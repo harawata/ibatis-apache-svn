@@ -177,7 +177,7 @@
 			Order_PostalCode
 			from Orders where Order_ID = #value#
 		</statement>
-		
+					
 		<statement id="GetOrderWithTypes"
 					parameterClass="Int"
 					resultMap="order-with-types-result" >

@@ -326,22 +326,25 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		/// <returns>An object.</returns>
 		public object CreateInstanceOfResultClass()
 		{
-			TypeCode typeCode = Type.GetTypeCode(_resultClass);
-
-			if (typeCode == TypeCode.Object)
+			if (_resultClass.IsPrimitive || _resultClass == typeof (string) )
+			{
+				TypeCode typeCode = Type.GetTypeCode(_resultClass);
+				return TypeAliasResolver.InstantiatePrimitiveType(typeCode);
+			}
+			else
 			{
 				if (_resultClass == typeof (Guid))
 				{
-					return Guid.NewGuid();
+					return Guid.Empty;
+				}
+				else if (_resultClass == typeof (TimeSpan))
+				{
+					return new TimeSpan(0);
 				}
 				else
 				{
 					return Activator.CreateInstance(_resultClass);
 				}
-			}
-			else
-			{
-				return TypeAliasResolver.InstantiatePrimitiveType(typeCode);
 			}
 		}
 

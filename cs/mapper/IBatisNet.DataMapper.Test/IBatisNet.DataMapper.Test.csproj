@@ -122,6 +122,10 @@
                     BuildAction = "None"
                 />
                 <File
+                    RelPath = "DataBase-Template.config"
+                    BuildAction = "None"
+                />
+                <File
                     RelPath = "IBatisNet.Test.build"
                     BuildAction = "None"
                 />
@@ -310,6 +314,10 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "Maps\MSSQL\Odbc\ResultClass.xml"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "Maps\MSSQL\OleDb\Account.xml"
                     BuildAction = "Content"
                 />
@@ -342,6 +350,10 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "Maps\MSSQL\OleDb\ResultClass.xml"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "Maps\MSSQL\SqlClient\Account.xml"
                     BuildAction = "Content"
                 />
@@ -371,6 +383,10 @@
                 />
                 <File
                     RelPath = "Maps\MSSQL\SqlClient\Other.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\MSSQL\SqlClient\ResultClass.xml"
                     BuildAction = "Content"
                 />
                 <File
@@ -496,6 +512,11 @@
                 />
                 <File
                     RelPath = "NUnit\SqlMapTests\ParameterMapTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NUnit\SqlMapTests\ResultClassTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

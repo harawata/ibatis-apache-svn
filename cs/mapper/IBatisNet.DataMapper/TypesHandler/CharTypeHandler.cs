@@ -54,7 +54,7 @@ namespace IBatisNet.DataMapper.TypesHandler
 			}
 			else
 			{
-				return dataReader.GetChar(index);
+				return dataReader.GetString(index)[0];
 			}
 		}
 
@@ -66,7 +66,8 @@ namespace IBatisNet.DataMapper.TypesHandler
 			}
 			else
 			{
-				return dataReader.GetChar(mapping.ColumnIndex);
+				return dataReader.GetString(mapping.ColumnIndex)[0];
+					//GetChar(mapping.ColumnIndex);
 			}
 		}
 

@@ -17,13 +17,7 @@
 			where Category_ID = #value# 
 		</select>
 		
-		<select id="GetGuid" parameterClass="Integer" resultClass="guid">
-			select
-			Category_Guid as value
-			from Categories  
-			where Category_ID = #value# 
-		</select>
-		
+	
 		<!-- Test for statement as insert -->
 		<statement id="InsertCategory" parameterClass="Category" resultClass="int">
 			insert into Categories  
