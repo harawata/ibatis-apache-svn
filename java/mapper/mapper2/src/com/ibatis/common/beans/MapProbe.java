@@ -138,6 +138,8 @@ public class MapProbe extends BaseProbe implements Probe {
         }
       }
       return value;
+    } else if (name.indexOf('[') > -1) {
+      return getIndexedProperty(object, name);
     } else {
       return getProperty(object, name);
     }
@@ -170,11 +172,12 @@ public class MapProbe extends BaseProbe implements Probe {
         property = parser.nextToken();
       }
       setProperty(child, property, value);
+    } else if (name.indexOf('.') > -1) {
+      setIndexedProperty(object, name, value);
     } else {
       setProperty(object, name, value);
     }
   }
-
 
 }
 

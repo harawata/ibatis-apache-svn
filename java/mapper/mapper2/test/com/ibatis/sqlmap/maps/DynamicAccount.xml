@@ -336,5 +336,39 @@
     order by ACC_LAST_NAME
   </select>
 
+  <select id="iterateListInMap"
+             parameterClass="map"
+             resultClass="testdomain.Account">
+    select
+      ACC_ID          as id,
+      ACC_FIRST_NAME  as firstName,
+      ACC_LAST_NAME   as lastName,
+      ACC_EMAIL       as emailAddress
+    from ACCOUNT
+    WHERE 1 = 1
+    <dynamic>
+    <iterate open="AND ACC_ID IN (" close=")" conjunction="," property="paramList">
+      #paramList[]#
+    </iterate>
+    </dynamic>
+  </select>
+
+  <select id="iterateListDirect"
+             parameterClass="list"
+             resultClass="testdomain.Account">
+    select
+      ACC_ID          as id,
+      ACC_FIRST_NAME  as firstName,
+      ACC_LAST_NAME   as lastName,
+      ACC_EMAIL       as emailAddress
+    from ACCOUNT
+    WHERE 1 = 1
+    <dynamic>
+    <iterate open="AND ACC_ID IN (" close=")" conjunction="," >
+      #value[]#
+    </iterate>
+    </dynamic>
+  </select>
+
 
 </sqlMap>

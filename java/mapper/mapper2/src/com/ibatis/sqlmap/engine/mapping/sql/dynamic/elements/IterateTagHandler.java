@@ -19,10 +19,10 @@ public class IterateTagHandler extends BaseTagHandler {
   public int doStartFragment(SqlTagContext ctx, SqlTag tag, Object parameterObject) {
     IterateContext iterate = (IterateContext) ctx.getAttribute(tag);
     if (iterate == null) {
-      String prop = tag.getPropertyAttr();
       Object collection;
+      String prop = tag.getPropertyAttr();
       if (prop != null) {
-        collection = PROBE.getObject(parameterObject, tag.getPropertyAttr());
+        collection = PROBE.getObject(parameterObject, prop);
       } else {
         collection = parameterObject;
       }

@@ -84,15 +84,6 @@ public class DynamicSql implements Sql, DynamicParent {
         if (sqlText.isWhiteSpace()) {
           out.print(sqlStatement);
         } else {
-
-// -- Allows for dynamically generated statements (code supplied as parameter).
-// -- Fails within iterate tag...deemed less valuable than iterative $substitutions[]$
-//          if (SimpleDynamicSql.isSimpleDynamicSql(sqlStatement)) {
-//            sqlStatement = new SimpleDynamicSql(sqlStatement).getSql(request, parameterObject);
-//            sqlText = XmlSqlMapClientBuilder.parseInlineParameterMap(sqlStatement);
-//            sqlStatement = sqlText.getText();
-//          }
-
           // BODY OUT
           out.print(sqlStatement);
 

@@ -8,9 +8,9 @@ import java.util.Map;
  */
 public class ProbeFactory {
 
-  private static final Probe DOM = new GenericProbe();
-  private static final Probe MAP = new GenericProbe();
-  private static final Probe BEAN = new GenericProbe();
+  private static final Probe DOM = new DomProbe();
+  private static final Probe MAP = new MapProbe();
+  private static final Probe BEAN = new JavaBeanProbe();
   private static final Probe GENERIC = new GenericProbe();
   private static final Probe LEGACY = new LegacyBeanProbe();
 

@@ -3,7 +3,6 @@ package com.ibatis.sqlmap;
 import testdomain.Account;
 
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -133,22 +132,6 @@ public class DynamicTest extends BaseSqlMapTest {
     assertEquals(1, list.size());
   }
 
-  // Iterate
-
-  public void testIterate() throws SQLException {
-    List params = Arrays.asList(new Integer[]{new Integer(1), new Integer(2), new Integer(3)});
-    List list = sqlMap.queryForList("dynamicIterate", params);
-    assertAccount1((Account) list.get(0));
-    assertEquals(3, list.size());
-  }
-
-  public void testMultiIterate() throws SQLException {
-    List params = Arrays.asList(new Integer[]{new Integer(1), new Integer(2), new Integer(3)});
-    List list = sqlMap.queryForList("multiDynamicIterate", params);
-    assertAccount1((Account) list.get(0));
-    assertEquals(3, list.size());
-  }
-
   public void testEmptyParameterObject() throws SQLException {
     Account account = new Account();
     account.setId(-1);
@@ -157,15 +140,6 @@ public class DynamicTest extends BaseSqlMapTest {
     assertEquals(5, list.size());
   }
 
-  // ARRAY
-
-  public void testArrayPropertyIterate() throws SQLException {
-    Account account = new Account();
-    account.setIds(new int[]{1, 2, 3});
-    List list = sqlMap.queryForList("dynamicQueryByExample", account);
-    assertAccount1((Account) list.get(0));
-    assertEquals(3, list.size());
-  }
 
 // COMPLETE STATEMENT SUBSTITUTION
 

@@ -23,7 +23,7 @@ public class ListDataExchange extends BaseDataExchange implements DataExchange {
     Object[] data = new Object[mappings.length];
     for (int i = 0; i < mappings.length; i++) {
       String propName = mappings[i].getPropertyName();
-      int index = Integer.parseInt((propName.substring(1, propName.length() - 1)));
+      int index = Integer.parseInt((propName.substring(propName.indexOf('[')+1, propName.length() - 1)));
       data[i] = ((List) parameterObject).get(index);
     }
     return data;

@@ -23,6 +23,7 @@ public class AllSqlMapTests {
     suite.addTestSuite(ResultMapTest.class);
     suite.addTestSuite(DynamicTest.class);
     suite.addTestSuite(DynamicPrependTest.class);
+    suite.addTestSuite(IterateTest.class);
     suite.addTestSuite(ComplexTypeTest.class);
     suite.addTestSuite(XmlStatementTest.class);
     suite.addTestSuite(DomStatementTest.class);

@@ -57,10 +57,10 @@ public class EnhancedLazyResultLoader {
         return ResultLoader.getResult(client, statementName, parameterObject, targetType);
       } else if (XmlTypeMarker.class.isAssignableFrom(targetType)) {
         return ResultLoader.getResult(client, statementName, parameterObject, targetType);
-      } else if (targetType.isArray() || ClassInfo.isKnownType(targetType)) {
-        return ResultLoader.getResult(client, statementName, parameterObject, targetType);
       } else if (Collection.class.isAssignableFrom(targetType)) {
         return Enhancer.create(Object.class, INTERFACES, this);
+      } else if (targetType.isArray() || ClassInfo.isKnownType(targetType)) {
+        return ResultLoader.getResult(client, statementName, parameterObject, targetType);
       } else {
         return Enhancer.create(targetType, this);
       }
