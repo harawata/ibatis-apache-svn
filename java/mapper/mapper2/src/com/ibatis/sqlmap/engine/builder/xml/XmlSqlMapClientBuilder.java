@@ -1201,7 +1201,7 @@ public class XmlSqlMapClientBuilder {
       dbf.setIgnoringComments(true);
       dbf.setIgnoringElementContentWhitespace(true);
       dbf.setCoalescing(false);
-      dbf.setExpandEntityReferences(false);
+      dbf.setExpandEntityReferences(true);
 
       OutputStreamWriter errorWriter = new OutputStreamWriter(System.err);
 

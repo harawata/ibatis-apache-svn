@@ -37,27 +37,27 @@ public abstract class BaseProbe implements Probe {
     try {
       String name = indexedName.substring(0, indexedName.indexOf("["));
       int i = Integer.parseInt(indexedName.substring(indexedName.indexOf("[") + 1, indexedName.indexOf("]")));
-      value = getProperty(object, name);
-      if (value instanceof List) {
-        value = ((List) value).get(i);
-      } else if (value instanceof Object[]) {
-        value = ((Object[]) value)[i];
-      } else if (value instanceof char[]) {
-        value = new Character(((char[]) value)[i]);
-      } else if (value instanceof boolean[]) {
-        value = new Boolean(((boolean[]) value)[i]);
-      } else if (value instanceof byte[]) {
-        value = new Byte(((byte[]) value)[i]);
-      } else if (value instanceof double[]) {
-        value = new Double(((double[]) value)[i]);
-      } else if (value instanceof float[]) {
-        value = new Float(((float[]) value)[i]);
-      } else if (value instanceof int[]) {
-        value = new Integer(((int[]) value)[i]);
-      } else if (value instanceof long[]) {
-        value = new Long(((long[]) value)[i]);
-      } else if (value instanceof short[]) {
-        value = new Short(((short[]) value)[i]);
+      Object list = getProperty(object, name);
+      if (list instanceof List) {
+        value = ((List) list).get(i);
+      } else if (list instanceof Object[]) {
+        value = ((Object[]) list)[i];
+      } else if (list instanceof char[]) {
+        value = new Character(((char[]) list)[i]);
+      } else if (list instanceof boolean[]) {
+        value = new Boolean(((boolean[]) list)[i]);
+      } else if (list instanceof byte[]) {
+        value = new Byte(((byte[]) list)[i]);
+      } else if (list instanceof double[]) {
+        value = new Double(((double[]) list)[i]);
+      } else if (list instanceof float[]) {
+        value = new Float(((float[]) list)[i]);
+      } else if (list instanceof int[]) {
+        value = new Integer(((int[]) list)[i]);
+      } else if (list instanceof long[]) {
+        value = new Long(((long[]) list)[i]);
+      } else if (list instanceof short[]) {
+        value = new Short(((short[]) list)[i]);
       } else {
         throw new ProbeException("The '" + name + "' property of the " + object.getClass().getName() + " class is not a List or Array.");
       }
@@ -65,7 +65,7 @@ public abstract class BaseProbe implements Probe {
     } catch (ProbeException e) {
       throw e;
     } catch (Exception e) {
-      throw new ProbeException("Error getting ordinal value from JavaBean. Cause " + e, e);
+      throw new ProbeException("Error getting ordinal list from JavaBean. Cause " + e, e);
     }
 
     return value;
@@ -79,24 +79,24 @@ public abstract class BaseProbe implements Probe {
       Object list = getProperty(object, name);
       if (list instanceof List) {
         ((List) list).set(i, value);
-      } else if (value instanceof Object[]) {
-        value = ((Object[]) value)[i];
-      } else if (value instanceof char[]) {
-        ((char[]) value)[i] = ((Character) value).charValue();
-      } else if (value instanceof boolean[]) {
-        ((boolean[]) value)[i] = ((Boolean) value).booleanValue();
-      } else if (value instanceof byte[]) {
-        ((byte[]) value)[i] = ((Byte) value).byteValue();
-      } else if (value instanceof double[]) {
-        ((double[]) value)[i] = ((Double) value).doubleValue();
-      } else if (value instanceof float[]) {
-        ((float[]) value)[i] = ((Float) value).floatValue();
-      } else if (value instanceof int[]) {
-        ((int[]) value)[i] = ((Integer) value).intValue();
-      } else if (value instanceof long[]) {
-        ((long[]) value)[i] = ((Long) value).longValue();
-      } else if (value instanceof short[]) {
-        ((short[]) value)[i] = ((Short) value).shortValue();
+      } else if (list instanceof Object[]) {
+        ((Object[]) list)[i] = value;
+      } else if (list instanceof char[]) {
+        ((char[]) list)[i] = ((Character) value).charValue();
+      } else if (list instanceof boolean[]) {
+        ((boolean[]) list)[i] = ((Boolean) value).booleanValue();
+      } else if (list instanceof byte[]) {
+        ((byte[]) list)[i] = ((Byte) value).byteValue();
+      } else if (list instanceof double[]) {
+        ((double[]) list)[i] = ((Double) value).doubleValue();
+      } else if (list instanceof float[]) {
+        ((float[]) list)[i] = ((Float) value).floatValue();
+      } else if (list instanceof int[]) {
+        ((int[]) list)[i] = ((Integer) value).intValue();
+      } else if (list instanceof long[]) {
+        ((long[]) list)[i] = ((Long) value).longValue();
+      } else if (list instanceof short[]) {
+        ((short[]) list)[i] = ((Short) value).shortValue();
       } else {
         throw new ProbeException("The '" + name + "' property of the " + object.getClass().getName() + " class is not a List or Array.");
       }

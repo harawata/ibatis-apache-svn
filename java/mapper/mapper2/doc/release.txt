@@ -7,6 +7,8 @@ Build Number: @buildNum@
 
  o Added OJB DAO support (Thanks to Pedro Salgado)
  o Fixed Autocommit (true) in JdbcDaoTransaction
+ o Fixed Expanded entity references in XML (for &gt; etc.)
+ o Fixed base probe indexed property accessor
 
 ------------------------------
  2.0.4 - Jul 25, 2004
