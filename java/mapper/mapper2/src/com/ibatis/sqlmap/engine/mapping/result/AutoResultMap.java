@@ -30,8 +30,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * An automatic result map for simple stuff
+ */
 public class AutoResultMap extends BasicResultMap {
 
+  /**
+   * Constructor to pass in the SqlMapExecutorDelegate 
+   * 
+   * @param delegate - the delegate
+   */
   public AutoResultMap(SqlMapExecutorDelegate delegate) {
     super(delegate);
   }

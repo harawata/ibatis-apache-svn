@@ -21,17 +21,54 @@ import com.ibatis.sqlmap.engine.scope.RequestScope;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * This is a grouping of ResultMapping objects used to map results back to objects
+ */
 public interface ResultMap {
 
+  /**
+   * A way to identify the ResultMap
+   * 
+   * @return - an ID
+   */
   public String getId();
 
+  /**
+   * Perform the mapping, and return the results
+   * 
+   * @param request - the request scope
+   * @param rs - the result set to map
+   * 
+   * @return - an object array with the data in it
+   * 
+   * @throws SQLException - if an exception is thrown processing the results
+   */
   public Object[] getResults(RequestScope request, ResultSet rs)
       throws SQLException;
 
+  /**
+   * Callback method for RowHandler
+   * 
+   * @param request - the request scope
+   * @param resultObject - the object being populated
+   * @param values - the values from the database
+   * 
+   * @return - the populated object
+   */
   public Object setResultObjectValues(RequestScope request, Object resultObject, Object[] values);
 
+  /**
+   * Getter for the ResultMapping objects
+   * 
+   * @return - an array of ResultMapping objects
+   */
   public ResultMapping[] getResultMappings();
 
+  /**
+   * Getter for the class that data wil be mapped into
+   * 
+   * @return - the class
+   */
   public Class getResultClass();
 
 }

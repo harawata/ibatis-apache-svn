@@ -26,6 +26,9 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Class to lazily load results into objects
+ */
 public class LazyResultLoader implements InvocationHandler {
 
   private static final Class[] LIST_INTERFACES = new Class[]{List.class};
@@ -41,10 +44,10 @@ public class LazyResultLoader implements InvocationHandler {
   /**
    * Constructor for a lazy list loader
    *
-   * @param client          - the client that is creating the lazy list
-   * @param statementName   - the statement to be used to build the list
+   * @param client - the client that is creating the lazy list
+   * @param statementName - the statement to be used to build the list
    * @param parameterObject - the parameter object to be used to build the list
-   * @param targetType      - ??
+   * @param targetType - the type we are putting data into
    */
   public LazyResultLoader(ExtendedSqlMapClient client, String statementName, Object parameterObject, Class targetType) {
     this.client = client;
@@ -54,9 +57,10 @@ public class LazyResultLoader implements InvocationHandler {
   }
 
   /**
-   * Loads the result(!)
+   * Loads the result
    *
    * @return the results - a list or object
+   * 
    * @throws SQLException if there is a problem
    */
   public Object loadResult() throws SQLException {

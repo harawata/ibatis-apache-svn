@@ -24,6 +24,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Class to load results into objects
+ */
 public class ResultLoader {
 
   private ResultLoader() {

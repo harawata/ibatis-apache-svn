@@ -27,16 +27,34 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Class to lazily load results into objects (uses CGLib to improve performance)
+ */
 public class EnhancedLazyResultLoader {
 
   private static final Class[] INTERFACES = new Class[]{List.class};
   private Object loader;
 
 
+  /**
+   * Constructor for an enhanced lazy list loader
+   *
+   * @param client - the client that is creating the lazy list
+   * @param statementName - the statement to be used to build the list
+   * @param parameterObject - the parameter object to be used to build the list
+   * @param targetType - the type we are putting data into
+   */
   public EnhancedLazyResultLoader(ExtendedSqlMapClient client, String statementName, Object parameterObject, Class targetType) {
     loader = new EnhancedLazyResultLoaderImpl(client, statementName, parameterObject, targetType);
   }
 
+  /**
+   * Loads the result
+   *
+   * @return the results - a list or object
+   * 
+   * @throws SQLException if there is a problem
+   */
   public Object loadResult() throws SQLException {
     return ((EnhancedLazyResultLoaderImpl) loader).loadResult();
   }
@@ -53,6 +71,14 @@ public class EnhancedLazyResultLoader {
     protected boolean loaded;
     protected Object resultObject;
 
+    /**
+     * Constructor for an enhanced lazy list loader implementation
+     *
+     * @param client - the client that is creating the lazy list
+     * @param statementName - the statement to be used to build the list
+     * @param parameterObject - the parameter object to be used to build the list
+     * @param targetType - the type we are putting data into
+     */
     public EnhancedLazyResultLoaderImpl(ExtendedSqlMapClient client, String statementName, Object parameterObject, Class targetType) {
       this.client = client;
       this.statementName = statementName;
@@ -60,6 +86,13 @@ public class EnhancedLazyResultLoader {
       this.targetType = targetType;
     }
 
+    /**
+     * Loads the result
+     *
+     * @return the results - a list or object
+     * 
+     * @throws SQLException if there is a problem
+     */
     public Object loadResult() throws SQLException {
       if (DomTypeMarker.class.isAssignableFrom(targetType)) {
         return ResultLoader.getResult(client, statementName, parameterObject, targetType);

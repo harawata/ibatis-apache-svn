@@ -20,10 +20,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+/**
+ * Not really sure what this is...it is not used internally
+ */
 public class XmlList implements List {
 
   private List list;
 
+  /**
+   * Build a list from another list
+   * 
+   * @param list - a base list
+   */
   public XmlList(List list) {
     this.list = list;
   }

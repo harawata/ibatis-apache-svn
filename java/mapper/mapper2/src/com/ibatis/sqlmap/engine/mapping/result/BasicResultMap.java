@@ -43,6 +43,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+/**
+ * Basic implementation of ResultMap interface
+ */
 public class BasicResultMap implements ResultMap {
 
   private static final Probe PROBE = ProbeFactory.getProbe();
@@ -59,10 +62,20 @@ public class BasicResultMap implements ResultMap {
 
   private SqlMapExecutorDelegate delegate;
 
+  /**
+   * Constructor to pass a SqlMapExecutorDelegate in
+   * 
+   * @param delegate - the SqlMapExecutorDelegate 
+   */
   public BasicResultMap(SqlMapExecutorDelegate delegate) {
     this.delegate = delegate;
   }
 
+  /**
+   * Getter for the SqlMapExecutorDelegate
+   *  
+   * @return - the delegate
+   */
   public SqlMapExecutorDelegate getDelegate() {
     return delegate;
   }
@@ -71,6 +84,11 @@ public class BasicResultMap implements ResultMap {
     return id;
   }
 
+  /**
+   * Setter for the ID
+   * 
+   * @param id - the new ID
+   */
   public void setId(String id) {
     this.id = id;
   }
@@ -79,30 +97,65 @@ public class BasicResultMap implements ResultMap {
     return resultClass;
   }
 
+  /**
+   * Setter for the result class (what the results will be mapped into)
+   * 
+   * @param resultClass - the result class
+   */
   public void setResultClass(Class resultClass) {
     this.resultClass = resultClass;
   }
 
+  /**
+   * Getter for the DataExchange object to be used
+   * 
+   * @return - the DataExchange object 
+   */
   public DataExchange getDataExchange() {
     return dataExchange;
   }
 
+  /**
+   * Setter for the DataExchange object to be used
+   * 
+   * @param dataExchange - the new DataExchange object 
+   */
   public void setDataExchange(DataExchange dataExchange) {
     this.dataExchange = dataExchange;
   }
 
+  /**
+   * Getter (used by DomDataExchange) for the xml name of the results
+   * 
+   * @return - the name
+   */
   public String getXmlName() {
     return xmlName;
   }
 
+  /**
+   * Setter (used by the SqlMapBuilder) for the xml name of the results
+   * 
+   * @param xmlName - the name
+   */
   public void setXmlName(String xmlName) {
     this.xmlName = xmlName;
   }
 
+  /**
+   * Getter for the resource (used to report errors)
+   * 
+   * @return - the resource
+   */
   public String getResource() {
     return resource;
   }
 
+  /**
+   * Setter for the resource (used by the SqlMapBuilder)
+   * 
+   * @param resource - the resource name
+   */
   public void setResource(String resource) {
     this.resource = resource;
   }
@@ -111,6 +164,11 @@ public class BasicResultMap implements ResultMap {
     return resultMappings;
   }
 
+  /**
+   * Setter for a list of the individual ResultMapping objects
+   * 
+   * @param resultMappingList - the list
+   */
   public void setResultMappingList(List resultMappingList) {
     this.resultMappings = (BasicResultMapping[]) resultMappingList.toArray(new BasicResultMapping[resultMappingList.size()]);
     Map props = new HashMap();
@@ -119,6 +177,11 @@ public class BasicResultMap implements ResultMap {
     dataExchange.initialize(props);
   }
 
+  /**
+   * Getter for the number of ResultMapping objects
+   * 
+   * @return - the count
+   */
   public int getResultCount() {
     return this.resultMappings.length;
   }

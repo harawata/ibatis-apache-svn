@@ -15,8 +15,16 @@
  */
 package com.ibatis.sqlmap.engine.mapping.result;
 
+/**
+ * Interface for the objects that map individual columns
+ */
 public interface ResultMapping {
 
+  /**
+   * Getter for the property this will do mapping for
+   * 
+   * @return - the property name
+   */
   public String getPropertyName();
 
 }
