@@ -240,6 +240,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Domain\MyFormula.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Domain\Newspaper.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

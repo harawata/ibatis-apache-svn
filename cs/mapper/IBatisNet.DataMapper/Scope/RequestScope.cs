@@ -45,7 +45,7 @@ namespace IBatisNet.DataMapper.Scope
 		
 		private ParameterMap _parameterMap = null;
 		private ResultMap _resultMap = null;
-		private ResultMap _oldResultMap = null;
+		private ResultMap _initialResultMap = null;
 		private PreparedStatement _preparedStatement = null;
 		private Queue _properties = new Queue();
 
@@ -90,16 +90,21 @@ namespace IBatisNet.DataMapper.Scope
 		}
 		#endregion
 
+		#region Method
 		/// <summary>
 		/// Check if the ResultMap is well set, process case of subMap resultMap
 		/// </summary>
 		/// <param name="dataReader">The current IDataReader</param>
-		public void CheckResultMap(IDataReader dataReader)
+		public void SetResultMap(IDataReader dataReader)
 		{
-			_oldResultMap = _resultMap;
+			_initialResultMap = _resultMap;
 			if (_resultMap != null && _resultMap.Discriminator != null)
 			{
 				_resultMap = _resultMap.Discriminator.GetResultMap(dataReader);
+				if (_resultMap==null)
+				{
+					_resultMap = _initialResultMap;
+				}
 			}
 		}
 
@@ -108,8 +113,10 @@ namespace IBatisNet.DataMapper.Scope
 		/// </summary>
 		public void Reset()
 		{
-			_resultMap = _oldResultMap;
+			_resultMap = _initialResultMap;
 		}
+		#endregion
+
 
 	}
 }

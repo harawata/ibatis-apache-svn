@@ -362,11 +362,11 @@ namespace IBatisNet.DataMapper.MappedStatements
 		{
 			object outObject = resultObject; 
 
-			request.CheckResultMap(reader);
 
 			// If there's an ResultMap, use it
 			if (request.ResultMap != null) 
 			{
+				request.SetResultMap(reader);
 				ResultMap resultMap = request.ResultMap;
 
 				if (outObject == null) 

@@ -44,27 +44,80 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		#endregion
 
 		/// <summary>
+		/// Test All document with no formula
 		/// </summary>
 		[Test] 
 		public void GetAllDocument() 
 		{
 			IList list = sqlMap.QueryForList("GetAllDocument", null);
 
-			Assert.AreEqual(3, list.Count);
+			Assert.AreEqual(6, list.Count);
 			Book book = (Book) list[0];
-			Assert.AreEqual(1, book.Id);
-			Assert.AreEqual("The World of Null-A", book.Title);
-			Assert.AreEqual(55, book.PageNumber);
+			AssertBook(book, 1, "The World of Null-A", 55);
 
 			book = (Book) list[1];
-			Assert.AreEqual(3, book.Id);
-			Assert.AreEqual("Lord of the Rings", book.Title);
-			Assert.AreEqual(3587, book.PageNumber);
+			AssertBook(book, 3, "Lord of the Rings", 3587);
+
+			Document document = (Document) list[2];
+			AssertDocument(document, 5, "Le Monde");
+
+			document = (Document) list[3];
+			AssertDocument(document, 6, "Foundation");
+
+			Newspaper news = (Newspaper) list[4];
+			AssertNewspaper(news, 2, "Le Progres de Lyon", "Lyon");
+
+			document = (Document) list[5];
+			AssertDocument(document, 4, "Le Canard enchaine");
+		}
+
+		/// <summary>
+		/// Test All document with formula
+		/// </summary>
+		[Test] 
+		public void GetAllDocumentWithFormula() 
+		{
+			IList list = sqlMap.QueryForList("GetAllDocumentWithFormula", null);
+
+			Assert.AreEqual(6, list.Count);
+			Book book = (Book) list[0];
+			AssertBook(book, 1, "The World of Null-A", 55);
+
+			book = (Book) list[1];
+			AssertBook(book, 3, "Lord of the Rings", 3587);
 
 			Newspaper news = (Newspaper) list[2];
-			Assert.AreEqual(2, news.Id);
-			Assert.AreEqual("Le Progres de Lyon", news.Title);
-			Assert.AreEqual("Lyon", news.City);
+			AssertNewspaper(news, 5, "Le Monde", "Paris");
+
+			book = (Book) list[3];
+			AssertBook(book, 6, "Foundation", 557);
+
+			news = (Newspaper) list[4];
+			AssertNewspaper(news, 2, "Le Progres de Lyon", "Lyon");
+
+			news = (Newspaper) list[5];
+			AssertNewspaper(news, 4, "Le Canard enchaine", "Paris");
 		}
+
+		void AssertDocument(Document document, int id, string title)
+		{
+			Assert.AreEqual(id, document.Id);
+			Assert.AreEqual(title, document.Title);
+		}
+
+		void AssertBook(Book book, int id, string title, int pageNumber)
+		{
+			Assert.AreEqual(id, book.Id);
+			Assert.AreEqual(title, book.Title);
+			Assert.AreEqual(pageNumber, book.PageNumber);
+		}
+
+		void AssertNewspaper(Newspaper news, int id, string title, string city)
+		{
+			Assert.AreEqual(id, news.Id);
+			Assert.AreEqual(title, news.Title);
+			Assert.AreEqual(city, news.City);
+		}
+
 	}
 }
