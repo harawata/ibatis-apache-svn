@@ -1027,7 +1027,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		{
 			string selectStatement = mapping.Select;
 
-			if (selectStatement.Length == 0 && mapping.ResultMap == null)
+			if (selectStatement.Length == 0 && mapping.NestedResultMap == null)
 			{
 				// If the property is not a 'select' ResultProperty 
 				//                     or a 'resultMap' ResultProperty
@@ -1068,12 +1068,12 @@ namespace IBatisNet.DataMapper.MappedStatements
 				}
 				#endregion
 			}
-			else if (mapping.ResultMap != null) // 'resultMap' ResultProperty
+			else if (mapping.NestedResultMap != null) // 'resultMap' ResultProperty
 			{
 				object obj = null;
 
-				obj = mapping.ResultMap.CreateInstanceOfResult();
-				FillObjectWithReaderAndResultMap(request, reader, mapping.ResultMap, obj);
+				obj = mapping.NestedResultMap.CreateInstanceOfResult();
+				FillObjectWithReaderAndResultMap(request, reader, mapping.NestedResultMap, obj);
 				MappedStatement.SetValueOfProperty( ref target, mapping, obj );
 			}
 			else //'select' ResultProperty 

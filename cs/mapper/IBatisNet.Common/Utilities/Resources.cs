@@ -24,12 +24,13 @@
  ********************************************************************************/
 #endregion
 
-#region Imports
+#region Using
 using System;
 using System.Collections.Specialized;
 using System.IO;
 using System.Xml;
 using System.Reflection;
+using System.Resources;
 
 using log4net;
 
@@ -50,11 +51,14 @@ namespace IBatisNet.Common.Utilities
 	/// </summary>
 	public class Resources
 	{
+		private const string RESOURCE_FILENAME = "iBATIS.DataMapper";
 
 		#region Fields
 		private static string _applicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
 		private static string _baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
 		private static CachedTypeResolver _cachedTypeResolver = null;
+		private static ResourceManager _resourceManager= null;
+
 		private static readonly ILog _logger = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
 		#endregion
@@ -81,16 +85,41 @@ namespace IBatisNet.Common.Utilities
 				return _baseDirectory;
 			}
 		}
+
+
 		#endregion
 
 		#region Constructor (s) / Destructor
 		static Resources()
 		{
 			_cachedTypeResolver = new CachedTypeResolver();
+			_resourceManager = new ResourceManager(typeof(Resources).Namespace + RESOURCE_FILENAME, Assembly.GetExecutingAssembly());	
 		}
 		#endregion
 
 		#region Methods
+
+		/// <summary>
+		/// Gets the message with the specified key from the assembly resource file.
+		/// </summary>
+		/// <param name="key">Key of the item to retrieve from the resource file.</param>
+		/// <returns>Value from the resource file identified by the key.</returns>
+		public static string GetMessage(string key)
+		{
+			return _resourceManager.GetString( key, System.Globalization.CultureInfo.CurrentUICulture );																
+		}
+		/// <summary>
+		/// Formats a message stored in the assembly resource file.
+		/// </summary>
+		/// <param name="key">The resource key.</param>
+		/// <param name="format">The format arguments.</param>
+		/// <returns>A formatted string.</returns>
+		public static string FormatMessage( string key, params object[] format )
+		{
+			return String.Format( System.Globalization.CultureInfo.CurrentCulture, GetMessage(key), format );  
+		}
+
+
 		/// <summary>
 		/// Get config file from from the base directory that the assembler
 		/// used for probe assemblies

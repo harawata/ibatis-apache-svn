@@ -30,8 +30,10 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
 using System.Text;
+using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Xml.Schema;
 
 using IBatisNet.Common;
 using IBatisNet.Common.Exceptions;
@@ -62,6 +64,18 @@ namespace IBatisNet.DataMapper.Configuration
 	/// </summary>
 	public class DomSqlMapBuilder
 	{
+		#region Embedded resource
+
+		// Which files must we allow to be used as Embedded Resources ?
+		// - slqMap.config [No]
+		// - providers.config [No]
+		// - sqlMap files [yes]
+		// - properties file (like Database.config) [Yes]
+		// see contribution, NHibernate usage,
+		// see http://www.codeproject.com/csharp/EmbeddedResourceStrings.asp
+		// see http://www.devhood.com/tutorials/tutorial_details.aspx?tutorial_id=75
+		#endregion
+
 		#region Constant
 		private const string DEFAULT_PROVIDER_NAME = "_DEFAULT_PROVIDER_NAME";
 		/// <summary>
@@ -95,44 +109,14 @@ namespace IBatisNet.DataMapper.Configuration
 		/// Token for cacheModelsEnabled attribute.
 		/// </summary>
 		private const string ATR_CACHE_MODELS_ENABLED = "cacheModelsEnabled";
-		/// <summary>
-		/// Token for assemblyResource attribute.
-		/// </summary>
-		private const string ATR_ASSEMBLY_RESOURCE = "assemblyResource";
 
 		#endregion
 
-		#region Fields 
+		#region Fields
 
-		// These variables maintain the state of the build process.
-		private XmlDocument _sqlMapConfig = null;
-		private bool _isCallFromDao = false;
-		private bool _useConfigFileWatcher = false;
-		private DataSource _dataSource = null;
-		private bool _useStatementNamespaces = false;
-		private bool _cacheModelsEnabled = false;
-		private string _assemblyResource = string.Empty;
-		private ErrorContext _errorContext = null;
-
-		private HybridDictionary _providers = new HybridDictionary();
-		private NameValueCollection  _properties = new NameValueCollection();
-		private SqlMapper _sqlMap = null;
-
-		// static private Assembly _assembly = null;
+		private ConfigurationScope _configScope = null;
 
 		#endregion 
-		 
-		#region Properties
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public HybridDictionary Providers
-		{
-			get { return _providers; }
-		}
-
-		#endregion
 
 		#region Methods
 
@@ -148,22 +132,74 @@ namespace IBatisNet.DataMapper.Configuration
 			DataSource dataSource, 
 			bool useConfigFileWatcher, bool isCallFromDao)
 		{
-			_sqlMapConfig = document;
-			_dataSource = dataSource;
-			_isCallFromDao = isCallFromDao;
-			_useConfigFileWatcher = useConfigFileWatcher;
-			_sqlMap = null;
-			_errorContext = new ErrorContext();
+			_configScope = new ConfigurationScope();
 
-			// Load sqlMap statement.
+			_configScope.SqlMapConfigDocument = document;
+			_configScope.DataSource = dataSource;
+			_configScope.IsCallFromDao = isCallFromDao;
+			_configScope.UseConfigFileWatcher = useConfigFileWatcher;
+
+			
 			try
 			{
-				return Initialize();
+				ValidateSchema( document.ChildNodes[1], "SqlMapConfig.xsd" );
+				Initialize();
+				return _configScope.SqlMapper;
 			}
 			catch(Exception e)
-			{	_errorContext.Cause = e;
-				throw new ConfigurationException(_errorContext.ToString(),e);
+			{	
+				throw new ConfigurationException(_configScope.ErrorContext.ToString(), e);
 			}
+		}
+
+		/// <summary>
+		/// validate againts schema
+		/// </summary>
+		/// <param name="section">The doc to validate</param>
+		/// <param name="schemaFileName">schema File Name</param>
+		private void ValidateSchema( XmlNode section, string schemaFileName )
+		{
+			XmlValidatingReader validatingReader = null;
+			Stream xsdFile = null; 
+			StreamReader streamReader = null; 
+
+			_configScope.ErrorContext.Activity = "Validate SqlMap config";
+			try
+			{
+				//Validate the document using a schema
+				validatingReader = new XmlValidatingReader( new XmlTextReader( new StringReader( section.OuterXml ) ) );
+				validatingReader.ValidationType = ValidationType.Schema;
+
+				xsdFile = GetStream( schemaFileName ); 
+				streamReader = new StreamReader( xsdFile ); 
+
+				validatingReader.Schemas.Add( XmlSchema.Read( new XmlTextReader( streamReader ), null ) );
+
+				// Wire up the call back.  The ValidationEvent is fired when the
+				// XmlValidatingReader hits an issue validating a section of the xml
+				validatingReader.ValidationEventHandler += new ValidationEventHandler(ValidationCallBack);
+
+				// Validate the document
+				while (validatingReader.Read()){}
+
+				if(! _configScope.IsXmlValid )
+				{
+					throw new ConfigurationException( "Invalid SqlMap.config document. cause :"+_configScope.ErrorContext.Resource);
+						//( Resource.ResourceManager.FormatMessage( Resource.MessageKeys.DocumentNotValidated, _schemaErrors )) );
+				}
+			}
+			finally
+			{
+				if( validatingReader != null ) validatingReader.Close();
+				if( xsdFile != null ) xsdFile.Close();
+				if( streamReader != null ) streamReader.Close();
+			}
+		}
+
+		private void ValidationCallBack( object sender, ValidationEventArgs args )
+		{
+			_configScope.IsXmlValid = false;
+			_configScope.ErrorContext.Resource += args.Message + Environment.NewLine;
 		}
 
 		/// <summary>
@@ -198,18 +234,17 @@ namespace IBatisNet.DataMapper.Configuration
 		/// <summary>
 		/// Intilaize an SqlMap.
 		/// </summary>
-		private SqlMapper Initialize()
+		private void Initialize()
 		{
 			Reset();
 
-			SqlMapper sqlMap = new SqlMapper();
-			_sqlMap = sqlMap;
+			_configScope.SqlMapper = new SqlMapper();
 
 			#region Load settings
 
-			_errorContext.Activity = "Loading global settings";
+			_configScope.ErrorContext.Activity = "loading global settings";
 
-			XmlNodeList settings = _sqlMapConfig.SelectNodes(XML_CONFIG_SETTINGS);
+			XmlNodeList settings = _configScope.SqlMapConfigDocument.SelectNodes(XML_CONFIG_SETTINGS);
 
 			if (settings!=null)
 			{
@@ -217,181 +252,167 @@ namespace IBatisNet.DataMapper.Configuration
 				{
 					if (setting.Attributes[ATR_USE_STATEMENT_NAMESPACES] != null )
 					{				
-						_useStatementNamespaces =  System.Convert.ToBoolean(setting.Attributes[ATR_USE_STATEMENT_NAMESPACES].Value); 
+						_configScope.UseStatementNamespaces =  System.Convert.ToBoolean(setting.Attributes[ATR_USE_STATEMENT_NAMESPACES].Value); 
 					}
 					if (setting.Attributes[ATR_CACHE_MODELS_ENABLED] != null )
 					{				
-						_cacheModelsEnabled =  System.Convert.ToBoolean(setting.Attributes[ATR_CACHE_MODELS_ENABLED].Value); 
+						_configScope.IsCacheModelsEnabled =  System.Convert.ToBoolean(setting.Attributes[ATR_CACHE_MODELS_ENABLED].Value); 
 					}
-					#region Embedded resource
-
-					// Which files must we allow to be used as Embedded Resources ?
-					// - slqMap.config [No]
-					// - providers.config [No]
-					// - sqlMap files [yes]
-					// - properties file (like Database.config) [Yes]
-					// see contribution, NHibernate usage,
-					// see http://www.codeproject.com/csharp/EmbeddedResourceStrings.asp
-					// see http://www.devhood.com/tutorials/tutorial_details.aspx?tutorial_id=75
-					if (setting.Attributes[ATR_ASSEMBLY_RESOURCE] != null )
-					{
-						_assemblyResource = setting.Attributes[ATR_ASSEMBLY_RESOURCE].Value;
-					}
-					#endregion
 				}
 			}
 
-			sqlMap.SetCacheModelsEnabled(_cacheModelsEnabled);
+			_configScope.SqlMapper.SetCacheModelsEnabled(_configScope.IsCacheModelsEnabled);
 
 			#endregion
 
 			#region Load Global Properties
-			if (_isCallFromDao == false)
+			if (_configScope.IsCallFromDao == false)
 			{
-				ParseGlobalProperties(_sqlMapConfig.SelectSingleNode(XML_CONFIG_ROOT));
+				_configScope.NodeContext = _configScope.SqlMapConfigDocument.SelectSingleNode(XML_CONFIG_ROOT);
+				ParseGlobalProperties();
 			}
 			#endregion
 
 			#region Load providers
-			if (_isCallFromDao == false)
+			if (_configScope.IsCallFromDao == false)
 			{
-				_errorContext.Activity = "Loading Providers";
-				GetProviders(Resources.GetConfigAsXmlDocument(PROVIDERS_FILE_NAME));
+				GetProviders();
 			}
 			#endregion
 
 			#region Load DataBase
 			#region Choose the  provider
 			Provider provider = null;
-			if ( _isCallFromDao==false )
+			if ( _configScope.IsCallFromDao==false )
 			{
-				XmlNode providerNode = null;
-
-				providerNode = _sqlMapConfig.SelectSingleNode("/sqlMapConfig/database/provider");
-
-				provider = ParseProvider(providerNode);
+				provider = ParseProvider();
+				_configScope.ErrorContext.Reset();
 			}
 			#endregion
 
 			#region Load the DataSources
 
-			_errorContext.Activity = "Loading Database DataSource";
-			XmlNode nodeDataSource = _sqlMapConfig.SelectSingleNode("/sqlMapConfig/database/dataSource");
+			_configScope.ErrorContext.Activity = "loading Database DataSource";
+			XmlNode nodeDataSource = _configScope.SqlMapConfigDocument.SelectSingleNode("/sqlMapConfig/database/dataSource");
 			if (nodeDataSource == null)
 			{
-				if (_isCallFromDao == false)
+				if (_configScope.IsCallFromDao == false)
 				{
 					throw new ConfigurationException("There's no dataSource tag in SqlMap.config.");
 				}
 				else  // patch from Luke Yang
 				{
-					sqlMap.DataSource = _dataSource;
+					_configScope.SqlMapper.DataSource = _configScope.DataSource;
 				}
 			}
 			else
 			{
-				if (_isCallFromDao == false)
+				if (_configScope.IsCallFromDao == false)
 				{
-					_errorContext.Resource = nodeDataSource.OuterXml.ToString();
-					_errorContext.MoreInfo = "Parse DataSource";
+					_configScope.ErrorContext.Resource = nodeDataSource.OuterXml.ToString();
+					_configScope.ErrorContext.MoreInfo = "parse DataSource";
 					XmlSerializer serializer = null;
 					serializer = new XmlSerializer(typeof(DataSource));
 					DataSource dataSource = (DataSource) serializer.Deserialize(new XmlNodeReader(nodeDataSource));
 
 					dataSource.Provider = provider;
 					// Use Global Properties if any
-					dataSource.ConnectionString = Resources.ParsePropertyTokens(dataSource.ConnectionString, _properties);
+					dataSource.ConnectionString = Resources.ParsePropertyTokens(dataSource.ConnectionString, _configScope.Properties);
 
-					sqlMap.DataSource = dataSource;
+					_configScope.SqlMapper.DataSource = dataSource;
 				}
 				else
 				{
-					sqlMap.DataSource = _dataSource;
+					_configScope.SqlMapper.DataSource = _configScope.DataSource;
 				}
-				_errorContext.Reset();
+				_configScope.ErrorContext.Reset();
 			}
 			#endregion
 			#endregion
 
 			#region Load Global TypeAlias
-			foreach (XmlNode xmlNode in _sqlMapConfig.SelectNodes("/sqlMapConfig/alias/typeAlias"))
+			foreach (XmlNode xmlNode in _configScope.SqlMapConfigDocument.SelectNodes("/sqlMapConfig/alias/typeAlias"))
 			{
-				_errorContext.Activity = "Loading Global Type alias";
+				_configScope.ErrorContext.Activity = "loading global Type alias";
 				TypeAlias typeAlias = null;
 				XmlSerializer serializer = new XmlSerializer(typeof(TypeAlias));
 
 				typeAlias = (TypeAlias) serializer.Deserialize(new XmlNodeReader(xmlNode));
-				_errorContext.ObjectId = typeAlias.ClassName;
-				_errorContext.MoreInfo = "Initialize type alias";
+				_configScope.ErrorContext.ObjectId = typeAlias.ClassName;
+				_configScope.ErrorContext.MoreInfo = "initialize type alias";
 				typeAlias.Initialize();
 
-				sqlMap.AddTypeAlias( typeAlias.Name, typeAlias );
+				_configScope.SqlMapper.AddTypeAlias( typeAlias.Name, typeAlias );
 			}
-			_errorContext.Reset();
+			_configScope.ErrorContext.Reset();
 			#endregion
 
 			#region Load sqlMap mapping files
 			
-			foreach (XmlNode xmlNode in _sqlMapConfig.SelectNodes("/sqlMapConfig/sqlMaps/sqlMap"))
+			foreach (XmlNode xmlNode in _configScope.SqlMapConfigDocument.SelectNodes("/sqlMapConfig/sqlMaps/sqlMap"))
 			{
-				ConfigureSqlMap(sqlMap, xmlNode );
+				_configScope.NodeContext = xmlNode;
+				ConfigureSqlMap();
 			}
 
 			#endregion
 
 			#region Resolve "resulMap" attribut on Result Property + initialize Discriminator property 
 
-			foreach(DictionaryEntry entry in sqlMap.ResultMaps)
+			foreach(DictionaryEntry entry in _configScope.SqlMapper.ResultMaps)
 			{
 				ResultMap resultMap = (ResultMap)entry.Value;
 				foreach(DictionaryEntry item in resultMap.ColumnsToPropertiesMap)
 				{
 					ResultProperty result = (ResultProperty)item.Value;
-					if(result.ResulMapName.Length >0)
+					if(result.NestedResultMapName.Length >0)
 					{
-						result.ResultMap = sqlMap.GetResultMap(result.ResulMapName);
+						result.NestedResultMap = _configScope.SqlMapper.GetResultMap(result.NestedResultMapName);
 					}
 				}
 				if (resultMap.Discriminator != null)
 				{
-					resultMap.Discriminator.Initialize(sqlMap);
+					resultMap.Discriminator.Initialize(_configScope.SqlMapper);
 				}
 			}
 
 			#endregion
 
-			return sqlMap;
 		}
 
 		/// <summary>
 		/// Load and initialize providers from specified file.
 		/// </summary>
-		/// <param name="xmlProviders"></param>
-		private void GetProviders(XmlDocument xmlProviders)
+		private void GetProviders()
 		{
 			XmlSerializer serializer = null;
 			Provider provider = null;
 
-			_providers.Clear();
+			_configScope.ErrorContext.Activity = "loading Providers";
+
+			XmlDocument xmlProviders = Resources.GetConfigAsXmlDocument(PROVIDERS_FILE_NAME);
 
 			serializer = new XmlSerializer(typeof(Provider));
 
 			foreach (XmlNode node in xmlProviders.SelectNodes("/providers/provider"))
 			{
+				_configScope.ErrorContext.Resource = node.InnerXml.ToString();
+
 				provider = (Provider) serializer.Deserialize(new XmlNodeReader(node));
 
 				if (provider.IsEnabled == true)
 				{
-					_errorContext.MoreInfo = "Init provider";
-					_errorContext.ObjectId = provider.Name;
+					_configScope.ErrorContext.ObjectId = provider.Name;
+					_configScope.ErrorContext.MoreInfo = "initialize provider";
+
 					provider.Initialisation();
-					_providers.Add(provider.Name, provider);
+					_configScope.Providers.Add(provider.Name, provider);
 
 					if (provider.IsDefault == true)
 					{
-						if (_providers[DEFAULT_PROVIDER_NAME] == null) 
+						if (_configScope.Providers[DEFAULT_PROVIDER_NAME] == null) 
 						{
-							_providers.Add(DEFAULT_PROVIDER_NAME,provider);
+							_configScope.Providers.Add(DEFAULT_PROVIDER_NAME,provider);
 						} 
 						else 
 						{
@@ -401,29 +422,30 @@ namespace IBatisNet.DataMapper.Configuration
 					}
 				}
 			}
-			_errorContext.Reset();
+			_configScope.ErrorContext.Reset();
 		}
 
 
 		/// <summary>
 		/// Parse the provider tag.
 		/// </summary>
-		/// <remarks>
-		/// Could be specified via Global propertie in properties file (see properties tag).
-		/// </remarks>
-		/// <param name="node">An xml provider node</param>
 		/// <returns>A provider object.</returns>
-		private Provider ParseProvider(System.Xml.XmlNode node)
+		private Provider ParseProvider()
 		{
-			_errorContext.Activity = "Load DataBase Provider";
+			_configScope.ErrorContext.Activity = "load DataBase Provider";
+			XmlNode node = _configScope.SqlMapConfigDocument.SelectSingleNode("database/provider");
+
 			if (node != null)
 			{
+				_configScope.ErrorContext.Resource = node.OuterXml.ToString();
 				// name
-				string providerName = Resources.ParsePropertyTokens(node.Attributes["name"].Value, _properties);
+				string providerName = Resources.ParsePropertyTokens(node.Attributes["name"].Value, _configScope.Properties);
 
-				if (_providers.Contains(providerName) == true)
+				_configScope.ErrorContext.ObjectId = providerName;
+
+				if (_configScope.Providers.Contains(providerName) == true)
 				{
-					return (Provider) _providers[providerName];
+					return (Provider) _configScope.Providers[providerName];
 				}
 				else
 				{
@@ -434,9 +456,9 @@ namespace IBatisNet.DataMapper.Configuration
 			}
 			else
 			{
-				if (_providers.Contains(DEFAULT_PROVIDER_NAME) == true)
+				if (_configScope.Providers.Contains(DEFAULT_PROVIDER_NAME) == true)
 				{
-					return (Provider) _providers[DEFAULT_PROVIDER_NAME];
+					return (Provider) _configScope.Providers[DEFAULT_PROVIDER_NAME];
 				}
 				else
 				{
@@ -450,60 +472,66 @@ namespace IBatisNet.DataMapper.Configuration
 		/// <summary>
 		/// Load sqlMap statement.
 		/// </summary>
-		/// <param name="sqlMap">An SqlMap</param>
-		/// <param name="sqlMapNode"></param>
-		private void ConfigureSqlMap(SqlMapper sqlMap, XmlNode sqlMapNode)
+		private void ConfigureSqlMap( )
+			//SqlMapper sqlMap, XmlNode sqlMapNode)
 		{
 			XmlSerializer serializer = null;
-			string sqlMapName = string.Empty;
-			_errorContext.Activity = "Loading Sql Map";
-			_errorContext.Resource = sqlMapNode.OuterXml.ToString();
+			XmlNode sqlMapNode = _configScope.NodeContext;
 
-			if (_useConfigFileWatcher == true)
+			_configScope.ErrorContext.Activity = "loading SqlMap ";
+			_configScope.ErrorContext.Resource = sqlMapNode.OuterXml.ToString();
+
+			if (_configScope.UseConfigFileWatcher == true)
 			{
 				ConfigWatcherHandler.AddFileToWatch( Resources.GetFileInfo( Resources.GetValueOfNodeResourceUrl(sqlMapNode) ) );
 			}
 
 			// Load the file 
-			XmlDocument config = Resources.GetAsXmlDocument(sqlMapNode);
+			_configScope.SqlMapDocument = Resources.GetAsXmlDocument(sqlMapNode);
+			
+			//ValidateSchema( _configScope.SqlMapDocument.ChildNodes[1], "SqlMap.xsd" );
 
-			sqlMapName = config.SelectSingleNode("sqlMap").Attributes["namespace"].Value;
+			_configScope.SqlMapNamespace = _configScope.SqlMapDocument.SelectSingleNode("sqlMap").Attributes["namespace"].Value;
 
 			#region Load TypeAlias
 
-			foreach (XmlNode xmlNode in config.SelectNodes("/sqlMap/alias/typeAlias"))
+			foreach (XmlNode xmlNode in _configScope.SqlMapDocument.SelectNodes("/sqlMap/alias/typeAlias"))
 			{
-				_errorContext.MoreInfo = "Loading type alias";
+				_configScope.ErrorContext.MoreInfo = "loading type alias";
 				TypeAlias typeAlias = null;
 				serializer = new XmlSerializer(typeof(TypeAlias));
 				typeAlias = (TypeAlias) serializer.Deserialize(new XmlNodeReader(xmlNode));
-				_errorContext.ObjectId = typeAlias.ClassName;
-				_errorContext.MoreInfo = "Initialize type alias";
+				_configScope.ErrorContext.ObjectId = typeAlias.ClassName;
+				_configScope.ErrorContext.MoreInfo = "initialize type alias";
 				typeAlias.Initialize();
 
-				sqlMap.AddTypeAlias( typeAlias.Name, typeAlias );
+				_configScope.SqlMapper.AddTypeAlias( typeAlias.Name, typeAlias );
 			}
-			_errorContext.MoreInfo = string.Empty;
-			_errorContext.ObjectId = string.Empty;
+			_configScope.ErrorContext.MoreInfo = string.Empty;
+			_configScope.ErrorContext.ObjectId = string.Empty;
 
 			#endregion
 
 			#region Load resultMap
 
-			foreach (XmlNode xmlNode in config.SelectNodes("/sqlMap/resultMaps/resultMap"))
+			foreach (XmlNode xmlNode in _configScope.SqlMapDocument.SelectNodes("/sqlMap/resultMaps/resultMap"))
 			{
-				_errorContext.MoreInfo = "Loading ResultMap";
+				_configScope.ErrorContext.MoreInfo = "loading ResultMap tag";
+				_configScope.NodeContext = xmlNode; // A ResultMap node
 
-				BuildResultMap( config, xmlNode, sqlMapName, sqlMap );
+				BuildResultMap();
 			}
 
 			#endregion
 
 			#region Load parameterMaps
 
-			foreach (XmlNode xmlNode in config.SelectNodes("/sqlMap/parameterMaps/parameterMap"))
+			foreach (XmlNode xmlNode in _configScope.SqlMapDocument.SelectNodes("/sqlMap/parameterMaps/parameterMap"))
 			{
-				BuildParameterMap(config, xmlNode, sqlMapName, sqlMap );
+				_configScope.ErrorContext.MoreInfo = "loading ParameterMap tag";
+				_configScope.NodeContext = xmlNode; // A ParameterMap node
+
+				BuildParameterMap();
 			}
 
 			#endregion
@@ -513,105 +541,119 @@ namespace IBatisNet.DataMapper.Configuration
 			#region Statement tag
 			Statement statement = null;
 			serializer = new XmlSerializer(typeof(Statement));
-			foreach (XmlNode xmlNode in config.SelectNodes("/sqlMap/statements/statement"))
+			foreach (XmlNode xmlNode in _configScope.SqlMapDocument.SelectNodes("/sqlMap/statements/statement"))
 			{
+				_configScope.ErrorContext.MoreInfo = "loading statement tag";
+				_configScope.NodeContext = xmlNode; // A statement tag
+
 				MappedStatement mappedStatement = null;
 
 				statement = (Statement) serializer.Deserialize(new XmlNodeReader(xmlNode));
-				if (_useStatementNamespaces == true)
+				if (_configScope.UseStatementNamespaces == true)
 				{
-					statement.Id = ApplyNamespace(statement.Id, sqlMapName);
+					statement.Id = ApplyNamespace(statement.Id, _configScope.SqlMapNamespace);
 				}
-				statement.Initialize( sqlMapName, sqlMap );
+				_configScope.ErrorContext.ObjectId = statement.Id;
+				statement.Initialize( _configScope );
 
 				// Build ISql (analyse sql statement)		
-				ProcessSqlStatement(config, sqlMapName, sqlMap, xmlNode, statement);
+				ProcessSqlStatement( statement  );
+					//config, sqlMapName, sqlMap, xmlNode, statement);
 
 				// Build MappedStatement
-				mappedStatement = new MappedStatement( sqlMap, statement);
+				mappedStatement = new MappedStatement( _configScope.SqlMapper, statement);
 
-				sqlMap.AddMappedStatement(mappedStatement.Name, mappedStatement);
+				_configScope.SqlMapper.AddMappedStatement(mappedStatement.Name, mappedStatement);
 			}
 			#endregion
 
 			#region Select tag
 			Select select = null;
 			serializer = new XmlSerializer(typeof(Select));
-			foreach (XmlNode xmlNode in config.SelectNodes("/sqlMap/statements/select"))
+			foreach (XmlNode xmlNode in _configScope.SqlMapDocument.SelectNodes("/sqlMap/statements/select"))
 			{
+				_configScope.ErrorContext.MoreInfo = "loading select tag";
+				_configScope.NodeContext = xmlNode; // A select node
+
 				MappedStatement mappedStatement = null;
 
 				select = (Select) serializer.Deserialize(new XmlNodeReader(xmlNode));
-				if (_useStatementNamespaces == true)
+				if (_configScope.UseStatementNamespaces == true)
 				{
-					select.Id = ApplyNamespace(select.Id, sqlMapName);
+					select.Id = ApplyNamespace(select.Id, _configScope.SqlMapNamespace);
 				}
-				select.Initialize( sqlMapName, sqlMap );
+				_configScope.ErrorContext.ObjectId = select.Id;
+				select.Initialize( _configScope );
 
 				if (select.Generate != null)
 				{
-					GenerateCommandText(sqlMap, select);
+					GenerateCommandText(_configScope.SqlMapper, select);
 				}
 				else
 				{
 					// Build ISql (analyse sql statement)		
-					ProcessSqlStatement(config, sqlMapName, sqlMap, xmlNode, select);
+					ProcessSqlStatement( select);
+						//config, sqlMapName, sqlMap, xmlNode, select);
 				}
 
 				// Build MappedStatement
-				mappedStatement = new SelectMappedStatement( sqlMap, select);
+				mappedStatement = new SelectMappedStatement( _configScope.SqlMapper, select);
 
-				sqlMap.AddMappedStatement(mappedStatement.Name, mappedStatement);
+				_configScope.SqlMapper.AddMappedStatement(mappedStatement.Name, mappedStatement);
 			}
 			#endregion
 
 			#region Insert tag
 			Insert insert = null;
 			serializer = new XmlSerializer(typeof(Insert));
-			foreach (XmlNode xmlNode in config.SelectNodes("/sqlMap/statements/insert"))
+			foreach (XmlNode xmlNode in _configScope.SqlMapDocument.SelectNodes("/sqlMap/statements/insert"))
 			{
+				_configScope.ErrorContext.MoreInfo = "loading insert tag";
+				_configScope.NodeContext = xmlNode; // A insert tag
+
 				MappedStatement mappedStatement = null;
 
 				insert = (Insert) serializer.Deserialize(new XmlNodeReader(xmlNode));
-				if (_useStatementNamespaces == true)
+				if (_configScope.UseStatementNamespaces == true)
 				{
-					insert.Id = ApplyNamespace(insert.Id, sqlMapName);
+					insert.Id = ApplyNamespace(insert.Id, _configScope.SqlMapNamespace);
 				}
-
-				insert.Initialize( sqlMapName, sqlMap );
+				_configScope.ErrorContext.ObjectId = insert.Id;
+				insert.Initialize( _configScope );
 
 				// Build ISql (analyse sql command text)
 				if (insert.Generate != null)
 				{
-					GenerateCommandText(sqlMap, insert);
+					GenerateCommandText(_configScope.SqlMapper, insert);
 				}
 				else
 				{
-					ProcessSqlStatement(config, sqlMapName, sqlMap, xmlNode, insert);
+					ProcessSqlStatement( insert);
+						//config, sqlMapName, sqlMap, xmlNode, insert);
 				}
 
 				// Build MappedStatement
-				mappedStatement = new InsertMappedStatement( sqlMap, insert);
+				mappedStatement = new InsertMappedStatement( _configScope.SqlMapper, insert);
 
-				sqlMap.AddMappedStatement(mappedStatement.Name, mappedStatement);
+				_configScope.SqlMapper.AddMappedStatement(mappedStatement.Name, mappedStatement);
 
 				#region statement SelectKey
 				// Set sql statement SelectKey 
 				if (insert.SelectKey != null)
 				{
-					insert.SelectKey.Initialize( sqlMapName, sqlMap );
+					insert.SelectKey.Initialize( _configScope );
 					insert.SelectKey.Id = insert.Id + DOT + "SelectKey";
 					string commandText = xmlNode.SelectSingleNode("selectKey").FirstChild.InnerText.Replace('\n', ' ').Replace('\r', ' ').Replace('\t', ' ').Trim();
-					commandText = Resources.ParsePropertyTokens(commandText, _properties);
+					commandText = Resources.ParsePropertyTokens(commandText, _configScope.Properties);
 					StaticSql sql = new StaticSql(insert.SelectKey);
-					IDalSession session = new SqlMapSession(sqlMap.DataSource);
+					IDalSession session = new SqlMapSession( _configScope.SqlMapper.DataSource );
 					sql.BuildPreparedStatement( session, commandText );
 					insert.SelectKey.Sql = sql;					
 					
 					// Build MappedStatement
-					mappedStatement = new MappedStatement( sqlMap, insert.SelectKey);
+					mappedStatement = new MappedStatement( _configScope.SqlMapper, insert.SelectKey);
 
-					sqlMap.AddMappedStatement(mappedStatement.Name, mappedStatement);
+					_configScope.SqlMapper.AddMappedStatement(mappedStatement.Name, mappedStatement);
 				}
 				#endregion
 			}
@@ -620,88 +662,102 @@ namespace IBatisNet.DataMapper.Configuration
 			#region Update tag
 			Update update = null;
 			serializer = new XmlSerializer(typeof(Update));
-			foreach (XmlNode xmlNode in config.SelectNodes("/sqlMap/statements/update"))
+			foreach (XmlNode xmlNode in _configScope.SqlMapDocument.SelectNodes("/sqlMap/statements/update"))
 			{
+				_configScope.ErrorContext.MoreInfo = "loading update tag";
+				_configScope.NodeContext = xmlNode; // A update tag
+
 				MappedStatement mappedStatement = null;
 
 				update = (Update) serializer.Deserialize(new XmlNodeReader(xmlNode));
-				if (_useStatementNamespaces == true)
+				if (_configScope.UseStatementNamespaces == true)
 				{
-					update.Id = ApplyNamespace(update.Id, sqlMapName);
+					update.Id = ApplyNamespace(update.Id, _configScope.SqlMapNamespace);
 				}
-				update.Initialize( sqlMapName, sqlMap );
+				_configScope.ErrorContext.ObjectId = update.Id;
+				update.Initialize( _configScope );
 
 				// Build ISql (analyse sql statement)	
 				if (update.Generate != null)
 				{
-					GenerateCommandText(sqlMap, update);
+					GenerateCommandText(_configScope.SqlMapper, update);
 				}
 				else
 				{
 					// Build ISql (analyse sql statement)		
-					ProcessSqlStatement(config, sqlMapName, sqlMap, xmlNode, update);
+					ProcessSqlStatement(update);
+						//config, sqlMapName, sqlMap, xmlNode, update);
 				}	
 
 				// Build MappedStatement
-				mappedStatement = new UpdateMappedStatement( sqlMap, update);
+				mappedStatement = new UpdateMappedStatement( _configScope.SqlMapper, update);
 
-				sqlMap.AddMappedStatement(mappedStatement.Name, mappedStatement);
+				_configScope.SqlMapper.AddMappedStatement(mappedStatement.Name, mappedStatement);
 			}
 			#endregion
 
 			#region Delete tag
 			Delete delete = null;
 			serializer = new XmlSerializer(typeof(Delete));
-			foreach (XmlNode xmlNode in config.SelectNodes("/sqlMap/statements/delete"))
+			foreach (XmlNode xmlNode in _configScope.SqlMapDocument.SelectNodes("/sqlMap/statements/delete"))
 			{
+				_configScope.ErrorContext.MoreInfo = "loading delete tag";
+				_configScope.NodeContext = xmlNode; // A delete tag
 				MappedStatement mappedStatement = null;
 
 				delete = (Delete) serializer.Deserialize(new XmlNodeReader(xmlNode));
-				if (_useStatementNamespaces == true)
+				if (_configScope.UseStatementNamespaces == true)
 				{
-					delete.Id = ApplyNamespace(delete.Id, sqlMapName);
+					delete.Id = ApplyNamespace(delete.Id, _configScope.SqlMapNamespace);
 				}
-				delete.Initialize( sqlMapName, sqlMap );
+				_configScope.ErrorContext.ObjectId = delete.Id;
+				delete.Initialize( _configScope );
 
 				// Build ISql (analyse sql statement)
 				if (delete.Generate != null)
 				{
-					GenerateCommandText(sqlMap, delete);
+					GenerateCommandText(_configScope.SqlMapper, delete);
 				}
 				else
 				{
 					// Build ISql (analyse sql statement)		
-					ProcessSqlStatement(config, sqlMapName, sqlMap, xmlNode, delete);
+					ProcessSqlStatement(delete);
+						//config, sqlMapName, sqlMap, xmlNode, delete);
 				}	
 
 				// Build MappedStatement
-				mappedStatement = new DeleteMappedStatement( sqlMap, delete);
+				mappedStatement = new DeleteMappedStatement( _configScope.SqlMapper, delete);
 
-				sqlMap.AddMappedStatement(mappedStatement.Name, mappedStatement);
+				_configScope.SqlMapper.AddMappedStatement(mappedStatement.Name, mappedStatement);
 			}
 			#endregion
 
 			#region Procedure tag
 			Procedure procedure = null;
 			serializer = new XmlSerializer(typeof(Procedure));
-			foreach (XmlNode xmlNode in config.SelectNodes("/sqlMap/statements/procedure"))
+			foreach (XmlNode xmlNode in _configScope.SqlMapDocument.SelectNodes("/sqlMap/statements/procedure"))
 			{
+				_configScope.ErrorContext.MoreInfo = "loading procedure tag";
+				_configScope.NodeContext = xmlNode; // A procedure tag
+
 				MappedStatement mappedStatement = null;
 
 				procedure = (Procedure)serializer.Deserialize(new XmlNodeReader(xmlNode));
-				if (_useStatementNamespaces == true)
+				if (_configScope.UseStatementNamespaces == true)
 				{
-					procedure.Id = ApplyNamespace(procedure.Id, sqlMapName);
+					procedure.Id = ApplyNamespace(procedure.Id, _configScope.SqlMapNamespace);
 				}
-				procedure.Initialize( sqlMapName, sqlMap );
+				_configScope.ErrorContext.ObjectId = procedure.Id;
+				procedure.Initialize( _configScope );
 
 				// Build ISql (analyse sql command text)
-				ProcessSqlStatement(config, sqlMapName, sqlMap, xmlNode, procedure);
+				ProcessSqlStatement( procedure );
+					//config, sqlMapName, sqlMap, xmlNode, procedure);
 
 				// Build MappedStatement
-				mappedStatement = new MappedStatement( sqlMap, procedure);
+				mappedStatement = new MappedStatement( _configScope.SqlMapper, procedure);
 
-				sqlMap.AddMappedStatement(mappedStatement.Name, mappedStatement);
+				_configScope.SqlMapper.AddMappedStatement(mappedStatement.Name, mappedStatement);
 			}
 			#endregion
 
@@ -709,11 +765,11 @@ namespace IBatisNet.DataMapper.Configuration
 
 			#region Load CacheModels
 
-			if (sqlMap.IsCacheModelsEnabled == true)
+			if (_configScope.IsCacheModelsEnabled == true)
 			{
 				CacheModel cacheModel = null;
 				serializer = new XmlSerializer(typeof(CacheModel));
-				foreach (XmlNode xmlNode in config.SelectNodes("/sqlMap/cacheModels/cacheModel"))
+				foreach (XmlNode xmlNode in _configScope.SqlMapDocument.SelectNodes("/sqlMap/cacheModels/cacheModel"))
 				{
 					cacheModel = (CacheModel) serializer.Deserialize(new XmlNodeReader(xmlNode));
 
@@ -721,12 +777,12 @@ namespace IBatisNet.DataMapper.Configuration
 					foreach(XmlNode flushOn in xmlNode.SelectNodes("flushOnExecute"))
 					{
 						string statementName = flushOn.Attributes["statement"].Value;
-						if (_useStatementNamespaces == true)
+						if (_configScope.UseStatementNamespaces == true)
 						{
-							statementName = sqlMapName + DOT + statementName;
+							statementName = _configScope.SqlMapNamespace + DOT + statementName;
 						}
 
-						MappedStatement mappedStatement = sqlMap.GetMappedStatement(statementName);
+						MappedStatement mappedStatement = _configScope.SqlMapper.GetMappedStatement(statementName);
 
 						cacheModel.RegisterTriggerStatement(mappedStatement);
 					}
@@ -742,16 +798,16 @@ namespace IBatisNet.DataMapper.Configuration
 
 					cacheModel.Initialize();
 
-					sqlMap.AddCache( cacheModel );
+					_configScope.SqlMapper.AddCache( cacheModel );
 				}
 
 				// Attach CacheModel to statement
-				foreach(DictionaryEntry entry in sqlMap.MappedStatements)
+				foreach(DictionaryEntry entry in _configScope.SqlMapper.MappedStatements)
 				{
 					MappedStatement mappedStatement = (MappedStatement)entry.Value;
 					if (mappedStatement.Statement.CacheModelName.Length >0)
 					{
-						mappedStatement.Statement.CacheModel = sqlMap.GetCache(mappedStatement.Statement.CacheModelName);
+						mappedStatement.Statement.CacheModel = _configScope.SqlMapper.GetCache(mappedStatement.Statement.CacheModelName);
 					}
 				}
 			}
@@ -762,24 +818,24 @@ namespace IBatisNet.DataMapper.Configuration
 
 
 		/// <summary>
-		/// 
+		/// Process the Sql Statement
 		/// </summary>
-		/// <param name="config"></param>
-		/// <param name="sqlMapName"></param>
-		/// <param name="sqlMap"></param>
-		/// <param name="commandTextNode"></param>
 		/// <param name="statement"></param>
-		private void ProcessSqlStatement(XmlDocument config, string sqlMapName, SqlMapper sqlMap, XmlNode commandTextNode, IStatement statement) 
+		private void ProcessSqlStatement( IStatement statement )
+			//XmlDocument config, string sqlMapName, SqlMapper sqlMap, XmlNode commandTextNode, IStatement statement) 
 		{
 			bool isDynamic = false;
+			XmlNode commandTextNode = _configScope.NodeContext;
 			DynamicSql dynamic = new DynamicSql(statement);
 			StringBuilder sqlBuffer = new StringBuilder();
+
+			_configScope.ErrorContext.MoreInfo = "process the Sql statement";
 
 			// Resolve "extend" attribute on Statement
 			if (statement.ExtendSatement.Length >0)
 			{
 				// Find 'super' statement
-				XmlNode supperStatementNode = config.SelectSingleNode("/sqlMap/statements/child::*[@id='"+statement.ExtendSatement+"']");
+				XmlNode supperStatementNode = _configScope.SqlMapDocument.SelectSingleNode("/sqlMap/statements/child::*[@id='"+statement.ExtendSatement+"']");
 				if (supperStatementNode!=null)
 				{
 					commandTextNode.InnerXml = supperStatementNode.InnerXml + commandTextNode.InnerXml;
@@ -790,7 +846,9 @@ namespace IBatisNet.DataMapper.Configuration
 				}
 			}
 
-			isDynamic = ParseDynamicTags(commandTextNode, dynamic, sqlBuffer, isDynamic, false);
+			_configScope.ErrorContext.MoreInfo = "parse dynamic tags on sql statement";
+
+			isDynamic = ParseDynamicTags( commandTextNode, dynamic, sqlBuffer, isDynamic, false);
 
 			if (isDynamic) 
 			{
@@ -799,13 +857,13 @@ namespace IBatisNet.DataMapper.Configuration
 			else 
 			{	
 				string sqlText = sqlBuffer.ToString();
-				ApplyInlineParemeterMap(sqlMap, statement, sqlText);
+				ApplyInlineParemeterMap( statement, sqlText);
 			}
 		}
 
 				
 		/// <summary>
-		/// 
+		/// Parse dynamic tags
 		/// </summary>
 		/// <param name="commandTextNode"></param>
 		/// <param name="dynamic"></param>
@@ -813,7 +871,7 @@ namespace IBatisNet.DataMapper.Configuration
 		/// <param name="isDynamic"></param>
 		/// <param name="postParseRequired"></param>
 		/// <returns></returns>
-		private bool ParseDynamicTags(XmlNode commandTextNode, IDynamicParent dynamic, 
+		private bool ParseDynamicTags( XmlNode commandTextNode, IDynamicParent dynamic, 
 			StringBuilder sqlBuffer, bool isDynamic, bool postParseRequired) 
 		{
 			XmlNodeList children = commandTextNode.ChildNodes;
@@ -824,7 +882,7 @@ namespace IBatisNet.DataMapper.Configuration
 				{
 					string data = child.InnerText.Replace('\n', ' ').Replace('\r', ' ').Replace('\t', ' ').Trim(); //??
 
-					data = Resources.ParsePropertyTokens(data, _properties);
+					data = Resources.ParsePropertyTokens(data, _configScope.Properties);
 
 					SqlText sqlText = null;
 					if ( postParseRequired == true ) 
@@ -869,20 +927,21 @@ namespace IBatisNet.DataMapper.Configuration
 		#region Inline Parameter parsing
 
 		/// <summary>
-		/// 
+		/// Apply inline paremeterMap
 		/// </summary>
-		/// <param name="sqlMap"></param>
 		/// <param name="statement"></param>
 		/// <param name="sqlStatement"></param>
-		private void ApplyInlineParemeterMap(SqlMapper sqlMap, IStatement statement, string sqlStatement)
+		private void ApplyInlineParemeterMap( IStatement statement, string sqlStatement)
 		{
 			string newSql = sqlStatement;
+
+			_configScope.ErrorContext.MoreInfo = "apply inline paremeterMap";
 
 			// Check the inline parameter
 			if (statement.ParameterMap == null)
 			{
-				// Construit Une parameter Map avec les inline Parameter
-				// si il existe, et vire les infos 'inline' du sqlText
+				// Build a Parametermap with the inline parameters.
+				// if they exist. Then deleter inline infos from sqltext.
 				// ParseInlineParameter devrait retourner une ParameterMap ou null
 				
 				SqlText sqlText = ParseInlineParameterMap( statement, newSql );
@@ -919,7 +978,7 @@ namespace IBatisNet.DataMapper.Configuration
 				else if (statement is Statement)
 				{
 					sql = new StaticSql(statement);
-					IDalSession session = new SqlMapSession(sqlMap.DataSource);
+					IDalSession session = new SqlMapSession(_configScope.SqlMapper.DataSource);
 
 					((StaticSql)sql).BuildPreparedStatement( session, newSql );
 				}					
@@ -927,22 +986,23 @@ namespace IBatisNet.DataMapper.Configuration
 			statement.Sql = sql;
 		}
 
+		
 		/// <summary>
-		/// 
+		/// Parse inline ParameterMap
 		/// </summary>
 		/// <param name="sqlStatement"></param>
-		/// <returns></returns>
+		/// <returns>A new sql command text</returns>
 		public static SqlText ParseInlineParameterMap(string sqlStatement) 
 		{
 			return ParseInlineParameterMap(null, sqlStatement);
 		}
 
 		/// <summary>
-		/// 
+		/// Parse inline ParameterMap
 		/// </summary>
 		/// <param name="statement"></param>
 		/// <param name="sqlStatement"></param>
-		/// <returns></returns>
+		/// <returns>A new sql command text.</returns>
 		private static SqlText ParseInlineParameterMap(IStatement statement, string sqlStatement )
 		{
 			SqlText sqlText = new SqlText();
@@ -1101,7 +1161,7 @@ namespace IBatisNet.DataMapper.Configuration
 		#endregion
 
 		/// <summary>
-		/// 
+		/// Resolve TypeHandler
 		/// </summary>
 		/// <param name="type"></param>
 		/// <param name="propertyName"></param>
@@ -1149,28 +1209,31 @@ namespace IBatisNet.DataMapper.Configuration
 			return handler;
 		}
 
+		
 		/// <summary>
 		/// Initialize the list of variables defined in the
 		/// properties file.
 		/// </summary>
-		/// <param name="xmlContext">The current context being analysed.</param>
-		private void ParseGlobalProperties(XmlNode xmlContext)
+		private void ParseGlobalProperties()
 		{
-			XmlNode nodeProperties = xmlContext.SelectSingleNode("properties");
-			_errorContext.Activity = "loading global properties";
+			XmlNode nodeProperties = _configScope.NodeContext.SelectSingleNode("properties");
+			_configScope.ErrorContext.Activity = "loading global properties";
+			_configScope.ErrorContext.Resource = nodeProperties.InnerXml.ToString();
 
 			if (nodeProperties != null)
 			{
-				_errorContext.Resource = nodeProperties.OuterXml.ToString();
+				_configScope.ErrorContext.Resource = nodeProperties.OuterXml.ToString();
 
 				// Load the file defined by the resource attribut
 				XmlDocument propertiesConfig = Resources.GetAsXmlDocument(nodeProperties); 
 
 				foreach (XmlNode node in propertiesConfig.SelectNodes("/settings/add"))
 				{
-					_properties[node.Attributes["key"].Value] = node.Attributes["value"].Value;
+					_configScope.Properties[node.Attributes["key"].Value] = node.Attributes["value"].Value;
 				}
 			}
+
+			_configScope.ErrorContext.Reset();;
 		}
 
 
@@ -1194,114 +1257,120 @@ namespace IBatisNet.DataMapper.Configuration
 			statement.Sql = sql;
 		}
 
+		
 		/// <summary>
-		/// 
+		/// Build a ParameterMap
 		/// </summary>
-		/// <param name="config"></param>
-		/// <param name="parameterMapNode"></param>
-		/// <param name="sqlMapName"></param>
-		/// <param name="sqlMap"></param>
-		private void BuildParameterMap(XmlDocument config, XmlNode parameterMapNode, string sqlMapName, SqlMapper sqlMap)
+		private void BuildParameterMap()
 		 {
 			ParameterMap parameterMap = null;
+			XmlNode parameterMapNode = _configScope.NodeContext;
+
 			XmlSerializer serializer = new XmlSerializer(typeof(ParameterMap));
 
+			_configScope.ErrorContext.MoreInfo = "build ParameterMap";
+
 			string id = ((XmlAttribute)parameterMapNode.Attributes.GetNamedItem("id")).Value;
-		
+			_configScope.ErrorContext.ObjectId = id;
+
 			// Did we already process it ?
-			if (sqlMap.ParameterMaps.Contains( sqlMapName + DOT + id ) == false)
+			if (_configScope.SqlMapper.ParameterMaps.Contains( _configScope.SqlMapNamespace + DOT + id ) == false)
 			{
 				parameterMap = (ParameterMap) serializer.Deserialize(new XmlNodeReader(parameterMapNode));
+				
+				_configScope.ErrorContext.MoreInfo = "initialize ParameterMap";
 				parameterMap.Initialize(parameterMapNode);
 
-				parameterMap.Id = sqlMapName + DOT + parameterMap.Id;
+				parameterMap.Id = _configScope.SqlMapNamespace + DOT + parameterMap.Id;
 
 				if (parameterMap.ExtendMap.Length >0)
 				{
 					ParameterMap superMap = null;
 					// Did we already build Extend ParameterMap ?
-					if (sqlMap.ParameterMaps.Contains(sqlMapName + DOT + parameterMap.ExtendMap) == false)
+					if (_configScope.SqlMapper.ParameterMaps.Contains(_configScope.SqlMapNamespace + DOT + parameterMap.ExtendMap) == false)
 					{
-						XmlNode superNode = config.SelectSingleNode("/sqlMap/parameterMaps/parameterMap[@id='"+ parameterMap.ExtendMap +"']");
+						XmlNode superNode = _configScope.SqlMapConfigDocument.SelectSingleNode("/sqlMap/parameterMaps/parameterMap[@id='"+ parameterMap.ExtendMap +"']");
 
 						if (superNode != null)
 						{
-							BuildParameterMap( config, superNode, sqlMapName, sqlMap);
-							superMap = sqlMap.GetParameterMap(sqlMapName + DOT + parameterMap.ExtendMap);
+							_configScope.ErrorContext.MoreInfo = "Build parent ParameterMap";
+							_configScope.NodeContext = superNode;
+							BuildParameterMap();
+							superMap = _configScope.SqlMapper.GetParameterMap(_configScope.SqlMapNamespace + DOT + parameterMap.ExtendMap);
 						}
 						else
 						{
-							throw new ConfigurationException("In mapping file '"+sqlMapName+"' the parameterMap '"+parameterMap.Id+"' can not resolve extends attribut '"+parameterMap.ExtendMap+"'");
+							throw new ConfigurationException("In mapping file '"+ _configScope.SqlMapNamespace +"' the parameterMap '"+parameterMap.Id+"' can not resolve extends attribut '"+parameterMap.ExtendMap+"'");
 						}
 					}
 					else
 					{
-						superMap = sqlMap.GetParameterMap(sqlMapName + DOT + parameterMap.ExtendMap);
+						superMap = _configScope.SqlMapper.GetParameterMap(_configScope.SqlMapNamespace + DOT + parameterMap.ExtendMap);
 					}
-					// Do extends
+					// Add extends property
 					int index = 0;
 
-					// Add parent property
 					foreach(string propertyName in superMap.GetPropertyNameArray())
 					{
 						parameterMap.InsertParameterProperty( index, superMap.GetProperty(propertyName) );
 						index++;
 					}
 				}
-				sqlMap.AddParameterMap( parameterMap );
+				_configScope.SqlMapper.AddParameterMap( parameterMap );
 			}
 		}
 
 
 		/// <summary>
-		/// 
+		/// Build a ResultMap
 		/// </summary>
-		/// <param name="config"></param>
-		/// <param name="resultMapNode"></param>
-		/// <param name="sqlMapName"></param>
-		/// <param name="sqlMap"></param>
-		private void BuildResultMap(XmlDocument config, XmlNode resultMapNode, string sqlMapName, SqlMapper sqlMap)
+		private void BuildResultMap()
 		 {
 			ResultMap resultMap = null;
+			XmlNode resultMapNode = _configScope.NodeContext;
+
 			XmlSerializer serializer = new XmlSerializer(typeof(ResultMap));
 
-			_errorContext.MoreInfo = "Build ResultMap";
+			_configScope.ErrorContext.MoreInfo = "build ResultMap";
 
 			string id = ((XmlAttribute)resultMapNode.Attributes.GetNamedItem("id")).Value;
-			_errorContext.ObjectId = id;
+			_configScope.ErrorContext.ObjectId = id;
 
 			// Did we alredy process it
-			if (sqlMap.ResultMaps.Contains( sqlMapName + DOT + id ) == false)
+			if (_configScope.SqlMapper.ResultMaps.Contains( _configScope.SqlMapNamespace + DOT + id ) == false)
 			{
 				resultMap = (ResultMap) serializer.Deserialize(new XmlNodeReader(resultMapNode));
-				resultMap.SqlMapName = sqlMapName;
-				_errorContext.MoreInfo = "Initialize resultMap";
-				resultMap.Initialize( sqlMap, resultMapNode);
+				
+				resultMap.SqlMapNameSpace = _configScope.SqlMapNamespace;
 
-				resultMap.Id = sqlMapName + DOT + resultMap.Id;
+				_configScope.ErrorContext.MoreInfo = "initialize ResultMap";
+				resultMap.Initialize( _configScope.SqlMapper, resultMapNode);
+
+				resultMap.Id = _configScope.SqlMapNamespace + DOT + resultMap.Id;
 
 				if (resultMap.ExtendMap.Length >0)
 				{
 					ResultMap superMap = null;
-					// Did we already build it ?
-					if (sqlMap.ResultMaps.Contains(sqlMapName + DOT + resultMap.ExtendMap) == false)
+					// Did we already build Extend ResultMap?
+					if (_configScope.SqlMapper.ResultMaps.Contains(_configScope.SqlMapNamespace + DOT + resultMap.ExtendMap) == false)
 					{
-						XmlNode superNode = config.SelectSingleNode("/sqlMap/resultMaps/resultMap[@id='"+ resultMap.ExtendMap +"']");
+						XmlNode superNode = _configScope.SqlMapDocument.SelectSingleNode("/sqlMap/resultMaps/resultMap[@id='"+ resultMap.ExtendMap +"']");
 
 						if (superNode != null)
 						{
-							_errorContext.MoreInfo = "Build parent ResultMap";
-							BuildResultMap( config, superNode, sqlMapName, sqlMap);
-							superMap = sqlMap.GetResultMap(sqlMapName + DOT + resultMap.ExtendMap);
+							_configScope.ErrorContext.MoreInfo = "Build parent ResultMap";
+							_configScope.NodeContext = superNode;
+							BuildResultMap();
+							superMap = _configScope.SqlMapper.GetResultMap(_configScope.SqlMapNamespace + DOT + resultMap.ExtendMap);
 						}
 						else
 						{
-							throw new ConfigurationException("In mapping file '"+sqlMapName+"' the resultMap '"+resultMap.Id+"' can not resolve extends attribut '"+resultMap.ExtendMap+"'" );
+							throw new ConfigurationException("In mapping file '"+_configScope.SqlMapNamespace+"' the resultMap '"+resultMap.Id+"' can not resolve extends attribut '"+resultMap.ExtendMap+"'" );
 						}
 					}
 					else
 					{
-						superMap = sqlMap.GetResultMap(sqlMapName + DOT + resultMap.ExtendMap);
+						superMap = _configScope.SqlMapper.GetResultMap(_configScope.SqlMapNamespace + DOT + resultMap.ExtendMap);
 					}
 
 					// Add parent property
@@ -1311,7 +1380,7 @@ namespace IBatisNet.DataMapper.Configuration
 						resultMap.AddResultPropery(property);
 					}
 				}
-				sqlMap.AddResultMap( resultMap );
+				_configScope.SqlMapper.AddResultMap( resultMap );
 			}
 		 }
 
@@ -1332,6 +1401,19 @@ namespace IBatisNet.DataMapper.Configuration
 			}
 			return newId;
 		}
+
+
+
+		/// <summary>
+		/// Gets a resource stream.
+		/// </summary>
+		/// <param name="name">The resource key.</param>
+		/// <returns>A resource stream.</returns>
+		public Stream GetStream( string name )
+		{
+			return Assembly.GetExecutingAssembly().GetManifestResourceStream("IBatisNet.DataMapper." + name); 
+		}
+
 
 //		private String ParsePropertyTokens(string str) 
 //		{

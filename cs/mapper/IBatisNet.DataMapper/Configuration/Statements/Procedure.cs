@@ -24,13 +24,14 @@
  ********************************************************************************/
 #endregion
 
-#region Imprts
+#region Using
 using System;
 using System.Data;
 using System.Xml.Serialization;
 
 using IBatisNet.Common.Exceptions;
 using IBatisNet.DataMapper.Exceptions;
+using IBatisNet.DataMapper.Scope;
 #endregion
 
 namespace IBatisNet.DataMapper.Configuration.Statements
@@ -78,11 +79,10 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="sqlMapName"></param>
-		/// <param name="sqlMap"></param>
-		override internal void Initialize(string sqlMapName, SqlMapper sqlMap)
+		/// <param name="configurationScope">The scope of the configuration</param>
+		override internal void Initialize(ConfigurationScope configurationScope)
 		{
-			base.Initialize(sqlMapName, sqlMap);
+			base.Initialize( configurationScope );
 			if (this.ParameterMap == null)
 			{
 				throw new ConfigurationException("The parameterMap attribut is required in the procedure tag named '"+ this.Id +"'.");

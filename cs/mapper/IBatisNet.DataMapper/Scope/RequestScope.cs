@@ -63,8 +63,6 @@ namespace IBatisNet.DataMapper.Scope
 		}
 		#endregion 
 
-
-
 		#region Properties
 
 		/// <summary>
@@ -141,7 +139,5 @@ namespace IBatisNet.DataMapper.Scope
 			_resultMap = _initialResultMap;
 		}
 		#endregion
-
-
 	}
 }

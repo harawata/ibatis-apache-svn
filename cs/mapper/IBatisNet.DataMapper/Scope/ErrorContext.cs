@@ -44,7 +44,6 @@ namespace IBatisNet.DataMapper.Scope
 		private string _activity;
 		private string _objectId;
 		private string _moreInfo;
-		private Exception _cause;
 		#endregion 
 
 		#region Properties
@@ -85,18 +84,7 @@ namespace IBatisNet.DataMapper.Scope
 			set { _moreInfo = value; }
 		}
 
-		/// <summary>
-		/// The cause of the error
-		/// </summary>
-		public Exception Cause
-		{
-			get { return _cause; }
-			set { _cause = value; }
-		}
-
 		#endregion 
-
-
 
 		/// <summary>
 		/// Clear the error context
@@ -107,7 +95,6 @@ namespace IBatisNet.DataMapper.Scope
 			_activity = string.Empty;;
 			_objectId = string.Empty;;
 			_moreInfo = string.Empty;;
-			_cause = null;
 		}
 
 		/// <summary>
@@ -118,43 +105,43 @@ namespace IBatisNet.DataMapper.Scope
 		{
 			StringBuilder message = new StringBuilder();
 
-			// resource
-			if (_resource != null) 
-			{
-				message.Append("  \n--- The error occurred in ");
-				message.Append(_resource);
-				message.Append(".");
-			}
-
 			// activity
 			if (_activity != null) 
 			{
-				message.Append("  \n--- The error occurred while ");
+				message.Append("\n- The error occurred while ");
 				message.Append(_activity);
+				message.Append(".");
+			}			
+
+			// more info
+			if (_moreInfo != null) 
+			{
+				message.Append("\n- ");
+				message.Append(_moreInfo);
+			}
+			
+			// resource
+			if (_resource != null) 
+			{
+				message.Append("\n- The error occurred in ");
+				message.Append(_resource);
 				message.Append(".");
 			}
 
 			// object
 			if (_objectId != null) 
 			{
-				message.Append("  \n--- Check the ");
+				message.Append("  \n- Check the ");
 				message.Append(_objectId);
 				message.Append(".");
 			}
 
-			// more info
-			if (_moreInfo != null) 
-			{
-				message.Append("  \n--- ");
-				message.Append(_moreInfo);
-			}
-
-			// cause
-			if (_cause != null) 
-			{
-				message.Append("  \n--- Cause: ");
-				message.Append(_cause.ToString());
-			}
+//			// cause
+//			if (_cause != null) 
+//			{
+//				message.Append("\n- Cause: ");
+//				message.Append(_cause.ToString());
+//			}
 
 			return message.ToString();
 		}

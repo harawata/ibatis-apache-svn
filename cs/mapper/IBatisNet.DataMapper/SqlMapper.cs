@@ -1110,7 +1110,7 @@ namespace IBatisNet.DataMapper
 
 
 		/// <summary>
-		/// Get the DataSource
+		/// The DataSource
 		/// </summary>
 		public DataSource DataSource
 		{

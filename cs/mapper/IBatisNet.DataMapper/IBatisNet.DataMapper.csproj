@@ -158,6 +158,14 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "SqlMap.xsd"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "SqlMapConfig.xsd"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "SqlMapper.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -594,6 +602,11 @@
                 />
                 <File
                     RelPath = "MappedStatements\UpdateMappedStatement.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Scope\ConfigurationScope.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

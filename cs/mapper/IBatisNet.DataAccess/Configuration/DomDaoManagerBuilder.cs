@@ -219,7 +219,7 @@ namespace IBatisNet.DataAccess.Configuration
 			// Build one daoManager for each context
 			foreach (XmlNode contextNode in section.SelectNodes("context"))
 			{
-				configurationScope.ErrorContext.Activity = "build daoManager : ";
+				configurationScope.ErrorContext.Activity = "build daoManager";
 				configurationScope.NodeContext = contextNode;
 
 				#region Configure a new DaoManager
@@ -403,6 +403,10 @@ namespace IBatisNet.DataAccess.Configuration
 						configurationScope.NodeContext.Attributes["name"].Value));
 				}
 			}
+
+			configurationScope.ErrorContext.ObjectId = string.Empty;
+			configurationScope.ErrorContext.Resource = string.Empty;
+			configurationScope.ErrorContext.MoreInfo = string.Empty;
 		}
 
 //		/// <summary>

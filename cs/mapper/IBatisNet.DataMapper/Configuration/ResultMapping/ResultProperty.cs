@@ -61,9 +61,9 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		[NonSerialized]
 		private string _select = string.Empty;
 		[NonSerialized]
-		private string _resulMapName = string.Empty;
+		private string _nestedResultMapName = string.Empty; 
 		[NonSerialized]
-		private ResultMap _resulMap = null;
+		private ResultMap _nestedResultMap = null;
 		[NonSerialized]
 		private string _dbType = string.Empty;
 		[NonSerialized]
@@ -147,13 +147,13 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		}
 
 		/// <summary>
-		/// The name of the ResultMap to set the property
+		/// The name of a nested ResultMap to set the property
 		/// </summary>
 		[XmlAttribute("resultMapping")]
-		public string ResulMapName
+		public string NestedResultMapName
 		{
-			get { return _resulMapName; }
-			set { _resulMapName = value; }
+			get { return _nestedResultMapName; }
+			set { _nestedResultMapName = value; }
 		}
 
 		/// <summary>
@@ -212,13 +212,13 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		}
 
 		/// <summary>
-		/// The resultMap use to set the object
+		/// A nested ResultMap use to set a property
 		/// </summary>
 		[XmlIgnoreAttribute]
-		public ResultMap ResultMap
+		public ResultMap NestedResultMap
 		{
-			get { return _resulMap; }
-			set { _resulMap = value; }
+			get { return _nestedResultMap; }
+			set { _nestedResultMap = value; }
 		}
 		#endregion
 

@@ -24,7 +24,7 @@
  ********************************************************************************/
 #endregion
 
-#region Imports
+#region Using
 using System;
 using System.Data;
 using System.Collections;
@@ -41,6 +41,7 @@ using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.Cache;
 using IBatisNet.DataMapper.Configuration.Sql;
 using IBatisNet.DataMapper.Exceptions;
+using IBatisNet.DataMapper.Scope;
 #endregion
 
 namespace IBatisNet.DataMapper.Configuration.Statements
@@ -293,29 +294,28 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		/// <summary>
 		/// Initialize an statement for the sqlMap.
 		/// </summary>
-		/// <param name="sqlMapName"></param>
-		/// <param name="sqlMap">The sqlMap.</param>
-		internal virtual void Initialize(string sqlMapName, SqlMapper sqlMap)
+		/// <param name="configurationScope">The scope of the configuration</param>
+		internal virtual void Initialize(ConfigurationScope configurationScope)
 		{
 			if (_resultMapName != string.Empty )
 			{
-				_resultMap = sqlMap.GetResultMap( sqlMapName + DOT + _resultMapName);
+				_resultMap = configurationScope.SqlMapper.GetResultMap( configurationScope.SqlMapNamespace + DOT + _resultMapName);
 			}
 			if (_parameterMapName != string.Empty )
 			{
-				_parameterMap = sqlMap.GetParameterMap( sqlMapName + DOT + _parameterMapName);
+				_parameterMap = configurationScope.SqlMapper.GetParameterMap( configurationScope.SqlMapNamespace + DOT + _parameterMapName);
 			}
 			if (_resultClassName != string.Empty )
 			{
-				_resultClass = sqlMap.GetType(_resultClassName);
+				_resultClass = configurationScope.SqlMapper.GetType(_resultClassName);
 			}
 			if (_parameterClassName != string.Empty )
 			{
-				_parameterClass = sqlMap.GetType(_parameterClassName);
+				_parameterClass = configurationScope.SqlMapper.GetType(_parameterClassName);
 			}
 			if (_listClassName != string.Empty )
 			{
-				_listClass = sqlMap.GetType(_listClassName);
+				_listClass = configurationScope.SqlMapper.GetType(_listClassName);
 			}
 		}
 

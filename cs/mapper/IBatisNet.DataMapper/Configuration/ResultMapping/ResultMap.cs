@@ -64,24 +64,24 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		[NonSerialized]
 		private Discriminator _discriminator = null;
 		[NonSerialized]
-		private string _sqlMapName = string.Empty;
+		private string _sqlMapNameSpace = string.Empty;
 		#endregion
 
 		#region Properties
 
 		/// <summary>
-		/// The sqlMap name parent
+		/// The sqlMap namespace
 		/// </summary>
 		[XmlIgnoreAttribute]
-		public string SqlMapName
+		public string SqlMapNameSpace
 		{
 			get
 			{
-				return _sqlMapName;
+				return _sqlMapNameSpace;
 			}	
 			set
 			{
-				_sqlMapName = value;
+				_sqlMapNameSpace = value;
 			}	
 		}
 
@@ -246,7 +246,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			foreach ( XmlNode resultNode in node.SelectNodes("subMap") )
 			{
 				subMap = (SubMap) serializer.Deserialize(new XmlNodeReader(resultNode));
-				subMap.ResulMapName = this.SqlMapName + DomSqlMapBuilder.DOT + subMap.ResulMapName;
+				subMap.ResulMapName = this.SqlMapNameSpace + DomSqlMapBuilder.DOT + subMap.ResulMapName;
 				this.Discriminator.Add( subMap );
 			}
 			#endregion 
