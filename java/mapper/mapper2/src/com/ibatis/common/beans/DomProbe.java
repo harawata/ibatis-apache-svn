@@ -2,6 +2,8 @@ package com.ibatis.common.beans;
 
 import org.w3c.dom.*;
 
+import java.util.StringTokenizer;
+
 /**
  * <p/>
  * Date: Apr 24, 2004 11:37:54 PM
@@ -35,18 +37,74 @@ public class DomProbe extends BaseProbe {
   }
 
   public Object getObject(Object object, String name) {
-    return null;
+    if (name.indexOf('.') > -1) {
+      StringTokenizer parser = new StringTokenizer(name, ".");
+      Object value = object;
+      while (parser.hasMoreTokens()) {
+        value = getProperty(value, parser.nextToken());
+        if (value == null) {
+          break;
+        }
+      }
+      return value;
+    } else {
+      return getProperty(object, name);
+    }
   }
 
   public void setObject(Object object, String name, Object value) {
-
+    if (name.indexOf('.') > -1) {
+      StringTokenizer parser = new StringTokenizer(name, ".");
+      String property = parser.nextToken();
+      Object child = object;
+      while (parser.hasMoreTokens()) {
+        Class type = getPropertyTypeForSetter(child, property);
+        Object parent = child;
+        child = getProperty(parent, property);
+        if (child == null) {
+          try {
+            child = type.newInstance();
+            setObject(parent, property, child);
+          } catch (Exception e) {
+            throw new ProbeException("Cannot set value of property '" + name + "' because '" + property + "' is null and cannot be instantiated on instance of " + type.getName() + ". Cause:" + e.toString(), e);
+          }
+        }
+        property = parser.nextToken();
+      }
+      setProperty(child, property, value);
+    } else {
+      setProperty(object, name, value);
+    }
   }
 
   protected void setProperty(Object object, String property, Object value) {
+    if (property.indexOf("[") > -1) {
+      //setArrayProperty(object, name, value);
+    } else {
+      Element element = null;
+      if (object instanceof Document) {
+        element = (Element) ((Document) object).getLastChild();
+      } else if (object instanceof Element) {
+        element = (Element) object;
+      }
+      setElementValue(element, property, value, 0);
+    }
   }
 
   protected Object getProperty(Object object, String property) {
-    return null;
+    Object value = null;
+    if (property.indexOf("[") > -1) {
+      //value = getArrayProperty(object, name);
+    } else {
+      Element element = null;
+      if (object instanceof Document) {
+        element = (Element) ((Document) object).getLastChild();
+      } else if (object instanceof Element) {
+        element = (Element) object;
+      }
+      value = getElementValue(element, property, 0);
+    }
+    return value;
   }
 
   private void setElementValue(Element element, String property, Object value, int index) {
@@ -110,7 +168,7 @@ public class DomProbe extends BaseProbe {
     //convert to proper type
     //value = convert(value.toString());
 
-    return value.toString();
+    return String.valueOf(value);
   }
 
 
