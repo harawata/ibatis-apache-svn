@@ -1,0 +1,107 @@
+Build Date: @buildDate@
+Build Number: @buildNum@
+
+------------------------------
+ 2.0.0 RC2 - Apr 11, 2004
+------------------------------
+
+ o Added SqlMapClient.flushDataCache()
+ o Added "context." prefix for JNDI InitialContext properties
+ o Added Resources.setDefaultClassLoader()
+ o Fixed specified JDBC type problem with DATE etc.
+ o Fixed DAO JDBC connection not being returned
+ o Fixed queries with no result map error message
+ o Fixed cache key parameter order problem
+ o Fixed multiple calls to ResultSet when logging (ODBC/MSAccess problem)
+ o Fixed unwrapping of proxy exceptions
+ o Fixed convert task temp file bug
+ o Fixed specific statement elements using cache model
+
+------------------------------
+ 2.0.0 RC1 - Mar 20, 2004
+------------------------------
+
+ o Commit/rollback is now only applied if an update occurs.
+ o Improved error messages (please comment if they still suck)
+ o Fixed dynamic SQL with multiple params via result mapped statement
+ o Fixed statement w/ cache models fail with class Cast Exception
+ o Fixed procedure parameterMap instead of resultMap JavaBeanDataExchange.setData()
+ o Fixed procedure calls with no params fails with NPE
+ o Fixed duplicate parameters (#value#...#value#) causes out of bounds exception
+
+------------------------------
+ 2.0.0 Beta 5 - Mar 8, 2004
+------------------------------
+
+ o Added DAO properties forwarding to transaction managers (e.g. SQL Map config)
+ o Added support for both file prop config and prog. properties (file overrides prog.)
+ o Fixed SQL Map statement conversion issue (empty SQL)
+ o Fixed DAO passthrough methods
+ o Fixed DAO commit/close connection
+ o Fixed Property name reuse in parameter maps (PropertyAccessPlan)
+
+------------------------------
+ 2.0.0 Beta 4 - Mar 2, 2004
+------------------------------
+
+ o Includes first "sneak peek" of DAO 2.0 Framework 
+ o Added DAO 1.x TX Pool classes for real SQL Maps 2.0 support
+ o Added SqlMapSession.close()
+ o Refactored SqlMapSession and SqlMapClient interfaces
+ o Renamed SqlMapClient.getSession() to .openSession()
+ o Renamed files to ibatis-sqlmap-2.jar, ibatis-common-2.jar and ibatis-dao-2.jar
+ o Moved compatibilitiy JARs and DAO 1.x to lib/optional/compatibility
+ o Fixed hasReadable/WriteableProperty check bug
+ o Fixed addBatch Bug
+ o Fixed Result Map nullValue type conversion
+
+------------------------------
+ 2.0.0 Beta 3 - Feb 18, 2004
+------------------------------
+
+ o Added new namespaces
+ o Renamed <procedure> output="true" to mode="IN|OUT|INOUT"
+ o Renamed queryWithRowHandler to queryForList(String, Object, RowHandler)
+ o Upgraded DAO JAR to version 1.3.1
+ o Fixed iterative $substitutions[]$
+ o Fixed multiple iterations in a mapped statement
+ o Fixed pure output parameters for stored procs
+ o Fixed stored proc trimming problem
+
+------------------------------
+ 2.0.0 Beta 2 - Jan 18, 2004
+------------------------------
+
+ o Changed (IMPORTANT) cacheModel attribute readWrite="true" to readOnly="false" (more accurate)
+ o Ant task to convert SQL Maps
+ o Updated example log4j.properties and included in /debug directory.
+ o Implemented session based caching
+ o Moved ErrorContext to request scope
+ o Implemented reset methods for scopes
+ o Skipped records use rs.absolute() if ResultSet type is not TYPE_FORWARD_ONLY
+ o Fixed connection proxy logging bug (no output).
+ o Fixed insert element without selectKey (NPE)
+ o Fixed LRU/FIFO aliases (swapped)
+ o Fixed legacy properties left in converted map files
+
+------------------------------
+ 2.0.0 Beta 1 - Jan 11, 2004
+------------------------------
+
+IMPORTANT: 2.0 initially focuses on compatibility, stability and quality.  Very
+           few new features have been added, but the new architecture should make
+           make possible the addition of many great new features.
+
+ o Complete, from the ground up rewrite.
+ o Completely new, but familiar API and XML document structure
+ o Compatibility API for 99% 1.x backward compatibility
+ o New and improved array[] support
+ o New and improved stored proc support (including output params)
+ o New support for auto-gen keys
+ o New URL resource loading of config files
+ o New type aliases for more concise mappings
+ o New XML data types for mappings (direct XML to DB)
+ o New and improved lazy loading of all complex types
+ o Improved overall performance
+ o Reduced library dependencies
+ o Much more...and more yet to come

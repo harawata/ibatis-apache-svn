@@ -1,0 +1,221 @@
+package com.ibatis.sqlmap;
+
+import testdomain.Account;
+
+import java.sql.*;
+import java.util.*;
+
+/**
+ * User: Clinton Begin
+ * Date: Nov 19, 2003
+ * Time: 10:51:48 PM
+ */
+public class DynamicTest extends BaseSqlMapTest {
+
+  protected void setUp() throws Exception {
+    initSqlMap("com/ibatis/sqlmap/maps/SqlMapConfig.xml", null);
+    initScript("scripts/account-init.sql");
+  }
+
+  protected void tearDown() throws Exception {
+  }
+
+  // PARAMETER PRESENT
+
+  public void testIsParameterPresentTrue() throws SQLException {
+    List list = sqlMap.queryForList("dynamicIsParameterPresent", new Integer(1));
+    assertAccount1((Account) list.get(0));
+    assertEquals(1, list.size());
+  }
+
+  public void testIsParameterPresentFalse() throws SQLException {
+    List list = sqlMap.queryForList("dynamicIsParameterPresent", null);
+    assertEquals(5, list.size());
+  }
+
+  // EMPTY
+
+  public void testIsNotEmptyTrue() throws SQLException {
+    List list = sqlMap.queryForList("dynamicIsNotEmpty", "Clinton");
+    assertAccount1((Account) list.get(0));
+    assertEquals(1, list.size());
+  }
+
+  public void testIsNotEmptyFalse() throws SQLException {
+    List list = sqlMap.queryForList("dynamicIsNotEmpty", "");
+    assertEquals(5, list.size());
+  }
+
+  // EQUAL
+
+  public void testIsEqualTrue() throws SQLException {
+    List list = sqlMap.queryForList("dynamicIsEqual", "Clinton");
+    assertAccount1((Account) list.get(0));
+    assertEquals(1, list.size());
+  }
+
+  public void testIsEqualFalse() throws SQLException {
+    List list = sqlMap.queryForList("dynamicIsEqual", "BLAH!");
+    assertEquals(5, list.size());
+  }
+
+  // GREATER
+
+  public void testIsGreaterTrue() throws SQLException {
+    List list = sqlMap.queryForList("dynamicIsGreater", new Integer(5));
+    assertAccount1((Account) list.get(0));
+    assertEquals(1, list.size());
+  }
+
+  public void testIsGreaterFalse() throws SQLException {
+    List list = sqlMap.queryForList("dynamicIsGreater", new Integer(1));
+    assertEquals(5, list.size());
+  }
+
+  // GREATER EQUAL
+
+  public void testIsGreaterEqualTrue() throws SQLException {
+    List list = sqlMap.queryForList("dynamicIsGreaterEqual", new Integer(3));
+    assertAccount1((Account) list.get(0));
+    assertEquals(1, list.size());
+  }
+
+  public void testIsGreaterEqualFalse() throws SQLException {
+    List list = sqlMap.queryForList("dynamicIsGreaterEqual", new Integer(1));
+    assertEquals(5, list.size());
+  }
+
+  // LESS
+
+  public void testIsLessTrue() throws SQLException {
+    List list = sqlMap.queryForList("dynamicIsLess", new Integer(1));
+    assertAccount1((Account) list.get(0));
+    assertEquals(1, list.size());
+  }
+
+  public void testIsLessFalse() throws SQLException {
+    List list = sqlMap.queryForList("dynamicIsLess", new Integer(5));
+    assertEquals(5, list.size());
+  }
+
+  // LESS EQUAL
+
+  public void testIsLessEqualTrue() throws SQLException {
+    List list = sqlMap.queryForList("dynamicIsLessEqual", new Integer(3));
+    assertAccount1((Account) list.get(0));
+    assertEquals(1, list.size());
+  }
+
+  public void testIsLessEqualFalse() throws SQLException {
+    List list = sqlMap.queryForList("dynamicIsLessEqual", new Integer(5));
+    assertEquals(5, list.size());
+  }
+
+  // NULL
+
+  public void testIsNotNullTrue() throws SQLException {
+    List list = sqlMap.queryForList("dynamicIsNotNull", "");
+    assertAccount1((Account) list.get(0));
+    assertEquals(1, list.size());
+  }
+
+  public void testIsNotNullFalse() throws SQLException {
+    List list = sqlMap.queryForList("dynamicIsNotNull", null);
+    assertEquals(5, list.size());
+  }
+
+  // PROPERTY AVAILABLE
+
+  public void testIsPropertyAvailableTrue() throws SQLException {
+    List list = sqlMap.queryForList("dynamicIsPropertyAvailable", "1");
+    assertAccount1((Account) list.get(0));
+    assertEquals(1, list.size());
+  }
+
+  // Iterate
+
+  public void testIterate() throws SQLException {
+    List params = Arrays.asList(new Integer[]{new Integer(1), new Integer(2), new Integer(3)});
+    List list = sqlMap.queryForList("dynamicIterate", params);
+    assertAccount1((Account) list.get(0));
+    assertEquals(3, list.size());
+  }
+
+  public void testMultiIterate() throws SQLException {
+    List params = Arrays.asList(new Integer[]{new Integer(1), new Integer(2), new Integer(3)});
+    List list = sqlMap.queryForList("multiDynamicIterate", params);
+    assertAccount1((Account) list.get(0));
+    assertEquals(3, list.size());
+  }
+
+  // ARRAY
+
+  public void testArrayPropertyIterate() throws SQLException {
+    Account account = new Account();
+    account.setIds(new int[]{1, 2, 3});
+    List list = sqlMap.queryForList("dynamicQueryByExample", account);
+    assertAccount1((Account) list.get(0));
+    assertEquals(3, list.size());
+  }
+
+// COMPLETE STATEMENT SUBSTITUTION
+
+// -- No longer supported.  Conflicted with and deemed less valuable than
+// -- iterative $substitutions[]$.
+//
+//  public void testCompleteStatementSubst() throws SQLException {
+//    String statement = "select" +
+//        "    ACC_ID          as id," +
+//        "    ACC_FIRST_NAME  as firstName," +
+//        "    ACC_LAST_NAME   as lastName," +
+//        "    ACC_EMAIL       as emailAddress" +
+//        "  from ACCOUNT" +
+//        "  WHERE ACC_ID = #id#";
+//    Integer id = new Integer(1);
+//
+//    Map params = new HashMap();
+//    params.put("id", id);
+//    params.put("statement", statement);
+//
+//    List list = sqlMap.queryForList("dynamicSubst", params);
+//    assertAccount1((Account) list.get(0));
+//    assertEquals(1, list.size());
+//  }
+
+  // Query By Example w/Prepend
+
+  public void testQueryByExample() throws SQLException {
+    Account account;
+
+    account = new Account();
+    account.setId(1);
+    account = (Account) sqlMap.queryForObject("dynamicQueryByExample", account);
+    assertAccount1(account);
+
+    account = new Account();
+    account.setFirstName("Clinton");
+    account = (Account) sqlMap.queryForObject("dynamicQueryByExample", account);
+    assertAccount1(account);
+
+    account = new Account();
+    account.setLastName("Begin");
+    account = (Account) sqlMap.queryForObject("dynamicQueryByExample", account);
+    assertAccount1(account);
+
+    account = new Account();
+    account.setEmailAddress("clinton");
+    account = (Account) sqlMap.queryForObject("dynamicQueryByExample", account);
+    assertAccount1(account);
+
+    account = new Account();
+    account.setId(1);
+    account.setFirstName("Clinton");
+    account.setLastName("Begin");
+    account.setEmailAddress("clinton");
+    account = (Account) sqlMap.queryForObject("dynamicQueryByExample", account);
+    assertAccount1(account);
+
+
+  }
+
+}

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!ELEMENT sqlMapConfig (properties?, settings?, typeAlias*, transactionManager?, sqlMap+)+>
+<!ATTLIST sqlMapConfig
+	xmlns:fo CDATA #IMPLIED
+>
+
+<!ELEMENT properties EMPTY>
+<!ATTLIST properties
+	resource CDATA #IMPLIED
+	url CDATA #IMPLIED
+>
+
+<!ELEMENT settings EMPTY>
+<!ATTLIST settings
+  lazyLoadingEnabled (true | false) #IMPLIED
+  cacheModelsEnabled (true | false) #IMPLIED
+  enhancementEnabled (true | false) #IMPLIED
+  errorTracingEnabled (true | false) #IMPLIED
+  useStatementNamespaces (true | false) #IMPLIED
+  maxSessions CDATA #IMPLIED
+  maxTransactions CDATA #IMPLIED
+  maxRequests CDATA #IMPLIED
+>
+
+<!ELEMENT transactionManager (property*,dataSource)>
+<!ATTLIST transactionManager
+	type (JDBC | JTA | EXTERNAL) #REQUIRED
+>
+
+<!ELEMENT dataSource (property*)>
+<!ATTLIST dataSource
+	type (SIMPLE | DBCP | JNDI) #REQUIRED
+>
+
+<!ELEMENT property EMPTY>
+<!ATTLIST property
+	name CDATA #REQUIRED
+	value CDATA #REQUIRED
+>
+
+<!ELEMENT sqlMap EMPTY>
+<!ATTLIST sqlMap
+	resource CDATA #IMPLIED
+	url CDATA #IMPLIED
+>
+
+<!ELEMENT typeAlias EMPTY>
+<!ATTLIST typeAlias
+	alias CDATA #REQUIRED
+	type CDATA #REQUIRED
+>

@@ -1,0 +1,68 @@
+/**
+ * User: Clinton Begin
+ * Date: May 17, 2003
+ * Time: 9:41:34 PM
+ */
+package com.ibatis.sqlmap;
+
+import testdomain.Account;
+
+import java.sql.*;
+
+public class ParameterMapTest extends BaseSqlMapTest {
+
+  // SETUP & TEARDOWN
+
+  protected void setUp() throws Exception {
+    initSqlMap("com/ibatis/sqlmap/maps/SqlMapConfig.xml", null);
+    initScript("scripts/account-init.sql");
+  }
+
+  protected void tearDown() throws Exception {
+  }
+
+  // PARAMETER MAP FEATURE TESTS
+
+  public void testNullValueReplacementMap() throws SQLException {
+    Account account = newAccount6();
+
+    sqlMap.update("insertAccountViaParameterMap", account);
+
+    account = (Account) sqlMap.queryForObject("getAccountNullableEmail", new Integer(6));
+
+    assertAccount6(account);
+  }
+
+  public void testNullValueReplacementInline() throws SQLException {
+    Account account = newAccount6();
+
+    sqlMap.update("insertAccountViaInlineParameters", account);
+
+    account = (Account) sqlMap.queryForObject("getAccountNullableEmail", new Integer(6));
+
+    assertAccount6(account);
+  }
+
+  public void testSpecifiedType() throws SQLException {
+    Account account = newAccount6();
+    account.setEmailAddress(null);
+
+    sqlMap.update("insertAccountNullableEmail", account);
+
+    account = (Account) sqlMap.queryForObject("getAccountNullableEmail", new Integer(6));
+
+    assertAccount6(account);
+  }
+
+  public void testUnknownParameterClass() throws SQLException {
+    Account account = newAccount6();
+    account.setEmailAddress(null);
+
+    sqlMap.update("insertAccountUknownParameterClass", account);
+
+    account = (Account) sqlMap.queryForObject("getAccountNullableEmail", new Integer(6));
+
+    assertAccount6(account);
+  }
+
+}

@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap
+    PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"
+    "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Account" >
+
+
+  <select id="dynamicIsParameterPresent"
+             parameterClass="integer"
+             resultClass="testdomain.Account">
+    select
+      ACC_ID          as id,
+      ACC_FIRST_NAME  as firstName,
+      ACC_LAST_NAME   as lastName,
+      ACC_EMAIL       as emailAddress
+    from ACCOUNT
+    <isParameterPresent >
+      where ACC_ID = #value#
+    </isParameterPresent>
+  </select>
+
+  <select id="dynamicIsNotEmpty"
+             parameterClass="string"
+             resultClass="testdomain.Account">
+    select
+      ACC_ID          as id,
+      ACC_FIRST_NAME  as firstName,
+      ACC_LAST_NAME   as lastName,
+      ACC_EMAIL       as emailAddress
+    from ACCOUNT
+    <isNotEmpty>
+      where ACC_FIRST_NAME = #value#
+    </isNotEmpty>
+  </select>
+
+  <select id="dynamicIsEqual"
+             parameterClass="string"
+             resultClass="testdomain.Account">
+    select
+      ACC_ID          as id,
+      ACC_FIRST_NAME  as firstName,
+      ACC_LAST_NAME   as lastName,
+      ACC_EMAIL       as emailAddress
+    from ACCOUNT
+    <isEqual compareValue="Clinton" >
+      where ACC_FIRST_NAME = 'Clinton'
+    </isEqual>
+  </select>
+
+  <select id="dynamicIsGreater"
+             parameterClass="int"
+             resultClass="testdomain.Account">
+    select
+      ACC_ID          as id,
+      ACC_FIRST_NAME  as firstName,
+      ACC_LAST_NAME   as lastName,
+      ACC_EMAIL       as emailAddress
+    from ACCOUNT
+    <isGreaterThan compareValue="3" >
+      where ACC_ID = 1
+    </isGreaterThan>
+  </select>
+
+  <select id="dynamicIsGreaterEqual"
+             parameterClass="int"
+             resultClass="testdomain.Account">
+    select
+      ACC_ID          as id,
+      ACC_FIRST_NAME  as firstName,
+      ACC_LAST_NAME   as lastName,
+      ACC_EMAIL       as emailAddress
+    from ACCOUNT
+    <isGreaterEqual compareValue="3" >
+      where ACC_ID = 1
+    </isGreaterEqual>
+  </select>
+
+  <select id="dynamicIsLess"
+             parameterClass="int"
+             resultClass="testdomain.Account">
+    select
+      ACC_ID          as id,
+      ACC_FIRST_NAME  as firstName,
+      ACC_LAST_NAME   as lastName,
+      ACC_EMAIL       as emailAddress
+    from ACCOUNT
+    <isLessThan compareValue="3" >
+      where ACC_ID = 1
+    </isLessThan>
+  </select>
+
+  <select id="dynamicIsLessEqual"
+             parameterClass="int"
+             resultClass="testdomain.Account">
+    select
+      ACC_ID          as id,
+      ACC_FIRST_NAME  as firstName,
+      ACC_LAST_NAME   as lastName,
+      ACC_EMAIL       as emailAddress
+    from ACCOUNT
+    <isLessEqual compareValue="3" >
+      where ACC_ID = 1
+    </isLessEqual>
+  </select>
+
+  <select id="dynamicIsNotNull"
+             parameterClass="string"
+             resultClass="testdomain.Account">
+    select
+      ACC_ID          as id,
+      ACC_FIRST_NAME  as firstName,
+      ACC_LAST_NAME   as lastName,
+      ACC_EMAIL       as emailAddress
+    from ACCOUNT
+    <isNotNull>
+      where ACC_ID = 1
+    </isNotNull>
+  </select>
+
+  <select id="dynamicIsPropertyAvailable"
+             parameterClass="string"
+             resultClass="testdomain.Account">
+    select
+      ACC_ID          as id,
+      ACC_FIRST_NAME  as firstName,
+      ACC_LAST_NAME   as lastName,
+      ACC_EMAIL       as emailAddress
+    from ACCOUNT
+    <isPropertyAvailable property="class" >
+      where ACC_ID = 1
+    </isPropertyAvailable>
+  </select>
+
+  <select id="dynamicSubst"
+             parameterClass="map"
+             resultClass="testdomain.Account">
+    <dynamic>
+       $statement$
+    </dynamic>
+  </select>
+
+  <select id="dynamicIterate"
+             parameterClass="list"
+             resultClass="testdomain.Account">
+    select
+      ACC_ID          as id,
+      ACC_FIRST_NAME  as firstName,
+      ACC_LAST_NAME   as lastName,
+      ACC_EMAIL       as emailAddress
+    from ACCOUNT
+    WHERE ACC_ID IN
+    <iterate open="(" close=")" conjunction=",">
+       #[]#
+    </iterate>
+  </select>
+
+  <select id="multiDynamicIterate"
+             parameterClass="list"
+             resultClass="testdomain.Account">
+    select
+      ACC_ID          as id,
+      ACC_FIRST_NAME  as firstName,
+      ACC_LAST_NAME   as lastName,
+      ACC_EMAIL       as emailAddress
+    from ACCOUNT
+    WHERE ACC_ID IN
+    <iterate open="(" close=")" conjunction=",">
+       #[]#
+    </iterate>
+    AND ACC_ID IN
+    <iterate open="(" close=")" conjunction=",">
+       #[]#
+    </iterate>
+  </select>
+
+  <select id="dynamicQueryByExample"
+             parameterClass="testdomain.Account"
+             resultClass="testdomain.Account">
+    select
+      ACC_ID          as id,
+      ACC_FIRST_NAME  as firstName,
+      ACC_LAST_NAME   as lastName,
+      ACC_EMAIL       as emailAddress
+    from ACCOUNT
+    <dynamic prepend="WHERE" >
+      <isGreaterThan prepend="AND" property="id" compareValue="0"  >
+         ACC_ID = #id#
+      </isGreaterThan>
+      <isNotNull prepend="AND" property="ids" >
+        ACC_ID in
+        <iterate property="ids" open="(" close=")"  conjunction="," >
+         #ids[]#
+        </iterate>
+      </isNotNull>
+      <isNotEmpty prepend="AND" property="firstName" >
+         ACC_FIRST_NAME = #firstName#
+      </isNotEmpty>
+      <isNotEmpty prepend="AND" property="lastName" >
+         ACC_LAST_NAME = #lastName#
+      </isNotEmpty>
+      <isNotEmpty prepend="AND" property="emailAddress" >
+         <isEqual property="emailAddress" compareValue="clinton">
+           ACC_EMAIL = 'clinton.begin@ibatis.com'
+         </isEqual>
+         <isNotEqual property="emailAddress" compareValue="clinton">
+           ACC_EMAIL = #emailAddress#
+         </isNotEqual>
+      </isNotEmpty>
+    </dynamic>
+  </select>
+
+  <select id="dynamicIterateWithPrepend1"
+             parameterClass="list"
+             resultClass="testdomain.Account">
+    select
+      ACC_ID          as id,
+      ACC_FIRST_NAME  as firstName,
+      ACC_LAST_NAME   as lastName,
+      ACC_EMAIL       as emailAddress
+    from ACCOUNT
+    <dynamic prepend="where" >
+      ACC_ID IN
+      <iterate open="(" close=")" conjunction=",">
+          #[]#
+      </iterate>
+    </dynamic>
+  </select>
+
+  <select id="dynamicIterateWithPrepend2"
+             parameterClass="list"
+             resultClass="testdomain.Account">
+    select
+      ACC_ID          as id,
+      ACC_FIRST_NAME  as firstName,
+      ACC_LAST_NAME   as lastName,
+      ACC_EMAIL       as emailAddress
+    from ACCOUNT
+    <dynamic prepend="where" >
+      <iterate open="(" close=")" conjunction="OR">
+          ACC_ID = #[]#
+      </iterate>
+    </dynamic>
+  </select>
+
+  <select id="dynamicIterateWithPrepend3"
+             parameterClass="list"
+             resultClass="testdomain.Account">
+    select
+      ACC_ID          as id,
+      ACC_FIRST_NAME  as firstName,
+      ACC_LAST_NAME   as lastName,
+      ACC_EMAIL       as emailAddress
+    from ACCOUNT
+    <dynamic prepend="where" >
+      <isParameterPresent prepend="BLAH!" >
+        <iterate open="(" close=")" conjunction="OR">
+          ACC_ID = #[]#
+        </iterate>
+      </isParameterPresent>
+    </dynamic>
+  </select>
+
+  <select id="dynamicWithPrepend"
+             parameterClass="testdomain.Account"
+             resultClass="testdomain.Account">
+    select
+      ACC_ID          as id,
+      ACC_FIRST_NAME  as firstName,
+      ACC_LAST_NAME   as lastName,
+      ACC_EMAIL       as emailAddress
+    from ACCOUNT
+    <dynamic prepend="where">
+      <isParameterPresent>
+        <isNotEmpty prepend="and" property="id" >
+          ACC_ID = #id#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="firstName" >
+          ACC_FIRST_NAME = #firstName#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="lastName"  >
+          ACC_LAST_NAME = #lastName#
+        </isNotEmpty>
+      </isParameterPresent>
+    </dynamic>
+  </select>
+
+  <select id="dynamicWithTwoDynamicElements"
+             parameterClass="testdomain.Account"
+             resultClass="testdomain.Account">
+    select
+      ACC_ID          as id,
+      ACC_FIRST_NAME  as firstName,
+      ACC_LAST_NAME   as lastName,
+      ACC_EMAIL       as emailAddress
+    from ACCOUNT
+    <dynamic prepend="where">
+        <isNotEmpty prepend="BLAH!" property="id" >
+          ACC_ID = #id#
+        </isNotEmpty>
+    </dynamic>
+    <dynamic prepend="and">
+        <isNotEmpty prepend="BLAH!" property="firstName" >
+          ACC_FIRST_NAME = #firstName#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="lastName"  >
+          ACC_LAST_NAME = #lastName#
+        </isNotEmpty>
+    </dynamic>
+  </select>
+
+
+  <select id="complexDynamicStatement" cacheModel="account-cache" resultClass="testdomain.Account" parameterClass="testdomain.Account">
+    select
+      ACC_ID          as id,
+      ACC_FIRST_NAME  as firstName,
+      ACC_LAST_NAME   as lastName,
+      ACC_EMAIL       as emailAddress
+    from ACCOUNT
+    <dynamic prepend="WHERE">
+      <isNotNull prepend="AND" property="firstName">
+        (ACC_FIRST_NAME = #firstName#
+        <isNotNull prepend="OR" property="lastName">
+          ACC_LAST_NAME = #lastName#
+        </isNotNull>
+        )
+      </isNotNull>
+      <isNotNull prepend="AND" property="emailAddress">
+        ACC_EMAIL like #emailAddress#
+      </isNotNull>
+      <isGreaterThan prepend="AND" property="id" compareValue="0">
+        ACC_ID = #id#
+      </isGreaterThan>
+    </dynamic>
+    order by ACC_LAST_NAME
+  </select>
+
+
+</sqlMap>

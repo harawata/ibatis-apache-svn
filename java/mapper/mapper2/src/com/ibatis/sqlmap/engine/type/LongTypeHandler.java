@@ -1,0 +1,51 @@
+package com.ibatis.sqlmap.engine.type;
+
+import java.sql.*;
+
+/**
+ * User: Clinton Begin
+ * Date: Sep 12, 2003
+ * Time: 8:13:08 PM
+ */
+public class LongTypeHandler implements TypeHandler {
+
+  public void setParameter(PreparedStatement ps, int i, Object parameter)
+      throws SQLException {
+    ps.setLong(i, ((Long) parameter).longValue());
+  }
+
+  public Object getResult(ResultSet rs, String columnName)
+      throws SQLException {
+    long l = rs.getLong(columnName);
+    if (rs.wasNull()) {
+      return null;
+    } else {
+      return new Long(l);
+    }
+  }
+
+  public Object getResult(ResultSet rs, int columnIndex)
+      throws SQLException {
+    long l = rs.getLong(columnIndex);
+    if (rs.wasNull()) {
+      return null;
+    } else {
+      return new Long(l);
+    }
+  }
+
+  public Object getResult(CallableStatement cs, int columnIndex)
+      throws SQLException {
+    long l = cs.getLong(columnIndex);
+    if (cs.wasNull()) {
+      return null;
+    } else {
+      return new Long(l);
+    }
+  }
+
+  public Object valueOf(String s) {
+    return Long.valueOf(s);
+  }
+
+}

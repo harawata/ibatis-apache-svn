@@ -1,0 +1,906 @@
+package com.ibatis.common.jdbc;
+
+import org.apache.commons.logging.*;
+
+import javax.sql.*;
+import java.io.*;
+import java.sql.*;
+import java.util.*;
+import java.lang.reflect.*;
+
+import com.ibatis.common.exception.*;
+import com.ibatis.common.resources.*;
+import com.ibatis.common.beans.ClassInfo;
+
+/**
+ *
+ * This is a simple, synchronous, thread-safe database connection pool.
+ *
+ * REQUIRED PROPERTIES
+ * -------------------
+ * JDBC.Driver
+ * JDBC.ConnectionURL
+ * JDBC.Username
+ * JDBC.Password
+ *
+ * Pool.MaximumActiveConnections
+ * Pool.MaximumIdleConnections
+ * Pool.MaximumCheckoutTime
+ * Pool.TimeToWait
+ * Pool.PingQuery
+ * Pool.PingEnabled
+ * Pool.PingConnectionsOlderThan
+ * Pool.PingConnectionsNotUsedFor
+ * Pool.QuietMode
+ *
+ */
+public class SimpleDataSource implements DataSource {
+
+  private static final Log log = LogFactory.getLog(SimpleDataSource.class);
+
+  // Required Properties
+  private static final String PROP_JDBC_DRIVER = "JDBC.Driver";
+  private static final String PROP_JDBC_URL = "JDBC.ConnectionURL";
+  private static final String PROP_JDBC_USERNAME = "JDBC.Username";
+  private static final String PROP_JDBC_PASSWORD = "JDBC.Password";
+  private static final String PROP_JDBC_DEFAULT_AUTOCOMMIT = "JDBC.DefaultAutoCommit";
+
+  // Optional Properties
+  private static final String PROP_POOL_MAX_ACTIVE_CONN = "Pool.MaximumActiveConnections";
+  private static final String PROP_POOL_MAX_IDLE_CONN = "Pool.MaximumIdleConnections";
+  private static final String PROP_POOL_MAX_CHECKOUT_TIME = "Pool.MaximumCheckoutTime";
+  private static final String PROP_POOL_TIME_TO_WAIT = "Pool.TimeToWait";
+  private static final String PROP_POOL_PING_QUERY = "Pool.PingQuery";
+  private static final String PROP_POOL_PING_CONN_OLDER_THAN = "Pool.PingConnectionsOlderThan";
+  private static final String PROP_POOL_PING_ENABLED = "Pool.PingEnabled";
+  private static final String PROP_POOL_QUIET_MODE = "Pool.QuietMode";
+  private static final String PROP_POOL_PING_CONN_NOT_USED_FOR = "Pool.PingConnectionsNotUsedFor";
+  private int expectedConnectionTypeCode;
+  // Additional Driver Properties prefix
+  private static final String ADD_DRIVER_PROPS_PREFIX = "Driver.";
+  private static final int ADD_DRIVER_PROPS_PREFIX_LENGTH = ADD_DRIVER_PROPS_PREFIX.length();
+
+  // ----- BEGIN: FIELDS LOCKED BY POOL_LOCK -----
+  private static final Object POOL_LOCK = new Object();
+  private List idleConnections = new ArrayList();
+  private List activeConnections = new ArrayList();
+  private long requestCount = 0;
+  private long accumulatedRequestTime = 0;
+  private long accumulatedCheckoutTime = 0;
+  private long claimedOverdueConnectionCount = 0;
+  private long accumulatedCheckoutTimeOfOverdueConnections = 0;
+  private long accumulatedWaitTime = 0;
+  private long hadToWaitCount = 0;
+  private long badConnectionCount = 0;
+  // ----- END: FIELDS LOCKED BY POOL_LOCK -----
+
+  // ----- BEGIN: PROPERTY FIELDS FOR CONFIGURATION -----
+  private String jdbcDriver;
+  private String jdbcUrl;
+  private String jdbcUsername;
+  private String jdbcPassword;
+  private boolean jdbcDefaultAutoCommit;
+  private Properties driverProps;
+  private boolean useDriverProps;
+
+  private int poolMaximumActiveConnections;
+  private int poolMaximumIdleConnections;
+  private int poolMaximumCheckoutTime;
+  private int poolTimeToWait;
+  private String poolPingQuery;
+  private boolean poolQuietMode;
+  private boolean poolPingEnabled;
+  private int poolPingConnectionsOlderThan;
+  private int poolPingConnectionsNotUsedFor;
+  // ----- END: PROPERTY FIELDS FOR CONFIGURATION -----
+
+  public SimpleDataSource(Map props) {
+    initialize(props);
+  }
+
+  private void initialize(Map props) {
+    try {
+      if (props == null) {
+        throw new NestedRuntimeException("SimpleDataSource: The properties map passed to the initializer was null.");
+      }
+
+      if (!(props.containsKey(PROP_JDBC_DRIVER)
+          && props.containsKey(PROP_JDBC_URL)
+          && props.containsKey(PROP_JDBC_USERNAME)
+          && props.containsKey(PROP_JDBC_PASSWORD))) {
+        throw new NestedRuntimeException("SimpleDataSource: Some properties were not set.");
+      } else {
+
+        jdbcDriver = (String) props.get(PROP_JDBC_DRIVER);
+        jdbcUrl = (String) props.get(PROP_JDBC_URL);
+        jdbcUsername = (String) props.get(PROP_JDBC_USERNAME);
+        jdbcPassword = (String) props.get(PROP_JDBC_PASSWORD);
+
+        poolMaximumActiveConnections =
+            props.containsKey(PROP_POOL_MAX_ACTIVE_CONN)
+            ? Integer.parseInt((String) props.get(PROP_POOL_MAX_ACTIVE_CONN))
+            : 10;
+
+        poolMaximumIdleConnections =
+            props.containsKey(PROP_POOL_MAX_IDLE_CONN)
+            ? Integer.parseInt((String) props.get(PROP_POOL_MAX_IDLE_CONN))
+            : 5;
+
+        poolMaximumCheckoutTime =
+            props.containsKey(PROP_POOL_MAX_CHECKOUT_TIME)
+            ? Integer.parseInt((String) props.get(PROP_POOL_MAX_CHECKOUT_TIME))
+            : 20000;
+
+        poolTimeToWait =
+            props.containsKey(PROP_POOL_TIME_TO_WAIT)
+            ? Integer.parseInt((String) props.get(PROP_POOL_TIME_TO_WAIT))
+            : 20000;
+
+        poolPingEnabled =
+            props.containsKey(PROP_POOL_PING_ENABLED)
+            ? Boolean.valueOf((String) props.get(PROP_POOL_PING_ENABLED)).booleanValue()
+            : false;
+
+        poolPingQuery =
+            props.containsKey(PROP_POOL_PING_QUERY)
+            ? (String) props.get(PROP_POOL_PING_QUERY)
+            : "NO PING QUERY SET";
+
+        poolPingConnectionsOlderThan =
+            props.containsKey(PROP_POOL_PING_CONN_OLDER_THAN)
+            ? Integer.parseInt((String) props.get(PROP_POOL_PING_CONN_OLDER_THAN))
+            : 0;
+
+        poolPingConnectionsNotUsedFor =
+            props.containsKey(PROP_POOL_PING_CONN_NOT_USED_FOR)
+            ? Integer.parseInt((String) props.get(PROP_POOL_PING_CONN_NOT_USED_FOR))
+            : 0;
+
+        poolQuietMode =
+            props.containsKey(PROP_POOL_QUIET_MODE)
+            ? Boolean.valueOf((String) props.get(PROP_POOL_QUIET_MODE)).booleanValue()
+            : true;
+
+        jdbcDefaultAutoCommit =
+            props.containsKey(PROP_JDBC_DEFAULT_AUTOCOMMIT)
+            ? Boolean.valueOf((String) props.get(PROP_JDBC_DEFAULT_AUTOCOMMIT)).booleanValue()
+            : false;
+
+        useDriverProps = false;
+        Iterator propIter = props.keySet().iterator();
+        driverProps = new Properties();
+        driverProps.put("user", jdbcUsername);
+        driverProps.put("password", jdbcPassword);
+        while (propIter.hasNext()) {
+          String name = (String) propIter.next();
+          String value = (String) props.get(name);
+          if (name.startsWith(ADD_DRIVER_PROPS_PREFIX)) {
+            driverProps.put(name.substring(ADD_DRIVER_PROPS_PREFIX_LENGTH), value);
+            useDriverProps = true;
+          }
+        }
+
+        expectedConnectionTypeCode = assembleConnectionTypeCode(jdbcUrl, jdbcUsername, jdbcPassword);
+
+        Resources.instantiate(jdbcDriver);
+      }
+
+    } catch (Exception e) {
+      log.error("SimpleDataSource: Error while loading properties. Cause: " + e.toString(), e);
+      throw new NestedRuntimeException("SimpleDataSource: Error while loading properties. Cause: " + e, e);
+    }
+  }
+
+  private int assembleConnectionTypeCode(String url, String username, String password) {
+    return ("" + url + username + password).hashCode();
+  }
+
+  public Connection getConnection() throws SQLException {
+    return popConnection(jdbcUsername, jdbcPassword).getProxyConnection();
+  }
+
+  public Connection getConnection(String username, String password) throws SQLException {
+    return popConnection(username, password).getProxyConnection();
+  }
+
+  public void setLoginTimeout(int loginTimeout) throws SQLException {
+    DriverManager.setLoginTimeout(loginTimeout);
+  }
+
+  public int getLoginTimeout() throws SQLException {
+    return DriverManager.getLoginTimeout();
+  }
+
+  public void setLogWriter(PrintWriter logWriter) throws SQLException {
+    DriverManager.setLogWriter(logWriter);
+  }
+
+  public PrintWriter getLogWriter() throws SQLException {
+    return DriverManager.getLogWriter();
+  }
+
+  public int getPoolPingConnectionsNotUsedFor() {
+    return poolPingConnectionsNotUsedFor;
+  }
+
+  public String getJdbcDriver() {
+    return jdbcDriver;
+  }
+
+  public String getJdbcUrl() {
+    return jdbcUrl;
+  }
+
+  public String getJdbcUsername() {
+    return jdbcUsername;
+  }
+
+  public String getJdbcPassword() {
+    return jdbcPassword;
+  }
+
+  public int getPoolMaximumActiveConnections() {
+    return poolMaximumActiveConnections;
+  }
+
+  public int getPoolMaximumIdleConnections() {
+    return poolMaximumIdleConnections;
+  }
+
+  public int getPoolMaximumCheckoutTime() {
+    return poolMaximumCheckoutTime;
+  }
+
+  public int getPoolTimeToWait() {
+    return poolTimeToWait;
+  }
+
+  public String getPoolPingQuery() {
+    return poolPingQuery;
+  }
+
+  public boolean isPoolPingEnabled() {
+    return poolPingEnabled;
+  }
+
+  public int getPoolPingConnectionsOlderThan() {
+    return poolPingConnectionsOlderThan;
+  }
+
+  public boolean isPoolQuietMode() {
+    return poolQuietMode;
+  }
+
+  public void setPoolQuietMode(boolean poolQuietMode) {
+    this.poolQuietMode = poolQuietMode;
+  }
+
+  private int getExpectedConnectionTypeCode() {
+    return expectedConnectionTypeCode;
+  }
+
+  public long getRequestCount() {
+    synchronized (POOL_LOCK) {
+      return requestCount;
+    }
+  }
+
+  public long getAverageRequestTime() {
+    synchronized (POOL_LOCK) {
+      return requestCount == 0 ? 0 : accumulatedRequestTime / requestCount;
+    }
+  }
+
+  public long getAverageWaitTime() {
+    synchronized (POOL_LOCK) {
+      return hadToWaitCount == 0 ? 0 : accumulatedWaitTime / hadToWaitCount;
+    }
+  }
+
+  public long getHadToWaitCount() {
+    synchronized (POOL_LOCK) {
+      return hadToWaitCount;
+    }
+  }
+
+  public long getBadConnectionCount() {
+    synchronized (POOL_LOCK) {
+      return badConnectionCount;
+    }
+  }
+
+  public long getClaimedOverdueConnectionCount() {
+    synchronized (POOL_LOCK) {
+      return claimedOverdueConnectionCount;
+    }
+  }
+
+  public long getAverageOverdueCheckoutTime() {
+    synchronized (POOL_LOCK) {
+      return claimedOverdueConnectionCount == 0 ? 0 : accumulatedCheckoutTimeOfOverdueConnections / claimedOverdueConnectionCount;
+    }
+  }
+
+
+  public long getAverageCheckoutTime() {
+    synchronized (POOL_LOCK) {
+      return requestCount == 0 ? 0 : accumulatedCheckoutTime / requestCount;
+    }
+  }
+
+  public String getStatus() {
+    StringBuffer buffer = new StringBuffer();
+
+    buffer.append("\n===============================================================");
+    buffer.append("\n jdbcDriver                     " + jdbcDriver);
+    buffer.append("\n jdbcUrl                        " + jdbcUrl);
+    buffer.append("\n jdbcUsername                   " + jdbcUsername);
+    buffer.append("\n jdbcPassword                   " + (jdbcPassword == null ? "NULL" : "************"));
+    buffer.append("\n poolMaxActiveConnections       " + poolMaximumActiveConnections);
+    buffer.append("\n poolMaxIdleConnections         " + poolMaximumIdleConnections);
+    buffer.append("\n poolMaxCheckoutTime            " + poolMaximumCheckoutTime);
+    buffer.append("\n poolTimeToWait                 " + poolTimeToWait);
+    buffer.append("\n poolQuietMode                  " + poolQuietMode);
+    buffer.append("\n poolPingEnabled                " + poolPingEnabled);
+    buffer.append("\n poolPingQuery                  " + poolPingQuery);
+    buffer.append("\n poolPingConnectionsOlderThan   " + poolPingConnectionsOlderThan);
+    buffer.append("\n poolPingConnectionsNotUsedFor  " + poolPingConnectionsNotUsedFor);
+    buffer.append("\n --------------------------------------------------------------");
+    buffer.append("\n activeConnections              " + activeConnections.size());
+    buffer.append("\n idleConnections                " + idleConnections.size());
+    buffer.append("\n requestCount                   " + getRequestCount());
+    buffer.append("\n averageRequestTime             " + getAverageRequestTime());
+    buffer.append("\n averageCheckoutTime            " + getAverageCheckoutTime());
+    buffer.append("\n claimedOverdue                 " + getClaimedOverdueConnectionCount());
+    buffer.append("\n averageOverdueCheckoutTime     " + getAverageOverdueCheckoutTime());
+    buffer.append("\n hadToWait                      " + getHadToWaitCount());
+    buffer.append("\n averageWaitTime                " + getAverageWaitTime());
+    buffer.append("\n badConnectionCount             " + getBadConnectionCount());
+    buffer.append("\n===============================================================");
+    return buffer.toString();
+  }
+
+  public void forceCloseAll() {
+    synchronized (POOL_LOCK) {
+      for (int i = activeConnections.size(); i > 0; i--) {
+        try {
+          SimplePooledConnection conn = (SimplePooledConnection) activeConnections.remove(i - 1);
+          conn.invalidate();
+
+          Connection realConn = conn.getRealConnection();
+          if (!realConn.getAutoCommit()) {
+            realConn.rollback();
+          }
+          realConn.close();
+        } catch (Exception e) {
+          // ignore
+        }
+      }
+      for (int i = idleConnections.size(); i > 0; i--) {
+        try {
+          SimplePooledConnection conn = (SimplePooledConnection) idleConnections.remove(i - 1);
+          conn.invalidate();
+
+          Connection realConn = conn.getRealConnection();
+          if (!realConn.getAutoCommit()) {
+            realConn.rollback();
+          }
+          realConn.close();
+        } catch (Exception e) {
+          // ignore
+        }
+      }
+    }
+    if (log.isDebugEnabled()) {
+      log.debug("SimpleDataSource forcefully closed/removed all connections.");
+    }
+  }
+
+  private void pushConnection(SimplePooledConnection conn)
+      throws SQLException {
+
+    synchronized (POOL_LOCK) {
+      activeConnections.remove(conn);
+      if (conn.isValid()) {
+        if (idleConnections.size() < poolMaximumIdleConnections && conn.getConnectionTypeCode() == getExpectedConnectionTypeCode()) {
+          accumulatedCheckoutTime += conn.getCheckoutTime();
+          if (!conn.getRealConnection().getAutoCommit()) {
+            conn.getRealConnection().rollback();
+          }
+          SimplePooledConnection newConn = new SimplePooledConnection(conn.getRealConnection(), this);
+          idleConnections.add(newConn);
+          newConn.setCreatedTimestamp(conn.getCreatedTimestamp());
+          newConn.setLastUsedTimestamp(conn.getLastUsedTimestamp());
+          conn.invalidate();
+          if (log.isDebugEnabled()) {
+            log.debug("Returned connection " + newConn.getRealHashCode() + " to pool.");
+          }
+          POOL_LOCK.notifyAll();
+        } else {
+          accumulatedCheckoutTime += conn.getCheckoutTime();
+          if (!conn.getRealConnection().getAutoCommit()) {
+            conn.getRealConnection().rollback();
+          }
+          conn.getRealConnection().close();
+          if (log.isDebugEnabled()) {
+            log.debug("Closed connection " + conn.getRealHashCode() + ".");
+          }
+          conn.invalidate();
+        }
+      } else {
+        if (log.isDebugEnabled()) {
+          log.debug("A bad connection (" + conn.getRealHashCode() + ") attempted to return to the pool, discarding connection.");
+        }
+        badConnectionCount++;
+      }
+    }
+  }
+
+  private SimplePooledConnection popConnection(String username, String password)
+      throws SQLException {
+    boolean countedWait = false;
+    SimplePooledConnection conn = null;
+    long t = System.currentTimeMillis();
+    int localBadConnectionCount = 0;
+
+    while (conn == null) {
+      synchronized (POOL_LOCK) {
+        if (idleConnections.size() > 0) {
+          // Pool has available connection
+          conn = (SimplePooledConnection) idleConnections.remove(0);
+          if (log.isDebugEnabled()) {
+            log.debug("Checked out connection " + conn.getRealHashCode() + " from pool.");
+          }
+        } else {
+          // Pool does not have available connection
+          if (activeConnections.size() < poolMaximumActiveConnections) {
+            // Can create new connection
+            if (useDriverProps) {
+              conn = new SimplePooledConnection(DriverManager.getConnection(jdbcUrl, driverProps), this);
+            } else {
+              conn = new SimplePooledConnection(DriverManager.getConnection(jdbcUrl, jdbcUsername, jdbcPassword), this);
+            }
+            Connection realConn = conn.getRealConnection();
+            if (realConn.getAutoCommit() != jdbcDefaultAutoCommit) {
+              realConn.setAutoCommit(jdbcDefaultAutoCommit);
+            }
+            if (log.isDebugEnabled()) {
+              log.debug("Created connection " + conn.getRealHashCode() + ".");
+            }
+          } else {
+            // Cannot create new connection
+            SimplePooledConnection oldestActiveConnection = (SimplePooledConnection) activeConnections.get(0);
+            long longestCheckoutTime = oldestActiveConnection.getCheckoutTime();
+            if (longestCheckoutTime > poolMaximumCheckoutTime) {
+              // Can claim overdue connection
+              claimedOverdueConnectionCount++;
+              accumulatedCheckoutTimeOfOverdueConnections += longestCheckoutTime;
+              accumulatedCheckoutTime += longestCheckoutTime;
+              activeConnections.remove(oldestActiveConnection);
+              if (!oldestActiveConnection.getRealConnection().getAutoCommit()) {
+                oldestActiveConnection.getRealConnection().rollback();
+              }
+              conn = new SimplePooledConnection(oldestActiveConnection.getRealConnection(), this);
+              oldestActiveConnection.invalidate();
+              if (log.isDebugEnabled()) {
+                log.debug("Claimed overdue connection " + conn.getRealHashCode() + ".");
+              }
+            } else {
+              // Must wait
+              try {
+                if (!countedWait) {
+                  hadToWaitCount++;
+                  countedWait = true;
+                }
+                if (log.isDebugEnabled()) {
+                  log.debug("Waiting as long as " + poolTimeToWait + " milliseconds for connection.");
+                }
+                long wt = System.currentTimeMillis();
+                POOL_LOCK.wait(poolTimeToWait);
+                accumulatedWaitTime += System.currentTimeMillis() - wt;
+              } catch (InterruptedException e) {
+                break;
+              }
+            }
+          }
+        }
+        if (conn != null) {
+          if (conn.isValid()) {
+            if (!conn.getRealConnection().getAutoCommit()) {
+              conn.getRealConnection().rollback();
+            }
+            conn.setConnectionTypeCode(assembleConnectionTypeCode(jdbcUrl, username, password));
+            conn.setCheckoutTimestamp(System.currentTimeMillis());
+            conn.setLastUsedTimestamp(System.currentTimeMillis());
+            activeConnections.add(conn);
+            requestCount++;
+            accumulatedRequestTime += System.currentTimeMillis() - t;
+          } else {
+            if (log.isDebugEnabled()) {
+              log.debug("A bad connection (" + conn.getRealHashCode() + ") was returned from the pool, getting another connection.");
+            }
+            badConnectionCount++;
+            localBadConnectionCount++;
+            conn = null;
+            if (localBadConnectionCount > (poolMaximumIdleConnections + 3)) {
+              if (log.isDebugEnabled()) {
+                log.debug("SimpleDataSource: Could not get a good connection to the database.");
+              }
+              throw new SQLException("SimpleDataSource: Could not get a good connection to the database.");
+            }
+          }
+        }
+      }
+
+    }
+
+    if (conn == null) {
+      if (log.isDebugEnabled()) {
+        log.debug("SimpleDataSource: Unknown severe error condition.  The connection pool returned a null connection.");
+      }
+      throw new SQLException("SimpleDataSource: Unknown severe error condition.  The connection pool returned a null connection.");
+    }
+
+    return conn;
+  }
+
+  private boolean pingConnection(SimplePooledConnection conn) {
+    boolean result = true;
+
+    try {
+      result = !conn.getRealConnection().isClosed();
+    } catch (SQLException e) {
+      result = false;
+    }
+
+    if (result) {
+      if (poolPingEnabled) {
+        if ((poolPingConnectionsOlderThan > 0 && conn.getAge() > poolPingConnectionsOlderThan)
+            || (poolPingConnectionsNotUsedFor > 0 && conn.getTimeElapsedSinceLastUse() > poolPingConnectionsNotUsedFor)) {
+
+          try {
+            if (log.isDebugEnabled()) {
+              log.debug("Testing connection " + conn.getRealHashCode() + "...");
+            }
+            Connection realConn = conn.getRealConnection();
+            Statement statement = realConn.createStatement();
+            ResultSet rs = statement.executeQuery(poolPingQuery);
+            rs.close();
+            statement.close();
+            if (!realConn.getAutoCommit()) {
+              realConn.rollback();
+            }
+            result = true;
+            if (log.isDebugEnabled()) {
+              log.debug("Connection " + conn.getRealHashCode() + " is GOOD!");
+            }
+          } catch (Exception e) {
+            try {
+              conn.getRealConnection().close();
+            } catch (Exception e2) {
+              //ignore
+            }
+            result = false;
+            if (log.isDebugEnabled()) {
+              log.debug("Connection " + conn.getRealHashCode() + " is BAD!");
+            }
+          }
+        }
+      }
+    }
+    return result;
+  }
+
+  public static Connection unwrapConnection(Connection conn) {
+    if (conn instanceof SimplePooledConnection) {
+      return ((SimplePooledConnection) conn).getRealConnection();
+    } else {
+      return conn;
+    }
+  }
+
+  protected void finalize() throws Throwable {
+    forceCloseAll();
+  }
+
+  /**
+   * ---------------------------------------------------------------------------------------
+   *                               SimplePooledConnection
+   * ---------------------------------------------------------------------------------------
+   */
+  private static class SimplePooledConnection implements InvocationHandler {
+
+    private static final String CLOSE = "close";
+    private static final Class[] IFACES = new Class[]{Connection.class};
+
+    private int hashCode = 0;
+    private SimpleDataSource dataSource;
+    private Connection realConnection;
+    private Connection proxyConnection;
+    private long checkoutTimestamp;
+    private long createdTimestamp;
+    private long lastUsedTimestamp;
+    private int connectionTypeCode;
+    private boolean valid;
+
+    public SimplePooledConnection(Connection connection, SimpleDataSource dataSource) {
+      this.hashCode = connection.hashCode();
+      this.realConnection = connection;
+      this.dataSource = dataSource;
+      this.createdTimestamp = System.currentTimeMillis();
+      this.lastUsedTimestamp = System.currentTimeMillis();
+      this.valid = true;
+
+      proxyConnection = (Connection) Proxy.newProxyInstance(Connection.class.getClassLoader(), IFACES, this);
+    }
+
+    public void invalidate() {
+      valid = false;
+    }
+
+    public boolean isValid() {
+      return valid && realConnection != null && dataSource.pingConnection(this);
+    }
+
+    public Connection getRealConnection() {
+      return realConnection;
+    }
+
+    public Connection getProxyConnection() {
+      return proxyConnection;
+    }
+
+    public int getRealHashCode() {
+      if (realConnection == null) {
+        return 0;
+      } else {
+        return realConnection.hashCode();
+      }
+    }
+
+    public int getConnectionTypeCode() {
+      return connectionTypeCode;
+    }
+
+    public void setConnectionTypeCode(int connectionTypeCode) {
+      this.connectionTypeCode = connectionTypeCode;
+    }
+
+    public long getCreatedTimestamp() {
+      return createdTimestamp;
+    }
+
+    public void setCreatedTimestamp(long createdTimestamp) {
+      this.createdTimestamp = createdTimestamp;
+    }
+
+    public long getLastUsedTimestamp() {
+      return lastUsedTimestamp;
+    }
+
+    public void setLastUsedTimestamp(long lastUsedTimestamp) {
+      this.lastUsedTimestamp = lastUsedTimestamp;
+    }
+
+    public long getTimeElapsedSinceLastUse() {
+      return System.currentTimeMillis() - lastUsedTimestamp;
+    }
+
+    public long getAge() {
+      return System.currentTimeMillis() - createdTimestamp;
+    }
+
+    public long getCheckoutTimestamp() {
+      return checkoutTimestamp;
+    }
+
+    public void setCheckoutTimestamp(long timestamp) {
+      this.checkoutTimestamp = timestamp;
+    }
+
+    public long getCheckoutTime() {
+      return System.currentTimeMillis() - checkoutTimestamp;
+    }
+
+    private Connection getValidConnection() {
+      if (!valid) {
+        throw new NestedRuntimeException("Error accessing SimplePooledConnection.  Connection has been invalidated (probably released back to the pool).");
+      }
+      return realConnection;
+    }
+
+    public int hashCode() {
+      return hashCode;
+    }
+
+    public boolean equals(Object obj) {
+      if (obj instanceof SimplePooledConnection) {
+        return realConnection.hashCode() == (((SimplePooledConnection) obj).realConnection.hashCode());
+      } else if (obj instanceof Connection) {
+        return hashCode == obj.hashCode();
+      } else {
+        return false;
+      }
+    }
+
+    // **********************************
+    // Implemented Connection Methods -- Now handled by proxy
+    // **********************************
+
+    public Object invoke(Object proxy, Method method, Object[] args)
+        throws Throwable {
+      String methodName = method.getName();
+      if (CLOSE.hashCode() == methodName.hashCode() && CLOSE.equals(methodName)) {
+        dataSource.pushConnection(this);
+        return null;
+      } else {
+        try {
+          return method.invoke(getValidConnection(), args);
+        } catch (Throwable t) {
+          throw ClassInfo.unwrapThrowable(t);
+        }
+      }
+    }
+
+    /*
+
+    public Statement createStatement() throws SQLException {
+      return getValidConnection().createStatement();
+    }
+
+    public PreparedStatement prepareStatement(String sql) throws SQLException {
+      return getValidConnection().prepareStatement(sql);
+    }
+
+    public CallableStatement prepareCall(String sql) throws SQLException {
+      return getValidConnection().prepareCall(sql);
+    }
+
+    public String nativeSQL(String sql) throws SQLException {
+      return getValidConnection().nativeSQL(sql);
+    }
+
+    public void setAutoCommit(boolean autoCommit) throws SQLException {
+      getValidConnection().setAutoCommit(autoCommit);
+    }
+
+    public boolean getAutoCommit() throws SQLException {
+      return getValidConnection().getAutoCommit();
+    }
+
+    public void commit() throws SQLException {
+      getValidConnection().commit();
+    }
+
+    public void rollback() throws SQLException {
+      getValidConnection().rollback();
+    }
+
+    public void close() throws SQLException {
+      dataSource.pushConnection(this);
+    }
+
+    public boolean isClosed() throws SQLException {
+      return getValidConnection().isClosed();
+    }
+
+    public DatabaseMetaData getMetaData() throws SQLException {
+      return getValidConnection().getMetaData();
+    }
+
+    public void setReadOnly(boolean readOnly) throws SQLException {
+      getValidConnection().setReadOnly(readOnly);
+    }
+
+    public boolean isReadOnly() throws SQLException {
+      return getValidConnection().isReadOnly();
+    }
+
+    public void setCatalog(String catalog) throws SQLException {
+      getValidConnection().setCatalog(catalog);
+    }
+
+    public String getCatalog() throws SQLException {
+      return getValidConnection().getCatalog();
+    }
+
+    public void setTransactionIsolation(int level) throws SQLException {
+      getValidConnection().setTransactionIsolation(level);
+    }
+
+    public int getTransactionIsolation() throws SQLException {
+      return getValidConnection().getTransactionIsolation();
+    }
+
+    public SQLWarning getWarnings() throws SQLException {
+      return getValidConnection().getWarnings();
+    }
+
+    public void clearWarnings() throws SQLException {
+      getValidConnection().clearWarnings();
+    }
+
+    public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
+      return getValidConnection().createStatement(resultSetType, resultSetConcurrency);
+    }
+
+    public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
+      return getValidConnection().prepareCall(sql, resultSetType, resultSetConcurrency);
+    }
+
+    public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
+      return getValidConnection().prepareCall(sql, resultSetType, resultSetConcurrency);
+    }
+
+    public Map getTypeMap() throws SQLException {
+      return getValidConnection().getTypeMap();
+    }
+
+    public void setTypeMap(Map map) throws SQLException {
+      getValidConnection().setTypeMap(map);
+    }
+
+    // **********************************
+    // JDK 1.4 JDBC 3.0 Methods below
+    // **********************************
+
+    public void setHoldability(int holdability) throws SQLException {
+      getValidConnection().setHoldability(holdability);
+    }
+
+    public int getHoldability() throws SQLException {
+      return getValidConnection().getHoldability();
+    }
+
+    public Savepoint setSavepoint() throws SQLException {
+      return getValidConnection().setSavepoint();
+    }
+
+    public Savepoint setSavepoint(String name) throws SQLException {
+      return getValidConnection().setSavepoint(name);
+    }
+
+    public void rollback(Savepoint savepoint) throws SQLException {
+      getValidConnection().rollback(savepoint);
+    }
+
+    public void releaseSavepoint(Savepoint savepoint) throws SQLException {
+      getValidConnection().releaseSavepoint(savepoint);
+    }
+
+    public Statement createStatement(int resultSetType, int resultSetConcurrency,
+                                     int resultSetHoldability) throws SQLException {
+      return getValidConnection().createStatement(resultSetType, resultSetConcurrency, resultSetHoldability);
+    }
+
+    public PreparedStatement prepareStatement(String sql, int resultSetType,
+                                              int resultSetConcurrency, int resultSetHoldability)
+        throws SQLException {
+      return getValidConnection().prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
+    }
+
+    public CallableStatement prepareCall(String sql, int resultSetType,
+                                         int resultSetConcurrency,
+                                         int resultSetHoldability) throws SQLException {
+      return getValidConnection().prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
+    }
+
+    public PreparedStatement prepareStatement(String sql, int autoGeneratedKeys)
+        throws SQLException {
+      return getValidConnection().prepareStatement(sql, autoGeneratedKeys);
+    }
+
+    public PreparedStatement prepareStatement(String sql, int columnIndexes[])
+        throws SQLException {
+      return getValidConnection().prepareStatement(sql, columnIndexes);
+    }
+
+    public PreparedStatement prepareStatement(String sql, String columnNames[])
+        throws SQLException {
+      return getValidConnection().prepareStatement(sql, columnNames);
+    }
+
+    */
+
+  }
+}

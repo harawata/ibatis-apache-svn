@@ -1,0 +1,26 @@
+------------------------------
+TO-DO: BUGS & FEATURES
+------------------------------
+
+ o Better Spring integration (TX Config)
+ o Implement DBCP 2.0 (update from 1.0)
+ o Improve/fix OSCache 2.0 integration
+
+------------------------------
+TO-DO: DOCUMENTATION
+------------------------------
+
+  o Installation and Configuration
+  o XML Data types
+  o Patterns and Best Practices
+    o Naming conventions
+    o Config Singleton
+    o Simple solution first
+    o N+1 Avoidance
+    o RO/RW Cache Separation
+  o Refactorings
+    o Eliminate N+1 Selects
+    o Lazy Load Associations
+    o ResultClass to ResultMap
+    o ParameterClass to ParameterMap
+

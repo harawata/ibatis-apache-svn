@@ -1,0 +1,293 @@
+<project name="iBATIS-DBL2" default="all" basedir=".">
+
+  <property file="build.properties"/>
+
+  <path id="classpath">
+    <pathelement location="${instrumented}/"/>
+    <pathelement location="${compatibility}/"/>
+    <pathelement location="${src}/"/>
+    <pathelement location="${tests}/"/>
+    <fileset dir="${lib}" includes="**/*.jar" />
+    <fileset dir="${devlib}" includes="**/*.jar" />
+  </path>
+
+  <target name="clean" >
+    <delete dir="${javadocs}" />
+    <delete dir="${jars}" />
+    <delete>
+      <fileset dir="${src}">
+        <include name="**/*.class"/>
+      </fileset>
+    </delete>
+    <delete>
+      <fileset dir="${compatibility}">
+        <include name="**/*.class"/>
+      </fileset>
+    </delete>
+    <delete>
+      <fileset dir="${tests}">
+        <include name="**/*.class"/>
+      </fileset>
+    </delete>
+  </target>
+
+  <target name="prepare" depends="clean">
+    <mkdir dir="${javadocs}"/>
+    <mkdir dir="${jars}"/>
+    <mkdir dir="${jars}/debug"/>
+    <mkdir dir="${jars}/tests"/>
+    <!-- Prepare Release Docs -->
+    <copy todir="${jars}" >
+      <fileset dir="${doc}">
+        <include name="**/*.txt"/>
+      </fileset>
+    </copy>
+    <propertyfile file="version.properties" comment="Build version info">
+        <entry key="buildDate" type="date" value="now"/>
+        <entry key="buildNum" default="0" type="int" operation="+" value="1"/>
+    </propertyfile>
+    <replace
+        file="${jars}/release.txt"
+        value="value not found in version.properties"
+        propertyFile="version.properties">
+        <replacefilter
+            token="@buildDate@"
+            property="buildDate"/>
+        <replacefilter
+            token="@buildNum@"
+            property="buildNum"/>
+    </replace>
+  </target>
+
+  <target name="src.compile" depends="prepare">
+    <!-- defaults - override in build.properties-->
+    <property name="compile.debug" value="true" />
+    <property name="compile.deprecation" value="false" />
+    <javac srcdir="${src}" destdir="${src}" deprecation="${compile.deprecation}" debug="${compile.debug}">
+      <classpath refid="classpath"/>
+    </javac>
+    <javac srcdir="${compatibility}" destdir="${compatibility}" deprecation="${compile.deprecation}" debug="${compile.debug}">
+      <classpath refid="classpath"/>
+    </javac>
+    <javac srcdir="${tests}" destdir="${tests}" deprecation="off" debug="on">
+      <classpath refid="classpath"/>
+    </javac>
+  </target>
+
+  <target name="src.javadoc" >
+    <javadoc destdir="${javadocs}" defaultexcludes="false" failonerror="true" verbose="false" >
+      <classpath refid="classpath"/>
+      <packageset dir="${src}">
+        <include name="com/ibatis/sqlmap/client/**"/>
+        <include name="com/ibatis/dao/client/**"/>
+      </packageset>
+    </javadoc>
+    <copy todir="${javadocs}" filtering="true" overwrite="true" >
+      <fileset dir="${javadocsres}">
+        <include name="**/*"/>
+      </fileset>
+    </copy>
+    <move todir="${javadocs}" overwrite="false">
+      <fileset dir="${javadocs}" />
+      <mapper type="glob" from="*xml" to="*txt" />
+    </move>
+  </target>
+
+  <target name="test.run" depends="src.compile" >
+    <junit fork="yes" printsummary="true" haltonerror="true" showoutput="true" >
+      <!--formatter type="plain" usefile="false"/-->
+      <test name="com.ibatis.sqlmap.AllSqlMapTests"  />
+      <test name="com.ibatis.dao.AllDaoTests"  />
+      <test name="com.ibatis.common.util.AllUtilTests" />
+      <test name="com.ibatis.common.beans.AllBeansTests" />
+      <classpath refid="classpath"/>
+    </junit>
+  </target>
+
+  <target name="test.compatibility" depends="test.run">
+    <java fork="true" classname="compatibility.RunAllCompat">
+      <classpath refid="classpath"/>
+    </java>
+  </target>
+
+  <target name="jar.sqlmaps" depends="src.compile">
+    <jar jarfile="${jars}/ibatis-sqlmap-2.jar">
+      <fileset dir="${src}">
+        <exclude name="com/ibatis/common/**/*"/>
+        <exclude name="com/ibatis/dao/**/*"/>
+        <exclude name="**/*.java"/>
+      </fileset>
+      <fileset dir="${jars}">
+        <include name="release.txt"/>
+        <include name="license.txt"/>
+      </fileset>
+    </jar>
+  </target>
+
+  <target name="jar.dao" depends="src.compile">
+    <jar jarfile="${jars}/ibatis-dao-2.jar">
+      <fileset dir="${src}">
+        <exclude name="com/ibatis/common/**/*"/>
+        <exclude name="com/ibatis/sqlmap/**/*"/>
+        <exclude name="**/*.java"/>
+      </fileset>
+      <fileset dir="${jars}">
+        <include name="release.txt"/>
+        <include name="license.txt"/>
+      </fileset>
+    </jar>
+  </target>
+
+  <target name="jar.common" depends="src.compile">
+    <jar jarfile="${jars}/ibatis-common-2.jar">
+      <fileset dir="${src}">
+        <exclude name="com/ibatis/sqlmap/**/*"/>
+        <exclude name="com/ibatis/dao/**/*"/>
+        <exclude name="**/*.java"/>
+      </fileset>
+      <fileset dir="${jars}">
+        <include name="release.txt"/>
+        <include name="license.txt"/>
+      </fileset>
+    </jar>
+  </target>
+
+  <target name="jar.compatibility" depends="src.compile">
+    <mkdir dir="${jars}/lib/optional/compatibility/"/>
+    <jar jarfile="${jars}/lib/optional/compatibility/ibatis-sqlmap-1-x.jar">
+      <fileset dir="${compatibility}">
+        <exclude name="**/*.java"/>
+      </fileset>
+      <fileset dir="${jars}">
+        <include name="release.txt"/>
+        <include name="license.txt"/>
+      </fileset>
+    </jar>
+  </target>
+
+  <target name="jar.tests" depends="src.compile">
+    <jar jarfile="${jars}/tests/ibatis-tests.zip">
+      <fileset dir="${tests}">
+        <exclude name="**/*.class"/>
+      </fileset>
+      <fileset dir="${jars}">
+        <include name="release.txt"/>
+        <include name="license.txt"/>
+      </fileset>
+    </jar>
+  </target>
+
+  <target name="jar.debug" depends="src.compile">
+    <delete>
+      <fileset dir="${src}">
+        <include name="**/*.class"/>
+      </fileset>
+      <fileset dir="${compatibility}">
+        <include name="**/*.class"/>
+      </fileset>
+    </delete>
+    <javac srcdir="${src}" destdir="${src}" deprecation="off" debug="on">
+      <classpath refid="classpath"/>
+    </javac>
+    <javac srcdir="${compatibility}" destdir="${compatibility}" deprecation="off" debug="on">
+      <classpath refid="classpath"/>
+    </javac>
+    <jar jarfile="${jars}/debug/ibatis-debug.jar">
+      <fileset dir="${src}">
+        <exclude name="**/*.java"/>
+      </fileset>
+      <fileset dir="${compatibility}">
+        <exclude name="**/*.java"/>
+      </fileset>
+      <fileset dir="${jars}">
+        <include name="release.txt"/>
+        <include name="license.txt"/>
+      </fileset>
+    </jar>
+    <jar jarfile="${jars}/debug/ibatis-source.zip">
+      <fileset dir="${src}">
+        <exclude name="**/*.class"/>
+      </fileset>
+      <fileset dir="${compatibility}">
+        <exclude name="**/*.class"/>
+      </fileset>
+      <fileset dir="${jars}">
+        <include name="release.txt"/>
+        <include name="license.txt"/>
+      </fileset>
+    </jar>
+    <copy todir="${jars}/debug/" file="${tests}/log4j.properties" />
+  </target>
+
+  <target name="deploy.assemble" depends="jar.sqlmaps,jar.dao,jar.common,jar.compatibility,jar.tests,jar.debug">
+    <copy todir="${jars}/lib" >
+      <fileset dir="${lib}">
+        <include name="**/*.jar"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="deploy.zipfile" depends="deploy.assemble">
+    <property file="version.properties"/>
+    <jar jarfile="${deployfile-prefix}${buildNum}${deployfile-ext}">
+      <fileset dir="${jars}">
+        <include name="**/*.*"/>
+      </fileset>
+    </jar>
+  </target>
+
+  <target name="post-clean" >
+    <delete>
+      <fileset dir="${src}">
+        <include name="**/*.class"/>
+      </fileset>
+    </delete>
+    <delete>
+      <fileset dir="${compatibility}">
+        <include name="**/*.class"/>
+      </fileset>
+    </delete>
+    <delete>
+      <fileset dir="${tests}">
+        <include name="**/*.class"/>
+      </fileset>
+    </delete>
+  </target>
+
+  <taskdef  name="instrument" classname="com.jcoverage.ant.InstrumentTask" classpathref="classpath"  />
+  <taskdef  name="merge" classname="com.jcoverage.ant.MergeTask"  classpathref="classpath"/>
+  <taskdef  name="report" classname="com.jcoverage.ant.CoverageReportTask"  classpathref="classpath"/>
+  <taskdef  name="check" classname="com.jcoverage.ant.CheckTask"  classpathref="classpath"/>
+
+  <target name="test.instrument" depends="src.compile">
+    <mkdir dir="${instrumented}"/>
+    <instrument todir="${instrumented}">
+      <ignore regex="org.apache.log4j.*"/>
+      <fileset dir="${src}">
+        <include name="**/*.class"/>
+        <exclude name="**/*Test.class"/>
+      </fileset>
+    </instrument>
+  </target>
+
+  <target name="test.report.coverage" description="HTML and XML coverage reports can be found in build/coverage">
+    <mkdir dir="${reports}/jcoverage"/>
+    <report srcdir="${src}" destdir="${reports}/jcoverage"/>
+  </target>
+
+  <target name="coverage" depends="test.instrument, test.compatibility, test.report.coverage, post-clean" />
+  <target name="all" depends="test.compatibility, src.javadoc, deploy.zipfile, post-clean" />
+  <target name="buildOnly" depends="deploy.assemble, post-clean" />
+
+  <!--
+  <taskdef  name="convertSqlMaps" classname="com.ibatis.db.sqlmap.upgrade.ConvertTask"  classpathref="classpath"/>
+  <target name="convert">
+    <convertSqlMaps todir="F:/out/" overwrite="true">
+      <fileset dir="${tests}/compatibility/">
+        <include name="**/maps/*.xml"/>
+      </fileset>
+    </convertSqlMaps>
+  </target>
+  -->
+
+</project>

@@ -1,0 +1,40 @@
+JAR File Dependencies
+---------------------
+
+iBATIS 2.0 has generally few dependencies.  If you're running JDK 1.4, then
+the only real dependency is on the Jakarta Commons Logging framework.  The
+optional JAR file libraries are organized into a package structure found in
+/lib/optional and are categorized by function.
+
+  * If you're running less than JDK 1.4 and if your app server also
+    doesn't already supply the following, then you will need these
+    optional JAR packages:
+
+      /lib/optional/jdbc
+      /lib/optional/jta
+      /lib/optional/xml
+
+All remaining libraries and JAR files are completely optional. Here's
+a summary of those libraries and when you need to use them.
+
+  * If you want to use bytecode enhancement with CGLIB 2.0 you'll need:
+
+      /lib/optional/enhancement
+
+  * If you want to use the Jakarta DBCP connection pool you'll need:
+
+      /lib/optional/dbcp
+
+  * If you want to use OSCache you'll need:
+
+      /lib/optional/caching
+
+  * If you want to use log4j logging you'll need:
+
+      /lib/optional/logging
+
+  * If you want to use legacy (1.x) DAO framework or SQL Map APIs you'll need:
+
+      /lib/optional/compatibility
+
+That's it!
