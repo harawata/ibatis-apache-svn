@@ -2,7 +2,7 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
- 2.0.5 - ??, 2004
+ 2.0.5 - Aug 8, 2004
 ------------------------------
 
  o Added Custom Type Handlers!  (see TypeHandlerCallback)

@@ -2,6 +2,7 @@
 TO-DO: BUGS & FEATURES
 ------------------------------
 
+ o Fix XML encoding for special characters
 
 ------------------------------
 TO-DO: DOCUMENTATION
