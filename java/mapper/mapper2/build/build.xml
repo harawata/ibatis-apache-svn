@@ -12,7 +12,8 @@
   </path>
 
   <target name="clean" >
-    <delete dir="${javadocs}" />
+    <delete dir="${user_javadocs}" />
+    <delete dir="${dev_javadocs}" />
     <delete dir="${jars}" />
     <delete dir="${reports}" />
     <delete dir="${instrumented}" />
@@ -34,7 +35,8 @@
   </target>
 
   <target name="prepare" depends="clean">
-    <mkdir dir="${javadocs}"/>
+    <mkdir dir="${dev_javadocs}"/>
+    <mkdir dir="${user_javadocs}"/>
     <mkdir dir="${jars}"/>
     <mkdir dir="${jars}/debug"/>
     <mkdir dir="${jars}/tests"/>
@@ -77,22 +79,40 @@
   </target>
 
   <target name="src.javadoc" >
-    <javadoc destdir="${javadocs}" defaultexcludes="false" failonerror="true" verbose="false" >
+      
+    <javadoc destdir="${dev_javadocs}" defaultexcludes="false" failonerror="true" verbose="false" >
       <classpath refid="classpath"/>
       <packageset dir="${src}">
-        <include name="com/ibatis/sqlmap/**"/>
-        <include name="com/ibatis/dao/**"/>
+        <include name="com/ibatis/**"/>
       </packageset>
     </javadoc>
-    <copy todir="${javadocs}" filtering="true" overwrite="true" >
+    <copy todir="${dev_javadocs}" filtering="true" overwrite="true" >
       <fileset dir="${javadocsres}">
         <include name="**/*"/>
       </fileset>
     </copy>
-    <move todir="${javadocs}" overwrite="false">
-      <fileset dir="${javadocs}" />
+    <move todir="${dev_javadocs}" overwrite="false">
+      <fileset dir="${dev_javadocs}" />
       <mapper type="glob" from="*xml" to="*txt" />
     </move>
+      
+    <javadoc destdir="${user_javadocs}" defaultexcludes="false" failonerror="true" verbose="false" >
+	  <classpath refid="classpath"/>
+	  <packageset dir="${src}">
+	    <include name="com/ibatis/*/client/**"/>
+        <include name="com/ibatis/common/**"/>
+	  </packageset>
+	</javadoc>
+      <copy todir="${user_javadocs}" filtering="true" overwrite="true" >
+        <fileset dir="${javadocsres}">
+          <include name="**/*"/>
+        </fileset>
+      </copy>
+      <move todir="${user_javadocs}" overwrite="false">
+        <fileset dir="${user_javadocs}" />
+        <mapper type="glob" from="*xml" to="*txt" />
+      </move>
+      
   </target>
 
   <target name="test.run" depends="src.compile">
