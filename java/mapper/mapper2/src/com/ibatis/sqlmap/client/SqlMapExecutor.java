@@ -129,8 +129,8 @@ public interface SqlMapExecutor {
   List queryForList(String id, Object parameterObject, int skip, int max) throws SQLException;
 
   /**
-   * Executes a mapped SQL SELECT statement that returns data to populate
-   * a number of result objects that will be handled one at a time by a
+   * Executes a mapped SQL SELECT statement that returns a number of
+   * result objects that will be handled one at a time by a
    * RowHandler.
    * <p/>
    * This is generally a good approach to take when dealing with large sets
@@ -143,7 +143,6 @@ public interface SqlMapExecutor {
    * @param id              The name of the statement to execute.
    * @param parameterObject The parameter object (e.g. JavaBean, Map, XML etc.).
    * @param rowHandler      A RowHandler instance
-   * @return A List of all, some or none of the result objects handled by RowHandler.
    * @throws java.sql.SQLException If an error occurs.
    */
   void queryWithRowHandler(String id, Object parameterObject, RowHandler rowHandler) throws SQLException;

@@ -2,9 +2,10 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
- 2.0.0 RC4 - May ??, 2004
+ 2.0.0 RC4 - May 10, 2004
 ------------------------------
 
+ o IMPORTANT: Renamed queryForList(String, Object, RowHandler) BACK TO queryWithRowHandler
  o Added DaoManager.getDao(class, contextId) to support for multiple DAO impls
  o Added access to SqlMapTransactionManager from SQL Map DAOs
  o Released all DTD constraints for pluggable components (cache, datasource, txmgr, daotx)
