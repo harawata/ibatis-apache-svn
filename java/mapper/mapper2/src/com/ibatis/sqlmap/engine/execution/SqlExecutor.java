@@ -146,8 +146,11 @@ public class SqlExecutor {
       handleResults(request, rs, skipResults, maxResults, callback);
 
     } finally {
-      closeResultSet(rs);
-      closeStatement(ps);
+      try {
+        closeResultSet(rs);
+      } finally {
+        closeStatement(ps);
+      }
     }
 
   }
@@ -236,8 +239,11 @@ public class SqlExecutor {
       retrieveOutputParameters(cs, mappings, parameters);
 
     } finally {
-      closeResultSet(rs);
-      closeStatement(cs);
+      try {
+        closeResultSet(rs);
+      } finally {
+        closeStatement(cs);
+      }
     }
 
   }
