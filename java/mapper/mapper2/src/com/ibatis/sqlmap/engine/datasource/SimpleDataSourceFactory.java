@@ -10,6 +10,9 @@ import com.ibatis.common.jdbc.SimpleDataSource;
 import javax.sql.DataSource;
 import java.util.Map;
 
+/**
+ * DataSourceFactory implementation for the iBATIS SimpleDataSource
+ */
 public class SimpleDataSourceFactory implements DataSourceFactory {
 
   private DataSource dataSource;

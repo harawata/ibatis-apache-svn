@@ -17,7 +17,15 @@ public class ResultLoader {
 
   private ResultLoader() {
   }
-
+  /**
+   * Loads a result lazily
+   * @param client - the client creating the object
+   * @param statementName - the name of the statement to be used
+   * @param parameterObject - the parameters for the statement
+   * @param targetType - the target type of the result
+   * @return the loaded result
+   * @throws SQLException
+   */
   public static Object loadResult(ExtendedSqlMapClient client, String statementName, Object parameterObject, Class targetType)
       throws SQLException {
     Object value = null;
