@@ -2,10 +2,11 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
- 2.0.0 RC4 - May 10, 2004
+ 2.0.0 RC4 - May 11, 2004
 ------------------------------
 
  o IMPORTANT: Renamed queryForList(String, Object, RowHandler) BACK TO queryWithRowHandler
+ o Added serialize option to cache model to improve concurrent R/W cache performance
  o Added DOM type support for results and parameters.
  o Added DaoManager.getDao(class, contextId) to support for multiple DAO impls
  o Added access to SqlMapTransactionManager from SQL Map DAOs
