@@ -1,21 +1,22 @@
 package com.ibatis.common.beans;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
  * StaticBeanProbe provides methods that allow simple, reflective access to
  * JavaBeans style properties.  Methods are provided for all simple types as
  * well as object types.
- * <p>
+ * <p/>
  * Examples:
- * <p>
+ * <p/>
  * StaticBeanProbe.setObject(object, propertyName, value);
  * <P>
  * Object value = StaticBeanProbe.getObject(object, propertyName);
  *
  * @author clinton_begin
- *
  */
 public class BeanProbe extends Object {
 
@@ -24,7 +25,9 @@ public class BeanProbe extends Object {
   private BeanProbe() {
   }
 
-  /** Returns an array of the readable properties exposed by a bean
+  /**
+   * Returns an array of the readable properties exposed by a bean
+   *
    * @param object The bean
    * @return The properties
    */
@@ -32,7 +35,9 @@ public class BeanProbe extends Object {
     return ClassInfo.getInstance(object.getClass()).getReadablePropertyNames();
   }
 
-  /** Returns an array of the writeable properties exposed by a bean
+  /**
+   * Returns an array of the writeable properties exposed by a bean
+   *
    * @param object The bean
    * @return The properties
    */
@@ -40,10 +45,12 @@ public class BeanProbe extends Object {
     return ClassInfo.getInstance(object.getClass()).getReadablePropertyNames();
   }
 
-  /** Returns the class that the setter expects to receive as a parameter when
+  /**
+   * Returns the class that the setter expects to receive as a parameter when
    * setting a property value.
+   *
    * @param object The bean to check
-   * @param name The name of the property
+   * @param name   The name of the property
    * @return The type of the property
    */
   public static Class getPropertyTypeForSetter(Object object, String name) {
@@ -72,8 +79,10 @@ public class BeanProbe extends Object {
     return type;
   }
 
-  /** Returns the class that the setter expects to receive as a parameter when
+  /**
+   * Returns the class that the setter expects to receive as a parameter when
    * setting a property value.
+   *
    * @param type The class to check
    * @param name The name of the property
    * @return The type of the property
@@ -93,9 +102,11 @@ public class BeanProbe extends Object {
     return type;
   }
 
-  /** Returns the class that the getter will return when reading a property value.
+  /**
+   * Returns the class that the getter will return when reading a property value.
+   *
    * @param object The bean to check
-   * @param name The name of the property
+   * @param name   The name of the property
    * @return The type of the property
    */
   public static Class getPropertyTypeForGetter(Object object, String name) {
@@ -124,7 +135,9 @@ public class BeanProbe extends Object {
     return type;
   }
 
-  /** Returns the class that the getter will return when reading a property value.
+  /**
+   * Returns the class that the getter will return when reading a property value.
+   *
    * @param type The class to check
    * @param name The name of the property
    * @return The type of the property
@@ -289,9 +302,11 @@ public class BeanProbe extends Object {
     }
   }
 
-  /** Gets an Object property from a bean
+  /**
+   * Gets an Object property from a bean
+   *
    * @param object The bean
-   * @param name The property name
+   * @param name   The property name
    * @return The property value (as an Object)
    */
   public static Object getObject(Object object, String name) {
@@ -312,10 +327,12 @@ public class BeanProbe extends Object {
     }
   }
 
-  /** Sets the value of a bean property to an Object
+  /**
+   * Sets the value of a bean property to an Object
+   *
    * @param object The bean to change
-   * @param name The name of the property to set
-   * @param value The new value to set
+   * @param name   The name of the property to set
+   * @param value  The new value to set
    */
   public static void setObject(Object object, String name, Object value) {
     if (name.indexOf('.') > -1) {
@@ -343,8 +360,10 @@ public class BeanProbe extends Object {
   }
 
 
-  /** Checks to see if a bean has a writable property be a given name
-   * @param object The bean to check
+  /**
+   * Checks to see if a bean has a writable property be a given name
+   *
+   * @param object       The bean to check
    * @param propertyName The property to check for
    * @return True if the property exists and is writable
    */
@@ -368,8 +387,10 @@ public class BeanProbe extends Object {
     return hasProperty;
   }
 
-  /** Checks to see if a bean has a readable property be a given name
-   * @param object The bean to check
+  /**
+   * Checks to see if a bean has a readable property be a given name
+   *
+   * @param object       The bean to check
    * @param propertyName The property to check for
    * @return True if the property exists and is readable
    */
@@ -391,27 +412,6 @@ public class BeanProbe extends Object {
       }
     }
     return hasProperty;
-  }
-
-  // ARRAY UTILITIES
-
-  public static List arrayToList(Object array) {
-    List list = null;
-    if (array instanceof Object[]) {
-      list = Arrays.asList((Object[]) array);
-    } else {
-      list = new ArrayList();
-      for (int i = 0, n = Array.getLength(array); i < n; i++) {
-        list.add(Array.get(array, i));
-      }
-    }
-    return list;
-  }
-
-  public static Object[] listToArray(List list, Class type) {
-    Object array = Array.newInstance(type, list.size());
-    array = list.toArray((Object[]) array);
-    return (Object[]) array;
   }
 
 

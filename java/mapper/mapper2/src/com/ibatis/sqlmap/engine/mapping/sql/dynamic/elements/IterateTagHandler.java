@@ -5,9 +5,10 @@
  */
 package com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements;
 
-import com.ibatis.common.beans.*;
-import com.ibatis.sqlmap.client.*;
+import com.ibatis.common.beans.BeanProbe;
+import com.ibatis.sqlmap.client.SqlMapException;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class IterateTagHandler extends BaseTagHandler {
@@ -101,7 +102,7 @@ public class IterateTagHandler extends BaseTagHandler {
       } else if (collection instanceof Iterator) {
         this.iterator = ((Iterator) collection);
       } else if (collection.getClass().isArray()) {
-        List list = BeanProbe.arrayToList(collection);
+        List list = arrayToList(collection);
         this.iterator = list.iterator();
       } else {
         throw new SqlMapException("ParameterObject or property was not a Collection, Array or Iterator.");
@@ -137,6 +138,19 @@ public class IterateTagHandler extends BaseTagHandler {
 
   public boolean isPostParseRequired() {
     return true;
+  }
+
+  private List arrayToList(Object array) {
+    List list = null;
+    if (array instanceof Object[]) {
+      list = Arrays.asList((Object[]) array);
+    } else {
+      list = new ArrayList();
+      for (int i = 0, n = Array.getLength(array); i < n; i++) {
+        list.add(Array.get(array, i));
+      }
+    }
+    return list;
   }
 
 }

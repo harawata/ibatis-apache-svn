@@ -1,11 +1,11 @@
 package com.ibatis.sqlmap.engine.mapping.result.loader;
 
-import com.ibatis.sqlmap.engine.impl.*;
-import com.ibatis.sqlmap.engine.type.*;
-import com.ibatis.common.beans.*;
+import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
+import com.ibatis.sqlmap.engine.type.XmlCollectionTypeMarker;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * User: Clinton Begin
@@ -45,11 +45,18 @@ public class ResultLoader {
       value = client.queryForList(statementName, parameterObject);
     } else if (targetType.isArray()) {
       List list = client.queryForList(statementName, parameterObject);
-      value = BeanProbe.listToArray(list, targetType.getComponentType());
+      value = listToArray(list, targetType.getComponentType());
     } else {
       value = client.queryForObject(statementName, parameterObject);
     }
     return value;
+  }
+
+
+  private static Object[] listToArray(List list, Class type) {
+    Object array = java.lang.reflect.Array.newInstance(type, list.size());
+    array = list.toArray((Object[]) array);
+    return (Object[]) array;
   }
 
 }
