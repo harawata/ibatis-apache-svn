@@ -4,30 +4,30 @@ package com.ibatis.dao.client;
  * This interface describes the DaoManager interface.  It provides
  * access to all DAOs it manages and also allows transactions
  * to be committed and ended (possibly rolled back).
- * <p>
+ * <p/>
  * DAO instances returned from the DAO Manager are proxied such that transactions
  * can be automatically started, committed and ended (or rolled back). This is
  * a similar semantic to the JDBC autocommit, but much more powerful.
- * <p>
+ * <p/>
  * Alternatively, tranasctions can be controlled programmatically, allowing you to
  * demarcate wider scope transactions as needed.
- * <p>
+ * <p/>
  * Either way, transactions will only be started for those contexts that require them.
  * No unneccessary transactions will be started.  When commitTransaction() and
  * endTransaction() are called, all transactions which have been started in each
  * configured context will be committed and ended respectively.  endTransaction() will
  * automatically rollback any transactions that have not been committed.
- * <p>
+ * <p/>
  * Here's a couple of examples:
- *
- *
- *
+ * <p/>
+ * <p/>
+ * <p/>
  * <pre>
- *
+ * <p/>
  * // **************************************************************
  * //              AUTO COMMIT TRANASACTION SEMANTIC
  * // **************************************************************
- *
+ * <p/>
  * DaoManager daoManager = DaoManagerBuilder.buildDaoManager(reader);
  * PersonDao personDao = daoManager.getDao(PersonDao.class);
  * // A transaction will be automatically started committed and ended
@@ -35,12 +35,12 @@ package com.ibatis.dao.client;
  * // are TWO separate transactions.
  * personDao.insertPerson (person); // Starts transaction
  * person.setLastName("Begin");
- * personDao.updatePerson (person); // Continues same transaction
- *
+ * personDao.updatePerson (person); // Starts a new transaction
+ * <p/>
  * // **************************************************************
  * //      PROGRAMMATIC DEMARCATION OF TRANSACTION SCOPE
  * // **************************************************************
- *
+ * <p/>
  * DaoManager daoManager = DaoManagerBuilder.buildDaoManager(reader);
  * PersonDao personDao = daoManager.getDao(PersonDao.class);
  * try {
@@ -57,12 +57,13 @@ package com.ibatis.dao.client;
  *   daoManager.endTransaction();
  * }
  * </pre>
- * <p>
+ * <p/>
  * <b>Important: </b> In order to achieve global transaction behaviour
  * (i.e. two phase commit), you'll need to configure all of your contexts
  * using JTA, JNDI and XA compliant DataSources.
- *
+ * <p/>
  * Date: Jan 27, 2004 10:47:17 PM
+ *
  * @author Clinton Begin
  */
 public interface DaoManager {
@@ -71,7 +72,7 @@ public interface DaoManager {
    * Gets a Dao instance for the requested interface type.
    *
    * @param type The interface or generic type for which an implementation
-   * should be returned.
+   *             should be returned.
    * @return The Dao implementation instance.
    */
   public Dao getDao(Class type);
@@ -83,9 +84,9 @@ public interface DaoManager {
    *
    * @param dao The Dao to find a transaction for.
    * @return The Transaction under which the Dao provided is working
-   * under.
+   *         under.
    */
-  public DaoTransaction getTransaction (Dao dao);
+  public DaoTransaction getTransaction(Dao dao);
 
   /**
    * Starts a transaction scope managed by this  DaoManager.
