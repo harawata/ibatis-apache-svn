@@ -13,7 +13,6 @@ import java.util.StringTokenizer;
  * StaticBeanProbe.setObject(object, propertyName, value);
  * <P>
  * Object value = StaticBeanProbe.getObject(object, propertyName);
- *
  */
 public class GenericProbe extends BaseProbe {
 
@@ -23,9 +22,11 @@ public class GenericProbe extends BaseProbe {
   protected GenericProbe() {
   }
 
-  /** Gets an object from a Map or bean
+  /**
+   * Gets an object from a Map or bean
+   *
    * @param object - the object to probe
-   * @param name - the name of the property (or map entry)
+   * @param name   - the name of the property (or map entry)
    * @return The value of the property (or map entry)
    * @see com.ibatis.common.beans.BaseProbe#getObject(java.lang.Object, java.lang.String)
    */
@@ -37,10 +38,12 @@ public class GenericProbe extends BaseProbe {
     }
   }
 
-  /** Sets an object in a Map or bean
+  /**
+   * Sets an object in a Map or bean
+   *
    * @param object - the object to probe
-   * @param name - the name of the property (or map entry)
-   * @param value - the new value of the property (or map entry)
+   * @param name   - the name of the property (or map entry)
+   * @param value  - the new value of the property (or map entry)
    * @see com.ibatis.common.beans.BaseProbe#setObject(java.lang.Object, java.lang.String, java.lang.Object)
    */
   public void setObject(Object object, String name, Object value) {
@@ -51,10 +54,12 @@ public class GenericProbe extends BaseProbe {
     }
   }
 
-  /** Gets an array of the readable properties in a Map or JavaBean
+  /**
+   * Gets an array of the readable properties in a Map or JavaBean
+   *
    * @param object - the object to get properties for
    * @return The array of properties (or map entries)
-   * @see com.ibatis.common.beans.Probe#getReadablePropertyNames(java.lang.Object)
+   * @see com.ibatis.common.beans.BaseProbe#getReadablePropertyNames(java.lang.Object)
    */
   public String[] getReadablePropertyNames(Object object) {
     if (object instanceof Map) {
@@ -64,12 +69,12 @@ public class GenericProbe extends BaseProbe {
     }
   }
 
-  /** 
+  /**
    * Gets an array of the writeable properties in a Map or JavaBean
-   * 
+   *
    * @param object - the object to get properties for
    * @return The array of properties (or map entries)
-   * @see com.ibatis.common.beans.Probe#getWriteablePropertyNames(java.lang.Object)
+   * @see com.ibatis.common.beans.BaseProbe#getWriteablePropertyNames(java.lang.Object)
    */
   public String[] getWriteablePropertyNames(Object object) {
     if (object instanceof Map) {
@@ -84,7 +89,7 @@ public class GenericProbe extends BaseProbe {
    * setting a property value.
    *
    * @param object - The class to check
-   * @param name - the name of the property
+   * @param name   - the name of the property
    * @return The type of the property
    * @see com.ibatis.common.beans.Probe#getPropertyTypeForSetter(java.lang.Object, java.lang.String)
    */

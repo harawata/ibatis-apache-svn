@@ -6,6 +6,7 @@ import com.ibatis.common.exception.NestedRuntimeException;
 import org.apache.commons.dbcp.BasicDataSource;
 
 import javax.sql.DataSource;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -40,6 +41,7 @@ public class DbcpConfiguration {
 
   /**
    * Getter for DataSource
+   *
    * @return The DataSource
    */
   public DataSource getDataSource() {
@@ -48,10 +50,10 @@ public class DbcpConfiguration {
 
   private BasicDataSource newDbcpConfiguration(Map map) {
     BasicDataSource basicDataSource = new BasicDataSource();
-    String[] props = PROBE.getWriteablePropertyNames(basicDataSource);
-    for (int i = 0; i < props.length; i++) {
-      String propertyName = props[i];
-      if (map.containsKey(propertyName)) {
+    Iterator props = map.keySet().iterator();
+    while (props.hasNext()) {
+      String propertyName = (String) props.next();
+      if (PROBE.hasWritableProperty(basicDataSource, propertyName)) {
         String value = (String) map.get(propertyName);
         Object convertedValue = convertValue(basicDataSource, propertyName, value);
         PROBE.setObject(basicDataSource, propertyName, convertedValue);

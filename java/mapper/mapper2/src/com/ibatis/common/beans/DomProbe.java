@@ -1,8 +1,10 @@
 package com.ibatis.common.beans;
 
-import org.w3c.dom.CharacterData;
 import org.w3c.dom.*;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 /**
@@ -14,141 +16,118 @@ import java.util.StringTokenizer;
 public class DomProbe extends BaseProbe {
 
   public String[] getReadablePropertyNames(Object object) {
-    return new String[0];
+    List props = new ArrayList();
+    Element e = resolveElement(object);
+    NodeList nodes = e.getChildNodes();
+    for (int i = 0; i < nodes.getLength(); i++) {
+      props.add(nodes.item(i).getNodeName());
+    }
+    return (String[]) props.toArray(new String[props.size()]);
   }
 
   public String[] getWriteablePropertyNames(Object object) {
-    return new String[0];
+    List props = new ArrayList();
+    Element e = resolveElement(object);
+    NodeList nodes = e.getChildNodes();
+    for (int i = 0; i < nodes.getLength(); i++) {
+      props.add(nodes.item(i).getNodeName());
+    }
+    return (String[]) props.toArray(new String[props.size()]);
   }
 
   public Class getPropertyTypeForSetter(Object object, String name) {
-    Object obj = getObject(object, name);
-    if (obj == null) {
+    Element e = findNestedNodeByName(resolveElement(object), name, false);
+    //todo alias types, don't use exceptions like this
+    try {
+      return Class.forName(e.getAttribute("type"));
+    } catch (ClassNotFoundException e1) {
       return Object.class;
-    } else {
-      return obj.getClass();
     }
   }
 
   public Class getPropertyTypeForGetter(Object object, String name) {
-    Object obj = getObject(object, name);
-    if (obj == null) {
+    Element e = findNestedNodeByName(resolveElement(object), name, false);
+    //todo alias types, don't use exceptions like this
+    try {
+      return Class.forName(e.getAttribute("type"));
+    } catch (ClassNotFoundException e1) {
       return Object.class;
-    } else {
-      return obj.getClass();
     }
   }
 
   public boolean hasWritableProperty(Object object, String propertyName) {
-    Object obj = getObject(object, propertyName);
-    if (obj == null) {
-      return false;
-    } else {
-      return true;
-    }
+    return findNestedNodeByName(resolveElement(object), propertyName, false) != null;
   }
 
   public boolean hasReadableProperty(Object object, String propertyName) {
-    Object obj = getObject(object, propertyName);
-    if (obj == null) {
-      return false;
-    } else {
-      return true;
-    }
+    return findNestedNodeByName(resolveElement(object), propertyName, false) != null;
   }
 
   public Object getObject(Object object, String name) {
-    if (name.indexOf('.') > -1) {
-      StringTokenizer parser = new StringTokenizer(name, ".");
-      Object value = object;
-      while (parser.hasMoreTokens()) {
-        value = getProperty(value, parser.nextToken());
-        if (value == null) {
-          break;
-        }
-      }
-      return value;
-    } else {
-      return getProperty(object, name);
+    Object value = null;
+    Element element = findNestedNodeByName(resolveElement(object), name, false);
+    if (element != null) {
+      value = getElementValue(element);
     }
+    return value;
   }
 
   public void setObject(Object object, String name, Object value) {
-    if (name.indexOf('.') > -1) {
-      StringTokenizer parser = new StringTokenizer(name, ".");
-      String property = parser.nextToken();
-      Object child = object;
-      while (parser.hasMoreTokens()) {
-        Class type = getPropertyTypeForSetter(child, property);
-        Object parent = child;
-        child = getProperty(parent, property);
-        if (child == null) {
-          try {
-            child = type.newInstance();
-            setObject(parent, property, child);
-          } catch (Exception e) {
-            throw new ProbeException("Cannot set value of property '" + name + "' because '" + property + "' is null and cannot be instantiated on instance of " + type.getName() + ". Cause:" + e.toString(), e);
-          }
-        }
-        property = parser.nextToken();
-      }
-      setProperty(child, property, value);
-    } else {
-      setProperty(object, name, value);
+    Element element = findNestedNodeByName(resolveElement(object), name, true);
+    if (element != null) {
+      setElementValue(element, value);
     }
   }
 
   protected void setProperty(Object object, String property, Object value) {
-    if (property.indexOf("[") > -1) {
-      //setArrayProperty(object, name, value);
-    } else {
-      Element element = null;
-      if (object instanceof Document) {
-        element = (Element) ((Document) object).getLastChild();
-      } else if (object instanceof Element) {
-        element = (Element) object;
-      }
-      setElementValue(element, property, value, 0);
+    Element element = findNodeByName(resolveElement(object), property, 0, true);
+    if (element != null) {
+      setElementValue(element, value);
     }
   }
 
   protected Object getProperty(Object object, String property) {
     Object value = null;
-    if (property.indexOf("[") > -1) {
-//value = getArrayProperty(object, name);
-    } else {
-      Element element = null;
-      if (object instanceof Document) {
-        element = (Element) ((Document) object).getLastChild();
-      } else if (object instanceof Element) {
-        element = (Element) object;
-      }
-      value = getElementValue(element, property, 0);
+    Element element = findNodeByName(resolveElement(object), property, 0, false);
+    if (element != null) {
+      value = getElementValue(element);
     }
     return value;
   }
 
-  private void setElementValue(Element element, String property, Object value, int index) {
+  private Element resolveElement(Object object) {
+    Element element = null;
+    if (object instanceof Document) {
+      element = (Element) ((Document) object).getLastChild();
+    } else if (object instanceof Element) {
+      element = (Element) object;
+    } else {
+      throw new ProbeException("An unknown object type was passed to DomProbe.  Must be a Document.");
+    }
+    return element;
+  }
+
+  private void setElementValue(Element element, Object value) {
     CharacterData data = null;
 
-    Element prop = findNodeByName(element, property, index, true);
+    Element prop = element;
 
-// Find text child element
+    // Find text child element
     NodeList texts = prop.getChildNodes();
     if (texts.getLength() == 1) {
       Node child = texts.item(0);
       if (child instanceof CharacterData) {
-// Use existing text.
+        // Use existing text.
         data = (CharacterData) child;
       } else {
-// Remove non-text, add text.
+        // Remove non-text, add text.
         prop.removeChild(child);
         Text text = prop.getOwnerDocument().createTextNode(String.valueOf(value));
         prop.appendChild(text);
         data = text;
       }
     } else if (texts.getLength() > 1) {
-// Remove all, add text.
+      // Remove all, add text.
       for (int i = texts.getLength() - 1; i >= 0; i--) {
         prop.removeChild(texts.item(i));
       }
@@ -156,50 +135,76 @@ public class DomProbe extends BaseProbe {
       prop.appendChild(text);
       data = text;
     } else {
-// Add text.
+      // Add text.
       Text text = prop.getOwnerDocument().createTextNode(String.valueOf(value));
       prop.appendChild(text);
       data = text;
     }
 
-// Set type attribute
+    // Set type attribute
     prop.setAttribute("type", value == null ? "null" : value.getClass().getName());
 
     data.setData(String.valueOf(value));
   }
 
-  private Object getElementValue(Element element, String property, int index) {
-    StringBuffer value = new StringBuffer();
+  private Object getElementValue(Element element) {
+    StringBuffer value = null;
 
-    Element prop = findNodeByName(element, property, index, false);
+    Element prop = element;
 
-// Find text child elements
-    NodeList texts = prop.getChildNodes();
-    if (texts.getLength() > 0) {
-      for (int i = 0; i < texts.getLength(); i++) {
-        Node text = texts.item(i);
-        if (text instanceof CharacterData) {
-          value.append(((CharacterData) text).getData());
+    if (prop != null) {
+      // Find text child elements
+      NodeList texts = prop.getChildNodes();
+      if (texts.getLength() > 0) {
+        value = new StringBuffer();
+        for (int i = 0; i < texts.getLength(); i++) {
+          Node text = texts.item(i);
+          if (text instanceof CharacterData) {
+            value.append(((CharacterData) text).getData());
+          }
         }
       }
-    } else {
-      value = null;
     }
 
-//convert to proper type
-//value = convert(value.toString());
+    //convert to proper type
+    //value = convert(value.toString());
 
-    return String.valueOf(value);
+    if (value == null) {
+      return null;
+    } else {
+      return String.valueOf(value);
+    }
   }
 
+
+  private Element findNestedNodeByName(Element element, String name, boolean create) {
+    Element child = element;
+
+    StringTokenizer parser = new StringTokenizer(name, ".", false);
+    while (parser.hasMoreTokens()) {
+      String childName = parser.nextToken();
+      if (childName.indexOf("[") > -1) {
+        String propName = childName.substring(0, childName.indexOf("["));
+        int i = Integer.parseInt(childName.substring(childName.indexOf("[") + 1, childName.indexOf("]")));
+        child = findNodeByName(child, propName, i, create);
+      } else {
+        child = findNodeByName(child, childName, 0, create);
+      }
+      if (child == null) {
+        break;
+      }
+    }
+
+    return child;
+  }
 
   private Element findNodeByName(Element element, String name, int index, boolean create) {
     Element prop = null;
 
-// Find named property element
-    NodeList props = element.getElementsByTagName(name);
-    if (props.getLength() > index) {
-      prop = (Element) props.item(index);
+    // Find named property element
+    NodeList propNodes = element.getElementsByTagName(name);
+    if (propNodes.getLength() > index) {
+      prop = (Element) propNodes.item(index);
     } else {
       if (create) {
         for (int i = 0; i < index + 1; i++) {
@@ -210,4 +215,67 @@ public class DomProbe extends BaseProbe {
     }
     return prop;
   }
+
+
+  public static void main(String[] args) throws Exception {
+    DomProbe probe = new DomProbe();
+
+    Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+    doc.appendChild(doc.createElement("root"));
+
+    probe.setObject(doc, "hello[2]", "value3");
+    probe.setObject(doc, "hello[1].hhh", "value2");
+
+    System.out.println(probe.getObject(doc, "hello"));
+
+
+    printNode(doc, "");
+  }
+
+  private static void printNode(Node node, String indent) {
+
+    switch (node.getNodeType()) {
+
+      case Node.DOCUMENT_NODE:
+        System.out.println("<xml version=\"1.0\">\n");
+        // recurse on each child
+        NodeList nodes = node.getChildNodes();
+        if (nodes != null) {
+          for (int i = 0; i < nodes.getLength(); i++) {
+            printNode(nodes.item(i), "");
+          }
+        }
+        break;
+
+      case Node.ELEMENT_NODE:
+        String name = node.getNodeName();
+        System.out.print(indent + "<" + name);
+        NamedNodeMap attributes = node.getAttributes();
+        for (int i = 0; i < attributes.getLength(); i++) {
+          Node current = attributes.item(i);
+          System.out.print(" " + current.getNodeName() +
+              "=\"" + current.getNodeValue() +
+              "\"");
+        }
+        System.out.print(">");
+
+        // recurse on each child
+        NodeList children = node.getChildNodes();
+        if (children != null) {
+          for (int i = 0; i < children.getLength(); i++) {
+            printNode(children.item(i), indent + "  ");
+          }
+        }
+
+        System.out.print("</" + name + ">");
+        break;
+
+      case Node.TEXT_NODE:
+        System.out.print(node.getNodeValue());
+        break;
+    }
+
+  }
+
+
 }
