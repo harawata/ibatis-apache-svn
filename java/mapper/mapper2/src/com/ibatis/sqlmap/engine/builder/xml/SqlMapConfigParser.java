@@ -4,6 +4,7 @@ import com.ibatis.common.resources.Resources;
 import com.ibatis.common.xml.Nodelet;
 import com.ibatis.common.xml.NodeletParser;
 import com.ibatis.common.xml.NodeletUtils;
+import com.ibatis.common.exception.NestedRuntimeException;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.client.extensions.TypeHandlerCallback;
@@ -77,7 +78,7 @@ public class SqlMapConfigParser extends BaseParser {
       parser.parse(reader);
       return vars.client;
     } catch (Exception e) {
-      throw new RuntimeException("Error occurred.  Cause: " + e, e);
+      throw new NestedRuntimeException("Error occurred.  Cause: " + e, e);
     }
   }
 
@@ -96,7 +97,7 @@ public class SqlMapConfigParser extends BaseParser {
             if (statement != null) {
               statement.addExecuteListener(cacheModel);
             } else {
-              throw new RuntimeException("Could not find statement named '" + statementName + "' for use as a flush trigger for the cache model named '" + cacheName + "'.");
+              throw new NestedRuntimeException("Could not find statement named '" + statementName + "' for use as a flush trigger for the cache model named '" + cacheName + "'.");
             }
           }
         }
@@ -122,7 +123,7 @@ public class SqlMapConfigParser extends BaseParser {
             vars.errorCtx.setResource(url);
             props = Resources.getUrlAsProperties(resource);
           } else {
-            throw new RuntimeException("The " + "properties" + " element requires either a resource or a url attribute.");
+            throw new NestedRuntimeException("The " + "properties" + " element requires either a resource or a url attribute.");
           }
 
           if (vars.properties == null) {
@@ -132,7 +133,7 @@ public class SqlMapConfigParser extends BaseParser {
             vars.properties = props;
           }
         } catch (Exception e) {
-          throw new RuntimeException("Error loading properties.  Cause: " + e);
+          throw new NestedRuntimeException("Error loading properties.  Cause: " + e);
         }
       }
     });
@@ -220,7 +221,7 @@ public class SqlMapConfigParser extends BaseParser {
           } else if (impl instanceof TypeHandler) {
             typeHandler = (TypeHandler) impl;
           } else {
-            throw new RuntimeException ("The class '' is not a valid implementation of TypeHandler or TypeHandlerCallback");
+            throw new NestedRuntimeException ("The class '' is not a valid implementation of TypeHandler or TypeHandlerCallback");
           }
 
           vars.errorCtx.setMoreInfo("Check the javaType attribute '" + javaType + "' (must be a classname) or the jdbcType '" + jdbcType + "' (must be a JDBC type name).");

@@ -17,6 +17,7 @@ package com.ibatis.sqlmap.engine.mapping.statement;
 
 import com.ibatis.common.jdbc.exception.NestedSQLException;
 import com.ibatis.common.io.ReaderInputStream;
+import com.ibatis.common.exception.NestedRuntimeException;
 import com.ibatis.sqlmap.client.event.RowHandler;
 import com.ibatis.sqlmap.engine.execution.SqlExecutor;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
@@ -234,7 +235,7 @@ public class GeneralStatement extends BaseStatement {
       DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
       return documentBuilder.parse(new ReaderInputStream(new StringReader(s)));
     } catch (Exception e) {
-      throw new RuntimeException("Error occurred.  Cause: " + e, e);
+      throw new NestedRuntimeException("Error occurred.  Cause: " + e, e);
     }
   }
 }

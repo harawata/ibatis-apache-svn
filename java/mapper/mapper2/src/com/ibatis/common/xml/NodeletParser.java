@@ -12,6 +12,8 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.util.*;
 
+import com.ibatis.common.exception.NestedRuntimeException;
+
 /**
  * The NodeletParser is a callback based parser similar to SAX.  The big
  * difference is that rather than having a single callback for all nodes,
@@ -109,7 +111,7 @@ public class NodeletParser {
       try {
         nodelet.process(node);
       } catch (Exception e) {
-        throw new RuntimeException("Error parsing XPath '" + pathString + "'.  Cause: " + e, e);
+        throw new NestedRuntimeException("Error parsing XPath '" + pathString + "'.  Cause: " + e, e);
       }
     }
   }

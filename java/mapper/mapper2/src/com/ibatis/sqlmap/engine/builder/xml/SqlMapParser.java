@@ -5,6 +5,7 @@ import com.ibatis.common.xml.Nodelet;
 import com.ibatis.common.xml.NodeletException;
 import com.ibatis.common.xml.NodeletParser;
 import com.ibatis.common.xml.NodeletUtils;
+import com.ibatis.common.exception.NestedRuntimeException;
 import com.ibatis.sqlmap.client.extensions.TypeHandlerCallback;
 import com.ibatis.sqlmap.engine.cache.CacheModel;
 import com.ibatis.sqlmap.engine.mapping.parameter.BasicParameterMap;
@@ -113,7 +114,7 @@ public class SqlMapParser extends BaseParser {
         try {
           vars.currentCacheModel.setControllerClassName(type);
         } catch (Exception e) {
-          throw new RuntimeException("Error setting Cache Controller Class.  Cause: " + e, e);
+          throw new NestedRuntimeException("Error setting Cache Controller Class.  Cause: " + e, e);
         }
 
         vars.errorCtx.setMoreInfo("Check the cache model configuration.");
@@ -159,10 +160,10 @@ public class SqlMapParser extends BaseParser {
           if (seconds != null) t += Integer.parseInt(seconds) * 1000;
           if (minutes != null) t += Integer.parseInt(minutes) * 60 * 1000;
           if (hours != null) t += Integer.parseInt(hours) * 60 * 60 * 1000;
-          if (t < 1) throw new RuntimeException("A flush interval must specify one or more of milliseconds, seconds, minutes or hours.");
+          if (t < 1) throw new NestedRuntimeException("A flush interval must specify one or more of milliseconds, seconds, minutes or hours.");
           vars.currentCacheModel.setFlushInterval(t);
         } catch (NumberFormatException e) {
-          throw new RuntimeException("Error building cache '" + vars.currentCacheModel.getId() + "' in '" + "resourceNAME" + "'.  Flush interval milliseconds must be a valid long integer value.  Cause: " + e, e);
+          throw new NestedRuntimeException("Error building cache '" + vars.currentCacheModel.getId() + "' in '" + "resourceNAME" + "'.  Flush interval milliseconds must be a valid long integer value.  Cause: " + e, e);
         }
       }
     });
@@ -234,7 +235,7 @@ public class SqlMapParser extends BaseParser {
             TypeHandlerCallback typeHandlerCallback = (TypeHandlerCallback) Resources.classForName(callback).newInstance();
             handler = new CustomTypeHandler(typeHandlerCallback);
           } catch (Exception e) {
-            throw new RuntimeException("Error occurred during custom type handler configuration.  Cause: " + e, e);
+            throw new NestedRuntimeException("Error occurred during custom type handler configuration.  Cause: " + e, e);
           }
         } else {
           vars.errorCtx.setMoreInfo("Check the parameter mapping property type or name.");
@@ -254,7 +255,7 @@ public class SqlMapParser extends BaseParser {
             mapping.setJavaType(Class.forName(javaType));
           }
         } catch (ClassNotFoundException e) {
-          throw new RuntimeException("Error setting javaType on parameter mapping.  Cause: " + e);
+          throw new NestedRuntimeException("Error setting javaType on parameter mapping.  Cause: " + e);
         }
 
 
@@ -308,11 +309,8 @@ public class SqlMapParser extends BaseParser {
           vars.errorCtx.setMoreInfo("Check the result class.");
           resultClass = Resources.classForName(resultClassName);
         } catch (Exception e) {
-          if (e instanceof RuntimeException) {
-            throw (RuntimeException) e;
-          } else {
-            throw new RuntimeException("Error configuring Result.  Could not set ResultClass.  Cause: " + e, e);
-          }
+          throw new NestedRuntimeException("Error configuring Result.  Could not set ResultClass.  Cause: " + e, e);
+
         }
 
         vars.currentResultMap.setResultClass(resultClass);
@@ -358,7 +356,7 @@ public class SqlMapParser extends BaseParser {
             TypeHandlerCallback typeHandlerCallback = (TypeHandlerCallback) Resources.classForName(callback).newInstance();
             handler = new CustomTypeHandler(typeHandlerCallback);
           } catch (Exception e) {
-            throw new RuntimeException("Error occurred during custom type handler configuration.  Cause: " + e, e);
+            throw new NestedRuntimeException("Error occurred during custom type handler configuration.  Cause: " + e, e);
           }
         } else {
           vars.errorCtx.setMoreInfo("Check the result mapping property type or name.");
@@ -384,7 +382,7 @@ public class SqlMapParser extends BaseParser {
             mapping.setJavaType(Class.forName(javaType));
           }
         } catch (ClassNotFoundException e) {
-          throw new RuntimeException("Error setting javaType on result mapping.  Cause: " + e);
+          throw new NestedRuntimeException("Error setting javaType on result mapping.  Cause: " + e);
         }
 
         if (columnIndex != null && columnIndex.length() > 0) {

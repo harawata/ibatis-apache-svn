@@ -4,6 +4,7 @@ import com.ibatis.common.beans.Probe;
 import com.ibatis.common.beans.ProbeFactory;
 import com.ibatis.common.resources.Resources;
 import com.ibatis.common.xml.NodeletUtils;
+import com.ibatis.common.exception.NestedRuntimeException;
 import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.engine.cache.CacheModel;
 import com.ibatis.sqlmap.engine.mapping.parameter.BasicParameterMap;
@@ -208,7 +209,7 @@ public class SqlStatementParser extends BaseParser {
         String refid = (String) attributes.get("refid");
         Node includeNode = (Node) vars.sqlIncludes.get(refid);
         if (includeNode == null) {
-          throw new RuntimeException("Could not find SQL statement to include with refid '" + refid + "'");
+          throw new NestedRuntimeException("Could not find SQL statement to include with refid '" + refid + "'");
         }
         isDynamic = parseDynamicTags(includeNode, dynamic, sqlBuffer, isDynamic, false);
       } else {
