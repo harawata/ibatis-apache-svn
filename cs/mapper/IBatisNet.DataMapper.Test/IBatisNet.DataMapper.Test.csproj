@@ -471,6 +471,10 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "Maps\Oracle\ODP\Document.xml"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "Maps\Oracle\ODP\DynamicAccount.xml"
                     BuildAction = "Content"
                 />
@@ -488,6 +492,10 @@
                 />
                 <File
                     RelPath = "Maps\Oracle\ODP\Other.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\Oracle\ODP\ResultClass.xml"
                     BuildAction = "Content"
                 />
                 <File
