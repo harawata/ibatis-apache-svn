@@ -8,8 +8,6 @@ Source1 - The main iBatisNet solution, including Common, DataAccess, and DataMap
 
 Tutorial - The tutorial solution (and docbook).
 
-NPetstore - The example PetShop solution
-
-Whiteboard - Proposals and other internal team documentation. 
+NPetstore - The example PetShop solution 
 
 ####
