@@ -20,6 +20,7 @@ import com.ibatis.sqlmap.engine.exchange.DataExchange;
 import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
 import com.ibatis.sqlmap.engine.scope.ErrorContext;
 import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.type.CustomTypeHandler;
 import com.ibatis.sqlmap.engine.type.JdbcTypeRegistry;
 import com.ibatis.sqlmap.engine.type.TypeHandler;
 
@@ -159,8 +160,10 @@ public class BasicParameterMap implements ParameterMap {
     }
 
     // Set Parameter
+    TypeHandler typeHandler = mapping.getTypeHandler();
     if (value != null) {
-      TypeHandler typeHandler = mapping.getTypeHandler();
+      typeHandler.setParameter(ps, i + 1, value, mapping.getJdbcTypeName());
+    } else if (typeHandler instanceof CustomTypeHandler) {
       typeHandler.setParameter(ps, i + 1, value, mapping.getJdbcTypeName());
     } else {
       int jdbcType = mapping.getJdbcType();

@@ -215,11 +215,15 @@ public class ComplexBeanProbe extends BaseProbe {
         Object parent = child;
         child = getProperty(parent, property);
         if (child == null) {
-          try {
-            child = type.newInstance();
-            setObject(parent, property, child);
-          } catch (Exception e) {
-            throw new ProbeException("Cannot set value of property '" + name + "' because '" + property + "' is null and cannot be instantiated on instance of " + type.getName() + ". Cause:" + e.toString(), e);
+          if (value == null) {
+            return; // don't instantiate child path if value is null
+          } else {
+            try {
+              child = type.newInstance();
+              setObject(parent, property, child);
+            } catch (Exception e) {
+              throw new ProbeException("Cannot set value of property '" + name + "' because '" + property + "' is null and cannot be instantiated on instance of " + type.getName() + ". Cause:" + e.toString(), e);
+            }
           }
         }
         property = parser.nextToken();

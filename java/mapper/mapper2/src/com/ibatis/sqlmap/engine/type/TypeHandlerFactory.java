@@ -65,6 +65,7 @@ public class TypeHandlerFactory {
     register(byte[].class, new ByteArrayTypeHandler());
 
     register(Object.class, new ObjectTypeHandler());
+    register(Object.class, "OBJECT", new ObjectTypeHandler());
 
     register(Date.class, new DateTypeHandler());
     register(Date.class, "DATE", new DateOnlyTypeHandler());

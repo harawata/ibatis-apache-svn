@@ -2,8 +2,6 @@
 TO-DO: BUGS & FEATURES
 ------------------------------
 
- o Fix cache controller removal of key list items and also check for existing key values
-
 ------------------------------
 TO-DO: DOCUMENTATION
 ------------------------------

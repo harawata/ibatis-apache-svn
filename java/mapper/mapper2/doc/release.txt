@@ -2,9 +2,14 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
- 2.0.7 - Sep ??, 2004
+ 2.0.7 - Oct ??, 2004
 ------------------------------
 
+ o Added direct Set type property support
+ o Added "OBJECT" type handler mapping to help deal with  unsupported types
+ o Fixed complex properties being instantiated, even if ultimate value is null
+ o Fixed DAO builder so that parameter properties override file props
+ o Fixed CTH so nulls are now sent to custom setParameter
  o Fixed DAO unclosed Connection in JTA transaction 
  o Fixed DAO possible (unlikely) unclosed JDBC connection
 

@@ -20,7 +20,9 @@ import com.ibatis.sqlmap.engine.type.DomCollectionTypeMarker;
 
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ResultLoader {
 
@@ -61,6 +63,8 @@ public class ResultLoader {
     Object value = null;
     if (DomCollectionTypeMarker.class.isAssignableFrom(targetType)) {
       value = client.queryForList(statementName, parameterObject);
+    } else if (Set.class.isAssignableFrom(targetType)) {
+      value = new HashSet(client.queryForList(statementName, parameterObject));
     } else if (Collection.class.isAssignableFrom(targetType)) {
       value = client.queryForList(statementName, parameterObject);
     } else if (targetType.isArray()) {

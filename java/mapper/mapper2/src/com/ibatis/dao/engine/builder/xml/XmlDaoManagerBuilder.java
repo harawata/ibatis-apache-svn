@@ -105,14 +105,18 @@ public class XmlDaoManagerBuilder {
               if (properties == null) {
                 properties = Resources.getResourceAsProperties(resource);
               } else {
-                properties.putAll(Resources.getResourceAsProperties(resource));
+                Properties tempProps = Resources.getResourceAsProperties(resource);
+                tempProps.putAll(properties);
+                properties = tempProps;
               }
             } else if (attributes.containsKey("url")) {
               String url = attributes.getProperty("url");
               if (properties == null) {
                 properties = Resources.getUrlAsProperties(url);
               } else {
-                properties.putAll(Resources.getUrlAsProperties(url));
+                Properties tempProps = Resources.getUrlAsProperties(url);
+                tempProps.putAll(properties);
+                properties = tempProps;
               }
             }
           }

@@ -18,6 +18,7 @@ package com.ibatis.common.beans;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.UndeclaredThrowableException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
 
@@ -52,7 +53,12 @@ public class ClassInfo {
     SIMPLE_TYPE_SET.add(Date.class);
     SIMPLE_TYPE_SET.add(Class.class);
     SIMPLE_TYPE_SET.add(BigInteger.class);
+    SIMPLE_TYPE_SET.add(BigDecimal.class);
+
     SIMPLE_TYPE_SET.add(Collection.class);
+    SIMPLE_TYPE_SET.add(Set.class);
+    SIMPLE_TYPE_SET.add(Map.class);
+    SIMPLE_TYPE_SET.add(List.class);
     SIMPLE_TYPE_SET.add(HashMap.class);
     SIMPLE_TYPE_SET.add(TreeMap.class);
     SIMPLE_TYPE_SET.add(ArrayList.class);
