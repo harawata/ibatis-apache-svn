@@ -106,7 +106,7 @@ public interface SqlMapClient extends SqlMapExecutor, SqlMapTransactionManager {
   public SqlMapSession openSession();
 
   /**
-   * TODO : DEPRECATED
+   * TODO : Deprecated and will be removed.
    *
    * @return
    * @deprecated Use openSession() instead.  THIS METHOD WILL BE REMOVED BEFORE

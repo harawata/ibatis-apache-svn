@@ -6,6 +6,8 @@ import com.ibatis.sqlmap.client.event.RowHandler;
 import com.ibatis.sqlmap.engine.execution.SqlExecutor;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
 import com.ibatis.sqlmap.engine.scope.SessionScope;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -20,6 +22,8 @@ import java.util.Map;
  * Time: 3:57:30 PM
  */
 public class SqlMapSessionImpl implements SqlMapSession {
+
+  private static final Log log = LogFactory.getLog(SqlMapSessionImpl.class);
 
   public SqlMapExecutorDelegate delegate;
   public SessionScope session;
@@ -99,6 +103,7 @@ public class SqlMapSessionImpl implements SqlMapSession {
    * @deprecated Use queryWithRowHandler(String, Object, RowHandler).
    */
   public List queryForList(String id, Object parameterObject, RowHandler rowHandler) throws SQLException {
+    log.warn("Use of a deprecated API detected.  The method SqlMapExecutor.queryForList(String,Object,RowHandler) is deprecated.  Use SqlMapExecutor.queryWithRowHandler(String,Object,RowHandler) instead.");
     DeprecatedRowHandlerAdapter adapter = new DeprecatedRowHandlerAdapter(rowHandler);
     delegate.queryWithRowHandler(session, id, parameterObject, adapter);
     return adapter.getList();
@@ -161,7 +166,7 @@ public class SqlMapSessionImpl implements SqlMapSession {
    *
    * @deprecated No substitute.
    */
-  private class DeprecatedRowHandlerAdapter implements RowHandler {
+  private static class DeprecatedRowHandlerAdapter implements RowHandler {
 
     private RowHandler rowHandler;
     private List list;
@@ -176,6 +181,7 @@ public class SqlMapSessionImpl implements SqlMapSession {
     }
 
     public void handleRow(Object valueObject, List list) {
+      log.warn("Use of a deprecated API detected.  The method RowHandler.handleRow(Object, List) is deprecated.  Use RowHandler.handleRow(Object) instead.");
       rowHandler.handleRow(valueObject, list);
     }
 

@@ -189,7 +189,6 @@ public class CacheModel implements ExecuteListener {
         ObjectInputStream ois = new ObjectInputStream(bis);
         value = ois.readObject();
         ois.close();
-        System.out.println(">>>> DE-SERIALIZED >>>>> " + value);
       } catch (Exception e) {
         throw new NestableRuntimeException("Error caching serializable object.  Cause: " + e, e);
       }
@@ -220,7 +219,6 @@ public class CacheModel implements ExecuteListener {
         oos.writeObject((Serializable) value);
         oos.flush();
         oos.close();
-        System.out.println(">>>> SERIALIZED >>>>> " + value);
         value = bos.toByteArray();
       } catch (IOException e) {
         throw new NestableRuntimeException("Error caching serializable object.  Cause: " + e, e);

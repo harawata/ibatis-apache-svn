@@ -5,6 +5,8 @@ import com.ibatis.sqlmap.client.SqlMapSession;
 import com.ibatis.sqlmap.client.event.RowHandler;
 import com.ibatis.sqlmap.engine.execution.SqlExecutor;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -18,6 +20,8 @@ import java.util.Map;
  * Time: 4:10:15 PM
  */
 public class SqlMapClientImpl implements ExtendedSqlMapClient {
+
+  private static final Log log = LogFactory.getLog(SqlMapClientImpl.class);
 
   public SqlMapExecutorDelegate delegate;
   private ThreadLocal localSqlMapSession = new ThreadLocal();
@@ -147,6 +151,7 @@ public class SqlMapClientImpl implements ExtendedSqlMapClient {
    * @deprecated Use openSession()
    */
   public SqlMapSession getSession() {
+    log.warn("Use of a deprecated API detected.  SqlMapClient.getSession() is deprecated.  Use SqlMapClient.openSession() instead.");
     return openSession();
   }
 
