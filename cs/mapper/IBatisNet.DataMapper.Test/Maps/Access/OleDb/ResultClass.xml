@@ -11,7 +11,7 @@
 		<statement id="GetBoolean"
 					parameterClass="Int"
 					resultClass="bool" >
-			select 1 from Orders where Order_ID = #value#
+			select CBool('True') from Orders where Order_ID = #value#
 		</statement>	
 
 		<!--
@@ -21,7 +21,7 @@
 		<statement id="GetByte"
 					parameterClass="Int"
 					resultClass="byte" >
-			select 155 from Orders where Order_ID = #value#
+			select CByte(155) from Orders where Order_ID = #value#
 		</statement>	
 		
 		<statement id="GetChar"
@@ -37,7 +37,7 @@
 		<statement id="GetDate"
 					parameterClass="Int"
 					resultClass="date" >
-			select '2003-02-15 8:15:00' from Orders where Order_ID  = #value#
+			select Order_Date from Orders where Order_ID  = #value#
 		</statement>
 									
 		<statement id="GetDecimal"
@@ -52,7 +52,7 @@
 		<statement id="GetDouble"
 					parameterClass="Int"
 					resultClass="double" >
-			select 99.5 from Orders where Order_ID= #value#
+			select CDbl(99.5) from Orders where Order_ID= #value#
 		</statement>
 
 		<!--
@@ -62,7 +62,7 @@
 		<statement id="GetGuid"
 					parameterClass="Int"
 					resultClass="guid" >
-			select 'CD5ABF17-4BBC-4C86-92F1-257735414CF4' from Orders where Order_ID = #value#
+			select CONVERT(UNIQUEIDENTIFIER, 'CD5ABF17-4BBC-4C86-92F1-257735414CF4') from Orders where Order_ID = #value#
 		</statement>
 		
 		<statement id="GetInt16"
@@ -89,7 +89,7 @@
 		<statement id="GetSingle"
 					parameterClass="Int"
 					resultClass="float" >
-			select 92233.5 from Orders where Order_ID = #value#
+			select CSng(92233.5) from Orders where Order_ID = #value#
 		</statement>
 						
 		<statement id="GetString"
