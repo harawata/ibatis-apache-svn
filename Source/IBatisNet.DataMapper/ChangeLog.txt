@@ -3,6 +3,7 @@ IBatisNet Change Log
 ------------------------------
 1.1.0 Alpha- XX/XX/XXXX
 ------------------------------
+- Added type (a CLR type) attribut in result and parameterMap element.
 - Patch from Luke Yang
 - Updated schema.
 - Added explicit open/close connection for DataAccess framework.
