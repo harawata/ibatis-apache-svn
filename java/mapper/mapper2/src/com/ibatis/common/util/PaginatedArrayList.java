@@ -17,6 +17,9 @@ package com.ibatis.common.util;
 
 import java.util.*;
 
+/**
+ * Implementation of PaginatedList backed by an ArrayList
+ */
 public class PaginatedArrayList implements PaginatedList {
 
   private static final ArrayList EMPTY_LIST = new ArrayList(0);
@@ -26,6 +29,9 @@ public class PaginatedArrayList implements PaginatedList {
   private int pageSize;
   private int index;
 
+  /**
+   * @param pageSize
+   */
   public PaginatedArrayList(int pageSize) {
     this.pageSize = pageSize;
     this.index = 0;
@@ -33,6 +39,11 @@ public class PaginatedArrayList implements PaginatedList {
     repaginate();
   }
 
+  /**
+   * Constructor to set the initial size and the page size
+   * @param initialCapacity - the initial size
+   * @param pageSize - the page size
+   */
   public PaginatedArrayList(int initialCapacity, int pageSize) {
     this.pageSize = pageSize;
     this.index = 0;
@@ -40,6 +51,11 @@ public class PaginatedArrayList implements PaginatedList {
     repaginate();
   }
 
+  /**
+   * Constructor to create an instance using an existing collection
+   * @param c - the collection to build the instance with
+   * @param pageSize - the page size
+   */
   public PaginatedArrayList(Collection c, int pageSize) {
     this.pageSize = pageSize;
     this.index = 0;

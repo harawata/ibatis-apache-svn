@@ -25,6 +25,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+/**
+ * Memory-based implementation of CacheController
+ */
 public class MemoryCacheController implements CacheController {
 
   private MemoryCacheLevel cacheLevel = MemoryCacheLevel.WEAK;
@@ -116,10 +119,18 @@ public class MemoryCacheController implements CacheController {
   private static class StrongReference {
     private Object object;
 
+    /**
+     * StrongReference constructor for an object
+     * @param object - the Object to store
+     */
     public StrongReference(Object object) {
       this.object = object;
     }
 
+    /**
+     * Getter to get the object stored in the StrongReference
+     * @return - the stored Object
+     */
     public Object get() {
       return object;
     }

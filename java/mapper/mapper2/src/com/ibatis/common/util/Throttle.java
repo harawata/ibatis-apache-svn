@@ -17,6 +17,9 @@ package com.ibatis.common.util;
 
 import com.ibatis.common.exception.NestedRuntimeException;
 
+/**
+ * This is to help keep from getting too many resources
+ */
 public class Throttle {
 
   private final Object LOCK = new Object();
@@ -25,16 +28,28 @@ public class Throttle {
   private int limit;
   private long maxWait;
 
+  /**
+   * Create a throttle object with just a limit
+   * @param limit - the number of references to allow
+   */
   public Throttle(int limit) {
     this.limit = limit;
     this.maxWait = 0;
   }
 
+  /**
+   * Create a throttle object with a limit and a wait time
+   * @param limit - the number of references to allow
+   * @param maxWait - the maximum wait time allowed for a reference
+   */
   public Throttle(int limit, long maxWait) {
     this.limit = limit;
     this.maxWait = maxWait;
   }
 
+  /**
+   * Add a reference; if a reference is not available, an exception is thrown
+   */
   public void increment() {
     synchronized (LOCK) {
       if (count >= limit) {
@@ -61,6 +76,9 @@ public class Throttle {
     }
   }
 
+  /**
+   * Remove a reference
+   */
   public void decrement() {
     synchronized (LOCK) {
       count--;

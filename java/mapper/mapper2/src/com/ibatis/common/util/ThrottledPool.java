@@ -21,6 +21,9 @@ import java.util.List;
 import java.util.Collections;
 import java.util.ArrayList;
 
+/**
+ * This is a pool of Throttle objects (!)
+ */
 public class ThrottledPool {
 
  private Throttle throttle;
@@ -28,6 +31,11 @@ public class ThrottledPool {
   private Class type;
   private List pool;
 
+  /**
+   * Create a ThrottledPool for a Class 
+   * @param type - the type of objects being managed
+   * @param size - the size of the pool
+   */
   public ThrottledPool(Class type, int size) {
     try {
       this.throttle = new Throttle(size);
@@ -41,6 +49,10 @@ public class ThrottledPool {
     }
   }
 
+  /**
+   * Pop an object from the pool
+   * @return - the Object
+   */
   public Object pop() {
     Object o = null;
     while (o == null) {
@@ -54,6 +66,10 @@ public class ThrottledPool {
     return o;
   }
 
+  /**
+   * Push an object onto the pool
+   * @param o - the object to put into the pool
+   */
   public void push(Object o) {
     if (o != null && o.getClass() == type) pool.add(o);
     throttle.decrement();
