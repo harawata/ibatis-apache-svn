@@ -16,7 +16,7 @@
    limitations under the License.
  -->
 
-<!ELEMENT sqlMap (typeAlias* | cacheModel* | resultMap* | parameterMap* | statement* | insert* | update* | delete* | select* | procedure*)+>
+<!ELEMENT sqlMap (typeAlias* | cacheModel* | resultMap* | parameterMap* | sql* | statement* | insert* | update* | delete* | select* | procedure*)+>
 <!ATTLIST sqlMap
 xmlns:fo CDATA #IMPLIED
 namespace CDATA #IMPLIED
@@ -87,7 +87,17 @@ alias CDATA #REQUIRED
 type CDATA #REQUIRED
 >
 
-<!ELEMENT statement (#PCDATA | dynamic | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
+<!ELEMENT sql (#PCDATA | include | dynamic | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
+<!ATTLIST sql
+id CDATA #REQUIRED
+>
+
+<!ELEMENT include EMPTY>
+<!ATTLIST include
+refid CDATA #REQUIRED
+>
+
+<!ELEMENT statement (#PCDATA | include | dynamic | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
 <!ATTLIST statement
 id CDATA #REQUIRED
 parameterMap CDATA #IMPLIED
@@ -101,7 +111,7 @@ xmlResultName CDATA #IMPLIED
 remapResults (true|false) #IMPLIED
 >
 
-<!ELEMENT select (#PCDATA | dynamic | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
+<!ELEMENT select (#PCDATA | include | dynamic | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
 <!ATTLIST select
 id CDATA #REQUIRED
 parameterMap CDATA #IMPLIED
@@ -115,7 +125,7 @@ xmlResultName CDATA #IMPLIED
 remapResults (true|false) #IMPLIED
 >
 
-<!ELEMENT insert (#PCDATA | selectKey | dynamic | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
+<!ELEMENT insert (#PCDATA | include | dynamic | selectKey | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
 <!ATTLIST insert
 id CDATA #REQUIRED
 parameterMap CDATA #IMPLIED
@@ -128,21 +138,21 @@ resultClass CDATA #IMPLIED
 keyProperty CDATA #IMPLIED
 >
 
-<!ELEMENT update (#PCDATA | dynamic | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
+<!ELEMENT update (#PCDATA | include | dynamic | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
 <!ATTLIST update
 id CDATA #REQUIRED
 parameterMap CDATA #IMPLIED
 parameterClass CDATA #IMPLIED
 >
 
-<!ELEMENT delete (#PCDATA | dynamic | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
+<!ELEMENT delete (#PCDATA | include | dynamic | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
 <!ATTLIST delete
 id CDATA #REQUIRED
 parameterMap CDATA #IMPLIED
 parameterClass CDATA #IMPLIED
 >
 
-<!ELEMENT procedure (#PCDATA | dynamic | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
+<!ELEMENT procedure (#PCDATA | include | dynamic | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
 <!ATTLIST procedure
 id CDATA #REQUIRED
 parameterMap CDATA #IMPLIED
@@ -157,36 +167,36 @@ xmlResultName CDATA #IMPLIED
                  DYNAMIC ELEMENTS
   - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-<!ELEMENT dynamic (#PCDATA | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
+<!ELEMENT dynamic (#PCDATA | include | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
 <!ATTLIST dynamic
 prepend CDATA #IMPLIED
 >
 
-<!ELEMENT isNotNull (#PCDATA | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
+<!ELEMENT isNotNull (#PCDATA | include | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
 <!ATTLIST isNotNull
 prepend CDATA #IMPLIED
 property CDATA #IMPLIED
 >
 
-<!ELEMENT isNull (#PCDATA | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
+<!ELEMENT isNull (#PCDATA | include | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
 <!ATTLIST isNull
 prepend CDATA #IMPLIED
 property CDATA #IMPLIED
 >
 
-<!ELEMENT isNotPropertyAvailable (#PCDATA | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
+<!ELEMENT isNotPropertyAvailable (#PCDATA | include | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
 <!ATTLIST isNotPropertyAvailable
 prepend CDATA #IMPLIED
 property CDATA #REQUIRED
 >
 
-<!ELEMENT isPropertyAvailable (#PCDATA | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
+<!ELEMENT isPropertyAvailable (#PCDATA | include | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
 <!ATTLIST isPropertyAvailable
 prepend CDATA #IMPLIED
 property CDATA #REQUIRED
 >
 
-<!ELEMENT isEqual (#PCDATA | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
+<!ELEMENT isEqual (#PCDATA | include | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
 <!ATTLIST isEqual
 prepend CDATA #IMPLIED
 property CDATA #IMPLIED
@@ -194,7 +204,7 @@ compareProperty CDATA #IMPLIED
 compareValue CDATA #IMPLIED
 >
 
-<!ELEMENT isNotEqual (#PCDATA | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
+<!ELEMENT isNotEqual (#PCDATA | include | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
 <!ATTLIST isNotEqual
 prepend CDATA #IMPLIED
 property CDATA #IMPLIED
@@ -202,7 +212,7 @@ compareProperty CDATA #IMPLIED
 compareValue CDATA #IMPLIED
 >
 
-<!ELEMENT isGreaterThan (#PCDATA | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
+<!ELEMENT isGreaterThan (#PCDATA | include | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
 <!ATTLIST isGreaterThan
 prepend CDATA #IMPLIED
 property CDATA #IMPLIED
@@ -210,7 +220,7 @@ compareProperty CDATA #IMPLIED
 compareValue CDATA #IMPLIED
 >
 
-<!ELEMENT isGreaterEqual (#PCDATA | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
+<!ELEMENT isGreaterEqual (#PCDATA | include | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
 <!ATTLIST isGreaterEqual
 prepend CDATA #IMPLIED
 property CDATA #IMPLIED
@@ -218,7 +228,7 @@ compareProperty CDATA #IMPLIED
 compareValue CDATA #IMPLIED
 >
 
-<!ELEMENT isLessThan (#PCDATA | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
+<!ELEMENT isLessThan (#PCDATA | include | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
 <!ATTLIST isLessThan
 prepend CDATA #IMPLIED
 property CDATA #IMPLIED
@@ -226,7 +236,7 @@ compareProperty CDATA #IMPLIED
 compareValue CDATA #IMPLIED
 >
 
-<!ELEMENT isLessEqual (#PCDATA | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
+<!ELEMENT isLessEqual (#PCDATA | include | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
 <!ATTLIST isLessEqual
 prepend CDATA #IMPLIED
 property CDATA #IMPLIED
@@ -234,29 +244,29 @@ compareProperty CDATA #IMPLIED
 compareValue CDATA #IMPLIED
 >
 
-<!ELEMENT isEmpty (#PCDATA | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
+<!ELEMENT isEmpty (#PCDATA | include | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
 <!ATTLIST isEmpty
 prepend CDATA #IMPLIED
 property CDATA #IMPLIED
 >
 
-<!ELEMENT isNotEmpty (#PCDATA | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
+<!ELEMENT isNotEmpty (#PCDATA | include | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
 <!ATTLIST isNotEmpty
 prepend CDATA #IMPLIED
 property CDATA #IMPLIED
 >
 
-<!ELEMENT isParameterPresent (#PCDATA | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
+<!ELEMENT isParameterPresent (#PCDATA | include | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
 <!ATTLIST isParameterPresent
 prepend CDATA #IMPLIED
 >
 
-<!ELEMENT isNotParameterPresent (#PCDATA | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
+<!ELEMENT isNotParameterPresent (#PCDATA | include | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
 <!ATTLIST isNotParameterPresent
 prepend CDATA #IMPLIED
 >
 
-<!ELEMENT iterate (#PCDATA | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
+<!ELEMENT iterate (#PCDATA | include | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
 <!ATTLIST iterate
 prepend CDATA #IMPLIED
 property CDATA #IMPLIED

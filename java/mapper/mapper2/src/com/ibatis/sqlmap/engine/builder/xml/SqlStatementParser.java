@@ -156,57 +156,6 @@ public class SqlStatementParser extends BaseParser {
 
   }
 
-  private SelectKeyStatement parseSelectKey(Node node, GeneralStatement insertStatement) {
-    vars.errorCtx.setActivity("parsing a select key");
-
-    // get attributes
-    Properties attributes = NodeletUtils.parseAttributes(node, vars.properties);
-    String keyPropName = attributes.getProperty("keyProperty");
-    String resultClassName = attributes.getProperty("resultClass");
-    resultClassName = vars.typeHandlerFactory.resolveAlias(resultClassName);
-    Class resultClass = null;
-
-    // get parameter and result maps
-    SelectKeyStatement selectKeyStatement = new SelectKeyStatement();
-    selectKeyStatement.setSqlMapClient(vars.client);
-
-    selectKeyStatement.setId(insertStatement.getId() + "-SelectKey");
-    selectKeyStatement.setResource(vars.errorCtx.getResource());
-    selectKeyStatement.setKeyProperty(keyPropName);
-
-    try {
-      if (resultClassName != null) {
-        vars.errorCtx.setMoreInfo("Check the select key result class.");
-        resultClass = Resources.classForName(resultClassName);
-      } else {
-        Class parameterClass = insertStatement.getParameterClass();
-        if (keyPropName != null && parameterClass != null) {
-          resultClass = PROBE.getPropertyTypeForSetter(parameterClass, selectKeyStatement.getKeyProperty());
-        }
-      }
-    } catch (ClassNotFoundException e) {
-      throw new SqlMapException("Error.  Could not set result class.  Cause: " + e, e);
-    }
-
-    if (resultClass == null) {
-      resultClass = Object.class;
-    }
-
-    // process SQL statement, including inline parameter maps
-    vars.errorCtx.setMoreInfo("Check the select key SQL statement.");
-    processSqlStatement(node, selectKeyStatement);
-
-    BasicResultMap resultMap;
-    resultMap = new AutoResultMap(vars.client.getDelegate(), false);
-    resultMap.setId(selectKeyStatement.getId() + "-AutoResultMap");
-    resultMap.setResultClass(resultClass);
-    resultMap.setResource(selectKeyStatement.getResource());
-    selectKeyStatement.setResultMap(resultMap);
-
-    vars.errorCtx.setMoreInfo(null);
-    return selectKeyStatement;
-  }
-
   private void processSqlStatement(Node n, GeneralStatement statement) {
     vars.errorCtx.setActivity("processing an SQL statement");
 
@@ -236,6 +185,7 @@ public class SqlStatementParser extends BaseParser {
     NodeList children = node.getChildNodes();
     for (int i = 0; i < children.getLength(); i++) {
       Node child = children.item(i);
+      String nodeName = child.getNodeName();
       if (child.getNodeType() == Node.CDATA_SECTION_NODE
           || child.getNodeType() == Node.TEXT_NODE) {
 
@@ -253,10 +203,17 @@ public class SqlStatementParser extends BaseParser {
         dynamic.addChild(sqlText);
 
         sqlBuffer.append(data);
-
+      } else if ("include".equals(nodeName)) {
+        Properties attributes = NodeletUtils.parseAttributes(child, vars.properties);
+        String refid = (String) attributes.get("refid");
+        Node includeNode = (Node) vars.sqlIncludes.get(refid);
+        if (includeNode == null) {
+          throw new RuntimeException("Could not find SQL statement to include with refid '" + refid + "'");
+        }
+        isDynamic = parseDynamicTags(includeNode, dynamic, sqlBuffer, isDynamic, false);
       } else {
         vars.errorCtx.setMoreInfo("Check the dynamic tags.");
-        String nodeName = child.getNodeName();
+
         SqlTagHandler handler = SqlTagHandlerFactory.getSqlTagHandler(nodeName);
         if (handler != null) {
           isDynamic = true;
@@ -314,6 +271,57 @@ public class SqlStatementParser extends BaseParser {
     if (selectKeyStatement != null) {
       selectKeyStatement.setAfter(foundTextFirst);
     }
+    vars.errorCtx.setMoreInfo(null);
+    return selectKeyStatement;
+  }
+
+  private SelectKeyStatement parseSelectKey(Node node, GeneralStatement insertStatement) {
+    vars.errorCtx.setActivity("parsing a select key");
+
+    // get attributes
+    Properties attributes = NodeletUtils.parseAttributes(node, vars.properties);
+    String keyPropName = attributes.getProperty("keyProperty");
+    String resultClassName = attributes.getProperty("resultClass");
+    resultClassName = vars.typeHandlerFactory.resolveAlias(resultClassName);
+    Class resultClass = null;
+
+    // get parameter and result maps
+    SelectKeyStatement selectKeyStatement = new SelectKeyStatement();
+    selectKeyStatement.setSqlMapClient(vars.client);
+
+    selectKeyStatement.setId(insertStatement.getId() + "-SelectKey");
+    selectKeyStatement.setResource(vars.errorCtx.getResource());
+    selectKeyStatement.setKeyProperty(keyPropName);
+
+    try {
+      if (resultClassName != null) {
+        vars.errorCtx.setMoreInfo("Check the select key result class.");
+        resultClass = Resources.classForName(resultClassName);
+      } else {
+        Class parameterClass = insertStatement.getParameterClass();
+        if (keyPropName != null && parameterClass != null) {
+          resultClass = PROBE.getPropertyTypeForSetter(parameterClass, selectKeyStatement.getKeyProperty());
+        }
+      }
+    } catch (ClassNotFoundException e) {
+      throw new SqlMapException("Error.  Could not set result class.  Cause: " + e, e);
+    }
+
+    if (resultClass == null) {
+      resultClass = Object.class;
+    }
+
+    // process SQL statement, including inline parameter maps
+    vars.errorCtx.setMoreInfo("Check the select key SQL statement.");
+    processSqlStatement(node, selectKeyStatement);
+
+    BasicResultMap resultMap;
+    resultMap = new AutoResultMap(vars.client.getDelegate(), false);
+    resultMap.setId(selectKeyStatement.getId() + "-AutoResultMap");
+    resultMap.setResultClass(resultClass);
+    resultMap.setResource(selectKeyStatement.getResource());
+    selectKeyStatement.setResultMap(resultMap);
+
     vars.errorCtx.setMoreInfo(null);
     return selectKeyStatement;
   }

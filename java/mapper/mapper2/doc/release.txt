@@ -12,6 +12,7 @@ Build Number: @buildNum@
  o Added support for isolation levels specified in .startTransaction()
  o Refactored Builder/Parser to be more maintainable (nodelets)
  o Verified that duplicate statement names throw an exception. [982534]
+ o Included SQL Fragments to reduce/eliminate repeated SQL
 
 ------------------------------
  2.0.8 - Nov 26, 2004

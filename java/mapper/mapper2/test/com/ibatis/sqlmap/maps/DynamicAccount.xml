@@ -292,15 +292,7 @@
     </dynamic>
   </select>
 
-  <select id="dynamicWithPrepend"
-    parameterClass="testdomain.Account"
-    resultClass="testdomain.Account">
-    select
-      ACC_ID          as id,
-      ACC_FIRST_NAME  as firstName,
-      ACC_LAST_NAME   as lastName,
-      ACC_EMAIL       as emailAddress
-    from ACCOUNT
+  <sql id="includeComplex">
     <dynamic prepend="where">
       <isParameterPresent>
         <isNotEmpty prepend="and" property="id">
@@ -314,6 +306,18 @@
         </isNotEmpty>
       </isParameterPresent>
     </dynamic>
+  </sql>
+
+  <select id="dynamicWithPrepend"
+    parameterClass="testdomain.Account"
+    resultClass="testdomain.Account">
+    select
+      ACC_ID          as id,
+      ACC_FIRST_NAME  as firstName,
+      ACC_LAST_NAME   as lastName,
+      ACC_EMAIL       as emailAddress
+    from ACCOUNT
+    <include refid="includeComplex"/>
   </select>
 
   <select id="dynamicWithTwoDynamicElements"
@@ -340,14 +344,13 @@
     </dynamic>
   </select>
 
-
   <select id="complexDynamicStatement" cacheModel="account-cache" resultClass="testdomain.Account" parameterClass="testdomain.Account">
     select
       ACC_ID          as id,
       ACC_FIRST_NAME  as firstName,
       ACC_LAST_NAME   as lastName,
       ACC_EMAIL       as emailAddress
-    from ACCOUNT
+     from ACCOUNT
     <dynamic prepend="WHERE">
       <isNotNull prepend="AND" property="firstName">
         (ACC_FIRST_NAME = #firstName#

@@ -4,7 +4,6 @@
 
 2.1
   Ease of Use
-      - Included SQL Fragments
       - <generate> tag for CRUD methods
       - Constructor and field based results
 

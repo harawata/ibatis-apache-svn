@@ -32,6 +32,7 @@ public class SqlMapParser extends BaseParser {
     parser.setEntityResolver(new SqlMapClasspathEntityResolver());
 
     addSqlMapNodelets();
+    addSqlNodelets();
     addTypeAliasNodelets();
     addCacheModelNodelets();
     addParameterMapNodelets();
@@ -49,6 +50,15 @@ public class SqlMapParser extends BaseParser {
       public void process(Node node) throws Exception {
         Properties attributes = NodeletUtils.parseAttributes(node, vars.properties);
         vars.currentNamespace = attributes.getProperty("namespace");
+      }
+    });
+  }
+
+  private void addSqlNodelets() {
+    parser.addNodelet("/sqlMap/sql", new Nodelet() {
+      public void process(Node node) throws Exception {
+        Properties attributes = NodeletUtils.parseAttributes(node, vars.properties);
+        vars.sqlIncludes.put(attributes.getProperty("id"), node);
       }
     });
   }

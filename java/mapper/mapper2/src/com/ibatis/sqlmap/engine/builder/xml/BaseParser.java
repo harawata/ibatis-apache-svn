@@ -15,7 +15,9 @@ import com.ibatis.sqlmap.engine.type.TypeHandler;
 import com.ibatis.sqlmap.engine.type.TypeHandlerFactory;
 
 import javax.sql.DataSource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 public abstract class BaseParser {
@@ -121,7 +123,7 @@ public abstract class BaseParser {
     public List parameterMappingList;
     public List resultMappingList;
     public int resultMappingIndex;
-
+    public Map sqlIncludes = new HashMap();
   }
 
 }
