@@ -1,10 +1,6 @@
-------------------------------
-TO-DO: BUGS & FEATURES
-------------------------------
-
-------------------------------
-TO-DO: DOCUMENTATION
-------------------------------
+------------------------------------------------------------
+                 Documentation Needed
+------------------------------------------------------------
 
   o commitRequired="true" on transactionManager element
   o DefaultAutoCommit property of EXTERNAL TX Manager

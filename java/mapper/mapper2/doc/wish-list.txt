@@ -1,27 +1,7 @@
 ------------------------------------------------------------
-              iBATIS Wish List and Road Map
+                      Wish List
 ------------------------------------------------------------
 
-2.1
-  Ease of Use
-      - Included SQL Fragments
-      - <generate> tag for CRUD methods
-      - Constructor and field based results
-
-2.2
-  Ease of Use
-      - Override/extend mapped statements (i.e. reuse SQL; overrides="statementName")
-      - Improved configuration API and logging
-      - Pluggable SQL Scripting languages
-  Database Support
-      - Save point support
-  Performance
-      - Cache dependency on other cache (flush-on-dependant)
-      - Flush cache at specifig time (e.g. 22:30)
-  Object Oriented
-      - Inheritance via selects or joins (same as groups)
-
-#.#
   Ease of Use
       - Optional new line stripping
       - Cross file resource management (currently works, but order dependent --ok?)
