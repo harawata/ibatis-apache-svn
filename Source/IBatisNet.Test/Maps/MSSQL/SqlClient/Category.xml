@@ -26,6 +26,15 @@
 			select CAST(SCOPE_IDENTITY() as int) as value
 		</statement><!--Guid for Oledb, UniqueIdentifier for SqlClient,Odbc -->
 		
+		<!-- Test for Guid Parameter Class-->
+		<statement id="InsertCategoryGuidParameterClass" parameterClass="Guid" resultClass="int">
+			insert into Categories  
+				(Category_Name, Category_Guid) 
+			values 
+				('toto', #value:UniqueIdentifier#);
+			select CAST(SCOPE_IDENTITY() as int) as value
+		</statement><!--Guid for Oledb, UniqueIdentifier for SqlClient,Odbc -->		
+		
 		<!--  -->
 		<insert id="InsertCategoryViaInsertStatement" parameterClass="Category" >
 			<selectKey property="Id" type="post" resultClass="int">

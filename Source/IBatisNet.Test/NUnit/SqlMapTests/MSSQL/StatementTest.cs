@@ -108,6 +108,20 @@ namespace IBatisNet.Test.NUnit.SqlMapTests.MSSQL
 		}
 
 		/// <summary>
+		/// Test guid column/field through parameterClass.
+		/// </summary>
+		[Test] 
+		public void TestGuidColumnParameterClass() {
+			Guid newGuid = Guid.NewGuid();
+			int key = (int)sqlMap.Insert("InsertCategoryGuidParameterClass", newGuid);
+
+			Category categoryTest = (Category)sqlMap.QueryForObject("GetCategory", key);
+			Assert.AreEqual(key, categoryTest.Id);
+			Assert.AreEqual("toto", categoryTest.Name);
+			Assert.AreEqual(newGuid, categoryTest.Guid);
+		}
+
+		/// <summary>
 		/// Test Insert Category Via ParameterMap.
 		/// </summary>
 		[Test] 
