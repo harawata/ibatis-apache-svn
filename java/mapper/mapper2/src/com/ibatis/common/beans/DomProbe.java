@@ -2,7 +2,8 @@ package com.ibatis.common.beans;
 
 import org.w3c.dom.*;
 
-import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -216,66 +217,50 @@ public class DomProbe extends BaseProbe {
     return prop;
   }
 
-
-  public static void main(String[] args) throws Exception {
-    DomProbe probe = new DomProbe();
-
-    Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-    doc.appendChild(doc.createElement("root"));
-
-    probe.setObject(doc, "hello[2]", "value3");
-    probe.setObject(doc, "hello[1].hhh", "value2");
-
-    System.out.println(probe.getObject(doc, "hello"));
-
-
-    printNode(doc, "");
-  }
-
-  private static void printNode(Node node, String indent) {
+  public static String nodeToString(Node node, String indent) {
+    PrintWriter writer = new PrintWriter(new StringWriter());
 
     switch (node.getNodeType()) {
 
       case Node.DOCUMENT_NODE:
-        System.out.println("<xml version=\"1.0\">\n");
+        writer.println("<xml version=\"1.0\">\n");
         // recurse on each child
         NodeList nodes = node.getChildNodes();
         if (nodes != null) {
           for (int i = 0; i < nodes.getLength(); i++) {
-            printNode(nodes.item(i), "");
+            writer.print(nodeToString(nodes.item(i), ""));
           }
         }
         break;
 
       case Node.ELEMENT_NODE:
         String name = node.getNodeName();
-        System.out.print(indent + "<" + name);
+        writer.print(indent + "<" + name);
         NamedNodeMap attributes = node.getAttributes();
         for (int i = 0; i < attributes.getLength(); i++) {
           Node current = attributes.item(i);
-          System.out.print(" " + current.getNodeName() +
+          writer.print(" " + current.getNodeName() +
               "=\"" + current.getNodeValue() +
               "\"");
         }
-        System.out.print(">");
+        writer.print(">");
 
         // recurse on each child
         NodeList children = node.getChildNodes();
         if (children != null) {
           for (int i = 0; i < children.getLength(); i++) {
-            printNode(children.item(i), indent + "  ");
+            writer.print(nodeToString(children.item(i), indent + indent));
           }
         }
 
-        System.out.print("</" + name + ">");
+        writer.print("</" + name + ">");
         break;
 
       case Node.TEXT_NODE:
-        System.out.print(node.getNodeValue());
+        writer.print(node.getNodeValue());
         break;
     }
-
+    return writer.toString();
   }
-
 
 }
