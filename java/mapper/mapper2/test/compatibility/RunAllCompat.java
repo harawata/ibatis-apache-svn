@@ -16,7 +16,7 @@ import compatibility.scriptrunner.ScriptRunnerCompat;
 
 public class RunAllCompat extends BaseCompat implements Runnable {
 
-  private static final int THREADS = 100;
+  private static final int THREADS = 250;
   private static final int STATEMENTS = 19;
 
   private static final Stopwatch stopwatch = new Stopwatch();

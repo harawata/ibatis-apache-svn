@@ -13,7 +13,7 @@ import java.lang.ref.*;
 public class MemoryCacheController implements CacheController {
 
   private MemoryCacheLevel cacheLevel = MemoryCacheLevel.WEAK;
-  private Map cache = new HashMap();
+  private Map cache = Collections.synchronizedMap(new HashMap());
 
   /**
    * Configures the cache
@@ -35,17 +35,15 @@ public class MemoryCacheController implements CacheController {
    * @param value The object to be cached
    */
   public void putObject(CacheModel cacheModel, Object key, Object value) {
-    synchronized (this) {
-      Object reference = null;
-      if (cacheLevel.equals(MemoryCacheLevel.WEAK)) {
-        reference = new WeakReference(value);
-      } else if (cacheLevel.equals(MemoryCacheLevel.SOFT)) {
-        reference = new SoftReference(value);
-      } else if (cacheLevel.equals(MemoryCacheLevel.STRONG)) {
-        reference = new StrongReference(value);
-      }
-      cache.put(key, reference);
+    Object reference = null;
+    if (cacheLevel.equals(MemoryCacheLevel.WEAK)) {
+      reference = new WeakReference(value);
+    } else if (cacheLevel.equals(MemoryCacheLevel.SOFT)) {
+      reference = new SoftReference(value);
+    } else if (cacheLevel.equals(MemoryCacheLevel.STRONG)) {
+      reference = new StrongReference(value);
     }
+    cache.put(key, reference);
   }
 
   /** Get an object out of the cache.
@@ -54,7 +52,6 @@ public class MemoryCacheController implements CacheController {
    * @return The cached object (or null)
    */
   public Object getObject(CacheModel cacheModel, Object key) {
-    synchronized (this) {
       Object value = null;
       Object ref = cache.get(key);
       if (ref != null) {
@@ -67,11 +64,9 @@ public class MemoryCacheController implements CacheController {
         }
       }
       return value;
-    }
   }
 
   public Object removeObject(CacheModel cacheModel, Object key) {
-    synchronized (this) {
       Object value = null;
       Object ref = cache.remove(key);
       if (ref != null) {
@@ -84,7 +79,6 @@ public class MemoryCacheController implements CacheController {
         }
       }
       return value;
-    }
   }
 
   /**
@@ -92,9 +86,7 @@ public class MemoryCacheController implements CacheController {
    * @param cacheModel The cache model
    */
   public void flush(CacheModel cacheModel) {
-    synchronized (this) {
       cache.clear();
-    }
   }
 
   /**

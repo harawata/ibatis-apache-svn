@@ -6,17 +6,14 @@ import com.ibatis.sqlmap.engine.mapping.statement.ExecuteListener;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
 
 import java.io.*;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 
  */
 public class CacheModel implements ExecuteListener {
 
-  //private static final String CTX_LOCKED_OBJECTS = "__CACHE_MODEL_LOCKED_OBJECTS";
+  private static final Map lockMap = new HashMap();
 
   private Object STATS_LOCK = new Object();
   private int requests = 0;
@@ -212,7 +209,12 @@ public class CacheModel implements ExecuteListener {
    */
   public void flush() {
     lastFlush = System.currentTimeMillis();
-    controller.flush(this);
+    // use the controller's key
+    CacheKey key = new CacheKey();
+    key.update(controller);
+    synchronized (getLock(controller, key)) {
+      controller.flush(this);
+    }
   }
 
   /**
@@ -231,7 +233,10 @@ public class CacheModel implements ExecuteListener {
       }
     }
 
-    Object value = controller.getObject(this, key);
+    Object value = null;
+    synchronized (getLock(controller, key)) {
+      value = controller.getObject(this, key);
+    }
 
     if (serialize && !readOnly && value != null) {
       try {
@@ -244,7 +249,6 @@ public class CacheModel implements ExecuteListener {
             "a serialized cache for an object that may be taking advantage of lazy loading.  Cause: " + e, e);
       }
     }
-
 
     synchronized (STATS_LOCK) {
       requests++;
@@ -275,7 +279,21 @@ public class CacheModel implements ExecuteListener {
         throw new NestedRuntimeException("Error caching serializable object.  Cause: " + e, e);
       }
     }
-    controller.putObject(this, key, value);
+    synchronized (getLock(controller, key)) {
+      controller.putObject(this, key, value);
+    }
+  }
+
+  private synchronized static final Object getLock (CacheController controller, CacheKey key) {
+    int controllerId = System.identityHashCode(controller);
+    int keyHash = key.hashCode();
+    Integer lockKey = new Integer(29 * controllerId + keyHash);
+    Object lock = lockMap.get(lockKey);
+    if (lock == null) {
+      lock = lockKey; //might as well use the same object
+      lockMap.put(lockKey, lock);
+    }
+    return lock;
   }
 
 }

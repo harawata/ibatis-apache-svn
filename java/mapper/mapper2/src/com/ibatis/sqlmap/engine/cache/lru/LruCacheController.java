@@ -23,8 +23,8 @@ public class LruCacheController implements CacheController {
    */
   public LruCacheController() {
     this.cacheSize = 100;
-    this.cache = new HashMap();
-    this.keyList = new ArrayList();
+    this.cache = Collections.synchronizedMap(new HashMap());
+    this.keyList = Collections.synchronizedList(new ArrayList());
   }
 
   /**
@@ -47,14 +47,12 @@ public class LruCacheController implements CacheController {
    * @param value The object to be cached
    */
   public void putObject(CacheModel cacheModel, Object key, Object value) {
-    synchronized (this) {
       cache.put(key, value);
       keyList.add(key);
       if (keyList.size() > cacheSize) {
         Object oldestKey = keyList.remove(0);
         cache.remove(oldestKey);
       }
-    }
   }
 
   /** Get an object out of the cache.
@@ -63,19 +61,15 @@ public class LruCacheController implements CacheController {
    * @return The cached object (or null)
    */
   public Object getObject(CacheModel cacheModel, Object key) {
-    synchronized (this) {
       keyList.remove(key);
       keyList.add(key);
       return cache.get(key);
-    }
   }
 
   public Object removeObject(CacheModel cacheModel, Object key) {
-    synchronized (this) {
       keyList.remove(key);
       keyList.add(key);
       return cache.remove(key);
-    }
   }
 
   /**
@@ -83,10 +77,8 @@ public class LruCacheController implements CacheController {
    * @param cacheModel The cache model
    */
   public void flush(CacheModel cacheModel) {
-    synchronized (this) {
       cache.clear();
       keyList.clear();
-    }
   }
 
 }
