@@ -1,9 +1,9 @@
 package com.ibatis.sqlmap.engine.cache;
 
+import com.ibatis.common.exception.NestedRuntimeException;
 import com.ibatis.common.resources.Resources;
 import com.ibatis.sqlmap.engine.mapping.statement.ExecuteListener;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
-import net.sf.hibernate.exception.NestableRuntimeException;
 
 import java.io.*;
 import java.util.HashSet;
@@ -190,7 +190,7 @@ public class CacheModel implements ExecuteListener {
         value = ois.readObject();
         ois.close();
       } catch (Exception e) {
-        throw new NestableRuntimeException("Error caching serializable object.  Cause: " + e, e);
+        throw new NestedRuntimeException("Error caching serializable object.  Cause: " + e, e);
       }
     }
 
@@ -221,7 +221,7 @@ public class CacheModel implements ExecuteListener {
         oos.close();
         value = bos.toByteArray();
       } catch (IOException e) {
-        throw new NestableRuntimeException("Error caching serializable object.  Cause: " + e, e);
+        throw new NestedRuntimeException("Error caching serializable object.  Cause: " + e, e);
       }
     }
     controller.putObject(this, key, value);
