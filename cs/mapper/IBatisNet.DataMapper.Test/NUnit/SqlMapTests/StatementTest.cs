@@ -991,6 +991,16 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Assert.IsNull(account);
 		}
 
+		/// <summary>
+		/// Test Execute Delete
+		/// </summary>
+		[Test]
+		public void TestDeleteWithComments() 
+		{
+			int rowNumber = sqlMap.Delete("DeleteWithComments", null);
+
+			Assert.IsTrue( rowNumber==4 );
+		}
 		#endregion
 
 		#region Row delegate
