@@ -212,8 +212,16 @@ public class SqlMapConfigParser extends BaseParser {
           javaType = typeHandlerFactory.resolveAlias(javaType);
 
           vars.errorCtx.setMoreInfo("Check the callback attribute '" + callback + "' (must be a classname).");
-          TypeHandlerCallback typeHandlerCallback = (TypeHandlerCallback) Resources.classForName(callback).newInstance();
-          TypeHandler typeHandler = new CustomTypeHandler(typeHandlerCallback);
+
+          TypeHandler typeHandler;
+          Object impl = Resources.classForName(callback).newInstance();
+          if (impl instanceof TypeHandlerCallback) {
+            typeHandler = new CustomTypeHandler((TypeHandlerCallback) impl);
+          } else if (impl instanceof TypeHandler) {
+            typeHandler = (TypeHandler) impl;
+          } else {
+            throw new RuntimeException ("The class '' is not a valid implementation of TypeHandler or TypeHandlerCallback");
+          }
 
           vars.errorCtx.setMoreInfo("Check the javaType attribute '" + javaType + "' (must be a classname) or the jdbcType '" + jdbcType + "' (must be a JDBC type name).");
           if (jdbcType != null && jdbcType.length() > 0) {

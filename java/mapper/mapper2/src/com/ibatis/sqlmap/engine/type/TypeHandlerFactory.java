@@ -67,10 +67,14 @@ public class TypeHandlerFactory {
     register(double.class, handler);
 
     register(String.class, new StringTypeHandler());
+    register(String.class, "CLOB", new CustomTypeHandler(new ClobTypeHandlerCallback()));
+    register(String.class, "LONGVARCHAR", new CustomTypeHandler(new ClobTypeHandlerCallback()));
 
     register(BigDecimal.class, new BigDecimalTypeHandler());
 
     register(byte[].class, new ByteArrayTypeHandler());
+    register(byte[].class, "BLOB", new CustomTypeHandler(new BlobTypeHandlerCallback()));
+    register(byte[].class, "LONGVARBINARY", new CustomTypeHandler(new BlobTypeHandlerCallback()));
 
     register(Object.class, new ObjectTypeHandler());
     register(Object.class, "OBJECT", new ObjectTypeHandler());
@@ -83,7 +87,6 @@ public class TypeHandlerFactory {
     register(java.sql.Date.class, new SqlDateTypeHandler());
     register(java.sql.Time.class, new SqlTimeTypeHandler());
     register(java.sql.Timestamp.class, new SqlTimestampTypeHandler());
-
 
     putTypeAlias("string", String.class.getName());
     putTypeAlias("byte", Byte.class.getName());
@@ -185,7 +188,6 @@ public class TypeHandlerFactory {
     }
     map.put(jdbcType, handler);
   }
-
 
   /**
    * Lookup an aliased class and return it's REAL name
