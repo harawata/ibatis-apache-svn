@@ -1,6 +1,7 @@
 package com.ibatis.sqlmap.engine.mapping.statement;
 
 import com.ibatis.sqlmap.engine.scope.*;
+import com.ibatis.sqlmap.engine.transaction.Transaction;
 
 import java.sql.*;
 
@@ -11,7 +12,7 @@ import java.sql.*;
  */
 public class SelectStatement extends GeneralStatement {
 
-  public int executeUpdate(RequestScope request, Connection conn, Object parameterObject)
+  public int executeUpdate(RequestScope request, Transaction trans, Object parameterObject)
       throws SQLException {
     throw new SQLException("Select statements cannot be executed as an update.");
   }

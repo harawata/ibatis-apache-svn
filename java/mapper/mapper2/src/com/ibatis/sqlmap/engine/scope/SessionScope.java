@@ -3,8 +3,6 @@ package com.ibatis.sqlmap.engine.scope;
 import com.ibatis.sqlmap.engine.transaction.*;
 import com.ibatis.sqlmap.client.*;
 
-import java.sql.*;
-
 /**
  * User: Clinton Begin
  * Date: Jan 2, 2004
@@ -22,7 +20,7 @@ public class SessionScope extends BaseScope {
   private SqlMapTransactionManager sqlMapTxMgr;
 
   // Used by StandardSqlMapClient
-  private Connection userConnection;
+  private Transaction userTransaction;
 
   // Used by TransactionManager
   private Transaction transaction;
@@ -66,12 +64,12 @@ public class SessionScope extends BaseScope {
     this.sqlMapTxMgr = sqlMapTxMgr;
   }
 
-  public Connection getUserConnection() {
-    return userConnection;
+  public Transaction getUserTransaction() {
+    return userTransaction;
   }
 
-  public void setUserConnection(Connection userConnection) {
-    this.userConnection = userConnection;
+  public void setUserTransaction(Transaction userTransaction) {
+    this.userTransaction = userTransaction;
   }
 
   public boolean isInBatch() {
@@ -127,7 +125,7 @@ public class SessionScope extends BaseScope {
     this.batch = null;
     sqlMapExecutor = null;
     sqlMapTxMgr = null;
-    userConnection = null;
+    userTransaction = null;
     inBatch = false;
     transaction = null;
     transactionState = null;

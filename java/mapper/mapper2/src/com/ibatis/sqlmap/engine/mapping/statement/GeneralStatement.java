@@ -10,6 +10,8 @@ import com.ibatis.sqlmap.engine.scope.ErrorContext;
 import com.ibatis.sqlmap.engine.scope.RequestScope;
 import com.ibatis.sqlmap.engine.type.DomTypeMarker;
 import com.ibatis.sqlmap.engine.type.XmlTypeMarker;
+import com.ibatis.sqlmap.engine.transaction.Transaction;
+import com.ibatis.sqlmap.engine.transaction.TransactionException;
 import org.w3c.dom.Document;
 
 import java.sql.Connection;
@@ -23,7 +25,7 @@ import java.util.List;
  */
 public class GeneralStatement extends BaseStatement {
 
-  public int executeUpdate(RequestScope request, Connection conn, Object parameterObject)
+  public int executeUpdate(RequestScope request, Transaction trans, Object parameterObject)
       throws SQLException {
     ErrorContext errorContext = request.getErrorContext();
     errorContext.setActivity("preparing the mapped statement for execution");
@@ -56,7 +58,7 @@ public class GeneralStatement extends BaseStatement {
 
       errorContext.setActivity("executing mapped statement");
       errorContext.setMoreInfo("Check the statement or the result map.");
-      rows = sqlExecuteUpdate(request, conn, sqlString, parameters);
+      rows = sqlExecuteUpdate(request, trans.getConnection(), sqlString, parameters);
 
       errorContext.setMoreInfo("Check the output parameters.");
       if (parameterObject != null) {
@@ -76,33 +78,45 @@ public class GeneralStatement extends BaseStatement {
     }
   }
 
-  public Object executeQueryForObject(RequestScope request, Connection conn, Object parameterObject, Object resultObject)
+  public Object executeQueryForObject(RequestScope request, Transaction trans, Object parameterObject, Object resultObject)
       throws SQLException {
-    Object object = null;
+    try {
+      Object object = null;
 
-    DefaultRowHandler rowHandler = new DefaultRowHandler();
-    executeQueryWithCallback(request, conn, parameterObject, resultObject, rowHandler, SqlExecutor.NO_SKIPPED_RESULTS, SqlExecutor.NO_MAXIMUM_RESULTS);
-    List list = rowHandler.getList();
+      DefaultRowHandler rowHandler = new DefaultRowHandler();
+      executeQueryWithCallback(request, trans.getConnection(), parameterObject, resultObject, rowHandler, SqlExecutor.NO_SKIPPED_RESULTS, SqlExecutor.NO_MAXIMUM_RESULTS);
+      List list = rowHandler.getList();
 
-    if (list.size() > 1) {
-      throw new SQLException("Error: executeQueryForObject returned too many results.");
-    } else if (list.size() > 0) {
-      object = list.get(0);
+      if (list.size() > 1) {
+        throw new SQLException("Error: executeQueryForObject returned too many results.");
+      } else if (list.size() > 0) {
+        object = list.get(0);
+      }
+
+      return object;
+    } catch (TransactionException e) {
+      throw new NestedSQLException ("Error getting Connection from Transaction.  Cause: " + e, e);
     }
-
-    return object;
   }
 
-  public List executeQueryForList(RequestScope request, Connection conn, Object parameterObject, int skipResults, int maxResults)
+  public List executeQueryForList(RequestScope request, Transaction trans, Object parameterObject, int skipResults, int maxResults)
       throws SQLException {
-    DefaultRowHandler rowHandler = new DefaultRowHandler();
-    executeQueryWithCallback(request, conn, parameterObject, null, rowHandler, skipResults, maxResults);
-    return rowHandler.getList();
+    try {
+      DefaultRowHandler rowHandler = new DefaultRowHandler();
+      executeQueryWithCallback(request, trans.getConnection(), parameterObject, null, rowHandler, skipResults, maxResults);
+      return rowHandler.getList();
+    } catch (TransactionException e) {
+      throw new NestedSQLException ("Error getting Connection from Transaction.  Cause: " + e, e);
+    }
   }
 
-  public void executeQueryWithRowHandler(RequestScope request, Connection conn, Object parameterObject, RowHandler rowHandler)
+  public void executeQueryWithRowHandler(RequestScope request, Transaction trans, Object parameterObject, RowHandler rowHandler)
       throws SQLException {
-    executeQueryWithCallback(request, conn, parameterObject, null, rowHandler, SqlExecutor.NO_SKIPPED_RESULTS, SqlExecutor.NO_MAXIMUM_RESULTS);
+    try {
+      executeQueryWithCallback(request, trans.getConnection(), parameterObject, null, rowHandler, SqlExecutor.NO_SKIPPED_RESULTS, SqlExecutor.NO_MAXIMUM_RESULTS);
+    } catch (TransactionException e) {
+      throw new NestedSQLException ("Error getting Connection from Transaction.  Cause: " + e, e);
+    }
   }
 
   //

@@ -22,8 +22,7 @@ import com.ibatis.sqlmap.engine.scope.SessionScope;
 import com.ibatis.sqlmap.engine.transaction.Transaction;
 import com.ibatis.sqlmap.engine.transaction.TransactionException;
 import com.ibatis.sqlmap.engine.transaction.TransactionManager;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.ibatis.sqlmap.engine.transaction.user.UserProvidedTransaction;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -33,6 +32,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * User: Clinton Begin
  * Date: Sep 13, 2003
@@ -40,13 +42,13 @@ import java.util.Map;
  */
 public class SqlMapExecutorDelegate {
 
+  private static final Log log = LogFactory.getLog(SqlMapExecutorDelegate.class);
+
   private static final Probe PROBE = ProbeFactory.getProbe();
 
   public static final int DEFAULT_MAX_REQUESTS = 512;
   public static final int DEFAULT_MAX_SESSIONS = 128;
   public static final int DEFAULT_MAX_TRANSACTIONS = 32;
-
-  private static final Log log = LogFactory.getLog(SqlMapExecutorDelegate.class);
 
   private boolean lazyLoadingEnabled;
   private boolean cacheModelsEnabled;
@@ -210,11 +212,11 @@ public class SqlMapExecutorDelegate {
     Object generatedKey = null;
 
     MappedStatement ms = getMappedStatement(id);
-    Connection conn = getConnection(session);
-    boolean autoStart = conn == null;
+    Transaction trans = getTransaction(session);
+    boolean autoStart = trans == null;
 
     try {
-      conn = autoStartTransaction(session, autoStart, conn);
+      trans = autoStartTransaction(session, autoStart, trans);
 
       SelectKeyStatement selectKeyStatement = null;
       if (ms instanceof InsertStatement) {
@@ -222,18 +224,18 @@ public class SqlMapExecutorDelegate {
       }
 
       if (selectKeyStatement != null && !selectKeyStatement.isAfter()) {
-        generatedKey = executeSelectKey(session, conn, ms, param);
+        generatedKey = executeSelectKey(session, trans, ms, param);
       }
 
       RequestScope request = popRequest(session, ms);
       try {
-        ms.executeUpdate(request, conn, param);
+        ms.executeUpdate(request, trans, param);
       } finally {
         pushRequest(request);
       }
 
       if (selectKeyStatement != null && selectKeyStatement.isAfter()) {
-        generatedKey = executeSelectKey(session, conn, ms, param);
+        generatedKey = executeSelectKey(session, trans, ms, param);
       }
 
       autoCommitTransaction(session, autoStart);
@@ -244,7 +246,7 @@ public class SqlMapExecutorDelegate {
     return generatedKey;
   }
 
-  private Object executeSelectKey(SessionScope session, Connection conn, MappedStatement ms, Object param) throws SQLException {
+  private Object executeSelectKey(SessionScope session, Transaction trans, MappedStatement ms, Object param) throws SQLException {
     Object generatedKey = null;
     RequestScope request;
     InsertStatement insert = (InsertStatement) ms;
@@ -252,7 +254,7 @@ public class SqlMapExecutorDelegate {
     if (selectKeyStatement != null) {
       request = popRequest(session, selectKeyStatement);
       try {
-        generatedKey = selectKeyStatement.executeQueryForObject(request, conn, param, null);
+        generatedKey = selectKeyStatement.executeQueryForObject(request, trans, param, null);
         String keyProp = selectKeyStatement.getKeyProperty();
         if (keyProp != null) {
           PROBE.setObject(param, keyProp, generatedKey);
@@ -268,15 +270,15 @@ public class SqlMapExecutorDelegate {
     int rows = 0;
 
     MappedStatement ms = getMappedStatement(id);
-    Connection conn = getConnection(session);
-    boolean autoStart = conn == null;
+    Transaction trans = getTransaction(session);
+    boolean autoStart = trans == null;
 
     try {
-      conn = autoStartTransaction(session, autoStart, conn);
+      trans = autoStartTransaction(session, autoStart, trans);
 
       RequestScope request = popRequest(session, ms);
       try {
-        rows = ms.executeUpdate(request, conn, param);
+        rows = ms.executeUpdate(request, trans, param);
       } finally {
         pushRequest(request);
       }
@@ -301,15 +303,15 @@ public class SqlMapExecutorDelegate {
     Object object = null;
 
     MappedStatement ms = getMappedStatement(id);
-    Connection conn = getConnection(session);
-    boolean autoStart = conn == null;
+    Transaction trans = getTransaction(session);
+    boolean autoStart = trans == null;
 
     try {
-      conn = autoStartTransaction(session, autoStart, conn);
+      trans = autoStartTransaction(session, autoStart, trans);
 
       RequestScope request = popRequest(session, ms);
       try {
-        object = ms.executeQueryForObject(request, conn, paramObject, resultObject);
+        object = ms.executeQueryForObject(request, trans, paramObject, resultObject);
       } finally {
         pushRequest(request);
       }
@@ -330,15 +332,15 @@ public class SqlMapExecutorDelegate {
     List list = null;
 
     MappedStatement ms = getMappedStatement(id);
-    Connection conn = getConnection(session);
-    boolean autoStart = conn == null;
+    Transaction trans = getTransaction(session);
+    boolean autoStart = trans == null;
 
     try {
-      conn = autoStartTransaction(session, autoStart, conn);
+      trans = autoStartTransaction(session, autoStart, trans);
 
       RequestScope request = popRequest(session, ms);
       try {
-        list = ms.executeQueryForList(request, conn, paramObject, skip, max);
+        list = ms.executeQueryForList(request, trans, paramObject, skip, max);
       } finally {
         pushRequest(request);
       }
@@ -354,15 +356,15 @@ public class SqlMapExecutorDelegate {
   public void queryWithRowHandler(SessionScope session, String id, Object paramObject, RowHandler rowHandler) throws SQLException {
 
     MappedStatement ms = getMappedStatement(id);
-    Connection conn = getConnection(session);
-    boolean autoStart = conn == null;
+    Transaction trans = getTransaction(session);
+    boolean autoStart = trans == null;
 
     try {
-      conn = autoStartTransaction(session, autoStart, conn);
+      trans = autoStartTransaction(session, autoStart, trans);
 
       RequestScope request = popRequest(session, ms);
       try {
-        ms.executeQueryWithRowHandler(request, conn, paramObject, rowHandler);
+        ms.executeQueryWithRowHandler(request, trans, paramObject, rowHandler);
       } finally {
         pushRequest(request);
       }
@@ -445,12 +447,20 @@ public class SqlMapExecutorDelegate {
     return sqlExecutor.executeBatch(session);
   }
 
-  public Connection getUserConnection(SessionScope session) {
-    return session.getUserConnection();
+  public Transaction getUserTransaction(SessionScope session) {
+    return session.getUserTransaction();
   }
 
-  public void setUserConnection(SessionScope session, Connection userConnection) {
-    session.setUserConnection(userConnection);
+  public void setUserTransaction(SessionScope session, Connection userConnection) {
+    if (userConnection != null) {
+      Connection conn = userConnection;
+      if (log.isDebugEnabled()) {
+        conn = ConnectionLogProxy.newInstance(conn);
+      }
+      session.setUserTransaction(new UserProvidedTransaction(conn));
+    } else {
+      session.setUserTransaction(null);
+    }
   }
 
   public DataSource getDataSource() {
@@ -467,20 +477,12 @@ public class SqlMapExecutorDelegate {
 
   // -- Private Methods
 
-  private Connection getConnection(SessionScope session) throws SQLException {
-    Connection connection = session.getUserConnection();
-    if (connection == null) {
-      try {
-        Transaction trans = session.getTransaction();
-        if (trans != null) {
-          connection = trans.getConnection();
-        }
-      } catch (TransactionException e) {
-        throw new NestedSQLException("Could not get connection.  Cause: " + e, e);
-      }
+  private Transaction getTransaction(SessionScope session) {
+    Transaction transaction = session.getUserTransaction();
+    if (transaction == null) {
+      transaction = session.getTransaction();
     }
-
-    return connection;
+    return transaction;
   }
 
   private void autoStopTransaction(SessionScope session, boolean autoStart) throws SQLException {
@@ -495,16 +497,13 @@ public class SqlMapExecutorDelegate {
     }
   }
 
-  private Connection autoStartTransaction(SessionScope session, boolean autoStart, Connection conn) throws SQLException {
-    Connection connection = conn;
+  private Transaction autoStartTransaction(SessionScope session, boolean autoStart, Transaction trans) throws SQLException {
+    Transaction transaction = trans;
     if (autoStart) {
       session.getSqlMapTxMgr().startTransaction();
-      connection = getConnection(session);
+      transaction = getTransaction(session);
     }
-    if (connection != null && log.isDebugEnabled()) {
-      connection = ConnectionLogProxy.newInstance(connection);
-    }
-    return connection;
+    return transaction;
   }
 
   public boolean equals(Object obj) {

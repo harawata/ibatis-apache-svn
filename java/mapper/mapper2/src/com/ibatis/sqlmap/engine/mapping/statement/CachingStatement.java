@@ -7,8 +7,8 @@ import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
 import com.ibatis.sqlmap.engine.mapping.sql.Sql;
 import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.transaction.Transaction;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -39,27 +39,27 @@ public class CachingStatement implements MappedStatement {
     return statement.getResultMap();
   }
 
-  public int executeUpdate(RequestScope request, Connection conn, Object parameterObject)
+  public int executeUpdate(RequestScope request, Transaction trans, Object parameterObject)
       throws SQLException {
-    int n = statement.executeUpdate(request, conn, parameterObject);
+    int n = statement.executeUpdate(request, trans, parameterObject);
     return n;
   }
 
-  public Object executeQueryForObject(RequestScope request, Connection conn, Object parameterObject, Object resultObject)
+  public Object executeQueryForObject(RequestScope request, Transaction trans, Object parameterObject, Object resultObject)
       throws SQLException {
     CacheKey cacheKey = getCacheKey(request, parameterObject);
     cacheKey.update("executeQueryForObject");
     Object object = cacheModel.getObject(cacheKey);
     if (object == null) {
       synchronized (cacheModel) {
-        object = statement.executeQueryForObject(request, conn, parameterObject, resultObject);
+        object = statement.executeQueryForObject(request, trans, parameterObject, resultObject);
         cacheModel.putObject(cacheKey, object);
       }
     }
     return object;
   }
 
-  public List executeQueryForList(RequestScope request, Connection conn, Object parameterObject, int skipResults, int maxResults)
+  public List executeQueryForList(RequestScope request, Transaction trans, Object parameterObject, int skipResults, int maxResults)
       throws SQLException {
     CacheKey cacheKey = getCacheKey(request, parameterObject);
     cacheKey.update("executeQueryForList");
@@ -68,16 +68,16 @@ public class CachingStatement implements MappedStatement {
     List list = (List) cacheModel.getObject(cacheKey);
     if (list == null) {
       synchronized (cacheModel) {
-        list = statement.executeQueryForList(request, conn, parameterObject, skipResults, maxResults);
+        list = statement.executeQueryForList(request, trans, parameterObject, skipResults, maxResults);
         cacheModel.putObject(cacheKey, list);
       }
     }
     return list;
   }
 
-  public void executeQueryWithRowHandler(RequestScope request, Connection conn, Object parameterObject, RowHandler rowHandler)
+  public void executeQueryWithRowHandler(RequestScope request, Transaction trans, Object parameterObject, RowHandler rowHandler)
       throws SQLException {
-    statement.executeQueryWithRowHandler(request, conn, parameterObject, rowHandler);
+    statement.executeQueryWithRowHandler(request, trans, parameterObject, rowHandler);
   }
 
   public CacheKey getCacheKey(RequestScope request, Object parameterObject) {

@@ -2,8 +2,8 @@ package com.ibatis.sqlmap.engine.mapping.statement;
 
 import com.ibatis.sqlmap.client.event.RowHandler;
 import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.transaction.Transaction;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -33,12 +33,12 @@ public class SelectKeyStatement extends SelectStatement {
     this.after = after;
   }
 
-  public List executeQueryForList(RequestScope request, Connection conn, Object parameterObject, int skipResults, int maxResults)
+  public List executeQueryForList(RequestScope request, Transaction trans, Object parameterObject, int skipResults, int maxResults)
       throws SQLException {
     throw new SQLException("Select statements cannot be executed for a list.");
   }
 
-  public void executeQueryWithRowHandler(RequestScope request, Connection conn, Object parameterObject, RowHandler rowHandler)
+  public void executeQueryWithRowHandler(RequestScope request, Transaction trans, Object parameterObject, RowHandler rowHandler)
       throws SQLException {
     throw new SQLException("Select Key statements cannot be executed with a row handler.");
   }

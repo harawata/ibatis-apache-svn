@@ -1,11 +1,14 @@
 package com.ibatis.sqlmap.engine.impl;
 
 import com.ibatis.common.util.PaginatedList;
+import com.ibatis.common.jdbc.exception.NestedSQLException;
 import com.ibatis.sqlmap.client.SqlMapSession;
 import com.ibatis.sqlmap.client.event.RowHandler;
 import com.ibatis.sqlmap.engine.execution.SqlExecutor;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
 import com.ibatis.sqlmap.engine.scope.SessionScope;
+import com.ibatis.sqlmap.engine.transaction.Transaction;
+import com.ibatis.sqlmap.engine.transaction.TransactionException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -130,11 +133,20 @@ public class SqlMapSessionImpl implements SqlMapSession {
   }
 
   public void setUserConnection(Connection connection) throws SQLException {
-    delegate.setUserConnection(session, connection);
+    delegate.setUserTransaction(session, connection);
   }
 
   public Connection getUserConnection() throws SQLException {
-    return delegate.getUserConnection(session);
+    try {
+      Connection conn = null;
+      Transaction trans = delegate.getUserTransaction(session);
+      if (trans != null) {
+        conn = trans.getConnection();
+      }
+      return conn;
+    } catch (TransactionException e) {
+      throw new NestedSQLException ("Error getting Connection from Transaction.  Cause: " + e, e);
+    }
   }
 
   public DataSource getDataSource() {
