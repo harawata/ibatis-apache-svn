@@ -39,4 +39,5 @@ FEATURE REQUESTS: LOW-PRIORITY
  o Optional results/exclusions (i.e. don't require all results)
  o Extended Statements
  o Included Statements
+ o Improved Inline parameters (w/stored proc mode)
 

@@ -1,19 +1,18 @@
 package com.ibatis.dao.engine.transaction;
 
-import com.ibatis.dao.client.*;
+import com.ibatis.dao.client.DaoTransaction;
 
-import java.util.*;
+import java.util.Properties;
 
 /**
- *
- *
- * <p>
+ * <p/>
  * Date: Jan 27, 2004 10:41:00 PM
+ *
  * @author Clinton Begin
  */
 public interface DaoTransactionManager {
 
-  public void configure(Map properties);
+  public void configure(Properties properties);
 
   public DaoTransaction startTransaction();
 

@@ -1,7 +1,6 @@
 package com.ibatis.sqlmap.engine.mapping.sql;
 
-import com.ibatis.sqlmap.engine.mapping.parameter.*;
-import com.ibatis.sqlmap.engine.mapping.sql.*;
+import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMapping;
 
 /**
  * User: Clinton Begin
@@ -20,7 +19,7 @@ public class SqlText implements SqlChild {
   }
 
   public void setText(String text) {
-    this.text = text;
+    this.text = text.replace('\r', ' ').replace('\n', ' ');
     this.isWhiteSpace = text.trim().length() == 0;
   }
 

@@ -1,10 +1,12 @@
 package com.ibatis.sqlmap.engine.transaction.external;
 
-import com.ibatis.sqlmap.engine.transaction.*;
+import com.ibatis.sqlmap.engine.transaction.BaseTransactionConfig;
+import com.ibatis.sqlmap.engine.transaction.Transaction;
+import com.ibatis.sqlmap.engine.transaction.TransactionException;
 
-import javax.sql.*;
-import java.util.*;
-import java.sql.*;
+import javax.sql.DataSource;
+import java.sql.SQLException;
+import java.util.Properties;
 
 /**
  * User: Clinton Begin
@@ -23,7 +25,7 @@ public class ExternalTransactionConfig extends BaseTransactionConfig {
     this.dataSource = ds;
   }
 
-  public void initialize(Map props) throws SQLException, TransactionException {
+  public void initialize(Properties props) throws SQLException, TransactionException {
   }
 
   public Transaction newTransaction() throws SQLException, TransactionException {

@@ -1,29 +1,26 @@
 package com.ibatis.dao.engine.transaction.hibernate;
 
-import com.ibatis.dao.engine.transaction.DaoTransactionManager;
-import com.ibatis.dao.client.DaoTransaction;
-import com.ibatis.dao.client.DaoException;
 import com.ibatis.common.resources.Resources;
+import com.ibatis.dao.client.DaoException;
+import com.ibatis.dao.client.DaoTransaction;
+import com.ibatis.dao.engine.transaction.DaoTransactionManager;
+import net.sf.hibernate.SessionFactory;
+import net.sf.hibernate.cfg.Configuration;
 
-import java.util.Map;
 import java.util.Iterator;
 import java.util.Properties;
 
-import net.sf.hibernate.cfg.Configuration;
-import net.sf.hibernate.SessionFactory;
-
 /**
- *
- *
- * <p>
+ * <p/>
  * Date: Jan 27, 2004 10:49:28 PM
+ *
  * @author Clinton Begin
  */
 public class HibernateDaoTransactionManager implements DaoTransactionManager {
 
   private SessionFactory factory;
 
-  public void configure(Map properties) {
+  public void configure(Properties properties) {
     try {
       Configuration config = new Configuration();
 
@@ -52,10 +49,10 @@ public class HibernateDaoTransactionManager implements DaoTransactionManager {
   }
 
   public void commitTransaction(DaoTransaction trans) {
-    ((HibernateDaoTransaction)trans).commit();
+    ((HibernateDaoTransaction) trans).commit();
   }
 
   public void rollbackTransaction(DaoTransaction trans) {
-    ((HibernateDaoTransaction)trans).rollback();
+    ((HibernateDaoTransaction) trans).rollback();
   }
 }

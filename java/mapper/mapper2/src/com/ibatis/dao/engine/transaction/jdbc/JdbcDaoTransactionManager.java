@@ -1,33 +1,33 @@
 package com.ibatis.dao.engine.transaction.jdbc;
 
-import com.ibatis.dao.engine.transaction.DaoTransactionManager;
-import com.ibatis.dao.client.DaoTransaction;
-import com.ibatis.dao.client.DaoException;
 import com.ibatis.common.jdbc.SimpleDataSource;
+import com.ibatis.dao.client.DaoException;
+import com.ibatis.dao.client.DaoTransaction;
+import com.ibatis.dao.engine.transaction.DaoTransactionManager;
+import org.apache.commons.dbcp.BasicDataSource;
 
-import javax.sql.DataSource;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.sql.DataSource;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Iterator;
-
-import org.apache.commons.dbcp.BasicDataSource;
 
 /**
  * TODO: Centralize configuration of DBCP datasource
- *
- * <p>
+ * <p/>
+ * <p/>
  * Date: Jan 27, 2004 10:48:58 PM
+ *
  * @author Clinton Begin
  */
 public class JdbcDaoTransactionManager implements DaoTransactionManager {
 
   private DataSource dataSource;
 
-  public void configure(Map properties) {
+  public void configure(Properties properties) {
     if (properties.containsKey("DataSource")) {
-      String type = (String)properties.get("DataSource");
+      String type = (String) properties.get("DataSource");
       if ("SIMPLE".equals(type)) {
         configureSimpleDataSource(properties);
       } else if ("DBCP".equals(type)) {
@@ -35,22 +35,22 @@ public class JdbcDaoTransactionManager implements DaoTransactionManager {
       } else if ("JNDI".equals(type)) {
         configureJndi(properties);
       } else {
-        throw new DaoException ("DAO Transaction Manager properties must include a value for 'DataSource' of SIMPLE, DBCP or JNDI.");
+        throw new DaoException("DAO Transaction Manager properties must include a value for 'DataSource' of SIMPLE, DBCP or JNDI.");
       }
     } else {
-      throw new DaoException ("DAO Transaction Manager properties must include a value for 'DataSource' of SIMPLE, DBCP or JNDI.");
+      throw new DaoException("DAO Transaction Manager properties must include a value for 'DataSource' of SIMPLE, DBCP or JNDI.");
     }
   }
 
   public DaoTransaction startTransaction() {
-    return new JdbcDaoTransaction (dataSource);
+    return new JdbcDaoTransaction(dataSource);
   }
 
-  private void configureSimpleDataSource (Map properties) {
+  private void configureSimpleDataSource(Map properties) {
     dataSource = new SimpleDataSource(properties);
   }
 
-  private void configureDbcp (Map properties) {
+  private void configureDbcp(Map properties) {
     try {
       String driver = (String) properties.get("JDBC.Driver");
       String url = (String) properties.get("JDBC.ConnectionURL");
@@ -106,7 +106,7 @@ public class JdbcDaoTransactionManager implements DaoTransactionManager {
     }
   }
 
-  private void configureJndi (Map properties) {
+  private void configureJndi(Map properties) {
     try {
       Properties contextProps = getContextProperties(properties);
       InitialContext initCtx = null;
@@ -126,11 +126,11 @@ public class JdbcDaoTransactionManager implements DaoTransactionManager {
   }
 
   public void commitTransaction(DaoTransaction trans) {
-    ((JdbcDaoTransaction)trans).commit();
+    ((JdbcDaoTransaction) trans).commit();
   }
 
   public void rollbackTransaction(DaoTransaction trans) {
-    ((JdbcDaoTransaction)trans).rollback();
+    ((JdbcDaoTransaction) trans).rollback();
   }
 
   private static Properties getContextProperties(Map allProps) {
@@ -138,13 +138,13 @@ public class JdbcDaoTransactionManager implements DaoTransactionManager {
     Properties contextProperties = null;
     Iterator keys = allProps.keySet().iterator();
     while (keys.hasNext()) {
-      String key = (String)keys.next();
-      String value = (String)allProps.get(key);
+      String key = (String) keys.next();
+      String value = (String) allProps.get(key);
       if (key.startsWith(PREFIX)) {
-        if(contextProperties == null) {
+        if (contextProperties == null) {
           contextProperties = new Properties();
         }
-        contextProperties.put(key.substring(PREFIX.length()),value);
+        contextProperties.put(key.substring(PREFIX.length()), value);
       }
     }
     return contextProperties;

@@ -1,15 +1,14 @@
 package com.ibatis.sqlmap.engine.mapping.sql.simple;
 
-import com.ibatis.sqlmap.engine.mapping.parameter.*;
-import com.ibatis.sqlmap.engine.mapping.result.*;
-import com.ibatis.sqlmap.engine.mapping.sql.*;
-import com.ibatis.sqlmap.engine.type.*;
+import com.ibatis.common.beans.BeanProbe;
+import com.ibatis.sqlmap.client.SqlMapException;
+import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
+import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
+import com.ibatis.sqlmap.engine.mapping.sql.Sql;
+import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.type.TypeHandlerFactory;
 
-import com.ibatis.sqlmap.engine.scope.*;
-import com.ibatis.sqlmap.client.*;
-import com.ibatis.common.beans.*;
-
-import java.util.*;
+import java.util.StringTokenizer;
 
 /**
  * User: Clinton Begin
@@ -23,7 +22,7 @@ public class SimpleDynamicSql implements Sql {
   private String sqlStatement;
 
   public SimpleDynamicSql(String sqlStatement) {
-    this.sqlStatement = sqlStatement;
+    this.sqlStatement = sqlStatement.replace('\r', ' ').replace('\n', ' ');
   }
 
   public String getSql(RequestScope request, Object parameterObject) {

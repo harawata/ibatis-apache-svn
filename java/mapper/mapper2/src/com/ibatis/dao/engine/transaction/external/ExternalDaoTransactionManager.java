@@ -1,9 +1,9 @@
 package com.ibatis.dao.engine.transaction.external;
 
-import com.ibatis.dao.engine.transaction.DaoTransactionManager;
 import com.ibatis.dao.client.DaoTransaction;
+import com.ibatis.dao.engine.transaction.DaoTransactionManager;
 
-import java.util.Map;
+import java.util.Properties;
 
 /**
  * <p/>
@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class ExternalDaoTransactionManager implements DaoTransactionManager {
 
-  public void configure(Map properties) {
+  public void configure(Properties properties) {
     // Do nothing
   }
 
@@ -22,11 +22,11 @@ public class ExternalDaoTransactionManager implements DaoTransactionManager {
   }
 
   public void commitTransaction(DaoTransaction trans) {
-    ((ExternalDaoTransaction)trans).commit();
+    ((ExternalDaoTransaction) trans).commit();
   }
 
   public void rollbackTransaction(DaoTransaction trans) {
-    ((ExternalDaoTransaction)trans).rollback();
+    ((ExternalDaoTransaction) trans).rollback();
   }
 
 }

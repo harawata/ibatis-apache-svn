@@ -2,6 +2,14 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
+ Next Release
+------------------------------
+
+ o Newlines (\r, \n) are now stripped from SQL
+ o Properties are passed from DAO builder to SQL Maps builder
+ o Improved OSCache key uniqueness
+
+------------------------------
  2.0.0 RC2 - Apr 11, 2004
 ------------------------------
 

@@ -1,14 +1,16 @@
 package com.ibatis.sqlmap.engine.transaction.jta;
 
-import com.ibatis.sqlmap.engine.transaction.*;
+import com.ibatis.sqlmap.client.SqlMapException;
+import com.ibatis.sqlmap.engine.transaction.BaseTransactionConfig;
 import com.ibatis.sqlmap.engine.transaction.Transaction;
-import com.ibatis.sqlmap.client.*;
+import com.ibatis.sqlmap.engine.transaction.TransactionException;
 
-import javax.sql.*;
-import javax.transaction.*;
-import javax.naming.*;
-import java.util.*;
-import java.sql.*;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+import javax.transaction.UserTransaction;
+import java.sql.SQLException;
+import java.util.Properties;
 
 /**
  * User: Clinton Begin
@@ -28,7 +30,7 @@ public class JtaTransactionConfig extends BaseTransactionConfig {
     this.dataSource = ds;
   }
 
-  public void initialize(Map props) throws SQLException, TransactionException {
+  public void initialize(Properties props) throws SQLException, TransactionException {
     String utxName = null;
     try {
       utxName = (String) props.get("UserTransaction");

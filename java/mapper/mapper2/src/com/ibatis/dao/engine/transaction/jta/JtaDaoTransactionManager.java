@@ -1,19 +1,18 @@
 package com.ibatis.dao.engine.transaction.jta;
 
-import com.ibatis.dao.engine.transaction.DaoTransactionManager;
-import com.ibatis.dao.client.DaoTransaction;
 import com.ibatis.dao.client.DaoException;
+import com.ibatis.dao.client.DaoTransaction;
+import com.ibatis.dao.engine.transaction.DaoTransactionManager;
 
+import javax.naming.InitialContext;
 import javax.sql.DataSource;
 import javax.transaction.UserTransaction;
-import javax.naming.InitialContext;
-import java.util.Map;
+import java.util.Properties;
 
 /**
- *
- *
- * <p>
+ * <p/>
  * Date: Jan 27, 2004 10:48:39 PM
+ *
  * @author Clinton Begin
  */
 public class JtaDaoTransactionManager implements DaoTransactionManager {
@@ -21,7 +20,7 @@ public class JtaDaoTransactionManager implements DaoTransactionManager {
   private DataSource dataSource;
   private UserTransaction userTransaction;
 
-  public void configure(Map properties) {
+  public void configure(Properties properties) {
     String utxName = null;
     String dsName = null;
     try {
@@ -31,7 +30,7 @@ public class JtaDaoTransactionManager implements DaoTransactionManager {
       dsName = (String) properties.get("DBJndiContext");
       dataSource = (DataSource) initCtx.lookup(dsName);
     } catch (Exception e) {
-      throw new DaoException("Error initializing JTA transaction while looking up UserTransaction (" + utxName + ") or DataSource ("+dsName+").  Cause: " + e);
+      throw new DaoException("Error initializing JTA transaction while looking up UserTransaction (" + utxName + ") or DataSource (" + dsName + ").  Cause: " + e);
     }
   }
 
@@ -40,10 +39,10 @@ public class JtaDaoTransactionManager implements DaoTransactionManager {
   }
 
   public void commitTransaction(DaoTransaction trans) {
-    ((JtaDaoTransaction)trans).commit();
+    ((JtaDaoTransaction) trans).commit();
   }
 
   public void rollbackTransaction(DaoTransaction trans) {
-    ((JtaDaoTransaction)trans).rollback();
+    ((JtaDaoTransaction) trans).rollback();
   }
 }

@@ -1,10 +1,9 @@
 package com.ibatis.sqlmap.engine.mapping.sql.stat;
 
-import com.ibatis.sqlmap.engine.mapping.parameter.*;
-import com.ibatis.sqlmap.engine.mapping.result.*;
-import com.ibatis.sqlmap.engine.mapping.sql.*;
-
-import com.ibatis.sqlmap.engine.scope.*;
+import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
+import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
+import com.ibatis.sqlmap.engine.mapping.sql.Sql;
+import com.ibatis.sqlmap.engine.scope.RequestScope;
 
 /**
  * User: Clinton Begin
@@ -16,7 +15,7 @@ public class StaticSql implements Sql {
   private String sqlStatement;
 
   public StaticSql(String sqlStatement) {
-    this.sqlStatement = sqlStatement;
+    this.sqlStatement = sqlStatement.replace('\r', ' ').replace('\n', ' ');
   }
 
   public String getSql(RequestScope request, Object parameterObject) {

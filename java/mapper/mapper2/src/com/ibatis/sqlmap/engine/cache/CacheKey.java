@@ -1,12 +1,9 @@
 package com.ibatis.sqlmap.engine.cache;
 
-import java.util.*;
-
 /**
- *
- *
- * <p>
+ * <p/>
  * Date: Jan 18, 2004 8:24:01 AM
+ *
  * @author Clinton Begin
  */
 public class CacheKey {
@@ -37,7 +34,7 @@ public class CacheKey {
     count = 0;
   }
 
-  public CacheKey update (int x) {
+  public CacheKey update(int x) {
     count++;
     x *= count;
     hashcode = multiplier * hashcode + (x ^ (x >>> 32));
@@ -45,7 +42,7 @@ public class CacheKey {
     return this;
   }
 
-  public CacheKey update (Object object) {
+  public CacheKey update(Object object) {
     update(object.hashCode());
     return this;
   }
@@ -64,6 +61,10 @@ public class CacheKey {
 
   public int hashCode() {
     return hashcode;
+  }
+
+  public String toString() {
+    return new StringBuffer().append(hashcode).append('|').append(checksum).toString();
   }
 
 }

@@ -1,8 +1,8 @@
 package com.ibatis.sqlmap.engine.transaction;
 
-import javax.sql.*;
-import java.util.*;
-import java.sql.*;
+import javax.sql.DataSource;
+import java.sql.SQLException;
+import java.util.Properties;
 
 /**
  * User: Clinton Begin
@@ -15,7 +15,7 @@ public interface TransactionConfig {
 
   public void setDataSource(DataSource ds);
 
-  public void initialize(Map props) throws SQLException, TransactionException;
+  public void initialize(Properties props) throws SQLException, TransactionException;
 
   public Transaction newTransaction() throws SQLException, TransactionException;
 
