@@ -16,7 +16,7 @@ Build Number: @buildNum@
  o Custom type handlers can now directly implement the TypeHandler interface
  o Refactored Builder/Parser to be more maintainable (nodelets)
  o Verified that duplicate statement names throw an exception. [982534]
- o SqlExecuror now always exhausts result sets with ps.getMoreResults()
+ o SqlExecutor now always exhausts result sets with ps.getMoreResults()
  o Fixed new format inline parameter parsing error [ibatis-23]
 
 ------------------------------
