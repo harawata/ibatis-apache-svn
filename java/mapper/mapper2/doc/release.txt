@@ -2,7 +2,7 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
- 2.0.0 Final - Jun 8, 2004
+ 2.0.0 Final - Jun 18, 2004
 ------------------------------
 
  o Added SqlMapDaoTemplate wrapper methods (wraps SqlMapExecutor methods)
