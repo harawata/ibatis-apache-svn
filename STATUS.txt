@@ -1,0 +1,16 @@
+APACHE IBATIS PROJECT STATUS:
+Last modified at [$Date: $]
+
+Web site: http://Incubator.Apache.Org/ibatis
+Wiki: http://wiki.apache.org/ibatis/
+Mailing Lists: http://incubator.apache.org/ibatis/site/mailinglists.html
+Issue Tracking: http://incubator.apache.org/ibatis/site/issuetracking.html
+Source Code: http://incubator.apache.org/ibatis/site/sourcecode.html
+
+Active Committers:
+* Clinton Begin (cbegin)
+* Gilles Bayon (gbayon)
+* Ted Husted (husted)
+* Brandon Goodin (bgoodin)
+* Larry Meadors (lmeadors)
+* Robert Rabe (roberto)
