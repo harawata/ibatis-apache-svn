@@ -18,6 +18,7 @@
   o <resultMap ... groupBy="propName">
   o <result ... resultMap="..."/>
   o Isolation Level support
+  o Sql fragment includes
 
   o More on bytecode enhancement
   o More on dynamic statment prepend behavior
