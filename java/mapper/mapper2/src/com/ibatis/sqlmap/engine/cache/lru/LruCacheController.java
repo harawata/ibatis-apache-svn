@@ -64,8 +64,12 @@ public class LruCacheController implements CacheController {
     cache.put(key, value);
     keyList.add(key);
     if (keyList.size() > cacheSize) {
-      Object oldestKey = keyList.remove(0);
-      cache.remove(oldestKey);
+      try {
+        Object oldestKey = keyList.remove(0);
+        cache.remove(oldestKey);
+      } catch (IndexOutOfBoundsException e) {
+        //ignore
+      }
     }
   }
 
