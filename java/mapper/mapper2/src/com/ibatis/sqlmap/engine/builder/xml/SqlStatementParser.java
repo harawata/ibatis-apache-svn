@@ -1,22 +1,34 @@
 package com.ibatis.sqlmap.engine.builder.xml;
 
-import com.ibatis.sqlmap.engine.mapping.statement.*;
-import com.ibatis.sqlmap.engine.mapping.result.*;
-import com.ibatis.sqlmap.engine.mapping.parameter.*;
-import com.ibatis.sqlmap.engine.mapping.sql.dynamic.DynamicSql;
-import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.*;
-import com.ibatis.sqlmap.engine.mapping.sql.*;
-import com.ibatis.sqlmap.engine.mapping.sql.stat.StaticSql;
-import com.ibatis.sqlmap.engine.mapping.sql.simple.SimpleDynamicSql;
-import com.ibatis.sqlmap.engine.cache.CacheModel;
-import com.ibatis.sqlmap.client.SqlMapException;
+import com.ibatis.common.beans.Probe;
+import com.ibatis.common.beans.ProbeFactory;
 import com.ibatis.common.resources.Resources;
 import com.ibatis.common.xml.NodeletUtils;
-import com.ibatis.common.beans.*;
-import org.w3c.dom.*;
+import com.ibatis.sqlmap.client.SqlMapException;
+import com.ibatis.sqlmap.engine.cache.CacheModel;
+import com.ibatis.sqlmap.engine.mapping.parameter.BasicParameterMap;
+import com.ibatis.sqlmap.engine.mapping.parameter.InlineParameterMapParser;
+import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
+import com.ibatis.sqlmap.engine.mapping.result.AutoResultMap;
+import com.ibatis.sqlmap.engine.mapping.result.BasicResultMap;
+import com.ibatis.sqlmap.engine.mapping.sql.Sql;
+import com.ibatis.sqlmap.engine.mapping.sql.SqlText;
+import com.ibatis.sqlmap.engine.mapping.sql.dynamic.DynamicSql;
+import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.DynamicParent;
+import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.SqlTag;
+import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.SqlTagHandler;
+import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.SqlTagHandlerFactory;
+import com.ibatis.sqlmap.engine.mapping.sql.simple.SimpleDynamicSql;
+import com.ibatis.sqlmap.engine.mapping.sql.stat.StaticSql;
+import com.ibatis.sqlmap.engine.mapping.statement.*;
+import org.w3c.dom.CharacterData;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
-import java.util.*;
 import java.sql.ResultSet;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
 
 public class SqlStatementParser extends BaseParser {
 
@@ -25,12 +37,14 @@ public class SqlStatementParser extends BaseParser {
   private static final InlineParameterMapParser PARAM_PARSER = new InlineParameterMapParser();
 
   public SqlStatementParser(Variables vars) {
-    super (vars);
+    super(vars);
   }
 
   public MappedStatement parseGeneralStatement(Node node, GeneralStatement statement) {
-    Properties attributes = NodeletUtils.parseAttributes(node, vars.properties);
+    vars.errorCtx.setActivity("parsing a mapped statement");
 
+    // get attributes
+    Properties attributes = NodeletUtils.parseAttributes(node, vars.currentProperties);
     String id = attributes.getProperty("id");
 
     if (vars.useStatementNamespaces) {
@@ -47,6 +61,8 @@ public class SqlStatementParser extends BaseParser {
     String fetchSize = attributes.getProperty("fetchSize");
     String allowRemapping = attributes.getProperty("remapResults");
 
+    vars.errorCtx.setObjectId(id + " statement");
+
     parameterClassName = vars.typeHandlerFactory.resolveAlias(parameterClassName);
     resultClassName = vars.typeHandlerFactory.resolveAlias(resultClassName);
 
@@ -55,20 +71,22 @@ public class SqlStatementParser extends BaseParser {
 
     // get parameter and result maps
 
+    vars.errorCtx.setMoreInfo("Check the result map name.");
     BasicResultMap resultMap = null;
     if (resultMapName != null) {
-      resultMap = (BasicResultMap) vars.delegate.getResultMap(resultMapName);
+      resultMap = (BasicResultMap) vars.client.getDelegate().getResultMap(resultMapName);
     }
 
+    vars.errorCtx.setMoreInfo("Check the parameter map name.");
     BasicParameterMap parameterMap = null;
     if (parameterMapName != null) {
-      parameterMap = (BasicParameterMap) vars.delegate.getParameterMap(parameterMapName);
+      parameterMap = (BasicParameterMap) vars.client.getDelegate().getParameterMap(parameterMapName);
     }
 
     statement.setId(id);
     statement.setParameterMap(parameterMap);
     statement.setResultMap(resultMap);
-    statement.setResource(vars.currentResource);
+    statement.setResource(vars.errorCtx.getResource());
 
     if (resultSetType != null) {
       if ("FORWARD_ONLY".equals(resultSetType)) {
@@ -88,6 +106,7 @@ public class SqlStatementParser extends BaseParser {
     if (parameterMap == null) {
       try {
         if (parameterClassName != null) {
+          vars.errorCtx.setMoreInfo("Check the parameter class.");
           parameterClass = Resources.classForName(parameterClassName);
           statement.setParameterClass(parameterClass);
         }
@@ -100,6 +119,7 @@ public class SqlStatementParser extends BaseParser {
 
     try {
       if (resultClassName != null) {
+        vars.errorCtx.setMoreInfo("Check the result class.");
         resultClass = Resources.classForName(resultClassName);
       }
     } catch (ClassNotFoundException e) {
@@ -107,13 +127,14 @@ public class SqlStatementParser extends BaseParser {
     }
 
     // process SQL statement, including inline parameter maps
+    vars.errorCtx.setMoreInfo("Check the SQL statement.");
     processSqlStatement(node, statement);
 
     // set up either null result map or automatic result mapping
     if (resultMap == null && resultClass == null) {
       statement.setResultMap(null);
     } else if (resultMap == null) {
-      resultMap = new AutoResultMap(vars.delegate, "true".equals(allowRemapping));
+      resultMap = new AutoResultMap(vars.client.getDelegate(), "true".equals(allowRemapping));
       resultMap.setId(statement.getId() + "-AutoResultMap");
       resultMap.setResultClass(resultClass);
       resultMap.setXmlName(xmlResultName);
@@ -122,9 +143,12 @@ public class SqlStatementParser extends BaseParser {
 
     }
 
+    vars.errorCtx.setMoreInfo(null);
+    vars.errorCtx.setObjectId(null);
+
     statement.setSqlMapClient(vars.client);
-    if (cacheModelName != null && cacheModelName.length() > 0 && vars.delegate.isCacheModelsEnabled()) {
-      CacheModel cacheModel = vars.delegate.getCacheModel(cacheModelName);
+    if (cacheModelName != null && cacheModelName.length() > 0 && vars.client.getDelegate().isCacheModelsEnabled()) {
+      CacheModel cacheModel = vars.client.getDelegate().getCacheModel(cacheModelName);
       return new CachingStatement(statement, cacheModel);
     } else {
       return statement;
@@ -133,6 +157,8 @@ public class SqlStatementParser extends BaseParser {
   }
 
   private SelectKeyStatement parseSelectKey(Node node, GeneralStatement insertStatement) {
+    vars.errorCtx.setActivity("parsing a select key");
+
     // get attributes
     Properties attributes = NodeletUtils.parseAttributes(node, vars.properties);
     String keyPropName = attributes.getProperty("keyProperty");
@@ -145,11 +171,12 @@ public class SqlStatementParser extends BaseParser {
     selectKeyStatement.setSqlMapClient(vars.client);
 
     selectKeyStatement.setId(insertStatement.getId() + "-SelectKey");
-    selectKeyStatement.setResource(vars.currentResource);
+    selectKeyStatement.setResource(vars.errorCtx.getResource());
     selectKeyStatement.setKeyProperty(keyPropName);
 
     try {
       if (resultClassName != null) {
+        vars.errorCtx.setMoreInfo("Check the select key result class.");
         resultClass = Resources.classForName(resultClassName);
       } else {
         Class parameterClass = insertStatement.getParameterClass();
@@ -166,23 +193,25 @@ public class SqlStatementParser extends BaseParser {
     }
 
     // process SQL statement, including inline parameter maps
+    vars.errorCtx.setMoreInfo("Check the select key SQL statement.");
     processSqlStatement(node, selectKeyStatement);
 
     BasicResultMap resultMap;
-    resultMap = new AutoResultMap(vars.delegate, false);
+    resultMap = new AutoResultMap(vars.client.getDelegate(), false);
     resultMap.setId(selectKeyStatement.getId() + "-AutoResultMap");
     resultMap.setResultClass(resultClass);
     resultMap.setResource(selectKeyStatement.getResource());
     selectKeyStatement.setResultMap(resultMap);
 
+    vars.errorCtx.setMoreInfo(null);
     return selectKeyStatement;
-
   }
 
   private void processSqlStatement(Node n, GeneralStatement statement) {
+    vars.errorCtx.setActivity("processing an SQL statement");
 
     boolean isDynamic = false;
-    DynamicSql dynamic = new DynamicSql(vars.delegate);
+    DynamicSql dynamic = new DynamicSql(vars.client.getDelegate());
     StringBuffer sqlBuffer = new StringBuffer();
 
     isDynamic = parseDynamicTags(n, dynamic, sqlBuffer, isDynamic, false);
@@ -202,6 +231,7 @@ public class SqlStatementParser extends BaseParser {
   }
 
   private boolean parseDynamicTags(Node node, DynamicParent dynamic, StringBuffer sqlBuffer, boolean isDynamic, boolean postParseRequired) {
+    vars.errorCtx.setActivity("parsing dynamic SQL tags");
 
     NodeList children = node.getChildNodes();
     for (int i = 0; i < children.getLength(); i++) {
@@ -217,7 +247,7 @@ public class SqlStatementParser extends BaseParser {
           sqlText = new SqlText();
           sqlText.setText(data.toString());
         } else {
-          sqlText = PARAM_PARSER.parseInlineParameterMap(vars.delegate.getTypeHandlerFactory(), data.toString(), null);
+          sqlText = PARAM_PARSER.parseInlineParameterMap(vars.client.getDelegate().getTypeHandlerFactory(), data.toString(), null);
         }
 
         dynamic.addChild(sqlText);
@@ -225,6 +255,7 @@ public class SqlStatementParser extends BaseParser {
         sqlBuffer.append(data);
 
       } else {
+        vars.errorCtx.setMoreInfo("Check the dynamic tags.");
         String nodeName = child.getNodeName();
         SqlTagHandler handler = SqlTagHandlerFactory.getSqlTagHandler(nodeName);
         if (handler != null) {
@@ -234,7 +265,7 @@ public class SqlStatementParser extends BaseParser {
           tag.setName(nodeName);
           tag.setHandler(handler);
 
-          Properties attributes = NodeletUtils.parseAttributes(node, vars.properties);
+          Properties attributes = NodeletUtils.parseAttributes(child, vars.properties);
 
           tag.setPrependAttr(attributes.getProperty("prepend"));
           tag.setPropertyAttr(attributes.getProperty("property"));
@@ -254,10 +285,13 @@ public class SqlStatementParser extends BaseParser {
         }
       }
     }
+    vars.errorCtx.setMoreInfo(null);
     return isDynamic;
   }
 
   private SelectKeyStatement findAndParseSelectKeyStatement(Node n, GeneralStatement insertStatement) {
+    vars.errorCtx.setActivity("parsing select key tags");
+
     SelectKeyStatement selectKeyStatement = null;
 
     boolean foundTextFirst = false;
@@ -280,25 +314,29 @@ public class SqlStatementParser extends BaseParser {
     if (selectKeyStatement != null) {
       selectKeyStatement.setAfter(foundTextFirst);
     }
+    vars.errorCtx.setMoreInfo(null);
     return selectKeyStatement;
   }
 
   private void applyInlineParameterMap(GeneralStatement statement, String sqlStatement) {
     String newSql = sqlStatement;
 
+    vars.errorCtx.setActivity("building an inline parameter map");
+
     ParameterMap parameterMap = statement.getParameterMap();
 
+    vars.errorCtx.setMoreInfo("Check the inline parameters.");
     if (parameterMap == null) {
 
       BasicParameterMap map;
-      map = new BasicParameterMap(vars.delegate);
+      map = new BasicParameterMap(vars.client.getDelegate());
 
       map.setId(statement.getId() + "-InlineParameterMap");
       map.setParameterClass(statement.getParameterClass());
       map.setResource(statement.getResource());
       statement.setParameterMap(map);
 
-      SqlText sqlText = PARAM_PARSER.parseInlineParameterMap(vars.delegate.getTypeHandlerFactory(), newSql, statement.getParameterClass());
+      SqlText sqlText = PARAM_PARSER.parseInlineParameterMap(vars.client.getDelegate().getTypeHandlerFactory(), newSql, statement.getParameterClass());
       newSql = sqlText.getText();
       List mappingList = Arrays.asList(sqlText.getParameterMappings());
 
@@ -308,12 +346,12 @@ public class SqlStatementParser extends BaseParser {
 
     Sql sql = null;
     if (SimpleDynamicSql.isSimpleDynamicSql(newSql)) {
-      sql = new SimpleDynamicSql(vars.delegate, newSql);
+      sql = new SimpleDynamicSql(vars.client.getDelegate(), newSql);
     } else {
       sql = new StaticSql(newSql);
     }
     statement.setSql(sql);
-  }
 
+  }
 
 }

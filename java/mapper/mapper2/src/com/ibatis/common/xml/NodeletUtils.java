@@ -1,26 +1,27 @@
 package com.ibatis.common.xml;
 
-import org.w3c.dom.*;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 
 import java.util.Properties;
 
 public class NodeletUtils {
 
-  public static boolean getBooleanAttribute (Properties attribs, String name, boolean def) {
+  public static boolean getBooleanAttribute(Properties attribs, String name, boolean def) {
     String value = attribs.getProperty(name);
     if (value == null) {
       return def;
     } else {
-      return  "true".equals(value);
+      return "true".equals(value);
     }
   }
 
-  public static int getIntAttribute (Properties attribs, String name, int def) {
+  public static int getIntAttribute(Properties attribs, String name, int def) {
     String value = attribs.getProperty(name);
     if (value == null) {
       return def;
     } else {
-      return  Integer.parseInt(value);
+      return Integer.parseInt(value);
     }
   }
 
@@ -33,10 +34,7 @@ public class NodeletUtils {
     NamedNodeMap attributeNodes = n.getAttributes();
     for (int i = 0; i < attributeNodes.getLength(); i++) {
       Node attribute = attributeNodes.item(i);
-      String value = attribute.getNodeValue();
-      if (variables != null) {
-        parsePropertyTokens(value, variables);
-      }
+      String value = parsePropertyTokens(attribute.getNodeValue(), variables);
       attributes.put(attribute.getNodeName(), value);
     }
     return attributes;

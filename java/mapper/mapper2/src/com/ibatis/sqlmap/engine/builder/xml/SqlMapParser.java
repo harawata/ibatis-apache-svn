@@ -159,6 +159,17 @@ public class SqlMapParser extends BaseParser {
   }
 
   private void addParameterMapNodelets() {
+    parser.addNodelet("/sqlMap/parameterMap/end()", new Nodelet() {
+      public void process(Node node) throws Exception {
+
+        vars.currentParameterMap.setParameterMappingList(vars.parameterMappingList);
+
+        vars.client.getDelegate().addParameterMap(vars.currentParameterMap);
+
+        vars.errorCtx.setMoreInfo(null);
+        vars.errorCtx.setObjectId(null);
+      }
+    });
     parser.addNodelet("/sqlMap/parameterMap", new Nodelet() {
       public void process(Node node) throws Exception {
         vars.errorCtx.setActivity("building a parameter map");
@@ -189,13 +200,6 @@ public class SqlMapParser extends BaseParser {
         vars.parameterMappingList = new ArrayList();
 
         vars.errorCtx.setMoreInfo("Check the parameter mappings.");
-
-        vars.currentParameterMap.setParameterMappingList(vars.parameterMappingList);
-
-        vars.client.getDelegate().addParameterMap(vars.currentParameterMap);
-
-        vars.errorCtx.setMoreInfo(null);
-        vars.errorCtx.setObjectId(null);
       }
     });
     parser.addNodelet("/sqlMap/parameterMap/parameter", new Nodelet() {
@@ -251,6 +255,17 @@ public class SqlMapParser extends BaseParser {
   }
 
   private void addResultMapNodelets() {
+    parser.addNodelet("/sqlMap/resultMap/end()", new Nodelet() {
+      public void process(Node node) throws Exception {
+        vars.currentResultMap.setResultMappingList(vars.resultMappingList);
+
+        vars.client.getDelegate().addResultMap(vars.currentResultMap);
+
+        vars.errorCtx.setMoreInfo(null);
+
+        vars.errorCtx.setObjectId(null);
+      }
+    });
     parser.addNodelet("/sqlMap/resultMap", new Nodelet() {
       public void process(Node node) throws Exception {
         vars.errorCtx.setActivity("building a result map");
@@ -306,13 +321,6 @@ public class SqlMapParser extends BaseParser {
         vars.errorCtx.setMoreInfo("Check the result mappings.");
         vars.resultMappingIndex = vars.resultMappingList.size();
 
-        vars.currentResultMap.setResultMappingList(vars.resultMappingList);
-
-        vars.client.getDelegate().addResultMap(vars.currentResultMap);
-
-        vars.errorCtx.setMoreInfo(null);
-
-        vars.errorCtx.setObjectId(null);
       }
     });
     parser.addNodelet("/sqlMap/resultMap/result", new Nodelet() {
