@@ -78,10 +78,6 @@ import java.util.*;
 
 /**
  * NOT THREAD SAFE.  USE SEPARATE INSTANCES PER THREAD.
- * <p/>
- * User: Clinton Begin
- * Date: Nov 8, 2003
- * Time: 7:12:11 PM
  */
 public class XmlSqlMapClientBuilder {
 

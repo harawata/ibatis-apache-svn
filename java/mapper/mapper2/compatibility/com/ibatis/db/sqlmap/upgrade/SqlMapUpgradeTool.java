@@ -19,11 +19,6 @@ import com.ibatis.common.exception.NestedRuntimeException;
 
 import java.io.IOException;
 
-/**
- * User: Clinton Begin
- * Date: Dec 1, 2003
- * Time: 11:16:36 PM
- */
 public class SqlMapUpgradeTool {
 
   private static final SqlMapXmlConverter CONVERTER = new SqlMapXmlConverter();

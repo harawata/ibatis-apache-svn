@@ -1,16 +1,10 @@
-/**
- * User: Clinton Begin
- * Date: Mar 8, 2003
- * Time: 2:51:44 PM
- */
 package compatibility.sqlmap;
 
 import com.ibatis.db.sqlmap.RowHandler;
 import com.ibatis.db.sqlmap.SqlMap;
-
-import java.sql.*;
-
 import compatibility.BaseCompat;
+
+import java.sql.SQLException;
 
 public class RowHandlerCompat extends BaseCompat {
 

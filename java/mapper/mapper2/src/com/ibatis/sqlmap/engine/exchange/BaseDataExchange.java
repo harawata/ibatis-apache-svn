@@ -19,11 +19,6 @@ import com.ibatis.sqlmap.engine.cache.CacheKey;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
 import com.ibatis.sqlmap.engine.scope.RequestScope;
 
-/**
- * User: Clinton Begin
- * Date: Nov 24, 2003
- * Time: 9:54:28 PM
- */
 public abstract class BaseDataExchange implements DataExchange {
 
   private DataExchangeFactory dataExchangeFactory;

@@ -1,22 +1,16 @@
 package com.ibatis.dao.impl.jdbc;
 
-import com.ibatis.dao.client.template.JdbcDaoTemplate;
-import com.ibatis.dao.client.DaoManager;
 import com.ibatis.dao.client.DaoException;
+import com.ibatis.dao.client.DaoManager;
+import com.ibatis.dao.client.template.JdbcDaoTemplate;
 import com.ibatis.dao.iface.AccountDao;
 import testdomain.Account;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
-/**
- * <p/>
- * Date: Feb 29, 2004 12:28:00 PM
- * 
- * @author Clinton Begin
- */
 public class JdbcAccountDao extends JdbcDaoTemplate implements AccountDao {
 
   private static final String INSERT =
@@ -58,7 +52,7 @@ public class JdbcAccountDao extends JdbcDaoTemplate implements AccountDao {
       ps.setString(4, account.getEmailAddress());
       ps.executeUpdate();
     } catch (SQLException e) {
-      throw new DaoException ("Error creating Account.  Cause: " + e, e);
+      throw new DaoException("Error creating Account.  Cause: " + e, e);
     } finally {
       closePreparedStatement(ps);
     }
@@ -75,7 +69,7 @@ public class JdbcAccountDao extends JdbcDaoTemplate implements AccountDao {
       ps.setInt(4, account.getId());
       ps.executeUpdate();
     } catch (SQLException e) {
-      throw new DaoException ("Error saving Account.  Cause: " + e, e);
+      throw new DaoException("Error saving Account.  Cause: " + e, e);
     } finally {
       closePreparedStatement(ps);
     }
@@ -89,7 +83,7 @@ public class JdbcAccountDao extends JdbcDaoTemplate implements AccountDao {
       ps.setInt(1, account.getId());
       ps.executeUpdate();
     } catch (SQLException e) {
-      throw new DaoException ("Error removing Account.  Cause: " + e, e);
+      throw new DaoException("Error removing Account.  Cause: " + e, e);
     } finally {
       closePreparedStatement(ps);
     }
@@ -112,7 +106,7 @@ public class JdbcAccountDao extends JdbcDaoTemplate implements AccountDao {
         account.setEmailAddress(rs.getString("emailAddress"));
       }
     } catch (SQLException e) {
-      throw new DaoException ("Error finding Account.  Cause: " + e, e);
+      throw new DaoException("Error finding Account.  Cause: " + e, e);
     } finally {
       closeResultSet(rs);
       closePreparedStatement(ps);

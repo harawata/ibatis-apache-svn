@@ -2,13 +2,9 @@ package com.ibatis.sqlmap;
 
 import testdomain.ComplexBean;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
-/**
- * User: Clinton Begin
- * Date: Jan 7, 2004
- * Time: 10:31:20 PM
- */
 public class ComplexTypeTest extends BaseSqlMapTest {
 
   // SETUP & TEARDOWN

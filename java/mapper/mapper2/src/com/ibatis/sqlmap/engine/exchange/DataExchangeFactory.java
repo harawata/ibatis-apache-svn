@@ -22,11 +22,6 @@ import com.ibatis.sqlmap.engine.type.XmlTypeMarker;
 import java.util.List;
 import java.util.Map;
 
-/**
- * User: Clinton Begin
- * Date: Nov 16, 2003
- * Time: 10:36:10 PM
- */
 public class DataExchangeFactory {
 
   private final DataExchange domDataExchange;

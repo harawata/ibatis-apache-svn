@@ -1,14 +1,8 @@
-/**
- * User: Clinton Begin
- * Date: Mar 10, 2003
- * Time: 8:48:27 PM
- */
 package compatibility.dao;
 
-import com.ibatis.db.dao.DaoManager;
+import com.ibatis.common.exception.NestedRuntimeException;
 import com.ibatis.common.resources.Resources;
-import com.ibatis.common.exception.*;
-
+import com.ibatis.db.dao.DaoManager;
 import compatibility.BaseCompat;
 
 public class DaoConfigCompat extends BaseCompat {

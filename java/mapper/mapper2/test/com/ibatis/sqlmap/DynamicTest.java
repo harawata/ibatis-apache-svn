@@ -5,11 +5,6 @@ import testdomain.Account;
 import java.sql.SQLException;
 import java.util.List;
 
-/**
- * User: Clinton Begin
- * Date: Nov 19, 2003
- * Time: 10:51:48 PM
- */
 public class DynamicTest extends BaseSqlMapTest {
 
   protected void setUp() throws Exception {

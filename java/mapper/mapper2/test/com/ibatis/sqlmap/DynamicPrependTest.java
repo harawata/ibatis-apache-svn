@@ -2,14 +2,10 @@ package com.ibatis.sqlmap;
 
 import testdomain.Account;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 
-/**
- * User: Clinton Begin
- * Date: Dec 6, 2003
- * Time: 9:38:15 AM
- */
 public class DynamicPrependTest extends BaseSqlMapTest {
 
   protected void setUp() throws Exception {

@@ -15,12 +15,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.sql.Connection;
 
-/**
- * <p/>
- * Date: Feb 29, 2004 1:55:02 PM
- * 
- * @author Clinton Begin
- */
 public abstract class BaseDaoTest extends TestCase {
 
   protected DaoManager daoManager;

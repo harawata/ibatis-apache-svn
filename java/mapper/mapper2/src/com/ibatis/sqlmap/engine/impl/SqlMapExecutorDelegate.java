@@ -49,11 +49,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-/**
- * User: Clinton Begin
- * Date: Sep 13, 2003
- * Time: 7:04:24 AM
- */
 public class SqlMapExecutorDelegate {
 
   private static final Probe PROBE = ProbeFactory.getProbe();

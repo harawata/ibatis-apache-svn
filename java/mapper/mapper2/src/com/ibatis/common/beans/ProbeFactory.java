@@ -17,10 +17,6 @@ package com.ibatis.common.beans;
 
 import java.util.Map;
 
-/**
- * <p/>
- * Date: Apr 23, 2004 11:26:44 PM
- */
 public class ProbeFactory {
 
   private static final Probe DOM = new DomProbe();

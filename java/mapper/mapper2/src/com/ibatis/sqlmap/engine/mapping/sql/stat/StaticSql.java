@@ -20,11 +20,6 @@ import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
 import com.ibatis.sqlmap.engine.mapping.sql.Sql;
 import com.ibatis.sqlmap.engine.scope.RequestScope;
 
-/**
- * User: Clinton Begin
- * Date: Sep 13, 2003
- * Time: 6:49:56 PM
- */
 public class StaticSql implements Sql {
 
   private String sqlStatement;

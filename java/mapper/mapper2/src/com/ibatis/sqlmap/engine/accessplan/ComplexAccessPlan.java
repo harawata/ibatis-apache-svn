@@ -18,11 +18,6 @@ package com.ibatis.sqlmap.engine.accessplan;
 import com.ibatis.common.beans.Probe;
 import com.ibatis.common.beans.ProbeFactory;
 
-/**
- * User: Clinton Begin
- * Date: Nov 27, 2003
- * Time: 9:36:06 PM
- */
 public class ComplexAccessPlan extends BaseAccessPlan {
 
   private static final Probe PROBE = ProbeFactory.getProbe();

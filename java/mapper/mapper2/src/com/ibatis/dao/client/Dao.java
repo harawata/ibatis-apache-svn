@@ -25,9 +25,6 @@ package com.ibatis.dao.client;
  * The DaoManager instance will allow you to easily access transactions
  * and other DAOs.
  * <p/>
- * Date: Jan 27, 2004 10:37:10 PM
- *
- * @author Clinton Begin
  */
 public interface Dao {
 

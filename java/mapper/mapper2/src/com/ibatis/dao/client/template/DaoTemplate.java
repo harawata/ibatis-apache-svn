@@ -20,11 +20,6 @@ import com.ibatis.dao.client.DaoManager;
 
 /**
  * A base class for Dao implementations, or other DAO templates.
- * <p/>
- * <p/>
- * Date: Feb 22, 2004 3:25:19 PM
- *
- * @author Clinton Begin
  */
 public abstract class DaoTemplate implements Dao {
 

@@ -27,11 +27,6 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.*;
 
-/**
- * User: Clinton Begin
- * Date: Dec 1, 2003
- * Time: 10:42:18 PM
- */
 public class SqlMapXmlConverter implements XmlConverter {
 
   public void convertXml(Reader reader, Writer writer) {

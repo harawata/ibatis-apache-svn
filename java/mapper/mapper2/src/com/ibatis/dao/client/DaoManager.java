@@ -77,9 +77,6 @@ package com.ibatis.dao.client;
  * (i.e. two phase commit), you'll need to configure all of your contexts
  * using JTA, JNDI and XA compliant DataSources.
  * <p/>
- * Date: Jan 27, 2004 10:47:17 PM
- *
- * @author Clinton Begin
  */
 public interface DaoManager {
 

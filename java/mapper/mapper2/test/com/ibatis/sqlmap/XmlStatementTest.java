@@ -5,12 +5,6 @@ import com.ibatis.common.minixml.MiniParser;
 
 import java.sql.SQLException;
 
-/**
- * <p/>
- * Date: May 4, 2004 10:04:28 PM
- * 
- * @author Clinton Begin
- */
 public class XmlStatementTest extends BaseSqlMapTest {
 
   // SETUP & TEARDOWN

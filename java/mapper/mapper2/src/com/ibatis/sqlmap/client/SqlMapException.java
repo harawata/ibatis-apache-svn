@@ -24,10 +24,6 @@ import com.ibatis.common.exception.NestedRuntimeException;
  * <p/>
  * Note: Generally this wouldn't be used to indicate that an SQL execution error
  * occurred (that's what SQLException is for).
- * <p/>
- * Date: Sep 5, 2003 5:56:44 PM
- *
- * @author Clinton Begin
  */
 public class SqlMapException extends NestedRuntimeException {
 

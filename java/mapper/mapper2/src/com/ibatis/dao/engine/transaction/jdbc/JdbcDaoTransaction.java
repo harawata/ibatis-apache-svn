@@ -25,12 +25,6 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-/**
- * <p/>
- * Date: Jan 27, 2004 10:48:48 PM
- *
- * @author Clinton Begin
- */
 public class JdbcDaoTransaction implements ConnectionDaoTransaction {
 
   private static final Log connectionLog = LogFactory.getLog(Connection.class);

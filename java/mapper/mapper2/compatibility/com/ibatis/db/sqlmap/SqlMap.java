@@ -23,11 +23,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-/**
- * User: Clinton Begin
- * Date: Nov 18, 2003
- * Time: 9:23:34 PM
- */
 public class SqlMap {
 
   private SqlMapClient client;

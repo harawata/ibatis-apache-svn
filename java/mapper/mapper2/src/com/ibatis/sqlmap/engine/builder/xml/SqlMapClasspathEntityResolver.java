@@ -22,11 +22,6 @@ import org.xml.sax.SAXException;
 
 import java.io.InputStream;
 
-/**
- * User: Clinton Begin
- * Date: Jan 5, 2004
- * Time: 11:52:33 PM
- */
 public class SqlMapClasspathEntityResolver implements EntityResolver {
 
   private static final String SYSTEM_ID_SQL_MAP_CONFIG = "http://www.ibatis.com/dtd/sql-map-config-2.dtd";

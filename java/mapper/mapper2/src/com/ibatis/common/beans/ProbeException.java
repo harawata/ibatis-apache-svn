@@ -19,8 +19,6 @@ import com.ibatis.common.exception.NestedRuntimeException;
 
 /**
  * BeansException for use for by BeanProbe and StaticBeanProbe.
- *
- * @author clinton_begin
  */
 public class ProbeException extends NestedRuntimeException {
 

@@ -24,12 +24,6 @@ import net.sf.hibernate.Transaction;
 
 import java.sql.Connection;
 
-/**
- * <p/>
- * Date: Jan 27, 2004 10:49:12 PM
- *
- * @author Clinton Begin
- */
 public class HibernateDaoTransaction implements ConnectionDaoTransaction {
 
   private Session session;

@@ -25,11 +25,6 @@ import com.ibatis.sqlmap.engine.scope.RequestScope;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * User: Clinton Begin
- * Date: Sep 6, 2003
- * Time: 8:31:37 AM
- */
 public class MapDataExchange extends BaseDataExchange implements DataExchange {
 
   protected MapDataExchange(DataExchangeFactory dataExchangeFactory) {

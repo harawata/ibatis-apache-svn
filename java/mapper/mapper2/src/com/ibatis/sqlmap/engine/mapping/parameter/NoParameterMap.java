@@ -19,11 +19,6 @@ package com.ibatis.sqlmap.engine.mapping.parameter;
 import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
 import com.ibatis.sqlmap.engine.scope.RequestScope;
 
-/**
- * User: Clinton Begin
- * Date: Nov 16, 2003
- * Time: 6:15:10 PM
- */
 public class NoParameterMap extends BasicParameterMap {
 
   private static final ParameterMapping[] NO_PARAMETERS = new ParameterMapping[0];

@@ -1,8 +1,3 @@
-/**
- * User: Clinton Begin
- * Date: Aug 24, 2003
- * Time: 9:56:40 AM
- */
 package com.ibatis.common.beans;
 
 import com.ibatis.sqlmap.engine.accessplan.AccessPlan;

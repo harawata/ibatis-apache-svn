@@ -27,12 +27,6 @@ import javax.transaction.UserTransaction;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-/**
- * <p/>
- * Date: Jan 27, 2004 10:48:31 PM
- *
- * @author Clinton Begin
- */
 public class JtaDaoTransaction implements ConnectionDaoTransaction {
 
   private static final Log connectionLog = LogFactory.getLog(Connection.class);

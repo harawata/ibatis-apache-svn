@@ -19,11 +19,6 @@ import com.ibatis.common.beans.ClassInfo;
 
 import java.lang.reflect.Method;
 
-/**
- * User: Clinton Begin
- * Date: Nov 27, 2003
- * Time: 9:14:22 PM
- */
 public abstract class BaseAccessPlan implements AccessPlan {
 
   protected Class clazz;

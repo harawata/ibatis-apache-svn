@@ -28,8 +28,6 @@ import java.util.StringTokenizer;
  * StaticBeanProbe.setObject(object, propertyName, value);
  * <P>
  * Object value = StaticBeanProbe.getObject(object, propertyName);
- *
- * @author clinton_begin
  */
 public class JavaBeanProbe extends BaseProbe {
 

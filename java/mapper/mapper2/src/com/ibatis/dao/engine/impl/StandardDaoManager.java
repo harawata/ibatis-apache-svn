@@ -22,12 +22,6 @@ import com.ibatis.dao.client.DaoTransaction;
 
 import java.util.*;
 
-/**
- * <p/>
- * Date: Jan 27, 2004 10:47:28 PM
- *
- * @author Clinton Begin
- */
 public class StandardDaoManager implements DaoManager {
 
   private static final String DAO_EXPLICIT_TX = "__DAO_EXPLICIT_TX";

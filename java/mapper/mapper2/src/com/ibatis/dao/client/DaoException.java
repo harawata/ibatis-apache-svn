@@ -21,9 +21,6 @@ import com.ibatis.common.exception.NestedRuntimeException;
  * General runtime exception thrown by the DAO framework.
  * <p/>
  * <p/>
- * Date: Jan 27, 2004 10:42:55 PM
- *
- * @author Clinton Begin
  */
 public class DaoException extends NestedRuntimeException {
 

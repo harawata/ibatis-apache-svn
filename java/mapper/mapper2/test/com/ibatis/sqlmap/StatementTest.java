@@ -1,13 +1,8 @@
-/**
- * User: Clinton Begin
- * Date: May 17, 2003
- * Time: 8:46:39 PM
- */
 package com.ibatis.sqlmap;
 
 import com.ibatis.common.util.PaginatedList;
-import com.ibatis.sqlmap.client.event.RowHandler;
 import com.ibatis.sqlmap.client.SqlMapSession;
+import com.ibatis.sqlmap.client.event.RowHandler;
 import com.ibatis.sqlmap.engine.impl.SqlMapClientImpl;
 import testdomain.Account;
 import testdomain.LineItem;
@@ -15,8 +10,8 @@ import testdomain.SuperAccount;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
-import java.sql.SQLException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,30 +41,30 @@ public class StatementTest extends BaseSqlMapTest {
   public void testUserConnection() throws SQLException {
     DataSource ds = sqlMap.getDataSource();
     Connection conn = ds.getConnection();
-    ((SqlMapClientImpl)sqlMap).getDelegate().getTxManager().setDataSource(null);
+    ((SqlMapClientImpl) sqlMap).getDelegate().getTxManager().setDataSource(null);
     sqlMap.setUserConnection(conn);
     Account account = (Account) sqlMap.queryForObject("getAccountViaColumnName", new Integer(1));
     conn.close();
     assertAccount1(account);
-    ((SqlMapClientImpl)sqlMap).getDelegate().getTxManager().setDataSource(ds);
+    ((SqlMapClientImpl) sqlMap).getDelegate().getTxManager().setDataSource(ds);
   }
 
   public void testSessionUserConnection() throws SQLException {
     DataSource ds = sqlMap.getDataSource();
     Connection conn = ds.getConnection();
-    ((SqlMapClientImpl)sqlMap).getDelegate().getTxManager().setDataSource(null);
+    ((SqlMapClientImpl) sqlMap).getDelegate().getTxManager().setDataSource(null);
     SqlMapSession session = sqlMap.openSession(conn);
     Account account = (Account) session.queryForObject("getAccountViaColumnName", new Integer(1));
     session.close();
     conn.close();
     assertAccount1(account);
-    ((SqlMapClientImpl)sqlMap).getDelegate().getTxManager().setDataSource(ds);
+    ((SqlMapClientImpl) sqlMap).getDelegate().getTxManager().setDataSource(ds);
   }
 
   public void testSessionUserConnectionFailures() throws SQLException {
     DataSource ds = sqlMap.getDataSource();
     Connection conn = ds.getConnection();
-    ((SqlMapClientImpl)sqlMap).getDelegate().getTxManager().setDataSource(null);
+    ((SqlMapClientImpl) sqlMap).getDelegate().getTxManager().setDataSource(null);
     SqlMapSession session = sqlMap.openSession(conn);
 
     Exception expected = null;
@@ -99,7 +94,7 @@ public class StatementTest extends BaseSqlMapTest {
     session.close();
     conn.close();
     assertAccount1(account);
-    ((SqlMapClientImpl)sqlMap).getDelegate().getTxManager().setDataSource(ds);
+    ((SqlMapClientImpl) sqlMap).getDelegate().getTxManager().setDataSource(ds);
   }
 
   public void testExecuteQueryForObjectViaColumnIndex() throws SQLException {
@@ -116,7 +111,7 @@ public class StatementTest extends BaseSqlMapTest {
     List list = sqlMap.queryForList("getAccountViaResultClassPlusOne", new Integer(1));
     assertList(list);
   }
-  
+
   public void testExecuteQueryForObjectAsHashMap() throws SQLException {
     Map account = (HashMap) sqlMap.queryForObject("getAccountAsHashMap", new Integer(1));
     assertAccount1(account);
@@ -125,7 +120,7 @@ public class StatementTest extends BaseSqlMapTest {
   public void testExecuteQueryForObjectAsHashMapResultClass() throws SQLException {
     Map account = (HashMap) sqlMap.queryForObject("getAccountAsHashMapResultClass", new Integer(1));
     assertAccount1(account);
-  } 
+  }
 
   public void testExecuteQueryForObjectWithSimpleResultClass() throws SQLException {
     String email = (String) sqlMap.queryForObject("getEmailAddressViaResultClass", new Integer(1));

@@ -27,10 +27,6 @@ import java.io.StringReader;
  * causes problems for those running without a network.
  * <p/>
  * Line terminators are converted to a \n
- * <p/>
- * Date: Jan 17, 2004 6:30:40 AM
- *
- * @author Clinton Begin
  */
 public class DocTypeReader extends Reader {
 

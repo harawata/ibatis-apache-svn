@@ -19,12 +19,6 @@ import com.ibatis.dao.client.DaoTransaction;
 
 import java.util.Properties;
 
-/**
- * <p/>
- * Date: Jan 27, 2004 10:41:00 PM
- *
- * @author Clinton Begin
- */
 public interface DaoTransactionManager {
 
   public void configure(Properties properties);

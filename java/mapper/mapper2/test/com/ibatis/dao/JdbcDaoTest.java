@@ -5,12 +5,6 @@ import com.ibatis.dao.client.DaoManagerBuilder;
 
 import java.io.Reader;
 
-/**
- * <p/>
- * Date: Feb 29, 2004 1:54:09 PM
- * 
- * @author Clinton Begin
- */
 public class JdbcDaoTest extends BaseDaoTest {
 
   public void setUp() throws Exception {

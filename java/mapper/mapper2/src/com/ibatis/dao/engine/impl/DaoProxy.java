@@ -24,12 +24,6 @@ import java.lang.reflect.Proxy;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * <p/>
- * Date: Jan 30, 2004 12:15:03 AM
- *
- * @author Clinton Begin
- */
 public class DaoProxy implements InvocationHandler {
 
   private static final Set PASSTHROUGH_METHODS = new HashSet();

@@ -25,12 +25,6 @@ import net.sf.hibernate.cfg.Configuration;
 import java.util.Iterator;
 import java.util.Properties;
 
-/**
- * <p/>
- * Date: Jan 27, 2004 10:49:28 PM
- *
- * @author Clinton Begin
- */
 public class HibernateDaoTransactionManager implements DaoTransactionManager {
 
   private SessionFactory factory;

@@ -1,8 +1,3 @@
-/**
- * User: Clinton Begin
- * Date: Mar 9, 2003
- * Time: 9:20:43 AM
- */
 package compatibility;
 
 public class BaseCompat {

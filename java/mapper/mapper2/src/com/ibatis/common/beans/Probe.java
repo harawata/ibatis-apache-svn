@@ -15,10 +15,6 @@
  */
 package com.ibatis.common.beans;
 
-/**
- * <p/>
- * Date: Apr 23, 2004 9:40:19 PM
- */
 public interface Probe {
 
   /**

@@ -1,13 +1,8 @@
-/**
- * User: Clinton Begin
- * Date: Jun 23, 2003
- * Time: 8:19:57 PM
- */
 package com.ibatis.common.util;
 
 import junit.framework.TestCase;
 
-import java.util.*;
+import java.util.Iterator;
 
 public class PaginatedArrayListTest extends TestCase {
 

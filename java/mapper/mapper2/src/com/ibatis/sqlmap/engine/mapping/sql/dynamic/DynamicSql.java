@@ -35,11 +35,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * User: Clinton Begin
- * Date: Sep 13, 2003
- * Time: 6:50:06 PM
- */
 public class DynamicSql implements Sql, DynamicParent {
 
   private List children = new ArrayList();

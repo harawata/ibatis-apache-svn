@@ -24,12 +24,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-/**
- * <p/>
- * Date: Jan 29, 2004 11:46:41 PM
- *
- * @author Clinton Begin
- */
 public class DaoContext {
 
   private String id;

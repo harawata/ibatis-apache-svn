@@ -21,11 +21,6 @@ import com.ibatis.sqlmap.engine.scope.RequestScope;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * User: Clinton Begin
- * Date: Nov 16, 2003
- * Time: 9:49:48 PM
- */
 public interface ResultMap {
 
   public String getId();

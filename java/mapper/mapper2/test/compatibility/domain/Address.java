@@ -1,8 +1,3 @@
-/**
- * User: Clinton Begin
- * Date: Mar 9, 2003
- * Time: 9:30:44 PM
- */
 package compatibility.domain;
 
 public class Address {

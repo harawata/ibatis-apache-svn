@@ -22,12 +22,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
 
-/**
- * <p/>
- * Date: Apr 24, 2004 11:37:54 PM
- *
- * @author Clinton Begin
- */
 public class DomProbe extends BaseProbe {
 
   public String[] getReadablePropertyNames(Object object) {

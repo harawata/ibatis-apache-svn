@@ -2,12 +2,6 @@ package testdomain;
 
 import java.io.Serializable;
 
-/**
- * <p/>
- * Date: Mar 19, 2004 10:35:09 PM
- * 
- * @author Clinton Begin
- */
 public class ProcBean implements Serializable {
 
   private String email1;

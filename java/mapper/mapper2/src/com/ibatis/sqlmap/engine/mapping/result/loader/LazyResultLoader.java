@@ -26,11 +26,6 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * User: Clinton Begin
- * Date: Dec 29, 2003
- * Time: 7:28:03 PM
- */
 public class LazyResultLoader implements InvocationHandler {
 
   private static final Class[] LIST_INTERFACES = new Class[]{List.class};

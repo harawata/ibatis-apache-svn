@@ -103,7 +103,6 @@ import java.sql.Connection;
  *   <b>sqlMap.endTransaction()</b>;
  * }
  * </pre>
- * Date: Sep 5, 2003 9:23:34 PM
  *
  * @see SqlMapClientBuilder
  * @see SqlMapSession

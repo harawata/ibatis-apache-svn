@@ -8,12 +8,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.sql.SQLException;
 
-/**
- * <p/>
- * Date: May 4, 2004 10:16:31 PM
- * 
- * @author Clinton Begin
- */
 public class DomStatementTest extends BaseSqlMapTest {
 
   // SETUP & TEARDOWN

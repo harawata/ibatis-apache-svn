@@ -25,11 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * User: Clinton Begin
- * Date: Nov 22, 2003
- * Time: 6:25:30 PM
- */
 public class ListDataExchange extends BaseDataExchange implements DataExchange {
 
   protected ListDataExchange(DataExchangeFactory dataExchangeFactory) {

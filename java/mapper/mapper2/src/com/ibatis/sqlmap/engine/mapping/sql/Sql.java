@@ -19,11 +19,6 @@ import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
 import com.ibatis.sqlmap.engine.scope.RequestScope;
 
-/**
- * User: Clinton Begin
- * Date: Sep 12, 2003
- * Time: 7:37:44 PM
- */
 public interface Sql {
 
   public String getSql(RequestScope request, Object parameterObject);

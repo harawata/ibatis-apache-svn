@@ -28,11 +28,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * User: Clinton Begin
- * Date: Sep 5, 2003
- * Time: 9:23:01 AM
- */
 public class SqlExecutor {
 
   //

@@ -20,12 +20,6 @@ import com.ibatis.dao.engine.transaction.DaoTransactionManager;
 
 import java.util.Properties;
 
-/**
- * <p/>
- * Date: Feb 22, 2004 12:10:36 PM
- *
- * @author Clinton Begin
- */
 public class ExternalDaoTransactionManager implements DaoTransactionManager {
 
   public void configure(Properties properties) {

@@ -24,9 +24,7 @@ package com.ibatis.dao.client;
  * provided to simplify accessing implementation specific transaction
  * artifacts such as JDBC connections etc.
  * <p/>
- * Date: Jan 27, 2004 10:41:59 PM
  *
- * @author Clinton Begin
  * @see com.ibatis.dao.client.template.DaoTemplate
  */
 public interface DaoTransaction {

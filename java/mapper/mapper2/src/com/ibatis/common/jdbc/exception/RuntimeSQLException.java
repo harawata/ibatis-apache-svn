@@ -19,12 +19,6 @@ import com.ibatis.common.exception.NestedRuntimeException;
 
 import java.sql.SQLException;
 
-/**
- * <p/>
- * Date: Jan 9, 2004 11:10:00 PM
- *
- * @author Clinton Begin
- */
 public class RuntimeSQLException extends NestedRuntimeException {
 
   public RuntimeSQLException() {

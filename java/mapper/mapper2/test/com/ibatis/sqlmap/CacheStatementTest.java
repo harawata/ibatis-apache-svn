@@ -9,12 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * <p/>
- * Date: May 8, 2004 3:49:53 PM
- * 
- * @author Clinton Begin
- */
 public class CacheStatementTest extends BaseSqlMapTest {
 
   // SETUP & TEARDOWN

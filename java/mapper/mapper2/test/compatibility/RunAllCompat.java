@@ -1,18 +1,13 @@
-/**
- * User: Clinton Begin
- * Date: Mar 8, 2003
- * Time: 11:32:37 AM
- */
 package compatibility;
 
-import com.ibatis.common.util.*;
-
-import java.sql.*;
-import java.util.*;
-
-import compatibility.sqlmap.*;
+import com.ibatis.common.util.Stopwatch;
 import compatibility.dao.CrudCompat;
 import compatibility.scriptrunner.ScriptRunnerCompat;
+import compatibility.sqlmap.*;
+
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RunAllCompat extends BaseCompat implements Runnable {
 

@@ -31,11 +31,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * User: Clinton Begin
- * Date: Nov 9, 2003
- * Time: 10:24:07 PM
- */
 public class AutoResultMap extends BasicResultMap {
 
   public AutoResultMap(SqlMapExecutorDelegate delegate) {

@@ -28,11 +28,6 @@ import com.ibatis.sqlmap.engine.type.TypeHandlerFactory;
 
 import java.util.Map;
 
-/**
- * User: Clinton Begin
- * Date: Nov 22, 2003
- * Time: 7:12:57 PM
- */
 public class ComplexDataExchange extends BaseDataExchange implements DataExchange {
 
   private static final Probe PROBE = ProbeFactory.getProbe();

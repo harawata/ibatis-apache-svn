@@ -22,8 +22,6 @@ import java.util.Properties;
 
 /**
  * A class to simplify access to resources through the classloader.
- *
- * @author clinton_begin
  */
 public class Resources extends Object {
 

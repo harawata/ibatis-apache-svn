@@ -30,11 +30,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-/**
- * User: Clinton Begin
- * Date: Dec 28, 2003
- * Time: 4:10:15 PM
- */
 public class SqlMapClientImpl implements ExtendedSqlMapClient {
 
   private static final Log log = LogFactory.getLog(SqlMapClientImpl.class);

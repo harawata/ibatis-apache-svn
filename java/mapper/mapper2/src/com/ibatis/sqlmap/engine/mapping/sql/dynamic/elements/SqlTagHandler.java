@@ -15,11 +15,6 @@
  */
 package com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements;
 
-/**
- * User: Clinton Begin
- * Date: Nov 18, 2003
- * Time: 10:05:47 PM
- */
 public interface SqlTagHandler {
 
   // BODY TAG

@@ -5,13 +5,6 @@ import testdomain.Account;
 import java.sql.SQLException;
 import java.util.*;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Clinton
- * Date: 24-May-2004
- * Time: 4:56:18 PM
- * To change this template use File | Settings | File Templates.
- */
 public class IterateTest extends BaseSqlMapTest {
 
   protected void setUp() throws Exception {
@@ -57,7 +50,7 @@ public class IterateTest extends BaseSqlMapTest {
     paramList.add(new Integer(3));
 
     Map paramMap = new HashMap();
-    paramMap.put("paramList",paramList);
+    paramMap.put("paramList", paramList);
 
     List list = sqlMap.queryForList("iterateListInMap", paramMap);
     assertAccount1((Account) list.get(0));
@@ -90,7 +83,7 @@ public class IterateTest extends BaseSqlMapTest {
   public void testIterateNestedMapListProperty() throws SQLException {
     Map account = new HashMap();
     List accountList = new ArrayList();
-    account.put("accountList",accountList);
+    account.put("accountList", accountList);
     accountList.add(new Account(1));
     accountList.add(new Account(2));
     accountList.add(new Account(3));

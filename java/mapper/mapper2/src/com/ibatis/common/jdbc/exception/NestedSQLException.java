@@ -17,11 +17,6 @@ package com.ibatis.common.jdbc.exception;
 
 import java.sql.SQLException;
 
-/**
- * User: Clinton Begin
- * Date: Nov 30, 2003
- * Time: 6:47:38 PM
- */
 public class NestedSQLException extends SQLException {
 
   private static final String CAUSED_BY = "\nCaused by: ";

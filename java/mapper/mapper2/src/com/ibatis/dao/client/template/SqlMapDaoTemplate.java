@@ -32,10 +32,7 @@ import java.util.Map;
  * convenient method to access the SqlMapExecutor.  This class
  * also provides SqlMapExecutor method wrappers that conveniently
  * wrap SQLExceptions with DAO Exceptions.
- * <p/>
- * Date: Feb 22, 2004 3:26:53 PM
  *
- * @author Clinton Begin
  * @author Zach Scott
  */
 public abstract class SqlMapDaoTemplate extends DaoTemplate implements SqlMapExecutor {

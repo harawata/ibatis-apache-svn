@@ -23,11 +23,6 @@ import com.ibatis.sqlmap.engine.builder.xml.XmlSqlMapClientBuilder;
 import java.io.Reader;
 import java.util.Properties;
 
-/**
- * User: Clinton Begin
- * Date: Nov 18, 2003
- * Time: 9:47:32 PM
- */
 public class XmlSqlMapBuilder {
 
   private static final XmlConverter SQL_MAP_CONVERTER = new SqlMapXmlConverter();

@@ -30,12 +30,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.util.Map;
 
-/**
- * <p/>
- * Date: May 2, 2004 4:56:42 PM
- *
- * @author Clinton Begin
- */
 public class DomDataExchange extends BaseDataExchange implements DataExchange {
 
   public DomDataExchange(DataExchangeFactory dataExchangeFactory) {

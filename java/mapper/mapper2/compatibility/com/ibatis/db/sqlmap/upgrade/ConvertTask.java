@@ -29,10 +29,6 @@ import java.util.Enumeration;
  * Extends the ant copy task to convert SQL Map files from v.1.x to v.2.x.
  * <p/>
  * Extends Ant version 1.5.4. Changes/extensions marked inline below
- * <p/>
- * Date: Jan 17, 2004 6:30:40 AM
- *
- * @author Clinton Begin
  */
 public class ConvertTask extends Copy {
 

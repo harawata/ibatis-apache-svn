@@ -1,13 +1,10 @@
-/**
- * User: Clinton Begin
- * Date: Jun 3, 2003
- * Time: 9:50:16 PM
- */
 package compatibility.dao.impl.map;
 
-import com.ibatis.db.sqlmap.*;
-import com.ibatis.db.dao.*;
-import com.ibatis.db.dao.jdbc.*;
+import com.ibatis.db.dao.Dao;
+import com.ibatis.db.dao.DaoException;
+import com.ibatis.db.dao.DaoManager;
+import com.ibatis.db.dao.jdbc.SqlMapDaoTransaction;
+import com.ibatis.db.sqlmap.SqlMap;
 
 public class BaseMapDao implements Dao {
 

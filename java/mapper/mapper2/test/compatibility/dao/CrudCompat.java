@@ -1,14 +1,10 @@
-/**
- * User: Clinton Begin
- * Date: Mar 10, 2003
- * Time: 9:00:21 PM
- */
 package compatibility.dao;
 
-import com.ibatis.db.dao.*;
+import com.ibatis.db.dao.DaoException;
+import com.ibatis.db.dao.DaoManager;
+import compatibility.BaseCompat;
 import compatibility.dao.iface.AccountDao;
 import compatibility.domain.Account;
-import compatibility.BaseCompat;
 
 public class CrudCompat extends BaseCompat {
 

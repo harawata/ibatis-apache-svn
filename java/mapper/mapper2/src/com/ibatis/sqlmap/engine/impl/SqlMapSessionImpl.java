@@ -34,11 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * User: Clinton Begin
- * Date: Dec 28, 2003
- * Time: 3:57:30 PM
- */
 public class SqlMapSessionImpl implements SqlMapSession {
 
   private static final Log log = LogFactory.getLog(SqlMapSessionImpl.class);

@@ -26,11 +26,6 @@ import com.ibatis.sqlmap.engine.scope.RequestScope;
 
 import java.util.StringTokenizer;
 
-/**
- * User: Clinton Begin
- * Date: Sep 13, 2003
- * Time: 6:50:19 PM
- */
 public class SimpleDynamicSql implements Sql {
 
   private static final Probe PROBE = ProbeFactory.getProbe();

@@ -27,12 +27,6 @@ import java.io.Reader;
 import java.sql.SQLException;
 import java.util.Map;
 
-/**
- * <p/>
- * Date: Feb 23, 2004 9:19:43 PM
- *
- * @author Clinton Begin
- */
 public class SqlMap2DaoTransactionPool implements DaoTransactionPool {
 
   private SqlMapClient sqlMap;

@@ -21,11 +21,7 @@ import java.sql.SQLException;
 
 /**
  * This interface declares methods for demarcating SQL Map transactions.
- * <p/>
- * <p/>
- * Date: Mar 2, 2004 9:12:21 PM
  *
- * @author Clinton Begin
  * @see SqlMapSession, SqlMapClient
  */
 public interface SqlMapTransactionManager {

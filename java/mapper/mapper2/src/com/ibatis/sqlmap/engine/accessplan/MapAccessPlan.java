@@ -17,11 +17,6 @@ package com.ibatis.sqlmap.engine.accessplan;
 
 import java.util.Map;
 
-/**
- * User: Clinton Begin
- * Date: Nov 27, 2003
- * Time: 8:57:56 PM
- */
 public class MapAccessPlan extends BaseAccessPlan {
 
   MapAccessPlan(Class clazz, String[] propertyNames) {

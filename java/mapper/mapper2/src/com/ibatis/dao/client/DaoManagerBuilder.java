@@ -27,9 +27,6 @@ import java.util.Properties;
  * <li> <a href="dao.txt">The DAO Configuration file (dao.xml)</a>
  * <ul>
  * <p/>
- * Date: Feb 22, 2004 12:45:20 PM
- *
- * @author Clinton Begin
  */
 public class DaoManagerBuilder {
 

@@ -23,11 +23,6 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * User: Clinton Begin
- * Date: Dec 29, 2003
- * Time: 7:45:26 PM
- */
 public class ResultLoader {
 
   private ResultLoader() {

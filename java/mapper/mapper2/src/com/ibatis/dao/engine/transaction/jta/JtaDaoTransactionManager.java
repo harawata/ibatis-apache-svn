@@ -24,12 +24,6 @@ import javax.sql.DataSource;
 import javax.transaction.UserTransaction;
 import java.util.Properties;
 
-/**
- * <p/>
- * Date: Jan 27, 2004 10:48:39 PM
- *
- * @author Clinton Begin
- */
 public class JtaDaoTransactionManager implements DaoTransactionManager {
 
   private DataSource dataSource;

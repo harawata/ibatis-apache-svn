@@ -1,15 +1,12 @@
-/**
- * User: Clinton Begin
- * Date: Mar 8, 2003
- * Time: 11:44:00 AM
- */
 package compatibility.scriptrunner;
 
+import com.ibatis.common.jdbc.ScriptRunner;
 import com.ibatis.common.resources.Resources;
-import com.ibatis.common.jdbc.*;
 
-import java.io.*;
-import java.sql.*;
+import java.io.IOException;
+import java.io.Reader;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class ScriptRunnerCompat {
 

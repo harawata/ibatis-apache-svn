@@ -22,12 +22,6 @@ import org.xml.sax.SAXException;
 
 import java.io.InputStream;
 
-/**
- * <p/>
- * Date: Feb 22, 2004 11:48:13 AM
- *
- * @author Clinton Begin
- */
 public class DaoClasspathEntityResolver implements EntityResolver {
 
   private static final String SYSTEM_ID_DAO = "http://www.ibatis.com/dtd/dao-2.dtd";

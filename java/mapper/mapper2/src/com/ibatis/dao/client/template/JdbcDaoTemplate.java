@@ -29,10 +29,6 @@ import java.sql.Connection;
  * Use this template for both JDBC and JTA transaction managers.
  * It can also be used for any transaction manager that supports
  * normal JDBC connections, including iBATIS SQL Maps and Hibernate.
- * <p/>
- * Date: Feb 22, 2004 3:21:25 PM
- *
- * @author Clinton Begin
  */
 public abstract class JdbcDaoTemplate extends DaoTemplate {
 

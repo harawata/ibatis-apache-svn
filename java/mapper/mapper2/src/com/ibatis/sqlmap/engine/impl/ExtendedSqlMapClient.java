@@ -19,11 +19,6 @@ import com.ibatis.sqlmap.client.SqlMapClient;
 import com.ibatis.sqlmap.engine.execution.SqlExecutor;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
 
-/**
- * User: Clinton Begin
- * Date: Dec 28, 2003
- * Time: 4:31:14 PM
- */
 public interface ExtendedSqlMapClient extends SqlMapClient {
 
   public SqlMapExecutorDelegate getDelegate();

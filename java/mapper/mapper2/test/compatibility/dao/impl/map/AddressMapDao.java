@@ -1,14 +1,9 @@
-/**
- * User: Clinton Begin
- * Date: Mar 10, 2003
- * Time: 8:22:25 PM
- */
 package compatibility.dao.impl.map;
 
-import compatibility.dao.iface.AddressDao;
-import compatibility.domain.Address;
 import com.ibatis.db.dao.DaoException;
 import com.ibatis.db.sqlmap.SqlMap;
+import compatibility.dao.iface.AddressDao;
+import compatibility.domain.Address;
 
 public class AddressMapDao extends BaseMapDao implements AddressDao {
 

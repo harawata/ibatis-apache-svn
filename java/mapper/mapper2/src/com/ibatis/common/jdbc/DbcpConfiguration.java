@@ -24,12 +24,6 @@ import javax.sql.DataSource;
 import java.util.Iterator;
 import java.util.Map;
 
-/**
- * <p/>
- * Date: Apr 19, 2004 7:03:58 PM
- *
- * @author Clinton Begin
- */
 public class DbcpConfiguration {
 
   private static final Probe PROBE = ProbeFactory.getProbe();

@@ -17,12 +17,6 @@ package com.ibatis.dao.engine.impl;
 
 import com.ibatis.dao.client.Dao;
 
-/**
- * <p/>
- * Date: Jan 30, 2004 12:43:09 AM
- *
- * @author Clinton Begin
- */
 public class DaoImpl {
 
   private StandardDaoManager daoManager;

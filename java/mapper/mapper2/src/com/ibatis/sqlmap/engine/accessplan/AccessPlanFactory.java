@@ -17,11 +17,6 @@ package com.ibatis.sqlmap.engine.accessplan;
 
 import java.util.Map;
 
-/**
- * User: Clinton Begin
- * Date: Nov 27, 2003
- * Time: 9:05:34 PM
- */
 public class AccessPlanFactory {
 
   private static boolean bytecodeEnhancementEnabled = false;

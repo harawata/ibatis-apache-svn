@@ -1,8 +1,3 @@
-/**
- * User: Clinton Begin
- * Date: May 19, 2003
- * Time: 1:11:15 PM
- */
 package testdomain;
 
 import java.io.Serializable;
@@ -52,24 +47,28 @@ public class Account implements Serializable {
   public int getAge() {
     return age;
   }
+
   /**
    * @param age The age to set.
    */
   public void setAge(int age) {
     this.age = age;
   }
+
   /**
    * @return Returns the dateAdded.
    */
   public Date getDateAdded() {
     return dateAdded;
   }
+
   /**
    * @param dateAdded The dateAdded to set.
    */
   public void setDateAdded(Date dateAdded) {
     this.dateAdded = dateAdded;
   }
+
   public String getFirstName() {
     return firstName;
   }

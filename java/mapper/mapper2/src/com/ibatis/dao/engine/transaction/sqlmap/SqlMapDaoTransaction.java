@@ -22,12 +22,6 @@ import com.ibatis.sqlmap.client.SqlMapClient;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-/**
- * <p/>
- * Date: Jan 27, 2004 10:48:12 PM
- *
- * @author Clinton Begin
- */
 public class SqlMapDaoTransaction implements ConnectionDaoTransaction {
 
   private SqlMapClient client;

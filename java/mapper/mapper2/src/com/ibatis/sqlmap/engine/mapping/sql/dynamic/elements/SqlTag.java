@@ -21,11 +21,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * User: Clinton Begin
- * Date: Nov 18, 2003
- * Time: 10:13:35 PM
- */
 public class SqlTag implements SqlChild, DynamicParent {
 
   private String name;

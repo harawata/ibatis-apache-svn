@@ -25,9 +25,6 @@ import java.util.Map;
 /**
  * This interface declares all methods involved with executing statements
  * and batches for an SQL Map.
- * <p/>
- * <p/>
- * Date: Feb 22, 2004 3:30:33 PM
  *
  * @see SqlMapSession
  * @see SqlMapClient

@@ -23,11 +23,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * User: Clinton Begin
- * Date: Nov 18, 2003
- * Time: 10:13:46 PM
- */
 public class SqlTagContext {
 
   private StringWriter sw;

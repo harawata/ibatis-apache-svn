@@ -18,11 +18,6 @@ package com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * User: Clinton Begin
- * Date: Nov 18, 2003
- * Time: 11:41:11 PM
- */
 public class SqlTagHandlerFactory {
 
   private static final Map HANDLER_MAP = new HashMap();

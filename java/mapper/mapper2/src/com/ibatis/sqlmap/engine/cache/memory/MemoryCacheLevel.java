@@ -20,9 +20,6 @@ import com.ibatis.sqlmap.client.SqlMapException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author lmeadors
- */
 public final class MemoryCacheLevel {
 
   private static Map cacheLevelMap = new HashMap();

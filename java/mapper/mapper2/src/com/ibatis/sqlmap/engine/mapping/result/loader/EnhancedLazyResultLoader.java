@@ -28,12 +28,6 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * <p/>
- * Date: Jan 11, 2004 8:06:19 PM
- *
- * @author Clinton Begin
- */
 public class EnhancedLazyResultLoader {
 
   private static final Class[] INTERFACES = new Class[]{List.class};

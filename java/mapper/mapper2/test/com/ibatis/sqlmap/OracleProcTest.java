@@ -1,16 +1,12 @@
 package com.ibatis.sqlmap;
 
-import com.ibatis.common.resources.*;
-
-import java.util.*;
-
+import com.ibatis.common.resources.Resources;
 import testdomain.ProcBean;
 
-/**
- * User: Clinton Begin
- * Date: Dec 13, 2003
- * Time: 1:38:25 PM
- */
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
 public class OracleProcTest extends BaseSqlMapTest {
   // SETUP & TEARDOWN
 

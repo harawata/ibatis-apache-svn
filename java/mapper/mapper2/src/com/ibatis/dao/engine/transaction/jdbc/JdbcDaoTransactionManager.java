@@ -29,13 +29,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
-/**
- * <p/>
- * <p/>
- * Date: Jan 27, 2004 10:48:58 PM
- *
- * @author Clinton Begin
- */
 public class JdbcDaoTransactionManager implements DaoTransactionManager {
 
   private DataSource dataSource;

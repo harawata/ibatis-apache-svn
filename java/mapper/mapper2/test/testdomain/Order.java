@@ -1,8 +1,3 @@
-/**
- * User: Clinton Begin
- * Date: May 19, 2003
- * Time: 1:11:22 PM
- */
 package testdomain;
 
 import java.io.Serializable;

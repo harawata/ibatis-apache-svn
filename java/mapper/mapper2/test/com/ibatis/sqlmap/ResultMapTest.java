@@ -1,15 +1,11 @@
-/**
- * User: Clinton Begin
- * Date: May 17, 2003
- * Time: 9:41:21 PM
- */
 package com.ibatis.sqlmap;
 
 import testdomain.Account;
 import testdomain.Order;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 public class ResultMapTest extends BaseSqlMapTest {
 

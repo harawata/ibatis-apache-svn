@@ -1,24 +1,17 @@
-/**
- * User: Clinton Begin
- * Date: May 17, 2003
- * Time: 9:24:24 PM
- */
 package com.ibatis.sqlmap;
 
+import com.ibatis.common.jdbc.ScriptRunner;
+import com.ibatis.common.resources.Resources;
+import com.ibatis.sqlmap.client.SqlMapClient;
+import com.ibatis.sqlmap.client.SqlMapClientBuilder;
 import junit.framework.TestCase;
-import com.ibatis.common.resources.*;
-import com.ibatis.sqlmap.client.*;
-import com.ibatis.common.jdbc.*;
-
-import java.io.*;
-import java.sql.*;
-import java.util.*;
-import java.util.Date;
-
 import testdomain.Account;
 import testdomain.Order;
 
-import javax.sql.*;
+import javax.sql.DataSource;
+import java.io.Reader;
+import java.sql.Connection;
+import java.util.*;
 
 public class BaseSqlMapTest extends TestCase {
 
@@ -67,7 +60,7 @@ public class BaseSqlMapTest extends TestCase {
   protected void assertList(List list) {
     assertEquals(2, list.size());
   }
-  
+
   protected void assertAccount6(Account account) {
     assertEquals(6, account.getId());
     assertEquals("Jennifer", account.getFirstName());

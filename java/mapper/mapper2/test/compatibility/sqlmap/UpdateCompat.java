@@ -1,15 +1,10 @@
-/**
- * User: Clinton Begin
- * Date: Mar 8, 2003
- * Time: 11:59:49 AM
- */
 package compatibility.sqlmap;
 
 import com.ibatis.db.sqlmap.SqlMap;
-import compatibility.domain.Account;
 import compatibility.BaseCompat;
+import compatibility.domain.Account;
 
-import java.sql.*;
+import java.sql.SQLException;
 
 public class UpdateCompat extends BaseCompat {
 

@@ -1,15 +1,11 @@
-/**
- * User: Clinton Begin
- * Date: Jan 16, 2003
- * Time: 9:17:28 PM
- */
 package compatibility.sqlmap;
 
+import com.ibatis.common.exception.NestedRuntimeException;
 import com.ibatis.common.resources.Resources;
-import com.ibatis.common.exception.*;
-import com.ibatis.db.sqlmap.*;
+import com.ibatis.db.sqlmap.SqlMap;
+import com.ibatis.db.sqlmap.XmlSqlMapBuilder;
 
-import java.io.*;
+import java.io.Reader;
 
 public class SqlMapConfigCompat {
 

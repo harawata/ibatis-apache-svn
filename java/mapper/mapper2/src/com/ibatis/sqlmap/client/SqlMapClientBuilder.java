@@ -41,10 +41,6 @@ import java.util.Properties;
  * <li> <a href="sql-map-config.txt">The SQL Map Config File</a>
  * <li> <a href="sql-map.txt">An SQL Map File</a>
  * <ul>
- * <p/>
- * Date: Sep 5, 2003 4:26:32 PM
- *
- * @author Clinton Begin
  */
 public class SqlMapClientBuilder {
 

@@ -20,11 +20,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-/**
- * User: Clinton Begin
- * Date: Jan 4, 2004
- * Time: 4:37:44 PM
- */
 public class XmlList implements List {
 
   private List list;

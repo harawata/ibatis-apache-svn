@@ -30,11 +30,6 @@ import java.util.List;
 /**
  * A DaoTemplate for Hibernate implementations that provides a
  * convenient method to access the Hibernate Session.
- * <p/>
- * <p/>
- * Date: Feb 22, 2004 3:37:58 PM
- *
- * @author Clinton Begin
  */
 public abstract class HibernateDaoTemplate extends DaoTemplate {
 
