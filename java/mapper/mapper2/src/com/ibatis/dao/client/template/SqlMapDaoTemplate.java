@@ -344,10 +344,4 @@ public abstract class SqlMapDaoTemplate extends DaoTemplate implements SqlMapExe
     }
   }
 
-  /**
-   * @deprecated Use queryWithRowHandler instead.
-   */
-  public List queryForList(String id, Object parameterObject, RowHandler rowHandler) {
-    throw new UnsupportedOperationException("This method is deprecated in the SQL Maps API.");
-  }
 }
