@@ -29,6 +29,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
+/**
+ * DaoTransactionManager implementation for JDBC
+ */
 public class JdbcDaoTransactionManager implements DaoTransactionManager {
 
   private DataSource dataSource;
@@ -76,10 +79,6 @@ public class JdbcDaoTransactionManager implements DaoTransactionManager {
     } catch (NamingException e) {
       throw new DaoException("There was an error configuring the DataSource from JNDI.  Cause: " + e, e);
     }
-  }
-
-  private boolean notEmpty(String s) {
-    return s != null && s.length() > 0;
   }
 
   public void commitTransaction(DaoTransaction trans) {
