@@ -68,7 +68,10 @@ public class CachingStatement implements MappedStatement {
     CacheKey cacheKey = getCacheKey(request, parameterObject);
     cacheKey.update("executeQueryForObject");
     Object object = cacheModel.getObject(cacheKey);
-    if (object == null) {
+    if (object == CacheModel.NULL_OBJECT){
+    	//	This was cached, but null
+    	object = null;
+    }else if (object == null) {
       synchronized (cacheModel.getLock(cacheKey)) {
         object = statement.executeQueryForObject(request, trans, parameterObject, resultObject);
         cacheModel.putObject(cacheKey, object);
@@ -83,12 +86,18 @@ public class CachingStatement implements MappedStatement {
     cacheKey.update("executeQueryForList");
     cacheKey.update(skipResults);
     cacheKey.update(maxResults);
-    List list = (List) cacheModel.getObject(cacheKey);
-    if (list == null) {
+    Object listAsObject = cacheModel.getObject(cacheKey);
+    List list;
+    if(listAsObject == CacheModel.NULL_OBJECT){
+      // The cached object was null
+      list = null;
+    }else if (listAsObject == null) {
       synchronized (cacheModel.getLock(cacheKey)) {
         list = statement.executeQueryForList(request, trans, parameterObject, skipResults, maxResults);
         cacheModel.putObject(cacheKey, list);
       }
+    }else{
+      list = (List) listAsObject;
     }
     return list;
   }

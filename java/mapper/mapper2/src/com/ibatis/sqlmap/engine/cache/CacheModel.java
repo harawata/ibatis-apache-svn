@@ -29,7 +29,7 @@ import java.util.*;
 public class CacheModel implements ExecuteListener {
 
   private static final Map lockMap = new HashMap();
-
+  public static final Object NULL_OBJECT = new Object();
   private Object STATS_LOCK = new Object();
   private int requests = 0;
   private int hits = 0;
@@ -281,8 +281,9 @@ public class CacheModel implements ExecuteListener {
         hits++;
       }
     }
-
+    
     return value;
+    
   }
 
   /**
@@ -292,6 +293,7 @@ public class CacheModel implements ExecuteListener {
    * @param value The object to be cached
    */
   public void putObject(CacheKey key, Object value) {
+    if(null == value) value = NULL_OBJECT;
     if (serialize && !readOnly && value != null) {
       try {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
