@@ -7,12 +7,20 @@ TO-DO: BUGS & FEATURES
 TO-DO: DOCUMENTATION
 ------------------------------
 
+  o DefaultAutoCommit property of EXTERNAL TX Manager
+  o SetAutoCommitAllowed property of EXTERNAL TX Manager
+  o Serialize option for cache models
+  o XML/DOM result/param mappings
+  o DAO context id (for multiple DAO impls)
+  o .flushDataCache() for cache model
+  o "context." prefix for JNDI InitialContext properties
+  o Resources.setDefaultClassLoader()
   o DBCP 2.0 config docs
+
   o More on bytecode enhancement
   o More on dynamic statment prepend behavior
 
   o Installation and Configuration
-  o XML Data types
   o Patterns and Best Practices
     o Naming conventions
     o Config Singleton

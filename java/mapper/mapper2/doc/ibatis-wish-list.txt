@@ -11,7 +11,8 @@
       - Current parameters could skip options with empty :: (e.g. #COLNAME::-1#)
       - Pluggable SQL Scripting languages
 
-  ?.? - Optional results/exclusions (i.e. don't require all results)
+  ?.? - Optional new line stripping
+      - Optional results/exclusions (i.e. don't require all results)
       - Included SQL Fragments
       - Cross file resource management (currently works, but order dependent --ok?)
       - Circular relationships
