@@ -249,4 +249,9 @@ public interface ParameterSetter {
    */
   public void setURL(URL x) throws SQLException;
 
+  /**
+   * Returns the underlying prepared statement...be careful!
+   */
+  public PreparedStatement getPreparedStatement();
+
 }

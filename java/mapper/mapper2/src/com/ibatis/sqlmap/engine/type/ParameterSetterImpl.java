@@ -159,4 +159,8 @@ public class ParameterSetterImpl implements ParameterSetter {
     ps.setURL(index, x);
   }
 
+  public PreparedStatement getPreparedStatement() {
+    return ps;
+  }
+
 }

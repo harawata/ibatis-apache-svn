@@ -243,4 +243,7 @@ public class ResultGetterImpl implements ResultGetter {
     return rs.wasNull();
   }
 
+  public ResultSet getResultSet() {
+    return rs;
+  }
 }

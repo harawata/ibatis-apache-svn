@@ -207,4 +207,10 @@ public interface ResultGetter {
    */
   public boolean wasNull() throws SQLException;
 
+  /**
+   * Returns the underlying ResultSet...be careful!
+   * @return a ResultSet instance.
+   */
+  public ResultSet getResultSet();
+
 }
