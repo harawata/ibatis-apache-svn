@@ -2,13 +2,13 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
- 2.0.3 - Jun ??, 2004
+ 2.0.3 - Jul ??, 2004
 ------------------------------
 
  o Added parameter count to CacheKey equals for paranoid equality
  o Removed redundant bit shift in CacheKey update
  o Refactored cache locking pattern to improve concurrent access to cache models
- o Added lazy loading to SQL Map transactions to avoid connection reservations
+ o Improved caching to avoid redundant connection reservations
  o New property to stop autocommit from being called in EXTERNAL TX Manager
  o Fixed JDBC types being ignored for hashmap parameter classes
 

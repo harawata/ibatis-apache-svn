@@ -63,7 +63,7 @@ public class JdbcDaoTransactionManager implements DaoTransactionManager {
       } else {
         initCtx = new InitialContext(contextProps);
       }
-      dataSource = (DataSource) initCtx.lookup((String) properties.get("DataSource"));
+      dataSource = (DataSource) initCtx.lookup((String) properties.get("DBJndiContext"));
     } catch (NamingException e) {
       throw new DaoException("There was an error configuring the DataSource from JNDI.  Cause: " + e, e);
     }
