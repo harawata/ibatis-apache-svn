@@ -79,6 +79,26 @@
                     AssemblyName = "System.Xml"
                     HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
+                <Reference
+                    Name = "IBatisNet.Common"
+                    Project = "{BBC8DA4A-EA88-41D9-8B93-929B8F3ADADE}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "IBatisNet.DataAccess"
+                    AssemblyName = "IBatisNet.DataAccess"
+                    HintPath = "..\IBatisNet.DataAccess\bin\Debug\IBatisNet.DataAccess.dll"
+                />
+                <Reference
+                    Name = "log4net"
+                    AssemblyName = "log4net"
+                    HintPath = "..\External-Bin\Net\1.1\log4net.dll"
+                />
+                <Reference
+                    Name = "IBatisNet.DataMapper"
+                    AssemblyName = "IBatisNet.DataMapper"
+                    HintPath = "..\IBatisNet.DataMapper\bin\Debug\IBatisNet.DataMapper.dll"
+                />
             </References>
         </Build>
         <Files>
@@ -88,7 +108,47 @@
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
-                <Folder RelPath = "NUnit\" />
+                <File
+                    RelPath = "NUnit\CommonTests\ConfigWatcher\ConfigWatcherTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NUnit\CommonTests\DynamicProxy\IMyInterface.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NUnit\CommonTests\DynamicProxy\IMySecondInterface.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NUnit\CommonTests\DynamicProxy\MyInterfaceImpl.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NUnit\CommonTests\DynamicProxy\MySecondInterfaceImpl.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NUnit\CommonTests\DynamicProxy\ProxyTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NUnit\CommonTests\Pagination\PaginatedArrayListTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <Folder RelPath = "NUnit\CommonTests\Transaction\" />
+                <File
+                    RelPath = "NUnit\CommonTests\Utilities\ResourcesTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
             </Include>
         </Files>
     </CSHARP>

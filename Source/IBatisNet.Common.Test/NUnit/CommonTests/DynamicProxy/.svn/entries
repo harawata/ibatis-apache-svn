@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="473"
+   name=""
+   committed-date="2005-01-15T20:08:06.665704Z"
+   url="https://wush.net/svn/ibatisnet1/trunk/Source/IBatisNet.Common.Test/NUnit/CommonTests/DynamicProxy"
+   last-author="gilles"
+   kind="dir"
+   uuid="e704e83d-b7da-0310-89c5-f3737eb3fa2d"
+   revision="473"/>
+<entry
+   committed-rev="473"
+   name="IMySecondInterface.cs"
+   text-time="2005-01-15T20:06:16.278360Z"
+   committed-date="2005-01-15T20:08:06.665704Z"
+   checksum="974b2d9fee2d84e7f29ad689991f13c3"
+   last-author="gilles"
+   kind="file"
+   prop-time="2005-01-09T19:20:49.351856Z"/>
+<entry
+   committed-rev="473"
+   name="IMyInterface.cs"
+   text-time="2005-01-15T20:06:16.278360Z"
+   committed-date="2005-01-15T20:08:06.665704Z"
+   checksum="b14921328bd82d89513102e9a8c8cc1a"
+   last-author="gilles"
+   kind="file"
+   prop-time="2005-01-09T19:20:49.361870Z"/>
+<entry
+   name=".svn"
+   kind="dir"
+   schedule="add"/>
+<entry
+   committed-rev="473"
+   name="ProxyTest.cs"
+   text-time="2005-01-15T20:06:16.328432Z"
+   committed-date="2005-01-15T20:08:06.665704Z"
+   checksum="99fa777b1007ec73c244b888e93f41ba"
+   last-author="gilles"
+   kind="file"
+   prop-time="2005-01-09T19:20:49.391913Z"/>
+<entry
+   committed-rev="473"
+   name="MySecondInterfaceImpl.cs"
+   text-time="2005-01-15T20:06:16.308403Z"
+   committed-date="2005-01-15T20:08:06.665704Z"
+   checksum="c68d1ba221bc6032c385a10ed4361e37"
+   last-author="gilles"
+   kind="file"
+   prop-time="2005-01-09T19:20:49.421956Z"/>
+<entry
+   committed-rev="473"
+   name="MyInterfaceImpl.cs"
+   text-time="2005-01-15T20:06:16.308403Z"
+   committed-date="2005-01-15T20:08:06.665704Z"
+   checksum="ad5304f226c9f8e78f9fa4f309278d15"
+   last-author="gilles"
+   kind="file"
+   prop-time="2005-01-09T19:20:49.431971Z"/>
+</wc-entries>

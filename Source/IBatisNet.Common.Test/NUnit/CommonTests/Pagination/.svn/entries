@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="473"
+   name=""
+   committed-date="2005-01-15T20:08:06.665704Z"
+   url="https://wush.net/svn/ibatisnet1/trunk/Source/IBatisNet.Common.Test/NUnit/CommonTests/Pagination"
+   last-author="gilles"
+   kind="dir"
+   uuid="e704e83d-b7da-0310-89c5-f3737eb3fa2d"
+   revision="473"/>
+<entry
+   name=".svn"
+   kind="dir"
+   schedule="add"/>
+<entry
+   committed-rev="473"
+   name="PaginatedArrayListTest.cs"
+   text-time="2005-01-15T20:06:16.388518Z"
+   committed-date="2005-01-15T20:08:06.665704Z"
+   checksum="de513d10347e9ef1173d7eca2b5b284a"
+   last-author="gilles"
+   kind="file"
+   prop-time="2005-01-09T19:20:49.962734Z"/>
+</wc-entries>

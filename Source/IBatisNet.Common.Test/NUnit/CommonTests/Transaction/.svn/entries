@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="473"
+   name=""
+   committed-date="2005-01-15T20:08:06.665704Z"
+   url="https://wush.net/svn/ibatisnet1/trunk/Source/IBatisNet.Common.Test/NUnit/CommonTests/Transaction"
+   last-author="gilles"
+   kind="dir"
+   uuid="e704e83d-b7da-0310-89c5-f3737eb3fa2d"
+   revision="473"/>
+<entry
+   name=".svn"
+   kind="dir"
+   schedule="add"/>
+<entry
+   committed-rev="473"
+   name="TransactionTest.cs"
+   text-time="2005-01-15T20:06:16.478648Z"
+   committed-date="2005-01-15T20:08:06.665704Z"
+   checksum="7cda646202c789248f48c2ed8ae43ae6"
+   last-author="gilles"
+   kind="file"
+   schedule="delete"
+   prop-time="2005-01-09T19:20:49.141553Z"/>
+</wc-entries>
