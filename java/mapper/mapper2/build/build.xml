@@ -80,8 +80,8 @@
     <javadoc destdir="${javadocs}" defaultexcludes="false" failonerror="true" verbose="false" >
       <classpath refid="classpath"/>
       <packageset dir="${src}">
-        <include name="com/ibatis/sqlmap/client/**"/>
-        <include name="com/ibatis/dao/client/**"/>
+        <include name="com/ibatis/sqlmap/**"/>
+        <include name="com/ibatis/dao/**"/>
       </packageset>
     </javadoc>
     <copy todir="${javadocs}" filtering="true" overwrite="true" >
