@@ -2,9 +2,10 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
- Next Release
+ 2.0.0 RC3 - Apr 11, 2004
 ------------------------------
 
+ o Updated DBCP support and centralized config
  o Newlines (\r, \n) are now stripped from SQL
  o Properties are passed from DAO builder to SQL Maps builder
  o Improved OSCache key uniqueness
