@@ -22,6 +22,12 @@
           <td><fork href="http://nagoya.apache.org/eyebrowse/SummarizeList?listName=ibatis-user-java@incubator.apache.org"> Archives</fork></td>
         </tr>
         <tr>
+          <td><link href="mailto:ibatis-user-java@incubator.apache.org">iBATIS Java Users DIGEST</link></td>
+          <td><link href="mailto:ibatis-user-java-digest-subscribe@incubator.apache.org"> Subscribe</link></td>
+          <td><link href="mailto:ibatis-user-java-digest-unsubscribe@incubator.apache.org"> Unsubscribe</link></td>
+          <td><fork href="http://nagoya.apache.org/eyebrowse/SummarizeList?listName=ibatis-user-java@incubator.apache.org"> Archives</fork></td>
+        </tr>
+        <tr>
           <td><link href="mailto:ibatis-user-cs@incubator.apache.org"> iBATIS.NET Users List</link></td>
           <td><link href="mailto:ibatis-user-cs-subscribe@incubator.apache.org"> Subscribe</link></td>
           <td><link href="mailto:ibatis-user-cs-unsubscribe@incubator.apache.org"> Unsubscribe</link></td>
