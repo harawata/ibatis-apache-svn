@@ -25,32 +25,47 @@ public class MappedStatement {
 
   public int executeUpdate(Connection conn, Object parameterObject)
       throws SQLException {
-    sqlMapClient.setUserConnection(conn);
-    int n = sqlMapClient.update(statementName, parameterObject);
-    sqlMapClient.setUserConnection(null);
+    int n;
+    try {
+      sqlMapClient.setUserConnection(conn);
+      n = sqlMapClient.update(statementName, parameterObject);
+    } finally {
+      sqlMapClient.setUserConnection(null);
+    }
     return n;
   }
 
   public void executeQueryWithRowHandler(Connection conn, Object parameterObject, RowHandler rowHandler)
       throws SQLException {
-    sqlMapClient.setUserConnection(conn);
-    sqlMapClient.queryWithRowHandler(statementName, parameterObject, new RowHandlerAdapter(rowHandler));
-    sqlMapClient.setUserConnection(null);
+    try {
+      sqlMapClient.setUserConnection(conn);
+      sqlMapClient.queryWithRowHandler(statementName, parameterObject, new RowHandlerAdapter(rowHandler));
+    } finally {
+      sqlMapClient.setUserConnection(null);
+    }
   }
 
   public Map executeQueryForMap(Connection conn, Object parameterObject, String keyProperty)
       throws SQLException {
-    sqlMapClient.setUserConnection(conn);
-    Map map = sqlMapClient.queryForMap(statementName, parameterObject, keyProperty);
-    sqlMapClient.setUserConnection(null);
+    Map map;
+    try {
+      sqlMapClient.setUserConnection(conn);
+      map = sqlMapClient.queryForMap(statementName, parameterObject, keyProperty);
+    } finally {
+      sqlMapClient.setUserConnection(null);
+    }
     return map;
   }
 
   public Map executeQueryForMap(Connection conn, Object parameterObject, String keyProperty, String valueProperty)
       throws SQLException {
-    sqlMapClient.setUserConnection(conn);
-    Map map = sqlMapClient.queryForMap(statementName, parameterObject, keyProperty, valueProperty);
-    sqlMapClient.setUserConnection(null);
+    Map map;
+    try {
+      sqlMapClient.setUserConnection(conn);
+      map = sqlMapClient.queryForMap(statementName, parameterObject, keyProperty, valueProperty);
+    } finally {
+      sqlMapClient.setUserConnection(null);
+    }
     return map;
   }
 
@@ -62,33 +77,49 @@ public class MappedStatement {
 
   public List executeQueryForList(Connection conn, Object parameterObject)
       throws SQLException {
-    sqlMapClient.setUserConnection(conn);
-    List list = sqlMapClient.queryForList(statementName, parameterObject);
-    sqlMapClient.setUserConnection(null);
+    List list;
+    try {
+      sqlMapClient.setUserConnection(conn);
+      list = sqlMapClient.queryForList(statementName, parameterObject);
+    } finally {
+      sqlMapClient.setUserConnection(null);
+    }
     return list;
   }
 
   public List executeQueryForList(Connection conn, Object parameterObject, int skipResults, int maxResults)
       throws SQLException {
-    sqlMapClient.setUserConnection(conn);
-    List list = sqlMapClient.queryForList(statementName, parameterObject, skipResults, maxResults);
-    sqlMapClient.setUserConnection(null);
+    List list;
+    try {
+      sqlMapClient.setUserConnection(conn);
+      list = sqlMapClient.queryForList(statementName, parameterObject, skipResults, maxResults);
+    } finally {
+      sqlMapClient.setUserConnection(null);
+    }
     return list;
   }
 
   public Object executeQueryForObject(Connection conn, Object parameterObject)
       throws SQLException {
-    sqlMapClient.setUserConnection(conn);
-    Object o = sqlMapClient.queryForObject(statementName, parameterObject);
-    sqlMapClient.setUserConnection(null);
+    Object o;
+    try {
+      sqlMapClient.setUserConnection(conn);
+      o = sqlMapClient.queryForObject(statementName, parameterObject);
+    } finally {
+      sqlMapClient.setUserConnection(null);
+    }
     return o;
   }
 
   public Object executeQueryForObject(Connection conn, Object parameterObject, Object resultObject)
       throws SQLException {
-    sqlMapClient.setUserConnection(conn);
-    Object o = sqlMapClient.queryForObject(statementName, parameterObject, resultObject);
-    sqlMapClient.setUserConnection(null);
+    Object o;
+    try {
+      sqlMapClient.setUserConnection(conn);
+      o = sqlMapClient.queryForObject(statementName, parameterObject, resultObject);
+    } finally {
+      sqlMapClient.setUserConnection(null);
+    }
     return o;
   }
 
