@@ -18,6 +18,7 @@ public class GenericProbe extends BaseProbe {
 
   private static final BaseProbe MAP_PROBE = new MapProbe();
   private static final BaseProbe BEAN_PROBE = new JavaBeanProbe();
+  private static final BaseProbe DOM_PROBE = new DomProbe();
 
   protected GenericProbe() {
   }
@@ -33,6 +34,8 @@ public class GenericProbe extends BaseProbe {
   public Object getObject(Object object, String name) {
     if (object instanceof Map) {
       return MAP_PROBE.getObject(object, name);
+    } else if (object instanceof org.w3c.dom.Document) {
+      return DOM_PROBE.getObject(object, name);
     } else {
       return BEAN_PROBE.getObject(object, name);
     }
@@ -49,6 +52,8 @@ public class GenericProbe extends BaseProbe {
   public void setObject(Object object, String name, Object value) {
     if (object instanceof Map) {
       MAP_PROBE.setObject(object, name, value);
+    } else if (object instanceof org.w3c.dom.Document) {
+      DOM_PROBE.setObject(object, name, value);
     } else {
       BEAN_PROBE.setObject(object, name, value);
     }
@@ -64,6 +69,8 @@ public class GenericProbe extends BaseProbe {
   public String[] getReadablePropertyNames(Object object) {
     if (object instanceof Map) {
       return MAP_PROBE.getReadablePropertyNames(object);
+    } else if (object instanceof org.w3c.dom.Document) {
+      return DOM_PROBE.getReadablePropertyNames(object);
     } else {
       return BEAN_PROBE.getReadablePropertyNames(object);
     }
@@ -79,6 +86,8 @@ public class GenericProbe extends BaseProbe {
   public String[] getWriteablePropertyNames(Object object) {
     if (object instanceof Map) {
       return MAP_PROBE.getWriteablePropertyNames(object);
+    } else if (object instanceof org.w3c.dom.Document) {
+      return DOM_PROBE.getWriteablePropertyNames(object);
     } else {
       return BEAN_PROBE.getWriteablePropertyNames(object);
     }
@@ -98,6 +107,8 @@ public class GenericProbe extends BaseProbe {
       return getClassPropertyTypeForSetter((Class) object, name);
     } else if (object instanceof Map) {
       return MAP_PROBE.getPropertyTypeForSetter(object, name);
+    } else if (object instanceof org.w3c.dom.Document) {
+      return DOM_PROBE.getPropertyTypeForSetter(object, name);
     } else {
       return BEAN_PROBE.getPropertyTypeForSetter(object, name);
     }
@@ -116,6 +127,8 @@ public class GenericProbe extends BaseProbe {
       return getClassPropertyTypeForGetter((Class) object, name);
     } else if (object instanceof Map) {
       return MAP_PROBE.getPropertyTypeForGetter(object, name);
+    } else if (object instanceof org.w3c.dom.Document) {
+      return DOM_PROBE.getPropertyTypeForGetter(object, name);
     } else {
       return BEAN_PROBE.getPropertyTypeForGetter(object, name);
     }
@@ -132,6 +145,8 @@ public class GenericProbe extends BaseProbe {
   public boolean hasWritableProperty(Object object, String propertyName) {
     if (object instanceof Map) {
       return MAP_PROBE.hasWritableProperty(object, propertyName);
+    } else if (object instanceof org.w3c.dom.Document) {
+      return DOM_PROBE.hasWritableProperty(object, propertyName);
     } else {
       return BEAN_PROBE.hasWritableProperty(object, propertyName);
     }
@@ -148,6 +163,8 @@ public class GenericProbe extends BaseProbe {
   public boolean hasReadableProperty(Object object, String propertyName) {
     if (object instanceof Map) {
       return MAP_PROBE.hasReadableProperty(object, propertyName);
+    } else if (object instanceof org.w3c.dom.Document) {
+      return DOM_PROBE.hasReadableProperty(object, propertyName);
     } else {
       return BEAN_PROBE.hasReadableProperty(object, propertyName);
     }
@@ -156,6 +173,8 @@ public class GenericProbe extends BaseProbe {
   protected void setProperty(Object object, String property, Object value) {
     if (object instanceof Map) {
       MAP_PROBE.setProperty(object, property, value);
+    } else if (object instanceof org.w3c.dom.Document) {
+      DOM_PROBE.setProperty(object, property, value);
     } else {
       BEAN_PROBE.setProperty(object, property, value);
     }
@@ -164,6 +183,8 @@ public class GenericProbe extends BaseProbe {
   protected Object getProperty(Object object, String property) {
     if (object instanceof Map) {
       return MAP_PROBE.getProperty(object, property);
+    } else if (object instanceof org.w3c.dom.Document) {
+      return DOM_PROBE.getProperty(object, property);
     } else {
       return BEAN_PROBE.getProperty(object, property);
     }
