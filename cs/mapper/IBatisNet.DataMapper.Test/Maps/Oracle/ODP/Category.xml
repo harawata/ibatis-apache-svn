@@ -17,7 +17,7 @@
 			where Category_ID = #value:Int32# 
 		</select>
 		
-		<select id="GetGuid" parameterClass="Integer" resultClass="guid">
+		<select id="GetCategoryGuid" parameterClass="Integer" resultClass="guid">
 			select
 			Category_Guid as value
 			from Categories  

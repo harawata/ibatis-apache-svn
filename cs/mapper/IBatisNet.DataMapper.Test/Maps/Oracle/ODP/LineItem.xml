@@ -187,6 +187,26 @@
 			(?, ?, ?, ?, ?)
 		</insert>
   
+  		<!-- JIRA 23 -->
+  		<!--
+  		Using ODP.NET 10.1
+  		Throws OracleException: SQL command not properly ended
+		at Oracle.DataAccess.Client.OracleException.HandleErrorHelper(Int32 errCode, OracleConnection conn, IntPtr opsErrCtx, OpoSqlValCtx* pOpoSqlValCtx, Object src, String procedure)
+		at Oracle.DataAccess.Client.OracleCommand.ExecuteNonQuery()
+		at IBatisNet.DataMapper.MappedStatements.MappedStatement.ExecuteUpdate(IDalSession session, Object parameterObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 788
+		at IBatisNet.DataMapper.SqlMapper.Delete(String statementName, Object parameterObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\SqlMapper.cs:line 984
+		at IBatisNet.DataMapper.Test.NUnit.SqlMapTests.StatementTest.TestDeleteWithComments() in c:\projects\ibatis\asf\trunk\cs\mapper\ibatisnet.datamapper.test\nunit\sqlmaptests\statementtest.cs:line 1000
+  		
+  		Cannot run multiple statements through single command
+  		with ODP.NET provider
+  		-->
+		<delete id="DeleteWithComments" >
+			<!-- Delete LineItems -->
+			delete from LineItems where Order_ID = 10
+			<!-- Delete LineItems -->
+			delete from LineItems where Order_ID = 9
+		</delete>    
+  
   </statements>
 	
 

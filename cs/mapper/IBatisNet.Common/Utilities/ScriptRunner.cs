@@ -71,6 +71,7 @@ namespace IBatisNet.Common.Utilities
 			if (doParse) {
 				switch(dataSource.Provider.Name) {         
 					case "oracle9.2":   
+					case "oracle10.1":   
 					case "oracleClient1.0":   
 					case "ByteFx":
 						sqlStatements = ParseScript(script);
@@ -94,6 +95,7 @@ namespace IBatisNet.Common.Utilities
 			else {
 				switch(dataSource.Provider.Name) {         
 					case "oracle9.2":   
+					case "oracle10.1":   
 					case "oracleClient1.0":   
 					case "ByteFx":
 						script = script.Replace("\r\n"," ");
