@@ -16,7 +16,7 @@
   </resultMap>
 
   <select id="getSequence" resultMap="orderResult" parameterClass="sequence">
-    select name, nextid from SEQUENCE where NAME = #name# for update
+    select name, nextid from SEQUENCE where NAME = #name# 
   </select>
 
   <update id="updateSequence" parameterClass="sequence">
