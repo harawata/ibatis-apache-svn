@@ -40,6 +40,7 @@ namespace IBatisNet.DataMapper
 	/// <summary>
 	/// Summary description for SqlMapSession.
 	/// </summary>
+	[Serializable]
 	public class SqlMapSession : IDalSession
 	{
 		#region Fields
