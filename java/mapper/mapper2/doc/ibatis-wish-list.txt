@@ -33,7 +33,6 @@
       - Automap remaining columns, ignore missing columns
       - DAO lazy initialization option (quiet failure?)
   Database Support
-      - NULL complex property map results set prop to null (don't run query selectOnNull="false")
       - Trim whitespace from CHAR data
   Tools
       - XDoclet/QDox Tags (@ibatis)
