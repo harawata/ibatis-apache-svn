@@ -75,7 +75,7 @@ public class SimpleDataSource implements DataSource {
   private static final int ADD_DRIVER_PROPS_PREFIX_LENGTH = ADD_DRIVER_PROPS_PREFIX.length();
 
   // ----- BEGIN: FIELDS LOCKED BY POOL_LOCK -----
-  private static final Object POOL_LOCK = new Object();
+  private final Object POOL_LOCK = new Object();
   private List idleConnections = new ArrayList();
   private List activeConnections = new ArrayList();
   private long requestCount = 0;
