@@ -11,6 +11,9 @@ import com.ibatis.common.jdbc.DbcpConfiguration;
 import javax.sql.DataSource;
 import java.util.Map;
 
+/**
+ * DataSourceFactory implementation for DBCP
+ */
 public class DbcpDataSourceFactory implements DataSourceFactory {
 
   private DataSource dataSource;

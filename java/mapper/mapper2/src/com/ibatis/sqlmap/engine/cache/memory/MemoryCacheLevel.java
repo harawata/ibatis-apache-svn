@@ -67,10 +67,19 @@ public final class MemoryCacheLevel {
     this.referenceType = type;
   }
 
+  /**
+   * Getter for the reference type
+   * @return the type of reference type used
+   */
   public String getReferenceType() {
     return this.referenceType;
   }
 
+  /**
+   * Gets a MemoryCacheLevel by name
+   * @param refType the name of the reference type
+   * @return the MemoryCacheLevel that the name indicates
+   */
   public static MemoryCacheLevel getByReferenceType(String refType) {
     MemoryCacheLevel cacheLevel = (MemoryCacheLevel) cacheLevelMap.get(refType);
     if (cacheLevel == null) {
