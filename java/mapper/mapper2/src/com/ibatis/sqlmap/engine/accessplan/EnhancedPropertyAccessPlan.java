@@ -1,11 +1,9 @@
 package com.ibatis.sqlmap.engine.accessplan;
 
-import net.sf.cglib.beans.*;
+import net.sf.cglib.beans.BulkBean;
 
 /**
- * User: Clinton Begin
- * Date: Nov 27, 2003
- * Time: 9:05:13 PM
+ * Enhanced PropertyAccessPlan (for working with beans using CG Lib)
  */
 public class EnhancedPropertyAccessPlan extends BaseAccessPlan {
 
