@@ -9,12 +9,18 @@ import com.ibatis.sqlmap.engine.cache.*;
 
 import java.util.*;
 
+/**
+ * LRU (least recently used) cache controller implementation
+ */
 public class LruCacheController implements CacheController {
 
   private int cacheSize;
   private Map cache;
   private List keyList;
 
+  /**
+   * Default constructor
+   */
   public LruCacheController() {
     this.cacheSize = 100;
     this.cache = new HashMap();

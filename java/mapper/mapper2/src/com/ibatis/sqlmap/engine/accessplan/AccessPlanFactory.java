@@ -14,6 +14,12 @@ public class AccessPlanFactory {
   private AccessPlanFactory() {
   }
 
+  /**
+   * Creates an access plan for working with a bean
+   * @param clazz
+   * @param propertyNames
+   * @return An access plan
+   */
   public static AccessPlan getAccessPlan(Class clazz, String[] propertyNames) {
     AccessPlan plan;
 
@@ -58,10 +64,18 @@ public class AccessPlanFactory {
     return plan;
   }
 
+  /**
+   * Tells whether or not bytecode enhancement (CGLIB, etc) is enabled
+   * @return true if bytecode enhancement is enabled
+   */
   public static boolean isBytecodeEnhancementEnabled() {
     return bytecodeEnhancementEnabled;
   }
 
+  /**
+   * Turns on or off bytecode enhancement (CGLIB, etc)
+   * @param bytecodeEnhancementEnabled - the switch
+   */
   public static void setBytecodeEnhancementEnabled(boolean bytecodeEnhancementEnabled) {
     AccessPlanFactory.bytecodeEnhancementEnabled = bytecodeEnhancementEnabled;
   }

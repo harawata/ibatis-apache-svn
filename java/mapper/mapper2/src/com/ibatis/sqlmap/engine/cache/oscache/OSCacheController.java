@@ -12,6 +12,9 @@ import com.opensymphony.oscache.general.GeneralCacheAdministrator;
 
 import java.util.Properties;
 
+/**
+ * Cache implementation for using OSCache with iBATIS 
+ */
 public class OSCacheController implements CacheController {
 
     private static final GeneralCacheAdministrator CACHE = new GeneralCacheAdministrator();

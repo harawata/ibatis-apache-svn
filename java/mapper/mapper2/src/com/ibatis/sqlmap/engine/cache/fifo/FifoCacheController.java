@@ -9,12 +9,18 @@ import com.ibatis.sqlmap.engine.cache.*;
 
 import java.util.*;
 
+/**
+ * FIFO (first in, first out) cache controller implementation
+ */
 public class FifoCacheController implements CacheController {
 
   private int cacheSize;
   private Map cache;
   private List keyList;
 
+  /**
+   * Default constructor
+   */
   public FifoCacheController() {
     this.cacheSize = 100;
     this.cache = new HashMap();

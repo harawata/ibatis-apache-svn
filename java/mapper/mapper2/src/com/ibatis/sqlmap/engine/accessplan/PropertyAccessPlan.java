@@ -10,6 +10,9 @@ import com.ibatis.common.beans.ClassInfo;
 
 import java.lang.reflect.*;
 
+/**
+ * Property access plan (for working with beans)
+ */
 public class PropertyAccessPlan extends BaseAccessPlan {
 
   protected static final Object[] NO_ARGUMENTS = new Object[0];

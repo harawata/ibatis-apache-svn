@@ -1,10 +1,7 @@
 package com.ibatis.sqlmap.engine.cache;
 
 /**
- * <p/>
- * Date: Jan 18, 2004 8:24:01 AM
- *
- * @author Clinton Begin
+ * Hash value generator for cache keys
  */
 public class CacheKey {
 
@@ -16,25 +13,42 @@ public class CacheKey {
   private long checksum;
   private int count;
 
+  /**
+   * Default constructor
+   */
   public CacheKey() {
     hashcode = DEFAULT_HASHCODE;
     multiplier = DEFAULT_MULTIPLYER;
     count = 0;
   }
 
+  /**
+   * Costructor that supplies an initial hashcode
+   * @param initialNonZeroOddNumber - the hashcode to use
+   */
   public CacheKey(int initialNonZeroOddNumber) {
     hashcode = initialNonZeroOddNumber;
     multiplier = DEFAULT_MULTIPLYER;
     count = 0;
   }
 
+  /**
+   * Costructor that supplies an initial hashcode and multiplier
+   * @param initialNonZeroOddNumber - the hashcode to use
+   * @param multiplierNonZeroOddNumber - the multiplier to use
+   */
   public CacheKey(int initialNonZeroOddNumber, int multiplierNonZeroOddNumber) {
     hashcode = initialNonZeroOddNumber;
     multiplier = multiplierNonZeroOddNumber;
     count = 0;
   }
 
-  public CacheKey update(int x) {
+  /**
+   * Updates this object with new information based on an int value
+   * @param x - the int value
+   * @return the cache key
+   */
+public CacheKey update(int x) {
     count++;
     x *= count;
     hashcode = multiplier * hashcode + (x ^ (x >>> 32));
@@ -42,6 +56,11 @@ public class CacheKey {
     return this;
   }
 
+  /**
+   * Updates this object with new information based on an object 
+   * @param object - the object
+   * @return the cachekey
+   */
   public CacheKey update(Object object) {
     update(object.hashCode());
     return this;

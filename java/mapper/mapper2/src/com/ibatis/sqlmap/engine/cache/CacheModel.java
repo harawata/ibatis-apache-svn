@@ -11,6 +11,9 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
+/**
+ * 
+ */
 public class CacheModel implements ExecuteListener {
 
   //private static final String CTX_LOCKED_OBJECTS = "__CACHE_MODEL_LOCKED_OBJECTS";
@@ -38,6 +41,9 @@ public class CacheModel implements ExecuteListener {
 
   private String resource;
 
+  /**
+   * Default constructor
+   */
   public CacheModel() {
     this.flushInterval = NO_FLUSH_INTERVAL;
     this.flushIntervalSeconds = NO_FLUSH_INTERVAL;
@@ -45,38 +51,77 @@ public class CacheModel implements ExecuteListener {
     this.flushTriggerStatements = new HashSet();
   }
 
+  /**
+   * Getter for the cache model's id
+   * @return the id
+   */
   public String getId() {
     return id;
   }
 
+  /**
+   * Setter for the cache model's id
+   * @param id - the new id
+   */
   public void setId(String id) {
     this.id = id;
   }
 
+  /**
+   * Getter for read-only property
+   * @return true if a read-only model
+   */
   public boolean isReadOnly() {
     return readOnly;
   }
 
+  /**
+   * Setter for read-only property
+   * @param readOnly - the new setting
+   */
   public void setReadOnly(boolean readOnly) {
     this.readOnly = readOnly;
   }
 
+  /**
+   * Getter to tell if the cache serializes 
+   * @return true if the cache model serializes objects
+   */
   public boolean isSerialize() {
     return serialize;
   }
 
+  /**
+   * Setter to tell the cache to serialize objects 
+   * @param serialize - if the cache model is to serialize objects
+   */
   public void setSerialize(boolean serialize) {
     this.serialize = serialize;
   }
 
+  /**
+   * Getter for resource property
+   * @return the value of the resource property
+   */
   public String getResource() {
     return resource;
   }
 
+  /**
+   * Setter for resource property
+   * @param resource - the new value
+   */
   public void setResource(String resource) {
     this.resource = resource;
   }
 
+  /**
+   * Sets up the controller for the cache model
+   * @param implementation - the class (FQCN) for the controller
+   * @throws ClassNotFoundException - if the class cannot be found
+   * @throws InstantiationException - if the class cannot be instantiated
+   * @throws IllegalAccessException - if the classes constructor is not accessible
+   */
   public void setControllerClassName(String implementation)
       throws ClassNotFoundException, InstantiationException, IllegalAccessException {
     Class clazz = Resources.classForName(implementation);
@@ -144,6 +189,11 @@ public class CacheModel implements ExecuteListener {
     flush();
   }
 
+  
+  /**
+   * Returns statistical information about the cache.
+   * @return the number of cache hits divided by the total requests
+   */
   public double getHitRatio() {
     return (double) hits / (double) requests;
   }
