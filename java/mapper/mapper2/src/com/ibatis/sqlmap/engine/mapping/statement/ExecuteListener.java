@@ -5,8 +5,6 @@
  */
 package com.ibatis.sqlmap.engine.mapping.statement;
 
-import com.ibatis.sqlmap.engine.mapping.statement.*;
-
 public interface ExecuteListener {
 
   public void onExecuteStatement(MappedStatement statement);
