@@ -2,53 +2,49 @@
               iBATIS Wish List and Road Map
 ------------------------------------------------------------
 
+2.1
   Ease of Use
-
-  2.1 - Improved configuration API and logging
       - Override/extend mapped statements (i.e. reuse SQL; overrides="statementName")
+  Database Support
+      - Custom Type Handlers
+      - Type translation filters (e.g. "Y"|"N" -> true|false)
+      - CLOB/BLOB support
+      - Isolation Level support
+  Performance
+      - Repeating group mapping (solution for M:N n+1 selects problem)
+  Object Oriented
+      - Inheritance via selects or joins (same as groups)
 
-  2.2 - Improved Inline parameters (w/stored proc mode)
+2.2
+  Ease of Use
+      - Improved configuration API and logging
+      - Improved Inline parameters (w/stored proc mode)
       - Current parameters could skip options with empty :: (e.g. #COLNAME::-1#)
       - Pluggable SQL Scripting languages
+  Database Support
+      - Save point support
+  Performance
+      - Cache dependency on other cache (flush-on-dependant)
 
-  ?.? - Optional new line stripping
+#.#
+  Ease of Use
+      - Optional new line stripping
       - Optional results/exclusions (i.e. don't require all results)
       - Included SQL Fragments
       - Cross file resource management (currently works, but order dependent --ok?)
       - Circular relationships
       - Per result Lazy Load configuration
-
   Database Support
-
-  2.1 - Custom Type Handlers
-      - Type translation filters (e.g. "Y"|"N" -> true|false)
-      - CLOB/BLOB support
-      - Save point support
-      - Isolation Level support
-
-  ?.? - NULL complex property map results set prop to null (don't run query selectOnNull="false")
+      - NULL complex property map results set prop to null (don't run query selectOnNull="false")
       - Trim whitespace from CHAR data
-
   Performance
-
-  2.1 - Fetch size, driver hints, scroll/concur type on prepare
-      - Repeating group mapping (solution for M:N n+1 selects problem)
-      - Cache dependency on other cache (flush-on-dependant)
       - Flush cache at specifig time (e.g. 22:30)
-
-  Object Oriented
-
-  2.1 - Inheritance via selects or joins (same as groups)
-
   Tools
-
-  ?.? - XDoclet/QDox Tags (@ibatis)
+      - XDoclet/QDox Tags (@ibatis)
       - SQL Map Editor GUI
       - Ant Tasks?
-
-  Unlikely
-
-  ?.? - RowSet|ResultSet results?
+  Unconfirmed
+      - RowSet|ResultSet results?
       - Multiple result sets/update results
       - Get warnings (conn, ps, rs)
       - Asynchronous updates (queued)
