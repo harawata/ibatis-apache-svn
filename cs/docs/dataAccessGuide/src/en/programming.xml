@@ -63,16 +63,18 @@
 
     <itemizedlist>
       <listitem>
-        <para>ConfigureAndWatch() : reads and watches for changes to a
-        configuration file named <filename>dao.config</filename>.</para>
+        <para>ConfigureAndWatch(ConfigureHandler configureDelegate) : reads
+        and watches for changes to a configuration file named
+        <filename>dao.config</filename> and calls the delegate method.</para>
       </listitem>
     </itemizedlist>
 
     <itemizedlist>
       <listitem>
-        <para>ConfigureAndWatch(string fileName) : reads and watches for
-        changes to a configuration file named
-        '<filename>fileName</filename>'.</para>
+        <para>ConfigureAndWatch(string fileName, ConfigureHandler
+        configureDelegate) : reads and watches for changes to a configuration
+        file named '<filename>fileName</filename>' and calls the delegate
+        method.</para>
       </listitem>
     </itemizedlist>
 
