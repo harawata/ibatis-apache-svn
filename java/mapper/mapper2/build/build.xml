@@ -3,7 +3,7 @@
   <property file="build.properties"/>
 
   <path id="classpath">
-    <pathelement location="${instrumented}/"/>
+    <pathelement location="${classes}/"/>
     <pathelement location="${compatibility}/"/>
     <pathelement location="${src}/"/>
     <pathelement location="${devsrc}/"/>
@@ -13,11 +13,17 @@
   </path>
 
   <target name="clean" >
+    <delete dir="${databases}" />
+    <delete dir="${classes}" />
     <delete dir="${user_javadocs}" />
     <delete dir="${dev_javadocs}" />
     <delete dir="${jars}" />
     <delete dir="${reports}" />
-    <delete dir="${instrumented}" />
+    <delete>
+      <fileset dir="${devsrc}">
+        <include name="**/*.class"/>
+      </fileset>
+    </delete>
     <delete>
       <fileset dir="${src}">
         <include name="**/*.class"/>
@@ -33,9 +39,23 @@
         <include name="**/*.class"/>
       </fileset>
     </delete>
+    <delete>
+      <fileset dir="./">
+        <include name="junit*.properties"/>
+      </fileset>
+    </delete>
+    <delete>
+      <fileset dir="./">
+        <include name="derby.log"/>
+      </fileset>
+    </delete>
   </target>
 
   <target name="prepare" depends="clean">
+    <delete dir="${databases}/compat" />
+    <delete dir="${databases}/mapper" />
+    <delete dir="${databases}/dao" />
+    <mkdir dir="${classes}"/>
     <mkdir dir="${dev_javadocs}"/>
     <mkdir dir="${user_javadocs}"/>
     <mkdir dir="${jars}"/>
@@ -68,16 +88,16 @@
     <!-- defaults - override in build.properties-->
     <property name="compile.debug" value="true" />
     <property name="compile.deprecation" value="false" />
-    <javac srcdir="${devsrc}" destdir="${devsrc}" deprecation="${compile.deprecation}" debug="${compile.debug}">
+    <javac srcdir="${devsrc}" destdir="${classes}" deprecation="${compile.deprecation}" debug="${compile.debug}">
       <classpath refid="classpath"/>
     </javac>
-    <javac srcdir="${src}" destdir="${src}" deprecation="${compile.deprecation}" debug="${compile.debug}">
+    <javac srcdir="${src}" destdir="${classes}" deprecation="${compile.deprecation}" debug="${compile.debug}">
       <classpath refid="classpath"/>
     </javac>
-    <javac srcdir="${compatibility}" destdir="${compatibility}" deprecation="${compile.deprecation}" debug="${compile.debug}">
+    <javac srcdir="${compatibility}" destdir="${classes}" deprecation="${compile.deprecation}" debug="${compile.debug}">
       <classpath refid="classpath"/>
     </javac>
-    <javac srcdir="${tests}" destdir="${tests}" deprecation="off" debug="on">
+    <javac srcdir="${tests}" destdir="${classes}" deprecation="off" debug="on">
       <classpath refid="classpath"/>
     </javac>
   </target>
@@ -124,7 +144,7 @@
     <junit printsummary="true" showoutput="true">
       <formatter type="xml"/>
       <batchtest todir="${reports}/junit" fork="yes" haltonerror="no" failureproperty="testsFailed" >
-        <fileset dir="${tests}">
+        <fileset dir="${classes}">
           <include name="**/*Test.class"/>
           <exclude name="**/Oracle*Test.class"/>
           <exclude name="**/Base*Test.class"/>
@@ -288,31 +308,6 @@
         <include name="**/*.class"/>
       </fileset>
     </delete>
-  </target>
-
-  <taskdef  name="instrument" classname="com.jcoverage.ant.InstrumentTask" classpathref="classpath"  />
-  <taskdef  name="merge" classname="com.jcoverage.ant.MergeTask"  classpathref="classpath"/>
-  <taskdef  name="report" classname="com.jcoverage.ant.CoverageReportTask"  classpathref="classpath"/>
-  <taskdef  name="check" classname="com.jcoverage.ant.CheckTask"  classpathref="classpath"/>
-
-  <target name="test.instrument" depends="src.compile">
-    <mkdir dir="${instrumented}"/>
-    <instrument todir="${instrumented}">
-      <ignore regex="org.apache.log4j.*"/>
-      <fileset dir="${src}">
-        <include name="**/*.class"/>
-        <exclude name="**/*Test.class"/>
-      </fileset>
-    </instrument>
-  </target>
-
-  <target name="test.report.coverage" description="HTML and XML coverage reports can be found in build/coverage">
-    <mkdir dir="${reports}/jcoverage"/>
-    <report srcdir="${src}" destdir="${reports}/jcoverage"/>
-  </target>
-
-  <target name="coverage" depends="test.instrument, test.compatibility, test.report.coverage, post-clean"  >
-    <fail if="testsFailed" message="The tests did not pass" />
   </target>
 
   <target name="all" depends="test.compatibility, src.javadoc, deploy.zipfile, post-clean" >

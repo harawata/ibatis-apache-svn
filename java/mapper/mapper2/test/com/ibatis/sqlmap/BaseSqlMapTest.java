@@ -11,34 +11,45 @@ import testdomain.Order;
 import javax.sql.DataSource;
 import java.io.Reader;
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.*;
 
 public class BaseSqlMapTest extends TestCase {
 
   protected static SqlMapClient sqlMap;
 
+  protected void tearDown() throws Exception {
+    super.tearDown();
+    try {
+      DriverManager.getConnection("jdbc:derby:;shutdown=true");
+    } catch (SQLException e) {
+      System.out.println ("Derby shutdown successful.  Exception: " + e);
+    }
+  }
+
   protected static void initSqlMap(String configFile, Properties props) throws Exception {
-    Reader reader = Resources.getResourceAsReader(configFile);
-    sqlMap = SqlMapClientBuilder.buildSqlMapClient(reader, props);
-    reader.close();
+      Reader reader = Resources.getResourceAsReader(configFile);
+      sqlMap = SqlMapClientBuilder.buildSqlMapClient(reader, props);
+      reader.close();
   }
 
   protected static void initScript(String script) throws Exception {
-    DataSource ds = sqlMap.getDataSource();
+      DataSource ds = sqlMap.getDataSource();
 
-    Connection conn = ds.getConnection();
+      Connection conn = ds.getConnection();
 
-    Reader reader = Resources.getResourceAsReader(script);
+      Reader reader = Resources.getResourceAsReader(script);
 
-    ScriptRunner runner = new ScriptRunner();
-    runner.setStopOnError(false);
-    runner.setLogWriter(null);
-    runner.setErrorLogWriter(null);
+      ScriptRunner runner = new ScriptRunner();
+      runner.setStopOnError(false);
+      runner.setLogWriter(null);
+      runner.setErrorLogWriter(null);
 
-    runner.runScript(conn, reader);
-    conn.commit();
-    conn.close();
-    reader.close();
+      runner.runScript(conn, reader);
+      conn.commit();
+      conn.close();
+      reader.close();
   }
 
   protected Account newAccount6() {

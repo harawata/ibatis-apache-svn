@@ -950,8 +950,6 @@ public class SimpleDataSource implements DataSource {
       }
     }
 
-    /*
-
     public Statement createStatement() throws SQLException {
       return getValidConnection().createStatement();
     }
@@ -1108,7 +1106,6 @@ public class SimpleDataSource implements DataSource {
       return getValidConnection().prepareStatement(sql, columnNames);
     }
 
-    */
 
   }
 }
