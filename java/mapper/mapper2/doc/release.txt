@@ -2,7 +2,7 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
- 2.0.0 RC3 - Apr 11, 2004
+ 2.0.0 RC3 - Apr 19, 2004
 ------------------------------
 
  o Updated DBCP support and centralized config
