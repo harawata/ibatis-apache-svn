@@ -3,10 +3,10 @@ using System.Collections;
 
 using NUnit.Framework;
 
-using IBatisNet.Test.NUnit;
-using IBatisNet.Test.Domain;
+using IBatisNet.DataMapper.Test.NUnit;
+using IBatisNet.DataMapper.Test.Domain;
 
-namespace IBatisNet.Test.NUnit.SqlMapTests.Oracle
+namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Oracle
 {
 	/// <summary>
 	/// Summary description for StatementTest.

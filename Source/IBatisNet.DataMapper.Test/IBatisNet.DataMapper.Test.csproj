@@ -79,12 +79,117 @@
                     AssemblyName = "System.Xml"
                     HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
+                <Reference
+                    Name = "IBatisNet.Common"
+                    Project = "{BBC8DA4A-EA88-41D9-8B93-929B8F3ADADE}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "IBatisNet.DataMapper"
+                    Project = "{72F70057-B2E1-4DAD-BA6C-E2962745EEA5}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "nunit.framework"
+                    AssemblyName = "nunit.framework"
+                    HintPath = "..\External-Bin\Net\1.1\nunit.framework.dll"
+                />
+                <Reference
+                    Name = "log4net"
+                    AssemblyName = "log4net"
+                    HintPath = "..\External-Bin\Net\1.1\log4net.dll"
+                />
+                <Reference
+                    Name = "System.Drawing"
+                    AssemblyName = "System.Drawing"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Drawing.dll"
+                />
             </References>
         </Build>
         <Files>
             <Include>
                 <File
                     RelPath = "AssemblyInfo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "cool.jpg"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "DataBase.config"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "IBatisNet.Test.build"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "ReadMe.txt"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "User.hbm.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Domain\Account.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Domain\AccountBis.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Domain\AccountCollection.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Domain\Category.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Domain\Complex.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Domain\Enumeration.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Domain\LineItem.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Domain\LineItemCollection.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Domain\Order.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Domain\Other.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Domain\Search.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Domain\User.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -402,6 +507,158 @@
                     RelPath = "NUnit\SqlMapTests\Oracle\StatementTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Scripts\MSSQL\account-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MSSQL\account-procedure.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MSSQL\category-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MSSQL\category-procedure.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MSSQL\DataBase.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MSSQL\DBCreation.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MSSQL\enumeration-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MSSQL\line-item-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MSSQL\more-account-records.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MSSQL\order-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MSSQL\other-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MSSQL\swap-procedure.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MSSQL\user-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MySql\account-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MySql\account-procedure.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MySql\category-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MySql\category-procedure.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MySql\DataBase.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MySql\enumeration-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MySql\line-item-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MySql\more-account-records.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MySql\order-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MySql\other-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MySql\swap-procedure.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MySql\user-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\Oracle\account-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\Oracle\account-procedure.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\Oracle\category-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\Oracle\category-procedure.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\Oracle\DataBase.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\Oracle\DataBaseNHibernate.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\Oracle\enumeration-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\Oracle\line-item-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\Oracle\more-account-records.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\Oracle\order-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\Oracle\other-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\Oracle\swap-procedure.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\Oracle\user-init.sql"
+                    BuildAction = "Content"
                 />
             </Include>
         </Files>

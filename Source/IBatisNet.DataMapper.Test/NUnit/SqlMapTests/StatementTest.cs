@@ -9,10 +9,10 @@ using IBatisNet.DataMapper.MappedStatements; //<-- To access the definition of t
 using IBatisNet.Common;
 using IBatisNet.Common.Exceptions;
 
-using IBatisNet.Test;
-using IBatisNet.Test.Domain;
+using IBatisNet.DataMapper.Test;
+using IBatisNet.DataMapper.Test.Domain;
 
-namespace IBatisNet.Test.NUnit.SqlMapTests
+namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 {
 	/// <summary>
 	/// Summary description for ParameterMapTest.

@@ -9,17 +9,15 @@ using log4net;
 
 using NUnit.Framework;
 
-using IBatisNet.DataAccess;
-
 using IBatisNet.Common; // DataSource definition
 using IBatisNet.Common.Utilities; // ScriptRunner definition
 using IBatisNet.DataMapper; // SqlMap API
 
-using IBatisNet.Test.Domain;
+using IBatisNet.DataMapper.Test.Domain;
 
 [assembly:log4net.Config.DOMConfigurator(Watch=true)]
 
-namespace IBatisNet.Test.NUnit.SqlMapTests
+namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 {
 	/// <summary>
 	/// Summary description for BaseTest.
@@ -30,14 +28,6 @@ namespace IBatisNet.Test.NUnit.SqlMapTests
 		/// The sqlMap
 		/// </summary>
 		protected static SqlMapper sqlMap;
-		/// <summary>
-		/// A daoManager with a SimpledaoSession
-		/// </summary>
-		protected static DaoManager daoManager = null;
-		/// <summary>
-		/// A daoManager with a sqlMapSession
-		/// </summary>
-		protected static DaoManager daoManagerSqlMap = null;
 
 		private static readonly ILog _logger = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 		

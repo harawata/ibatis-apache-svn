@@ -11,10 +11,10 @@ using IBatisNet.Common.Utilities;
 using IBatisNet.DataMapper; //<-- To access the definition of the deleagte RowDelegate
 using IBatisNet.DataMapper.MappedStatements;
 
-using IBatisNet.Test;
-using IBatisNet.Test.Domain;
+using IBatisNet.DataMapper.Test;
+using IBatisNet.DataMapper.Test.Domain;
 
-namespace IBatisNet.Test.NUnit.SqlMapTests
+namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 {
 	/// <summary>
 	/// Summary description for ParameterMapTest.

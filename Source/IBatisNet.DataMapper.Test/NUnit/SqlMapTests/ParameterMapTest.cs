@@ -8,9 +8,9 @@ using System.IO;
 using NUnit.Framework;
 
 using IBatisNet.Common.Utilities;
-using IBatisNet.Test.Domain;
+using IBatisNet.DataMapper.Test.Domain;
 
-namespace IBatisNet.Test.NUnit.SqlMapTests
+namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 {
 	/// <summary>
 	/// Summary description for ParameterMapTest.

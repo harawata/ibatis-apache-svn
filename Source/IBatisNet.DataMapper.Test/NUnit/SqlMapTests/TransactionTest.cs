@@ -6,10 +6,10 @@ using NUnit.Framework;
 
 using IBatisNet.DataMapper.Exceptions;
 
-using IBatisNet.Test;
-using IBatisNet.Test.Domain;
+using IBatisNet.DataMapper.Test;
+using IBatisNet.DataMapper.Test.Domain;
 
-namespace IBatisNet.Test.NUnit.SqlMapTests
+namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 {
 	/// <summary>
 	/// Summary description for TransactionTest.
