@@ -9,7 +9,9 @@ Build Number: @buildNum@
  o Added getCurrentConnection()
  o Added openSession(Connection) for easier user connections
  o Improved user provided connection implementation
- o Fixed logging
+ o Fixed logging bug that prevented SQL from being logged
+ o Fixed resultSetType prepareStatement overloaded method call  
+ o Fixed nullValue replacement when used with dynamic statements
 
 ------------------------------
  2.0.3 - Jul 16, 2004
