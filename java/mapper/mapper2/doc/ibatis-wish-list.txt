@@ -34,7 +34,6 @@ FEATURE REQUESTS: LOW-PRIORITY
  o Pluggable dynamic fragments
  o Asynchronous updates (queued)
  o Idle Connection Timeout in SimpleDataSource
- o DBCP update code to version
  o Map with 1:M relationship with other Map?  (i.e. map key contains list of other maps)
  o Per result Lazy Load configuration 
  o Specify classloader for DAO/SqlMap builders
