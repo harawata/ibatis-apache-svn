@@ -2,6 +2,25 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
+ 2.0.9B - Feb ??, 2004
+------------------------------
+
+ o Fixed IBATIS-24 Add use="true" to javadoc tasks
+ o Fixed IBATIS-25 Included com.ibatis.common not included in JavaDoc
+ o Fixed IBATIS-57 Deprecated ScriptRunner
+ o Fixed IBATIS-47 Add Table of Contents to SqlMaps developer guide
+ o Fixed IBATIS-68 Add PrameterSetter's interface ( getPreparedStatement() )
+ o Fixed IBATIS-55 Throws ArrayIndexOutOfBoundsException when call queryForObject
+ o Fixed IBATIS-41 Sql fragments don´t use namespaces
+ o Fixed IBATIS-51 isParameterAvailable for Maps always returns true
+ o Fixed IBATIS-66 com.ibatis.common.util.Throttle not decrementing Session counter causes application to hang
+ o Fixed IBATIS-61 Inconsistent type handler handling
+ o Fixed IBATIS-70 iBatis Caching Should Not Rely on hashCode Alone
+ o Fixed IBATIS-72 Placeholders in sqlmap are not resolved in config
+ o Fixed IBATIS-74 Problem using a "url" based properties file
+ o Fixed IBATIS-34 Exception while serializable NULL value (CacheModel)
+
+------------------------------
  2.0.9 - Dec 31, 2004
 ------------------------------
 
