@@ -8,20 +8,20 @@ package com.ibatis.common.beans;
  */
 public interface Probe {
 
-  Object getObject(Object object, String name);
+  public Object getObject(Object object, String name);
 
-  void setObject(Object object, String name, Object value);
+  public void setObject(Object object, String name, Object value);
 
-  String[] getReadablePropertyNames(Object object);
+  public String[] getReadablePropertyNames(Object object);
 
-  String[] getWriteablePropertyNames(Object object);
+  public String[] getWriteablePropertyNames(Object object);
 
-  Class getPropertyTypeForSetter(Object object, String name);
+  public Class getPropertyTypeForSetter(Object object, String name);
 
-  Class getPropertyTypeForGetter(Object object, String name);
+  public Class getPropertyTypeForGetter(Object object, String name);
 
-  boolean hasWritableProperty(Object object, String propertyName);
+  public boolean hasWritableProperty(Object object, String propertyName);
 
-  boolean hasReadableProperty(Object object, String propertyName);
+  public boolean hasReadableProperty(Object object, String propertyName);
 
 }

@@ -18,8 +18,8 @@ import java.util.StringTokenizer;
  */
 public class GenericProbe extends BaseProbe {
 
-  public static final BaseProbe MAP_PROBE = new MapProbe();
-  public static final BaseProbe BEAN_PROBE = new JavaBeanProbe();
+  private static final BaseProbe MAP_PROBE = new MapProbe();
+  private static final BaseProbe BEAN_PROBE = new JavaBeanProbe();
 
   protected GenericProbe() {
   }
