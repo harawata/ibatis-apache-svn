@@ -5,10 +5,11 @@ Build Number: @buildNum@
  2.0.9 - Dec 11, 2004
 ------------------------------
 
- o Added solution for N+1 selects for any number of 1:M and M:N relationships. 
+ o Added solution for N+1 selects for any number of 1:M and M:N relationships.
  o Added groupBy="..." for Result Maps to deal with repeating groups.
  o Added resultMap="..." to result mapping to deal with sub groups.
  o Added remapResults="true|false" remapping of dynamic result set metadata.
+ o Verified that duplicate statement names throw an exception. [982534]
 
 ------------------------------
  2.0.8 - Nov 26, 2004
