@@ -7,12 +7,18 @@ import java.sql.*;
  * Date: Nov 23, 2003
  * Time: 10:39:10 PM
  */
-public class UnknownTypeHandler implements TypeHandler {
+public class UnknownTypeHandler extends BaseTypeHandler implements TypeHandler {
+
+  private TypeHandlerFactory factory;
+
+  public UnknownTypeHandler(TypeHandlerFactory factory) {
+    this.factory = factory;
+  }
 
   public void setParameter(PreparedStatement ps, int i, Object parameter, String jdbcType)
       throws SQLException {
 
-    TypeHandler handler = TypeHandlerFactory.getTypeHandler(parameter.getClass(), jdbcType);
+    TypeHandler handler = factory.getTypeHandler(parameter.getClass(), jdbcType);
     handler.setParameter(ps, i, parameter, jdbcType);
 
   }
@@ -51,12 +57,11 @@ public class UnknownTypeHandler implements TypeHandler {
     return s;
   }
 
-
   public boolean equals(Object object, String string) {
     if (object == null || string == null) {
       return object == string;
     } else {
-      TypeHandler handler = TypeHandlerFactory.getTypeHandler(object.getClass());
+      TypeHandler handler = factory.getTypeHandler(object.getClass());
       Object castedObject = handler.valueOf(string);
       return object.equals(castedObject);
     }

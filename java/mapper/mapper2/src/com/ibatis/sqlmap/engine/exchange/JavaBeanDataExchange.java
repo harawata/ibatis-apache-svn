@@ -22,6 +22,10 @@ public class JavaBeanDataExchange extends BaseDataExchange implements DataExchan
   private AccessPlan resultPlan;
   private AccessPlan parameterPlan;
 
+  protected JavaBeanDataExchange(DataExchangeFactory dataExchangeFactory) {
+    super(dataExchangeFactory);
+  }
+
   /**
    * Initializes the data exchange instance.
    *

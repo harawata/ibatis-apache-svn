@@ -23,6 +23,8 @@ import com.ibatis.sqlmap.engine.transaction.TransactionException;
 import com.ibatis.sqlmap.engine.transaction.TransactionManager;
 import com.ibatis.sqlmap.engine.transaction.TransactionState;
 import com.ibatis.sqlmap.engine.transaction.user.UserProvidedTransaction;
+import com.ibatis.sqlmap.engine.type.TypeHandlerFactory;
+import com.ibatis.sqlmap.engine.exchange.DataExchangeFactory;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -55,15 +57,39 @@ public class SqlMapExecutorDelegate {
 
   private TransactionManager txManager;
 
-  private HashMap mappedStatements = new HashMap();
-  private HashMap cacheModels = new HashMap();
-  private HashMap resultMaps = new HashMap();
-  private HashMap parameterMaps = new HashMap();
+  private HashMap mappedStatements;
+  private HashMap cacheModels;
+  private HashMap resultMaps;
+  private HashMap parameterMaps;
 
-  private ThrottledPool requestPool = new ThrottledPool(RequestScope.class, DEFAULT_MAX_REQUESTS);
-  private ThrottledPool sessionPool = new ThrottledPool(SessionScope.class, DEFAULT_MAX_SESSIONS);
+  private ThrottledPool requestPool;
+  private ThrottledPool sessionPool;
 
-  private SqlExecutor sqlExecutor = new SqlExecutor();
+  private SqlExecutor sqlExecutor;
+  private TypeHandlerFactory typeHandlerFactory;
+  private DataExchangeFactory dataExchangeFactory;
+
+  public SqlMapExecutorDelegate() {
+    mappedStatements = new HashMap();
+    cacheModels = new HashMap();
+    resultMaps = new HashMap();
+    parameterMaps = new HashMap();
+
+    requestPool = new ThrottledPool(RequestScope.class, DEFAULT_MAX_REQUESTS);
+    sessionPool = new ThrottledPool(SessionScope.class, DEFAULT_MAX_SESSIONS);
+
+    sqlExecutor = new SqlExecutor();
+    typeHandlerFactory = new TypeHandlerFactory();
+    dataExchangeFactory = new DataExchangeFactory(typeHandlerFactory);
+  }
+
+  public DataExchangeFactory getDataExchangeFactory() {
+    return dataExchangeFactory;
+  }
+
+  public TypeHandlerFactory getTypeHandlerFactory() {
+    return typeHandlerFactory;
+  }
 
   public boolean isLazyLoadingEnabled() {
     return lazyLoadingEnabled;

@@ -5,8 +5,8 @@ import com.ibatis.common.exception.NestedRuntimeException;
 import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.engine.scope.RequestScope;
 import com.ibatis.sqlmap.engine.type.DomTypeMarker;
-import com.ibatis.sqlmap.engine.type.TypeHandlerFactory;
 import com.ibatis.sqlmap.engine.type.XmlTypeMarker;
+import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -23,6 +23,10 @@ import java.util.Map;
  */
 public class AutoResultMap extends BasicResultMap {
 
+  public AutoResultMap(SqlMapExecutorDelegate delegate) {
+    super(delegate);
+  }
+
   public synchronized Object[] getResults(RequestScope request, ResultSet rs)
       throws SQLException {
     if (resultMappings == null) {
@@ -36,7 +40,7 @@ public class AutoResultMap extends BasicResultMap {
       throw new SqlMapException("The automatic ResultMap named " + this.getId() + " had a null result class (not allowed).");
     } else if (Map.class.isAssignableFrom(resultClass)) {
       initializeMapResults(rs);
-    } else if (TypeHandlerFactory.getTypeHandler(resultClass) != null) {
+    } else if (getDelegate().getTypeHandlerFactory().getTypeHandler(resultClass) != null) {
       initializePrimitiveResults(rs);
     } else if (DomTypeMarker.class.isAssignableFrom(resultClass)
         || XmlTypeMarker.class.isAssignableFrom(resultClass)) {
@@ -68,7 +72,7 @@ public class AutoResultMap extends BasicResultMap {
           resultMapping.setColumnName(columnName);
           resultMapping.setColumnIndex(i + 1);
           Class type = classInfo.getSetterType(matchedProp);
-          resultMapping.setTypeHandler(TypeHandlerFactory.getTypeHandler(type));
+          resultMapping.setTypeHandler(getDelegate().getTypeHandlerFactory().getTypeHandler(type));
           resultMappingList.add(resultMapping);
         }
       }
@@ -91,7 +95,7 @@ public class AutoResultMap extends BasicResultMap {
         resultMapping.setPropertyName(columnName);
         resultMapping.setColumnName(columnName);
         resultMapping.setColumnIndex(i + 1);
-        resultMapping.setTypeHandler(TypeHandlerFactory.getTypeHandler(String.class));
+        resultMapping.setTypeHandler(getDelegate().getTypeHandlerFactory().getTypeHandler(String.class));
         resultMappingList.add(resultMapping);
       }
       setResultMappingList(resultMappingList);
@@ -110,7 +114,7 @@ public class AutoResultMap extends BasicResultMap {
         resultMapping.setPropertyName(columnName);
         resultMapping.setColumnName(columnName);
         resultMapping.setColumnIndex(i + 1);
-        resultMapping.setTypeHandler(TypeHandlerFactory.getTypeHandler(Object.class));
+        resultMapping.setTypeHandler(getDelegate().getTypeHandlerFactory().getTypeHandler(Object.class));
         resultMappingList.add(resultMapping);
       }
 
@@ -129,7 +133,7 @@ public class AutoResultMap extends BasicResultMap {
       resultMapping.setPropertyName(columnName);
       resultMapping.setColumnName(columnName);
       resultMapping.setColumnIndex(1);
-      resultMapping.setTypeHandler(TypeHandlerFactory.getTypeHandler(resultClass));
+      resultMapping.setTypeHandler(getDelegate().getTypeHandlerFactory().getTypeHandler(resultClass));
 
       List resultMappingList = new ArrayList();
       resultMappingList.add(resultMapping);

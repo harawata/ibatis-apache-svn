@@ -43,8 +43,6 @@ import com.ibatis.sqlmap.engine.transaction.external.ExternalTransactionConfig;
 import com.ibatis.sqlmap.engine.transaction.jdbc.JdbcTransactionConfig;
 import com.ibatis.sqlmap.engine.transaction.jta.JtaTransactionConfig;
 import com.ibatis.sqlmap.engine.type.*;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.*;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
@@ -69,8 +67,6 @@ import java.sql.ResultSet;
  * Time: 7:12:11 PM
  */
 public class XmlSqlMapClientBuilder {
-
-  private static final Log log = LogFactory.getLog(XmlSqlMapClientBuilder.class);
 
   private static final Probe PROBE = ProbeFactory.getProbe();
 
@@ -579,7 +575,7 @@ public class XmlSqlMapClientBuilder {
     if (resultMap == null && resultClass == null) {
       statement.setResultMap(null);
     } else if (resultMap == null) {
-      resultMap = new AutoResultMap();
+      resultMap = new AutoResultMap(client.getDelegate());
       resultMap.setId(statement.getId() + "-AutoResultMap");
       resultMap.setResultClass(resultClass);
       resultMap.setXmlName(xmlResultName);
@@ -642,7 +638,7 @@ public class XmlSqlMapClientBuilder {
     processSqlStatement(n, selectKeyStatement);
 
     BasicResultMap resultMap;
-    resultMap = new AutoResultMap();
+    resultMap = new AutoResultMap(client.getDelegate());
     resultMap.setId(selectKeyStatement.getId() + "-AutoResultMap");
     resultMap.setResultClass(resultClass);
     resultMap.setResource(selectKeyStatement.getResource());
@@ -657,7 +653,7 @@ public class XmlSqlMapClientBuilder {
     errorCtx.setActivity("processing an SQL statement");
 
     boolean isDynamic = false;
-    DynamicSql dynamic = new DynamicSql();
+    DynamicSql dynamic = new DynamicSql(client.getDelegate());
     StringBuffer sqlBuffer = new StringBuffer();
 
     isDynamic = parseDynamicTags(n, dynamic, sqlBuffer, isDynamic, false);
@@ -693,7 +689,7 @@ public class XmlSqlMapClientBuilder {
           sqlText = new SqlText();
           sqlText.setText(data.toString());
         } else {
-          sqlText = parseInlineParameterMap(data.toString());
+          sqlText = parseInlineParameterMap(client.getDelegate().getTypeHandlerFactory(), null, data.toString());
         }
 
         dynamic.addChild(sqlText);
@@ -775,14 +771,14 @@ public class XmlSqlMapClientBuilder {
     if (parameterMap == null) {
 
       BasicParameterMap map;
-      map = new BasicParameterMap();
+      map = new BasicParameterMap(client.getDelegate());
 
       map.setId(statement.getId() + "-InlineParameterMap");
       map.setParameterClass(statement.getParameterClass());
       map.setResource(statement.getResource());
       statement.setParameterMap(map);
 
-      SqlText sqlText = parseInlineParameterMap(statement.getParameterClass(), newSql);
+      SqlText sqlText = parseInlineParameterMap(client.getDelegate().getTypeHandlerFactory(), statement.getParameterClass(), newSql);
       newSql = sqlText.getText();
       List mappingList = Arrays.asList(sqlText.getParameterMappings());
 
@@ -792,18 +788,18 @@ public class XmlSqlMapClientBuilder {
 
     Sql sql = null;
     if (SimpleDynamicSql.isSimpleDynamicSql(newSql)) {
-      sql = new SimpleDynamicSql(newSql);
+      sql = new SimpleDynamicSql(client.getDelegate(), newSql);
     } else {
       sql = new StaticSql(newSql);
     }
     statement.setSql(sql);
   }
 
-  public static SqlText parseInlineParameterMap(String sqlStatement) {
-    return parseInlineParameterMap(null, sqlStatement);
+  public static SqlText parseInlineParameterMap(TypeHandlerFactory typeHandlerFactory, String sqlStatement) {
+    return parseInlineParameterMap(typeHandlerFactory, null, sqlStatement);
   }
 
-  private static SqlText parseInlineParameterMap(Class parameterClass, String sqlStatement) {
+  private static SqlText parseInlineParameterMap(TypeHandlerFactory typeHandlerFactory, Class parameterClass, String sqlStatement) {
 
     String newSql = sqlStatement;
 
@@ -833,9 +829,9 @@ public class XmlSqlMapClientBuilder {
               mapping.setJdbcTypeName(type);
               TypeHandler handler;
               if (parameterClass == null) {
-                handler = TypeHandlerFactory.getUnkownTypeHandler();
+                handler = typeHandlerFactory.getUnkownTypeHandler();
               } else {
-                handler = resolveTypeHandler(parameterClass, name, null, type);
+                handler = resolveTypeHandler(typeHandlerFactory, parameterClass, name, null, type);
               }
               mapping.setTypeHandler(handler);
               mappingList.add(mapping);
@@ -854,9 +850,9 @@ public class XmlSqlMapClientBuilder {
               mapping.setNullValue(nullValue);
               TypeHandler handler;
               if (parameterClass == null) {
-                handler = TypeHandlerFactory.getUnkownTypeHandler();
+                handler = typeHandlerFactory.getUnkownTypeHandler();
               } else {
-                handler = resolveTypeHandler(parameterClass, name, null, type);
+                handler = resolveTypeHandler(typeHandlerFactory, parameterClass, name, null, type);
               }
               mapping.setTypeHandler(handler);
               mappingList.add(mapping);
@@ -868,9 +864,9 @@ public class XmlSqlMapClientBuilder {
             mapping.setPropertyName(token);
             TypeHandler handler;
             if (parameterClass == null) {
-              handler = TypeHandlerFactory.getUnkownTypeHandler();
+              handler = typeHandlerFactory.getUnkownTypeHandler();
             } else {
-              handler = resolveTypeHandler(parameterClass, token, null, null);
+              handler = resolveTypeHandler(typeHandlerFactory, parameterClass, token, null, null);
             }
             mapping.setTypeHandler(handler);
             mappingList.add(mapping);
@@ -905,7 +901,7 @@ public class XmlSqlMapClientBuilder {
     errorCtx.setActivity("building a result map");
 
     BasicResultMap map;
-    map = new BasicResultMap();
+    map = new BasicResultMap(client.getDelegate());
 
     Properties attributes = parseAttributes(n);
     String id = applyNamespace(attributes.getProperty("id"));
@@ -965,7 +961,7 @@ public class XmlSqlMapClientBuilder {
         errorCtx.setObjectId(propertyName + " mapping of the " + id + " result map");
 
         errorCtx.setMoreInfo("Check the result mapping property type or name.");
-        TypeHandler handler = resolveTypeHandler(resultClass, propertyName, javaType, jdbcType, true);
+        TypeHandler handler = resolveTypeHandler(client.getDelegate().getTypeHandlerFactory(),resultClass, propertyName, javaType, jdbcType, true);
 
         BasicResultMapping mapping = new BasicResultMapping();
         mapping.setPropertyName(propertyName);
@@ -1005,7 +1001,7 @@ public class XmlSqlMapClientBuilder {
     errorCtx.setActivity("building a parameter map");
 
     BasicParameterMap map;
-    map = new BasicParameterMap();
+    map = new BasicParameterMap(client.getDelegate());
 
     Properties attributes = parseAttributes(n);
     String id = applyNamespace(attributes.getProperty("id"));
@@ -1046,7 +1042,7 @@ public class XmlSqlMapClientBuilder {
         errorCtx.setObjectId(propertyName + " mapping of the " + id + " parameter map");
 
         errorCtx.setMoreInfo("Check the parameter mapping property type or name.");
-        TypeHandler handler = resolveTypeHandler(parameterClass, propertyName, javaType, jdbcType);
+        TypeHandler handler = resolveTypeHandler(client.getDelegate().getTypeHandlerFactory(), parameterClass, propertyName, javaType, jdbcType);
 
         BasicParameterMapping mapping = new BasicParameterMapping();
         mapping.setPropertyName(propertyName);
@@ -1216,50 +1212,50 @@ public class XmlSqlMapClientBuilder {
     }
   }
 
-  private static TypeHandler resolveTypeHandler(Class clazz, String propertyName, String javaType, String jdbcType) {
-    return resolveTypeHandler(clazz, propertyName, javaType, jdbcType, false);
+  private static TypeHandler resolveTypeHandler(TypeHandlerFactory typeHandlerFactory, Class clazz, String propertyName, String javaType, String jdbcType) {
+    return resolveTypeHandler(typeHandlerFactory, clazz, propertyName, javaType, jdbcType, false);
   }
 
-  private static TypeHandler resolveTypeHandler(Class clazz, String propertyName, String javaType, String jdbcType, boolean useSetterToResolve) {
+  private static TypeHandler resolveTypeHandler(TypeHandlerFactory typeHandlerFactory, Class clazz, String propertyName, String javaType, String jdbcType, boolean useSetterToResolve) {
     TypeHandler handler = null;
     if (clazz == null) {
       // Unknown
-      handler = TypeHandlerFactory.getUnkownTypeHandler();
+      handler = typeHandlerFactory.getUnkownTypeHandler();
     } else if (DomTypeMarker.class.isAssignableFrom(clazz)) {
       // DOM
-      handler = TypeHandlerFactory.getTypeHandler(String.class, jdbcType);
+      handler = typeHandlerFactory.getTypeHandler(String.class, jdbcType);
     } else if (XmlTypeMarker.class.isAssignableFrom(clazz)) {
       // XML
-      handler = TypeHandlerFactory.getTypeHandler(String.class, jdbcType);
+      handler = typeHandlerFactory.getTypeHandler(String.class, jdbcType);
     } else if (java.util.Map.class.isAssignableFrom(clazz)) {
       // Map
       if (javaType == null) {
-        handler = TypeHandlerFactory.getTypeHandler(java.lang.Object.class, jdbcType);
+        handler = typeHandlerFactory.getTypeHandler(java.lang.Object.class, jdbcType);
       } else {
         try {
           Class javaClass = Resources.classForName(javaType);
-          handler = TypeHandlerFactory.getTypeHandler(javaClass, jdbcType);
+          handler = typeHandlerFactory.getTypeHandler(javaClass, jdbcType);
         } catch (Exception e) {
           throw new SqlMapException("Error.  Could not set TypeHandler.  Cause: " + e, e);
         }
       }
-    } else if (TypeHandlerFactory.getTypeHandler(clazz, jdbcType) != null) {
+    } else if (typeHandlerFactory.getTypeHandler(clazz, jdbcType) != null) {
       // Primitive
-      handler = TypeHandlerFactory.getTypeHandler(clazz, jdbcType);
+      handler = typeHandlerFactory.getTypeHandler(clazz, jdbcType);
     } else {
       // JavaBean
       if (javaType == null) {
         if (useSetterToResolve) {
           Class type = PROBE.getPropertyTypeForSetter(clazz, propertyName);
-          handler = TypeHandlerFactory.getTypeHandler(type, jdbcType);
+          handler = typeHandlerFactory.getTypeHandler(type, jdbcType);
         } else {
           Class type = PROBE.getPropertyTypeForGetter(clazz, propertyName);
-          handler = TypeHandlerFactory.getTypeHandler(type, jdbcType);
+          handler = typeHandlerFactory.getTypeHandler(type, jdbcType);
         }
       } else {
         try {
           Class javaClass = Resources.classForName(javaType);
-          handler = TypeHandlerFactory.getTypeHandler(javaClass, jdbcType);
+          handler = typeHandlerFactory.getTypeHandler(javaClass, jdbcType);
         } catch (Exception e) {
           throw new SqlMapException("Error.  Could not set TypeHandler.  Cause: " + e, e);
         }

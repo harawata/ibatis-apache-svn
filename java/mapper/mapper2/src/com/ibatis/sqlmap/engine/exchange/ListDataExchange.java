@@ -14,6 +14,9 @@ import java.util.*;
  */
 public class ListDataExchange extends BaseDataExchange implements DataExchange {
 
+  protected ListDataExchange(DataExchangeFactory dataExchangeFactory) {
+    super(dataExchangeFactory);
+  }
 
   public void initialize(Map properties) {
   }

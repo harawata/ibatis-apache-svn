@@ -22,14 +22,19 @@ public class ComplexDataExchange extends BaseDataExchange implements DataExchang
 
   private static final Probe PROBE = ProbeFactory.getProbe();
 
+  public ComplexDataExchange(DataExchangeFactory dataExchangeFactory) {
+    super(dataExchangeFactory);
+  }
+
   public void initialize(Map properties) {
   }
 
   public Object[] getData(RequestScope request, ParameterMap parameterMap, Object parameterObject) {
+    TypeHandlerFactory typeHandlerFactory = getDataExchangeFactory().getTypeHandlerFactory();
     if (parameterObject == null) {
       return new Object[0];
     } else {
-      if (TypeHandlerFactory.hasTypeHandler(parameterObject.getClass())) {
+      if (typeHandlerFactory.hasTypeHandler(parameterObject.getClass())) {
         ParameterMapping[] mappings = parameterMap.getParameterMappings();
         Object[] data = new Object[mappings.length];
         for (int i = 0; i < mappings.length; i++) {
@@ -48,7 +53,8 @@ public class ComplexDataExchange extends BaseDataExchange implements DataExchang
   }
 
   public Object setData(RequestScope request, ResultMap resultMap, Object resultObject, Object[] values) {
-    if (TypeHandlerFactory.hasTypeHandler(resultMap.getResultClass())) {
+    TypeHandlerFactory typeHandlerFactory = getDataExchangeFactory().getTypeHandlerFactory();
+    if (typeHandlerFactory.hasTypeHandler(resultMap.getResultClass())) {
       return values[0];
     } else {
       Object object = resultObject;
@@ -68,7 +74,8 @@ public class ComplexDataExchange extends BaseDataExchange implements DataExchang
   }
 
   public Object setData(RequestScope request, ParameterMap parameterMap, Object parameterObject, Object[] values) {
-    if (TypeHandlerFactory.hasTypeHandler(parameterMap.getParameterClass())) {
+    TypeHandlerFactory typeHandlerFactory = getDataExchangeFactory().getTypeHandlerFactory();
+    if (typeHandlerFactory.hasTypeHandler(parameterMap.getParameterClass())) {
       return values[0];
     } else {
       Object object = parameterObject;

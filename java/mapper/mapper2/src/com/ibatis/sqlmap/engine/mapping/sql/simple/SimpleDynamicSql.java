@@ -7,7 +7,7 @@ import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
 import com.ibatis.sqlmap.engine.mapping.sql.Sql;
 import com.ibatis.sqlmap.engine.scope.RequestScope;
-import com.ibatis.sqlmap.engine.type.TypeHandlerFactory;
+import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
 
 import java.util.StringTokenizer;
 
@@ -24,8 +24,11 @@ public class SimpleDynamicSql implements Sql {
 
   private String sqlStatement;
 
-  public SimpleDynamicSql(String sqlStatement) {
-    this.sqlStatement = sqlStatement.replace('\r', ' ').replace('\n', ' ');
+  private SqlMapExecutorDelegate delegate;
+
+  public SimpleDynamicSql(SqlMapExecutorDelegate delegate, String sqlStatement) {
+    this.delegate = delegate;
+    this.sqlStatement = sqlStatement;
   }
 
   public String getSql(RequestScope request, Object parameterObject) {
@@ -64,7 +67,7 @@ public class SimpleDynamicSql implements Sql {
 
           Object value = null;
           if (parameterObject != null) {
-            if (TypeHandlerFactory.hasTypeHandler(parameterObject.getClass())) {
+            if (delegate.getTypeHandlerFactory().hasTypeHandler(parameterObject.getClass())) {
               value = parameterObject;
             } else {
               value = PROBE.getObject(parameterObject, token);

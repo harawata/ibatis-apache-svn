@@ -16,6 +16,10 @@ import java.util.*;
  */
 public class XmlDataExchange extends BaseDataExchange implements DataExchange {
 
+  protected XmlDataExchange(DataExchangeFactory dataExchangeFactory) {
+    super(dataExchangeFactory);
+  }
+
   public void initialize(Map properties) {
   }
 

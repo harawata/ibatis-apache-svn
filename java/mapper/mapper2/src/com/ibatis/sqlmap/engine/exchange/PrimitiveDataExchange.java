@@ -14,6 +14,10 @@ import java.util.*;
  */
 public class PrimitiveDataExchange extends BaseDataExchange implements DataExchange {
 
+  protected PrimitiveDataExchange(DataExchangeFactory dataExchangeFactory) {
+    super(dataExchangeFactory);
+  }
+
   public void initialize(Map properties) {
   }
 

@@ -5,6 +5,7 @@ import com.ibatis.sqlmap.engine.type.*;
 
 import com.ibatis.sqlmap.engine.scope.*;
 import com.ibatis.sqlmap.engine.cache.*;
+import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
 
 import java.util.*;
 import java.sql.*;
@@ -20,6 +21,16 @@ public class BasicParameterMap implements ParameterMap {
   private String resource;
 
   private Map parameterMappingIndex = new HashMap();
+
+  private SqlMapExecutorDelegate delegate;
+
+  public BasicParameterMap(SqlMapExecutorDelegate delegate) {
+    this.delegate = delegate;
+  }
+
+  public SqlMapExecutorDelegate getDelegate() {
+    return delegate;
+  }
 
   public String getId() {
     return id;
@@ -56,7 +67,8 @@ public class BasicParameterMap implements ParameterMap {
     }
     Map props = new HashMap();
     props.put("map", this);
-    dataExchange = DataExchangeFactory.getDataExchangeForClass(parameterClass);
+
+    dataExchange = delegate.getDataExchangeFactory().getDataExchangeForClass(parameterClass);
     dataExchange.initialize(props);
   }
 

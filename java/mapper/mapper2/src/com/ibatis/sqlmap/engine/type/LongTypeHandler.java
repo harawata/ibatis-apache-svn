@@ -7,7 +7,7 @@ import java.sql.*;
  * Date: Sep 12, 2003
  * Time: 8:13:08 PM
  */
-public class LongTypeHandler implements TypeHandler {
+public class LongTypeHandler extends BaseTypeHandler implements TypeHandler {
 
   public void setParameter(PreparedStatement ps, int i, Object parameter, String jdbcType)
       throws SQLException {
@@ -46,16 +46,6 @@ public class LongTypeHandler implements TypeHandler {
 
   public Object valueOf(String s) {
     return Long.valueOf(s);
-  }
-
-
-  public boolean equals(Object object, String string) {
-    if (object == null || string == null) {
-      return object == string;
-    } else {
-      Object castedObject = valueOf(string);
-      return object.equals(castedObject);
-    }
   }
 
 }

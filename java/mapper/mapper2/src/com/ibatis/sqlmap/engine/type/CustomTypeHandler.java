@@ -14,7 +14,7 @@ import java.sql.CallableStatement;
  * Date: 1-Aug-2004
  * Time: 7:38:39 AM
  */
-public class CustomTypeHandler implements TypeHandler {
+public class CustomTypeHandler extends BaseTypeHandler implements TypeHandler {
 
   public TypeHandlerCallback callback;
 
@@ -48,15 +48,6 @@ public class CustomTypeHandler implements TypeHandler {
 
   public Object valueOf(String s) {
     return callback.valueOf(s);
-  }
-
-  public boolean equals(Object object, String string) {
-    if (object == null || string == null) {
-      return object == string;
-    } else {
-      Object castedObject = valueOf(string);
-      return object.equals(castedObject);
-    }
   }
 
 }

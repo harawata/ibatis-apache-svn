@@ -7,7 +7,7 @@ import java.sql.*;
  * Date: Sep 12, 2003
  * Time: 8:06:36 PM
  */
-public class BooleanTypeHandler implements TypeHandler {
+public class BooleanTypeHandler extends BaseTypeHandler implements TypeHandler {
 
   public void setParameter(PreparedStatement ps, int i, Object parameter, String jdbcType)
       throws SQLException {
@@ -48,13 +48,6 @@ public class BooleanTypeHandler implements TypeHandler {
     return Boolean.valueOf(s);
   }
 
-  public boolean equals(Object object, String string) {
-    if (object == null || string == null) {
-      return object == string;
-    } else {
-      Object castedObject = valueOf(string);
-      return object.equals(castedObject);
-    }
-  }
+
 
 }

@@ -9,6 +9,7 @@ import com.ibatis.sqlmap.engine.mapping.statement.*;
 import com.ibatis.sqlmap.engine.builder.xml.*;
 
 import com.ibatis.sqlmap.engine.scope.*;
+import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
 
 import java.util.*;
 import java.io.*;
@@ -21,6 +22,11 @@ import java.io.*;
 public class DynamicSql implements Sql, DynamicParent {
 
   private List children = new ArrayList();
+  private SqlMapExecutorDelegate delegate;
+
+  public DynamicSql(SqlMapExecutorDelegate delegate) {
+    this.delegate = delegate;
+  }
 
   public String getSql(RequestScope request, Object parameterObject) {
     String sql = request.getDynamicSql();
@@ -54,7 +60,7 @@ public class DynamicSql implements Sql, DynamicParent {
     List localChildren = children;
     processBodyChildren(request, ctx, parameterObject, localChildren.iterator());
 
-    BasicParameterMap map = new BasicParameterMap();
+    BasicParameterMap map = new BasicParameterMap(delegate);
     map.setId(request.getStatement().getId() + "-InlineParameterMap");
     map.setParameterClass(((GeneralStatement) request.getStatement()).getParameterClass());
     map.setParameterMappingList(ctx.getParameterMappings());
@@ -63,7 +69,7 @@ public class DynamicSql implements Sql, DynamicParent {
 
     // Processes $substitutions$ after DynamicSql
     if (SimpleDynamicSql.isSimpleDynamicSql(dynSql)) {
-      dynSql = new SimpleDynamicSql(dynSql).getSql(request, parameterObject);
+      dynSql = new SimpleDynamicSql(delegate, dynSql).getSql(request, parameterObject);
     }
 
     request.setDynamicSql(dynSql);
@@ -122,7 +128,7 @@ public class DynamicSql implements Sql, DynamicParent {
                 // BODY OUT
 
                 if (handler.isPostParseRequired()) {
-                  SqlText sqlText = XmlSqlMapClientBuilder.parseInlineParameterMap(body.toString());
+                  SqlText sqlText = XmlSqlMapClientBuilder.parseInlineParameterMap(delegate.getTypeHandlerFactory(),body.toString());
                   out.print(sqlText.getText());
                   ParameterMapping[] mappings = sqlText.getParameterMappings();
                   if (mappings != null) {

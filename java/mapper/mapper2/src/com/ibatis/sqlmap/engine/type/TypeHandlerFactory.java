@@ -10,17 +10,12 @@ import java.math.*;
 
 public class TypeHandlerFactory {
 
-  private static final Map TYPE_HANDLER_MAP = new HashMap();
-  private static final TypeHandler UNKNOWN_TYPE_HANDLER = new UnknownTypeHandler();
+  private final Map typeHandlerMap = new HashMap();
+  private final TypeHandler unknownTypeHandler = new UnknownTypeHandler(this);
 
   /* Constructor */
 
-  private TypeHandlerFactory() {
-  }
-
-  /* Static Initializer */
-
-  static {
+  public TypeHandlerFactory() {
     TypeHandler handler;
 
     handler = new BooleanTypeHandler();
@@ -71,12 +66,12 @@ public class TypeHandlerFactory {
 
   /* Public Methods */
 
-  public static TypeHandler getTypeHandler(Class type) {
+  public TypeHandler getTypeHandler(Class type) {
     return getTypeHandler(type, null);
   }
 
-  public static TypeHandler getTypeHandler(Class type, String jdbcType) {
-    Map jdbcHandlerMap = (Map) TYPE_HANDLER_MAP.get(type);
+  public TypeHandler getTypeHandler(Class type, String jdbcType) {
+    Map jdbcHandlerMap = (Map) typeHandlerMap.get(type);
     TypeHandler handler = null;
     if (jdbcHandlerMap != null) {
       handler = (TypeHandler) jdbcHandlerMap.get(jdbcType);
@@ -87,26 +82,26 @@ public class TypeHandlerFactory {
     return handler;
   }
 
-  public static TypeHandler getUnkownTypeHandler() {
-    return UNKNOWN_TYPE_HANDLER;
+  public TypeHandler getUnkownTypeHandler() {
+    return unknownTypeHandler;
   }
 
 
-  public static boolean hasTypeHandler(Class type) {
+  public boolean hasTypeHandler(Class type) {
     return getTypeHandler(type) != null;
   }
 
   /* Private Methods */
 
-  private static void put(Class type, TypeHandler handler) {
+  private void put(Class type, TypeHandler handler) {
     put(type, null, handler);
   }
 
-  private static void put(Class type, String jdbcType, TypeHandler handler) {
-    Map map = (Map) TYPE_HANDLER_MAP.get(type);
+  private void put(Class type, String jdbcType, TypeHandler handler) {
+    Map map = (Map) typeHandlerMap.get(type);
     if (map == null) {
       map = new HashMap();
-      TYPE_HANDLER_MAP.put(type, map);
+      typeHandlerMap.put(type, map);
     }
     map.put(jdbcType, handler);
   }

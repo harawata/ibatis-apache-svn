@@ -12,6 +12,12 @@ import com.ibatis.sqlmap.engine.cache.*;
  */
 public abstract class BaseDataExchange implements DataExchange {
 
+  private DataExchangeFactory dataExchangeFactory;
+
+  protected BaseDataExchange(DataExchangeFactory dataExchangeFactory) {
+    this.dataExchangeFactory = dataExchangeFactory;
+  }
+
   public CacheKey getCacheKey(RequestScope request, ParameterMap parameterMap, Object parameterObject) {
     CacheKey key = new CacheKey();
     Object[] data = getData(request, parameterMap, parameterObject);
@@ -21,6 +27,10 @@ public abstract class BaseDataExchange implements DataExchange {
       }
     }
     return key;
+  }
+
+  public DataExchangeFactory getDataExchangeFactory() {
+    return dataExchangeFactory;
   }
 
 }

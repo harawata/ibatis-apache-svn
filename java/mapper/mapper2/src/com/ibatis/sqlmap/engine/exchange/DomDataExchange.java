@@ -23,6 +23,10 @@ import java.util.Map;
  */
 public class DomDataExchange extends BaseDataExchange implements DataExchange {
 
+  public DomDataExchange(DataExchangeFactory dataExchangeFactory) {
+    super(dataExchangeFactory);
+  }
+
   public void initialize(Map properties) {
   }
 

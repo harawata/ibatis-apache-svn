@@ -1,6 +1,5 @@
 package com.ibatis.sqlmap.engine.mapping.result;
 
-import com.ibatis.common.beans.ClassInfo;
 import com.ibatis.common.beans.Probe;
 import com.ibatis.common.beans.ProbeFactory;
 import com.ibatis.common.jdbc.exception.NestedSQLException;
@@ -8,8 +7,8 @@ import com.ibatis.common.minixml.MiniDom;
 import com.ibatis.common.resources.Resources;
 import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.engine.exchange.DataExchange;
-import com.ibatis.sqlmap.engine.exchange.DataExchangeFactory;
 import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
+import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
 import com.ibatis.sqlmap.engine.mapping.result.loader.ResultLoader;
 import com.ibatis.sqlmap.engine.mapping.sql.Sql;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
@@ -40,6 +39,16 @@ public class BasicResultMap implements ResultMap {
   private String xmlName;
 
   private String resource;
+
+  private SqlMapExecutorDelegate delegate;
+
+  public BasicResultMap(SqlMapExecutorDelegate delegate) {
+    this.delegate = delegate;
+  }
+
+  public SqlMapExecutorDelegate getDelegate() {
+    return delegate;
+  }
 
   public String getId() {
     return id;
@@ -89,7 +98,7 @@ public class BasicResultMap implements ResultMap {
     this.resultMappings = (BasicResultMapping[]) resultMappingList.toArray(new BasicResultMapping[resultMappingList.size()]);
     Map props = new HashMap();
     props.put("map", this);
-    dataExchange = DataExchangeFactory.getDataExchangeForClass(resultClass);
+    dataExchange = getDelegate().getDataExchangeFactory().getDataExchangeForClass(resultClass);
     dataExchange.initialize(props);
   }
 
@@ -151,6 +160,7 @@ public class BasicResultMap implements ResultMap {
   protected Object getNestedResultMappingValue(RequestScope request, ResultSet rs, BasicResultMapping mapping, Class targetType)
       throws SQLException {
     try {
+      TypeHandlerFactory typeHandlerFactory = getDelegate().getTypeHandlerFactory();
 
       String statementName = mapping.getStatementName();
       ExtendedSqlMapClient client = (ExtendedSqlMapClient) request.getSession().getSqlMapClient();
@@ -161,14 +171,16 @@ public class BasicResultMap implements ResultMap {
 
       if (parameterType == null) {
         parameterObject = prepareBeanParameterObject(rs, mapping, parameterType);
-      } else if (TypeHandlerFactory.hasTypeHandler(parameterType)) {
-        parameterObject = preparePrimitiveParameterObject(rs, mapping, parameterType);
-      } else if (DomTypeMarker.class.isAssignableFrom(parameterType)) {
-        parameterObject = prepareDomParameterObject(rs, mapping);
-      } else if (XmlTypeMarker.class.isAssignableFrom(parameterType)) {
-        parameterObject = prepareXmlParameterObject(rs, mapping);
       } else {
-        parameterObject = prepareBeanParameterObject(rs, mapping, parameterType);
+        if (typeHandlerFactory.hasTypeHandler(parameterType)) {
+          parameterObject = preparePrimitiveParameterObject(rs, mapping, parameterType);
+        } else if (DomTypeMarker.class.isAssignableFrom(parameterType)) {
+          parameterObject = prepareDomParameterObject(rs, mapping);
+        } else if (XmlTypeMarker.class.isAssignableFrom(parameterType)) {
+          parameterObject = prepareXmlParameterObject(rs, mapping);
+        } else {
+          parameterObject = prepareBeanParameterObject(rs, mapping, parameterType);
+        }
       }
 
       Sql sql = mappedStatement.getSql();
@@ -210,7 +222,7 @@ public class BasicResultMap implements ResultMap {
 
       String nullValue = mapping.getNullValue();
       if (result == null && nullValue != null) {
-        TypeHandler typeHandler = TypeHandlerFactory.getTypeHandler(targetType);
+        TypeHandler typeHandler = typeHandlerFactory.getTypeHandler(targetType);
         if (typeHandler != null) {
           result = typeHandler.valueOf(nullValue);
         }
@@ -228,12 +240,14 @@ public class BasicResultMap implements ResultMap {
 
   private Object preparePrimitiveParameterObject(ResultSet rs, BasicResultMapping mapping, Class parameterType) throws SQLException {
     Object parameterObject;
-    TypeHandler th = TypeHandlerFactory.getTypeHandler(parameterType);
+    TypeHandlerFactory typeHandlerFactory = getDelegate().getTypeHandlerFactory();
+    TypeHandler th = typeHandlerFactory.getTypeHandler(parameterType);
     parameterObject = th.getResult(rs, mapping.getColumnName());
     return parameterObject;
   }
 
   private Object prepareXmlParameterObject(ResultSet rs, BasicResultMapping mapping) throws SQLException {
+    TypeHandlerFactory typeHandlerFactory = getDelegate().getTypeHandlerFactory();
 
     Object parameterObject;
 
@@ -241,7 +255,7 @@ public class BasicResultMap implements ResultMap {
 
     String complexName = mapping.getColumnName();
 
-    TypeHandler stringTypeHandler = TypeHandlerFactory.getTypeHandler(String.class);
+    TypeHandler stringTypeHandler = typeHandlerFactory.getTypeHandler(String.class);
     if (complexName.indexOf('=') > -1) {
       // old 1.x style multiple params
       StringTokenizer parser = new StringTokenizer(complexName, "{}=, ", false);
@@ -272,13 +286,14 @@ public class BasicResultMap implements ResultMap {
   }
 
   private Object prepareDomParameterObject(ResultSet rs, BasicResultMapping mapping) throws SQLException {
+    TypeHandlerFactory typeHandlerFactory = getDelegate().getTypeHandlerFactory();
 
     Document doc = newDocument("parameter");
     Probe probe = ProbeFactory.getProbe(doc);
 
     String complexName = mapping.getColumnName();
 
-    TypeHandler stringTypeHandler = TypeHandlerFactory.getTypeHandler(String.class);
+    TypeHandler stringTypeHandler = typeHandlerFactory.getTypeHandler(String.class);
     if (complexName.indexOf('=') > -1) {
       // old 1.x style multiple params
       StringTokenizer parser = new StringTokenizer(complexName, "{}=, ", false);
@@ -300,6 +315,7 @@ public class BasicResultMap implements ResultMap {
 
   private Object prepareBeanParameterObject(ResultSet rs, BasicResultMapping mapping, Class parameterType)
       throws InstantiationException, IllegalAccessException, SQLException {
+    TypeHandlerFactory typeHandlerFactory = getDelegate().getTypeHandlerFactory();
 
     Object parameterObject;
     if (parameterType == null) {
@@ -316,15 +332,15 @@ public class BasicResultMap implements ResultMap {
         String propName = parser.nextToken();
         String colName = parser.nextToken();
         Class propType = PROBE.getPropertyTypeForSetter(parameterObject, propName);
-        TypeHandler propTypeHandler = TypeHandlerFactory.getTypeHandler(propType);
+        TypeHandler propTypeHandler = typeHandlerFactory.getTypeHandler(propType);
         Object propValue = propTypeHandler.getResult(rs, colName);
         PROBE.setObject(parameterObject, propName, propValue);
       }
     } else {
       // single param
-      TypeHandler propTypeHandler = TypeHandlerFactory.getTypeHandler(parameterType);
+      TypeHandler propTypeHandler = typeHandlerFactory.getTypeHandler(parameterType);
       if (propTypeHandler == null) {
-        propTypeHandler = TypeHandlerFactory.getUnkownTypeHandler();
+        propTypeHandler = typeHandlerFactory.getUnkownTypeHandler();
       }
       parameterObject = propTypeHandler.getResult(rs, complexName);
     }

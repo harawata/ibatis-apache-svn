@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
  * Date: Sep 12, 2003
  * Time: 8:33:51 PM
  */
-public class SqlTimeTypeHandler implements TypeHandler {
+public class SqlTimeTypeHandler extends BaseTypeHandler implements TypeHandler {
 
   private static final String DATE_FORMAT = "hh:mm:ss";
   private static final DateFormat format = new SimpleDateFormat(DATE_FORMAT);
@@ -58,16 +58,6 @@ public class SqlTimeTypeHandler implements TypeHandler {
       return new Time(date.getTime());
     } catch (ParseException e) {
       throw new SqlMapException("Error parsing default null value date.  Format must be '" + DATE_FORMAT + "'. Cause: " + e);
-    }
-  }
-
-
-  public boolean equals(Object object, String string) {
-    if (object == null || string == null) {
-      return object == string;
-    } else {
-      Object castedObject = valueOf(string);
-      return object.equals(castedObject);
     }
   }
 

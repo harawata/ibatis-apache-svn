@@ -14,32 +14,45 @@ import java.util.Map;
  */
 public class DataExchangeFactory {
 
-  private static final DataExchange DOM_DATA_EXCHANGE = new DomDataExchange();
-  private static final DataExchange XML_DATA_EXCHANGE = new XmlDataExchange();
-  private static final DataExchange LIST_DATA_EXCHANGE = new ListDataExchange();
-  private static final DataExchange MAP_DATA_EXCHANGE = new ComplexDataExchange();
-  private static final DataExchange PRIMITIVE_DATA_EXCHANGE = new PrimitiveDataExchange();
-  private static final DataExchange COMPLEX_DATA_EXCHANGE = new ComplexDataExchange();
+  private final DataExchange domDataExchange;
+  private final DataExchange xmlDataExchange;
+  private final DataExchange listDataExchange;
+  private final DataExchange mapDataExchange;
+  private final DataExchange primitiveDataExchange;
+  private final DataExchange complexDataExchange;
 
-  private DataExchangeFactory() {
+  private TypeHandlerFactory typeHandlerFactory;
+
+  public DataExchangeFactory(TypeHandlerFactory typeHandlerFactory) {
+    this.typeHandlerFactory = typeHandlerFactory;
+    domDataExchange = new DomDataExchange(this);
+    xmlDataExchange = new XmlDataExchange(this);
+    listDataExchange = new ListDataExchange(this);
+    mapDataExchange = new ComplexDataExchange(this);
+    primitiveDataExchange = new PrimitiveDataExchange(this);
+    complexDataExchange = new ComplexDataExchange(this);
   }
 
-  public static DataExchange getDataExchangeForClass(Class clazz) {
+  public TypeHandlerFactory getTypeHandlerFactory() {
+    return typeHandlerFactory;
+  }
+
+  public DataExchange getDataExchangeForClass(Class clazz) {
     DataExchange dataExchange = null;
     if (clazz == null) {
-      dataExchange = COMPLEX_DATA_EXCHANGE;
+      dataExchange = complexDataExchange;
     } else if (DomTypeMarker.class.isAssignableFrom(clazz)) {
-      dataExchange = DOM_DATA_EXCHANGE;
+      dataExchange = domDataExchange;
     } else if (XmlTypeMarker.class.isAssignableFrom(clazz)) {
-      dataExchange = XML_DATA_EXCHANGE;
+      dataExchange = xmlDataExchange;
     } else if (List.class.isAssignableFrom(clazz)) {
-      dataExchange = LIST_DATA_EXCHANGE;
+      dataExchange = listDataExchange;
     } else if (Map.class.isAssignableFrom(clazz)) {
-      dataExchange = MAP_DATA_EXCHANGE;
-    } else if (TypeHandlerFactory.getTypeHandler(clazz) != null) {
-      dataExchange = PRIMITIVE_DATA_EXCHANGE;
+      dataExchange = mapDataExchange;
+    } else if (typeHandlerFactory.getTypeHandler(clazz) != null) {
+      dataExchange = primitiveDataExchange;
     } else {
-      dataExchange = new JavaBeanDataExchange();
+      dataExchange = new JavaBeanDataExchange(this);
     }
     return dataExchange;
   }
