@@ -83,6 +83,7 @@ namespace IBatisNet.DataMapper.Configuration
 		/// </summary>
 		public const string DOT = ".";
 		private const string PARAMETER_TOKEN = "#";
+		private const string PARAM_DELIM = ":";
 
 		/// <summary>
 		/// Token for SqlMapConfig xml root.
@@ -374,6 +375,18 @@ namespace IBatisNet.DataMapper.Configuration
 			}
 
 			#endregion
+
+			#region Attach CacheModel to statement
+
+			foreach(DictionaryEntry entry in _configScope.SqlMapper.MappedStatements)
+			{
+				MappedStatement mappedStatement = (MappedStatement)entry.Value;
+				if (mappedStatement.Statement.CacheModelName.Length >0)
+				{
+					mappedStatement.Statement.CacheModel = _configScope.SqlMapper.GetCache(mappedStatement.Statement.CacheModelName);
+				}
+			}
+			#endregion 
 
 			#region Resolve "resulMap" attribut on Result Property + initialize Discriminator property 
 
@@ -821,16 +834,6 @@ namespace IBatisNet.DataMapper.Configuration
 
 					_configScope.SqlMapper.AddCache( cacheModel );
 				}
-
-				// Attach CacheModel to statement
-				foreach(DictionaryEntry entry in _configScope.SqlMapper.MappedStatements)
-				{
-					MappedStatement mappedStatement = (MappedStatement)entry.Value;
-					if (mappedStatement.Statement.CacheModelName.Length >0)
-					{
-						mappedStatement.Statement.CacheModel = _configScope.SqlMapper.GetCache(mappedStatement.Statement.CacheModelName);
-					}
-				}
 			}
 
 			#endregion
@@ -1058,9 +1061,9 @@ namespace IBatisNet.DataMapper.Configuration
 					} 
 					else 
 					{
-						if (token.IndexOf(':') > -1) 
+						if (token.IndexOf(PARAM_DELIM) > -1) 
 						{
-							StringTokenizer paramParser = new StringTokenizer(token, ":", true);
+							StringTokenizer paramParser = new StringTokenizer(token, PARAM_DELIM, true);
 							IEnumerator enumeratorParam = paramParser.GetEnumerator();
 
 							int n1 = paramParser.TokenNumber;

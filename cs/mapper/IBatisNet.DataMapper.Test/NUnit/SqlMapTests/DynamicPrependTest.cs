@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Configuration;
+using System.Globalization;
+using System.Threading;
 
 using NUnit.Framework;
 
@@ -307,7 +309,12 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			search.Operande = "like";
 			search.StartDateAnd = true;
 			
+			CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
+			Thread.CurrentThread.CurrentCulture =  new CultureInfo("fr-FR");
+
 			IList list = sqlMap.QueryForList("Jira-IBATISNET-11", search);
+
+			Thread.CurrentThread.CurrentCulture = currentCulture;
 
 			Assert.AreEqual(0, list.Count);
 		}
@@ -361,11 +368,29 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
 			Assert.AreEqual(1, order.Id);
 
+			CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
+			Thread.CurrentThread.CurrentCulture =  new CultureInfo("en-US");
+
 			order = sqlMap.QueryForObject("SelectOrderByDateDynamic", param) as Order;
+
+			Thread.CurrentThread.CurrentCulture = currentCulture;
 
 			Assert.IsNotNull(order);
 
 			Assert.AreEqual(1, order.Id);
+		}
+
+		/// <summary>
+		/// Test JIRA 29
+		/// </summary>
+		[Test] 
+		public void TestJIRA29Bis() 
+		{
+			Hashtable param = new Hashtable();
+			param["BandName"] = "#The Pound Signs#";
+
+			Hashtable hash = sqlMap.QueryForObject("SelectBand", param) as Hashtable;
+
 		}
 		#endregion
 

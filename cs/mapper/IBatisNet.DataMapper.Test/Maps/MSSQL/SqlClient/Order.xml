@@ -312,6 +312,14 @@
 
 		</select>	
 		
+		<select id="SelectBand" parameterClass="map" resultClass="string">
+			SELECT Name FROM Band WHERE Name = #BandName#
+		</select>
+
+		<select id="SelectBandTest" parameterClass="map" resultClass="string">
+			SELECT Name FROM Band WHERE Name = '####$inlineParameterBandName$####'
+		</select>
+		
 	</statements>
 
 	<parameterMaps>   

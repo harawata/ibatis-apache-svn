@@ -15,6 +15,7 @@ using IBatisNet.DataMapper; // SqlMap API
 
 using IBatisNet.DataMapper.Test.Domain;
 
+
 [assembly:log4net.Config.DOMConfigurator(Watch=true)]
 
 namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
@@ -38,7 +39,6 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// </summary>
 		static BaseTest()
 		{
-
 			ScriptDirectory = Path.Combine(
 								Path.Combine(
 									Path.Combine(
