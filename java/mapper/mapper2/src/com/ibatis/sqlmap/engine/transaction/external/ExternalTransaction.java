@@ -77,7 +77,7 @@ public class ExternalTransaction implements Transaction {
   public void close() throws SQLException, TransactionException {
     if (connection != null) {
       try {
-        isolationLevel.applyIsolationLevel(connection);
+        isolationLevel.restoreIsolationLevel(connection);
       } finally {
         connection.close();
         connection = null;
