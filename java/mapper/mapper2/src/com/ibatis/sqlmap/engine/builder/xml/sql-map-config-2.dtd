@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<!ELEMENT sqlMapConfig (properties?, settings?, typeAlias*, transactionManager?, sqlMap+)+>
+<!ELEMENT sqlMapConfig (properties?, settings?, typeAlias*, typeHandler*, transactionManager?, sqlMap+)+>
 <!ATTLIST sqlMapConfig
 xmlns:fo CDATA #IMPLIED
 >

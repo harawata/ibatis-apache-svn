@@ -20,6 +20,8 @@ public class Account implements Serializable {
   private Date dateAdded;
   private Account account;
   private List accountList;
+  private boolean bannerOption;
+  private boolean cartOption;
 
   public Account() {
   }
@@ -108,4 +110,20 @@ public class Account implements Serializable {
     this.accountList = accountList;
   }
 
+  public boolean isBannerOption() {
+    return bannerOption;
+  }
+
+  public void setBannerOption(boolean bannerOption) {
+    this.bannerOption = bannerOption;
+  }
+
+
+  public boolean isCartOption() {
+    return cartOption;
+  }
+
+  public void setCartOption(boolean cartOption) {
+    this.cartOption = cartOption;
+  }
 }

@@ -163,6 +163,31 @@ public class StatementTest extends BaseSqlMapTest {
     assertEquals(3, ((Account) list.get(2)).getId());
     assertEquals(4, ((Account) list.get(3)).getId());
     assertEquals(5, ((Account) list.get(4)).getId());
+
+  }
+
+  public void testExecuteQueryWithCustomTypeHandler() throws SQLException {
+    List list = sqlMap.queryForList("getAllAccountsViaCustomTypeHandler", null);
+
+    assertAccount1((Account) list.get(0));
+    assertEquals(5, list.size());
+    assertEquals(1, ((Account) list.get(0)).getId());
+    assertEquals(2, ((Account) list.get(1)).getId());
+    assertEquals(3, ((Account) list.get(2)).getId());
+    assertEquals(4, ((Account) list.get(3)).getId());
+    assertEquals(5, ((Account) list.get(4)).getId());
+
+    assertFalse(((Account) list.get(0)).isCartOption());
+    assertFalse(((Account) list.get(1)).isCartOption());
+    assertTrue(((Account) list.get(2)).isCartOption());
+    assertTrue(((Account) list.get(3)).isCartOption());
+    assertTrue(((Account) list.get(4)).isCartOption());
+
+    assertTrue(((Account) list.get(0)).isBannerOption());
+    assertTrue(((Account) list.get(1)).isBannerOption());
+    assertFalse(((Account) list.get(2)).isBannerOption());
+    assertFalse(((Account) list.get(3)).isBannerOption());
+    assertTrue(((Account) list.get(4)).isBannerOption());
   }
 
   /**

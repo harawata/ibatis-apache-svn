@@ -940,13 +940,14 @@ public class XmlSqlMapClientBuilder {
         String statementName = childAttributes.getProperty("select");
         String callback = childAttributes.getProperty("typeHandler");
 
+        callback = resolveAlias(callback);
         javaType = resolveAlias(javaType);
 
         errorCtx.setObjectId(propertyName + " mapping of the " + id + " result map");
 
         TypeHandler handler = null;
         if (callback != null) {
-          errorCtx.setMoreInfo("Check the result mapping type handler class name (must be a TypeHandlerCallback implementation).");
+          errorCtx.setMoreInfo("Check the result mapping typeHandler attribute '"+callback+"' (must be a TypeHandlerCallback implementation).");
           try {
             TypeHandlerCallback typeHandlerCallback = (TypeHandlerCallback) Resources.classForName(callback).newInstance();
             handler = new CustomTypeHandler (typeHandlerCallback);
@@ -1034,13 +1035,14 @@ public class XmlSqlMapClientBuilder {
         String mode = childAttributes.getProperty("mode");
         String callback = childAttributes.getProperty("typeHandler");
 
+        callback = resolveAlias(callback);
         javaType = resolveAlias(javaType);
 
         errorCtx.setObjectId(propertyName + " mapping of the " + id + " parameter map");
 
         TypeHandler handler = null;
         if (callback != null) {
-          errorCtx.setMoreInfo("Check the parameter mapping type handler class name (must be a TypeHandlerCallback implementation).");
+          errorCtx.setMoreInfo("Check the parameter mapping typeHandler attribute '"+callback+"' (must be a TypeHandlerCallback implementation).");
           try {
             TypeHandlerCallback typeHandlerCallback = (TypeHandlerCallback) Resources.classForName(callback).newInstance();
             handler = new CustomTypeHandler (typeHandlerCallback);
@@ -1093,11 +1095,11 @@ public class XmlSqlMapClientBuilder {
       callback = resolveAlias(callback);
       javaType = resolveAlias(javaType);
 
-      errorCtx.setMoreInfo("Check the callback attribute (must be a classname).");
+      errorCtx.setMoreInfo("Check the callback attribute '"+callback+"' (must be a classname).");
       TypeHandlerCallback typeHandlerCallback = (TypeHandlerCallback) Resources.classForName(callback).newInstance();
       TypeHandler typeHandler = new CustomTypeHandler (typeHandlerCallback);
 
-      errorCtx.setMoreInfo("Check the javaType attribute (must be a classname) or the jdbcType (must be a JDBC type name).");
+      errorCtx.setMoreInfo("Check the javaType attribute '"+javaType+"' (must be a classname) or the jdbcType '"+jdbcType+"' (must be a JDBC type name).");
       if (jdbcType != null && jdbcType.length() > 0) {
         typeHandlerFactory.register(Resources.classForName(javaType), jdbcType, typeHandler);
       } else {

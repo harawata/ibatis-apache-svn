@@ -25,6 +25,9 @@
     />
 
   <typeAlias alias="order" type="testdomain.Order"/>
+  <typeAlias alias="OuiNonBool" type="com.ibatis.sqlmap.extensions.OuiNonTypeHandlerCallback"/>
+
+  <typeHandler javaType="boolean" jdbcType="VARCHAR" callback="OuiNonBool" />
 
   <transactionManager type="JDBC">
     <dataSource type="SIMPLE">

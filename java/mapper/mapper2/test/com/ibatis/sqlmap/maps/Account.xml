@@ -8,6 +8,7 @@
 
   <typeAlias alias="account" type="testdomain.Account"/>
   <typeAlias alias="Long" type="java.lang.Long"/>
+  <typeAlias alias="HundredsBool" type="com.ibatis.sqlmap.extensions.HundredsTypeHandlerCallback"/>
 
   <cacheModel id="account-cache" type="LRU" readOnly="true">
     <flushInterval hours="24"/>
@@ -47,6 +48,15 @@
     <result property="firstName" jdbcType="VARCHAR" column="ACC_FIRST_NAME"/>
     <result property="lastName" jdbcType="VARCHAR" column="ACC_LAST_NAME"/>
     <result property="emailAddress" jdbcType="VARCHAR" column="ACC_EMAIL" nullValue="no_email@provided.com"/>
+  </resultMap>
+
+  <resultMap id="account-custom-result" class="account">
+    <result property="id" jdbcType="NUMERIC" column="ACC_ID"/>
+    <result property="firstName" jdbcType="VARCHAR" column="ACC_FIRST_NAME"/>
+    <result property="lastName" jdbcType="VARCHAR" column="ACC_LAST_NAME"/>
+    <result property="emailAddress" jdbcType="VARCHAR" column="ACC_EMAIL" nullValue="no_email@provided.com"/>
+    <result property="bannerOption" javaType="boolean" jdbcType="VARCHAR" column="ACC_BANNER_OPTION"/>
+    <result property="cartOption" column="ACC_CART_OPTION" typeHandler="HundredsBool" />
   </resultMap>
 
   <resultMap id="nested-account-result" class="account">
@@ -223,6 +233,12 @@
 
   <select id="getAllAccountsViaResultMap"
     resultMap="account-result">
+    select * from ACCOUNT
+    order by ACC_ID
+  </select>
+
+  <select id="getAllAccountsViaCustomTypeHandler"
+    resultMap="account-custom-result">
     select * from ACCOUNT
     order by ACC_ID
   </select>

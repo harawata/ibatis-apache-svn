@@ -69,13 +69,6 @@ alias CDATA #REQUIRED
 type CDATA #REQUIRED
 >
 
-<!ELEMENT typeHandler EMPTY>
-<!ATTLIST typeHandler
-javaType CDATA #REQUIRED
-jdbcType CDATA #IMPLIED
-callback CDATA #REQUIRED
->
-
 <!ELEMENT statement (#PCDATA | dynamic | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
 <!ATTLIST statement
 id CDATA #REQUIRED
