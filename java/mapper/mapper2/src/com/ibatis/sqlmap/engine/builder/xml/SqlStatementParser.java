@@ -209,7 +209,11 @@ public class SqlStatementParser extends BaseParser {
         String refid = (String) attributes.get("refid");
         Node includeNode = (Node) vars.sqlIncludes.get(refid);
         if (includeNode == null) {
-          throw new NestedRuntimeException("Could not find SQL statement to include with refid '" + refid + "'");
+          String nsrefid = applyNamespace(refid);
+          includeNode = (Node) vars.sqlIncludes.get(nsrefid);
+          if (includeNode == null) {
+            throw new NestedRuntimeException("Could not find SQL statement to include with refid '" + refid + "'");
+          }
         }
         isDynamic = parseDynamicTags(includeNode, dynamic, sqlBuffer, isDynamic, false);
       } else {

@@ -59,7 +59,11 @@ public class SqlMapParser extends BaseParser {
     parser.addNodelet("/sqlMap/sql", new Nodelet() {
       public void process(Node node) throws Exception {
         Properties attributes = NodeletUtils.parseAttributes(node, vars.properties);
-        vars.sqlIncludes.put(attributes.getProperty("id"), node);
+        String id = attributes.getProperty("id");
+        if (vars.useStatementNamespaces) {
+          id = applyNamespace(id);
+        }
+        vars.sqlIncludes.put(id, node);
       }
     });
   }
