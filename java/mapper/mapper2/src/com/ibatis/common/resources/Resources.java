@@ -215,8 +215,4 @@ public class Resources extends Object {
     return clazz.newInstance();
   }
 
-  public static void main(String[] args) {
-    ClassLoaderResolver.getClassLoader(0);
-  }
-
 }
