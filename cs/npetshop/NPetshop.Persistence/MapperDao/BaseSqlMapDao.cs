@@ -2,9 +2,10 @@
 using System;
 using System.Collections;
 
-using IBatisNet.Common.Exceptions;
+using IBatisNet.Common;
 using IBatisNet.Common.Pagination;
 using IBatisNet.DataAccess;
+using IBatisNet.DataAccess.Exceptions;
 using IBatisNet.DataAccess.DaoSessionHandlers;
 using IBatisNet.DataAccess.Interfaces;
 using IBatisNet.DataMapper;
@@ -35,7 +36,7 @@ namespace NPetshop.Persistence.MapperDao
 
 		/// <summary>
 		/// Simple convenience method to wrap the SqlMap method of the same name.
-		/// Wraps the exception with a IBatisNetException to isolate the SqlMap framework.
+		/// Wraps the exception with a DataAccessException to isolate the SqlMap framework.
 		/// </summary>
 		/// <param name="statementName"></param>
 		/// <param name="parameterObject"></param>
@@ -49,13 +50,13 @@ namespace NPetshop.Persistence.MapperDao
 			} 
 			catch (Exception e) 
 			{
-				throw new IBatisNetException("Error executing query '"+statementName+"' for list.  Cause: " + e.Message, e);
+				throw new DataAccessException("Error executing query '"+statementName+"' for list.  Cause: " + e.Message, e);
 			}
 		}
 
 		/// <summary>
 		/// Simple convenience method to wrap the SqlMap method of the same name.
-		/// Wraps the exception with a IBatisNetException to isolate the SqlMap framework.
+		/// Wraps the exception with a DataAccessException to isolate the SqlMap framework.
 		/// </summary>
 		/// <param name="statementName"></param>
 		/// <param name="parameterObject"></param>
@@ -71,13 +72,13 @@ namespace NPetshop.Persistence.MapperDao
 			} 
 			catch (Exception e) 
 			{
-				throw new IBatisNetException("Error executing query '"+statementName+"' for list.  Cause: " + e.Message, e);
+				throw new DataAccessException("Error executing query '"+statementName+"' for list.  Cause: " + e.Message, e);
 			}
 		}
 
 		/// <summary>
 		/// Simple convenience method to wrap the SqlMap method of the same name.
-		/// Wraps the exception with a IBatisNetException to isolate the SqlMap framework.
+		/// Wraps the exception with a DataAccessException to isolate the SqlMap framework.
 		/// </summary>
 		/// <param name="statementName"></param>
 		/// <param name="parameterObject"></param>
@@ -92,13 +93,13 @@ namespace NPetshop.Persistence.MapperDao
 			} 
 			catch (Exception e) 
 			{
-				throw new IBatisNetException("Error executing query '"+statementName+"' for paginated list.  Cause: " + e.Message, e);
+				throw new DataAccessException("Error executing query '"+statementName+"' for paginated list.  Cause: " + e.Message, e);
 			}
 		}
 
 		/// <summary>
 		/// Simple convenience method to wrap the SqlMap method of the same name.
-		/// Wraps the exception with a IBatisNetException to isolate the SqlMap framework.
+		/// Wraps the exception with a DataAccessException to isolate the SqlMap framework.
 		/// </summary>
 		/// <param name="statementName"></param>
 		/// <param name="parameterObject"></param>
@@ -113,13 +114,13 @@ namespace NPetshop.Persistence.MapperDao
 			} 
 			catch (Exception e) 
 			{
-				throw new IBatisNetException("Error executing query '"+statementName+"' for object.  Cause: " + e.Message, e);
+				throw new DataAccessException("Error executing query '"+statementName+"' for object.  Cause: " + e.Message, e);
 			}
 		}
 
 		/// <summary>
 		/// Simple convenience method to wrap the SqlMap method of the same name.
-		/// Wraps the exception with a IBatisNetException to isolate the SqlMap framework.
+		/// Wraps the exception with a DataAccessException to isolate the SqlMap framework.
 		/// </summary>
 		/// <param name="statementName"></param>
 		/// <param name="parameterObject"></param>
@@ -134,13 +135,13 @@ namespace NPetshop.Persistence.MapperDao
 			} 
 			catch (Exception e) 
 			{
-				throw new IBatisNetException("Error executing query '"+statementName+"' for update.  Cause: " + e.Message, e);
+				throw new DataAccessException("Error executing query '"+statementName+"' for update.  Cause: " + e.Message, e);
 			}
 		}
 
 		/// <summary>
 		/// Simple convenience method to wrap the SqlMap method of the same name.
-		/// Wraps the exception with a IBatisNetException to isolate the SqlMap framework.
+		/// Wraps the exception with a DataAccessException to isolate the SqlMap framework.
 		/// </summary>
 		/// <param name="statementName"></param>
 		/// <param name="parameterObject"></param>
@@ -155,7 +156,7 @@ namespace NPetshop.Persistence.MapperDao
 			} 
 			catch (Exception e) 
 			{
-				throw new IBatisNetException("Error executing query '"+statementName+"' for insert.  Cause: " + e.Message, e);
+				throw new DataAccessException("Error executing query '"+statementName+"' for insert.  Cause: " + e.Message, e);
 			}
 		}
 	}

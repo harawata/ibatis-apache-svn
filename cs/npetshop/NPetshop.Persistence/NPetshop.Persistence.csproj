@@ -100,34 +100,14 @@
                     HintPath = "..\External-bin\IBatisNet.DataAccess.dll"
                 />
                 <Reference
-                    Name = "ByteFX.MySqlClient"
-                    AssemblyName = "ByteFX.MySqlClient"
-                    HintPath = "..\External-bin\ByteFX.MySqlClient.dll"
-                />
-                <Reference
-                    Name = "log4net"
-                    AssemblyName = "log4net"
-                    HintPath = "..\External-bin\log4net.dll"
-                />
-                <Reference
-                    Name = "ICSharpCode.SharpZipLib"
-                    AssemblyName = "ICSharpCode.SharpZipLib"
-                    HintPath = "..\External-bin\ICSharpCode.SharpZipLib.dll"
-                />
-                <Reference
-                    Name = "Npgsql"
-                    AssemblyName = "Npgsql"
-                    HintPath = "..\External-bin\Npgsql.dll"
-                />
-                <Reference
                     Name = "Mono.Security.Protocol.Tls"
                     AssemblyName = "Mono.Security.Protocol.Tls"
                     HintPath = "..\External-bin\Mono.Security.Protocol.Tls.dll"
                 />
                 <Reference
-                    Name = "Apache.Avalon.DynamicProxy"
-                    AssemblyName = "Apache.Avalon.DynamicProxy"
-                    HintPath = "..\External-bin\Apache.Avalon.DynamicProxy.dll"
+                    Name = "Castle.DynamicProxy"
+                    AssemblyName = "Castle.DynamicProxy"
+                    HintPath = "..\External-bin\Castle.DynamicProxy.dll"
                 />
             </References>
         </Build>

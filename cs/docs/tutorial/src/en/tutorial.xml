@@ -341,12 +341,13 @@ namespace IBatisNet.DataMapper
     specify another configuration, as so:<programlisting>_mapperTwo = SqlMapper.ConfigureAndWatch ("sqlmap2.config", handler);</programlisting>You
     can access as many different database configurations as you need, just by
     setting up additional <classname>SqlMapper</classname> instances using
-    different configuration files. Each <classname>SqlMapper</classname>
-    configuration is a facade for accessing a datasource. As far as our
-    application knows, the <classname>SqlMapper</classname> *is* the
-    datasource. Behind the <classname>SqlMapper</classname> facade, you can
-    change the location of the database, or switch between SQL statements and
-    stored procedures, with zero-changes to your application code.</para>
+    different configuration files. Each configured
+    <classname>SqlMapper</classname> instance acts as a facade for accessing a
+    datasource. As far as our application knows, the
+    <classname>SqlMapper</classname> *is* the datasource. Behind the
+    <classname>SqlMapper</classname> facade, you can change the location of
+    the database, or switch between SQL statements and stored procedures, with
+    zero-changes to your application code.</para>
 
     <para>If we put this all together into a solution, we can "green bar" our
     test, as shown by Figure 1. If you'd like to see that bar for yourself,

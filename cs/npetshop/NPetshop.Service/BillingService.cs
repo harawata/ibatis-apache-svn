@@ -52,13 +52,12 @@ namespace NPetshop.Service
 
 		public void InsertOrder(Order order) 
 		{
+			// Get the next id within a separate transaction
+			order.Id = GetNextId("OrderNum");
+
+			_daoManager.BeginTransaction();
 			try 
 			{
-				// Get the next id within a separate transaction
-				order.Id = GetNextId("OrderNum");
-
-				_daoManager.BeginTransaction();
-
 				_itemDao.UpdateQuantity(order);
 				_orderDao.InsertOrder(order);
 
@@ -82,9 +81,10 @@ namespace NPetshop.Service
 		public int GetNextId(string key) 
 		{
 			int id = -1;
+
+			_daoManager.BeginTransaction();
 			try 
 			{
-				_daoManager.BeginTransaction();
 				id = _sequenceDao.GetNextId(key);
 				_daoManager.CommitTransaction();
 			} 

@@ -244,7 +244,7 @@ CREATE TABLE [SignsOn] (
 -- CREATE TABLE [Orders]
 -- -------------------------------------------------------------------------------------------------*/
 CREATE TABLE [Orders] (
-	[Order_Id] [int] IDENTITY (1, 1) NOT NULL ,
+	[Order_Id] [int] NOT NULL ,
 	[Account_ID] varchar(20) NOT NULL ,
 	[Order_Date] datetime NOT NULL ,
 	[Order_ShipToFirstName] varchar(80) NOT NULL ,

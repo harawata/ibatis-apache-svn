@@ -62,11 +62,17 @@
 			Account_Phone = #Address.Phone# 
 			where Account_Id = #Login#
 		</update>
+		
+		<!--
+		NOTE: 
+		Specified bit type for boolean property for SqlServer 1.1 provider
+		Change type for other providers
+		-->
 		<insert id="InsertProfile" parameterClass="Account">
 			insert into Profiles 
 				(Profile_LangPref, Profile_FavCategory, Profile_MyListOpt, Profile_BannerOpt, Account_Id)
 			values 
-				(#Profile.FavoriteLanguage#, #Profile.FavouriteCategory.Id#, #Profile.IsShowFavorites#, #Profile.IsShowBanners#, #Login#)
+				(#Profile.FavoriteLanguage#, #Profile.FavouriteCategory.Id#, #Profile.IsShowFavorites:bit#, #Profile.IsShowBanners:bit#, #Login#)
 		</insert>
 		<update id="UpdateProfile" parameterClass="Account">
 			update Profiles 

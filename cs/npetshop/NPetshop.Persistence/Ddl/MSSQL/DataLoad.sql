@@ -83,3 +83,4 @@ INSERT INTO [Inventories] VALUES ('EST-26', 10000)
 INSERT INTO [Inventories] VALUES ('EST-27', 10000)
 INSERT INTO [Inventories] VALUES ('EST-28', 10000)
 
+INSERT INTO [Sequences] (Sequence_Name, Sequence_NextId) VALUES ('OrderNum', 0)
