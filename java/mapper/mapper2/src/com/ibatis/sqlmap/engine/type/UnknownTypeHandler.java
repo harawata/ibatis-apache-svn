@@ -30,10 +30,8 @@ public class UnknownTypeHandler extends BaseTypeHandler implements TypeHandler {
 
   public void setParameter(PreparedStatement ps, int i, Object parameter, String jdbcType)
       throws SQLException {
-
     TypeHandler handler = factory.getTypeHandler(parameter.getClass(), jdbcType);
     handler.setParameter(ps, i, parameter, jdbcType);
-
   }
 
   public Object getResult(ResultSet rs, String columnName)

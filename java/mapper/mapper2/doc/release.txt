@@ -11,6 +11,7 @@ Build Number: @buildNum@
  o Fixed unclosed statement if result set fails in MS SQL Server
  o Fixed comments within dao.xml
  o Fixed undetected duplicate statement names in a single sql map
+ o Fixed inconsistent type handler for Map params causing Sybase Date to fail
 
 ------------------------------
  2.0.5 - Aug 11, 2004
