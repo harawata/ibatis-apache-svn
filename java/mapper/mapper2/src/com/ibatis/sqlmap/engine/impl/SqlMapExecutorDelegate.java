@@ -454,7 +454,11 @@ public class SqlMapExecutorDelegate {
   }
 
   public DataSource getDataSource() {
-    return txManager.getDataSource();
+    DataSource ds = null;
+    if (txManager != null) {
+      ds = txManager.getDataSource();
+    }
+    return ds;
   }
 
   public SqlExecutor getSqlExecutor() {
