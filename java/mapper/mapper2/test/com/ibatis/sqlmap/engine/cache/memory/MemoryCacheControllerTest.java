@@ -23,5 +23,7 @@ public class MemoryCacheControllerTest extends LruCacheControllerTest {
   protected CacheController getController(){
     return new MemoryCacheController();
   }
-
+  public void testSizeOne() {
+      // This is not relevant for this model
+  }
 }

@@ -6,6 +6,8 @@
  */
 package com.ibatis.sqlmap.engine.cache.lru;
 
+import java.util.Properties;
+
 import junit.framework.TestCase;
 
 import com.ibatis.sqlmap.engine.cache.CacheController;
@@ -23,6 +25,23 @@ public class LruCacheControllerTest extends TestCase {
   }
   protected CacheController getController(){
     return new LruCacheController();
+  }
+  
+  public void testSizeOne() {
+      CacheController cc = getController();
+      String testKey = "testKey";
+      String testVal = "testVal";
+      Properties props = new Properties();
+      props.setProperty("cache-size", "1");
+      cc.configure(props);
+      cc.putObject(null, testKey, testVal);
+      assertEquals(testVal, cc.getObject(null, testKey));
+      String testKey2 = "testKey2";
+      String testVal2 = "testVal2";
+      cc.putObject(null, testKey2, testVal2);
+      assertEquals(testVal2, cc.getObject(null, testKey2));
+      assertNull(cc.getObject(null, testKey));
+      
   }
   
   public void testGetAndPutObject() {
