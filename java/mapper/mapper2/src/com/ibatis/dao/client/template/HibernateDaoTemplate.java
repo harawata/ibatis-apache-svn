@@ -21,7 +21,7 @@ import java.util.Collection;
  * 
  * @author Clinton Begin
  */
-public abstract class HibernateDaoTemplate extends DaoTemplate implements Session {
+public abstract class HibernateDaoTemplate extends DaoTemplate {
 
   /**
    * The DaoManager that manages this Dao instance will be passed
