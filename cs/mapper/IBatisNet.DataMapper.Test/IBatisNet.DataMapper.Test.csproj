@@ -431,6 +431,10 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "Maps\MySql\ByteFx\Document.xml"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "Maps\MySql\ByteFx\DynamicAccount.xml"
                     BuildAction = "Content"
                 />
@@ -448,6 +452,10 @@
                 />
                 <File
                     RelPath = "Maps\MySql\ByteFx\Other.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\MySql\ByteFx\ResultClass.xml"
                     BuildAction = "Content"
                 />
                 <File
@@ -749,6 +757,10 @@
                 />
                 <File
                     RelPath = "Scripts\MySql\DataBase.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MySql\documents-init.sql"
                     BuildAction = "Content"
                 />
                 <File
