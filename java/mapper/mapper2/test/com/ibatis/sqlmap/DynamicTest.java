@@ -2,8 +2,9 @@ package com.ibatis.sqlmap;
 
 import testdomain.Account;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * User: Clinton Begin
@@ -146,6 +147,14 @@ public class DynamicTest extends BaseSqlMapTest {
     List list = sqlMap.queryForList("multiDynamicIterate", params);
     assertAccount1((Account) list.get(0));
     assertEquals(3, list.size());
+  }
+
+  public void testEmptyParameterObject() throws SQLException {
+    Account account = new Account();
+    account.setId(-1);
+    List list = sqlMap.queryForList("dynamicQueryByExample", account);
+    assertAccount1((Account) list.get(0));
+    assertEquals(5, list.size());
   }
 
   // ARRAY

@@ -12,17 +12,17 @@ import java.util.Properties;
  */
 public class Resources extends Object {
 
-  private static ClassLoader defaultClassLoader = Resources.class.getClassLoader();
+  private static ClassLoader defaultClassLoader;
 
   private Resources() {
   }
 
-  public static void setDefaultClassLoader(ClassLoader loader) {
-    if (loader == null) {
-      Resources.defaultClassLoader = Resources.class.getClassLoader();
-    } else {
-      Resources.defaultClassLoader = loader;
-    }
+  public static ClassLoader getDefaultClassLoader() {
+    return defaultClassLoader;
+  }
+
+  public static void setDefaultClassLoader(ClassLoader defaultClassLoader) {
+    Resources.defaultClassLoader = defaultClassLoader;
   }
 
   /**
@@ -33,12 +33,7 @@ public class Resources extends Object {
    * @throws IOException If the resource cannot be found or read
    */
   public static URL getResourceURL(String resource) throws IOException {
-    URL url = null;
-    ClassLoader loader = defaultClassLoader;
-    if (loader != null) url = loader.getResource(resource);
-    if (url == null) url = ClassLoader.getSystemResource(resource);
-    if (url == null) throw new IOException("Could not find resource " + resource);
-    return url;
+    return getResourceURL(getClassLoader(), resource);
   }
 
   /**
@@ -65,12 +60,7 @@ public class Resources extends Object {
    * @throws IOException If the resource cannot be found or read
    */
   public static InputStream getResourceAsStream(String resource) throws IOException {
-    InputStream in = null;
-    ClassLoader loader = defaultClassLoader;
-    if (loader != null) in = loader.getResourceAsStream(resource);
-    if (in == null) in = ClassLoader.getSystemResourceAsStream(resource);
-    if (in == null) throw new IOException("Could not find resource " + resource);
-    return in;
+    return getResourceAsStream(getClassLoader(), resource);
   }
 
   /**
@@ -195,7 +185,7 @@ public class Resources extends Object {
   public static Class classForName(String className) throws ClassNotFoundException {
     Class clazz = null;
     try {
-      clazz = Thread.currentThread().getContextClassLoader().loadClass(className);
+      clazz = getClassLoader().loadClass(className);
     } catch (Exception e) {
       // Ignore.  Failsafe below.
     }
@@ -213,6 +203,14 @@ public class Resources extends Object {
   public static Object instantiate(Class clazz)
       throws InstantiationException, IllegalAccessException {
     return clazz.newInstance();
+  }
+
+  private static ClassLoader getClassLoader() {
+    if (defaultClassLoader != null) {
+      return defaultClassLoader;
+    } else {
+      return Thread.currentThread().getContextClassLoader();
+    }
   }
 
 }
