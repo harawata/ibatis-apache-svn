@@ -24,6 +24,9 @@ import javax.sql.DataSource;
 import java.util.Iterator;
 import java.util.Map;
 
+/**
+ * Wrapper class to simplify use of DBCP
+ */
 public class DbcpConfiguration {
 
   private static final Probe PROBE = ProbeFactory.getProbe();

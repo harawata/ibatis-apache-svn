@@ -15,6 +15,10 @@
  */
 package com.ibatis.common.beans;
 
+/**
+ * A Probe is an object that is used to work with beans, DOM objects, or other 
+ * objects.
+ */
 public interface Probe {
 
   /**

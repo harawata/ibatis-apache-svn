@@ -29,6 +29,10 @@ import java.util.*;
 public class CacheModel implements ExecuteListener {
 
   private static final Map lockMap = new HashMap();
+  /**
+   * This is used to represent null objects that are returned from the cache so 
+   * that they can be cached, too.
+   */
   public static final Object NULL_OBJECT = new Object();
   private final Object STATS_LOCK = new Object();
   private int requests = 0;
@@ -298,7 +302,7 @@ public class CacheModel implements ExecuteListener {
       try {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(bos);
-        oos.writeObject((Serializable) value);
+        oos.writeObject(value);
         oos.flush();
         oos.close();
         value = bos.toByteArray();
@@ -311,6 +315,11 @@ public class CacheModel implements ExecuteListener {
     }
   }
 
+  /**
+   * OK, honestly, i have no idea what this does.
+   * @param key
+   * @return
+   */
   public synchronized final Object getLock(CacheKey key) {
     int controllerId = System.identityHashCode(controller);
     int keyHash = key.hashCode();

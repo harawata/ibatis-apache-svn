@@ -259,46 +259,91 @@ public class SimpleDataSource implements DataSource {
     return poolPingConnectionsNotUsedFor;
   }
 
+  /**
+   * Getter for the name of the JDBC driver class used
+   * @return The name of the class
+   */
   public String getJdbcDriver() {
     return jdbcDriver;
   }
 
+  /**
+   * Getter of the JDBC URL used
+   * @return The JDBC URL
+   */
   public String getJdbcUrl() {
     return jdbcUrl;
   }
 
+  /**
+   * Getter for the JDBC user name used
+   * @return The user name
+   */
   public String getJdbcUsername() {
     return jdbcUsername;
   }
 
+  /**
+   * Getter for the JDBC password used
+   * @return The password
+   */
   public String getJdbcPassword() {
     return jdbcPassword;
   }
 
+  /**
+   * Getter for the maximum number of active connections
+   * @return The maximum number of active connections
+   */
   public int getPoolMaximumActiveConnections() {
     return poolMaximumActiveConnections;
   }
 
+  /**
+   * Getter for the maximum number of idle connections
+   * @return The maximum number of idle connections
+   */
   public int getPoolMaximumIdleConnections() {
     return poolMaximumIdleConnections;
   }
 
+  /**
+   * Getter for the maximum time a connection can be used before it *may* be 
+   * given away again. 
+   * @return The maximum time
+   */
   public int getPoolMaximumCheckoutTime() {
     return poolMaximumCheckoutTime;
   }
 
+  /**
+   * Getter for the time to wait before retrying to get a connection
+   * @return The time to wait
+   */
   public int getPoolTimeToWait() {
     return poolTimeToWait;
   }
 
+  /**
+   * Getter for the query to be used to check a connection
+   * @return The query
+   */
   public String getPoolPingQuery() {
     return poolPingQuery;
   }
 
+  /**
+   * Getter to tell if we should use the ping query
+   * @return True if we need to check a connection before using it
+   */
   public boolean isPoolPingEnabled() {
     return poolPingEnabled;
   }
 
+  /**
+   * Getter for the age of connections that should be pinged before using
+   * @return The age
+   */
   public int getPoolPingConnectionsOlderThan() {
     return poolPingConnectionsOlderThan;
   }
@@ -307,42 +352,70 @@ public class SimpleDataSource implements DataSource {
     return expectedConnectionTypeCode;
   }
 
+  /**
+   * Getter for the number of connection requests made
+   * @return The number of connection requests made
+   */
   public long getRequestCount() {
     synchronized (POOL_LOCK) {
       return requestCount;
     }
   }
 
+  /**
+   * Getter for the average time required to get a connection to the database
+   * @return The average time
+   */
   public long getAverageRequestTime() {
     synchronized (POOL_LOCK) {
       return requestCount == 0 ? 0 : accumulatedRequestTime / requestCount;
     }
   }
 
+  /**
+   * Getter for the average time spent waiting for connections that were in use
+   * @return The average time
+   */
   public long getAverageWaitTime() {
     synchronized (POOL_LOCK) {
       return hadToWaitCount == 0 ? 0 : accumulatedWaitTime / hadToWaitCount;
     }
   }
 
+  /**
+   * Getter for the number of requests that had to wait for connections that were in use
+   * @return The number of requests that had to wait
+   */
   public long getHadToWaitCount() {
     synchronized (POOL_LOCK) {
       return hadToWaitCount;
     }
   }
 
+  /**
+   * Getter for the number of invalid connections that were found in the pool
+   * @return The number of invalid connections
+   */
   public long getBadConnectionCount() {
     synchronized (POOL_LOCK) {
       return badConnectionCount;
     }
   }
 
+  /**
+   * Getter for the number of connections that were claimed before they were returned
+   * @return The number of connections
+   */
   public long getClaimedOverdueConnectionCount() {
     synchronized (POOL_LOCK) {
       return claimedOverdueConnectionCount;
     }
   }
 
+  /**
+   * Getter for the average age of overdue connections
+   * @return The average age
+   */
   public long getAverageOverdueCheckoutTime() {
     synchronized (POOL_LOCK) {
       return claimedOverdueConnectionCount == 0 ? 0 : accumulatedCheckoutTimeOfOverdueConnections / claimedOverdueConnectionCount;
@@ -350,12 +423,20 @@ public class SimpleDataSource implements DataSource {
   }
 
 
+  /** 
+   * Getter for the average age of a connection checkout
+   * @return The average age
+   */
   public long getAverageCheckoutTime() {
     synchronized (POOL_LOCK) {
       return requestCount == 0 ? 0 : accumulatedCheckoutTime / requestCount;
     }
   }
 
+  /**
+   * Returns the status of the connection pool
+   * @return The status 
+   */
   public String getStatus() {
     StringBuffer buffer = new StringBuffer();
 
@@ -387,6 +468,9 @@ public class SimpleDataSource implements DataSource {
     return buffer.toString();
   }
 
+  /**
+   * Closes all of the connections in the pool
+   */
   public void forceCloseAll() {
     synchronized (POOL_LOCK) {
       for (int i = activeConnections.size(); i > 0; i--) {
@@ -679,6 +763,9 @@ public class SimpleDataSource implements DataSource {
       proxyConnection = (Connection) Proxy.newProxyInstance(Connection.class.getClassLoader(), IFACES, this);
     }
 
+    /**
+     * Invalidates the connection
+     */
     public void invalidate() {
       valid = false;
     }
@@ -692,10 +779,18 @@ public class SimpleDataSource implements DataSource {
       return valid && realConnection != null && dataSource.pingConnection(this);
     }
 
+    /**
+     * Getter for the *real* connection that this wraps
+     * @return The connection
+     */
     public Connection getRealConnection() {
       return realConnection;
     }
 
+    /**
+     * Getter for the proxy for the connection
+     * @return The proxy
+     */
     public Connection getProxyConnection() {
       return proxyConnection;
     }
@@ -713,46 +808,90 @@ public class SimpleDataSource implements DataSource {
       }
     }
 
+    /**
+     * Getter for the connection type (based on url + user + password)
+     * @return The connection type
+     */
     public int getConnectionTypeCode() {
       return connectionTypeCode;
     }
 
+    /**
+     * Setter for the connection type
+     * @param connectionTypeCode - the connection type
+     */
     public void setConnectionTypeCode(int connectionTypeCode) {
       this.connectionTypeCode = connectionTypeCode;
     }
 
+    /**
+     * Getter for the time that the connection was created
+     * @return The creation timestamp
+     */
     public long getCreatedTimestamp() {
       return createdTimestamp;
     }
 
+    /**
+     * Setter for the time that the connection was created
+     * @param createdTimestamp - the timestamp
+     */
     public void setCreatedTimestamp(long createdTimestamp) {
       this.createdTimestamp = createdTimestamp;
     }
 
+    /**
+     * Getter for the time that the connection was last used
+     * @return - the timestamp
+     */
     public long getLastUsedTimestamp() {
       return lastUsedTimestamp;
     }
 
+    /**
+     * Setter for the time that the connection was last used
+     * @param lastUsedTimestamp - the timestamp
+     */
     public void setLastUsedTimestamp(long lastUsedTimestamp) {
       this.lastUsedTimestamp = lastUsedTimestamp;
     }
 
+    /**
+     * Getter for the time since this connection was last used
+     * @return - the time since the last use
+     */
     public long getTimeElapsedSinceLastUse() {
       return System.currentTimeMillis() - lastUsedTimestamp;
     }
 
+    /**
+     * Getter for the age of the connection
+     * @return the age
+     */
     public long getAge() {
       return System.currentTimeMillis() - createdTimestamp;
     }
 
+    /**
+     * Getter for the timestamp that this connection was checked out
+     * @return the timestamp
+     */
     public long getCheckoutTimestamp() {
       return checkoutTimestamp;
     }
 
+    /**
+     * Setter for the timestamp that this connection was checked out
+     * @param timestamp the timestamp
+     */
     public void setCheckoutTimestamp(long timestamp) {
       this.checkoutTimestamp = timestamp;
     }
 
+    /**
+     * Getter for the time that this connection has been checked out
+     * @return the time
+     */
     public long getCheckoutTime() {
       return System.currentTimeMillis() - checkoutTimestamp;
     }

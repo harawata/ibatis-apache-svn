@@ -17,6 +17,9 @@ package com.ibatis.common.beans;
 
 import java.util.Map;
 
+/**
+ * An abstract factory for getting Probe implementations.
+ */
 public class ProbeFactory {
 
   private static final Probe DOM = new DomProbe();

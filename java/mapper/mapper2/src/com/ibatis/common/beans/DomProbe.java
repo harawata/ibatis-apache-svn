@@ -22,6 +22,9 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
 
+/**
+ * A Probe implementation for working with DOM objects
+ */
 public class DomProbe extends BaseProbe {
 
   public String[] getReadablePropertyNames(Object object) {
@@ -248,6 +251,12 @@ public class DomProbe extends BaseProbe {
     return prop;
   }
 
+  /**
+   * Converts a DOM node to a complete xml string
+   * @param node - the node to process
+   * @param indent - how to indent the children of the node
+   * @return The node as a String
+   */
   public static String nodeToString(Node node, String indent) {
     StringWriter stringWriter = new StringWriter();
     PrintWriter printWriter = new PrintWriter(stringWriter);

@@ -17,6 +17,9 @@ package com.ibatis.common.beans;
 
 import java.util.List;
 
+/**
+ * Abstract class used to help development of Probe implementations
+ */
 public abstract class BaseProbe implements Probe {
 
   protected abstract void setProperty(Object object, String property, Object value);
