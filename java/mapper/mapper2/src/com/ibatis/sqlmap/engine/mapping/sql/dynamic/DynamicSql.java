@@ -15,9 +15,9 @@
  */
 package com.ibatis.sqlmap.engine.mapping.sql.dynamic;
 
-import com.ibatis.sqlmap.engine.builder.xml.XmlSqlMapClientBuilder;
 import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
 import com.ibatis.sqlmap.engine.mapping.parameter.BasicParameterMap;
+import com.ibatis.sqlmap.engine.mapping.parameter.InlineParameterMapParser;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMapping;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
@@ -36,6 +36,8 @@ import java.util.Iterator;
 import java.util.List;
 
 public class DynamicSql implements Sql, DynamicParent {
+
+  private static final InlineParameterMapParser PARAM_PARSER = new InlineParameterMapParser();
 
   private List children = new ArrayList();
   private SqlMapExecutorDelegate delegate;
@@ -144,7 +146,7 @@ public class DynamicSql implements Sql, DynamicParent {
                 // BODY OUT
 
                 if (handler.isPostParseRequired()) {
-                  SqlText sqlText = XmlSqlMapClientBuilder.parseInlineParameterMap(delegate.getTypeHandlerFactory(), body.toString());
+                  SqlText sqlText = PARAM_PARSER.parseInlineParameterMap(delegate.getTypeHandlerFactory(), body.toString());
                   out.print(sqlText.getText());
                   ParameterMapping[] mappings = sqlText.getParameterMappings();
                   if (mappings != null) {

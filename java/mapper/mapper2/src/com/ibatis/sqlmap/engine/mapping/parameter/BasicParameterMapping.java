@@ -15,6 +15,7 @@
  */
 package com.ibatis.sqlmap.engine.mapping.parameter;
 
+import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.engine.type.JdbcTypeRegistry;
 import com.ibatis.sqlmap.engine.type.TypeHandler;
 
@@ -77,6 +78,26 @@ public class BasicParameterMapping implements ParameterMapping {
 
   public void setJavaType(Class javaType) {
     this.javaType = javaType;
+  }
+
+  public String getJavaTypeName() {
+    if (javaType == null) {
+      return null;
+    } else {
+      return javaType.getName();
+    }
+  }
+
+  public void setJavaTypeName(String javaTypeName) {
+    try {
+      if (javaTypeName == null) {
+        this.javaType = null;
+      } else {
+        this.javaType = Class.forName(javaTypeName);
+      }
+    } catch (ClassNotFoundException e) {
+      throw new SqlMapException("Error setting javaType property of ParameterMap.  Cause: " + e, e);
+    }
   }
 
   public int getJdbcType() {

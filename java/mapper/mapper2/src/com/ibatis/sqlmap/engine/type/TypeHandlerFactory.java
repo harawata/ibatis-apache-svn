@@ -15,15 +15,17 @@
  */
 package com.ibatis.sqlmap.engine.type;
 
+import com.ibatis.sqlmap.client.SqlMapException;
+
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class TypeHandlerFactory {
 
   private final Map typeHandlerMap = new HashMap();
   private final TypeHandler unknownTypeHandler = new UnknownTypeHandler(this);
+  private HashMap typeAliases = new HashMap();
+
 
   /* Constructor */
 
@@ -75,6 +77,27 @@ public class TypeHandlerFactory {
     register(java.sql.Date.class, new SqlDateTypeHandler());
     register(java.sql.Time.class, new SqlTimeTypeHandler());
     register(java.sql.Timestamp.class, new SqlTimestampTypeHandler());
+
+
+    putTypeAlias("string", String.class.getName());
+    putTypeAlias("byte", Byte.class.getName());
+    putTypeAlias("long", Long.class.getName());
+    putTypeAlias("short", Short.class.getName());
+    putTypeAlias("int", Integer.class.getName());
+    putTypeAlias("integer", Integer.class.getName());
+    putTypeAlias("double", Double.class.getName());
+    putTypeAlias("float", Float.class.getName());
+    putTypeAlias("boolean", Boolean.class.getName());
+    putTypeAlias("date", Date.class.getName());
+    putTypeAlias("decimal", BigDecimal.class.getName());
+    putTypeAlias("object", Object.class.getName());
+    putTypeAlias("map", Map.class.getName());
+    putTypeAlias("hashmap", HashMap.class.getName());
+    putTypeAlias("list", List.class.getName());
+    putTypeAlias("arraylist", ArrayList.class.getName());
+    putTypeAlias("collection", Collection.class.getName());
+    putTypeAlias("iterator", Iterator.class.getName());
+
   }
 
   /* Public Methods */
@@ -117,5 +140,23 @@ public class TypeHandlerFactory {
     map.put(jdbcType, handler);
   }
 
+
+  public String resolveAlias(String string) {
+    String newString = null;
+    if (typeAliases.containsKey(string)) {
+      newString = (String) typeAliases.get(string);
+    }
+    if (newString != null) {
+      string = newString;
+    }
+    return string;
+  }
+
+  public void putTypeAlias(String alias, String value) {
+    if (typeAliases.containsKey(alias)) {
+      throw new SqlMapException("Error in XmlSqlMapClientBuilder.  Alias name conflict occurred.  The alias '" + alias + "' is already mapped to the value '" + typeAliases.get(alias) + "'.");
+    }
+    typeAliases.put(alias, value);
+  }
 
 }

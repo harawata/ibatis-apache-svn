@@ -17,8 +17,6 @@
 2.2
   Ease of Use
       - Improved configuration API and logging
-      - Improved Inline parameters (w/stored proc mode)
-      - Current parameters could skip options with empty :: (e.g. #COLNAME::-1#)
       - Pluggable SQL Scripting languages
   Database Support
       - Save point support

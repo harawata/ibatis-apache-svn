@@ -36,8 +36,8 @@ import com.ibatis.sqlmap.engine.impl.SqlMapClientImpl;
 import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
 import com.ibatis.sqlmap.engine.mapping.parameter.BasicParameterMap;
 import com.ibatis.sqlmap.engine.mapping.parameter.BasicParameterMapping;
+import com.ibatis.sqlmap.engine.mapping.parameter.InlineParameterMapParser;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
-import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMapping;
 import com.ibatis.sqlmap.engine.mapping.result.AutoResultMap;
 import com.ibatis.sqlmap.engine.mapping.result.BasicResultMap;
 import com.ibatis.sqlmap.engine.mapping.result.BasicResultMapping;
@@ -72,7 +72,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Reader;
-import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.util.*;
 
@@ -82,6 +81,7 @@ import java.util.*;
 public class XmlSqlMapClientBuilder {
 
   private static final Probe PROBE = ProbeFactory.getProbe();
+  private static final InlineParameterMapParser PARAM_PARSER = new InlineParameterMapParser();
 
   private static final String NODE_PROPERTIES = "properties";
   private static final String NODE_SETTINGS = "settings";
@@ -104,8 +104,6 @@ public class XmlSqlMapClientBuilder {
   private static final String NODE_TYPE_ALIAS = "typeAlias";
   private static final String NODE_TYPE_HANDLER = "typeHandler";
 
-  private static final String PARAMETER_TOKEN = "#";
-
   private boolean validationEnabled = true;
 
   // State Variables
@@ -117,49 +115,35 @@ public class XmlSqlMapClientBuilder {
   private Properties globalProps;
   private boolean useStatementNamespaces;
   private String currentNamespace;
-  private HashMap typeAliases = new HashMap();
+  private TypeHandlerFactory typeHandlerFactory;
 
   public XmlSqlMapClientBuilder() {
+    SqlMapExecutorDelegate delegate = new SqlMapExecutorDelegate();
+    typeHandlerFactory = delegate.getTypeHandlerFactory();
+    client = new SqlMapClientImpl(delegate);
+
     // TRANSACTION ALIASES
-    putTypeAlias("JDBC", JdbcTransactionConfig.class.getName());
-    putTypeAlias("JTA", JtaTransactionConfig.class.getName());
-    putTypeAlias("EXTERNAL", ExternalTransactionConfig.class.getName());
+    typeHandlerFactory.putTypeAlias("JDBC", JdbcTransactionConfig.class.getName());
+    typeHandlerFactory.putTypeAlias("JTA", JtaTransactionConfig.class.getName());
+    typeHandlerFactory.putTypeAlias("EXTERNAL", ExternalTransactionConfig.class.getName());
 
     // DATA SOURCE ALIASES
-    putTypeAlias("SIMPLE", SimpleDataSourceFactory.class.getName());
-    putTypeAlias("DBCP", DbcpDataSourceFactory.class.getName());
-    putTypeAlias("JNDI", JndiDataSourceFactory.class.getName());
+    typeHandlerFactory.putTypeAlias("SIMPLE", SimpleDataSourceFactory.class.getName());
+    typeHandlerFactory.putTypeAlias("DBCP", DbcpDataSourceFactory.class.getName());
+    typeHandlerFactory.putTypeAlias("JNDI", JndiDataSourceFactory.class.getName());
 
     // CACHE ALIASES
-    putTypeAlias("FIFO", FifoCacheController.class.getName());
-    putTypeAlias("LRU", LruCacheController.class.getName());
-    putTypeAlias("MEMORY", MemoryCacheController.class.getName());
+    typeHandlerFactory.putTypeAlias("FIFO", FifoCacheController.class.getName());
+    typeHandlerFactory.putTypeAlias("LRU", LruCacheController.class.getName());
+    typeHandlerFactory.putTypeAlias("MEMORY", MemoryCacheController.class.getName());
     // -- use a string for OSCache to avoid uneccessary loading of properties upon init
-    putTypeAlias("OSCACHE", "com.ibatis.sqlmap.engine.cache.oscache.OSCacheController");
+    typeHandlerFactory.putTypeAlias("OSCACHE", "com.ibatis.sqlmap.engine.cache.oscache.OSCacheController");
 
     // TYPE ALIASEs
-    putTypeAlias("dom", DomTypeMarker.class.getName());
-    putTypeAlias("domCollection", DomCollectionTypeMarker.class.getName());
-    putTypeAlias("xml", XmlTypeMarker.class.getName());
-    putTypeAlias("xmlCollection", XmlCollectionTypeMarker.class.getName());
-    putTypeAlias("string", String.class.getName());
-    putTypeAlias("byte", Byte.class.getName());
-    putTypeAlias("long", Long.class.getName());
-    putTypeAlias("short", Short.class.getName());
-    putTypeAlias("int", Integer.class.getName());
-    putTypeAlias("integer", Integer.class.getName());
-    putTypeAlias("double", Double.class.getName());
-    putTypeAlias("float", Float.class.getName());
-    putTypeAlias("boolean", Boolean.class.getName());
-    putTypeAlias("date", Date.class.getName());
-    putTypeAlias("decimal", BigDecimal.class.getName());
-    putTypeAlias("object", Object.class.getName());
-    putTypeAlias("map", Map.class.getName());
-    putTypeAlias("hashmap", HashMap.class.getName());
-    putTypeAlias("list", List.class.getName());
-    putTypeAlias("arraylist", ArrayList.class.getName());
-    putTypeAlias("collection", Collection.class.getName());
-    putTypeAlias("iterator", Iterator.class.getName());
+    typeHandlerFactory.putTypeAlias("dom", DomTypeMarker.class.getName());
+    typeHandlerFactory.putTypeAlias("domCollection", DomCollectionTypeMarker.class.getName());
+    typeHandlerFactory.putTypeAlias("xml", XmlTypeMarker.class.getName());
+    typeHandlerFactory.putTypeAlias("xmlCollection", XmlCollectionTypeMarker.class.getName());
   }
 
   public boolean isValidationEnabled() {
@@ -219,9 +203,6 @@ public class XmlSqlMapClientBuilder {
   private SqlMapClient parseSqlMapConfig(Node n) throws IOException {
     errorCtx.setActivity("creating the SqlMapClient instance");
 
-    SqlMapExecutorDelegate delegate = new SqlMapExecutorDelegate();
-    client = new SqlMapClientImpl(delegate);
-
     NodeList children = n.getChildNodes();
     for (int i = 0; i < children.getLength(); i++) {
       Node child = children.item(i);
@@ -244,7 +225,7 @@ public class XmlSqlMapClientBuilder {
 
     wireUpCacheModelListeners();
 
-    return new SqlMapClientImpl(delegate);
+    return client;
   }
 
   private void parseGlobalProperties(Node n) {
@@ -327,7 +308,7 @@ public class XmlSqlMapClientBuilder {
 
     Properties initProperties = new Properties();
     String type = attributes.getProperty("type");
-    type = resolveAlias(type);
+    type = typeHandlerFactory.resolveAlias(type);
 
     DataSource dataSource = null;
 
@@ -372,7 +353,7 @@ public class XmlSqlMapClientBuilder {
 
     Properties initProperties = new Properties();
     String type = attributes.getProperty("type");
-    type = resolveAlias(type);
+    type = typeHandlerFactory.resolveAlias(type);
 
     NodeList children = n.getChildNodes();
     for (int i = 0; i < children.getLength(); i++) {
@@ -522,8 +503,8 @@ public class XmlSqlMapClientBuilder {
 
     errorCtx.setObjectId(id + " statement");
 
-    parameterClassName = resolveAlias(parameterClassName);
-    resultClassName = resolveAlias(resultClassName);
+    parameterClassName = typeHandlerFactory.resolveAlias(parameterClassName);
+    resultClassName = typeHandlerFactory.resolveAlias(resultClassName);
 
     Class parameterClass = null;
     Class resultClass = null;
@@ -622,7 +603,7 @@ public class XmlSqlMapClientBuilder {
     Properties attributes = parseAttributes(n);
     String keyPropName = attributes.getProperty("keyProperty");
     String resultClassName = attributes.getProperty("resultClass");
-    resultClassName = resolveAlias(resultClassName);
+    resultClassName = typeHandlerFactory.resolveAlias(resultClassName);
     Class resultClass = null;
 
     // get parameter and result maps
@@ -707,7 +688,7 @@ public class XmlSqlMapClientBuilder {
           sqlText = new SqlText();
           sqlText.setText(data.toString());
         } else {
-          sqlText = parseInlineParameterMap(client.getDelegate().getTypeHandlerFactory(), null, data.toString());
+          sqlText = PARAM_PARSER.parseInlineParameterMap(client.getDelegate().getTypeHandlerFactory(), data.toString(), null);
         }
 
         dynamic.addChild(sqlText);
@@ -796,7 +777,7 @@ public class XmlSqlMapClientBuilder {
       map.setResource(statement.getResource());
       statement.setParameterMap(map);
 
-      SqlText sqlText = parseInlineParameterMap(client.getDelegate().getTypeHandlerFactory(), statement.getParameterClass(), newSql);
+      SqlText sqlText = PARAM_PARSER.parseInlineParameterMap(client.getDelegate().getTypeHandlerFactory(), newSql, statement.getParameterClass());
       newSql = sqlText.getText();
       List mappingList = Arrays.asList(sqlText.getParameterMappings());
 
@@ -813,108 +794,6 @@ public class XmlSqlMapClientBuilder {
     statement.setSql(sql);
   }
 
-  public static SqlText parseInlineParameterMap(TypeHandlerFactory typeHandlerFactory, String sqlStatement) {
-    return parseInlineParameterMap(typeHandlerFactory, null, sqlStatement);
-  }
-
-  private static SqlText parseInlineParameterMap(TypeHandlerFactory typeHandlerFactory, Class parameterClass, String sqlStatement) {
-
-    String newSql = sqlStatement;
-
-    List mappingList = new ArrayList();
-
-    StringTokenizer parser = new StringTokenizer(sqlStatement, PARAMETER_TOKEN, true);
-    StringBuffer newSqlBuffer = new StringBuffer();
-
-    String token = null;
-    String lastToken = null;
-    while (parser.hasMoreTokens()) {
-      token = parser.nextToken();
-      if (PARAMETER_TOKEN.equals(lastToken)) {
-        if (PARAMETER_TOKEN.equals(token)) {
-          newSqlBuffer.append(PARAMETER_TOKEN);
-          token = null;
-        } else {
-          if (token.indexOf(':') > -1) {
-            StringTokenizer paramParser = new StringTokenizer(token, ":", true);
-            int n1 = paramParser.countTokens();
-            if (n1 == 3) {
-              String name = paramParser.nextToken();
-              paramParser.nextToken(); //ignore ":"
-              String type = paramParser.nextToken();
-              BasicParameterMapping mapping = new BasicParameterMapping();
-              mapping.setPropertyName(name);
-              mapping.setJdbcTypeName(type);
-              TypeHandler handler;
-              if (parameterClass == null) {
-                handler = typeHandlerFactory.getUnkownTypeHandler();
-              } else {
-                handler = resolveTypeHandler(typeHandlerFactory, parameterClass, name, null, type);
-              }
-              mapping.setTypeHandler(handler);
-              mappingList.add(mapping);
-            } else if (n1 >= 5) {
-              String name = paramParser.nextToken();
-              paramParser.nextToken(); //ignore ":"
-              String type = paramParser.nextToken();
-              paramParser.nextToken(); //ignore ":"
-              String nullValue = paramParser.nextToken();
-              while (paramParser.hasMoreTokens()) {
-                nullValue = nullValue + paramParser.nextToken();
-              }
-              BasicParameterMapping mapping = new BasicParameterMapping();
-              mapping.setPropertyName(name);
-              mapping.setJdbcTypeName(type);
-              mapping.setNullValue(nullValue);
-              TypeHandler handler;
-              if (parameterClass == null) {
-                handler = typeHandlerFactory.getUnkownTypeHandler();
-              } else {
-                handler = resolveTypeHandler(typeHandlerFactory, parameterClass, name, null, type);
-              }
-              mapping.setTypeHandler(handler);
-              mappingList.add(mapping);
-            } else {
-              throw new SqlMapException("Incorrect inline parameter map format: " + token);
-            }
-          } else {
-            BasicParameterMapping mapping = new BasicParameterMapping();
-            mapping.setPropertyName(token);
-            TypeHandler handler;
-            if (parameterClass == null) {
-              handler = typeHandlerFactory.getUnkownTypeHandler();
-            } else {
-              handler = resolveTypeHandler(typeHandlerFactory, parameterClass, token, null, null);
-            }
-            mapping.setTypeHandler(handler);
-            mappingList.add(mapping);
-          }
-          newSqlBuffer.append("?");
-          token = parser.nextToken();
-          if (!PARAMETER_TOKEN.equals(token)) {
-            throw new SqlMapException("Unterminated inline parameter in mapped statement (" + "statement.getId()" + ").");
-          }
-          token = null;
-        }
-      } else {
-        if (!PARAMETER_TOKEN.equals(token)) {
-          newSqlBuffer.append(token);
-        }
-      }
-
-      lastToken = token;
-    }
-
-    newSql = newSqlBuffer.toString();
-
-    ParameterMapping[] mappingArray = (ParameterMapping[]) mappingList.toArray(new ParameterMapping[mappingList.size()]);
-
-    SqlText sqlText = new SqlText();
-    sqlText.setText(newSql);
-    sqlText.setParameterMappings(mappingArray);
-    return sqlText;
-  }
-
   private void parseResultMap(Node n) {
     errorCtx.setActivity("building a result map");
 
@@ -926,7 +805,7 @@ public class XmlSqlMapClientBuilder {
     String resultClassName = attributes.getProperty("class");
     String extended = applyNamespace(attributes.getProperty("extends"));
     String xmlName = attributes.getProperty("xmlName");
-    resultClassName = resolveAlias(resultClassName);
+    resultClassName = typeHandlerFactory.resolveAlias(resultClassName);
 
     errorCtx.setObjectId(id + " result map");
 
@@ -975,8 +854,8 @@ public class XmlSqlMapClientBuilder {
         String statementName = childAttributes.getProperty("select");
         String callback = childAttributes.getProperty("typeHandler");
 
-        callback = resolveAlias(callback);
-        javaType = resolveAlias(javaType);
+        callback = typeHandlerFactory.resolveAlias(callback);
+        javaType = typeHandlerFactory.resolveAlias(javaType);
 
         errorCtx.setObjectId(propertyName + " mapping of the " + id + " result map");
 
@@ -1038,7 +917,7 @@ public class XmlSqlMapClientBuilder {
     Properties attributes = parseAttributes(n);
     String id = applyNamespace(attributes.getProperty("id"));
     String parameterClassName = attributes.getProperty("class");
-    parameterClassName = resolveAlias(parameterClassName);
+    parameterClassName = typeHandlerFactory.resolveAlias(parameterClassName);
 
     map.setId(id);
     map.setResource(errorCtx.getResource());
@@ -1070,8 +949,8 @@ public class XmlSqlMapClientBuilder {
         String mode = childAttributes.getProperty("mode");
         String callback = childAttributes.getProperty("typeHandler");
 
-        callback = resolveAlias(callback);
-        javaType = resolveAlias(javaType);
+        callback = typeHandlerFactory.resolveAlias(callback);
+        javaType = typeHandlerFactory.resolveAlias(javaType);
 
         errorCtx.setObjectId(propertyName + " mapping of the " + id + " parameter map");
 
@@ -1127,8 +1006,8 @@ public class XmlSqlMapClientBuilder {
       String jdbcType = prop.getProperty("jdbcType");
       String javaType = prop.getProperty("javaType");
       String callback = prop.getProperty("callback");
-      callback = resolveAlias(callback);
-      javaType = resolveAlias(javaType);
+      callback = typeHandlerFactory.resolveAlias(callback);
+      javaType = typeHandlerFactory.resolveAlias(javaType);
 
       errorCtx.setMoreInfo("Check the callback attribute '" + callback + "' (must be a classname).");
       TypeHandlerCallback typeHandlerCallback = (TypeHandlerCallback) Resources.classForName(callback).newInstance();
@@ -1155,7 +1034,7 @@ public class XmlSqlMapClientBuilder {
     Properties attributes = parseAttributes(n);
     String id = applyNamespace(attributes.getProperty("id"));
     String type = attributes.getProperty("type");
-    type = resolveAlias(type);
+    type = typeHandlerFactory.resolveAlias(type);
 
     String readOnly = attributes.getProperty("readOnly");
     if (readOnly != null && readOnly.length() > 0) {
@@ -1336,30 +1215,14 @@ public class XmlSqlMapClientBuilder {
     return handler;
   }
 
-  private String resolveAlias(String string) {
-    String newString = null;
-    if (typeAliases.containsKey(string)) {
-      newString = (String) typeAliases.get(string);
-    }
-    if (newString != null) {
-      string = newString;
-    }
-    return string;
-  }
 
   private void parseTypeAliasNode(Node child) {
     Properties prop = parseAttributes(child);
     String alias = prop.getProperty("alias");
     String type = prop.getProperty("type");
-    putTypeAlias(alias, type);
+    typeHandlerFactory.putTypeAlias(alias, type);
   }
 
-  private void putTypeAlias(String alias, String value) {
-    if (typeAliases.containsKey(alias)) {
-      throw new SqlMapException("Error in XmlSqlMapClientBuilder.  Alias name conflict occurred.  The alias '" + alias + "' is already mapped to the value '" + typeAliases.get(alias) + "'.");
-    }
-    typeAliases.put(alias, value);
-  }
 
   private void addNameValuePairProperty(Node child, Properties modelProperties) {
     Properties prop = parseAttributes(child);
