@@ -122,6 +122,7 @@ parameterMap CDATA #IMPLIED
 parameterClass CDATA #IMPLIED
 resultMap CDATA #IMPLIED
 resultClass CDATA #IMPLIED
+cacheModel CDATA #IMPLIED
 xmlResultName CDATA #IMPLIED
 >
 
