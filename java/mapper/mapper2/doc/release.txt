@@ -2,6 +2,12 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
+ 2.1.0 - Mar ??, 2004
+------------------------------
+ 
+ o Removed JavaBeanProbe and MapProbe in favour of ComplexBeanProbe for the best flexibility (iBATIS-45)
+
+------------------------------
  2.0.9B - Feb 20, 2004
 ------------------------------
 

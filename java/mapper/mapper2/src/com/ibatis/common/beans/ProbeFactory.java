@@ -15,18 +15,14 @@
  */
 package com.ibatis.common.beans;
 
-import java.util.Map;
-
 /**
  * An abstract factory for getting Probe implementations.
  */
 public class ProbeFactory {
 
   private static final Probe DOM = new DomProbe();
-  private static final Probe MAP = new ComplexBeanProbe(); // Yes, use the complex one.
-  private static final Probe BEAN = new JavaBeanProbe();
+  private static final Probe BEAN = new ComplexBeanProbe();
   private static final Probe GENERIC = new GenericProbe();
-  private static final Probe LEGACY = new ComplexBeanProbe();
 
   /**
    * Factory method for getting a Probe object
@@ -46,12 +42,8 @@ public class ProbeFactory {
    * @return An implementation of the Probe interface
    */
   public static Probe getProbe(Object object) {
-    if (object instanceof Map) {
-      return MAP;
-    } else if (object instanceof org.w3c.dom.Document) {
+    if (object instanceof org.w3c.dom.Document) {
       return DOM;
-    } else if (object instanceof Class) {
-      return LEGACY;
     } else {
       return BEAN;
     }
