@@ -19,15 +19,6 @@ public class BaseSqlMapTest extends TestCase {
 
   protected static SqlMapClient sqlMap;
 
-  protected void tearDown() throws Exception {
-    super.tearDown();
-    try {
-      DriverManager.getConnection("jdbc:derby:;shutdown=true");
-    } catch (SQLException e) {
-      System.out.println ("Derby shutdown successful.  Exception: " + e);
-    }
-  }
-
   protected static void initSqlMap(String configFile, Properties props) throws Exception {
       Reader reader = Resources.getResourceAsReader(configFile);
       sqlMap = SqlMapClientBuilder.buildSqlMapClient(reader, props);
@@ -127,4 +118,9 @@ public class BaseSqlMapTest extends TestCase {
     assertEquals("BC", order.get("province"));
     assertEquals("C4B 4F4", order.get("postalCode"));
   }
+
+  public void testDummy() {
+    // just to avoid warnings when running all tests.
+  }
+
 }

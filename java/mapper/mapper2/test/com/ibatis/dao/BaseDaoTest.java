@@ -22,15 +22,6 @@ public abstract class BaseDaoTest extends TestCase {
 
   protected DaoManager daoManager;
 
-  protected void tearDown() throws Exception {
-    super.tearDown();
-    try {
-      DriverManager.getConnection("jdbc:derby:;shutdown=true");
-    } catch (SQLException e) {
-      System.out.println ("Derby shutdown successful.  Exception: " + e);
-    }
-  }
-
   public void testCreateAccount() {
     AccountDao dao = (AccountDao) daoManager.getDao(AccountDao.class);
 
