@@ -3,6 +3,7 @@
 -------------------------------------------
  
   - Fixed struts-config.xml that was breaking checkout and register
+  - Added MS SQL Server DDL
 
 -------------------------------------------
   Release 4.0.3 June 17, 2004
