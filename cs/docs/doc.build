@@ -31,7 +31,7 @@
 	<property name="doc.ref.output.dir" value="${doc.output.dir}" />
 
 	<!-- the main source code directory for the iBATIS.NET codebase  -->	
-	<property name="src.dir" value="../source" />
+	<property name="src.dir" value="../mapper" />
 
 	<target name="clean" description="Delete output and temporary directories.">
 		<delete dir="${doc.output.dir}" failonerror="false"/>

@@ -239,10 +239,7 @@
 
     <example>
       Example dao.config file
-
-      <title></title>
-
-       
+      
 
       <programlisting>&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;daoConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -354,6 +351,29 @@ xsi:noNamespaceSchemaLocation="DaoConfig.xsd"&gt;
     can be validated by the <filename>DaoConfig.xsd</filename> schema provided
     with the distribution.</para>
 
+    <sect2>
+      <title>type Attribut</title>
+      When specifying a type attribut within configuration, the type attribut value must be a fully qualified
+type name following the format:
+
+       <programlisting>
+      type="[namespace.class], [assembly name],
+            Version=[version], Culture=[culture],
+            PublicKeyToken=[public token]"
+	 </programlisting>
+
+For example:
+ <programlisting>
+      type="MyProject.Domain.LineItem, MyProject.Domain,
+            Version=1.2.3300.0, Culture=neutral,
+            PublicKeyToken=b03f455f11d50a3a"
+ </programlisting>
+The strongly typed name is desired, however, it is also legitimate to
+use the shorter style assembly type name:
+<programlisting>
+      type="MyProject.Domain.LineItem, MyProject.Domain"
+</programlisting>
+	</sect2>
     <sect2>
       <title>The &lt;context&gt; Element</title>
 

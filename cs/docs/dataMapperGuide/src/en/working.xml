@@ -27,6 +27,33 @@
   </sect1>
 
   <sect1>
+     
+
+    <title>type Attribut</title>
+
+     When specifying a type attribut within configuration, the type attribut value must be a fully qualified type name following the format: 
+
+    <programlisting>type="[namespace.class], [assembly name],
+        Version=[version], Culture=[culture],
+        PublicKeyToken=[public token]"
+</programlisting>
+
+     For example: 
+
+    <programlisting>type="MyProject.Domain.LineItem, MyProject.Domain,
+        Version=1.2.3300.0, Culture=neutral,
+        PublicKeyToken=b03f455f11d50a3a"
+</programlisting>
+
+     The strongly typed name is desired, however, it is also legitimate to use the shorter style assembly type name: 
+
+    <programlisting>type="MyProject.Domain.LineItem, MyProject.Domain"
+</programlisting>
+
+     
+  </sect1>
+
+  <sect1>
     <title>What's in a Data Map definition file, anyway?</title>
 
     <para>If you read the Tutorial, you've already seen some simple Data Map
@@ -836,12 +863,13 @@ All query methods</programlisting></entry>
             role="blue">class.name|typeAlias</emphasis>"]&gt;
   &lt;parameter 
     property ="<emphasis role="blue">property.name</emphasis>" 
-    [dbType="<emphasis role="blue">database.type</emphasis>"] 
-    [nullValue="<emphasis role="blue">null.value.replacement</emphasis>"] 
-    [type="<emphasis role="blue">property.CLR.type</emphasis>"] 
     [column="<emphasis role="blue">column.name</emphasis>"]
+    [dbType="<emphasis role="blue">database.type</emphasis>"] 
+    [extends="<emphasis role="blue">parent.parameterMap</emphasis>"]
+    [nullValue="<emphasis role="blue">null.value.replacement</emphasis>"] 
+    [resultMapping="<emphasis role="blue">[sqlMap.namespace.]parameterMap.Id</emphasis>"]/&gt;
     [size="<emphasis role="blue">column.size</emphasis>"] 
-    [extends="<emphasis role="blue">parent.parameterMap</emphasis>"]/&gt;
+    [type="<emphasis role="blue">property.CLR.type</emphasis>"] 
   &lt;parameter ... ... /&gt;
   &lt;parameter ... ... /&gt; 
 &lt;/parameterMap&gt;</programlisting>
@@ -1065,6 +1093,21 @@ All query methods</programlisting></entry>
         used more than once depending on the number of times it is needed in
         the statement. (In an update, you might set a column that is also part
         of the where clause.)</para>
+      </sect3>
+
+      <sect3>
+        <title>resultMapping</title>
+
+        <para>The <parameter>resultMapping</parameter> attribute can be set to
+        the name of another parameterMap used to fill the property. If the
+        parameterMap is in an other mapping file, you must specified the fully
+        qualified name as : <programlisting>
+resultMapping="[namespace.sqlMap.]resultMapping.id"
+
+resultMapping="Newspaper"
+<emphasis role="comment">&lt;!--resultMapping with a fully qualified name.--&gt;</emphasis>
+resultMapping="LineItem.LineItem"
+</programlisting></para>
       </sect3>
 
       <sect3>
