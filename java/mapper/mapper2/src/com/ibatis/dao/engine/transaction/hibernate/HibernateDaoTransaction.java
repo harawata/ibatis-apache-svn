@@ -40,8 +40,11 @@ public class HibernateDaoTransaction implements ConnectionDaoTransaction {
 
   public void commit() {
     try {
-      transaction.commit();
-      session.close();
+      try {
+        transaction.commit();
+      } finally {
+        session.close();
+      }
     } catch (HibernateException e) {
       throw new DaoException("Error committing Hibernate transaction.  Cause: " + e);
     }
@@ -49,8 +52,11 @@ public class HibernateDaoTransaction implements ConnectionDaoTransaction {
 
   public void rollback() {
     try {
-      transaction.rollback();
-      session.close();
+      try {
+        transaction.rollback();
+      } finally {
+        session.close();
+      }
     } catch (HibernateException e) {
       throw new DaoException("Error ending Hibernate transaction.  Cause: " + e);
     }

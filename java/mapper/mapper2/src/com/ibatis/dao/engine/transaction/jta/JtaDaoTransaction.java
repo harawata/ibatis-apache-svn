@@ -81,8 +81,12 @@ public class JtaDaoTransaction implements ConnectionDaoTransaction {
       throw new DaoException("JtaTransaction could not commit because this transaction has already been committed.");
     }
     try {
-      if (newTransaction) {
-        userTransaction.commit();
+      try {
+        if (newTransaction) {
+          userTransaction.commit();
+        }
+      } finally {
+        close();
       }
     } catch (Exception e) {
       throw new DaoException("JtaTransaction could not commit.  Cause: ", e);
@@ -93,12 +97,16 @@ public class JtaDaoTransaction implements ConnectionDaoTransaction {
   public void rollback() {
     if (!commmitted) {
       try {
-        if (userTransaction != null) {
-          if (newTransaction) {
-            userTransaction.rollback();
-          } else {
-            userTransaction.setRollbackOnly();
+        try {
+          if (userTransaction != null) {
+            if (newTransaction) {
+              userTransaction.rollback();
+            } else {
+              userTransaction.setRollbackOnly();
+            }
           }
+        } finally {
+          close();
         }
       } catch (Exception e) {
         throw new DaoException("JTA transaction could not rollback.  Cause: ", e);
