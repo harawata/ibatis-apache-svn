@@ -52,7 +52,6 @@ public class ParameterMapTest extends BaseSqlMapTest {
 
     account = (Account) sqlMap.queryForObject("getAccountNullableEmail", new Integer(0));
 
-    expected.printStackTrace();
 
     assertNotNull(expected);
     assertTrue(expected.getMessage().indexOf("Try to insert null into a non-nullable column: column: ACC_ID table: ACCOUNT in statement") > -1);
