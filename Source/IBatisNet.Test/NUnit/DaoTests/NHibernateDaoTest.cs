@@ -60,6 +60,7 @@ namespace IBatisNet.Test.NUnit.DaoTests
 		/// Test Create user
 		/// </summary>
 		[Test] 
+		[Category("NHibernate")]
 		public void TestCreateUser () 
 		{
 			IUserDao userDao = (IUserDao)_daoManager[typeof(IUserDao)];

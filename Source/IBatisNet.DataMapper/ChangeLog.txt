@@ -1,7 +1,13 @@
 IBatisNet Change Log
 
 ------------------------------
-1.1.0 Alpha- XX/XX/XXXX
+1.1.* - XX/XX/XXXX
+------------------------------
+- Fixed for JIRA 20.
+- Added nunit category 'NHibernate'
+
+------------------------------
+1.1.458 Alpha- 12-jan-2005
 ------------------------------
 - Added type (a CLR type) attribut in result and parameterMap element.
 - Patch from Luke Yang

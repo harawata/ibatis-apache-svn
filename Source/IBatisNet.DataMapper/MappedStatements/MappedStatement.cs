@@ -298,6 +298,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 				}
 
 				IDataParameter parameterCopy = command.CreateParameter();
+				// Fix JIRA 20
+				sqlParameter.Value = parameterValue;
 				parameterCopy.Value = parameterValue;
 				
 				parameterCopy.Direction = sqlParameter.Direction;
@@ -313,12 +315,12 @@ namespace IBatisNet.DataMapper.MappedStatements
 					}
 					else
 					{
-						parameterCopy.DbType = sqlParameter.DbType;
+						//parameterCopy.DbType = sqlParameter.DbType;
 					}
 				}
 				else
 				{
-					parameterCopy.DbType = sqlParameter.DbType;
+					//parameterCopy.DbType = sqlParameter.DbType;
 				}
 
 				((IDbDataParameter)parameterCopy).Size = ((IDbDataParameter)sqlParameter).Size;

@@ -664,6 +664,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "NUnit\SqlMapTests\StatementNamespaceTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "NUnit\SqlMapTests\StatementTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

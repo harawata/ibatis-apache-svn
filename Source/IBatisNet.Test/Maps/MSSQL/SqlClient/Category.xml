@@ -35,6 +35,15 @@
 			select CAST(SCOPE_IDENTITY() as int) as value
 		</statement><!--Guid for Oledb, UniqueIdentifier for SqlClient,Odbc -->		
 		
+		<!-- JIRA 20 Test without specifying the dbtype-->
+		<statement id="InsertCategoryGuidParameterClassJIRA20" parameterClass="Guid" resultClass="int">
+			insert into Categories  
+				(Category_Name, Category_Guid) 
+			values 
+				('toto', #value#);
+			select CAST(SCOPE_IDENTITY() as int) as value
+		</statement>
+		
 		<!--  -->
 		<insert id="InsertCategoryViaInsertStatement" parameterClass="Category" >
 			<selectKey property="Id" type="post" resultClass="int">
