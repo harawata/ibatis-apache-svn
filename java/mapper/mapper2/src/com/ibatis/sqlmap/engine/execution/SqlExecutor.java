@@ -178,6 +178,9 @@ public class SqlExecutor {
       errorContext.setMoreInfo("Check the results (failed to retrieve results).");
       handleResults(request, rs, skipResults, maxResults, callback);
 
+      // clear out remaining results
+      while (ps.getMoreResults());
+
     } finally {
       try {
         closeResultSet(rs);
