@@ -6,6 +6,10 @@ Build Number: @buildNum@
 ------------------------------
 
  o Fixed non-caching null cache result bug.
+ o Fixed removeObject bug from fifo and lifo cache
+ o Fixed locale issue with JavaBean property matching
+ o Fixed unclosed statement if result set fails in MS SQL Server
+ o Fixed comments within dao.xml
 
 ------------------------------
  2.0.5 - Aug 11, 2004
