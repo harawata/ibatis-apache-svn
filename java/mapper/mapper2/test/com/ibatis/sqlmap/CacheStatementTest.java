@@ -2,6 +2,7 @@ package com.ibatis.sqlmap;
 
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.ibatis.sqlmap.client.SqlMapSession;
+import com.ibatis.sqlmap.engine.cache.CacheKey;
 import com.ibatis.common.exception.NestedRuntimeException;
 import testdomain.Account;
 
@@ -116,6 +117,31 @@ public class CacheStatementTest extends BaseSqlMapTest {
 
     assertTrue(firstId.intValue() != thirdId);
 
+  }
+
+  public void testCacheKeyWithSameHashcode() {
+    CacheKey key1 = new CacheKey();
+    CacheKey key2 = new CacheKey();
+
+    key1.update("HS1CS001");
+    key2.update("HS1D4001");
+
+    assertEquals("Expect same hashcode.", key1.hashCode(), key2.hashCode());
+    assertFalse("Expect not equal", key1.equals(key2));
+  }
+
+  public void testCacheKeyWithTwoParamsSameHashcode() {
+    CacheKey key1 = new CacheKey();
+    CacheKey key2 = new CacheKey();
+
+    key1.update("HS1CS001");
+    key1.update("HS1D4001");
+
+    key2.update("HS1D4001");
+    key2.update("HS1CS001");
+
+    assertEquals("Expect same hashcode.", key1.hashCode(), key2.hashCode());
+    assertFalse("Expect not equal", key1.equals(key2));
   }
 
   private static class TestCacheThread extends Thread {

@@ -15,6 +15,9 @@
  */
 package com.ibatis.sqlmap.engine.cache;
 
+import java.util.List;
+import java.util.ArrayList;
+
 /**
  * Hash value generator for cache keys
  */
@@ -27,6 +30,7 @@ public class CacheKey {
   private int hashcode;
   private long checksum;
   private int count;
+  private List paramList = new ArrayList();
 
   /**
    * Default constructor
@@ -67,12 +71,7 @@ public class CacheKey {
    * @return the cache key
    */
   public CacheKey update(int x) {
-    count++;
-    checksum += x;
-    x *= count;
-
-    hashcode = multiplier * hashcode + x;
-
+    update(new Integer(x));
     return this;
   }
 
@@ -83,7 +82,16 @@ public class CacheKey {
    * @return the cachekey
    */
   public CacheKey update(Object object) {
-    update(object.hashCode());
+    int baseHashCode = object.hashCode();
+
+    count++;
+    checksum += baseHashCode;
+    baseHashCode *= count;
+
+    hashcode = multiplier * hashcode + baseHashCode;
+
+    paramList.add(object);
+
     return this;
   }
 
@@ -96,6 +104,16 @@ public class CacheKey {
     if (hashcode != cacheKey.hashcode) return false;
     if (checksum != cacheKey.checksum) return false;
     if (count != cacheKey.count) return false;
+
+    for (int i=0; i < paramList.size(); i++) {
+      Object thisParam = paramList.get(i);
+      Object thatParam = cacheKey.paramList.get(i);
+      if(thisParam == null) {
+        if (thatParam != null) return false;
+      } else {
+        if (!thisParam.equals(thatParam)) return false;
+      }
+    }
 
     return true;
   }
