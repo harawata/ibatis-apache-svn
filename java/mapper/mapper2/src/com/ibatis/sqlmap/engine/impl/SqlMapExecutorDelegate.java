@@ -49,12 +49,24 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The workhorse that really runs the SQL
+ */
 public class SqlMapExecutorDelegate {
 
   private static final Probe PROBE = ProbeFactory.getProbe();
 
+  /**
+   * The default maximum number of requests
+   */
   public static final int DEFAULT_MAX_REQUESTS = 512;
+  /**
+   * The default maximum number of sessions
+   */
   public static final int DEFAULT_MAX_SESSIONS = 128;
+  /**
+   * The default maximum number of transactions
+   */
   public static final int DEFAULT_MAX_TRANSACTIONS = 32;
 
   private boolean lazyLoadingEnabled;
@@ -79,6 +91,9 @@ public class SqlMapExecutorDelegate {
   private TypeHandlerFactory typeHandlerFactory;
   private DataExchangeFactory dataExchangeFactory;
 
+  /**
+   * Default constructor
+   */
   public SqlMapExecutorDelegate() {
     mappedStatements = new HashMap();
     cacheModels = new HashMap();
@@ -93,72 +108,155 @@ public class SqlMapExecutorDelegate {
     dataExchangeFactory = new DataExchangeFactory(typeHandlerFactory);
   }
 
+  /**
+   * Getter for the DataExchangeFactory
+   * 
+   * @return - the DataExchangeFactory 
+   */
   public DataExchangeFactory getDataExchangeFactory() {
     return dataExchangeFactory;
   }
 
+  /**
+   * Getter for the TypeHandlerFactory
+   * 
+   * @return - the TypeHandlerFactory
+   */
   public TypeHandlerFactory getTypeHandlerFactory() {
     return typeHandlerFactory;
   }
 
+  /**
+   * Getter for the status of lazy loading
+   * 
+   * @return - the status
+   */
   public boolean isLazyLoadingEnabled() {
     return lazyLoadingEnabled;
   }
 
+  /**
+   * Turn on or off lazy loading
+   * 
+   * @param lazyLoadingEnabled - the new state of caching
+   */
   public void setLazyLoadingEnabled(boolean lazyLoadingEnabled) {
     this.lazyLoadingEnabled = lazyLoadingEnabled;
   }
 
+  /**
+   * Getter for the status of caching
+   * 
+   * @return - the status
+   */
   public boolean isCacheModelsEnabled() {
     return cacheModelsEnabled;
   }
 
+  /**
+   * Turn on or off caching
+   * 
+   * @param cacheModelsEnabled - the new state of caching
+   */
   public void setCacheModelsEnabled(boolean cacheModelsEnabled) {
     this.cacheModelsEnabled = cacheModelsEnabled;
   }
 
+  /**
+   * Getter for the status of CGLib enhancements
+   * 
+   * @return - the status
+   */
   public boolean isEnhancementEnabled() {
     return enhancementEnabled;
   }
 
+  /**
+   * Turn on or off CGLib enhancements
+   * @param enhancementEnabled - the new state
+   */
   public void setEnhancementEnabled(boolean enhancementEnabled) {
     this.enhancementEnabled = enhancementEnabled;
   }
 
+  /**
+   * Getter for the maximum number of requests
+   * 
+   * @return - the maximum number of requests
+   */
   public int getMaxRequests() {
     return maxRequests;
   }
 
+  /**
+   * Setter for the maximum number of requests
+   * 
+   * @param maxRequests - the maximum number of requests
+   */
   public void setMaxRequests(int maxRequests) {
     this.maxRequests = maxRequests;
     requestPool = new ThrottledPool(RequestScope.class, maxRequests);
   }
 
+  /**
+   * Getter for the maximum number of sessions
+   * 
+   * @return - the maximum number of sessions
+   */
   public int getMaxSessions() {
     return maxSessions;
   }
 
+  /**
+   * Setter for the maximum number of sessions
+   * 
+   * @param maxSessions - the maximum number of sessions
+   */
   public void setMaxSessions(int maxSessions) {
     this.maxSessions = maxSessions;
     this.sessionPool = new ThrottledPool(SessionScope.class, maxSessions);
   }
 
+  /**
+   * Getter for the the maximum number of transactions
+   * 
+   * @return - the maximum number of transactions
+   */
   public int getMaxTransactions() {
     return maxTransactions;
   }
 
+  /**
+   * Setter for the maximum number of transactions
+   * 
+   * @param maxTransactions - the maximum number of transactions
+   */
   public void setMaxTransactions(int maxTransactions) {
     this.maxTransactions = maxTransactions;
   }
 
+  /**
+   * Getter for the transaction manager 
+   * @return - the transaction manager
+   */
   public TransactionManager getTxManager() {
     return txManager;
   }
 
+  /**
+   * Setter for the transaction manager
+   * 
+   * @param txManager - the transaction manager
+   */
   public void setTxManager(TransactionManager txManager) {
     this.txManager = txManager;
   }
 
+  /**
+   * Add a mapped statement
+   * 
+   * @param ms - the mapped statement to add
+   */
   public void addMappedStatement(MappedStatement ms) {
     if (mappedStatements.containsKey(ms.getId())) {
       throw new SqlMapException("There is already a statement named " + ms.getId() + " in this SqlMap.");
@@ -167,10 +265,22 @@ public class SqlMapExecutorDelegate {
     mappedStatements.put(ms.getId(), ms);
   }
 
+  /**
+   * Get an iterator of the mapped statements
+   * 
+   * @return - the iterator
+   */
   public Iterator getMappedStatementNames() {
     return mappedStatements.keySet().iterator();
   }
 
+  /**
+   * Get a mappedstatement by its ID
+   * 
+   * @param id - the statement ID
+   * 
+   * @return - the mapped statement
+   */
   public MappedStatement getMappedStatement(String id) {
     MappedStatement ms = (MappedStatement) mappedStatements.get(id);
     if (ms == null) {
@@ -179,14 +289,31 @@ public class SqlMapExecutorDelegate {
     return ms;
   }
 
+  /**
+   * Add a cache model
+   * 
+   * @param model - the model to add
+   */
   public void addCacheModel(CacheModel model) {
     cacheModels.put(model.getId(), model);
   }
 
+  /**
+   * Get an iterator of the cache models
+   * 
+   * @return - the cache models
+   */
   public Iterator getCacheModelNames() {
     return cacheModels.keySet().iterator();
   }
 
+  /**
+   * Get a cache model by ID
+   * 
+   * @param id - the ID
+   * 
+   * @return - the cache model
+   */
   public CacheModel getCacheModel(String id) {
     CacheModel model = (CacheModel) cacheModels.get(id);
     if (model == null) {
@@ -195,14 +322,31 @@ public class SqlMapExecutorDelegate {
     return model;
   }
 
+  /**
+   * Add a result map
+   * 
+   * @param map - the result map to add
+   */
   public void addResultMap(ResultMap map) {
     resultMaps.put(map.getId(), map);
   }
 
+  /**
+   * Get an iterator of the result maps
+   * 
+   * @return - the result maps
+   */
   public Iterator getResultMapNames() {
     return resultMaps.keySet().iterator();
   }
 
+  /**
+   * Get a result map by ID
+   * 
+   * @param id - the ID
+   * 
+   * @return - the result map
+   */
   public ResultMap getResultMap(String id) {
     ResultMap map = (ResultMap) resultMaps.get(id);
     if (map == null) {
@@ -211,14 +355,31 @@ public class SqlMapExecutorDelegate {
     return map;
   }
 
+  /**
+   * Add a parameter map
+   * 
+   * @param map - the map to add
+   */
   public void addParameterMap(ParameterMap map) {
     parameterMaps.put(map.getId(), map);
   }
 
+  /**
+   * Get an iterator of all of the parameter maps
+   * 
+   * @return - the parameter maps
+   */
   public Iterator getParameterMapNames() {
     return parameterMaps.keySet().iterator();
   }
 
+  /**
+   * Get a parameter map by ID
+   * 
+   * @param id - the ID
+   * 
+   * @return - the parameter map
+   */
   public ParameterMap getParameterMap(String id) {
     ParameterMap map = (ParameterMap) parameterMaps.get(id);
     if (map == null) {
@@ -227,6 +388,9 @@ public class SqlMapExecutorDelegate {
     return map;
   }
 
+  /**
+   * Flush all of the data caches
+   */
   public void flushDataCache() {
     Iterator models = cacheModels.values().iterator();
     while (models.hasNext()) {
@@ -234,6 +398,11 @@ public class SqlMapExecutorDelegate {
     }
   }
 
+  /**
+   * Flush a single cache by ID
+   * 
+   * @param id - the ID
+   */
   public void flushDataCache(String id) {
     CacheModel model = getCacheModel(id);
     if (model != null) {
@@ -242,6 +411,17 @@ public class SqlMapExecutorDelegate {
   }
 
   //-- Basic Methods
+  /**
+   * Call an insert statement by ID
+   * 
+   * @param session - the session
+   * @param id - the statement ID
+   * @param param - the parameter object
+   * 
+   * @return - the generated key (or null)
+   * 
+   * @throws SQLException - if the insert fails
+   */
   public Object insert(SessionScope session, String id, Object param) throws SQLException {
     Object generatedKey = null;
 
@@ -300,6 +480,17 @@ public class SqlMapExecutorDelegate {
     return generatedKey;
   }
 
+  /**
+   * Execute an update statement
+   * 
+   * @param session - the session scope
+   * @param id - the statement ID
+   * @param param - the parameter object
+   * 
+   * @return - the number of rows updated
+   * 
+   * @throws SQLException - if the update fails
+   */
   public int update(SessionScope session, String id, Object param) throws SQLException {
     int rows = 0;
 
@@ -325,14 +516,48 @@ public class SqlMapExecutorDelegate {
     return rows;
   }
 
+  /**
+   * Execute a delete statement
+   * 
+   * @param session - the session scope
+   * @param id - the statement ID
+   * @param param - the parameter object
+   * 
+   * @return - the number of rows deleted
+   * 
+   * @throws SQLException - if the delete fails
+   */
   public int delete(SessionScope session, String id, Object param) throws SQLException {
     return update(session, id, param);
   }
 
+  /**
+   * Execute a select for a single object
+   * 
+   * @param session - the session scope
+   * @param id - the statement ID
+   * @param paramObject - the parameter object
+   * 
+   * @return - the result of the query
+   * 
+   * @throws SQLException - if the query fails
+   */
   public Object queryForObject(SessionScope session, String id, Object paramObject) throws SQLException {
     return queryForObject(session, id, paramObject, null);
   }
 
+  /**
+   * Execute a select for a single object
+   * 
+   * @param session - the session scope
+   * @param id - the statement ID
+   * @param paramObject - the parameter object
+   * @param resultObject - the result object (if not supplied or null, a new object will be created)
+   * 
+   * @return - the result of the query
+   * 
+   * @throws SQLException - if the query fails
+   */
   public Object queryForObject(SessionScope session, String id, Object paramObject, Object resultObject) throws SQLException {
     Object object = null;
 
@@ -358,10 +583,34 @@ public class SqlMapExecutorDelegate {
     return object;
   }
 
+  /**
+   * Execute a query for a list
+   * 
+   * @param session - the session scope
+   * @param id - the statement ID
+   * @param paramObject - the parameter object
+   * 
+   * @return - the data list
+   * 
+   * @throws SQLException - if the query fails
+   */
   public List queryForList(SessionScope session, String id, Object paramObject) throws SQLException {
     return queryForList(session, id, paramObject, SqlExecutor.NO_SKIPPED_RESULTS, SqlExecutor.NO_MAXIMUM_RESULTS);
   }
 
+  /**
+   * Execute a query for a list
+   * 
+   * @param session - the session scope
+   * @param id - the statement ID
+   * @param paramObject - the parameter object
+   * @param skip - the number of rows to skip
+   * @param max - the maximum number of rows to return
+   * 
+   * @return - the data list
+   * 
+   * @throws SQLException - if the query fails
+   */
   public List queryForList(SessionScope session, String id, Object paramObject, int skip, int max) throws SQLException {
     List list = null;
 
@@ -387,6 +636,17 @@ public class SqlMapExecutorDelegate {
     return list;
   }
 
+  /**
+   * Execute a query with a row handler. 
+   * The row handler is called once per row in the query results.
+   * 
+   * @param session - the session scope
+   * @param id - the statement ID
+   * @param paramObject - the parameter object
+   * @param rowHandler - the row handler
+   * 
+   * @throws SQLException - if the query fails
+   */
   public void queryWithRowHandler(SessionScope session, String id, Object paramObject, RowHandler rowHandler) throws SQLException {
 
     MappedStatement ms = getMappedStatement(id);
@@ -410,14 +670,53 @@ public class SqlMapExecutorDelegate {
 
   }
 
+  /**
+   * Execute a query and return a paginated list
+   * 
+   * @param session - the session scope
+   * @param id - the statement ID
+   * @param paramObject - the parameter object
+   * @param pageSize - the page size
+   * 
+   * @return - the data list
+   * 
+   * @throws SQLException - if the query fails
+   */
   public PaginatedList queryForPaginatedList(SessionScope session, String id, Object paramObject, int pageSize) throws SQLException {
     return new PaginatedDataList(session.getSqlMapExecutor(), id, paramObject, pageSize);
   }
 
+  /**
+   * Execute a query for a map.
+   * The map has the table key as the key, and the results as the map data
+   * 
+   * @param session - the session scope
+   * @param id - the statement ID
+   * @param paramObject - the parameter object
+   * @param keyProp - the key property (from the results for the map)
+   * 
+   * @return - the Map
+   * 
+   * @throws SQLException - if the query fails
+   */
   public Map queryForMap(SessionScope session, String id, Object paramObject, String keyProp) throws SQLException {
     return queryForMap(session, id, paramObject, keyProp, null);
   }
 
+  /**
+   * Execute a query for a map.
+   * The map has the table key as the key, and a property from the results as the map data
+   * 
+   * @param session - the session scope
+   * @param id - the statement ID
+   * @param paramObject - the parameter object
+   * @param keyProp - the property for the map key
+   * @param valueProp - the property for the map data
+   * 
+   * @return - the Map
+   * 
+   * @throws SQLException - if the query fails
+   */
   public Map queryForMap(SessionScope session, String id, Object paramObject, String keyProp, String valueProp) throws SQLException {
     Map map = new HashMap();
 
@@ -439,6 +738,13 @@ public class SqlMapExecutorDelegate {
   }
 
   // -- Transaction Control Methods
+  /**
+   * Start a transaction on the session
+   * 
+   * @param session - the session
+   * 
+   * @throws SQLException - if the transaction could not be started
+   */
   public void startTransaction(SessionScope session) throws SQLException {
     try {
       txManager.begin(session);
@@ -447,6 +753,13 @@ public class SqlMapExecutorDelegate {
     }
   }
 
+  /**
+   * Commit the transaction on a session
+   * 
+   * @param session - the session
+   * 
+   * @throws SQLException - if the transaction could not be committed
+   */
   public void commitTransaction(SessionScope session) throws SQLException {
     try {
       // Auto batch execution
@@ -460,6 +773,13 @@ public class SqlMapExecutorDelegate {
     }
   }
 
+  /**
+   * End the transaction on a session
+   * 
+   * @param session - the session
+   * 
+   * @throws SQLException - if the transaction could not be ended
+   */
   public void endTransaction(SessionScope session) throws SQLException {
     try {
       try {
@@ -472,15 +792,34 @@ public class SqlMapExecutorDelegate {
     }
   }
 
-  public void startBatch(SessionScope session) throws SQLException {
+  /**
+   * Start a batch for a session
+   * 
+   * @param session - the session
+   */
+  public void startBatch(SessionScope session) {
     session.setInBatch(true);
   }
 
+  /**
+   * Execute a batch for a session
+   * 
+   * @param session - the session
+   * @return - the number of rows impacted by the batch
+   * 
+   * @throws SQLException - if the batch fails
+   */
   public int executeBatch(SessionScope session) throws SQLException {
     session.setInBatch(false);
     return sqlExecutor.executeBatch(session);
   }
 
+  /**
+   * Use a user-provided transaction for a session
+   * 
+   * @param session - the session scope
+   * @param userConnection - the user supplied connection
+   */
   public void setUserProvidedTransaction(SessionScope session, Connection userConnection) {
     if (session.getTransactionState() == TransactionState.STATE_USER_PROVIDED) {
       session.recallTransactionState();
@@ -495,6 +834,11 @@ public class SqlMapExecutorDelegate {
     }
   }
 
+  /**
+   * Get the DataSource for the session
+   * 
+   * @return - the DataSource
+   */
   public DataSource getDataSource() {
     DataSource ds = null;
     if (txManager != null) {
@@ -503,10 +847,22 @@ public class SqlMapExecutorDelegate {
     return ds;
   }
 
+  /**
+   * Getter for the SqlExecutor
+   * 
+   * @return the SqlExecutor
+   */
   public SqlExecutor getSqlExecutor() {
     return sqlExecutor;
   }
 
+  /**
+   * Get a transaction for the session
+   * 
+   * @param session - the session
+   * 
+   * @return - the transaction
+   */
   public Transaction getTransaction(SessionScope session) {
     return session.getTransaction();
   }
