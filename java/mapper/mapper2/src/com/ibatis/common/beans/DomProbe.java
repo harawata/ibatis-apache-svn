@@ -4,9 +4,7 @@ import org.w3c.dom.*;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * <p/>
@@ -113,39 +111,61 @@ public class DomProbe extends BaseProbe {
 
     Element prop = element;
 
-    // Find text child element
-    NodeList texts = prop.getChildNodes();
-    if (texts.getLength() == 1) {
-      Node child = texts.item(0);
-      if (child instanceof CharacterData) {
-        // Use existing text.
-        data = (CharacterData) child;
+    if (value instanceof Collection) {
+      Iterator items = ((Collection) value).iterator();
+      while (items.hasNext()) {
+        Document valdoc = (Document) items.next();
+        NodeList list = valdoc.getChildNodes();
+        for (int i = 0; i < list.getLength(); i++) {
+          Node newNode = element.getOwnerDocument().importNode(list.item(i), true);
+          element.appendChild(newNode);
+        }
+      }
+    } else if (value instanceof Document) {
+      Document valdoc = (Document) value;
+      NodeList list = valdoc.getChildNodes();
+      for (int i = 0; i < list.getLength(); i++) {
+        Node newNode = element.getOwnerDocument().importNode(list.item(i), true);
+        element.appendChild(newNode);
+      }
+    } else if (value instanceof Element) {
+      Node newNode = element.getOwnerDocument().importNode((Element) value, true);
+      element.appendChild(newNode);
+    } else {
+      // Find text child element
+      NodeList texts = prop.getChildNodes();
+      if (texts.getLength() == 1) {
+        Node child = texts.item(0);
+        if (child instanceof CharacterData) {
+          // Use existing text.
+          data = (CharacterData) child;
+        } else {
+          // Remove non-text, add text.
+          prop.removeChild(child);
+          Text text = prop.getOwnerDocument().createTextNode(String.valueOf(value));
+          prop.appendChild(text);
+          data = text;
+        }
+      } else if (texts.getLength() > 1) {
+        // Remove all, add text.
+        for (int i = texts.getLength() - 1; i >= 0; i--) {
+          prop.removeChild(texts.item(i));
+        }
+        Text text = prop.getOwnerDocument().createTextNode(String.valueOf(value));
+        prop.appendChild(text);
+        data = text;
       } else {
-        // Remove non-text, add text.
-        prop.removeChild(child);
+        // Add text.
         Text text = prop.getOwnerDocument().createTextNode(String.valueOf(value));
         prop.appendChild(text);
         data = text;
       }
-    } else if (texts.getLength() > 1) {
-      // Remove all, add text.
-      for (int i = texts.getLength() - 1; i >= 0; i--) {
-        prop.removeChild(texts.item(i));
-      }
-      Text text = prop.getOwnerDocument().createTextNode(String.valueOf(value));
-      prop.appendChild(text);
-      data = text;
-    } else {
-      // Add text.
-      Text text = prop.getOwnerDocument().createTextNode(String.valueOf(value));
-      prop.appendChild(text);
-      data = text;
+      data.setData(String.valueOf(value));
     }
 
     // Set type attribute
-    prop.setAttribute("type", value == null ? "null" : value.getClass().getName());
+    //prop.setAttribute("type", value == null ? "null" : value.getClass().getName());
 
-    data.setData(String.valueOf(value));
   }
 
   private Object getElementValue(Element element) {
@@ -218,49 +238,55 @@ public class DomProbe extends BaseProbe {
   }
 
   public static String nodeToString(Node node, String indent) {
-    PrintWriter writer = new PrintWriter(new StringWriter());
+    StringWriter stringWriter = new StringWriter();
+    PrintWriter printWriter = new PrintWriter(stringWriter);
 
     switch (node.getNodeType()) {
 
       case Node.DOCUMENT_NODE:
-        writer.println("<xml version=\"1.0\">\n");
+        printWriter.println("<xml version=\"1.0\">\n");
         // recurse on each child
         NodeList nodes = node.getChildNodes();
         if (nodes != null) {
           for (int i = 0; i < nodes.getLength(); i++) {
-            writer.print(nodeToString(nodes.item(i), ""));
+            printWriter.print(nodeToString(nodes.item(i), ""));
           }
         }
         break;
 
       case Node.ELEMENT_NODE:
         String name = node.getNodeName();
-        writer.print(indent + "<" + name);
+        printWriter.print(indent + "<" + name);
         NamedNodeMap attributes = node.getAttributes();
         for (int i = 0; i < attributes.getLength(); i++) {
           Node current = attributes.item(i);
-          writer.print(" " + current.getNodeName() +
+          printWriter.print(" " + current.getNodeName() +
               "=\"" + current.getNodeValue() +
               "\"");
         }
-        writer.print(">");
+        printWriter.print(">");
 
         // recurse on each child
         NodeList children = node.getChildNodes();
         if (children != null) {
           for (int i = 0; i < children.getLength(); i++) {
-            writer.print(nodeToString(children.item(i), indent + indent));
+            printWriter.print(nodeToString(children.item(i), indent + indent));
           }
         }
 
-        writer.print("</" + name + ">");
+        printWriter.print("</" + name + ">");
         break;
 
       case Node.TEXT_NODE:
-        writer.print(node.getNodeValue());
+        printWriter.print(node.getNodeValue());
         break;
     }
-    return writer.toString();
+
+    printWriter.flush();
+    String result = stringWriter.getBuffer().toString();
+    printWriter.close();
+
+    return result;
   }
 
 }

@@ -25,7 +25,7 @@ public class AllSqlMapTests {
     suite.addTestSuite(DynamicPrependTest.class);
     suite.addTestSuite(ComplexTypeTest.class);
     suite.addTestSuite(XmlStatementTest.class);
-    //suite.addTestSuite(DomStatementTest.class);
+    suite.addTestSuite(DomStatementTest.class);
     return suite;
   }
 

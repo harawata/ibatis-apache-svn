@@ -1,6 +1,7 @@
 package com.ibatis.sqlmap.engine.mapping.result.loader;
 
 import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
+import com.ibatis.sqlmap.engine.type.DomCollectionTypeMarker;
 import com.ibatis.sqlmap.engine.type.XmlCollectionTypeMarker;
 
 import java.sql.SQLException;
@@ -40,6 +41,8 @@ public class ResultLoader {
   protected static Object getResult(ExtendedSqlMapClient client, String statementName, Object parameterObject, Class targetType) throws SQLException {
     Object value = null;
     if (XmlCollectionTypeMarker.class.isAssignableFrom(targetType)) {
+      value = client.queryForList(statementName, parameterObject);
+    } else if (DomCollectionTypeMarker.class.isAssignableFrom(targetType)) {
       value = client.queryForList(statementName, parameterObject);
     } else if (Collection.class.isAssignableFrom(targetType)) {
       value = client.queryForList(statementName, parameterObject);

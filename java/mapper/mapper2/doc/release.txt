@@ -6,6 +6,7 @@ Build Number: @buildNum@
 ------------------------------
 
  o IMPORTANT: Renamed queryForList(String, Object, RowHandler) BACK TO queryWithRowHandler
+ o Added DOM type support for results and parameters
  o Added DaoManager.getDao(class, contextId) to support for multiple DAO impls
  o Added access to SqlMapTransactionManager from SQL Map DAOs
  o Released all DTD constraints for pluggable components (cache, datasource, txmgr, daotx)

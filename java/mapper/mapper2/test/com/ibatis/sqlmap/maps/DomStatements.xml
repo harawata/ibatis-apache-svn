@@ -20,7 +20,7 @@
 
   <resultMap id="dom-order-with-lines-result" class="dom" xmlName="order"
     extends="lite-order-result-by-name">
-    <result property="lineItems" javaType="dom" column="{value=ORD_ID}" select="getLineItemsForOrderDom"/>
+    <result property="lineItems" javaType="domCollection" column="{value=ORD_ID}" select="getLineItemsForOrderDom"/>
   </resultMap>
 
   <select id="getAccountDomExternalMaps"
