@@ -5,7 +5,8 @@ Build Number: @buildNum@
  2.0.0 Final - ???, 2004
 ------------------------------
 
- o Fixed finalizer triggering lazy loader 
+ o Fixed finalizer triggering lazy loader
+ o Fixed Paginated List caching 
 
 ------------------------------
  2.0.0 RC5 - May 24, 2004
