@@ -3,22 +3,22 @@
   <property file="build.properties"/>
 
   <path id="classpath">
-    <pathelement location="${classes}/"/>
-    <pathelement location="${compatibility}/"/>
-    <pathelement location="${src}/"/>
-    <pathelement location="${devsrc}/"/>
-    <pathelement location="${tests}/"/>
-    <fileset dir="${lib}" includes="**/*.jar" />
-    <fileset dir="${devlib}" includes="**/*.jar" />
+    <pathelement location="${compatibility}"/>
+    <pathelement location="${src}"/>
+    <pathelement location="${devsrc}"/>
+    <pathelement location="${tests}"/>
+    <pathelement location="${classes}"/>
+    <fileset dir="${lib}" includes="**/*.jar"/>
+    <fileset dir="${devlib}" includes="**/*.jar"/>
   </path>
 
-  <target name="clean" >
-    <delete dir="${databases}" />
-    <delete dir="${classes}" />
-    <delete dir="${user_javadocs}" />
-    <delete dir="${dev_javadocs}" />
-    <delete dir="${jars}" />
-    <delete dir="${reports}" />
+  <target name="clean">
+    <delete dir="${classes}"/>
+    <delete dir="${user_javadocs}"/>
+    <delete dir="${dev_javadocs}"/>
+    <delete dir="${jars}"/>
+    <delete dir="${reports}"/>
+    <delete dir="${emmadir}"/>
     <delete>
       <fileset dir="${devsrc}">
         <include name="**/*.class"/>
@@ -46,15 +46,12 @@
     </delete>
     <delete>
       <fileset dir="./">
-        <include name="derby.log"/>
+        <include name="coverage.ec"/>
       </fileset>
     </delete>
   </target>
 
   <target name="prepare" depends="clean">
-    <delete dir="${databases}/compat" />
-    <delete dir="${databases}/mapper" />
-    <delete dir="${databases}/dao" />
     <mkdir dir="${classes}"/>
     <mkdir dir="${dev_javadocs}"/>
     <mkdir dir="${user_javadocs}"/>
@@ -62,94 +59,118 @@
     <mkdir dir="${jars}/debug"/>
     <mkdir dir="${jars}/tests"/>
     <!-- Prepare Release Docs -->
-    <copy todir="${jars}" >
+    <copy todir="${jars}">
       <fileset dir="${doc}">
         <include name="**/*.txt"/>
       </fileset>
     </copy>
     <propertyfile file="version.properties" comment="Build version info">
-        <entry key="buildDate" type="date" value="now"/>
-        <entry key="buildNum" default="0" type="int" operation="+" value="1"/>
+      <entry key="buildDate" type="date" value="now"/>
+      <entry key="buildNum" default="0" type="int" operation="+" value="1"/>
     </propertyfile>
     <replace
-        file="${jars}/release.txt"
-        value="value not found in version.properties"
-        propertyFile="version.properties">
-        <replacefilter
-            token="@buildDate@"
-            property="buildDate"/>
-        <replacefilter
-            token="@buildNum@"
-            property="buildNum"/>
+      file="${jars}/release.txt"
+      value="value not found in version.properties"
+      propertyFile="version.properties">
+      <replacefilter
+        token="@buildDate@"
+        property="buildDate"/>
+      <replacefilter
+        token="@buildNum@"
+        property="buildNum"/>
     </replace>
   </target>
 
   <target name="src.compile" depends="prepare">
     <!-- defaults - override in build.properties-->
-    <property name="compile.debug" value="true" />
-    <property name="compile.deprecation" value="false" />
-    <javac srcdir="${devsrc}" destdir="${classes}" deprecation="${compile.deprecation}" debug="${compile.debug}">
+    <property name="compile.debug" value="true"/>
+    <property name="compile.deprecation" value="false"/>
+    <javac srcdir="${devsrc}" destdir="${classes}" deprecation="true" debug="true">
       <classpath refid="classpath"/>
     </javac>
-    <javac srcdir="${src}" destdir="${classes}" deprecation="${compile.deprecation}" debug="${compile.debug}">
+    <javac srcdir="${src}" destdir="${classes}" deprecation="true" debug="true">
       <classpath refid="classpath"/>
     </javac>
-    <javac srcdir="${compatibility}" destdir="${classes}" deprecation="${compile.deprecation}" debug="${compile.debug}">
+    <javac srcdir="${compatibility}" destdir="${classes}" deprecation="true" debug="true">
       <classpath refid="classpath"/>
     </javac>
-    <javac srcdir="${tests}" destdir="${classes}" deprecation="off" debug="on">
+    <javac srcdir="${tests}" destdir="${classes}" deprecation="true" debug="true">
       <classpath refid="classpath"/>
     </javac>
   </target>
 
-  <target name="src.javadoc" >
-      
-    <javadoc destdir="${dev_javadocs}" use="true"  defaultexcludes="false" failonerror="true" verbose="false" >
+  <target name="src.javadoc">
+
+    <javadoc destdir="${dev_javadocs}" use="true" defaultexcludes="false" failonerror="true" verbose="false">
       <classpath refid="classpath"/>
       <packageset dir="${src}">
         <include name="com/ibatis/**"/>
       </packageset>
     </javadoc>
-    <copy todir="${dev_javadocs}" filtering="true" overwrite="true" >
+    <copy todir="${dev_javadocs}" filtering="true" overwrite="true">
       <fileset dir="${javadocsres}">
         <include name="**/*"/>
       </fileset>
     </copy>
     <move todir="${dev_javadocs}" overwrite="false">
-      <fileset dir="${dev_javadocs}" />
-      <mapper type="glob" from="*xml" to="*txt" />
+      <fileset dir="${dev_javadocs}"/>
+      <mapper type="glob" from="*xml" to="*txt"/>
     </move>
-      
-    <javadoc destdir="${user_javadocs}" defaultexcludes="false" failonerror="true" verbose="false" >
-	  <classpath refid="classpath"/>
-	  <packageset dir="${src}">
-	    <include name="com/ibatis/*/client/**"/>
+
+    <javadoc destdir="${user_javadocs}" defaultexcludes="false" failonerror="true" verbose="false">
+      <classpath refid="classpath"/>
+      <packageset dir="${src}">
+        <include name="com/ibatis/*/client/**"/>
         <include name="com/ibatis/common/**"/>
-	  </packageset>
-	</javadoc>
-      <copy todir="${user_javadocs}" filtering="true" overwrite="true" >
-        <fileset dir="${javadocsres}">
-          <include name="**/*"/>
-        </fileset>
-      </copy>
-      <move todir="${user_javadocs}" overwrite="false">
-        <fileset dir="${user_javadocs}" />
-        <mapper type="glob" from="*xml" to="*txt" />
-      </move>
-      
+      </packageset>
+    </javadoc>
+    <copy todir="${user_javadocs}" filtering="true" overwrite="true">
+      <fileset dir="${javadocsres}">
+        <include name="**/*"/>
+      </fileset>
+    </copy>
+    <move todir="${user_javadocs}" overwrite="false">
+      <fileset dir="${user_javadocs}"/>
+      <mapper type="glob" from="*xml" to="*txt"/>
+    </move>
+
   </target>
 
-  <target name="test.run" depends="src.compile">
+  <taskdef resource="emma_ant.properties" classpathref="classpath"/>
+
+  <target name="test.instrument" depends="src.compile">
+    <mkdir dir="${emmadir}"/>
+    <emma enabled="${emmaenabled}">
+      <instr instrpathref="classpath"
+        destdir="${emmadir}"
+        metadatafile="./coverage.ec"
+        merge="true"
+        >
+        <filter includes="com.ibatis.*"/>
+        <filter excludes="com.ibatis.db.*"/>
+        <filter excludes="com.opensymphony"/>
+        <filter excludes="net.*"/>
+        <filter excludes="oracle.*"/>
+        <filter excludes="*Test"/>
+        <filter excludes="testdomain.*"/>
+        <filter excludes="compatibility.*"/>
+        <filter excludes="xmltester.*"/>
+      </instr>
+    </emma>
+  </target>
+
+  <target name="test.run" depends="test.instrument">
     <mkdir dir="${reports}/junit"/>
     <junit printsummary="true" showoutput="true">
       <formatter type="xml"/>
-      <batchtest todir="${reports}/junit" fork="yes" haltonerror="no" failureproperty="testsFailed" >
+      <batchtest todir="${reports}/junit" fork="yes" haltonerror="no" failureproperty="testsFailed">
         <fileset dir="${classes}">
           <include name="**/*Test.class"/>
           <exclude name="**/Oracle*Test.class"/>
           <exclude name="**/Base*Test.class"/>
         </fileset>
       </batchtest>
+      <classpath path="${emmadir}"/>
       <classpath refid="classpath"/>
     </junit>
     <junitreport todir="${reports}/junit">
@@ -160,10 +181,31 @@
     </junitreport>
   </target>
 
-  <target name="test.compatibility" depends="test.run" >
-    <java fork="true" classname="compatibility.RunAllCompat" failonerror="true" >
+  <target name="test.compatibility" depends="test.run">
+    <java fork="true" classname="compatibility.RunAllCompat" failonerror="true">
+      <classpath path="${emmadir}"/>
       <classpath refid="classpath"/>
     </java>
+  </target>
+
+  <target name="test.coverage" depends="test.compatibility" >
+    <mkdir dir="${reports}/coverage"/>
+    <emma enabled="${emmaenabled}">
+      <report sourcepath="${src}"
+        sort="+block,+name,+method,+class"
+        metrics="method:70,block:80,line:80,class:100"
+        >
+
+        <fileset dir="./">
+          <include name="*.ec"/>
+        </fileset>
+
+        <html outfile="${reports}/coverage/coverage.html"
+          depth="method"
+          columns="name,class,method,block,line"
+          />
+      </report>
+    </emma>
   </target>
 
   <target name="jar.sqlmaps" depends="src.compile">
@@ -272,11 +314,11 @@
         <include name="license.txt"/>
       </fileset>
     </jar>
-    <copy todir="${jars}/debug/" file="${tests}/log4j.properties" />
+    <copy todir="${jars}/debug/" file="${tests}/log4j.properties"/>
   </target>
 
   <target name="deploy.assemble" depends="jar.sqlmaps,jar.dao,jar.common,jar.compatibility,jar.tests,jar.debug">
-    <copy todir="${jars}/lib" >
+    <copy todir="${jars}/lib">
       <fileset dir="${lib}">
         <include name="**/*.jar"/>
       </fileset>
@@ -292,7 +334,7 @@
     </jar>
   </target>
 
-  <target name="post-clean" >
+  <target name="post-clean">
     <delete>
       <fileset dir="${src}">
         <include name="**/*.class"/>
@@ -310,8 +352,8 @@
     </delete>
   </target>
 
-  <target name="all" depends="test.compatibility, src.javadoc, deploy.zipfile, post-clean" >
-    <fail if="testsFailed" message="The tests did not pass" />
+  <target name="all" depends="test.coverage, src.javadoc, deploy.zipfile, post-clean">
+    <fail if="testsFailed" message="The tests did not pass"/>
   </target>
 
   <!--
