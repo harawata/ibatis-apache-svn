@@ -70,6 +70,17 @@ namespace IBatisNet.Common.Utilities
 				return _applicationBase;
 			}
 		}
+
+		/// <summary>
+		/// The name of the directory used to probe the assemblies.
+		/// </summary>
+		public static string BaseDirectory
+		{
+			get
+			{
+				return _baseDirectory;
+			}
+		}
 		#endregion
 
 		#region Constructor (s) / Destructor
