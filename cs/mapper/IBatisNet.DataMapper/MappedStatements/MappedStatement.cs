@@ -389,7 +389,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 					}
 
 					// Check if the ResultClass is a 'primitive' Type
-					if (Type.GetTypeCode(outObject.GetType()) != TypeCode.Object)
+					if (TypeHandlerFactory.IsSimpleType(_statement.ResultClass))
 					{
 						// Create a ResultProperty
 						ResultProperty property = new ResultProperty();

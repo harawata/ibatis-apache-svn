@@ -330,7 +330,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 
 			if (typeCode == TypeCode.Object)
 			{
-				if (_resultClass.GetType() == typeof (Guid))
+				if (_resultClass == typeof (Guid))
 				{
 					return Guid.NewGuid();
 				}

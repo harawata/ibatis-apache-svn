@@ -175,6 +175,24 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL
 			Assert.AreEqual(category.Name, categoryRead.Name);
 			Assert.AreEqual(category.Guid.ToString(), categoryRead.Guid.ToString());
 		}
+
+		/// <summary>
+		///  IBATISNET-25 Error applying ResultMap when using 'Guid' in resultClass
+		/// </summary>
+		[Test] 
+		public void TestResultGuid() 
+		{
+			Guid newGuid = Guid.NewGuid();;
+			Category category = new Category();
+			category.Name = "toto";
+			category.Guid = newGuid;
+
+			int key = (int)sqlMap.Insert("InsertCategory", category);
+
+			Guid guid = (Guid)sqlMap.QueryForObject("GetGuid", key);
+
+			Assert.AreEqual(newGuid, guid);
+		}
 		#endregion
 
 

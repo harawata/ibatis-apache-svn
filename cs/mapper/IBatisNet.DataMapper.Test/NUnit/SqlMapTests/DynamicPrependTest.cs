@@ -284,6 +284,9 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// <summary>
 		/// Test JIRA 11
 		/// </summary>
+		/// <remarks>
+		/// To test only for MSSQL with .NET SqlClient provider
+		/// </remarks>
 		[Test] 
 		public void TestJIRA11() 
 		{
