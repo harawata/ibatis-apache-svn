@@ -450,7 +450,7 @@ All query methods</programlisting></entry>
   insert into PRODUCT (PRD_DESCRIPTION)
   values (#description#) 
  &lt;selectKey resultClass="int" type="post" property="id" &gt; 
-   <emphasis role="blue">select CAST(@@IDENTITY as int) as value</emphasis>
+   <emphasis role="blue">select @@IDENTITY as value</emphasis>
  &lt;/selectKey&gt;
 &lt;/insert&gt;
 
@@ -528,7 +528,7 @@ All query methods</programlisting></entry>
 
   &lt;insert id="InsertCategoryGenerate" parameterMap="insert-generate-params"&gt;
     &lt;selectKey property="Id" type="post" resultClass="int"&gt;
-      select CAST(@@IDENTITY as int) as value
+      select @@IDENTITY as value
     &lt;/selectKey&gt;
     &lt;generate table="Categories" /&gt;
   &lt;/insert&gt;
@@ -1002,11 +1002,11 @@ All query methods</programlisting></entry>
           </note></para>
 
         <para>The <parameter>dbType</parameter> attribute can be set to any
-        string value that matches a constant in the specific data type
-         enum of the used provider (<classname>System.Data.SqlDbType</classname> for Microsoft Sql Server). 
-		Although it can be set to any of these, some types are not supported
-        (<classname>blobs</classname>). Section 3.6 describes the types that
-        are supported by the framework.</para>
+        string value that matches a constant in the specific data type enum of
+        the used provider (<classname>System.Data.SqlDbType</classname> for
+        Microsoft Sql Server). Although it can be set to any of these, some
+        types are not supported (<classname>blobs</classname>). Section 3.6
+        describes the types that are supported by the framework.</para>
       </sect3>
 
       <sect3>
@@ -1119,7 +1119,8 @@ All query methods</programlisting></entry>
 
         <programlisting>&lt;statement id="insertProduct" parameterClass="product"&gt;
   insert into PRODUCT (PRD_ID, PRD_DESCRIPTION)
-  values (<emphasis role="blue">#id:int:-999999#</emphasis>, <emphasis role="blue">#description:VarChar:NO_ENTRY#</emphasis>);
+  values (<emphasis role="blue">#id:int:-999999#</emphasis>, <emphasis
+            role="blue">#description:VarChar:NO_ENTRY#</emphasis>);
 &lt;/statement&gt;</programlisting>
       </example>
 
@@ -1499,7 +1500,8 @@ All query methods</programlisting></entry>
       standard type as a result class, as shown in Example 3.25.<example>
           <title>Selecting a standard type</title>
 
-          <programlisting>&lt;select id="selectProductCount" resultClass="<emphasis role="blue">System.Int32</emphasis>"&gt;
+          <programlisting>&lt;select id="selectProductCount" resultClass="<emphasis
+              role="blue">System.Int32</emphasis>"&gt;
   select count(1)
   from PRODUCT
 &lt;/select&gt;</programlisting>
@@ -1530,7 +1532,8 @@ All query methods</programlisting></entry>
       <example>
         <title>Result Maps can use generic "entry-type" objects</title>
 
-        <programlisting>&lt;resultMap id="select-product-result" class="<emphasis role="blue">HashTable</emphasis>"&gt;
+        <programlisting>&lt;resultMap id="select-product-result" class="<emphasis
+            role="blue">HashTable</emphasis>"&gt;
   &lt;result property="id" column="PRD_ID"/&gt;
   &lt;result property="code" column="PRD_CODE"/&gt;
   &lt;result property="description" column="PRD_DESCRIPTION"/&gt;
@@ -1551,7 +1554,8 @@ All query methods</programlisting></entry>
       <example>
         <title>Implicit Result Maps can use "entry-type" objects too</title>
 
-        <para><programlisting>&lt;statement id="selectProductCount" resultClass="<emphasis role="blue">HashTable</emphasis>"&gt;
+        <para><programlisting>&lt;statement id="selectProductCount" resultClass="<emphasis
+              role="blue">HashTable</emphasis>"&gt;
   select * from PRODUCT
 &lt;/statement&gt;</programlisting></para>
       </example>
@@ -2265,7 +2269,8 @@ All query methods</programlisting></entry>
       <example>
         <title>Configuring a memory-type cache</title>
 
-        <programlisting>&lt;cacheModel id="product-cache" <emphasis role="blue">implementation="MEMORY"</emphasis> &gt;
+        <programlisting>&lt;cacheModel id="product-cache" <emphasis
+            role="blue">implementation="MEMORY"</emphasis> &gt;
   &lt;flushInterval hours="24"/&gt;
   &lt;flushOnExecute  statement="insertProduct"/&gt;
   &lt;flushOnExecute  statement="updateProduct"/&gt;
@@ -2352,7 +2357,8 @@ All query methods</programlisting></entry>
       <example>
         <title>Configuring a LRU type cache</title>
 
-        <programlisting>&lt;cacheModel id="product-cache"  <emphasis role="blue">implementation="LRU"</emphasis> &gt;
+        <programlisting>&lt;cacheModel id="product-cache"  <emphasis
+            role="blue">implementation="LRU"</emphasis> &gt;
   &lt;flushInterval hours="24"/&gt;
   &lt;flushOnExecute  statement="insertProduct"/&gt;
   &lt;flushOnExecute  statement="updateProduct"/&gt;
@@ -2386,7 +2392,8 @@ All query methods</programlisting></entry>
       <example>
         <title>Configuring a FIFO type cache</title>
 
-        <programlisting>&lt;cacheModel id="product-cache" <emphasis role="blue">implementation="FIFO"</emphasis> &gt;
+        <programlisting>&lt;cacheModel id="product-cache" <emphasis
+            role="blue">implementation="FIFO"</emphasis> &gt;
   &lt;flushInterval hours="24"/&gt;
   &lt;flushOnExecute  statement="insertProduct"/&gt;
   &lt;flushOnExecute  statement="updateProduct"/&gt;
@@ -2865,7 +2872,8 @@ ADOLESCENT = ‘TRUE'
       ‘%dog%', then the SQL statement generated would be:</para>
 
       <informalexample>
-        <programlisting>  SELECT * FROM PRODUCT WHERE PRD_DESCRIPTION <emphasis role="blue">LIKE</emphasis> ‘%dog%'</programlisting>
+        <programlisting>  SELECT * FROM PRODUCT WHERE PRD_DESCRIPTION <emphasis
+            role="blue">LIKE</emphasis> ‘%dog%'</programlisting>
       </informalexample>
     </sect2>
   </sect1>
