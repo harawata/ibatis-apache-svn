@@ -11,9 +11,9 @@ import java.net.URL;
  * TypeHandlerCallback implementations use this interface to
  * get values that they can subsequently manipulate before
  * having them returned.  Each of these methods has a corresponding
- * method on the ResultSet class, the only difference being
- * that there is no need to specify the column name or index with
- * these methods.
+ * method on the ResultSet (or CallableStatement) class, the only
+ * difference being that there is no need to specify the column name
+ * or index with these methods.
  * <p/>
  * <b>NOTE:</b> There is no need to implement this.  The implementation
  * will be passed into the TypeHandlerCallback automatically.
