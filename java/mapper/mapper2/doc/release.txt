@@ -6,6 +6,7 @@ Build Number: @buildNum@
 ------------------------------
 
  o Added OJB DAO support (Thanks to Pedro Salgado)
+ o Fixed Autocommit (true) in JdbcDaoTransaction
 
 ------------------------------
  2.0.4 - Jul 25, 2004

@@ -2,12 +2,16 @@ package com.ibatis.dao.engine.transaction.jta;
 
 import com.ibatis.dao.client.DaoTransaction;
 import com.ibatis.dao.client.DaoException;
+import com.ibatis.common.jdbc.logging.ConnectionLogProxy;
 
 import javax.sql.DataSource;
 import javax.transaction.UserTransaction;
 import javax.transaction.Status;
 import java.sql.SQLException;
 import java.sql.Connection;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  *
@@ -17,6 +21,8 @@ import java.sql.Connection;
  * @author Clinton Begin
  */
 public class JtaDaoTransaction implements DaoTransaction {
+
+  private static final Log connectionLog = LogFactory.getLog(Connection.class);
 
   private UserTransaction userTransaction;
   private DataSource dataSource;
@@ -50,10 +56,13 @@ public class JtaDaoTransaction implements DaoTransaction {
       // Open JDBC Connection
       connection = dataSource.getConnection();
       if (connection == null) {
-        throw new DaoException("JtaTransaction could not start transaction.  Cause: The DataSource returned a null connection.");
+        throw new DaoException("Could not start transaction.  Cause: The DataSource returned a null connection.");
       }
       if (connection.getAutoCommit()) {
         connection.setAutoCommit(false);
+      }
+      if (connectionLog.isDebugEnabled()) {
+        connection = ConnectionLogProxy.newInstance(connection);
       }
     } catch (SQLException e) {
       throw new DaoException("Error opening JDBC connection.  Cause: " + e, e);
