@@ -36,6 +36,8 @@ public class ProbeFactory {
       return MAP;
     } else if (object instanceof org.w3c.dom.Document) {
       return DOM;
+    } else if (object instanceof Class) {
+      return LEGACY;
     } else {
       return BEAN;
     }

@@ -14,6 +14,7 @@ public class Account implements Serializable {
   private String lastName;
   private String emailAddress;
   private int[] ids;
+  private Account account;
 
   public int getId() {
     return id;
@@ -53,6 +54,14 @@ public class Account implements Serializable {
 
   public void setEmailAddress(String emailAddress) {
     this.emailAddress = emailAddress;
+  }
+
+  public Account getAccount() {
+    return account;
+  }
+
+  public void setAccount(Account account) {
+    this.account = account;
   }
 
 }

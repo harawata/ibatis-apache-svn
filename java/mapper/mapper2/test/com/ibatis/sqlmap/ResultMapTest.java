@@ -127,4 +127,11 @@ public class ResultMapTest extends BaseSqlMapTest {
     assertEquals(1, order1.getFavouriteLineItem().getOrderId());
 
   }
+
+  public void testGetDoubleNestedResult() throws SQLException {
+    Account account = (Account) sqlMap.queryForObject("getNestedAccountViaColumnName", new Integer(1));
+    assertAccount1(account);
+  }
+
+
 }

@@ -134,8 +134,8 @@ public class BasicResultMap implements ResultMap {
           }
           columnValues[i] = getNestedResultMappingValue(request, rs, mapping, javaType);
         } else {
-          ClassInfo info = ClassInfo.getInstance(resultClass);
-          Class type = info.getSetterType(mapping.getPropertyName());
+          Probe p = ProbeFactory.getProbe(resultClass);
+          Class type = p.getPropertyTypeForSetter(resultClass, mapping.getPropertyName());
           columnValues[i] = getNestedResultMappingValue(request, rs, mapping, type);
         }
       }

@@ -6,6 +6,7 @@ Build Number: @buildNum@
 ------------------------------
 
  o Added SqlMapDaoTemplate wrapper methods (wraps SqlMapExecutor methods)
+ o Fixed "double.nested" complex properties (no WRITEABLE prop found)
  o Fixed finalizer triggering lazy loader
  o Fixed Paginated List caching
  o Fixed NPE on complex prop without parameter class

@@ -39,6 +39,14 @@
     <result property="emailAddress" jdbcType="VARCHAR" column="ACC_EMAIL" nullValue="no_email@provided.com"/>
   </resultMap>
 
+  <resultMap id="nested-account-result" class="account">
+    <result property="id" jdbcType="NUMERIC" column="ACC_ID"/>
+    <result property="firstName" jdbcType="VARCHAR" column="ACC_FIRST_NAME"/>
+    <result property="lastName" jdbcType="VARCHAR" column="ACC_LAST_NAME"/>
+    <result property="emailAddress" jdbcType="VARCHAR" column="ACC_EMAIL" nullValue="no_email@provided.com"/>
+    <result property="account.account" column="ACC_ID" select="getAccountViaColumnName" />
+  </resultMap>
+
   <resultMap id="indexed-account-result" class="account">
     <result property="id" column="ACC_ID" columnIndex="1"/>
     <result property="firstName" column="ACC_FIRST_NAME" columnIndex="2"/>
@@ -113,6 +121,18 @@
   <select id="getAccountViaColumnName"
     parameterClass="java.lang.Integer"
     resultMap="account-result">
+    select
+      ACC_ID,
+      ACC_FIRST_NAME,
+      ACC_LAST_NAME,
+      ACC_EMAIL
+    from ACCOUNT
+    where ACC_ID = #value#
+  </select>
+
+  <select id="getNestedAccountViaColumnName"
+    parameterClass="java.lang.Integer"
+    resultMap="nested-account-result">
     select
       ACC_ID,
       ACC_FIRST_NAME,
