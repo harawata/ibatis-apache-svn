@@ -94,7 +94,9 @@ public class SqlMapSessionImpl implements SqlMapSession {
   }
 
   /**
-   * @deprecated REMOVE THIS
+   * TODO : DEPRECATED
+   *
+   * @deprecated Use queryWithRowHandler(String, Object, RowHandler).
    */
   public List queryForList(String id, Object parameterObject, RowHandler rowHandler) throws SQLException {
     DeprecatedRowHandlerAdapter adapter = new DeprecatedRowHandlerAdapter(rowHandler);
@@ -155,7 +157,9 @@ public class SqlMapSessionImpl implements SqlMapSession {
   }
 
   /**
-   * @deprecated REMOVE THIS
+   * TODO : DEPRECATED
+   *
+   * @deprecated No substitute.
    */
   private class DeprecatedRowHandlerAdapter implements RowHandler {
 

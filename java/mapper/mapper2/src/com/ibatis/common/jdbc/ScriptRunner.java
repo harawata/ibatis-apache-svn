@@ -9,12 +9,14 @@ package com.ibatis.common.jdbc;
 
 //import org.apache.commons.logging.*;
 
-import com.ibatis.common.resources.*;
-import com.ibatis.common.exception.NestedRuntimeException;
+import com.ibatis.common.resources.Resources;
 
+import java.io.IOException;
+import java.io.LineNumberReader;
+import java.io.PrintWriter;
+import java.io.Reader;
 import java.sql.*;
-import java.io.*;
-import java.util.*;
+import java.util.Map;
 
 /**
  * Tool to run database scripts
@@ -43,6 +45,7 @@ public class ScriptRunner {
 
   /**
    * Constructor to allow passing in a Map with configuration data
+   *
    * @param props - the configuration properties
    */
   public ScriptRunner(Map props) {
@@ -52,24 +55,6 @@ public class ScriptRunner {
     setPassword((String) props.get("password"));
     setStopOnError("true".equals(props.get("stopOnError")));
     setAutoCommit("true".equals(props.get("autoCommit")));
-  }
-
-  /**
-   * Don't use this! ;-)
-   * 
-   * @param driver - the Driver class to use
-   * @param url - the database URL
-   * @param username - the username to use to connect to the database
-   * @param password - the password to use to connect to the database
-   * 
-   * @deprecated
-   */
-  public ScriptRunner(String driver, String url, String username, String password) {
-    this.driver = driver;
-    this.url = url;
-    this.username = username;
-    this.password = password;
-    this.autoCommit = false;
   }
 
   /**
@@ -218,18 +203,17 @@ public class ScriptRunner {
 
   /**
    * Runs an SQL script (read in using the Reader parameter)
-   * 
+   *
    * @param reader - the source of the script
-   * 
    * @throws ClassNotFoundException if the driver class cannot be found
-   * @throws SQLException if any SQL errors occur
-   * @throws IOException if there is an error reading from the Reader
+   * @throws SQLException           if any SQL errors occur
+   * @throws IOException            if there is an error reading from the Reader
    * @throws IllegalAccessException if there are problems creating the driver class
    * @throws InstantiationException if there are problems creating the driver class
    */
   public void runScript(Reader reader)
       throws ClassNotFoundException, SQLException, IOException,
-             IllegalAccessException, InstantiationException {
+      IllegalAccessException, InstantiationException {
     DriverManager.registerDriver((Driver) Resources.classForName(driver).newInstance());
     Connection conn = DriverManager.getConnection(url, username, password);
     if (conn.getAutoCommit() != autoCommit) {
@@ -241,12 +225,11 @@ public class ScriptRunner {
 
   /**
    * Runs an SQL script (read in using the Reader parameter) using the connection passed in
-   * 
-   * @param conn - the connection to use for the script
+   *
+   * @param conn   - the connection to use for the script
    * @param reader - the source of the script
-   *  
    * @throws SQLException if any SQL errors occur
-   * @throws IOException if there is an error reading from the Reader
+   * @throws IOException  if there is an error reading from the Reader
    */
   public void runScript(Connection conn, Reader reader)
       throws IOException, SQLException {
@@ -341,56 +324,6 @@ public class ScriptRunner {
     } finally {
       conn.rollback();
       flush();
-    }
-  }
-
-
-  /**
-   * Deprecated
-   * @param args
-   * @deprecated Main method will not be supported in future versions
-   */
-  public static void main(String[] args) {
-    try {
-      if (args.length < 1) {
-        System.out.println("Usage: " + ScriptRunner.class.getName() + " <scriptrunner.properties>");
-      } else {
-        File file = new File(args[0]);
-        if (!file.exists()) {
-          System.out.println(args[0] + " not found.");
-          System.out.println("Usage: " + ScriptRunner.class.getName() + " <scriptrunner.properties>");
-        } else {
-          FileInputStream in = new FileInputStream(file);
-          Properties props = new Properties();
-          props.load(in);
-          in.close();
-          ScriptRunner runner = new ScriptRunner(props);
-
-          Map map = new TreeMap();
-
-          Enumeration propEnum = props.propertyNames();
-          while (propEnum.hasMoreElements()) {
-            String name = (String) propEnum.nextElement();
-            if (name.startsWith("file-")) {
-              runner.println("");
-              runner.printlnError("");
-              String filename = props.getProperty(name);
-              map.put(Integer.valueOf(name.substring(5, name.length())), filename);
-            }
-          }
-
-          Iterator i = map.keySet().iterator();
-          while (i.hasNext()) {
-            String filename = (String) map.get(i.next());
-            runner.println("Running Script: " + filename);
-            runner.printlnError("Running Script: " + filename);
-            runner.runScript(new FileReader(filename));
-            runner.printlnError("");
-          }
-        }
-      }
-    } catch (Exception e) {
-      throw new NestedRuntimeException("Error running ScriptRunner.  Cause: " + e, e);
     }
   }
 

@@ -1,10 +1,15 @@
 package com.ibatis.sqlmap.engine.cache;
 
-import com.ibatis.sqlmap.engine.mapping.statement.*;
+import com.ibatis.common.resources.Resources;
+import com.ibatis.sqlmap.engine.mapping.statement.ExecuteListener;
+import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
+import net.sf.hibernate.exception.NestableRuntimeException;
 
-import com.ibatis.common.resources.*;
-
-import java.util.*;
+import java.io.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Properties;
+import java.util.Set;
 
 public class CacheModel implements ExecuteListener {
 
@@ -14,12 +19,15 @@ public class CacheModel implements ExecuteListener {
   private int requests = 0;
   private int hits = 0;
 
-  /** Constant to turn off periodic cache flushes */
+  /**
+   * Constant to turn off periodic cache flushes
+   */
   private static final long NO_FLUSH_INTERVAL = -99999;
 
   private String id;
 
   private boolean readOnly;
+  private boolean serialize;
 
   private long lastFlush;
   private long flushInterval;
@@ -53,6 +61,14 @@ public class CacheModel implements ExecuteListener {
     this.readOnly = readOnly;
   }
 
+  public boolean isSerialize() {
+    return serialize;
+  }
+
+  public void setSerialize(boolean serialize) {
+    this.serialize = serialize;
+  }
+
   public String getResource() {
     return resource;
   }
@@ -67,21 +83,27 @@ public class CacheModel implements ExecuteListener {
     controller = (CacheController) Resources.instantiate(clazz);
   }
 
-  /** Getter for flushInterval property
+  /**
+   * Getter for flushInterval property
+   *
    * @return The flushInterval (in milliseconds)
    */
   public long getFlushInterval() {
     return flushInterval;
   }
 
-  /** Getter for flushInterval property
+  /**
+   * Getter for flushInterval property
+   *
    * @return The flushInterval (in milliseconds)
    */
   public long getFlushIntervalSeconds() {
     return flushIntervalSeconds;
   }
 
-  /** Setter for flushInterval property
+  /**
+   * Setter for flushInterval property
+   *
    * @param flushInterval The new flushInterval (in milliseconds)
    */
   public void setFlushInterval(long flushInterval) {
@@ -89,27 +111,33 @@ public class CacheModel implements ExecuteListener {
     this.flushIntervalSeconds = flushInterval / 1000;
   }
 
-  /** Adds a flushTriggerStatment. When a flushTriggerStatment is executed, the
+  /**
+   * Adds a flushTriggerStatment. When a flushTriggerStatment is executed, the
    * cache is flushed (cleared).
+   *
    * @param statementName The statement to add.
    */
   public void addFlushTriggerStatement(String statementName) {
     flushTriggerStatements.add(statementName);
   }
 
-  /** Gets an Iterator containing all flushTriggerStatment objects for this cache.
+  /**
+   * Gets an Iterator containing all flushTriggerStatment objects for this cache.
+   *
    * @return The Iterator
    */
   public Iterator getFlushTriggerStatementNames() {
     return flushTriggerStatements.iterator();
   }
 
-  /** ExecuteListener event.  This will be called by a MappedStatement
+  /**
+   * ExecuteListener event.  This will be called by a MappedStatement
    * for which this cache is registered as a ExecuteListener.  It will
    * be called each time an executeXXXXXX method is called.  In the
    * case of the Cache class, it is registered in order to flush the
    * cache whenever a certain statement is executed.
    * (i.e. the flushOnExecute cache policy)
+   *
    * @param statement The statement to execute
    */
   public void onExecuteStatement(MappedStatement statement) {
@@ -122,21 +150,26 @@ public class CacheModel implements ExecuteListener {
 
   /**
    * Configures the cache
+   *
    * @param props
    */
   public void configure(Properties props) {
     controller.configure(props);
   }
 
-  /** Clears the cache */
+  /**
+   * Clears the cache
+   */
   public void flush() {
     lastFlush = System.currentTimeMillis();
     controller.flush(this);
   }
 
-  /** Get an object out of the cache.
+  /**
+   * Get an object out of the cache.
    * A side effect of this method is that is may clear the cache if it has not been
    * cleared in the flushInterval.
+   *
    * @param key The key of the object to be returned
    * @return The cached object (or null)
    */
@@ -150,6 +183,19 @@ public class CacheModel implements ExecuteListener {
 
     Object value = controller.getObject(this, key);
 
+    if (serialize && !readOnly && value != null) {
+      try {
+        ByteArrayInputStream bis = new ByteArrayInputStream((byte[]) value);
+        ObjectInputStream ois = new ObjectInputStream(bis);
+        value = ois.readObject();
+        ois.close();
+        System.out.println(">>>> DE-SERIALIZED >>>>> " + value);
+      } catch (Exception e) {
+        throw new NestableRuntimeException("Error caching serializable object.  Cause: " + e, e);
+      }
+    }
+
+
     synchronized (STATS_LOCK) {
       requests++;
       if (value != null) {
@@ -160,11 +206,26 @@ public class CacheModel implements ExecuteListener {
     return value;
   }
 
-  /** Add an object to the cache
-   * @param key The key of the object to be cached
+  /**
+   * Add an object to the cache
+   *
+   * @param key   The key of the object to be cached
    * @param value The object to be cached
    */
   public void putObject(CacheKey key, Object value) {
+    if (serialize && !readOnly && value != null) {
+      try {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(bos);
+        oos.writeObject((Serializable) value);
+        oos.flush();
+        oos.close();
+        System.out.println(">>>> SERIALIZED >>>>> " + value);
+        value = bos.toByteArray();
+      } catch (IOException e) {
+        throw new NestableRuntimeException("Error caching serializable object.  Cause: " + e, e);
+      }
+    }
     controller.putObject(this, key, value);
   }
 

@@ -5,9 +5,10 @@
  */
 package testdomain;
 
-import java.math.*;
+import java.io.Serializable;
+import java.math.BigDecimal;
 
-public class LineItem {
+public class LineItem implements Serializable {
 
   private int id;
   private int orderId;

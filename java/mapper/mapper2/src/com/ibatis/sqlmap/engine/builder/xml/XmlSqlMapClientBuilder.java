@@ -1076,6 +1076,13 @@ public class XmlSqlMapClientBuilder {
       model.setReadOnly(true);
     }
 
+    String serialize = attributes.getProperty("serialize");
+    if (serialize != null && serialize.length() > 0) {
+      model.setSerialize("true".equals(serialize));
+    } else {
+      model.setSerialize(true);
+    }
+
     errorCtx.setObjectId(id + " cache model");
 
     errorCtx.setMoreInfo("Check the cache model type.");

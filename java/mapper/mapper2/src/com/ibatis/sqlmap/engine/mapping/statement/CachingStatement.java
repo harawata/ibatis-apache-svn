@@ -80,7 +80,7 @@ public class CachingStatement implements MappedStatement {
 
   public CacheKey getCacheKey(RequestScope request, Object parameterObject) {
     CacheKey key = statement.getCacheKey(request, parameterObject);
-    if (!cacheModel.isReadOnly()) {
+    if (!cacheModel.isReadOnly() && !cacheModel.isSerialize()) {
       key.update(request.getSession());
     }
     return key;

@@ -149,6 +149,8 @@ public interface SqlMapExecutor {
 
 
   /**
+   * TODO : Deprecated and will be removed.
+   *
    * @see RowHandler
    * @deprecated Use queryWithRowHandler instead (requires RowHandler interface change) THIS WILL BE REMOVED BY FINAL 2.0 RELEASE
    */

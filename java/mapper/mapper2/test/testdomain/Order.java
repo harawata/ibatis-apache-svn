@@ -5,9 +5,12 @@
  */
 package testdomain;
 
-import java.util.*;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
-public class Order {
+public class Order implements Serializable {
 
   private int id;
   private Account account;

@@ -71,7 +71,9 @@ public class SqlMapClientImpl implements ExtendedSqlMapClient {
   }
 
   /**
-   * @deprecated REMOVE THIS
+   * TODO : DEPRECATED
+   *
+   * @deprecated
    */
   public List queryForList(String id, Object parameterObject, RowHandler rowHandler) throws SQLException {
     return getLocalSqlMapSession().queryForList(id, parameterObject, rowHandler);
@@ -140,8 +142,9 @@ public class SqlMapClientImpl implements ExtendedSqlMapClient {
   }
 
   /**
-   * @return
-   * @deprecated
+   * TODO : DEPRECATED
+   *
+   * @deprecated Use openSession()
    */
   public SqlMapSession getSession() {
     return openSession();

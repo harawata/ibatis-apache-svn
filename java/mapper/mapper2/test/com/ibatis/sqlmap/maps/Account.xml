@@ -13,7 +13,7 @@
     <flushOnExecute statement="updateAccountViaInlineParameters"/>
   </cacheModel>
 
-  <cacheModel id="rw-account-cache" type="FIFO" readOnly="false">
+  <cacheModel id="rw-account-cache" type="FIFO" serialize="true" readOnly="false">
     <flushInterval hours="24"/>
     <flushOnExecute statement="updateAccountViaInlineParameters"/>
   </cacheModel>

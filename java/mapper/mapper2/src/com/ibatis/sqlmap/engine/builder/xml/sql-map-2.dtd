@@ -41,6 +41,7 @@ select CDATA #IMPLIED
 id CDATA #REQUIRED
 type CDATA #REQUIRED
 readOnly (true | false) #IMPLIED
+serialize (true | false) #IMPLIED
 >
 <!ELEMENT flushInterval EMPTY>
 <!ATTLIST flushInterval
