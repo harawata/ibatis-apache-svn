@@ -140,8 +140,8 @@
     </junitreport>
   </target>
 
-  <target name="test.compatibility" depends="test.run">
-    <java fork="true" classname="compatibility.RunAllCompat">
+  <target name="test.compatibility" depends="test.run" >
+    <java fork="true" classname="compatibility.RunAllCompat" failonerror="true" >
       <classpath refid="classpath"/>
     </java>
   </target>
