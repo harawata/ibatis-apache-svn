@@ -2,6 +2,13 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
+ 2.0.8 - Oct 03, 2004
+------------------------------
+
+ o Probes now always return true for hasReadable/hasWriteable property checks.
+ 
+
+------------------------------
  2.0.7 - Oct 03, 2004
 ------------------------------
 

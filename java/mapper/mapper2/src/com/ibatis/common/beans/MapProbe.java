@@ -110,7 +110,7 @@ public class MapProbe extends BaseProbe implements Probe {
    * @return True if the property exists and is writable
    */
   public boolean hasWritableProperty(Object object, String propertyName) {
-    return ((Map) object).containsKey(propertyName);
+    return true;//((Map) object).containsKey(propertyName);
   }
 
   /**
@@ -121,7 +121,7 @@ public class MapProbe extends BaseProbe implements Probe {
    * @return True if the property exists and is readable
    */
   public boolean hasReadableProperty(Object object, String propertyName) {
-    return ((Map) object).containsKey(propertyName);
+    return true;//((Map) object).containsKey(propertyName);
   }
 
 

@@ -7,6 +7,8 @@
       - Override/extend mapped statements (i.e. reuse SQL; overrides="statementName")
       - Remappable automatic result maps (for dynamic column list)
       - DAO lazy initialization option (quiet failure?)
+      - <generate> tag for CRUD methods
+      - Constructor and field based results
   Database Support
       - Isolation Level support
   Performance

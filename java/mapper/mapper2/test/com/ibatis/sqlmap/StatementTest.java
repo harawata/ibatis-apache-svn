@@ -571,8 +571,13 @@ public class StatementTest extends BaseSqlMapTest {
     Account account = (Account) sqlMap.queryForObject("getAccountViaColumnName", new Integer(1));
 
     account.setEmailAddress("new.clinton@ibatis.com");
-    sqlMap.update("updateAccountViaInlineParameters", account);
-
+    try {
+      sqlMap.startTransaction();
+      sqlMap.update("updateAccountViaInlineParameters", account);
+      sqlMap.commitTransaction();
+    } finally {
+      sqlMap.endTransaction();
+    }
     account = (Account) sqlMap.queryForObject("getAccountViaColumnName", new Integer(1));
 
     assertEquals("new.clinton@ibatis.com", account.getEmailAddress());

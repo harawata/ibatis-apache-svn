@@ -245,7 +245,7 @@ public class ComplexBeanProbe extends BaseProbe {
   public boolean hasWritableProperty(Object object, String propertyName) {
     boolean hasProperty = false;
     if (object instanceof Map) {
-      hasProperty = ((Map) object).containsKey(propertyName);
+      hasProperty = true;//((Map) object).containsKey(propertyName);
     } else {
       if (propertyName.indexOf('.') > -1) {
         StringTokenizer parser = new StringTokenizer(propertyName, ".");
@@ -272,7 +272,7 @@ public class ComplexBeanProbe extends BaseProbe {
   public boolean hasReadableProperty(Object object, String propertyName) {
     boolean hasProperty = false;
     if (object instanceof Map) {
-      hasProperty = ((Map) object).containsKey(propertyName);
+      hasProperty = true;//((Map) object).containsKey(propertyName);
     } else {
       if (propertyName.indexOf('.') > -1) {
         StringTokenizer parser = new StringTokenizer(propertyName, ".");
