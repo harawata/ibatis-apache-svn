@@ -1,5 +1,7 @@
 package com.ibatis.sqlmap;
 
+import testdomain.*;
+
 import java.util.List;
 
 public class RepeatingGroupMappingTest extends BaseSqlMapTest {
@@ -15,4 +17,18 @@ public class RepeatingGroupMappingTest extends BaseSqlMapTest {
     assertEquals (5, list.size());
   }
 
+  public void testNestedProperties() throws Exception {
+    List list = sqlMap.queryForList("getFish",null);
+    assertEquals (1, list.size());
+
+    Category cat = (Category)list.get(0);
+    assertEquals ("FISH",cat.getCategoryId());
+    assertEquals ("Fish",cat.getName());
+    assertNotNull ("Expected product list.", cat.getProductList());
+    assertEquals (4, cat.getProductList().size());
+
+    Product product = (Product)cat.getProductList().get(0);
+    assertEquals (2, product.getItemList().size());
+
+  }
 }

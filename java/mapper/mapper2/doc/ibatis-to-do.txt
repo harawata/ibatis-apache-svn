@@ -19,7 +19,7 @@ TO-DO: DOCUMENTATION
   o fetchSize and resultSetType attributes
   o custom type handler docs
   o new inline parameter map syntax
-
+  o <resultMap ... groupBy="propName">
 
   o More on bytecode enhancement
   o More on dynamic statment prepend behavior

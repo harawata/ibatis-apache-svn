@@ -15,29 +15,21 @@
  */
 package com.ibatis.sqlmap.engine.mapping.result;
 
-import com.ibatis.common.beans.Probe;
-import com.ibatis.common.beans.ProbeFactory;
+import com.ibatis.common.beans.*;
 import com.ibatis.common.jdbc.exception.NestedSQLException;
 import com.ibatis.common.resources.Resources;
 import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.engine.exchange.DataExchange;
-import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
-import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
+import com.ibatis.sqlmap.engine.impl.*;
 import com.ibatis.sqlmap.engine.mapping.result.loader.ResultLoader;
 import com.ibatis.sqlmap.engine.mapping.sql.Sql;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
-import com.ibatis.sqlmap.engine.scope.ErrorContext;
-import com.ibatis.sqlmap.engine.scope.RequestScope;
-import com.ibatis.sqlmap.engine.type.DomCollectionTypeMarker;
-import com.ibatis.sqlmap.engine.type.DomTypeMarker;
-import com.ibatis.sqlmap.engine.type.TypeHandler;
-import com.ibatis.sqlmap.engine.type.TypeHandlerFactory;
+import com.ibatis.sqlmap.engine.scope.*;
+import com.ibatis.sqlmap.engine.type.*;
 import org.w3c.dom.Document;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import javax.xml.parsers.*;
+import java.sql.*;
 import java.util.*;
 
 /**
@@ -53,7 +45,10 @@ public class BasicResultMap implements ResultMap {
   protected ResultMapping[] resultMappings;
   protected DataExchange dataExchange;
 
+  private List nestedResultMappings;
+
   private Set groupByProps;
+  private Map uniqueKeys;
 
   private String xmlName;
 
@@ -63,8 +58,8 @@ public class BasicResultMap implements ResultMap {
 
   /**
    * Constructor to pass a SqlMapExecutorDelegate in
-   * 
-   * @param delegate - the SqlMapExecutorDelegate 
+   *
+   * @param delegate - the SqlMapExecutorDelegate
    */
   public BasicResultMap(SqlMapExecutorDelegate delegate) {
     this.delegate = delegate;
@@ -72,7 +67,7 @@ public class BasicResultMap implements ResultMap {
 
   /**
    * Getter for the SqlMapExecutorDelegate
-   *  
+   *
    * @return - the delegate
    */
   public SqlMapExecutorDelegate getDelegate() {
@@ -85,7 +80,7 @@ public class BasicResultMap implements ResultMap {
 
   /**
    * Setter for the ID
-   * 
+   *
    * @param id - the new ID
    */
   public void setId(String id) {
@@ -99,7 +94,7 @@ public class BasicResultMap implements ResultMap {
   public Object getUniqueKey(Object[] values) {
     if (groupByProps != null) {
       StringBuffer keyBuffer = new StringBuffer();
-      for (int i=0; i < resultMappings.length; i++) {
+      for (int i = 0; i < resultMappings.length; i++) {
         String propertyName = resultMappings[i].getPropertyName();
         if (groupByProps.contains(propertyName)) {
           keyBuffer.append(values[i]);
@@ -118,7 +113,7 @@ public class BasicResultMap implements ResultMap {
 
   /**
    * Setter for the result class (what the results will be mapped into)
-   * 
+   *
    * @param resultClass - the result class
    */
   public void setResultClass(Class resultClass) {
@@ -127,8 +122,8 @@ public class BasicResultMap implements ResultMap {
 
   /**
    * Getter for the DataExchange object to be used
-   * 
-   * @return - the DataExchange object 
+   *
+   * @return - the DataExchange object
    */
   public DataExchange getDataExchange() {
     return dataExchange;
@@ -136,8 +131,8 @@ public class BasicResultMap implements ResultMap {
 
   /**
    * Setter for the DataExchange object to be used
-   * 
-   * @param dataExchange - the new DataExchange object 
+   *
+   * @param dataExchange - the new DataExchange object
    */
   public void setDataExchange(DataExchange dataExchange) {
     this.dataExchange = dataExchange;
@@ -145,7 +140,7 @@ public class BasicResultMap implements ResultMap {
 
   /**
    * Getter (used by DomDataExchange) for the xml name of the results
-   * 
+   *
    * @return - the name
    */
   public String getXmlName() {
@@ -154,7 +149,7 @@ public class BasicResultMap implements ResultMap {
 
   /**
    * Setter (used by the SqlMapBuilder) for the xml name of the results
-   * 
+   *
    * @param xmlName - the name
    */
   public void setXmlName(String xmlName) {
@@ -163,7 +158,7 @@ public class BasicResultMap implements ResultMap {
 
   /**
    * Getter for the resource (used to report errors)
-   * 
+   *
    * @return - the resource
    */
   public String getResource() {
@@ -172,18 +167,25 @@ public class BasicResultMap implements ResultMap {
 
   /**
    * Setter for the resource (used by the SqlMapBuilder)
-   * 
+   *
    * @param resource - the resource name
    */
   public void setResource(String resource) {
     this.resource = resource;
   }
 
-  public void addGroupByProperty (String name) {
+  public void addGroupByProperty(String name) {
     if (groupByProps == null) {
       groupByProps = new HashSet();
     }
     groupByProps.add(name);
+  }
+
+  public void addNestedResultMappings(ResultMapping mapping) {
+    if (nestedResultMappings == null) {
+      nestedResultMappings = new ArrayList();
+    }
+    nestedResultMappings.add(mapping);
   }
 
   public ResultMapping[] getResultMappings() {
@@ -192,7 +194,7 @@ public class BasicResultMap implements ResultMap {
 
   /**
    * Setter for a list of the individual ResultMapping objects
-   * 
+   *
    * @param resultMappingList - the list
    */
   public void setResultMappingList(List resultMappingList) {
@@ -205,7 +207,7 @@ public class BasicResultMap implements ResultMap {
 
   /**
    * Getter for the number of ResultMapping objects
-   * 
+   *
    * @return - the count
    */
   public int getResultCount() {
@@ -229,24 +231,24 @@ public class BasicResultMap implements ResultMap {
     for (int i = 0; i < resultMappings.length; i++) {
       BasicResultMapping mapping = (BasicResultMapping) resultMappings[i];
       errorContext.setMoreInfo(mapping.getErrorString());
-      if (mapping.getStatementName() == null) {
-        columnValues[i] = getPrimitiveResultMappingValue(rs, mapping);
-      } else {
+      if (mapping.getStatementName() != null) {
         if (resultClass == null) {
           throw new SqlMapException("The result class was null when trying to get results for ResultMap named " + getId() + ".");
         } else if (Map.class.isAssignableFrom(resultClass)) {
-          columnValues[i] = getNestedResultMappingValue(request, rs, mapping, Object.class);
+          columnValues[i] = getNestedSelectMappingValue(request, rs, mapping, Object.class);
         } else if (DomTypeMarker.class.isAssignableFrom(resultClass)) {
           Class javaType = mapping.getJavaType();
           if (javaType == null) {
             javaType = DomTypeMarker.class;
           }
-          columnValues[i] = getNestedResultMappingValue(request, rs, mapping, javaType);
+          columnValues[i] = getNestedSelectMappingValue(request, rs, mapping, javaType);
         } else {
           Probe p = ProbeFactory.getProbe(resultClass);
           Class type = p.getPropertyTypeForSetter(resultClass, mapping.getPropertyName());
-          columnValues[i] = getNestedResultMappingValue(request, rs, mapping, type);
+          columnValues[i] = getNestedSelectMappingValue(request, rs, mapping, type);
         }
+      } else if (mapping.getNestedResultMapName() == null) {
+        columnValues[i] = getPrimitiveResultMappingValue(rs, mapping);
       }
     }
 
@@ -254,10 +256,81 @@ public class BasicResultMap implements ResultMap {
   }
 
   public Object setResultObjectValues(RequestScope request, Object resultObject, Object[] values) {
-    return dataExchange.setData(request, this, resultObject, values);
+    Object ukey = getUniqueKey(values);
+
+    // Only continue if unique key is not already known.
+    if (uniqueKeys != null && uniqueKeys.containsKey(ukey)) {
+      resultObject = uniqueKeys.get(ukey);
+      applyNestedResultMap(request, resultObject, values);
+      resultObject = NO_VALUE;
+    } else if (ukey == null || uniqueKeys == null || !uniqueKeys.containsKey(ukey)) {
+      resultObject = dataExchange.setData(request, this, resultObject, values);
+      // Lazy init key set
+      if (ukey != null) {
+        if (uniqueKeys == null) {
+          uniqueKeys = new HashMap();
+        }
+        uniqueKeys.put(ukey, resultObject);
+      }
+      applyNestedResultMap(request, resultObject, values);
+    } else {
+      resultObject = NO_VALUE;
+    }
+
+    return resultObject;
   }
 
-  protected Object getNestedResultMappingValue(RequestScope request, ResultSet rs, BasicResultMapping mapping, Class targetType)
+  private void applyNestedResultMap(RequestScope request, Object resultObject, Object[] values) {
+    if (resultObject != null && resultObject != NO_VALUE) {
+      if (nestedResultMappings != null) {
+        for (int i = 0, n=nestedResultMappings.size(); i < n; i++) {
+          BasicResultMapping resultMapping = (BasicResultMapping) nestedResultMappings.get(i);
+          setNestedResultMappingValue(resultMapping, request, resultObject, values);
+        }
+      }
+    }
+  }
+
+  protected void setNestedResultMappingValue(BasicResultMapping mapping, RequestScope request, Object resultObject, Object[] values) {
+    try {
+
+      String resultMapName = mapping.getNestedResultMapName();
+      ResultMap resultMap = getDelegate().getResultMap(resultMapName);
+      Class type = mapping.getJavaType();
+      String propertyName = mapping.getPropertyName();
+
+      Collection c = (Collection) PROBE.getObject(resultObject, propertyName);
+
+      if (c == null) {
+        if (type == null) {
+          type = PROBE.getPropertyTypeForSetter(resultObject, propertyName);
+        }
+        if (type == Collection.class || type == List.class || type == ArrayList.class) {
+          c = new ArrayList();
+        } else if (type == Set.class || type == HashSet.class) {
+          c = new HashSet();
+        } else {
+          try {
+            c = (Collection) type.newInstance();
+          } catch (Exception e) {
+            throw new SqlMapException("Error instantiating collection property for mapping '" + mapping.getPropertyName() + "'.  Cause: " + e, e);
+          }
+        }
+        PROBE.setObject(resultObject, propertyName, c);
+      }
+
+      values = resultMap.getResults(request, request.getResultSet());
+      Object o = resultMap.setResultObjectValues(request, null, values);
+      if (o != NO_VALUE) {
+        c.add(o);
+      }
+    } catch (SQLException e) {
+      throw new SqlMapException("Error getting nested result map values for '" + mapping.getPropertyName() + "'.  Cause: " + e, e);
+    }
+
+  }
+
+  protected Object getNestedSelectMappingValue(RequestScope request, ResultSet rs, BasicResultMapping mapping, Class targetType)
       throws SQLException {
     try {
       TypeHandlerFactory typeHandlerFactory = getDelegate().getTypeHandlerFactory();
@@ -416,7 +489,6 @@ public class BasicResultMap implements ResultMap {
     }
     return value;
   }
-
 
 
 }

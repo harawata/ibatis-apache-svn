@@ -20,6 +20,8 @@ import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
 import com.ibatis.sqlmap.engine.mapping.sql.Sql;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
 
+import java.sql.ResultSet;
+
 /**
  * Request based implementation of Scope interface
  */
@@ -37,6 +39,9 @@ public class RequestScope extends BaseScope {
   // Used by DynamicSql
   private ParameterMap dynamicParameterMap;
   private String dynamicSql;
+
+  // Used by N+1 Select solution
+  private ResultSet resultSet;
 
   /**
    * Default constructor
@@ -178,6 +183,14 @@ public class RequestScope extends BaseScope {
     this.dynamicSql = dynamicSql;
   }
 
+  public ResultSet getResultSet() {
+    return resultSet;
+  }
+
+  public void setResultSet(ResultSet resultSet) {
+    this.resultSet = resultSet;
+  }
+
   public void reset() {
     super.reset();
     errorContext.reset();
@@ -188,6 +201,7 @@ public class RequestScope extends BaseScope {
     sql = null;
     dynamicParameterMap = null;
     dynamicSql = null;
+    resultSet = null;
   }
 
 }

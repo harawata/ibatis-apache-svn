@@ -8,9 +8,7 @@
     <result property="categoryId" column="catid"/>
     <result property="name" column="name"/>
     <result property="description" column="descn"/>
-    <!--
     <result property="productList" resultMap="productResult"/>
-    -->
   </resultMap>
 
   <resultMap id="productResult" class="testdomain.Product" groupBy="productId">
@@ -34,9 +32,18 @@
 
   <select id="getAllCategories" resultMap="categoryResult" >
     select *
-    from category c, product p, item i
+    from category c, product p, item i, inventory v
     where c.catid = p.category
       and p.productid = i.productid
+      and i.itemid = v.itemid
   </select>
 
+  <select id="getFish" resultMap="categoryResult" >
+    select *
+    from category c, product p, item i, inventory v
+    where c.catid = p.category
+      and p.productid = i.productid
+      and i.itemid = v.itemid
+      and c.catid = 'FISH'
+  </select>
 </sqlMap>

@@ -1,7 +1,3 @@
-drop index productCat;
-drop index productName;
-drop index itemProd;
-
 drop table lineitem;
 drop table orderstatus;
 drop table orders;
@@ -129,9 +125,6 @@ create table product (
         references category (catid)
 );
 
-create index productCat on product (category);
-create index productName on product (name);
-
 create table item (
     itemid varchar(10) not null,
     productid varchar(10) not null,
@@ -150,8 +143,6 @@ create table item (
         constraint fk_item_2 foreign key (supplier)
         references supplier (suppid)
 );
-
-create index itemProd on item (productid);
 
 create table inventory (
     itemid varchar(10) not null,

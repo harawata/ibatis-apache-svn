@@ -33,6 +33,8 @@ public class BasicResultMapping implements ResultMapping {
   private String statementName;
   private Class javaType;
 
+  private String nestedResultMapName;
+
   private String errorString;
 
   public String getPropertyName() {
@@ -191,6 +193,14 @@ public class BasicResultMapping implements ResultMapping {
    */
   public void setStatementName(String statementName) {
     this.statementName = statementName;
+  }
+
+  public String getNestedResultMapName() {
+    return nestedResultMapName;
+  }
+
+  public void setNestedResultMapName(String nestedResultMapName) {
+    this.nestedResultMapName = nestedResultMapName;
   }
 
 }

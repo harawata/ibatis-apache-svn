@@ -328,28 +328,33 @@ public class SqlExecutor {
   }
 
   private void handleResults(RequestScope request, ResultSet rs, int skipResults, int maxResults, RowHandlerCallback callback) throws SQLException {
-    ResultMap resultMap = request.getResultMap();
-    if (resultMap != null) {
-      // Skip Results
-      if (rs.getType() != ResultSet.TYPE_FORWARD_ONLY) {
-        if (skipResults > 0) {
-          rs.absolute(skipResults);
-        }
-      } else {
-        for (int i = 0; i < skipResults; i++) {
-          if (!rs.next()) {
-            break;
+    try {
+      request.setResultSet(rs);
+      ResultMap resultMap = request.getResultMap();
+      if (resultMap != null) {
+        // Skip Results
+        if (rs.getType() != ResultSet.TYPE_FORWARD_ONLY) {
+          if (skipResults > 0) {
+            rs.absolute(skipResults);
+          }
+        } else {
+          for (int i = 0; i < skipResults; i++) {
+            if (!rs.next()) {
+              break;
+            }
           }
         }
-      }
 
-      // Get Results
-      int resultsFetched = 0;
-      while ((maxResults == SqlExecutor.NO_MAXIMUM_RESULTS || resultsFetched < maxResults) && rs.next()) {
-        Object[] columnValues = resultMap.getResults(request, rs);
-        callback.handleResultObject(request, columnValues);
-        resultsFetched++;
+        // Get Results
+        int resultsFetched = 0;
+        while ((maxResults == SqlExecutor.NO_MAXIMUM_RESULTS || resultsFetched < maxResults) && rs.next()) {
+          Object[] columnValues = resultMap.getResults(request, rs);
+          callback.handleResultObject(request, columnValues);
+          resultsFetched++;
+        }
       }
+    } finally {
+      request.setResultSet(null);
     }
   }
 

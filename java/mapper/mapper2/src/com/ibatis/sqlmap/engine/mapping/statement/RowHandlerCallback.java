@@ -15,28 +15,21 @@
  */
 package com.ibatis.sqlmap.engine.mapping.statement;
 
-import java.io.StringWriter;
-import java.util.*;
-
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.w3c.dom.Document;
-
 import com.ibatis.sqlmap.client.event.RowHandler;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
 import com.ibatis.sqlmap.engine.scope.RequestScope;
 import com.ibatis.sqlmap.engine.type.XmlTypeMarker;
+import org.w3c.dom.Document;
+
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.StringWriter;
 
 /**
  * Class to manager row handler access
  */
 public class RowHandlerCallback {
-
-  private Set uniqueKeys;
 
   private RowHandler rowHandler;
   private ResultMap resultMap;
@@ -44,10 +37,10 @@ public class RowHandlerCallback {
 
   /**
    * Constructor
-   * 
-   * @param resultMap - the result map
+   *
+   * @param resultMap    - the result map
    * @param resultObject - the result object
-   * @param rowHandler - the row handler object
+   * @param rowHandler   - the row handler object
    */
   public RowHandlerCallback(ResultMap resultMap, Object resultObject, RowHandler rowHandler) {
     this.rowHandler = rowHandler;
@@ -57,27 +50,16 @@ public class RowHandlerCallback {
 
   /**
    * Prepares the row object, and passes it to the row handler
-   * 
+   *
    * @param request - the request scope
    * @param results - the result data
    */
   public void handleResultObject(RequestScope request, Object[] results) {
     Object object;
 
-    Object ukey = resultMap.getUniqueKey(results);
+    object = resultMap.setResultObjectValues(request, resultObject, results);
 
-    // Only continue if unique key is not already known.
-    if (ukey == null || uniqueKeys == null || !uniqueKeys.contains(ukey)) {
-      object = resultMap.setResultObjectValues(request, resultObject, results);
-
-      // Lazy init key set
-      if (ukey != null) {
-        if (uniqueKeys == null) {
-          uniqueKeys = new HashSet();
-        }
-        uniqueKeys.add(ukey);
-      }
-
+    if (object != ResultMap.NO_VALUE) {
       //  XML Only special processing. (converts elements to string for easy insertion).
       int stackDepth = request.getSession().getRequestStackDepth();
       if (stackDepth == 1) {
@@ -92,7 +74,7 @@ public class RowHandlerCallback {
     }
   }
 
-  private String documentToString (Document document) {
+  private String documentToString(Document document) {
     String s = null;
 
     try {

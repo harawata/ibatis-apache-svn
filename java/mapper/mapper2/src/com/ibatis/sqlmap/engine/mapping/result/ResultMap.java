@@ -26,6 +26,8 @@ import java.sql.SQLException;
  */
 public interface ResultMap {
 
+  public static final Object NO_VALUE = new Object();
+
   /**
    * A way to identify the ResultMap
    * 

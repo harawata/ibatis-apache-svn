@@ -906,6 +906,7 @@ public class XmlSqlMapClientBuilder {
         String columnName = childAttributes.getProperty("column");
         String columnIndex = childAttributes.getProperty("columnIndex");
         String statementName = childAttributes.getProperty("select");
+        String resultMapName = childAttributes.getProperty("resultMap");
         String callback = childAttributes.getProperty("typeHandler");
 
         callback = typeHandlerFactory.resolveAlias(callback);
@@ -935,6 +936,12 @@ public class XmlSqlMapClientBuilder {
         mapping.setTypeHandler(handler);
         mapping.setNullValue(nullValue);
         mapping.setStatementName(statementName);
+        mapping.setNestedResultMapName(resultMapName);
+
+        if (resultMapName != null && resultMapName.length() > 0) {
+          map.addNestedResultMappings(mapping);
+        }
+
         try {
           if (javaType != null && javaType.length() > 0) {
             mapping.setJavaType(Class.forName(javaType));
