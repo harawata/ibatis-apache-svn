@@ -15,8 +15,6 @@
  */
 package com.ibatis.db.sqlmap;
 
-import java.util.List;
-
 public class RowHandlerAdapter implements com.ibatis.sqlmap.client.event.RowHandler {
 
   private RowHandler rowHandler;
@@ -27,15 +25,6 @@ public class RowHandlerAdapter implements com.ibatis.sqlmap.client.event.RowHand
 
   public void handleRow(Object valueObject) {
     rowHandler.handleRow(valueObject);
-  }
-
-  /**
-   * TODO : DEPRECATED
-   *
-   * @deprecated Use handleRow(Object)
-   */
-  public void handleRow(Object valueObject, List list) {
-    throw new UnsupportedOperationException("DEPRECATED: This should never be called internally.");
   }
 
 }

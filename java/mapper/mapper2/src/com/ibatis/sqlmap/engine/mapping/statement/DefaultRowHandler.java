@@ -32,14 +32,4 @@ public class DefaultRowHandler implements RowHandler {
     return list;
   }
 
-  /**
-   * TODO : DEPRECATED
-   *
-   * @deprecated Use handleRow(Object).
-   */
-  public void handleRow(Object valueObject, List list) {
-    throw new UnsupportedOperationException("DEPRECATED: This should never be called internally.");
-  }
-
-
 }
