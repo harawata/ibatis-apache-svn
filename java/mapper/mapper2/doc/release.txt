@@ -5,13 +5,15 @@ Build Number: @buildNum@
  2.0.6 - Sep 19, 2004
 ------------------------------
 
- o Fixed non-caching null cache result bug.
+ o Changed complex props so select won't be executed if param null
+ o Fixed non-caching null cache result bug
  o Fixed removeObject bug from fifo and lifo cache
  o Fixed locale issue with JavaBean property matching
  o Fixed unclosed statement if result set fails in MS SQL Server
  o Fixed comments within dao.xml
  o Fixed undetected duplicate statement names in a single sql map
- o Fixed inconsistent type handler for Map params causing Sybase Date to fail
+ o Fixed inconsistent type handler for Map params without paramclass
+ o Fixed SQLExceptin when populating complex properties
 
 ------------------------------
  2.0.5 - Aug 11, 2004

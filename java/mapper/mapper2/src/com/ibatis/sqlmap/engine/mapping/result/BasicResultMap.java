@@ -28,7 +28,10 @@ import com.ibatis.sqlmap.engine.mapping.sql.Sql;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
 import com.ibatis.sqlmap.engine.scope.ErrorContext;
 import com.ibatis.sqlmap.engine.scope.RequestScope;
-import com.ibatis.sqlmap.engine.type.*;
+import com.ibatis.sqlmap.engine.type.DomCollectionTypeMarker;
+import com.ibatis.sqlmap.engine.type.DomTypeMarker;
+import com.ibatis.sqlmap.engine.type.TypeHandler;
+import com.ibatis.sqlmap.engine.type.TypeHandlerFactory;
 import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -189,30 +192,32 @@ public class BasicResultMap implements ResultMap {
         }
       }
 
-      Sql sql = mappedStatement.getSql();
-      ResultMap resultMap = sql.getResultMap(request, parameterObject);
-      Class resultClass = resultMap.getResultClass();
+      Object result = null;
+      if (parameterObject != null) {
 
-      if (resultClass != null && !DomTypeMarker.class.isAssignableFrom(targetType)) {
-        if (DomCollectionTypeMarker.class.isAssignableFrom(resultClass)) {
-          targetType = DomCollectionTypeMarker.class;
-        } else if (DomTypeMarker.class.isAssignableFrom(resultClass)) {
-          targetType = DomTypeMarker.class;
+        Sql sql = mappedStatement.getSql();
+        ResultMap resultMap = sql.getResultMap(request, parameterObject);
+        Class resultClass = resultMap.getResultClass();
+
+        if (resultClass != null && !DomTypeMarker.class.isAssignableFrom(targetType)) {
+          if (DomCollectionTypeMarker.class.isAssignableFrom(resultClass)) {
+            targetType = DomCollectionTypeMarker.class;
+          } else if (DomTypeMarker.class.isAssignableFrom(resultClass)) {
+            targetType = DomTypeMarker.class;
+          }
+        }
+
+        result = ResultLoader.loadResult(client, statementName, parameterObject, targetType);
+
+        String nullValue = mapping.getNullValue();
+        if (result == null && nullValue != null) {
+          TypeHandler typeHandler = typeHandlerFactory.getTypeHandler(targetType);
+          if (typeHandler != null) {
+            result = typeHandler.valueOf(nullValue);
+          }
         }
       }
-
-      Object result = ResultLoader.loadResult(client, statementName, parameterObject, targetType);
-
-      String nullValue = mapping.getNullValue();
-      if (result == null && nullValue != null) {
-        TypeHandler typeHandler = typeHandlerFactory.getTypeHandler(targetType);
-        if (typeHandler != null) {
-          result = typeHandler.valueOf(nullValue);
-        }
-      }
-
       return result;
-
     } catch (InstantiationException e) {
       throw new NestedSQLException("Error setting nested bean property.  Cause: " + e, e);
     } catch (IllegalAccessException e) {
