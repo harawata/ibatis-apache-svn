@@ -1080,7 +1080,7 @@ public class XmlSqlMapClientBuilder {
     if (serialize != null && serialize.length() > 0) {
       model.setSerialize("true".equals(serialize));
     } else {
-      model.setSerialize(true);
+      model.setSerialize(false);
     }
 
     errorCtx.setObjectId(id + " cache model");

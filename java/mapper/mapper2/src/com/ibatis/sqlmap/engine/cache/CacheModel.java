@@ -240,7 +240,8 @@ public class CacheModel implements ExecuteListener {
         value = ois.readObject();
         ois.close();
       } catch (Exception e) {
-        throw new NestedRuntimeException("Error caching serializable object.  Cause: " + e, e);
+        throw new NestedRuntimeException("Error caching serializable object.  Be sure you're not attempting to use " +
+            "a serialized cache for an object that may be taking advantage of lazy loading.  Cause: " + e, e);
       }
     }
 
