@@ -3,7 +3,7 @@
 		xsi:noNamespaceSchemaLocation="SqlMap.xsd">
 	
 	<alias>
-		<typeAlias alias="Enumeration" type="IBatisNet.Test.Domain.Enumeration, IBatisNet.Test"/>
+		<typeAlias alias="Enumeration" type="IBatisNet.DataMapper.Test.Domain.Enumeration, IBatisNet.DataMapper.Test"/>
 	</alias>
 	
 	<resultMaps>                                    

@@ -4,7 +4,7 @@
 	xsi:noNamespaceSchemaLocation="SqlMap.xsd">
 
 	<alias>
-		<typeAlias alias="Order" type="IBatisNet.Test.Domain.Order, IBatisNet.Test" />
+		<typeAlias alias="Order" type="IBatisNet.DataMapper.Test.Domain.Order, IBatisNet.TDataMapper.est" />
 	</alias>
 
 		<!-- If the type is not specified, ADO.NET infers the 

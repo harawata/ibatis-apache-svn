@@ -130,8 +130,64 @@
                     BuildAction = "Content"
                 />
                 <File
-                    RelPath = "User.hbm.xml"
-                    BuildAction = "Content"
+                    RelPath = "bin\Debug\dao_MSSQL_Odbc.config"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "bin\Debug\dao_MSSQL_OleDb.config"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "bin\Debug\dao_MSSQL_SqlClient.config"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "bin\Debug\dao_MySql_ByteFx.config"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "bin\Debug\dao_Oracle_ODP.config"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "bin\Debug\dao_Oracle_OracleClient.config"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "bin\Debug\IBatisNet.DataMapper.Test.dll.config"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "bin\Debug\providers.config"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "bin\Debug\SqlMap_MSSQL_Odbc.config"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "bin\Debug\SqlMap_MSSQL_OleDb.config"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "bin\Debug\SqlMap_MSSQL_SqlClient.config"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "bin\Debug\SqlMap_MySql_ByteFx.config"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "bin\Debug\SqlMap_Oracle_ODP.config"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "bin\Debug\SqlMap_Oracle_OracleClient.config"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "bin\Debug\test.config"
+                    BuildAction = "None"
                 />
                 <File
                     RelPath = "Domain\Account.cs"
