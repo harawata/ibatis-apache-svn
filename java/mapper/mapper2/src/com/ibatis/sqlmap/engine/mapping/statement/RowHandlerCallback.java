@@ -15,34 +15,50 @@
  */
 package com.ibatis.sqlmap.engine.mapping.statement;
 
-import com.ibatis.sqlmap.client.event.RowHandler;
-import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
-import com.ibatis.sqlmap.engine.scope.RequestScope;
-import com.ibatis.sqlmap.engine.type.*;
-
-import java.sql.SQLException;
 import java.io.StringWriter;
+
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 
-import javax.xml.transform.*;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.dom.DOMSource;
+import com.ibatis.sqlmap.client.event.RowHandler;
+import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
+import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.type.XmlTypeMarker;
 
+/**
+ * Class to manager row handler access
+ */
 public class RowHandlerCallback {
 
   private RowHandler rowHandler;
   private ResultMap resultMap;
   private Object resultObject;
 
+  /**
+   * Constructor
+   * 
+   * @param resultMap - the result map
+   * @param resultObject - the result object
+   * @param rowHandler - the row handler object
+   */
   public RowHandlerCallback(ResultMap resultMap, Object resultObject, RowHandler rowHandler) {
     this.rowHandler = rowHandler;
     this.resultMap = resultMap;
     this.resultObject = resultObject;
   }
 
-  public void handleResultObject(RequestScope request, Object[] results)
-      throws SQLException {
+  /**
+   * Prepares the row object, and passes it to the row handler
+   * 
+   * @param request - the request scope
+   * @param results - the result data
+   */
+  public void handleResultObject(RequestScope request, Object[] results) {
     Object object;
     object = resultMap.setResultObjectValues(request, resultObject, results);
 

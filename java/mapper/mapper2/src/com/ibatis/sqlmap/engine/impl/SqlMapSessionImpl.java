@@ -15,6 +15,16 @@
  */
 package com.ibatis.sqlmap.engine.impl;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+import javax.sql.DataSource;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.ibatis.common.jdbc.exception.NestedSQLException;
 import com.ibatis.common.util.PaginatedList;
 import com.ibatis.sqlmap.client.SqlMapSession;
@@ -24,24 +34,23 @@ import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
 import com.ibatis.sqlmap.engine.scope.SessionScope;
 import com.ibatis.sqlmap.engine.transaction.Transaction;
 import com.ibatis.sqlmap.engine.transaction.TransactionException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+/**
+ * Implementation of SqlMapSession
+ */
 public class SqlMapSessionImpl implements SqlMapSession {
 
   private static final Log log = LogFactory.getLog(SqlMapSessionImpl.class);
 
-  public SqlMapExecutorDelegate delegate;
-  public SessionScope session;
-  public boolean closed;
+  protected SqlMapExecutorDelegate delegate;
+  protected SessionScope session;
+  protected boolean closed;
 
+  /**
+   * Constructor
+   * 
+   * @param client - the client that will use the session
+   */
   public SqlMapSessionImpl(ExtendedSqlMapClient client) {
     this.delegate = client.getDelegate();
     this.session = this.delegate.popSession();
@@ -51,10 +60,18 @@ public class SqlMapSessionImpl implements SqlMapSession {
     this.closed = false;
   }
 
+  /**
+   * Start the session
+   */
   public void open() {
     session.setSqlMapTxMgr(this);
   }
 
+  /**
+   * Getter to tell if the session is still open
+   * 
+   * @return - the status of the session
+   */
   public boolean isClosed() {
     return closed;
   }
@@ -162,22 +179,49 @@ public class SqlMapSessionImpl implements SqlMapSession {
     return delegate.getDataSource();
   }
 
+  /**
+   * Gets a mapped statement by ID
+   * 
+   * @param id - the ID
+   * 
+   * @return - the mapped statement
+   */
   public MappedStatement getMappedStatement(String id) {
     return delegate.getMappedStatement(id);
   }
 
+  /**
+   * Get the status of lazy loading
+   * 
+   * @return - the status
+   */
   public boolean isLazyLoadingEnabled() {
     return delegate.isLazyLoadingEnabled();
   }
 
+  /**
+   * Get the status of CGLib enhancements
+   * 
+   * @return - the status
+   */
   public boolean isEnhancementEnabled() {
     return delegate.isEnhancementEnabled();
   }
 
+  /**
+   * Get the SQL executor
+   * 
+   * @return -  the executor
+   */
   public SqlExecutor getSqlExecutor() {
     return delegate.getSqlExecutor();
   }
 
+  /**
+   * Get the delegate
+   * 
+   * @return - the delegate
+   */
   public SqlMapExecutorDelegate getDelegate() {
     return delegate;
   }
