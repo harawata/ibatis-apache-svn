@@ -2,7 +2,7 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
- 2.0.3 - Jul ??, 2004
+ 2.0.3 - Jul 16, 2004
 ------------------------------
 
  o Added fetchSize and resultSetType attributes to statement and select
