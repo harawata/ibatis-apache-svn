@@ -47,25 +47,25 @@
 
     <action path="/shop/viewCategory" type="com.ibatis.struts.BeanAction"
       name="catalogBean" scope="session"
-      validate="false" input="/catalog/index.jsp">
+      validate="false" >
       <forward name="success" path="/catalog/Category.jsp"/>
     </action>
 
     <action path="/shop/switchProductListPage" type="com.ibatis.struts.BeanAction"
       name="catalogBean" scope="session"
-      validate="false" input="/catalog/index.jsp">
+      validate="false" >
       <forward name="success" path="/catalog/Category.jsp"/>
     </action>
 
     <action path="/shop/viewProduct" type="com.ibatis.struts.BeanAction"
       name="catalogBean" scope="session"
-      validate="false" input="/catalog/index.jsp">
+      validate="false" >
       <forward name="success" path="/catalog/Product.jsp"/>
     </action>
 
     <action path="/shop/switchItemListPage" type="com.ibatis.struts.BeanAction"
       name="catalogBean" scope="session"
-      validate="false" input="/catalog/index.jsp">
+      validate="false" >
       <forward name="success" path="/catalog/Product.jsp"/>
     </action>
 

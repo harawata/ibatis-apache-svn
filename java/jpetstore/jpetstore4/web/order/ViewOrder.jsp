@@ -7,7 +7,6 @@
 <tr><td bgcolor="#FFFF88">
 <html:link page="/shop/index.shtml"><b><font color="BLACK" size="2">&lt;&lt; Main Menu</font></b></html:link>
 </td></tr>
-</html:link>
 </table>
 
 <p>
