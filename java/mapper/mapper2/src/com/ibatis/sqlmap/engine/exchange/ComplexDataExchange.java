@@ -30,8 +30,11 @@ public class ComplexDataExchange extends BaseDataExchange implements DataExchang
       return new Object[0];
     } else {
       if (TypeHandlerFactory.hasTypeHandler(parameterObject.getClass())) {
-        Object[] data = new Object[1];
-        data[0] = parameterObject;
+        ParameterMapping[] mappings = parameterMap.getParameterMappings();
+        Object[] data = new Object[mappings.length];
+        for (int i = 0; i < mappings.length; i++) {
+          data[i] = parameterObject;
+        }
         return data;
       } else {
         Object[] data = new Object[parameterMap.getParameterMappings().length];

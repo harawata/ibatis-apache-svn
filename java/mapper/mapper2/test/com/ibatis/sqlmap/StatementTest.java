@@ -64,6 +64,11 @@ public class StatementTest extends BaseSqlMapTest {
     assertAccount1(account);
   }
 
+  public void testExecuteQueryForObjectViaResultClassPlusOne() throws SQLException {
+    List list = sqlMap.queryForList("getAccountViaResultClassPlusOne", new Integer(1));
+    assertList(list);
+  }
+  
   public void testExecuteQueryForObjectAsHashMap() throws SQLException {
     Map account = (HashMap) sqlMap.queryForObject("getAccountAsHashMap", new Integer(1));
     assertAccount1(account);
@@ -72,7 +77,7 @@ public class StatementTest extends BaseSqlMapTest {
   public void testExecuteQueryForObjectAsHashMapResultClass() throws SQLException {
     Map account = (HashMap) sqlMap.queryForObject("getAccountAsHashMapResultClass", new Integer(1));
     assertAccount1(account);
-  }
+  } 
 
   public void testExecuteQueryForObjectWithSimpleResultClass() throws SQLException {
     String email = (String) sqlMap.queryForObject("getEmailAddressViaResultClass", new Integer(1));

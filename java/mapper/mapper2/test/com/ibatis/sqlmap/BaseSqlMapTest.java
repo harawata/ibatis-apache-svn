@@ -64,6 +64,10 @@ public class BaseSqlMapTest extends TestCase {
     assertEquals("clinton.begin@ibatis.com", account.getEmailAddress());
   }
 
+  protected void assertList(List list) {
+    assertEquals(2, list.size());
+  }
+  
   protected void assertAccount6(Account account) {
     assertEquals(6, account.getId());
     assertEquals("Jennifer", account.getFirstName());

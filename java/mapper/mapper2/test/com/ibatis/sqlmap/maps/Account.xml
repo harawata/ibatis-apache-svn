@@ -127,6 +127,19 @@
     and ACC_ID = #value#
     ]]>
   </select>
+<!--parameterClass="java.math.BigDecimal"-->
+  <select id="getAccountViaResultClassPlusOne"
+    resultClass="account">
+    <![CDATA[
+    select
+      ACC_ID as id,
+      ACC_FIRST_NAME as firstName,
+      ACC_LAST_NAME as lastName,
+      ACC_EMAIL as emailAddress
+    from ACCOUNT
+    where ACC_ID IN (#value#,#value#+1)
+    ]]>
+  </select>
 
   <select id="getAccountViaColumnName"
     parameterClass="java.lang.Integer"
