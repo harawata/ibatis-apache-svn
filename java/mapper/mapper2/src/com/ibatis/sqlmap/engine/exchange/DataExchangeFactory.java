@@ -1,8 +1,11 @@
 package com.ibatis.sqlmap.engine.exchange;
 
-import com.ibatis.sqlmap.engine.type.*;
+import com.ibatis.sqlmap.engine.type.TypeHandlerFactory;
+import com.ibatis.sqlmap.engine.type.XmlTypeMarker;
+import org.w3c.dom.Document;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * User: Clinton Begin
@@ -11,6 +14,7 @@ import java.util.*;
  */
 public class DataExchangeFactory {
 
+  private static final DataExchange DOM_DATA_EXCHANGE = new DomDataExchange();
   private static final DataExchange XML_DATA_EXCHANGE = new XmlDataExchange();
   private static final DataExchange LIST_DATA_EXCHANGE = new ListDataExchange();
   private static final DataExchange MAP_DATA_EXCHANGE = new ComplexDataExchange();
@@ -24,6 +28,8 @@ public class DataExchangeFactory {
     DataExchange dataExchange = null;
     if (clazz == null) {
       dataExchange = COMPLEX_DATA_EXCHANGE;
+    } else if (Document.class.isAssignableFrom(clazz)) {
+      dataExchange = DOM_DATA_EXCHANGE;
     } else if (XmlTypeMarker.class.isAssignableFrom(clazz)) {
       dataExchange = XML_DATA_EXCHANGE;
     } else if (List.class.isAssignableFrom(clazz)) {

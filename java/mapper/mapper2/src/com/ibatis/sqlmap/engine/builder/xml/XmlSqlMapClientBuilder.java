@@ -141,6 +141,7 @@ public class XmlSqlMapClientBuilder {
     putTypeAlias("OSCACHE", "com.ibatis.sqlmap.engine.cache.oscache.OSCacheController");
 
     // TYPE ALIASEs
+    putTypeAlias("dom", Document.class.getName());
     putTypeAlias("xml", XmlTypeMarker.class.getName());
     putTypeAlias("xmlCollection", XmlCollectionTypeMarker.class.getName());
     putTypeAlias("string", String.class.getName());
