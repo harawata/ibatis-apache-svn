@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<sqlMap name="Enumeration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-		xsi:noNamespaceSchemaLocation="..\..\Nausicaa.Framework.Dal\Schemas\SqlMap.xsd">
+<sqlMap namespace="Enumeration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xsi:noNamespaceSchemaLocation="SqlMap.xsd">
 	
 	<alias>
-		<typeAlias name="Enumeration" assembly="IBatisNet.Test.dll" class="IBatisNet.Test.Domain.Enumeration"/>
+		<typeAlias alias="Enumeration" type="IBatisNet.DataAccess.Test.Domain.Enumeration, IBatisNet.DataAccess.Test"/>
 	</alias>
 	
 	<resultMaps>                                    
-		<resultMap name="enumeration-result"  class="Enumeration" >
+		<resultMap id="enumeration-result"  class="Enumeration" >
 			<result property="Id"           column="Enum_ID"/>
 			<result property="Day"    column="Enum_Day"/>
 			<result property="Color"     column="Enum_Color"/>
@@ -17,7 +17,7 @@
 	
 	<statements>
 	
-		<select name="GetEnumerationNullValue" 
+		<select id="GetEnumerationNullValue" 
 			parameterClass="Integer" 
 			resultMap="enumeration-result">
 			select
@@ -29,17 +29,17 @@
 			where Enum_ID = #value# 
 		</select>
 		
-		<select name="GetEnumeration" parameterClass="Integer" resultClass="Enumeration">
+		<select id="GetEnumeration" parameterClass="Integer" resultClass="Enumeration">
 			select
-				Enum_ID as Id,
-				Enum_Day as Day,
-				Enum_Color as Color,
-				Enum_Month as Month
+				Enum_ID as [Id],
+				Enum_Day as [Day],
+				Enum_Color as [Color],
+				Enum_Month as [Month]
 			from Enumerations  
 			where Enum_ID = #value# 
 		</select>
 		
-		<insert name="InsertEnumViaParameterMap" parameterMap="insert-params" >
+		<insert id="InsertEnumViaParameterMap" parameterMap="insert-params" >
 			insert into Enumerations  
 				(Enum_ID, Enum_Day, Enum_Color, Enum_Month) 
 			values 
@@ -49,7 +49,7 @@
 	</statements>
 	
 	<parameterMaps>
-		<parameterMap name="insert-params">
+		<parameterMap id="insert-params">
 			<parameter property="Id" column="Enum_ID" />
 			<parameter property="Day" column="Enum_Day"/>
 			<parameter property="Color" column="Enum_Color" />

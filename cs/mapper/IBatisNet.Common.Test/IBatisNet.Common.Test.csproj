@@ -135,6 +135,10 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "bin\Debug\dao_Access_OleDb.config"
+                    BuildAction = "None"
+                />
+                <File
                     RelPath = "bin\Debug\dao_MSSQL_Odbc.config"
                     BuildAction = "None"
                 />
@@ -164,6 +168,10 @@
                 />
                 <File
                     RelPath = "bin\Debug\providers.config"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "bin\Debug\SqlMap_Access_OleDb.config"
                     BuildAction = "None"
                 />
                 <File
@@ -276,6 +284,62 @@
                     RelPath = "NUnit\CommonTests\Utilities\ResourcesTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Scripts\Access\account-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\Access\account-procedure.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\Access\category-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\Access\category-procedure.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\Access\DataBase.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\Access\DataBaseNHibernate.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\Access\documents-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\Access\enumeration-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\Access\line-item-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\Access\more-account-records.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\Access\order-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\Access\other-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\Access\swap-procedure.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\Access\user-init.sql"
+                    BuildAction = "Content"
                 />
                 <File
                     RelPath = "Scripts\MSSQL\account-init.sql"

@@ -73,6 +73,7 @@ namespace IBatisNet.Common.Utilities
 					case "oracle9.2":   
 					case "oracleClient1.0":   
 					case "ByteFx":
+					case "OleDb1.1":
 						sqlStatements = ParseScript(script);
 						break;                  
 					default:            
@@ -85,6 +86,7 @@ namespace IBatisNet.Common.Utilities
 					case "oracle9.2":   
 					case "oracleClient1.0":   
 					case "ByteFx":
+					case "OleDb1.1":
 						script = script.Replace("\r\n"," ");
 						script = script.Replace("\t"," ");
 						sqlStatements.Add(script);
