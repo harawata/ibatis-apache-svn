@@ -15,6 +15,7 @@
  */
 package com.ibatis.common.beans;
 
+import java.util.Map;
 import java.util.StringTokenizer;
 
 /**
@@ -183,31 +184,52 @@ public class GenericProbe extends BaseProbe {
     }
   }
 
-  private Class getClassPropertyTypeForSetter(Class type, String name) {
-    if (name.indexOf('.') > -1) {
-      StringTokenizer parser = new StringTokenizer(name, ".");
-      while (parser.hasMoreTokens()) {
-        name = parser.nextToken();
-        type = ClassInfo.getInstance(type).getSetterType(name);
-      }
-    } else {
-      type = ClassInfo.getInstance(type).getSetterType(name);
-    }
-    return type;
-  }
-
   private Class getClassPropertyTypeForGetter(Class type, String name) {
+
     if (name.indexOf('.') > -1) {
       StringTokenizer parser = new StringTokenizer(name, ".");
       while (parser.hasMoreTokens()) {
         name = parser.nextToken();
+        if (Map.class.isAssignableFrom(type)) {
+          type = Object.class;
+          break;
+        }
         type = ClassInfo.getInstance(type).getGetterType(name);
       }
     } else {
       type = ClassInfo.getInstance(type).getGetterType(name);
     }
+
     return type;
   }
+
+  /**
+   * Returns the class that the setter expects to receive as a parameter when
+   * setting a property value.
+   *
+   * @param type The class to check
+   * @param name The name of the property
+   * @return The type of the property
+   */
+  private Class getClassPropertyTypeForSetter(Class type, String name) {
+
+    if (name.indexOf('.') > -1) {
+      StringTokenizer parser = new StringTokenizer(name, ".");
+      while (parser.hasMoreTokens()) {
+        name = parser.nextToken();
+        if (Map.class.isAssignableFrom(type)) {
+          type = Object.class;
+          break;
+        }
+        type = ClassInfo.getInstance(type).getSetterType(name);
+      }
+    } else {
+      type = ClassInfo.getInstance(type).getSetterType(name);
+    }
+
+    return type;
+  }
+
 
 }
 
