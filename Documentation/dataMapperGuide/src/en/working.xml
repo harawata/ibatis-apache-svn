@@ -108,15 +108,19 @@ Mapper.Instance().Insert("InsertLineItem",lineItem);</programlisting></para>
 
   <emphasis role="alias">&lt;typeAlias alias="Product" type="Example.Domain.Product, Example.Domain" /&gt;</emphasis>
 
-  <emphasis role="cache">&lt;cacheModel id="productCache" type="LRU"&gt;
-    &lt;flushInterval hours="24"/&gt;
-    &lt;property name="size" value="1000" /&gt;
-  &lt;/cacheModel&gt;</emphasis>
+  <emphasis role="cache">&lt;alias&gt;
+    &lt;cacheModel id="productCache" type="LRU"&gt;
+      &lt;flushInterval hours="24"/&gt;
+      &lt;property name="size" value="1000" /&gt;
+    &lt;/cacheModel&gt;
+  &lt;/alias&gt;</emphasis>
 
-  <emphasis role="resultmap">&lt;resultMap id="productResult" class="Product"&gt;
-    &lt;result property="Id" column="Product_Id"/&gt;
-    &lt;result property="Description" column="Product_Description"/&gt;
-  &lt;/resultMap&gt;</emphasis>
+  <emphasis role="resultmap"> &lt;resultMaps&gt;
+    &lt;resultMap id="productResult" class="Product"&gt;
+      &lt;result property="Id" column="Product_Id"/&gt;
+      &lt;result property="Description" column="Product_Description"/&gt;
+    &lt;/resultMap&gt;
+   &lt;/resultMaps&gt;</emphasis>
 
   <emphasis role="statement">&lt;statements&gt;
     &lt;select id="GetProduct" parameterMap="productParam" cacheModel="productCache"&gt;
@@ -124,9 +128,11 @@ Mapper.Instance().Insert("InsertLineItem",lineItem);</programlisting></para>
     &lt;/select&gt;
   &lt;/statements&gt;</emphasis>
 
-  <emphasis role="parameterMap">&lt;parameterMap id="productParam" class="Product"&gt;
-    &lt;parameter property="Id"/&gt;
-  &lt;/parameterMap&gt;</emphasis>
+  <emphasis role="parameterMap">&lt;parameterMaps&gt;
+    &lt;parameterMap id="productParam" class="Product"&gt;
+      &lt;parameter property="Id"/&gt;
+    &lt;/parameterMap&gt;
+  &lt;parameterMaps&gt;</emphasis>
 
 &lt;/sqlMap&gt;</programlisting>
       </example>In Example 3.2, &lt;parameterMap&gt; maps the SQL
@@ -996,9 +1002,9 @@ All query methods</programlisting></entry>
           </note></para>
 
         <para>The <parameter>dbType</parameter> attribute can be set to any
-        string value that matches a constant in the
-        <classname>System.Data.DbType</classname> enum. Although it can be set
-        to any of these, some types are not supported
+        string value that matches a constant in the specific data type
+         enum of the used provider (<classname>System.Data.SqlDbType</classname> for Microsoft Sql Server). 
+		Although it can be set to any of these, some types are not supported
         (<classname>blobs</classname>). Section 3.6 describes the types that
         are supported by the framework.</para>
       </sect3>
