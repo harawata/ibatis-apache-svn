@@ -16,7 +16,7 @@ import java.util.StringTokenizer;
  */
 public class GenericProbe extends BaseProbe {
 
-  private static final BaseProbe MAP_PROBE = new MapProbe();
+  private static final BaseProbe MAP_PROBE = new ComplexBeanProbe();  // Yes, use the complex one.
   private static final BaseProbe BEAN_PROBE = new JavaBeanProbe();
   private static final BaseProbe DOM_PROBE = new DomProbe();
 

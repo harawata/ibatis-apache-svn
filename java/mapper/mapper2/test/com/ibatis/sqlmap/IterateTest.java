@@ -87,4 +87,18 @@ public class IterateTest extends BaseSqlMapTest {
     assertEquals(3, list.size());
   }
 
+  public void testIterateNestedMapListProperty() throws SQLException {
+    Map account = new HashMap();
+    List accountList = new ArrayList();
+    account.put("accountList",accountList);
+    accountList.add(new Account(1));
+    accountList.add(new Account(2));
+    accountList.add(new Account(3));
+
+    List list = sqlMap.queryForList("iterateNestedMapListProperty", account);
+    assertAccount1((Account) list.get(0));
+    assertEquals(3, list.size());
+  }
+
+
 }

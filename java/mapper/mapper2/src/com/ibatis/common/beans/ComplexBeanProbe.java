@@ -17,11 +17,11 @@ import java.util.StringTokenizer;
  *
  * @author clinton_begin
  */
-public class LegacyBeanProbe extends BaseProbe {
+public class ComplexBeanProbe extends BaseProbe {
 
   private static final Object[] NO_ARGUMENTS = new Object[0];
 
-  protected LegacyBeanProbe() {
+  protected ComplexBeanProbe() {
   }
 
   /**

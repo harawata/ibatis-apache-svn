@@ -9,10 +9,10 @@ import java.util.Map;
 public class ProbeFactory {
 
   private static final Probe DOM = new DomProbe();
-  private static final Probe MAP = new MapProbe();
+  private static final Probe MAP = new ComplexBeanProbe(); // Yes, use the complex one.
   private static final Probe BEAN = new JavaBeanProbe();
   private static final Probe GENERIC = new GenericProbe();
-  private static final Probe LEGACY = new LegacyBeanProbe();
+  private static final Probe LEGACY = new ComplexBeanProbe();
 
   /**
    * Factory method for getting a Probe object

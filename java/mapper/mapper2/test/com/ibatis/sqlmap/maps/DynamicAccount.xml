@@ -190,6 +190,21 @@
     </iterate>
   </select>
 
+  <select id="iterateNestedMapListProperty"
+             parameterClass="map"
+             resultClass="testdomain.Account">
+    select
+      ACC_ID          as id,
+      ACC_FIRST_NAME  as firstName,
+      ACC_LAST_NAME   as lastName,
+      ACC_EMAIL       as emailAddress
+    from ACCOUNT
+    WHERE ACC_ID IN
+    <iterate open="(" close=")" conjunction="," property="accountList" >
+       #accountList[].id#
+    </iterate>
+  </select>
+
   <select id="dynamicQueryByExample"
              parameterClass="testdomain.Account"
              resultClass="testdomain.Account">
