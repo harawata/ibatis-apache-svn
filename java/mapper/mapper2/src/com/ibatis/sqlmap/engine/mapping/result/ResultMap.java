@@ -71,4 +71,11 @@ public interface ResultMap {
    */
   public Class getResultClass();
 
+  /**
+   * Gets a unique key based on the values provided.
+   * @param values Result values representing a single row of results.
+   * @return The unique key.
+   */
+  public Object getUniqueKey(Object[] values);
+
 }

@@ -851,6 +851,7 @@ public class XmlSqlMapClientBuilder {
     String resultClassName = attributes.getProperty("class");
     String extended = applyNamespace(attributes.getProperty("extends"));
     String xmlName = attributes.getProperty("xmlName");
+    String groupBy = attributes.getProperty("groupBy");
     resultClassName = typeHandlerFactory.resolveAlias(resultClassName);
 
     errorCtx.setObjectId(id + " result map");
@@ -858,6 +859,13 @@ public class XmlSqlMapClientBuilder {
     map.setId(id);
     map.setXmlName(xmlName);
     map.setResource(errorCtx.getResource());
+
+    if (groupBy != null && groupBy.length() > 0) {
+      StringTokenizer parser = new StringTokenizer(groupBy, ", ",false);
+      while (parser.hasMoreTokens()) {
+        map.addGroupByProperty(parser.nextToken());
+      }
+    }
 
     Class resultClass = null;
     try {

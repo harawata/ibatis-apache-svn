@@ -38,10 +38,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * Basic implementation of ResultMap interface
@@ -55,6 +52,8 @@ public class BasicResultMap implements ResultMap {
 
   protected ResultMapping[] resultMappings;
   protected DataExchange dataExchange;
+
+  private Set groupByProps;
 
   private String xmlName;
 
@@ -95,6 +94,26 @@ public class BasicResultMap implements ResultMap {
 
   public Class getResultClass() {
     return resultClass;
+  }
+
+  public Object getUniqueKey(Object[] values) {
+    if (groupByProps != null) {
+      StringBuffer keyBuffer = new StringBuffer();
+      for (int i=0; i < resultMappings.length; i++) {
+        String propertyName = resultMappings[i].getPropertyName();
+        if (groupByProps.contains(propertyName)) {
+          keyBuffer.append(values[i]);
+          keyBuffer.append('-');
+        }
+      }
+      if (keyBuffer.length() < 1) {
+        return null;
+      } else {
+        return keyBuffer.toString();
+      }
+    } else {
+      return null;
+    }
   }
 
   /**
@@ -158,6 +177,13 @@ public class BasicResultMap implements ResultMap {
    */
   public void setResource(String resource) {
     this.resource = resource;
+  }
+
+  public void addGroupByProperty (String name) {
+    if (groupByProps == null) {
+      groupByProps = new HashSet();
+    }
+    groupByProps.add(name);
   }
 
   public ResultMapping[] getResultMappings() {
@@ -390,6 +416,8 @@ public class BasicResultMap implements ResultMap {
     }
     return value;
   }
+
+
 
 }
 

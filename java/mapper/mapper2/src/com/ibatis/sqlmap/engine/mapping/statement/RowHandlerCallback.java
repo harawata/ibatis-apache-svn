@@ -16,6 +16,7 @@
 package com.ibatis.sqlmap.engine.mapping.statement;
 
 import java.io.StringWriter;
+import java.util.*;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -34,6 +35,8 @@ import com.ibatis.sqlmap.engine.type.XmlTypeMarker;
  * Class to manager row handler access
  */
 public class RowHandlerCallback {
+
+  private Set uniqueKeys;
 
   private RowHandler rowHandler;
   private ResultMap resultMap;
@@ -60,19 +63,33 @@ public class RowHandlerCallback {
    */
   public void handleResultObject(RequestScope request, Object[] results) {
     Object object;
-    object = resultMap.setResultObjectValues(request, resultObject, results);
 
-    int stackDepth = request.getSession().getRequestStackDepth();
-    
-    if (stackDepth == 1) {
-      Class targetType = request.getResultMap().getResultClass();
-      if (XmlTypeMarker.class.isAssignableFrom(targetType)
-          && object instanceof Document) {
-        object = documentToString((Document) object);
+    Object ukey = resultMap.getUniqueKey(results);
+
+    // Only continue if unique key is not already known.
+    if (ukey == null || uniqueKeys == null || !uniqueKeys.contains(ukey)) {
+      object = resultMap.setResultObjectValues(request, resultObject, results);
+
+      // Lazy init key set
+      if (ukey != null) {
+        if (uniqueKeys == null) {
+          uniqueKeys = new HashSet();
+        }
+        uniqueKeys.add(ukey);
       }
-    }
 
-    rowHandler.handleRow(object);
+      //  XML Only special processing. (converts elements to string for easy insertion).
+      int stackDepth = request.getSession().getRequestStackDepth();
+      if (stackDepth == 1) {
+        Class targetType = request.getResultMap().getResultClass();
+        if (XmlTypeMarker.class.isAssignableFrom(targetType)
+            && object instanceof Document) {
+          object = documentToString((Document) object);
+        }
+      }
+
+      rowHandler.handleRow(object);
+    }
   }
 
   private String documentToString (Document document) {

@@ -6,7 +6,6 @@
   Ease of Use
       - Override/extend mapped statements (i.e. reuse SQL; overrides="statementName")
       - Remappable automatic result maps (for dynamic column list)
-      - DAO lazy initialization option (quiet failure?)
       - <generate> tag for CRUD methods
       - Constructor and field based results
   Database Support
@@ -35,6 +34,7 @@
       - Circular relationships
       - Per result Lazy Load configuration
       - Automap remaining columns, ignore missing columns
+      - DAO lazy initialization option (quiet failure?)
   Database Support
       - NULL complex property map results set prop to null (don't run query selectOnNull="false")
       - Trim whitespace from CHAR data

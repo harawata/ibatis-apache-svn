@@ -6,6 +6,7 @@ TO-DO: BUGS & FEATURES
 TO-DO: DOCUMENTATION
 ------------------------------
 
+  o commitRequired="true" on transactionManager element
   o DefaultAutoCommit property of EXTERNAL TX Manager
   o SetAutoCommitAllowed property of EXTERNAL TX Manager
   o Serialize option for cache models
