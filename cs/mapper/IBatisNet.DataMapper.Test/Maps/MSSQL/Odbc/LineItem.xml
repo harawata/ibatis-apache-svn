@@ -163,6 +163,14 @@
 			(#Id#, #Order.Id#, #Code#, #Quantity#, #Price:Decimal#)
 		</insert>
   
+    	<!-- JIRA 23 -->
+		<delete id="DeleteWithComments" >
+			<!-- Delete LineItems -->
+			delete from LineItems where Order_ID = 10
+			<!-- Delete LineItems -->
+			delete from LineItems where Order_ID = 9
+		</delete>
+		
   </statements>
 	
 

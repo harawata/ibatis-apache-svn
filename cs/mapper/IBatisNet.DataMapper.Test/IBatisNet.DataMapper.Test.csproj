@@ -310,6 +310,10 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "Maps\MSSQL\Odbc\Document.xml"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "Maps\MSSQL\Odbc\DynamicAccount.xml"
                     BuildAction = "Content"
                 />
@@ -343,6 +347,10 @@
                 />
                 <File
                     RelPath = "Maps\MSSQL\OleDb\Complex.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\MSSQL\OleDb\document.xml"
                     BuildAction = "Content"
                 />
                 <File

@@ -92,13 +92,13 @@ namespace IBatisNet.DataMapper.Scope
 
 		#region Method
 		/// <summary>
-		/// Check if the ResultMap is well set, process case of subMap resultMap
+		/// Check if the ResultMap is well set, process case of subMap resultMap.
 		/// </summary>
 		/// <param name="dataReader">The current IDataReader</param>
 		public void SetResultMap(IDataReader dataReader)
 		{
 			_initialResultMap = _resultMap;
-			if (_resultMap != null && _resultMap.Discriminator != null)
+			if (_resultMap.Discriminator != null)
 			{
 				_resultMap = _resultMap.Discriminator.GetResultMap(dataReader);
 				if (_resultMap==null)
