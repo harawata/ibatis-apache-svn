@@ -5,12 +5,12 @@
  */
 package com.ibatis.common.beans;
 
+import com.ibatis.sqlmap.engine.accessplan.AccessPlan;
+import com.ibatis.sqlmap.engine.accessplan.AccessPlanFactory;
 import junit.framework.TestCase;
 import testdomain.Order;
 
-import java.math.*;
-
-import com.ibatis.sqlmap.engine.accessplan.*;
+import java.math.BigDecimal;
 
 public class PropertyAccessPlanTest extends TestCase {
 
@@ -46,8 +46,6 @@ public class PropertyAccessPlanTest extends TestCase {
   public void testSetAndGetProperties() {
 
     AccessPlan plan = AccessPlanFactory.getAccessPlan(Order.class, properties);
-
-    System.out.println (plan);
 
     Order order = new Order();
 

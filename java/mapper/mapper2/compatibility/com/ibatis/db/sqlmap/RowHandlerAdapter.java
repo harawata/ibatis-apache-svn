@@ -1,5 +1,7 @@
 package com.ibatis.db.sqlmap;
 
+import java.util.List;
+
 /**
  * User: Clinton Begin
  * Date: Nov 29, 2003
@@ -15,6 +17,13 @@ public class RowHandlerAdapter implements com.ibatis.sqlmap.client.event.RowHand
 
   public void handleRow(Object valueObject) {
     rowHandler.handleRow(valueObject);
+  }
+
+  /**
+   * @deprecated REMOVE THIS
+   */
+  public void handleRow(Object valueObject, List list) {
+    throw new UnsupportedOperationException("DEPRECATED: This should never be called internally.");
   }
 
 }

@@ -22,4 +22,12 @@ public class DefaultRowHandler implements RowHandler {
     return list;
   }
 
+  /**
+   * @deprecated REMOVE THIS
+   */
+  public void handleRow(Object valueObject, List list) {
+    throw new UnsupportedOperationException("DEPRECATED: This should never be called internally.");
+  }
+
+
 }

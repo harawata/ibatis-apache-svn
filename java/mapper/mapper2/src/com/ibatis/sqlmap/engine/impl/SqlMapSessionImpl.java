@@ -10,6 +10,7 @@ import com.ibatis.sqlmap.engine.scope.SessionScope;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -92,6 +93,15 @@ public class SqlMapSessionImpl implements SqlMapSession {
     delegate.queryWithRowHandler(session, id, paramObject, rowHandler);
   }
 
+  /**
+   * @deprecated REMOVE THIS
+   */
+  public List queryForList(String id, Object parameterObject, RowHandler rowHandler) throws SQLException {
+    DeprecatedRowHandlerAdapter adapter = new DeprecatedRowHandlerAdapter(rowHandler);
+    delegate.queryWithRowHandler(session, id, parameterObject, adapter);
+    return adapter.getList();
+  }
+
   public void startTransaction() throws SQLException {
     delegate.startTransaction(session);
   }
@@ -142,6 +152,32 @@ public class SqlMapSessionImpl implements SqlMapSession {
 
   public SqlMapExecutorDelegate getDelegate() {
     return delegate;
+  }
+
+  /**
+   * @deprecated REMOVE THIS
+   */
+  private class DeprecatedRowHandlerAdapter implements RowHandler {
+
+    private RowHandler rowHandler;
+    private List list;
+
+    public DeprecatedRowHandlerAdapter(RowHandler rowHandler) {
+      this.rowHandler = rowHandler;
+      this.list = new ArrayList();
+    }
+
+    public void handleRow(Object valueObject) {
+      handleRow(valueObject, list);
+    }
+
+    public void handleRow(Object valueObject, List list) {
+      rowHandler.handleRow(valueObject, list);
+    }
+
+    public List getList() {
+      return list;
+    }
   }
 
 }

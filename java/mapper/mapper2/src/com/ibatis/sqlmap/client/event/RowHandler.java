@@ -1,5 +1,7 @@
 package com.ibatis.sqlmap.client.event;
 
+import java.util.List;
+
 /**
  * Event handler for row by row processing.
  * <p/>
@@ -27,6 +29,76 @@ public interface RowHandler {
    * @param valueObject The object representing a single row from the query.
    * @see com.ibatis.sqlmap.client.SqlMapSession
    */
-  public void handleRow(Object valueObject);
+  void handleRow(Object valueObject);
+
+
+  /**
+   * @see RowHandler#handleRow(Object)
+   * @deprecated THIS WILL BE REMOVED BY FINAL RELEASE
+   *             <p/>
+   *             Use RowHandler.handleRow(Object) instead.
+   *             <p/>
+   *             queryForList(String,Object,RowHandler) has been renamed BACK to queryWithRowHandler(String,Object,RowHandler).
+   *             The new signature is:
+   *             <p/>
+   *             void queryWithRowHandler(String id, Object parameterObject, RowHandler rowHandler)
+   *             throws SQLException;
+   *             <p/>
+   *             The RowHandler interface will also be changed back to the original strategy used in 1.x. That is, there will no
+   *             longer be a List parameter in the method signature of the handleRow() method.  The new signature is:
+   *             <p/>
+   *             public void handleRow(Object valueObject);
+   *             <p/>
+   *             This was necessary to make the API more flexible.  Many people complained about the change because they did not
+   *             want to return a list.  They may have been using a RowHandler to build a Map, or even aggregate into a single
+   *             result object.  In these cases the List parameter and return type on the RowHandler API was unecessary, confusing and extra overhead.
+   *             <p/>
+   *             WHAT SHOULD YOU DO?
+   *             <p/>
+   *             Well, basically your RowHandlers will need to be changed to handle the List themselves.  For example:
+   *             <pre>
+   *             <br/>
+   *             <br/> ----------------------------
+   *             <br/> // OLD WAY
+   *             <br/>
+   *             <br/> public class MyRowHandler imlements RowHandler {
+   *             <br/>    public void handleRow(Object valueObject, List list) {
+   *             <br/>        list.add(valueObject);
+   *             <br/>    }
+   *             <br/> }
+   *             <br/>
+   *             <br/> // NEW WAY
+   *             <br/>
+   *             <br/> public class MyNewRowHandler imlements RowHandler {
+   *             <br/>    private List list = new ArrayList();
+   *             <br/>    public void handleRow(Object valueObject) {
+   *             <br/>        list.add(valueObject);
+   *             <br/>    }
+   *             <br/>    public List getList () {
+   *             <br/>        return list;
+   *             <br/>    }
+   *             <br/> }
+   *             <br/> ----------------------------
+   *             <br/>
+   *             <br/> Obviously the calling code will need to be changed too.  For example:
+   *             <br/>
+   *             <br/> ----------------------------
+   *             <br/> // OLD WAY
+   *             <br/> RowHandler rowHandler = new MyRowHandler();
+   *             <br/> List list = sqlMap.queryForList("name", param, rowHandler);
+   *             <br/>
+   *             <br/> // NEW WAY
+   *             <br/>
+   *             <br/> RowHandler rowHandler = new MyNewRowHandler();
+   *             <br/> sqlMap.queryWithRowHandler("name", param, rowHandler);
+   *             <br/> List list = rowHandler.getList();
+   *             <br/> ----------------------------
+   *             <br/>
+   *             <br/> The cost is a few extra lines of code, but the benefit is a great deal of
+   *             <br/> flexibility and eliminated redundancy.
+   *             <br/>
+   *             </pre>
+   */
+  void handleRow(Object valueObject, List list);
 
 }

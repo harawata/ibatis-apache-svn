@@ -1,6 +1,5 @@
 package com.ibatis.sqlmap;
 
-import com.ibatis.common.beans.DomProbe;
 import com.ibatis.common.beans.Probe;
 import com.ibatis.common.beans.ProbeFactory;
 import org.w3c.dom.Document;
@@ -36,8 +35,6 @@ public class DomStatementTest extends BaseSqlMapTest {
 
     Probe dom = ProbeFactory.getProbe(account);
 
-    System.out.println(DomProbe.nodeToString(account, "  "));
-
     assertEquals("1", dom.getObject(account, "ID"));
     assertEquals("Clinton", dom.getObject(account, "FIRSTNAME"));
     assertEquals("Begin", dom.getObject(account, "LASTNAME"));
@@ -49,8 +46,6 @@ public class DomStatementTest extends BaseSqlMapTest {
     assertNotNull(account);
 
     Probe dom = ProbeFactory.getProbe(account);
-
-    System.out.println(DomProbe.nodeToString(account, "  "));
 
     assertEquals("1", dom.getObject(account, "id"));
     assertEquals("Clinton", dom.getObject(account, "firstName"));
@@ -68,8 +63,6 @@ public class DomStatementTest extends BaseSqlMapTest {
     assertNotNull(order);
 
     Probe dom = ProbeFactory.getProbe(order);
-
-    System.out.println(DomProbe.nodeToString(order, "  "));
 
     assertEquals("1", dom.getObject(order, "id"));
     assertEquals("2", dom.getObject(order, "lineItems.lineItem[1].ID"));
