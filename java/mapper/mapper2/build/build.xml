@@ -2,43 +2,32 @@
 
   <property file="build.properties"/>
 
+  <path id="runtime.src">
+    <pathelement location="${src.rt}"/>
+    <pathelement location="${src.compat}"/>
+  </path>
+
+  <path id="test.src">
+    <pathelement location="${src.dev}"/>
+    <pathelement location="${src.test}"/>
+  </path>
+
+  <path id="sourcepath">
+    <path refid="runtime.src"/>
+    <path refid="test.src"/>
+  </path>
+
   <path id="classpath">
-    <pathelement location="${compatibility}"/>
-    <pathelement location="${src}"/>
-    <pathelement location="${devsrc}"/>
-    <pathelement location="${tests}"/>
-    <pathelement location="${classes}"/>
-    <fileset dir="${lib}" includes="**/*.jar"/>
-    <fileset dir="${devlib}" includes="**/*.jar"/>
+    <pathelement location="${cp.classes}"/>
+    <pathelement location="${cp.tests}"/>
+    <fileset dir="${lib.rt}" includes="**/*.jar"/>
+    <fileset dir="${lib.dev}" includes="**/*.jar"/>
   </path>
 
   <target name="clean">
-    <delete dir="${classes}"/>
-    <delete dir="${user_javadocs}"/>
-    <delete dir="${dev_javadocs}"/>
-    <delete dir="${jars}"/>
-    <delete dir="${reports}"/>
-    <delete dir="${emmadir}"/>
-    <delete>
-      <fileset dir="${devsrc}">
-        <include name="**/*.class"/>
-      </fileset>
-    </delete>
-    <delete>
-      <fileset dir="${src}">
-        <include name="**/*.class"/>
-      </fileset>
-    </delete>
-    <delete>
-      <fileset dir="${compatibility}">
-        <include name="**/*.class"/>
-      </fileset>
-    </delete>
-    <delete>
-      <fileset dir="${tests}">
-        <include name="**/*.class"/>
-      </fileset>
-    </delete>
+    <delete dir="${deploy.root}"/>
+    <delete dir="${work.root}"/>
+    <delete dir="${reports.root}"/>
     <delete>
       <fileset dir="./">
         <include name="junit*.properties"/>
@@ -49,18 +38,41 @@
         <include name="coverage.ec"/>
       </fileset>
     </delete>
+    <delete>
+      <fileset dir="${src.rt}">
+        <include name="**/*.class"/>
+      </fileset>
+    </delete>
+    <delete>
+      <fileset dir="${src.compat}">
+        <include name="**/*.class"/>
+      </fileset>
+    </delete>
+    <delete>
+      <fileset dir="${src.dev}">
+        <include name="**/*.class"/>
+      </fileset>
+    </delete>
+    <delete>
+      <fileset dir="${src.test}">
+        <include name="**/*.class"/>
+      </fileset>
+    </delete>
   </target>
 
   <target name="prepare" depends="clean">
-    <mkdir dir="${classes}"/>
-    <mkdir dir="${dev_javadocs}"/>
-    <mkdir dir="${user_javadocs}"/>
-    <mkdir dir="${jars}"/>
-    <mkdir dir="${jars}/debug"/>
-    <mkdir dir="${jars}/tests"/>
+    <mkdir dir="${deploy.files}"/>
+    <mkdir dir="${cp.classes}"/>
+    <mkdir dir="${cp.tests}"/>
+    <mkdir dir="${cp.instr}"/>
+    <mkdir dir="${javadoc.dev}"/>
+    <mkdir dir="${javadoc.user}"/>
+    <mkdir dir="${reports.junit}"/>
+    <mkdir dir="${reports.coverage}"/>
+    <mkdir dir="${deploy.path}"/>
     <!-- Prepare Release Docs -->
-    <copy todir="${jars}">
-      <fileset dir="${doc}">
+    <copy todir="${deploy.path}">
+      <fileset dir="${res.txt}">
         <include name="**/*.txt"/>
       </fileset>
     </copy>
@@ -69,7 +81,7 @@
       <entry key="buildNum" default="0" type="int" operation="+" value="1"/>
     </propertyfile>
     <replace
-      file="${jars}/release.txt"
+      file="${deploy.path}/release.txt"
       value="value not found in version.properties"
       propertyFile="version.properties">
       <replacefilter
@@ -82,67 +94,69 @@
   </target>
 
   <target name="src.compile" depends="prepare">
-    <!-- defaults - override in build.properties-->
-    <property name="compile.debug" value="true"/>
-    <property name="compile.deprecation" value="false"/>
-    <javac srcdir="${devsrc}" destdir="${classes}" deprecation="true" debug="true">
-      <classpath refid="classpath"/>
-    </javac>
-    <javac srcdir="${src}" destdir="${classes}" deprecation="true" debug="true">
-      <classpath refid="classpath"/>
-    </javac>
-    <javac srcdir="${compatibility}" destdir="${classes}" deprecation="true" debug="true">
-      <classpath refid="classpath"/>
-    </javac>
-    <javac srcdir="${tests}" destdir="${classes}" deprecation="true" debug="true">
-      <classpath refid="classpath"/>
-    </javac>
+    <javac srcdir="${src.rt}" sourcepathref="sourcepath" classpathref="classpath" destdir="${cp.classes}" deprecation="true" debug="true"/>
+    <javac srcdir="${src.compat}" sourcepathref="sourcepath" classpathref="classpath" destdir="${cp.classes}" deprecation="true" debug="true"/>
+    <copy todir="${cp.classes}">
+      <fileset dir="${src.rt}" >
+        <exclude name="**/*.java"/>
+      </fileset>
+      <fileset dir="${src.compat}" >
+        <exclude name="**/*.java"/>
+      </fileset>
+    </copy>
+    <javac srcdir="${src.dev}" sourcepathref="sourcepath" classpathref="classpath" destdir="${cp.tests}" deprecation="false" debug="true"/>
+    <javac srcdir="${src.test}" sourcepathref="sourcepath" classpathref="classpath" destdir="${cp.tests}" deprecation="false" debug="true"/>
+    <copy todir="${cp.tests}">
+      <fileset dir="${src.dev}" >
+        <exclude name="**/*.java"/>
+      </fileset>
+      <fileset dir="${src.test}" >
+        <exclude name="**/*.java"/>
+      </fileset>
+    </copy>
   </target>
 
   <target name="src.javadoc">
-
-    <javadoc destdir="${dev_javadocs}" use="true" defaultexcludes="false" failonerror="true" verbose="false">
+    <javadoc destdir="${javadoc.dev}" use="true" defaultexcludes="false" failonerror="true" verbose="false">
       <classpath refid="classpath"/>
-      <packageset dir="${src}">
+      <packageset dir="${src.rt}">
         <include name="com/ibatis/**"/>
       </packageset>
     </javadoc>
-    <copy todir="${dev_javadocs}" filtering="true" overwrite="true">
-      <fileset dir="${javadocsres}">
+    <copy todir="${javadoc.dev}" filtering="true" overwrite="true">
+      <fileset dir="${res.javadoc}">
         <include name="**/*"/>
       </fileset>
     </copy>
-    <move todir="${dev_javadocs}" overwrite="false">
-      <fileset dir="${dev_javadocs}"/>
+    <move todir="${javadoc.dev}" overwrite="false">
+      <fileset dir="${javadoc.dev}"/>
       <mapper type="glob" from="*xml" to="*txt"/>
     </move>
 
-    <javadoc destdir="${user_javadocs}" defaultexcludes="false" failonerror="true" verbose="false">
+    <javadoc destdir="${javadoc.user}" defaultexcludes="false" failonerror="true" verbose="false">
       <classpath refid="classpath"/>
-      <packageset dir="${src}">
+      <packageset dir="${src.rt}">
         <include name="com/ibatis/*/client/**"/>
         <include name="com/ibatis/common/**"/>
       </packageset>
     </javadoc>
-    <copy todir="${user_javadocs}" filtering="true" overwrite="true">
-      <fileset dir="${javadocsres}">
+    <copy todir="${javadoc.user}" filtering="true" overwrite="true">
+      <fileset dir="${res.javadoc}">
         <include name="**/*"/>
       </fileset>
     </copy>
-    <move todir="${user_javadocs}" overwrite="false">
-      <fileset dir="${user_javadocs}"/>
+    <move todir="${javadoc.user}" overwrite="false">
+      <fileset dir="${javadoc.user}"/>
       <mapper type="glob" from="*xml" to="*txt"/>
     </move>
-
   </target>
 
   <taskdef resource="emma_ant.properties" classpathref="classpath"/>
 
   <target name="test.instrument" depends="src.compile">
-    <mkdir dir="${emmadir}"/>
-    <emma enabled="${emmaenabled}">
+    <emma enabled="${coverage.enabled}">
       <instr instrpathref="classpath"
-        destdir="${emmadir}"
+        destdir="${cp.instr}"
         metadatafile="./coverage.ec"
         merge="true"
         >
@@ -160,47 +174,46 @@
   </target>
 
   <target name="test.run" depends="test.instrument">
-    <mkdir dir="${reports}/junit"/>
     <junit printsummary="true" showoutput="true">
       <formatter type="xml"/>
-      <batchtest todir="${reports}/junit" fork="yes" haltonerror="no" failureproperty="testsFailed">
-        <fileset dir="${classes}">
+      <batchtest todir="${reports.junit}" fork="yes" haltonerror="no" failureproperty="testsFailed">
+        <fileset dir="${cp.tests}">
           <include name="**/*Test.class"/>
           <exclude name="**/Oracle*Test.class"/>
           <exclude name="**/Base*Test.class"/>
         </fileset>
       </batchtest>
-      <classpath path="${emmadir}"/>
+      <classpath path="${cp.instr}"/>
       <classpath refid="classpath"/>
     </junit>
-    <junitreport todir="${reports}/junit">
-      <fileset dir="${reports}/junit">
+  </target>
+
+  <target name="test.report" depends="test.run" >
+    <junitreport todir="${reports.junit}">
+      <fileset dir="${reports.junit}">
         <include name="TEST-*.xml"/>
       </fileset>
-      <report format="frames" todir="${reports}/junit"/>
+      <report format="frames" todir="${reports.junit}"/>
     </junitreport>
   </target>
 
-  <target name="test.compatibility" depends="test.run">
+  <target name="test.compatibility" depends="test.report">
     <java fork="true" classname="compatibility.RunAllCompat" failonerror="true">
-      <classpath path="${emmadir}"/>
+      <classpath path="${cp.instr}"/>
       <classpath refid="classpath"/>
     </java>
   </target>
 
   <target name="test.coverage" depends="test.compatibility" >
-    <mkdir dir="${reports}/coverage"/>
-    <emma enabled="${emmaenabled}">
-      <report sourcepath="${src}"
+    <emma enabled="${coverage.enabled}">
+      <report sourcepath="${src.rt}"
         sort="+block,+name,+method,+class"
         metrics="method:70,block:80,line:80,class:100"
         >
-
         <fileset dir="./">
           <include name="*.ec"/>
         </fileset>
-
-        <html outfile="${reports}/coverage/coverage.html"
+        <html outfile="${reports.coverage}/coverage.html"
           depth="method"
           columns="name,class,method,block,line"
           />
@@ -209,13 +222,11 @@
   </target>
 
   <target name="jar.sqlmaps" depends="src.compile">
-    <jar jarfile="${jars}/ibatis-sqlmap-2.jar">
-      <fileset dir="${src}">
-        <exclude name="com/ibatis/common/**/*"/>
-        <exclude name="com/ibatis/dao/**/*"/>
-        <exclude name="**/*.java"/>
+    <jar jarfile="${deploy.path}/ibatis-sqlmap-2.jar">
+      <fileset dir="${cp.classes}">
+        <include name="com/ibatis/sqlmap/**/*"/>
       </fileset>
-      <fileset dir="${jars}">
+      <fileset dir="${deploy.path}">
         <include name="release.txt"/>
         <include name="license.txt"/>
       </fileset>
@@ -223,13 +234,11 @@
   </target>
 
   <target name="jar.dao" depends="src.compile">
-    <jar jarfile="${jars}/ibatis-dao-2.jar">
-      <fileset dir="${src}">
-        <exclude name="com/ibatis/common/**/*"/>
-        <exclude name="com/ibatis/sqlmap/**/*"/>
-        <exclude name="**/*.java"/>
+    <jar jarfile="${deploy.path}/ibatis-dao-2.jar">
+      <fileset dir="${cp.classes}">
+        <include name="com/ibatis/dao/**/*"/>
       </fileset>
-      <fileset dir="${jars}">
+      <fileset dir="${deploy.path}">
         <include name="release.txt"/>
         <include name="license.txt"/>
       </fileset>
@@ -237,13 +246,11 @@
   </target>
 
   <target name="jar.common" depends="src.compile">
-    <jar jarfile="${jars}/ibatis-common-2.jar">
-      <fileset dir="${src}">
-        <exclude name="com/ibatis/sqlmap/**/*"/>
-        <exclude name="com/ibatis/dao/**/*"/>
-        <exclude name="**/*.java"/>
+    <jar jarfile="${deploy.path}/ibatis-common-2.jar">
+      <fileset dir="${cp.classes}">
+        <include name="com/ibatis/common/**/*"/>
       </fileset>
-      <fileset dir="${jars}">
+      <fileset dir="${deploy.path}">
         <include name="release.txt"/>
         <include name="license.txt"/>
       </fileset>
@@ -251,75 +258,32 @@
   </target>
 
   <target name="jar.compatibility" depends="src.compile">
-    <mkdir dir="${jars}/lib/optional/compatibility/"/>
-    <jar jarfile="${jars}/lib/optional/compatibility/ibatis-sqlmap-1-x.jar">
-      <fileset dir="${compatibility}">
-        <exclude name="**/*.java"/>
+    <mkdir dir="${deploy.path}/lib/1-x-Compatibility/"/>
+    <jar jarfile="${deploy.path}/lib/1-x-Compatibility/ibatis-sqlmap-1-x.jar">
+      <fileset dir="${cp.classes}">
+        <include name="com/ibatis/db/**/*"/>
       </fileset>
-      <fileset dir="${jars}">
+      <fileset dir="${deploy.path}">
         <include name="release.txt"/>
         <include name="license.txt"/>
       </fileset>
     </jar>
   </target>
 
-  <target name="jar.tests" depends="src.compile">
-    <jar jarfile="${jars}/tests/ibatis-tests.zip">
-      <fileset dir="${tests}">
-        <exclude name="**/*.class"/>
-      </fileset>
-      <fileset dir="${jars}">
+  <target name="jar.src" depends="src.compile">
+    <jar jarfile="${deploy.path}/ibatis-src.zip">
+      <fileset dir="${src.rt}"/>
+      <fileset dir="${src.compat}"/>
+      <fileset dir="${deploy.path}">
         <include name="release.txt"/>
         <include name="license.txt"/>
       </fileset>
     </jar>
   </target>
 
-  <target name="jar.debug" depends="src.compile">
-    <delete>
-      <fileset dir="${src}">
-        <include name="**/*.class"/>
-      </fileset>
-      <fileset dir="${compatibility}">
-        <include name="**/*.class"/>
-      </fileset>
-    </delete>
-    <javac srcdir="${src}" destdir="${src}" deprecation="off" debug="on">
-      <classpath refid="classpath"/>
-    </javac>
-    <javac srcdir="${compatibility}" destdir="${compatibility}" deprecation="off" debug="on">
-      <classpath refid="classpath"/>
-    </javac>
-    <jar jarfile="${jars}/debug/ibatis-debug.jar">
-      <fileset dir="${src}">
-        <exclude name="**/*.java"/>
-      </fileset>
-      <fileset dir="${compatibility}">
-        <exclude name="**/*.java"/>
-      </fileset>
-      <fileset dir="${jars}">
-        <include name="release.txt"/>
-        <include name="license.txt"/>
-      </fileset>
-    </jar>
-    <jar jarfile="${jars}/debug/ibatis-source.zip">
-      <fileset dir="${src}">
-        <exclude name="**/*.class"/>
-      </fileset>
-      <fileset dir="${compatibility}">
-        <exclude name="**/*.class"/>
-      </fileset>
-      <fileset dir="${jars}">
-        <include name="release.txt"/>
-        <include name="license.txt"/>
-      </fileset>
-    </jar>
-    <copy todir="${jars}/debug/" file="${tests}/log4j.properties"/>
-  </target>
-
-  <target name="deploy.assemble" depends="jar.sqlmaps,jar.dao,jar.common,jar.compatibility,jar.tests,jar.debug">
-    <copy todir="${jars}/lib">
-      <fileset dir="${lib}">
+  <target name="deploy.assemble" depends="jar.sqlmaps,jar.dao,jar.common,jar.compatibility,jar.src">
+    <copy todir="${deploy.path}/lib">
+      <fileset dir="${lib.rt}">
         <include name="**/*.jar"/>
       </fileset>
     </copy>
@@ -327,32 +291,12 @@
 
   <target name="deploy.zipfile" depends="deploy.assemble">
     <property file="version.properties"/>
-    <jar jarfile="${deployfile-prefix}${buildNum}${deployfile-ext}">
-      <fileset dir="${jars}">
-        <include name="**/*.*"/>
-      </fileset>
+    <jar jarfile="${deploy.files}/${deploy.prefix}${buildNum}${deploy.ext}">
+      <fileset dir="${deploy.path}"/>
     </jar>
   </target>
 
-  <target name="post-clean">
-    <delete>
-      <fileset dir="${src}">
-        <include name="**/*.class"/>
-      </fileset>
-    </delete>
-    <delete>
-      <fileset dir="${compatibility}">
-        <include name="**/*.class"/>
-      </fileset>
-    </delete>
-    <delete>
-      <fileset dir="${tests}">
-        <include name="**/*.class"/>
-      </fileset>
-    </delete>
-  </target>
-
-  <target name="all" depends="test.coverage, src.javadoc, deploy.zipfile, post-clean">
+  <target name="all" depends="test.coverage, src.javadoc, deploy.zipfile">
     <fail if="testsFailed" message="The tests did not pass"/>
   </target>
 

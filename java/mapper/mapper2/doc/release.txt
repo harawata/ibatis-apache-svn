@@ -2,9 +2,10 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
- 2.0.9B - Feb 17, 2004
+ 2.0.9B - Feb 20, 2004
 ------------------------------
 
+ o Rebuilt on Feb 20th to fix incomplete ZIP file
  o Fixed IBATIS-24 Add use="true" to javadoc tasks
  o Fixed IBATIS-25 Included com.ibatis.common not included in JavaDoc
  o Fixed IBATIS-57 Deprecated ScriptRunner
