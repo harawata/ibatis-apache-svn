@@ -4,8 +4,6 @@ import com.ibatis.jpetstore.domain.Account;
 import com.ibatis.jpetstore.domain.Order;
 import com.ibatis.jpetstore.service.AccountService;
 import com.ibatis.jpetstore.service.OrderService;
-import com.ibatis.struts.ActionContext;
-import com.ibatis.struts.BaseBean;
 import com.ibatis.common.util.PaginatedList;
 
 import java.util.ArrayList;
@@ -13,16 +11,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Collections;
 
-public class OrderBean extends BaseBean {
+import org.apache.struts.beanaction.ActionContext;
+
+public class OrderBean extends AbstractBean {
 
   /* Constants */
-
-  private static final AccountService accountService = AccountService.getInstance();
-  private static final OrderService orderService = OrderService.getInstance();
 
   private static final List CARD_TYPE_LIST;
 
   /* Private Fields */
+
+  private AccountService accountService;
+  private OrderService orderService;
 
   private Order order;
   private int orderId;
@@ -44,9 +44,11 @@ public class OrderBean extends BaseBean {
   /* Constructors */
 
   public OrderBean() {
-    this.order = new Order();
-    this.shippingAddressRequired = false;
-    this.confirmed = false;
+    order = new Order();
+    shippingAddressRequired = false;
+    confirmed = false;
+    accountService = AccountService.getInstance();
+    orderService = OrderService.getInstance();
   }
 
   /* JavaBeans Properties */
@@ -108,16 +110,16 @@ public class OrderBean extends BaseBean {
 
     clear();
     if (accountBean == null || !accountBean.isAuthenticated()){
-      ActionContext.getActionContext().setSimpleMessage("You must sign on before attempting to check out.  Please sign on and try checking out again.");
-      return "signon";
+      setMessage("You must sign on before attempting to check out.  Please sign on and try checking out again.");
+      return SIGNON;
     } else if (cartBean != null) {
       // Re-read account from DB at team's request.
       Account account = accountService.getAccount(accountBean.getAccount().getUsername());
       order.initOrder(account, cartBean.getCart());
-      return "success";
+      return SUCCESS;
     } else {
-      ActionContext.getActionContext().setSimpleMessage("An order could not be created because a cart could not be found.");
-      return "failure";
+      setMessage("An order could not be created because a cart could not be found.");
+      return FAILURE;
     }
   }
 
@@ -126,9 +128,9 @@ public class OrderBean extends BaseBean {
 
     if (shippingAddressRequired) {
       shippingAddressRequired = false;
-      return "shipping";
+      return SHIPPING;
     } else if (!isConfirmed()) {
-      return "confirm";
+      return CONFIRM;
     } else if (getOrder() != null) {
 
       orderService.insertOrder(order);
@@ -136,12 +138,12 @@ public class OrderBean extends BaseBean {
       CartBean cartBean = (CartBean)sessionMap.get("cartBean");
       cartBean.clear();
 
-      ActionContext.getActionContext().setSimpleMessage("Thank you, your order has been submitted.");
+      setMessage("Thank you, your order has been submitted.");
 
-      return "success";
+      return SUCCESS;
     } else {
-      ActionContext.getActionContext().setSimpleMessage("An error occurred processing your order (order was null).");
-      return "failure";
+      setMessage("An error occurred processing your order (order was null).");
+      return FAILURE;
     }
   }
 
@@ -149,7 +151,7 @@ public class OrderBean extends BaseBean {
     Map sessionMap = ActionContext.getActionContext().getSessionMap();
     AccountBean accountBean = (AccountBean) sessionMap.get("accountBean");
     orderList = orderService.getOrdersByUsername(accountBean.getAccount().getUsername());
-    return "success";
+    return SUCCESS;
   }
 
   public String switchOrderPage() {
@@ -158,7 +160,7 @@ public class OrderBean extends BaseBean {
     } else if ("previous".equals(pageDirection)) {
       orderList.previousPage();
     }
-    return "success";
+    return SUCCESS;
   }
 
 
@@ -169,11 +171,11 @@ public class OrderBean extends BaseBean {
     order = orderService.getOrder(orderId);
 
     if (accountBean.getAccount().getUsername().equals(order.getUsername())) {
-      return "success";
+      return SUCCESS;
     } else {
       order = null;
-      ActionContext.getActionContext().setSimpleMessage("You may only view your own orders.");
-      return "failure";
+      setMessage("You may only view your own orders.");
+      return FAILURE;
     }
   }
 
@@ -188,44 +190,6 @@ public class OrderBean extends BaseBean {
     confirmed = false;
     orderList = null;
     pageDirection = null;
-  }
-
-  public void validate() {
-    ActionContext ctx = ActionContext.getActionContext();
-
-    if (!this.isShippingAddressRequired()) {
-      validateRequiredField(order.getCreditCard(), "FAKE (!) credit card number required.");
-      validateRequiredField(order.getExpiryDate(), "Expiry date is required.");
-      validateRequiredField(order.getCardType(), "Card type is required.");
-
-      validateRequiredField(order.getShipToFirstName(), "Shipping Info: first name is required.");
-      validateRequiredField(order.getShipToLastName(), "Shipping Info: last name is required.");
-      validateRequiredField(order.getShipAddress1(), "Shipping Info: address is required.");
-      validateRequiredField(order.getShipCity(), "Shipping Info: city is required.");
-      validateRequiredField(order.getShipState(), "Shipping Info: state is required.");
-      validateRequiredField(order.getShipZip(), "Shipping Info: zip/postal code is required.");
-      validateRequiredField(order.getShipCountry(), "Shipping Info: country is required.");
-
-      validateRequiredField(order.getBillToFirstName(), "Billing Info: first name is required.");
-      validateRequiredField(order.getBillToLastName(), "Billing Info: last name is required.");
-      validateRequiredField(order.getBillAddress1(), "Billing Info: address is required.");
-      validateRequiredField(order.getBillCity(), "Billing Info: city is required.");
-      validateRequiredField(order.getBillState(), "Billing Info: state is required.");
-      validateRequiredField(order.getBillZip(), "Billing Info: zip/postal code is required.");
-      validateRequiredField(order.getBillCountry(), "Billing Info: country is required.");
-    }
-
-    if (ctx.isSimpleErrorsExist()) {
-      order.setBillAddress1(order.getShipAddress1());
-      order.setBillAddress2(order.getShipAddress2());
-      order.setBillToFirstName(order.getShipToFirstName());
-      order.setBillToLastName(order.getShipToLastName());
-      order.setBillCity(order.getShipCity());
-      order.setBillCountry(order.getShipCountry());
-      order.setBillState(order.getShipState());
-      order.setBillZip(order.getShipZip());
-    }
-
   }
 
 }

@@ -5,8 +5,6 @@ import com.ibatis.jpetstore.domain.Category;
 import com.ibatis.jpetstore.domain.Item;
 import com.ibatis.jpetstore.domain.Product;
 import com.ibatis.jpetstore.service.CatalogService;
-import com.ibatis.struts.ActionContext;
-import com.ibatis.struts.BaseBean;
 
 /**
  * <p/>
@@ -14,13 +12,11 @@ import com.ibatis.struts.BaseBean;
  * 
  * @author Clinton Begin
  */
-public class CatalogBean extends BaseBean {
-
-  /* Constants */
-
-  private static final CatalogService catalogService = CatalogService.getInstance();
+public class CatalogBean extends AbstractBean {
 
   /* Private Fields */
+
+  private CatalogService catalogService;
 
   private String keyword;
   private String pageDirection;
@@ -36,6 +32,12 @@ public class CatalogBean extends BaseBean {
   private String itemId;
   private Item item;
   private PaginatedList itemList;
+
+  /* Constructors */
+  
+  public CatalogBean() {
+    catalogService = CatalogService.getInstance();
+  }
 
   /* JavaBeans Properties */
 
@@ -134,16 +136,16 @@ public class CatalogBean extends BaseBean {
       productList = catalogService.getProductListByCategory(categoryId);
       category = catalogService.getCategory(categoryId);
     }
-    return "success";
+    return SUCCESS;
   }
 
   public String searchProducts() {
     if (keyword == null || keyword.length() < 1) {
-      ActionContext.getActionContext().setSimpleMessage("Please enter a keyword to search for, then press the search button.");
-      return "failure";
+      setMessage("Please enter a keyword to search for, then press the search button.");
+      return FAILURE;
     } else {
       productList = catalogService.searchProductList(keyword.toLowerCase());
-      return "success";
+      return SUCCESS;
     }
   }
 
@@ -153,7 +155,7 @@ public class CatalogBean extends BaseBean {
     } else if ("previous".equals(pageDirection)) {
       productList.previousPage();
     }
-    return "success";
+    return SUCCESS;
   }
 
   public String viewProduct() {
@@ -161,7 +163,7 @@ public class CatalogBean extends BaseBean {
       itemList = catalogService.getItemListByProduct(productId);
       product = catalogService.getProduct(productId);
     }
-    return "success";
+    return SUCCESS;
   }
 
   public String switchItemListPage() {
@@ -170,13 +172,13 @@ public class CatalogBean extends BaseBean {
     } else if ("previous".equals(pageDirection)) {
       itemList.previousPage();
     }
-    return "success";
+    return SUCCESS;
   }
 
   public String viewItem() {
     item = catalogService.getItem(itemId);
     product = item.getProduct();
-    return "success";
+    return SUCCESS;
   }
 
   public void clear () {

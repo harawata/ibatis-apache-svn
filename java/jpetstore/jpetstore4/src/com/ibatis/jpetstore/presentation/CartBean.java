@@ -4,23 +4,27 @@ import com.ibatis.jpetstore.domain.Cart;
 import com.ibatis.jpetstore.domain.CartItem;
 import com.ibatis.jpetstore.domain.Item;
 import com.ibatis.jpetstore.service.CatalogService;
-import com.ibatis.struts.ActionContext;
-import com.ibatis.struts.BaseBean;
 
 import java.util.Iterator;
 import java.util.Map;
 
-public class CartBean extends BaseBean {
+import org.apache.struts.beanaction.ActionContext;
 
-  /* Constants */
-
-  private static final CatalogService catalogService = CatalogService.getInstance();
+public class CartBean extends AbstractBean {
 
   /* Private Fields */
+
+  private CatalogService catalogService;
 
   private Cart cart = new Cart();
   private String workingItemId;
   private String pageDirection;
+
+  /* Constructors */
+  
+  public CartBean() {
+    catalogService = CatalogService.getInstance();
+  }
 
   /* JavaBeans Properties */
 
@@ -62,7 +66,7 @@ public class CartBean extends BaseBean {
       cart.addItem(item, isInStock);
     }
 
-    return "success";
+    return SUCCESS;
   }
 
   public String removeItemFromCart() {
@@ -70,10 +74,10 @@ public class CartBean extends BaseBean {
     Item item = cart.removeItemById(workingItemId);
 
     if (item == null) {
-      ActionContext.getActionContext().setSimpleMessage("Attempted to remove null CartItem from Cart.");
-      return "failure";
+      setMessage("Attempted to remove null CartItem from Cart.");
+      return FAILURE;
     } else {
-      return "success";
+      return SUCCESS;
     }
   }
 
@@ -95,7 +99,7 @@ public class CartBean extends BaseBean {
       }
     }
 
-    return "success";
+    return SUCCESS;
   }
 
   public String switchCartPage() {
@@ -104,11 +108,11 @@ public class CartBean extends BaseBean {
     } else if ("previous".equals(pageDirection)) {
       cart.getCartItemList().previousPage();
     }
-    return "success";
+    return SUCCESS;
   }
 
   public String viewCart() {
-    return "success";
+    return SUCCESS;
   }
 
   public void clear() {

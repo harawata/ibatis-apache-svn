@@ -4,28 +4,25 @@ import com.ibatis.common.util.PaginatedList;
 import com.ibatis.jpetstore.domain.Account;
 import com.ibatis.jpetstore.service.AccountService;
 import com.ibatis.jpetstore.service.CatalogService;
-import com.ibatis.struts.ActionContext;
-import com.ibatis.struts.BaseBean;
-import com.ibatis.struts.BeanActionException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
 
-public class AccountBean extends BaseBean {
+import org.apache.struts.beanaction.BeanActionException;
+import org.apache.struts.beanaction.ActionContext;
+
+public class AccountBean extends AbstractBean {
 
   /* Constants */
-
-  private static final AccountService accountService = AccountService.getInstance();
-  private static final CatalogService catalogService = CatalogService.getInstance();
-
-  private static final String VALIDATE_NEW_ACCOUNT = "new";
-  private static final String VALIDATE_EDIT_ACCOUNT = "edit";
 
   private static final List LANGUAGE_LIST;
   private static final List CATEGORY_LIST;
 
   /* Private Fields */
+
+  private AccountService accountService;
+  private CatalogService catalogService;
 
   private Account account;
   private String repeatedPassword;
@@ -55,6 +52,8 @@ public class AccountBean extends BaseBean {
 
   public AccountBean() {
     account = new Account();
+    accountService = AccountService.getInstance();
+    catalogService = CatalogService.getInstance();
   }
 
   /* JavaBeans Properties */
@@ -133,7 +132,7 @@ public class AccountBean extends BaseBean {
       myList = catalogService.getProductListByCategory(account.getFavouriteCategoryId());
       authenticated = true;
       repeatedPassword = null;
-      return "success";
+      return SUCCESS;
     } catch (Exception e) {
       throw new BeanActionException ("There was a problem creating your Account Information.  Cause: " + e, e);
     }
@@ -142,7 +141,7 @@ public class AccountBean extends BaseBean {
   public String editAccountForm() {
     try {
       account = accountService.getAccount(account.getUsername());
-      return "success";
+      return SUCCESS;
     } catch (Exception e) {
       throw new BeanActionException ("There was a problem retrieving your Account Information. Cause: "+e, e);
     }
@@ -153,7 +152,7 @@ public class AccountBean extends BaseBean {
       accountService.updateAccount(account);
       account = accountService.getAccount(account.getUsername());
       myList = catalogService.getProductListByCategory(account.getFavouriteCategoryId());
-      return "success";
+      return SUCCESS;
     } catch (Exception e) {
       throw new BeanActionException ("There was a problem updating your Account Information. Cause: "+e, e);
     }
@@ -165,7 +164,7 @@ public class AccountBean extends BaseBean {
     } else if ("previous".equals(pageDirection)) {
       myList.previousPage();
     }
-    return "success";
+    return SUCCESS;
   }
 
   public String signon() {
@@ -173,9 +172,10 @@ public class AccountBean extends BaseBean {
     account = accountService.getAccount(account.getUsername(), account.getPassword());
 
     if (account == null || account == null) {
-      ActionContext.getActionContext().setSimpleMessage("Invalid username or password.  Signon failed.");
+      String value = "Invalid username or password.  Signon failed.";
+      setMessage(value);
       clear();
-      return "failure";
+      return FAILURE;
     } else {
       account.setPassword(null);
 
@@ -183,14 +183,14 @@ public class AccountBean extends BaseBean {
 
       authenticated = true;
 
-      return "success";
+      return SUCCESS;
     }
   }
 
   public String signoff() {
     ActionContext.getActionContext().getRequest().getSession().invalidate();
     clear();
-    return "success";
+    return SUCCESS;
   }
 
   public boolean isAuthenticated() {
@@ -210,36 +210,6 @@ public class AccountBean extends BaseBean {
     pageDirection = null;
     myList = null;
     authenticated = false;
-  }
-
-  public void validate() {
-    ActionContext ctx = ActionContext.getActionContext();
-    if (validation != null) {
-      if (VALIDATE_EDIT_ACCOUNT.equals(validation) || VALIDATE_NEW_ACCOUNT.equals(validation)) {
-        if (VALIDATE_NEW_ACCOUNT.equals(validation)) {
-          account.setStatus("OK");
-          validateRequiredField(account.getUsername(), "User ID is required.");
-          if (account.getPassword() == null || account.getPassword().length() < 1 || !account.getPassword().equals(repeatedPassword)) {
-            ctx.addSimpleError("Passwords did not match or were not provided.  Matching passwords are required.");
-          }
-        }
-        if (account.getPassword() != null && account.getPassword().length() > 0) {
-          if (!account.getPassword().equals(repeatedPassword)) {
-            ctx.addSimpleError("Passwords did not match.");
-          }
-        }
-        validateRequiredField(account.getFirstName(), "First name is required.");
-        validateRequiredField(account.getLastName(), "Last name is required.");
-        validateRequiredField(account.getEmail(), "Email address is required.");
-        validateRequiredField(account.getPhone(), "Phone number is required.");
-        validateRequiredField(account.getAddress1(), "Address (1) is required.");
-        validateRequiredField(account.getCity(), "City is required.");
-        validateRequiredField(account.getState(), "State is required.");
-        validateRequiredField(account.getZip(), "ZIP is required.");
-        validateRequiredField(account.getCountry(), "Country is required.");
-      }
-    }
-
   }
 
 }
