@@ -298,6 +298,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// To test only for MSSQL with .NET SqlClient provider
 		/// </remarks>
 		[Test] 
+		[Category("MSSQL")]
 		public void TestJIRA11() 
 		{
 			Search search = new Search();
@@ -342,6 +343,29 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Assert.AreEqual(8888888, anOther.Long);
 			Assert.AreEqual(false, anOther.Bool);
 
+		}
+
+		/// <summary>
+		/// Test JIRA 29
+		/// </summary>
+		[Test] 
+		[Category("MSSQL")]
+		public void TestJIRA29() 
+		{
+			Hashtable param = new Hashtable();
+			param["Foo"] = new DateTime(2003, 2, 15, 8, 15, 0); 
+
+			Order order = sqlMap.QueryForObject("SelectOrderByDate", param) as Order;
+
+			Assert.IsNotNull(order);
+
+			Assert.AreEqual(1, order.Id);
+
+			order = sqlMap.QueryForObject("SelectOrderByDateDynamic", param) as Order;
+
+			Assert.IsNotNull(order);
+
+			Assert.AreEqual(1, order.Id);
 		}
 		#endregion
 

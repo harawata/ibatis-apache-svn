@@ -160,18 +160,89 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL
 		
 		#endregion
 		
+		[Test] 
 		public void TestAdoPerformanceWithParameter()
 		{
-			IDbConnection connection = new SqlConnection();
-			connection.ConnectionString = sqlMap.DataSource.ConnectionString;
+			string connectionString = sqlMap.DataSource.ConnectionString;
 
-			IDbCommand command = new SqlCommand();
-//			command.CommandType = CommandType.Text;
-//			command.CommandText = "";
-//			command.Parameters.Add ( "@id", id) ;
-//			command.Parameters.Add ( "@desc", desc) ;
-//			command.Prepare() ;  // Calling Prepare after having set the Commandtext and parameters.
-//			command.ExecuteNonQuery();
+			// Embeded Parameters
+			using (SqlConnection connection = new SqlConnection(connectionString))
+			{
+				string commandText = @"SELECT 
+					[Many_FirstID] AS FirstId, 
+					[Many_SecondID] AS SecondId, 
+					[Many_ThirdID] AS ThirdId, 
+					[Many_FourthID] AS FourthId,  
+					[Many_FifthID] AS FifthId,  
+					[Many_SequenceID] AS SequenceId,  
+					[Many_DistributedID] AS DistributedId, 
+					[Many_SampleCharValue] AS SampleChar,  
+					[Many_SampleDecimal] AS SampleDecimal, 
+					[Many_SampleMoney] AS SampleMoney, 
+					[Many_SampleDate] AS SampleDate, 
+					[Many_SequenceDate] AS SequenceDate
+				FROM 
+					[ManyRecordsTest]
+				WHERE 
+					[Many_SampleDate] BETWEEN '1990/01/01' AND '1992/01/01'";
+
+				connection.Open();
+
+				using (SqlCommand command = new SqlCommand(commandText, connection))
+				{
+					command.CommandType = CommandType.Text;
+
+					long startCount = DateTime.Now.Ticks;
+					for(int i= 0; i<50; i++)
+					{
+						command.ExecuteNonQuery();
+					}
+					long endCount = DateTime.Now.Ticks;
+					Console.Write("Embeded Parameters : ");
+					Console.Write(endCount-startCount);
+					Console.WriteLine();
+				}
+			}
+
+			// Using Parameter
+			using (SqlConnection connection = new SqlConnection(connectionString))
+			{
+				string commandText = @"SELECT 
+					[Many_FirstID] AS FirstId, 
+					[Many_SecondID] AS SecondId, 
+					[Many_ThirdID] AS ThirdId, 
+					[Many_FourthID] AS FourthId,  
+					[Many_FifthID] AS FifthId,  
+					[Many_SequenceID] AS SequenceId,  
+					[Many_DistributedID] AS DistributedId, 
+					[Many_SampleCharValue] AS SampleChar,  
+					[Many_SampleDecimal] AS SampleDecimal, 
+					[Many_SampleMoney] AS SampleMoney, 
+					[Many_SampleDate] AS SampleDate, 
+					[Many_SequenceDate] AS SequenceDate
+				FROM 
+					[ManyRecordsTest]
+				WHERE 
+					[Many_SampleDate] BETWEEN @date1 AND @date2";
+
+				connection.Open();
+
+				using (SqlCommand command = new SqlCommand(commandText, connection))
+				{
+					command.CommandType = CommandType.Text;
+					command.Parameters.Add ( "@date1", new DateTime(1990,1,1)) ;
+					command.Parameters.Add ( "@date2", new DateTime(1992,1,1)) ;
+
+					long startCount = DateTime.Now.Ticks;
+					for(int i= 0; i<50; i++)
+					{
+						command.ExecuteNonQuery();
+					}
+					long endCount = DateTime.Now.Ticks;
+					Console.Write("Parameter : ");
+					Console.Write(endCount-startCount);
+				}
+			}
 
 		}
 
