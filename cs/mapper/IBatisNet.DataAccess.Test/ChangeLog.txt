@@ -1,8 +1,5 @@
-IBatisNet DataAcess Change Log
+IBatisNet DataAccess test Change Log
 
 ------------------------------
 1.5.* - XX/XX/XXXX
 ------------------------------
-
-- Renamed Resources.RootApplication ot Resources.ApplicationBase in IBatisNet.Common.Utilities 
-  + fixed issue in init of ApplicationBase

@@ -118,6 +118,10 @@
                     BuildAction = "None"
                 />
                 <File
+                    RelPath = "ChangeLog.txt"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "DaoManager.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -45,6 +45,7 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 		/// Test Create user
 		/// </summary>
 		[Test] 
+		[Category("NHibernate")]
 		public void TestCreateUser () 
 		{
 			IUserDao userDao = (IUserDao)daoManager2[typeof(IUserDao)];
@@ -115,6 +116,7 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 		/// </summary>
 		[Test] 
 		[Category("MTS")]
+		[Category("NHibernate")]
 		public void TestUsingTransactionScope () 
 		{
 			Account account = NewAccount();
@@ -179,6 +181,7 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 		/// Test Create user
 		/// </summary>
 		[Test] 
+		[Category("NHibernate")]
 		public void TestNestedDao()
 		{
 			IAccountDao accountDao = daoManager[typeof(IAccountDao)] as IAccountDao;

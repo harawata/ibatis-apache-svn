@@ -4,8 +4,8 @@
 	xsi:noNamespaceSchemaLocation="SqlMap.xsd">
 
 	<alias>
-		<typeAlias alias="LineItem" type="IBatisNet.Test.Domain.LineItem, IBatisNet.Test" />
-		<typeAlias alias="LineItemCollection" type="IBatisNet.Test.Domain.LineItemCollection, IBatisNet.Test" />
+		<typeAlias alias="LineItem" type="IBatisNet.DataAccess.Test.Domain.LineItem, IBatisNet.DataAccess.Test" />
+		<typeAlias alias="LineItemCollection" type="IBatisNet.DataAccess.Test.Domain.LineItemCollection, IBatisNet.DataAccess.Test" />
 	</alias>
 	
 	<resultMaps>  	
