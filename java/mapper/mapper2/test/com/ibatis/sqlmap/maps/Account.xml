@@ -257,6 +257,14 @@
     and ACC_ID = #id#
   </delete>
 
+  <delete id="deleteAccountByDuplicateInteger"
+    >
+    delete from ACCOUNT
+    where ACC_ID = #value#
+    and ACC_ID = #value#
+  </delete>
+
+
   <update id="updateAccountViaInlineParameters"
     parameterClass="account">
     update ACCOUNT set

@@ -494,6 +494,18 @@ public class StatementTest extends BaseSqlMapTest {
     assertTrue(checkForInvalidTypeFailedAppropriately);
   }
 
+  /**
+   * For bug 959140
+   */
+//  public void testExecuteUpdateWithDuplicateParams() throws SQLException {
+//
+//    sqlMap.update("deleteAccountByDuplicateInteger", new Integer (5));
+//
+//    Account account = (Account) sqlMap.queryForObject("getAccountViaColumnName", new Integer(5));
+//
+//    assertNull(account);
+//  }
+
   // DYNAMIC SQL
 
   public void testQueryDynamicSqlElement() throws SQLException {
