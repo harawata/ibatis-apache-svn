@@ -1,47 +1,58 @@
-------------------------------
-FEATURE REQUESTS: TOOLS
-------------------------------
+------------------------------------------------------------
+              iBATIS Wish List and Road Map
+------------------------------------------------------------
 
- o XDoclet/QDox Tags (@ibatis)
- o SQL Map Editor GUI
- o Ant Tasks?
+  Ease of Use
 
-------------------------------
-FEATURE REQUESTS: MED-PRIORITY
-------------------------------
+  2.1 - Improved configuration API and logging
+      - Override/extend mapped statements (i.e. reuse SQL; overrides="statementName")
 
- o Pluggable SQL Scripting languages
- o Fetch size, driver hints, scroll/concur type on prepare
- o Repeating group mapping (solution for n+1 selects problem)
- o Inheritance via selects or joins (same as groups)
- o Cancel long running statements (cross thread)
- o Overriding mapped statements (i.e. reuse SQL; overrides="statementName")
- o Cache dependency on other cache (flush-on-dependant)
- o Flush cache at specifig time (e.g. 22:30)
- o Improved Inline parameters (w/stored proc mode)
- o Current parameters could skip options with empty :: (e.g. #COLNAME::-1#)
- o Extended Statements
- o Included Statements
- o Optional results/exclusions (i.e. don't require all results)
- o Type translation filters (e.g. "Y"|"N" -> true|false)
- o NULL complex property map results set prop to null (don't run query selectOnNull="false")
+  2.2 - Improved Inline parameters (w/stored proc mode)
+      - Current parameters could skip options with empty :: (e.g. #COLNAME::-1#)
+      - Pluggable SQL Scripting languages
 
-------------------------------
-FEATURE REQUESTS: LOW-PRIORITY 
-------------------------------
+  ?.? - Optional results/exclusions (i.e. don't require all results)
+      - Included SQL Fragments
+      - Cross file resource management (currently works, but order dependent --ok?)
+      - Circular relationships
+      - Per result Lazy Load configuration
 
- o Circular relationships
- o Cross file resource management (currently works, but order dependent --ok?)
- o CLOB/BLOB support
- o RowSet|ResultSet results?
- o Multiple result sets/update results
- o Extended configuration logging
- o Get warnings (conn, ps, rs)
- o Pluggable dynamic fragments
- o Asynchronous updates (queued)
- o Idle Connection Timeout in SimpleDataSource
- o Map with 1:M relationship with other Map?  (i.e. map key contains list of other maps)
- o Per result Lazy Load configuration 
- o On-the-fly configuration reload? (out of scope? external responsibility?)
- o Trim whitespace from CHAR data
+  Database Support
+
+  2.1 - Custom Type Handlers
+      - Type translation filters (e.g. "Y"|"N" -> true|false)
+      - CLOB/BLOB support
+      - Save point support
+      - Isolation Level support
+
+  ?.? - NULL complex property map results set prop to null (don't run query selectOnNull="false")
+      - Trim whitespace from CHAR data
+
+  Performance
+
+  2.1 - Fetch size, driver hints, scroll/concur type on prepare
+      - Repeating group mapping (solution for M:N n+1 selects problem)
+      - Cache dependency on other cache (flush-on-dependant)
+      - Flush cache at specifig time (e.g. 22:30)
+
+  Object Oriented
+
+  2.1 - Inheritance via selects or joins (same as groups)
+
+  Tools
+
+  ?.? - XDoclet/QDox Tags (@ibatis)
+      - SQL Map Editor GUI
+      - Ant Tasks?
+
+  Unlikely
+
+  ?.? - RowSet|ResultSet results?
+      - Multiple result sets/update results
+      - Get warnings (conn, ps, rs)
+      - Asynchronous updates (queued)
+      - Idle Connection Timeout in SimpleDataSource
+      - Map with 1:M relationship with other Map?  (i.e. map key contains list of other maps)
+      - On-the-fly configuration reload? (out of scope? external responsibility?)
+      - Cancel long running statements (cross thread)
 
