@@ -96,7 +96,7 @@
     </action>
 
     <action path="/shop/checkout" type="com.ibatis.struts.BeanAction"
-      scope="session"
+      name="cartBean" scope="session"
       validate="false">
       <forward name="success" path="/cart/Checkout.jsp"/>
     </action>
@@ -122,7 +122,7 @@
     <!-- ACCOUNT ACTIONS -->
 
     <action path="/shop/newAccountForm" type="com.ibatis.struts.BeanAction"
-      scope="session"
+      name="accountBean" scope="session"
       validate="false">
       <forward name="success" path="/account/NewAccountForm.jsp"/>
     </action>
