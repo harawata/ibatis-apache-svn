@@ -1,3 +1,18 @@
+/*
+ *  Copyright 2004 Clinton Begin
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package com.ibatis.sqlmap.client.event;
 
 import java.util.List;
@@ -34,7 +49,7 @@ public interface RowHandler {
 
   /**
    * TODO : Deprecated and will be removed.
-   * 
+   *
    * @see RowHandler#handleRow(Object)
    * @deprecated THIS WILL BE REMOVED BY FINAL RELEASE
    *             <p/>
@@ -59,47 +74,47 @@ public interface RowHandler {
    *             <p/>
    *             Well, basically your RowHandlers will need to be changed to handle the List themselves.  For example:
    *             <pre>
-   *                         <br/>
-   *                         <br/> ----------------------------
-   *                         <br/> // OLD WAY
-   *                         <br/>
-   *                         <br/> public class MyRowHandler imlements RowHandler {
-   *                         <br/>    public void handleRow(Object valueObject, List list) {
-   *                         <br/>        list.add(valueObject);
-   *                         <br/>    }
-   *                         <br/> }
-   *                         <br/>
-   *                         <br/> // NEW WAY
-   *                         <br/>
-   *                         <br/> public class MyNewRowHandler imlements RowHandler {
-   *                         <br/>    private List list = new ArrayList();
-   *                         <br/>    public void handleRow(Object valueObject) {
-   *                         <br/>        list.add(valueObject);
-   *                         <br/>    }
-   *                         <br/>    public List getList () {
-   *                         <br/>        return list;
-   *                         <br/>    }
-   *                         <br/> }
-   *                         <br/> ----------------------------
-   *                         <br/>
-   *                         <br/> Obviously the calling code will need to be changed too.  For example:
-   *                         <br/>
-   *                         <br/> ----------------------------
-   *                         <br/> // OLD WAY
-   *                         <br/> RowHandler rowHandler = new MyRowHandler();
-   *                         <br/> List list = sqlMap.queryForList("name", param, rowHandler);
-   *                         <br/>
-   *                         <br/> // NEW WAY
-   *                         <br/>
-   *                         <br/> RowHandler rowHandler = new MyNewRowHandler();
-   *                         <br/> sqlMap.queryWithRowHandler("name", param, rowHandler);
-   *                         <br/> List list = rowHandler.getList();
-   *                         <br/> ----------------------------
-   *                         <br/>
-   *                         <br/> The cost is a few extra lines of code, but the benefit is a great deal of
-   *                         <br/> flexibility and eliminated redundancy.
-   *                         <br/>
-   *                         </pre>
+   *                                     <br/>
+   *                                     <br/> ----------------------------
+   *                                     <br/> // OLD WAY
+   *                                     <br/>
+   *                                     <br/> public class MyRowHandler imlements RowHandler {
+   *                                     <br/>    public void handleRow(Object valueObject, List list) {
+   *                                     <br/>        list.add(valueObject);
+   *                                     <br/>    }
+   *                                     <br/> }
+   *                                     <br/>
+   *                                     <br/> // NEW WAY
+   *                                     <br/>
+   *                                     <br/> public class MyNewRowHandler imlements RowHandler {
+   *                                     <br/>    private List list = new ArrayList();
+   *                                     <br/>    public void handleRow(Object valueObject) {
+   *                                     <br/>        list.add(valueObject);
+   *                                     <br/>    }
+   *                                     <br/>    public List getList () {
+   *                                     <br/>        return list;
+   *                                     <br/>    }
+   *                                     <br/> }
+   *                                     <br/> ----------------------------
+   *                                     <br/>
+   *                                     <br/> Obviously the calling code will need to be changed too.  For example:
+   *                                     <br/>
+   *                                     <br/> ----------------------------
+   *                                     <br/> // OLD WAY
+   *                                     <br/> RowHandler rowHandler = new MyRowHandler();
+   *                                     <br/> List list = sqlMap.queryForList("name", param, rowHandler);
+   *                                     <br/>
+   *                                     <br/> // NEW WAY
+   *                                     <br/>
+   *                                     <br/> RowHandler rowHandler = new MyNewRowHandler();
+   *                                     <br/> sqlMap.queryWithRowHandler("name", param, rowHandler);
+   *                                     <br/> List list = rowHandler.getList();
+   *                                     <br/> ----------------------------
+   *                                     <br/>
+   *                                     <br/> The cost is a few extra lines of code, but the benefit is a great deal of
+   *                                     <br/> flexibility and eliminated redundancy.
+   *                                     <br/>
+   *                                     </pre>
    */
   void handleRow(Object valueObject, List list);
 

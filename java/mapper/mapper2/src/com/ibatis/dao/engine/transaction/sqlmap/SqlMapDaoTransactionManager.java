@@ -1,3 +1,18 @@
+/*
+ *  Copyright 2004 Clinton Begin
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package com.ibatis.dao.engine.transaction.sqlmap;
 
 import com.ibatis.common.resources.Resources;
@@ -20,9 +35,10 @@ public class SqlMapDaoTransactionManager implements DaoTransactionManager {
 
   /**
    * Required by interface
-   * @see com.ibatis.dao.engine.transaction.DaoTransactionManager
+   *
    * @param properties required by interface
-   */  
+   * @see com.ibatis.dao.engine.transaction.DaoTransactionManager
+   */
   public void configure(Properties properties) {
     try {
       Reader reader = null;
@@ -41,27 +57,30 @@ public class SqlMapDaoTransactionManager implements DaoTransactionManager {
 
   /**
    * Required by interface
-   * @see com.ibatis.dao.engine.transaction.DaoTransactionManager
+   *
    * @return A new Transaction
-   */  
+   * @see com.ibatis.dao.engine.transaction.DaoTransactionManager
+   */
   public DaoTransaction startTransaction() {
     return new SqlMapDaoTransaction(client);
   }
 
   /**
    * Required by interface
-   * @see com.ibatis.dao.engine.transaction.DaoTransactionManager
+   *
    * @param trans Required by interface
-   */  
+   * @see com.ibatis.dao.engine.transaction.DaoTransactionManager
+   */
   public void commitTransaction(DaoTransaction trans) {
     ((SqlMapDaoTransaction) trans).commit();
   }
 
   /**
    * Required by interface
-   * @see com.ibatis.dao.engine.transaction.DaoTransactionManager
+   *
    * @param trans Required by interface
-   */  
+   * @see com.ibatis.dao.engine.transaction.DaoTransactionManager
+   */
   public void rollbackTransaction(DaoTransaction trans) {
     ((SqlMapDaoTransaction) trans).rollback();
   }

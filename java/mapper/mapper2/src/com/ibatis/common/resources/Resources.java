@@ -1,3 +1,18 @@
+/*
+ *  Copyright 2004 Clinton Begin
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package com.ibatis.common.resources;
 
 import java.io.*;
@@ -17,14 +32,18 @@ public class Resources extends Object {
   private Resources() {
   }
 
-  /** Returns the default classloader (may be null).
-   * @return The default classloader 
+  /**
+   * Returns the default classloader (may be null).
+   *
+   * @return The default classloader
    */
   public static ClassLoader getDefaultClassLoader() {
     return defaultClassLoader;
   }
 
-  /** Sets the default classloader
+  /**
+   * Sets the default classloader
+   *
    * @param defaultClassLoader - the new default ClassLoader
    */
   public static void setDefaultClassLoader(ClassLoader defaultClassLoader) {
@@ -159,7 +178,7 @@ public class Resources extends Object {
   /**
    * Returns a resource on the classpath as a File object
    *
-   * @param loader - the classloader used to load the resource
+   * @param loader   - the classloader used to load the resource
    * @param resource - the resource to find
    * @return The resource
    * @throws IOException If the resource cannot be found or read
@@ -168,7 +187,9 @@ public class Resources extends Object {
     return new File(getResourceURL(loader, resource).getFile());
   }
 
-  /** Gets a URL as an input stream
+  /**
+   * Gets a URL as an input stream
+   *
    * @param urlString - the URL to get
    * @return An input stream with the data from the URL
    * @throws IOException If the resource cannot be found or read
@@ -179,7 +200,9 @@ public class Resources extends Object {
     return conn.getInputStream();
   }
 
-  /** Gets a URL as a Reader
+  /**
+   * Gets a URL as a Reader
+   *
    * @param urlString - the URL to get
    * @return A Reader with the data from the URL
    * @throws IOException If the resource cannot be found or read
@@ -188,7 +211,9 @@ public class Resources extends Object {
     return new InputStreamReader(getUrlAsStream(urlString));
   }
 
-  /** Gets a URL as a Properties object
+  /**
+   * Gets a URL as a Properties object
+   *
    * @param urlString - the URL to get
    * @return A Properties object with the data from the URL
    * @throws IOException If the resource cannot be found or read
@@ -203,7 +228,9 @@ public class Resources extends Object {
     return props;
   }
 
-  /** Loads a class
+  /**
+   * Loads a class
+   *
    * @param className - the class to load
    * @return The loaded class
    * @throws ClassNotFoundException If the class cannot be found (duh!)
@@ -221,7 +248,9 @@ public class Resources extends Object {
     return clazz;
   }
 
-  /** Creates an instance of a class
+  /**
+   * Creates an instance of a class
+   *
    * @param className - the class to create
    * @return An instance of the class
    * @throws ClassNotFoundException If the class cannot be found (duh!)
@@ -233,7 +262,9 @@ public class Resources extends Object {
     return instantiate(classForName(className));
   }
 
-  /** Creates an instance of a class
+  /**
+   * Creates an instance of a class
+   *
    * @param clazz - the class to create
    * @return An instance of the class
    * @throws InstantiationException If the class cannot be instantiaed

@@ -1,3 +1,18 @@
+/*
+ *  Copyright 2004 Clinton Begin
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package com.ibatis.sqlmap.engine.cache;
 
 /**
@@ -24,6 +39,7 @@ public class CacheKey {
 
   /**
    * Costructor that supplies an initial hashcode
+   *
    * @param initialNonZeroOddNumber - the hashcode to use
    */
   public CacheKey(int initialNonZeroOddNumber) {
@@ -34,7 +50,8 @@ public class CacheKey {
 
   /**
    * Costructor that supplies an initial hashcode and multiplier
-   * @param initialNonZeroOddNumber - the hashcode to use
+   *
+   * @param initialNonZeroOddNumber    - the hashcode to use
    * @param multiplierNonZeroOddNumber - the multiplier to use
    */
   public CacheKey(int initialNonZeroOddNumber, int multiplierNonZeroOddNumber) {
@@ -45,10 +62,11 @@ public class CacheKey {
 
   /**
    * Updates this object with new information based on an int value
+   *
    * @param x - the int value
    * @return the cache key
    */
-public CacheKey update(int x) {
+  public CacheKey update(int x) {
     count++;
     checksum += x;
     x *= count;
@@ -59,7 +77,8 @@ public CacheKey update(int x) {
   }
 
   /**
-   * Updates this object with new information based on an object 
+   * Updates this object with new information based on an object
+   *
    * @param object - the object
    * @return the cachekey
    */

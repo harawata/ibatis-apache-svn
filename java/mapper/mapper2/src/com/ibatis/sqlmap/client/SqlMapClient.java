@@ -1,3 +1,18 @@
+/*
+ *  Copyright 2004 Clinton Begin
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package com.ibatis.sqlmap.client;
 
 import java.sql.Connection;
@@ -119,7 +134,7 @@ public interface SqlMapClient extends SqlMapExecutor, SqlMapTransactionManager {
    * connection will be used for executing statements, and therefore overrides any
    * configured datasources.  Using this approach allows the developer to easily use an externally
    * supplied connection for executing statements.
-   * <p>
+   * <p/>
    * <b>Important:</b> Using a user supplied connection basically sidesteps the datasource
    * so you are responsible for appropriately handling your connection lifecycle (i.e. closing).
    * Here's a (very) simple example (throws SQLException):
@@ -151,6 +166,7 @@ public interface SqlMapClient extends SqlMapExecutor, SqlMapTransactionManager {
 
   /**
    * TODO : Deprecated and will be removed.
+   *
    * @return A session (DEPRECATED)
    * @deprecated Use openSession() instead.  THIS METHOD WILL BE REMOVED BEFORE
    *             FINAL RELEASE.
@@ -164,6 +180,7 @@ public interface SqlMapClient extends SqlMapExecutor, SqlMapTransactionManager {
 
   /**
    * Flushes the data cache that matches the cache model ID provided.
+   *
    * @param cacheId The cache model to flush
    */
   public void flushDataCache(String cacheId);

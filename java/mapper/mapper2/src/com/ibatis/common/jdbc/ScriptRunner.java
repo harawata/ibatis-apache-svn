@@ -1,13 +1,19 @@
-/**
- * Created by IntelliJ IDEA.
- * User: Clinton Begin
- * Date: Nov 17, 2002
- * Time: 4:44:09 PM
- * To change this template use Options | File Templates.
+/*
+ *  Copyright 2004 Clinton Begin
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 package com.ibatis.common.jdbc;
-
-//import org.apache.commons.logging.*;
 
 import com.ibatis.common.resources.Resources;
 
@@ -59,7 +65,7 @@ public class ScriptRunner {
 
   /**
    * Getter for stopOnError property
-   * 
+   *
    * @return The value of the stopOnError property
    */
   public boolean isStopOnError() {
@@ -68,7 +74,7 @@ public class ScriptRunner {
 
   /**
    * Setter for stopOnError property
-   * 
+   *
    * @param stopOnError - the new value of the stopOnError property
    */
   public void setStopOnError(boolean stopOnError) {
@@ -77,7 +83,7 @@ public class ScriptRunner {
 
   /**
    * Getter for autoCommit property
-   * 
+   *
    * @return The value of the autoCommit property
    */
   public boolean isAutoCommit() {
@@ -86,7 +92,7 @@ public class ScriptRunner {
 
   /**
    * Setter for autoCommit property
-   * 
+   *
    * @param autoCommit - the new value of the autoCommit property
    */
   public void setAutoCommit(boolean autoCommit) {
@@ -95,7 +101,7 @@ public class ScriptRunner {
 
   /**
    * Getter for logWriter property
-   * 
+   *
    * @return The value of the logWriter property
    */
   public PrintWriter getLogWriter() {
@@ -104,7 +110,7 @@ public class ScriptRunner {
 
   /**
    * Setter for logWriter property
-   * 
+   *
    * @param logWriter - the new value of the logWriter property
    */
   public void setLogWriter(PrintWriter logWriter) {
@@ -113,7 +119,7 @@ public class ScriptRunner {
 
   /**
    * Getter for errorLogWriter property
-   * 
+   *
    * @return The value of the errorLogWriter property
    */
   public PrintWriter getErrorLogWriter() {
@@ -122,7 +128,7 @@ public class ScriptRunner {
 
   /**
    * Setter for errorLogWriter property
-   * 
+   *
    * @param errorLogWriter - the new value of the errorLogWriter property
    */
   public void setErrorLogWriter(PrintWriter errorLogWriter) {
@@ -131,7 +137,7 @@ public class ScriptRunner {
 
   /**
    * Getter for driver property
-   * 
+   *
    * @return The value of the driver property
    */
   public String getDriver() {
@@ -140,7 +146,7 @@ public class ScriptRunner {
 
   /**
    * Setter for driver property
-   * 
+   *
    * @param driver - the new value of the driver property
    */
   public void setDriver(String driver) {
@@ -149,7 +155,7 @@ public class ScriptRunner {
 
   /**
    * Getter for url property
-   * 
+   *
    * @return The value of the url property
    */
   public String getUrl() {
@@ -158,7 +164,7 @@ public class ScriptRunner {
 
   /**
    * Setter for url property
-   * 
+   *
    * @param url - the new value of the url property
    */
   public void setUrl(String url) {
@@ -167,7 +173,7 @@ public class ScriptRunner {
 
   /**
    * Getter for username property
-   * 
+   *
    * @return The value of the username property
    */
   public String getUsername() {
@@ -176,7 +182,7 @@ public class ScriptRunner {
 
   /**
    * Setter for username property
-   * 
+   *
    * @param username - the new value of the username property
    */
   public void setUsername(String username) {
@@ -185,7 +191,7 @@ public class ScriptRunner {
 
   /**
    * Getter for password property
-   * 
+   *
    * @return The value of the password property
    */
   public String getPassword() {
@@ -194,7 +200,7 @@ public class ScriptRunner {
 
   /**
    * Setter for password property
-   * 
+   *
    * @param password - the new value of the password property
    */
   public void setPassword(String password) {

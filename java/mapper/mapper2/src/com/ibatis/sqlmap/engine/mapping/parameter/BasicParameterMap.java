@@ -1,14 +1,34 @@
+/*
+ *  Copyright 2004 Clinton Begin
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package com.ibatis.sqlmap.engine.mapping.parameter;
 
-import com.ibatis.sqlmap.engine.exchange.*;
-import com.ibatis.sqlmap.engine.type.*;
-
-import com.ibatis.sqlmap.engine.scope.*;
-import com.ibatis.sqlmap.engine.cache.*;
+import com.ibatis.sqlmap.engine.cache.CacheKey;
+import com.ibatis.sqlmap.engine.exchange.DataExchange;
 import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
+import com.ibatis.sqlmap.engine.scope.ErrorContext;
+import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.type.JdbcTypeRegistry;
+import com.ibatis.sqlmap.engine.type.TypeHandler;
 
-import java.util.*;
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class BasicParameterMap implements ParameterMap {
 
@@ -83,7 +103,6 @@ public class BasicParameterMap implements ParameterMap {
   }
 
   /**
-   *
    * @param ps
    * @param parameters
    * @throws java.sql.SQLException

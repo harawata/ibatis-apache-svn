@@ -1,3 +1,18 @@
+/*
+ *  Copyright 2004 Clinton Begin
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package com.ibatis.common.jdbc;
 
 import com.ibatis.common.beans.ClassInfo;
@@ -94,7 +109,7 @@ public class SimpleDataSource implements DataSource {
   
   /**
    * Constructor to allow passing in a map of properties for configuration
-   * 
+   *
    * @param props - the configuration parameters
    */
   public SimpleDataSource(Map props) {
@@ -237,7 +252,7 @@ public class SimpleDataSource implements DataSource {
 
   /**
    * No idea what this is used for...
-   * 
+   *
    * @return
    */
   public int getPoolPingConnectionsNotUsedFor() {
@@ -558,6 +573,7 @@ public class SimpleDataSource implements DataSource {
 
   /**
    * Method to check to see if a connection is still usable
+   *
    * @param conn - the connection to check
    * @return True if the connection is still usable
    */
@@ -610,9 +626,8 @@ public class SimpleDataSource implements DataSource {
 
   /**
    * Unwraps a pooled connection to get to the 'real' connection
-   * 
+   *
    * @param conn - the pooled connection to unwrap
-   * 
    * @return The 'real' connection
    */
   public static Connection unwrapConnection(Connection conn) {
@@ -649,7 +664,7 @@ public class SimpleDataSource implements DataSource {
 
     /**
      * Constructor for SimplePooledConnection that uses the Connection and SimpleDataSource passed in
-     * 
+     *
      * @param connection - the connection that is to be presented as a pooled connection
      * @param dataSource - the dataSource that the connection is from
      */
@@ -668,7 +683,9 @@ public class SimpleDataSource implements DataSource {
       valid = false;
     }
 
-    /** Method to see if the connection is usable
+    /**
+     * Method to see if the connection is usable
+     *
      * @return True if the connection is usable
      */
     public boolean isValid() {
@@ -685,7 +702,7 @@ public class SimpleDataSource implements DataSource {
 
     /**
      * Gets the hashcode of the real connection (or 0 if it is null)
-     * 
+     *
      * @return The hashcode of the real connection (or 0 if it is null)
      */
     public int getRealHashCode() {
@@ -751,11 +768,10 @@ public class SimpleDataSource implements DataSource {
       return hashCode;
     }
 
-    /** 
+    /**
      * Allows comparing this connection to another
-     * 
+     *
      * @param obj - the other connection to test for equality
-     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     public boolean equals(Object obj) {
@@ -774,11 +790,10 @@ public class SimpleDataSource implements DataSource {
 
     /**
      * Required for InvocationHandler inplementaion.
-     *  
-     * @param proxy - not used
+     *
+     * @param proxy  - not used
      * @param method - the method to be executed
-     * @param args - the parameters to be passed to the method
-     * 
+     * @param args   - the parameters to be passed to the method
      * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object, java.lang.reflect.Method, java.lang.Object[])
      */
     public Object invoke(Object proxy, Method method, Object[] args)

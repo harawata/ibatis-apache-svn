@@ -1,5 +1,3 @@
-package com.ibatis.common.io;
-
 /*
  * Java Network Programming, Second Edition
  * Merlin Hughes, Michael Shoffner, Derek Hamner
@@ -35,6 +33,7 @@ package com.ibatis.common.io;
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.ibatis.common.io;
 
 import java.io.*;
 
@@ -51,7 +50,7 @@ public class ReaderInputStream extends InputStream {
 
   /**
    * Constructor to supply a Reader
-   * 
+   *
    * @param reader - the Reader used by the InputStream
    */
   public ReaderInputStream(Reader reader) {
@@ -63,10 +62,9 @@ public class ReaderInputStream extends InputStream {
 
   /**
    * Constructor to supply a Reader and an encoding
-   * 
-   * @param reader - the Reader used by the InputStream
+   *
+   * @param reader   - the Reader used by the InputStream
    * @param encoding - the encoding to use for the InputStream
-   * 
    * @throws UnsupportedEncodingException if the encoding is not supported
    */
   public ReaderInputStream(Reader reader, String encoding) throws UnsupportedEncodingException {

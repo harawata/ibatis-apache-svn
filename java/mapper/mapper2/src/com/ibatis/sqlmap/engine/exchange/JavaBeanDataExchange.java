@@ -1,14 +1,32 @@
+/*
+ *  Copyright 2004 Clinton Begin
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package com.ibatis.sqlmap.engine.exchange;
 
-import com.ibatis.sqlmap.engine.mapping.parameter.*;
-import com.ibatis.sqlmap.engine.mapping.result.*;
+import com.ibatis.common.exception.NestedRuntimeException;
+import com.ibatis.common.resources.Resources;
+import com.ibatis.sqlmap.engine.accessplan.AccessPlan;
+import com.ibatis.sqlmap.engine.accessplan.AccessPlanFactory;
+import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
+import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMapping;
+import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
+import com.ibatis.sqlmap.engine.mapping.result.ResultMapping;
+import com.ibatis.sqlmap.engine.scope.ErrorContext;
+import com.ibatis.sqlmap.engine.scope.RequestScope;
 
-import com.ibatis.sqlmap.engine.scope.*;
-import com.ibatis.sqlmap.engine.accessplan.*;
-import com.ibatis.common.exception.*;
-import com.ibatis.common.resources.*;
-
-import java.util.*;
+import java.util.Map;
 
 /**
  * User: Clinton Begin
@@ -67,9 +85,9 @@ public class JavaBeanDataExchange extends BaseDataExchange implements DataExchan
   public Object setData(RequestScope request, ResultMap resultMap, Object resultObject, Object[] values) {
     if (resultPlan != null) {
       Object object = resultObject;
-      
+
       ErrorContext errorContext = request.getErrorContext();
-      
+
       if (object == null) {
         errorContext.setMoreInfo("The error occured while instantiating the result object");
         try {

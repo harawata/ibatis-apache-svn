@@ -1,7 +1,17 @@
-/**
- * User: Clinton Begin
- * Date: Jul 11, 2003
- * Time: 9:06:53 AM
+/*
+ *  Copyright 2004 Clinton Begin
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 package com.ibatis.common.exception;
 
@@ -23,6 +33,7 @@ public class NestedRuntimeException extends RuntimeException {
 
   /**
    * Constructor
+   *
    * @param msg error message
    */
   public NestedRuntimeException(String msg) {
@@ -31,6 +42,7 @@ public class NestedRuntimeException extends RuntimeException {
 
   /**
    * Constructor
+   *
    * @param cause the nested exception (caused by)
    */
   public NestedRuntimeException(Throwable cause) {
@@ -40,7 +52,8 @@ public class NestedRuntimeException extends RuntimeException {
 
   /**
    * Constructor
-   * @param msg error message
+   *
+   * @param msg   error message
    * @param cause the nested exception (caused by)
    */
   public NestedRuntimeException(String msg, Throwable cause) {
@@ -50,7 +63,7 @@ public class NestedRuntimeException extends RuntimeException {
 
   /**
    * Gets the causing exception, if any.
-   * 
+   *
    * @return The cause of the exception
    */
   public Throwable getCause() {
@@ -59,7 +72,7 @@ public class NestedRuntimeException extends RuntimeException {
 
   /**
    * Converts the exception to a string representation
-   * 
+   *
    * @return The string representation of the exception
    */
   public String toString() {
@@ -83,7 +96,7 @@ public class NestedRuntimeException extends RuntimeException {
 
   /**
    * Sends a stack trace to the PrintStream passed in (including the root cause, if any)
-   * 
+   *
    * @param ps - the PrintStream to send the output to
    */
   public void printStackTrace(java.io.PrintStream ps) {
@@ -96,7 +109,7 @@ public class NestedRuntimeException extends RuntimeException {
 
   /**
    * Sends a stack trace to the PrintWriter passed in (including the root cause, if any)
-   * 
+   *
    * @param pw - the PrintWriter to send the output to
    */
   public void printStackTrace(java.io.PrintWriter pw) {

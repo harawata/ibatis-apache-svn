@@ -1,7 +1,17 @@
-/**
- * User: Clinton Begin
- * Date: Aug 23, 2003
- * Time: 7:38:47 AM
+/*
+ *  Copyright 2004 Clinton Begin
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 package com.ibatis.common.beans;
 
@@ -110,25 +120,29 @@ public class ClassInfo {
   }
 
   public static void main(String[] args) {
-    System.out.println (dropCase("getFoo"));
-    System.out.println (dropCase("getFOO"));
-    System.out.println (dropCase("getF"));
-    System.out.println (dropCase("setFoo"));
-    System.out.println (dropCase("setFOO"));
-    System.out.println (dropCase("setF"));
-    System.out.println (dropCase("isFoo"));
-    System.out.println (dropCase("isFOO"));
-    System.out.println (dropCase("isF"));
+    System.out.println(dropCase("getFoo"));
+    System.out.println(dropCase("getFOO"));
+    System.out.println(dropCase("getF"));
+    System.out.println(dropCase("setFoo"));
+    System.out.println(dropCase("setFOO"));
+    System.out.println(dropCase("setF"));
+    System.out.println(dropCase("isFoo"));
+    System.out.println(dropCase("isFOO"));
+    System.out.println(dropCase("isF"));
   }
 
-  /** Gets the name of the class the instance provides information for
+  /**
+   * Gets the name of the class the instance provides information for
+   *
    * @return The class name
    */
   public String getClassName() {
     return className;
   }
 
-  /** Gets the setter for a property as a Method object
+  /**
+   * Gets the setter for a property as a Method object
+   *
    * @param propertyName - the property
    * @return The Method
    */
@@ -140,7 +154,9 @@ public class ClassInfo {
     return method;
   }
 
-  /** Gets the getter for a property as a Method object
+  /**
+   * Gets the getter for a property as a Method object
+   *
    * @param propertyName - the property
    * @return The Method
    */
@@ -152,7 +168,9 @@ public class ClassInfo {
     return method;
   }
 
-  /** Gets the type for a property setter
+  /**
+   * Gets the type for a property setter
+   *
    * @param propertyName - the name of the property
    * @return The Class of the propery setter
    */
@@ -164,7 +182,9 @@ public class ClassInfo {
     return clazz;
   }
 
-  /** Gets the type for a property getter
+  /**
+   * Gets the type for a property getter
+   *
    * @param propertyName - the name of the property
    * @return The Class of the propery getter
    */
@@ -176,21 +196,27 @@ public class ClassInfo {
     return clazz;
   }
 
-  /** Gets an array of the readable properties for an object
-   * @return The array 
+  /**
+   * Gets an array of the readable properties for an object
+   *
+   * @return The array
    */
   public String[] getReadablePropertyNames() {
     return readablePropertyNames;
   }
 
-  /** Gets an array of the writeable properties for an object
-   * @return The array 
+  /**
+   * Gets an array of the writeable properties for an object
+   *
+   * @return The array
    */
   public String[] getWriteablePropertyNames() {
     return writeablePropertyNames;
   }
 
-  /** Check to see if a class has a writeable property by name
+  /**
+   * Check to see if a class has a writeable property by name
+   *
    * @param propertyName - the name of the property to check
    * @return True if the object has a writeable property by the name
    */
@@ -198,7 +224,9 @@ public class ClassInfo {
     return setMethods.keySet().contains(propertyName);
   }
 
-  /** Check to see if a class has a readable property by name
+  /**
+   * Check to see if a class has a readable property by name
+   *
    * @param propertyName - the name of the property to check
    * @return True if the object has a readable property by the name
    */
@@ -206,7 +234,9 @@ public class ClassInfo {
     return getMethods.keySet().contains(propertyName);
   }
 
-  /** Tells us if the class passed in is a knwon common type
+  /**
+   * Tells us if the class passed in is a knwon common type
+   *
    * @param clazz The class to check
    * @return True if the class is known
    */
@@ -245,7 +275,9 @@ public class ClassInfo {
     }
   }
 
-  /** Examines a Throwable object and gets it's root cause
+  /**
+   * Examines a Throwable object and gets it's root cause
+   *
    * @param t - the exception to examine
    * @return The root cause
    */

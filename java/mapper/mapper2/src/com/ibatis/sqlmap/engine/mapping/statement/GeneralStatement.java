@@ -1,3 +1,18 @@
+/*
+ *  Copyright 2004 Clinton Begin
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package com.ibatis.sqlmap.engine.mapping.statement;
 
 import com.ibatis.common.jdbc.exception.NestedSQLException;
@@ -8,21 +23,16 @@ import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
 import com.ibatis.sqlmap.engine.mapping.sql.Sql;
 import com.ibatis.sqlmap.engine.scope.ErrorContext;
 import com.ibatis.sqlmap.engine.scope.RequestScope;
-import com.ibatis.sqlmap.engine.type.DomTypeMarker;
-import com.ibatis.sqlmap.engine.type.XmlTypeMarker;
 import com.ibatis.sqlmap.engine.transaction.Transaction;
 import com.ibatis.sqlmap.engine.transaction.TransactionException;
+import com.ibatis.sqlmap.engine.type.DomTypeMarker;
+import com.ibatis.sqlmap.engine.type.XmlTypeMarker;
 import org.w3c.dom.Document;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-/**
- * User: Clinton Begin
- * Date: Sep 6, 2003
- * Time: 9:03:20 AM
- */
 public class GeneralStatement extends BaseStatement {
 
   public int executeUpdate(RequestScope request, Transaction trans, Object parameterObject)
@@ -95,7 +105,7 @@ public class GeneralStatement extends BaseStatement {
 
       return object;
     } catch (TransactionException e) {
-      throw new NestedSQLException ("Error getting Connection from Transaction.  Cause: " + e, e);
+      throw new NestedSQLException("Error getting Connection from Transaction.  Cause: " + e, e);
     }
   }
 
@@ -106,7 +116,7 @@ public class GeneralStatement extends BaseStatement {
       executeQueryWithCallback(request, trans.getConnection(), parameterObject, null, rowHandler, skipResults, maxResults);
       return rowHandler.getList();
     } catch (TransactionException e) {
-      throw new NestedSQLException ("Error getting Connection from Transaction.  Cause: " + e, e);
+      throw new NestedSQLException("Error getting Connection from Transaction.  Cause: " + e, e);
     }
   }
 
@@ -115,7 +125,7 @@ public class GeneralStatement extends BaseStatement {
     try {
       executeQueryWithCallback(request, trans.getConnection(), parameterObject, null, rowHandler, SqlExecutor.NO_SKIPPED_RESULTS, SqlExecutor.NO_MAXIMUM_RESULTS);
     } catch (TransactionException e) {
-      throw new NestedSQLException ("Error getting Connection from Transaction.  Cause: " + e, e);
+      throw new NestedSQLException("Error getting Connection from Transaction.  Cause: " + e, e);
     }
   }
 

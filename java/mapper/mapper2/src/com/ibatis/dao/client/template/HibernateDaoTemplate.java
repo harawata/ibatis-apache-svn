@@ -1,24 +1,39 @@
+/*
+ *  Copyright 2004 Clinton Begin
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package com.ibatis.dao.client.template;
 
-import com.ibatis.dao.engine.transaction.hibernate.HibernateDaoTransaction;
-import com.ibatis.dao.client.DaoManager;
 import com.ibatis.dao.client.DaoException;
+import com.ibatis.dao.client.DaoManager;
+import com.ibatis.dao.engine.transaction.hibernate.HibernateDaoTransaction;
 import net.sf.hibernate.*;
 import net.sf.hibernate.type.Type;
 
-import java.sql.Connection;
 import java.io.Serializable;
-import java.util.List;
-import java.util.Iterator;
+import java.sql.Connection;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * A DaoTemplate for Hibernate implementations that provides a
  * convenient method to access the Hibernate Session.
- *
+ * <p/>
  * <p/>
  * Date: Feb 22, 2004 3:37:58 PM
- * 
+ *
  * @author Clinton Begin
  */
 public abstract class HibernateDaoTemplate extends DaoTemplate {
@@ -28,7 +43,7 @@ public abstract class HibernateDaoTemplate extends DaoTemplate {
    * in as the parameter to this constructor automatically upon
    * instantiation.
    *
-    * @param daoManager
+   * @param daoManager
    */
   public HibernateDaoTemplate(DaoManager daoManager) {
     super(daoManager);
@@ -39,7 +54,7 @@ public abstract class HibernateDaoTemplate extends DaoTemplate {
    * DaoTransaction that this Dao is working under.
    *
    * @return A Hibernate Session instance.
-   */ 
+   */
   protected Session getSession() {
     HibernateDaoTransaction trans = (HibernateDaoTransaction) daoManager.getTransaction(this);
     return trans.getSession();
@@ -93,7 +108,7 @@ public abstract class HibernateDaoTemplate extends DaoTemplate {
     try {
       getSession().reconnect(connection);
     } catch (HibernateException e) {
-      throw new DaoException (e);
+      throw new DaoException(e);
     }
   }
 
@@ -351,7 +366,7 @@ public abstract class HibernateDaoTemplate extends DaoTemplate {
 
   public void refresh(Object o) {
     try {
-      getSession().refresh (o);
+      getSession().refresh(o);
     } catch (HibernateException e) {
       throw new DaoException("Error occurred in a Hibernate DAO.  Cause: " + e, e);
     }

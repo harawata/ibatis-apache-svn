@@ -1,8 +1,23 @@
+/*
+ *  Copyright 2004 Clinton Begin
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package com.ibatis.db.sqlmap.upgrade;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.taskdefs.*;
+import org.apache.tools.ant.taskdefs.Copy;
 import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
 
@@ -12,10 +27,11 @@ import java.util.Enumeration;
 
 /**
  * Extends the ant copy task to convert SQL Map files from v.1.x to v.2.x.
- * <p>
+ * <p/>
  * Extends Ant version 1.5.4. Changes/extensions marked inline below
- * <p>
+ * <p/>
  * Date: Jan 17, 2004 6:30:40 AM
+ *
  * @author Clinton Begin
  */
 public class ConvertTask extends Copy {
@@ -58,7 +74,7 @@ public class ConvertTask extends Copy {
 
           // --------------------------------------
 
-          File temp = File.createTempFile("sql-map-","-temp");
+          File temp = File.createTempFile("sql-map-", "-temp");
 
           CONVERTER.convertFile(new File(fromFile), temp);
 

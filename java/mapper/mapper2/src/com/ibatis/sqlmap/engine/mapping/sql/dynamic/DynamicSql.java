@@ -1,18 +1,39 @@
+/*
+ *  Copyright 2004 Clinton Begin
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package com.ibatis.sqlmap.engine.mapping.sql.dynamic;
 
-import com.ibatis.sqlmap.engine.mapping.parameter.*;
-import com.ibatis.sqlmap.engine.mapping.result.*;
-import com.ibatis.sqlmap.engine.mapping.sql.*;
-import com.ibatis.sqlmap.engine.mapping.sql.simple.*;
-import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.*;
-import com.ibatis.sqlmap.engine.mapping.statement.*;
-import com.ibatis.sqlmap.engine.builder.xml.*;
-
-import com.ibatis.sqlmap.engine.scope.*;
+import com.ibatis.sqlmap.engine.builder.xml.XmlSqlMapClientBuilder;
 import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
+import com.ibatis.sqlmap.engine.mapping.parameter.BasicParameterMap;
+import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
+import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMapping;
+import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
+import com.ibatis.sqlmap.engine.mapping.sql.Sql;
+import com.ibatis.sqlmap.engine.mapping.sql.SqlChild;
+import com.ibatis.sqlmap.engine.mapping.sql.SqlText;
+import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.*;
+import com.ibatis.sqlmap.engine.mapping.sql.simple.SimpleDynamicSql;
+import com.ibatis.sqlmap.engine.mapping.statement.GeneralStatement;
+import com.ibatis.sqlmap.engine.scope.RequestScope;
 
-import java.util.*;
-import java.io.*;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * User: Clinton Begin
@@ -128,7 +149,7 @@ public class DynamicSql implements Sql, DynamicParent {
                 // BODY OUT
 
                 if (handler.isPostParseRequired()) {
-                  SqlText sqlText = XmlSqlMapClientBuilder.parseInlineParameterMap(delegate.getTypeHandlerFactory(),body.toString());
+                  SqlText sqlText = XmlSqlMapClientBuilder.parseInlineParameterMap(delegate.getTypeHandlerFactory(), body.toString());
                   out.print(sqlText.getText());
                   ParameterMapping[] mappings = sqlText.getParameterMappings();
                   if (mappings != null) {

@@ -1,15 +1,30 @@
+/*
+ *  Copyright 2004 Clinton Begin
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package com.ibatis.sqlmap.client;
 
 import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
- * This interface declares methods for demarcating SQL Map transactions. 
- *
+ * This interface declares methods for demarcating SQL Map transactions.
+ * <p/>
  * <p/>
  * Date: Mar 2, 2004 9:12:21 PM
- * 
+ *
  * @author Clinton Begin
  * @see SqlMapSession, SqlMapClient
  */
@@ -28,11 +43,11 @@ public interface SqlMapTransactionManager {
    *   sqlMap.endTransaction();
    * }
    * </pre>
-   *
+   * <p/>
    * Always call endTransaction() once startTransaction() has been called.
    *
    * @throws java.sql.SQLException If an error occurs while starting the transaction, or
-   * the transaction could not be started.
+   *                               the transaction could not be started.
    */
   public void startTransaction() throws SQLException;
 
@@ -40,7 +55,7 @@ public interface SqlMapTransactionManager {
    * Commits the currently started transaction.
    *
    * @throws SQLException If an error occurs while committing the transaction, or
-   * the transaction could not be committed.
+   *                      the transaction could not be committed.
    */
   public void commitTransaction() throws SQLException;
 
@@ -50,14 +65,14 @@ public interface SqlMapTransactionManager {
    * endTransaction().
    *
    * @throws SQLException If an error occurs during rollback or the transaction could
-   * not be ended.
+   *                      not be ended.
    */
   public void endTransaction() throws SQLException;
 
   /**
    * Allows the developer to easily use an externally supplied connection
    * when executing statements.
-   * <p>
+   * <p/>
    * <b>Important:</b> Using a user supplied connection basically sidesteps the transaction manager,
    * so you are responsible for appropriately.  Here's a (very) simple example (throws SQLException):
    * <pre>
@@ -89,12 +104,11 @@ public interface SqlMapTransactionManager {
 
   /**
    * Returns the current user supplied connection as set by setUserConnection().
-   *
+   * <p/>
    * TODO : DEPRECATED
    *
    * @return The current user supplied connection.
    * @throws SQLException
-   *
    * @deprecated Use getCurrentConnection() instead.
    */
   public Connection getUserConnection() throws SQLException;

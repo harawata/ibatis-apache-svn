@@ -1,19 +1,30 @@
+/*
+ *  Copyright 2004 Clinton Begin
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package com.ibatis.sqlmap.engine.transaction.jdbc;
 
-import com.ibatis.sqlmap.engine.transaction.*;
 import com.ibatis.common.jdbc.logging.ConnectionLogProxy;
-
-import javax.sql.*;
-import java.sql.*;
-
+import com.ibatis.sqlmap.engine.transaction.Transaction;
+import com.ibatis.sqlmap.engine.transaction.TransactionException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-/**
- * User: Clinton Begin
- * Date: Sep 12, 2003
- * Time: 10:14:24 PM
- */
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
+
 public class JdbcTransaction implements Transaction {
 
   private static final Log connectionLog = LogFactory.getLog(Connection.class);

@@ -1,3 +1,18 @@
+/*
+ *  Copyright 2004 Clinton Begin
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package com.ibatis.sqlmap.engine.cache;
 
 import com.ibatis.common.exception.NestedRuntimeException;
@@ -50,6 +65,7 @@ public class CacheModel implements ExecuteListener {
 
   /**
    * Getter for the cache model's id
+   *
    * @return the id
    */
   public String getId() {
@@ -58,6 +74,7 @@ public class CacheModel implements ExecuteListener {
 
   /**
    * Setter for the cache model's id
+   *
    * @param id - the new id
    */
   public void setId(String id) {
@@ -66,6 +83,7 @@ public class CacheModel implements ExecuteListener {
 
   /**
    * Getter for read-only property
+   *
    * @return true if a read-only model
    */
   public boolean isReadOnly() {
@@ -74,6 +92,7 @@ public class CacheModel implements ExecuteListener {
 
   /**
    * Setter for read-only property
+   *
    * @param readOnly - the new setting
    */
   public void setReadOnly(boolean readOnly) {
@@ -81,7 +100,8 @@ public class CacheModel implements ExecuteListener {
   }
 
   /**
-   * Getter to tell if the cache serializes 
+   * Getter to tell if the cache serializes
+   *
    * @return true if the cache model serializes objects
    */
   public boolean isSerialize() {
@@ -89,7 +109,8 @@ public class CacheModel implements ExecuteListener {
   }
 
   /**
-   * Setter to tell the cache to serialize objects 
+   * Setter to tell the cache to serialize objects
+   *
    * @param serialize - if the cache model is to serialize objects
    */
   public void setSerialize(boolean serialize) {
@@ -98,6 +119,7 @@ public class CacheModel implements ExecuteListener {
 
   /**
    * Getter for resource property
+   *
    * @return the value of the resource property
    */
   public String getResource() {
@@ -106,6 +128,7 @@ public class CacheModel implements ExecuteListener {
 
   /**
    * Setter for resource property
+   *
    * @param resource - the new value
    */
   public void setResource(String resource) {
@@ -114,6 +137,7 @@ public class CacheModel implements ExecuteListener {
 
   /**
    * Sets up the controller for the cache model
+   *
    * @param implementation - the class (FQCN) for the controller
    * @throws ClassNotFoundException - if the class cannot be found
    * @throws InstantiationException - if the class cannot be instantiated
@@ -186,9 +210,10 @@ public class CacheModel implements ExecuteListener {
     flush();
   }
 
-  
+
   /**
    * Returns statistical information about the cache.
+   *
    * @return the number of cache hits divided by the total requests
    */
   public double getHitRatio() {
@@ -284,7 +309,7 @@ public class CacheModel implements ExecuteListener {
     }
   }
 
-  public synchronized final Object getLock (CacheKey key) {
+  public synchronized final Object getLock(CacheKey key) {
     int controllerId = System.identityHashCode(controller);
     int keyHash = key.hashCode();
     Integer lockKey = new Integer(29 * controllerId + keyHash);

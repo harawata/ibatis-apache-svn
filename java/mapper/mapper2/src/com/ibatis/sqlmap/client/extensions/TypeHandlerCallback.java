@@ -1,3 +1,18 @@
+/*
+ *  Copyright 2004 Clinton Begin
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package com.ibatis.sqlmap.client.extensions;
 
 import java.sql.SQLException;
@@ -19,10 +34,10 @@ import java.sql.SQLException;
  * <p>Here's a simple example of a boolean handler that uses "Yes" and "No".</p>
  * <pre>
  * public class YesNoBoolTypeHandlerCallback implements TypeHandlerCallback {
- *
+ * <p/>
  *   private static final String YES = "Yes";
  *   private static final String NO = "No";
- *
+ * <p/>
  *   public Object getResult(ResultGetter getter) throws SQLException {
  *     String s = getter.getString();
  *     if (YES.equalsIgnoreCase(s)) {
@@ -33,7 +48,7 @@ import java.sql.SQLException;
  *       throw new SQLException ("Unexpected value " + s + " found where "+YES+" or "+NO+" was expected.");
  *     }
  *   }
- *
+ * <p/>
  *   public void setParameter(ParameterSetter setter, Object parameter) throws SQLException {
  *     boolean b = ((Boolean)parameter).booleanValue();
  *     if (b) {
@@ -42,7 +57,7 @@ import java.sql.SQLException;
  *       setter.setString(NO);
  *     }
  *   }
- *
+ * <p/>
  *   public Object valueOf(String s) {
  *     if (YES.equalsIgnoreCase(s)) {
  *       return new Boolean (true);
@@ -52,7 +67,7 @@ import java.sql.SQLException;
  *       throw new SQLException ("Unexpected value " + s + " found where "+YES+" or "+NO+" was expected.");
  *     }
  *   }
- *
+ * <p/>
  * }
  * </pre>
  */
@@ -62,7 +77,7 @@ public interface TypeHandlerCallback {
    * Performs processing on a value before it is used to set
    * the parameter of a PreparedStatement.
    *
-   * @param setter The interface for setting the value on the PreparedStatement.
+   * @param setter    The interface for setting the value on the PreparedStatement.
    * @param parameter The value to be set.
    * @throws SQLException If any error occurs.
    */
@@ -91,11 +106,11 @@ public interface TypeHandlerCallback {
    *
    * @param s A string representation of a valid value for this type.
    * @return One of the following:
-   * <ol>
-   *   <li>the casted repersentation of the String value,</li>
-   *   <li>the string as is,</li>
-   *   <li>null, only if null was passed in.</li> 
-   * </ol>
+   *         <ol>
+   *         <li>the casted repersentation of the String value,</li>
+   *         <li>the string as is,</li>
+   *         <li>null, only if null was passed in.</li>
+   *         </ol>
    */
   public Object valueOf(String s);
 
