@@ -1,63 +1,41 @@
 package com.ibatis.sqlmap.engine.builder.xml;
 
-import com.ibatis.common.beans.Probe;
-import com.ibatis.common.beans.ProbeFactory;
+import com.ibatis.common.beans.*;
 import com.ibatis.common.io.ReaderInputStream;
 import com.ibatis.common.resources.Resources;
-import com.ibatis.sqlmap.client.SqlMapClient;
-import com.ibatis.sqlmap.client.SqlMapException;
+import com.ibatis.sqlmap.client.*;
+import com.ibatis.sqlmap.client.extensions.TypeHandlerCallback;
 import com.ibatis.sqlmap.engine.accessplan.AccessPlanFactory;
 import com.ibatis.sqlmap.engine.cache.CacheModel;
 import com.ibatis.sqlmap.engine.cache.fifo.FifoCacheController;
 import com.ibatis.sqlmap.engine.cache.lru.LruCacheController;
 import com.ibatis.sqlmap.engine.cache.memory.MemoryCacheController;
-import com.ibatis.sqlmap.engine.datasource.DataSourceFactory;
-import com.ibatis.sqlmap.engine.datasource.DbcpDataSourceFactory;
-import com.ibatis.sqlmap.engine.datasource.JndiDataSourceFactory;
-import com.ibatis.sqlmap.engine.datasource.SimpleDataSourceFactory;
-import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
-import com.ibatis.sqlmap.engine.impl.SqlMapClientImpl;
-import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
-import com.ibatis.sqlmap.engine.mapping.parameter.BasicParameterMap;
-import com.ibatis.sqlmap.engine.mapping.parameter.BasicParameterMapping;
-import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
-import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMapping;
-import com.ibatis.sqlmap.engine.mapping.result.AutoResultMap;
-import com.ibatis.sqlmap.engine.mapping.result.BasicResultMap;
-import com.ibatis.sqlmap.engine.mapping.result.BasicResultMapping;
-import com.ibatis.sqlmap.engine.mapping.result.ResultMapping;
-import com.ibatis.sqlmap.engine.mapping.sql.Sql;
-import com.ibatis.sqlmap.engine.mapping.sql.SqlText;
+import com.ibatis.sqlmap.engine.datasource.*;
+import com.ibatis.sqlmap.engine.impl.*;
+import com.ibatis.sqlmap.engine.mapping.parameter.*;
+import com.ibatis.sqlmap.engine.mapping.result.*;
+import com.ibatis.sqlmap.engine.mapping.sql.*;
 import com.ibatis.sqlmap.engine.mapping.sql.dynamic.DynamicSql;
-import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.DynamicParent;
-import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.SqlTag;
-import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.SqlTagHandler;
-import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.SqlTagHandlerFactory;
+import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.*;
 import com.ibatis.sqlmap.engine.mapping.sql.simple.SimpleDynamicSql;
 import com.ibatis.sqlmap.engine.mapping.sql.stat.StaticSql;
 import com.ibatis.sqlmap.engine.mapping.statement.*;
 import com.ibatis.sqlmap.engine.scope.ErrorContext;
-import com.ibatis.sqlmap.engine.transaction.TransactionConfig;
-import com.ibatis.sqlmap.engine.transaction.TransactionManager;
+import com.ibatis.sqlmap.engine.transaction.*;
 import com.ibatis.sqlmap.engine.transaction.external.ExternalTransactionConfig;
 import com.ibatis.sqlmap.engine.transaction.jdbc.JdbcTransactionConfig;
 import com.ibatis.sqlmap.engine.transaction.jta.JtaTransactionConfig;
 import com.ibatis.sqlmap.engine.type.*;
+import org.w3c.dom.CharacterData;
 import org.w3c.dom.*;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
+import org.xml.sax.*;
 
 import javax.sql.DataSource;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.Reader;
+import javax.xml.parsers.*;
+import java.io.*;
 import java.math.BigDecimal;
-import java.util.*;
 import java.sql.ResultSet;
+import java.util.*;
 
 /**
  * NOT THREAD SAFE.  USE SEPARATE INSTANCES PER THREAD.
@@ -89,6 +67,7 @@ public class XmlSqlMapClientBuilder {
   private static final String NODE_PROCEDURE = "procedure";
   private static final String NODE_SELECT_KEY = "selectKey";
   private static final String NODE_TYPE_ALIAS = "typeAlias";
+  private static final String NODE_TYPE_HANDLER = "typeHandler";
 
   private static final String PARAMETER_TOKEN = "#";
 
@@ -216,6 +195,8 @@ public class XmlSqlMapClientBuilder {
           parseGlobalProperties(child);
         } else if (NODE_TYPE_ALIAS.equals(child.getNodeName())) {
           parseTypeAliasNode(child);
+        } else if (NODE_TYPE_HANDLER.equals(child.getNodeName())) {
+          parseTypeHandlerNode(child);
         } else if (NODE_SETTINGS.equals(child.getNodeName())) {
           parseSettings(child);
         } else if (NODE_TX_MANAGER.equals(child.getNodeName())) {
@@ -447,6 +428,8 @@ public class XmlSqlMapClientBuilder {
           parseCacheModel(child);
         } else if (NODE_TYPE_ALIAS.equals(child.getNodeName())) {
           parseTypeAliasNode(child);
+        } else if (NODE_TYPE_HANDLER.equals(child.getNodeName())) {
+          parseTypeHandlerNode(child);
         }
       }
     }
@@ -955,13 +938,26 @@ public class XmlSqlMapClientBuilder {
         String columnName = childAttributes.getProperty("column");
         String columnIndex = childAttributes.getProperty("columnIndex");
         String statementName = childAttributes.getProperty("select");
+        String callback = childAttributes.getProperty("typeHandler");
 
         javaType = resolveAlias(javaType);
 
         errorCtx.setObjectId(propertyName + " mapping of the " + id + " result map");
 
-        errorCtx.setMoreInfo("Check the result mapping property type or name.");
-        TypeHandler handler = resolveTypeHandler(client.getDelegate().getTypeHandlerFactory(),resultClass, propertyName, javaType, jdbcType, true);
+        TypeHandler handler = null;
+        if (callback != null) {
+          errorCtx.setMoreInfo("Check the result mapping type handler class name (must be a TypeHandlerCallback implementation).");
+          try {
+            TypeHandlerCallback typeHandlerCallback = (TypeHandlerCallback) Resources.classForName(callback).newInstance();
+            handler = new CustomTypeHandler (typeHandlerCallback);
+          } catch (Exception e) {
+            throw new SqlMapException("Error occurred during custom type handler configuration.  Cause: " + e, e);
+          }
+        } else {
+          errorCtx.setMoreInfo("Check the result mapping property type or name.");
+          handler = resolveTypeHandler(client.getDelegate().getTypeHandlerFactory(),resultClass, propertyName, javaType, jdbcType, true);
+        }
+
 
         BasicResultMapping mapping = new BasicResultMapping();
         mapping.setPropertyName(propertyName);
@@ -975,7 +971,7 @@ public class XmlSqlMapClientBuilder {
             mapping.setJavaType(Class.forName(javaType));
           }
         } catch (ClassNotFoundException e) {
-          throw new RuntimeException("Error setting javaType on result mapping.  Cause: " + e);
+          throw new SqlMapException("Error setting javaType on result mapping.  Cause: " + e);
         }
 
         if (columnIndex != null && columnIndex.length() > 0) {
@@ -1036,13 +1032,25 @@ public class XmlSqlMapClientBuilder {
         String javaType = childAttributes.getProperty("javaType");
         String nullValue = childAttributes.getProperty("nullValue");
         String mode = childAttributes.getProperty("mode");
+        String callback = childAttributes.getProperty("typeHandler");
 
         javaType = resolveAlias(javaType);
 
         errorCtx.setObjectId(propertyName + " mapping of the " + id + " parameter map");
 
-        errorCtx.setMoreInfo("Check the parameter mapping property type or name.");
-        TypeHandler handler = resolveTypeHandler(client.getDelegate().getTypeHandlerFactory(), parameterClass, propertyName, javaType, jdbcType);
+        TypeHandler handler = null;
+        if (callback != null) {
+          errorCtx.setMoreInfo("Check the parameter mapping type handler class name (must be a TypeHandlerCallback implementation).");
+          try {
+            TypeHandlerCallback typeHandlerCallback = (TypeHandlerCallback) Resources.classForName(callback).newInstance();
+            handler = new CustomTypeHandler (typeHandlerCallback);
+          } catch (Exception e) {
+            throw new SqlMapException("Error occurred during custom type handler configuration.  Cause: " + e, e);
+          }
+        } else {
+          errorCtx.setMoreInfo("Check the parameter mapping property type or name.");
+          handler = resolveTypeHandler(client.getDelegate().getTypeHandlerFactory(), parameterClass, propertyName, javaType, jdbcType);
+        }
 
         BasicParameterMapping mapping = new BasicParameterMapping();
         mapping.setPropertyName(propertyName);
@@ -1057,7 +1065,7 @@ public class XmlSqlMapClientBuilder {
             mapping.setJavaType(Class.forName(javaType));
           }
         } catch (ClassNotFoundException e) {
-          throw new RuntimeException("Error setting javaType on parameter mapping.  Cause: " + e);
+          throw new SqlMapException("Error setting javaType on parameter mapping.  Cause: " + e);
         }
 
 
@@ -1068,6 +1076,36 @@ public class XmlSqlMapClientBuilder {
 
     client.getDelegate().addParameterMap(map);
 
+    errorCtx.setMoreInfo(null);
+    errorCtx.setObjectId(null);
+  }
+
+  private void parseTypeHandlerNode(Node child) {
+    errorCtx.setActivity("building a building custom type handler");
+    try {
+      TypeHandlerFactory typeHandlerFactory = client.getDelegate().getTypeHandlerFactory();
+
+      Properties prop = parseAttributes(child);
+
+      String jdbcType = prop.getProperty("jdbcType");
+      String javaType = prop.getProperty("javaType");
+      String callback = prop.getProperty("callback");
+      callback = resolveAlias(callback);
+      javaType = resolveAlias(javaType);
+
+      errorCtx.setMoreInfo("Check the callback attribute (must be a classname).");
+      TypeHandlerCallback typeHandlerCallback = (TypeHandlerCallback) Resources.classForName(callback).newInstance();
+      TypeHandler typeHandler = new CustomTypeHandler (typeHandlerCallback);
+
+      errorCtx.setMoreInfo("Check the javaType attribute (must be a classname) or the jdbcType (must be a JDBC type name).");
+      if (jdbcType != null && jdbcType.length() > 0) {
+        typeHandlerFactory.register(Resources.classForName(javaType), jdbcType, typeHandler);
+      } else {
+        typeHandlerFactory.register(Resources.classForName(javaType), typeHandler);
+      }
+    } catch (Exception e) {
+      throw new SqlMapException("Error registering occurred.  Cause: " + e, e);
+    }
     errorCtx.setMoreInfo(null);
     errorCtx.setObjectId(null);
   }

@@ -19,49 +19,49 @@ public class TypeHandlerFactory {
     TypeHandler handler;
 
     handler = new BooleanTypeHandler();
-    put(Boolean.class, handler);
-    put(boolean.class, handler);
+    register(Boolean.class, handler);
+    register(boolean.class, handler);
 
     handler = new ByteTypeHandler();
-    put(Byte.class, handler);
-    put(byte.class, handler);
+    register(Byte.class, handler);
+    register(byte.class, handler);
 
     handler = new ShortTypeHandler();
-    put(Short.class, handler);
-    put(short.class, handler);
+    register(Short.class, handler);
+    register(short.class, handler);
 
     handler = new IntegerTypeHandler();
-    put(Integer.class, handler);
-    put(int.class, handler);
+    register(Integer.class, handler);
+    register(int.class, handler);
 
     handler = new LongTypeHandler();
-    put(Long.class, handler);
-    put(long.class, handler);
+    register(Long.class, handler);
+    register(long.class, handler);
 
     handler = new FloatTypeHandler();
-    put(Float.class, handler);
-    put(float.class, handler);
+    register(Float.class, handler);
+    register(float.class, handler);
 
     handler = new DoubleTypeHandler();
-    put(Double.class, handler);
-    put(double.class, handler);
+    register(Double.class, handler);
+    register(double.class, handler);
 
-    put(String.class, new StringTypeHandler());
+    register(String.class, new StringTypeHandler());
 
-    put(BigDecimal.class, new BigDecimalTypeHandler());
+    register(BigDecimal.class, new BigDecimalTypeHandler());
 
-    put(byte[].class, new ByteArrayTypeHandler());
+    register(byte[].class, new ByteArrayTypeHandler());
 
-    put(Object.class, new ObjectTypeHandler());
+    register(Object.class, new ObjectTypeHandler());
 
-    put(Date.class, new DateTypeHandler());
-    put(Date.class, "DATE", new DateOnlyTypeHandler());
-    put(Date.class, "TIME", new TimeOnlyTypeHandler());
+    register(Date.class, new DateTypeHandler());
+    register(Date.class, "DATE", new DateOnlyTypeHandler());
+    register(Date.class, "TIME", new TimeOnlyTypeHandler());
 
 
-    put(java.sql.Date.class, new SqlDateTypeHandler());
-    put(java.sql.Time.class, new SqlTimeTypeHandler());
-    put(java.sql.Timestamp.class, new SqlTimestampTypeHandler());
+    register(java.sql.Date.class, new SqlDateTypeHandler());
+    register(java.sql.Time.class, new SqlTimeTypeHandler());
+    register(java.sql.Timestamp.class, new SqlTimestampTypeHandler());
   }
 
   /* Public Methods */
@@ -91,13 +91,11 @@ public class TypeHandlerFactory {
     return getTypeHandler(type) != null;
   }
 
-  /* Private Methods */
-
-  private void put(Class type, TypeHandler handler) {
-    put(type, null, handler);
+  public void register(Class type, TypeHandler handler) {
+    register(type, null, handler);
   }
 
-  private void put(Class type, String jdbcType, TypeHandler handler) {
+  public void register(Class type, String jdbcType, TypeHandler handler) {
     Map map = (Map) typeHandlerMap.get(type);
     if (map == null) {
       map = new HashMap();
@@ -105,4 +103,6 @@ public class TypeHandlerFactory {
     }
     map.put(jdbcType, handler);
   }
+  
+
 }

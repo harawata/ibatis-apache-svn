@@ -50,3 +50,10 @@ url CDATA #IMPLIED
 alias CDATA #REQUIRED
 type CDATA #REQUIRED
 >
+
+<!ELEMENT typeHandler EMPTY>
+<!ATTLIST typeHandler
+javaType CDATA #REQUIRED
+jdbcType CDATA #IMPLIED
+callback CDATA #REQUIRED
+>

@@ -18,6 +18,7 @@ javaType CDATA #IMPLIED
 jdbcType CDATA #IMPLIED
 nullValue CDATA #IMPLIED
 mode (IN | OUT | INOUT) #IMPLIED
+typeHandler CDATA #IMPLIED
 >
 <!ELEMENT resultMap (result+)>
 <!ATTLIST resultMap
@@ -35,6 +36,7 @@ columnIndex CDATA #IMPLIED
 jdbcType CDATA #IMPLIED
 nullValue CDATA #IMPLIED
 select CDATA #IMPLIED
+typeHandler CDATA #IMPLIED
 >
 <!ELEMENT cacheModel (flushInterval?, flushOnExecute*, property*)+>
 <!ATTLIST cacheModel
@@ -65,6 +67,13 @@ value CDATA #REQUIRED
 <!ATTLIST typeAlias
 alias CDATA #REQUIRED
 type CDATA #REQUIRED
+>
+
+<!ELEMENT typeHandler EMPTY>
+<!ATTLIST typeHandler
+javaType CDATA #REQUIRED
+jdbcType CDATA #IMPLIED
+callback CDATA #REQUIRED
 >
 
 <!ELEMENT statement (#PCDATA | dynamic | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
