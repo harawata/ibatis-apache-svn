@@ -10,6 +10,8 @@ import java.lang.reflect.Proxy;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * User: Clinton Begin
@@ -46,15 +48,20 @@ public class LazyResultLoader implements InvocationHandler {
   }
 
   public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
-    loadObject();
-    if (resultObject != null) {
-      try {
-        return method.invoke(resultObject, objects);
-      } catch (Throwable t) {
-        throw ClassInfo.unwrapThrowable(t);
-      }
-    } else {
+    if ("finalize".hashCode() == method.getName().hashCode() 
+        && "finalize".equals(method.getName())) {
       return null;
+    } else {
+      loadObject();
+      if (resultObject != null) {
+        try {
+          return method.invoke(resultObject, objects);
+        } catch (Throwable t) {
+          throw ClassInfo.unwrapThrowable(t);
+        }
+      } else {
+        return null;
+      }
     }
   }
 
