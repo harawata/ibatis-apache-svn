@@ -2,7 +2,7 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
- 2.0.1 - Jun ??, 2004
+ 2.0.1 - Jun 21, 2004
 ------------------------------
 
  o Added DefaultAutoCommit property to EXTERNAL transaction manager
