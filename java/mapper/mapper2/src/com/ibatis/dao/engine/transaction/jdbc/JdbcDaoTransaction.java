@@ -1,7 +1,7 @@
 package com.ibatis.dao.engine.transaction.jdbc;
 
-import com.ibatis.dao.client.DaoTransaction;
 import com.ibatis.dao.client.DaoException;
+import com.ibatis.dao.engine.transaction.ConnectionDaoTransaction;
 import com.ibatis.common.jdbc.logging.ConnectionLogProxy;
 
 import javax.sql.DataSource;
@@ -18,7 +18,7 @@ import org.apache.commons.logging.LogFactory;
  * Date: Jan 27, 2004 10:48:48 PM
  * @author Clinton Begin
  */
-public class JdbcDaoTransaction implements DaoTransaction {
+public class JdbcDaoTransaction implements ConnectionDaoTransaction {
 
   private static final Log connectionLog = LogFactory.getLog(Connection.class);
 

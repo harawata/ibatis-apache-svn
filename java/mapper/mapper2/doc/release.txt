@@ -6,6 +6,9 @@ Build Number: @buildNum@
 ------------------------------
 
  o Added OJB DAO support (Thanks to Pedro Salgado)
+ o Added passthrough methods for Hibernate DAO template
+ o Added JdbcDaoTemplate support to most DAO TX managers
+ o Deprecated JtaDaoTemplate, use JdbcDaoTemplate instead
  o Fixed Autocommit (true) in JdbcDaoTransaction
  o Fixed Expanded entity references in XML (for &gt; etc.)
  o Fixed base probe indexed property accessor

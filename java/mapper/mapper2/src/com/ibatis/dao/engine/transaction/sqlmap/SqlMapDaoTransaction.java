@@ -2,9 +2,11 @@ package com.ibatis.dao.engine.transaction.sqlmap;
 
 import com.ibatis.dao.client.DaoTransaction;
 import com.ibatis.dao.client.DaoException;
+import com.ibatis.dao.engine.transaction.ConnectionDaoTransaction;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 import java.sql.SQLException;
+import java.sql.Connection;
 
 /**
  *
@@ -13,7 +15,7 @@ import java.sql.SQLException;
  * Date: Jan 27, 2004 10:48:12 PM
  * @author Clinton Begin
  */
-public class SqlMapDaoTransaction implements DaoTransaction {
+public class SqlMapDaoTransaction implements ConnectionDaoTransaction {
 
   private SqlMapClient client;
 
@@ -45,6 +47,14 @@ public class SqlMapDaoTransaction implements DaoTransaction {
 
   public SqlMapClient getSqlMap () {
     return client;
+  }
+
+  public Connection getConnection() {
+    try {
+      return client.getCurrentConnection();
+    } catch (SQLException e) {
+      throw new DaoException("Error getting connection from SQL Map Client.  Cause: " + e, e);
+    }
   }
 
 }

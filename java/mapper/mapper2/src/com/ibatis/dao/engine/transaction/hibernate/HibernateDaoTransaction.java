@@ -1,11 +1,13 @@
 package com.ibatis.dao.engine.transaction.hibernate;
 
-import com.ibatis.dao.client.DaoTransaction;
 import com.ibatis.dao.client.DaoException;
+import com.ibatis.dao.engine.transaction.ConnectionDaoTransaction;
 import net.sf.hibernate.SessionFactory;
 import net.sf.hibernate.Transaction;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
+
+import java.sql.Connection;
 
 /**
  *
@@ -14,7 +16,7 @@ import net.sf.hibernate.Session;
  * Date: Jan 27, 2004 10:49:12 PM
  * @author Clinton Begin
  */
-public class HibernateDaoTransaction implements DaoTransaction {
+public class HibernateDaoTransaction implements ConnectionDaoTransaction {
 
   private Session session;
   private Transaction transaction;
@@ -48,6 +50,14 @@ public class HibernateDaoTransaction implements DaoTransaction {
 
   public Session getSession() {
     return session;
+  }
+
+  public Connection getConnection() {
+    try {
+      return session.connection();
+    } catch (HibernateException e) {
+      throw new DaoException("Error occurred getting connection from Hibernate Session.  Cause: " + e, e);
+    }
   }
 
 }
