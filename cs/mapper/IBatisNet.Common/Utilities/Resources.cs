@@ -335,7 +335,7 @@ namespace IBatisNet.Common.Utilities
 
 
 		/// <summary>
-		/// 
+		/// Replace properties by their values in the given string
 		/// </summary>
 		/// <param name="str"></param>
 		/// <param name="properties"></param>

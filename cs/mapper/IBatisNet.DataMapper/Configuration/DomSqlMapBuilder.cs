@@ -595,6 +595,7 @@ namespace IBatisNet.DataMapper.Configuration
 					insert.SelectKey.Initialize( sqlMapName, sqlMap );
 					insert.SelectKey.Id = insert.Id + DOT + "SelectKey";
 					string commandText = xmlNode.SelectSingleNode("selectKey").FirstChild.InnerText.Replace('\n', ' ').Replace('\r', ' ').Replace('\t', ' ').Trim();
+					commandText = Resources.ParsePropertyTokens(commandText, _properties);
 					StaticSql sql = new StaticSql(insert.SelectKey);
 					IDalSession session = new SqlMapSession(sqlMap.DataSource);
 					sql.BuildPreparedStatement( session, commandText );
@@ -815,7 +816,8 @@ namespace IBatisNet.DataMapper.Configuration
 				if ( (child.NodeType == XmlNodeType.CDATA) || (child.NodeType == XmlNodeType.Text) )
 				{
 					string data = child.InnerText.Replace('\n', ' ').Replace('\r', ' ').Replace('\t', ' ').Trim(); //??
-					//data = ParsePropertyTokens(data);
+
+					data = Resources.ParsePropertyTokens(data, _properties);
 
 					SqlText sqlText = null;
 					if ( postParseRequired == true ) 

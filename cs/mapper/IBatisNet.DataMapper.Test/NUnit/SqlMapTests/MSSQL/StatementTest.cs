@@ -77,6 +77,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL
 
 		/// <summary>
 		/// Test Insert Via Insert Statement.
+		/// (Test for IBATISNET-21 : Property substitutions do not occur inside <selectKey> statement)
 		/// </summary>
 		[Test] 
 		public void TestInsertViaInsertStatement()
@@ -87,6 +88,24 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL
 
 			int key = (int)sqlMap.Insert("InsertCategoryViaInsertStatement", category);
 			Assert.AreEqual(1, key);
+		}
+
+		/// <summary>
+		/// Test statement with properties subtitutions
+		/// (Test for IBATISNET-21 : Property substitutions do not occur inside <selectKey> statement)
+		/// </summary>
+		[Test] 
+		public void TestInsertCategoryWithProperties()
+		{
+			Category category = new Category();
+			category.Guid = Guid.NewGuid();
+
+			int key = (int)sqlMap.Insert("InsertCategoryWithProperties", category);
+
+			Category categoryTest = sqlMap.QueryForObject("GetCategory", key) as Category;
+			Assert.AreEqual(key, categoryTest.Id);
+			Assert.AreEqual("Film", categoryTest.Name);
+			Assert.AreEqual(category.Guid, categoryTest.Guid);
 		}
 
 		/// <summary>

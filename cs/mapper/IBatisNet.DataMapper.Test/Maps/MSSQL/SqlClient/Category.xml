@@ -47,13 +47,23 @@
 		<!--  -->
 		<insert id="InsertCategoryViaInsertStatement" parameterClass="Category" >
 			<selectKey property="Id" type="post" resultClass="int">
-				select @@IDENTITY as value
+				${selectKey}
             </selectKey>			
             insert into Categories  
 				(Category_Name, Category_Guid) 
 			values 
 				(#Name#, #Guid:UniqueIdentifier#)
 		</insert><!--Guid for Oledb, UniqueIdentifier for SqlClient, Odbc -->
+		
+		<insert id="InsertCategoryWithProperties" parameterClass="Category" >
+			<selectKey property="Id" type="post" resultClass="int">
+				${selectKey}
+            </selectKey>			
+            insert into Categories  
+				(Category_Name, Category_Guid) 
+			values 
+				(${MyCategoryName}, #Guid:UniqueIdentifier#)
+		</insert>
 		
 		<statement id="InsertCategoryViaParameterMap" parameterMap="InsertParam" resultClass="int">
 			insert into Categories  
