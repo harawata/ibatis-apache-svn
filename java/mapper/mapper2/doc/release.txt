@@ -11,6 +11,7 @@ Build Number: @buildNum@
  o Added remapResults="true|false" remapping of dynamic result set metadata.
  o Added support for isolation levels specified in .startTransaction()
  o Added support for SQL "includes" to reduce/eliminate repeated SQL
+ o Added TopLink DAO Transaction Manager and Template (thanks to Wayne Gentile!)
  o Refactored Builder/Parser to be more maintainable (nodelets)
  o Verified that duplicate statement names throw an exception. [982534]
  o SqlExecuror now always exhausts result sets with ps.getMoreResults()
