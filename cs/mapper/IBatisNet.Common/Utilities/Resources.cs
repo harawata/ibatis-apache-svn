@@ -108,10 +108,10 @@ namespace IBatisNet.Common.Utilities
 		}
 
 		/// <summary>
-		/// 
+		/// Load an XML resource from a location specify by the node.
 		/// </summary>
-		/// <param name="node"></param>
-		/// <returns></returns>
+		/// <param name="node">An location node</param>
+		/// <returns>Return the Xml document load.</returns>
 		public static XmlDocument GetAsXmlDocument(XmlNode node)
 		{
 			XmlDocument xmlDocument = null;
@@ -133,9 +133,9 @@ namespace IBatisNet.Common.Utilities
 		}
 
 		/// <summary>
-		/// 
+		/// Get the path resource of an url or resource location.
 		/// </summary>
-		/// <param name="node"></param>
+		/// <param name="node">The specification from where to load.</param>
 		/// <returns></returns>
 		public static string GetValueOfNodeResourceUrl(XmlNode node)
 		{
@@ -313,10 +313,10 @@ namespace IBatisNet.Common.Utilities
 
 
 		/// <summary>
-		/// 
+		/// Load a file from a given path
 		/// </summary>
-		/// <param name="path"></param>
-		/// <returns></returns>
+		/// <param name="path">The path</param>
+		/// <returns>return a FileInfo</returns>
 		public static FileInfo GetFileInfo(string path)
 		{
 			string file = string.Empty;
@@ -329,8 +329,18 @@ namespace IBatisNet.Common.Utilities
 			{
 				file = path;
 			}
-
-			return new FileInfo(file);
+			FileInfo fileInfo = null;
+			try
+			{
+				fileInfo = new FileInfo(file);
+			}
+			catch
+			{
+				_logger.Error("Could not load file from path : " + path);
+				throw new ConfigurationException(
+					string.Format("Unable to load file \"{0}\" from path.", path));
+			}
+			return fileInfo;
 		}
 
 
@@ -386,7 +396,6 @@ namespace IBatisNet.Common.Utilities
 
 		#endregion
 
-		
 		#region Inner Class : FileAssemblyInfo
 		/// <summary>
 		/// Holds data about a <see cref="System.Type"/> and it's
