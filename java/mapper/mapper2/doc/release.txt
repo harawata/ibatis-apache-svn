@@ -5,11 +5,12 @@ Build Number: @buildNum@
  2.0.0 Final - Jun 8, 2004
 ------------------------------
 
+ o Added SqlMapDaoTemplate wrapper methods (wraps SqlMapExecutor methods)
  o Fixed finalizer triggering lazy loader
  o Fixed Paginated List caching
  o Fixed NPE on complex prop without parameter class
  o Fixed default serialize setting on cache model and improved error msg
-
+ 
 ------------------------------
  2.0.0 RC5 - May 24, 2004
 ------------------------------
