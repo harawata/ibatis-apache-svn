@@ -108,6 +108,10 @@
                     BuildAction = "None"
                 />
                 <File
+                    RelPath = "ChangeLog.txt"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "DataSource.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

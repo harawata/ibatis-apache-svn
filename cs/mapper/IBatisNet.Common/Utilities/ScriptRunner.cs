@@ -73,8 +73,18 @@ namespace IBatisNet.Common.Utilities
 					case "oracle9.2":   
 					case "oracleClient1.0":   
 					case "ByteFx":
-					case "OleDb1.1":
 						sqlStatements = ParseScript(script);
+						break;   
+					case "OleDb1.1":
+						if (dataSource.ConnectionString.IndexOf("Microsoft.Jet.OLEDB")>0)
+						{
+							// Access
+							sqlStatements = ParseScript(script);
+						}
+						else
+						{
+							sqlStatements.Add(script);
+						}
 						break;                  
 					default:            
 						sqlStatements.Add(script);
@@ -86,10 +96,22 @@ namespace IBatisNet.Common.Utilities
 					case "oracle9.2":   
 					case "oracleClient1.0":   
 					case "ByteFx":
-					case "OleDb1.1":
 						script = script.Replace("\r\n"," ");
 						script = script.Replace("\t"," ");
 						sqlStatements.Add(script);
+						break;  
+					case "OleDb1.1":
+						if (dataSource.ConnectionString.IndexOf("Microsoft.Jet.OLEDB")>0)
+						{
+							// Access
+							script = script.Replace("\r\n"," ");
+							script = script.Replace("\t"," ");
+							sqlStatements.Add(script);
+						}
+						else
+						{
+							sqlStatements.Add(script);
+						}
 						break;                  
 					default:            
 						sqlStatements.Add(script);
