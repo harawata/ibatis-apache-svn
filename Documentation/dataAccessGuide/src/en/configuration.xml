@@ -60,7 +60,7 @@
               </row>
 
               <row>
-                <entry>iBatisNet-DataMapper</entry>
+                <entry>IBatisNet-DataMapper</entry>
 
                 <entry>The Data Mapper framework (see separate DataMapper
                 Guide)</entry>
@@ -237,14 +237,20 @@
     follows. Values that you will likely change for your application are
     highlighted.</para>
 
-    <example>Example dao.config file<title></title>
-    <programlisting>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+    <example>
+      Example dao.config file
+
+      <title></title>
+
+       
+
+      <programlisting>&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;daoConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:noNamespaceSchemaLocation="DaoConfig.xsd"&gt;
 
 <emphasis role="comment">&lt;!-- Example ADO.NET DAO Configuration --&gt;</emphasis>
 &lt;context id="<emphasis role="blue">SimpleDao</emphasis>" default="<emphasis
-        role="blue">true</emphasis>"&gt;
+          role="blue">true</emphasis>"&gt;
   &lt;properties resource="<emphasis role="blue">database.config</emphasis>"/&gt;
 
   &lt;database&gt;
@@ -282,7 +288,8 @@ xsi:noNamespaceSchemaLocation="DaoConfig.xsd"&gt;
   &lt;/daoFactory&gt;
 &lt;/context&gt;
 
-&lt;/daoConfig&gt;     </programlisting></example>
+&lt;/daoConfig&gt;     </programlisting>
+    </example>
 
     <para>In the example above, what we end up with is two DAO contexts. DAOs
     are automatically aware of which context they belong to and therefore
@@ -296,15 +303,18 @@ xsi:noNamespaceSchemaLocation="DaoConfig.xsd"&gt;
     you to use placeholders in the place of literal value elements. If you
     have a properties file with the following values:</para>
 
-    <example><title>Example properties file</title>
-    <programlisting>&lt;add key="<emphasis role="blue">userid</emphasis>" value="<emphasis
-        role="blue">IBatisNet</emphasis>" /&gt;
+    <example>
+      <title>Example properties file</title>
+
+      <programlisting>&lt;add key="<emphasis role="blue">userid</emphasis>" value="<emphasis
+          role="blue">IBatisNet</emphasis>" /&gt;
 &lt;add key="<emphasis role="blue">password</emphasis>" value="<emphasis
-        role="blue">test</emphasis>" /&gt;
+          role="blue">test</emphasis>" /&gt;
 &lt;add key="<emphasis role="blue">database</emphasis>" value="<emphasis
-        role="blue">iBatisNet</emphasis>" /&gt;
+          role="blue">iBatisNet</emphasis>" /&gt;
 &lt;add key="<emphasis role="blue">datasource</emphasis>" value="<emphasis
-        role="blue">(local)\NetSDK</emphasis>" /&gt;</programlisting></example>
+          role="blue">(local)\NetSDK</emphasis>" /&gt;</programlisting>
+    </example>
 
     <para>You can use placeholders defined in that properties file instead of
     explicit values in the <filename>dao.config</filename> file. For

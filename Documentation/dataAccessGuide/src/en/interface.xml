@@ -254,7 +254,7 @@ using IBatisNet.Test.Domain; // Account</programlisting>
    }
   }</programlisting>
 
-      <para>The DAO obtain's an instance of <classname>DaoSession</classname>
+      <para>The DAO obtains an instance of <classname>DaoSession</classname>
       by calling the <methodname>GetContext</methodname> method inherited from
       <classname>BaseDao</classname>. Next, it uses the simple
       <classname>DaoSession</classname> to get a <varname>command</varname>
@@ -327,8 +327,8 @@ using IBatisNet.Test.Domain; // Account</programlisting>
 
       <para>After configuring the framework's
       <classname>DaoManager</classname> for either the ADO.NET or Data Mapper
-      <classname>AccountDao</classname> we just created (see the Configuration
-      section), we can now look at how to use them.</para>
+      <classname>AccountDao</classname> that we just created (see the
+      Configuration section), we can now look at how to use them.</para>
 
       <programlisting>using System;
 
@@ -382,7 +382,7 @@ namespace Examples.DaoUsage {
       <classname>UserDao</classname> class.</para>
 
       <para>Like the <classname>SqlMapDaoSession</classname> handler, the
-      <classname>NHibernateDaoSession</classname> handler is found in
+      <classname>NHibernateDaoSession</classname> handler is found in the
       <classname>IBatisNet.DataAccess.Extensions.DaoSessionHandlers</classname>
       namespace.</para>
 

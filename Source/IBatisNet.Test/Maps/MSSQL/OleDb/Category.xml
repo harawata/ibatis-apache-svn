@@ -97,7 +97,50 @@
 			<generate table="Categories" by="Category_Id, Category_Name"/>
 		</delete>
 		
-		<select id="SelectByPKCategoryGenerate" resultClass="Category" parameterClass="Category" parameterMap="selectByPK-generate-params">
+		<!--
+		If using selectByPK-generate-params as parameterMap, 
+		test assertions for other Category class properties fail 
+		since generated SQL statement only selects Category_Id:
+		
+		SELECT \tCategory_Id as Id FROM \tCategories WHERE \tCategory_Id =  ?
+		
+		IBatisNet.Test.NUnit.SqlMapTests.MSSQL.StatementGenerate.TestSelectByPK : 
+		expected:<"toto">
+		but was:<(null)>
+				
+		
+		If using select-generate-params as parameterMap,
+		Throws OleDbException:
+		
+		IBatisNet.Test.NUnit.SqlMapTests.MSSQL.StatementGenerate.TestSelectByPK : 
+		System.InvalidOperationException : Command parameter[1] 'Name' is invalid.
+		Command parameter[2] 'Guid' is invalid.
+		System.Data.OleDb.OleDbException : Multiple-step OLE DB operation generated errors. Check each OLE DB status value, if available. No work was done.
+		
+		at System.Data.OleDb.OleDbCommand.ExecuteCommandTextErrorHandling(Int32 hr)
+		at System.Data.OleDb.OleDbCommand.ExecuteCommandTextForMultpleResults(tagDBPARAMS dbParams, Object& executeResult)
+		at System.Data.OleDb.OleDbCommand.ExecuteCommandText(Object& executeResult)
+		at System.Data.OleDb.OleDbCommand.ExecuteCommand(CommandBehavior behavior, Object& executeResult)
+		at System.Data.OleDb.OleDbCommand.ExecuteReaderInternal(CommandBehavior behavior, String method)
+		at System.Data.OleDb.OleDbCommand.ExecuteReader(CommandBehavior behavior)
+		at System.Data.OleDb.OleDbCommand.System.Data.IDbCommand.ExecuteReader()
+		at IBatisNet.DataMapper.MappedStatements.MappedStatement.RunQueryForObject(RequestScope request, IDalSession session, Object parameterObject, Object resultObject) in c:\projects\ibatis\svn\trunk\source\ibatisnet.datamapper\mappedstatements\mappedstatement.cs:line 555
+		at IBatisNet.DataMapper.MappedStatements.MappedStatement.ExecuteQueryForObject(IDalSession session, Object parameterObject, Object resultObject) in c:\projects\ibatis\svn\trunk\source\ibatisnet.datamapper\mappedstatements\mappedstatement.cs:line 502
+		at IBatisNet.DataMapper.MappedStatements.MappedStatement.ExecuteQueryForObject(IDalSession session, Object parameterObject) in c:\projects\ibatis\svn\trunk\source\ibatisnet.datamapper\mappedstatements\mappedstatement.cs:line 483
+		at IBatisNet.DataMapper.SqlMapper.QueryForObject(String statementName, Object parameterObject) in C:\projects\ibatis\svn\trunk\Source\IBatisNet.DataMapper\SqlMapper.cs:line 489
+		at IBatisNet.Test.NUnit.SqlMapTests.MSSQL.StatementGenerate.TestSelectByPK() in C:\projects\ibatis\svn\trunk\Source\IBatisNet.Test\NUnit\SqlMapTests\MSSQL\StatementGenerate.cs:line 54
+		InvalidOperationException
+		
+		Generated SQL statement uses positional parameters for OleDb, 
+		but generated Command object has 3 parameters, one for each Category property,
+		which OleDb doesn't like.
+		Having three parameters works ok with SqlClient since the generated SQL statement 
+		uses a named parameter of @Id instead of ?.
+		
+		SELECT \tCategory_Id as Id,\tCategory_Name as Name,\tCategory_Guid as Guid FROM \tCategories WHERE \tCategory_Id =  ?
+		
+		-->
+		<select id="SelectByPKCategoryGenerate" resultClass="Category" parameterClass="Category" parameterMap="select-generate-params">
 			<generate table="Categories" by="Category_Id"/> 
 		</select>
 		
