@@ -19,16 +19,46 @@ import com.ibatis.sqlmap.client.SqlMapClient;
 import com.ibatis.sqlmap.engine.execution.SqlExecutor;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
 
+/**
+ * A more advanced SQL map client interface
+ */
 public interface ExtendedSqlMapClient extends SqlMapClient {
 
+  /**
+   * Get the SQL delegate
+   * 
+   * @return - the SqlMapExecutorDelegate
+   */
   public SqlMapExecutorDelegate getDelegate();
 
+  /**
+   * Get a mapped statement by ID
+   * 
+   * @param id - the ID
+   * 
+   * @return - the mapped statement
+   */
   public MappedStatement getMappedStatement(String id);
 
+  /**
+   * Get the SQL executor
+   * 
+   * @return - the SQL executor
+   */
   public SqlExecutor getSqlExecutor();
 
+  /**
+   * Get the status of lazy loading
+   * 
+   * @return - the status
+   */
   public boolean isLazyLoadingEnabled();
 
+  /**
+   * Get the status of CGLib enhancements
+   * 
+   * @return - the status
+   */
   public boolean isEnhancementEnabled();
 
 }

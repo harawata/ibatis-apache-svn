@@ -30,13 +30,24 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Implementation of ExtendedSqlMapClient
+ */
 public class SqlMapClientImpl implements ExtendedSqlMapClient {
 
   private static final Log log = LogFactory.getLog(SqlMapClientImpl.class);
-
+  
+  /**
+   * Delegate for SQL execution
+   */
   public SqlMapExecutorDelegate delegate;
+  
   private ThreadLocal localSqlMapSession = new ThreadLocal();
 
+  /**
+   * Constructor to supply a delegate
+   * @param delegate - the delegate
+   */
   public SqlMapClientImpl(SqlMapExecutorDelegate delegate) {
     this.delegate = delegate;
   }
