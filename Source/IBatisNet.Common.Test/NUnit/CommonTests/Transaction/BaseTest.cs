@@ -155,42 +155,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Transaction
 			Assert.IsNull(account.EmailAddress, "account.EmailAddress");
 		}
 
-		/// <summary>
-		/// Verify that the input order is equal to the order(id=1).
-		/// </summary>
-		/// <param name="order">An order object.</param>
-		protected void AssertOrder1(Order order) 
-		{
-			System.DateTime date = new DateTime(2003, 2, 15, 8, 15, 00);
 
-			Assert.AreEqual(1, order.Id, "order.Id");
-			Assert.AreEqual(date.ToString(), order.Date.ToString(), "order.Date");
-			Assert.AreEqual("VISA", order.CardType, "order.CardType");
-			Assert.AreEqual("999999999999", order.CardNumber, "order.CardNumber");
-			Assert.AreEqual("05/03", order.CardExpiry, "order.CardExpiry");
-			Assert.AreEqual("11 This Street", order.Street, "order.Street");
-			Assert.AreEqual("Victoria", order.City, "order.City");
-			Assert.AreEqual("BC", order.Province, "order.Id");
-			Assert.AreEqual("C4B 4F4", order.PostalCode, "order.PostalCode");
-		}
 
-		/// <summary>
-		/// Verify that the input order is equal to the order(id=1).
-		/// </summary>
-		/// <param name="order">An order as hashtable.</param>
-		protected void AssertOrder1AsHashtable(Hashtable order) 
-		{
-			System.DateTime date = new DateTime(2003, 2, 15, 8, 15, 00);
-
-			Assert.AreEqual(1,					(int)order["Id"], "order.Id");
-			Assert.AreEqual(date.ToString(),	((DateTime)order["Date"]).ToString(), "order.Date");
-			Assert.AreEqual("VISA",				(string)order["CardType"], "order.CardType");
-			Assert.AreEqual("999999999999",		(string)order["CardNumber"], "order.CardNumber");
-			Assert.AreEqual("05/03",			(string)order["CardExpiry"], "order.CardExpiry");
-			Assert.AreEqual("11 This Street",	(string)order["Street"], "order.Street");
-			Assert.AreEqual("Victoria",			(string)order["City"], "order.City");
-			Assert.AreEqual("BC",				(string)order["Province"], "order.Id");
-			Assert.AreEqual("C4B 4F4",			(string)order["PostalCode"], "order.PostalCode");
-		}
 	}
 }

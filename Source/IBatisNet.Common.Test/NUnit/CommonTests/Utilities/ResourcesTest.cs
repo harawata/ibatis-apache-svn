@@ -44,7 +44,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 		{
 			XmlDocument doc = null;
 
-			doc = Resources.GetEmbeddedResourceAsXmlDocument("properties.xml, IBatisNet.Test");
+			doc = Resources.GetEmbeddedResourceAsXmlDocument("properties.xml, IBatisNet.Common.Test");
 
 			Assert.IsNotNull(doc);
 			Assert.IsTrue(doc.HasChildNodes);

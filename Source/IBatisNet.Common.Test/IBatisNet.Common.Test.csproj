@@ -119,6 +119,22 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "DataBase.config"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "licence.txt"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "properties.xml"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "ReadMe.txt"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "bin\Debug\dao_MSSQL_Odbc.config"
                     BuildAction = "None"
                 />
@@ -184,86 +200,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Domain\AccountBis.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Domain\AccountCollection.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Domain\Category.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Domain\Complex.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Domain\Enumeration.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Domain\LineItem.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Domain\LineItemCollection.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Domain\Order.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Domain\Other.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Domain\Search.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Domain\User.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Maps\Access\OleDb\Account.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\Access\OleDb\Category.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\Access\OleDb\Complex.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\Access\OleDb\DynamicAccount.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\Access\OleDb\Enumeration.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\Access\OleDb\LineItem.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\Access\OleDb\Order.xml"
                     BuildAction = "Content"
                 />
                 <File
@@ -271,63 +208,7 @@
                     BuildAction = "Content"
                 />
                 <File
-                    RelPath = "Maps\MSSQL\Odbc\Category.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\MSSQL\Odbc\Complex.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\MSSQL\Odbc\DynamicAccount.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\MSSQL\Odbc\Enumeration.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\MSSQL\Odbc\LineItem.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\MSSQL\Odbc\Order.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\MSSQL\Odbc\Other.xml"
-                    BuildAction = "Content"
-                />
-                <File
                     RelPath = "Maps\MSSQL\OleDb\Account.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\MSSQL\OleDb\Category.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\MSSQL\OleDb\Complex.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\MSSQL\OleDb\DynamicAccount.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\MSSQL\OleDb\Enumeration.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\MSSQL\OleDb\LineItem.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\MSSQL\OleDb\Order.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\MSSQL\OleDb\Other.xml"
                     BuildAction = "Content"
                 />
                 <File
@@ -335,63 +216,7 @@
                     BuildAction = "Content"
                 />
                 <File
-                    RelPath = "Maps\MSSQL\SqlClient\Category.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\MSSQL\SqlClient\Complex.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\MSSQL\SqlClient\DynamicAccount.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\MSSQL\SqlClient\Enumeration.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\MSSQL\SqlClient\LineItem.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\MSSQL\SqlClient\Order.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\MSSQL\SqlClient\Other.xml"
-                    BuildAction = "Content"
-                />
-                <File
                     RelPath = "Maps\MySql\ByteFx\Account.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\MySql\ByteFx\Category.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\MySql\ByteFx\Complex.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\MySql\ByteFx\DynamicAccount.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\MySql\ByteFx\Enumeration.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\MySql\ByteFx\LineItem.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\MySql\ByteFx\Order.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\MySql\ByteFx\Other.xml"
                     BuildAction = "Content"
                 />
                 <File
@@ -399,63 +224,7 @@
                     BuildAction = "Content"
                 />
                 <File
-                    RelPath = "Maps\Oracle\ODP\Category.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\Oracle\ODP\Complex.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\Oracle\ODP\DynamicAccount.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\Oracle\ODP\Enumeration.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\Oracle\ODP\LineItem.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\Oracle\ODP\Order.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\Oracle\ODP\Other.xml"
-                    BuildAction = "Content"
-                />
-                <File
                     RelPath = "Maps\Oracle\OracleClient\Account.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\Oracle\OracleClient\Category.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\Oracle\OracleClient\Complex.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\Oracle\OracleClient\DynamicAccount.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\Oracle\OracleClient\Enumeration.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\Oracle\OracleClient\LineItem.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\Oracle\OracleClient\Order.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Maps\Oracle\OracleClient\Other.xml"
                     BuildAction = "Content"
                 />
                 <File
