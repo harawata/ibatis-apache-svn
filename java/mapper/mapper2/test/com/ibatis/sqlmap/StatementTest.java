@@ -7,8 +7,8 @@ package com.ibatis.sqlmap;
 
 import com.ibatis.common.util.PaginatedList;
 import com.ibatis.sqlmap.client.event.RowHandler;
+import com.ibatis.sqlmap.client.SqlMapSession;
 import com.ibatis.sqlmap.engine.impl.SqlMapClientImpl;
-import com.ibatis.sqlmap.engine.transaction.jdbc.JdbcTransactionConfig;
 import testdomain.Account;
 import testdomain.LineItem;
 import testdomain.SuperAccount;
@@ -49,6 +49,54 @@ public class StatementTest extends BaseSqlMapTest {
     ((SqlMapClientImpl)sqlMap).getDelegate().getTxManager().setDataSource(null);
     sqlMap.setUserConnection(conn);
     Account account = (Account) sqlMap.queryForObject("getAccountViaColumnName", new Integer(1));
+    conn.close();
+    assertAccount1(account);
+    ((SqlMapClientImpl)sqlMap).getDelegate().getTxManager().setDataSource(ds);
+  }
+
+  public void testSessionUserConnection() throws SQLException {
+    DataSource ds = sqlMap.getDataSource();
+    Connection conn = ds.getConnection();
+    ((SqlMapClientImpl)sqlMap).getDelegate().getTxManager().setDataSource(null);
+    SqlMapSession session = sqlMap.openSession(conn);
+    Account account = (Account) session.queryForObject("getAccountViaColumnName", new Integer(1));
+    session.close();
+    conn.close();
+    assertAccount1(account);
+    ((SqlMapClientImpl)sqlMap).getDelegate().getTxManager().setDataSource(ds);
+  }
+
+  public void testSessionUserConnectionFailures() throws SQLException {
+    DataSource ds = sqlMap.getDataSource();
+    Connection conn = ds.getConnection();
+    ((SqlMapClientImpl)sqlMap).getDelegate().getTxManager().setDataSource(null);
+    SqlMapSession session = sqlMap.openSession(conn);
+
+    Exception expected = null;
+    try {
+      session.startTransaction();
+    } catch (Exception e) {
+      expected = e;
+    }
+    assertNotNull("Expected exception from startTransaction() was not detected.", expected);
+    expected = null;
+    try {
+      session.commitTransaction();
+    } catch (Exception e) {
+      expected = e;
+    }
+    assertNotNull("Expected exception from commitTransaction() was not detected.", expected);
+    expected = null;
+    try {
+      session.endTransaction();
+    } catch (Exception e) {
+      expected = e;
+    }
+    assertNotNull("Expected exception from endTransaction() was not detected.", expected);
+    expected = null;
+
+    Account account = (Account) session.queryForObject("getAccountViaColumnName", new Integer(1));
+    session.close();
     conn.close();
     assertAccount1(account);
     ((SqlMapClientImpl)sqlMap).getDelegate().getTxManager().setDataSource(ds);

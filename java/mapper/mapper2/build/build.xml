@@ -94,15 +94,8 @@
   </target>
 
   <target name="test.run" depends="src.compile">
-    <junit fork="yes" printsummary="true" haltonerror="true" showoutput="true">
-      <!--formatter type="plain" usefile="false"/-->
-      <!--
-      <test name="com.ibatis.sqlmap.AllSqlMapTests"  />
-      <test name="com.ibatis.dao.AllDaoTests"  />
-      <test name="com.ibatis.common.util.AllUtilTests" />
-      <test name="com.ibatis.common.beans.AllBeansTests" />
-      -->
-      <batchtest>
+    <junit fork="no" printsummary="true" haltonerror="true" showoutput="true">
+      <batchtest >
         <fileset dir="${tests}">
           <include name="**/*Test.class"/>
           <exclude name="**/Oracle*Test.class"/>
