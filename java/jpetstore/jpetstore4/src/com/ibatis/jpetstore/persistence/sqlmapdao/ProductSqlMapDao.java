@@ -21,16 +21,16 @@ public class ProductSqlMapDao extends BaseSqlMapDao implements ProductDao {
   }
 
   public PaginatedList getProductListByCategory(String categoryId) {
-    return executeQueryForPaginatedList("getProductListByCategory", categoryId, PAGE_SIZE);
+    return queryForPaginatedList("getProductListByCategory", categoryId, PAGE_SIZE);
   }
 
   public Product getProduct(String productId) {
-    return (Product) executeQueryForObject("getProduct", productId);
+    return (Product) queryForObject("getProduct", productId);
   }
 
   public PaginatedList searchProductList(String keywords) {
     Object parameterObject = new ProductSearch(keywords);
-    return executeQueryForPaginatedList("searchProductList", parameterObject, PAGE_SIZE);
+    return queryForPaginatedList("searchProductList", parameterObject, PAGE_SIZE);
   }
 
   /* Inner Classes */

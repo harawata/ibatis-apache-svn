@@ -77,7 +77,7 @@ public class PetStoreLogicTest implements Runnable{
     Thread.sleep(1000);
     while (activeThreads > 1) {
       Date d = new Date();
-      System.out.println ("Time: "+d.getHours()+":"+d.getMinutes()+":"+d.getSeconds());
+      System.out.println ("Time: " + d);
       System.out.println("Error Count = " + errorCount);
       System.out.println ("Active Threads: "+activeThreads);
       System.out.flush();
@@ -86,7 +86,7 @@ public class PetStoreLogicTest implements Runnable{
     }
 
     Date d = new Date();
-    System.out.println ("Time: "+d.getHours()+":"+d.getMinutes()+":"+d.getSeconds());
+    System.out.println ("Time: " + d);
     System.out.println("Error Count = " + errorCount);
     System.out.println ("Active Threads: "+activeThreads);
     System.out.println (masterWatch);

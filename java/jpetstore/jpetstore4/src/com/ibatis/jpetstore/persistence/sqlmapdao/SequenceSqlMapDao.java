@@ -29,12 +29,12 @@ public class SequenceSqlMapDao extends BaseSqlMapDao implements SequenceDao {
   public synchronized int getNextId(String name) {
     Sequence sequence = new Sequence(name, -1);
 
-    sequence = (Sequence) executeQueryForObject("getSequence", sequence);
+    sequence = (Sequence) queryForObject("getSequence", sequence);
     if (sequence == null) {
       throw new DaoException("Error: A null sequence was returned from the database (could not get next " + name + " sequence).");
     }
     Object parameterObject = new Sequence(name, sequence.getNextId() + 1);
-    executeUpdate("updateSequence", parameterObject);
+    update("updateSequence", parameterObject);
 
     return sequence.getNextId();
   }

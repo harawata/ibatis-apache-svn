@@ -18,32 +18,32 @@ public class AccountSqlMapDao extends BaseSqlMapDao implements AccountDao {
   }
 
   public Account getAccount(String username) {
-    return (Account) executeQueryForObject("getAccountByUsername", username);
+    return (Account) queryForObject("getAccountByUsername", username);
   }
 
   public List getUsernameList() {
-    return executeQueryForList("getUsernameList", null);
+    return queryForList("getUsernameList", null);
   }
 
   public Account getAccount(String username, String password) {
     Account account = new Account();
     account.setUsername(username);
     account.setPassword(password);
-    return (Account) executeQueryForObject("getAccountByUsernameAndPassword", account);
+    return (Account) queryForObject("getAccountByUsernameAndPassword", account);
   }
 
   public void insertAccount(Account account) {
-    executeUpdate("insertAccount", account);
-    executeUpdate("insertProfile", account);
-    executeUpdate("insertSignon", account);
+    update("insertAccount", account);
+    update("insertProfile", account);
+    update("insertSignon", account);
   }
 
   public void updateAccount(Account account) {
-    executeUpdate("updateAccount", account);
-    executeUpdate("updateProfile", account);
+    update("updateAccount", account);
+    update("updateProfile", account);
 
     if (account.getPassword() != null && account.getPassword().length() > 0) {
-      executeUpdate("updateSignon", account);
+      update("updateSignon", account);
     }
   }
 

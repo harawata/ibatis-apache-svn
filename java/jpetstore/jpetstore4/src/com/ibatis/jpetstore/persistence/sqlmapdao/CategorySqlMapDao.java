@@ -18,11 +18,11 @@ public class CategorySqlMapDao extends BaseSqlMapDao implements CategoryDao {
   }
 
   public List getCategoryList() {
-    return executeQueryForList("getCategoryList", null);
+    return queryForList("getCategoryList", null);
   }
 
   public Category getCategory(String categoryId) {
-    return (Category) executeQueryForObject("getCategory", categoryId);
+    return (Category) queryForObject("getCategory", categoryId);
   }
 
 }

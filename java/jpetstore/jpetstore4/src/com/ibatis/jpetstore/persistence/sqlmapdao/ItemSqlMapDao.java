@@ -29,22 +29,22 @@ public class ItemSqlMapDao extends BaseSqlMapDao implements ItemDao {
       Map param = new HashMap(2);
       param.put("itemId", itemId);
       param.put("increment", increment);
-      executeUpdate("updateInventoryQuantity", param);
+      update("updateInventoryQuantity", param);
     }
   }
 
   public boolean isItemInStock(String itemId) {
-    Integer i = (Integer) executeQueryForObject("getInventoryQuantity", itemId);
+    Integer i = (Integer) queryForObject("getInventoryQuantity", itemId);
     return (i != null && i.intValue() > 0);
   }
 
   public PaginatedList getItemListByProduct(String productId) {
-    return executeQueryForPaginatedList("getItemListByProduct", productId, PAGE_SIZE);
+    return queryForPaginatedList("getItemListByProduct", productId, PAGE_SIZE);
   }
 
   public Item getItem(String itemId) {
-    Integer i = (Integer) executeQueryForObject("getInventoryQuantity", itemId);
-    Item item = (Item) executeQueryForObject("getItem", itemId);
+    Integer i = (Integer) queryForObject("getInventoryQuantity", itemId);
+    Item item = (Item) queryForObject("getItem", itemId);
     item.setQuantity(i.intValue());
     return item;
   }
