@@ -5,6 +5,7 @@ Build Number: @buildNum@
  2.0.5 - ??, 2004
 ------------------------------
 
+ o Added Custom Type Handlers!  (see TypeHandlerCallback)
  o Added OJB DAO support (Thanks to Pedro Salgado)
  o Added passthrough methods for Hibernate DAO template
  o Added JdbcDaoTemplate support to most DAO TX managers

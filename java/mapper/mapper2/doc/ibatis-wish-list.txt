@@ -6,9 +6,6 @@
   Ease of Use
       - Override/extend mapped statements (i.e. reuse SQL; overrides="statementName")
   Database Support
-      - Custom Type Handlers
-      - Type translation filters (e.g. "Y"|"N" -> true|false)
-      - CLOB/BLOB support
       - Isolation Level support
   Performance
       - Repeating group mapping (solution for M:N n+1 selects problem)
