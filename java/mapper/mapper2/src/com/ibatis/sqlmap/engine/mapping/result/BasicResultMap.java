@@ -1,23 +1,35 @@
 package com.ibatis.sqlmap.engine.mapping.result;
 
-import com.ibatis.sqlmap.engine.exchange.*;
-import com.ibatis.sqlmap.engine.type.*;
-import com.ibatis.sqlmap.engine.impl.*;
-
-import com.ibatis.sqlmap.engine.mapping.statement.*;
-import com.ibatis.sqlmap.engine.mapping.result.loader.*;
+import com.ibatis.common.beans.ClassInfo;
+import com.ibatis.common.beans.Probe;
+import com.ibatis.common.beans.ProbeFactory;
+import com.ibatis.common.jdbc.exception.NestedSQLException;
+import com.ibatis.common.minixml.MiniDom;
+import com.ibatis.common.resources.Resources;
+import com.ibatis.sqlmap.client.SqlMapException;
+import com.ibatis.sqlmap.engine.exchange.DataExchange;
+import com.ibatis.sqlmap.engine.exchange.DataExchangeFactory;
+import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
+import com.ibatis.sqlmap.engine.mapping.result.loader.ResultLoader;
 import com.ibatis.sqlmap.engine.mapping.sql.Sql;
-import com.ibatis.sqlmap.engine.scope.*;
-import com.ibatis.sqlmap.client.*;
-import com.ibatis.common.jdbc.exception.*;
-import com.ibatis.common.resources.*;
-import com.ibatis.common.beans.*;
-import com.ibatis.common.minixml.*;
+import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
+import com.ibatis.sqlmap.engine.scope.ErrorContext;
+import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.type.TypeHandler;
+import com.ibatis.sqlmap.engine.type.TypeHandlerFactory;
+import com.ibatis.sqlmap.engine.type.XmlCollectionTypeMarker;
+import com.ibatis.sqlmap.engine.type.XmlTypeMarker;
 
-import java.util.*;
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 public class BasicResultMap implements ResultMap {
+
+  private static final Probe PROBE = ProbeFactory.getProbe();
 
   protected String id;
   protected Class resultClass;
@@ -86,7 +98,6 @@ public class BasicResultMap implements ResultMap {
   }
 
   /**
-   *
    * @param rs
    * @return
    * @throws java.sql.SQLException
@@ -107,7 +118,7 @@ public class BasicResultMap implements ResultMap {
         columnValues[i] = getPrimitiveResultMappingValue(rs, mapping);
       } else {
         if (resultClass == null) {
-          throw new SqlMapException ("The result class was null when trying to get results for ResultMap named " + getId() + ".");
+          throw new SqlMapException("The result class was null when trying to get results for ResultMap named " + getId() + ".");
         } else if (Map.class.isAssignableFrom(resultClass)) {
           columnValues[i] = getNestedResultMappingValue(request, rs, mapping, Object.class);
         } else if (XmlTypeMarker.class.isAssignableFrom(resultClass)) {
@@ -244,10 +255,10 @@ public class BasicResultMap implements ResultMap {
       while (parser.hasMoreTokens()) {
         String propName = parser.nextToken();
         String colName = parser.nextToken();
-        Class propType = BeanProbe.getPropertyTypeForSetter(parameterObject, propName);
+        Class propType = PROBE.getPropertyTypeForSetter(parameterObject, propName);
         TypeHandler propTypeHandler = TypeHandlerFactory.getTypeHandler(propType);
         Object propValue = propTypeHandler.getResult(rs, colName);
-        BeanProbe.setObject(parameterObject, propName, propValue);
+        PROBE.setObject(parameterObject, propName, propValue);
       }
     } else {
       // single param

@@ -1,40 +1,67 @@
 package com.ibatis.sqlmap.engine.builder.xml;
 
-import com.ibatis.sqlmap.client.*;
-import com.ibatis.sqlmap.engine.impl.*;
-import com.ibatis.sqlmap.engine.type.*;
-import com.ibatis.sqlmap.engine.mapping.parameter.*;
-import com.ibatis.sqlmap.engine.mapping.result.*;
-import com.ibatis.sqlmap.engine.mapping.statement.*;
-import com.ibatis.sqlmap.engine.mapping.sql.stat.*;
-import com.ibatis.sqlmap.engine.mapping.sql.*;
-import com.ibatis.sqlmap.engine.mapping.sql.dynamic.*;
-import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.*;
-import com.ibatis.sqlmap.engine.mapping.sql.simple.*;
-import com.ibatis.sqlmap.engine.cache.*;
-import com.ibatis.sqlmap.engine.cache.memory.MemoryCacheController;
+import com.ibatis.common.beans.Probe;
+import com.ibatis.common.beans.ProbeFactory;
+import com.ibatis.common.io.ReaderInputStream;
+import com.ibatis.common.resources.Resources;
+import com.ibatis.sqlmap.client.SqlMapClient;
+import com.ibatis.sqlmap.client.SqlMapException;
+import com.ibatis.sqlmap.engine.accessplan.AccessPlanFactory;
+import com.ibatis.sqlmap.engine.cache.CacheModel;
 import com.ibatis.sqlmap.engine.cache.fifo.FifoCacheController;
 import com.ibatis.sqlmap.engine.cache.lru.LruCacheController;
-import com.ibatis.sqlmap.engine.datasource.*;
-import com.ibatis.sqlmap.engine.transaction.*;
+import com.ibatis.sqlmap.engine.cache.memory.MemoryCacheController;
+import com.ibatis.sqlmap.engine.datasource.DataSourceFactory;
+import com.ibatis.sqlmap.engine.datasource.DbcpDataSourceFactory;
+import com.ibatis.sqlmap.engine.datasource.JndiDataSourceFactory;
+import com.ibatis.sqlmap.engine.datasource.SimpleDataSourceFactory;
+import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
+import com.ibatis.sqlmap.engine.impl.SqlMapClientImpl;
+import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
+import com.ibatis.sqlmap.engine.mapping.parameter.BasicParameterMap;
+import com.ibatis.sqlmap.engine.mapping.parameter.BasicParameterMapping;
+import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
+import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMapping;
+import com.ibatis.sqlmap.engine.mapping.result.AutoResultMap;
+import com.ibatis.sqlmap.engine.mapping.result.BasicResultMap;
+import com.ibatis.sqlmap.engine.mapping.result.BasicResultMapping;
+import com.ibatis.sqlmap.engine.mapping.result.ResultMapping;
+import com.ibatis.sqlmap.engine.mapping.sql.Sql;
+import com.ibatis.sqlmap.engine.mapping.sql.SqlText;
+import com.ibatis.sqlmap.engine.mapping.sql.dynamic.DynamicSql;
+import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.DynamicParent;
+import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.SqlTag;
+import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.SqlTagHandler;
+import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.SqlTagHandlerFactory;
+import com.ibatis.sqlmap.engine.mapping.sql.simple.SimpleDynamicSql;
+import com.ibatis.sqlmap.engine.mapping.sql.stat.StaticSql;
+import com.ibatis.sqlmap.engine.mapping.statement.*;
+import com.ibatis.sqlmap.engine.scope.ErrorContext;
+import com.ibatis.sqlmap.engine.transaction.TransactionConfig;
+import com.ibatis.sqlmap.engine.transaction.TransactionManager;
 import com.ibatis.sqlmap.engine.transaction.external.ExternalTransactionConfig;
-import com.ibatis.sqlmap.engine.transaction.jta.JtaTransactionConfig;
 import com.ibatis.sqlmap.engine.transaction.jdbc.JdbcTransactionConfig;
-import com.ibatis.sqlmap.engine.scope.*;
-import com.ibatis.common.resources.*;
-import com.ibatis.common.beans.*;
-import com.ibatis.sqlmap.engine.accessplan.*;
-import com.ibatis.common.io.*;
-
-import javax.xml.parsers.*;
-import javax.sql.*;
-import java.util.*;
-import java.io.*;
-import java.math.BigDecimal;
-
+import com.ibatis.sqlmap.engine.transaction.jta.JtaTransactionConfig;
+import com.ibatis.sqlmap.engine.type.TypeHandler;
+import com.ibatis.sqlmap.engine.type.TypeHandlerFactory;
+import com.ibatis.sqlmap.engine.type.XmlCollectionTypeMarker;
+import com.ibatis.sqlmap.engine.type.XmlTypeMarker;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.*;
-import org.xml.sax.*;
-import org.apache.commons.logging.*;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+
+import javax.sql.DataSource;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * User: Clinton Begin
@@ -42,6 +69,8 @@ import org.apache.commons.logging.*;
  * Time: 7:12:11 PM
  */
 public class XmlSqlMapClientBuilder {
+
+  private static final Probe PROBE = ProbeFactory.getProbe();
 
   private static final Log log = LogFactory.getLog(XmlSqlMapClientBuilder.class);
 
@@ -168,7 +197,7 @@ public class XmlSqlMapClientBuilder {
 
     // Parse input file
     if (reader == null) {
-      throw new SqlMapException ("The reader passed to SqlMapClientBuilder was null.");
+      throw new SqlMapException("The reader passed to SqlMapClientBuilder was null.");
     }
 
     try {
@@ -222,35 +251,35 @@ public class XmlSqlMapClientBuilder {
   }
 
   private void parseGlobalProperties(Node n) {
-      ErrorContext errorCtx = (ErrorContext) getContextObject(KEY_ERROR_CONTEXT);
-      errorCtx.setActivity("loading global properties");
+    ErrorContext errorCtx = (ErrorContext) getContextObject(KEY_ERROR_CONTEXT);
+    errorCtx.setActivity("loading global properties");
 
-      Properties attributes = parseAttributes(n);
-      String resource = attributes.getProperty("resource");
-      String url = attributes.getProperty("url");
+    Properties attributes = parseAttributes(n);
+    String resource = attributes.getProperty("resource");
+    String url = attributes.getProperty("url");
 
-      try {
-        Properties props = null;
-        if (resource != null) {
-          errorCtx.setResource(resource);
-          props = Resources.getResourceAsProperties(resource);
-        } else if (url != null) {
-          errorCtx.setResource(url);
-          props = Resources.getUrlAsProperties(resource);
-        } else {
-          throw new SqlMapException ("The " + NODE_PROPERTIES + " element requires either a resource or a url attribute.");
-        }
-
-        Properties existingProperties = (Properties)getContextObject(KEY_GLOBAL_PROPS);
-        if (existingProperties == null) {
-          setContextObject(KEY_GLOBAL_PROPS, props);
-        } else {
-          props.putAll(existingProperties);
-          setContextObject(KEY_GLOBAL_PROPS, props);
-        }
-      } catch (IOException e) {
-        throw new SqlMapException("Error loading properties.  Cause: " + e);
+    try {
+      Properties props = null;
+      if (resource != null) {
+        errorCtx.setResource(resource);
+        props = Resources.getResourceAsProperties(resource);
+      } else if (url != null) {
+        errorCtx.setResource(url);
+        props = Resources.getUrlAsProperties(resource);
+      } else {
+        throw new SqlMapException("The " + NODE_PROPERTIES + " element requires either a resource or a url attribute.");
       }
+
+      Properties existingProperties = (Properties) getContextObject(KEY_GLOBAL_PROPS);
+      if (existingProperties == null) {
+        setContextObject(KEY_GLOBAL_PROPS, props);
+      } else {
+        props.putAll(existingProperties);
+        setContextObject(KEY_GLOBAL_PROPS, props);
+      }
+    } catch (IOException e) {
+      throw new SqlMapException("Error loading properties.  Cause: " + e);
+    }
   }
 
   private void parseSettings(Node n) {
@@ -402,7 +431,7 @@ public class XmlSqlMapClientBuilder {
       errorCtx.setResource(url);
       reader = Resources.getUrlAsReader(url);
     } else {
-      throw new SqlMapException ("The " + NODE_SQL_MAP + " element requires either a resource or a url attribute.");
+      throw new SqlMapException("The " + NODE_SQL_MAP + " element requires either a resource or a url attribute.");
     }
 
     XmlConverter converter = (XmlConverter) getContextObject(KEY_GLOBAL_SQL_MAP_CONV);
@@ -420,7 +449,7 @@ public class XmlSqlMapClientBuilder {
     ErrorContext errorCtx = (ErrorContext) getContextObject(KEY_ERROR_CONTEXT);
     errorCtx.setActivity("building an SQL Map instance");
 
-    Properties attributes = parseAttributes (n);
+    Properties attributes = parseAttributes(n);
     String namespace = attributes.getProperty("namespace");
     setContextObject(KEY_CURRENT_NAMESPACE, namespace);
 
@@ -617,7 +646,7 @@ public class XmlSqlMapClientBuilder {
       } else {
         Class parameterClass = insertStatement.getParameterClass();
         if (keyPropName != null && parameterClass != null) {
-          resultClass = BeanProbe.getPropertyTypeForSetter(parameterClass, selectKeyStatement.getKeyProperty());
+          resultClass = PROBE.getPropertyTypeForSetter(parameterClass, selectKeyStatement.getKeyProperty());
         }
       }
     } catch (ClassNotFoundException e) {
@@ -1080,7 +1109,7 @@ public class XmlSqlMapClientBuilder {
     CacheModel model = new CacheModel();
 
     Properties attributes = parseAttributes(n);
-    String id = applyNamespace (attributes.getProperty("id"));
+    String id = applyNamespace(attributes.getProperty("id"));
     String type = attributes.getProperty("type");
     type = resolveAlias(type);
 
@@ -1151,7 +1180,7 @@ public class XmlSqlMapClientBuilder {
 
   private String applyNamespace(String id) {
     String newId = id;
-    String namespace = (String)getContextObject(KEY_CURRENT_NAMESPACE);
+    String namespace = (String) getContextObject(KEY_CURRENT_NAMESPACE);
     if (namespace != null && namespace.length() > 0 && id != null && id.indexOf(".") < 0) {
       newId = namespace + "." + id;
     }
@@ -1232,7 +1261,7 @@ public class XmlSqlMapClientBuilder {
     } else if (TypeHandlerFactory.getTypeHandler(clazz, jdbcType) != null) {
       handler = TypeHandlerFactory.getTypeHandler(clazz, jdbcType);
     } else {
-      Class type = BeanProbe.getPropertyTypeForGetter(clazz, propertyName);
+      Class type = PROBE.getPropertyTypeForGetter(clazz, propertyName);
       handler = TypeHandlerFactory.getTypeHandler(type, jdbcType);
     }
     return handler;
@@ -1254,16 +1283,16 @@ public class XmlSqlMapClientBuilder {
     return string;
   }
 
-  private void parseTypeAliasNode (Node child) {
+  private void parseTypeAliasNode(Node child) {
     Properties prop = parseAttributes(child);
     String alias = prop.getProperty("alias");
     String type = prop.getProperty("type");
     putTypeAlias(alias, type);
   }
 
-  private void putTypeAlias (String alias, String value) {
+  private void putTypeAlias(String alias, String value) {
     if (typeAliases.containsKey(alias)) {
-      throw new SqlMapException ("Error in XmlSqlMapClientBuilder.  Alias name conflict occurred.  The alias '" + alias + "' is already mapped to the value '"+typeAliases.get(alias)+"'.");
+      throw new SqlMapException("Error in XmlSqlMapClientBuilder.  Alias name conflict occurred.  The alias '" + alias + "' is already mapped to the value '" + typeAliases.get(alias) + "'.");
     }
     typeAliases.put(alias, value);
   }
@@ -1349,7 +1378,9 @@ public class XmlSqlMapClientBuilder {
 
   // Error handler to report errors and warnings
   private static class SimpleErrorHandler implements ErrorHandler {
-    /** Error handler output goes here */
+    /**
+     * Error handler output goes here
+     */
     private PrintWriter out;
 
     SimpleErrorHandler(PrintWriter out) {

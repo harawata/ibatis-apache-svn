@@ -5,9 +5,11 @@
  */
 package com.ibatis.common.beans;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.UndeclaredThrowableException;
+import java.math.BigInteger;
 import java.util.*;
-import java.lang.reflect.*;
-import java.math.*;
 
 /**
  * This class represents a cached set of class definition information that
@@ -98,7 +100,7 @@ public class ClassInfo {
   public Method getSetter(String propertyName) {
     Method method = (Method) setMethods.get(propertyName);
     if (method == null) {
-      throw new BeanException("There is no WRITEABLE property named '" + propertyName + "' in class '" + className + "'");
+      throw new ProbeException("There is no WRITEABLE property named '" + propertyName + "' in class '" + className + "'");
     }
     return method;
   }
@@ -106,7 +108,7 @@ public class ClassInfo {
   public Method getGetter(String propertyName) {
     Method method = (Method) getMethods.get(propertyName);
     if (method == null) {
-      throw new BeanException("There is no READABLE property named '" + propertyName + "' in class '" + className + "'");
+      throw new ProbeException("There is no READABLE property named '" + propertyName + "' in class '" + className + "'");
     }
     return method;
   }
@@ -114,7 +116,7 @@ public class ClassInfo {
   public Class getSetterType(String propertyName) {
     Class clazz = (Class) setTypes.get(propertyName);
     if (clazz == null) {
-      throw new BeanException("There is no WRITEABLE property named '" + propertyName + "' in class '" + className + "'");
+      throw new ProbeException("There is no WRITEABLE property named '" + propertyName + "' in class '" + className + "'");
     }
     return clazz;
   }
@@ -122,7 +124,7 @@ public class ClassInfo {
   public Class getGetterType(String propertyName) {
     Class clazz = (Class) getTypes.get(propertyName);
     if (clazz == null) {
-      throw new BeanException("There is no READABLE property named '" + propertyName + "' in class '" + className + "'");
+      throw new ProbeException("There is no READABLE property named '" + propertyName + "' in class '" + className + "'");
     }
     return clazz;
   }
@@ -163,6 +165,7 @@ public class ClassInfo {
 
   /**
    * Gets an instance of ClassInfo for the specified class.
+   *
    * @param clazz The class for which to lookup the method cache.
    * @return The method cache for the class
    */
@@ -181,9 +184,9 @@ public class ClassInfo {
     Throwable t2 = t;
     while (true) {
       if (t2 instanceof InvocationTargetException) {
-        t2 = ((InvocationTargetException)t).getTargetException();
+        t2 = ((InvocationTargetException) t).getTargetException();
       } else if (t instanceof UndeclaredThrowableException) {
-        t2 = ((UndeclaredThrowableException)t).getUndeclaredThrowable();
+        t2 = ((UndeclaredThrowableException) t).getUndeclaredThrowable();
       } else {
         return t2;
       }

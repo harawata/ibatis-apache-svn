@@ -5,7 +5,8 @@
  */
 package com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements;
 
-import com.ibatis.common.beans.BeanProbe;
+import com.ibatis.common.beans.Probe;
+import com.ibatis.common.beans.ProbeFactory;
 import com.ibatis.sqlmap.client.SqlMapException;
 
 import java.lang.reflect.Array;
@@ -13,6 +14,7 @@ import java.util.*;
 
 public class IterateTagHandler extends BaseTagHandler {
 
+  private static final Probe PROBE = ProbeFactory.getProbe();
 
   public int doStartFragment(SqlTagContext ctx, SqlTag tag, Object parameterObject) {
     IterateContext iterate = (IterateContext) ctx.getAttribute(tag);
@@ -20,7 +22,7 @@ public class IterateTagHandler extends BaseTagHandler {
       String prop = tag.getPropertyAttr();
       Object collection;
       if (prop != null) {
-        collection = BeanProbe.getObject(parameterObject, tag.getPropertyAttr());
+        collection = PROBE.getObject(parameterObject, tag.getPropertyAttr());
       } else {
         collection = parameterObject;
       }

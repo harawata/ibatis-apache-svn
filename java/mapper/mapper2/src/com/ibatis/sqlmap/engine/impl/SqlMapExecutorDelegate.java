@@ -1,23 +1,31 @@
 package com.ibatis.sqlmap.engine.impl;
 
-import com.ibatis.sqlmap.client.*;
-import com.ibatis.sqlmap.client.event.*;
-import com.ibatis.sqlmap.engine.transaction.*;
+import com.ibatis.common.beans.Probe;
+import com.ibatis.common.beans.ProbeFactory;
+import com.ibatis.common.jdbc.exception.NestedSQLException;
+import com.ibatis.common.jdbc.logging.ConnectionLogProxy;
+import com.ibatis.common.util.PaginatedList;
+import com.ibatis.common.util.ThrottledPool;
+import com.ibatis.sqlmap.client.SqlMapException;
+import com.ibatis.sqlmap.client.event.RowHandler;
+import com.ibatis.sqlmap.engine.cache.CacheKey;
+import com.ibatis.sqlmap.engine.execution.SqlExecutor;
 import com.ibatis.sqlmap.engine.mapping.statement.*;
-import com.ibatis.sqlmap.engine.execution.*;
+import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.scope.SessionScope;
+import com.ibatis.sqlmap.engine.transaction.Transaction;
+import com.ibatis.sqlmap.engine.transaction.TransactionException;
+import com.ibatis.sqlmap.engine.transaction.TransactionManager;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import com.ibatis.sqlmap.engine.scope.*;
-import com.ibatis.sqlmap.engine.cache.*;
-import com.ibatis.common.jdbc.logging.*;
-import com.ibatis.common.jdbc.exception.*;
-import com.ibatis.common.beans.*;
-import com.ibatis.common.util.*;
-
-import javax.sql.*;
-import java.sql.*;
-import java.util.*;
-
-import org.apache.commons.logging.*;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * User: Clinton Begin
@@ -25,6 +33,8 @@ import org.apache.commons.logging.*;
  * Time: 7:04:24 AM
  */
 public class SqlMapExecutorDelegate {
+
+  private static final Probe PROBE = ProbeFactory.getProbe();
 
   public static final int DEFAULT_MAX_REQUESTS = 512;
   public static final int DEFAULT_MAX_SESSIONS = 128;
@@ -111,12 +121,12 @@ public class SqlMapExecutorDelegate {
     mappedStatements.put(ms.getId(), ms);
   }
 
-  public void flushDataCache () {
+  public void flushDataCache() {
     Iterator statements = mappedStatements.values().iterator();
     while (statements.hasNext()) {
       MappedStatement statement = (MappedStatement) statements.next();
       if (statement instanceof CachingStatement) {
-        ((CachingStatement)statement).flushDataCache();
+        ((CachingStatement) statement).flushDataCache();
       }
     }
   }
@@ -171,7 +181,7 @@ public class SqlMapExecutorDelegate {
         generatedKey = selectKeyStatement.executeQueryForObject(request, conn, param, null);
         String keyProp = selectKeyStatement.getKeyProperty();
         if (keyProp != null) {
-          BeanProbe.setObject(param, keyProp, generatedKey);
+          PROBE.setObject(param, keyProp, generatedKey);
         }
       } finally {
         pushRequest(request);
@@ -307,12 +317,12 @@ public class SqlMapExecutorDelegate {
 
     for (int i = 0, n = list.size(); i < n; i++) {
       Object object = list.get(i);
-      Object key = BeanProbe.getObject(object, keyProp);
+      Object key = PROBE.getObject(object, keyProp);
       Object value = null;
       if (valueProp == null) {
         value = object;
       } else {
-        value = BeanProbe.getObject(object, valueProp);
+        value = PROBE.getObject(object, valueProp);
       }
       map.put(key, value);
     }

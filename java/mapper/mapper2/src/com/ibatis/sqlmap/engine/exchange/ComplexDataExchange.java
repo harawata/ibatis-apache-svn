@@ -1,15 +1,17 @@
 package com.ibatis.sqlmap.engine.exchange;
 
-import com.ibatis.sqlmap.engine.mapping.parameter.*;
-import com.ibatis.sqlmap.engine.mapping.result.*;
-import com.ibatis.sqlmap.engine.type.*;
+import com.ibatis.common.beans.Probe;
+import com.ibatis.common.beans.ProbeFactory;
+import com.ibatis.common.exception.NestedRuntimeException;
+import com.ibatis.common.resources.Resources;
+import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
+import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMapping;
+import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
+import com.ibatis.sqlmap.engine.mapping.result.ResultMapping;
+import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.type.TypeHandlerFactory;
 
-import com.ibatis.sqlmap.engine.scope.*;
-import com.ibatis.common.beans.*;
-import com.ibatis.common.resources.*;
-import com.ibatis.common.exception.*;
-
-import java.util.*;
+import java.util.Map;
 
 /**
  * User: Clinton Begin
@@ -17,6 +19,8 @@ import java.util.*;
  * Time: 7:12:57 PM
  */
 public class ComplexDataExchange extends BaseDataExchange implements DataExchange {
+
+  private static final Probe PROBE = ProbeFactory.getProbe();
 
   public void initialize(Map properties) {
   }
@@ -33,7 +37,7 @@ public class ComplexDataExchange extends BaseDataExchange implements DataExchang
         Object[] data = new Object[parameterMap.getParameterMappings().length];
         ParameterMapping[] mappings = parameterMap.getParameterMappings();
         for (int i = 0; i < mappings.length; i++) {
-          data[i] = BeanProbe.getObject(parameterObject, mappings[i].getPropertyName());
+          data[i] = PROBE.getObject(parameterObject, mappings[i].getPropertyName());
         }
         return data;
       }
@@ -54,7 +58,7 @@ public class ComplexDataExchange extends BaseDataExchange implements DataExchang
       }
       ResultMapping[] mappings = resultMap.getResultMappings();
       for (int i = 0; i < mappings.length; i++) {
-        BeanProbe.setObject(object, mappings[i].getPropertyName(), values[i]);
+        PROBE.setObject(object, mappings[i].getPropertyName(), values[i]);
       }
       return object;
     }
@@ -74,7 +78,7 @@ public class ComplexDataExchange extends BaseDataExchange implements DataExchang
       }
       ParameterMapping[] mappings = parameterMap.getParameterMappings();
       for (int i = 0; i < mappings.length; i++) {
-        BeanProbe.setObject(object, mappings[i].getPropertyName(), values[i]);
+        PROBE.setObject(object, mappings[i].getPropertyName(), values[i]);
       }
       return object;
     }

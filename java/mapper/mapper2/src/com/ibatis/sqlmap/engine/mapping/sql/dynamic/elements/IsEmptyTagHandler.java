@@ -5,12 +5,15 @@
  */
 package com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements;
 
-import com.ibatis.common.beans.BeanProbe;
+import com.ibatis.common.beans.Probe;
+import com.ibatis.common.beans.ProbeFactory;
 
-import java.util.Collection;
 import java.lang.reflect.Array;
+import java.util.Collection;
 
 public class IsEmptyTagHandler extends ConditionalTagHandler {
+
+  private static final Probe PROBE = ProbeFactory.getProbe();
 
   public boolean isCondition(SqlTagContext ctx, SqlTag tag, Object parameterObject) {
     if (parameterObject == null) {
@@ -19,13 +22,13 @@ public class IsEmptyTagHandler extends ConditionalTagHandler {
       String prop = tag.getPropertyAttr();
       Object value;
       if (prop != null) {
-        value = BeanProbe.getObject(parameterObject, prop);
+        value = PROBE.getObject(parameterObject, prop);
       } else {
         value = parameterObject;
       }
       if (value instanceof Collection) {
         return value == null || ((Collection) value).size() < 1;
-      } else if(value != null && value.getClass().isArray()) {
+      } else if (value != null && value.getClass().isArray()) {
         return Array.getLength(value) == 0;
       } else {
         return value == null || String.valueOf(value).equals("");

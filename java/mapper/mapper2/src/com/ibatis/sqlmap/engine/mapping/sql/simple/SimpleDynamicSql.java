@@ -1,6 +1,7 @@
 package com.ibatis.sqlmap.engine.mapping.sql.simple;
 
-import com.ibatis.common.beans.BeanProbe;
+import com.ibatis.common.beans.Probe;
+import com.ibatis.common.beans.ProbeFactory;
 import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
@@ -16,6 +17,8 @@ import java.util.StringTokenizer;
  * Time: 6:50:19 PM
  */
 public class SimpleDynamicSql implements Sql {
+
+  private static final Probe PROBE = ProbeFactory.getProbe();
 
   private static final String ELEMENT_TOKEN = "$";
 
@@ -64,7 +67,7 @@ public class SimpleDynamicSql implements Sql {
             if (TypeHandlerFactory.hasTypeHandler(parameterObject.getClass())) {
               value = parameterObject;
             } else {
-              value = BeanProbe.getObject(parameterObject, token);
+              value = PROBE.getObject(parameterObject, token);
             }
           }
           if (value != null) {

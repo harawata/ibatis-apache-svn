@@ -5,15 +5,20 @@
  */
 package com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements;
 
-import com.ibatis.common.beans.BeanProbe;
-import com.ibatis.common.exception.*;
+import com.ibatis.common.beans.Probe;
+import com.ibatis.common.beans.ProbeFactory;
+import com.ibatis.common.exception.NestedRuntimeException;
 
-import java.util.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.math.*;
-import java.text.*;
 
 public abstract class ConditionalTagHandler extends BaseTagHandler {
+
+  private static final Probe PROBE = ProbeFactory.getProbe();
 
   public static final long NOT_COMPARABLE = Long.MIN_VALUE;
   private static final String DATE_MASK = "yyyy/MM/dd hh:mm:ss";
@@ -42,8 +47,8 @@ public abstract class ConditionalTagHandler extends BaseTagHandler {
     Object value1;
     Class type;
     if (prop != null) {
-      value1 = BeanProbe.getObject(parameterObject, propertyName);
-      type = BeanProbe.getPropertyTypeForGetter(parameterObject, propertyName);
+      value1 = PROBE.getObject(parameterObject, propertyName);
+      type = PROBE.getPropertyTypeForGetter(parameterObject, propertyName);
     } else {
       value1 = parameterObject;
       if (value1 != null) {
@@ -53,7 +58,7 @@ public abstract class ConditionalTagHandler extends BaseTagHandler {
       }
     }
     if (comparePropertyName != null) {
-      Object value2 = BeanProbe.getObject(parameterObject, comparePropertyName);
+      Object value2 = PROBE.getObject(parameterObject, comparePropertyName);
       return compareValues(type, value1, value2);
     } else if (compareValue != null) {
       return compareValues(type, value1, compareValue);

@@ -1,6 +1,7 @@
 package com.ibatis.common.jdbc;
 
-import com.ibatis.common.beans.BeanProbe;
+import com.ibatis.common.beans.Probe;
+import com.ibatis.common.beans.ProbeFactory;
 import com.ibatis.common.exception.NestedRuntimeException;
 import org.apache.commons.dbcp.BasicDataSource;
 
@@ -14,6 +15,8 @@ import java.util.Map;
  * @author Clinton Begin
  */
 public class DbcpConfiguration {
+
+  private static final Probe PROBE = ProbeFactory.getProbe();
 
   private DataSource dataSource;
 
@@ -36,13 +39,13 @@ public class DbcpConfiguration {
 
   private BasicDataSource newDbcpConfiguration(Map map) {
     BasicDataSource basicDataSource = new BasicDataSource();
-    String[] props = BeanProbe.getWriteablePropertyNames(basicDataSource);
+    String[] props = PROBE.getWriteablePropertyNames(basicDataSource);
     for (int i = 0; i < props.length; i++) {
       String propertyName = props[i];
       if (map.containsKey(propertyName)) {
         String value = (String) map.get(propertyName);
         Object convertedValue = convertValue(basicDataSource, propertyName, value);
-        BeanProbe.setObject(basicDataSource, propertyName, convertedValue);
+        PROBE.setObject(basicDataSource, propertyName, convertedValue);
       }
     }
     return basicDataSource;
@@ -50,7 +53,7 @@ public class DbcpConfiguration {
 
   private Object convertValue(Object object, String propertyName, String value) {
     Object convertedValue = value;
-    Class targetType = BeanProbe.getPropertyTypeForSetter(object, propertyName);
+    Class targetType = PROBE.getPropertyTypeForSetter(object, propertyName);
     if (targetType == Integer.class || targetType == int.class) {
       convertedValue = Integer.valueOf(value);
     } else if (targetType == Long.class || targetType == long.class) {
