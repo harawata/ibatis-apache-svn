@@ -5,11 +5,8 @@
 2.1
   Ease of Use
       - <generate> tag for CRUD methods
-  Performance
-      - Cache dependency on other cache (flush-on-dependant)
-      - Flush cache at specific time (e.g. 22:30)
-  Database Support
-      - Add true autocommit support (mostly for SYBASE procs)
+  Object Oriented
+      - Inheritance via selects or joins (same as groups)
 
 2.2
   Ease of Use
@@ -18,7 +15,9 @@
   Flexibility
       - Override/extend mapped statements (i.e. reuse SQL; overrides="statementName")
       - Constructor and field based results
+  Performance
+      - Cache dependency on other cache (flush-on-dependant)
+      - Flush cache at specific time (e.g. 22:30)
   Database Support
       - Save point support
-  Object Oriented
-      - Inheritance via selects or joins (same as groups)
+      - Add true autocommit support (mostly for SYBASE procs)
