@@ -45,14 +45,14 @@
     </dataSource>
   </transactionManager>
 
-  <sqlMap resource="com/ibatis/sqlmap/maps/Account.xml"/>
-  <sqlMap resource="com/ibatis/sqlmap/maps/DynamicAccount.xml"/>
-  <sqlMap resource="com/ibatis/sqlmap/maps/Order.xml"/>
-  <sqlMap resource="com/ibatis/sqlmap/maps/LineItem.xml"/>
-  <sqlMap resource="com/ibatis/sqlmap/maps/OracleProc.xml"/>
-  <sqlMap resource="com/ibatis/sqlmap/maps/Complex.xml"/>
-  <sqlMap resource="com/ibatis/sqlmap/maps/XmlStatements.xml"/>
-  <sqlMap resource="com/ibatis/sqlmap/maps/DomStatements.xml"/>
-  <sqlMap resource="com/ibatis/sqlmap/maps/RepeatingGroupMapping.xml"/>
+  <sqlMap resource="${SqlMapPath}/Account.xml"/>
+  <sqlMap resource="${SqlMapPath}/DynamicAccount.xml"/>
+  <sqlMap resource="${SqlMapPath}/Order.xml"/>
+  <sqlMap resource="${SqlMapPath}/LineItem.xml"/>
+  <sqlMap resource="${SqlMapPath}/OracleProc.xml"/>
+  <sqlMap resource="${SqlMapPath}/Complex.xml"/>
+  <sqlMap resource="${SqlMapPath}/XmlStatements.xml"/>
+  <sqlMap resource="${SqlMapPath}/DomStatements.xml"/>
+  <sqlMap resource="${SqlMapPath}/RepeatingGroupMapping.xml"/>
 
 </sqlMapConfig>

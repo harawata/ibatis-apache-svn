@@ -330,7 +330,7 @@ public class SqlMapConfigParser extends BaseParser {
       public void process(Node node) throws Exception {
         vars.errorCtx.setActivity("loading the SQL Map resource");
 
-        Properties attributes = NodeletUtils.parseAttributes(node);
+        Properties attributes = NodeletUtils.parseAttributes(node, vars.properties);
 
         String resource = attributes.getProperty("resource");
         String url = attributes.getProperty("url");
