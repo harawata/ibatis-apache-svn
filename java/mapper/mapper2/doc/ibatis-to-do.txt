@@ -2,7 +2,7 @@
 TO-DO: BUGS & FEATURES
 ------------------------------
 
- o Fix XML encoding for special characters
+ o Fix cache controller removal of key list items and also check for existing key values
 
 ------------------------------
 TO-DO: DOCUMENTATION
