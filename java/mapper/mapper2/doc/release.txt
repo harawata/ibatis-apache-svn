@@ -2,7 +2,7 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
- Next release
+ 2.0.6 - Sep 19, 2004
 ------------------------------
 
  o Fixed non-caching null cache result bug.
@@ -10,6 +10,7 @@ Build Number: @buildNum@
  o Fixed locale issue with JavaBean property matching
  o Fixed unclosed statement if result set fails in MS SQL Server
  o Fixed comments within dao.xml
+ o Fixed undetected duplicate statement names in a single sql map
 
 ------------------------------
  2.0.5 - Aug 11, 2004

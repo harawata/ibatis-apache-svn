@@ -160,6 +160,9 @@ public class SqlMapExecutorDelegate {
   }
 
   public void addMappedStatement(MappedStatement ms) {
+    if (mappedStatements.containsKey(ms.getId())) {
+      throw new SqlMapException("There is already a statement named " + ms.getId() + " in this SqlMap.");
+    }
     ms.setBaseCacheKey(hashCode());
     mappedStatements.put(ms.getId(), ms);
   }
