@@ -163,6 +163,21 @@
 			(#Id#, #Order.Id#, #Code#, #Quantity#, #Price:Number#)
 		</insert>
   
+  		<!-- JIRA 23 -->
+  		<!--
+  		Throws OracleException
+  		SQL command not properly ended
+  		
+  		Cannot run multiple statements through single command
+  		with OracleClient provider
+  		-->
+		<delete id="DeleteWithComments" >
+			<!-- Delete LineItems -->
+			delete from LineItems where Order_ID = 10
+			<!-- Delete LineItems -->
+			delete from LineItems where Order_ID = 9
+		</delete>  
+  
   </statements>
 	
 

@@ -503,6 +503,10 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "Maps\Oracle\OracleClient\Document.xml"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "Maps\Oracle\OracleClient\DynamicAccount.xml"
                     BuildAction = "Content"
                 />
@@ -520,6 +524,10 @@
                 />
                 <File
                     RelPath = "Maps\Oracle\OracleClient\Other.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\Oracle\OracleClient\ResultClass.xml"
                     BuildAction = "Content"
                 />
                 <File
@@ -813,6 +821,10 @@
                 />
                 <File
                     RelPath = "Scripts\Oracle\DataBaseNHibernate.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\Oracle\documents-init.sql"
                     BuildAction = "Content"
                 />
                 <File

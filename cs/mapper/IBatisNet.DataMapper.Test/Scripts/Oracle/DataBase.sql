@@ -17,6 +17,8 @@ DROP TABLE ORDERS CASCADE CONSTRAINTS;
 
 DROP TABLE OTHERS CASCADE CONSTRAINTS;
 
+DROP TABLE DOCUMENTS CASCADE CONSTRAINTS;
+
 DROP SEQUENCE S_CATEGORIES;
 
 CREATE SEQUENCE S_CATEGORIES
@@ -125,4 +127,21 @@ CREATE TABLE OTHERS (
 )
 NOLOGGING
 NOCACHE
+NOPARALLEL;
+
+/*==============================================================*/
+/* Table : OTHERS                                               */
+/*==============================================================*/
+
+
+CREATE TABLE DOCUMENTS  (
+   DOCUMENT_ID           INTEGER                          NOT NULL,
+   DOCUMENT_TITLE        VARCHAR2(32),
+   DOCUMENT_TYPE         VARCHAR2(32),
+   DOCUMENT_PAGENUMBER   INTEGER,
+   DOCUMENT_CITY         VARCHAR2(32),
+   CONSTRAINT PK_DOCUMENTS PRIMARY KEY (DOCUMENT_ID)
+)
+NOLOGGING 
+NOCACHE 
 NOPARALLEL;
