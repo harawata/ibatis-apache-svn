@@ -10,6 +10,8 @@
 
   <documentation label="Documentation">
     <faq label="FAQ" href="faq.html" />
+    <devguide label="Dev Guide" href="http://ibatisnet.sourceforge.net/DevGuide/index.html" />
+    <devguide label="Dev Guide (PDF)" href="http://ibatisnet.sourceforge.net/DevGuide.pdf" />
     <resources label="Resources" href="resources.html" />
   </documentation>
 
