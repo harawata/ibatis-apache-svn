@@ -17,6 +17,7 @@ public class ExternalTransactionConfig extends BaseTransactionConfig {
 
   private DataSource dataSource;
   private boolean defaultAutoCommit = false;
+  private boolean setAutoCommitAllowed = true;
 
   public DataSource getDataSource() {
     return dataSource;
@@ -28,10 +29,12 @@ public class ExternalTransactionConfig extends BaseTransactionConfig {
 
   public void initialize(Properties props) throws SQLException, TransactionException {
     String dacProp = props.getProperty("DefaultAutoCommit");
+    String sacaProp = props.getProperty("SetAutoCommitAllowed");
     defaultAutoCommit = "true".equals(dacProp);
+    setAutoCommitAllowed = "true".equals(sacaProp) || sacaProp == null;
   }
 
   public Transaction newTransaction() throws SQLException, TransactionException {
-    return new ExternalTransaction(dataSource, defaultAutoCommit);
+    return new ExternalTransaction(dataSource, defaultAutoCommit, setAutoCommitAllowed);
   }
 }

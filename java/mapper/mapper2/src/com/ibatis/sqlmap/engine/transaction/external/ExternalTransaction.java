@@ -15,7 +15,7 @@ public class ExternalTransaction implements Transaction {
   private DataSource dataSource;
   private Connection connection;
 
-  public ExternalTransaction(DataSource ds, boolean defaultAutoCommit) throws SQLException, TransactionException {
+  public ExternalTransaction(DataSource ds, boolean defaultAutoCommit, boolean setAutoCommitAllowed) throws SQLException, TransactionException {
     // Check Parameters
     dataSource = ds;
     if (dataSource == null) {
@@ -27,8 +27,10 @@ public class ExternalTransaction implements Transaction {
     if (connection == null) {
       throw new TransactionException("ExternalTransaction could not start transaction.  Cause: The DataSource returned a null connection.");
     }
-    if (connection.getAutoCommit() != defaultAutoCommit) {
-      connection.setAutoCommit(defaultAutoCommit);
+    if (setAutoCommitAllowed) {
+      if (connection.getAutoCommit() != defaultAutoCommit) {
+        connection.setAutoCommit(defaultAutoCommit);
+      }
     }
   }
 
