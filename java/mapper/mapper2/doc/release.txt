@@ -9,6 +9,7 @@ Build Number: @buildNum@
  o Added groupBy="..." for Result Maps to deal with repeating groups.
  o Added resultMap="..." to result mapping to deal with sub groups.
  o Added remapResults="true|false" remapping of dynamic result set metadata.
+ o Refactored Builder/Parser to be more maintainable (nodelets)
  o Verified that duplicate statement names throw an exception. [982534]
 
 ------------------------------
