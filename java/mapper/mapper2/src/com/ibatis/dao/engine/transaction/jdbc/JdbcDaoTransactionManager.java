@@ -1,17 +1,17 @@
 package com.ibatis.dao.engine.transaction.jdbc;
 
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 import com.ibatis.common.jdbc.DbcpConfiguration;
 import com.ibatis.common.jdbc.SimpleDataSource;
 import com.ibatis.dao.client.DaoException;
 import com.ibatis.dao.client.DaoTransaction;
 import com.ibatis.dao.engine.transaction.DaoTransactionManager;
-
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * <p/>
@@ -56,7 +56,7 @@ public class JdbcDaoTransactionManager implements DaoTransactionManager {
 
   private void configureJndi(Map properties) {
     try {
-      Properties contextProps = getContextProperties(properties);
+      Hashtable contextProps = getContextProperties(properties);
       InitialContext initCtx = null;
       if (contextProps == null) {
         initCtx = new InitialContext();
@@ -81,9 +81,9 @@ public class JdbcDaoTransactionManager implements DaoTransactionManager {
     ((JdbcDaoTransaction) trans).rollback();
   }
 
-  private static Properties getContextProperties(Map allProps) {
+  private static Hashtable getContextProperties(Map allProps) {
     final String PREFIX = "context.";
-    Properties contextProperties = null;
+    Hashtable contextProperties = null;
     Iterator keys = allProps.keySet().iterator();
     while (keys.hasNext()) {
       String key = (String) keys.next();
