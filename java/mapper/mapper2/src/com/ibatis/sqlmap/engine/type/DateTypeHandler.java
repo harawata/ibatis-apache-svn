@@ -18,7 +18,7 @@ public class DateTypeHandler implements TypeHandler {
   private static final String DATE_FORMAT = "yyyy/MM/dd hh:mm:ss";
   private static final DateFormat format = new SimpleDateFormat(DATE_FORMAT);
 
-  public void setParameter(PreparedStatement ps, int i, Object parameter)
+  public void setParameter(PreparedStatement ps, int i, Object parameter, String jdbcType)
       throws SQLException {
     ps.setTimestamp(i, new java.sql.Timestamp(((Date) parameter).getTime()));
   }

@@ -9,7 +9,7 @@ import java.sql.*;
  */
 public class StringTypeHandler implements TypeHandler {
 
-  public void setParameter(PreparedStatement ps, int i, Object parameter)
+  public void setParameter(PreparedStatement ps, int i, Object parameter, String jdbcType)
       throws SQLException {
     ps.setString(i, ((String) parameter));
   }

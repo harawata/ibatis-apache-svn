@@ -9,7 +9,7 @@ import java.sql.*;
  */
 public interface TypeHandler {
 
-  public void setParameter(PreparedStatement ps, int i, Object parameter)
+  public void setParameter(PreparedStatement ps, int i, Object parameter, String jdbcType)
       throws SQLException;
 
   public Object getResult(ResultSet rs, String columnName)

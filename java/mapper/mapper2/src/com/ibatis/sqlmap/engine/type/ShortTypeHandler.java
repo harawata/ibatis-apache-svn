@@ -9,7 +9,7 @@ import java.sql.*;
  */
 public class ShortTypeHandler implements TypeHandler {
 
-  public void setParameter(PreparedStatement ps, int i, Object parameter)
+  public void setParameter(PreparedStatement ps, int i, Object parameter, String jdbcType)
       throws SQLException {
     ps.setShort(i, ((Short) parameter).shortValue());
   }

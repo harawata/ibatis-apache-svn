@@ -9,7 +9,7 @@ import java.sql.*;
  */
 public class BooleanTypeHandler implements TypeHandler {
 
-  public void setParameter(PreparedStatement ps, int i, Object parameter)
+  public void setParameter(PreparedStatement ps, int i, Object parameter, String jdbcType)
       throws SQLException {
     ps.setBoolean(i, ((Boolean) parameter).booleanValue());
   }

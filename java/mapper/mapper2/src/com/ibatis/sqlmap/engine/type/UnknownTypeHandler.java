@@ -9,11 +9,11 @@ import java.sql.*;
  */
 public class UnknownTypeHandler implements TypeHandler {
 
-  public void setParameter(PreparedStatement ps, int i, Object parameter)
+  public void setParameter(PreparedStatement ps, int i, Object parameter, String jdbcType)
       throws SQLException {
 
-    TypeHandler handler = TypeHandlerFactory.getTypeHandler(parameter.getClass());
-    handler.setParameter(ps, i, parameter);
+    TypeHandler handler = TypeHandlerFactory.getTypeHandler(parameter.getClass(), jdbcType);
+    handler.setParameter(ps, i, parameter, jdbcType);
 
   }
 

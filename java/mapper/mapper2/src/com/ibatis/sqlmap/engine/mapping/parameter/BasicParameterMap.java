@@ -131,7 +131,7 @@ public class BasicParameterMap implements ParameterMap {
     // Set Parameter
     if (value != null) {
       TypeHandler typeHandler = mapping.getTypeHandler();
-      typeHandler.setParameter(ps, i + 1, value);
+      typeHandler.setParameter(ps, i + 1, value, mapping.getJdbcTypeName());
     } else {
       int jdbcType = mapping.getJdbcType();
       if (jdbcType != JdbcTypeRegistry.UNKNOWN_TYPE) {

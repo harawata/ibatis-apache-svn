@@ -9,7 +9,7 @@ import java.sql.*;
  */
 public class LongTypeHandler implements TypeHandler {
 
-  public void setParameter(PreparedStatement ps, int i, Object parameter)
+  public void setParameter(PreparedStatement ps, int i, Object parameter, String jdbcType)
       throws SQLException {
     ps.setLong(i, ((Long) parameter).longValue());
   }

@@ -17,7 +17,7 @@ public class SqlDateTypeHandler implements TypeHandler {
   private static final String DATE_FORMAT = "yyyy/MM/dd";
   private static final DateFormat format = new SimpleDateFormat(DATE_FORMAT);
 
-  public void setParameter(PreparedStatement ps, int i, Object parameter)
+  public void setParameter(PreparedStatement ps, int i, Object parameter, String jdbcType)
       throws SQLException {
     ps.setDate(i, (java.sql.Date) parameter);
   }

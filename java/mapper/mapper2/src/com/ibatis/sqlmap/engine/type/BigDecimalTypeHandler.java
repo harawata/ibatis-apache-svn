@@ -10,7 +10,7 @@ import java.math.*;
  */
 public class BigDecimalTypeHandler implements TypeHandler {
 
-  public void setParameter(PreparedStatement ps, int i, Object parameter)
+  public void setParameter(PreparedStatement ps, int i, Object parameter, String jdbcType)
       throws SQLException {
     ps.setBigDecimal(i, ((BigDecimal) parameter));
   }
