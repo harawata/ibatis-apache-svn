@@ -249,6 +249,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Domain\Sample.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Domain\Search.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -396,6 +401,10 @@
                 />
                 <File
                     RelPath = "Maps\MSSQL\SqlClient\DynamicAccount.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\MSSQL\SqlClient\EmbedParameter.xml"
                     BuildAction = "Content"
                 />
                 <File
@@ -604,6 +613,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "NUnit\SqlMapTests\MSSQL\EmbedParameterTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "NUnit\SqlMapTests\MSSQL\ProcedureTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -728,6 +742,14 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "Scripts\MSSQL\embed-param-setup-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MSSQL\embed-param-test-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "Scripts\MSSQL\enumeration-init.sql"
                     BuildAction = "Content"
                 />
@@ -745,6 +767,10 @@
                 />
                 <File
                     RelPath = "Scripts\MSSQL\other-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MSSQL\README-embed-param.txt"
                     BuildAction = "Content"
                 />
                 <File

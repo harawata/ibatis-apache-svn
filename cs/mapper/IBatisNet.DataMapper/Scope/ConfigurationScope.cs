@@ -56,6 +56,7 @@ namespace IBatisNet.DataMapper.Scope
 		private bool _useConfigFileWatcher = false;
 		private bool _useStatementNamespaces = false;
 		private bool _isCacheModelsEnabled = false;
+		private bool _isEmbedStatementParams = false;
 		private bool _isCallFromDao = false;
 
 		private SqlMapper _sqlMapper = null;
@@ -277,6 +278,21 @@ namespace IBatisNet.DataMapper.Scope
 			get
 			{
 				return _properties;
+			}
+		}
+
+		/// <summary>
+		/// Indicates if parameters should be embedded in the sql statement.
+		/// </summary>
+		public bool IsEmbedStatementParams
+		{
+			get
+			{
+				return _isEmbedStatementParams;
+			}
+			set
+			{
+				_isEmbedStatementParams = value;
 			}
 		}
 

@@ -81,6 +81,7 @@ namespace IBatisNet.DataMapper
 		private HybridDictionary _cacheMaps = new HybridDictionary();
 
 		private bool _cacheModelsEnabled = false;
+		private bool _embedStatementParams = false;
 
 		/// <summary>
 		/// Container session unique for each thread. 
@@ -118,6 +119,15 @@ namespace IBatisNet.DataMapper
 		{
 			get { return _cacheModelsEnabled; }
 		}
+
+		/// <summary>
+		/// A flag that determines whether statements should have
+		/// embedded parameters.
+		/// </summary>
+		public bool IsEmbedStatementParams
+		{
+			get { return _embedStatementParams; }
+		}
 		#endregion
 
 		#region Constructor (s) / Destructor
@@ -138,6 +148,15 @@ namespace IBatisNet.DataMapper
 		internal void SetCacheModelsEnabled(bool value)
 		{
 			_cacheModelsEnabled = value;
+		}
+
+		/// <summary>
+		/// Sets the flag indicating if statements should have embedded
+		/// parameters
+		/// </summary>
+		internal void SetEmbedStatementParams(bool value)
+		{
+			_embedStatementParams = value;
 		}
 
 		#region Configure

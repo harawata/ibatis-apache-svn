@@ -36,6 +36,7 @@ using IBatisNet.Common.Utilities;
 using IBatisNet.Common.Utilities.Objects;
 
 using IBatisNet.DataMapper;
+using IBatisNet.DataMapper.Commands;
 using IBatisNet.DataMapper.Configuration;
 using IBatisNet.DataMapper.Configuration.Statements;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
@@ -553,7 +554,9 @@ namespace IBatisNet.DataMapper.MappedStatements
 		{
 			object result = resultObject;
 			
-			using ( IDbCommand command = CreatePreparedCommand( request, session, parameterObject ) )
+			//using ( IDbCommand command = CreatePreparedCommand( request, session, parameterObject ) )
+			IPreparedCommand preparedCommand = PreparedCommandFactory.GetPreparedCommand(SqlMap.IsEmbedStatementParams);
+			using ( IDbCommand command = preparedCommand.Create( request, session, this.Statement, parameterObject ) )
 			{
 				using ( IDataReader reader = command.ExecuteReader() )
 				{				
@@ -680,7 +683,9 @@ namespace IBatisNet.DataMapper.MappedStatements
 		{
 			IList list = null;
 			
-			using ( IDbCommand command = CreatePreparedCommand(request, session, parameterObject ))
+			//using ( IDbCommand command = CreatePreparedCommand(request, session, parameterObject ))
+			IPreparedCommand preparedCommand = PreparedCommandFactory.GetPreparedCommand(SqlMap.IsEmbedStatementParams);
+			using ( IDbCommand command = preparedCommand.Create( request, session, this.Statement, parameterObject ) )
 			{
 				if (_statement.ListClass == null)
 				{
@@ -748,7 +753,9 @@ namespace IBatisNet.DataMapper.MappedStatements
 			IList result = new ArrayList();
 			RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session);;
 
-			using ( IDbCommand command = CreatePreparedCommand(request, session, parameterObject ) )
+			//using ( IDbCommand command = CreatePreparedCommand(request, session, parameterObject ) )
+			IPreparedCommand preparedCommand = PreparedCommandFactory.GetPreparedCommand(SqlMap.IsEmbedStatementParams);
+			using ( IDbCommand command = preparedCommand.Create( request, session, this.Statement, parameterObject ) )
 			{
 				using ( IDataReader reader = command.ExecuteReader() )
 				{			
@@ -783,7 +790,10 @@ namespace IBatisNet.DataMapper.MappedStatements
 			int rows = 0; // the number of rows affected
 			RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session);;
 
-			using (IDbCommand command = CreatePreparedCommand(request, session, parameterObject ))
+			//using (IDbCommand command = CreatePreparedCommand(request, session, parameterObject ))
+			IPreparedCommand preparedCommand = PreparedCommandFactory.GetPreparedCommand(SqlMap.IsEmbedStatementParams);
+			
+			using ( IDbCommand command = preparedCommand.Create( request, session, this.Statement, parameterObject ) )
 			{
 				rows = command.ExecuteNonQuery();
 
@@ -824,7 +834,9 @@ namespace IBatisNet.DataMapper.MappedStatements
 				ObjectProbe.SetPropertyValue(parameterObject, selectKeyStatement.PropertyName, generatedKey);
 			}
 
-			using (IDbCommand command = CreatePreparedCommand(request, session, parameterObject ))
+			//using (IDbCommand command = CreatePreparedCommand(request, session, parameterObject ))
+			IPreparedCommand preparedCommand = PreparedCommandFactory.GetPreparedCommand(SqlMap.IsEmbedStatementParams);
+			using ( IDbCommand command = preparedCommand.Create( request, session, this.Statement, parameterObject ) )
 			{
 				if (_statement is Insert)
 				{

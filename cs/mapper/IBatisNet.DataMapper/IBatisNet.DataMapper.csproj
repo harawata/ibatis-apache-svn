@@ -176,6 +176,26 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Commands\DefaultPreparedCommand.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Commands\EmbedParamsPreparedCommand.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Commands\IPreparedCommand.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Commands\PreparedCommandFactory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Configuration\DomSqlMapBuilder.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

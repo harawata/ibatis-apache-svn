@@ -109,6 +109,10 @@ namespace IBatisNet.DataMapper.Configuration
 		/// Token for cacheModelsEnabled attribute.
 		/// </summary>
 		private const string ATR_CACHE_MODELS_ENABLED = "cacheModelsEnabled";
+		/// <summary>
+		/// Token for embedStatementParams attribute.
+		/// </summary>
+		private const string ATR_EMBED_STATEMENT_PARAMS = "embedStatementParams";
 
 		#endregion
 
@@ -258,10 +262,15 @@ namespace IBatisNet.DataMapper.Configuration
 					{				
 						_configScope.IsCacheModelsEnabled =  System.Convert.ToBoolean(setting.Attributes[ATR_CACHE_MODELS_ENABLED].Value); 
 					}
+					if (setting.Attributes[ATR_EMBED_STATEMENT_PARAMS] != null )
+					{				
+						_configScope.IsEmbedStatementParams =  System.Convert.ToBoolean(setting.Attributes[ATR_EMBED_STATEMENT_PARAMS].Value); 
+					}
 				}
 			}
 
 			_configScope.SqlMapper.SetCacheModelsEnabled(_configScope.IsCacheModelsEnabled);
+			_configScope.SqlMapper.SetEmbedStatementParams(_configScope.IsEmbedStatementParams);
 
 			#endregion
 
