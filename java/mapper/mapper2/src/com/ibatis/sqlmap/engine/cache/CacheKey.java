@@ -50,9 +50,11 @@ public class CacheKey {
    */
 public CacheKey update(int x) {
     count++;
-    x *= count;
-    hashcode = multiplier * hashcode + (x ^ (x >>> 32));
     checksum += x;
+    x *= count;
+
+    hashcode = multiplier * hashcode + x;
+
     return this;
   }
 
@@ -74,6 +76,7 @@ public CacheKey update(int x) {
 
     if (hashcode != cacheKey.hashcode) return false;
     if (checksum != cacheKey.checksum) return false;
+    if (count != cacheKey.count) return false;
 
     return true;
   }
