@@ -31,6 +31,7 @@
       - Cross file resource management (currently works, but order dependent --ok?)
       - Circular relationships
       - Per result Lazy Load configuration
+      - Automap remaining columns, ignore missing columns
   Database Support
       - NULL complex property map results set prop to null (don't run query selectOnNull="false")
       - Trim whitespace from CHAR data
