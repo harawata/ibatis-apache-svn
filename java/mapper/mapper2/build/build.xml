@@ -6,6 +6,7 @@
     <pathelement location="${instrumented}/"/>
     <pathelement location="${compatibility}/"/>
     <pathelement location="${src}/"/>
+    <pathelement location="${devsrc}/"/>
     <pathelement location="${tests}/"/>
     <fileset dir="${lib}" includes="**/*.jar" />
     <fileset dir="${devlib}" includes="**/*.jar" />
@@ -67,6 +68,9 @@
     <!-- defaults - override in build.properties-->
     <property name="compile.debug" value="true" />
     <property name="compile.deprecation" value="false" />
+    <javac srcdir="${devsrc}" destdir="${devsrc}" deprecation="${compile.deprecation}" debug="${compile.debug}">
+      <classpath refid="classpath"/>
+    </javac>
     <javac srcdir="${src}" destdir="${src}" deprecation="${compile.deprecation}" debug="${compile.debug}">
       <classpath refid="classpath"/>
     </javac>

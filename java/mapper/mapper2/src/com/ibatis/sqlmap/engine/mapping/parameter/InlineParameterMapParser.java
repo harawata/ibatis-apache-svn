@@ -118,7 +118,7 @@ public class InlineParameterMapParser {
       if (parameterClass == null) {
         handler = typeHandlerFactory.getUnkownTypeHandler();
       } else {
-        handler = resolveTypeHandler(typeHandlerFactory, parameterClass, token, mapping.getJavaTypeName(), mapping.getJdbcTypeName());
+        handler = resolveTypeHandler(typeHandlerFactory, parameterClass, mapping.getPropertyName(), mapping.getJavaTypeName(), mapping.getJdbcTypeName());
       }
       mapping.setTypeHandler(handler);
     }
