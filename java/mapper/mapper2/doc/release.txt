@@ -2,6 +2,13 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
+ 2.0.3 - Jun ??, 2004
+------------------------------
+
+ o Fixed JDBC types being ignored for hashmap parameter classes
+ o New property to stop autocommit from being called in EXTERNAL TX Manager
+
+------------------------------
  2.0.2 - Jun 22, 2004
 ------------------------------
 
