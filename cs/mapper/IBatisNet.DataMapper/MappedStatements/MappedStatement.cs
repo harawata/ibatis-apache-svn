@@ -156,9 +156,20 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 		private SqlMapper _sqlMap = null;
 
+		private IPreparedCommand _preparedCommand = null;
+
 		#endregion
 
 		#region Properties
+
+		/// <summary>
+		/// The IPreparedCommand to use
+		/// </summary>
+		public IPreparedCommand PreparedCommand
+		{
+			get { return _preparedCommand; }
+		}
+
 		/// <summary>
 		/// Name used to identify the MappedStatement amongst the others.
 		/// This the name of the SQL statement by default.
@@ -195,6 +206,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		{
 			_sqlMap = sqlMap;
 			_statement = statement;
+			_preparedCommand = PreparedCommandFactory.GetPreparedCommand(sqlMap.IsEmbedStatementParams);
 		}
 		#endregion
 
@@ -215,124 +227,124 @@ namespace IBatisNet.DataMapper.MappedStatements
 			}
 		}
 		
-		/// <summary>
-		/// Create an IDbCommand for the IDalSession and the current SQL Statement
-		/// and fill IDbCommand IDataParameter's with the parameterObject.
-		/// </summary>
-		/// <param name="request"></param>
-		/// <param name="session">The IDalSession</param>
-		/// <param name="parameterObject">
-		/// The parameter object which will fill the sql parameter
-		/// </param>
-		/// <returns>An IDbCommand with all the IDataParameter filled.</returns>
-		private IDbCommand CreatePreparedCommand (RequestScope request, IDalSession session, object parameterObject )
-		{
-			// the IDbConnection & the IDbTransaction are assign in the CreateCommand 
-			IDbCommand command = session.CreateCommand(_statement.CommandType);
-				
-			command.CommandText = request.PreparedStatement.PreparedSql;
-		
-			ApplyParameterMap( session, command, request, parameterObject );
+//		/// <summary>
+//		/// Create an IDbCommand for the IDalSession and the current SQL Statement
+//		/// and fill IDbCommand IDataParameter's with the parameterObject.
+//		/// </summary>
+//		/// <param name="request"></param>
+//		/// <param name="session">The IDalSession</param>
+//		/// <param name="parameterObject">
+//		/// The parameter object which will fill the sql parameter
+//		/// </param>
+//		/// <returns>An IDbCommand with all the IDataParameter filled.</returns>
+//		private IDbCommand CreatePreparedCommand (RequestScope request, IDalSession session, object parameterObject )
+//		{
+//			// the IDbConnection & the IDbTransaction are assign in the CreateCommand 
+//			IDbCommand command = session.CreateCommand(_statement.CommandType);
+//				
+//			command.CommandText = request.PreparedStatement.PreparedSql;
+//		
+//			ApplyParameterMap( session, command, request, parameterObject );
+//
+//			return command;
+//		}
 
-			return command;
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="session"></param>
-		/// <param name="command"></param>
-		/// <param name="request"></param>
-		/// <param name="parameterObject"></param>
-		private void ApplyParameterMap
-			( IDalSession session, IDbCommand command,
-			RequestScope request, object parameterObject )
-		{
-			ArrayList properties = request.PreparedStatement.DbParametersName;
-			ArrayList parameters = request.PreparedStatement.DbParameters;
-			object parameterValue = null;
-
-			for ( int i = 0; i < properties.Count; ++i )
-			{
-				IDataParameter sqlParameter = (IDataParameter)parameters[i];
-				string propertyName = (string)properties[i];
-
-				if (command.CommandType == CommandType.Text)
-				{
-					if ( propertyName != "value" ) // Inline Parameters && Parameters via ParameterMap
-					{
-						ParameterProperty property = request.ParameterMap.GetProperty(i);
-
-						parameterValue = request.ParameterMap.GetValueOfProperty(parameterObject,
-							property.PropertyName);
-					}
-					else // 'value' parameter
-					{
-						parameterValue = parameterObject;
-					}
-				}
-				else // CommandType.StoredProcedure
-				{
-					// A store procedure must always use a ParameterMap 
-					// to indicate the mapping order of the properties to the columns
-					if (request.ParameterMap == null) // Inline Parameters
-					{
-						throw new DataMapperException("A procedure statement tag must alway have a parameterMap attribut, which is not the case for the procedure '"+_statement.Id+"'."); 
-					}
-					else // Parameters via ParameterMap
-					{
-						ParameterProperty property = request.ParameterMap.GetProperty(i);
-
-						if (property.DirectionAttribut.Length == 0)
-						{
-							property.Direction = sqlParameter.Direction;
-						}
-
-						//						IDbDataParameter dataParameter = (IDbDataParameter)parameters[i];
-						//						property.Precision = dataParameter.Precision;
-						//						property.Scale = dataParameter.Scale;
-						//						property.Size = dataParameter.Size;
-
-						sqlParameter.Direction = property.Direction;
-						parameterValue = request.ParameterMap.GetValueOfProperty( parameterObject, property.PropertyName );
-					}
-				}
-
-				IDataParameter parameterCopy = command.CreateParameter();
-				// Fix JIRA 20
-				sqlParameter.Value = parameterValue;
-				parameterCopy.Value = parameterValue;
-				
-				parameterCopy.Direction = sqlParameter.Direction;
-
-				// With a ParameterMap, we could specify the ParameterDbTypeProperty
-				if (_statement.ParameterMap != null)
-				{
-					if (request.ParameterMap.GetProperty(i).DbType.Length >0)
-					{
-						string dbTypePropertyName = session.DataSource.Provider.ParameterDbTypeProperty;
-
-						ObjectProbe.SetPropertyValue(parameterCopy, dbTypePropertyName, ObjectProbe.GetPropertyValue(sqlParameter, dbTypePropertyName));
-					}
-					else
-					{
-						//parameterCopy.DbType = sqlParameter.DbType;
-					}
-				}
-				else
-				{
-					//parameterCopy.DbType = sqlParameter.DbType;
-				}
-
-				((IDbDataParameter)parameterCopy).Size = ((IDbDataParameter)sqlParameter).Size;
-				((IDbDataParameter)parameterCopy).Precision = ((IDbDataParameter)sqlParameter).Precision;
-				((IDbDataParameter)parameterCopy).Scale = ((IDbDataParameter)sqlParameter).Scale;
-
-				parameterCopy.ParameterName = sqlParameter.ParameterName;
-
-				command.Parameters.Add( parameterCopy );
-			}
-		}
+//		/// <summary>
+//		/// 
+//		/// </summary>
+//		/// <param name="session"></param>
+//		/// <param name="command"></param>
+//		/// <param name="request"></param>
+//		/// <param name="parameterObject"></param>
+//		private void ApplyParameterMap
+//			( IDalSession session, IDbCommand command,
+//			RequestScope request, object parameterObject )
+//		{
+//			ArrayList properties = request.PreparedStatement.DbParametersName;
+//			ArrayList parameters = request.PreparedStatement.DbParameters;
+//			object parameterValue = null;
+//
+//			for ( int i = 0; i < properties.Count; ++i )
+//			{
+//				IDataParameter sqlParameter = (IDataParameter)parameters[i];
+//				string propertyName = (string)properties[i];
+//
+//				if (command.CommandType == CommandType.Text)
+//				{
+//					if ( propertyName != "value" ) // Inline Parameters && Parameters via ParameterMap
+//					{
+//						ParameterProperty property = request.ParameterMap.GetProperty(i);
+//
+//						parameterValue = request.ParameterMap.GetValueOfProperty(parameterObject,
+//							property.PropertyName);
+//					}
+//					else // 'value' parameter
+//					{
+//						parameterValue = parameterObject;
+//					}
+//				}
+//				else // CommandType.StoredProcedure
+//				{
+//					// A store procedure must always use a ParameterMap 
+//					// to indicate the mapping order of the properties to the columns
+//					if (request.ParameterMap == null) // Inline Parameters
+//					{
+//						throw new DataMapperException("A procedure statement tag must alway have a parameterMap attribut, which is not the case for the procedure '"+_statement.Id+"'."); 
+//					}
+//					else // Parameters via ParameterMap
+//					{
+//						ParameterProperty property = request.ParameterMap.GetProperty(i);
+//
+//						if (property.DirectionAttribut.Length == 0)
+//						{
+//							property.Direction = sqlParameter.Direction;
+//						}
+//
+//						//						IDbDataParameter dataParameter = (IDbDataParameter)parameters[i];
+//						//						property.Precision = dataParameter.Precision;
+//						//						property.Scale = dataParameter.Scale;
+//						//						property.Size = dataParameter.Size;
+//
+//						sqlParameter.Direction = property.Direction;
+//						parameterValue = request.ParameterMap.GetValueOfProperty( parameterObject, property.PropertyName );
+//					}
+//				}
+//
+//				IDataParameter parameterCopy = command.CreateParameter();
+//				// Fix JIRA 20
+//				sqlParameter.Value = parameterValue;
+//				parameterCopy.Value = parameterValue;
+//				
+//				parameterCopy.Direction = sqlParameter.Direction;
+//
+//				// With a ParameterMap, we could specify the ParameterDbTypeProperty
+//				if (_statement.ParameterMap != null)
+//				{
+//					if (request.ParameterMap.GetProperty(i).DbType.Length >0)
+//					{
+//						string dbTypePropertyName = session.DataSource.Provider.ParameterDbTypeProperty;
+//
+//						ObjectProbe.SetPropertyValue(parameterCopy, dbTypePropertyName, ObjectProbe.GetPropertyValue(sqlParameter, dbTypePropertyName));
+//					}
+//					else
+//					{
+//						//parameterCopy.DbType = sqlParameter.DbType;
+//					}
+//				}
+//				else
+//				{
+//					//parameterCopy.DbType = sqlParameter.DbType;
+//				}
+//
+//				((IDbDataParameter)parameterCopy).Size = ((IDbDataParameter)sqlParameter).Size;
+//				((IDbDataParameter)parameterCopy).Precision = ((IDbDataParameter)sqlParameter).Precision;
+//				((IDbDataParameter)parameterCopy).Scale = ((IDbDataParameter)sqlParameter).Scale;
+//
+//				parameterCopy.ParameterName = sqlParameter.ParameterName;
+//
+//				command.Parameters.Add( parameterCopy );
+//			}
+//		}
 
 
 		/// <summary>
@@ -554,9 +566,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 		{
 			object result = resultObject;
 			
-			//using ( IDbCommand command = CreatePreparedCommand( request, session, parameterObject ) )
-			IPreparedCommand preparedCommand = PreparedCommandFactory.GetPreparedCommand(SqlMap.IsEmbedStatementParams);
-			using ( IDbCommand command = preparedCommand.Create( request, session, this.Statement, parameterObject ) )
+			//using ( IDbCommand command = CreatePreparedCommand(request, session, parameterObject ))
+			using ( IDbCommand command = _preparedCommand.Create( request, session, this.Statement, parameterObject ) )
 			{
 				using ( IDataReader reader = command.ExecuteReader() )
 				{				
@@ -684,8 +695,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 			IList list = null;
 			
 			//using ( IDbCommand command = CreatePreparedCommand(request, session, parameterObject ))
-			IPreparedCommand preparedCommand = PreparedCommandFactory.GetPreparedCommand(SqlMap.IsEmbedStatementParams);
-			using ( IDbCommand command = preparedCommand.Create( request, session, this.Statement, parameterObject ) )
+			using ( IDbCommand command = _preparedCommand.Create( request, session, this.Statement, parameterObject ) )
 			{
 				if (_statement.ListClass == null)
 				{
@@ -754,8 +764,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 			RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session);;
 
 			//using ( IDbCommand command = CreatePreparedCommand(request, session, parameterObject ) )
-			IPreparedCommand preparedCommand = PreparedCommandFactory.GetPreparedCommand(SqlMap.IsEmbedStatementParams);
-			using ( IDbCommand command = preparedCommand.Create( request, session, this.Statement, parameterObject ) )
+			using ( IDbCommand command = _preparedCommand.Create( request, session, this.Statement, parameterObject ) )
 			{
 				using ( IDataReader reader = command.ExecuteReader() )
 				{			
@@ -790,10 +799,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 			int rows = 0; // the number of rows affected
 			RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session);;
 
-			//using (IDbCommand command = CreatePreparedCommand(request, session, parameterObject ))
-			IPreparedCommand preparedCommand = PreparedCommandFactory.GetPreparedCommand(SqlMap.IsEmbedStatementParams);
-			
-			using ( IDbCommand command = preparedCommand.Create( request, session, this.Statement, parameterObject ) )
+			//using (IDbCommand command = CreatePreparedCommand(request, session, parameterObject ))		
+			using ( IDbCommand command = _preparedCommand.Create( request, session, this.Statement, parameterObject ) )
 			{
 				rows = command.ExecuteNonQuery();
 
@@ -835,8 +842,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 			}
 
 			//using (IDbCommand command = CreatePreparedCommand(request, session, parameterObject ))
-			IPreparedCommand preparedCommand = PreparedCommandFactory.GetPreparedCommand(SqlMap.IsEmbedStatementParams);
-			using ( IDbCommand command = preparedCommand.Create( request, session, this.Statement, parameterObject ) )
+			using ( IDbCommand command = _preparedCommand.Create( request, session, this.Statement, parameterObject ) )
 			{
 				if (_statement is Insert)
 				{

@@ -29,6 +29,7 @@ using System;
 using System.Collections;
 
 using IBatisNet.Common;
+using IBatisNet.DataMapper.Commands;
 using IBatisNet.DataMapper.Configuration.Statements;
 #endregion
 
@@ -45,6 +46,15 @@ namespace IBatisNet.DataMapper.MappedStatements
 	public interface IMappedStatement
 	{
 		#region Properties
+
+		/// <summary>
+		/// The IPreparedCommand to use
+		/// </summary>
+		IPreparedCommand PreparedCommand
+		{
+			get;
+		}
+
 		/// <summary>
 		/// Name used to identify the MappedStatement amongst the others.
 		/// This the name of the SQL statment by default.

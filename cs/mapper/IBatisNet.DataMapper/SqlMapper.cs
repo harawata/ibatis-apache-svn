@@ -121,7 +121,7 @@ namespace IBatisNet.DataMapper
 		}
 
 		/// <summary>
-		/// A flag that determines whether statements should have
+		/// A flag that determines whether statements can use
 		/// embedded parameters.
 		/// </summary>
 		public bool IsEmbedStatementParams
