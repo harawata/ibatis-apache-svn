@@ -81,6 +81,7 @@ public class FifoCacheController implements CacheController {
   }
 
   public Object removeObject(CacheModel cacheModel, Object key) {
+    keyList.remove(key);
     return cache.remove(key);
   }
 
