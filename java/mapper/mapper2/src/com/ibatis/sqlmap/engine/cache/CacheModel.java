@@ -212,7 +212,7 @@ public class CacheModel implements ExecuteListener {
     // use the controller's key
     CacheKey key = new CacheKey();
     key.update(controller);
-    synchronized (getLock(controller, key)) {
+    synchronized (getLock(key)) {
       controller.flush(this);
     }
   }
@@ -234,7 +234,7 @@ public class CacheModel implements ExecuteListener {
     }
 
     Object value = null;
-    synchronized (getLock(controller, key)) {
+    synchronized (getLock(key)) {
       value = controller.getObject(this, key);
     }
 
@@ -279,12 +279,12 @@ public class CacheModel implements ExecuteListener {
         throw new NestedRuntimeException("Error caching serializable object.  Cause: " + e, e);
       }
     }
-    synchronized (getLock(controller, key)) {
+    synchronized (getLock(key)) {
       controller.putObject(this, key, value);
     }
   }
 
-  private synchronized static final Object getLock (CacheController controller, CacheKey key) {
+  public synchronized final Object getLock (CacheKey key) {
     int controllerId = System.identityHashCode(controller);
     int keyHash = key.hashCode();
     Integer lockKey = new Integer(29 * controllerId + keyHash);

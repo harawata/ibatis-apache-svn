@@ -51,7 +51,7 @@ public class CachingStatement implements MappedStatement {
     cacheKey.update("executeQueryForObject");
     Object object = cacheModel.getObject(cacheKey);
     if (object == null) {
-      synchronized (cacheModel) {
+      synchronized (cacheModel.getLock(cacheKey)) {
         object = statement.executeQueryForObject(request, trans, parameterObject, resultObject);
         cacheModel.putObject(cacheKey, object);
       }
@@ -67,7 +67,7 @@ public class CachingStatement implements MappedStatement {
     cacheKey.update(maxResults);
     List list = (List) cacheModel.getObject(cacheKey);
     if (list == null) {
-      synchronized (cacheModel) {
+      synchronized (cacheModel.getLock(cacheKey)) {
         list = statement.executeQueryForList(request, trans, parameterObject, skipResults, maxResults);
         cacheModel.putObject(cacheKey, list);
       }
