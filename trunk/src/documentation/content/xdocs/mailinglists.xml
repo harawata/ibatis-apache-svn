@@ -14,6 +14,8 @@
       <p>Use these links to send mail to, subscribe, unsubscribe or check the archives of the iBATIS mailing lists.
       Subcribing and unsubscribing is performed by simply sending a blank email to applicable address (as linked below).
       </p>
+      <p>Please note that the iBATIS Eyebrowse mail archive is broken. We have filed an <link href="http://issues.apache.org/jira/browse/INFRA-138">issue</link> with the ASF infrastructure team. The iBATIS lists are also archived by <fork href="http://www.mail-archive.com/index.php?hunt=ibatis">The Mail Archive</fork>.
+      </p>
       <table>
         <tr>
           <td><link href="mailto:ibatis-user-java@incubator.apache.org"> iBATIS Java Users List</link></td>

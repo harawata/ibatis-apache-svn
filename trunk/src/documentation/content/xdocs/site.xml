@@ -12,14 +12,16 @@
     <wiki label="Wiki" href="http://wiki.apache.org/ibatis" />
     <devguide label="Dev Guide" href="http://ibatisnet.sourceforge.net/DevGuide/index.html" />
     <devguide label="Dev Guide (PDF)" href="http://ibatisnet.sourceforge.net/DevGuide.pdf" />
+    
     <resources label="Resources" href="resources.html" />
   </documentation>
 
   <community label="Community">
     <mailinglists label="Mailing Lists" href="mailinglists.html" />
     <issuetracking label="Issue Tracking" href="issuetracking.html" />
-    <bylaws label="ByLaws" href="bylaws.html" />
+    <sourcecode label="Source Code" href="sourcecode.html" />
     <contributors label="Contributors" href="contributors.html" />
+    <bylaws label="ByLaws" href="bylaws.html" />
     <status label="Status" href="status.html"/>
   </community>
 

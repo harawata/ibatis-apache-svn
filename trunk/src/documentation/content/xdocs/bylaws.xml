@@ -267,9 +267,9 @@
 
     <p>
     Showstoppers are issues that require a fix be in place before the
-    next public release. They are listed in the status file in order to
+    next public release. They are listed on the Status page in order to
     focus special attention on these problems. An issue becomes a
-    showstopper when it is listed as such in the status file and remains
+    showstopper when it is listed as such in the Status page and remains
     so by lazy consensus.
     </p>
 
