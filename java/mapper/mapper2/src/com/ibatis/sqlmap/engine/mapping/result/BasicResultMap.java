@@ -309,7 +309,8 @@ public class BasicResultMap implements ResultMap {
     }
     String complexName = mapping.getColumnName();
 
-    if (complexName.indexOf('=') > -1) {
+    if (complexName.indexOf('=') > -1
+        || complexName.indexOf(',') > -1) {
       StringTokenizer parser = new StringTokenizer(complexName, "{}=, ", false);
       while (parser.hasMoreTokens()) {
         String propName = parser.nextToken();
@@ -322,6 +323,9 @@ public class BasicResultMap implements ResultMap {
     } else {
       // single param
       TypeHandler propTypeHandler = TypeHandlerFactory.getTypeHandler(parameterType);
+      if (propTypeHandler == null) {
+        propTypeHandler = TypeHandlerFactory.getUnkownTypeHandler();
+      }
       parameterObject = propTypeHandler.getResult(rs, complexName);
     }
 
