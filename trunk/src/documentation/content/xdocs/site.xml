@@ -15,7 +15,8 @@
 
   <community label="Community">
     <mailinglists label="Mailing Lists" href="mailinglists.html" />
-    <contributors label="ByLaws" href="bylaws.html" />
+    <issuetracking label="Issue Tracking" href="issuetracking.html" />
+    <bylaws label="ByLaws" href="bylaws.html" />
     <contributors label="Contributors" href="contributors.html" />
   </community>
 
