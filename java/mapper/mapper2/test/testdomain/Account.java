@@ -6,6 +6,7 @@
 package testdomain;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 public class Account implements Serializable {
@@ -15,6 +16,8 @@ public class Account implements Serializable {
   private String lastName;
   private String emailAddress;
   private int[] ids;
+  private int age;
+  private Date dateAdded;
   private Account account;
   private List accountList;
 
@@ -41,6 +44,30 @@ public class Account implements Serializable {
     this.ids = ids;
   }
 
+  /**
+   * @return Returns the age.
+   */
+  public int getAge() {
+    return age;
+  }
+  /**
+   * @param age The age to set.
+   */
+  public void setAge(int age) {
+    this.age = age;
+  }
+  /**
+   * @return Returns the dateAdded.
+   */
+  public Date getDateAdded() {
+    return dateAdded;
+  }
+  /**
+   * @param dateAdded The dateAdded to set.
+   */
+  public void setDateAdded(Date dateAdded) {
+    this.dateAdded = dateAdded;
+  }
   public String getFirstName() {
     return firstName;
   }

@@ -112,6 +112,23 @@ public class StatementTest extends BaseSqlMapTest {
     assertEquals(5, ((Account) list.get(4)).getId());
   }
 
+  /**
+   * for bug 976614
+   */
+  /*
+  public void testBrokenExecuteQueryForListWithResultMap() throws SQLException {
+    List list = sqlMap.queryForList("getBrokenAllAccountsViaResultMap", null);
+    
+    assertAccount1((Account) list.get(0));
+    assertEquals(5, list.size());
+    assertEquals(1, ((Account) list.get(0)).getId());
+    assertEquals(2, ((Account) list.get(1)).getId());
+    assertEquals(3, ((Account) list.get(2)).getId());
+    assertEquals(4, ((Account) list.get(3)).getId());
+    assertEquals(5, ((Account) list.get(4)).getId());
+  }
+  */
+  
   public void testExecuteQueryForPaginatedList() throws SQLException {
 
     // Get List of all 5
