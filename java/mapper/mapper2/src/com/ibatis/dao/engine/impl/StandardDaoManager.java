@@ -1,14 +1,16 @@
 package com.ibatis.dao.engine.impl;
 
-import com.ibatis.dao.client.*;
+import com.ibatis.dao.client.Dao;
+import com.ibatis.dao.client.DaoException;
+import com.ibatis.dao.client.DaoManager;
+import com.ibatis.dao.client.DaoTransaction;
 
 import java.util.*;
 
 /**
- *
- *
- * <p>
+ * <p/>
  * Date: Jan 27, 2004 10:47:28 PM
+ *
  * @author Clinton Begin
  */
 public class StandardDaoManager implements DaoManager {
@@ -18,14 +20,30 @@ public class StandardDaoManager implements DaoManager {
   private ThreadLocal transactionMode = new ThreadLocal();
   private ThreadLocal contextInTransactionList = new ThreadLocal();
 
+  private Map idContextMap = new HashMap();
   private Map typeContextMap = new HashMap();
   private Map daoImplMap = new HashMap();
 
   public void addContext(DaoContext context) {
+    // Add context ID mapping
+    if (context.getId() != null && context.getId().length() > 0) {
+      if (idContextMap.containsKey(context.getId())) {
+        throw new DaoException("There is already a DAO Context with the ID '" + context.getId() + "'.");
+      }
+      idContextMap.put(context.getId(), context);
+    }
+    // Add type mappings
     Iterator i = context.getDaoImpls();
     while (i.hasNext()) {
       DaoImpl daoImpl = (DaoImpl) i.next();
-      typeContextMap.put(daoImpl.getDaoInterface(), context);
+
+      // Don't associate a default DAO when multiple DAO impls are registered.
+      if (typeContextMap.containsKey(daoImpl.getDaoInterface())) {
+        typeContextMap.put(daoImpl.getDaoInterface(), null);
+      } else {
+        typeContextMap.put(daoImpl.getDaoInterface(), context);
+      }
+
       daoImplMap.put(daoImpl.getProxy(), daoImpl);
       daoImplMap.put(daoImpl.getDaoInstance(), daoImpl);
     }
@@ -34,7 +52,17 @@ public class StandardDaoManager implements DaoManager {
   public Dao getDao(Class iface) {
     DaoContext context = (DaoContext) typeContextMap.get(iface);
     if (context == null) {
-      throw new DaoException ("There is no DAO implementation found for " + iface + " in any context.");
+      throw new DaoException("There is no DAO implementation found for " + iface + " in any context. If you've " +
+          "registered multiple implementations of this DAO, you must specify the Context ID for the DAO implementation" +
+          "you're looking for using the getDao(Class iface, String contextId) method.");
+    }
+    return context.getDao(iface);
+  }
+
+  public Dao getDao(Class iface, String contextId) {
+    DaoContext context = (DaoContext) idContextMap.get(contextId);
+    if (context == null) {
+      throw new DaoException("There is no Context found with the ID " + contextId + ".");
     }
     return context.getDao(iface);
   }
@@ -67,7 +95,7 @@ public class StandardDaoManager implements DaoManager {
   }
 
   public DaoTransaction getTransaction(Dao dao) {
-    DaoImpl impl = (DaoImpl)daoImplMap.get(dao);
+    DaoImpl impl = (DaoImpl) daoImplMap.get(dao);
     return impl.getDaoContext().getTransaction();
   }
 
@@ -75,7 +103,7 @@ public class StandardDaoManager implements DaoManager {
     return DAO_EXPLICIT_TX.equals(transactionMode.get());
   }
 
-  public void addContextInTransaction (DaoContext ctx) {
+  public void addContextInTransaction(DaoContext ctx) {
     List ctxList = getContextInTransactionList();
     if (!ctxList.contains(ctx)) {
       ctxList.add(ctx);

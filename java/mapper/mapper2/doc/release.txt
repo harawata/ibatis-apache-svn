@@ -5,7 +5,9 @@ Build Number: @buildNum@
  2.0.0 RC4 - May ??, 2004
 ------------------------------
 
- o Fixed threading issue with StandardDaoManager.
+ o Added DaoManager.getDao(class, contextId) to support for multiple DAO impls
+ o Added access to SqlMapTransactionManager from SQL Map DAOs
+ o Fixed threading issue with StandardDaoManager
 
 ------------------------------
  2.0.0 RC3 - Apr 19, 2004

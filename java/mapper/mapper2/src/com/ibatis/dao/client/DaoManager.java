@@ -78,6 +78,18 @@ public interface DaoManager {
   public Dao getDao(Class type);
 
   /**
+   * Gets a Dao instance for the requested interface type registered
+   * under the context with the specified id.
+   *
+   * @param iface     The interface or generic type for which an implementation
+   *                  should be returned.
+   * @param contextId The ID of the context under which to find the DAO
+   *                  implementation (use for multiple interface defs).
+   * @return The Dao implementation instance.
+   */
+  public Dao getDao(Class iface, String contextId);
+
+  /**
    * Gets the transaction that the provided Dao is currently working
    * under.  If there is no current transaction in scope, one will
    * be started.

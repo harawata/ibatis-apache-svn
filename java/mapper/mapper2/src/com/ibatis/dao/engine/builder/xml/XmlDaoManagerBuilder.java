@@ -1,39 +1,39 @@
 package com.ibatis.dao.engine.builder.xml;
 
-import org.w3c.dom.*;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.SAXException;
-
-import java.util.Properties;
-import java.util.Map;
-import java.util.HashMap;
-import java.io.*;
-import java.lang.reflect.Constructor;
-
-import com.ibatis.common.resources.Resources;
 import com.ibatis.common.io.ReaderInputStream;
-import com.ibatis.dao.client.DaoManager;
-import com.ibatis.dao.client.DaoException;
+import com.ibatis.common.resources.Resources;
 import com.ibatis.dao.client.Dao;
-import com.ibatis.dao.engine.impl.StandardDaoManager;
+import com.ibatis.dao.client.DaoException;
+import com.ibatis.dao.client.DaoManager;
 import com.ibatis.dao.engine.impl.DaoContext;
 import com.ibatis.dao.engine.impl.DaoImpl;
+import com.ibatis.dao.engine.impl.StandardDaoManager;
 import com.ibatis.dao.engine.transaction.DaoTransactionManager;
-import com.ibatis.dao.engine.transaction.sqlmap.SqlMapDaoTransactionManager;
-import com.ibatis.dao.engine.transaction.hibernate.HibernateDaoTransactionManager;
 import com.ibatis.dao.engine.transaction.external.ExternalDaoTransactionManager;
-import com.ibatis.dao.engine.transaction.jta.JtaDaoTransactionManager;
+import com.ibatis.dao.engine.transaction.hibernate.HibernateDaoTransactionManager;
 import com.ibatis.dao.engine.transaction.jdbc.JdbcDaoTransactionManager;
+import com.ibatis.dao.engine.transaction.jta.JtaDaoTransactionManager;
+import com.ibatis.dao.engine.transaction.sqlmap.SqlMapDaoTransactionManager;
+import org.w3c.dom.*;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.lang.reflect.Constructor;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 /**
- *
- *
- * <p>
+ * <p/>
  * Date: Jan 27, 2004 11:23:19 PM
+ *
  * @author Clinton Begin
  */
 public class XmlDaoManagerBuilder {
@@ -71,11 +71,12 @@ public class XmlDaoManagerBuilder {
     try {
 
       Document doc = getDoc(reader);
-      Element root = (Element)doc.getLastChild();
+      Element root = (Element) doc.getLastChild();
 
       String rootname = root.getNodeName();
       if (!DAO_CONFIG_ELEMENT.equals(rootname)) {
-        throw new IOException("Error while configuring DaoManager.  The root tag of the DAO configuration XML document must be '" + DAO_CONFIG_ELEMENT + "'.");
+        throw new IOException("Error while configuring DaoManager.  The root tag of the DAO configuration XML " +
+            "document must be '" + DAO_CONFIG_ELEMENT + "'.");
       }
 
       NodeList children = root.getChildNodes();
@@ -83,19 +84,19 @@ public class XmlDaoManagerBuilder {
         Node child = children.item(i);
         if (child.getNodeType() == Node.ELEMENT_NODE) {
           if (CONTEXT_ELEMENT.equals(child.getNodeName())) {
-            DaoContext daoContext = parseContext((Element)child, daoManager);
+            DaoContext daoContext = parseContext((Element) child, daoManager);
             daoManager.addContext(daoContext);
           } else if (PROPERTIES_ELEMENT.equals(child.getNodeName())) {
             Properties attributes = parseAttributes(child);
             if (attributes.containsKey("resource")) {
-              String resource = attributes.getProperty("resource") ;
+              String resource = attributes.getProperty("resource");
               if (properties == null) {
                 properties = Resources.getResourceAsProperties(resource);
               } else {
                 properties.putAll(Resources.getResourceAsProperties(resource));
               }
             } else if (attributes.containsKey("url")) {
-              String url = attributes.getProperty("url") ;
+              String url = attributes.getProperty("url");
               if (properties == null) {
                 properties = Resources.getUrlAsProperties(url);
               } else {
@@ -124,6 +125,10 @@ public class XmlDaoManagerBuilder {
     DaoContext daoContext = new DaoContext();
 
     daoContext.setDaoManager(daoManager);
+    String id = contextElement.getAttribute("id");
+    if (id != null && id.length() > 0) {
+      daoContext.setId(id);
+    }
 
     NodeList children = contextElement.getChildNodes();
     for (int i = 0; i < children.getLength(); i++) {
@@ -160,7 +165,7 @@ public class XmlDaoManagerBuilder {
 
     Properties props = properties;
 
-    if(props == null) {
+    if (props == null) {
       props = parsePropertyElements(transPoolElement);
     } else {
       props.putAll(parsePropertyElements(transPoolElement));
@@ -169,44 +174,45 @@ public class XmlDaoManagerBuilder {
     txMgr.configure(props);
 
     if (txMgr == null) {
-      throw new DaoException("Error while configuring DaoManager.  Some unknown condition caused the DaoTransactionPool to be null after configuration.");
+      throw new DaoException("Error while configuring DaoManager.  Some unknown condition caused the " +
+          "DAO Transaction Manager to be null after configuration.");
     }
 
     return txMgr;
   }
 
-  private DaoImpl parseDao (Element element, StandardDaoManager daoManager, DaoContext daoContext) {
+  private DaoImpl parseDao(Element element, StandardDaoManager daoManager, DaoContext daoContext) {
     DaoImpl daoImpl = new DaoImpl();
-      if (element.getNodeType() == Node.ELEMENT_NODE) {
-        if (DAO_ELEMENT.equals(element.getNodeName())) {
+    if (element.getNodeType() == Node.ELEMENT_NODE) {
+      if (DAO_ELEMENT.equals(element.getNodeName())) {
 
-          Properties attributes = parseAttributes(element);
+        Properties attributes = parseAttributes(element);
+
+        try {
+          String iface = attributes.getProperty("interface");
+          String impl = attributes.getProperty("implementation");
+          daoImpl.setDaoManager(daoManager);
+          daoImpl.setDaoContext(daoContext);
+          daoImpl.setDaoInterface(Resources.classForName(iface));
+          daoImpl.setDaoImplementation(Resources.classForName(impl));
+
+          Class daoClass = daoImpl.getDaoImplementation();
+          Dao dao = null;
 
           try {
-            String iface = attributes.getProperty("interface");
-            String impl = attributes.getProperty("implementation");
-            daoImpl.setDaoManager(daoManager);
-            daoImpl.setDaoContext(daoContext);
-            daoImpl.setDaoInterface(Resources.classForName(iface));
-            daoImpl.setDaoImplementation(Resources.classForName(impl));
-
-            Class daoClass = daoImpl.getDaoImplementation();
-            Dao dao = null;
-
-            try {
-              Constructor constructor = daoClass.getConstructor(new Class[]{DaoManager.class});
-              dao = (Dao)constructor.newInstance(new Object[]{daoManager});
-            } catch (Exception e) {
-              dao = (Dao)daoClass.newInstance();
-            }
-
-            daoImpl.setDaoInstance(dao);
-            daoImpl.initProxy();
+            Constructor constructor = daoClass.getConstructor(new Class[]{DaoManager.class});
+            dao = (Dao) constructor.newInstance(new Object[]{daoManager});
           } catch (Exception e) {
-            throw new DaoException("Error configuring DAO.  Cause: " + e, e);
+            dao = (Dao) daoClass.newInstance();
           }
+
+          daoImpl.setDaoInstance(dao);
+          daoImpl.initProxy();
+        } catch (Exception e) {
+          throw new DaoException("Error configuring DAO.  Cause: " + e, e);
         }
       }
+    }
     return daoImpl;
   }
 
@@ -315,7 +321,9 @@ public class XmlDaoManagerBuilder {
 
   // Error handler to report errors and warnings
   private static class SimpleErrorHandler implements ErrorHandler {
-    /** Error handler output goes here */
+    /**
+     * Error handler output goes here
+     */
     private PrintWriter out;
 
     SimpleErrorHandler(PrintWriter out) {

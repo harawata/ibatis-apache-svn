@@ -1,20 +1,19 @@
 package com.ibatis.dao;
 
-import com.ibatis.dao.iface.AccountDao;
+import com.ibatis.common.jdbc.ScriptRunner;
+import com.ibatis.common.resources.Resources;
 import com.ibatis.dao.client.DaoManager;
 import com.ibatis.dao.client.DaoTransaction;
 import com.ibatis.dao.engine.transaction.jdbc.JdbcDaoTransaction;
 import com.ibatis.dao.engine.transaction.sqlmap.SqlMapDaoTransaction;
-import com.ibatis.common.resources.Resources;
-import com.ibatis.common.jdbc.ScriptRunner;
+import com.ibatis.dao.iface.AccountDao;
+import junit.framework.TestCase;
 import testdomain.Account;
 
-import java.sql.Connection;
 import java.io.Reader;
-import java.lang.reflect.UndeclaredThrowableException;
 import java.lang.reflect.InvocationTargetException;
-
-import junit.framework.TestCase;
+import java.lang.reflect.UndeclaredThrowableException;
+import java.sql.Connection;
 
 /**
  * <p/>
@@ -26,7 +25,7 @@ public abstract class BaseDaoTest extends TestCase {
 
   protected DaoManager daoManager;
 
-  public void testCreateAccount () {
+  public void testCreateAccount() {
     AccountDao dao = (AccountDao) daoManager.getDao(AccountDao.class);
 
     Account account = newAccount();
@@ -34,13 +33,13 @@ public abstract class BaseDaoTest extends TestCase {
     // Create Account (autocommit)
     dao.createAccount(account);
 
-    account = (Account)dao.findAccount(account.getId());
+    account = (Account) dao.findAccount(account.getId());
     assertNotNull(account);
-    assertEquals ("clinton.begin@ibatis.com", account.getEmailAddress());
+    assertEquals("clinton.begin@ibatis.com", account.getEmailAddress());
 
   }
 
-  public void testTransactionRollback () {
+  public void testTransactionRollback() {
     AccountDao dao = (AccountDao) daoManager.getDao(AccountDao.class);
 
     Account account = newAccount();
@@ -63,11 +62,11 @@ public abstract class BaseDaoTest extends TestCase {
     account2 = dao.findAccount(1);
 
     assertNull(account);
-    assertEquals ("clinton.begin@ibatis.com", account2.getEmailAddress());
+    assertEquals("clinton.begin@ibatis.com", account2.getEmailAddress());
 
   }
 
-  public void testTransactionCommit () {
+  public void testTransactionCommit() {
     AccountDao dao = (AccountDao) daoManager.getDao(AccountDao.class);
 
     Account account = newAccount();
@@ -87,11 +86,11 @@ public abstract class BaseDaoTest extends TestCase {
     account2 = dao.findAccount(1);
 
     assertNotNull(account);
-    assertEquals ("someotherAddress@somewhere.com", account2.getEmailAddress());
+    assertEquals("someotherAddress@somewhere.com", account2.getEmailAddress());
 
   }
 
-  public void testDeleteAccount () {
+  public void testDeleteAccount() {
     AccountDao dao = (AccountDao) daoManager.getDao(AccountDao.class);
 
     Account account = newAccount();
@@ -99,18 +98,18 @@ public abstract class BaseDaoTest extends TestCase {
     // Create Account (autocommit)
     dao.createAccount(account);
 
-    account = (Account)dao.findAccount(account.getId());
+    account = (Account) dao.findAccount(account.getId());
     assertNotNull(account);
-    assertEquals ("clinton.begin@ibatis.com", account.getEmailAddress());
+    assertEquals("clinton.begin@ibatis.com", account.getEmailAddress());
 
     dao.removeAccount(account);
 
-    account = (Account)dao.findAccount(account.getId());
+    account = (Account) dao.findAccount(account.getId());
     assertNull(account);
 
   }
 
-  public void testException () {
+  public void testException() {
     AccountDao dao = (AccountDao) daoManager.getDao(AccountDao.class);
 
     try {

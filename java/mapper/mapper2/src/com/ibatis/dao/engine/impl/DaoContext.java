@@ -1,19 +1,23 @@
 package com.ibatis.dao.engine.impl;
 
-import com.ibatis.dao.engine.transaction.*;
-import com.ibatis.dao.client.*;
+import com.ibatis.dao.client.Dao;
+import com.ibatis.dao.client.DaoException;
+import com.ibatis.dao.client.DaoTransaction;
+import com.ibatis.dao.engine.transaction.DaoTransactionManager;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
- *
- *
- * <p>
+ * <p/>
  * Date: Jan 29, 2004 11:46:41 PM
+ *
  * @author Clinton Begin
  */
 public class DaoContext {
 
+  private String id;
   private StandardDaoManager daoManager;
   private DaoTransactionManager transactionManager;
   private ThreadLocal transaction = new ThreadLocal();
@@ -22,6 +26,14 @@ public class DaoContext {
   private Map typeDaoImplMap = new HashMap();
 
   public DaoContext() {
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
   }
 
   public StandardDaoManager getDaoManager() {
@@ -40,25 +52,29 @@ public class DaoContext {
     this.transactionManager = transactionManager;
   }
 
-  public void addDao (DaoImpl daoImpl) {
+  public void addDao(DaoImpl daoImpl) {
+    if (typeDaoImplMap.containsKey(daoImpl.getDaoInterface())) {
+      throw new DaoException("More than one implementation for '" + daoImpl.getDaoInterface() + "' was configured.  " +
+          "Only one implementation per context is allowed.");
+    }
     typeDaoImplMap.put(daoImpl.getDaoInterface(), daoImpl);
   }
 
-  public Dao getDao (Class iface) {
+  public Dao getDao(Class iface) {
     DaoImpl impl = (DaoImpl) typeDaoImplMap.get(iface);
     if (impl == null) {
-      throw new DaoException ("There is no DAO implementation found for " + iface + " in this context.");
+      throw new DaoException("There is no DAO implementation found for " + iface + " in this context.");
     }
     return impl.getProxy();
   }
 
-  public Iterator getDaoImpls () {
+  public Iterator getDaoImpls() {
     return typeDaoImplMap.values().iterator();
   }
 
   public DaoTransaction getTransaction() {
     startTransaction();
-    return (DaoTransaction)transaction.get();
+    return (DaoTransaction) transaction.get();
   }
 
   public void startTransaction() {
@@ -71,7 +87,7 @@ public class DaoContext {
   }
 
   public void commitTransaction() {
-    DaoTransaction trans = (DaoTransaction)transaction.get();
+    DaoTransaction trans = (DaoTransaction) transaction.get();
     if (state.get() == DaoTransactionState.ACTIVE) {
       transactionManager.commitTransaction(trans);
       state.set(DaoTransactionState.COMMITTED);
@@ -81,7 +97,7 @@ public class DaoContext {
   }
 
   public void endTransaction() {
-    DaoTransaction trans = (DaoTransaction)transaction.get();
+    DaoTransaction trans = (DaoTransaction) transaction.get();
     if (state.get() == DaoTransactionState.ACTIVE) {
       try {
         transactionManager.rollbackTransaction(trans);
