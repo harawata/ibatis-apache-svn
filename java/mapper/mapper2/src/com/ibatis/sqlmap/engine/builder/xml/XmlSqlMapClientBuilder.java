@@ -588,7 +588,7 @@ public class XmlSqlMapClientBuilder {
 
     statement.setSqlMapClient(client);
     if (cacheModelName != null && cacheModelName.length() > 0 && client.getDelegate().isCacheModelsEnabled()) {
-      CacheModel cacheModel = (CacheModel) client.getDelegate().getCacheModel(cacheModelName);
+      CacheModel cacheModel = client.getDelegate().getCacheModel(cacheModelName);
       return new CachingStatement(statement, cacheModel);
     } else {
       return statement;

@@ -85,15 +85,6 @@ public class SqlMapClientImpl implements ExtendedSqlMapClient {
     getLocalSqlMapSession().queryWithRowHandler(id, paramObject, rowHandler);
   }
 
-  /**
-   * TODO : DEPRECATED
-   *
-   * @deprecated
-   */
-  public List queryForList(String id, Object parameterObject, RowHandler rowHandler) throws SQLException {
-    return getLocalSqlMapSession().queryForList(id, parameterObject, rowHandler);
-  }
-
   public void startTransaction() throws SQLException {
     getLocalSqlMapSession().startTransaction();
   }

@@ -159,15 +159,6 @@ public interface SqlMapExecutor {
    */
   void queryWithRowHandler(String id, Object parameterObject, RowHandler rowHandler) throws SQLException;
 
-
-  /**
-   * TODO : Deprecated and will be removed.
-   *
-   * @see RowHandler
-   * @deprecated Use queryWithRowHandler instead (requires RowHandler interface change) THIS WILL BE REMOVED BY FINAL 2.0 RELEASE
-   */
-  List queryForList(String id, Object parameterObject, RowHandler rowHandler) throws SQLException;
-
   /**
    * Executes a mapped SQL SELECT statement that returns data to populate
    * a number of result objects a page at a time.

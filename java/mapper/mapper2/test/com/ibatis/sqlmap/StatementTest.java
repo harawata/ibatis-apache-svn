@@ -446,8 +446,9 @@ public class StatementTest extends BaseSqlMapTest {
 
   public void testLegacyExecuteQueryForListWithRowHandler() throws SQLException {
     TestRowHandler handler = new TestRowHandler();
-    List list = sqlMap.queryForList("getAllAccountsViaResultMap", null, handler);
+    sqlMap.queryWithRowHandler("getAllAccountsViaResultMap", null, handler);
     assertEquals(5, handler.getIndex());
+    /*
     assertEquals(5, list.size());
     assertAccount1((Account) list.get(0));
     assertEquals(1, ((Account) list.get(0)).getId());
@@ -455,7 +456,7 @@ public class StatementTest extends BaseSqlMapTest {
     assertEquals(3, ((Account) list.get(2)).getId());
     assertEquals(4, ((Account) list.get(3)).getId());
     assertEquals(5, ((Account) list.get(4)).getId());
-
+    */
   }
 
   // MAP TESTS

@@ -110,18 +110,6 @@ public class SqlMapSessionImpl implements SqlMapSession {
     delegate.queryWithRowHandler(session, id, paramObject, rowHandler);
   }
 
-  /**
-   * TODO : DEPRECATED
-   *
-   * @deprecated Use queryWithRowHandler(String, Object, RowHandler).
-   */
-  public List queryForList(String id, Object parameterObject, RowHandler rowHandler) throws SQLException {
-    log.warn("Use of a deprecated API detected.  The method SqlMapExecutor.queryForList(String,Object,RowHandler) is deprecated.  Use SqlMapExecutor.queryWithRowHandler(String,Object,RowHandler) instead.");
-    DeprecatedRowHandlerAdapter adapter = new DeprecatedRowHandlerAdapter(rowHandler);
-    delegate.queryWithRowHandler(session, id, parameterObject, adapter);
-    return adapter.getList();
-  }
-
   public void startTransaction() throws SQLException {
     delegate.startTransaction(session);
   }
@@ -192,35 +180,6 @@ public class SqlMapSessionImpl implements SqlMapSession {
 
   public SqlMapExecutorDelegate getDelegate() {
     return delegate;
-  }
-
-  /**
-   * TODO : DEPRECATED
-   *
-   * @deprecated No substitute.
-   */
-  private static class DeprecatedRowHandlerAdapter implements RowHandler {
-
-    private RowHandler rowHandler;
-    private List list;
-
-    public DeprecatedRowHandlerAdapter(RowHandler rowHandler) {
-      this.rowHandler = rowHandler;
-      this.list = new ArrayList();
-    }
-
-    public void handleRow(Object valueObject) {
-      handleRow(valueObject, list);
-    }
-
-    public void handleRow(Object valueObject, List list) {
-      log.warn("Use of a deprecated API detected.  The method RowHandler.handleRow(Object, List) is deprecated.  Use RowHandler.handleRow(Object) instead.");
-      rowHandler.handleRow(valueObject, list);
-    }
-
-    public List getList() {
-      return list;
-    }
   }
 
 }
