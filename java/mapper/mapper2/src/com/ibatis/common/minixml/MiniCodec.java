@@ -29,7 +29,6 @@ public class MiniCodec {
       s2 = replaceAll("\"", "&quot;", s2);
       s2 = replaceAll("%", "&#37;", s2);
     }
-    System.out.println (s2);
     return s2;
   }
 
@@ -43,7 +42,6 @@ public class MiniCodec {
       s2 = replaceAll("&quot;", "\"", s2);
       s2 = replaceAll("&#37;", "%", s2);
     }
-    System.out.println (s2);
     return s2;
   }
 

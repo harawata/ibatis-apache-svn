@@ -119,18 +119,6 @@ public class ClassInfo {
     return name;
   }
 
-  public static void main(String[] args) {
-    System.out.println(dropCase("getFoo"));
-    System.out.println(dropCase("getFOO"));
-    System.out.println(dropCase("getF"));
-    System.out.println(dropCase("setFoo"));
-    System.out.println(dropCase("setFOO"));
-    System.out.println(dropCase("setF"));
-    System.out.println(dropCase("isFoo"));
-    System.out.println(dropCase("isFOO"));
-    System.out.println(dropCase("isF"));
-  }
-
   /**
    * Gets the name of the class the instance provides information for
    *
