@@ -2,7 +2,7 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
- 2.0.0 RC5 - May 23, 2004
+ 2.0.0 RC5 - May 24, 2004
 ------------------------------
 
  o Fixed uppercase bean property support
