@@ -559,10 +559,14 @@ public class StatementTest extends BaseSqlMapTest {
 
     account.setId(6);
     account.setEmailAddress("new.clinton@ibatis.com");
+    account.setBannerOption(true);
+    account.setCartOption(true);
     sqlMap.update("insertAccountViaParameterMap", account);
 
     account = (Account) sqlMap.queryForObject("getAccountViaColumnName", new Integer(6));
 
+    assertEquals(true, account.isBannerOption());
+    assertEquals(true, account.isCartOption());
     assertEquals("new.clinton@ibatis.com", account.getEmailAddress());
 
   }

@@ -116,6 +116,7 @@ public class JavaBeanDataExchange extends BaseDataExchange implements DataExchan
     }
   }
 
+  // Bug ibatis-12
   public Object setData(RequestScope request, ParameterMap parameterMap, Object parameterObject, Object[] values) {
     if (outParamPlan != null) {
       Object object = parameterObject;
@@ -123,14 +124,25 @@ public class JavaBeanDataExchange extends BaseDataExchange implements DataExchan
         try {
           object = Resources.instantiate(parameterMap.getParameterClass());
         } catch (Exception e) {
-          throw new NestedRuntimeException("JavaBeansDataExchange could not instantiate parameter class.  Cause: " + e, e);
+          throw new NestedRuntimeException("JavaBeansDataExchange could not instantiate parameter class. Cause: " + e, e);
         }
       }
+      values = getOutputParamValues(parameterMap.getParameterMappings(), values);
       outParamPlan.setProperties(object, values);
       return object;
     } else {
       return null;
     }
+  }
+
+  private Object[] getOutputParamValues(ParameterMapping[] mappings, Object[] values) {
+    List outParamValues = new ArrayList();
+    for (int i = 0; i < mappings.length; i++) {
+      if (mappings[i].isOutputAllowed()) {
+        outParamValues.add(values[i]);
+      }
+    }
+    return outParamValues.toArray();
   }
 
 }

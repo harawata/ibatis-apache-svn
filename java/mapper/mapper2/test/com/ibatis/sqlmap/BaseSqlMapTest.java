@@ -47,6 +47,8 @@ public class BaseSqlMapTest extends TestCase {
     account.setFirstName("Jennifer");
     account.setLastName("Begin");
     account.setEmailAddress("no_email@provided.com");
+    account.setBannerOption(true);
+    account.setCartOption(true);
     return account;
   }
 

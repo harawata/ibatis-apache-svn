@@ -13,6 +13,7 @@
   <cacheModel id="account-cache" type="LRU" readOnly="true">
     <flushInterval hours="24"/>
     <flushOnExecute statement="updateAccountViaInlineParameters"/>
+    <property name="size" value="1"/>
   </cacheModel>
 
   <cacheModel id="rw-account-cache" type="FIFO" serialize="true" readOnly="false">
@@ -48,6 +49,8 @@
     <result property="firstName" jdbcType="VARCHAR" column="ACC_FIRST_NAME"/>
     <result property="lastName" jdbcType="VARCHAR" column="ACC_LAST_NAME"/>
     <result property="emailAddress" jdbcType="VARCHAR" column="ACC_EMAIL" nullValue="no_email@provided.com"/>
+    <result property="bannerOption" column="ACC_BANNER_OPTION" jdbcType="VARCHAR" javaType="boolean"/>
+    <result property="cartOption" column="ACC_CART_OPTION" typeHandler="HundredsBool"/>
   </resultMap>
 
   <resultMap id="account-custom-result" class="account">
@@ -158,7 +161,9 @@
       ACC_ID,
       ACC_FIRST_NAME,
       ACC_LAST_NAME,
-      ACC_EMAIL
+      ACC_EMAIL,
+      ACC_BANNER_OPTION,
+      ACC_CART_OPTION
     from ACCOUNT
     where ACC_ID = #value#
   </select>
@@ -345,6 +350,8 @@
     <parameter property="firstName"/>
     <parameter property="lastName"/>
     <parameter property="emailAddress" jdbcType="VARCHAR" nullValue="no_email@provided.com"/>
+    <parameter property="bannerOption" jdbcType="VARCHAR" javaType="boolean"/>
+    <parameter property="cartOption" jdbcType="NUMERIC" javaType="boolean" typeHandler="HundredsBool"/>
   </parameterMap>
 
   <insert id="insertAccountViaParameterMap"
@@ -353,9 +360,11 @@
       ACC_ID,
       ACC_FIRST_NAME,
       ACC_LAST_NAME,
-      ACC_EMAIL)
+      ACC_EMAIL,
+      ACC_BANNER_OPTION,
+      ACC_CART_OPTION)
     values (
-      ?, ?, ?, ?
+      ?, ?, ?, ?, ?, ?
     )
   </insert>
 

@@ -81,9 +81,12 @@ public class LruCacheController implements CacheController {
    * @return The cached object (or null)
    */
   public Object getObject(CacheModel cacheModel, Object key) {
+    Object result = cache.get(key);
     keyList.remove(key);
-    keyList.add(key);
-    return cache.get(key);
+    if (result != null) {
+      keyList.add(key);
+    }
+    return result;
   }
 
   public Object removeObject(CacheModel cacheModel, Object key) {

@@ -2,7 +2,7 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
- 2.0.8 - Oct 03, 2004
+ 2.0.8 - Nov 26, 2004
 ------------------------------
 
  o Probes now always return true for hasReadable/hasWriteable property checks.
@@ -10,6 +10,9 @@ Build Number: @buildNum@
  o Verified missing columns throw an exception (ibatis-16)
  o Completely $supplied$ SQL statements are not supported (ibatis-17)
  o Verified parameter type handlers are applied (ibatis-ll)
+ o Fixed cache model size of 1 disables caching (ibatis-7)
+ o Fixed LRU cache memory leak (ibatis-1)
+ o Added commitRequired attribute to transactionManager to force commit even on query (ibatis-10,3)
 
 ------------------------------
  2.0.7 - Oct 03, 2004

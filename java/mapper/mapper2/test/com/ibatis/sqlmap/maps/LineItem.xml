@@ -6,6 +6,36 @@
 
 <sqlMap>
 
+  <resultMap id="missingParamCheckA" class="testdomain.LineItem">
+    <result property="id" column="id"/>
+    <result property="orderId" column="orderId"/>
+    <result property="itemCode" column="itemCode"/>
+  </resultMap>
+
+  <resultMap id="missingParamCheckB" class="testdomain.LineItem" extends="missingParamCheckA">
+    <result property="quantity" column="quantity"/>
+    <result property="price" column="price"/>
+  </resultMap>
+
+  <select id="getAllLineItemProps" parameterClass="int" resultMap="missingParamCheckA">
+      select
+        LIN_ID as id,
+        LIN_ORD_ID as orderId,
+        LIN_ITM_CODE as itemCode
+      from LINE_ITEM where LIN_ORD_ID = #value#
+  </select>
+
+  <select id="getSomeLineItemProps" parameterClass="int" resultMap="missingParamCheckB">
+      select
+        LIN_ID as id,
+        LIN_ORD_ID as orderId,
+
+        LIN_QUANTITY as quantity,
+        LIN_PRICE as price
+      from LINE_ITEM where LIN_ORD_ID = #value#
+  </select>
+
+
   <select id="getLineItemsForOrder"
     parameterClass="java.lang.Integer"
     resultClass="testdomain.LineItem">

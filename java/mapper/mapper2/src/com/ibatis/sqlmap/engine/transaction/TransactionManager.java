@@ -25,6 +25,8 @@ public class TransactionManager {
 
   private TransactionConfig transactionConfig;
 
+  private boolean forceCommit;
+
   private Throttle txThrottle;
 
   public TransactionManager(TransactionConfig transactionConfig) {
@@ -72,7 +74,7 @@ public class TransactionManager {
     } else if (state != TransactionState.STATE_STARTED) {
       throw new TransactionException("TransactionManager could not commit.  No transaction is started.");
     }
-    if (session.isCommitRequired()) {
+    if (session.isCommitRequired() || forceCommit) {
       trans.commit();
       session.setCommitRequired(false);
     }
@@ -94,7 +96,7 @@ public class TransactionManager {
       if (trans != null) {
         try {
           if (state != TransactionState.STATE_COMMITTED) {
-            if (session.isCommitRequired()) {
+            if (session.isCommitRequired() || forceCommit) {
               trans.rollback();
               session.setCommitRequired(false);
             }
@@ -120,6 +122,14 @@ public class TransactionManager {
 
   public void setDataSource(DataSource ds) {
     transactionConfig.setDataSource(ds);
+  }
+
+  public boolean isForceCommit() {
+    return forceCommit;
+  }
+
+  public void setForceCommit(boolean forceCommit) {
+    this.forceCommit = forceCommit;
   }
 
 }

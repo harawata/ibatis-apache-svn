@@ -1,5 +1,6 @@
 package com.ibatis.sqlmap;
 
+import com.ibatis.common.jdbc.exception.NestedSQLException;
 import testdomain.Account;
 import testdomain.Order;
 
@@ -69,6 +70,24 @@ public class ResultMapTest extends BaseSqlMapTest {
     assertNotNull(order.getLineItemsList());
     assertEquals(2, order.getLineItemsList().size());
   }
+
+  public void testGetAllLineItemProps() throws SQLException {
+    List list = sqlMap.queryForList("getAllLineItemProps", new Integer(1));
+
+    assertNotNull(list);
+    assertEquals(2, list.size());
+  }
+
+  public void testGetSomeLineItemProps() throws SQLException {
+    try {
+      List list = sqlMap.queryForList("getSomeLineItemProps", new Integer(1));
+
+      fail("Expected exception because column was missing.");
+    } catch (NestedSQLException e) {
+      // expected
+    }
+  }
+
 
   public void testArrayMapping() throws SQLException {
     Order order = (Order) sqlMap.queryForObject("getOrderWithLineItemArray", new Integer(1));

@@ -77,7 +77,7 @@ import java.util.*;
 
 /**
  * Creates an SqlMapClient from an XML definition
- * 
+ * <p/>
  * NOT THREAD SAFE.  USE SEPARATE INSTANCES PER THREAD.
  */
 public class XmlSqlMapClientBuilder {
@@ -153,6 +153,7 @@ public class XmlSqlMapClientBuilder {
 
   /**
    * Getter to tell if we are to validate the source XML document
+   *
    * @return - the flag
    */
   public boolean isValidationEnabled() {
@@ -161,6 +162,7 @@ public class XmlSqlMapClientBuilder {
 
   /**
    * Setter to control XML validation
+   *
    * @param validationEnabled - flag to control validation
    */
   public void setValidationEnabled(boolean validationEnabled) {
@@ -169,10 +171,11 @@ public class XmlSqlMapClientBuilder {
 
   /**
    * Method to build the SqlMapClient
-   * @param reader - a Reader to read the XML File
-   * @param props - a properties object for configuration replacements
+   *
+   * @param reader                - a Reader to read the XML File
+   * @param props                 - a properties object for configuration replacements
    * @param sqlMapConfigConverter - a converter for the sql map configuration file
-   * @param sqlMapConverter - a converter for the sql map files
+   * @param sqlMapConverter       - a converter for the sql map files
    * @return - a SqlMapClient
    */
   public SqlMapClient buildSqlMap(Reader reader, Properties props, XmlConverter sqlMapConfigConverter, XmlConverter sqlMapConverter) {
@@ -184,9 +187,10 @@ public class XmlSqlMapClientBuilder {
 
   /**
    * Method to build the SqlMapClient
-   * @param reader - a Reader to read the XML File
+   *
+   * @param reader                - a Reader to read the XML File
    * @param sqlMapConfigConverter - a converter for the sql map configuration file
-   * @param sqlMapConverter - a converter for the sql map files
+   * @param sqlMapConverter       - a converter for the sql map files
    * @return - a SqlMapClient
    */
   public SqlMapClient buildSqlMap(Reader reader, XmlConverter sqlMapConfigConverter, XmlConverter sqlMapConverter) {
@@ -197,8 +201,9 @@ public class XmlSqlMapClientBuilder {
 
   /**
    * Method to build the SqlMapClient
+   *
    * @param reader - a Reader to read the XML File
-   * @param props - a properties object for configuration replacements
+   * @param props  - a properties object for configuration replacements
    * @return - a SqlMapClient
    */
   public SqlMapClient buildSqlMap(Reader reader, Properties props) {
@@ -208,6 +213,7 @@ public class XmlSqlMapClientBuilder {
 
   /**
    * Method to build the SqlMapClient
+   *
    * @param reader - a Reader to read the XML File
    * @return - a SqlMapClient
    */
@@ -373,6 +379,7 @@ public class XmlSqlMapClientBuilder {
       config.initialize(initProperties);
       errorCtx.setMoreInfo(null);
       txManager = new TransactionManager(config);
+      txManager.setForceCommit("true".equals(attributes.getProperty("commitRequired")));
     } catch (Exception e) {
       if (e instanceof SqlMapException) {
         throw (SqlMapException) e;

@@ -42,6 +42,7 @@ maxRequests CDATA #IMPLIED
 <!ELEMENT transactionManager (property*,dataSource)>
 <!ATTLIST transactionManager
 type CDATA #REQUIRED
+commitRequired (true | false) #IMPLIED
 >
 
 <!ELEMENT dataSource (property*)>
