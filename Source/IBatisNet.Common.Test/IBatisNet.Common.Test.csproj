@@ -143,7 +143,11 @@
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
-                <Folder RelPath = "NUnit\CommonTests\Transaction\" />
+                <File
+                    RelPath = "NUnit\CommonTests\Transaction\TransactionTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
                 <File
                     RelPath = "NUnit\CommonTests\Utilities\ResourcesTest.cs"
                     SubType = "Code"
