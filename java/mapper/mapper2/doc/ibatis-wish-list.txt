@@ -24,6 +24,7 @@ FEATURE REQUESTS: MED-PRIORITY
  o Included Statements
  o Optional results/exclusions (i.e. don't require all results)
  o Type translation filters (e.g. "Y"|"N" -> true|false)
+ o NULL complex property map results set prop to null (don't run query selectOnNull="false")
 
 ------------------------------
 FEATURE REQUESTS: LOW-PRIORITY 

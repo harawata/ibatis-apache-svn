@@ -6,6 +6,7 @@
 package testdomain;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Account implements Serializable {
 
@@ -15,6 +16,14 @@ public class Account implements Serializable {
   private String emailAddress;
   private int[] ids;
   private Account account;
+  private List accountList;
+
+  public Account() {
+  }
+
+  public Account(int id) {
+    this.id = id;
+  }
 
   public int getId() {
     return id;
@@ -62,6 +71,14 @@ public class Account implements Serializable {
 
   public void setAccount(Account account) {
     this.account = account;
+  }
+
+  public List getAccountList() {
+    return accountList;
+  }
+
+  public void setAccountList(List accountList) {
+    this.accountList = accountList;
   }
 
 }
