@@ -22,6 +22,7 @@ FEATURE REQUESTS: MED-PRIORITY
  o Cache dependency on other cache (flush-on-dependant)
  o Flush cache at specifig time (e.g. 22:30)
  o Circular relationships
+ o Deal with XML as DOM rather than String
 
 ------------------------------
 FEATURE REQUESTS: LOW-PRIORITY 
