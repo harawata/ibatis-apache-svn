@@ -2,6 +2,16 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
+ 2.0.4 - Jul 25, 2004
+------------------------------
+
+ o Deprecated getUserConnection() (use getCurrentConnection())
+ o Added getCurrentConnection()
+ o Added openSession(Connection) for easier user connections
+ o Improved user provided connection implementation
+ o Fixed logging
+
+------------------------------
  2.0.3 - Jul 16, 2004
 ------------------------------
 

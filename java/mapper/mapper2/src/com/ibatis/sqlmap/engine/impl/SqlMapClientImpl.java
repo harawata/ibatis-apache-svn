@@ -112,8 +112,18 @@ public class SqlMapClientImpl implements ExtendedSqlMapClient {
     getLocalSqlMapSession().setUserConnection(connection);
   }
 
+  /**
+   * TODO Deprecated
+   * @return
+   * @throws SQLException
+   * @deprecated 
+   */
   public Connection getUserConnection() throws SQLException {
-    return getLocalSqlMapSession().getUserConnection();
+    return getCurrentConnection();
+  }
+
+  public Connection getCurrentConnection() throws SQLException {
+    return getLocalSqlMapSession().getCurrentConnection();
   }
 
   public DataSource getDataSource() {

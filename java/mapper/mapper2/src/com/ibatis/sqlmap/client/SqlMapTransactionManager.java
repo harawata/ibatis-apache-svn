@@ -90,10 +90,24 @@ public interface SqlMapTransactionManager {
   /**
    * Returns the current user supplied connection as set by setUserConnection().
    *
+   * TODO : DEPRECATED
+   *
    * @return The current user supplied connection.
    * @throws SQLException
+   *
+   * @deprecated Use getCurrentConnection() instead.
    */
   public Connection getUserConnection() throws SQLException;
+
+  /**
+   * Returns the current connection in use.  If no connection exists null will
+   * be returned. There may be no connection if no transaction has been started,
+   * and if no user provided connection has been set.
+   *
+   * @return The current connection or null.
+   * @throws SQLException
+   */
+  public Connection getCurrentConnection() throws SQLException;
 
   /**
    * Returns the DataSource instance currently being used by the SqlMapSession.

@@ -23,6 +23,9 @@ public class SessionScope extends BaseScope {
   private Transaction transaction;
   private TransactionState transactionState;
 
+  // Used by SqlMapExecutorDelegate.setUserProvidedTransaction()
+  private TransactionState savedTransactionState;
+
   // Used by StandardSqlMapClient and GeneralStatement
   private boolean inBatch;
 
@@ -139,5 +142,13 @@ public class SessionScope extends BaseScope {
 
   public synchronized static long getNextId() {
     return nextId++;
+  }
+
+  public void saveTransactionState() {
+    savedTransactionState = transactionState;
+  }
+
+  public void recallTransactionState() {
+    transactionState = savedTransactionState;
   }
 }

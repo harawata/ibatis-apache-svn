@@ -3,7 +3,6 @@ package com.ibatis.sqlmap.engine.impl;
 import com.ibatis.common.beans.Probe;
 import com.ibatis.common.beans.ProbeFactory;
 import com.ibatis.common.jdbc.exception.NestedSQLException;
-import com.ibatis.common.jdbc.logging.ConnectionLogProxy;
 import com.ibatis.common.util.PaginatedList;
 import com.ibatis.common.util.ThrottledPool;
 import com.ibatis.sqlmap.client.SqlMapException;
@@ -33,17 +32,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * User: Clinton Begin
  * Date: Sep 13, 2003
  * Time: 7:04:24 AM
  */
 public class SqlMapExecutorDelegate {
-
-  private static final Log log = LogFactory.getLog(SqlMapExecutorDelegate.class);
 
   private static final Probe PROBE = ProbeFactory.getProbe();
 
@@ -449,16 +443,16 @@ public class SqlMapExecutorDelegate {
   }
 
   public void setUserProvidedTransaction(SessionScope session, Connection userConnection) {
+    if (session.getTransactionState() == TransactionState.STATE_USER_PROVIDED) {
+      session.recallTransactionState();
+    }
     if (userConnection != null) {
       Connection conn = userConnection;
-      if (log.isDebugEnabled()) {
-        conn = ConnectionLogProxy.newInstance(conn);
-      }
+      session.saveTransactionState();
       session.setTransaction(new UserProvidedTransaction(conn));
       session.setTransactionState(TransactionState.STATE_USER_PROVIDED);
     } else {
       session.setTransaction(null);
-      session.setTransactionState(TransactionState.STATE_ENDED);
     }
   }
 

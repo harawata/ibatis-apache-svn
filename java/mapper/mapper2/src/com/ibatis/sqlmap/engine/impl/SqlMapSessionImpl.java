@@ -136,7 +136,17 @@ public class SqlMapSessionImpl implements SqlMapSession {
     delegate.setUserProvidedTransaction(session, connection);
   }
 
+  /**
+   * TODO Deprecated
+   * @return
+   * @throws SQLException
+   * @deprecated 
+   */
   public Connection getUserConnection() throws SQLException {
+    return getCurrentConnection();
+  }
+
+  public Connection getCurrentConnection() throws SQLException {
     try {
       Connection conn = null;
       Transaction trans = delegate.getTransaction(session);

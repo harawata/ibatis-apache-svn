@@ -1,9 +1,13 @@
 package com.ibatis.sqlmap.engine.transaction.jdbc;
 
 import com.ibatis.sqlmap.engine.transaction.*;
+import com.ibatis.common.jdbc.logging.ConnectionLogProxy;
 
 import javax.sql.*;
 import java.sql.*;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * User: Clinton Begin
@@ -11,6 +15,8 @@ import java.sql.*;
  * Time: 10:14:24 PM
  */
 public class JdbcTransaction implements Transaction {
+
+  private static final Log connectionLog = LogFactory.getLog(Connection.class);
 
   private DataSource dataSource;
   private Connection connection;
@@ -31,6 +37,9 @@ public class JdbcTransaction implements Transaction {
     }
     if (connection.getAutoCommit()) {
       connection.setAutoCommit(false);
+    }
+    if (connectionLog.isDebugEnabled()) {
+      connection = ConnectionLogProxy.newInstance(connection);
     }
   }
 

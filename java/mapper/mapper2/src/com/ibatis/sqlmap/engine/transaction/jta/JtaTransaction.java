@@ -2,11 +2,15 @@ package com.ibatis.sqlmap.engine.transaction.jta;
 
 import com.ibatis.sqlmap.engine.transaction.*;
 import com.ibatis.sqlmap.engine.transaction.Transaction;
+import com.ibatis.common.jdbc.logging.ConnectionLogProxy;
 
 import javax.transaction.UserTransaction;
 import javax.transaction.Status;
 import javax.sql.*;
 import java.sql.*;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * User: Clinton Begin
@@ -14,6 +18,8 @@ import java.sql.*;
  * Time: 10:14:37 PM
  */
 public class JtaTransaction implements Transaction {
+
+  private static final Log connectionLog = LogFactory.getLog(Connection.class);
 
   private UserTransaction userTransaction;
   private DataSource dataSource;
@@ -52,6 +58,9 @@ public class JtaTransaction implements Transaction {
     }
     if (connection.getAutoCommit()) {
       connection.setAutoCommit(false);
+    }
+    if (connectionLog.isDebugEnabled()) {
+      connection = ConnectionLogProxy.newInstance(connection);
     }
   }
 

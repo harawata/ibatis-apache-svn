@@ -1,9 +1,13 @@
 package com.ibatis.sqlmap.engine.transaction.external;
 
 import com.ibatis.sqlmap.engine.transaction.*;
+import com.ibatis.common.jdbc.logging.ConnectionLogProxy;
 
 import javax.sql.*;
 import java.sql.*;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * User: Clinton Begin
@@ -11,6 +15,8 @@ import java.sql.*;
  * Time: 6:33:22 AM
  */
 public class ExternalTransaction implements Transaction {
+
+  private static final Log connectionLog = LogFactory.getLog(Connection.class);
 
   private DataSource dataSource;
   private boolean defaultAutoCommit;
@@ -38,6 +44,9 @@ public class ExternalTransaction implements Transaction {
       if (connection.getAutoCommit() != defaultAutoCommit) {
         connection.setAutoCommit(defaultAutoCommit);
       }
+    }
+    if (connectionLog.isDebugEnabled()) {
+      connection = ConnectionLogProxy.newInstance(connection);
     }
   }
 

@@ -2,9 +2,13 @@ package com.ibatis.sqlmap.engine.transaction.user;
 
 import com.ibatis.sqlmap.engine.transaction.Transaction;
 import com.ibatis.sqlmap.engine.transaction.TransactionException;
+import com.ibatis.common.jdbc.logging.ConnectionLogProxy;
 
 import java.sql.SQLException;
 import java.sql.Connection;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,10 +19,16 @@ import java.sql.Connection;
  */
 public class UserProvidedTransaction implements Transaction {
 
+  private static final Log connectionLog = LogFactory.getLog(Connection.class);
+
   private Connection connection;
 
   public UserProvidedTransaction(Connection connection) {
-    this.connection = connection;
+    if (connectionLog.isDebugEnabled()) {
+      this.connection = ConnectionLogProxy.newInstance(connection);
+    } else {
+      this.connection = connection;
+    }
   }
 
   public void commit() throws SQLException, TransactionException {
