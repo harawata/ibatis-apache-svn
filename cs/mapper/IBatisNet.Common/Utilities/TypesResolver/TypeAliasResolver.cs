@@ -238,7 +238,7 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 			_aliases [TypeAliasResolver.FloatAlias1] = typeof (float).FullName;
 			_aliases [TypeAliasResolver.FloatAlias2] = typeof (float).FullName;
 
-			_aliases [TypeAliasResolver.GuidAlias] = typeof (double).FullName;
+			_aliases [TypeAliasResolver.GuidAlias] = typeof (System.Guid).FullName;
 
 			_aliases [TypeAliasResolver.HashtableAlias1] = typeof (Hashtable).FullName;
 			_aliases [TypeAliasResolver.HashtableAlias2] = typeof (Hashtable).FullName;
