@@ -1,0 +1,54 @@
+Installation of HSQLDB for use with JPetstore 3
+===============================================
+
+The following applies for release 3.1.0-b (referenced as "JP3")
+
+To integrate HSQLDB with JP3, do this:
+
+1. HSQLDB jar file
+------------------
+Get HSQLDB.jar and copy it into the WEB-INF/lib-directory under the src-directory
+
+2. Database definition
+----------------------
+Copy the files jpetstore-hsqldb-schema.sql and jpetstore-hsqldb-dataload.sql
+into the directory ddl/hsqldb. the subdirectory hsqldb has to be created first!
+
+3. Create database and fill it
+------------------------------
+With the tool of your choice, run both sql scripts given in step 2 against the
+HSQLDB database. First the jpetstore-hsqldb-schema.sql and then the other one.
+Be sure to use a file-based storage, not the in-memory variant also possible
+with HSQLDB!
+
+4. Change petstore.properties
+-----------------------------
+Be sure to have the following properties set correctly in the petstore.properties
+file:
+--
+SimpleDriver=org.hsqldb.jdbcDriver
+SimpleUrl=jdbc:hsqldb:D:/tmp/jpetstore
+
+SimpleUsername=sa
+SimplePassword=
+--
+Adapt the path and file name for property "SimpleUrl" to fit your configuration.
+
+5. Change sequence.xml
+----------------------
+Search for "for update" and delete it.
+
+6. Build JP3
+------------
+Now you can build JP3 and deploy it.
+
+
+
+Please notice that it is not necessary to start up HSQLDB! This is done by the
+application itself thru the given HSQLDB.jar file.
+
+Klaus Meffert
+mailto: hsqldb@it-logic.de
+
+
+

@@ -1,0 +1,100 @@
+Setting up your Windows computer to run JPetStore with MySQL and Tomcat:
+
+By: Adrian Lanning
+    alanning55@hotmail.com
+
+Original Version: 10-13-03
+
+
+1. Java
+	1.1. Download Java SDK 1.4.2_01 (had trouble using the NetBeans bundle so I recommend using the regular SDK package).
+
+2. Tomcat
+	2.1. Download and install Tomcat 5.0.12b.
+		2.1.1. I install all my Apache apps to "c:\program files\apache" to keep it simple.
+		2.1.2. Just keep all the other defaults the same, and input your preferred admin password when prompted.
+	2.2. Start Tomcat.  You can use either the Windows Service or the Start Menu shortcut, "Start->Programs->Apache Tomcat 5.0->Start Tomcat".
+	2.3. Verify that Tomcat is working correctly.
+		2.3.1. Goto http://localhost:8080.  If you see a Tomcat base page you're good.
+		2.3.2. Goto http://localhost:8080/jsp-examples and try out a couple of the examples to confirm that Tomcat is working properly.
+			NOTE: I had trouble getting the example, "http://localhost:8080/jsp-examples/jsp2/misc/config.jsp" to work.  To fix this exception I followed the on-screen instructions and copied "$JAVA_HOME/lib/tools.jar from the JDK to the common/lib directory of the Tomcat server, followed by a Tomcat restart." :)
+
+3. JPetStore - Download
+	3.1 Download and unzip JPetStore 3.1.0b to a temp directory.
+	
+4. MySQL
+	4.1. Download MySQL 4.0.14b, unzip, and run Setup.
+	4.2. Goto your default MySQL directory (C:\mysql for me) and copy my-medium.cnf to my.cnf.  Now move my.cnf to C:\.
+	4.3. Open a command prompt (Dos prompt). Now goto, "C:\mysql\bin" and run, "mysqld-nt -install".  This will install the MySQL daemon (server) as a Windows Service that will start automatically when Windows starts.  You can verify this by going to Start->Control Panel->Administrative Tools->Services under Win2000.
+	4.4. Start the MySQL Service.
+		Win2000: Go to Start->Control Panel->Administrative Tools->Services. Double-click the MySQL service, and click the Start button.
+	4.5. Set Root MySQL password.     ***  Very Important Step  ***
+		4.5.1. Goto "C:\mysql\bin".
+		4.5.2. Run "mysqladmin -uroot password NEW-PASS" where NEW-PASS is your password of choice.  NOTE: Don't type the quotes...
+	4.6. Verify MySQL is running correctly.
+		4.6.1. Run "mysql -uroot -p".  You will be prompted for a password.  Just enter in whatever you typed for NEW-PASS.
+		4.6.2. You should see a "mysql>" prompt. If not, check Google for whatever error code you received.
+		4.6.3. Run "show databases;".  NOTE: Don't forget the ';'.  If you ever see a prompt with just a "    ->" then you know you forgot the ';'.
+		4.6.4. If you don't see,
+			"+----------+
+			 | Database |
+			 +----------+
+			 | mysql    |
+			 | test     |
+			 +----------+
+			 2 rows in set (0.02 sec)"
+			then you know something is wrong...try Google.
+5. MySQL JDBC Driver
+	5.1. Download the MySQL JDBC Driver, mysql-connector-java-3.0.9-stable.
+	5.2. Unzip the driver.  Copy the file, "mysql-connector-java-3.0.9-stable-bin.jar" to Tomcat's common/lib directory.
+	
+6. JPetStore - Database
+	6.1. Jump over to explorer and copy jpetstore-mysql-schema.sql and jpetstore-mysql-dataload.sql from your jpetstore/ddl/mysql unzip folder to c:\mysql\bin.
+	6.2. Jump back to your "mysql>" prompt.  If you logged out, just log back in as root.
+	6.3. Run "source jpetstore-mysql-schema.sql;".   NOTE: You must run the schema sql script before running the dataload script.
+	6.4. Run "source jpetstore-mysql-dataload.sql;". 
+	6.5. Run "source jpetstore-mysql-create-user.sql;".
+	6.6. If you don't hear any beeps or see any errors, it worked correctly.
+
+7. JPetStore - Deploy
+	7.1. Find jpetstore.war in the build/wars folder of wherever you unzipped the JPetStore download to.
+	7.2. Copy jpetstore.war to your Tomcat/webapps folder.  For me this was at "C:\Program Files\Apache\Tomcat 5.0\webapps".  Tomcat will automatically deploy your app if you have it started.  If its not started just follow the instructions in step 2.
+	7.3. Don't try to access (run) the app yet.
+	
+8. JPetStore - Driver Setup
+	8.1. Find  /webapps/jpetstore/WEB-INF/classes/properties/petstore.properties from your Tomcat directory. (c:\program files\apache\tomcat 5.0, for me)
+	8.2. Change the default (oracle) values to match the following:
+		SimpleDriver=org.gjt.mm.mysql.Driver
+		SimpleUrl=jdbc:mysql://localhost:3306/jpetstore
+		SimpleUsername=jpetstore
+		SimplePassword=ibatis9977
+	8.3. Save it!
+
+9, Test
+	9.1. Shutdown and restart your Tomcat Web Server by either stopping the Service or using the System Tray icon.
+	9.2. Once Tomcat has restarted, open your web browser (I recommend Mozilla) and point it to: http://localhost:8080/jpetstore .
+	9.3. Have fun!
+	
+	
+	
+	
+TROUBLESHOOTING
+
+I figured I'd try to do things wrong and see what errors I got in case it happens to one of you. :)
+
+- HTTP Status 500
+  Message: HTTP Status 500 - No action instance for path /shop/index could be created
+  Description: The server encountered an internal error (No action instance for path /shop/index could be created) that prevented it from fulfilling this request.
+  
+  I got this error by deleting the JDBC driver from Tomcat's common/lib directory.  If you see this error, follow the directions in Step 5, and then restart the Tomcat server.
+  
+- Error!
+  Unhandled Exception: com.ibatis.db.dao.DaoException: Error getting transaction. 
+  Cause: java.sql.SQLException: Invalid authorization specification, message from server: "Access denied for user: 'jpetstore@localhost' (Using password: YES)" 
+  <---- Caused by: java.sql.SQLException: Invalid authorization specification, message from server: "Access denied for user: 'jpetstore@localhost' (Using password: YES)" ---->
+  
+  I got this error by deleting the jpetstore@localhost user from MySQL.  See Step 6.5. 
+  NOTE: While porting the iBATIS JPetStore to use MySQL I had a big problem where I got this error even when I had clearly created a 'jpetstore' user.  After trying a few things out, I found out you have to make the user as 'jpetstore@localhost' rather than 'jpetstore' in order for this to work.  If anybody knows why this occurs, please let me know.
+  
+  
+  
