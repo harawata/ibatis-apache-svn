@@ -16,6 +16,7 @@
 package com.ibatis.sqlmap.engine.transaction.jta;
 
 import com.ibatis.common.jdbc.logging.ConnectionLogProxy;
+import com.ibatis.sqlmap.engine.transaction.IsolationLevel;
 import com.ibatis.sqlmap.engine.transaction.Transaction;
 import com.ibatis.sqlmap.engine.transaction.TransactionException;
 import org.apache.commons.logging.Log;
@@ -34,11 +35,12 @@ public class JtaTransaction implements Transaction {
   private UserTransaction userTransaction;
   private DataSource dataSource;
   private Connection connection;
+  private IsolationLevel isolationLevel = new IsolationLevel();
 
   private boolean commmitted = false;
   private boolean newTransaction = false;
 
-  public JtaTransaction(UserTransaction utx, DataSource ds) throws TransactionException {
+  public JtaTransaction(UserTransaction utx, DataSource ds, int isolationLevel) throws TransactionException {
     // Check parameters
     userTransaction = utx;
     dataSource = ds;
@@ -48,6 +50,7 @@ public class JtaTransaction implements Transaction {
     if (dataSource == null) {
       throw new TransactionException("JtaTransaction initialization failed.  DataSource was null.");
     }
+    this.isolationLevel.setIsolationLevel(isolationLevel);
   }
 
   private void init() throws TransactionException, SQLException {
@@ -66,9 +69,13 @@ public class JtaTransaction implements Transaction {
     if (connection == null) {
       throw new TransactionException("JtaTransaction could not start transaction.  Cause: The DataSource returned a null connection.");
     }
+    // Isolation Level
+    isolationLevel.applyIsolationLevel(connection);
+    // AutoCommit
     if (connection.getAutoCommit()) {
       connection.setAutoCommit(false);
     }
+    // Debug
     if (connectionLog.isDebugEnabled()) {
       connection = ConnectionLogProxy.newInstance(connection);
     }
@@ -110,8 +117,12 @@ public class JtaTransaction implements Transaction {
 
   public void close() throws SQLException, TransactionException {
     if (connection != null) {
-      connection.close();
-      connection = null;
+      try {
+        isolationLevel.restoreIsolationLevel(connection);
+      } finally {
+        connection.close();
+        connection = null;
+      }
     }
   }
 

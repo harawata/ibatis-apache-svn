@@ -16,6 +16,7 @@
 package com.ibatis.sqlmap.engine.transaction.external;
 
 import com.ibatis.common.jdbc.logging.ConnectionLogProxy;
+import com.ibatis.sqlmap.engine.transaction.IsolationLevel;
 import com.ibatis.sqlmap.engine.transaction.Transaction;
 import com.ibatis.sqlmap.engine.transaction.TransactionException;
 import org.apache.commons.logging.Log;
@@ -33,8 +34,9 @@ public class ExternalTransaction implements Transaction {
   private boolean defaultAutoCommit;
   private boolean setAutoCommitAllowed;
   private Connection connection;
+  private IsolationLevel isolationLevel = new IsolationLevel();
 
-  public ExternalTransaction(DataSource ds, boolean defaultAutoCommit, boolean setAutoCommitAllowed) throws TransactionException {
+  public ExternalTransaction(DataSource ds, boolean defaultAutoCommit, boolean setAutoCommitAllowed, int isolationLevel) throws TransactionException {
     // Check Parameters
     dataSource = ds;
     if (dataSource == null) {
@@ -43,6 +45,7 @@ public class ExternalTransaction implements Transaction {
 
     this.defaultAutoCommit = defaultAutoCommit;
     this.setAutoCommitAllowed = setAutoCommitAllowed;
+    this.isolationLevel.setIsolationLevel(isolationLevel);
   }
 
   private void init() throws SQLException, TransactionException {
@@ -51,11 +54,15 @@ public class ExternalTransaction implements Transaction {
     if (connection == null) {
       throw new TransactionException("ExternalTransaction could not start transaction.  Cause: The DataSource returned a null connection.");
     }
+    // Isolation Level
+    isolationLevel.applyIsolationLevel(connection);
+    // AutoCommit
     if (setAutoCommitAllowed) {
       if (connection.getAutoCommit() != defaultAutoCommit) {
         connection.setAutoCommit(defaultAutoCommit);
       }
     }
+    // Debug
     if (connectionLog.isDebugEnabled()) {
       connection = ConnectionLogProxy.newInstance(connection);
     }
@@ -69,8 +76,12 @@ public class ExternalTransaction implements Transaction {
 
   public void close() throws SQLException, TransactionException {
     if (connection != null) {
-      connection.close();
-      connection = null;
+      try {
+        isolationLevel.applyIsolationLevel(connection);
+      } finally {
+        connection.close();
+        connection = null;
+      }
     }
   }
 

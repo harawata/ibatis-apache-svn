@@ -110,8 +110,8 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Getter for the DataExchangeFactory
-   * 
-   * @return - the DataExchangeFactory 
+   *
+   * @return - the DataExchangeFactory
    */
   public DataExchangeFactory getDataExchangeFactory() {
     return dataExchangeFactory;
@@ -119,7 +119,7 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Getter for the TypeHandlerFactory
-   * 
+   *
    * @return - the TypeHandlerFactory
    */
   public TypeHandlerFactory getTypeHandlerFactory() {
@@ -128,7 +128,7 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Getter for the status of lazy loading
-   * 
+   *
    * @return - the status
    */
   public boolean isLazyLoadingEnabled() {
@@ -137,7 +137,7 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Turn on or off lazy loading
-   * 
+   *
    * @param lazyLoadingEnabled - the new state of caching
    */
   public void setLazyLoadingEnabled(boolean lazyLoadingEnabled) {
@@ -146,7 +146,7 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Getter for the status of caching
-   * 
+   *
    * @return - the status
    */
   public boolean isCacheModelsEnabled() {
@@ -155,7 +155,7 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Turn on or off caching
-   * 
+   *
    * @param cacheModelsEnabled - the new state of caching
    */
   public void setCacheModelsEnabled(boolean cacheModelsEnabled) {
@@ -164,7 +164,7 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Getter for the status of CGLib enhancements
-   * 
+   *
    * @return - the status
    */
   public boolean isEnhancementEnabled() {
@@ -173,6 +173,7 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Turn on or off CGLib enhancements
+   *
    * @param enhancementEnabled - the new state
    */
   public void setEnhancementEnabled(boolean enhancementEnabled) {
@@ -181,7 +182,7 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Getter for the maximum number of requests
-   * 
+   *
    * @return - the maximum number of requests
    */
   public int getMaxRequests() {
@@ -190,7 +191,7 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Setter for the maximum number of requests
-   * 
+   *
    * @param maxRequests - the maximum number of requests
    */
   public void setMaxRequests(int maxRequests) {
@@ -200,7 +201,7 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Getter for the maximum number of sessions
-   * 
+   *
    * @return - the maximum number of sessions
    */
   public int getMaxSessions() {
@@ -209,7 +210,7 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Setter for the maximum number of sessions
-   * 
+   *
    * @param maxSessions - the maximum number of sessions
    */
   public void setMaxSessions(int maxSessions) {
@@ -219,7 +220,7 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Getter for the the maximum number of transactions
-   * 
+   *
    * @return - the maximum number of transactions
    */
   public int getMaxTransactions() {
@@ -228,7 +229,7 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Setter for the maximum number of transactions
-   * 
+   *
    * @param maxTransactions - the maximum number of transactions
    */
   public void setMaxTransactions(int maxTransactions) {
@@ -236,7 +237,8 @@ public class SqlMapExecutorDelegate {
   }
 
   /**
-   * Getter for the transaction manager 
+   * Getter for the transaction manager
+   *
    * @return - the transaction manager
    */
   public TransactionManager getTxManager() {
@@ -245,7 +247,7 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Setter for the transaction manager
-   * 
+   *
    * @param txManager - the transaction manager
    */
   public void setTxManager(TransactionManager txManager) {
@@ -254,7 +256,7 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Add a mapped statement
-   * 
+   *
    * @param ms - the mapped statement to add
    */
   public void addMappedStatement(MappedStatement ms) {
@@ -267,7 +269,7 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Get an iterator of the mapped statements
-   * 
+   *
    * @return - the iterator
    */
   public Iterator getMappedStatementNames() {
@@ -276,9 +278,8 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Get a mappedstatement by its ID
-   * 
+   *
    * @param id - the statement ID
-   * 
    * @return - the mapped statement
    */
   public MappedStatement getMappedStatement(String id) {
@@ -291,7 +292,7 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Add a cache model
-   * 
+   *
    * @param model - the model to add
    */
   public void addCacheModel(CacheModel model) {
@@ -300,7 +301,7 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Get an iterator of the cache models
-   * 
+   *
    * @return - the cache models
    */
   public Iterator getCacheModelNames() {
@@ -309,9 +310,8 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Get a cache model by ID
-   * 
+   *
    * @param id - the ID
-   * 
    * @return - the cache model
    */
   public CacheModel getCacheModel(String id) {
@@ -324,7 +324,7 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Add a result map
-   * 
+   *
    * @param map - the result map to add
    */
   public void addResultMap(ResultMap map) {
@@ -333,7 +333,7 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Get an iterator of the result maps
-   * 
+   *
    * @return - the result maps
    */
   public Iterator getResultMapNames() {
@@ -342,9 +342,8 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Get a result map by ID
-   * 
+   *
    * @param id - the ID
-   * 
    * @return - the result map
    */
   public ResultMap getResultMap(String id) {
@@ -357,7 +356,7 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Add a parameter map
-   * 
+   *
    * @param map - the map to add
    */
   public void addParameterMap(ParameterMap map) {
@@ -366,7 +365,7 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Get an iterator of all of the parameter maps
-   * 
+   *
    * @return - the parameter maps
    */
   public Iterator getParameterMapNames() {
@@ -375,9 +374,8 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Get a parameter map by ID
-   * 
+   *
    * @param id - the ID
-   * 
    * @return - the parameter map
    */
   public ParameterMap getParameterMap(String id) {
@@ -400,7 +398,7 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Flush a single cache by ID
-   * 
+   *
    * @param id - the ID
    */
   public void flushDataCache(String id) {
@@ -413,13 +411,11 @@ public class SqlMapExecutorDelegate {
   //-- Basic Methods
   /**
    * Call an insert statement by ID
-   * 
+   *
    * @param session - the session
-   * @param id - the statement ID
-   * @param param - the parameter object
-   * 
+   * @param id      - the statement ID
+   * @param param   - the parameter object
    * @return - the generated key (or null)
-   * 
    * @throws SQLException - if the insert fails
    */
   public Object insert(SessionScope session, String id, Object param) throws SQLException {
@@ -482,13 +478,11 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Execute an update statement
-   * 
+   *
    * @param session - the session scope
-   * @param id - the statement ID
-   * @param param - the parameter object
-   * 
+   * @param id      - the statement ID
+   * @param param   - the parameter object
    * @return - the number of rows updated
-   * 
    * @throws SQLException - if the update fails
    */
   public int update(SessionScope session, String id, Object param) throws SQLException {
@@ -518,13 +512,11 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Execute a delete statement
-   * 
+   *
    * @param session - the session scope
-   * @param id - the statement ID
-   * @param param - the parameter object
-   * 
+   * @param id      - the statement ID
+   * @param param   - the parameter object
    * @return - the number of rows deleted
-   * 
    * @throws SQLException - if the delete fails
    */
   public int delete(SessionScope session, String id, Object param) throws SQLException {
@@ -533,13 +525,11 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Execute a select for a single object
-   * 
-   * @param session - the session scope
-   * @param id - the statement ID
+   *
+   * @param session     - the session scope
+   * @param id          - the statement ID
    * @param paramObject - the parameter object
-   * 
    * @return - the result of the query
-   * 
    * @throws SQLException - if the query fails
    */
   public Object queryForObject(SessionScope session, String id, Object paramObject) throws SQLException {
@@ -548,14 +538,12 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Execute a select for a single object
-   * 
-   * @param session - the session scope
-   * @param id - the statement ID
-   * @param paramObject - the parameter object
+   *
+   * @param session      - the session scope
+   * @param id           - the statement ID
+   * @param paramObject  - the parameter object
    * @param resultObject - the result object (if not supplied or null, a new object will be created)
-   * 
    * @return - the result of the query
-   * 
    * @throws SQLException - if the query fails
    */
   public Object queryForObject(SessionScope session, String id, Object paramObject, Object resultObject) throws SQLException {
@@ -585,13 +573,11 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Execute a query for a list
-   * 
-   * @param session - the session scope
-   * @param id - the statement ID
+   *
+   * @param session     - the session scope
+   * @param id          - the statement ID
    * @param paramObject - the parameter object
-   * 
    * @return - the data list
-   * 
    * @throws SQLException - if the query fails
    */
   public List queryForList(SessionScope session, String id, Object paramObject) throws SQLException {
@@ -600,15 +586,13 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Execute a query for a list
-   * 
-   * @param session - the session scope
-   * @param id - the statement ID
+   *
+   * @param session     - the session scope
+   * @param id          - the statement ID
    * @param paramObject - the parameter object
-   * @param skip - the number of rows to skip
-   * @param max - the maximum number of rows to return
-   * 
+   * @param skip        - the number of rows to skip
+   * @param max         - the maximum number of rows to return
    * @return - the data list
-   * 
    * @throws SQLException - if the query fails
    */
   public List queryForList(SessionScope session, String id, Object paramObject, int skip, int max) throws SQLException {
@@ -637,14 +621,13 @@ public class SqlMapExecutorDelegate {
   }
 
   /**
-   * Execute a query with a row handler. 
+   * Execute a query with a row handler.
    * The row handler is called once per row in the query results.
-   * 
-   * @param session - the session scope
-   * @param id - the statement ID
+   *
+   * @param session     - the session scope
+   * @param id          - the statement ID
    * @param paramObject - the parameter object
-   * @param rowHandler - the row handler
-   * 
+   * @param rowHandler  - the row handler
    * @throws SQLException - if the query fails
    */
   public void queryWithRowHandler(SessionScope session, String id, Object paramObject, RowHandler rowHandler) throws SQLException {
@@ -672,14 +655,12 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Execute a query and return a paginated list
-   * 
-   * @param session - the session scope
-   * @param id - the statement ID
+   *
+   * @param session     - the session scope
+   * @param id          - the statement ID
    * @param paramObject - the parameter object
-   * @param pageSize - the page size
-   * 
+   * @param pageSize    - the page size
    * @return - the data list
-   * 
    * @throws SQLException - if the query fails
    */
   public PaginatedList queryForPaginatedList(SessionScope session, String id, Object paramObject, int pageSize) throws SQLException {
@@ -689,14 +670,12 @@ public class SqlMapExecutorDelegate {
   /**
    * Execute a query for a map.
    * The map has the table key as the key, and the results as the map data
-   * 
-   * @param session - the session scope
-   * @param id - the statement ID
+   *
+   * @param session     - the session scope
+   * @param id          - the statement ID
    * @param paramObject - the parameter object
-   * @param keyProp - the key property (from the results for the map)
-   * 
+   * @param keyProp     - the key property (from the results for the map)
    * @return - the Map
-   * 
    * @throws SQLException - if the query fails
    */
   public Map queryForMap(SessionScope session, String id, Object paramObject, String keyProp) throws SQLException {
@@ -706,15 +685,13 @@ public class SqlMapExecutorDelegate {
   /**
    * Execute a query for a map.
    * The map has the table key as the key, and a property from the results as the map data
-   * 
-   * @param session - the session scope
-   * @param id - the statement ID
+   *
+   * @param session     - the session scope
+   * @param id          - the statement ID
    * @param paramObject - the parameter object
-   * @param keyProp - the property for the map key
-   * @param valueProp - the property for the map data
-   * 
+   * @param keyProp     - the property for the map key
+   * @param valueProp   - the property for the map data
    * @return - the Map
-   * 
    * @throws SQLException - if the query fails
    */
   public Map queryForMap(SessionScope session, String id, Object paramObject, String keyProp, String valueProp) throws SQLException {
@@ -740,9 +717,8 @@ public class SqlMapExecutorDelegate {
   // -- Transaction Control Methods
   /**
    * Start a transaction on the session
-   * 
+   *
    * @param session - the session
-   * 
    * @throws SQLException - if the transaction could not be started
    */
   public void startTransaction(SessionScope session) throws SQLException {
@@ -754,10 +730,23 @@ public class SqlMapExecutorDelegate {
   }
 
   /**
-   * Commit the transaction on a session
-   * 
+   * Start a transaction on the session with the specified isolation level.
+   *
    * @param session - the session
-   * 
+   * @throws SQLException - if the transaction could not be started
+   */
+  public void startTransaction(SessionScope session, int transactionIsolation) throws SQLException {
+    try {
+      txManager.begin(session, transactionIsolation);
+    } catch (TransactionException e) {
+      throw new NestedSQLException("Could not start transaction.  Cause: " + e, e);
+    }
+  }
+
+  /**
+   * Commit the transaction on a session
+   *
+   * @param session - the session
    * @throws SQLException - if the transaction could not be committed
    */
   public void commitTransaction(SessionScope session) throws SQLException {
@@ -775,9 +764,8 @@ public class SqlMapExecutorDelegate {
 
   /**
    * End the transaction on a session
-   * 
+   *
    * @param session - the session
-   * 
    * @throws SQLException - if the transaction could not be ended
    */
   public void endTransaction(SessionScope session) throws SQLException {
@@ -794,7 +782,7 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Start a batch for a session
-   * 
+   *
    * @param session - the session
    */
   public void startBatch(SessionScope session) {
@@ -803,10 +791,9 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Execute a batch for a session
-   * 
+   *
    * @param session - the session
    * @return - the number of rows impacted by the batch
-   * 
    * @throws SQLException - if the batch fails
    */
   public int executeBatch(SessionScope session) throws SQLException {
@@ -816,8 +803,8 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Use a user-provided transaction for a session
-   * 
-   * @param session - the session scope
+   *
+   * @param session        - the session scope
    * @param userConnection - the user supplied connection
    */
   public void setUserProvidedTransaction(SessionScope session, Connection userConnection) {
@@ -836,7 +823,7 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Get the DataSource for the session
-   * 
+   *
    * @return - the DataSource
    */
   public DataSource getDataSource() {
@@ -849,7 +836,7 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Getter for the SqlExecutor
-   * 
+   *
    * @return the SqlExecutor
    */
   public SqlExecutor getSqlExecutor() {
@@ -858,9 +845,8 @@ public class SqlMapExecutorDelegate {
 
   /**
    * Get a transaction for the session
-   * 
+   *
    * @param session - the session
-   * 
    * @return - the transaction
    */
   public Transaction getTransaction(SessionScope session) {

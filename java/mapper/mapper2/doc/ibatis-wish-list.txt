@@ -7,8 +7,6 @@
       - Included SQL Fragments
       - <generate> tag for CRUD methods
       - Constructor and field based results
-  Database Support
-      - Isolation Level support
 
 2.2
   Ease of Use

@@ -36,16 +36,17 @@ import java.util.Map;
 public class SqlMapClientImpl implements ExtendedSqlMapClient {
 
   private static final Log log = LogFactory.getLog(SqlMapClientImpl.class);
-  
+
   /**
    * Delegate for SQL execution
    */
   public SqlMapExecutorDelegate delegate;
-  
+
   private ThreadLocal localSqlMapSession = new ThreadLocal();
 
   /**
    * Constructor to supply a delegate
+   *
    * @param delegate - the delegate
    */
   public SqlMapClientImpl(SqlMapExecutorDelegate delegate) {
@@ -98,6 +99,10 @@ public class SqlMapClientImpl implements ExtendedSqlMapClient {
 
   public void startTransaction() throws SQLException {
     getLocalSqlMapSession().startTransaction();
+  }
+
+  public void startTransaction(int transactionIsolation) throws SQLException {
+    getLocalSqlMapSession().startTransaction(transactionIsolation);
   }
 
   public void commitTransaction() throws SQLException {

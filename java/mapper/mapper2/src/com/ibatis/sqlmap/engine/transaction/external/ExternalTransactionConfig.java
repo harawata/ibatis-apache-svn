@@ -44,7 +44,8 @@ public class ExternalTransactionConfig extends BaseTransactionConfig {
     setAutoCommitAllowed = "true".equals(sacaProp) || sacaProp == null;
   }
 
-  public Transaction newTransaction() throws SQLException, TransactionException {
-    return new ExternalTransaction(dataSource, defaultAutoCommit, setAutoCommitAllowed);
+  public Transaction newTransaction(int transactionIsolation) throws SQLException, TransactionException {
+    return new ExternalTransaction(dataSource, defaultAutoCommit, setAutoCommitAllowed, transactionIsolation);
   }
+
 }

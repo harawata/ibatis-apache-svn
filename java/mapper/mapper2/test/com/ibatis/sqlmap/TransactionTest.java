@@ -3,6 +3,7 @@ package com.ibatis.sqlmap;
 
 import testdomain.Account;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 
 public class TransactionTest extends BaseSqlMapTest {
@@ -102,7 +103,7 @@ public class TransactionTest extends BaseSqlMapTest {
     Account account = newAccount6();
 
     try {
-      sqlMap.startTransaction();
+      sqlMap.startTransaction(Connection.TRANSACTION_READ_UNCOMMITTED);
       sqlMap.update("insertAccountViaParameterMap", account);
       //sqlMap.commitTransaction();
     } finally {

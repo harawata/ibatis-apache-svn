@@ -51,8 +51,8 @@ public class JtaTransactionConfig extends BaseTransactionConfig {
     }
   }
 
-  public Transaction newTransaction() throws SQLException, TransactionException {
-    return new JtaTransaction(userTransaction, dataSource);
+  public Transaction newTransaction(int transactionIsolation) throws SQLException, TransactionException {
+    return new JtaTransaction(userTransaction, dataSource, transactionIsolation);
   }
 
 }

@@ -47,6 +47,28 @@ public interface SqlMapTransactionManager {
    */
   public void startTransaction() throws SQLException;
 
+
+  /**
+   * Demarcates the beginning of a transaction scope using the specified transaction
+   * isolation.  Transactions must be properly committed or rolled back to be effective.
+   * Use the following pattern when working with transactions:
+   * <pre>
+   * try {
+   *   sqlMap.startTransaction(Connection.TRANSACTION_REPEATABLE_READ);
+   *   // do work
+   *   sqlMap.commitTransaction();
+   * } finally {
+   *   sqlMap.endTransaction();
+   * }
+   * </pre>
+   * <p/>
+   * Always call endTransaction() once startTransaction() has been called.
+   *
+   * @throws java.sql.SQLException If an error occurs while starting the transaction, or
+   *                               the transaction could not be started.
+   */
+  public void startTransaction(int transactionIsolation) throws SQLException;
+
   /**
    * Commits the currently started transaction.
    *

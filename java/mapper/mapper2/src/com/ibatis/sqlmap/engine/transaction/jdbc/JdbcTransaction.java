@@ -16,6 +16,7 @@
 package com.ibatis.sqlmap.engine.transaction.jdbc;
 
 import com.ibatis.common.jdbc.logging.ConnectionLogProxy;
+import com.ibatis.sqlmap.engine.transaction.IsolationLevel;
 import com.ibatis.sqlmap.engine.transaction.Transaction;
 import com.ibatis.sqlmap.engine.transaction.TransactionException;
 import org.apache.commons.logging.Log;
@@ -31,13 +32,15 @@ public class JdbcTransaction implements Transaction {
 
   private DataSource dataSource;
   private Connection connection;
+  private IsolationLevel isolationLevel = new IsolationLevel();
 
-  public JdbcTransaction(DataSource ds) throws TransactionException {
+  public JdbcTransaction(DataSource ds, int isolationLevel) throws TransactionException {
     // Check Parameters
     dataSource = ds;
     if (dataSource == null) {
       throw new TransactionException("JdbcTransaction initialization failed.  DataSource was null.");
     }
+    this.isolationLevel.setIsolationLevel(isolationLevel);
   }
 
   private void init() throws SQLException, TransactionException {
@@ -46,9 +49,13 @@ public class JdbcTransaction implements Transaction {
     if (connection == null) {
       throw new TransactionException("JdbcTransaction could not start transaction.  Cause: The DataSource returned a null connection.");
     }
+    // Isolation Level
+    isolationLevel.applyIsolationLevel(connection);
+    // AutoCommit
     if (connection.getAutoCommit()) {
       connection.setAutoCommit(false);
     }
+    // Debug
     if (connectionLog.isDebugEnabled()) {
       connection = ConnectionLogProxy.newInstance(connection);
     }
@@ -68,8 +75,12 @@ public class JdbcTransaction implements Transaction {
 
   public void close() throws SQLException, TransactionException {
     if (connection != null) {
-      connection.close();
-      connection = null;
+      try {
+        isolationLevel.restoreIsolationLevel(connection);
+      } finally {
+        connection.close();
+        connection = null;
+      }
     }
   }
 

@@ -2,13 +2,14 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
- 2.0.9 - Dec 11, 2004
+ 2.0.9 - Dec 20, 2004
 ------------------------------
 
  o Added solution for N+1 selects for any number of 1:M and M:N relationships.
  o Added groupBy="..." for Result Maps to deal with repeating groups.
  o Added resultMap="..." to result mapping to deal with sub groups.
  o Added remapResults="true|false" remapping of dynamic result set metadata.
+ o Added support for isolation levels specified in .startTransaction()
  o Refactored Builder/Parser to be more maintainable (nodelets)
  o Verified that duplicate statement names throw an exception. [982534]
 

@@ -27,7 +27,7 @@ public interface TransactionConfig {
 
   public void initialize(Properties props) throws SQLException, TransactionException;
 
-  public Transaction newTransaction() throws SQLException, TransactionException;
+  public Transaction newTransaction(int transactionIsolation) throws SQLException, TransactionException;
 
   public int getMaximumConcurrentTransactions();
 

@@ -20,6 +20,8 @@ TO-DO: DOCUMENTATION
   o custom type handler docs
   o new inline parameter map syntax
   o <resultMap ... groupBy="propName">
+  o <result ... resultMap="..."/>
+  o Isolation Level support
 
   o More on bytecode enhancement
   o More on dynamic statment prepend behavior

@@ -38,7 +38,8 @@ public class JdbcTransactionConfig extends BaseTransactionConfig {
   public void initialize(Properties props) throws SQLException, TransactionException {
   }
 
-  public Transaction newTransaction() throws SQLException, TransactionException {
-    return new JdbcTransaction(dataSource);
+  public Transaction newTransaction(int transactionIsolation) throws SQLException, TransactionException {
+    return new JdbcTransaction(dataSource, transactionIsolation);
   }
+
 }

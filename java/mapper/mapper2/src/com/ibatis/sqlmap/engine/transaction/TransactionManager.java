@@ -34,7 +34,12 @@ public class TransactionManager {
     this.txThrottle = new Throttle(transactionConfig.getMaximumConcurrentTransactions());
   }
 
+
   public void begin(SessionScope session) throws SQLException, TransactionException {
+    begin(session, IsolationLevel.UNSET_ISOLATION_LEVEL);
+  }
+
+  public void begin(SessionScope session, int transactionIsolation) throws SQLException, TransactionException {
     Transaction trans = session.getTransaction();
     TransactionState state = session.getTransactionState();
     if (state == TransactionState.STATE_STARTED) {
@@ -49,7 +54,7 @@ public class TransactionManager {
     txThrottle.increment();
 
     try {
-      trans = transactionConfig.newTransaction();
+      trans = transactionConfig.newTransaction(transactionIsolation);
       session.setCommitRequired(false);
     } catch (SQLException e) {
       txThrottle.decrement();

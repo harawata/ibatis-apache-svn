@@ -15,16 +15,6 @@
  */
 package com.ibatis.sqlmap.engine.impl;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-
-import javax.sql.DataSource;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.ibatis.common.jdbc.exception.NestedSQLException;
 import com.ibatis.common.util.PaginatedList;
 import com.ibatis.sqlmap.client.SqlMapSession;
@@ -34,6 +24,14 @@ import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
 import com.ibatis.sqlmap.engine.scope.SessionScope;
 import com.ibatis.sqlmap.engine.transaction.Transaction;
 import com.ibatis.sqlmap.engine.transaction.TransactionException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation of SqlMapSession
@@ -48,7 +46,7 @@ public class SqlMapSessionImpl implements SqlMapSession {
 
   /**
    * Constructor
-   * 
+   *
    * @param client - the client that will use the session
    */
   public SqlMapSessionImpl(ExtendedSqlMapClient client) {
@@ -69,7 +67,7 @@ public class SqlMapSessionImpl implements SqlMapSession {
 
   /**
    * Getter to tell if the session is still open
-   * 
+   *
    * @return - the status of the session
    */
   public boolean isClosed() {
@@ -131,6 +129,10 @@ public class SqlMapSessionImpl implements SqlMapSession {
     delegate.startTransaction(session);
   }
 
+  public void startTransaction(int transactionIsolation) throws SQLException {
+    delegate.startTransaction(session, transactionIsolation);
+  }
+
   public void commitTransaction() throws SQLException {
     delegate.commitTransaction(session);
   }
@@ -181,9 +183,8 @@ public class SqlMapSessionImpl implements SqlMapSession {
 
   /**
    * Gets a mapped statement by ID
-   * 
+   *
    * @param id - the ID
-   * 
    * @return - the mapped statement
    */
   public MappedStatement getMappedStatement(String id) {
@@ -192,7 +193,7 @@ public class SqlMapSessionImpl implements SqlMapSession {
 
   /**
    * Get the status of lazy loading
-   * 
+   *
    * @return - the status
    */
   public boolean isLazyLoadingEnabled() {
@@ -201,7 +202,7 @@ public class SqlMapSessionImpl implements SqlMapSession {
 
   /**
    * Get the status of CGLib enhancements
-   * 
+   *
    * @return - the status
    */
   public boolean isEnhancementEnabled() {
@@ -210,7 +211,7 @@ public class SqlMapSessionImpl implements SqlMapSession {
 
   /**
    * Get the SQL executor
-   * 
+   *
    * @return -  the executor
    */
   public SqlExecutor getSqlExecutor() {
@@ -219,7 +220,7 @@ public class SqlMapSessionImpl implements SqlMapSession {
 
   /**
    * Get the delegate
-   * 
+   *
    * @return - the delegate
    */
   public SqlMapExecutorDelegate getDelegate() {
