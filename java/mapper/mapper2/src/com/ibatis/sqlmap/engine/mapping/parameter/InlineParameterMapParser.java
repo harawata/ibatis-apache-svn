@@ -90,6 +90,7 @@ public class InlineParameterMapParser {
       if (paramParser.hasMoreTokens()) {
         String value = paramParser.nextToken();
         if ("javaType".equals(field)) {
+          value = typeHandlerFactory.resolveAlias(value);
           mapping.setJavaTypeName(value);
         } else if ("jdbcType".equals(field)) {
           mapping.setJdbcTypeName(value);

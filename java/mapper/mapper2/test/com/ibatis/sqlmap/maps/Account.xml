@@ -56,7 +56,7 @@
     <result property="lastName" jdbcType="VARCHAR" column="ACC_LAST_NAME"/>
     <result property="emailAddress" jdbcType="VARCHAR" column="ACC_EMAIL" nullValue="no_email@provided.com"/>
     <result property="bannerOption" javaType="boolean" jdbcType="VARCHAR" column="ACC_BANNER_OPTION"/>
-    <result property="cartOption" column="ACC_CART_OPTION" typeHandler="HundredsBool" />
+    <result property="cartOption" column="ACC_CART_OPTION" typeHandler="HundredsBool"/>
   </resultMap>
 
   <resultMap id="nested-account-result" class="account">
@@ -64,7 +64,7 @@
     <result property="firstName" jdbcType="VARCHAR" column="ACC_FIRST_NAME"/>
     <result property="lastName" jdbcType="VARCHAR" column="ACC_LAST_NAME"/>
     <result property="emailAddress" jdbcType="VARCHAR" column="ACC_EMAIL" nullValue="no_email@provided.com"/>
-    <result property="account.account" column="ACC_ID" select="getAccountViaColumnName" />
+    <result property="account.account" column="ACC_ID" select="getAccountViaColumnName"/>
   </resultMap>
 
   <resultMap id="indexed-account-result" class="account">
@@ -137,7 +137,7 @@
     and ACC_ID = #value#
     ]]>
   </select>
-<!--parameterClass="java.math.BigDecimal"-->
+  <!--parameterClass="java.math.BigDecimal"-->
   <select id="getAccountViaResultClassPlusOne"
     resultClass="account">
     <![CDATA[
@@ -335,7 +335,7 @@
     update ACCOUNT set
       ACC_FIRST_NAME = #firstName#,
       ACC_LAST_NAME = #lastName#,
-      ACC_EMAIL = #emailAddress:VARCHAR:no_email@provided.com#
+      ACC_EMAIL = #emailAddress,javaType=string,jdbcType=VARCHAR,nullValue=no_email@provided.com#
     where
       ACC_ID = #id#
   </update>

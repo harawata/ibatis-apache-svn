@@ -24,7 +24,7 @@ public class TypeHandlerFactory {
 
   private final Map typeHandlerMap = new HashMap();
   private final TypeHandler unknownTypeHandler = new UnknownTypeHandler(this);
-  private HashMap typeAliases = new HashMap();
+  private final HashMap typeAliases = new HashMap();
 
 
   /* Constructor */
