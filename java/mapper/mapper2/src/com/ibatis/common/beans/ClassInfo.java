@@ -93,10 +93,17 @@ public class ClassInfo {
     }
   }
 
+  /** Gets the name of the class the instance provides information for
+   * @return The class name
+   */
   public String getClassName() {
     return className;
   }
 
+  /** Gets the setter for a property as a Method object
+   * @param propertyName - the property
+   * @return The Method
+   */
   public Method getSetter(String propertyName) {
     Method method = (Method) setMethods.get(propertyName);
     if (method == null) {
@@ -105,6 +112,10 @@ public class ClassInfo {
     return method;
   }
 
+  /** Gets the getter for a property as a Method object
+   * @param propertyName - the property
+   * @return The Method
+   */
   public Method getGetter(String propertyName) {
     Method method = (Method) getMethods.get(propertyName);
     if (method == null) {
@@ -113,6 +124,10 @@ public class ClassInfo {
     return method;
   }
 
+  /** Gets the type for a property setter
+   * @param propertyName - the name of the property
+   * @return The Class of the propery setter
+   */
   public Class getSetterType(String propertyName) {
     Class clazz = (Class) setTypes.get(propertyName);
     if (clazz == null) {
@@ -121,6 +136,10 @@ public class ClassInfo {
     return clazz;
   }
 
+  /** Gets the type for a property getter
+   * @param propertyName - the name of the property
+   * @return The Class of the propery getter
+   */
   public Class getGetterType(String propertyName) {
     Class clazz = (Class) getTypes.get(propertyName);
     if (clazz == null) {
@@ -129,22 +148,40 @@ public class ClassInfo {
     return clazz;
   }
 
+  /** Gets an array of the readable properties for an object
+   * @return The array 
+   */
   public String[] getReadablePropertyNames() {
     return readablePropertyNames;
   }
 
+  /** Gets an array of the writeable properties for an object
+   * @return The array 
+   */
   public String[] getWriteablePropertyNames() {
     return writeablePropertyNames;
   }
 
+  /** Check to see if a class has a writeable property by name
+   * @param propertyName - the name of the property to check
+   * @return True if the object has a writeable property by the name
+   */
   public boolean hasWritableProperty(String propertyName) {
     return setMethods.keySet().contains(propertyName);
   }
 
+  /** Check to see if a class has a readable property by name
+   * @param propertyName - the name of the property to check
+   * @return True if the object has a readable property by the name
+   */
   public boolean hasReadableProperty(String propertyName) {
     return getMethods.keySet().contains(propertyName);
   }
 
+  /** Tells us if the class passed in is a knwon common type
+   * @param clazz The class to check
+   * @return True if the class is known
+   */
   public static boolean isKnownType(Class clazz) {
     if (SIMPLE_TYPE_SET.contains(clazz)) {
       return true;
@@ -180,6 +217,10 @@ public class ClassInfo {
     }
   }
 
+  /** Examines a Throwable object and gets it's root cause
+   * @param t - the exception to examine
+   * @return The root cause
+   */
   public static Throwable unwrapThrowable(Throwable t) {
     Throwable t2 = t;
     while (true) {

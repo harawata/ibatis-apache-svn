@@ -17,10 +17,16 @@ public class Resources extends Object {
   private Resources() {
   }
 
+  /** Returns the default classloader (may be null).
+   * @return The default classloader 
+   */
   public static ClassLoader getDefaultClassLoader() {
     return defaultClassLoader;
   }
 
+  /** Sets the default classloader
+   * @param defaultClassLoader - the new default ClassLoader
+   */
   public static void setDefaultClassLoader(ClassLoader defaultClassLoader) {
     Resources.defaultClassLoader = defaultClassLoader;
   }
@@ -153,8 +159,8 @@ public class Resources extends Object {
   /**
    * Returns a resource on the classpath as a File object
    *
-   * @param loader   The classloader used to load the resource
-   * @param resource The resource to find
+   * @param loader - the classloader used to load the resource
+   * @param resource - the resource to find
    * @return The resource
    * @throws IOException If the resource cannot be found or read
    */
@@ -162,16 +168,31 @@ public class Resources extends Object {
     return new File(getResourceURL(loader, resource).getFile());
   }
 
+  /** Gets a URL as an input stream
+   * @param urlString - the URL to get
+   * @return An input stream with the data from the URL
+   * @throws IOException If the resource cannot be found or read
+   */
   public static InputStream getUrlAsStream(String urlString) throws IOException {
     URL url = new URL(urlString);
     URLConnection conn = url.openConnection();
     return conn.getInputStream();
   }
 
+  /** Gets a URL as a Reader
+   * @param urlString - the URL to get
+   * @return A Reader with the data from the URL
+   * @throws IOException If the resource cannot be found or read
+   */
   public static Reader getUrlAsReader(String urlString) throws IOException {
     return new InputStreamReader(getUrlAsStream(urlString));
   }
 
+  /** Gets a URL as a Properties object
+   * @param urlString - the URL to get
+   * @return A Properties object with the data from the URL
+   * @throws IOException If the resource cannot be found or read
+   */
   public static Properties getUrlAsProperties(String urlString) throws IOException {
     Properties props = new Properties();
     InputStream in = null;
@@ -182,6 +203,11 @@ public class Resources extends Object {
     return props;
   }
 
+  /** Loads a class
+   * @param className - the class to load
+   * @return The loaded class
+   * @throws ClassNotFoundException If the class cannot be found (duh!)
+   */
   public static Class classForName(String className) throws ClassNotFoundException {
     Class clazz = null;
     try {
@@ -195,11 +221,24 @@ public class Resources extends Object {
     return clazz;
   }
 
+  /** Creates an instance of a class
+   * @param className - the class to create
+   * @return An instance of the class
+   * @throws ClassNotFoundException If the class cannot be found (duh!)
+   * @throws InstantiationException If the class cannot be instantiaed
+   * @throws IllegalAccessException If the class is not public, or other access problems arise
+   */
   public static Object instantiate(String className)
       throws ClassNotFoundException, InstantiationException, IllegalAccessException {
     return instantiate(classForName(className));
   }
 
+  /** Creates an instance of a class
+   * @param clazz - the class to create
+   * @return An instance of the class
+   * @throws InstantiationException If the class cannot be instantiaed
+   * @throws IllegalAccessException If the class is not public, or other access problems arise
+   */
   public static Object instantiate(Class clazz)
       throws InstantiationException, IllegalAccessException {
     return clazz.newInstance();
