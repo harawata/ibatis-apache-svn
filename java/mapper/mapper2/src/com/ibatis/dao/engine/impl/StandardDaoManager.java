@@ -16,11 +16,10 @@ public class StandardDaoManager implements DaoManager {
   private static final String DAO_EXPLICIT_TX = "__DAO_EXPLICIT_TX";
 
   private ThreadLocal transactionMode = new ThreadLocal();
+  private ThreadLocal contextInTransactionList = new ThreadLocal();
 
   private Map typeContextMap = new HashMap();
   private Map daoImplMap = new HashMap();
-
-  private List contextInTransactionList = new ArrayList();
 
   public void addContext(DaoContext context) {
     Iterator i = context.getDaoImpls();
@@ -45,7 +44,8 @@ public class StandardDaoManager implements DaoManager {
   }
 
   public void commitTransaction() {
-    Iterator i = contextInTransactionList.iterator();
+    List ctxList = getContextInTransactionList();
+    Iterator i = ctxList.iterator();
     while (i.hasNext()) {
       DaoContext context = (DaoContext) i.next();
       context.commitTransaction();
@@ -53,15 +53,16 @@ public class StandardDaoManager implements DaoManager {
   }
 
   public void endTransaction() {
+    List ctxList = getContextInTransactionList();
     try {
-      Iterator i = contextInTransactionList.iterator();
+      Iterator i = ctxList.iterator();
       while (i.hasNext()) {
         DaoContext context = (DaoContext) i.next();
         context.endTransaction();
       }
     } finally {
       transactionMode.set(null);
-      contextInTransactionList.clear();
+      ctxList.clear();
     }
   }
 
@@ -75,9 +76,19 @@ public class StandardDaoManager implements DaoManager {
   }
 
   public void addContextInTransaction (DaoContext ctx) {
-    if (!contextInTransactionList.contains(ctx)) {
-      contextInTransactionList.add(ctx);
+    List ctxList = getContextInTransactionList();
+    if (!ctxList.contains(ctx)) {
+      ctxList.add(ctx);
     }
+  }
+
+  private List getContextInTransactionList() {
+    List list = (List) contextInTransactionList.get();
+    if (list == null) {
+      list = new ArrayList();
+      contextInTransactionList.set(list);
+    }
+    return list;
   }
 
 }
