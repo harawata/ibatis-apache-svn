@@ -208,6 +208,14 @@ public class BasicResultMap implements ResultMap {
         }
       }
 
+      String nullValue = mapping.getNullValue();
+      if (result == null && nullValue != null) {
+        TypeHandler typeHandler = TypeHandlerFactory.getTypeHandler(targetType);
+        if (typeHandler != null) {
+          result = typeHandler.valueOf(nullValue);
+        }
+      }
+      
       return result;
 
     } catch (InstantiationException e) {

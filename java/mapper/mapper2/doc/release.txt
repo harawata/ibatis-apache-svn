@@ -10,6 +10,7 @@ Build Number: @buildNum@
  o Fixed javaType attribute support for JavaBeans
  o Fixed caching of statements containing $simple$ dynamic sql
  o Fixed List in Map iterate tag problem
+ o Fixed nullValue for primitive result classes of nested select statements
 
 ------------------------------
  2.0.0 RC4 - May 11, 2004
