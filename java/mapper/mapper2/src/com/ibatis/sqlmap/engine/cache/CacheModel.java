@@ -267,7 +267,7 @@ public class CacheModel implements ExecuteListener {
       value = controller.getObject(this, key);
     }
 
-    if (serialize && !readOnly && value != null) {
+    if (serialize && !readOnly && (value != NULL_OBJECT && value != null)) {
       try {
         ByteArrayInputStream bis = new ByteArrayInputStream((byte[]) value);
         ObjectInputStream ois = new ObjectInputStream(bis);
@@ -286,7 +286,7 @@ public class CacheModel implements ExecuteListener {
       }
     }
 
-    return value;
+    return value == NULL_OBJECT ? null : value;
 
   }
 
@@ -298,7 +298,7 @@ public class CacheModel implements ExecuteListener {
    */
   public void putObject(CacheKey key, Object value) {
     if (null == value) value = NULL_OBJECT;
-    if (serialize && !readOnly && value != null) {
+    if (serialize && !readOnly && value != NULL_OBJECT) {
       try {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(bos);
