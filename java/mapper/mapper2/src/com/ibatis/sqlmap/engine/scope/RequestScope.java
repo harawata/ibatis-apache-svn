@@ -21,6 +21,7 @@ import com.ibatis.sqlmap.engine.mapping.sql.Sql;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
 
 import java.sql.ResultSet;
+import java.util.Map;
 
 /**
  * Request based implementation of Scope interface
@@ -42,12 +43,14 @@ public class RequestScope extends BaseScope {
 
   // Used by N+1 Select solution
   private ResultSet resultSet;
-
+  private Map uniqueKeys;
+  private boolean rowDataFound;
   /**
    * Default constructor
    */
   public RequestScope() {
     errorContext = new ErrorContext();
+    reset();
   }
 
   /**
@@ -191,6 +194,22 @@ public class RequestScope extends BaseScope {
     this.resultSet = resultSet;
   }
 
+  public Map getUniqueKeys() {
+    return uniqueKeys;
+  }
+
+  public void setUniqueKeys(Map uniqueKeys) {
+    this.uniqueKeys = uniqueKeys;
+  }
+
+  public boolean isRowDataFound() {
+    return rowDataFound;
+  }
+
+  public void setRowDataFound(boolean rowDataFound) {
+    this.rowDataFound = rowDataFound;
+  }
+
   public void reset() {
     super.reset();
     errorContext.reset();
@@ -202,6 +221,8 @@ public class RequestScope extends BaseScope {
     dynamicParameterMap = null;
     dynamicSql = null;
     resultSet = null;
+    uniqueKeys = null;
+    rowDataFound = true;
   }
 
 }

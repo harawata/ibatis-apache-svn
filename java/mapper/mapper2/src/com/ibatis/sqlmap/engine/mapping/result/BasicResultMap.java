@@ -59,7 +59,6 @@ public class BasicResultMap implements ResultMap {
   private List nestedResultMappings;
 
   private Set groupByProps;
-  private Map uniqueKeys;
 
   private String xmlName;
 
@@ -250,6 +249,7 @@ public class BasicResultMap implements ResultMap {
     errorContext.setResource(this.getResource());
     errorContext.setMoreInfo("Check the result map.");
 
+    boolean foundData = false;
     Object[] columnValues = new Object[getResultMappings().length];
     for (int i = 0; i < getResultMappings().length; i++) {
       BasicResultMapping mapping = (BasicResultMapping) getResultMappings()[i];
@@ -273,7 +273,10 @@ public class BasicResultMap implements ResultMap {
       } else if (mapping.getNestedResultMapName() == null) {
         columnValues[i] = getPrimitiveResultMappingValue(rs, mapping);
       }
+      foundData = foundData || columnValues[i] != null;
     }
+
+    request.setRowDataFound (foundData);
 
     return columnValues;
   }
@@ -281,22 +284,27 @@ public class BasicResultMap implements ResultMap {
   public Object setResultObjectValues(RequestScope request, Object resultObject, Object[] values) {
     Object ukey = getUniqueKey(values);
 
-    // Only continue if unique key is not already known.
+    Map uniqueKeys = request.getUniqueKeys();
+
     if (uniqueKeys != null && uniqueKeys.containsKey(ukey)) {
+      // Unique key is already known, so get the existing result object and process additional results.
       resultObject = uniqueKeys.get(ukey);
       applyNestedResultMap(request, resultObject, values);
       resultObject = NO_VALUE;
     } else if (ukey == null || uniqueKeys == null || !uniqueKeys.containsKey(ukey)) {
+      // Unique key is NOT known, so create a new result object and then process additional results.
       resultObject = dataExchange.setData(request, this, resultObject, values);
-      // Lazy init key set
+      // Lazy init key set, only if we're grouped by something (i.e. ukey != null)
       if (ukey != null) {
         if (uniqueKeys == null) {
           uniqueKeys = new HashMap();
+          request.setUniqueKeys(uniqueKeys);
         }
         uniqueKeys.put(ukey, resultObject);
       }
       applyNestedResultMap(request, resultObject, values);
     } else {
+      // Otherwise, we don't care about these results.
       resultObject = NO_VALUE;
     }
 
@@ -343,9 +351,11 @@ public class BasicResultMap implements ResultMap {
       }
 
       values = resultMap.getResults(request, request.getResultSet());
-      Object o = resultMap.setResultObjectValues(request, null, values);
-      if (o != NO_VALUE) {
-        c.add(o);
+      if (request.isRowDataFound()) {
+        Object o = resultMap.setResultObjectValues(request, null, values);
+        if (o != NO_VALUE) {
+          c.add(o);
+        }
       }
     } catch (SQLException e) {
       throw new SqlMapException("Error getting nested result map values for '" + mapping.getPropertyName() + "'.  Cause: " + e, e);
