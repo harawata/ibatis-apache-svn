@@ -26,11 +26,10 @@ with HSQLDB!
 Be sure to have the following properties set correctly in the petstore.properties
 file:
 --
-SimpleDriver=org.hsqldb.jdbcDriver
-SimpleUrl=jdbc:hsqldb:D:/tmp/jpetstore
-
-SimpleUsername=sa
-SimplePassword=
+driver=org.hsqldb.jdbcDriver
+url=jdbc:hsqldb:D:/tmp/jpetstore
+username=sa
+password=
 --
 Adapt the path and file name for property "SimpleUrl" to fit your configuration.
 
