@@ -7,12 +7,16 @@ package com.ibatis.sqlmap;
 
 import com.ibatis.common.util.PaginatedList;
 import com.ibatis.sqlmap.client.event.RowHandler;
+import com.ibatis.sqlmap.engine.impl.SqlMapClientImpl;
+import com.ibatis.sqlmap.engine.transaction.jdbc.JdbcTransactionConfig;
 import testdomain.Account;
 import testdomain.LineItem;
 import testdomain.SuperAccount;
 
+import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +43,16 @@ public class StatementTest extends BaseSqlMapTest {
     assertAccount1(account);
   }
 
+  public void testUserConnection() throws SQLException {
+    DataSource ds = sqlMap.getDataSource();
+    Connection conn = ds.getConnection();
+    ((SqlMapClientImpl)sqlMap).getDelegate().getTxManager().setDataSource(null);
+    sqlMap.setUserConnection(conn);
+    Account account = (Account) sqlMap.queryForObject("getAccountViaColumnName", new Integer(1));
+    conn.close();
+    assertAccount1(account);
+    ((SqlMapClientImpl)sqlMap).getDelegate().getTxManager().setDataSource(ds);
+  }
 
   public void testExecuteQueryForObjectViaColumnIndex() throws SQLException {
     Account account = (Account) sqlMap.queryForObject("getAccountViaColumnIndex", new Integer(1));

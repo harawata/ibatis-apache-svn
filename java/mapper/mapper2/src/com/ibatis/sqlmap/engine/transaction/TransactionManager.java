@@ -87,5 +87,9 @@ public class TransactionManager {
     return transactionConfig.getDataSource();
   }
 
+  public void setDataSource(DataSource ds) {
+    transactionConfig.setDataSource(ds);
+  }
+
 }
 
