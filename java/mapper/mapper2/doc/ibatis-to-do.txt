@@ -2,7 +2,6 @@
 TO-DO: BUGS & FEATURES
 ------------------------------
 
-  o Investigate possible lazy loading bug (coll vs. class w/ enhancement vs. without)
 
 ------------------------------
 TO-DO: DOCUMENTATION
