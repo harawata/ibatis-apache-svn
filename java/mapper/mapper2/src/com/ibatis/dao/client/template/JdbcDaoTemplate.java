@@ -1,6 +1,5 @@
 package com.ibatis.dao.client.template;
 
-import com.ibatis.dao.client.Dao;
 import com.ibatis.dao.client.DaoManager;
 import com.ibatis.dao.engine.transaction.jdbc.JdbcDaoTransaction;
 
