@@ -196,9 +196,6 @@ public class BasicResultMap implements ResultMap {
         }
       }
 
-      // TODO DOM: Does the DOM functionality need ignoreRoot,
-      // TODO      or can it just use Document vs. String types?
-
       Object result = ResultLoader.loadResult(client, statementName, parameterObject, targetType);
 
       if (setIgnoreDomRoot) {
@@ -210,8 +207,6 @@ public class BasicResultMap implements ResultMap {
           result = new XmlList((List) result);
         }
       }
-
-      //TODO DomList (get complete Document from list of fragments
 
       return result;
 
