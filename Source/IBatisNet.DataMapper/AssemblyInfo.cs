@@ -11,7 +11,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("iBATIS.NET")]
-[assembly: AssemblyCopyright("Copyright (C) 2004 - Gilles Bayon")]
+[assembly: AssemblyCopyright("Copyright 2004,2005 The Apache Software Foundation")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
 
@@ -26,7 +26,7 @@ using System.Runtime.CompilerServices;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("1.1.*")]
+[assembly: AssemblyVersion("1.1.458")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 

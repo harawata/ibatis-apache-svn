@@ -221,5 +221,24 @@ HR  {
 
 .blue {
 	color: #0000FF;
-	font-weight: bold; 
+}
+
+.cache {
+	color: #FF9900;
+}
+
+.alias {
+	color: #FF0000;
+}
+
+.parameterMap {
+	color: #800080;
+}
+
+.resultmap {
+	color: #3366FF;
+}
+
+.statement {
+	color: #339966;
 }
