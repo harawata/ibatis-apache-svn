@@ -53,8 +53,8 @@
 		<!-- import system environment variables -->
 		<sysinfo />
 
-		<loadtasks assembly="D:/Program Files/Nant\nant-0.85-rc1/bin/NAnt.Contrib.Tasks.dll"/>
-		<loadtasks assembly="E:/Projet/NUnit2Report/bin/NAnt.NUnit2ReportTasks.dll"/>
+		<loadtasks assembly="G:\Program Files\nant\nantcontrib-0.85-rc1-bin\nantcontrib-0.85-rc1\bin/NAnt.Contrib.Tasks.dll"/>
+		<loadtasks assembly="E:\Projet\NUnit2Report\bin/NAnt.NUnit2ReportTasks.dll"/>
 
         <call target="${project.config}" />
         <call target="set-runtime-configuration" />
@@ -94,6 +94,9 @@
 
         <!-- build IBatisNet.DataAccess -->
         <nant buildfile="IBatisNet.DataAccess/IBatisNet.DataAccess.build" target="build" />
+
+        <!-- build IBatisNet.DataAccess.Extensions -->
+        <nant buildfile="IBatisNet.DataAccess.Extensions/IBatisNet.DataAccess.Extensions.build" target="build" />
 
     </target>
     
