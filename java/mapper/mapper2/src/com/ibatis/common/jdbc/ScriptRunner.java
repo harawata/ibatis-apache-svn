@@ -26,6 +26,8 @@ import java.util.Map;
 
 /**
  * Tool to run database scripts
+ * @deprecated There are better tools available for running scripts.  This
+ * class has become out of scope for iBATIS.
  */
 public class ScriptRunner {
 
