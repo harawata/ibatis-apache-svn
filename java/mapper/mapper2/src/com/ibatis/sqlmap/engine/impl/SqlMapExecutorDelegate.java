@@ -22,6 +22,7 @@ import com.ibatis.sqlmap.engine.scope.SessionScope;
 import com.ibatis.sqlmap.engine.transaction.Transaction;
 import com.ibatis.sqlmap.engine.transaction.TransactionException;
 import com.ibatis.sqlmap.engine.transaction.TransactionManager;
+import com.ibatis.sqlmap.engine.transaction.TransactionState;
 import com.ibatis.sqlmap.engine.transaction.user.UserProvidedTransaction;
 
 import javax.sql.DataSource;
@@ -240,7 +241,7 @@ public class SqlMapExecutorDelegate {
 
       autoCommitTransaction(session, autoStart);
     } finally {
-      autoStopTransaction(session, autoStart);
+      autoEndTransaction(session, autoStart);
     }
 
     return generatedKey;
@@ -285,7 +286,7 @@ public class SqlMapExecutorDelegate {
 
       autoCommitTransaction(session, autoStart);
     } finally {
-      autoStopTransaction(session, autoStart);
+      autoEndTransaction(session, autoStart);
     }
 
     return rows;
@@ -318,7 +319,7 @@ public class SqlMapExecutorDelegate {
 
       autoCommitTransaction(session, autoStart);
     } finally {
-      autoStopTransaction(session, autoStart);
+      autoEndTransaction(session, autoStart);
     }
 
     return object;
@@ -347,7 +348,7 @@ public class SqlMapExecutorDelegate {
 
       autoCommitTransaction(session, autoStart);
     } finally {
-      autoStopTransaction(session, autoStart);
+      autoEndTransaction(session, autoStart);
     }
 
     return list;
@@ -371,7 +372,7 @@ public class SqlMapExecutorDelegate {
 
       autoCommitTransaction(session, autoStart);
     } finally {
-      autoStopTransaction(session, autoStart);
+      autoEndTransaction(session, autoStart);
     }
 
   }
@@ -447,19 +448,17 @@ public class SqlMapExecutorDelegate {
     return sqlExecutor.executeBatch(session);
   }
 
-  public Transaction getUserTransaction(SessionScope session) {
-    return session.getUserTransaction();
-  }
-
-  public void setUserTransaction(SessionScope session, Connection userConnection) {
+  public void setUserProvidedTransaction(SessionScope session, Connection userConnection) {
     if (userConnection != null) {
       Connection conn = userConnection;
       if (log.isDebugEnabled()) {
         conn = ConnectionLogProxy.newInstance(conn);
       }
-      session.setUserTransaction(new UserProvidedTransaction(conn));
+      session.setTransaction(new UserProvidedTransaction(conn));
+      session.setTransactionState(TransactionState.STATE_USER_PROVIDED);
     } else {
-      session.setUserTransaction(null);
+      session.setTransaction(null);
+      session.setTransactionState(TransactionState.STATE_ENDED);
     }
   }
 
@@ -475,17 +474,13 @@ public class SqlMapExecutorDelegate {
     return sqlExecutor;
   }
 
-  // -- Private Methods
-
-  private Transaction getTransaction(SessionScope session) {
-    Transaction transaction = session.getUserTransaction();
-    if (transaction == null) {
-      transaction = session.getTransaction();
-    }
-    return transaction;
+  public Transaction getTransaction(SessionScope session) {
+    return session.getTransaction();
   }
 
-  private void autoStopTransaction(SessionScope session, boolean autoStart) throws SQLException {
+  // -- Private Methods
+
+  private void autoEndTransaction(SessionScope session, boolean autoStart) throws SQLException {
     if (autoStart) {
       session.getSqlMapTxMgr().endTransaction();
     }

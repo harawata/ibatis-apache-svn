@@ -133,13 +133,13 @@ public class SqlMapSessionImpl implements SqlMapSession {
   }
 
   public void setUserConnection(Connection connection) throws SQLException {
-    delegate.setUserTransaction(session, connection);
+    delegate.setUserProvidedTransaction(session, connection);
   }
 
   public Connection getUserConnection() throws SQLException {
     try {
       Connection conn = null;
-      Transaction trans = delegate.getUserTransaction(session);
+      Transaction trans = delegate.getTransaction(session);
       if (trans != null) {
         conn = trans.getConnection();
       }

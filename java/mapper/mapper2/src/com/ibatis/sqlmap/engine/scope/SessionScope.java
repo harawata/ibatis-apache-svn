@@ -19,9 +19,6 @@ public class SessionScope extends BaseScope {
   private SqlMapExecutor sqlMapExecutor;
   private SqlMapTransactionManager sqlMapTxMgr;
 
-  // Used by StandardSqlMapClient
-  private Transaction userTransaction;
-
   // Used by TransactionManager
   private Transaction transaction;
   private TransactionState transactionState;
@@ -62,14 +59,6 @@ public class SessionScope extends BaseScope {
 
   public void setSqlMapTxMgr(SqlMapTransactionManager sqlMapTxMgr) {
     this.sqlMapTxMgr = sqlMapTxMgr;
-  }
-
-  public Transaction getUserTransaction() {
-    return userTransaction;
-  }
-
-  public void setUserTransaction(Transaction userTransaction) {
-    this.userTransaction = userTransaction;
   }
 
   public boolean isInBatch() {
@@ -125,7 +114,6 @@ public class SessionScope extends BaseScope {
     this.batch = null;
     sqlMapExecutor = null;
     sqlMapTxMgr = null;
-    userTransaction = null;
     inBatch = false;
     transaction = null;
     transactionState = null;

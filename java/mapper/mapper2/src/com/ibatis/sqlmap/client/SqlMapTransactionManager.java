@@ -62,16 +62,23 @@ public interface SqlMapTransactionManager {
    * so you are responsible for appropriately.  Here's a (very) simple example (throws SQLException):
    * <pre>
    * try {
-   *   Connection myConnection = dataSource.getConnection();
-   *   sqlMap.setUserConnection(myConnection);
+   *   Connection connection = dataSource.getConnection();
+   *   sqlMap.setUserConnection(connection);
    *   // do work
-   *   myConnection.commit();
+   *   connection.commit();
    * } catch (SQLException e) {
-   *   myConnection.rollback();
-   *   throw e;
+   *     try {
+   *       if (connection != null) commit.rollback();
+   *     } catch (SQLException ignored) {
+   *       // generally ignored
+   *     }
+   *     throw e;  // rethrow the exception
    * } finally {
-   *   myConnection.close();
-   *   sqlMap.setUserConnection(null);
+   *   try {
+   *     if (connection != null) connection.close();
+   *   } catch (SQLException ignored) {
+   *     // generally ignored
+   *   }
    * }
    * </pre>
    *

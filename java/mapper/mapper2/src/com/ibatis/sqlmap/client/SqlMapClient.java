@@ -1,5 +1,7 @@
 package com.ibatis.sqlmap.client;
 
+import java.sql.Connection;
+
 /**
  * A thread safe client for working with your SQL Maps (Start Here).  This interface inherits transaction control
  * and execution methods from the SqlMapTransactionManager and SqlMapExecutor interfaces.
@@ -95,7 +97,7 @@ package com.ibatis.sqlmap.client;
 public interface SqlMapClient extends SqlMapExecutor, SqlMapTransactionManager {
 
   /**
-   * Generally would return a single threaded SqlMapSession implementation for use by
+   * Returns a single threaded SqlMapSession implementation for use by
    * one user.  Remember though, that SqlMapClient itself is a thread safe SqlMapSession
    * implementation, so you can also just work directly with it.  If you do get a session
    * explicitly using this method <b>be sure to close it!</b>  You can close a session using
@@ -105,6 +107,47 @@ public interface SqlMapClient extends SqlMapExecutor, SqlMapTransactionManager {
    * @return An SqlMapSession instance.
    */
   public SqlMapSession openSession();
+
+  /**
+   * Returns a single threaded SqlMapSession implementation for use by
+   * one user.  Remember though, that SqlMapClient itself is a thread safe SqlMapSession
+   * implementation, so you can also just work directly with it.  If you do get a session
+   * explicitly using this method <b>be sure to close it!</b>  You can close a session using
+   * the SqlMapSession.close() method.
+   * <p/>
+   * This particular implementation takes a user provided connection as a parameter.  This
+   * connection will be used for executing statements, and therefore overrides any
+   * configured datasources.  Using this approach allows the developer to easily use an externally
+   * supplied connection for executing statements.
+   * <p>
+   * <b>Important:</b> Using a user supplied connection basically sidesteps the datasource
+   * so you are responsible for appropriately handling your connection lifecycle (i.e. closing).
+   * Here's a (very) simple example (throws SQLException):
+   * <pre>
+   * try {
+   *   Connection connection = dataSource.getConnection();
+   *   SqlMapSession session = sqlMap.openSession(connection);
+   *   // do work
+   *   connection.commit();
+   * } catch (SQLException e) {
+   *     try {
+   *       if (connection != null) commit.rollback();
+   *     } catch (SQLException ignored) {
+   *       // generally ignored
+   *     }
+   *     throw e;  // rethrow the exception
+   * } finally {
+   *   try {
+   *     if (connection != null) connection.close();
+   *   } catch (SQLException ignored) {
+   *     // generally ignored
+   *   }
+   * }
+   * </pre>
+   *
+   * @return An SqlMapSession instance.
+   */
+  public SqlMapSession openSession(Connection conn);
 
   /**
    * TODO : Deprecated and will be removed.

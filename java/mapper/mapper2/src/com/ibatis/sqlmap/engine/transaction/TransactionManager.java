@@ -26,7 +26,12 @@ public class TransactionManager {
     Transaction trans = session.getTransaction();
     TransactionState state = session.getTransactionState();
     if (state == TransactionState.STATE_STARTED) {
-      throw new TransactionException("TransactionManager could not start a new transaction.  A transaction is already started.");
+      throw new TransactionException("TransactionManager could not start a new transaction.  " +
+          "A transaction is already started.");
+    } else if (state == TransactionState.STATE_USER_PROVIDED) {
+      throw new TransactionException("TransactionManager could not start a new transaction.  " +
+          "A user provided connection is currently being used by this session.  " +
+          "The calling .setUserConnection (null) will clear the user provided transaction.");
     }
 
     txThrottle.increment();
@@ -49,7 +54,12 @@ public class TransactionManager {
   public void commit(SessionScope session) throws SQLException, TransactionException {
     Transaction trans = session.getTransaction();
     TransactionState state = session.getTransactionState();
-    if (state != TransactionState.STATE_STARTED) {
+    if (state == TransactionState.STATE_USER_PROVIDED) {
+      throw new TransactionException("TransactionManager could not commit.  " +
+          "A user provided connection is currently being used by this session.  " +
+          "You must call the commit() method of the Connection directly.  " +
+          "The calling .setUserConnection (null) will clear the user provided transaction.");
+    } else  if (state != TransactionState.STATE_STARTED) {
       throw new TransactionException("TransactionManager could not commit.  No transaction is started.");
     }
     if (session.isCommitRequired()) {
@@ -62,15 +72,26 @@ public class TransactionManager {
   public void end(SessionScope session) throws SQLException, TransactionException {
     Transaction trans = session.getTransaction();
     TransactionState state = session.getTransactionState();
+
+    if (state == TransactionState.STATE_USER_PROVIDED) {
+      throw new TransactionException("TransactionManager could not end this transaction.  " +
+          "A user provided connection is currently being used by this session.  " +
+          "You must call the rollback() method of the Connection directly.  " +
+          "The calling .setUserConnection (null) will clear the user provided transaction.");
+    }
+
     try {
       if (trans != null) {
-        if (state != TransactionState.STATE_COMMITTED) {
-          if (session.isCommitRequired()) {
-            trans.rollback();
-            session.setCommitRequired(false);
+        try {
+          if (state != TransactionState.STATE_COMMITTED) {
+            if (session.isCommitRequired()) {
+              trans.rollback();
+              session.setCommitRequired(false);
+            }
           }
+        } finally {
+          trans.close();
         }
-        trans.close();
       }
     } finally {
 
