@@ -2,7 +2,7 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
- 2.0.6 - Sep 19, 2004
+ 2.0.6 - Sep 18, 2004
 ------------------------------
 
  o Changed complex props so select won't be executed if param null
