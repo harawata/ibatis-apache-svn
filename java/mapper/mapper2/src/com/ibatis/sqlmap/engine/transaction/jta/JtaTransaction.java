@@ -22,7 +22,7 @@ public class JtaTransaction implements Transaction {
   private boolean commmitted = false;
   private boolean newTransaction = false;
 
-  public JtaTransaction(UserTransaction utx, DataSource ds) throws SQLException, TransactionException {
+  public JtaTransaction(UserTransaction utx, DataSource ds) throws TransactionException {
     // Check parameters
     userTransaction = utx;
     dataSource = ds;
@@ -32,7 +32,9 @@ public class JtaTransaction implements Transaction {
     if (dataSource == null) {
       throw new TransactionException("JtaTransaction initialization failed.  DataSource was null.");
     }
+  }
 
+  private void init() throws TransactionException, SQLException {
     // Start JTA Transaction
     try {
       newTransaction = userTransaction.getStatus() == Status.STATUS_NO_TRANSACTION;
@@ -54,31 +56,35 @@ public class JtaTransaction implements Transaction {
   }
 
   public void commit() throws SQLException, TransactionException {
-    if (commmitted) {
-      throw new TransactionException("JtaTransaction could not commit because this transaction has already been committed.");
-    }
-    try {
-      if (newTransaction) {
-        userTransaction.commit();
+    if (connection != null) {
+      if (commmitted) {
+        throw new TransactionException("JtaTransaction could not commit because this transaction has already been committed.");
       }
-    } catch (Exception e) {
-      throw new TransactionException("JtaTransaction could not commit.  Cause: ", e);
+      try {
+        if (newTransaction) {
+          userTransaction.commit();
+        }
+      } catch (Exception e) {
+        throw new TransactionException("JtaTransaction could not commit.  Cause: ", e);
+      }
+      commmitted = true;
     }
-    commmitted = true;
   }
 
   public void rollback() throws SQLException, TransactionException {
-    if (!commmitted) {
-      try {
-        if (userTransaction != null) {
-          if (newTransaction) {
-            userTransaction.rollback();
-          } else {
-            userTransaction.setRollbackOnly();
+    if (connection != null) {
+      if (!commmitted) {
+        try {
+          if (userTransaction != null) {
+            if (newTransaction) {
+              userTransaction.rollback();
+            } else {
+              userTransaction.setRollbackOnly();
+            }
           }
+        } catch (Exception e) {
+          throw new TransactionException("JtaTransaction could not rollback.  Cause: ", e);
         }
-      } catch (Exception e) {
-        throw new TransactionException("JtaTransaction could not rollback.  Cause: ", e);
       }
     }
   }
@@ -91,6 +97,9 @@ public class JtaTransaction implements Transaction {
   }
 
   public Connection getConnection() throws SQLException, TransactionException {
+    if (connection == null) {
+      init();
+    }
     return connection;
   }
 

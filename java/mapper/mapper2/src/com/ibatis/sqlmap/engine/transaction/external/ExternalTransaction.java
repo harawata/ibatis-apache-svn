@@ -13,15 +13,22 @@ import java.sql.*;
 public class ExternalTransaction implements Transaction {
 
   private DataSource dataSource;
+  private boolean defaultAutoCommit;
+  private boolean setAutoCommitAllowed;
   private Connection connection;
 
-  public ExternalTransaction(DataSource ds, boolean defaultAutoCommit, boolean setAutoCommitAllowed) throws SQLException, TransactionException {
+  public ExternalTransaction(DataSource ds, boolean defaultAutoCommit, boolean setAutoCommitAllowed) throws TransactionException {
     // Check Parameters
     dataSource = ds;
     if (dataSource == null) {
       throw new TransactionException("ExternalTransaction initialization failed.  DataSource was null.");
     }
 
+    this.defaultAutoCommit = defaultAutoCommit;
+    this.setAutoCommitAllowed = setAutoCommitAllowed;
+  }
+
+  private void init() throws SQLException, TransactionException {
     // Open JDBC Transaction
     connection = dataSource.getConnection();
     if (connection == null) {
@@ -48,6 +55,9 @@ public class ExternalTransaction implements Transaction {
   }
 
   public Connection getConnection() throws SQLException, TransactionException {
+    if (connection == null) {
+      init();
+    }
     return connection;
   }
 

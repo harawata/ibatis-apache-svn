@@ -15,13 +15,15 @@ public class JdbcTransaction implements Transaction {
   private DataSource dataSource;
   private Connection connection;
 
-  public JdbcTransaction(DataSource ds) throws SQLException, TransactionException {
+  public JdbcTransaction(DataSource ds) throws TransactionException {
     // Check Parameters
     dataSource = ds;
     if (dataSource == null) {
       throw new TransactionException("JdbcTransaction initialization failed.  DataSource was null.");
     }
+  }
 
+  private void init() throws SQLException, TransactionException {
     // Open JDBC Transaction
     connection = dataSource.getConnection();
     if (connection == null) {
@@ -33,11 +35,15 @@ public class JdbcTransaction implements Transaction {
   }
 
   public void commit() throws SQLException, TransactionException {
-    connection.commit();
+    if (connection != null) {
+      connection.commit();
+    }
   }
 
   public void rollback() throws SQLException, TransactionException {
-    connection.rollback();
+    if (connection != null) {
+      connection.rollback();
+    }
   }
 
   public void close() throws SQLException, TransactionException {
@@ -48,6 +54,9 @@ public class JdbcTransaction implements Transaction {
   }
 
   public Connection getConnection() throws SQLException, TransactionException {
+    if (connection == null) {
+      init();
+    }
     return connection;
   }
 
