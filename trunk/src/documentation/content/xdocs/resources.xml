@@ -9,9 +9,14 @@
 
 <body>
 
-<p><strong><link href="http://www.ibatis.com">Original iBATIS Website</link></strong>
+<ul>
+<li><link href="http://www.ibatis.com">Original iBATIS Website</link></li>
+<li>
+<link href="http://alxeg.narod.ru/ibatis/index.html">sql2ibatis</link> - iBATIS configuration and SQL generation tool. 
+Generates configuration files and SQL based on an input DDL file. 
+</li>
+</ul>
 
-</p>
 </body>
     
 <footer>
