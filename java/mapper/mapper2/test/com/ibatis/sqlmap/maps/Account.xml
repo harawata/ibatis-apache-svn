@@ -7,6 +7,7 @@
 <sqlMap namespace="Account">
 
   <typeAlias alias="account" type="testdomain.Account"/>
+  <typeAlias alias="Long" type="java.lang.Long"/>
 
   <cacheModel id="account-cache" type="LRU" readOnly="true">
     <flushInterval hours="24"/>
@@ -30,7 +31,7 @@
     <result property="firstName" javaType="java.lang.String" jdbcType="VARCHAR" column="ACC_FIRST_NAME"/>
     <result property="lastName" javaType="java.lang.String" jdbcType="VARCHAR" column="ACC_LAST_NAME"/>
     <result property="emailAddress" javaType="java.lang.String" jdbcType="VARCHAR" column="ACC_EMAIL"/>
-    <result property="age" javaType="java.lang.Long" jdbcType="NUMERIC" column="ACC_AGE"/>
+    <result property="age" javaType="Long" jdbcType="NUMERIC" column="ACC_AGE"/>
     <result property="dateAdded" javaType="java.util.Date" jdbcType="DATE" column="ACC_DATE_ADDED"/>
   </resultMap>
 

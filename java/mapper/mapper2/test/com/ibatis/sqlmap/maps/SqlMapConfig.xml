@@ -7,6 +7,12 @@
 
   <properties resource="com/ibatis/sqlmap/maps/SqlMapConfig.properties"/>
 
+  <!-- settings
+	add these to test bug 976614
+	enhancementEnabled="false"
+    lazyLoadingEnabled="false"
+  -->
+
   <settings
     cacheModelsEnabled="true"
     enhancementEnabled="true"

@@ -113,7 +113,7 @@ public class StatementTest extends BaseSqlMapTest {
   }
 
   /**
-   * for bug 976614
+   * for bug 976614 - bug squashed 07-14-04 By Brandon Goodin
    */
   /*
   public void testBrokenExecuteQueryForListWithResultMap() throws SQLException {
@@ -128,7 +128,6 @@ public class StatementTest extends BaseSqlMapTest {
     assertEquals(5, ((Account) list.get(4)).getId());
   }
   */
-  
   public void testExecuteQueryForPaginatedList() throws SQLException {
 
     // Get List of all 5

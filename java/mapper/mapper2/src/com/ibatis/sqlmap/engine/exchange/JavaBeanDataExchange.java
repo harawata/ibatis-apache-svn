@@ -63,13 +63,18 @@ public class JavaBeanDataExchange extends BaseDataExchange implements DataExchan
   public Object setData(RequestScope request, ResultMap resultMap, Object resultObject, Object[] values) {
     if (resultPlan != null) {
       Object object = resultObject;
+      
+      ErrorContext errorContext = request.getErrorContext();
+      
       if (object == null) {
+        errorContext.setMoreInfo("The error occured while instantiating the result object");
         try {
           object = Resources.instantiate(resultMap.getResultClass());
         } catch (Exception e) {
           throw new NestedRuntimeException("JavaBeansDataExchange could not instantiate result class.  Cause: " + e, e);
         }
       }
+      errorContext.setMoreInfo("The error happened while setting a property on the result object ("+object+").");
       resultPlan.setProperties(object, values);
       return object;
     } else {
