@@ -130,6 +130,10 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "bin\Debug\cool.jpg"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "bin\Debug\dao_Access_OleDb.config"
                     BuildAction = "None"
                 />

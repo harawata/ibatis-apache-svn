@@ -1157,7 +1157,7 @@ namespace IBatisNet.DataMapper.Configuration
 		private void ParseGlobalProperties(XmlNode xmlContext)
 		{
 			XmlNode nodeProperties = xmlContext.SelectSingleNode("properties");
-			_errorContext.Activity = "Loading global properties";
+			_errorContext.Activity = "loading global properties";
 
 			if (nodeProperties != null)
 			{

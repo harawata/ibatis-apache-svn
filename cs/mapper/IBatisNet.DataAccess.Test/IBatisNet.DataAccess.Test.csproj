@@ -124,11 +124,11 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "cool.jpg"
+                    RelPath = "ChangeLog.txt"
                     BuildAction = "Content"
                 />
                 <File
-                    RelPath = "DataBase.config"
+                    RelPath = "DataBase-Template.config"
                     BuildAction = "None"
                 />
                 <File

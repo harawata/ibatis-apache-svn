@@ -279,7 +279,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Image _picture = null;
 
 			// first try without path
-			_picture = Image.FromFile( Resources.RootDirectory + Path.DirectorySeparatorChar + "cool.jpg");
+			_picture = Image.FromFile( Path.Combine(Resources.ApplicationBase, "cool.jpg") );
 
 			Assert.IsNotNull( _picture );
 			return _picture;

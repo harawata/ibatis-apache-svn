@@ -52,7 +52,7 @@ namespace IBatisNet.Common.Utilities
 	{
 
 		#region Fields
-		private static string _rootDirectory = AppDomain.CurrentDomain.BaseDirectory.Replace(@"\bin","").Replace(@"\Debug","").Replace(@"\Release","");
+		private static string _applicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
 		private static string _baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
 		private static CachedTypeResolver _cachedTypeResolver = null;
 		private static readonly ILog _logger = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
@@ -61,13 +61,13 @@ namespace IBatisNet.Common.Utilities
 
 		#region Properties
 		/// <summary>
-		/// Get the root directory of the application
+		/// The name of the directory containing the application
 		/// </summary>
-		public static string RootDirectory
+		public static string ApplicationBase
 		{
 			get
 			{
-				return _rootDirectory;
+				return _applicationBase;
 			}
 		}
 		#endregion
@@ -92,7 +92,7 @@ namespace IBatisNet.Common.Utilities
 
 			try 
 			{
-				XmlTextReader reader = new XmlTextReader(_baseDirectory + Path.DirectorySeparatorChar + fileName);
+				XmlTextReader reader = new XmlTextReader(Path.Combine(_baseDirectory, fileName));
 				config.Load(reader);
 				reader.Close();
 			}
@@ -143,7 +143,7 @@ namespace IBatisNet.Common.Utilities
 
 			if (node.Attributes["resource"] != null)
 			{
-				path = _rootDirectory + Path.DirectorySeparatorChar + node.Attributes["resource"].Value;
+				path = Path.Combine(_applicationBase, node.Attributes["resource"].Value);
 			}
 			else if (node.Attributes["url"] != null)
 			{
@@ -166,7 +166,7 @@ namespace IBatisNet.Common.Utilities
 
 			try 
 			{
-				reader = new XmlTextReader(_rootDirectory + Path.DirectorySeparatorChar + resource);
+				reader = new XmlTextReader(Path.Combine(_applicationBase, resource));
 				config.Load(reader);
 			}
 			catch(Exception e)
@@ -323,7 +323,7 @@ namespace IBatisNet.Common.Utilities
 
 			if (!File.Exists(path)) 
 			{
-				file = _rootDirectory + Path.DirectorySeparatorChar + path;
+				file = Path.Combine(_applicationBase, path);
 			}
 			else
 			{

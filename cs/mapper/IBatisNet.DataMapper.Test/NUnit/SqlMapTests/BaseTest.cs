@@ -39,9 +39,10 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		static BaseTest()
 		{
 
-			ScriptDirectory = Resources.RootDirectory + Path.DirectorySeparatorChar +
-				"Scripts" + Path.DirectorySeparatorChar +
-				ConfigurationSettings.AppSettings["database"]+ Path.DirectorySeparatorChar;
+			ScriptDirectory = Path.Combine(
+								Path.Combine(
+									Path.Combine(
+										Path.Combine(Resources.ApplicationBase, ".."), ".."), "Scripts"), ConfigurationSettings.AppSettings["database"]) + Path.DirectorySeparatorChar;
 		}
 
 		/// <summary>

@@ -32,9 +32,10 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 		[SetUp] 
 		public void SetUp() 
 		{
-			string scriptDirectory = Resources.RootDirectory + Path.DirectorySeparatorChar +
-				"Scripts" + Path.DirectorySeparatorChar +
-				ConfigurationSettings.AppSettings["database"]+ Path.DirectorySeparatorChar;
+			string scriptDirectory = Path.Combine( Path.Combine( Path.Combine( Path.Combine(Resources.ApplicationBase, ".."), ".."), "Scripts"), ConfigurationSettings.AppSettings["database"]) + Path.DirectorySeparatorChar;
+//				Resources.RootDirectory + Path.DirectorySeparatorChar +
+//				"Scripts" + Path.DirectorySeparatorChar +
+//				ConfigurationSettings.AppSettings["database"]+ Path.DirectorySeparatorChar;
 
 			DaoManager.Configure( "dao"+ "_" + ConfigurationSettings.AppSettings["database"] + "_"
 				+ ConfigurationSettings.AppSettings["providerType"] + ".config" );
