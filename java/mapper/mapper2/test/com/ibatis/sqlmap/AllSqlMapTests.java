@@ -5,8 +5,8 @@
  */
 package com.ibatis.sqlmap;
 
-import junit.framework.TestSuite;
 import junit.framework.Test;
+import junit.framework.TestSuite;
 
 public class AllSqlMapTests {
 
@@ -23,6 +23,7 @@ public class AllSqlMapTests {
     suite.addTestSuite(DynamicTest.class);
     suite.addTestSuite(DynamicPrependTest.class);
     suite.addTestSuite(ComplexTypeTest.class);
+    suite.addTestSuite(XmlStatementTest.class);
     return suite;
   }
 

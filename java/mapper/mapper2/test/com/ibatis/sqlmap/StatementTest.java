@@ -5,18 +5,19 @@
  */
 package com.ibatis.sqlmap;
 
-import java.sql.*;
-import java.util.*;
-import java.math.*;
-
+import com.ibatis.common.util.PaginatedList;
+import com.ibatis.sqlmap.client.SqlMapClient;
+import com.ibatis.sqlmap.client.SqlMapSession;
+import com.ibatis.sqlmap.client.event.RowHandler;
 import testdomain.Account;
 import testdomain.LineItem;
 import testdomain.SuperAccount;
-import com.ibatis.sqlmap.client.event.*;
-import com.ibatis.sqlmap.client.event.RowHandler;
-import com.ibatis.sqlmap.client.*;
-import com.ibatis.common.util.*;
-import com.ibatis.common.minixml.*;
+
+import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class StatementTest extends BaseSqlMapTest {
 
@@ -39,37 +40,6 @@ public class StatementTest extends BaseSqlMapTest {
     assertAccount1(account);
   }
 
-  public void testExecuteQueryForXml() throws SQLException {
-    String account = (String) sqlMap.queryForObject("getAccountXml", "<parameter><id>1</id></parameter>");
-    assertNotNull(account);
-    MiniDom dom = new MiniParser(account).getDom();
-    assertEquals("1", dom.getValue("ID"));
-    assertEquals("Clinton", dom.getValue("FIRSTNAME"));
-    assertEquals("Begin", dom.getValue("LASTNAME"));
-    assertEquals("clinton.begin@ibatis.com", dom.getValue("EMAILADDRESS"));
-  }
-
-  public void testExecuteQueryForXmlExternalMaps() throws SQLException {
-    String account = (String) sqlMap.queryForObject("getAccountXmlExternalMaps", "<parameter><id>1</id></parameter>");
-    assertNotNull(account);
-    MiniDom dom = new MiniParser(account).getDom();
-    assertEquals("1", dom.getValue("id"));
-    assertEquals("Clinton", dom.getValue("firstName"));
-    assertEquals("Begin", dom.getValue("lastName"));
-    assertEquals("clinton.begin@ibatis.com", dom.getValue("emailAddress"));
-    assertEquals("1", dom.getValue("account.ID"));
-    assertEquals("Clinton", dom.getValue("account.FIRSTNAME"));
-    assertEquals("Begin", dom.getValue("account.LASTNAME"));
-    assertEquals("clinton.begin@ibatis.com", dom.getValue("account.EMAILADDRESS"));
-  }
-
-  public void testExecuteQueryForOrderXml() throws SQLException {
-    String order = (String) sqlMap.queryForObject("getOrderXml", "<parameter><id>1</id></parameter>");
-    assertNotNull(order);
-    MiniDom dom = new MiniParser(order).getDom();
-    assertEquals("1", dom.getValue("id"));
-    assertEquals("2", dom.getValue("lineItems.lineItem.ID"));
-  }
 
   public void testExecuteQueryForObjectViaColumnIndex() throws SQLException {
     Account account = (Account) sqlMap.queryForObject("getAccountViaColumnIndex", new Integer(1));
@@ -561,14 +531,14 @@ public class StatementTest extends BaseSqlMapTest {
     Map results = new HashMap();
 
     TestCacheThread.startThread(sqlMap, results, "getCachedAccountsViaResultMap");
-    Integer firstId = (Integer)results.get("id");
+    Integer firstId = (Integer) results.get("id");
 
     TestCacheThread.startThread(sqlMap, results, "getCachedAccountsViaResultMap");
-    Integer secondId = (Integer)results.get("id");
+    Integer secondId = (Integer) results.get("id");
 
     assertTrue(firstId.equals(secondId));
 
-    List list = (List)results.get("list");
+    List list = (List) results.get("list");
 
     Account account = (Account) list.get(1);
     account.setEmailAddress("new.clinton@ibatis.com");
@@ -587,14 +557,14 @@ public class StatementTest extends BaseSqlMapTest {
     Map results = new HashMap();
 
     TestCacheThread.startThread(sqlMap, results, "getRWCachedAccountsViaResultMap");
-    Integer firstId = (Integer)results.get("id");
+    Integer firstId = (Integer) results.get("id");
 
     TestCacheThread.startThread(sqlMap, results, "getRWCachedAccountsViaResultMap");
-    Integer secondId = (Integer)results.get("id");
+    Integer secondId = (Integer) results.get("id");
 
     assertFalse(firstId.equals(secondId));
 
-    List list = (List)results.get("list");
+    List list = (List) results.get("list");
 
     Account account = (Account) list.get(1);
     account.setEmailAddress("new.clinton@ibatis.com");
@@ -612,11 +582,13 @@ public class StatementTest extends BaseSqlMapTest {
     private SqlMapClient sqlMap;
     private Map results;
     private String statementName;
+
     public TestCacheThread(SqlMapClient sqlMap, Map results, String statementName) {
       this.sqlMap = sqlMap;
       this.results = results;
       this.statementName = statementName;
     }
+
     public void run() {
       try {
         SqlMapSession session = sqlMap.openSession();
@@ -632,6 +604,7 @@ public class StatementTest extends BaseSqlMapTest {
         throw new RuntimeException("Error.  Cause: " + e);
       }
     }
+
     public static void startThread(SqlMapClient sqlMap, Map results, String statementName) {
       Thread t = new TestCacheThread(sqlMap, results, statementName);
       t.start();

@@ -18,31 +18,18 @@
     from LINE_ITEM where LIN_ORD_ID = #value#
   </select>
 
-  <select id="getLineItemsForOrderXml"
-    parameterClass="xml"
-    resultClass="xmlCollection"
-    xmlResultName="lineItem" >
-    select
-      LIN_ID as id,
-      LIN_ORD_ID as orderId,
-      LIN_ITM_CODE as itemCode,
-      LIN_QUANTITY as quantity,
-      LIN_PRICE as price
-    from LINE_ITEM where LIN_ORD_ID = #value#
-  </select>
-
   <insert id="insertLineItem" parameterClass="testdomain.LineItem">
     insert into LINE_ITEM
       (LIN_ID, LIN_ORD_ID, LIN_ITM_CODE, LIN_QUANTITY, LIN_PRICE)
     values
       (#id#, #orderId#, #itemCode#, #quantity#, #price#)
-    <selectKey resultClass="int" keyProperty="id" >
+    <selectKey resultClass="int" keyProperty="id">
       select 99 from LINE_ITEM where LIN_ID = 1 and LIN_ORD_ID=1
     </selectKey>
   </insert>
 
   <insert id="insertLineItemPreKey" parameterClass="testdomain.LineItem">
-    <selectKey resultClass="int" keyProperty="id" >
+    <selectKey resultClass="int" keyProperty="id">
       select 99 from LINE_ITEM where LIN_ID = 1 and LIN_ORD_ID=1
     </selectKey>
     insert into LINE_ITEM

@@ -4,52 +4,52 @@
     PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"
     "http://www.ibatis.com/dtd/sql-map-2.dtd">
 
-<sqlMap namespace="Account" >
+<sqlMap namespace="Account">
 
   <typeAlias alias="account" type="testdomain.Account"/>
 
-  <cacheModel id="account-cache" type="LRU" readOnly="true" >
+  <cacheModel id="account-cache" type="LRU" readOnly="true">
     <flushInterval hours="24"/>
     <flushOnExecute statement="updateAccountViaInlineParameters"/>
   </cacheModel>
 
-  <cacheModel id="rw-account-cache" type="FIFO" readOnly="false" >
+  <cacheModel id="rw-account-cache" type="FIFO" readOnly="false">
     <flushInterval hours="24"/>
     <flushOnExecute statement="updateAccountViaInlineParameters"/>
   </cacheModel>
 
   <resultMap id="cached-account-result" class="account">
-    <result property="id"           column="ACC_ID"/>
-    <result property="firstName"    column="ACC_FIRST_NAME"/>
-    <result property="lastName"     column="ACC_LAST_NAME"/>
+    <result property="id" column="ACC_ID"/>
+    <result property="firstName" column="ACC_FIRST_NAME"/>
+    <result property="lastName" column="ACC_LAST_NAME"/>
     <result property="emailAddress" column="ACC_EMAIL"/>
   </resultMap>
 
   <resultMap id="account-result-nullable-email" class="account">
-    <result property="id"           jdbcType="NUMERIC" column="ACC_ID"/>
-    <result property="firstName"    jdbcType="VARCHAR" column="ACC_FIRST_NAME"/>
-    <result property="lastName"     jdbcType="VARCHAR" column="ACC_LAST_NAME"/>
+    <result property="id" jdbcType="NUMERIC" column="ACC_ID"/>
+    <result property="firstName" jdbcType="VARCHAR" column="ACC_FIRST_NAME"/>
+    <result property="lastName" jdbcType="VARCHAR" column="ACC_LAST_NAME"/>
     <result property="emailAddress" jdbcType="VARCHAR" column="ACC_EMAIL"/>
   </resultMap>
 
   <resultMap id="account-result" class="account">
-    <result property="id"           jdbcType="NUMERIC" column="ACC_ID"/>
-    <result property="firstName"    jdbcType="VARCHAR" column="ACC_FIRST_NAME"/>
-    <result property="lastName"     jdbcType="VARCHAR" column="ACC_LAST_NAME"/>
-    <result property="emailAddress" jdbcType="VARCHAR" column="ACC_EMAIL"      nullValue="no_email@provided.com"/>
+    <result property="id" jdbcType="NUMERIC" column="ACC_ID"/>
+    <result property="firstName" jdbcType="VARCHAR" column="ACC_FIRST_NAME"/>
+    <result property="lastName" jdbcType="VARCHAR" column="ACC_LAST_NAME"/>
+    <result property="emailAddress" jdbcType="VARCHAR" column="ACC_EMAIL" nullValue="no_email@provided.com"/>
   </resultMap>
 
   <resultMap id="indexed-account-result" class="account">
-    <result property="id"           column="ACC_ID"         columnIndex="1"/>
-    <result property="firstName"    column="ACC_FIRST_NAME" columnIndex="2"/>
-    <result property="lastName"     column="ACC_LAST_NAME"  columnIndex="3"/>
-    <result property="emailAddress" column="ACC_EMAIL"      columnIndex="4"  nullValue="no_email@provided.com"/>
+    <result property="id" column="ACC_ID" columnIndex="1"/>
+    <result property="firstName" column="ACC_FIRST_NAME" columnIndex="2"/>
+    <result property="lastName" column="ACC_LAST_NAME" columnIndex="3"/>
+    <result property="emailAddress" column="ACC_EMAIL" columnIndex="4" nullValue="no_email@provided.com"/>
   </resultMap>
 
   <resultMap id="account-hashmap-result" class="java.util.HashMap">
-    <result property="id"           column="ACC_ID"/>
-    <result property="firstName"    column="ACC_FIRST_NAME"/>
-    <result property="lastName"     column="ACC_LAST_NAME"/>
+    <result property="id" column="ACC_ID"/>
+    <result property="firstName" column="ACC_FIRST_NAME"/>
+    <result property="lastName" column="ACC_LAST_NAME"/>
     <result property="emailAddress" column="ACC_EMAIL"/>
   </resultMap>
 
@@ -58,8 +58,8 @@
   </resultMap>
 
   <select id="getEmailAddressViaResultClass"
-                    parameterClass="java.lang.Integer"
-                    resultClass="java.lang.String">
+    parameterClass="java.lang.Integer"
+    resultClass="java.lang.String">
     select ACC_EMAIL as value
     from ACCOUNT
     where ACC_ID = #value#
@@ -67,14 +67,14 @@
 
   <select id="getEmailAddressViaResultMap"
     parameterClass="java.lang.Integer"
-                    resultMap="email-result">
+    resultMap="email-result">
     select ACC_EMAIL
     from ACCOUNT
     where ACC_ID = #value#
   </select>
 
   <select id="getDynamicOrderedEmailAddressesViaResultMap"
-                    resultMap="email-result">
+    resultMap="email-result">
     select ACC_EMAIL
     from ACCOUNT
     ORDER BY $value$
@@ -82,14 +82,14 @@
 
 
   <select id="getAllEmailAddressesViaResultClass"
-                    resultClass="java.lang.String">
+    resultClass="java.lang.String">
     select ACC_EMAIL as value
     from ACCOUNT
     order by ACC_ID
   </select>
 
   <select id="getAllEmailAddressesViaResultMap"
-                    resultMap="email-result">
+    resultMap="email-result">
     select ACC_EMAIL
     from ACCOUNT
     order by ACC_ID
@@ -97,7 +97,7 @@
 
   <select id="getAccountViaResultClass"
     parameterClass="java.lang.Integer"
-                    resultClass="account">
+    resultClass="account">
     <![CDATA[
     select
       ACC_ID as id,
@@ -112,7 +112,7 @@
 
   <select id="getAccountViaColumnName"
     parameterClass="java.lang.Integer"
-                    resultMap="account-result">
+    resultMap="account-result">
     select
       ACC_ID,
       ACC_FIRST_NAME,
@@ -123,44 +123,8 @@
   </select>
 
   <select id="getSuperAccount"
-     parameterClass="testdomain.SuperAccount"
-     resultClass="testdomain.SuperAccount">
-    select
-      ACC_ID as id,
-      ACC_FIRST_NAME as firstName,
-      ACC_LAST_NAME as lastName,
-      ACC_EMAIL as emailAddress
-    from ACCOUNT
-    where ACC_ID = #id#
-  </select>
-
-  <resultMap id="xml-account-result" class="xml">
-    <result property="id"           column="ACC_ID"/>
-    <result property="firstName"    column="ACC_FIRST_NAME"/>
-    <result property="lastName"     column="ACC_LAST_NAME"/>
-    <result property="emailAddress" column="ACC_EMAIL"/>
-    <result property="account" column="{id=ACC_ID}" select="getAccountXml" />
-  </resultMap>
-
-  <parameterMap id="xml-parameter-map" class="xml">
-    <parameter property="id" />
-  </parameterMap>
-
-  <select id="getAccountXmlExternalMaps"
-    parameterMap="xml-parameter-map"
-    resultMap="xml-account-result">
-    select
-      ACC_ID,
-      ACC_FIRST_NAME,
-      ACC_LAST_NAME,
-      ACC_EMAIL
-    from ACCOUNT
-    where ACC_ID = ?
-  </select>
-
-  <select id="getAccountXml"
-    parameterClass="xml"
-    resultClass="xml">
+    parameterClass="testdomain.SuperAccount"
+    resultClass="testdomain.SuperAccount">
     select
       ACC_ID as id,
       ACC_FIRST_NAME as firstName,
@@ -171,8 +135,8 @@
   </select>
 
   <select id="getAccountNullableEmail"
-                    parameterClass="java.lang.Integer"
-                    resultMap="account-result-nullable-email">
+    parameterClass="java.lang.Integer"
+    resultMap="account-result-nullable-email">
     select
       ACC_ID,
       ACC_FIRST_NAME,
@@ -184,7 +148,7 @@
 
   <select id="getAccountViaColumnIndex"
     parameterClass="java.lang.Integer"
-                    resultMap="indexed-account-result">
+    resultMap="indexed-account-result">
     select
       ACC_ID,
       ACC_FIRST_NAME,
@@ -196,7 +160,7 @@
 
   <select id="getAccountAsHashMap"
     parameterClass="java.lang.Integer"
-                    resultMap="account-hashmap-result">
+    resultMap="account-hashmap-result">
     select *
     from ACCOUNT
     where ACC_ID = #value#
@@ -204,7 +168,7 @@
 
   <select id="getAccountAsHashMapResultClass"
     parameterClass="java.lang.Integer"
-                    resultClass="java.util.HashMap">
+    resultClass="java.util.HashMap">
     select
       ACC_ID as id,
       ACC_FIRST_NAME as firstName,
@@ -215,20 +179,20 @@
   </select>
 
   <select id="getAllAccountsViaResultMap"
-                    resultMap="account-result">
+    resultMap="account-result">
     select * from ACCOUNT
     order by ACC_ID
   </select>
 
   <select id="getNoAccountsViaResultMap"
-                    resultMap="account-result">
+    resultMap="account-result">
     select * from ACCOUNT
     where ACC_ID > 1000
     order by ACC_ID
   </select>
 
   <select id="getFewAccountsViaResultMap"
-                    resultMap="account-result">
+    resultMap="account-result">
     <![CDATA[
     select * from ACCOUNT
     where ACC_ID < 2
@@ -237,7 +201,7 @@
   </select>
 
   <select id="getAllAccountsViaResultMapWithDynamicElement"
-                    resultMap="account-result">
+    resultMap="account-result">
     select * from ACCOUNT
     where ACC_EMAIL $value$ '%@%'
     order by ACC_ID
@@ -245,21 +209,21 @@
 
 
   <select id="getCachedAccountsViaResultMap"
-                    resultMap="account-result"
-                    cacheModel="account-cache" >
+    resultMap="account-result"
+    cacheModel="account-cache">
     select * from ACCOUNT
     order by ACC_ID
   </select>
 
   <select id="getRWCachedAccountsViaResultMap"
-                    resultMap="account-result"
-                    cacheModel="rw-account-cache" >
+    resultMap="account-result"
+    cacheModel="rw-account-cache">
     select * from ACCOUNT
     order by ACC_ID
   </select>
 
   <select id="getAllAccountsViaResultClass"
-                    resultClass="account">
+    resultClass="account">
     select
       ACC_ID as id,
       ACC_FIRST_NAME as firstName,
@@ -270,13 +234,13 @@
   </select>
 
   <select id="getAllAccountsAsHashMapViaResultMap"
-                    resultMap="account-hashmap-result">
+    resultMap="account-hashmap-result">
     select * from ACCOUNT
     order by ACC_ID
   </select>
 
   <select id="getAllAccountsAsHashMapViaResultClass"
-                    resultClass="java.util.HashMap">
+    resultClass="java.util.HashMap">
     select
       ACC_ID as id,
       ACC_FIRST_NAME as firstName,
@@ -287,7 +251,7 @@
   </select>
 
   <delete id="deleteAccount"
-                    parameterClass="account" >
+    parameterClass="account">
     delete from ACCOUNT
     where ACC_ID = #id#
     and ACC_ID = #id#
@@ -307,11 +271,11 @@
     <parameter property="id"/>
     <parameter property="firstName"/>
     <parameter property="lastName"/>
-    <parameter property="emailAddress" jdbcType="VARCHAR"  nullValue="no_email@provided.com" />
+    <parameter property="emailAddress" jdbcType="VARCHAR" nullValue="no_email@provided.com"/>
   </parameterMap>
 
   <insert id="insertAccountViaParameterMap"
-                    parameterMap="insert-params">
+    parameterMap="insert-params">
     insert into ACCOUNT (
       ACC_ID,
       ACC_FIRST_NAME,
