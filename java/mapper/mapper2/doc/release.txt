@@ -2,6 +2,12 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
+ Next release
+------------------------------
+
+ o Fixed non-caching null cache result bug.
+
+------------------------------
  2.0.5 - Aug 11, 2004
 ------------------------------
 
