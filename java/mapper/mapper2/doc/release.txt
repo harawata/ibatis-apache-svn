@@ -2,7 +2,7 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
- 2.0.9 - Dec 20, 2004
+ 2.0.9 - Dec 31, 2004
 ------------------------------
 
  o Added solution for N+1 selects for any number of 1:M and M:N relationships.
@@ -11,10 +11,13 @@ Build Number: @buildNum@
  o Added remapResults="true|false" remapping of dynamic result set metadata.
  o Added support for isolation levels specified in .startTransaction()
  o Added support for SQL "includes" to reduce/eliminate repeated SQL
+ o Added default CLOB/BLOB support that should work for most databases (thanks to Alexander and Martin)
  o Added TopLink DAO Transaction Manager and Template (thanks to Wayne Gentile!)
+ o Custom type handlers can now directly implement the TypeHandler interface
  o Refactored Builder/Parser to be more maintainable (nodelets)
  o Verified that duplicate statement names throw an exception. [982534]
  o SqlExecuror now always exhausts result sets with ps.getMoreResults()
+ o Fixed new format inline parameter parsing error [ibatis-23]
 
 ------------------------------
  2.0.8 - Nov 26, 2004
