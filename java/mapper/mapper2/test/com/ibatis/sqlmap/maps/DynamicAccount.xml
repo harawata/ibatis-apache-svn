@@ -420,4 +420,17 @@
     </isNotEqual>
   </select>
 
+  <select id="selectIfPropertyAvailable" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+      SELECT * FROM ACCOUNT
+      <dynamic prepend="WHERE">
+      <isPropertyAvailable prepend="AND" property="xid">
+          ACC_ID = #xid#
+      </isPropertyAvailable>
+      <isPropertyAvailable prepend="AND" property="name">
+          ACC_FIRST_NAME = #name#
+      </isPropertyAvailable>
+      </dynamic>
+      ORDER BY ACC_ID
+  </select>
+
 </sqlMap>

@@ -18,6 +18,8 @@ package com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements;
 import com.ibatis.common.beans.Probe;
 import com.ibatis.common.beans.ProbeFactory;
 
+import java.util.Map;
+
 public class IsPropertyAvailableTagHandler extends ConditionalTagHandler {
 
   private static final Probe PROBE = ProbeFactory.getProbe();
@@ -25,6 +27,8 @@ public class IsPropertyAvailableTagHandler extends ConditionalTagHandler {
   public boolean isCondition(SqlTagContext ctx, SqlTag tag, Object parameterObject) {
     if (parameterObject == null) {
       return false;
+    } else if (parameterObject instanceof Map) {
+      return ((Map)parameterObject).containsKey(tag.getPropertyAttr());      
     } else {
       return PROBE.hasReadableProperty(parameterObject, tag.getPropertyAttr());
     }

@@ -4,6 +4,8 @@ import testdomain.Account;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DynamicTest extends BaseSqlMapTest {
 
@@ -212,5 +214,16 @@ public class DynamicTest extends BaseSqlMapTest {
 
     assertEquals(0, account.getId());
     assertEquals("Jim", account.getFirstName());
+  }
+
+  public void testIsPropertyAvailable () throws Exception {
+    Map account = new HashMap();
+
+    account.put("id",new Integer(1));
+    account.put("name", "Clinton");
+    account = (Map) sqlMap.queryForObject("selectIfPropertyAvailable", account);
+
+    assertEquals(new Integer(1), account.get("ACC_ID"));
+    assertEquals("Clinton", account.get("ACC_FIRST_NAME"));
   }
 }
