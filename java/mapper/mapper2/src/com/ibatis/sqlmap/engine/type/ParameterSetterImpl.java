@@ -24,11 +24,20 @@ import java.net.URL;
 import java.sql.*;
 import java.util.Calendar;
 
+/**
+ * A ParameterSetter implementation
+ */
 public class ParameterSetterImpl implements ParameterSetter {
 
   private PreparedStatement ps;
   private int index;
 
+  /**
+   * Creates an instance for a PreparedStatement and column index
+   * 
+   * @param statement - the PreparedStatement 
+   * @param columnIndex - the column index
+   */
   public ParameterSetterImpl(PreparedStatement statement, int columnIndex) {
     this.ps = statement;
     this.index = columnIndex;

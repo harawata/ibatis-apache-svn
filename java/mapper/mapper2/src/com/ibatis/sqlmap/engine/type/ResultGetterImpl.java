@@ -23,17 +23,32 @@ import java.sql.*;
 import java.util.Calendar;
 import java.util.Map;
 
+/**
+ * A ResultGetter implementation
+ */
 public class ResultGetterImpl implements ResultGetter {
 
   private ResultSet rs;
   private String name;
   private int index;
 
+  /**
+   * Creates an instance for a PreparedStatement and column index
+   * 
+   * @param resultSet - the result set 
+   * @param columnIndex - the column index
+   */
   public ResultGetterImpl(ResultSet resultSet, int columnIndex) {
     this.rs = resultSet;
     this.index = columnIndex;
   }
 
+  /**
+   * Creates an instance for a PreparedStatement and column name
+   * 
+   * @param resultSet - the result set
+   * @param columnName - the column index
+   */
   public ResultGetterImpl(ResultSet resultSet, String columnName) {
     this.rs = resultSet;
     this.name = columnName;

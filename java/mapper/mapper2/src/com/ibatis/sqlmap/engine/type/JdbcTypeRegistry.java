@@ -19,12 +19,26 @@ import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Singleton
+ */
 public class JdbcTypeRegistry {
 
+  /**
+   * Value for the unknown type
+   */
   public static final int UNKNOWN_TYPE = -99999999;
+  
   private static final Map TYPE_MAP = new HashMap();
 
+  /**
+   * Value for a JDBC 3.o datalink type
+   */
   public final static int JDBC_30_DATALINK = 70;
+
+  /**
+   * Value for a JDBC 3.o boolean type
+   */
   public final static int JDBC_30_BOOLEAN = 16;
 
   static {
@@ -38,6 +52,13 @@ public class JdbcTypeRegistry {
     TYPE_MAP.put(name, new Integer(value));
   }
 
+  /**
+   * Looks up a type by name, and returns it's int value (from java.sql.Types)
+   * 
+   * @param name - the type name
+   * 
+   * @return - the int value (from java.sql.Types)
+   */
   public static int getType(String name) {
     if (name == null)
       return UNKNOWN_TYPE;

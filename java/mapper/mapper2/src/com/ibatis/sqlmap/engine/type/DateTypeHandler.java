@@ -26,6 +26,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Date (and time) implementation of TypeHandler
+ */
 public class DateTypeHandler extends BaseTypeHandler implements TypeHandler {
 
   private static final String DATE_FORMAT = "yyyy/MM/dd hh:mm:ss";

@@ -20,6 +20,9 @@ import com.ibatis.sqlmap.client.SqlMapException;
 import java.math.BigDecimal;
 import java.util.*;
 
+/**
+ * Not much of a suprise, this is a factory class for TypeHandler objects.
+ */
 public class TypeHandlerFactory {
 
   private final Map typeHandlerMap = new HashMap();
@@ -29,6 +32,9 @@ public class TypeHandlerFactory {
 
   /* Constructor */
 
+  /**
+   * Default constructor
+   */
   public TypeHandlerFactory() {
     TypeHandler handler;
 
@@ -102,10 +108,25 @@ public class TypeHandlerFactory {
 
   /* Public Methods */
 
+  /**
+   * Get a TypeHandler for a class
+   * 
+   * @param type - the class you want a TypeHandler for
+   * 
+   * @return - the handler
+   */
   public TypeHandler getTypeHandler(Class type) {
     return getTypeHandler(type, null);
   }
 
+  /**
+   * Get a TypeHandler for a class and a JDBC type
+   * 
+   * @param type - the class
+   * @param jdbcType - the jdbc type
+   * 
+   * @return - the handler
+   */
   public TypeHandler getTypeHandler(Class type, String jdbcType) {
     Map jdbcHandlerMap = (Map) typeHandlerMap.get(type);
     TypeHandler handler = null;
@@ -118,19 +139,44 @@ public class TypeHandlerFactory {
     return handler;
   }
 
+  /**
+   * When in doubt, get the "unknown" type handler
+   * 
+   * @return - if I told you, it would not be unknown, would it?
+   */
   public TypeHandler getUnkownTypeHandler() {
     return unknownTypeHandler;
   }
 
 
+  /**
+   * Tells you if a particular class has a TypeHandler
+   * 
+   * @param type - the class
+   * 
+   * @return - true if there is a TypeHandler
+   */
   public boolean hasTypeHandler(Class type) {
     return getTypeHandler(type) != null;
   }
 
+  /**
+   * Register (add) a type handler for a class
+   * 
+   * @param type - the class
+   * @param handler - the handler instance
+   */
   public void register(Class type, TypeHandler handler) {
     register(type, null, handler);
   }
 
+  /**
+   * Register (add) a type handler for a class and JDBC type
+   * 
+   * @param type - the class
+   * @param jdbcType - the JDBC type
+   * @param handler - the handler instance
+   */
   public void register(Class type, String jdbcType, TypeHandler handler) {
     Map map = (Map) typeHandlerMap.get(type);
     if (map == null) {
@@ -141,6 +187,13 @@ public class TypeHandlerFactory {
   }
 
 
+  /**
+   * Lookup an aliased class and return it's REAL name
+   * 
+   * @param string - the alias
+   * 
+   * @return - the REAL name
+   */
   public String resolveAlias(String string) {
     String newString = null;
     if (typeAliases.containsKey(string)) {
@@ -152,6 +205,11 @@ public class TypeHandlerFactory {
     return string;
   }
 
+  /**
+   * Add an alias
+   * @param alias - the alias
+   * @param value - the real class name
+   */
   public void putTypeAlias(String alias, String value) {
     if (typeAliases.containsKey(alias)) {
       throw new SqlMapException("Error in XmlSqlMapClientBuilder.  Alias name conflict occurred.  The alias '" + alias + "' is already mapped to the value '" + typeAliases.get(alias) + "'.");

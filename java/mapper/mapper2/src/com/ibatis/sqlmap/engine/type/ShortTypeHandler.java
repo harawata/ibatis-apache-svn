@@ -20,6 +20,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Short implementation of TypeHandler
+ */
 public class ShortTypeHandler extends BaseTypeHandler implements TypeHandler {
 
   public void setParameter(PreparedStatement ps, int i, Object parameter, String jdbcType)

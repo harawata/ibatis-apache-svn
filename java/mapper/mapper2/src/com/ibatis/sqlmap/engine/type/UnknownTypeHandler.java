@@ -20,10 +20,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Implementation of TypeHandler for dealing with unknown types
+ */
 public class UnknownTypeHandler extends BaseTypeHandler implements TypeHandler {
 
   private TypeHandlerFactory factory;
 
+  /**
+   * Constructor to create via a factory
+   * 
+   * @param factory - the factory to associate this with
+   */
   public UnknownTypeHandler(TypeHandlerFactory factory) {
     this.factory = factory;
   }

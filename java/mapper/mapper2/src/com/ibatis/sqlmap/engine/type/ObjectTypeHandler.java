@@ -20,6 +20,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Object implementation of TypeHandler
+ */
 public class ObjectTypeHandler extends BaseTypeHandler implements TypeHandler {
 
   public void setParameter(PreparedStatement ps, int i, Object parameter, String jdbcType)

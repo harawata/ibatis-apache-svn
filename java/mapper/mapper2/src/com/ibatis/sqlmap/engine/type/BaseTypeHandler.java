@@ -15,6 +15,9 @@
  */
 package com.ibatis.sqlmap.engine.type;
 
+/**
+ * Base type handler for convenience
+ */
 public abstract class BaseTypeHandler implements TypeHandler {
 
   public boolean equals(Object object, String string) {

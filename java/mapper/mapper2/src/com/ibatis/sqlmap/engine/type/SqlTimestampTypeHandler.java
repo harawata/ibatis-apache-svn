@@ -22,6 +22,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+/**
+ * SQL timestamp implementation of TypeHandler
+ */
 public class SqlTimestampTypeHandler extends BaseTypeHandler implements TypeHandler {
 
   private static final String DATE_FORMAT = "yyyy/MM/dd hh:mm:ss";

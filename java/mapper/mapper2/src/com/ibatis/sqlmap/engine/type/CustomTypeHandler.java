@@ -24,10 +24,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Custom type handler for adding a TypeHandlerCallback
+ */
 public class CustomTypeHandler extends BaseTypeHandler implements TypeHandler {
 
-  public TypeHandlerCallback callback;
+  private TypeHandlerCallback callback;
 
+  /**
+   * Constructor to provide a TypeHandlerCallback instance
+   * 
+   * @param callback - the TypeHandlerCallback instance
+   */
   public CustomTypeHandler(TypeHandlerCallback callback) {
     this.callback = callback;
   }

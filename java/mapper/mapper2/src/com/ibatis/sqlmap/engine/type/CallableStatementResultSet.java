@@ -23,10 +23,18 @@ import java.sql.*;
 import java.util.Calendar;
 import java.util.Map;
 
+/**
+ * A way to make a CallableStatement look like a ResultSet 
+ */
 public class CallableStatementResultSet implements ResultSet {
 
   private CallableStatement cs;
 
+  /**
+   * Constructor to stretch a ResultSet interface over a CallableStatement
+   *  
+   * @param cs - the CallableStatement
+   */
   public CallableStatementResultSet(CallableStatement cs) {
     this.cs = cs;
   }
