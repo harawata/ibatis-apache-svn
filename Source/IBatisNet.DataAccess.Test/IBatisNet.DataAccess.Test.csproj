@@ -100,11 +100,6 @@
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
-                    Name = "nunit.framework"
-                    AssemblyName = "nunit.framework"
-                    HintPath = "..\External-Bin\Net\1.1\nunit.framework.dll"
-                />
-                <Reference
                     Name = "NHibernate"
                     AssemblyName = "NHibernate"
                     HintPath = "..\External-Bin\Net\1.1\NHibernate.dll"
@@ -122,6 +117,26 @@
                     RelPath = "AssemblyInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "cool.jpg"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "DataBase.config"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "IBatisNet.DataMapper.Test.build"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "ReadMe.txt"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "User.hbm.xml"
+                    BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "bin\Debug\dao_MSSQL_Odbc.config"
