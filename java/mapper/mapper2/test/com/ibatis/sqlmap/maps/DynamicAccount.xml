@@ -241,6 +241,26 @@
     </dynamic>
   </select>
 
+  <select id="dynamicQueryByExample2"
+    parameterClass="testdomain.Account"
+    resultClass="testdomain.Account">
+    select
+      ACC_ID as id,
+      ACC_FIRST_NAME as firstName,
+      ACC_LAST_NAME as lastName,
+      ACC_EMAIL as emailAddress
+    from ACCOUNT
+    <dynamic prepend="WHERE">
+      <isNotNull prepend="AND" property="ids">
+        <iterate property="ids" conjunction="OR">
+          <isNotNull property="ids">
+            ACC_ID = #ids[]#
+          </isNotNull>
+        </iterate>
+      </isNotNull>
+    </dynamic>
+  </select>
+
   <select id="dynamicIterateWithPrepend1"
     parameterClass="list"
     resultClass="testdomain.Account">
