@@ -16,25 +16,35 @@ import java.sql.*;
 import java.io.*;
 import java.util.*;
 
+/**
+ * Tool to run database scripts
+ */
 public class ScriptRunner {
 
   //private static final Log log = LogFactory.getLog(ScriptRunner.class);
 
 
-  public String driver;
-  public String url;
-  public String username;
-  public String password;
-  public boolean stopOnError;
-  public boolean autoCommit;
-  public PrintWriter logWriter = new PrintWriter(System.out);
-  public PrintWriter errorLogWriter = new PrintWriter(System.err);
+  private String driver;
+  private String url;
+  private String username;
+  private String password;
+  private boolean stopOnError;
+  private boolean autoCommit;
+  private PrintWriter logWriter = new PrintWriter(System.out);
+  private PrintWriter errorLogWriter = new PrintWriter(System.err);
 
+  /**
+   * Default constructor
+   */
   public ScriptRunner() {
     stopOnError = false;
     autoCommit = false;
   }
 
+  /**
+   * Constructor to allow passing in a Map with configuration data
+   * @param props - the configuration properties
+   */
   public ScriptRunner(Map props) {
     setDriver((String) props.get("driver"));
     setUrl((String) props.get("url"));
@@ -45,6 +55,13 @@ public class ScriptRunner {
   }
 
   /**
+   * Don't use this! ;-)
+   * 
+   * @param driver - the Driver class to use
+   * @param url - the database URL
+   * @param username - the username to use to connect to the database
+   * @param password - the password to use to connect to the database
+   * 
    * @deprecated
    */
   public ScriptRunner(String driver, String url, String username, String password) {
@@ -55,70 +72,161 @@ public class ScriptRunner {
     this.autoCommit = false;
   }
 
+  /**
+   * Getter for stopOnError property
+   * 
+   * @return The value of the stopOnError property
+   */
   public boolean isStopOnError() {
     return stopOnError;
   }
 
+  /**
+   * Setter for stopOnError property
+   * 
+   * @param stopOnError - the new value of the stopOnError property
+   */
   public void setStopOnError(boolean stopOnError) {
     this.stopOnError = stopOnError;
   }
 
+  /**
+   * Getter for autoCommit property
+   * 
+   * @return The value of the autoCommit property
+   */
   public boolean isAutoCommit() {
     return autoCommit;
   }
 
+  /**
+   * Setter for autoCommit property
+   * 
+   * @param autoCommit - the new value of the autoCommit property
+   */
   public void setAutoCommit(boolean autoCommit) {
     this.autoCommit = autoCommit;
   }
 
+  /**
+   * Getter for logWriter property
+   * 
+   * @return The value of the logWriter property
+   */
   public PrintWriter getLogWriter() {
     return logWriter;
   }
 
+  /**
+   * Setter for logWriter property
+   * 
+   * @param logWriter - the new value of the logWriter property
+   */
   public void setLogWriter(PrintWriter logWriter) {
     this.logWriter = logWriter;
   }
 
+  /**
+   * Getter for errorLogWriter property
+   * 
+   * @return The value of the errorLogWriter property
+   */
   public PrintWriter getErrorLogWriter() {
     return errorLogWriter;
   }
 
+  /**
+   * Setter for errorLogWriter property
+   * 
+   * @param errorLogWriter - the new value of the errorLogWriter property
+   */
   public void setErrorLogWriter(PrintWriter errorLogWriter) {
     this.errorLogWriter = errorLogWriter;
   }
 
+  /**
+   * Getter for driver property
+   * 
+   * @return The value of the driver property
+   */
   public String getDriver() {
     return driver;
   }
 
+  /**
+   * Setter for driver property
+   * 
+   * @param driver - the new value of the driver property
+   */
   public void setDriver(String driver) {
     this.driver = driver;
   }
 
+  /**
+   * Getter for url property
+   * 
+   * @return The value of the url property
+   */
   public String getUrl() {
     return url;
   }
 
+  /**
+   * Setter for url property
+   * 
+   * @param url - the new value of the url property
+   */
   public void setUrl(String url) {
     this.url = url;
   }
 
+  /**
+   * Getter for username property
+   * 
+   * @return The value of the username property
+   */
   public String getUsername() {
     return username;
   }
 
+  /**
+   * Setter for username property
+   * 
+   * @param username - the new value of the username property
+   */
   public void setUsername(String username) {
     this.username = username;
   }
 
+  /**
+   * Getter for password property
+   * 
+   * @return The value of the password property
+   */
   public String getPassword() {
     return password;
   }
 
+  /**
+   * Setter for password property
+   * 
+   * @param password - the new value of the password property
+   */
   public void setPassword(String password) {
     this.password = password;
   }
 
+  /**
+   * Runs an SQL script (read in using the Reader parameter)
+   * 
+   * @param reader - the source of the script
+   * 
+   * @throws ClassNotFoundException if the driver class cannot be found
+   * @throws SQLException if any SQL errors occur
+   * @throws IOException if there is an error reading from the Reader
+   * @throws IllegalAccessException if there are problems creating the driver class
+   * @throws InstantiationException if there are problems creating the driver class
+   */
   public void runScript(Reader reader)
       throws ClassNotFoundException, SQLException, IOException,
              IllegalAccessException, InstantiationException {
@@ -131,6 +239,15 @@ public class ScriptRunner {
     conn.close();
   }
 
+  /**
+   * Runs an SQL script (read in using the Reader parameter) using the connection passed in
+   * 
+   * @param conn - the connection to use for the script
+   * @param reader - the source of the script
+   *  
+   * @throws SQLException if any SQL errors occur
+   * @throws IOException if there is an error reading from the Reader
+   */
   public void runScript(Connection conn, Reader reader)
       throws IOException, SQLException {
     StringBuffer command = null;

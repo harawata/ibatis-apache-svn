@@ -20,6 +20,11 @@ public class DbcpConfiguration {
 
   private DataSource dataSource;
 
+  /**
+   * Constructor to supply a map of properties
+   * 
+   * @param properties - the map of configuration properties
+   */
   public DbcpConfiguration(Map properties) {
     try {
 
@@ -33,6 +38,10 @@ public class DbcpConfiguration {
     }
   }
 
+  /**
+   * Getter for DataSource
+   * @return The DataSource
+   */
   public DataSource getDataSource() {
     return dataSource;
   }
