@@ -70,27 +70,55 @@ public class ClassInfo {
     Method[] methods = cls.getMethods();
     for (int i = 0; i < methods.length; i++) {
       String name = methods[i].getName();
-      if (name.indexOf("set") == 0 && name.length() > 3) {
+      if (name.startsWith("set") && name.length() > 3) {
         if (methods[i].getParameterTypes().length == 1) {
-          name = name.substring(3, 4).toLowerCase() + name.substring(4);
+          name = dropCase(name);
           setMethods.put(name, methods[i]);
           setTypes.put(name, methods[i].getParameterTypes()[0]);
         }
-      } else if (name.indexOf("get") == 0 && name.length() > 3) {
+      } else if (name.startsWith("get") && name.length() > 3) {
         if (methods[i].getParameterTypes().length == 0) {
-          name = name.substring(3, 4).toLowerCase() + name.substring(4);
+          name = dropCase(name);
           getMethods.put(name, methods[i]);
           getTypes.put(name, methods[i].getReturnType());
         }
-      } else if (name.indexOf("is") == 0 && name.length() > 2) {
+      } else if (name.startsWith("is") && name.length() > 2) {
         if (methods[i].getParameterTypes().length == 0) {
-          name = name.substring(2, 3).toLowerCase() + name.substring(3);
+          name = dropCase(name);
           getMethods.put(name, methods[i]);
           getTypes.put(name, methods[i].getReturnType());
         }
       }
       name = null;
     }
+  }
+
+  private static String dropCase(String name) {
+    if (name.startsWith("is")) {
+      name = name.substring(2);
+    } else if (name.startsWith("get") || name.startsWith("set")) {
+      name = name.substring(3);
+    } else {
+      throw new ProbeException("Error parsing property name '" + name + "'.  Didn't start with 'is', 'get' or 'set'.");
+    }
+
+    if (name.length() == 1 || (name.length() > 1 && !Character.isUpperCase(name.charAt(1)))) {
+      name = name.substring(0, 1).toLowerCase() + name.substring(1);
+    }
+
+    return name;
+  }
+
+  public static void main(String[] args) {
+    System.out.println (dropCase("getFoo"));
+    System.out.println (dropCase("getFOO"));
+    System.out.println (dropCase("getF"));
+    System.out.println (dropCase("setFoo"));
+    System.out.println (dropCase("setFOO"));
+    System.out.println (dropCase("setF"));
+    System.out.println (dropCase("isFoo"));
+    System.out.println (dropCase("isFOO"));
+    System.out.println (dropCase("isF"));
   }
 
   /** Gets the name of the class the instance provides information for

@@ -948,7 +948,7 @@ public class XmlSqlMapClientBuilder {
         errorCtx.setObjectId(propertyName + " mapping of the " + id + " result map");
 
         errorCtx.setMoreInfo("Check the result mapping property type or name.");
-        TypeHandler handler = resolveTypeHandler(resultClass, propertyName, javaType, jdbcType);
+        TypeHandler handler = resolveTypeHandler(resultClass, propertyName, javaType, jdbcType, true);
 
         BasicResultMapping mapping = new BasicResultMapping();
         mapping.setPropertyName(propertyName);
@@ -1199,30 +1199,54 @@ public class XmlSqlMapClientBuilder {
     }
   }
 
-  private static TypeHandler resolveTypeHandler(Class clazz, String propertyName, String propertyType, String jdbcType) {
+  private static TypeHandler resolveTypeHandler(Class clazz, String propertyName, String javaType, String jdbcType) {
+    return resolveTypeHandler(clazz, propertyName, javaType, jdbcType, false);
+  }
+
+  private static TypeHandler resolveTypeHandler(Class clazz, String propertyName, String javaType, String jdbcType, boolean useSetterToResolve) {
     TypeHandler handler = null;
     if (clazz == null) {
+      // Unknown
       handler = TypeHandlerFactory.getUnkownTypeHandler();
     } else if (DomTypeMarker.class.isAssignableFrom(clazz)) {
+      // DOM
       handler = TypeHandlerFactory.getTypeHandler(String.class, jdbcType);
     } else if (XmlTypeMarker.class.isAssignableFrom(clazz)) {
+      // XML
       handler = TypeHandlerFactory.getTypeHandler(String.class, jdbcType);
     } else if (java.util.Map.class.isAssignableFrom(clazz)) {
-      if (propertyType == null) {
+      // Map
+      if (javaType == null) {
         handler = TypeHandlerFactory.getTypeHandler(java.lang.Object.class, jdbcType);
       } else {
         try {
-          Class javaClass = Resources.classForName(propertyType);
+          Class javaClass = Resources.classForName(javaType);
           handler = TypeHandlerFactory.getTypeHandler(javaClass, jdbcType);
         } catch (Exception e) {
           throw new SqlMapException("Error.  Could not set TypeHandler.  Cause: " + e, e);
         }
       }
     } else if (TypeHandlerFactory.getTypeHandler(clazz, jdbcType) != null) {
+      // Primitive
       handler = TypeHandlerFactory.getTypeHandler(clazz, jdbcType);
     } else {
-      Class type = PROBE.getPropertyTypeForGetter(clazz, propertyName);
-      handler = TypeHandlerFactory.getTypeHandler(type, jdbcType);
+      // JavaBean
+      if (javaType == null) {
+        if (useSetterToResolve) {
+          Class type = PROBE.getPropertyTypeForSetter(clazz, propertyName);
+          handler = TypeHandlerFactory.getTypeHandler(type, jdbcType);
+        } else {
+          Class type = PROBE.getPropertyTypeForGetter(clazz, propertyName);
+          handler = TypeHandlerFactory.getTypeHandler(type, jdbcType);
+        }
+      } else {
+        try {
+          Class javaClass = Resources.classForName(javaType);
+          handler = TypeHandlerFactory.getTypeHandler(javaClass, jdbcType);
+        } catch (Exception e) {
+          throw new SqlMapException("Error.  Could not set TypeHandler.  Cause: " + e, e);
+        }
+      }
     }
     return handler;
   }

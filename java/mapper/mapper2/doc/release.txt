@@ -2,6 +2,14 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
+ 2.0.0 RC5 - May 23, 2004
+------------------------------
+
+ o Fixed uppercase bean property support
+ o Fixed result map getter based typing vs. setter
+ o Fixed javaType attribute support for JavaBeans
+
+------------------------------
  2.0.0 RC4 - May 11, 2004
 ------------------------------
 
