@@ -9,7 +9,6 @@ package com.ibatis.sqlmap.engine.cache.lru;
 import junit.framework.TestCase;
 
 import com.ibatis.sqlmap.engine.cache.CacheController;
-import com.ibatis.sqlmap.engine.cache.CacheModel;
 
 /**
  * @author lmeadors
@@ -25,6 +24,7 @@ public class LruCacheControllerTest extends TestCase {
   protected CacheController getController(){
     return new LruCacheController();
   }
+  
   public void testGetAndPutObject() {
     CacheController cc = getController();
     String testKey = "testKey";

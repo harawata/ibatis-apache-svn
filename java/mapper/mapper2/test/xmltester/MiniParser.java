@@ -15,21 +15,21 @@
  */
 package xmltester;
 
-import com.ibatis.common.exception.NestedRuntimeException;
-import com.ibatis.common.io.ReaderInputStream;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-
-import xmltester.*;
+import com.ibatis.common.exception.NestedRuntimeException;
+import com.ibatis.common.io.ReaderInputStream;
 
 public class MiniParser extends DefaultHandler {
 
