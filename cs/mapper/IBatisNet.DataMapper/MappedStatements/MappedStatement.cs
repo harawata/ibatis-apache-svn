@@ -380,6 +380,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 					ResultProperty property = (ResultProperty)entry.Value;
 					SetObjectProperty(request, request.ResultMap, property, ref outObject, reader);
 				}
+				request.ResetResultmap();
 			} 
 			else // else try to use a ResultClass
 			{
@@ -416,7 +417,6 @@ namespace IBatisNet.DataMapper.MappedStatements
 				}
 			}
 
-			request.Reset();
 			return outObject;
 		}		
 

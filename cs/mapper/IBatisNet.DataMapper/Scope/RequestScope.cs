@@ -43,6 +43,7 @@ namespace IBatisNet.DataMapper.Scope
 	{
 		#region Fields
 		
+		private ErrorContext _errorContext = null;
 		private ParameterMap _parameterMap = null;
 		private ResultMap _resultMap = null;
 		private ResultMap _initialResultMap = null;
@@ -51,7 +52,31 @@ namespace IBatisNet.DataMapper.Scope
 
 		#endregion
 	
+		#region Constructors
+
+		/// <summary>
+		/// Default constructor
+		/// </summary>
+		public RequestScope()
+		{
+			_errorContext = new ErrorContext();
+		}
+		#endregion 
+
+
+
 		#region Properties
+
+		/// <summary>
+		///  Get the request's error context
+		/// </summary>
+		public ErrorContext ErrorContext
+		{
+			get
+			{
+				return _errorContext;
+			}
+		}
 
 		/// <summary>
 		/// The 'select' result property to process after having process the main properties.
@@ -109,9 +134,9 @@ namespace IBatisNet.DataMapper.Scope
 		}
 
 		/// <summary>
-		/// Reset
+		/// Reset the resulMap to his intila value
 		/// </summary>
-		public void Reset()
+		public void ResetResultmap()
 		{
 			_resultMap = _initialResultMap;
 		}

@@ -43,6 +43,8 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
 		#endregion
 
+		#region Tests
+
 		/// <summary>
 		/// Test All document with no formula
 		/// </summary>
@@ -52,6 +54,35 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			IList list = sqlMap.QueryForList("GetAllDocument", null);
 
 			Assert.AreEqual(6, list.Count);
+			Book book = (Book) list[0];
+			AssertBook(book, 1, "The World of Null-A", 55);
+
+			book = (Book) list[1];
+			AssertBook(book, 3, "Lord of the Rings", 3587);
+
+			Document document = (Document) list[2];
+			AssertDocument(document, 5, "Le Monde");
+
+			document = (Document) list[3];
+			AssertDocument(document, 6, "Foundation");
+
+			Newspaper news = (Newspaper) list[4];
+			AssertNewspaper(news, 2, "Le Progres de Lyon", "Lyon");
+
+			document = (Document) list[5];
+			AssertDocument(document, 4, "Le Canard enchaine");
+		}
+
+		/// <summary>
+		/// Test All document in a typed collection
+		/// </summary>
+		[Test] 
+		public void GetTypedCollection() 
+		{
+			DocumentCollection list = sqlMap.QueryForList("GetTypedCollection", null) as DocumentCollection;
+
+			Assert.AreEqual(6, list.Count);
+
 			Book book = (Book) list[0];
 			AssertBook(book, 1, "The World of Null-A", 55);
 
@@ -98,6 +129,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			news = (Newspaper) list[5];
 			AssertNewspaper(news, 4, "Le Canard enchaine", "Paris");
 		}
+		#endregion 
 
 		void AssertDocument(Document document, int id, string title)
 		{

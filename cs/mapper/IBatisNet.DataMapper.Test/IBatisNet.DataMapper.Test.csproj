@@ -233,6 +233,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Domain\DocumentCollection.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Domain\Enumeration.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

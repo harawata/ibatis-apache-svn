@@ -24,7 +24,7 @@
  ********************************************************************************/
 #endregion
 
-#region Imports
+#region Using
 using System;
 using System.Collections;
 using System.Collections.Specialized;
@@ -40,6 +40,7 @@ using IBatisNet.Common.Utilities;
 using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.DataMapper;
 
+using IBatisNet.DataMapper.Scope;
 using IBatisNet.DataMapper.Configuration.Alias;
 using IBatisNet.DataMapper.Configuration.Cache;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
@@ -84,11 +85,6 @@ namespace IBatisNet.DataMapper.Configuration
 		/// </summary>
 		private const string PROVIDERS_FILE_NAME = "providers.config";
 
-		/// <summary>
-		/// Token for xml path to SqlMapConfig assembly element.
-		/// </summary>
-		private const string XML_CONFIG_ASSEMBLY = "/sqlMapConfig/assembly";
-
 		// TODO: Other XML paths.
 
 		/// <summary>
@@ -116,6 +112,7 @@ namespace IBatisNet.DataMapper.Configuration
 		private bool _useStatementNamespaces = false;
 		private bool _cacheModelsEnabled = false;
 		private string _assemblyResource = string.Empty;
+		private ErrorContext _errorContext = null;
 
 		private HybridDictionary _providers = new HybridDictionary();
 		private NameValueCollection  _properties = new NameValueCollection();
@@ -138,20 +135,44 @@ namespace IBatisNet.DataMapper.Configuration
 		#endregion
 
 		#region Methods
+
+		/// <summary>
+		/// Build a SqlMapper instance
+		/// </summary>
+		/// <param name="document">An xml configuration document</param>
+		/// <param name="dataSource">A data source</param>
+		/// <param name="useConfigFileWatcher"></param>
+		/// <param name="isCallFromDao"></param>
+		/// <returns>return an a SqlMapper instance</returns>
+		private SqlMapper Build(XmlDocument document, 
+			DataSource dataSource, 
+			bool useConfigFileWatcher, bool isCallFromDao)
+		{
+			_sqlMapConfig = document;
+			_dataSource = dataSource;
+			_isCallFromDao = isCallFromDao;
+			_useConfigFileWatcher = useConfigFileWatcher;
+			_sqlMap = null;
+			_errorContext = new ErrorContext();
+
+			// Load sqlMap statement.
+			try
+			{
+				return Initialize();
+			}
+			catch(Exception e)
+			{	_errorContext.Cause = e;
+				throw new ConfigurationException(_errorContext.ToString(),e);
+			}
+		}
+
 		/// <summary>
 		/// Load statement, parameters, resultmap.
 		/// Used by Dao
 		/// </summary>
 		public SqlMapper Build(XmlDocument document, DataSource dataSource, bool useConfigFileWatcher)
 		{
-			_sqlMapConfig = document;
-			_dataSource = dataSource;
-			_isCallFromDao = true;
-			_useConfigFileWatcher = useConfigFileWatcher;
-			_sqlMap = null;
-
-			// Load sqlMap statement.
-			return Initialize();
+			return Build(document, dataSource, useConfigFileWatcher, true);
 		}
 
 
@@ -163,14 +184,7 @@ namespace IBatisNet.DataMapper.Configuration
 		/// <param name="useConfigFileWatcher"></param>
 		public SqlMapper Build(XmlDocument document, bool useConfigFileWatcher)
 		{
-			_sqlMapConfig= document;
-			_dataSource = null;
-			_isCallFromDao = false;
-			_useConfigFileWatcher = useConfigFileWatcher;
-			_sqlMap = null;
-
-			// Load DatAsource, provider & sqlMaps statement.
-			return Initialize();
+			return Build(document, null, useConfigFileWatcher, false);
 		}
 
 
@@ -192,6 +206,8 @@ namespace IBatisNet.DataMapper.Configuration
 			_sqlMap = sqlMap;
 
 			#region Load settings
+
+			_errorContext.Activity = "Loading global settings";
 
 			XmlNodeList settings = _sqlMapConfig.SelectNodes(XML_CONFIG_SETTINGS);
 
@@ -229,32 +245,6 @@ namespace IBatisNet.DataMapper.Configuration
 
 			#endregion
 
-			#region Load the assembly
-
-			// Which files must we allow to be used as Embedded Resources ?
-			// - slqMap.config [No]
-			// - providers.config [No]
-			// - sqlMap files [yes]
-			// - properties file (like Database.config) [Yes]
-			// see contribution, NHibernate usage,
-			// see http://www.codeproject.com/csharp/EmbeddedResourceStrings.asp
-			// see http://www.devhood.com/tutorials/tutorial_details.aspx?tutorial_id=75
-			XmlNode assemblyNode = _sqlMapConfig.SelectSingleNode(XML_CONFIG_ASSEMBLY);
-			if (assemblyNode != null)
-			{
-				try
-				{
-					Assembly.Load(assemblyNode.InnerText);
-				}
-				catch (Exception e)
-				{
-					throw new ConfigurationException(
-						string.Format("Unable to load assembly \"{0}\". Cause : ", e.Message  ) ,e);
-				}
-			}
-
-			#endregion
-
 			#region Load Global Properties
 			if (_isCallFromDao == false)
 			{
@@ -265,6 +255,7 @@ namespace IBatisNet.DataMapper.Configuration
 			#region Load providers
 			if (_isCallFromDao == false)
 			{
+				_errorContext.Activity = "Loading Providers";
 				GetProviders(Resources.GetConfigAsXmlDocument(PROVIDERS_FILE_NAME));
 			}
 			#endregion
@@ -284,6 +275,7 @@ namespace IBatisNet.DataMapper.Configuration
 
 			#region Load the DataSources
 
+			_errorContext.Activity = "Loading Database DataSource";
 			XmlNode nodeDataSource = _sqlMapConfig.SelectSingleNode("/sqlMapConfig/database/dataSource");
 			if (nodeDataSource == null)
 			{
@@ -300,6 +292,8 @@ namespace IBatisNet.DataMapper.Configuration
 			{
 				if (_isCallFromDao == false)
 				{
+					_errorContext.Resource = nodeDataSource.OuterXml.ToString();
+					_errorContext.MoreInfo = "Parse DataSource";
 					XmlSerializer serializer = null;
 					serializer = new XmlSerializer(typeof(DataSource));
 					DataSource dataSource = (DataSource) serializer.Deserialize(new XmlNodeReader(nodeDataSource));
@@ -314,6 +308,7 @@ namespace IBatisNet.DataMapper.Configuration
 				{
 					sqlMap.DataSource = _dataSource;
 				}
+				_errorContext.Reset();
 			}
 			#endregion
 			#endregion
@@ -321,14 +316,18 @@ namespace IBatisNet.DataMapper.Configuration
 			#region Load Global TypeAlias
 			foreach (XmlNode xmlNode in _sqlMapConfig.SelectNodes("/sqlMapConfig/alias/typeAlias"))
 			{
+				_errorContext.Activity = "Loading Global Type alias";
 				TypeAlias typeAlias = null;
 				XmlSerializer serializer = new XmlSerializer(typeof(TypeAlias));
 
 				typeAlias = (TypeAlias) serializer.Deserialize(new XmlNodeReader(xmlNode));
+				_errorContext.ObjectId = typeAlias.ClassName;
+				_errorContext.MoreInfo = "Initialize type alias";
 				typeAlias.Initialize();
 
 				sqlMap.AddTypeAlias( typeAlias.Name, typeAlias );
 			}
+			_errorContext.Reset();
 			#endregion
 
 			#region Load sqlMap mapping files
@@ -383,6 +382,8 @@ namespace IBatisNet.DataMapper.Configuration
 
 				if (provider.IsEnabled == true)
 				{
+					_errorContext.MoreInfo = "Init provider";
+					_errorContext.ObjectId = provider.Name;
 					provider.Initialisation();
 					_providers.Add(provider.Name, provider);
 
@@ -400,6 +401,7 @@ namespace IBatisNet.DataMapper.Configuration
 					}
 				}
 			}
+			_errorContext.Reset();
 		}
 
 
@@ -413,6 +415,7 @@ namespace IBatisNet.DataMapper.Configuration
 		/// <returns>A provider object.</returns>
 		private Provider ParseProvider(System.Xml.XmlNode node)
 		{
+			_errorContext.Activity = "Load DataBase Provider";
 			if (node != null)
 			{
 				// name
@@ -453,6 +456,8 @@ namespace IBatisNet.DataMapper.Configuration
 		{
 			XmlSerializer serializer = null;
 			string sqlMapName = string.Empty;
+			_errorContext.Activity = "Loading Sql Map";
+			_errorContext.Resource = sqlMapNode.OuterXml.ToString();
 
 			if (_useConfigFileWatcher == true)
 			{
@@ -468,13 +473,18 @@ namespace IBatisNet.DataMapper.Configuration
 
 			foreach (XmlNode xmlNode in config.SelectNodes("/sqlMap/alias/typeAlias"))
 			{
+				_errorContext.MoreInfo = "Loading type alias";
 				TypeAlias typeAlias = null;
 				serializer = new XmlSerializer(typeof(TypeAlias));
 				typeAlias = (TypeAlias) serializer.Deserialize(new XmlNodeReader(xmlNode));
+				_errorContext.ObjectId = typeAlias.ClassName;
+				_errorContext.MoreInfo = "Initialize type alias";
 				typeAlias.Initialize();
 
 				sqlMap.AddTypeAlias( typeAlias.Name, typeAlias );
 			}
+			_errorContext.MoreInfo = string.Empty;
+			_errorContext.ObjectId = string.Empty;
 
 			#endregion
 
@@ -482,6 +492,8 @@ namespace IBatisNet.DataMapper.Configuration
 
 			foreach (XmlNode xmlNode in config.SelectNodes("/sqlMap/resultMaps/resultMap"))
 			{
+				_errorContext.MoreInfo = "Loading ResultMap";
+
 				BuildResultMap( config, xmlNode, sqlMapName, sqlMap );
 			}
 
@@ -1145,9 +1157,12 @@ namespace IBatisNet.DataMapper.Configuration
 		private void ParseGlobalProperties(XmlNode xmlContext)
 		{
 			XmlNode nodeProperties = xmlContext.SelectSingleNode("properties");
+			_errorContext.Activity = "Loading global properties";
 
 			if (nodeProperties != null)
 			{
+				_errorContext.Resource = nodeProperties.OuterXml.ToString();
+
 				// Load the file defined by the resource attribut
 				XmlDocument propertiesConfig = Resources.GetAsXmlDocument(nodeProperties); 
 
@@ -1156,19 +1171,6 @@ namespace IBatisNet.DataMapper.Configuration
 					_properties[node.Attributes["key"].Value] = node.Attributes["value"].Value;
 				}
 			}
-
-//			if (assemblyNode != null)
-//			{
-//				try
-//				{
-//					Assembly.Load(assemblyNode.InnerText);
-//				}
-//				catch (Exception e)
-//				{
-//					throw new ConfigurationException(
-//						string.Format("Unable to load assembly \"{0}\". Cause : ", e.Message  ) ,e);
-//				}
-//			}
 		}
 
 
@@ -1261,16 +1263,19 @@ namespace IBatisNet.DataMapper.Configuration
 		private void BuildResultMap(XmlDocument config, XmlNode resultMapNode, string sqlMapName, SqlMapper sqlMap)
 		 {
 			ResultMap resultMap = null;
-
 			XmlSerializer serializer = new XmlSerializer(typeof(ResultMap));
 
+			_errorContext.MoreInfo = "Build ResultMap";
+
 			string id = ((XmlAttribute)resultMapNode.Attributes.GetNamedItem("id")).Value;
+			_errorContext.ObjectId = id;
 
 			// Did we alredy process it
 			if (sqlMap.ResultMaps.Contains( sqlMapName + DOT + id ) == false)
 			{
 				resultMap = (ResultMap) serializer.Deserialize(new XmlNodeReader(resultMapNode));
 				resultMap.SqlMapName = sqlMapName;
+				_errorContext.MoreInfo = "Initialize resultMap";
 				resultMap.Initialize( sqlMap, resultMapNode);
 
 				resultMap.Id = sqlMapName + DOT + resultMap.Id;
@@ -1278,13 +1283,14 @@ namespace IBatisNet.DataMapper.Configuration
 				if (resultMap.ExtendMap.Length >0)
 				{
 					ResultMap superMap = null;
-					// Did we already buid it ?
+					// Did we already build it ?
 					if (sqlMap.ResultMaps.Contains(sqlMapName + DOT + resultMap.ExtendMap) == false)
 					{
 						XmlNode superNode = config.SelectSingleNode("/sqlMap/resultMaps/resultMap[@id='"+ resultMap.ExtendMap +"']");
 
 						if (superNode != null)
 						{
+							_errorContext.MoreInfo = "Build parent ResultMap";
 							BuildResultMap( config, superNode, sqlMapName, sqlMap);
 							superMap = sqlMap.GetResultMap(sqlMapName + DOT + resultMap.ExtendMap);
 						}

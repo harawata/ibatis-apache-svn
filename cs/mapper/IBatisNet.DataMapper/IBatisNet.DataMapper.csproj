@@ -598,6 +598,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Scope\ErrorContext.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Scope\RequestScope.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
