@@ -124,9 +124,8 @@ public abstract class SqlMapDaoTemplate extends DaoTemplate implements SqlMapExe
    * @param id              The name of the statement to execute.
    * @param parameterObject The parameter object (e.g. JavaBean, Map, XML etc.).
    * @return The number of rows effected.
-   * @throws java.sql.SQLException If an error occurs.
    */
-  public int delete(String id, Object parameterObject) throws SQLException {
+  public int delete(String id, Object parameterObject) {
     try {
       return getSqlMapExecutor().delete(id, parameterObject);
     } catch (SQLException e) {
@@ -314,9 +313,8 @@ public abstract class SqlMapDaoTemplate extends DaoTemplate implements SqlMapExe
    * the database all at once. This can improve overall performance of updates update
    * when dealing with numerous updates (e.g. inserting 1:M related data).
    *
-   * @throws java.sql.SQLException If the batch could not be started.
    */
-  public void startBatch() throws SQLException {
+  public void startBatch() {
     try {
       getSqlMapExecutor().startBatch();
     } catch (SQLException e) {
@@ -327,10 +325,8 @@ public abstract class SqlMapDaoTemplate extends DaoTemplate implements SqlMapExe
   /**
    * Executes (flushes) all statements currently batched.
    *
-   * @throws java.sql.SQLException If the batch could not be executed or if any of the statements
-   *                               fails.
    */
-  public int executeBatch() throws SQLException {
+  public int executeBatch() {
     try {
       return getSqlMapExecutor().executeBatch();
     } catch (SQLException e) {
@@ -341,7 +337,7 @@ public abstract class SqlMapDaoTemplate extends DaoTemplate implements SqlMapExe
   /**
    * @deprecated Use queryWithRowHandler instead.
    */
-  public List queryForList(String id, Object parameterObject, RowHandler rowHandler) throws SQLException {
+  public List queryForList(String id, Object parameterObject, RowHandler rowHandler) {
     throw new UnsupportedOperationException("This method is deprecated in the SQL Maps API.");
   }
 }

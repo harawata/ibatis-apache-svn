@@ -2,6 +2,12 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
+ 2.0.1 - Jun ??, 2004
+------------------------------
+
+ o Removed redundant throws from template methods
+
+------------------------------
  2.0.0 Final - Jun 18, 2004
 ------------------------------
 
