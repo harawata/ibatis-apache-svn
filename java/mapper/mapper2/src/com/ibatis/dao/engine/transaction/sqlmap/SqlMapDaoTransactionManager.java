@@ -12,15 +12,17 @@ import java.io.Reader;
 import java.util.Properties;
 
 /**
- * <p/>
- * Date: Jan 27, 2004 10:48:21 PM
- *
- * @author Clinton Begin
+ * @see com.ibatis.dao.engine.transaction.DaoTransactionManager
  */
 public class SqlMapDaoTransactionManager implements DaoTransactionManager {
 
   private SqlMapClient client;
 
+  /**
+   * Required by interface
+   * @see com.ibatis.dao.engine.transaction.DaoTransactionManager
+   * @param properties required by interface
+   */  
   public void configure(Properties properties) {
     try {
       Reader reader = null;
@@ -37,14 +39,29 @@ public class SqlMapDaoTransactionManager implements DaoTransactionManager {
     }
   }
 
+  /**
+   * Required by interface
+   * @see com.ibatis.dao.engine.transaction.DaoTransactionManager
+   * @return A new Transaction
+   */  
   public DaoTransaction startTransaction() {
     return new SqlMapDaoTransaction(client);
   }
 
+  /**
+   * Required by interface
+   * @see com.ibatis.dao.engine.transaction.DaoTransactionManager
+   * @param trans Required by interface
+   */  
   public void commitTransaction(DaoTransaction trans) {
     ((SqlMapDaoTransaction) trans).commit();
   }
 
+  /**
+   * Required by interface
+   * @see com.ibatis.dao.engine.transaction.DaoTransactionManager
+   * @param trans Required by interface
+   */  
   public void rollbackTransaction(DaoTransaction trans) {
     ((SqlMapDaoTransaction) trans).rollback();
   }

@@ -90,8 +90,13 @@ public class SimpleDataSource implements DataSource {
   private boolean poolPingEnabled;
   private int poolPingConnectionsOlderThan;
   private int poolPingConnectionsNotUsedFor;
-  // ----- END: PROPERTY FIELDS FOR CONFIGURATION -----
-
+  //----- END: PROPERTY FIELDS FOR CONFIGURATION -----
+  
+  /**
+   * Constructor to allow passing in a map of properties for configuration
+   * 
+   * @param props - the configuration parameters
+   */
   public SimpleDataSource(Map props) {
     initialize(props);
   }
@@ -188,30 +193,53 @@ public class SimpleDataSource implements DataSource {
     return ("" + url + username + password).hashCode();
   }
 
+  /**
+   * @see javax.sql.DataSource#getConnection()
+   */
   public Connection getConnection() throws SQLException {
     return popConnection(jdbcUsername, jdbcPassword).getProxyConnection();
   }
 
+  /**
+   * @see javax.sql.DataSource#getConnection(java.lang.String, java.lang.String)
+   */
   public Connection getConnection(String username, String password) throws SQLException {
     return popConnection(username, password).getProxyConnection();
   }
 
+  /**
+   * @see javax.sql.DataSource#setLoginTimeout(int)
+   */
   public void setLoginTimeout(int loginTimeout) throws SQLException {
     DriverManager.setLoginTimeout(loginTimeout);
   }
 
+  /**
+   * @see javax.sql.DataSource#getLoginTimeout()
+   */
   public int getLoginTimeout() throws SQLException {
     return DriverManager.getLoginTimeout();
   }
 
+  /**
+   * @see javax.sql.DataSource#setLogWriter(java.io.PrintWriter)
+   */
   public void setLogWriter(PrintWriter logWriter) throws SQLException {
     DriverManager.setLogWriter(logWriter);
   }
 
+  /**
+   * @see javax.sql.DataSource#getLogWriter()
+   */
   public PrintWriter getLogWriter() throws SQLException {
     return DriverManager.getLogWriter();
   }
 
+  /**
+   * No idea what this is used for...
+   * 
+   * @return
+   */
   public int getPoolPingConnectionsNotUsedFor() {
     return poolPingConnectionsNotUsedFor;
   }
@@ -528,6 +556,11 @@ public class SimpleDataSource implements DataSource {
     return conn;
   }
 
+  /**
+   * Method to check to see if a connection is still usable
+   * @param conn - the connection to check
+   * @return True if the connection is still usable
+   */
   private boolean pingConnection(SimplePooledConnection conn) {
     boolean result = true;
 
@@ -575,6 +608,13 @@ public class SimpleDataSource implements DataSource {
     return result;
   }
 
+  /**
+   * Unwraps a pooled connection to get to the 'real' connection
+   * 
+   * @param conn - the pooled connection to unwrap
+   * 
+   * @return The 'real' connection
+   */
   public static Connection unwrapConnection(Connection conn) {
     if (conn instanceof SimplePooledConnection) {
       return ((SimplePooledConnection) conn).getRealConnection();
@@ -607,6 +647,12 @@ public class SimpleDataSource implements DataSource {
     private int connectionTypeCode;
     private boolean valid;
 
+    /**
+     * Constructor for SimplePooledConnection that uses the Connection and SimpleDataSource passed in
+     * 
+     * @param connection - the connection that is to be presented as a pooled connection
+     * @param dataSource - the dataSource that the connection is from
+     */
     public SimplePooledConnection(Connection connection, SimpleDataSource dataSource) {
       this.hashCode = connection.hashCode();
       this.realConnection = connection;
@@ -622,6 +668,9 @@ public class SimpleDataSource implements DataSource {
       valid = false;
     }
 
+    /** Method to see if the connection is usable
+     * @return True if the connection is usable
+     */
     public boolean isValid() {
       return valid && realConnection != null && dataSource.pingConnection(this);
     }
@@ -634,6 +683,11 @@ public class SimpleDataSource implements DataSource {
       return proxyConnection;
     }
 
+    /**
+     * Gets the hashcode of the real connection (or 0 if it is null)
+     * 
+     * @return The hashcode of the real connection (or 0 if it is null)
+     */
     public int getRealHashCode() {
       if (realConnection == null) {
         return 0;
@@ -697,6 +751,13 @@ public class SimpleDataSource implements DataSource {
       return hashCode;
     }
 
+    /** 
+     * Allows comparing this connection to another
+     * 
+     * @param obj - the other connection to test for equality
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
     public boolean equals(Object obj) {
       if (obj instanceof SimplePooledConnection) {
         return realConnection.hashCode() == (((SimplePooledConnection) obj).realConnection.hashCode());
@@ -711,6 +772,15 @@ public class SimpleDataSource implements DataSource {
     // Implemented Connection Methods -- Now handled by proxy
     // **********************************
 
+    /**
+     * Required for InvocationHandler inplementaion.
+     *  
+     * @param proxy - not used
+     * @param method - the method to be executed
+     * @param args - the parameters to be passed to the method
+     * 
+     * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object, java.lang.reflect.Method, java.lang.Object[])
+     */
     public Object invoke(Object proxy, Method method, Object[] args)
         throws Throwable {
       String methodName = method.getName();

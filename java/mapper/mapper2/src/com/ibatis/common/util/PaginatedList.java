@@ -7,11 +7,15 @@ package com.ibatis.common.util;
 
 import java.util.*;
 
+/**
+ * Interface for lists that support paging
+ */
 public interface PaginatedList extends List {
 
-  /**
-   * @return The maximum number of items per page.
-   */
+    /**
+     * Returns the maximum number of items per page
+     * @return The maximum number of items per page.
+     */
   public int getPageSize();
 
   /** Is the current page the first page?
@@ -46,12 +50,14 @@ public interface PaginatedList extends List {
   /**
    * Moves to the next page after the current page.  If the current
    * page is the last page, wrap to the first page.
+   * @return True if the page changed
    */
   public boolean nextPage();
 
   /**
    * Moves to the page before the current page.  If the current
    * page is the first page, wrap to the last page.
+   * @return True if the page changed
    */
   public boolean previousPage();
 
@@ -60,6 +66,7 @@ public interface PaginatedList extends List {
    * page is beyond the last page, wrap to the first page.
    * If the specified page is before the first page, wrap
    * to the last page.
+   * @param pageNumber The page to go to
    */
   public void gotoPage(int pageNumber);
 
@@ -67,6 +74,7 @@ public interface PaginatedList extends List {
    * Returns the current page index, which is a zero based integer.
    * All paginated list implementations should know what index they are
    * on, even if they don't know the ultimate boundaries (min/max).
+   * @return The current page
    */
   public int getPageIndex();
 

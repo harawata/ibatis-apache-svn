@@ -88,8 +88,9 @@ package com.ibatis.sqlmap.client;
  * </pre>
  * Date: Sep 5, 2003 9:23:34 PM
  *
- * @author Clinton Begin
- * @see SqlMapClientBuilder, SqlMapSession, SqlMapExecutor
+ * @see SqlMapClientBuilder
+ * @see SqlMapSession
+ * @see SqlMapExecutor
  */
 public interface SqlMapClient extends SqlMapExecutor, SqlMapTransactionManager {
 
@@ -107,8 +108,7 @@ public interface SqlMapClient extends SqlMapExecutor, SqlMapTransactionManager {
 
   /**
    * TODO : Deprecated and will be removed.
-   *
-   * @return
+   * @return A session (DEPRECATED)
    * @deprecated Use openSession() instead.  THIS METHOD WILL BE REMOVED BEFORE
    *             FINAL RELEASE.
    */
@@ -121,6 +121,7 @@ public interface SqlMapClient extends SqlMapExecutor, SqlMapTransactionManager {
 
   /**
    * Flushes the data cache that matches the cache model ID provided.
+   * @param cacheId The cache model to flush
    */
   public void flushDataCache(String cacheId);
 

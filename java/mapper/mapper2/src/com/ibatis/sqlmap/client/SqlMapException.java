@@ -15,17 +15,33 @@ import com.ibatis.common.exception.*;
  */
 public class SqlMapException extends NestedRuntimeException {
 
+  /**
+   * Simple constructor
+   */    
   public SqlMapException() {
   }
 
+  /**
+   * Constructor to create exception with a message
+   * @param msg A message to associate with the exception
+   */  
   public SqlMapException(String msg) {
     super(msg);
   }
 
+  /**
+   * Constructor to create exception to wrap another exception
+   * @param cause The real cause of the exception
+   */  
   public SqlMapException(Throwable cause) {
     super(cause);
   }
 
+  /**
+   * Constructor to create exception to wrap another exception and pass a message
+   * @param msg The message
+   * @param cause The real cause of the exception
+   */  
   public SqlMapException(String msg, Throwable cause) {
     super(msg, cause);
   }
