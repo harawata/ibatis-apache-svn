@@ -78,7 +78,7 @@
                 <Reference
                     Name = "IBatisNet.DataMapper"
                     AssemblyName = "IBatisNet.DataMapper"
-                    HintPath = "..\..\Source1\IBatisNet.DataMapper\bin\Debug\IBatisNet.DataMapper.dll"
+                    HintPath = "..\..\mapper\IBatisNet.DataMapper\bin\Debug\IBatisNet.DataMapper.dll"
                 />
             </References>
         </Build>

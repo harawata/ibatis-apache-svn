@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace iBatisTutorial.Model
 {
 	[TestFixture]
-	public class PersonListTest
+	public class PersonTest
 	{
 		[Test]
 		public void PersonList ()

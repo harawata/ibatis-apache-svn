@@ -7,7 +7,7 @@ namespace iBatisTutorial.Model
 	/// Tests to exercise Person and PersonHelper methods.
 	/// </summary>
 	[TestFixture]
-	public class PersonListTest
+	public class PersonTest
 	{
 		[Test]
 		public void PersonList ()
