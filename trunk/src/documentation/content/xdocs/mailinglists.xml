@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "document-v12.dtd">
+
+<document>
+
+<header>
+    <title>Apache iBATIS Mailing Lists</title>
+</header>
+
+<body>
+
+    <section>
+      <title>Mailing Lists</title>
+      <p>Use the links below to send mail to, subscribe, unsubscribe or check the archives of the iBATIS mailing lists.
+      Subcribing and unsubscribing is performed by simply sending a blank email to applicable address (as linked below).
+      </p>
+      <table>
+        <tr>
+          <td><link href="mailto:ibatis-user-java@incubator.apache.org"> iBATIS Java Users List</link></td>
+          <td><link href="mailto:ibatis-user-java-subscribe@incubator.apache.org"> Subscribe</link></td>
+          <td><link href="mailto:ibatis-user-java-unsubscribe@incubator.apache.org"> Unsubscribe</link></td>
+          <td><fork href="http://nagoya.apache.org/eyebrowse/SummarizeList?listName=ibatis-user-java@incubator.apache.org"> Archives</fork></td>
+        </tr>
+        <tr>
+          <td><link href="mailto:ibatis-user-cs@incubator.apache.org"> iBATIS Java Users List</link></td>
+          <td><link href="mailto:ibatis-user-cs-subscribe@incubator.apache.org"> Subscribe</link></td>
+          <td><link href="mailto:ibatis-user-cs-unsubscribe@incubator.apache.org"> Unsubscribe</link></td>
+          <td><fork href="http://nagoya.apache.org/eyebrowse/SummarizeList?listName=ibatis-user-cs@incubator.apache.org"> Archives</fork></td>
+        </tr>
+        <tr>
+          <td><link href="mailto:ibatis-dev@incubator.apache.org"> iBATIS Developer List</link></td>
+          <td><link href="mailto:ibatis-dev-subscribe@incubator.apache.org"> Subscribe</link></td>
+          <td><link href="mailto:ibatis-dev-unsubscribe@incubator.apache.org"> Unsubscribe</link></td>
+          <td><fork href="http://nagoya.apache.org/eyebrowse/SummarizeList?listName=ibatis-dev@incubator.apache.org"> Archives</fork></td>
+        </tr>
+      </table>
+    </section>
+    
+</body>
+    
+<footer>
+    <legal>Java, J2EE, and JCP are trademarks or registered trademarks of Sun Microsystems, Inc. in the United States and other countries.<br />
+	&copy; 2004, Apache Software Foundation
+    </legal>
+</footer>
+
+</document>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "http://apache.org/forrest/dtd/document-v12.dtd">
+<document> 
+  <header> 
+    <title>Apache iBATIS News</title> 
+  </header> 
+  <body>
+
+    <section>
+     <title>Updated Chinese Document</title>
+     <p>[16 Nov 2004] Huge thanks to Liutao for completely translating the entire Java SQL Maps documentation and tutorial to Chinese!</p>
+    </section>
+	
+    <section>
+     <title>Happy Halloween from iBATIS and The Apache Software Foundation</title>
+     <p>[31 Oct 2004] iBATIS has been voted into the Apache Incubator, and a number of resources have been set up. Over the next few weeks, we'll be switching over our current SourceForge resources over to Apache. </p>
+    </section>
+
+</body>
+</document>

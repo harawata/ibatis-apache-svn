@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "document-v12.dtd">
+
+<document>
+
+<header>
+    <title>Apache iBATIS Contributors</title>
+</header>
+
+<body>
+    <section>
+      <title>ASF Committers</title>
+      <table>
+	<tr><td><strong>Username</strong></td><td><strong>Committers</strong></td></tr>
+      	<tr><td>cbegin</td><td>Clinton Begin</td></tr>
+      	<tr><td>gbayon</td><td>Gilles Bayon</td></tr>
+      	<tr><td>husted</td><td>Ted Husted</td></tr>
+      	<tr><td>bgoodin</td><td>Brandon Goodin</td></tr>
+      	<tr><td>lmeadows</td><td>Larry Meadors</td></tr>
+       </table>
+    </section>
+
+    </body>
+
+    <footer>
+    	<legal>Java, J2EE, and JCP are trademarks or registered trademarks of Sun Microsystems, Inc. in the United States and other countries.<br />
+	&copy; 2004, Apache Software Foundation
+	</legal>
+    </footer>
+
+</document>

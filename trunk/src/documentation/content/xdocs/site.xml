@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<site label="iBATIS" href="" xmlns="http://apache.org/forrest/linkmap/1.0">
+
+  <about label="iBATIS">
+    <index label="Welcome" href="index.html" />
+    <news label="News" href="news.html" />
+    <downloads label="Downloads" href="downloads.html" />
+    <license label="License" href="license.html" />
+  </about>
+
+  <documentation label="Documentation">
+    <faq label="FAQ" href="faq.html" />
+    <resources label="Resources" href="resources.html" />
+  </documentation>
+
+  <community label="Community">
+    <mailinglists label="Mailing Lists" href="mailinglists.html" />
+    <contributors label="Contributors" href="contributors.html" />
+  </community>
+
+  <external-refs>
+    <xml.apache.org href="http://xml.apache.org/" />
+  </external-refs>
+</site>
