@@ -17,7 +17,7 @@ package com.ibatis.common.minixml;
 
 public class MiniCodec {
 
-    public static String boxReservedXMLChars(String s) {
+  public static String encodeReservedXMLChars(String s) {
     String s2 = s;
     if (s2 != null) {
       // Do ampersand FIRST to avoid replacing other tokens.
@@ -29,10 +29,11 @@ public class MiniCodec {
       s2 = replaceAll("\"", "&quot;", s2);
       s2 = replaceAll("%", "&#37;", s2);
     }
+    System.out.println (s2);
     return s2;
   }
 
-  public static String unboxReservedXMLChars(String s) {
+  public static String decodeReservedXMLChars(String s) {
     String s2 = s;
     if (s2 != null) {
       s2 = replaceAll("&amp;", "&", s2);
@@ -42,6 +43,7 @@ public class MiniCodec {
       s2 = replaceAll("&quot;", "\"", s2);
       s2 = replaceAll("&#37;", "%", s2);
     }
+    System.out.println (s2);
     return s2;
   }
 
@@ -53,9 +55,9 @@ public class MiniCodec {
    * For all of it's nastiness, this method replaces all occurrences
    * of a pattern with a new pattern, and quite quickly.
    *
-   * @param pattern The pattern to match.
+   * @param pattern    The pattern to match.
    * @param newPattern The pattern to replace the matched pattern.
-   * @param string The string in which to search and replace.
+   * @param string     The string in which to search and replace.
    * @return The new string with patterns replaced.
    */
   private static String replaceAll(String pattern, String newPattern, String string) {
