@@ -74,7 +74,7 @@ public abstract class ClassLoaderResolver {
     final ClassLoader systemLoader = ClassLoader.getSystemClassLoader();
 
     // precaution for when deployed as a bootstrap or extension class:
-    if (isChild(result, systemLoader)) {
+    if (result == null || isChild(result, systemLoader)) {
       result = systemLoader;
     }
 
