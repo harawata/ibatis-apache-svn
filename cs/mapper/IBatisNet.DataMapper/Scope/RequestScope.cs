@@ -24,8 +24,9 @@
  ********************************************************************************/
 #endregion
 
-#region Imports
+#region Using
 using System;
+using System.Data;
 using System.Collections;
 
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
@@ -44,6 +45,7 @@ namespace IBatisNet.DataMapper.Scope
 		
 		private ParameterMap _parameterMap = null;
 		private ResultMap _resultMap = null;
+		private ResultMap _oldResultMap = null;
 		private PreparedStatement _preparedStatement = null;
 		private Queue _properties = new Queue();
 
@@ -87,6 +89,27 @@ namespace IBatisNet.DataMapper.Scope
 			set { _preparedStatement = value; }
 		}
 		#endregion
+
+		/// <summary>
+		/// Check if the ResultMap is well set, process case of subMap resultMap
+		/// </summary>
+		/// <param name="dataReader">The current IDataReader</param>
+		public void CheckResultMap(IDataReader dataReader)
+		{
+			_oldResultMap = _resultMap;
+			if (_resultMap != null && _resultMap.Discriminator != null)
+			{
+				_resultMap = _resultMap.Discriminator.GetResultMap(dataReader);
+			}
+		}
+
+		/// <summary>
+		/// Reset
+		/// </summary>
+		public void Reset()
+		{
+			_resultMap = _oldResultMap;
+		}
 
 	}
 }

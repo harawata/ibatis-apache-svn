@@ -362,6 +362,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 		{
 			object outObject = resultObject; 
 
+			request.CheckResultMap(reader);
+
 			// If there's an ResultMap, use it
 			if (request.ResultMap != null) 
 			{
@@ -414,6 +416,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 				}
 			}
 
+			request.Reset();
 			return outObject;
 		}		
 

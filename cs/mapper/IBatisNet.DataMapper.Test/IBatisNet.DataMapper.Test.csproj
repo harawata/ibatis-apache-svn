@@ -205,12 +205,22 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Domain\Book.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Domain\Category.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Domain\Complex.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Domain\Document.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -226,6 +236,11 @@
                 />
                 <File
                     RelPath = "Domain\LineItemCollection.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Domain\Newspaper.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -359,6 +374,10 @@
                 />
                 <File
                     RelPath = "Maps\MSSQL\SqlClient\Complex.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\MSSQL\SqlClient\Document.xml"
                     BuildAction = "Content"
                 />
                 <File
@@ -507,6 +526,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "NUnit\SqlMapTests\InheritanceTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "NUnit\SqlMapTests\ParameterMapTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -603,6 +627,10 @@
                 />
                 <File
                     RelPath = "Scripts\MSSQL\DBCreation.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MSSQL\documents-init.sql"
                     BuildAction = "Content"
                 />
                 <File

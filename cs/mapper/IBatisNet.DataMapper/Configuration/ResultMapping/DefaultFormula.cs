@@ -46,6 +46,8 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 
 		#endregion 
 
+		#region Constructor
+
 		/// <summary>
 		/// Constructor
 		/// </summary>
@@ -54,6 +56,8 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		{
 			_discriminatorColumn = discriminatorColumn;
 		}
+		#endregion 
+
 		#region IDiscriminatorFormula members
 
 		/// <summary>

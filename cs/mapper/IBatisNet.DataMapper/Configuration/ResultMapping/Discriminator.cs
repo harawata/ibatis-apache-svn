@@ -40,26 +40,58 @@ using IBatisNet.Common.Exceptions;
 namespace IBatisNet.DataMapper.Configuration.ResultMapping
 {
 	/// <summary>
-	/// Summary description for  SubClassMap.
+	/// Summary description for Discriminator.
 	/// </summary>
 	[Serializable]
-	public class SubMap
+	[XmlRoot("discriminator")]
+	public class Discriminator
 	{
 
 		#region Fields
-
+		[NonSerialized]
+		private string _discriminatorColumn = string.Empty;
+		[NonSerialized]
+		private IDiscriminatorFormula _formula = null;
 		/// <summary>
 		/// (discriminatorValue (string), ResulMap)
 		/// </summary>
+		[NonSerialized]
 		private HybridDictionary _resultMaps = null;
-		private IDiscriminatorFormula _formula = null;
-		private string _discriminatorColumn = string.Empty;
-
+		/// <summary>
+		/// The subMaps name who used this discriminator
+		/// </summary>
+		[NonSerialized]
+		private ArrayList _subMaps = null;
+		[NonSerialized]
+		private string _formulaClassName = string.Empty;//typeof(DefaultFormula).FullName;
 		#endregion 
+
+		#region Properties
+
+		/// <summary>
+		/// Column Name
+		/// </summary>
+		[XmlAttribute("formula")]
+		public string FormulaClassName
+		{
+			get { return _formulaClassName; }
+			set { _formulaClassName = value; }
+		}
+
+		/// <summary>
+		/// Column Name
+		/// </summary>
+		[XmlAttribute("column")]
+		public string DiscriminatorColumn
+		{
+			get { return _discriminatorColumn; }
+			set { _discriminatorColumn = value; }
+		}
 
 		/// <summary>
 		/// A formula to calculate the discriminator value to use
 		/// </summary>
+		[XmlIgnoreAttribute]
 		public IDiscriminatorFormula Formula
 		{
 			get
@@ -68,42 +100,61 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			}	
 			set
 			{
-				 _formula = value;
+				_formula = value;
 			}	
 		}
+		#endregion 
+
+		#region Constructor
 
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		public SubMap(string discriminatorColumn)
+		public Discriminator()
 		{
-			_formula = new DefaultFormula(discriminatorColumn);
-			_discriminatorColumn = discriminatorColumn;
 			_resultMaps = new HybridDictionary();
+			_subMaps = new ArrayList();
 		}
+		#endregion 
+
+		#region Methods
 
 		/// <summary>
-		/// Add a subclass resultMap
+		/// Initialize the Discriminator
 		/// </summary>
-		/// <param name="discriminatorValue">The discriminator Value which identify the ResultMap</param>
-		/// <param name="resultMap">The corresponding ResultMap</param>
-		public void Add(string discriminatorValue, ResultMap resultMap)
+		/// <param name="sqlMap"></param>
+		public void Initialize(SqlMapper sqlMap)
 		{
-			_resultMaps.Add(discriminatorValue, resultMap);
+			// Set the formula
+			if (_formulaClassName.Length == 0)
+			{
+				_formula = new DefaultFormula(_discriminatorColumn);
+			}
+			else
+			{
+				Type formulaType = sqlMap.GetType(_formulaClassName);
+				_formula = Activator.CreateInstance(formulaType) as IDiscriminatorFormula;
+			}
+
+			// Set the ResultMaps
+			for(int index=0; index<_subMaps.Count; index++)
+			{
+				SubMap subMap = _subMaps[index] as SubMap;
+				_resultMaps.Add(subMap.DiscriminatorValue, sqlMap.GetResultMap( subMap.ResulMapName ) );
+			}
 		}
 
-//		<resultMap name="document" class="Document">
-//			<result property="Id" column="Document_ID"/>
-//			<result property="Title" column="Document_Title"/>
-//			<subMap column="Document_Type" 
-//					value="Book" -- discriminator value
-//					formula="DefaultFormula, iBatisNet.DataMapper" -- discriminator type (DefaultFormula is default), else used an aliasType wich implement IDiscriminatorFormula)
-//					resultMap="bookResultMap"
-//			/>
-//		</resultMap>
+		/// <summary>
+		/// Add a subMap that the discrimator must treat
+		/// </summary>
+		/// <param name="subMap">A subMap</param>
+		public void Add(SubMap subMap)
+		{
+			_subMaps.Add(subMap);
+		}
 
 		/// <summary>
-		/// Find the ResultMap to use.
+		/// Find the SubMap to use.
 		/// </summary>
 		/// <param name="dataReader">A IDataReader which contains result values</param>
 		/// <returns>The find ResultMap</returns>
@@ -115,5 +166,8 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			string discriminatorValue = _formula.GetDiscriminatorValue(dataReader);
 			return _resultMaps[discriminatorValue] as ResultMap;
 		}
+		#endregion 
+
+
 	}
 }

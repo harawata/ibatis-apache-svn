@@ -57,13 +57,50 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		[NonSerialized]
 		private string _extendMap = string.Empty;
 		[NonSerialized]
-		private Type _class;
+		private Type _class = null;
 		//(columnName, property)
 		[NonSerialized]
-		private Hashtable _columnsToPropertiesMap = new Hashtable();	
+		private Hashtable _columnsToPropertiesMap = new Hashtable();
+		[NonSerialized]
+		private Discriminator _discriminator = null;
+		[NonSerialized]
+		private string _sqlMapName = string.Empty;
 		#endregion
 
 		#region Properties
+
+		/// <summary>
+		/// The sqlMap name parent
+		/// </summary>
+		[XmlIgnoreAttribute]
+		public string SqlMapName
+		{
+			get
+			{
+				return _sqlMapName;
+			}	
+			set
+			{
+				_sqlMapName = value;
+			}	
+		}
+
+		/// <summary>
+		/// The discriminator used to choose the good SubMap
+		/// </summary>
+		[XmlIgnoreAttribute]
+		public Discriminator Discriminator
+		{
+			get
+			{
+				return _discriminator;
+			}	
+			set
+			{
+				_discriminator = value;
+			}	
+		}
+
 		/// <summary>
 		/// The collection of result properties.
 		/// </summary>
@@ -152,8 +189,8 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			{
 				_class = sqlMap.GetType(_className);
 
-				// Load the properties
-				GetProperties(node);
+				// Load the child node
+				GetChildNode(node);
 			}
 			catch(Exception e)
 			{
@@ -165,13 +202,16 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 
 
 		/// <summary>
-		/// Get the result properties from the xmNode.
+		/// Get the result properties and the subMap properties.
 		/// </summary>
 		/// <param name="node">An xmlNode.</param>
-		private void GetProperties(XmlNode node)
+		private void GetChildNode(XmlNode node)
 		{
 			XmlSerializer serializer = null;
 			ResultProperty property = null;
+			SubMap subMap = null;
+
+			#region Load the Result Properties
 
 			serializer = new XmlSerializer(typeof(ResultProperty));
 			foreach ( XmlNode resultNode in node.SelectNodes("result") )
@@ -188,6 +228,28 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 
 				this.AddResultPropery( property  );
 			}
+			#endregion 
+
+			#region Load the Discriminator Property
+
+			serializer = new XmlSerializer(typeof(Discriminator));
+			XmlNode discriminatorNode = node.SelectSingleNode("discriminator");
+			if (discriminatorNode != null)
+			{
+				this.Discriminator = (Discriminator) serializer.Deserialize(new XmlNodeReader(discriminatorNode));
+			}
+			#endregion 
+
+			#region Load the SubMap Properties
+
+			serializer = new XmlSerializer(typeof(SubMap));
+			foreach ( XmlNode resultNode in node.SelectNodes("subMap") )
+			{
+				subMap = (SubMap) serializer.Deserialize(new XmlNodeReader(resultNode));
+				subMap.ResulMapName = this.SqlMapName + DomSqlMapBuilder.DOT + subMap.ResulMapName;
+				this.Discriminator.Add( subMap );
+			}
+			#endregion 
 		}
 
 		#endregion

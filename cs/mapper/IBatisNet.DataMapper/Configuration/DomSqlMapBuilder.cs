@@ -63,7 +63,10 @@ namespace IBatisNet.DataMapper.Configuration
 	{
 		#region Constant
 		private const string DEFAULT_PROVIDER_NAME = "_DEFAULT_PROVIDER_NAME";
-		private const string DOT = ".";
+		/// <summary>
+		/// Dot representation
+		/// </summary>
+		public const string DOT = ".";
 		private const string PARAMETER_TOKEN = "#";
 
 		/// <summary>
@@ -328,7 +331,7 @@ namespace IBatisNet.DataMapper.Configuration
 			}
 			#endregion
 
-			#region Load the mapping files
+			#region Load sqlMap mapping files
 			
 			foreach (XmlNode xmlNode in _sqlMapConfig.SelectNodes("/sqlMapConfig/sqlMaps/sqlMap"))
 			{
@@ -337,18 +340,22 @@ namespace IBatisNet.DataMapper.Configuration
 
 			#endregion
 
-			#region Resolve "resulMap" attribut on ResultProperty
+			#region Resolve "resulMap" attribut on Result Property + initialize Discriminator property 
 
 			foreach(DictionaryEntry entry in sqlMap.ResultMaps)
 			{
 				ResultMap resultMap = (ResultMap)entry.Value;
 				foreach(DictionaryEntry item in resultMap.ColumnsToPropertiesMap)
 				{
-					ResultProperty property = (ResultProperty)item.Value;
-					if(property.ResulMapName.Length >0)
+					ResultProperty result = (ResultProperty)item.Value;
+					if(result.ResulMapName.Length >0)
 					{
-						property.ResultMap = sqlMap.GetResultMap(property.ResulMapName);
+						result.ResultMap = sqlMap.GetResultMap(result.ResulMapName);
 					}
+				}
+				if (resultMap.Discriminator != null)
+				{
+					resultMap.Discriminator.Initialize(sqlMap);
 				}
 			}
 
@@ -1263,6 +1270,7 @@ namespace IBatisNet.DataMapper.Configuration
 			if (sqlMap.ResultMaps.Contains( sqlMapName + DOT + id ) == false)
 			{
 				resultMap = (ResultMap) serializer.Deserialize(new XmlNodeReader(resultMapNode));
+				resultMap.SqlMapName = sqlMapName;
 				resultMap.Initialize( sqlMap, resultMapNode);
 
 				resultMap.Id = sqlMapName + DOT + resultMap.Id;

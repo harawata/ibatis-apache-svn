@@ -233,6 +233,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Configuration\ResultMapping\Discriminator.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Configuration\ResultMapping\IDiscriminatorFormula.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -248,7 +253,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Configuration\ResultMapping\SubClassMap.cs"
+                    RelPath = "Configuration\ResultMapping\SubMap.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
