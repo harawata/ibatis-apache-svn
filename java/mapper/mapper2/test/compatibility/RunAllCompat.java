@@ -22,7 +22,7 @@ public class RunAllCompat extends BaseCompat implements Runnable {
     setLogEnabled(false);
 
     // -- We'll borrow the already configured connection from an SQL Map
-    Connection conn = SqlMapConfigCompat.getSqlMap().getDataSource().getConnection();
+    Connection conn = SqlMapConfigCompat.getSqlMap().getDataSource("").getConnection();
     ScriptRunnerCompat.runInitializationScript(conn, "compatibility/ddl/hsql-init.sql");
     conn.commit();
     conn.close();
