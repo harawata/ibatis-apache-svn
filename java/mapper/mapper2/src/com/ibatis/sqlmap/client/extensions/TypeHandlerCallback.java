@@ -15,6 +15,46 @@ import java.sql.SQLException;
  * BLOB support (e.g. Oracle), or you might use it to handle
  * booleans using "Y" and "N" instead of the more typical 0/1.
  * <p/>
+ * <b>EXAMPLE</b>
+ * <p>Here's a simple example of a boolean handler that uses "Yes" and "No".</p>
+ * <pre>
+   public class YesNoBoolTypeHandlerCallback implements TypeHandlerCallback {
+
+     private static final String YES = "Yes";
+     private static final String NO = "No";
+
+     public Object getResult(ResultGetter getter) throws SQLException {
+       String s = getter.getString();
+       if (YES.equalsIgnoreCase(s)) {
+         return new Boolean (true);
+       } else if (NO.equalsIgnoreCase(s)) {
+         return new Boolean (false);
+       } else {
+         throw new SQLException ("Unexpected value " + s + " found where "+YES+" or "+NO+" was expected.");
+       }
+     }
+
+     public void setParameter(ParameterSetter setter, Object parameter) throws SQLException {
+       boolean b = ((Boolean)parameter).booleanValue();
+       if (b) {
+         setter.setString(YES);
+       } else {
+         setter.setString(NO);
+       }
+     }
+
+     public Object valueOf(String s) {
+       if (YES.equalsIgnoreCase(s)) {
+         return new Boolean (true);
+       } else if (NO.equalsIgnoreCase(s)) {
+         return new Boolean (false);
+       } else {
+         throw new SQLException ("Unexpected value " + s + " found where "+YES+" or "+NO+" was expected.");
+       }
+     }
+
+   }
+ * </pre>
  */
 public interface TypeHandlerCallback {
 
