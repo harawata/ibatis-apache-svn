@@ -22,6 +22,7 @@
       - Save point support
   Performance
       - Cache dependency on other cache (flush-on-dependant)
+      - Flush cache at specifig time (e.g. 22:30)
 
 #.#
   Ease of Use
@@ -35,8 +36,6 @@
   Database Support
       - NULL complex property map results set prop to null (don't run query selectOnNull="false")
       - Trim whitespace from CHAR data
-  Performance
-      - Flush cache at specifig time (e.g. 22:30)
   Tools
       - XDoclet/QDox Tags (@ibatis)
       - SQL Map Editor GUI
