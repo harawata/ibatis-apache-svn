@@ -35,11 +35,9 @@ import java.util.Map;
  */
 public class AutoResultMap extends BasicResultMap {
 
-  private boolean allowRemapping = false;
-
   /**
-   * Constructor to pass in the SqlMapExecutorDelegate 
-   * 
+   * Constructor to pass in the SqlMapExecutorDelegate
+   *
    * @param delegate - the delegate
    */
   public AutoResultMap(SqlMapExecutorDelegate delegate, boolean allowRemapping) {
@@ -49,20 +47,20 @@ public class AutoResultMap extends BasicResultMap {
 
   public synchronized Object[] getResults(RequestScope request, ResultSet rs)
       throws SQLException {
-    if (allowRemapping || resultMappings == null) {
+    if (allowRemapping || getResultMappings() == null) {
       initialize(rs);
     }
     return super.getResults(request, rs);
   }
 
   private void initialize(ResultSet rs) {
-    if (resultClass == null) {
+    if (getResultClass() == null) {
       throw new SqlMapException("The automatic ResultMap named " + this.getId() + " had a null result class (not allowed).");
-    } else if (Map.class.isAssignableFrom(resultClass)) {
+    } else if (Map.class.isAssignableFrom(getResultClass())) {
       initializeMapResults(rs);
-    } else if (getDelegate().getTypeHandlerFactory().getTypeHandler(resultClass) != null) {
+    } else if (getDelegate().getTypeHandlerFactory().getTypeHandler(getResultClass()) != null) {
       initializePrimitiveResults(rs);
-    } else if (DomTypeMarker.class.isAssignableFrom(resultClass)) {
+    } else if (DomTypeMarker.class.isAssignableFrom(getResultClass())) {
       initializeXmlResults(rs);
     } else {
       initializeBeanResults(rs);
@@ -71,7 +69,7 @@ public class AutoResultMap extends BasicResultMap {
 
   private void initializeBeanResults(ResultSet rs) {
     try {
-      ClassInfo classInfo = ClassInfo.getInstance(resultClass);
+      ClassInfo classInfo = ClassInfo.getInstance(getResultClass());
       String[] propertyNames = classInfo.getWriteablePropertyNames();
 
       Map propertyMap = new HashMap();
@@ -152,7 +150,7 @@ public class AutoResultMap extends BasicResultMap {
       resultMapping.setPropertyName(columnName);
       resultMapping.setColumnName(columnName);
       resultMapping.setColumnIndex(1);
-      resultMapping.setTypeHandler(getDelegate().getTypeHandlerFactory().getTypeHandler(resultClass));
+      resultMapping.setTypeHandler(getDelegate().getTypeHandlerFactory().getTypeHandler(getResultClass()));
 
       List resultMappingList = new ArrayList();
       resultMappingList.add(resultMapping);

@@ -15,21 +15,29 @@
  */
 package com.ibatis.sqlmap.engine.mapping.result;
 
-import com.ibatis.common.beans.*;
+import com.ibatis.common.beans.Probe;
+import com.ibatis.common.beans.ProbeFactory;
 import com.ibatis.common.jdbc.exception.NestedSQLException;
 import com.ibatis.common.resources.Resources;
 import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.engine.exchange.DataExchange;
-import com.ibatis.sqlmap.engine.impl.*;
+import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
+import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
 import com.ibatis.sqlmap.engine.mapping.result.loader.ResultLoader;
 import com.ibatis.sqlmap.engine.mapping.sql.Sql;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
-import com.ibatis.sqlmap.engine.scope.*;
-import com.ibatis.sqlmap.engine.type.*;
+import com.ibatis.sqlmap.engine.scope.ErrorContext;
+import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.type.DomCollectionTypeMarker;
+import com.ibatis.sqlmap.engine.type.DomTypeMarker;
+import com.ibatis.sqlmap.engine.type.TypeHandler;
+import com.ibatis.sqlmap.engine.type.TypeHandlerFactory;
 import org.w3c.dom.Document;
 
-import javax.xml.parsers.*;
-import java.sql.*;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -39,11 +47,14 @@ public class BasicResultMap implements ResultMap {
 
   private static final Probe PROBE = ProbeFactory.getProbe();
 
-  protected String id;
-  protected Class resultClass;
+  private String id;
+  private Class resultClass;
 
-  protected ResultMapping[] resultMappings;
-  protected DataExchange dataExchange;
+  // DO NOT ACCESS EITHER OF THESE OUTSIDE OF THEIR BEAN GETTER/SETTER
+  private ResultMapping[] resultMappings;
+  private ThreadLocal remappableResultMappings = new ThreadLocal();
+
+  private DataExchange dataExchange;
 
   private List nestedResultMappings;
 
@@ -55,6 +66,8 @@ public class BasicResultMap implements ResultMap {
   private String resource;
 
   private SqlMapExecutorDelegate delegate;
+
+  protected boolean allowRemapping = false;
 
   /**
    * Constructor to pass a SqlMapExecutorDelegate in
@@ -94,8 +107,8 @@ public class BasicResultMap implements ResultMap {
   public Object getUniqueKey(Object[] values) {
     if (groupByProps != null) {
       StringBuffer keyBuffer = new StringBuffer();
-      for (int i = 0; i < resultMappings.length; i++) {
-        String propertyName = resultMappings[i].getPropertyName();
+      for (int i = 0; i < getResultMappings().length; i++) {
+        String propertyName = getResultMappings()[i].getPropertyName();
         if (groupByProps.contains(propertyName)) {
           keyBuffer.append(values[i]);
           keyBuffer.append('-');
@@ -189,7 +202,11 @@ public class BasicResultMap implements ResultMap {
   }
 
   public ResultMapping[] getResultMappings() {
-    return resultMappings;
+    if (allowRemapping) {
+      return (ResultMapping[]) remappableResultMappings.get();
+    } else {
+      return resultMappings;
+    }
   }
 
   /**
@@ -198,7 +215,13 @@ public class BasicResultMap implements ResultMap {
    * @param resultMappingList - the list
    */
   public void setResultMappingList(List resultMappingList) {
-    this.resultMappings = (BasicResultMapping[]) resultMappingList.toArray(new BasicResultMapping[resultMappingList.size()]);
+    if (allowRemapping) {
+      this.remappableResultMappings.set((BasicResultMapping[]) resultMappingList.toArray(new BasicResultMapping[resultMappingList.size()]));
+    } else {
+      this.resultMappings = (BasicResultMapping[]) resultMappingList.toArray(new BasicResultMapping[resultMappingList.size()]);
+    }
+
+
     Map props = new HashMap();
     props.put("map", this);
     dataExchange = getDelegate().getDataExchangeFactory().getDataExchangeForClass(resultClass);
@@ -211,7 +234,7 @@ public class BasicResultMap implements ResultMap {
    * @return - the count
    */
   public int getResultCount() {
-    return this.resultMappings.length;
+    return this.getResultMappings().length;
   }
 
   /**
@@ -227,9 +250,9 @@ public class BasicResultMap implements ResultMap {
     errorContext.setResource(this.getResource());
     errorContext.setMoreInfo("Check the result map.");
 
-    Object[] columnValues = new Object[resultMappings.length];
-    for (int i = 0; i < resultMappings.length; i++) {
-      BasicResultMapping mapping = (BasicResultMapping) resultMappings[i];
+    Object[] columnValues = new Object[getResultMappings().length];
+    for (int i = 0; i < getResultMappings().length; i++) {
+      BasicResultMapping mapping = (BasicResultMapping) getResultMappings()[i];
       errorContext.setMoreInfo(mapping.getErrorString());
       if (mapping.getStatementName() != null) {
         if (resultClass == null) {
@@ -283,7 +306,7 @@ public class BasicResultMap implements ResultMap {
   private void applyNestedResultMap(RequestScope request, Object resultObject, Object[] values) {
     if (resultObject != null && resultObject != NO_VALUE) {
       if (nestedResultMappings != null) {
-        for (int i = 0, n=nestedResultMappings.size(); i < n; i++) {
+        for (int i = 0, n = nestedResultMappings.size(); i < n; i++) {
           BasicResultMapping resultMapping = (BasicResultMapping) nestedResultMappings.get(i);
           setNestedResultMappingValue(resultMapping, request, resultObject, values);
         }

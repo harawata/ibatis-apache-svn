@@ -196,4 +196,21 @@ public class DynamicTest extends BaseSqlMapTest {
 
   }
 
+
+  public void testRemappableResults() throws SQLException {
+    Account account;
+
+    account = new Account();
+    account.setId(1);
+    account = (Account) sqlMap.queryForObject("testRemappableResults", new Integer(1));
+
+    assertAccount1(account);
+
+    account = new Account();
+    account.setId(5);
+    account = (Account) sqlMap.queryForObject("testRemappableResults", new Integer(77));
+
+    assertEquals(0, account.getId());
+    assertEquals("Jim", account.getFirstName());
+  }
 }
