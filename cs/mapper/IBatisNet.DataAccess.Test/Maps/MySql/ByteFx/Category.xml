@@ -3,7 +3,7 @@
 		xsi:noNamespaceSchemaLocation="SqlMap.xsd">
 	
 	<alias>
-		<typeAlias alias="Category" type="IBatisNet.Test.Domain.Category, IBatisNet.Test"/>
+		<typeAlias alias="Category" type="IBatisNet.DataAccess.Test.Domain.Category, IBatisNet.DataAccess.Test"/>
 	</alias>
 	
 	<statements>
