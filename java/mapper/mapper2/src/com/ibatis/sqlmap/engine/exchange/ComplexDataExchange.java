@@ -98,7 +98,9 @@ public class ComplexDataExchange extends BaseDataExchange implements DataExchang
       }
       ParameterMapping[] mappings = parameterMap.getParameterMappings();
       for (int i = 0; i < mappings.length; i++) {
-        PROBE.setObject(object, mappings[i].getPropertyName(), values[i]);
+        if (mappings[i].isOutputAllowed()) {
+          PROBE.setObject(object, mappings[i].getPropertyName(), values[i]);
+        }
       }
       return object;
     }

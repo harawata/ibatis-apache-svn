@@ -19,4 +19,6 @@ public interface ParameterMapping {
 
   public String getPropertyName();
 
+  public boolean isOutputAllowed();
+
 }

@@ -78,7 +78,9 @@ public class MapDataExchange extends BaseDataExchange implements DataExchange {
 
     ParameterMapping[] mappings = parameterMap.getParameterMappings();
     for (int i = 0; i < mappings.length; i++) {
-      map.put(mappings[i].getPropertyName(), values[i]);
+      if (mappings[i].isOutputAllowed()) {
+        map.put(mappings[i].getPropertyName(), values[i]);
+      }
     }
 
     return map;

@@ -60,10 +60,13 @@ public class ListDataExchange extends BaseDataExchange implements DataExchange {
     ParameterMapping[] mappings = parameterMap.getParameterMappings();
     List data = new ArrayList();
     for (int i = 0; i < mappings.length; i++) {
-      String propName = mappings[i].getPropertyName();
-      int index = Integer.parseInt((propName.substring(1, propName.length() - 1)));
-      data.set(index, values[i]);
+      if (mappings[i].isOutputAllowed()) {
+        String propName = mappings[i].getPropertyName();
+        int index = Integer.parseInt((propName.substring(1, propName.length() - 1)));
+        data.set(index, values[i]);
+      }
     }
+
     return data;
   }
 

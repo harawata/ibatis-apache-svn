@@ -89,7 +89,9 @@ public class DomDataExchange extends BaseDataExchange implements DataExchange {
 
     for (int i = 0; i < mappings.length; i++) {
       if (values[i] != null) {
-        probe.setObject(parameterObject, mappings[i].getPropertyName(), values[i]);
+        if (mappings[i].isOutputAllowed()) {
+          probe.setObject(parameterObject, mappings[i].getPropertyName(), values[i]);
+        }
       }
     }
 

@@ -26,6 +26,8 @@ import com.ibatis.sqlmap.engine.mapping.result.ResultMapping;
 import com.ibatis.sqlmap.engine.scope.ErrorContext;
 import com.ibatis.sqlmap.engine.scope.RequestScope;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class JavaBeanDataExchange extends BaseDataExchange implements DataExchange {
@@ -34,6 +36,7 @@ public class JavaBeanDataExchange extends BaseDataExchange implements DataExchan
 
   private AccessPlan resultPlan;
   private AccessPlan parameterPlan;
+  private AccessPlan outParamPlan;
 
   protected JavaBeanDataExchange(DataExchangeFactory dataExchangeFactory) {
     super(dataExchangeFactory);
@@ -55,7 +58,18 @@ public class JavaBeanDataExchange extends BaseDataExchange implements DataExchan
           parameterPropNames[i] = parameterMappings[i].getPropertyName();
         }
         parameterPlan = AccessPlanFactory.getAccessPlan(parameterMap.getParameterClass(), parameterPropNames);
+
+        // OUTPUT PARAMS
+        List outParamList = new ArrayList();
+        for (int i = 0; i < parameterPropNames.length; i++) {
+          if (parameterMappings[i].isOutputAllowed()) {
+            outParamList.add(parameterMappings[i].getPropertyName());
+          }
+        }
+        String[] outParams = (String[]) outParamList.toArray(new String[outParamList.size()]);
+        outParamPlan = AccessPlanFactory.getAccessPlan(parameterMap.getParameterClass(), outParams);
       }
+
     } else if (map instanceof ResultMap) {
       ResultMap resultMap = (ResultMap) map;
       if (resultMap != null) {
@@ -100,7 +114,7 @@ public class JavaBeanDataExchange extends BaseDataExchange implements DataExchan
   }
 
   public Object setData(RequestScope request, ParameterMap parameterMap, Object parameterObject, Object[] values) {
-    if (parameterPlan != null) {
+    if (outParamPlan != null) {
       Object object = parameterObject;
       if (object == null) {
         try {
@@ -109,7 +123,7 @@ public class JavaBeanDataExchange extends BaseDataExchange implements DataExchan
           throw new NestedRuntimeException("JavaBeansDataExchange could not instantiate parameter class.  Cause: " + e, e);
         }
       }
-      parameterPlan.setProperties(object, values);
+      outParamPlan.setProperties(object, values);
       return object;
     } else {
       return null;

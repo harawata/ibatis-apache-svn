@@ -14,6 +14,7 @@ Build Number: @buildNum@
  o Fixed undetected duplicate statement names in a single sql map
  o Fixed inconsistent type handler for Map params without paramclass
  o Fixed SQLExceptin when populating complex properties
+ o Fixed setters being called for non-OUT parameter objects
 
 ------------------------------
  2.0.5 - Aug 11, 2004
