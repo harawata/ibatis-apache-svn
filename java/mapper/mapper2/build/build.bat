@@ -1,9 +1,5 @@
-echo off
+@ECHO off
 
-set BUILD_CP=%JAVA_HOME%\lib\tools.jar;..\devlib\ant.jar;..\devlib\optional.jar;..\devlib\junit.jar;..\lib\optional\xml\xercesImpl-2-4-0.jar;..\lib\optional\xml\xmlParserAPIs-2-4-0.jar
+call ant.bat all
 
-%JAVA_HOME%\bin\java -classpath %BUILD_CP% org.apache.tools.ant.Main -buildfile build.xml all
-
-set BUILD_CP=
-
-pause
+PAUSE
