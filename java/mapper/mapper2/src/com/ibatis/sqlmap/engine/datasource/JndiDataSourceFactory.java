@@ -5,26 +5,29 @@
  */
 package com.ibatis.sqlmap.engine.datasource;
 
-import com.ibatis.sqlmap.client.SqlMapException;
-
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Properties;
+import com.ibatis.sqlmap.client.SqlMapException;
 
+/**
+ * DataSourceFactory implementation for JNDI
+ */
 public class JndiDataSourceFactory implements DataSourceFactory {
 
-  public final static String CONTEXT_SETTINGS = "context_settings";
+  private final static String CONTEXT_SETTINGS = "context_settings";
 
   private DataSource dataSource;
 
   public void initialize(Map properties) {
     try {
       InitialContext initCtx = null;
-      Properties context = getContextProperties(properties);
+      Hashtable context = getContextProperties(properties);
 
       if (context == null) {
         initCtx = new InitialContext();
@@ -53,9 +56,9 @@ public class JndiDataSourceFactory implements DataSourceFactory {
     return dataSource;
   }
 
-  private static Properties getContextProperties(Map allProps) {
+  private static Hashtable getContextProperties(Map allProps) {
     final String PREFIX = "context.";
-    Properties contextProperties = null;
+    Hashtable contextProperties = null;
     Iterator keys = allProps.keySet().iterator();
     while (keys.hasNext()) {
       String key = (String) keys.next();
