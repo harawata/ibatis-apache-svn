@@ -14,8 +14,8 @@ import java.util.Map;
  * <p/>
  * Date: Feb 22, 2004 3:30:33 PM
  *
- * @author Clinton Begin
- * @see SqlMapSession, SqlMapClient
+ * @see SqlMapSession
+ * @see SqlMapClient
  */
 public interface SqlMapExecutor {
 
@@ -216,6 +216,7 @@ public interface SqlMapExecutor {
    *
    * @throws java.sql.SQLException If the batch could not be executed or if any of the statements
    *                               fails.
+   * @return the number of rows updated in the batch
    */
   int executeBatch() throws SQLException;
 }
