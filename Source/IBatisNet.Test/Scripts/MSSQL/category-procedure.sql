@@ -7,4 +7,4 @@ insert into Categories
 			(Category_Name, Category_Guid ) 
 values 
 			(@Category_Name, @Category_Guid)
-SELECT @Category_Id = CAST(SCOPE_IDENTITY() as int)
+SELECT @Category_Id = SCOPE_IDENTITY()

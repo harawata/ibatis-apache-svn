@@ -23,13 +23,13 @@
 				(Category_Name, Category_Guid) 
 			values 
 				(#Name#, #Guid:Guid#);
-			select CAST(SCOPE_IDENTITY() as int) as value
+			select SCOPE_IDENTITY() as value
 		</statement><!--Guid for Oledb, UniqueIdentifier for SqlClient,Odbc -->
 		
 		<!--  -->
 		<insert name="InsertCategoryViaInsertSatement" parameterClass="Category" >
 			<selectKey property="Id" type="post" resultClass="int">
-				select CAST(@@IDENTITY as int) as value
+				select @@IDENTITY as value
             </selectKey>			
             insert into Categories  
 				(Category_Name, Category_Guid) 

@@ -830,6 +830,12 @@ namespace IBatisNet.DataMapper.MappedStatements
 				else
 				{
 					generatedKey = command.ExecuteScalar();
+					if ( (_statement.ResultClass!=null) && 
+						TypeHandlerFactory.IsSimpleType(_statement.ResultClass) )
+					{
+						ITypeHandler typeHandler = TypeHandlerFactory.GetTypeHandler(_statement.ResultClass);
+						generatedKey = typeHandler.GetDataBaseValue(generatedKey, _statement.ResultClass);
+					}
 				}
 			
 				if (selectKeyStatement != null && selectKeyStatement.isAfter)

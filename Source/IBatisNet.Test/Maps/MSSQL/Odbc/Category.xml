@@ -23,7 +23,7 @@
 				(Category_Name, Category_Guid) 
 			values 
 				(#Name#, #Guid:UniqueIdentifier#);
-			select CAST(SCOPE_IDENTITY() as int) as value
+			select SCOPE_IDENTITY() as value
 		</statement><!--Guid for Oledb, UniqueIdentifier for SqlClient,Odbc -->
 
 		<!-- Test for Guid Parameter Class-->
@@ -32,7 +32,7 @@
 				(Category_Name, Category_Guid) 
 			values 
 				('toto', #value:UniqueIdentifier#);
-			select CAST(SCOPE_IDENTITY() as int) as value
+			select SCOPE_IDENTITY() as value
 		</statement><!--Guid for Oledb, UniqueIdentifier for SqlClient,Odbc -->		
 
 		<!-- JIRA 20 Test without specifying the dbtype-->
@@ -41,12 +41,12 @@
 				(Category_Name, Category_Guid) 
 			values 
 				('toto', #value#);
-			select CAST(SCOPE_IDENTITY() as int) as value
+			select SCOPE_IDENTITY() as value
 		</statement>
 						
 		<insert id="InsertCategoryViaInsertStatement" parameterClass="Category" >
 			<selectKey property="Id" type="post" resultClass="int">
-				select CAST(@@IDENTITY as int) as value
+				select @@IDENTITY as value
             </selectKey>			
             insert into Categories  
 				(Category_Name, Category_Guid) 
@@ -59,7 +59,7 @@
 				(Category_Name, Category_Guid)
 			values 
 				(?,?);
-			select CAST(SCOPE_IDENTITY() as int) as value
+			select SCOPE_IDENTITY() as value
 		</statement>
 
 		<statement id="InsertCategoryNull" parameterMap="insert-null-params" resultClass="int">
@@ -67,7 +67,7 @@
 				(Category_Name, Category_Guid)
 			values 
 				(?,?);
-			select CAST(SCOPE_IDENTITY() as int) as value
+			select SCOPE_IDENTITY() as value
 		</statement>
 				
 		<update id="UpdateCategoryViaParameterMap" parameterMap="UpdateParam">
@@ -84,7 +84,7 @@
 		
 		<insert id="InsertCategoryGenerate" parameterMap="insert-generate-params">
 			<selectKey property="Id" type="post" resultClass="int">
-				select CAST(@@IDENTITY as int) as value
+				select @@IDENTITY as value
             </selectKey>
             <generate table="Categories" />
 		</insert>
