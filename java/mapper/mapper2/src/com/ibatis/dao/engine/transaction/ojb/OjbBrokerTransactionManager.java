@@ -15,13 +15,16 @@
  */
 package com.ibatis.dao.engine.transaction.ojb;
 
-import com.ibatis.dao.client.DaoTransaction;
-import com.ibatis.dao.engine.transaction.DaoTransactionManager;
-import org.apache.ojb.broker.PersistenceBroker;
-import org.apache.ojb.broker.PersistenceBrokerFactory;
-
 import java.util.Properties;
 
+import org.apache.ojb.broker.PersistenceBrokerFactory;
+
+import com.ibatis.dao.client.DaoTransaction;
+import com.ibatis.dao.engine.transaction.DaoTransactionManager;
+
+/**
+ * DaoTransactionManager for use with OJB
+ */
 public class OjbBrokerTransactionManager implements DaoTransactionManager {
 
   public void configure(final Properties properties) {
