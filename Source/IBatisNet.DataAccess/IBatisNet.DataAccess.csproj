@@ -100,11 +100,6 @@
                     HintPath = "D:\WINNT\Microsoft.NET\Framework\v1.1.4322\System.Web.dll"
                 />
                 <Reference
-                    Name = "NHibernate"
-                    AssemblyName = "NHibernate"
-                    HintPath = "..\External-Bin\Net\1.1\NHibernate.dll"
-                />
-                <Reference
                     Name = "Castle.DynamicProxy"
                     AssemblyName = "Castle.DynamicProxy"
                     HintPath = "..\External-Bin\Net\1.1\Castle.DynamicProxy.dll"
@@ -166,16 +161,6 @@
                 />
                 <File
                     RelPath = "DaoSessionHandlers\DaoSessionHandlerFactory.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DaoSessionHandlers\NHibernateDaoSession.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DaoSessionHandlers\NHibernateDaoSessionHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

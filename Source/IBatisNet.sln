@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBatisNet.Test", "IBatisNet
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBatisNet.DataAccess.Extensions", "IBatisNet.DataAccess.Extensions\IBatisNet.DataAccess.Extensions.csproj", "{342C92B4-2742-4C55-9374-A504FE3B6972}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -46,6 +50,12 @@ Global
 		{33AF5FB1-4ADD-43BB-BE05-31F28C1AE0C3}.Debug Test.Build.0 = Debug|.NET
 		{33AF5FB1-4ADD-43BB-BE05-31F28C1AE0C3}.Release.ActiveCfg = Release|.NET
 		{33AF5FB1-4ADD-43BB-BE05-31F28C1AE0C3}.Release.Build.0 = Release|.NET
+		{342C92B4-2742-4C55-9374-A504FE3B6972}.Debug.ActiveCfg = Debug|.NET
+		{342C92B4-2742-4C55-9374-A504FE3B6972}.Debug.Build.0 = Debug|.NET
+		{342C92B4-2742-4C55-9374-A504FE3B6972}.Debug Test.ActiveCfg = Debug|.NET
+		{342C92B4-2742-4C55-9374-A504FE3B6972}.Debug Test.Build.0 = Debug|.NET
+		{342C92B4-2742-4C55-9374-A504FE3B6972}.Release.ActiveCfg = Release|.NET
+		{342C92B4-2742-4C55-9374-A504FE3B6972}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		External-Bin\Net\1.1\Castle.DynamicProxy.dll = External-Bin\Net\1.1\Castle.DynamicProxy.dll

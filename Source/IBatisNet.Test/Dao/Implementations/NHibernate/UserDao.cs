@@ -1,7 +1,7 @@
 using System;
 
 using IBatisNet.DataMapper;
-using IBatisNet.DataAccess.DaoSessionHandlers; // NHibernateDaoSession
+using IBatisNet.DataAccess.Extensions.DaoSessionHandlers; // NHibernateDaoSession
 using IBatisNet.DataAccess.Exceptions;
 
 // Domain Dao

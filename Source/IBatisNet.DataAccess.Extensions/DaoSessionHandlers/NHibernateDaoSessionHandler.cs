@@ -40,7 +40,7 @@ using NHibernate.Cfg;
 using NHibernate;
 #endregion
 
-namespace IBatisNet.DataAccess.DaoSessionHandlers
+namespace IBatisNet.DataAccess.Extensions.DaoSessionHandlers
 {
 	/// <summary>
 	/// Summary description for NHibernateDaoSessionHandler.
