@@ -10,38 +10,37 @@ FEATURE REQUESTS: TOOLS
 FEATURE REQUESTS: MED-PRIORITY
 ------------------------------
 
- o Better Spring integration (TX Config)
+ o Pluggable SQL Scripting languages
+ o Fetch size, driver hints, scroll/concur type on prepare
  o Repeating group mapping (solution for n+1 selects problem)
  o Inheritance via selects or joins (same as groups)
  o Cancel long running statements (cross thread)
- o CLOB/BLOB support
- o Cross file resource management (currently works, but order dependent --ok?)
- o RowSet|ResultSet results?
- o Multiple result sets/update results
- o Extended configuration logging
  o Overriding mapped statements (i.e. reuse SQL; overrides="statementName")
  o Cache dependency on other cache (flush-on-dependant)
  o Flush cache at specifig time (e.g. 22:30)
- o Circular relationships
- o Deal with XML as DOM rather than String
+ o Improved Inline parameters (w/stored proc mode)
+ o Current parameters could skip options with empty :: (e.g. #COLNAME::-1#)
+ o Extended Statements
+ o Included Statements
+ o Optional results/exclusions (i.e. don't require all results)
+ o Type translation filters (e.g. "Y"|"N" -> true|false)
 
 ------------------------------
 FEATURE REQUESTS: LOW-PRIORITY 
 ------------------------------
 
+ o Circular relationships
+ o Cross file resource management (currently works, but order dependent --ok?)
+ o CLOB/BLOB support
+ o RowSet|ResultSet results?
+ o Multiple result sets/update results
+ o Extended configuration logging
  o Get warnings (conn, ps, rs)
- o Type translation filters (e.g. "Y"|"N" -> true|false)
  o Pluggable dynamic fragments
  o Asynchronous updates (queued)
  o Idle Connection Timeout in SimpleDataSource
  o Map with 1:M relationship with other Map?  (i.e. map key contains list of other maps)
  o Per result Lazy Load configuration 
- o Specify classloader for DAO/SqlMap builders
- o Optional results/exclusions (i.e. don't require all results)
- o Extended Statements
- o Included Statements
- o Improved Inline parameters (w/stored proc mode)
- o Current parameters could skip options with empty :: (e.g. #COLNAME::-1#)
  o On-the-fly configuration reload? (out of scope? external responsibility?)
  o Trim whitespace from CHAR data
 
