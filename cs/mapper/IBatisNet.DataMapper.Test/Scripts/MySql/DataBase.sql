@@ -35,6 +35,8 @@ drop table if exists ORDERS;
 
 drop table if exists OTHERS;
 
+drop table if exists DOCUMENTS;
+
 /*==============================================================*/
 /* Table : ACCOUNTS                                             */
 /*==============================================================*/
@@ -110,6 +112,19 @@ create table OTHERS
 (
    OTHER_INT                       int,
    OTHER_LONG                     bigint
+) TYPE=INNODB;
+
+/*==============================================================*/
+/* Table : DOCUMENTS                                            */
+/*==============================================================*/
+create table DOCUMENTS
+(
+   DOCUMENT_ID                    int                            not null,
+   DOCUMENT_TITLE                  varchar(32),
+   DOCUMENT_TYPE                  varchar(32),
+   DOCUMENT_PAGENUMBER				int,
+   DOCUMENT_CITY					varchar(32),
+   primary key (DOCUMENT_ID)
 ) TYPE=INNODB;
 
 
