@@ -4,16 +4,15 @@
 
 2.1
   Ease of Use
-      - Override/extend mapped statements (i.e. reuse SQL; overrides="statementName")
+      - Included SQL Fragments
       - <generate> tag for CRUD methods
       - Constructor and field based results
   Database Support
       - Isolation Level support
-  Object Oriented
-      - Inheritance via selects or joins (same as groups)
 
 2.2
   Ease of Use
+      - Override/extend mapped statements (i.e. reuse SQL; overrides="statementName")
       - Improved configuration API and logging
       - Pluggable SQL Scripting languages
   Database Support
@@ -21,11 +20,12 @@
   Performance
       - Cache dependency on other cache (flush-on-dependant)
       - Flush cache at specifig time (e.g. 22:30)
+  Object Oriented
+      - Inheritance via selects or joins (same as groups)
 
 #.#
   Ease of Use
       - Optional new line stripping
-      - Included SQL Fragments
       - Cross file resource management (currently works, but order dependent --ok?)
       - Circular relationships
       - Per result Lazy Load configuration
@@ -47,4 +47,3 @@
       - Map with 1:M relationship with other Map?  (i.e. map key contains list of other maps)
       - On-the-fly configuration reload? (out of scope? external responsibility?)
       - Cancel long running statements (cross thread)
-
