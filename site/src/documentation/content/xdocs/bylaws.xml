@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
-<document url="./bylaws.xml">
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "http://forrest.apache.org/dtd/document-v12.dtd">
+
+<document>
 
   <header>
     <title>Apache iBATIS - Bylaws</title>
@@ -8,11 +11,11 @@
 <body>
 
 		<section>
-		<title>Project Management Committee Bylaws</title>		
+		<title>Project Management Committee Bylaws</title>
 
 		<p>
-		Right now, these are simply our "Decision Making Guidelines". 
-		Once we graduate from the Apache Incubator, we can apply to become a top-level Apache Project. 
+		Right now, these are simply our "Decision Making Guidelines".
+		Once we graduate from the Apache Incubator, we can apply to become a top-level Apache Project.
 		At that point, we will establish our own PMC, and these guidelines can become the bylaws.
 		</p>
 
@@ -49,10 +52,10 @@
 
     <p>
     <strong>Committers.</strong>
-    Contributors who give frequent and valuable contributions to 
+    Contributors who give frequent and valuable contributions to
     the Project can have their status promoted to that of
-    a &quot;<em>Committer</em>&quot;. A Committer has write access to the 
-    source code repository. Committer status is granted by the Project 
+    a &quot;<em>Committer</em>&quot;. A Committer has write access to the
+    source code repository. Committer status is granted by the Project
     Management Committee by majority vote.
     </p>
 
@@ -74,7 +77,7 @@
     and also serves as the PMC chair. The PMC may nominate new
     members. Nominees may then be approved with a 3/4 majority vote
     of the PMC. Membership can be revoked by a unanimous vote of all
-    the active PMC members other than the member in question. 
+    the active PMC members other than the member in question.
     </p>
 
     </section>
@@ -86,8 +89,8 @@
     management of the Project. The PMC oversees all changes
     made to the codebase. The PMC must ensure that all code under a
     Apache iBATIS repository is the lawful property of the Foundation and
-    may be distributed under the <a href="http://apache.org/licenses/">
-    Apache Software License</a>. All releases of an iBATIS subproject
+    may be distributed under the <link href="http://apache.org/licenses/">
+    Apache Software License</link>. All releases of an iBATIS subproject
     must be sanctioned by the Project Management Committee.
     </p>
 

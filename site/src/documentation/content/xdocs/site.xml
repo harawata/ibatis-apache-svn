@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
+
 <site label="iBATIS" href="" xmlns="http://apache.org/forrest/linkmap/1.0">
 
   <about label="iBATIS">
-    <index label="Welcome" href="index.html" />
-    <news label="News" href="news.html" />
+    <index label="News" href="index.html" />
+    <news label="About" href="about.html" />
     <downloads label="Downloads" href="downloads.html" />
     <license label="License" href="license.html" />
   </about>
