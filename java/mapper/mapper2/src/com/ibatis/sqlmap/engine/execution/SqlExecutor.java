@@ -117,7 +117,7 @@ public class SqlExecutor {
 
       Integer rsType = request.getStatement().getResultSetType();
       if (rsType != null) {
-        ps = conn.prepareStatement(sql, rsType.intValue());
+        ps = conn.prepareStatement(sql, rsType.intValue(), ResultSet.CONCUR_READ_ONLY);
       } else {
         ps = conn.prepareStatement(sql);
       }
