@@ -35,18 +35,21 @@ import java.util.Map;
  */
 public class AutoResultMap extends BasicResultMap {
 
+  private boolean allowRemapping = false;
+
   /**
    * Constructor to pass in the SqlMapExecutorDelegate 
    * 
    * @param delegate - the delegate
    */
-  public AutoResultMap(SqlMapExecutorDelegate delegate) {
+  public AutoResultMap(SqlMapExecutorDelegate delegate, boolean allowRemapping) {
     super(delegate);
+    this.allowRemapping = allowRemapping;
   }
 
   public synchronized Object[] getResults(RequestScope request, ResultSet rs)
       throws SQLException {
-    if (resultMappings == null) {
+    if (allowRemapping || resultMappings == null) {
       initialize(rs);
     }
     return super.getResults(request, rs);

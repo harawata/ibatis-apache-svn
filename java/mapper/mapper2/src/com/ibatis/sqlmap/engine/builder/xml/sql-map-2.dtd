@@ -98,6 +98,7 @@ cacheModel CDATA #IMPLIED
 resultSetType (FORWARD_ONLY | SCROLL_INSENSITIVE | SCROLL_SENSITIVE) #IMPLIED
 fetchSize CDATA #IMPLIED
 xmlResultName CDATA #IMPLIED
+remapResults (true|false) #IMPLIED
 >
 
 <!ELEMENT select (#PCDATA | dynamic | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
@@ -111,6 +112,7 @@ cacheModel CDATA #IMPLIED
 resultSetType (FORWARD_ONLY | SCROLL_INSENSITIVE | SCROLL_SENSITIVE) #IMPLIED
 fetchSize CDATA #IMPLIED
 xmlResultName CDATA #IMPLIED
+remapResults (true|false) #IMPLIED
 >
 
 <!ELEMENT insert (#PCDATA | selectKey | dynamic | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>

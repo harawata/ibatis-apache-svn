@@ -546,6 +546,7 @@ public class XmlSqlMapClientBuilder {
     String xmlResultName = attributes.getProperty("xmlResultName");
     String resultSetType = attributes.getProperty("resultSetType");
     String fetchSize = attributes.getProperty("fetchSize");
+    String allowRemapping = attributes.getProperty("remapResults");
 
     errorCtx.setObjectId(id + " statement");
 
@@ -620,7 +621,7 @@ public class XmlSqlMapClientBuilder {
     if (resultMap == null && resultClass == null) {
       statement.setResultMap(null);
     } else if (resultMap == null) {
-      resultMap = new AutoResultMap(client.getDelegate());
+      resultMap = new AutoResultMap(client.getDelegate(), "true".equals(allowRemapping));
       resultMap.setId(statement.getId() + "-AutoResultMap");
       resultMap.setResultClass(resultClass);
       resultMap.setXmlName(xmlResultName);
@@ -683,7 +684,7 @@ public class XmlSqlMapClientBuilder {
     processSqlStatement(n, selectKeyStatement);
 
     BasicResultMap resultMap;
-    resultMap = new AutoResultMap(client.getDelegate());
+    resultMap = new AutoResultMap(client.getDelegate(), false);
     resultMap.setId(selectKeyStatement.getId() + "-AutoResultMap");
     resultMap.setResultClass(resultClass);
     resultMap.setResource(selectKeyStatement.getResource());

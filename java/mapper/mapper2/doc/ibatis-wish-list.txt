@@ -5,13 +5,10 @@
 2.1
   Ease of Use
       - Override/extend mapped statements (i.e. reuse SQL; overrides="statementName")
-      - Remappable automatic result maps (for dynamic column list)
       - <generate> tag for CRUD methods
       - Constructor and field based results
   Database Support
       - Isolation Level support
-  Performance
-      - Repeating group mapping (solution for M:N n+1 selects problem)
   Object Oriented
       - Inheritance via selects or joins (same as groups)
 
