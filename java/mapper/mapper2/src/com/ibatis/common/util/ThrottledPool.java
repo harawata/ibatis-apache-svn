@@ -17,42 +17,46 @@ package com.ibatis.common.util;
 
 import com.ibatis.common.exception.NestedRuntimeException;
 
-import java.util.LinkedList;
+import java.util.List;
+import java.util.Collections;
+import java.util.ArrayList;
 
 public class ThrottledPool {
 
-  private Throttle throttle;
+ private Throttle throttle;
+
   private Class type;
-  private LinkedList pool = new LinkedList();
+  private List pool;
 
   public ThrottledPool(Class type, int size) {
-    this.type = type;
-    this.throttle = new Throttle(size);
+    try {
+      this.throttle = new Throttle(size);
+      this.type = type;
+      this.pool = Collections.synchronizedList(new ArrayList(size));
+      for (int i=0; i < size; i++) {
+        this.pool.add(type.newInstance());
+      }
+    } catch (Exception e) {
+      throw new NestedRuntimeException("Error instantiating class.  Cause: " + e, e);
+    }
   }
 
   public Object pop() {
-    throttle.increment();
-    Object object;
-    synchronized (pool) {
-      if (pool.size() > 0) {
-        object = pool.removeFirst();
-      } else {
-        try {
-          object = type.newInstance();
-        } catch (Exception e) {
-          throw new NestedRuntimeException("Error instantiating class.  Cause: " + e, e);
-        }
+    Object o = null;
+    while (o == null) {
+      try {
+        throttle.increment();
+        o = pool.remove(0);
+      } catch (Exception e) {
+        // thread collision detected, retry
       }
     }
-    return object;
+    return o;
   }
 
   public void push(Object o) {
-    synchronized (pool) {
-      if (o != null) pool.addLast(o);
-    }
+    if (o != null && o.getClass() == type) pool.add(o);
     throttle.decrement();
   }
-
 
 }
