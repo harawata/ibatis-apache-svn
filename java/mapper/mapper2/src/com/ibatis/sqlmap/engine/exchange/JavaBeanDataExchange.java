@@ -74,7 +74,7 @@ public class JavaBeanDataExchange extends BaseDataExchange implements DataExchan
           throw new NestedRuntimeException("JavaBeansDataExchange could not instantiate result class.  Cause: " + e, e);
         }
       }
-      errorContext.setMoreInfo("The error happened while setting a property on the result object ("+object+").");
+      errorContext.setMoreInfo("The error happened while setting a property on the result object.");
       resultPlan.setProperties(object, values);
       return object;
     } else {
