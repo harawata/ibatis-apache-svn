@@ -818,9 +818,9 @@ public class SqlMapExecutorDelegate {
       session.setTransactionState(TransactionState.STATE_USER_PROVIDED);
     } else {
       session.setTransaction(null);
+      pushSession(session);
     }
   }
-
   /**
    * Get the DataSource for the session
    *
