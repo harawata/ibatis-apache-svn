@@ -8,6 +8,7 @@ Build Number: @buildNum@
  o Fixed uppercase bean property support
  o Fixed result map getter based typing vs. setter
  o Fixed javaType attribute support for JavaBeans
+ o Fixed caching of statements containing $simple$ dynamic sql
 
 ------------------------------
  2.0.0 RC4 - May 11, 2004

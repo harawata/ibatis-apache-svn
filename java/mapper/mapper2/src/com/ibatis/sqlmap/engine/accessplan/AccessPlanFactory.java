@@ -36,6 +36,7 @@ public class AccessPlanFactory {
     } else if (Map.class.isAssignableFrom(clazz)) {
       plan = new MapAccessPlan(clazz, propertyNames);
     } else {
+      // Possibly causes bug 945746 --but the bug is unconfirmed (can't be reproduced)
       if (bytecodeEnhancementEnabled) {
         try {
           plan = new EnhancedPropertyAccessPlan(clazz, propertyNames);

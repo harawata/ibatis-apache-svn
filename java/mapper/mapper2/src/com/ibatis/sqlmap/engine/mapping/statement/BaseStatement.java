@@ -85,6 +85,7 @@ public abstract class BaseStatement implements MappedStatement {
     CacheKey cacheKey = pmap.getCacheKey(request, parameterObject);
     cacheKey.update(id);
     cacheKey.update(baseCacheKey);
+    cacheKey.update(sql.getSql(request, parameterObject)); //Fixes bug 953001
     return cacheKey;
   }
 
