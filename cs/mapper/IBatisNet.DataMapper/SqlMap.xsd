@@ -7,6 +7,20 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
+	<xs:element name="discriminator">
+		<xs:complexType>
+			<xs:attribute name="column" type="xs:string"/>
+			<xs:attribute name="formula" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="subMap">
+		<xs:complexType>
+			<xs:attribute name="value" use="required" type="xs:string"/>
+			<xs:attribute name="resultMapping" use="required" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+
 	<xs:element name="cacheModel">
 		<xs:complexType>
 			<xs:sequence maxOccurs="unbounded">
@@ -562,6 +576,8 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="result" maxOccurs="unbounded"/>
+				<xs:element ref="discriminator" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="subMap" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
 			<xs:attribute name="id" type="xs:string" use="required"/>
 			<xs:attribute name="class" type="xs:string" use="required"/>
@@ -602,6 +618,7 @@
 			<xs:attribute name="resultClass" type="xs:string"/>
 			<xs:attribute name="parameterMap" type="xs:string"/>
 			<xs:attribute name="cacheModel" type="xs:string"/>
+			<xs:attribute name="listClass" type="xs:string"/>
 			<xs:attribute name="extends" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>

@@ -214,7 +214,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// Bug Fix https://sourceforge.net/forum/message.php?msg_id=2840259
 		/// </remarks>
 		[Test] 
-		public void TestDynamicSelectByIntLongc() 
+		public void TestDynamicSelectByIntLong() 
 		{
 			Hashtable search = new Hashtable(); 
 			search.Add("year", 0); 
@@ -223,6 +223,14 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			IList list = sqlMap.QueryForList("DynamicSelectByIntLong", search);
 
 			Assert.AreEqual(2, list.Count);
+			Assert.AreEqual(1, (list[0] as Other).Int);
+			Assert.AreEqual(8888888, (list[0] as Other).Long);
+			Assert.AreEqual(false, (list[0] as Other).Bool);
+
+			Assert.AreEqual(2, (list[1] as Other).Int);
+			Assert.AreEqual(9999999999, (list[1] as Other).Long);
+			Assert.AreEqual(true, (list[1] as Other).Bool);
+
 			//----------------------
 			search.Clear();
 			search.Add("year", 1); 
@@ -250,8 +258,10 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			list= null;
 			list = sqlMap.QueryForList("DynamicSelectByIntLong", search);
 
-			Assert.AreEqual(2, (list[0] as Other).Int);
 			Assert.AreEqual(1, list.Count);
+			Assert.AreEqual(2, (list[0] as Other).Int);
+			Assert.AreEqual(9999999999, (list[0] as Other).Long);
+			Assert.AreEqual(true, (list[0] as Other).Bool);
 		}
 
 		/// <summary>
@@ -299,6 +309,39 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			IList list = sqlMap.QueryForList("Jira-IBATISNET-11", search);
 
 			Assert.AreEqual(0, list.Count);
+		}
+
+		/// <summary>
+		/// We've been using the stable version of Ibatis for a while and recently
+		/// upgraded to the latest alpha version 1.1.0.458. The old version was
+		/// able to handle mapping the .Net bool type to SqlServer's Bit column.
+		/// When we run sql maps that contain a bool property, we now get an
+		/// exception.
+		/// </summary>
+		/// <remarks>
+		/// No problems !!
+		/// </remarks>
+		[Test] 
+		public void TestDynamicSelectByBool() 
+		{
+			Other other = new Other();
+			other.Bool = true;
+
+			Other anOther = sqlMap.QueryForObject("DynamicSelectByBool", other) as Other;
+
+			Assert.IsNotNull( anOther );
+			Assert.AreEqual(2, anOther.Int);
+			Assert.AreEqual(9999999999, anOther.Long);
+			Assert.AreEqual(true, anOther.Bool);
+
+			other.Bool = false;
+			anOther = sqlMap.QueryForObject("DynamicSelectByBool", other) as Other;
+
+			Assert.IsNotNull( anOther );
+			Assert.AreEqual(1, anOther.Int);
+			Assert.AreEqual(8888888, anOther.Long);
+			Assert.AreEqual(false, anOther.Bool);
+
 		}
 		#endregion
 

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <sqlMap namespace="Other" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 		xsi:noNamespaceSchemaLocation="SqlMap.xsd">
 	
@@ -10,6 +10,7 @@
 		<resultMap id="other-result"  class="Other" >
 			<result property="Int"		column="Other_Int"/>
 			<result property="Long"		column="Other_Long"/>
+			<result property="Bool"		column="Other_Bit"/>
 		</resultMap>
 	</resultMaps>
 	
@@ -20,7 +21,8 @@
 			resultMap="other-result">
 			select
 				Other_Int,
-				Other_Long
+				Other_Long,
+				Other_Bit
 			from Others  
 			<dynamic prepend="WHERE"> 
 				<isNotEqual prepend="AND" property="year" compareValue="0"> 
@@ -33,6 +35,17 @@
 			</dynamic> 
 		</statement>
 				
+		<statement id="DynamicSelectByBool" 
+			parameterClass="Other" 
+			resultMap="other-result">
+			select
+				Other_Int,
+				Other_Long,
+				Other_Bit
+			from Others  
+			Where Other_Bit = #Bool# 
+		</statement>
+		
 	</statements>
 	
 </sqlMap>

@@ -110,9 +110,13 @@ namespace IBatisNet.DataMapper.Configuration
 		/// </summary>
 		private const string ATR_CACHE_MODELS_ENABLED = "cacheModelsEnabled";
 		/// <summary>
+		/// Token for validateSqlMap attribute.
+		/// </summary>
+		private const string ATR_VALIDATE_SQLMAP = "validateSqlMap";
+		/// <summary>
 		/// Token for embedStatementParams attribute.
 		/// </summary>
-		private const string ATR_EMBED_STATEMENT_PARAMS = "embedStatementParams";
+		private const string ATR_EMBED_STATEMENT_PARAMS = "useEmbedStatementParams";
 
 		#endregion
 
@@ -177,7 +181,7 @@ namespace IBatisNet.DataMapper.Configuration
 				xsdFile = GetStream( schemaFileName ); 
 				streamReader = new StreamReader( xsdFile ); 
 
-				validatingReader.Schemas.Add( XmlSchema.Read( new XmlTextReader( streamReader ), null ) );
+				validatingReader.Schemas.Add( XmlSchema.Read( new XmlTextReader( streamReader ), new ValidationEventHandler(ValidationCallBack) ) );
 
 				// Wire up the call back.  The ValidationEvent is fired when the
 				// XmlValidatingReader hits an issue validating a section of the xml
@@ -264,13 +268,18 @@ namespace IBatisNet.DataMapper.Configuration
 					}
 					if (setting.Attributes[ATR_EMBED_STATEMENT_PARAMS] != null )
 					{				
-						_configScope.IsEmbedStatementParams =  System.Convert.ToBoolean(setting.Attributes[ATR_EMBED_STATEMENT_PARAMS].Value); 
+						_configScope.UseEmbedStatementParams =  System.Convert.ToBoolean(setting.Attributes[ATR_EMBED_STATEMENT_PARAMS].Value); 
+					}
+
+					if (setting.Attributes[ATR_VALIDATE_SQLMAP] != null )
+					{				
+						_configScope.ValidateSqlMap =  System.Convert.ToBoolean(setting.Attributes[ATR_VALIDATE_SQLMAP].Value); 
 					}
 				}
 			}
 
 			_configScope.SqlMapper.SetCacheModelsEnabled(_configScope.IsCacheModelsEnabled);
-			_configScope.SqlMapper.SetEmbedStatementParams(_configScope.IsEmbedStatementParams);
+			_configScope.SqlMapper.SetUseEmbedStatementParams(_configScope.UseEmbedStatementParams);
 
 			#endregion
 
@@ -442,7 +451,7 @@ namespace IBatisNet.DataMapper.Configuration
 		private Provider ParseProvider()
 		{
 			_configScope.ErrorContext.Activity = "load DataBase Provider";
-			XmlNode node = _configScope.SqlMapConfigDocument.SelectSingleNode("database/provider");
+			XmlNode node = _configScope.SqlMapConfigDocument.SelectSingleNode("//database/provider");
 
 			if (node != null)
 			{
@@ -498,7 +507,10 @@ namespace IBatisNet.DataMapper.Configuration
 			// Load the file 
 			_configScope.SqlMapDocument = Resources.GetAsXmlDocument(sqlMapNode);
 			
-			//ValidateSchema( _configScope.SqlMapDocument.ChildNodes[1], "SqlMap.xsd" );
+			if (_configScope.ValidateSqlMap)
+			{
+				ValidateSchema( _configScope.SqlMapDocument.ChildNodes[1], "SqlMap.xsd" );
+			}
 
 			_configScope.SqlMapNamespace = _configScope.SqlMapDocument.SelectSingleNode("sqlMap").Attributes["namespace"].Value;
 
@@ -1416,11 +1428,11 @@ namespace IBatisNet.DataMapper.Configuration
 		/// <summary>
 		/// Gets a resource stream.
 		/// </summary>
-		/// <param name="name">The resource key.</param>
+		/// <param name="schemaResourceKey">The schema resource key.</param>
 		/// <returns>A resource stream.</returns>
-		public Stream GetStream( string name )
+		public Stream GetStream( string schemaResourceKey )
 		{
-			return Assembly.GetExecutingAssembly().GetManifestResourceStream("IBatisNet.DataMapper." + name); 
+			return Assembly.GetExecutingAssembly().GetManifestResourceStream("IBatisNet.DataMapper." + schemaResourceKey); 
 		}
 
 

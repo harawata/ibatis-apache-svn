@@ -9,6 +9,19 @@ namespace IBatisNet.DataMapper.Test.Domain
 	{
 		private int _int;
 		private long _long;
+		private bool _bool = false;
+
+		public bool Bool
+		{
+			get
+			{
+				return _bool; 
+			}
+			set
+			{ 
+				_bool = value; 
+			}
+		}
 
 		public int Int
 		{

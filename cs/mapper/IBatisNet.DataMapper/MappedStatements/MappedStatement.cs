@@ -206,7 +206,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		{
 			_sqlMap = sqlMap;
 			_statement = statement;
-			_preparedCommand = PreparedCommandFactory.GetPreparedCommand(sqlMap.IsEmbedStatementParams);
+			_preparedCommand = PreparedCommandFactory.GetPreparedCommand(sqlMap.UseEmbedStatementParams);
 		}
 		#endregion
 

@@ -56,7 +56,8 @@ namespace IBatisNet.DataMapper.Scope
 		private bool _useConfigFileWatcher = false;
 		private bool _useStatementNamespaces = false;
 		private bool _isCacheModelsEnabled = false;
-		private bool _isEmbedStatementParams = false;
+		private bool _useEmbedStatementParams = false;
+		private bool _validateSqlMap = false;
 		private bool _isCallFromDao = false;
 
 		private SqlMapper _sqlMapper = null;
@@ -80,6 +81,21 @@ namespace IBatisNet.DataMapper.Scope
 		#endregion 
 
 		#region Properties
+
+		/// <summary>
+		/// Set if theparser should validate the sqlMap documents
+		/// </summary>
+		public bool ValidateSqlMap
+		{
+			set
+			{
+				_validateSqlMap = value;
+			}
+			get
+			{
+				return _validateSqlMap;
+			}
+		}
 
 		/// <summary>
 		/// Tells us if the xml configuration file validate the schema 
@@ -284,15 +300,15 @@ namespace IBatisNet.DataMapper.Scope
 		/// <summary>
 		/// Indicates if parameters should be embedded in the sql statement.
 		/// </summary>
-		public bool IsEmbedStatementParams
+		public bool UseEmbedStatementParams
 		{
 			get
 			{
-				return _isEmbedStatementParams;
+				return _useEmbedStatementParams;
 			}
 			set
 			{
-				_isEmbedStatementParams = value;
+				_useEmbedStatementParams = value;
 			}
 		}
 
