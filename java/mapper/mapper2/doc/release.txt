@@ -12,6 +12,7 @@ Build Number: @buildNum@
  o Improved caching to avoid redundant connection reservations
  o New property to stop autocommit from being called in EXTERNAL TX Manager
  o Fixed JDBC types being ignored for hashmap parameter classes
+ o Fixed some rare misleading error messages
 
 ------------------------------
  2.0.2 - Jun 22, 2004

@@ -16,6 +16,8 @@ TO-DO: DOCUMENTATION
   o "context." prefix for JNDI InitialContext properties
   o Resources.setDefaultClassLoader()
   o DBCP 2.0 config docs
+  o fetchSize and resultSetType attributes
+
 
   o More on bytecode enhancement
   o More on dynamic statment prepend behavior
