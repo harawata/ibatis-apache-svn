@@ -8,6 +8,8 @@
   Performance
       - Cache dependency on other cache (flush-on-dependant)
       - Flush cache at specific time (e.g. 22:30)
+  Database Support
+      - Add true autocommit support (mostly for SYBASE procs)
 
 2.2
   Ease of Use
