@@ -17,6 +17,7 @@ TO-DO: DOCUMENTATION
   o Resources.setDefaultClassLoader()
   o DBCP 2.0 config docs
   o fetchSize and resultSetType attributes
+  o custom type handler docs
 
 
   o More on bytecode enhancement
