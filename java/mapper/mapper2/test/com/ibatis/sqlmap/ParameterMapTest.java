@@ -43,6 +43,25 @@ public class ParameterMapTest extends BaseSqlMapTest {
     assertAccount6(account);
   }
 
+  public void testNullValueReplacementInlineWithDynamic() throws SQLException {
+    Account account = newAccount6();
+
+    account.setId(0);
+
+    Exception expected = null;
+    try {
+      sqlMap.update("insertAccountViaInlineParametersWithDynamic", account);
+    } catch (SQLException e) {
+      expected = e;
+    }
+
+    account = (Account) sqlMap.queryForObject("getAccountNullableEmail", new Integer(0));
+
+    assertNotNull(expected);
+    assertTrue(expected.getMessage().indexOf("Try to insert null into a non-nullable column in statement") > -1);
+    assertNull(account);
+  }
+
   public void testSpecifiedType() throws SQLException {
     Account account = newAccount6();
     account.setEmailAddress(null);

@@ -48,4 +48,14 @@ public class ByteTypeHandler implements TypeHandler {
     return Byte.valueOf(s);
   }
 
+
+  public boolean equals(Object object, String string) {
+    if (object == null || string == null) {
+      return object == string;
+    } else {
+      Object castedObject = valueOf(string);
+      return object.equals(castedObject);
+    }
+  }
+
 }

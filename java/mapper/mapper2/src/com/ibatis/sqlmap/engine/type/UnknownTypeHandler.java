@@ -51,4 +51,15 @@ public class UnknownTypeHandler implements TypeHandler {
     return s;
   }
 
+
+  public boolean equals(Object object, String string) {
+    if (object == null || string == null) {
+      return object == string;
+    } else {
+      TypeHandler handler = TypeHandlerFactory.getTypeHandler(object.getClass());
+      Object castedObject = handler.valueOf(string);
+      return object.equals(castedObject);
+    }
+  }
+
 }

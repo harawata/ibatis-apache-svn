@@ -48,4 +48,13 @@ public class BooleanTypeHandler implements TypeHandler {
     return Boolean.valueOf(s);
   }
 
+  public boolean equals(Object object, String string) {
+    if (object == null || string == null) {
+      return object == string;
+    } else {
+      Object castedObject = valueOf(string);
+      return object.equals(castedObject);
+    }
+  }
+
 }

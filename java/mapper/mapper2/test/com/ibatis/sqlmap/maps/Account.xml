@@ -359,6 +359,26 @@
     )
   </insert>
 
+  <insert id="insertAccountViaInlineParametersWithDynamic"
+    parameterClass="account"
+    >
+    insert into ACCOUNT (
+      ACC_ID,
+      ACC_FIRST_NAME,
+      ACC_LAST_NAME,
+      ACC_EMAIL)
+    values (
+      #id:NUMERIC:0#,
+      #firstName#,
+      #lastName#,
+      #emailAddress:VARCHAR:no_email@provided.com#
+    <dynamic prepend="">
+      <isNotEmpty property="emailAddress">
+      )
+      </isNotEmpty>
+    </dynamic>
+  </insert>
+
   <insert id="insertAccountNullableEmail"
     parameterClass="account"
     >

@@ -122,8 +122,7 @@ public class BasicParameterMap implements ParameterMap {
     String nullValueString = mapping.getNullValue();
     if (nullValueString != null) {
       TypeHandler handler = mapping.getTypeHandler();
-      Object nullValue = handler.valueOf(nullValueString);
-      if (nullValue.equals(value)) {
+      if (handler.equals(value, nullValueString)) {
         value = null;
       }
     }

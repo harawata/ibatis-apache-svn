@@ -23,4 +23,6 @@ public interface TypeHandler {
 
   public Object valueOf(String s);
 
+  public boolean equals(Object object, String string);
+
 }
