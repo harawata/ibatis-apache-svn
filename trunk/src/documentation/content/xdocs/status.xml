@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "http://apache.org/forrest/dtd/document-v12.dtd">
+<document> 
+  <header> 
+    <title>Status</title> 
+  </header> 
+  <body> 
+    <section>
+      <title>Action Items</title>
+      <p>iBATIS is in the process of migrating to the Apache Software Foundation. 
+      Once we have passed through the Apache Incubator, iBATIS will become a top-level Apache project.</p>
+    </section>
+  </body>
+</document>

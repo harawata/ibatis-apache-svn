@@ -76,7 +76,7 @@
     made to the codebase. The PMC must ensure that all code under a
     Apache iBATIS repository is the lawful property of the Foundation and
     may be distributed under the <a href="http://apache.org/licenses/">
-    Apache Software License</a>. All releases of a Struts subproject
+    Apache Software License</a>. All releases of an iBATIS subproject
     must be sanctioned by the Project Management Committee.
     </p>
 
@@ -87,7 +87,7 @@
 
     <p>
     Subprojects are the Project's unit of release. Each subproject should
-    represent an implementation of the Struts core or a related component.
+    represent an implementation of the iBATIS core or a related component.
     Each subproject should focus on creating, maintaining, and releasing a
     single software product or "deliverable".
     </p>

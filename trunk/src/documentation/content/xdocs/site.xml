@@ -9,7 +9,7 @@
   </about>
 
   <documentation label="Documentation">
-    <faq label="FAQ" href="faq.html" />
+    <wiki label="Wiki" href="http://wiki.apache.org/ibatis" />
     <devguide label="Dev Guide" href="http://ibatisnet.sourceforge.net/DevGuide/index.html" />
     <devguide label="Dev Guide (PDF)" href="http://ibatisnet.sourceforge.net/DevGuide.pdf" />
     <resources label="Resources" href="resources.html" />
@@ -20,6 +20,7 @@
     <issuetracking label="Issue Tracking" href="issuetracking.html" />
     <bylaws label="ByLaws" href="bylaws.html" />
     <contributors label="Contributors" href="contributors.html" />
+    <status label="Status" href="status.html"/>
   </community>
 
   <external-refs>
