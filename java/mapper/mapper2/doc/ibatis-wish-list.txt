@@ -41,4 +41,7 @@ FEATURE REQUESTS: LOW-PRIORITY
  o Extended Statements
  o Included Statements
  o Improved Inline parameters (w/stored proc mode)
+ o Current parameters could skip options with empty :: (e.g. #COLNAME::-1#)
+ o On-the-fly configuration reload? (out of scope? external responsibility?)
+ o Trim whitespace from CHAR data
 

@@ -8,6 +8,9 @@ TO-DO: BUGS & FEATURES
 TO-DO: DOCUMENTATION
 ------------------------------
 
+  o More on bytecode enhancement
+  o More on dynamic statment prepend behavior
+
   o Installation and Configuration
   o XML Data types
   o Patterns and Best Practices

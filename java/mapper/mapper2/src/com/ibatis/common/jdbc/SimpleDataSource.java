@@ -1,28 +1,29 @@
 package com.ibatis.common.jdbc;
 
-import org.apache.commons.logging.*;
+import com.ibatis.common.beans.ClassInfo;
+import com.ibatis.common.exception.NestedRuntimeException;
+import com.ibatis.common.resources.Resources;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import javax.sql.*;
-import java.io.*;
+import javax.sql.DataSource;
+import java.io.PrintWriter;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.sql.*;
 import java.util.*;
-import java.lang.reflect.*;
-
-import com.ibatis.common.exception.*;
-import com.ibatis.common.resources.*;
-import com.ibatis.common.beans.ClassInfo;
 
 /**
- *
  * This is a simple, synchronous, thread-safe database connection pool.
- *
+ * <p/>
  * REQUIRED PROPERTIES
  * -------------------
  * JDBC.Driver
  * JDBC.ConnectionURL
  * JDBC.Username
  * JDBC.Password
- *
+ * <p/>
  * Pool.MaximumActiveConnections
  * Pool.MaximumIdleConnections
  * Pool.MaximumCheckoutTime
@@ -32,7 +33,6 @@ import com.ibatis.common.beans.ClassInfo;
  * Pool.PingConnectionsOlderThan
  * Pool.PingConnectionsNotUsedFor
  * Pool.QuietMode
- *
  */
 public class SimpleDataSource implements DataSource {
 
@@ -53,7 +53,6 @@ public class SimpleDataSource implements DataSource {
   private static final String PROP_POOL_PING_QUERY = "Pool.PingQuery";
   private static final String PROP_POOL_PING_CONN_OLDER_THAN = "Pool.PingConnectionsOlderThan";
   private static final String PROP_POOL_PING_ENABLED = "Pool.PingEnabled";
-  private static final String PROP_POOL_QUIET_MODE = "Pool.QuietMode";
   private static final String PROP_POOL_PING_CONN_NOT_USED_FOR = "Pool.PingConnectionsNotUsedFor";
   private int expectedConnectionTypeCode;
   // Additional Driver Properties prefix
@@ -88,7 +87,6 @@ public class SimpleDataSource implements DataSource {
   private int poolMaximumCheckoutTime;
   private int poolTimeToWait;
   private String poolPingQuery;
-  private boolean poolQuietMode;
   private boolean poolPingEnabled;
   private int poolPingConnectionsOlderThan;
   private int poolPingConnectionsNotUsedFor;
@@ -155,11 +153,6 @@ public class SimpleDataSource implements DataSource {
             props.containsKey(PROP_POOL_PING_CONN_NOT_USED_FOR)
             ? Integer.parseInt((String) props.get(PROP_POOL_PING_CONN_NOT_USED_FOR))
             : 0;
-
-        poolQuietMode =
-            props.containsKey(PROP_POOL_QUIET_MODE)
-            ? Boolean.valueOf((String) props.get(PROP_POOL_QUIET_MODE)).booleanValue()
-            : true;
 
         jdbcDefaultAutoCommit =
             props.containsKey(PROP_JDBC_DEFAULT_AUTOCOMMIT)
@@ -267,14 +260,6 @@ public class SimpleDataSource implements DataSource {
     return poolPingConnectionsOlderThan;
   }
 
-  public boolean isPoolQuietMode() {
-    return poolQuietMode;
-  }
-
-  public void setPoolQuietMode(boolean poolQuietMode) {
-    this.poolQuietMode = poolQuietMode;
-  }
-
   private int getExpectedConnectionTypeCode() {
     return expectedConnectionTypeCode;
   }
@@ -340,7 +325,6 @@ public class SimpleDataSource implements DataSource {
     buffer.append("\n poolMaxIdleConnections         " + poolMaximumIdleConnections);
     buffer.append("\n poolMaxCheckoutTime            " + poolMaximumCheckoutTime);
     buffer.append("\n poolTimeToWait                 " + poolTimeToWait);
-    buffer.append("\n poolQuietMode                  " + poolQuietMode);
     buffer.append("\n poolPingEnabled                " + poolPingEnabled);
     buffer.append("\n poolPingQuery                  " + poolPingQuery);
     buffer.append("\n poolPingConnectionsOlderThan   " + poolPingConnectionsOlderThan);
@@ -605,7 +589,7 @@ public class SimpleDataSource implements DataSource {
 
   /**
    * ---------------------------------------------------------------------------------------
-   *                               SimplePooledConnection
+   * SimplePooledConnection
    * ---------------------------------------------------------------------------------------
    */
   private static class SimplePooledConnection implements InvocationHandler {
