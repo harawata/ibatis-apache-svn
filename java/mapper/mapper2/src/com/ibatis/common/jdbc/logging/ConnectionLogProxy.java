@@ -26,6 +26,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 
+/**
+ * Connection proxy to add logging
+ */
 public class ConnectionLogProxy extends BaseLogProxy implements InvocationHandler {
 
   private static final Log log = LogFactory.getLog(Connection.class);
@@ -64,6 +67,11 @@ public class ConnectionLogProxy extends BaseLogProxy implements InvocationHandle
 
   }
 
+  /**
+   * Creates a logging version of a connection
+   * @param conn - the original connection
+   * @return - the connection with logging
+   */
   public static Connection newInstance(Connection conn) {
     InvocationHandler handler = new ConnectionLogProxy(conn);
     ClassLoader cl = Connection.class.getClassLoader();

@@ -17,6 +17,9 @@ package com.ibatis.common.jdbc.logging;
 
 import java.util.*;
 
+/**
+ * Base class for proxies to do logging
+ */
 public class BaseLogProxy {
 
   private static int nextId = 100000;
@@ -31,6 +34,9 @@ public class BaseLogProxy {
 
   protected int id;
 
+  /**
+   * Default constructor
+   */
   public BaseLogProxy() {
     id = getNextId();
   }

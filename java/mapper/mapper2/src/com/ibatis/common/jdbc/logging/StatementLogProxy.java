@@ -25,6 +25,9 @@ import java.lang.reflect.Proxy;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+/**
+ * Statement proxy to add logging
+ */
 public class StatementLogProxy extends BaseLogProxy implements InvocationHandler {
 
   private static final Log log = LogFactory.getLog(Statement.class);
@@ -59,6 +62,11 @@ public class StatementLogProxy extends BaseLogProxy implements InvocationHandler
     }
   }
 
+  /**
+   * Creates a logging version of a Statement
+   * @param stmt - the statement
+   * @return - the proxy
+   */
   public static Statement newInstance(Statement stmt) {
     InvocationHandler handler = new StatementLogProxy(stmt);
     ClassLoader cl = Statement.class.getClassLoader();

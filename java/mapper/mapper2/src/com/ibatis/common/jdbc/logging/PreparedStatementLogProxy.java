@@ -26,6 +26,9 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+/**
+ * PreparedStatement proxy to add logging
+ */
 public class PreparedStatementLogProxy extends BaseLogProxy implements InvocationHandler {
 
   private static final Log log = LogFactory.getLog(PreparedStatement.class);
@@ -55,9 +58,9 @@ public class PreparedStatementLogProxy extends BaseLogProxy implements Invocatio
         }
       } else if (SET_METHODS.contains(method.getName())) {
         if ("setNull".equals(method.getName())) {
-          setColumn(((Integer) params[0]), null);
+          setColumn(params[0], null);
         } else {
-          setColumn(((Integer) params[0]), params[1]);
+          setColumn(params[0], params[1]);
         }
         return method.invoke(statement, params);
       } else if ("getResultSet".equals(method.getName())) {
@@ -71,6 +74,12 @@ public class PreparedStatementLogProxy extends BaseLogProxy implements Invocatio
     }
   }
 
+  /**
+   * Creates a logging version of a PreparedStatement
+   * @param stmt - the statement
+   * @param sql - the sql statement
+   * @return - the proxy
+   */
   public static PreparedStatement newInstance(PreparedStatement stmt, String sql) {
     InvocationHandler handler = new PreparedStatementLogProxy(stmt, sql);
     ClassLoader cl = PreparedStatement.class.getClassLoader();

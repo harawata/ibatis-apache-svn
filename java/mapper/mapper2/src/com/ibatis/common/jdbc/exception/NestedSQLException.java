@@ -17,6 +17,9 @@ package com.ibatis.common.jdbc.exception;
 
 import java.sql.SQLException;
 
+/**
+ * Class to allow passing an Exception with the original SQLException 
+ */
 public class NestedSQLException extends SQLException {
 
   private static final String CAUSED_BY = "\nCaused by: ";
@@ -24,36 +27,73 @@ public class NestedSQLException extends SQLException {
   private Throwable cause = null;
 
   /**
-   * Constructor
+   * Constructor from java.sql.SQLException
+   * @see java.sql.SQLException
+   * @param msg - the message for the exception
    */
-
   public NestedSQLException(String msg) {
     super(msg);
   }
 
+  /**
+   * Constructor from java.sql.SQLException
+   * @see java.sql.SQLException
+   * @param reason - the reason for the exception
+   * @param SQLState - the SQLState
+   */
   public NestedSQLException(String reason, String SQLState) {
     super(reason, SQLState);
   }
 
+  /**
+   * Constructor from java.sql.SQLException
+   * @see java.sql.SQLException
+   * @param reason - the reason for the exception
+   * @param SQLState - the SQLState
+   * @param vendorCode - a vendor supplied code to go w/ the message
+   */
   public NestedSQLException(String reason, String SQLState, int vendorCode) {
     super(reason, SQLState, vendorCode);
   }
 
+  /**
+   * Constructor from java.sql.SQLException with added nested exception
+   * @param msg - the message for the exception
+   * @param cause - the cause of the exception
+   */
   public NestedSQLException(String msg, Throwable cause) {
     super(msg);
     this.cause = cause;
   }
 
+  /**
+   * Constructor from java.sql.SQLException with added nested exception
+   * @see java.sql.SQLException
+   * @param reason - the reason for the exception
+   * @param SQLState - the SQLState
+   * @param cause - the cause of the exception
+   */
   public NestedSQLException(String reason, String SQLState, Throwable cause) {
     super(reason, SQLState);
     this.cause = cause;
   }
 
+  /**
+   * Constructor from java.sql.SQLException with added nested exception
+   * @param reason - the reason for the exception
+   * @param SQLState - the SQLState
+   * @param vendorCode - a vendor supplied code to go w/ the message
+   * @param cause - the cause of the exception
+   */
   public NestedSQLException(String reason, String SQLState, int vendorCode, Throwable cause) {
     super(reason, SQLState, vendorCode);
     this.cause = cause;
   }
 
+  /**
+   * Constructor from java.sql.SQLException with added nested exception
+   * @param cause - the cause of the exception
+   */
   public NestedSQLException(Throwable cause) {
     super();
     this.cause = cause;

@@ -19,23 +19,49 @@ import com.ibatis.common.exception.NestedRuntimeException;
 
 import java.sql.SQLException;
 
+/**
+ * Unchecked exception to allow passing an Exception with the original SQLException 
+ */
 public class RuntimeSQLException extends NestedRuntimeException {
 
+  /**
+   * Default constructor
+   */
   public RuntimeSQLException() {
   }
 
+  /**
+   * Constructor to pass along a message
+   * @see com.ibatis.common.exception.NestedRuntimeException
+   * @param msg - the message
+   */
   public RuntimeSQLException(String msg) {
     super(msg);
   }
 
+  /**
+   * Constructor to pass along another exception
+   * @see com.ibatis.common.exception.NestedRuntimeException
+   * @param sqlException - the exception
+   */
   public RuntimeSQLException(SQLException sqlException) {
     super(sqlException);
   }
 
+  /**
+   * Constructor to pass along a message and an exception
+   * @see com.ibatis.common.exception.NestedRuntimeException
+   * @param msg - the message
+   * @param sqlException - the exception
+   */
   public RuntimeSQLException(String msg, SQLException sqlException) {
     super(msg, sqlException);
   }
 
+  /**
+   * Getter for the SQL State
+   * @return - the state
+   */
   public String getSQLState() {
     Throwable cause = getCause();
     if (cause instanceof SQLException) {
@@ -46,6 +72,10 @@ public class RuntimeSQLException extends NestedRuntimeException {
 
   }
 
+  /**
+   * Getter for the error code
+   * @return - the error code
+   */
   public int getErrorCode() {
     Throwable cause = getCause();
     if (cause instanceof SQLException) {
@@ -55,6 +85,10 @@ public class RuntimeSQLException extends NestedRuntimeException {
     }
   }
 
+  /**
+   * Get the next exception in the chain
+   * @return - the next exception
+   */
   public SQLException getNextException() {
     Throwable cause = getCause();
     if (cause instanceof SQLException) {
@@ -64,6 +98,10 @@ public class RuntimeSQLException extends NestedRuntimeException {
     }
   }
 
+  /**
+   * Set the next exception in the chain
+   * @param ex - the next exception
+   */
   public synchronized void setNextException(SQLException ex) {
     Throwable cause = getCause();
     if (cause instanceof SQLException) {

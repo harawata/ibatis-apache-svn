@@ -24,6 +24,9 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.sql.ResultSet;
 
+/**
+ * ResultSet proxy to add logging
+ */
 public class ResultSetLogProxy extends BaseLogProxy implements InvocationHandler {
 
   private static final Log log = LogFactory.getLog(ResultSet.class);
@@ -70,6 +73,12 @@ public class ResultSetLogProxy extends BaseLogProxy implements InvocationHandler
     }
   }
 
+  /**
+   * Creates a logging version of a ResultSet 
+   * 
+   * @param rs - the ResultSet to proxy
+   * @return - the ResultSet with logging
+   */
   public static ResultSet newInstance(ResultSet rs) {
     InvocationHandler handler = new ResultSetLogProxy(rs);
     ClassLoader cl = ResultSet.class.getClassLoader();
