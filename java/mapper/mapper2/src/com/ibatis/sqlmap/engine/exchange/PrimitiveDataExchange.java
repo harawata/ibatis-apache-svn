@@ -22,6 +22,9 @@ import com.ibatis.sqlmap.engine.scope.RequestScope;
 
 import java.util.Map;
 
+/**
+ * DataExchange implementation for primitive objects
+ */
 public class PrimitiveDataExchange extends BaseDataExchange implements DataExchange {
 
   protected PrimitiveDataExchange(DataExchangeFactory dataExchangeFactory) {

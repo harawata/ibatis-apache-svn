@@ -18,10 +18,23 @@ package com.ibatis.sqlmap.engine.builder.xml;
 import java.io.Reader;
 import java.io.Writer;
 
+/**
+ * Interface for converting XML
+ */
 public interface XmlConverter {
 
+  /**
+   * Get a Reader based on another Reader
+   * @param reader - a Reader for the file to convert
+   * @return - the converted file
+   */
   public Reader convertXml(Reader reader);
 
+  /**
+   * Convert an XML file into another XML file
+   * @param reader - a reader for the XML to be converted from
+   * @param writer - a writer for the XML to be converted to
+   */
   public void convertXml(Reader reader, Writer writer);
 
 }

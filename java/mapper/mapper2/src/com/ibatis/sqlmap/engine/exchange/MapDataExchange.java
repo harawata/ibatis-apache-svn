@@ -25,6 +25,9 @@ import com.ibatis.sqlmap.engine.scope.RequestScope;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * DataExchange implementation for Map objects
+ */
 public class MapDataExchange extends BaseDataExchange implements DataExchange {
 
   protected MapDataExchange(DataExchangeFactory dataExchangeFactory) {

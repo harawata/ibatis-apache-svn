@@ -30,8 +30,15 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.util.Map;
 
+/**
+ * A DataExchange implemtation for working with DOM objects
+ */
 public class DomDataExchange extends BaseDataExchange implements DataExchange {
 
+  /**
+   * Constructor for the factory
+   * @param dataExchangeFactory - the factory
+   */
   public DomDataExchange(DataExchangeFactory dataExchangeFactory) {
     super(dataExchangeFactory);
   }

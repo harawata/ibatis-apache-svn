@@ -15,6 +15,9 @@
  */
 package com.ibatis.sqlmap.engine.accessplan;
 
+/**
+ * An interface to make access to resources consistent, regardless of type.
+ */
 public interface AccessPlan {
 
   /**

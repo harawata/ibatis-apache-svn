@@ -25,6 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * DataExchange implementation for List objects
+ */
 public class ListDataExchange extends BaseDataExchange implements DataExchange {
 
   protected ListDataExchange(DataExchangeFactory dataExchangeFactory) {

@@ -30,6 +30,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * DataExchange implementation for beans
+ */
 public class JavaBeanDataExchange extends BaseDataExchange implements DataExchange {
 
   private static final Object[] NO_DATA = new Object[0];

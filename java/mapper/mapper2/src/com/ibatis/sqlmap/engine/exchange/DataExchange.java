@@ -22,6 +22,9 @@ import com.ibatis.sqlmap.engine.scope.RequestScope;
 
 import java.util.Map;
 
+/**
+ * Interface for exchanging data between a parameter map/result map and the related objects
+ */
 public interface DataExchange {
 
   /**
@@ -33,38 +36,48 @@ public interface DataExchange {
 
   /**
    * Gets a data array from a parameter object.
-   *
-   * @param parameterMap
-   * @param parameterObject
-   * @return
+   * 
+   * @param request - the scope of the request
+   * @param parameterMap - the parameter map
+   * @param parameterObject - the parameter object
+   * 
+   * @return - the objects
    */
   public Object[] getData(RequestScope request, ParameterMap parameterMap, Object parameterObject);
 
   /**
    * Sets values from a data array into a result object.
-   *
-   * @param resultMap
-   * @param resultObject
-   * @param values
+   * 
+   * @param request - the request scope
+   * @param resultMap - the result map
+   * @param resultObject - the result object
+   * @param values - the values to be mapped
+   * 
    * @return
    */
   public Object setData(RequestScope request, ResultMap resultMap, Object resultObject, Object[] values);
 
 
   /**
-   * @param parameterMap
-   * @param parameterObject
-   * @param values
+   * Sets values from a data array into a parameter object
+   * 
+   * @param request - the request scope
+   * @param parameterMap - the parameter map
+   * @param parameterObject - the parameter object
+   * @param values - the values to set
+   * 
    * @return
    */
   public Object setData(RequestScope request, ParameterMap parameterMap, Object parameterObject, Object[] values);
 
   /**
    * Returns an object capable of being a unique cache key for a parameter object.
-   *
-   * @param parameterMap
-   * @param parameterObject
-   * @return
+   * 
+   * @param request - the request scope
+   * @param parameterMap - the parameter map
+   * @param parameterObject - the parameter object
+   * 
+   * @return - a cache key
    */
   public CacheKey getCacheKey(RequestScope request, ParameterMap parameterMap, Object parameterObject);
 

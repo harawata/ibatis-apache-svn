@@ -19,6 +19,9 @@ import com.ibatis.common.beans.ClassInfo;
 
 import java.lang.reflect.Method;
 
+/**
+ * Base implementation of the AccessPlan interface
+ */
 public abstract class BaseAccessPlan implements AccessPlan {
 
   protected Class clazz;

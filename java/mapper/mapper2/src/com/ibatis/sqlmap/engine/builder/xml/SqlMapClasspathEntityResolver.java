@@ -22,6 +22,9 @@ import org.xml.sax.SAXException;
 
 import java.io.InputStream;
 
+/**
+ * Offline entity resolver for the iBATIS DTDs
+ */
 public class SqlMapClasspathEntityResolver implements EntityResolver {
 
   private static final String SYSTEM_ID_SQL_MAP_CONFIG = "http://www.ibatis.com/dtd/sql-map-config-2.dtd";

@@ -17,6 +17,9 @@ package com.ibatis.sqlmap.engine.accessplan;
 
 import java.util.Map;
 
+/**
+ * Factory to get an accesss plan appropriate for an object
+ */
 public class AccessPlanFactory {
 
   private static boolean bytecodeEnhancementEnabled = false;

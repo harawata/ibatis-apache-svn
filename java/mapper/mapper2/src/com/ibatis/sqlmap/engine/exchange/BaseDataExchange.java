@@ -19,6 +19,9 @@ import com.ibatis.sqlmap.engine.cache.CacheKey;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
 import com.ibatis.sqlmap.engine.scope.RequestScope;
 
+/**
+ * Base implementation for the DataExchange interface
+ */
 public abstract class BaseDataExchange implements DataExchange {
 
   private DataExchangeFactory dataExchangeFactory;
@@ -38,6 +41,10 @@ public abstract class BaseDataExchange implements DataExchange {
     return key;
   }
 
+  /**
+   * Getter for the factory that created this object
+   * @return - the factory
+   */
   public DataExchangeFactory getDataExchangeFactory() {
     return dataExchangeFactory;
   }

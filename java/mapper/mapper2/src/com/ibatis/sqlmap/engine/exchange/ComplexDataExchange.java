@@ -28,10 +28,17 @@ import com.ibatis.sqlmap.engine.type.TypeHandlerFactory;
 
 import java.util.Map;
 
+/**
+ * A DataExchange implemtation for working with beans
+ */
 public class ComplexDataExchange extends BaseDataExchange implements DataExchange {
 
   private static final Probe PROBE = ProbeFactory.getProbe();
 
+  /**
+   * Constructor for the factory
+   * @param dataExchangeFactory - the factory
+   */
   public ComplexDataExchange(DataExchangeFactory dataExchangeFactory) {
     super(dataExchangeFactory);
   }

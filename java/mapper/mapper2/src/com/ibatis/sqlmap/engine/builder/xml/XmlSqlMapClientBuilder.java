@@ -76,6 +76,8 @@ import java.sql.ResultSet;
 import java.util.*;
 
 /**
+ * Creates an SqlMapClient from an XML definition
+ * 
  * NOT THREAD SAFE.  USE SEPARATE INSTANCES PER THREAD.
  */
 public class XmlSqlMapClientBuilder {
@@ -117,6 +119,9 @@ public class XmlSqlMapClientBuilder {
   private String currentNamespace;
   private TypeHandlerFactory typeHandlerFactory;
 
+  /**
+   * Creates a new builder
+   */
   public XmlSqlMapClientBuilder() {
     SqlMapExecutorDelegate delegate = new SqlMapExecutorDelegate();
     typeHandlerFactory = delegate.getTypeHandlerFactory();
@@ -146,14 +151,30 @@ public class XmlSqlMapClientBuilder {
     typeHandlerFactory.putTypeAlias("xmlCollection", XmlCollectionTypeMarker.class.getName());
   }
 
+  /**
+   * Getter to tell if we are to validate the source XML document
+   * @return - the flag
+   */
   public boolean isValidationEnabled() {
     return validationEnabled;
   }
 
+  /**
+   * Setter to control XML validation
+   * @param validationEnabled - flag to control validation
+   */
   public void setValidationEnabled(boolean validationEnabled) {
     this.validationEnabled = validationEnabled;
   }
 
+  /**
+   * Method to build the SqlMapClient
+   * @param reader - a Reader to read the XML File
+   * @param props - a properties object for configuration replacements
+   * @param sqlMapConfigConverter - a converter for the sql map configuration file
+   * @param sqlMapConverter - a converter for the sql map files
+   * @return - a SqlMapClient
+   */
   public SqlMapClient buildSqlMap(Reader reader, Properties props, XmlConverter sqlMapConfigConverter, XmlConverter sqlMapConverter) {
     this.globalProps = props;
     this.sqlMapConv = sqlMapConverter;
@@ -161,17 +182,35 @@ public class XmlSqlMapClientBuilder {
     return buildSqlMap(reader);
   }
 
+  /**
+   * Method to build the SqlMapClient
+   * @param reader - a Reader to read the XML File
+   * @param sqlMapConfigConverter - a converter for the sql map configuration file
+   * @param sqlMapConverter - a converter for the sql map files
+   * @return - a SqlMapClient
+   */
   public SqlMapClient buildSqlMap(Reader reader, XmlConverter sqlMapConfigConverter, XmlConverter sqlMapConverter) {
     this.sqlMapConv = sqlMapConverter;
     this.sqlMapConfigConv = sqlMapConfigConverter;
     return buildSqlMap(reader);
   }
 
+  /**
+   * Method to build the SqlMapClient
+   * @param reader - a Reader to read the XML File
+   * @param props - a properties object for configuration replacements
+   * @return - a SqlMapClient
+   */
   public SqlMapClient buildSqlMap(Reader reader, Properties props) {
     this.globalProps = props;
     return buildSqlMap(reader);
   }
 
+  /**
+   * Method to build the SqlMapClient
+   * @param reader - a Reader to read the XML File
+   * @return - a SqlMapClient
+   */
   public SqlMapClient buildSqlMap(Reader reader) {
 
     errorCtx.setResource("the SQL Map Configuration file");

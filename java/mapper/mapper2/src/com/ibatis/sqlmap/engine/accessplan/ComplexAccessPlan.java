@@ -18,6 +18,9 @@ package com.ibatis.sqlmap.engine.accessplan;
 import com.ibatis.common.beans.Probe;
 import com.ibatis.common.beans.ProbeFactory;
 
+/**
+ * Access plan for working with beans
+ */
 public class ComplexAccessPlan extends BaseAccessPlan {
 
   private static final Probe PROBE = ProbeFactory.getProbe();

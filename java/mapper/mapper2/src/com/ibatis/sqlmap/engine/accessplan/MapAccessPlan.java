@@ -17,6 +17,9 @@ package com.ibatis.sqlmap.engine.accessplan;
 
 import java.util.Map;
 
+/**
+ * Access plan for working with Maps
+ */
 public class MapAccessPlan extends BaseAccessPlan {
 
   MapAccessPlan(Class clazz, String[] propertyNames) {

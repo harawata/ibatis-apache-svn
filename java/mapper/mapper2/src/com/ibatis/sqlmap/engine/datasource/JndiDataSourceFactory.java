@@ -31,8 +31,6 @@ import java.util.Properties;
  */
 public class JndiDataSourceFactory implements DataSourceFactory {
 
-  private final static String CONTEXT_SETTINGS = "context_settings";
-
   private DataSource dataSource;
 
   public void initialize(Map properties) {

@@ -21,6 +21,9 @@ import com.ibatis.sqlmap.engine.type.TypeHandlerFactory;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Factory for DataExchange objects
+ */
 public class DataExchangeFactory {
 
   private final DataExchange domDataExchange;
@@ -31,6 +34,10 @@ public class DataExchangeFactory {
 
   private TypeHandlerFactory typeHandlerFactory;
 
+  /**
+   * Constructor for the factory
+   * @param typeHandlerFactory - a type handler factory for the factory
+   */
   public DataExchangeFactory(TypeHandlerFactory typeHandlerFactory) {
     this.typeHandlerFactory = typeHandlerFactory;
     domDataExchange = new DomDataExchange(this);
@@ -40,10 +47,19 @@ public class DataExchangeFactory {
     complexDataExchange = new ComplexDataExchange(this);
   }
 
+  /**
+   * Getter for the type handler factory
+   * @return - the type handler factory
+   */
   public TypeHandlerFactory getTypeHandlerFactory() {
     return typeHandlerFactory;
   }
 
+  /**
+   * Get a DataExchange object for the passed in Class
+   * @param clazz - the class to get a DataExchange object for
+   * @return - the DataExchange object
+   */
   public DataExchange getDataExchangeForClass(Class clazz) {
     DataExchange dataExchange = null;
     if (clazz == null) {
