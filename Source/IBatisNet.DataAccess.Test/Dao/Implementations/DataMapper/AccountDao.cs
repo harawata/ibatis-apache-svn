@@ -5,12 +5,12 @@ using IBatisNet.DataAccess.DaoSessionHandlers; // SqlMapDaoSession
 using IBatisNet.DataAccess.Exceptions;
 
 // Domain Dao
-using IBatisNet.Test.Dao.Interfaces; // IAccountDao
-using IBatisNet.Test.Implementations; // BaseDao
+using IBatisNet.DataAccess.Test.Dao.Interfaces; // IAccountDao
+using IBatisNet.DataAccess.Test.Implementations; // BaseDao
 
-using IBatisNet.Test.Domain;
+using IBatisNet.DataAccess.Test.Domain;
 
-namespace IBatisNet.Test.Dao.Implementations.DataMapper
+namespace IBatisNet.DataAccess.Test.Dao.Implementations.DataMapper
 {
 	/// <summary>
 	/// Summary description for SqlAccountViaSqlMapDao.

@@ -5,13 +5,13 @@ using System.Configuration;
 
 using IBatisNet.Common.Transaction;
 using IBatisNet.DataAccess;
-using IBatisNet.Test.Dao.Interfaces;
-using IBatisNet.Test.Domain;
-using IBatisNet.Test.NUnit;
+using IBatisNet.DataAccess.Test.Dao.Interfaces;
+using IBatisNet.DataAccess.Test.Domain;
+using IBatisNet.DataAccess.Test.NUnit;
 
 using NUnit.Framework;
 
-namespace IBatisNet.Test.NUnit.DaoTests
+namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 {
 	/// <summary>
 	/// Summary description for MutipleDaoTest.

@@ -6,11 +6,11 @@ using System.Configuration;
 using IBatisNet.DataAccess;
 using IBatisNet.Common.Utilities;
 
-using IBatisNet.Test.NUnit;
+using IBatisNet.DataAccess.Test.NUnit;
 
 using NUnit.Framework;
 
-namespace IBatisNet.Test.NUnit.DaoTests.Ado.MySql
+namespace IBatisNet.DataAccess.Test.NUnit.DaoTests.Ado.MySql
 {
 	/// <summary>
 	/// Summary description for AdoDaoTest.

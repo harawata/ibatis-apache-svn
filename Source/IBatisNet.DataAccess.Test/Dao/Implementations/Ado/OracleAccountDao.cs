@@ -6,12 +6,12 @@ using IBatisNet.DataAccess;
 using IBatisNet.DataAccess.Exceptions;
 using IBatisNet.DataAccess.Interfaces;
 
-using IBatisNet.Test.Dao.Interfaces;
-using IBatisNet.Test.Implementations;
+using IBatisNet.DataAccess.Test.Dao.Interfaces;
+using IBatisNet.DataAccess.Test.Implementations;
 
-using IBatisNet.Test.Domain;
+using IBatisNet.DataAccess.Test.Domain;
 
-namespace IBatisNet.Test.Dao.Implementations.Ado
+namespace IBatisNet.DataAccess.Test.Dao.Implementations.Ado
 {
 	/// <summary>
 	/// Description résumée de OracleAccountDao.

@@ -4,7 +4,7 @@ using IBatisNet.Common;
 using IBatisNet.DataAccess; //DaoManager, DaoSession
 using IBatisNet.DataAccess.Interfaces; //IDao
 
-namespace IBatisNet.Test.Implementations
+namespace IBatisNet.DataAccess.Test.Implementations
 {
 	/// <summary>
 	/// Description résumée de BaseDao.

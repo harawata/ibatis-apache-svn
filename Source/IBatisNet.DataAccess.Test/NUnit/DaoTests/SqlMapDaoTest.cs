@@ -5,11 +5,11 @@ using System.Configuration;
 
 using IBatisNet.DataAccess;
 
-using IBatisNet.Test.NUnit;
+using IBatisNet.DataAccess.Test.NUnit;
 
 using NUnit.Framework;
 
-namespace IBatisNet.Test.NUnit.DaoTests
+namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 {
 	/// <summary>
 	/// Summary description for SqlMapDaoTesto.

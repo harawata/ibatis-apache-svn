@@ -1,9 +1,9 @@
 using System;
 
 using IBatisNet.DataAccess.Interfaces;
-using IBatisNet.Test.Domain;
+using IBatisNet.DataAccess.Test.Domain;
 
-namespace IBatisNet.Test.Dao.Interfaces
+namespace IBatisNet.DataAccess.Test.Dao.Interfaces
 {
 	/// <summary>
 	/// Summary description for IuserDao.

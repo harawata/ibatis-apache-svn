@@ -5,14 +5,14 @@ using IBatisNet.DataAccess.Extensions.DaoSessionHandlers; // NHibernateDaoSessio
 using IBatisNet.DataAccess.Exceptions;
 
 // Domain Dao
-using IBatisNet.Test.Dao.Interfaces; // IUserDao
-using IBatisNet.Test.Implementations; // BaseDao
+using IBatisNet.DataAccess.Test.Dao.Interfaces; // IUserDao
+using IBatisNet.DataAccess.Test.Implementations; // BaseDao
 
-using IBatisNet.Test.Domain;
+using IBatisNet.DataAccess.Test.Domain;
 
 using NHibernate;
 
-namespace IBatisNet.Test.Dao.Implementations.NHibernate
+namespace IBatisNet.DataAccess.Test.Dao.Implementations.NHibernate
 {
 	/// <summary>
 	/// Summary description for UserDao.
