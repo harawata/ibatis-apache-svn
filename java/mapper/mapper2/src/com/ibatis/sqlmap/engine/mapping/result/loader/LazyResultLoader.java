@@ -1,17 +1,15 @@
 package com.ibatis.sqlmap.engine.mapping.result.loader;
 
-import com.ibatis.common.beans.ClassInfo;
-import com.ibatis.common.exception.NestedRuntimeException;
-import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
-
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
-import java.util.HashSet;
+
+import com.ibatis.common.beans.ClassInfo;
+import com.ibatis.common.exception.NestedRuntimeException;
+import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
 
 /**
  * User: Clinton Begin
@@ -30,14 +28,26 @@ public class LazyResultLoader implements InvocationHandler {
   protected boolean loaded;
   protected Object resultObject;
 
-  public LazyResultLoader(ExtendedSqlMapClient client, String statementName, Object parameterObject, Class targetType) {
+  /**
+   * Constructor for a lazy list loader
+   * @param client - the client that is creating the lazy list
+   * @param statementName - the statement to be used to build the list
+   * @param parameterObject - the parameter object to be used to build the list
+   * @param targetType - ??
+   */
+public LazyResultLoader(ExtendedSqlMapClient client, String statementName, Object parameterObject, Class targetType) {
     this.client = client;
     this.statementName = statementName;
     this.parameterObject = parameterObject;
     this.targetType = targetType;
   }
 
-  public Object loadResult() throws SQLException {
+  /**
+   * Loads the result(!)
+   * @return the results - a list or object
+   * @throws SQLException if there is a problem
+   */
+public Object loadResult() throws SQLException {
     if (Collection.class.isAssignableFrom(targetType)) {
       InvocationHandler handler = new LazyResultLoader(client, statementName, parameterObject, targetType);
       ClassLoader cl = targetType.getClassLoader();
