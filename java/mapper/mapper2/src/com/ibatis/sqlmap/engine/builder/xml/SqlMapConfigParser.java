@@ -121,7 +121,7 @@ public class SqlMapConfigParser extends BaseParser {
             props = Resources.getResourceAsProperties(resource);
           } else if (url != null) {
             vars.errorCtx.setResource(url);
-            props = Resources.getUrlAsProperties(resource);
+            props = Resources.getUrlAsProperties(url);
           } else {
             throw new NestedRuntimeException("The " + "properties" + " element requires either a resource or a url attribute.");
           }
