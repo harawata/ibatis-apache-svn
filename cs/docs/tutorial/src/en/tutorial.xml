@@ -1,39 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="introduction">
-<title>iBATIS.NET Data Mapper Tutorial</title>
+  <title>iBATIS.NET Data Mapper Tutorial</title>
 
   <sect1>
-		<title>Introduction</title>
+    <title>Introduction</title>
 
-	  <sect2>
-		<title>License Information</title>
+    <sect2>
+      <title>License Information</title>
 
-		<para>iBATIS.NET is licensed according to the terms of the Apache License,
-		Version 2.0. The full text of this license are available online at <ulink url="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</ulink>
-		(<ulink url="http://www.apache.org/licenses/LICENSE-2.0.txt">TXT</ulink> or <ulink url="http://www.apache.org/licenses/LICENSE-2.0.html">HTML</ulink>). You
-		can also view the full text of any of these licenses in the doc subdirectory of the iBATIS.NET distribution.</para>
-	  </sect2>
+      <para>iBATIS.NET is licensed according to the terms of the Apache
+      License, Version 2.0. The full text of this license are available online
+      at <ulink
+      url="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</ulink>
+      (<ulink url="http://www.apache.org/licenses/LICENSE-2.0.txt">TXT</ulink>
+      or <ulink
+      url="http://www.apache.org/licenses/LICENSE-2.0.html">HTML</ulink>). You
+      can also view the full text of any of these licenses in the doc
+      subdirectory of the iBATIS.NET distribution.</para>
+    </sect2>
 
-	<sect2>
-    <title>Disclaimer</title>
+    <sect2>
+      <title>Disclaimer</title>
 
-    <blockquote>
-      <para>iBATIS MAKES NO WARRANTIES, EXPRESS OR IMPLIED, AS TO THE
-      INFORMATION IN THIS DOCUMENT. The names of actual companies and products
-      mentioned herein may be the trademarks of their respective
-      owners.</para>
-    </blockquote>
-	</sect2>
+      <blockquote>
+        <para>iBATIS MAKES NO WARRANTIES, EXPRESS OR IMPLIED, AS TO THE
+        INFORMATION IN THIS DOCUMENT. The names of actual companies and
+        products mentioned herein may be the trademarks of their respective
+        owners.</para>
+      </blockquote>
+    </sect2>
 
-	<sect2>
-	<title>Remark</title>
-    <para>Original writting by Clinton Begin. Adaptation by Ted Husted and Gilles Bayon with the aimable
-    permission of Clinton Begin.</para>
-  </sect2>
-  
+    <sect2>
+      <title>Remark</title>
+
+      <para>Original writting by Clinton Begin. Adaptation by Ted Husted and
+      Gilles Bayon with the aimable permission of Clinton Begin.</para>
+    </sect2>
   </sect1>
 
-<sect1>
+  <sect1>
     <title>Welcome</title>
 
     <para>This tutorial takes an "over-the-shoulder" Cookbook approach. We'll
@@ -44,15 +49,16 @@
   <sect1>
     <title>Test first!</title>
 
-    <para>Let's say our client has a database and one of the tables in the
-    database is a list of people. Client tells us:</para>
+    <para>Let's say that our most important client has a database and one of
+    the tables in the database is a list of people. Our client tells
+    us:</para>
 
     <para><quote>We would like to use a web application to display the people
     in this table and to add, edit, and delete individual
     records.</quote></para>
 
     <para>Not a complicated story, but it will cover the CRUD most developers
-    want to learn first. :) Let's start with the people table client
+    want to learn first. :) Let's start with the people table that the client
     mentioned. Since we're keeping it simple, we'll say it's a table in an
     Access database. The table definition is shown as Example 1.</para>
 
@@ -76,7 +82,7 @@ PER_HEIGHT_M      Double            8</programlisting>
 
       <programlisting>using System.Collections;
 using IBatisNet.DataMapper;
-using NUnit.Framework;complete
+using NUnit.Framework;
 
 namespace iBatisTutorial.Model
 {
@@ -93,7 +99,7 @@ namespace iBatisTutorial.Model
    Assert.IsNotNull(people,"Person list not returned");
    Assert.IsTrue(people.Count&gt;0,"Person list is empty"); 
    Person person = (Person) people[0];
-  Assert.IsNotNull(person,"Person not returned");
+   Assert.IsNotNull(person,"Person not returned");
   }
  }
 }</programlisting>
@@ -136,23 +142,30 @@ namespace iBatisTutorial.Model
     </example>
 
     <para>OK, that was fun! The Assert class is built into NUnit, so to
-    compile Example 2, we just need the Mapper object and
-    <methodname>QueryForList</methodname> method. The Mapper is built into the
-    iBATIS framework, so we don't need to write that either. The iBATIS
-    <methodname>QueryForList</methodname> method executes our SQL statement
-    (or stored procedure) and returns the result as a list. Each row in the
-    result becomes an entry in the list. Along with
-    <methodname>QueryForList</methodname>, there is also
+    compile Example 2, we just need the <classname>Mapper</classname> object
+    and <methodname>QueryForList</methodname> method. Wonderfully, the iBATIS
+    DataMapper framework has a <classname>Mapper</classname> class built into
+    it that will work just fine for for us to use in this tutorial, so we
+    don't need to write that either. When the
+    <classname>Mapper.Instance()</classname> method is called, an instance of
+    the iBATIS <classname>SqlMapper</classname> class is returned that has
+    various methods available such as <methodname>QueryForList</methodname>.
+    In this example, the iBATIS
+    <methodname>SqlMapper.QueryForList</methodname> method executes our SQL
+    statement (or stored procedure) and returns the result as a list. Each row
+    in the result becomes an entry in the list. Along with
+    <methodname>QueryForList</methodname>, there are also
     <methodname>Delete</methodname>, <methodname>Insert</methodname>,
     <methodname>Select</methodname>, <methodname>QueryForObject</methodname>,
-    and a couple of other methods in the iBATIS API. (See Section 5 in the
-    Developers Guide for details.)</para>
+    <methodname>QueryForPaginatedList</methodname> and a few other methods in
+    the iBATIS API. (See Chapter 4 in the iBATIS DataMapper Developer Guide
+    for details.)</para>
 
     <para>Looking at Example 2, we see that the
     <methodname>QueryForList</methodname> method takes the name of the
-    statement we want to run and any runtime values the statement may need.
-    Since a "SelectAll" statement wouldn't need any runtime values, we pass
-    null in our test.</para>
+    statement we want to run and any runtime values (stored in a parameter
+    object) that the statement may need. Since a "SelectAll" statement
+    wouldn't need any runtime values, we pass null in our test.</para>
 
     <para>OK. Easy enough. But where does iBATIS get the "SelectAll"
     statement? Some systems try to generate SQL statements for you, but iBATIS
@@ -165,10 +178,9 @@ namespace iBatisTutorial.Model
       <title>We use XML elements to map a database statement to an application
       object</title>
 
-      <programlisting>  &lt;typeAlias alias="Person" assembly="iBatisTutorial.Model.dll" 
-   type="iBatisTutorial.Model.Person" /&gt;
+      <programlisting>  &lt;typeAlias alias="Person" type="iBatisTutorial.Model.Person, iBatisTutorial.Model" /&gt;
 
-  &lt;resultMap id="SelectAllResult" class="Person"&gt;
+  &lt;resultMap id="SelectResult" class="Person"&gt;
    &lt;result property="Id" column="PER_ID" /&gt;
    &lt;result property="FirstName" column="PER_FIRST_NAME" /&gt;
    &lt;result property="LastName" column="PER_LAST_NAME" /&gt;
@@ -177,7 +189,7 @@ namespace iBatisTutorial.Model
    &lt;result property="HeightInMeters" column="PER_HEIGHT_M" /&gt;
   &lt;/resultMap&gt;
 
-  &lt;select id="SelectAll" resultMap="SelectAllResult"&gt;
+  &lt;select id="SelectAll" resultMap="SelectResult"&gt;
    select
     PER_ID,
     PER_FIRST_NAME,
@@ -192,7 +204,7 @@ namespace iBatisTutorial.Model
     <para><note>
         <para>Since this is a very simple case, iBATIS could in fact generate
         this SQL for us. In Example 4, we could have also written the select
-        statement this way: <programlisting>  &lt;select id="SelectAll" resultMap="SelectAllResult"&gt;
+        statement this way: <programlisting>  &lt;select id="SelectAll" resultMap="SelectResult"&gt;
   &lt;generate table="PERSON" /&gt;
   &lt;/select&gt;</programlisting></para>
 
@@ -200,11 +212,12 @@ namespace iBatisTutorial.Model
         SQL statement for us. But this feature only works with the simplest of
         SQL statements. Most often, you will write your own SQL statement or
         pass parameters to a stored procedure. (See Section 3 in the
-        Developers Guide for more about the generate tag.)</para>
+        DataMapper Developers Guide for more about the generate tag.)</para>
       </note>The iBATIS mapping documents can hold several sets of related
     elements, like those shown in Example 4. We can also have as many mapping
-    documents as we need. Having multiple mapping documents is handy when
-    several developers are working on the project at once.</para>
+    documents as we need to help organize our code. Additionally, having
+    multiple mapping documents is handy when several developers are working on
+    the project at once.</para>
 
     <para>So, the framework gets the SQL code for the query from the mapping,
     and plugs it into a prepared statement. But, how does iBATIS know where to
@@ -223,23 +236,27 @@ namespace iBatisTutorial.Model
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
   xsi:noNamespaceSchemaLocation="SqlMapConfig.xsd"&gt;
 
- &lt;providers file="providers.config"/&gt;
+ &lt;settings&gt;
+  &lt;setting useStatementNamespaces="false"/&gt;
+  &lt;setting cacheModelsEnabled="false"/&gt;
+ &lt;/settings&gt;
 
  &lt;database&gt;
+  &lt;provider name="OleDb1.1"/&gt;
   &lt;dataSource name="iBatisTutorial"  
-    connectionString="Provider=Microsoft.Jet.OLEDB.4.0;Data Source=./Resources/iBatisTutorial.mdb"/&gt;
+    connectionString="Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\tutorial\WebView\Resources\iBatisTutorial.mdb"/&gt;
  &lt;/database&gt;
 
  &lt;sqlMaps&gt;
-  &lt;sqlMap file="./Resources/PersonHelper.xml"/&gt;
+  &lt;sqlMap resource="./Resources/PersonHelper.xml"/&gt;
  &lt;/sqlMaps&gt;
 
 &lt;/sqlMapConfig&gt;</programlisting>
     </example>
 
-    <para>Of course, besides Access, other ADO.NET providers are supported,
-    including SqlServer, Oracle, MySQL, and generic ODBC providers. (See
-    Section 5 in the Developers Guide for details.)</para>
+    <para>Of course, besides Access through OLEDB, other ADO.NET providers are
+    supported, including SQL Server, Oracle, MySQL, and generic ODBC
+    providers. (See Section 5 in the Developers Guide for details.)</para>
 
     <para>The last part of the configuration file ("sqlMaps") is where we list
     our mapping documents, like the one shown back in Example 4. We can list
@@ -250,20 +267,27 @@ namespace iBatisTutorial.Model
 
     <para>Look back at Example 2. The heart of the code is the call to the
     "Mapper" object (under the remark "try it"). The
-    <classname>Mapper</classname> object is a singleton. The first time it's
-    called, it reads in the configuration documents to create the
-    <classname>Mapper</classname> object. On subsequent calls, it reuses the
-    <classname>Mapper</classname> object, so that the configuration is re-read
-    only if the file changes.</para>
+    <classname>Mapper</classname> object is a singleton that handles the
+    instantiation and configuration of an iBATIS
+    <classname>SqlMapper</classname> object, which provides a facade to the
+    iBATIS DataMapper framework API. The first time that the
+    <classname>Mapper</classname> is called, it reads in the
+    <filename>sqlMap.config</filename> file and associated mapping documents
+    to create an instance of the <classname>SqlMapper</classname> class. On
+    subsequent calls, it reuses the <classname>SqlMapper</classname> object so
+    that the configuration is re-read only when files change.</para>
 
     <para>The framework comes bundled with a default
-    <classname>Mapper</classname> class. If you want to use a different name
-    for the configuration file, or need to use more than one database, you can
-    also use your own class, by copying and modifying the standard
-    version.</para>
+    <classname>Mapper</classname> class for you to use immediately to get
+    access to the iBATIS <classname>SqlMapper</classname> object. If you want
+    to use a different name other than <filename>sqlMap.config</filename> for
+    the configuration file, or need to use more than one database and have one
+    <classname>SqlMapper</classname> per database, you can also write your own
+    class to mimic the role of the <classname>Mapper</classname> class view by
+    copying and modifying the standard version.</para>
 
-    <para>Example 6 shows the code for the standard Mapper class that comes
-    with the framework.</para>
+    <para>Example 6 shows the code for the standard
+    <classname>Mapper</classname> class that comes with the framework.</para>
 
     <example>
       <title>The standard "Mapper" facade for providing access to the data
@@ -282,6 +306,7 @@ namespace IBatisNet.DataMapper
   {
    _mapper = (SqlMapper) obj;
   }
+
   protected static void InitMapper()
   {   
    ConfigureHandler handler = new ConfigureHandler (Configure);
@@ -310,24 +335,28 @@ namespace IBatisNet.DataMapper
     </example>
 
     <para>If you wanted to use a second database, you could load another
-    configuration by changing the call to ConfigureHandler. There's another
-    signature that takes a file name, which you can use to specify another
-    configuration, as so:<programlisting>ConfigureHandler handler = new ConfigureHandler (Configure,"sqlmap2.config");</programlisting>You
+    configuration by changing the call to the
+    <methodname>SqlMapper.ConfigureAndWatch()</methodname> method. There's
+    another method signature that takes a file name, which you can use to
+    specify another configuration, as so:<programlisting>_mapperTwo = SqlMapper.ConfigureAndWatch ("sqlmap2.config", handler);</programlisting>You
     can access as many different database configurations as you need, just by
-    setting up additional Mapper classes. Each Mapper configuration is a
-    facade for a database. As far as our application knows, the "Mapper" *is*
-    the database. Behind the Mapper facade, you can change the location of the
-    database, or switch between SQL statements and stored procedures, with
-    zero-changes to your application code.</para>
+    setting up additional <classname>SqlMapper</classname> instances using
+    different configuration files. Each <classname>SqlMapper</classname>
+    configuration is a facade for accessing a datasource. As far as our
+    application knows, the <classname>SqlMapper</classname> *is* the
+    datasource. Behind the <classname>SqlMapper</classname> facade, you can
+    change the location of the database, or switch between SQL statements and
+    stored procedures, with zero-changes to your application code.</para>
 
     <para>If we put this all together into a solution, we can "green bar" our
     test, as shown by Figure 1. If you'd like to see that bar for yourself,
     open the iBatisNet Tutorial solution available from the website
     &lt;http://sf.net/projects/ibatisnet&gt;. If you do, you'll note that we
     set up the solution using two projects. A "Model" project for our business
-    and database code and corresponding unit tests, and a "Web" project our
-    user application. (After extracting the solution, set Web Sharing for the
-    "Web" folder as "iBatisTutorial".)</para>
+    and database code and corresponding unit tests, and a "WebView" project
+    for our user interface. (After extracting the solution, set Web Sharing
+    for the "WebView" folder as "iBatisTutorial". See the ReadMe.txt file
+    included in the solution for other setup instructions.)</para>
 
     <figure>
       <title>Green Bar!</title>
@@ -350,7 +379,7 @@ namespace IBatisNet.DataMapper
     <para><example>
         <title>ASPX page for our Person list</title>
 
-        <programlisting>&lt;%@ Page language="c#" Codebehind="Person.aspx.cs" AutoEventWireup="false" Inherits="iBatisTutorial.Web.Forms.Person" %&gt;
+        <programlisting>&lt;%@ Page language="c#" Codebehind="Person.aspx.cs" AutoEventWireup="false" Inherits="iBatisTutorial.Web.Forms.PersonPage" %&gt;
 &lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" &gt; 
 &lt;html&gt;
   &lt;head&gt;
@@ -362,11 +391,11 @@ namespace IBatisNet.DataMapper
   &lt;/head&gt;
   &lt;body&gt;
     &lt;form id="Person" method="post" runat="server"&gt;
-  &lt;asp:Panel ID="pnlList" Runat="server"&gt;
-    &lt;h1&gt;Person List&lt;/h1&gt;<emphasis>
-      &lt;asp:DataGrid id="dgList" Runat="server"&gt;&lt;/asp:DataGrid&gt;</emphasis>
-  &lt;/asp:Panel&gt;
-     &lt;/form&gt;
+    &lt;asp:Panel ID="pnlList" Runat="server"&gt;
+      &lt;h1&gt;Person List&lt;/h1&gt;<emphasis>
+        &lt;asp:DataGrid id="dgList" Runat="server"&gt;&lt;/asp:DataGrid&gt;</emphasis>
+    &lt;/asp:Panel&gt;
+    &lt;/form&gt;
   &lt;/body&gt;
 &lt;/html&gt;</programlisting>
       </example></para>
@@ -461,7 +490,9 @@ namespace iBatisTutorial.Web.Forms
     const string EXPECT = "Clinton";
     const string EDITED = "Notnilc"; 
     // get it 
-    person.Id = 1; person = (Person) Mapper.Instance().QueryForObject("Select",1); 
+    Person person = new Person();
+    person.Id = 1; 
+    person = (Person) Mapper.Instance().QueryForObject("Select",1); 
     // test it
     Assert.IsNotNull(person,"Missing person");
     Assert.IsTrue(EXPECT.Equals(person.FirstName),"Mistaken identity");
@@ -478,7 +509,7 @@ namespace iBatisTutorial.Web.Forms
   } 
     
   [Test] 
-  public voidPersonInsertDelete () 
+  public void PersonInsertDelete () 
   { 
    // insert it 
    Person person = new Person();
@@ -493,10 +524,11 @@ namespace iBatisTutorial.Web.Forms
     <para>Not the best tests ever written, but for now, they will do :)</para>
 
     <para>To make the new tests work, we'll need some new mapping statements.
-    Example 10 shows the complete PersonHelper.xml mapper document.</para>
+    Example 10 shows the complete mapper document that we've called
+    <filename>PersonHelper.xml</filename>.</para>
 
     <example>
-      <title>The new and improved Mapper document</title>
+      <title>The new and improved mapper document</title>
 
       <programlisting>&lt;xml version="1.0" encoding="utf-8" ?&gt; 
 
@@ -506,7 +538,7 @@ namespace iBatisTutorial.Web.Forms
  xsi:noNamespaceSchemaLocation="SqlMap.xsd"&gt;
 
  &lt;alias&gt;
-  &lt;typeAlias alias="Person" assembly="iBatisTutorial.Model.dll" type="iBatisTutorial.Model.Person" /&gt;
+  &lt;typeAlias alias="Person" type="iBatisTutorial.Model.Person, iBatisTutorial.Model" /&gt;
  &lt;/alias&gt;
 
  &lt;resultMaps&gt;
@@ -538,7 +570,7 @@ namespace iBatisTutorial.Web.Forms
     &lt;/dynamic&gt;
   &lt;/select&gt;
 
-  &lt;insert id="Insert" parameterClass="Person" resultClas"int"&gt;
+  &lt;insert id="Insert" parameterClass="Person"&gt;
    insert into PERSON 
     (PER_ID, PER_FIRST_NAME, PER_LAST_NAME,
     PER_BIRTH_DATE, PER_WEIGHT_KG, PER_HEIGHT_M)
@@ -547,7 +579,7 @@ namespace iBatisTutorial.Web.Forms
     #BirthDate#, #WeightInKilograms#, #HeightInMeters#)
   &lt;/insert&gt;
 
-  &lt;update id="Update" parameterClass="Person" resultClass="int"&gt;
+  &lt;update id="Update" parameterClass="Person"&gt;
    update PERSON set
     PER_FIRST_NAME = #FirstName#,
     PER_LAST_NAME = #LastName#, 
@@ -557,7 +589,7 @@ namespace iBatisTutorial.Web.Forms
    where PER_ID = #Id#
   &lt;/update&gt;
 
-  &lt;delete id="Delete" parameterClass="int" resultClass="int"&gt;
+  &lt;delete id="Delete" parameterClass="int"&gt;
    delete from PERSON
    where PER_ID = #value#
   &lt;/delete&gt;
@@ -574,12 +606,12 @@ namespace iBatisTutorial.Web.Forms
       </note></para>
 
     <para>Hmm. So, what's with this &lt;isParameterPresent&gt; tag in the
-    Select element? The &lt;isParameterPresent&gt; tag is an example of
-    Dynamic SQL. Rather than have nearly identical statements for SelectAll
+    &lt;select&gt; element? The &lt;isParameterPresent&gt; tag is an example
+    of Dynamic SQL. Rather than have nearly identical statements for SelectAll
     and SelectById, we can use Dynamic SQL to let the same statement serve
     both purposes. If Id is null, the WHERE clause is omitted. Otherwise, the
     WHERE clause is included. Dynamic SQL is even more useful for "Query By
-    Example" stories. (See Section 3.7 in the Developers Guide for
+    Example" stories. (See Section 3.9 in the DataMapper Developer Guide for
     more.)</para>
 
     <para>Why bother? Because with the dynamic clause, we can use a single
@@ -589,11 +621,11 @@ namespace iBatisTutorial.Web.Forms
 
     <para>Well, waddya know, if run our tests now, we are favored with a green
     bar!. It all works!<note>
-        <para>Though, of course, everything did not work perfectly the first
-        time! We had to fix this and that, and try, try, again. But NUnit made
-        trying again quick and easy. For changes to the XML mappings document,
-        we do not even have to recompile. We can just update the XML and rerun
-        the test! No fuss, no muss.</para>
+        <para>Though, of course, things usually do not work perfectly the
+        first time! We have to fix this and that, and try, try, again. But
+        NUnit makes trying again quick and easy. For changes to the XML
+        mapping documents, we do not even have to recompile. We can just
+        update the XML and rerun the tests! No muss, no fuss.</para>
       </note></para>
 
     <para>Turning back to our ASP.NET page, we can revamp the DataGrid to
@@ -616,9 +648,10 @@ namespace iBatisTutorial.Web.Forms
       &lt;asp:BoundColumn DataField="LastName" HeaderText="Last"&gt;&lt;/asp:BoundColumn&gt;
       &lt;asp:BoundColumn DataField="HeightInMeters" HeaderText="Height"&gt;&lt;/asp:BoundColumn&gt;
       &lt;asp:BoundColumn DataField="WeightInKilograms" HeaderText="Weight"&gt;&lt;/asp:BoundColumn&gt;
-      &lt;asp:EditCommandColumn ButtonType="PushButton" EditText="Edit" CancelText="Cancel" 
-      &lt;asp:ButtonColumn ButtonType="PushButton" Text="Delete" CommandName="Delete"&gt;&lt;/asp:ButtonColumn&gt;
-       UpdateText="Save"&gt;&lt;/asp:EditCommandColumn&gt;
+      &lt;asp:EditCommandColumn ButtonType="PushButton" EditText="Edit" CancelText="Cancel" UpdateText="Save"&gt;
+      &lt;/asp:EditCommandColumn&gt;
+      &lt;asp:ButtonColumn ButtonType="PushButton" Text="Delete" CommandName="Delete"&gt;
+      &lt;/asp:ButtonColumn&gt;
      &lt;/Columns&gt;
     &lt;/asp:DataGrid&gt;
     &lt;p&gt;&lt;asp:Button ID="btnAdd" Runat="server"&gt;&lt;/asp:Button&gt;&lt;/p&gt;</programlisting>
@@ -664,11 +697,11 @@ namespace iBatisTutorial.Web.Forms
   protected void List_Update(object source, DataGridCommandEventArgs e)
   {
    Person person = new Person();
-    person.Id = GetKey(dgList,e);
-    person.FirstName = GetText(e,0);
-    person.LastName = GetText(e,1);
-    person.HeightInMeters = GetDouble(e,2);
-    person.WeightInKilograms = GetDouble(e,3);
+   person.Id = GetKey(dgList,e);
+   person.FirstName = GetText(e,0);
+   person.LastName = GetText(e,1);
+   person.HeightInMeters = GetDouble(e,2);
+   person.WeightInKilograms = GetDouble(e,3);
    Mapper.Instance().Update("Update",person);
    List_Load();
   }
@@ -691,7 +724,15 @@ namespace iBatisTutorial.Web.Forms
 
   private double GetDouble(DataGridCommandEventArgs e, int v)
   {
-   return Convernext to the t.ToDouble(GetText(e,v));
+   return Convert.ToDouble(GetText(e,v));
+  }
+
+  protected void List_Add (object source, EventArgs e)
+  {
+   Person person = new Person();
+   person.FirstName = "--New Person--";
+   Mapper.Instance().Insert("Insert", person);
+   List_Load ();
   }
 
   #endregion
@@ -711,9 +752,9 @@ namespace iBatisTutorial.Web.Forms
     <para>OK, we are CRUD complete! There's more we could do here. In
     particular, we should add validation methods to prevent client from
     entering alphabetic characters where only numbers can live. But, that's
-    ASP.NET grunt-work, and this is an <emphasis>iBATIS</emphasis> tutorial.
-    So, for now, we can stand tall and proudly declare: <emphasis>Mission
-    accomplished!</emphasis></para>
+    ASP.NET grunt-work, and this is an <emphasis>iBATIS DataMapper</emphasis>
+    tutorial. So, for now, we can stand tall and proudly declare:
+    <emphasis>Mission accomplished!</emphasis></para>
   </sect1>
 
   <sect1>
@@ -733,7 +774,7 @@ namespace iBatisTutorial.Web.Forms
 namespace iBatisTutorial.Model
 {
 
- public class PersonHelper: BaseHelper
+ public class PersonHelper : Helper
  {
 
   public Person Select(int id)
@@ -989,6 +1030,6 @@ namespace iBatisTutorial.Model
 
     <para>Now I'm happy, and ready to move on to the next story ... As for
     you, if you've liked what you've seen so far, please move on to the
-    Developers Guide. There are many more goodies in store.</para>
+    DataMapper Developers Guide. There are many more goodies in store.</para>
   </sect1>
 </chapter>
