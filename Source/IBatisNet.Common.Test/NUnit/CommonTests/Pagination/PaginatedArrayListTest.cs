@@ -3,11 +3,11 @@ using System.Collections;
 
 using IBatisNet.Common.Pagination;
 
-using IBatisNet.Test.NUnit;
+using IBatisNet.Common.Test.NUnit;
 
 using NUnit.Framework;
 
-namespace IBatisNet.Test.NUnit.CommonTests.Pagination
+namespace IBatisNet.Common.Test.NUnit.CommonTests.Pagination
 {
 	/// <summary>
 	/// Summary description for PaginatedArrayListTest.

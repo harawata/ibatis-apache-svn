@@ -1,6 +1,6 @@
 using System;
 
-namespace IBatisNet.Test.NUnit.CommonTests.DynamicProxy
+namespace IBatisNet.Common.Test.NUnit.CommonTests.DynamicProxy
 {
 	/// <summary>
 	/// Description résumée de MySecondInterfaceImpl.

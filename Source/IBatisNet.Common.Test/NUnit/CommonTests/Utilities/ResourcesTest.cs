@@ -5,7 +5,7 @@ using IBatisNet.Common.Utilities;
 
 using NUnit.Framework;
 
-namespace IBatisNet.Test.NUnit.CommonTests.Utilities
+namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 {
 	/// <summary>
 	/// Description résumée de ResourcesTest.

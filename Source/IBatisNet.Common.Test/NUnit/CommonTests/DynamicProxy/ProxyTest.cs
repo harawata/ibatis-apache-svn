@@ -3,11 +3,11 @@ using System.Collections;
 
 using IBatisNet.Common.Utilities.DynamicProxy;
 
-using IBatisNet.Test.NUnit;
+using IBatisNet.Common.Test.NUnit;
 
 using NUnit.Framework;
 
-namespace IBatisNet.Test.NUnit.CommonTests.DynamicProxy
+namespace IBatisNet.Common.Test.NUnit.CommonTests.DynamicProxy
 {
 	/// <summary>
 	/// Summary description for ProxyTest.

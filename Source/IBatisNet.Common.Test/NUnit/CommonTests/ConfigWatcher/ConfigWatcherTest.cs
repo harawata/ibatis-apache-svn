@@ -6,11 +6,11 @@ using System.Threading;
 
 using IBatisNet.Common.Utilities;
 
-using IBatisNet.Test.NUnit;
+using IBatisNet.Common.Test.NUnit;
 
 using NUnit.Framework;
 
-namespace IBatisNet.Test.NUnit.CommonTests.ConfigWatcher
+namespace IBatisNet.Common.Test.NUnit.CommonTests.ConfigWatcher
 {
 	/// <summary>
 	/// Summary description for ConfigWatcherTest.

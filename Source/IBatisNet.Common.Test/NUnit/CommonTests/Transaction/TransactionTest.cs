@@ -3,12 +3,11 @@ using System;
 
 using IBatisNet.Common.Transaction;
 
-using IBatisNet.Test.Domain;
-using IBatisNet.Test.NUnit.SqlMapTests;
+using IBatisNet.Common.Test.Domain;
 
 using NUnit.Framework;
 
-namespace IBatisNet.Test.NUnit.CommonTests.Transaction
+namespace IBatisNet.Common.Test.NUnit.CommonTests.Transaction
 {
 	/// <summary>
 	/// Summary description for TransactionTest.

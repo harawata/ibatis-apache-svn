@@ -1,6 +1,6 @@
 using System;
 
-namespace IBatisNet.Test.NUnit.CommonTests.DynamicProxy
+namespace IBatisNet.Common.Test.NUnit.CommonTests.DynamicProxy
 {
 	/// <summary>
 	/// Summary description for IMyInterface.

@@ -7,6 +7,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBatisNet.Common.Test", "IB
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBatisNet.DataAccess", "IBatisNet.DataAccess\IBatisNet.DataAccess.csproj", "{BEFC4A45-7DF9-40E4-942C-82DC1BA5E708}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBatisNet.DataMapper", "IBatisNet.DataMapper\IBatisNet.DataMapper.csproj", "{72F70057-B2E1-4DAD-BA6C-E2962745EEA5}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -21,6 +29,14 @@ Global
 		{5961F3DE-CB5E-40FE-AE89-D00D6E453907}.Debug.Build.0 = Debug|.NET
 		{5961F3DE-CB5E-40FE-AE89-D00D6E453907}.Release.ActiveCfg = Release|.NET
 		{5961F3DE-CB5E-40FE-AE89-D00D6E453907}.Release.Build.0 = Release|.NET
+		{BEFC4A45-7DF9-40E4-942C-82DC1BA5E708}.Debug.ActiveCfg = Debug|.NET
+		{BEFC4A45-7DF9-40E4-942C-82DC1BA5E708}.Debug.Build.0 = Debug|.NET
+		{BEFC4A45-7DF9-40E4-942C-82DC1BA5E708}.Release.ActiveCfg = Release|.NET
+		{BEFC4A45-7DF9-40E4-942C-82DC1BA5E708}.Release.Build.0 = Release|.NET
+		{72F70057-B2E1-4DAD-BA6C-E2962745EEA5}.Debug.ActiveCfg = Debug|.NET
+		{72F70057-B2E1-4DAD-BA6C-E2962745EEA5}.Debug.Build.0 = Debug|.NET
+		{72F70057-B2E1-4DAD-BA6C-E2962745EEA5}.Release.ActiveCfg = Release|.NET
+		{72F70057-B2E1-4DAD-BA6C-E2962745EEA5}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
