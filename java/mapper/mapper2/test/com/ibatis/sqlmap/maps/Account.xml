@@ -327,8 +327,7 @@
     and ACC_ID = #id#
   </delete>
 
-  <delete id="deleteAccountByDuplicateInteger"
-    >
+  <delete id="deleteAccountByDuplicateInteger">
     delete from ACCOUNT
     where ACC_ID = #value#
     and ACC_ID = #value#
@@ -346,7 +345,7 @@
   </update>
 
   <parameterMap id="insert-params" class="account">
-    <parameter property="id"/>
+    <parameter property="id" />
     <parameter property="firstName"/>
     <parameter property="lastName"/>
     <parameter property="emailAddress" jdbcType="VARCHAR" nullValue="no_email@provided.com"/>

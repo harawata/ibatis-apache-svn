@@ -15,7 +15,6 @@
     cacheModelsEnabled="true"
     enhancementEnabled="false"
     lazyLoadingEnabled="true"
-    errorTracingEnabled="false"
     maxRequests="32"
     maxSessions="10"
     maxTransactions="5"
@@ -27,7 +26,7 @@
 
   <typeHandler javaType="boolean" jdbcType="VARCHAR" callback="OuiNonBool"/>
 
-  <transactionManager type="JDBC">
+  <transactionManager type="JDBC" commitRequired="false">
     <dataSource type="SIMPLE">
       <property name="JDBC.Driver" value="${driver}"/>
       <property name="JDBC.ConnectionURL" value="${url}"/>
