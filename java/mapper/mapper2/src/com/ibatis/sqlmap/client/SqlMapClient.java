@@ -158,6 +158,8 @@ public interface SqlMapClient extends SqlMapExecutor, SqlMapTransactionManager {
    *   }
    * }
    * </pre>
+   * 
+   * @param conn - the connection to use for the session
    *
    * @return An SqlMapSession instance.
    */
