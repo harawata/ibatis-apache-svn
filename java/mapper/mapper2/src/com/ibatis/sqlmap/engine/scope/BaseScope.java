@@ -17,6 +17,9 @@ package com.ibatis.sqlmap.engine.scope;
 
 import java.util.HashMap;
 
+/**
+ * Abstract implementation of the Scope interface
+ */
 public abstract class BaseScope implements Scope {
 
   private HashMap map = new HashMap(0);

@@ -15,6 +15,9 @@
  */
 package com.ibatis.sqlmap.engine.scope;
 
+/**
+ * ThreadLocal based implementation of the Scope interface
+ */
 public class ThreadScope extends BaseScope {
 
   private static final ThreadLocal LOCAL_CONTEXT = new ThreadLocal();
@@ -22,6 +25,11 @@ public class ThreadScope extends BaseScope {
   private ThreadScope() {
   }
 
+  /**
+   * Get an instance of the ThreadScope
+   * 
+   * @return - a new or existing thread-based Scope object
+   */
   public static ThreadScope getInstance() {
     ThreadScope ctx = (ThreadScope) LOCAL_CONTEXT.get();
     if (ctx == null) {

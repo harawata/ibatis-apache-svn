@@ -20,6 +20,9 @@ import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
 import com.ibatis.sqlmap.engine.mapping.sql.Sql;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
 
+/**
+ * Request based implementation of Scope interface
+ */
 public class RequestScope extends BaseScope {
 
 
@@ -35,66 +38,142 @@ public class RequestScope extends BaseScope {
   private ParameterMap dynamicParameterMap;
   private String dynamicSql;
 
+  /**
+   * Default constructor
+   */
   public RequestScope() {
     errorContext = new ErrorContext();
   }
 
+  /**
+   * Get the request's error context
+   * 
+   * @return - the request's error context
+   */
   public ErrorContext getErrorContext() {
     return errorContext;
   }
 
+  /**
+   * Get the session of the request
+   * 
+   * @return - the session
+   */
   public SessionScope getSession() {
     return session;
   }
 
+  /**
+   * Set the session for the request
+   * 
+   * @param session - the new session
+   */
   public void setSession(SessionScope session) {
     this.session = session;
   }
 
+  /**
+   * Get the statement for the request
+   * 
+   * @return - the statement
+   */
   public MappedStatement getStatement() {
     return statement;
   }
 
+  /**
+   * Set the statement for the request
+   * 
+   * @param statement - the statement
+   */
   public void setStatement(MappedStatement statement) {
     this.statement = statement;
   }
 
+  /**
+   * Get the parameter map for the request
+   * 
+   * @return - the parameter map
+   */
   public ParameterMap getParameterMap() {
     return parameterMap;
   }
 
+  /**
+   * Set the parameter map for the request
+   * @param parameterMap - the new parameter map
+   */
   public void setParameterMap(ParameterMap parameterMap) {
     this.parameterMap = parameterMap;
   }
 
+  /**
+   * Get the result map for the request
+   * 
+   * @return - the result map
+   */
   public ResultMap getResultMap() {
     return resultMap;
   }
 
+  /**
+   * Set the result map for the request
+   * 
+   * @param resultMap - the result map
+   */
   public void setResultMap(ResultMap resultMap) {
     this.resultMap = resultMap;
   }
 
+  /**
+   * Get the SQL for the request
+   * 
+   * @return - the sql
+   */
   public Sql getSql() {
     return sql;
   }
 
+  /**
+   * Set the SQL for the request
+   * 
+   * @param sql - the sql
+   */
   public void setSql(Sql sql) {
     this.sql = sql;
   }
 
+  /**
+   * Get the dynamic parameter for the request 
+   * 
+   * @return - the dynamic parameter
+   */
   public ParameterMap getDynamicParameterMap() {
     return dynamicParameterMap;
   }
 
+  /**
+   * Set the dynamic parameter for the request
+   * 
+   * @param dynamicParameterMap - the dynamic parameter
+   */
   public void setDynamicParameterMap(ParameterMap dynamicParameterMap) {
     this.dynamicParameterMap = dynamicParameterMap;
   }
 
+  /**
+   * Get the dynamic SQL for the request
+   * 
+   * @return - the dynamic SQL
+   */
   public String getDynamicSql() {
     return dynamicSql;
   }
 
+  /**
+   * Set the dynamic SQL for the request
+   * @param dynamicSql - the dynamic SQL
+   */
   public void setDynamicSql(String dynamicSql) {
     this.dynamicSql = dynamicSql;
   }

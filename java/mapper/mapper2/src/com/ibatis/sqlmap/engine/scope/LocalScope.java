@@ -15,5 +15,8 @@
  */
 package com.ibatis.sqlmap.engine.scope;
 
+/**
+ * Simple implementation of Scope interface
+ */
 public class LocalScope extends BaseScope {
 }
