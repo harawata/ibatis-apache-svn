@@ -49,7 +49,7 @@ public class ComplexDataExchange extends BaseDataExchange implements DataExchang
   public Object[] getData(RequestScope request, ParameterMap parameterMap, Object parameterObject) {
     TypeHandlerFactory typeHandlerFactory = getDataExchangeFactory().getTypeHandlerFactory();
     if (parameterObject == null) {
-      return new Object[0];
+      return new Object[1];
     } else {
       if (typeHandlerFactory.hasTypeHandler(parameterObject.getClass())) {
         ParameterMapping[] mappings = parameterMap.getParameterMappings();

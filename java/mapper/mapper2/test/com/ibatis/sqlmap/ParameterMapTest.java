@@ -80,4 +80,12 @@ public class ParameterMapTest extends BaseSqlMapTest {
     assertAccount6(account);
   }
 
+  public void testNullParameter() throws SQLException {
+
+    Account account = (Account)sqlMap.queryForObject("getAccountNullParameter", null);
+
+
+    assertNull(account);
+  }
+
 }

@@ -433,4 +433,17 @@
     )
   </insert>
 
+  <select id="getAccountNullParameter"
+    resultMap="account-result">
+    select
+      ACC_ID,
+      ACC_FIRST_NAME,
+      ACC_LAST_NAME,
+      ACC_EMAIL,
+      ACC_BANNER_OPTION,
+      ACC_CART_OPTION
+    from ACCOUNT
+    where ACC_ID = #value#
+  </select>
+
 </sqlMap>
