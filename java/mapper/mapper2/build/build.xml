@@ -104,7 +104,7 @@
 
   <target name="src.javadoc" >
       
-    <javadoc destdir="${dev_javadocs}" defaultexcludes="false" failonerror="true" verbose="false" >
+    <javadoc destdir="${dev_javadocs}" use="true"  defaultexcludes="false" failonerror="true" verbose="false" >
       <classpath refid="classpath"/>
       <packageset dir="${src}">
         <include name="com/ibatis/**"/>
