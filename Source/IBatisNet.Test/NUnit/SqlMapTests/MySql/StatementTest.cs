@@ -62,7 +62,7 @@ namespace IBatisNet.Test.NUnit.SqlMapTests.MySql
 			category.Name = "toto";
 			category.Guid = Guid.NewGuid();
 
-			int key = (int)sqlMap.Insert("InsertCategoryViaInsertSatement", category);
+			int key = (int)sqlMap.Insert("InsertCategoryViaInsertStatement", category);
 			Assert.AreEqual(1, key);
 		}
 
@@ -76,7 +76,7 @@ namespace IBatisNet.Test.NUnit.SqlMapTests.MySql
 			category.Name = "toto";
 			category.Guid = Guid.NewGuid();
 
-			int key = (int)sqlMap.Insert("InsertCategoryViaInsertSatement", category);
+			int key = (int)sqlMap.Insert("InsertCategoryViaInsertStatement", category);
 
 			Category categoryTest = (Category)sqlMap.QueryForObject("GetCategory", key);
 			Assert.AreEqual(key, categoryTest.Id);

@@ -30,7 +30,7 @@
 		<!--  
 		Note: Use a parameterMap for statements with string parameters!
 		-->
-		<insert id="InsertCategoryViaInsertSatement" parameterMap="InsertCategoryViaInsertStatementParamMap" >
+		<insert id="InsertCategoryViaInsertStatement" parameterMap="InsertCategoryViaInsertStatementParamMap" >
 			<selectKey property="Id" type="pre" resultClass="int">
 				select s_categories.nextval as value from dual
             </selectKey>		

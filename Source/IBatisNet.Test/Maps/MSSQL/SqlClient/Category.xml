@@ -27,7 +27,7 @@
 		</statement><!--Guid for Oledb, UniqueIdentifier for SqlClient,Odbc -->
 		
 		<!--  -->
-		<insert id="InsertCategoryViaInsertSatement" parameterClass="Category" >
+		<insert id="InsertCategoryViaInsertStatement" parameterClass="Category" >
 			<selectKey property="Id" type="post" resultClass="int">
 				select CAST(@@IDENTITY as int) as value
             </selectKey>			

@@ -34,7 +34,7 @@
 		</insert>
 		
 		<!--  -->
-		<insert id="InsertCategoryViaInsertSatement" parameterClass="Category" >
+		<insert id="InsertCategoryViaInsertStatement" parameterClass="Category" >
 			<selectKey property="Id" type="pre" resultClass="int">
 				select s_categories.nextval as value from dual
             </selectKey>		

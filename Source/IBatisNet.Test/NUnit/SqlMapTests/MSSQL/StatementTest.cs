@@ -85,7 +85,7 @@ namespace IBatisNet.Test.NUnit.SqlMapTests.MSSQL
 			category.Name = "toto";
 			category.Guid = Guid.NewGuid();
 
-			int key = (int)sqlMap.Insert("InsertCategoryViaInsertSatement", category);
+			int key = (int)sqlMap.Insert("InsertCategoryViaInsertStatement", category);
 			Assert.AreEqual(1, key);
 		}
 

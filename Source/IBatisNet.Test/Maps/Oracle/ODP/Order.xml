@@ -16,11 +16,16 @@
 		<resultMap id="credit-card-result" class="string">
 			<result property="value" column="Order_CardNumber" dbType="VarChar2" />
 		</resultMap>
-		<!--  -->
+
 		<resultMap id="order-with-lines-result" class="Order" 
 								extends="lite-order-result-by-name" >
 			<result property="LineItemsIList" lazyLoad="true" column="Order_ID" select="GetLineItemsForOrder" />
 		</resultMap>
+		
+		<resultMap id="order-with-lines-result-statement-namespaces" class="Order" 
+								extends="lite-order-result-by-name" >
+			<result property="LineItemsIList" lazyLoad="true" column="Order_ID" select="LineItem.GetLineItemsForOrder" />
+		</resultMap>		
 		
 		<resultMap id="order-with-lines-collection" class="Order"
 								extends="lite-order-result-by-name" >
@@ -184,6 +189,12 @@
 					resultMap="order-with-lines-result" >
 			select * from Orders where Order_ID = #value:Int32#
 		</statement>
+		
+		<statement id="GetOrderWithLineItemsUsingStatementNamespaces"
+					parameterClass="Integer"
+					resultMap="order-with-lines-result-statement-namespaces" >
+			select * from Orders where Order_ID = #value:Int32#
+		</statement>		
 
 		<statement id="GetAllOrderWithLineItems"
 					resultMap="order-with-lines-result" >

@@ -30,7 +30,7 @@
 		</insert>
 		
 		<!--  -->
-		<insert id="InsertCategoryViaInsertSatement" parameterClass="Category" >
+		<insert id="InsertCategoryViaInsertStatement" parameterClass="Category" >
 			<selectKey property="Id" type="post" resultClass="int">
 				select LAST_INSERT_ID() as value
             </selectKey>			

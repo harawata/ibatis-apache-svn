@@ -81,7 +81,18 @@ namespace IBatisNet.Common.Utilities
 				}
 			}
 			else {
-				sqlStatements.Add(script);
+				switch(dataSource.Provider.Name) {         
+					case "oracle9.2":   
+					case "oracleClient1.0":   
+					case "ByteFx":
+						script = script.Replace("\r\n"," ");
+						script = script.Replace("\t"," ");
+						sqlStatements.Add(script);
+						break;                  
+					default:            
+						sqlStatements.Add(script);
+						break;      
+				}
 			}
 
 			try {
