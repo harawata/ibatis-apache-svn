@@ -14,6 +14,8 @@
   <target name="clean" >
     <delete dir="${javadocs}" />
     <delete dir="${jars}" />
+    <delete dir="${reports}" />
+    <delete dir="${instrumented}" />
     <delete>
       <fileset dir="${src}">
         <include name="**/*.class"/>
@@ -94,8 +96,10 @@
   </target>
 
   <target name="test.run" depends="src.compile">
-    <junit fork="no" printsummary="true" haltonerror="true" showoutput="true">
-      <batchtest >
+    <mkdir dir="${reports}/junit"/>
+    <junit printsummary="true" showoutput="true">
+      <formatter type="xml"/>
+      <batchtest todir="${reports}/junit" fork="yes" haltonerror="no" failureproperty="testsFailed" >
         <fileset dir="${tests}">
           <include name="**/*Test.class"/>
           <exclude name="**/Oracle*Test.class"/>
@@ -104,6 +108,12 @@
       </batchtest>
       <classpath refid="classpath"/>
     </junit>
+    <junitreport todir="${reports}/junit">
+      <fileset dir="${reports}/junit">
+        <include name="TEST-*.xml"/>
+      </fileset>
+      <report format="frames" todir="${reports}/junit"/>
+    </junitreport>
   </target>
 
   <target name="test.compatibility" depends="test.run">
@@ -277,9 +287,13 @@
     <report srcdir="${src}" destdir="${reports}/jcoverage"/>
   </target>
 
-  <target name="coverage" depends="test.instrument, test.compatibility, test.report.coverage, post-clean" />
-  <target name="all" depends="test.compatibility, src.javadoc, deploy.zipfile, post-clean" />
-  <target name="buildOnly" depends="deploy.assemble, post-clean" />
+  <target name="coverage" depends="test.instrument, test.compatibility, test.report.coverage, post-clean"  >
+    <fail if="testsFailed" message="The tests did not pass" />
+  </target>
+
+  <target name="all" depends="test.compatibility, src.javadoc, deploy.zipfile, post-clean" >
+    <fail if="testsFailed" message="The tests did not pass" />
+  </target>
 
   <!--
   <taskdef  name="convertSqlMaps" classname="com.ibatis.db.sqlmap.upgrade.ConvertTask"  classpathref="classpath"/>

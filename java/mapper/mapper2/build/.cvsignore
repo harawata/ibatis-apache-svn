@@ -1,3 +1,5 @@
 *.ser
 *.zip
 deploy
+reports
+temp
