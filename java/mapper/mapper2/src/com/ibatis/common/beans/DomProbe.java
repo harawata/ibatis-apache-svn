@@ -133,7 +133,8 @@ public class DomProbe extends BaseProbe {
       }
     } else if (value instanceof Document) {
       Document valdoc = (Document) value;
-      NodeList list = valdoc.getChildNodes();
+      Node lastChild = valdoc.getLastChild();
+      NodeList list = lastChild.getChildNodes();
       for (int i = 0; i < list.getLength(); i++) {
         Node newNode = element.getOwnerDocument().importNode(list.item(i), true);
         element.appendChild(newNode);
