@@ -2,6 +2,12 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
+ 2.0.5 - ??, 2004
+------------------------------
+
+ o Added OJB DAO support (Thanks to Pedro Salgado)
+
+------------------------------
  2.0.4 - Jul 25, 2004
 ------------------------------
 
