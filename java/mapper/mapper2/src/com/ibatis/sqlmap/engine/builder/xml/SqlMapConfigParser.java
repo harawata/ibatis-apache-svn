@@ -36,9 +36,16 @@ public class SqlMapConfigParser extends BaseParser {
   private final NodeletParser parser = new NodeletParser();
 
   public SqlMapConfigParser() {
+    this(null, null);
+  }
+
+  public SqlMapConfigParser(XmlConverter sqlMapConfigConv, XmlConverter sqlMapConv) {
     super(new Variables());
     parser.setValidation(true);
     parser.setEntityResolver(new SqlMapClasspathEntityResolver());
+
+    vars.sqlMapConfigConv = sqlMapConfigConv;
+    vars.sqlMapConv = sqlMapConv;
 
     vars.delegate = new SqlMapExecutorDelegate();
     vars.typeHandlerFactory = vars.delegate.getTypeHandlerFactory();
@@ -57,17 +64,16 @@ public class SqlMapConfigParser extends BaseParser {
   }
 
   public SqlMapClient parse(Reader reader, Properties props) {
-    try {
-      vars.properties = props;
-      parser.parse(reader);
-      return vars.client;
-    } catch (Exception e) {
-      throw new RuntimeException("Error occurred.  Cause: " + e, e);
-    }
+    vars.properties = props;
+    return parse(reader);
   }
 
   public SqlMapClient parse(Reader reader) {
     try {
+      if (vars.sqlMapConfigConv != null) {
+        reader = vars.sqlMapConfigConv.convertXml(reader);
+      }
+
       parser.parse(reader);
       return vars.client;
     } catch (Exception e) {

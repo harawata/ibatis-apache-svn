@@ -17,8 +17,8 @@ package com.ibatis.db.sqlmap;
 
 import com.ibatis.db.sqlmap.upgrade.SqlMapXmlConverter;
 import com.ibatis.sqlmap.client.SqlMapClient;
+import com.ibatis.sqlmap.engine.builder.xml.SqlMapConfigParser;
 import com.ibatis.sqlmap.engine.builder.xml.XmlConverter;
-import com.ibatis.sqlmap.engine.builder.xml.XmlSqlMapClientBuilder;
 
 import java.io.Reader;
 import java.util.Properties;
@@ -31,14 +31,14 @@ public class XmlSqlMapBuilder {
   }
 
   public static SqlMap buildSqlMap(Reader reader) {
-    XmlSqlMapClientBuilder builder = new XmlSqlMapClientBuilder();
-    SqlMapClient client = builder.buildSqlMap(reader, SQL_MAP_CONVERTER, SQL_MAP_CONVERTER);
+    SqlMapConfigParser parser = new SqlMapConfigParser(SQL_MAP_CONVERTER, SQL_MAP_CONVERTER);
+    SqlMapClient client = parser.parse(reader);
     return new SqlMap(client);
   }
 
   public static SqlMap buildSqlMap(Reader reader, Properties props) {
-    XmlSqlMapClientBuilder builder = new XmlSqlMapClientBuilder();
-    SqlMapClient client = builder.buildSqlMap(reader, props, SQL_MAP_CONVERTER, SQL_MAP_CONVERTER);
+    SqlMapConfigParser parser = new SqlMapConfigParser(SQL_MAP_CONVERTER, SQL_MAP_CONVERTER);
+    SqlMapClient client = parser.parse(reader, props);
     return new SqlMap(client);
   }
 
