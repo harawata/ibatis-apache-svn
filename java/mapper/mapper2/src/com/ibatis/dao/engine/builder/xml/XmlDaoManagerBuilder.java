@@ -144,13 +144,13 @@ public class XmlDaoManagerBuilder {
 
     NodeList children = contextElement.getChildNodes();
     for (int i = 0; i < children.getLength(); i++) {
-      Element child = (Element) children.item(i);
+      Node child = children.item(i);
       if (child.getNodeType() == Node.ELEMENT_NODE) {
         if (TRANS_MGR_ELEMENT.equals(child.getNodeName())) {
-          DaoTransactionManager txMgr = parseTransactionManager(child);
+          DaoTransactionManager txMgr = parseTransactionManager((Element) child);
           daoContext.setTransactionManager(txMgr);
         } else if (DAO_ELEMENT.equals(child.getNodeName())) {
-          DaoImpl daoImpl = parseDao(child, daoManager, daoContext);
+          DaoImpl daoImpl = parseDao((Element) child, daoManager, daoContext);
           daoContext.addDao(daoImpl);
         }
       }
