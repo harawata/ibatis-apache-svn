@@ -7,9 +7,16 @@ import java.util.Map;
 import java.net.URL;
 
 /**
- * User: Clinton
- * Date: 1-Aug-2004
- * Time: 7:40:54 AM
+ * Allows values to be retrieved from the underlying result set.
+ * TypeHandlerCallback implementations use this interface to
+ * get values that they can subsequently manipulate before
+ * having them returned.  Each of these methods has a corresponding
+ * method on the ResultSet class, the only difference being
+ * that there is no need to specify the column name or index with
+ * these methods.
+ * <p/>
+ * <b>NOTE:</b> There is no need to implement this.  The implementation
+ * will be passed into the TypeHandlerCallback automatically.
  */
 public interface ResultGetter {
 
@@ -60,4 +67,5 @@ public interface ResultGetter {
   public URL getURL() throws SQLException;
 
   public boolean wasNull() throws SQLException;
+
 }

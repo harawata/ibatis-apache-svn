@@ -8,9 +8,16 @@ import java.util.Calendar;
 import java.net.URL;
 
 /**
- * User: Clinton
- * Date: 1-Aug-2004
- * Time: 7:55:49 AM
+ * Allows parameters to be set on the underlying prepared statement.
+ * TypeHandlerCallback implementations use this interface to
+ * process values before they are set on the prepared statement.
+ * Each of these methods has a corresponding method on the
+ * PreparedStatement class, the only difference being
+ * that there is no need to specify the parameter index with these
+ * methods.
+ * <p/>
+ * <b>NOTE:</b> There is no need to implement this.  The implementation
+ * will be passed into the TypeHandlerCallback automatically.
  */
 public interface ParameterSetter {
 
