@@ -20,6 +20,8 @@ import java.util.*;
 public abstract class BaseStatement implements MappedStatement {
 
   private String id;
+  private Integer resultSetType;
+  private Integer fetchSize;
   private ResultMap resultMap;
   private ParameterMap parameterMap;
   private Class parameterClass;
@@ -33,6 +35,22 @@ public abstract class BaseStatement implements MappedStatement {
 
   public String getId() {
     return id;
+  }
+
+  public Integer getResultSetType() {
+    return resultSetType;
+  }
+
+  public void setResultSetType(Integer resultSetType) {
+    this.resultSetType = resultSetType;
+  }
+
+  public Integer getFetchSize() {
+    return fetchSize;
+  }
+
+  public void setFetchSize(Integer fetchSize) {
+    this.fetchSize = fetchSize;
   }
 
   public void setId(String id) {

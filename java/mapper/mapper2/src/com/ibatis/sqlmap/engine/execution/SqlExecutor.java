@@ -5,7 +5,6 @@ import com.ibatis.sqlmap.engine.mapping.statement.*;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
 
 import com.ibatis.sqlmap.engine.scope.*;
-import com.ibatis.sqlmap.client.SqlMapException;
 
 import java.sql.*;
 import java.util.*;
@@ -115,7 +114,18 @@ public class SqlExecutor {
 
     try {
       errorContext.setMoreInfo("Check the SQL Statement (preparation failed).");
-      ps = conn.prepareStatement(sql);
+
+      Integer rsType = request.getStatement().getResultSetType();
+      if (rsType != null) {
+        ps = conn.prepareStatement(sql, rsType.intValue());
+      } else {
+        ps = conn.prepareStatement(sql);
+      }
+
+      Integer fetchSize = request.getStatement().getFetchSize();
+      if (fetchSize != null) {
+        ps.setFetchSize(fetchSize.intValue());
+      }
 
       errorContext.setMoreInfo("Check the parameters (set parameters failed).");
       request.getParameterMap().setParameters(request, ps, parameters);

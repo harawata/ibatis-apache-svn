@@ -31,6 +31,14 @@ public class CachingStatement implements MappedStatement {
     return statement.getId();
   }
 
+  public Integer getResultSetType() {
+    return statement.getResultSetType();
+  }
+
+  public Integer getFetchSize() {
+    return statement.getFetchSize();
+  }
+
   public ParameterMap getParameterMap() {
     return statement.getParameterMap();
   }

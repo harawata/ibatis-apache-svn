@@ -59,6 +59,7 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.util.*;
+import java.sql.ResultSet;
 
 /**
  * NOT THREAD SAFE.  USE SEPARATE INSTANCES PER THREAD.
@@ -502,6 +503,8 @@ public class XmlSqlMapClientBuilder {
     String resultClassName = attributes.getProperty("resultClass");
     String cacheModelName = applyNamespace(attributes.getProperty("cacheModel"));
     String xmlResultName = attributes.getProperty("xmlResultName");
+    String resultSetType = attributes.getProperty("resultSetType");
+    String fetchSize = attributes.getProperty("fetchSize");
 
     errorCtx.setObjectId(id + " statement");
 
@@ -529,6 +532,20 @@ public class XmlSqlMapClientBuilder {
     statement.setParameterMap(parameterMap);
     statement.setResultMap(resultMap);
     statement.setResource(errorCtx.getResource());
+
+    if (resultSetType != null) {
+      if ("FORWARD_ONLY".equals(resultSetType)) {
+        statement.setResultSetType(new Integer(ResultSet.TYPE_FORWARD_ONLY));
+      } else if ("SCROLL_INSENSITIVE".equals(resultSetType)) {
+        statement.setResultSetType(new Integer(ResultSet.TYPE_SCROLL_INSENSITIVE));
+      } else if ("SCROLL_SENSITIVE".equals(resultSetType)) {
+        statement.setResultSetType(new Integer(ResultSet.TYPE_SCROLL_SENSITIVE));
+      }
+    }
+
+    if (fetchSize != null) {
+      statement.setFetchSize(new Integer(fetchSize));
+    }
 
     // set parameter class either from attribute or from map (make sure to match)
     if (parameterMap == null) {

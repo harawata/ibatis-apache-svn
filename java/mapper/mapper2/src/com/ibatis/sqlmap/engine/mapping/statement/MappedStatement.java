@@ -20,6 +20,8 @@ public interface MappedStatement {
 
   public String getId();
 
+  public Integer getResultSetType();
+
   public int executeUpdate(RequestScope request, Transaction trans, Object parameterObject)
       throws SQLException;
 
@@ -49,6 +51,8 @@ public interface MappedStatement {
   public Sql getSql();
 
   public Class getParameterClass();
+
+  public Integer getFetchSize();
 
 
 }

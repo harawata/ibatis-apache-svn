@@ -5,6 +5,7 @@ Build Number: @buildNum@
  2.0.3 - Jul ??, 2004
 ------------------------------
 
+ o Added fetchSize and resultSetType attributes to statement and select
  o Added parameter count to CacheKey equals for paranoid equality
  o Removed redundant bit shift in CacheKey update
  o Refactored cache locking pattern to improve concurrent access to cache models
