@@ -10,6 +10,7 @@ FEATURE REQUESTS: TOOLS
 FEATURE REQUESTS: MED-PRIORITY
 ------------------------------
 
+ o Better Spring integration (TX Config)
  o Repeating group mapping (solution for n+1 selects problem)
  o Inheritance via selects or joins (same as groups)
  o Cancel long running statements (cross thread)

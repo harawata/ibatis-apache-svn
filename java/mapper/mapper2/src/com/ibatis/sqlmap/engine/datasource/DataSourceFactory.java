@@ -6,14 +6,12 @@
 package com.ibatis.sqlmap.engine.datasource;
 
 import javax.sql.DataSource;
-import java.util.*;
+import java.util.Map;
 
 public interface DataSourceFactory {
 
   public void initialize(Map map);
 
   public DataSource getDataSource();
-
-  public String[] getExpectedProperties();
 
 }

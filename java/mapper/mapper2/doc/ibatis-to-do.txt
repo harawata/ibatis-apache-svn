@@ -2,9 +2,7 @@
 TO-DO: BUGS & FEATURES
 ------------------------------
 
- o Better Spring integration (TX Config)
- o Implement DBCP 2.0 (update from 1.0)
- o Improve/fix OSCache 2.0 integration
+  o ?
 
 ------------------------------
 TO-DO: DOCUMENTATION

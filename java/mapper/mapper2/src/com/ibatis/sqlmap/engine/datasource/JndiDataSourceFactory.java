@@ -5,12 +5,15 @@
  */
 package com.ibatis.sqlmap.engine.datasource;
 
-import com.ibatis.sqlmap.client.*;
+import com.ibatis.sqlmap.client.SqlMapException;
 
-import javax.sql.*;
-import javax.naming.*;
-
-import java.util.*;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
 
 public class JndiDataSourceFactory implements DataSourceFactory {
 
@@ -50,22 +53,18 @@ public class JndiDataSourceFactory implements DataSourceFactory {
     return dataSource;
   }
 
-  public String[] getExpectedProperties() {
-    return new String[]{"DBFullJndiContext"};
-  }
-
   private static Properties getContextProperties(Map allProps) {
     final String PREFIX = "context.";
     Properties contextProperties = null;
     Iterator keys = allProps.keySet().iterator();
     while (keys.hasNext()) {
-      String key = (String)keys.next();
-      String value = (String)allProps.get(key);
+      String key = (String) keys.next();
+      String value = (String) allProps.get(key);
       if (key.startsWith(PREFIX)) {
-        if(contextProperties == null) {
+        if (contextProperties == null) {
           contextProperties = new Properties();
         }
-        contextProperties.put(key.substring(PREFIX.length()),value);
+        contextProperties.put(key.substring(PREFIX.length()), value);
       }
     }
     return contextProperties;

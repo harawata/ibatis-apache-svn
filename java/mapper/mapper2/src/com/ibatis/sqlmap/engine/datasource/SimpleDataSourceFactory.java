@@ -5,28 +5,12 @@
  */
 package com.ibatis.sqlmap.engine.datasource;
 
-import com.ibatis.common.jdbc.*;
+import com.ibatis.common.jdbc.SimpleDataSource;
 
 import javax.sql.DataSource;
-import java.util.*;
+import java.util.Map;
 
 public class SimpleDataSourceFactory implements DataSourceFactory {
-
-  private String[] expectedProperties = {
-    "JDBC.Driver",
-    "JDBC.ConnectionURL",
-    "JDBC.Username",
-    "JDBC.Password",
-    "Pool.MaximumActiveConnections",
-    "Pool.MaximumIdleConnections",
-    "Pool.MaximumCheckoutTime",
-    "Pool.TimeToWait",
-    "Pool.PingQuery",
-    "Pool.PingEnabled",
-    "Pool.PingConnectionsOlderThan",
-    "Pool.PingConnectionsNotUsedFor",
-    "Pool.QuietMode"
-  };
 
   private DataSource dataSource;
 
@@ -38,7 +22,4 @@ public class SimpleDataSourceFactory implements DataSourceFactory {
     return dataSource;
   }
 
-  public String[] getExpectedProperties() {
-    return expectedProperties;
-  }
 }
