@@ -156,6 +156,17 @@
 	</resultMaps>  
 	
 	<statements>
+	
+		<!-- <select id="GetOrderJoinWithNoLineItem"
+			parameterClass="Int"
+			resultMap="order-joined-nolineitem">
+			select * 
+			from Orders LEFT OUTER JOIN
+			LineItems ON Orders.Order_ID = LineItems.Order_ID 
+						AND Orders.Order_FavouriteLineItem = LineItems.LineItem_ID
+			WHERE     Orders.Order_ID = #value#
+		</select>-->
+		
 		<statement id="GetOrderLiteByColumnName"
 					parameterClass="Int"
 					resultMap="lite-order-result-by-name" >

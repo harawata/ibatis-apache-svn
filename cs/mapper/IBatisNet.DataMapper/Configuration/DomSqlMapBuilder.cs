@@ -473,21 +473,9 @@ namespace IBatisNet.DataMapper.Configuration
 
 			#region Load resultMap
 
-//			ResultMap resultMap = null;
-//			serializer = new XmlSerializer(typeof(ResultMap));
 			foreach (XmlNode xmlNode in config.SelectNodes("/sqlMap/resultMaps/resultMap"))
 			{
 				BuildResultMap( config, xmlNode, sqlMapName, sqlMap );
-//				resultMap = (ResultMap) serializer.Deserialize(new XmlNodeReader(xmlNode));
-//				resultMap.Initialize( sqlMap, xmlNode);
-//
-//				resultMap.Id = sqlMapName + DOT + resultMap.Id;
-//				if (resultMap.ExtendMap.Length >0)
-//				{
-//					resultMap.ExtendMap = sqlMapName + DOT + resultMap.ExtendMap;
-//				}
-//
-//				sqlMap.AddResultMap( resultMap );
 			}
 
 			#endregion
