@@ -3,3 +3,4 @@
 deploy
 reports
 temp
+junit*.properties
