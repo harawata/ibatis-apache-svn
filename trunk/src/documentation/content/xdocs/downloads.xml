@@ -4,20 +4,21 @@
 <document>
 
 <header>
-    <title>Apache iBATIS Downloads</title>
+    <title>Apache iBATIS - Downloads</title>
 </header>
 
 <body>
 
 <section>
 <title>Pardon our dust!</title>
-      <p>While we complete our migration to the Apache Software Foundation, the latest iBATIS releases are available through SourceForge.</p>
+      <p>While we complete our migration to the Apache Software Foundation, the latest iBATIS releases are available through SourceForge.
+      These are <strong>not</strong> formal ASF releases, but they are under the Apache License.</p>
 </section>
 
 <section>
 <title>iBATIS for Java</title>
       <ul>
-        <li><link href="http://prdownloads.sourceforge.net/ibatisdb/iBATIS_DBL-2.0.8.470.zip?download">Current release</link> (Nov 2004, v2.08)</li>
+        <li><link href="http://prdownloads.sourceforge.net/ibatisdb/iBATIS_DBL-2.0.9.496.zip?download">Current release</link> (Jan 2005, v2.09)</li>
         <li><link href="http://prdownloads.sourceforge.net/ibatisjpetstore/iBATIS_JPetStore-4.0.5.zip?download">JPetstore</link> (Jun 2004, v4.0.5)</li>
         <li><link href="http://prdownloads.sourceforge.net/ibatisdb/iBATIS-SqlMaps-2.pdf?download">SQL Maps Manual</link> (Jun 2004)</li>
         <li><link href="http://prdownloads.sourceforge.net/ibatisdb/iBATIS-SqlMaps-2-Tutorial.pdf?download">SQL Maps Tutorial</link> (Jun 2004)</li>
@@ -29,20 +30,15 @@
 <section>
 <title>iBATIS for .NET</title>
       <ul>
-        <li><link href="http://prdownloads.sourceforge.net/ibatisnet/iBatisNet-bin-release-1.0.1.321.zip">Current Release</link> (Oct 2004, v1.0.1)</li>
-        <li><link href="http://prdownloads.sourceforge.net/ibatisnet/iBatisNet-source-1.0.1.321.zip?download">Current Source Release</link> (Oct 2004, v1.0.1)</li>
+        <li><link href="http://prdownloads.sourceforge.net/ibatisnet/DataMapper-bin-1.1.0.458.zip?download">Data Mapper</link> (Jan 2005, v1.1.0)</li>
+        <li><link href="http://prdownloads.sourceforge.net/ibatisnet/DataAccess-bin-1.5.0.458.zip?download">Data Access</link> (Jan 2005, v1.5.0)</li>
+        <li><link href="http://prdownloads.sourceforge.net/ibatisnet/iBatisNet-src.458.zip?download">Current Source Snapshot</link> (Jan 2005, r458)</li>
         <li><link href="http://prdownloads.sourceforge.net/ibatisnet/NPetshop-1.0.0.RC1.zip?download">NPetstore Example Application</link> (Oct 2004)</li>
-        <li><link href="http://prdownloads.sourceforge.net/ibatisnet/DevGuide.pdf?download">Tutorial</link> (Oct 2004, v1.0.0)</li>
+        <li><link href="http://prdownloads.sourceforge.net/ibatisnet/DevGuide.pdf?download">Tutorial</link> (Jan 2005, v1.1.0)</li>
         <li><link href="http://prdownloads.sourceforge.net/ibatisnet/DevGuide.pdf?download">Documentation</link> (Oct 2004, v1.0.0)</li>
       </ul>
 </section>
 
 </body>
     
-<footer>
-    	<legal>Java, J2EE, and JCP are trademarks or registered trademarks of Sun Microsystems, Inc. in the United States and other countries.<br />
-	&copy; 2004, Apache Software Foundation
-	</legal>
-</footer>
-
 </document>

@@ -2,10 +2,21 @@
 <document url="./bylaws.xml">
 
   <header>
-    <title>Project Management Committee Bylaws</title>
+    <title>Apache iBATIS - Bylaws</title>
   </header>
 
 <body>
+
+		<section>
+		<title>Project Management Committee Bylaws</title>		
+
+		<p>
+		Right now, these are simply our "Decision Making Guidelines". 
+		Once we graduate from the Apache Incubator, we can apply to become a top-level Apache Project. 
+		At that point, we will establish our own PMC, and these guidelines can become the bylaws.
+		</p>
+
+		</section>
 
     <section>
     <title>Roles &amp; Responsibilities</title>

@@ -4,7 +4,7 @@
 <document>
 
 <header>
-    <title>Apache iBATIS Contributors</title>
+    <title>Apache iBATIS - Contributors</title>
 </header>
 
 <body>
@@ -17,15 +17,16 @@
       	<tr><td>husted</td><td>Ted Husted</td></tr>
       	<tr><td>bgoodin</td><td>Brandon Goodin</td></tr>
       	<tr><td>lmeadows</td><td>Larry Meadors</td></tr>
-       </table>
+       </table>       
+    </section>
+    <section>
+      <title>Major Contributors</title>
+      <table>
+	<tr><td><strong>Username</strong></td><td><strong>Developers</strong></td></tr>
+      	<tr><td>roberto</td><td>Roberto Rabe</td></tr>
+       </table>       
     </section>
 
     </body>
-
-    <footer>
-    	<legal>Java, J2EE, and JCP are trademarks or registered trademarks of Sun Microsystems, Inc. in the United States and other countries.<br />
-	&copy; 2004, Apache Software Foundation
-	</legal>
-    </footer>
 
 </document>

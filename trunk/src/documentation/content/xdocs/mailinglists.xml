@@ -4,7 +4,7 @@
 <document>
 
 <header>
-    <title>Apache iBATIS Mailing Lists</title>
+    <title>Apache iBATIS - Mailing Lists</title>
 </header>
 
 <body>
@@ -66,10 +66,4 @@
 
 </body>
     
-<footer>
-    <legal>Java, J2EE, and JCP are trademarks or registered trademarks of Sun Microsystems, Inc. in the United States and other countries.<br />
-	&copy; 2004, Apache Software Foundation
-    </legal>
-</footer>
-
 </document>

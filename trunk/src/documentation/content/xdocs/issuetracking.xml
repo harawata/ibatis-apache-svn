@@ -4,7 +4,7 @@
 <document>
 
 <header>
-    <title>Apache iBATIS Issue Tracking</title>
+    <title>Apache iBATIS - Issue Tracking</title>
 </header>
 
 <body>
@@ -48,10 +48,4 @@
     
 </body>
     
-<footer>
-    <legal>Java, J2EE, and JCP are trademarks or registered trademarks of Sun Microsystems, Inc. in the United States and other countries.<br />
-	&copy; 2004, Apache Software Foundation
-    </legal>
-</footer>
-
 </document>

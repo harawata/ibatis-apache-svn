@@ -1,28 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "document-v12.dtd">
-
 <document>
-
 <header>
-    <title>Apache iBATIS</title>
+    <title>Apache iBATIS - Resources</title>
 </header>
-
 <body>
-
-<ul>
-<li><link href="http://www.ibatis.com">Original iBATIS Website</link></li>
-<li>
-<link href="http://alxeg.narod.ru/ibatis/index.html">sql2ibatis</link> - iBATIS configuration and SQL generation tool. 
-Generates configuration files and SQL based on an input DDL file. 
-</li>
-</ul>
-
-</body>
-    
-<footer>
-    	<legal>Java, J2EE, and JCP are trademarks or registered trademarks of Sun Microsystems, Inc. in the United States and other countries.<br />
-	&copy; 2004, Apache Software Foundation
-	</legal>
-</footer>
-
+    <section>
+      <title>Other Resources</title>
+			<ul>
+				<li><fork href="http://www.ibatis.com">Original iBATIS Website</fork></li>
+				<li>
+				<fork href="http://alxeg.narod.ru/ibatis/index.html">sql2ibatis</fork> - iBATIS configuration and SQL generation tool. 
+				Generates configuration files and SQL based on an input DDL file. 
+				</li>
+			</ul>
+	</section>
+</body>   
 </document>
