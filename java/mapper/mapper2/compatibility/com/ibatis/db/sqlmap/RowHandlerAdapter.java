@@ -1,7 +1,5 @@
 package com.ibatis.db.sqlmap;
 
-import java.util.*;
-
 /**
  * User: Clinton Begin
  * Date: Nov 29, 2003
@@ -15,7 +13,7 @@ public class RowHandlerAdapter implements com.ibatis.sqlmap.client.event.RowHand
     this.rowHandler = rowHandler;
   }
 
-  public void handleRow(Object valueObject, List list) {
+  public void handleRow(Object valueObject) {
     rowHandler.handleRow(valueObject);
   }
 

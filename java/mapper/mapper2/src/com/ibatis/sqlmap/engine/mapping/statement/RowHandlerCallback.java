@@ -1,12 +1,10 @@
 package com.ibatis.sqlmap.engine.mapping.statement;
 
-import com.ibatis.sqlmap.client.event.*;
-import com.ibatis.sqlmap.engine.mapping.result.*;
+import com.ibatis.sqlmap.client.event.RowHandler;
+import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
+import com.ibatis.sqlmap.engine.scope.RequestScope;
 
-import com.ibatis.sqlmap.engine.scope.*;
-
-import java.sql.*;
-import java.util.*;
+import java.sql.SQLException;
 
 /**
  * User: Clinton Begin
@@ -18,11 +16,9 @@ public class RowHandlerCallback {
   private RowHandler rowHandler;
   private ResultMap resultMap;
   private Object resultObject;
-  private List resultList;
 
-  public RowHandlerCallback(ResultMap resultMap, List resultList, Object resultObject, RowHandler rowHandler) {
+  public RowHandlerCallback(ResultMap resultMap, Object resultObject, RowHandler rowHandler) {
     this.rowHandler = rowHandler;
-    this.resultList = resultList;
     this.resultMap = resultMap;
     this.resultObject = resultObject;
   }
@@ -31,7 +27,7 @@ public class RowHandlerCallback {
       throws SQLException {
     Object object;
     object = resultMap.setResultObjectValues(request, resultObject, results);
-    rowHandler.handleRow(object, resultList);
+    rowHandler.handleRow(object);
   }
 
 }

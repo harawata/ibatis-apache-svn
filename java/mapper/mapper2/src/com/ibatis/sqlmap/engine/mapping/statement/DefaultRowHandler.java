@@ -1,8 +1,9 @@
 package com.ibatis.sqlmap.engine.mapping.statement;
 
-import com.ibatis.sqlmap.client.event.*;
+import com.ibatis.sqlmap.client.event.RowHandler;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User: Clinton Begin
@@ -11,8 +12,14 @@ import java.util.*;
  */
 public class DefaultRowHandler implements RowHandler {
 
-  public void handleRow(Object valueObject, List list) {
+  private List list = new ArrayList();
+
+  public void handleRow(Object valueObject) {
     list.add(valueObject);
+  }
+
+  public List getList() {
+    return list;
   }
 
 }

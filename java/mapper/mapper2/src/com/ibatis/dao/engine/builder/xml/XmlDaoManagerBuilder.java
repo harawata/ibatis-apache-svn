@@ -31,6 +31,8 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
+ * NOT THREAD SAFE.  USE SEPARATE INSTANCES PER THREAD.
+ * <p/>
  * <p/>
  * Date: Jan 27, 2004 11:23:19 PM
  *

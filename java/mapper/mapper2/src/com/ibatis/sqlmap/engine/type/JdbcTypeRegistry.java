@@ -1,8 +1,8 @@
 package com.ibatis.sqlmap.engine.type;
 
+import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
-import java.sql.*;
 
 public class JdbcTypeRegistry {
 
@@ -82,6 +82,9 @@ public class JdbcTypeRegistry {
     setType("DC", Types.DECIMAL);
     setType("DB", Types.DOUBLE);
     setType("FL", Types.FLOAT);
+
+    setType("ORACLECURSOR", -10);
+
   }
 
 }

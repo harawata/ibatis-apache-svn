@@ -1,10 +1,11 @@
 package com.ibatis.sqlmap.engine.mapping.statement;
 
-import com.ibatis.sqlmap.engine.scope.*;
-import com.ibatis.sqlmap.client.event.*;
+import com.ibatis.sqlmap.client.event.RowHandler;
+import com.ibatis.sqlmap.engine.scope.RequestScope;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
 
 /**
  * User: Clinton Begin
@@ -25,7 +26,7 @@ public class InsertStatement extends GeneralStatement {
     throw new SQLException("Insert statements cannot be executed as a query.");
   }
 
-  public List executeQueryForList(RequestScope request, Connection conn, Object parameterObject, RowHandler rowHandler)
+  public void executeQueryWithRowHandler(RequestScope request, Connection conn, Object parameterObject, RowHandler rowHandler)
       throws SQLException {
     throw new SQLException("Update statements cannot be executed as a query.");
   }

@@ -1,11 +1,12 @@
 package com.ibatis.db.sqlmap;
 
-import com.ibatis.common.util.*;
-import com.ibatis.sqlmap.client.*;
+import com.ibatis.common.util.PaginatedList;
+import com.ibatis.sqlmap.client.SqlMapClient;
 
-import javax.sql.*;
-import java.sql.*;
-import java.util.*;
+import javax.sql.DataSource;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * User: Clinton Begin
@@ -82,7 +83,7 @@ public class SqlMap {
 
   public void executeQueryWithRowHandler(String statementName, Object parameterObject, RowHandler rowHandler)
       throws SQLException {
-    client.queryForList(statementName, parameterObject, new RowHandlerAdapter(rowHandler));
+    client.queryWithRowHandler(statementName, parameterObject, new RowHandlerAdapter(rowHandler));
   }
 
   public void startBatch()

@@ -42,10 +42,7 @@ import com.ibatis.sqlmap.engine.transaction.TransactionManager;
 import com.ibatis.sqlmap.engine.transaction.external.ExternalTransactionConfig;
 import com.ibatis.sqlmap.engine.transaction.jdbc.JdbcTransactionConfig;
 import com.ibatis.sqlmap.engine.transaction.jta.JtaTransactionConfig;
-import com.ibatis.sqlmap.engine.type.TypeHandler;
-import com.ibatis.sqlmap.engine.type.TypeHandlerFactory;
-import com.ibatis.sqlmap.engine.type.XmlCollectionTypeMarker;
-import com.ibatis.sqlmap.engine.type.XmlTypeMarker;
+import com.ibatis.sqlmap.engine.type.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.*;
@@ -64,20 +61,17 @@ import java.math.BigDecimal;
 import java.util.*;
 
 /**
+ * NOT THREAD SAFE.  USE SEPARATE INSTANCES PER THREAD.
+ * <p/>
  * User: Clinton Begin
  * Date: Nov 8, 2003
  * Time: 7:12:11 PM
  */
 public class XmlSqlMapClientBuilder {
 
-  private static final Probe PROBE = ProbeFactory.getProbe();
-
   private static final Log log = LogFactory.getLog(XmlSqlMapClientBuilder.class);
 
-//  private static final String JAXP_SCHEMA_LANGUAGE = "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
-//  private static final String W3C_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
-//  private static final String JAXP_SCHEMA_SOURCE = "http://java.sun.com/xml/jaxp/properties/schemaSource";
-//  private static final String OUTPUT_ENCODING = "UTF-8";
+  private static final Probe PROBE = ProbeFactory.getProbe();
 
   private static final String NODE_PROPERTIES = "properties";
   private static final String NODE_SETTINGS = "settings";
@@ -99,28 +93,20 @@ public class XmlSqlMapClientBuilder {
   private static final String NODE_SELECT_KEY = "selectKey";
   private static final String NODE_TYPE_ALIAS = "typeAlias";
 
-  private static final String KEY_CURRENT_NAMESPACE = "NAMESPACE";
-  private static final String KEY_SQL_MAP_CLIENT = "SqlMapClient";
-  private static final String KEY_GLOBAL_PROPS = "GlobalProperties";
-  private static final String KEY_DATA_SOURCE = "DataSource";
-  private static final String KEY_GLOBAL_SQL_MAP_CONV = "SqlMapConverter";
-  private static final String KEY_GLOBAL_CONFIG_CONV = "SqlMapConfigConverter";
-
-  private static final String KEY_ERROR_CONTEXT = "ErrorContext";
-  private static final String KEY_STATEMENT_NAMESPACES = "StatementNamespaces";
-
-  private static final String GROUP_CACHE_MODEL = "CacheModel";
-  private static final String GROUP_RESULT_MAP = "ResultMap";
-  private static final String GROUP_PARAMETER_MAP = "ParameterMap";
-  private static final String GROUP_SELECT_KEY = "SelectKey";
-
   private static final String PARAMETER_TOKEN = "#";
-
-  private HashMap typeAliases = new HashMap();
-  private Map contextPropertiesMap = new HashMap();
 
   private boolean validationEnabled = true;
 
+  // State Variables
+  // These variables maintain the state of the buld process.
+  private ErrorContext errorCtx = new ErrorContext();
+  private ExtendedSqlMapClient client;
+  private XmlConverter sqlMapConv;
+  private XmlConverter sqlMapConfigConv;
+  private Properties globalProps;
+  private boolean useStatementNamespaces;
+  private String currentNamespace;
+  private HashMap typeAliases = new HashMap();
 
   public XmlSqlMapClientBuilder() {
     // TRANSACTION ALIASES
@@ -141,7 +127,8 @@ public class XmlSqlMapClientBuilder {
     putTypeAlias("OSCACHE", "com.ibatis.sqlmap.engine.cache.oscache.OSCacheController");
 
     // TYPE ALIASEs
-    putTypeAlias("dom", Document.class.getName());
+    putTypeAlias("dom", DomTypeMarker.class.getName());
+    putTypeAlias("domCollection", DomCollectionTypeMarker.class.getName());
     putTypeAlias("xml", XmlTypeMarker.class.getName());
     putTypeAlias("xmlCollection", XmlCollectionTypeMarker.class.getName());
     putTypeAlias("string", String.class.getName());
@@ -173,26 +160,24 @@ public class XmlSqlMapClientBuilder {
   }
 
   public SqlMapClient buildSqlMap(Reader reader, Properties props, XmlConverter sqlMapConfigConverter, XmlConverter sqlMapConverter) {
-    setContextObject(KEY_GLOBAL_PROPS, props);
-    setContextObject(KEY_GLOBAL_SQL_MAP_CONV, sqlMapConverter);
-    setContextObject(KEY_GLOBAL_CONFIG_CONV, sqlMapConfigConverter);
+    this.globalProps = props;
+    this.sqlMapConv = sqlMapConverter;
+    this.sqlMapConfigConv = sqlMapConfigConverter;
     return buildSqlMap(reader);
   }
 
   public SqlMapClient buildSqlMap(Reader reader, XmlConverter sqlMapConfigConverter, XmlConverter sqlMapConverter) {
-    setContextObject(KEY_GLOBAL_SQL_MAP_CONV, sqlMapConverter);
-    setContextObject(KEY_GLOBAL_CONFIG_CONV, sqlMapConfigConverter);
+    this.sqlMapConv = sqlMapConverter;
+    this.sqlMapConfigConv = sqlMapConfigConverter;
     return buildSqlMap(reader);
   }
 
   public SqlMapClient buildSqlMap(Reader reader, Properties props) {
-    setContextObject(KEY_GLOBAL_PROPS, props);
+    this.globalProps = props;
     return buildSqlMap(reader);
   }
 
   public SqlMapClient buildSqlMap(Reader reader) {
-    ErrorContext errorCtx = new ErrorContext();
-    setContextObject(KEY_ERROR_CONTEXT, errorCtx);
 
     errorCtx.setResource("the SQL Map Configuration file");
 
@@ -203,9 +188,8 @@ public class XmlSqlMapClientBuilder {
 
     try {
 
-      XmlConverter converter = (XmlConverter) getContextObject(KEY_GLOBAL_CONFIG_CONV);
-      if (converter != null) {
-        reader = converter.convertXml(reader);
+      if (sqlMapConfigConv != null) {
+        reader = sqlMapConfigConv.convertXml(reader);
       }
 
       Document doc = getDoc(reader);
@@ -222,11 +206,10 @@ public class XmlSqlMapClientBuilder {
   }
 
   private SqlMapClient parseSqlMapConfig(Node n) throws IOException {
-    ErrorContext errorCtx = (ErrorContext) getContextObject(KEY_ERROR_CONTEXT);
     errorCtx.setActivity("creating the SqlMapClient instance");
 
-    SqlMapExecutorDelegate clientImpl = new SqlMapExecutorDelegate();
-    setContextObject(KEY_SQL_MAP_CLIENT, new SqlMapClientImpl(clientImpl));
+    SqlMapExecutorDelegate delegate = new SqlMapExecutorDelegate();
+    client = new SqlMapClientImpl(delegate);
 
     NodeList children = n.getChildNodes();
     for (int i = 0; i < children.getLength(); i++) {
@@ -248,11 +231,10 @@ public class XmlSqlMapClientBuilder {
 
     wireUpCacheModelListeners();
 
-    return new SqlMapClientImpl(clientImpl);
+    return new SqlMapClientImpl(delegate);
   }
 
   private void parseGlobalProperties(Node n) {
-    ErrorContext errorCtx = (ErrorContext) getContextObject(KEY_ERROR_CONTEXT);
     errorCtx.setActivity("loading global properties");
 
     Properties attributes = parseAttributes(n);
@@ -271,12 +253,11 @@ public class XmlSqlMapClientBuilder {
         throw new SqlMapException("The " + NODE_PROPERTIES + " element requires either a resource or a url attribute.");
       }
 
-      Properties existingProperties = (Properties) getContextObject(KEY_GLOBAL_PROPS);
-      if (existingProperties == null) {
-        setContextObject(KEY_GLOBAL_PROPS, props);
+      if (globalProps == null) {
+        globalProps = props;
       } else {
-        props.putAll(existingProperties);
-        setContextObject(KEY_GLOBAL_PROPS, props);
+        props.putAll(globalProps);
+        globalProps = props;
       }
     } catch (IOException e) {
       throw new SqlMapException("Error loading properties.  Cause: " + e);
@@ -284,10 +265,8 @@ public class XmlSqlMapClientBuilder {
   }
 
   private void parseSettings(Node n) {
-    ErrorContext errorCtx = (ErrorContext) getContextObject(KEY_ERROR_CONTEXT);
     errorCtx.setActivity("loading settings properties");
 
-    ExtendedSqlMapClient client = (ExtendedSqlMapClient) getContextObject(KEY_SQL_MAP_CLIENT);
     Properties attributes = parseAttributes(n);
 
     String lazyLoadingEnabledAttr = attributes.getProperty("lazyLoadingEnabled");
@@ -308,8 +287,7 @@ public class XmlSqlMapClientBuilder {
     client.getDelegate().setEnhancementEnabled(enhancementEnabled);
 
     String useStatementNamespacesAttr = attributes.getProperty("useStatementNamespaces");
-    boolean useStatementNamespaces = ("true".equals(useStatementNamespacesAttr));
-    setContextObject(KEY_STATEMENT_NAMESPACES, new Boolean(useStatementNamespaces));
+    useStatementNamespaces = ("true".equals(useStatementNamespacesAttr));
 
     String maxTransactions = attributes.getProperty("maxTransactions");
     if (maxTransactions != null && Integer.parseInt(maxTransactions) > 0) {
@@ -330,16 +308,15 @@ public class XmlSqlMapClientBuilder {
   }
 
   private void parseTransactionManager(Node n) {
-    ErrorContext errorCtx = (ErrorContext) getContextObject(KEY_ERROR_CONTEXT);
     errorCtx.setActivity("configuring the transaction manager");
-
-    ExtendedSqlMapClient client = (ExtendedSqlMapClient) getContextObject(KEY_SQL_MAP_CLIENT);
 
     Properties attributes = parseAttributes(n);
 
     Properties initProperties = new Properties();
     String type = attributes.getProperty("type");
     type = resolveAlias(type);
+
+    DataSource dataSource = null;
 
     NodeList children = n.getChildNodes();
     for (int i = 0; i < children.getLength(); i++) {
@@ -348,14 +325,13 @@ public class XmlSqlMapClientBuilder {
         if (NODE_PROPERTY.equals(child.getNodeName())) {
           addNameValuePairProperty(child, initProperties);
         } else if (NODE_DATA_SOURCE.equals(child.getNodeName())) {
-          parseDataSource(child);
+          dataSource = parseDataSource(child);
         }
       }
     }
 
     TransactionManager txManager = null;
     try {
-      DataSource dataSource = (DataSource) getContextObject(KEY_DATA_SOURCE);
       errorCtx.setMoreInfo("Check the transaction manager type or class.");
       TransactionConfig config = (TransactionConfig) Resources.instantiate(type);
       config.setDataSource(dataSource);
@@ -376,8 +352,7 @@ public class XmlSqlMapClientBuilder {
 
   }
 
-  private void parseDataSource(Node n) {
-    ErrorContext errorCtx = (ErrorContext) getContextObject(KEY_ERROR_CONTEXT);
+  private DataSource parseDataSource(Node n) {
     errorCtx.setActivity("configuring the data source");
 
     Properties attributes = parseAttributes(n);
@@ -412,11 +387,10 @@ public class XmlSqlMapClientBuilder {
       }
     }
 
-    setContextObject(KEY_DATA_SOURCE, dataSource);
+    return dataSource;
   }
 
   private void parseSqlMapRef(Node n) throws IOException {
-    ErrorContext errorCtx = (ErrorContext) getContextObject(KEY_ERROR_CONTEXT);
     errorCtx.setActivity("loading the SQL Map resource");
 
     Properties attributes = parseAttributes(n);
@@ -435,9 +409,8 @@ public class XmlSqlMapClientBuilder {
       throw new SqlMapException("The " + NODE_SQL_MAP + " element requires either a resource or a url attribute.");
     }
 
-    XmlConverter converter = (XmlConverter) getContextObject(KEY_GLOBAL_SQL_MAP_CONV);
-    if (converter != null) {
-      reader = converter.convertXml(reader);
+    if (sqlMapConv != null) {
+      reader = sqlMapConv.convertXml(reader);
     }
 
     Document doc = getDoc(reader);
@@ -447,12 +420,11 @@ public class XmlSqlMapClientBuilder {
   }
 
   private void parseSqlMap(Node n) {
-    ErrorContext errorCtx = (ErrorContext) getContextObject(KEY_ERROR_CONTEXT);
     errorCtx.setActivity("building an SQL Map instance");
 
     Properties attributes = parseAttributes(n);
-    String namespace = attributes.getProperty("namespace");
-    setContextObject(KEY_CURRENT_NAMESPACE, namespace);
+    currentNamespace = attributes.getProperty("namespace");
+
 
     NodeList children = n.getChildNodes();
     for (int i = 0; i < children.getLength(); i++) {
@@ -484,50 +456,43 @@ public class XmlSqlMapClientBuilder {
   }
 
   private void parseProcedure(Node n) {
-    ExtendedSqlMapClient client = (ExtendedSqlMapClient) getContextObject(KEY_SQL_MAP_CLIENT);
     MappedStatement statement = parseGeneralStatement(n, new ProcedureStatement());
     client.getDelegate().addMappedStatement(statement);
   }
 
   private void parseSelect(Node n) {
-    ExtendedSqlMapClient client = (ExtendedSqlMapClient) getContextObject(KEY_SQL_MAP_CLIENT);
     MappedStatement statement = parseGeneralStatement(n, new SelectStatement());
     client.getDelegate().addMappedStatement(statement);
   }
 
   private void parseInsert(Node n) {
-    ExtendedSqlMapClient client = (ExtendedSqlMapClient) getContextObject(KEY_SQL_MAP_CLIENT);
     MappedStatement statement = parseGeneralStatement(n, new InsertStatement());
     client.getDelegate().addMappedStatement(statement);
   }
 
   private void parseUpdate(Node n) {
-    ExtendedSqlMapClient client = (ExtendedSqlMapClient) getContextObject(KEY_SQL_MAP_CLIENT);
     MappedStatement statement = parseGeneralStatement(n, new UpdateStatement());
     client.getDelegate().addMappedStatement(statement);
   }
 
   private void parseDelete(Node n) {
-    ExtendedSqlMapClient client = (ExtendedSqlMapClient) getContextObject(KEY_SQL_MAP_CLIENT);
     MappedStatement statement = parseGeneralStatement(n, new DeleteStatement());
     client.getDelegate().addMappedStatement(statement);
   }
 
   private void parseStatement(Node n) {
-    ExtendedSqlMapClient client = (ExtendedSqlMapClient) getContextObject(KEY_SQL_MAP_CLIENT);
     MappedStatement statement = parseGeneralStatement(n, new GeneralStatement());
     client.getDelegate().addMappedStatement(statement);
   }
 
   private MappedStatement parseGeneralStatement(Node n, GeneralStatement statement) {
-    ErrorContext errorCtx = (ErrorContext) getContextObject(KEY_ERROR_CONTEXT);
     errorCtx.setActivity("parsing a mapped statement");
 
     // get attributes
     Properties attributes = parseAttributes(n);
     String id = attributes.getProperty("id");
 
-    if (isStatementNamespacesEnabled()) {
+    if (useStatementNamespaces) {
       id = applyNamespace(id);
     }
 
@@ -549,15 +514,15 @@ public class XmlSqlMapClientBuilder {
     // get parameter and result maps
 
     errorCtx.setMoreInfo("Check the result map name.");
-    BasicResultMap resultMap = (BasicResultMap) getSubContextObject(GROUP_RESULT_MAP, resultMapName);
-    if (resultMap == null && resultMapName != null) {
-      throw new SqlMapException("Could not find ResultMap named " + resultMapName);
+    BasicResultMap resultMap = null;
+    if (resultMapName != null) {
+      resultMap = (BasicResultMap) client.getDelegate().getResultMap(resultMapName);
     }
 
     errorCtx.setMoreInfo("Check the parameter map name.");
-    BasicParameterMap parameterMap = (BasicParameterMap) getSubContextObject(GROUP_PARAMETER_MAP, parameterMapName);
-    if (parameterMap == null && parameterMapName != null) {
-      throw new SqlMapException("Could not find ParameterMap named " + parameterMapName);
+    BasicParameterMap parameterMap = null;
+    if (parameterMapName != null) {
+      parameterMap = (BasicParameterMap) client.getDelegate().getParameterMap(parameterMapName);
     }
 
     statement.setId(id);
@@ -609,10 +574,9 @@ public class XmlSqlMapClientBuilder {
     errorCtx.setMoreInfo(null);
     errorCtx.setObjectId(null);
 
-    ExtendedSqlMapClient client = (ExtendedSqlMapClient) getContextObject(KEY_SQL_MAP_CLIENT);
     statement.setSqlMapClient(client);
     if (cacheModelName != null && cacheModelName.length() > 0 && client.getDelegate().isCacheModelsEnabled()) {
-      CacheModel cacheModel = (CacheModel) getSubContextObject(GROUP_CACHE_MODEL, cacheModelName);
+      CacheModel cacheModel = (CacheModel) client.getDelegate().getCacheModel(cacheModelName);
       return new CachingStatement(statement, cacheModel);
     } else {
       return statement;
@@ -621,7 +585,6 @@ public class XmlSqlMapClientBuilder {
   }
 
   private SelectKeyStatement parseSelectKey(Node n, GeneralStatement insertStatement) {
-    ErrorContext errorCtx = (ErrorContext) getContextObject(KEY_ERROR_CONTEXT);
     errorCtx.setActivity("parsing a select key");
 
     // get attributes
@@ -633,10 +596,9 @@ public class XmlSqlMapClientBuilder {
 
     // get parameter and result maps
     SelectKeyStatement selectKeyStatement = new SelectKeyStatement();
-    ExtendedSqlMapClient client = (ExtendedSqlMapClient) getContextObject(KEY_SQL_MAP_CLIENT);
     selectKeyStatement.setSqlMapClient(client);
 
-    selectKeyStatement.setId(insertStatement.getId() + GROUP_SELECT_KEY);
+    selectKeyStatement.setId(insertStatement.getId() + "-SelectKey");
     selectKeyStatement.setResource(errorCtx.getResource());
     selectKeyStatement.setKeyProperty(keyPropName);
 
@@ -675,7 +637,6 @@ public class XmlSqlMapClientBuilder {
   }
 
   private void processSqlStatement(Node n, GeneralStatement statement) {
-    ErrorContext errorCtx = (ErrorContext) getContextObject(KEY_ERROR_CONTEXT);
     errorCtx.setActivity("processing an SQL statement");
 
     boolean isDynamic = false;
@@ -699,7 +660,6 @@ public class XmlSqlMapClientBuilder {
   }
 
   private boolean parseDynamicTags(Node n, DynamicParent dynamic, StringBuffer sqlBuffer, boolean isDynamic, boolean postParseRequired) {
-    ErrorContext errorCtx = (ErrorContext) getContextObject(KEY_ERROR_CONTEXT);
     errorCtx.setActivity("parsing dynamic SQL tags");
 
     NodeList children = n.getChildNodes();
@@ -759,7 +719,6 @@ public class XmlSqlMapClientBuilder {
   }
 
   private SelectKeyStatement findAndParseSelectKeyStatement(Node n, GeneralStatement insertStatement) {
-    ErrorContext errorCtx = (ErrorContext) getContextObject(KEY_ERROR_CONTEXT);
     errorCtx.setActivity("parsing select key tags");
 
     SelectKeyStatement selectKeyStatement = null;
@@ -791,7 +750,6 @@ public class XmlSqlMapClientBuilder {
   private void applyInlineParameterMap(GeneralStatement statement, String sqlStatement) {
     String newSql = sqlStatement;
 
-    ErrorContext errorCtx = (ErrorContext) getContextObject(KEY_ERROR_CONTEXT);
     errorCtx.setActivity("building an inline parameter map");
 
     ParameterMap parameterMap = statement.getParameterMap();
@@ -927,7 +885,6 @@ public class XmlSqlMapClientBuilder {
   }
 
   private void parseResultMap(Node n) {
-    ErrorContext errorCtx = (ErrorContext) getContextObject(KEY_ERROR_CONTEXT);
     errorCtx.setActivity("building a result map");
 
     BasicResultMap map;
@@ -964,7 +921,7 @@ public class XmlSqlMapClientBuilder {
 
     errorCtx.setMoreInfo("Check the extended result map.");
     if (extended != null) {
-      BasicResultMap extendedResultMap = (BasicResultMap) getSubContextObject(GROUP_RESULT_MAP, extended);
+      BasicResultMap extendedResultMap = (BasicResultMap) client.getDelegate().getResultMap(extended);
       ResultMapping[] resultMappings = extendedResultMap.getResultMappings();
       for (int i = 0; i < resultMappings.length; i++) {
         resultMappingList.add(resultMappings[i]);
@@ -1020,7 +977,7 @@ public class XmlSqlMapClientBuilder {
     }
     map.setResultMappingList(resultMappingList);
 
-    setSubContextObject(GROUP_RESULT_MAP, map.getId(), map);
+    client.getDelegate().addResultMap(map);
 
     errorCtx.setMoreInfo(null);
 
@@ -1028,7 +985,6 @@ public class XmlSqlMapClientBuilder {
   }
 
   private void parseParameterMap(Node n) {
-    ErrorContext errorCtx = (ErrorContext) getContextObject(KEY_ERROR_CONTEXT);
     errorCtx.setActivity("building a parameter map");
 
     BasicParameterMap map;
@@ -1097,14 +1053,13 @@ public class XmlSqlMapClientBuilder {
     }
     map.setParameterMappingList(parameterMappingList);
 
-    setSubContextObject(GROUP_PARAMETER_MAP, map.getId(), map);
+    client.getDelegate().addParameterMap(map);
 
     errorCtx.setMoreInfo(null);
     errorCtx.setObjectId(null);
   }
 
   private void parseCacheModel(Node n) {
-    ErrorContext errorCtx = (ErrorContext) getContextObject(KEY_ERROR_CONTEXT);
     errorCtx.setActivity("building a cache model");
 
     CacheModel model = new CacheModel();
@@ -1170,9 +1125,8 @@ public class XmlSqlMapClientBuilder {
     errorCtx.setMoreInfo("Check the cache model configuration.");
     model.configure(modelProperties);
 
-    ExtendedSqlMapClient client = (ExtendedSqlMapClient) getContextObject(KEY_SQL_MAP_CLIENT);
     if (client.getDelegate().isCacheModelsEnabled()) {
-      setSubContextObject(GROUP_CACHE_MODEL, model.getId(), model);
+      client.getDelegate().addCacheModel(model);
     }
 
     errorCtx.setMoreInfo(null);
@@ -1181,33 +1135,29 @@ public class XmlSqlMapClientBuilder {
 
   private String applyNamespace(String id) {
     String newId = id;
-    String namespace = (String) getContextObject(KEY_CURRENT_NAMESPACE);
-    if (namespace != null && namespace.length() > 0 && id != null && id.indexOf(".") < 0) {
-      newId = namespace + "." + id;
+
+    if (currentNamespace != null && currentNamespace.length() > 0 && id != null && id.indexOf(".") < 0) {
+      newId = currentNamespace + "." + id;
     }
     return newId;
 
   }
 
   private void wireUpCacheModelListeners() {
-    ExtendedSqlMapClient client = (ExtendedSqlMapClient) getContextObject(KEY_SQL_MAP_CLIENT);
 
-    Map cacheModelMap = (Map) getContextObject(GROUP_CACHE_MODEL);
+    Iterator cacheNames = client.getDelegate().getCacheModelNames();
 
-    if (cacheModelMap != null) {
-      Iterator cacheNames = cacheModelMap.keySet().iterator();
-      while (cacheNames.hasNext()) {
-        String cacheName = (String) cacheNames.next();
-        CacheModel cacheModel = (CacheModel) cacheModelMap.get(cacheName);
-        Iterator statementNames = cacheModel.getFlushTriggerStatementNames();
-        while (statementNames.hasNext()) {
-          String statementName = (String) statementNames.next();
-          MappedStatement statement = client.getDelegate().getMappedStatement(statementName);
-          if (statement != null) {
-            statement.addExecuteListener(cacheModel);
-          } else {
-            throw new SqlMapException("Could not find statement named '" + statementName + "' for use as a flush trigger for the cache model named '" + cacheName + "'.");
-          }
+    while (cacheNames.hasNext()) {
+      String cacheName = (String) cacheNames.next();
+      CacheModel cacheModel = client.getDelegate().getCacheModel(cacheName);
+      Iterator statementNames = cacheModel.getFlushTriggerStatementNames();
+      while (statementNames.hasNext()) {
+        String statementName = (String) statementNames.next();
+        MappedStatement statement = client.getDelegate().getMappedStatement(statementName);
+        if (statement != null) {
+          statement.addExecuteListener(cacheModel);
+        } else {
+          throw new SqlMapException("Could not find statement named '" + statementName + "' for use as a flush trigger for the cache model named '" + cacheName + "'.");
         }
       }
     }
@@ -1246,6 +1196,8 @@ public class XmlSqlMapClientBuilder {
     TypeHandler handler = null;
     if (clazz == null) {
       handler = TypeHandlerFactory.getUnkownTypeHandler();
+    } else if (DomTypeMarker.class.isAssignableFrom(clazz)) {
+      handler = TypeHandlerFactory.getTypeHandler(String.class, jdbcType);
     } else if (XmlTypeMarker.class.isAssignableFrom(clazz)) {
       handler = TypeHandlerFactory.getTypeHandler(String.class, jdbcType);
     } else if (java.util.Map.class.isAssignableFrom(clazz)) {
@@ -1266,11 +1218,6 @@ public class XmlSqlMapClientBuilder {
       handler = TypeHandlerFactory.getTypeHandler(type, jdbcType);
     }
     return handler;
-  }
-
-  private boolean isStatementNamespacesEnabled() {
-    Boolean useStatementNamespaces = (Boolean) getContextObject(KEY_STATEMENT_NAMESPACES);
-    return useStatementNamespaces != null && useStatementNamespaces.booleanValue();
   }
 
   private String resolveAlias(String string) {
@@ -1305,33 +1252,6 @@ public class XmlSqlMapClientBuilder {
     modelProperties.setProperty(name, value);
   }
 
-  private void setContextObject(Object key, Object value) {
-    contextPropertiesMap.put(key, value);
-  }
-
-  private Object getContextObject(Object key) {
-    return contextPropertiesMap.get(key);
-  }
-
-  private void setSubContextObject(Object group, Object key, Object value) {
-    Map map = (Map) contextPropertiesMap.get(group);
-    if (map == null) {
-      map = new HashMap();
-      contextPropertiesMap.put(group, map);
-    }
-    map.put(key, value);
-  }
-
-  private Object getSubContextObject(Object group, Object key) {
-    Map map = (Map) contextPropertiesMap.get(group);
-    Object result = null;
-    if (map != null) {
-      result = map.get(key);
-    }
-    return result;
-  }
-
-
   private Properties parseAttributes(Node n) {
     Properties attributes = new Properties();
     NamedNodeMap attributeNodes = n.getAttributes();
@@ -1347,7 +1267,7 @@ public class XmlSqlMapClientBuilder {
     final String OPEN = "${";
     final String CLOSE = "}";
 
-    Properties props = (Properties) contextPropertiesMap.get(KEY_GLOBAL_PROPS);
+    Properties props = globalProps;
 
     String newString = string;
     if (newString != null && props != null) {

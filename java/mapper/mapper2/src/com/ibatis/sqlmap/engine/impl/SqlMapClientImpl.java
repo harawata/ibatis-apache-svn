@@ -1,15 +1,16 @@
 package com.ibatis.sqlmap.engine.impl;
 
-import com.ibatis.sqlmap.client.*;
-import com.ibatis.sqlmap.client.event.*;
+import com.ibatis.common.util.PaginatedList;
+import com.ibatis.sqlmap.client.SqlMapSession;
+import com.ibatis.sqlmap.client.event.RowHandler;
+import com.ibatis.sqlmap.engine.execution.SqlExecutor;
+import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
 
-import com.ibatis.sqlmap.engine.mapping.statement.*;
-import com.ibatis.sqlmap.engine.execution.*;
-import com.ibatis.common.util.*;
-
-import javax.sql.*;
-import java.sql.*;
-import java.util.*;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * User: Clinton Begin
@@ -65,8 +66,8 @@ public class SqlMapClientImpl implements ExtendedSqlMapClient {
     return getLocalSqlMapSession().queryForMap(id, paramObject, keyProp, valueProp);
   }
 
-  public List queryForList(String id, Object paramObject, RowHandler rowHandler) throws SQLException {
-    return getLocalSqlMapSession().queryForList(id, paramObject, rowHandler);
+  public void queryWithRowHandler(String id, Object paramObject, RowHandler rowHandler) throws SQLException {
+    getLocalSqlMapSession().queryWithRowHandler(id, paramObject, rowHandler);
   }
 
   public void startTransaction() throws SQLException {
@@ -132,8 +133,8 @@ public class SqlMapClientImpl implements ExtendedSqlMapClient {
   }
 
   /**
-   * @deprecated
    * @return
+   * @deprecated
    */
   public SqlMapSession getSession() {
     return openSession();
@@ -141,6 +142,10 @@ public class SqlMapClientImpl implements ExtendedSqlMapClient {
 
   public void flushDataCache() {
     delegate.flushDataCache();
+  }
+
+  public void flushDataCache(String cacheId) {
+    delegate.flushDataCache(cacheId);
   }
 
   private SqlMapSessionImpl getLocalSqlMapSession() {

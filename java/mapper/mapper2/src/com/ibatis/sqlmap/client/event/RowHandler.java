@@ -1,27 +1,26 @@
 package com.ibatis.sqlmap.client.event;
 
-import java.util.*;
-
 /**
  * Event handler for row by row processing.
- * <p>
+ * <p/>
  * The RowHandler interface is used by the SqlMapSession.queryForList() method.
  * Generally a RowHandler implementation will perform some row-by-row processing logic
  * in cases where there are too many rows to efficiently load into memory.  Alternatively,
  * the RowHandler can also be used to build lists using custom logic.
- * <p>
+ * <p/>
  * Example:
  * <pre>
  * List list = sqlMap.queryForList ("findAllEmployees", null, new MyRowHandler()));
  * </pre>
  * Date: Sep 5, 2003 4:46:44 PM
+ *
  * @author Clinton Begin
  */
 public interface RowHandler {
 
   /**
    * Handles a single row of a result set.
-   * <p>
+   * <p/>
    * This method will be called for each row in a result set.  For each row the result map
    * will be applied to build the value object, which is then passed in as the valueObject
    * parameter.  An instantiated list is provided as the second parameter that you are free
@@ -29,9 +28,8 @@ public interface RowHandler {
    * SqlMapSession.queryForList() after all rows have been processed.
    *
    * @param valueObject The object representing a single row from the query.
-   * @param list The list that will ultimately be returned by SqlMapSession.queryForList()
    * @see com.ibatis.sqlmap.client.SqlMapSession
    */
-  public void handleRow(Object valueObject, List list);
+  public void handleRow(Object valueObject);
 
 }

@@ -1,16 +1,17 @@
 package com.ibatis.sqlmap.engine.impl;
 
-import com.ibatis.common.util.*;
-import com.ibatis.sqlmap.client.event.*;
-import com.ibatis.sqlmap.client.*;
+import com.ibatis.common.util.PaginatedList;
+import com.ibatis.sqlmap.client.SqlMapSession;
+import com.ibatis.sqlmap.client.event.RowHandler;
+import com.ibatis.sqlmap.engine.execution.SqlExecutor;
+import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
+import com.ibatis.sqlmap.engine.scope.SessionScope;
 
-import com.ibatis.sqlmap.engine.mapping.statement.*;
-import com.ibatis.sqlmap.engine.execution.*;
-import com.ibatis.sqlmap.engine.scope.*;
-
-import javax.sql.*;
-import java.sql.*;
-import java.util.*;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * User: Clinton Begin
@@ -87,8 +88,8 @@ public class SqlMapSessionImpl implements SqlMapSession {
     return delegate.queryForMap(session, id, paramObject, keyProp, valueProp);
   }
 
-  public List queryForList(String id, Object paramObject, RowHandler rowHandler) throws SQLException {
-    return delegate.queryForList(session, id, paramObject, rowHandler);
+  public void queryWithRowHandler(String id, Object paramObject, RowHandler rowHandler) throws SQLException {
+    delegate.queryWithRowHandler(session, id, paramObject, rowHandler);
   }
 
   public void startTransaction() throws SQLException {

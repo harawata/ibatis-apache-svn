@@ -46,5 +46,6 @@
   <sqlMap resource="com/ibatis/sqlmap/maps/OracleProc.xml"/>
   <sqlMap resource="com/ibatis/sqlmap/maps/Complex.xml"/>
   <sqlMap resource="com/ibatis/sqlmap/maps/XmlStatements.xml"/>
+  <sqlMap resource="com/ibatis/sqlmap/maps/DomStatements.xml"/>
 
 </sqlMapConfig>

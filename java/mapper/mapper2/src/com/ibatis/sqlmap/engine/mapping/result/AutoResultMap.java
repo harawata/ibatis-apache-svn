@@ -1,14 +1,20 @@
 package com.ibatis.sqlmap.engine.mapping.result;
 
-import com.ibatis.common.beans.*;
-import com.ibatis.common.exception.*;
-import com.ibatis.sqlmap.engine.type.*;
+import com.ibatis.common.beans.ClassInfo;
+import com.ibatis.common.exception.NestedRuntimeException;
+import com.ibatis.sqlmap.client.SqlMapException;
+import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.type.DomTypeMarker;
+import com.ibatis.sqlmap.engine.type.TypeHandlerFactory;
+import com.ibatis.sqlmap.engine.type.XmlTypeMarker;
 
-import com.ibatis.sqlmap.engine.scope.*;
-import com.ibatis.sqlmap.client.*;
-
-import java.sql.*;
-import java.util.*;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * User: Clinton Begin
@@ -27,12 +33,13 @@ public class AutoResultMap extends BasicResultMap {
 
   private void initialize(ResultSet rs) {
     if (resultClass == null) {
-      throw new SqlMapException ("The automatic ResultMap named "+this.getId()+" had a null result class (not allowed).");
+      throw new SqlMapException("The automatic ResultMap named " + this.getId() + " had a null result class (not allowed).");
     } else if (Map.class.isAssignableFrom(resultClass)) {
       initializeMapResults(rs);
     } else if (TypeHandlerFactory.getTypeHandler(resultClass) != null) {
       initializePrimitiveResults(rs);
-    } else if (XmlTypeMarker.class.isAssignableFrom(resultClass)) {
+    } else if (DomTypeMarker.class.isAssignableFrom(resultClass)
+        || XmlTypeMarker.class.isAssignableFrom(resultClass)) {
       initializeXmlResults(rs);
     } else {
       initializeBeanResults(rs);

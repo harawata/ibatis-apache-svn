@@ -1,9 +1,10 @@
 package com.ibatis.sqlmap.engine.mapping.result;
 
 
-import com.ibatis.sqlmap.engine.scope.*;
+import com.ibatis.sqlmap.engine.scope.RequestScope;
 
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * User: Clinton Begin
@@ -11,6 +12,8 @@ import java.sql.*;
  * Time: 9:49:48 PM
  */
 public interface ResultMap {
+
+  public String getId();
 
   public Object[] getResults(RequestScope request, ResultSet rs)
       throws SQLException;

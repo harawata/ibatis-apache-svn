@@ -18,12 +18,14 @@ public class AllSqlMapTests {
     TestSuite suite = new TestSuite();
     suite.addTestSuite(TransactionTest.class);
     suite.addTestSuite(StatementTest.class);
+    suite.addTestSuite(CacheStatementTest.class);
     suite.addTestSuite(ParameterMapTest.class);
     suite.addTestSuite(ResultMapTest.class);
     suite.addTestSuite(DynamicTest.class);
     suite.addTestSuite(DynamicPrependTest.class);
     suite.addTestSuite(ComplexTypeTest.class);
     suite.addTestSuite(XmlStatementTest.class);
+    //suite.addTestSuite(DomStatementTest.class);
     return suite;
   }
 

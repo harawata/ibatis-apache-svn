@@ -15,11 +15,11 @@ import com.ibatis.sqlmap.engine.mapping.sql.Sql;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
 import com.ibatis.sqlmap.engine.scope.ErrorContext;
 import com.ibatis.sqlmap.engine.scope.RequestScope;
-import com.ibatis.sqlmap.engine.type.TypeHandler;
-import com.ibatis.sqlmap.engine.type.TypeHandlerFactory;
-import com.ibatis.sqlmap.engine.type.XmlCollectionTypeMarker;
-import com.ibatis.sqlmap.engine.type.XmlTypeMarker;
+import com.ibatis.sqlmap.engine.type.*;
+import org.w3c.dom.Document;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -127,6 +127,12 @@ public class BasicResultMap implements ResultMap {
             javaType = XmlTypeMarker.class;
           }
           columnValues[i] = getNestedResultMappingValue(request, rs, mapping, javaType);
+        } else if (DomTypeMarker.class.isAssignableFrom(resultClass)) {
+          Class javaType = mapping.getJavaType();
+          if (javaType == null) {
+            javaType = DomTypeMarker.class;
+          }
+          columnValues[i] = getNestedResultMappingValue(request, rs, mapping, javaType);
         } else {
           ClassInfo info = ClassInfo.getInstance(resultClass);
           Class type = info.getSetterType(mapping.getPropertyName());
@@ -157,6 +163,8 @@ public class BasicResultMap implements ResultMap {
         parameterObject = prepareBeanParameterObject(rs, mapping, parameterType);
       } else if (TypeHandlerFactory.hasTypeHandler(parameterType)) {
         parameterObject = preparePrimitiveParameterObject(rs, mapping, parameterType);
+      } else if (DomTypeMarker.class.isAssignableFrom(parameterType)) {
+        parameterObject = prepareDomParameterObject(rs, mapping);
       } else if (XmlTypeMarker.class.isAssignableFrom(parameterType)) {
         parameterObject = prepareXmlParameterObject(rs, mapping);
       } else {
@@ -172,6 +180,12 @@ public class BasicResultMap implements ResultMap {
         } else if (XmlTypeMarker.class.isAssignableFrom(resultClass)) {
           targetType = XmlTypeMarker.class;
         }
+      } else if (resultClass != null && !DomTypeMarker.class.isAssignableFrom(targetType)) {
+        if (DomCollectionTypeMarker.class.isAssignableFrom(resultClass)) {
+          targetType = DomCollectionTypeMarker.class;
+        } else if (DomTypeMarker.class.isAssignableFrom(resultClass)) {
+          targetType = DomTypeMarker.class;
+        }
       }
 
       boolean setIgnoreDomRoot = false;
@@ -181,6 +195,9 @@ public class BasicResultMap implements ResultMap {
           setIgnoreDomRoot = true;
         }
       }
+
+      // TODO DOM: Does the DOM functionality need ignoreRoot,
+      // TODO      or can it just use Document vs. String types?
 
       Object result = ResultLoader.loadResult(client, statementName, parameterObject, targetType);
 
@@ -193,6 +210,8 @@ public class BasicResultMap implements ResultMap {
           result = new XmlList((List) result);
         }
       }
+
+      //TODO DomList (get complete Document from list of fragments
 
       return result;
 
@@ -238,6 +257,43 @@ public class BasicResultMap implements ResultMap {
     parameterObject = dom.toString();
     return parameterObject;
   }
+
+  private Document newDocument(String root) {
+    try {
+      Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+      doc.appendChild(doc.createElement(root));
+      return doc;
+    } catch (ParserConfigurationException e) {
+      throw new RuntimeException("Error creating XML document.  Cause: " + e);
+    }
+  }
+
+  private Object prepareDomParameterObject(ResultSet rs, BasicResultMapping mapping) throws SQLException {
+
+    Document doc = newDocument("parameter");
+    Probe probe = ProbeFactory.getProbe(doc);
+
+    String complexName = mapping.getColumnName();
+
+    TypeHandler stringTypeHandler = TypeHandlerFactory.getTypeHandler(String.class);
+    if (complexName.indexOf('=') > -1) {
+      // old 1.x style multiple params
+      StringTokenizer parser = new StringTokenizer(complexName, "{}=, ", false);
+      while (parser.hasMoreTokens()) {
+        String propName = parser.nextToken();
+        String colName = parser.nextToken();
+        Object propValue = stringTypeHandler.getResult(rs, colName);
+        probe.setObject(doc, propName, propValue.toString());
+      }
+    } else {
+      // single param
+      Object propValue = stringTypeHandler.getResult(rs, complexName);
+      probe.setObject(doc, "value", propValue.toString());
+    }
+
+    return doc;
+  }
+
 
   private Object prepareBeanParameterObject(ResultSet rs, BasicResultMapping mapping, Class parameterType)
       throws InstantiationException, IllegalAccessException, SQLException {

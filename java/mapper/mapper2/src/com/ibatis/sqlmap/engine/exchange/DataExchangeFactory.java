@@ -1,8 +1,8 @@
 package com.ibatis.sqlmap.engine.exchange;
 
+import com.ibatis.sqlmap.engine.type.DomTypeMarker;
 import com.ibatis.sqlmap.engine.type.TypeHandlerFactory;
 import com.ibatis.sqlmap.engine.type.XmlTypeMarker;
-import org.w3c.dom.Document;
 
 import java.util.List;
 import java.util.Map;
@@ -28,7 +28,7 @@ public class DataExchangeFactory {
     DataExchange dataExchange = null;
     if (clazz == null) {
       dataExchange = COMPLEX_DATA_EXCHANGE;
-    } else if (Document.class.isAssignableFrom(clazz)) {
+    } else if (DomTypeMarker.class.isAssignableFrom(clazz)) {
       dataExchange = DOM_DATA_EXCHANGE;
     } else if (XmlTypeMarker.class.isAssignableFrom(clazz)) {
       dataExchange = XML_DATA_EXCHANGE;

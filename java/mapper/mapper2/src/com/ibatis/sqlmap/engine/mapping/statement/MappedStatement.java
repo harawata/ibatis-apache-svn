@@ -1,15 +1,15 @@
 package com.ibatis.sqlmap.engine.mapping.statement;
 
-import com.ibatis.sqlmap.engine.mapping.parameter.*;
-import com.ibatis.sqlmap.engine.mapping.result.*;
+import com.ibatis.sqlmap.client.event.RowHandler;
+import com.ibatis.sqlmap.engine.cache.CacheKey;
+import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
+import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
 import com.ibatis.sqlmap.engine.mapping.sql.Sql;
+import com.ibatis.sqlmap.engine.scope.RequestScope;
 
-import com.ibatis.sqlmap.engine.scope.*;
-import com.ibatis.sqlmap.engine.cache.*;
-import com.ibatis.sqlmap.client.event.*;
-
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
 
 /**
  * User: Clinton Begin
@@ -29,7 +29,7 @@ public interface MappedStatement {
   public List executeQueryForList(RequestScope request, Connection conn, Object parameterObject, int skipResults, int maxResults)
       throws SQLException;
 
-  public List executeQueryForList(RequestScope request, Connection conn, Object parameterObject, RowHandler rowHandler)
+  public void executeQueryWithRowHandler(RequestScope request, Connection conn, Object parameterObject, RowHandler rowHandler)
       throws SQLException;
 
   public CacheKey getCacheKey(RequestScope request, Object parameterObject);

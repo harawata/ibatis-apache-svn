@@ -6,8 +6,6 @@
 package com.ibatis.sqlmap;
 
 import com.ibatis.common.util.PaginatedList;
-import com.ibatis.sqlmap.client.SqlMapClient;
-import com.ibatis.sqlmap.client.SqlMapSession;
 import com.ibatis.sqlmap.client.event.RowHandler;
 import testdomain.Account;
 import testdomain.LineItem;
@@ -15,6 +13,7 @@ import testdomain.SuperAccount;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -329,7 +328,8 @@ public class StatementTest extends BaseSqlMapTest {
 
   public void testExecuteQueryForListWithRowHandler() throws SQLException {
     TestRowHandler handler = new TestRowHandler();
-    List list = sqlMap.queryForList("getAllAccountsViaResultMap", null, handler);
+    sqlMap.queryWithRowHandler("getAllAccountsViaResultMap", null, handler);
+    List list = handler.getList();
     assertEquals(5, handler.getIndex());
     assertEquals(5, list.size());
     assertAccount1((Account) list.get(0));
@@ -480,141 +480,7 @@ public class StatementTest extends BaseSqlMapTest {
     assertTrue(checkForInvalidTypeFailedAppropriately);
   }
 
-  // DYNAMIC SQL AND CACHING
-
-  public void testMappedStatementQueryWithCache() throws SQLException {
-    List list = sqlMap.queryForList("getCachedAccountsViaResultMap", null);
-
-    int firstId = System.identityHashCode(list);
-
-    list = sqlMap.queryForList("getCachedAccountsViaResultMap", null);
-
-    int secondId = System.identityHashCode(list);
-
-    assertEquals(firstId, secondId);
-
-    Account account = (Account) list.get(1);
-    account.setEmailAddress("new.clinton@ibatis.com");
-    sqlMap.update("updateAccountViaInlineParameters", account);
-
-    list = sqlMap.queryForList("getCachedAccountsViaResultMap", null);
-
-    int thirdId = System.identityHashCode(list);
-
-    assertTrue(firstId != thirdId);
-
-  }
-
-  public void testFlushDataCache() throws SQLException {
-    List list = sqlMap.queryForList("getCachedAccountsViaResultMap", null);
-
-    int firstId = System.identityHashCode(list);
-
-    list = sqlMap.queryForList("getCachedAccountsViaResultMap", null);
-
-    int secondId = System.identityHashCode(list);
-
-    assertEquals(firstId, secondId);
-
-    sqlMap.flushDataCache();
-
-    list = sqlMap.queryForList("getCachedAccountsViaResultMap", null);
-
-    int thirdId = System.identityHashCode(list);
-
-    assertTrue(firstId != thirdId);
-
-  }
-
-  public void testMappedStatementQueryWithThreadedCache() throws SQLException {
-
-    Map results = new HashMap();
-
-    TestCacheThread.startThread(sqlMap, results, "getCachedAccountsViaResultMap");
-    Integer firstId = (Integer) results.get("id");
-
-    TestCacheThread.startThread(sqlMap, results, "getCachedAccountsViaResultMap");
-    Integer secondId = (Integer) results.get("id");
-
-    assertTrue(firstId.equals(secondId));
-
-    List list = (List) results.get("list");
-
-    Account account = (Account) list.get(1);
-    account.setEmailAddress("new.clinton@ibatis.com");
-    sqlMap.update("updateAccountViaInlineParameters", account);
-
-    list = sqlMap.queryForList("getCachedAccountsViaResultMap", null);
-
-    int thirdId = System.identityHashCode(list);
-
-    assertTrue(firstId.intValue() != thirdId);
-
-  }
-
-  public void testMappedStatementQueryWithThreadedReadWriteCache() throws SQLException {
-
-    Map results = new HashMap();
-
-    TestCacheThread.startThread(sqlMap, results, "getRWCachedAccountsViaResultMap");
-    Integer firstId = (Integer) results.get("id");
-
-    TestCacheThread.startThread(sqlMap, results, "getRWCachedAccountsViaResultMap");
-    Integer secondId = (Integer) results.get("id");
-
-    assertFalse(firstId.equals(secondId));
-
-    List list = (List) results.get("list");
-
-    Account account = (Account) list.get(1);
-    account.setEmailAddress("new.clinton@ibatis.com");
-    sqlMap.update("updateAccountViaInlineParameters", account);
-
-    list = sqlMap.queryForList("getCachedAccountsViaResultMap", null);
-
-    int thirdId = System.identityHashCode(list);
-
-    assertTrue(firstId.intValue() != thirdId);
-
-  }
-
-  private static class TestCacheThread extends Thread {
-    private SqlMapClient sqlMap;
-    private Map results;
-    private String statementName;
-
-    public TestCacheThread(SqlMapClient sqlMap, Map results, String statementName) {
-      this.sqlMap = sqlMap;
-      this.results = results;
-      this.statementName = statementName;
-    }
-
-    public void run() {
-      try {
-        SqlMapSession session = sqlMap.openSession();
-        List list = session.queryForList(statementName, null);
-        int firstId = System.identityHashCode(list);
-        list = session.queryForList(statementName, null);
-        int secondId = System.identityHashCode(list);
-        assertEquals(firstId, secondId);
-        results.put("id", new Integer(System.identityHashCode(list)));
-        results.put("list", list);
-        session.close();
-      } catch (SQLException e) {
-        throw new RuntimeException("Error.  Cause: " + e);
-      }
-    }
-
-    public static void startThread(SqlMapClient sqlMap, Map results, String statementName) {
-      Thread t = new TestCacheThread(sqlMap, results, statementName);
-      t.start();
-      try {
-        t.join();
-      } catch (InterruptedException e) {
-        throw new RuntimeException("Error.  Cause: " + e);
-      }
-    }
-  }
+  // DYNAMIC SQL
 
   public void testQueryDynamicSqlElement() throws SQLException {
     List list = sqlMap.queryForList("getDynamicOrderedEmailAddressesViaResultMap", "ACC_ID");
@@ -632,7 +498,9 @@ public class StatementTest extends BaseSqlMapTest {
   public class TestRowHandler implements RowHandler {
     private int index = 0;
 
-    public void handleRow(Object object, List list) {
+    private List list = new ArrayList();
+
+    public void handleRow(Object object) {
       index++;
       assertEquals(index, ((Account) object).getId());
       list.add(object);
@@ -641,6 +509,11 @@ public class StatementTest extends BaseSqlMapTest {
     public int getIndex() {
       return index;
     }
+
+    public List getList() {
+      return list;
+    }
+
   }
 
 }

@@ -146,7 +146,7 @@ public interface SqlMapExecutor {
    * @return A List of all, some or none of the result objects handled by RowHandler.
    * @throws java.sql.SQLException If an error occurs.
    */
-  List queryForList(String id, Object parameterObject, RowHandler rowHandler) throws SQLException;
+  void queryWithRowHandler(String id, Object parameterObject, RowHandler rowHandler) throws SQLException;
 
   /**
    * Executes a mapped SQL SELECT statement that returns data to populate

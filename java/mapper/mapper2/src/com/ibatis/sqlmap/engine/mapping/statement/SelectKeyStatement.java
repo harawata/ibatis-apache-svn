@@ -1,10 +1,11 @@
 package com.ibatis.sqlmap.engine.mapping.statement;
 
-import com.ibatis.sqlmap.engine.scope.*;
-import com.ibatis.sqlmap.client.event.*;
+import com.ibatis.sqlmap.client.event.RowHandler;
+import com.ibatis.sqlmap.engine.scope.RequestScope;
 
-import java.util.*;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
 
 /**
  * User: Clinton Begin
@@ -37,7 +38,7 @@ public class SelectKeyStatement extends SelectStatement {
     throw new SQLException("Select statements cannot be executed for a list.");
   }
 
-  public List executeQueryForList(RequestScope request, Connection conn, Object parameterObject, RowHandler rowHandler)
+  public void executeQueryWithRowHandler(RequestScope request, Connection conn, Object parameterObject, RowHandler rowHandler)
       throws SQLException {
     throw new SQLException("Select Key statements cannot be executed with a row handler.");
   }

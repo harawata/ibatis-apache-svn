@@ -9,8 +9,14 @@ import com.ibatis.common.util.ThrottledPool;
 import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.client.event.RowHandler;
 import com.ibatis.sqlmap.engine.cache.CacheKey;
+import com.ibatis.sqlmap.engine.cache.CacheModel;
 import com.ibatis.sqlmap.engine.execution.SqlExecutor;
-import com.ibatis.sqlmap.engine.mapping.statement.*;
+import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
+import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
+import com.ibatis.sqlmap.engine.mapping.statement.InsertStatement;
+import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
+import com.ibatis.sqlmap.engine.mapping.statement.PaginatedDataList;
+import com.ibatis.sqlmap.engine.mapping.statement.SelectKeyStatement;
 import com.ibatis.sqlmap.engine.scope.RequestScope;
 import com.ibatis.sqlmap.engine.scope.SessionScope;
 import com.ibatis.sqlmap.engine.transaction.Transaction;
@@ -51,7 +57,11 @@ public class SqlMapExecutorDelegate {
   private int maxTransactions = DEFAULT_MAX_TRANSACTIONS;
 
   private TransactionManager txManager;
+
   private HashMap mappedStatements = new HashMap();
+  private HashMap cacheModels = new HashMap();
+  private HashMap resultMaps = new HashMap();
+  private HashMap parameterMaps = new HashMap();
 
   private ThrottledPool requestPool = new ThrottledPool(RequestScope.class, DEFAULT_MAX_REQUESTS);
   private ThrottledPool sessionPool = new ThrottledPool(SessionScope.class, DEFAULT_MAX_SESSIONS);
@@ -121,13 +131,77 @@ public class SqlMapExecutorDelegate {
     mappedStatements.put(ms.getId(), ms);
   }
 
+  public Iterator getMappedStatementNames() {
+    return mappedStatements.keySet().iterator();
+  }
+
+  public MappedStatement getMappedStatement(String id) {
+    MappedStatement ms = (MappedStatement) mappedStatements.get(id);
+    if (ms == null) {
+      throw new SqlMapException("There is no statement named " + id + " in this SqlMap.");
+    }
+    return ms;
+  }
+
+  public void addCacheModel(CacheModel model) {
+    cacheModels.put(model.getId(), model);
+  }
+
+  public Iterator getCacheModelNames() {
+    return cacheModels.keySet().iterator();
+  }
+
+  public CacheModel getCacheModel(String id) {
+    CacheModel model = (CacheModel) cacheModels.get(id);
+    if (model == null) {
+      throw new SqlMapException("There is no cache model named " + id + " in this SqlMap.");
+    }
+    return model;
+  }
+
+  public void addResultMap(ResultMap map) {
+    resultMaps.put(map.getId(), map);
+  }
+
+  public Iterator getResultMapNames() {
+    return resultMaps.keySet().iterator();
+  }
+
+  public ResultMap getResultMap(String id) {
+    ResultMap map = (ResultMap) resultMaps.get(id);
+    if (map == null) {
+      throw new SqlMapException("There is no result map named " + id + " in this SqlMap.");
+    }
+    return map;
+  }
+
+  public void addParameterMap(ParameterMap map) {
+    parameterMaps.put(map.getId(), map);
+  }
+
+  public Iterator getParameterMapNames() {
+    return parameterMaps.keySet().iterator();
+  }
+
+  public ParameterMap getParameterMap(String id) {
+    ParameterMap map = (ParameterMap) parameterMaps.get(id);
+    if (map == null) {
+      throw new SqlMapException("There is no parameter map named " + id + " in this SqlMap.");
+    }
+    return map;
+  }
+
   public void flushDataCache() {
-    Iterator statements = mappedStatements.values().iterator();
-    while (statements.hasNext()) {
-      MappedStatement statement = (MappedStatement) statements.next();
-      if (statement instanceof CachingStatement) {
-        ((CachingStatement) statement).flushDataCache();
-      }
+    Iterator models = cacheModels.values().iterator();
+    while (models.hasNext()) {
+      ((CacheModel) models.next()).flush();
+    }
+  }
+
+  public void flushDataCache(String id) {
+    CacheModel model = getCacheModel(id);
+    if (model != null) {
+      model.flush();
     }
   }
 
@@ -277,8 +351,7 @@ public class SqlMapExecutorDelegate {
     return list;
   }
 
-  public List queryForList(SessionScope session, String id, Object paramObject, RowHandler rowHandler) throws SQLException {
-    List list = null;
+  public void queryWithRowHandler(SessionScope session, String id, Object paramObject, RowHandler rowHandler) throws SQLException {
 
     MappedStatement ms = getMappedStatement(id);
     Connection conn = getConnection(session);
@@ -289,7 +362,7 @@ public class SqlMapExecutorDelegate {
 
       RequestScope request = popRequest(session, ms);
       try {
-        list = ms.executeQueryForList(request, conn, paramObject, rowHandler);
+        ms.executeQueryWithRowHandler(request, conn, paramObject, rowHandler);
       } finally {
         pushRequest(request);
       }
@@ -299,7 +372,6 @@ public class SqlMapExecutorDelegate {
       autoStopTransaction(session, autoStart);
     }
 
-    return list;
   }
 
   public PaginatedList queryForPaginatedList(SessionScope session, String id, Object paramObject, int pageSize) throws SQLException {
@@ -383,14 +455,6 @@ public class SqlMapExecutorDelegate {
 
   public DataSource getDataSource() {
     return txManager.getDataSource();
-  }
-
-  public MappedStatement getMappedStatement(String id) {
-    MappedStatement ms = (MappedStatement) mappedStatements.get(id);
-    if (ms == null) {
-      throw new SqlMapException("There is no statement named " + id + " in this SqlMap.");
-    }
-    return ms;
   }
 
   public SqlExecutor getSqlExecutor() {

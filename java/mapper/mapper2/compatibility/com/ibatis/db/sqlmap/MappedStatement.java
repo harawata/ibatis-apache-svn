@@ -1,10 +1,12 @@
 package com.ibatis.db.sqlmap;
 
-import com.ibatis.common.util.*;
-import com.ibatis.sqlmap.client.*;
+import com.ibatis.common.util.PaginatedList;
+import com.ibatis.sqlmap.client.SqlMapClient;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * User: Clinton Begin
@@ -32,7 +34,7 @@ public class MappedStatement {
   public void executeQueryWithRowHandler(Connection conn, Object parameterObject, RowHandler rowHandler)
       throws SQLException {
     sqlMapClient.setUserConnection(conn);
-    sqlMapClient.queryForList(statementName, parameterObject, new RowHandlerAdapter(rowHandler));
+    sqlMapClient.queryWithRowHandler(statementName, parameterObject, new RowHandlerAdapter(rowHandler));
     sqlMapClient.setUserConnection(null);
   }
 

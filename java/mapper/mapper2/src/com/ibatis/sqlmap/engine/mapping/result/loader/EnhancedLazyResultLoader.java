@@ -1,22 +1,22 @@
 package com.ibatis.sqlmap.engine.mapping.result.loader;
 
-import net.sf.cglib.proxy.*;
+import com.ibatis.common.beans.ClassInfo;
+import com.ibatis.common.exception.NestedRuntimeException;
+import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
+import com.ibatis.sqlmap.engine.type.DomTypeMarker;
+import com.ibatis.sqlmap.engine.type.XmlTypeMarker;
+import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.InvocationHandler;
 
-import java.sql.*;
-import java.util.*;
-import java.lang.reflect.*;
-
-import com.ibatis.common.exception.*;
-import com.ibatis.common.beans.*;
-import com.ibatis.sqlmap.engine.impl.*;
-import com.ibatis.sqlmap.engine.type.*;
+import java.lang.reflect.Method;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.List;
 
 /**
- *
- *
- * <p>
+ * <p/>
  * Date: Jan 11, 2004 8:06:19 PM
+ *
  * @author Clinton Begin
  */
 public class EnhancedLazyResultLoader {
@@ -26,11 +26,11 @@ public class EnhancedLazyResultLoader {
 
 
   public EnhancedLazyResultLoader(ExtendedSqlMapClient client, String statementName, Object parameterObject, Class targetType) {
-    loader = new EnhancedLazyResultLoaderImpl (client, statementName, parameterObject, targetType);
+    loader = new EnhancedLazyResultLoaderImpl(client, statementName, parameterObject, targetType);
   }
 
   public Object loadResult() throws SQLException {
-    return ((EnhancedLazyResultLoaderImpl)loader).loadResult();
+    return ((EnhancedLazyResultLoaderImpl) loader).loadResult();
   }
 
 
@@ -53,7 +53,9 @@ public class EnhancedLazyResultLoader {
     }
 
     public Object loadResult() throws SQLException {
-      if (XmlTypeMarker.class.isAssignableFrom(targetType)) {
+      if (DomTypeMarker.class.isAssignableFrom(targetType)) {
+        return ResultLoader.getResult(client, statementName, parameterObject, targetType);
+      } else if (XmlTypeMarker.class.isAssignableFrom(targetType)) {
         return ResultLoader.getResult(client, statementName, parameterObject, targetType);
       } else if (targetType.isArray() || ClassInfo.isKnownType(targetType)) {
         return ResultLoader.getResult(client, statementName, parameterObject, targetType);

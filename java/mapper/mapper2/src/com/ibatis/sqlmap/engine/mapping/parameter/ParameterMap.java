@@ -1,10 +1,11 @@
 package com.ibatis.sqlmap.engine.mapping.parameter;
 
 
-import com.ibatis.sqlmap.engine.scope.*;
-import com.ibatis.sqlmap.engine.cache.*;
+import com.ibatis.sqlmap.engine.cache.CacheKey;
+import com.ibatis.sqlmap.engine.scope.RequestScope;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
  * User: Clinton Begin
@@ -12,6 +13,8 @@ import java.sql.*;
  * Time: 9:52:21 PM
  */
 public interface ParameterMap {
+
+  public String getId();
 
   public void setParameters(RequestScope request, PreparedStatement ps, Object[] parameters)
       throws SQLException;
