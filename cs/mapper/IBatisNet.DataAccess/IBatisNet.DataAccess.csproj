@@ -204,6 +204,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Scope\ConfigurationScope.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Scope\ErrorContext.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "SessionContainer\ISessionContainer.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

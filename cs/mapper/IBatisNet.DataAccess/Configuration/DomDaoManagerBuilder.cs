@@ -41,6 +41,7 @@ using IBatisNet.DataAccess;
 using IBatisNet.DataAccess.Exceptions;
 using IBatisNet.DataAccess.Interfaces;
 using IBatisNet.DataAccess.DaoSessionHandlers;
+using IBatisNet.DataAccess.Scope;
 #endregion
 
 namespace IBatisNet.DataAccess.Configuration
@@ -51,116 +52,101 @@ namespace IBatisNet.DataAccess.Configuration
 	public class DomDaoManagerBuilder
 	{
 		#region Constants
-		private const string DEFAULT_PROVIDER_NAME = "_DEFAULT_PROVIDER_NAME";
-		private const string DEFAULT_DAOSESSIONHANDLER_NAME = "DEFAULT_DAOSESSIONHANDLER_NAME";
+		/// <summary>
+		/// Key for default provider name
+		/// </summary>
+		public const string DEFAULT_PROVIDER_NAME = "_DEFAULT_PROVIDER_NAME";
+		/// <summary>
+		/// Key for default dao session handler name
+		/// </summary>
+		public const string DEFAULT_DAOSESSIONHANDLER_NAME = "DEFAULT_DAOSESSIONHANDLER_NAME";
+
 		/// <summary>
 		/// Token for providers config file name.
 		/// </summary>
 		private const string PROVIDERS_FILE_NAME = "providers.config";
 		#endregion
 
-		#region Fields
-		private HybridDictionary _providers = new HybridDictionary();
-		private HybridDictionary _daoSectionHandlers = new HybridDictionary();
-		private NameValueCollection  _properties = new NameValueCollection();
-		private bool _useConfigFileWatcher = false;
-
-		#endregion
-
-		#region Properties
-		/// <summary>
-		/// 
-		/// </summary>
-		public HybridDictionary Providers
-		{
-			get { return _providers; }
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public HybridDictionary DaoSectionHandlers
-		{
-			get { return _daoSectionHandlers; }
-		}
-		#endregion
-
 		#region Constructor (s) / Destructor
+
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		public DomDaoManagerBuilder()
-		{
-			Reset();
-		}
+		public DomDaoManagerBuilder(){ }
+
 		#endregion
 
 		#region Methods
+
 		/// <summary>
 		/// Build DaoManagers from config document.
 		/// </summary>
-		[MethodImpl(MethodImplOptions.Synchronized)]
+//		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void BuildDaoManagers(XmlDocument document, bool useConfigFileWatcher)
 		{
+			ConfigurationScope configurationScope = new ConfigurationScope();
 
-			_daoSectionHandlers.Add(DEFAULT_DAOSESSIONHANDLER_NAME, DaoSessionHandlerFactory.GetDaoSessionHandler("ADONET"));
-			_daoSectionHandlers.Add("ADONET", DaoSessionHandlerFactory.GetDaoSessionHandler("ADONET"));
-			_daoSectionHandlers.Add("SqlMap", DaoSessionHandlerFactory.GetDaoSessionHandler("SqlMap"));
+			configurationScope.UseConfigFileWatcher = useConfigFileWatcher;
+			configurationScope.DaoConfigDocument = document;
 
-			_useConfigFileWatcher = useConfigFileWatcher;
-
-			GetConfig(document);
+			try
+			{
+				GetConfig( configurationScope );
+			}
+			catch(Exception ex)
+			{
+//				configurationScope.ErrorContext.Cause = ex;
+				throw new ConfigurationException( configurationScope.ErrorContext.ToString(), ex);
+			}
 		}
-
 
 		/// <summary>
-		/// Reset globals variables
+		/// Load and build the dao managers.
 		/// </summary>
-		internal void Reset()
+		/// <param name="configurationScope">The scope of the configuration</param>
+		private void GetConfig(ConfigurationScope configurationScope)
 		{
-			_providers.Clear();
-			_daoSectionHandlers.Clear();
-		}
+			GetProviders( configurationScope );
 
-
-		private void GetConfig(XmlDocument daoConfig)
-		{
-			XmlNode section = null;
-
-			section = daoConfig.SelectSingleNode("daoConfig");
-
-			GetProviders(Resources.GetConfigAsXmlDocument(PROVIDERS_FILE_NAME));
-
-			GetDaoSessionHandlers(section.SelectSingleNode("daoSessionHandlers"));
-			GetContexts(section);
+			GetDaoSessionHandlers( configurationScope );
+			GetContexts( configurationScope );
 		}
 
 		
 		/// <summary>
 		/// Load and initialize providers from specified file.
 		/// </summary>
-		/// <param name="xmlProviders"></param>
-		private void GetProviders(XmlDocument xmlProviders)
+		/// <param name="configurationScope">The scope of the configuration</param>
+		private void GetProviders(ConfigurationScope configurationScope)
 		{
 			XmlSerializer serializer = null;
 			Provider provider = null;
 			string directoryName = string.Empty;
 
+			configurationScope.ErrorContext.Activity = "load DataBase Provider";
+
+			XmlDocument xmlProviders = Resources.GetConfigAsXmlDocument(PROVIDERS_FILE_NAME);
+
 			serializer = new XmlSerializer(typeof(Provider));
 
 			foreach (XmlNode node in xmlProviders.SelectNodes("/providers/provider"))
 			{
+				configurationScope.ErrorContext.Resource = node.InnerXml.ToString();
+
 				provider = (Provider) serializer.Deserialize(new XmlNodeReader(node));
 
 				if (provider.IsEnabled == true)
 				{
+					configurationScope.ErrorContext.ObjectId = provider.Name;
+					configurationScope.ErrorContext.MoreInfo = "initialize provider";
+
 					provider.Initialisation();
-					_providers.Add(provider.Name,provider);
+					configurationScope.Providers.Add(provider.Name, provider);
 					if (provider.IsDefault == true)
 					{
-						if (_providers[DEFAULT_PROVIDER_NAME] == null) 
+						if (configurationScope.Providers[DEFAULT_PROVIDER_NAME] == null) 
 						{
-							_providers.Add(DEFAULT_PROVIDER_NAME,provider);
+							configurationScope.Providers.Add(DEFAULT_PROVIDER_NAME, provider);
 						} 
 						else 
 						{
@@ -170,53 +156,84 @@ namespace IBatisNet.DataAccess.Configuration
 					}
 				}
 			}
+
+			configurationScope.ErrorContext.Reset();
 		}
 
 
-		private void GetDaoSessionHandlers(XmlNode daoSessionHandlersNode)
+		/// <summary>
+		/// Load and initialize custom DaoSession Handlers.
+		/// </summary>
+		/// <param name="configurationScope">The scope of the configuration</param>
+		private void GetDaoSessionHandlers(ConfigurationScope configurationScope)
 		{
 			XmlSerializer serializer = null;
+			XmlNode daoSessionHandlersNode = null;
+
+			configurationScope.ErrorContext.Activity = "load custom DaoSession Handlers";
 
 			serializer = new XmlSerializer(typeof(DaoSessionHandler));
+			daoSessionHandlersNode = configurationScope.DaoConfigDocument.SelectSingleNode("daoConfig").SelectSingleNode("daoSessionHandlers");
 
 			if (daoSessionHandlersNode != null)
 			{
 				foreach (XmlNode node in daoSessionHandlersNode.SelectNodes("handler"))
 				{
+					configurationScope.ErrorContext.Resource = node.InnerXml.ToString();
+
 					DaoSessionHandler daoSessionHandler =(DaoSessionHandler) serializer.Deserialize(new XmlNodeReader(node));
 				
+					configurationScope.ErrorContext.ObjectId = daoSessionHandler.Name;
+					configurationScope.ErrorContext.MoreInfo = "build daoSession handler";
+
 					IDaoSessionHandler sessionHandler = daoSessionHandler.GetIDaoSessionHandler();
 
-					_daoSectionHandlers[daoSessionHandler.Name] = sessionHandler;
+					configurationScope.DaoSectionHandlers[daoSessionHandler.Name] = sessionHandler;
 
 					if (daoSessionHandler.IsDefault == true)
 					{
-						_daoSectionHandlers[DEFAULT_DAOSESSIONHANDLER_NAME] = sessionHandler;
+						configurationScope.DaoSectionHandlers[DEFAULT_DAOSESSIONHANDLER_NAME] = sessionHandler;
 					}
 				}
 			}
+
+			configurationScope.ErrorContext.Reset();
 		}
 
 
-		private void GetContexts(XmlNode section)
+		/// <summary>
+		/// Build dao contexts
+		/// </summary>
+		/// <param name="configurationScope">The scope of the configuration</param>
+		private void GetContexts(ConfigurationScope configurationScope)
 		{
-			DaoManager daoManager;
-			XmlAttribute attribute;
+			DaoManager daoManager = null;
+			XmlAttribute attribute = null;
+			XmlNode section = null;
 
 			// Init
 			DaoManager.Reset();
 
+			section = configurationScope.DaoConfigDocument.SelectSingleNode("daoConfig");
+
 			// Build one daoManager for each context
-			foreach (XmlNode node in section.SelectNodes("context"))
+			foreach (XmlNode contextNode in section.SelectNodes("context"))
 			{
+				configurationScope.ErrorContext.Activity = "build daoManager : ";
+				configurationScope.NodeContext = contextNode;
+
+				#region Configure a new DaoManager
+
 				daoManager = DaoManager.NewInstance();
 
 				// name
-				attribute = node.Attributes["id"];
+				attribute = contextNode.Attributes["id"];
 				daoManager.Name = attribute.Value;
 
+				configurationScope.ErrorContext.Activity += daoManager.Name;
+
 				// default
-				attribute = node.Attributes["default"];
+				attribute = contextNode.Attributes["default"];
 				if (attribute != null)
 				{
 					if (attribute.Value=="true")
@@ -232,64 +249,85 @@ namespace IBatisNet.DataAccess.Configuration
 				{
 					daoManager.IsDefault= false;
 				}
+				#endregion 
 
 				#region Properties
-				ParseGlobalProperties(node);
+				ParseGlobalProperties( configurationScope );
 				#endregion
 
 				#region provider
-				daoManager.Provider = ParseProvider(node);
+				daoManager.Provider = ParseProvider( configurationScope );
+
+				configurationScope.ErrorContext.Resource = string.Empty;
+				configurationScope.ErrorContext.MoreInfo = string.Empty;
+				configurationScope.ErrorContext.ObjectId = string.Empty;
 				#endregion
 
 				#region DataSource 
-				daoManager.DataSource = ParseDataSource(node);
+				daoManager.DataSource = ParseDataSource( configurationScope );
 				daoManager.DataSource.Provider = daoManager.Provider;
 				#endregion
 
 				#region DaoSessionHandler
 
-				XmlNode nodeSessionHandler = node.SelectSingleNode("daoSessionHandler");
+				XmlNode nodeSessionHandler = contextNode.SelectSingleNode("daoSessionHandler");
+
+				configurationScope.ErrorContext.MoreInfo = "configure DaoSessionHandler";
+
+				// The properties use to initialize the SessionHandler 
 				IDictionary properties = new Hashtable();
 				// By default, add the DataSource
 				properties.Add( "DataSource", daoManager.DataSource);
 				// By default, add the useConfigFileWatcher
-				properties.Add( "UseConfigFileWatcher", _useConfigFileWatcher);
+				properties.Add( "UseConfigFileWatcher", configurationScope.UseConfigFileWatcher);
 
 				IDaoSessionHandler sessionHandler = null;
 
 				if (nodeSessionHandler!= null)
 				{
-					//daoSessionHandler = (DaoSessionHandler)DomDaoManagerBuilder.DaoSectionHandlers[nodeSessionHandler.Attributes["name"].Value];
+					configurationScope.ErrorContext.Resource = nodeSessionHandler.InnerXml.ToString();
 					
-					sessionHandler = (IDaoSessionHandler)_daoSectionHandlers[nodeSessionHandler.Attributes["id"].Value];
+					sessionHandler = (IDaoSessionHandler)configurationScope.DaoSectionHandlers[nodeSessionHandler.Attributes["id"].Value];
 
 					// Parse property node
 					foreach(XmlNode nodeProperty in nodeSessionHandler.SelectNodes("property"))
 					{
 						properties.Add(nodeProperty.Attributes["name"].Value, 
-							Resources.ParsePropertyTokens(nodeProperty.Attributes["value"].Value, _properties));
+							Resources.ParsePropertyTokens(nodeProperty.Attributes["value"].Value, configurationScope.Properties));
 					}
 				}
 				else
 				{
-					//daoSessionHandler = (DaoSessionHandler)DomDaoManagerBuilder.DaoSectionHandlers[DEFAULT_DAOSESSIONHANDLER_NAME];
-					sessionHandler = (IDaoSessionHandler)_daoSectionHandlers[DEFAULT_DAOSESSIONHANDLER_NAME];
+					sessionHandler = (IDaoSessionHandler)configurationScope.DaoSectionHandlers[DEFAULT_DAOSESSIONHANDLER_NAME];
 				}
 
-				//IDaoSessionHandler sessionHandler = daoSessionHandler.GetIDaoSessionHandler();
 				// Configure the sessionHandler
-				sessionHandler.Configure(properties);
+				configurationScope.ErrorContext.ObjectId = sessionHandler.GetType().FullName;
+
+				sessionHandler.Configure( properties );
 
 				daoManager.DaoSessionHandler = sessionHandler;
 
+				configurationScope.ErrorContext.Resource = string.Empty;
+				configurationScope.ErrorContext.MoreInfo = string.Empty;
+				configurationScope.ErrorContext.ObjectId = string.Empty;
 				#endregion
 
-				#region Daos
-				ParseDaoFactory(node,daoManager);
+				#region Build Daos
+				ParseDaoFactory(configurationScope, daoManager);
 				#endregion
+
+				#region Register DaoManager
+
+				configurationScope.ErrorContext.MoreInfo = "register DaoManager";
+				configurationScope.ErrorContext.ObjectId = daoManager.Name;
 
 				DaoManager.RegisterDaoManager(daoManager.Name, daoManager);
 
+				configurationScope.ErrorContext.Resource = string.Empty;
+				configurationScope.ErrorContext.MoreInfo = string.Empty;
+				configurationScope.ErrorContext.ObjectId = string.Empty;
+				#endregion 
 			}
 		}
 
@@ -297,10 +335,13 @@ namespace IBatisNet.DataAccess.Configuration
 		/// Initialize the list of variables defined in the
 		/// properties file.
 		/// </summary>
-		/// <param name="xmlContext">The current context being analysed.</param>
-		private void ParseGlobalProperties(XmlNode xmlContext)
+		/// <param name="configurationScope">The scope of the configuration</param>
+		private void ParseGlobalProperties(ConfigurationScope configurationScope)
 		{
-			XmlNode nodeProperties = xmlContext.SelectSingleNode("properties");
+			XmlNode nodeProperties = configurationScope.NodeContext.SelectSingleNode("properties");
+
+			configurationScope.ErrorContext.Resource = nodeProperties.InnerXml.ToString();
+			configurationScope.ErrorContext.MoreInfo = "add global properties";
 
 			if (nodeProperties != null)
 			{
@@ -309,42 +350,57 @@ namespace IBatisNet.DataAccess.Configuration
 
 				foreach (XmlNode node in propertiesConfig.SelectNodes("/settings/add"))
 				{
-					_properties[node.Attributes["key"].Value] = node.Attributes["value"].Value;
+					configurationScope.Properties[node.Attributes["key"].Value] = node.Attributes["value"].Value;
 				}
 			}
+
+			configurationScope.ErrorContext.Resource = string.Empty;
+			configurationScope.ErrorContext.MoreInfo = string.Empty;
 		}
 
 
-		private Provider ParseProvider(XmlNode xmlContext)
+		/// <summary>
+		/// Initialize the provider
+		/// </summary>
+		/// <param name="configurationScope">The scope of the configuration</param>
+		/// <returns>A provider</returns>
+		private Provider ParseProvider(ConfigurationScope configurationScope)
 		{
 			XmlAttribute attribute = null;
-			XmlNode node = xmlContext.SelectSingleNode("database/provider");
+			XmlNode node = configurationScope.NodeContext.SelectSingleNode("database/provider");
+
+			configurationScope.ErrorContext.MoreInfo = "configure provider";
 
 			if (node != null)
 			{
+				configurationScope.ErrorContext.Resource = node.OuterXml.ToString();
 				// name
 				attribute = node.Attributes["name"];
 
-				if (_providers.Contains(attribute.Value) == true)
+				configurationScope.ErrorContext.ObjectId = attribute.Value;
+
+				if (configurationScope.Providers.Contains(attribute.Value) == true)
 				{
-					return (Provider)_providers[attribute.Value];
+					return (Provider)configurationScope.Providers[attribute.Value];
 				}
 				else
 				{
 					throw new ConfigurationException(
-						string.Format("Error while configuring the Provider named \"{0}\" in the Context named \"{1}\".",attribute.Value,xmlContext.Attributes["name"].Value));
+						string.Format("Error while configuring the Provider named \"{0}\" in the Context named \"{1}\".",
+						attribute.Value, configurationScope.NodeContext.Attributes["name"].Value));
 				}
 			}
 			else
 			{
-				if(_providers.Contains(DEFAULT_PROVIDER_NAME) == true)
+				if(configurationScope.Providers.Contains(DEFAULT_PROVIDER_NAME) == true)
 				{
-					return (Provider)_providers[DEFAULT_PROVIDER_NAME];
+					return (Provider) configurationScope.Providers[DEFAULT_PROVIDER_NAME];
 				}
 				else
 				{
 					throw new ConfigurationException(
-						string.Format("Error while configuring the Context named \"{0}\". There is no default provider.",xmlContext.Attributes["name"].Value));
+						string.Format("Error while configuring the Context named \"{0}\". There is no default provider.",
+						configurationScope.NodeContext.Attributes["name"].Value));
 				}
 			}
 		}
@@ -415,46 +471,65 @@ namespace IBatisNet.DataAccess.Configuration
 //		}
 
 
-		private DataSource ParseDataSource(System.Xml.XmlNode xmlContext)
+		/// <summary>
+		/// Build the data source object
+		/// </summary>
+		/// <param name="configurationScope">The scope of the configuration</param>
+		/// <returns>A DataSource</returns>
+		private DataSource ParseDataSource(ConfigurationScope configurationScope)
 		{
 			XmlSerializer serializer = null;
 			DataSource dataSource = null;
-			XmlNode node = xmlContext.SelectSingleNode("database/dataSource");
+			XmlNode node = configurationScope.NodeContext.SelectSingleNode("database/dataSource");
+
+			configurationScope.ErrorContext.Resource = node.InnerXml.ToString();
+			configurationScope.ErrorContext.MoreInfo = "configure data source";
 
 			serializer = new XmlSerializer(typeof(DataSource));
 
 			dataSource = (DataSource)serializer.Deserialize(new XmlNodeReader(node));
 
-			dataSource.ConnectionString = Resources.ParsePropertyTokens(dataSource.ConnectionString, _properties);
+			dataSource.ConnectionString = Resources.ParsePropertyTokens(dataSource.ConnectionString, configurationScope.Properties);
+			
+			configurationScope.ErrorContext.Resource = string.Empty;
+			configurationScope.ErrorContext.MoreInfo = string.Empty;
+			
 			return dataSource;
 		}
 
 
-		private void ParseDaoFactory(System.Xml.XmlNode xmlContext, DaoManager daoManager)
+		/// <summary>
+		/// Parse dao factory tag
+		/// </summary>
+		/// <param name="configurationScope">The scope of the configuration</param>
+		/// <param name="daoManager"></param>
+		private void ParseDaoFactory(ConfigurationScope configurationScope, DaoManager daoManager)
 		{
 			XmlSerializer serializer = null;
 			Dao dao = null;
 			XmlNode xmlDaoFactory = null;
+			string currentDirectory = Resources.BaseDirectory;
 
-			xmlDaoFactory = xmlContext.SelectSingleNode("daoFactory");
+			xmlDaoFactory = configurationScope.NodeContext.SelectSingleNode("daoFactory");
 
-			string currentDirectory = Path.GetDirectoryName(Assembly.GetCallingAssembly().CodeBase.Replace(@"file:///",""));
+			configurationScope.ErrorContext.Resource = xmlDaoFactory.InnerXml.ToString();
+			configurationScope.ErrorContext.MoreInfo = "configure dao";
 
 			serializer = new XmlSerializer(typeof(Dao));
 			
 			foreach (XmlNode node in xmlDaoFactory.SelectNodes("dao"))
 			{
 				dao = (Dao) serializer.Deserialize(new XmlNodeReader(node));
-				try
-				{
-					dao.Initialize(daoManager);
-					daoManager.RegisterDao(dao);
-				}
-				catch(Exception e)
-				{
-					throw new ConfigurationException(string.Format("DaoManager could not configure DaoFactory. Cause: {1}", e.Message), e);
-				}
+				
+				configurationScope.ErrorContext.ObjectId = dao.Implementation;
+
+				dao.Initialize(daoManager);
+				daoManager.RegisterDao(dao);
 			}
+
+			configurationScope.ErrorContext.Resource = string.Empty;
+			configurationScope.ErrorContext.MoreInfo = string.Empty;
+			configurationScope.ErrorContext.ObjectId = string.Empty;
 		}
 		#endregion
 
