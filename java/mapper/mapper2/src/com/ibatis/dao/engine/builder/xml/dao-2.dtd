@@ -14,7 +14,7 @@ url CDATA #IMPLIED
 
 <!ELEMENT transactionManager (property*)>
 <!ATTLIST transactionManager
-type (JTA | JDBC | SQLMAP | HIBERNATE | EXTERNAL)  #REQUIRED
+type CDATA #REQUIRED
 >
 
 <!ELEMENT property EMPTY>
