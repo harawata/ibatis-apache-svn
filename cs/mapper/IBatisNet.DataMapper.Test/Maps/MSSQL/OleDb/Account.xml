@@ -76,7 +76,14 @@
 				</dynamic>
 				order by Account_LastName
 		</select>
-			
+		
+		<select id="SelectWithProperty"
+					resultMap="account-result">
+			select *
+			from Accounts
+			where Account_FirstName = ${accountName}
+		</select>
+		
 		<select id="GetCachedAccountsViaResultMap"
 					resultMap="account-result"
 					cacheModel="account-cache" >

@@ -49,6 +49,17 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		#region Object Query tests
 
 		/// <summary>
+		/// Test use a satement with property subtitution
+		/// (JIRA 22)
+		/// </summary>
+		[Test] 
+		public void TestSelectWithProperty() 
+		{
+			Account account = sqlMap.QueryForObject("SelectWithProperty", null) as Account;
+			AssertAccount1(account);
+		}
+
+		/// <summary>
 		/// Test ExecuteQueryForObject Via ColumnName
 		/// </summary>
 		[Test] 

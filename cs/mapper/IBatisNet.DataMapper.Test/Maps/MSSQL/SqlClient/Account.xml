@@ -129,6 +129,13 @@
 			order by Account_ID
 		</select>
   
+  		<select id="SelectWithProperty"
+					resultMap="account-result">
+			select *
+			from Accounts
+			where Account_FirstName = ${accountName}
+		</select>
+		
 		<select id="GetAccountAsHashtable"
 						parameterClass="Integer"
 						resultMap="account-hashtable-result">
