@@ -30,10 +30,6 @@
 			select 'a' from Orders where Order_ID = #value#
 		</statement>
 		
-		<!--
-		System.InvalidCastException
-		No cast function in Access SQL syntax
-		-->		
 		<statement id="GetDate"
 					parameterClass="Int"
 					resultClass="date" >
@@ -46,9 +42,6 @@
 			select 1.56 from Orders where Order_ID = #value#
 		</statement>
 
-		<!--
-		System.InvalidCastException
-		-->
 		<statement id="GetDouble"
 					parameterClass="Int"
 					resultClass="double" >
