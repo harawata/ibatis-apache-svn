@@ -63,6 +63,8 @@ public class CachingStatement implements MappedStatement {
       throws SQLException {
     CacheKey cacheKey = getCacheKey(request, parameterObject);
     cacheKey.update("executeQueryForList");
+    cacheKey.update(skipResults);
+    cacheKey.update(maxResults);
     List list = (List) cacheModel.getObject(cacheKey);
     if (list == null) {
       synchronized (cacheModel) {
