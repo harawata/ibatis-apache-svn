@@ -860,7 +860,7 @@ public class XmlSqlMapClientBuilder {
               if (parameterClass == null) {
                 handler = TypeHandlerFactory.getUnkownTypeHandler();
               } else {
-                handler = resolveTypeHandler(parameterClass, name, null, null);
+                handler = resolveTypeHandler(parameterClass, name, null, type);
               }
               mapping.setTypeHandler(handler);
               mappingList.add(mapping);
@@ -881,7 +881,7 @@ public class XmlSqlMapClientBuilder {
               if (parameterClass == null) {
                 handler = TypeHandlerFactory.getUnkownTypeHandler();
               } else {
-                handler = resolveTypeHandler(parameterClass, name, null, null);
+                handler = resolveTypeHandler(parameterClass, name, null, type);
               }
               mapping.setTypeHandler(handler);
               mappingList.add(mapping);
