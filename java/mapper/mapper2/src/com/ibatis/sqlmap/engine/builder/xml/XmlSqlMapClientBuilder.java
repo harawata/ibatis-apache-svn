@@ -85,27 +85,6 @@ public class XmlSqlMapClientBuilder {
   private static final Probe PROBE = ProbeFactory.getProbe();
   private static final InlineParameterMapParser PARAM_PARSER = new InlineParameterMapParser();
 
-  private static final String NODE_PROPERTIES = "properties";
-  private static final String NODE_SETTINGS = "settings";
-  private static final String NODE_TX_MANAGER = "transactionManager";
-  private static final String NODE_DATA_SOURCE = "dataSource";
-  private static final String NODE_PROPERTY = "property";
-  private static final String NODE_SQL_MAP = "sqlMap";
-  private static final String NODE_CACHE_MODEL = "cacheModel";
-  private static final String NODE_FLUSH_INTERVAL = "flushInterval";
-  private static final String NODE_FLUSH_ON_EXECUTE = "flushOnExecute";
-  private static final String NODE_RESULT_MAP = "resultMap";
-  private static final String NODE_PARAMETER_MAP = "parameterMap";
-  private static final String NODE_SELECT = "select";
-  private static final String NODE_INSERT = "insert";
-  private static final String NODE_UPDATE = "update";
-  private static final String NODE_DELETE = "delete";
-  private static final String NODE_STATEMENT = "statement";
-  private static final String NODE_PROCEDURE = "procedure";
-  private static final String NODE_SELECT_KEY = "selectKey";
-  private static final String NODE_TYPE_ALIAS = "typeAlias";
-  private static final String NODE_TYPE_HANDLER = "typeHandler";
-
   private boolean validationEnabled = true;
 
   // State Variables
@@ -252,17 +231,17 @@ public class XmlSqlMapClientBuilder {
     for (int i = 0; i < children.getLength(); i++) {
       Node child = children.item(i);
       if (child.getNodeType() == Node.ELEMENT_NODE) {
-        if (NODE_PROPERTIES.equals(child.getNodeName())) {
+        if ("properties".equals(child.getNodeName())) {
           parseGlobalProperties(child);
-        } else if (NODE_TYPE_ALIAS.equals(child.getNodeName())) {
+        } else if ("typeAlias".equals(child.getNodeName())) {
           parseTypeAliasNode(child);
-        } else if (NODE_TYPE_HANDLER.equals(child.getNodeName())) {
+        } else if ("typeHandler".equals(child.getNodeName())) {
           parseTypeHandlerNode(child);
-        } else if (NODE_SETTINGS.equals(child.getNodeName())) {
+        } else if ("settings".equals(child.getNodeName())) {
           parseSettings(child);
-        } else if (NODE_TX_MANAGER.equals(child.getNodeName())) {
+        } else if ("transactionManager".equals(child.getNodeName())) {
           parseTransactionManager(child);
-        } else if (NODE_SQL_MAP.equals(child.getNodeName())) {
+        } else if ("sqlMap".equals(child.getNodeName())) {
           parseSqlMapRef(child);
         }
       }
@@ -289,7 +268,7 @@ public class XmlSqlMapClientBuilder {
         errorCtx.setResource(url);
         props = Resources.getUrlAsProperties(resource);
       } else {
-        throw new SqlMapException("The " + NODE_PROPERTIES + " element requires either a resource or a url attribute.");
+        throw new SqlMapException("The " + "properties" + " element requires either a resource or a url attribute.");
       }
 
       if (globalProps == null) {
@@ -361,9 +340,9 @@ public class XmlSqlMapClientBuilder {
     for (int i = 0; i < children.getLength(); i++) {
       Node child = children.item(i);
       if (child.getNodeType() == Node.ELEMENT_NODE) {
-        if (NODE_PROPERTY.equals(child.getNodeName())) {
+        if ("property".equals(child.getNodeName())) {
           addNameValuePairProperty(child, initProperties);
-        } else if (NODE_DATA_SOURCE.equals(child.getNodeName())) {
+        } else if ("dataSource".equals(child.getNodeName())) {
           dataSource = parseDataSource(child);
         }
       }
@@ -405,7 +384,7 @@ public class XmlSqlMapClientBuilder {
     for (int i = 0; i < children.getLength(); i++) {
       Node child = children.item(i);
       if (child.getNodeType() == Node.ELEMENT_NODE) {
-        if (NODE_PROPERTY.equals(child.getNodeName())) {
+        if ("property".equals(child.getNodeName())) {
           addNameValuePairProperty(child, initProperties);
         }
       }
@@ -446,7 +425,7 @@ public class XmlSqlMapClientBuilder {
       errorCtx.setResource(url);
       reader = Resources.getUrlAsReader(url);
     } else {
-      throw new SqlMapException("The " + NODE_SQL_MAP + " element requires either a resource or a url attribute.");
+      throw new SqlMapException("The " + "sqlMap" + " element requires either a resource or a url attribute.");
     }
 
     if (sqlMapConv != null) {
@@ -470,27 +449,27 @@ public class XmlSqlMapClientBuilder {
     for (int i = 0; i < children.getLength(); i++) {
       Node child = children.item(i);
       if (child.getNodeType() == Node.ELEMENT_NODE) {
-        if (NODE_SELECT.equals(child.getNodeName())) {
+        if ("select".equals(child.getNodeName())) {
           parseSelect(child);
-        } else if (NODE_INSERT.equals(child.getNodeName())) {
+        } else if ("insert".equals(child.getNodeName())) {
           parseInsert(child);
-        } else if (NODE_UPDATE.equals(child.getNodeName())) {
+        } else if ("update".equals(child.getNodeName())) {
           parseUpdate(child);
-        } else if (NODE_DELETE.equals(child.getNodeName())) {
+        } else if ("delete".equals(child.getNodeName())) {
           parseDelete(child);
-        } else if (NODE_STATEMENT.equals(child.getNodeName())) {
+        } else if ("statement".equals(child.getNodeName())) {
           parseStatement(child);
-        } else if (NODE_PROCEDURE.equals(child.getNodeName())) {
+        } else if ("procedure".equals(child.getNodeName())) {
           parseProcedure(child);
-        } else if (NODE_RESULT_MAP.equals(child.getNodeName())) {
+        } else if ("resultMap".equals(child.getNodeName())) {
           parseResultMap(child);
-        } else if (NODE_PARAMETER_MAP.equals(child.getNodeName())) {
+        } else if ("parameterMap".equals(child.getNodeName())) {
           parseParameterMap(child);
-        } else if (NODE_CACHE_MODEL.equals(child.getNodeName())) {
+        } else if ("cacheModel".equals(child.getNodeName())) {
           parseCacheModel(child);
-        } else if (NODE_TYPE_ALIAS.equals(child.getNodeName())) {
+        } else if ("typeAlias".equals(child.getNodeName())) {
           parseTypeAliasNode(child);
-        } else if (NODE_TYPE_HANDLER.equals(child.getNodeName())) {
+        } else if ("typeHandler".equals(child.getNodeName())) {
           parseTypeHandlerNode(child);
         }
       }
@@ -794,7 +773,7 @@ public class XmlSqlMapClientBuilder {
           foundTextFirst = true;
         }
       } else if (child.getNodeType() == Node.ELEMENT_NODE
-          && NODE_SELECT_KEY.equals(child.getNodeName())) {
+          && "selectKey".equals(child.getNodeName())) {
         selectKeyStatement = parseSelectKey(child, insertStatement);
         break;
       }
@@ -862,7 +841,7 @@ public class XmlSqlMapClientBuilder {
     map.setResource(errorCtx.getResource());
 
     if (groupBy != null && groupBy.length() > 0) {
-      StringTokenizer parser = new StringTokenizer(groupBy, ", ",false);
+      StringTokenizer parser = new StringTokenizer(groupBy, ", ", false);
       while (parser.hasMoreTokens()) {
         map.addGroupByProperty(parser.nextToken());
       }
@@ -900,7 +879,7 @@ public class XmlSqlMapClientBuilder {
       Node child = children.item(i);
       if (child.getNodeType() == Node.ELEMENT_NODE) {
         Properties childAttributes = parseAttributes(child);
-        String propertyName = childAttributes.getProperty(NODE_PROPERTY);
+        String propertyName = childAttributes.getProperty("property");
         String nullValue = childAttributes.getProperty("nullValue");
         String jdbcType = childAttributes.getProperty("jdbcType");
         String javaType = childAttributes.getProperty("javaType");
@@ -1004,7 +983,7 @@ public class XmlSqlMapClientBuilder {
       Node child = children.item(i);
       if (child.getNodeType() == Node.ELEMENT_NODE) {
         Properties childAttributes = parseAttributes(child);
-        String propertyName = childAttributes.getProperty(NODE_PROPERTY);
+        String propertyName = childAttributes.getProperty("property");
         String jdbcType = childAttributes.getProperty("jdbcType");
         String javaType = childAttributes.getProperty("javaType");
         String nullValue = childAttributes.getProperty("nullValue");
@@ -1130,7 +1109,7 @@ public class XmlSqlMapClientBuilder {
     for (int i = 0; i < children.getLength(); i++) {
       Node child = children.item(i);
       if (child.getNodeType() == Node.ELEMENT_NODE) {
-        if (NODE_FLUSH_INTERVAL.equals(child.getNodeName())) {
+        if ("flushInterval".equals(child.getNodeName())) {
           Properties childAttributes = parseAttributes(child);
           long t = 0;
           try {
@@ -1148,11 +1127,11 @@ public class XmlSqlMapClientBuilder {
           } catch (NumberFormatException e) {
             throw new SqlMapException("Error building cache '" + model.getId() + "' in '" + "resourceNAME" + "'.  Flush interval milliseconds must be a valid long integer value.  Cause: " + e, e);
           }
-        } else if (NODE_FLUSH_ON_EXECUTE.equals(child.getNodeName())) {
+        } else if ("flushOnExecute".equals(child.getNodeName())) {
           errorCtx.setMoreInfo("Check the cache model flush on statement elements.");
           Properties childAttributes = parseAttributes(child);
           model.addFlushTriggerStatement(childAttributes.getProperty("statement"));
-        } else if (NODE_PROPERTY.equals(child.getNodeName())) {
+        } else if ("property".equals(child.getNodeName())) {
           errorCtx.setMoreInfo("Check the cache model properties.");
           addNameValuePairProperty(child, modelProperties);
         }

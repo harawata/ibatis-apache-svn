@@ -1,33 +1,42 @@
 package com.ibatis.sqlmap.engine.builder.xml;
 
 import com.ibatis.common.resources.Resources;
-import com.ibatis.common.xml.*;
+import com.ibatis.common.xml.Nodelet;
+import com.ibatis.common.xml.NodeletParser;
+import com.ibatis.common.xml.NodeletUtils;
 import com.ibatis.sqlmap.client.SqlMapClient;
+import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.client.extensions.TypeHandlerCallback;
 import com.ibatis.sqlmap.engine.accessplan.AccessPlanFactory;
+import com.ibatis.sqlmap.engine.cache.CacheModel;
 import com.ibatis.sqlmap.engine.cache.fifo.FifoCacheController;
 import com.ibatis.sqlmap.engine.cache.lru.LruCacheController;
 import com.ibatis.sqlmap.engine.cache.memory.MemoryCacheController;
-import com.ibatis.sqlmap.engine.cache.CacheModel;
-import com.ibatis.sqlmap.engine.datasource.*;
-import com.ibatis.sqlmap.engine.impl.*;
-import com.ibatis.sqlmap.engine.transaction.*;
+import com.ibatis.sqlmap.engine.datasource.DataSourceFactory;
+import com.ibatis.sqlmap.engine.datasource.DbcpDataSourceFactory;
+import com.ibatis.sqlmap.engine.datasource.JndiDataSourceFactory;
+import com.ibatis.sqlmap.engine.datasource.SimpleDataSourceFactory;
+import com.ibatis.sqlmap.engine.impl.SqlMapClientImpl;
+import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
+import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
+import com.ibatis.sqlmap.engine.transaction.TransactionConfig;
+import com.ibatis.sqlmap.engine.transaction.TransactionManager;
 import com.ibatis.sqlmap.engine.transaction.external.ExternalTransactionConfig;
 import com.ibatis.sqlmap.engine.transaction.jdbc.JdbcTransactionConfig;
 import com.ibatis.sqlmap.engine.transaction.jta.JtaTransactionConfig;
 import com.ibatis.sqlmap.engine.type.*;
-import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
 import org.w3c.dom.Node;
 
 import java.io.Reader;
-import java.util.*;
+import java.util.Iterator;
+import java.util.Properties;
 
 public class SqlMapConfigParser extends BaseParser {
 
   private final NodeletParser parser = new NodeletParser();
 
   public SqlMapConfigParser() {
-    super (new Variables());
+    super(new Variables());
     parser.setValidation(true);
     parser.setEntityResolver(new SqlMapClasspathEntityResolver());
 
@@ -35,7 +44,7 @@ public class SqlMapConfigParser extends BaseParser {
     vars.typeHandlerFactory = vars.delegate.getTypeHandlerFactory();
     vars.client = new SqlMapClientImpl(vars.delegate);
 
-    addDefaultTypeAliases();
+    registerDefaultTypeAliases();
 
     addSqlMapConfigNodelets();
     addGlobalPropNodelets();
@@ -69,15 +78,15 @@ public class SqlMapConfigParser extends BaseParser {
   private void addSqlMapConfigNodelets() {
     parser.addNodelet("/sqlMapConfig/end()", new Nodelet() {
       public void process(Node node) throws Exception {
-        Iterator cacheNames = vars.delegate.getCacheModelNames();
+        Iterator cacheNames = vars.client.getDelegate().getCacheModelNames();
 
         while (cacheNames.hasNext()) {
           String cacheName = (String) cacheNames.next();
-          CacheModel cacheModel = vars.delegate.getCacheModel(cacheName);
+          CacheModel cacheModel = vars.client.getDelegate().getCacheModel(cacheName);
           Iterator statementNames = cacheModel.getFlushTriggerStatementNames();
           while (statementNames.hasNext()) {
             String statementName = (String) statementNames.next();
-            MappedStatement statement = vars.delegate.getMappedStatement(statementName);
+            MappedStatement statement = vars.client.getDelegate().getMappedStatement(statementName);
             if (statement != null) {
               statement.addExecuteListener(cacheModel);
             } else {
@@ -92,24 +101,32 @@ public class SqlMapConfigParser extends BaseParser {
   private void addGlobalPropNodelets() {
     parser.addNodelet("/sqlMapConfig/properties", new Nodelet() {
       public void process(Node node) throws Exception {
+        vars.errorCtx.setActivity("loading global properties");
+
         Properties attributes = NodeletUtils.parseAttributes(node);
         String resource = attributes.getProperty("resource");
         String url = attributes.getProperty("url");
 
-        Properties props = null;
-        if (resource != null) {
-          props = Resources.getResourceAsProperties(resource);
-        } else if (url != null) {
-          props = Resources.getUrlAsProperties(resource);
-        } else {
-          throw new RuntimeException("The properties element requires either a resource or a url attribute.");
-        }
+        try {
+          Properties props = null;
+          if (resource != null) {
+            vars.errorCtx.setResource(resource);
+            props = Resources.getResourceAsProperties(resource);
+          } else if (url != null) {
+            vars.errorCtx.setResource(url);
+            props = Resources.getUrlAsProperties(resource);
+          } else {
+            throw new RuntimeException("The " + "properties" + " element requires either a resource or a url attribute.");
+          }
 
-        if (vars.properties == null) {
-          vars.properties = props;
-        } else {
-          props.putAll(vars.properties);
-          vars.properties = props;
+          if (vars.properties == null) {
+            vars.properties = props;
+          } else {
+            props.putAll(vars.properties);
+            vars.properties = props;
+          }
+        } catch (Exception e) {
+          throw new RuntimeException("Error loading properties.  Cause: " + e);
         }
       }
     });
@@ -118,25 +135,46 @@ public class SqlMapConfigParser extends BaseParser {
   private void addSettingsNodelets() {
     parser.addNodelet("/sqlMapConfig/settings", new Nodelet() {
       public void process(Node node) throws Exception {
+        vars.errorCtx.setActivity("loading settings properties");
+
         Properties attributes = NodeletUtils.parseAttributes(node, vars.properties);
-        vars.useStatementNamespaces = NodeletUtils.getBooleanAttribute(attributes, "useStatementNamespaces", false);
-        vars.delegate.setCacheModelsEnabled(NodeletUtils.getBooleanAttribute(attributes, "cacheModelsEnabled", false));
-        vars.delegate.setEnhancementEnabled(NodeletUtils.getBooleanAttribute(attributes, "enhancementEnabled", false));
-        vars.delegate.setLazyLoadingEnabled(NodeletUtils.getBooleanAttribute(attributes, "lazyLoadingEnabled", false));
-        vars.delegate.setMaxRequests(NodeletUtils.getIntAttribute(attributes, "maxRequests", 1024));
-        vars.delegate.setMaxSessions(NodeletUtils.getIntAttribute(attributes, "maxSessions", 256));
-        vars.delegate.setMaxTransactions(NodeletUtils.getIntAttribute(attributes, "maxTransactions", 64));
 
-        if (vars.delegate.isEnhancementEnabled()) {
-          try {
-            vars.delegate.setEnhancementEnabled(Class.forName("net.sf.cglib.proxy.InvocationHandler") != null);
-          } catch (ClassNotFoundException e) {
-            vars.delegate.setEnhancementEnabled(false);
-          }
+        String lazyLoadingEnabledAttr = attributes.getProperty("lazyLoadingEnabled");
+        boolean lazyLoadingEnabled = (lazyLoadingEnabledAttr == null || "true".equals(lazyLoadingEnabledAttr));
+        vars.client.getDelegate().setLazyLoadingEnabled(lazyLoadingEnabled);
+
+        String cacheModelsEnabledAttr = attributes.getProperty("cacheModelsEnabled");
+        boolean cacheModelsEnabled = (cacheModelsEnabledAttr == null || "true".equals(cacheModelsEnabledAttr));
+        vars.client.getDelegate().setCacheModelsEnabled(cacheModelsEnabled);
+
+        String enhancementEnabledAttr = attributes.getProperty("enhancementEnabled");
+        boolean enhancementEnabled = (enhancementEnabledAttr == null || "true".equals(enhancementEnabledAttr));
+        try {
+          enhancementEnabled = enhancementEnabled && Class.forName("net.sf.cglib.proxy.InvocationHandler") != null;
+        } catch (ClassNotFoundException e) {
+          enhancementEnabled = false;
         }
-        
+        vars.client.getDelegate().setEnhancementEnabled(enhancementEnabled);
 
-        AccessPlanFactory.setBytecodeEnhancementEnabled(vars.delegate.isEnhancementEnabled());
+        String useStatementNamespacesAttr = attributes.getProperty("useStatementNamespaces");
+        vars.useStatementNamespaces = ("true".equals(useStatementNamespacesAttr));
+
+        String maxTransactions = attributes.getProperty("maxTransactions");
+        if (maxTransactions != null && Integer.parseInt(maxTransactions) > 0) {
+          vars.client.getDelegate().setMaxTransactions(Integer.parseInt(maxTransactions));
+        }
+
+        String maxRequests = attributes.getProperty("maxRequests");
+        if (maxRequests != null && Integer.parseInt(maxRequests) > 0) {
+          vars.client.getDelegate().setMaxRequests(Integer.parseInt(maxRequests));
+        }
+
+        String maxSessions = attributes.getProperty("maxSessions");
+        if (maxSessions != null && Integer.parseInt(maxSessions) > 0) {
+          vars.client.getDelegate().setMaxSessions(Integer.parseInt(maxSessions));
+        }
+
+        AccessPlanFactory.setBytecodeEnhancementEnabled(vars.client.getDelegate().isEnhancementEnabled());
       }
     });
   }
@@ -144,9 +182,9 @@ public class SqlMapConfigParser extends BaseParser {
   private void addTypeAliasNodelets() {
     parser.addNodelet("/sqlMapConfig/typeAlias", new Nodelet() {
       public void process(Node node) throws Exception {
-        Properties attributes = NodeletUtils.parseAttributes(node, vars.properties);
-        String alias = attributes.getProperty("alias");
-        String type = attributes.getProperty("type");
+        Properties prop = NodeletUtils.parseAttributes(node, vars.properties);
+        String alias = prop.getProperty("alias");
+        String type = prop.getProperty("type");
         vars.typeHandlerFactory.putTypeAlias(alias, type);
       }
     });
@@ -155,21 +193,33 @@ public class SqlMapConfigParser extends BaseParser {
   private void addTypeHandlerNodelets() {
     parser.addNodelet("/sqlMapConfig/typeHandler", new Nodelet() {
       public void process(Node node) throws Exception {
-        Properties attributes = NodeletUtils.parseAttributes(node, vars.properties);
-        String javaType = attributes.getProperty("javaType");
-        String jdbcType = attributes.getProperty("jdbcType");
-        String callback = attributes.getProperty("callback");
-        callback = vars.typeHandlerFactory.resolveAlias(callback);
-        javaType = vars.typeHandlerFactory.resolveAlias(javaType);
+        vars.errorCtx.setActivity("building a building custom type handler");
+        try {
+          TypeHandlerFactory typeHandlerFactory = vars.client.getDelegate().getTypeHandlerFactory();
 
-        TypeHandlerCallback typeHandlerCallback = (TypeHandlerCallback) Resources.classForName(callback).newInstance();
-        TypeHandler typeHandler = new CustomTypeHandler(typeHandlerCallback);
+          Properties prop = NodeletUtils.parseAttributes(node, vars.properties);
 
-        if (jdbcType != null && jdbcType.length() > 0) {
-          vars.typeHandlerFactory.register(Resources.classForName(javaType), jdbcType, typeHandler);
-        } else {
-          vars.typeHandlerFactory.register(Resources.classForName(javaType), typeHandler);
+          String jdbcType = prop.getProperty("jdbcType");
+          String javaType = prop.getProperty("javaType");
+          String callback = prop.getProperty("callback");
+          callback = typeHandlerFactory.resolveAlias(callback);
+          javaType = typeHandlerFactory.resolveAlias(javaType);
+
+          vars.errorCtx.setMoreInfo("Check the callback attribute '" + callback + "' (must be a classname).");
+          TypeHandlerCallback typeHandlerCallback = (TypeHandlerCallback) Resources.classForName(callback).newInstance();
+          TypeHandler typeHandler = new CustomTypeHandler(typeHandlerCallback);
+
+          vars.errorCtx.setMoreInfo("Check the javaType attribute '" + javaType + "' (must be a classname) or the jdbcType '" + jdbcType + "' (must be a JDBC type name).");
+          if (jdbcType != null && jdbcType.length() > 0) {
+            typeHandlerFactory.register(Resources.classForName(javaType), jdbcType, typeHandler);
+          } else {
+            typeHandlerFactory.register(Resources.classForName(javaType), typeHandler);
+          }
+        } catch (Exception e) {
+          throw new SqlMapException("Error registering occurred.  Cause: " + e, e);
         }
+        vars.errorCtx.setMoreInfo(null);
+        vars.errorCtx.setObjectId(null);
       }
     });
   }
@@ -177,48 +227,84 @@ public class SqlMapConfigParser extends BaseParser {
   private void addTransactionManagerNodelets() {
     parser.addNodelet("/sqlMapConfig/transactionManager/end()", new Nodelet() {
       public void process(Node node) throws Exception {
+        vars.txProps = new Properties();
+      }
+    });
+    parser.addNodelet("/sqlMapConfig/transactionManager/end()", new Nodelet() {
+      public void process(Node node) throws Exception {
+        vars.errorCtx.setActivity("configuring the transaction manager");
+
         Properties attributes = NodeletUtils.parseAttributes(node, vars.properties);
+
+
         String type = attributes.getProperty("type");
-        boolean commitRequired = NodeletUtils.getBooleanAttribute(attributes, "commitRequired", false);
         type = vars.typeHandlerFactory.resolveAlias(type);
 
         TransactionManager txManager = null;
+        try {
+          vars.errorCtx.setMoreInfo("Check the transaction manager type or class.");
+          TransactionConfig config = (TransactionConfig) Resources.instantiate(type);
+          config.setDataSource(vars.dataSource);
+          config.setMaximumConcurrentTransactions(vars.client.getDelegate().getMaxTransactions());
+          vars.errorCtx.setMoreInfo("Check the transactio nmanager properties or configuration.");
+          config.initialize(vars.txProps);
+          vars.errorCtx.setMoreInfo(null);
+          txManager = new TransactionManager(config);
+          txManager.setForceCommit("true".equals(attributes.getProperty("commitRequired")));
+        } catch (Exception e) {
+          if (e instanceof SqlMapException) {
+            throw (SqlMapException) e;
+          } else {
+            throw new SqlMapException("Error initializing TransactionManager.  Could not instantiate TransactionConfig.  Cause: " + e, e);
+          }
+        }
 
-        TransactionConfig config1 = (TransactionConfig) Resources.instantiate(type);
-        config1.setDataSource(vars.dataSource);
-        config1.setMaximumConcurrentTransactions(vars.delegate.getMaxTransactions());
-
-        config1.initialize(vars.txProps);
-
-        txManager = new TransactionManager(config1);
-        txManager.setForceCommit(commitRequired);
-        vars.delegate.setTxManager(txManager);
+        vars.client.getDelegate().setTxManager(txManager);
       }
     });
     parser.addNodelet("/sqlMapConfig/transactionManager/property", new Nodelet() {
       public void process(Node node) throws Exception {
         Properties attributes = NodeletUtils.parseAttributes(node, vars.properties);
         String name = attributes.getProperty("name");
-        String value = NodeletUtils.parsePropertyTokens(attributes.getProperty("value"),vars.properties);
+        String value = NodeletUtils.parsePropertyTokens(attributes.getProperty("value"), vars.properties);
         vars.txProps.setProperty(name, value);
+      }
+    });
+    parser.addNodelet("/sqlMapConfig/transactionManager/dataSource", new Nodelet() {
+      public void process(Node node) throws Exception {
+        vars.dsProps = new Properties();
       }
     });
     parser.addNodelet("/sqlMapConfig/transactionManager/dataSource/end()", new Nodelet() {
       public void process(Node node) throws Exception {
-        Properties attributes = NodeletUtils.parseAttributes(node, vars.properties);
+        vars.errorCtx.setActivity("configuring the data source");
+
+        Properties attributes = NodeletUtils.parseAttributes(node);
+
         String type = attributes.getProperty("type");
         type = vars.typeHandlerFactory.resolveAlias(type);
 
-        DataSourceFactory dsFactory = (DataSourceFactory) Resources.instantiate(type);
-        dsFactory.initialize(vars.dsProps);
-        vars.dataSource = dsFactory.getDataSource();
+        try {
+          vars.errorCtx.setMoreInfo("Check the data source type or class.");
+          DataSourceFactory dsFactory = (DataSourceFactory) Resources.instantiate(type);
+          vars.errorCtx.setMoreInfo("Check the data source properties or configuration.");
+          dsFactory.initialize(vars.dsProps);
+          vars.dataSource = dsFactory.getDataSource();
+          vars.errorCtx.setMoreInfo(null);
+        } catch (Exception e) {
+          if (e instanceof SqlMapException) {
+            throw (SqlMapException) e;
+          } else {
+            throw new SqlMapException("Error initializing DataSource.  Could not instantiate DataSourceFactory.  Cause: " + e, e);
+          }
+        }
       }
     });
     parser.addNodelet("/sqlMapConfig/transactionManager/dataSource/property", new Nodelet() {
       public void process(Node node) throws Exception {
         Properties attributes = NodeletUtils.parseAttributes(node, vars.properties);
         String name = attributes.getProperty("name");
-        String value = NodeletUtils.parsePropertyTokens(attributes.getProperty("value"),vars.properties);
+        String value = NodeletUtils.parsePropertyTokens(attributes.getProperty("value"), vars.properties);
         vars.dsProps.setProperty(name, value);
       }
     });
@@ -227,28 +313,33 @@ public class SqlMapConfigParser extends BaseParser {
   private void addSqlMapNodelets() {
     parser.addNodelet("/sqlMapConfig/sqlMap", new Nodelet() {
       public void process(Node node) throws Exception {
-        Properties attributes = NodeletUtils.parseAttributes(node, vars.properties);
+        vars.errorCtx.setActivity("loading the SQL Map resource");
+
+        Properties attributes = NodeletUtils.parseAttributes(node);
+
         String resource = attributes.getProperty("resource");
         String url = attributes.getProperty("url");
 
-        Reader reader;
+        Reader reader = null;
         if (resource != null) {
-          vars.currentResource = resource;
+          vars.errorCtx.setResource(resource);
           reader = Resources.getResourceAsReader(resource);
         } else if (url != null) {
-          vars.currentResource = url;
-          reader = Resources.getUrlAsReader(resource);
+          vars.errorCtx.setResource(url);
+          reader = Resources.getUrlAsReader(url);
         } else {
-          throw new RuntimeException("The sqlMap element requires either a resource or a url attribute.");
+          throw new SqlMapException("The " + "sqlMap" + " element requires either a resource or a url attribute.");
         }
 
+        if (vars.sqlMapConv != null) {
+          reader = vars.sqlMapConv.convertXml(reader);
+        }
         new SqlMapParser(vars).parse(reader);
-
       }
     });
   }
 
-  private void addDefaultTypeAliases() {
+  private void registerDefaultTypeAliases() {
     // TRANSACTION ALIASES
     vars.typeHandlerFactory.putTypeAlias("JDBC", JdbcTransactionConfig.class.getName());
     vars.typeHandlerFactory.putTypeAlias("JTA", JtaTransactionConfig.class.getName());

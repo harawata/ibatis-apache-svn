@@ -59,6 +59,7 @@ public class SqlMapClientBuilder {
    */
   public static SqlMapClient buildSqlMapClient(Reader reader) {
     return new XmlSqlMapClientBuilder().buildSqlMap(reader);
+//    return new SqlMapConfigParser().parse(reader);
   }
 
   /**
@@ -74,6 +75,7 @@ public class SqlMapClientBuilder {
    */
   public static SqlMapClient buildSqlMapClient(Reader reader, Properties props) {
     return new XmlSqlMapClientBuilder().buildSqlMap(reader, props);
+//    return new SqlMapConfigParser().parse(reader, props);
   }
 
 }

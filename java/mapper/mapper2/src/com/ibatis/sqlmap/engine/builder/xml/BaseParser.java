@@ -1,17 +1,22 @@
 package com.ibatis.sqlmap.engine.builder.xml;
 
-import com.ibatis.sqlmap.engine.scope.ErrorContext;
-import com.ibatis.sqlmap.engine.impl.*;
-import com.ibatis.sqlmap.engine.type.*;
-import com.ibatis.sqlmap.engine.cache.CacheModel;
-import com.ibatis.sqlmap.engine.mapping.result.BasicResultMap;
-import com.ibatis.sqlmap.engine.mapping.parameter.BasicParameterMap;
-import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
+import com.ibatis.common.beans.Probe;
+import com.ibatis.common.beans.ProbeFactory;
 import com.ibatis.common.resources.Resources;
-import com.ibatis.common.beans.*;
+import com.ibatis.sqlmap.engine.cache.CacheModel;
+import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
+import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
+import com.ibatis.sqlmap.engine.mapping.parameter.BasicParameterMap;
+import com.ibatis.sqlmap.engine.mapping.result.BasicResultMap;
+import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
+import com.ibatis.sqlmap.engine.scope.ErrorContext;
+import com.ibatis.sqlmap.engine.type.DomTypeMarker;
+import com.ibatis.sqlmap.engine.type.TypeHandler;
+import com.ibatis.sqlmap.engine.type.TypeHandlerFactory;
 
 import javax.sql.DataSource;
-import java.util.*;
+import java.util.List;
+import java.util.Properties;
 
 public abstract class BaseParser {
 
@@ -87,6 +92,8 @@ public abstract class BaseParser {
    * variables for parsing state.
    */
   protected static class Variables {
+    public ErrorContext errorCtx = new ErrorContext();
+
     public Properties txProps = new Properties();
     public Properties dsProps = new Properties();
     public ErrorContext errorContext = new ErrorContext();

@@ -3,8 +3,13 @@ package com.ibatis.common.xml;
 import org.w3c.dom.*;
 import org.xml.sax.*;
 
-import javax.xml.parsers.*;
-import java.io.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.util.*;
 
 /**
@@ -38,10 +43,13 @@ public class NodeletParser {
   /**
    * Begins parsing from the provided Reader.
    */
-  public void parse(Reader reader) throws ParserConfigurationException, FactoryConfigurationError,
-      SAXException, IOException {
-    Document doc = createDocument(reader);
-    parse(doc.getLastChild());
+  public void parse(Reader reader) throws NodeletException {
+    try {
+      Document doc = createDocument(reader);
+      parse(doc.getLastChild());
+    } catch (Exception e) {
+      throw new NodeletException("Error parsing XML.  Cause: " + e, e);
+    }
   }
 
   /**
@@ -101,7 +109,7 @@ public class NodeletParser {
       try {
         nodelet.process(node);
       } catch (Exception e) {
-        throw new RuntimeException("Error parsing XPath '"+pathString+"'.  Cause: " + e, e);
+        throw new RuntimeException("Error parsing XPath '" + pathString + "'.  Cause: " + e, e);
       }
     }
   }
@@ -114,11 +122,11 @@ public class NodeletParser {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     factory.setValidating(validation);
 
-//    factory.setNamespaceAware(false);
-//    factory.setIgnoringComments(true);
-//    factory.setIgnoringElementContentWhitespace(false);
-//    factory.setCoalescing(false);
-//    factory.setExpandEntityReferences(true);
+    factory.setNamespaceAware(false);
+    factory.setIgnoringComments(true);
+    factory.setIgnoringElementContentWhitespace(false);
+    factory.setCoalescing(false);
+    factory.setExpandEntityReferences(true);
 
     OutputStreamWriter errorWriter = new OutputStreamWriter(System.err);
 
@@ -144,7 +152,7 @@ public class NodeletParser {
     this.validation = validation;
   }
 
-  public void setEntityResolver (EntityResolver resolver) {
+  public void setEntityResolver(EntityResolver resolver) {
     this.entityResolver = resolver;
   }
 
