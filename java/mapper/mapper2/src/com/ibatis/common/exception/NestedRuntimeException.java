@@ -50,11 +50,18 @@ public class NestedRuntimeException extends RuntimeException {
 
   /**
    * Gets the causing exception, if any.
+   * 
+   * @return The cause of the exception
    */
   public Throwable getCause() {
     return cause;
   }
 
+  /**
+   * Converts the exception to a string representation
+   * 
+   * @return The string representation of the exception
+   */
   public String toString() {
     if (cause == null) {
       return super.toString();
@@ -63,6 +70,9 @@ public class NestedRuntimeException extends RuntimeException {
     }
   }
 
+  /**
+   * Sends a stack trace to System.err (including the root cause, if any)
+   */
   public void printStackTrace() {
     super.printStackTrace();
     if (cause != null) {
@@ -71,6 +81,11 @@ public class NestedRuntimeException extends RuntimeException {
     }
   }
 
+  /**
+   * Sends a stack trace to the PrintStream passed in (including the root cause, if any)
+   * 
+   * @param ps - the PrintStream to send the output to
+   */
   public void printStackTrace(java.io.PrintStream ps) {
     super.printStackTrace(ps);
     if (cause != null) {
@@ -79,6 +94,11 @@ public class NestedRuntimeException extends RuntimeException {
     }
   }
 
+  /**
+   * Sends a stack trace to the PrintWriter passed in (including the root cause, if any)
+   * 
+   * @param pw - the PrintWriter to send the output to
+   */
   public void printStackTrace(java.io.PrintWriter pw) {
     super.printStackTrace(pw);
     if (cause != null) {

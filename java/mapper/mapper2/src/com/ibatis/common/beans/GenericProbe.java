@@ -14,7 +14,6 @@ import java.util.StringTokenizer;
  * <P>
  * Object value = StaticBeanProbe.getObject(object, propertyName);
  *
- * @author clinton_begin
  */
 public class GenericProbe extends BaseProbe {
 
@@ -24,6 +23,12 @@ public class GenericProbe extends BaseProbe {
   protected GenericProbe() {
   }
 
+  /** Gets an object from a Map or bean
+   * @param object - the object to probe
+   * @param name - the name of the property (or map entry)
+   * @return The value of the property (or map entry)
+   * @see com.ibatis.common.beans.BaseProbe#getObject(java.lang.Object, java.lang.String)
+   */
   public Object getObject(Object object, String name) {
     if (object instanceof Map) {
       return MAP_PROBE.getObject(object, name);
@@ -32,6 +37,12 @@ public class GenericProbe extends BaseProbe {
     }
   }
 
+  /** Sets an object in a Map or bean
+   * @param object - the object to probe
+   * @param name - the name of the property (or map entry)
+   * @param value - the new value of the property (or map entry)
+   * @see com.ibatis.common.beans.BaseProbe#setObject(java.lang.Object, java.lang.String, java.lang.Object)
+   */
   public void setObject(Object object, String name, Object value) {
     if (object instanceof Map) {
       MAP_PROBE.setObject(object, name, value);
@@ -40,6 +51,11 @@ public class GenericProbe extends BaseProbe {
     }
   }
 
+  /** Gets an array of the readable properties in a Map or JavaBean
+   * @param object - the object to get properties for
+   * @return The array of properties (or map entries)
+   * @see com.ibatis.common.beans.Probe#getReadablePropertyNames(java.lang.Object)
+   */
   public String[] getReadablePropertyNames(Object object) {
     if (object instanceof Map) {
       return MAP_PROBE.getReadablePropertyNames(object);
@@ -48,6 +64,13 @@ public class GenericProbe extends BaseProbe {
     }
   }
 
+  /** 
+   * Gets an array of the writeable properties in a Map or JavaBean
+   * 
+   * @param object - the object to get properties for
+   * @return The array of properties (or map entries)
+   * @see com.ibatis.common.beans.Probe#getWriteablePropertyNames(java.lang.Object)
+   */
   public String[] getWriteablePropertyNames(Object object) {
     if (object instanceof Map) {
       return MAP_PROBE.getWriteablePropertyNames(object);
@@ -56,6 +79,15 @@ public class GenericProbe extends BaseProbe {
     }
   }
 
+  /**
+   * Returns the class that the setter expects to receive as a parameter when
+   * setting a property value.
+   *
+   * @param object - The class to check
+   * @param name - the name of the property
+   * @return The type of the property
+   * @see com.ibatis.common.beans.Probe#getPropertyTypeForSetter(java.lang.Object, java.lang.String)
+   */
   public Class getPropertyTypeForSetter(Object object, String name) {
     if (object instanceof Class) {
       return getClassPropertyTypeForSetter((Class) object, name);
@@ -66,6 +98,14 @@ public class GenericProbe extends BaseProbe {
     }
   }
 
+  /**
+   * Returns the class that the getter will return when reading a property value.
+   *
+   * @param object The bean to check
+   * @param name   The name of the property
+   * @return The type of the property
+   * @see com.ibatis.common.beans.Probe#getPropertyTypeForGetter(java.lang.Object, java.lang.String)
+   */
   public Class getPropertyTypeForGetter(Object object, String name) {
     if (object instanceof Class) {
       return getClassPropertyTypeForGetter((Class) object, name);
@@ -76,6 +116,14 @@ public class GenericProbe extends BaseProbe {
     }
   }
 
+  /**
+   * Checks to see if an object has a writable property by a given name
+   *
+   * @param object       The bean to check
+   * @param propertyName The property to check for
+   * @return True if the property exists and is writable
+   * @see com.ibatis.common.beans.Probe#hasWritableProperty(java.lang.Object, java.lang.String)
+   */
   public boolean hasWritableProperty(Object object, String propertyName) {
     if (object instanceof Map) {
       return MAP_PROBE.hasWritableProperty(object, propertyName);
@@ -84,6 +132,14 @@ public class GenericProbe extends BaseProbe {
     }
   }
 
+  /**
+   * Checks to see if a bean has a readable property by a given name
+   *
+   * @param object       The bean to check
+   * @param propertyName The property to check for
+   * @return True if the property exists and is readable
+   * @see com.ibatis.common.beans.Probe#hasReadableProperty(java.lang.Object, java.lang.String)
+   */
   public boolean hasReadableProperty(Object object, String propertyName) {
     if (object instanceof Map) {
       return MAP_PROBE.hasReadableProperty(object, propertyName);
