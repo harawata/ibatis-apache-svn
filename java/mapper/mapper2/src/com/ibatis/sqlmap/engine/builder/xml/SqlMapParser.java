@@ -353,8 +353,14 @@ public class SqlMapParser extends BaseParser {
         if (callback != null) {
           vars.errorCtx.setMoreInfo("Check the result mapping typeHandler attribute '" + callback + "' (must be a TypeHandlerCallback implementation).");
           try {
-            TypeHandlerCallback typeHandlerCallback = (TypeHandlerCallback) Resources.classForName(callback).newInstance();
-            handler = new CustomTypeHandler(typeHandlerCallback);
+            Object impl = Resources.classForName(callback).newInstance();
+            if (impl instanceof TypeHandlerCallback) {
+              handler = new CustomTypeHandler((TypeHandlerCallback) impl);
+            } else if (impl instanceof TypeHandler) {
+              handler = (TypeHandler) impl;
+            } else {
+              throw new NestedRuntimeException ("The class '' is not a valid implementation of TypeHandler or TypeHandlerCallback");
+            }
           } catch (Exception e) {
             throw new NestedRuntimeException("Error occurred during custom type handler configuration.  Cause: " + e, e);
           }
