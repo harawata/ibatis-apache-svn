@@ -23,7 +23,7 @@
 			[Many_SampleDate] AS SampleDate, 
 			[Many_SequenceDate] AS SequenceDate
 		FROM 
-			[dbo].[ManyRecordsTest]
+			[ManyRecordsTest]
 		WHERE 
 			[Many_SequenceID] = #value#
 		-->
@@ -42,7 +42,7 @@
 			[Many_SampleDate] AS SampleDate, 
 			[Many_SequenceDate] AS SequenceDate
 		FROM 
-			[dbo].[ManyRecordsTest]
+			[ManyRecordsTest]
 		WHERE 
 			[Many_SequenceID] = #value#
 		</select>
@@ -62,7 +62,7 @@
 			[Many_SampleDate] AS SampleDate, 
 			[Many_SequenceDate] AS SequenceDate
 		FROM 
-			[dbo].[ManyRecordsTest] WITH(INDEX([IDX_ManyRecordsTest_Seq])) 
+			[ManyRecordsTest] WITH(INDEX([IDX_ManyRecordsTest_Seq])) 
 		WHERE 
 			[Many_SequenceID] = 91
 		-->
@@ -81,7 +81,7 @@
 			[Many_SampleDate] AS SampleDate, 
 			[Many_SequenceDate] AS SequenceDate
 		FROM 
-			[dbo].[ManyRecordsTest] WITH(INDEX([IDX_ManyRecordsTest_Seq])) 
+			[ManyRecordsTest] WITH(INDEX([IDX_ManyRecordsTest_Seq])) 
 		WHERE 
 			[Many_SequenceID] = #value#
 		</select>
@@ -101,7 +101,7 @@
 			[Many_SampleDate] AS SampleDate, 
 			[Many_SequenceDate] AS SequenceDate
 		FROM 
-			[dbo].[ManyRecordsTest]
+			[ManyRecordsTest]
 		WHERE 
 			[Many_DistributedID] = 91
 		-->
@@ -120,7 +120,7 @@
 			[Many_SampleDate] AS SampleDate, 
 			[Many_SequenceDate] AS SequenceDate
 		FROM 
-			[dbo].[ManyRecordsTest]
+			[ManyRecordsTest]
 		WHERE 
 			[Many_DistributedID] = #value#
 		</select>
@@ -140,7 +140,7 @@
 			[Many_SampleDate] AS SampleDate, 
 			[Many_SequenceDate] AS SequenceDate
 		FROM 
-			[dbo].[ManyRecordsTest] WITH(INDEX([IDX_ManyRecordsTest_Dist])) 
+			[ManyRecordsTest] WITH(INDEX([IDX_ManyRecordsTest_Dist])) 
 		WHERE 
 			[Many_DistributedID] = 91
 		-->
@@ -159,7 +159,7 @@
 			[Many_SampleDate] AS SampleDate, 
 			[Many_SequenceDate] AS SequenceDate
 		FROM 
-			[dbo].[ManyRecordsTest] WITH(INDEX([IDX_ManyRecordsTest_Dist])) 
+			[ManyRecordsTest] WITH(INDEX([IDX_ManyRecordsTest_Dist])) 
 		WHERE 
 			[Many_DistributedID] = #value#
 		</select>
@@ -179,7 +179,7 @@
 			[Many_SampleDate] AS SampleDate, 
 			[Many_SequenceDate] AS SequenceDate
 		FROM 
-			[dbo].[ManyRecordsTest]
+			[ManyRecordsTest]
 		WHERE 
 			[Many_FifthID] = 30000 
 		-->
@@ -198,7 +198,7 @@
 			[Many_SampleDate] AS SampleDate, 
 			[Many_SequenceDate] AS SequenceDate
 		FROM 
-			[dbo].[ManyRecordsTest]
+			[ManyRecordsTest]
 		WHERE 
 			[Many_FifthID] = #value# 
 		</select>
@@ -218,7 +218,7 @@
 			[Many_SampleDate] AS SampleDate, 
 			[Many_SequenceDate] AS SequenceDate
 		FROM 
-			[dbo].[ManyRecordsTest]
+			[ManyRecordsTest]
 		WHERE 
 			[Many_FifthID] = 30000 OR
 			[Many_SequenceID] = 91
@@ -238,7 +238,7 @@
 			[Many_SampleDate] AS SampleDate, 
 			[Many_SequenceDate] AS SequenceDate
 		FROM 
-			[dbo].[ManyRecordsTest]
+			[ManyRecordsTest]
 		WHERE 
 			[Many_FifthID] = #FifthID# OR
 			[Many_SequenceID] = #SequenceID#
@@ -259,7 +259,7 @@
 			[Many_SampleDate] AS SampleDate, 
 			[Many_SequenceDate] AS SequenceDate
 		FROM 
-			[dbo].[ManyRecordsTest]
+			[ManyRecordsTest]
 		WHERE 
 			[Many_SampleDate] BETWEEN '1999-01-01' AND '1999-01-02' 
 		-->
@@ -278,7 +278,7 @@
 			[Many_SampleDate] AS SampleDate, 
 			[Many_SequenceDate] AS SequenceDate
 		FROM 
-			[dbo].[ManyRecordsTest]
+			[ManyRecordsTest]
 		WHERE 
 			[Many_SampleDate] BETWEEN #StartDate# AND #EndDate# 
 		</select>
@@ -298,7 +298,7 @@
 			[Many_SampleDate] AS SampleDate, 
 			[Many_SequenceDate] AS SequenceDate
 		FROM 
-			[dbo].[ManyRecordsTest]
+			[ManyRecordsTest]
 		WHERE 
 			[Many_SampleCharValue] = 'AAA'		
 		-->
@@ -317,7 +317,7 @@
 			[Many_SampleDate] AS SampleDate, 
 			[Many_SequenceDate] AS SequenceDate
 		FROM 
-			[dbo].[ManyRecordsTest]
+			[ManyRecordsTest]
 		WHERE 
 			[Many_SampleCharValue] = #value#
 		</select>
@@ -337,7 +337,7 @@
 			[Many_SampleDate] AS SampleDate, 
 			[Many_SequenceDate] AS SequenceDate
 		FROM 
-			[dbo].[ManyRecordsTest]
+			[ManyRecordsTest]
 		WHERE 
 			[Many_SampleCharValue] LIKE '%AAA%'		
 		-->
@@ -356,7 +356,7 @@
 			[Many_SampleDate] AS SampleDate, 
 			[Many_SequenceDate] AS SequenceDate
 		FROM 
-			[dbo].[ManyRecordsTest]
+			[ManyRecordsTest]
 		WHERE 
 			[Many_SampleCharValue] LIKE '%$value$%'
 		</select>

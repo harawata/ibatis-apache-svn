@@ -1,4 +1,7 @@
 using System;
+using System.Data;
+using System.Data.SqlClient;
+
 using System.Collections;
 
 using NUnit.Framework;
@@ -17,6 +20,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL
 	/// </summary>
 	[TestFixture] 
 	[Category("MSSQL")]
+	[Category("EmbedParameter")]
 	public class EmbedParameterTest : BaseTest
 	{
 		
@@ -155,7 +159,21 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL
 		}
 		
 		#endregion
+		
+		public void TestAdoPerformanceWithParameter()
+		{
+			IDbConnection connection = new SqlConnection();
+			connection.ConnectionString = sqlMap.DataSource.ConnectionString;
 
+			IDbCommand command = new SqlCommand();
+//			command.CommandType = CommandType.Text;
+//			command.CommandText = "";
+//			command.Parameters.Add ( "@id", id) ;
+//			command.Parameters.Add ( "@desc", desc) ;
+//			command.Prepare() ;  // Calling Prepare after having set the Commandtext and parameters.
+//			command.ExecuteNonQuery();
+
+		}
 
 	}
 }
