@@ -22,6 +22,7 @@ import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
 
 import java.sql.ResultSet;
 import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Request based implementation of Scope interface
@@ -194,12 +195,18 @@ public class RequestScope extends BaseScope {
     this.resultSet = resultSet;
   }
 
-  public Map getUniqueKeys() {
-    return uniqueKeys;
+  public Map getUniqueKeys(ResultMap map) {
+    if (uniqueKeys == null) {
+      return null;
+    }
+    return (Map)uniqueKeys.get(map);
   }
 
-  public void setUniqueKeys(Map uniqueKeys) {
-    this.uniqueKeys = uniqueKeys;
+  public void setUniqueKeys(ResultMap map, Map keys) {
+    if (uniqueKeys == null) {
+      uniqueKeys = new HashMap();
+    }
+    this.uniqueKeys.put(map, keys);
   }
 
   public boolean isRowDataFound() {

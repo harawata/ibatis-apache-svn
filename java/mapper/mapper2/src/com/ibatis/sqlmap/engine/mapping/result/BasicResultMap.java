@@ -285,7 +285,7 @@ public class BasicResultMap implements ResultMap {
   public Object setResultObjectValues(RequestScope request, Object resultObject, Object[] values) {
     Object ukey = getUniqueKey(values);
 
-    Map uniqueKeys = request.getUniqueKeys();
+    Map uniqueKeys = request.getUniqueKeys(this);
 
     if (uniqueKeys != null && uniqueKeys.containsKey(ukey)) {
       // Unique key is already known, so get the existing result object and process additional results.
@@ -299,7 +299,7 @@ public class BasicResultMap implements ResultMap {
       if (ukey != null) {
         if (uniqueKeys == null) {
           uniqueKeys = new HashMap();
-          request.setUniqueKeys(uniqueKeys);
+          request.setUniqueKeys(this, uniqueKeys);
         }
         uniqueKeys.put(ukey, resultObject);
       }
