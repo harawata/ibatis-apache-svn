@@ -547,7 +547,6 @@
                     RelPath = "Maps\Oracle\OracleClient\Other.xml"
                     BuildAction = "Content"
                 />
-                <Folder RelPath = "NPerf\" />
                 <File
                     RelPath = "NUnit\CommonTests\ConfigWatcher\ConfigWatcherTest.cs"
                     SubType = "Code"
