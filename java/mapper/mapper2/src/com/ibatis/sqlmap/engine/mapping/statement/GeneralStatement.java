@@ -16,6 +16,7 @@
 package com.ibatis.sqlmap.engine.mapping.statement;
 
 import com.ibatis.common.jdbc.exception.NestedSQLException;
+import com.ibatis.common.io.ReaderInputStream;
 import com.ibatis.sqlmap.client.event.RowHandler;
 import com.ibatis.sqlmap.engine.execution.SqlExecutor;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
@@ -25,13 +26,14 @@ import com.ibatis.sqlmap.engine.scope.ErrorContext;
 import com.ibatis.sqlmap.engine.scope.RequestScope;
 import com.ibatis.sqlmap.engine.transaction.Transaction;
 import com.ibatis.sqlmap.engine.transaction.TransactionException;
-import com.ibatis.sqlmap.engine.type.DomTypeMarker;
-import com.ibatis.sqlmap.engine.type.XmlTypeMarker;
+import com.ibatis.sqlmap.engine.type.*;
 import org.w3c.dom.Document;
 
+import javax.xml.parsers.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.io.*;
 
 public class GeneralStatement extends BaseStatement {
 
@@ -45,7 +47,7 @@ public class GeneralStatement extends BaseStatement {
     request.getSession().setCommitRequired(true);
 
     try {
-      validateParameter(parameterObject);
+      parameterObject = validateParameter(parameterObject);
 
       Sql sql = getSql();
 
@@ -141,7 +143,7 @@ public class GeneralStatement extends BaseStatement {
     errorContext.setResource(this.getResource());
 
     try {
-      validateParameter(parameterObject);
+      parameterObject = validateParameter(parameterObject);
 
       Sql sql = getSql();
 
@@ -198,24 +200,41 @@ public class GeneralStatement extends BaseStatement {
     getSqlExecutor().executeQuery(request, conn, sqlString, parameters, skipResults, maxResults, callback);
   }
 
-  protected void validateParameter(Object param)
+  protected Object validateParameter(Object param)
       throws SQLException {
+    Object newParam = param;
     Class parameterClass = getParameterClass();
-    if (param != null && parameterClass != null) {
+    if (newParam != null && parameterClass != null) {
       if (DomTypeMarker.class.isAssignableFrom(parameterClass)) {
-        if (!Document.class.isAssignableFrom(param.getClass())) {
-          throw new SQLException("Invalid parameter object type.  Expected '" + Document.class.getName() + "' but found '" + param.getClass().getName() + "'.");
-        }
-      } else if (XmlTypeMarker.class.isAssignableFrom(parameterClass)) {
-        if (param.getClass() != String.class) {
-          throw new SQLException("Invalid parameter object type.  Expected '" + String.class.getName() + "' but found '" + param.getClass().getName() + "'.");
+        if (XmlTypeMarker.class.isAssignableFrom(parameterClass)) {
+          if (!(newParam instanceof String)
+              && !(newParam instanceof Document)) {
+            throw new SQLException("Invalid parameter object type.  Expected '" + String.class.getName() + "' or '" + Document.class.getName() + "' but found '" + newParam.getClass().getName() + "'.");
+          }
+          if (!(newParam instanceof Document)) {
+            newParam = stringToDocument ((String)newParam);
+          }
+        } else {
+          if (!Document.class.isAssignableFrom(newParam.getClass())) {
+            throw new SQLException("Invalid parameter object type.  Expected '" + Document.class.getName() + "' but found '" + newParam.getClass().getName() + "'.");
+          }
         }
       } else {
-        if (!parameterClass.isAssignableFrom(param.getClass())) {
-          throw new SQLException("Invalid parameter object type.  Expected '" + parameterClass.getName() + "' but found '" + param.getClass().getName() + "'.");
+        if (!parameterClass.isAssignableFrom(newParam.getClass())) {
+          throw new SQLException("Invalid parameter object type.  Expected '" + parameterClass.getName() + "' but found '" + newParam.getClass().getName() + "'.");
         }
       }
     }
+    return newParam;
   }
 
+  private Document stringToDocument (String s) {
+    try {
+      DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+      DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+      return documentBuilder.parse(new ReaderInputStream(new StringReader(s)));
+    } catch (Exception e) {
+      throw new RuntimeException("Error occurred.  Cause: " + e, e);
+    }
+  }
 }

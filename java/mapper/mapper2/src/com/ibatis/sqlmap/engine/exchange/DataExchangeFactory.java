@@ -17,7 +17,6 @@ package com.ibatis.sqlmap.engine.exchange;
 
 import com.ibatis.sqlmap.engine.type.DomTypeMarker;
 import com.ibatis.sqlmap.engine.type.TypeHandlerFactory;
-import com.ibatis.sqlmap.engine.type.XmlTypeMarker;
 
 import java.util.List;
 import java.util.Map;
@@ -25,7 +24,6 @@ import java.util.Map;
 public class DataExchangeFactory {
 
   private final DataExchange domDataExchange;
-  private final DataExchange xmlDataExchange;
   private final DataExchange listDataExchange;
   private final DataExchange mapDataExchange;
   private final DataExchange primitiveDataExchange;
@@ -36,7 +34,6 @@ public class DataExchangeFactory {
   public DataExchangeFactory(TypeHandlerFactory typeHandlerFactory) {
     this.typeHandlerFactory = typeHandlerFactory;
     domDataExchange = new DomDataExchange(this);
-    xmlDataExchange = new XmlDataExchange(this);
     listDataExchange = new ListDataExchange(this);
     mapDataExchange = new ComplexDataExchange(this);
     primitiveDataExchange = new PrimitiveDataExchange(this);
@@ -53,8 +50,6 @@ public class DataExchangeFactory {
       dataExchange = complexDataExchange;
     } else if (DomTypeMarker.class.isAssignableFrom(clazz)) {
       dataExchange = domDataExchange;
-    } else if (XmlTypeMarker.class.isAssignableFrom(clazz)) {
-      dataExchange = xmlDataExchange;
     } else if (List.class.isAssignableFrom(clazz)) {
       dataExchange = listDataExchange;
     } else if (Map.class.isAssignableFrom(clazz)) {

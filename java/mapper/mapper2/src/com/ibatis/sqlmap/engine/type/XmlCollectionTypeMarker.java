@@ -15,5 +15,5 @@
  */
 package com.ibatis.sqlmap.engine.type;
 
-public interface XmlCollectionTypeMarker extends XmlTypeMarker {
+public interface XmlCollectionTypeMarker extends XmlTypeMarker, DomCollectionTypeMarker {
 }

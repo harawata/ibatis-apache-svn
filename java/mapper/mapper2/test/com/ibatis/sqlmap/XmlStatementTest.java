@@ -1,7 +1,7 @@
 package com.ibatis.sqlmap;
 
-import com.ibatis.common.minixml.MiniDom;
-import com.ibatis.common.minixml.MiniParser;
+import xmltester.*;
+import xmltester.MiniParser;
 
 import java.sql.SQLException;
 
@@ -51,6 +51,14 @@ public class XmlStatementTest extends BaseSqlMapTest {
     MiniDom dom = new MiniParser(order).getDom();
     assertEquals("1", dom.getValue("id"));
     assertEquals("2", dom.getValue("lineItems.lineItem.ID"));
+  }
+
+  public void testExecuteQueryForXmlSpecialChars() throws SQLException {
+    String account = (String) sqlMap.queryForObject("getAccountXml", "<parameter><id>5</id></parameter>");
+    assertNotNull(account);
+    MiniDom dom = new MiniParser(account).getDom();
+    assertEquals("5", dom.getValue("ID"));
+    assertEquals("&manda", dom.getValue("FIRSTNAME"));
   }
 
 }

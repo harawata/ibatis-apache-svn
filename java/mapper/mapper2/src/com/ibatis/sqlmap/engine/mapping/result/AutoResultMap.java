@@ -21,7 +21,6 @@ import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
 import com.ibatis.sqlmap.engine.scope.RequestScope;
 import com.ibatis.sqlmap.engine.type.DomTypeMarker;
-import com.ibatis.sqlmap.engine.type.XmlTypeMarker;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -52,8 +51,7 @@ public class AutoResultMap extends BasicResultMap {
       initializeMapResults(rs);
     } else if (getDelegate().getTypeHandlerFactory().getTypeHandler(resultClass) != null) {
       initializePrimitiveResults(rs);
-    } else if (DomTypeMarker.class.isAssignableFrom(resultClass)
-        || XmlTypeMarker.class.isAssignableFrom(resultClass)) {
+    } else if (DomTypeMarker.class.isAssignableFrom(resultClass)) {
       initializeXmlResults(rs);
     } else {
       initializeBeanResults(rs);

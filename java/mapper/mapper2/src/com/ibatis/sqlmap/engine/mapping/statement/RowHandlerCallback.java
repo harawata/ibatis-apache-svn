@@ -18,8 +18,16 @@ package com.ibatis.sqlmap.engine.mapping.statement;
 import com.ibatis.sqlmap.client.event.RowHandler;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
 import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.type.*;
 
 import java.sql.SQLException;
+import java.io.StringWriter;
+
+import org.w3c.dom.Document;
+
+import javax.xml.transform.*;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.dom.DOMSource;
 
 public class RowHandlerCallback {
 
@@ -37,7 +45,39 @@ public class RowHandlerCallback {
       throws SQLException {
     Object object;
     object = resultMap.setResultObjectValues(request, resultObject, results);
+
+    int stackDepth = request.getSession().getRequestStackDepth();
+    
+    if (stackDepth == 1) {
+      Class targetType = request.getResultMap().getResultClass();
+      if (XmlTypeMarker.class.isAssignableFrom(targetType)
+          && object instanceof Document) {
+        object = documentToString((Document) object);
+      }
+    }
+
     rowHandler.handleRow(object);
   }
+
+  private String documentToString (Document document) {
+    String s = null;
+
+    try {
+      TransformerFactory tFactory = TransformerFactory.newInstance();
+      Transformer transformer = tFactory.newTransformer();
+
+      DOMSource source = new DOMSource(document);
+      StringWriter writer = new StringWriter();
+      StreamResult result = new StreamResult(writer);
+      transformer.transform(source, result);
+      s = writer.getBuffer().toString();
+
+    } catch (TransformerException e) {
+      throw new RuntimeException("Error occurred.  Cause: " + e, e);
+    }
+
+    return s;
+  }
+
 
 }

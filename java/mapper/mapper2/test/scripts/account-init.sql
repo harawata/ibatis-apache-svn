@@ -24,6 +24,6 @@ INSERT INTO ACCOUNT VALUES(1,'Clinton', 'Begin', 'clinton.begin@ibatis.com', 1, 
 INSERT INTO ACCOUNT VALUES(2,'Jim', 'Smith', 'jim.smith@somewhere.com', 2, 'Oui', 200, NOW());
 INSERT INTO ACCOUNT VALUES(3,'Elizabeth', 'Jones', null, 3, 'Non', 100, NOW());
 INSERT INTO ACCOUNT VALUES(4,'Bob', 'Jackson', 'bob.jackson@somewhere.com', 4, 'Non', 100, NOW());
-INSERT INTO ACCOUNT VALUES(5,'Amanda', 'Goodman', null, 5, 'Oui', 100, NOW());
+INSERT INTO ACCOUNT VALUES(5,'&manda', 'Goodman', null, 5, 'Oui', 100, NOW());
 
 

@@ -19,7 +19,6 @@ import com.ibatis.common.beans.ClassInfo;
 import com.ibatis.common.exception.NestedRuntimeException;
 import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
 import com.ibatis.sqlmap.engine.type.DomTypeMarker;
-import com.ibatis.sqlmap.engine.type.XmlTypeMarker;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.InvocationHandler;
 
@@ -63,8 +62,6 @@ public class EnhancedLazyResultLoader {
 
     public Object loadResult() throws SQLException {
       if (DomTypeMarker.class.isAssignableFrom(targetType)) {
-        return ResultLoader.getResult(client, statementName, parameterObject, targetType);
-      } else if (XmlTypeMarker.class.isAssignableFrom(targetType)) {
         return ResultLoader.getResult(client, statementName, parameterObject, targetType);
       } else if (Collection.class.isAssignableFrom(targetType)) {
         return Enhancer.create(Object.class, INTERFACES, this);

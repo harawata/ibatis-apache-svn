@@ -18,7 +18,6 @@ package com.ibatis.sqlmap.engine.mapping.result;
 import com.ibatis.common.beans.Probe;
 import com.ibatis.common.beans.ProbeFactory;
 import com.ibatis.common.jdbc.exception.NestedSQLException;
-import com.ibatis.common.minixml.MiniDom;
 import com.ibatis.common.resources.Resources;
 import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.engine.exchange.DataExchange;
@@ -145,12 +144,6 @@ public class BasicResultMap implements ResultMap {
           throw new SqlMapException("The result class was null when trying to get results for ResultMap named " + getId() + ".");
         } else if (Map.class.isAssignableFrom(resultClass)) {
           columnValues[i] = getNestedResultMappingValue(request, rs, mapping, Object.class);
-        } else if (XmlTypeMarker.class.isAssignableFrom(resultClass)) {
-          Class javaType = mapping.getJavaType();
-          if (javaType == null) {
-            javaType = XmlTypeMarker.class;
-          }
-          columnValues[i] = getNestedResultMappingValue(request, rs, mapping, javaType);
         } else if (DomTypeMarker.class.isAssignableFrom(resultClass)) {
           Class javaType = mapping.getJavaType();
           if (javaType == null) {
@@ -191,8 +184,6 @@ public class BasicResultMap implements ResultMap {
           parameterObject = preparePrimitiveParameterObject(rs, mapping, parameterType);
         } else if (DomTypeMarker.class.isAssignableFrom(parameterType)) {
           parameterObject = prepareDomParameterObject(rs, mapping);
-        } else if (XmlTypeMarker.class.isAssignableFrom(parameterType)) {
-          parameterObject = prepareXmlParameterObject(rs, mapping);
         } else {
           parameterObject = prepareBeanParameterObject(rs, mapping, parameterType);
         }
@@ -201,13 +192,8 @@ public class BasicResultMap implements ResultMap {
       Sql sql = mappedStatement.getSql();
       ResultMap resultMap = sql.getResultMap(request, parameterObject);
       Class resultClass = resultMap.getResultClass();
-      if (resultClass != null && !XmlTypeMarker.class.isAssignableFrom(targetType)) {
-        if (XmlCollectionTypeMarker.class.isAssignableFrom(resultClass)) {
-          targetType = XmlCollectionTypeMarker.class;
-        } else if (XmlTypeMarker.class.isAssignableFrom(resultClass)) {
-          targetType = XmlTypeMarker.class;
-        }
-      } else if (resultClass != null && !DomTypeMarker.class.isAssignableFrom(targetType)) {
+
+      if (resultClass != null && !DomTypeMarker.class.isAssignableFrom(targetType)) {
         if (DomCollectionTypeMarker.class.isAssignableFrom(resultClass)) {
           targetType = DomCollectionTypeMarker.class;
         } else if (DomTypeMarker.class.isAssignableFrom(resultClass)) {
@@ -215,25 +201,7 @@ public class BasicResultMap implements ResultMap {
         }
       }
 
-      boolean setIgnoreDomRoot = false;
-      if (XmlTypeMarker.class == (targetType)) {
-        if (!request.getSession().isIgnoreDomRoot()) {
-          request.getSession().setIgnoreDomRoot(true);
-          setIgnoreDomRoot = true;
-        }
-      }
-
       Object result = ResultLoader.loadResult(client, statementName, parameterObject, targetType);
-
-      if (setIgnoreDomRoot) {
-        request.getSession().setIgnoreDomRoot(false);
-      }
-
-      if (XmlTypeMarker.class.isAssignableFrom(targetType)) {
-        if (result instanceof List) {
-          result = new XmlList((List) result);
-        }
-      }
 
       String nullValue = mapping.getNullValue();
       if (result == null && nullValue != null) {
@@ -258,35 +226,6 @@ public class BasicResultMap implements ResultMap {
     TypeHandlerFactory typeHandlerFactory = getDelegate().getTypeHandlerFactory();
     TypeHandler th = typeHandlerFactory.getTypeHandler(parameterType);
     parameterObject = th.getResult(rs, mapping.getColumnName());
-    return parameterObject;
-  }
-
-  private Object prepareXmlParameterObject(ResultSet rs, BasicResultMapping mapping) throws SQLException {
-    TypeHandlerFactory typeHandlerFactory = getDelegate().getTypeHandlerFactory();
-
-    Object parameterObject;
-
-    MiniDom dom = new MiniDom("parameter");
-
-    String complexName = mapping.getColumnName();
-
-    TypeHandler stringTypeHandler = typeHandlerFactory.getTypeHandler(String.class);
-    if (complexName.indexOf('=') > -1) {
-      // old 1.x style multiple params
-      StringTokenizer parser = new StringTokenizer(complexName, "{}=, ", false);
-      while (parser.hasMoreTokens()) {
-        String propName = parser.nextToken();
-        String colName = parser.nextToken();
-        Object propValue = stringTypeHandler.getResult(rs, colName);
-        dom.setValue(propName, propValue.toString());
-      }
-    } else {
-      // single param
-      Object propValue = stringTypeHandler.getResult(rs, complexName);
-      dom.setValue("value", propValue.toString());
-    }
-
-    parameterObject = dom.toString();
     return parameterObject;
   }
 

@@ -35,6 +35,16 @@ public class DomStatementTest extends BaseSqlMapTest {
     assertEquals("clinton.begin@ibatis.com", dom.getObject(account, "EMAILADDRESS"));
   }
 
+  public void testExecuteQueryForDomSpecialChars() throws SQLException {
+    Document account = (Document) sqlMap.queryForObject("getAccountDom", newParameter("5"));
+    assertNotNull(account);
+
+    Probe dom = ProbeFactory.getProbe(account);
+
+    assertEquals("5", dom.getObject(account, "ID"));
+    assertEquals("&manda", dom.getObject(account, "FIRSTNAME"));
+  }
+
   public void testExecuteQueryForDomExternalMaps() throws SQLException {
     Document account = (Document) sqlMap.queryForObject("getAccountDomExternalMaps", newParameter("1"));
     assertNotNull(account);

@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.ibatis.common.minixml;
+package xmltester;
 
 import com.ibatis.common.exception.NestedRuntimeException;
 import com.ibatis.common.io.ReaderInputStream;
@@ -28,6 +28,8 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+
+import xmltester.*;
 
 public class MiniParser extends DefaultHandler {
 

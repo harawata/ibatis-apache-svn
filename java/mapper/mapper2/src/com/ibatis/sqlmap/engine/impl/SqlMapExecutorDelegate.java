@@ -549,12 +549,14 @@ public class SqlMapExecutorDelegate {
 
   protected RequestScope popRequest(SessionScope session, MappedStatement mappedStatement) {
     RequestScope request = (RequestScope) requestPool.pop();
+    session.incrementRequestStackDepth();
     request.setSession(session);
     mappedStatement.initRequest(request);
     return request;
   }
 
   protected void pushRequest(RequestScope request) {
+    request.getSession().decrementRequestStackDepth();
     request.reset();
     requestPool.push(request);
   }

@@ -480,7 +480,7 @@ public class StatementTest extends BaseSqlMapTest {
     assertEquals("Jim", map.get("Smith"));
     assertEquals("Elizabeth", map.get("Jones"));
     assertEquals("Bob", map.get("Jackson"));
-    assertEquals("Amanda", map.get("Goodman"));
+    assertEquals("&manda", map.get("Goodman"));
   }
 
   // UPDATE TESTS

@@ -31,6 +31,7 @@ public class SessionScope extends BaseScope {
   private SqlMapClient sqlMapClient;
   private SqlMapExecutor sqlMapExecutor;
   private SqlMapTransactionManager sqlMapTxMgr;
+  private int requestStackDepth;
 
   // Used by TransactionManager
   private Transaction transaction;
@@ -44,8 +45,6 @@ public class SessionScope extends BaseScope {
 
   // Used by SqlExecutor
   private Object batch;
-
-  private boolean ignoreDomRoot;
 
   private boolean commitRequired;
 
@@ -109,12 +108,16 @@ public class SessionScope extends BaseScope {
     this.batch = batch;
   }
 
-  public boolean isIgnoreDomRoot() {
-    return ignoreDomRoot;
+  public int getRequestStackDepth() {
+    return requestStackDepth;
   }
 
-  public void setIgnoreDomRoot(boolean ignoreDomRoot) {
-    this.ignoreDomRoot = ignoreDomRoot;
+  public void incrementRequestStackDepth() {
+    requestStackDepth++;
+  }
+
+  public void decrementRequestStackDepth() {
+    requestStackDepth--;
   }
 
   public boolean isCommitRequired() {
@@ -134,7 +137,7 @@ public class SessionScope extends BaseScope {
     transaction = null;
     transactionState = null;
     batch = null;
-    ignoreDomRoot = false;
+    requestStackDepth = 0;
     id = getNextId();
   }
 

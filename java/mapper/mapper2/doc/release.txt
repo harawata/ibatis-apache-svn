@@ -2,7 +2,7 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
- 2.0.5 - Aug 8, 2004
+ 2.0.5 - Aug 11, 2004
 ------------------------------
 
  o Added Custom Type Handlers!  (see TypeHandlerCallback)
@@ -10,9 +10,11 @@ Build Number: @buildNum@
  o Added passthrough methods for Hibernate DAO template
  o Added JdbcDaoTemplate support to most DAO TX managers
  o Deprecated JtaDaoTemplate, use JdbcDaoTemplate instead
+ o Fixed reserved XML character encoding for XML types
  o Fixed Autocommit (true) in JdbcDaoTransaction
  o Fixed Expanded entity references in XML (for &gt; etc.)
  o Fixed base probe indexed property accessor
+ o Fixed doubled-up property element for complex DOM props
 
 ------------------------------
  2.0.4 - Jul 25, 2004

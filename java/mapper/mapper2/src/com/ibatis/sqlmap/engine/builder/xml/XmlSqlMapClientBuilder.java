@@ -1270,7 +1270,7 @@ public class XmlSqlMapClientBuilder {
       dbf.setNamespaceAware(false);
       dbf.setValidating(validationEnabled);
       dbf.setIgnoringComments(true);
-      dbf.setIgnoringElementContentWhitespace(true);
+      dbf.setIgnoringElementContentWhitespace(false);
       dbf.setCoalescing(false);
       dbf.setExpandEntityReferences(true);
 
@@ -1298,9 +1298,6 @@ public class XmlSqlMapClientBuilder {
       handler = typeHandlerFactory.getUnkownTypeHandler();
     } else if (DomTypeMarker.class.isAssignableFrom(clazz)) {
       // DOM
-      handler = typeHandlerFactory.getTypeHandler(String.class, jdbcType);
-    } else if (XmlTypeMarker.class.isAssignableFrom(clazz)) {
-      // XML
       handler = typeHandlerFactory.getTypeHandler(String.class, jdbcType);
     } else if (java.util.Map.class.isAssignableFrom(clazz)) {
       // Map
