@@ -1,5 +1,6 @@
 package com.ibatis.common.beans;
 
+import org.w3c.dom.CharacterData;
 import org.w3c.dom.*;
 
 import java.util.StringTokenizer;
@@ -21,19 +22,39 @@ public class DomProbe extends BaseProbe {
   }
 
   public Class getPropertyTypeForSetter(Object object, String name) {
-    return null;
+    Object obj = getObject(object, name);
+    if (obj == null) {
+      return Object.class;
+    } else {
+      return obj.getClass();
+    }
   }
 
   public Class getPropertyTypeForGetter(Object object, String name) {
-    return null;
+    Object obj = getObject(object, name);
+    if (obj == null) {
+      return Object.class;
+    } else {
+      return obj.getClass();
+    }
   }
 
   public boolean hasWritableProperty(Object object, String propertyName) {
-    return false;
+    Object obj = getObject(object, propertyName);
+    if (obj == null) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   public boolean hasReadableProperty(Object object, String propertyName) {
-    return false;
+    Object obj = getObject(object, propertyName);
+    if (obj == null) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   public Object getObject(Object object, String name) {
@@ -94,7 +115,7 @@ public class DomProbe extends BaseProbe {
   protected Object getProperty(Object object, String property) {
     Object value = null;
     if (property.indexOf("[") > -1) {
-      //value = getArrayProperty(object, name);
+//value = getArrayProperty(object, name);
     } else {
       Element element = null;
       if (object instanceof Document) {
@@ -112,22 +133,22 @@ public class DomProbe extends BaseProbe {
 
     Element prop = findNodeByName(element, property, index, true);
 
-    // Find text child element
+// Find text child element
     NodeList texts = prop.getChildNodes();
     if (texts.getLength() == 1) {
       Node child = texts.item(0);
       if (child instanceof CharacterData) {
-        // Use existing text.
+// Use existing text.
         data = (CharacterData) child;
       } else {
-        // Remove non-text, add text.
+// Remove non-text, add text.
         prop.removeChild(child);
         Text text = prop.getOwnerDocument().createTextNode(String.valueOf(value));
         prop.appendChild(text);
         data = text;
       }
     } else if (texts.getLength() > 1) {
-      // Remove all, add text.
+// Remove all, add text.
       for (int i = texts.getLength() - 1; i >= 0; i--) {
         prop.removeChild(texts.item(i));
       }
@@ -135,13 +156,13 @@ public class DomProbe extends BaseProbe {
       prop.appendChild(text);
       data = text;
     } else {
-      // Add text.
+// Add text.
       Text text = prop.getOwnerDocument().createTextNode(String.valueOf(value));
       prop.appendChild(text);
       data = text;
     }
 
-    // Set type attribute
+// Set type attribute
     prop.setAttribute("type", value == null ? "null" : value.getClass().getName());
 
     data.setData(String.valueOf(value));
@@ -152,7 +173,7 @@ public class DomProbe extends BaseProbe {
 
     Element prop = findNodeByName(element, property, index, false);
 
-    // Find text child elements
+// Find text child elements
     NodeList texts = prop.getChildNodes();
     if (texts.getLength() > 0) {
       for (int i = 0; i < texts.getLength(); i++) {
@@ -165,8 +186,8 @@ public class DomProbe extends BaseProbe {
       value = null;
     }
 
-    //convert to proper type
-    //value = convert(value.toString());
+//convert to proper type
+//value = convert(value.toString());
 
     return String.valueOf(value);
   }
@@ -175,7 +196,7 @@ public class DomProbe extends BaseProbe {
   private Element findNodeByName(Element element, String name, int index, boolean create) {
     Element prop = null;
 
-    // Find named property element
+// Find named property element
     NodeList props = element.getElementsByTagName(name);
     if (props.getLength() > index) {
       prop = (Element) props.item(index);
