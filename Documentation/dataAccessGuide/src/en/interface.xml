@@ -365,11 +365,12 @@ namespace Examples.DaoUsage {
       of whether the returned <varname>accountDao</varname> is the ADO.NET or
       Data Mapper implementation. If we needed to for one reason or another,
       we could easily change the configuration to switch between the DAO
-      implementations. After getting the <varname>accountDao</varname>, we
-      open a connection to the data source and call the DAO method(s) that we
-      need to execute. A consistent interface for either ADO.NET or Data
-      Mapper DAOs with no persistence implementation details found in our
-      code!</para>
+      implementations (use the DAO configuration file to switch database
+      platforms, run test DAOs, etc). After getting the
+      <varname>accountDao</varname>, we open a connection to the data source
+      and call the DAO method(s) that we need to execute. A consistent
+      interface for either ADO.NET or Data Mapper DAOs with no persistence
+      implementation details found in our code!</para>
     </sect2>
 
     <sect2>
@@ -382,14 +383,14 @@ namespace Examples.DaoUsage {
 
       <para>Like the <classname>SqlMapDaoSession</classname> handler, the
       <classname>NHibernateDaoSession</classname> handler is found in
-      <classname>IBatisNet.DataAccess.DaoSessionHandlers</classname>
+      <classname>IBatisNet.DataAccess.Extensions.DaoSessionHandlers</classname>
       namespace.</para>
 
       <programlisting>using System;
 
 using NHibernate;
 
-<emphasis role="blue">using IBatisNet.DataAccess.DaoSessionHandlers; // NHibernateDaoSession
+<emphasis role="blue">using IBatisNet.DataAccess.Extensions.DaoSessionHandlers; // NHibernateDaoSession
 using IBatisNet.DataAccess.Exceptions; // DataAccessException
 </emphasis>
 using IBatisNet.Test.Dao.Interfaces; // IUserDao
