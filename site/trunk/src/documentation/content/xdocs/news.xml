@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "http://apache.org/forrest/dtd/document-v12.dtd">
+<document> 
+  <header> 
+    <title>Apache iBATIS - News</title> 
+  </header> 
+  <body>  
+
+	  <section>
+		  <title>iBATIS.NET DataAccess 1.5.0 and DataMapper 1.1.0 are Available</title>
+		  <p>
+		  (12 Jan 2005) Alpha distributions of iBATIS.NET DataMapper 1.1 and DataAccess 1.5 are available at the <link href="http://sourceforge.net/project/showfiles.php?group_id=109704">SourceForge site</link>.  
+		  This is not an ASF release, but it is under the Apache License.
+		  For more, see the <link href="http://sourceforge.net/forum/forum.php?forum_id=437027">release notes</link>.
+		  </p>
+		</section>
+
+
+		<section>
+			<title>iBATIS/Java 2.0.9 is Available -- Happy New Year!</title>
+
+					<p>(05 Jan 2005) Distributions of iBATIS 2.0.9 are available at the 
+					<link href="http://sourceforge.net/project/showfiles.php?group_id=61326">SourceForge site</link>.
+		      This is not an ASF release, but it is under the Apache License.
+					</p>
+					
+					<p>					
+              Well, it's been a long time since we've released any major 
+              features. We've been working on stabalizing the platform, organizing 
+              the team and supporting the community. We like to consider this 
+              progress, but sometimes we want is features. So here we go! Check 
+              out the new feature list:
+          </p>
+
+            <ul>
+              <li><strong>Solution for N+1 selects for 1:M and 
+                M:N.</strong> Version 2.0 was always designed for this, I just 
+                didn't have a chance to implement it, until now. It's made possible 
+                by two small additions to the mappings 
+                <ul>
+                  <li>&lt;resultMap...groupBy=&quot;prop1,prop2&quot;&gt; </li>
+                  <li>&lt;result...resultMap=&quot;subResultMapForCollectionItems&quot;&gt;</li>
+                </ul>
+              </li>
+
+              <li><strong>Remappable result sets!</strong> So, 
+                you're one of those people who wants to use a dynamic SELECT clause 
+                in your SQL Maps? Now you can. One simple addition to your select 
+                statements. 
+                <ul>
+                  <li>&lt;select...remapResults=&quot;true&quot;&gt;</li>
+                </ul>
+              </li>
+              
+              <li><strong>Isolation Level Support. </strong>Now 
+                you can specify the transaction isolation level when starting 
+                a transaction. Simply specify it as a parameter of SqlMapClient.startTransaction 
+                (int isolationLevel).</li>
+
+              <li><strong>SQL Fragment Includes.</strong> No more 
+                repeated where clauses. If you have a need to repeat (such as 
+                a count * and a column list version of a query), now you can include 
+                the common part of the statement. Simply declare an &lt;sql&gt; 
+                element with an id, then &lt;include&gt; it with a refid. You 
+                can also use dynamic SQL, inline parameters and anything else 
+                you can put in any other statement. Two new elements: 
+                <ul>
+                  <li>&lt;sql id=&quot;someSqlToInclude&quot;&gt; ... WHERE BLAH 
+                    = BLAH ...&lt;/sql&gt;</li>
+
+                  <li>&lt;include refid=&quot;someSqlToInclude&quot;/&gt;</li>
+                </ul>
+              </li>
+
+              <li><strong>Default CLOB/BLOB Handlers.</strong> 
+                Why punish everyone with a good database driver? We've now included 
+                default LOB handlers for byte[] and large strings. Any mapping 
+                to byte[] with BLOB or LONGVARGBINARY will use the BLOB handler; 
+                and any mapping to String with CLOB or LONGVARCHAR will use CLOB. 
+                Only poor database drivers are not supported, and may still require 
+                a custom tag handler. In those cases, you can use the default 
+                ones as an example (they're implemented as CTH).</li>
+
+              <li><strong>Other features include: </strong>TopLink 
+                DAO template and TX manager, support for directly implementing 
+                TagHandler interface (in place of CTH), a completely refactored 
+                XML parser and a few minor bug fixes.</li>
+
+              <li><strong>Documentation coming soon.</strong> 
+                &quot;Yeah right!&quot;, you say! Well, admittedly we have been 
+                slow to document lately. Now we have a solution for keeping up 
+                with ourselves. Our<strong> Wiki </strong>will serve as a documentation 
+                launch pad where everyone (including us) can contribute to the 
+                documentation of the new features. Good documentation will be 
+                promoted to the developer guide. </li>
+            </ul>
+		</section>
+
+		<section>
+			<title>iBATIS/Java 2.0.8 available</title>
+			<p>
+				(26 Nov 2004) Under the new release plan, Team Java will be alternating between bug fix releases and feature releases. Version 2.0.8 is a bug fix release, and therefore the next release will be a feature release. This approach will keep the product stable while offering power users access to new features earlier and on a more consistent release schedule.
+			</p>
+			<ul>
+				<li>Probes now always return true for hasReadable/hasWriteable property checks.</li>
+				<li>Fixed OUT/INOUT parameters to proc not retrieved properly (ibatis-12)</li>
+				<li>Verified missing columns throw an exception (ibatis-16)</li>
+				<li>Completely $supplied$ SQL statements are not supported (ibatis-17)</li>
+				<li>Verified parameter type handlers are applied (ibatis-ll)</li>
+				<li>Fixed cache model size of 1 disables caching (ibatis-7)</li>
+				<li>Fixed LRU cache memory leak (ibatis-1)</li>
+				<li>Added commitRequired attribute to transactionManager to force commit even on query (ibatis-10,3)</li>
+			</ul>
+			<p><link href="http://prdownloads.sourceforge.net/ibatisdb/iBATIS_DBL-2.0.8.470.zip?download">Download 2.0.8</link></p>
+		</section>
+	
+		<section>
+			<title>New version of sql2ibatis available</title>
+			<p>
+				(26 Nov 2004) Alex Egorov has released a new version of his iBATIS configuration and SQL generation tool. It generates configuration files and SQL based on an input DDL file. Check it out. 
+			</p>
+			<p>
+				<fork href="http://alxeg.narod.ru/ibatis/index.html">Download sql2ibatis</fork>
+			</p>
+		</section>
+
+	 	<section>
+     <title>Updated Chinese Document</title>
+     <p>(16 Nov 2004) Huge thanks to Liutao for completely translating the entire Java SQL Maps documentation and tutorial to Chinese!</p>
+     <p><link href="http://prdownloads.sourceforge.net/ibatisdb/iBATIS-SqlMaps-2_cn.pdf?download">SQL Maps Guide</link> | <link href="http://prdownloads.sourceforge.net/ibatisdb/iBATIS-SqlMaps-2-Tutorial_cn.pdf?download">SQL Maps Tutorial</link></p>
+	  </section>
+	
+		<section>
+     <title>Happy Halloween from iBATIS and The Apache Software Foundation</title>
+     <p>(31 Oct 2004) iBATIS has been voted into the Apache Incubator, and a number of resources have been set up. Over the next few weeks, we'll be switching over our current SourceForge resources over to Apache. </p>
+    </section>
+  
+	</body>
+</document>

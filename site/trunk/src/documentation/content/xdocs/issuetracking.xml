@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "document-v12.dtd">
+
+<document>
+
+<header>
+    <title>Apache iBATIS - Issue Tracking</title>
+</header>
+
+<body>
+
+    <section>
+      <title>Issue Tracking</title>
+      <p>
+      Use the links below to review or create issues tickets to track software defects or feature requests.
+      </p>
+      <p>
+      Please note that this is <em>not</em> a support forum. Before filing any tickets, please review the 
+      documentation and mailing list archives. Please also consider posting a message to the appropriate 
+      user list before creating a new ticket.
+      </p>
+      <table>
+        <tr>
+          <td><link href="http://nagoya.apache.org/jira/browse/IBATIS">iBATIS Java Issue Tracking</link></td>
+        </tr>
+        <tr>
+          <td><link href="http://nagoya.apache.org/jira/browse/IBATISNET"> iBATIS.NET Issue Tracking</link></td>
+        </tr>
+      </table>
+    </section>
+
+    <section>
+     <title>Legacy Issues</title>
+     <p>
+      Use the link below to review prior issues that were tracked at the iBATIS for Java SourceForge site, 
+      before iBATIS joined Apache. These links are provided for research purposes only. All new issues
+      must be registered in the ASF tracking system.
+     </p>
+     <table>
+        <tr>
+          <td><link href="http://sourceforge.net/tracker/?group_id=61326">iBATIS Java Legacy Issues</link> - Use for reference only!</td>
+        </tr>
+        <tr>
+          <td>iBATIS.NET Legacy Issues - All tickets were transferred</td>
+        </tr>
+      </table>
+     </section>
+    
+</body>
+    
+</document>

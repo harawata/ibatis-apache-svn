@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "document-v12.dtd">
+
+<document>
+
+<header>
+    <title>Apache iBATIS - Downloads</title>
+</header>
+
+<body>
+
+<section>
+<title>Pardon our dust!</title>
+      <p>While we complete our migration to the Apache Software Foundation, the latest iBATIS releases are available through SourceForge.
+      These are <strong>not</strong> formal ASF releases, but they are under the Apache License.</p>
+</section>
+
+<section>
+<title>iBATIS for Java</title>
+      <ul>
+        <li><link href="http://prdownloads.sourceforge.net/ibatisdb/iBATIS_DBL-2.0.9.496.zip?download">iBATIS/Java</link> (Jan 2005, v2.09)</li>
+        <li><link href="http://prdownloads.sourceforge.net/ibatisjpetstore/iBATIS_JPetStore-4.0.5.zip?download">JPetstore</link> (Jun 2004, v4.0.5)</li>
+        <li><link href="http://prdownloads.sourceforge.net/ibatisdb/iBATIS-SqlMaps-2.pdf?download">SQL Maps Manual</link> (Jun 2004)</li>
+        <li><link href="http://prdownloads.sourceforge.net/ibatisdb/iBATIS-SqlMaps-2-Tutorial.pdf?download">SQL Maps Tutorial</link> (Jun 2004)</li>
+        <li><link href="http://prdownloads.sourceforge.net/ibatisdb/iBATIS-DAO-2.pdf?download">DAO Manual</link> (Jun 2004)</li>
+        <li><link href="http://ibatis.com/common/javadocs/">JavaDocs</link></li>
+      </ul>
+</section>
+
+<section>
+<title>iBATIS for .NET</title>
+      <p>Best Available Releases</p>
+      <ul>
+        <li><link href="http://prdownloads.sourceforge.net/ibatisnet/iBatisNet-bin-release-1.0.1.321.zip?download">iBATIS.NET- binary</link> (Nov 2004, v1.0.1)</li>
+        <li><link href="http://prdownloads.sourceforge.net/ibatisnet/iBatisNet-source-1.0.1.321.zip?download">iBATIS.NET - source</link> (Nov 2004, v1.0.1)</li>
+      </ul>
+      <p>Development Releases</p>
+      <ul>
+        <li><link href="http://prdownloads.sourceforge.net/ibatisnet/DataMapper-bin-1.1.0.458.zip?download">Data Mapper</link> Alpha (Jan 2005, v1.1.0)</li>
+        <li><link href="http://prdownloads.sourceforge.net/ibatisnet/DataAccess-bin-1.5.0.458.zip?download">Data Access</link> Alpha (Jan 2005, v1.5.0)</li>
+        <li><link href="http://prdownloads.sourceforge.net/ibatisnet/tutorial-1.1.zip?download">Tutorial</link> Alpha (Jan 2005, v1.5.0)</li>
+        <li><link href="http://prdownloads.sourceforge.net/ibatisnet/DevGuide.pdf?download">Documentation</link> Alpha (Oct 2004, v1.0.0)</li>
+        <li><link href="http://prdownloads.sourceforge.net/ibatisnet/NPetshop-1.0.0.RC1.zip?download">NPetstore Example Application</link> Alpha (Oct 2004, v1.0.0)</li>
+      </ul>      
+			<p>Sourcecode Snapshots</p>      
+			<ul>			
+			  <li><link href="http://prdownloads.sourceforge.net/ibatisnet/iBatisNet-src.458.zip?download">12 Jan 2005, Revision 458</link></li>
+			</ul>		
+</section>
+
+</body>
+    
+</document>
