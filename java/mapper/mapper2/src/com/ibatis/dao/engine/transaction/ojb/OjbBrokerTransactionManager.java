@@ -24,14 +24,11 @@ import java.util.Properties;
 
 public class OjbBrokerTransactionManager implements DaoTransactionManager {
 
-  private PersistenceBroker broker;
-
   public void configure(final Properties properties) {
-    broker = PersistenceBrokerFactory.defaultPersistenceBroker();
   }
 
   public DaoTransaction startTransaction() {
-    return new OjbBrokerDaoTransaction(broker);
+    return new OjbBrokerDaoTransaction(PersistenceBrokerFactory.defaultPersistenceBroker());
   }
 
   public void commitTransaction(final DaoTransaction trans) {

@@ -31,7 +31,7 @@ public class OjbBrokerDaoTransaction
     try {
       broker.beginTransaction();
     } catch (final Throwable t) {
-      throw new DaoException(t);
+      throw new DaoException("Error starting OJB broker transaction.  Cause: " + t, t);
     }
   }
 
@@ -39,7 +39,11 @@ public class OjbBrokerDaoTransaction
     try {
       broker.commitTransaction();
     } catch (final Throwable t) {
-      throw new DaoException(t);
+      throw new DaoException("Error committing OJB broker transaction. Cause: " + t);
+    } finally {
+        if (broker != null) {
+            broker.close();
+        }
     }
   }
 
@@ -47,7 +51,11 @@ public class OjbBrokerDaoTransaction
     try {
       broker.abortTransaction();
     } catch (final Throwable t) {
-      throw new DaoException(t);
+      throw new DaoException("Error ending OJB broker transaction.  Cause: " + t);
+    } finally {
+        if (broker != null) {
+            broker.close();
+        }
     }
   }
 
