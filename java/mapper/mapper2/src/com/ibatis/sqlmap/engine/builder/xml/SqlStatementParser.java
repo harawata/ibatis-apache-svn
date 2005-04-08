@@ -231,7 +231,8 @@ public class SqlStatementParser extends BaseParser {
 
           tag.setPrependAttr(attributes.getProperty("prepend"));
           tag.setPropertyAttr(attributes.getProperty("property"));
-
+          tag.setRemoveFirstPrepend(attributes.getProperty("removeFirstPrepend"));
+          
           tag.setOpenAttr(attributes.getProperty("open"));
           tag.setCloseAttr(attributes.getProperty("close"));
 

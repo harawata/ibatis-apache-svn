@@ -37,6 +37,9 @@ public abstract class ConditionalTagHandler extends BaseTagHandler {
   public abstract boolean isCondition(SqlTagContext ctx, SqlTag tag, Object parameterObject);
 
   public int doStartFragment(SqlTagContext ctx, SqlTag tag, Object parameterObject) {
+    
+    ctx.pushRemoveFirstPrependMarker(tag);
+    
     if (isCondition(ctx, tag, parameterObject)) {
       return SqlTagHandler.INCLUDE_BODY;
     } else {
@@ -45,7 +48,7 @@ public abstract class ConditionalTagHandler extends BaseTagHandler {
   }
 
   public int doEndFragment(SqlTagContext ctx, SqlTag tag, Object parameterObject, StringBuffer bodyContent) {
-    return SqlTagHandler.INCLUDE_BODY;
+    return super.doEndFragment(ctx,tag,parameterObject,bodyContent);
   }
 
   protected long compare(SqlTagContext ctx, SqlTag tag, Object parameterObject) {

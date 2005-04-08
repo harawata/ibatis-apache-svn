@@ -60,7 +60,14 @@ public class BaseSqlMapTest extends TestCase {
     assertEquals("Begin", account.getLastName());
     assertEquals("clinton.begin@ibatis.com", account.getEmailAddress());
   }
-
+  
+  protected void assertAccount2(Account account) {
+    assertEquals(2, account.getId());
+    assertEquals("Jim", account.getFirstName());
+    assertEquals("Smith", account.getLastName());
+    assertEquals(account.getEmailAddress(),"jim.smith@somewhere.com");
+  }
+  
   protected void assertList(List list) {
     assertEquals(2, list.size());
   }
@@ -71,7 +78,7 @@ public class BaseSqlMapTest extends TestCase {
     assertEquals("Begin", account.getLastName());
     assertNull(account.getEmailAddress());
   }
-
+  
   protected void assertAccount1(Map account) {
     Integer id = (Integer) account.get("id");
     String firstName = (String) account.get("firstName");

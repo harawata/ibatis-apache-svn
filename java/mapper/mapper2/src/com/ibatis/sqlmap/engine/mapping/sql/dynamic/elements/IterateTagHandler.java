@@ -29,6 +29,9 @@ public class IterateTagHandler extends BaseTagHandler {
   public int doStartFragment(SqlTagContext ctx, SqlTag tag, Object parameterObject) {
     IterateContext iterate = (IterateContext) ctx.getAttribute(tag);
     if (iterate == null) {
+      
+      ctx.pushRemoveFirstPrependMarker(tag);
+      
       Object collection;
       String prop = tag.getPropertyAttr();
       if (prop != null) {
@@ -83,7 +86,7 @@ public class IterateTagHandler extends BaseTagHandler {
 
       return REPEAT_BODY;
     } else {
-      return INCLUDE_BODY;
+      return super.doEndFragment(ctx,tag,parameterObject,bodyContent);
     }
   }
 

@@ -218,9 +218,9 @@
       <isGreaterThan prepend="AND" property="id" compareValue="0">
          ACC_ID = #id#
       </isGreaterThan>
-      <isNotNull prepend="AND" property="ids">
+      <isNotNull prepend="AND" property="ids" removeFirstPrepend="true">
         ACC_ID in
-        <iterate property="ids" open="(" close=")" conjunction=",">
+        <iterate prepend="YODUDE" property="ids" open="(" close=")" conjunction=",">
          #ids[]#
         </iterate>
       </isNotNull>
@@ -230,6 +230,48 @@
       <isNotEmpty prepend="AND" property="lastName">
          ACC_LAST_NAME = #lastName#
       </isNotEmpty>
+      <isNotEmpty prepend="AND" property="emailAddress">
+        <isEqual property="emailAddress" compareValue="clinton">
+           ACC_EMAIL = 'clinton.begin@ibatis.com'
+        </isEqual>
+        <isNotEqual property="emailAddress" compareValue="clinton">
+           ACC_EMAIL = #emailAddress#
+        </isNotEqual>
+      </isNotEmpty>
+    </dynamic>
+  </select>
+
+  <select id="complexDynamicQueryByExample"
+    parameterClass="testdomain.Account"
+    resultClass="testdomain.Account">
+    select
+      ACC_ID          as id,
+      ACC_FIRST_NAME  as firstName,
+      ACC_LAST_NAME   as lastName,
+      ACC_EMAIL       as emailAddress
+    from ACCOUNT
+    <dynamic prepend="WHERE" open="(" close=")">
+      <isNotPropertyAvailable property="id" prepend="AND" open="(" close=")" removeFirstPrepend="true">
+	      <isGreaterThan prepend="AND" property="id" compareValue="0">
+	         ACC_ID = #id#
+	      </isGreaterThan>
+      </isNotPropertyAvailable>
+      <isNotNull prepend="AND" property="ids" removeFirstPrepend="false">
+        ACC_ID in
+        <iterate property="ids" open="(" close=")" conjunction=",">
+         #ids[]#
+        </iterate>
+      </isNotNull>
+      <isPropertyAvailable property="lastName" prepend="AND" open="(" close=")" removeFirstPrepend="true">
+      <isNotEmpty prepend="AND" property="firstName" removeFirstPrepend="false">
+         ACC_FIRST_NAME = #firstName#
+      </isNotEmpty>
+      </isPropertyAvailable>
+      <isPropertyAvailable property="lastName" prepend="AND" open="(" close=")" removeFirstPrepend="true">
+	      <isNotEmpty prepend="AND" property="lastName" removeFirstPrepend="false">
+	         ACC_LAST_NAME = #lastName#
+	      </isNotEmpty>
+      </isPropertyAvailable>
       <isNotEmpty prepend="AND" property="emailAddress">
         <isEqual property="emailAddress" compareValue="clinton">
            ACC_EMAIL = 'clinton.begin@ibatis.com'

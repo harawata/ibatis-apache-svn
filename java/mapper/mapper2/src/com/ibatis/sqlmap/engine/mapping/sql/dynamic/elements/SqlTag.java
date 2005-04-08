@@ -29,6 +29,7 @@ public class SqlTag implements SqlChild, DynamicParent {
   // general attributes
   private String prependAttr;
   private String propertyAttr;
+  private String removeFirstPrepend;
 
   // conditional attributes
   private String comparePropertyAttr;
@@ -61,7 +62,15 @@ public class SqlTag implements SqlChild, DynamicParent {
   public boolean isPrependAvailable() {
     return prependAttr != null && prependAttr.length() > 0;
   }
-
+  
+  public boolean isCloseAvailable() {
+    return closeAttr != null && closeAttr.length() > 0;
+  }
+  
+  public boolean isOpenAvailable() {
+    return openAttr != null && openAttr.length() > 0;
+  }
+  
   public String getPrependAttr() {
     return prependAttr;
   }
@@ -132,6 +141,14 @@ public class SqlTag implements SqlChild, DynamicParent {
 
   public SqlTag getParent() {
     return parent;
+  }
+
+  public String getRemoveFirstPrepend() {
+    return removeFirstPrepend;
+  }
+  
+  public void setRemoveFirstPrepend(String removeFirstPrepend) {
+    this.removeFirstPrepend = removeFirstPrepend;
   }
 
 }

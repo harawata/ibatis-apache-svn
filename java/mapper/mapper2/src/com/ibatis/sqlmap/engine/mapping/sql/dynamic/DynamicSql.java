@@ -125,15 +125,9 @@ public class DynamicSql implements Sql, DynamicParent {
         do {
           StringWriter sw = new StringWriter();
           PrintWriter pw = new PrintWriter(sw);
-
+          
           response = handler.doStartFragment(ctx, tag, parameterObject);
           if (response != SqlTagHandler.SKIP_BODY) {
-            if (ctx.isOverridePrepend()
-                && ctx.getFirstNonDynamicTagWithPrepend() == null
-                && tag.isPrependAvailable()
-                && !(tag.getHandler() instanceof DynamicTagHandler)) {
-              ctx.setFirstNonDynamicTagWithPrepend(tag);
-            }
 
             processBodyChildren(request, ctx, parameterObject, tag.getChildren(), pw);
             pw.flush();
@@ -141,6 +135,7 @@ public class DynamicSql implements Sql, DynamicParent {
             StringBuffer body = sw.getBuffer();
             response = handler.doEndFragment(ctx, tag, parameterObject, body);
             handler.doPrepend(ctx, tag, parameterObject, body);
+            
             if (response != SqlTagHandler.SKIP_BODY) {
               if (body.length() > 0) {
                 // BODY OUT
@@ -157,13 +152,14 @@ public class DynamicSql implements Sql, DynamicParent {
                 } else {
                   out.print(body.toString());
                 }
-                if (tag.isPrependAvailable() && tag == ctx.getFirstNonDynamicTagWithPrepend()) {
-                  ctx.setOverridePrepend(false);
-                }
               }
             }
+            
           }
         } while (response == SqlTagHandler.REPEAT_BODY);
+        
+        ctx.popRemoveFirstPrependMarker(tag);
+        
       }
     }
   }

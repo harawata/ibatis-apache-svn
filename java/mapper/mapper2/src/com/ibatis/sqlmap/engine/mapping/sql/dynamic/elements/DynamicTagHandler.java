@@ -18,10 +18,7 @@ package com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements;
 public class DynamicTagHandler extends BaseTagHandler {
 
   public int doStartFragment(SqlTagContext ctx, SqlTag tag, Object parameterObject) {
-    ctx.setFirstNonDynamicTagWithPrepend(null);
-    if (tag.isPrependAvailable()) {
-      ctx.setOverridePrepend(true);
-    }
+    ctx.pushRemoveFirstPrependMarker(tag);
     return BaseTagHandler.INCLUDE_BODY;
   }
 

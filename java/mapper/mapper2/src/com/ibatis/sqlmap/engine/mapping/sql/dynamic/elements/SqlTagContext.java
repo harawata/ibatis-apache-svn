@@ -15,13 +15,14 @@
  */
 package com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements;
 
-import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMapping;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+
+import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMapping;
 
 public class SqlTagContext {
 
@@ -30,8 +31,9 @@ public class SqlTagContext {
 
   private HashMap attributes;
 
+  private LinkedList removeFirstPrependStack;
+  
   private boolean overridePrepend;
-  private SqlTag firstNonDynamicTagWithPrepend;
 
   private ArrayList parameterMappings = new ArrayList();
 
@@ -41,6 +43,7 @@ public class SqlTagContext {
     out = new PrintWriter(sw);
     attributes = new HashMap();
     overridePrepend = false;
+    removeFirstPrependStack = new LinkedList();
   }
 
   public PrintWriter getWriter() {
@@ -50,22 +53,6 @@ public class SqlTagContext {
   public String getBodyText() {
     out.flush();
     return sw.getBuffer().toString();
-  }
-
-  public boolean isOverridePrepend() {
-    return overridePrepend;
-  }
-
-  public void setOverridePrepend(boolean overridePrepend) {
-    this.overridePrepend = overridePrepend;
-  }
-
-  public SqlTag getFirstNonDynamicTagWithPrepend() {
-    return firstNonDynamicTagWithPrepend;
-  }
-
-  public void setFirstNonDynamicTagWithPrepend(SqlTag firstNonDynamicTagWithPrepend) {
-    this.firstNonDynamicTagWithPrepend = firstNonDynamicTagWithPrepend;
   }
 
   public void setAttribute(Object key, Object value) {
@@ -84,4 +71,127 @@ public class SqlTagContext {
     return parameterMappings;
   }
 
+  public boolean isEmptyRemoveFirtPrepend() {
+    return removeFirstPrependStack.size() <= 0;
+  }
+  
+  /**
+   * examine the value of the top RemoveFirstPrependMarker object on the stack
+   * @return
+   */
+  public boolean peekRemoveFirstPrependMarker(SqlTag sqlTag) {
+    
+      RemoveFirstPrependMarker removeFirstPrepend = 
+        (RemoveFirstPrependMarker) removeFirstPrependStack.get(1);
+      
+      return removeFirstPrepend.isRemoveFirstPrepend();
+  } 
+  
+  /**
+   * pop the first RemoveFirstPrependMarker once the recursion is on it's way out
+   * of the recursion loop and return it's internal value.
+   * 
+   * @return
+   */
+  public void popRemoveFirstPrependMarker(SqlTag tag) {
+        
+    RemoveFirstPrependMarker removeFirstPrepend = 
+      (RemoveFirstPrependMarker) removeFirstPrependStack.getFirst();
+    
+    if(tag == removeFirstPrepend.getSqlTag()) {
+      removeFirstPrependStack.removeFirst();
+    }
+  }
+  
+  /**
+   * push a new RemoveFirstPrependMarker object with the specified internal state
+   * 
+   * @param removeFirstPrependBoolean
+   */
+  public void pushRemoveFirstPrependMarker(SqlTag tag) {
+    
+    if(tag.getHandler() instanceof DynamicTagHandler) {
+      // this was added to retain default behavior
+      if(tag.isPrependAvailable()) {
+        removeFirstPrependStack.addFirst(
+            new RemoveFirstPrependMarker(tag,true));
+      } else {
+        removeFirstPrependStack.addFirst(
+            new RemoveFirstPrependMarker(tag,false));
+      }
+    } else if("true".equals(tag.getRemoveFirstPrepend())){
+      // you must be specific about the removal otherwise it
+      // will function as ibatis has always functioned and add
+      // the prepend
+      removeFirstPrependStack.addFirst(
+          new RemoveFirstPrependMarker(tag,true));
+    } else if(!tag.isPrependAvailable() && 
+        !"true".equals(tag.getRemoveFirstPrepend()) &&
+        tag.getParent() != null) {
+      // if no prepend or removeFirstPrepend is specified 
+      // we need to look to the parent tag for default values
+      if("true".equals(tag.getParent().getRemoveFirstPrepend())) {
+        removeFirstPrependStack.addFirst(
+            new RemoveFirstPrependMarker(tag,true));
+      }
+    } else {
+      removeFirstPrependStack.addFirst(
+          new RemoveFirstPrependMarker(tag,false));
+    }
+
+  }
+  
+  /**
+   * set a new internal state for top RemoveFirstPrependMarker object
+   * 
+   * @param removeFirstPrependBoolean
+   */
+  public void disableRemoveFirstPrependMarker() {
+    ((RemoveFirstPrependMarker) removeFirstPrependStack.get(1)).setRemoveFirstPrepend(false);
+  }
+  
+}
+
+/**
+ * 
+ * This inner class i used strictly to house whether the 
+ * removeFirstPrepend has been used in a particular nested
+ * situation. 
+ * 
+ * @author Brandon Goodin
+ */
+class RemoveFirstPrependMarker {
+  
+  private boolean removeFirstPrepend;
+  private SqlTag tag;
+  
+  /**
+   * 
+   */
+  public RemoveFirstPrependMarker(SqlTag tag, boolean removeFirstPrepend) {
+    this.removeFirstPrepend = removeFirstPrepend;
+    this.tag = tag;
+  }
+  
+  /**
+   * @return Returns the removeFirstPrepend.
+   */
+  public boolean isRemoveFirstPrepend() {
+    return removeFirstPrepend;
+  }
+  
+  /**
+   * @param removeFirstPrepend The removeFirstPrepend to set.
+   */
+  public void setRemoveFirstPrepend(boolean removeFirstPrepend) {
+    this.removeFirstPrepend = removeFirstPrepend;
+  }
+  
+  /**
+   * @return Returns the sqlTag.
+   */
+  public SqlTag getSqlTag() {
+    return tag;
+  }
+  
 }
