@@ -30,7 +30,8 @@ import java.util.Map;
 public class DbcpConfiguration {
 
   private static final Probe PROBE = ProbeFactory.getProbe();
-
+  private static final String ADD_DRIVER_PROPS_PREFIX = "Driver.";
+  private static final int ADD_DRIVER_PROPS_PREFIX_LENGTH = ADD_DRIVER_PROPS_PREFIX.length();
   private DataSource dataSource;
 
   /**
@@ -65,7 +66,10 @@ public class DbcpConfiguration {
     Iterator props = map.keySet().iterator();
     while (props.hasNext()) {
       String propertyName = (String) props.next();
-      if (PROBE.hasWritableProperty(basicDataSource, propertyName)) {
+      if (propertyName.startsWith(ADD_DRIVER_PROPS_PREFIX)) {
+        String value = (String) map.get(propertyName);
+        basicDataSource.addConnectionProperty(propertyName.substring(ADD_DRIVER_PROPS_PREFIX_LENGTH), value);
+      } else if (PROBE.hasWritableProperty(basicDataSource, propertyName)) {
         String value = (String) map.get(propertyName);
         Object convertedValue = convertValue(basicDataSource, propertyName, value);
         PROBE.setObject(basicDataSource, propertyName, convertedValue);
