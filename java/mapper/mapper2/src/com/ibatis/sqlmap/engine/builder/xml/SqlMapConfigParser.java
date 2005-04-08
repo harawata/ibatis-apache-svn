@@ -242,11 +242,6 @@ public class SqlMapConfigParser extends BaseParser {
   private void addTransactionManagerNodelets() {
     parser.addNodelet("/sqlMapConfig/transactionManager/end()", new Nodelet() {
       public void process(Node node) throws Exception {
-        vars.txProps = new Properties();
-      }
-    });
-    parser.addNodelet("/sqlMapConfig/transactionManager/end()", new Nodelet() {
-      public void process(Node node) throws Exception {
         vars.errorCtx.setActivity("configuring the transaction manager");
 
         Properties attributes = NodeletUtils.parseAttributes(node, vars.properties);
