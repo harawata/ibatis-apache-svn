@@ -41,6 +41,15 @@ public class IterateTest extends BaseSqlMapTest {
     assertEquals(3, list.size());
   }
 
+  public void testArrayPropertyIterate2() throws SQLException {
+    Account account = new Account();
+    account.setAge(4);
+    account.setIds(new int[]{1, 2, 3});
+    List list = sqlMap.queryForList("dynamicQueryByExample2", account);
+    assertAccount1((Account) list.get(0));
+    assertEquals(3, list.size());
+  }
+  
   // LIST IN MAP
 
   public void testListInMap() throws SQLException {

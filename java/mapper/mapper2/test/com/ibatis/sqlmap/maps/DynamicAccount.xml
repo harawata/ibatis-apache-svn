@@ -295,13 +295,19 @@
     <dynamic prepend="WHERE">
       <isNotNull prepend="AND" property="ids">
         <iterate property="ids" conjunction="OR">
-          <isNotNull property="ids">
-            ACC_ID = #ids[]#
-          </isNotNull>
+			ACC_ID = #ids[]#
         </iterate>
       </isNotNull>
     </dynamic>
   </select>
+<!-- 
+issue IBATIS-42 test
+include the following code in the same place where 
+'ACC_ID = #ids[]#' exists in the dynamicQueryByExample2 statement
+<isNotNull property="age">
+	ACC_ID = #ids[]#
+</isNotNull>
+-->
 
   <select id="dynamicIterateWithPrepend1"
     parameterClass="list"
