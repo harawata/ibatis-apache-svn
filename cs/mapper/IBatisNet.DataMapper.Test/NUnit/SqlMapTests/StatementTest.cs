@@ -208,6 +208,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// Test Simple Dynamic Substitution
 		/// </summary>
 		[Test]
+		[Ignore("No longer supported.")]
 		public void TestSimpleDynamicSubstitution() 
 		{
 			string statement = "select" +

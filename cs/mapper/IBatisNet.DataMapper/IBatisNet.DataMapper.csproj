@@ -246,6 +246,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Configuration\ParamaterMapping\InlineParameterMapParser.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Configuration\ParamaterMapping\ParameterMap.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

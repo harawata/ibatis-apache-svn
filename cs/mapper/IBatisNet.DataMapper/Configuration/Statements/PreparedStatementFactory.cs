@@ -24,7 +24,7 @@
  ********************************************************************************/
 #endregion
 
-#region Imports
+#region Using
 using System;
 using System.Data;
 using System.Collections;
@@ -41,6 +41,7 @@ using IBatisNet.DataMapper.Configuration.Statements;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.Scope;
+using IBatisNet.DataMapper.Configuration.Sql.Dynamic;
 using IBatisNet.Common.Utilities;
 using IBatisNet.Common.Utilities.Objects;
 #endregion
@@ -94,30 +95,18 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 			_preparedStatement = new PreparedStatement();
 			_parameterPrefix = _session.DataSource.Provider.ParameterPrefix;
 
+			_preparedStatement.PreparedSql = _commandText;
+
 			if (_statement.CommandType == CommandType.Text)
 			{
-				if (_request.ParameterMap != null) // Use a ParameterMap
+				if (_request.ParameterMap != null) 
 				{
 					CreateParametersForStatementText();
 					EvaluateParameterMap();
 				}
-				else // InLine parameter
-				{
-					Regex regEx = new Regex( "#(?<parameterName>\\w.*?)#", RegexOptions.Multiline );
-				
-					// Create a parameterMap
-					ParameterMap parameterMap = new ParameterMap();
-					parameterMap.Id =  "InLineParameterMap-"+_statement.Id +System.DateTime.Now.Ticks.ToString();
-					_request.ParameterMap = parameterMap;
-
-                    
-					_preparedStatement.PreparedSql = regEx.Replace( _commandText, new MatchEvaluator( this.EvaluatorInlineParameter ) );
-				}
 			}
 			else if (_statement.CommandType == CommandType.StoredProcedure) // StoredProcedure
 			{
-				_preparedStatement.PreparedSql = _commandText;
-
 				if (_request.ParameterMap == null) // No parameterMap --> error
 				{
 					throw new DataMapperException("A procedure statement tag must have a parameterMap attribut, which is not the case for the procedure '"+_statement.Id+"."); 
@@ -267,58 +256,6 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 
 
 		/// <summary>
-		/// Retrieve IDataParameter name and create a IDataParameter template
-		/// from inline parameter.
-		/// </summary>
-		/// <param name="match">A regular expression match which give 
-		/// the name of the IDataParameter.
-		///  </param>
-		/// <returns>The name of the IDataParameter.</returns>
-		private string EvaluatorInlineParameter( Match match )
-		{
-			string paramName = match.Groups["parameterName"].Value;
-			string sqlParamName = string.Empty;
-			ParameterProperty property = new ParameterProperty();
-			
-			StringBuilder stringBuilder = new StringBuilder(paramName);
-			stringBuilder = stringBuilder.Replace(".", "_");
-			paramName = stringBuilder.ToString();
-
-			if (_session.DataSource.Provider.UseParameterPrefixInParameter )
-			{
-				sqlParamName = _parameterPrefix + paramName;
-			}
-			else
-			{
-				sqlParamName = paramName;
-			}
-
-			IDataParameter dataParameter = _session.CreateCommand(_statement.CommandType).CreateParameter();
-				
-			if ( sqlParamName != "?" )
-			{
-				dataParameter.ParameterName = sqlParamName;
-			}	
-			_preparedStatement.DbParametersName.Add( paramName );
-			_preparedStatement.DbParameters.Add( dataParameter );
-
-			// ---- Create a ParameterProperty and add it to the parameterMap
-			property.PropertyName = match.Groups["parameterName"].Value;
-			_request.ParameterMap.AddParameterProperty(property);
-
-			if (_session.DataSource.Provider.UsePositionalParameters)
-			{
-				// OLEDB/OBDC doesn't support named parameters !!!
-				return "?";
-			}
-			else
-			{
-				return sqlParamName;
-			}
-		}
-
-
-		/// <summary>
 		/// Parse sql command text.
 		/// </summary>
 		private void EvaluateParameterMap()
@@ -376,6 +313,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 
 			_preparedStatement.PreparedSql = newCommandTextBuffer.ToString();
 		}
+
 
 		#endregion
 	}

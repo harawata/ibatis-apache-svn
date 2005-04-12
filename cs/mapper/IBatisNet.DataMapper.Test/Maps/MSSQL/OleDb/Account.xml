@@ -407,6 +407,31 @@
 		<procedure id="SwapEmailAddresses" parameterMap="swap-params">
 			ps_swap_email_address
 		</procedure>
+		
+		<select id="SelectAccountJIRA29" parameterClass="map" resultClass="Account">
+			select
+				Account_ID as Id,
+				Account_FirstName as FirstName,
+				Account_LastName as LastName,
+				Account_Email as EmailAddress
+			from Accounts
+			where Account_FirstName = '##$AccountName$##'
+		</select>
+		
+		<select id="SelectAccountJIRA29-2"
+				parameterClass="Hashtable"
+				resultClass="Account">
+			select
+				Account_ID as Id,
+				Account_FirstName as FirstName,
+				Account_LastName as LastName,
+				Account_Email as EmailAddress
+			from Accounts
+			where 1=1
+			<isNotEmpty prepend="AND" property="Foo"> 
+				(Account_FirstName = '##$Foo$##') 
+			</isNotEmpty> 
+		</select>	
 	</statements>
 
 	<!-- =============================================

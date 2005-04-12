@@ -283,7 +283,23 @@
 				resultMap="order-with-dyn-favourite-line-item">
 			select * from Orders where Order_ID = #value#
 		</select>			
+
+		<select id="SelectOrderByDate"
+				parameterClass="Hashtable"
+				resultMap="lite-order-result-by-name">
+			select * from Orders where Order_Date = #Foo#
+		</select>	
 		
+		<select id="SelectOrderByDateDynamic"
+				parameterClass="Hashtable"
+				resultMap="lite-order-result-by-name">
+			select * from Orders
+			where 1=1
+			<isNotEmpty prepend="AND" property="Foo"> 
+				(Order_Date = '$Foo$') 
+			</isNotEmpty> 
+		</select>
+				
 	</statements>
 
 	<parameterMaps>   

@@ -82,8 +82,6 @@ namespace IBatisNet.DataMapper.Configuration
 		/// Dot representation
 		/// </summary>
 		public const string DOT = ".";
-		private const string PARAMETER_TOKEN = "#";
-		private const string PARAM_DELIM = ":";
 
 		/// <summary>
 		/// Token for SqlMapConfig xml root.
@@ -124,6 +122,7 @@ namespace IBatisNet.DataMapper.Configuration
 		#region Fields
 
 		private ConfigurationScope _configScope = null;
+		private InlineParameterMapParser _paramParser = new InlineParameterMapParser();
 
 		#endregion 
 
@@ -504,7 +503,6 @@ namespace IBatisNet.DataMapper.Configuration
 		/// Load sqlMap statement.
 		/// </summary>
 		private void ConfigureSqlMap( )
-			//SqlMapper sqlMap, XmlNode sqlMapNode)
 		{
 			XmlSerializer serializer = null;
 			XmlNode sqlMapNode = _configScope.NodeContext;
@@ -846,7 +844,6 @@ namespace IBatisNet.DataMapper.Configuration
 		/// </summary>
 		/// <param name="statement"></param>
 		private void ProcessSqlStatement( IStatement statement )
-			//XmlDocument config, string sqlMapName, SqlMapper sqlMap, XmlNode commandTextNode, IStatement statement) 
 		{
 			bool isDynamic = false;
 			XmlNode commandTextNode = _configScope.NodeContext;
@@ -916,7 +913,7 @@ namespace IBatisNet.DataMapper.Configuration
 					} 
 					else 
 					{
-						sqlText = ParseInlineParameterMap(data);
+						sqlText = _paramParser.ParseInlineParameterMap( null, data );
 					}
 
 					dynamic.AddChild(sqlText);
@@ -965,10 +962,9 @@ namespace IBatisNet.DataMapper.Configuration
 			if (statement.ParameterMap == null)
 			{
 				// Build a Parametermap with the inline parameters.
-				// if they exist. Then deleter inline infos from sqltext.
-				// ParseInlineParameter devrait retourner une ParameterMap ou null
+				// if they exist. Then delete inline infos from sqltext.
 				
-				SqlText sqlText = ParseInlineParameterMap( statement, newSql );
+				SqlText sqlText = _paramParser.ParseInlineParameterMap( statement, newSql );
 
 				if (sqlText.Parameters.Length > 0)
 				{
@@ -1010,228 +1006,7 @@ namespace IBatisNet.DataMapper.Configuration
 			statement.Sql = sql;
 		}
 
-		
-		/// <summary>
-		/// Parse inline ParameterMap
-		/// </summary>
-		/// <param name="sqlStatement"></param>
-		/// <returns>A new sql command text</returns>
-		public static SqlText ParseInlineParameterMap(string sqlStatement) 
-		{
-			return ParseInlineParameterMap(null, sqlStatement);
-		}
-
-		/// <summary>
-		/// Parse inline ParameterMap
-		/// </summary>
-		/// <param name="statement"></param>
-		/// <param name="sqlStatement"></param>
-		/// <returns>A new sql command text.</returns>
-		private static SqlText ParseInlineParameterMap(IStatement statement, string sqlStatement )
-		{
-			SqlText sqlText = new SqlText();
-			string newSql = sqlStatement;
-			Type parameterClass = null;
-
-			if (statement != null)
-			{
-				parameterClass = statement.ParameterClass;
-			}
-
-			ArrayList mappingList = new ArrayList();
-
-			StringTokenizer parser = new StringTokenizer(sqlStatement, PARAMETER_TOKEN, true);
-			StringBuilder newSqlBuffer = new StringBuilder();
-
-			string token = null;
-			string lastToken = null;
-
-			IEnumerator enumerator = parser.GetEnumerator();
-
-			while (enumerator.MoveNext()) 
-			{
-				token = (string)enumerator.Current;
-
-				if (PARAMETER_TOKEN.Equals(lastToken)) 
-				{
-					if (PARAMETER_TOKEN.Equals(token)) 
-					{
-						newSqlBuffer.Append(PARAMETER_TOKEN);
-						token = null;
-					} 
-					else 
-					{
-						if (token.IndexOf(PARAM_DELIM) > -1) 
-						{
-							StringTokenizer paramParser = new StringTokenizer(token, PARAM_DELIM, true);
-							IEnumerator enumeratorParam = paramParser.GetEnumerator();
-
-							int n1 = paramParser.TokenNumber;
-							if (n1 == 3) 
-							{
-								enumeratorParam.MoveNext();
-								string propertyName = ((string)enumeratorParam.Current).Trim();
-								enumeratorParam.MoveNext();
-								enumeratorParam.MoveNext(); //ignore ":"
-								string dBType = ((string)enumeratorParam.Current).Trim();
-								ParameterProperty mapping = new ParameterProperty();
-								mapping.PropertyName = propertyName;
-								mapping.DbType = dBType;
-								ITypeHandler handler = null;
-								if (parameterClass == null) 
-								{
-									handler = null; //TypeHandlerFactory.getUnkownTypeHandler();
-								} 
-								else 
-								{
-									handler = ResolveTypeHandler(parameterClass, propertyName, null, null);
-										//TypeHandlerFactory.GetTypeHandler(parameterClass);
-										//
-								}
-								mapping.TypeHandler = handler;
-								mapping.Initialize();
-								mappingList.Add(mapping);
-							} 
-							else if (n1 >= 5) 
-							{
-								enumeratorParam.MoveNext();
-								string propertyName = ((string)enumeratorParam.Current).Trim();
-								enumeratorParam.MoveNext();
-								enumeratorParam.MoveNext(); //ignore ":"
-								string dBType = ((string)enumeratorParam.Current).Trim();
-								enumeratorParam.MoveNext();
-								enumeratorParam.MoveNext(); //ignore ":"
-								string nullValue = ((string)enumeratorParam.Current).Trim();
-								while (enumeratorParam.MoveNext()) 
-								{
-									nullValue = nullValue + ((string)enumeratorParam.Current).Trim();
-								}
-								ParameterProperty mapping = new ParameterProperty();
-								mapping.PropertyName = propertyName;
-								mapping.DbType = dBType;
-								mapping.NullValue = nullValue;
-								ITypeHandler handler;
-								if (parameterClass == null) 
-								{
-									handler = null;//TypeHandlerFactory.getUnkownTypeHandler();
-								} 
-								else 
-								{
-									handler = ResolveTypeHandler(parameterClass, propertyName, null, null);
-										//TypeHandlerFactory.GetTypeHandler(parameterClass);
-										//
-								}
-								mapping.TypeHandler = handler;
-								mapping.Initialize();
-								mappingList.Add(mapping);
-							} 
-							else 
-							{
-								throw new ConfigurationException("Incorrect inline parameter map format: " + token);
-							}
-						} 
-						else 
-						{
-							ParameterProperty mapping = new ParameterProperty();
-							mapping.PropertyName = token;
-							ITypeHandler handler;
-							if (parameterClass == null) 
-							{
-								handler = null;
-									//TypeHandlerFactory.getUnkownTypeHandler();
-							} 
-							else 
-							{
-								handler = ResolveTypeHandler(parameterClass, token, null, null);
-									//TypeHandlerFactory.GetTypeHandler(parameterClass);
-									//
-							}
-							mapping.TypeHandler = handler;
-							mapping.Initialize();
-							mappingList.Add(mapping);
-						}
-						newSqlBuffer.Append("? ");
-						
-						enumerator.MoveNext();
-						token = ((string)enumerator.Current).Trim();
-						if (!PARAMETER_TOKEN.Equals(token)) 
-						{
-							throw new ConfigurationException("Unterminated inline parameter in mapped statement (" + statement.Id + ").");
-						}
-						token = null;
-					}
-				} 
-				else 
-				{
-					if (!PARAMETER_TOKEN.Equals(token)) 
-					{
-						newSqlBuffer.Append(token);
-					}
-				}
-
-				lastToken = token;
-			}
-
-			newSql = newSqlBuffer.ToString();
-			sqlText.Text = newSql;
-
-			ParameterProperty[] mappingArray = (ParameterProperty[]) mappingList.ToArray(typeof(ParameterProperty));
-			sqlText.Parameters = mappingArray;
-
-			return sqlText;
-		}
-		
-
 		#endregion
-
-		/// <summary>
-		/// Resolve TypeHandler
-		/// </summary>
-		/// <param name="type"></param>
-		/// <param name="propertyName"></param>
-		/// <param name="propertyType"></param>
-		/// <param name="dbType"></param>
-		/// <returns></returns>
-		private static ITypeHandler ResolveTypeHandler(Type type, string propertyName, 
-			string propertyType, string dbType) 
-		{
-			ITypeHandler handler = null;
-
-			if (type == null) 
-			{
-				handler = null;//TypeHandlerFactory.getUnkownTypeHandler();
-			} 
-			else if (typeof(IDictionary).IsAssignableFrom(type))//java.util.Map.class.isAssignableFrom(clazz)) 
-			{
-				if (propertyType == null) 
-				{
-					handler = TypeHandlerFactory.GetTypeHandler(typeof(object), dbType);
-				} 
-				else 
-				{
-					try 
-					{
-						Type typeClass = Resources.TypeForName( propertyType );
-						handler = TypeHandlerFactory.GetTypeHandler(typeClass, dbType);
-					} 
-					catch (Exception e) 
-					{
-						throw new ConfigurationException("Error. Could not set TypeHandler.  Cause: " + e, e);
-					}
-				}
-			} 
-			else if (TypeHandlerFactory.GetTypeHandler(type, dbType) != null) 
-			{
-				handler = TypeHandlerFactory.GetTypeHandler(type, dbType);
-			} 
-			else 
-			{
-				Type typeClass = ObjectProbe.GetPropertyTypeForGetter(type, propertyName);
-				handler = TypeHandlerFactory.GetTypeHandler(typeClass, dbType);
-			}
-
-			return handler;
-		}
 
 		
 		/// <summary>

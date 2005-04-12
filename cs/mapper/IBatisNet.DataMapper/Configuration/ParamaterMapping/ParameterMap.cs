@@ -119,7 +119,6 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		}
 		#endregion
 
-
 		#region Methods
 		/// <summary>
 		/// Get the ParameterProperty at index.
@@ -348,7 +347,6 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		#endregion
 
 		#endregion
-
 
 }
 }

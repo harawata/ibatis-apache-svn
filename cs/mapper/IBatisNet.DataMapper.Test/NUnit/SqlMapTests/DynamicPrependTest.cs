@@ -384,16 +384,56 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// Test JIRA 29
 		/// </summary>
 		[Test] 
-		public void TestJIRA29Bis() 
+		public void Test2ForJIRA29() 
 		{
+			// init
+			Account account = new Account();
+
+			account.Id = 1234;
+			account.FirstName = "#The Pound Signs#";
+			account.LastName = "Gilles";
+			account.EmailAddress = "a.a@somewhere.com";
+
+			sqlMap.Insert("InsertAccountViaInlineParameters", account);
+
+			// test
 			Hashtable param = new Hashtable();
-			param["BandName"] = "#The Pound Signs#";
+			param["AccountName"] = "The Pound Signs";
 
-			Hashtable hash = sqlMap.QueryForObject("SelectBand", param) as Hashtable;
+			Account testAccount = sqlMap.QueryForObject("SelectAccountJIRA29", param) as Account;
 
+			Assert.IsNotNull(testAccount);
+			Assert.AreEqual(1234, testAccount.Id);
+			Assert.AreEqual("#The Pound Signs#", testAccount.FirstName);
+		}
+
+		/// <summary>
+		/// Test JIRA 29
+		/// </summary>
+		[Test] 
+		public void Test3ForJIRA29() 
+		{
+			// init
+			Account account = new Account();
+
+			account.Id = 1234;
+			account.FirstName = "#The Pound Signs#";
+			account.LastName = "Gilles";
+			account.EmailAddress = "a.a@somewhere.com";
+
+			sqlMap.Insert("InsertAccountViaInlineParameters", account);
+
+			// test
+			Hashtable param = new Hashtable();
+			param["Foo"] = "The Pound Signs"; 
+
+			Account testAccount = sqlMap.QueryForObject("SelectAccountJIRA29-2", param) as Account;
+
+			Assert.IsNotNull(testAccount);
+			Assert.AreEqual(1234, testAccount.Id);
+			Assert.AreEqual("#The Pound Signs#", testAccount.FirstName);
 		}
 		#endregion
 
-		
 	}
 }

@@ -54,6 +54,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 
 		private IList _children = new ArrayList();
 		private IStatement _statement = null ;
+		InlineParameterMapParser _paramParser = new InlineParameterMapParser();
 
 		#endregion
 
@@ -69,6 +70,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 		#endregion
 
 		#region Methods
+
 		#region ISql IDynamicParent
 
 		/// <summary>
@@ -129,7 +131,14 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 			}
 			request.ParameterMap = map;
 
-			return ctx.BodyText;
+			string dynSql = ctx.BodyText;
+
+			// Processes $substitutions$ after DynamicSql
+			if ( SimpleDynamicSql.IsSimpleDynamicSql(dynSql) ) 
+			{
+				dynSql = new SimpleDynamicSql(dynSql, _statement).GetSql(parameterObject);
+			}
+			return dynSql;
 		}
 
 
@@ -173,20 +182,20 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 					} 
 					else 
 					{
-						if (SimpleDynamicSql.IsSimpleDynamicSql(sqlStatement)) 
-						{
-							sqlStatement= new SimpleDynamicSql(sqlStatement, _statement).GetSql(parameterObject);
-							SqlText newSqlText = DomSqlMapBuilder.ParseInlineParameterMap(sqlStatement);
-							sqlStatement = newSqlText.Text;
-							ParameterProperty[] mappings = newSqlText.Parameters;
-							if (mappings != null) 
-							{
-								for (int i = 0; i < mappings.Length; i++) 
-								{
-									ctx.AddParameterMapping(mappings[i]);
-								}
-							}
-						}
+//						if (SimpleDynamicSql.IsSimpleDynamicSql(sqlStatement)) 
+//						{
+//							sqlStatement = new SimpleDynamicSql(sqlStatement, _statement).GetSql(parameterObject);
+//							SqlText newSqlText = _paramParser.ParseInlineParameterMap( null, sqlStatement );
+//							sqlStatement = newSqlText.Text;
+//							ParameterProperty[] mappings = newSqlText.Parameters;
+//							if (mappings != null) 
+//							{
+//								for (int i = 0; i < mappings.Length; i++) 
+//								{
+//									ctx.AddParameterMapping(mappings[i]);
+//								}
+//							}
+//						}
 						// BODY OUT
 						buffer.Append(" ");
 						buffer.Append(sqlStatement);
@@ -234,7 +243,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 
 									if (handler.IsPostParseRequired) 
 									{
-										SqlText sqlText = DomSqlMapBuilder.ParseInlineParameterMap( body.ToString() );
+										SqlText sqlText = _paramParser.ParseInlineParameterMap( null, body.ToString() );
 										buffer.Append(sqlText.Text);
 										ParameterProperty[] mappings = sqlText.Parameters;
 										if (mappings != null) 

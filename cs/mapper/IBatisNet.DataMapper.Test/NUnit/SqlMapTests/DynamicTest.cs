@@ -316,6 +316,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// Test Complete Statement Substitution
 		/// </summary>
 		[Test]
+		[Ignore("No longer supported.")]
 		public void TestCompleteStatementSubst() 
 		{
 			string statement = "select" +

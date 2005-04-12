@@ -24,14 +24,13 @@
  ********************************************************************************/
 #endregion
 
-#region Imports
+#region Using
 using System;
 
 using IBatisNet.Common;
 using IBatisNet.DataMapper.Configuration.Statements;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
 #endregion
-
 
 namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 {
