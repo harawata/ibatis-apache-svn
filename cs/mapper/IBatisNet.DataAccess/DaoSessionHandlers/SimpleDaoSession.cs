@@ -130,10 +130,6 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		/// </summary>
 		public override void OpenConnection()
 		{
-			if (_logger.IsDebugEnabled)
-			{
-				_logger.Debug("Open Connection");
-			}
 			if (_connection == null)
 			{
 				_connection =  _dataSource.Provider.GetConnection();
@@ -141,6 +137,10 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 				try
 				{
 					_connection.Open();
+					if (_logger.IsDebugEnabled)
+					{
+						_logger.Debug("Open Connection");
+					}
 				}
 				catch(Exception ex)
 				{
@@ -152,6 +152,10 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 				try
 				{
 					_connection.Open();
+					if (_logger.IsDebugEnabled)
+					{
+						_logger.Debug("Open Connection");
+					}
 				}
 				catch(Exception ex)
 				{

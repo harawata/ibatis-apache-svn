@@ -95,7 +95,6 @@ namespace IBatisNet.DataAccess.Configuration
 			}
 			catch(Exception ex)
 			{
-//				configurationScope.ErrorContext.Cause = ex;
 				throw new ConfigurationException( configurationScope.ErrorContext.ToString(), ex);
 			}
 		}
@@ -367,7 +366,7 @@ namespace IBatisNet.DataAccess.Configuration
 		private Provider ParseProvider(ConfigurationScope configurationScope)
 		{
 			XmlAttribute attribute = null;
-			XmlNode node = configurationScope.NodeContext.SelectSingleNode("database/provider");
+			XmlNode node = configurationScope.NodeContext.SelectSingleNode("//database/provider");
 
 			configurationScope.ErrorContext.MoreInfo = "configure provider";
 
@@ -403,10 +402,6 @@ namespace IBatisNet.DataAccess.Configuration
 						configurationScope.NodeContext.Attributes["name"].Value));
 				}
 			}
-
-			configurationScope.ErrorContext.ObjectId = string.Empty;
-			configurationScope.ErrorContext.Resource = string.Empty;
-			configurationScope.ErrorContext.MoreInfo = string.Empty;
 		}
 
 //		/// <summary>
