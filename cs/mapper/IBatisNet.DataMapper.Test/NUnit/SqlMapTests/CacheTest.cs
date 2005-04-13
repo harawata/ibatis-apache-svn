@@ -47,6 +47,17 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		#region Test cache
 
 		/// <summary>
+		/// Test for JIRA 29
+		/// </summary>
+		[Test] 
+		public void TestJIRA28()
+		{
+			Account account = sqlMap.QueryForObject("GetNoAccountWithCache",-99) as Account;
+
+			Assert.IsNull(account);
+		}
+
+		/// <summary>
 		/// Test Cache query
 		/// </summary>
 		[Test] 

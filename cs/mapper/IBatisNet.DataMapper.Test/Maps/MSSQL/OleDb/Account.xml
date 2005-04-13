@@ -91,7 +91,16 @@
 			from Accounts
 			order by Account_ID
 		</select>
-  
+
+  		<select id="GetNoAccountWithCache"
+						parameterClass="Integer"
+						resultMap="account-hashtable-result"
+						cacheModel="account-cache">
+			select *
+			from Accounts
+			where Account_ID = #value#
+		</select>
+		  
 		<select id="GetAccountAsHashtable"
 						parameterClass="Integer"
 						resultMap="account-hashtable-result">
