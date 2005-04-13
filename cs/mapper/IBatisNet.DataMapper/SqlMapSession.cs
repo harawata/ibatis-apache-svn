@@ -180,14 +180,14 @@ namespace IBatisNet.DataMapper
 		/// </summary>
 		public void CloseConnection()
 		{
-			if ( (_connection != null) && (_connection.State == ConnectionState.Open) )
+			if ( (_connection != null) && (_connection.State != ConnectionState.Closed) )
 			{
 				if (_logger.IsDebugEnabled)
 				{
 					_logger.Debug("Close Connection");
 				}
 				_connection.Close();
-				_connection.Dispose();;
+				_connection.Dispose();
 			}
 			_connection = null;
 		}
