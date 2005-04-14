@@ -512,7 +512,10 @@ namespace IBatisNet.DataMapper.Configuration
 
 			if (_configScope.UseConfigFileWatcher == true)
 			{
-				ConfigWatcherHandler.AddFileToWatch( Resources.GetFileInfo( Resources.GetValueOfNodeResourceUrl(sqlMapNode) ) );
+				if (sqlMapNode.Attributes["resource"] != null || sqlMapNode.Attributes["url"] != null) 
+				{ 
+					ConfigWatcherHandler.AddFileToWatch( Resources.GetFileInfo( Resources.GetValueOfNodeResourceUrl(sqlMapNode) ) );
+				}
 			}
 
 			// Load the file 
