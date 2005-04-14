@@ -1103,7 +1103,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 				bool wasNull = false;
 
 				#region Find Key(s)
-				if (paramString.IndexOf(',')>0) // composite parameters key
+				if (paramString.IndexOf(',')>0 || paramString.IndexOf('=')>0) // composite parameters key
 				{
 					IDictionary keyMap = new Hashtable();
 					keys = keyMap;
