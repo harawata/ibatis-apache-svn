@@ -406,17 +406,7 @@
 			resultMap="account-result">
 			where Account_ID between #lowID# and #hightID#
 		</select>
-				
-		<!-- For procedure, the parameters of the parameterMap must in the same order 
-		as for the procedure paramaters-->
-		<procedure id="InsertAccountViaStoreProcedure" parameterMap="insert-params">
-			sp_InsertAccount
-		</procedure>
-		
-		<procedure id="SwapEmailAddresses" parameterMap="swap-params">
-			ps_swap_email_address
-		</procedure>
-		
+
 		<select id="SelectAccountJIRA29" parameterClass="map" resultClass="Account">
 			select
 				Account_ID as Id,
@@ -441,6 +431,21 @@
 				(Account_FirstName = '##$Foo$##') 
 			</isNotEmpty> 
 		</select>	
+						
+		<!-- For procedure, the parameters of the parameterMap must in the same order 
+		as for the procedure paramaters-->
+		<procedure id="InsertAccountViaStoreProcedure" parameterMap="insert-params">
+			ps_InsertAccount
+		</procedure>
+		
+		<procedure id="SwapEmailAddresses" parameterMap="swap-params">
+			ps_swap_email_address
+		</procedure>
+		
+		<procedure id="GetAccountViaSP" parameterMap="select-params" resultClass="Account">
+			ps_SelectAccount
+		</procedure>
+		
 	</statements>
 
 	<!-- =============================================
@@ -452,7 +457,11 @@
 			<parameter property="email1" column="First_Email" />
 			<parameter property="email2" column="Second_Email" />
 		</parameterMap>
-		
+
+		<parameterMap id="select-params">
+			<parameter property="Account_ID" />
+		</parameterMap>
+				
 		<parameterMap id="insert-params">
 			<parameter property="Id" />
 			<parameter property="FirstName" />

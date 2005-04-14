@@ -97,7 +97,20 @@
 			<result property="PostalCode" column="Order_PostalCode"/>
 			<result property="Account"    column="Account_ID" select="GetAccountViaColumnName" />
 		</resultMap>
-		
+
+		<resultMap id="order-with-sp-account-result" class="Order">
+			<result property="Id"         column="Order_ID"/>
+			<result property="Date"       column="Order_Date"/>
+			<result property="CardExpiry" column="Order_CardExpiry"/>
+			<result property="CardType"   column="Order_CardType"/>
+			<result property="CardNumber" column="Order_CardNumber"/>
+			<result property="Street"     column="Order_Street"/>
+			<result property="City"       column="Order_City"/>
+			<result property="Province"   column="Order_Province"/>
+			<result property="PostalCode" column="Order_PostalCode"/>
+			<result property="Account"    column="Account_ID=Account_ID" select="GetAccountViaSP" />
+		</resultMap>
+				
 		<resultMap id="order-with-collection-result" class="Order">
 			<result property="Id"				column="Order_ID"/>
 			<result property="Date"				column="Order_Date"/>

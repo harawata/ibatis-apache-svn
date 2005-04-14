@@ -770,6 +770,10 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "Scripts\MSSQL\ps_SelectAccount.sql"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "Scripts\MSSQL\README-embed-param.txt"
                     BuildAction = "Content"
                 />

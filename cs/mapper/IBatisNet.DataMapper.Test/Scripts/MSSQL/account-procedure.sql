@@ -1,4 +1,4 @@
-CREATE PROCEDURE dbo.[sp_InsertAccount]
+CREATE PROCEDURE dbo.[ps_InsertAccount]
 @Account_ID  [int], 
 @Account_FirstName [nvarchar] (40),
 @Account_LastName [varchar] (32),
@@ -8,4 +8,3 @@ insert into Accounts
 			(Account_ID, Account_FirstName, Account_LastName, Account_Email) 
 values 
 			(@Account_ID, @Account_FirstName, @Account_LastName, @Account_Email)
-

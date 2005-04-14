@@ -13,5 +13,5 @@ CREATE TABLE [dbo].[Categories] (
 
 -- Store procedure
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[sp_InsertCategorie]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
-drop procedure [dbo].[sp_InsertCategorie]
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[ps_InsertCategorie]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[ps_InsertCategorie]

@@ -26,7 +26,9 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL
 			InitSqlMap();
 			InitScript( sqlMap.DataSource, ScriptDirectory + "account-init.sql" );
 			InitScript( sqlMap.DataSource, ScriptDirectory + "account-procedure.sql", false );
+			InitScript( sqlMap.DataSource, ScriptDirectory + "ps_SelectAccount.sql", false );
 			InitScript( sqlMap.DataSource, ScriptDirectory + "category-init.sql" );
+			InitScript( sqlMap.DataSource, ScriptDirectory + "order-init.sql" );
 		}
 
 		/// <summary>
@@ -195,6 +197,16 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL
 			Assert.AreEqual(category.Guid.ToString(), categoryRead.Guid.ToString());
 		}
 
+		/// <summary>
+		/// Test select via store procedure
+		/// </summary>
+		[Test] 
+		public void TestSelect()
+		{
+			Order order = (Order) sqlMap.QueryForObject("GetOrderWithAccountViaSP", 1);
+			AssertOrder1(order);
+			AssertAccount1(order.Account);
+		}
 		#endregion
 
 

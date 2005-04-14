@@ -90,7 +90,7 @@
 		</update>
 		
 		<procedure id="InsertCategoryViaStoreProcedure" parameterMap="insert-params">
-			sp_InsertCategorie
+			ps_InsertCategorie
 		</procedure>
 		
 		<insert id="InsertCategoryGenerate" parameterMap="insert-generate-params">

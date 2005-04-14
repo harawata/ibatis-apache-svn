@@ -446,7 +446,7 @@
 		<!-- For procedure, the parameters of the parameterMap must in the same order 
 		as for the procedure paramaters-->
 		<procedure id="InsertAccountViaStoreProcedure" parameterMap="insert-params">
-			sp_InsertAccount
+			ps_InsertAccount
 		</procedure>
 		
 		<procedure id="SwapEmailAddresses" parameterMap="swap-params">

@@ -33,8 +33,11 @@ INSERT INTO [dbo].[Accounts] VALUES(5,'Gilles', 'Bayon', null);
 
 -- Store procedure
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[sp_InsertAccount]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
-drop procedure [dbo].[sp_InsertAccount]
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[ps_InsertAccount]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[ps_InsertAccount]
+
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[ps_SelectAccount]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[ps_SelectAccount]
 
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[ps_swap_email_address]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
 drop procedure [dbo].[ps_swap_email_address]
