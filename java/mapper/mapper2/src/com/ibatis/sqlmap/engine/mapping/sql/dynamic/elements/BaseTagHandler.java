@@ -18,9 +18,7 @@ package com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements;
 public abstract class BaseTagHandler implements SqlTagHandler {
 
   public int doStartFragment(SqlTagContext ctx, SqlTag tag, Object parameterObject) {
-    
     ctx.pushRemoveFirstPrependMarker(tag);
-    
     return SqlTagHandler.INCLUDE_BODY;
   }
 
@@ -52,8 +50,25 @@ public abstract class BaseTagHandler implements SqlTagHandler {
     }
 
   }
-  
-  public boolean isPostParseRequired() {
-    return false;
+
+  protected static void replace(StringBuffer buffer, String find, String replace) {
+    int pos = buffer.toString().indexOf(find);
+    int len = find.length();
+    while (pos > -1) {
+      buffer.replace(pos, pos + len, replace);
+      pos = buffer.toString().indexOf(find);
+    }
+  }
+
+  /**
+   * @param bodyContent
+   * @param iterate
+   */
+  protected void iteratePropertyReplace(StringBuffer bodyContent, IterateContext iterate) {
+    if(iterate!=null) {
+      String find = iterate.getProperty() + "[]";
+      String replace = iterate.getProperty() + "[" + iterate.getIndex() + "]";
+      replace(bodyContent, find, replace);
+    }
   }
 }

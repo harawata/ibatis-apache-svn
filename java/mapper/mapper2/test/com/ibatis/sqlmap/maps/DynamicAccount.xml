@@ -6,7 +6,6 @@
 
 <sqlMap namespace="Account">
 
-
   <select id="dynamicIsParameterPresent"
     parameterClass="integer"
     resultClass="testdomain.Account">
@@ -293,13 +292,14 @@
       ACC_EMAIL as emailAddress
     from ACCOUNT
     <dynamic prepend="WHERE">
-      <isNotNull prepend="AND" property="ids">
         <iterate property="ids" conjunction="OR">
-			ACC_ID = #ids[]#
+        	<isNotNull property="age">
+				ACC_ID = #ids[]#
+			</isNotNull>
         </iterate>
-      </isNotNull>
     </dynamic>
   </select>
+
 <!-- 
 issue IBATIS-42 test
 include the following code in the same place where 

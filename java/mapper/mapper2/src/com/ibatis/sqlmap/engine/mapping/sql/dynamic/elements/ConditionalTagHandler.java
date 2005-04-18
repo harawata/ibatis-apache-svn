@@ -48,6 +48,16 @@ public abstract class ConditionalTagHandler extends BaseTagHandler {
   }
 
   public int doEndFragment(SqlTagContext ctx, SqlTag tag, Object parameterObject, StringBuffer bodyContent) {
+    
+    IterateContext iterate = ctx.peekIterateContext();
+    
+    if(null != iterate && iterate.isAllowNext()){
+      iterate.next();
+      iterate.setAllowNext(false);
+    }
+    
+    iteratePropertyReplace(bodyContent,ctx.peekIterateContext());
+    
     return super.doEndFragment(ctx,tag,parameterObject,bodyContent);
   }
 

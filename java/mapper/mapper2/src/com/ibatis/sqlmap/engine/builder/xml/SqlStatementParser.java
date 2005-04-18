@@ -1,10 +1,19 @@
 package com.ibatis.sqlmap.engine.builder.xml;
 
+import java.sql.ResultSet;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
+
+import org.w3c.dom.CharacterData;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import com.ibatis.common.beans.Probe;
 import com.ibatis.common.beans.ProbeFactory;
+import com.ibatis.common.exception.NestedRuntimeException;
 import com.ibatis.common.resources.Resources;
 import com.ibatis.common.xml.NodeletUtils;
-import com.ibatis.common.exception.NestedRuntimeException;
 import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.engine.cache.CacheModel;
 import com.ibatis.sqlmap.engine.mapping.parameter.BasicParameterMap;
@@ -16,20 +25,18 @@ import com.ibatis.sqlmap.engine.mapping.sql.Sql;
 import com.ibatis.sqlmap.engine.mapping.sql.SqlText;
 import com.ibatis.sqlmap.engine.mapping.sql.dynamic.DynamicSql;
 import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.DynamicParent;
+import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.DynamicTagHandler;
+import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.IterateTagHandler;
 import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.SqlTag;
 import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.SqlTagHandler;
 import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.SqlTagHandlerFactory;
 import com.ibatis.sqlmap.engine.mapping.sql.simple.SimpleDynamicSql;
 import com.ibatis.sqlmap.engine.mapping.sql.stat.StaticSql;
-import com.ibatis.sqlmap.engine.mapping.statement.*;
-import org.w3c.dom.CharacterData;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import java.sql.ResultSet;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
+import com.ibatis.sqlmap.engine.mapping.statement.CachingStatement;
+import com.ibatis.sqlmap.engine.mapping.statement.GeneralStatement;
+import com.ibatis.sqlmap.engine.mapping.statement.InsertStatement;
+import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
+import com.ibatis.sqlmap.engine.mapping.statement.SelectKeyStatement;
 
 public class SqlStatementParser extends BaseParser {
 
@@ -239,11 +246,24 @@ public class SqlStatementParser extends BaseParser {
           tag.setComparePropertyAttr(attributes.getProperty("compareProperty"));
           tag.setCompareValueAttr(attributes.getProperty("compareValue"));
           tag.setConjunctionAttr(attributes.getProperty("conjunction"));
-
+          
+          // an iterate ancestor requires a post parse
+          if(dynamic instanceof SqlTag) {
+            SqlTag parentSqlTag = (SqlTag)dynamic;
+            if(parentSqlTag.isPostParseRequired() ||
+               tag.getHandler() instanceof IterateTagHandler) {
+              tag.setPostParseRequired(true);
+            }
+          } else if (dynamic instanceof DynamicSql) {
+              if(tag.getHandler() instanceof IterateTagHandler) {
+                tag.setPostParseRequired(true);
+              }
+          }
+          
           dynamic.addChild(tag);
-
+          
           if (child.hasChildNodes()) {
-            isDynamic = parseDynamicTags(child, tag, sqlBuffer, isDynamic, handler.isPostParseRequired());
+            isDynamic = parseDynamicTags(child, tag, sqlBuffer, isDynamic, tag.isPostParseRequired());
           }
         }
       }

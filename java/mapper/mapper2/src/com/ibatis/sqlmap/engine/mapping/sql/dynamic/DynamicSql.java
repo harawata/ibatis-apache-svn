@@ -140,7 +140,7 @@ public class DynamicSql implements Sql, DynamicParent {
               if (body.length() > 0) {
                 // BODY OUT
 
-                if (handler.isPostParseRequired()) {
+                if (tag.isPostParseRequired()) {
                   SqlText sqlText = PARAM_PARSER.parseInlineParameterMap(delegate.getTypeHandlerFactory(), body.toString());
                   out.print(sqlText.getText());
                   ParameterMapping[] mappings = sqlText.getParameterMappings();
@@ -159,6 +159,10 @@ public class DynamicSql implements Sql, DynamicParent {
         } while (response == SqlTagHandler.REPEAT_BODY);
         
         ctx.popRemoveFirstPrependMarker(tag);
+        
+        if(ctx.peekIterateContext()!= null && ctx.peekIterateContext().getTag() == tag) {
+          ctx.popIterateContext();
+        }
         
       }
     }

@@ -28,6 +28,4 @@ public interface SqlTagHandler {
 
   public void doPrepend(SqlTagContext ctx, SqlTag tag, Object parameterObject, StringBuffer bodyContent);
 
-  public boolean isPostParseRequired();
-
 }

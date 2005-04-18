@@ -25,7 +25,7 @@ public class SqlTag implements SqlChild, DynamicParent {
 
   private String name;
   private SqlTagHandler handler;
-
+    
   // general attributes
   private String prependAttr;
   private String propertyAttr;
@@ -43,6 +43,8 @@ public class SqlTag implements SqlChild, DynamicParent {
   private SqlTag parent;
   private List children = new ArrayList();
 
+  private boolean postParseRequired = false;
+  
   public String getName() {
     return name;
   }
@@ -151,4 +153,17 @@ public class SqlTag implements SqlChild, DynamicParent {
     this.removeFirstPrepend = removeFirstPrepend;
   }
 
+  /**
+   * @return Returns the postParseRequired.
+   */
+  public boolean isPostParseRequired() {
+    return postParseRequired;
+  }
+  
+  /**
+   * @param postParseRequired The postParseRequired to set.
+   */
+  public void setPostParseRequired(boolean iterateAncestor) {
+    this.postParseRequired = iterateAncestor;
+  }
 }

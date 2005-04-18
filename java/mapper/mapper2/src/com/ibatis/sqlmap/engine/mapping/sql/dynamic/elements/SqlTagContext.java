@@ -32,6 +32,7 @@ public class SqlTagContext {
   private HashMap attributes;
 
   private LinkedList removeFirstPrependStack;
+  private LinkedList iterateContextStack;
   
   private boolean overridePrepend;
 
@@ -44,6 +45,7 @@ public class SqlTagContext {
     attributes = new HashMap();
     overridePrepend = false;
     removeFirstPrependStack = new LinkedList();
+    iterateContextStack = new LinkedList();
   }
 
   public PrintWriter getWriter() {
@@ -148,6 +150,44 @@ public class SqlTagContext {
    */
   public void disableRemoveFirstPrependMarker() {
     ((RemoveFirstPrependMarker) removeFirstPrependStack.get(1)).setRemoveFirstPrepend(false);
+  }
+  
+  /**
+   * iterate context is stored here for nested dynamic tags in
+   * the body of the iterate tag
+   * 
+   * @param iterateContext
+   */
+  public void pushIterateContext(IterateContext iterateContext) {
+    iterateContextStack.addFirst(iterateContext);
+  }
+  
+  /**
+   * iterate context is removed here from the stack when iterate tag is finished being
+   * processed
+   * 
+   * @return
+   */
+  public IterateContext popIterateContext() {
+    IterateContext retVal = null;
+    if(!iterateContextStack.isEmpty()) {
+      retVal = (IterateContext)iterateContextStack.removeFirst();
+    }
+    return retVal;
+  }
+  
+  /**
+   * iterate context is removed here from the stack when iterate tag is finished being
+   * processed
+   * 
+   * @return
+   */
+  public IterateContext peekIterateContext() {
+    IterateContext retVal = null;
+    if(!iterateContextStack.isEmpty()) {
+      retVal = (IterateContext)iterateContextStack.getFirst();
+    }
+    return retVal;
   }
   
 }
