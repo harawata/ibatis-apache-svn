@@ -151,11 +151,11 @@ namespace IBatisNet.DataMapper
 				_connection.ConnectionString = _dataSource.ConnectionString;
 				try
 				{
+					_connection.Open();
 					if (_logger.IsDebugEnabled)
 					{
 						_logger.Debug("Open Connection");
 					}
-					_connection.Open();
 				}
 				catch(Exception ex)
 				{
@@ -167,6 +167,10 @@ namespace IBatisNet.DataMapper
 				try
 				{
 					_connection.Open();
+					if (_logger.IsDebugEnabled)
+					{
+						_logger.Debug("Open Connection");
+					}
 				}
 				catch(Exception ex)
 				{
@@ -201,11 +205,11 @@ namespace IBatisNet.DataMapper
 			{
 				OpenConnection();
 			}
+			_transaction = _connection.BeginTransaction();
 			if (_logger.IsDebugEnabled)
 			{
 				_logger.Debug("Begin Transaction");
 			}
-			_transaction = _connection.BeginTransaction();
 			_isOpenTransaction = true;
 		}
 
@@ -225,11 +229,11 @@ namespace IBatisNet.DataMapper
 				{
 					throw new DataMapperException("SqlMapSession could not invoke BeginTransaction(). A Connection must be started. Call OpenConnection() first.");
 				}
+				_transaction = _connection.BeginTransaction();
 				if (_logger.IsDebugEnabled)
 				{
 					_logger.Debug("Begin Transaction");
 				}
-				_transaction = _connection.BeginTransaction();
 				_isOpenTransaction = true;
 			}
 		}
@@ -246,11 +250,11 @@ namespace IBatisNet.DataMapper
 			{
 				OpenConnection();
 			}
+			_transaction = _connection.BeginTransaction(isolationLevel);
 			if (_logger.IsDebugEnabled)
 			{
 				_logger.Debug("Begin Transaction");
 			}
-			_transaction = _connection.BeginTransaction(isolationLevel);
 			_isOpenTransaction = true;
 		}
 
@@ -272,11 +276,11 @@ namespace IBatisNet.DataMapper
 				{
 					throw new DataMapperException("SqlMapSession could not invoke StartTransaction(). A Connection must be started. Call OpenConnection() first.");
 				}
+				_transaction = _connection.BeginTransaction(isolationLevel);
 				if (_logger.IsDebugEnabled)
 				{
 					_logger.Debug("Start Transaction");
 				}
-				_transaction = _connection.BeginTransaction(isolationLevel);
 				_isOpenTransaction = true;
 			}
 		}
