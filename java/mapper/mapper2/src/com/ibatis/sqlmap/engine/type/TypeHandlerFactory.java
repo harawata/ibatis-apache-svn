@@ -213,7 +213,7 @@ public class TypeHandlerFactory {
    * @param value - the real class name
    */
   public void putTypeAlias(String alias, String value) {
-    if (typeAliases.containsKey(alias)) {
+    if (typeAliases.containsKey(alias) && !typeAliases.get(alias).equals(value)) {
       throw new SqlMapException("Error in XmlSqlMapClientBuilder.  Alias name conflict occurred.  The alias '" + alias + "' is already mapped to the value '" + typeAliases.get(alias) + "'.");
     }
     typeAliases.put(alias, value);

@@ -10,6 +10,8 @@
     <flushInterval hours="24"/>
   </cacheModel>
 
+  <typeAlias alias="order" type="testdomain.Order"/>
+
   <resultMap id="credit-card-result" class="java.lang.String">
     <result property="value" column="ORD_CARD_NUMBER"/>
   </resultMap>
