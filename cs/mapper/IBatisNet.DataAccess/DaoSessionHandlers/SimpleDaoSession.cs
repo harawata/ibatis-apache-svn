@@ -139,12 +139,12 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 					_connection.Open();
 					if (_logger.IsDebugEnabled)
 					{
-						_logger.Debug("Open Connection");
+						_logger.Debug(string.Format("Open Connection \"{0}\" to \"{1}\".", _connection.GetHashCode().ToString(), _dataSource.Provider.Description) );
 					}
 				}
 				catch(Exception ex)
 				{
-					throw new DataAccessException( "Unable to open connection.", ex );
+					throw new DataAccessException( string.Format("Unable to open connection to \"{0}\".", _dataSource.Provider.Description), ex );
 				}
 			}
 			else if (_connection.State != ConnectionState.Open)
@@ -154,12 +154,12 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 					_connection.Open();
 					if (_logger.IsDebugEnabled)
 					{
-						_logger.Debug("Open Connection");
+						_logger.Debug(string.Format("Open Connection \"{0}\" to \"{1}\".", _connection.GetHashCode().ToString(), _dataSource.Provider.Description) );
 					}
 				}
 				catch(Exception ex)
 				{
-					throw new DataAccessException("Unable to open connection.", ex );
+					throw new DataAccessException(string.Format("Unable to open connection to \"{0}\".", _dataSource.Provider.Description), ex );
 				}
 			}
 		}
@@ -169,13 +169,13 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		/// </summary>
 		public override void CloseConnection()
 		{
-			if (_logger.IsDebugEnabled)
-			{
-				_logger.Debug("Close Connection");
-			}
 			if ( (_connection != null) && (_connection.State == ConnectionState.Open) )
 			{
 				_connection.Close();
+				if (_logger.IsDebugEnabled)
+				{
+					_logger.Debug(string.Format("Close Connection \"{0}\" to \"{1}\".", _connection.GetHashCode().ToString(), _dataSource.Provider.Description));
+				}
 			}
 			_connection = null;
 		}
@@ -188,15 +188,16 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		/// </remarks>
 		public override void BeginTransaction()
 		{
-			if (_logger.IsDebugEnabled)
-			{
-				_logger.Debug("Begin Transaction");
-			}
+
 			if (_connection == null || _connection.State != ConnectionState.Open)
 			{
 				OpenConnection();
 			}
 			_transaction = _connection.BeginTransaction();
+			if (_logger.IsDebugEnabled)
+			{
+				_logger.Debug("Begin Transaction.");
+			}			
 			_isOpenTransaction = true;
 		}
 
@@ -217,6 +218,10 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 					throw new DataAccessException("SimpleDaoSession could not invoke BeginTransaction(). A Connection must be started. Call OpenConnection() first.");
 				}
 				_transaction = _connection.BeginTransaction();
+				if (_logger.IsDebugEnabled)
+				{
+					_logger.Debug("Begin Transaction.");
+				}	
 				_isOpenTransaction = true;
 			}
 		}
@@ -227,15 +232,15 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		/// <param name="isolationLevel">The transaction isolation level for this connection.</param>
 		public override void BeginTransaction(IsolationLevel isolationLevel)
 		{
-			if (_logger.IsDebugEnabled)
-			{
-				_logger.Debug("Begin Transaction");
-			}
 			if (_connection == null || _connection.State != ConnectionState.Open)
 			{
 				OpenConnection();
 			}
 			_transaction = _connection.BeginTransaction(isolationLevel);
+			if (_logger.IsDebugEnabled)
+			{
+				_logger.Debug("Begin Transaction.");
+			}
 			_isOpenTransaction = true;
 		}
 
@@ -258,6 +263,10 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 					throw new DataAccessException("SimpleDaoSession could not invoke StartTransaction(). A Connection must be started. Call OpenConnection() first.");
 				}
 				_transaction = _connection.BeginTransaction(isolationLevel);
+				if (_logger.IsDebugEnabled)
+				{
+					_logger.Debug("Begin Transaction.");
+				}	
 				_isOpenTransaction = true;
 			}
 		}
@@ -270,11 +279,11 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		/// </remarks>
 		public override void CommitTransaction()
 		{
+			_transaction.Commit();
 			if (_logger.IsDebugEnabled)
 			{
 				_logger.Debug("Commit Transaction");
-			}
-			_transaction.Commit();
+			}			
 			_transaction.Dispose();
 			_transaction= null;
 			if (_connection.State != ConnectionState.Closed)
@@ -289,11 +298,11 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		/// <param name="closeConnection">Close the connection</param>
 		public override void CommitTransaction(bool closeConnection)
 		{
+			_transaction.Commit();
 			if (_logger.IsDebugEnabled)
 			{
 				_logger.Debug("Commit Transaction");
 			}
-			_transaction.Commit();
 			_transaction.Dispose();
 			_transaction= null;
 
@@ -313,12 +322,11 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		/// </remarks>
 		public override void RollBackTransaction()
 		{
+			_transaction.Rollback();
 			if (_logger.IsDebugEnabled)
 			{
 				_logger.Debug("RollBack Transaction");
 			}
-
-			_transaction.Rollback();
 			_transaction.Dispose();
 			_transaction = null;
 			if (_connection.State != ConnectionState.Closed)
@@ -333,12 +341,11 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		/// <param name="closeConnection">Close the connection</param>
 		public override void RollBackTransaction(bool closeConnection)
 		{
+			_transaction.Rollback();
 			if (_logger.IsDebugEnabled)
 			{
 				_logger.Debug("RollBack Transaction");
 			}
-
-			_transaction.Rollback();
 			_transaction.Dispose();
 			_transaction = null;
 
