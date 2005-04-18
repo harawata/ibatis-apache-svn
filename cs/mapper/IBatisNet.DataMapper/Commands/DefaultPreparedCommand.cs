@@ -24,9 +24,12 @@
  ********************************************************************************/
 #endregion
 
-#region Imports
+#region Using
 using System.Data;
 using System.Collections;
+using System.Text;
+
+using log4net;
 
 using IBatisNet.Common;
 using IBatisNet.Common.Utilities.Objects;
@@ -42,8 +45,13 @@ namespace IBatisNet.DataMapper.Commands
 	/// <summary>
 	/// Summary description for DefaultPreparedCommand.
 	/// </summary>
-	public class DefaultPreparedCommand : IPreparedCommand
+	internal class DefaultPreparedCommand : IPreparedCommand
 	{
+
+		#region Fields
+		private static readonly ILog _logger = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
+		#endregion 
+
 		#region IPreparedCommand Members
 
 		/// <summary>
@@ -61,13 +69,19 @@ namespace IBatisNet.DataMapper.Commands
 		{
 			// the IDbConnection & the IDbTransaction are assign in the CreateCommand 
 			IDbCommand command = session.CreateCommand(statement.CommandType);
-				
+			
+			if (_logger.IsDebugEnabled)
+			{
+				_logger.Debug("PreparedStatement : [" + request.PreparedStatement.PreparedSql + "]");
+			}
+
 			command.CommandText = request.PreparedStatement.PreparedSql;
 
-			ApplyParameterMap( session, command, request, statement, parameterObject );
+			ApplyParameterMap( session, command, request, statement, parameterObject  );
 
 			return command;
 		}
+
 
 		/// <summary>
 		/// 
@@ -83,6 +97,9 @@ namespace IBatisNet.DataMapper.Commands
 		{
 			ArrayList properties = request.PreparedStatement.DbParametersName;
 			ArrayList parameters = request.PreparedStatement.DbParameters;
+			StringBuilder valueList = new StringBuilder(); // Log info
+			StringBuilder typeList = new StringBuilder(); // Log info 
+
 			object parameterValue = null;
 
 			for ( int i = 0; i < properties.Count; ++i )
@@ -131,6 +148,22 @@ namespace IBatisNet.DataMapper.Commands
 					}
 				}
 
+				#region Logging
+
+				if (parameterValue == System.DBNull.Value) 
+				{
+					valueList.Append("null,");
+					typeList.Append("null,");
+				} 
+				else 
+				{
+					valueList.Append( parameterValue.ToString() );
+					valueList.Append( "," );
+					typeList.Append( parameterValue.GetType().ToString() );
+					typeList.Append( "," );
+				}
+				#endregion 
+
 				IDataParameter parameterCopy = command.CreateParameter();
 				// Fix JIRA 20
 				sqlParameter.Value = parameterValue;
@@ -164,6 +197,12 @@ namespace IBatisNet.DataMapper.Commands
 				parameterCopy.ParameterName = sqlParameter.ParameterName;
 
 				command.Parameters.Add( parameterCopy );
+			}
+
+			if (_logger.IsDebugEnabled && properties.Count>0)
+			{
+				_logger.Debug("Parameters: [" + valueList.ToString().Remove(valueList.ToString().Length-1,1) + "]");
+				_logger.Debug("Types: [" + typeList.ToString().Remove(typeList.ToString().Length-1,1) + "]");
 			}
 		}
 

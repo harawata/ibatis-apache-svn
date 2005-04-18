@@ -44,7 +44,7 @@ namespace IBatisNet.DataMapper.Commands
 	/// <summary>
 	/// Summary description for EmbedParamsPreparedCommand.
 	/// </summary>
-	public class EmbedParamsPreparedCommand : DefaultPreparedCommand
+	internal class EmbedParamsPreparedCommand : DefaultPreparedCommand
 	{
 		#region EmbedParamsPreparedCommand Members
 

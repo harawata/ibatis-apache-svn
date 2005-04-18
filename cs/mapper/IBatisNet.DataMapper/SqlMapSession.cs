@@ -154,12 +154,12 @@ namespace IBatisNet.DataMapper
 					_connection.Open();
 					if (_logger.IsDebugEnabled)
 					{
-						_logger.Debug("Open Connection");
+						_logger.Debug( string.Format("Open Connection \"{0}\" to \"{1}\".", _connection.GetHashCode().ToString(), _dataSource.Provider.Description) );
 					}
 				}
 				catch(Exception ex)
 				{
-					throw new DataMapperException( "Unable to open connection.", ex );
+					throw new DataMapperException( string.Format("Unable to open connection to \"{0}\".", _dataSource.Provider.Description), ex );
 				}
 			}
 			else if (_connection.State != ConnectionState.Open)
@@ -169,12 +169,12 @@ namespace IBatisNet.DataMapper
 					_connection.Open();
 					if (_logger.IsDebugEnabled)
 					{
-						_logger.Debug("Open Connection");
+						_logger.Debug(string.Format("Open Connection \"{0}\" to \"{1}\".", _connection.GetHashCode().ToString(), _dataSource.Provider.Description) );
 					}
 				}
 				catch(Exception ex)
 				{
-					throw new DataMapperException("Unable to open connection.", ex );
+					throw new DataMapperException(string.Format("Unable to open connection to \"{0}\".", _dataSource.Provider.Description), ex );
 				}
 			}
 		}
@@ -186,11 +186,12 @@ namespace IBatisNet.DataMapper
 		{
 			if ( (_connection != null) && (_connection.State != ConnectionState.Closed) )
 			{
+				_connection.Close();
 				if (_logger.IsDebugEnabled)
 				{
-					_logger.Debug("Close Connection");
+
+					_logger.Debug(string.Format("Close Connection \"{0}\" to \"{1}\".", _connection.GetHashCode().ToString(), _dataSource.Provider.Description));
 				}
-				_connection.Close();
 				_connection.Dispose();
 			}
 			_connection = null;
@@ -208,7 +209,7 @@ namespace IBatisNet.DataMapper
 			_transaction = _connection.BeginTransaction();
 			if (_logger.IsDebugEnabled)
 			{
-				_logger.Debug("Begin Transaction");
+				_logger.Debug("Begin Transaction.");
 			}
 			_isOpenTransaction = true;
 		}
@@ -232,7 +233,7 @@ namespace IBatisNet.DataMapper
 				_transaction = _connection.BeginTransaction();
 				if (_logger.IsDebugEnabled)
 				{
-					_logger.Debug("Begin Transaction");
+					_logger.Debug("Begin Transaction.");
 				}
 				_isOpenTransaction = true;
 			}
@@ -253,7 +254,7 @@ namespace IBatisNet.DataMapper
 			_transaction = _connection.BeginTransaction(isolationLevel);
 			if (_logger.IsDebugEnabled)
 			{
-				_logger.Debug("Begin Transaction");
+				_logger.Debug("Begin Transaction.");
 			}
 			_isOpenTransaction = true;
 		}
@@ -279,7 +280,7 @@ namespace IBatisNet.DataMapper
 				_transaction = _connection.BeginTransaction(isolationLevel);
 				if (_logger.IsDebugEnabled)
 				{
-					_logger.Debug("Start Transaction");
+					_logger.Debug("Begin Transaction.");
 				}
 				_isOpenTransaction = true;
 			}
@@ -296,7 +297,7 @@ namespace IBatisNet.DataMapper
 		{
 			if (_logger.IsDebugEnabled)
 			{
-				_logger.Debug("Commit Transaction");
+				_logger.Debug("Commit Transaction.");
 			}
 			_transaction.Commit();
 			_transaction.Dispose();
@@ -318,11 +319,11 @@ namespace IBatisNet.DataMapper
 			}
 			else
 			{
+				_transaction.Commit();
 				if (_logger.IsDebugEnabled)
 				{
-					_logger.Debug("Commit Transaction");
+					_logger.Debug("Commit Transaction.");
 				}
-				_transaction.Commit();
 				_transaction.Dispose();
 			}
 		}
@@ -335,11 +336,11 @@ namespace IBatisNet.DataMapper
 		/// </remarks>
 		public void RollBackTransaction()
 		{
+			_transaction.Rollback();
 			if (_logger.IsDebugEnabled)
 			{
-				_logger.Debug("RollBack Transaction");
+				_logger.Debug("RollBack Transaction.");
 			}
-			_transaction.Rollback();
 			_transaction.Dispose();
 			_transaction = null;
 			if (_connection.State != ConnectionState.Closed)
@@ -362,7 +363,7 @@ namespace IBatisNet.DataMapper
 			{
 				if (_logger.IsDebugEnabled)
 				{
-					_logger.Debug("RollBack Transaction");
+					_logger.Debug("RollBack Transaction.");
 				}
 				_transaction.Rollback();
 				_transaction.Dispose();

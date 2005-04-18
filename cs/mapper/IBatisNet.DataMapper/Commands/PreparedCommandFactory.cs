@@ -32,7 +32,7 @@ namespace IBatisNet.DataMapper.Commands
 	/// <summary>
 	/// Summary description for PreparedCommandFactory.
 	/// </summary>
-	public class PreparedCommandFactory
+	internal class PreparedCommandFactory
 	{
 		/// <summary>
 		/// Get an IPreparedCommand.

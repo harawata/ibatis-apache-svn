@@ -72,6 +72,8 @@ namespace IBatisNet.Common
 		[NonSerialized]
 		private string _name = string.Empty;
 		[NonSerialized]
+		private string _description = string.Empty;
+		[NonSerialized]
 		private bool _isDefault = false;
 		[NonSerialized]
 		private bool _isEnabled = true;
@@ -335,6 +337,16 @@ namespace IBatisNet.Common
 			}
 		}
 
+		/// <summary>
+		/// Description.
+		/// </summary>
+		[XmlAttribute("description")]
+		public string Description
+		{
+			get { return _description; }
+			set { _description = value;}
+		}
+		
 		/// <summary>
 		/// Parameter prefix use in store procedure.
 		/// </summary>
