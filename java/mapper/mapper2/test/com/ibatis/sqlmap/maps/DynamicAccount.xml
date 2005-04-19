@@ -155,7 +155,41 @@
     </iterate>
   </select>
 
+  <select id="dynamicIterateLiteral"
+    parameterClass="list"
+    resultClass="testdomain.Account">
+    select
+      ACC_ID          as id,
+      ACC_FIRST_NAME  as firstName,
+      ACC_LAST_NAME   as lastName,
+      ACC_EMAIL       as emailAddress
+    from ACCOUNT
+    WHERE ACC_ID IN
+    <iterate open="(" close=")" conjunction=",">
+       $[]$
+    </iterate>
+  </select>
+
   <select id="multiDynamicIterate"
+    parameterClass="list"
+    resultClass="testdomain.Account">
+    select
+      ACC_ID          as id,
+      ACC_FIRST_NAME  as firstName,
+      ACC_LAST_NAME   as lastName,
+      ACC_EMAIL       as emailAddress
+    from ACCOUNT
+    WHERE ACC_ID IN
+    <iterate open="(" close=")" conjunction=",">
+       #[]#
+    </iterate>
+    AND ACC_ID IN
+    <iterate open="(" close=")" conjunction=",">
+       #[]#
+    </iterate>
+  </select>
+
+  <select id="multiDynamicIterateLiteral"
     parameterClass="list"
     resultClass="testdomain.Account">
     select
@@ -258,6 +292,48 @@
       <isNotNull prepend="AND" property="ids" removeFirstPrepend="false">
         ACC_ID in
         <iterate property="ids" open="(" close=")" conjunction=",">
+         $ids[]$
+        </iterate>
+      </isNotNull>
+      <isPropertyAvailable property="lastName" prepend="AND" open="(" close=")" removeFirstPrepend="true">
+      <isNotEmpty prepend="AND" property="firstName" removeFirstPrepend="false">
+         ACC_FIRST_NAME = #firstName#
+      </isNotEmpty>
+      </isPropertyAvailable>
+      <isPropertyAvailable property="lastName" prepend="AND" open="(" close=")" removeFirstPrepend="true">
+	      <isNotEmpty prepend="AND" property="lastName" removeFirstPrepend="false">
+	         ACC_LAST_NAME = #lastName#
+	      </isNotEmpty>
+      </isPropertyAvailable>
+      <isNotEmpty prepend="AND" property="emailAddress">
+        <isEqual property="emailAddress" compareValue="clinton">
+           ACC_EMAIL = 'clinton.begin@ibatis.com'
+        </isEqual>
+        <isNotEqual property="emailAddress" compareValue="clinton">
+           ACC_EMAIL = #emailAddress#
+        </isNotEqual>
+      </isNotEmpty>
+    </dynamic>
+  </select>
+
+  <select id="complexDynamicQueryByExampleLiteral"
+    parameterClass="testdomain.Account"
+    resultClass="testdomain.Account">
+    select
+      ACC_ID          as id,
+      ACC_FIRST_NAME  as firstName,
+      ACC_LAST_NAME   as lastName,
+      ACC_EMAIL       as emailAddress
+    from ACCOUNT
+    <dynamic prepend="WHERE" open="(" close=")">
+      <isNotPropertyAvailable property="id" prepend="AND" open="(" close=")" removeFirstPrepend="true">
+	      <isGreaterThan prepend="AND" property="id" compareValue="0">
+	         ACC_ID = #id#
+	      </isGreaterThan>
+      </isNotPropertyAvailable>
+      <isNotNull prepend="AND" property="ids" removeFirstPrepend="false">
+        ACC_ID in
+        <iterate property="ids" open="(" close=")" conjunction=",">
          #ids[]#
         </iterate>
       </isNotNull>
@@ -299,7 +375,24 @@
         </iterate>
     </dynamic>
   </select>
-
+  
+  <select id="dynamicQueryByExample2Literal"
+    parameterClass="testdomain.Account"
+    resultClass="testdomain.Account">
+    select
+      ACC_ID as id,
+      ACC_FIRST_NAME as firstName,
+      ACC_LAST_NAME as lastName,
+      ACC_EMAIL as emailAddress
+    from ACCOUNT
+    <dynamic prepend="WHERE">
+        <iterate property="ids" conjunction="OR">
+        	<isNotNull property="age">
+				ACC_ID = $ids[]$
+			</isNotNull>
+        </iterate>
+    </dynamic>
+  </select>
 <!-- 
 issue IBATIS-42 test
 include the following code in the same place where 

@@ -15,6 +15,7 @@
  */
 package com.ibatis.common.beans;
 
+import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -33,7 +34,9 @@ public class GenericProbe extends BaseProbe {
 
   private static final BaseProbe BEAN_PROBE = new ComplexBeanProbe();
   private static final BaseProbe DOM_PROBE = new DomProbe();
-
+  private static final String START_INDEX = "[";
+  private static final String END_INDEX = "]";
+  
   protected GenericProbe() {
   }
 
@@ -48,6 +51,8 @@ public class GenericProbe extends BaseProbe {
   public Object getObject(Object object, String name) {
     if (object instanceof org.w3c.dom.Document) {
       return DOM_PROBE.getObject(object, name);
+    } else if (object instanceof List) {
+      return ((List)object).get(new Integer(name.substring(1,name.indexOf(END_INDEX))).intValue());
     } else {
       return BEAN_PROBE.getObject(object, name);
     }

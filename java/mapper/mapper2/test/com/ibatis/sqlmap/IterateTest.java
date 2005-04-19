@@ -24,6 +24,15 @@ public class IterateTest extends BaseSqlMapTest {
     assertEquals(3, list.size());
   }
 
+  // Iterate
+  
+  public void testIterateLiteral() throws SQLException {
+    List params = Arrays.asList(new Integer[]{new Integer(1), new Integer(2), new Integer(3)});
+    List list = sqlMap.queryForList("dynamicIterateLiteral", params);
+    assertAccount1((Account) list.get(0));
+    assertEquals(3, list.size());
+  }
+
   public void testMultiIterate() throws SQLException {
     List params = Arrays.asList(new Integer[]{new Integer(1), new Integer(2), new Integer(3)});
     List list = sqlMap.queryForList("multiDynamicIterate", params);
@@ -31,6 +40,13 @@ public class IterateTest extends BaseSqlMapTest {
     assertEquals(3, list.size());
   }
 
+  public void testMultiIterateLiteral() throws SQLException {
+    List params = Arrays.asList(new Integer[]{new Integer(1), new Integer(2), new Integer(3)});
+    List list = sqlMap.queryForList("multiDynamicIterateLiteral", params);
+    assertAccount1((Account) list.get(0));
+    assertEquals(3, list.size());
+  }
+  
   // ARRAY
 
   public void testArrayPropertyIterate() throws SQLException {
@@ -46,6 +62,15 @@ public class IterateTest extends BaseSqlMapTest {
     account.setAge(4);
     account.setIds(new int[]{1, 2, 3});
     List list = sqlMap.queryForList("dynamicQueryByExample2", account);
+    assertAccount1((Account) list.get(0));
+    assertEquals(3, list.size());
+  }
+  
+  public void testArrayPropertyIterate2Literal() throws SQLException {
+    Account account = new Account();
+    account.setAge(4);
+    account.setIds(new int[]{1, 2, 3});
+    List list = sqlMap.queryForList("dynamicQueryByExample2Literal", account);
     assertAccount1((Account) list.get(0));
     assertEquals(3, list.size());
   }

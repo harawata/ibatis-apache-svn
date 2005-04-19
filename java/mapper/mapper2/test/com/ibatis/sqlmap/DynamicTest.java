@@ -148,6 +148,17 @@ public class DynamicTest extends BaseSqlMapTest {
     assertEquals(1, list.size());
   }
 
+  public void testComplexDynamicQueryLiteral() throws SQLException {
+    Account account = new Account();
+    account.setId(2);
+    account.setFirstName("Jim");
+    account.setLastName("Smith");
+    account.setEmailAddress("jim.smith@somewhere.com");
+    List list = sqlMap.queryForList("complexDynamicQueryByExampleLiteral", account);
+    assertAccount2((Account) list.get(0));
+    assertEquals(1, list.size());
+  }
+  
 // COMPLETE STATEMENT SUBSTITUTION
 
 // -- No longer supported.  Conflicted with and deemed less valuable than
