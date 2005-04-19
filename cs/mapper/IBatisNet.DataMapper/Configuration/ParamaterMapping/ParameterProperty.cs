@@ -52,7 +52,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		[NonSerialized]
 		private ParameterDirection _direction = ParameterDirection.Input;
 		[NonSerialized]
-		private string _directionAttribut = string.Empty;
+		private string _directionAttribute = string.Empty;
 		[NonSerialized]
 		private string _dbType = string.Empty;
 		[NonSerialized]
@@ -157,8 +157,8 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		[XmlAttribute("direction")]
 		public string DirectionAttribut
 		{
-			get { return _directionAttribut; }
-			set { _directionAttribut = value; }
+			get { return _directionAttribute; }
+			set { _directionAttribute = value; }
 		}
 
 		/// <summary>
@@ -172,7 +172,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 			set 
 			{ 
 				_direction = value;
-				_directionAttribut = _direction.ToString();
+				_directionAttribute = _direction.ToString();
 			}
 		}
 
@@ -230,9 +230,9 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// </summary>
 		public void Initialize()
 		{
-			if(_directionAttribut.Length >0)
+			if(_directionAttribute.Length >0)
 			{
-				_direction = (ParameterDirection)Enum.Parse( typeof(ParameterDirection), _directionAttribut, true );
+				_direction = (ParameterDirection)Enum.Parse( typeof(ParameterDirection), _directionAttribute, true );
 			}
 			// If we specify a type, it can be set 
 			if (this.CLRType != string.Empty)
