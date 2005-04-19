@@ -195,7 +195,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			catch(Exception e)
 			{
 				throw new ConfigurationException(
-					string.Format("Could not configure ResulMap. ResulMap named \"{0}\" not found, failed. \n Cause: {1}", _id, e.Message)
+					string.Format("Could not configure ResultMap. ResulMap named \"{0}\" not found, failed. \n Cause: {1}", _id, e.Message)
 					);
 			}
 		}
