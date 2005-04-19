@@ -34,6 +34,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			InitScript( sqlMap.DataSource, ScriptDirectory + "order-init.sql" );
 			InitScript( sqlMap.DataSource, ScriptDirectory + "line-item-init.sql" );
 			InitScript( sqlMap.DataSource, ScriptDirectory + "enumeration-init.sql" );
+			InitScript( sqlMap.DataSource, ScriptDirectory + "other-init.sql" );
 		}
 
 
@@ -1017,6 +1018,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
 		#endregion
 
+		#region Tests using syntax
 
 		/// <summary>
 		/// Test Test Using syntax on sqlMap.OpenConnection
@@ -1051,5 +1053,22 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 				session.Complete(); // Commit
 			}   // compiler will call Dispose on SqlMapSession
 		}
+		#endregion 
+
+		/// <summary>
+		/// Test Bit column 
+		/// </summary>
+		[Test]
+		public void TestJIRA42() 
+		{
+			Other other = new Other();
+
+			other.Int = 100;
+			other.Bool = true;
+			other.Long = 789456321;
+
+			sqlMap.Insert("InsertBool", other);
+		}
+		
 	}
 }

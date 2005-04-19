@@ -24,16 +24,20 @@
  ********************************************************************************/
 #endregion
 
+#region Using
+
 using System;
 using System.Data;
 using System.Globalization;
 
 using IBatisNet.DataMapper.Configuration.ResultMapping;
 
+#endregion 
+
 namespace IBatisNet.DataMapper.TypesHandler
 {
 	/// <summary>
-	/// Description résumée de BoolTypeHandler.
+	/// Boolean TypeHandler.
 	/// </summary>
 	internal class BooleanTypeHandler : BaseTypeHandler
 	{
