@@ -228,6 +228,12 @@
 			select * from Orders where Order_ID = #value#
 		</statement>
 		
+		<statement id="GetOrderWithAccountViaSP"
+					parameterClass="int"
+					resultMap="order-with-sp-account-result" >
+			select * from Orders where Order_ID = #value#
+		</statement>
+		
 		<statement id="GetOrderWithLineItemsCollection"
 					parameterClass="Integer"
 					resultMap="order-with-collection-result" >
