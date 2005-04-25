@@ -114,7 +114,7 @@ namespace IBatisNet.DataMapper.Scope
 
 
 		/// <summary>
-		/// A SqlMap namespace.
+		/// The current SqlMap namespace.
 		/// </summary>
 		public string SqlMapNamespace
 		{

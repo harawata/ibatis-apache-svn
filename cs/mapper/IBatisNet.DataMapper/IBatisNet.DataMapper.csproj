@@ -191,6 +191,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Commands\IPreparedCommandProxy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Commands\PreparedCommandFactory.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

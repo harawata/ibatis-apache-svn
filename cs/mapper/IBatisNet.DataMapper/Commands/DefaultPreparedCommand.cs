@@ -70,12 +70,12 @@ namespace IBatisNet.DataMapper.Commands
 			// the IDbConnection & the IDbTransaction are assign in the CreateCommand 
 			IDbCommand command = session.CreateCommand(statement.CommandType);
 			
+			command.CommandText = request.PreparedStatement.PreparedSql;
+
 			if (_logger.IsDebugEnabled)
 			{
-				_logger.Debug("PreparedStatement : [" + request.PreparedStatement.PreparedSql + "]");
+				_logger.Debug("PreparedStatement : [" + command.CommandText + "]");
 			}
-
-			command.CommandText = request.PreparedStatement.PreparedSql;
 
 			ApplyParameterMap( session, command, request, statement, parameterObject  );
 

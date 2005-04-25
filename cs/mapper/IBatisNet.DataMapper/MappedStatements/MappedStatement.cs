@@ -375,7 +375,6 @@ namespace IBatisNet.DataMapper.MappedStatements
 		{
 			object outObject = resultObject; 
 
-
 			// If there's an ResultMap, use it
 			if (request.ResultMap != null) 
 			{
