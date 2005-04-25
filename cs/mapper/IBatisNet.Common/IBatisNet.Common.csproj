@@ -94,6 +94,11 @@
                     AssemblyName = "log4net"
                     HintPath = "..\External-Bin\Net\1.1\log4net.dll"
                 />
+                <Reference
+                    Name = "Castle.DynamicProxy"
+                    AssemblyName = "Castle.DynamicProxy"
+                    HintPath = "..\External-Bin\Net\1.1\Castle.DynamicProxy.dll"
+                />
             </References>
         </Build>
         <Files>
@@ -159,6 +164,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Logging\IDbConnectionProxy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Pagination\IPaginatedList.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -215,21 +225,6 @@
                 />
                 <File
                     RelPath = "Utilities\StringTokenizer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Utilities\DynamicProxy\IInvocationHandler.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Utilities\DynamicProxy\ProxyGenerator.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Utilities\DynamicProxy\StandardInvocationHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -24,12 +24,11 @@
  ********************************************************************************/
 #endregion
 
-#region Imports
+#region Using
 using System;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
 #endregion
-
 
 namespace IBatisNet.Common
 {

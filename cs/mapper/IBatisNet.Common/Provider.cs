@@ -24,7 +24,7 @@
  ********************************************************************************/
 #endregion
 
-#region Imports
+#region Using
 using System;
 using System.Data;
 
@@ -33,7 +33,10 @@ using System.Data.SqlClient;
 using System.Xml.Serialization;
 using System.Reflection;
 
-using IBatisNet.Common.Exceptions; 
+using IBatisNet.Common.Exceptions;
+using IBatisNet.Common.Logging; 
+
+using log4net;
 #endregion
 
 namespace IBatisNet.Common
@@ -94,6 +97,8 @@ namespace IBatisNet.Common
 		[NonSerialized]
 		private bool _usePositionalParameters = false;
 		
+		private static readonly ILog _connectionLogger = LogManager.GetLogger("System.Data.IDbConnection");
+
 		#endregion
 		
 		#region Properties
@@ -434,6 +439,15 @@ namespace IBatisNet.Common
 		/// <returns>An 'IDbConnection' object.</returns>
 		public IDbConnection GetConnection()
 		{
+			// Cannot do that because on 
+			// IDbCommand.Connection = cmdConnection
+			// .NET cast the cmdConnection to the real type (as SqlConnection)
+			// and we pass a proxy --> exception invalid cast !
+//			if (_connectionLogger.IsDebugEnabled)
+//			{
+//				connection = (IDbConnection)IDbConnectionProxy.NewInstance(connection, this);
+//			}
+
 			return (IDbConnection) ((ICloneable)_templateConnection).Clone();
 		}
 

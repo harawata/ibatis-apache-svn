@@ -141,6 +141,7 @@ namespace IBatisNet.Common.Utilities
 			IDbTransaction transaction = connection.BeginTransaction();
 			
 			IDbCommand command = dataSource.Provider.GetCommand();
+
 			command.Connection = connection;
 			command.Transaction = transaction;			
 
