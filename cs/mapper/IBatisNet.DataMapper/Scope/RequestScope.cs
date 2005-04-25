@@ -132,7 +132,7 @@ namespace IBatisNet.DataMapper.Scope
 		}
 
 		/// <summary>
-		/// Reset the resulMap to his intila value
+		/// Reset the resultMap to his intila value
 		/// </summary>
 		public void ResetResultmap()
 		{

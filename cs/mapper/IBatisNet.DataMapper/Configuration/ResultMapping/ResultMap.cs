@@ -195,7 +195,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			catch(Exception e)
 			{
 				throw new ConfigurationException(
-					string.Format("Could not configure ResultMap. ResulMap named \"{0}\" not found, failed. \n Cause: {1}", _id, e.Message)
+					string.Format("Could not configure ResultMap. ResultMap named \"{0}\" not found, failed. \n Cause: {1}", _id, e.Message)
 					);
 			}
 		}
@@ -246,7 +246,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			foreach ( XmlNode resultNode in node.SelectNodes("subMap") )
 			{
 				subMap = (SubMap) serializer.Deserialize(new XmlNodeReader(resultNode));
-				subMap.ResulMapName = this.SqlMapNameSpace + DomSqlMapBuilder.DOT + subMap.ResulMapName;
+				subMap.ResultMapName = this.SqlMapNameSpace + DomSqlMapBuilder.DOT + subMap.ResultMapName;
 				this.Discriminator.Add( subMap );
 			}
 			#endregion 

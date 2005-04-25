@@ -67,9 +67,9 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		[NonSerialized]
 		private string _discriminatorValue = string.Empty;
 		[NonSerialized]
-		private string _resulMapName = string.Empty;
+		private string _resultMapName = string.Empty;
 		[NonSerialized]
-		private ResultMap _resulMap = null;
+		private ResultMap _resultMap = null;
 		#endregion 
 
 		#region Properties
@@ -88,10 +88,10 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// The name of the ResultMap used if the column value is = to the Discriminator Value
 		/// </summary>
 		[XmlAttribute("resultMapping")]
-		public string ResulMapName
+		public string ResultMapName
 		{
-			get { return _resulMapName; }
-			set { _resulMapName = value; }
+			get { return _resultMapName; }
+			set { _resultMapName = value; }
 		}
 
 		/// <summary>
@@ -100,8 +100,8 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		[XmlIgnoreAttribute]
 		public ResultMap ResultMap
 		{
-			get { return _resulMap; }
-			set { _resulMap = value; }
+			get { return _resultMap; }
+			set { _resultMap = value; }
 		}
 
 		#endregion 

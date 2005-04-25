@@ -53,7 +53,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		[NonSerialized]
 		private IDiscriminatorFormula _formula = null;
 		/// <summary>
-		/// (discriminatorValue (string), ResulMap)
+		/// (discriminatorValue (string), ResultMap)
 		/// </summary>
 		[NonSerialized]
 		private HybridDictionary _resultMaps = null;
@@ -140,7 +140,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			for(int index=0; index<_subMaps.Count; index++)
 			{
 				SubMap subMap = _subMaps[index] as SubMap;
-				_resultMaps.Add(subMap.DiscriminatorValue, sqlMap.GetResultMap( subMap.ResulMapName ) );
+				_resultMaps.Add(subMap.DiscriminatorValue, sqlMap.GetResultMap( subMap.ResultMapName ) );
 			}
 		}
 

@@ -61,7 +61,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 
 		[NonSerialized]
 		private string _id = string.Empty;
-		// ResulMap
+		// ResultMap
 		[NonSerialized]
 		private string _resultMapName = string.Empty;
 		[NonSerialized]

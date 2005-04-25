@@ -387,7 +387,7 @@ namespace IBatisNet.DataMapper.Configuration
 			}
 			#endregion 
 
-			#region Resolve "resulMap" attribut on Result Property + initialize Discriminator property 
+			#region Resolve "resultMap" attribut on Result Property + initialize Discriminator property 
 
 			foreach(DictionaryEntry entry in _configScope.SqlMapper.ResultMaps)
 			{
