@@ -100,8 +100,9 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		}
 
 		/// <summary>
-		/// Extend ResultMap attribute
+		/// Extend Parametermap attribute
 		/// </summary>
+		/// <remarks>The id of a ParameterMap</remarks>
 		[XmlAttribute("extends")]
 		public string ExtendMap
 		{

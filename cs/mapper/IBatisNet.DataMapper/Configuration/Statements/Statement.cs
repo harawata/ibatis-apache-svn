@@ -299,11 +299,11 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		{
 			if (_resultMapName != string.Empty )
 			{
-				_resultMap = configurationScope.SqlMapper.GetResultMap( configurationScope.SqlMapNamespace + DOT + _resultMapName);
+				_resultMap = configurationScope.SqlMapper.GetResultMap( _resultMapName);
 			}
 			if (_parameterMapName != string.Empty )
 			{
-				_parameterMap = configurationScope.SqlMapper.GetParameterMap( configurationScope.SqlMapNamespace + DOT + _parameterMapName);
+				_parameterMap = configurationScope.SqlMapper.GetParameterMap( _parameterMapName);
 			}
 			if (_resultClassName != string.Empty )
 			{

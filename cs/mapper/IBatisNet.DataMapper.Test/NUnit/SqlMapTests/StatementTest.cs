@@ -1055,6 +1055,9 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		}
 		#endregion 
 
+
+		#region JIRA Tests
+
 		/// <summary>
 		/// Test Bit column 
 		/// </summary>
@@ -1069,6 +1072,20 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
 			sqlMap.Insert("InsertBool", other);
 		}
+
+		/// <summary>
+		/// Test for access a result map in a different namespace 
+		/// </summary>
+		[Test]
+		public void TestJIRA45() 
+		{
+			Account account = sqlMap.QueryForObject("GetAccountJIRA45", 1) as Account;
+			AssertAccount1(account);
+		}
+
+		#endregion 
+
+
 		
 	}
 }
