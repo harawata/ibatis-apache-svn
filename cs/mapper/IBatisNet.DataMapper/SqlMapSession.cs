@@ -404,7 +404,10 @@ namespace IBatisNet.DataMapper
 				}
 				catch(NotSupportedException e)
 				{
-					_logger.Info(e.Message);
+					if (_logger.IsInfoEnabled)
+					{
+						_logger.Info(e.Message);
+					}
 				}
 			}
 
