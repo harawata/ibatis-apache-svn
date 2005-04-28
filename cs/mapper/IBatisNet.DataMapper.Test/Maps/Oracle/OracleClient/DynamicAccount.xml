@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?> 
-<sqlMap namespace="Category" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<sqlMap namespace="Account" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 		xsi:noNamespaceSchemaLocation="SqlMap.xsd">
 		
 	<alias>
@@ -368,9 +368,10 @@
 		</statement>
   
 		<!--
-					cacheModel="account-cache" 
+					
 		-->  
 		<statement id="ComplexDynamicStatement" 
+			cacheModel="account-cache" 
 			resultClass="Account" 
 			parameterClass="Account">
 			select
