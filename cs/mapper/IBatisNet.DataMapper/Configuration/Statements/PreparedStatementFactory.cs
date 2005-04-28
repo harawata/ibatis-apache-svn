@@ -193,6 +193,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 			string dbTypePropertyName = _session.DataSource.Provider.ParameterDbTypeProperty;
 			Type enumDbType = _session.DataSource.Provider.ParameterDbType;
 			IList list = null;
+			int i = 0;
 
 			if (_session.DataSource.Provider.UsePositionalParameters) //obdc/oledb
 			{
@@ -211,7 +212,10 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 
 				//				if (_session.DataSource.Provider.UseParameterPrefixInParameter )
 				//				{
-				sqlParamName = _parameterPrefix + paramName;
+
+				// From Ryan Yao: JIRA-27
+				//sqlParamName = _parameterPrefix + paramName;
+				sqlParamName = _parameterPrefix + "param" + i++;
 				//				}
 				//				else //obdc/oledb
 				//				{

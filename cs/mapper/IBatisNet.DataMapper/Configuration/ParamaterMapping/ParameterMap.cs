@@ -308,6 +308,12 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 						{
 							propertyValue = DBNull.Value; ;
 						}
+						else if (propertyValue.GetType() == typeof(string) && propertyValue.ToString() == "" )
+						{
+							// From Ryan Yao: JIRA-27
+							//Manually changed "" to DbNull
+							propertyValue = DBNull.Value;
+						}
 					}
 				}
 			}
