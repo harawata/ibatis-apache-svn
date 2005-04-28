@@ -35,6 +35,7 @@ using System.Reflection;
 
 using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Logging; 
+using IBatisNet.Common.Utilities.TypesResolver;
 
 using log4net;
 #endregion
@@ -411,6 +412,7 @@ namespace IBatisNet.Common
 		{
 			Assembly assembly;
 			Type type;
+			CachedTypeResolver cachedTypeResolver = new CachedTypeResolver();
 
 			try
 			{
@@ -429,7 +431,14 @@ namespace IBatisNet.Common
 				_dataParameterType = assembly.GetType(_dataParameter, true);
 				// Get the CommandBuilder Type
 				_commandBuilderType = assembly.GetType(_commandBuilderClass, true);
-				_parameterDbType = assembly.GetType(_parameterDbTypeClass, true);
+				if (_parameterDbTypeClass.IndexOf(',')>0)
+				{
+					_parameterDbType = cachedTypeResolver.Resolve(_parameterDbTypeClass);
+				}
+				else
+				{
+					_parameterDbType = assembly.GetType(_parameterDbTypeClass, true);
+				}
 
 				_templateConnectionIsICloneable = _templateConnection is ICloneable;
 				_templateCommandIsICloneable = _templateCommand is ICloneable;
