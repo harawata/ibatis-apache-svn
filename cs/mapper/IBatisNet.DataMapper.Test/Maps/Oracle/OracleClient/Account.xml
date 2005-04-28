@@ -135,6 +135,15 @@
 			order by Account_ID
 		</select>
   
+  		<select id="GetNoAccountWithCache"
+						parameterClass="Integer"
+						resultMap="account-hashtable-result"
+						cacheModel="account-cache">
+			select *
+			from Accounts
+			where Account_ID = #value#
+		</select>  
+  
 		<select id="SelectWithProperty"
 					resultMap="account-result">
 			select *
@@ -482,6 +491,31 @@
 			resultMap="account-result">
 			where Account_ID between #lowID# and #hightID#
 		</select>
+		
+		<select id="SelectAccountJIRA29" parameterClass="map" resultClass="Account">
+			select
+				Account_ID as Id,
+				Account_FirstName as FirstName,
+				Account_LastName as LastName,
+				Account_Email as EmailAddress
+			from Accounts
+			where Account_FirstName = '##$AccountName$##'
+		</select>	
+			
+		<select id="SelectAccountJIRA29-2"
+				parameterClass="Hashtable"
+				resultClass="Account">
+			select
+				Account_ID as Id,
+				Account_FirstName as FirstName,
+				Account_LastName as LastName,
+				Account_Email as EmailAddress
+			from Accounts
+			where 1=1
+			<isNotEmpty prepend="AND" property="Foo"> 
+				(Account_FirstName = '##$Foo$##') 
+			</isNotEmpty> 
+		</select>			
 		
 		<procedure id="InsertAccountViaStoreProcedure" parameterMap="insert-params">
 			prc_InsertAccount

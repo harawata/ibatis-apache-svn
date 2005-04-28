@@ -33,6 +33,25 @@
 			</dynamic> 
 		</statement>
 				
+		<statement id="DynamicSelectByBool" 
+			parameterClass="Other" 
+			resultMap="other-result">
+			select
+				Other_Int,
+				Other_Long,
+				Other_Bit
+			from Others  
+			Where Other_Bit = #Bool# 
+		</statement>
+		
+		<statement id="InsertBool" 
+			parameterClass="Other">
+			Insert into Others
+				( Other_Int, Other_Long, Other_Bit )
+			values
+			( #Int#, #Long#, #Bool#)
+		</statement>	
+						
 	</statements>
 	
 </sqlMap>

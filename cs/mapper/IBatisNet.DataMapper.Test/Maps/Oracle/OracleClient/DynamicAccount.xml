@@ -367,8 +367,10 @@
 			</dynamic>
 		</statement>
   
+		<!--
+					cacheModel="account-cache" 
+		-->  
 		<statement id="ComplexDynamicStatement" 
-			cacheModel="account-cache" 
 			resultClass="Account" 
 			parameterClass="Account">
 			select

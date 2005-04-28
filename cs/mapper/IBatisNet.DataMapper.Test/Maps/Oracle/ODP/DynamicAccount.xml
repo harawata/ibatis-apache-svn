@@ -46,7 +46,7 @@
 			Account_Email		as EmailAddress
 			from Accounts
 			<isNotEmpty>
-			where Account_FirstName = '$value$'
+			where Account_FirstName = #value#
 			</isNotEmpty>
 		</statement>
 
@@ -247,17 +247,17 @@
 				</iterate>
 			</isNotNull>
 			<isNotEmpty prepend="AND" property="FirstName" >
-				Account_FirstName = '$FirstName$'
+				Account_FirstName = #FirstName#
 			</isNotEmpty>
 			<isNotEmpty prepend="AND" property="LastName" >
-				Account_LastName = '$LastName$'
+				Account_LastName = #LastName#
 			</isNotEmpty>
 			<isNotEmpty prepend="AND" property="EmailAddress" >
 				<isEqual property="EmailAddress" compareValue="Joe">
 				Account_Email = 'clinton.begin@ibatis.com'
 				</isEqual>
 				<isNotEqual property="EmailAddress" compareValue="Joe">
-				Account_Email = '$EmailAddress$'
+				Account_Email = #EmailAddress#
 				</isNotEqual>
 			</isNotEmpty>
 			</dynamic>
@@ -333,10 +333,10 @@
 					Account_ID = #Id:Int32#
 					</isNotEmpty>
 					<isNotEmpty prepend="and" property="FirstName" >
-					Account_FirstName = '$FirstName$'
+					Account_FirstName = #FirstName#
 					</isNotEmpty>
 					<isNotEmpty prepend="and" property="LastName"  >
-					Account_LastName = '$LastName$'
+					Account_LastName = #LastName#
 					</isNotEmpty>
 				</isParameterPresent>
 			</dynamic>
@@ -358,16 +358,18 @@
 			</dynamic>
 			<dynamic prepend="and">
 				<isNotEmpty prepend="BLAH!" property="FirstName" >
-				Account_FirstName = '$FirstName$'
+				Account_FirstName = #FirstName#
 				</isNotEmpty>
 				<isNotEmpty prepend="and" property="LastName"  >
-				Account_LastName = '$LastName$'
+				Account_LastName = #LastName#
 				</isNotEmpty>
 			</dynamic>
 		</statement>
   
+  		<!--
+		cacheModel="account-cache" 
+		-->
 		<statement id="ComplexDynamicStatement" 
-			cacheModel="account-cache" 
 			resultClass="Account" 
 			parameterClass="Account">
 			select
@@ -378,9 +380,9 @@
 			from Accounts
 			<dynamic prepend="WHERE">
 				<isNotNull prepend="AND" property="FirstName">
-					(Account_FirstName = '$FirstName$'
+					(Account_FirstName = #FirstName#
 					<isNotNull prepend="OR" property="LastName">
-					Account_LastName = '$LastName$'
+					Account_LastName = #LastName#
 					</isNotNull>
 					)
 				</isNotNull>
