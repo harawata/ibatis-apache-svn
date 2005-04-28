@@ -96,6 +96,12 @@ namespace IBatisNet.Common
 		private bool _useParameterPrefixInParameter = true;
 		[NonSerialized]
 		private bool _usePositionalParameters = false;
+		[NonSerialized]
+		private bool _templateConnectionIsICloneable = false;
+		[NonSerialized]
+		private bool _templateCommandIsICloneable = false;
+		[NonSerialized]
+		private bool _templateDataAdapterIsICloneable = false;
 		
 		private static readonly ILog _connectionLogger = LogManager.GetLogger("System.Data.IDbConnection");
 
@@ -424,6 +430,10 @@ namespace IBatisNet.Common
 				// Get the CommandBuilder Type
 				_commandBuilderType = assembly.GetType(_commandBuilderClass, true);
 				_parameterDbType = assembly.GetType(_parameterDbTypeClass, true);
+
+				_templateConnectionIsICloneable = _templateConnection is ICloneable;
+				_templateCommandIsICloneable = _templateCommand is ICloneable;
+				_templateDataAdapterIsICloneable = _templateDataAdapter is ICloneable;
 			}
 			catch(Exception e)
 			{
@@ -447,8 +457,14 @@ namespace IBatisNet.Common
 //			{
 //				connection = (IDbConnection)IDbConnectionProxy.NewInstance(connection, this);
 //			}
-
-			return (IDbConnection) ((ICloneable)_templateConnection).Clone();
+			if (_templateConnectionIsICloneable)
+			{
+				return (IDbConnection) ((ICloneable)_templateConnection).Clone();
+			}
+			else
+			{
+				return (IDbConnection) Activator.CreateInstance(_templateConnection.GetType());
+			}
 		}
 
 		/// <summary>
@@ -457,7 +473,14 @@ namespace IBatisNet.Common
 		/// <returns>An 'IDbCommand' object.</returns>
 		public IDbCommand GetCommand()
 		{
-			return (IDbCommand) ((ICloneable)_templateCommand).Clone();
+			if (_templateCommandIsICloneable)
+			{
+				return (IDbCommand) ((ICloneable)_templateCommand).Clone();
+			}
+			else
+			{
+				return (IDbCommand) Activator.CreateInstance(_templateCommand.GetType());
+			}
 		}
 
 		/// <summary>
@@ -466,7 +489,14 @@ namespace IBatisNet.Common
 		/// <returns>An 'IDbDataAdapter' object.</returns>
 		public IDbDataAdapter GetDataAdapter()
 		{
-			return (IDbDataAdapter) ((ICloneable)_templateDataAdapter).Clone();
+			if (_templateDataAdapterIsICloneable)
+			{
+				return (IDbDataAdapter) ((ICloneable)_templateDataAdapter).Clone();
+			}
+			else
+			{
+				return (IDbDataAdapter) Activator.CreateInstance(_templateDataAdapter.GetType());
+			}
 		}
 
 		/// <summary>
