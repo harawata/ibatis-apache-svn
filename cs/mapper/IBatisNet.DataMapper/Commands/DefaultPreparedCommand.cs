@@ -190,7 +190,10 @@ namespace IBatisNet.DataMapper.Commands
 					//parameterCopy.DbType = sqlParameter.DbType;
 				}
 
-				((IDbDataParameter)parameterCopy).Size = ((IDbDataParameter)sqlParameter).Size;
+				if (((IDbDataParameter)sqlParameter).Size > 0) 
+				{
+					((IDbDataParameter)parameterCopy).Size = ((IDbDataParameter)sqlParameter).Size;
+				}
 				((IDbDataParameter)parameterCopy).Precision = ((IDbDataParameter)sqlParameter).Precision;
 				((IDbDataParameter)parameterCopy).Scale = ((IDbDataParameter)sqlParameter).Scale;
 
