@@ -1,14 +1,14 @@
-use iBatisNet;
+use IBatisNet;
 
-drop table if exists ACCOUNTS;
+drop table if exists Accounts;
 
-create table ACCOUNTS
+create table Accounts
 (
-   ACCOUNT_ID                     int                            not null,
-   ACCOUNT_FIRSTNAME              varchar(32)                    not null,
-   ACCOUNT_LASTNAME               varchar(32)                    not null,
-   ACCOUNT_EMAIL                  varchar(128),
-   primary key (ACCOUNT_ID)
+   Account_Id                     int                            not null,
+   Account_FirstName              varchar(32)                    not null,
+   Account_LastName               varchar(32)                    not null,
+   Account_Email                  varchar(128),
+   primary key (Account_Id)
 ) TYPE=INNODB;
 
 INSERT INTO Accounts VALUES(1,'Joe', 'Dalton', 'Joe.Dalton@somewhere.com');

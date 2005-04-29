@@ -1,14 +1,14 @@
 
 use NHibernate;
 
-drop table if exists USERS;
+drop table if exists Users;
 
-create table USERS
+create table Users
 (
-   LOGONID                      varchar(20)						not null default '0',
-   NAME							varchar(40)                     default null,
-   PASSWORD                     varchar(20)						default null,
-   EMAILADDRESS                 varchar(40)						default null,
-   LASTLOGON					datetime						default null,
-   primary key (LOGONID)
+   LogonId                      varchar(20)						not null default '0',
+   Name							varchar(40)                     default null,
+   Password                     varchar(20)						default null,
+   EmailAddress                 varchar(40)						default null,
+   LastLogon					datetime						default null,
+   primary key (LogonId)
 ) TYPE=INNODB;

@@ -1,15 +1,15 @@
 
-use iBatisNet;
+use IBatisNet;
 
-drop table if exists ENUMERATIONS;
+drop table if exists Enumerations;
 
-create table ENUMERATIONS
+create table Enumerations
 (
-   ENUM_ID                        int                            not null,
-   ENUM_DAY                       int                            not null,
-   ENUM_COLOR                     int                            not null,
-   ENUM_MONTH                     int,
-   primary key (ENUM_ID)
+   Enum_Id                        int                            not null,
+   Enum_Day                       int                            not null,
+   Enum_Color                     int                            not null,
+   Enum_Month                     int,
+   primary key (Enum_Id)
 ) TYPE=INNODB;
 
 INSERT INTO Enumerations VALUES(1, 1, 1, 128);

@@ -1,2 +1,2 @@
 
-use iBatisNet;
+use IBatisNet;

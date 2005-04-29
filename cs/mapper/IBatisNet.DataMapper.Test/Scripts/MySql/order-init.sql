@@ -1,19 +1,19 @@
-drop table if exists ORDERS;
+drop table if exists Orders;
 
-create table ORDERS
+create table Orders
 (
-   ORDER_ID                       int                            not null,
-   ACCOUNT_ID                     int                            not null,
-   ORDER_DATE                     datetime,
-   ORDER_CARDTYPE                 varchar(32),
-   ORDER_CARDNUMBER               varchar(32),
-   ORDER_CARDEXPIRY               varchar(32),
-   ORDER_STREET                   varchar(32),
-   ORDER_CITY                     varchar(32),
-   ORDER_PROVINCE                 varchar(32),
-   ORDER_POSTALCODE               varchar(32),
-   ORDER_FAVOURITELINEITEM        int,
-   primary key (ORDER_ID)
+   Order_Id                       int                            not null,
+   Account_Id                     int                            not null,
+   Order_Date                     datetime,
+   Order_CardType                 varchar(32),
+   Order_CardNumber               varchar(32),
+   Order_CardExpiry               varchar(32),
+   Order_Street                   varchar(32),
+   Order_City                     varchar(32),
+   Order_Province                 varchar(32),
+   Order_PostalCode               varchar(32),
+   Order_FavouriteLineItem        int,
+   primary key (Order_Id)
 ) TYPE=INNODB;
 
 INSERT INTO Orders VALUES (1, 1, '2003-02-15 8:15:00', 'VISA', '999999999999', '05/03', '11 This Street', 'Victoria', 'BC', 'C4B 4F4',2);

@@ -1,17 +1,17 @@
 
-use iBatisNet;
+use IBatisNet;
 
-drop table if exists LINEITEMS;
+drop table if exists LineItems;
 
-create table LINEITEMS
+create table LineItems
 (
-   LINEITEM_ID                    int                            not null,
-   ORDER_ID                       int                            not null,
-   LINEITEM_CODE                  varchar(32)                    not null,
-   LINEITEM_QUANTITY              int                            not null,
-   LINEITEM_PRICE                 decimal(18,2),
-   LINEITEM_PICTURE					blob,
-   primary key (ORDER_ID, LINEITEM_ID)
+   LineItem_Id                    int                            not null,
+   Order_Id                       int                            not null,
+   LineItem_Code                  varchar(32)                    not null,
+   LineItem_Quantity              int                            not null,
+   LineItem_Price                 decimal(18,2),
+   LineItem_Picture					blob,
+   primary key (Order_Id, LineItem_Id)
 ) TYPE=INNODB;
 
 INSERT INTO LineItems VALUES (1, 10, 'ESM-34', 1, 45.43, null);

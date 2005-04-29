@@ -1,14 +1,14 @@
 use mysql;
 
-drop database iBatisNet;
-create database iBatisNet;
+drop database IBatisNet;
+create database IBatisNet;
 
 drop database NHibernate;
 create database NHibernate;
 
-grant all privileges on iBatisNet.* to IBatisNet@'%' identified by 'test';
-grant all privileges on iBatisNet.* to IBatisNet@localhost identified by 'test';
-grant all privileges on iBatisNet.* to IBatisNet@localhost.localdomain identified by 'test';
+grant all privileges on IBatisNet.* to IBatisNet@'%' identified by 'test';
+grant all privileges on IBatisNet.* to IBatisNet@localhost identified by 'test';
+grant all privileges on IBatisNet.* to IBatisNet@localhost.localdomain identified by 'test';
 
 grant all privileges on NHibernate.* to NHibernate@'%' identified by 'test';
 grant all privileges on NHibernate.* to NHibernate@localhost identified by 'test';
@@ -21,109 +21,110 @@ grant all privileges on NHibernate.* to NHibernate@localhost.localdomain identif
 /* Date de création :  27/05/2004 20:51:40                      */
 /*==============================================================*/
 
-use iBatisNet;
+use IBatisNet;
 
-drop table if exists ACCOUNTS;
+drop table if exists Accounts;
 
-drop table if exists CATEGORIES;
+drop table if exists Categories;
 
-drop table if exists ENUMERATIONS;
+drop table if exists Enumerations;
 
-drop table if exists LINEITEMS;
+drop table if exists LineItems;
 
-drop table if exists ORDERS;
+drop table if exists Orders;
 
-drop table if exists OTHERS;
+drop table if exists Others;
 
-drop table if exists DOCUMENTS;
+drop table if exists Documents;
 
 /*==============================================================*/
-/* Table : ACCOUNTS                                             */
+/* Table : Accounts                                             */
 /*==============================================================*/
-create table ACCOUNTS
+create table Accounts
 (
-   ACCOUNT_ID                     int                            not null,
-   ACCOUNT_FIRSTNAME              varchar(32)                    not null,
-   ACCOUNT_LASTNAME               varchar(32)                    not null,
-   ACCOUNT_EMAIL                  varchar(128),
-   primary key (ACCOUNT_ID)
+   Account_Id                     int                            not null,
+   Account_FirstName              varchar(32)                    not null,
+   Account_LastName               varchar(32)                    not null,
+   Account_Email                  varchar(128),
+   primary key (Account_Id)
 ) TYPE=INNODB;
 
 /*==============================================================*/
-/* Table : CATEGORIES                                           */
+/* Table : Categories                                           */
 /*==============================================================*/
-create table CATEGORIES
+create table Categories
 (
-   CATEGORY_ID                    int                            not null AUTO_INCREMENT,
-   CATEGORY_NAME                  varchar(32),
-   CATEGORY_GUID                  varchar(36),
-   primary key (CATEGORY_ID)
+   Category_Id                    int                            not null AUTO_INCREMENT,
+   Category_Name                  varchar(32),
+   Category_Guid                  varchar(36),
+   primary key (Category_Id)
 ) TYPE=INNODB;
 
 /*==============================================================*/
-/* Table : ENUMERATIONS                                         */
+/* Table : Enumerations                                         */
 /*==============================================================*/
-create table ENUMERATIONS
+create table Enumerations
 (
-   ENUM_ID                        int                            not null,
-   ENUM_DAY                       int                            not null,
-   ENUM_COLOR                     int                            not null,
-   ENUM_MONTH                     int,
-   primary key (ENUM_ID)
+   Enum_Id                        int                            not null,
+   Enum_Day                       int                            not null,
+   Enum_Color                     int                            not null,
+   Enum_Month                     int,
+   primary key (Enum_Id)
 ) TYPE=INNODB;
 
 /*==============================================================*/
-/* Table : LINEITEMS                                            */
+/* Table : LineItems                                            */
 /*==============================================================*/
-create table LINEITEMS
+create table LineItems
 (
-   LINEITEM_ID                    int                            not null,
-   ORDER_ID                       int                            not null,
-   LINEITEM_CODE                  varchar(32)                    not null,
-   LINEITEM_QUANTITY              int                            not null,
-   LINEITEM_PRICE                 decimal(18,2),
-   LINEITEM_PICTURE					blob,
-   primary key (ORDER_ID, LINEITEM_ID)
+   LineItem_Id                    int                            not null,
+   Order_Id                       int                            not null,
+   LineItem_Code                  varchar(32)                    not null,
+   LineItem_Quantity              int                            not null,
+   LineItem_Price                 decimal(18,2),
+   LineItem_Picture					blob,
+   primary key (Order_Id, LineItem_Id)
 ) TYPE=INNODB;
 
 /*==============================================================*/
-/* Table : ORDERS                                               */
+/* Table : Orders                                               */
 /*==============================================================*/
-create table ORDERS
+create table Orders
 (
-   ORDER_ID                       int                            not null,
-   ACCOUNT_ID                     int                            not null,
-   ORDER_DATE                     datetime,
-   ORDER_CARDTYPE                 varchar(32),
-   ORDER_CARDNUMBER               varchar(32),
-   ORDER_CARDEXPIRY               varchar(32),
-   ORDER_STREET                   varchar(32),
-   ORDER_CITY                     varchar(32),
-   ORDER_PROVINCE                 varchar(32),
-   ORDER_POSTALCODE               varchar(32),
-   ORDER_FAVOURITELINEITEM        int,
-   primary key (ORDER_ID)
+   Order_Id                       int                            not null,
+   Account_Id                     int                            not null,
+   Order_Date                     datetime,
+   Order_CardType                 varchar(32),
+   Order_CardNumber               varchar(32),
+   Order_CardExpiry               varchar(32),
+   Order_Street                   varchar(32),
+   Order_City                     varchar(32),
+   Order_Province                 varchar(32),
+   Order_PostalCode               varchar(32),
+   Order_FavouriteLineItem        int,
+   primary key (Order_Id)
 ) TYPE=INNODB;
 
 /*==============================================================*/
-/* Table : OTHERS                                               */
+/* Table : Others                                               */
 /*==============================================================*/
-create table OTHERS
+create table Others
 (
-   OTHER_INT                       int,
-   OTHER_LONG                     bigint
+   Other_Int                       int,
+   Other_Long                     bigint,
+   Other_Bit		            bit not null default 0
 ) TYPE=INNODB;
 
 /*==============================================================*/
-/* Table : DOCUMENTS                                            */
+/* Table : Documents                                            */
 /*==============================================================*/
-create table DOCUMENTS
+create table Documents
 (
-   DOCUMENT_ID                    int                            not null,
-   DOCUMENT_TITLE                  varchar(32),
-   DOCUMENT_TYPE                  varchar(32),
-   DOCUMENT_PAGENUMBER				int,
-   DOCUMENT_CITY					varchar(32),
+   Document_Id                    int                            not null,
+   Document_Title                  varchar(32),
+   Document_Type                  varchar(32),
+   Document_PageNumber				int,
+   Document_City					varchar(32),
    primary key (DOCUMENT_ID)
 ) TYPE=INNODB;
 
@@ -131,17 +132,17 @@ create table DOCUMENTS
 
 use NHibernate;
 
-drop table if exists USERS;
+drop table if exists Users;
 
 /*==============================================================*/
-/* Table : USERS                                                */
+/* Table : Users                                                */
 /*==============================================================*/
-create table USERS
+create table Users
 (
-   LOGONID                      varchar(20)						not null default '0',
-   NAME							varchar(40)                     default null,
-   PASSWORD                     varchar(20)						default null,
-   EMAILADDRESS                 varchar(40)						default null,
-   LASTLOGON					datetime						default null,
-   primary key (LOGONID)
+   LogonId                      varchar(20)						not null default '0',
+   Name							varchar(40)                     default null,
+   Password                     varchar(20)						default null,
+   EmailAddress                 varchar(40)						default null,
+   LastLogon					datetime						default null,
+   primary key (LogonId)
 ) TYPE=INNODB;

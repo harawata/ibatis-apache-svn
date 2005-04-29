@@ -1,12 +1,12 @@
 
-use iBatisNet;
+use IBatisNet;
 
-drop table if exists CATEGORIES;
+drop table if exists Categories;
 
-create table CATEGORIES
+create table Categories
 (
-   CATEGORY_ID                    int                            not null AUTO_INCREMENT,
-   CATEGORY_NAME                  varchar(32),
-   CATEGORY_GUID                  varchar(36),
-   primary key (CATEGORY_ID)
+   Category_Id                    int                            not null AUTO_INCREMENT,
+   Category_Name                  varchar(32),
+   Category_Guid                  varchar(36),
+   primary key (Category_Id)
 ) TYPE=INNODB;

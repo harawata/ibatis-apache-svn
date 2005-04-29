@@ -1,13 +1,14 @@
 
-use iBatisNet;
+use IBatisNet;
 
-drop table if exists OTHERS;
+drop table if exists Others;
 
-create table OTHERS
+create table Others
 (
-   OTHER_INT                       int,
-   OTHER_LONG                     bigint
+   Other_Int                       int,
+   Other_Long                     bigint,
+   Other_Bit					            bit not null default 0
 ) TYPE=INNODB;
 
-INSERT INTO Others VALUES(1, 8888888);
-INSERT INTO Others VALUES(2, 9999999999);
+INSERT INTO Others VALUES(1, 8888888, 0);
+INSERT INTO Others VALUES(2, 9999999999, 1);
