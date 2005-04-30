@@ -74,6 +74,7 @@ namespace IBatisNet.Common.Utilities
 					case "oracle10.1":   
 					case "oracleClient1.0":   
 					case "ByteFx":
+					case "MySql":
 						sqlStatements = ParseScript(script);
 						break;   
 					case "OleDb1.1":
@@ -98,6 +99,7 @@ namespace IBatisNet.Common.Utilities
 					case "oracle10.1":   
 					case "oracleClient1.0":   
 					case "ByteFx":
+					case "MySql":
 						script = script.Replace("\r\n"," ");
 						script = script.Replace("\t"," ");
 						sqlStatements.Add(script);
