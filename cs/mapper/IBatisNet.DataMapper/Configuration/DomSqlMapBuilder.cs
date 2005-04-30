@@ -1058,10 +1058,13 @@ namespace IBatisNet.DataMapper.Configuration
 		{
 			XmlNode nodeProperties = _configScope.NodeContext.SelectSingleNode("properties");
 			_configScope.ErrorContext.Activity = "loading global properties";
-			_configScope.ErrorContext.Resource = nodeProperties.InnerXml.ToString();
-
+			
 			if (nodeProperties != null)
 			{
+				// JIRA-38 Fix 
+				// <properties> element's InnerXml is currently an empty string anyway
+				// since <settings> are in properties file
+				//_configScope.ErrorContext.Resource = nodeProperties.InnerXml.ToString();
 				_configScope.ErrorContext.Resource = nodeProperties.OuterXml.ToString();
 
 				// Load the file defined by the resource attribut
