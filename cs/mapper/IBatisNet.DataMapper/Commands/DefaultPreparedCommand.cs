@@ -190,12 +190,24 @@ namespace IBatisNet.DataMapper.Commands
 					//parameterCopy.DbType = sqlParameter.DbType;
 				}
 
-				if (((IDbDataParameter)sqlParameter).Size > 0) 
+				// JIRA-49 Fixes (size, precision, and scale)
+				if (session.DataSource.Provider.SetDbParameterSize) 
 				{
-					((IDbDataParameter)parameterCopy).Size = ((IDbDataParameter)sqlParameter).Size;
+					if (((IDbDataParameter)sqlParameter).Size > 0) 
+					{
+						((IDbDataParameter)parameterCopy).Size = ((IDbDataParameter)sqlParameter).Size;
+					}
 				}
-				((IDbDataParameter)parameterCopy).Precision = ((IDbDataParameter)sqlParameter).Precision;
-				((IDbDataParameter)parameterCopy).Scale = ((IDbDataParameter)sqlParameter).Scale;
+
+				if (session.DataSource.Provider.SetDbParameterPrecision) 
+				{
+					((IDbDataParameter)parameterCopy).Precision = ((IDbDataParameter)sqlParameter).Precision;
+				}
+				
+				if (session.DataSource.Provider.SetDbParameterScale) 
+				{
+					((IDbDataParameter)parameterCopy).Scale = ((IDbDataParameter)sqlParameter).Scale;
+				}				
 
 				parameterCopy.ParameterName = sqlParameter.ParameterName;
 

@@ -235,13 +235,25 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 				}
 
 				// Set IDbDataParameter
-				if (property.Size != -1)
+				// JIRA-49 Fixes (size, precision, and scale)
+				if (_session.DataSource.Provider.SetDbParameterSize) 
 				{
-					((IDbDataParameter)dataParameter).Size = property.Size;
+					if (property.Size != -1)
+					{
+						((IDbDataParameter)dataParameter).Size = property.Size;
+					}
 				}
-				((IDbDataParameter)dataParameter).Precision = property.Precision;
-				((IDbDataParameter)dataParameter).Scale = property.Scale;
 
+				if (_session.DataSource.Provider.SetDbParameterPrecision) 
+                {
+					((IDbDataParameter)dataParameter).Precision = property.Precision;
+				}
+				
+				if (_session.DataSource.Provider.SetDbParameterScale) 
+				{
+					((IDbDataParameter)dataParameter).Scale = property.Scale;
+				}
+				
 				// Set as direction parameter
 				dataParameter.Direction = property.Direction;
 

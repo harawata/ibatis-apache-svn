@@ -103,6 +103,13 @@ namespace IBatisNet.Common
 		private bool _templateCommandIsICloneable = false;
 		[NonSerialized]
 		private bool _templateDataAdapterIsICloneable = false;
+		[NonSerialized]
+		private bool _setDbParameterSize = true;
+		[NonSerialized]
+		private bool _setDbParameterPrecision = true;
+		[NonSerialized]
+		private bool _setDbParameterScale = true;
+
 		
 		private static readonly ILog _connectionLogger = LogManager.GetLogger("System.Data.IDbConnection");
 
@@ -216,6 +223,48 @@ namespace IBatisNet.Common
 		{
 			get { return _usePositionalParameters; }
 			set { _usePositionalParameters = value; }		
+		}
+
+		/// <summary>
+		/// Used to indicate whether or not the provider 
+		/// supports parameter size.
+		/// </summary>
+		/// <remarks>
+		/// See JIRA-49 about SQLite.Net provider not supporting parameter size.
+		/// </remarks>
+		[XmlAttribute("setDbParameterSize")]
+		public bool SetDbParameterSize
+		{
+			get { return _setDbParameterSize; }
+			set { _setDbParameterSize = value; }		
+		}
+
+		/// <summary>
+		/// Used to indicate whether or not the provider 
+		/// supports parameter precision.
+		/// </summary>
+		/// <remarks>
+		/// See JIRA-49 about SQLite.Net provider not supporting parameter precision.
+		/// </remarks>
+		[XmlAttribute("setDbParameterPrecision")]
+		public bool SetDbParameterPrecision
+		{
+			get { return _setDbParameterPrecision; }
+			set { _setDbParameterPrecision = value; }		
+		}
+
+		/// <summary>
+		/// Used to indicate whether or not the provider 
+		/// supports a parameter scale.
+		/// </summary>
+		/// <remarks>
+		/// See JIRA-49 about SQLite.Net provider not supporting parameter scale.
+		/// </remarks>
+		[XmlAttribute("setDbParameterScale")]
+		public bool SetDbParameterScale
+		{
+			get { return _setDbParameterScale; }
+			set { _setDbParameterScale = value; }		
 		}
 
 		/// <summary>
@@ -447,7 +496,7 @@ namespace IBatisNet.Common
 			catch(Exception e)
 			{
 				throw new ConfigurationException(
-					string.Format("DaoManager could not configure providers. Provider named \"{0}\" not found, failed. Cause: {1}", _name, e.Message)
+					string.Format("Could not configure providers. Provider named \"{0}\" not found, failed. Cause: {1}", _name, e.Message)
 					);
 			}
 		}
