@@ -10,17 +10,34 @@
 		<resultMap id="other-result"  class="Other" >
 			<result property="Int"		column="Other_Int" dbType="Int32"/>
 			<result property="Long"		column="Other_Long" dbType="Int64"/>
+			<result property="Bool"		column="Other_Bit"/>
 		</resultMap>
 	</resultMaps>
 	
 	<statements>
 	
+		<!--
+		Throws System.NotSupportedException : 
+		Specified method is not supported.
+		
+	    at System.Data.OracleClient.OracleDataReader.GetBoolean(Int32 i)
+		at IBatisNet.DataMapper.TypesHandler.BooleanTypeHandler.GetValueByName(ResultProperty mapping, IDataReader dataReader) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\TypesHandler\BooleanTypeHandler.cs:line 61
+		at IBatisNet.DataMapper.TypesHandler.BaseTypeHandler.GetDataBaseValue(ResultProperty mapping, IDataReader dataReader) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\TypesHandler\BaseTypeHandler.cs:line 54
+		at IBatisNet.DataMapper.MappedStatements.MappedStatement.SetObjectProperty(RequestScope request, ResultMap resultMap, ResultProperty mapping, Object& target, IDataReader reader) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 1076
+		at IBatisNet.DataMapper.MappedStatements.MappedStatement.ApplyResultMap(RequestScope request, IDataReader reader, Object resultObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 393
+		at IBatisNet.DataMapper.MappedStatements.MappedStatement.RunQueryForObject(RequestScope request, IDalSession session, Object parameterObject, Object resultObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 575
+		at IBatisNet.DataMapper.MappedStatements.MappedStatement.ExecuteQueryForObject(IDalSession session, Object parameterObject, Object resultObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 517
+		at IBatisNet.DataMapper.MappedStatements.MappedStatement.ExecuteQueryForObject(IDalSession session, Object parameterObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 498
+		at IBatisNet.DataMapper.SqlMapper.QueryForObject(String statementName, Object parameterObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\SqlMapper.cs:line 508
+		at IBatisNet.DataMapper.Test.NUnit.SqlMapTests.DynamicPrependTest.TestDynamicSelectByBool() in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper.Test\NUnit\SqlMapTests\DynamicPrependTest.cs:line 338
+		-->
 		<statement id="DynamicSelectByIntLong" 
 			parameterClass="Hashtable" 
 			resultMap="other-result">
 			select
 				Other_Int,
-				Other_Long
+				Other_Long,
+				Other_Bit
 			from Others  
 			<dynamic prepend="WHERE"> 
 				<isNotEqual prepend="AND" property="year" compareValue="0"> 
@@ -33,6 +50,21 @@
 			</dynamic> 
 		</statement>
 		
+		<!--
+		Throws System.NotSupportedException : 
+		Specified method is not supported.
+		
+		at System.Data.OracleClient.OracleDataReader.GetBoolean(Int32 i)
+		at IBatisNet.DataMapper.TypesHandler.BooleanTypeHandler.GetValueByName(ResultProperty mapping, IDataReader dataReader) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\TypesHandler\BooleanTypeHandler.cs:line 61
+		at IBatisNet.DataMapper.TypesHandler.BaseTypeHandler.GetDataBaseValue(ResultProperty mapping, IDataReader dataReader) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\TypesHandler\BaseTypeHandler.cs:line 54
+		at IBatisNet.DataMapper.MappedStatements.MappedStatement.SetObjectProperty(RequestScope request, ResultMap resultMap, ResultProperty mapping, Object& target, IDataReader reader) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 1076
+		at IBatisNet.DataMapper.MappedStatements.MappedStatement.ApplyResultMap(RequestScope request, IDataReader reader, Object resultObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 393
+		at IBatisNet.DataMapper.MappedStatements.MappedStatement.RunQueryForList(RequestScope request, IDalSession session, Object parameterObject, Int32 skipResults, Int32 maxResults, RowDelegate rowDelegate) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 726
+		at IBatisNet.DataMapper.MappedStatements.MappedStatement.ExecuteQueryForList(IDalSession session, Object parameterObject, Int32 skipResults, Int32 maxResults) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 644
+		at IBatisNet.DataMapper.MappedStatements.MappedStatement.ExecuteQueryForList(IDalSession session, Object parameterObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 625
+		at IBatisNet.DataMapper.SqlMapper.QueryForList(String statementName, Object parameterObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\SqlMapper.cs:line 689
+		at IBatisNet.DataMapper.Test.NUnit.SqlMapTests.DynamicPrependTest.TestDynamicSelectByIntLong() in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper.Test\NUnit\SqlMapTests\DynamicPrependTest.cs:line 225
+		-->
 		<statement id="DynamicSelectByBool" 
 			parameterClass="Other" 
 			resultMap="other-result">
