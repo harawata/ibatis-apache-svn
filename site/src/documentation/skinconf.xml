@@ -29,7 +29,7 @@ which will be used to configure the chosen Forrest skin.
     no search box. @domain will enable sitesearch for the specific domain with google.
     In other words google will search the @domain for the query string.
   -->
-  <search name="iBATIS" domain="incubator.apache.org" provider="google"/>
+  <search name="iBATIS" domain="apache.org" provider="google"/>
 
   <!-- Disable the print link? If enabled, invalid HTML 4.0.1 -->
   <disable-print-link>true</disable-print-link>  
@@ -57,7 +57,7 @@ which will be used to configure the chosen Forrest skin.
   <disable-compliance-links>true</disable-compliance-links>
 
   <!-- Render mailto: links unrecognisable by spam harvesters? -->
-  <obfuscate-mail-links>true</obfuscate-mail-links>
+  <obfuscate-mail-links>false</obfuscate-mail-links>
   <obfuscate-mail-value>.at.</obfuscate-mail-value>
 
   <!-- Disable the javascript facility to change the font size -->
@@ -68,16 +68,16 @@ which will be used to configure the chosen Forrest skin.
   <project-name>iBATIS</project-name>
   <project-description>iBATIS</project-description>
   <project-url>http://incubator.apache.org/ibatis/site/index.html</project-url>
-  <project-logo>resources/images/ibatis-banner.gif</project-logo>
+  <project-logo>resources/images/ibatis.gif</project-logo>
   
 
   <!-- optional group logo
        default skin: renders it at the top-left corner 
    -->
-  <group-name>Apache Incubator</group-name>
-  <group-description>Apache Incubator</group-description>
-  <group-url>http://incubator.apache.org/</group-url>
-  <group-logo>resources/images/incubator-logo.png</group-logo>
+  <group-name>iBATIS</group-name>
+  <group-description>iBATIS</group-description>
+  <group-url>http://incubator.apache.org/ibatis/site/index.html</group-url>
+  <group-logo>resources/images/logo.gif</group-logo>
 
   <!-- optional host logo (e.g. sourceforge logo)
        default skin: renders it at the bottom-left corner -->
@@ -85,7 +85,7 @@ which will be used to configure the chosen Forrest skin.
   <host-logo></host-logo>
 
   <!-- relative url of a favicon file, normally favicon.ico -->
-  <favicon-url></favicon-url>
+  <favicon-url>resources/images/favicon.ico</favicon-url>
 
   <!-- The following are used to construct a copyright statement -->
   <year>2004</year>
@@ -104,8 +104,8 @@ which will be used to configure the chosen Forrest skin.
   -->
   <trail>
     <link1 name="Apache" href="http://www.apache.org/"/>
-    <link2 name="Incubator" href="http://incubator.apache.org/"/>
-    <link3 name="iBATIS" href="http://incubator.apache.org/ibatis/site/index.html"/>
+    <link2 name="iBATIS" href="http://incubator.apache.org/ibatis/site/index.html"/>
+    <link3 name="" href=""/>
   </trail>
 
   <!-- Configure the TOC, i.e. the Table of Contents.
