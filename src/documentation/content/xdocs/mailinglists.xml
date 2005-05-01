@@ -22,51 +22,35 @@
           <td><link href="mailto:ibatis-user-java@incubator.apache.org"> iBATIS Java Users List</link></td>
           <td><link href="mailto:ibatis-user-java-subscribe@incubator.apache.org"> Subscribe</link></td>
           <td><link href="mailto:ibatis-user-java-unsubscribe@incubator.apache.org"> Unsubscribe</link></td>
-          <td><fork href="http://nagoya.apache.org/eyebrowse/SummarizeList?listName=ibatis-user-java@incubator.apache.org"> Archives</fork></td>
+          <td><fork href="http://www.mail-archive.com/ibatis-user-java@incubator.apache.org/"> Archives</fork></td>
         </tr>
         <tr>
           <td><link href="mailto:ibatis-user-java@incubator.apache.org">iBATIS Java Users DIGEST</link></td>
           <td><link href="mailto:ibatis-user-java-digest-subscribe@incubator.apache.org"> Subscribe</link></td>
           <td><link href="mailto:ibatis-user-java-digest-unsubscribe@incubator.apache.org"> Unsubscribe</link></td>
-          <td><fork href="http://nagoya.apache.org/eyebrowse/SummarizeList?listName=ibatis-user-java@incubator.apache.org"> Archives</fork></td>
+          <td><fork href="http://www.mail-archive.com/ibatis-user-java@incubator.apache.org/"> Archives</fork></td>
         </tr>
         <tr>
           <td><link href="mailto:ibatis-user-cs@incubator.apache.org"> iBATIS.NET Users List</link></td>
           <td><link href="mailto:ibatis-user-cs-subscribe@incubator.apache.org"> Subscribe</link></td>
           <td><link href="mailto:ibatis-user-cs-unsubscribe@incubator.apache.org"> Unsubscribe</link></td>
-          <td><fork href="http://nagoya.apache.org/eyebrowse/SummarizeList?listName=ibatis-user-cs@incubator.apache.org"> Archives</fork></td>
+          <td><fork href="http://www.mail-archive.com/ibatis-user-cs@incubator.apache.org/"> Archives</fork></td>
         </tr>
         <tr>
           <td><link href="mailto:ibatis-dev@incubator.apache.org"> iBATIS Developer List</link></td>
           <td><link href="mailto:ibatis-dev-subscribe@incubator.apache.org"> Subscribe</link></td>
           <td><link href="mailto:ibatis-dev-unsubscribe@incubator.apache.org"> Unsubscribe</link></td>
-          <td><fork href="http://nagoya.apache.org/eyebrowse/SummarizeList?listName=ibatis-dev@incubator.apache.org"> Archives</fork></td>
+          <td><fork href="http://www.mail-archive.com/ibatis-dev@incubator.apache.org/"> Archives</fork></td>
         </tr>
         <tr>
           <td><link href="mailto:ibatis-commits@incubator.apache.org"> iBATIS Commits List</link></td>
           <td><link href="mailto:ibatis-commits-subscribe@incubator.apache.org"> Subscribe</link></td>
           <td><link href="mailto:ibatis-commits-unsubscribe@incubator.apache.org"> Unsubscribe</link></td>
-          <td><fork href="http://nagoya.apache.org/eyebrowse/SummarizeList?listName=ibatis-commits@incubator.apache.org"> Archives</fork></td>
+          <td><fork href="http://mail-archives.apache.org/mod_mbox/incubator-ibatis-commits/"> Archives</fork></td>
         </tr>
       </table>
     </section>
     
-    <section>
-      <title>Legacy Support Forums</title>
-      <p>
-      Use these links to review support threds that were opened at our SourceForge site. These links are provided for research purposes only. All new support threads must be opened on the ASF mailing lists. 
-      </p>
-
-      <table>
-        <tr>
-          <td>LEGACY <link href="http://sourceforge.net/tracker/?group_id=61326">iBATIS Java Support Forum</link> - Use for reference only!</td>
-        </tr>
-        <tr>
-          <td>LEGACY <link href="http://sourceforge.net/forum/?group_id=109704">iBATIS.NET Support Forum</link> - Use for reference only!</td>
-        </tr>
-      </table>
-</section>
-
-</body>
+ </body>
     
 </document>

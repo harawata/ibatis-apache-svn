@@ -7,5 +7,8 @@
   copyright="Apache Software Foundation"
   xmlns:xlink="http://www.w3.org/1999/xlink">
 
-  <tab label="Home" dir=""/>
+  <tab label="Home"          dir="" indexfile="index.html"/>
+  <tab label="Community"     dir="" indexfile="community.html"/>
+  <tab label="Documentation" dir="" indexfile="documentation.html"/>
+  <tab label="Download"      dir="" indexfile="download.html"/>
 </tabs>

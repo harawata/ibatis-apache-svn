@@ -18,16 +18,28 @@
       	<tr><td>husted</td><td>Ted Husted</td></tr>
       	<tr><td>bgoodin</td><td>Brandon Goodin</td></tr>
       	<tr><td>lmeadors</td><td>Larry Meadors</td></tr>
+      	<tr><td>roberto</td><td>Roberto Rabe</td></tr>
        </table>       
     </section>
     <section>
-      <title>Major Contributors</title>
+      <title>Major Contributors (code, documentation, emails, FAQs, articles and much more...) </title>
       <table>
-	<tr><td><strong>Username</strong></td><td><strong>Developers</strong></td></tr>
-      	<tr><td>roberto</td><td>Roberto Rabe</td></tr>
-      	<tr><td>&nbsp;</td><td>Kris Jenkins</td></tr>
+      	<tr><td>Kris Jenkins</td></tr>
+      	<tr><td>Nathan Maves</td></tr>
+      	<tr><td>Fabrizio Gianneschi</td></tr>
+      	<tr><td>Ron Grabowski</td></tr>
        </table>       
     </section>
+    <section>
+      <title>Thanks to...</title>
+      <table>
+      	<tr><td>The Spring Team - For integration, improvements and kudos over the years. - www.spring.org </td></tr>
+      	<tr><td>The Hibernate Team - For being good neighbors. - www.hibernate.org </td></tr>
+      	<tr><td>All of the authors of the articles, feedback and shared experiences that appear on our <link href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Home">wiki</link></td></tr>
+      	<tr><td>Vic Cekvenich - For relentless promotion of iBATIS.  ;-)</td></tr>
+       </table>       
+    </section>
+
 
     </body>
 
