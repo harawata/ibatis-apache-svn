@@ -162,6 +162,10 @@
                     BuildAction = "None"
                 />
                 <File
+                    RelPath = "bin\Debug\SqlMap_MySql_MySql.config"
+                    BuildAction = "None"
+                />
+                <File
                     RelPath = "bin\Debug\SqlMap_Oracle_ODP.config"
                     BuildAction = "None"
                 />
@@ -465,6 +469,46 @@
                 />
                 <File
                     RelPath = "Maps\MySql\ByteFx\ResultClass.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\MySql\MySql\Account.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\MySql\MySql\Category.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\MySql\MySql\Complex.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\MySql\MySql\Document.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\MySql\MySql\DynamicAccount.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\MySql\MySql\Enumeration.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\MySql\MySql\LineItem.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\MySql\MySql\Order.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\MySql\MySql\Other.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\MySql\MySql\ResultClass.xml"
                     BuildAction = "Content"
                 />
                 <File
