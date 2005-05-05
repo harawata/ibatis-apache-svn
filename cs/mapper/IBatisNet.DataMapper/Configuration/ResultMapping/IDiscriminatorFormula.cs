@@ -25,7 +25,7 @@
 #endregion
 
 #region Using
-using System;
+
 using System.Data;
 
 #endregion
@@ -33,7 +33,7 @@ using System.Data;
 namespace IBatisNet.DataMapper.Configuration.ResultMapping
 {
 	/// <summary>
-	/// D Summary description for IDiscriminatorFormula.
+	/// Summary description for IDiscriminatorFormula.
 	/// </summary>
 	public interface IDiscriminatorFormula
 	{

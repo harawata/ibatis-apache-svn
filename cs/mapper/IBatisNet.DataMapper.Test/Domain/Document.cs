@@ -1,9 +1,7 @@
-using System;
-
 namespace IBatisNet.DataMapper.Test.Domain
 {
 	/// <summary>
-	/// Description résumée de Document.
+	/// Summary for Document.
 	/// </summary>
 	public class Document
 	{
@@ -12,33 +10,14 @@ namespace IBatisNet.DataMapper.Test.Domain
 
 		public int Id
 		{
-			get
-			{
-				return _id; 
-			}
-			set
-			{ 
-				_id = value; 
-			}
+			get { return _id; }
+			set { _id = value; }
 		}
 
 		public string Title
 		{
-			get
-			{
-				return _title; 
-			}
-			set
-			{ 
-				_title = value; 
-			}
-		}
-
-		public Document()
-		{
-			//
-			// TODO : ajoutez ici la logique du constructeur
-			//
+			get { return _title; }
+			set { _title = value; }
 		}
 	}
 }

@@ -25,15 +25,9 @@
 #endregion
 
 #region Using
-using System;
-using System.Data;
-using System.Collections;
-using System.Collections.Specialized;
-using System.Reflection;
-using System.Xml;
-using System.Xml.Serialization;
 
-using IBatisNet.Common.Exceptions;
+using System;
+using System.Xml.Serialization;
 
 #endregion
 
@@ -97,7 +91,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// <summary>
 		/// The resultMap used if the column value is = to the Discriminator Value
 		/// </summary>
-		[XmlIgnoreAttribute]
+		[XmlIgnore]
 		public ResultMap ResultMap
 		{
 			get { return _resultMap; }

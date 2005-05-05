@@ -25,15 +25,12 @@
 #endregion
 
 #region Using
+
 using System;
-using System.Data;
 using System.Collections;
 using System.Collections.Specialized;
-using System.Reflection;
-using System.Xml;
+using System.Data;
 using System.Xml.Serialization;
-
-using IBatisNet.Common.Exceptions;
 
 #endregion
 
@@ -69,7 +66,8 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		#region Properties
 
 		/// <summary>
-		/// Column Name
+		/// Formula class name, 
+		/// used to calculate the discriminator value to use
 		/// </summary>
 		[XmlAttribute("formula")]
 		public string FormulaClassName
@@ -91,7 +89,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// <summary>
 		/// A formula to calculate the discriminator value to use
 		/// </summary>
-		[XmlIgnoreAttribute]
+		[XmlIgnore]
 		public IDiscriminatorFormula Formula
 		{
 			get
@@ -160,9 +158,9 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// <returns>The find ResultMap</returns>
 		public ResultMap GetResultMap(IDataReader dataReader)
 		{
-			// récupérer le resultmap correspondant
-			// 1/ récupérer la valeur de la colonne (en string)
-			// 2/ récupérer 
+			// Find the resultmap to use
+			// 1/ Find the value to test
+			// 2/ Find the  resultmap
 			string discriminatorValue = _formula.GetDiscriminatorValue(dataReader);
 			return _resultMaps[discriminatorValue] as ResultMap;
 		}

@@ -11,14 +11,8 @@ namespace IBatisNet.DataMapper.Test.Domain
 
 		public int PageNumber
 		{
-			get
-			{
-				return _pageNumber; 
-			}
-			set
-			{ 
-				_pageNumber = value; 
-			}
+			get { return _pageNumber; }
+			set { _pageNumber = value; }
 		}
 	}
 }

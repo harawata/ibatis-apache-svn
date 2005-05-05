@@ -1,6 +1,4 @@
-using System;
 using System.Data;
-
 using IBatisNet.DataMapper.Configuration.ResultMapping;
 
 namespace IBatisNet.DataMapper.Test.Domain
