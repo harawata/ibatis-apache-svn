@@ -25,7 +25,7 @@
 #endregion
 
 #region Using
-using System;
+
 using System.Text;
 
 #endregion
@@ -40,10 +40,10 @@ namespace IBatisNet.DataMapper.Scope
 
 		#region Fields
 
-		private string _resource;
-		private string _activity;
-		private string _objectId;
-		private string _moreInfo;
+		private string _resource = string.Empty;
+		private string _activity = string.Empty;
+		private string _objectId = string.Empty;
+		private string _moreInfo = string.Empty;
 		#endregion 
 
 		#region Properties
@@ -106,7 +106,7 @@ namespace IBatisNet.DataMapper.Scope
 			StringBuilder message = new StringBuilder();
 
 			// activity
-			if (_activity != null) 
+			if (_activity != null && _activity.Length > 0) 
 			{
 				message.Append("\n- The error occurred while ");
 				message.Append(_activity);
@@ -114,14 +114,14 @@ namespace IBatisNet.DataMapper.Scope
 			}			
 
 			// more info
-			if (_moreInfo != null) 
+			if (_moreInfo != null && _moreInfo.Length > 0) 
 			{
 				message.Append("\n- ");
 				message.Append(_moreInfo);
 			}
 			
 			// resource
-			if (_resource != null) 
+			if (_resource != null && _resource.Length > 0) 
 			{
 				message.Append("\n- The error occurred in ");
 				message.Append(_resource);
@@ -129,19 +129,12 @@ namespace IBatisNet.DataMapper.Scope
 			}
 
 			// object
-			if (_objectId != null) 
+			if (_objectId != null && _objectId.Length > 0)
 			{
 				message.Append("  \n- Check the ");
 				message.Append(_objectId);
 				message.Append(".");
 			}
-
-//			// cause
-//			if (_cause != null) 
-//			{
-//				message.Append("\n- Cause: ");
-//				message.Append(_cause.ToString());
-//			}
 
 			return message.ToString();
 		}
