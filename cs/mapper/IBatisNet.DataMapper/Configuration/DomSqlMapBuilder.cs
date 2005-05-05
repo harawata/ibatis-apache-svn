@@ -372,16 +372,19 @@ namespace IBatisNet.DataMapper.Configuration
 
 			#region Attach CacheModel to statement
 
-			foreach(DictionaryEntry entry in _configScope.SqlMapper.MappedStatements)
+			if (_configScope.IsCacheModelsEnabled)
 			{
-				_configScope.ErrorContext.Activity = "Set CacheModel to statement";
-
-				MappedStatement mappedStatement = (MappedStatement)entry.Value;
-				if (mappedStatement.Statement.CacheModelName.Length >0)
+				foreach(DictionaryEntry entry in _configScope.SqlMapper.MappedStatements)
 				{
-					_configScope.ErrorContext.MoreInfo = "statement :"+mappedStatement.Statement.Id;
-					_configScope.ErrorContext.Resource = "cacheModel : " +mappedStatement.Statement.CacheModelName;
-					mappedStatement.Statement.CacheModel = _configScope.SqlMapper.GetCache(mappedStatement.Statement.CacheModelName);
+					_configScope.ErrorContext.Activity = "Set CacheModel to statement";
+
+					MappedStatement mappedStatement = (MappedStatement)entry.Value;
+					if (mappedStatement.Statement.CacheModelName.Length >0)
+					{
+						_configScope.ErrorContext.MoreInfo = "statement : "+mappedStatement.Statement.Id;
+						_configScope.ErrorContext.Resource = "cacheModel : " +mappedStatement.Statement.CacheModelName;
+						mappedStatement.Statement.CacheModel = _configScope.SqlMapper.GetCache(mappedStatement.Statement.CacheModelName);
+					}
 				}
 			}
 			#endregion 
@@ -871,7 +874,6 @@ namespace IBatisNet.DataMapper.Configuration
 			#endregion
 
 			_configScope.ErrorContext.Reset();
-
 		}
 
 
