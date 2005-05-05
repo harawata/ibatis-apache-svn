@@ -259,6 +259,7 @@
   &lt;settings&gt;
     &lt;setting useFullyQualifiedStatementNames="false"/&gt;
     &lt;setting cacheModelsEnabled="true"/&gt;
+	 &lt;setting validateSqlMap="false"/&gt;
   &lt;/settings&gt;
 
   &lt;database&gt;
@@ -412,6 +413,13 @@ Default: true (enabled)</programlisting></entry>
                 the combination of the sqlMap namesource and the statement id.
                 For example:
                 <methodname>queryForObject(“Namespace.statement.Id”);</methodname></para><programlisting>Example: useStatementNamespaces=”false”
+Default: false (disabled)</programlisting></entry>
+              </row>
+			   <row>
+                <entry><emphasis>validateSqlMap </emphasis></entry>
+
+                <entry><para>This setting globally enables or disables the validation of mapping files against the SqlMapConfig.xsd schema. This can come in handy
+                for debugging.</para><programlisting>Example: validateSqlMap=”false”
 Default: false (disabled)</programlisting></entry>
               </row>
             </tbody>

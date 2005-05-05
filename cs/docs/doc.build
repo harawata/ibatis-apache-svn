@@ -191,8 +191,8 @@
 		<delete file="${xml.src.dir}/xsd-config.xml" failonerror="false"/>
  		<delete file="${xml.src.dir}/xsd-sqlMap.xml" failonerror="false"/>
 
-		<loadfile property="doc.config.schema" file="${src.dir}/IBatisNet.Schemas/SqlMapConfig.xsd" />
- 		<loadfile property="doc.sqlMap.schema" file="${src.dir}/IBatisNet.Schemas/SqlMap.xsd" />
+		<loadfile property="doc.config.schema" file="${src.dir}/IBatisNet.DataMapper/SqlMapConfig.xsd" />
+ 		<loadfile property="doc.sqlMap.schema" file="${src.dir}/IBatisNet.DataMapper/SqlMap.xsd" />
 
 		<copy file="${xml.src.dir}/xsd-config-template.xml" tofile="${xml.src.dir}/xsd-config.xml" >
 			<filterchain>
