@@ -25,13 +25,9 @@
 #endregion
 
 #region Using
-using System;
-using System.Data;
-using System.Collections;
+
 using System.Collections.Specialized;
 using System.Xml;
-
-using IBatisNet.DataMapper;
 using IBatisNet.Common;
 
 #endregion

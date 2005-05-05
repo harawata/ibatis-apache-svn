@@ -25,24 +25,18 @@
 #endregion
 
 #region Using
+
 using System;
 using System.Collections;
-using System.Collections.Specialized;
+using System.IO;
 using System.Reflection;
 using System.Text;
-using System.IO;
 using System.Xml;
-using System.Xml.Serialization;
 using System.Xml.Schema;
-
+using System.Xml.Serialization;
 using IBatisNet.Common;
 using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Utilities;
-
-using IBatisNet.Common.Utilities.Objects;
-using IBatisNet.DataMapper;
-
-using IBatisNet.DataMapper.Scope;
 using IBatisNet.DataMapper.Configuration.Alias;
 using IBatisNet.DataMapper.Configuration.Cache;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
@@ -53,8 +47,9 @@ using IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements;
 using IBatisNet.DataMapper.Configuration.Sql.SimpleDynamic;
 using IBatisNet.DataMapper.Configuration.Sql.Static;
 using IBatisNet.DataMapper.Configuration.Statements;
-using IBatisNet.DataMapper.TypesHandler;
 using IBatisNet.DataMapper.MappedStatements;
+using IBatisNet.DataMapper.Scope;
+
 #endregion
 
 namespace IBatisNet.DataMapper.Configuration
@@ -137,7 +132,7 @@ namespace IBatisNet.DataMapper.Configuration
 		/// <param name="isCallFromDao"></param>
 		/// <returns>return an a SqlMapper instance</returns>
 		private SqlMapper Build(XmlDocument document, 
-			DataSource dataSource, 
+		                        DataSource dataSource, 
 			bool useConfigFileWatcher, bool isCallFromDao)
 		{
 			_configScope = new ConfigurationScope();
@@ -260,20 +255,20 @@ namespace IBatisNet.DataMapper.Configuration
 				{
 					if (setting.Attributes[ATR_USE_STATEMENT_NAMESPACES] != null )
 					{				
-						_configScope.UseStatementNamespaces =  System.Convert.ToBoolean(setting.Attributes[ATR_USE_STATEMENT_NAMESPACES].Value); 
+						_configScope.UseStatementNamespaces =  Convert.ToBoolean(setting.Attributes[ATR_USE_STATEMENT_NAMESPACES].Value); 
 					}
 					if (setting.Attributes[ATR_CACHE_MODELS_ENABLED] != null )
 					{				
-						_configScope.IsCacheModelsEnabled =  System.Convert.ToBoolean(setting.Attributes[ATR_CACHE_MODELS_ENABLED].Value); 
+						_configScope.IsCacheModelsEnabled =  Convert.ToBoolean(setting.Attributes[ATR_CACHE_MODELS_ENABLED].Value); 
 					}
 					if (setting.Attributes[ATR_EMBED_STATEMENT_PARAMS] != null )
 					{				
-						_configScope.UseEmbedStatementParams =  System.Convert.ToBoolean(setting.Attributes[ATR_EMBED_STATEMENT_PARAMS].Value); 
+						_configScope.UseEmbedStatementParams =  Convert.ToBoolean(setting.Attributes[ATR_EMBED_STATEMENT_PARAMS].Value); 
 					}
 
 					if (setting.Attributes[ATR_VALIDATE_SQLMAP] != null )
 					{				
-						_configScope.ValidateSqlMap =  System.Convert.ToBoolean(setting.Attributes[ATR_VALIDATE_SQLMAP].Value); 
+						_configScope.ValidateSqlMap =  Convert.ToBoolean(setting.Attributes[ATR_VALIDATE_SQLMAP].Value); 
 					}
 				}
 			}

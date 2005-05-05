@@ -25,7 +25,8 @@
 
 #region Using
 
-using log4net;
+
+
 #endregion
 
 namespace IBatisNet.DataMapper.Commands
@@ -43,16 +44,14 @@ namespace IBatisNet.DataMapper.Commands
 		{
 			IPreparedCommand preparedCommand = null;
 
-			if (isEmbedStatementParams)
-			{
-				preparedCommand = new EmbedParamsPreparedCommand();
-			}
-			else
-			{
+//			if (isEmbedStatementParams)
+//			{
+//				preparedCommand = new EmbedParamsPreparedCommand();
+//			}
+//			else
+//			{
 				preparedCommand = new DefaultPreparedCommand();
-			}
-
-			//return (IPreparedCommand)IPreparedCommandProxy.NewInstance(preparedCommand);
+//			}
 
 			return preparedCommand;
 		}
