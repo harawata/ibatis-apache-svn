@@ -25,19 +25,15 @@
 #endregion
 
 #region Using
+
 using System;
 using System.Data;
-
-using System.Data.SqlClient;
-
-using System.Xml.Serialization;
 using System.Reflection;
-
+using System.Xml.Serialization;
 using IBatisNet.Common.Exceptions;
-using IBatisNet.Common.Logging; 
 using IBatisNet.Common.Utilities.TypesResolver;
+//using log4net;
 
-using log4net;
 #endregion
 
 namespace IBatisNet.Common
@@ -109,9 +105,10 @@ namespace IBatisNet.Common
 		private bool _setDbParameterPrecision = true;
 		[NonSerialized]
 		private bool _setDbParameterScale = true;
-
+		[NonSerialized]
+		private bool _useDeriveParameters = true;
 		
-		private static readonly ILog _connectionLogger = LogManager.GetLogger("System.Data.IDbConnection");
+//		private static readonly ILog _connectionLogger = LogManager.GetLogger("System.Data.IDbConnection");
 
 		#endregion
 		
@@ -265,6 +262,17 @@ namespace IBatisNet.Common
 		{
 			get { return _setDbParameterScale; }
 			set { _setDbParameterScale = value; }		
+		}
+
+		/// <summary>
+		/// Used to indicate whether or not the provider 
+		/// supports DeriveParameters method for procedure.
+		/// </summary>
+		[XmlAttribute("useDeriveParameters")]
+		public bool UseDeriveParameters
+		{
+			get { return _useDeriveParameters; }
+			set { _useDeriveParameters = value; }		
 		}
 
 		/// <summary>
@@ -433,7 +441,7 @@ namespace IBatisNet.Common
 		/// <summary>
 		/// Check if this provider is Odbc ?
 		/// </summary>
-		[XmlIgnoreAttribute]
+		[XmlIgnore]
 		public bool IsObdc
 		{
 			get

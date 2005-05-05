@@ -108,7 +108,15 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 				}
 				else // use the parameterMap
 				{
-					DiscoverParameter(_session);
+					if (_session.DataSource.Provider.UseDeriveParameters)
+					{
+						DiscoverParameter(_session);
+					}
+					else
+					{
+						CreateParametersForStatementText();
+						EvaluateParameterMap();
+					}
 				}
 
 				#region Fix for Odbc
