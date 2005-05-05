@@ -97,8 +97,7 @@ namespace IBatisNet.DataMapper.Commands
 		{
 			ArrayList properties = request.PreparedStatement.DbParametersName;
 			ArrayList parameters = request.PreparedStatement.DbParameters;
-			StringBuilder valueList = new StringBuilder(); // Log info
-			StringBuilder typeList = new StringBuilder(); // Log info 
+			StringBuilder logList = new StringBuilder(); // Log info
 
 			object parameterValue = null;
 
@@ -152,15 +151,19 @@ namespace IBatisNet.DataMapper.Commands
 
 				if (parameterValue == System.DBNull.Value) 
 				{
-					valueList.Append("null,");
-					typeList.Append("null,");
+					logList.Append(sqlParameter.ParameterName);
+					logList.Append("=[");
+					logList.Append("null");
+					logList.Append( "], " );
 				} 
 				else 
-				{
-					valueList.Append( parameterValue.ToString() );
-					valueList.Append( "," );
-					typeList.Append( parameterValue.GetType().ToString() );
-					typeList.Append( "," );
+				{ 
+					logList.Append(sqlParameter.ParameterName);
+					logList.Append("=[");
+					logList.Append( parameterValue.ToString() );
+					logList.Append( "," );
+					logList.Append( parameterValue.GetType().ToString().Replace("System.",string.Empty) );
+					logList.Append( "], " );
 				}
 				#endregion 
 
@@ -214,11 +217,13 @@ namespace IBatisNet.DataMapper.Commands
 				command.Parameters.Add( parameterCopy );
 			}
 
+			#region Logging
+
 			if (_logger.IsDebugEnabled && properties.Count>0)
 			{
-				_logger.Debug("Parameters: [" + valueList.ToString().Remove(valueList.ToString().Length-1,1) + "]");
-				_logger.Debug("Types: [" + typeList.ToString().Remove(typeList.ToString().Length-1,1) + "]");
+				_logger.Debug("Parameters: [" + logList.ToString(0, logList.Length - 2)  + "]");
 			}
+			#endregion 
 		}
 
 		#endregion

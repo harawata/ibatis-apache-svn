@@ -1,14 +1,11 @@
 using System;
 using System.Collections;
-using System.Configuration;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-
-using NUnit.Framework;
-
 using IBatisNet.Common.Utilities;
 using IBatisNet.DataMapper.Test.Domain;
+using NUnit.Framework;
 
 namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 {
@@ -127,7 +124,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			order.CardNumber = "154564656";
 			order.CardType = "Visa";
 			order.City = "Lyon";
-			order.Date = System.DateTime.MinValue; //<-- null replacement
+			order.Date = DateTime.MinValue; //<-- null replacement
 			order.PostalCode = "69004";
 			order.Province = "Rhône";
 			order.Street = "rue Durand";
@@ -207,7 +204,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			order.CardNumber = "154564656";
 			order.CardType = "Visa";
 			order.City = "Lyon";
-			order.Date = System.DateTime.MinValue; 
+			order.Date = DateTime.MinValue; 
 			order.PostalCode = "69004";
 			order.Province = "Rhône";
 			order.Street = "rue Durand";
@@ -258,7 +255,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			order.CardNumber = "154564656";
 			order.CardType = "Visa";
 			order.City = "Lyon";
-			order.Date = System.DateTime.MinValue; //<-- null replacement
+			order.Date = DateTime.MinValue; //<-- null replacement
 			order.PostalCode = "69004";
 			order.Province = "Rhône";
 			order.Street = "rue Durand";

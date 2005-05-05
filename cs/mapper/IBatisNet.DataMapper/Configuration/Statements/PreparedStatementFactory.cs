@@ -25,25 +25,21 @@
 #endregion
 
 #region Using
+
 using System;
-using System.Data;
 using System.Collections;
 using System.Collections.Specialized;
-using System.Text.RegularExpressions;
+using System.Data;
+using System.Reflection;
 using System.Text;
-
-using log4net;
-
 using IBatisNet.Common;
-using IBatisNet.DataMapper.Configuration.Alias;
-using IBatisNet.DataMapper.Configuration;
-using IBatisNet.DataMapper.Configuration.Statements;
+using IBatisNet.Common.Utilities;
+using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.Scope;
-using IBatisNet.DataMapper.Configuration.Sql.Dynamic;
-using IBatisNet.Common.Utilities;
-using IBatisNet.Common.Utilities.Objects;
+using log4net;
+
 #endregion
 
 namespace IBatisNet.DataMapper.Configuration.Statements
@@ -65,9 +61,8 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		private RequestScope _request = null;
 		// (property, DbParameter)
 		private HybridDictionary _propertyDbParameterMap = new HybridDictionary();
-		private ArrayList _mapping = new ArrayList();
 
-		private static readonly ILog _logger = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
+		private static readonly ILog _logger = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
 
 		#endregion
 
@@ -206,21 +201,17 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 
 			foreach(ParameterProperty property in list)
 			{
-				StringBuilder stringBuilder = new StringBuilder(property.PropertyName);
-				stringBuilder = stringBuilder.Replace('.', '_').Replace('[','P').Replace(']','D');
-				string paramName =  stringBuilder.ToString();
-
-				//				if (_session.DataSource.Provider.UseParameterPrefixInParameter )
-				//				{
-
-				// From Ryan Yao: JIRA-27
-				//sqlParamName = _parameterPrefix + paramName;
-				sqlParamName = _parameterPrefix + "param" + i++;
-				//				}
-				//				else //obdc/oledb
-				//				{
-				//					sqlParamName = paramName;
-				//				}
+				if (_session.DataSource.Provider.UseParameterPrefixInParameter )
+				{
+					// From Ryan Yao: JIRA-27
+					// sqlParamName = _parameterPrefix + paramName;
+					sqlParamName = _parameterPrefix + "param" + i++;
+				}
+				else //obdc/oledb
+				{
+					// sqlParamName = paramName;
+					sqlParamName = "param" + i++;
+				}
 
 				IDataParameter dataParameter = _session.CreateCommand(_statement.CommandType).CreateParameter();
 
@@ -259,7 +250,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 
 				dataParameter.ParameterName = sqlParamName;
 
-				_preparedStatement.DbParametersName.Add( paramName );
+				_preparedStatement.DbParametersName.Add( property.PropertyName );
 				_preparedStatement.DbParameters.Add( dataParameter );	
 
 				if ( _session.DataSource.Provider.UsePositionalParameters == false)
