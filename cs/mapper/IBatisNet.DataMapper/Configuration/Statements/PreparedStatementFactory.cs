@@ -302,15 +302,27 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 					{
 						dataParameter = (IDataParameter) _propertyDbParameterMap[property];
 						
-						// Fix ByteFX.Data.MySqlClient.MySqlParameter
-						// who strip prefix in Parameter Name ?!
-						if (_session.DataSource.Provider.Name.IndexOf("ByteFx")>=0)
+						// 5 May 2004
+						// Need to check UseParameterPrefixInParameter here 
+						// since CreateParametersForStatementText now does
+						// a check for UseParameterPrefixInParameter before 
+						// creating the parameter name!
+						if (_session.DataSource.Provider.UseParameterPrefixInParameter) 
 						{
-							sqlParamName = _parameterPrefix+dataParameter.ParameterName;
+							// Fix ByteFX.Data.MySqlClient.MySqlParameter
+							// who strip prefix in Parameter Name ?!
+							if (_session.DataSource.Provider.Name.IndexOf("ByteFx")>=0)
+							{
+								sqlParamName = _parameterPrefix+dataParameter.ParameterName;
+							}
+							else
+							{
+								sqlParamName = dataParameter.ParameterName;
+							}
 						}
 						else
 						{
-							sqlParamName = dataParameter.ParameterName;
+							sqlParamName = _parameterPrefix+dataParameter.ParameterName;
 						}
 					}			
 		
