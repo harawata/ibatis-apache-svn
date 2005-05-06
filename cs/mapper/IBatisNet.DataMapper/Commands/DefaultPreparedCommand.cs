@@ -97,7 +97,8 @@ namespace IBatisNet.DataMapper.Commands
 		{
 			ArrayList properties = request.PreparedStatement.DbParametersName;
 			ArrayList parameters = request.PreparedStatement.DbParameters;
-			StringBuilder logList = new StringBuilder(); // Log info
+			StringBuilder paramLogList = new StringBuilder(); // Log info
+			StringBuilder typeLogList = new StringBuilder(); // Log info
 
 			object parameterValue = null;
 
@@ -105,6 +106,16 @@ namespace IBatisNet.DataMapper.Commands
 			{
 				IDataParameter sqlParameter = (IDataParameter)parameters[i];
 				string propertyName = (string)properties[i];
+
+				#region Logging
+				if (_logger.IsDebugEnabled)
+				{
+					paramLogList.Append(sqlParameter.ParameterName);
+					paramLogList.Append("=[");
+					typeLogList.Append(sqlParameter.ParameterName);
+					typeLogList.Append("=[");
+				}
+				#endregion
 
 				if (command.CommandType == CommandType.Text)
 				{
@@ -114,10 +125,26 @@ namespace IBatisNet.DataMapper.Commands
 
 						parameterValue = request.ParameterMap.GetValueOfProperty(parameterObject,
 							property.PropertyName);
+
+						#region Logging
+						if (_logger.IsDebugEnabled)
+						{
+							paramLogList.Append( property.PropertyName );
+							paramLogList.Append( "," );
+						}
+						#endregion 
 					}
 					else // 'value' parameter
 					{
 						parameterValue = parameterObject;
+
+						#region Logging
+						if (_logger.IsDebugEnabled)
+						{
+							paramLogList.Append( "'value'" );
+							paramLogList.Append( "," );
+						}
+						#endregion 
 					}
 				}
 				else // CommandType.StoredProcedure
@@ -144,34 +171,45 @@ namespace IBatisNet.DataMapper.Commands
 
 						sqlParameter.Direction = property.Direction;
 						parameterValue = request.ParameterMap.GetValueOfProperty( parameterObject, property.PropertyName );
+					
+						#region Logging
+						if (_logger.IsDebugEnabled)
+						{
+							paramLogList.Append( property.PropertyName );
+							paramLogList.Append( "," );
+						}
+						#endregion 					
 					}
 				}
 
-				#region Logging
-
-				if (parameterValue == System.DBNull.Value) 
-				{
-					logList.Append(sqlParameter.ParameterName);
-					logList.Append("=[");
-					logList.Append("null");
-					logList.Append( "], " );
-				} 
-				else 
-				{ 
-					logList.Append(sqlParameter.ParameterName);
-					logList.Append("=[");
-					logList.Append( parameterValue.ToString() );
-					logList.Append( "," );
-					logList.Append( parameterValue.GetType().ToString().Replace("System.",string.Empty) );
-					logList.Append( "], " );
-				}
-				#endregion 
 
 				IDataParameter parameterCopy = command.CreateParameter();
 				// Fix JIRA 20
 				sqlParameter.Value = parameterValue;
 				parameterCopy.Value = parameterValue;
 				
+				#region Logging
+				if (_logger.IsDebugEnabled)
+				{
+					if (parameterValue == System.DBNull.Value) 
+					{
+						paramLogList.Append("null");
+						paramLogList.Append( "], " );
+						typeLogList.Append("System.DBNull, null");
+						typeLogList.Append( "], " );
+					} 
+					else 
+					{ 
+						paramLogList.Append( parameterValue.ToString() );
+						paramLogList.Append( "], " );
+						typeLogList.Append( sqlParameter.DbType.ToString() );
+						typeLogList.Append( ", " );
+						typeLogList.Append( parameterValue.GetType().ToString() );
+						typeLogList.Append( "], " );
+					}
+				}
+				#endregion 
+
 				parameterCopy.Direction = sqlParameter.Direction;
 
 				// With a ParameterMap, we could specify the ParameterDbTypeProperty
@@ -221,7 +259,8 @@ namespace IBatisNet.DataMapper.Commands
 
 			if (_logger.IsDebugEnabled && properties.Count>0)
 			{
-				_logger.Debug("Parameters: [" + logList.ToString(0, logList.Length - 2)  + "]");
+				_logger.Debug("Parameters: [" + paramLogList.ToString(0, paramLogList.Length - 2)  + "]");
+				_logger.Debug("Types: [" + typeLogList.ToString(0, typeLogList.Length - 2)  + "]");			
 			}
 			#endregion 
 		}
