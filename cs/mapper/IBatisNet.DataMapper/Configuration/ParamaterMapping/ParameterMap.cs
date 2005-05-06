@@ -25,15 +25,16 @@
 #endregion
 
 #region Imports
+
 using System;
 using System.Collections;
-using System.Collections.Specialized;
+using System.Globalization;
+using System.IO;
+using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
-using System.Reflection;
-using System.Globalization;
-
 using IBatisNet.Common.Utilities.Objects;
+
 #endregion
 
 namespace IBatisNet.DataMapper.Configuration.ParameterMapping
@@ -84,7 +85,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// <summary>
 		/// The collection of ParameterProperty
 		/// </summary>
-		[XmlIgnoreAttribute]
+		[XmlIgnore]
 		public ArrayList Properties
 		{
 			get { return _properties; }
@@ -93,7 +94,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// <summary>
 		/// 
 		/// </summary>
-		[XmlIgnoreAttribute]
+		[XmlIgnore]
 		public ArrayList PropertiesList
 		{
 			get { return _propertiesList; }
@@ -188,7 +189,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		{
 			int idx = -1;
 			//idx = (Integer) parameterMappingIndex.get(propertyName);
-			idx = System.Convert.ToInt32(propertyName.Replace("[","").Replace("]",""));
+			idx = Convert.ToInt32(propertyName.Replace("[","").Replace("]",""));
 			return idx;
 		}
 		
@@ -201,7 +202,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		{
 			string[] propertyNameArray = new string[_propertiesMap.Count];
 
-			System.Collections.IEnumerator myEnumerator = _propertiesList.GetEnumerator();
+			IEnumerator myEnumerator = _propertiesList.GetEnumerator();
 			int index =0;
 			while ( myEnumerator.MoveNext() )
 			{
@@ -232,7 +233,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 
 				if (propertyValue != null && propertyValue.GetType() == typeof(byte[]))
 				{
-					System.IO.MemoryStream stream = new System.IO.MemoryStream((byte[])propertyValue);
+					MemoryStream stream = new MemoryStream((byte[])propertyValue);
 
 					propertyValue = stream.ToArray();
 				}
@@ -278,7 +279,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 
 						PropertyInfo propertyInfo =  ReflectionInfo.GetInstance(source.GetType()).GetGetter( propertyName );
 
-						if (propertyInfo.PropertyType == typeof(System.Decimal))
+						if (propertyInfo.PropertyType == typeof(Decimal))
 						{
 							#region Decimal
 							CultureInfo culture = new CultureInfo( "en-US" );
@@ -286,7 +287,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 							nullValue = decimal.Parse( property.NullValue, culture);
 							#endregion
 						}
-						else if (propertyInfo.PropertyType == typeof(System.Guid)) 
+						else if (propertyInfo.PropertyType == typeof(Guid)) 
 						{
 							#region Guid
 							nullValue = new Guid(property.NullValue); 
@@ -307,12 +308,6 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 						if (propertyValue == null)
 						{
 							propertyValue = DBNull.Value; ;
-						}
-						else if (propertyValue.GetType() == typeof(string) && propertyValue.ToString() == "" )
-						{
-							// From Ryan Yao: JIRA-27
-							//Manually changed "" to DbNull
-							propertyValue = DBNull.Value;
 						}
 					}
 				}
