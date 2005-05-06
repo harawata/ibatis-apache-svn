@@ -541,16 +541,6 @@
 			</isNotEmpty> 
 		</select>			
 		
-		<!--
-		NOTE:
-		ODP.NET 9.2 does not have a DeriveParameters method for iBATIS.NET
-		to dynamically determine the procedure's parameters.  You cannot
-		use the <procedure> statement.
-		
-		IBatisNet.Test.NUnit.SqlMapTests.Oracle.ProcedureTest.InsertTestSequenceViaProcedure : IBatisNet.Common.Exceptions.IBatisNetException : 
-		Could not retrieve parameters for the store procedure named {call prc_InsertCategory(?, ?, ?)}
-		System.MissingMethodException : Method Oracle.DataAccess.Client.OracleCommandBuilder.DeriveParameters not found.		
-		-->
 		<!-- For procedure, the parameters of the parameterMap must in the same order 
 		as for the procedure paramaters-->
 		<!--
@@ -562,10 +552,6 @@
 			prc_InsertAccount
 		</procedure>
 		
-		<!--
-		See InsertCategoryViaStoreProcedure issue with ODP.NET due to lack of
-		DeriveParameters (cannot use <procedure> statement)
-		-->
 		<!--
 		<statement id="SwapEmailAddresses" parameterMap="swap-params">
 			call prc_Swap_Email_Address(?, ?)
