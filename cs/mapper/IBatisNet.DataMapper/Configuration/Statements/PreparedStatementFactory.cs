@@ -209,16 +209,36 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 
 			foreach(ParameterProperty property in list)
 			{
-				if (_session.DataSource.Provider.UseParameterPrefixInParameter )
+				// Check if property is part of a parameterMap for naming purposes
+				// used when retrieving output parameters (stored procs/input/output).
+				// property.ColumnName is used when retrieving output parameters,
+				// so it has to be used here as the parameter name!
+				if (_statement.ParameterMap != null && 
+					(property.Direction == ParameterDirection.Output || 
+					property.Direction == ParameterDirection.InputOutput)) 
 				{
-					// From Ryan Yao: JIRA-27
-					// sqlParamName = _parameterPrefix + paramName;
-					sqlParamName = _parameterPrefix + "param" + i++;
+					if (_session.DataSource.Provider.UseParameterPrefixInParameter)
+					{
+						sqlParamName = _parameterPrefix + property.ColumnName;
+					}
+					else //obdc/oledb
+					{
+						sqlParamName =  property.ColumnName;
+					}
 				}
-				else //obdc/oledb
+				else 
 				{
-					// sqlParamName = paramName;
-					sqlParamName = "param" + i++;
+					if (_session.DataSource.Provider.UseParameterPrefixInParameter )
+					{
+						// From Ryan Yao: JIRA-27
+						// sqlParamName = _parameterPrefix + paramName;
+						sqlParamName = _parameterPrefix + "param" + i++;
+					}
+					else //obdc/oledb
+					{
+						// sqlParamName = paramName;
+						sqlParamName = "param" + i++;
+					}
 				}
 
 				IDataParameter dataParameter = _session.CreateCommand(_statement.CommandType).CreateParameter();

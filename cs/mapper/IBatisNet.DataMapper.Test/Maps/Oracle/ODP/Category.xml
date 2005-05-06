@@ -84,27 +84,15 @@
 		</update>
 
 		<!--
-		NOTE: ODP.NET does not have a DeriveParameters method 
-		to allow iBAITS.NET to dynamically infer the stored procedure's parameters.
-		You cannot use the <procedure> statement.
-		
-		This was an attempt at a workaround for using 
-		a stored proc with 2 Input and 1 Output parameter in a <statement>.
-		
-		Unfortunately, the retrieving the output parameters doesn't work
-		since the procedure param name that iBATIS gets is p_Category_Id, 
-		but since this is a <statement> the actual param name is :Id!
-		
-		To get around this property name to paramMap name to proc param name issue,
-		use the same name for all, and this should work!
-		
-		Found in MappedStatement.RetrieveOutputParameters():
-		object dataBaseValue = mapping.TypeHandler.GetDataBaseValue( ((IDataParameter)command.Parameters[parameterName]).Value, result.GetType() );		
-		-->
-		<statement id="InsertCategoryViaStoreProcedure" parameterMap="stored-proc-insert-params">
+		<insert id="InsertCategoryViaStoreProcedure" parameterMap="stored-proc-insert-params">
 			call prc_InsertCategory(?, ?, ?)
-		</statement>
-				
+		</insert>
+		-->
+		<procedure id="InsertCategoryViaStoreProcedure" parameterMap="stored-proc-insert-params">
+			prc_InsertCategory
+		</procedure>
+		
+						
 		<insert id="InsertCategoryGenerate" parameterMap="insert-generate-params">
 			<selectKey property="Id" type="post" resultClass="int">
 				select s_categories.nextval as value from dual

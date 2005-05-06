@@ -553,17 +553,28 @@
 		-->
 		<!-- For procedure, the parameters of the parameterMap must in the same order 
 		as for the procedure paramaters-->
+		<!--
 		<statement id="InsertAccountViaStoreProcedure" parameterMap="insert-params">
 			call prc_InsertAccount(?, ?, ?, ?)
 		</statement>
+		-->
+		<procedure id="InsertAccountViaStoreProcedure" parameterMap="insert-params">
+			prc_InsertAccount
+		</procedure>
 		
 		<!--
 		See InsertCategoryViaStoreProcedure issue with ODP.NET due to lack of
 		DeriveParameters (cannot use <procedure> statement)
 		-->
+		<!--
 		<statement id="SwapEmailAddresses" parameterMap="swap-params">
 			call prc_Swap_Email_Address(?, ?)
 		</statement>
+		-->
+		<procedure id="SwapEmailAddresses" parameterMap="swap-params">
+			prc_Swap_Email_Address
+		</procedure>
+
 	</statements>
 
 	<!-- =============================================

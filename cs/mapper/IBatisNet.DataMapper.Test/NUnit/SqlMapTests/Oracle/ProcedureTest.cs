@@ -58,7 +58,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Oracle
 			category = new Category();
 			category.Name = "Nausicaa";
 
-			sqlMap.QueryForObject("InsertCategoryViaStoreProcedure", category);
+			sqlMap.Insert("InsertCategoryViaStoreProcedure", category);
 			Assert.AreEqual(2, category.Id );
 		}
 
