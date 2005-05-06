@@ -74,6 +74,18 @@
 			Where Other_Bit = #Bool# 
 		</statement>
 		
+
+		<!--
+		Throws System.ArgumentException : 
+		Value does not fall within the expected range.
+		
+		at Oracle.DataAccess.Client.OracleParameter.set_Value(Object value)
+		at IBatisNet.DataMapper.Commands.DefaultPreparedCommand.ApplyParameterMap(IDalSession session, IDbCommand command, RequestScope request, IStatement statement, Object parameterObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\Commands\DefaultPreparedCommand.cs:line 172
+		at IBatisNet.DataMapper.Commands.DefaultPreparedCommand.Create(RequestScope request, IDalSession session, IStatement statement, Object parameterObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\Commands\DefaultPreparedCommand.cs:line 80
+		at IBatisNet.DataMapper.MappedStatements.MappedStatement.ExecuteInsert(IDalSession session, Object parameterObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 844
+		at IBatisNet.DataMapper.SqlMapper.Insert(String statementName, Object parameterObject) in c:\projects\ibatis\asf\trunk\cs\mapper\ibatisnet.datamapper\sqlmapper.cs:line 904
+		at IBatisNet.DataMapper.Test.NUnit.SqlMapTests.StatementTest.TestJIRA42() in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper.Test\NUnit\SqlMapTests\StatementTest.cs:line 1073
+		-->
 		<statement id="InsertBool" 
 			parameterClass="Other">
 			Insert into Others

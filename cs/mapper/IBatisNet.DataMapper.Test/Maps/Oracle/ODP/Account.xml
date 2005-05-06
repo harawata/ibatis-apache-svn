@@ -422,29 +422,6 @@
 				(#Id:Int32#, #FirstName#, #LastName#, #EmailAddress#)
 		</insert>
 		
-
-		<!--
-		StatementTest.TestUpdateWithInlineParameters : 
-		Throws Oracle.DataAccess.Client.OracleException : 
-		ORA-01407: cannot update ("IBATISNET"."ACCOUNTS"."ACCOUNT_FIRSTNAME") to NULL
-
-		at Oracle.DataAccess.Client.OracleException.HandleErrorHelper(Int32 errCode, OracleConnection conn, IntPtr opsErrCtx, OpoSqlValCtx* pOpoSqlValCtx, Object src, String procedure)
-		at Oracle.DataAccess.Client.OracleException.HandleError(Int32 errCode, OracleConnection conn, String procedure, IntPtr opsErrCtx, OpoSqlValCtx* pOpoSqlValCtx, Object src)
-		at Oracle.DataAccess.Client.OracleCommand.ExecuteNonQuery()
-		at IBatisNet.DataMapper.MappedStatements.MappedStatement.ExecuteUpdate(IDalSession session, Object parameterObject) in c:\projects\ibatis\svn\source\ibatisnet.datamapper\mappedstatements\mappedstatement.cs:line 770
-		at IBatisNet.DataMapper.SqlMapper.Update(String statementName, Object parameterObject) in c:\projects\ibatis\svn\source\ibatisnet.datamapper\sqlmapper.cs:line 834
-		at IBatisNet.Test.NUnit.SqlMapTests.StatementTest.TestUpdateWithInlineParameters() in c:\projects\ibatis\svn\source\ibatisnet.test\nunit\sqlmaptests\statementtest.cs:line 924
-
-		Upon inspection, CommandText looks ok and Parameter order/types/values look ok:
-		update Accounts set Account_FirstName = :FirstName , Account_LastName = :LastName , Account_Email = :EmailAddress where Account_ID =  :Id
-
-			update Accounts set
-			Account_FirstName = #FirstName#,
-			Account_LastName = #LastName#,
-			Account_Email = #EmailAddress:VarChar2:no_email@provided.com#
-			where
-			Account_ID = #Id:Int32#
-		-->
 		<!-- Inline Parameters -->
 		<update id="UpdateAccountViaInlineParameters"
 			parameterMap="update-params">

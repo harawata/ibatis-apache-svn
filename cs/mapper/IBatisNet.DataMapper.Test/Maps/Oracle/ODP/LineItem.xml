@@ -77,18 +77,6 @@
 				and LineItem_ID = #LineItem_ID:Int32#
 		</statement>
 		
-		<!--
-		ResultMapTest.TestByteArrayMapping :
-		
-		at NUnit.Framework.Assert.Fail(String message, Object[] args)
-		at NUnit.Framework.Assert.IsTrue(Boolean condition, String message, Object[] args)
-		at NUnit.Framework.Assert.IsNotNull(Object anObject, String message, Object[] args)
-		at NUnit.Framework.Assert.IsNotNull(Object anObject)
-		at IBatisNet.Test.NUnit.SqlMapTests.ResultMapTest.TestByteArrayMapping() in C:\projects\ibatis\svn\Source\IBatisNet.Test\NUnit\SqlMapTests\ResultMapTest.cs:line 354
-		
-		InsertLineItemWithPicture did not insert the byte array
-		(database record column is null when inspected)
-		-->
 		<statement id="GetSpecificLineItemWithPicture"
 					parameterClass="Hashtable"
 					resultClass="LineItem">
@@ -140,14 +128,6 @@
 			(?, ?, ?, ?, ?)
 		</statement>
 		
-		<!--
-		ResultMapTest.TestByteArrayMapping :
-		No exceptions when using Raw dbType
-		but picture data is not really inserted
-
-		InsertLineItemWithPicture did not insert the byte array
-		(database record column is null when inspected)
-		-->
 		<statement id="InsertLineItemWithPicture" 
 					parameterMap="insert-params-picture" >
 			insert into LineItems

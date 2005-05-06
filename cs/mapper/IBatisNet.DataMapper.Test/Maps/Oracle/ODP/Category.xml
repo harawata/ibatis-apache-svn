@@ -67,13 +67,6 @@
 				(?,?,?)
 		</insert>
 		
-		<!--
-		Throws OracleException Illegal variable name/number
-		
-		WorkAround:
-		Use a specific parameterMap for the UPDATE
-		or use a parameterClass instead of an extended parameterMap		
-		-->
 		<update id="UpdateCategoryViaParameterMap" parameterMap="UpdateParam">
 			update Categories set
 			Category_Id = ?,
