@@ -24,8 +24,11 @@
  ********************************************************************************/
 #endregion
 
-using System;
+#region Using
+
 using System.Collections;
+
+#endregion 
 
 namespace IBatisNet.DataMapper.Configuration.Statements
 {

@@ -96,7 +96,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 			{
 				if (_request.ParameterMap != null) 
 				{
-					CreateParametersForStatementText();
+					CreateParametersForTextCommand();
 					EvaluateParameterMap();
 				}
 			}
@@ -114,8 +114,8 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 					}
 					else
 					{
-						CreateParametersForStatementText();
-						EvaluateParameterMap();
+						CreateParametersForProcedureCommand();
+						// EvaluateParameterMap(); // Did we need that ? I don't think for the procedure
 					}
 				}
 
@@ -188,9 +188,9 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 
 
 		/// <summary>
-		/// Create IDataParameters for statement Text.
+		/// Create IDataParameters for command text statement.
 		/// </summary>
-		private void CreateParametersForStatementText()
+		private void CreateParametersForTextCommand()
 		{
 			string sqlParamName = string.Empty;
 			string dbTypePropertyName = _session.DataSource.Provider.ParameterDbTypeProperty;
@@ -209,36 +209,90 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 
 			foreach(ParameterProperty property in list)
 			{
-				// Check if property is part of a parameterMap for naming purposes
-				// used when retrieving output parameters (stored procs/input/output).
-				// property.ColumnName is used when retrieving output parameters,
-				// so it has to be used here as the parameter name!
-				if (_statement.ParameterMap != null && 
-					(property.Direction == ParameterDirection.Output || 
-					property.Direction == ParameterDirection.InputOutput)) 
+				// From Ryan Yao: JIRA-27, used "param" + i++ for sqlParamName
+				sqlParamName = _parameterPrefix + "param" + i++;
+
+				IDataParameter dataParameter = _session.CreateCommand(_statement.CommandType).CreateParameter();
+
+				// Manage dbType attribut if any
+				if (property.DbType.Length >0) 
 				{
-					if (_session.DataSource.Provider.UseParameterPrefixInParameter)
+					// Exemple : Enum.parse(System.Data.SqlDbType, 'VarChar')
+					object dbType = Enum.Parse( enumDbType, property.DbType, true );
+
+					// Exemple : ObjectHelper.SetProperty(sqlparameter, 'SqlDbType', SqlDbType.Int);
+					ObjectProbe.SetPropertyValue(dataParameter, dbTypePropertyName, dbType);
+				}
+
+				// Set IDbDataParameter
+				// JIRA-49 Fixes (size, precision, and scale)
+				if (_session.DataSource.Provider.SetDbParameterSize) 
+				{
+					if (property.Size != -1)
 					{
-						sqlParamName = _parameterPrefix + property.ColumnName;
-					}
-					else //obdc/oledb
-					{
-						sqlParamName =  property.ColumnName;
+						((IDbDataParameter)dataParameter).Size = property.Size;
 					}
 				}
-				else 
+
+				if (_session.DataSource.Provider.SetDbParameterPrecision) 
 				{
-					if (_session.DataSource.Provider.UseParameterPrefixInParameter )
-					{
-						// From Ryan Yao: JIRA-27
-						// sqlParamName = _parameterPrefix + paramName;
-						sqlParamName = _parameterPrefix + "param" + i++;
-					}
-					else //obdc/oledb
-					{
-						// sqlParamName = paramName;
-						sqlParamName = "param" + i++;
-					}
+					((IDbDataParameter)dataParameter).Precision = property.Precision;
+				}
+				
+				if (_session.DataSource.Provider.SetDbParameterScale) 
+				{
+					((IDbDataParameter)dataParameter).Scale = property.Scale;
+				}
+				
+				// Set as direction parameter
+				dataParameter.Direction = property.Direction;
+
+				dataParameter.ParameterName = sqlParamName;
+
+				_preparedStatement.DbParametersName.Add( property.PropertyName );
+				_preparedStatement.DbParameters.Add( dataParameter );	
+
+				if ( _session.DataSource.Provider.UsePositionalParameters == false)
+				{
+					_propertyDbParameterMap.Add(property, dataParameter);
+				}
+			}
+		}
+
+
+		/// <summary>
+		/// Create IDataParameters for procedure statement.
+		/// </summary>
+		private void CreateParametersForProcedureCommand()
+		{
+			string sqlParamName = string.Empty;
+			string dbTypePropertyName = _session.DataSource.Provider.ParameterDbTypeProperty;
+			Type enumDbType = _session.DataSource.Provider.ParameterDbType;
+			IList list = null;
+
+			if (_session.DataSource.Provider.UsePositionalParameters) //obdc/oledb
+			{
+				list = _request.ParameterMap.Properties;
+			}
+			else 
+			{
+				list = _request.ParameterMap.PropertiesList;
+			}
+
+			// ParemeterMap are required for procedure and we tested existance in Prepare() method
+			// so we don't have to test existence here.
+			// A ParameterMap used in CreateParametersForProcedureText must
+			// have property and column attributes set.
+			// The column attribute is the name of a procedure parameter.
+			foreach(ParameterProperty property in list)
+			{
+				if (_session.DataSource.Provider.UseParameterPrefixInParameter)
+				{
+					sqlParamName = _parameterPrefix + property.ColumnName;
+				}
+				else //obdc/oledb
+				{
+					sqlParamName =  property.ColumnName;
 				}
 
 				IDataParameter dataParameter = _session.CreateCommand(_statement.CommandType).CreateParameter();
@@ -264,7 +318,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 				}
 
 				if (_session.DataSource.Provider.SetDbParameterPrecision) 
-                {
+				{
 					((IDbDataParameter)dataParameter).Precision = property.Precision;
 				}
 				
@@ -285,7 +339,6 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 				{
 					_propertyDbParameterMap.Add(property, dataParameter);
 				}
-				
 			}
 		}
 
