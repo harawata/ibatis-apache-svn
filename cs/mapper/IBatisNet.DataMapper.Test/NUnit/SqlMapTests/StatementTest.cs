@@ -1091,7 +1091,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			other.Bool = true;
 			other.Bool2 = false;
 
-			sqlMap.Insert("InsertCustomTypeHnadler", other);
+			sqlMap.Insert("InsertCustomTypeHandler", other);
 
 			Other anOther = sqlMap.QueryForObject("SelectByInt", 99) as Other;
 

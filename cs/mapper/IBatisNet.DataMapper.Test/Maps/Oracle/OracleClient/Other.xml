@@ -5,13 +5,14 @@
 	<alias>
 		<typeAlias alias="Other" type="IBatisNet.DataMapper.Test.Domain.Other, IBatisNet.DataMapper.Test"/>
 		<typeAlias alias="OuiNonBool" type="IBatisNet.DataMapper.Test.Domain.YesNoBoolTypeHandlerCallback, IBatisNet.DataMapper.Test"/>
+		<typeAlias alias="OneZeroBool" type="IBatisNet.DataMapper.Test.Domain.OneZeroBoolTypeHandlerCallback, IBatisNet.DataMapper.Test"/>
 	</alias>
 	
 	<resultMaps>                                    
 		<resultMap id="other-result"  class="Other" >
 			<result property="Int"		column="Other_Int" dbType="Int32"/>
 			<result property="Long"		column="Other_Long" dbType="Int64"/>
-			<result property="Bool"		column="Other_Bit"/>
+			<result property="Bool"		column="Other_Bit" typeHandler="OneZeroBool"/>
 			<result property="Bool2"	column="Other_String" typeHandler="OuiNonBool"/>
 		</resultMap>
 	</resultMaps>
@@ -88,7 +89,7 @@
 			( #Int#, #Long#, #Bool#, 'Yes')
 		</statement>		
 				
-		<statement id="InsertCustomTypeHnadler" 
+		<statement id="InsertCustomTypeHandler" 
 			parameterMap="insert-params">
 			Insert into Others
 				( Other_Int, Other_Long, Other_Bit, Other_String  )
@@ -114,7 +115,7 @@
 		<parameterMap id="insert-params">
 			<parameter property="Int" />
 			<parameter property="Long" />
-			<parameter property="Bool" />			
+			<parameter property="Bool" typeHandler="OneZeroBool"/>			
 			<parameter property="Bool2" typeHandler="OuiNonBool"/>
 		</parameterMap>
 	</parameterMaps>	

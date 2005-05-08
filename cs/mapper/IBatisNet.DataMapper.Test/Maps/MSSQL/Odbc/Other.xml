@@ -58,7 +58,7 @@
 			( #Int#, #Long#, #Bool#, 'Yes')
 		</statement>			
 		
-		<statement id="InsertCustomTypeHnadler" 
+		<statement id="InsertCustomTypeHandler" 
 			parameterMap="insert-params">
 			Insert into Others
 				( Other_Int, Other_Long, Other_Bit, Other_String  )
