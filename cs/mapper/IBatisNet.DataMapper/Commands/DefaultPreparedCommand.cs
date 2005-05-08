@@ -106,6 +106,8 @@ namespace IBatisNet.DataMapper.Commands
 			{
 				IDataParameter sqlParameter = (IDataParameter)parameters[i];
 				string propertyName = (string)properties[i];
+				IDataParameter parameterCopy = command.CreateParameter();
+				ParameterProperty property = request.ParameterMap.GetProperty(i);
 
 				#region Logging
 				if (_logger.IsDebugEnabled)
@@ -119,9 +121,11 @@ namespace IBatisNet.DataMapper.Commands
 
 				if (command.CommandType == CommandType.Text)
 				{
+
+					#region text command
+
 					if ( propertyName != "value" ) // Inline Parameters && Parameters via ParameterMap
 					{
-						ParameterProperty property = request.ParameterMap.GetProperty(i);
 
 						parameterValue = request.ParameterMap.GetValueOfProperty(parameterObject,
 							property.PropertyName);
@@ -146,9 +150,12 @@ namespace IBatisNet.DataMapper.Commands
 						}
 						#endregion 
 					}
+					#endregion 
 				}
 				else // CommandType.StoredProcedure
 				{
+					#region store procedure command
+
 					// A store procedure must always use a ParameterMap 
 					// to indicate the mapping order of the properties to the columns
 					if (request.ParameterMap == null) // Inline Parameters
@@ -157,17 +164,17 @@ namespace IBatisNet.DataMapper.Commands
 					}
 					else // Parameters via ParameterMap
 					{
-						ParameterProperty property = request.ParameterMap.GetProperty(i);
+//						ParameterProperty property = request.ParameterMap.GetProperty(i);
 
 						if (property.DirectionAttribut.Length == 0)
 						{
 							property.Direction = sqlParameter.Direction;
 						}
 
-						//						IDbDataParameter dataParameter = (IDbDataParameter)parameters[i];
-						//						property.Precision = dataParameter.Precision;
-						//						property.Scale = dataParameter.Scale;
-						//						property.Size = dataParameter.Size;
+						// DbDataParameter dataParameter = (IDbDataParameter)parameters[i];
+						// property.Precision = dataParameter.Precision;
+						// property.Scale = dataParameter.Scale;
+						// property.Size = dataParameter.Size;
 
 						sqlParameter.Direction = property.Direction;
 						parameterValue = request.ParameterMap.GetValueOfProperty( parameterObject, property.PropertyName );
@@ -180,13 +187,14 @@ namespace IBatisNet.DataMapper.Commands
 						}
 						#endregion 					
 					}
+					#endregion 
 				}
 
 
-				IDataParameter parameterCopy = command.CreateParameter();
 				// Fix JIRA 20
-				sqlParameter.Value = parameterValue;
-				parameterCopy.Value = parameterValue;
+				//parameterCopy.Value = parameterValue;
+				property.TypeHandler.SetParameter(property, parameterCopy, parameterValue);
+
 				
 				#region Logging
 				if (_logger.IsDebugEnabled)

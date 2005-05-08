@@ -24,7 +24,7 @@
  ********************************************************************************/
 #endregion
 
-#region Imports
+#region Using
 
 using System;
 using System.Collections;
@@ -34,6 +34,7 @@ using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
 using IBatisNet.Common.Utilities.Objects;
+using IBatisNet.DataMapper.Scope;
 
 #endregion
 
@@ -255,7 +256,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 						
 						if ( object.Equals(propertyValue, nullValue) )
 						{
-							propertyValue = DBNull.Value; ;
+							propertyValue = null; ;
 						}
 						else
 						{
@@ -300,14 +301,14 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 
 						if ( object.Equals(propertyValue, nullValue) )
 						{
-							propertyValue = DBNull.Value; ;
+							propertyValue = null; ;
 						}
 					}
 					else
 					{
 						if (propertyValue == null)
 						{
-							propertyValue = DBNull.Value; ;
+							propertyValue = null; ;
 						}
 					}
 				}
@@ -321,27 +322,27 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// <summary>
 		/// Initialize the parameter properties child.
 		/// </summary>
-		/// <param name="node"></param>
-		public void Initialize(XmlNode node)
+		/// <param name="configScope"></param>
+		public void Initialize(ConfigurationScope configScope)
 		{
-			GetProperties( node);
+			GetProperties( configScope );
 		}
 
 
 		/// <summary>
 		///  Get the parameter properties child for the xmlNode parameter.
 		/// </summary>
-		/// <param name="node">An xmlNode.</param>
-		private void GetProperties(XmlNode node)
+		/// <param name="configScope"></param>
+		private void GetProperties(ConfigurationScope configScope)
 		{
 			XmlSerializer serializer = null;
 			ParameterProperty property = null;
 
 			serializer = new XmlSerializer(typeof(ParameterProperty));
-			foreach ( XmlNode parameterNode in node.SelectNodes("parameter") )
+			foreach ( XmlNode parameterNode in configScope.NodeContext.SelectNodes("parameter") )
 			{
 				property = (ParameterProperty) serializer.Deserialize(new XmlNodeReader(parameterNode));
-				property.Initialize();
+				property.Initialize( configScope );
 					
 				AddParameterProperty(property);
 			}

@@ -122,11 +122,6 @@ namespace IBatisNet.DataMapper.TypesHandler
 			throw new DataMapperException("NotSupportedException");
 		}
 
-		public override bool IsEqualToNullValue(string nullValue, Object realValue) 
-		{
-			return false;
-		}
-
 		public override bool IsSimpleType() 
 		{
 			return true;

@@ -1,49 +1,44 @@
+
 using System;
 using System.Collections;
-using System.Configuration;
-
-using NUnit.Framework;
-
-using IBatisNet.DataMapper; //<-- To access the definition of the deleagte RowDelegate
-using IBatisNet.DataMapper.MappedStatements; //<-- To access the definition of the PageinatedList
 using IBatisNet.Common;
 using IBatisNet.Common.Exceptions;
-
-using IBatisNet.DataMapper.Test;
+using IBatisNet.DataMapper.MappedStatements;
 using IBatisNet.DataMapper.Test.Domain;
+using NUnit.Framework;
 
 namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 {
 	/// <summary>
 	/// Summary description for ParameterMapTest.
 	/// </summary>
-	[TestFixture] 
+	[TestFixture]
 	public class StatementTest : BaseTest
 	{
-
 		#region SetUp & TearDown
 
 		/// <summary>
 		/// SetUp
 		/// </summary>
-		[SetUp] 
-		public void Init() 
+		[SetUp]
+		public void Init()
 		{
 			InitSqlMap();
-			InitScript( sqlMap.DataSource, ScriptDirectory + "account-init.sql" );
-			InitScript( sqlMap.DataSource, ScriptDirectory + "order-init.sql" );
-			InitScript( sqlMap.DataSource, ScriptDirectory + "line-item-init.sql" );
-			InitScript( sqlMap.DataSource, ScriptDirectory + "enumeration-init.sql" );
-			InitScript( sqlMap.DataSource, ScriptDirectory + "other-init.sql" );
+			InitScript(sqlMap.DataSource, ScriptDirectory + "account-init.sql");
+			InitScript(sqlMap.DataSource, ScriptDirectory + "order-init.sql");
+			InitScript(sqlMap.DataSource, ScriptDirectory + "line-item-init.sql");
+			InitScript(sqlMap.DataSource, ScriptDirectory + "enumeration-init.sql");
+			InitScript(sqlMap.DataSource, ScriptDirectory + "other-init.sql");
 		}
 
 
 		/// <summary>
 		/// TearDown
 		/// </summary>
-		[TearDown] 
+		[TearDown]
 		public void Dispose()
-		{ /* ... */ } 
+		{ /* ... */
+		}
 
 		#endregion
 
@@ -53,8 +48,8 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// Test use a satement with property subtitution
 		/// (JIRA 22)
 		/// </summary>
-		[Test] 
-		public void TestSelectWithProperty() 
+		[Test]
+		public void TestSelectWithProperty()
 		{
 			Account account = sqlMap.QueryForObject("SelectWithProperty", null) as Account;
 			AssertAccount1(account);
@@ -63,8 +58,8 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// <summary>
 		/// Test ExecuteQueryForObject Via ColumnName
 		/// </summary>
-		[Test] 
-		public void TestExecuteQueryForObjectViaColumnName() 
+		[Test]
+		public void TestExecuteQueryForObjectViaColumnName()
 		{
 			Account account = sqlMap.QueryForObject("GetAccountViaColumnName", 1) as Account;
 			AssertAccount1(account);
@@ -73,8 +68,8 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// <summary>
 		/// Test ExecuteQueryForObject Via ColumnIndex
 		/// </summary>
-		[Test] 
-		public void TestExecuteQueryForObjectViaColumnIndex() 
+		[Test]
+		public void TestExecuteQueryForObjectViaColumnIndex()
 		{
 			Account account = sqlMap.QueryForObject("GetAccountViaColumnIndex", 1) as Account;
 			AssertAccount1(account);
@@ -83,7 +78,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// <summary>
 		/// Test ExecuteQueryForObject Via ResultClass
 		/// </summary>
-		[Test] 
+		[Test]
 		public void TestExecuteQueryForObjectViaResultClass()
 		{
 			Account account = sqlMap.QueryForObject("GetAccountViaResultClass", 1) as Account;
@@ -93,7 +88,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// <summary>
 		/// Test ExecuteQueryForObject With simple ResultClass : string
 		/// </summary>
-		[Test] 
+		[Test]
 		public void TestExecuteQueryForObjectWithSimpleResultClass()
 		{
 			string email = sqlMap.QueryForObject("GetEmailAddressViaResultClass", 1) as string;
@@ -103,7 +98,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// <summary>
 		/// Test ExecuteQueryForObject With simple ResultMap : string
 		/// </summary>
-		[Test] 
+		[Test]
 		public void TestExecuteQueryForObjectWithSimpleResultMap()
 		{
 			string email = sqlMap.QueryForObject("GetEmailAddressViaResultMap", 1) as string;
@@ -116,14 +111,14 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		[Test]
 		public void TestPrimitiveReturnValue()
 		{
-			System.DateTime CardExpiry = (System.DateTime) sqlMap.QueryForObject("GetOrderCardExpiryViaResultClass", 1);
-			Assert.AreEqual( new DateTime( 2003, 02, 15, 8, 15, 00 ), CardExpiry );
+			DateTime CardExpiry = (DateTime) sqlMap.QueryForObject("GetOrderCardExpiryViaResultClass", 1);
+			Assert.AreEqual(new DateTime(2003, 02, 15, 8, 15, 00), CardExpiry);
 		}
 
 		/// <summary>
 		/// Test ExecuteQueryForObject with result object : Account
 		/// </summary>
-		[Test] 
+		[Test]
 		public void TestExecuteQueryForObjectWithResultObject()
 		{
 			Account account = new Account();
@@ -135,8 +130,8 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// <summary>
 		/// Test ExecuteQueryForObject as Hashtable
 		/// </summary>
-		[Test] 
-		public void TestExecuteQueryForObjectAsHashtable() 
+		[Test]
+		public void TestExecuteQueryForObjectAsHashtable()
 		{
 			Hashtable account = (Hashtable) sqlMap.QueryForObject("GetAccountAsHashtable", 1);
 			AssertAccount1AsHashtable(account);
@@ -146,9 +141,8 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// Test ExecuteQueryForObject as Hashtable ResultClass
 		/// </summary>
 		[Test]
-		public void TestExecuteQueryForObjectAsHashtableResultClass() 
+		public void TestExecuteQueryForObjectAsHashtableResultClass()
 		{
-
 			Hashtable account = (Hashtable) sqlMap.QueryForObject("GetAccountAsHashtableResultClass", 1);
 			AssertAccount1AsHashtable(account);
 		}
@@ -161,7 +155,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		{
 			Hashtable param = new Hashtable();
 			param.Add("LineItem_ID", 2);
-			param.Add("Order_ID",  9);
+			param.Add("Order_ID", 9);
 
 			LineItem testItem = sqlMap.QueryForObject("GetSpecificLineItem", param) as LineItem;
 
@@ -173,7 +167,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// Test Query Dynamic Sql Element
 		/// </summary>
 		[Test]
-		public void TestQueryDynamicSqlElement() 
+		public void TestQueryDynamicSqlElement()
 		{
 			IList list = sqlMap.QueryForList("GetDynamicOrderedEmailAddressesViaResultMap", "Account_ID");
 
@@ -189,20 +183,19 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// Test Execute QueryForList With ResultMap With Dynamic Element
 		/// </summary>
 		[Test]
-		public void TestExecuteQueryForListWithResultMapWithDynamicElement() 
+		public void TestExecuteQueryForListWithResultMapWithDynamicElement()
 		{
-
 			IList list = sqlMap.QueryForList("GetAllAccountsViaResultMapWithDynamicElement", "LIKE");
 
 			AssertAccount1((Account) list[0]);
-			Assert.AreEqual(3, list.Count );
-			Assert.AreEqual(1, ((Account) list[0]).Id );
-			Assert.AreEqual(2, ((Account) list[1]).Id );
-			Assert.AreEqual(4, ((Account) list[2]).Id );
+			Assert.AreEqual(3, list.Count);
+			Assert.AreEqual(1, ((Account) list[0]).Id);
+			Assert.AreEqual(2, ((Account) list[1]).Id);
+			Assert.AreEqual(4, ((Account) list[2]).Id);
 
 			list = sqlMap.QueryForList("GetAllAccountsViaResultMapWithDynamicElement", "=");
 
-			Assert.AreEqual(0, list.Count );
+			Assert.AreEqual(0, list.Count);
 		}
 
 		/// <summary>
@@ -210,15 +203,9 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// </summary>
 		[Test]
 		[Ignore("No longer supported.")]
-		public void TestSimpleDynamicSubstitution() 
+		public void TestSimpleDynamicSubstitution()
 		{
-			string statement = "select" +
-				"    Account_ID          as Id," +
-				"    Account_FirstName   as FirstName," +
-				"    Account_LastName    as LastName," +
-				"    Account_Email       as EmailAddress" +
-				"  from Accounts" +
-				"  WHERE Account_ID = #id#";
+			string statement = "select" + "    Account_ID          as Id," + "    Account_FirstName   as FirstName," + "    Account_LastName    as LastName," + "    Account_Email       as EmailAddress" + "  from Accounts" + "  WHERE Account_ID = #id#";
 
 			Hashtable param = new Hashtable();
 			param.Add("id", 1);
@@ -227,27 +214,27 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
 			IList list = sqlMap.QueryForList("SimpleDynamicSubstitution", param);
 			AssertAccount1((Account) list[0]);
-			Assert.AreEqual(1, list.Count );
+			Assert.AreEqual(1, list.Count);
 		}
 
 		/// <summary>
 		/// Test Get Account Via Inline Parameters
 		/// </summary>
-		[Test] 
+		[Test]
 		public void TestExecuteQueryForObjectViaInlineParameters()
 		{
 			Account account = new Account();
 			account.Id = 1;
 
 			Account testAccount = sqlMap.QueryForObject("GetAccountViaInlineParameters", account) as Account;
-			
+
 			AssertAccount1(testAccount);
 		}
 
 		/// <summary>
 		/// Test ExecuteQuery For Object With Enum property
 		/// </summary>
-		[Test] 
+		[Test]
 		public void TestExecuteQueryForObjectWithEnum()
 		{
 			Enumeration enumClass = sqlMap.QueryForObject("GetEnumeration", 1) as Enumeration;
@@ -262,6 +249,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Assert.AreEqual(enumClass.Color, Colors.Blue);
 			Assert.AreEqual(enumClass.Month, Months.September);
 		}
+
 		#endregion
 
 		#region  List Query tests
@@ -270,7 +258,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// Test QueryForList with Hashtable ResultMap
 		/// </summary>
 		[Test]
-		public void TestQueryForListWithHashtableResultMap() 
+		public void TestQueryForListWithHashtableResultMap()
 		{
 			IList list = sqlMap.QueryForList("GetAllAccountsAsHashMapViaResultMap", null);
 
@@ -288,7 +276,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// Test QueryForList with Hashtable ResultClass
 		/// </summary>
 		[Test]
-		public void TestQueryForListWithHashtableResultClass() 
+		public void TestQueryForListWithHashtableResultClass()
 		{
 			IList list = sqlMap.QueryForList("GetAllAccountsAsHashtableViaResultClass", null);
 
@@ -305,7 +293,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// <summary>
 		/// Test QueryForList With ResultMap, result collection as ArrayList
 		/// </summary>
-		[Test] 
+		[Test]
 		public void TestQueryForListWithResultMap()
 		{
 			IList list = sqlMap.QueryForList("GetAllAccountsViaResultMap", null);
@@ -319,8 +307,8 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Assert.AreEqual(5, ((Account) list[4]).Id);
 		}
 
-		[Test] 
-		public void TestExecuteQueryForPaginatedList() 
+		[Test]
+		public void TestExecuteQueryForPaginatedList()
 		{
 			// Get List of all 5
 			PaginatedList list = sqlMap.QueryForPaginatedList("GetAllAccountsViaResultMap", null, 2);
@@ -330,7 +318,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Assert.IsTrue(list.IsNextPageAvailable);
 			AssertAccount1((Account) list[0]);
 			Assert.AreEqual(2, list.Count);
-			Assert.AreEqual(1, ((Account) list[0]).Id );
+			Assert.AreEqual(1, ((Account) list[0]).Id);
 			Assert.AreEqual(2, ((Account) list[1]).Id);
 
 			// Test illegal previous page (no effect, state should be same)
@@ -339,7 +327,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Assert.IsTrue(list.IsNextPageAvailable);
 			AssertAccount1((Account) list[0]);
 			Assert.AreEqual(2, list.Count);
-			Assert.AreEqual(1, ((Account) list[0]).Id );
+			Assert.AreEqual(1, ((Account) list[0]).Id);
 			Assert.AreEqual(2, ((Account) list[1]).Id);
 
 			// Test next (page 1)
@@ -347,7 +335,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Assert.IsTrue(list.IsPreviousPageAvailable);
 			Assert.IsTrue(list.IsNextPageAvailable);
 			Assert.AreEqual(2, list.Count);
-			Assert.AreEqual(3, ((Account) list[0]).Id );
+			Assert.AreEqual(3, ((Account) list[0]).Id);
 			Assert.AreEqual(4, ((Account) list[1]).Id);
 
 			// Test next (page 2 -last)
@@ -355,14 +343,14 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Assert.IsTrue(list.IsPreviousPageAvailable);
 			Assert.IsFalse(list.IsNextPageAvailable);
 			Assert.AreEqual(1, list.Count);
-			Assert.AreEqual(5, ((Account) list[0]).Id );
+			Assert.AreEqual(5, ((Account) list[0]).Id);
 
 			// Test previous (page 1)
 			list.PreviousPage();
 			Assert.IsTrue(list.IsPreviousPageAvailable);
 			Assert.IsTrue(list.IsNextPageAvailable);
 			Assert.AreEqual(2, list.Count);
-			Assert.AreEqual(3, ((Account) list[0]).Id );
+			Assert.AreEqual(3, ((Account) list[0]).Id);
 			Assert.AreEqual(4, ((Account) list[1]).Id);
 
 			// Test previous (page 0 -first)
@@ -371,7 +359,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Assert.IsTrue(list.IsNextPageAvailable);
 			AssertAccount1((Account) list[0]);
 			Assert.AreEqual(2, list.Count);
-			Assert.AreEqual(1, ((Account) list[0]).Id );
+			Assert.AreEqual(1, ((Account) list[0]).Id);
 			Assert.AreEqual(2, ((Account) list[1]).Id);
 
 			// Test goto (page 0)
@@ -379,7 +367,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Assert.IsFalse(list.IsPreviousPageAvailable);
 			Assert.IsTrue(list.IsNextPageAvailable);
 			Assert.AreEqual(2, list.Count);
-			Assert.AreEqual(1, ((Account) list[0]).Id );
+			Assert.AreEqual(1, ((Account) list[0]).Id);
 			Assert.AreEqual(2, ((Account) list[1]).Id);
 
 			// Test goto (page 1)
@@ -387,7 +375,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Assert.IsTrue(list.IsPreviousPageAvailable);
 			Assert.IsTrue(list.IsNextPageAvailable);
 			Assert.AreEqual(2, list.Count);
-			Assert.AreEqual(3, ((Account) list[0]).Id );
+			Assert.AreEqual(3, ((Account) list[0]).Id);
 			Assert.AreEqual(4, ((Account) list[1]).Id);
 
 			// Test goto (page 2)
@@ -395,7 +383,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Assert.IsTrue(list.IsPreviousPageAvailable);
 			Assert.IsFalse(list.IsNextPageAvailable);
 			Assert.AreEqual(1, list.Count);
-			Assert.AreEqual(5, ((Account) list[0]).Id );
+			Assert.AreEqual(5, ((Account) list[0]).Id);
 
 			// Test illegal goto (page 0)
 			list.GotoPage(3);
@@ -453,11 +441,11 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Assert.AreEqual(1, list.Count);
 
 			// Test Even - Two Pages
-			try 
+			try
 			{
-				InitScript( sqlMap.DataSource, ScriptDirectory + "more-account-records.sql" );
-			} 
-			catch (Exception e) 
+				InitScript(sqlMap.DataSource, ScriptDirectory + "more-account-records.sql");
+			}
+			catch (Exception e)
 			{
 				Console.WriteLine(e.Message);
 			}
@@ -478,7 +466,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// Test QueryForList with ResultObject : 
 		/// AccountCollection strongly typed collection
 		/// </summary>
-		[Test] 
+		[Test]
 		public void TestQueryForListWithResultObject()
 		{
 			AccountCollection accounts = new AccountCollection();
@@ -497,10 +485,10 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// <summary>
 		/// Test QueryForList with ListClass : LineItemCollection
 		/// </summary>
-		[Test] 
+		[Test]
 		public void TestQueryForListWithListClass()
 		{
-			LineItemCollection linesItem= sqlMap.QueryForList("GetLineItemsForOrderWithListClass", 10) as LineItemCollection;
+			LineItemCollection linesItem = sqlMap.QueryForList("GetLineItemsForOrderWithListClass", 10) as LineItemCollection;
 
 			Assert.IsNotNull(linesItem);
 			Assert.AreEqual(2, linesItem.Count);
@@ -511,7 +499,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// <summary>
 		/// Test QueryForList with no result.
 		/// </summary>
-		[Test] 
+		[Test]
 		public void TestQueryForListWithNoResult()
 		{
 			IList list = sqlMap.QueryForList("GetNoAccountsViaResultMap", null);
@@ -522,7 +510,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// <summary>
 		/// Test QueryForList with ResultClass : Account.
 		/// </summary>
-		[Test] 
+		[Test]
 		public void TestQueryForListResultClass()
 		{
 			IList list = sqlMap.QueryForList("GetAllAccountsViaResultClass", null);
@@ -539,30 +527,30 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// <summary>
 		/// Test QueryForList with simple resultClass : string
 		/// </summary>
-		[Test] 
+		[Test]
 		public void TestQueryForListWithSimpleResultClass()
 		{
 			IList list = sqlMap.QueryForList("GetAllEmailAddressesViaResultClass", null);
 
-			Assert.AreEqual("Joe.Dalton@somewhere.com", (string)list[0]);
-			Assert.AreEqual("Averel.Dalton@somewhere.com", (string)list[1]);
+			Assert.AreEqual("Joe.Dalton@somewhere.com", (string) list[0]);
+			Assert.AreEqual("Averel.Dalton@somewhere.com", (string) list[1]);
 			Assert.IsNull(list[2]);
-			Assert.AreEqual("Jack.Dalton@somewhere.com", (string)list[3]);
+			Assert.AreEqual("Jack.Dalton@somewhere.com", (string) list[3]);
 			Assert.IsNull(list[4]);
 		}
 
 		/// <summary>
 		/// Test  QueryForList with simple ResultMap : string
 		/// </summary>
-		[Test] 
-		public void TestQueryForListWithSimpleResultMap() 
+		[Test]
+		public void TestQueryForListWithSimpleResultMap()
 		{
 			IList list = sqlMap.QueryForList("GetAllEmailAddressesViaResultMap", null);
 
-			Assert.AreEqual("Joe.Dalton@somewhere.com", (string)list[0]);
-			Assert.AreEqual("Averel.Dalton@somewhere.com", (string)list[1]);
+			Assert.AreEqual("Joe.Dalton@somewhere.com", (string) list[0]);
+			Assert.AreEqual("Averel.Dalton@somewhere.com", (string) list[1]);
 			Assert.IsNull(list[2]);
-			Assert.AreEqual("Jack.Dalton@somewhere.com", (string)list[3]);
+			Assert.AreEqual("Jack.Dalton@somewhere.com", (string) list[3]);
 			Assert.IsNull(list[4]);
 		}
 
@@ -570,7 +558,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// Test QueryForListWithSkipAndMax
 		/// </summary>
 		[Test]
-		public void TestQueryForListWithSkipAndMax() 
+		public void TestQueryForListWithSkipAndMax()
 		{
 			IList list = sqlMap.QueryForList("GetAllAccountsViaResultMap", null, 2, 2);
 
@@ -581,7 +569,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
 
 		[Test]
-		public void TestQueryWithRowDelegate() 
+		public void TestQueryWithRowDelegate()
 		{
 			SqlMapper.RowDelegate handler = new SqlMapper.RowDelegate(this.RowHandler);
 
@@ -597,6 +585,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Assert.AreEqual(5, ((Account) list[4]).Id);
 
 		}
+
 		#endregion
 
 		#region  Map Tests
@@ -604,19 +593,19 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// <summary>
 		/// Test ExecuteQueryForMap : Hashtable.
 		/// </summary>
-		[Test] 
-		public void TestExecuteQueryForMap() 
+		[Test]
+		public void TestExecuteQueryForMap()
 		{
 			IDictionary map = sqlMap.QueryForMap("GetAllAccountsViaResultClass", null, "FirstName");
 
-			Assert.AreEqual( 5, map.Count);
-			AssertAccount1( ((Account) map["Joe"]) );
+			Assert.AreEqual(5, map.Count);
+			AssertAccount1(((Account) map["Joe"]));
 
-			Assert.AreEqual( 1, ((Account) map["Joe"]).Id );
-			Assert.AreEqual( 2, ((Account) map["Averel"]).Id );
-			Assert.AreEqual( 3, ((Account) map["William"]).Id );
-			Assert.AreEqual( 4, ((Account) map["Jack"]).Id );
-			Assert.AreEqual( 5, ((Account) map["Gilles"]).Id );
+			Assert.AreEqual(1, ((Account) map["Joe"]).Id);
+			Assert.AreEqual(2, ((Account) map["Averel"]).Id);
+			Assert.AreEqual(3, ((Account) map["William"]).Id);
+			Assert.AreEqual(4, ((Account) map["Jack"]).Id);
+			Assert.AreEqual(5, ((Account) map["Gilles"]).Id);
 		}
 
 		/// <summary>
@@ -626,43 +615,44 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// If the keyProperty is an integer, you must acces the map
 		/// by map[integer] and not by map["integer"]
 		/// </remarks>
-		[Test] 
-		public void TestExecuteQueryForMap2() 
+		[Test]
+		public void TestExecuteQueryForMap2()
 		{
 			IDictionary map = sqlMap.QueryForMap("GetAllOrderWithLineItems", null, "PostalCode");
 
-			Assert.AreEqual( 10, map.Count);
+			Assert.AreEqual(10, map.Count);
 			Order order = ((Order) map["T4H 9G4"]);
 
-			Assert.AreEqual( 2, order.LineItemsIList.Count );
+			Assert.AreEqual(2, order.LineItemsIList.Count);
 		}
 
 		/// <summary>
 		/// Test ExecuteQueryForMap with value property :
 		/// "FirstName" as key, "EmailAddress" as value
 		/// </summary>
-		[Test] 
-		public void TestExecuteQueryForMapWithValueProperty() 
+		[Test]
+		public void TestExecuteQueryForMapWithValueProperty()
 		{
 			IDictionary map = sqlMap.QueryForMap("GetAllAccountsViaResultClass", null, "FirstName", "EmailAddress");
 
-			Assert.AreEqual( 5, map.Count);
+			Assert.AreEqual(5, map.Count);
 
-			Assert.AreEqual( "Joe.Dalton@somewhere.com", map["Joe"] );
-			Assert.AreEqual( "Averel.Dalton@somewhere.com", map["Averel"] );
-			Assert.IsNull( map["William"] );
-			Assert.AreEqual( "Jack.Dalton@somewhere.com", map["Jack"] );
-			Assert.IsNull( map["Gilles"] );
+			Assert.AreEqual("Joe.Dalton@somewhere.com", map["Joe"]);
+			Assert.AreEqual("Averel.Dalton@somewhere.com", map["Averel"]);
+			Assert.IsNull(map["William"]);
+			Assert.AreEqual("Jack.Dalton@somewhere.com", map["Jack"]);
+			Assert.IsNull(map["Gilles"]);
 		}
 
 		#endregion
 
 		#region Extends statement
+
 		/// <summary>
 		/// Test base Extends statement
 		/// </summary>
 		[Test]
-		public void TestExtendsGetAllAccounts() 
+		public void TestExtendsGetAllAccounts()
 		{
 			IList list = sqlMap.QueryForList("GetAllAccounts", null);
 
@@ -679,7 +669,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// Test Extends statement GetAllAccountsOrderByName extends GetAllAccounts
 		/// </summary>
 		[Test]
-		public void TestExtendsGetAllAccountsOrderByName() 
+		public void TestExtendsGetAllAccountsOrderByName()
 		{
 			IList list = sqlMap.QueryForList("GetAllAccountsOrderByName", null);
 
@@ -697,7 +687,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// Test Extends statement GetOneAccount extends GetAllAccounts
 		/// </summary>
 		[Test]
-		public void TestExtendsGetOneAccount() 
+		public void TestExtendsGetOneAccount()
 		{
 			Account account = sqlMap.QueryForObject("GetOneAccount", 1) as Account;
 			AssertAccount1(account);
@@ -707,11 +697,11 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// Test Extends statement GetSomeAccount extends GetAllAccounts
 		/// </summary>
 		[Test]
-		public void TestExtendsGetSomeAccount() 
+		public void TestExtendsGetSomeAccount()
 		{
 			Hashtable param = new Hashtable();
 			param.Add("lowID", 2);
-			param.Add("hightID",  4);
+			param.Add("hightID", 4);
 
 			IList list = sqlMap.QueryForList("GetSomeAccount", param);
 
@@ -721,6 +711,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Assert.AreEqual(3, ((Account) list[1]).Id);
 			Assert.AreEqual(4, ((Account) list[2]).Id);
 		}
+
 		#endregion
 
 		#region Update tests
@@ -728,8 +719,8 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// <summary>
 		/// Test Insert with post GeneratedKey
 		/// </summary>
-		[Test] 
-		public void TestInsertPostKey() 
+		[Test]
+		public void TestInsertPostKey()
 		{
 			LineItem item = new LineItem();
 
@@ -738,7 +729,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			item.Order = new Order();
 			item.Order.Id = 9;
 			item.Price = 44.00m;
-			item.Quantity= 1;
+			item.Quantity = 1;
 
 			object key = sqlMap.Insert("InsertLineItemPostKey", item);
 
@@ -776,9 +767,9 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Hashtable param = new Hashtable();
 			param.Add("Order_ID", 9);
 			param.Add("LineItem_ID", 99);
-			
+
 			LineItem testItem = (LineItem) sqlMap.QueryForObject("GetSpecificLineItem", param);
-			
+
 			Assert.IsNotNull(testItem);
 			Assert.AreEqual(99, testItem.Id);
 		}
@@ -787,7 +778,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// Test Test Insert No Key
 		/// </summary>
 		[Test]
-		public void TestInsertNoKey() 
+		public void TestInsertNoKey()
 		{
 			LineItem item = new LineItem();
 
@@ -806,18 +797,18 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Hashtable param = new Hashtable();
 			param.Add("Order_ID", 9);
 			param.Add("LineItem_ID", 100);
-			
+
 			LineItem testItem = (LineItem) sqlMap.QueryForObject("GetSpecificLineItem", param);
-		
+
 			Assert.IsNotNull(testItem);
 			Assert.AreEqual(100, testItem.Id);
 		}
-		
+
 		/// <summary>
 		/// Test Insert account via public fields
 		/// </summary>
 		[Ignore("No more supported")]
-		public void TestInsertAccountViaPublicFields() 
+		public void TestInsertAccountViaPublicFields()
 		{
 			AccountBis account = new AccountBis();
 
@@ -837,8 +828,8 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// <summary>
 		/// Test Insert account via inline parameters
 		/// </summary>
-		[Test] 
-		public void TestInsertAccountViaInlineParameters() 
+		[Test]
+		public void TestInsertAccountViaInlineParameters()
 		{
 			Account account = new Account();
 
@@ -858,7 +849,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// <summary>
 		/// Test Insert account via parameterMap
 		/// </summary>
-		[Test] 
+		[Test]
 		public void TestInsertAccountViaParameterMap()
 		{
 			Account account = NewAccount6();
@@ -873,7 +864,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// <summary>
 		/// Test Insert account via parameterMap
 		/// </summary>
-		[Test] 
+		[Test]
 		public void TestInsertEnumViaParameterMap()
 		{
 			Enumeration enumClass = new Enumeration();
@@ -900,12 +891,12 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		{
 			Account account = (Account) sqlMap.QueryForObject("GetAccountViaColumnName", 1);
 
-			account.EmailAddress = "new@somewhere.com" ;
+			account.EmailAddress = "new@somewhere.com";
 			sqlMap.Update("UpdateAccountViaParameterMap", account);
 
 			account = sqlMap.QueryForObject("GetAccountViaColumnName", 1) as Account;
 
-			Assert.AreEqual( "new@somewhere.com", account.EmailAddress );
+			Assert.AreEqual("new@somewhere.com", account.EmailAddress);
 		}
 
 		/// <summary>
@@ -916,23 +907,23 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		{
 			Account account = (Account) sqlMap.QueryForObject("GetAccountViaColumnName", 1);
 
-			account.EmailAddress = "new@somewhere.com" ;
+			account.EmailAddress = "new@somewhere.com";
 			sqlMap.Update("UpdateAccountViaParameterMap2", account);
 
 			account = sqlMap.QueryForObject("GetAccountViaColumnName", 1) as Account;
 
-			Assert.AreEqual( "new@somewhere.com", account.EmailAddress );
+			Assert.AreEqual("new@somewhere.com", account.EmailAddress);
 		}
 
 		/// <summary>
 		/// Test Update with inline parameters
 		/// </summary>
 		[Test]
-		public void TestUpdateWithInlineParameters() 
+		public void TestUpdateWithInlineParameters()
 		{
 			Account account = sqlMap.QueryForObject("GetAccountViaColumnName", 1) as Account;
 
-			account.EmailAddress = "new@somewhere.com" ;
+			account.EmailAddress = "new@somewhere.com";
 			sqlMap.Update("UpdateAccountViaInlineParameters", account);
 
 			account = (Account) sqlMap.QueryForObject("GetAccountViaColumnName", 1);
@@ -944,7 +935,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// Test Execute Update With Parameter Class
 		/// </summary>
 		[Test]
-		public void TestExecuteUpdateWithParameterClass() 
+		public void TestExecuteUpdateWithParameterClass()
 		{
 			Account account = NewAccount6();
 
@@ -952,13 +943,13 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
 			bool checkForInvalidTypeFailedAppropriately = false;
 
-			try 
+			try
 			{
 				sqlMap.Update("DeleteAccount", new object());
-			} 
-			catch (IBatisNetException e) 
+			}
+			catch (IBatisNetException e)
 			{
-				Console.WriteLine("TestExecuteUpdateWithParameterClass :"+e.Message);
+				Console.WriteLine("TestExecuteUpdateWithParameterClass :" + e.Message);
 				checkForInvalidTypeFailedAppropriately = true;
 			}
 
@@ -974,7 +965,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// Test Execute Delete
 		/// </summary>
 		[Test]
-		public void TestExecuteDelete() 
+		public void TestExecuteDelete()
 		{
 			Account account = NewAccount6();
 
@@ -983,10 +974,10 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			account = null;
 			account = sqlMap.QueryForObject("GetAccountViaColumnName", 6) as Account;
 
-			Assert.IsTrue( account.Id == 6 );
+			Assert.IsTrue(account.Id == 6);
 
 			int rowNumber = sqlMap.Delete("DeleteAccount", account);
-			Assert.IsTrue( rowNumber==1 );
+			Assert.IsTrue(rowNumber == 1);
 
 			account = sqlMap.QueryForObject("GetAccountViaColumnName", 6) as Account;
 
@@ -997,12 +988,13 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// Test Execute Delete
 		/// </summary>
 		[Test]
-		public void TestDeleteWithComments() 
+		public void TestDeleteWithComments()
 		{
 			int rowNumber = sqlMap.Delete("DeleteWithComments", null);
 
-			Assert.IsTrue( rowNumber==4 );
+			Assert.IsTrue(rowNumber == 4);
 		}
+
 		#endregion
 
 		#region Row delegate
@@ -1012,7 +1004,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		public void RowHandler(object obj, IList list)
 		{
 			_index++;
-			Assert.AreEqual( _index, ((Account) obj).Id);
+			Assert.AreEqual(_index, ((Account) obj).Id);
 			list.Add(obj);
 		}
 
@@ -1023,38 +1015,38 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// <summary>
 		/// Test Test Using syntax on sqlMap.OpenConnection
 		/// </summary>
-		[Test] 
-		public void TestUsingConnection() 
+		[Test]
+		public void TestUsingConnection()
 		{
-			using ( IDalSession session = sqlMap.OpenConnection() )
+			using (IDalSession session = sqlMap.OpenConnection())
 			{
 				Account account = sqlMap.QueryForObject("GetAccountViaColumnName", 1) as Account;
 				AssertAccount1(account);
-			}   // compiler will call Dispose on SqlMapSession
+			} // compiler will call Dispose on SqlMapSession
 		}
 
 		/// <summary>
 		/// Test Using syntax on sqlMap.BeginTransaction
 		/// </summary>
-		[Test] 
-		public void TestUsingTransaction() 
+		[Test]
+		public void TestUsingTransaction()
 		{
-			using ( IDalSession session = sqlMap.BeginTransaction() )
+			using (IDalSession session = sqlMap.BeginTransaction())
 			{
 				Account account = (Account) sqlMap.QueryForObject("GetAccountViaColumnName", 1);
 
-				account.EmailAddress = "new@somewhere.com" ;
+				account.EmailAddress = "new@somewhere.com";
 				sqlMap.Update("UpdateAccountViaParameterMap", account);
 
 				account = sqlMap.QueryForObject("GetAccountViaColumnName", 1) as Account;
 
-				Assert.AreEqual( "new@somewhere.com", account.EmailAddress );
+				Assert.AreEqual("new@somewhere.com", account.EmailAddress);
 
 				session.Complete(); // Commit
-			}   // compiler will call Dispose on SqlMapSession
+			} // compiler will call Dispose on SqlMapSession
 		}
-		#endregion 
 
+		#endregion 
 
 		#region JIRA Tests
 
@@ -1062,7 +1054,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// Test Bit column 
 		/// </summary>
 		[Test]
-		public void TestJIRA42() 
+		public void TestJIRA42()
 		{
 			Other other = new Other();
 
@@ -1077,7 +1069,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// Test for access a result map in a different namespace 
 		/// </summary>
 		[Test]
-		public void TestJIRA45() 
+		public void TestJIRA45()
 		{
 			Account account = sqlMap.QueryForObject("GetAccountJIRA45", 1) as Account;
 			AssertAccount1(account);
@@ -1085,7 +1077,33 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
 		#endregion 
 
+		#region CustomTypeHandler tests
 
-		
+		/// <summary>
+		/// Test CustomTypeHandler Oui/Non
+		/// </summary>
+		[Test]
+		public void TestCustomTypeHandler()
+		{
+			Other other = new Other();
+			other.Int = 99;
+			other.Long = 1966;
+			other.Bool = true;
+			other.Bool2 = false;
+
+			sqlMap.Insert("InsertCustomTypeHnadler", other);
+
+			Other anOther = sqlMap.QueryForObject("SelectByInt", 99) as Other;
+
+			Assert.IsNotNull( anOther );
+			Assert.AreEqual(99, anOther.Int);
+			Assert.AreEqual(1966, anOther.Long);
+			Assert.AreEqual(true, anOther.Bool);
+			Assert.AreEqual(false, anOther.Bool2);
+		}
+		#endregion 
+
+
+
 	}
 }

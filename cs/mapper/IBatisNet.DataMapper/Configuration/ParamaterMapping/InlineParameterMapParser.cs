@@ -30,6 +30,7 @@ using System.Collections;
 using System.Text;
 
 using IBatisNet.DataMapper.Configuration.Sql.Dynamic;
+using IBatisNet.DataMapper.Scope;
 using IBatisNet.DataMapper.TypesHandler;
 using IBatisNet.DataMapper.Exceptions;
 
@@ -53,6 +54,8 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		private const string PARAMETER_TOKEN = "#";
 		private const string PARAM_DELIM = ":";
 
+		private ErrorContext _errorContext= null;
+
 		#endregion 
 
 		#region Constructors
@@ -60,8 +63,11 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		public InlineParameterMapParser()
-		{}
+		/// <param name="errorContext"></param>
+		public InlineParameterMapParser(ErrorContext errorContext)
+		{
+			_errorContext = errorContext;
+		}
 		#endregion 
 
 		/// <summary>
@@ -139,6 +145,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 			return sqlText;
 		}
 
+
 		private ParameterProperty ParseMapping(string token, Type parameterClass) 
 		{
 			ParameterProperty mapping = new ParameterProperty();
@@ -172,7 +179,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 						//
 					}
 					mapping.TypeHandler = handler;
-					mapping.Initialize();
+					mapping.Initialize(_errorContext);
 				} 
 				else if (n1 >= 5) 
 				{
@@ -204,7 +211,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 						//
 					}
 					mapping.TypeHandler = handler;
-					mapping.Initialize();
+					mapping.Initialize(_errorContext);
 				} 
 				else 
 				{
@@ -226,10 +233,11 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 					//TypeHandlerFactory.GetTypeHandler(parameterClass);
 				}
 				mapping.TypeHandler = handler;
-				mapping.Initialize();
+				mapping.Initialize(_errorContext);
 			}
 			return mapping;
 		}
+
 
 		/// <summary>
 		/// Resolve TypeHandler

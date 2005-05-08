@@ -82,10 +82,6 @@ namespace IBatisNet.DataMapper.TypesHandler
 			return Enum.Parse(parameterType, outputValue.ToString());
 		}
 
-		public override bool IsEqualToNullValue(string nullValue, object realValue) 
-		{
-			return Enum.Parse(realValue.GetType(), nullValue).Equals(realValue);
-		}
 
 		public override bool IsSimpleType() 
 		{

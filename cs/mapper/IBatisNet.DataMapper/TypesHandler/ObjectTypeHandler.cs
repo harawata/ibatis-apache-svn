@@ -80,10 +80,6 @@ namespace IBatisNet.DataMapper.TypesHandler
 			return outputValue;
 		}
 
-		public override bool IsEqualToNullValue(string nullValue, object realValue) 
-		{
-			return (realValue == null);
-		}
 
 		public override bool IsSimpleType() 
 		{

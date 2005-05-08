@@ -81,10 +81,6 @@ namespace IBatisNet.DataMapper.TypesHandler
 			return Convert.ToByte(outputValue);
 		}
 
-		public override bool IsEqualToNullValue(string nullValue, Object realValue) 
-		{
-			return Convert.ToByte(nullValue).Equals(realValue);
-		}
 
 		public override bool IsSimpleType() 
 		{

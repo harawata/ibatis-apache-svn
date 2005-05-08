@@ -24,14 +24,17 @@
  ********************************************************************************/
 #endregion
 
-#region Imports
+#region Using
+
 using System;
 using System.Data;
-using System.Reflection;
 using System.Xml.Serialization;
-
+using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Utilities;
+using IBatisNet.Common.Utilities.Objects;
+using IBatisNet.DataMapper.Scope;
 using IBatisNet.DataMapper.TypesHandler;
+
 #endregion
 
 namespace IBatisNet.DataMapper.Configuration.ParameterMapping
@@ -67,11 +70,25 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		private ITypeHandler _typeHandler = null;
 		[NonSerialized]
 		private string _clrType = string.Empty;
+		[NonSerialized]
+		private string _callBackName= string.Empty;
 		#endregion
 
 		#region Properties
+
 		/// <summary>
-		/// Specify the CLR type of the result.
+		/// Specify the custom type handlers to used.
+		/// </summary>
+		/// <remarks>Will be an alias to a class wchic implement ITypeHandlerCallback</remarks>
+		[XmlAttribute("typeHandler")]
+		public string CallBackName
+		{
+			get { return _callBackName; }
+			set { _callBackName = value; }
+		}
+
+		/// <summary>
+		/// Specify the CLR type of the parameter.
 		/// </summary>
 		/// <remarks>
 		/// The type attribute is used to explicitly specify the property type to be read.
@@ -88,7 +105,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// <summary>
 		/// The typeHandler used to work with the parameter.
 		/// </summary>
-		[XmlIgnoreAttribute]
+		[XmlIgnore]
 		public ITypeHandler TypeHandler
 		{
 			get { return _typeHandler; }
@@ -165,7 +182,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// Indicate the direction of the parameter.
 		/// </summary>
 		/// <example> Input, Output, InputOutput</example>
-		[XmlIgnoreAttribute]
+		[XmlIgnore]
 		public ParameterDirection Direction
 		{
 			get { return _direction; }
@@ -196,7 +213,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// <summary>
 		/// Tell if a nullValue is defined.
 		/// </summary>
-		[XmlIgnoreAttribute]
+		[XmlIgnore]
 		public bool HasNullValue
 		{
 			get { return (_nullValue.Length>0); }
@@ -228,18 +245,88 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// <summary>
 		/// 
 		/// </summary>
-		public void Initialize()
+		/// <param name="configScope"></param>
+		public void Initialize(ConfigurationScope configScope)
 		{
 			if(_directionAttribute.Length >0)
 			{
 				_direction = (ParameterDirection)Enum.Parse( typeof(ParameterDirection), _directionAttribute, true );
 			}
-			// If we specify a type, it can be set 
-			if (this.CLRType != string.Empty)
+			
+			configScope.ErrorContext.MoreInfo = "Check the parameter mapping typeHandler attribute '" + this.CallBackName + "' (must be a ITypeHandlerCallback implementation).";
+			if (this.CallBackName.Length >0)
 			{
-				_typeHandler = TypeHandlerFactory.GetTypeHandler(Resources.TypeForName(this.CLRType));
+				try 
+				{
+					Type type = configScope.SqlMapper.GetType(this.CallBackName);
+					ITypeHandlerCallback typeHandlerCallback = (ITypeHandlerCallback) Activator.CreateInstance( type );
+					_typeHandler = new CustomTypeHandler(typeHandlerCallback);
+				}
+				catch (Exception e) 
+				{
+					throw new ConfigurationException("Error occurred during custom type handler configuration.  Cause: " + e.Message, e);
+				}
+			}
+			else
+			{
+				if (this.CLRType.Length == 0 )  // Unknown
+				{
+					_typeHandler = TypeHandlerFactory.GetUnkownTypeHandler();
+				}
+				else // If we specify a CLR type, use it
+				{ 
+					Type type = Resources.TypeForName(this.CLRType);
+
+					if (TypeHandlerFactory.IsSimpleType(type)) 
+					{
+						// Primitive
+						_typeHandler = TypeHandlerFactory.GetTypeHandler(type);
+					}
+					else
+					{
+						// .NET object
+						type = ObjectProbe.GetPropertyTypeForGetter(type, this.PropertyName);
+						_typeHandler = TypeHandlerFactory.GetTypeHandler(type);
+					}
+				}
 			}
 		}
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="errorContext"></param>
+		public void Initialize(ErrorContext errorContext)
+		{
+			if(_directionAttribute.Length >0)
+			{
+				_direction = (ParameterDirection)Enum.Parse( typeof(ParameterDirection), _directionAttribute, true );
+			}
+			
+			errorContext.MoreInfo = "Intialize a parameter property '" + this.PropertyName + "' .";
+			if (this.CLRType.Length == 0 )  // Unknown
+			{
+				_typeHandler = TypeHandlerFactory.GetUnkownTypeHandler();
+			}
+			else // If we specify a CLR type, use it
+			{ 
+				Type type = Resources.TypeForName(this.CLRType);
+
+				if (TypeHandlerFactory.IsSimpleType(type)) 
+				{
+					// Primitive
+					_typeHandler = TypeHandlerFactory.GetTypeHandler(type);
+				}
+				else
+				{
+					// .NET object
+					type = ObjectProbe.GetPropertyTypeForGetter(type, this.PropertyName);
+					_typeHandler = TypeHandlerFactory.GetTypeHandler(type);
+				}
+			}
+		}
+
 
 		/// <summary>
 		/// 

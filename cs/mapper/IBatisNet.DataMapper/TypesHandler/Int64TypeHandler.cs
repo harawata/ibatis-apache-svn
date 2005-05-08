@@ -82,10 +82,6 @@ namespace IBatisNet.DataMapper.TypesHandler
 			return Convert.ToInt64(outputValue);
 		}
 
-		public override bool IsEqualToNullValue(string nullValue, Object realValue) 
-		{
-			return Convert.ToInt64(nullValue).Equals(realValue);
-		}
 
 		public override bool IsSimpleType() 
 		{

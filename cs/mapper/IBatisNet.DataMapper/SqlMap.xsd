@@ -518,6 +518,7 @@
 			<xs:attribute name="size" type="xs:string"/>
 			<xs:attribute name="scale" type="xs:string"/>
 			<xs:attribute name="precision" type="xs:string"/>
+			<xs:attribute name="typeHandler" type="xs:string"/>
 			<xs:attribute name="direction">
 				<xs:simpleType>
 					<xs:restriction base="xs:NMTOKEN">
@@ -570,6 +571,7 @@
 			<xs:attribute name="dbType" type="xs:string"/>
 			<xs:attribute name="columnIndex" type="xs:string"/>
 			<xs:attribute name="resultMapping" type="xs:string"/>
+			<xs:attribute name="typeHandler" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="resultMap">

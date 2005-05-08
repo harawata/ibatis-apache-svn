@@ -696,6 +696,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "TypesHandler\CustomTypeHandler.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "TypesHandler\DateTimeTypeHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -741,7 +746,32 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "TypesHandler\ITypeHandlerCallback.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "TypesHandler\ObjectTypeHandler.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "TypesHandler\ParameterSetter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "TypesHandler\ParameterSetterImpl.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "TypesHandler\ResultGetter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "TypesHandler\ResultGetterImpl.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -762,6 +792,11 @@
                 />
                 <File
                     RelPath = "TypesHandler\TypeHandlerFactory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "TypesHandler\UnknownTypeHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

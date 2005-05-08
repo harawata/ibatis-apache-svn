@@ -1,4 +1,3 @@
-
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
@@ -35,31 +34,16 @@ using IBatisNet.DataMapper.Configuration.ResultMapping;
 namespace IBatisNet.DataMapper.TypesHandler
 {
 	/// <summary>
-	/// Summary description for ITypeHandler.
+	/// Custom type handler for adding a TypeHandlerCallback
 	/// </summary>
-	public interface ITypeHandler
+	internal class CustomTypeHandler : BaseTypeHandler
 	{
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="mapping"></param>
-		/// <param name="dataReader"></param>
-		/// <returns></returns>
-		object GetDataBaseValue(ResultProperty mapping, IDataReader dataReader);
+		private ITypeHandlerCallback _callback = null;
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <returns></returns>
-		bool IsSimpleType();
-
-		/// <summary>
-		/// Retrieve ouput database value of an output parameter
-		/// </summary>
-		/// <param name="outputValue">ouput database value</param>
-		/// <param name="parameterType">type used in EnumTypeHandler</param>
-		/// <returns></returns>
-		object GetDataBaseValue(object outputValue, Type parameterType);
+		public CustomTypeHandler(ITypeHandlerCallback callback)
+		{
+			_callback = callback;
+		}
 
 		/// <summary>
 		/// Performs processing on a value before it is used to set
@@ -68,7 +52,38 @@ namespace IBatisNet.DataMapper.TypesHandler
 		/// <param name="mapping">The mapping between data parameter and object property.</param>
 		/// <param name="dataParameter"></param>
 		/// <param name="parameterValue">The value to be set</param>
-		void SetParameter(ParameterProperty mapping, IDataParameter dataParameter, object parameterValue);
+		public override void SetParameter(ParameterProperty mapping, IDataParameter dataParameter, object parameterValue)
+		{
+			IParameterSetter setter = new ParameterSetterImpl(dataParameter);
+			_callback.SetParameter(setter, parameterValue);
+		}
 
+		protected override object GetValueByName(ResultProperty mapping, IDataReader dataReader)
+		{
+			IResultGetter getter = new ResultGetterImpl(dataReader, mapping.ColumnName);
+			return _callback.GetResult(getter);
+		}
+
+		protected override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader)
+		{
+			IResultGetter getter = new ResultGetterImpl(dataReader, mapping.ColumnIndex);
+			return _callback.GetResult(getter);		
+		}
+
+		protected override object GetNullValue(ResultProperty mapping)
+		{
+			return _callback.GetNullValue(mapping.NullValue);
+		}
+
+		public override object GetDataBaseValue(object outputValue, Type parameterType)
+		{
+			IResultGetter getter = new ResultGetterImpl(outputValue);
+			return _callback.GetResult(getter);	
+		}
+
+		public override bool IsSimpleType()
+		{
+			return false;
+		}
 	}
 }

@@ -24,8 +24,13 @@
  ********************************************************************************/
 #endregion
 
+#region Using
+
 using System;
 using System.Runtime.Serialization;
+#endregion 
+
+
 
 namespace IBatisNet.Common.Exceptions
 {

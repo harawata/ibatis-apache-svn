@@ -24,18 +24,28 @@
  ********************************************************************************/
 #endregion
 
+#region Using
+
 using System;
 using System.Collections.Specialized;
+
+#endregion 
 
 namespace IBatisNet.DataMapper.TypesHandler
 {
 	/// <summary>
-	/// Description résumée de TypeHandlerFactory.
+	/// Not much of a suprise, this is a factory class for TypeHandler objects.
 	/// </summary>
 	internal class TypeHandlerFactory
 	{
+
+		#region Fields
+
 		private static readonly HybridDictionary _typeHandlerMap = new HybridDictionary();
 
+		#endregion 
+
+		#region Constructor
 
 		/// <summary>
 		/// Constructor
@@ -94,6 +104,7 @@ namespace IBatisNet.DataMapper.TypesHandler
 
 		}
 
+		#endregion 
 
 		#region Methods
 
@@ -115,14 +126,24 @@ namespace IBatisNet.DataMapper.TypesHandler
 		}
 
 		/// <summary>
-		/// 
+		/// Get a TypeHandler for a type
 		/// </summary>
 		/// <param name="type"></param>
 		/// <param name="dbType"></param>
 		/// <returns></returns>
 		public static ITypeHandler GetTypeHandler(Type type, string dbType) 
 		{
-			return (ITypeHandler) GetTypeHandler(type);
+			return GetTypeHandler(type);
+		}
+
+
+		/// <summary>
+		/// When in doubt, get the "unknown" type handler
+		/// </summary>
+		/// <returns>if I told you, it would not be unknown, would it?</returns>
+		public static ITypeHandler GetUnkownTypeHandler() 
+		{
+			return new UnknownTypeHandler();
 		}
 
 		/// <summary>

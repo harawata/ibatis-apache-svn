@@ -28,7 +28,8 @@
 using System;
 using System.Reflection;
 using System.Xml.Serialization;
-
+using IBatisNet.Common.Exceptions;
+using IBatisNet.DataMapper.Scope;
 using IBatisNet.DataMapper.TypesHandler;
 using IBatisNet.Common.Utilities;
 #endregion
@@ -72,9 +73,23 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		private bool _isLazyLoad = false;
 		[NonSerialized]
 		private ITypeHandler _typeHandler = null;
+		[NonSerialized]
+		private string _callBackName= string.Empty;
 		#endregion
 
 		#region Properties
+
+		/// <summary>
+		/// Specify the custom type handlers to used.
+		/// </summary>
+		/// <remarks>Will be an alias to a class wchic implement ITypeHandlerCallback</remarks>
+		[XmlAttribute("typeHandler")]
+		public string CallBackName
+		{
+			get { return _callBackName; }
+			set { _callBackName = value; }
+		}
+
 		/// <summary>
 		/// Tell us if we must lazy load this property..
 		/// </summary>
@@ -237,6 +252,42 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// Initialize the PropertyInfo of the result property.
 		/// </summary>
 		/// <param name="propertyInfo">A PropertyInfoot.</param>
+		/// <param name="configScope"></param>
+		public void Initialize( ConfigurationScope configScope, PropertyInfo propertyInfo )
+		{
+			_propertyInfo = propertyInfo;
+
+			if ( propertyInfo != null)
+			{
+				_typeHandler =  TypeHandlerFactory.GetTypeHandler(propertyInfo.PropertyType);
+			}
+			// If we specify a type, it can overrride 
+			if (this.CLRType.Length>0)
+			{
+				_typeHandler = TypeHandlerFactory.GetTypeHandler(Resources.TypeForName(this.CLRType));
+			}
+			// If we specify a typeHandler, it can overrride 
+			if (this.CallBackName.Length >0)
+			{
+				configScope.ErrorContext.MoreInfo = "Check the parameter mapping typeHandler attribute '" + this.CallBackName + "' (must be a ITypeHandlerCallback implementation).";
+				try 
+				{
+					Type type = configScope.SqlMapper.GetType(this.CallBackName);
+					ITypeHandlerCallback typeHandlerCallback = (ITypeHandlerCallback) Activator.CreateInstance( type );
+					_typeHandler = new CustomTypeHandler(typeHandlerCallback);
+				}
+				catch (Exception e) 
+				{
+					throw new ConfigurationException("Error occurred during custom type handler configuration.  Cause: " + e.Message, e);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Initialize the PropertyInfo of the result property
+		/// for AutoMapper
+		/// </summary>
+		/// <param name="propertyInfo">A PropertyInfoot.</param>
 		public void Initialize( PropertyInfo propertyInfo )
 		{
 			_propertyInfo = propertyInfo;
@@ -246,12 +297,12 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 				_typeHandler =  TypeHandlerFactory.GetTypeHandler(propertyInfo.PropertyType);
 			}
 			// If we specify a type, it can overrride 
-			if (this.CLRType != string.Empty)
+			if (this.CLRType.Length>0)
 			{
 				_typeHandler = TypeHandlerFactory.GetTypeHandler(Resources.TypeForName(this.CLRType));
 			}
 		}
 		#endregion
-
 	}
+
 }

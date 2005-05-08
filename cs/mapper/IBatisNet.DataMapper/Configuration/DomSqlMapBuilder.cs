@@ -117,8 +117,20 @@ namespace IBatisNet.DataMapper.Configuration
 		#region Fields
 
 		private ConfigurationScope _configScope = null;
-		private InlineParameterMapParser _paramParser = new InlineParameterMapParser();
+		private InlineParameterMapParser _paramParser = null;
 
+		#endregion 		
+		
+		#region Constructor
+
+		/// <summary>
+		/// Default constructor
+		/// </summary>
+		public DomSqlMapBuilder()
+		{
+			_configScope = new ConfigurationScope();
+			_paramParser = new InlineParameterMapParser(_configScope.ErrorContext);
+		}
 		#endregion 
 
 		#region Methods
@@ -135,8 +147,6 @@ namespace IBatisNet.DataMapper.Configuration
 		                        DataSource dataSource, 
 			bool useConfigFileWatcher, bool isCallFromDao)
 		{
-			_configScope = new ConfigurationScope();
-
 			_configScope.SqlMapConfigDocument = document;
 			_configScope.DataSource = dataSource;
 			_configScope.IsCallFromDao = isCallFromDao;
@@ -1119,8 +1129,9 @@ namespace IBatisNet.DataMapper.Configuration
 			{
 				parameterMap = (ParameterMap) serializer.Deserialize(new XmlNodeReader(parameterMapNode));
 				
-				_configScope.ErrorContext.MoreInfo = "initialize ParameterMap";
-				parameterMap.Initialize(parameterMapNode);
+				_configScope.ErrorContext.MoreInfo = "Initialize ParameterMap";
+				_configScope.NodeContext = parameterMapNode;
+				parameterMap.Initialize( _configScope );
 
 				parameterMap.Id = ApplyNamespace( parameterMap.Id );
 				string attributeExtendMap = parameterMap.ExtendMap;
@@ -1187,7 +1198,7 @@ namespace IBatisNet.DataMapper.Configuration
 				resultMap.SqlMapNameSpace = _configScope.SqlMapNamespace;
 
 				_configScope.ErrorContext.MoreInfo = "initialize ResultMap";
-				resultMap.Initialize( _configScope.SqlMapper, resultMapNode);
+				resultMap.Initialize( _configScope );
 
 				resultMap.Id = ApplyNamespace( resultMap.Id );
 				string attributeExtendMap = resultMap.ExtendMap;

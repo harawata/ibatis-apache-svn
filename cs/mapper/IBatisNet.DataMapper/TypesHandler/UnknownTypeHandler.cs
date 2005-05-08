@@ -1,4 +1,3 @@
-
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
@@ -30,66 +29,79 @@ using System;
 using System.Data;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
-#endregion 
 
+#endregion 
 
 namespace IBatisNet.DataMapper.TypesHandler
 {
 	/// <summary>
-	/// Summary description for Int32TypeHandler.
+	///  Implementation of TypeHandler for dealing with unknown types
 	/// </summary>
-	internal class Int32TypeHandler : BaseTypeHandler
+	internal class UnknownTypeHandler : BaseTypeHandler
 	{
 
 		/// <summary>
-		/// 
+		/// Performs processing on a value before it is used to set
+		/// the parameter of a IDbCommand.
 		/// </summary>
-		/// <param name="mapping"></param>
-		/// <param name="dataReader"></param>
-		/// <returns></returns>
+		/// <param name="mapping">The mapping between data parameter and object property.</param>
+		/// <param name="dataParameter"></param>
+		/// <param name="parameterValue">The value to be set</param>
+		public override void SetParameter(ParameterProperty mapping, IDataParameter dataParameter, object parameterValue)
+		{
+			if (parameterValue!=null)
+			{
+				ITypeHandler handler = TypeHandlerFactory.GetTypeHandler( parameterValue.GetType() );
+				handler.SetParameter(mapping, dataParameter, parameterValue);
+			}
+			else
+			{
+				// When sending a null parameter value to the server,
+				// the user must specify DBNull, not null. 
+				dataParameter.Value = System.DBNull.Value;
+			}
+		}
+
 		protected override object GetValueByName(ResultProperty mapping, IDataReader dataReader)
 		{
 			int index = dataReader.GetOrdinal(mapping.ColumnName);
 
 			if (dataReader.IsDBNull(index) == true)
 			{
-				return DBNull.Value;
+				return System.DBNull.Value;
 			}
 			else
 			{
-				// Don't used dataReader.GetInt32 to fix oracle who alwray return decimal type
-				return Convert.ToInt32(dataReader.GetValue(index));
-			}
+				return dataReader.GetValue(index);
+			}		
 		}
 
-		protected override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader) 
+		protected override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader)
 		{
 			if (dataReader.IsDBNull(mapping.ColumnIndex) == true)
 			{
-				return DBNull.Value;
+				return System.DBNull.Value;
 			}
 			else
 			{
-				// Don't used dataReader.GetInt32 to fix oracle who alwray return decimal type
-				return Convert.ToInt32(dataReader.GetValue(mapping.ColumnIndex));
-			}
+				return dataReader.GetValue(mapping.ColumnIndex);
+			}		
 		}
 
-		protected override object GetNullValue(ResultProperty mapping) 
+		protected override object GetNullValue(ResultProperty mapping)
 		{
-			return Convert.ToInt32(mapping.NullValue);
+			throw new NotImplementedException();
 		}
 
-		public override object GetDataBaseValue(object outputValue, Type parameterType )
+		public override object GetDataBaseValue(object outputValue, Type parameterType)
 		{
-			return Convert.ToInt32(outputValue);
+			return outputValue;
 		}
 
 
-		public override bool IsSimpleType() 
+		public override bool IsSimpleType()
 		{
-			return true;
+			throw new NotImplementedException();
 		}
-
 	}
 }

@@ -1,0 +1,75 @@
+
+#region Apache Notice
+/*****************************************************************************
+ * $Header: $
+ * $Revision: $
+ * $Date: $
+ * 
+ * iBATIS.NET Data Mapper
+ * Copyright (C) 2004 - Gilles Bayon
+ *  
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ ********************************************************************************/
+#endregion
+
+#region Using
+
+using System.Data;
+using IBatisNet.DataMapper.Configuration.ParameterMapping;
+
+#endregion 
+
+namespace IBatisNet.DataMapper.TypesHandler
+{
+	/// <summary>
+	/// A simple interface for implementing custom type handlers.
+	/// <p/>
+	/// Using this interface, you can implement a type handler that
+	/// will perform customized processing before parameters are set
+	/// on a IDbCommand and after values are retrieved from
+	/// a IDataReader.  Using a custom type handler you can extend
+	/// the framework to handle types that are not supported, or
+	/// handle supported types in a different way.  For example,
+	/// you might use a custom type handler to implement proprietary
+	/// BLOB support (e.g. Oracle), or you might use it to handle
+	/// booleans using "Y" and "N" instead of the more typical 0/1.
+	/// </summary>
+	public interface ITypeHandlerCallback
+	{
+		/// <summary>
+		/// Performs processing on a value before it is used to set
+		/// the parameter of a IDbCommand.
+		/// </summary>
+		/// <param name="setter">The interface for setting the value on the IDbCommand.</param>
+		/// <param name="parameter">The value to be set</param>
+		void SetParameter(IParameterSetter setter, object parameter);
+
+
+		/// <summary>
+		/// Performs processing on a value before after it has been retrieved
+		/// from a IDataReader.
+		/// </summary>
+		/// <param name="getter">The interface for getting the value from the IDataReader.</param>
+		/// <returns>The processed value.</returns>
+		object GetResult(IResultGetter getter);
+
+		/// <summary>
+		///  Converts the string to the type that this handler deals with
+		/// </summary>
+		/// <param name="nullValue">the String value</param>
+		/// <returns>the converted value</returns>
+		object GetNullValue(string nullValue);
+	}
+}

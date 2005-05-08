@@ -10,10 +10,11 @@ END
 CREATE TABLE [dbo].[Others] (
 	[Other_Int] [int]  NULL ,
 	[Other_Long] [BigInt] NULL,
-	[Other_Bit] [Bit] NOT NULL DEFAULT (0) 
+	[Other_Bit] [Bit] NOT NULL DEFAULT (0), 
+	[Other_String] [varchar] (32) NOT NULL
 ) ON [PRIMARY]
 
 -- Creating Test Data
 
-INSERT INTO [dbo].[Others] VALUES(1, 8888888, 0);
-INSERT INTO [dbo].[Others] VALUES(2, 9999999999, 1);
+INSERT INTO [dbo].[Others] VALUES(1, 8888888, 0, 'Oui');
+INSERT INTO [dbo].[Others] VALUES(2, 9999999999, 1, 'Non');

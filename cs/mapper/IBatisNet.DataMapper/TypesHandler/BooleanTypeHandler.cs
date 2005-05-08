@@ -84,19 +84,11 @@ namespace IBatisNet.DataMapper.TypesHandler
 			return Convert.ToBoolean(outputValue);
 		}
 
-		public override bool IsEqualToNullValue(string nullValue, Object realValue) 
-		{
-			return Convert.ToBoolean(nullValue).Equals(realValue);
-		}
 
 		public override bool IsSimpleType() 
 		{
 			return true;
 		}
 
-//		public abstract object GetDataParameter(ParameterProperty mapping, object source)
-//		{
-//			parameter.Value = 
-//		}
 	}
 }

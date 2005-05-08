@@ -79,18 +79,6 @@ namespace IBatisNet.DataMapper.TypesHandler
 			return  new TimeSpan(Convert.ToInt64(outputValue));
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="nullValue"></param>
-		/// <param name="realValue"></param>
-		/// <returns></returns>
-		public override bool IsEqualToNullValue(string nullValue, Object realValue) 
-		{
-			TimeSpan stamp = new TimeSpan(Convert.ToInt64(nullValue));
-
-			return stamp.Equals(realValue);
-		}
 
 		/// <summary>
 		/// 

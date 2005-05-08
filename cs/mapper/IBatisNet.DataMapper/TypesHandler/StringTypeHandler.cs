@@ -91,16 +91,6 @@ namespace IBatisNet.DataMapper.TypesHandler
 			return Convert.ToString(outputValue);;
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="nullValue"></param>
-		/// <param name="realValue"></param>
-		/// <returns></returns>
-		public override bool IsEqualToNullValue(string nullValue, object realValue) 
-		{
-			return Convert.ToString(nullValue).Equals(realValue);
-		}
 
 		/// <summary>
 		/// 

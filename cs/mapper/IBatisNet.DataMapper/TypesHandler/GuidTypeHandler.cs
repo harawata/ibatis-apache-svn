@@ -80,11 +80,6 @@ namespace IBatisNet.DataMapper.TypesHandler
 			return new Guid(outputValue.ToString());
 		}
 
-		public override bool IsEqualToNullValue(string nullValue, object realValue) 
-		{
-			Guid guid = new Guid(nullValue);
-			return guid.Equals(realValue);
-		}
 
 		public override bool IsSimpleType() 
 		{

@@ -24,13 +24,14 @@
  ********************************************************************************/
 #endregion
 
+#region Using
+
 using System;
 using System.Data;
-using System.Collections;
-
+using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
 
-using IBatisNet.Common.Utilities;
+#endregion 
 
 namespace IBatisNet.DataMapper.TypesHandler
 {
@@ -58,7 +59,7 @@ namespace IBatisNet.DataMapper.TypesHandler
 				value = GetValueByIndex(mapping, dataReader);
 			}
 
-			bool wasNull = (value == System.DBNull.Value);
+			bool wasNull = (value == DBNull.Value);
 			if (wasNull)
 			{
 				if (mapping.HasNullValue) 
@@ -83,9 +84,28 @@ namespace IBatisNet.DataMapper.TypesHandler
 
 		public abstract object GetDataBaseValue(object outputValue, Type parameterType );
 
-		public abstract bool IsEqualToNullValue(string nullValue, object realValue);
-
 		public abstract bool IsSimpleType();
+
+		/// <summary>
+		/// Performs processing on a value before it is used to set
+		/// the parameter of a IDbCommand.
+		/// </summary>
+		/// <param name="mapping">The mapping between data parameter and object property.</param>
+		/// <param name="dataParameter"></param>
+		/// <param name="parameterValue">The value to be set</param>
+		public virtual void SetParameter(ParameterProperty mapping, IDataParameter dataParameter, object parameterValue)
+		{
+			if (parameterValue!=null)
+			{
+				dataParameter.Value = parameterValue;
+			}
+			else
+			{
+				// When sending a null parameter value to the server,
+				// the user must specify DBNull, not null. 
+				dataParameter.Value = System.DBNull.Value;
+			}
+		}
 
 //		public abstract object GetDataParameter(ParameterProperty mapping, object source);
 	}

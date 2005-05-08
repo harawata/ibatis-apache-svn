@@ -54,7 +54,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 
 		private IList _children = new ArrayList();
 		private IStatement _statement = null ;
-		InlineParameterMapParser _paramParser = new InlineParameterMapParser();
+		InlineParameterMapParser _paramParser = null;
 
 		#endregion
 
@@ -95,6 +95,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 		public RequestScope GetRequestScope(object parameterObject, IDalSession session)
 		{ 
 			RequestScope request = new RequestScope();
+			_paramParser = new InlineParameterMapParser(request.ErrorContext);
 			request.ResultMap = _statement.ResultMap;
 
 			string sqlStatement = Process(request, parameterObject);

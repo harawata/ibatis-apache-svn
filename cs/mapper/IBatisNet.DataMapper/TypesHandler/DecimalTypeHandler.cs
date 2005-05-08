@@ -83,10 +83,6 @@ namespace IBatisNet.DataMapper.TypesHandler
 			return Convert.ToDecimal(outputValue);
 		}
 
-		public override bool IsEqualToNullValue(string nullValue, Object realValue) 
-		{
-			return Convert.ToDecimal(nullValue).Equals(realValue);
-		}
 
 		public override bool IsSimpleType() 
 		{
