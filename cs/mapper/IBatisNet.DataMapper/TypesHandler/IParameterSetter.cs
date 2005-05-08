@@ -1,4 +1,3 @@
-using System.Data;
 
 #region Apache Notice
 /*****************************************************************************
@@ -27,6 +26,7 @@ using System.Data;
 
 #region Using
 
+using System.Data;
 
 
 #endregion 

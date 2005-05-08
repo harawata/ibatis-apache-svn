@@ -741,6 +741,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "TypesHandler\IParameterSetter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "TypesHandler\IResultGetter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "TypesHandler\ITypeHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -756,17 +766,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TypesHandler\ParameterSetter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "TypesHandler\ParameterSetterImpl.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "TypesHandler\ResultGetter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
