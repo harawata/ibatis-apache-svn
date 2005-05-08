@@ -58,7 +58,7 @@ namespace IBatisNet.DataMapper.TypesHandler
 			}
 			else
 			{
-				return dataReader.GetBoolean(index);
+				return Convert.ToBoolean(dataReader.GetValue(index));
 			}
 		}
 
@@ -70,7 +70,7 @@ namespace IBatisNet.DataMapper.TypesHandler
 			}
 			else
 			{
-				return dataReader.GetBoolean(mapping.ColumnIndex);
+				return Convert.ToBoolean(dataReader.GetValue(mapping.ColumnIndex));
 			}
 		}
 

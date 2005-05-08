@@ -53,7 +53,7 @@ namespace IBatisNet.DataMapper.TypesHandler
 			}
 			else
 			{
-				return dataReader.GetGuid(index);
+				return new Guid(dataReader.GetGuid(index).ToString());
 			}
 		}
 
@@ -65,7 +65,7 @@ namespace IBatisNet.DataMapper.TypesHandler
 			}
 			else
 			{
-				return dataReader.GetGuid(mapping.ColumnIndex);
+				return new Guid(dataReader.GetValue(mapping.ColumnIndex).ToString());
 			}
 		}
 
