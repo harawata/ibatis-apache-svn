@@ -209,8 +209,15 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 
 			foreach(ParameterProperty property in list)
 			{
-				// From Ryan Yao: JIRA-27, used "param" + i++ for sqlParamName
-				sqlParamName = _parameterPrefix + "param" + i++;
+				if (_session.DataSource.Provider.UseParameterPrefixInParameter)
+				{
+					// From Ryan Yao: JIRA-27, used "param" + i++ for sqlParamName
+					sqlParamName = _parameterPrefix + "param" + i++;
+				}
+				else
+				{
+					sqlParamName = "param" + i++;
+				}
 
 				IDataParameter dataParameter = _session.CreateCommand(_statement.CommandType).CreateParameter();
 
