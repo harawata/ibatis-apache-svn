@@ -199,7 +199,7 @@ namespace IBatisNet.DataMapper.Commands
 				#region Logging
 				if (_logger.IsDebugEnabled)
 				{
-					if (parameterValue == System.DBNull.Value) 
+					if (parameterValue == null) 
 					{
 						paramLogList.Append("null");
 						paramLogList.Append( "], " );
@@ -208,6 +208,7 @@ namespace IBatisNet.DataMapper.Commands
 					} 
 					else 
 					{ 
+
 						paramLogList.Append( parameterValue.ToString() );
 						paramLogList.Append( "], " );
 						typeLogList.Append( sqlParameter.DbType.ToString() );
