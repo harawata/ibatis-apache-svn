@@ -1,16 +1,22 @@
 
 using System;
 using System.Collections;
-using System.Configuration;
+using System.Data;
 using System.IO;
-using IBatisNet.Common;
-using IBatisNet.Common.Utilities;
-using IBatisNet.DataMapper.Test.Domain;
-using log4net.Config;
+using System.Reflection;
+using System.Configuration;
+
+using log4net;
+
 using NUnit.Framework;
 
+using IBatisNet.Common; // DataSource definition
+using IBatisNet.Common.Utilities; // ScriptRunner definition
+using IBatisNet.DataMapper; // SqlMap API
+using IBatisNet.DataMapper.Test.Domain;
 
-[assembly : DOMConfigurator(Watch=true)]
+
+[assembly : log4net.Config.DOMConfigurator(Watch=true)]
 
 namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 {
@@ -23,6 +29,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// The sqlMap
 		/// </summary>
 		protected static SqlMapper sqlMap;
+		private static readonly ILog _logger = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
 		protected static string ScriptDirectory = null;
 

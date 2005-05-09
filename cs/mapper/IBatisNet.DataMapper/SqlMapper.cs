@@ -640,11 +640,14 @@ namespace IBatisNet.DataMapper
 			} 
 			catch
 			{
+				throw;
+			}
+			finally
+			{
 				if ( isSessionLocal )
 				{
 					session.CloseConnection();
 				}
-				throw;
 			}
 
 			return map;
