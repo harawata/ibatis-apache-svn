@@ -24,18 +24,23 @@
  ********************************************************************************/
 #endregion
 
+#region Using
+
 using System;
 using System.Data;
 using System.Globalization;
 
 using IBatisNet.DataMapper.Configuration.ResultMapping;
+#endregion 
 
-namespace IBatisNet.DataMapper.TypesHandler
+
+
+namespace IBatisNet.DataMapper.TypeHandlers
 {
 	/// <summary>
-	/// Description résumée de DecimalTypeHandler.
+	/// Description résumée de Int16TypeHandler.
 	/// </summary>
-	internal class DecimalTypeHandler : BaseTypeHandler
+	internal class Int16TypeHandler : BaseTypeHandler
 	{
 
 		/// <summary>
@@ -54,7 +59,8 @@ namespace IBatisNet.DataMapper.TypesHandler
 			}
 			else
 			{
-				return dataReader.GetDecimal(index);
+				// Don't used dataReader.GetInt32 to fix oracle who alwray return decimal type
+				return Convert.ToInt16(dataReader.GetValue(index));
 			}
 		}
 
@@ -66,21 +72,20 @@ namespace IBatisNet.DataMapper.TypesHandler
 			}
 			else
 			{
-				return dataReader.GetDecimal(mapping.ColumnIndex);
+				// Don't used dataReader.GetInt32 to fix oracle who alwray return decimal type
+				return Convert.ToInt16(dataReader.GetValue(mapping.ColumnIndex));
 			}
 		}
 
 		protected override object GetNullValue(ResultProperty mapping) 
 		{
-			CultureInfo culture = new CultureInfo( "en-US" );
-			// nullValue decimal must be  in format ######.##
-			// where . is separator for decimal
-			return decimal.Parse( mapping.NullValue, culture);
+			return Convert.ToInt16(mapping.NullValue);
 		}
+
 
 		public override object GetDataBaseValue(object outputValue, Type parameterType )
 		{
-			return Convert.ToDecimal(outputValue);
+			return Convert.ToInt16(outputValue);
 		}
 
 

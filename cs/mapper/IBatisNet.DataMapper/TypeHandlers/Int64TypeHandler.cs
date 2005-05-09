@@ -24,18 +24,23 @@
  ********************************************************************************/
 #endregion
 
+#region Using
+
 using System;
 using System.Data;
 using System.Globalization;
 
 using IBatisNet.DataMapper.Configuration.ResultMapping;
+#endregion 
 
-namespace IBatisNet.DataMapper.TypesHandler
+
+
+namespace IBatisNet.DataMapper.TypeHandlers
 {
 	/// <summary>
-	/// Description résumée de SingleTypeHandler.
+	/// Description résumée de Int64TypeHandler.
 	/// </summary>
-	internal class SingleTypeHandler : BaseTypeHandler
+	internal class Int64TypeHandler : BaseTypeHandler
 	{
 
 		/// <summary>
@@ -54,16 +59,11 @@ namespace IBatisNet.DataMapper.TypesHandler
 			}
 			else
 			{
-				return dataReader.GetFloat(index);
+				// Don't used dataReader.GetInt32 to fix oracle who alwray return decimal type
+				return Convert.ToInt64(dataReader.GetValue(index));
 			}
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="mapping"></param>
-		/// <param name="dataReader"></param>
-		/// <returns></returns>
 		protected override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader) 
 		{
 			if (dataReader.IsDBNull(mapping.ColumnIndex) == true)
@@ -72,30 +72,22 @@ namespace IBatisNet.DataMapper.TypesHandler
 			}
 			else
 			{
-				return dataReader.GetFloat(mapping.ColumnIndex);
+				// Don't used dataReader.GetInt32 to fix oracle who alwray return decimal type
+				return Convert.ToInt64(dataReader.GetValue(mapping.ColumnIndex));
 			}
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="mapping"></param>
-		/// <returns></returns>
 		protected override object GetNullValue(ResultProperty mapping) 
 		{
-			return Convert.ToSingle(mapping.NullValue);
+			return Convert.ToInt64(mapping.NullValue);
 		}
 
 		public override object GetDataBaseValue(object outputValue, Type parameterType )
 		{
-			return Convert.ToSingle(outputValue);;
+			return Convert.ToInt64(outputValue);
 		}
 
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <returns></returns>
 		public override bool IsSimpleType() 
 		{
 			return true;

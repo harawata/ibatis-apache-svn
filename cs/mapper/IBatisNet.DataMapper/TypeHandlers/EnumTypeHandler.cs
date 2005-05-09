@@ -24,18 +24,25 @@
  ********************************************************************************/
 #endregion
 
+#region Using
+
 using System;
 using System.Data;
 using System.Globalization;
 
+using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
+using IBatisNet.DataMapper.Exceptions;
+#endregion 
 
-namespace IBatisNet.DataMapper.TypesHandler
+
+
+namespace IBatisNet.DataMapper.TypeHandlers
 {
 	/// <summary>
-	/// Description résumée de CharTypeHandler.
+	/// Summary description for EnumTypeHandler.
 	/// </summary>
-	internal class CharTypeHandler : BaseTypeHandler
+	internal class EnumTypeHandler : BaseTypeHandler
 	{
 
 		/// <summary>
@@ -53,8 +60,8 @@ namespace IBatisNet.DataMapper.TypesHandler
 				return System.DBNull.Value;
 			}
 			else
-			{
-				return dataReader.GetString(index)[0];
+			{  
+				return Enum.Parse(mapping.PropertyInfo.PropertyType, dataReader.GetValue(index).ToString());
 			}
 		}
 
@@ -66,19 +73,18 @@ namespace IBatisNet.DataMapper.TypesHandler
 			}
 			else
 			{
-				return dataReader.GetString(mapping.ColumnIndex)[0];
-					//GetChar(mapping.ColumnIndex);
+				return Enum.Parse(mapping.PropertyInfo.PropertyType, dataReader.GetValue(mapping.ColumnIndex).ToString());
 			}
 		}
 
 		protected override object GetNullValue(ResultProperty mapping) 
 		{
-			return Convert.ToChar(mapping.NullValue);
+			return Enum.Parse(mapping.PropertyInfo.PropertyType, mapping.NullValue);
 		}
 
 		public override object GetDataBaseValue(object outputValue, Type parameterType )
 		{
-			return Convert.ToChar(outputValue);
+			return Enum.Parse(parameterType, outputValue.ToString());
 		}
 
 

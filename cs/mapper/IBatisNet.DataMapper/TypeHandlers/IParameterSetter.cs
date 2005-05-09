@@ -28,31 +28,31 @@
 
 using System.Data;
 
+
 #endregion 
 
-namespace IBatisNet.DataMapper.TypesHandler
+namespace IBatisNet.DataMapper.TypeHandlers
 {
 	/// <summary>
-	/// Allows values to be retrieved from the underlying IDataReader.
+	/// Allows parameters to be set on the underlying prepared IDbCommand.
 	/// TypeHandlerCallback implementations use this interface to
-	/// get values that they can subsequently manipulate before
-	/// having them returned.  																																																														   * or index with these methods.
+	/// process values before they are set on the IDbCommand.
 	/// </summary>
 	/// <remarks>
 	/// There is no need to implement this.  The implementation
 	/// will be passed into the TypeHandlerCallback automatically.
 	/// </remarks>
-	public interface IResultGetter
+	public interface IParameterSetter
 	{
 
 		/// <summary>
-		/// Returns the underlying IDataReader
+		/// Returns the underlying IDataParameter
 		/// </summary>
-		IDataReader DataReader { get; }
+		IDataParameter DataParameter { get; }
 
 		/// <summary>
 		/// Get the parameter value
 		/// </summary>
-		object Value { get; }
+		object Value { set; }
 	}
 }

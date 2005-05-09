@@ -30,7 +30,7 @@ using System.Reflection;
 using System.Xml.Serialization;
 using IBatisNet.Common.Exceptions;
 using IBatisNet.DataMapper.Scope;
-using IBatisNet.DataMapper.TypesHandler;
+using IBatisNet.DataMapper.TypeHandlers;
 using IBatisNet.Common.Utilities;
 #endregion
 

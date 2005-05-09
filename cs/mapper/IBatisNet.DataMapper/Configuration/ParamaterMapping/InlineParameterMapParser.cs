@@ -31,7 +31,7 @@ using System.Text;
 
 using IBatisNet.DataMapper.Configuration.Sql.Dynamic;
 using IBatisNet.DataMapper.Scope;
-using IBatisNet.DataMapper.TypesHandler;
+using IBatisNet.DataMapper.TypeHandlers;
 using IBatisNet.DataMapper.Exceptions;
 
 using IBatisNet.Common.Utilities;

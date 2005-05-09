@@ -33,7 +33,7 @@ using IBatisNet.DataMapper.Configuration.ResultMapping;
 #endregion 
 
 
-namespace IBatisNet.DataMapper.TypesHandler
+namespace IBatisNet.DataMapper.TypeHandlers
 {
 	/// <summary>
 	/// Summary description for Int32TypeHandler.

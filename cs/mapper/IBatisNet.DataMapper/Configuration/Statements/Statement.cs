@@ -35,7 +35,7 @@ using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Utilities.TypesResolver;
 
 using IBatisNet.DataMapper.Configuration.Alias;
-using IBatisNet.DataMapper.TypesHandler;
+using IBatisNet.DataMapper.TypeHandlers;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.Cache;

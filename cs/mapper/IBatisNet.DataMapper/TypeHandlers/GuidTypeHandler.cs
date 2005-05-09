@@ -24,13 +24,18 @@
  ********************************************************************************/
 #endregion
 
+#region Using
+
 using System;
 using System.Data;
 using System.Globalization;
 
 using IBatisNet.DataMapper.Configuration.ResultMapping;
+#endregion 
 
-namespace IBatisNet.DataMapper.TypesHandler
+
+
+namespace IBatisNet.DataMapper.TypeHandlers
 {
 	/// <summary>
 	/// Description résumée de GuidTypeHandler.

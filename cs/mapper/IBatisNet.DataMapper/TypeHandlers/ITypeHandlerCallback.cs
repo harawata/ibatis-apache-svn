@@ -31,7 +31,7 @@ using IBatisNet.DataMapper.Configuration.ParameterMapping;
 
 #endregion 
 
-namespace IBatisNet.DataMapper.TypesHandler
+namespace IBatisNet.DataMapper.TypeHandlers
 {
 	/// <summary>
 	/// A simple interface for implementing custom type handlers.

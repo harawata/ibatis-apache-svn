@@ -24,18 +24,23 @@
  ********************************************************************************/
 #endregion
 
+#region Using
+
 using System;
 using System.Data;
 using System.Globalization;
 
 using IBatisNet.DataMapper.Configuration.ResultMapping;
+#endregion 
 
-namespace IBatisNet.DataMapper.TypesHandler
+
+
+namespace IBatisNet.DataMapper.TypeHandlers
 {
 	/// <summary>
-	/// Description résumée de ObjectTypeHandler.
+	/// Description résumée de DateTimeTypeHandler.
 	/// </summary>
-	internal class ObjectTypeHandler: BaseTypeHandler
+	internal class DateTimeTypeHandler : BaseTypeHandler
 	{
 
 		/// <summary>
@@ -54,7 +59,7 @@ namespace IBatisNet.DataMapper.TypesHandler
 			}
 			else
 			{
-				return dataReader.GetValue(index);
+				return dataReader.GetDateTime(index);
 			}
 		}
 
@@ -66,25 +71,24 @@ namespace IBatisNet.DataMapper.TypesHandler
 			}
 			else
 			{
-				return dataReader.GetValue(mapping.ColumnIndex);
+				return dataReader.GetDateTime(mapping.ColumnIndex);
 			}
 		}
 
 		protected override object GetNullValue(ResultProperty mapping) 
 		{
-			return null;
+			return Convert.ToDateTime(mapping.NullValue);
 		}
 
 		public override object GetDataBaseValue(object outputValue, Type parameterType )
 		{
-			return outputValue;
+			return Convert.ToDateTime(outputValue);
 		}
 
 
 		public override bool IsSimpleType() 
 		{
-			return false;
+			return true;
 		}
-
 	}
 }

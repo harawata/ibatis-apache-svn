@@ -1,4 +1,3 @@
-
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
@@ -33,58 +32,13 @@ using IBatisNet.DataMapper.Configuration.ResultMapping;
 
 #endregion 
 
-namespace IBatisNet.DataMapper.TypesHandler
+namespace IBatisNet.DataMapper.TypeHandlers
 {
 	/// <summary>
-	/// Summary description for BaseTypeHandler.
+	///  Implementation of TypeHandler for dealing with unknown types
 	/// </summary>
-	internal abstract class BaseTypeHandler : ITypeHandler
+	internal class UnknownTypeHandler : BaseTypeHandler
 	{
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="mapping"></param>
-		/// <param name="dataReader"></param>
-		/// <returns></returns>
-		public object GetDataBaseValue(ResultProperty mapping, IDataReader dataReader)
-		{
-			object value = null;
-
-			if (mapping.ColumnIndex == ResultProperty.UNKNOWN_COLUMN_INDEX)  
-			{
-				value = GetValueByName(mapping, dataReader);
-			} 
-			else 
-			{
-				value = GetValueByIndex(mapping, dataReader);
-			}
-
-			bool wasNull = (value == DBNull.Value);
-			if (wasNull)
-			{
-				if (mapping.HasNullValue) 
-				{
-					value = GetNullValue(mapping);
-				}
-				else
-				{
-					value = null;
-				}			
-			}
-
-			return value;
-		}
-
-
-		protected abstract object GetValueByName(ResultProperty mapping, IDataReader dataReader);
-
-		protected abstract object GetValueByIndex(ResultProperty mapping, IDataReader dataReader);
-
-		protected abstract object GetNullValue(ResultProperty mapping);
-
-		public abstract object GetDataBaseValue(object outputValue, Type parameterType );
-
-		public abstract bool IsSimpleType();
 
 		/// <summary>
 		/// Performs processing on a value before it is used to set
@@ -93,11 +47,12 @@ namespace IBatisNet.DataMapper.TypesHandler
 		/// <param name="mapping">The mapping between data parameter and object property.</param>
 		/// <param name="dataParameter"></param>
 		/// <param name="parameterValue">The value to be set</param>
-		public virtual void SetParameter(ParameterProperty mapping, IDataParameter dataParameter, object parameterValue)
+		public override void SetParameter(ParameterProperty mapping, IDataParameter dataParameter, object parameterValue)
 		{
 			if (parameterValue!=null)
 			{
-				dataParameter.Value = parameterValue;
+				ITypeHandler handler = TypeHandlerFactory.GetTypeHandler( parameterValue.GetType() );
+				handler.SetParameter(mapping, dataParameter, parameterValue);
 			}
 			else
 			{
@@ -107,6 +62,46 @@ namespace IBatisNet.DataMapper.TypesHandler
 			}
 		}
 
-//		public abstract object GetDataParameter(ParameterProperty mapping, object source);
+		protected override object GetValueByName(ResultProperty mapping, IDataReader dataReader)
+		{
+			int index = dataReader.GetOrdinal(mapping.ColumnName);
+
+			if (dataReader.IsDBNull(index) == true)
+			{
+				return System.DBNull.Value;
+			}
+			else
+			{
+				return dataReader.GetValue(index);
+			}		
+		}
+
+		protected override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader)
+		{
+			if (dataReader.IsDBNull(mapping.ColumnIndex) == true)
+			{
+				return System.DBNull.Value;
+			}
+			else
+			{
+				return dataReader.GetValue(mapping.ColumnIndex);
+			}		
+		}
+
+		protected override object GetNullValue(ResultProperty mapping)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override object GetDataBaseValue(object outputValue, Type parameterType)
+		{
+			return outputValue;
+		}
+
+
+		public override bool IsSimpleType()
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

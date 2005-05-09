@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="169155"
+   name=""
+   committed-date="2005-05-08T20:07:11.408892Z"
+   url="https://svn.apache.org/repos/asf/incubator/ibatis/trunk/cs/mapper/IBatisNet.DataMapper/TypeHandlers"
+   copied="true"
+   last-author="roberto"
+   kind="dir"
+   uuid="13f79535-47bb-0310-9956-ffa450edef68"
+   copyfrom-rev="169336"
+   schedule="add"
+   revision="169336"
+   copyfrom-url="https://svn.apache.org/repos/asf/incubator/ibatis/trunk/cs/mapper/IBatisNet.DataMapper/TypesHandler"/>
+<entry
+   committed-rev="169140"
+   name="ResultGetterImpl.cs"
+   text-time="2005-05-09T16:34:11.453125Z"
+   committed-date="2005-05-08T16:20:30.556296Z"
+   checksum="8f178bb0eb67059d618c6a9519d5eda5"
+   copied="true"
+   last-author="gbayon"
+   kind="file"
+   prop-time="2005-05-09T16:34:11.453125Z"/>
+<entry
+   committed-rev="169140"
+   name="CharTypeHandler.cs"
+   text-time="2005-05-09T16:34:11.515625Z"
+   committed-date="2005-05-08T16:20:30.556296Z"
+   checksum="abb668806f36b3c5575163aa25c8f24f"
+   copied="true"
+   last-author="gbayon"
+   kind="file"
+   prop-time="2005-05-09T16:34:11.500000Z"/>
+<entry
+   committed-rev="169155"
+   name="BooleanTypeHandler.cs"
+   text-time="2005-05-09T16:34:11.546875Z"
+   committed-date="2005-05-08T20:07:11.408892Z"
+   checksum="0eef61097d9c87e03b23ff5fc49e4815"
+   copied="true"
+   last-author="roberto"
+   kind="file"
+   prop-time="2005-05-09T16:34:11.546875Z"/>
+<entry
+   committed-rev="169140"
+   name="TimeSpanTypeHandler.cs"
+   text-time="2005-05-09T16:34:11.578125Z"
+   committed-date="2005-05-08T16:20:30.556296Z"
+   checksum="1a39a5c955f7f1085d5c36953b40f422"
+   copied="true"
+   last-author="gbayon"
+   kind="file"
+   prop-time="2005-05-09T16:34:11.578125Z"/>
+<entry
+   committed-rev="169142"
+   name="IParameterSetter.cs"
+   text-time="2005-05-09T16:34:11.609375Z"
+   committed-date="2005-05-08T16:23:53.485795Z"
+   checksum="612359031bb043d31157e56c90d8c355"
+   copied="true"
+   last-author="gbayon"
+   kind="file"
+   prop-time="2005-05-09T16:34:11.593750Z"/>
+<entry
+   name=".svn"
+   kind="dir"
+   schedule="add"/>
+<entry
+   committed-rev="169140"
+   name="SingleTypeHandler.cs"
+   text-time="2005-05-09T16:34:11.625000Z"
+   committed-date="2005-05-08T16:20:30.556296Z"
+   checksum="a7d1936ca1aa819372bb628fe1de5e8e"
+   copied="true"
+   last-author="gbayon"
+   kind="file"
+   prop-time="2005-05-09T16:34:11.609375Z"/>
+<entry
+   committed-rev="169140"
+   name="ITypeHandler.cs"
+   text-time="2005-05-09T16:34:11.640625Z"
+   committed-date="2005-05-08T16:20:30.556296Z"
+   checksum="f36d4c3d5ed60b898e12b2be59e6a8a0"
+   copied="true"
+   last-author="gbayon"
+   kind="file"
+   prop-time="2005-05-09T16:34:11.640625Z"/>
+<entry
+   committed-rev="169155"
+   name="GuidTypeHandler.cs"
+   text-time="2005-05-09T16:34:11.671875Z"
+   committed-date="2005-05-08T20:07:11.408892Z"
+   checksum="ed4a615c8c88ed973053827c8fb59bc0"
+   copied="true"
+   last-author="roberto"
+   kind="file"
+   prop-time="2005-05-09T16:34:11.656250Z"/>
+<entry
+   committed-rev="169140"
+   name="ParameterSetterImpl.cs"
+   text-time="2005-05-09T16:34:11.671875Z"
+   committed-date="2005-05-08T16:20:30.556296Z"
+   checksum="58f3d4832f4afaa4e5868d82397cff45"
+   copied="true"
+   last-author="gbayon"
+   kind="file"
+   prop-time="2005-05-09T16:34:11.671875Z"/>
+<entry
+   committed-rev="169140"
+   name="DateTimeTypeHandler.cs"
+   text-time="2005-05-09T16:34:11.687500Z"
+   committed-date="2005-05-08T16:20:30.556296Z"
+   checksum="d32c4076c41eeb42c73ef3ff65b998fd"
+   copied="true"
+   last-author="gbayon"
+   kind="file"
+   prop-time="2005-05-09T16:34:11.687500Z"/>
+<entry
+   committed-rev="169140"
+   name="DecimalTypeHandler.cs"
+   text-time="2005-05-09T16:34:11.703125Z"
+   committed-date="2005-05-08T16:20:30.556296Z"
+   checksum="e345c48b72b33a82c258a395753cfc17"
+   copied="true"
+   last-author="gbayon"
+   kind="file"
+   prop-time="2005-05-09T16:34:11.703125Z"/>
+<entry
+   committed-rev="169140"
+   name="Int32TypeHandler.cs"
+   text-time="2005-05-09T16:34:11.734375Z"
+   committed-date="2005-05-08T16:20:30.556296Z"
+   checksum="6e94ee94ebdff8340d304ac8f109d218"
+   copied="true"
+   last-author="gbayon"
+   kind="file"
+   prop-time="2005-05-09T16:34:11.734375Z"/>
+<entry
+   committed-rev="169140"
+   name="UnknownTypeHandler.cs"
+   text-time="2005-05-09T16:34:11.718750Z"
+   committed-date="2005-05-08T16:20:30.556296Z"
+   checksum="acab5d0b978372cd3a3d38dddc26f989"
+   copied="true"
+   last-author="gbayon"
+   kind="file"
+   prop-time="2005-05-09T16:34:11.718750Z"/>
+<entry
+   committed-rev="169140"
+   name="Int16TypeHandler.cs"
+   text-time="2005-05-09T16:34:11.750000Z"
+   committed-date="2005-05-08T16:20:30.556296Z"
+   checksum="34adab72fcf6755bdea70f8fb3d8823e"
+   copied="true"
+   last-author="gbayon"
+   kind="file"
+   prop-time="2005-05-09T16:34:11.750000Z"/>
+<entry
+   committed-rev="169140"
+   name="ByteArrayTypeHandler.cs"
+   text-time="2005-05-09T16:34:11.781250Z"
+   committed-date="2005-05-08T16:20:30.556296Z"
+   checksum="681445b0893480bff03b5fa2fcdf5364"
+   copied="true"
+   last-author="gbayon"
+   kind="file"
+   prop-time="2005-05-09T16:34:11.781250Z"/>
+<entry
+   committed-rev="169142"
+   name="IResultGetter.cs"
+   text-time="2005-05-09T16:34:11.765625Z"
+   committed-date="2005-05-08T16:23:53.485795Z"
+   checksum="f9b870645124ab0fe8f6e47f44284823"
+   copied="true"
+   last-author="gbayon"
+   kind="file"
+   prop-time="2005-05-09T16:34:11.765625Z"/>
+<entry
+   committed-rev="169155"
+   name="ByteTypeHandler.cs"
+   text-time="2005-05-09T16:34:11.796875Z"
+   committed-date="2005-05-08T20:07:11.408892Z"
+   checksum="6e1ceaef7595b373ab41b99394a81ceb"
+   copied="true"
+   last-author="roberto"
+   kind="file"
+   prop-time="2005-05-09T16:34:11.796875Z"/>
+<entry
+   committed-rev="169140"
+   name="Int64TypeHandler.cs"
+   text-time="2005-05-09T16:34:11.828125Z"
+   committed-date="2005-05-08T16:20:30.556296Z"
+   checksum="a1ee865e6797f0216c5448542dddb226"
+   copied="true"
+   last-author="gbayon"
+   kind="file"
+   prop-time="2005-05-09T16:34:11.812500Z"/>
+<entry
+   committed-rev="169140"
+   name="EnumTypeHandler.cs"
+   text-time="2005-05-09T16:34:11.843750Z"
+   committed-date="2005-05-08T16:20:30.556296Z"
+   checksum="7f31df5a2eef69d370657e3c57c6ed22"
+   copied="true"
+   last-author="gbayon"
+   kind="file"
+   prop-time="2005-05-09T16:34:11.843750Z"/>
+<entry
+   committed-rev="169140"
+   name="ITypeHandlerCallback.cs"
+   text-time="2005-05-09T16:34:11.859375Z"
+   committed-date="2005-05-08T16:20:30.556296Z"
+   checksum="a6858f7f740086087bffae6b8883af87"
+   copied="true"
+   last-author="gbayon"
+   kind="file"
+   prop-time="2005-05-09T16:34:11.859375Z"/>
+<entry
+   committed-rev="169140"
+   name="ObjectTypeHandler.cs"
+   text-time="2005-05-09T16:34:11.890625Z"
+   committed-date="2005-05-08T16:20:30.556296Z"
+   checksum="a14df23374665d307c1f462e04913078"
+   copied="true"
+   last-author="gbayon"
+   kind="file"
+   prop-time="2005-05-09T16:34:11.890625Z"/>
+<entry
+   committed-rev="169140"
+   name="StringTypeHandler.cs"
+   text-time="2005-05-09T16:34:11.875000Z"
+   committed-date="2005-05-08T16:20:30.556296Z"
+   checksum="f05bc3910c2f9e8ef7137440bf418397"
+   copied="true"
+   last-author="gbayon"
+   kind="file"
+   prop-time="2005-05-09T16:34:11.875000Z"/>
+<entry
+   committed-rev="169140"
+   name="TypeHandlerFactory.cs"
+   text-time="2005-05-09T16:34:11.906250Z"
+   committed-date="2005-05-08T16:20:30.556296Z"
+   checksum="a30af00839757382271752fad3dd0a43"
+   copied="true"
+   last-author="gbayon"
+   kind="file"
+   prop-time="2005-05-09T16:34:11.906250Z"/>
+<entry
+   committed-rev="169140"
+   name="DoubleTypeHandler.cs"
+   text-time="2005-05-09T16:34:11.921875Z"
+   committed-date="2005-05-08T16:20:30.556296Z"
+   checksum="871080791af056689db135ba518cdeb9"
+   copied="true"
+   last-author="gbayon"
+   kind="file"
+   prop-time="2005-05-09T16:34:11.921875Z"/>
+<entry
+   committed-rev="169140"
+   name="BaseTypeHandler.cs"
+   text-time="2005-05-09T16:34:11.937500Z"
+   committed-date="2005-05-08T16:20:30.556296Z"
+   checksum="6cec774d9e276a8f4b1e780d0b1d8d1a"
+   copied="true"
+   last-author="gbayon"
+   kind="file"
+   prop-time="2005-05-09T16:34:11.937500Z"/>
+<entry
+   committed-rev="169140"
+   name="CustomTypeHandler.cs"
+   text-time="2005-05-09T16:34:11.953125Z"
+   committed-date="2005-05-08T16:20:30.556296Z"
+   checksum="253e8cd451427d218f48206a4f547c5d"
+   copied="true"
+   last-author="gbayon"
+   kind="file"
+   prop-time="2005-05-09T16:34:11.953125Z"/>
+</wc-entries>

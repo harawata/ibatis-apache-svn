@@ -43,7 +43,7 @@ using IBatisNet.DataMapper.Configuration.ResultMapping;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.Sql.SimpleDynamic;
 using IBatisNet.DataMapper.Configuration.Sql.Static;
-using IBatisNet.DataMapper.TypesHandler;
+using IBatisNet.DataMapper.TypeHandlers;
 using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.Scope;
 

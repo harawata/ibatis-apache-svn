@@ -32,7 +32,7 @@ using System.Reflection;
 
 using IBatisNet.Common.Utilities.Objects;
 
-using IBatisNet.DataMapper.TypesHandler;
+using IBatisNet.DataMapper.TypeHandlers;
 #endregion
 
 

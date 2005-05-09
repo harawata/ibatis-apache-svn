@@ -24,18 +24,23 @@
  ********************************************************************************/
 #endregion
 
+#region Using
+
 using System;
 using System.Data;
 using System.Globalization;
 
 using IBatisNet.DataMapper.Configuration.ResultMapping;
+#endregion 
 
-namespace IBatisNet.DataMapper.TypesHandler
+
+
+namespace IBatisNet.DataMapper.TypeHandlers
 {
 	/// <summary>
-	/// Description résumée de Int64TypeHandler.
+	/// Description résumée de Double.
 	/// </summary>
-	internal class Int64TypeHandler : BaseTypeHandler
+	internal class DoubleTypeHandler : BaseTypeHandler
 	{
 
 		/// <summary>
@@ -54,8 +59,7 @@ namespace IBatisNet.DataMapper.TypesHandler
 			}
 			else
 			{
-				// Don't used dataReader.GetInt32 to fix oracle who alwray return decimal type
-				return Convert.ToInt64(dataReader.GetValue(index));
+				return dataReader.GetDouble(index);
 			}
 		}
 
@@ -67,19 +71,18 @@ namespace IBatisNet.DataMapper.TypesHandler
 			}
 			else
 			{
-				// Don't used dataReader.GetInt32 to fix oracle who alwray return decimal type
-				return Convert.ToInt64(dataReader.GetValue(mapping.ColumnIndex));
+				return dataReader.GetDouble(mapping.ColumnIndex);
 			}
 		}
 
 		protected override object GetNullValue(ResultProperty mapping) 
 		{
-			return Convert.ToInt64(mapping.NullValue);
+			return Convert.ToDouble(mapping.NullValue);
 		}
 
 		public override object GetDataBaseValue(object outputValue, Type parameterType )
 		{
-			return Convert.ToInt64(outputValue);
+			return Convert.ToDouble(outputValue);
 		}
 
 

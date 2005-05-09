@@ -671,132 +671,132 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TypesHandler\BaseTypeHandler.cs"
+                    RelPath = "TypeHandlers\BaseTypeHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TypesHandler\BooleanTypeHandler.cs"
+                    RelPath = "TypeHandlers\BooleanTypeHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TypesHandler\ByteArrayTypeHandler.cs"
+                    RelPath = "TypeHandlers\ByteArrayTypeHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TypesHandler\ByteTypeHandler.cs"
+                    RelPath = "TypeHandlers\ByteTypeHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TypesHandler\CharTypeHandler.cs"
+                    RelPath = "TypeHandlers\CharTypeHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TypesHandler\CustomTypeHandler.cs"
+                    RelPath = "TypeHandlers\CustomTypeHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TypesHandler\DateTimeTypeHandler.cs"
+                    RelPath = "TypeHandlers\DateTimeTypeHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TypesHandler\DecimalTypeHandler.cs"
+                    RelPath = "TypeHandlers\DecimalTypeHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TypesHandler\DoubleTypeHandler.cs"
+                    RelPath = "TypeHandlers\DoubleTypeHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TypesHandler\EnumTypeHandler.cs"
+                    RelPath = "TypeHandlers\EnumTypeHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TypesHandler\GuidTypeHandler.cs"
+                    RelPath = "TypeHandlers\GuidTypeHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TypesHandler\Int16TypeHandler.cs"
+                    RelPath = "TypeHandlers\Int16TypeHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TypesHandler\Int32TypeHandler.cs"
+                    RelPath = "TypeHandlers\Int32TypeHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TypesHandler\Int64TypeHandler.cs"
+                    RelPath = "TypeHandlers\Int64TypeHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TypesHandler\IParameterSetter.cs"
+                    RelPath = "TypeHandlers\IParameterSetter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TypesHandler\IResultGetter.cs"
+                    RelPath = "TypeHandlers\IResultGetter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TypesHandler\ITypeHandler.cs"
+                    RelPath = "TypeHandlers\ITypeHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TypesHandler\ITypeHandlerCallback.cs"
+                    RelPath = "TypeHandlers\ITypeHandlerCallback.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TypesHandler\ObjectTypeHandler.cs"
+                    RelPath = "TypeHandlers\ObjectTypeHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TypesHandler\ParameterSetterImpl.cs"
+                    RelPath = "TypeHandlers\ParameterSetterImpl.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TypesHandler\ResultGetterImpl.cs"
+                    RelPath = "TypeHandlers\ResultGetterImpl.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TypesHandler\SingleTypeHandler.cs"
+                    RelPath = "TypeHandlers\SingleTypeHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TypesHandler\StringTypeHandler.cs"
+                    RelPath = "TypeHandlers\StringTypeHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TypesHandler\TimeSpanTypeHandler.cs"
+                    RelPath = "TypeHandlers\TimeSpanTypeHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TypesHandler\TypeHandlerFactory.cs"
+                    RelPath = "TypeHandlers\TypeHandlerFactory.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TypesHandler\UnknownTypeHandler.cs"
+                    RelPath = "TypeHandlers\UnknownTypeHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

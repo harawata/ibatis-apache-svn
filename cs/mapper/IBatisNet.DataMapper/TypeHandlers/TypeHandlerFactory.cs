@@ -31,7 +31,7 @@ using System.Collections.Specialized;
 
 #endregion 
 
-namespace IBatisNet.DataMapper.TypesHandler
+namespace IBatisNet.DataMapper.TypeHandlers
 {
 	/// <summary>
 	/// Not much of a suprise, this is a factory class for TypeHandler objects.

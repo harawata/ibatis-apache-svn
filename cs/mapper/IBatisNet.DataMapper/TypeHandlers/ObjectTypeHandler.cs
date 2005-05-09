@@ -31,15 +31,16 @@ using System.Data;
 using System.Globalization;
 
 using IBatisNet.DataMapper.Configuration.ResultMapping;
-
 #endregion 
 
-namespace IBatisNet.DataMapper.TypesHandler
+
+
+namespace IBatisNet.DataMapper.TypeHandlers
 {
 	/// <summary>
-	/// Boolean TypeHandler.
+	/// Description résumée de ObjectTypeHandler.
 	/// </summary>
-	internal class BooleanTypeHandler : BaseTypeHandler
+	internal class ObjectTypeHandler: BaseTypeHandler
 	{
 
 		/// <summary>
@@ -58,7 +59,7 @@ namespace IBatisNet.DataMapper.TypesHandler
 			}
 			else
 			{
-				return Convert.ToBoolean(dataReader.GetValue(index));
+				return dataReader.GetValue(index);
 			}
 		}
 
@@ -70,24 +71,24 @@ namespace IBatisNet.DataMapper.TypesHandler
 			}
 			else
 			{
-				return Convert.ToBoolean(dataReader.GetValue(mapping.ColumnIndex));
+				return dataReader.GetValue(mapping.ColumnIndex);
 			}
 		}
 
 		protected override object GetNullValue(ResultProperty mapping) 
 		{
-			return Convert.ToBoolean(mapping.NullValue);
+			return null;
 		}
 
 		public override object GetDataBaseValue(object outputValue, Type parameterType )
 		{
-			return Convert.ToBoolean(outputValue);
+			return outputValue;
 		}
 
 
 		public override bool IsSimpleType() 
 		{
-			return true;
+			return false;
 		}
 
 	}

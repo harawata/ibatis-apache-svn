@@ -28,47 +28,68 @@
 
 using System;
 using System.Data;
-using IBatisNet.DataMapper.Configuration.ParameterMapping;
+using System.Globalization;
+
 using IBatisNet.DataMapper.Configuration.ResultMapping;
 #endregion 
 
-namespace IBatisNet.DataMapper.TypesHandler
+
+
+namespace IBatisNet.DataMapper.TypeHandlers
 {
 	/// <summary>
-	/// Summary description for ITypeHandler.
+	/// Description résumée de CharTypeHandler.
 	/// </summary>
-	public interface ITypeHandler
+	internal class CharTypeHandler : BaseTypeHandler
 	{
+
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="mapping"></param>
 		/// <param name="dataReader"></param>
 		/// <returns></returns>
-		object GetDataBaseValue(ResultProperty mapping, IDataReader dataReader);
+		protected override object GetValueByName(ResultProperty mapping, IDataReader dataReader)
+		{
+			int index = dataReader.GetOrdinal(mapping.ColumnName);
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <returns></returns>
-		bool IsSimpleType();
+			if (dataReader.IsDBNull(index) == true)
+			{
+				return System.DBNull.Value;
+			}
+			else
+			{
+				return dataReader.GetString(index)[0];
+			}
+		}
 
-		/// <summary>
-		/// Retrieve ouput database value of an output parameter
-		/// </summary>
-		/// <param name="outputValue">ouput database value</param>
-		/// <param name="parameterType">type used in EnumTypeHandler</param>
-		/// <returns></returns>
-		object GetDataBaseValue(object outputValue, Type parameterType);
+		protected override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader) 
+		{
+			if (dataReader.IsDBNull(mapping.ColumnIndex) == true)
+			{
+				return System.DBNull.Value;
+			}
+			else
+			{
+				return dataReader.GetString(mapping.ColumnIndex)[0];
+					//GetChar(mapping.ColumnIndex);
+			}
+		}
 
-		/// <summary>
-		/// Performs processing on a value before it is used to set
-		/// the parameter of a IDbCommand.
-		/// </summary>
-		/// <param name="mapping">The mapping between data parameter and object property.</param>
-		/// <param name="dataParameter"></param>
-		/// <param name="parameterValue">The value to be set</param>
-		void SetParameter(ParameterProperty mapping, IDataParameter dataParameter, object parameterValue);
+		protected override object GetNullValue(ResultProperty mapping) 
+		{
+			return Convert.ToChar(mapping.NullValue);
+		}
 
+		public override object GetDataBaseValue(object outputValue, Type parameterType )
+		{
+			return Convert.ToChar(outputValue);
+		}
+
+
+		public override bool IsSimpleType() 
+		{
+			return true;
+		}
 	}
 }

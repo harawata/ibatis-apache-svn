@@ -24,69 +24,51 @@
  ********************************************************************************/
 #endregion
 
+#region Using
+
 using System;
 using System.Data;
-using System.Globalization;
-
+using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
+#endregion 
 
-namespace IBatisNet.DataMapper.TypesHandler
+namespace IBatisNet.DataMapper.TypeHandlers
 {
 	/// <summary>
-	/// Description résumée de TimespanTypeHandler.
+	/// Summary description for ITypeHandler.
 	/// </summary>
-	internal class TimeSpanTypeHandler : BaseTypeHandler
+	public interface ITypeHandler
 	{
-
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="mapping"></param>
 		/// <param name="dataReader"></param>
 		/// <returns></returns>
-		protected override object GetValueByName(ResultProperty mapping, IDataReader dataReader)
-		{
-			//return GetValueByIndex(dataReader.GetOrdinal(columnName), dataReader);
-			return "ToDo";
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="mapping"></param>
-		/// <param name="dataReader"></param>
-		/// <returns></returns>
-		protected override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader) 
-		{
-			// dépendra du dbType spécifié ds le ResultProperty (idem pour le StringTypeHandler
-			// des fois en DateTime, d'autre fois en TimeSpan
-			return "To do";
-				//dataReader.GetTimeSpan(columnIndex);
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="mapping"></param>
-		/// <returns></returns>
-		protected override object GetNullValue(ResultProperty mapping) 
-		{
-			return new TimeSpan(Convert.ToInt64(mapping.NullValue));
-		}
-
-		public override object GetDataBaseValue(object outputValue, Type parameterType )
-		{
-			return  new TimeSpan(Convert.ToInt64(outputValue));
-		}
-
+		object GetDataBaseValue(ResultProperty mapping, IDataReader dataReader);
 
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <returns></returns>
-		public override bool IsSimpleType() 
-		{
-			return true;
-		}
+		bool IsSimpleType();
+
+		/// <summary>
+		/// Retrieve ouput database value of an output parameter
+		/// </summary>
+		/// <param name="outputValue">ouput database value</param>
+		/// <param name="parameterType">type used in EnumTypeHandler</param>
+		/// <returns></returns>
+		object GetDataBaseValue(object outputValue, Type parameterType);
+
+		/// <summary>
+		/// Performs processing on a value before it is used to set
+		/// the parameter of a IDbCommand.
+		/// </summary>
+		/// <param name="mapping">The mapping between data parameter and object property.</param>
+		/// <param name="dataParameter"></param>
+		/// <param name="parameterValue">The value to be set</param>
+		void SetParameter(ParameterProperty mapping, IDataParameter dataParameter, object parameterValue);
+
 	}
 }

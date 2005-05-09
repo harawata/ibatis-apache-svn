@@ -24,18 +24,23 @@
  ********************************************************************************/
 #endregion
 
+#region Using
+
 using System;
 using System.Data;
 using System.Globalization;
 
 using IBatisNet.DataMapper.Configuration.ResultMapping;
+#endregion 
 
-namespace IBatisNet.DataMapper.TypesHandler
+
+
+namespace IBatisNet.DataMapper.TypeHandlers
 {
 	/// <summary>
-	/// Description résumée de DateTimeTypeHandler.
+	/// Description résumée de SingleTypeHandler.
 	/// </summary>
-	internal class DateTimeTypeHandler : BaseTypeHandler
+	internal class SingleTypeHandler : BaseTypeHandler
 	{
 
 		/// <summary>
@@ -54,10 +59,16 @@ namespace IBatisNet.DataMapper.TypesHandler
 			}
 			else
 			{
-				return dataReader.GetDateTime(index);
+				return dataReader.GetFloat(index);
 			}
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="mapping"></param>
+		/// <param name="dataReader"></param>
+		/// <returns></returns>
 		protected override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader) 
 		{
 			if (dataReader.IsDBNull(mapping.ColumnIndex) == true)
@@ -66,21 +77,30 @@ namespace IBatisNet.DataMapper.TypesHandler
 			}
 			else
 			{
-				return dataReader.GetDateTime(mapping.ColumnIndex);
+				return dataReader.GetFloat(mapping.ColumnIndex);
 			}
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="mapping"></param>
+		/// <returns></returns>
 		protected override object GetNullValue(ResultProperty mapping) 
 		{
-			return Convert.ToDateTime(mapping.NullValue);
+			return Convert.ToSingle(mapping.NullValue);
 		}
 
 		public override object GetDataBaseValue(object outputValue, Type parameterType )
 		{
-			return Convert.ToDateTime(outputValue);
+			return Convert.ToSingle(outputValue);;
 		}
 
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
 		public override bool IsSimpleType() 
 		{
 			return true;

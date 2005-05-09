@@ -24,18 +24,23 @@
  ********************************************************************************/
 #endregion
 
+#region Using
+
 using System;
 using System.Data;
 using System.Globalization;
 
 using IBatisNet.DataMapper.Configuration.ResultMapping;
+#endregion 
 
-namespace IBatisNet.DataMapper.TypesHandler
+
+
+namespace IBatisNet.DataMapper.TypeHandlers
 {
 	/// <summary>
-	/// Description résumée de Double.
+	/// Description résumée de SByteTypeHandler.
 	/// </summary>
-	internal class DoubleTypeHandler : BaseTypeHandler
+	internal class StringTypeHandler : BaseTypeHandler
 	{
 
 		/// <summary>
@@ -54,33 +59,48 @@ namespace IBatisNet.DataMapper.TypesHandler
 			}
 			else
 			{
-				return dataReader.GetDouble(index);
+				return dataReader.GetString(index);
 			}
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="mapping"></param>
+		/// <param name="dataReader"></param>
+		/// <returns></returns>
 		protected override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader) 
-		{
+		{	
 			if (dataReader.IsDBNull(mapping.ColumnIndex) == true)
 			{
 				return System.DBNull.Value;
 			}
 			else
 			{
-				return dataReader.GetDouble(mapping.ColumnIndex);
+				return dataReader.GetString(mapping.ColumnIndex);
 			}
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="mapping"></param>
+		/// <returns></returns>
 		protected override object GetNullValue(ResultProperty mapping) 
 		{
-			return Convert.ToDouble(mapping.NullValue);
+			return Convert.ToString(mapping.NullValue);
 		}
 
 		public override object GetDataBaseValue(object outputValue, Type parameterType )
 		{
-			return Convert.ToDouble(outputValue);
+			return Convert.ToString(outputValue);;
 		}
 
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
 		public override bool IsSimpleType() 
 		{
 			return true;

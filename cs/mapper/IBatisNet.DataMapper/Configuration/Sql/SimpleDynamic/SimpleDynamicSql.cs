@@ -34,7 +34,7 @@ using IBatisNet.DataMapper.Configuration.Sql;
 using IBatisNet.DataMapper.Configuration.Statements;
 using IBatisNet.DataMapper.Scope;
 using IBatisNet.DataMapper.Exceptions;
-using IBatisNet.DataMapper.TypesHandler;
+using IBatisNet.DataMapper.TypeHandlers;
 using IBatisNet.Common.Utilities;
 using IBatisNet.Common.Utilities.Objects;
 #endregion
