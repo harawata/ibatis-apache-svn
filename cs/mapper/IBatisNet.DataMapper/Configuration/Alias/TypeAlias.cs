@@ -67,7 +67,7 @@ namespace IBatisNet.DataMapper.Configuration.Alias
 			{ 
 				if ((value == null) || (value.Length < 1))
 				{
-					throw new ArgumentNullException("The name attribut is mandatory in the typeAlias ");
+					throw new ArgumentNullException("The name attribute is mandatory in the typeAlias ");
 				}
 				_name = value; 
 			}
@@ -96,7 +96,7 @@ namespace IBatisNet.DataMapper.Configuration.Alias
 			{ 
 				if ((value == null) || (value.Length < 1))
 				{
-					throw new ArgumentNullException("The class attribut is mandatory in the typeAlias " + _name);
+					throw new ArgumentNullException("The class attribute is mandatory in the typeAlias " + _name);
 				}
 				_className = value; 
 			}

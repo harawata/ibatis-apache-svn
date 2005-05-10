@@ -289,7 +289,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 //					// to indicate the mapping order of the properties to the columns
 //					if (request.ParameterMap == null) // Inline Parameters
 //					{
-//						throw new DataMapperException("A procedure statement tag must alway have a parameterMap attribut, which is not the case for the procedure '"+_statement.Id+"'."); 
+//						throw new DataMapperException("A procedure statement tag must alway have a parameterMap attribute, which is not the case for the procedure '"+_statement.Id+"'."); 
 //					}
 //					else // Parameters via ParameterMap
 //					{

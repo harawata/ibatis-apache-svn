@@ -61,7 +61,7 @@ namespace IBatisNet.Common
 			set
 			{
 				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The connectionString attribut is mandatory in the data source " + _name);
+					throw new ArgumentNullException("The connectionString attribute is mandatory in the data source " + _name);
 
 				_connectionString = value;
 			}
@@ -77,7 +77,7 @@ namespace IBatisNet.Common
 			set 
 			{ 
 				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The name attribut is mandatory in the data source.");
+					throw new ArgumentNullException("The name attribute is mandatory in the data source.");
 
 				_name = value; 
 			}

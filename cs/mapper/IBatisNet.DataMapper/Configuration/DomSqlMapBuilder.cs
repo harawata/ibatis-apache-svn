@@ -401,11 +401,11 @@ namespace IBatisNet.DataMapper.Configuration
 
 			_configScope.ErrorContext.Reset();
 
-			#region Resolve "resultMap" attribut on Result Property + initialize Discriminator property 
+			#region Resolve "resultMap" attribute on Result Property + initialize Discriminator property 
 
 			foreach(DictionaryEntry entry in _configScope.SqlMapper.ResultMaps)
 			{
-				_configScope.ErrorContext.Activity = "Resolve 'resultMap' attribut on Result Property";
+				_configScope.ErrorContext.Activity = "Resolve 'resultMap' attribute on Result Property";
 
 				ResultMap resultMap = (ResultMap)entry.Value;
 				foreach(DictionaryEntry item in resultMap.ColumnsToPropertiesMap)
@@ -1074,7 +1074,7 @@ namespace IBatisNet.DataMapper.Configuration
 				//_configScope.ErrorContext.Resource = nodeProperties.InnerXml.ToString();
 				_configScope.ErrorContext.Resource = nodeProperties.OuterXml.ToString();
 
-				// Load the file defined by the resource attribut
+				// Load the file defined by the resource attribute
 				XmlDocument propertiesConfig = Resources.GetAsXmlDocument(nodeProperties); 
 
 				foreach (XmlNode node in propertiesConfig.SelectNodes("/settings/add"))
@@ -1154,7 +1154,7 @@ namespace IBatisNet.DataMapper.Configuration
 						}
 						else
 						{
-							throw new ConfigurationException("In mapping file '"+ _configScope.SqlMapNamespace +"' the parameterMap '"+parameterMap.Id+"' can not resolve extends attribut '"+parameterMap.ExtendMap+"'");
+							throw new ConfigurationException("In mapping file '"+ _configScope.SqlMapNamespace +"' the parameterMap '"+parameterMap.Id+"' can not resolve extends attribute '"+parameterMap.ExtendMap+"'");
 						}
 					}
 					else
@@ -1221,7 +1221,7 @@ namespace IBatisNet.DataMapper.Configuration
 						}
 						else
 						{
-							throw new ConfigurationException("In mapping file '"+_configScope.SqlMapNamespace+"' the resultMap '"+resultMap.Id+"' can not resolve extends attribut '"+resultMap.ExtendMap+"'" );
+							throw new ConfigurationException("In mapping file '"+_configScope.SqlMapNamespace+"' the resultMap '"+resultMap.Id+"' can not resolve extends attribute '"+resultMap.ExtendMap+"'" );
 						}
 					}
 					else

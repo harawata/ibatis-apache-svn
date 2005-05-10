@@ -119,7 +119,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			set 
 			{ 
 				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The id attribut is mandatory in a ResultMap tag.");
+					throw new ArgumentNullException("The id attribute is mandatory in a ResultMap tag.");
 
 				_id = value; 
 			}
@@ -156,7 +156,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			set 
 			{ 
 				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The class attribut is mandatory in a ResultMap tag.");
+					throw new ArgumentNullException("The class attribute is mandatory in a ResultMap tag.");
 
 				_className = value; 
 			}

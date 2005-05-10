@@ -93,7 +93,7 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 			set 
 			{ 
 				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The id attribut is mandatory in a cacheModel tag.");
+					throw new ArgumentNullException("The id attribute is mandatory in a cacheModel tag.");
 
 				_id = value; 
 			}
@@ -109,7 +109,7 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 			set 
 			{ 
 				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The implementation attribut is mandatory in a cacheModel tag.");
+					throw new ArgumentNullException("The implementation attribute is mandatory in a cacheModel tag.");
 
 				_implementation = value; 
 			}

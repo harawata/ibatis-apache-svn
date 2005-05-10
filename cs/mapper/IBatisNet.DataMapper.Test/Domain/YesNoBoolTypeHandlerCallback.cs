@@ -1,6 +1,6 @@
 using System;
 
-using IBatisNet.DataMapper.TypesHandler;
+using IBatisNet.DataMapper.TypeHandlers;
 
 namespace IBatisNet.DataMapper.Test.Domain
 {

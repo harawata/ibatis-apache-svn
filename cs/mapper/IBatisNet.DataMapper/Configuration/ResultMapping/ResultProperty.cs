@@ -191,7 +191,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			set 
 			{ 
 				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The property attribut is mandatory in a result property.");
+					throw new ArgumentNullException("The property attribute is mandatory in a result property.");
 
 				_property = value; 
 			}

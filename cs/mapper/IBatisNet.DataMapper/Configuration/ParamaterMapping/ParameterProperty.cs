@@ -168,7 +168,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		}
 
 		/// <summary>
-		/// The direction attribut of the XML parameter.
+		/// The direction attribute of the XML parameter.
 		/// </summary>
 		/// <example> Input, Output, InputOutput</example>
 		[XmlAttribute("direction")]
@@ -204,7 +204,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 			set 
 			{ 
 				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The property attribut is mandatory in a paremeter property.");
+					throw new ArgumentNullException("The property attribute is mandatory in a paremeter property.");
 
 				_property = value; 
 			}

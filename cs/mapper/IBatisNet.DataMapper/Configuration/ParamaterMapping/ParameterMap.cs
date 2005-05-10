@@ -76,7 +76,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 			set 
 			{ 
 				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The id attribut is mandatory in a ParameterMap tag.");
+					throw new ArgumentNullException("The id attribute is mandatory in a ParameterMap tag.");
 
 				_id = value; 
 			}

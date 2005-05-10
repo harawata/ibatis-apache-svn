@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <sqlMap namespace="Other" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 		xsi:noNamespaceSchemaLocation="SqlMap.xsd">
 	
@@ -24,8 +24,8 @@
 		Specified method is not supported.
 		
 	    at System.Data.OracleClient.OracleDataReader.GetBoolean(Int32 i)
-		at IBatisNet.DataMapper.TypesHandler.BooleanTypeHandler.GetValueByName(ResultProperty mapping, IDataReader dataReader) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\TypesHandler\BooleanTypeHandler.cs:line 61
-		at IBatisNet.DataMapper.TypesHandler.BaseTypeHandler.GetDataBaseValue(ResultProperty mapping, IDataReader dataReader) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\TypesHandler\BaseTypeHandler.cs:line 54
+		at IBatisNet.DataMapper.TypeHandlers.BooleanTypeHandler.GetValueByName(ResultProperty mapping, IDataReader dataReader) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\TypeHandlers\BooleanTypeHandler.cs:line 61
+		at IBatisNet.DataMapper.TypeHandlers.BaseTypeHandler.GetDataBaseValue(ResultProperty mapping, IDataReader dataReader) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\TypeHandlers\BaseTypeHandler.cs:line 54
 		at IBatisNet.DataMapper.MappedStatements.MappedStatement.SetObjectProperty(RequestScope request, ResultMap resultMap, ResultProperty mapping, Object& target, IDataReader reader) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 1076
 		at IBatisNet.DataMapper.MappedStatements.MappedStatement.ApplyResultMap(RequestScope request, IDataReader reader, Object resultObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 393
 		at IBatisNet.DataMapper.MappedStatements.MappedStatement.RunQueryForObject(RequestScope request, IDalSession session, Object parameterObject, Object resultObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 575
@@ -59,8 +59,8 @@
 		Specified method is not supported.
 		
 		at System.Data.OracleClient.OracleDataReader.GetBoolean(Int32 i)
-		at IBatisNet.DataMapper.TypesHandler.BooleanTypeHandler.GetValueByName(ResultProperty mapping, IDataReader dataReader) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\TypesHandler\BooleanTypeHandler.cs:line 61
-		at IBatisNet.DataMapper.TypesHandler.BaseTypeHandler.GetDataBaseValue(ResultProperty mapping, IDataReader dataReader) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\TypesHandler\BaseTypeHandler.cs:line 54
+		at IBatisNet.DataMapper.TypeHandlers.BooleanTypeHandler.GetValueByName(ResultProperty mapping, IDataReader dataReader) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\TypeHandlers\BooleanTypeHandler.cs:line 61
+		at IBatisNet.DataMapper.TypeHandlers.BaseTypeHandler.GetDataBaseValue(ResultProperty mapping, IDataReader dataReader) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\TypeHandlers\BaseTypeHandler.cs:line 54
 		at IBatisNet.DataMapper.MappedStatements.MappedStatement.SetObjectProperty(RequestScope request, ResultMap resultMap, ResultProperty mapping, Object& target, IDataReader reader) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 1076
 		at IBatisNet.DataMapper.MappedStatements.MappedStatement.ApplyResultMap(RequestScope request, IDataReader reader, Object resultObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 393
 		at IBatisNet.DataMapper.MappedStatements.MappedStatement.RunQueryForList(RequestScope request, IDalSession session, Object parameterObject, Int32 skipResults, Int32 maxResults, RowDelegate rowDelegate) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 726

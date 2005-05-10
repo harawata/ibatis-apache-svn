@@ -104,7 +104,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 			{
 				if (_request.ParameterMap == null) // No parameterMap --> error
 				{
-					throw new DataMapperException("A procedure statement tag must have a parameterMap attribut, which is not the case for the procedure '"+_statement.Id+"."); 
+					throw new DataMapperException("A procedure statement tag must have a parameterMap attribute, which is not the case for the procedure '"+_statement.Id+"."); 
 				}
 				else // use the parameterMap
 				{
@@ -221,7 +221,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 
 				IDataParameter dataParameter = _session.CreateCommand(_statement.CommandType).CreateParameter();
 
-				// Manage dbType attribut if any
+				// Manage dbType attribute if any
 				if (property.DbType.Length >0) 
 				{
 					// Exemple : Enum.parse(System.Data.SqlDbType, 'VarChar')
@@ -304,7 +304,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 
 				IDataParameter dataParameter = _session.CreateCommand(_statement.CommandType).CreateParameter();
 
-				// Manage dbType attribut if any
+				// Manage dbType attribute if any
 				if (property.DbType.Length >0) 
 				{
 					// Exemple : Enum.parse(System.Data.SqlDbType, 'VarChar')

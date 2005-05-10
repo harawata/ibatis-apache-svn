@@ -206,7 +206,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 			set 
 			{ 
 				if ((value == null) || (value.Length < 1))
-					throw new DataMapperException("The id attribut is required in a statement tag.");
+					throw new DataMapperException("The id attribute is required in a statement tag.");
 
 				_id= value; 
 			}

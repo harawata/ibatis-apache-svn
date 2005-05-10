@@ -62,7 +62,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		}
 
 		/// <summary>
-		/// The by attribut is used to generate the where clause.
+		/// The by attribute is used to generate the where clause.
 		/// </summary>
 		/// <remarks>The by="" attribute can support multiple colums.</remarks>
 		/// <example> 

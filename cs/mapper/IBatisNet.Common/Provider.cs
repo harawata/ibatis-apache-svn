@@ -169,7 +169,7 @@ namespace IBatisNet.Common
 			set
 			{
 				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The connectionClass attribut is mandatory in the provider " + _name);
+					throw new ArgumentNullException("The connectionClass attribute is mandatory in the provider " + _name);
 				_connectionClass = value;
 			}
 		}
@@ -288,7 +288,7 @@ namespace IBatisNet.Common
 			set
 			{
 				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The commandClass attribut is mandatory in the provider " + _name);
+					throw new ArgumentNullException("The commandClass attribute is mandatory in the provider " + _name);
 				_commandClass = value;
 			}
 		}
@@ -307,7 +307,7 @@ namespace IBatisNet.Common
 			set
 			{
 				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The parameterClass attribut is mandatory in the provider " + _name);
+					throw new ArgumentNullException("The parameterClass attribute is mandatory in the provider " + _name);
 				_dataParameter = value;
 			}
 		}
@@ -326,7 +326,7 @@ namespace IBatisNet.Common
 			set
 			{
 				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The parameterDbTypeClass attribut is mandatory in the provider " + _name);
+					throw new ArgumentNullException("The parameterDbTypeClass attribute is mandatory in the provider " + _name);
 				_parameterDbTypeClass = value;
 			}
 		}
@@ -346,7 +346,7 @@ namespace IBatisNet.Common
 			set
 			{
 				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The parameterDbTypeProperty attribut is mandatory in the provider " + _name);
+					throw new ArgumentNullException("The parameterDbTypeProperty attribute is mandatory in the provider " + _name);
 				_parameterDbTypeProperty = value;
 			}
 		}
@@ -364,7 +364,7 @@ namespace IBatisNet.Common
 			set
 			{
 				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The dataAdapterClass attribut is mandatory in the provider " + _name);
+					throw new ArgumentNullException("The dataAdapterClass attribute is mandatory in the provider " + _name);
 				_dataAdapterClass = value;
 			}
 		}
@@ -384,7 +384,7 @@ namespace IBatisNet.Common
 			set
 			{
 				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The commandBuilderClass attribut is mandatory in the provider " + _name);
+					throw new ArgumentNullException("The commandBuilderClass attribute is mandatory in the provider " + _name);
 				_commandBuilderClass = value;
 			}
 		}
@@ -400,7 +400,7 @@ namespace IBatisNet.Common
 			set 
 			{ 
 				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The name attribut is mandatory in the provider.");
+					throw new ArgumentNullException("The name attribute is mandatory in the provider.");
 
 				_name = value; 			
 			}
@@ -429,7 +429,7 @@ namespace IBatisNet.Common
 				if ((value == null) || (value.Length < 1))
 				{
 					_parameterPrefix = ""; 
-					//throw new ArgumentNullException("The parameterPrefix attribut is mandatory in the provider " + _name);
+					//throw new ArgumentNullException("The parameterPrefix attribute is mandatory in the provider " + _name);
 				}
 				else
 				{
