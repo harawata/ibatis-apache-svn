@@ -304,7 +304,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 				_direction = (ParameterDirection)Enum.Parse( typeof(ParameterDirection), _directionAttribute, true );
 			}
 			
-			errorContext.MoreInfo = "Intialize a parameter property '" + this.PropertyName + "' .";
+			errorContext.MoreInfo = "Intialize an inline parameter property '" + this.PropertyName + "' .";
 			if (this.CLRType.Length == 0 )  // Unknown
 			{
 				_typeHandler = TypeHandlerFactory.GetUnkownTypeHandler();

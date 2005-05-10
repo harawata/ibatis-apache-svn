@@ -292,15 +292,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		{
 			_propertyInfo = propertyInfo;
 
-			if ( propertyInfo != null)
-			{
-				_typeHandler =  TypeHandlerFactory.GetTypeHandler(propertyInfo.PropertyType);
-			}
-			// If we specify a type, it can overrride 
-			if (this.CLRType.Length>0)
-			{
-				_typeHandler = TypeHandlerFactory.GetTypeHandler(Resources.TypeForName(this.CLRType));
-			}
+			_typeHandler =  TypeHandlerFactory.GetTypeHandler(propertyInfo.PropertyType);
 		}
 		#endregion
 	}
