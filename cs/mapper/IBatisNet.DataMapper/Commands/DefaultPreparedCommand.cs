@@ -166,7 +166,7 @@ namespace IBatisNet.DataMapper.Commands
 					{
 //						ParameterProperty property = request.ParameterMap.GetProperty(i);
 
-						if (property.DirectionAttribut.Length == 0)
+						if (property.DirectionAttribute.Length == 0)
 						{
 							property.Direction = sqlParameter.Direction;
 						}

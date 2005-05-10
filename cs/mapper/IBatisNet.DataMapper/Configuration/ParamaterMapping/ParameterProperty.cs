@@ -172,7 +172,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// </summary>
 		/// <example> Input, Output, InputOutput</example>
 		[XmlAttribute("direction")]
-		public string DirectionAttribut
+		public string DirectionAttribute
 		{
 			get { return _directionAttribute; }
 			set { _directionAttribute = value; }
