@@ -103,9 +103,9 @@ namespace IBatisNet.DataAccess.Scope
 		public void Reset() 
 		{
 			_resource = string.Empty;
-			_activity = string.Empty;;
-			_objectId = string.Empty;;
-			_moreInfo = string.Empty;;
+			_activity = string.Empty;
+			_objectId = string.Empty;
+			_moreInfo = string.Empty;
 			_cause = null;
 		}
 
@@ -120,7 +120,7 @@ namespace IBatisNet.DataAccess.Scope
 
 
 			// activity
-			if (_activity != null) 
+			if (_activity != null && _activity.Length > 0) 
 			{
 				message.Append("\n- The error occurred while ");
 				message.Append(_activity);
@@ -128,14 +128,14 @@ namespace IBatisNet.DataAccess.Scope
 			}			
 
 			// more info
-			if (_moreInfo != null) 
+			if (_moreInfo != null && _moreInfo.Length > 0) 
 			{
 				message.Append("\n- ");
 				message.Append(_moreInfo);
 			}
 			
 			// resource
-			if (_resource != null) 
+			if (_resource != null && _resource.Length > 0) 
 			{
 				message.Append("\n- The error occurred in ");
 				message.Append(_resource);
@@ -143,13 +143,12 @@ namespace IBatisNet.DataAccess.Scope
 			}
 
 			// object
-			if (_objectId != null) 
+			if (_objectId != null && _objectId.Length > 0) 
 			{
 				message.Append("  \n- Check the ");
 				message.Append(_objectId);
 				message.Append(".");
 			}
-
 
 			// cause
 			if (_cause != null) 
