@@ -19,21 +19,6 @@
 	
 	<statements>
 
-		<!--
-		Throws System.NotSupportedException : 
-		Specified method is not supported.
-		
-		at Oracle.DataAccess.Client.OracleDataReader.GetBoolean(Int32 i)
-		at IBatisNet.DataMapper.TypeHandlers.BooleanTypeHandler.GetValueByName(ResultProperty mapping, IDataReader dataReader) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\TypeHandlers\BooleanTypeHandler.cs:line 61
-		at IBatisNet.DataMapper.TypeHandlers.BaseTypeHandler.GetDataBaseValue(ResultProperty mapping, IDataReader dataReader) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\TypeHandlers\BaseTypeHandler.cs:line 54
-		at IBatisNet.DataMapper.MappedStatements.MappedStatement.SetObjectProperty(RequestScope request, ResultMap resultMap, ResultProperty mapping, Object& target, IDataReader reader) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 1076
-		at IBatisNet.DataMapper.MappedStatements.MappedStatement.ApplyResultMap(RequestScope request, IDataReader reader, Object resultObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 393
-		at IBatisNet.DataMapper.MappedStatements.MappedStatement.RunQueryForList(RequestScope request, IDalSession session, Object parameterObject, Int32 skipResults, Int32 maxResults, RowDelegate rowDelegate) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 726
-		at IBatisNet.DataMapper.MappedStatements.MappedStatement.ExecuteQueryForList(IDalSession session, Object parameterObject, Int32 skipResults, Int32 maxResults) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 644
-		at IBatisNet.DataMapper.MappedStatements.MappedStatement.ExecuteQueryForList(IDalSession session, Object parameterObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 625
-		at IBatisNet.DataMapper.SqlMapper.QueryForList(String statementName, Object parameterObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\SqlMapper.cs:line 689
-		at IBatisNet.DataMapper.Test.NUnit.SqlMapTests.DynamicPrependTest.TestDynamicSelectByIntLong() in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper.Test\NUnit\SqlMapTests\DynamicPrependTest.cs:line 225
-		-->	
 		<statement id="DynamicSelectByIntLong" 
 			parameterClass="Hashtable" 
 			resultMap="other-result">
@@ -79,18 +64,6 @@
 			Where Other_Bit = #Bool# 
 		</statement>
 		
-
-		<!--
-		Throws System.ArgumentException : 
-		Value does not fall within the expected range.
-		
-		at Oracle.DataAccess.Client.OracleParameter.set_Value(Object value)
-		at IBatisNet.DataMapper.Commands.DefaultPreparedCommand.ApplyParameterMap(IDalSession session, IDbCommand command, RequestScope request, IStatement statement, Object parameterObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\Commands\DefaultPreparedCommand.cs:line 172
-		at IBatisNet.DataMapper.Commands.DefaultPreparedCommand.Create(RequestScope request, IDalSession session, IStatement statement, Object parameterObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\Commands\DefaultPreparedCommand.cs:line 80
-		at IBatisNet.DataMapper.MappedStatements.MappedStatement.ExecuteInsert(IDalSession session, Object parameterObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 844
-		at IBatisNet.DataMapper.SqlMapper.Insert(String statementName, Object parameterObject) in c:\projects\ibatis\asf\trunk\cs\mapper\ibatisnet.datamapper\sqlmapper.cs:line 904
-		at IBatisNet.DataMapper.Test.NUnit.SqlMapTests.StatementTest.TestJIRA42() in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper.Test\NUnit\SqlMapTests\StatementTest.cs:line 1073
-		-->
 		<statement id="InsertBool" 
 			parameterClass="Other">
 			Insert into Others

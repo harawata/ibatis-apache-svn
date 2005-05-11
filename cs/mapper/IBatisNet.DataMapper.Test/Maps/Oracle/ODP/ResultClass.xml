@@ -4,40 +4,13 @@
 	xsi:noNamespaceSchemaLocation="SqlMap.xsd">
 
 	<statements>	
-		<!--
-		Using ODP.NET 10.1
-		Throws System.NotSupportedException
-		at Oracle.DataAccess.Client.OracleDataReader.GetBoolean(Int32 i)
-		at IBatisNet.DataMapper.TypeHandlers.BooleanTypeHandler.GetValueByIndex(ResultProperty mapping, IDataReader dataReader) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\TypeHandlers\BooleanTypeHandler.cs:line 69
-		at IBatisNet.DataMapper.TypeHandlers.BaseTypeHandler.GetDataBaseValue(ResultProperty mapping, IDataReader dataReader) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\TypeHandlers\BaseTypeHandler.cs:line 58
-		at IBatisNet.DataMapper.MappedStatements.MappedStatement.SetObjectProperty(RequestScope request, ResultMap resultMap, ResultProperty mapping, Object& target, IDataReader reader) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 1059
-		at IBatisNet.DataMapper.MappedStatements.MappedStatement.ApplyResultMap(RequestScope request, IDataReader reader, Object resultObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 403
-		at IBatisNet.DataMapper.MappedStatements.MappedStatement.RunQueryForObject(RequestScope request, IDalSession session, Object parameterObject, Object resultObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 562
-		at IBatisNet.DataMapper.MappedStatements.MappedStatement.ExecuteQueryForObject(IDalSession session, Object parameterObject, Object resultObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 505
-		at IBatisNet.DataMapper.MappedStatements.MappedStatement.ExecuteQueryForObject(IDalSession session, Object parameterObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 486
-		at IBatisNet.DataMapper.SqlMapper.QueryForObject(String statementName, Object parameterObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\SqlMapper.cs:line 489
-		at IBatisNet.DataMapper.Test.NUnit.SqlMapTests.ResultClassTest.TestBoolean() in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper.Test\NUnit\SqlMapTests\ResultClassTest.cs:line 44
-		-->	
+
 		<statement id="GetBoolean"
 					parameterClass="Int"
 					resultClass="bool" >
 			select 1 from dual where 1 = #value#
 		</statement>	
 
-		<!--
-		Using ODP.NET 10.1
-		Throws System.InvalidCastException
-		at Oracle.DataAccess.Client.OracleDataReader.GetByte(Int32 i)
-		at IBatisNet.DataMapper.TypeHandlers.ByteTypeHandler.GetValueByIndex(ResultProperty mapping, IDataReader dataReader) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\TypeHandlers\ByteTypeHandler.cs:line 69
-		at IBatisNet.DataMapper.TypeHandlers.BaseTypeHandler.GetDataBaseValue(ResultProperty mapping, IDataReader dataReader) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\TypeHandlers\BaseTypeHandler.cs:line 58
-		at IBatisNet.DataMapper.MappedStatements.MappedStatement.SetObjectProperty(RequestScope request, ResultMap resultMap, ResultProperty mapping, Object& target, IDataReader reader) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 1059
-		at IBatisNet.DataMapper.MappedStatements.MappedStatement.ApplyResultMap(RequestScope request, IDataReader reader, Object resultObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 403
-		at IBatisNet.DataMapper.MappedStatements.MappedStatement.RunQueryForObject(RequestScope request, IDalSession session, Object parameterObject, Object resultObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 562
-		at IBatisNet.DataMapper.MappedStatements.MappedStatement.ExecuteQueryForObject(IDalSession session, Object parameterObject, Object resultObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 505
-		at IBatisNet.DataMapper.MappedStatements.MappedStatement.ExecuteQueryForObject(IDalSession session, Object parameterObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 486
-		at IBatisNet.DataMapper.SqlMapper.QueryForObject(String statementName, Object parameterObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\SqlMapper.cs:line 489
-		at IBatisNet.DataMapper.Test.NUnit.SqlMapTests.ResultClassTest.TestByte() in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper.Test\NUnit\SqlMapTests\ResultClassTest.cs:line 55
-		-->
 		<statement id="GetByte"
 					parameterClass="Int"
 					resultClass="byte" >
@@ -82,20 +55,6 @@
 			select 99.5 from dual where 1 = #value#
 		</statement>
 
-		<!--
-		Using ODP.NET 10.1
-		Throws System.NotSupportedException
-		at Oracle.DataAccess.Client.OracleDataReader.GetGuid(Int32 i)
-		at IBatisNet.DataMapper.TypeHandlers.GuidTypeHandler.GetValueByIndex(ResultProperty mapping, IDataReader dataReader) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\TypeHandlers\GuidTypeHandler.cs:line 68
-		at IBatisNet.DataMapper.TypeHandlers.BaseTypeHandler.GetDataBaseValue(ResultProperty mapping, IDataReader dataReader) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\TypeHandlers\BaseTypeHandler.cs:line 58
-		at IBatisNet.DataMapper.MappedStatements.MappedStatement.SetObjectProperty(RequestScope request, ResultMap resultMap, ResultProperty mapping, Object& target, IDataReader reader) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 1059
-		at IBatisNet.DataMapper.MappedStatements.MappedStatement.ApplyResultMap(RequestScope request, IDataReader reader, Object resultObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 403
-		at IBatisNet.DataMapper.MappedStatements.MappedStatement.RunQueryForObject(RequestScope request, IDalSession session, Object parameterObject, Object resultObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 562
-		at IBatisNet.DataMapper.MappedStatements.MappedStatement.ExecuteQueryForObject(IDalSession session, Object parameterObject, Object resultObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 505
-		at IBatisNet.DataMapper.MappedStatements.MappedStatement.ExecuteQueryForObject(IDalSession session, Object parameterObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\MappedStatements\MappedStatement.cs:line 486
-		at IBatisNet.DataMapper.SqlMapper.QueryForObject(String statementName, Object parameterObject) in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper\SqlMapper.cs:line 489
-		at IBatisNet.DataMapper.Test.NUnit.SqlMapTests.ResultClassTest.TestGuid() in C:\projects\ibatis\asf\trunk\cs\mapper\IBatisNet.DataMapper.Test\NUnit\SqlMapTests\ResultClassTest.cs:line 116
-		-->
 		<statement id="GetGuid"
 					parameterClass="Int"
 					resultClass="guid" >
