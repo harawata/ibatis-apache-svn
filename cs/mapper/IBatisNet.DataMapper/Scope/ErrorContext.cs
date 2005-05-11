@@ -86,6 +86,8 @@ namespace IBatisNet.DataMapper.Scope
 
 		#endregion 
 
+		#region Methods
+
 		/// <summary>
 		/// Clear the error context
 		/// </summary>
@@ -139,6 +141,7 @@ namespace IBatisNet.DataMapper.Scope
 			return message.ToString();
 		}
 
+		#endregion 
 
 	}
 }
