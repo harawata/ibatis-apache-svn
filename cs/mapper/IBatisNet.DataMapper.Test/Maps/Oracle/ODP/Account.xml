@@ -2,7 +2,7 @@
 
 <sqlMap namespace="Account" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:noNamespaceSchemaLocation="SqlMap.xsd">
-	
+
 	<!-- =============================================                
                 <resultMap 
 					name="name"  
@@ -538,13 +538,37 @@
 			prc_Swap_Email_Address
 		</procedure>
 
+		<procedure id="GetAllAccountsViaStoredProcRefCursor" 
+			parameterMap="stored-proc-refcursor-param"
+			resultClass="Account">
+			REF_CURSOR_TEST.GET_ACCOUNTS_PROCEDURE
+		</procedure>
+
+		<procedure id="GetAccountViaStoredProcRefCursor" 
+			parameterMap="stored-proc-refcursor-param-with-input"
+			resultClass="Account">
+			REF_CURSOR_TEST.GET_ACCOUNT_PROCEDURE
+		</procedure>
+
 	</statements>
 
 	<!-- =============================================
             OPTIONAL EXPLICIT PARAMETER MAP
     ============================================= -->
 	<parameterMaps>   
-		
+	
+		<parameterMap id="stored-proc-refcursor-param">
+			<!--
+			<parameter property="P_ACCOUNTS" direction="Output" column="P_ACCOUNTS" dbType="RefCursor"/>
+			-->
+			<parameter direction="Output" column="P_ACCOUNTS" dbType="RefCursor"/>
+		</parameterMap>	
+
+		<parameterMap id="stored-proc-refcursor-param-with-input">
+			<parameter direction="Output" column="P_ACCOUNTS" dbType="RefCursor"/>
+			<parameter property="P_ACCOUNT_ID" direction="Input" column="P_ACCOUNT_ID" dbType="Int32"/>
+		</parameterMap>			
+
 		<parameterMap id="swap-params">
 			<parameter property="email1" column="p_First" direction="InputOutput" dbType="VarChar2" size="64"/>
 			<parameter property="email2" column="p_Second" direction="InputOutput" dbType="VarChar2" size="64"/>

@@ -30,6 +30,8 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Oracle
 			InitScript( sqlMap.DataSource, ScriptDirectory + "account-init.sql" );	
 			InitScript( sqlMap.DataSource, ScriptDirectory + "account-procedure.sql", false );
 			InitScript( sqlMap.DataSource, ScriptDirectory + "swap-procedure.sql", false );	
+			InitScript( sqlMap.DataSource, ScriptDirectory + "account-refcursor-package-spec.sql", false );	
+			InitScript( sqlMap.DataSource, ScriptDirectory + "account-refcursor-package-body.sql", false );	
 		}
 
 		/// <summary>
@@ -77,8 +79,8 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Oracle
 
 			sqlMap.QueryForObject("SwapEmailAddresses", map);
 
-			Assert.AreEqual(first, map["email2"]);
-			Assert.AreEqual(second, map["email1"]);
+			Assert.AreEqual(first, map["email2"].ToString());
+			Assert.AreEqual(second, map["email1"].ToString());
 		}
 
 		/// <summary>
@@ -117,6 +119,44 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Oracle
 			Assert.IsNotNull(testAccount);
 			Assert.AreEqual(99, testAccount.Id);
 		}
+
+		/// <summary>
+		/// Test QueryForList with Ref Cursor.
+		/// </summary>
+		[Test]
+		public void QueryForListWithRefCursor()
+		{
+			Hashtable param = new Hashtable();
+			param.Add("P_ACCOUNTS",null);
+
+			IList list = sqlMap.QueryForList("GetAllAccountsViaStoredProcRefCursor", param);
+
+			Assert.AreEqual(5, list.Count);
+			AssertAccount1((Account) list[0]);
+			Assert.AreEqual(2, ((Account) list[1]).Id);
+			Assert.AreEqual("Averel", ((Account) list[1]).FirstName);
+			Assert.AreEqual(3, ((Account) list[2]).Id);
+			Assert.AreEqual("William", ((Account) list[2]).FirstName);
+			Assert.AreEqual(4, ((Account) list[3]).Id);
+			Assert.AreEqual("Jack", ((Account) list[3]).FirstName);
+			Assert.AreEqual(5, ((Account) list[4]).Id);
+			Assert.AreEqual("Gilles", ((Account) list[4]).FirstName);
+		}
+
+		/// <summary>
+		/// Test QueryForList with Ref Cursor and Input.
+		/// </summary>
+		[Test]
+		public void QueryForListWithRefCursorAndInput()
+		{
+			Hashtable param = new Hashtable();
+			param.Add("P_ACCOUNT_ID",1);
+
+			IList list = sqlMap.QueryForList("GetAccountViaStoredProcRefCursor", param);
+
+			Assert.AreEqual(1, list.Count);
+			AssertAccount1((Account) list[0]);
+		}		
 		#endregion
 	}
 }

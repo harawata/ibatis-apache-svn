@@ -900,6 +900,14 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "Scripts\Oracle\account-refcursor-package-body.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\Oracle\account-refcursor-package-spec.sql"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "Scripts\Oracle\category-init.sql"
                     BuildAction = "Content"
                 />
