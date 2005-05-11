@@ -92,9 +92,9 @@ namespace IBatisNet.DataMapper.Scope
 		public void Reset() 
 		{
 			_resource = string.Empty;
-			_activity = string.Empty;;
-			_objectId = string.Empty;;
-			_moreInfo = string.Empty;;
+			_activity = string.Empty;
+			_objectId = string.Empty;
+			_moreInfo = string.Empty;
 		}
 
 		/// <summary>
