@@ -118,7 +118,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 						token = (string)enumerator.Current;
 						if (!PARAMETER_TOKEN.Equals(token)) 
 						{
-							throw new DataMapperException("Unterminated inline parameter in mapped statement (" + "statement.getId()" + ").");
+							throw new DataMapperException("Unterminated inline parameter in mapped statement (" + statement.Id + ").");
 						}
 						token = null;
 					}
