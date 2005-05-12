@@ -150,6 +150,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Oracle
 		public void QueryForListWithRefCursorAndInput()
 		{
 			Hashtable param = new Hashtable();
+			param.Add("P_ACCOUNTS",null);
 			param.Add("P_ACCOUNT_ID",1);
 
 			IList list = sqlMap.QueryForList("GetAccountViaStoredProcRefCursor", param);

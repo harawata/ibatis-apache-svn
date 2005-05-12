@@ -559,13 +559,13 @@
 	
 		<parameterMap id="stored-proc-refcursor-param">
 			<!--
-			<parameter property="P_ACCOUNTS" direction="Output" column="P_ACCOUNTS" dbType="RefCursor"/>
-			-->
 			<parameter direction="Output" column="P_ACCOUNTS" dbType="RefCursor"/>
+			-->
+			<parameter property="P_ACCOUNTS" direction="Output" column="P_ACCOUNTS" dbType="RefCursor"/>
 		</parameterMap>	
 
 		<parameterMap id="stored-proc-refcursor-param-with-input">
-			<parameter direction="Output" column="P_ACCOUNTS" dbType="RefCursor"/>
+			<parameter property="P_ACCOUNTS" direction="Output" column="P_ACCOUNTS" dbType="RefCursor"/>
 			<parameter property="P_ACCOUNT_ID" direction="Input" column="P_ACCOUNT_ID" dbType="Int32"/>
 		</parameterMap>			
 
