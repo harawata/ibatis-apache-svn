@@ -35,44 +35,36 @@ using IBatisNet.Common.Utilities;
 namespace IBatisNet.DataMapper.Configuration.Alias
 {
 	/// <summary>
-	/// TypeAlias.
+	/// Summary description for TypeHandler.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("typeAlias")]
-	public class TypeAlias
+	[XmlRoot("typeHandler")]
+	public class TypeHandler
 	{
-
 		#region Fields
-		[NonSerialized]
-		private string _name = string.Empty;
 		[NonSerialized]
 		private string _className = string.Empty;
 		[NonSerialized]
 		private Type _class = null;
+		[NonSerialized]
+		private string _dbType = string.Empty;
+		[NonSerialized]
+		private string _callBackName = string.Empty;
 		#endregion
 
 		#region Properties
 		/// <summary>
-		/// Name used to identify the typeAlias amongst the others.
+		/// CLR type
 		/// </summary>
-		/// <example> Account</example>
-		[XmlAttribute("alias")]
-		public string Name
+		[XmlAttribute("type")]
+		public string ClassName
 		{
-			get { return _name; }
-			set 
-			{ 
-				if ((value == null) || (value.Length < 1))
-				{
-					throw new ArgumentNullException("The name attribute is mandatory in the typeAlias ");
-				}
-				_name = value; 
-			}
+			get { return _className; }
+			set {_className = value; }
 		}
 
-
 		/// <summary>
-		/// The type class for the typeAlias
+		/// The type class for the TypeName
 		/// </summary>
 		[XmlIgnore]
 		public Type Class
@@ -80,43 +72,40 @@ namespace IBatisNet.DataMapper.Configuration.Alias
 			get { return _class; }
 		}
 	
+		/// <summary>
+		/// dbType name
+		/// </summary>
+		[XmlAttribute("dbType")]
+		public string DbType
+		{
+			get { return _dbType; }
+			set {_dbType = value; }
+		}
+
 
 		/// <summary>
-		/// The class name to identify the typeAlias.
+		/// callback alias name
 		/// </summary>
-		/// <example>Com.Site.Domain.Product</example>
-		[XmlAttribute("type")]
-		public string ClassName
+		[XmlAttribute("callback")]
+		public string CallBackName
 		{
-			get { return _className; }
-			set 
-			{ 
-				if ((value == null) || (value.Length < 1))
-				{
-					throw new ArgumentNullException("The class attribute is mandatory in the typeAlias " + _name);
-				}
-				_className = value; 
-			}
+			get { return _callBackName; }
+			set {_callBackName = value; }
 		}
+
+	
 		#endregion
 
-		#region Constructor (s) / Destructor
+		#region Constructors
+
 		/// <summary>
 		/// Do not use direclty, only for serialization.
 		/// </summary>
 		[Obsolete("This public constructor with no parameter is not really obsolete, but is reserved for serialization.", false)]
-		public TypeAlias()
+		public TypeHandler()
 		{}
+		#endregion 
 
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		/// <param name="type">a type.</param>
-		public TypeAlias(Type type)
-		{
-			_class = type;
-		}
-		#endregion
 
 		#region Methods
 		/// <summary>

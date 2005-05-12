@@ -41,7 +41,9 @@ namespace IBatisNet.DataMapper.TypeHandlers
 
 		#region Fields
 
-		private static readonly HybridDictionary _typeHandlerMap = new HybridDictionary();
+		private HybridDictionary _typeHandlerMap = new HybridDictionary();
+		private ITypeHandler _unknownTypeHandler = null;
+		private const string NULL = "_NULL_TYPE_";
 
 		#endregion 
 
@@ -50,57 +52,59 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		static TypeHandlerFactory() 
+		public TypeHandlerFactory() 
 		{
-			ITypeHandler handler;
+			ITypeHandler handler = null;
 
 			handler = new BooleanTypeHandler();
-			_typeHandlerMap.Add(typeof(bool), handler); // key= "System.Boolean"
+			this.Register(typeof(bool), handler); // key= "System.Boolean"
 
 			handler = new ByteTypeHandler();
-			_typeHandlerMap.Add(typeof(Byte), handler);
+			this.Register(typeof(Byte), handler);
 
 			handler = new CharTypeHandler();
-			_typeHandlerMap.Add(typeof(Char), handler);
+			this.Register(typeof(Char), handler);
 
 			handler = new DateTimeTypeHandler();
-			_typeHandlerMap.Add(typeof(DateTime), handler);
+			this.Register(typeof(DateTime), handler);
 
 			handler = new DecimalTypeHandler();
-			_typeHandlerMap.Add(typeof(Decimal), handler);
+			this.Register(typeof(Decimal), handler);
 
 			handler = new DoubleTypeHandler();
-			_typeHandlerMap.Add(typeof(Double), handler);
+			this.Register(typeof(Double), handler);
 
 			handler = new Int16TypeHandler();
-			_typeHandlerMap.Add(typeof(Int16), handler);
+			this.Register(typeof(Int16), handler);
 
 			handler = new Int32TypeHandler();
-			_typeHandlerMap.Add(typeof(Int32), handler);
+			this.Register(typeof(Int32), handler);
 
 			handler = new Int64TypeHandler();
-			_typeHandlerMap.Add(typeof(Int64), handler);
+			this.Register(typeof(Int64), handler);
 
 			handler = new SingleTypeHandler();
-			_typeHandlerMap.Add(typeof(Single), handler);
+			this.Register(typeof(Single), handler);
 
 			handler = new StringTypeHandler();
-			_typeHandlerMap.Add(typeof(String), handler);
+			this.Register(typeof(String), handler);
 
 			handler = new GuidTypeHandler();
-			_typeHandlerMap.Add(typeof(Guid), handler);
+			this.Register(typeof(Guid), handler);
 
 			handler = new TimeSpanTypeHandler();
-			_typeHandlerMap.Add(typeof(TimeSpan), handler);
+			this.Register(typeof(TimeSpan), handler);
 
 			handler = new ByteArrayTypeHandler();
-			_typeHandlerMap.Add(typeof(Byte[]), handler);
+			this.Register(typeof(Byte[]), handler);
 
 			handler = new ObjectTypeHandler();
-			_typeHandlerMap.Add(typeof(object), handler);
+			this.Register(typeof(object), handler);
 
 			handler = new EnumTypeHandler();
-			_typeHandlerMap.Add( typeof(System.Enum), handler);
+			this.Register( typeof(System.Enum), handler);
+
+			_unknownTypeHandler = new UnknownTypeHandler(this);
 
 		}
 
@@ -109,41 +113,96 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		#region Methods
 
 		/// <summary>
-		/// 
+		/// Get a TypeHandler for a type
 		/// </summary>
-		/// <param name="type"></param>
-		/// <returns></returns>
-		public static ITypeHandler GetTypeHandler(Type type) 
+		/// <param name="type">the type you want a TypeHandler for</param>
+		/// <returns>the handler</returns>
+		public ITypeHandler GetTypeHandler(Type type) 
 		{
 			if (type.IsEnum)
 			{
-				return (ITypeHandler) _typeHandlerMap[typeof(System.Enum)];
+				return this.GetTypeHandler(typeof(System.Enum), null);
 			}
 			else
 			{
-				return (ITypeHandler) _typeHandlerMap[type];
+				return this.GetTypeHandler(type, null);
 			}
 		}
 
 		/// <summary>
-		/// Get a TypeHandler for a type
+		///  Get a TypeHandler for a type and a dbType type
 		/// </summary>
-		/// <param name="type"></param>
-		/// <param name="dbType"></param>
-		/// <returns></returns>
-		public static ITypeHandler GetTypeHandler(Type type, string dbType) 
+		/// <param name="type">the type</param>
+		/// <param name="dbType">the dbType type</param>
+		/// <returns>the handler</returns>
+		public ITypeHandler GetTypeHandler(Type type, string dbType) 
 		{
-			return GetTypeHandler(type);
+			HybridDictionary dbTypeHandlerMap = (HybridDictionary) _typeHandlerMap[ type ];
+			ITypeHandler handler = null;
+
+			if (dbTypeHandlerMap != null) 
+			{
+				if (dbType==null)
+				{
+					handler = (ITypeHandler) dbTypeHandlerMap[ NULL ];
+				}
+				else
+				{
+					handler = (ITypeHandler) dbTypeHandlerMap[ dbType ];
+					if (handler == null) 
+					{
+						handler = (ITypeHandler) dbTypeHandlerMap[ NULL ];
+					}					
+				}
+
+			}
+			return handler;
+
+			//return GetTypeHandler(type);
 		}
 
+
+		/// <summary>
+		/// Register (add) a type handler for a type
+		/// </summary>
+		/// <param name="type">the type</param>
+		/// <param name="handler">the handler instance</param>
+		public void Register(Type type, ITypeHandler handler) 
+		{
+			this.Register(type, null, handler);
+		}
+
+		/// <summary>
+		/// Register (add) a type handler for a type and dbType
+		/// </summary>
+		/// <param name="type">the type</param>
+		/// <param name="dbType">the dbType</param>
+		/// <param name="handler">the handler instance</param>
+		public void Register(Type type, string dbType, ITypeHandler handler) 
+		{
+			HybridDictionary map = (HybridDictionary) _typeHandlerMap[ type ];
+			if (map == null) 
+			{
+				map = new HybridDictionary();
+				_typeHandlerMap.Add(type, map)  ;
+			}
+			if (dbType==null)
+			{
+				map.Add(NULL, handler);
+			}
+			else
+			{
+				map.Add(dbType, handler);
+			}
+		}
 
 		/// <summary>
 		/// When in doubt, get the "unknown" type handler
 		/// </summary>
 		/// <returns>if I told you, it would not be unknown, would it?</returns>
-		public static ITypeHandler GetUnkownTypeHandler() 
+		public ITypeHandler GetUnkownTypeHandler() 
 		{
-			return new UnknownTypeHandler();
+			return _unknownTypeHandler;
 		}
 
 		/// <summary>
@@ -151,12 +210,12 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		/// </summary>
 		/// <param name="type"></param>
 		/// <returns></returns>
-		public static bool IsSimpleType(Type type) 
+		public bool IsSimpleType(Type type) 
 		{
 			bool result = false;
 			if (type != null) 
 			{
-				ITypeHandler handler = TypeHandlerFactory.GetTypeHandler(type);
+				ITypeHandler handler = this.GetTypeHandler(type);
 				if (handler != null) 
 				{
 					result = handler.IsSimpleType();

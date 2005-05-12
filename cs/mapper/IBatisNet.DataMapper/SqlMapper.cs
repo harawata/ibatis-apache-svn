@@ -46,6 +46,7 @@ using IBatisNet.DataMapper.Configuration.ResultMapping;
 using IBatisNet.DataMapper.Configuration.Cache;
 using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.MappedStatements;
+using IBatisNet.DataMapper.TypeHandlers;
 
 #endregion
 
@@ -79,6 +80,7 @@ namespace IBatisNet.DataMapper
 		private HybridDictionary _typeAliasMaps = new HybridDictionary();
 		//(CacheModel name, cache))
 		private HybridDictionary _cacheMaps = new HybridDictionary();
+		private TypeHandlerFactory _typeHandlerFactory = null; 
 
 		private bool _cacheModelsEnabled = false;
 		private bool _useEmbedStatementParams = false;
@@ -128,21 +130,30 @@ namespace IBatisNet.DataMapper
 		{
 			get { return _useEmbedStatementParams; }
 		}
+
+		/// <summary>
+		/// The TypeHandlerFactory
+		/// </summary>
+		internal TypeHandlerFactory TypeHandlerFactory
+		{
+			get { return _typeHandlerFactory; }
+		}
 		#endregion
 
 		#region Constructor (s) / Destructor
 		/// <summary>
 		/// Create a new SqlMap
 		/// </summary>
-		internal SqlMapper() 
+		internal SqlMapper(TypeHandlerFactory typeHandlerFactory) 
 		{
+			_typeHandlerFactory = typeHandlerFactory;
 			_sessionContainer = SessionContainerFactory.GetSessionContainer(IBatisNet.Common.Utilities.HashCodeProvider.GetIdentityHashCode(this).ToString());
 		}
 		#endregion
 
 		#region Methods
 		/// <summary>
-		/// Set the faleg to tell us if cache models were enabled
+		/// Set the falg to tell us if cache models were enabled
 		/// or not.
 		/// </summary>
 		internal void SetCacheModelsEnabled(bool value)

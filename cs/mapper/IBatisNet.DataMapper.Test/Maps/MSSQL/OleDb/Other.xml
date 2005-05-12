@@ -4,7 +4,6 @@
 	
 	<alias>
 		<typeAlias alias="Other" type="IBatisNet.DataMapper.Test.Domain.Other, IBatisNet.DataMapper.Test"/>
-		<typeAlias alias="OuiNonBool" type="IBatisNet.DataMapper.Test.Domain.YesNoBoolTypeHandlerCallback, IBatisNet.DataMapper.Test"/>
 	</alias>	
 	
 	<resultMaps>                                    

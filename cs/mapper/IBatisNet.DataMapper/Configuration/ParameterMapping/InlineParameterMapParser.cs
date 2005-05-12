@@ -76,7 +76,8 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// <param name="statement"></param>
 		/// <param name="sqlStatement"></param>
 		/// <returns>A new sql command text.</returns>
-		public SqlText ParseInlineParameterMap(IStatement statement, string sqlStatement)
+		/// <param name="typeHandlerFactory"></param>
+		public SqlText ParseInlineParameterMap(TypeHandlerFactory typeHandlerFactory, IStatement statement, string sqlStatement)
 		{
 			string newSql = sqlStatement;
 			ArrayList mappingList = new ArrayList();
@@ -109,7 +110,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 					else 
 					{
 						//ParameterMapping mapping = null; Java
-						ParameterProperty mapping =  ParseMapping(token, parameterClass);
+						ParameterProperty mapping =  ParseMapping(token, parameterClass, typeHandlerFactory);
 
 						mappingList.Add(mapping);
 						newSqlBuffer.Append("? ");
@@ -146,7 +147,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		}
 
 
-		private ParameterProperty ParseMapping(string token, Type parameterClass) 
+		private ParameterProperty ParseMapping(string token, Type parameterClass, TypeHandlerFactory typeHandlerFactory) 
 		{
 			ParameterProperty mapping = new ParameterProperty();
 
@@ -170,16 +171,14 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 					ITypeHandler handler = null;
 					if (parameterClass == null) 
 					{
-						handler = null; //TypeHandlerFactory.getUnkownTypeHandler();
+						handler = typeHandlerFactory.GetUnkownTypeHandler();
 					} 
 					else 
 					{
-						handler = ResolveTypeHandler(parameterClass, propertyName, null, null);
-						//TypeHandlerFactory.GetTypeHandler(parameterClass);
-						//
+						handler = ResolveTypeHandler(typeHandlerFactory, parameterClass, propertyName, null, null);
 					}
 					mapping.TypeHandler = handler;
-					mapping.Initialize(_errorContext);
+					mapping.Initialize(typeHandlerFactory, _errorContext);
 				} 
 				else if (n1 >= 5) 
 				{
@@ -202,16 +201,14 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 					ITypeHandler handler;
 					if (parameterClass == null) 
 					{
-						handler = null;//TypeHandlerFactory.getUnkownTypeHandler();
+						handler = typeHandlerFactory.GetUnkownTypeHandler();
 					} 
 					else 
 					{
-						handler = ResolveTypeHandler(parameterClass, propertyName, null, null);
-						//TypeHandlerFactory.GetTypeHandler(parameterClass);
-						//
+						handler = ResolveTypeHandler(typeHandlerFactory, parameterClass, propertyName, null, null);
 					}
 					mapping.TypeHandler = handler;
-					mapping.Initialize(_errorContext);
+					mapping.Initialize(typeHandlerFactory, _errorContext);
 				} 
 				else 
 				{
@@ -224,16 +221,14 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 				ITypeHandler handler;
 				if (parameterClass == null) 
 				{
-					handler = null;
-					//TypeHandlerFactory.getUnkownTypeHandler();
+					handler = typeHandlerFactory.GetUnkownTypeHandler();
 				} 
 				else 
 				{
-					handler = ResolveTypeHandler(parameterClass, token, null, null);
-					//TypeHandlerFactory.GetTypeHandler(parameterClass);
+					handler = ResolveTypeHandler(typeHandlerFactory, parameterClass, token, null, null);
 				}
 				mapping.TypeHandler = handler;
-				mapping.Initialize(_errorContext);
+				mapping.Initialize(typeHandlerFactory, _errorContext);
 			}
 			return mapping;
 		}
@@ -246,28 +241,30 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// <param name="propertyName"></param>
 		/// <param name="propertyType"></param>
 		/// <param name="dbType"></param>
+		/// <param name="typeHandlerFactory"></param>
 		/// <returns></returns>
-		private static ITypeHandler ResolveTypeHandler(Type type, string propertyName, 
+		private ITypeHandler ResolveTypeHandler(TypeHandlerFactory typeHandlerFactory, 
+			Type type, string propertyName, 
 			string propertyType, string dbType) 
 		{
 			ITypeHandler handler = null;
 
 			if (type == null) 
 			{
-				handler = null;//TypeHandlerFactory.getUnkownTypeHandler();
+				handler = typeHandlerFactory.GetUnkownTypeHandler();
 			} 
 			else if (typeof(IDictionary).IsAssignableFrom(type))//java.util.Map.class.isAssignableFrom(clazz)) 
 			{
 				if (propertyType == null) 
 				{
-					handler = TypeHandlerFactory.GetTypeHandler(typeof(object), dbType);
+					handler = typeHandlerFactory.GetTypeHandler(typeof(object), dbType);
 				} 
 				else 
 				{
 					try 
 					{
 						Type typeClass = Resources.TypeForName( propertyType );
-						handler = TypeHandlerFactory.GetTypeHandler(typeClass, dbType);
+						handler = typeHandlerFactory.GetTypeHandler(typeClass, dbType);
 					} 
 					catch (Exception e) 
 					{
@@ -275,14 +272,14 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 					}
 				}
 			} 
-			else if (TypeHandlerFactory.GetTypeHandler(type, dbType) != null) 
+			else if (typeHandlerFactory.GetTypeHandler(type, dbType) != null) 
 			{
-				handler = TypeHandlerFactory.GetTypeHandler(type, dbType);
+				handler = typeHandlerFactory.GetTypeHandler(type, dbType);
 			} 
 			else 
 			{
 				Type typeClass = ObjectProbe.GetPropertyTypeForGetter(type, propertyName);
-				handler = TypeHandlerFactory.GetTypeHandler(typeClass, dbType);
+				handler = typeHandlerFactory.GetTypeHandler(typeClass, dbType);
 			}
 
 			return handler;

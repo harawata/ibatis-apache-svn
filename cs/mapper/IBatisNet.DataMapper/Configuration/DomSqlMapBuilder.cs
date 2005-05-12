@@ -49,6 +49,7 @@ using IBatisNet.DataMapper.Configuration.Sql.Static;
 using IBatisNet.DataMapper.Configuration.Statements;
 using IBatisNet.DataMapper.MappedStatements;
 using IBatisNet.DataMapper.Scope;
+using IBatisNet.DataMapper.TypeHandlers;
 
 #endregion
 
@@ -250,8 +251,8 @@ namespace IBatisNet.DataMapper.Configuration
 		private void Initialize()
 		{
 			Reset();
-
-			_configScope.SqlMapper = new SqlMapper();
+			
+			_configScope.SqlMapper = new SqlMapper( new TypeHandlerFactory() );
 
 			#region Load settings
 
@@ -366,6 +367,56 @@ namespace IBatisNet.DataMapper.Configuration
 				typeAlias.Initialize();
 
 				_configScope.SqlMapper.AddTypeAlias( typeAlias.Name, typeAlias );
+			}
+			_configScope.ErrorContext.Reset();
+			#endregion
+
+			#region Load TypeHandlers
+			foreach (XmlNode xmlNode in _configScope.SqlMapConfigDocument.SelectNodes("/sqlMapConfig/typeHandlers/typeHandler"))
+			{
+				try
+				{
+					_configScope.ErrorContext.Activity = "loading typeHandler";
+					TypeHandler handler = null;
+					XmlSerializer serializer = new XmlSerializer(typeof(TypeHandler));
+
+					handler = (TypeHandler) serializer.Deserialize(new XmlNodeReader(xmlNode));
+					_configScope.ErrorContext.ObjectId = handler.ClassName;
+					_configScope.ErrorContext.MoreInfo = "initialize typeHandler";
+					handler.Initialize();
+
+
+					_configScope.ErrorContext.MoreInfo = "Check the callback attribute '" + handler.ClassName + "' (must be a classname).";
+					ITypeHandler typeHandler = null;
+					Type type = _configScope.SqlMapper.GetType(handler.CallBackName);
+					object impl = Activator.CreateInstance( type );
+					if (impl is ITypeHandlerCallback) 
+					{
+						typeHandler = new CustomTypeHandler((ITypeHandlerCallback) impl);
+					} 
+					else if (impl is ITypeHandler) 
+					{
+						typeHandler = (ITypeHandler) impl;
+					} 
+					else 
+					{
+						throw new ConfigurationException("The callBack type is not a valid implementation of ITypeHandler or ITypeHandlerCallback");
+					}
+
+					_configScope.ErrorContext.MoreInfo = "Check the type attribute '" + handler.ClassName + "' (must be a class name) or the dbType '" + handler.DbType + "' (must be a DbType type name).";
+					if (handler.DbType.Length > 0) 
+					{
+						_configScope.TypeHandlerFactory.Register(Resources.TypeForName(handler.ClassName), handler.DbType, typeHandler);
+					} 
+					else 
+					{
+						_configScope.TypeHandlerFactory.Register(Resources.TypeForName(handler.ClassName), typeHandler);
+					}
+				} 
+				catch (Exception e) 
+				{
+					throw new ConfigurationException("Error registering occurred.  Cause: " + e.Message, e);
+				}
 			}
 			_configScope.ErrorContext.Reset();
 			#endregion
@@ -895,7 +946,7 @@ namespace IBatisNet.DataMapper.Configuration
 		{
 			bool isDynamic = false;
 			XmlNode commandTextNode = _configScope.NodeContext;
-			DynamicSql dynamic = new DynamicSql(statement);
+			DynamicSql dynamic = new DynamicSql(_configScope.TypeHandlerFactory,  statement);
 			StringBuilder sqlBuffer = new StringBuilder();
 
 			_configScope.ErrorContext.MoreInfo = "process the Sql statement";
@@ -961,7 +1012,7 @@ namespace IBatisNet.DataMapper.Configuration
 					} 
 					else 
 					{
-						sqlText = _paramParser.ParseInlineParameterMap( null, data );
+						sqlText = _paramParser.ParseInlineParameterMap(_configScope.TypeHandlerFactory, null, data );
 					}
 
 					dynamic.AddChild(sqlText);
@@ -1012,7 +1063,7 @@ namespace IBatisNet.DataMapper.Configuration
 				// Build a Parametermap with the inline parameters.
 				// if they exist. Then delete inline infos from sqltext.
 				
-				SqlText sqlText = _paramParser.ParseInlineParameterMap( statement, newSql );
+				SqlText sqlText = _paramParser.ParseInlineParameterMap(_configScope.TypeHandlerFactory,  statement, newSql );
 
 				if (sqlText.Parameters.Length > 0)
 				{
@@ -1032,7 +1083,7 @@ namespace IBatisNet.DataMapper.Configuration
 
 			if (SimpleDynamicSql.IsSimpleDynamicSql(newSql)) 
 			{
-				sql = new SimpleDynamicSql(newSql, statement);
+				sql = new SimpleDynamicSql(_configScope.TypeHandlerFactory, newSql, statement);
 			} 
 			else 
 			{

@@ -7,7 +7,11 @@ namespace IBatisNet.DataMapper.Test.Domain
 	/// <summary>
 	/// YesNoBoolTypeHandlerCallback.
 	/// </summary>
-	public class YesNoBoolTypeHandlerCallback : ITypeHandlerCallback
+	/// <remarks>
+	/// Used in account.xml on 
+	///  &lt; result property="BannerOption" type="Bit" dbType="Varchar" column="Account_Banner_Option" /&gt;
+	/// </remarks>
+	public class OuiNonBoolTypeHandlerCallback : ITypeHandlerCallback
 	{
 		private const string YES = "Oui";
 		private const string NO = "Non";

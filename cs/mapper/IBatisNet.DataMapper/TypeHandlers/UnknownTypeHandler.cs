@@ -40,6 +40,16 @@ namespace IBatisNet.DataMapper.TypeHandlers
 	internal class UnknownTypeHandler : BaseTypeHandler
 	{
 
+		private TypeHandlerFactory _factory = null;
+
+		/// <summary>
+		/// Constructor to create via a factory
+		/// </summary>
+		/// <param name="factory">the factory to associate this with</param>
+		public UnknownTypeHandler(TypeHandlerFactory factory) 
+		{
+			_factory = factory;
+		}
 		/// <summary>
 		/// Performs processing on a value before it is used to set
 		/// the parameter of a IDbCommand.
@@ -51,7 +61,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		{
 			if (parameterValue!=null)
 			{
-				ITypeHandler handler = TypeHandlerFactory.GetTypeHandler( parameterValue.GetType() );
+				ITypeHandler handler = _factory.GetTypeHandler( parameterValue.GetType() );
 				handler.SetParameter(mapping, dataParameter, parameterValue);
 			}
 			else

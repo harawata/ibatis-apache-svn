@@ -29,6 +29,7 @@
 using System.Collections.Specialized;
 using System.Xml;
 using IBatisNet.Common;
+using IBatisNet.DataMapper.TypeHandlers;
 
 #endregion
 
@@ -136,6 +137,17 @@ namespace IBatisNet.DataMapper.Scope
 			get
 			{
 				return _sqlMapper;
+			}
+		}
+
+		/// <summary>
+		/// The current TypeHandlerFactory
+		/// </summary>
+		internal TypeHandlerFactory TypeHandlerFactory
+		{
+			get
+			{
+				return _sqlMapper.TypeHandlerFactory;
 			}
 		}
 

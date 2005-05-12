@@ -379,7 +379,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 			if (request.ResultMap != null) 
 			{
 				request.SetResultMap(reader);
-				ResultMap resultMap = request.ResultMap;
+				//ResultMap resultMap = request.ResultMap;
 
 				if (outObject == null) 
 				{
@@ -404,13 +404,13 @@ namespace IBatisNet.DataMapper.MappedStatements
 					}
 
 					// Check if the ResultClass is a 'primitive' Type
-					if (TypeHandlerFactory.IsSimpleType(_statement.ResultClass))
+					if (_sqlMap.TypeHandlerFactory.IsSimpleType(_statement.ResultClass))
 					{
 						// Create a ResultProperty
 						ResultProperty property = new ResultProperty();
 						property.PropertyName = "value";
 						property.ColumnIndex = 0;
-						property.TypeHandler = TypeHandlerFactory.GetTypeHandler(outObject.GetType());
+						property.TypeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(outObject.GetType());
 
 						SetObjectProperty(request, request.ResultMap, property, ref outObject, reader);
 					}
@@ -471,7 +471,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 								{
 									Type propertyType =ObjectProbe.GetPropertyTypeForGetter(result,mapping.PropertyName);
 
-									mapping.TypeHandler = TypeHandlerFactory.GetTypeHandler(propertyType);
+									mapping.TypeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(propertyType);
 								}
 							}					
 						}
@@ -521,7 +521,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 				CacheKey key = null;
 				if (_statement.ParameterMap != null) 
 				{
-					key = new CacheKey(this.Name, 
+					key = new CacheKey(_sqlMap.TypeHandlerFactory, this.Name, 
 						request.PreparedStatement.PreparedSql,
 						parameterObject, 
 						request.ParameterMap.GetPropertyNameArray(), 
@@ -531,7 +531,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 				} 
 				else 
 				{
-					key = new CacheKey(this.Name, 
+					key = new CacheKey(_sqlMap.TypeHandlerFactory, this.Name, 
 						request.PreparedStatement.PreparedSql,
 						parameterObject, 
 						new string[0], 
@@ -648,7 +648,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 				CacheKey key = null;
 				if (_statement.ParameterMap != null) 
 				{
-					key = new CacheKey(this.Name, 
+					key = new CacheKey(_sqlMap.TypeHandlerFactory, this.Name, 
 						request.PreparedStatement.PreparedSql, 
 						parameterObject, 
 						request.ParameterMap.GetPropertyNameArray(), 
@@ -658,7 +658,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 				} 
 				else 
 				{
-					key = new CacheKey(this.Name, 
+					key = new CacheKey(_sqlMap.TypeHandlerFactory, this.Name, 
 						request.PreparedStatement.PreparedSql,  
 						parameterObject, 
 						new string[0], 
@@ -759,7 +759,6 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="resultObject">A strongly typed collection of result objects.</param>
 		public virtual void ExecuteQueryForList(IDalSession session, object parameterObject, IList resultObject )
 		{
-			IList result = new ArrayList();
 			RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session);;
 
 			//using ( IDbCommand command = CreatePreparedCommand(request, session, parameterObject ) )
@@ -851,9 +850,9 @@ namespace IBatisNet.DataMapper.MappedStatements
 				{
 					generatedKey = command.ExecuteScalar();
 					if ( (_statement.ResultClass!=null) && 
-						TypeHandlerFactory.IsSimpleType(_statement.ResultClass) )
+						_sqlMap.TypeHandlerFactory.IsSimpleType(_statement.ResultClass) )
 					{
-						ITypeHandler typeHandler = TypeHandlerFactory.GetTypeHandler(_statement.ResultClass);
+						ITypeHandler typeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(_statement.ResultClass);
 						generatedKey = typeHandler.GetDataBaseValue(generatedKey, _statement.ResultClass);
 					}
 				}
@@ -915,7 +914,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 				CacheKey key = null;
 				if (_statement.ParameterMap != null) 
 				{
-					key = new CacheKey(this.Name, 
+					key = new CacheKey(_sqlMap.TypeHandlerFactory, this.Name, 
 						request.PreparedStatement.PreparedSql, 
 						parameterObject, 
 						request.ParameterMap.GetPropertyNameArray(), 
@@ -925,7 +924,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 				} 
 				else 
 				{
-					key = new CacheKey(this.Name, 
+					key = new CacheKey(_sqlMap.TypeHandlerFactory, this.Name, 
 						request.PreparedStatement.PreparedSql,  
 						parameterObject, 
 						new string[0], 
@@ -1068,7 +1067,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 							}
 							Type systemType =((IDataRecord)reader).GetFieldType(columnIndex);
 
-							mapping.TypeHandler = TypeHandlerFactory.GetTypeHandler(systemType);
+							mapping.TypeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(systemType);
 						}
 					}					
 				}
@@ -1271,7 +1270,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 				{
 					if (_readerAutoMapper == null) 
 					{
-						_readerAutoMapper = new ReaderAutoMapper( reader, ref resultObject);
+						_readerAutoMapper = new ReaderAutoMapper(_sqlMap.TypeHandlerFactory, reader, ref resultObject);
 					}
 				}
 			}
@@ -1290,7 +1289,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 			/// </summary>
 			/// <param name="reader"></param>
 			/// <param name="resultObject"></param>
-			public ReaderAutoMapper(IDataReader reader,ref object resultObject) 
+			/// <param name="typeHandlerFactory"></param>
+			public ReaderAutoMapper(TypeHandlerFactory typeHandlerFactory, IDataReader reader,ref object resultObject) 
 			{
 				try 
 				{
@@ -1318,7 +1318,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 						if (matchedPropertyInfo != null ) 
 						{
 							property.PropertyName = matchedPropertyInfo.Name;
-							property.Initialize( matchedPropertyInfo );
+							property.Initialize(typeHandlerFactory, matchedPropertyInfo );
 							mappings.Add(property);
 						}
 						else if (resultObject is Hashtable) 
@@ -1329,7 +1329,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 						// Set TypeHandler
 						Type propertyType = reflectionInfo.GetSetterType(property.PropertyName);
-						property.TypeHandler = TypeHandlerFactory.GetTypeHandler( propertyType );
+						property.TypeHandler = typeHandlerFactory.GetTypeHandler( propertyType );
 					}
 				} 
 				catch (Exception e) 

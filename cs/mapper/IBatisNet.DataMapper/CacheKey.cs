@@ -24,15 +24,13 @@
  ********************************************************************************/
 #endregion
 
-#region Imports
+#region Using
+
 using System;
 using System.Collections;
-using System.Xml.Serialization;
-using System.Reflection;
-
 using IBatisNet.Common.Utilities.Objects;
-
 using IBatisNet.DataMapper.TypeHandlers;
+
 #endregion
 
 
@@ -42,7 +40,7 @@ namespace IBatisNet.DataMapper
 	/// Summary description for FlushInterval.
 	/// </summary>
 	[Serializable]
-	public class CacheKey
+	internal class CacheKey
 	{
 		#region Fields
 		private string[] _properties = null;
@@ -52,6 +50,7 @@ namespace IBatisNet.DataMapper
 		private int _maxResults = 0 ;
 		private int _skipRecords = 0;
 		private CacheKeyType _type = CacheKeyType.Object;
+		private TypeHandlerFactory _typeHandlerFactory = null;
 
 		private string _hashCodeString = string.Empty;
 		private int _hashCode = 0;
@@ -67,9 +66,11 @@ namespace IBatisNet.DataMapper
 		/// <param name="skipRecords"></param>
 		/// <param name="maxResults"></param>
 		/// <param name="type"></param>
-		public CacheKey(string statementName, string sql, object parameter, string[] properties, 
+		/// <param name="typeHandlerFactory"></param>
+		internal CacheKey(TypeHandlerFactory typeHandlerFactory, string statementName, string sql, object parameter, string[] properties, 
 			int skipRecords, int maxResults, CacheKeyType type)
 		{
+			_typeHandlerFactory = typeHandlerFactory;
 			_statementName = statementName;
 			_sql = sql;
 			_parameter = parameter;
@@ -78,7 +79,7 @@ namespace IBatisNet.DataMapper
 			_maxResults = maxResults;
 			_type = type;
 			_hashCode = GenerateHashCode();
-			_hashCodeString = System.Convert.ToString(_hashCode);
+			_hashCodeString = Convert.ToString(_hashCode);
 		}
 
 
@@ -98,7 +99,7 @@ namespace IBatisNet.DataMapper
 			{
 				result = (_parameter != null ? _parameter.GetHashCode() : 0);
 			} 
-			else if ( _parameter != null && TypeHandlerFactory.IsSimpleType(_parameter.GetType()) ) 
+			else if ( _parameter != null && _typeHandlerFactory.IsSimpleType(_parameter.GetType()) ) 
 			{
 				result = (_parameter != null ? _parameter.GetHashCode() : 0);
 			} 
@@ -135,7 +136,7 @@ namespace IBatisNet.DataMapper
 				if (_hashCode != cacheKey._hashCode) return false;
 				if (!_parameter.Equals(cacheKey._parameter)) return false;
 			} 
-			else if (_parameter != null && TypeHandlerFactory.IsSimpleType(_parameter.GetType())) 
+			else if (_parameter != null && _typeHandlerFactory.IsSimpleType(_parameter.GetType())) 
 			{
 				if (_parameter != null ? !_parameter.Equals(cacheKey._parameter) : cacheKey._parameter != null) return false;
 			} 

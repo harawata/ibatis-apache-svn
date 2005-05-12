@@ -259,12 +259,12 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 
 			if ( propertyInfo != null)
 			{
-				_typeHandler =  TypeHandlerFactory.GetTypeHandler(propertyInfo.PropertyType);
+				_typeHandler =  configScope.TypeHandlerFactory.GetTypeHandler(propertyInfo.PropertyType);
 			}
 			// If we specify a type, it can overrride 
 			if (this.CLRType.Length>0)
 			{
-				_typeHandler = TypeHandlerFactory.GetTypeHandler(Resources.TypeForName(this.CLRType));
+				_typeHandler = configScope.TypeHandlerFactory.GetTypeHandler(Resources.TypeForName(this.CLRType));
 			}
 			// If we specify a typeHandler, it can overrride 
 			if (this.CallBackName.Length >0)
@@ -288,11 +288,12 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// for AutoMapper
 		/// </summary>
 		/// <param name="propertyInfo">A PropertyInfoot.</param>
-		public void Initialize( PropertyInfo propertyInfo )
+		/// <param name="typeHandlerFactory"></param>
+		internal void Initialize(TypeHandlerFactory typeHandlerFactory, PropertyInfo propertyInfo )
 		{
 			_propertyInfo = propertyInfo;
 
-			_typeHandler =  TypeHandlerFactory.GetTypeHandler(propertyInfo.PropertyType);
+			_typeHandler =  typeHandlerFactory.GetTypeHandler(propertyInfo.PropertyType);
 		}
 		#endregion
 	}

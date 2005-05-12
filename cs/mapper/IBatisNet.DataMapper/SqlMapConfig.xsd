@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" >
+	<xs:element name="typeHandlers">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="typeHandler" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
 	<xs:element name="alias">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="typeAlias"/>
+				<xs:element ref="typeAlias" maxOccurs="unbounded"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -62,6 +69,7 @@
 				<xs:element ref="properties" minOccurs="0" maxOccurs="1"/>
 				<xs:element ref="database" minOccurs="0" maxOccurs="1"/>
 				<xs:element ref="alias" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="typeHandlers" minOccurs="0" maxOccurs="1"/>
 				<xs:element ref="sqlMaps" minOccurs="0" maxOccurs="1"/>
 			</xs:sequence>
 		</xs:complexType>
@@ -77,6 +85,13 @@
 		<xs:complexType>
 			<xs:attribute name="alias" type="xs:string" use="required"/>
 			<xs:attribute name="type" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="typeHandler">
+		<xs:complexType>
+			<xs:attribute name="type" type="xs:string"/>
+			<xs:attribute name="dbType" type="xs:string"/>
+			<xs:attribute name="callback" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 </xs:schema>

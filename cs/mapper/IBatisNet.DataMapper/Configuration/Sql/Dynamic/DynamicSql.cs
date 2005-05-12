@@ -37,6 +37,8 @@ using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements;
 using IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers;
 using IBatisNet.DataMapper.Scope;
+using IBatisNet.DataMapper.TypeHandlers;
+
 #endregion
 
 namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
@@ -47,14 +49,15 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 	/// <example>
 	///      <dynamic prepend="where">...</dynamic>
 	/// </example>
-	public class DynamicSql : ISql, IDynamicParent  
+	internal class DynamicSql : ISql, IDynamicParent  
 	{
 
 		#region Fields
 
 		private IList _children = new ArrayList();
 		private IStatement _statement = null ;
-		InlineParameterMapParser _paramParser = null;
+		private InlineParameterMapParser _paramParser = null;
+		private TypeHandlerFactory _typeHandlerFactory = null;
 
 		#endregion
 
@@ -63,9 +66,11 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 		/// Constructor
 		/// </summary>
 		/// <param name="statement">The mapped statement.</param>
-		public DynamicSql(IStatement statement)
+		/// <param name="typeHandlerFactory"></param>
+		internal DynamicSql(TypeHandlerFactory typeHandlerFactory, IStatement statement)
 		{
 			_statement = statement;
+			_typeHandlerFactory = typeHandlerFactory;
 		}
 		#endregion
 
@@ -137,7 +142,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 			// Processes $substitutions$ after DynamicSql
 			if ( SimpleDynamicSql.IsSimpleDynamicSql(dynSql) ) 
 			{
-				dynSql = new SimpleDynamicSql(dynSql, _statement).GetSql(parameterObject);
+				dynSql = new SimpleDynamicSql(_typeHandlerFactory, dynSql, _statement).GetSql(parameterObject);
 			}
 			return dynSql;
 		}
@@ -244,7 +249,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 
 									if (handler.IsPostParseRequired) 
 									{
-										SqlText sqlText = _paramParser.ParseInlineParameterMap( null, body.ToString() );
+										SqlText sqlText = _paramParser.ParseInlineParameterMap(_typeHandlerFactory, null, body.ToString() );
 										buffer.Append(sqlText.Text);
 										ParameterProperty[] mappings = sqlText.Parameters;
 										if (mappings != null) 

@@ -271,22 +271,22 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 			{
 				if (this.CLRType.Length == 0 )  // Unknown
 				{
-					_typeHandler = TypeHandlerFactory.GetUnkownTypeHandler();
+					_typeHandler = configScope.TypeHandlerFactory.GetUnkownTypeHandler();
 				}
 				else // If we specify a CLR type, use it
 				{ 
 					Type type = Resources.TypeForName(this.CLRType);
 
-					if (TypeHandlerFactory.IsSimpleType(type)) 
+					if (configScope.TypeHandlerFactory.IsSimpleType(type)) 
 					{
 						// Primitive
-						_typeHandler = TypeHandlerFactory.GetTypeHandler(type);
+						_typeHandler = configScope.TypeHandlerFactory.GetTypeHandler(type);
 					}
 					else
 					{
 						// .NET object
 						type = ObjectProbe.GetPropertyTypeForGetter(type, this.PropertyName);
-						_typeHandler = TypeHandlerFactory.GetTypeHandler(type);
+						_typeHandler = configScope.TypeHandlerFactory.GetTypeHandler(type);
 					}
 				}
 			}
@@ -297,7 +297,8 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// 
 		/// </summary>
 		/// <param name="errorContext"></param>
-		public void Initialize(ErrorContext errorContext)
+		/// <param name="typeHandlerFactory"></param>
+		internal void Initialize(TypeHandlerFactory typeHandlerFactory, ErrorContext errorContext)
 		{
 			if(_directionAttribute.Length >0)
 			{
@@ -307,22 +308,22 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 			errorContext.MoreInfo = "Intialize an inline parameter property '" + this.PropertyName + "' .";
 			if (this.CLRType.Length == 0 )  // Unknown
 			{
-				_typeHandler = TypeHandlerFactory.GetUnkownTypeHandler();
+				_typeHandler = typeHandlerFactory.GetUnkownTypeHandler();
 			}
 			else // If we specify a CLR type, use it
 			{ 
 				Type type = Resources.TypeForName(this.CLRType);
 
-				if (TypeHandlerFactory.IsSimpleType(type)) 
+				if (typeHandlerFactory.IsSimpleType(type)) 
 				{
 					// Primitive
-					_typeHandler = TypeHandlerFactory.GetTypeHandler(type);
+					_typeHandler = typeHandlerFactory.GetTypeHandler(type);
 				}
 				else
 				{
 					// .NET object
 					type = ObjectProbe.GetPropertyTypeForGetter(type, this.PropertyName);
-					_typeHandler = TypeHandlerFactory.GetTypeHandler(type);
+					_typeHandler = typeHandlerFactory.GetTypeHandler(type);
 				}
 			}
 		}

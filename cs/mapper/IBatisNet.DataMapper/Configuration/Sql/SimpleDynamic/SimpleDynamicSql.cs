@@ -45,15 +45,16 @@ namespace IBatisNet.DataMapper.Configuration.Sql.SimpleDynamic
 	/// <summary>
 	/// Summary description for SimpleDynamicSql.
 	/// </summary>
-	public class SimpleDynamicSql : ISql
+	internal class SimpleDynamicSql : ISql
 	{
 
 		#region private
 
-		private static readonly string ELEMENT_TOKEN = "$";
+		private const string ELEMENT_TOKEN = "$";
 
 		private string _simpleSqlStatement = string.Empty;
 		private IStatement _statement = null ;
+		private TypeHandlerFactory _typeHandlerFactory = null;
 
 		#endregion
 
@@ -63,10 +64,12 @@ namespace IBatisNet.DataMapper.Configuration.Sql.SimpleDynamic
 		/// </summary>
 		/// <param name="sqlStatement">The sql statement.</param>
 		/// <param name="statement"></param>
-		public SimpleDynamicSql(string sqlStatement, IStatement statement)
+		/// <param name="typeHandlerFactory"></param>
+		internal SimpleDynamicSql(TypeHandlerFactory typeHandlerFactory,string sqlStatement, IStatement statement)
 		{
 			_simpleSqlStatement = sqlStatement;
 			_statement = statement;
+			_typeHandlerFactory = typeHandlerFactory;
 		}
 		#endregion
 
@@ -127,7 +130,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.SimpleDynamic
 						object value = null;
 						if (parameterObject != null) 
 						{
-							if ( TypeHandlerFactory.IsSimpleType( parameterObject.GetType() ) == true) 
+							if ( _typeHandlerFactory.IsSimpleType( parameterObject.GetType() ) == true) 
 							{
 								value = parameterObject;
 							} 
