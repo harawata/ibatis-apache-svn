@@ -50,6 +50,13 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Oracle
 			category.Id = (int)sqlMap.Insert("InsertCategoryGenerate", category);
 			Assert.AreEqual(1, category.Id);
 
+			// Workaround!
+			// Null out unneeded properties, otherwise those property values will be added
+			// as command parameters for the auto-generated SELECT query even if
+			// only 1 parameter for Id is needed.
+			category.Name = null;
+			category.Guid = Guid.Empty;
+
 			Category categoryRead = null;
 			categoryRead = (Category) sqlMap.QueryForObject("SelectByPKCategoryGenerate", category);
 

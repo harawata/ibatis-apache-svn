@@ -69,7 +69,6 @@
 		
 		<update id="UpdateCategoryViaParameterMap" parameterMap="UpdateParam">
 			update Categories set
-			Category_Id = ?,
 			Category_Name =?,
 			Category_Guid = ?
 			where
@@ -87,16 +86,12 @@
 		
 						
 		<insert id="InsertCategoryGenerate" parameterMap="insert-generate-params">
-			<selectKey property="Id" type="post" resultClass="int">
+			<selectKey property="Id" type="pre" resultClass="int">
 				select s_categories.nextval as value from dual
             </selectKey>
             <generate table="Categories" />
 		</insert>
 		
-		<!--
-		See OracleClient issues for UpdateCategoryGenerate 
-		and SelectByPKCategoryGenerate
-		-->
 		<update id="UpdateCategoryGenerate" parameterMap="update-generate-params">
 			<generate table="Categories" by="Category_Id"/>
 		</update>
@@ -106,9 +101,11 @@
 		</delete>
 
 		<!--
-		See OracleClient issues for UpdateCategoryGenerate 
-		and SelectByPKCategoryGenerate
-		-->		
+		Do not use a parameterMap with more parameters than the SQL statement needs as parameters or
+		pass in a parameter object that has more properties than the SQL statement needs as parameters
+		since they will be added to the command's parameters collection.
+		Oracle with OracleClient or ODP will throw an error unlike MSSQL and MySQL databases and providers.
+		-->
 		<select id="SelectByPKCategoryGenerate" resultClass="Category" parameterClass="Category" parameterMap="select-generate-params">
 			<generate table="Categories" by="Category_Id"/> 
 		</select>
@@ -147,8 +144,26 @@
 			<parameter property="Id" direction="Output" column="p_Category_Id" dbType="Int32" />
 		</parameterMap>
 		
+		<!-- 
+		Unlike MSSQL and MySQL, we need to have Id as a property since this
+		Oracle test uses a "pre" selectKey sequence that is used on insert 
+		into Id property parameter.
+		
+		MSSQL and MySQL use IDENTITY and AUTOGENERATE Ids that are generated after
+		the insert.  Therefore, the Id property is not needed as a parameter for those databases.
+		
+		Unfortunately, since the Id property is defined here for an INSERT statement, we cannot 
+		extend this parameterMap for an UPDATE statement unlike MSSQL and MySQL because the Id
+		property is already positioned as the first parameter in the parameterMap
+		when it needs to be the last parameter in an UPDATE statement.
+		-->		
 		<parameterMap id="InsertParam">
 			<parameter property="Id"   column="Category_Id" dbType="Int32" />
+			<parameter property="Name" column="Category_Name" dbType="VarChar2" size="32"/>
+			<parameter property="GuidString" column="Category_Guid" dbType="VarChar2" size="36"/>
+		</parameterMap>
+
+		<parameterMap id="InsertParamWithoutId">
 			<parameter property="Name" column="Category_Name" dbType="VarChar2" size="32"/>
 			<parameter property="GuidString" column="Category_Guid" dbType="VarChar2" size="36"/>
 		</parameterMap>
@@ -159,19 +174,36 @@
 			<parameter property="GuidString" column="Category_Guid" nullValue="00000000-0000-0000-0000-000000000000" dbType="VarChar2" size="36"/>
 		</parameterMap>
 		
-		<parameterMap id="UpdateParam" extends="InsertParam">
+		<parameterMap id="UpdateParam" extends="InsertParamWithoutId">
 			<parameter property="Id" column="Category_Id" dbType="Int32"/>
 		</parameterMap>
 		
 		<!-- Used by generated statement -->
+		<!-- 
+		Unlike MSSQL and MySQL, we need to have Id as a property since this
+		Oracle test uses a "pre" selectKey sequence that is used on insert 
+		into Id property parameter.
 		
+		MSSQL and MySQL use IDENTITY and AUTOGENERATE Ids that are generated after
+		the insert.  Therefore, the Id property is not needed as a parameter for those databases.
+		
+		Unfortunately, since the Id property is defined here for an INSERT statement, we cannot 
+		extend this parameterMap for an UPDATE statement unlike MSSQL and MySQL because the Id
+		property is already positioned as the first parameter in the parameterMap
+		when it needs to be the last parameter in an UPDATE statement.
+		-->		
 		<parameterMap id="insert-generate-params">
 			<parameter property="Id"   column="Category_Id" dbType="Int32" />		
 			<parameter property="Name" column="Category_Name"/>
 			<parameter property="GuidString" column="Category_Guid" dbType="VarChar2"/>
 		</parameterMap>
+
+		<parameterMap id="insert-generate-params-without-id">
+			<parameter property="Name" column="Category_Name"/>
+			<parameter property="GuidString" column="Category_Guid" dbType="VarChar2"/>
+		</parameterMap>
 		
-		<parameterMap id="update-generate-params" extends="insert-generate-params">
+		<parameterMap id="update-generate-params" extends="insert-generate-params-without-id">
 			<parameter property="Id" column="Category_Id" dbType="Int32"/>
 		</parameterMap>
 		
@@ -182,8 +214,6 @@
 		
 		<parameterMap id="select-generate-params">
 			<parameter property="Id" column="Category_Id" dbType="Int32"/>
-			<parameter property="Name" column="Category_Name"/>
-			<parameter property="GuidString" column="Category_Guid" dbType="VarChar2"/>
 		</parameterMap>
 		
 	</parameterMaps>
