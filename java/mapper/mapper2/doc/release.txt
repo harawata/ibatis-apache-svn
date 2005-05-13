@@ -2,12 +2,15 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
- 2.1.0 - Mar ??, 2004
+ 2.1.0 - May ??, 2004
 ------------------------------
  
+ o Added removeFirstPrepend attribute to all tags 
+ o Added open and close attributes to all dynamic tags to better handle complex queries that require bracketing
  o Fixed IBATIS-45 Removed JavaBeanProbe/MapProbe in favor of ComplexBeanProbe 
  o Fixed IBATIS-79 Problem with nested groupBy resultMaps
- 
+ o Fixed bug that prevented dynamic tags from being nested inside an iterate tag
+ o Fixed bug that will now allow for the $[]$ notation to be used.
 ------------------------------
  2.0.9B - Feb 20, 2004
 ------------------------------
