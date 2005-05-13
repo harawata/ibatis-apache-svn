@@ -52,7 +52,7 @@
 		<statement id="GetDouble"
 					parameterClass="Int"
 					resultClass="double" >
-			select 99.5 from dual where 1 = #value#
+			select trunc(99.5,1) from dual where 1 = #value#
 		</statement>
 
 		<statement id="GetGuid"
@@ -96,7 +96,7 @@
 		<statement id="GetSingle"
 					parameterClass="Int"
 					resultClass="float" >
-			select 92233.5 from dual where 1 = #value#
+			select trunc(92233.5,1) from dual where 1 = #value#
 		</statement>
 						
 		<statement id="GetString"

@@ -112,11 +112,11 @@
       references. To your project, you need to add two or three references:
       <orderedlist>
           <listitem>
-            iBatisNet.DataMapper.dll 
+             iBatisNet.DataMapper.dll 
           </listitem>
 
           <listitem>
-            iBatisNet.Common.dll (implied) 
+             iBatisNet.Common.dll (implied) 
           </listitem>
 
           <listitem>
@@ -259,7 +259,7 @@
   &lt;settings&gt;
     &lt;setting useFullyQualifiedStatementNames="false"/&gt;
     &lt;setting cacheModelsEnabled="true"/&gt;
-	 &lt;setting validateSqlMap="false"/&gt;
+    &lt;setting validateSqlMap="false"/&gt;
   &lt;/settings&gt;
 
   &lt;database&gt;
@@ -415,11 +415,14 @@ Default: true (enabled)</programlisting></entry>
                 <methodname>queryForObject(“Namespace.statement.Id”);</methodname></para><programlisting>Example: useStatementNamespaces=”false”
 Default: false (disabled)</programlisting></entry>
               </row>
-			   <row>
+
+              <row>
                 <entry><emphasis>validateSqlMap </emphasis></entry>
 
-                <entry><para>This setting globally enables or disables the validation of mapping files against the SqlMapConfig.xsd schema. This can come in handy
-                for debugging.</para><programlisting>Example: validateSqlMap=”false”
+                <entry><para>This setting globally enables or disables the
+                validation of mapping files against the SqlMapConfig.xsd
+                schema. This can come in handy for
+                debugging.</para><programlisting>Example: validateSqlMap=”false”
 Default: false (disabled)</programlisting></entry>
               </row>
             </tbody>
@@ -474,6 +477,30 @@ IBatisNet.Test"</programlisting></entry>
                 </tbody>
               </tgroup>
             </table></para>
+
+          <sect5>
+             
+
+            <title>type Attribute</title>
+
+             When specifying a type attribute for the configuration, the type attribute value must be a fully qualified type name in the following format: 
+
+            <programlisting>type="[namespace.class], [assembly name],
+     Version=[version], Culture=[culture],
+     PublicKeyToken=[public token]"</programlisting>
+
+             For example: 
+
+            <programlisting>type="MyProject.Domain.LineItem, MyProject.Domain,
+     Version=1.2.3300.0, Culture=neutral,
+     PublicKeyToken=b03f455f11d50a3a"</programlisting>
+
+             The strongly typed name is desired, although it is also legitimate to use the shorter style assembly type name: 
+
+            <programlisting>type="MyProject.Domain.LineItem, MyProject.Domain"</programlisting>
+
+             
+          </sect5>
         </sect4>
 
         <sect4>
@@ -1080,8 +1107,7 @@ public IList QueryForList(string statementName,
       <sect3>
         <title>QueryWithRowDelegate</title>
 
-        <para>
-<programlisting>public delegate void RowDelegate(object obj,
+        <para><programlisting>public delegate void RowDelegate(object obj,
                                  IList list);
 public IList QueryWithRowDelegate(string statementName,
                                   object parameterObject, 
@@ -1108,8 +1134,7 @@ public IList QueryWithRowDelegate(string statementName,
       <sect3>
         <title>QueryForPaginatedList</title>
 
-        <para>
-		<programlisting>public PaginatedList QueryForPaginatedList(string statementName,
+        <para><programlisting>public PaginatedList QueryForPaginatedList(string statementName,
                                            object parameterObject,
                                            int pageSize);</programlisting></para>
 
@@ -1214,8 +1239,13 @@ public IDictionary QueryForMap(string statementName,
 
       <para>In the iBATIS DataMapper framework, a session is a container for
       an ADO connection and transaction.</para>
-	  <para>The iBATIS.NET Data Mapper session <classname>IDalSession</classname> implement <classname>IDisposable</classname> interface. So you can use it with the <methodname>using</methodname> syntax.</para>
- <example>
+
+      <para>The iBATIS.NET Data Mapper session
+      <classname>IDalSession</classname> implement
+      <classname>IDisposable</classname> interface. So you can use it with the
+      <methodname>using</methodname> syntax.</para>
+
+      <example>
         <title>using instruction</title>
 
         <para><programlisting>[C#]
@@ -1246,7 +1276,7 @@ public void OpenConnection()
 <emphasis role="comment">// Close a session : Close the associated ADO connection</emphasis>
 public void CloseConnection()</programlisting></para>
 
- <example>
+      <example>
         <title>Connection example</title>
 
         <para><programlisting>[C#]
@@ -1356,7 +1386,8 @@ catch {
   item.Description = newDescription;
   sqlMap.Update("updateItem", item);
 
-  <emphasis role="blue">session.Complete();</emphasis> <emphasis role="comment">// Commit</emphasis>
+  <emphasis role="blue">session.Complete();</emphasis> <emphasis
+              role="comment">// Commit</emphasis>
 }
 </programlisting></para>
       </example>

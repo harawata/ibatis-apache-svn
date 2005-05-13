@@ -223,6 +223,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Domain\GuidStringTypeHandlerCallback.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Domain\LineItem.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

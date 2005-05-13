@@ -6,7 +6,7 @@
     <title>Introduction</title>
 
     <para>If you want to know how to configure and install iBATIS, see the
-    sections Developer Guide for your platform. But if you want to know how
+    Developer Guide section for your platform. But if you want to know how
     iBATIS <emphasis>really</emphasis> works, continue from here.</para>
 
     <para>The Data Map definition file is where the interesting stuff happens.
@@ -23,34 +23,7 @@
     benefit is that the XML descriptors are much better suited to the task of
     mapping your object properties to database entities. At least, that's our
     own experience with our own applications. Of course, your mileage may
-    differ.</para>
-  </sect1>
-
-  <sect1>
-     
-
-    <title>type Attribut</title>
-
-     When specifying a type attribut within configuration, the type attribut value must be a fully qualified type name following the format: 
-
-    <programlisting>type="[namespace.class], [assembly name],
-        Version=[version], Culture=[culture],
-        PublicKeyToken=[public token]"
-</programlisting>
-
-     For example: 
-
-    <programlisting>type="MyProject.Domain.LineItem, MyProject.Domain,
-        Version=1.2.3300.0, Culture=neutral,
-        PublicKeyToken=b03f455f11d50a3a"
-</programlisting>
-
-     The strongly typed name is desired, however, it is also legitimate to use the shorter style assembly type name: 
-
-    <programlisting>type="MyProject.Domain.LineItem, MyProject.Domain"
-</programlisting>
-
-     
+    vary.</para>
   </sect1>
 
   <sect1>
@@ -593,7 +566,7 @@ All query methods</programlisting></entry>
             <tgroup cols="3">
               <thead>
                 <row>
-                  <entry>Attribut</entry>
+                  <entry>Attribute</entry>
 
                   <entry>Description</entry>
 
@@ -1491,29 +1464,31 @@ resultMapping="LineItem.LineItem"
     <sect2>
       <title>Inheritance Mapping</title>
 
-        <para>iBATIS DataMapper support for implementing object-oriented inheritance (subclassing) your object model. 
-		There are several implementation options for mapping entity classes and subclasses to database tables:<itemizedlist>
-        <listitem>
-           table per class hierarchy
-        </listitem>
+      <para>The iBATIS DataMapper supports the implementation of
+      object-oriented inheritance (subclassing) in your object model. There
+      are several developer options for mapping entity classes and subclasses
+      to database tables:<itemizedlist>
+          <listitem>
+             table per class hierarchy 
+          </listitem>
 
-        <listitem>
-          table per subclass 
-        </listitem>
+          <listitem>
+             table per subclass 
+          </listitem>
 
-        <listitem>
-        table per concrete class
-        </listitem>
+          <listitem>
+             table per concrete class 
+          </listitem>
+        </itemizedlist></para>
 
-      </itemizedlist></para>
+      <para>You can use the most efficient mapping strategies from a SQL and
+      query performance perspective. The Sql result must define one or more
+      columns in your result that will serve to identify which resultMap
+      should be used to map the table row. In most case, you will use one
+      column value to identify which resultMap.<example>
+          <title>One column disciminator usage</title>
 
-        <para>You can use the most efficient mapping strategies from a SQL and query performance perspective.
-		
-		The Sql result must define one/some column(s) in your result that will serve to identify which resultMap should be used to map the table row.
-		In most case, you will use one column value to identify which resultMap.<example>
- <title>One column disciminator usage</title>
-
-<programlisting>
+          <programlisting>
 <emphasis role="comment">// .NET class</emphasis>
 public class Document
 {
@@ -1555,7 +1530,7 @@ public class Newspaper : Document
   }
 }</programlisting>
 
-<programlisting>
+          <programlisting>
 <emphasis role="comment">// Database table document</emphasis>
 CREATE TABLE [Documents] (
     [Document_ID] [int] NOT NULL ,
@@ -1565,7 +1540,8 @@ CREATE TABLE [Documents] (
     [Document_City] [varchar] (32)  NULL
 ) 
 </programlisting>
-<programlisting>
+
+          <programlisting>
 <emphasis role="comment">// Document mapping file</emphasis>
 &lt;resultMap <emphasis role="blue">id="document"</emphasis> class="Document"&gt; 
   &lt;result property="Id" column="Document_ID"/&gt;
@@ -1590,15 +1566,19 @@ from Documents
 order by Document_Type, Document_Id
 &lt;/select&gt; 
 </programlisting>
-        </example>
-		Based on the "Document_Type" column value, iBATIS DataMapper will use the resultMap named "Document" or "Book" or "Newspaper".
-		When you not specify a forumla attribute in the discriminator the comparaison with column value is based on string equivalence.
-
-		If you want a more complex comparaison (discrimination on multiple column, with a formula...), you can use the formula attribute to specify a comparaison method.
-		A formula attribute is a <emphasis role="alias">typeAlias</emphasis> to a class which implements the <emphasis role="blue">IDiscriminatorFormula</emphasis> interface.
-<example>
+        </example>Based on the "Document_Type" column value, iBATIS DataMapper
+      will use the resultMap named "Document" or "Book" or "Newspaper". When
+      you do not specify a formula attribute in the discriminator, the
+      comparison column value is based on its string equivalence. If you want
+      a more complex comparison by discrimination through multiple columns or
+      using a formula, you can use the formula attribute to specify a
+      comparison method. A formula attribute is a <emphasis
+      role="alias">typeAlias</emphasis> to a class which implements the
+      <emphasis role="blue">IDiscriminatorFormula</emphasis> interface.
+      <example>
           <title>IDiscriminatorFormula interface</title>
-		<programlisting>
+
+          <programlisting>
 public interface IDiscriminatorFormula
 {
   /// &lt;summary&gt;
@@ -1610,9 +1590,11 @@ public interface IDiscriminatorFormula
   string GetDiscriminatorValue(IDataReader dataReader);
 }
 </programlisting>
-</example><example>
-          <title>Example of IDiscriminatorFormula interface implemantation</title>
-		<programlisting>
+        </example><example>
+          <title>Example of IDiscriminatorFormula interface
+          implemantation</title>
+
+          <programlisting>
 public class MyFormula : IDiscriminatorFormula
 {
 
@@ -1637,23 +1619,19 @@ public class MyFormula : IDiscriminatorFormula
   }
 
   #endregion
-}
-</programlisting>
-</example>
-<example>
+}</programlisting>
+        </example> <example>
           <title>Complex disciminator usage with formula</title>
-<programlisting>
-&lt;resultMap id="document-custom-formula" class="Document">
-  &lt;result property="Id" column="Document_ID"/&lt;
-  &lt;result property="Title" column="Document_Title"/&lt;
-  &lt;discriminator <emphasis role="blue">formula="MyFormula"</emphasis>  /&lt; 
-  &lt;subMap value="Book" resultMapping="book" /&lt;
-  &lt;subMap value="Newspaper" resultMapping="newspaper" /&lt;
-&lt;/resultMap/&lt;
-</programlisting>
-        </example>
-		</para>
 
+          <programlisting>
+&lt;resultMap id="document-custom-formula" class="Document"&gt;
+  &lt;result property="Id" column="Document_ID"/&gt;
+  &lt;result property="Title" column="Document_Title"/&gt;
+  &lt;discriminator <emphasis role="blue">formula="MyFormula"</emphasis>/&gt;
+  &lt;subMap value="Book" resultMapping="book"/&gt;
+  &lt;subMap value="Newspaper" resultMapping="newspaper"/&gt;
+&lt;/resultMap&gt;</programlisting>
+        </example></para>
     </sect2>
 
     <sect2>
@@ -2088,44 +2066,216 @@ public class MyFormula : IDiscriminatorFormula
 
     <sect2>
       <para>Table 3.3 shows the Supported Types for Parameter Maps and Result
-      Maps for .NET. <table><title>Supported Types for Parameter Maps and
-      Result Maps (.NET only)</title> <tgroup cols="4"> <thead> <row>
-      <entry>CLR Type</entry> <entry>Object/Map Property Mapping</entry>
-      <entry>Result Class/Parameter Class**</entry> <entry>Type
-      Alias**</entry> </row> </thead> <tbody> <row>
-      <entry>System.ArrayList</entry> <entry>Yes</entry> <entry>Yes</entry>
-      <entry>list</entry> </row> <row> <entry>System.Boolean</entry>
-      <entry>Yes</entry> <entry>Yes</entry> <entry>Boolean, bool</entry>
-      </row> <row> <entry>System.Byte</entry> <entry>Yes</entry>
-      <entry>Yes</entry> <entry>Byte, byte</entry> </row> <row>
-      <entry>System.Char</entry> <entry>Yes</entry> <entry>Yes</entry>
-      <entry>Char, char</entry> </row> <row> <entry>System.DateTime</entry>
-      <entry>Yes</entry> <entry>Yes</entry> <entry>dateTime, date</entry>
-      </row> <row> <entry>System.Decimal</entry> <entry>Yes</entry>
-      <entry>Yes</entry> <entry>Decimal, decimal</entry> </row> <row>
-      <entry>System.Double</entry> <entry>Yes</entry> <entry>Yes</entry>
-      <entry>Double, double</entry> </row> <row> <entry>System.Guid</entry>
-      <entry>Yes</entry> <entry>Yes</entry> <entry>guid</entry> </row> <row>
-      <entry>System.Hashtable</entry> <entry>Yes</entry> <entry>Yes</entry>
-      <entry>map, hashmap, hashtable</entry> </row> <row>
-      <entry>System.Int16</entry> <entry>Yes</entry> <entry>Yes</entry>
-      <entry>Int16, short, Short</entry> </row> <row>
-      <entry>System.Int32</entry> <entry>Yes</entry> <entry>Yes</entry>
-      <entry>Int32, int, Int, integer, Integer</entry> </row> <row>
-      <entry>System.Int64</entry> <entry>Yes</entry> <entry>Yes</entry>
-      <entry>Int64, long, Long</entry> </row> <row>
-      <entry>System.SByte</entry> <entry>Yes</entry> <entry>Yes</entry>
-      <entry>SByte, sbyte</entry> </row> <row> <entry>System.Single</entry>
-      <entry>Yes</entry> <entry>Yes</entry> <entry>Float, float, Single,
-      single</entry> </row> <row> <entry>System.String</entry>
-      <entry>Yes</entry> <entry>Yes</entry> <entry>String, string</entry>
-      </row> <row> <entry>System.TimeSpan</entry> <entry>Yes</entry>
-      <entry>Yes</entry> <entry>N/A</entry> </row> <row>
-      <entry>System.UInt16</entry> <entry>Yes</entry> <entry>Yes</entry>
-      <entry>Short, short</entry> </row> <row> <entry>System.UInt32</entry>
-      <entry>Yes</entry> <entry>Yes</entry> <entry>Uint, uint</entry> </row>
-      <row> <entry>System.UInt64</entry> <entry>Yes</entry> <entry>Yes</entry>
-      <entry>Ulong, ulong</entry> </row> </tbody> </tgroup> </table></para>
+      Maps for .NET. <table>
+          <title>Supported Types for Parameter Maps and Result Maps (.NET
+          only)</title>
+
+          <tgroup cols="4">
+            <thead>
+              <row>
+                <entry>CLR Type</entry>
+
+                <entry>Object/Map Property Mapping</entry>
+
+                <entry>Result Class/Parameter Class**</entry>
+
+                <entry>Type Alias**</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>System.ArrayList</entry>
+
+                <entry>Yes</entry>
+
+                <entry>Yes</entry>
+
+                <entry>list</entry>
+              </row>
+
+              <row>
+                <entry>System.Boolean</entry>
+
+                <entry>Yes</entry>
+
+                <entry>Yes</entry>
+
+                <entry>Boolean, bool</entry>
+              </row>
+
+              <row>
+                <entry>System.Byte</entry>
+
+                <entry>Yes</entry>
+
+                <entry>Yes</entry>
+
+                <entry>Byte, byte</entry>
+              </row>
+
+              <row>
+                <entry>System.Char</entry>
+
+                <entry>Yes</entry>
+
+                <entry>Yes</entry>
+
+                <entry>Char, char</entry>
+              </row>
+
+              <row>
+                <entry>System.DateTime</entry>
+
+                <entry>Yes</entry>
+
+                <entry>Yes</entry>
+
+                <entry>dateTime, date</entry>
+              </row>
+
+              <row>
+                <entry>System.Decimal</entry>
+
+                <entry>Yes</entry>
+
+                <entry>Yes</entry>
+
+                <entry>Decimal, decimal</entry>
+              </row>
+
+              <row>
+                <entry>System.Double</entry>
+
+                <entry>Yes</entry>
+
+                <entry>Yes</entry>
+
+                <entry>Double, double</entry>
+              </row>
+
+              <row>
+                <entry>System.Guid</entry>
+
+                <entry>Yes</entry>
+
+                <entry>Yes</entry>
+
+                <entry>guid</entry>
+              </row>
+
+              <row>
+                <entry>System.Hashtable</entry>
+
+                <entry>Yes</entry>
+
+                <entry>Yes</entry>
+
+                <entry>map, hashmap, hashtable</entry>
+              </row>
+
+              <row>
+                <entry>System.Int16</entry>
+
+                <entry>Yes</entry>
+
+                <entry>Yes</entry>
+
+                <entry>Int16, short, Short</entry>
+              </row>
+
+              <row>
+                <entry>System.Int32</entry>
+
+                <entry>Yes</entry>
+
+                <entry>Yes</entry>
+
+                <entry>Int32, int, Int, integer, Integer</entry>
+              </row>
+
+              <row>
+                <entry>System.Int64</entry>
+
+                <entry>Yes</entry>
+
+                <entry>Yes</entry>
+
+                <entry>Int64, long, Long</entry>
+              </row>
+
+              <row>
+                <entry>System.SByte</entry>
+
+                <entry>Yes</entry>
+
+                <entry>Yes</entry>
+
+                <entry>SByte, sbyte</entry>
+              </row>
+
+              <row>
+                <entry>System.Single</entry>
+
+                <entry>Yes</entry>
+
+                <entry>Yes</entry>
+
+                <entry>Float, float, Single, single</entry>
+              </row>
+
+              <row>
+                <entry>System.String</entry>
+
+                <entry>Yes</entry>
+
+                <entry>Yes</entry>
+
+                <entry>String, string</entry>
+              </row>
+
+              <row>
+                <entry>System.TimeSpan</entry>
+
+                <entry>Yes</entry>
+
+                <entry>Yes</entry>
+
+                <entry>N/A</entry>
+              </row>
+
+              <row>
+                <entry>System.UInt16</entry>
+
+                <entry>Yes</entry>
+
+                <entry>Yes</entry>
+
+                <entry>Short, short</entry>
+              </row>
+
+              <row>
+                <entry>System.UInt32</entry>
+
+                <entry>Yes</entry>
+
+                <entry>Yes</entry>
+
+                <entry>Uint, uint</entry>
+              </row>
+
+              <row>
+                <entry>System.UInt64</entry>
+
+                <entry>Yes</entry>
+
+                <entry>Yes</entry>
+
+                <entry>Ulong, ulong</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table></para>
     </sect2>
   </sect1>
 
