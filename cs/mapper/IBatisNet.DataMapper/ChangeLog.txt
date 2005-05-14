@@ -3,8 +3,35 @@ IBatisNet Change Log
 ------------------------------
 1.2.* - XX/XX/XXXX
 ------------------------------
-- Fixed for JIRA 20.
+- Updated dto Castle.DynamicProxy V1.1.0.0
+- Impoved logging JIRA-35
+- Added support to validate SqlMap.config (automatic) and mapping file (manual) via setting tag (<setting validateSqlMap="false"/>)
+- Fixed grammar typo (JIRA-36, JIRA-40, JIRA-41, JIRA-44, JIRA-61)
+- Added support for custom type handler
+- Added typeHandler attribute to result-property and parameter-property tags
+- Added <discriminator> and <subMap> tags for class inheritance support
 - Added nunit category 'NHibernate'
+- Fixed Oracle issues (JIRA-27, JIRA-56, JIRA-54)
+- Fixed JIRA-60 QueryForMap not calling session.CloseConnection() correctly 
+- Fixed JIRA-51 If a <statement> has a "cacheModel" attribute set and cacheModelsEnabled="false" in SqlMap.config, an DataMapperException is thrown 
+- Fixed JIRA-49 Exceptions such as NotSupportedException not handled gracefully in CreateParametersForStatementText() 
+- Fixed JIRA-47/48 providers.config Assumes Types Are In The Same Assembly
+- Fixed JIRA-45 Unable to reference result maps defined in other xml files when useStatementNamespaces is set to true
+- Fixed JIRA-42 Build 1.1.458.0 doesn't automatically map .Net's bool to Sql Server 2000's Bit column type like previous builds did. 
+- Fixed JIRA-38 ParseGlobalProperties raises NullReferenceException if optional "properties" element is missing from sqlmap config file 
+- Fixed JIRA-37 An exception is thrown when a file watch is applied to an embedded resource 
+- Fixed JIRA-34 SqlMapSession's OpenConnection writes log message in "if" statement but not in "else if" statement 
+- Fixed JIRA-33 SqlMapSession's OpenConnection writes log message in "if" statement but not in "else if" statement 
+- Fixed JIRA-32 Improve how CloseConnection() tests for closeable connection 
+- Fixed JIRA-30 bug in when referencing a parameter more than once
+- Fixed JIRA-29 Pound signs not handled correctly 
+- Fixed JIRA-26 Unhandled NullReference parsing non-existent properties. 
+- Fixed JIAR-25 Error applying ResultMap when using 'Guid' in resultClass
+- Fixed JIRA-24 GUID TypeResolving misconfigured
+- Fixed JIRA-23 Add ability to preserve newlines within statement bodies. 
+- Fixed JIRA-22 statements containing undefined global properties silently fail 
+- Fixed JIRA-21 Property substitutions do not occur inside <selectKey> statement 
+- Fixed JIRA-20 Type problems when applying parameters.
 
 ------------------------------
 1.1.458 Alpha- 12-jan-2005
