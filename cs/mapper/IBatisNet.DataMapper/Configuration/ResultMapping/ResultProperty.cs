@@ -43,10 +43,14 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 	[XmlRoot("result")]
 	public class ResultProperty
 	{
+		#region Const
+
 		/// <summary>
 		/// 
-		/// </summary>
+		/// </summary>		
 		public const int UNKNOWN_COLUMN_INDEX = -999999;
+
+		#endregion 
 
 		#region Fields
 		[NonSerialized]

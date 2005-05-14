@@ -28,6 +28,7 @@
 
 using System;
 using System.Collections;
+using System.Data;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
@@ -181,7 +182,6 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// </summary>
 		/// <param name="configScope"></param>
 		public void Initialize( ConfigurationScope configScope )
-			//SqlMapper sqlMap, XmlNode node)
 		{
 			try
 			{
@@ -216,6 +216,8 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			{
 				property = (ResultProperty) serializer.Deserialize(new XmlNodeReader(resultNode));
 					
+				configScope.ErrorContext.MoreInfo = "initialize result property :"+property.PropertyName;
+
 				PropertyInfo propertyInfo = null;
 
 				if ( property.PropertyName != "value" && !typeof(IDictionary).IsAssignableFrom(_class) )
@@ -234,6 +236,8 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			XmlNode discriminatorNode = configScope.NodeContext.SelectSingleNode("discriminator");
 			if (discriminatorNode != null)
 			{
+				configScope.ErrorContext.MoreInfo = "initialize discriminator";
+
 				this.Discriminator = (Discriminator) serializer.Deserialize(new XmlNodeReader(discriminatorNode));
 			}
 			#endregion 
@@ -241,8 +245,13 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			#region Load the SubMap Properties
 
 			serializer = new XmlSerializer(typeof(SubMap));
+			if (configScope.NodeContext.SelectNodes("subMap").Count>0 && this.Discriminator==null)
+			{
+				throw new ConfigurationException("The discriminator is null, but somehow a subMap was reached.  This is a bug.");
+			}
 			foreach ( XmlNode resultNode in configScope.NodeContext.SelectNodes("subMap") )
 			{
+				configScope.ErrorContext.MoreInfo = "initialize subMap";
 				subMap = (SubMap) serializer.Deserialize(new XmlNodeReader(resultNode));
 				subMap.ResultMapName = this.SqlMapNameSpace + DomSqlMapBuilder.DOT + subMap.ResultMapName;
 				this.Discriminator.Add( subMap );
@@ -307,6 +316,29 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 					target = dataBaseValue;
 				}
 			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="dataReader"></param>
+		/// <returns></returns>
+		public ResultMap ResolveSubMap(IDataReader dataReader)
+		{
+			 ResultMap subMap = this;
+			if (this.Discriminator != null)
+			{
+				subMap = this.Discriminator.GetSubMap(dataReader);
+				if (subMap == null) 
+				{
+					subMap = this;
+				} 
+				else if (subMap != this) 
+				{
+					subMap = subMap.ResolveSubMap(dataReader);
+				}
+			}
+			return subMap;
 		}
 		#endregion
 	}

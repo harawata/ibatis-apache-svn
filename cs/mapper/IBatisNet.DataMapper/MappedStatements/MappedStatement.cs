@@ -378,21 +378,19 @@ namespace IBatisNet.DataMapper.MappedStatements
 			// If there's an ResultMap, use it
 			if (request.ResultMap != null) 
 			{
-				request.SetResultMap(reader);
-				//ResultMap resultMap = request.ResultMap;
+				ResultMap resultMap = request.GetResultMap(reader);
 
 				if (outObject == null) 
 				{
-					outObject = request.ResultMap.CreateInstanceOfResult();
+					outObject = resultMap.CreateInstanceOfResult();
 				}
 
 				// For each Property in the ResultMap, set the property in the object 
-				foreach(DictionaryEntry entry in request.ResultMap.ColumnsToPropertiesMap)
+				foreach(DictionaryEntry entry in resultMap.ColumnsToPropertiesMap)
 				{
 					ResultProperty property = (ResultProperty)entry.Value;
-					SetObjectProperty(request, request.ResultMap, property, ref outObject, reader);
+					SetObjectProperty(request, resultMap, property, ref outObject, reader);
 				}
-				request.ResetResultmap();
 			} 
 			else // else try to use a ResultClass
 			{

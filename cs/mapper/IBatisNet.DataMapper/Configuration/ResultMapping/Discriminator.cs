@@ -31,6 +31,7 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Data;
 using System.Xml.Serialization;
+using IBatisNet.DataMapper.Scope;
 
 #endregion
 
@@ -92,14 +93,8 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		[XmlIgnore]
 		public IDiscriminatorFormula Formula
 		{
-			get
-			{
-				return _formula;
-			}	
-			set
-			{
-				_formula = value;
-			}	
+			get { return _formula; }	
+			set { _formula = value; }	
 		}
 		#endregion 
 
@@ -120,8 +115,8 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// <summary>
 		/// Initialize the Discriminator
 		/// </summary>
-		/// <param name="sqlMap"></param>
-		public void Initialize(SqlMapper sqlMap)
+		/// <param name="configScope"></param>
+		public void Initialize(ConfigurationScope configScope)
 		{
 			// Set the formula
 			if (_formulaClassName.Length == 0)
@@ -130,7 +125,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			}
 			else
 			{
-				Type formulaType = sqlMap.GetType(_formulaClassName);
+				Type formulaType = configScope.SqlMapper.GetType(_formulaClassName);
 				_formula = Activator.CreateInstance(formulaType) as IDiscriminatorFormula;
 			}
 
@@ -138,7 +133,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			for(int index=0; index<_subMaps.Count; index++)
 			{
 				SubMap subMap = _subMaps[index] as SubMap;
-				_resultMaps.Add(subMap.DiscriminatorValue, sqlMap.GetResultMap( subMap.ResultMapName ) );
+				_resultMaps.Add(subMap.DiscriminatorValue, configScope.SqlMapper.GetResultMap( subMap.ResultMapName ) );
 			}
 		}
 
@@ -156,7 +151,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// </summary>
 		/// <param name="dataReader">A IDataReader which contains result values</param>
 		/// <returns>The find ResultMap</returns>
-		public ResultMap GetResultMap(IDataReader dataReader)
+		public ResultMap GetSubMap(IDataReader dataReader)
 		{
 			// Find the resultmap to use
 			// 1/ Find the value to test

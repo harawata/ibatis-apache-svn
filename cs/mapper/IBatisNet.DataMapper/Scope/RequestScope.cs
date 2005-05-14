@@ -25,13 +25,13 @@
 #endregion
 
 #region Using
-using System;
-using System.Data;
-using System.Collections;
 
+using System.Collections;
+using System.Data;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
 using IBatisNet.DataMapper.Configuration.Statements;
+
 #endregion
 
 namespace IBatisNet.DataMapper.Scope
@@ -46,7 +46,6 @@ namespace IBatisNet.DataMapper.Scope
 		private ErrorContext _errorContext = null;
 		private ParameterMap _parameterMap = null;
 		private ResultMap _resultMap = null;
-		private ResultMap _initialResultMap = null;
 		private PreparedStatement _preparedStatement = null;
 		private Queue _properties = new Queue();
 
@@ -114,30 +113,18 @@ namespace IBatisNet.DataMapper.Scope
 		#endregion
 
 		#region Method
+
+
 		/// <summary>
 		/// Check if the ResultMap is well set, process case of subMap resultMap.
 		/// </summary>
 		/// <param name="dataReader">The current IDataReader</param>
-		public void SetResultMap(IDataReader dataReader)
+		/// <returns>the resultMap to use</returns>
+		public ResultMap GetResultMap(IDataReader dataReader)
 		{
-			_initialResultMap = _resultMap;
-			if (_resultMap.Discriminator != null)
-			{
-				_resultMap = _resultMap.Discriminator.GetResultMap(dataReader);
-				if (_resultMap==null)
-				{
-					_resultMap = _initialResultMap;
-				}
-			}
+			return _resultMap.ResolveSubMap(dataReader);
 		}
 
-		/// <summary>
-		/// Reset the resultMap to his intila value
-		/// </summary>
-		public void ResetResultmap()
-		{
-			_resultMap = _initialResultMap;
-		}
 		#endregion
 	}
 }

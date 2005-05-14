@@ -448,9 +448,9 @@ namespace IBatisNet.DataMapper.Configuration
 					}
 				}
 			}
+			_configScope.ErrorContext.Reset();
 			#endregion 
 
-			_configScope.ErrorContext.Reset();
 
 			#region Resolve "resultMap" attribute on Result Property + initialize Discriminator property 
 
@@ -469,13 +469,14 @@ namespace IBatisNet.DataMapper.Configuration
 				}
 				if (resultMap.Discriminator != null)
 				{
-					resultMap.Discriminator.Initialize(_configScope.SqlMapper);
+					resultMap.Discriminator.Initialize(_configScope);
 				}
 			}
 
+			_configScope.ErrorContext.Reset();
+
 			#endregion
 
-			_configScope.ErrorContext.Reset();
 
 		}
 
