@@ -56,12 +56,15 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		private ArrayList _properties = new ArrayList();
 		// Same list as _properties but without doubled (Test UpdateAccountViaParameterMap2)
 		[NonSerialized]
-		private ArrayList _propertiesList = new ArrayList();		
+		private ArrayList _propertiesList = new ArrayList();
 		//(property Name, property)
 		[NonSerialized]
 		private Hashtable _propertiesMap = new Hashtable(); // Corrected ?? Support Request 1043181, move to HashTable
 		[NonSerialized]
 		private string _extendMap = string.Empty;
+		[NonSerialized]
+		private bool _usePositionalParameters =false;
+
 
 		#endregion
 
@@ -73,13 +76,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		public string Id
 		{
 			get { return _id; }
-			set 
-			{ 
-				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The id attribute is mandatory in a ParameterMap tag.");
-
-				_id = value; 
-			}
+			set { _id = value; }
 		}
 
 
@@ -89,7 +86,18 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		[XmlIgnore]
 		public ArrayList Properties
 		{
-			get { return _properties; }
+			get
+			{
+//				if (_usePositionalParameters) //obdc/oledb
+//				{
+//					return _properties;
+//				}
+//				else 
+//				{
+//					return _propertiesList;
+//				}
+				return _properties;
+			}
 		}
 
 		/// <summary>
@@ -114,11 +122,21 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		#endregion
 
 		#region Constructor (s) / Destructor
+		
 		/// <summary>
 		/// Do not use direclty, only for serialization.
 		/// </summary>
 		public ParameterMap()
+		{}
+
+		/// <summary>
+		/// Default constructor
+		/// </summary>
+		/// <param name="usePositionalParameters"></param>
+		public ParameterMap(bool usePositionalParameters)
 		{
+			_usePositionalParameters = usePositionalParameters;
+
 		}
 		#endregion
 
@@ -130,7 +148,15 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// <returns>A ParameterProperty</returns>
 		public ParameterProperty GetProperty(int index)
 		{
-			return (ParameterProperty)_properties[index];
+			if (_usePositionalParameters) //obdc/oledb
+			{
+				return (ParameterProperty)_properties[index];
+			}
+			else 
+			{
+				return (ParameterProperty)_propertiesList[index];
+			}
+			//return (ParameterProperty)_properties[index];
 		}
 
 		/// <summary>
@@ -325,6 +351,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// <param name="configScope"></param>
 		public void Initialize(ConfigurationScope configScope)
 		{
+			_usePositionalParameters = configScope.DataSource.Provider.UsePositionalParameters;
 			GetProperties( configScope );
 		}
 

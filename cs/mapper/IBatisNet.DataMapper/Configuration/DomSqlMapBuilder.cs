@@ -343,7 +343,8 @@ namespace IBatisNet.DataMapper.Configuration
 					// Use Global Properties if any
 					dataSource.ConnectionString = Resources.ParsePropertyTokens(dataSource.ConnectionString, _configScope.Properties);
 
-					_configScope.SqlMapper.DataSource = dataSource;
+					_configScope.DataSource = dataSource;
+					_configScope.SqlMapper.DataSource = _configScope.DataSource;
 				}
 				else
 				{
@@ -947,7 +948,7 @@ namespace IBatisNet.DataMapper.Configuration
 		{
 			bool isDynamic = false;
 			XmlNode commandTextNode = _configScope.NodeContext;
-			DynamicSql dynamic = new DynamicSql(_configScope.TypeHandlerFactory,  statement);
+			DynamicSql dynamic = new DynamicSql(_configScope.TypeHandlerFactory,  statement, _configScope.DataSource.Provider.UsePositionalParameters );
 			StringBuilder sqlBuffer = new StringBuilder();
 
 			_configScope.ErrorContext.MoreInfo = "process the Sql statement";
@@ -1068,7 +1069,7 @@ namespace IBatisNet.DataMapper.Configuration
 
 				if (sqlText.Parameters.Length > 0)
 				{
-					ParameterMap map = new ParameterMap();
+					ParameterMap map = new ParameterMap(_configScope.DataSource.Provider.UsePositionalParameters);
 					map.Id = statement.Id + "-InLineParameterMap";
 					statement.ParameterMap = map;	
 				

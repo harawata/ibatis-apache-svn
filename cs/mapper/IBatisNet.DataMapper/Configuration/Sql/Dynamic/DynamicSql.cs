@@ -58,6 +58,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 		private IStatement _statement = null ;
 		private InlineParameterMapParser _paramParser = null;
 		private TypeHandlerFactory _typeHandlerFactory = null;
+		private bool _usePositionalParameters = false;
 
 		#endregion
 
@@ -67,10 +68,12 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 		/// </summary>
 		/// <param name="statement">The mapped statement.</param>
 		/// <param name="typeHandlerFactory"></param>
-		internal DynamicSql(TypeHandlerFactory typeHandlerFactory, IStatement statement)
+		/// <param name="usePositionalParameters"></param>
+		internal DynamicSql(TypeHandlerFactory typeHandlerFactory, IStatement statement, bool usePositionalParameters)
 		{
 			_statement = statement;
 			_typeHandlerFactory = typeHandlerFactory;
+			_usePositionalParameters = usePositionalParameters;
 		}
 		#endregion
 
@@ -126,7 +129,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 			ProcessBodyChildren(request, ctx, parameterObject, localChildren);
 
 			// Builds a 'dynamic' ParameterMap
-			ParameterMap map = new ParameterMap();
+			ParameterMap map = new ParameterMap(_usePositionalParameters);
 			map.Id = _statement.Id + "-InlineParameterMap";
 
 			// Adds 'dynamic' ParameterProperty

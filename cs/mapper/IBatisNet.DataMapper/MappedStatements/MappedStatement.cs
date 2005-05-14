@@ -444,7 +444,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		{
 			if (request.ParameterMap != null)
 			{
-				for(int i=0; i<request.ParameterMap.Properties.Count; i++)
+				for(int i=0; i<request.ParameterMap.PropertiesList.Count; i++)
 				{
 					ParameterProperty  mapping = request.ParameterMap.GetProperty(i);
 					if (mapping.Direction == ParameterDirection.Output || 
