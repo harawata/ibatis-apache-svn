@@ -45,7 +45,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		#region Object Query tests
 
 		/// <summary>
-		/// Test use a satement with property subtitution
+		/// Test use a statement with property subtitution
 		/// (JIRA 22)
 		/// </summary>
 		[Test]
@@ -53,6 +53,24 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		{
 			Account account = sqlMap.QueryForObject("SelectWithProperty", null) as Account;
 			AssertAccount1(account);
+		}
+
+		/// <summary>
+		/// Test JIRA 30 (repeating property)
+		/// TODO JIRA 30 repeating property for all providers
+		/// </summary>
+		[Test] 
+		public void TestJIRA30()
+		{
+			Account account = new Account();
+			account.Id = 1;
+			account.FirstName = "Joe";
+			account.LastName = "Dalton";
+			account.EmailAddress = "Joe.Dalton@somewhere.com";
+
+			Account result = sqlMap.QueryForObject("GetAccountWithRepeatingProperty", account) as Account;
+
+			AssertAccount1(result);
 		}
 
 		/// <summary>
