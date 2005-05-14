@@ -1469,27 +1469,58 @@ resultMapping="LineItem.LineItem"
       are several developer options for mapping entity classes and subclasses
       to database tables:<itemizedlist>
           <listitem>
-             table per class hierarchy 
+            table per class hierarchy
           </listitem>
 
           <listitem>
-             table per subclass 
+            table per subclass
           </listitem>
 
           <listitem>
-             table per concrete class 
+            table per concrete class
           </listitem>
         </itemizedlist></para>
 
       <para>You can use the most efficient mapping strategies from a SQL and
-      query performance perspective. The Sql result must define one or more
-      columns in your result that will serve to identify which resultMap
-      should be used to map the table row. In most case, you will use one
-      column value to identify which resultMap.<example>
-          <title>One column disciminator usage</title>
+      query performance perspective when using the inheritance mappings of the
+      DataMapper. To implement an inheritance mapping, the resultMap must
+      define one or more columns in your query's resultset that will serve to
+      identify which resultMap should be used to map each result record/table
+      row to a specific subclass. In many cases, you will use one column value
+      for the DataMapper to use in identifying the proper resultMap and
+      subclass. This column is known as a discriminator.</para>
 
-          <programlisting>
-<emphasis role="comment">// .NET class</emphasis>
+      <para>For example, we have a table defined in a database that contains
+      Document records. There are five table columns used to store Document
+      IDs, Titles, Types, PageNumbers, and Cities. Perhaps this table belongs
+      to a legacy database, and we need to create an application using this
+      table that has a finer-grained domain model that defines a class
+      hierarchy of different types of Documents. Or perhaps we are creating a
+      new application and database and just want to persist the data found in
+      a related set of classes into one table. In either case, the
+      DataMapper's inheritance mapping feature can help.</para>
+
+      <programlisting><emphasis role="comment">// Database table Document</emphasis>
+CREATE TABLE [Documents] (
+    [Document_ID] [int] NOT NULL ,
+    [Document_Title] [varchar] (32) NULL ,
+    [Document_Type] [varchar] (32)  NULL ,
+    [Document_PageNumber] [int] NULL  ,
+    [Document_City] [varchar] (32)  NULL
+)</programlisting>
+
+      <para>To illustrate this, let's take a look at a few example classes
+      shown below that have a relationship through inheritance and whose
+      properties can be persisted into our one Documents table. First, we have
+      a base Document class that has Id and Title properties. Next, we have a
+      Book class that inherits from Document and contains an additional
+      property called PageNumber. Last, we have a Newspaper class that also
+      inherits from Document and contains a City property.</para>
+
+      <para><example>
+          <title>Documents, Books, and Newspapers!</title>
+
+          <programlisting><emphasis role="comment">// C# class</emphasis>
 public class Document
 {
   private int _id = -1;
@@ -1504,7 +1535,7 @@ public class Document
   public string Title
   {
     get { return _title; }
-   set { _title = value; }
+    set { _title = value; }
   }
 }
 
@@ -1529,20 +1560,23 @@ public class Newspaper : Document
     set { _city = value; }
   }
 }</programlisting>
+        </example>Now that we have our classes and database table, we can
+      start working on our mappings. We can create one &lt;select&gt;
+      statement that returns all columns in the table. To help the DataMapper
+      discriminate between the different Document records, we're going to
+      indicate that the Document_Type column holds values that will
+      distinguish one record from another for mapping the results into our
+      class hierarchy.</para>
 
-          <programlisting>
-<emphasis role="comment">// Database table document</emphasis>
-CREATE TABLE [Documents] (
-    [Document_ID] [int] NOT NULL ,
-    [Document_Title] [varchar] (32) NULL ,
-    [Document_Type] [varchar] (32)  NULL ,
-    [Document_PageNumber] [int] NULL  ,
-    [Document_City] [varchar] (32)  NULL
-) 
-</programlisting>
+      <programlisting><emphasis role="comment">// Document mapping file</emphasis>
+&lt;select id="GetAllDocument" resultMap="document"&gt; 
+   select 
+     Document_Id, Document_Title, Document_Type,
+     Document_PageNumber, Document_City
+   from Documents 
+   order by Document_Type, Document_Id
+&lt;/select&gt;
 
-          <programlisting>
-<emphasis role="comment">// Document mapping file</emphasis>
 &lt;resultMap <emphasis role="blue">id="document"</emphasis> class="Document"&gt; 
   &lt;result property="Id" column="Document_ID"/&gt;
   &lt;result property="Title" column="Document_Title"/&gt;
@@ -1551,35 +1585,52 @@ CREATE TABLE [Documents] (
   &lt;subMap value="Newspaper" resultMapping="newspaper"/&gt;</emphasis>
 &lt;/resultMap&gt;
 
-&lt;id="book" class="Book" <emphasis role="blue">extends="document"</emphasis>&gt; 
+&lt;resultMap id="book" class="Book" <emphasis role="blue">extends="document"</emphasis>&gt; 
   &lt;property="PageNumber" column="Document_PageNumber"/&gt;
 &lt;/resultMap&gt;
 
-&lt;id="newspaper" class="Newspaper"  <emphasis role="blue">extends="document"</emphasis>&gt; 
+&lt;resultMap id="newspaper" class="Newspaper"  <emphasis role="blue">extends="document"</emphasis>&gt; 
   &lt;property="City" column="Document_City"/&gt;
-&lt;/resultMap&gt;
+&lt;/resultMap&gt;</programlisting>
 
-&lt;select id="GetAllDocument" resultMap="document"&gt; 
-select 
-  *
-from Documents 
-order by Document_Type, Document_Id
-&lt;/select&gt; 
-</programlisting>
-        </example>Based on the "Document_Type" column value, iBATIS DataMapper
-      will use the resultMap named "Document" or "Book" or "Newspaper". When
-      you do not specify a formula attribute in the discriminator, the
-      comparison column value is based on its string equivalence. If you want
-      a more complex comparison by discrimination through multiple columns or
-      using a formula, you can use the formula attribute to specify a
-      comparison method. A formula attribute is a <emphasis
-      role="alias">typeAlias</emphasis> to a class which implements the
-      <emphasis role="blue">IDiscriminatorFormula</emphasis> interface.
+      <para>The DataMapper compares the data found in the discriminator column
+      to the different &lt;submap&gt; values using the column value's string
+      equivalence. Based on this string value, iBATIS DataMapper will use the
+      resultMap named "Book" or "Newspaper" as defined in the &lt;submap&gt;
+      elements or it will use the default or base resultMap "Document" if
+      neither of the submap values satisfy the comparison. With these
+      resultMaps, we can implement an object-oriented inheritance mapping to
+      our database table.</para>
+
+      <para>If you want a more complex comparison by discrimination through
+      multiple columns or by using custom logic, you can use the formula
+      attribute of the &lt;discriminator&gt; element to specify a comparison
+      method.</para>
+
       <example>
-          <title>IDiscriminatorFormula interface</title>
+        <title>Complex disciminator usage with formula</title>
 
-          <programlisting>
-public interface IDiscriminatorFormula
+        <programlisting>
+&lt;resultMap id="document-custom-formula" class="Document"&gt;
+  &lt;result property="Id" column="Document_ID"/&gt;
+  &lt;result property="Title" column="Document_Title"/&gt;
+  &lt;discriminator <emphasis role="blue">formula="MyFormula"</emphasis>/&gt;
+  &lt;subMap value="Book" resultMapping="book"/&gt;
+  &lt;subMap value="Newspaper" resultMapping="newspaper"/&gt;
+&lt;/resultMap&gt;</programlisting>
+      </example>
+
+      <para>A formula attribute is the <emphasis
+      role="alias">typeAlias</emphasis> of a class that implements the
+      <emphasis role="blue">IDiscriminatorFormula</emphasis> interface. This
+      interface simply furnishes a method for coding custom logic to read the
+      query results and return a string value for the DataMapper to use for
+      its comparison to the resultMap's defined &lt;submap&gt; values.</para>
+
+      <example>
+        <title>IDiscriminatorFormula interface</title>
+
+        <programlisting>public interface IDiscriminatorFormula
 {
   /// &lt;summary&gt;
   /// Calulate the discriminator value
@@ -1588,13 +1639,13 @@ public interface IDiscriminatorFormula
   /// &lt;param name="dataReader"&gt;An IDataReader&lt;/param&gt;
   /// &lt;returns&gt;Return the discriminator value&lt;/returns&gt;
   string GetDiscriminatorValue(IDataReader dataReader);
-}
-</programlisting>
-        </example><example>
-          <title>Example of IDiscriminatorFormula interface
-          implemantation</title>
+}</programlisting>
+      </example>
 
-          <programlisting>
+      <example>
+        <title>Example IDiscriminatorFormula interface implementation</title>
+
+        <programlisting>
 public class MyFormula : IDiscriminatorFormula
 {
 
@@ -1606,7 +1657,7 @@ public class MyFormula : IDiscriminatorFormula
 
     if (type=="Monograph" || type=="Book")
     {
-      return "Book";
+sudo       return "Book";
     }
     else if (type=="Tabloid" || type=="Broadsheet" || type=="Newspaper")
     {
@@ -1620,18 +1671,7 @@ public class MyFormula : IDiscriminatorFormula
 
   #endregion
 }</programlisting>
-        </example> <example>
-          <title>Complex disciminator usage with formula</title>
-
-          <programlisting>
-&lt;resultMap id="document-custom-formula" class="Document"&gt;
-  &lt;result property="Id" column="Document_ID"/&gt;
-  &lt;result property="Title" column="Document_Title"/&gt;
-  &lt;discriminator <emphasis role="blue">formula="MyFormula"</emphasis>/&gt;
-  &lt;subMap value="Book" resultMapping="book"/&gt;
-  &lt;subMap value="Newspaper" resultMapping="newspaper"/&gt;
-&lt;/resultMap&gt;</programlisting>
-        </example></para>
+      </example>
     </sect2>
 
     <sect2>
