@@ -218,6 +218,25 @@ public class BasicResultMap implements ResultMap {
     this.discriminator = discriminator;
   }
 
+  public Discriminator getDiscriminator() {
+    return discriminator;
+  }
+
+  public ResultMap resolveSubMap (RequestScope request, ResultSet rs) throws SQLException {
+    ResultMap subMap = this;
+    if (discriminator != null) {
+      BasicResultMapping mapping = (BasicResultMapping)discriminator.getResultMapping();
+      Object value = getPrimitiveResultMappingValue(rs, mapping);
+      subMap = discriminator.getSubMap(String.valueOf(value));
+      if (subMap == null) {
+        subMap = this;
+      } else if (subMap != this) {
+        subMap = subMap.resolveSubMap(request, rs);
+      }
+    }
+    return subMap;
+  }
+
   /**
    * Setter for a list of the individual ResultMapping objects
    *

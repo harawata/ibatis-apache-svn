@@ -39,6 +39,10 @@ public class Discriminator {
     subMaps.put(discriminatorValue, resultMapName);
   }
 
+  public ResultMap getSubMap(String s) {
+    return (ResultMap) subMaps.get(s);
+  }
+
   public void bindSubMaps() {
     if (subMaps != null) {
       Iterator keys = subMaps.keySet().iterator();
@@ -51,6 +55,5 @@ public class Discriminator {
       }
     }
   }
-
 
 }

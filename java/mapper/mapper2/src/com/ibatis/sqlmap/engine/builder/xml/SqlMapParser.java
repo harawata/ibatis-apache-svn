@@ -10,10 +10,7 @@ import com.ibatis.sqlmap.client.extensions.TypeHandlerCallback;
 import com.ibatis.sqlmap.engine.cache.CacheModel;
 import com.ibatis.sqlmap.engine.mapping.parameter.BasicParameterMap;
 import com.ibatis.sqlmap.engine.mapping.parameter.BasicParameterMapping;
-import com.ibatis.sqlmap.engine.mapping.result.BasicResultMap;
-import com.ibatis.sqlmap.engine.mapping.result.BasicResultMapping;
-import com.ibatis.sqlmap.engine.mapping.result.ResultMapping;
-import com.ibatis.sqlmap.engine.mapping.result.Discriminator;
+import com.ibatis.sqlmap.engine.mapping.result.*;
 import com.ibatis.sqlmap.engine.mapping.statement.*;
 import com.ibatis.sqlmap.engine.type.CustomTypeHandler;
 import com.ibatis.sqlmap.engine.type.TypeHandler;
@@ -23,6 +20,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.StringTokenizer;
+import java.util.Iterator;
 
 public class SqlMapParser extends BaseParser {
 
@@ -52,6 +50,19 @@ public class SqlMapParser extends BaseParser {
       public void process(Node node) throws Exception {
         Properties attributes = NodeletUtils.parseAttributes(node, vars.properties);
         vars.currentNamespace = attributes.getProperty("namespace");
+      }
+    });
+    parser.addNodelet("/sqlMap/end()", new Nodelet() {
+      public void process(Node node) throws Exception {
+        Iterator names = vars.delegate.getResultMapNames();
+        while (names.hasNext()) {
+          String name = (String)names.next();
+          ResultMap rm = vars.delegate.getResultMap(name);
+          Discriminator disc = rm.getDiscriminator();
+          if (disc != null) {
+            disc.bindSubMaps();
+          }
+        }
       }
     });
   }
@@ -416,22 +427,13 @@ public class SqlMapParser extends BaseParser {
         Properties childAttributes = NodeletUtils.parseAttributes(node, vars.properties);
         String value = childAttributes.getProperty("value");
         String resultMap = childAttributes.getProperty("resultMap");
-        vars.discriminator.addSubMap(value, resultMap);
-      }
-    });
-
-    parser.addNodelet("/sqlMap/resultMap/discriminator/end()", new Nodelet() {
-      public void process(Node node) throws Exception {
-        if (vars.discriminator != null) {
-          vars.discriminator.bindSubMaps();
-        }
+        vars.discriminator.addSubMap(value, applyNamespace(resultMap));
       }
     });
 
     parser.addNodelet("/sqlMap/resultMap/discriminator", new Nodelet() {
       public void process(Node node) throws Exception {
         Properties childAttributes = NodeletUtils.parseAttributes(node, vars.properties);
-        String propertyName = childAttributes.getProperty("property");
         String nullValue = childAttributes.getProperty("nullValue");
         String jdbcType = childAttributes.getProperty("jdbcType");
         String javaType = childAttributes.getProperty("javaType");
@@ -441,8 +443,6 @@ public class SqlMapParser extends BaseParser {
 
         callback = vars.typeHandlerFactory.resolveAlias(callback);
         javaType = vars.typeHandlerFactory.resolveAlias(javaType);
-
-        vars.errorCtx.setObjectId(propertyName + " mapping of the " + vars.currentResultMap.getId() + " result map");
 
         TypeHandler handler = null;
         if (callback != null) {
@@ -461,11 +461,10 @@ public class SqlMapParser extends BaseParser {
           }
         } else {
           vars.errorCtx.setMoreInfo("Check the result mapping property type or name.");
-          handler = resolveTypeHandler(vars.client.getDelegate().getTypeHandlerFactory(), vars.currentResultMap.getResultClass(), propertyName, javaType, jdbcType, true);
+          handler = resolveTypeHandler(vars.client.getDelegate().getTypeHandlerFactory(), vars.currentResultMap.getResultClass(), "", javaType, jdbcType, true);
         }
 
         BasicResultMapping mapping = new BasicResultMapping();
-        mapping.setPropertyName(propertyName);
         mapping.setColumnName(columnName);
         mapping.setJdbcTypeName(jdbcType);
         mapping.setTypeHandler(handler);

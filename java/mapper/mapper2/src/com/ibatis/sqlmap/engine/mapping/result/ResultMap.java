@@ -80,4 +80,7 @@ public interface ResultMap {
    */
   public Object getUniqueKey(Object[] values);
 
+  public ResultMap resolveSubMap (RequestScope request, ResultSet rs) throws SQLException;
+
+  public Discriminator getDiscriminator();
 }

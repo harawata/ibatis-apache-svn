@@ -360,8 +360,8 @@ public class SqlExecutor {
         // Get Results
         int resultsFetched = 0;
         while ((maxResults == SqlExecutor.NO_MAXIMUM_RESULTS || resultsFetched < maxResults) && rs.next()) {
-          Object[] columnValues = resultMap.getResults(request, rs);
-          callback.handleResultObject(request, columnValues);
+          Object[] columnValues = resultMap.resolveSubMap(request, rs).getResults(request, rs);
+          callback.handleResultObject(request, columnValues, rs);
           resultsFetched++;
         }
       }

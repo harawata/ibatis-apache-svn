@@ -26,6 +26,8 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.StringWriter;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Class to manager row handler access
@@ -55,10 +57,10 @@ public class RowHandlerCallback {
    * @param request - the request scope
    * @param results - the result data
    */
-  public void handleResultObject(RequestScope request, Object[] results) {
+  public void handleResultObject(RequestScope request, Object[] results, ResultSet rs) throws SQLException {
     Object object;
 
-    object = resultMap.setResultObjectValues(request, resultObject, results);
+    object = resultMap.resolveSubMap(request, rs).setResultObjectValues(request, resultObject, results);
 
     if (object != ResultMap.NO_VALUE) {
       //  XML Only special processing. (converts elements to string for easy insertion).

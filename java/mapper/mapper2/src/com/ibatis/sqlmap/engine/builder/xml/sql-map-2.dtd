@@ -58,8 +58,7 @@ typeHandler CDATA #IMPLIED
 >
 <!ELEMENT discriminator (subMap+)>
 <!ATTLIST discriminator
-property CDATA #REQUIRED
-javaType CDATA #IMPLIED
+javaType CDATA #REQUIRED
 column CDATA #IMPLIED
 columnIndex CDATA #IMPLIED
 jdbcType CDATA #IMPLIED
