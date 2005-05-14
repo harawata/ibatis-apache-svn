@@ -80,8 +80,11 @@ public class SqlExecutor {
       request.getParameterMap().setParameters(request, ps, parameters);
 
       errorContext.setMoreInfo("Check the statement (update failed).");
-      rows = ps.executeUpdate();
-    } finally {
+
+      ps.execute();
+      rows = ps.getUpdateCount();
+    }
+    finally {
       closeStatement(ps);
     }
 
@@ -173,7 +176,9 @@ public class SqlExecutor {
       request.getParameterMap().setParameters(request, ps, parameters);
 
       errorContext.setMoreInfo("Check the statement (query failed).");
-      rs = ps.executeQuery();
+
+      ps.execute();
+      rs = ps.getResultSet();
 
       errorContext.setMoreInfo("Check the results (failed to retrieve results).");
       handleResults(request, rs, skipResults, maxResults, callback);
@@ -227,7 +232,9 @@ public class SqlExecutor {
       parameterMap.setParameters(request, cs, parameters);
 
       errorContext.setMoreInfo("Check the statement (update procedure failed).");
-      rows = cs.executeUpdate();
+
+      cs.execute();
+      rows = cs.getUpdateCount();
 
       errorContext.setMoreInfo("Check the output parameters (retrieval of output parameters failed).");
       retrieveOutputParameters(cs, mappings, parameters);
@@ -276,7 +283,9 @@ public class SqlExecutor {
       parameterMap.setParameters(request, cs, parameters);
 
       errorContext.setMoreInfo("Check the statement (update procedure failed).");
-      rs = cs.executeQuery();
+
+      cs.execute();
+      rs = cs.getResultSet();
 
       errorContext.setMoreInfo("Check the results (failed to retrieve results).");
       handleResults(request, rs, skipResults, maxResults, callback);

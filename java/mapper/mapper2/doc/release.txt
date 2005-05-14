@@ -11,6 +11,8 @@ Build Number: @buildNum@
  o Fixed IBATIS-79 Problem with nested groupBy resultMaps
  o Fixed bug that prevented dynamic tags from being nested inside an iterate tag
  o Fixed bug that will now allow for the $[]$ notation to be used.
+ o Changed SQL executor to always call .execute instead of .executeQuery and .executeUpdate
+ 
 ------------------------------
  2.0.9B - Feb 20, 2004
 ------------------------------
