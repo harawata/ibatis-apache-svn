@@ -13,6 +13,7 @@ import com.ibatis.sqlmap.engine.mapping.parameter.BasicParameterMapping;
 import com.ibatis.sqlmap.engine.mapping.result.BasicResultMap;
 import com.ibatis.sqlmap.engine.mapping.result.BasicResultMapping;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMapping;
+import com.ibatis.sqlmap.engine.mapping.result.Discriminator;
 import com.ibatis.sqlmap.engine.mapping.statement.*;
 import com.ibatis.sqlmap.engine.type.CustomTypeHandler;
 import com.ibatis.sqlmap.engine.type.TypeHandler;
@@ -262,7 +263,6 @@ public class SqlMapParser extends BaseParser {
           throw new NestedRuntimeException("Error setting javaType on parameter mapping.  Cause: " + e);
         }
 
-
         vars.parameterMappingList.add(mapping);
 
       }
@@ -273,6 +273,8 @@ public class SqlMapParser extends BaseParser {
     parser.addNodelet("/sqlMap/resultMap/end()", new Nodelet() {
       public void process(Node node) throws Exception {
         vars.currentResultMap.setResultMappingList(vars.resultMappingList);
+
+        vars.currentResultMap.setDiscriminator(vars.discriminator);
 
         vars.client.getDelegate().addResultMap(vars.currentResultMap);
 
@@ -403,6 +405,85 @@ public class SqlMapParser extends BaseParser {
         }
 
         vars.resultMappingList.add(mapping);
+      }
+    });
+
+    parser.addNodelet("/sqlMap/resultMap/discriminator/subMap", new Nodelet() {
+      public void process(Node node) throws Exception {
+        if (vars.discriminator == null) {
+          throw new NestedRuntimeException ("The discriminator is null, but somehow a subMap was reached.  This is a bug.");
+        }
+        Properties childAttributes = NodeletUtils.parseAttributes(node, vars.properties);
+        String value = childAttributes.getProperty("value");
+        String resultMap = childAttributes.getProperty("resultMap");
+        vars.discriminator.addSubMap(value, resultMap);
+      }
+    });
+
+    parser.addNodelet("/sqlMap/resultMap/discriminator/end()", new Nodelet() {
+      public void process(Node node) throws Exception {
+        if (vars.discriminator != null) {
+          vars.discriminator.bindSubMaps();
+        }
+      }
+    });
+
+    parser.addNodelet("/sqlMap/resultMap/discriminator", new Nodelet() {
+      public void process(Node node) throws Exception {
+        Properties childAttributes = NodeletUtils.parseAttributes(node, vars.properties);
+        String propertyName = childAttributes.getProperty("property");
+        String nullValue = childAttributes.getProperty("nullValue");
+        String jdbcType = childAttributes.getProperty("jdbcType");
+        String javaType = childAttributes.getProperty("javaType");
+        String columnName = childAttributes.getProperty("column");
+        String columnIndex = childAttributes.getProperty("columnIndex");
+        String callback = childAttributes.getProperty("typeHandler");
+
+        callback = vars.typeHandlerFactory.resolveAlias(callback);
+        javaType = vars.typeHandlerFactory.resolveAlias(javaType);
+
+        vars.errorCtx.setObjectId(propertyName + " mapping of the " + vars.currentResultMap.getId() + " result map");
+
+        TypeHandler handler = null;
+        if (callback != null) {
+          vars.errorCtx.setMoreInfo("Check the result mapping typeHandler attribute '" + callback + "' (must be a TypeHandlerCallback implementation).");
+          try {
+            Object impl = Resources.classForName(callback).newInstance();
+            if (impl instanceof TypeHandlerCallback) {
+              handler = new CustomTypeHandler((TypeHandlerCallback) impl);
+            } else if (impl instanceof TypeHandler) {
+              handler = (TypeHandler) impl;
+            } else {
+              throw new NestedRuntimeException ("The class '' is not a valid implementation of TypeHandler or TypeHandlerCallback");
+            }
+          } catch (Exception e) {
+            throw new NestedRuntimeException("Error occurred during custom type handler configuration.  Cause: " + e, e);
+          }
+        } else {
+          vars.errorCtx.setMoreInfo("Check the result mapping property type or name.");
+          handler = resolveTypeHandler(vars.client.getDelegate().getTypeHandlerFactory(), vars.currentResultMap.getResultClass(), propertyName, javaType, jdbcType, true);
+        }
+
+        BasicResultMapping mapping = new BasicResultMapping();
+        mapping.setPropertyName(propertyName);
+        mapping.setColumnName(columnName);
+        mapping.setJdbcTypeName(jdbcType);
+        mapping.setTypeHandler(handler);
+        mapping.setNullValue(nullValue);
+
+        try {
+          if (javaType != null && javaType.length() > 0) {
+            mapping.setJavaType(Class.forName(javaType));
+          }
+        } catch (ClassNotFoundException e) {
+          throw new NestedRuntimeException("Error setting javaType on result mapping.  Cause: " + e);
+        }
+
+        if (columnIndex != null && columnIndex.length() > 0) {
+          mapping.setColumnIndex(Integer.parseInt(columnIndex));
+        }
+
+        vars.discriminator = new Discriminator (vars.delegate, mapping);
       }
     });
   }

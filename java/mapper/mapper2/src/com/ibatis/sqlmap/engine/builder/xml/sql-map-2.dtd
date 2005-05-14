@@ -36,7 +36,7 @@ nullValue CDATA #IMPLIED
 mode (IN | OUT | INOUT) #IMPLIED
 typeHandler CDATA #IMPLIED
 >
-<!ELEMENT resultMap (result+)>
+<!ELEMENT resultMap (result+, discriminator?)>
 <!ATTLIST resultMap
 id CDATA #REQUIRED
 class CDATA #REQUIRED
@@ -55,6 +55,21 @@ nullValue CDATA #IMPLIED
 select CDATA #IMPLIED
 resultMap CDATA #IMPLIED
 typeHandler CDATA #IMPLIED
+>
+<!ELEMENT discriminator (subMap+)>
+<!ATTLIST discriminator
+property CDATA #REQUIRED
+javaType CDATA #IMPLIED
+column CDATA #IMPLIED
+columnIndex CDATA #IMPLIED
+jdbcType CDATA #IMPLIED
+nullValue CDATA #IMPLIED
+typeHandler CDATA #IMPLIED
+>
+<!ELEMENT subMap EMPTY>
+<!ATTLIST subMap
+value CDATA #REQUIRED
+resultMap CDATA #REQUIRED
 >
 <!ELEMENT cacheModel (flushInterval?, flushOnExecute*, property*)+>
 <!ATTLIST cacheModel

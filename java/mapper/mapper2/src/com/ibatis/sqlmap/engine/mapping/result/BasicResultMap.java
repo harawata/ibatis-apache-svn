@@ -59,6 +59,8 @@ public class BasicResultMap implements ResultMap {
 
   private List nestedResultMappings;
 
+  private Discriminator discriminator;
+
   private Set groupByProps;
 
   private String xmlName;
@@ -209,6 +211,13 @@ public class BasicResultMap implements ResultMap {
     }
   }
 
+  public void setDiscriminator (Discriminator discriminator) {
+    if (this.discriminator != null) {
+      throw new SqlMapException ("A discriminator may only be set once per result map.");
+    }
+    this.discriminator = discriminator;
+  }
+
   /**
    * Setter for a list of the individual ResultMapping objects
    *
@@ -277,7 +286,7 @@ public class BasicResultMap implements ResultMap {
       foundData = foundData || columnValues[i] != null;
     }
 
-    request.setRowDataFound (foundData);
+    request.setRowDataFound(foundData);
 
     return columnValues;
   }

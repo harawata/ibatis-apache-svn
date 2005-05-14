@@ -9,6 +9,9 @@ import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
 import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
 import com.ibatis.sqlmap.engine.mapping.parameter.BasicParameterMap;
 import com.ibatis.sqlmap.engine.mapping.result.BasicResultMap;
+import com.ibatis.sqlmap.engine.mapping.result.BasicResultMapping;
+import com.ibatis.sqlmap.engine.mapping.result.ResultMapping;
+import com.ibatis.sqlmap.engine.mapping.result.Discriminator;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
 import com.ibatis.sqlmap.engine.scope.ErrorContext;
 import com.ibatis.sqlmap.engine.type.DomTypeMarker;
@@ -125,6 +128,7 @@ public abstract class BaseParser {
     public List resultMappingList;
     public int resultMappingIndex;
     public Map sqlIncludes = new HashMap();
+    public Discriminator discriminator;
   }
 
 }
