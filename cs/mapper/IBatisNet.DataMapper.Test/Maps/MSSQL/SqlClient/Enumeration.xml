@@ -9,9 +9,9 @@
 	<resultMaps>                                    
 		<resultMap id="enumeration-result"  class="Enumeration" >
 			<result property="Id"           column="Enum_ID"/>
-			<result property="Day"    column="Enum_Day"/>
-			<result property="Color"     column="Enum_Color"/>
-			<result property="Month" column="Enum_Month" nullValue="All"/>
+			<result property="Day"			column="Enum_Day"/>
+			<result property="Color"		column="Enum_Color"/>
+			<result property="Month"		column="Enum_Month" nullValue="All"/>
 		</resultMap>
 	</resultMaps>
 	

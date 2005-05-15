@@ -174,7 +174,8 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// Initilaize the underlying mapping
 		/// </summary>
 		/// <param name="configScope"></param>
-		public void SetMapping(ConfigurationScope configScope)
+		/// <param name="resultClass"></param>
+		public void SetMapping(ConfigurationScope configScope, Type resultClass)
 		{
 			configScope.ErrorContext.MoreInfo = "Initialize discriminator mapping";
 			_mapping = new ResultProperty();
@@ -185,7 +186,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			_mapping.DbType = _dbType;
 			_mapping.NullValue = _nullValue;
 
-			_mapping.Initialize( configScope, null );
+			_mapping.Initialize( configScope, resultClass );
 		}
 
 		/// <summary>

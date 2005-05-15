@@ -93,7 +93,8 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		/// <param name="mapping">The mapping between data parameter and object property.</param>
 		/// <param name="dataParameter"></param>
 		/// <param name="parameterValue">The value to be set</param>
-		public virtual void SetParameter(ParameterProperty mapping, IDataParameter dataParameter, object parameterValue)
+		/// <param name="dbType">Data base type</param>
+		public virtual void SetParameter(ParameterProperty mapping, IDataParameter dataParameter, object parameterValue, string dbType)
 		{
 			if (parameterValue!=null)
 			{

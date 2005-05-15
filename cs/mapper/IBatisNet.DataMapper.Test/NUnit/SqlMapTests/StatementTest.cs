@@ -56,24 +56,6 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		}
 
 		/// <summary>
-		/// Test JIRA 30 (repeating property)
-		/// TODO JIRA 30 repeating property for all providers
-		/// </summary>
-		[Test] 
-		public void TestJIRA30()
-		{
-			Account account = new Account();
-			account.Id = 1;
-			account.FirstName = "Joe";
-			account.LastName = "Dalton";
-			account.EmailAddress = "Joe.Dalton@somewhere.com";
-
-			Account result = sqlMap.QueryForObject("GetAccountWithRepeatingProperty", account) as Account;
-
-			AssertAccount1(result);
-		}
-
-		/// <summary>
 		/// Test ExecuteQueryForObject Via ColumnName
 		/// </summary>
 		[Test]
@@ -858,7 +840,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
 			sqlMap.Insert("InsertAccountViaInlineParameters", account);
 
-			Account testAccount = sqlMap.QueryForObject("GetAccountViaColumnName", 10) as Account;
+			Account testAccount = sqlMap.QueryForObject("GetAccountViaColumnIndex", 10) as Account;
 
 			Assert.IsNotNull(testAccount);
 			Assert.AreEqual(10, testAccount.Id);
@@ -1013,6 +995,8 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Assert.IsTrue(rowNumber == 4);
 		}
 
+
+
 		#endregion
 
 		#region Row delegate
@@ -1069,6 +1053,24 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		#region JIRA Tests
 
 		/// <summary>
+		/// Test JIRA 30 (repeating property)
+		/// TODO JIRA 30 repeating property for all providers
+		/// </summary>
+		[Test] 
+		public void TestJIRA30()
+		{
+			Account account = new Account();
+			account.Id = 1;
+			account.FirstName = "Joe";
+			account.LastName = "Dalton";
+			account.EmailAddress = "Joe.Dalton@somewhere.com";
+
+			Account result = sqlMap.QueryForObject("GetAccountWithRepeatingProperty", account) as Account;
+
+			AssertAccount1(result);
+		}
+
+		/// <summary>
 		/// Test Bit column 
 		/// </summary>
 		[Test]
@@ -1096,6 +1098,35 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		#endregion 
 
 		#region CustomTypeHandler tests
+
+		/// <summary>
+		/// Test CustomTypeHandler 
+		/// </summary>
+		[Test]
+		public void TestExecuteQueryWithCustomTypeHandler() 
+		{
+			IList list = sqlMap.QueryForList("GetAllAccountsViaCustomTypeHandler", null);
+
+			AssertAccount1((Account) list[0]);
+			Assert.AreEqual(5, list.Count);
+			Assert.AreEqual(1, ((Account) list[0]).Id);
+			Assert.AreEqual(2, ((Account) list[1]).Id);
+			Assert.AreEqual(3, ((Account) list[2]).Id);
+			Assert.AreEqual(4, ((Account) list[3]).Id);
+			Assert.AreEqual(5, ((Account) list[4]).Id);
+
+			Assert.IsFalse(((Account) list[0]).CartOption);
+			Assert.IsFalse(((Account) list[1]).CartOption);
+			Assert.IsTrue(((Account) list[2]).CartOption);
+			Assert.IsTrue(((Account) list[3]).CartOption);
+			Assert.IsTrue(((Account) list[4]).CartOption);
+
+			Assert.IsTrue(((Account) list[0]).BannerOption);
+			Assert.IsTrue(((Account) list[1]).BannerOption);
+			Assert.IsFalse(((Account) list[2]).BannerOption);
+			Assert.IsFalse(((Account) list[3]).BannerOption);
+			Assert.IsTrue(((Account) list[4]).BannerOption);
+		}
 
 		/// <summary>
 		/// Test CustomTypeHandler Oui/Non

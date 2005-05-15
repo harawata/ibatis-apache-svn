@@ -116,16 +116,17 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		/// Get a TypeHandler for a type
 		/// </summary>
 		/// <param name="type">the type you want a TypeHandler for</param>
+		/// <param name="dbType">the database type</param>
 		/// <returns>the handler</returns>
-		public ITypeHandler GetTypeHandler(Type type) 
+		public ITypeHandler GetTypeHandler(Type type, string dbType) 
 		{
 			if (type.IsEnum)
 			{
-				return this.GetTypeHandler(typeof(System.Enum), null);
+				return this.GetPrivateTypeHandler(typeof(System.Enum), dbType);
 			}
 			else
 			{
-				return this.GetTypeHandler(type, null);
+				return this.GetPrivateTypeHandler(type, dbType);
 			}
 		}
 
@@ -135,7 +136,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		/// <param name="type">the type</param>
 		/// <param name="dbType">the dbType type</param>
 		/// <returns>the handler</returns>
-		public ITypeHandler GetTypeHandler(Type type, string dbType) 
+		private ITypeHandler GetPrivateTypeHandler(Type type, string dbType) 
 		{
 			HybridDictionary dbTypeHandlerMap = (HybridDictionary) _typeHandlerMap[ type ];
 			ITypeHandler handler = null;
@@ -157,8 +158,6 @@ namespace IBatisNet.DataMapper.TypeHandlers
 
 			}
 			return handler;
-
-			//return GetTypeHandler(type);
 		}
 
 
@@ -215,7 +214,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 			bool result = false;
 			if (type != null) 
 			{
-				ITypeHandler handler = this.GetTypeHandler(type);
+				ITypeHandler handler = this.GetTypeHandler(type, null);
 				if (handler != null) 
 				{
 					result = handler.IsSimpleType();

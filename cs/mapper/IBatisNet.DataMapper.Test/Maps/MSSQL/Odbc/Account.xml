@@ -20,12 +20,18 @@
 		
     </cacheModels>
        
+    <alias>
+		<typeAlias alias="HundredsBool" type="IBatisNet.DataMapper.Test.Domain.HundredsTypeHandlerCallback, IBatisNet.DataMapper.Test"/>
+	</alias>
+	
 	<resultMaps>                                    
 		<resultMap id="account-result"  class="Account" >
 			<result property="Id"           column="Account_ID"/>
 			<result property="FirstName"    column="Account_FirstName"/>
 			<result property="LastName"     column="Account_LastName"/>
 			<result property="EmailAddress" column="Account_Email" nullValue="no_email@provided.com"/>
+			<result property="BannerOption" column="Account_Banner_Option" dbType="Varchar" type="bool"/>
+			<result property="CartOption"	column="Account_Cart_Option" typeHandler="HundredsBool"/>
 		</resultMap>
 		<resultMap id="indexed-account-result" class="Account">
 			<result property="Id"           column="Account_ID"			columnIndex="0"/>
@@ -146,7 +152,9 @@
 			Account_ID,
 			Account_FirstName,
 			Account_LastName,
-			Account_Email
+			Account_Email, 
+			Account_Banner_Option,
+			Account_Cart_Option
 			from Accounts
 			where Account_ID = #value#
 		</select>
@@ -222,7 +230,7 @@
 		</select>
 		
 		<select id="GetAccountViaInlineParameters"
-				resultMap="account-result">
+				resultMap="indexed-account-result">
 			select
 			Account_ID,
 			Account_FirstName,
@@ -263,9 +271,9 @@
 		 <insert id="InsertAccountViaParameterMap"
                     parameterMap="insert-params">
 			insert into Accounts  
-				(Account_ID, Account_FirstName, Account_LastName, Account_Email) 
+				(Account_ID, Account_FirstName, Account_LastName, Account_Email, Account_Banner_Option, Account_Cart_Option) 
 			values 
-				(?, ?, ?, ?)
+				(?, ?, ?, ?, ?, ?)
 		</insert>
 		
 		 <update id="UpdateAccountViaParameterMap"
@@ -314,7 +322,7 @@
 		
 		<!-- Dynamic statements -->
 		<select id="GetAllAccountsViaResultMapWithDynamicElement"
-				resultMap="account-result">
+				resultMap="indexed-account-result">
 			select * from Accounts
 			where Account_Email $value$ '%@%'
 			order by Account_ID
@@ -379,7 +387,7 @@
 
 		<!-- Extends statement -->
 		<select id="GetAllAccounts"
-					resultMap="account-result">
+					resultMap="indexed-account-result">
 			select
 			Account_ID,
 			Account_FirstName,
@@ -390,20 +398,20 @@
 		
 		<select id="GetAllAccountsOrderByName"
 			extends="GetAllAccounts"
-			resultMap="account-result">
+			resultMap="indexed-account-result">
 			order by Account_FirstName
 		</select>
 		
 		<select id="GetOneAccount"
 			extends="GetAllAccounts"
-			resultMap="account-result">
+			resultMap="indexed-account-result">
 			where Account_ID = #value#
 		</select>
 		
 		<select id="GetSomeAccount"
 			extends="GetAllAccounts"
 			parameterClass="Hashtable"
-			resultMap="account-result">
+			resultMap="indexed-account-result">
 			where Account_ID between #lowID# and #hightID#
 		</select>
 
@@ -434,7 +442,7 @@
 		
 		<select id="GetAccountWithRepeatingProperty"
 						parameterClass="Account" 
-						resultMap="account-result">
+						resultMap="indexed-account-result">
 			select
 					Account_ID,
 					Account_FirstName,
@@ -448,6 +456,12 @@
 					Account_ID = #Id#				
 		</select>		
 						
+		<select id="GetAllAccountsViaCustomTypeHandler"
+			resultMap="account-result">
+			select * from Accounts
+			order by Account_ID
+		</select>	
+		
 		<!-- For procedure, the parameters of the parameterMap must in the same order 
 		as for the procedure paramaters-->
 		<procedure id="InsertAccountViaStoreProcedure" parameterMap="insert-params">
@@ -483,6 +497,8 @@
 			<parameter property="FirstName" />
 			<parameter property="LastName" />			
 			<parameter property="EmailAddress" nullValue="no_email@provided.com"/>
+			<parameter property="BannerOption"  dbType="Varchar" type="bool"/>
+			<parameter property="CartOption"	column="Account_Cart_Option" typeHandler="HundredsBool"/>
 		</parameterMap>
 		
 		<parameterMap id="update-params">

@@ -193,7 +193,7 @@ namespace IBatisNet.DataMapper.Commands
 
 				// Fix JIRA 20
 				//parameterCopy.Value = parameterValue;
-				property.TypeHandler.SetParameter(property, parameterCopy, parameterValue);
+				property.TypeHandler.SetParameter(property, parameterCopy, parameterValue, property.DbType);
 
 				
 				#region Logging

@@ -217,14 +217,14 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 				mapping = (ResultProperty) serializer.Deserialize(new XmlNodeReader(resultNode));
 					
 				configScope.ErrorContext.MoreInfo = "initialize result property :"+mapping.PropertyName;
-
-				PropertyInfo propertyInfo = null;
-
-				if ( mapping.PropertyName != "value" && !typeof(IDictionary).IsAssignableFrom(_class) )
-				{
-					propertyInfo = ReflectionInfo.GetInstance(_class).GetSetter( mapping.PropertyName );
-				}
-				mapping.Initialize( configScope, propertyInfo );
+//
+//				PropertyInfo propertyInfo = null;
+//
+//				if ( mapping.PropertyName != "value" && !typeof(IDictionary).IsAssignableFrom(_class) )
+//				{
+//					propertyInfo = ReflectionInfo.GetInstance(_class).GetSetter( mapping.PropertyName );
+//				}
+				mapping.Initialize( configScope, _class );
 
 				this.AddResultPropery( mapping  );
 			}
@@ -240,7 +240,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 
 				this.Discriminator = (Discriminator) serializer.Deserialize(new XmlNodeReader(discriminatorNode));
 
-				this.Discriminator.SetMapping( configScope );
+				this.Discriminator.SetMapping( configScope, _class );
 			}
 			#endregion 
 

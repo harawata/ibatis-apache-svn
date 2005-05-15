@@ -408,7 +408,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 						ResultProperty property = new ResultProperty();
 						property.PropertyName = "value";
 						property.ColumnIndex = 0;
-						property.TypeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(outObject.GetType());
+						property.TypeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(outObject.GetType(), null);
 
 						SetObjectProperty(request, request.ResultMap, property, ref outObject, reader);
 					}
@@ -469,7 +469,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 								{
 									Type propertyType =ObjectProbe.GetPropertyTypeForGetter(result,mapping.PropertyName);
 
-									mapping.TypeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(propertyType);
+									mapping.TypeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(propertyType, null);
 								}
 							}					
 						}
@@ -850,7 +850,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 					if ( (_statement.ResultClass!=null) && 
 						_sqlMap.TypeHandlerFactory.IsSimpleType(_statement.ResultClass) )
 					{
-						ITypeHandler typeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(_statement.ResultClass);
+						ITypeHandler typeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(_statement.ResultClass, null);
 						generatedKey = typeHandler.GetDataBaseValue(generatedKey, _statement.ResultClass);
 					}
 				}
@@ -1065,7 +1065,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 							}
 							Type systemType =((IDataRecord)reader).GetFieldType(columnIndex);
 
-							mapping.TypeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(systemType);
+							mapping.TypeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(systemType, null);
 						}
 					}					
 				}
@@ -1327,7 +1327,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 						// Set TypeHandler
 						Type propertyType = reflectionInfo.GetSetterType(property.PropertyName);
-						property.TypeHandler = typeHandlerFactory.GetTypeHandler( propertyType );
+						property.TypeHandler = typeHandlerFactory.GetTypeHandler( propertyType, null );
 					}
 				} 
 				catch (Exception e) 

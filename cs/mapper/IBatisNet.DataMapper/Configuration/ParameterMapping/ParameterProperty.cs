@@ -280,13 +280,13 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 					if (configScope.TypeHandlerFactory.IsSimpleType(type)) 
 					{
 						// Primitive
-						_typeHandler = configScope.TypeHandlerFactory.GetTypeHandler(type);
+						_typeHandler = configScope.TypeHandlerFactory.GetTypeHandler(type, _dbType);
 					}
 					else
 					{
 						// .NET object
 						type = ObjectProbe.GetPropertyTypeForGetter(type, this.PropertyName);
-						_typeHandler = configScope.TypeHandlerFactory.GetTypeHandler(type);
+						_typeHandler = configScope.TypeHandlerFactory.GetTypeHandler(type, _dbType);
 					}
 				}
 			}
@@ -305,7 +305,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 				_direction = (ParameterDirection)Enum.Parse( typeof(ParameterDirection), _directionAttribute, true );
 			}
 			
-			errorContext.MoreInfo = "Intialize an inline parameter property '" + this.PropertyName + "' .";
+			errorContext.MoreInfo = "Initialize an inline parameter property '" + this.PropertyName + "' .";
 			if (this.CLRType.Length == 0 )  // Unknown
 			{
 				_typeHandler = typeHandlerFactory.GetUnkownTypeHandler();
@@ -317,13 +317,13 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 				if (typeHandlerFactory.IsSimpleType(type)) 
 				{
 					// Primitive
-					_typeHandler = typeHandlerFactory.GetTypeHandler(type);
+					_typeHandler = typeHandlerFactory.GetTypeHandler(type, null);
 				}
 				else
 				{
 					// .NET object
 					type = ObjectProbe.GetPropertyTypeForGetter(type, this.PropertyName);
-					_typeHandler = typeHandlerFactory.GetTypeHandler(type);
+					_typeHandler = typeHandlerFactory.GetTypeHandler(type, null);
 				}
 			}
 		}

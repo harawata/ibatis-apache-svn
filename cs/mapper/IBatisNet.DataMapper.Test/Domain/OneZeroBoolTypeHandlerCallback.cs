@@ -1,5 +1,5 @@
 using System;
-
+using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.TypeHandlers;
 
 namespace IBatisNet.DataMapper.Test.Domain
@@ -26,7 +26,7 @@ namespace IBatisNet.DataMapper.Test.Domain
 			} 
 			else 
 			{
-				throw new Exception("Unexpected value " + nullValue + " found where "+TRUE+" or "+FALSE+" was expected.");
+				throw new DataMapperException("Unexpected value " + nullValue + " found where "+TRUE+" or "+FALSE+" was expected.");
 			}		
 		}
 
@@ -43,7 +43,7 @@ namespace IBatisNet.DataMapper.Test.Domain
 			} 
 			else 
 			{
- 				 throw new Exception("Unexpected value " + i + " found where "+TRUE+" or "+FALSE+" was expected.");
+ 				 throw new DataMapperException("Unexpected value " + i + " found where "+TRUE+" or "+FALSE+" was expected.");
 			}
 		}
 

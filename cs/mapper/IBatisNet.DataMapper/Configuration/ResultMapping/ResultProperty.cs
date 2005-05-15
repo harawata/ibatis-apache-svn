@@ -26,9 +26,11 @@
 
 #region Imports
 using System;
+using System.Collections;
 using System.Reflection;
 using System.Xml.Serialization;
 using IBatisNet.Common.Exceptions;
+using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.DataMapper.Scope;
 using IBatisNet.DataMapper.TypeHandlers;
 using IBatisNet.Common.Utilities;
@@ -58,7 +60,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		[NonSerialized]
 		private string _nullValue = string.Empty;
 		[NonSerialized]
-		private string _property = string.Empty;
+		private string _propertyName = string.Empty;
 		[NonSerialized]
 		private string _columnName = string.Empty;
 		[NonSerialized]
@@ -191,8 +193,8 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		[XmlAttribute("property")]
 		public string PropertyName
 		{
-			get { return _property; }
-			set { _property = value; }
+			get { return _propertyName; }
+			set { _propertyName = value; }
 		}
 
 		/// <summary>
@@ -249,25 +251,18 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// <summary>
 		/// Initialize the PropertyInfo of the result property.
 		/// </summary>
-		/// <param name="propertyInfo">A PropertyInfoot.</param>
+		/// <param name="resultClass"></param>
 		/// <param name="configScope"></param>
-		public void Initialize( ConfigurationScope configScope, PropertyInfo propertyInfo )
+		public void Initialize( ConfigurationScope configScope, Type resultClass )
 		{
-			_propertyInfo = propertyInfo;
+			if ( _propertyName.Length>0 &&_propertyName != "value" && !typeof(IDictionary).IsAssignableFrom(resultClass) )
+			{
+				_propertyInfo = ReflectionInfo.GetInstance(resultClass).GetSetter( _propertyName );
+			}
 
-			if ( propertyInfo != null)
-			{
-				_typeHandler =  configScope.TypeHandlerFactory.GetTypeHandler(propertyInfo.PropertyType);
-			}
-			// If we specify a type, it can overrride 
-			if (this.CLRType.Length>0)
-			{
-				_typeHandler = configScope.TypeHandlerFactory.GetTypeHandler(Resources.TypeForName(this.CLRType));
-			}
-			// If we specify a typeHandler, it can overrride 
 			if (this.CallBackName.Length >0)
 			{
-				configScope.ErrorContext.MoreInfo = "Check the parameter mapping typeHandler attribute '" + this.CallBackName + "' (must be a ITypeHandlerCallback implementation).";
+				configScope.ErrorContext.MoreInfo = "Result property '"+_propertyName+"' check the typeHandler attribute '" + this.CallBackName + "' (must be a ITypeHandlerCallback implementation).";
 				try 
 				{
 					Type type = configScope.SqlMapper.GetType(this.CallBackName);
@@ -279,6 +274,35 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 					throw new ConfigurationException("Error occurred during custom type handler configuration.  Cause: " + e.Message, e);
 				}
 			}
+			else
+			{
+				configScope.ErrorContext.MoreInfo = "Result property '"+_propertyName+"' set the typeHandler attribute.";
+				_typeHandler = configScope.ResolveTypeHandler( resultClass, _propertyName, _clrType, _dbType);
+			}
+//			if ( propertyInfo != null)
+//			{
+//				_typeHandler =  configScope.TypeHandlerFactory.GetTypeHandler(propertyInfo.PropertyType);
+//			}
+//			// If we specify a type, it can overrride 
+//			if (this.CLRType.Length>0)
+//			{
+//				_typeHandler = configScope.TypeHandlerFactory.GetTypeHandler(Resources.TypeForName(this.CLRType));
+//			}
+//			// If we specify a typeHandler, it can overrride 
+//			if (this.CallBackName.Length >0)
+//			{
+//				configScope.ErrorContext.MoreInfo = "Check the parameter mapping typeHandler attribute '" + this.CallBackName + "' (must be a ITypeHandlerCallback implementation).";
+//				try 
+//				{
+//					Type type = configScope.SqlMapper.GetType(this.CallBackName);
+//					ITypeHandlerCallback typeHandlerCallback = (ITypeHandlerCallback) Activator.CreateInstance( type );
+//					_typeHandler = new CustomTypeHandler(typeHandlerCallback);
+//				}
+//				catch (Exception e) 
+//				{
+//					throw new ConfigurationException("Error occurred during custom type handler configuration.  Cause: " + e.Message, e);
+//				}
+//			}
 		}
 
 		/// <summary>
@@ -291,7 +315,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		{
 			_propertyInfo = propertyInfo;
 
-			_typeHandler =  typeHandlerFactory.GetTypeHandler(propertyInfo.PropertyType);
+			_typeHandler =  typeHandlerFactory.GetTypeHandler(propertyInfo.PropertyType, null);
 		}
 		#endregion
 	}

@@ -26,9 +26,14 @@
 
 #region Using
 
+using System;
+using System.Collections;
 using System.Collections.Specialized;
+using System.Configuration;
 using System.Xml;
 using IBatisNet.Common;
+using IBatisNet.Common.Utilities;
+using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.DataMapper.TypeHandlers;
 
 #endregion
@@ -321,5 +326,89 @@ namespace IBatisNet.DataMapper.Scope
 		}
 
 		#endregion 
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="clazz">Type of the ResultMap</param>
+		/// <param name="propertyName">Property name to map</param>
+		/// <param name="clrType"></param>
+		/// <param name="dbType"></param>
+		/// <returns></returns>
+		public ITypeHandler ResolveTypeHandler(Type clazz, string propertyName, string clrType, string dbType)
+		{
+			ITypeHandler handler = null;
+			if (clazz==null)
+			{
+				handler = this.TypeHandlerFactory.GetUnkownTypeHandler();
+			}
+			else if (typeof(IDictionary).IsAssignableFrom(clazz)) 
+			{
+				// IDictionary
+				if (clrType.Length == 0) 
+				{
+					handler = this.TypeHandlerFactory.GetUnkownTypeHandler(); 
+				} 
+				else 
+				{
+					try 
+					{
+						Type type = Resources.TypeForName(clrType);
+						handler = this.TypeHandlerFactory.GetTypeHandler(type, dbType);
+					} 
+					catch (Exception e) 
+					{
+						throw new ConfigurationException("Error. Could not set TypeHandler.  Cause: " + e.Message, e);
+					}
+				}
+			}
+			else if (this.TypeHandlerFactory.GetTypeHandler(clazz, dbType) != null) 
+			{
+				// Primitive
+				handler = this.TypeHandlerFactory.GetTypeHandler(clazz, dbType);
+			}
+			else 
+			{
+				// .NET object
+				if (clrType.Length == 0) 
+				{
+					Type type = ObjectProbe.GetPropertyTypeForGetter(clazz, propertyName);
+					handler = this.TypeHandlerFactory.GetTypeHandler(type, dbType);
+				} 
+				else 
+				{
+					try 
+					{
+						Type type = Resources.TypeForName(clrType);
+						handler = this.TypeHandlerFactory.GetTypeHandler(type, dbType);
+					} 
+					catch (Exception e) 
+					{
+						throw new ConfigurationException("Error. Could not set TypeHandler.  Cause: " + e.Message, e);
+					}
+				}
+			}
+//			if (clrType.Length == 0 )  // Unknown
+//			{
+//				handler = this.TypeHandlerFactory.GetUnkownTypeHandler();
+//			}
+//			else // If we specify a CLR type, use it
+//			{ 
+//				Type type = Resources.TypeForName(clrType);
+//
+//				if (this.TypeHandlerFactory.IsSimpleType(type)) 
+//				{
+//					// Primitive
+//					handler = this.TypeHandlerFactory.GetTypeHandler(type);
+//				}
+//				else
+//				{
+//					// .NET object
+//					type = ObjectProbe.GetPropertyTypeForGetter(type, propertyName);
+//					handler = this.TypeHandlerFactory.GetTypeHandler(type);
+//				}
+//			}
+			return handler;
+		}
 	}
 }
