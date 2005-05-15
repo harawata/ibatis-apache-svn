@@ -375,8 +375,19 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 					
 					if (_session.DataSource.Provider.UsePositionalParameters)
 					{
-						// OLEDB/OBDC doesn't support named parameters !!!
-						sqlParamName = "?";
+						// TODO Refactor?
+						if (_parameterPrefix.Equals(":"))
+						{
+							// ODP.NET uses positional parameters by default
+							// but uses ":0" or ":1" instead of "?"
+							sqlParamName = ":" + index;	
+						}
+						else 
+						{
+							// OLEDB/OBDC doesn't support named parameters !!!
+							sqlParamName = "?";
+						}
+						
 					}
 					else
 					{

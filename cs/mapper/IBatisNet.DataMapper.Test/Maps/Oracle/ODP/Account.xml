@@ -518,6 +518,9 @@
 			</isNotEmpty> 
 		</select>			
 		
+		<!--
+		Using positional parameters with a parameterClass or parameterMap
+		-->
 		<select id="GetAccountWithRepeatingProperty"
 						parameterClass="Account" 
 						resultMap="account-result">
@@ -533,6 +536,23 @@
 					Account_LastName = #LastName# and 
 					Account_ID = #Id#				
 		</select>
+		<!--
+		<select id="GetAccountWithRepeatingProperty"
+						parameterMap="account-repeat-param" 
+						resultMap="account-result">
+			select
+					Account_ID,
+					Account_FirstName,
+					Account_LastName,
+					Account_Email
+			from Accounts
+			where Account_ID = ? and 
+					Account_ID = ? and 
+					Account_FirstName = ? and 
+					Account_LastName = ? and 
+					Account_ID = ?				
+		</select>
+		-->
 				
 		<!-- For procedure, the parameters of the parameterMap must in the same order 
 		as for the procedure paramaters-->
@@ -611,6 +631,14 @@
 			<parameter property="EmailAddress" dbType="VarChar2" size="128" nullValue="no_email@provided.com"/>
 			<parameter property="Id" dbType="Int32"/>
 		</parameterMap>
+		
+		<parameterMap id="account-repeat-param">
+			<parameter property="Id" dbType="Int32"/>
+			<parameter property="Id" dbType="Int32"/>
+			<parameter property="FirstName" dbType="VarChar2" size="32"/>
+			<parameter property="LastName" dbType="VarChar2" size="32"/>			
+			<parameter property="Id" dbType="Int32"/>
+		</parameterMap>		
 		
 	</parameterMaps>
 	

@@ -112,7 +112,8 @@ create table Others
 (
    Other_Int                       int,
    Other_Long                     bigint,
-   Other_Bit		            bit not null default 0
+   Other_Bit		            bit not null default 0,
+   Other_String		              varchar(32) not null   
 ) TYPE=INNODB;
 
 /*==============================================================*/
