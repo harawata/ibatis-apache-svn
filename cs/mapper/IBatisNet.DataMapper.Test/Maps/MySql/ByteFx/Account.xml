@@ -396,7 +396,7 @@
 			update Accounts set
 			Account_FirstName = #FirstName#,
 			Account_LastName = #LastName#,
-			Account_Email = #EmailAddress:VarChar:no_email@provided.com#
+			Account_Email = #EmailAddress:varchar:no_email@provided.com#
 			where
 			Account_ID = #Id#
 		</update>
@@ -406,7 +406,7 @@
 			insert into Accounts 
 				(Account_ID, Account_FirstName, Account_LastName, Account_Email) 
 			values 
-				(#Id#, #FirstName#, #LastName#, #EmailAddress:VarChar:no_email@provided.com#
+				(#Id#, #FirstName#, #LastName#, #EmailAddress:varchar:no_email@provided.com#
 			)
 		</insert>
 
@@ -415,14 +415,14 @@
 			insert into Accounts 
 				(Account_ID, Account_FirstName, Account_LastName, Account_Email) 
 			values 
-				( #Id#, #FirstName#, #LastName#, #EmailAddress:VarChar# )
+				( #Id#, #FirstName#, #LastName#, #EmailAddress:varchar# )
 		</insert>
 
 		<insert id="InsertAccountUknownParameterClass">
 			insert into Accounts 
 				(Account_ID, Account_FirstName, Account_LastName, Account_Email) 
 			values 
-				( #Id#, #FirstName#, #LastName#, #EmailAddress:VarChar# )
+				( #Id#, #FirstName#, #LastName#, #EmailAddress:varchar# )
 		</insert>
   
 		<delete id="DeleteAccount"

@@ -33,7 +33,7 @@
   			insert into Categories  
 				(Category_Name, Category_Guid) 
 			values 
-				(#Name#, #GuidString:Varchar#);
+				(#Name#, #GuidString:varchar#);
 		</insert>
 		
 		<!--  -->
@@ -44,7 +44,7 @@
             insert into Categories  
 				(Category_Name, Category_Guid) 
 			values 
-				(#Name#, #GuidString:Varchar#)
+				(#Name#, #GuidString:varchar#)
 		</insert>
 
 		<!-- Needs to be <insert> vs <statement> for MySql due to selectKey -->		
@@ -114,7 +114,7 @@
 			from Categories  
 			<dynamic prepend="where">
 				<isNotEqual prepend="and" property="Guid" compareProperty="EmptyGuid">
-					Category_Guid=#GuidString:Varchar#
+					Category_Guid=#GuidString:varchar#
 				</isNotEqual>
 			</dynamic>
 		</statement>
@@ -124,17 +124,17 @@
 		<parameterMap id="insert-params">
 			<parameter property="Id" column="Category_Id" dbType="Int" />
 			<parameter property="Name" column="Category_Name"/>
-			<parameter property="GuidString" column="Category_Guid" dbType="Varchar"/>
+			<parameter property="GuidString" column="Category_Guid" dbType="varchar"/>
 		</parameterMap>
 		
 		<parameterMap id="InsertParam">
 			<parameter property="Name" column="Category_Name"/>
-			<parameter property="GuidString" column="Category_Guid" dbType="Varchar"/>
+			<parameter property="GuidString" column="Category_Guid" dbType="varchar"/>
 		</parameterMap>
 		
 		<parameterMap id="insert-null-params">
 			<parameter property="Name" column="Category_Name"/>
-			<parameter property="GuidString" column="Category_Guid" nullValue="00000000-0000-0000-0000-000000000000" dbType="Varchar"/>
+			<parameter property="GuidString" column="Category_Guid" nullValue="00000000-0000-0000-0000-000000000000" dbType="varchar"/>
 		</parameterMap>
 		
 		<parameterMap id="UpdateParam" extends="InsertParam">
@@ -145,7 +145,7 @@
 		
 		<parameterMap id="insert-generate-params">
 			<parameter property="Name" column="Category_Name"/>
-			<parameter property="GuidString" column="Category_Guid" dbType="Varchar"/>
+			<parameter property="GuidString" column="Category_Guid" dbType="varchar"/>
 		</parameterMap>
 		
 		<parameterMap id="update-generate-params" extends="insert-generate-params">
@@ -160,7 +160,7 @@
 		<parameterMap id="select-generate-params">
 			<parameter property="Id" column="Category_Id" />
 			<parameter property="Name" column="Category_Name"/>
-			<parameter property="GuidString" column="Category_Guid" dbType="Varchar"/>
+			<parameter property="GuidString" column="Category_Guid" dbType="varchar"/>
 		</parameterMap>
 		
 	</parameterMaps>

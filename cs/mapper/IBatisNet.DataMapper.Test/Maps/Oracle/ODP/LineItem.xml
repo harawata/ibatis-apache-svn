@@ -15,14 +15,14 @@
 		
 		<resultMap id="LineItem" class="LineItem">
 			<result property="Id"			column="LineItem_ID" dbType="Int32" />
-			<result property="Code"			column="LineItem_Code" dbType="VarChar2" />
+			<result property="Code"			column="LineItem_Code" dbType="Varchar2" />
 			<result property="Quantity"		column="LineItem_Quantity" dbType="Int32" />
 			<result property="Price"		column="LineItem_Price" dbType="Decimal" />
 		</resultMap>
 		
 		<resultMap id="LineItemWithNullReplacement" class="LineItem">
 			<result property="Id"			column="LineItem_ID" dbType="Int32" />
-			<result property="Code"			column="LineItem_Code" dbType="VarChar2" />
+			<result property="Code"			column="LineItem_Code" dbType="Varchar2" />
 			<result property="Quantity"		column="LineItem_Quantity" dbType="Int32" />
 			<result property="Price"		column="LineItem_Price" dbType="Decimal" nullValue="-77.77"/>
 		</resultMap>
@@ -196,7 +196,7 @@
 		<parameterMap id="insert-params">
 			<parameter property="Id" dbType="Int32" />
 			<parameter property="Order.Id" dbType="Int32" />
-			<parameter property="Code" dbType="VarChar2" size="32" />			
+			<parameter property="Code" dbType="Varchar2" size="32" />			
 			<parameter property="Quantity" dbType="Int32" />
 			<parameter property="Price" dbType="Decimal" precision="18" scale="2" nullValue="-99.99"/>
 		</parameterMap>
@@ -204,7 +204,7 @@
 		<parameterMap id="insert-params-picture">
 			<parameter property="Id" dbType="Int32" />
 			<parameter property="Order.Id" dbType="Int32" />
-			<parameter property="Code" dbType="VarChar2" size="32" />			
+			<parameter property="Code" dbType="Varchar2" size="32" />			
 			<parameter property="Quantity" dbType="Int32" />
 			<parameter property="Price" dbType="Decimal" precision="18" scale="2" nullValue="-99.99"/>
 			<parameter property="PictureData" dbType="Blob" size="4000"/>

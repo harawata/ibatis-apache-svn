@@ -31,7 +31,7 @@
 			insert into Categories  
 				(Category_Id, Category_Name, Category_Guid) 
 			values 
-				(#Id:Int32#, #Name#, #GuidString:VarChar2#)
+				(#Id:Int32#, #Name#, #GuidString:Varchar2#)
 		</insert>
 		
 		<!--  
@@ -124,7 +124,7 @@
 			from Categories  
 			<dynamic prepend="where">
 				<isNotEqual prepend="and" property="Guid" compareProperty="EmptyGuid">
-					Category_Guid=#GuidString:VarChar2#
+					Category_Guid=#GuidString:Varchar2#
 				</isNotEqual>
 			</dynamic>
 		</statement>
@@ -134,13 +134,13 @@
 	
 		<parameterMap id="InsertCategoryViaInsertStatementParamMap">
 			<parameter property="Id" column="p_Category_Id" dbType="Int32" />
-			<parameter property="Name" column="p_Category_Name" dbType="VarChar2" size="32"/>
-			<parameter property="GuidString" column="p_Category_Guid" dbType="VarChar2" size="36"/>
+			<parameter property="Name" column="p_Category_Name" dbType="Varchar2" size="32"/>
+			<parameter property="GuidString" column="p_Category_Guid" dbType="Varchar2" size="36"/>
 		</parameterMap>
 
 		<parameterMap id="stored-proc-insert-params">
-			<parameter property="Name" direction="Input" column="p_Category_Name" dbType="VarChar2" size="32"/>
-			<parameter property="GuidString" direction="Input" column="p_Category_Guid" dbType="VarChar2" size="36"/>
+			<parameter property="Name" direction="Input" column="p_Category_Name" dbType="Varchar2" size="32"/>
+			<parameter property="GuidString" direction="Input" column="p_Category_Guid" dbType="Varchar2" size="36"/>
 			<parameter property="Id" direction="Output" column="p_Category_Id" dbType="Int32" />
 		</parameterMap>
 		
@@ -159,19 +159,19 @@
 		-->		
 		<parameterMap id="InsertParam">
 			<parameter property="Id"   column="Category_Id" dbType="Int32" />
-			<parameter property="Name" column="Category_Name" dbType="VarChar2" size="32"/>
-			<parameter property="GuidString" column="Category_Guid" dbType="VarChar2" size="36"/>
+			<parameter property="Name" column="Category_Name" dbType="Varchar2" size="32"/>
+			<parameter property="GuidString" column="Category_Guid" dbType="Varchar2" size="36"/>
 		</parameterMap>
 
 		<parameterMap id="InsertParamWithoutId">
-			<parameter property="Name" column="Category_Name" dbType="VarChar2" size="32"/>
-			<parameter property="GuidString" column="Category_Guid" dbType="VarChar2" size="36"/>
+			<parameter property="Name" column="Category_Name" dbType="Varchar2" size="32"/>
+			<parameter property="GuidString" column="Category_Guid" dbType="Varchar2" size="36"/>
 		</parameterMap>
 		
 		<parameterMap id="insert-null-params">
 			<parameter property="Id"   column="Category_Id" dbType="Int32" />
-			<parameter property="Name" column="Category_Name" dbType="VarChar2" size="32"/>
-			<parameter property="GuidString" column="Category_Guid" nullValue="00000000-0000-0000-0000-000000000000" dbType="VarChar2" size="36"/>
+			<parameter property="Name" column="Category_Name" dbType="Varchar2" size="32"/>
+			<parameter property="GuidString" column="Category_Guid" nullValue="00000000-0000-0000-0000-000000000000" dbType="Varchar2" size="36"/>
 		</parameterMap>
 		
 		<parameterMap id="UpdateParam" extends="InsertParamWithoutId">
@@ -195,12 +195,12 @@
 		<parameterMap id="insert-generate-params">
 			<parameter property="Id"   column="Category_Id" dbType="Int32" />		
 			<parameter property="Name" column="Category_Name"/>
-			<parameter property="GuidString" column="Category_Guid" dbType="VarChar2"/>
+			<parameter property="GuidString" column="Category_Guid" dbType="Varchar2"/>
 		</parameterMap>
 
 		<parameterMap id="insert-generate-params-without-id">
 			<parameter property="Name" column="Category_Name"/>
-			<parameter property="GuidString" column="Category_Guid" dbType="VarChar2"/>
+			<parameter property="GuidString" column="Category_Guid" dbType="Varchar2"/>
 		</parameterMap>
 		
 		<parameterMap id="update-generate-params" extends="insert-generate-params-without-id">

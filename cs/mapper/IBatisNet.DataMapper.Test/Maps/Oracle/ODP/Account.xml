@@ -73,23 +73,23 @@
 	<resultMaps>                                    
 		<resultMap id="account-result"  class="Account" >
 			<result property="Id"           type="Int"		column="Account_ID"			dbType="Int32"/>
-			<result property="FirstName"    type="string"	column="Account_FirstName"	dbType="VarChar2"/>
-			<result property="LastName"     type="string"	column="Account_LastName"	dbType="VarChar2"/>
-			<result property="EmailAddress" type="string"	column="Account_Email"		dbType="VarChar2" nullValue="no_email@provided.com"/>
-			<result property="BannerOption" column="Account_Banner_Option" dbType="Varchar2" typeHandler="OuiNonBool"/>
+			<result property="FirstName"    type="string"	column="Account_FirstName"	dbType="Varchar2"/>
+			<result property="LastName"     type="string"	column="Account_LastName"	dbType="Varchar2"/>
+			<result property="EmailAddress" type="string"	column="Account_Email"		dbType="Varchar2" nullValue="no_email@provided.com"/>
+			<result property="BannerOption" column="Account_Banner_Option" dbType="Varchar2" type="bool"/>
 			<result property="CartOption"	column="Account_Cart_Option" typeHandler="HundredsBool"/>						
 		</resultMap>
 		<resultMap id="indexed-account-result" class="Account">
 			<result property="Id"           type="Int"		column="Account_ID"			dbType="Int32" columnIndex="0"/>
-			<result property="FirstName"    type="string"	column="Account_FirstName"	dbType="VarChar2" columnIndex="1"/>
-			<result property="LastName"     type="string"	column="Account_LastName"	dbType="VarChar2" columnIndex="2"/>
-			<result property="EmailAddress" type="string"	column="Account_Email"		dbType="VarChar2" columnIndex="3"	nullValue="no_email@provided.com"/>
+			<result property="FirstName"    type="string"	column="Account_FirstName"	dbType="Varchar2" columnIndex="1"/>
+			<result property="LastName"     type="string"	column="Account_LastName"	dbType="Varchar2" columnIndex="2"/>
+			<result property="EmailAddress" type="string"	column="Account_Email"		dbType="Varchar2" columnIndex="3"	nullValue="no_email@provided.com"/>
 		</resultMap>
 		<resultMap id="account-result-nullable-email" class="Account">
 			<result property="Id"           type="Int"		column="Account_ID"			dbType="Int32"/>
-			<result property="FirstName"    type="string"	column="Account_FirstName"	dbType="VarChar2"/>
-			<result property="LastName"     type="string"	column="Account_LastName"	dbType="VarChar2"/>
-			<result property="EmailAddress" type="string"	column="Account_Email"		dbType="VarChar2"/>
+			<result property="FirstName"    type="string"	column="Account_FirstName"	dbType="Varchar2"/>
+			<result property="LastName"     type="string"	column="Account_LastName"	dbType="Varchar2"/>
+			<result property="EmailAddress" type="string"	column="Account_Email"		dbType="Varchar2"/>
 		</resultMap>
 		
 		<resultMap id="email-result" class="string">
@@ -448,7 +448,7 @@
 			insert into Accounts 
 				(Account_ID, Account_FirstName, Account_LastName, Account_Email) 
 			values 
-				(#Id:Int32#, #FirstName#, #LastName#, #EmailAddress:VarChar2:no_email@provided.com#
+				(#Id:Int32#, #FirstName#, #LastName#, #EmailAddress:Varchar2:no_email@provided.com#
 			)
 		</insert>
 
@@ -622,39 +622,39 @@
 		</parameterMap>			
 
 		<parameterMap id="swap-params">
-			<parameter property="email1" column="p_First" direction="InputOutput" dbType="VarChar2" size="64"/>
-			<parameter property="email2" column="p_Second" direction="InputOutput" dbType="VarChar2" size="64"/>
+			<parameter property="email1" column="p_First" direction="InputOutput" dbType="Varchar2" size="64"/>
+			<parameter property="email2" column="p_Second" direction="InputOutput" dbType="Varchar2" size="64"/>
 		</parameterMap>
 		
 		<parameterMap id="insert-params">
 			<parameter property="Id" dbType="Int32"/>
-			<parameter property="FirstName" dbType="VarChar2" size="32"/>
-			<parameter property="LastName" dbType="VarChar2" size="32"/>			
-			<parameter property="EmailAddress" dbType="VarChar2" size="128" nullValue="no_email@provided.com"/>
-			<parameter property="BannerOption"  dbType="VarChar2" typeHandler="OuiNonBool"/>
+			<parameter property="FirstName" dbType="Varchar2" size="32"/>
+			<parameter property="LastName" dbType="Varchar2" size="32"/>			
+			<parameter property="EmailAddress" dbType="Varchar2" size="128" nullValue="no_email@provided.com"/>
+			<parameter property="BannerOption"  dbType="Varchar2" type="bool"/>
 			<parameter property="CartOption"	column="Account_Cart_Option" typeHandler="HundredsBool"/>			
 		</parameterMap>
 		
 		<parameterMap id="update-params">
-			<parameter property="FirstName" dbType="VarChar2" size="32"/>
-			<parameter property="LastName" dbType="VarChar2" size="32"/>			
-			<parameter property="EmailAddress" dbType="VarChar2" size="128" nullValue="no_email@provided.com"/>
+			<parameter property="FirstName" dbType="Varchar2" size="32"/>
+			<parameter property="LastName" dbType="Varchar2" size="32"/>			
+			<parameter property="EmailAddress" dbType="Varchar2" size="128" nullValue="no_email@provided.com"/>
 			<parameter property="Id" dbType="Int32"/>
 		</parameterMap>
 		
 		<parameterMap id="update-params2">
 			<parameter property="Id" dbType="Int32"/>
-			<parameter property="FirstName" dbType="VarChar2" size="32" />
-			<parameter property="LastName" dbType="VarChar2" size="32" />			
-			<parameter property="EmailAddress" dbType="VarChar2" size="128" nullValue="no_email@provided.com"/>
+			<parameter property="FirstName" dbType="Varchar2" size="32" />
+			<parameter property="LastName" dbType="Varchar2" size="32" />			
+			<parameter property="EmailAddress" dbType="Varchar2" size="128" nullValue="no_email@provided.com"/>
 			<parameter property="Id" dbType="Int32"/>
 		</parameterMap>
 		
 		<parameterMap id="account-repeat-param">
 			<parameter property="Id" dbType="Int32"/>
 			<parameter property="Id" dbType="Int32"/>
-			<parameter property="FirstName" dbType="VarChar2" size="32"/>
-			<parameter property="LastName" dbType="VarChar2" size="32"/>			
+			<parameter property="FirstName" dbType="Varchar2" size="32"/>
+			<parameter property="LastName" dbType="Varchar2" size="32"/>			
 			<parameter property="Id" dbType="Int32"/>
 		</parameterMap>		
 		

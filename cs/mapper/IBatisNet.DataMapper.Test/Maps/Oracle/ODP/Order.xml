@@ -14,7 +14,7 @@
 	<resultMaps>  
 	
 		<resultMap id="credit-card-result" class="string">
-			<result property="value" column="Order_CardNumber" dbType="VarChar2" />
+			<result property="value" column="Order_CardNumber" dbType="Varchar2" />
 		</resultMap>
 
 		<resultMap id="order-with-lines-result" class="Order" 
@@ -40,49 +40,49 @@
 		<resultMap id="lite-order-map-result" class="Hashtable">
 			<result property="Id"         column="Order_ID"			type="Int"		dbType="Int32"/>
 			<result property="Date"       column="Order_Date"		type="date"		dbType="Date"/>
-			<result property="CardExpiry" column="Order_CardExpiry" type="string"	dbType="VarChar2" />
-			<result property="CardType"   column="Order_CardType"	type="string"	dbType="VarChar2" />
-			<result property="CardNumber" column="Order_CardNumber" type="string"	dbType="VarChar2" />
-			<result property="Street"     column="Order_Street"		type="string"	dbType="VarChar2" />
-			<result property="City"       column="Order_City"		type="string"	dbType="VarChar2" />
-			<result property="Province"   column="Order_Province"	type="string"	dbType="VarChar2" />
-			<result property="PostalCode" column="Order_PostalCode" type="string"	dbType="VarChar2" />
+			<result property="CardExpiry" column="Order_CardExpiry" type="string"	dbType="Varchar2" />
+			<result property="CardType"   column="Order_CardType"	type="string"	dbType="Varchar2" />
+			<result property="CardNumber" column="Order_CardNumber" type="string"	dbType="Varchar2" />
+			<result property="Street"     column="Order_Street"		type="string"	dbType="Varchar2" />
+			<result property="City"       column="Order_City"		type="string"	dbType="Varchar2" />
+			<result property="Province"   column="Order_Province"	type="string"	dbType="Varchar2" />
+			<result property="PostalCode" column="Order_PostalCode" type="string"	dbType="Varchar2" />
 		</resultMap>
   
 		<resultMap id="lite-order-result-by-name" class="Order">
 			<result property="Id"         column="Order_ID" dbType="Int32"/>
 			<result property="Date"       column="Order_Date" dbType="Date" nullValue="01/01/0001 00:00:00"/>
-			<result property="CardExpiry" column="Order_CardExpiry" dbType="VarChar2" />
-			<result property="CardType"   column="Order_CardType" dbType="VarChar2" />
-			<result property="CardNumber" column="Order_CardNumber" dbType="VarChar2" />
-			<result property="Street"     column="Order_Street" dbType="VarChar2" />
-			<result property="City"       column="Order_City" dbType="VarChar2" />
-			<result property="Province"   column="Order_Province" dbType="VarChar2" />
-			<result property="PostalCode" column="Order_PostalCode" dbType="VarChar2" />
+			<result property="CardExpiry" column="Order_CardExpiry" dbType="Varchar2" />
+			<result property="CardType"   column="Order_CardType" dbType="Varchar2" />
+			<result property="CardNumber" column="Order_CardNumber" dbType="Varchar2" />
+			<result property="Street"     column="Order_Street" dbType="Varchar2" />
+			<result property="City"       column="Order_City" dbType="Varchar2" />
+			<result property="Province"   column="Order_Province" dbType="Varchar2" />
+			<result property="PostalCode" column="Order_PostalCode" dbType="Varchar2" />
 		</resultMap>
 		
 		<resultMap id="order-with-types-result" class="Order">
 			<result property="Id"         column="Order_ID"			dbType="Int32"/>
 			<result property="Date"       column="Order_Date"		dbType="Date"/>
-			<result property="CardExpiry" column="Order_CardExpiry" dbType="VarChar2"/>
-			<result property="CardType"   column="Order_CardType"	dbType="VarChar2"/>
-			<result property="CardNumber" column="Order_CardNumber" dbType="VarChar2"/>
-			<result property="Street"     column="Order_Street"		dbType="VarChar2"/>
-			<result property="City"       column="Order_City"		dbType="VarChar2"/>
-			<result property="Province"   column="Order_Province"	dbType="VarChar2"/>
-			<result property="PostalCode" column="Order_PostalCode" dbType="VarChar2"/>
+			<result property="CardExpiry" column="Order_CardExpiry" dbType="Varchar2"/>
+			<result property="CardType"   column="Order_CardType"	dbType="Varchar2"/>
+			<result property="CardNumber" column="Order_CardNumber" dbType="Varchar2"/>
+			<result property="Street"     column="Order_Street"		dbType="Varchar2"/>
+			<result property="City"       column="Order_City"		dbType="Varchar2"/>
+			<result property="Province"   column="Order_Province"	dbType="Varchar2"/>
+			<result property="PostalCode" column="Order_PostalCode" dbType="Varchar2"/>
 		</resultMap>
 		
 		<resultMap id="lite-order-result-by-index" class="Order">
 			<result property="Id"         column="Order_ID"			columnIndex="0" dbType="Int32" />
 			<result property="Date"       column="Order_Date"		columnIndex="1" dbType="Date" />
-			<result property="CardExpiry" column="Order_CardExpiry" columnIndex="2" dbType="VarChar2" />
-			<result property="CardType"   column="Order_CardType"	columnIndex="3" dbType="VarChar2" />
-			<result property="CardNumber" column="Order_CardNumber" columnIndex="4" dbType="VarChar2" />
-			<result property="Street"     column="Order_Street"		columnIndex="5" dbType="VarChar2" />
-			<result property="City"       column="Order_City"		columnIndex="6" dbType="VarChar2" />
-			<result property="Province"   column="Order_Province"	columnIndex="7" dbType="VarChar2" />
-			<result property="PostalCode" column="Order_PostalCode" columnIndex="8" dbType="VarChar2" />
+			<result property="CardExpiry" column="Order_CardExpiry" columnIndex="2" dbType="Varchar2" />
+			<result property="CardType"   column="Order_CardType"	columnIndex="3" dbType="Varchar2" />
+			<result property="CardNumber" column="Order_CardNumber" columnIndex="4" dbType="Varchar2" />
+			<result property="Street"     column="Order_Street"		columnIndex="5" dbType="Varchar2" />
+			<result property="City"       column="Order_City"		columnIndex="6" dbType="Varchar2" />
+			<result property="Province"   column="Order_Province"	columnIndex="7" dbType="Varchar2" />
+			<result property="PostalCode" column="Order_PostalCode" columnIndex="8" dbType="Varchar2" />
 		</resultMap>
 		
 		<resultMap id="order-with-account-result" class="Order">
@@ -323,26 +323,26 @@
 			<parameter property="Id" dbType="Int32"/>
 			<parameter property="Account.Id" dbType="Int32"/>
 			<parameter property="OrderDate" dbType="Date" nullValue="01/01/0001 00:00:00" />
-			<parameter property="CardExpiry" dbType="VarChar2" size="32"/>
-			<parameter property="CardType" dbType="VarChar2" size="32"/>			
-			<parameter property="CardNumber" dbType="VarChar2" size="32"/>
-			<parameter property="Street" dbType="VarChar2" size="32"/>
-			<parameter property="City" dbType="VarChar2" size="32"/>			
-			<parameter property="Province" dbType="VarChar2" size="32"/>
-			<parameter property="PostalCode" dbType="VarChar2" size="32"/>
+			<parameter property="CardExpiry" dbType="Varchar2" size="32"/>
+			<parameter property="CardType" dbType="Varchar2" size="32"/>			
+			<parameter property="CardNumber" dbType="Varchar2" size="32"/>
+			<parameter property="Street" dbType="Varchar2" size="32"/>
+			<parameter property="City" dbType="Varchar2" size="32"/>			
+			<parameter property="Province" dbType="Varchar2" size="32"/>
+			<parameter property="PostalCode" dbType="Varchar2" size="32"/>
 		</parameterMap>
 		
 		<parameterMap id="params-parent"> <!-- 1043181 support request -->
 			<parameter property="Id" dbType="Int32"/>	
 			<parameter property="Account.Id" dbType="Int32"/>
 			<parameter property="OrderDate" dbType="Date" nullValue="01/01/0001 00:00:00" />
-			<parameter property="CardExpiry" dbType="VarChar2" size="32"/>
-			<parameter property="CardType" dbType="VarChar2" size="32"/>			
-			<parameter property="CardNumber" dbType="VarChar2" size="32"/>
-			<parameter property="Street" dbType="VarChar2" size="32"/>
-			<parameter property="City" dbType="VarChar2" size="32"/>			
-			<parameter property="Province" dbType="VarChar2" size="32"/>
-			<parameter property="PostalCode" dbType="VarChar2" size="32"/>		
+			<parameter property="CardExpiry" dbType="Varchar2" size="32"/>
+			<parameter property="CardType" dbType="Varchar2" size="32"/>			
+			<parameter property="CardNumber" dbType="Varchar2" size="32"/>
+			<parameter property="Street" dbType="Varchar2" size="32"/>
+			<parameter property="City" dbType="Varchar2" size="32"/>			
+			<parameter property="Province" dbType="Varchar2" size="32"/>
+			<parameter property="PostalCode" dbType="Varchar2" size="32"/>		
 		</parameterMap>
 		
 		<parameterMap id="insert-extend" extends="params-parent">

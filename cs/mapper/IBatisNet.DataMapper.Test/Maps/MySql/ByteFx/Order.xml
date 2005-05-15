@@ -64,13 +64,13 @@
 		<resultMap id="order-with-types-result" class="Order">
 			<result property="Id"         column="Order_ID"			dbType="Int"/><!-- Int for SqlClient, Obdc; Integer for Oledb -->
 			<result property="Date"       column="Order_Date"		dbType="DateTime "/>
-			<result property="CardExpiry" column="Order_CardExpiry" dbType="VarChar"/>
-			<result property="CardType"   column="Order_CardType"	dbType="VarChar"/>
-			<result property="CardNumber" column="Order_CardNumber" dbType="VarChar"/>
-			<result property="Street"     column="Order_Street"		dbType="VarChar"/>
-			<result property="City"       column="Order_City"		dbType="VarChar"/>
-			<result property="Province"   column="Order_Province"	dbType="VarChar"/>
-			<result property="PostalCode" column="Order_PostalCode" dbType="VarChar"/>
+			<result property="CardExpiry" column="Order_CardExpiry" dbType="varchar"/>
+			<result property="CardType"   column="Order_CardType"	dbType="varchar"/>
+			<result property="CardNumber" column="Order_CardNumber" dbType="varchar"/>
+			<result property="Street"     column="Order_Street"		dbType="varchar"/>
+			<result property="City"       column="Order_City"		dbType="varchar"/>
+			<result property="Province"   column="Order_Province"	dbType="varchar"/>
+			<result property="PostalCode" column="Order_PostalCode" dbType="varchar"/>
 		</resultMap>
 		
 		<resultMap id="lite-order-result-by-index" class="Order">
