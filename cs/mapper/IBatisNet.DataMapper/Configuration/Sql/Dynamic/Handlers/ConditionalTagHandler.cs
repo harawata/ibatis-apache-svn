@@ -207,7 +207,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers
 				} 
 				catch (Exception e) 
 				{
-					throw new DataMapperException("Error parsing date. Cause: " + e, e);
+					throw new DataMapperException("Error parsing date. Cause: " + e.Message, e);
 				}
 			} 
 			else if (type == typeof(Decimal)) 

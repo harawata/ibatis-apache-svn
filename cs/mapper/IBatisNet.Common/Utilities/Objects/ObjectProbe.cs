@@ -282,7 +282,7 @@ namespace IBatisNet.Common.Utilities.Objects
 			} 
 			catch(Exception e)
 			{		
-				throw new ProbeException("Error getting ordinal value from .net object. Cause" + e, e);
+				throw new ProbeException("Error getting ordinal value from .net object. Cause" + e.Message, e);
 			}
 
 			return value;
@@ -390,7 +390,7 @@ namespace IBatisNet.Common.Utilities.Objects
 			} 
 			catch (Exception e) 
 			{
-				throw new ProbeException("Error getting ordinal value from .net object. Cause" + e, e);
+				throw new ProbeException("Error getting ordinal value from .net object. Cause" + e.Message, e);
 			}
 		}
 

@@ -268,7 +268,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 					} 
 					catch (Exception e) 
 					{
-						throw new ConfigurationException("Error. Could not set TypeHandler.  Cause: " + e, e);
+						throw new ConfigurationException("Error. Could not set TypeHandler.  Cause: " + e.Message, e);
 					}
 				}
 			} 

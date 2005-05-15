@@ -6,7 +6,7 @@ IBatisNet Change Log
 - Updated dto Castle.DynamicProxy V1.1.0.0
 - Impoved logging JIRA-35
 - Added support to validate SqlMap.config (automatic) and mapping file (manual) via setting tag (<setting validateSqlMap="false"/>)
-- Fixed grammar typo (JIRA-36, JIRA-40, JIRA-41, JIRA-44, JIRA-61)
+- Fixed grammar typo (JIRA-36, JIRA-40, JIRA-41, JIRA-44, JIRA-61, JIRA-64)
 - Added support for custom type handler
 - Added typeHandler attribute to result-property and parameter-property tags
 - Added <discriminator> and <subMap> tags for class inheritance support

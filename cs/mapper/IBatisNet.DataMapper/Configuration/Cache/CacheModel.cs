@@ -195,7 +195,7 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 			} 
 			catch (Exception e) 
 			{
-				throw new ConfigurationException ("Error configuring controller named '"+_id+". Cause: " + e.Message, e);
+				throw new ConfigurationException ("Error configuring controller named '"+_id+"'. Cause: " + e.Message, e);
 			}
 			finally
 			{
