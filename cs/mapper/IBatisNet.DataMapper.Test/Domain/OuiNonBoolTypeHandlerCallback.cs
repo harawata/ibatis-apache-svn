@@ -5,11 +5,11 @@ using IBatisNet.DataMapper.TypeHandlers;
 namespace IBatisNet.DataMapper.Test.Domain
 {
 	/// <summary>
-	/// YesNoBoolTypeHandlerCallback.
+	/// OuiNonBoolTypeHandlerCallback.
 	/// </summary>
 	/// <remarks>
 	/// Used in account.xml on 
-	///  &lt; result property="BannerOption" type="Bit" dbType="Varchar" column="Account_Banner_Option" /&gt;
+	///  &lt; result property="BannerOption" type="bool" dbType="Varchar" column="Account_Banner_Option" /&gt;
 	/// </remarks>
 	public class OuiNonBoolTypeHandlerCallback : ITypeHandlerCallback
 	{
@@ -44,10 +44,10 @@ namespace IBatisNet.DataMapper.Test.Domain
 			else if (NO.Equals(s)) 
 			{
 				return false;
-		} 
+			} 
 			else 
 			{
- 				 throw new Exception("Unexpected value " + s + " found where "+YES+" or "+NO+" was expected.");
+				throw new Exception("Unexpected value " + s + " found where "+YES+" or "+NO+" was expected.");
 			}
 		}
 
