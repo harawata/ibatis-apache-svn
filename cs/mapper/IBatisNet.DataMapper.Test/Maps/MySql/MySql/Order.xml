@@ -302,7 +302,7 @@
 		
 		<select id="GetAccountJIRA45"
 				parameterClass="int"
-				resultMap="Account.account-result">
+				resultMap="Account.indexed-account-result">
 			select
 			Account_ID,
 			Account_FirstName,

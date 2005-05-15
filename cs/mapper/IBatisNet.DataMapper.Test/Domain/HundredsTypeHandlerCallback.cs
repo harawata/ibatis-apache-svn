@@ -30,18 +30,24 @@ namespace IBatisNet.DataMapper.Test.Domain
 
 		public object GetResult(IResultGetter getter)
 		{
-			int i = (int) getter.Value;
-			if (i == 100) 
-			{
-				return true;
-			} 
-			else if (i == 200) 
-			{
-				return false;
-			} 
+			if (getter.Value != null && getter.Value != System.DBNull.Value) {
+				int i = Convert.ToInt32(getter.Value);
+				if (i == 100) 
+				{
+					return true;
+				} 
+				else if (i == 200) 
+				{
+					return false;
+				} 
+				else 
+				{
+					throw new DataMapperException("Unexpected value " + i + " found where 100 or 200 was expected.");
+				}
+			}
 			else 
 			{
-				throw new DataMapperException("Unexpected value " + i + " found where 100 or 200 was expected.");
+				throw new DataMapperException("Unexpected null value found where 100 or 200 was expected.");
 			}
 		}
 

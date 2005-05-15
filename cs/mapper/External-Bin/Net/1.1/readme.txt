@@ -17,6 +17,6 @@ Log4NET 1.2.0.30714
 ===================
 log4net.dll
 
-Castle dynamic proxy 1.0.3.0
+Castle dynamic proxy 1.1.0.0
 ============================
 Castle.DynamicProxy.dll

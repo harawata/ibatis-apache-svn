@@ -46,6 +46,8 @@ create table Accounts
    Account_FirstName              varchar(32)                    not null,
    Account_LastName               varchar(32)                    not null,
    Account_Email                  varchar(128),
+   Account_Banner_Option		  varchar(255),
+   Account_Cart_Option			  int,
    primary key (Account_Id)
 ) TYPE=INNODB;
 

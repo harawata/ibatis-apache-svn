@@ -55,14 +55,20 @@
 			<property name="Type" value="Weak"/>
 		</cacheModel>
 		
-		<!-- <cacheModel name="account-cache" implementation="LRU" >
+		<!--
+		<cacheModel name="account-cache" implementation="LRU" >
 			<flushInterval hours="24"/>
 			<flushOnExecute statement="UpdateAccountViaInlineParameters"/>
 			<flushOnExecute statement="UpdateAccountViaParameterMap"/>
 			<property name="CacheSize" value="50"/>
-		</cacheModel> -->
+		</cacheModel>
+		-->
 		
     </cacheModels>
+    
+	<alias>
+		<typeAlias alias="HundredsBool" type="IBatisNet.DataMapper.Test.Domain.HundredsTypeHandlerCallback, IBatisNet.DataMapper.Test"/>
+	</alias>         
        
 	<resultMaps>                                    
 		<resultMap id="account-result"  class="Account" >
@@ -70,6 +76,8 @@
 			<result property="FirstName"    type="string"	column="Account_FirstName"	dbType="VarChar2"/>
 			<result property="LastName"     type="string"	column="Account_LastName"	dbType="VarChar2"/>
 			<result property="EmailAddress" type="string"	column="Account_Email"		dbType="VarChar2" nullValue="no_email@provided.com"/>
+			<result property="BannerOption" column="Account_Banner_Option" dbType="Varchar2" typeHandler="OuiNonBool"/>
+			<result property="CartOption"	column="Account_Cart_Option" typeHandler="HundredsBool"/>						
 		</resultMap>
 		<resultMap id="indexed-account-result" class="Account">
 			<result property="Id"           type="Int"		column="Account_ID"			dbType="Int32" columnIndex="0"/>
@@ -207,7 +215,9 @@
 			Account_ID,
 			Account_FirstName,
 			Account_LastName,
-			Account_Email
+			Account_Email,
+			Account_Banner_Option,
+			Account_Cart_Option			
 			from Accounts
 			where Account_ID = #value:Int32#
 		</select>
@@ -283,7 +293,7 @@
 		</select>
 		
 		<select id="GetAccountViaInlineParameters"
-				resultMap="account-result">
+				resultMap="indexed-account-result">
 			select
 			Account_ID,
 			Account_FirstName,
@@ -324,9 +334,9 @@
 		 <insert id="InsertAccountViaParameterMap"
                     parameterMap="insert-params">
 			insert into Accounts  
-				(Account_ID, Account_FirstName, Account_LastName, Account_Email) 
+				(Account_ID, Account_FirstName, Account_LastName, Account_Email, Account_Banner_Option, Account_Cart_Option) 
 			values 
-				(?, ?, ?, ?)
+				(?, ?, ?, ?, ?, ?)
 		</insert>
 		
 		 <update id="UpdateAccountViaParameterMap"
@@ -465,7 +475,7 @@
 		
 		<!-- Extends statement -->
 		<select id="GetAllAccounts"
-					resultMap="account-result">
+					resultMap="indexed-account-result">
 			select
 			Account_ID,
 			Account_FirstName,
@@ -476,20 +486,20 @@
 		
 		<select id="GetAllAccountsOrderByName"
 			extends="GetAllAccounts"
-			resultMap="account-result">
+			resultMap="indexed-account-result">
 			order by Account_FirstName
 		</select>
 		
 		<select id="GetOneAccount"
 			extends="GetAllAccounts"
-			resultMap="account-result">
+			resultMap="indexed-account-result">
 			where Account_ID = #value:Int32#
 		</select>
 		
 		<select id="GetSomeAccount"
 			extends="GetAllAccounts"
 			parameterClass="Hashtable"
-			resultMap="account-result">
+			resultMap="indexed-account-result">
 			where Account_ID between #lowID:Int32# and #hightID:Int32#
 		</select>
 		
@@ -523,7 +533,7 @@
 		-->
 		<select id="GetAccountWithRepeatingProperty"
 						parameterClass="Account" 
-						resultMap="account-result">
+						resultMap="indexed-account-result">
 			select
 					Account_ID,
 					Account_FirstName,
@@ -553,6 +563,12 @@
 					Account_ID = ?				
 		</select>
 		-->
+		
+		<select id="GetAllAccountsViaCustomTypeHandler"
+			resultMap="account-result">
+			select * from Accounts
+			order by Account_ID
+		</select>					
 				
 		<!-- For procedure, the parameters of the parameterMap must in the same order 
 		as for the procedure paramaters-->
@@ -615,6 +631,8 @@
 			<parameter property="FirstName" dbType="VarChar2" size="32"/>
 			<parameter property="LastName" dbType="VarChar2" size="32"/>			
 			<parameter property="EmailAddress" dbType="VarChar2" size="128" nullValue="no_email@provided.com"/>
+			<parameter property="BannerOption"  dbType="VarChar2" typeHandler="OuiNonBool"/>
+			<parameter property="CartOption"	column="Account_Cart_Option" typeHandler="HundredsBool"/>			
 		</parameterMap>
 		
 		<parameterMap id="update-params">
