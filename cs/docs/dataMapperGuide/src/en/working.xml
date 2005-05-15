@@ -1467,38 +1467,36 @@ resultMapping="LineItem.LineItem"
       <para>The iBATIS DataMapper supports the implementation of
       object-oriented inheritance (subclassing) in your object model. There
       are several developer options for mapping entity classes and subclasses
-      to database tables:<itemizedlist>
+      to database results:<itemizedlist>
           <listitem>
-            table per class hierarchy
+             resultMap for each class
           </listitem>
 
           <listitem>
-            table per subclass
+             resultMap with submaps for a class hierarchy
           </listitem>
 
           <listitem>
-            table per concrete class
+             resultMap with extended resultMaps for each subclass
           </listitem>
-        </itemizedlist></para>
-
-      <para>You can use the most efficient mapping strategies from a SQL and
-      query performance perspective when using the inheritance mappings of the
-      DataMapper. To implement an inheritance mapping, the resultMap must
-      define one or more columns in your query's resultset that will serve to
-      identify which resultMap should be used to map each result record/table
-      row to a specific subclass. In many cases, you will use one column value
-      for the DataMapper to use in identifying the proper resultMap and
+        </itemizedlist>You can use the most efficient mapping strategies from
+      a SQL and query performance perspective when using the inheritance
+      mappings of the DataMapper. To implement an inheritance mapping, the
+      resultMap must define one or more columns in your query's resultset that
+      will serve to identify which resultMap should be used to map each result
+      record to a specific subclass. In many cases, you will use one column
+      value for the DataMapper to use in identifying the proper resultMap and
       subclass. This column is known as a discriminator.</para>
 
       <para>For example, we have a table defined in a database that contains
       Document records. There are five table columns used to store Document
       IDs, Titles, Types, PageNumbers, and Cities. Perhaps this table belongs
       to a legacy database, and we need to create an application using this
-      table that has a finer-grained domain model that defines a class
-      hierarchy of different types of Documents. Or perhaps we are creating a
-      new application and database and just want to persist the data found in
-      a related set of classes into one table. In either case, the
-      DataMapper's inheritance mapping feature can help.</para>
+      table with a domain model that defines a class hierarchy of different
+      types of Documents. Or perhaps we are creating a new application and
+      database and just want to persist the data found in a set of related
+      classes into one table. In either case, the DataMapper's inheritance
+      mapping feature can help.</para>
 
       <programlisting><emphasis role="comment">// Database table Document</emphasis>
 CREATE TABLE [Documents] (
@@ -1511,8 +1509,8 @@ CREATE TABLE [Documents] (
 
       <para>To illustrate this, let's take a look at a few example classes
       shown below that have a relationship through inheritance and whose
-      properties can be persisted into our one Documents table. First, we have
-      a base Document class that has Id and Title properties. Next, we have a
+      properties can be persisted into our Documents table. First, we have a
+      base Document class that has Id and Title properties. Next, we have a
       Book class that inherits from Document and contains an additional
       property called PageNumber. Last, we have a Newspaper class that also
       inherits from Document and contains a City property.</para>
@@ -1580,7 +1578,7 @@ public class Newspaper : Document
 &lt;resultMap <emphasis role="blue">id="document"</emphasis> class="Document"&gt; 
   &lt;result property="Id" column="Document_ID"/&gt;
   &lt;result property="Title" column="Document_Title"/&gt;
-  <emphasis role="blue">&lt;discriminator column="Document_Type"/&gt;
+  <emphasis role="blue">&lt;discriminator column="Document_Type" type="string"/&gt;
   &lt;subMap value="Book" resultMapping="book"/&gt;
   &lt;subMap value="Newspaper" resultMapping="newspaper"/&gt;</emphasis>
 &lt;/resultMap&gt;
@@ -1602,73 +1600,71 @@ public class Newspaper : Document
       resultMaps, we can implement an object-oriented inheritance mapping to
       our database table.</para>
 
-      <para>If you want a more complex comparison by discrimination through
-      multiple columns or by using custom logic, you can use the formula
-      attribute of the &lt;discriminator&gt; element to specify a comparison
-      method.</para>
+      <para>If you want to use custom logic, you can use the typeHandler
+      attribute of the &lt;discriminator&gt; element to specify a custom type
+      handler for the discriminator column.</para>
 
       <example>
         <title>Complex disciminator usage with formula</title>
 
-        <programlisting>
-&lt;resultMap id="document-custom-formula" class="Document"&gt;
-  &lt;result property="Id" column="Document_ID"/&gt;
-  &lt;result property="Title" column="Document_Title"/&gt;
-  &lt;discriminator <emphasis role="blue">formula="MyFormula"</emphasis>/&gt;
-  &lt;subMap value="Book" resultMapping="book"/&gt;
-  &lt;subMap value="Newspaper" resultMapping="newspaper"/&gt;
-&lt;/resultMap&gt;</programlisting>
+        <programlisting><emphasis role="blue">&lt;alias&gt;
+  &lt;typeAlias alias="CustomInheritance" 
+  type="IBatisNet.DataMapper.Test.Domain.CustomInheritance, IBatisNet.DataMapper.Test"/&gt;
+&lt;/alias&gt;</emphasis>
+
+&lt;resultMaps&gt;
+  &lt;resultMap id="document-custom-formula" class="Document"&gt;
+    &lt;result property="Id" column="Document_ID"/&gt;
+    &lt;result property="Title" column="Document_Title"/&gt;
+    &lt;discriminator <emphasis role="blue">column="Document_Type" typeHandler="CustomInheritance"</emphasis>/&gt;
+    &lt;subMap value="Book" resultMapping="book"/&gt;
+    &lt;subMap value="Newspaper" resultMapping="newspaper"/&gt;
+  &lt;/resultMap&gt;
+&lt;/resultMaps&gt;</programlisting>
       </example>
 
-      <para>A formula attribute is the <emphasis
-      role="alias">typeAlias</emphasis> of a class that implements the
-      <emphasis role="blue">IDiscriminatorFormula</emphasis> interface. This
-      interface simply furnishes a method for coding custom logic to read the
-      query results and return a string value for the DataMapper to use for
-      its comparison to the resultMap's defined &lt;submap&gt; values.</para>
-
-      <example>
-        <title>IDiscriminatorFormula interface</title>
-
-        <programlisting>public interface IDiscriminatorFormula
-{
-  /// &lt;summary&gt;
-  /// Calulate the discriminator value
-  /// from the IDataReader fields
-  /// &lt;/summary&gt;
-  /// &lt;param name="dataReader"&gt;An IDataReader&lt;/param&gt;
-  /// &lt;returns&gt;Return the discriminator value&lt;/returns&gt;
-  string GetDiscriminatorValue(IDataReader dataReader);
-}</programlisting>
-      </example>
+      <para>The value of the typeHandler attribute specifies which of our
+      classes implements the <emphasis
+      role="blue">ITypeHandlerCallback</emphasis> interface. This interface
+      furnishes a GetResult method for coding custom logic to read the column
+      result value and return a value for the DataMapper to use in its
+      comparison to the resultMap's defined &lt;submap&gt; values.</para>
 
       <example>
         <title>Example IDiscriminatorFormula interface implementation</title>
 
-        <programlisting>
-public class MyFormula : IDiscriminatorFormula
+        <programlisting>public class CustomInheritance : ITypeHandlerCallback
 {
+  #region ITypeHandlerCallback members
 
-  #region IDiscriminatorFormula Members
-
-  public string GetDiscriminatorValue(IDataReader dataReader)
+  public object GetNullValue(string nullValue)
   {
-    string type = dataReader.GetString(dataReader.GetOrdinal("Document_Type"));
-
-    if (type=="Monograph" || type=="Book")
-    {
-sudo       return "Book";
-    }
-    else if (type=="Tabloid" || type=="Broadsheet" || type=="Newspaper")
-    {
-      return "Newspaper";
-    }
-    else
-    {
-       return "Document";
-    }
+    throw new NotImplementedException();
   }
 
+  public object GetResult(IResultGetter getter)
+  {
+   string type = getter.Value.ToString();
+
+   if (type=="Monograph" || type=="Book")
+   {
+     return "Book";
+   }
+   else if (type=="Tabloid" || type=="Broadsheet" || type=="Newspaper")
+   {
+     return "Newspaper";
+   }
+   else
+   {
+     return "Document";
+   }
+
+  }
+
+  public void SetParameter(IParameterSetter setter, object parameter)
+  {
+   throw new NotImplementedException(); 
+  }
   #endregion
 }</programlisting>
       </example>
