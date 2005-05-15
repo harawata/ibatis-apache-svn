@@ -12,6 +12,8 @@ namespace IBatisNet.DataMapper.Test.Domain
 		private string _lastName;
 		private string _emailAddress;
 		private int[] _ids = null;
+		private bool _bannerOption = false;
+		private bool _cartOption = false;
 
 		public int Id
 		{
@@ -71,6 +73,18 @@ namespace IBatisNet.DataMapper.Test.Domain
 			{ 
 				_ids = value; 
 			}
+		}
+
+		public bool BannerOption
+		{
+			get { return _bannerOption; }
+			set { _bannerOption = value; }
+		}
+
+		public bool CartOption
+		{
+			get { return _cartOption; }
+			set { _cartOption = value; }
 		}
 	}
 }

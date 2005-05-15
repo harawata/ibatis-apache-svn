@@ -70,13 +70,17 @@
 			<result property="FirstName"    column="Account_FirstName"/>
 			<result property="LastName"     column="Account_LastName"/>
 			<result property="EmailAddress" column="Account_Email" nullValue="no_email@provided.com"/>
+			<!--<result property="BannerOption" column="Account_Banner_Option" dbType="Varchar" type="boolean"/>
+			<result property="CartOption"	column="Account_Cart_Option" typeHandler="HundredsBool"/>-->
 		</resultMap>
+		
 		<resultMap id="indexed-account-result" class="Account">
 			<result property="Id"           column="Account_ID"			columnIndex="0"/>
 			<result property="FirstName"    column="Account_FirstName"	columnIndex="1"/>
 			<result property="LastName"     column="Account_LastName"	columnIndex="2"/>
 			<result property="EmailAddress" column="Account_Email"		columnIndex="3"	nullValue="no_email@provided.com"/>
 		</resultMap>
+		
 		<resultMap id="account-result-nullable-email" class="Account">
 			<result property="Id"           column="Account_ID"/>
 			<result property="FirstName"    column="Account_FirstName"/>
