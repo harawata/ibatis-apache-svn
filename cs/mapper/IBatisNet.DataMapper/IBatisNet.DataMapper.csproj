@@ -271,17 +271,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Configuration\ResultMapping\DefaultFormula.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Configuration\ResultMapping\Discriminator.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Configuration\ResultMapping\IDiscriminatorFormula.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

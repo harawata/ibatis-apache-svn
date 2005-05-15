@@ -192,13 +192,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		public string PropertyName
 		{
 			get { return _property; }
-			set 
-			{ 
-				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The property attribute is mandatory in a result property.");
-
-				_property = value; 
-			}
+			set { _property = value; }
 		}
 
 		/// <summary>

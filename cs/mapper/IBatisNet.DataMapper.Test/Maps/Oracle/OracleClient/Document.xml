@@ -7,22 +7,22 @@
 		<typeAlias alias="Book" type="IBatisNet.DataMapper.Test.Domain.Book, IBatisNet.DataMapper.Test" />
 		<typeAlias alias="Newspaper" type="IBatisNet.DataMapper.Test.Domain.Newspaper, IBatisNet.DataMapper.Test" />
 		<typeAlias alias="DocumentCollection" type="IBatisNet.DataMapper.Test.Domain.DocumentCollection, IBatisNet.DataMapper.Test" />
-		<typeAlias alias="MyFormula" type="IBatisNet.DataMapper.Test.Domain.MyFormula, IBatisNet.DataMapper.Test" />
+		<typeAlias alias="CustomInheritance" type="IBatisNet.DataMapper.Test.Domain.CustomInheritance, IBatisNet.DataMapper.Test"/>	
 	</alias>
 	
 	<resultMaps>  	
 		<resultMap id="document" class="Document">
 			<result property="Id"			column="Document_ID"/>
 			<result property="Title"			column="Document_Title"/>
-			<discriminator column="Document_Type"  /> 
+			<discriminator column="Document_Type" type="string"/> 
 			<subMap value="Book" resultMapping="book" />
 			<subMap value="Newspaper" resultMapping="newspaper" />
 		</resultMap>
 		
-		<resultMap id="document-custom-formula" class="Document">
+		<resultMap id="document-custom-handler" class="Document">
 			<result property="Id"			column="Document_ID"/>
-			<result property="Title"			column="Document_Title"/>
-			<discriminator formula="MyFormula"  /> 
+			<result property="Title"		column="Document_Title"/>
+			<discriminator column="Document_Type"  typeHandler="CustomInheritance"/> 
 			<subMap value="Book" resultMapping="book" />
 			<subMap value="Newspaper" resultMapping="newspaper" />
 		</resultMap>
@@ -56,13 +56,13 @@
 			order by Document_Type, Document_Id
 		</select>		
 		
-		<statement id="GetAllDocumentWithFormula"
-			resultMap="document-custom-formula">
+		<select id="GetAllDocumentWithCustomTypeHandler"
+			resultMap="document-custom-handler">
 			select
 				*
 			from Documents 
 			order by Document_Type, Document_Id
-		</statement>
+		</select>
 		
   </statements>
 	

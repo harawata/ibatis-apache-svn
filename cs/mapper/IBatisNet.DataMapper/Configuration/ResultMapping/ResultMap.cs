@@ -206,7 +206,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		private void GetChildNode(ConfigurationScope configScope)
 		{
 			XmlSerializer serializer = null;
-			ResultProperty property = null;
+			ResultProperty mapping = null;
 			SubMap subMap = null;
 
 			#region Load the Result Properties
@@ -214,19 +214,19 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			serializer = new XmlSerializer(typeof(ResultProperty));
 			foreach ( XmlNode resultNode in configScope.NodeContext.SelectNodes("result") )
 			{
-				property = (ResultProperty) serializer.Deserialize(new XmlNodeReader(resultNode));
+				mapping = (ResultProperty) serializer.Deserialize(new XmlNodeReader(resultNode));
 					
-				configScope.ErrorContext.MoreInfo = "initialize result property :"+property.PropertyName;
+				configScope.ErrorContext.MoreInfo = "initialize result property :"+mapping.PropertyName;
 
 				PropertyInfo propertyInfo = null;
 
-				if ( property.PropertyName != "value" && !typeof(IDictionary).IsAssignableFrom(_class) )
+				if ( mapping.PropertyName != "value" && !typeof(IDictionary).IsAssignableFrom(_class) )
 				{
-					propertyInfo = ReflectionInfo.GetInstance(_class).GetSetter( property.PropertyName );
+					propertyInfo = ReflectionInfo.GetInstance(_class).GetSetter( mapping.PropertyName );
 				}
-				property.Initialize( configScope, propertyInfo );
+				mapping.Initialize( configScope, propertyInfo );
 
-				this.AddResultPropery( property  );
+				this.AddResultPropery( mapping  );
 			}
 			#endregion 
 
@@ -239,6 +239,8 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 				configScope.ErrorContext.MoreInfo = "initialize discriminator";
 
 				this.Discriminator = (Discriminator) serializer.Deserialize(new XmlNodeReader(discriminatorNode));
+
+				this.Discriminator.SetMapping( configScope );
 			}
 			#endregion 
 
@@ -326,9 +328,12 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		public ResultMap ResolveSubMap(IDataReader dataReader)
 		{
 			 ResultMap subMap = this;
-			if (this.Discriminator != null)
-			{
-				subMap = this.Discriminator.GetSubMap(dataReader);
+			if (_discriminator != null)
+			{	
+				ResultProperty mapping = _discriminator.ResultProperty;
+				object dataBaseValue = mapping.TypeHandler.GetDataBaseValue( mapping, dataReader);
+				subMap = _discriminator.GetSubMap( dataBaseValue.ToString() );
+
 				if (subMap == null) 
 				{
 					subMap = this;

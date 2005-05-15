@@ -29,7 +29,6 @@
 using System;
 using System.Collections;
 using System.Collections.Specialized;
-using System.Data;
 using System.Xml.Serialization;
 using IBatisNet.DataMapper.Scope;
 
@@ -47,9 +46,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 
 		#region Fields
 		[NonSerialized]
-		private string _discriminatorColumn = string.Empty;
-		[NonSerialized]
-		private IDiscriminatorFormula _formula = null;
+		private ResultProperty _mapping = null;
 		/// <summary>
 		/// (discriminatorValue (string), ResultMap)
 		/// </summary>
@@ -60,41 +57,102 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// </summary>
 		[NonSerialized]
 		private ArrayList _subMaps = null;
+
 		[NonSerialized]
-		private string _formulaClassName = string.Empty;//typeof(DefaultFormula).FullName;
+		private string _nullValue = string.Empty;
+		[NonSerialized]
+		private string _columnName = string.Empty;
+		[NonSerialized]
+		private int _columnIndex = ResultProperty.UNKNOWN_COLUMN_INDEX;
+		[NonSerialized]
+		private string _dbType = string.Empty;
+		[NonSerialized]
+		private string _clrType = string.Empty;
+		[NonSerialized]
+		private string _callBackName= string.Empty;
 		#endregion 
 
 		#region Properties
 
 		/// <summary>
-		/// Formula class name, 
-		/// used to calculate the discriminator value to use
+		/// Specify the custom type handlers to used.
 		/// </summary>
-		[XmlAttribute("formula")]
-		public string FormulaClassName
+		/// <remarks>Will be an alias to a class wchic implement ITypeHandlerCallback</remarks>
+		[XmlAttribute("typeHandler")]
+		public string CallBackName
 		{
-			get { return _formulaClassName; }
-			set { _formulaClassName = value; }
+			get { return _callBackName; }
+			set { _callBackName = value; }
+		}
+
+		/// <summary>
+		/// Give an entry in the 'DbType' enumeration
+		/// </summary>
+		/// <example >
+		/// For Sql Server, give an entry of SqlDbType : Bit, Decimal, Money...
+		/// <br/>
+		/// For Oracle, give an OracleType Enumeration : Byte, Int16, Number...
+		/// </example>
+		[XmlAttribute("dbType")]
+		public string DbType
+		{
+			get { return _dbType; }
+			set { _dbType = value; }
+		}
+
+		/// <summary>
+		/// Specify the CLR type of the result.
+		/// </summary>
+		/// <remarks>
+		/// The type attribute is used to explicitly specify the property type of the property to be set.
+		/// Normally this can be derived from a property through reflection, but certain mappings such as
+		/// HashTable cannot provide the type to the framework.
+		/// </remarks>
+		[XmlAttribute("type")]
+		public string CLRType
+		{
+			get { return _clrType; }
+			set { _clrType = value; }
+		}
+
+		/// <summary>
+		/// Column Index
+		/// </summary>
+		[XmlAttribute("columnIndex")]
+		public int ColumnIndex
+		{
+			get { return _columnIndex; }
+			set { _columnIndex = value; }
 		}
 
 		/// <summary>
 		/// Column Name
 		/// </summary>
 		[XmlAttribute("column")]
-		public string DiscriminatorColumn
+		public string ColumnName
 		{
-			get { return _discriminatorColumn; }
-			set { _discriminatorColumn = value; }
+			get { return _columnName; }
+			set { _columnName = value; }
 		}
 
 		/// <summary>
-		/// A formula to calculate the discriminator value to use
+		/// Null value replacement.
+		/// </summary>
+		/// <example>"no_email@provided.com"</example>
+		[XmlAttribute("nullValue")]
+		public string NullValue
+		{
+			get { return _nullValue; }
+			set { _nullValue = value; }
+		}
+
+		/// <summary>
+		/// Th underlying ResultProperty
 		/// </summary>
 		[XmlIgnore]
-		public IDiscriminatorFormula Formula
+		public ResultProperty ResultProperty
 		{
-			get { return _formula; }	
-			set { _formula = value; }	
+			get { return _mapping; }
 		}
 		#endregion 
 
@@ -113,22 +171,29 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		#region Methods
 
 		/// <summary>
+		/// Initilaize the underlying mapping
+		/// </summary>
+		/// <param name="configScope"></param>
+		public void SetMapping(ConfigurationScope configScope)
+		{
+			configScope.ErrorContext.MoreInfo = "Initialize discriminator mapping";
+			_mapping = new ResultProperty();
+			_mapping.ColumnName =  _columnName;
+			_mapping.ColumnIndex = _columnIndex;
+			_mapping.CLRType = _clrType;
+			_mapping.CallBackName = _callBackName;
+			_mapping.DbType = _dbType;
+			_mapping.NullValue = _nullValue;
+
+			_mapping.Initialize( configScope, null );
+		}
+
+		/// <summary>
 		/// Initialize the Discriminator
 		/// </summary>
 		/// <param name="configScope"></param>
 		public void Initialize(ConfigurationScope configScope)
 		{
-			// Set the formula
-			if (_formulaClassName.Length == 0)
-			{
-				_formula = new DefaultFormula(_discriminatorColumn);
-			}
-			else
-			{
-				Type formulaType = configScope.SqlMapper.GetType(_formulaClassName);
-				_formula = Activator.CreateInstance(formulaType) as IDiscriminatorFormula;
-			}
-
 			// Set the ResultMaps
 			for(int index=0; index<_subMaps.Count; index++)
 			{
@@ -149,16 +214,13 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// <summary>
 		/// Find the SubMap to use.
 		/// </summary>
-		/// <param name="dataReader">A IDataReader which contains result values</param>
+		/// <param name="discriminatorValue">the discriminator value</param>
 		/// <returns>The find ResultMap</returns>
-		public ResultMap GetSubMap(IDataReader dataReader)
+		public ResultMap GetSubMap(string discriminatorValue)
 		{
-			// Find the resultmap to use
-			// 1/ Find the value to test
-			// 2/ Find the  resultmap
-			string discriminatorValue = _formula.GetDiscriminatorValue(dataReader);
 			return _resultMaps[discriminatorValue] as ResultMap;
 		}
+
 		#endregion 
 
 

@@ -103,12 +103,12 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		}
 
 		/// <summary>
-		/// Test All document with formula
+		/// Test All document with Custom Type Handler
 		/// </summary>
 		[Test] 
-		public void GetAllDocumentWithFormula() 
+		public void GetAllDocumentWithCustomTypeHandler() 
 		{
-			IList list = sqlMap.QueryForList("GetAllDocumentWithFormula", null);
+			IList list = sqlMap.QueryForList("GetAllDocumentWithCustomTypeHandler", null);
 
 			Assert.AreEqual(6, list.Count);
 			Book book = (Book) list[0];

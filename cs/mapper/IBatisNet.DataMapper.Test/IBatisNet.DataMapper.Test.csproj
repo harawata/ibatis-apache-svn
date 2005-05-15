@@ -208,6 +208,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Domain\CustomInheritance.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Domain\Document.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -234,11 +239,6 @@
                 />
                 <File
                     RelPath = "Domain\LineItemCollection.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Domain\MyFormula.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
