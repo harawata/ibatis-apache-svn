@@ -164,6 +164,7 @@
 		</insert>
 		
   		<!-- JIRA 23 -->
+  		<!-- Fails because Postgres returns that 2 rows have been modified but we deleted 4 ! -->
 		<delete id="DeleteWithComments" >
 			<!-- Delete LineItems -->
 			delete from LineItems where Order_ID = 10;

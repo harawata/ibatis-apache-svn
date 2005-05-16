@@ -25,7 +25,7 @@
 		<statement id="GetDate"
 					parameterClass="Int"
 					resultClass="date" >
-			select '2003-02-15 8:15:00' from Orders where Order_ID  = #value#
+			select '2003-02-15 8:15:00'::timestamp from Orders where Order_ID  = #value#
 		</statement>
 									
 		<statement id="GetDecimal"
@@ -37,7 +37,7 @@
 		<statement id="GetDouble"
 					parameterClass="Int"
 					resultClass="double" >
-			select 99.5 from Orders where Order_ID= #value#
+			select CAST(99.5 as float8) from Orders where Order_ID= #value#
 		</statement>
 
 		<statement id="GetGuid"
@@ -67,7 +67,7 @@
 		<statement id="GetSingle"
 					parameterClass="Int"
 					resultClass="float" >
-			select 92233.5 from Orders where Order_ID = #value#
+			select CAST(92233.5as float4) from Orders where Order_ID = #value#
 		</statement>
 						
 		<statement id="GetString"

@@ -168,6 +168,8 @@
 			order by Account_ID
 		</select>
   
+		<!-- Nunit test fails as all columns names are lower Id is id, ... 
+		but the result is good -->
 		<select id="GetAccountAsHashtableResultClass"
 						parameterClass="int"
 						resultClass="HashMap">
@@ -180,6 +182,8 @@
 			where Account_ID = #value#
 		</select>
   
+  		<!-- Nunit test fails as all columns names are lower Id is id, ... 
+		but the result is good -->
 		<select id="GetAllAccountsAsHashtableViaResultClass"
 						resultClass="Hashtable">
 			select

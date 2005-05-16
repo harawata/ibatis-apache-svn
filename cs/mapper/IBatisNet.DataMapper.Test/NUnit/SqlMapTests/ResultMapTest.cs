@@ -325,7 +325,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			order.City = "Lyon";
 			order.Date = System.DateTime.MinValue; 
 			order.PostalCode = "69004";
-			order.Province = "Rhône";
+			order.Province = "Rhone";
 			order.Street = "rue Durand";
  
 			sqlMap.Insert("InsertOrderViaParameterMap", order);
@@ -374,7 +374,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			order.City = "Lyon";
 			order.Date = System.DateTime.MinValue; //<-- null replacement for parameterMAp 
 			order.PostalCode = "69004";
-			order.Province = "Rhône";
+			order.Province = "Rhone";
 			order.Street = "rue Durand";
  
 			sqlMap.Insert("InsertOrderViaParameterMap", order);
@@ -416,7 +416,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			order.City = "Lyon";
 			order.Date = System.DateTime.MinValue; //<-- null replacement
 			order.PostalCode = "69004";
-			order.Province = "Rhône";
+			order.Province = "Rhone";
 			order.Street = "rue Durand";
  
 			sqlMap.Insert("InsertOrderViaParameterMap", order);
