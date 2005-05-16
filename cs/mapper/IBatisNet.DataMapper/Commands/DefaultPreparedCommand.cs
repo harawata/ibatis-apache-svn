@@ -211,7 +211,14 @@ namespace IBatisNet.DataMapper.Commands
 
 						paramLogList.Append( parameterValue.ToString() );
 						paramLogList.Append( "], " );
-						typeLogList.Append( sqlParameter.DbType.ToString() );
+
+						// sqlParameter.DbType could be null (as with Npgsql)
+						// if PreparedStatementFactory did not find a dbType for the parameter in:
+						// line 225: "if (property.DbType.Length >0)"
+						// Use parameterCopy.DbType
+
+						//typeLogList.Append( sqlParameter.DbType.ToString() );
+						typeLogList.Append( parameterCopy.DbType.ToString() );
 						typeLogList.Append( ", " );
 						typeLogList.Append( parameterValue.GetType().ToString() );
 						typeLogList.Append( "], " );
