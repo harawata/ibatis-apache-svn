@@ -159,7 +159,7 @@
 		<statement id="GetOrderLiteByColumnName"
 					parameterClass="Int"
 					resultMap="lite-order-result-by-name" >
-			select * from Orders where Order_ID = #value:Int32#
+			select * from Orders where Order_ID = #value#
 		</statement>
 		
 		<statement id="GetOrderLiteByColumnIndex"
@@ -175,25 +175,25 @@
 			Order_City,
 			Order_Province,
 			Order_PostalCode
-			from Orders where Order_ID = #value:Int32#
+			from Orders where Order_ID = #value#
 		</statement>
 		
 		<statement id="GetOrderWithTypes"
 					parameterClass="Int"
 					resultMap="order-with-types-result" >
-			select * from Orders where Order_ID = #value:Int32#
+			select * from Orders where Order_ID = #value#
 		</statement>
 		
 		<statement id="GetOrderWithLineItems"
 					parameterClass="Integer"
 					resultMap="order-with-lines-result" >
-			select * from Orders where Order_ID = #value:Int32#
+			select * from Orders where Order_ID = #value#
 		</statement>
 		
 		<statement id="GetOrderWithLineItemsUsingStatementNamespaces"
 					parameterClass="Integer"
 					resultMap="order-with-lines-result-statement-namespaces" >
-			select * from Orders where Order_ID = #value:Int32#
+			select * from Orders where Order_ID = #value#
 		</statement>		
 
 		<statement id="GetAllOrderWithLineItems"
@@ -206,19 +206,19 @@
 					resultClass="date">
 			select
 			Order_Date
-			from Orders where Order_ID = #value:Int32#
+			from Orders where Order_ID = #value#
 		</statement>
 		
 		<statement id="GetOrderWithAccount"
 					parameterClass="int"
 					resultMap="order-with-account-result" >
-			select * from Orders where Order_ID = #value:Int32#
+			select * from Orders where Order_ID = #value#
 		</statement>
 		
 		<statement id="GetOrderWithLineItemsCollection"
 					parameterClass="Integer"
 					resultMap="order-with-collection-result" >
-			select * from Orders where Order_ID = #value:Int32#
+			select * from Orders where Order_ID = #value#
 		</statement>
 		
 		 <statement id="GetOrderJoinedFavourite"
@@ -227,31 +227,31 @@
 			select * from Orders, LineItems
 			where Orders.Order_ID = LineItems.Order_ID
 			and Order_FavouriteLineItem = LineItems.LineItem_ID
-			and Orders.Order_ID = #value:Int32#
+			and Orders.Order_ID = #value#
 		</statement>
 		
 		<statement id="GetOrderWithFavouriteLineItem"
 					parameterClass="int"
 					resultMap="order-with-favourite-line-item" >
-			select * from Orders where Order_ID = #value:Int32#
+			select * from Orders where Order_ID = #value#
 		</statement>
 		
 		<statement id="GetOrderWithLineItemCollection"
 					parameterClass="int"
 					resultMap="order-with-lines-collection" >
-			select * from Orders where Order_ID = #value:Int32#
+			select * from Orders where Order_ID = #value#
 		</statement>
 		
 		<statement id="GetOrderAsHastable"
 					parameterClass="Integer"
 					resultMap="lite-order-map-result" >
-			select * from Orders where Order_ID = #value:Int32#
+			select * from Orders where Order_ID = #value#
 		</statement>
 		
 		<statement id="GetOrderWithLineItemArray"
 				parameterClass="int"
 				resultMap="order-with-lines-array">
-				select * from Orders where Order_ID = #value:Int32#
+				select * from Orders where Order_ID = #value#
 		</statement>
 		
 		<statement id="GetAllCreditCardNumbersFromOrders"
@@ -300,7 +300,7 @@
 		<select id="GetOrderWithDynFavouriteLineItem"
 				parameterClass="Integer"
 				resultMap="order-with-dyn-favourite-line-item">
-			select * from Orders where Order_ID = #value:Int32#
+			select * from Orders where Order_ID = #value#
 		</select>			
 		
 		<select id="GetAccountJIRA45"

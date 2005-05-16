@@ -32,7 +32,7 @@
 			Account_Email		as EmailAddress
 			from Accounts
 			<isParameterPresent >
-			where Account_ID = #value:Int32#
+			where Account_ID = #value#
 			</isParameterPresent>
 		</statement>
 
@@ -153,7 +153,7 @@
 			from Accounts
 			WHERE Account_ID IN
 			<iterate open="(" close=")" conjunction=",">
-				#[]:Int32#
+				#[]#
 			</iterate>
 			ORDER BY Account_Id ASC			
 		</statement>
@@ -169,7 +169,7 @@
 			from Accounts
 			WHERE Account_ID IN
 			<iterate property="Ids" open="(" close=")"  conjunction="," >
-				#Ids[]:Int32#
+				#Ids[]#
 			</iterate>
 			ORDER BY Account_Id ASC			
 		</statement>
@@ -217,11 +217,11 @@
 			from Accounts
 			WHERE Account_ID IN
 			<iterate open="(" close=")" conjunction=",">
-				#[]:Int32#
+				#[]#
 			</iterate>
 				and Account_ID IN
 			<iterate open="(" close=")" conjunction=",">
-				#[]:Int32#
+				#[]#
 			</iterate>
 			ORDER BY Account_Id ASC			
 		</statement>
@@ -238,12 +238,12 @@
 			from Accounts
 			<dynamic prepend="WHERE" >
 			<isGreaterThan prepend="AND" property="Id" compareValue="0"  >
-				Account_ID = #Id:Int32#
+				Account_ID = #Id#
 			</isGreaterThan>
 			<isNotNull prepend="AND" property="Ids" >
 				Account_ID in
 				<iterate property="Ids" open="(" close=")"  conjunction="," >
-					#Ids[]:Int32#
+					#Ids[]#
 				</iterate>
 			</isNotNull>
 			<isNotEmpty prepend="AND" property="FirstName" >
@@ -276,7 +276,7 @@
 			<dynamic prepend="where" >
 			Account_ID IN
 			<iterate open="(" close=")" conjunction=",">
-				#[]:Int32#
+				#[]#
 			</iterate>
 			</dynamic>
 			ORDER BY Account_Id ASC
@@ -293,7 +293,7 @@
 			from Accounts
 			<dynamic prepend="where" >
 			<iterate open="(" close=")" conjunction="OR">
-				Account_ID = #[]:Int32#
+				Account_ID = #[]#
 			</iterate>
 			</dynamic>
 			ORDER BY Account_Id ASC
@@ -311,7 +311,7 @@
 			<dynamic prepend="where" >
 				<isParameterPresent prepend="BLAH!" >
 					<iterate open="(" close=")" conjunction="OR">
-						Account_ID = #[]:Int32#
+						Account_ID = #[]#
 					</iterate>
 				</isParameterPresent>
 			</dynamic>
@@ -330,7 +330,7 @@
 			<dynamic prepend="where">
 				<isParameterPresent>
 					<isNotEmpty prepend="and" property="Id" >
-					Account_ID = #Id:Int32#
+					Account_ID = #Id#
 					</isNotEmpty>
 					<isNotEmpty prepend="and" property="FirstName" >
 					Account_FirstName = #FirstName#
@@ -353,7 +353,7 @@
 			from Accounts
 			<dynamic prepend="where">
 				<isNotEmpty prepend="BLAH!" property="Id" >
-				Account_ID = #Id:Int32#
+				Account_ID = #Id#
 				</isNotEmpty>
 			</dynamic>
 			<dynamic prepend="and">
@@ -390,7 +390,7 @@
 					Account_Email like '%$EmailAddress$%'
 				</isNotNull>
 				<isGreaterThan prepend="AND" property="Id" compareValue="0">
-					Account_ID = #Id:Int32#
+					Account_ID = #Id#
 				</isGreaterThan>
 			</dynamic>
 			order by Account_LastName
@@ -407,8 +407,8 @@
 			from Accounts
 			<dynamic prepend="where">
 				<isNotNull prepend="and" property="NumberSearch">
-					((Account_ID $Operande$ #NumberSearch:Int32#) or 
-					(Account_ID $Operande$ #NumberSearch:Int32#)) 
+					((Account_ID $Operande$ #NumberSearch#) or 
+					(Account_ID $Operande$ #NumberSearch#)) 
 				</isNotNull>
 				<isEqual prepend="and" property="StartDate" compareValue="12/25/2004">
 						<![CDATA[Account_FirstName >= TO_CHAR(#StartDate#, 'mm/dd/yyyy') ]]>

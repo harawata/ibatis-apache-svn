@@ -26,7 +26,7 @@
 				Enum_Color,
 				Enum_Month
 			from Enumerations  
-			where Enum_ID = #value:Int32# 
+			where Enum_ID = #value# 
 		</select>
 		
 		<select id="GetEnumeration" parameterClass="Integer" resultClass="Enumeration">
@@ -36,7 +36,7 @@
 				Enum_Color as Color,
 				Enum_Month as Month
 			from Enumerations  
-			where Enum_ID = #value:Int32# 
+			where Enum_ID = #value# 
 		</select>
 		
 		<insert id="InsertEnumViaParameterMap" parameterMap="insert-params" >

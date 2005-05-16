@@ -29,7 +29,7 @@
 			from Others  
 			<dynamic prepend="WHERE"> 
 				<isNotEqual prepend="AND" property="year" compareValue="0"> 
-				Other_Int = #year:Int32#  
+				Other_Int = #year#  
 				</isNotEqual> 
 				 
 				<isNotEqual prepend="AND" property="areaid" compareValue="0"> 

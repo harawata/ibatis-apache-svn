@@ -117,7 +117,7 @@
 				LineItem_Quantity,
 				LineItem_Price
 				from LineItems
-				where LineItem_ID =  #value:Int32#
+				where LineItem_ID =  #value#
 		</statement>
 		
 		<statement id="InsertLineItem" 

@@ -72,28 +72,28 @@
        
 	<resultMaps>                                    
 		<resultMap id="account-result"  class="Account" >
-			<result property="Id"           type="Int"		column="Account_ID"			dbType="Int32"/>
-			<result property="FirstName"    type="string"	column="Account_FirstName"	dbType="Varchar2"/>
-			<result property="LastName"     type="string"	column="Account_LastName"	dbType="Varchar2"/>
-			<result property="EmailAddress" type="string"	column="Account_Email"		dbType="Varchar2" nullValue="no_email@provided.com"/>
+			<result property="Id"           column="Account_ID"/>
+			<result property="FirstName"    column="Account_FirstName"/>
+			<result property="LastName"     column="Account_LastName"/>
+			<result property="EmailAddress" column="Account_Email" nullValue="no_email@provided.com"/>
 			<result property="BannerOption" column="Account_Banner_Option" dbType="Varchar2" type="bool"/>
 			<result property="CartOption"	column="Account_Cart_Option" typeHandler="HundredsBool"/>						
 		</resultMap>
 		<resultMap id="indexed-account-result" class="Account">
-			<result property="Id"           type="Int"		column="Account_ID"			dbType="Int32" columnIndex="0"/>
-			<result property="FirstName"    type="string"	column="Account_FirstName"	dbType="Varchar2" columnIndex="1"/>
-			<result property="LastName"     type="string"	column="Account_LastName"	dbType="Varchar2" columnIndex="2"/>
-			<result property="EmailAddress" type="string"	column="Account_Email"		dbType="Varchar2" columnIndex="3"	nullValue="no_email@provided.com"/>
+			<result property="Id"           column="Account_ID"			columnIndex="0"/>
+			<result property="FirstName"    column="Account_FirstName"	columnIndex="1"/>
+			<result property="LastName"     column="Account_LastName"	columnIndex="2"/>
+			<result property="EmailAddress" column="Account_Email"		columnIndex="3"	nullValue="no_email@provided.com"/>
 		</resultMap>
 		<resultMap id="account-result-nullable-email" class="Account">
-			<result property="Id"           type="Int"		column="Account_ID"			dbType="Int32"/>
-			<result property="FirstName"    type="string"	column="Account_FirstName"	dbType="Varchar2"/>
-			<result property="LastName"     type="string"	column="Account_LastName"	dbType="Varchar2"/>
-			<result property="EmailAddress" type="string"	column="Account_Email"		dbType="Varchar2"/>
+			<result property="Id"           column="Account_ID"/>
+			<result property="FirstName"    column="Account_FirstName"/>
+			<result property="LastName"     column="Account_LastName"/>
+			<result property="EmailAddress" column="Account_Email"/>
 		</resultMap>
 		
 		<resultMap id="email-result" class="string">
-			<result property="value" type="string"	column="Account_Email"/>
+			<result property="value" column="Account_Email"/>
 		</resultMap>
 		
 		<resultMap id="account-hashtable-result" class="Hashtable">
@@ -165,7 +165,7 @@
 						resultMap="account-hashtable-result">
 			select *
 			from Accounts
-			where Account_ID = #value:Int32#
+			where Account_ID = #value#
 		</select>
   
 		<select id="GetAllAccountsAsHashMapViaResultMap"
@@ -194,7 +194,7 @@
 			Account_LastName as LastName,
 			Account_Email as EmailAddress
 			from Accounts
-			where Account_ID = #value:Int32#
+			where Account_ID = #value#
 		</select>
   
 		<select id="GetAllAccountsAsHashtableViaResultClass"
@@ -363,7 +363,7 @@
 		<delete id="DeleteAccountViaInlineParameters">
 			delete from Accounts 
 			where
-			Account_ID = #Id:Int32#
+			Account_ID = #Id#
 		</delete>
 		
 		<select id="GetAccountComplexMapping"
@@ -429,7 +429,7 @@
 			insert into Accounts 
 				(Account_ID, Account_FirstName, Account_LastName, Account_Email) 
 			values 
-				(#Id:Int32#, #FirstName#, #LastName#, #EmailAddress#)
+				(#Id#, #FirstName#, #LastName#, #EmailAddress#)
 		</insert>
 		
 		<!-- Inline Parameters -->
@@ -448,7 +448,7 @@
 			insert into Accounts 
 				(Account_ID, Account_FirstName, Account_LastName, Account_Email) 
 			values 
-				(#Id:Int32#, #FirstName#, #LastName#, #EmailAddress:Varchar2:no_email@provided.com#
+				(#Id#, #FirstName#, #LastName#, #EmailAddress:Varchar2:no_email@provided.com#
 			)
 		</insert>
 
@@ -457,20 +457,20 @@
 			insert into Accounts 
 				(Account_ID, Account_FirstName, Account_LastName, Account_Email) 
 			values 
-				( #Id:Int32#, #FirstName#, #LastName#, #EmailAddress# )
+				( #Id#, #FirstName#, #LastName#, #EmailAddress# )
 		</insert>
 
 		<insert id="InsertAccountUknownParameterClass">
 			insert into Accounts 
 				(Account_ID, Account_FirstName, Account_LastName, Account_Email) 
 			values 
-				( #Id:Int32#, #FirstName#, #LastName#, #EmailAddress# )
+				( #Id#, #FirstName#, #LastName#, #EmailAddress# )
 		</insert>
   
 		<delete id="DeleteAccount"
 			parameterClass="Account">
 			delete from Accounts
-			where Account_ID = #Id:Int32#
+			where Account_ID = #Id#
 		</delete>
 		
 		<!-- Extends statement -->
@@ -493,14 +493,14 @@
 		<select id="GetOneAccount"
 			extends="GetAllAccounts"
 			resultMap="indexed-account-result">
-			where Account_ID = #value:Int32#
+			where Account_ID = #value#
 		</select>
 		
 		<select id="GetSomeAccount"
 			extends="GetAllAccounts"
 			parameterClass="Hashtable"
 			resultMap="indexed-account-result">
-			where Account_ID between #lowID:Int32# and #hightID:Int32#
+			where Account_ID between #lowID# and #hightID#
 		</select>
 		
 		<select id="SelectAccountJIRA29" parameterClass="map" resultClass="Account">
@@ -627,7 +627,7 @@
 		</parameterMap>
 		
 		<parameterMap id="insert-params">
-			<parameter property="Id" dbType="Int32"/>
+			<parameter property="Id"/>
 			<parameter property="FirstName" dbType="Varchar2" size="32"/>
 			<parameter property="LastName" dbType="Varchar2" size="32"/>			
 			<parameter property="EmailAddress" dbType="Varchar2" size="128" nullValue="no_email@provided.com"/>

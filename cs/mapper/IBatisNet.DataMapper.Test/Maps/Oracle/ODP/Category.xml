@@ -14,7 +14,7 @@
 			Category_Name as Name,
 			Category_Guid as GuidString
 			from Categories  
-			where Category_ID = #value:Int32# 
+			where Category_ID = #value# 
 		</select>
 		
 		<select id="GetCategoryGuid" parameterClass="Integer" resultClass="guid">
@@ -31,7 +31,7 @@
 			insert into Categories  
 				(Category_Id, Category_Name, Category_Guid) 
 			values 
-				(#Id:Int32#, #Name#, #GuidString:Varchar2#)
+				(#Id#, #Name#, #GuidString:Varchar2#)
 		</insert>
 		
 		<!--  

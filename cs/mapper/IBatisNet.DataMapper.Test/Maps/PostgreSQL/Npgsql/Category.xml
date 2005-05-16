@@ -33,7 +33,7 @@
   			insert into Categories  
 				(Category_Name, Category_Guid) 
 			values 
-				(#Name#, #GuidString:text#);
+				(#Name#, #GuidString:Text#);
 		</insert>
 		
 		<!--  -->
@@ -45,7 +45,7 @@
             insert into Categories  
 				(Category_Name, Category_Guid) 
 			values 
-				(#Name#, #GuidString:text#)
+				(#Name#, #GuidString:Text#)
 		</insert>
 
 		<insert id="InsertCategoryViaParameterMap" parameterMap="InsertParam">
@@ -112,11 +112,11 @@
 			select
 			Category_ID as Id,
 			Category_Name as Name,
-			Category_Guid as Guid
+			Category_Guid as GuidString
 			from Categories  
 			<dynamic prepend="where">
 				<isNotEqual prepend="and" property="Guid" compareProperty="EmptyGuid">
-					Category_Guid=#GuidString:text#
+					Category_Guid=#GuidString:Text#
 				</isNotEqual>
 			</dynamic>
 		</statement>

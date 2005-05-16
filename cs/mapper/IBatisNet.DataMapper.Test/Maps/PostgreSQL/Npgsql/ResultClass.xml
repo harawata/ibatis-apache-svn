@@ -19,13 +19,13 @@
 		<statement id="GetChar"
 					parameterClass="Int"
 					resultClass="char" >
-			select cast('a' as char) from Orders where Order_ID = #value#
+			select 'a' from Orders where Order_ID = #value#
 		</statement>
 		
 		<statement id="GetDate"
 					parameterClass="Int"
 					resultClass="date" >
-			select cast('2003-02-15 8:15:00' as timestamp) from Orders where Order_ID  = #value#
+			select '2003-02-15 8:15:00' from Orders where Order_ID  = #value#
 		</statement>
 									
 		<statement id="GetDecimal"
@@ -43,7 +43,7 @@
 		<statement id="GetGuid"
 					parameterClass="Int"
 					resultClass="guid" >
-			select cast('CD5ABF17-4BBC-4C86-92F1-257735414CF4' as text) from Orders where Order_ID = #value#
+			select 'CD5ABF17-4BBC-4C86-92F1-257735414CF4' from Orders where Order_ID = #value#
 		</statement>
 		
 		<statement id="GetInt16"
