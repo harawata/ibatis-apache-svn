@@ -2,6 +2,7 @@
                  Documentation Needed
 ------------------------------------------------------------
 
+  o <discriminator> and <subMap> SqlMap elements
   o commitRequired="true" on transactionManager element
   o DefaultAutoCommit property of EXTERNAL TX Manager
   o SetAutoCommitAllowed property of EXTERNAL TX Manager
