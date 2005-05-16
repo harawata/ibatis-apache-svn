@@ -57,7 +57,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		[NonSerialized]
 		private string _directionAttribute = string.Empty;
 		[NonSerialized]
-		private string _dbType = string.Empty;
+		private string _dbType = null;
 		[NonSerialized]
 		private int _size = -1;
 		[NonSerialized]
@@ -317,13 +317,13 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 				if (typeHandlerFactory.IsSimpleType(type)) 
 				{
 					// Primitive
-					_typeHandler = typeHandlerFactory.GetTypeHandler(type, null);
+					_typeHandler = typeHandlerFactory.GetTypeHandler(type);
 				}
 				else
 				{
 					// .NET object
 					type = ObjectProbe.GetPropertyTypeForGetter(type, this.PropertyName);
-					_typeHandler = typeHandlerFactory.GetTypeHandler(type, null);
+					_typeHandler = typeHandlerFactory.GetTypeHandler(type);
 				}
 			}
 		}

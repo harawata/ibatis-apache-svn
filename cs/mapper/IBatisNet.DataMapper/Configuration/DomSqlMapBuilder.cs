@@ -405,7 +405,7 @@ namespace IBatisNet.DataMapper.Configuration
 					}
 
 					_configScope.ErrorContext.MoreInfo = "Check the type attribute '" + handler.ClassName + "' (must be a class name) or the dbType '" + handler.DbType + "' (must be a DbType type name).";
-					if (handler.DbType.Length > 0) 
+					if (handler.DbType!= null && handler.DbType.Length > 0) 
 					{
 						_configScope.TypeHandlerFactory.Register(Resources.TypeForName(handler.ClassName), handler.DbType, typeHandler);
 					} 

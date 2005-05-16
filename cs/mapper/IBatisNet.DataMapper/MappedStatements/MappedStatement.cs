@@ -227,125 +227,6 @@ namespace IBatisNet.DataMapper.MappedStatements
 			}
 		}
 		
-//		/// <summary>
-//		/// Create an IDbCommand for the IDalSession and the current SQL Statement
-//		/// and fill IDbCommand IDataParameter's with the parameterObject.
-//		/// </summary>
-//		/// <param name="request"></param>
-//		/// <param name="session">The IDalSession</param>
-//		/// <param name="parameterObject">
-//		/// The parameter object which will fill the sql parameter
-//		/// </param>
-//		/// <returns>An IDbCommand with all the IDataParameter filled.</returns>
-//		private IDbCommand CreatePreparedCommand (RequestScope request, IDalSession session, object parameterObject )
-//		{
-//			// the IDbConnection & the IDbTransaction are assign in the CreateCommand 
-//			IDbCommand command = session.CreateCommand(_statement.CommandType);
-//				
-//			command.CommandText = request.PreparedStatement.PreparedSql;
-//		
-//			ApplyParameterMap( session, command, request, parameterObject );
-//
-//			return command;
-//		}
-
-//		/// <summary>
-//		/// 
-//		/// </summary>
-//		/// <param name="session"></param>
-//		/// <param name="command"></param>
-//		/// <param name="request"></param>
-//		/// <param name="parameterObject"></param>
-//		private void ApplyParameterMap
-//			( IDalSession session, IDbCommand command,
-//			RequestScope request, object parameterObject )
-//		{
-//			ArrayList properties = request.PreparedStatement.DbParametersName;
-//			ArrayList parameters = request.PreparedStatement.DbParameters;
-//			object parameterValue = null;
-//
-//			for ( int i = 0; i < properties.Count; ++i )
-//			{
-//				IDataParameter sqlParameter = (IDataParameter)parameters[i];
-//				string propertyName = (string)properties[i];
-//
-//				if (command.CommandType == CommandType.Text)
-//				{
-//					if ( propertyName != "value" ) // Inline Parameters && Parameters via ParameterMap
-//					{
-//						ParameterProperty property = request.ParameterMap.GetProperty(i);
-//
-//						parameterValue = request.ParameterMap.GetValueOfProperty(parameterObject,
-//							property.PropertyName);
-//					}
-//					else // 'value' parameter
-//					{
-//						parameterValue = parameterObject;
-//					}
-//				}
-//				else // CommandType.StoredProcedure
-//				{
-//					// A store procedure must always use a ParameterMap 
-//					// to indicate the mapping order of the properties to the columns
-//					if (request.ParameterMap == null) // Inline Parameters
-//					{
-//						throw new DataMapperException("A procedure statement tag must alway have a parameterMap attribute, which is not the case for the procedure '"+_statement.Id+"'."); 
-//					}
-//					else // Parameters via ParameterMap
-//					{
-//						ParameterProperty property = request.ParameterMap.GetProperty(i);
-//
-//						if (property.DirectionAttribute.Length == 0)
-//						{
-//							property.Direction = sqlParameter.Direction;
-//						}
-//
-//						//						IDbDataParameter dataParameter = (IDbDataParameter)parameters[i];
-//						//						property.Precision = dataParameter.Precision;
-//						//						property.Scale = dataParameter.Scale;
-//						//						property.Size = dataParameter.Size;
-//
-//						sqlParameter.Direction = property.Direction;
-//						parameterValue = request.ParameterMap.GetValueOfProperty( parameterObject, property.PropertyName );
-//					}
-//				}
-//
-//				IDataParameter parameterCopy = command.CreateParameter();
-//				// Fix JIRA 20
-//				sqlParameter.Value = parameterValue;
-//				parameterCopy.Value = parameterValue;
-//				
-//				parameterCopy.Direction = sqlParameter.Direction;
-//
-//				// With a ParameterMap, we could specify the ParameterDbTypeProperty
-//				if (_statement.ParameterMap != null)
-//				{
-//					if (request.ParameterMap.GetProperty(i).DbType.Length >0)
-//					{
-//						string dbTypePropertyName = session.DataSource.Provider.ParameterDbTypeProperty;
-//
-//						ObjectProbe.SetPropertyValue(parameterCopy, dbTypePropertyName, ObjectProbe.GetPropertyValue(sqlParameter, dbTypePropertyName));
-//					}
-//					else
-//					{
-//						//parameterCopy.DbType = sqlParameter.DbType;
-//					}
-//				}
-//				else
-//				{
-//					//parameterCopy.DbType = sqlParameter.DbType;
-//				}
-//
-//				((IDbDataParameter)parameterCopy).Size = ((IDbDataParameter)sqlParameter).Size;
-//				((IDbDataParameter)parameterCopy).Precision = ((IDbDataParameter)sqlParameter).Precision;
-//				((IDbDataParameter)parameterCopy).Scale = ((IDbDataParameter)sqlParameter).Scale;
-//
-//				parameterCopy.ParameterName = sqlParameter.ParameterName;
-//
-//				command.Parameters.Add( parameterCopy );
-//			}
-//		}
-
 
 		/// <summary>
 		/// 
@@ -408,7 +289,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 						ResultProperty property = new ResultProperty();
 						property.PropertyName = "value";
 						property.ColumnIndex = 0;
-						property.TypeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(outObject.GetType(), null);
+						property.TypeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(outObject.GetType());
 
 						SetObjectProperty(request, request.ResultMap, property, ref outObject, reader);
 					}
@@ -469,7 +350,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 								{
 									Type propertyType =ObjectProbe.GetPropertyTypeForGetter(result,mapping.PropertyName);
 
-									mapping.TypeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(propertyType, null);
+									mapping.TypeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(propertyType);
 								}
 							}					
 						}
@@ -850,7 +731,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 					if ( (_statement.ResultClass!=null) && 
 						_sqlMap.TypeHandlerFactory.IsSimpleType(_statement.ResultClass) )
 					{
-						ITypeHandler typeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(_statement.ResultClass, null);
+						ITypeHandler typeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(_statement.ResultClass);
 						generatedKey = typeHandler.GetDataBaseValue(generatedKey, _statement.ResultClass);
 					}
 				}
@@ -1065,7 +946,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 							}
 							Type systemType =((IDataRecord)reader).GetFieldType(columnIndex);
 
-							mapping.TypeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(systemType, null);
+							mapping.TypeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(systemType);
 						}
 					}					
 				}
@@ -1327,7 +1208,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 						// Set TypeHandler
 						Type propertyType = reflectionInfo.GetSetterType(property.PropertyName);
-						property.TypeHandler = typeHandlerFactory.GetTypeHandler( propertyType, null );
+						property.TypeHandler = typeHandlerFactory.GetTypeHandler( propertyType );
 					}
 				} 
 				catch (Exception e) 

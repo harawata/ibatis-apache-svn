@@ -25,6 +25,7 @@
 #endregion
 
 #region Imports
+
 using System;
 using System.Collections;
 using System.Reflection;
@@ -33,7 +34,7 @@ using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.DataMapper.Scope;
 using IBatisNet.DataMapper.TypeHandlers;
-using IBatisNet.Common.Utilities;
+
 #endregion
 
 namespace IBatisNet.DataMapper.Configuration.ResultMapping
@@ -72,7 +73,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		[NonSerialized]
 		private ResultMap _nestedResultMap = null;
 		[NonSerialized]
-		private string _dbType = string.Empty;
+		private string _dbType = null;
 		[NonSerialized]
 		private string _clrType = string.Empty;
 		[NonSerialized]
@@ -109,7 +110,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// <summary>
 		/// The typeHandler used to work with the result property.
 		/// </summary>
-		[XmlIgnoreAttribute]
+		[XmlIgnore]
 		public ITypeHandler TypeHandler
 		{
 			get { return _typeHandler; }
@@ -200,7 +201,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// <summary>
 		/// 
 		/// </summary>
-		[XmlIgnoreAttribute]
+		[XmlIgnore]
 		public PropertyInfo PropertyInfo
 		{
 			get { return _propertyInfo; }
@@ -209,7 +210,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// <summary>
 		/// Tell if a nullValue is defined.
 		/// </summary>
-		[XmlIgnoreAttribute]
+		[XmlIgnore]
 		public bool HasNullValue
 		{
 			get { return (_nullValue.Length>0); }
@@ -229,7 +230,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// <summary>
 		/// A nested ResultMap use to set a property
 		/// </summary>
-		[XmlIgnoreAttribute]
+		[XmlIgnore]
 		public ResultMap NestedResultMap
 		{
 			get { return _nestedResultMap; }
@@ -279,30 +280,6 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 				configScope.ErrorContext.MoreInfo = "Result property '"+_propertyName+"' set the typeHandler attribute.";
 				_typeHandler = configScope.ResolveTypeHandler( resultClass, _propertyName, _clrType, _dbType);
 			}
-//			if ( propertyInfo != null)
-//			{
-//				_typeHandler =  configScope.TypeHandlerFactory.GetTypeHandler(propertyInfo.PropertyType);
-//			}
-//			// If we specify a type, it can overrride 
-//			if (this.CLRType.Length>0)
-//			{
-//				_typeHandler = configScope.TypeHandlerFactory.GetTypeHandler(Resources.TypeForName(this.CLRType));
-//			}
-//			// If we specify a typeHandler, it can overrride 
-//			if (this.CallBackName.Length >0)
-//			{
-//				configScope.ErrorContext.MoreInfo = "Check the parameter mapping typeHandler attribute '" + this.CallBackName + "' (must be a ITypeHandlerCallback implementation).";
-//				try 
-//				{
-//					Type type = configScope.SqlMapper.GetType(this.CallBackName);
-//					ITypeHandlerCallback typeHandlerCallback = (ITypeHandlerCallback) Activator.CreateInstance( type );
-//					_typeHandler = new CustomTypeHandler(typeHandlerCallback);
-//				}
-//				catch (Exception e) 
-//				{
-//					throw new ConfigurationException("Error occurred during custom type handler configuration.  Cause: " + e.Message, e);
-//				}
-//			}
 		}
 
 		/// <summary>
@@ -315,7 +292,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		{
 			_propertyInfo = propertyInfo;
 
-			_typeHandler =  typeHandlerFactory.GetTypeHandler(propertyInfo.PropertyType, null);
+			_typeHandler =  typeHandlerFactory.GetTypeHandler(propertyInfo.PropertyType);
 		}
 		#endregion
 	}

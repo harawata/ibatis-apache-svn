@@ -120,7 +120,8 @@ namespace IBatisNet.DataMapper.Commands
 				// With a ParameterMap, we could specify the ParameterDbTypeProperty
 				if (statement.ParameterMap != null)
 				{
-					if (request.ParameterMap.GetProperty(i).DbType.Length > 0)
+					if (request.ParameterMap.GetProperty(i).DbType != null && 
+						request.ParameterMap.GetProperty(i).DbType.Length >0)
 					{
 						string dbTypePropertyName = session.DataSource.Provider.ParameterDbTypeProperty;
 

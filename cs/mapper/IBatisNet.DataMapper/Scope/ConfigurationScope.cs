@@ -388,26 +388,7 @@ namespace IBatisNet.DataMapper.Scope
 					}
 				}
 			}
-//			if (clrType.Length == 0 )  // Unknown
-//			{
-//				handler = this.TypeHandlerFactory.GetUnkownTypeHandler();
-//			}
-//			else // If we specify a CLR type, use it
-//			{ 
-//				Type type = Resources.TypeForName(clrType);
-//
-//				if (this.TypeHandlerFactory.IsSimpleType(type)) 
-//				{
-//					// Primitive
-//					handler = this.TypeHandlerFactory.GetTypeHandler(type);
-//				}
-//				else
-//				{
-//					// .NET object
-//					type = ObjectProbe.GetPropertyTypeForGetter(type, propertyName);
-//					handler = this.TypeHandlerFactory.GetTypeHandler(type);
-//				}
-//			}
+
 			return handler;
 		}
 	}

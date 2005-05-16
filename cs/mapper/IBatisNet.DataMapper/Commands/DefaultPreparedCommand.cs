@@ -190,12 +190,33 @@ namespace IBatisNet.DataMapper.Commands
 					#endregion 
 				}
 
-
 				// Fix JIRA 20
 				//parameterCopy.Value = parameterValue;
 				property.TypeHandler.SetParameter(property, parameterCopy, parameterValue, property.DbType);
 
-				
+				parameterCopy.Direction = sqlParameter.Direction;
+
+				// With a ParameterMap, we could specify the ParameterDbTypeProperty
+				if (statement.ParameterMap != null)
+				{
+					if (request.ParameterMap.GetProperty(i).DbType != null && 
+						request.ParameterMap.GetProperty(i).DbType.Length >0)
+					{
+						string dbTypePropertyName = session.DataSource.Provider.ParameterDbTypeProperty;
+
+						ObjectProbe.SetPropertyValue(parameterCopy, dbTypePropertyName, ObjectProbe.GetPropertyValue(sqlParameter, dbTypePropertyName));
+					}
+					else
+					{
+						//parameterCopy.DbType = sqlParameter.DbType;
+					}
+				}
+				else
+				{
+					//parameterCopy.DbType = sqlParameter.DbType;
+				}
+
+
 				#region Logging
 				if (_logger.IsDebugEnabled)
 				{
@@ -225,27 +246,6 @@ namespace IBatisNet.DataMapper.Commands
 					}
 				}
 				#endregion 
-
-				parameterCopy.Direction = sqlParameter.Direction;
-
-				// With a ParameterMap, we could specify the ParameterDbTypeProperty
-				if (statement.ParameterMap != null)
-				{
-					if (request.ParameterMap.GetProperty(i).DbType.Length >0)
-					{
-						string dbTypePropertyName = session.DataSource.Provider.ParameterDbTypeProperty;
-
-						ObjectProbe.SetPropertyValue(parameterCopy, dbTypePropertyName, ObjectProbe.GetPropertyValue(sqlParameter, dbTypePropertyName));
-					}
-					else
-					{
-						//parameterCopy.DbType = sqlParameter.DbType;
-					}
-				}
-				else
-				{
-					//parameterCopy.DbType = sqlParameter.DbType;
-				}
 
 				// JIRA-49 Fixes (size, precision, and scale)
 				if (session.DataSource.Provider.SetDbParameterSize) 

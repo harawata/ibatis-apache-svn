@@ -222,7 +222,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 				IDataParameter dataParameter = _session.CreateCommand(_statement.CommandType).CreateParameter();
 
 				// Manage dbType attribute if any
-				if (property.DbType.Length >0) 
+				if (property.DbType != null && property.DbType.Length >0) 
 				{
 					// Exemple : Enum.parse(System.Data.SqlDbType, 'VarChar')
 					object dbType = Enum.Parse( enumDbType, property.DbType, true );
@@ -305,7 +305,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 				IDataParameter dataParameter = _session.CreateCommand(_statement.CommandType).CreateParameter();
 
 				// Manage dbType attribute if any
-				if (property.DbType.Length >0) 
+				if (property.DbType!=null && property.DbType.Length >0) 
 				{
 					// Exemple : Enum.parse(System.Data.SqlDbType, 'VarChar')
 					object dbType = Enum.Parse( enumDbType, property.DbType, true );

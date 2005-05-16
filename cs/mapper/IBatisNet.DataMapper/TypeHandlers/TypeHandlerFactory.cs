@@ -113,6 +113,16 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		#region Methods
 
 		/// <summary>
+		/// Get a TypeHandler for a Type
+		/// </summary>
+		/// <param name="type">the Type you want a TypeHandler for</param>
+		/// <returns>the handler</returns>
+		public ITypeHandler GetTypeHandler(Type type)
+		{
+			return GetTypeHandler(type, null);
+		}
+
+		/// <summary>
 		/// Get a TypeHandler for a type
 		/// </summary>
 		/// <param name="type">the type you want a TypeHandler for</param>
