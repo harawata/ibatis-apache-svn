@@ -1,24 +1,22 @@
-\connect "IBatisNet" "IBatisNet";
+DROP TABLE Orders;
 
-DROP TABLE "Orders";
-
-CREATE TABLE "Orders"
+CREATE TABLE Orders
 (
-  "Order_Id" int4 NOT NULL,
-  "Account_Id" int4 NOT NULL,
-  "Order_Date" date,
-  "Order_CardType" varchar(32),
-  "Order_CardNumber" varchar(32),
-  "Order_CardExpiry" varchar(32),
-  "Order_Street" varchar(32),
-  "Order_City" varchar(32),
-  "Order_Province" varchar(32),
-  "Order_PostalCode" varchar(32),
-  "Order_FavouriteLineItem" int4,
-  CONSTRAINT "PK_Orders" PRIMARY KEY ("Order_Id")
+  Order_Id int4 NOT NULL,
+  Account_Id int4 NOT NULL,
+  Order_Date timestamp,
+  Order_CardType varchar(32),
+  Order_CardNumber varchar(32),
+  Order_CardExpiry varchar(32),
+  Order_Street varchar(32),
+  Order_City varchar(32),
+  Order_Province varchar(32),
+  Order_PostalCode varchar(32),
+  Order_FavouriteLineItem int4,
+  CONSTRAINT PK_Orders PRIMARY KEY (Order_Id)
 ) 
 WITHOUT OIDS;
-ALTER TABLE "Orders" OWNER TO "IBatisNet";
+ALTER TABLE Orders OWNER TO "IBatisNet";
 
 INSERT INTO Orders VALUES (1, 1, '2003-02-15 8:15:00', 'VISA', '999999999999', '05/03', '11 This Street', 'Victoria', 'BC', 'C4B 4F4',2);
 INSERT INTO Orders VALUES (2, 4, '2003-02-15 8:15:00', 'MC', '888888888888', '06/03', '222 That Street', 'Edmonton', 'AB', 'X4K 5Y4',1);

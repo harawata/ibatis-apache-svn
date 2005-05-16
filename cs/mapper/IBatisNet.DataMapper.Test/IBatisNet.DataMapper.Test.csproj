@@ -174,6 +174,10 @@
                     BuildAction = "None"
                 />
                 <File
+                    RelPath = "bin\Debug\SqlMap_PostgreSQL_Npgsql.config"
+                    BuildAction = "None"
+                />
+                <File
                     RelPath = "bin\Debug\test.config"
                     BuildAction = "None"
                 />
@@ -612,6 +616,46 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "Maps\PostgreSQL\Npgsql\Account.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\PostgreSQL\Npgsql\Category.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\PostgreSQL\Npgsql\Complex.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\PostgreSQL\Npgsql\Document.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\PostgreSQL\Npgsql\DynamicAccount.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\PostgreSQL\Npgsql\Enumeration.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\PostgreSQL\Npgsql\LineItem.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\PostgreSQL\Npgsql\Order.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\PostgreSQL\Npgsql\Other.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\PostgreSQL\Npgsql\ResultClass.xml"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "NUnit\SqlMapTests\BaseTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -963,6 +1007,58 @@
                 />
                 <File
                     RelPath = "Scripts\Oracle\user-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\PostgreSQL\account-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\PostgreSQL\account-procedure.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\PostgreSQL\category-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\PostgreSQL\category-procedure.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\PostgreSQL\DataBase.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\PostgreSQL\documents-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\PostgreSQL\enumeration-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\PostgreSQL\line-item-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\PostgreSQL\more-account-records.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\PostgreSQL\order-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\PostgreSQL\other-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\PostgreSQL\swap-procedure.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\PostgreSQL\user-init.sql"
                     BuildAction = "Content"
                 />
             </Include>

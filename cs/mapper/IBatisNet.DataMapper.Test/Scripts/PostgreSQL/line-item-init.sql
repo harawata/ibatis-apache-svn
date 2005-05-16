@@ -1,19 +1,17 @@
-\connect "IBatisNet" "IBatisNet";
+DROP TABLE LineItems;
 
-DROP TABLE "LineItems";
-
-CREATE TABLE "LineItems"
+CREATE TABLE LineItems
 (
-  "LineItem_Id" int4 NOT NULL,
-  "Order_Id" int4 NOT NULL,
-  "LineItem_Code" varchar(32) NOT NULL,
-  "LineItem_Quantity" int4 NOT NULL,
-  "LineItem_Price" numeric(18,2),
-  "LineItem_Picture" bytea,
-  CONSTRAINT "PK_LineItems" PRIMARY KEY ("LineItem_Id", "Order_Id")
+  LineItem_Id int4 NOT NULL,
+  Order_Id int4 NOT NULL,
+  LineItem_Code varchar(32) NOT NULL,
+  LineItem_Quantity int4 NOT NULL,
+  LineItem_Price numeric(18,2),
+  LineItem_Picture bytea,
+  CONSTRAINT PK_LineItems PRIMARY KEY (LineItem_Id, Order_Id)
 ) 
 WITHOUT OIDS;
-ALTER TABLE "LineItems" OWNER TO "IBatisNet";
+ALTER TABLE LineItems OWNER TO "IBatisNet";
 
 INSERT INTO LineItems VALUES (1, 10, 'ESM-34', 1, 45.43, null);
 INSERT INTO LineItems VALUES (2, 10, 'QSM-98', 8, 8.40, null);

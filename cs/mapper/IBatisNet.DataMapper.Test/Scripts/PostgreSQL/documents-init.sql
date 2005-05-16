@@ -1,18 +1,16 @@
-\connect "IBatisNet" "IBatisNet";
+DROP TABLE Documents;
 
-DROP TABLE "Documents";
-
-CREATE TABLE "Documents"
+CREATE TABLE Documents
 (
-  "Document_Id" int4 NOT NULL,
-  "Document_Title" varchar(32),
-  "Document_Type" varchar(32),
-  "Document_PageNumber" int4,
-  "Document_City" varchar(32),
-  CONSTRAINT "PK_Documents" PRIMARY KEY ("Document_Id")
+  Document_Id int4 NOT NULL,
+  Document_Title varchar(32),
+  Document_Type varchar(32),
+  Document_PageNumber int4,
+  Document_City varchar(32),
+  CONSTRAINT PK_Documents PRIMARY KEY (Document_Id)
 ) 
 WITHOUT OIDS;
-ALTER TABLE "Documents" OWNER TO "IBatisNet";
+ALTER TABLE Documents OWNER TO "IBatisNet";
 
 INSERT INTO Documents VALUES (1, 'The World of Null-A', 'Book', 55, null);
 INSERT INTO Documents VALUES (2, 'Le Progres de Lyon', 'Newspaper', null , 'Lyon');
