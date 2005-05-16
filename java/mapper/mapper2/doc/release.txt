@@ -2,16 +2,23 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
- 2.1.0 - May ??, 2004
+ 2.1.0 - May 16, 2004
 ------------------------------
 
  o Added <discriminator> and <subMap> tags for class inheritance support
- o Added removeFirstPrepend attribute to all tags 
- o Added open and close attributes to all dynamic tags to better handle complex queries that require bracketing
+ o Added IBATIS-95 removeFirstPrepend attribute to all tags 
+ o Added IBATIS-95 open and close attributes to all dynamic tags to handle complex queries with bracketing 
+ o Added IBATIS-35 to allow duplicate type aliases
  o Fixed IBATIS-45 Removed JavaBeanProbe/MapProbe in favor of ComplexBeanProbe 
  o Fixed IBATIS-79 Problem with nested groupBy resultMaps
- o Fixed bug that prevented dynamic tags from being nested inside an iterate tag
- o Fixed bug that will now allow for the $[]$ notation to be used.
+ o Fixed IBATIS-78 JDBC driver properties does not work when using DBCP
+ o Fixed IBATIS-42 bug that prevented dynamic tags from being nested inside an iterate tag
+ o Fixed IBATIS-112 bug that will now allow for the $[]$ notation to be used.
+ o Fixed IBATIS-45 ProbeExceptions with complex beans
+ o Fixed IBATIS-79 Problem with nested groupBy resultMaps
+ o Fixed IBATIS-46 xml parsing issue using jdk 1.3
+ o Fixed IBATIS-102 duplicate code in the SqlMapConfigParser.java
+ o Fixed IBATIS-101 add remapResults attribute to procedure tag in sql-map-2.dtd
  o Changed SQL executor to always call .execute instead of .executeQuery and .executeUpdate
  
 ------------------------------
