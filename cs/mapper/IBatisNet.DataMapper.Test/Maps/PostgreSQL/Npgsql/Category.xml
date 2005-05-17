@@ -12,7 +12,7 @@
 			select
 			Category_ID as Id,
 			Category_Name as Name,
-			Category_Guid as Guid
+			Category_Guid as GuidString
 			from Categories  
 			where Category_ID = #value# 
 		</select>
@@ -98,6 +98,19 @@
 			<generate table="Categories" by="Category_Id, Category_Name"/>
 		</delete>
 		
+		<!--
+		Using a parameterMap with more parameters than the SQL statement needs as parameters 
+		will throw an error with Npgsql 0.7.  This is like Oracle with MS OracleClient or ODP.NET 10g.
+		
+		Removing the parameters doesn't help though, unlike Oracle since it only selects the columns
+		listed in the parameterMap!
+		
+		MSSQL and MySQL databases and providers seem to allow unneeded parameters.
+		-->		
+		<!--
+		This creates an invalid SQL statement (ends with ? instead of :param0) :
+		<select id="SelectByPKCategoryGenerate" resultClass="Category" parameterMap="select-generate-params">
+		-->
 		<select id="SelectByPKCategoryGenerate" resultClass="Category" parameterClass="Category" parameterMap="select-generate-params">
 			<generate table="Categories" by="Category_Id"/> 
 		</select>
@@ -158,7 +171,12 @@
 			<parameter property="Id" column="Category_Id" />
 			<parameter property="Name" column="Category_Name"/>
 		</parameterMap>
-		
+
+		<!--
+		<parameterMap id="select-generate-params">
+			<parameter property="Id" column="Category_Id" />
+		</parameterMap>
+		-->
 		<parameterMap id="select-generate-params">
 			<parameter property="Id" column="Category_Id" />
 			<parameter property="Name" column="Category_Name"/>

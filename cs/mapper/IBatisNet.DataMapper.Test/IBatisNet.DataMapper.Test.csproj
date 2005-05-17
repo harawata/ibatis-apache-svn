@@ -766,6 +766,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "NUnit\SqlMapTests\PostgreSQL\StatementGenerate.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NUnit\SqlMapTests\PostgreSQL\StatementTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Scripts\Access\account-init.sql"
                     BuildAction = "Content"
                 />
