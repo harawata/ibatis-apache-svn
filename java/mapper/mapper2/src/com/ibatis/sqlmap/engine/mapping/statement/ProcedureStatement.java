@@ -34,4 +34,7 @@ public class ProcedureStatement extends GeneralStatement {
     getSqlExecutor().executeQueryProcedure(request, conn, sqlString.trim(), parameters, skipResults, maxResults, callback);
   }
 
+  public StatementType getStatementType() {
+    return StatementType.PROCEDURE;
+  }
 }

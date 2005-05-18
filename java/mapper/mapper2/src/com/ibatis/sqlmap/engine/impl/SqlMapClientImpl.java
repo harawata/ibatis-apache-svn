@@ -21,6 +21,7 @@ import com.ibatis.sqlmap.client.SqlMapSession;
 import com.ibatis.sqlmap.client.event.RowHandler;
 import com.ibatis.sqlmap.engine.execution.SqlExecutor;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
+import com.ibatis.sqlmap.engine.binding.MapperProxy;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -201,6 +202,10 @@ public class SqlMapClientImpl implements ExtendedSqlMapClient {
 
   public void flushDataCache(String cacheId) {
     delegate.flushDataCache(cacheId);
+  }
+
+  public Object getMapper(Class c) {
+    return MapperProxy.newMapperProxy(this, c);
   }
 
   private SqlMapSessionImpl getLocalSqlMapSession() {

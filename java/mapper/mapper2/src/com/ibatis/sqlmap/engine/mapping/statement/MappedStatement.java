@@ -30,6 +30,8 @@ public interface MappedStatement {
 
   public String getId();
 
+  public StatementType getStatementType();
+
   public Integer getResultSetType();
 
   public int executeUpdate(RequestScope request, Transaction trans, Object parameterObject)

@@ -24,6 +24,10 @@ import java.util.List;
 
 public class DeleteStatement extends GeneralStatement {
 
+  public StatementType getStatementType() {
+    return StatementType.DELETE;
+  }
+
   public Object executeQueryForObject(RequestScope request, Transaction trans, Object parameterObject, Object resultObject)
       throws SQLException {
     throw new SQLException("Delete statements cannot be executed as a query.");

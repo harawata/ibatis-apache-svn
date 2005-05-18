@@ -26,6 +26,10 @@ public class InsertStatement extends GeneralStatement {
 
   private SelectKeyStatement selectKeyStatement;
 
+  public StatementType getStatementType() {
+    return StatementType.INSERT;
+  }
+
   public Object executeQueryForObject(RequestScope request, Transaction trans, Object parameterObject, Object resultObject)
       throws SQLException {
     throw new SQLException("Insert statements cannot be executed as a query.");

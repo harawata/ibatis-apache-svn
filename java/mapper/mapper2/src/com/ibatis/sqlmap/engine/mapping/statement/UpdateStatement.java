@@ -24,6 +24,10 @@ import java.util.List;
 
 public class UpdateStatement extends GeneralStatement {
 
+  public StatementType getStatementType() {
+    return StatementType.UPDATE;
+  }
+
   public Object executeQueryForObject(RequestScope request, Transaction trans, Object parameterObject, Object resultObject)
       throws SQLException {
     throw new SQLException("Update statements cannot be executed as a query.");

@@ -41,6 +41,10 @@ public class CachingStatement implements MappedStatement {
     return statement.getId();
   }
 
+  public StatementType getStatementType() {
+    return statement.getStatementType();
+  }
+
   public Integer getResultSetType() {
     return statement.getResultSetType();
   }

@@ -38,6 +38,10 @@ import java.io.*;
 
 public class GeneralStatement extends BaseStatement {
 
+  public StatementType getStatementType() {
+    return StatementType.UNKNOWN;
+  }
+
   public int executeUpdate(RequestScope request, Transaction trans, Object parameterObject)
       throws SQLException {
     ErrorContext errorContext = request.getErrorContext();

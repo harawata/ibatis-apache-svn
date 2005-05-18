@@ -22,6 +22,10 @@ import java.sql.SQLException;
 
 public class SelectStatement extends GeneralStatement {
 
+  public StatementType getStatementType() {
+    return StatementType.SELECT;
+  }
+
   public int executeUpdate(RequestScope request, Transaction trans, Object parameterObject)
       throws SQLException {
     throw new SQLException("Select statements cannot be executed as an update.");

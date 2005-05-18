@@ -186,4 +186,45 @@ public interface SqlMapClient extends SqlMapExecutor, SqlMapTransactionManager {
    */
   public void flushDataCache(String cacheId);
 
+  /**
+   * Returns a generated implementation of a cusom mapper class as specified by the method
+   * parameter.  The generated implementation will run mapped statements by matching the method
+   * name to the statement name.  The mapped statement elements determine how the statement is
+   * run as per the following:
+   * <ul>
+   *   <li>&lt;insert&gt; -- insert()
+   *   <li>&lt;update&gt; -- update()
+   *   <li>&lt;delete&gt; -- delete()
+   *   <li>&lt;select&gt; -- queryForObject, queryForList or queryForMap, as determined by signature (see below)
+   *   <li>&lt;procedure&gt; -- determined by method name (see below)
+   * </ul>
+   *
+   * How select statements are run is determined by the method signature,
+   * as per the following:
+   * <ul>
+   *   <li> Object methodName (Object param) -- queryForObject
+   *   <li> List methodName (Object param [, int skip, int max | , int pageSize]) -- queryForList
+   *   <li> Map methodName (Object param, String keyProp [,valueProp]) -- queryForMap
+   * </ul>
+   *
+   * How stored procedures are run is determined by the method name,
+   * as per the following:
+   * <ul>
+   *   <li> insertXxxxx -- insert()
+   *   <li> createXxxxx -- insert()
+   *   <li> updateXxxxx -- update()
+   *   <li> saveXxxxx -- update()
+   *   <li> deleteXxxxx -- delete()
+   *   <li> removeXxxxx -- delete()
+   *   <li> selectXxxxx -- queryForXxxxxx() determined by method signature as above
+   *   <li> queryXxxxx -- queryForXxxxxx() determined by method signature as above
+   *   <li> fetchXxxxx -- queryForXxxxxx() determined by method signature as above
+   *   <li> getXxxxx -- queryForXxxxxx() determined by method signature as above
+   * </ul>
+   *
+   * @param c
+   * @return
+   */
+  public Object getMapper (Class c);
+
 }
