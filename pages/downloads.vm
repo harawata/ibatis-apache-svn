@@ -1,0 +1,45 @@
+<html>
+<head>    
+<title>iBATIS Downloads</title>
+</head>
+
+<body>
+
+<h2>iBATIS for Java</h2>
+
+    <ul>
+      <li><a href="http://prdownloads.sourceforge.net/ibatisdb/iBATIS_DBL-2.1.0.565.zip?download">Stable Binaries and Source</a> (2.1.0 build 565)</li>
+      <li><a href="http://prdownloads.sourceforge.net/ibatisjpetstore/iBATIS_JPetStore-4.0.5.zip?download">JPetStore Example Application</a></li>
+      <li><a href="http://sourceforge.net/project/showfiles.php?group_id=61326">Old Releases (at SourceForge) </a></li>
+    </ul>
+    
+<h2>iBATIS.NET</h2>
+
+    <ul>
+      <li class="general"><a href="http://prdownloads.sourceforge.net/ibatisnet/iBatisNet-bin-release-1.0.1.321.zip">Stable Binaries</a></li>
+      <li class="general"><a href="http://prdownloads.sourceforge.net/ibatisnet/iBatisNet-source-1.0.1.321.zip?download">Stable Source Code</a></li>
+      <li class="general"><a href="http://prdownloads.sourceforge.net/ibatisnet/NPetshop-1.0.0.RC1.zip?download">NPetShop Example Application</a></li>
+    </ul>
+
+<h2>Documentation </h2>
+    <ul>
+      <li>English 
+        <ul>
+          <li><a href="http://prdownloads.sourceforge.net/ibatisnet/DevGuide.pdf?download"><b>Generic Developer Guide (.NET and Java)</b></a></li>
+          <li><a href="http://prdownloads.sourceforge.net/ibatisdb/iBATIS-SqlMaps-2.pdf?download">SQL Maps for Java, Developer Guide </a></li>
+          <li><a href="http://prdownloads.sourceforge.net/ibatisdb/iBATIS-SqlMaps-2-Tutorial.pdf?download">SQL Maps for Java, Tutorial </a></li>
+          <li><a href="http://prdownloads.sourceforge.net/ibatisdb/iBATIS-DAO-2.pdf?download">DAO for Java, Developer Guide</a></li>
+        </ul>
+      </li>
+      <li>Chinese 
+        <ul>
+          <li><a href="http://prdownloads.sourceforge.net/ibatisdb/iBATIS-SqlMaps-2_cn.pdf?download">SQL Maps for Java, Developer Guide </a></li>
+          <li><a href="http://prdownloads.sourceforge.net/ibatisdb/iBATIS-SqlMaps-2-Tutorial_cn.pdf?download">SQL Maps for Java, Tutorial </a></li>
+        </ul>
+      </li>
+    </ul>
+
+
+</body>
+
+</html>

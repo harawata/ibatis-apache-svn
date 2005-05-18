@@ -1,0 +1,25 @@
+<div id="Menu">
+	<b>Information</b><br/>
+	<a href="index.html" title="What's new with iBATIS?">News</a><br />
+	<a href="events.html" title="User groups, seminars, conferences etc.">Events</a><br />
+	<a href="archive.html" title="Old news from the past.">News Archive</a><br />
+	<br/>
+	<b>Software</b><br/>
+	<a href="datamapper.html" title="Simplify data access">Data Mapper</a><br />
+	<a href="dao.html" title="Hide data acess implementation">Data Access Objects</a><br />
+	<a href="petstore.html" title="The official example applications">Example Apps</a><br />
+	<br/>
+	<b>Project</b><br/>
+	<a href="about.html" title="What is iBATIS?">About</a><br />
+	<a href="background.html" title="Where did iBATIS come from, what does 'iBATIS' mean?">Background</a><br />
+	<a href="license.html" title="The Apache Software Foundation License 2.0">License</a><br />
+	<a href="team.html" title="Who's responsible for iBATIS?">Team</a><br />
+	<a href="bylaws.html" title="How do we operate?">Bylaws</a><br />
+	<a href="status.html" title="Where are we at?">Status</a><br />
+	<br/>
+	<b>Resources</b><br/>
+	<a href="resources.html" title="Helpful resources">FAQ, Wiki, Mailing Lists, Issue Tracker, Source Code</a><br/>
+	<br/>
+	<b>Downloads</b><br/>
+	<a href="downloads.html" title="Everything you need to run iBATIS">Binaries, Documentation, Source</a><br />
+</div>

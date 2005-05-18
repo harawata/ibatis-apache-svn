@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    $!headerContent
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="default.css">
+</head>
+
+<body>
+    <div id="Logo">
+    <img valign="top" align="right" src="logo.gif">
+      <img src="ibatis.gif">
+      
+    </div>
+    
+    <div id="Header"><script language="javascript">document.write(document.title);</script></div>
+
+    <div id="Content">
+      #parse($innerTemplate)
+    </div>
+
+    #parse("template/menu.vm")
+
+    <hr height="1" color="black" width="800">
+    <p align="center">
+    <i>This site is maintained by the iBATIS development community, but this site is not affiliated with the Apache Software Foundation.</i>
+    <br/><img src="asf.jpg"></p>
+</body>
+</html>
