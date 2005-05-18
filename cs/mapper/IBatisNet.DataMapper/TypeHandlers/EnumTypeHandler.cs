@@ -29,8 +29,9 @@
 using System;
 using System.Data;
 using System.Globalization;
-
+using System.Reflection;
 using IBatisNet.Common.Utilities.Objects;
+using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
 using IBatisNet.DataMapper.Exceptions;
 #endregion 
@@ -46,12 +47,23 @@ namespace IBatisNet.DataMapper.TypeHandlers
 	{
 
 		/// <summary>
+		///  Sets a parameter on a IDbCommand
+		/// </summary>
+		/// <param name="dataParameter">the parameter</param>
+		/// <param name="parameterValue">the parameter value</param>
+		/// <param name="dbType">the dbType of the parameter</param>
+		public override void SetParameter(IDataParameter dataParameter, object parameterValue, string dbType)
+		{
+			dataParameter.Value =  Convert.ChangeType( parameterValue, Enum.GetUnderlyingType( parameterValue.GetType() ) );;
+		}
+
+		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="mapping"></param>
 		/// <param name="dataReader"></param>
 		/// <returns></returns>
-		protected override object GetValueByName(ResultProperty mapping, IDataReader dataReader)
+		public override object GetValueByName(ResultProperty mapping, IDataReader dataReader)
 		{
 			int index = dataReader.GetOrdinal(mapping.ColumnName);
 
@@ -65,7 +77,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 			}
 		}
 
-		protected override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader) 
+		public override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader) 
 		{
 			if (dataReader.IsDBNull(mapping.ColumnIndex) == true)
 			{
@@ -77,9 +89,10 @@ namespace IBatisNet.DataMapper.TypeHandlers
 			}
 		}
 
-		protected override object GetNullValue(ResultProperty mapping) 
+
+		public override object ValueOf(Type type, string s)
 		{
-			return Enum.Parse(mapping.PropertyInfo.PropertyType, mapping.NullValue);
+			return Enum.Parse(type, s);
 		}
 
 		public override object GetDataBaseValue(object outputValue, Type parameterType )
@@ -88,9 +101,12 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		}
 
 
-		public override bool IsSimpleType() 
+		public override bool IsSimpleType
 		{
-			return true;
+			get
+			{
+				return true;
+			}
 		}
 	}
 }

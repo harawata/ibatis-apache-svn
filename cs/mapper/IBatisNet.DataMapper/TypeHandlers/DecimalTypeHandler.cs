@@ -43,13 +43,14 @@ namespace IBatisNet.DataMapper.TypeHandlers
 	internal class DecimalTypeHandler : BaseTypeHandler
 	{
 
+
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="mapping"></param>
 		/// <param name="dataReader"></param>
 		/// <returns></returns>
-		protected override object GetValueByName(ResultProperty mapping, IDataReader dataReader)
+		public override object GetValueByName(ResultProperty mapping, IDataReader dataReader)
 		{
 			int index = dataReader.GetOrdinal(mapping.ColumnName);
 
@@ -63,7 +64,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 			}
 		}
 
-		protected override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader) 
+		public override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader) 
 		{
 			if (dataReader.IsDBNull(mapping.ColumnIndex) == true)
 			{
@@ -75,12 +76,12 @@ namespace IBatisNet.DataMapper.TypeHandlers
 			}
 		}
 
-		protected override object GetNullValue(ResultProperty mapping) 
+		public override object ValueOf(Type type, string s)
 		{
 			CultureInfo culture = new CultureInfo( "en-US" );
 			// nullValue decimal must be  in format ######.##
 			// where . is separator for decimal
-			return decimal.Parse( mapping.NullValue, culture);
+			return decimal.Parse(s, culture);
 		}
 
 		public override object GetDataBaseValue(object outputValue, Type parameterType )
@@ -89,9 +90,12 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		}
 
 
-		public override bool IsSimpleType() 
+		public override bool IsSimpleType
 		{
-			return true;
+			get
+			{
+				return true;
+			}
 		}
 	}
 }

@@ -28,6 +28,7 @@
 
 using System;
 using System.Collections;
+using System.Data;
 using System.Reflection;
 using System.Xml.Serialization;
 using IBatisNet.Common.Exceptions;
@@ -293,6 +294,40 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			_propertyInfo = propertyInfo;
 
 			_typeHandler =  typeHandlerFactory.GetTypeHandler(propertyInfo.PropertyType);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="dataReader"></param>
+		/// <returns></returns>
+		public object GetDataBaseValue(IDataReader dataReader)
+		{
+			object value = null;
+
+			if (_columnIndex == UNKNOWN_COLUMN_INDEX)  
+			{
+				value = _typeHandler.GetValueByName(this, dataReader);
+			} 
+			else 
+			{
+				value = _typeHandler.GetValueByIndex(this, dataReader);
+			}
+
+			bool wasNull = (value == DBNull.Value);
+			if (wasNull)
+			{
+				if (this.HasNullValue) 
+				{
+					value = _typeHandler.ValueOf(_propertyInfo.PropertyType, _nullValue);
+				}
+				else
+				{
+					value = null;
+				}			
+			}
+
+			return value;
 		}
 		#endregion
 	}

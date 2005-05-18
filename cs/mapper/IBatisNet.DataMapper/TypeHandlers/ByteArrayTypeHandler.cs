@@ -43,13 +43,14 @@ namespace IBatisNet.DataMapper.TypeHandlers
 	internal class ByteArrayTypeHandler : BaseTypeHandler
 	{
 
+
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="mapping"></param>
 		/// <param name="dataReader"></param>
 		/// <returns></returns>
-		protected override object GetValueByName(ResultProperty mapping, IDataReader dataReader)
+		public override object GetValueByName(ResultProperty mapping, IDataReader dataReader)
 		{
 			int index = dataReader.GetOrdinal(mapping.ColumnName);
 
@@ -63,7 +64,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 			}
 		}
 
-		protected override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader) 
+		public override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader) 
 		{
 			if (dataReader.IsDBNull(mapping.ColumnIndex) == true)
 			{
@@ -111,20 +112,23 @@ namespace IBatisNet.DataMapper.TypeHandlers
 			return stream.ToArray();
 		}
 
-		protected override object GetNullValue(ResultProperty mapping) 
+		
+		public override object ValueOf(Type type, string s)
 		{
-			return null;
+			return System.Text.Encoding.Default.GetBytes(s);
 		}
-
 
 		public override object GetDataBaseValue(object outputValue, Type parameterType )
 		{
 			throw new DataMapperException("NotSupportedException");
 		}
 
-		public override bool IsSimpleType() 
+		public override bool IsSimpleType
 		{
-			return true;
+			get
+			{
+				return true;
+			}
 		}
 	}
 }

@@ -75,8 +75,8 @@ namespace IBatisNet.DataMapper.Commands
 					{
 						ParameterProperty property = request.ParameterMap.GetProperty(i);
 
-						parameterValue = request.ParameterMap.GetValueOfProperty(parameterObject,
-							property.PropertyName);
+//						parameterValue = request.ParameterMap.GetValueOfProperty(parameterObject,
+//							property.PropertyName);
 					}
 					else // 'value' parameter
 					{
@@ -106,7 +106,7 @@ namespace IBatisNet.DataMapper.Commands
 						//						property.Size = dataParameter.Size;
 
 						sqlParameter.Direction = property.Direction;
-						parameterValue = request.ParameterMap.GetValueOfProperty(parameterObject, property.PropertyName);
+//						parameterValue = request.ParameterMap.GetValueOfProperty(parameterObject, property.PropertyName);
 					}
 				}
 

@@ -12,7 +12,7 @@ namespace IBatisNet.DataMapper.Test.Domain
 
 		#region ITypeHandlerCallback
 
-		public object GetNullValue(string nullValue)
+		public object ValueOf(string nullValue)
 		{
 			if ("100".Equals(nullValue)) 
 			{

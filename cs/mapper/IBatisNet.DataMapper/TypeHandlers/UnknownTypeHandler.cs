@@ -54,16 +54,15 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		/// Performs processing on a value before it is used to set
 		/// the parameter of a IDbCommand.
 		/// </summary>
-		/// <param name="mapping">The mapping between data parameter and object property.</param>
 		/// <param name="dataParameter"></param>
 		/// <param name="parameterValue">The value to be set</param>
 		/// <param name="dbType">Data base type</param>
-		public override void SetParameter(ParameterProperty mapping, IDataParameter dataParameter, object parameterValue, string dbType)
+		public override void SetParameter(IDataParameter dataParameter, object parameterValue, string dbType)
 		{
 			if (parameterValue!=null)
 			{
 				ITypeHandler handler = _factory.GetTypeHandler( parameterValue.GetType(), dbType );
-				handler.SetParameter(mapping, dataParameter, parameterValue, dbType);
+				handler.SetParameter(dataParameter, parameterValue, dbType);
 			}
 			else
 			{
@@ -73,7 +72,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 			}
 		}
 
-		protected override object GetValueByName(ResultProperty mapping, IDataReader dataReader)
+		public override object GetValueByName(ResultProperty mapping, IDataReader dataReader)
 		{
 			int index = dataReader.GetOrdinal(mapping.ColumnName);
 
@@ -87,7 +86,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 			}		
 		}
 
-		protected override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader)
+		public override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader)
 		{
 			if (dataReader.IsDBNull(mapping.ColumnIndex) == true)
 			{
@@ -99,9 +98,9 @@ namespace IBatisNet.DataMapper.TypeHandlers
 			}		
 		}
 
-		protected override object GetNullValue(ResultProperty mapping)
+		public override object ValueOf(Type type, string s)
 		{
-			throw new NotImplementedException();
+			return s;
 		}
 
 		public override object GetDataBaseValue(object outputValue, Type parameterType)
@@ -110,9 +109,32 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		}
 
 
-		public override bool IsSimpleType()
+		public override bool IsSimpleType
 		{
-			throw new NotImplementedException();
+			get
+			{
+				return true;
+			}
+		}
+
+		/// <summary>
+		///  Compares two values (that this handler deals with) for equality
+		/// </summary>
+		/// <param name="obj">one of the objects</param>
+		/// <param name="str">the other object as a String</param>
+		/// <returns>true if they are equal</returns>
+		public override bool Equals(object obj, string str) 
+		{
+			if (obj == null || str == null) 
+			{
+				return obj == str;
+			} 
+			else 
+			{
+				ITypeHandler handler = _factory.GetTypeHandler(obj.GetType());
+				object castedObject = handler.ValueOf(obj.GetType(), str);
+				return obj.Equals(castedObject);
+			}
 		}
 	}
 }

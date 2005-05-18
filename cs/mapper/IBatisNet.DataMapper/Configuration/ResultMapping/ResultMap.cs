@@ -168,7 +168,6 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// <summary>
 		/// Do not use direclty, only for serialization.
 		/// </summary>
-		[Obsolete("This public constructor with no parameter is not really obsolete, but is reserved for serialization.", false)]
 		public ResultMap()
 		{
 		}
@@ -331,7 +330,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			if (_discriminator != null)
 			{	
 				ResultProperty mapping = _discriminator.ResultProperty;
-				object dataBaseValue = mapping.TypeHandler.GetDataBaseValue( mapping, dataReader);
+				object dataBaseValue = mapping.GetDataBaseValue( dataReader );
 				subMap = _discriminator.GetSubMap( dataBaseValue.ToString() );
 
 				if (subMap == null) 
@@ -345,6 +344,8 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			}
 			return subMap;
 		}
+
+		
 		#endregion
 	}
 }

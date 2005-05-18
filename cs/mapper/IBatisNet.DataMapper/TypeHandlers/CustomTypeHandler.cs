@@ -49,31 +49,30 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		/// Performs processing on a value before it is used to set
 		/// the parameter of a IDbCommand.
 		/// </summary>
-		/// <param name="mapping">The mapping between data parameter and object property.</param>
 		/// <param name="dataParameter"></param>
 		/// <param name="parameterValue">The value to be set</param>
 		/// <param name="dbType">Data base type</param>
-		public override void SetParameter(ParameterProperty mapping, IDataParameter dataParameter, object parameterValue, string dbType)
+		public override void SetParameter(IDataParameter dataParameter, object parameterValue, string dbType)
 		{
 			IParameterSetter setter = new ParameterSetterImpl(dataParameter);
 			_callback.SetParameter(setter, parameterValue);
 		}
 
-		protected override object GetValueByName(ResultProperty mapping, IDataReader dataReader)
+		public override object GetValueByName(ResultProperty mapping, IDataReader dataReader)
 		{
 			IResultGetter getter = new ResultGetterImpl(dataReader, mapping.ColumnName);
 			return _callback.GetResult(getter);
 		}
 
-		protected override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader)
+		public override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader)
 		{
 			IResultGetter getter = new ResultGetterImpl(dataReader, mapping.ColumnIndex);
 			return _callback.GetResult(getter);		
 		}
 
-		protected override object GetNullValue(ResultProperty mapping)
+		public override object ValueOf(Type type, string s)
 		{
-			return _callback.GetNullValue(mapping.NullValue);
+			return _callback.ValueOf(s);
 		}
 
 		public override object GetDataBaseValue(object outputValue, Type parameterType)
@@ -82,9 +81,12 @@ namespace IBatisNet.DataMapper.TypeHandlers
 			return _callback.GetResult(getter);	
 		}
 
-		public override bool IsSimpleType()
+		public override bool IsSimpleType
 		{
-			return false;
+			get
+			{
+				return true;
+			}
 		}
 	}
 }

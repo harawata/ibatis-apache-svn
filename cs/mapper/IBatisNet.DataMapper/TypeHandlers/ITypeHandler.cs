@@ -39,19 +39,28 @@ namespace IBatisNet.DataMapper.TypeHandlers
 	/// </summary>
 	public interface ITypeHandler
 	{
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="mapping"></param>
-		/// <param name="dataReader"></param>
-		/// <returns></returns>
-		object GetDataBaseValue(ResultProperty mapping, IDataReader dataReader);
 
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <returns></returns>
-		bool IsSimpleType();
+		bool IsSimpleType{get;}
+
+		/// <summary>
+		/// Gets a column value by the name
+		/// </summary>
+		/// <param name="mapping"></param>
+		/// <param name="dataReader"></param>
+		/// <returns></returns>
+		object GetValueByName(ResultProperty mapping, IDataReader dataReader);
+
+		/// <summary>
+		/// Gets a column value by the index
+		/// </summary>
+		/// <param name="mapping"></param>
+		/// <param name="dataReader"></param>
+		/// <returns></returns>
+		object GetValueByIndex(ResultProperty mapping, IDataReader dataReader);
 
 		/// <summary>
 		/// Retrieve ouput database value of an output parameter
@@ -62,14 +71,27 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		object GetDataBaseValue(object outputValue, Type parameterType);
 
 		/// <summary>
-		/// Performs processing on a value before it is used to set
-		/// the parameter of a IDbCommand.
+		///  Sets a parameter on a IDbCommand
 		/// </summary>
-		/// <param name="mapping">The mapping between data parameter and object property.</param>
-		/// <param name="dataParameter"></param>
-		/// <param name="parameterValue">The value to be set</param>
-		/// <param name="dbType">Data base type</param>
-		void SetParameter(ParameterProperty mapping, IDataParameter dataParameter, object parameterValue, string dbType);
+		/// <param name="dataParameter">the parameter</param>
+		/// <param name="parameterValue">the parameter value</param>
+		/// <param name="dbType">the dbType of the parameter</param>
+		void SetParameter(IDataParameter dataParameter, object parameterValue, string dbType);
 
+		/// <summary>
+		/// Converts the String to the type that this handler deals with
+		/// </summary>
+		/// <param name="type">the tyepe of the property (used only for enum conversion)</param>
+		/// <param name="s">the String value</param>
+		/// <returns>the converted value</returns>
+		object ValueOf(Type type, string s);
+
+		/// <summary>
+		///  Compares two values (that this handler deals with) for equality
+		/// </summary>
+		/// <param name="obj">one of the objects</param>
+		/// <param name="str">the other object as a String</param>
+		/// <returns>true if they are equal</returns>
+		 bool Equals(object obj, string str);
 	}
 }

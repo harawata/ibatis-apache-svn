@@ -65,11 +65,18 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		/// <returns>The processed value.</returns>
 		object GetResult(IResultGetter getter);
 
+
 		/// <summary>
-		///  Converts the string to the type that this handler deals with
+		/// Casts the string representation of a value into a type recognized by
+		/// this type handler.  This method is used to translate nullValue values
+		/// into types that can be appropriately compared.  If your custom type handler
+		/// cannot support nullValues, or if there is no reasonable string representation
+		/// for this type (e.g. File type), you can simply return the String representation
+		/// as it was passed in.  It is not recommended to return null, unless null was passed
+		/// in.
 		/// </summary>
-		/// <param name="nullValue">the String value</param>
-		/// <returns>the converted value</returns>
-		object GetNullValue(string nullValue);
+		/// <param name="s"></param>
+		/// <returns></returns>
+		object ValueOf(string s);
 	}
 }

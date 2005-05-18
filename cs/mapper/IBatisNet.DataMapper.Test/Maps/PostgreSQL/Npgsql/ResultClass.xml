@@ -7,7 +7,7 @@
 		<statement id="GetBoolean"
 					parameterClass="Int"
 					resultClass="bool" >
-			select 1 from Orders where Order_ID = #value#
+			select 1 from Orders where Order_ID = #dummy#
 		</statement>	
 
 		<statement id="GetByte"

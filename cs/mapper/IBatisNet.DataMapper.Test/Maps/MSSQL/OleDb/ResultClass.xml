@@ -7,7 +7,7 @@
 		<statement id="GetBoolean"
 					parameterClass="Int"
 					resultClass="bool" >
-			select cast(1 as bit) from Orders where Order_ID = #value#
+			select cast(1 as bit) from Orders where Order_ID = #dummy#
 		</statement>	
 
 		<statement id="GetByte"

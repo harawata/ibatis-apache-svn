@@ -49,7 +49,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		/// <param name="mapping"></param>
 		/// <param name="dataReader"></param>
 		/// <returns></returns>
-		protected override object GetValueByName(ResultProperty mapping, IDataReader dataReader)
+		public override object GetValueByName(ResultProperty mapping, IDataReader dataReader)
 		{
 			int index = dataReader.GetOrdinal(mapping.ColumnName);
 
@@ -69,7 +69,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		/// <param name="mapping"></param>
 		/// <param name="dataReader"></param>
 		/// <returns></returns>
-		protected override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader) 
+		public override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader) 
 		{	
 			if (dataReader.IsDBNull(mapping.ColumnIndex) == true)
 			{
@@ -81,19 +81,14 @@ namespace IBatisNet.DataMapper.TypeHandlers
 			}
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="mapping"></param>
-		/// <returns></returns>
-		protected override object GetNullValue(ResultProperty mapping) 
-		{
-			return Convert.ToString(mapping.NullValue);
-		}
-
 		public override object GetDataBaseValue(object outputValue, Type parameterType )
 		{
-			return Convert.ToString(outputValue);;
+			return outputValue;
+		}
+
+		public override object ValueOf(Type type, string s)
+		{
+			return s;
 		}
 
 
@@ -101,9 +96,12 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		/// 
 		/// </summary>
 		/// <returns></returns>
-		public override bool IsSimpleType() 
+		public override bool IsSimpleType
 		{
-			return true;
+			get
+			{
+				return true;
+			}
 		}
 	}
 }

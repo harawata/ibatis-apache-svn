@@ -28,13 +28,16 @@
 
 using System;
 using System.Collections;
+using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
 using IBatisNet.Common.Utilities.Objects;
+using IBatisNet.DataMapper.Configuration.Alias;
 using IBatisNet.DataMapper.Scope;
+using IBatisNet.DataMapper.TypeHandlers;
 
 #endregion
 
@@ -88,14 +91,14 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		{
 			get
 			{
-//				if (_usePositionalParameters) //obdc/oledb
-//				{
-//					return _properties;
-//				}
-//				else 
-//				{
-//					return _propertiesList;
-//				}
+				//				if (_usePositionalParameters) //obdc/oledb
+				//				{
+				//					return _properties;
+				//				}
+				//				else 
+				//				{
+				//					return _propertiesList;
+				//				}
 				return _properties;
 			}
 		}
@@ -242,107 +245,55 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 
 
 		/// <summary>
-		/// Get the value of a property form an object. Replace the null value if any.
+		/// Set parameter value, replace the null value if any.
 		/// </summary>
-		/// <param name="source">The object to get the property.</param>
-		/// <param name="propertyName">The name of the property to read.</param>
-		/// <returns>An object</returns>
-		public object GetValueOfProperty(object source, string propertyName)
+		/// <param name="mapping"></param>
+		/// <param name="dataParameter"></param>
+		/// <param name="parameterValue"></param>
+		public void SetParameter(ParameterProperty mapping, IDataParameter dataParameter, object parameterValue)
 		{
-			object propertyValue = null;
+			object value = parameterValue;
+			ITypeHandler typeHandler = mapping.TypeHandler;
 
-			if ( _propertiesMap.Contains( propertyName ) )
+			if (parameterValue.GetType() != typeof(string) && 
+				parameterValue.GetType() != typeof(Guid) &&
+				!parameterValue.GetType().IsPrimitive)
 			{
-				ParameterProperty property = (ParameterProperty)_propertiesMap[propertyName];
+				value = ObjectProbe.GetPropertyValue(value, mapping.PropertyName);
 
-				// Get the property value
-				propertyValue = ObjectProbe.GetPropertyValue(source, propertyName);
-
-				if (propertyValue != null && propertyValue.GetType() == typeof(byte[]))
+				if (value != null && value.GetType() == typeof(byte[]))
 				{
-					MemoryStream stream = new MemoryStream((byte[])propertyValue);
+					MemoryStream stream = new MemoryStream((byte[])value);
 
-					propertyValue = stream.ToArray();
-				}
-
-				// Check null value
-				// Case of Enum property
-				if (propertyValue != null && propertyValue.GetType().IsEnum)
-				{
-					#region Enum case
-					PropertyInfo propertyInfo =  ReflectionInfo.GetInstance(source.GetType()).GetGetter( propertyName );
-				
-					// check nullValue
-					if ( property.HasNullValue == true )
-					{
-						object nullValue = null;
-
-						nullValue = Enum.Parse(propertyInfo.PropertyType, property.NullValue);
-						//Convert.ChangeType( property.NullValue, type );
-						
-						if ( object.Equals(propertyValue, nullValue) )
-						{
-							propertyValue = null; ;
-						}
-						else
-						{
-							// Convert enum value to numeric value
-							propertyValue = Convert.ChangeType( propertyValue, Enum.GetUnderlyingType( propertyInfo.PropertyType ) );
-						}
-					}
-					else
-					{
-						// Convert enum value to numeric value
-						propertyValue = Convert.ChangeType( propertyValue, Enum.GetUnderlyingType( propertyInfo.PropertyType ) );
-					}
-					#endregion
-				}
-				else
-				{
-					// check nullValue
-					if ( property.HasNullValue == true )
-					{
-						object nullValue = null;
-
-						PropertyInfo propertyInfo =  ReflectionInfo.GetInstance(source.GetType()).GetGetter( propertyName );
-
-						if (propertyInfo.PropertyType == typeof(Decimal))
-						{
-							#region Decimal
-							CultureInfo culture = new CultureInfo( "en-US" );
-							// nullValue decimal must be  ######.##
-							nullValue = decimal.Parse( property.NullValue, culture);
-							#endregion
-						}
-						else if (propertyInfo.PropertyType == typeof(Guid)) 
-						{
-							#region Guid
-							nullValue = new Guid(property.NullValue); 
-							#endregion
-						}						
-						else
-						{
-							nullValue = Convert.ChangeType( property.NullValue, propertyInfo.PropertyType );
-						}
-
-						if ( object.Equals(propertyValue, nullValue) )
-						{
-							propertyValue = null; ;
-						}
-					}
-					else
-					{
-						if (propertyValue == null)
-						{
-							propertyValue = null; ;
-						}
-					}
+					value = stream.ToArray();
 				}
 			}
 
-			return propertyValue;
+			// Apply Null Value
+			if (mapping.HasNullValue) 
+			{
+				if (typeHandler.Equals(value, mapping.NullValue)) 
+				{
+					value = null;
+				}
+			}
+
+			// Set Parameter
+			if (value != null) 
+			{
+				typeHandler.SetParameter(dataParameter, value, mapping.DbType);
+			}
+			else if(typeHandler is CustomTypeHandler)
+			{
+				typeHandler.SetParameter(dataParameter, value, mapping.DbType);
+			}
+			else 
+			{
+				// When sending a null parameter value to the server,
+				// the user must specify DBNull, not null. 
+				dataParameter.Value = System.DBNull.Value;
+			}
 		}
-	
 
 		#region Configuration
 		/// <summary>
@@ -378,5 +329,5 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 
 		#endregion
 
-}
+	}
 }

@@ -8,7 +8,7 @@
 		<statement id="GetBoolean"
 					parameterClass="Int"
 					resultClass="bool" >
-			select 1 from dual where 1 = #value#
+			select 1 from dual where 1 = #dummy#
 		</statement>	
 
 		<statement id="GetByte"

@@ -41,73 +41,67 @@ namespace IBatisNet.DataMapper.TypeHandlers
 	internal abstract class BaseTypeHandler : ITypeHandler
 	{
 		/// <summary>
-		/// 
+		/// Gets a column value by the name
 		/// </summary>
 		/// <param name="mapping"></param>
 		/// <param name="dataReader"></param>
 		/// <returns></returns>
-		public object GetDataBaseValue(ResultProperty mapping, IDataReader dataReader)
-		{
-			object value = null;
+		public abstract object GetValueByName(ResultProperty mapping, IDataReader dataReader);
 
-			if (mapping.ColumnIndex == ResultProperty.UNKNOWN_COLUMN_INDEX)  
+		/// <summary>
+		/// Gets a column value by the index
+		/// </summary>
+		/// <param name="mapping"></param>
+		/// <param name="dataReader"></param>
+		/// <returns></returns>
+		public abstract object GetValueByIndex(ResultProperty mapping, IDataReader dataReader);
+
+		/// <summary>
+		/// Retrieve ouput database value of an output parameter
+		/// </summary>
+		/// <param name="outputValue">ouput database value</param>
+		/// <param name="parameterType">type used in EnumTypeHandler</param>
+		/// <returns></returns>
+		public abstract object GetDataBaseValue(object outputValue, Type parameterType );
+
+		public abstract bool IsSimpleType{ get; }
+
+		/// <summary>
+		/// Converts the String to the type that this handler deals with
+		/// </summary>
+		/// <param name="type">the tyepe of the property (used only for enum conversion)</param>
+		/// <param name="s">the String value</param>
+		/// <returns>the converted value</returns>
+		public abstract object ValueOf(Type type, string s);
+
+		/// <summary>
+		///  Sets a parameter on a IDbCommand
+		/// </summary>
+		/// <param name="dataParameter">the parameter</param>
+		/// <param name="parameterValue">the parameter value</param>
+		/// <param name="dbType">the dbType of the parameter</param>
+		public virtual void SetParameter(IDataParameter dataParameter, object parameterValue, string dbType)
+		{
+			dataParameter.Value = parameterValue;
+		}
+
+		/// <summary>
+		///  Compares two values (that this handler deals with) for equality
+		/// </summary>
+		/// <param name="obj">one of the objects</param>
+		/// <param name="str">the other object as a String</param>
+		/// <returns>true if they are equal</returns>
+		public virtual bool Equals(object obj, string str) 
+		{
+			if (obj == null || str == null) 
 			{
-				value = GetValueByName(mapping, dataReader);
+				return obj == str;
 			} 
 			else 
 			{
-				value = GetValueByIndex(mapping, dataReader);
-			}
-
-			bool wasNull = (value == DBNull.Value);
-			if (wasNull)
-			{
-				if (mapping.HasNullValue) 
-				{
-					value = GetNullValue(mapping);
-				}
-				else
-				{
-					value = null;
-				}			
-			}
-
-			return value;
-		}
-
-
-		protected abstract object GetValueByName(ResultProperty mapping, IDataReader dataReader);
-
-		protected abstract object GetValueByIndex(ResultProperty mapping, IDataReader dataReader);
-
-		protected abstract object GetNullValue(ResultProperty mapping);
-
-		public abstract object GetDataBaseValue(object outputValue, Type parameterType );
-
-		public abstract bool IsSimpleType();
-
-		/// <summary>
-		/// Performs processing on a value before it is used to set
-		/// the parameter of a IDbCommand.
-		/// </summary>
-		/// <param name="mapping">The mapping between data parameter and object property.</param>
-		/// <param name="dataParameter"></param>
-		/// <param name="parameterValue">The value to be set</param>
-		/// <param name="dbType">Data base type</param>
-		public virtual void SetParameter(ParameterProperty mapping, IDataParameter dataParameter, object parameterValue, string dbType)
-		{
-			if (parameterValue!=null)
-			{
-				dataParameter.Value = parameterValue;
-			}
-			else
-			{
-				// When sending a null parameter value to the server,
-				// the user must specify DBNull, not null. 
-				dataParameter.Value = System.DBNull.Value;
+				object castedObject = ValueOf(obj.GetType(), str);
+				return obj.Equals(castedObject);
 			}
 		}
-
-//		public abstract object GetDataParameter(ParameterProperty mapping, object source);
 	}
 }

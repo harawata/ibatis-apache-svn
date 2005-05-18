@@ -227,7 +227,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 				ITypeHandler handler = this.GetTypeHandler(type, null);
 				if (handler != null) 
 				{
-					result = handler.IsSimpleType();
+					result = handler.IsSimpleType;
 				}
 			}
 			return result;

@@ -285,11 +285,16 @@ namespace IBatisNet.DataMapper.MappedStatements
 					// Check if the ResultClass is a 'primitive' Type
 					if (_sqlMap.TypeHandlerFactory.IsSimpleType(_statement.ResultClass))
 					{
+						// Create a ResultMap
+						ResultMap resultMap = new ResultMap();
+
 						// Create a ResultProperty
 						ResultProperty property = new ResultProperty();
 						property.PropertyName = "value";
 						property.ColumnIndex = 0;
 						property.TypeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(outObject.GetType());
+
+						resultMap.AddResultPropery(property);
 
 						SetObjectProperty(request, request.ResultMap, property, ref outObject, reader);
 					}
@@ -951,7 +956,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 					}					
 				}
 
-				object dataBaseValue = mapping.TypeHandler.GetDataBaseValue( mapping, reader);
+				object dataBaseValue = mapping.GetDataBaseValue( reader );
 
 				if (resultMap != null) 
 				{
@@ -1161,7 +1166,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 		private class ReaderAutoMapper 
 		{
 
-			private IList mappings = new ArrayList();
+//			private IList _mappings = new ArrayList();
+			private ResultMap _resultMap = new ResultMap();
 
 			/// <summary>
 			/// 
@@ -1198,12 +1204,14 @@ namespace IBatisNet.DataMapper.MappedStatements
 						{
 							property.PropertyName = matchedPropertyInfo.Name;
 							property.Initialize(typeHandlerFactory, matchedPropertyInfo );
-							mappings.Add(property);
+//							_mappings.Add(property);
+							_resultMap.AddResultPropery(property);
 						}
 						else if (resultObject is Hashtable) 
 						{
 							property.PropertyName = columnName;
-							mappings.Add(property);
+//							_mappings.Add(property);
+							_resultMap.AddResultPropery(property);
 						}
 
 						// Set TypeHandler
@@ -1224,11 +1232,11 @@ namespace IBatisNet.DataMapper.MappedStatements
 			/// <param name="resultObject"></param>
 			public void AutoMapReader(IDataReader reader, ref object resultObject)
 			{
-				for (int i = 0; i < mappings.Count; i++) 
+				foreach (string key in _resultMap.ColumnsToPropertiesMap.Keys) 
 				{
-					ResultProperty property = (ResultProperty) mappings[i];
+					ResultProperty property = (ResultProperty) _resultMap.ColumnsToPropertiesMap[key];
 					MappedStatement.SetValueOfProperty( ref resultObject, property, 
-									property.TypeHandler.GetDataBaseValue(property, reader));
+						property.GetDataBaseValue( reader ));
 				}
 			}
 

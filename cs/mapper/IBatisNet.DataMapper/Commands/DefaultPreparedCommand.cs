@@ -100,8 +100,6 @@ namespace IBatisNet.DataMapper.Commands
 			StringBuilder paramLogList = new StringBuilder(); // Log info
 			StringBuilder typeLogList = new StringBuilder(); // Log info
 
-			object parameterValue = null;
-
 			for ( int i = 0; i < properties.Count; ++i )
 			{
 				IDataParameter sqlParameter = (IDataParameter)parameters[i];
@@ -119,40 +117,7 @@ namespace IBatisNet.DataMapper.Commands
 				}
 				#endregion
 
-				if (command.CommandType == CommandType.Text)
-				{
-
-					#region text command
-
-					if ( propertyName != "value" ) // Inline Parameters && Parameters via ParameterMap
-					{
-
-						parameterValue = request.ParameterMap.GetValueOfProperty(parameterObject,
-							property.PropertyName);
-
-						#region Logging
-						if (_logger.IsDebugEnabled)
-						{
-							paramLogList.Append( property.PropertyName );
-							paramLogList.Append( "," );
-						}
-						#endregion 
-					}
-					else // 'value' parameter
-					{
-						parameterValue = parameterObject;
-
-						#region Logging
-						if (_logger.IsDebugEnabled)
-						{
-							paramLogList.Append( "'value'" );
-							paramLogList.Append( "," );
-						}
-						#endregion 
-					}
-					#endregion 
-				}
-				else // CommandType.StoredProcedure
+				if (command.CommandType == CommandType.StoredProcedure)
 				{
 					#region store procedure command
 
@@ -164,8 +129,6 @@ namespace IBatisNet.DataMapper.Commands
 					}
 					else // Parameters via ParameterMap
 					{
-//						ParameterProperty property = request.ParameterMap.GetProperty(i);
-
 						if (property.DirectionAttribute.Length == 0)
 						{
 							property.Direction = sqlParameter.Direction;
@@ -176,23 +139,23 @@ namespace IBatisNet.DataMapper.Commands
 						// property.Scale = dataParameter.Scale;
 						// property.Size = dataParameter.Size;
 
-						sqlParameter.Direction = property.Direction;
-						parameterValue = request.ParameterMap.GetValueOfProperty( parameterObject, property.PropertyName );
-					
-						#region Logging
-						if (_logger.IsDebugEnabled)
-						{
-							paramLogList.Append( property.PropertyName );
-							paramLogList.Append( "," );
-						}
-						#endregion 					
+						sqlParameter.Direction = property.Direction;					
 					}
 					#endregion 
 				}
 
-				// Fix JIRA 20
-				//parameterCopy.Value = parameterValue;
-				property.TypeHandler.SetParameter(property, parameterCopy, parameterValue, property.DbType);
+				#region Logging
+				if (_logger.IsDebugEnabled)
+				{
+					paramLogList.Append( property.PropertyName );
+					paramLogList.Append( "," );
+				}
+				#endregion 					
+
+				request.ParameterMap.SetParameter(property, parameterCopy, parameterObject );
+
+//				// Fix JIRA 20
+//				property.TypeHandler.SetParameter(property, parameterCopy, parameterValue, property.DbType);
 
 				parameterCopy.Direction = sqlParameter.Direction;
 
@@ -220,7 +183,7 @@ namespace IBatisNet.DataMapper.Commands
 				#region Logging
 				if (_logger.IsDebugEnabled)
 				{
-					if (parameterValue == null) 
+					if (parameterCopy.Value == System.DBNull.Value) 
 					{
 						paramLogList.Append("null");
 						paramLogList.Append( "], " );
@@ -230,7 +193,7 @@ namespace IBatisNet.DataMapper.Commands
 					else 
 					{ 
 
-						paramLogList.Append( parameterValue.ToString() );
+						paramLogList.Append( parameterCopy.Value.ToString() );
 						paramLogList.Append( "], " );
 
 						// sqlParameter.DbType could be null (as with Npgsql)
@@ -241,7 +204,7 @@ namespace IBatisNet.DataMapper.Commands
 						//typeLogList.Append( sqlParameter.DbType.ToString() );
 						typeLogList.Append( parameterCopy.DbType.ToString() );
 						typeLogList.Append( ", " );
-						typeLogList.Append( parameterValue.GetType().ToString() );
+						typeLogList.Append( parameterCopy.Value.GetType().ToString() );
 						typeLogList.Append( "], " );
 					}
 				}

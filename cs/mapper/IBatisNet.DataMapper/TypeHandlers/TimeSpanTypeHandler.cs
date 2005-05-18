@@ -49,7 +49,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		/// <param name="mapping"></param>
 		/// <param name="dataReader"></param>
 		/// <returns></returns>
-		protected override object GetValueByName(ResultProperty mapping, IDataReader dataReader)
+		public override object GetValueByName(ResultProperty mapping, IDataReader dataReader)
 		{
 			//return GetValueByIndex(dataReader.GetOrdinal(columnName), dataReader);
 			return "ToDo";
@@ -61,7 +61,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		/// <param name="mapping"></param>
 		/// <param name="dataReader"></param>
 		/// <returns></returns>
-		protected override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader) 
+		public override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader) 
 		{
 			// dépendra du dbType spécifié ds le ResultProperty (idem pour le StringTypeHandler
 			// des fois en DateTime, d'autre fois en TimeSpan
@@ -69,29 +69,26 @@ namespace IBatisNet.DataMapper.TypeHandlers
 				//dataReader.GetTimeSpan(columnIndex);
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="mapping"></param>
-		/// <returns></returns>
-		protected override object GetNullValue(ResultProperty mapping) 
-		{
-			return new TimeSpan(Convert.ToInt64(mapping.NullValue));
-		}
-
 		public override object GetDataBaseValue(object outputValue, Type parameterType )
 		{
 			return  new TimeSpan(Convert.ToInt64(outputValue));
 		}
 
+		public override object ValueOf(Type type, string s)
+		{
+			return new TimeSpan(Convert.ToInt64(s));
+		}
 
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <returns></returns>
-		public override bool IsSimpleType() 
+		public override bool IsSimpleType
 		{
-			return true;
+			get
+			{
+				return true;
+			}
 		}
 	}
 }

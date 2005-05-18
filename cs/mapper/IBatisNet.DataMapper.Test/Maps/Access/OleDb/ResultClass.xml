@@ -11,7 +11,7 @@
 		<statement id="GetBoolean"
 					parameterClass="Int"
 					resultClass="bool" >
-			select CBool('True') from Orders where Order_ID = #value#
+			select CBool('True') from Orders where Order_ID = #dummy#
 		</statement>	
 
 		<!--

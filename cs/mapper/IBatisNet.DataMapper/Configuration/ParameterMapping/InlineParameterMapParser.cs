@@ -255,7 +255,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 			} 
 			else if (typeof(IDictionary).IsAssignableFrom(type))
 			{
-				if (propertyType == null) 
+				if (propertyType == null || propertyType.Length==0) 
 				{
 					handler = typeHandlerFactory.GetUnkownTypeHandler();
 				} 

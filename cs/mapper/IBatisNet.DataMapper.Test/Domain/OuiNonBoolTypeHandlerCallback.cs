@@ -18,7 +18,7 @@ namespace IBatisNet.DataMapper.Test.Domain
 
 		#region ITypeHandlerCallback members
 
-		public object GetNullValue(string nullValue)
+		public object ValueOf(string nullValue)
 		{
 			if (YES.Equals(nullValue)) 
 			{
