@@ -18,7 +18,6 @@ public class BindingTest  extends BaseSqlMapTest {
   public void testSelectListStatement () throws Exception {
 
     DocumentMapper dm = (DocumentMapper) sqlMap.getMapper(DocumentMapper.class);
-
     List list = dm.getDocuments();
 
     assertNotNull(list);

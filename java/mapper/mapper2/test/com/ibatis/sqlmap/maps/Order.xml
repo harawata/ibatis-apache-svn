@@ -65,28 +65,6 @@
     <result property="account" column="ORD_ACC_ID" select="getAccountViaColumnName"/>
   </resultMap>
 
-  <!--
-    <resultMap id="repeating-group" class="order">
-      <result property="id"         column="ORD_ID"/>
-      <result property="date"       column="ORD_DATE"/>
-      <result property="cardExpiry" column="ORD_CARD_EXPIRY"/>
-      <result property="cardType"   column="ORD_CARD_TYPE"/>
-      <result property="cardNumber" column="ORD_CARD_NUMBER"/>
-      <result property="street"     column="ORD_STREET"/>
-      <result property="city"       column="ORD_CITY"/>
-      <result property="province"   column="ORD_PROVINCE"/>
-      <result property="postalCode" column="ORD_POSTAL_CODE"/>
-      <group nestedCollection="lineItems" by="ORD_ID" class="testDomain.LineItem">
-        <result property="id"  column="LIN_ITEM_ID" />
-        <result property="description"  column="LIN_DESC" />
-        <group nestedCollection="stockEntries" by="LIN_ITEM_ID" class="testDomain.StockEntry" >
-          <result property="id"  column="LIN_ITEM_ID" />
-          <result property="description"  column="LIN_DESC" />
-        </group>
-      </group>
-    </resultMap>
-  -->
-
   <resultMap id="order-with-lines-result" class="order"
     extends="lite-order-result-by-name">
     <result property="lineItems" column="ORD_ID" select="getLineItemsForOrder"/>

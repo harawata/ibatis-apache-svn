@@ -222,9 +222,10 @@ public interface SqlMapClient extends SqlMapExecutor, SqlMapTransactionManager {
    *   <li> getXxxxx -- queryForXxxxxx() determined by method signature as above
    * </ul>
    *
-   * @param c
-   * @return
+   * @param iface The interface that contains methods representing the mapped statements contained.
+   * @return An instance of iface that can be used to call mapped statements directly in a typesafe
+   * manner.
    */
-  public Object getMapper (Class c);
+  public Object getMapper (Class iface);
 
 }
