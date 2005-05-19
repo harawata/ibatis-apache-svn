@@ -308,6 +308,9 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		}
 
 		[Test]
+		/// <summary>
+		/// Test ExecuteQueryForPaginatedList
+		/// </summary>
 		public void TestExecuteQueryForPaginatedList()
 		{
 			// Get List of all 5
@@ -1054,7 +1057,6 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
 		/// <summary>
 		/// Test JIRA 30 (repeating property)
-		/// TODO JIRA 30 repeating property for all providers
 		/// </summary>
 		[Test] 
 		public void TestJIRA30()

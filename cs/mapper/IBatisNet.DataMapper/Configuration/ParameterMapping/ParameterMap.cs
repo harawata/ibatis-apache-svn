@@ -257,6 +257,8 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 
 			if (parameterValue.GetType() != typeof(string) && 
 				parameterValue.GetType() != typeof(Guid) &&
+				parameterValue.GetType() != typeof(Decimal) &&
+				parameterValue.GetType() != typeof(DateTime) &&
 				!parameterValue.GetType().IsPrimitive)
 			{
 				value = ObjectProbe.GetPropertyValue(value, mapping.PropertyName);

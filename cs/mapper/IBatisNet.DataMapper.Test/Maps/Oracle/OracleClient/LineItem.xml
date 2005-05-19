@@ -173,9 +173,9 @@
   		-->
 		<delete id="DeleteWithComments" >
 			<!-- Delete LineItems -->
-			delete from LineItems where Order_ID = 10
+			BEGIN delete from LineItems where Order_ID = 10;
 			<!-- Delete LineItems -->
-			delete from LineItems where Order_ID = 9
+			delete from LineItems where Order_ID = 9; END;
 		</delete>  
   
   </statements>
