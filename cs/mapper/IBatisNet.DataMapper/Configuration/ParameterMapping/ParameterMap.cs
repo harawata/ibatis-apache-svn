@@ -29,13 +29,9 @@
 using System;
 using System.Collections;
 using System.Data;
-using System.Globalization;
-using System.IO;
-using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
 using IBatisNet.Common.Utilities.Objects;
-using IBatisNet.DataMapper.Configuration.Alias;
 using IBatisNet.DataMapper.Scope;
 using IBatisNet.DataMapper.TypeHandlers;
 
@@ -255,6 +251,9 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 			object value = parameterValue;
 			ITypeHandler typeHandler = mapping.TypeHandler;
 
+			// "The primitive types are Boolean, Byte, SByte, Int16, UInt16, Int32,
+			// UInt32, Int64, UInt64, Char, Double, and Single."
+
 			if (parameterValue.GetType() != typeof(string) && 
 				parameterValue.GetType() != typeof(Guid) &&
 				parameterValue.GetType() != typeof(Decimal) &&
@@ -263,12 +262,15 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 			{
 				value = ObjectProbe.GetPropertyValue(value, mapping.PropertyName);
 
-				if (value != null && value.GetType() == typeof(byte[]))
-				{
-					MemoryStream stream = new MemoryStream((byte[])value);
-
-					value = stream.ToArray();
-				}
+				// This code is obsolete
+				// if we realy need it we must put it in the SetParameter method 
+				// of theByteArrayTypeHandler
+//				if (value != null && value.GetType() == typeof(byte[]))
+//				{
+//					MemoryStream stream = new MemoryStream((byte[])value);
+//
+//					value = stream.ToArray();
+//				}
 			}
 
 			// Apply Null Value
@@ -293,7 +295,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 			{
 				// When sending a null parameter value to the server,
 				// the user must specify DBNull, not null. 
-				dataParameter.Value = System.DBNull.Value;
+				dataParameter.Value = DBNull.Value;
 			}
 		}
 
