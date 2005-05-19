@@ -1,7 +1,7 @@
 <VisualStudioProject>
     <CSHARP LastOpenVersion = "7.10.3077" >
         <Build>
-            <Settings ReferencePath = "E:\Projet\iBATISNet\trunk\Source\IBatisNet.DataMapper\bin\Debug\;E:\Projet\iBATISNet\trunk\Source\External-Bin\Net\1.1\;E:\Projet\iBATISNet\trunk\Source\IBatisNet.DataAccess\bin\Debug\" >
+            <Settings ReferencePath = "E:\Projet\iBATISNet\trunk\Source\IBatisNet.DataMapper\bin\Debug\;E:\Projet\iBATISNet\trunk\Source\External-Bin\Net\1.1\;E:\Projet\iBATISNet\trunk\Source\IBatisNet.DataAccess\bin\Debug\;H:\iBATIS.NET\trunk\cs\mapper\External-Bin\Net\1.1\" >
                 <Config
                     Name = "Debug"
                     EnableASPDebugging = "false"

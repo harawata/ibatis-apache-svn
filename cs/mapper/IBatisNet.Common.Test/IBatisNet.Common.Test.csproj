@@ -261,11 +261,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "NUnit\CommonTests\DynamicProxy\ProxyTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "NUnit\CommonTests\Pagination\PaginatedArrayListTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

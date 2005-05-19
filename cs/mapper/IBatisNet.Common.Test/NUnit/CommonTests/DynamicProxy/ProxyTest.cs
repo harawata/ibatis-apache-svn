@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 
-using IBatisNet.Common.Utilities.DynamicProxy;
-
 using IBatisNet.Common.Test.NUnit;
 
 using NUnit.Framework;

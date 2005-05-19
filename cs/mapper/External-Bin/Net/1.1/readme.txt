@@ -20,3 +20,8 @@ log4net.dll
 Castle dynamic proxy 1.1.0.0
 ============================
 Castle.DynamicProxy.dll
+
+PostgreSql, Npgsql provider V0.7.0.0
+============================
+Npgsql.dll
+Mono.Security.Protocol.Tls.dll

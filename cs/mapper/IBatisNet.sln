@@ -11,11 +11,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBatisNet.DataMapper", "IBa
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBatisNet.Test", "IBatisNet.Test\IBatisNet.Test.csproj", "{33AF5FB1-4ADD-43BB-BE05-31F28C1AE0C3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBatisNet.DataAccess.Extensions", "IBatisNet.DataAccess.Extensions\IBatisNet.DataAccess.Extensions.csproj", "{342C92B4-2742-4C55-9374-A504FE3B6972}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBatisNet.DataAccess.Extensions", "IBatisNet.DataAccess.Extensions\IBatisNet.DataAccess.Extensions.csproj", "{342C92B4-2742-4C55-9374-A504FE3B6972}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBatisNet.Common.Test", "IBatisNet.Common.Test\IBatisNet.Common.Test.csproj", "{5961F3DE-CB5E-40FE-AE89-D00D6E453907}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBatisNet.DataAccess.Test", "IBatisNet.DataAccess.Test\IBatisNet.DataAccess.Test.csproj", "{888FE332-F7B7-4248-AEE1-73E14EB9C042}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBatisNet.DataMapper.Test", "IBatisNet.DataMapper.Test\IBatisNet.DataMapper.Test.csproj", "{998B79D9-800F-493F-A263-306F06906E2F}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -44,30 +52,41 @@ Global
 		{72F70057-B2E1-4DAD-BA6C-E2962745EEA5}.Debug Test.Build.0 = Debug|.NET
 		{72F70057-B2E1-4DAD-BA6C-E2962745EEA5}.Release.ActiveCfg = Release|.NET
 		{72F70057-B2E1-4DAD-BA6C-E2962745EEA5}.Release.Build.0 = Release|.NET
-		{33AF5FB1-4ADD-43BB-BE05-31F28C1AE0C3}.Debug.ActiveCfg = Debug|.NET
-		{33AF5FB1-4ADD-43BB-BE05-31F28C1AE0C3}.Debug.Build.0 = Debug|.NET
-		{33AF5FB1-4ADD-43BB-BE05-31F28C1AE0C3}.Debug Test.ActiveCfg = Debug|.NET
-		{33AF5FB1-4ADD-43BB-BE05-31F28C1AE0C3}.Debug Test.Build.0 = Debug|.NET
-		{33AF5FB1-4ADD-43BB-BE05-31F28C1AE0C3}.Release.ActiveCfg = Release|.NET
-		{33AF5FB1-4ADD-43BB-BE05-31F28C1AE0C3}.Release.Build.0 = Release|.NET
 		{342C92B4-2742-4C55-9374-A504FE3B6972}.Debug.ActiveCfg = Debug|.NET
 		{342C92B4-2742-4C55-9374-A504FE3B6972}.Debug.Build.0 = Debug|.NET
 		{342C92B4-2742-4C55-9374-A504FE3B6972}.Debug Test.ActiveCfg = Debug|.NET
 		{342C92B4-2742-4C55-9374-A504FE3B6972}.Debug Test.Build.0 = Debug|.NET
 		{342C92B4-2742-4C55-9374-A504FE3B6972}.Release.ActiveCfg = Release|.NET
 		{342C92B4-2742-4C55-9374-A504FE3B6972}.Release.Build.0 = Release|.NET
+		{5961F3DE-CB5E-40FE-AE89-D00D6E453907}.Debug.ActiveCfg = Debug|.NET
+		{5961F3DE-CB5E-40FE-AE89-D00D6E453907}.Debug.Build.0 = Debug|.NET
+		{5961F3DE-CB5E-40FE-AE89-D00D6E453907}.Debug Test.ActiveCfg = Debug|.NET
+		{5961F3DE-CB5E-40FE-AE89-D00D6E453907}.Debug Test.Build.0 = Debug|.NET
+		{5961F3DE-CB5E-40FE-AE89-D00D6E453907}.Release.ActiveCfg = Release|.NET
+		{5961F3DE-CB5E-40FE-AE89-D00D6E453907}.Release.Build.0 = Release|.NET
+		{888FE332-F7B7-4248-AEE1-73E14EB9C042}.Debug.ActiveCfg = Debug|.NET
+		{888FE332-F7B7-4248-AEE1-73E14EB9C042}.Debug.Build.0 = Debug|.NET
+		{888FE332-F7B7-4248-AEE1-73E14EB9C042}.Debug Test.ActiveCfg = Debug|.NET
+		{888FE332-F7B7-4248-AEE1-73E14EB9C042}.Debug Test.Build.0 = Debug|.NET
+		{888FE332-F7B7-4248-AEE1-73E14EB9C042}.Release.ActiveCfg = Release|.NET
+		{888FE332-F7B7-4248-AEE1-73E14EB9C042}.Release.Build.0 = Release|.NET
+		{998B79D9-800F-493F-A263-306F06906E2F}.Debug.ActiveCfg = Debug|.NET
+		{998B79D9-800F-493F-A263-306F06906E2F}.Debug.Build.0 = Debug|.NET
+		{998B79D9-800F-493F-A263-306F06906E2F}.Debug Test.ActiveCfg = Debug|.NET
+		{998B79D9-800F-493F-A263-306F06906E2F}.Debug Test.Build.0 = Debug|.NET
+		{998B79D9-800F-493F-A263-306F06906E2F}.Release.ActiveCfg = Release|.NET
+		{998B79D9-800F-493F-A263-306F06906E2F}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		External-Bin\Net\1.1\Castle.DynamicProxy.dll = External-Bin\Net\1.1\Castle.DynamicProxy.dll
+		External-Bin\Net\1.1\Castle.DynamicProxy.license.txt = External-Bin\Net\1.1\Castle.DynamicProxy.license.txt
 		IBatisNet.Schemas\DaoConfig.xsd = IBatisNet.Schemas\DaoConfig.xsd
 		iBATIS.build = iBATIS.build
-		External-Bin\Net\1.1\ICSharpCode.SharpZipLib.dll = External-Bin\Net\1.1\ICSharpCode.SharpZipLib.dll
 		External-Bin\Net\1.1\log4net.dll = External-Bin\Net\1.1\log4net.dll
+		External-Bin\Net\1.1\log4net.license.txt = External-Bin\Net\1.1\log4net.license.txt
 		External-Bin\Net\1.1\log4net.xml = External-Bin\Net\1.1\log4net.xml
-		External-Bin\Net\1.1\NHibernate.dll = External-Bin\Net\1.1\NHibernate.dll
 		External-Bin\Net\1.1\nunit.framework.dll = External-Bin\Net\1.1\nunit.framework.dll
-		IBatisNet.Schemas\SqlMap.xsd = IBatisNet.Schemas\SqlMap.xsd
-		IBatisNet.Schemas\SqlMapConfig.xsd = IBatisNet.Schemas\SqlMapConfig.xsd
+		External-Bin\Net\1.1\readme.txt = External-Bin\Net\1.1\readme.txt
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
