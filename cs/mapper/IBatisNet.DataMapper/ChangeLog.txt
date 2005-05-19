@@ -12,11 +12,13 @@ IBatisNet Change Log
 - Added <discriminator> and <subMap> tags for class inheritance support
 - Added nunit category 'NHibernate'
 - Fixed Oracle issues (JIRA-27, JIRA-54, JIRA-56, JIRA-57)
+- Fixed JIRA-66 #value# moniker not recognized when called something else like #ProductId# 
 - Fixed JIRA-60 QueryForMap not calling session.CloseConnection() correctly 
 - Fixed JIRA-51 If a <statement> has a "cacheModel" attribute set and cacheModelsEnabled="false" in SqlMap.config, an DataMapperException is thrown 
 - Fixed JIRA-49 Exceptions such as NotSupportedException not handled gracefully in CreateParametersForStatementText() 
 - Fixed JIRA-47/48/49 providers.config Assumes Types Are In The Same Assembly
 - Fixed JIRA-45 Unable to reference result maps defined in other xml files when useStatementNamespaces is set to true
+- Fixed JIRA-43 IBatisNet.sln contains a reference to a non-existant project: "IBatisNet.Test" 
 - Fixed JIRA-42 Build 1.1.458.0 doesn't automatically map .Net's bool to Sql Server 2000's Bit column type like previous builds did. 
 - Fixed JIRA-38 ParseGlobalProperties raises NullReferenceException if optional "properties" element is missing from sqlmap config file 
 - Fixed JIRA-37 An exception is thrown when a file watch is applied to an embedded resource 
