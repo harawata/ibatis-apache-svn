@@ -1168,7 +1168,7 @@ resultMapping="LineItem.LineItem"
       a standard type parameter. <example>
           <title>A &lt;statement&gt; using standard type parameters</title>
 
-          <programlisting>&lt;statement id="insertProduct" parameterClass="System.Integer"&gt;
+          <programlisting>&lt;statement id="getProduct" parameterClass="System.Integer"&gt;
   select * from PRODUCT where PRD_ID = <emphasis role="blue">#value#</emphasis>
 &lt;/statement&gt;</programlisting>
         </example></para>
@@ -1203,7 +1203,7 @@ resultMapping="LineItem.LineItem"
           <title>A &lt;statement&gt; using a Map or IDictionary for a
           parameterClass</title>
 
-          <programlisting>&lt;statement id="insertProduct" parameterClass="System.Collections.IDictionary"&gt;
+          <programlisting>&lt;statement id="getProduct" parameterClass="System.Collections.IDictionary"&gt;
   select * from PRODUCT
   where PRD_CAT_ID = <emphasis role="blue">#catId#</emphasis>
   and PRD_CODE = <emphasis role="blue">#code#</emphasis>
