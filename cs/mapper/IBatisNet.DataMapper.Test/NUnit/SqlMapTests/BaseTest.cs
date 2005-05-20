@@ -20,6 +20,8 @@ using IBatisNet.DataMapper.Test.Domain;
 
 namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 {
+	public delegate string KeyConvert(string key);
+
 	/// <summary>
 	/// Summary description for BaseTest.
 	/// </summary>
@@ -32,6 +34,8 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		private static readonly ILog _logger = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
 		protected static string ScriptDirectory = null;
+
+		protected static KeyConvert ConvertKey = null;
 
 		/// <summary>
 		/// Constructor
@@ -51,8 +55,36 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			ConfigureHandler handler = new ConfigureHandler(Configure);
 			sqlMap = SqlMapper.ConfigureAndWatch("sqlmap" + "_" + ConfigurationSettings.AppSettings["database"] + "_" + ConfigurationSettings.AppSettings["providerType"] + ".config", handler);
 
+			if ( sqlMap.DataSource.Provider.Name.IndexOf("PostgreSql")>=0)
+			{
+				BaseTest.ConvertKey = new KeyConvert(Lower);
+			}
+			else if ( sqlMap.DataSource.Provider.Name.IndexOf("oracle")>=0)
+			{
+				BaseTest.ConvertKey = new KeyConvert(Upper);
+			}
+			else 
+			{
+				BaseTest.ConvertKey = new KeyConvert(Normal);
+			}
+
 //			string loadTime = DateTime.Now.Subtract(start).ToString();
 //			Console.WriteLine("Loading configuration time :"+loadTime);
+		}
+
+		protected static string Normal(string key)
+		{
+			return key;
+		}
+
+		protected static string Upper(string key)
+		{
+			return key.ToUpper();
+		}
+
+		protected static string Lower(string key)
+		{
+			return key.ToLower();
 		}
 
 		/// <summary>
@@ -128,6 +160,18 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Assert.AreEqual("Joe", (string) account["FirstName"], "account.FirstName");
 			Assert.AreEqual("Dalton", (string) account["LastName"], "account.LastName");
 			Assert.AreEqual("Joe.Dalton@somewhere.com", (string) account["EmailAddress"], "account.EmailAddress");
+		}
+
+		/// <summary>
+		/// Verify that the input account is equal to the account(id=1).
+		/// </summary>
+		/// <param name="account">An account as hashtable</param>
+		protected void AssertAccount1AsHashtableForResultClass(Hashtable account)
+		{
+			Assert.AreEqual(1, (int) account[BaseTest.ConvertKey("Id")], "account.Id");
+			Assert.AreEqual("Joe", (string) account[BaseTest.ConvertKey("FirstName")], "account.FirstName");
+			Assert.AreEqual("Dalton", (string) account[BaseTest.ConvertKey("LastName")], "account.LastName");
+			Assert.AreEqual("Joe.Dalton@somewhere.com", (string) account[BaseTest.ConvertKey("EmailAddress")], "account.EmailAddress");
 		}
 
 		/// <summary>

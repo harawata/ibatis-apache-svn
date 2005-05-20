@@ -144,7 +144,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		public void TestExecuteQueryForObjectAsHashtableResultClass()
 		{
 			Hashtable account = (Hashtable) sqlMap.QueryForObject("GetAccountAsHashtableResultClass", 1);
-			AssertAccount1AsHashtable(account);
+			AssertAccount1AsHashtableForResultClass(account);
 		}
 
 		/// <summary>
@@ -280,14 +280,14 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		{
 			IList list = sqlMap.QueryForList("GetAllAccountsAsHashtableViaResultClass", null);
 
-			AssertAccount1AsHashtable((Hashtable) list[0]);
+			AssertAccount1AsHashtableForResultClass((Hashtable) list[0]);
 			Assert.AreEqual(5, list.Count);
 
-			Assert.AreEqual(1, ((Hashtable) list[0])["Id"]);
-			Assert.AreEqual(2, ((Hashtable) list[1])["Id"]);
-			Assert.AreEqual(3, ((Hashtable) list[2])["Id"]);
-			Assert.AreEqual(4, ((Hashtable) list[3])["Id"]);
-			Assert.AreEqual(5, ((Hashtable) list[4])["Id"]);
+			Assert.AreEqual(1, ((Hashtable) list[0])[BaseTest.ConvertKey("Id")]);
+			Assert.AreEqual(2, ((Hashtable) list[1])[BaseTest.ConvertKey("Id")]);
+			Assert.AreEqual(3, ((Hashtable) list[2])[BaseTest.ConvertKey("Id")]);
+			Assert.AreEqual(4, ((Hashtable) list[3])[BaseTest.ConvertKey("Id")]);
+			Assert.AreEqual(5, ((Hashtable) list[4])[BaseTest.ConvertKey("Id")]);
 		}
 
 		/// <summary>
