@@ -21,7 +21,7 @@ Wiki
 DataMapper
 --------------------
 
-MySql/MySql
+MySql/MySql 1.0.4
  + ICloneable exception with no connectionstring
 
 Oracle/ODP.NET 10g
@@ -29,10 +29,11 @@ Oracle/ODP.NET 10g
  + ResultClassTest.TestSingle invalid cast provider/db issue
  + ResultClassTest.TestDouble invalid cast provider/db issue
 
-PostgreSQL/Npgsql
- + Stored function NUnit tests
+PostgreSQL/Npgsql 0.7
+ + StatementGenerate.TestSelectByPK
+ + Add Stored function NUnit tests
 
-Firebird/Firebird
+Firebird/Firebird 1.7
  + ICloneable exception with no connectionstring
 
 Clover.NET
