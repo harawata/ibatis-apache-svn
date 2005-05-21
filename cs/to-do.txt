@@ -1,0 +1,63 @@
+--------------------
+Docs
+--------------------
+ + Basic CTH explanation
+ + Update for basic TypeHandler support
+ + Configuration changes
+ + New SqlMap element attributes
+ + Updated SqlMap element attributes
+
+
+--------------------
+Wiki
+--------------------
+
+ + FAQ Explanation for Oracle and multiple SQL statements in one <statement> (as in TestDeleteWithComments)
+ + FAQ CTH explanation for Oracle ODP.NET 10g and Boolean parameters
+ + FAQ CTH explanation for Oracle Decimals and Hashtable resultClass
+
+
+--------------------
+DataMapper
+--------------------
+
+MySql/MySql
+ + ICloneable exception with no connectionstring
+
+Oracle/ODP.NET 10g
+ + ResultMapTest.TestDynamiqueCompositeMapping needs dbType (int vs Decimal) for resultMap column specification
+ + ResultClassTest.TestSingle invalid cast provider/db issue
+ + ResultClassTest.TestDouble invalid cast provider/db issue
+
+PostgreSQL/Npgsql
+ + Stored function NUnit tests
+
+Firebird/Firebird
+ + ICloneable exception with no connectionstring
+
+Clover.NET
+ + Add NUnit tests to cover IBatisNet.Common.Exceptions
+ + Add NUnit tests to cover LRU Cache
+ + Add NUnit tests to cover FIFO Cache
+
+
+--------------------
+DataAccess
+--------------------
+
+ + Castle.DynamicProxy update
+ + Merge with DataMapper NUnit tests or keep seperate and update (need to add PostgreSQL!)?
+
+
+--------------------
+Tutorial
+--------------------
+
+ + Update for DataMapper 1.1 GA release
+
+
+--------------------
+NPetshop
+--------------------
+
+ + Update for DataMapper 1.1 GA release
