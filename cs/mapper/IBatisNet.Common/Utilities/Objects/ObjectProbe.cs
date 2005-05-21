@@ -89,7 +89,7 @@ namespace IBatisNet.Common.Utilities.Objects
 		/// <returns>The properties name</returns>
 		public static string[] GetWriteablePropertyNames(object obj) 
 		{
-			return ReflectionInfo.GetInstance(obj.GetType()).GetReadablePropertyNames();
+			return ReflectionInfo.GetInstance(obj.GetType()).GetWriteablePropertyNames();
 		}
 
 		/// <summary>
