@@ -79,37 +79,16 @@ namespace IBatisNet.DataMapper.TypeHandlers
 
 		private byte[] GetValueByIndex(int columnIndex, IDataReader dataReader) 
 		{
-			int bufferSize = 100;                  // Size of the BLOB buffer.
-			byte[] buffer = new byte[bufferSize];  // The BLOB byte[] buffer to be filled by GetBytes.
-			long size = bufferSize;                // The bytes returned from GetBytes.
-			long startIndex = 0;                   //  The data position in the BLOB output.
-			MemoryStream stream = null;                   // Writes the BLOB to a memory stream.
+			// determine the buffer size
+			int bufferLength = (int) dataReader.GetBytes(columnIndex, 0, null, 0, 0);
 
-			// Create a memory stream to hold the output.
-			stream = new MemoryStream();
+			// initialize it
+			byte[] byteArray = new byte[bufferLength];
 
-			// Reset the starting byte for the new BLOB.
-			startIndex  = 0;
+			// fill it
+			dataReader.GetBytes(columnIndex, 0, byteArray, 0, bufferLength);
 
-			// Read the bytes into outbyte[] and retain the number of bytes returned.
-			size  = dataReader.GetBytes(columnIndex, startIndex , buffer, 0, bufferSize);
-
-			// Continue reading and writing while there are bytes beyond the size of the buffer.
-			while (size  == bufferSize)
-			{
-				stream.Write(buffer, 0, (int)size);
-				stream.Flush();
-
-				// Reposition the start index to the end of the last buffer and fill the buffer.
-				startIndex += bufferSize;
-				size  = dataReader.GetBytes(columnIndex, startIndex, buffer, 0, bufferSize);
-			}
-
-			// Write the remaining buffer.
-			stream.Write(buffer, 0, (int)size);
-			stream.Flush();
-
-			return stream.ToArray();
+			return byteArray;
 		}
 
 		

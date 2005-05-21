@@ -1043,8 +1043,6 @@ namespace IBatisNet.DataMapper.MappedStatements
 						}
 						else
 						{
-							//IDalSession session = new SqlMapSession(_sqlMap.DataSource);
-
 							if (mapping.PropertyInfo.PropertyType == typeof(IList))
 							{
 								postSelect.Method = ExecuteMethod.ExecuteQueryForIList;
