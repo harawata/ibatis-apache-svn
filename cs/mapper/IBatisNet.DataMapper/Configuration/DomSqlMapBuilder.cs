@@ -382,12 +382,12 @@ namespace IBatisNet.DataMapper.Configuration
 					XmlSerializer serializer = new XmlSerializer(typeof(TypeHandler));
 
 					handler = (TypeHandler) serializer.Deserialize(new XmlNodeReader(xmlNode));
-					_configScope.ErrorContext.ObjectId = handler.ClassName;
+					_configScope.ErrorContext.ObjectId = handler.CallBackName;
 					_configScope.ErrorContext.MoreInfo = "initialize typeHandler";
 					handler.Initialize();
 
 
-					_configScope.ErrorContext.MoreInfo = "Check the callback attribute '" + handler.ClassName + "' (must be a classname).";
+					_configScope.ErrorContext.MoreInfo = "Check the callback attribute '" + handler.CallBackName + "' (must be a classname).";
 					ITypeHandler typeHandler = null;
 					Type type = _configScope.SqlMapper.GetType(handler.CallBackName);
 					object impl = Activator.CreateInstance( type );
@@ -416,7 +416,12 @@ namespace IBatisNet.DataMapper.Configuration
 				} 
 				catch (Exception e) 
 				{
-					throw new ConfigurationException("Error registering occurred.  Cause: " + e.Message, e);
+					throw new ConfigurationException(
+						String.Format("Error registering TypeHandler class \"{0}\" for handling .Net type \"{1}\" and dbType \"{2}\". Cause: {3}", 
+						xmlNode.Attributes["callback"].Value,
+						xmlNode.Attributes["type"].Value,
+						xmlNode.Attributes["dbType"].Value,
+						e.Message), e);
 				}
 			}
 			_configScope.ErrorContext.Reset();

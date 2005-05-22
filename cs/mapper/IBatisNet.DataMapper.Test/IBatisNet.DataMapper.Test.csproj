@@ -413,7 +413,7 @@
                 />
                 <File
                     RelPath = "Maps\MSSQL\SqlClient\Account.xml"
-                    BuildAction = "Content"
+                    BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "Maps\MSSQL\SqlClient\Category.xml"
