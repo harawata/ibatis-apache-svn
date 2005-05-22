@@ -4,6 +4,32 @@
 </head>
 
 <body>
+	<h3>May 22: .NET DataMapper 1.1 and DataAccess 1.5 General Availability!</h3>
+
+    <p>Some of the new features for the <strong>DataMapper</strong> framework include:</p>
+    <ul>
+      <li>A new <strong>CLR "type" attribute</strong> for parameterMaps and resultMaps.</li>
+      <li>New <strong>"extends" attribute</strong> for parameterMaps, resultMaps, and statements.</li>
+      <li>Support for <strong>Distributed Transactions</strong> using a TransactionScope object
+      in IBatisNet.Common.</li>
+      <li>Added support for <strong>embedded resources</strong> for your properties file and
+      SqlMaps.</li>
+    </ul>
+
+    <p>Some of the new features for the <strong>DataAccess</strong> framework include:</p>
+
+    <ul>
+      <li>New <strong>NHibernate support</strong>.</li>
+      <li>Support for <strong>Distributed Transactions</strong> using a TransactionScope object
+      in IBatisNet.Common.</li>
+      <li>The use of <strong>Castle.DynamicProxy v1.0.3</strong>.</li>
+    </ul>
+
+    <p>These releases include updated documentation for both the DataMapper and DataAccess
+    frameworks.
+	<br/><a href="downloads.html">Download iBATIS.NET DataMapper 1.1 and DataAccess 1.5</a>
+	</p>
+
 	<h3>May 16: 2.1.0 Released!</h3>
 	<p>This release includes some cool new features like &lt;discriminator&gt; and &lt;subMap&gt; tags 
 	for better support of class inheritance. There's an example of how to use these new

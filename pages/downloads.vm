@@ -16,19 +16,25 @@
 <h2>iBATIS.NET</h2>
 
     <ul>
-      <li class="general"><a href="http://prdownloads.sourceforge.net/ibatisnet/iBatisNet-bin-release-1.0.1.321.zip">Stable Binaries</a></li>
-      <li class="general"><a href="http://prdownloads.sourceforge.net/ibatisnet/iBatisNet-source-1.0.1.321.zip?download">Stable Source Code</a></li>
-      <li class="general"><a href="http://prdownloads.sourceforge.net/ibatisnet/NPetshop-1.0.0.RC1.zip?download">NPetShop Example Application</a></li>
+      <li><a href="http://prdownloads.sourceforge.net/ibatisnet/DataMapper-bin-1.1.0.458.zip?download">DataMapper 1.1 General Availability</a></li>
+      <li><a href="http://prdownloads.sourceforge.net/ibatisnet/DataAccess-bin-1.5.0.458.zip?download">DataAccess 1.5 General Availability</a></li>
+      <li><a href="http://prdownloads.sourceforge.net/ibatisnet/iBatisNet-src.458.zip?download">Stable Source Revision 1.1.0.458</a></li>
+      <li><a href="http://prdownloads.sourceforge.net/ibatisnet/tutorial-1.1.zip?download">Tutorial 1.1, Docs and Source</a></li>
+      <li><a href="http://prdownloads.sourceforge.net/ibatisnet/NPetshop-1.0.0.RC1.zip?download">NPetShop Example Application</a></li>
+      <li><a href="http://sourceforge.net/project/showfiles.php?group_id=109704">Old Releases (at SourceForge)</a></li>
     </ul>
 
 <h2>Documentation </h2>
     <ul>
       <li>English 
         <ul>
-          <li><a href="http://prdownloads.sourceforge.net/ibatisnet/DevGuide.pdf?download"><b>Generic Developer Guide (.NET and Java)</b></a></li>
+          <li><a href="http://prdownloads.sourceforge.net/ibatisnet/DevGuide.pdf?download"><b>Generic Developer Guide</b></a></li>
           <li><a href="http://prdownloads.sourceforge.net/ibatisdb/iBATIS-SqlMaps-2.pdf?download">SQL Maps for Java, Developer Guide </a></li>
           <li><a href="http://prdownloads.sourceforge.net/ibatisdb/iBATIS-SqlMaps-2-Tutorial.pdf?download">SQL Maps for Java, Tutorial </a></li>
           <li><a href="http://prdownloads.sourceforge.net/ibatisdb/iBATIS-DAO-2.pdf?download">DAO for Java, Developer Guide</a></li>
+          <li><a href="http://prdownloads.sourceforge.net/ibatisnet/Doc-DataMapper-1.1.zip?download">DataMapper 1.1 for .NET, Docs Bundle (CHM, PDF, and SDK Help)</a></li>
+          <li><a href="http://prdownloads.sourceforge.net/ibatisnet/Doc-DataAccess-1.5.zip?download">DataAccess 1.5 for .NET, Docs Bundle (CHM, PDF, and SDK Help)</a></li>
+          <li><a href="http://prdownloads.sourceforge.net/ibatisnet/tutorial-1.1.zip?download">Tutorial 1.1 for .NET, Docs and Source</a></li>
         </ul>
       </li>
       <li>Chinese 
