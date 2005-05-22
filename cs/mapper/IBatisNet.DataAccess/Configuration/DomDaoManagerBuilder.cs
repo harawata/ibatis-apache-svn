@@ -345,7 +345,7 @@ namespace IBatisNet.DataAccess.Configuration
 			if (nodeProperties != null)
 			{
 				// Load the file defined by the resource attribut
-				XmlDocument propertiesConfig = Resources.GetAsXmlDocument(nodeProperties); 
+				XmlDocument propertiesConfig = Resources.GetAsXmlDocument(nodeProperties, configurationScope.Properties); 
 
 				foreach (XmlNode node in propertiesConfig.SelectNodes("/settings/add"))
 				{
