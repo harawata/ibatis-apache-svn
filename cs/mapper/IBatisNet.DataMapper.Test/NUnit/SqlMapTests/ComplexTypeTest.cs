@@ -55,6 +55,26 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Assert.AreEqual(id, obj.Map["Id"]);
 		}
 
+		/// <summary>
+		/// Complex type insert inline default null test
+		/// </summary>
+		[Test] 
+		public void TestInsertMapObjMapAcctInlineDefaultNull() 
+		{
+			Hashtable map = new Hashtable();
+			Account acct = NewAccount6();
+			Complex obj = new Complex();
+			obj.Map = new Hashtable();
+			obj.Map.Add("acct", acct);
+			map.Add("obj", obj);
+
+			sqlMap.Insert("InsertComplexAccountViaInlineDefaultNull", map);
+
+			Account account = (Account) sqlMap.QueryForObject("GetAccountNullableEmail", 6);
+
+			AssertAccount6(account);
+		}
+
 		#endregion
 
 

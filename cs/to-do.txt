@@ -32,6 +32,7 @@ Oracle/ODP.NET 10g
 PostgreSQL/Npgsql 0.7
  + StatementGenerate.TestSelectByPK
  + Add Stored function NUnit tests
+ + Clean-up SqlMap files
 
 Firebird/Firebird 1.7
  + ICloneable exception with no connectionstring
