@@ -131,18 +131,21 @@ namespace IBatisNet.Common.Utilities
 		/// Load an XML resource from a location specify by the node.
 		/// </summary>
 		/// <param name="node">An location node</param>
+		/// <param name="properties">the global properties</param>
 		/// <returns>Return the Xml document load.</returns>
-		public static XmlDocument GetAsXmlDocument(XmlNode node)
+		public static XmlDocument GetAsXmlDocument(XmlNode node, NameValueCollection  properties)
 		{
 			XmlDocument xmlDocument = null;
 
 			if (node.Attributes["resource"] != null)
 			{
-				xmlDocument = Resources.GetResourceAsXmlDocument(node.Attributes["resource"].Value);
+				string ressource = Resources.ParsePropertyTokens( node.Attributes["resource"].Value, properties);
+				xmlDocument = Resources.GetResourceAsXmlDocument( ressource );
 			}
 			else if (node.Attributes["url"] != null)
 			{
-				xmlDocument = Resources.GetUrlAsXmlDocument(node.Attributes["url"].Value);
+				string url = Resources.ParsePropertyTokens( node.Attributes["url"].Value, properties);
+				xmlDocument = Resources.GetUrlAsXmlDocument( url );
 			}
 			else if (node.Attributes["embedded"] != null)
 			{
@@ -156,18 +159,21 @@ namespace IBatisNet.Common.Utilities
 		/// Get the path resource of an url or resource location.
 		/// </summary>
 		/// <param name="node">The specification from where to load.</param>
+		/// <param name="properties">the global properties</param>
 		/// <returns></returns>
-		public static string GetValueOfNodeResourceUrl(XmlNode node)
+		public static string GetValueOfNodeResourceUrl(XmlNode node, NameValueCollection  properties)
 		{
 			string path = null;
 
 			if (node.Attributes["resource"] != null)
 			{
-				path = Path.Combine(_applicationBase, node.Attributes["resource"].Value);
+				string ressource = Resources.ParsePropertyTokens( node.Attributes["resource"].Value, properties);
+				path = Path.Combine(_applicationBase, ressource);
 			}
 			else if (node.Attributes["url"] != null)
 			{
-				path = node.Attributes["url"].Value;
+				string url = Resources.ParsePropertyTokens( node.Attributes["url"].Value, properties);
+				path = url;
 			}
 
 			return path;

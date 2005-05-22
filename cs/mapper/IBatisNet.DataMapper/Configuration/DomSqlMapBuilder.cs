@@ -585,12 +585,12 @@ namespace IBatisNet.DataMapper.Configuration
 			{
 				if (sqlMapNode.Attributes["resource"] != null || sqlMapNode.Attributes["url"] != null) 
 				{ 
-					ConfigWatcherHandler.AddFileToWatch( Resources.GetFileInfo( Resources.GetValueOfNodeResourceUrl(sqlMapNode) ) );
+					ConfigWatcherHandler.AddFileToWatch( Resources.GetFileInfo( Resources.GetValueOfNodeResourceUrl(sqlMapNode, _configScope.Properties) ) );
 				}
 			}
 
 			// Load the file 
-			_configScope.SqlMapDocument = Resources.GetAsXmlDocument(sqlMapNode);
+			_configScope.SqlMapDocument = Resources.GetAsXmlDocument(sqlMapNode, _configScope.Properties);
 			
 			if (_configScope.ValidateSqlMap)
 			{
@@ -1128,7 +1128,7 @@ namespace IBatisNet.DataMapper.Configuration
 				_configScope.ErrorContext.Resource = nodeProperties.OuterXml.ToString();
 
 				// Load the file defined by the resource attribute
-				XmlDocument propertiesConfig = Resources.GetAsXmlDocument(nodeProperties); 
+				XmlDocument propertiesConfig = Resources.GetAsXmlDocument(nodeProperties, _configScope.Properties); 
 
 				foreach (XmlNode node in propertiesConfig.SelectNodes("/settings/add"))
 				{
