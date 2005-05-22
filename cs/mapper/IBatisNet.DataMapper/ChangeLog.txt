@@ -12,6 +12,7 @@ IBatisNet Change Log
 - Added <discriminator> and <subMap> tags for class inheritance support
 - Added nunit category 'NHibernate'
 - Fixed Oracle issues (JIRA-27, JIRA-54, JIRA-56, JIRA-57)
+- Fixed JIRA-69 Added support for global setting in ressource and url attribute
 - Fixed JIRA-66 #value# moniker not recognized when called something else like #ProductId# 
 - Fixed JIRA-60 QueryForMap not calling session.CloseConnection() correctly 
 - Fixed JIRA-51 If a <statement> has a "cacheModel" attribute set and cacheModelsEnabled="false" in SqlMap.config, an DataMapperException is thrown 
