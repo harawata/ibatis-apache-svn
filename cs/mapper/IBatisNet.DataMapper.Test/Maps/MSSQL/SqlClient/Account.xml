@@ -390,13 +390,13 @@
 		</insert>
 		
 
-		<!-- Inline Parameters -->
+		<!-- Inline Parameters #EmailAddress:VarChar:no_email@provided.com#-->
 		<update id="UpdateAccountViaInlineParameters"
 			parameterClass="Account">
 			update Accounts set
 			Account_FirstName = #FirstName#,
 			Account_LastName = #LastName#,
-			Account_Email = #EmailAddress:VarChar:no_email@provided.com#
+			Account_Email = #EmailAddress,type=string,dbType=Varchar,nullValue=no_email@provided.com#
 			where
 			Account_ID = #Id#
 		</update>

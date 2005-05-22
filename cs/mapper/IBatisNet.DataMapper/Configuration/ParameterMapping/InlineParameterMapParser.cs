@@ -28,16 +28,14 @@
 using System;
 using System.Collections;
 using System.Text;
-
+using IBatisNet.Common.Exceptions;
+using IBatisNet.Common.Utilities;
+using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.DataMapper.Configuration.Sql.Dynamic;
+using IBatisNet.DataMapper.Configuration.Statements;
+using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.Scope;
 using IBatisNet.DataMapper.TypeHandlers;
-using IBatisNet.DataMapper.Exceptions;
-
-using IBatisNet.Common.Utilities;
-using IBatisNet.Common.Exceptions;
-using IBatisNet.Common.Utilities.Objects;
-using IBatisNet.DataMapper.Configuration.Statements;
 
 #endregion 
 
@@ -81,11 +79,11 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		{
 			string newSql = sqlStatement;
 			ArrayList mappingList = new ArrayList();
-			Type parameterClass = null;
+			Type parameterClassType = null;
 
 			if (statement != null)
 			{
-				parameterClass = statement.ParameterClass;
+				parameterClassType = statement.ParameterClass;
 			}
 
 			StringTokenizer parser = new StringTokenizer(sqlStatement, PARAMETER_TOKEN, true);
@@ -109,8 +107,15 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 					} 
 					else 
 					{
-						//ParameterMapping mapping = null; Java
-						ParameterProperty mapping =  ParseMapping(token, parameterClass, typeHandlerFactory);
+						ParameterProperty mapping = null; 
+						if (token.IndexOf(PARAM_DELIM) > -1) 
+						{
+							mapping =  OldParseMapping(token, parameterClassType, typeHandlerFactory);
+						} 
+						else 
+						{
+							mapping = NewParseMapping(token, parameterClassType, typeHandlerFactory);
+						}															 
 
 						mappingList.Add(mapping);
 						newSqlBuffer.Append("? ");
@@ -147,7 +152,93 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		}
 
 
-		private ParameterProperty ParseMapping(string token, Type parameterClass, TypeHandlerFactory typeHandlerFactory) 
+		/// <summary>
+		/// Parse inline parameter with syntax as
+		/// #propertyName,type=string,dbype=Varchar,direction=Input,nullValue=N/A,handler=string#
+		/// </summary>
+		/// <param name="token"></param>
+		/// <param name="parameterClassType"></param>
+		/// <param name="typeHandlerFactory"></param>
+		/// <returns></returns>
+		private ParameterProperty NewParseMapping(string token, Type parameterClassType, TypeHandlerFactory typeHandlerFactory) 
+		{
+			ParameterProperty mapping = new ParameterProperty();
+
+			StringTokenizer paramParser = new StringTokenizer(token, "=,", false);
+			IEnumerator enumeratorParam = paramParser.GetEnumerator();
+
+			enumeratorParam.MoveNext();
+
+			mapping.PropertyName = ((string)enumeratorParam.Current).Trim();
+
+			while (enumeratorParam.MoveNext()) 
+			{
+				string field = (string)enumeratorParam.Current;
+				if (enumeratorParam.MoveNext()) 
+				{
+					string value = (string)enumeratorParam.Current;
+					if ("type".Equals(field)) 
+					{
+						mapping.CLRType = value;
+					} 
+					else if ("dbType".Equals(field)) 
+					{
+						mapping.DbType = value;
+					} 
+					else if ("direction".Equals(field)) 
+					{
+						mapping.DirectionAttribute = value;
+					} 
+					else if ("nullValue".Equals(field)) 
+					{
+						mapping.NullValue = value;
+					} 
+					else if ("handler".Equals(field)) 
+					{
+						mapping.CallBackName = value;
+					} 
+					else 
+					{
+						throw new DataMapperException("Unrecognized parameter mapping field: '" + field + "' in " + token);
+					}
+				} 
+				else 
+				{
+					throw new DataMapperException("Incorrect inline parameter map format (missmatched name=value pairs): " + token);
+				}
+			}
+
+			mapping.Initialize(typeHandlerFactory, _errorContext);
+
+			if (mapping.TypeHandler is UnknownTypeHandler) 
+			{
+				ITypeHandler handler = null;
+				if (parameterClassType == null) 
+				{
+					handler = typeHandlerFactory.GetUnkownTypeHandler();
+				} 
+				else 
+				{
+					handler = ResolveTypeHandler(typeHandlerFactory, 
+						parameterClassType, mapping.PropertyName,  
+						mapping.CLRType, mapping.DbType );
+				}
+				mapping.TypeHandler = handler;
+			}
+
+			return mapping;
+		}
+
+
+		/// <summary>
+		/// Parse inline parameter with syntax as
+		/// #propertyName:dbType:nullValue#
+		/// </summary>
+		/// <param name="token"></param>
+		/// <param name="parameterClass"></param>
+		/// <param name="typeHandlerFactory"></param>
+		/// <returns></returns>
+		private ParameterProperty OldParseMapping(string token, Type parameterClass, TypeHandlerFactory typeHandlerFactory) 
 		{
 			ParameterProperty mapping = new ParameterProperty();
 
@@ -198,7 +289,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 					mapping.PropertyName = propertyName;
 					mapping.DbType = dBType;
 					mapping.NullValue = nullValue;
-					ITypeHandler handler;
+					ITypeHandler handler = null;
 					if (parameterClass == null) 
 					{
 						handler = typeHandlerFactory.GetUnkownTypeHandler();
@@ -218,7 +309,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 			else 
 			{
 				mapping.PropertyName = token;
-				ITypeHandler handler;
+				ITypeHandler handler = null;
 				if (parameterClass == null) 
 				{
 					handler = typeHandlerFactory.GetUnkownTypeHandler();
@@ -237,23 +328,23 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// <summary>
 		/// Resolve TypeHandler
 		/// </summary>
-		/// <param name="type"></param>
+		/// <param name="paremeterClassType"></param>
 		/// <param name="propertyName"></param>
 		/// <param name="propertyType"></param>
 		/// <param name="dbType"></param>
 		/// <param name="typeHandlerFactory"></param>
 		/// <returns></returns>
 		private ITypeHandler ResolveTypeHandler(TypeHandlerFactory typeHandlerFactory, 
-			Type type, string propertyName, 
+			Type paremeterClassType, string propertyName, 
 			string propertyType, string dbType) 
 		{
 			ITypeHandler handler = null;
 
-			if (type == null) 
+			if (paremeterClassType == null) 
 			{
 				handler = typeHandlerFactory.GetUnkownTypeHandler();
 			} 
-			else if (typeof(IDictionary).IsAssignableFrom(type))
+			else if (typeof(IDictionary).IsAssignableFrom(paremeterClassType))
 			{
 				if (propertyType == null || propertyType.Length==0) 
 				{
@@ -272,13 +363,13 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 					}
 				}
 			} 
-			else if (typeHandlerFactory.GetTypeHandler(type, dbType) != null) 
+			else if (typeHandlerFactory.GetTypeHandler(paremeterClassType, dbType) != null) 
 			{
-				handler = typeHandlerFactory.GetTypeHandler(type, dbType);
+				handler = typeHandlerFactory.GetTypeHandler(paremeterClassType, dbType);
 			} 
 			else 
 			{
-				Type typeClass = ObjectProbe.GetPropertyTypeForGetter(type, propertyName);
+				Type typeClass = ObjectProbe.GetPropertyTypeForGetter(paremeterClassType, propertyName);
 				handler = typeHandlerFactory.GetTypeHandler(typeClass, dbType);
 			}
 
