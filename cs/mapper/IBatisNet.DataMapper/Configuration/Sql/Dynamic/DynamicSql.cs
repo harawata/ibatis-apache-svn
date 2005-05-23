@@ -67,13 +67,12 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 		/// Constructor
 		/// </summary>
 		/// <param name="statement">The mapped statement.</param>
-		/// <param name="typeHandlerFactory"></param>
-		/// <param name="usePositionalParameters"></param>
-		internal DynamicSql(TypeHandlerFactory typeHandlerFactory, IStatement statement, bool usePositionalParameters)
+		/// <param name="configScope"></param>
+		internal DynamicSql(ConfigurationScope configScope, IStatement statement)
 		{
 			_statement = statement;
-			_typeHandlerFactory = typeHandlerFactory;
-			_usePositionalParameters = usePositionalParameters;
+			_typeHandlerFactory = configScope.TypeHandlerFactory;
+			_usePositionalParameters = configScope.DataSource.Provider.UsePositionalParameters;
 		}
 		#endregion
 

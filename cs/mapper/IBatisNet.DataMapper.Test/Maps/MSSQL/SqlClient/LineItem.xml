@@ -100,10 +100,10 @@
 				LineItem_Quantity as Quantity,
 				LineItem_Price as Price
 				from LineItems
-			where Order_ID = #Order_ID#
+			where Order_ID = #Order_ID:Int#
 			<dynamic>
 				<isNotNull property="LineItem_ID">
-					and LineItem_ID = #LineItem_ID#
+					and LineItem_ID = #LineItem_ID:Int#
 				</isNotNull>
 			</dynamic>
 		</select>

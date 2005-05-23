@@ -160,7 +160,7 @@ namespace IBatisNet.DataMapper.Commands
 				parameterCopy.Direction = sqlParameter.Direction;
 
 				// With a ParameterMap, we could specify the ParameterDbTypeProperty
-				if (statement.ParameterMap != null)
+				if (request.ParameterMap != null)
 				{
 					if (request.ParameterMap.GetProperty(i).DbType != null && 
 						request.ParameterMap.GetProperty(i).DbType.Length >0)

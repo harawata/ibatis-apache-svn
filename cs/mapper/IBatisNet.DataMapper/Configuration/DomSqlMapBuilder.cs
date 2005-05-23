@@ -953,7 +953,7 @@ namespace IBatisNet.DataMapper.Configuration
 		{
 			bool isDynamic = false;
 			XmlNode commandTextNode = _configScope.NodeContext;
-			DynamicSql dynamic = new DynamicSql(_configScope.TypeHandlerFactory,  statement, _configScope.DataSource.Provider.UsePositionalParameters );
+			DynamicSql dynamic = new DynamicSql( _configScope,  statement );
 			StringBuilder sqlBuffer = new StringBuilder();
 
 			_configScope.ErrorContext.MoreInfo = "process the Sql statement";

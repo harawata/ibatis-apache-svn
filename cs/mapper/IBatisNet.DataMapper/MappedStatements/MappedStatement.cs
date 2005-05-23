@@ -1202,13 +1202,11 @@ namespace IBatisNet.DataMapper.MappedStatements
 						{
 							property.PropertyName = matchedPropertyInfo.Name;
 							property.Initialize(typeHandlerFactory, matchedPropertyInfo );
-//							_mappings.Add(property);
 							_resultMap.AddResultPropery(property);
 						}
 						else if (resultObject is Hashtable) 
 						{
 							property.PropertyName = columnName;
-//							_mappings.Add(property);
 							_resultMap.AddResultPropery(property);
 						}
 
