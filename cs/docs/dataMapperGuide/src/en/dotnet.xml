@@ -6,15 +6,15 @@
     <title>Introduction</title>
 
     <para>This guide explains how to install, configure, and use the iBATIS
-    Data Mapper with your .NET applications. This guide assumes that you are
+    DataMapper with your .NET applications. This guide assumes that you are
     using Microsoft Visual Studio .NET (VSN). If you are using another IDE,
     please adapt these instructions accordingly.</para>
   </sect1>
 
   <sect1>
-    <title>Installing the Data Mapper for .NET</title>
+    <title>Installing the DataMapper for .NET</title>
 
-    <para>There are three steps to using iBATIS Data Mapper with your
+    <para>There are three steps to using iBATIS DataMapper with your
     application for the first time. <orderedlist>
         <listitem>
            Setup the distribution 
@@ -32,7 +32,7 @@
     <sect2>
       <title>Setup the Distribution</title>
 
-      <para>The official site for iBATIS Data Mapper for .NET is our Apache
+      <para>The official site for iBATIS DataMapper for .NET is our Apache
       site &lt;http://incubator.apache.org/ibatis/site/&gt;. To download the
       distribution, follow the link to the Downloads area, and select the
       iBATIS.NET V1.0 or later release. The distribution is in the form of a
@@ -80,7 +80,7 @@
               <row>
                 <entry>iBatisNet-DataMapper</entry>
 
-                <entry>The Data Mapper framework</entry>
+                <entry>The DataMapper framework</entry>
               </row>
 
               <row>
@@ -106,7 +106,7 @@
       <title>Add Assembly References</title>
 
       <para>Switching to your own solution, open the project that will be
-      using the iBATIS.NET Data Mapper. Depending on how your organize your
+      using the iBATIS.NET DataMapper. Depending on how your organize your
       solutions, this might not be the project for your Windows or Web
       application. It may be a library project that your application project
       references. To your project, you need to add two or three references:
@@ -147,7 +147,7 @@
 
       <para><itemizedlist>
           <listitem>
-             SqlMap.config - The Data Mapper configuration file (usually one) 
+             SqlMap.config - The DataMapper configuration file (usually one) 
           </listitem>
 
           <listitem>
@@ -209,39 +209,39 @@
   </sect1>
 
   <sect1>
-    <title>Configuring the Data Mapper for .NET</title>
+    <title>Configuring the DataMapper for .NET</title>
 
-    <para>iBATIS Data Mapper is configured using a central XML descriptor
-    file, usually named <filename>SqlMap.config</filename>, which provides the
+    <para>iBATIS DataMapper is configured using a central XML descriptor file,
+    usually named <filename>SqlMap.config</filename>, which provides the
     details for your data source, data maps, and other features like caching,
     transactions, and thread management. At runtime, your application code
     calls a iBATIS library routine (see Section 5.3) which reads and parses
     the main <filename>SqlMap.config</filename> file. Other XML descriptors
-    may be incorporated by reference, but each Data Mapper client instance is
+    may be incorporated by reference, but each DataMapper client instance is
     initialized using a single <filename>SqlMap.config</filename>
     configuration file.</para>
 
     <sect2>
-      <title>Data Mapper clients</title>
+      <title>DataMapper clients</title>
 
-      <para>Currently, the Data Mapper framework revolves around the
+      <para>Currently, the DataMapper framework revolves around the
       <classname>SqlMapper</classname> class, which acts as a facade to the
-      Data Mapper framework API. You can create a Data Mapper client by
+      DataMapper framework API. You can create a DataMapper client by
       instantiating an object of the <classname>SqlMapper</classname> class.
-      An instance of the <classname>SqlMapper</classname> class (your Data
-      Mapper client) is created by reading a single configuration file. Each
-      configuration file can specify one database or datasource. However, you
-      can use multiple Data Mapper clients in your application. Just create
-      another configuration file and pass the name of that file when the Data
-      Mapper client is created. The configuration files might use a different
-      account with the same database, or reference different databases on
-      different servers. You can read from one client and write to another, if
-      that's what you need to do. See Section 5.4.1 for more details on
-      building a <classname>SqlMapper</classname> instance.</para>
+      An instance of the <classname>SqlMapper</classname> class (your
+      DataMapper client) is created by reading a single configuration file.
+      Each configuration file can specify one database or datasource. However,
+      you can use multiple DataMapper clients in your application. Just create
+      another configuration file and pass the name of that file when the
+      DataMapper client is created. The configuration files might use a
+      different account with the same database, or reference different
+      databases on different servers. You can read from one client and write
+      to another, if that's what you need to do. See Section 5.4.1 for more
+      details on building a <classname>SqlMapper</classname> instance.</para>
     </sect2>
 
     <sect2>
-      <title>Data Mapper Configuration File (SqlMap.config)</title>
+      <title>DataMapper Configuration File (SqlMap.config)</title>
 
       <para>A sample configuration file for .NET is shown in Example
       4.1.</para>
@@ -284,9 +284,9 @@
     </sect2>
 
     <sect2>
-      <title>Data Mapper Configuration Elements</title>
+      <title>DataMapper Configuration Elements</title>
 
-      <para>Sections 4..3.3.* describes the elements of the Data Mapper
+      <para>Sections 4..3.3.* describes the elements of the DataMapper
       configuration document for .NET.</para>
 
       <sect3>
@@ -296,9 +296,9 @@
         in more than one element. Often, there are values that change when we
         move the application from one server to another. To help you manage
         configuration values, you can specify a standard properties file (with
-        name=value entries) as part of a Data Mapper configuration. Each named
+        name=value entries) as part of a DataMapper configuration. Each named
         value in the properties file becomes a <emphasis>shell</emphasis>
-        variable that can be used throughout the Data Mapper configuration,
+        variable that can be used throughout the DataMapper configuration,
         including your Data Map definition files (see Section 3). For example,
         if the properties file contains</para>
 
@@ -306,7 +306,7 @@
           <programlisting>&lt;add key="username" value="albert" /&gt;</programlisting>
         </informalexample>
 
-        <para>then any element in the Data Mapper configuration, including the
+        <para>then any element in the DataMapper configuration, including the
         data maps, can use the variable <varname>${username}</varname> to
         insert the value "<emphasis>albert</emphasis>". For example:</para>
 
@@ -317,7 +317,7 @@
         environments or use automated tools for configuration such as
         NAnt.</para>
 
-        <para>There can be only one &lt;properties&gt; element per Data Mapper
+        <para>There can be only one &lt;properties&gt; element per DataMapper
         <filename>SqlMap.config</filename> file.</para>
 
         <sect4>
@@ -376,10 +376,10 @@
         <para>There are two default settings used by the framework.. The
         settings appropriate for one application may not be appropriate for
         another. The &lt;settings&gt; element lets you configure these options
-        and optimizations for the Data Mapper instance that is created from
-        the XML document. Each &lt;settings&gt; attribute has a default, and
-        you can omit the &lt;settings&gt; element or any of its attributes.
-        The &lt;settings&gt; attributes and the behavior they control are
+        and optimizations for the DataMapper instance that is created from the
+        XML document. Each &lt;settings&gt; attribute has a default, and you
+        can omit the &lt;settings&gt; element or any of its attributes. The
+        &lt;settings&gt; attributes and the behavior they control are
         described in the following table.</para>
 
         <table>
@@ -399,7 +399,7 @@
                 <entry><emphasis>cacheModelsEnabled </emphasis></entry>
 
                 <entry><para>This setting globally enables or disables all
-                cache models for an Data Mapper client. This can come in handy
+                cache models for an DataMapper client. This can come in handy
                 for debugging.</para><programlisting>Example: cacheModelsEnabled=”true”
 Default: true (enabled)</programlisting></entry>
               </row>
@@ -507,7 +507,7 @@ IBatisNet.Test"</programlisting></entry>
           <title>Predefined type aliases</title>
 
           <para>The framework predefines some aliases that you can use in your
-          Data Mapper configuration and data map files, as shown in Table
+          DataMapper configuration and data map files, as shown in Table
           4.5.<table>
               <title>Predefined Aliases</title>
 
@@ -787,8 +787,8 @@ IBatisNet.Test"</programlisting></entry>
         As your application grows, you may have several varieties of Data Map.
         To help you keep your Data Maps organized, you can create any number
         of Data Map definition files and incorporate them by reference in the
-        Data Mapper configuration. All of the definition files used by a Data
-        Mapper instance must be listed in the configuration file.</para>
+        DataMapper configuration. All of the definition files used by a
+        DataMapper instance must be listed in the configuration file.</para>
 
         <para>Example 4.3 shows &lt;sqlMap&gt; elements for loading a set of
         Data Map definitions. Note that the &lt;sqlMap&gt; elements are nested
@@ -813,9 +813,9 @@ IBatisNet.Test"</programlisting></entry>
   </sect1>
 
   <sect1>
-    <title>Programming with iBATIS Data Mapper: The .NET API</title>
+    <title>Programming with iBATIS DataMapper: The .NET API</title>
 
-    <para>The IBATIS.NET Data Mapper API provides four core functions:
+    <para>The IBATIS.NET DataMapper API provides four core functions:
     <orderedlist>
         <listitem>
           <para>build a <classname>SqlMapper</classname> instance from a
@@ -947,7 +947,7 @@ mapper = SqlMapper.Configure("file.name");</programlisting></para>
         <title>Multiple Databases</title>
 
         <para>If you need access to more than one database from the same
-        application, create a Data Mapper configuration file for that database
+        application, create a DataMapper configuration file for that database
         and another <classname>Mapper</classname> class to go with it. In the
         new <classname>Mapper</classname> class, change the call to
         <methodname>ConfigureAndWatch</methodname> to</para>
@@ -966,14 +966,14 @@ SqlMapper access = AccessMapper.Get();</programlisting></para>
     </sect2>
 
     <sect2>
-      <title>Exploring the Data Mapper API through the SqlMapper</title>
+      <title>Exploring the DataMapper API through the SqlMapper</title>
 
       <para>The <classname>SqlMapper</classname> instance acts as a facade to
-      provide access the rest of the Data Mapper framework. The Data Mapper
-      API methods are shown in Example 4.5.</para>
+      provide access the rest of the DataMapper framework. The DataMapper API
+      methods are shown in Example 4.5.</para>
 
       <example>
-        <title>The Data Mapper API for .NET</title>
+        <title>The DataMapper API for .NET</title>
 
         <para><programlisting><emphasis role="comment">[C#]
 
@@ -1240,7 +1240,7 @@ public IDictionary QueryForMap(string statementName,
       <para>In the iBATIS DataMapper framework, a session is a container for
       an ADO connection and transaction.</para>
 
-      <para>The iBATIS.NET Data Mapper session
+      <para>The iBATIS.NET DataMapper session
       <classname>IDalSession</classname> implement
       <classname>IDisposable</classname> interface. So you can use it with the
       <methodname>using</methodname> syntax.</para>
@@ -1270,7 +1270,7 @@ public IDictionary QueryForMap(string statementName,
     <sect2>
       <title>Connection</title>
 
-      <para>The Data Mapper API includes methods to demarcate connection
+      <para>The DataMapper API includes methods to demarcate connection
       boundaries. <programlisting><emphasis role="comment">// Open a session : Open an ADO connection</emphasis>
 public void OpenConnection() 
 <emphasis role="comment">// Close a session : Close the associated ADO connection</emphasis>
@@ -1335,7 +1335,7 @@ sqlMap.Update("UpdateItem", item);</programlisting></para>
     <sect2>
       <title>Transaction</title>
 
-      <para>The Data Mapper API includes methods to demarcate transactional
+      <para>The DataMapper API includes methods to demarcate transactional
       boundaries. A transaction can be started, committed and/or rolled back.
       You can call the transaction methods from the
       <classname>SqlMapper</classname> instance (see Section 5.3.1)
@@ -1537,10 +1537,10 @@ Product p = (Product) map[“EST-93”];</programlisting>
   <sect1>
     <title>Logging SqlMap Activity with Apache Log4Net</title>
 
-    <para>The iBATIS Data Mapper framework provides logging information
-    through the use of Apache Log4Net (http://logging.apache.org/log4net/).
-    The specifics of Log4Net are beyond the scope of this document. This
-    section provides a sample configuration to help you get started.</para>
+    <para>The iBATIS DataMapper framework provides logging information through
+    the use of Apache Log4Net (http://logging.apache.org/log4net/). The
+    specifics of Log4Net are beyond the scope of this document. This section
+    provides a sample configuration to help you get started.</para>
 
     <sect2>
       <title>Log Configuration</title>

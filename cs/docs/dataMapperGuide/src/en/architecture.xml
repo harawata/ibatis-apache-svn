@@ -51,9 +51,9 @@
 
      
 
-    <para>iBATIS Data Mapper solves these problems -- and many more -- by
-    using XML documents to create a mapping between a plain-old object and a
-    SQL statement or a stored procedure. The "plain-old object" can be a
+    <para>iBATIS DataMapper solves these problems -- and many more -- by using
+    XML documents to create a mapping between a plain-old object and a SQL
+    statement or a stored procedure. The "plain-old object" can be a
     IDictionary or property object. <tip>
         <para>The object does not need to be part of a special object
         hierarchy or implement a special interface. (Which is why we call them
@@ -65,7 +65,7 @@
 
     <para>
       <figure>
-        <title>iBATIS Data Mapper workflow</title>
+        <title>iBATIS DataMapper workflow</title>
 
         <mediaobject>
           <imageobject>

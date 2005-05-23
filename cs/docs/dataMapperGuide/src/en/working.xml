@@ -344,7 +344,7 @@ All query methods</programlisting></entry>
     <sect2>
       <title>Stored Procedures</title>
 
-      <para>iBATIS Data Mapper treats stored procedures as yet another
+      <para>iBATIS DataMapper treats stored procedures as yet another
       statement type. Example 3.5 shows a simple Data Map hosting a stored
       procedure. <example>
           <title>A Data Map using a stored procedure</title>
@@ -544,7 +544,7 @@ All query methods</programlisting></entry>
         </example>
 
         <para><note>
-            <para>The SQL is generated when the Data Mapper instance is built,
+            <para>The SQL is generated when the DataMapper instance is built,
             so there is no performance impact at execution time.</para>
           </note>The tag generates ANSI SQL, which should work with any
         compliant database. Special types, such as blobs, are not supported,
@@ -773,7 +773,7 @@ All query methods</programlisting></entry>
         collection: a class that implements the
         System.Collections.CollectionBase abstract class. The following is an
         example of a CollectionBase class that can be used with the
-        DataMapper. </para>
+        DataMapper.</para>
 
         <para><example>
             <title>A System.Collections.CollectionBase implementation</title>
@@ -1192,6 +1192,12 @@ namespace WebShop.Domain
         <para>The <parameter>scale</parameter> attribute sets the number of
         decimal places used to resolve the property value.</para>
       </sect3>
+
+      <sect3>
+        <title>typeHandler</title>
+
+        <para>...</para>
+      </sect3>
     </sect2>
 
     <sect2>
@@ -1276,7 +1282,7 @@ namespace WebShop.Domain
       <varname>value</varname> is simply a placeholder, you can use another
       moniker of your choice. Result Maps support primitive types as results
       as well. For more information about using primitive types as parameters,
-      see Section 3.4, "Result Maps" and the "Programming iBATIS Data Mapper"
+      see Section 3.4, "Result Maps" and the "Programming iBATIS DataMapper"
       section in the Developers Guide for your platform.</para>
 
       <para>For your convenience, primitive types are aliased by the
@@ -1342,8 +1348,8 @@ namespace WebShop.Domain
     <para>A Result Map lets you control how data is extracted from the result
     of a query, and how the columns are mapped to object properties. A Result
     Map can describe the column type, a null value replacement, and complex
-    property mappings (including Collections). Example 3.21 shows the
-    structure of a &lt;resultMap&gt; element.<example>
+    property mappings including Collections. Example 3.21 shows the structure
+    of a &lt;resultMap&gt; element.<example>
         <title>The structure of a &lt;resultMap&gt; element.</title>
 
         <para><programlisting>&lt;resultMap id="<emphasis role="blue">parameterMap.name</emphasis>" 
@@ -1359,12 +1365,13 @@ namespace WebShop.Domain
            [nullValue="<emphasis role="blue">null.value.replacement</emphasis>"] 
            [select="<emphasis role="blue">some.other.statement.name</emphasis>"] 
            [lazyLoad="<emphasis role="blue">true|false</emphasis>"]
+           [typeHandler="<emphasis role="blue">class.name, assembly|typeAlias</emphasis>"]
    /&gt;
    &lt;result ... .../&gt;
    &lt;result ... .../&gt;
    <emphasis role="comment"> // Inheritance support</emphasis>
    &lt;discriminator column="<emphasis role="blue">column.name</emphasis>" 
-                     [formula="<emphasis role="blue">typeAlias</emphasis>"]
+                     [type|typeHandler="<emphasis role="blue">class.name, assembly|typeAlias</emphasis>"]
    /&gt;
     &lt;subMap value="<emphasis role="blue">discriminator.value</emphasis>" 
                resultMapping="<emphasis role="blue">resultMap.name</emphasis>"
@@ -1380,12 +1387,12 @@ namespace WebShop.Domain
     it contains.</para>
 
     <para>The resultMap can contain any number of property mappings that map
-    object properties to the columns of a result set. The property mappings
-    are applied, and the columns are read, in the order that they are defined
-    by the element. Mainting the element order ensures consistent results
-    between different drivers and providers. <note>
+    object properties to the columns of a result element. The property
+    mappings are applied, and the columns are read, in the order that they are
+    defined. Mainting the element order ensures consistent results between
+    different drivers and providers. <note>
         <para>As with parameter classes, the result class must be a .NET
-        object or IDictionary instance (.NET).</para>
+        object or IDictionary instance.</para>
       </note></para>
 
     <sect2>
@@ -1406,8 +1413,9 @@ namespace WebShop.Domain
     <sect2>
       <title>&lt;resultMap&gt; attributes</title>
 
-      <para>The &lt;resultMap&gt; element accepts three attributes: id
-      (required), class (optional), and extends (optional).</para>
+      <para>The &lt;resultMap&gt; element accepts three attributes:
+      <parameter>id</parameter> (required), <parameter>class</parameter>
+      (optional), and <parameter>extends</parameter> (optional).</para>
 
       <sect3>
         <title>id</title>
@@ -1426,7 +1434,7 @@ namespace WebShop.Domain
 
         <para><note>
             <para>As with parameter classes, the result classes must be a .NET
-            object or IDictionary instance (.NET).</para>
+            object or IDictionary instance.</para>
           </note></para>
       </sect3>
 
@@ -1448,10 +1456,10 @@ namespace WebShop.Domain
         <title>property</title>
 
         <para>The <parameter>property</parameter> attribute of the Result Map
-        property is the name of a property (get method) of the result object
-        that will be returned by the Mapped Statement. The name can be used
-        more than once depending on the number of times it is needed to
-        populate the results.</para>
+        property is the name of a property of the result object that will be
+        returned by the Mapped Statement. The name can be used more than once
+        depending on the number of times it is needed to populate the
+        results.</para>
       </sect3>
 
       <sect3>
@@ -1469,9 +1477,9 @@ namespace WebShop.Domain
         <parameter>columnIndex</parameter> attribute value is the index of the
         column in the ResultSet from which the value will be used to populate
         the object property. This is not likely needed in 99% of applications
-        and sacrifices maintainability and readability for speed. Some drivers
-        or providers may not realize any performance benefit, while others
-        will speed up dramatically.</para>
+        and sacrifices maintainability and readability for speed. Some
+        providers may not realize any performance benefit, while others will
+        speed up dramatically.</para>
       </sect3>
 
       <sect3>
@@ -1563,10 +1571,25 @@ resultMapping="LineItem.LineItem"
         mapped statement. The value of the database column (the column
         attribute) that is defined in the same property element as this
         statement attribute will be passed to the related mapped statement as
-        the parameter. Therefore the column must be a supported primitive
-        type. More information about supported primitive types and complex
-        property mappings/relationships is discussed later in this
-        document.</para>
+        the parameter. More information about supported primitive types and
+        complex property mappings/relationships is discussed later in this
+        document. The lazyLoad attribute can be specified with the
+        select</para>
+      </sect3>
+
+      <sect3>
+        <title>lazyLoad</title>
+
+        <para>Use the lazyLoad attribute with the select attribute to indicate
+        whether or not the select statement's results should be lazy loaded.
+        This can provide a performance boost by delaying the loading of the
+        select statement's results until they are needed/accessed.</para>
+      </sect3>
+
+      <sect3>
+        <title>typeHandler</title>
+
+        <para>...</para>
       </sect3>
     </sect2>
 
@@ -1704,10 +1727,10 @@ public class Newspaper : Document
       to the different &lt;submap&gt; values using the column value's string
       equivalence. Based on this string value, iBATIS DataMapper will use the
       resultMap named "Book" or "Newspaper" as defined in the &lt;submap&gt;
-      elements or it will use the default or base resultMap "Document" if
-      neither of the submap values satisfy the comparison. With these
-      resultMaps, we can implement an object-oriented inheritance mapping to
-      our database table.</para>
+      elements or it will use the "super" resultMap "Document" if neither of
+      the submap values satisfy the comparison. With these resultMaps, we can
+      implement an object-oriented inheritance mapping to our database
+      table.</para>
 
       <para>If you want to use custom logic, you can use the typeHandler
       attribute of the &lt;discriminator&gt; element to specify a custom type
@@ -1789,7 +1812,7 @@ public class Newspaper : Document
       property names already match, so a result map is not needed.<example>
           <title>A Mapped Statement that doesn't need a Result Map</title>
 
-          <programlisting>&lt;statement id="selectProduct" resultClass="product"&gt;
+          <programlisting>&lt;statement id="selectProduct" resultClass="Product"&gt;
   select
     id,
     description
@@ -1806,7 +1829,7 @@ public class Newspaper : Document
         <title>A Mapped Statement using column alaising instead of a Result
         Map</title>
 
-        <programlisting>&lt;statement id="selectProduct" resultClass="product"&gt;
+        <programlisting>&lt;statement id="selectProduct" resultClass="Product"&gt;
   select
   PRD_ID as <emphasis role="blue">id</emphasis>,
   PRD_DESCRIPTION as <emphasis role="blue">description</emphasis>
@@ -1907,9 +1930,10 @@ public class Newspaper : Document
       automatically be returned.</para>
 
       <para><note>
-          <para>Certain providers may return column names in upper case
-          format. When accessing values with such a provider, you will have to
-          pass the Hashtable or HashMap key name in upper case.</para>
+          <para>Certain providers may return column names in upper case or
+          lower case format. When accessing values with such a provider, you
+          will have to pass the Hashtable or HashMap key name in the expected
+          case.</para>
         </note></para>
     </sect2>
 
@@ -1979,6 +2003,37 @@ public class Newspaper : Document
       execute. The number of statements executing for Example 3.29 will always
       be N+1: 100+1=101.</para>
 
+      <example>
+        <title>N+1 Selects (1:1)</title>
+
+        <programlisting>
+&lt;resultMaps&gt;
+  &lt;resultMap id="select-product-result" class="product"&gt;
+    &lt;result property="id" column="PRD_ID"/&gt;
+    &lt;result property="description" column="PRD_DESCRIPTION"/&gt;
+    <emphasis role="blue">&lt;result property="category" column="PRD_CAT_ID" select="selectCategory"/&gt;</emphasis>
+  &lt;/resultMap&gt;
+
+  &lt;resultMap id="select-category-result" class="category"&gt;
+    &lt;result property="id" column="CAT_ID"/&gt;
+    &lt;result property="description" column="CAT_DESCRIPTION"/&gt;
+  &lt;/resultMap&gt;
+&lt;/resultMaps&gt;
+
+&lt;statements&gt;
+  <emphasis role="green">&lt;!-- This statement executes 1 time --&gt;</emphasis>
+  &lt;select id="selectProducts" parameterClass="int" resultMap="select-product-result"&gt;
+   select * from PRODUCT
+  &lt;/select&gt;
+
+  <emphasis role="green">&lt;!-- This statement executes N times (once for each product returned above) --&gt;</emphasis>
+  &lt;select id="selectCategory" parameterClass="int" resultMap="select-category-result"&gt;
+   <emphasis role="blue">select * from CATEGORY where CAT_ID = #value#</emphasis>
+  &lt;/select&gt;
+&lt;/statements&gt;
+      </programlisting>
+      </example>
+
       <para>One way to mitigate the problem is to cache the "selectCategory"
       statement . We might have a hundred products, but there might only be
       five categories. Instead of running a SQL query or stored procedure, the
@@ -1999,6 +2054,7 @@ public class Newspaper : Document
         <title>Resolving complex properties with a join</title>
 
         <programlisting>
+&lt;resultMaps&gt;
   &lt;resultMap id="select-product-result" class="product"&gt;
     &lt;result property="id" column="PRD_ID"/&gt;
     &lt;result property="description" column="PRD_DESCRIPTION"/&gt;
@@ -2027,10 +2083,9 @@ public class Newspaper : Document
         all category properties. This is especially true for database designs
         that involve outer joins or nullable and/or non-indexed columns. In
         these situations it might be better to use the sub-select solution
-        with the lazy loading enabled. The general rule of thumb is: use the
-        join if you're more likely going to access the associated properties
-        than not. Otherwise, only use it if lazy loading is not an
-        option.</para>
+        with lazy loading enabled. The general rule of thumb is: use the join
+        if you're more likely going to access the associated properties than
+        not. Otherwise, only use it if lazy loading is not an option.</para>
 
         <para>If you're having trouble deciding which way to go, don't worry.
         No matter which way you go, you can always change it without impacting
@@ -2047,20 +2102,18 @@ public class Newspaper : Document
     <sect2>
       <title>Complex Collection Properties</title>
 
-      <para><remark>[TODO: Revise from 3.5.8 to end of Section
-      3]</remark></para>
-
       <para>It is also possible to load properties that represent lists of
       complex objects. In the database the data would be represented by a M:M
       relationship, or a 1:M relationship where the class containing the list
       is on the "one side" of the relationship and the objects in the list are
-      on the "many side". To load a List of objects, there is no change to the
-      statement (see example above). The only difference required to cause the
-      iBATIS Data Mapper framework to load the property as a List is that the
-      property on the business object must be of type
-      System.Collections.IList. For example, if a Category has a List of
-      Product instances, the mapping would look like this (assume Category has
-      a property called "ProductList" of System.Collections.IList.):</para>
+      on the "many side". To load an IList of objects, there is no change to
+      the statement (see example above). The only difference required to cause
+      the iBATIS DataMapper framework to load the property as an IList is that
+      the property on the business object must be of type
+      System.Collections.IList. For example, if a Category has a IList of
+      Product instances, the mapping would look like this (assuming Category
+      has a property called "ProductList" of
+      System.Collections.IList.):</para>
 
       <example>
         <title>Mapping that creates a list of complex objects</title>
@@ -2094,7 +2147,7 @@ public class Newspaper : Document
     </sect2>
 
     <sect2>
-      <title>Avoiding N+1 Selects (1:M and M:N)</title>
+      <title>Avoiding N+1 Select Lists (1:M and M:N)</title>
 
       <para>This is similar to the 1:1 situation above, but is of even greater
       concern due to the potentially large amount of data involved. The
@@ -2108,6 +2161,39 @@ public class Newspaper : Document
       returned to load each related list of Products (N+1 or in this case
       10+1=11). To make this situation worse, we're dealing with potentially
       large lists of data.</para>
+
+      <example>
+        <title>N+1 Select Lists (1:M and M:N)</title>
+
+        <programlisting>
+&lt;resultMaps&gt;
+
+  &lt;resultMap id="select-category-result" class="Category"&gt;
+    &lt;result property="Id" column="CAT_ID"/&gt;
+    &lt;result property="Description" column="CAT_DESCRIPTION"/&gt;
+    <emphasis role="blue">&lt;result property="ProductList" column="CAT_ID" select="selectProductsByCatId"/&gt;</emphasis>
+  &lt;/resultMap&gt;
+
+  &lt;resultMap id="select-product-result" class="Product"&gt;
+    &lt;result property="Id" column="PRD_ID"/&gt;
+    &lt;result property="Description" column="PRD_DESCRIPTION"/&gt;
+  &lt;/resultMap&gt;
+&lt;resultMaps&gt;
+
+&lt;statements&gt;
+
+  <emphasis role="green">&lt;!-- This statement executes 1 time --&gt;</emphasis>
+  &lt;statement id="selectCategory" parameterClass="int" resultMap="select-category-result"&gt;
+    select * from CATEGORY where CAT_ID = #value#
+  &lt;/statement&gt;
+
+  <emphasis role="green">&lt;!-- This statement executes N times (once for each category returned above) 
+       and returns a list of Products (1:M) --&gt;</emphasis>
+  &lt;statement id="selectProductsByCatId" parameterClass="int" resultMap="select-product-result"&gt;
+    <emphasis role="blue">select * from PRODUCT where PRD_CAT_ID = #value#</emphasis>
+  &lt;/statement&gt;
+&lt;/statements&gt;</programlisting>
+      </example>
 
       <para>1:N &amp; M:N Solution? Currently the feature that resolves this
       issue not implemented, but the development discussions are active, and
@@ -2158,7 +2244,7 @@ public class Newspaper : Document
       Customer ID and Order ID:</para>
 
       <example>
-        <title>Mapping a componsite key</title>
+        <title>Mapping a composite key</title>
 
         <programlisting>
 &lt;resultMaps&gt;
@@ -2191,7 +2277,7 @@ public class Newspaper : Document
       <para>As usual, this is a slight performance gain with an impact on
       readability and maintainability.</para>
 
-      <para>Important! Currently the iBATIS Data Mapper framework does not
+      <para>Important! Currently the iBATIS DataMapper framework does not
       automatically resolve circular relationships. Be aware of this when
       implementing parent/child relationships (trees). An easy workaround is
       to simply define a second result map for one of the cases that does not
@@ -2200,8 +2286,8 @@ public class Newspaper : Document
           <para>Result Map names are always local to the Data Map definition
           file that they are defined in. You can refer to a Result Map in
           another Data Map definition file by prefixing the name of the Result
-          Map with the namespace of the SQL Map (set in the &lt;sqlMap&gt;
-          root tag).</para>
+          Map with the namespace of the SqlMap set in the &lt;sqlMap&gt; root
+          element.</para>
         </note></para>
     </sect2>
   </sect1>
@@ -2712,7 +2798,7 @@ public class Newspaper : Document
 
     <para>The results from a query Mapped Statement can be cached simply by
     specifying the cacheModel parameter in the statement tag (seen above). A
-    cache model is a configured cache that is defined within your Data Mapper
+    cache model is a configured cache that is defined within your DataMapper
     configuration file. Cache models are configured using the cacheModel
     element as follows:</para>
 
@@ -2935,7 +3021,7 @@ public class Newspaper : Document
     included at all. The typical solution is usually a mess of conditional
     if-else statements and horrid string concatenations. The desired result is
     often a query by example, where a query can be built to find objects that
-    are similar to the example object. The iBATIS Data Mapper API provides a
+    are similar to the example object. The iBATIS DataMapper API provides a
     relatively elegant solution that can be applied to any mapped statement
     element. Here is a simple example:</para>
 

@@ -5,21 +5,21 @@
   <sect1>
     <title>Overview</title>
 
-    <para>The iBATIS Data Mapper framework makes it easier to use a database
-    with a Java or .NET application. iBATIS Data Mapper couples objects with
+    <para>The iBATIS DataMapper framework makes it easier to use a database
+    with a Java or .NET application. iBATIS DataMapper couples objects with
     stored procedures or SQL statements using a XML descriptor. Simplicity is
-    the biggest advantage of the iBATIS Data Mapper over object relational
-    mapping tools. To use iBATIS Data Mapper you rely on your own objects,
-    XML, and SQL. There is little to learn that you don't already know. With
-    iBATIS Data Mapper you have the full power of both SQL and stored
-    procedures at your fingertips.</para>
+    the biggest advantage of the iBATIS DataMapper over object relational
+    mapping tools. To use iBATIS DataMapper you rely on your own objects, XML,
+    and SQL. There is little to learn that you don't already know. With iBATIS
+    DataMapper you have the full power of both SQL and stored procedures at
+    your fingertips.</para>
   </sect1>
 
   <sect1>
     <title>What's covered here</title>
 
-    <para>This Guide covers the .NET implementations of iBATIS Data Mapper.
-    The Java implementation offers the same services with some changes in the
+    <para>This Guide covers the .NET implementations of iBATIS DataMapper. The
+    Java implementation offers the same services with some changes in the
     API.</para>
 
     <para>Since iBATIS relies on an XML descriptor to create the mappings,
@@ -37,7 +37,7 @@
       url="http://opensource.atlassian.com/confluence/oss/display/IBATIS/How+do+I+generate+PDF+and+HTML+Help+files+from+the+latest+documentation+XML+source+files+in+the+source+control+repository%3F">iBATIS
       Wiki FAQ</ulink>. The FAQ entry explains how you can access our SVN
       source repository and generate CHM and PDF files of the latest
-      development documentation for the Data Mapper.</para>
+      development documentation for the DataMapper.</para>
     </tip>
   </sect1>
 
