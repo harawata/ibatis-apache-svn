@@ -2296,10 +2296,11 @@ public class Newspaper : Document
     <title>Supported Types for Parameter Maps and Result Maps</title>
 
     <sect2>
-      <para>Table 3.3 shows the Supported Types for Parameter Maps and Result
-      Maps for .NET. <table>
-          <title>Supported Types for Parameter Maps and Result Maps (.NET
-          only)</title>
+      <para>Table 3.3 shows the basic Supported Types for Parameter Maps and
+      Result Maps for .NET. You can extend the framework's support for
+      additional types by using a Custom Type Handler.<table>
+          <title>Supported Types for Parameter Maps and Result Maps
+          (.NET)</title>
 
           <tgroup cols="4">
             <thead>
@@ -2513,8 +2514,10 @@ public class Newspaper : Document
   <sect1>
     <title>Supported database types for Parameter Maps and Result Maps</title>
 
-    <para>Table 3.4 shows the Supported DbTypes for Parameter Maps and Result
-    Maps for .NET.</para>
+    <para>Table 3.4 shows the basic Supported DbTypes for Parameter Maps and
+    Result Maps for .NET that come with the System.Data and
+    System.Data.OracleClient assemblies. See the .NET Developer Guide section
+    on configuring the DataMapper to work with your provider's DbTypes.</para>
 
     <para>The .NET Framework data provider type of a Parameter object is
     inferred from the .NET Framework type of the Value of the Parameter
@@ -2724,7 +2727,7 @@ public class Newspaper : Document
 
               <entry>Char, NChar, NText, NVarChar, Text, VarChar</entry>
 
-              <entry>NVarChar</entry>
+              <entry>NVarChar, VarChar</entry>
             </row>
 
             <row>
@@ -2790,11 +2793,11 @@ public class Newspaper : Document
   <sect1>
     <title>Cache Models</title>
 
-    <para>Some values in a database are know to change more slowly than
-    others. To improve performance, many developers like to cache often-used
-    data, to avoid making unnecessary trips back to the database. iBATIS
-    provides its own caching system, that you configure through a
-    &lt;cacheModel&gt; element.</para>
+    <para>Some values in a database are know to change slower than others. To
+    improve performance, many developers like to cache often-used data to
+    avoid making unnecessary trips back to the database. iBATIS provides its
+    own caching system, that you configure through a &lt;cacheModel&gt;
+    element.</para>
 
     <para>The results from a query Mapped Statement can be cached simply by
     specifying the cacheModel parameter in the statement tag (seen above). A
@@ -2811,8 +2814,7 @@ public class Newspaper : Document
   &lt;flushOnExecute  statement="updateProduct"/&gt;
   &lt;flushOnExecute  statement="deleteProduct"/&gt;
   &lt;property name="CacheSize" value="100"/&gt;
-&lt;/cacheModel&gt;
-</programlisting>
+&lt;/cacheModel&gt;</programlisting>
     </example>
 
     <para>The cache model above will create an instance of a cache named
@@ -2843,14 +2845,14 @@ public class Newspaper : Document
       <title>Cache Implementation</title>
 
       <para>The cache model uses a pluggable framework for supporting
-      different types of caches. The implementation is specified in the type
-      attribute of the cacheModel element (as discussed above). The class name
-      specified must be an implementation of the CacheController interface, or
-      one of the four aliases discussed below. Further configuration
-      parameters can be passed to the implementation via the property elements
-      contained within the body of the cacheModel. Currently there are 3
-      implementations included with the .NET distribution. These are as
-      follows:</para>
+      different types of caches. The choice of cache is specified in the
+      "implementation" attribute of the cacheModel element as discussed above.
+      The class name specified must be an implementation of the
+      ICacheController interface, or one of the three aliases discussed below.
+      Further configuration parameters can be passed to the implementation via
+      the property elements contained within the body of the cacheModel.
+      Currently there are 3 implementations included with the .NET
+      distribution. These are as follows:</para>
     </sect2>
 
     <sect2>
@@ -2860,8 +2862,7 @@ public class Newspaper : Document
       cache behavior. That is, the garbage collector effectively determines
       what stays in the cache or otherwise. The MEMORY cache is a good choice
       for applications that don't have an identifiable pattern of object
-      reuse, or applications where memory is scarce (it will do what it
-      can).</para>
+      reuse, or applications where memory is scarce.</para>
 
       <para>The MEMORY implementation is configured as follows:</para>
 
@@ -2875,13 +2876,12 @@ public class Newspaper : Document
   &lt;flushOnExecute  statement="updateProduct"/&gt;
   &lt;flushOnExecute  statement="deleteProduct"/&gt;
   <emphasis role="blue">&lt;property name="Type" value="WEAK"/&gt;</emphasis>
-&lt;/cacheModel&gt;
-</programlisting>
+&lt;/cacheModel&gt;</programlisting>
       </example>
 
       <para>Only a single property is recognized by the MEMORY cache
       implementation. This property, named 'reference-type' must be set to a
-      value of STRONG, SOFT or WEAK.</para>
+      value of STRONG, SOFT, or WEAK.</para>
 
       <para>The following table describes the different reference types that
       can be used for a MEMORY cache. <table>
@@ -2909,7 +2909,7 @@ public class Newspaper : Document
               </row>
 
               <row>
-                <entry>SOFT (Java only)</entry>
+                <entry>SOFT (currently Java only)</entry>
 
                 <entry>This reference type will reduce the likelihood of
                 running out of memory in case the results are not currently in
@@ -2963,8 +2963,7 @@ public class Newspaper : Document
   &lt;flushOnExecute  statement="updateProduct"/&gt;
   &lt;flushOnExecute  statement="deleteProduct"/&gt;
    <emphasis role="blue">&lt;property name="CacheSize" value="100"</emphasis>/&gt;
-&lt;/cacheModel&gt;
-</programlisting>
+&lt;/cacheModel&gt;</programlisting>
       </example>
 
       <para>Only a single property is recognized by the LRU cache
@@ -2998,8 +2997,7 @@ public class Newspaper : Document
   &lt;flushOnExecute  statement="updateProduct"/&gt;
   &lt;flushOnExecute  statement="deleteProduct"/&gt;
   <emphasis role="blue">&lt;property name="CacheSize" value="100"/&gt;</emphasis>
-&lt;/cacheModel&gt;
-</programlisting>
+&lt;/cacheModel&gt;</programlisting>
       </example>
 
       <para>Only a single property is recognized by the FIFO cache
@@ -3066,19 +3064,19 @@ public class Newspaper : Document
   <emphasis role="blue">select * from ACCOUNT</emphasis>
     &lt;dynamic prepend="WHERE"&gt;
       &lt;isNotNull prepend="AND" property="FirstName"&gt;
-        <emphasis role="blue">(ACC_FIRST_NAME = #FirstName#</emphasis>
+        <emphasis role="blue">( ACC_FIRST_NAME = #FirstName#</emphasis>
         &lt;isNotNull prepend="OR" property="LastName"&gt;
           <emphasis role="blue">ACC_LAST_NAME = #LastName#</emphasis>
         &lt;/isNotNull&gt;
         )
-    &lt;/isNotNull&gt;
-    &lt;isNotNull prepend="AND" property="EmailAddress"&gt;
-      <emphasis role="blue">ACC_EMAIL like #EmailAddress#</emphasis>
-    &lt;/isNotNull&gt;
-    &lt;isGreaterThan prepend="AND" property="Id" compareValue="0"&gt;
-      <emphasis role="blue">ACC_ID = #Id#</emphasis>
-    &lt;/isGreaterThan&gt;
-  &lt;/dynamic&gt;
+      &lt;/isNotNull&gt;
+      &lt;isNotNull prepend="AND" property="EmailAddress"&gt;
+        <emphasis role="blue">ACC_EMAIL like #EmailAddress#</emphasis>
+      &lt;/isNotNull&gt;
+      &lt;isGreaterThan prepend="AND" property="Id" compareValue="0"&gt;
+        <emphasis role="blue">ACC_ID = #Id#</emphasis>
+      &lt;/isGreaterThan&gt;
+    &lt;/dynamic&gt;
   <emphasis role="blue">order by ACC_LAST_NAME</emphasis>
 &lt;/select&gt;</programlisting>
     </example>
@@ -3110,10 +3108,10 @@ order by ACC_LAST_NAME
 
     <para>In the above statement, the &lt;dynamic&gt; element demarcates a
     section of the SQL that is dynamic. The dynamic element is optional and
-    provides a way to manage a prepend in cases where the prepend (e.g.
-    "WHERE") should not be included unless the contained conditions append to
-    the statement. The statement section can contain any number of conditional
-    elements (see below) that will determine whether a the contained SQL code
+    provides a way to manage a prepend in cases where the prepend ("WHERE")
+    should not be included unless the contained conditions append to the
+    statement. The statement section can contain any number of conditional
+    elements (see below) that will determine whether the contained SQL code
     will be included in the statement. All of the conditional elements work
     based on the state of the parameter object passed into the query. Both the
     dynamic element and the conditional elements have a "prepend" attribute.
