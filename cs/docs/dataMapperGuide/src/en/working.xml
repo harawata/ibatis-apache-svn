@@ -240,9 +240,9 @@ Mapper.Instance().Insert("InsertLineItem",lineItem);</programlisting></para>
                 <entry><programlisting>id 
 parameterClass 
 resultClass 
+listClass
 parameterMap 
 resultMap 
-listClass
 cacheModel</programlisting></entry>
 
                 <entry><programlisting>All dynamic elements</programlisting></entry>
@@ -307,6 +307,7 @@ Delete</programlisting></entry>
                 <entry><programlisting>id 
 parameterClass 
 resultClass 
+listClass
 parameterMap 
 resultMap 
 cacheModel
@@ -765,6 +766,111 @@ All query methods</programlisting></entry>
       </sect3>
 
       <sect3>
+        <title>listClass</title>
+
+        <para>In addition to providing the ability to return an IList of
+        objects, the DataMapper supports the use of a strongly-typed custom
+        collection: a class that implements the
+        System.Collections.CollectionBase abstract class. The following is an
+        example of a CollectionBase class that can be used with the
+        DataMapper. </para>
+
+        <para><example>
+            <title>A System.Collections.CollectionBase implementation</title>
+
+            <para><programlisting>using System;
+using System.Collections;
+
+namespace WebShop.Domain 
+{
+ public class AccountCollection : CollectionBase 
+ {
+  public AccountCollection() {}
+
+  public Account this[int index] 
+  {
+   get { return (Account)List[index]; }
+   set { List[index] = value; }
+  }
+
+  public int Add(Account value) 
+  {
+   return List.Add(value);
+  }
+
+  public void AddRange(Account[] value) 
+  {
+   for (int i = 0; i &lt; value.Length; i++) 
+   {
+    Add(value[i]);
+   }
+  }
+
+  public void AddRange(AccountCollection value) 
+  {
+   for (int i = 0; i &lt; value.Count; i++) 
+   {
+    Add(value[i]);
+   }
+  }
+
+  public bool Contains(Account value) 
+  {
+   return List.Contains(value);
+  }
+
+  public void CopyTo(Account[] array, int index) 
+  {
+   List.CopyTo(array, index);
+  }
+
+  public int IndexOf(Account value) 
+  {
+   return List.IndexOf(value);
+  }
+  
+  public void Insert(int index, Account value) 
+  {
+   Account.Insert(index, value);
+  }
+  
+  public void Remove(Account value) 
+  {
+   Account.Remove(value);
+  }
+ }
+}</programlisting></para>
+          </example></para>
+
+        <para>A CollectionBase class can be specified for a select statement
+        through the listClass attribute. The value of the listClass attribute
+        can be a Type Alias or the fully qualified name of a class. The
+        statement should also indicate the resultClass so that the DataMapper
+        knows how to handle the type of objects in the collection. The
+        resultClass specified will be automatically mapped to the columns in
+        the result, based on the result metadata. Example 16 shows a
+        &lt;statement&gt; element with a listClass attribute.</para>
+
+        <para><example>
+            <title>A &lt;statement &gt;element with resultClass
+            attribute</title>
+
+            <para><programlisting>&lt;statement id="GetAccounts"
+ parameterClass="int"
+ <emphasis role="blue">listClass="AccountCollection"</emphasis>
+ <emphasis role="blue">resultClass="Account"</emphasis>&gt;
+   select
+   Account_ID as Id,
+   Account_FirstName as FirstName,
+   Account_LastName as LastName,
+   Account_Email as EmailAddress
+   from Accounts
+   order by Account_LastName, Account_FirstName
+&lt;/statement&gt;</programlisting></para>
+          </example></para>
+      </sect3>
+
+      <sect3>
         <title>cacheModel</title>
 
         <para>If you want to cache the result of a query, you can specify a
@@ -805,17 +911,19 @@ All query methods</programlisting></entry>
     runtime. Someone wants a database record with the <database>ID
     42</database>, and we need to merge that <database>ID</database> number
     into a select statement. A list of one or more parameters are passed at
-    runtime, and each placeholder is replaced in turn. Simple, but labor
-    intensive, since developers spend a lot of time counting symbols to make
-    sure everything is in sync.</para>
+    runtime, and each placeholder is replaced in turn. This is simple but
+    labor intensive, since developers spend a lot of time counting symbols to
+    make sure everything is in sync.</para>
 
     <para><note>
-        <para>Precedents sections introduce the iBATIS inline parameters,
-        which automatically map properties to named parameters. Many, if not
-        most, iBATIS developers prefer this approach. But others do prefer to
-        stick to the standard, anonymous approach to SQL parameters. Sometimes
-        people need to retain the purity of the SQL statements, other times
-        because extra information needs to be passed.</para>
+        <para>Preceding sections briefly touched on inline parameters, which
+        automatically map properties to named parameters. Many iBATIS
+        developers prefer this approach. But others prefer to stick to the
+        standard, anonymous approach to SQL parameters by using parameter
+        maps. Sometimes people need to retain the purity of the SQL
+        statements; other times they need the detailed specification offered
+        by parameter maps due to database or provider-specific information
+        that needs to be used.</para>
       </note></para>
 
     <para>A Parameter Map defines an ordered list of values that match up with
@@ -838,17 +946,20 @@ All query methods</programlisting></entry>
     Map.<example>
         <title>An external Parameter Map</title>
 
-        <programlisting>&lt;parameterMap id="<emphasis role="blue">ParameterMap.name</emphasis>" [class="<emphasis
-            role="blue">class.name|typeAlias</emphasis>"]&gt;
+        <programlisting>&lt;parameterMap id="<emphasis role="blue">ParameterMap.name</emphasis>" 
+  [class="<emphasis role="blue">class.name, assembly|typeAlias</emphasis>"]
+  [extends="<emphasis role="blue">[sqlMap.namespace.]parameterMap.Id</emphasis>"]&gt;
   &lt;parameter 
     property ="<emphasis role="blue">property.name</emphasis>" 
     [column="<emphasis role="blue">column.name</emphasis>"]
+    [direction="<emphasis role="blue">Input|Output|InputOutput</emphasis>"]
     [dbType="<emphasis role="blue">database.type</emphasis>"] 
-    [extends="<emphasis role="blue">parent.parameterMap</emphasis>"]
+    [type="<emphasis role="blue">property.CLR.type</emphasis>"]
     [nullValue="<emphasis role="blue">null.value.replacement</emphasis>"] 
-    [resultMapping="<emphasis role="blue">[sqlMap.namespace.]parameterMap.Id</emphasis>"]/&gt;
     [size="<emphasis role="blue">column.size</emphasis>"] 
-    [type="<emphasis role="blue">property.CLR.type</emphasis>"] 
+    [precision="<emphasis role="blue">column.precision</emphasis>"] 
+    [scale="<emphasis role="blue">column.scale</emphasis>"]  
+    [typeHandler="<emphasis role="blue">class.name, assembly|typeAlias</emphasis>"]  
   &lt;parameter ... ... /&gt;
   &lt;parameter ... ... /&gt; 
 &lt;/parameterMap&gt;</programlisting>
@@ -862,10 +973,10 @@ All query methods</programlisting></entry>
     typical &lt;parameterMap&gt;. <example>
         <title>A typical &lt;parameterMap&gt; element</title>
 
-        <programlisting>&lt;parameterMap id="insert-product-param" class="product"&gt;
+        <programlisting>&lt;parameterMap id="insert-product-param" class="Product"&gt;
   &lt;parameter property="<emphasis role="blue">description</emphasis>" /&gt;
   &lt;parameter property="<emphasis role="blue">id</emphasis>"/&gt;
-  &lt;/parameterMap&gt;
+&lt;/parameterMap&gt;
 
 &lt;statement id="insertProduct" parameterMap="insert-product-param"&gt;
   insert into PRODUCT (<emphasis role="blue">PRD_DESCRIPTION</emphasis>, <emphasis
@@ -878,18 +989,18 @@ All query methods</programlisting></entry>
         file where they are defined. You can refer to a Parameter Map in
         another Data Map definition file by prefixing the
         <parameter>id</parameter> of the Parameter Map with the namespace of
-        the Data Map (set in the &lt;sqlMap&gt; root tag). If the Parameter
-        Map in Example 3.15 were in a Data Map named "Product", it could be
-        referenced from another file using
+        the Data Map (set in the &lt;sqlMap&gt; root element). If the
+        Parameter Map in Example 3.15 were in a Data Map named "Product", it
+        could be referenced from another file using
         "Product.insert-product-param".</para>
       </note></para>
 
     <sect2>
       <title>&lt;parameterMap&gt; attributes</title>
 
-      <para>The &lt;parameterMap&gt; element accepts two attributes:
-      <parameter>id</parameter> (required) and <parameter>class</parameter>
-      (optional).</para>
+      <para>The &lt;parameterMap&gt; element accepts three attributes:
+      <parameter>id</parameter> (required), <parameter>class</parameter>
+      (optional), and <parameter>extends</parameter> (optional).</para>
 
       <sect3>
         <title>id</title>
@@ -903,22 +1014,46 @@ All query methods</programlisting></entry>
 
         <para>The optional <parameter>class</parameter> attribute specifies an
         object class to use with this &lt;parameterMap&gt;. The full classname
-        or an alias must be specified. Any class can be used.</para>
+        and assembly or an alias must be specified. Any class can be
+        used.</para>
 
         <para><note>
             <para>The parameter classes must be a property object or
-            <interfacename>IDictionary</interfacename> instance (if you are
-            using .NET).</para>
+            <interfacename>IDictionary</interfacename> instance.</para>
           </note></para>
+      </sect3>
+
+      <sect3>
+        <title>extends</title>
+
+        <para>The optional <parameter>extends</parameter> attribute can be set
+        to the name of another parameterMap upon which to base this
+        parameterMap. All properties of the <emphasis>super</emphasis>
+        parameterMap will be included as part of this parameterMap, and values
+        from the <emphasis>super</emphasis> parameterMap are set before any
+        values specified by this parameterMap. The effect is similar to
+        extending a class.</para>
       </sect3>
     </sect2>
 
     <sect2>
       <title>&lt;parameter&gt; Elements</title>
 
-      <para>The &lt;parameterMap&gt; element holds one or more parameter
-      stanzas that map object properties to placeholders in a SQL statement.
+      <para>The &lt;parameterMap&gt; element holds one or more parameter child
+      elements that map object properties to placeholders in a SQL statement.
       Section 3.3.2.1 through 3.3.2.11 describe each of the attributes.</para>
+
+      <sect3>
+        <title>property</title>
+
+        <para>The <parameter>property</parameter> attribute of
+        &lt;parameterMap&gt; is the name of a property of the parameter
+        object. It may also be the name of an entry in a
+        <interfacename>IDictionary</interfacename> object. The name can be
+        used more than once depending on the number of times it is needed in
+        the statement. (In an update, you might set a column that is also part
+        of the where clause.)</para>
+      </sect3>
 
       <sect3>
         <title>column</title>
@@ -969,70 +1104,53 @@ All query methods</programlisting></entry>
       </sect3>
 
       <sect3>
-        <title>extends</title>
-
-        <para>The optional <parameter>extends</parameter> attribute can be set
-        to the name of another parameterMap upon which to base this
-        parameterMap. All properties of the <emphasis>super</emphasis>
-        parameterMap will be included as part of this parameterMap, and values
-        from the <emphasis>super</emphasis> parameterMap are set before any
-        values specified by this parameterMap. The effect is similar to
-        extending a class.</para>
-      </sect3>
-
-      <sect3>
         <title>dbType</title>
 
-        <para>The <parameter>dbType</parameter> attribute (.NET) is used to
+        <para>The <parameter>dbType</parameter> attribute is used to
         explicitly specify the database column type of the parameter to be set
         by this property. For certain operations, some ADO.NET providers are
         not able to determine the type of a column, and the type must be
         specified.</para>
 
         <para>This attribute is normally only required if the column is
-        nullable. Although, another reason to use the type attribute is to
-        explicitly specify date types. Whereas .NET only have one Date value
+        nullable. Although, another reason to use the dbType attribute is to
+        explicitly specify date types. Whereas .NET only has one Date value
         type (<classname>System.DateTime</classname>), most SQL databases have
         more than one. Usually, a database has at least three different types
         (<database>DATE</database>, <database>DATETIME</database>,
         <database>TIMESTAMP</database>). In order for the value to map
-        correctly, you might need to specify the column type,</para>
+        correctly, you might need to specify the column's dbType,</para>
 
         <para><note>
-            <para>Most providers only need the type specified for nullable
+            <para>Most providers only need the dbType specified for nullable
             columns. In this case, you only need to specify the type for the
             columns that are nullable.</para>
-          </note><note>
-            <para>When using Oracle, you will create an <errortext>Invalid
-            column type</errortext> error if you attempt to set a null value
-            to a column without specifying its type.</para>
           </note></para>
 
         <para>The <parameter>dbType</parameter> attribute can be set to any
         string value that matches a constant in the specific data type enum of
-        the used provider (<classname>System.Data.SqlDbType</classname> for
-        Microsoft Sql Server). Although it can be set to any of these, some
-        types are not supported (<classname>blobs</classname>). Section 3.6
-        describes the types that are supported by the framework.</para>
+        the used provider such as <classname>System.Data.SqlDbType</classname>
+        for Microsoft Sql Server. Section 3.6 describes the types that are
+        supported by the framework.</para>
       </sect3>
 
       <sect3>
         <title>type</title>
 
-        <para>The <parameter>type</parameter> attribute (.NET) is used to
-        specify the CLR type of the parameter's
-        <parameter>property</parameter>. This attribute is useful when passing
-        InputOutput and Output parameters into stored procedures. The
-        framework uses the specified <parameter>type</parameter> to properly
-        handle and set the parameter object's properties with the procedure's
-        output values after execution.</para>
+        <para>The <parameter>type</parameter> attribute is used to specify the
+        CLR type of the parameter's <parameter>property</parameter>. This
+        attribute is useful when passing InputOutput and Output parameters
+        into stored procedures. The framework uses the specified
+        <parameter>type</parameter> to properly handle and set the parameter
+        object's properties with the procedure's output values after
+        execution.</para>
 
         <para>Normally, the type can be derived from a property through
         reflection, but certain mappings that use objects such as a Map cannot
         provide the property type to the framework. If the attribute type is
         not set and the framework cannot otherwise determine the type, the
         type is assumed to be an Object. Section 6 details the CLR types and
-        available aliases that are supported by the framework.</para>
+        available aliases that have pre-built support in the framework.</para>
       </sect3>
 
       <sect3>
@@ -1054,6 +1172,13 @@ All query methods</programlisting></entry>
       </sect3>
 
       <sect3>
+        <title>size</title>
+
+        <para>The <parameter>size</parameter> attribute sets the maximum size
+        of the data within the column.</para>
+      </sect3>
+
+      <sect3>
         <title>precision</title>
 
         <para>The <parameter>precision</parameter> attribute is used to set
@@ -1062,45 +1187,10 @@ All query methods</programlisting></entry>
       </sect3>
 
       <sect3>
-        <title>property</title>
-
-        <para>The <parameter>property</parameter> attribute of
-        &lt;parameterMap&gt; is the name of an object property
-        (<methodname>get</methodname> method) of the parameter object. It may
-        also be the name of an entry in a
-        <interfacename>IDictionary</interfacename> (.NET). The name can be
-        used more than once depending on the number of times it is needed in
-        the statement. (In an update, you might set a column that is also part
-        of the where clause.)</para>
-      </sect3>
-
-      <sect3>
-        <title>resultMapping</title>
-
-        <para>The <parameter>resultMapping</parameter> attribute can be set to
-        the name of another parameterMap used to fill the property. If the
-        parameterMap is in an other mapping file, you must specified the fully
-        qualified name as : <programlisting>
-resultMapping="[namespace.sqlMap.]resultMapping.id"
-
-resultMapping="Newspaper"
-<emphasis role="comment">&lt;!--resultMapping with a fully qualified name.--&gt;</emphasis>
-resultMapping="LineItem.LineItem"
-</programlisting></para>
-      </sect3>
-
-      <sect3>
         <title>scale</title>
 
         <para>The <parameter>scale</parameter> attribute sets the number of
         decimal places used to resolve the property value.</para>
-      </sect3>
-
-      <sect3>
-        <title>size</title>
-
-        <para>The <parameter>size</parameter> attribute sets the maximum size,
-        in bytes, of the data within the column.</para>
       </sect3>
     </sect2>
 
@@ -1111,7 +1201,7 @@ resultMapping="LineItem.LineItem"
       3.4.3), you can add extra type information inline too. The inline
       parameter map syntax lets you embed the property name, the property
       type, and the column type, into a parametrized SQL statement. Example
-      3.16, 3.17 shows coded with inline parameters.<example>
+      3.16, 3.17 shows statements written with inline parameters.<example>
           <title>A &lt;statement&gt; using inline parameters</title>
 
           <para><programlisting>&lt;statement id="insertProduct" parameterClass="product"&gt;
@@ -1182,10 +1272,10 @@ resultMapping="LineItem.LineItem"
       <para>Assuming <database>PRD_ID</database> is a numeric type, when a
       call is made to this Mapped Statement, a standard Integer object can be
       passed in. The <parameter>#value#</parameter> parameter will be replaced
-      with the value of the Integer instance. (The name
+      with the value of the Integer instance. The name
       <varname>value</varname> is simply a placeholder, you can use another
-      moniker if you like.) Result Maps support primitive types as results as
-      well. For more information about using primitive types as parameters,
+      moniker of your choice. Result Maps support primitive types as results
+      as well. For more information about using primitive types as parameters,
       see Section 3.4, "Result Maps" and the "Programming iBATIS Data Mapper"
       section in the Developers Guide for your platform.</para>
 
@@ -1227,9 +1317,8 @@ resultMapping="LineItem.LineItem"
       <para>Result Maps support Map and
       <interfacename>IDictionary</interfacename> types as results too. For
       more information about using <classname>Map</classname> and
-      <interfacename>IDictionary</interfacename> types as parameters, see
-      Section 3.5, "Result Maps" and "Programming iBATIS Data Mapper" in your
-      platform's Developer Guide (Section 5).</para>
+      <interfacename>IDictionary</interfacename> types as parameters, see the
+      "Result Maps" and "Developer Guide" sections.</para>
 
       <para>For your convenience, <interfacename>IDictionary</interfacename>
       types are aliased by the framework. So, <classname>map</classname> or
@@ -1259,7 +1348,7 @@ resultMapping="LineItem.LineItem"
 
         <para><programlisting>&lt;resultMap id="<emphasis role="blue">parameterMap.name</emphasis>" 
            [class="<emphasis role="blue">class.name|typeAlias</emphasis>"] 
-           [extends="<emphasis role="blue">parent.resultMap</emphasis>"]&gt;
+           [extends="<emphasis role="blue">[sqlMap.namespace.]resultMap.id</emphasis>"]&gt;
 
    &lt;result property="<emphasis role="blue">property.name</emphasis>" 
            column="<emphasis role="blue">column.name</emphasis>"
@@ -1411,6 +1500,20 @@ resultMapping="LineItem.LineItem"
         the type, the type is assumed to be Object. Section 6 details the CLR
         types and available aliases that are supported by the
         framework.</para>
+      </sect3>
+
+      <sect3>
+        <title>resultMapping</title>
+
+        <para>The <parameter>resultMapping</parameter> attribute can be set to
+        the name of another resultMap used to fill the property. If the
+        resultMap is in an other mapping file, you must specified the fully
+        qualified name as : <programlisting>resultMapping="[namespace.sqlMap.]resultMapping.id"
+
+resultMapping="Newspaper"
+<emphasis role="comment">&lt;!--resultMapping with a fully qualified name.--&gt;</emphasis>
+resultMapping="LineItem.LineItem"
+</programlisting></para>
       </sect3>
 
       <sect3>
