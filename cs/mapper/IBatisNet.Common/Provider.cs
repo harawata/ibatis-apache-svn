@@ -504,7 +504,7 @@ namespace IBatisNet.Common
 			catch(Exception e)
 			{
 				throw new ConfigurationException(
-					string.Format("Could not configure providers. Provider named \"{0}\" not found, failed. Cause: {1}", _name, e.Message)
+					string.Format("Could not configure providers. Unable to load provider named \"{0}\" not found, failed. Cause: {1}", _name, e.Message), e
 					);
 			}
 		}
