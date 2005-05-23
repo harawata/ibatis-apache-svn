@@ -36,25 +36,17 @@
     accessing databases, whether through SQL statements or stored procedures.
     But developers find several things are still hard to do well when using
     "stock" ADO.NET, including:<itemizedlist>
-        <listitem>
-           Separating SQL code from programming code 
-        </listitem>
+        <listitem>Separating SQL code from programming code</listitem>
 
-        <listitem>
-           Passing input parameters to the library classes and extracting the output 
-        </listitem>
+        <listitem>Passing input parameters to the library classes and
+        extracting the output</listitem>
 
-        <listitem>
-           Separating data access classes from business logic classes 
-        </listitem>
+        <listitem>Separating data access classes from business logic
+        classes</listitem>
 
-        <listitem>
-           Caching often-used data until it changes 
-        </listitem>
+        <listitem>Caching often-used data until it changes</listitem>
 
-        <listitem>
-           Managing transactions and threading 
-        </listitem>
+        <listitem>Managing transactions and threading</listitem>
       </itemizedlist></para>
 
      
@@ -71,7 +63,8 @@
 
      
 
-    <para><figure>
+    <para>
+      <figure>
         <title>iBATIS Data Mapper workflow</title>
 
         <mediaobject>
@@ -80,7 +73,8 @@
                        format="GIF" />
           </imageobject>
         </mediaobject>
-      </figure></para>
+      </figure>
+    </para>
 
      Here's a high level description of the workflow diagrammed by Figure 2.1: 
 
@@ -121,7 +115,7 @@ Mapper.Instance().Insert("InsertLineItem",lineItem);</programlisting>If your
      
 
     <programlisting>C#
-MyKey = Mapper.Instance().Insert("InsertLineItem",lineItem);</programlisting>
+int myKey = Mapper.Instance().Insert("InsertLineItem",lineItem);</programlisting>
 
      
 
@@ -129,7 +123,8 @@ MyKey = Mapper.Instance().Insert("InsertLineItem",lineItem);</programlisting>
 
      
 
-    <para><example>
+    <para>
+      <example>
         <title>The "InsertLineItem" descriptor</title>
 
         <programlisting>&lt;insert id="InsertLineItem" parameterClass="LineItem"&gt;
@@ -141,7 +136,8 @@ MyKey = Mapper.Instance().Insert("InsertLineItem",lineItem);</programlisting>
   select @@IDENTITY as value
  &lt;/selectKey&gt;
 &lt;/insert&gt;</programlisting>
-      </example></para>
+      </example>
+    </para>
 
      
 
@@ -155,8 +151,10 @@ MyKey = Mapper.Instance().Insert("InsertLineItem",lineItem);</programlisting>
 
      
 
-    <para><programlisting>C#
-IList productList = Mapper.Instance().QueryForList("selectProduct",categoryKey);</programlisting></para>
+    <para>
+      <programlisting>C#
+IList productList = Mapper.Instance().QueryForList("selectProduct",categoryKey);</programlisting>
+    </para>
 
      
 
@@ -186,9 +184,9 @@ Product product = Mapper.Instance().QueryForObject("SelectProduct",productKey) a
     business layer is distinct from the user-interface layer.</para>
 
     <para>Under these circumstances, another good choice would be an
-    Object/Relational Mapping tool (OR/M tool), like NHibernate. (Other
+    Object/Relational Mapping tool (OR/M tool), like NHibernate. Other
     products in this category are Apache ObjectRelationalBridge and
-    Gentle.NET.) An OR/M tool generates all or most of the SQL for you, either
+    Gentle.NET. An OR/M tool generates all or most of the SQL for you, either
     beforehand or at runtime. These products are called OR/M tools because
     they try to map an object graph to a relational schema.</para>
 

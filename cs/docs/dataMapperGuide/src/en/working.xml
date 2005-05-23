@@ -180,6 +180,7 @@ Mapper.Instance().Insert("InsertLineItem",lineItem);</programlisting></para>
   [parameterClass="<emphasis role="blue">alias</emphasis>"]
   [resultMap="<emphasis role="blue">resultMap.name</emphasis>"]
   [resultClass="<emphasis role="blue">class.name|alias</emphasis>"]
+  [listClass="<emphasis role="blue">class.name|alias</emphasis>"]
   [cacheModel="<emphasis role="blue">cache.name</emphasis>"]
 &gt;
 
@@ -202,7 +203,7 @@ Mapper.Instance().Insert("InsertLineItem",lineItem);</programlisting></para>
     <para>Example 6 is obviously unlikely, unless you are running a test. But
     it does shows that you can use iBATIS to execute arbitrary SQL statements.
     More likely, you will use the object mapping features with Parameter Maps
-    (Section 3.4) and Result Maps (Section 3.5), where the magic
+    (Section 3.4) and Result Maps (Section 3.5) since that's where the magic
     happens.</para>
 
     <sect2>
@@ -241,6 +242,7 @@ parameterClass
 resultClass 
 parameterMap 
 resultMap 
+listClass
 cacheModel</programlisting></entry>
 
                 <entry><programlisting>All dynamic elements</programlisting></entry>
@@ -272,13 +274,14 @@ Delete </programlisting></entry>
 
                 <entry><programlisting>id 
 parameterClass 
-parameterMap</programlisting></entry>
+parameterMap
+extends</programlisting></entry>
 
                 <entry><programlisting>All dynamic elements 
 &lt;generate&gt;</programlisting></entry>
 
                 <entry><programlisting>Insert 
-Udate 
+Update 
 Delete</programlisting></entry>
               </row>
 
@@ -287,7 +290,8 @@ Delete</programlisting></entry>
 
                 <entry><programlisting>id 
 parameterClass 
-parameterMap</programlisting></entry>
+parameterMap
+extends</programlisting></entry>
 
                 <entry><programlisting>All dynamic elements 
 &lt;generate&gt;</programlisting></entry>
@@ -305,7 +309,8 @@ parameterClass
 resultClass 
 parameterMap 
 resultMap 
-cacheModel</programlisting></entry>
+cacheModel
+extends</programlisting></entry>
 
                 <entry><programlisting>All dynamic elements 
 &lt;generate&gt;</programlisting></entry>
@@ -317,10 +322,10 @@ cacheModel</programlisting></entry>
                 <entry>&lt;procedure&gt;</entry>
 
                 <entry><programlisting>id 
-parameterClass 
-resultClass 
 parameterMap 
-resultMap</programlisting></entry>
+resultClass 
+resultMap
+cacheModel</programlisting></entry>
 
                 <entry><programlisting>All dynamic elements </programlisting></entry>
 
@@ -353,7 +358,7 @@ All query methods</programlisting></entry>
   &lt;parameter property="email2" column="Second_Email" /&gt;
 &lt;/parameterMap&gt;
 
-<emphasis role="comment">&lt;!-- Oracle with .NET 1.1 System.Data.OracleClient provider --&gt;</emphasis>
+<emphasis role="comment">&lt;!-- Oracle with MS OracleClient provider --&gt;</emphasis>
 &lt;procedure id="InsertCategory" parameterMap="insert-params"&gt;
  prc_InsertCategory
 &lt;/procedure&gt;
@@ -364,9 +369,9 @@ All query methods</programlisting></entry>
  &lt;parameter property="Id"         column="p_Category_Id"   dbType="Int32"   type="Int"/&gt;
 &lt;/parameterMap&gt;
 
-<emphasis role="comment">&lt;!-- Oracle with ODP.NET 9i provider --&gt;</emphasis>
+<emphasis role="comment">&lt;!-- Oracle with ODP.NET 10g provider --&gt;</emphasis>
 &lt;statement id="InsertAccount" parameterMap="insert-params"&gt;
- call prc_InsertAccount(?, ?, ?, ?)
+ prc_InsertAccount
 &lt;/statement&gt;
 ... 
 &lt;parameterMap id="insert-params"&gt;
@@ -385,8 +390,9 @@ All query methods</programlisting></entry>
       Otherwise they are left unchanged. Of course, immutable parameter
       objects (e.g. <classname>String</classname>) cannot be modified.<note>
           <para>For .NET, the parameterMap attribute is required. The DBType,
-          parameter direction, and size are all auto-discovered by the
-          framework (via the CommandBuilder).</para>
+          parameter direction, size, precision, and scale are usually
+          auto-discovered by the framework (via the CommandBuilder) depending
+          on your provider.</para>
         </note></para>
     </sect2>
 
@@ -440,7 +446,7 @@ All query methods</programlisting></entry>
             <programlisting><emphasis role="comment">&lt;!—Oracle SEQUENCE Example using .NET 1.1 System.Data.OracleClient --&gt;</emphasis> 
 &lt;insert id="insertProduct-ORACLE" parameterClass="product"&gt; 
   &lt;selectKey resultClass="int" type="pre" property="Id" &gt; 
-     <emphasis role="blue">SELECT STOCKIDSEQUENCE.NEXTVAL AS ID FROM DUAL</emphasis>
+     <emphasis role="blue">SELECT STOCKIDSEQUENCE.NEXTVAL AS VALUE FROM DUAL</emphasis>
   &lt;/selectKey&gt; 
   insert into PRODUCT (PRD_ID,PRD_DESCRIPTION) values (#id#,#description#) 
 &lt;/insert&gt;
@@ -624,7 +630,7 @@ All query methods</programlisting></entry>
         &lt;parameterMap&gt; and a corresponding &lt;statement&gt;.<example>
             <title>A parameterMap and corresponding statement</title>
 
-            <programlisting>&lt;parameterMap id="<emphasis role="blue">insert-product-param</emphasis>" class="product"&gt;
+            <programlisting>&lt;parameterMap id="<emphasis role="blue">insert-product-param</emphasis>" class="Product"&gt;
   &lt;parameter property="id"/&gt;
   &lt;parameter property="description"/&gt;
 &lt;/parameterMap&gt;
@@ -658,7 +664,7 @@ All query methods</programlisting></entry>
             <title>Ways to specify a parameterClass</title>
 
             <programlisting><emphasis role="comment">&lt;!-- fully qualified classname --&gt;</emphasis>
-&lt;statement id="statementName" parameterClass="<emphasis role="blue">Examples.Domain.Product, examples.domain</emphasis>"&gt;
+&lt;statement id="statementName" parameterClass="<emphasis role="blue">Examples.Domain.Product, Examples.Domain</emphasis>"&gt;
   insert into PRODUCT values (#id#, #description#, #price#)
 &lt;/statement&gt;
 
@@ -740,18 +746,18 @@ All query methods</programlisting></entry>
         <property>BirthDate</property>,
         <property>WeightInKilograms</property>, and
         <property>HeightInMeters</property>. Each of these corresponds with
-        the column aliases described by the SQL select statement (using the
-        "<database>as</database>" keyword –a standard SQL feature). When
+        the column aliases described by the SQL select statement using the
+        "<database>as</database>" keyword –a standard SQL feature. When
         executed, a <classname>Person</classname> object is instantiated and
         populated by matching the object property names to the (aliased)
         column names from the query.</para>
 
         <para>Using SQL aliases to map columns to properties saves defining a
         &lt;resultMap&gt; element, but there are limitations. There is no way
-        to specify the types of the output columns (if necessary), there is no
-        way to automatically load related data (complex properties), and there
-        is a slight performance consequence (from accessing the result
-        metadata). Architecturally, using aliases this way mixes
+        to specify the types of the output columns (if needed), there is no
+        way to automatically load related data such as complex properties, and
+        there is a slight performance consequence from accessing the result
+        metadata. Architecturally, using aliases this way mixes
         <emphasis>database logic</emphasis> with <emphasis>reporting
         logic</emphasis>, making the query harder to read and maintain. You
         can overcome these limitations with an explicit Result Map (Section
@@ -1469,15 +1475,15 @@ resultMapping="LineItem.LineItem"
       are several developer options for mapping entity classes and subclasses
       to database results:<itemizedlist>
           <listitem>
-             resultMap for each class
+             resultMap for each class 
           </listitem>
 
           <listitem>
-             resultMap with submaps for a class hierarchy
+             resultMap with submaps for a class hierarchy 
           </listitem>
 
           <listitem>
-             resultMap with extended resultMaps for each subclass
+             resultMap with extended resultMaps for each subclass 
           </listitem>
         </itemizedlist>You can use the most efficient mapping strategies from
       a SQL and query performance perspective when using the inheritance
