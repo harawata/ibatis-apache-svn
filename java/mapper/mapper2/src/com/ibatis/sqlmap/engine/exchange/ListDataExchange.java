@@ -20,6 +20,7 @@ import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMapping;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMapping;
 import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.common.beans.ProbeFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,8 +43,43 @@ public class ListDataExchange extends BaseDataExchange implements DataExchange {
     Object[] data = new Object[mappings.length];
     for (int i = 0; i < mappings.length; i++) {
       String propName = mappings[i].getPropertyName();
-      int index = Integer.parseInt((propName.substring(propName.indexOf('[') + 1, propName.length() - 1)));
-      data[i] = ((List) parameterObject).get(index);
+
+      // parse on the '.' notation and get nested properties
+      String[] propertyArray = propName.split("\\.");
+
+      if(propertyArray.length > 0) {
+        // iterate list of properties to discover values
+
+        Object tempData = parameterObject;
+
+        for(int x=0; x<propertyArray.length; x++) {
+
+          // is property an array reference
+          int arrayStartIndex = propertyArray[x].indexOf('[');
+
+          if(arrayStartIndex == -1) {
+
+            // is a normal property
+            tempData = ProbeFactory.getProbe().getObject(tempData,propertyArray[x]);
+
+          } else {
+
+            int index = Integer.parseInt(propertyArray[x].substring(arrayStartIndex + 1, propertyArray[x].length() - 1));
+            tempData = ((List) tempData).get(index);
+
+          }
+
+        }
+
+        data[i] = tempData;
+
+      } else {
+
+        int index = Integer.parseInt((propName.substring(propName.indexOf('[') + 1, propName.length() - 1)));
+        data[i] = ((List) parameterObject).get(index);
+
+      }
+
     }
     return data;
   }
