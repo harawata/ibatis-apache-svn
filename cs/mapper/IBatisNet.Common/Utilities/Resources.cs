@@ -389,30 +389,30 @@ namespace IBatisNet.Common.Utilities
 		/// <summary>
 		/// Load a file from a given path
 		/// </summary>
-		/// <param name="path">The path</param>
+		/// <param name="filePath">The file path</param>
 		/// <returns>return a FileInfo</returns>
-		public static FileInfo GetFileInfo(string path)
+		public static FileInfo GetFileInfo(string filePath)
 		{
 			string file = string.Empty;
+			FileInfo fileInfo = null;
 
-			if (!File.Exists(path)) 
+			if (Resources.FileExists(filePath)) 
 			{
-				file = Path.Combine(_applicationBase, path);
+				file = filePath;
 			}
 			else
 			{
-				file = path;
+				file = Path.Combine(_applicationBase, filePath);
 			}
-			FileInfo fileInfo = null;
+
 			try
 			{
 				fileInfo = new FileInfo(file);
 			}
-			catch
+			catch(Exception e)
 			{
-				_logger.Error("Could not load file from path : " + path);
 				throw new ConfigurationException(
-					string.Format("Unable to load file \"{0}\" from path.", path));
+					string.Format("Unable to load file \"{0}\". Cause : \"{1}\"", filePath, e.Message),e);
 			}
 			return fileInfo;
 		}
