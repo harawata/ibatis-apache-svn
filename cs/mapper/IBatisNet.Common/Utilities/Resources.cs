@@ -25,16 +25,17 @@
 #endregion
 
 #region Using
+
 using System;
 using System.Collections.Specialized;
 using System.IO;
-using System.Xml;
 using System.Reflection;
-
-using log4net;
-
+using System.Security.Permissions;
+using System.Xml;
 using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Utilities.TypesResolver;
+using log4net;
+
 #endregion
 
 namespace IBatisNet.Common.Utilities
@@ -56,7 +57,7 @@ namespace IBatisNet.Common.Utilities
 		private static string _baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
 		private static CachedTypeResolver _cachedTypeResolver = null;
 
-		private static readonly ILog _logger = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
+		private static readonly ILog _logger = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
 
 		#endregion
 
@@ -99,22 +100,22 @@ namespace IBatisNet.Common.Utilities
 		/// Get config file from from the base directory that the assembler
 		/// used for probe assemblies
 		/// </summary>
-		/// <param name="path"></param>
+		/// <param name="filePath">The config file to load.</param>
 		/// <returns></returns>
-		public static XmlDocument GetConfigAsXmlDocument(string path)
+		public static XmlDocument GetConfigAsXmlDocument(string filePath)
 		{
 			XmlDocument config = new XmlDocument(); 
 			XmlTextReader reader = null; 
 			
 			try 
 			{ 
-				if (File.Exists(path))
+				if (Resources.FileExists(filePath))
 				{
-					reader = new XmlTextReader( path ); 				
+					reader = new XmlTextReader( filePath ); 				
 				}
 				else
 				{
-					reader = new XmlTextReader(Path.Combine(_baseDirectory, path)); 
+					reader = new XmlTextReader(Path.Combine(_baseDirectory, filePath)); 
 				}
 				config.Load(reader); 
 			} 
@@ -122,7 +123,7 @@ namespace IBatisNet.Common.Utilities
 			{ 
 				throw new ConfigurationException( 
 					string.Format("Unable to load config file \"{0}\". Cause : {1}", 
-					path, 
+					filePath, 
 					e.Message ) ,e); 
 			} 
 			finally 
@@ -134,6 +135,46 @@ namespace IBatisNet.Common.Utilities
 			} 
 			return config; 
 		}
+
+		/// <summary>
+		/// Determines whether the specified file exists.
+		/// </summary>
+		/// <param name="filePath">The file to check.</param>
+		/// <returns>
+		/// true if the caller has the required permissions and path contains the name of an existing file
+		/// false if the caller has the required permissions and path doesn't contain the name of an existing file
+		/// else exception
+		/// </returns>
+		public static bool FileExists(string filePath)
+		{
+			if (File.Exists(filePath) )
+			{
+				// true if the caller has the required permissions and path contains the name of an existing file; 
+				return true;
+			}
+			else
+			{
+				// This method also returns false if the caller does not have sufficient permissions 
+				// to read the specified file, 
+				// no exception is thrown and the method returns false regardless of the existence of path.
+				// So we check permissiion and throw an exception if no permission
+				FileIOPermission filePermission = new FileIOPermission(FileIOPermissionAccess.Read, filePath);
+				try
+				{
+					filePermission.Demand();
+				}
+				catch(Exception e) 
+				{ 
+					throw new ConfigurationException( 
+						string.Format("iBATIS doesn't have the right to read the config file \"{0}\". Cause : {1}", 
+						filePath, 
+						e.Message ) ,e); 
+				} 
+
+				return false;
+			}
+		}
+
 
 		/// <summary>
 		/// Load an XML resource from a location specify by the node.
