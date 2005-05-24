@@ -9,9 +9,12 @@ DataMapper 1.2
 --------------------
 Docs
 --------------------
+ + Configuration changes (ex: properties support in diff't SqlMap.config elements)
+ + Add more .NET coding examples (at least the code!)
+ + Update NAnt doc.build for 1.2?
+
  + DONE Basic CTH explanation
  + DONE Update for basic TypeHandler support
- + Configuration changes
  + DONE New SqlMap element attributes
  + DONE Updated SqlMap element attributes
  + DONE Update inline parameter maps syntax and add text/examples for composite key syntax
@@ -34,9 +37,10 @@ MySql/MySql 1.0.4
  + ICloneable exception with no connectionstring
 
 Oracle/ODP.NET 10g
- + DONE ResultMapTest.TestDynamiqueCompositeMapping needs dbType (int vs Decimal) for resultMap column specification
  + ResultClassTest.TestSingle invalid cast provider/db issue
  + ResultClassTest.TestDouble invalid cast provider/db issue
+
+ + DONE ResultMapTest.TestDynamiqueCompositeMapping needs dbType (int vs Decimal) for resultMap column specification
 
 PostgreSQL/Npgsql 0.7
  + StatementGenerate.TestSelectByPK
@@ -64,11 +68,11 @@ DataAccess
 Tutorial
 --------------------
 
- + DONE (did it 2 months ago?! but I forgot!) Update for DataMapper 1.1 GA release
+ + DONE (did it 2 months ago but forgot!) Update for DataMapper 1.1 GA release
 
 
 --------------------
 NPetshop
 --------------------
 
- + DONE (did it 2 months ago?! but I forgot!) Update for DataMapper 1.1 GA release
+ + DONE (did it 2 months ago but forgot!) Update for DataMapper 1.1 GA release

@@ -1793,7 +1793,7 @@ namespace BigApp.Common.TypeHandlers
       <para><example>
           <title>&lt;typeHandler&gt; in SqlMap.config</title>
 
-          <programlisting><emphasis role="green">[Our SqlMap.config]</emphasis>
+          <programlisting><emphasis role="comment">[Our SqlMap.config]</emphasis>
 &lt;alias&gt;
  &lt;typeAlias <emphasis role="blue">alias="GuidVarchar"</emphasis> 
          type="BigApp.Common.TypeHandlers.GuidVarcharTypeHandlerCallback,
@@ -1806,7 +1806,7 @@ namespace BigApp.Common.TypeHandlers
 &lt;/typeHandlers&gt; 
 
 
-<emphasis role="green">[One of our SqlMap.xml files]</emphasis>
+<emphasis role="comment">[One of our SqlMap.xml files]</emphasis>
 &lt;parameterMaps&gt;
  &lt;parameterMap id="boc-params"&gt;
   &lt;parameter property="Code" dbType="Varchar2" size="10"/&gt;
@@ -2254,12 +2254,12 @@ public class Newspaper : Document
 &lt;/resultMaps&gt;
 
 &lt;statements&gt;
-  <emphasis role="green">&lt;!-- This statement executes 1 time --&gt;</emphasis>
+  <emphasis role="comment">&lt;!-- This statement executes 1 time --&gt;</emphasis>
   &lt;select id="selectProducts" parameterClass="int" resultMap="select-product-result"&gt;
    select * from PRODUCT
   &lt;/select&gt;
 
-  <emphasis role="green">&lt;!-- This statement executes N times (once for each product returned above) --&gt;</emphasis>
+  <emphasis role="comment">&lt;!-- This statement executes N times (once for each product returned above) --&gt;</emphasis>
   &lt;select id="selectCategory" parameterClass="int" resultMap="select-category-result"&gt;
    <emphasis role="blue">select * from CATEGORY where CAT_ID = #value#</emphasis>
   &lt;/select&gt;
@@ -2415,12 +2415,12 @@ public class Newspaper : Document
 
 &lt;statements&gt;
 
-  <emphasis role="green">&lt;!-- This statement executes 1 time --&gt;</emphasis>
+  <emphasis role="comment">&lt;!-- This statement executes 1 time --&gt;</emphasis>
   &lt;statement id="selectCategory" parameterClass="int" resultMap="select-category-result"&gt;
     select * from CATEGORY where CAT_ID = #value#
   &lt;/statement&gt;
 
-  <emphasis role="green">&lt;!-- This statement executes N times (once for each category returned above) 
+  <emphasis role="comment">&lt;!-- This statement executes N times (once for each category returned above) 
        and returns a list of Products (1:M) --&gt;</emphasis>
   &lt;statement id="selectProductsByCatId" parameterClass="int" resultMap="select-product-result"&gt;
     <emphasis role="blue">select * from PRODUCT where PRD_CAT_ID = #value#</emphasis>

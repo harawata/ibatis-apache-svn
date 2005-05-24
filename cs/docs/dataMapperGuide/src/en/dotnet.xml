@@ -245,7 +245,7 @@
       <para>You can also use an absolute path to your Data Map definition
       files, if that is more convenient. Use use the url attribute instead
       through
-      <parameter>url="file:///C:/Projects/MySolution/MyProject/Maps/Account.xml"</parameter>,
+      <parameter>url="C:/Projects/MySolution/MyProject/Maps/Account.xml"</parameter>,
       and substitute the path to your own map document.</para>
 
       <para>Of course, the <filename>SqlMap.config</filename> file must be in
@@ -290,8 +290,8 @@
     <sect2>
       <title>DataMapper Configuration File (SqlMap.config)</title>
 
-      <para>A sample configuration file for .NET is shown in Example
-      4.1.</para>
+      <para>A sample configuration file for a .NET web application is shown in
+      Example 4.1.</para>
 
       <para><example>
           <title>SqlMap.Config for .NET Web Application (placed in same
@@ -302,7 +302,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
     xsi:noNamespaceSchemaLocation="SqlMapConfig.xsd"&gt;
 
-  &lt;properties resource="/Resources/database.properties"/&gt;
+  &lt;properties resource="Maps/database.properties"/&gt;
 
   &lt;settings&gt;
     &lt;setting useFullyQualifiedStatementNames="false"/&gt;
@@ -324,8 +324,8 @@
   &lt;/alias&gt;
 
   &lt;sqlMaps&gt;
-    &lt;sqlMap resource="/Resources/Category.xml"/&gt;
-    &lt;sqlMap resource="/Resources/Product.xml"/&gt;
+    &lt;sqlMap resource="Maps/Category.xml"/&gt;
+    &lt;sqlMap resource="Maps/Product.xml"/&gt;
   &lt;/sqlMaps&gt; 
 &lt;/sqlMapConfig&gt;</programlisting>
         </example></para>
@@ -695,7 +695,7 @@ IBatisNet.Test"</programlisting></entry>
         A database system can use a custom provider or a generic ODBC
         provider. The iBATIS .NET DataMapper uses a pluggable approach to
         installing providers. Each provider is represented by an XML
-        descriptor element. The list of providers you might want to use can be
+        descriptor element. The list of providers you might want to use is
         kept in a separate XML descriptor file. The iBATIS .NET DataMapper
         distribution includes the standard
         <filename>providers.config</filename> file with a set of twelve
@@ -780,8 +780,8 @@ IBatisNet.Test"</programlisting></entry>
 
         <para><tip>
             <para>Be sure to review the <filename>providers.config</filename>
-            file and confirm that the provider you intend to use is enabled!
-            (Set the enabled attribute to true.)</para>
+            file and confirm that the provider you intend to use is enabled by
+            setting the "enabled" attribute to "true".</para>
           </tip></para>
       </sect3>
 
@@ -807,7 +807,7 @@ IBatisNet.Test"</programlisting></entry>
 
           <para>The &lt;datasource&gt; element specifies the ADO.NET
           connection string. Example 4.2, shows sample elements for SQL
-          Server, Oracle, Access, and MySql.<example>
+          Server, Oracle, Access, MySql, and PostgreSQL.<example>
               <title>Sample &lt;datasource&gt; and &lt;provider&gt; elements
               (.NET)</title>
 
@@ -842,6 +842,14 @@ IBatisNet.Test"</programlisting></entry>
   &lt;dataSource name="NPetstore" default="true" 
        connectionString="Host=${host};Database=${database};
        Password=${password};Username=${username}" /&gt;
+&lt;/database&gt;
+
+<emphasis role="comment">&lt;!-- Connecting to a PostgreSQL database --&gt;</emphasis> 
+&lt;database&gt;
+  &lt;provider name="PostgreSql0.7" /&gt;
+  &lt;dataSource name="NPetstore" default="true" 
+       connectionString="Server=${server};Port=5432;User Id=${userid};Password=${password};
+       Database=${database};" /&gt;
 &lt;/database&gt;</programlisting></para>
             </example></para>
         </sect4>
@@ -866,8 +874,8 @@ IBatisNet.Test"</programlisting></entry>
             <title>SqlMap elements</title>
 
             <programlisting>&lt;sqlMaps&gt;
-  &lt;sqlMap resource="/Resources/Category.xml"/&gt;
-  &lt;sqlMap resource="/Resources/Product.xml"/&gt;
+  &lt;sqlMap resource="Maps/Category.xml"/&gt;
+  &lt;sqlMap resource="Maps/Product.xml"/&gt;
 &lt;/sqlMaps&gt;</programlisting>
           </example></para>
 

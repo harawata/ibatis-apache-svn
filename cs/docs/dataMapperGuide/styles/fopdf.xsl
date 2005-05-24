@@ -61,7 +61,7 @@
                     <fo:table-row>
                         <fo:table-cell text-align="center">
                             <fo:block font-family="Helvetica" font-size="12pt" padding="10mm">
-                                <xsl:text>Copyright 2003,2004 The Apache Software Foundation</xsl:text>
+                                <xsl:text>Copyright 2003, 2004, 2005 The Apache Software Foundation</xsl:text>
                             </fo:block>
 							 <fo:block font-family="Helvetica" font-size="12pt" padding="10mm">
                                 <xsl:text>Authors - </xsl:text>
