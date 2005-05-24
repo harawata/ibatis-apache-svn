@@ -24,28 +24,25 @@
  ********************************************************************************/
 #endregion
 
-#region Imports
+#region Using
+
 using System;
-using System.Data;
-using System.IO;
-using System.Text;
 using System.Collections;
 using System.Collections.Specialized;
+using System.Data;
+using System.Text;
 using System.Threading;
 using System.Xml;
-
 using IBatisNet.Common;
-using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Utilities;
-using IBatisNet.DataMapper.SessionContainer;
-
 using IBatisNet.DataMapper.Configuration;
 using IBatisNet.DataMapper.Configuration.Alias;
+using IBatisNet.DataMapper.Configuration.Cache;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
-using IBatisNet.DataMapper.Configuration.Cache;
 using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.MappedStatements;
+using IBatisNet.DataMapper.SessionContainer;
 using IBatisNet.DataMapper.TypeHandlers;
 
 #endregion
@@ -147,7 +144,7 @@ namespace IBatisNet.DataMapper
 		internal SqlMapper(TypeHandlerFactory typeHandlerFactory) 
 		{
 			_typeHandlerFactory = typeHandlerFactory;
-			_sessionContainer = SessionContainerFactory.GetSessionContainer(IBatisNet.Common.Utilities.HashCodeProvider.GetIdentityHashCode(this).ToString());
+			_sessionContainer = SessionContainerFactory.GetSessionContainer(HashCodeProvider.GetIdentityHashCode(this).ToString());
 		}
 		#endregion
 
@@ -196,8 +193,9 @@ namespace IBatisNet.DataMapper
 		/// <summary>
 		/// Configure an SqlMap from via a file.
 		/// </summary>
-		/// <param name="fileName">File name.</param>
+		/// <param name="fileName">A path to a file name.</param>
 		/// <returns>An SqlMap</returns>
+		/// <remarks>If you pass a relative file path, if will be relative to your Application root.</remarks>
 		public static SqlMapper Configure(string fileName)
 		{
 			XmlDocument document = Resources.GetConfigAsXmlDocument(fileName);

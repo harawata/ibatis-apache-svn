@@ -99,22 +99,30 @@ namespace IBatisNet.Common.Utilities
 		/// Get config file from from the base directory that the assembler
 		/// used for probe assemblies
 		/// </summary>
-		/// <param name="fileName"></param>
+		/// <param name="path"></param>
 		/// <returns></returns>
-		public static XmlDocument GetConfigAsXmlDocument(string fileName)
+		public static XmlDocument GetConfigAsXmlDocument(string path)
 		{
 			XmlDocument config = new XmlDocument(); 
 			XmlTextReader reader = null; 
+			
 			try 
 			{ 
-				reader = new XmlTextReader(Path.Combine(_baseDirectory, fileName)); 
+				if (File.Exists(path))
+				{
+					reader = new XmlTextReader( path ); 				
+				}
+				else
+				{
+					reader = new XmlTextReader(Path.Combine(_baseDirectory, path)); 
+				}
 				config.Load(reader); 
 			} 
 			catch(Exception e) 
 			{ 
 				throw new ConfigurationException( 
 					string.Format("Unable to load config file \"{0}\". Cause : {1}", 
-					fileName, 
+					path, 
 					e.Message ) ,e); 
 			} 
 			finally 
