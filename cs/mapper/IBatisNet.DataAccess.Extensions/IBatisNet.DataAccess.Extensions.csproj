@@ -109,7 +109,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "licence.txt"
+                    RelPath = "license.txt"
                     BuildAction = "Content"
                 />
                 <File

@@ -5,10 +5,10 @@
   <sect1>
     <title>Introduction</title>
 
-    <para>This guide explains how to install, configure, and use the iBATIS
-    DataMapper with your .NET applications. This guide assumes that you are
-    using Microsoft Visual Studio .NET (VSN). If you are using another IDE,
-    please modify these instructions accordingly.</para>
+    <para>This section explains how to install, configure, and use the iBATIS
+    DataMapper with your .NET application. It is assumed that you are using
+    Microsoft Visual Studio .NET (VSN). If you are using another IDE, please
+    modify these instructions accordingly.</para>
   </sect1>
 
   <sect1>
@@ -35,8 +35,11 @@
       <para>The official site for iBATIS DataMapper for .NET is our Apache
       site &lt;<ulink
       url="http://incubator.apache.org/ibatis/site/">http://incubator.apache.org/ibatis/site/</ulink>&gt;.
-      To download the distribution, follow the link to the Downloads area, and
-      select the source distribution for the iBATIS .NET DataMapper V1.* or
+      To work through using the DataMapper for the first time, we suggest that
+      you download the source distribution that includes the VSN solution
+      files and C# projects for the DataMapper. To download the source
+      distribution, follow the link to the Downloads area on our web site, and
+      select the source distribution for the iBATIS .NET DataMapper V1.2 or
       later release. The distribution is in the form of a ZIP archive. You can
       extract the distribution using a utility like WinZip or the extractor
       built into newer versions of Windows. We suggest that you create an
@@ -44,8 +47,8 @@
       extract the distribution there.</para>
 
       <para>Under the distribution's <filename>source</filename> folder are
-      five other folders that make up the iBATIS.NET distribution, as shown in
-      Table 4.1.<table>
+      eight other folders that make up the iBATIS.NET distribution, as shown
+      in Table 4.1.<table>
           <title>Folders found in the iBATIS.NET distribution</title>
 
           <tgroup cols="2">
@@ -61,34 +64,56 @@
               <row>
                 <entry>External-Bin</entry>
 
-                <entry>Precompiled assemblies provided for your
+                <entry>Dependency assemblies provided for your
                 convenience.</entry>
               </row>
 
               <row>
-                <entry>IBatisNet-Common</entry>
+                <entry>IBatisNet.Common</entry>
 
                 <entry>Assembly of classes shared by DataAccess and
                 DataMapper</entry>
               </row>
 
               <row>
-                <entry>IBatisNet-DataAccess</entry>
+                <entry>IBatisNet.Common.Test</entry>
+
+                <entry>Test project for IBatisNet.Common that can be used with
+                NUnit</entry>
+              </row>
+
+              <row>
+                <entry>IBatisNet.DataAccess</entry>
 
                 <entry>The Data Access Objects framework (see separate DAO
                 Guide)</entry>
               </row>
 
               <row>
-                <entry>iBatisNet-DataMapper</entry>
+                <entry>IBatisNet.DataAccess.Extensions</entry>
+
+                <entry>Contains a C# project for extensions to the DataAccess
+                framework</entry>
+              </row>
+
+              <row>
+                <entry>IBatisNet.DataAccess.Test</entry>
+
+                <entry>Test project for the DataAccess framework that can be
+                used with NUnit</entry>
+              </row>
+
+              <row>
+                <entry>iBatisNet.DataMapper</entry>
 
                 <entry>The DataMapper framework</entry>
               </row>
 
               <row>
-                <entry>IBatisNet-Test</entry>
+                <entry>IBatisNet.DataMapper.Test</entry>
 
-                <entry>NUnit tests for the solution</entry>
+                <entry>Test project for the DataMapper that can be run with
+                NUnit</entry>
               </row>
             </tbody>
           </tgroup>
@@ -96,48 +121,68 @@
 
       <para>You can load the <filename>IBatisNet.sln</filename> solution file
       into Visual Studio.NET and build the solution to generate the needed
-      assemblies. There are four projects in the solution, and all should
+      assemblies. There are seven projects in the solution, and all should
       succeed. The assemblies we need will be created under
       <filename>\source\IBatisNet.DataMapper\bin\Debug</filename>. The created
-      assemblies are : <filename>IBatisNet.Common.dll</filename>,
-      <filename>iBatisNet.DataAccess.dll</filename>, and
-      <filename>iBatisNet.DataMapper.dll</filename>.</para>
+      assemblies are : <filename>IBatisNet.Common.dll</filename> and
+      <filename>iBatisNet.DataMapper.dll</filename>. The DataMapper has
+      external dependencies on <filename>Castle.DynamicProxy.dll</filename>
+      (creating proxies) and <filename>log4net.dll</filename> (logging). Both
+      of these dependencies are found in the External-Bin folder and can also
+      be found in the bin\Debug folder after building the solution.</para>
+
+      <tip>
+        <para>If you will not be using the DataAccess framework and NHibernate
+        and if you have a problem building the solution due project
+        dependencies on NHibernate, simply remove the
+        IBatisNet.DataAccess.Extensions and IBatisNet.DataAccess.Test projects
+        from the solution before building.</para>
+      </tip>
     </sect2>
 
     <sect2>
       <title>Add Assembly References</title>
 
       <para>Switching to your own solution, open the project that will be
-      using the iBATIS.NET DataMapper. Depending on how your organize your
-      solutions, this might not be the project for your Windows or Web
+      using the iBATIS .NET DataMapper. Depending on how your organize your
+      solutions, this may or may not be the project for your Windows or Web
       application. It may be a library project that your application project
-      references. To your project, you need to add two or three references:
+      references. You will need to add one or two references to your project:
       <orderedlist>
           <listitem>
-             iBatisNet.DataMapper.dll 
+            IBatisNet.DataMapper.dll 
           </listitem>
 
           <listitem>
-             iBatisNet.Common.dll (implied) 
+            IBatisNet.DataAccess.dll (optional)
           </listitem>
 
           <listitem>
-            <para>iBatisNet.DataAccess.dll (optional)</para>
+            IBatisNet.Common.dll (implied) 
+          </listitem>
+
+          <listitem>
+            Castle.DynamicProxy.dll (implied) 
+          </listitem>
+
+          <listitem>
+            <para>log4net.dll (implied) </para>
           </listitem>
         </orderedlist></para>
 
       <para>If you are using the <classname>Mapper</classname> singleton (see
       section 4.3.1), then the only reference you will need is to the
-      DataMapper assembly. The Common assembly is still needed, but Visual
-      Studio.NET will resolve the dependance for you. If you are using the
-      Data Access Objects framework, then you will need a reference to the
-      DataAccess assembly too. So, start with the first, and add the others
-      only if needed.</para>
+      DataMapper assembly. The Common, Castle.DynamicProxy, and log4net
+      assemblies are still needed, but Visual Studio.NET will resolve the
+      dependencies for you. If you are using the Data Access Objects
+      framework, then you will need a reference to the DataAccess assembly
+      too. So, start with the first, and add the others only if needed.</para>
 
-      <para>If you have built the iBatisNet solution as described in Section
-      5.2.1, all three assemblies should be in the
-      <filename>bin/Debug</filename> folder under the iBatisNet-DataMapper
-      project.</para>
+      <para>If you have built the IBatisNet solution as described in Section
+      5.2.1, the four assemblies (IBatisNet.DataMapper.dll,
+      IBatisNet.Common.dll, Castle.DynamicProxy.dll, and log4net.dll) that you
+      will need should be in the <filename>bin/Debug</filename> folder of the
+      IBatisNet.DataMapper project.</para>
     </sect2>
 
     <sect2>
@@ -149,7 +194,7 @@
 
       <para><itemizedlist>
           <listitem>
-             SqlMap.config - The DataMapper configuration file (usually one) 
+             SqlMap.config - The DataMapper configuration file (one per data source) 
           </listitem>
 
           <listitem>
@@ -174,7 +219,7 @@
                 equivalent)</entry>
 
                 <entry>Place in <filename>/bin/Debug</filename> folder, with
-                the assembly (.dll) files, with the
+                the assembly (.dll) files and with the
                 <filename>app.config</filename> file</entry>
               </row>
 
@@ -200,7 +245,7 @@
       <para>You can also use an absolute path to your Data Map definition
       files, if that is more convenient. Use use the url attribute instead
       through
-      <parameter>uri="file:///C:/Projects/MySolution/MyProject/Maps/Account.xml"</parameter>,
+      <parameter>url="file:///C:/Projects/MySolution/MyProject/Maps/Account.xml"</parameter>,
       and substitute the path to your own map document.</para>
 
       <para>Of course, the <filename>SqlMap.config</filename> file must be in
@@ -249,7 +294,8 @@
       4.1.</para>
 
       <para><example>
-          <title>SqlMap.Config for .NET</title>
+          <title>SqlMap.Config for .NET Web Application (placed in same
+          directory as web.config)</title>
 
           <programlisting>&lt;?xml version="1.0" encoding="utf-8"?&gt; 
 &lt;sqlMapConfig 
@@ -375,7 +421,7 @@
       <sect3>
         <title>The &lt;settings&gt; Element</title>
 
-        <para>There are two default settings used by the framework.. The
+        <para>There are three default settings used by the framework.. The
         settings appropriate for one application may not be appropriate for
         another. The &lt;settings&gt; element lets you configure these options
         and optimizations for the DataMapper instance that is created from the
@@ -647,32 +693,37 @@ IBatisNet.Test"</programlisting></entry>
 
         <para>Under ADO.NET, a database system is accessed through a provider.
         A database system can use a custom provider or a generic ODBC
-        provider. iBATIS.NET uses a pluggable approach to installing
-        providers. Each provider is represented by an XML descriptor element.
-        The list of providers you might want to use can be kept in a separate
-        XML descriptor file. The iBATIS.NET distribution includes the standard
-        <filename>providers.config</filename> file with a set of seven
+        provider. The iBATIS .NET DataMapper uses a pluggable approach to
+        installing providers. Each provider is represented by an XML
+        descriptor element. The list of providers you might want to use can be
+        kept in a separate XML descriptor file. The iBATIS .NET DataMapper
+        distribution includes the standard
+        <filename>providers.config</filename> file with a set of twelve
         prewritten provider elements:</para>
 
         <para><itemizedlist>
             <listitem>
-               SqlServer 1.0 - Microsoft SQL Server 7.0/2000 provider available with .NET Framework 1.0 
+               sqlServer1.0 - Microsoft SQL Server 7.0/2000 provider available with .NET Framework 1.0 
             </listitem>
 
             <listitem>
-               SqlServer 1.1 -Microsoft SQL Server 7.0/2000 provider available with .NET Framework 1.1 
+               sqlServer1.1 -Microsoft SQL Server 7.0/2000 provider available with .NET Framework 1.1 
             </listitem>
 
             <listitem>
-               OleDb 1.1 - OleDb provider available with .NET Framework 1.1 (used for Access) 
+               OleDb1.1 - OleDb provider available with .NET Framework 1.1 
             </listitem>
 
             <listitem>
-               ODBC 1.1 - Odbc provider available with .NET Framework 1.1 
+               Odbc1.1 - Odbc provider available with .NET Framework 1.1 
             </listitem>
 
             <listitem>
                oracle9.2 - Oracle provider V9.2.0.401 
+            </listitem>
+
+            <listitem>
+               oracle10.1 - Oracle provider V10.1.0.301 
             </listitem>
 
             <listitem>
@@ -682,25 +733,42 @@ IBatisNet.Test"</programlisting></entry>
             <listitem>
                ByteFx - ByteFx MySQL provider V0.7.6.15073 
             </listitem>
+
+            <listitem>
+               MySql - MySQL provider V1.0.4.20163 
+            </listitem>
+
+            <listitem>
+               SQLite3 - SQLite.NET provider V0.21.1869.3794 
+            </listitem>
+
+            <listitem>
+               Firebird1.7 - Firebird SQL .NET provider V1.7.0.33200
+            </listitem>
+
+            <listitem>
+               PostgreSql0.7 - Npgsql provider V0.7.0.0
+            </listitem>
           </itemizedlist></para>
 
         <para>The <filename>providers.config</filename> file can be found
-        under <filename>\source\IBatisNet.Test\bin\Debug</filename> in the
-        iBATIS.NET distribution (see Section 5.1). To use it, you must copy it
-        into your project at the same location as the
+        under <filename>\source\IBatisNet.DataMapper.Test\bin\Debug</filename>
+        in the iBATIS .NET source distribution (see Section 5.1) or in the
+        root folder of the .NET DataMapper binary distribution. To use it, you
+        must copy it into your project at the same location as the
         <filename>SqlMap.config</filename> file (see section 4.2.3).</para>
 
         <para>A provider may require libraries that you do not have
-        installed,. Therefore, the provider element has an attribute that
-        allows you to disable unused providers. One provider can also be
+        installed,. Therefore, the provider element has an "enabled" attribute
+        that allows you to disable unused providers. One provider can also be
         marked as the "default" and will be used if another is not specified
         by your configuration (see Section 5.2.3.5).</para>
 
-        <para>The standard <filename>provider.config</filename> file has
-        SqlServer 1.1 set as the default and the SqlServer 1.0 provider
-        disabled. The Oracle and ByteFx providers are also disabled. (Oracle
-        is proprietary software, and ByteFx ships under a more restrictive
-        license.)</para>
+        <para>The standard <filename>providers.config</filename> file has
+        sqlServer1.1 set as the default and the sqlServer1.0 provider
+        disabled. Aside from sqlServer1.1, OleDb1.1, and Odbce1.1, all other
+        providers are disabled by default. Remember to set the "enabled"
+        attribute to "true" for the provider that you will be using.</para>
 
         <important>
           <para>ByteFx is the recommended provider if you are using MySQL. You
@@ -804,12 +872,6 @@ IBatisNet.Test"</programlisting></entry>
           </example></para>
 
         <para>For more about Data Map definition files, see Section 3.</para>
-      </sect3>
-
-      <sect3>
-        <title>Migrating from version 0.9.x</title>
-
-        <para><remark>[TODO: Upgraders guide]</remark></para>
       </sect3>
     </sect2>
   </sect1>

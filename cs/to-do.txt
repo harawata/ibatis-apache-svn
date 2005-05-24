@@ -1,11 +1,20 @@
 --------------------
+DataMapper 1.2
+--------------------
+ + Include Sample-SqlMap.config file
+ + Source distribution needs DataAccess to have updated Castle.DynamicProxy assembly
+ + providers.config file needs to have enabled="false" for all providers except sqlServer1.1, OleDb, and Odbc
+
+
+--------------------
 Docs
 --------------------
- + Basic CTH explanation
- + Update for basic TypeHandler support
+ + DONE Basic CTH explanation
+ + DONE Update for basic TypeHandler support
  + Configuration changes
- + New SqlMap element attributes
- + Updated SqlMap element attributes
+ + DONE New SqlMap element attributes
+ + DONE Updated SqlMap element attributes
+ + DONE Update inline parameter maps syntax and add text/examples for composite key syntax
 
 
 --------------------
@@ -25,7 +34,7 @@ MySql/MySql 1.0.4
  + ICloneable exception with no connectionstring
 
 Oracle/ODP.NET 10g
- + ResultMapTest.TestDynamiqueCompositeMapping needs dbType (int vs Decimal) for resultMap column specification
+ + DONE ResultMapTest.TestDynamiqueCompositeMapping needs dbType (int vs Decimal) for resultMap column specification
  + ResultClassTest.TestSingle invalid cast provider/db issue
  + ResultClassTest.TestDouble invalid cast provider/db issue
 
@@ -55,11 +64,11 @@ DataAccess
 Tutorial
 --------------------
 
- + Update for DataMapper 1.1 GA release
+ + DONE (did it 2 months ago?! but I forgot!) Update for DataMapper 1.1 GA release
 
 
 --------------------
 NPetshop
 --------------------
 
- + Update for DataMapper 1.1 GA release
+ + DONE (did it 2 months ago?! but I forgot!) Update for DataMapper 1.1 GA release
