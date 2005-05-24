@@ -1196,7 +1196,11 @@ namespace WebShop.Domain
       <sect3>
         <title>typeHandler</title>
 
-        <para>...</para>
+        <para>The <parameter>typeHandler</parameter> attribute allows the use
+        of a Custom Type Handler (see the Custom Type Handler section) to
+        extend the DataMapper's capabilities that are specific to your
+        database provider, are not handled by your database provider, or just
+        happen to be a part of your application design.</para>
       </sect3>
     </sect2>
 
@@ -1206,8 +1210,9 @@ namespace WebShop.Domain
       <para>If you prefer to use inline parameters (see Sections 3.0 and
       3.4.3), you can add extra type information inline too. The inline
       parameter map syntax lets you embed the property name, the property
-      type, and the column type, into a parametrized SQL statement. Example
-      3.16, 3.17 shows statements written with inline parameters.<example>
+      type, the column type, and a null value replacement into a parametrized
+      SQL statement. Example 3.16, 3.17 shows statements written with inline
+      parameters.<example>
           <title>A &lt;statement&gt; using inline parameters</title>
 
           <para><programlisting>&lt;statement id="insertProduct" parameterClass="product"&gt;
@@ -1216,7 +1221,8 @@ namespace WebShop.Domain
 &lt;/statement&gt;</programlisting></para>
         </example></para>
 
-      <para>Example 3.18 shows how you can declare dbTypes inline.</para>
+      <para>The following example shows how dbTypes can be declared
+      inline.</para>
 
       <example>
         <title>A &lt;statement&gt; using an inline parameter map with a
@@ -1228,8 +1234,8 @@ namespace WebShop.Domain
 &lt;/statement&gt;</programlisting></para>
       </example>
 
-      <para>Example 22 shows how you can declare types and null value
-      replacements.</para>
+      <para>The next example shows how dbTypes and null value replacements can
+      also be declared.</para>
 
       <example>
         <title>A &lt;statement&gt; using an inline parameter map with null
@@ -1242,10 +1248,28 @@ namespace WebShop.Domain
 &lt;/statement&gt;</programlisting>
       </example>
 
+      <para>Like the DataMapper for Java, there is an alternate inline syntax
+      that allows the specification of the property, type, dbType, and null
+      value replacement.</para>
+
+      <example>
+        <title>A &lt;statement&gt; using alternate inline syntax with
+        property, type, dbType, and null value replacement</title>
+
+        <programlisting>&lt;update id="UpdateAccountViaInlineParameters" parameterClass="Account"&gt;
+ update Accounts set
+ Account_FirstName = #FirstName#,
+ Account_LastName = #LastName#,
+ Account_Email = #EmailAddress,type=string,dbType=Varchar,nullValue=no_email@provided.com#
+ where
+ Account_ID = #Id#
+&lt;/update&gt;</programlisting>
+      </example>
+
       <para><note>
           <para>When using inline parameters, you cannot specify the null
-          value replacement without also specifying the type. You must specify
-          both due to the parsing order.</para>
+          value replacement without also specifying the dbType. You must
+          specify both due to the parsing order.</para>
         </note><note>
           <para>For <emphasis>round-trip</emphasis> transparency of null
           values, you must also specify database columns null value
@@ -1589,8 +1613,217 @@ resultMapping="LineItem.LineItem"
       <sect3>
         <title>typeHandler</title>
 
-        <para>...</para>
+        <para>The typeHandler attribute allows the use of a Custom Type
+        Handler (see the Custom Type Handler section) to extend the
+        DataMapper's capabilities that are specific to your database provider,
+        are not handled by your database provider, or just happen to be a part
+        of your application design.</para>
       </sect3>
+    </sect2>
+
+    <sect2>
+      <title>Custom Type Handlers</title>
+
+      <para>A custom type handler allows you to extend the DataMapper's
+      capabilities in handling types that are specific to your database
+      provider, not handled by your database provider, or just happen to be
+      part of your application design. The .NET DataMapper provides an
+      interface, IBatisNet.DataMappers.TypeHandlers.ITypeHandlerCallback, for
+      you to use in implementing your custom type handler.</para>
+
+      <para><example>
+          <title>ITypeHandlerCallback interface</title>
+
+          <programlisting>using System.Data;
+using IBatisNet.DataMapper.Configuration.ParameterMapping;
+
+
+namespace IBatisNet.DataMapper.TypeHandlers
+{
+ public interface ITypeHandlerCallback
+ {
+  <emphasis role="blue">void SetParameter(IParameterSetter setter, object parameter);</emphasis>
+
+  <emphasis role="blue">object GetResult(IResultGetter getter);</emphasis>
+
+  <emphasis role="blue">object ValueOf(string s);</emphasis>
+ }
+}</programlisting>
+        </example>The <methodname>SetParameter</methodname> method allows you
+      to process a &lt;statement&gt; parameter's value before it is added as
+      an IDbCommand parameter. This enables you to do any necessary type
+      conversion and clean-up before the DataMapper gets to work. If needed,
+      you also have access to the underlying IDataParameter through the
+      setter.DataParameter property.</para>
+
+      <para>The <methodname>GetResult</methodname> method allows you to
+      process a database result value right after it has been retrieved by the
+      DataMapper and before it is used in your resultClass, resultMap, or
+      listClass. If needed, you also have access to the underlying IDataReader
+      through the getter.DataReader property.</para>
+
+      <para>The <methodname>ValueOf</methodname> method allows you to compare
+      a string representation of a value with one that you are expecting and
+      can handle appropriately. Typically, this is useful for translating a
+      null value, but if your application or database will not support a null
+      value, you can basically return the given string. When presented with an
+      unexpected value, you can throw an appropriate exception.</para>
+
+      <para>One scenario that is familiar to .NET developers is the handling
+      of a Guid type/structure. Many providers do not handle Guid class
+      properties well, and developers may be faced with littering their domain
+      objects with an additional set of property accessors to translate Guid
+      properties into strings and strings into Guids.</para>
+
+      <programlisting>public class BudgetObjectCode
+{
+ private string _code;
+ private string _description;
+ private Guid _guidProperty;
+
+...
+
+ public Guid GuidProperty	{
+  get { return _guidProperty; }
+  set { __guidProperty = value; }
+ }
+
+ public string GuidPropertyString {
+  get { return _guidProperty.ToString(); }
+  set { 
+  if (value == null) {
+    _guidProperty = Guid.Empty;
+   }
+   else {
+    _guidProperty = new Guid(value.ToString());
+   }
+  }
+ }
+...
+}</programlisting>
+
+      <para>We can use a custom type handler to clean up this domain class.
+      First, we define a string that will represent a null Guid value
+      (Guid.Empty). We can then use that constant in our ValueOf null value
+      comparison for the DataMapper to eventually use in setting our domain
+      class' Guid properties. Implementing the GetResult and SetParameter
+      methods is straightforward since we had been basically doing the same
+      translation in our domain class' GuidPropertyString accessors.</para>
+
+      <para><example>
+          <title>Guid String Type Handler</title>
+
+          <programlisting>using System;
+using IBatisNet.DataMapper.TypeHandlers;
+
+namespace BigApp.Common.TypeHandlers
+{
+ /// &lt;summary&gt;
+ /// GuidVarcharTypeHandlerCallback.
+ /// &lt;/summary&gt;
+ public class GuidVarcharTypeHandlerCallback : ITypeHandlerCallback
+ {
+  private const string GUIDNULL = "00000000-0000-0000-0000-000000000000";
+
+  public object ValueOf(string nullValue)
+  {
+   if (GUIDNULL.Equals(nullValue)) 
+   {
+    return Guid.Empty;
+   } 
+   else 
+   {
+    throw new Exception(
+     "Unexpected value " + nullValue + 
+     " found where "+GUIDNULL+" was expected to represent a null value.");
+   }  
+  }
+
+  public object GetResult(IResultGetter getter)
+  {
+   try {
+    Guid result = new Guid(getter.Value.ToString());
+    return result;
+   } 
+   catch
+   {
+     throw new Exception(
+     "Unexpected value " + getter.Value.ToString() + 
+     " found where a valid GUID string value was expected.");
+   }
+  }
+
+  public void SetParameter(IParameterSetter setter, object parameter)
+  {
+   setter.Value = parameter.ToString();
+  }
+
+ }
+}</programlisting>
+        </example></para>
+
+      <para>With our custom type handler, we can clean up our domain class and
+      use the handler in our SqlMaps. To do that, we have two options in
+      configuring our custom type handler to be used by the DataMapper. We can
+      simply add it as a &lt;typeAlias&gt; and use it when needed in a
+      parameterMap or resultMap.</para>
+
+      <para><example>
+          <title>Aliased Custom Type Handler in a SqlMap.xml file</title>
+
+          <programlisting>&lt;alias&gt;
+ &lt;typeAlias alias="GuidVarchar" 
+         type="BigApp.Common.TypeHandlers.GuidVarcharTypeHandlerCallback,
+               BigApp.Common"/&gt;
+&lt;/alias&gt;
+ 
+&lt;resultMaps&gt;                                    
+ &lt;resultMap id="boc-result"  class="BudgetObjectCode"&gt;
+  &lt;result property="Code" column="BOC_CODE" dbType="Varchar2"/&gt;
+  &lt;result property="Description" column="BOC_DESC" dbType="Varchar2"/&gt;
+  &lt;result property="GuidProperty" column="BOC_GUID" typeHandler="GuidVarchar"/&gt;
+ &lt;/resultMap&gt;
+&lt;/resultMaps&gt;</programlisting>
+        </example></para>
+
+      <para>Or we can specify it as a basic &lt;typeHandler&gt; for all Guid
+      types mapped in our SqlMap files. &lt;typeHandler&gt; in
+      SqlMap.config</para>
+
+      <para><example>
+          <title>&lt;typeHandler&gt; in SqlMap.config</title>
+
+          <programlisting><emphasis role="green">[Our SqlMap.config]</emphasis>
+&lt;alias&gt;
+ &lt;typeAlias <emphasis role="blue">alias="GuidVarchar"</emphasis> 
+         type="BigApp.Common.TypeHandlers.GuidVarcharTypeHandlerCallback,
+               BigApp.Common"/&gt;
+&lt;/alias&gt;
+
+&lt;typeHandlers&gt;
+ &lt;typeHandler <emphasis role="blue">type="guid"</emphasis> dbType="Varchar2" <emphasis
+              role="blue">callback="GuidVarchar"</emphasis>/&gt;
+&lt;/typeHandlers&gt; 
+
+
+<emphasis role="green">[One of our SqlMap.xml files]</emphasis>
+&lt;parameterMaps&gt;
+ &lt;parameterMap id="boc-params"&gt;
+  &lt;parameter property="Code" dbType="Varchar2" size="10"/&gt;
+  &lt;parameter property="Description" dbType="Varchar2" size="100"/&gt;
+  &lt;parameter property="GuidProperty" dbType="Varchar2" type="guid"/&gt;
+ &lt;/parameterMap&gt;
+&lt;/parameterMaps&gt;
+
+&lt;resultMaps&gt;                                    
+ &lt;resultMap id="boc-result"  class="BudgetObjectCode"&gt;
+  &lt;result property="Code" column="BOC_CODE" dbType="Varchar2"/&gt;
+  &lt;result property="Description" column="BOC_DESC" dbType="Varchar2"/&gt;
+  &lt;result property="GuidProperty" column="BOC_GUID" dbType="Varchar2" <emphasis
+              role="blue">type="guid"</emphasis>/&gt;
+ &lt;/resultMap&gt;
+&lt;/resultMaps&gt;</programlisting>
+        </example></para>
     </sect2>
 
     <sect2>
@@ -1737,7 +1970,7 @@ public class Newspaper : Document
       handler for the discriminator column.</para>
 
       <example>
-        <title>Complex disciminator usage with formula</title>
+        <title>Complex disciminator usage with Custom Type Handler</title>
 
         <programlisting><emphasis role="blue">&lt;alias&gt;
   &lt;typeAlias alias="CustomInheritance" 
@@ -1763,13 +1996,13 @@ public class Newspaper : Document
       comparison to the resultMap's defined &lt;submap&gt; values.</para>
 
       <example>
-        <title>Example IDiscriminatorFormula interface implementation</title>
+        <title>Example ITypeHandlerCallback interface implementation</title>
 
         <programlisting>public class CustomInheritance : ITypeHandlerCallback
 {
   #region ITypeHandlerCallback members
 
-  public object GetNullValue(string nullValue)
+  public object ValueOf(string nullValue)
   {
     throw new NotImplementedException();
   }

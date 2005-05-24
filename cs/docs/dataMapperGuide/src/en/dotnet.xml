@@ -8,7 +8,7 @@
     <para>This guide explains how to install, configure, and use the iBATIS
     DataMapper with your .NET applications. This guide assumes that you are
     using Microsoft Visual Studio .NET (VSN). If you are using another IDE,
-    please adapt these instructions accordingly.</para>
+    please modify these instructions accordingly.</para>
   </sect1>
 
   <sect1>
@@ -33,13 +33,15 @@
       <title>Setup the Distribution</title>
 
       <para>The official site for iBATIS DataMapper for .NET is our Apache
-      site &lt;http://incubator.apache.org/ibatis/site/&gt;. To download the
-      distribution, follow the link to the Downloads area, and select the
-      iBATIS.NET V1.0 or later release. The distribution is in the form of a
-      ZIP archive. You can extract the distribution using a utility like
-      WinZip or the extractor built into newer versions of Windows. We suggest
-      that you create an <filename>ibatisnet</filename> folder in your VSN
-      project directory and extract the distribution there.</para>
+      site &lt;<ulink
+      url="http://incubator.apache.org/ibatis/site/">http://incubator.apache.org/ibatis/site/</ulink>&gt;.
+      To download the distribution, follow the link to the Downloads area, and
+      select the source distribution for the iBATIS .NET DataMapper V1.* or
+      later release. The distribution is in the form of a ZIP archive. You can
+      extract the distribution using a utility like WinZip or the extractor
+      built into newer versions of Windows. We suggest that you create an
+      <filename>ibatisnet</filename> folder in your VSN project directory and
+      extract the distribution there.</para>
 
       <para>Under the distribution's <filename>source</filename> folder are
       five other folders that make up the iBATIS.NET distribution, as shown in
