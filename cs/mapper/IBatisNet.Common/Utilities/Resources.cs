@@ -97,6 +97,37 @@ namespace IBatisNet.Common.Utilities
 		#region Methods
 
 		/// <summary>
+		/// Protocole separator
+		/// </summary>
+		 public const string PROTOCOL_SEPARATOR = "://";
+
+		/// <summary>
+		/// Strips protocol name from the resource name
+		/// </summary>
+		/// <param name="filePath">Name of the resource</param>
+		/// <returns>Name of the resource without protocol name</returns>
+		public static string GetFileSystemResourceWithoutProtocol(string filePath)
+		{
+			int pos = filePath.IndexOf(PROTOCOL_SEPARATOR);
+			if (pos == -1)
+			{
+				return filePath;
+			}
+			else
+			{
+				// skip forward slashes after protocol name, if any
+				if (filePath.Length > pos + PROTOCOL_SEPARATOR.Length)
+				{
+					while (filePath[++pos] == '/')
+					{
+						;
+					}
+				}
+				return filePath.Substring(pos);
+			}
+		}
+
+		/// <summary>
 		/// Get config file from from the base directory that the assembler
 		/// used for probe assemblies
 		/// </summary>
@@ -106,17 +137,16 @@ namespace IBatisNet.Common.Utilities
 		{
 			XmlDocument config = new XmlDocument(); 
 			XmlTextReader reader = null; 
+			filePath = GetFileSystemResourceWithoutProtocol(filePath);
 			
+			if (!Resources.FileExists(filePath))
+			{
+				filePath = Path.Combine(_baseDirectory, filePath); 
+			}
+
 			try 
 			{ 
-				if (Resources.FileExists(filePath))
-				{
-					reader = new XmlTextReader( filePath ); 				
-				}
-				else
-				{
-					reader = new XmlTextReader(Path.Combine(_baseDirectory, filePath)); 
-				}
+				reader = new XmlTextReader( filePath ); 				
 				config.Load(reader); 
 			} 
 			catch(Exception e) 
@@ -158,7 +188,16 @@ namespace IBatisNet.Common.Utilities
 				// to read the specified file, 
 				// no exception is thrown and the method returns false regardless of the existence of path.
 				// So we check permissiion and throw an exception if no permission
-				FileIOPermission filePermission = new FileIOPermission(FileIOPermissionAccess.Read, filePath);
+				FileIOPermission filePermission = null;
+				try
+				{
+					// filePath must be the absolute path of the file. 
+					filePermission = new FileIOPermission(FileIOPermissionAccess.Read, filePath);
+				}
+				catch
+				{
+					return false;
+				}
 				try
 				{
 					filePermission.Demand();
@@ -393,21 +432,18 @@ namespace IBatisNet.Common.Utilities
 		/// <returns>return a FileInfo</returns>
 		public static FileInfo GetFileInfo(string filePath)
 		{
-			string file = string.Empty;
 			FileInfo fileInfo = null;
+			filePath = GetFileSystemResourceWithoutProtocol(filePath);
 
-			if (Resources.FileExists(filePath)) 
+			if ( !Resources.FileExists(filePath)) 
 			{
-				file = filePath;
-			}
-			else
-			{
-				file = Path.Combine(_applicationBase, filePath);
+				filePath = Path.Combine(_applicationBase, filePath);
 			}
 
 			try
 			{
-				fileInfo = new FileInfo(file);
+				//argument : The fully qualified name of the new file, or the relative file name. 
+				fileInfo = new FileInfo(filePath);
 			}
 			catch(Exception e)
 			{
