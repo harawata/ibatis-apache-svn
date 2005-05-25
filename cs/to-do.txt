@@ -9,6 +9,7 @@ DataMapper 1.2
 --------------------
 Docs
 --------------------
+ + Add doc for providers tag with attribute resource/embedded/url
  + Configuration changes (ex: properties support in diff't SqlMap.config elements)
  + Add more .NET coding examples (at least the code!)
 
