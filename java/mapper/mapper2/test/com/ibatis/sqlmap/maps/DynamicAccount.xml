@@ -435,7 +435,7 @@ include the following code in the same place where
     </dynamic>
   </select>
 
-    <select id="dynamicIterateWithPrepend2b"
+  <select id="dynamicIterateWithPrepend2b"
     parameterClass="list"
     resultClass="testdomain.Account">
     select
@@ -447,6 +447,21 @@ include the following code in the same place where
     <dynamic prepend="where">
       <iterate open="(" close=")" conjunction="OR">
           ACC_ID = #[].id#
+      </iterate>
+    </dynamic>
+  </select>
+
+  <select id="dynamicIterateWithPrepend2c"
+    resultClass="testdomain.Account">
+    select
+      ACC_ID          as id,
+      ACC_FIRST_NAME  as firstName,
+      ACC_LAST_NAME   as lastName,
+      ACC_EMAIL       as emailAddress
+    from ACCOUNT
+    <dynamic prepend="where">
+      <iterate property="myList" open="(" close=")" conjunction="OR">
+          ACC_ID = #myList[].id#
       </iterate>
     </dynamic>
   </select>

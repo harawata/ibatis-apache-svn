@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
+import compatibility.domain.MyBean;
+
 public class DynamicPrependTest extends BaseSqlMapTest {
 
   protected void setUp() throws Exception {
@@ -48,6 +50,29 @@ public class DynamicPrependTest extends BaseSqlMapTest {
     List list = sqlMap.queryForList("dynamicIterateWithPrepend2b", params);
     assertAccount1((Account) list.get(0));
     assertEquals(3, list.size());
+  }
+
+    public void testIterateWithPrepend2c() throws SQLException {
+
+    Account account1, account2, account3;
+    account1 = new Account();
+    account1.setId(1);
+
+    account2 = new Account();
+    account2.setId(2);
+
+    account3 = new Account();
+    account3.setId(3);
+
+    List params = Arrays.asList(new Account[]{account1, account2, account3});
+
+    MyBean x = new MyBean();
+    x.setMyList(params);
+
+    List list = sqlMap.queryForList("dynamicIterateWithPrepend2c", x);
+    assertAccount1((Account) list.get(0));
+    assertEquals(3, list.size());
+
   }
 
   public void testIterateWithPrepend3() throws SQLException {
