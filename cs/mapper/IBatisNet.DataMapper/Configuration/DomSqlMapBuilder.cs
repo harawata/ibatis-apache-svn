@@ -504,16 +504,14 @@ namespace IBatisNet.DataMapper.Configuration
 
 			XmlNode providersNode = null;
 			providersNode = _configScope.SqlMapConfigDocument.SelectSingleNode(XML_CONFIG_PROVIDERS);
-			if (providersNode == null )
-			{
-				throw new ConfigurationException("The providers tag is required in sqlmap.config.");
-			}
-			else
+			if (providersNode != null )
 			{
 				xmlProviders = Resources.GetAsXmlDocument( providersNode, _configScope.Properties );
 			}
-
-			xmlProviders = Resources.GetConfigAsXmlDocument(PROVIDERS_FILE_NAME);
+			else
+			{
+				xmlProviders = Resources.GetConfigAsXmlDocument(PROVIDERS_FILE_NAME);
+			}
 
 			serializer = new XmlSerializer(typeof(Provider));
 

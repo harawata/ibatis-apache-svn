@@ -62,6 +62,11 @@ namespace IBatisNet.DataAccess.Configuration
 		public const string DEFAULT_DAOSESSIONHANDLER_NAME = "DEFAULT_DAOSESSIONHANDLER_NAME";
 
 		/// <summary>
+		/// Token for xml path to SqlMapConfig providers element.
+		/// </summary>
+		private static string XML_CONFIG_PROVIDERS = "/sqlMapConfig/providers";
+
+		/// <summary>
 		/// Token for providers config file name.
 		/// </summary>
 		private const string PROVIDERS_FILE_NAME = "providers.config";
@@ -120,11 +125,20 @@ namespace IBatisNet.DataAccess.Configuration
 		{
 			XmlSerializer serializer = null;
 			Provider provider = null;
-			string directoryName = string.Empty;
+			XmlDocument xmlProviders = null;
 
 			configurationScope.ErrorContext.Activity = "load DataBase Provider";
 
-			XmlDocument xmlProviders = Resources.GetConfigAsXmlDocument(PROVIDERS_FILE_NAME);
+			XmlNode providersNode = null;
+			providersNode = configurationScope.DaoConfigDocument.SelectSingleNode(XML_CONFIG_PROVIDERS);
+			if (providersNode != null )
+			{
+				xmlProviders = Resources.GetAsXmlDocument( providersNode, configurationScope.Properties );
+			}
+			else
+			{
+				xmlProviders = Resources.GetConfigAsXmlDocument(PROVIDERS_FILE_NAME);
+			}
 
 			serializer = new XmlSerializer(typeof(Provider));
 
