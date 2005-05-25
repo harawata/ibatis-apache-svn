@@ -150,23 +150,23 @@
       references. You will need to add one or two references to your project:
       <orderedlist>
           <listitem>
-            IBatisNet.DataMapper.dll 
+             IBatisNet.DataMapper.dll 
           </listitem>
 
           <listitem>
-            IBatisNet.DataAccess.dll (optional)
+             IBatisNet.DataAccess.dll (optional) 
           </listitem>
 
           <listitem>
-            IBatisNet.Common.dll (implied) 
+             IBatisNet.Common.dll (implied) 
           </listitem>
 
           <listitem>
-            Castle.DynamicProxy.dll (implied) 
+             Castle.DynamicProxy.dll (implied) 
           </listitem>
 
           <listitem>
-            <para>log4net.dll (implied) </para>
+            <para>log4net.dll (implied)</para>
           </listitem>
         </orderedlist></para>
 
@@ -743,11 +743,11 @@ IBatisNet.Test"</programlisting></entry>
             </listitem>
 
             <listitem>
-               Firebird1.7 - Firebird SQL .NET provider V1.7.0.33200
+               Firebird1.7 - Firebird SQL .NET provider V1.7.0.33200 
             </listitem>
 
             <listitem>
-               PostgreSql0.7 - Npgsql provider V0.7.0.0
+               PostgreSql0.7 - Npgsql provider V0.7.0.0 
             </listitem>
           </itemizedlist></para>
 
@@ -990,13 +990,14 @@ IList list = Mapper.Instance() .QueryForList ("PermitNoForYearList", values);</p
 
       <para>The first time <methodname>Mapper.Instance()</methodname> is
       called, it will read the default configuration file,
-      <filename>SqlMap.config</filename>. On subsequent calls, it will reuse
-      the cached <varname>mapper</varname> instance. The
+      <filename>SqlMap.config</filename>, through the
+      <methodname>ConfigureAndWatch</methodname> method. On subsequent calls,
+      it will reuse the cached <varname>mapper</varname> instance. The
       <methodname>ConfigureAndWatch</methodname> method monitors changes to
       the configuration files. If the configuration or definitions files
       change, the <classname>SqlMapper</classname> will be safely reloaded.
       This is particularly useful in development, when you might make a change
-      to a Data Map definition and want to see it take effect without
+      to a data map definition and want to see it take effect without
       restarting a debugging session. Likewise, in production, it can allow
       you to make changes to the definitions without reloading the rest of the
       application.</para>
@@ -1007,10 +1008,16 @@ IList list = Mapper.Instance() .QueryForList ("PermitNoForYearList", values);</p
         again. NUnit will reload the configuration automatically.</para>
       </note>
 
+      <note>
+        <para>The ConfigureAndWatch method requires that your SqlMap.config
+        file and data map files are accessible through the application's file
+        system to be able to track file changes.</para>
+      </note>
+
       <para>If for some reason you do not want to monitor changes to the
-      configuration, you can create your own <classname>Mapper</classname>
-      class, and use the <methodname>Configure</methodname> method
-      instead:</para>
+      configuration or you want to load your data map files as embedded
+      resources, you can create your own <classname>Mapper</classname> class,
+      and use the <methodname>Configure</methodname> method instead:</para>
 
       <para><programlisting>[C#]
 mapper = SqlMapper.Configure("file.name");</programlisting></para>
@@ -1312,8 +1319,7 @@ public IDictionary QueryForMap(string statementName,
       <para>In the iBATIS DataMapper framework, a session is a container for
       an ADO connection and transaction.</para>
 
-      <para>The iBATIS.NET DataMapper session
-      <classname>IDalSession</classname> implement
+      <para>The DataMapper's <classname>IDalSession</classname> implements the
       <classname>IDisposable</classname> interface. So you can use it with the
       <methodname>using</methodname> syntax.</para>
 
@@ -1517,11 +1523,11 @@ using IBatisNet.Common.Transaction;
         <para>It is important to make sure that each instance of this class
         gets <methodname>Close()</methodname>'d. The easiest way to ensure
         that each instance is closed is with the <literal>using</literal>
-        statement in C#. When <literal>using</literal> calls
-        <methodname>Dispose</methodname> on the transaction scope at the end
-        of the <literal>using</literal> code block, the
-        <emphasis>ambient</emphasis> transaction will be commited only if the
-        <methodname>Complete()</methodname> method has been called.</para>
+        statement in C#. When <methodname>Dispose</methodname> is called on
+        the transaction scope at the end of the <literal>using</literal> code
+        block, the <emphasis>ambient</emphasis> transaction will be commited
+        only if the <methodname>Complete()</methodname> method has been
+        called.</para>
       </example>
 
       <para><note>
@@ -1630,10 +1636,12 @@ Product p = (Product) map[“EST-93”];</programlisting>
         <title>A sample Log4Net configuration block
         (IBatisNet.Test.dll.Config)</title>
 
-        <programlisting>&lt;configuration&gt;
+        <programlisting>
+
+&lt;configuration&gt;
  <emphasis role="comment">&lt;!-- Register a section handler for the log4net section --&gt;</emphasis>
  &lt;configSections&gt;
-  &lt;section name="log4net" type="System.Configuration.IgnoreSectionHandler" /&gt;
+  &lt;section name="log4net" type="log4net.Config.Log4NetConfigurationSectionHandler, log4net" /&gt;
  &lt;/configSections&gt;
  &lt;appSettings&gt;
   <emphasis role="comment">&lt;!-- To enable internal log4net logging specify the following appSettings key --&gt;</emphasis>
@@ -1662,6 +1670,7 @@ Product p = (Product) map[“EST-93”];</programlisting>
    &lt;/layout&gt;
   &lt;/appender&gt;
 
+  &lt;!-- OFF, FATAL, ERROR, WARN, INFO, DEBUG, ALL --&gt;
   <emphasis role="comment">&lt;!-- Set root logger level to ERROR and its appenders --&gt;</emphasis>
   &lt;root&gt;
    &lt;level value="ERROR" /&gt;
@@ -1670,25 +1679,45 @@ Product p = (Product) map[“EST-93”];</programlisting>
   &lt;/root&gt;
 
  <emphasis role="comment"> &lt;!-- Print only messages of level DEBUG or above in the packages --&gt;</emphasis>
-  &lt;logger name="IBatisNet.DataMapper.Configuration.Cache.CacheModel"&gt;
+  &lt;logger name="IBatisNet.DataMapper.Commands.DefaultPreparedCommand"&gt;
    &lt;level value="DEBUG" /&gt;
   &lt;/logger&gt;
-  &lt;logger name="IBatisNet.DataMapper.Configuration.Statements.PreparedStatementFactory"&gt;
+  &lt;logger name="IBatisNet.DataMapper.Configuration.Cache.CacheModel"&gt;
    &lt;level value="DEBUG" /&gt;
   &lt;/logger&gt;
   &lt;logger name="IBatisNet.DataMapper.LazyLoadList"&gt;
    &lt;level value="DEBUG" /&gt;
   &lt;/logger&gt;
+  &lt;logger name="IBatisNet.DataMapper.SqlMapSession"&gt;
+   &lt;level value="DEBUG" /&gt;
+  &lt;/logger&gt;
+  &lt;logger name="IBatisNet.Common.Transaction.TransactionScope"&gt;
+   &lt;level value="DEBUG" /&gt;
+  &lt;/logger&gt;
+  &lt;logger name="IBatisNet.DataAccess.DaoSession"&gt;
+   &lt;level value="DEBUG" /&gt;
+  &lt;/logger&gt;
+  &lt;logger name="IBatisNet.DataAccess.Configuration.DaoProxy"&gt;
+   &lt;level value="DEBUG" /&gt;
+  &lt;/logger&gt;
+  &lt;logger name="IBatisNet.DataMapper.Configuration.Statements.PreparedStatementFactory"&gt;
+   &lt;level value="OFF" /&gt;
+  &lt;/logger&gt;
+  &lt;logger name="IBatisNet.DataMapper.Commands.IPreparedCommand"&gt;
+   &lt;level value="OFF" /&gt;
+  &lt;/logger&gt;  
  &lt;/log4net&gt;
 &lt;/configuration&gt;</programlisting>
       </example>
 
       <para>To log all Prepared SQL command text, enable the logger for
-      <classname>IBatisNet.DataMapper.Configuration.Statements.PreparedStatementFactory</classname>.
+      <classname>IBatisNet.DataMapper.Configuration.Statements.DefaultPreparedCommand</classname>.
       To log cache usage, enable the logger for
       <classname>IBatisNet.DataMapper.Configuration.Cache.CacheModel</classname>.
       To log lazyload usage, enable the logger for
-      <classname>IBatisNet.DataMapper.LazyLoadList</classname>.</para>
+      <classname>IBatisNet.DataMapper.LazyLoadList</classname>. To log
+      DataMapper session information, enable the logger for
+      <classname>IBatisNet.DataMapper.SqlMapSession</classname>.</para>
     </sect2>
   </sect1>
 </chapter>
