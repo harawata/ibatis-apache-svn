@@ -11,8 +11,8 @@ Docs
 --------------------
  + Configuration changes (ex: properties support in diff't SqlMap.config elements)
  + Add more .NET coding examples (at least the code!)
- + Update NAnt doc.build for 1.2?
 
+ + DONE Update NAnt doc.build for 1.2?
  + DONE Basic CTH explanation
  + DONE Update for basic TypeHandler support
  + DONE New SqlMap element attributes
@@ -24,7 +24,7 @@ Docs
 Wiki
 --------------------
 
- + FAQ Explanation for Oracle and multiple SQL statements in one <statement> (as in TestDeleteWithComments)
+ + DONE FAQ Explanation for Oracle and multiple SQL statements in one <statement> (as in TestDeleteWithComments)
  + FAQ CTH explanation for Oracle ODP.NET 10g and Boolean parameters
  + FAQ CTH explanation for Oracle Decimals and Hashtable resultClass
 
@@ -60,8 +60,9 @@ Clover.NET
 DataAccess
 --------------------
 
- + Castle.DynamicProxy update
+ + Castle.DynamicProxy update (tested?)
  + Merge with DataMapper NUnit tests or keep seperate and update (need to add PostgreSQL!)?
+ + Create NHibernate stub classes/methods
 
 
 --------------------
