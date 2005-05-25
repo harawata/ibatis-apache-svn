@@ -94,6 +94,11 @@ namespace IBatisNet.DataMapper.Configuration
 		/// </summary>
 		private const string PROVIDERS_FILE_NAME = "providers.config";
 
+		/// <summary>
+		/// Token for xml path to SqlMapConfig providers element.
+		/// </summary>
+		private static string XML_CONFIG_PROVIDERS = "/sqlMapConfig/providers";
+
 		// TODO: Other XML paths.
 
 		/// <summary>
@@ -493,10 +498,22 @@ namespace IBatisNet.DataMapper.Configuration
 		{
 			XmlSerializer serializer = null;
 			Provider provider = null;
+			XmlDocument xmlProviders = null;
 
 			_configScope.ErrorContext.Activity = "loading Providers";
 
-			XmlDocument xmlProviders = Resources.GetConfigAsXmlDocument(PROVIDERS_FILE_NAME);
+			XmlNode providersNode = null;
+			providersNode = _configScope.SqlMapConfigDocument.SelectSingleNode(XML_CONFIG_PROVIDERS);
+			if (providersNode == null )
+			{
+				throw new ConfigurationException("The providers tag is required in sqlmap.config.");
+			}
+			else
+			{
+				xmlProviders = Resources.GetAsXmlDocument( providersNode, _configScope.Properties );
+			}
+
+			xmlProviders = Resources.GetConfigAsXmlDocument(PROVIDERS_FILE_NAME);
 
 			serializer = new XmlSerializer(typeof(Provider));
 

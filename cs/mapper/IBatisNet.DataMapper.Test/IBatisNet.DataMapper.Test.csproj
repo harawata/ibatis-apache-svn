@@ -139,7 +139,7 @@
                 />
                 <File
                     RelPath = "bin\Debug\providers.config"
-                    BuildAction = "None"
+                    BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "bin\Debug\SqlMap_Access_OleDb.config"
