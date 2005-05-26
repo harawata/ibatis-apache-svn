@@ -1210,9 +1210,20 @@ namespace IBatisNet.DataMapper.MappedStatements
 							_resultMap.AddResultPropery(property);
 						}
 
-						// Set TypeHandler
-						Type propertyType = reflectionInfo.GetSetterType(property.PropertyName);
-						property.TypeHandler = typeHandlerFactory.GetTypeHandler( propertyType );
+						// Fix for IBATISNET-73 (JIRA-73) from Ron Grabowski
+						if (property.PropertyName != null && property.PropertyName.Length > 0)
+						{
+							// Set TypeHandler
+							Type propertyType = reflectionInfo.GetSetterType(property.PropertyName);
+							property.TypeHandler = typeHandlerFactory.GetTypeHandler( propertyType );
+						}
+						else
+						{
+							if (_logger.IsDebugEnabled)
+							{
+								_logger.Debug("The column [" + columnName + "] could not be auto mapped to a property on [" + resultObject.ToString() + "]");
+							}
+						}
 					}
 				} 
 				catch (Exception e) 
