@@ -34,7 +34,7 @@
 
       <para>The official site for iBATIS DataMapper for .NET is our Apache
       site &lt;<ulink
-      url="http://incubator.apache.org/ibatis/site/">http://incubator.apache.org/ibatis/site/</ulink>&gt;.
+      url="http://incubator.apache.org/ibatis/site/">http://incubator.apache.org/ibatis/</ulink>&gt;.
       To work through using the DataMapper for the first time, we suggest that
       you download the source distribution that includes the VSN solution
       files and C# projects for the DataMapper. To download the source
@@ -93,7 +93,7 @@
                 <entry>IBatisNet.DataAccess.Extensions</entry>
 
                 <entry>Contains a C# project for extensions to the DataAccess
-                framework</entry>
+                framework such as NHibernate support</entry>
               </row>
 
               <row>
@@ -188,9 +188,9 @@
     <sect2>
       <title>Add XML File Items</title>
 
-      <para>You will need to add three or more XML file items to your Windows
-      or Web application project (and Test project if you have one). These
-      files are:</para>
+      <para>You will need to add three or more XML file items to your Windows,
+      Web application, or library project (and Test project if you have one).
+      These files are:</para>
 
       <para><itemizedlist>
           <listitem>
@@ -202,15 +202,17 @@
           </listitem>
 
           <listitem>
-             providers.config - The database provider definition file 
+             providers.config - The database providers definition file 
           </listitem>
         </itemizedlist></para>
 
       <para>The <filename>SqlMap.config</filename> and
       <filename>providers.config</filename> files must be placed where the
       framework can find them at runtime. The default location differs by the
-      type of project, as shown in Table 4.2. <table>
-          <title>Where to place the SqlMap.config file</title>
+      type of project, as shown in Table 4.2, but you have the option to place
+      and load these 2 files from other locations.<table>
+          <title>Expected default locations for the SqlMap.config and
+          providers.config files</title>
 
           <tgroup cols="2">
             <tbody>
@@ -218,15 +220,14 @@
                 <entry>Windows, Library, or Test projects (using NUnit or
                 equivalent)</entry>
 
-                <entry>Place in <filename>/bin/Debug</filename> folder, with
-                the assembly (.dll) files and with the
+                <entry>With the assembly (.dll) files and the
                 <filename>app.config</filename> file</entry>
               </row>
 
               <row>
                 <entry>Web projects</entry>
 
-                <entry>Place in the project root, with the
+                <entry>In the project base directory, with the
                 <filename>web.config</filename> file</entry>
               </row>
             </tbody>
@@ -294,7 +295,7 @@
       Example 4.1.</para>
 
       <para><example>
-          <title>SqlMap.Config for .NET Web Application (placed in same
+          <title>Sample SqlMap.Config for .NET Web Application (placed in same
           directory as web.config)</title>
 
           <programlisting>&lt;?xml version="1.0" encoding="utf-8"?&gt; 
@@ -303,6 +304,9 @@
     xsi:noNamespaceSchemaLocation="SqlMapConfig.xsd"&gt;
 
   &lt;properties resource="Maps/database.properties"/&gt;
+
+  &lt;!-- Optional if located in default location --&gt;
+  &lt;providers embedded="resources.providers.config, IBatisNet.Test"/&gt;
 
   &lt;settings&gt;
     &lt;setting useFullyQualifiedStatementNames="false"/&gt;
@@ -321,7 +325,13 @@
 
   &lt;alias&gt;
     &lt;typeAlias alias="Account" type="IBatisNet.Test.Domain.Account, IBatisNet.Test"/&gt;
+    &lt;typeAlias alias="YesNoBool"
+         type="IBatisNet.Test.Domain.YesNoBoolTypeHandlerCallback, IBatisNet.Test"/&gt;
   &lt;/alias&gt;
+
+  &lt;typeHandlers&gt;
+    &lt;typeHandler type="bool" dbType="Varchar" callback="YesNoBool"/&gt;
+  &lt;/typeHandlers&gt;
 
   &lt;sqlMaps&gt;
     &lt;sqlMap resource="Maps/Category.xml"/&gt;
@@ -354,9 +364,9 @@
           <programlisting>&lt;add key="username" value="albert" /&gt;</programlisting>
         </informalexample>
 
-        <para>then any element in the DataMapper configuration, including the
-        data maps, can use the variable <varname>${username}</varname> to
-        insert the value "<emphasis>albert</emphasis>". For example:</para>
+        <para>then any many elements in the DataMapper configuration can use
+        the variable <varname>${username}</varname> to insert the value
+        "<emphasis>albert</emphasis>". For example:</para>
 
         <programlisting>&lt;dataSource connectionString="user id=${username}; </programlisting>
 
@@ -393,14 +403,14 @@
 
                   <entry>Specify the properties file name files to be loaded
                   from the root directory of the application (relative path)
-                  as properties.config.<programlisting>resource="properties.config"</programlisting></entry>
+                  as properties.config.<programlisting>resource="../..properties.config"</programlisting></entry>
                 </row>
 
                 <row>
                   <entry><emphasis>url</emphasis></entry>
 
                   <entry>Specify the properties file name files to be loaded
-                  as a valid filepath.<programlisting>url="<filename>c:\config\my.properties</filename>"</programlisting></entry>
+                  as a valid filepath.<programlisting>url="<filename>c:/config/my.properties</filename>"</programlisting></entry>
                 </row>
 
                 <row>
@@ -408,9 +418,9 @@
 
                   <entry>Specify the properties file name to be loaded as an
                   embedded resource in an assembly. Syntax for the embedded
-                  attribute is '<emphasis>file name, the name of the assembly
-                  which contains the embedded
-                  resource</emphasis>'<programlisting>embedded="properties.config, IBatisNet.Test"</programlisting></entry>
+                  attribute is '<emphasis>[extendednamespace.]filename, the
+                  name of the assembly which contains the embedded
+                  resource</emphasis>'<programlisting>embedded="resources.properties.config, IBatisNet.DataMapper.Test"</programlisting></entry>
                 </row>
               </tbody>
             </tgroup>
@@ -689,6 +699,62 @@ IBatisNet.Test"</programlisting></entry>
       </sect3>
 
       <sect3>
+        <title>The &lt;typeHandler&gt; Element</title>
+
+        <para>The &lt;typeHandler&gt; element allows for the configuration and
+        use of a Custom Type Handler (see the Custom Type Handler section).
+        This extends the DataMapper's capabilities in handling types that are
+        specific to your database provider, are not handled by your database
+        provider, or just happen to be a part of your application
+        design.<programlisting>  &lt;typeHandler type="guid" dbType="Varchar2" callback="GuidVarchar"/&gt;</programlisting><note>
+            <para>The DataMapper for .NET allows for zero or more
+            &lt;typeAlias&gt; elements to appear in the Data Map definition
+            file, within an enclosing &lt;alias&gt; element.</para>
+          </note></para>
+
+        <sect4>
+          <title>&lt;typeHandler&gt; attributes</title>
+
+          <para>The &lt;typeHandler&gt; element has three attributes: <table>
+              <title>Attributes of the &lt;typeAlias&gt; element</title>
+
+              <tgroup cols="2">
+                <thead>
+                  <row>
+                    <entry>Attribute</entry>
+
+                    <entry>Description</entry>
+                  </row>
+                </thead>
+
+                <tbody>
+                  <row>
+                    <entry><emphasis>type</emphasis></entry>
+
+                    <entry>Refers to the name of the type to
+                    handle<programlisting>type="guid"</programlisting></entry>
+                  </row>
+
+                  <row>
+                    <entry><emphasis>dbType</emphasis></entry>
+
+                    <entry>Indicates the provider dbType to
+                    handle<programlisting>dbType="Varchar2"</programlisting></entry>
+                  </row>
+
+                  <row>
+                    <entry><emphasis>callback</emphasis></entry>
+
+                    <entry>The alias of the custom type handler class
+                    name<programlisting>callback="GuidVarchar"</programlisting></entry>
+                  </row>
+                </tbody>
+              </tgroup>
+            </table></para>
+        </sect4>
+      </sect3>
+
+      <sect3>
         <title>The &lt;providers&gt; Element</title>
 
         <para>Under ADO.NET, a database system is accessed through a provider.
@@ -698,7 +764,7 @@ IBatisNet.Test"</programlisting></entry>
         descriptor element. The list of providers you might want to use is
         kept in a separate XML descriptor file. The iBATIS .NET DataMapper
         distribution includes the standard
-        <filename>providers.config</filename> file with a set of twelve
+        <filename>providers.config</filename> file with a set of thirteen
         prewritten provider elements:</para>
 
         <para><itemizedlist>
@@ -749,14 +815,55 @@ IBatisNet.Test"</programlisting></entry>
             <listitem>
                PostgreSql0.7 - Npgsql provider V0.7.0.0 
             </listitem>
+
+            <listitem>
+               iDb2.10 - IBM DB2 iSeries provider V10.0.0.0 
+            </listitem>
           </itemizedlist></para>
 
         <para>The <filename>providers.config</filename> file can be found
         under <filename>\source\IBatisNet.DataMapper.Test\bin\Debug</filename>
         in the iBATIS .NET source distribution (see Section 5.1) or in the
-        root folder of the .NET DataMapper binary distribution. To use it, you
-        must copy it into your project at the same location as the
-        <filename>SqlMap.config</filename> file (see section 4.2.3).</para>
+        root folder of the .NET DataMapper binary distribution. </para>
+
+        <table>
+          <title>Expected default locations of the providers.config
+          file</title>
+
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry>Windows, Library, or Test projects (using NUnit or
+                equivalent)</entry>
+
+                <entry>With the assembly (.dll) files with the
+                <filename>app.config</filename> file</entry>
+              </row>
+
+              <row>
+                <entry>Web projects</entry>
+
+                <entry>In the project base directory, with the
+                <filename>web.config</filename> file</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>To use the file, you can copy it into your project at the
+        expected default location, make it an embedded resource of your
+        project, or specify a url to its location. If you copy the file into
+        the expected default location, the &lt;providers&gt; element is not
+        required in your sqlMap.config file.</para>
+
+        <programlisting>&lt;!-- Using a relative path from the application base directory --&gt;
+&lt;providers resource="resources/providers.config"/&gt;
+
+&lt;!-- Embedded in a library using [extendednamespace.]filename, assemblyname --&gt;
+&lt;providers embedded="resources.providers.config, BigApp.Data"/&gt;
+
+&lt;!-- Using a full filepath --&gt;
+&lt;sqlMap url="C:/projects/BigApp/Data/resources/providers.config"/&gt;</programlisting>
 
         <para>A provider may require libraries that you do not have
         installed,. Therefore, the provider element has an "enabled" attribute
@@ -871,11 +978,27 @@ IBatisNet.Test"</programlisting></entry>
         <para>Example 4.3 shows &lt;sqlMap&gt; elements for loading a set of
         Data Map definitions. Note that the &lt;sqlMap&gt; elements are nested
         in a &lt;sqlMaps&gt; element. <example>
-            <title>SqlMap elements</title>
+            <title>Specifying sqlMap locations</title>
 
-            <programlisting>&lt;sqlMaps&gt;
+            <programlisting>&lt;!-- Relative path from the application base directory --&gt;
+&lt;sqlMaps&gt;
+  &lt;sqlMap resource="Maps/Account.xml"/&gt;
   &lt;sqlMap resource="Maps/Category.xml"/&gt;
   &lt;sqlMap resource="Maps/Product.xml"/&gt;
+&lt;/sqlMaps&gt;
+
+&lt;!-- Embedded resources using [extendednamespace.]filename, assemblyname --&gt;
+&lt;sqlMaps&gt;
+  &lt;sqlMap embedded="Maps.Account.xml, BigApp.Data"/&gt;
+  &lt;sqlMap embedded="Maps.Category.xml, BigApp.Data"/&gt;
+  &lt;sqlMap embedded="Maps.Product.xml, BigApp.Data"/&gt;
+&lt;/sqlMaps&gt;
+
+&lt;!-- Full URL with a property key--&gt;
+&lt;sqlMaps&gt;
+  &lt;sqlMap url="C:/${projectdir}/BigApp/Maps/Account.xml"/&gt;
+  &lt;sqlMap url="C:/${projectdir}/BigApp/Maps/Category.xml"/&gt;
+  &lt;sqlMap url="C:/${projectdir}/BigApp/Maps/Product.xml"/&gt;
 &lt;/sqlMaps&gt;</programlisting>
           </example></para>
 
@@ -1634,7 +1757,7 @@ Product p = (Product) map[“EST-93”];</programlisting>
 
       <example>
         <title>A sample Log4Net configuration block
-        (IBatisNet.Test.dll.Config)</title>
+        (IBatisNet.DataMapper.Test.dll.Config)</title>
 
         <programlisting>
 

@@ -1198,9 +1198,10 @@ namespace WebShop.Domain
 
         <para>The <parameter>typeHandler</parameter> attribute allows the use
         of a Custom Type Handler (see the Custom Type Handler section) to
-        extend the DataMapper's capabilities that are specific to your
-        database provider, are not handled by your database provider, or just
-        happen to be a part of your application design.</para>
+        extend the DataMapper's capabilities in handling types that are
+        specific to your database provider, are not handled by your database
+        provider, or just happen to be a part of your application
+        design.</para>
       </sect3>
     </sect2>
 
@@ -1211,8 +1212,8 @@ namespace WebShop.Domain
       3.4.3), you can add extra type information inline too. The inline
       parameter map syntax lets you embed the property name, the property
       type, the column type, and a null value replacement into a parametrized
-      SQL statement. Example 3.16, 3.17 shows statements written with inline
-      parameters.<example>
+      SQL statement. The next four examples shows statements written with
+      inline parameters.<example>
           <title>A &lt;statement&gt; using inline parameters</title>
 
           <para><programlisting>&lt;statement id="insertProduct" parameterClass="product"&gt;
@@ -1221,7 +1222,7 @@ namespace WebShop.Domain
 &lt;/statement&gt;</programlisting></para>
         </example></para>
 
-      <para>The following example shows how dbTypes can be declared
+      <para>Thefollowing example shows how dbTypes can be declared
       inline.</para>
 
       <example>
@@ -1270,11 +1271,11 @@ namespace WebShop.Domain
           <para>When using inline parameters, you cannot specify the null
           value replacement without also specifying the dbType. You must
           specify both due to the parsing order.</para>
-        </note><note>
+
           <para>For <emphasis>round-trip</emphasis> transparency of null
           values, you must also specify database columns null value
           replacements in your Result Map (see Section 3.5).</para>
-        </note><note>
+
           <para>Inline parameter maps are handy for small jobs, but when there
           are a lot of type descriptors and null value replacements in a
           complex statement, an industrial-strength, external parameterMap can
@@ -1615,9 +1616,9 @@ resultMapping="LineItem.LineItem"
 
         <para>The typeHandler attribute allows the use of a Custom Type
         Handler (see the Custom Type Handler section) to extend the
-        DataMapper's capabilities that are specific to your database provider,
-        are not handled by your database provider, or just happen to be a part
-        of your application design.</para>
+        DataMapper's capabilities in handling types that are specific to your
+        database provider, are not handled by your database provider, or just
+        happen to be a part of your application design.</para>
       </sect3>
     </sect2>
 
