@@ -167,7 +167,7 @@ namespace IBatisNet.DataAccess.Extensions.DaoSessionHandlers
 			} 
 			catch (HibernateException e) 
 			{
-				throw new DataAccessException("Error starting Hibernate transaction.  Cause: " + e, e);
+				throw new DataAccessException("Error starting Hibernate transaction.  Cause: " + e.Message, e);
 			}
 		}
 
@@ -193,7 +193,7 @@ namespace IBatisNet.DataAccess.Extensions.DaoSessionHandlers
 				}
 				catch (HibernateException e) 
 				{
-					throw new DataAccessException("Error starting Hibernate transaction.  Cause: " + e, e);
+					throw new DataAccessException("Error starting Hibernate transaction.  Cause: " + e.Message, e);
 				}
 			}
 		}
@@ -233,7 +233,7 @@ namespace IBatisNet.DataAccess.Extensions.DaoSessionHandlers
 			} 
 			catch (HibernateException e) 
 			{
-				throw new DataAccessException("Error committing Hibernate transaction.  Cause: " + e);
+				throw new DataAccessException("Error committing Hibernate transaction.  Cause: " + e.Message, e);
 			}
 		}
 
@@ -253,7 +253,7 @@ namespace IBatisNet.DataAccess.Extensions.DaoSessionHandlers
 			} 
 			catch (HibernateException e) 
 			{
-				throw new DataAccessException("Error committing Hibernate transaction.  Cause: " + e);
+				throw new DataAccessException("Error committing Hibernate transaction.  Cause: " + e.Message, e);
 			}
 		}
 
@@ -272,7 +272,7 @@ namespace IBatisNet.DataAccess.Extensions.DaoSessionHandlers
 			} 
 			catch (HibernateException e) 
 			{
-				throw new DataAccessException("Error ending Hibernate transaction.  Cause: " + e);
+				throw new DataAccessException("Error ending Hibernate transaction.  Cause: " + e.Message, e);
 			}		
 		}
 
@@ -292,7 +292,7 @@ namespace IBatisNet.DataAccess.Extensions.DaoSessionHandlers
 			} 
 			catch (HibernateException e) 
 			{
-				throw new DataAccessException("Error ending Hibernate transaction.  Cause: " + e);
+				throw new DataAccessException("Error ending Hibernate transaction.  Cause: " + e.Message, e);
 			}		
 		}
 

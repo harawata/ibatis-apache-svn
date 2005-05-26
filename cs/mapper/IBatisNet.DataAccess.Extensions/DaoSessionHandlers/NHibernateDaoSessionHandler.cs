@@ -113,7 +113,7 @@ namespace IBatisNet.DataAccess.Extensions.DaoSessionHandlers
 			}
 			catch(Exception e)
 			{
-				throw new ConfigurationException(string.Format("DaoManager could not configure NHibernateDaoSessionHandler. Cause: {0}", e.Message));
+				throw new ConfigurationException(string.Format("DaoManager could not configure NHibernateDaoSessionHandler. Cause: {0}", e.Message), e);
 			}
 		}
 

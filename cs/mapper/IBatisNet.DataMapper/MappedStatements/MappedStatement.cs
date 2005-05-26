@@ -1217,7 +1217,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 				} 
 				catch (Exception e) 
 				{
-					throw new DataMapperException("Error automapping columns. Cause: " + e);
+					throw new DataMapperException("Error automapping columns. Cause: " + e.Message, e);
 				}
 			}
 
