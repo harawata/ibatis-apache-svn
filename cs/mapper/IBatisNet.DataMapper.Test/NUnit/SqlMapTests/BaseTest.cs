@@ -30,7 +30,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// <summary>
 		/// The sqlMap
 		/// </summary>
-		protected static SqlMapper sqlMap;
+		protected static SqlMapper sqlMap = null;
 		private static readonly ILog _logger = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
 		protected static string ScriptDirectory = null;

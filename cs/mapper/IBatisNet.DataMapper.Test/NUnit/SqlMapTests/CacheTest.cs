@@ -22,7 +22,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 	[TestFixture] 
 	public class CacheTest : BaseTest
 	{
-		#region SetUp & TearDown
+			#region SetUp & TearDown
 
 		/// <summary>
 		/// SetUp

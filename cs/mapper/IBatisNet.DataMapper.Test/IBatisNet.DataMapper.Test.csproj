@@ -155,7 +155,7 @@
                 />
                 <File
                     RelPath = "bin\Debug\SqlMap_MSSQL_SqlClient.config"
-                    BuildAction = "None"
+                    BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "bin\Debug\SqlMap_MySql_ByteFx.config"
@@ -667,6 +667,11 @@
                 />
                 <File
                     RelPath = "NUnit\SqlMapTests\ComplexTypeTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NUnit\SqlMapTests\ConfigureTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

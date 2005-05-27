@@ -201,7 +201,15 @@ namespace IBatisNet.DataMapper
 		/// <returns>An SqlMap</returns>
 		public static SqlMapper Configure(string resource)
 		{
-			XmlDocument document = Resources.GetResourceAsXmlDocument( resource );
+			XmlDocument document = null;
+			if (resource.StartsWith("file://"))
+			{
+				document = Resources.GetUrlAsXmlDocument( resource.Remove(0, 7) );	
+			}
+			else
+			{
+				document = Resources.GetResourceAsXmlDocument( resource );	
+			}
 			return new DomSqlMapBuilder().Build( document, false);
 		}
 
@@ -209,7 +217,7 @@ namespace IBatisNet.DataMapper
 		///  Configure an SqlMap from via a stream.
 		/// </summary>
 		/// <param name="resource">A stream resource</param>
-		/// <returns></returns>
+		/// <returns>An SqlMap</returns>
 		public static SqlMapper Configure(Stream resource)
 		{
 			XmlDocument document = Resources.GetStreamAsXmlDocument( resource );
@@ -220,19 +228,22 @@ namespace IBatisNet.DataMapper
 		///  Configure an SqlMap from via a FileInfo.
 		/// </summary>
 		/// <param name="resource">A FileInfo resource</param>
-		/// <returns></returns>
+		/// <returns>An SqlMap</returns>
 		public static SqlMapper Configure(FileInfo resource)
 		{
-			XmlDocument document = new XmlDocument();
-			try
-			{
-				document.Load(resource.FullName);
-			}
-			catch(Exception e)
-			{
-				throw new ConfigurationException(string.Format("Unable to load configuration file from FileInfo. Cause : \"{0}\"",e.Message),e);
-			}
+			XmlDocument document = Resources.GetFileInfoAsXmlDocument( resource );
+			return new DomSqlMapBuilder().Build( document, false);
+		}
 
+
+		/// <summary>
+		///  Configure an SqlMap from via an Uri.
+		/// </summary>
+		/// <param name="resource">A Uri resource</param>
+		/// <returns></returns>
+		public static SqlMapper Configure(Uri resource)
+		{
+			XmlDocument document = Resources.GetUriAsXmlDocument( resource );
 			return new DomSqlMapBuilder().Build( document, false);
 		}
 
@@ -260,7 +271,15 @@ namespace IBatisNet.DataMapper
 		/// <returns>An SqlMap</returns>
 		public static SqlMapper ConfigureAndWatch( string resource, ConfigureHandler configureDelegate )
 		{
-			XmlDocument document = Resources.GetResourceAsXmlDocument( resource );
+			XmlDocument document = null;
+			if (resource.StartsWith("file://"))
+			{
+				document = Resources.GetUrlAsXmlDocument( resource.Remove(0, 7) );	
+			}
+			else
+			{
+				document = Resources.GetResourceAsXmlDocument( resource );	
+			}
 
 			ConfigWatcherHandler.ClearFilesMonitored();
 			ConfigWatcherHandler.AddFileToWatch( Resources.GetFileInfo( resource ) );
@@ -289,15 +308,7 @@ namespace IBatisNet.DataMapper
 		/// <returns>An SqlMap</returns>
 		public static SqlMapper ConfigureAndWatch( FileInfo resource, ConfigureHandler configureDelegate )
 		{
-			XmlDocument document = new XmlDocument();
-			try
-			{
-				document.Load(resource.FullName);
-			}
-			catch(Exception e)
-			{
-				throw new ConfigurationException(string.Format("Unable to load configuration file from FileInfo. Cause : \"{0}\"",e.Message),e);
-			}
+			XmlDocument document = Resources.GetFileInfoAsXmlDocument(resource);
 
 			ConfigWatcherHandler.ClearFilesMonitored();
 			ConfigWatcherHandler.AddFileToWatch( resource );

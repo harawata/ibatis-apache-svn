@@ -278,26 +278,62 @@ namespace IBatisNet.Common.Utilities
 		public static XmlDocument GetStreamAsXmlDocument(Stream resource)
 		{
 			XmlDocument config = new XmlDocument();
-			XmlTextReader reader = null;
 
 			try 
 			{
-				reader = new XmlTextReader( resource );
-				config.Load(reader);
+				config.Load(resource);
 			}
 			catch(Exception e)
 			{
 				throw new ConfigurationException(
 					string.Format("Unable to load XmlDocument via stream. Cause : {1}", 
 					e.Message ) ,e); 
-
 			}
-			finally
+
+			return config;
+		}
+
+		/// <summary>
+		/// Get XmlDocument from a FileInfo resource
+		/// </summary>
+		/// <param name="resource"></param>
+		/// <returns></returns>
+		public static XmlDocument GetFileInfoAsXmlDocument(FileInfo resource)
+		{
+			XmlDocument config = new XmlDocument();
+
+			try 
 			{
-				if (reader != null)
-				{
-					reader.Close();
-				}
+				config.Load( resource.FullName );
+			}
+			catch(Exception e)
+			{
+				throw new ConfigurationException(
+					string.Format("Unable to load XmlDocument via FileInfo. Cause : {1}", 
+					e.Message ) ,e); 
+			}
+
+			return config;
+		}
+
+		/// <summary>
+		/// Get XmlDocument from a Uri resource
+		/// </summary>
+		/// <param name="resource"></param>
+		/// <returns></returns>
+		public static XmlDocument GetUriAsXmlDocument(Uri resource)
+		{
+			XmlDocument config = new XmlDocument();
+
+			try 
+			{
+				config.Load( resource.AbsoluteUri );
+			}
+			catch(Exception e)
+			{
+				throw new ConfigurationException(
+					string.Format("Unable to load XmlDocument via Uri. Cause : {1}", 
+					e.Message ) ,e); 
 			}
 
 			return config;
@@ -311,12 +347,10 @@ namespace IBatisNet.Common.Utilities
 		public static XmlDocument GetResourceAsXmlDocument(string resource)
 		{
 			XmlDocument config = new XmlDocument();
-			XmlTextReader reader = null;
 
 			try 
 			{
-				reader = new XmlTextReader(Path.Combine(_applicationBase, resource));
-				config.Load(reader);
+				config.Load( Path.Combine(_applicationBase, resource) );
 			}
 			catch(Exception e)
 			{
@@ -324,14 +358,6 @@ namespace IBatisNet.Common.Utilities
 					string.Format("Unable to load file via resource \"{0}\" as resource. Cause : {1}", 
 					resource, 
 					e.Message ) ,e); 
-
-			}
-			finally
-			{
-				if (reader != null)
-				{
-					reader.Close();
-				}
 			}
 
 			return config;
@@ -346,12 +372,10 @@ namespace IBatisNet.Common.Utilities
 		public static XmlDocument GetUrlAsXmlDocument(string url)
 		{
 			XmlDocument config = new XmlDocument();
-			XmlTextReader reader = null;
 
 			try 
 			{
-				reader = new XmlTextReader(url);
-				config.Load(reader);
+				config.Load(url);
 			}
 			catch(Exception e)
 			{
@@ -359,13 +383,6 @@ namespace IBatisNet.Common.Utilities
 					string.Format("Unable to load file via url \"{0}\" as url. Cause : {1}",
 					url, 
 					e.Message  ) ,e);
-			}
-			finally
-			{
-				if (reader != null)
-				{
-					reader.Close();
-				}
 			}
 
 			return config;
@@ -375,15 +392,14 @@ namespace IBatisNet.Common.Utilities
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="fileResource"></param>
+		/// <param name="resource"></param>
 		/// <returns></returns>
-		public static XmlDocument GetEmbeddedResourceAsXmlDocument(string fileResource)
+		public static XmlDocument GetEmbeddedResourceAsXmlDocument(string resource)
 		{
 			XmlDocument config = new XmlDocument();
 			bool isLoad = false;
-			XmlTextReader reader = null;
 
-			FileAssemblyInfo fileInfo = new FileAssemblyInfo (fileResource);
+			FileAssemblyInfo fileInfo = new FileAssemblyInfo (resource);
 			if (fileInfo.IsAssemblyQualified)
 			{
 				Assembly assembly = Assembly.LoadWithPartialName (fileInfo.AssemblyName);
@@ -392,28 +408,20 @@ namespace IBatisNet.Common.Utilities
 //					Console.WriteLine(fileName);
 //				}
 
-				Stream resource = assembly.GetManifestResourceStream(fileInfo.ResourceFileName);
-				if (resource != null)
+				Stream stream = assembly.GetManifestResourceStream(fileInfo.ResourceFileName);
+				if (stream != null)
 				{
 					try
 					{
-						reader = new XmlTextReader(resource);
-						config.Load(reader);
+						config.Load(stream);
 						isLoad = true;
 					}
 					catch(Exception e)
 					{
 						throw new ConfigurationException(
 							string.Format("Unable to load file \"{0}\" in embedded resource. Cause : {1}",
-							fileResource, 
+							resource, 
 							e.Message  ) ,e);
-					}
-					finally
-					{
-						if (reader != null)
-						{
-							reader.Close();
-						}
 					}
 				}
 			} 
@@ -423,28 +431,20 @@ namespace IBatisNet.Common.Utilities
 				Assembly [] assemblies = AppDomain.CurrentDomain.GetAssemblies ();
 				foreach (Assembly assembly in assemblies)
 				{
-					Stream resource = assembly.GetManifestResourceStream(fileInfo.FileName);
-					if (resource != null)
+					Stream stream = assembly.GetManifestResourceStream(fileInfo.FileName);
+					if (stream != null)
 					{
 						try
 						{
-							reader = new XmlTextReader(resource);
-							config.Load(reader);
+							config.Load(stream);
 							isLoad = true;
 						}
 						catch(Exception e)
 						{
 							throw new ConfigurationException(
 								string.Format("Unable to load file \"{0}\" in embedded resource. Cause : ",
-								fileResource, 
+								resource, 
 								e.Message  ) ,e);
-						}
-						finally
-						{
-							if (reader != null)
-							{
-								reader.Close();
-							}
 						}
 						break;
 					}
