@@ -128,32 +128,33 @@ namespace IBatisNet.Common.Utilities
 		}
 
 		/// <summary>
-		/// Get config file from from the base directory that the assembler
-		/// used for probe assemblies
+		/// Get config file
 		/// </summary>
-		/// <param name="filePath">The config file to load.</param>
-		/// <returns></returns>
-		public static XmlDocument GetConfigAsXmlDocument(string filePath)
+		/// <param name="resourcePath">
+		/// A config resource path.
+		/// </param>
+		/// <returns>An XmlDocument representation of the config file</returns>
+		public static XmlDocument GetConfigAsXmlDocument(string resourcePath)
 		{
 			XmlDocument config = new XmlDocument(); 
 			XmlTextReader reader = null; 
-			filePath = GetFileSystemResourceWithoutProtocol(filePath);
+			resourcePath = GetFileSystemResourceWithoutProtocol(resourcePath);
 			
-			if (!Resources.FileExists(filePath))
+			if (!Resources.FileExists(resourcePath))
 			{
-				filePath = Path.Combine(_baseDirectory, filePath); 
+				resourcePath = Path.Combine(_baseDirectory, resourcePath); 
 			}
 
 			try 
 			{ 
-				reader = new XmlTextReader( filePath ); 				
+				reader = new XmlTextReader( resourcePath ); 				
 				config.Load(reader); 
 			} 
 			catch(Exception e) 
 			{ 
 				throw new ConfigurationException( 
 					string.Format("Unable to load config file \"{0}\". Cause : {1}", 
-					filePath, 
+					resourcePath, 
 					e.Message ) ,e); 
 			} 
 			finally 
@@ -164,6 +165,7 @@ namespace IBatisNet.Common.Utilities
 				} 
 			} 
 			return config; 
+
 		}
 
 		/// <summary>
@@ -243,6 +245,7 @@ namespace IBatisNet.Common.Utilities
 			return xmlDocument;
 		}
 
+
 		/// <summary>
 		/// Get the path resource of an url or resource location.
 		/// </summary>
@@ -268,7 +271,40 @@ namespace IBatisNet.Common.Utilities
 		}
 
 		/// <summary>
-		/// Load resource from the root directory of the application
+		/// Get XmlDocument from a stream resource
+		/// </summary>
+		/// <param name="resource"></param>
+		/// <returns></returns>
+		public static XmlDocument GetStreamAsXmlDocument(Stream resource)
+		{
+			XmlDocument config = new XmlDocument();
+			XmlTextReader reader = null;
+
+			try 
+			{
+				reader = new XmlTextReader( resource );
+				config.Load(reader);
+			}
+			catch(Exception e)
+			{
+				throw new ConfigurationException(
+					string.Format("Unable to load XmlDocument via stream. Cause : {1}", 
+					e.Message ) ,e); 
+
+			}
+			finally
+			{
+				if (reader != null)
+				{
+					reader.Close();
+				}
+			}
+
+			return config;
+		}
+
+		/// <summary>
+		/// Get XmlDocument from relative (from root directory of the application) path resource
 		/// </summary>
 		/// <param name="resource"></param>
 		/// <returns></returns>
@@ -301,8 +337,9 @@ namespace IBatisNet.Common.Utilities
 			return config;
 		}
 
+
 		/// <summary>
-		/// 
+		/// Get XmlDocument from absolute path resource
 		/// </summary>
 		/// <param name="url"></param>
 		/// <returns></returns>
@@ -334,6 +371,7 @@ namespace IBatisNet.Common.Utilities
 			return config;
 		}
 
+		
 		/// <summary>
 		/// 
 		/// </summary>
@@ -426,31 +464,34 @@ namespace IBatisNet.Common.Utilities
 
 
 		/// <summary>
-		/// Load a file from a given path
+		/// Load a file from a given resource path
 		/// </summary>
-		/// <param name="filePath">The file path</param>
+		/// <param name="resourcePath">
+		/// The resource path
+		/// </param>
 		/// <returns>return a FileInfo</returns>
-		public static FileInfo GetFileInfo(string filePath)
+		public static FileInfo GetFileInfo(string resourcePath)
 		{
 			FileInfo fileInfo = null;
-			filePath = GetFileSystemResourceWithoutProtocol(filePath);
+			resourcePath = GetFileSystemResourceWithoutProtocol(resourcePath);
 
-			if ( !Resources.FileExists(filePath)) 
+			if ( !Resources.FileExists(resourcePath)) 
 			{
-				filePath = Path.Combine(_applicationBase, filePath);
+				resourcePath = Path.Combine(_applicationBase, resourcePath);
 			}
 
 			try
 			{
 				//argument : The fully qualified name of the new file, or the relative file name. 
-				fileInfo = new FileInfo(filePath);
+				fileInfo = new FileInfo(resourcePath);
 			}
 			catch(Exception e)
 			{
 				throw new ConfigurationException(
-					string.Format("Unable to load file \"{0}\". Cause : \"{1}\"", filePath, e.Message),e);
+					string.Format("Unable to load file \"{0}\". Cause : \"{1}\"", resourcePath, e.Message),e);
 			}
 			return fileInfo;
+
 		}
 
 

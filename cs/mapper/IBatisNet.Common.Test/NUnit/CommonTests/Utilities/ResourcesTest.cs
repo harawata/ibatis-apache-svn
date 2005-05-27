@@ -54,46 +54,34 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 		#region GetFileInfo Tests
 
 		[Test] 
-		public void GetFileInfoWithAbsolute() 
-		{ 
-			FileInfo fileInfo = Resources.GetFileInfo(Resources.ApplicationBase+Path.DirectorySeparatorChar+"IBatisNet.Common.Test.dll");
-			Assert.IsNotNull(fileInfo);
-		}
-
-		[Test] 
 		public void GetFileInfoWithRelative() 
 		{ 
 			FileInfo fileInfo = Resources.GetFileInfo("IBatisNet.Common.Test.dll");
 			Assert.IsNotNull(fileInfo);
 		}
 
+
 		[Test] 
-		public void GetFileInfoWithRelativeProtocole() 
+		public void GetFileInfoWithAbsolute() 
 		{ 
-			FileInfo fileInfo = Resources.GetFileInfo("file://IBatisNet.Common.Test.dll");
+			string resourcePath = Resources.ApplicationBase+Path.DirectorySeparatorChar+"IBatisNet.Common.Test.dll";
+			FileInfo fileInfo = Resources.GetFileInfo(resourcePath);
 			Assert.IsNotNull(fileInfo);
 		}
 
 		[Test] 
 		public void GetFileInfoWithAbsoluteProtocole() 
 		{ 
-			FileInfo fileInfo = Resources.GetFileInfo("file://"+Resources.ApplicationBase+Path.DirectorySeparatorChar+"IBatisNet.Common.Test.dll");
+			string resourcePath = "file://"+Resources.ApplicationBase+Path.DirectorySeparatorChar+"IBatisNet.Common.Test.dll";
+			FileInfo fileInfo = Resources.GetFileInfo(resourcePath);
 			Assert.IsNotNull(fileInfo);
 		}
-
-		[Test] 
-		public void GetFileInfoWithRelativeProtocolePlusSlash() 
-		{ 
-			FileInfo fileInfo = Resources.GetFileInfo("file:///IBatisNet.Common.Test.dll");
-			Assert.IsNotNull(fileInfo);
-		}
-
-
 
 		[Test] 
 		public void GetFileInfoWithAbsoluteProtocolePlusSlash() 
 		{ 
-			FileInfo fileInfo = Resources.GetFileInfo("file:///"+Resources.ApplicationBase+Path.DirectorySeparatorChar+"IBatisNet.Common.Test.dll");
+			string resourcePath = "file:///"+Resources.ApplicationBase+Path.DirectorySeparatorChar+"IBatisNet.Common.Test.dll";
+			FileInfo fileInfo = Resources.GetFileInfo(resourcePath);
 			Assert.IsNotNull(fileInfo);
 		}
 		#endregion 
@@ -103,7 +91,24 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 		[Test] 
 		public void GetConfigAsXmlDocumentWithAbsolute() 
 		{ 
-			XmlDocument doc = Resources.GetConfigAsXmlDocument(Resources.ApplicationBase+Path.DirectorySeparatorChar+"SqlMap_MSSQL_SqlClient.config");
+			string resourcePath = Resources.ApplicationBase+Path.DirectorySeparatorChar+"SqlMap_MSSQL_SqlClient.config";
+			XmlDocument doc = Resources.GetConfigAsXmlDocument(resourcePath);
+			Assert.IsNotNull(doc);
+		}
+
+		[Test] 
+		public void GetConfigAsXmlDocumentWithAbsoluteProtocole() 
+		{ 
+			string resourcePath = "file://"+Resources.ApplicationBase+Path.DirectorySeparatorChar+"SqlMap_MSSQL_SqlClient.config";
+			XmlDocument doc = Resources.GetConfigAsXmlDocument(resourcePath);
+			Assert.IsNotNull(doc);
+		}
+
+
+		[Test] 
+		public void GetConfigAsXmlDocumentWithAbsoluteProtocolePlusSlash() 
+		{ 
+			XmlDocument doc = Resources.GetConfigAsXmlDocument("file:///"+Resources.ApplicationBase+Path.DirectorySeparatorChar+"SqlMap_MSSQL_SqlClient.config");
 			Assert.IsNotNull(doc);
 		}
 
@@ -114,35 +119,6 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			Assert.IsNotNull(doc);
 		}
 
-		[Test] 
-		public void GetConfigAsXmlDocumentWithRelativeProtocole() 
-		{ 
-			XmlDocument doc = Resources.GetConfigAsXmlDocument("file://SqlMap_MSSQL_SqlClient.config");
-			Assert.IsNotNull(doc);
-		}
-
-		[Test] 
-		public void GetConfigAsXmlDocumentWithAbsoluteProtocole() 
-		{ 
-			XmlDocument doc = Resources.GetConfigAsXmlDocument("file://"+Resources.ApplicationBase+Path.DirectorySeparatorChar+"SqlMap_MSSQL_SqlClient.config");
-			Assert.IsNotNull(doc);
-		}
-
-		[Test] 
-		public void GetConfigAsXmlDocumentWithRelativeProtocolePlusSlash() 
-		{ 
-			XmlDocument doc = Resources.GetConfigAsXmlDocument("file:///SqlMap_MSSQL_SqlClient.config");
-			Assert.IsNotNull(doc);
-		}
-
-
-
-		[Test] 
-		public void GetConfigAsXmlDocumentWithAbsoluteProtocolePlusSlash() 
-		{ 
-			XmlDocument doc = Resources.GetConfigAsXmlDocument("file:///"+Resources.ApplicationBase+Path.DirectorySeparatorChar+"SqlMap_MSSQL_SqlClient.config");
-			Assert.IsNotNull(doc);
-		}
 		#endregion 
 	}
 }

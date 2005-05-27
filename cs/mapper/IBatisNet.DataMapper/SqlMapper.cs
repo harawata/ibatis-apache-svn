@@ -30,10 +30,12 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Data;
+using System.IO;
 using System.Text;
 using System.Threading;
 using System.Xml;
 using IBatisNet.Common;
+using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Utilities;
 using IBatisNet.DataMapper.Configuration;
 using IBatisNet.DataMapper.Configuration.Alias;
@@ -180,10 +182,10 @@ namespace IBatisNet.DataMapper
 		}
 
 		/// <summary>
-		/// Configure an SqlMap from
-		/// default file named SqlMap.config.
+		/// Configure an SqlMap from default resource file named SqlMap.config.
 		/// </summary>
 		/// <returns>An SqlMap</returns>
+		/// <remarks>The file path is relative to the application root.</remarks>
 		static public SqlMapper Configure()
 		{
 			return Configure( Resources.GetConfigAsXmlDocument(DEFAULT_FILE_CONFIG_NAME) );
@@ -191,17 +193,48 @@ namespace IBatisNet.DataMapper
 
 
 		/// <summary>
-		/// Configure an SqlMap from via a file.
+		/// Configure an SqlMap from via a relative ressource path.
 		/// </summary>
-		/// <param name="fileName">A path to a file name.</param>
+		/// <param name="resource">
+		/// A relative ressource path from your Application root.
+		/// </param>
 		/// <returns>An SqlMap</returns>
-		/// <remarks>If you pass a relative file path, if will be relative to your Application root.</remarks>
-		public static SqlMapper Configure(string fileName)
+		public static SqlMapper Configure(string resource)
 		{
-			XmlDocument document = Resources.GetConfigAsXmlDocument(fileName);
+			XmlDocument document = Resources.GetResourceAsXmlDocument( resource );
 			return new DomSqlMapBuilder().Build( document, false);
 		}
 
+		/// <summary>
+		///  Configure an SqlMap from via a stream.
+		/// </summary>
+		/// <param name="resource">A stream resource</param>
+		/// <returns></returns>
+		public static SqlMapper Configure(Stream resource)
+		{
+			XmlDocument document = Resources.GetStreamAsXmlDocument( resource );
+			return new DomSqlMapBuilder().Build( document, false);
+		}
+
+		/// <summary>
+		///  Configure an SqlMap from via a FileInfo.
+		/// </summary>
+		/// <param name="resource">A FileInfo resource</param>
+		/// <returns></returns>
+		public static SqlMapper Configure(FileInfo resource)
+		{
+			XmlDocument document = new XmlDocument();
+			try
+			{
+				document.Load(resource.FullName);
+			}
+			catch(Exception e)
+			{
+				throw new ConfigurationException(string.Format("Unable to load configuration file from FileInfo. Cause : \"{0}\"",e.Message),e);
+			}
+
+			return new DomSqlMapBuilder().Build( document, false);
+		}
 
 		/// <summary>
 		/// Configure and monitor the default configuration file for modifications 
@@ -218,22 +251,61 @@ namespace IBatisNet.DataMapper
 		/// Configure and monitor the configuration file for modifications 
 		/// and automatically reconfigure SqlMap. 
 		/// </summary>
-		/// <param name="fileName">File name.</param>
+		/// <param name="resource">
+		/// A relative ressource path from your Application root.
+		/// </param>
 		///<param name="configureDelegate">
 		/// Delegate called when the file has changed, to rebuild the dal.
 		/// </param>
 		/// <returns>An SqlMap</returns>
-		public static SqlMapper ConfigureAndWatch( string fileName, ConfigureHandler configureDelegate )
+		public static SqlMapper ConfigureAndWatch( string resource, ConfigureHandler configureDelegate )
 		{
-			XmlDocument document = Resources.GetConfigAsXmlDocument( fileName );
+			XmlDocument document = Resources.GetResourceAsXmlDocument( resource );
 
 			ConfigWatcherHandler.ClearFilesMonitored();
-			ConfigWatcherHandler.AddFileToWatch( Resources.GetFileInfo( fileName ) );
+			ConfigWatcherHandler.AddFileToWatch( Resources.GetFileInfo( resource ) );
 
 			TimerCallback callBakDelegate = new TimerCallback( SqlMapper.OnConfigFileChange );
 
 			StateConfig state = new StateConfig();
-			state.fileName = fileName;
+			state.fileName = resource;
+			state.configureHandler = configureDelegate;
+
+			new ConfigWatcherHandler( callBakDelegate, state );
+
+			return new DomSqlMapBuilder().Build( document, true );
+		}
+
+		/// <summary>
+		/// Configure and monitor the configuration file for modifications 
+		/// and automatically reconfigure SqlMap. 
+		/// </summary>
+		/// <param name="resource">
+		/// A relative ressource path from your Application root.
+		/// </param>
+		///<param name="configureDelegate">
+		/// Delegate called when the file has changed, to rebuild the dal.
+		/// </param>
+		/// <returns>An SqlMap</returns>
+		public static SqlMapper ConfigureAndWatch( FileInfo resource, ConfigureHandler configureDelegate )
+		{
+			XmlDocument document = new XmlDocument();
+			try
+			{
+				document.Load(resource.FullName);
+			}
+			catch(Exception e)
+			{
+				throw new ConfigurationException(string.Format("Unable to load configuration file from FileInfo. Cause : \"{0}\"",e.Message),e);
+			}
+
+			ConfigWatcherHandler.ClearFilesMonitored();
+			ConfigWatcherHandler.AddFileToWatch( resource );
+
+			TimerCallback callBakDelegate = new TimerCallback( SqlMapper.OnConfigFileChange );
+
+			StateConfig state = new StateConfig();
+			state.fileName = resource.FullName;
 			state.configureHandler = configureDelegate;
 
 			new ConfigWatcherHandler( callBakDelegate, state );
@@ -248,9 +320,6 @@ namespace IBatisNet.DataMapper
 		public static void OnConfigFileChange(object obj)
 		{
 			StateConfig state = (StateConfig)obj;
-
-			//SqlMap sqlMap = ConfigureAndWatch( state.fileName, state.configureHandler );
-			//state.configureHandler( sqlMap );
 			state.configureHandler( null );
 		}
 

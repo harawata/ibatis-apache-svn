@@ -24,22 +24,21 @@
  ********************************************************************************/
 #endregion
 
-#region Imports
+#region Using
+
 using System;
-using System.Data;
-using System.Collections;
 using System.Collections.Specialized;
-using System.IO;
+using System.Data;
 using System.Threading;
 using System.Xml;
-
 using IBatisNet.Common;
+using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Utilities;
-using IBatisNet.DataAccess.SessionContainer;
 using IBatisNet.DataAccess.Configuration;
-using IBatisNet.DataAccess.Exceptions;    
+using IBatisNet.DataAccess.Exceptions;
 using IBatisNet.DataAccess.Interfaces;
-using IBatisNet.DataAccess.DaoSessionHandlers;
+using IBatisNet.DataAccess.SessionContainer;
+
 #endregion
 
 namespace IBatisNet.DataAccess
@@ -239,10 +238,12 @@ namespace IBatisNet.DataAccess
 		/// <summary>
 		/// Configure an DaoManager from via a file.
 		/// </summary>
-		/// <param name="fileName">File name.</param>
-		public static void Configure(string fileName)
+		/// <param name="resource">
+		/// A relative ressource path from your Application root.
+		/// </param>
+		public static void Configure(string resource)
 		{
-			XmlDocument document = Resources.GetConfigAsXmlDocument( fileName );
+			XmlDocument document = Resources.GetResourceAsXmlDocument( resource );
 			new DomDaoManagerBuilder().BuildDaoManagers( document, false );
 		}
 
@@ -264,22 +265,24 @@ namespace IBatisNet.DataAccess
 		/// Configure and monitor the configuration file for modifications and 
 		/// automatically reconfigure  
 		/// </summary>
-		/// <param name="fileName">File name.</param>
-		/// <param name="configureDelegate">
-		/// Delegate called when the file has changed to rebuild the 
+		/// <param name="resource">
+		/// A relative ressource path from your Application root.
 		/// </param>
-		public static void ConfigureAndWatch(string fileName, ConfigureHandler configureDelegate)
+		///<param name="configureDelegate">
+		/// Delegate called when the file has changed, to rebuild the dal.
+		/// </param>
+		public static void ConfigureAndWatch(string resource, ConfigureHandler configureDelegate)
 		{
 			ConfigWatcherHandler.ClearFilesMonitored();
-			ConfigWatcherHandler.AddFileToWatch( Resources.GetFileInfo( fileName ) );
+			ConfigWatcherHandler.AddFileToWatch( Resources.GetFileInfo( resource ) );
 
-			XmlDocument document = Resources.GetConfigAsXmlDocument( fileName );
+			XmlDocument document = Resources.GetConfigAsXmlDocument( resource );
 			new DomDaoManagerBuilder().BuildDaoManagers( document, true );
 
 			TimerCallback callBakDelegate = new TimerCallback( DaoManager.OnConfigFileChange );
 
 			StateConfig state = new StateConfig();
-			state.fileName = fileName;
+			state.fileName = resource;
 			state.configureHandler = configureDelegate;
 
 			new ConfigWatcherHandler( callBakDelegate, state );

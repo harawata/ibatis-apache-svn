@@ -24,24 +24,18 @@
  ********************************************************************************/
 #endregion
 
-#region Imports
+#region Using
+
 using System;
 using System.Collections;
-using System.Collections.Specialized;
-using System.IO;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Xml;
 using System.Xml.Serialization;
-
 using IBatisNet.Common;
-using IBatisNet.Common.Exceptions;    
+using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Utilities;
-using IBatisNet.DataAccess;
-using IBatisNet.DataAccess.Exceptions;
 using IBatisNet.DataAccess.Interfaces;
-using IBatisNet.DataAccess.DaoSessionHandlers;
 using IBatisNet.DataAccess.Scope;
+
 #endregion
 
 namespace IBatisNet.DataAccess.Configuration
