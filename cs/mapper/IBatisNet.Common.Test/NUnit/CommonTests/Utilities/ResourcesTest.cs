@@ -35,10 +35,10 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 		#region Test ResourcesTest
 
 		/// <summary>
-		/// Test loading Embeded Resource
+		/// Test loading Embedded Resource
 		/// </summary>
 		[Test] 
-		public void TestEmbededResource() 
+		public void TestEmbeddedResource() 
 		{
 			XmlDocument doc = null;
 
@@ -70,7 +70,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 		}
 
 		[Test] 
-		public void GetFileInfoWithAbsoluteProtocole() 
+		public void GetFileInfoWithAbsoluteProtocol() 
 		{ 
 			string resourcePath = "file://"+Resources.ApplicationBase+Path.DirectorySeparatorChar+"IBatisNet.Common.Test.dll";
 			FileInfo fileInfo = Resources.GetFileInfo(resourcePath);
@@ -78,7 +78,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 		}
 
 		[Test] 
-		public void GetFileInfoWithAbsoluteProtocolePlusSlash() 
+		public void GetFileInfoWithAbsoluteProtocolPlusSlash() 
 		{ 
 			string resourcePath = "file:///"+Resources.ApplicationBase+Path.DirectorySeparatorChar+"IBatisNet.Common.Test.dll";
 			FileInfo fileInfo = Resources.GetFileInfo(resourcePath);
@@ -89,7 +89,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 		#region GetConfigAsXmlDocument Tests
 
 		[Test] 
-		public void GetConfigAsXmlDocumentWithAbsolute() 
+		public void GetConfigAsXmlDocumentWithAbsolut() 
 		{ 
 			string resourcePath = Resources.ApplicationBase+Path.DirectorySeparatorChar+"SqlMap_MSSQL_SqlClient.config";
 			XmlDocument doc = Resources.GetConfigAsXmlDocument(resourcePath);
@@ -97,7 +97,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 		}
 
 		[Test] 
-		public void GetConfigAsXmlDocumentWithAbsoluteProtocole() 
+		public void GetConfigAsXmlDocumentWithAbsoluteProtocol() 
 		{ 
 			string resourcePath = "file://"+Resources.ApplicationBase+Path.DirectorySeparatorChar+"SqlMap_MSSQL_SqlClient.config";
 			XmlDocument doc = Resources.GetConfigAsXmlDocument(resourcePath);
@@ -106,7 +106,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 
 
 		[Test] 
-		public void GetConfigAsXmlDocumentWithAbsoluteProtocolePlusSlash() 
+		public void GetConfigAsXmlDocumentWithAbsoluteProtocolPlusSlash() 
 		{ 
 			XmlDocument doc = Resources.GetConfigAsXmlDocument("file:///"+Resources.ApplicationBase+Path.DirectorySeparatorChar+"SqlMap_MSSQL_SqlClient.config");
 			Assert.IsNotNull(doc);
