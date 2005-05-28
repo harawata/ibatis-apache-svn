@@ -238,8 +238,7 @@
     highlighted.</para>
 
     <example>
-      Example dao.config file
-      
+       Example dao.config file 
 
       <programlisting>&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;daoConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -286,6 +285,8 @@ xsi:noNamespaceSchemaLocation="DaoConfig.xsd"&gt;
 &lt;/context&gt;
 
 &lt;/daoConfig&gt;     </programlisting>
+
+       
     </example>
 
     <para>In the example above, what we end up with is two DAO contexts. DAOs
@@ -352,28 +353,30 @@ xsi:noNamespaceSchemaLocation="DaoConfig.xsd"&gt;
     with the distribution.</para>
 
     <sect2>
+       
+
       <title>type Attribut</title>
-      When specifying a type attribut within configuration, the type attribut value must be a fully qualified
-type name following the format:
 
-       <programlisting>
-      type="[namespace.class], [assembly name],
+       When specifying a type attribut within configuration, the type attribut value must be a fully qualified type name following the format:
+
+      <programlisting>      type="[namespace.class], [assembly name],
             Version=[version], Culture=[culture],
-            PublicKeyToken=[public token]"
-	 </programlisting>
+            PublicKeyToken=[public token]"</programlisting>
 
-For example:
- <programlisting>
-      type="MyProject.Domain.LineItem, MyProject.Domain,
+       For example: 
+
+      <programlisting>      type="MyProject.Domain.LineItem, MyProject.Domain,
             Version=1.2.3300.0, Culture=neutral,
-            PublicKeyToken=b03f455f11d50a3a"
- </programlisting>
-The strongly typed name is desired, however, it is also legitimate to
-use the shorter style assembly type name:
-<programlisting>
-      type="MyProject.Domain.LineItem, MyProject.Domain"
+            PublicKeyToken=b03f455f11d50a3a" </programlisting>
+
+       The strongly typed name is desired, however, it is also legitimate to use the shorter style assembly type name: 
+
+      <programlisting>      type="MyProject.Domain.LineItem, MyProject.Domain"
 </programlisting>
-	</sect2>
+
+       
+    </sect2>
+
     <sect2>
       <title>The &lt;context&gt; Element</title>
 
@@ -496,23 +499,27 @@ use the shorter style assembly type name:
 
         <para><itemizedlist>
             <listitem>
-               SqlServer 1.0 - Microsoft SQL Server 7.0/2000 provider available with .NET Framework 1.0 
+               sqlServer1.0 - Microsoft SQL Server 7.0/2000 provider available with .NET Framework 1.0 
             </listitem>
 
             <listitem>
-               SqlServer 1.1 -Microsoft SQL Server 7.0/2000 provider available with .NET Framework 1.1 
+               sqlServer1.1 -Microsoft SQL Server 7.0/2000 provider available with .NET Framework 1.1 
             </listitem>
 
             <listitem>
-               OleDb 1.1 - OleDb provider available with .NET Framework 1.1 (used for Access) 
+               OleDb1.1 - OleDb provider available with .NET Framework 1.1 
             </listitem>
 
             <listitem>
-               ODBC 1.1 - Odbc provider available with .NET Framework 1.1 
+               Odbc1.1 - Odbc provider available with .NET Framework 1.1 
             </listitem>
 
             <listitem>
                oracle9.2 - Oracle provider V9.2.0.401 
+            </listitem>
+
+            <listitem>
+               oracle10.1 - Oracle provider V10.1.0.301 
             </listitem>
 
             <listitem>
@@ -521,6 +528,26 @@ use the shorter style assembly type name:
 
             <listitem>
                ByteFx - ByteFx MySQL provider V0.7.6.15073 
+            </listitem>
+
+            <listitem>
+               MySql - MySQL provider V1.0.4.20163 
+            </listitem>
+
+            <listitem>
+               SQLite3 - SQLite.NET provider V0.21.1869.3794 
+            </listitem>
+
+            <listitem>
+               Firebird1.7 - Firebird SQL .NET provider V1.7.0.33200 
+            </listitem>
+
+            <listitem>
+               PostgreSql0.7 - Npgsql provider V0.7.0.0 
+            </listitem>
+
+            <listitem>
+               iDb2.10 - IBM DB2 iSeries provider V10.0.0.0
             </listitem>
           </itemizedlist></para>
 

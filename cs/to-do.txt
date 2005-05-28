@@ -2,17 +2,19 @@
 DataMapper 1.2
 --------------------
  + Include Sample-SqlMap.config file
- + Source distribution needs DataAccess to have updated Castle.DynamicProxy assembly
+ + Source distribution needs DataAccess to have updated Castle.DynamicProxy assembly (but NHibernate dependency!)
  + providers.config file needs to have enabled="false" for all providers except sqlServer1.1, OleDb, and Odbc
 
 
 --------------------
 Docs
 --------------------
- + Add doc for providers tag with attribute resource/embedded/url
- + Configuration changes (ex: properties support in diff't SqlMap.config elements)
- + Add more .NET coding examples (at least the code!)
+ + DataAccess Configuration changes
+ + Tutorial changes for SqlMap.config (with properties variable for relative path) and new DomSqlMapBuilder configuration API
+ + Add more .NET DataMapper coding examples (at least the code!)
 
+ + DONE DataMapper Configuration changes (ex: properties support in diff't SqlMap.config elements)
+ + DONE Add doc for providers tag with attribute resource/embedded/url
  + DONE Update NAnt doc.build for 1.2?
  + DONE Basic CTH explanation
  + DONE Update for basic TypeHandler support
