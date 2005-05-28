@@ -1,14 +1,9 @@
 using System;
-using System.IO;
-using System.Reflection;
 using System.Configuration;
-
 using IBatisNet.Common.Transaction;
-using IBatisNet.DataAccess;
+using IBatisNet.DataAccess.Configuration;
 using IBatisNet.DataAccess.Test.Dao.Interfaces;
 using IBatisNet.DataAccess.Test.Domain;
-using IBatisNet.DataAccess.Test.NUnit;
-
 using NUnit.Framework;
 
 namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
@@ -30,7 +25,8 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 		[SetUp] 
 		public void SetUp() 
 		{
-			DaoManager.Configure( "dao"+ "_" + ConfigurationSettings.AppSettings["database"] + "_"
+			DomDaoManagerBuilder builder = new DomDaoManagerBuilder();
+			builder.Configure( "dao"+ "_" + ConfigurationSettings.AppSettings["database"] + "_"
 				+ ConfigurationSettings.AppSettings["providerType"] + ".config" );
 
 			daoManager = DaoManager.GetInstance("SqlMapDao");

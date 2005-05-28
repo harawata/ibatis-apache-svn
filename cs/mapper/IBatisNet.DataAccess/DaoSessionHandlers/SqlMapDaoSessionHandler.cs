@@ -24,20 +24,19 @@
  ********************************************************************************/
 #endregion
 
-#region Imports
+#region Using
+
 using System;
 using System.Collections;
-
+using System.Collections.Specialized;
+using System.Xml;
 using IBatisNet.Common;
 using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Utilities;
-
-using IBatisNet.DataAccess;
-using IBatisNet.DataAccess.Exceptions;    
 using IBatisNet.DataAccess.Interfaces;
-
 using IBatisNet.DataMapper;
 using IBatisNet.DataMapper.Configuration;
+
 #endregion
 
 namespace IBatisNet.DataAccess.DaoSessionHandlers
@@ -75,20 +74,47 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		/// 
 		/// </summary>
 		/// <param name="properties"></param>
-		public void Configure(IDictionary properties)
+		/// <param name="resources"></param>
+		public void Configure(NameValueCollection properties, IDictionary resources)
 		{
+			DomSqlMapBuilder builder = new DomSqlMapBuilder();
+			XmlDocument document = null;
+
 			try
 			{
-				string fileName = (string) properties["sqlMapConfigFile"];
-				DataSource dataSource = (DataSource) properties["DataSource"];
-				bool useConfigFileWatcher = (bool) properties["UseConfigFileWatcher"];
+//				string fileName = (string) resources["sqlMapConfigFile"];
+				DataSource dataSource = (DataSource) resources["DataSource"];
+				bool useConfigFileWatcher = (bool) resources["UseConfigFileWatcher"];
 				
-				if (useConfigFileWatcher == true)
+				if (resources.Contains("resource")||resources.Contains("sqlMapConfigFile"))
 				{
-					ConfigWatcherHandler.AddFileToWatch( Resources.GetFileInfo( fileName ) );
+					string fileName = string.Empty;
+					if (resources.Contains("resource"))
+					{
+						fileName = (string) resources["resource"];
+					}else
+					{
+						fileName = (string) resources["sqlMapConfigFile"];
+					}
+					if (useConfigFileWatcher == true)
+					{
+						ConfigWatcherHandler.AddFileToWatch( Resources.GetFileInfo( fileName ) );
+					}
+					document = Resources.GetResourceAsXmlDocument(fileName);
 				}
-
-				_sqlMap = new DomSqlMapBuilder().Build( Resources.GetConfigAsXmlDocument(fileName), dataSource, useConfigFileWatcher);
+				else if ( resources.Contains("url") )
+				{
+					document = Resources.GetUrlAsXmlDocument( (string) resources["url"] );	
+				}
+				else if ( resources.Contains("embedded") )
+				{
+					document = Resources.GetEmbeddedResourceAsXmlDocument( (string) resources["embedded"] );	
+				}
+				else
+				{
+					throw new ConfigurationException("Invalid attribute on daoSessionHandler/property ");
+				}
+				_sqlMap = builder.Build( document, dataSource, useConfigFileWatcher, properties);
 			}
 			catch(Exception e)
 			{

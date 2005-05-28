@@ -96,13 +96,9 @@ namespace IBatisNet.DataAccess
 	{
 		#region Constants
 		/// <summary>
-		/// 
+		/// Key for default context name
 		/// </summary>
 		public static string DEFAULT_CONTEXT_NAME = "_DEFAULT_CONTEXT_NAME";
-		/// <summary>
-		/// 
-		/// </summary>
-		private const string DEFAULT_FILE_CONFIG_NAME = "dao.config";
 		#endregion
 
 		#region Fields
@@ -228,10 +224,12 @@ namespace IBatisNet.DataAccess
 
 		/// <summary>
 		/// Configure an DaoManager from via the default file config.
+		/// (accesd as relative ressource path from your Application root)
 		/// </summary>
+		[Obsolete("This method will be remove in future version, use DomSqlMapBuilder.Configure.", false)]
 		public static void Configure()
 		{
-			Configure( DEFAULT_FILE_CONFIG_NAME );
+			Configure( DomDaoManagerBuilder.DEFAULT_FILE_CONFIG_NAME );
 		}
 
 
@@ -241,6 +239,7 @@ namespace IBatisNet.DataAccess
 		/// <param name="resource">
 		/// A relative ressource path from your Application root.
 		/// </param>
+		[Obsolete("This method will be remove in future version, use DomSqlMapBuilder.Configure.", false)]
 		public static void Configure(string resource)
 		{
 			XmlDocument document = Resources.GetResourceAsXmlDocument( resource );
@@ -255,9 +254,10 @@ namespace IBatisNet.DataAccess
 		/// <param name="configureDelegate">
 		/// Delegate called when a file is changed to rebuild the 
 		/// </param>
+		[Obsolete("This method will be remove in future version, use DomSqlMapBuilder.Configure.", false)]
 		public static void ConfigureAndWatch(ConfigureHandler configureDelegate)
 		{
-			ConfigureAndWatch( DEFAULT_FILE_CONFIG_NAME, configureDelegate );
+			ConfigureAndWatch( DomDaoManagerBuilder.DEFAULT_FILE_CONFIG_NAME, configureDelegate );
 		}
 
 
@@ -271,6 +271,7 @@ namespace IBatisNet.DataAccess
 		///<param name="configureDelegate">
 		/// Delegate called when the file has changed, to rebuild the dal.
 		/// </param>
+		[Obsolete("This method will be remove in future version, use DomSqlMapBuilder.Configure.", false)]
 		public static void ConfigureAndWatch(string resource, ConfigureHandler configureDelegate)
 		{
 			ConfigWatcherHandler.ClearFilesMonitored();
@@ -279,25 +280,13 @@ namespace IBatisNet.DataAccess
 			XmlDocument document = Resources.GetConfigAsXmlDocument( resource );
 			new DomDaoManagerBuilder().BuildDaoManagers( document, true );
 
-			TimerCallback callBakDelegate = new TimerCallback( DaoManager.OnConfigFileChange );
+			TimerCallback callBakDelegate = new TimerCallback( DomDaoManagerBuilder.OnConfigFileChange );
 
 			StateConfig state = new StateConfig();
-			state.fileName = resource;
-			state.configureHandler = configureDelegate;
+			state.FileName = resource;
+			state.ConfigureHandler = configureDelegate;
 
 			new ConfigWatcherHandler( callBakDelegate, state );
-		}
-
-		/// <summary>
-		/// Called when the configuration has been updated. 
-		/// </summary>
-		/// <param name="obj">The state config.</param>
-		public static void OnConfigFileChange(object obj)
-		{
-			StateConfig state = (StateConfig)obj;
-
-			//ConfigureAndWatch( state.fileName, state.configureHandler );
-			state.configureHandler(null);
 		}
 
 		#endregion

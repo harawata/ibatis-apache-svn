@@ -1,13 +1,5 @@
-using System;
-using System.IO;
-using System.Reflection;
 using System.Configuration;
-
-using IBatisNet.DataAccess;
-using IBatisNet.Common.Utilities;
-
-using IBatisNet.DataAccess.Test.NUnit;
-
+using IBatisNet.DataAccess.Configuration;
 using NUnit.Framework;
 
 namespace IBatisNet.DataAccess.Test.NUnit.DaoTests.Ado.Oracle
@@ -24,7 +16,8 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests.Ado.Oracle
 		[SetUp] 
 		public void SetUp() 
 		{
-			DaoManager.Configure( "dao_Oracle_"
+			DomDaoManagerBuilder builder = new DomDaoManagerBuilder();
+			builder.Configure( "dao_Oracle_"
 				 + ConfigurationSettings.AppSettings["providerType"] + ".config" );
 			daoManager = DaoManager.GetInstance();
 

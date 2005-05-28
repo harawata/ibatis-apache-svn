@@ -1,5 +1,15 @@
 IBatisNet DataAccess Change Log
 
 ------------------------------
-1.5.* - XX/XX/XXXX
+1.5.1 - 01-June-2005
 ------------------------------
+
+- Added new API to DomDaoManagerBuilder.Configure(...)[old API DaoManager.Configure(...) are marked as obsolete]
+- Added New syntax to configure daoSessionHandler (old is too supported)
+<daoSessionHandler id="SqlMap">
+  <property name="resource" value="SqlMap_MSSQL_SqlClient.config"/>
+  <property name="url" value="E:\Projet\iBatis\trunk\cs\mapper\IBatisNet.DataAccess.Test\bin\Debug\SqlMap_MSSQL_SqlClient.config"/>
+  <property name="embedded" value="bin.Debug.SqlMap_MSSQL_SqlClient.config, IBatisNet.DataAccess.Test"/> 			
+</daoSessionHandler>
+
+- Fixed JIRA-69 Added support for global setting in ressource and url attribute (JIRA-69)

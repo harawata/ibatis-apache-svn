@@ -1,16 +1,13 @@
+// DataSource definition
+	// ScriptRunner definition
 using System;
-using System.IO;
 using System.Configuration;
-
-using IBatisNet.DataAccess;
-using IBatisNet.Common; // DataSource definition
-using IBatisNet.Common.Utilities; // ScriptRunner definition
-
+using System.IO;
+using IBatisNet.Common;
+using IBatisNet.Common.Utilities;
+using IBatisNet.DataAccess.Configuration;
 using IBatisNet.DataAccess.Test.Dao.Interfaces;
-
-using IBatisNet.DataAccess.Test.NUnit;
 using IBatisNet.DataAccess.Test.Domain;
-
 using NUnit.Framework;
 
 namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
@@ -18,31 +15,31 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 	/// <summary>
 	/// Summary description for NHibernateDaoTest.
 	/// </summary>
-	[TestFixture] 
+	[TestFixture]
 	public class NHibernateDaoTest
 	{
 		/// <summary>
 		/// A daoManager
 		/// </summary>
-		private static  DaoManager _daoManager = null;
+		private static DaoManager _daoManager = null;
 
 		/// <summary>
 		/// Initialisation
 		/// </summary>
-		[SetUp] 
-		public void SetUp() 
+		[SetUp]
+		public void SetUp()
 		{
-			string scriptDirectory = Path.Combine( Path.Combine( Path.Combine( Path.Combine(Resources.ApplicationBase, ".."), ".."), "Scripts"), ConfigurationSettings.AppSettings["database"]) + Path.DirectorySeparatorChar;
+			string scriptDirectory = Path.Combine(Path.Combine(Path.Combine(Path.Combine(Resources.ApplicationBase, ".."), ".."), "Scripts"), ConfigurationSettings.AppSettings["database"]) + Path.DirectorySeparatorChar;
 //				Resources.RootDirectory + Path.DirectorySeparatorChar +
 //				"Scripts" + Path.DirectorySeparatorChar +
 //				ConfigurationSettings.AppSettings["database"]+ Path.DirectorySeparatorChar;
 
-			DaoManager.Configure( "dao"+ "_" + ConfigurationSettings.AppSettings["database"] + "_"
-				+ ConfigurationSettings.AppSettings["providerType"] + ".config" );
+			DomDaoManagerBuilder builder = new DomDaoManagerBuilder();
+			builder.Configure("dao" + "_" + ConfigurationSettings.AppSettings["database"] + "_" + ConfigurationSettings.AppSettings["providerType"] + ".config");
 
 			_daoManager = DaoManager.GetInstance("NHibernateDao");
-			
-			InitScript( _daoManager.LocalDataSource, scriptDirectory + "user-init.sql" );
+
+			InitScript(_daoManager.LocalDataSource, scriptDirectory + "user-init.sql");
 		}
 
 		/// <summary>
@@ -60,11 +57,11 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 		/// <summary>
 		/// Test Create user
 		/// </summary>
-		[Test] 
+		[Test]
 		[Category("NHibernate")]
-		public void TestCreateUser () 
+		public void TestCreateUser()
 		{
-			IUserDao userDao = (IUserDao)_daoManager[typeof(IUserDao)];
+			IUserDao userDao = (IUserDao) _daoManager[typeof (IUserDao)];
 
 			User newUser = new User();
 			newUser.Id = "joe_cool";
@@ -78,10 +75,10 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 				_daoManager.OpenConnection();
 				userDao.Create(newUser);
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				// Ignore
-				Console.WriteLine("TestCreateUser, error cause : "+e.Message);
+				Console.WriteLine("TestCreateUser, error cause : " + e.Message);
 			}
 			finally
 			{
@@ -100,15 +97,15 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 
 				Assert.IsNotNull(joeCool);
 				Assert.AreEqual("Joseph Cool", joeCool.UserName);
-			
+
 				//Change its properties and it will get persisted to the database on Close. 
 				// set Joe Cool's Last Login property
-				joeCool.LastLogon = stamp;			
+				joeCool.LastLogon = stamp;
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				// Ignore
-				Console.WriteLine("TestCreateUser, error cause : "+e.Message);
+				Console.WriteLine("TestCreateUser, error cause : " + e.Message);
 			}
 			finally
 			{

@@ -24,11 +24,11 @@
  ********************************************************************************/
 #endregion
 
-#region Imports
-using System;
-using System.Collections;
+#region Using
 
-using IBatisNet.DataAccess;
+using System.Collections;
+using System.Collections.Specialized;
+
 #endregion
 
 
@@ -49,7 +49,8 @@ namespace IBatisNet.DataAccess.Interfaces
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="properties"></param>
-		void Configure(IDictionary properties);
+		/// <param name="properties">The properties scope</param>
+		/// <param name="resources">A collection of object useful to init</param>
+		void Configure(NameValueCollection properties, IDictionary resources);
 	}
 }

@@ -27,7 +27,7 @@
 #region Imports
 using System;
 using System.Collections;
-
+using System.Collections.Specialized;
 using IBatisNet.Common;
 using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Utilities;
@@ -80,7 +80,8 @@ namespace IBatisNet.DataAccess.Extensions.DaoSessionHandlers
 		/// 
 		/// </summary>
 		/// <param name="properties"></param>
-		public void Configure(IDictionary properties)
+		/// <param name="resources"></param>
+		public void Configure(NameValueCollection properties,IDictionary resources)
 		{
 			string mapping = string.Empty;
 
@@ -89,9 +90,9 @@ namespace IBatisNet.DataAccess.Extensions.DaoSessionHandlers
 				NHibernate.Cfg.Configuration config = new NHibernate.Cfg.Configuration();
 
 				// Set the connection string retrieve on the datasource
-				config.SetProperty( CONNECTION_STRING, (properties["DataSource"] as DataSource).ConnectionString );
+				config.SetProperty( CONNECTION_STRING, (resources["DataSource"] as DataSource).ConnectionString );
 
-				foreach(DictionaryEntry entry in properties)
+				foreach(DictionaryEntry entry in resources)
 				{
 					if ((entry.Key.ToString()).StartsWith("class.")) 
 					{

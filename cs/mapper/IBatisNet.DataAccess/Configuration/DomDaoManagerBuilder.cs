@@ -28,6 +28,8 @@
 
 using System;
 using System.Collections;
+using System.IO;
+using System.Threading;
 using System.Xml;
 using System.Xml.Serialization;
 using IBatisNet.Common;
@@ -46,6 +48,10 @@ namespace IBatisNet.DataAccess.Configuration
 	public class DomDaoManagerBuilder
 	{
 		#region Constants
+		/// <summary>
+		/// Key for default config name
+		/// </summary>
+		public const string DEFAULT_FILE_CONFIG_NAME = "dao.config";
 		/// <summary>
 		/// Key for default provider name
 		/// </summary>
@@ -72,6 +78,165 @@ namespace IBatisNet.DataAccess.Configuration
 		/// Constructor.
 		/// </summary>
 		public DomDaoManagerBuilder(){ }
+
+		#endregion
+
+		#region Configure
+
+		/// <summary>
+		/// Configure DaoManagers from via the default file config.
+		/// (accesd as relative ressource path from your Application root)
+		/// </summary>
+		public void Configure()
+		{
+			Configure( DomDaoManagerBuilder.DEFAULT_FILE_CONFIG_NAME );
+		}
+
+
+		/// <summary>
+		/// Configure DaoManagers from a file path.
+		/// </summary>
+		/// <param name="resource">
+		/// A relative ressource path from your Application root 
+		/// or a absolue file path file:\\c:\dir\a.config
+		/// </param>
+		public void Configure(string resource)
+		{
+			XmlDocument document = null;
+			if (resource.StartsWith("file://"))
+			{
+				document = Resources.GetUrlAsXmlDocument( resource.Remove(0, 7) );	
+			}
+			else
+			{
+				document = Resources.GetResourceAsXmlDocument( resource );	
+			}			
+			BuildDaoManagers( document, false );
+		}
+
+
+		/// <summary>
+		///  Configure DaoManagers from a stream.
+		/// </summary>
+		/// <param name="resource">A stream resource</param>
+		public void Configure(Stream resource)
+		{
+			XmlDocument document = Resources.GetStreamAsXmlDocument( resource );
+			BuildDaoManagers( document, false );
+		}
+
+		/// <summary>
+		///  Configure DaoManagers from a FileInfo.
+		/// </summary>
+		/// <param name="resource">A FileInfo resource</param>
+		/// <returns>An SqlMap</returns>
+		public void Configure(FileInfo resource)
+		{
+			XmlDocument document = Resources.GetFileInfoAsXmlDocument( resource );
+			BuildDaoManagers( document, false );
+		}
+
+		/// <summary>
+		///  Configure DaoManagers from an Uri.
+		/// </summary>
+		/// <param name="resource">A Uri resource</param>
+		/// <returns></returns>
+		public void Configure(Uri resource)
+		{
+			XmlDocument document = Resources.GetUriAsXmlDocument( resource );
+			BuildDaoManagers( document, false );
+		}
+
+		/// <summary>
+		/// Configure and monitor the configuration file for modifications and 
+		/// automatically reconfigure  
+		/// </summary>
+		/// <param name="configureDelegate">
+		/// Delegate called when a file is changed to rebuild the 
+		/// </param>
+		public void ConfigureAndWatch(ConfigureHandler configureDelegate)
+		{
+			ConfigureAndWatch( DomDaoManagerBuilder.DEFAULT_FILE_CONFIG_NAME, configureDelegate );
+		}
+
+
+		/// <summary>
+		/// Configure and monitor the configuration file for modifications and 
+		/// automatically reconfigure  
+		/// </summary>
+		/// <param name="resource">
+		/// A relative ressource path from your Application root 
+		/// or an absolue file path file:\\c:\dir\a.config
+		/// </param>
+		///<param name="configureDelegate">
+		/// Delegate called when the file has changed, to rebuild the dal.
+		/// </param>
+		public void ConfigureAndWatch(string resource, ConfigureHandler configureDelegate)
+		{
+			XmlDocument document = null;
+			if (resource.StartsWith("file://"))
+			{
+				document = Resources.GetUrlAsXmlDocument( resource.Remove(0, 7) );	
+			}
+			else
+			{
+				document = Resources.GetResourceAsXmlDocument( resource );	
+			}
+
+			ConfigWatcherHandler.ClearFilesMonitored();
+			ConfigWatcherHandler.AddFileToWatch( Resources.GetFileInfo( resource ) );
+
+			BuildDaoManagers( document, true );
+
+			TimerCallback callBakDelegate = new TimerCallback( DomDaoManagerBuilder.OnConfigFileChange );
+
+			StateConfig state = new StateConfig();
+			state.FileName = resource;
+			state.ConfigureHandler = configureDelegate;
+
+			new ConfigWatcherHandler( callBakDelegate, state );
+		}
+
+		
+		/// <summary>
+		/// Configure and monitor the configuration file for modifications 
+		/// and automatically reconfigure SqlMap. 
+		/// </summary>
+		/// <param name="resource">
+		/// A FileInfo to your config file.
+		/// </param>
+		///<param name="configureDelegate">
+		/// Delegate called when the file has changed, to rebuild the dal.
+		/// </param>
+		/// <returns>An SqlMap</returns>
+		public void ConfigureAndWatch( FileInfo resource, ConfigureHandler configureDelegate )
+		{
+			XmlDocument document = Resources.GetFileInfoAsXmlDocument(resource);
+
+			ConfigWatcherHandler.ClearFilesMonitored();
+			ConfigWatcherHandler.AddFileToWatch( resource );
+
+			BuildDaoManagers( document, true );
+
+			TimerCallback callBakDelegate = new TimerCallback( DomDaoManagerBuilder.OnConfigFileChange );
+
+			StateConfig state = new StateConfig();
+			state.FileName = resource.FullName;
+			state.ConfigureHandler = configureDelegate;
+
+			new ConfigWatcherHandler( callBakDelegate, state );
+		}
+
+		/// <summary>
+		/// Called when the configuration has been updated. 
+		/// </summary>
+		/// <param name="obj">The state config.</param>
+		public static void OnConfigFileChange(object obj)
+		{
+			StateConfig state = (StateConfig)obj;
+			state.ConfigureHandler(null);
+		}
+
 
 		#endregion
 
@@ -281,12 +446,12 @@ namespace IBatisNet.DataAccess.Configuration
 
 				configurationScope.ErrorContext.MoreInfo = "configure DaoSessionHandler";
 
-				// The properties use to initialize the SessionHandler 
-				IDictionary properties = new Hashtable();
+				// The resources use to initialize the SessionHandler 
+				IDictionary resources = new Hashtable();
 				// By default, add the DataSource
-				properties.Add( "DataSource", daoManager.DataSource);
+				resources.Add( "DataSource", daoManager.DataSource);
 				// By default, add the useConfigFileWatcher
-				properties.Add( "UseConfigFileWatcher", configurationScope.UseConfigFileWatcher);
+				resources.Add( "UseConfigFileWatcher", configurationScope.UseConfigFileWatcher);
 
 				IDaoSessionHandler sessionHandler = null;
 
@@ -299,7 +464,7 @@ namespace IBatisNet.DataAccess.Configuration
 					// Parse property node
 					foreach(XmlNode nodeProperty in nodeSessionHandler.SelectNodes("property"))
 					{
-						properties.Add(nodeProperty.Attributes["name"].Value, 
+						resources.Add(nodeProperty.Attributes["name"].Value, 
 							Resources.ParsePropertyTokens(nodeProperty.Attributes["value"].Value, configurationScope.Properties));
 					}
 				}
@@ -311,7 +476,7 @@ namespace IBatisNet.DataAccess.Configuration
 				// Configure the sessionHandler
 				configurationScope.ErrorContext.ObjectId = sessionHandler.GetType().FullName;
 
-				sessionHandler.Configure( properties );
+				sessionHandler.Configure(configurationScope.Properties,  resources );
 
 				daoManager.DaoSessionHandler = sessionHandler;
 
@@ -515,7 +680,6 @@ namespace IBatisNet.DataAccess.Configuration
 			XmlSerializer serializer = null;
 			Dao dao = null;
 			XmlNode xmlDaoFactory = null;
-			string currentDirectory = Resources.BaseDirectory;
 
 			xmlDaoFactory = configurationScope.NodeContext.SelectSingleNode("daoFactory");
 

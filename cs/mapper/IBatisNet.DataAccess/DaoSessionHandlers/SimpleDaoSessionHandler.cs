@@ -24,15 +24,14 @@
  ********************************************************************************/
 #endregion
 
-#region Imports
-using System;
+#region Using
+
 using System.Collections;
-
+using System.Collections.Specialized;
 using IBatisNet.Common;
-
-using IBatisNet.DataAccess;
-using IBatisNet.DataAccess.Exceptions;    
+using IBatisNet.DataAccess.Exceptions;
 using IBatisNet.DataAccess.Interfaces;
+
 #endregion
 
 namespace IBatisNet.DataAccess.DaoSessionHandlers
@@ -60,9 +59,10 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		/// 
 		/// </summary>
 		/// <param name="properties"></param>
-		public void Configure(IDictionary properties)
+		/// <param name="resources"></param>
+		public void Configure(NameValueCollection properties, IDictionary resources)
 		{
-			_dataSource = (DataSource) properties["DataSource"];
+			_dataSource = (DataSource) resources["DataSource"];
 		}
 
 		/// <summary>
@@ -79,7 +79,6 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 			return (new SimpleDaoSession(daoManager,_dataSource));
 		}
 		#endregion
-
 
 	}
 }
