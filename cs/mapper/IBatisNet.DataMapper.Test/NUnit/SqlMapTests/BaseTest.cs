@@ -5,7 +5,7 @@ using System.Data;
 using System.IO;
 using System.Reflection;
 using System.Configuration;
-
+using IBatisNet.DataMapper.Configuration;
 using log4net;
 
 using NUnit.Framework;
@@ -52,8 +52,10 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		{
 			//DateTime start = DateTime.Now;
 
-			ConfigureHandler handler = new ConfigureHandler(Configure);
-			sqlMap = SqlMapper.ConfigureAndWatch("sqlmap" + "_" + ConfigurationSettings.AppSettings["database"] + "_" + ConfigurationSettings.AppSettings["providerType"] + ".config", handler);
+//			ConfigureHandler handler = new ConfigureHandler(Configure);
+			DomSqlMapBuilder builder = new DomSqlMapBuilder();
+			string fileName = "sqlmap" + "_" + ConfigurationSettings.AppSettings["database"] + "_" + ConfigurationSettings.AppSettings["providerType"] + ".config";
+			sqlMap = builder.Configure(fileName);
 
 			if ( sqlMap.DataSource.Provider.Name.IndexOf("PostgreSql")>=0)
 			{
@@ -98,7 +100,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// </param>
 		protected static void Configure(object obj)
 		{
-			sqlMap = (SqlMapper) obj;
+			sqlMap = null;//(SqlMapper) obj;
 		}
 
 		/// <summary>

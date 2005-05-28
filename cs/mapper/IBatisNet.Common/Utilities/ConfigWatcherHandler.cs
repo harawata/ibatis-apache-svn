@@ -51,11 +51,11 @@ namespace IBatisNet.Common.Utilities
 		/// <summary>
 		/// Master Config File name.
 		/// </summary>
-		public string fileName;
+		public string FileName;
 		/// <summary>
 		/// Delegate called when a file is changed, use it to rebuild.
 		/// </summary>
-		public ConfigureHandler configureHandler;
+		public ConfigureHandler ConfigureHandler;
 	}
 
 	/// <summary>

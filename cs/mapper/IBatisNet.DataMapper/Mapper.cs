@@ -25,6 +25,7 @@
 
 using IBatisNet.Common.Utilities;
 using IBatisNet.DataMapper;
+using IBatisNet.DataMapper.Configuration;
 
 namespace IBatisNet.DataMapper
 {
@@ -43,7 +44,7 @@ namespace IBatisNet.DataMapper
 		/// <param name="obj"></param>
 		protected static void Configure (object obj)
 		{
-			_mapper = (SqlMapper) obj;
+			_mapper = null;
 		}
 
 		/// <summary>
@@ -52,8 +53,8 @@ namespace IBatisNet.DataMapper
 		protected static void InitMapper()
 		{
 			ConfigureHandler handler = new ConfigureHandler (Configure);
-			_mapper = SqlMapper.ConfigureAndWatch (handler);
-		}
+			DomSqlMapBuilder builder = new DomSqlMapBuilder();
+			_mapper = builder.ConfigureAndWatch (handler);		}
 
 		/// <summary>
 		/// Get the instance of the SqlMapper defined by the SqlMap.Config file.
@@ -66,7 +67,9 @@ namespace IBatisNet.DataMapper
 				lock (typeof (SqlMapper))
 				{
 					if (_mapper == null) // double-check
+					{	
 						InitMapper();
+					}
 				}
 			}
 			return _mapper;

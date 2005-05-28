@@ -31,6 +31,7 @@ using System.Collections;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -56,7 +57,7 @@ using IBatisNet.DataMapper.TypeHandlers;
 namespace IBatisNet.DataMapper.Configuration
 {
 	/// <summary>
-	/// Builds SqlMapClient instances from a supplied resource (e.g. XML configuration file)
+	/// Builds SqlMapper instances from a supplied resource (e.g. XML configuration file)
 	/// </summary>
 	public class DomSqlMapBuilder
 	{
@@ -73,7 +74,17 @@ namespace IBatisNet.DataMapper.Configuration
 		#endregion
 
 		#region Constant
+
+		/// <summary>
+		/// Default congig name
+		/// </summary>
+		public const string DEFAULT_FILE_CONFIG_NAME = "sqlmap.config";
+
+		/// <summary>
+		/// Default provider name
+		/// </summary>
 		private const string DEFAULT_PROVIDER_NAME = "_DEFAULT_PROVIDER_NAME";
+
 		/// <summary>
 		/// Dot representation
 		/// </summary>
@@ -138,6 +149,171 @@ namespace IBatisNet.DataMapper.Configuration
 			_paramParser = new InlineParameterMapParser(_configScope.ErrorContext);
 		}
 		#endregion 
+
+		#region Configure
+
+		/// <summary>
+		/// Configure an SqlMap from default resource file named SqlMap.config.
+		/// </summary>
+		/// <returns>An SqlMap</returns>
+		/// <remarks>The file path is relative to the application root.</remarks>
+		public SqlMapper Configure()
+		{
+			return Configure( Resources.GetConfigAsXmlDocument(DomSqlMapBuilder.DEFAULT_FILE_CONFIG_NAME) );
+		}
+
+		/// <summary>
+		/// Configure an SqlMap.
+		/// </summary>
+		/// <param name="document">An xml sql map configuration document.</param>
+		/// <returns>the SqlMap</returns>
+		public SqlMapper Configure( XmlDocument document )
+		{
+			return Build( document, false );
+		}
+
+		/// <summary>
+		/// Configure an SqlMap from via a relative ressource path.
+		/// </summary>
+		/// <param name="resource">
+		/// A relative ressource path from your Application root.
+		/// </param>
+		/// <returns>An SqlMap</returns>
+		public SqlMapper Configure(string resource)
+		{
+			XmlDocument document = null;
+			if (resource.StartsWith("file://"))
+			{
+				document = Resources.GetUrlAsXmlDocument( resource.Remove(0, 7) );	
+			}
+			else
+			{
+				document = Resources.GetResourceAsXmlDocument( resource );	
+			}
+			return Build( document, false);
+		}
+
+		/// <summary>
+		///  Configure an SqlMap from via a stream.
+		/// </summary>
+		/// <param name="resource">A stream resource</param>
+		/// <returns>An SqlMap</returns>
+		public SqlMapper Configure(Stream resource)
+		{
+			XmlDocument document = Resources.GetStreamAsXmlDocument( resource );
+			return Build( document, false);
+		}
+
+		/// <summary>
+		///  Configure an SqlMap from via a FileInfo.
+		/// </summary>
+		/// <param name="resource">A FileInfo resource</param>
+		/// <returns>An SqlMap</returns>
+		public SqlMapper Configure(FileInfo resource)
+		{
+			XmlDocument document = Resources.GetFileInfoAsXmlDocument( resource );
+			return Build( document, false);
+		}
+
+		/// <summary>
+		///  Configure an SqlMap from via an Uri.
+		/// </summary>
+		/// <param name="resource">A Uri resource</param>
+		/// <returns></returns>
+		public SqlMapper Configure(Uri resource)
+		{
+			XmlDocument document = Resources.GetUriAsXmlDocument( resource );
+			return Build( document, false);
+		}
+
+		/// <summary>
+		/// Configure and monitor the default configuration file for modifications 
+		/// and automatically reconfigure SqlMap. 
+		/// </summary>
+		/// <returns>An SqlMap</returns>
+		public SqlMapper ConfigureAndWatch(ConfigureHandler configureDelegate)
+		{
+			return ConfigureAndWatch( DEFAULT_FILE_CONFIG_NAME, configureDelegate ) ;
+		}
+
+		/// <summary>
+		/// Configure and monitor the configuration file for modifications 
+		/// and automatically reconfigure SqlMap. 
+		/// </summary>
+		/// <param name="resource">
+		/// A relative ressource path from your Application root.
+		/// </param>
+		///<param name="configureDelegate">
+		/// Delegate called when the file has changed, to rebuild the dal.
+		/// </param>
+		/// <returns>An SqlMap</returns>
+		public SqlMapper ConfigureAndWatch( string resource, ConfigureHandler configureDelegate )
+		{
+			XmlDocument document = null;
+			if (resource.StartsWith("file://"))
+			{
+				document = Resources.GetUrlAsXmlDocument( resource.Remove(0, 7) );	
+			}
+			else
+			{
+				document = Resources.GetResourceAsXmlDocument( resource );	
+			}
+
+			ConfigWatcherHandler.ClearFilesMonitored();
+			ConfigWatcherHandler.AddFileToWatch( Resources.GetFileInfo( resource ) );
+
+			TimerCallback callBakDelegate = new TimerCallback( DomSqlMapBuilder.OnConfigFileChange );
+
+			StateConfig state = new StateConfig();
+			state.FileName = resource;
+			state.ConfigureHandler = configureDelegate;
+
+			new ConfigWatcherHandler( callBakDelegate, state );
+
+			return Build( document, true );
+		}
+
+		/// <summary>
+		/// Configure and monitor the configuration file for modifications 
+		/// and automatically reconfigure SqlMap. 
+		/// </summary>
+		/// <param name="resource">
+		/// A relative ressource path from your Application root.
+		/// </param>
+		///<param name="configureDelegate">
+		/// Delegate called when the file has changed, to rebuild the dal.
+		/// </param>
+		/// <returns>An SqlMap</returns>
+		public SqlMapper ConfigureAndWatch( FileInfo resource, ConfigureHandler configureDelegate )
+		{
+			XmlDocument document = Resources.GetFileInfoAsXmlDocument(resource);
+
+			ConfigWatcherHandler.ClearFilesMonitored();
+			ConfigWatcherHandler.AddFileToWatch( resource );
+
+			TimerCallback callBakDelegate = new TimerCallback( DomSqlMapBuilder.OnConfigFileChange );
+
+			StateConfig state = new StateConfig();
+			state.FileName = resource.FullName;
+			state.ConfigureHandler = configureDelegate;
+
+			new ConfigWatcherHandler( callBakDelegate, state );
+
+			return Build( document, true );
+		}
+
+		/// <summary>
+		/// Callback called when the SqlMap.config changed.
+		/// </summary>
+		/// <param name="obj">The state config.</param>
+		public static void OnConfigFileChange(object obj)
+		{
+			StateConfig state = (StateConfig)obj;
+			state.ConfigureHandler( null );
+		}
+		#endregion 
+
+
 
 		#region Methods
 

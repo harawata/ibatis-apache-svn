@@ -30,12 +30,10 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Data;
-using System.IO;
 using System.Text;
 using System.Threading;
 using System.Xml;
 using IBatisNet.Common;
-using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Utilities;
 using IBatisNet.DataMapper.Configuration;
 using IBatisNet.DataMapper.Configuration.Alias;
@@ -61,10 +59,6 @@ namespace IBatisNet.DataMapper
 		/// 
 		/// </summary>
 		public delegate void RowDelegate(object obj, IList list);
-
-		#region Contants
-		private const string DEFAULT_FILE_CONFIG_NAME = "sqlmap.config";
-		#endregion
 
 		#region Fields
 		//(MappedStatement Name, MappedStatement)
@@ -174,8 +168,9 @@ namespace IBatisNet.DataMapper
 		/// <summary>
 		/// Configure an SqlMap.
 		/// </summary>
-		/// <param name="document">An xml sql map onfiguration document.</param>
+		/// <param name="document">An xml sql map configuration document.</param>
 		/// <returns>the SqlMap</returns>
+		[Obsolete("This method will be remove in next version, use DomSqlMapBuilder.Configure.", false)]
 		static public SqlMapper Configure( XmlDocument document )
 		{
 			return new DomSqlMapBuilder().Build( document, false );
@@ -186,9 +181,10 @@ namespace IBatisNet.DataMapper
 		/// </summary>
 		/// <returns>An SqlMap</returns>
 		/// <remarks>The file path is relative to the application root.</remarks>
+		[Obsolete("This method will be remove in next version, use DomSqlMapBuilder.Configure.", false)]
 		static public SqlMapper Configure()
 		{
-			return Configure( Resources.GetConfigAsXmlDocument(DEFAULT_FILE_CONFIG_NAME) );
+			return Configure( Resources.GetConfigAsXmlDocument(DomSqlMapBuilder.DEFAULT_FILE_CONFIG_NAME) );
 		}
 
 
@@ -199,6 +195,7 @@ namespace IBatisNet.DataMapper
 		/// A relative ressource path from your Application root.
 		/// </param>
 		/// <returns>An SqlMap</returns>
+		[Obsolete("This method will be remove in next version, use DomSqlMapBuilder.Configure.", false)]
 		public static SqlMapper Configure(string resource)
 		{
 			XmlDocument document = null;
@@ -213,48 +210,16 @@ namespace IBatisNet.DataMapper
 			return new DomSqlMapBuilder().Build( document, false);
 		}
 
-		/// <summary>
-		///  Configure an SqlMap from via a stream.
-		/// </summary>
-		/// <param name="resource">A stream resource</param>
-		/// <returns>An SqlMap</returns>
-		public static SqlMapper Configure(Stream resource)
-		{
-			XmlDocument document = Resources.GetStreamAsXmlDocument( resource );
-			return new DomSqlMapBuilder().Build( document, false);
-		}
-
-		/// <summary>
-		///  Configure an SqlMap from via a FileInfo.
-		/// </summary>
-		/// <param name="resource">A FileInfo resource</param>
-		/// <returns>An SqlMap</returns>
-		public static SqlMapper Configure(FileInfo resource)
-		{
-			XmlDocument document = Resources.GetFileInfoAsXmlDocument( resource );
-			return new DomSqlMapBuilder().Build( document, false);
-		}
-
-
-		/// <summary>
-		///  Configure an SqlMap from via an Uri.
-		/// </summary>
-		/// <param name="resource">A Uri resource</param>
-		/// <returns></returns>
-		public static SqlMapper Configure(Uri resource)
-		{
-			XmlDocument document = Resources.GetUriAsXmlDocument( resource );
-			return new DomSqlMapBuilder().Build( document, false);
-		}
 
 		/// <summary>
 		/// Configure and monitor the default configuration file for modifications 
 		/// and automatically reconfigure SqlMap. 
 		/// </summary>
 		/// <returns>An SqlMap</returns>
+		[Obsolete("This method will be remove in next version, use DomSqlMapBuilder.Configure.", false)]
 		public static SqlMapper ConfigureAndWatch(ConfigureHandler configureDelegate)
 		{
-			return ConfigureAndWatch( DEFAULT_FILE_CONFIG_NAME, configureDelegate ) ;
+			return ConfigureAndWatch( DomSqlMapBuilder.DEFAULT_FILE_CONFIG_NAME, configureDelegate ) ;
 		}
 
 
@@ -269,6 +234,7 @@ namespace IBatisNet.DataMapper
 		/// Delegate called when the file has changed, to rebuild the dal.
 		/// </param>
 		/// <returns>An SqlMap</returns>
+		[Obsolete("This method will be remove in next version, use DomSqlMapBuilder.Configure.", false)]
 		public static SqlMapper ConfigureAndWatch( string resource, ConfigureHandler configureDelegate )
 		{
 			XmlDocument document = null;
@@ -284,55 +250,17 @@ namespace IBatisNet.DataMapper
 			ConfigWatcherHandler.ClearFilesMonitored();
 			ConfigWatcherHandler.AddFileToWatch( Resources.GetFileInfo( resource ) );
 
-			TimerCallback callBakDelegate = new TimerCallback( SqlMapper.OnConfigFileChange );
+			TimerCallback callBakDelegate = new TimerCallback( DomSqlMapBuilder.OnConfigFileChange );
 
 			StateConfig state = new StateConfig();
-			state.fileName = resource;
-			state.configureHandler = configureDelegate;
+			state.FileName = resource;
+			state.ConfigureHandler = configureDelegate;
 
 			new ConfigWatcherHandler( callBakDelegate, state );
 
 			return new DomSqlMapBuilder().Build( document, true );
 		}
 
-		/// <summary>
-		/// Configure and monitor the configuration file for modifications 
-		/// and automatically reconfigure SqlMap. 
-		/// </summary>
-		/// <param name="resource">
-		/// A relative ressource path from your Application root.
-		/// </param>
-		///<param name="configureDelegate">
-		/// Delegate called when the file has changed, to rebuild the dal.
-		/// </param>
-		/// <returns>An SqlMap</returns>
-		public static SqlMapper ConfigureAndWatch( FileInfo resource, ConfigureHandler configureDelegate )
-		{
-			XmlDocument document = Resources.GetFileInfoAsXmlDocument(resource);
-
-			ConfigWatcherHandler.ClearFilesMonitored();
-			ConfigWatcherHandler.AddFileToWatch( resource );
-
-			TimerCallback callBakDelegate = new TimerCallback( SqlMapper.OnConfigFileChange );
-
-			StateConfig state = new StateConfig();
-			state.fileName = resource.FullName;
-			state.configureHandler = configureDelegate;
-
-			new ConfigWatcherHandler( callBakDelegate, state );
-
-			return new DomSqlMapBuilder().Build( document, true );
-		}
-
-		/// <summary>
-		/// Callback called when the SqlMap.config changed.
-		/// </summary>
-		/// <param name="obj">The state config.</param>
-		public static void OnConfigFileChange(object obj)
-		{
-			StateConfig state = (StateConfig)obj;
-			state.configureHandler( null );
-		}
 
 		#endregion
 
