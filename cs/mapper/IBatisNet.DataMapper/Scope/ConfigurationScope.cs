@@ -89,14 +89,8 @@ namespace IBatisNet.DataMapper.Scope
 		/// </summary>
 		public bool ValidateSqlMap
 		{
-			set
-			{
-				_validateSqlMap = value;
-			}
-			get
-			{
-				return _validateSqlMap;
-			}
+			set { _validateSqlMap = value; }
+			get { return _validateSqlMap; }
 		}
 
 		/// <summary>
@@ -104,14 +98,8 @@ namespace IBatisNet.DataMapper.Scope
 		/// </summary>
 		public bool IsXmlValid
 		{
-			set
-			{
-				_isXmlValid = value;
-			}
-			get
-			{
-				return _isXmlValid;
-			}
+			set { _isXmlValid = value; }
+			get { return _isXmlValid; }
 		}
 
 
@@ -120,14 +108,8 @@ namespace IBatisNet.DataMapper.Scope
 		/// </summary>
 		public string SqlMapNamespace
 		{
-			set
-			{
-				_sqlMapNamespace = value;
-			}
-			get
-			{
-				return _sqlMapNamespace;
-			}
+			set { _sqlMapNamespace = value; }
+			get { return _sqlMapNamespace; }
 		}
 
 		/// <summary>
@@ -135,14 +117,8 @@ namespace IBatisNet.DataMapper.Scope
 		/// </summary>
 		public SqlMapper SqlMapper
 		{
-			set
-			{
-				_sqlMapper = value;
-			}
-			get
-			{
-				return _sqlMapper;
-			}
+			set { _sqlMapper = value; }
+			get { return _sqlMapper; }
 		}
 
 		/// <summary>
@@ -150,10 +126,7 @@ namespace IBatisNet.DataMapper.Scope
 		/// </summary>
 		internal TypeHandlerFactory TypeHandlerFactory
 		{
-			get
-			{
-				return _sqlMapper.TypeHandlerFactory;
-			}
+			get { return _sqlMapper.TypeHandlerFactory; }
 		}
 
 		/// <summary>
@@ -161,14 +134,8 @@ namespace IBatisNet.DataMapper.Scope
 		/// </summary>
 		public bool IsCallFromDao
 		{
-			set
-			{
-				_isCallFromDao = value;
-			}
-			get
-			{
-				return _isCallFromDao;
-			}
+			set { _isCallFromDao = value; }
+			get { return _isCallFromDao; }
 		}
 
 		/// <summary>
@@ -176,14 +143,8 @@ namespace IBatisNet.DataMapper.Scope
 		/// </summary>
 		public bool IsCacheModelsEnabled
 		{
-			set
-			{
-				_isCacheModelsEnabled = value;
-			}
-			get
-			{
-				return _isCacheModelsEnabled;
-			}
+			set { _isCacheModelsEnabled = value; }
+			get { return _isCacheModelsEnabled; }
 		}
 		
 
@@ -192,14 +153,8 @@ namespace IBatisNet.DataMapper.Scope
 		/// </summary>
 		public DataSource DataSource
 		{
-			set
-			{
-				_dataSource = value;
-			}
-			get
-			{
-				return _dataSource;
-			}
+			set { _dataSource = value; }
+			get { return _dataSource; }
 		}
 
 		/// <summary>
@@ -207,14 +162,8 @@ namespace IBatisNet.DataMapper.Scope
 		/// </summary>
 		public XmlNode NodeContext
 		{
-			set
-			{
-				_nodeContext = value;
-			}
-			get
-			{
-				return _nodeContext;
-			}
+			set { _nodeContext = value; }
+			get { return _nodeContext; }
 		}
 
 		/// <summary>
@@ -222,14 +171,8 @@ namespace IBatisNet.DataMapper.Scope
 		/// </summary>
 		public XmlDocument SqlMapConfigDocument
 		{
-			set
-			{
-				_sqlMapConfigDocument = value;
-			}
-			get
-			{
-				return _sqlMapConfigDocument;
-			}
+			set { _sqlMapConfigDocument = value; }
+			get { return _sqlMapConfigDocument; }
 		}
 
 		/// <summary>
@@ -237,14 +180,8 @@ namespace IBatisNet.DataMapper.Scope
 		/// </summary>
 		public XmlDocument SqlMapDocument
 		{
-			set
-			{
-				_sqlMapDocument = value;
-			}
-			get
-			{
-				return _sqlMapDocument;
-			}
+			set { _sqlMapDocument = value; }
+			get { return _sqlMapDocument; }
 		}
 
 		/// <summary>
@@ -252,14 +189,8 @@ namespace IBatisNet.DataMapper.Scope
 		/// </summary>
 		public bool UseConfigFileWatcher
 		{
-			set
-			{
-				_useConfigFileWatcher = value;
-			}
-			get
-			{
-				return _useConfigFileWatcher;
-			}
+			set { _useConfigFileWatcher = value; }
+			get { return _useConfigFileWatcher; }
 		}
 
 		/// <summary>
@@ -267,14 +198,8 @@ namespace IBatisNet.DataMapper.Scope
 		/// </summary>
 		public bool UseStatementNamespaces
 		{
-			set
-			{
-				_useStatementNamespaces = value;
-			}
-			get
-			{
-				return _useStatementNamespaces;
-			}
+			set { _useStatementNamespaces = value; }
+			get { return _useStatementNamespaces; }
 		}
 		
 		/// <summary>
@@ -282,10 +207,7 @@ namespace IBatisNet.DataMapper.Scope
 		/// </summary>
 		public ErrorContext ErrorContext
 		{
-			get
-			{
-				return _errorContext;
-			}
+			get { return _errorContext; }
 		}
 
 		/// <summary>
@@ -293,10 +215,7 @@ namespace IBatisNet.DataMapper.Scope
 		/// </summary>
 		public HybridDictionary Providers
 		{
-			get
-			{
-				return _providers;
-			}
+			get { return _providers; }
 		}
 
 		/// <summary>
@@ -304,10 +223,7 @@ namespace IBatisNet.DataMapper.Scope
 		/// </summary>
 		public NameValueCollection Properties
 		{
-			get
-			{
-				return _properties;
-			}
+			get { return _properties; }
 		}
 
 		/// <summary>
@@ -315,14 +231,8 @@ namespace IBatisNet.DataMapper.Scope
 		/// </summary>
 		public bool UseEmbedStatementParams
 		{
-			get
-			{
-				return _useEmbedStatementParams;
-			}
-			set
-			{
-				_useEmbedStatementParams = value;
-			}
+			get { return _useEmbedStatementParams; }
+			set { _useEmbedStatementParams = value; }
 		}
 
 		#endregion 

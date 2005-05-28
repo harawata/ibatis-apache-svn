@@ -28,6 +28,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Specialized;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -162,6 +163,7 @@ namespace IBatisNet.DataMapper.Configuration
 			return Configure( Resources.GetConfigAsXmlDocument(DomSqlMapBuilder.DEFAULT_FILE_CONFIG_NAME) );
 		}
 
+
 		/// <summary>
 		/// Configure an SqlMap.
 		/// </summary>
@@ -172,11 +174,13 @@ namespace IBatisNet.DataMapper.Configuration
 			return Build( document, false );
 		}
 
+
 		/// <summary>
-		/// Configure an SqlMap from via a relative ressource path.
+		/// Configure an SqlMap from a file path.
 		/// </summary>
 		/// <param name="resource">
-		/// A relative ressource path from your Application root.
+		/// A relative ressource path from your Application root 
+		/// or a absolue file path file:\\c:\dir\a.config
 		/// </param>
 		/// <returns>An SqlMap</returns>
 		public SqlMapper Configure(string resource)
@@ -193,8 +197,9 @@ namespace IBatisNet.DataMapper.Configuration
 			return Build( document, false);
 		}
 
+
 		/// <summary>
-		///  Configure an SqlMap from via a stream.
+		///  Configure an SqlMap from a stream.
 		/// </summary>
 		/// <param name="resource">A stream resource</param>
 		/// <returns>An SqlMap</returns>
@@ -204,8 +209,9 @@ namespace IBatisNet.DataMapper.Configuration
 			return Build( document, false);
 		}
 
+
 		/// <summary>
-		///  Configure an SqlMap from via a FileInfo.
+		///  Configure an SqlMap from a FileInfo.
 		/// </summary>
 		/// <param name="resource">A FileInfo resource</param>
 		/// <returns>An SqlMap</returns>
@@ -215,8 +221,9 @@ namespace IBatisNet.DataMapper.Configuration
 			return Build( document, false);
 		}
 
+
 		/// <summary>
-		///  Configure an SqlMap from via an Uri.
+		///  Configure an SqlMap from an Uri.
 		/// </summary>
 		/// <param name="resource">A Uri resource</param>
 		/// <returns></returns>
@@ -225,6 +232,7 @@ namespace IBatisNet.DataMapper.Configuration
 			XmlDocument document = Resources.GetUriAsXmlDocument( resource );
 			return Build( document, false);
 		}
+
 
 		/// <summary>
 		/// Configure and monitor the default configuration file for modifications 
@@ -236,12 +244,14 @@ namespace IBatisNet.DataMapper.Configuration
 			return ConfigureAndWatch( DEFAULT_FILE_CONFIG_NAME, configureDelegate ) ;
 		}
 
+
 		/// <summary>
 		/// Configure and monitor the configuration file for modifications 
 		/// and automatically reconfigure SqlMap. 
 		/// </summary>
 		/// <param name="resource">
-		/// A relative ressource path from your Application root.
+		/// A relative ressource path from your Application root 
+		/// or an absolue file path file:\\c:\dir\a.config
 		/// </param>
 		///<param name="configureDelegate">
 		/// Delegate called when the file has changed, to rebuild the dal.
@@ -273,12 +283,13 @@ namespace IBatisNet.DataMapper.Configuration
 			return Build( document, true );
 		}
 
+
 		/// <summary>
 		/// Configure and monitor the configuration file for modifications 
 		/// and automatically reconfigure SqlMap. 
 		/// </summary>
 		/// <param name="resource">
-		/// A relative ressource path from your Application root.
+		/// A FileInfo to your config file.
 		/// </param>
 		///<param name="configureDelegate">
 		/// Delegate called when the file has changed, to rebuild the dal.
@@ -302,6 +313,7 @@ namespace IBatisNet.DataMapper.Configuration
 			return Build( document, true );
 		}
 
+
 		/// <summary>
 		/// Callback called when the SqlMap.config changed.
 		/// </summary>
@@ -311,9 +323,8 @@ namespace IBatisNet.DataMapper.Configuration
 			StateConfig state = (StateConfig)obj;
 			state.ConfigureHandler( null );
 		}
+
 		#endregion 
-
-
 
 		#region Methods
 
@@ -333,7 +344,6 @@ namespace IBatisNet.DataMapper.Configuration
 			_configScope.DataSource = dataSource;
 			_configScope.IsCallFromDao = isCallFromDao;
 			_configScope.UseConfigFileWatcher = useConfigFileWatcher;
-
 			
 			try
 			{
@@ -346,6 +356,7 @@ namespace IBatisNet.DataMapper.Configuration
 				throw new ConfigurationException(_configScope.ErrorContext.ToString(), e);
 			}
 		}
+
 
 		/// <summary>
 		/// validate againts schema
@@ -391,6 +402,7 @@ namespace IBatisNet.DataMapper.Configuration
 			}
 		}
 
+
 		private void ValidationCallBack( object sender, ValidationEventArgs args )
 		{
 			_configScope.IsXmlValid = false;
@@ -399,10 +411,16 @@ namespace IBatisNet.DataMapper.Configuration
 
 		/// <summary>
 		/// Load statement, parameters, resultmap.
-		/// Used by Dao
 		/// </summary>
-		public SqlMapper Build(XmlDocument document, DataSource dataSource, bool useConfigFileWatcher)
+		/// <param name="document"></param>
+		/// <param name="dataSource"></param>
+		/// <param name="useConfigFileWatcher"></param>
+		/// <param name="properties"></param>
+		/// <returns></returns>
+		/// <remarks>Used by Dao</remarks>
+		public SqlMapper Build(XmlDocument document, DataSource dataSource, bool useConfigFileWatcher, NameValueCollection properties)
 		{
+			_configScope.Properties.Add(properties);
 			return Build(document, dataSource, useConfigFileWatcher, true);
 		}
 
@@ -638,7 +656,6 @@ namespace IBatisNet.DataMapper.Configuration
 			_configScope.ErrorContext.Reset();
 			#endregion 
 
-
 			#region Resolve "resultMap" attribute on Result Property + initialize Discriminator property 
 
 			foreach(DictionaryEntry entry in _configScope.SqlMapper.ResultMaps)
@@ -663,7 +680,6 @@ namespace IBatisNet.DataMapper.Configuration
 			_configScope.ErrorContext.Reset();
 
 			#endregion
-
 
 		}
 

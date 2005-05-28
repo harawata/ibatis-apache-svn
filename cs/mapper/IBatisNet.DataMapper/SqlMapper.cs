@@ -181,7 +181,7 @@ namespace IBatisNet.DataMapper
 		/// </summary>
 		/// <returns>An SqlMap</returns>
 		/// <remarks>The file path is relative to the application root.</remarks>
-		[Obsolete("This method will be remove in next version, use DomSqlMapBuilder.Configure.", false)]
+		[Obsolete("This method will be remove in future version, use DomSqlMapBuilder.Configure.", false)]
 		static public SqlMapper Configure()
 		{
 			return Configure( Resources.GetConfigAsXmlDocument(DomSqlMapBuilder.DEFAULT_FILE_CONFIG_NAME) );
@@ -192,10 +192,11 @@ namespace IBatisNet.DataMapper
 		/// Configure an SqlMap from via a relative ressource path.
 		/// </summary>
 		/// <param name="resource">
-		/// A relative ressource path from your Application root.
+		/// A relative ressource path from your Application root 
+		/// or an absolue file path file:\\c:\dir\a.config
 		/// </param>
 		/// <returns>An SqlMap</returns>
-		[Obsolete("This method will be remove in next version, use DomSqlMapBuilder.Configure.", false)]
+		[Obsolete("This method will be remove in future version, use DomSqlMapBuilder.Configure.", false)]
 		public static SqlMapper Configure(string resource)
 		{
 			XmlDocument document = null;
@@ -216,7 +217,7 @@ namespace IBatisNet.DataMapper
 		/// and automatically reconfigure SqlMap. 
 		/// </summary>
 		/// <returns>An SqlMap</returns>
-		[Obsolete("This method will be remove in next version, use DomSqlMapBuilder.Configure.", false)]
+		[Obsolete("This method will be remove in future version, use DomSqlMapBuilder.Configure.", false)]
 		public static SqlMapper ConfigureAndWatch(ConfigureHandler configureDelegate)
 		{
 			return ConfigureAndWatch( DomSqlMapBuilder.DEFAULT_FILE_CONFIG_NAME, configureDelegate ) ;
@@ -228,13 +229,14 @@ namespace IBatisNet.DataMapper
 		/// and automatically reconfigure SqlMap. 
 		/// </summary>
 		/// <param name="resource">
-		/// A relative ressource path from your Application root.
+		/// A relative ressource path from your Application root 
+		/// or a absolue file path file:\\c:\dir\a.config
 		/// </param>
 		///<param name="configureDelegate">
 		/// Delegate called when the file has changed, to rebuild the dal.
 		/// </param>
 		/// <returns>An SqlMap</returns>
-		[Obsolete("This method will be remove in next version, use DomSqlMapBuilder.Configure.", false)]
+		[Obsolete("This method will be remove in future version, use DomSqlMapBuilder.Configure.", false)]
 		public static SqlMapper ConfigureAndWatch( string resource, ConfigureHandler configureDelegate )
 		{
 			XmlDocument document = null;
