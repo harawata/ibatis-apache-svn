@@ -1044,12 +1044,12 @@ IBatisNet.Test"</programlisting></entry>
           </example></para>
 
         <tip>
-          <para>Since the root directory location differs by project type
-          (Windows, Web, or library), it is best to use a properties variable
-          to indicate the relative path when using the &lt;sqlMap&gt;
-          "resource" attribute. Having a variable defined in a properties file
-          makes it easy to change the path to all your Data Mapper
-          configuration resources in one location.</para>
+          <para>Since the application root directory location differs by
+          project type (Windows, Web, or library), it is best to use a
+          properties variable to indicate the relative path when using the
+          &lt;sqlMap&gt; "resource" attribute. Having a variable defined in a
+          properties file makes it easy to change the path to all your Data
+          Mapper configuration resources in one location.</para>
         </tip>
       </sect3>
     </sect2>
@@ -1226,21 +1226,21 @@ SqlMapper access = AccessMapper.Get();</programlisting></para>
         fact, there are even more options since you can load the configuration
         file through a <classname>Stream</classname>,
         <classname>Uri</classname>, <classname>FileInfo</classname>, or
-        <classname>XmlDocument</classname> instance to just name a few. Below
-        is the <classname>DomSqlMapBuilder</classname> API for creating a
+        <classname>XmlDocument</classname> instance. Below is the
+        <classname>DomSqlMapBuilder</classname> API for creating a
         <classname>SqlMapper</classname> instance.</para>
 
         <para><programlisting>[C#]
 <emphasis role="comment">/* Configure a SqlMapper using the default filename (SqlMap.config)
- * in the project type's default location (application root directory). */</emphasis>
+   in the project type's default location (application root directory). */</emphasis>
 public SqlMapper Configure()
 
 <emphasis role="comment">/* Configure a SqlMapper with an XmlDocument */</emphasis>
 public SqlMapper Configure( XmlDocument document )
 
 <emphasis role="comment">/* Configure a SqlMapper from a file path.
- *  Uses a relative resource path from your application root 
- *  or a absolute file path such as "file:\\c:\dir\a.config" */
+   Uses a relative resource path from your application root 
+   or a absolute file path such as "file:\\c:\dir\a.config" */
 </emphasis>public SqlMapper Configure(string resource)
 
 <emphasis role="comment">/* Configure a SqlMapper from a stream. */</emphasis>
@@ -1253,19 +1253,30 @@ public SqlMapper Configure(FileInfo resource)
 public SqlMapper Configure(Uri resource)
 
 <emphasis role="comment">/* Configure and monitor the default configuration file for modifications 
- *  and automatically reconfigure the SqlMapper. */
+   and automatically reconfigure the SqlMapper. */
 </emphasis>public SqlMapper ConfigureAndWatch(ConfigureHandler configureDelegate)
 
 <emphasis role="comment">/* Configure and monitor the configuration file for modifications 
- *  and automatically reconfigure the SqlMapper. 
- *  Uses a relative path from your application root 
- *  or an absolute file path such as "file:\\c:\dir\a.config" */
+   and automatically reconfigure the SqlMapper. 
+   Uses a relative path from your application root 
+   or an absolute file path such as "file:\\c:\dir\a.config" */
 </emphasis>public SqlMapper ConfigureAndWatch( string resource, ConfigureHandler configureDelegate )
 
 <emphasis role="comment">/* Configure and monitor the configuration file for modifications 
- *  and automatically reconfigure the SqlMapper. 
- *  Uses a FileInfo instance for your config file. */</emphasis>
-public SqlMapper ConfigureAndWatch( FileInfo resource, ConfigureHandler configureDelegate )</programlisting></para>
+   and automatically reconfigure the SqlMapper. 
+   Uses a FileInfo instance for your config file. */</emphasis>
+public SqlMapper ConfigureAndWatch( FileInfo resource, ConfigureHandler configureDelegate )</programlisting><tip>
+            <para>Since the application root directory location differs by
+            project type (Windows, Web, or library), you can use an
+            AppSettings key for defining a relative path to your SqlMap.config
+            file:</para>
+
+            <programlisting>mapper = builder.Configure(
+         ConfigurationSettings.AppSettings["rootPath"]+"SqlMap.config");</programlisting>
+
+            <para>Having this defined makes it easy to change the path without
+            having to recompile your code.</para>
+          </tip></para>
       </sect3>
     </sect2>
 
@@ -1340,8 +1351,7 @@ public void RollBackTransaction(bool closeConnection)
       <sect3>
         <title>Insert, Update, Delete</title>
 
-        <para><programlisting>
-public object Insert(string statementName,
+        <para><programlisting>public object Insert(string statementName,
                      object parameterObject);
 public int Update(string statementName,
                   object parameterObject);
