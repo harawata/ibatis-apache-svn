@@ -52,6 +52,7 @@ using IBatisNet.DataMapper.Configuration.Statements;
 using IBatisNet.DataMapper.MappedStatements;
 using IBatisNet.DataMapper.Scope;
 using IBatisNet.DataMapper.TypeHandlers;
+using log4net;
 
 #endregion
 
@@ -75,6 +76,9 @@ namespace IBatisNet.DataMapper.Configuration
 		#endregion
 
 		#region Constant
+
+		private const string PROPERTY_ELEMENT_KEY_ATTRIB = "key";
+		private const string PROPERTY_ELEMENT_VALUE_ATTRIB = "value";
 
 		/// <summary>
 		/// Default congig name
@@ -133,6 +137,8 @@ namespace IBatisNet.DataMapper.Configuration
 		#endregion
 
 		#region Fields
+
+		private static readonly ILog _logger = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
 		private ConfigurationScope _configScope = null;
 		private InlineParameterMapParser _paramParser = null;
@@ -1337,21 +1343,49 @@ namespace IBatisNet.DataMapper.Configuration
 			
 			if (nodeProperties != null)
 			{
-				// JIRA-38 Fix 
-				// <properties> element's InnerXml is currently an empty string anyway
-				// since <settings> are in properties file
-				//_configScope.ErrorContext.Resource = nodeProperties.InnerXml.ToString();
-				_configScope.ErrorContext.Resource = nodeProperties.OuterXml.ToString();
-
-				// Load the file defined by the resource attribute
-				XmlDocument propertiesConfig = Resources.GetAsXmlDocument(nodeProperties, _configScope.Properties); 
-
-				foreach (XmlNode node in propertiesConfig.SelectNodes("/settings/add"))
+				if (nodeProperties.HasChildNodes)
 				{
-					_configScope.Properties[node.Attributes["key"].Value] = node.Attributes["value"].Value;
+					foreach (XmlNode propertyNode in nodeProperties.SelectNodes("propertie"))
+					{
+						XmlAttribute keyAttrib = propertyNode.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB];
+						XmlAttribute valueAttrib = propertyNode.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB];
+
+						if ( keyAttrib != null && valueAttrib!=null)
+						{
+							_configScope.Properties.Add( keyAttrib.Value,  valueAttrib.Value);
+							_logger.Info( string.Format("Add propertie \"{0}\" value \"{1}\"",keyAttrib.Value,valueAttrib.Value) );
+						}
+						else
+						{
+							// Load the file defined by the attribute
+							XmlDocument propertiesConfig = Resources.GetAsXmlDocument(propertyNode, _configScope.Properties); 
+							
+							foreach (XmlNode node in propertiesConfig.SelectNodes("/settings/add"))
+							{
+								_configScope.Properties[node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value] = node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value;
+								_logger.Info( string.Format("Add propertie \"{0}\" value \"{1}\"",node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value,node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value) );
+							}
+						}
+					}
+				}
+				else
+				{
+					// JIRA-38 Fix 
+					// <properties> element's InnerXml is currently an empty string anyway
+					// since <settings> are in properties file
+
+					_configScope.ErrorContext.Resource = nodeProperties.OuterXml.ToString();
+
+					// Load the file defined by the attribute
+					XmlDocument propertiesConfig = Resources.GetAsXmlDocument(nodeProperties, _configScope.Properties); 
+
+					foreach (XmlNode node in propertiesConfig.SelectNodes("/settings/add"))
+					{
+						_configScope.Properties[node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value] = node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value;
+						_logger.Info( string.Format("Add propertie \"{0}\" value \"{1}\"",node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value,node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value) );
+					}					
 				}
 			}
-
 			_configScope.ErrorContext.Reset();;
 		}
 
