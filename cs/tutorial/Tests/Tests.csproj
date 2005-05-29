@@ -71,14 +71,14 @@
                     AssemblyFolderKey = "hklm\dn\nunit.framework"
                 />
                 <Reference
-                    Name = "Model"
-                    Project = "{9024A1F6-D029-4CB0-99C1-6B50EC1BDFB3}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
                     Name = "IBatisNet.DataMapper"
                     AssemblyName = "IBatisNet.DataMapper"
                     HintPath = "..\..\mapper\IBatisNet.DataMapper\bin\Debug\IBatisNet.DataMapper.dll"
+                />
+                <Reference
+                    Name = "iBatisTutorial.Model"
+                    AssemblyName = "iBatisTutorial.Model"
+                    HintPath = "..\Model\bin\Debug\iBatisTutorial.Model.dll"
                 />
             </References>
         </Build>
@@ -90,15 +90,19 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "bin\Debug\properties.config"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "bin\Debug\providers.config"
+                    BuildAction = "None"
+                />
+                <File
                     RelPath = "bin\Debug\sqlmap.config"
                     BuildAction = "None"
                 />
                 <File
                     RelPath = "Resources\PersonHelper.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Resources\properties.xml"
                     BuildAction = "Content"
                 />
             </Include>

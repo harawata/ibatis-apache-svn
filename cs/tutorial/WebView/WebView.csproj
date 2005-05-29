@@ -124,6 +124,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "properties.config"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "providers.config"
                     BuildAction = "None"
                 />
@@ -157,10 +161,6 @@
                 />
                 <File
                     RelPath = "Resources\PersonHelper.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Resources\properties.xml"
                     BuildAction = "Content"
                 />
             </Include>

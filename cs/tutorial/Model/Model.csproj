@@ -82,13 +82,12 @@
                 <Reference
                     Name = "nunit.framework"
                     AssemblyName = "nunit.framework"
-                    HintPath = "..\..\..\..\..\Program Files\NUnit 2.2\bin\nunit.framework.dll"
-                    AssemblyFolderKey = "hklm\dn\nunit.framework"
+                    HintPath = "bin\Debug\nunit.framework.dll"
                 />
                 <Reference
                     Name = "IBatisNet.DataMapper"
                     AssemblyName = "IBatisNet.DataMapper"
-                    HintPath = "..\..\mapper\IBatisNet.DataMapper\bin\Debug\IBatisNet.DataMapper.dll"
+                    HintPath = "bin\Debug\IBatisNet.DataMapper.dll"
                 />
             </References>
         </Build>
@@ -120,6 +119,10 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "bin\Debug\properties.config"
+                    BuildAction = "None"
+                />
+                <File
                     RelPath = "bin\Debug\providers.config"
                     BuildAction = "None"
                 />
@@ -129,10 +132,6 @@
                 />
                 <File
                     RelPath = "Resources\PersonHelper.xml"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Resources\properties.xml"
                     BuildAction = "Content"
                 />
             </Include>
