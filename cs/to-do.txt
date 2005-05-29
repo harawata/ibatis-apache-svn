@@ -13,7 +13,6 @@ Docs
  + Add new API to DomDaoManagerBuilder.Configure(...)/DomDaoManagerBuilder.Configure(...)
    [tell that old API SqlMApper.Configure(...) are marked as  obsolete]
  + DataAccess Configuration changes
- + Tutorial changes for SqlMap.config (with properties variable for relative path) and new DomSqlMapBuilder configuration API
  + Add more .NET DataMapper coding examples (at least the code!)
  + DataAccess : New syntax to configure daoSessionHandler (old is too supported)
    <daoSessionHandler id="SqlMap">
@@ -22,6 +21,7 @@ Docs
        <property name="embedded" value="bin.Debug.SqlMap_MSSQL_SqlClient.config, IBatisNet.DataAccess.Test"/> 			
    </daoSessionHandler>
 
+ + DONE Tutorial changes for SqlMap.config (with properties variable for relative path) and new DomSqlMapBuilder configuration API
  + DONE DataMapper Configuration changes (ex: properties support in diff't SqlMap.config elements)
  + DONE Add doc for providers tag with attribute resource/embedded/url
  + DONE Update NAnt doc.build for 1.2?

@@ -53,8 +53,8 @@
       directory and extract the distribution there.</para>
 
       <para>Under the distribution's <filename>source</filename> folder are
-      eight other folders that make up the iBATIS.NET distribution, as shown
-      in Table 4.1.<table>
+      eight folders that make up the iBATIS.NET distribution, as shown in
+      Table 4.1.<table>
           <title>Folders found in the iBATIS.NET source distribution</title>
 
           <tgroup cols="2">
