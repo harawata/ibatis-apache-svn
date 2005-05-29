@@ -34,7 +34,7 @@
       <title>Remark</title>
 
       <para>Original writting by Clinton Begin. Adaptation by Ted Husted and
-      Gilles Bayon with the aimable permission of Clinton Begin.</para>
+      Gilles Bayon with the aimiable permission of Clinton Begin.</para>
     </sect2>
   </sect1>
 
@@ -236,6 +236,8 @@ namespace iBatisTutorial.Model
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
   xsi:noNamespaceSchemaLocation="SqlMapConfig.xsd"&gt;
 
+ &lt;properties resource="properties.config"/&gt;
+
  &lt;settings&gt;
   &lt;setting useStatementNamespaces="false"/&gt;
   &lt;setting cacheModelsEnabled="false"/&gt;
@@ -248,7 +250,7 @@ namespace iBatisTutorial.Model
  &lt;/database&gt;
 
  &lt;sqlMaps&gt;
-  &lt;sqlMap resource="./Resources/PersonHelper.xml"/&gt;
+  &lt;sqlMap resource="${root}Resources/PersonHelper.xml"/&gt;
  &lt;/sqlMaps&gt;
 
 &lt;/sqlMapConfig&gt;</programlisting>
@@ -263,7 +265,23 @@ namespace iBatisTutorial.Model
     as many documents as we need here, and they will all be read when the
     configuration is parsed.</para>
 
-    <para>OK, so how does the configuration get parsed?</para>
+    <para><tip>
+        <para>Did you notice the <varname>${root}</varname> variable placed in
+        the path to PersonHelper.xml? This variable is defined as a
+        "key-value" pair in a <filename>properties.config</filename> file. We
+        are using this properties variable since the application root
+        directory differs by project type (Web, Windows, and library) and can
+        cause lots of headaches when trying to figure out relative paths from
+        that root directory. Typically, the application root directory is
+        where you place your <filename>web.config</filename> or
+        <filename>app.config</filename> file. If we deploy this project as
+        part of an NUnit test library one day and as part of a Web app the
+        next day, we can easily switch our root path from "../../" to "./" in
+        one location, our properties.config file, by using this variable.
+        Otherwise, we would have to change all the relative paths defined in
+        our <filename>SqlMap.config </filename>file. See the DataMapper Guide
+        for more details on using properties files.</para>
+      </tip>OK, so how does the configuration get parsed?</para>
 
     <para>Look back at Example 2. The heart of the code is the call to the
     "Mapper" object (under the remark "try it"). The
