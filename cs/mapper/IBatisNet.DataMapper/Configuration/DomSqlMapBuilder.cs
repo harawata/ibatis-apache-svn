@@ -160,7 +160,7 @@ namespace IBatisNet.DataMapper.Configuration
 		#region Configure
 
 		/// <summary>
-		/// Configure an SqlMap from default resource file named SqlMap.config.
+		/// Configure a SqlMapper from default resource file named SqlMap.config.
 		/// </summary>
 		/// <returns>An SqlMap</returns>
 		/// <remarks>The file path is relative to the application root.</remarks>
@@ -182,7 +182,7 @@ namespace IBatisNet.DataMapper.Configuration
 
 
 		/// <summary>
-		/// Configure an SqlMap from a file path.
+		/// Configure a SqlMapper from a file path.
 		/// </summary>
 		/// <param name="resource">
 		/// A relative ressource path from your Application root 
@@ -205,7 +205,7 @@ namespace IBatisNet.DataMapper.Configuration
 
 
 		/// <summary>
-		///  Configure an SqlMap from a stream.
+		///  Configure a SqlMapper from a stream.
 		/// </summary>
 		/// <param name="resource">A stream resource</param>
 		/// <returns>An SqlMap</returns>
@@ -217,7 +217,7 @@ namespace IBatisNet.DataMapper.Configuration
 
 
 		/// <summary>
-		///  Configure an SqlMap from a FileInfo.
+		///  Configure a SqlMapper from a FileInfo.
 		/// </summary>
 		/// <param name="resource">A FileInfo resource</param>
 		/// <returns>An SqlMap</returns>
@@ -229,7 +229,7 @@ namespace IBatisNet.DataMapper.Configuration
 
 
 		/// <summary>
-		///  Configure an SqlMap from an Uri.
+		///  Configure a SqlMapper from an Uri.
 		/// </summary>
 		/// <param name="resource">A Uri resource</param>
 		/// <returns></returns>
@@ -1345,7 +1345,7 @@ namespace IBatisNet.DataMapper.Configuration
 			{
 				if (nodeProperties.HasChildNodes)
 				{
-					foreach (XmlNode propertyNode in nodeProperties.SelectNodes("propertie"))
+					foreach (XmlNode propertyNode in nodeProperties.SelectNodes("property"))
 					{
 						XmlAttribute keyAttrib = propertyNode.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB];
 						XmlAttribute valueAttrib = propertyNode.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB];
@@ -1353,7 +1353,7 @@ namespace IBatisNet.DataMapper.Configuration
 						if ( keyAttrib != null && valueAttrib!=null)
 						{
 							_configScope.Properties.Add( keyAttrib.Value,  valueAttrib.Value);
-							_logger.Info( string.Format("Add propertie \"{0}\" value \"{1}\"",keyAttrib.Value,valueAttrib.Value) );
+							_logger.Info( string.Format("Add property \"{0}\" value \"{1}\"",keyAttrib.Value,valueAttrib.Value) );
 						}
 						else
 						{
@@ -1363,7 +1363,7 @@ namespace IBatisNet.DataMapper.Configuration
 							foreach (XmlNode node in propertiesConfig.SelectNodes("/settings/add"))
 							{
 								_configScope.Properties[node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value] = node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value;
-								_logger.Info( string.Format("Add propertie \"{0}\" value \"{1}\"",node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value,node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value) );
+								_logger.Info( string.Format("Add property \"{0}\" value \"{1}\"",node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value,node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value) );
 							}
 						}
 					}
@@ -1382,7 +1382,7 @@ namespace IBatisNet.DataMapper.Configuration
 					foreach (XmlNode node in propertiesConfig.SelectNodes("/settings/add"))
 					{
 						_configScope.Properties[node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value] = node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value;
-						_logger.Info( string.Format("Add propertie \"{0}\" value \"{1}\"",node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value,node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value) );
+						_logger.Info( string.Format("Add property \"{0}\" value \"{1}\"",node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value,node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value) );
 					}					
 				}
 			}
