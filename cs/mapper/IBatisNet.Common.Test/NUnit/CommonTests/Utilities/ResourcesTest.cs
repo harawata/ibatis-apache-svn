@@ -89,7 +89,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 		#region GetConfigAsXmlDocument Tests
 
 		[Test] 
-		public void GetConfigAsXmlDocumentWithAbsolut() 
+		public void GetConfigAsXmlDocumentWithAbsolute() 
 		{ 
 			string resourcePath = Resources.ApplicationBase+Path.DirectorySeparatorChar+"SqlMap_MSSQL_SqlClient.config";
 			XmlDocument doc = Resources.GetConfigAsXmlDocument(resourcePath);

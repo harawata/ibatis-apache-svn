@@ -55,7 +55,7 @@
       <para>Under the distribution's <filename>source</filename> folder are
       eight other folders that make up the iBATIS.NET distribution, as shown
       in Table 4.1.<table>
-          <title>Folders found in the iBATIS.NET distribution</title>
+          <title>Folders found in the iBATIS.NET source distribution</title>
 
           <tgroup cols="2">
             <thead>
@@ -362,7 +362,7 @@
         variable <varname>${username}</varname> to insert the value
         "<emphasis>albert</emphasis>". For example:</para>
 
-        <programlisting>&lt;dataSource connectionString="user id=${username}; </programlisting>
+        <programlisting>&lt;dataSource connectionString="user id=${username};" </programlisting>
 
         <para>Properties are handy during building, testing, and deployment by
         making it easy to reconfigure your application for multiple
@@ -420,6 +420,80 @@ url="file://<filename>c:\Web\MyApp\Resources\properties</filename>.config"</prog
             </tgroup>
           </table>
         </sect4>
+
+        <sect4>
+          <title>&lt;property&gt; element and attributes</title>
+
+          <para>You can also specify more than one properties file or add
+          property keys and values directly into your
+          <filename>SqlMap.config</filename> file by using &lt;property&gt;
+          elements. For example:</para>
+
+          <informalexample>
+            <programlisting>&lt;properties&gt;
+ &lt;property resource="myProperties.config"/&gt;
+ &lt;property resource="anotherProperties.config"/&gt;
+ &lt;property key="host" value="ibatis.com" /&gt;
+&lt;/properties&gt;</programlisting>
+          </informalexample>
+
+          <table>
+            <title>Attributes of the &lt;property&gt; element</title>
+
+            <tgroup cols="2">
+              <thead>
+                <row>
+                  <entry>Attribute</entry>
+
+                  <entry>Description</entry>
+                </row>
+              </thead>
+
+              <tbody>
+                <row>
+                  <entry><emphasis>resource</emphasis></entry>
+
+                  <entry>Specify the properties file to be loaded from the
+                  root directory of the application<programlisting>resource="properties.config"</programlisting></entry>
+                </row>
+
+                <row>
+                  <entry><emphasis>url</emphasis></entry>
+
+                  <entry>Specify the properties file to be loaded through an
+                  absolute path.<programlisting>url="<filename>c:\Web\MyApp\Resources\properties</filename>.config"
+or
+url="file://<filename>c:\Web\MyApp\Resources\properties</filename>.config"</programlisting></entry>
+                </row>
+
+                <row>
+                  <entry><emphasis>embedded</emphasis></entry>
+
+                  <entry>Specify the properties file to be loaded as an
+                  embedded resource in an assembly. Syntax for the embedded
+                  attribute is '<emphasis>[extendednamespace.]filename, the
+                  name of the assembly which contains the embedded
+                  resource</emphasis>'<programlisting>embedded="Resources.properties.config, MyApp.Data"</programlisting></entry>
+                </row>
+
+                <row>
+                  <entry><emphasis>key</emphasis></entry>
+
+                  <entry>Defines a property key (variable)
+                  name<programlisting>key="username"</programlisting></entry>
+                </row>
+
+                <row>
+                  <entry><emphasis>value</emphasis></entry>
+
+                  <entry>Defines a value that will be used by the DataMapper
+                  in place of the the specified property
+                  key/variable<programlisting>value="mydbuser"</programlisting></entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </table>
+        </sect4>
       </sect3>
 
       <sect3>
@@ -436,55 +510,55 @@ url="file://<filename>c:\Web\MyApp\Resources\properties</filename>.config"</prog
 
         <para><itemizedlist>
             <listitem>
-              sqlServer1.0 - Microsoft SQL Server 7.0/2000 provider available with .NET Framework 1.0
+               sqlServer1.0 - Microsoft SQL Server 7.0/2000 provider available with .NET Framework 1.0 
             </listitem>
 
             <listitem>
-              sqlServer1.1 -Microsoft SQL Server 7.0/2000 provider available with .NET Framework 1.1
+               sqlServer1.1 -Microsoft SQL Server 7.0/2000 provider available with .NET Framework 1.1 
             </listitem>
 
             <listitem>
-              OleDb1.1 - OleDb provider available with .NET Framework 1.1
+               OleDb1.1 - OleDb provider available with .NET Framework 1.1 
             </listitem>
 
             <listitem>
-              Odbc1.1 - Odbc provider available with .NET Framework 1.1
+               Odbc1.1 - Odbc provider available with .NET Framework 1.1 
             </listitem>
 
             <listitem>
-              oracle9.2 - Oracle provider V9.2.0.401
+               oracle9.2 - Oracle provider V9.2.0.401 
             </listitem>
 
             <listitem>
-              oracle10.1 - Oracle provider V10.1.0.301
+               oracle10.1 - Oracle provider V10.1.0.301 
             </listitem>
 
             <listitem>
-              oracleClient1.0 - MS Oracle provider V1.0.5 available with .NET Framework 1.1
+               oracleClient1.0 - MS Oracle provider V1.0.5 available with .NET Framework 1.1 
             </listitem>
 
             <listitem>
-              ByteFx - ByteFx MySQL provider V0.7.6.15073
+               ByteFx - ByteFx MySQL provider V0.7.6.15073 
             </listitem>
 
             <listitem>
-              MySql - MySQL provider V1.0.4.20163
+               MySql - MySQL provider V1.0.4.20163 
             </listitem>
 
             <listitem>
-              SQLite3 - SQLite.NET provider V0.21.1869.3794
+               SQLite3 - SQLite.NET provider V0.21.1869.3794 
             </listitem>
 
             <listitem>
-              Firebird1.7 - Firebird SQL .NET provider V1.7.0.33200
+               Firebird1.7 - Firebird SQL .NET provider V1.7.0.33200 
             </listitem>
 
             <listitem>
-              PostgreSql0.7 - Npgsql provider V0.7.0.0
+               PostgreSql0.7 - Npgsql provider V0.7.0.0 
             </listitem>
 
             <listitem>
-              iDb2.10 - IBM DB2 iSeries provider V10.0.0.0
+               iDb2.10 - IBM DB2 iSeries provider V10.0.0.0 
             </listitem>
           </itemizedlist></para>
 
@@ -1084,6 +1158,16 @@ IBatisNet.Test"</programlisting></entry>
     <sect2>
       <title>Building a SqlMapper Instance</title>
 
+      <note>
+        <para>The SqlMapper API for configuration has been deprecated. The new
+        configuration API is now found within the DomSqlMapBuilder class. Old
+        method signatures have remained the same, and new methods for loading
+        SqlMap.config files through a <classname>Stream</classname>,
+        <classname>Uri</classname>, <classname>FileInfo</classname>, or
+        <classname>XmlDocument</classname> instance have been added for more
+        flexibility.</para>
+      </note>
+
       <para>An XML document is a wonderful tool for describing a database
       configuration (Section 5.2) or defining a set of data mappings (Section
       3), but you can't <emphasis>execute</emphasis> XML. In order to use the
@@ -1123,7 +1207,8 @@ namespace IBatisNet.DataMapper
   {
    ConfigureHandler handler = new ConfigureHandler(Configure);
    DomSqlMapBuilder builder = new DomSqlMapBuilder();
-   _mapper = builder.ConfigureAndWatch(handler);  }
+   _mapper = builder.ConfigureAndWatch(handler);
+  }
 
   public static SqlMapper Instance()
   {
@@ -1194,7 +1279,7 @@ IList list = Mapper.Instance().QueryForList("PermitNoForYearList", values);</pro
       instead:</para>
 
       <para><programlisting>[C#]
-mapper = builder.Configure();</programlisting></para>
+SqlMapper mapper = builder.Configure();</programlisting></para>
 
       <sect3>
         <title>Multiple Databases</title>
@@ -1206,7 +1291,7 @@ mapper = builder.Configure();</programlisting></para>
         <methodname>ConfigureAndWatch</methodname> to</para>
 
         <para><programlisting>[C#]
-mapper = builder.ConfigureAndWatch("anotherSqlMapConfig.config", handler);</programlisting></para>
+SqlMapper mapper = builder.ConfigureAndWatch("anotherSqlMapConfig.config", handler);</programlisting></para>
 
         <para>and substitute the name of your configuration file. Each
         database then has their own singleton you can call from your
@@ -1218,42 +1303,140 @@ SqlMapper access = AccessMapper.Get();</programlisting></para>
       </sect3>
 
       <sect3>
-        <title>Other DomSqlMapBuilder Configuration Options</title>
+        <title>DomSqlMapBuilder Configuration Options</title>
 
-        <para>iBATIS offers you more of the same flexibility found in loading
-        the Data Map files, <filename>providers.config</filename>, and
-        properties file for your <filename>SqlMap.config</filename> file. In
-        fact, there are even more options since you can load the configuration
-        file through a <classname>Stream</classname>,
-        <classname>Uri</classname>, <classname>FileInfo</classname>, or
-        <classname>XmlDocument</classname> instance. Below is the
+        <para>iBATIS offers you a plethora of other options for loading your
+        <filename>SqlMap.config</filename> file such as loading it through a
+        <classname>Stream</classname>, <classname>Uri</classname>,
+        <classname>FileInfo</classname>, or <classname>XmlDocument</classname>
+        instance. All of these methods are available through the
         <classname>DomSqlMapBuilder</classname> API for creating a
         <classname>SqlMapper</classname> instance.</para>
 
-        <para><programlisting>[C#]
-<emphasis role="comment">/* Configure a SqlMapper using the default filename (SqlMap.config)
-   in the project type's default location (application root directory). */</emphasis>
-public SqlMapper Configure()
+        <para>As seen in the prior section, the basic
+        <methodname>DomSqlMapBuilder.Configure()</methodname> call will look
+        for a file named <filename>SqlMap.config</filename> in your
+        application's root directory. This directory's location differs by
+        project type but is normally the directory where you place your
+        web.config or app.config file.</para>
 
-<emphasis role="comment">/* Configure a SqlMapper with an XmlDocument */</emphasis>
-public SqlMapper Configure( XmlDocument document )
+        <example>
+          <title>Basic SqlMapper Configuration</title>
 
-<emphasis role="comment">/* Configure a SqlMapper from a file path.
+          <programlisting>SqlMapper mapper = builder.Configure();</programlisting>
+        </example>
+
+        <para>If you have named your configuration file something other than
+        SqlMap.config or if you have located your configuration file in a
+        directory other than the application root directory, you can also pass
+        in a relative or absolute file path to the<methodname>
+        Configure</methodname> method.</para>
+
+        <example>
+          <title>SqlMapper Configuration through an absolute or relative file
+          path</title>
+
+          <programlisting><emphasis role="comment">/* Configure a SqlMapper from a file path.
    Uses a relative resource path from your application root 
-   or a absolute file path such as "file:\\c:\dir\a.config" */
-</emphasis>public SqlMapper Configure(string resource)
+   or an absolute file path such as "file:\\c:\dir\a.config" */
+</emphasis>SqlMapper mapper = builder.Configure(strPath);</programlisting>
+        </example>
 
-<emphasis role="comment">/* Configure a SqlMapper from a stream. */</emphasis>
-public SqlMapper Configure(Stream resource)
+        <tip>
+          <para>Since the application root directory location differs by
+          project type (Windows, Web, or library), you can use an AppSettings
+          key for defining a relative path to your SqlMap.config file. Having
+          this key defined makes it easy to change the path without having to
+          recompile your code:</para>
 
-<emphasis role="comment">/* Configure a SqlMapper with FileInfo. */</emphasis>
-public SqlMapper Configure(FileInfo resource)
+          <programlisting>mapper = builder.Configure(
+         ConfigurationSettings.AppSettings["rootPath"]+"SqlMap.config");</programlisting>
+        </tip>
+
+        <para>Aside from using a simple string filepath, you can also pass in
+        a <classname>FileInfo</classname> or <classname>Uri</classname>
+        instance for the <classname>DomSqlMapBuilder</classname> to use in
+        locating your <filename>SqlMap.config</filename> file.</para>
+
+        <example>
+          <title>SqlMapper Configuration with a FileInfo or Uri
+          instance</title>
+
+          <programlisting><emphasis role="comment">/* Configure a SqlMapper with FileInfo. */</emphasis>
+FileInfo aFileInfo = someSupportClass.GetDynamicFileInfo();
+SqlMapper mapper = builder.Configure(aFileInfo);
 
 <emphasis role="comment">/* Configure a SqlMapper through a Uri. */</emphasis>
-public SqlMapper Configure(Uri resource)
+Uri aUri = someSupportClass.GetDynamicUri();
+SqlMapper anotherMapper = builder.Configure(aUri);</programlisting>
+        </example>
 
-<emphasis role="comment">/* Configure and monitor the default configuration file for modifications 
-   and automatically reconfigure the SqlMapper. */
+        <para>If you find that you already have loaded your DataMapper
+        configuration information as an <classname>XmlDocument</classname> or
+        <classname>Stream </classname>instance within your application, the
+        <classname>DomSqlMapBuilder</classname> provides
+        <methodname>Configure</methodname> overloads for those types as
+        well.</para>
+
+        <example>
+          <title>SqlMapper Configuration with an XmlDocument or Stream</title>
+
+          <programlisting><emphasis role="comment">/* Configure a SqlMapper with an XmlDocument */</emphasis>
+XmlDocument anXmlDoc = someSupportClass.GetDynamicXmlDocument();
+SqlMapper mapper = builder.Configure(anXmlDoc);
+
+<emphasis role="comment">/* Configure a SqlMapper from a stream. */</emphasis>
+Stream aStream = someSupportClass.GetDynamicStream();
+SqlMapper anotherMapper = builder.Configure(aStream);</programlisting>
+        </example>
+
+        <para>The <classname>DomSqlMapBuilder</classname> API provides
+        <methodname>ConfigureAndWatch</methodname> methods that can be used to
+        monitor changes to the configuration files. This is particularly
+        useful when using a singleton such as the
+        <classname>Mapper</classname> class shown in the prior section. The
+        example <classname>Mapper</classname> singleton allows a reconfigured
+        <classname>SqlMapper</classname> instance to be reloaded on the fly.
+        </para>
+
+        <example>
+          <title>Mapper ConfigureHandler delegate</title>
+
+          <programlisting>...
+  protected static void Configure (object obj)
+  {
+   _mapper = null;
+  }
+
+  protected static void InitMapper()
+  {
+   ConfigureHandler handler = new ConfigureHandler(Configure);
+   DomSqlMapBuilder builder = new DomSqlMapBuilder();
+   _mapper = builder.ConfigureAndWatch(handler);
+  }
+...</programlisting>
+        </example>
+
+        <para>If you use a custom singleton, you will need to pass a
+        <classname>ConfigureHandler</classname> (callback delegate) to the
+        <classname>DomSqlMapBuilder</classname> so that it knows the method
+        for resetting your application's <classname>SqlMapper</classname>
+        instance. In the <classname>Mapper</classname>'s case, its
+        <methodname>Configure</methodname> method is used as the callback
+        delegate.</para>
+
+        <para>Since the configuration files need to be watched for changes,
+        your SqlMap.config file must be accessible through the file system.
+        This means that configuration is limited to the three methods shown
+        below.</para>
+
+        <example>
+          <title>DomSqlMapBuilder ConfigureAndWatch methods</title>
+
+          <programlisting><emphasis role="comment">/* Configure and monitor the configuration file for modifications 
+   and automatically reconfigure the SqlMapper. 
+   This basic ConfigureAndWatch method looks for a file with the 
+   default name of SqlMap.config in the application root directory. */
 </emphasis>public SqlMapper ConfigureAndWatch(ConfigureHandler configureDelegate)
 
 <emphasis role="comment">/* Configure and monitor the configuration file for modifications 
@@ -1265,18 +1448,8 @@ public SqlMapper Configure(Uri resource)
 <emphasis role="comment">/* Configure and monitor the configuration file for modifications 
    and automatically reconfigure the SqlMapper. 
    Uses a FileInfo instance for your config file. */</emphasis>
-public SqlMapper ConfigureAndWatch( FileInfo resource, ConfigureHandler configureDelegate )</programlisting><tip>
-            <para>Since the application root directory location differs by
-            project type (Windows, Web, or library), you can use an
-            AppSettings key for defining a relative path to your SqlMap.config
-            file:</para>
-
-            <programlisting>mapper = builder.Configure(
-         ConfigurationSettings.AppSettings["rootPath"]+"SqlMap.config");</programlisting>
-
-            <para>Having this defined makes it easy to change the path without
-            having to recompile your code.</para>
-          </tip></para>
+public SqlMapper ConfigureAndWatch( FileInfo resource, ConfigureHandler configureDelegate )</programlisting>
+        </example>
       </sect3>
     </sect2>
 

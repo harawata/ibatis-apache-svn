@@ -9,6 +9,7 @@ DataMapper 1.2
 --------------------
 Docs
 --------------------
+ + Update references in text to section #s and example #s in DataMapper and DataAccess guides resulting from edits
  + Add new API to DomDaoManagerBuilder.Configure(...)/DomDaoManagerBuilder.Configure(...)
    [tell that old API SqlMApper.Configure(...) are marked as  obsolete]
  + DataAccess Configuration changes
