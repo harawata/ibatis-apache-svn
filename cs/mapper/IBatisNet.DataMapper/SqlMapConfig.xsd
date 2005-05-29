@@ -42,10 +42,10 @@
 	</xs:element>
 	<xs:element name="setting">
 		<xs:complexType>
-			<xs:attribute name="useStatementNamespaces" type="xs:boolean"/>
-			<xs:attribute name="cacheModelsEnabled" type="xs:boolean"/>
-			<xs:attribute name="validateSqlMap" default="false" type="xs:boolean"/>
-			<xs:attribute name="useEmbedStatementParams" type="xs:boolean" default="false"/>
+			<xs:attribute name="useStatementNamespaces" type="xs:string"/>
+			<xs:attribute name="cacheModelsEnabled" type="xs:string"/>
+			<xs:attribute name="validateSqlMap" default="false" type="xs:string"/>
+			<xs:attribute name="useEmbedStatementParams" type="xs:string" default="false"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="settings">
@@ -72,8 +72,8 @@
 	<xs:element name="sqlMapConfig">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="settings" minOccurs="0" maxOccurs="1"/>
 				<xs:element ref="properties" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="settings" minOccurs="0" maxOccurs="1"/>
 				<xs:element ref="providers" minOccurs="0" maxOccurs="1"/>
 				<xs:element ref="database" minOccurs="0" maxOccurs="1"/>
 				<xs:element ref="alias" minOccurs="0" maxOccurs="1"/>

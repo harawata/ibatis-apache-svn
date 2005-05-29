@@ -3,7 +3,10 @@ IBatisNet Change Log
 ------------------------------
 1.2.* - XX/XX/XXXX
 ------------------------------
-- Updated dto Castle.DynamicProxy V1.1.0.0
+- Exchange order of settings and properties tag in config file
+- Add new API to DomSqlMapBuilder.Configure(...)[old API SqlMapper.Configure(...) are marked as obsolete]
+- Re-Add providers tag (optional) in SqlMap.Config
+- Updated to Castle.DynamicProxy V1.1.0.0
 - Impoved logging JIRA-35
 - Added support to validate SqlMap.config (automatic) and mapping file (manual) via setting tag (<setting validateSqlMap="false"/>)
 - Fixed grammar typo (JIRA-36, JIRA-40, JIRA-41, JIRA-44, JIRA-61, JIRA-64)

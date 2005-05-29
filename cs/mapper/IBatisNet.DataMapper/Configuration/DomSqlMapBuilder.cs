@@ -453,6 +453,14 @@ namespace IBatisNet.DataMapper.Configuration
 			
 			_configScope.SqlMapper = new SqlMapper( new TypeHandlerFactory() );
 
+			#region Load Global Properties
+			if (_configScope.IsCallFromDao == false)
+			{
+				_configScope.NodeContext = _configScope.SqlMapConfigDocument.SelectSingleNode(XML_CONFIG_ROOT);
+				ParseGlobalProperties();
+			}
+			#endregion
+
 			#region Load settings
 
 			_configScope.ErrorContext.Activity = "loading global settings";
@@ -464,21 +472,25 @@ namespace IBatisNet.DataMapper.Configuration
 				foreach (XmlNode setting in settings)
 				{
 					if (setting.Attributes[ATR_USE_STATEMENT_NAMESPACES] != null )
-					{				
-						_configScope.UseStatementNamespaces =  Convert.ToBoolean(setting.Attributes[ATR_USE_STATEMENT_NAMESPACES].Value); 
+					{	
+						string value = Resources.ParsePropertyTokens(setting.Attributes[ATR_USE_STATEMENT_NAMESPACES].Value, _configScope.Properties);
+						_configScope.UseStatementNamespaces =  Convert.ToBoolean( value ); 
 					}
 					if (setting.Attributes[ATR_CACHE_MODELS_ENABLED] != null )
-					{				
-						_configScope.IsCacheModelsEnabled =  Convert.ToBoolean(setting.Attributes[ATR_CACHE_MODELS_ENABLED].Value); 
+					{		
+						string value = Resources.ParsePropertyTokens(setting.Attributes[ATR_CACHE_MODELS_ENABLED].Value, _configScope.Properties);
+						_configScope.IsCacheModelsEnabled =  Convert.ToBoolean( value ); 
 					}
 					if (setting.Attributes[ATR_EMBED_STATEMENT_PARAMS] != null )
-					{				
-						_configScope.UseEmbedStatementParams =  Convert.ToBoolean(setting.Attributes[ATR_EMBED_STATEMENT_PARAMS].Value); 
+					{		
+						string value = Resources.ParsePropertyTokens(setting.Attributes[ATR_EMBED_STATEMENT_PARAMS].Value, _configScope.Properties);
+						_configScope.UseEmbedStatementParams =  Convert.ToBoolean( value ); 
 					}
 
 					if (setting.Attributes[ATR_VALIDATE_SQLMAP] != null )
-					{				
-						_configScope.ValidateSqlMap =  Convert.ToBoolean(setting.Attributes[ATR_VALIDATE_SQLMAP].Value); 
+					{		
+						string value = Resources.ParsePropertyTokens(setting.Attributes[ATR_VALIDATE_SQLMAP].Value, _configScope.Properties);
+						_configScope.ValidateSqlMap =  Convert.ToBoolean( value ); 
 					}
 				}
 			}
@@ -486,14 +498,6 @@ namespace IBatisNet.DataMapper.Configuration
 			_configScope.SqlMapper.SetCacheModelsEnabled(_configScope.IsCacheModelsEnabled);
 			_configScope.SqlMapper.SetUseEmbedStatementParams(_configScope.UseEmbedStatementParams);
 
-			#endregion
-
-			#region Load Global Properties
-			if (_configScope.IsCallFromDao == false)
-			{
-				_configScope.NodeContext = _configScope.SqlMapConfigDocument.SelectSingleNode(XML_CONFIG_ROOT);
-				ParseGlobalProperties();
-			}
 			#endregion
 
 			#region Load providers
