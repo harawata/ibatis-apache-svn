@@ -534,6 +534,12 @@
 	  </fo:inline>
 	</xsl:template>
 
+   	<xsl:template match="emphasis[@role='new']">
+	  <fo:inline background-color="#FFCC99" border="0.5pt solid black">
+		<xsl:apply-imports/>
+	  </fo:inline>
+	</xsl:template>
+
     <!-- Newer DocBook XSL apparently thinks that some sections are by
          default "draft" status, and this idiotic thing is by default
          also set to "maybe", so it spits out a lot of errors with the

@@ -423,7 +423,7 @@ url="file://<filename>c:\Web\MyApp\Resources\properties</filename>.config"</prog
       </sect3>
 
       <sect3>
-        <title>The &lt;providers&gt; Element</title>
+        <title>The &lt;providers&gt; Element<!--  <emphasis role="updated">Updated</emphasis> --></title>
 
         <para>Under ADO.NET, a database system is accessed through a provider.
         A database system can use a custom provider or a generic ODBC

@@ -242,3 +242,11 @@ HR  {
 .statement {
 	color: #339966;
 }
+.new {
+   border:thin solid black;
+	background-color:#FFF09E
+}
+.updated {
+    border:thin solid black;
+	background-color:#33FF33
+}

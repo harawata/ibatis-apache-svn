@@ -1194,7 +1194,8 @@ namespace WebShop.Domain
       </sect3>
 
       <sect3>
-        <title>typeHandler</title>
+        <title >typeHandler <!-- <emphasis role="new">New !</emphasis> --><!-- <inlinegraphic fileref="images/new.gif" format="GIF"/> -->
+<!-- <mediaobject> <imageobject><imagedata fileref="images/new.gif" format="GIF" /></imageobject></mediaobject> --></title>
 
         <para>The <parameter>typeHandler</parameter> attribute allows the use
         of a Custom Type Handler (see the Custom Type Handler section) to
