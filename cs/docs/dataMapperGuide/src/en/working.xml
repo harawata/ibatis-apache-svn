@@ -1200,8 +1200,8 @@ namespace WebShop.Domain
         allows you to extend the DataMapper's capabilities in handling types
         that are specific to your database provider, are not handled by your
         database provider, or just happen to be a part of your application
-        design. You can create custom type handlers to deal with storing
-        booleans and Guids in your database for example.</para>
+        design. You can create custom type handlers to deal with storing and
+        retrieving booleans and Guids from your database for example.</para>
       </sect3>
     </sect2>
 
@@ -1236,7 +1236,7 @@ namespace WebShop.Domain
       </example>
 
       <para>The next example shows how dbTypes and null value replacements can
-      also be declared.</para>
+      also be declared inline.</para>
 
       <example>
         <title>A &lt;statement&gt; using an inline parameter map with null
@@ -1251,7 +1251,8 @@ namespace WebShop.Domain
 
       <para>Like the DataMapper for Java, there is an alternate inline syntax
       that allows the specification of the property, type, dbType, and null
-      value replacement.</para>
+      value replacement. The following example shows that syntax in
+      use.</para>
 
       <example>
         <title>A &lt;statement&gt; using alternate inline syntax with
@@ -1291,7 +1292,7 @@ namespace WebShop.Domain
       <classname>String</classname>. Rather than wrap a single value in
       another object, you can use the standard library object
       (<classname>String</classname>, <classname>Integer</classname>, et
-      cetera) as the parameter directly. Example 3.19 shows a statement using
+      cetera) as the parameter directly. Example 3.22 shows a statement using
       a standard type parameter. <example>
           <title>A &lt;statement&gt; using standard type parameters</title>
 
@@ -1306,9 +1307,7 @@ namespace WebShop.Domain
       with the value of the Integer instance. The name
       <varname>value</varname> is simply a placeholder, you can use another
       moniker of your choice. Result Maps support primitive types as results
-      as well. For more information about using primitive types as parameters,
-      see Section 3.4, "Result Maps" and the "Programming iBATIS DataMapper"
-      section in the Developers Guide for your platform.</para>
+      as well.</para>
 
       <para>For your convenience, primitive types are aliased by the
       framework. For example, <classname>int</classname> can be used in place
@@ -1322,7 +1321,7 @@ namespace WebShop.Domain
 
       <para>You can also pass a <interfacename>IDictionary</interfacename>
       instance as a parameter object. This would usually be a
-      <classname>HashTable</classname>. Example 3.20 shows a &lt;statement&gt;
+      <classname>HashTable</classname>. Example 3.23 shows a &lt;statement&gt;
       using an <interfacename>IDictionary</interfacename> for a
       parameterClass.</para>
 
@@ -1337,19 +1336,13 @@ namespace WebShop.Domain
 &lt;/statement&gt;</programlisting>
         </example></para>
 
-      <para>In Example 24, notice that the SQL in this Mapped Statement looks
-      like any other. There is no difference in how the inline parameters are
-      used. If a <classname>HashTable</classname> instance is passed, it must
-      contain keys named <property>catId</property> and
+      <para>In Example 3.23, notice that the SQL in this Mapped Statement
+      looks like any other. There is no difference in how the inline
+      parameters are used. If a <classname>HashTable</classname> instance is
+      passed, it must contain keys named <property>catId</property> and
       <property>code</property>. The values referenced by those keys must be
       of the appropriate type for the column, just as they would be if passed
       from a properties object.</para>
-
-      <para>Result Maps support Map and
-      <interfacename>IDictionary</interfacename> types as results too. For
-      more information about using <classname>Map</classname> and
-      <interfacename>IDictionary</interfacename> types as parameters, see the
-      "Result Maps" and "Developer Guide" sections.</para>
 
       <para>For your convenience, <interfacename>IDictionary</interfacename>
       types are aliased by the framework. So, <classname>map</classname> or
@@ -1373,7 +1366,7 @@ namespace WebShop.Domain
     <para>A Result Map lets you control how data is extracted from the result
     of a query, and how the columns are mapped to object properties. A Result
     Map can describe the column type, a null value replacement, and complex
-    property mappings including Collections. Example 3.21 shows the structure
+    property mappings including Collections. Example 3.24 shows the structure
     of a &lt;resultMap&gt; element.<example>
         <title>The structure of a &lt;resultMap&gt; element.</title>
 
@@ -1404,7 +1397,7 @@ namespace WebShop.Domain
    &lt;subMap .../&gt; 
 &lt;/resultMap&gt;
 </programlisting></para>
-      </example>In Example 3.21, the [brackets] indicate optional attributes.
+      </example>In Example 3.24, the [brackets] indicate optional attributes.
     The <parameter>id</parameter> attribute is required and provides a name
     for the statement to reference. The class attribute is also required, and
     specifies a Type Alias or the fully qualified name of a class. This is the
@@ -1567,7 +1560,7 @@ resultMapping="LineItem.LineItem"
 
         <para>If your database has a NULLABLE column, but you want your
         application to represent NULL with a constant value, you can specify
-        it in the Result Map as shown in Example 3.22.</para>
+        it in the Result Map as shown in Example 3.25.</para>
 
         <example>
           <title>Specifying a nullvalue attribute in a Result Map</title>
@@ -1579,10 +1572,10 @@ resultMapping="LineItem.LineItem"
 &lt;/resultMap&gt;</programlisting>
         </example>
 
-        <para>In Example 26, if PRD_SUB_CODE is read as NULL, then the subCode
-        property will be set to the value of -9999. This allows you to use a
-        primitive type in your .NET class to represent a NULLABLE column in
-        the database. Remember that if you want this to work for queries as
+        <para>In Example 3.25, if PRD_SUB_CODE is read as NULL, then the
+        subCode property will be set to the value of -9999. This allows you to
+        use a primitive type in your .NET class to represent a NULLABLE column
+        in the database. Remember that if you want this to work for queries as
         well as updates/inserts, you must also specify the nullValue in the
         Parameter Map (discussed earlier in this document).</para>
       </sect3>
@@ -1615,10 +1608,12 @@ resultMapping="LineItem.LineItem"
         <title>typeHandler</title>
 
         <para>The typeHandler attribute allows the use of a Custom Type
-        Handler (see the Custom Type Handler section) to extend the
-        DataMapper's capabilities in handling types that are specific to your
-        database provider, are not handled by your database provider, or just
-        happen to be a part of your application design.</para>
+        Handler (see the Custom Type Handler section). This allows you to
+        extend the DataMapper's capabilities in handling types that are
+        specific to your database provider, are not handled by your database
+        provider, or just happen to be a part of your application design. You
+        can create custom type handlers to deal with storing and retrieving
+        booleans and Guids from your database for example.</para>
       </sect3>
     </sect2>
 
@@ -2042,7 +2037,7 @@ public class Newspaper : Document
       <para>If the columns returned by a SQL statement match the result
       object, you may not need an explicit Result Map. If you have control
       over the relational schema, you might be able to name the columns so
-      they also work as property names. In Example 3.27, the column names and
+      they also work as property names. In Example 3.33, the column names and
       property names already match, so a result map is not needed.<example>
           <title>A Mapped Statement that doesn't need a Result Map</title>
 
@@ -2057,7 +2052,7 @@ public class Newspaper : Document
 
       <para>Another way to skip a result map is to use column aliasing to make
       the column names match the properties names, as shown in Example
-      3.24.</para>
+      3.34.</para>
 
       <example>
         <title>A Mapped Statement using column alaising instead of a Result
@@ -2095,7 +2090,7 @@ public class Newspaper : Document
       properties. We just need a String, Integer, Boolean, and so forth. If
       you don't need to populate an object, iBATIS can return one of the
       primitive types instead. If you just need the value, you can use a
-      standard type as a result class, as shown in Example 3.25.<example>
+      standard type as a result class, as shown in Example 3.35.<example>
           <title>Selecting a standard type</title>
 
           <programlisting>&lt;select id="selectProductCount" resultClass="<emphasis
@@ -2106,7 +2101,7 @@ public class Newspaper : Document
         </example></para>
 
       <para>If need be, you can refer to the standard type using a marker
-      token, like "value" or "val", as shown by Example 3.26.</para>
+      token, like "value" or "val", as shown by Example 3.36.</para>
 
       <example>
         <title>Loading a simple list of product descriptions</title>
@@ -2124,7 +2119,7 @@ public class Newspaper : Document
       key/value list of the data, where each property is an entry on the list.
       If so, Result Maps can populate a IDictionary instance as easily as
       property objects. The syntax for using a IDictionary is identical to the
-      rich object syntax. As shown in Example 3.27, only the result object
+      rich object syntax. As shown in Example 3.37, only the result object
       changes.</para>
 
       <example>
@@ -2139,14 +2134,14 @@ public class Newspaper : Document
 &lt;/resultMap&gt;</programlisting>
       </example>
 
-      <para>In Example 3.27, an instance of HashTable would be created for
+      <para>In Example 3.37, an instance of HashTable would be created for
       each row in the result set and populated with the Product data. The
       property name attributes, like <parameter>id</parameter>,
       <parameter>code</parameter>, and so forth, would be the key of the
       entry, and the value of the mapped columns would be the value of the
       entry.</para>
 
-      <para>As shown in Example 3.28, you can also use an implicit Result Map
+      <para>As shown in Example 3.38, you can also use an implicit Result Map
       with a IDictionary type.</para>
 
       <example>
@@ -2190,7 +2185,7 @@ public class Newspaper : Document
       <para>From the framework's perspective, the problem is not so much
       loading a complex type, but loading each "complex property". To solve
       this problem, you can specify in the Result Map a statement to run to
-      load a given property. In Example 33, the "category" property of the
+      load a given property. In Example 3.39, the "category" property of the
       "select-product-result" element is a complex property. <example>
           <title>A Result Map with a Complex Property</title>
 
@@ -2218,7 +2213,7 @@ public class Newspaper : Document
   &lt;/select&gt;
 &lt;/statements&gt;
       </programlisting>
-        </example> In Example 3.29, the framework will use the
+        </example> In Example 3.39, the framework will use the
       "selectCategory" statement to populate the "category" property. The
       value of each category is passed to the "selectCategory" statement, and
       the object returned is set to the category property. When the process
@@ -2229,12 +2224,12 @@ public class Newspaper : Document
     <sect2>
       <title>Avoiding N+1 Selects (1:1)</title>
 
-      <para>A problem with Example 3.29 may be that whenever you load a
+      <para>A problem with Example 3.39 may be that whenever you load a
       Product, two statements execute: one for the Product and one for the
       Category. For a single Product, this issue may seem trivial. But if you
       load 10 products, then 11 statements execute. For 100 Products, instead
       of one statement product statement executing, a total of 101 statements
-      execute. The number of statements executing for Example 3.29 will always
+      execute. The number of statements executing for Example 3.40 will always
       be N+1: 100+1=101.</para>
 
       <example>
@@ -2281,8 +2276,8 @@ public class Newspaper : Document
       a nested object, you can reference nested properties using a dotted
       notation, like "category.description".</para>
 
-      <para>Example 3.30 solves the same problem as Example 3.29, but instead
-      uses nested properties uses a join instead.</para>
+      <para>Example 3.41 solves the same problem as Example 3.40, but uses a
+      join instead of nested properties.</para>
 
       <example>
         <title>Resolving complex properties with a join</title>
@@ -2323,7 +2318,7 @@ public class Newspaper : Document
 
         <para>If you're having trouble deciding which way to go, don't worry.
         No matter which way you go, you can always change it without impacting
-        your application source code. Example 3.29 and 3.40 result in exactly
+        your application source code. Example 3.40 and 3.41 result in exactly
         the same object graph and are loaded using the exact same method call
         from the application. The only consideration is that if you were to
         enable caching, then the using the separate select (not the join)
@@ -2529,226 +2524,224 @@ public class Newspaper : Document
   <sect1>
     <title>Supported Types for Parameter Maps and Result Maps</title>
 
-    <sect2>
-      <para>Table 3.3 shows the basic Supported Types for Parameter Maps and
-      Result Maps for .NET. You can extend the framework's support for
-      additional types by using a Custom Type Handler.<table>
-          <title>Supported Types for Parameter Maps and Result Maps
-          (.NET)</title>
+    <para>Table 3.4 shows the basic Supported Types for Parameter Maps and
+    Result Maps for .NET. You can extend the framework's support for
+    additional types by using a Custom Type Handler.<table>
+        <title>Supported Types for Parameter Maps and Result Maps
+        (.NET)</title>
 
-          <tgroup cols="4">
-            <thead>
-              <row>
-                <entry>CLR Type</entry>
+        <tgroup cols="4">
+          <thead>
+            <row>
+              <entry>CLR Type</entry>
 
-                <entry>Object/Map Property Mapping</entry>
+              <entry>Object/Map Property Mapping</entry>
 
-                <entry>Result Class/Parameter Class**</entry>
+              <entry>Result Class/Parameter Class**</entry>
 
-                <entry>Type Alias**</entry>
-              </row>
-            </thead>
+              <entry>Type Alias**</entry>
+            </row>
+          </thead>
 
-            <tbody>
-              <row>
-                <entry>System.ArrayList</entry>
+          <tbody>
+            <row>
+              <entry>System.ArrayList</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>list</entry>
-              </row>
+              <entry>list</entry>
+            </row>
 
-              <row>
-                <entry>System.Boolean</entry>
+            <row>
+              <entry>System.Boolean</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>Boolean, bool</entry>
-              </row>
+              <entry>Boolean, bool</entry>
+            </row>
 
-              <row>
-                <entry>System.Byte</entry>
+            <row>
+              <entry>System.Byte</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>Byte, byte</entry>
-              </row>
+              <entry>Byte, byte</entry>
+            </row>
 
-              <row>
-                <entry>System.Char</entry>
+            <row>
+              <entry>System.Char</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>Char, char</entry>
-              </row>
+              <entry>Char, char</entry>
+            </row>
 
-              <row>
-                <entry>System.DateTime</entry>
+            <row>
+              <entry>System.DateTime</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>dateTime, date</entry>
-              </row>
+              <entry>dateTime, date</entry>
+            </row>
 
-              <row>
-                <entry>System.Decimal</entry>
+            <row>
+              <entry>System.Decimal</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>Decimal, decimal</entry>
-              </row>
+              <entry>Decimal, decimal</entry>
+            </row>
 
-              <row>
-                <entry>System.Double</entry>
+            <row>
+              <entry>System.Double</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>Double, double</entry>
-              </row>
+              <entry>Double, double</entry>
+            </row>
 
-              <row>
-                <entry>System.Guid</entry>
+            <row>
+              <entry>System.Guid</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>guid</entry>
-              </row>
+              <entry>guid</entry>
+            </row>
 
-              <row>
-                <entry>System.Hashtable</entry>
+            <row>
+              <entry>System.Hashtable</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>map, hashmap, hashtable</entry>
-              </row>
+              <entry>map, hashmap, hashtable</entry>
+            </row>
 
-              <row>
-                <entry>System.Int16</entry>
+            <row>
+              <entry>System.Int16</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>Int16, short, Short</entry>
-              </row>
+              <entry>Int16, short, Short</entry>
+            </row>
 
-              <row>
-                <entry>System.Int32</entry>
+            <row>
+              <entry>System.Int32</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>Int32, int, Int, integer, Integer</entry>
-              </row>
+              <entry>Int32, int, Int, integer, Integer</entry>
+            </row>
 
-              <row>
-                <entry>System.Int64</entry>
+            <row>
+              <entry>System.Int64</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>Int64, long, Long</entry>
-              </row>
+              <entry>Int64, long, Long</entry>
+            </row>
 
-              <row>
-                <entry>System.SByte</entry>
+            <row>
+              <entry>System.SByte</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>SByte, sbyte</entry>
-              </row>
+              <entry>SByte, sbyte</entry>
+            </row>
 
-              <row>
-                <entry>System.Single</entry>
+            <row>
+              <entry>System.Single</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>Float, float, Single, single</entry>
-              </row>
+              <entry>Float, float, Single, single</entry>
+            </row>
 
-              <row>
-                <entry>System.String</entry>
+            <row>
+              <entry>System.String</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>String, string</entry>
-              </row>
+              <entry>String, string</entry>
+            </row>
 
-              <row>
-                <entry>System.TimeSpan</entry>
+            <row>
+              <entry>System.TimeSpan</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>N/A</entry>
-              </row>
+              <entry>N/A</entry>
+            </row>
 
-              <row>
-                <entry>System.UInt16</entry>
+            <row>
+              <entry>System.UInt16</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>Short, short</entry>
-              </row>
+              <entry>Short, short</entry>
+            </row>
 
-              <row>
-                <entry>System.UInt32</entry>
+            <row>
+              <entry>System.UInt32</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>Uint, uint</entry>
-              </row>
+              <entry>Uint, uint</entry>
+            </row>
 
-              <row>
-                <entry>System.UInt64</entry>
+            <row>
+              <entry>System.UInt64</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>Yes</entry>
+              <entry>Yes</entry>
 
-                <entry>Ulong, ulong</entry>
-              </row>
-            </tbody>
-          </tgroup>
-        </table></para>
-    </sect2>
+              <entry>Ulong, ulong</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table></para>
   </sect1>
 
   <sect1>
     <title>Supported database types for Parameter Maps and Result Maps</title>
 
-    <para>Table 3.4 shows the basic Supported DbTypes for Parameter Maps and
+    <para>Table 3.5 shows the basic Supported DbTypes for Parameter Maps and
     Result Maps for .NET that come with the System.Data and
     System.Data.OracleClient assemblies. See the .NET Developer Guide section
     on configuring the DataMapper to work with your provider's DbTypes.</para>
@@ -2761,15 +2754,15 @@ public class Newspaper : Document
     Parameter in a generic fashion by setting the DbType property of the
     Parameter object to a particular System.Data.DbType specific to your
     database. <table>
-        <title>Supported DbTypes for Parameter Maps and Result Maps (.NET
-        only)</title>
+        <title>Supported DbTypes for Parameter Maps and Result Maps
+        (.NET)</title>
 
         <tgroup cols="6">
           <thead>
             <row>
               <entry>CLR Type</entry>
 
-              <entry>iBatis support</entry>
+              <entry>iBATIS support</entry>
 
               <entry>SqlDbType</entry>
 
