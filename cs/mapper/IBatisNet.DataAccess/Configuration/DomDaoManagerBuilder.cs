@@ -68,9 +68,9 @@ namespace IBatisNet.DataAccess.Configuration
 		public const string DEFAULT_DAOSESSIONHANDLER_NAME = "DEFAULT_DAOSESSIONHANDLER_NAME";
 
 		/// <summary>
-		/// Token for xml path to SqlMapConfig providers element.
+		/// Token for xml path to DaoConfig providers element.
 		/// </summary>
-		private static string XML_CONFIG_PROVIDERS = "/sqlMapConfig/providers";
+		private static string XML_CONFIG_PROVIDERS = "/daoConfig/providers";
 
 		/// <summary>
 		/// Token for providers config file name.
@@ -531,7 +531,7 @@ namespace IBatisNet.DataAccess.Configuration
 			{
 				if (nodeProperties.HasChildNodes)
 				{
-					foreach (XmlNode propertyNode in nodeProperties.SelectNodes("propertie"))
+					foreach (XmlNode propertyNode in nodeProperties.SelectNodes("property"))
 					{
 						XmlAttribute keyAttrib = propertyNode.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB];
 						XmlAttribute valueAttrib = propertyNode.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB];
@@ -539,7 +539,7 @@ namespace IBatisNet.DataAccess.Configuration
 						if ( keyAttrib != null && valueAttrib!=null)
 						{
 							configurationScope.Properties.Add( keyAttrib.Value,  valueAttrib.Value);
-							_logger.Info( string.Format("Add propertie \"{0}\" value \"{1}\"",keyAttrib.Value,valueAttrib.Value) );
+							_logger.Info( string.Format("Add property \"{0}\" value \"{1}\"",keyAttrib.Value,valueAttrib.Value) );
 						}
 						else
 						{
@@ -549,7 +549,7 @@ namespace IBatisNet.DataAccess.Configuration
 							foreach (XmlNode node in propertiesConfig.SelectNodes("/settings/add"))
 							{
 								configurationScope.Properties[node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value] = node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value;
-								_logger.Info( string.Format("Add propertie \"{0}\" value \"{1}\"",node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value,node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value) );
+								_logger.Info( string.Format("Add property \"{0}\" value \"{1}\"",node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value,node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value) );
 							}
 						}
 					}
@@ -568,7 +568,7 @@ namespace IBatisNet.DataAccess.Configuration
 					foreach (XmlNode node in propertiesConfig.SelectNodes("/settings/add"))
 					{
 						configurationScope.Properties[node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value] = node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value;
-						_logger.Info( string.Format("Add propertie \"{0}\" value \"{1}\"",node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value,node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value) );
+						_logger.Info( string.Format("Add property \"{0}\" value \"{1}\"",node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value,node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value) );
 					}					
 				}
 //				// Load the file defined by the resource attribut
