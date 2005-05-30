@@ -19,7 +19,7 @@
     <tip>
       <para>If you would like to get the latest development (unreleased)
       version of this Guide, please see the <ulink
-      url="http://opensource.atlassian.com/confluence/oss/display/IBATIS/How+do+I+generate+PDF+and+HTML+Help+files+from+the+latest+documentation+XML+source+files+in+the+source+control+repository%3F">iBATIS
+      url="http://opensource.atlassian.com/confluence/oss/display/IBATIS/">iBATIS
       Wiki FAQ</ulink>. The FAQ entry explains how you can access our SVN
       source repository and generate CHM and PDF files of the latest
       development documentation for the DataAccess framework.</para>

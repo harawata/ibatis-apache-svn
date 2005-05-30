@@ -138,11 +138,11 @@
       be found in the bin\Debug folder after building the solution.</para>
 
       <tip>
-        <para>If you have a problem building the solution due project
-        dependencies on NHibernate and you will not be using the DataAccess
-        framework and NHibernate, simply remove the
-        IBatisNet.DataAccess.Extensions and IBatisNet.DataAccess.Test projects
-        from the solution before building.</para>
+        <para>If you will not be using the DataAccess framework and NHibernate
+        and you have a problem building the solution due to the dependency on
+        NHibernate, simply remove the IBatisNet.DataAccess.Extensions and
+        IBatisNet.DataAccess.Test projects from the solution before
+        building.</para>
       </tip>
     </sect2>
 

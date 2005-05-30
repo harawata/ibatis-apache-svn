@@ -123,18 +123,22 @@
       assemblies we need will be created under
       <filename>\source\IBatisNet.DataAccess\bin\Debug</filename>. The created
       assemblies are : <filename>IBatisNet.Common.dll</filename> and
-      <filename>iBatisNet.DataAccess.dll</filename>. The framework has
-      external dependencies on <filename>Castle.DynamicProxy.dll</filename>
-      (creating proxies) and <filename>log4net.dll</filename> (logging). Both
-      of these dependencies are found in the External-Bin folder and can also
-      be found in the bin\Debug folder after building the solution.</para>
+      <filename>iBatisNet.DataAccess.dll</filename>. The core DataAccess
+      framework has external dependencies on
+      <filename>Castle.DynamicProxy.dll</filename> (creating proxies) and
+      <filename>log4net.dll</filename> (logging). Both of these dependencies
+      are found in the <filename>External-Bin</filename> folder and can also
+      be found in the <filename>bin\Debug</filename> folder after building the
+      solution. In addition, the framework's
+      <filename>IBatisNet.DataAccess.Extensions</filename> and
+      <filename>IBatisNet.DataAccess.Test</filename> projects have
+      dependencies on NHibernate.</para>
 
       <tip>
-        <para>If you have a problem building the solution due project
-        dependencies on NHibernate and you will not be using NHibernate,
-        simply remove the IBatisNet.DataAccess.Extensions and
-        IBatisNet.DataAccess.Test projects from the solution before
-        building.</para>
+        <para>If you will not be using NHibernate and have a problem building
+        the solution due that dependency, simply remove the
+        IBatisNet.DataAccess.Extensions and IBatisNet.DataAccess.Test projects
+        from the solution before building.</para>
       </tip>
     </sect2>
 
@@ -147,7 +151,7 @@
       application. It may be a library project that your application project
       references. You need to add two references to your project: <orderedlist>
           <listitem>
-             IBatisNet.DataAccess.dll 
+            IBatisNet.DataAccess.dll 
           </listitem>
 
           <listitem>
@@ -418,7 +422,7 @@ xsi:noNamespaceSchemaLocation="DaoConfig.xsd"&gt;
 
       <title>type Attributes</title>
 
-      In general, when specifying a type attribute within a configuration file, a type attribute value must be a fully qualified type name following the format: 
+       In general, when specifying a type attribute within a configuration file, a type attribute value must be a fully qualified type name following the format: 
 
       <programlisting>      type="[namespace.class], [assembly name],
             Version=[version], Culture=[culture],
@@ -901,7 +905,7 @@ url="file://<filename>c:\Web\MyApp\Resources\properties</filename>.config"</prog
         </table>
 
         <sect4>
-          <title>The &lt;property &gt; Element</title>
+          <title>The &lt;property&gt; Element</title>
 
           <para>Some &lt;daoSessionHandler&gt; implementations such as iBATIS
           DataMapper SqlMaps and NHibernate need additional information for
@@ -949,9 +953,10 @@ url="file://<filename>c:\Web\MyApp\Resources\properties</filename>.config"</prog
             </tgroup>
           </table>
 
-          <para>For NHibernate, the name and value attributes are used to
-          specify various NHibernate configuration details such as the
-          hibernate.dialect, hibernate.connection.provider, or mapping.</para>
+          <para>For NHibernate, the "name" and "value" attributes are used to
+          specify various NHibernate configuration details such as
+          "hibernate.dialect", "hibernate.connection.provider", and
+          "mapping".</para>
 
           <table>
             <title>Attributes of the &lt;property&gt; element for use with

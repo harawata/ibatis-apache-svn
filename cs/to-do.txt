@@ -7,14 +7,23 @@ DataMapper 1.2
 
 
 --------------------
+DataAccess 1.5.1
+--------------------
+ + Include Sample-dao.config file
+ + Source distribution needs DataAccess to have updated Castle.DynamicProxy assembly (but NHibernate dependency!)
+ + providers.config file needs to have enabled="false" for all providers except sqlServer1.1, OleDb, and Odbc
+
+
+--------------------
 Docs
 --------------------
+ + Proofread!
  + Update references in text to section #s and example #s in DataMapper and DataAccess guides resulting from edits
- + Add new API to DomDaoManagerBuilder.Configure(...)/DomDaoManagerBuilder.Configure(...)
-   [tell that old API SqlMApper.Configure(...) are marked as  obsolete]
- + DataAccess Configuration changes
  + Add more .NET DataMapper coding examples (at least the code!)
 
+ + DONE Add new API to DomDaoManagerBuilder.Configure(...)/DomDaoManagerBuilder.Configure(...)
+   [tell that old API SqlMApper.Configure(...) are marked as  obsolete]
+ + DONE DataAccess Configuration changes
  + DONE DataAccess : New syntax to configure daoSessionHandler (old is too supported)
    <daoSessionHandler id="SqlMap">
        <property name="resource" value="SqlMap_MSSQL_SqlClient.config"/>
