@@ -177,7 +177,7 @@
         </orderedlist></para>
 
       <para>If you are using the <classname>Mapper</classname> singleton (see
-      section 5.3.1), then the only reference you will need is to the
+      section 4.4.1), then the only reference you will need is to the
       DataMapper assembly. The Common, Castle.DynamicProxy, and log4net
       assemblies are needed at runtime, but Visual Studio.NET will resolve the
       dependencies for you. If you are using the Data Access Objects
@@ -185,7 +185,7 @@
       too. So, start with the first, and add the others only if needed.</para>
 
       <para>If you have built the IBatisNet solution as described in Section
-      5.2.1, the four assemblies (IBatisNet.DataMapper.dll,
+      4.2.1, the four assemblies (IBatisNet.DataMapper.dll,
       IBatisNet.Common.dll, Castle.DynamicProxy.dll, and log4net.dll) that you
       will need should be in the <filename>bin/Debug</filename> folder of the
       IBatisNet.DataMapper project.</para>
@@ -273,7 +273,7 @@
       when the DataMapper client is created. The configuration files might use
       a different account with the same database, or reference different
       databases on different servers. You can read from one client and write
-      to another, if that's what you need to do. See Section 5.4.1 for more
+      to another, if that's what you need to do. See Section 4.4.1 for more
       details on building a <classname>SqlMapper</classname> instance, but
       first, let's take a look at the DataMapper configuration file.</para>
     </sect2>
@@ -368,9 +368,6 @@
         making it easy to reconfigure your application for multiple
         environments or use automated tools for configuration such as
         NAnt.</para>
-
-        <para>Currently, there can be only one &lt;properties&gt; element per
-        DataMapper <filename>SqlMap.config</filename> file.</para>
 
         <sect4>
           <title>&lt;properties&gt; attributes</title>
@@ -571,7 +568,7 @@ url="file://<filename>c:\Web\MyApp\Resources\properties</filename>.config"</prog
         installed,. Therefore, the provider element has an "enabled" attribute
         that allows you to disable unused providers. One provider can also be
         marked as the "default" and will be used if another is not specified
-        by your configuration (see Section 5.2.3.5).</para>
+        by your configuration.</para>
 
         <para>The standard <filename>providers.config</filename> file has
         sqlServer1.1 set as the default and the sqlServer1.0 provider
@@ -818,7 +815,7 @@ IBatisNet.Test"</programlisting></entry>
 
           <para>The framework predefines some aliases that you can use in your
           DataMapper configuration and data map files, as shown in Table
-          4.5.<table>
+          4.9.<table>
               <title>Predefined Aliases</title>
 
               <tgroup cols="2">
@@ -1173,7 +1170,7 @@ IBatisNet.Test"</programlisting></entry>
       </important>
 
       <para>An XML document is a wonderful tool for describing a database
-      configuration (Section 5.2) or defining a set of data mappings (Section
+      configuration (Section 4.3) or defining a set of data mappings (Section
       3), but you can't <emphasis>execute</emphasis> XML. In order to use the
       iBATIS.NET configuration and definitions in your .NET application, you
       need a class you can call.</para>
@@ -1462,7 +1459,7 @@ public SqlMapper ConfigureAndWatch( FileInfo resource, ConfigureHandler configur
 
       <para>The <classname>SqlMapper</classname> instance acts as a facade to
       provide access the rest of the DataMapper framework. The DataMapper API
-      methods are shown in Example 4.5.</para>
+      methods are shown in Example 4.11.</para>
 
       <example>
         <title>The DataMapper API for .NET</title>
@@ -1516,13 +1513,13 @@ public void RollBackTransaction(bool closeConnection)
         <para>Note that each of the API methods accept the name of the Mapped
         Statement as the first parameter. The <varname>statementName</varname>
         parameter corresponds to the <parameter>id</parameter> of the Mapped
-        Statement in the Data Map definition (see Section 3.2.4.1). In each
-        case, a <parameter>parameterObject</parameter> also may be passed. If
-        the Mapped Statement expects no parameters, a null
+        Statement in the Data Map definition (see Section 3.3). In each case,
+        a <parameter>parameterObject</parameter> also may be passed. If the
+        Mapped Statement expects no parameters, a null
         <parameter>parameterObject</parameter> may be passed. If a statement
         does expect parameters, then a valid
-        <parameter>parameterObject</parameter> is required. Section 4.4.2.*
-        describe how the API methods work.</para>
+        <parameter>parameterObject</parameter> is required. The following
+        sections describe how the API methods work.</para>
       </example>
 
       <sect3>
@@ -1539,7 +1536,7 @@ public int Delete(string statementName,
         &lt;update&gt;, or &lt;delete&gt; statement-types, then it should use
         the corresponding API method. The &lt;insert&gt; element supports a
         nested &lt;selectKey&gt; element for generating primary keys (see
-        Section 3.2.3.2). If the &lt;selectKey&gt; stanza is used, then
+        Section 3.3.3). If the &lt;selectKey&gt; stanza is used, then
         <methodname>Insert</methodname> returns the generated key; otherwise a
         null object is returned. Both the <methodname>Update</methodname> and
         <methodname>Delete</methodname> methods return the number of rows
@@ -1588,11 +1585,10 @@ public IList QueryForList(string statementName,
         number of records to skip (the starting point) and the maximum number
         to return, as the <parameter>skipResults</parameter> and
         <parameter>maxResults</parameter> parameters. The
-        <methodname>PaginatedList</methodname> method (Section 5.3.2.5)
-        provides the same functionality but in a more convenient wrapper. The
-        <methodname>QueryWithRowDelegate</methodname> method (Section 5.3.2.4)
-        also works with multiple rows, but provides a post-processing
-        feature.</para>
+        <methodname>PaginatedList</methodname> method provides the same
+        functionality but in a more convenient wrapper. The
+        <methodname>QueryWithRowDelegate</methodname> method also works with
+        multiple rows, but provides a post-processing feature.</para>
       </sect3>
 
       <sect3>
@@ -1706,10 +1702,10 @@ public IDictionary QueryForMap(string statementName,
         <property>EmployeeNumber</property>. <important>
             <para>You do not need to use this method just to obtain an
             <interfacename>IDictionary</interfacename> result object. As
-            explained in Section 3.x.x., the result object for any query can
-            be a property object or a
-            <interfacename>IDictionary</interfacename> instance. This method
-            is used to generate a <emphasis>new</emphasis>
+            explained in Section 3.5, the result object for any query can be a
+            property object or a <interfacename>IDictionary</interfacename>
+            instance. This method is used to generate a
+            <emphasis>new</emphasis>
             <interfacename>IDictionary</interfacename> result object from a
             property object or (another)
             <interfacename>IDictionary</interfacename> object. In this case,
@@ -1785,7 +1781,7 @@ using ( IDalSession session = <emphasis role="blue">sqlMap.OpenConnection()</emp
     <sect2>
       <title>Automatic Session</title>
 
-      <para>By default, calling any of the API methods (see Section 5.3.2) on
+      <para>By default, calling any of the API methods (see Section 4.4.2) on
       a <classname>SqlMapper</classname> instance will auto-open/close a
       connection. This means that each call to these methods will be a single
       unit of work. For many cases, this simple approach may be sufficient.
@@ -1795,7 +1791,7 @@ using ( IDalSession session = <emphasis role="blue">sqlMap.OpenConnection()</emp
       transactions</emphasis>.</para>
 
       <para>An example of using automatic session is shown as Example
-      4.6.</para>
+      4.14.</para>
 
       <example>
         <title>Using automatic session</title>
@@ -1815,7 +1811,7 @@ sqlMap.Update("UpdateItem", item);</programlisting></para>
         <para>Be careful to consider sessions when framing your queries.
         Automatic sessions are convenient, but you will run into trouble if
         your unit of work requires more than a single update to the database.
-        In Example 56, if the second call to
+        In Example 4.14, if the second call to
         <parameter>"UpdateItem"</parameter> fails, the item description will
         still be updated with the first new description of
         <parameter>“TX1”</parameter>. Not what a user might expect.</para>
@@ -1828,8 +1824,7 @@ sqlMap.Update("UpdateItem", item);</programlisting></para>
       <para>The DataMapper API includes methods to demarcate transactional
       boundaries. A transaction can be started, committed and/or rolled back.
       You can call the transaction methods from the
-      <classname>SqlMapper</classname> instance (see Section 5.3.1)
-      .<programlisting>
+      <classname>SqlMapper</classname> instance.<programlisting>
 <emphasis role="comment">// Begin a transactional session : Open a connection and begin an ADO transaction</emphasis>
 public void BeginTransaction()
 <emphasis role="comment">// Begin a transactional session : Open a connection is specified and begin an ADO transaction </emphasis>
@@ -1851,7 +1846,7 @@ public void RollBackTransaction()
 <emphasis role="comment">// RollBack a session : RollBack the ADO transaction and close the connection if specified </emphasis>
 public void RollBackTransaction(bool closeConnection)</programlisting></para>
 
-      <para>An example of using transactions is shown as Example 4.6.</para>
+      <para>An example of using transactions is shown as Example 4.15.</para>
 
       <example>
         <title>Using transactions</title>
@@ -2041,8 +2036,8 @@ Product p = (Product) map[“EST-93”];</programlisting>
       configuration. You can do this by adding a configuration file for your
       assembly that includes a &lt;log4Net&gt; element. The configuration file
       is named after your assembly but adds a <filename>.config</filename>
-      extension, and is stored in the same folder as your assembly. Example 89
-      shows the configuration for the framework's Test project.</para>
+      extension, and is stored in the same folder as your assembly. Example
+      4.26 shows the configuration for the framework's Test project.</para>
 
       <example>
         <title>A sample Log4Net configuration block
