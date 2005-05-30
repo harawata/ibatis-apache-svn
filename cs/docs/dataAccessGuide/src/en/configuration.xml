@@ -230,7 +230,7 @@
       <filename>providers.config</filename> files must be placed in a location
       where the framework can find them at runtime. Depending on the type of
       project you have, the default expected location of these 2 files will be
-      different, as shown in Table 4.2. However, your project is not limited
+      different, as shown in Table 3.3. However, your project is not limited
       to using just these locations. The DataAccess framework provides other
       options for placing these files in locations that are more suitable for
       your project instead of using the default locations. These options are
