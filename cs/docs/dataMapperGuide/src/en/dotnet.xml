@@ -1159,7 +1159,7 @@ IBatisNet.Test"</programlisting></entry>
     <sect2>
       <title>Building a SqlMapper Instance</title>
 
-      <note>
+      <important>
         <para>In prior versions of the DataMapper, the
         <classname>SqlMapper</classname> class was responsible for
         configuration. This has been superceded by a new configuration API
@@ -1170,7 +1170,7 @@ IBatisNet.Test"</programlisting></entry>
         <classname>Stream</classname>, <classname>Uri</classname>,
         <classname>FileInfo</classname>, or <classname>XmlDocument</classname>
         instance.</para>
-      </note>
+      </important>
 
       <para>An XML document is a wonderful tool for describing a database
       configuration (Section 5.2) or defining a set of data mappings (Section
@@ -1265,11 +1265,11 @@ IList list = Mapper.Instance().QueryForList("PermitNoForYearList", values);</pro
       it can allow you to make changes to the definitions without reloading
       the rest of the application.</para>
 
-      <note>
+      <tip>
         <para>If you are using NUnit to test your mappings, you can run a test
         suite, make changes to the XML mapping document, and run the test
         again. NUnit will reload the configuration automatically.</para>
-      </note>
+      </tip>
 
       <note>
         <para>The ConfigureAndWatch method requires that your SqlMap.config

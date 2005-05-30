@@ -136,7 +136,7 @@
 
       <tip>
         <para>If you will not be using NHibernate and have a problem building
-        the solution due that dependency, simply remove the
+        the solution due to that dependency, simply remove the
         IBatisNet.DataAccess.Extensions and IBatisNet.DataAccess.Test projects
         from the solution before building.</para>
       </tip>
@@ -151,7 +151,7 @@
       application. It may be a library project that your application project
       references. You need to add two references to your project: <orderedlist>
           <listitem>
-            IBatisNet.DataAccess.dll 
+             IBatisNet.DataAccess.dll 
           </listitem>
 
           <listitem>

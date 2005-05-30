@@ -1194,8 +1194,7 @@ namespace WebShop.Domain
       </sect3>
 
       <sect3>
-        <title >typeHandler <!-- <emphasis role="new">New !</emphasis> --><!-- <inlinegraphic fileref="images/new.gif" format="GIF"/> -->
-<!-- <mediaobject> <imageobject><imagedata fileref="images/new.gif" format="GIF" /></imageobject></mediaobject> --></title>
+        <title>typeHandler <!-- <emphasis role="new">New !</emphasis> --><!-- <inlinegraphic fileref="images/new.gif" format="GIF"/> --><!-- <mediaobject> <imageobject><imagedata fileref="images/new.gif" format="GIF" /></imageobject></mediaobject> --></title>
 
         <para>The <parameter>typeHandler</parameter> attribute allows the use
         of a Custom Type Handler (see the Custom Type Handler section) to
@@ -1476,16 +1475,16 @@ namespace WebShop.Domain
     <sect2>
       <title>&lt;result&gt; Elements</title>
 
-      <para>This section describe the &lt;resultMap&gt; attributes.</para>
+      <para>The &lt;resultMap&gt; element holds one or more &lt;result&gt;
+      child elements that map SQL resultsets to object properties.</para>
 
       <sect3>
         <title>property</title>
 
-        <para>The <parameter>property</parameter> attribute of the Result Map
-        property is the name of a property of the result object that will be
-        returned by the Mapped Statement. The name can be used more than once
-        depending on the number of times it is needed to populate the
-        results.</para>
+        <para>The <parameter>property</parameter> attribute is the name of a
+        property of the result object that will be returned by the Mapped
+        Statement. The name can be used more than once depending on the number
+        of times it is needed to populate the results.</para>
       </sect3>
 
       <sect3>
