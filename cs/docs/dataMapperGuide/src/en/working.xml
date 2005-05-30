@@ -166,13 +166,13 @@ Mapper.Instance().Insert("InsertLineItem",lineItem);</programlisting></para>
 
     <para>Mapped Statements can hold any SQL statement and can use Parameter
     Maps and Result Maps for input and output. (A stored procedure is a
-    specialized form of a statement. See section 3.3.1 and 3.3.2 for
-    more.)</para>
+    specialized form of a statement. See section 3.3.1 and 3.3.2 for more
+    information.)</para>
 
     <para>If the case is simple, the Mapped Statement can reference the
     parameter and result classes directly. Mapped Statements support caching
-    through reference to a Cache Model element. Example 5 shows the syntax for
-    a statement element. <example>
+    through reference to a Cache Model element. The following example shows
+    the syntax for a statement element. <example>
         <title>Statement element syntax</title>
 
         <programlisting>&lt;statement id="<emphasis role="blue">statement.name</emphasis>"
@@ -192,7 +192,7 @@ Mapper.Instance().Insert("InsertLineItem",lineItem);</programlisting></para>
 
     <para>In Example 3.3, the [bracketed] parts are optional, and some options
     are mutually exclusive. It is perfectly legal to have a Mapped Statement
-    as simple as shown by Example 6.<example>
+    as simple as shown by Example 3.4.<example>
         <title>A simplistic Mapped Statement</title>
 
         <programlisting>&lt;statement id="InsertTestProduct" &gt;
@@ -200,11 +200,11 @@ Mapper.Instance().Insert("InsertLineItem",lineItem);</programlisting></para>
 &lt;/statement&gt;</programlisting>
       </example></para>
 
-    <para>Example 6 is obviously unlikely, unless you are running a test. But
-    it does shows that you can use iBATIS to execute arbitrary SQL statements.
-    More likely, you will use the object mapping features with Parameter Maps
-    (Section 3.4) and Result Maps (Section 3.5) since that's where the magic
-    happens.</para>
+    <para>Example 3.4 is obviously unlikely, unless you are running a test.
+    But it does shows that you can use iBATIS to execute arbitrary SQL
+    statements. More likely, you will use the object mapping features with
+    Parameter Maps (Section 3.4) and Result Maps (Section 3.5) since that's
+    where the magic happens.</para>
 
     <sect2>
       <title>Statement Types</title>
@@ -214,8 +214,8 @@ Mapper.Instance().Insert("InsertLineItem",lineItem);</programlisting></para>
       idea to use one of the more specific statement-type elements. The more
       specific elements provided better error-checking and even more
       functionality. (For example, the insert statement can return a
-      database-generated key.) Table 1 summarizes the statement-type elements
-      and their supported attributes and features.</para>
+      database-generated key.) Table 3.1 summarizes the statement-type
+      elements and their supported attributes and features.</para>
 
       <para><table>
           <title>The six statement-type elements</title>
@@ -409,7 +409,7 @@ All query methods</programlisting></entry>
       long as your driver or provider supports them.</para>
 
       <para>If standard, static SQL isn't enough, iBATIS can help you build a
-      dynamic SQL statement. See Section 3.5 for more about Dynamic
+      dynamic SQL statement. See Section 3.9 for more about Dynamic
       SQL.</para>
 
       <sect3>
@@ -420,8 +420,8 @@ All query methods</programlisting></entry>
         less-than symbols (&gt;&lt;). SQL statements use these symbols as
         operators, but they are reserved symbols in XML. A simple solution is
         to <emphasis>escape</emphasis> the SQL statements that uses XML
-        reserved symbols within a CDATA element. Example 8
-        demonstrates.<example>
+        reserved symbols within a CDATA element. Example 3.6 demonstrates
+        this.<example>
             <title>Using CDATA to "escape" SQL code</title>
 
             <programlisting>&lt;statement id="SelectPersonsByAge" parameterClass="int" resultClass="Person"&gt;
@@ -439,7 +439,7 @@ All query methods</programlisting></entry>
         fields, as a vendor extension. Some vendors pre-generate keys (e.g.
         Oracle), some vendors post-generate keys (e.g. MS-SQL Server and
         MySQL). In either case, you can obtain a pre-generated key using a
-        &lt;selectKey&gt; stanza within an &lt;insert&gt; element. Example 9
+        &lt;selectKey&gt; stanza within an &lt;insert&gt; element. Example 3.7
         shows an &lt;insert&gt; statement for either approach.<example>
             <title>&lt;insert&gt; statements using &lt;selectKey&gt;
             stanzas</title>
@@ -482,7 +482,7 @@ All query methods</programlisting></entry>
         automatically, based on a &lt;parameterMap&gt; element. The four CRUD
         statement types (insert, select, update, and delete) are supported.
         For a select, you can select all or select by a key (or keys). Example
-        10 shows an example of generating the usual array of CRUD
+        3.8 shows an example of generating the usual array of CRUD
         statements.</para>
 
         <example>
@@ -610,9 +610,9 @@ All query methods</programlisting></entry>
       <title>Statement-type Element Attributes</title>
 
       <para>The six statement-type elements take various attributes. See
-      Section 3.2.1 for a table itemizing which attributes each element-type
-      accepts. The individual attributes are described in Sections 3.4.1
-      through 3.4.5.</para>
+      Section 3.3.1 for a table itemizing which attributes each element-type
+      accepts. The individual attributes are described in the sections that
+      follow.</para>
 
       <sect3>
         <title>id</title>
@@ -656,12 +656,11 @@ All query methods</programlisting></entry>
       <sect3>
         <title>parameterClass</title>
 
-        <para>If a parameterMap attribute is not specified (see Section 3.4),
-        you may specify a parameterClass instead and use inline parameters
-        (see Section 3.3.3 ). The value of the parameterClass attribute can be
-        a Type Alias or the fully qualified name of a class. Example 3.10
-        shows a statement using a fully-qualified name versus an
-        alias.<example>
+        <para>If a parameterMap attribute is not specified, you may specify a
+        parameterClass instead and use inline parameters (see Section 3.4.3 ).
+        The value of the parameterClass attribute can be a Type Alias or the
+        fully qualified name of a class. Example 3.10 shows a statement using
+        a fully-qualified name versus an alias.<example>
             <title>Ways to specify a parameterClass</title>
 
             <programlisting><emphasis role="comment">&lt;!-- fully qualified classname --&gt;</emphasis>
@@ -722,8 +721,8 @@ All query methods</programlisting></entry>
         instead. The value of the resultClass attribute can be a Type Alias or
         the fully qualified name of a class. The class specified will be
         automatically mapped to the columns in the result, based on the result
-        metadata. Example 14 shows a &lt;statement&gt; element with a
-        resultClass attribute.</para>
+        metadata. The following example shows a &lt;statement&gt; element with
+        a resultClass attribute.</para>
 
         <para><example>
             <title>A &lt;statement &gt;element with resultClass
@@ -848,11 +847,11 @@ namespace WebShop.Domain
         statement should also indicate the resultClass so that the DataMapper
         knows how to handle the type of objects in the collection. The
         resultClass specified will be automatically mapped to the columns in
-        the result, based on the result metadata. Example 16 shows a
-        &lt;statement&gt; element with a listClass attribute.</para>
+        the result, based on the result metadata. The following example shows
+        a &lt;statement&gt; element with a listClass attribute.</para>
 
         <para><example>
-            <title>A &lt;statement &gt;element with resultClass
+            <title>A &lt;statement &gt;element with listClass
             attribute</title>
 
             <para><programlisting>&lt;statement id="GetAccounts"
@@ -874,7 +873,7 @@ namespace WebShop.Domain
         <title>cacheModel</title>
 
         <para>If you want to cache the result of a query, you can specify a
-        Cache Model as part of the &lt;statement&gt; element. Example 3.13
+        Cache Model as part of the &lt;statement&gt; element. Example 3.15
         shows a &lt;cacheModel&gt; element and a corresponding
         &lt;statement&gt;.</para>
 
@@ -895,7 +894,7 @@ namespace WebShop.Domain
   select * from PRODUCT where PRD_CAT_ID = #value#
 &lt;/statement&gt;</programlisting></para>
 
-            <para>In Example 3.13, a cache is defined for products that uses a
+            <para>In Example 3.15, a cache is defined for products that uses a
             LRU reference type and flushes every 24 hours or whenever
             associated update statements are executed. For more about Cache
             Models, see Section 3.8.</para>
@@ -942,7 +941,7 @@ namespace WebShop.Domain
       </note></para>
 
     <para>Parameter Maps can be provided as an external element and
-    <emphasis>inline</emphasis>. Example 3.14 shows an external Parameter
+    <emphasis>inline</emphasis>. Example 3.16 shows an external Parameter
     Map.<example>
         <title>An external Parameter Map</title>
 
@@ -965,11 +964,11 @@ namespace WebShop.Domain
 &lt;/parameterMap&gt;</programlisting>
       </example></para>
 
-    <para>In Example 3.14, the parts in [brackets] are optional. The
+    <para>In Example 3.16, the parts in [brackets] are optional. The
     parameterMap element only requires the <parameter>id</parameter>
     attribute. The <parameter>class</parameter> attribute is optional but
     recommended. The <parameter>class</parameter> attribute helps to validate
-    the incoming parameter and optimizes performance. Example 3.15 shows a
+    the incoming parameter and optimizes performance. Example 3.17 shows a
     typical &lt;parameterMap&gt;. <example>
         <title>A typical &lt;parameterMap&gt; element</title>
 
@@ -990,7 +989,7 @@ namespace WebShop.Domain
         another Data Map definition file by prefixing the
         <parameter>id</parameter> of the Parameter Map with the namespace of
         the Data Map (set in the &lt;sqlMap&gt; root element). If the
-        Parameter Map in Example 3.15 were in a Data Map named "Product", it
+        Parameter Map in Example 3.17 were in a Data Map named "Product", it
         could be referenced from another file using
         "Product.insert-product-param".</para>
       </note></para>
@@ -1018,7 +1017,7 @@ namespace WebShop.Domain
         used.</para>
 
         <para><note>
-            <para>The parameter classes must be a property object or
+            <para>The parameter class must be a property object or
             <interfacename>IDictionary</interfacename> instance.</para>
           </note></para>
       </sect3>
@@ -1041,14 +1040,14 @@ namespace WebShop.Domain
 
       <para>The &lt;parameterMap&gt; element holds one or more parameter child
       elements that map object properties to placeholders in a SQL statement.
-      Section 3.3.2.1 through 3.3.2.11 describe each of the attributes.</para>
+      The sections that follow describe each of the attributes.</para>
 
       <sect3>
         <title>property</title>
 
         <para>The <parameter>property</parameter> attribute of
-        &lt;parameterMap&gt; is the name of a property of the parameter
-        object. It may also be the name of an entry in a
+        &lt;parameter&gt; is the name of a property of the parameter object.
+        It may also be the name of an entry in a
         <interfacename>IDictionary</interfacename> object. The name can be
         used more than once depending on the number of times it is needed in
         the statement. (In an update, you might set a column that is also part
@@ -1194,26 +1193,27 @@ namespace WebShop.Domain
       </sect3>
 
       <sect3>
-        <title>typeHandler <!-- <emphasis role="new">New !</emphasis> --><!-- <inlinegraphic fileref="images/new.gif" format="GIF"/> --><!-- <mediaobject> <imageobject><imagedata fileref="images/new.gif" format="GIF" /></imageobject></mediaobject> --></title>
+        <title>typeHandler<!-- <emphasis role="new">New !</emphasis> --><!-- <inlinegraphic fileref="images/new.gif" format="GIF"/> --><!-- <mediaobject> <imageobject><imagedata fileref="images/new.gif" format="GIF" /></imageobject></mediaobject> --></title>
 
         <para>The <parameter>typeHandler</parameter> attribute allows the use
-        of a Custom Type Handler (see the Custom Type Handler section) to
-        extend the DataMapper's capabilities in handling types that are
-        specific to your database provider, are not handled by your database
-        provider, or just happen to be a part of your application
-        design.</para>
+        of a Custom Type Handler (see the Custom Type Handler section). This
+        allows you to extend the DataMapper's capabilities in handling types
+        that are specific to your database provider, are not handled by your
+        database provider, or just happen to be a part of your application
+        design. You can create custom type handlers to deal with storing
+        booleans and Guids in your database for example.</para>
       </sect3>
     </sect2>
 
     <sect2>
       <title>Inline Parameter Maps</title>
 
-      <para>If you prefer to use inline parameters (see Sections 3.0 and
-      3.4.3), you can add extra type information inline too. The inline
-      parameter map syntax lets you embed the property name, the property
-      type, the column type, and a null value replacement into a parametrized
-      SQL statement. The next four examples shows statements written with
-      inline parameters.<example>
+      <para>If you prefer to use inline parameters instead of parameter maps,
+      you can add extra type information inline too. The inline parameter map
+      syntax lets you embed the property name, the property type, the column
+      type, and a null value replacement into a parametrized SQL statement.
+      The next four examples shows statements written with inline
+      parameters.<example>
           <title>A &lt;statement&gt; using inline parameters</title>
 
           <para><programlisting>&lt;statement id="insertProduct" parameterClass="product"&gt;
@@ -1222,7 +1222,7 @@ namespace WebShop.Domain
 &lt;/statement&gt;</programlisting></para>
         </example></para>
 
-      <para>Thefollowing example shows how dbTypes can be declared
+      <para>The following example shows how dbTypes can be declared
       inline.</para>
 
       <example>

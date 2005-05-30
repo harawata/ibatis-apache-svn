@@ -166,7 +166,7 @@ Product product = Mapper.Instance().QueryForObject("SelectProduct",productKey) a
     <para>Of course, there's more, but this is iBATIS from 10,000 meters. (For
     a longer, gentler introduction, see the Tutorial.) Section 3 describes the
     Data Map definition files -- where the statement for "InsertLineItem"
-    would be defined. The Developers Guide for your platform (Section 4 or 5)
+    would be defined. The Developers Guide for your platform (Section 4)
     describes the "bootstrap" configuration file that exposes iBATIS to your
     application.</para>
 
