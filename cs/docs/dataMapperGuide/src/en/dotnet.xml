@@ -1325,7 +1325,7 @@ SqlMapper access = AccessMapper.Get();</programlisting></para>
         web.config or app.config file.</para>
 
         <example>
-          <title>Basic SqlMapper Configuration</title>
+          <title>Basic SqlMapper Configuration Call</title>
 
           <programlisting>SqlMapper mapper = builder.Configure();</programlisting>
         </example>

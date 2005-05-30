@@ -28,70 +28,162 @@
     allowing the service and domain layer of your application to be written in
     a uniform fashion.</para>
 
-    <para>The <classname>DaoManager</classname> class is responsible for
-    configuration of the DAO framework (via <filename>dao.config</filename> as
-    described in previous sections). In addition, the
-    <classname>DaoManager</classname> acts as a central façade to the rest of
-    the DAO API. In particular, it provides methods that allow you to access
-    connection, transaction, and DAO instances.</para>
+    <para>The <classname>DomDaoManagerBuilder</classname> class is responsible
+    for the proper configuration of the DAO framework (via
+    <filename>dao.config</filename> as described in previous sections). After
+    configuration, another class called the <classname>DaoManager</classname>
+    provides the core DAO API for each of your data access contexts. In
+    particular, the <classname>DaoManager</classname> provides methods that
+    allow you to access connection, transaction, and DAO instances.</para>
+
+    <note>
+      <para>In prior versions of the DAO framework, the
+      <classname>DaoManager</classname> handled configuration
+      responsibilities. This has been superceded by a new configuration API
+      found within the <classname>DomDaoManagerBuilder</classname> class. Old
+      configuration method signatures have remained the same, but new
+      configuration methods have been added for more flexibility. These new
+      methods support the loading of configuration information through a
+      <classname>Stream</classname>, <classname>Uri</classname>,
+      <classname>FileInfo</classname>, or <classname>XmlDocument</classname>
+      instance.</para>
+    </note>
   </sect1>
 
   <sect1>
-    <title>Reading the Configuration File</title>
+    <title>Configuration with the DomDaoManagerBuilder</title>
 
-    <para>The <filename>dao.config</filename> file is read by the
-    <methodname>Configure()</methodname> or
-    <methodname>ConfigureAndWatch()</methodname> methods of the
-    <classname>DaoManager</classname> class. The
-    <filename>dao.config</filename> file must be placed where the framework
-    can find it at runtime. See the previous section for details on the
-    various location options that you have.</para>
+    <para>iBATIS offers you a plethora of options for loading your
+    <filename>dao.config</filename> file, such as loading it through a file
+    path<classname>, Stream</classname>, <classname>Uri</classname>,
+    <classname>FileInfo</classname>, or <classname>XmlDocument</classname>.
+    All of these methods are available through the
+    <classname>DomDaoManagerBuilder</classname> API for creating
+    <classname>DaoManager</classname> instances.</para>
 
-    <itemizedlist>
-      <listitem>
-        <para>Configure() : reads a configuration file named
-        <filename>dao.config.</filename></para>
-      </listitem>
-    </itemizedlist>
+    <para>The basic <methodname>DomDaoManagerBuilder.Configure()</methodname>
+    call will look for a file named <filename>dao.config</filename> in your
+    application's root directory. This directory's location differs by project
+    type but is normally the directory where you place your web.config or
+    app.config file.</para>
 
-    <itemizedlist>
-      <listitem>
-        <para>Configure(string fileName) : reads a configuration file named
-        '<filename>fileName</filename>'.</para>
-      </listitem>
-    </itemizedlist>
+    <example>
+      <title>Basic Configuration Call</title>
 
-    <itemizedlist>
-      <listitem>
-        <para>ConfigureAndWatch(ConfigureHandler configureDelegate) : reads
-        and watches for changes to a configuration file named
-        <filename>dao.config</filename> and calls the delegate method.</para>
-      </listitem>
-    </itemizedlist>
+      <programlisting>DomDaoManagerBuilder builder = new DomDaoManagerBuilder();
+builder.Configure();
+DaoManager daoManager = DaoManager.GetInstance("SqlMapDaoContext");</programlisting>
+    </example>
 
-    <itemizedlist>
-      <listitem>
-        <para>ConfigureAndWatch(string fileName, ConfigureHandler
-        configureDelegate) : reads and watches for changes to a configuration
-        file named '<filename>fileName</filename>' and calls the delegate
-        method.</para>
-      </listitem>
-    </itemizedlist>
+    <para>If you have named your configuration file something other than
+    <filename>dao.config</filename> or if you have located your configuration
+    file in a directory other than the application root directory, you can
+    also pass in a relative or absolute file path to the<methodname>
+    Configure</methodname> method.</para>
 
-    <para>The <methodname>ConfigureAndWatch</methodname> method monitors
-    changes to the configuration files. If the configuration file changes, the
-    <classname>DaoManager</classname> will be safely reloaded. This is
-    particularly useful in development, when you might make a change to load a
-    different DAO implementation and want to see it take effect without
-    restarting a debugging session. Likewise, in production, it can allow you
-    to make changes to the DAO implementations used without reloading the rest
-    of the application.</para>
+    <example>
+      <title>Configuration through an absolute or relative file path</title>
 
-    <programlisting role="java">[C#]
-DaoManager.Configure();</programlisting>
+      <programlisting><emphasis role="comment">/* Configure from a file path.
+   Uses a relative resource path from your application root 
+   or an absolute file path such as "file:\\c:\dir\a.config" */
+</emphasis>DomDaoManagerBuilder builder = new DomDaoManagerBuilder();
+builder.Configure(strPath);
+DaoManager daoManager = DaoManager.GetInstance("AnotherContext");</programlisting>
+    </example>
 
-    <para>If for some reason you do not want to monitor changes to the
-    configuration, you can use the Configure method instead.</para>
+    <tip>
+      <para>Since the application root directory location differs by project
+      type (Windows, Web, or library), you can use an AppSettings key for
+      defining a relative path to your <filename>dao.config</filename> file.
+      Having this key defined makes it easy to change the path without having
+      to recompile your code:</para>
+
+      <programlisting>builder.Configure(
+        ConfigurationSettings.AppSettings["rootPath"]+"dao.config");</programlisting>
+    </tip>
+
+    <para>Aside from using a simple string filepath, you can also pass in a
+    <classname>FileInfo</classname> or <classname>Uri</classname> instance for
+    the <classname>DomDaoManagerBuilder</classname> to use in locating your
+    <filename>dao.config</filename> file.</para>
+
+    <example>
+      <title>Configuration with a FileInfo or Uri instance</title>
+
+      <programlisting><emphasis role="comment">/* Configure with FileInfo. */</emphasis>
+FileInfo aFileInfo = someSupportClass.GetDynamicFileInfo();
+DomDaoManagerBuilder builder = new DomDaoManagerBuilder();
+builder.Configure(aFileInfo);
+DaoManager daoManager = DaoManager.GetInstance("NHibernateContext");
+
+<emphasis role="comment">/* Configure through a Uri. */</emphasis>
+Uri aUri = someSupportClass.GetDynamicUri();
+DomDaoManagerBuilder builder = new DomDaoManagerBuilder();
+builder.Configure(aUri);
+DaoManager daoManager = DaoManager.GetInstance("SimpleDao");</programlisting>
+    </example>
+
+    <para>If you find that you already have loaded your DAO configuration
+    information as an <classname>XmlDocument</classname> or <classname>Stream
+    </classname>instance within your application, the
+    <classname>DomDaoManagerBuilder</classname> provides
+    <methodname>Configure</methodname> overloads for those types as
+    well.</para>
+
+    <example>
+      <title>Configuration with an XmlDocument or Stream</title>
+
+      <programlisting><emphasis role="comment">/* Configure with an XmlDocument */</emphasis>
+XmlDocument anXmlDoc = someSupportClass.GetDynamicXmlDocument();
+DomDaoManagerBuilder builder = new DomDaoManagerBuilder();
+builder.Configure(anXmlDoc);
+DaoManager daoManager = DaoManager.GetInstance("Petstore");
+
+<emphasis role="comment">/* Configure from a stream. */</emphasis>
+Stream aStream = someSupportClass.GetDynamicStream();
+DomDaoManagerBuilder builder = new DomDaoManagerBuilder();
+builder.Configure(aStream);
+DaoManager daoManager = DaoManager.GetInstance("AnotherPetstore");</programlisting>
+    </example>
+
+    <para>In addition to the straightforward
+    <methodname>Configure</methodname> methods, the
+    <classname>DomDaoManagerBuilder</classname> provides
+    <methodname>ConfigureAndWatch</methodname> methods that can be used to
+    monitor changes to the configuration files so that
+    <classname>DaoManagers</classname> can be reconfigured and reloaded on the
+    fly. To use this functionality, you application will need to pass a
+    <classname>ConfigureHandler</classname> (callback delegate) to the
+    <classname>DomDaoManagerBuilder</classname> so that it knows the method
+    for resetting your application's <classname>DaoManager</classname>
+    instances. </para>
+
+    <para>Since the configuration files need to be watched for changes, your
+    <filename>dao.config</filename> file must be accessible through the file
+    system. This means that configuration is limited to the three methods
+    shown below.</para>
+
+    <example>
+      <title>DomDaoManagerBuilder ConfigureAndWatch methods</title>
+
+      <programlisting><emphasis role="comment">/* Configure and monitor the configuration file for modifications 
+   and automatically reconfigure DaoManagers. 
+   This basic ConfigureAndWatch method looks for a file with the 
+   default name of dao.config in the application root directory. */
+</emphasis>public void ConfigureAndWatch(ConfigureHandler configureDelegate)
+
+<emphasis role="comment">/* Configure and monitor the configuration file for modifications 
+   and automatically reconfigure DaoManagers. 
+   Uses a relative path from your application root 
+   or an absolute file path such as "file:\\c:\dir\a.config" */
+</emphasis>public void ConfigureAndWatch( string resource, ConfigureHandler configureDelegate )
+
+<emphasis role="comment">/* Configure and monitor the configuration file for modifications 
+   and automatically reconfigure DaoManagers. 
+   Uses a FileInfo instance for your config file. */</emphasis>
+public void ConfigureAndWatch( FileInfo resource, ConfigureHandler configureDelegate )</programlisting>
+    </example>
   </sect1>
 
   <sect1>
