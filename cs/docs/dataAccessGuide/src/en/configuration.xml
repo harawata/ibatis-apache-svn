@@ -123,7 +123,7 @@
       assemblies we need will be created under
       <filename>\source\IBatisNet.DataAccess\bin\Debug</filename>. The created
       assemblies are : <filename>IBatisNet.Common.dll</filename> and
-      <filename>iBatisNet.DataAccess.dll</filename>. The DataMapper has
+      <filename>iBatisNet.DataAccess.dll</filename>. The framework has
       external dependencies on <filename>Castle.DynamicProxy.dll</filename>
       (creating proxies) and <filename>log4net.dll</filename> (logging). Both
       of these dependencies are found in the External-Bin folder and can also
@@ -147,7 +147,7 @@
       application. It may be a library project that your application project
       references. You need to add two references to your project: <orderedlist>
           <listitem>
-            IBatisNet.DataAccess.dll 
+             IBatisNet.DataAccess.dll 
           </listitem>
 
           <listitem>
@@ -298,6 +298,8 @@
 &lt;daoConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:noNamespaceSchemaLocation="DaoConfig.xsd"&gt;
 
+&lt;providers resource="providers.config"&gt;
+
 <emphasis role="comment">&lt;!-- Example ADO.NET DAO Configuration --&gt;</emphasis>
 &lt;context id="<emphasis role="blue">SimpleDao</emphasis>" default="<emphasis
           role="blue">true</emphasis>"&gt;
@@ -330,7 +332,12 @@ xsi:noNamespaceSchemaLocation="DaoConfig.xsd"&gt;
 
   &lt;daoSessionHandler id="SqlMap"&gt;
     &lt;property name="resource" value="<emphasis role="blue">SqlMap.config</emphasis>"/&gt;
-  &lt;/daoSessionHandler&gt;
+<emphasis role="comment">    &lt;!-- 
+    url and embedded options are also available
+    &lt;property name="url" value="C:\iBATIS\IBatisNet.DataAccess.Test\bin\Debug\SqlMap.config"/&gt;
+    &lt;property name="embedded" value="bin.Debug.SqlMap.config, IBatisNet.DataAccess.Test"/&gt;
+    --&gt;
+</emphasis>  &lt;/daoSessionHandler&gt;
 
   &lt;daoFactory&gt;
     &lt;dao interface="<emphasis role="blue">IBatisNet.Test.Dao.Interfaces.IAccountDao, IBatisNet.Test</emphasis>"
@@ -409,9 +416,9 @@ xsi:noNamespaceSchemaLocation="DaoConfig.xsd"&gt;
     <sect2>
        
 
-      <title>type Attribute</title>
+      <title>type Attributes</title>
 
-       When specifying a type attribute within configuration, the type attribute value must be a fully qualified type name following the format: 
+      In general, when specifying a type attribute within a configuration file, a type attribute value must be a fully qualified type name following the format: 
 
       <programlisting>      type="[namespace.class], [assembly name],
             Version=[version], Culture=[culture],
@@ -429,6 +436,189 @@ xsi:noNamespaceSchemaLocation="DaoConfig.xsd"&gt;
 </programlisting>
 
        
+    </sect2>
+
+    <sect2>
+      <title>The &lt;providers&gt; Element</title>
+
+      <para>Under ADO.NET, a database system is accessed through a provider. A
+      database system can use a custom provider or a generic ODBC provider.
+      iBATIS.NET uses a pluggable approach to installing providers. Each
+      provider is represented by an XML descriptor element. The list of
+      providers you might want to use can be kept in a separate XML descriptor
+      file. The iBATIS.NET distribution includes the standard
+      <filename>providers.config</filename> file with a set of thirteen
+      prewritten provider elements:</para>
+
+      <para><itemizedlist>
+          <listitem>
+             sqlServer1.0 - Microsoft SQL Server 7.0/2000 provider available with .NET Framework 1.0 
+          </listitem>
+
+          <listitem>
+             sqlServer1.1 -Microsoft SQL Server 7.0/2000 provider available with .NET Framework 1.1 
+          </listitem>
+
+          <listitem>
+             OleDb1.1 - OleDb provider available with .NET Framework 1.1 
+          </listitem>
+
+          <listitem>
+             Odbc1.1 - Odbc provider available with .NET Framework 1.1 
+          </listitem>
+
+          <listitem>
+             oracle9.2 - Oracle provider V9.2.0.401 
+          </listitem>
+
+          <listitem>
+             oracle10.1 - Oracle provider V10.1.0.301 
+          </listitem>
+
+          <listitem>
+             oracleClient1.0 - MS Oracle provider V1.0.5 available with .NET Framework 1.1 
+          </listitem>
+
+          <listitem>
+             ByteFx - ByteFx MySQL provider V0.7.6.15073 
+          </listitem>
+
+          <listitem>
+             MySql - MySQL provider V1.0.4.20163 
+          </listitem>
+
+          <listitem>
+             SQLite3 - SQLite.NET provider V0.21.1869.3794 
+          </listitem>
+
+          <listitem>
+             Firebird1.7 - Firebird SQL .NET provider V1.7.0.33200 
+          </listitem>
+
+          <listitem>
+             PostgreSql0.7 - Npgsql provider V0.7.0.0 
+          </listitem>
+
+          <listitem>
+             iDb2.10 - IBM DB2 iSeries provider V10.0.0.0 
+          </listitem>
+        </itemizedlist></para>
+
+      <para>The <filename>providers.config</filename> file can be found under
+      <filename>\source\IBatisNet.DataAccess.Test\bin\Debug</filename> in the
+      iBATIS.NET source distribution or in the root folder of the .NET
+      DataAccess binary distribution.</para>
+
+      <para>A provider may require libraries that you do not have installed,.
+      Therefore, the provider element has an "enabled" attribute that allows
+      you to disable unused providers. One provider can also be marked as the
+      "default" and will be used if another is not specified by your
+      configuration.</para>
+
+      <para>The standard <filename>providers.config</filename> file has
+      sqlServer1.1 set as the default and the sqlServer1.0 provider disabled.
+      Aside from sqlServer1.1, OleDb1.1, and Odbc1.1, all other providers are
+      disabled by default. Remember to set the "enabled" attribute to "true"
+      for the provider that you will be using.</para>
+
+      <important>
+        <para>ByteFx is the recommended provider if you are using MySQL. You
+        may download ByteFx from the MySQLNet SourceForge site
+        (http://sf.net/projects/mysqlnet/). If the ByteFx license is
+        acceptable to you, you may install it as a reference within your
+        application and enable the ByteFx provider.</para>
+      </important>
+
+      <para><tip>
+          <para>Be sure to review the <filename>providers.config</filename>
+          file and confirm that the provider you intend to use is enabled!
+          (Set the enabled attribute to true.)</para>
+        </tip></para>
+
+      <table>
+        <title>Expected default locations of the providers.config file</title>
+
+        <tgroup cols="2">
+          <tbody>
+            <row>
+              <entry>Windows, Library, or Test projects (using NUnit or
+              equivalent)</entry>
+
+              <entry>With the assembly (.dll) files with the
+              <filename>app.config</filename> file</entry>
+            </row>
+
+            <row>
+              <entry>Web projects</entry>
+
+              <entry>In the project base directory, with the
+              <filename>web.config</filename> file</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+
+      <para>To use the file, you can copy it into your project at the expected
+      default location, give a path to the file relative to the project root
+      directory, specify a url (absolute path) to its location, or make it an
+      embedded resource of your project. If you copy the file into the
+      expected default location, the &lt;providers&gt; element is not required
+      in your dao.config file.</para>
+
+      <sect3>
+        <title>&lt;providers&gt; attributes</title>
+
+        <para>The &lt;providers&gt; element can accept one of the following
+        attributes to specify the location of the providers.config
+        file.</para>
+
+        <table>
+          <title>Attributes of the &lt;providers&gt; element</title>
+
+          <tgroup cols="2">
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+
+                <entry>Description</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry><emphasis>resource</emphasis></entry>
+
+                <entry>Specify the file to be loaded from a relative path from
+                the project root directory. Since the root directory is
+                different depending on the project type, it is best to use a
+                properties variable to indicate the relative path. Having that
+                variable defined in a properties file makes it easy to change
+                the path to all your DataAccess configuration resources in one
+                location.<programlisting>resource="${root}providers.config"</programlisting></entry>
+              </row>
+
+              <row>
+                <entry><emphasis>url</emphasis></entry>
+
+                <entry>Specify the providers.config to be loaded through an
+                absolute path.<programlisting>url="<filename>c:\Web\MyApp\</filename>Resources\providers.config"
+or
+url="file://<filename>c:\</filename><filename><filename>Web\MyApp\</filename>Resources\</filename>providers.config"</programlisting></entry>
+              </row>
+
+              <row>
+                <entry><emphasis>embedded</emphasis></entry>
+
+                <entry>Specify the providers.config file to be loaded as an
+                embedded resource in an assembly. Syntax for the embedded
+                attribute is '<emphasis>[extendednamespace.]filename, the name
+                of the assembly which contains the embedded
+                resource</emphasis>'<programlisting>embedded="Resources.providers.config, MyApp.Data"</programlisting></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </sect3>
     </sect2>
 
     <sect2>
@@ -465,90 +655,30 @@ xsi:noNamespaceSchemaLocation="DaoConfig.xsd"&gt;
           </tbody>
         </tgroup>
       </table>
-    </sect2>
-
-    <sect2>
-      <title>The &lt;properties&gt; Element</title>
-
-      <para>Sometimes the values we use in an XML configuration file occur in
-      more than one element. Often, there are values that change when we move
-      the application from one server to another. To help you manage
-      configuration values, you can specify a standard properties file (with
-      name=value entries) as part of a Data Access configuration. Each named
-      value in the properties file becomes a <emphasis>shell</emphasis>
-      variable that can be used throughout the Data Access
-      configuration.</para>
-
-      <para>Properties are handy during building, testing, and deployment.
-      Additionally, properties make it easy to reconfigure your application
-      for multiple environments or to use automated tools for configuration
-      such as NAnt.</para>
-
-      <para>The &lt;properties&gt; element can only accept one of the
-      following attributes to specify the location of the properties
-      file.</para>
-
-      <table>
-        <title>Attributes of the &lt;properties&gt; element</title>
-
-        <tgroup cols="2">
-          <thead>
-            <row>
-              <entry>Attribute</entry>
-
-              <entry>Description</entry>
-            </row>
-          </thead>
-
-          <tbody>
-            <row>
-              <entry><emphasis>resource</emphasis></entry>
-
-              <entry>Specify the properties file name files to be loaded from
-              the root directory of the application (relative
-              path)<programlisting>resource="properties.config"</programlisting></entry>
-            </row>
-
-            <row>
-              <entry><emphasis>url</emphasis></entry>
-
-              <entry>Specify the properties file to be loaded through an
-              absolute path<programlisting>url="<filename>c:\Web\MyApp\Resources\properties</filename>.config"
-or
-url="file://<filename>c:\Web\MyApp\Resources\properties</filename>.config"</programlisting></entry>
-            </row>
-
-            <row>
-              <entry><emphasis>embedded</emphasis></entry>
-
-              <entry>Specify the properties file to be loaded as an embedded
-              resource in an assembly. Syntax for the embedded attribute is
-              '<emphasis>[extendednamespace.]filename, the name of the
-              assembly which contains the embedded
-              resource</emphasis>'<programlisting>embedded="Resources.properties.config, MyApp.Data"</programlisting></entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </table>
 
       <sect3>
-        <title>&lt;property&gt; element and attributes</title>
+        <title>The &lt;properties&gt; Element</title>
 
-        <para>You can also specify more than one properties file or add
-        property keys and values directly into your
-        <filename>dao.config</filename> file by using &lt;property&gt;
-        elements. For example:</para>
+        <para>Sometimes the values we use in an XML configuration file occur
+        in more than one element. Often, there are values that change when we
+        move the application from one server to another. To help you manage
+        configuration values, you can specify a standard properties file (with
+        name=value entries) as part of a Data Access configuration. Each named
+        value in the properties file becomes a <emphasis>shell</emphasis>
+        variable that can be used throughout the Data Access
+        configuration.</para>
 
-        <informalexample>
-          <programlisting>&lt;properties&gt;
- &lt;property resource="myProperties.config"/&gt;
- &lt;property resource="anotherProperties.config"/&gt;
- &lt;property key="host" value="ibatis.com" /&gt;
-&lt;/properties&gt;</programlisting>
-        </informalexample>
+        <para>Properties are handy during building, testing, and deployment.
+        Additionally, properties make it easy to reconfigure your application
+        for multiple environments or to use automated tools for configuration
+        such as NAnt.</para>
+
+        <para>The &lt;properties&gt; element can only accept one of the
+        following attributes to specify the location of the properties
+        file.</para>
 
         <table>
-          <title>Attributes of the &lt;property&gt; element</title>
+          <title>Attributes of the &lt;properties&gt; element</title>
 
           <tgroup cols="2">
             <thead>
@@ -563,15 +693,16 @@ url="file://<filename>c:\Web\MyApp\Resources\properties</filename>.config"</prog
               <row>
                 <entry><emphasis>resource</emphasis></entry>
 
-                <entry>Specify the properties file to be loaded from the root
-                directory of the application<programlisting>resource="properties.config"</programlisting></entry>
+                <entry>Specify the properties file name files to be loaded
+                from the root directory of the application (relative
+                path)<programlisting>resource="properties.config"</programlisting></entry>
               </row>
 
               <row>
                 <entry><emphasis>url</emphasis></entry>
 
                 <entry>Specify the properties file to be loaded through an
-                absolute path.<programlisting>url="<filename>c:\Web\MyApp\Resources\properties</filename>.config"
+                absolute path<programlisting>url="<filename>c:\Web\MyApp\Resources\properties</filename>.config"
 or
 url="file://<filename>c:\Web\MyApp\Resources\properties</filename>.config"</programlisting></entry>
               </row>
@@ -585,166 +716,170 @@ url="file://<filename>c:\Web\MyApp\Resources\properties</filename>.config"</prog
                 assembly which contains the embedded
                 resource</emphasis>'<programlisting>embedded="Resources.properties.config, MyApp.Data"</programlisting></entry>
               </row>
-
-              <row>
-                <entry><emphasis>key</emphasis></entry>
-
-                <entry>Defines a property key (variable) name<programlisting>key="username"</programlisting></entry>
-              </row>
-
-              <row>
-                <entry><emphasis>value</emphasis></entry>
-
-                <entry>Defines a value that will be used by the framework in
-                place of the the specified property
-                key/variable<programlisting>value="mydbuser"</programlisting></entry>
-              </row>
             </tbody>
           </tgroup>
         </table>
+
+        <sect4>
+          <title>&lt;property&gt; element and attributes</title>
+
+          <para>You can also specify more than one properties file or add
+          property keys and values directly into your
+          <filename>dao.config</filename> file by using &lt;property&gt;
+          elements. For example:</para>
+
+          <informalexample>
+            <programlisting>&lt;properties&gt;
+ &lt;property resource="myProperties.config"/&gt;
+ &lt;property resource="anotherProperties.config"/&gt;
+ &lt;property key="host" value="ibatis.com" /&gt;
+&lt;/properties&gt;</programlisting>
+          </informalexample>
+
+          <table>
+            <title>Attributes of the &lt;property&gt; element</title>
+
+            <tgroup cols="2">
+              <thead>
+                <row>
+                  <entry>Attribute</entry>
+
+                  <entry>Description</entry>
+                </row>
+              </thead>
+
+              <tbody>
+                <row>
+                  <entry><emphasis>resource</emphasis></entry>
+
+                  <entry>Specify the properties file to be loaded from the
+                  root directory of the application<programlisting>resource="properties.config"</programlisting></entry>
+                </row>
+
+                <row>
+                  <entry><emphasis>url</emphasis></entry>
+
+                  <entry>Specify the properties file to be loaded through an
+                  absolute path.<programlisting>url="<filename>c:\Web\MyApp\Resources\properties</filename>.config"
+or
+url="file://<filename>c:\Web\MyApp\Resources\properties</filename>.config"</programlisting></entry>
+                </row>
+
+                <row>
+                  <entry><emphasis>embedded</emphasis></entry>
+
+                  <entry>Specify the properties file to be loaded as an
+                  embedded resource in an assembly. Syntax for the embedded
+                  attribute is '<emphasis>[extendednamespace.]filename, the
+                  name of the assembly which contains the embedded
+                  resource</emphasis>'<programlisting>embedded="Resources.properties.config, MyApp.Data"</programlisting></entry>
+                </row>
+
+                <row>
+                  <entry><emphasis>key</emphasis></entry>
+
+                  <entry>Defines a property key (variable)
+                  name<programlisting>key="username"</programlisting></entry>
+                </row>
+
+                <row>
+                  <entry><emphasis>value</emphasis></entry>
+
+                  <entry>Defines a value that will be used by the framework in
+                  place of the the specified property
+                  key/variable<programlisting>value="mydbuser"</programlisting></entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </table>
+        </sect4>
       </sect3>
-    </sect2>
-
-    <sect2>
-      <title>The &lt;database&gt; Element</title>
-
-      <para>The &lt;database&gt; element encloses elements that configure the
-      database system for use by the framework. These are the &lt;provider&gt;
-      and &lt;datasource&gt; elements.</para>
 
       <sect3>
-        <title>The &lt;provider&gt; Element</title>
+        <title>The &lt;database&gt; Element</title>
 
-        <para>The &lt;provider&gt; element specifies a database provider from
-        the <filename>providers.config</filename> file.</para>
+        <para>The &lt;database&gt; element encloses elements that configure
+        the database system for use by the framework. These are the
+        &lt;provider&gt; and &lt;datasource&gt; elements.</para>
 
-        <para>Under ADO.NET, a database system is accessed through a provider.
-        A database system can use a custom provider or a generic ODBC
-        provider. iBATIS.NET uses a pluggable approach to installing
-        providers. Each provider is represented by an XML descriptor element.
-        The list of providers you might want to use can be kept in a separate
-        XML descriptor file. The iBATIS.NET distribution includes the standard
-        <filename>providers.config</filename> file with a set of thirteen
-        prewritten provider elements:</para>
+        <sect4>
+          <title>The &lt;provider&gt; Element</title>
 
-        <para><itemizedlist>
-            <listitem>
-               sqlServer1.0 - Microsoft SQL Server 7.0/2000 provider available with .NET Framework 1.0 
-            </listitem>
+          <para>The &lt;provider&gt; element specifies a database provider
+          from the <filename>providers.config</filename> file.</para>
 
-            <listitem>
-               sqlServer1.1 -Microsoft SQL Server 7.0/2000 provider available with .NET Framework 1.1 
-            </listitem>
+          <para>If the default provider is being used, the &lt;provider&gt;
+          element is optional. Or, if several providers are available, one may
+          be selected using the provider element without modifying the
+          <filename>providers.config</filename> file. <programlisting>&lt;provider name="OleDb1.1" /&gt;</programlisting></para>
 
-            <listitem>
-               OleDb1.1 - OleDb provider available with .NET Framework 1.1 
-            </listitem>
+          <table>
+            <title>Attributes of the &lt;provider&gt; element</title>
 
-            <listitem>
-               Odbc1.1 - Odbc provider available with .NET Framework 1.1 
-            </listitem>
+            <tgroup cols="2">
+              <thead>
+                <row>
+                  <entry>Attribute</entry>
 
-            <listitem>
-               oracle9.2 - Oracle provider V9.2.0.401 
-            </listitem>
+                  <entry>Description</entry>
+                </row>
+              </thead>
 
-            <listitem>
-               oracle10.1 - Oracle provider V10.1.0.301 
-            </listitem>
+              <tbody>
+                <row>
+                  <entry><emphasis>name</emphasis></entry>
 
-            <listitem>
-               oracleClient1.0 - MS Oracle provider V1.0.5 available with .NET Framework 1.1 
-            </listitem>
+                  <entry>Name used to uniquely identify the provider</entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </table>
+        </sect4>
 
-            <listitem>
-               ByteFx - ByteFx MySQL provider V0.7.6.15073 
-            </listitem>
+        <sect4>
+          <title>The &lt;dataSource&gt; Element</title>
 
-            <listitem>
-               MySql - MySQL provider V1.0.4.20163 
-            </listitem>
+          <para>The &lt;datasource&gt; element specifies the connection string
+          for a specific database and provider.</para>
 
-            <listitem>
-               SQLite3 - SQLite.NET provider V0.21.1869.3794 
-            </listitem>
+          <table>
+            <title>Attributes of the &lt;dataSource&gt; element</title>
 
-            <listitem>
-               Firebird1.7 - Firebird SQL .NET provider V1.7.0.33200 
-            </listitem>
+            <tgroup cols="2">
+              <thead>
+                <row>
+                  <entry>Attribute</entry>
 
-            <listitem>
-               PostgreSql0.7 - Npgsql provider V0.7.0.0 
-            </listitem>
+                  <entry>Description</entry>
+                </row>
+              </thead>
 
-            <listitem>
-               iDb2.10 - IBM DB2 iSeries provider V10.0.0.0 
-            </listitem>
-          </itemizedlist></para>
+              <tbody>
+                <row>
+                  <entry><emphasis>name</emphasis></entry>
 
-        <para>The <filename>providers.config</filename> file can be found
-        under <filename>\source\IBatisNet.DataAccess.Test\bin\Debug</filename>
-        in the iBATIS.NET source distribution or in the root folder of the
-        .NET DataMapper binary distribution.</para>
+                  <entry>Name used to identify the data source</entry>
+                </row>
 
-        <para>A provider may require libraries that you do not have
-        installed,. Therefore, the provider element has an "enabled" attribute
-        that allows you to disable unused providers. One provider can also be
-        marked as the "default" and will be used if another is not specified
-        by your configuration.</para>
+                <row>
+                  <entry><emphasis>connectionString</emphasis></entry>
 
-        <para>The standard <filename>providers.config</filename> file has
-        sqlServer1.1 set as the default and the sqlServer1.0 provider
-        disabled. Aside from sqlServer1.1, OleDb1.1, and Odbc1.1, all other
-        providers are disabled by default. Remember to set the "enabled"
-        attribute to "true" for the provider that you will be using.</para>
+                  <entry>The connection string to the database</entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </table>
+        </sect4>
+      </sect3>
 
-        <important>
-          <para>ByteFx is the recommended provider if you are using MySQL. You
-          may download ByteFx from the MySQLNet SourceForge site
-          (http://sf.net/projects/mysqlnet/). If the ByteFx license is
-          acceptable to you, you may install it as a reference within your
-          application and enable the ByteFx provider.</para>
-        </important>
+      <sect3>
+        <title>The &lt;daoSessionHandler&gt; Element</title>
 
-        <para><tip>
-            <para>Be sure to review the <filename>providers.config</filename>
-            file and confirm that the provider you intend to use is enabled!
-            (Set the enabled attribute to true.)</para>
-          </tip></para>
+        <para>The &lt;daoSessionHandler&gt; element specifies the component
+        that manages transaction and connections for a session.</para>
 
         <table>
-          <title>Expected default locations of the providers.config
-          file</title>
-
-          <tgroup cols="2">
-            <tbody>
-              <row>
-                <entry>Windows, Library, or Test projects (using NUnit or
-                equivalent)</entry>
-
-                <entry>With the assembly (.dll) files with the
-                <filename>app.config</filename> file</entry>
-              </row>
-
-              <row>
-                <entry>Web projects</entry>
-
-                <entry>In the project base directory, with the
-                <filename>web.config</filename> file</entry>
-              </row>
-            </tbody>
-          </tgroup>
-        </table>
-
-        <para>To use the file, you can copy it into your project at the
-        expected default location, give a path to the file relative to the
-        project root directory, specify a url (absolute path) to its location,
-        or make it an embedded resource of your project. If you copy the file
-        into the expected default location, the &lt;providers&gt; element is
-        not required in your dao.config file.</para>
-
-        <table>
-          <title>Attributes of the &lt;provider&gt; element</title>
+          <title>Attributes of the &lt;daoSessionHandler&gt; element</title>
 
           <tgroup cols="2">
             <thead>
@@ -757,170 +892,152 @@ url="file://<filename>c:\Web\MyApp\Resources\properties</filename>.config"</prog
 
             <tbody>
               <row>
-                <entry><emphasis>name</emphasis></entry>
+                <entry><emphasis>id</emphasis></entry>
 
-                <entry>Name used to uniquely identify the provider</entry>
+                <entry>Id used to uniquely identify the handler</entry>
               </row>
             </tbody>
           </tgroup>
         </table>
+
+        <sect4>
+          <title>The &lt;property &gt; Element</title>
+
+          <para>Some &lt;daoSessionHandler&gt; implementations such as iBATIS
+          DataMapper SqlMaps and NHibernate need additional information for
+          configuration. The &lt;property&gt; element is used to specify this
+          information.</para>
+
+          <para>For iBATIS DataMapper SqlMaps, the method for locating and
+          loading the <filename>SqlMap.config</filename> file is used in the
+          "name" attribute. Depending on the chosen method, the corresponding
+          filepath or fully-qualified resource and assembly name is used for
+          the "value" attribute.</para>
+
+          <table>
+            <title>Attributes of the &lt;property&gt; element for use with
+            iBATIS DataMapper SqlMaps</title>
+
+            <tgroup cols="2">
+              <thead>
+                <row>
+                  <entry>Attribute</entry>
+
+                  <entry>Description</entry>
+                </row>
+              </thead>
+
+              <tbody>
+                <row>
+                  <entry><emphasis>name</emphasis></entry>
+
+                  <entry>Indicates the method used to locate and load the
+                  <filename>SqlMap.config</filename> file. The available
+                  options are "resource", "url", and "embedded" (as previously
+                  described for loading the providers and properties
+                  configuration files).<programlisting>name="resource"</programlisting></entry>
+                </row>
+
+                <row>
+                  <entry><emphasis>value</emphasis></entry>
+
+                  <entry>Used to specify the filename, fullpath, or fully
+                  qualified resource and assembly name for the
+                  <filename>SqlMap.config</filename> file.<programlisting>value="MySqlMap.config"</programlisting></entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </table>
+
+          <para>For NHibernate, the name and value attributes are used to
+          specify various NHibernate configuration details such as the
+          hibernate.dialect, hibernate.connection.provider, or mapping.</para>
+
+          <table>
+            <title>Attributes of the &lt;property&gt; element for use with
+            NHibernate</title>
+
+            <tgroup cols="2">
+              <thead>
+                <row>
+                  <entry>Attribute</entry>
+
+                  <entry>Description</entry>
+                </row>
+              </thead>
+
+              <tbody>
+                <row>
+                  <entry><emphasis>name</emphasis></entry>
+
+                  <entry>The name of the property to configure.
+                  Example:<programlisting>name="hibernate.dialect"</programlisting></entry>
+                </row>
+
+                <row>
+                  <entry><emphasis>value</emphasis></entry>
+
+                  <entry>The value of the property configuration.
+                  Example:<programlisting>value="NHibernate.Dialect.MsSql2000Dialect"</programlisting></entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </table>
+        </sect4>
       </sect3>
 
       <sect3>
-        <title>The &lt;dataSource&gt; Element</title>
+        <title>The &lt;daoFactory&gt; Element</title>
 
-        <para>The &lt;datasource&gt; element specifies the connection string
-        for a specific database and provider.</para>
+        <para>The &lt;daoFactory&gt; element is a grouping of Dao interfaces
+        and implementations.</para>
 
-        <table>
-          <title>Attributes of the &lt;dataSource&gt; element</title>
+        <sect4>
+          <title>The &lt;dao&gt; Element</title>
 
-          <tgroup cols="2">
-            <thead>
-              <row>
-                <entry>Attribute</entry>
+          <para>The &lt;dao&gt; element specifies a Dao interface and one
+          implementation of that interface.</para>
 
-                <entry>Description</entry>
-              </row>
-            </thead>
+          <table>
+            <title>Attributes of the &lt;dao&gt; element</title>
 
-            <tbody>
-              <row>
-                <entry><emphasis>name</emphasis></entry>
+            <tgroup cols="2">
+              <thead>
+                <row>
+                  <entry>Attribute</entry>
 
-                <entry>Name used to identify the data source</entry>
-              </row>
+                  <entry>Description</entry>
+                </row>
+              </thead>
 
-              <row>
-                <entry><emphasis>connectionString</emphasis></entry>
+              <tbody>
+                <row>
+                  <entry><emphasis>interface</emphasis></entry>
 
-                <entry>The connection string to the database</entry>
-              </row>
-            </tbody>
-          </tgroup>
-        </table>
-      </sect3>
-    </sect2>
-
-    <sect2>
-      <title>The &lt;daoSessionHandler&gt; Element</title>
-
-      <para>The &lt;daoSessionHandler&gt; element specifies the component that
-      &lt;isPropertyAvailable property="id" &gt; ACCOUNT_ID=#id#
-      &lt;/isPropertyAvailable&gt;manages transaction and connections for a
-      session.</para>
-
-      <table>
-        <title>Attributes of the &lt;daoSessionHandler&gt; element</title>
-
-        <tgroup cols="2">
-          <thead>
-            <row>
-              <entry>Attribute</entry>
-
-              <entry>Description</entry>
-            </row>
-          </thead>
-
-          <tbody>
-            <row>
-              <entry><emphasis>id</emphasis></entry>
-
-              <entry>Id used to uniquely identify the handler</entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </table>
-
-      <sect3>
-        <title>The &lt;property &gt; Element</title>
-
-        <para>Some &lt;daoSessionHandler&gt; implementations (such as SqlMap
-        and NHibernate) need additional information for configuration. The
-        &lt;property&gt; element is used to specify this information.</para>
-
-        <table>
-          <title>Attributes of the &lt;property&gt; element</title>
-
-          <tgroup cols="2">
-            <thead>
-              <row>
-                <entry>Attribute</entry>
-
-                <entry>Description</entry>
-              </row>
-            </thead>
-
-            <tbody>
-              <row>
-                <entry><emphasis>name</emphasis></entry>
-
-                <entry>The name of the property to configure.
-                Example:<programlisting>name="sqlMapConfigFile"</programlisting></entry>
-              </row>
-
-              <row>
-                <entry><emphasis>value</emphasis></entry>
-
-                <entry>The value of the property configuration.
-                Example:<programlisting>value="SqlMap_MSSQL_SqlClient.config"</programlisting></entry>
-              </row>
-            </tbody>
-          </tgroup>
-        </table>
-      </sect3>
-    </sect2>
-
-    <sect2>
-      <title>The &lt;daoFactory&gt; Element</title>
-
-      <para>The &lt;daoFactory&gt; element is a grouping of Dao interfaces and
-      implementations.</para>
-
-      <sect3>
-        <title>The &lt;dao&gt; Element</title>
-
-        <para>The &lt;dao&gt; element specifies a Dao interface and one
-        implementation of that interface.</para>
-
-        <table>
-          <title>Attributes of the &lt;dao&gt; element</title>
-
-          <tgroup cols="2">
-            <thead>
-              <row>
-                <entry>Attribute</entry>
-
-                <entry>Description</entry>
-              </row>
-            </thead>
-
-            <tbody>
-              <row>
-                <entry><emphasis>interface</emphasis></entry>
-
-                <entry>The interface that the Dao must implement. Structure
-                value must be : namespace-qualified name of the class,
-                followed by a comma, followed by (at a bare minimum) the name
-                of the assembly that contains the class. Example:
-                <programlisting>interface=
+                  <entry>The interface that the Dao must implement. Structure
+                  value must be : namespace-qualified name of the class,
+                  followed by a comma, followed by (at a bare minimum) the
+                  name of the assembly that contains the class. Example:
+                  <programlisting>interface=
 "IBatisNet.Test.Dao.Interfaces.IAccountDao,
 IBatisNet.Test"</programlisting></entry>
-              </row>
+                </row>
 
-              <row>
-                <entry><emphasis>implementation</emphasis></entry>
+                <row>
+                  <entry><emphasis>implementation</emphasis></entry>
 
-                <entry>An implementation of the Dao interface. Structure value
-                must be : namespace-qualified name of the class, followed by a
-                comma, followed by (at a bare minimum) the name of the
-                assembly that contains the class. Example: <programlisting>implementation=
+                  <entry>An implementation of the Dao interface. Structure
+                  value must be : namespace-qualified name of the class,
+                  followed by a comma, followed by (at a bare minimum) the
+                  name of the assembly that contains the class. Example:
+                  <programlisting>implementation=
 "IBatisNet.Test.Dao.Implementations.Ado.AccountDao, 
 IBatisNet.Test"</programlisting></entry>
-              </row>
-            </tbody>
-          </tgroup>
-        </table>
+                </row>
+              </tbody>
+            </tgroup>
+          </table>
+        </sect4>
       </sect3>
     </sect2>
   </sect1>

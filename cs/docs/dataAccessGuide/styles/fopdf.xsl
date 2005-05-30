@@ -286,8 +286,8 @@
                    Fonts & Styles
     ################################################### -->      
 
-    <!-- Justified text and no hyphenation -->
-    <xsl:param name="alignment">justify</xsl:param>
+    <!-- Left-align text and no hyphenation -->
+    <xsl:param name="alignment">left</xsl:param>
     <xsl:param name="hyphenate">false</xsl:param>
 
     <!-- Default Font size -->

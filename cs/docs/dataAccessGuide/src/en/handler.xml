@@ -17,9 +17,11 @@
     <para>This implementation uses ADO.NET to provide a connection and
     transaction via the ADO.NET API.</para>
 
-    <example><title>Example Simple DAO Session Handler configuration</title>
-    <programlisting>&lt;context id="<emphasis role="blue">SimpleDao</emphasis>" default="<emphasis
-        role="blue">true</emphasis>"&gt;
+    <example>
+      <title>Example Simple DAO Session Handler configuration</title>
+
+      <programlisting>&lt;context id="<emphasis role="blue">SimpleDao</emphasis>" default="<emphasis
+          role="blue">true</emphasis>"&gt;
   &lt;properties resource="<emphasis role="blue">database.config</emphasis>"/&gt;
 
   &lt;database&gt;
@@ -36,7 +38,8 @@
     &lt;dao interface="<emphasis role="blue">IBatisNet.Test.Dao.Interfaces.IAccountDao, IBatisNet.Test</emphasis>"
          implementation="<emphasis role="blue">IBatisNet.Test.Dao.Implementations.Ado.AccountDao, IBatisNet.Test</emphasis>"/&gt;
   &lt;/daoFactory&gt;
-&lt;/context&gt;</programlisting></example>
+&lt;/context&gt;</programlisting>
+    </example>
 
     <para></para>
   </sect1>
@@ -46,10 +49,13 @@
 
     <para>The SqlMap session handler implementation wraps iBATIS Data Mapper
     SqlMapper session management services for simple use via the DAO
-    framework. All you need to specify is the SqlMap configuration file.</para>
+    framework. All you need to specify is the SqlMap configuration
+    file.</para>
 
-    <example><title>Example SqlMap DAO Session Handler configuration</title>
-    <programlisting>&lt;context id="<emphasis role="blue">SqlMapDao</emphasis>"&gt;
+    <example>
+      <title>Example SqlMap DAO Session Handler configuration</title>
+
+      <programlisting>&lt;context id="<emphasis role="blue">SqlMapDao</emphasis>"&gt;
   &lt;properties resource="<emphasis role="blue">database.config</emphasis>"/&gt;
 
   &lt;database&gt;
@@ -60,14 +66,15 @@
   &lt;/database&gt;
 
   &lt;daoSessionHandler id="SqlMap"&gt;
-    &lt;property name="sqlMapConfigFile" value="<emphasis role="blue">SqlMap.config</emphasis>"/&gt;
+    &lt;property name="resource" value="<emphasis role="blue">SqlMap.config</emphasis>"/&gt;
   &lt;/daoSessionHandler&gt;
 
   &lt;daoFactory&gt;
     &lt;dao interface="<emphasis role="blue">IBatisNet.Test.Dao.Interfaces.IAccountDao, IBatisNet.Test</emphasis>" 
          implementation="<emphasis role="blue">IBatisNet.Test.Dao.Implementations.DataMapper.AccountDao, IBatisNet.Test"</emphasis>/&gt;
  &lt;/daoFactory&gt;
-&lt;/context&gt;</programlisting></example>
+&lt;/context&gt;</programlisting>
+    </example>
 
     <para></para>
   </sect1>
@@ -81,8 +88,10 @@
     configuration are the same as those that would normally be specified in an
     NHibernate configuration section. Here is an example configuration:</para>
 
-    <example><title>Example NHibernate DAO Session Handler configuration</title>
-    <programlisting>&lt;context id="<emphasis role="blue">NHibernateDao</emphasis>"&gt;
+    <example>
+      <title>Example NHibernate DAO Session Handler configuration</title>
+
+      <programlisting>&lt;context id="<emphasis role="blue">NHibernateDao</emphasis>"&gt;
   &lt;properties resource="<emphasis role="blue">database.config</emphasis>"/&gt;
     
   &lt;database&gt;
@@ -108,6 +117,7 @@
     &lt;dao interface="<emphasis role="blue">IBatisNet.Test.Dao.Interfaces.IAccountDao, IBatisNet.Test</emphasis>" 
          implementation="<emphasis role="blue">IBatisNet.Test.Dao.Implementations.DataMapper.AccountDao, IBatisNet.Test</emphasis>"/&gt;
   &lt;/daoFactory&gt;
-&lt;/context&gt;</programlisting></example>
+&lt;/context&gt;</programlisting>
+    </example>
   </sect1>
 </chapter>

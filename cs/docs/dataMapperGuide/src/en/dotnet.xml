@@ -632,7 +632,7 @@ url="file://<filename>c:\Web\MyApp\Resources\properties</filename>.config"</prog
           file.</para>
 
           <table>
-            <title>Attributes of the &lt;properties&gt; element</title>
+            <title>Attributes of the &lt;providers&gt; element</title>
 
             <tgroup cols="2">
               <thead>
@@ -1123,7 +1123,8 @@ IBatisNet.Test"</programlisting></entry>
           properties variable to indicate the relative path when using the
           &lt;sqlMap&gt; "resource" attribute. Having a variable defined in a
           properties file makes it easy to change the path to all your Data
-          Mapper configuration resources in one location.</para>
+          Mapper configuration resources in one location (note the
+          ${projectdir} and ${root} variables in the example above).</para>
         </tip>
       </sect3>
     </sect2>
@@ -1159,13 +1160,16 @@ IBatisNet.Test"</programlisting></entry>
       <title>Building a SqlMapper Instance</title>
 
       <note>
-        <para>The SqlMapper API for configuration has been deprecated. The new
-        configuration API is now found within the DomSqlMapBuilder class. Old
-        method signatures have remained the same, and new methods for loading
-        SqlMap.config files through a <classname>Stream</classname>,
-        <classname>Uri</classname>, <classname>FileInfo</classname>, or
-        <classname>XmlDocument</classname> instance have been added for more
-        flexibility.</para>
+        <para>In prior versions of the DataMapper, the
+        <classname>SqlMapper</classname> class was responsible for
+        configuration. This has been superceded by a new configuration API
+        found within the <classname>DomSqlMapBuilder</classname> class. Old
+        configuration method signatures have remained the same, but there are
+        new methods that have been added for more flexibility. These methods
+        support the loading of configuration information through a
+        <classname>Stream</classname>, <classname>Uri</classname>,
+        <classname>FileInfo</classname>, or <classname>XmlDocument</classname>
+        instance.</para>
       </note>
 
       <para>An XML document is a wonderful tool for describing a database
@@ -1396,8 +1400,8 @@ SqlMapper anotherMapper = builder.Configure(aStream);</programlisting>
         useful when using a singleton such as the
         <classname>Mapper</classname> class shown in the prior section. The
         example <classname>Mapper</classname> singleton allows a reconfigured
-        <classname>SqlMapper</classname> instance to be reloaded on the fly.
-        </para>
+        <classname>SqlMapper</classname> instance to be reloaded on the
+        fly.</para>
 
         <example>
           <title>Mapper ConfigureHandler delegate</title>
