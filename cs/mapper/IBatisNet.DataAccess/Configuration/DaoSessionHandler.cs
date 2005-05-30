@@ -153,7 +153,7 @@ namespace IBatisNet.DataAccess.Configuration
 			catch(Exception e)
 			{
 				throw new ConfigurationException(
-					string.Format("DaoManager could not configure DaoSessionHandler. DaoSessionHandler named \"{0}\", failed. Cause: {1}", _name, e.Message)
+					string.Format("DaoManager could not configure DaoSessionHandler. DaoSessionHandler named \"{0}\", failed. Cause: {1}", _name, e.Message),e
 					);
 			}
 		}

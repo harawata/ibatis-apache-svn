@@ -118,7 +118,7 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 			}
 			catch(Exception e)
 			{
-				throw new ConfigurationException(string.Format("DaoManager could not configure SqlMapDaoSessionHandler.Cause: {0}", e.Message));
+				throw new ConfigurationException(string.Format("DaoManager could not configure SqlMapDaoSessionHandler.Cause: {0}", e.Message),e);
 			}
 		}
 
