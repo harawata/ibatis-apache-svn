@@ -4,7 +4,24 @@
 </head>
 
 <body>
-	<h3>May 22: .NET DataMapper 1.1 and DataAccess 1.5 General Availability!</h3>
+
+<h2>What is iBATIS?</h2>
+
+    <p>The iBATIS framework makes it easier to use a database with Java and .NET applications. 
+       iBATIS couples objects with stored procedures or SQL statements using a XML descriptor.  
+       Simplicity is the biggest advantage of the iBATIS Data Mapper over object relational mapping 
+       tools. To use iBATIS Data Mapper you rely on your own objects, XML, and SQL. There is little to 
+       learn that you don't already know.  With iBATIS Data Mapper you have the full power of both SQL and 
+       stored procedures at your fingertips.
+    </p>
+    <p>
+       iBATIS is in the process of migrating to the Apache Software Foundation. Once we have passed through 
+       the Apache Incubator, iBATIS will become a top-level Apache project.
+    </p>
+
+<h2>News</h3>
+
+    <h3>May 22: .NET DataMapper 1.1 and DataAccess 1.5 General Availability!</h3>
 
     <p>Some of the new features for the <strong>DataMapper</strong> framework include:</p>
     <ul>
@@ -30,7 +47,7 @@
 	<br/><a href="downloads.html">Download iBATIS.NET DataMapper 1.1 and DataAccess 1.5</a>
 	</p>
 
-	<h3>May 16: 2.1.0 Released!</h3>
+	<h3>May 16: iBATIS for Java 2.1.0 Released!</h3>
 	<p>This release includes some cool new features like &lt;discriminator&gt; and &lt;subMap&gt; tags 
 	for better support of class inheritance. There's an example of how to use these new
 	tags <a href="http://svn.apache.org/repos/asf/incubator/ibatis/trunk/java/mapper/mapper2/test/com/ibatis/sqlmap/maps/Documents.xml">here</a>.
@@ -52,57 +69,7 @@
 	whole team.  Enjoy.
 	</p>
 
-	<h3>May 1: Successfully Incubated</h3>
-	<p>We've been successfully incubated and are ready to become an official 
-	Apache project. Our incubation checklist is complete, and now we 
-	have some new checklist items to get started on. Basically it involves 
-	moving the apache <strong>website </strong>and the <strong>mailing 
-	lists</strong>. This will be done with minimal impact to our community. 
-	Hopefully it will all be done within the next few weeks.</p>
-	<p><a href="common/download.html"></a></p>
-
-	<h3>Apache Incubator Status - Complete!</h3>
-                  <ol>
-                    <li><strong><font color="#0000FF">DONE &gt;&gt;</font> 
-                      Move Discussions to Apache Mailing Lists:</strong> The old 
-                      SourceForge forums are now closed. We all use the Apache 
-                      Mailing Lists now for support and development discussions. 
-                      So far, I think we're happy with the results. See the support 
-                      page for resource info.</li>
-                    <li ><strong><font color="#0000FF">DONE &gt;&gt;</font> 
-                      Move Bug tracking to JIRA:</strong> The SourceForge bug 
-                      tracker has been closed. We've moved to JIRA and so far 
-                      the results are good. JIRA is a bit slower, but arguably 
-                      does a much better job of organizing and tracking bugs and 
-                      their lifecycle.</li>
-                    <li ><strong><font color="#0000FF">DONE &gt;&gt;</font> 
-                      Apache Wiki:</strong> We've set up a Wiki to help us keep 
-                      up with the fast pace of iBATIS, including new features 
-                      and issues that would normally take months to get into the 
-                      documentation. If you can't find it in the documentation, 
-                      you'll hopefully find it on the Wiki <em>(FAQs, undocumented 
-                      items, environment specific solutions and 3rd party contributions 
-                      and tools)</em>.</li>
-                    <li ><strong><font color="#0000FF">DONE &gt;&gt;</font> 
-                      Move Feature Requests to JIRA:</strong> Turns out all of 
-                      the RFEs were invalid, fixed or otherwise unecessary to 
-                      move. If you disagree, please feel free to reopen one of 
-                      them at Apache JIRA.</li>
-                    <li ><strong><font color="#0000FF">DONE &gt;&gt;</font> 
-                      Move Source Control to Apache SVN: </strong>We've migrated 
-                      our SourceForge CVS repository to Subversion (SVN). It's 
-                      now migrated fully to the Apache infrastructure. </li>
-                    <li ><strong><font color="#0000FF">DONE &gt;&gt;</font><font color="#993399"> 
-                      </font> New Apache Website (Forrest): </strong>Well, for 
-                      now we have two websites. The forrest one at Apache is being 
-                      maintained regularly and is accessible to all of our developers 
-                      now. </li>
-                    <li ><strong>iBATIS.com/net </strong>will be 
-                      around for a long time. All of the key resources will be 
-                      migrated to Apache, but I'll maintain this as a gateway 
-                      to those resources for as long as the community finds it 
-                      useful and not redundant.</li>
-                  </ol>
+	
            
 </body>
 </html>
