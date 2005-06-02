@@ -17,9 +17,9 @@ IBatisNet Change Log
 - Fixed Oracle issues (JIRA-27, JIRA-54, JIRA-56, JIRA-57)
 - Improvement JIRA-75/63
 <properties> 
-     <propertie resource="sqlmap-config.xml"/> 
-     <propertie resource="${root}Resources/Query/database.xml"/> 
-     <propertie key="Hello" value="World" /> ( To resolve IBATISNET-63 ) 
+     <property resource="sqlmap-config.xml"/> 
+     <property resource="${root}Resources/Query/database.xml"/> 
+     <property key="Hello" value="World" /> ( To resolve IBATISNET-63 ) 
  <properties> 
  
 - Fixed JIRA-70 Passed inner exception when re-throwing when init provider

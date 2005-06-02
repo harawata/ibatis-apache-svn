@@ -106,14 +106,16 @@ Mapper.Instance().Insert("InsertLineItem",lineItem);</programlisting></para>
 &lt;sqlMap namespace="Product" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
   xsi:noNamespaceSchemaLocation="SqlMap.xsd"&gt;
 
-  <emphasis role="alias">&lt;typeAlias alias="Product" type="Example.Domain.Product, Example.Domain" /&gt;</emphasis>
+<emphasis role="alias">  &lt;alias&gt;
+    &lt;typeAlias alias="Product" type="Example.Domain.Product, Example.Domain" /&gt;
+  &lt;/alias&gt;</emphasis><emphasis role="cache">
 
-  <emphasis role="cache">&lt;alias&gt;
+  &lt;cacheModels&gt;
     &lt;cacheModel id="productCache" type="LRU"&gt;
       &lt;flushInterval hours="24"/&gt;
-      &lt;property name="size" value="1000" /&gt;
+      &lt;property name="CacheSize" value="1000" /&gt;
     &lt;/cacheModel&gt;
-  &lt;/alias&gt;</emphasis>
+  &lt;/cacheModels&gt;</emphasis>
 
   <emphasis role="resultmap"> &lt;resultMaps&gt;
     &lt;resultMap id="productResult" class="Product"&gt;
@@ -733,7 +735,7 @@ All query methods</programlisting></entry>
   SELECT
   PER_ID as <emphasis role="blue">Id</emphasis>,
   PER_FIRST_NAME as <emphasis role="blue">FirstName</emphasis>,
-  PER_LAST_NAME as <emphasis role="blue">LastNam</emphasis>e,
+  PER_LAST_NAME as <emphasis role="blue">LastName</emphasis>,
   PER_BIRTH_DATE as <emphasis role="blue">BirthDate</emphasis>,
   PER_WEIGHT_KG as <emphasis role="blue">WeightInKilograms</emphasis>,
   PER_HEIGHT_M as <emphasis role="blue">HeightInMeters</emphasis>
@@ -854,8 +856,7 @@ namespace WebShop.Domain
             <title>A &lt;statement &gt;element with listClass
             attribute</title>
 
-            <para><programlisting>&lt;statement id="GetAccounts"
- parameterClass="int"
+            <para><programlisting>&lt;statement id="GetAllAccounts"
  <emphasis role="blue">listClass="AccountCollection"</emphasis>
  <emphasis role="blue">resultClass="Account"</emphasis>&gt;
    select
@@ -945,20 +946,20 @@ namespace WebShop.Domain
     Map.<example>
         <title>An external Parameter Map</title>
 
-        <programlisting>&lt;parameterMap id="<emphasis role="blue">ParameterMap.name</emphasis>" 
-  [class="<emphasis role="blue">class.name, assembly|typeAlias</emphasis>"]
-  [extends="<emphasis role="blue">[sqlMap.namespace.]parameterMap.Id</emphasis>"]&gt;
+        <programlisting>&lt;parameterMap id="<emphasis role="blue">parameterMapIdentifier</emphasis>" 
+  [class="<emphasis role="blue">fullyQualifiedClassName, assembly|typeAlias</emphasis>"]
+  [extends="<emphasis role="blue">[sqlMapNamespace.]parameterMapId</emphasis>"]&gt;
   &lt;parameter 
-    property ="<emphasis role="blue">property.name</emphasis>" 
-    [column="<emphasis role="blue">column.name</emphasis>"]
+    property ="<emphasis role="blue">propertyName</emphasis>" 
+    [column="<emphasis role="blue">columnName</emphasis>"]
     [direction="<emphasis role="blue">Input|Output|InputOutput</emphasis>"]
-    [dbType="<emphasis role="blue">database.type</emphasis>"] 
-    [type="<emphasis role="blue">property.CLR.type</emphasis>"]
-    [nullValue="<emphasis role="blue">null.value.replacement</emphasis>"] 
-    [size="<emphasis role="blue">column.size</emphasis>"] 
-    [precision="<emphasis role="blue">column.precision</emphasis>"] 
-    [scale="<emphasis role="blue">column.scale</emphasis>"]  
-    [typeHandler="<emphasis role="blue">class.name, assembly|typeAlias</emphasis>"]  
+    [dbType="<emphasis role="blue">databaseType</emphasis>"] 
+    [type="<emphasis role="blue">propertyCLRType</emphasis>"]
+    [nullValue="<emphasis role="blue">nullValueReplacement</emphasis>"] 
+    [size="<emphasis role="blue">columnSize</emphasis>"] 
+    [precision="<emphasis role="blue">columnPrecision</emphasis>"] 
+    [scale="<emphasis role="blue">columnScale</emphasis>"]  
+    [typeHandler="<emphasis role="blue">fullyQualifiedClassName, assembly|typeAlias</emphasis>"]  
   &lt;parameter ... ... /&gt;
   &lt;parameter ... ... /&gt; 
 &lt;/parameterMap&gt;</programlisting>
@@ -1216,9 +1217,9 @@ namespace WebShop.Domain
       parameters.<example>
           <title>A &lt;statement&gt; using inline parameters</title>
 
-          <para><programlisting>&lt;statement id="insertProduct" parameterClass="product"&gt;
+          <para><programlisting>&lt;statement id="insertProduct" parameterClass="Product"&gt;
   insert into PRODUCT (PRD_ID, PRD_DESCRIPTION)
-  values (<emphasis role="blue">#id#</emphasis>, <emphasis role="blue">#description#</emphasis>);
+  values (<emphasis role="blue">#id#</emphasis>, <emphasis role="blue">#description#</emphasis>)
 &lt;/statement&gt;</programlisting></para>
         </example></para>
 
@@ -1229,9 +1230,9 @@ namespace WebShop.Domain
         <title>A &lt;statement&gt; using an inline parameter map with a
         type</title>
 
-        <para><programlisting>&lt;statement id="insertProduct" parameterClass="product"&gt;
+        <para><programlisting>&lt;statement id="insertProduct" parameterClass="Product"&gt;
   insert into PRODUCT (PRD_ID, PRD_DESCRIPTION)
-  values (<emphasis role="blue">#id:int#</emphasis>, <emphasis role="blue">#description:VarChar#</emphasis>);
+  values (<emphasis role="blue">#id:int#</emphasis>, <emphasis role="blue">#description:VarChar#</emphasis>)
 &lt;/statement&gt;</programlisting></para>
       </example>
 
@@ -1239,13 +1240,13 @@ namespace WebShop.Domain
       also be declared inline.</para>
 
       <example>
-        <title>A &lt;statement&gt; using an inline parameter map with null
-        value replacements</title>
+        <title>A &lt;statement&gt; using an inline parameter map with a null
+        value replacement</title>
 
-        <programlisting>&lt;statement id="insertProduct" parameterClass="product"&gt;
+        <programlisting>&lt;statement id="insertProduct" parameterClass="Product"&gt;
   insert into PRODUCT (PRD_ID, PRD_DESCRIPTION)
   values (<emphasis role="blue">#id:int:-999999#</emphasis>, <emphasis
-            role="blue">#description:VarChar:NO_ENTRY#</emphasis>);
+            role="blue">#description:VarChar#</emphasis>)
 &lt;/statement&gt;</programlisting>
       </example>
 
@@ -1296,7 +1297,7 @@ namespace WebShop.Domain
       a standard type parameter. <example>
           <title>A &lt;statement&gt; using standard type parameters</title>
 
-          <programlisting>&lt;statement id="getProduct" parameterClass="System.Integer"&gt;
+          <programlisting>&lt;statement id="getProduct" parameterClass="System.Int32"&gt;
   select * from PRODUCT where PRD_ID = <emphasis role="blue">#value#</emphasis>
 &lt;/statement&gt;</programlisting>
         </example></para>
@@ -1347,7 +1348,7 @@ namespace WebShop.Domain
       <para>For your convenience, <interfacename>IDictionary</interfacename>
       types are aliased by the framework. So, <classname>map</classname> or
       <classname>HashTable</classname> can be used in place of
-      <classname>System.Collections.HashTable</classname>. For a complete list
+      <classname>System.Collections.Hashtable</classname>. For a complete list
       of aliases, see Section 3.6, "Supported Types for Parameter Maps and
       Result Maps".</para>
     </sect2>
@@ -1370,29 +1371,29 @@ namespace WebShop.Domain
     of a &lt;resultMap&gt; element.<example>
         <title>The structure of a &lt;resultMap&gt; element.</title>
 
-        <para><programlisting>&lt;resultMap id="<emphasis role="blue">parameterMap.name</emphasis>" 
-           [class="<emphasis role="blue">class.name|typeAlias</emphasis>"] 
-           [extends="<emphasis role="blue">[sqlMap.namespace.]resultMap.id</emphasis>"]&gt;
+        <para><programlisting>&lt;resultMap id="<emphasis role="blue">resultMapIdentifier</emphasis>" 
+           [class="<emphasis role="blue">fullyQualifiedClassName, assembly|typeAlias</emphasis>"] 
+           [extends="<emphasis role="blue">[sqlMapNamespace.]resultMapId</emphasis>"]&gt;
 
-   &lt;result property="<emphasis role="blue">property.name</emphasis>" 
-           column="<emphasis role="blue">column.name</emphasis>"
-           [columnIndex="<emphasis role="blue">column.index</emphasis>"] 
-           [dbType="<emphasis role="blue">database.type</emphasis>"] 
-           [type="<emphasis role="blue">CLR.type</emphasis>"]
-           [resultMapping="<emphasis role="blue">resultMap.name</emphasis>"]
-           [nullValue="<emphasis role="blue">null.value.replacement</emphasis>"] 
-           [select="<emphasis role="blue">some.other.statement.name</emphasis>"] 
+   &lt;result property="<emphasis role="blue">propertyName</emphasis>" 
+           column="<emphasis role="blue">columnName</emphasis>"
+           [columnIndex="<emphasis role="blue">columnIndex</emphasis>"] 
+           [dbType="<emphasis role="blue">databaseType</emphasis>"] 
+           [type="<emphasis role="blue">propertyCLRType</emphasis>"]
+           [resultMapping="<emphasis role="blue">resultMapName</emphasis>"]
+           [nullValue="<emphasis role="blue">nullValueReplacement</emphasis>"] 
+           [select="<emphasis role="blue">someOtherStatementName</emphasis>"] 
            [lazyLoad="<emphasis role="blue">true|false</emphasis>"]
-           [typeHandler="<emphasis role="blue">class.name, assembly|typeAlias</emphasis>"]
+           [typeHandler="<emphasis role="blue">fullyQualifiedClassName, assembly|typeAlias</emphasis>"]
    /&gt;
    &lt;result ... .../&gt;
    &lt;result ... .../&gt;
    <emphasis role="comment"> // Inheritance support</emphasis>
-   &lt;discriminator column="<emphasis role="blue">column.name</emphasis>" 
-                     [type|typeHandler="<emphasis role="blue">class.name, assembly|typeAlias</emphasis>"]
+   &lt;discriminator column="<emphasis role="blue">columnName</emphasis>" 
+                     [type|typeHandler="<emphasis role="blue">fullyQualifiedClassName, assembly|typeAlias</emphasis>"]
    /&gt;
-    &lt;subMap value="<emphasis role="blue">discriminator.value</emphasis>" 
-               resultMapping="<emphasis role="blue">resultMap.name</emphasis>"
+    &lt;subMap value="<emphasis role="blue">discriminatorValue</emphasis>" 
+               resultMapping="<emphasis role="blue">resultMapName</emphasis>"
    /&gt;
    &lt;subMap .../&gt; 
 &lt;/resultMap&gt;
@@ -1534,7 +1535,7 @@ namespace WebShop.Domain
         <para>The <parameter>resultMapping</parameter> attribute can be set to
         the name of another resultMap used to fill the property. If the
         resultMap is in an other mapping file, you must specified the fully
-        qualified name as : <programlisting>resultMapping="[namespace.sqlMap.]resultMapping.id"
+        qualified name as : <programlisting>resultMapping="[namespace.sqlMap.]resultMappingId"
 
 resultMapping="Newspaper"
 <emphasis role="comment">&lt;!--resultMapping with a fully qualified name.--&gt;</emphasis>
@@ -1679,9 +1680,9 @@ namespace IBatisNet.DataMapper.TypeHandlers
 
 ...
 
- public Guid GuidProperty	{
+ public Guid GuidProperty {
   get { return _guidProperty; }
-  set { __guidProperty = value; }
+  set { _guidProperty = value; }
  }
 
  public string GuidPropertyString {
@@ -2101,12 +2102,12 @@ public class Newspaper : Document
         </example></para>
 
       <para>If need be, you can refer to the standard type using a marker
-      token, like "value" or "val", as shown by Example 3.36.</para>
+      token, "value", as shown by Example 3.36.</para>
 
       <example>
         <title>Loading a simple list of product descriptions</title>
 
-        <programlisting>&lt;resultMap id="select-product-result" class="System.String"&gt;
+        <programlisting>&lt;resultMap id="select-product-result" resultClass="System.String"&gt;
   &lt;result property="<emphasis role="blue">value</emphasis>" column="PRD_DESCRIPTION"/&gt;
 &lt;/resultMap&gt;</programlisting>
       </example>
@@ -3595,8 +3596,8 @@ ADOLESCENT = ‘TRUE'
           <member>prepend – the overridable SQL part that will be prepended to
           the statement (optional)</member>
 
-          <member>property – a property of type java.util.List that is to be
-          iterated over (required)</member>
+          <member>property – a property of type IList that is to be iterated
+          over (required)</member>
 
           <member>open – the string with which to open the entire block of
           iterations, useful for brackets (optional)</member>
@@ -3624,8 +3625,8 @@ ADOLESCENT = ‘TRUE'
                 <row>
                   <entry>&lt;iterate&gt;</entry>
 
-                  <entry>Iterates over a property that is of type
-                  java.util.List Example Usage:<programlisting>&lt;iterate prepend="AND" property="UserNameList"
+                  <entry>Iterates over a property that is of type IList
+                  Example Usage:<programlisting>&lt;iterate prepend="AND" property="UserNameList"
   open="(" close=")" conjunction="OR"&gt;
   username=<emphasis role="blue">#userNameList[]#</emphasis>
 &lt;/iterate&gt;</programlisting>Note: It is very important to include the
@@ -3692,8 +3693,8 @@ ADOLESCENT = ‘TRUE'
 
       <para>In the above example the operator property of the parameter object
       will be used to replace the $operator$ token. So if the operator
-      property was equal to ‘like' and the description property was equal to
-      ‘%dog%', then the SQL statement generated would be:</para>
+      property was equal to LIKE and the description property was equal to
+      %dog%, then the SQL statement generated would be:</para>
 
       <informalexample>
         <programlisting>  SELECT * FROM PRODUCT WHERE PRD_DESCRIPTION <emphasis

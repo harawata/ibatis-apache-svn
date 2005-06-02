@@ -561,8 +561,8 @@ url="file://<filename>c:\Web\MyApp\Resources\properties</filename>.config"</prog
 
         <para>The <filename>providers.config</filename> file can be found
         under <filename>\source\IBatisNet.DataMapper.Test\bin\Debug</filename>
-        in the iBATIS .NET source distribution (see Section 5.1) or in the
-        root folder of the .NET DataMapper binary distribution.</para>
+        in the iBATIS .NET source distribution or in the root folder of the
+        .NET DataMapper binary distribution.</para>
 
         <para>A provider may require libraries that you do not have
         installed,. Therefore, the provider element has an "enabled" attribute
@@ -885,7 +885,7 @@ IBatisNet.Test"</programlisting></entry>
                   <row>
                     <entry>System.Int16</entry>
 
-                    <entry>nt16, short, Short</entry>
+                    <entry>Int16, short, Short</entry>
                   </row>
 
                   <row>

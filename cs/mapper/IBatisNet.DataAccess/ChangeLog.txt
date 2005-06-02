@@ -1,7 +1,7 @@
 IBatisNet DataAccess Change Log
 
 ------------------------------
-1.5.1 - 01-June-2005
+1.6 - 01-June-2005
 ------------------------------
 - Improvement JIRA-75/63
   <properties> 

@@ -17,10 +17,10 @@ DataAccess 1.5.1
 --------------------
 Docs
 --------------------
- + Proofread!
- + Update references in text to section #s and example #s in DataMapper and DataAccess guides resulting from edits
+ + IN PROGRESS Proofread!
  + Add more .NET DataMapper coding examples (at least the code!)
 
+ + DONE Update references in text to section #s and example #s in DataMapper and DataAccess guides resulting from edits
  + DONE Add new API to DomDaoManagerBuilder.Configure(...)/DomDaoManagerBuilder.Configure(...)
    [tell that old API SqlMApper.Configure(...) are marked as  obsolete]
  + DONE DataAccess Configuration changes
