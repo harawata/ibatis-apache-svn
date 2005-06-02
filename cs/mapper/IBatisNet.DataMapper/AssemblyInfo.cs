@@ -7,10 +7,10 @@ using System.Runtime.CompilerServices;
 // associated with an assembly.
 //
 [assembly: AssemblyTitle("IBatisNet.DataMapper")]
-[assembly: AssemblyDescription("iBATIS.NET Data Mapper")]
+[assembly: AssemblyDescription("SVN 179390")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("iBATIS.NET")]
+[assembly: AssemblyProduct("iBATIS.NET Data Mapper")]
 [assembly: AssemblyCopyright("Copyright 2004,2005 The Apache Software Foundation")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
@@ -26,7 +26,7 @@ using System.Runtime.CompilerServices;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("1.1.458")]
+[assembly: AssemblyVersion("1.2.0")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 
