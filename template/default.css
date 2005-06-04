@@ -1,7 +1,7 @@
 body {
         margin:0px;
         padding:0px;
-        font-family:verdana, arial, helvetica, sans-serif;
+        font-family:helvetica, tahoma, arial, verdana, sans-serif;
         color:#333;
         background-color:white;
         }
@@ -19,7 +19,7 @@ h1 {
         font-size:28px;
         line-height:28px;
         font-weight:900;
-        color:#999;
+        color:#CF3300;
         }
 h2 {
         margin:15px 0px 10px 0px;
@@ -27,25 +27,25 @@ h2 {
         font-size:20px;
         line-height:20px;
         font-weight:700;
-        color:#777;
+        color:#AF3300;
         }
 h3 {
         margin:15px 0px 10px 0px;
         padding:0px;
         font-size:16px;
         line-height:16px;
-        font-weight:500;
-        color:#888;
+        font-weight:700;
+        color:#9F0000;
         }
 p {
-        font:11px/20px verdana, arial, helvetica, sans-serif;
+        font:12px/20px helvetica, tahoma, arial, verdana, sans-serif;
         margin:0px 0px 0px 0px;
         padding:5px;
         }
 #Content>p {margin:0px;}
 
 li {
-        font:11px/20px verdana, arial, helvetica, sans-serif;
+        font:12px/20px helvetica, tahoma, arial, verdana, sans-serif;
         margin:0px 0px 0px 0px;
         padding:0px;
         }
@@ -64,7 +64,7 @@ td, th {
     vertical-align: top;
     text-align: left;
     line-height: 1.3em;
-    font:11px/20px verdana, arial, helvetica, sans-serif;
+    font:12px/20px helvetica, tahoma, arial, verdana, sans-serif;
     border-top: 1px solid #aaa;
     border-bottom: 1px solid #aaa;
 	border-right: 1px solid #aaa;
@@ -81,24 +81,24 @@ th {
 
 
 a {
-        color:#00f;
-        font-size:11px;
+        color:#c60;
+        font-size:12px;
         text-decoration:none;
         font-weight:600;
-        font-family:verdana, arial, helvetica, sans-serif;
+        font-family:helvetica, tahoma, arial, verdana, sans-serif;
         }
-a:link {color:#00f;}
-a:visited {color:#00a;}
-a:hover {background-color:#aaa;}
+a:link {color:#c60;}
+a:visited {color:#c60;}
+a:hover {background-color:#ffffaa;}
 
 #Header {
-        margin:5px 0px 10px 0px;
-        padding:5px 0px 0px 20px;
+        margin:0px 0px 0px 0px;
+        padding:5px 0px 2px 20px;
         /* For IE5/Win's benefit height = [correct height] + [top padding] + [top and bottom border widths] */
         height:23px; /* 14px + 17px + 2px = 33px */
         border-style:solid;
-        border-color:black;
-        border-width:1px 0px; /* top and bottom borders: 1px; left and right borders: 0px */
+        border-color:#ccc;
+        border-width:0px 0px 2px 0px;
         line-height:10px;
         background-color:#000;		
 		color:#fff;
@@ -119,11 +119,11 @@ a "be nice to Opera 5" rule every time you use the Tantek Celik hack (above). */
 body>#Header {height:14px;}
 
 #Logo {
-        margin:10px 10px 10px 10px;
-        padding:0px 0px 0px 0px;
+        margin:0px 0px 0px 0px;
+        padding:10px 10px 5px 10px;
         /* For IE5/Win's benefit height = [correct height] + [top padding] + [top and bottom border widths] */
         height:65px; /* 14px + 17px + 2px = 33px */      
-        background-color:#fff;		
+        background-color:#fc0;
 		color:#fff;
         voice-family: "\"}\"";
         voice-family:inherit;
@@ -143,11 +143,11 @@ body>#Logo {height:65px;}
 
 #Menu {
         position:absolute;
-        top:125px;
+        top:117px;
         left:20px;
         width:172px;
         padding:10px;
-        background-color:#eee;
+        background-color:#ffeeaa;
         border:1px solid #999;
         line-height:17px;
 /* Again, the ugly brilliant hack. */
@@ -158,3 +158,21 @@ body>#Logo {height:65px;}
         }
 /* Again, "be nice to Opera 5". */
 body>#Menu {width:150px;}
+
+#Block {
+        margin:5px;
+        padding:5px;
+        background-color:#ffffee;
+        border-style:solid;
+        border-color:#999;
+        border-width:2px 0px 2px 0px;
+        line-height:15px;
+		color:#000
+        }
+
+#NewsByte {
+        padding:0px;
+        margin-right:75px;
+        line-height:11px;
+        color:#333;
+        }

@@ -8,12 +8,12 @@
 
 <body>
     <div id="Logo">
-    <img valign="top" align="right" src="logo.gif">
-      <img src="ibatis.gif">
-      
+    <img alt="iBATIS" valign="top" align="right" src="logo.jpg"/>
+    <img alt="iBATIS Logo" align="left" src="ibatis.jpg"/>
+    #parse("pages/newsbyte.vm")        
     </div>
     
-    <div id="Header"><script language="javascript">document.write(document.title);</script></div>
+    <div id="Header"><script type="text/javascript" language="javascript">document.write(document.title);</script></div>
 
     <div id="Content">
       #parse($innerTemplate)
@@ -21,9 +21,9 @@
 
     #parse("template/menu.vm")
 
-    <hr height="1" color="black" width="800">
-    <p align="center">
+    <hr align="right" height="1" color="black" width="800"/>
+    <p align="right">
     <i>This site is maintained by the iBATIS development community, but this site is not affiliated with the Apache Software Foundation.</i>
-    <br/><img src="asf.jpg"></p>
+    <br/><img alt="Apache Software Foundation" src="asf.jpg"/></p>
 </body>
 </html>

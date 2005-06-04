@@ -1,23 +1,32 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <html>
   <head>
     <title>iBATIS News</title>
   </head>
 
   <body>
+    <div id="Block">
     <h2>What is iBATIS?</h2>
 
-    <p>The iBATIS framework makes it easier to use a database with Java and
-    .NET applications. iBATIS couples objects with stored procedures or SQL
-    statements using a XML descriptor. Simplicity is the biggest advantage of
-    the iBATIS Data Mapper over object relational mapping tools. To use iBATIS
-    Data Mapper you rely on your own objects, XML, and SQL. There is little to
-    learn that you don't already know. With iBATIS Data Mapper you have the
-    full power of both SQL and stored procedures at your fingertips.</p>
+    <p>The <a title="iBATIS DataMapper framework" href="datamapper.html">
+    iBATIS Data Mapper framework</a> makes it easier to use a database with Java and
+    .NET applications. iBATIS couples objects with stored procedures or SQL statements
+    using a XML descriptor. Simplicity is the biggest advantage of the iBATIS Data
+    Mapper over object relational mapping tools. To use iBATIS Data Mapper you rely on
+    your own objects, XML, and SQL. There is little to learn that you don't already
+    know. With the iBATIS Data Mapper, you have the full power of both SQL and stored
+    procedures at your fingertips.</p>
+
+    <p>Interested but want to know what others have said? Well, first see the various
+    <a title="iBATIS Articles and Other Coverage" href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Articles+and+other+coverage+of+iBATIS">articles and books</a>
+    that have covered iBATIS and read some of our
+    <a title="iBATIS Feedback" href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Feedback+and+Experiences">user feedback</a>.
+    Then, learn how to simple it is to use the iBATIS Data Mapper by reading our
+    <a title="SQL Maps for Java Tutorial" href="http://prdownloads.sourceforge.net/ibatisdb/iBATIS-SqlMaps-2-Tutorial.pdf?download">Java Tutorial</a> or <a title="iBATIS.NET DataMapper Quick Start Guide" href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Quick+Start+Guide">.NET Quick Start Guide</a>!</p>
 
     <p>iBATIS is in the process of migrating to the Apache Software
     Foundation. Once we have passed through the Apache Incubator, iBATIS will
     become a top-level Apache project.</p>
+    </div>
 
     <h2>News</h2>
 
