@@ -60,6 +60,7 @@ namespace IBatisNet.DataMapper.Scope
 		private bool _isCacheModelsEnabled = false;
 		private bool _useEmbedStatementParams = false;
 		private bool _validateSqlMap = false;
+		private bool _validateSqlMapConfig = true;
 		private bool _isCallFromDao = false;
 
 		private SqlMapper _sqlMapper = null;
@@ -84,6 +85,15 @@ namespace IBatisNet.DataMapper.Scope
 
 		#region Properties
 
+		/// <summary>
+		/// Indicates whether or not to validate the configuration document
+		/// </summary>
+		public bool ValidateSqlMapConfig
+		{
+			set { _validateSqlMapConfig = value; }
+			get { return _validateSqlMapConfig; }
+		}
+		
 		/// <summary>
 		/// Set if theparser should validate the sqlMap documents
 		/// </summary>

@@ -57,6 +57,7 @@
 			<xs:attribute name="useStatementNamespaces" type="xs:string"/>
 			<xs:attribute name="cacheModelsEnabled" type="xs:string"/>
 			<xs:attribute name="validateSqlMap" default="false" type="xs:string"/>
+			<xs:attribute name="validateSqlMapConfig" default="true" type="xs:string"/>
 			<xs:attribute name="useEmbedStatementParams" type="xs:string" default="false"/>
 		</xs:complexType>
 	</xs:element>

@@ -301,11 +301,11 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 
 
 		/// <summary>
-		/// Add a propertie
+		/// Add a property
 		/// </summary>
-		/// <param name="name">The name of the propertie</param>
-		/// <param name="value">The value of the propertie</param>
-		public void AddPropertie(string name, string value)
+		/// <param name="name">The name of the property</param>
+		/// <param name="value">The value of the property</param>
+		public void AddProperty(string name, string value)
 		{
 			_properties.Add(name, value);
 		}

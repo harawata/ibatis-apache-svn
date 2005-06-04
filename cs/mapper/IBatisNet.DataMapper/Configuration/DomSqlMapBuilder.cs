@@ -130,6 +130,10 @@ namespace IBatisNet.DataMapper.Configuration
 		/// </summary>
 		private const string ATR_VALIDATE_SQLMAP = "validateSqlMap";
 		/// <summary>
+		/// Token for validateSqlMapConfig attribute.
+		/// </summary>
+		private const string ATR_VALIDATE_SQLMAP_CONFIG = "validateSqlMapConfig";
+		/// <summary>
 		/// Token for embedStatementParams attribute.
 		/// </summary>
 		private const string ATR_EMBED_STATEMENT_PARAMS = "useEmbedStatementParams";
@@ -353,13 +357,37 @@ namespace IBatisNet.DataMapper.Configuration
 			
 			try
 			{
-				ValidateSchema( document.ChildNodes[1], "SqlMapConfig.xsd" );
+				ParseValidateSqlMapConfigSetting();
+
+				if (_configScope.ValidateSqlMapConfig) 
+				{
+					ValidateSchema( document.ChildNodes[1], "SqlMapConfig.xsd" );
+				}
 				Initialize();
 				return _configScope.SqlMapper;
 			}
 			catch(Exception e)
 			{	
 				throw new ConfigurationException(_configScope.ErrorContext.ToString(), e);
+			}
+		}
+
+		private void ParseValidateSqlMapConfigSetting()
+		{
+			_configScope.ErrorContext.Activity = "Checking if configuration document should be validated";
+	
+			XmlNodeList settings = _configScope.SqlMapConfigDocument.SelectNodes(XML_CONFIG_SETTINGS);
+	
+			if (settings!=null)
+			{
+				foreach (XmlNode setting in settings)
+				{
+					if (setting.Attributes[ATR_VALIDATE_SQLMAP_CONFIG] != null )
+					{	
+						string value = setting.Attributes[ATR_VALIDATE_SQLMAP_CONFIG].Value;
+						_configScope.ValidateSqlMapConfig =  Convert.ToBoolean( value ); 
+					}
+				}
 			}
 		}
 
@@ -1147,7 +1175,7 @@ namespace IBatisNet.DataMapper.Configuration
 						string name = propertie.Attributes["name"].Value;
 						string value = propertie.Attributes["value"].Value;
 					
-						cacheModel.AddPropertie(name, value);
+						cacheModel.AddProperty(name, value);
 					}
 
 					cacheModel.Initialize();
