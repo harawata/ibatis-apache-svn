@@ -86,7 +86,7 @@ DaoManager daoManager = DaoManager.GetInstance("SqlMapDaoContext");</programlist
 
       <programlisting><emphasis role="comment">/* Configure from a file path.
    Uses a relative resource path from your application root 
-   or an absolute file path such as "file:\\c:\dir\a.config" */
+   or an absolute file path such as "file://c:\dir\a.config" */
 </emphasis>DomDaoManagerBuilder builder = new DomDaoManagerBuilder();
 builder.Configure(strPath);
 DaoManager daoManager = DaoManager.GetInstance("AnotherContext");</programlisting>
@@ -157,7 +157,7 @@ DaoManager daoManager = DaoManager.GetInstance("AnotherPetstore");</programlisti
     <classname>ConfigureHandler</classname> (callback delegate) to the
     <classname>DomDaoManagerBuilder</classname> so that it knows the method
     for resetting your application's <classname>DaoManager</classname>
-    instances. </para>
+    instances.</para>
 
     <para>Since the configuration files need to be watched for changes, your
     <filename>dao.config</filename> file must be accessible through the file
@@ -240,9 +240,9 @@ c2.Add(p2);
 DaoManager daoManager = DaoManager.GetInstance("PetStore"); 
 ICategoryDao categoryDao = daoManager[typeof(ICategoryDao)] as ICategoryDao;
 IProductDao productDao = daoManager[typeof(IProductDao)] as IProductDao;
-daoManager.BeginTransaction();
 
 try {
+      daoManager.BeginTransaction();
       productDao.Insert(p1);
       productDao.Insert(p2);
       categoryDao.Insert(c1);
@@ -261,7 +261,11 @@ catch {
     <literal>catch</literal> block. The call to
     <methodname>RollBackTransaction()</methodname> will rollback any changes
     you’ve made in case an exception is thrown before the call to
-    <methodname>CommitTransaction()</methodname>.</para>
+    <methodname>CommitTransaction()</methodname>. Be aware that if an
+    exception occurs before <methodname>BeginTransaction()</methodname>
+    completes and is caught in the <literal>catch</literal> block,
+    RollBackTransaction() will also throw another exception since a
+    transaction was not started.</para>
 
     <para>When you deal with a connection and transaction, you can also use
     the <methodname>using</methodname> syntax as in the examples below.</para>
@@ -302,12 +306,12 @@ using ( IDalSession session = daoManager.BeginTransaction() )
       <title>Example AutoConnection</title>
 
       <programlisting>[C#]
-<emphasis role="comment">// Open/close Connection 1</emphasis>
+<emphasis role="comment">// Open/close first Connection</emphasis>
 Product product = productDao.GetProduct (5); 
 product.Description = "New description.";
-<emphasis role="comment">// Open/close Connection 2</emphasis>
+<emphasis role="comment">// Open/close second Connection</emphasis>
 productDao.UpdateProduct(product);
-<emphasis role="comment">// Open/close Connection 3</emphasis>
+<emphasis role="comment">// Open/close third Connection</emphasis>
 product = productDao.GetProduct (5);</programlisting>
     </example>
 

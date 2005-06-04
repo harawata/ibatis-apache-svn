@@ -349,7 +349,7 @@
         value in the properties file becomes a <emphasis>shell</emphasis>
         variable that can be used in the DataMapper configuration file and
         your Data Map definition files (see Section 3). For example, if the
-        properties file contains</para>
+        "properties" file contains</para>
 
         <informalexample>
           <programlisting>&lt;?xml version="1.0" encoding="utf-8" ?&gt; 
@@ -1655,7 +1655,7 @@ public IList QueryWithRowDelegate(string statementName,
             the database provider and the smaller set extracted by the
             framework. The higher the page, the larger set that will be
             returned and thrown away. For very large sets, you may want to use
-            a stored procedure or your own query that used
+            a stored procedure or your own query that uses
             <parameter>skipResults</parameter> and
             <parameter>maxResults</parameter> as parameters. Unfortunately,
             the semantics for the returning partial data sets is not

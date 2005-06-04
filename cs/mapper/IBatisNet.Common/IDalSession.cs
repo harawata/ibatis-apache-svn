@@ -34,7 +34,7 @@ namespace IBatisNet.Common
 {
 	/// <summary>
 	/// A template for a session in the iBATIS.NET framwork.
-	/// Holds teh connection, the transaction ...
+	/// Holds the connection, the transaction ...
 	/// </summary>
 	public interface IDalSession : IDisposable 
 	{

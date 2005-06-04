@@ -44,7 +44,7 @@ namespace IBatisNet.DataMapper.Exceptions
 		/// This constructor initializes the <para>Message</para> property of the new instance 
 		/// to a system-supplied message that describes the error.
 		/// </remarks>
-		public DataMapperException(): base("iBatis.NET DataMappper component caused an exception.") { }
+		public DataMapperException(): base("iBATIS.NET DataMapper component caused an exception.") { }
 		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="IBatisNet.DataMapper.Exceptions.DataMapperException"/> 
@@ -59,7 +59,7 @@ namespace IBatisNet.DataMapper.Exceptions
 		/// If the innerException parameter is not a null reference (Nothing in Visual Basic), 
 		/// the current exception is raised in a catch block that handles the inner exception.
 		/// </param>
-		public DataMapperException(Exception ex) : base("iBatis.NET DataMappper component caused an exception.", ex) {  }
+		public DataMapperException(Exception ex) : base("iBATIS.NET DataMapper component caused an exception.", ex) {  }
 
 
 		/// <summary>

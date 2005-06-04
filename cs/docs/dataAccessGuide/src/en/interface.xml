@@ -46,9 +46,7 @@ public interface IAccountDao : IDao {
         <imagedata align="center" fileref="images/DAODesign.gif" format="GIF" />
       </imageobject>
 
-      <caption>
-        <para>DAO Implementation Diagram</para>
-      </caption>
+      <caption><para>DAO Implementation Diagram</para></caption>
     </mediaobject>
 
     <para>Notice that the <classname>BaseDao</classname> implements the
@@ -227,7 +225,7 @@ using IBatisNet.Test.Domain; // Account</programlisting>
       <para>Now, let's let's see how this DAO's <methodname>Delete(Account
       account)</methodname> method uses the framework.</para>
 
-      <programlisting>  public void Delete(Account account) {, DaoManager
+      <programlisting>  public void Delete(Account account) {
 
    IDbCommand command = null;
    DaoSession daoSession = null;
@@ -337,13 +335,13 @@ using IBatisNet.DataAccess;
 using IBatisNet.Test.Dao.Interfaces;
 using IBatisNet.Test.Domain;
 
-namespace Examples.DaoUsage {
+namespace Examples.Services {
 
- public class AccountDaoUsage {
+ public class AccountService {
 
   protected static DaoManager daoManager = null;
 
-  static AccountDaoUsage() {
+  static AccountService() {
    daoManager = DaoManager.GetInstance();
   }
 

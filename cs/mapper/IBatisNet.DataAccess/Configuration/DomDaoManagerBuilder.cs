@@ -178,7 +178,7 @@ namespace IBatisNet.DataAccess.Configuration
 		/// </summary>
 		/// <param name="resource">
 		/// A relative ressource path from your Application root 
-		/// or an absolue file path file:\\c:\dir\a.config
+		/// or an absolue file path file://c:\dir\a.config
 		/// </param>
 		///<param name="configureDelegate">
 		/// Delegate called when the file has changed, to rebuild the dal.

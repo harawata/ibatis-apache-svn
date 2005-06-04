@@ -364,7 +364,7 @@ xsi:noNamespaceSchemaLocation="DaoConfig.xsd"&gt;
     environments (DEVT, Q/A, PROD), you can also make use of the optional
     <literal>&lt;properties&gt;</literal> element as shown above. This allows
     you to use placeholders in the place of literal value elements. If you
-    have a properties file with the following values:</para>
+    have a "properties" file with the following values:</para>
 
     <example>
       <title>Example properties file</title>
