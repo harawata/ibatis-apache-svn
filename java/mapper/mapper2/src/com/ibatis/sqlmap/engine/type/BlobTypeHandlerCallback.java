@@ -15,27 +15,36 @@
  */
 package com.ibatis.sqlmap.engine.type;
 
-import com.ibatis.sqlmap.client.extensions.*;
+import com.ibatis.sqlmap.client.extensions.ParameterSetter;
+import com.ibatis.sqlmap.client.extensions.ResultGetter;
+import com.ibatis.sqlmap.client.extensions.TypeHandlerCallback;
 
-import java.sql.*;
+import java.sql.Blob;
+import java.sql.SQLException;
 
 public class BlobTypeHandlerCallback implements TypeHandlerCallback {
 
-  public Object getResult(ResultGetter getter)
-      throws SQLException {
-    Blob blob = getter.getBlob();
-    int size = (int) blob.length();
-    return blob.getBytes(1, size);
-  }
+ public Object getResult(ResultGetter getter) throws SQLException {
+   Blob blob = getter.getBlob();
+   byte[] returnValue = null;
+   if (null != blob) {
+     returnValue = blob.getBytes(1, (int) blob.length());
+   } else {
+     returnValue = null;
+   }
+   return returnValue;
+ }
 
-  public void setParameter(ParameterSetter setter, Object parameter)
-      throws SQLException {
-    byte[] bytes = (byte[]) parameter;
-    setter.setBytes(bytes);
-  }
+ public void setParameter(ParameterSetter setter, Object parameter)
+throws SQLException {
+   if (null != parameter) {
+     byte[] bytes = (byte[]) parameter;
+     setter.setBytes(bytes);
+   }
+ }
 
-  public Object valueOf(String s) {
-    return s;
-  }
+ public Object valueOf(String s) {
+   return s;
+ }
 
 }
