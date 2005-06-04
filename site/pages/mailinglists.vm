@@ -1,0 +1,67 @@
+<html>
+<head>    
+    <title>iBATIS Mailing Lists</title>
+</head>
+
+<body>
+
+      <h2>Mailing Lists</h2>
+
+      <p>We have different mailing lists for iBATIS for Java and iBATIS for .NET users. If you have questions,
+      there are many users on the lists who are more than willing to help every day of the week!  Our
+      user lists are archived and searchable.</p>
+
+      <p>The iBATIS Developer mailing list is where we discuss the future of the Data Mapper and
+      Data Access frameworks.  Every once in a while, we talk about bug fixes too.  ;-)</p>
+
+      <h2>iBATIS for Java</h2>
+      <table width="100%">
+        <tr >
+          <td width="40%">Java User Mailing List &nbsp;</td>
+          <td width="20%"><a href="mailto:ibatis-user-java@incubator.apache.org">New Message</a></td>
+          <td width="20%"><a href="http://www.mail-archive.com/ibatis-user-java@incubator.apache.org/">Archives/Search</a></td>
+          <td width="20%"><a href="mailto:ibatis-user-java-subscribe@incubator.apache.org">Subscribe</a></td>
+        </tr>
+        <tr >
+          <td width="40%">Java DIGEST User Mailing List &nbsp;</td>
+          <td width="20%">&nbsp;</td>
+          <td width="20%">&nbsp;</td>
+          <td width="20%"><a href="mailto:ibatis-user-java-digest-subscribe@incubator.apache.org">Subscribe</a></td>
+        </tr>
+      </table>
+
+      <h2>iBATIS for .NET</h2>
+      <table width="100%">
+        <tr >
+          <td width="40%">.NET User Mailing List</td>
+          <td width="20%"><a href="mailto:ibatis-user-cs@incubator.apache.org">New Message</a></td>
+          <td width="20%"><a href="http://www.mail-archive.com/ibatis-user-cs@incubator.apache.org/">Archives/Search</a></td>
+          <td width="20%"><a href="mailto:ibatis-user-cs-subscribe@incubator.apache.org">Subscribe</a></td>
+        </tr>
+        <tr >
+          <td width="40%">.NET DIGEST User Mailing List &nbsp;</td>
+          <td width="20%">&nbsp;</td>
+          <td width="20%">&nbsp;</td>
+          <td width="20%"><a href="mailto:ibatis-user-cs-digest-subscribe@incubator.apache.org">Subscribe</a></td>
+        </tr>
+      </table>
+
+      <h2>iBATIS Development</h2>
+      <table width="100%">
+        <tr >
+          <td width="40%">Developer Mailing List</td>
+          <td width="20%"><a href="mailto:ibatis-dev@incubator.apache.org">New Message</a></td>
+          <td width="20%"><a href="http://www.mail-archive.com/ibatis-dev@incubator.apache.org/">Archives/Search</a></td>
+          <td width="20%"><a href="mailto:ibatis-dev-subscribe@incubator.apache.org">Subscribe</a></td>
+        </tr>
+        <tr >
+          <td width="40%">Subversion Commits List</td>
+          <td width="20%">&nbsp;</td>
+          <td width="20%"><a href="http://mail-archives.apache.org/mod_mbox/incubator-ibatis-commits/">Archive</a></td>
+          <td width="20%"><a href="mailto:ibatis-commits-subscribe@incubator.apache.org">Subscribe</a></td>
+        </tr>
+      </table>
+
+</body>
+
+</html>

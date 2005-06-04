@@ -18,19 +18,19 @@
 
 	<h3>Apache Incubator Status - Complete!</h3>
                   <ol>
-                    <li><strong><font color="#0000FF">DONE &gt;&gt;</font> 
+                    <li><strong><font color="#006600">DONE &gt;&gt;</font>
                       Move Discussions to Apache Mailing Lists:</strong> The old 
                       SourceForge forums are now closed. We all use the Apache 
                       Mailing Lists now for support and development discussions. 
                       So far, I think we're happy with the results. See the support 
                       page for resource info.</li>
-                    <li ><strong><font color="#0000FF">DONE &gt;&gt;</font> 
+                    <li ><strong><font color="#006600">DONE &gt;&gt;</font>
                       Move Bug tracking to JIRA:</strong> The SourceForge bug 
                       tracker has been closed. We've moved to JIRA and so far 
                       the results are good. JIRA is a bit slower, but arguably 
                       does a much better job of organizing and tracking bugs and 
                       their lifecycle.</li>
-                    <li ><strong><font color="#0000FF">DONE &gt;&gt;</font> 
+                    <li ><strong><font color="#006600">DONE &gt;&gt;</font>
                       Apache Wiki:</strong> We've set up a Wiki to help us keep 
                       up with the fast pace of iBATIS, including new features 
                       and issues that would normally take months to get into the 
@@ -38,16 +38,16 @@
                       you'll hopefully find it on the Wiki <em>(FAQs, undocumented 
                       items, environment specific solutions and 3rd party contributions 
                       and tools)</em>.</li>
-                    <li ><strong><font color="#0000FF">DONE &gt;&gt;</font> 
+                    <li ><strong><font color="#006600">DONE &gt;&gt;</font>
                       Move Feature Requests to JIRA:</strong> Turns out all of 
                       the RFEs were invalid, fixed or otherwise unecessary to 
                       move. If you disagree, please feel free to reopen one of 
                       them at Apache JIRA.</li>
-                    <li ><strong><font color="#0000FF">DONE &gt;&gt;</font> 
+                    <li ><strong><font color="#006600">DONE &gt;&gt;</font>
                       Move Source Control to Apache SVN: </strong>We've migrated 
                       our SourceForge CVS repository to Subversion (SVN). It's 
                       now migrated fully to the Apache infrastructure. </li>
-                    <li ><strong><font color="#0000FF">DONE &gt;&gt;</font><font color="#993399"> 
+                    <li ><strong><font color="#006600">DONE &gt;&gt;</font><font color="#993399">
                       </font> New Apache Website (Forrest): </strong>Well, for 
                       now we have two websites. The forrest one at Apache is being 
                       maintained regularly and is accessible to all of our developers 

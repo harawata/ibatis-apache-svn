@@ -9,16 +9,21 @@
 	<a href="dao.html" title="Hide data acess implementation">Data Access Objects</a><br />
 	<a href="petstore.html" title="The official example applications">Example Apps</a><br />
 	<br/>
-	<b>Project</b><br/>
-	<a href="background.html" title="Where did iBATIS come from, what does 'iBATIS' mean?">Background</a><br />
-	<a href="license.html" title="The Apache Software Foundation License 2.0">License</a><br />
-	<a href="team.html" title="Who's responsible for iBATIS?">Team</a><br />
-	<a href="bylaws.html" title="How do we operate?">Bylaws</a><br />
-	<a href="status.html" title="Where are we at?">Status</a><br />
-	<br/>
-	<b>Resources</b><br/>
-	<a href="resources.html" title="Helpful resources">FAQ, Wiki, Mailing Lists, Issue Tracker, Source Code</a><br/>
-	<br/>
 	<b>Downloads</b><br/>
 	<a href="downloads.html" title="Everything you need to run iBATIS">Binaries, Documentation, Source</a><br />
+    <br/>
+    <b>Resources</b><br/>
+    <a href="help.html" title="iBATIS Wiki">How To Get Help</a><br/>
+    <a href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Home" title="iBATIS Wiki">Wiki</a><br/>
+    <a href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Frequently+Asked+Questions" title="iBATIS FAQ">FAQ</a><br/>
+    <a href="mailinglists.html" title="iBATIS Mailing Lists">Mailing Lists</a><br/>
+    <a href="issuetracker.html" title="iBATIS Issue Tracker">Issue Tracker</a><br/>
+    <a href="http://svn.apache.org/repos/asf/incubator/ibatis/trunk" title="Subversion Repository">SVN Repository</a><br/>
+    <br/>
+    <b>Project</b><br/>
+    <a href="background.html" title="Where did iBATIS come from, what does 'iBATIS' mean?">Background</a><br />
+    <a href="license.html" title="The Apache Software Foundation License 2.0">License</a><br />
+    <a href="team.html" title="Who's responsible for iBATIS?">Team</a><br />
+    <a href="bylaws.html" title="How do we operate?">Bylaws</a><br />
+    <a href="status.html" title="Where are we at?">Status</a><br />
 </div>

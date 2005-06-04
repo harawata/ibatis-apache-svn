@@ -10,7 +10,8 @@
 <strong>SUN Microsystems Java Conference</strong>
 <p>
 Fabrizio Gianneschi will present iBATIS. The full description of the event is available here:<br/>
-http://it.sun.com/eventi/jc05/programma.html#parallela6_23
+<a title="Fabrizio Gianneschi iBATIS Presentation" href="http://it.sun.com/eventi/jc05/programma.html#parallela6_23">
+ http://it.sun.com/eventi/jc05/programma.html#parallela6_23</a>
 </p>
 
 <h3>October 30, 2004 - Italy</h3>
@@ -27,7 +28,7 @@ a range of topics like Serialization, JDBC, XML/XMI, iBATIS, JDO, Hibernate and 
 <p>Object Relational Mapping (ORM) is often perceived as a "silver bullet" of software development. It can save us time, code and even improve performance. Indeed, fantastic tools like Hibernate and TopLink can do the job very well. However, like any other tool or framework there are limitations. Sometimes an ORM just won't work, or is simply not the best solution. SQL Mapping offers a different approach to solving the challenges we face when integrating Relational Data with Objects. SQL Mapping can offer an elegant solution even when dealing with especially difficult data models or object models that are beyond our control. An SQL Mapping framework can also provide much of the same benefits offered by ORM tools, such as improved performance, cleaner APIs and reduced code.
 
 <h3>December 10th & 11th, 2002 - Sun Developer Days</h3>
-Come hear the real story behind the Pet Store comparisons at Developer Days in Edmonton (Dec 10th) and Calgary (Dec 11th). Clinton will take the marketing out of the Pet Store implementations and show why Java is right choice for serious enterprise development. Online registration is now available at Sun's web site.
+<p>Come hear the real story behind the Pet Store comparisons at Developer Days in Edmonton (Dec 10th) and Calgary (Dec 11th). Clinton will take the marketing out of the Pet Store implementations and show why Java is right choice for serious enterprise development. Online registration is now available at Sun's web site.</p>
 
 
 
