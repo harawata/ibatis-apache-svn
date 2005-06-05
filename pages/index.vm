@@ -5,6 +5,7 @@
 
   <body>
     <div id="Block">
+    <img alt="iBATIS Data Mapper process" src="flow.jpg" align="right"/>
     <h2>What is iBATIS?</h2>
 
     <p>The <a title="iBATIS DataMapper framework" href="datamapper.html">
