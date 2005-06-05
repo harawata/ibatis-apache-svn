@@ -20,7 +20,7 @@ h1 {
         font-size:28px;
         line-height:28px;
         font-weight:900;
-        color:#CF3300;
+        color:#666;
         }
 h2 {
         margin:15px 0px 10px 0px;
@@ -28,7 +28,7 @@ h2 {
         font-size:20px;
         line-height:20px;
         font-weight:700;
-        color:#AF3300;
+        color:#444;
         }
 h3 {
         margin:15px 0px 10px 0px;
@@ -36,7 +36,7 @@ h3 {
         font-size:16px;
         line-height:16px;
         font-weight:700;
-        color:#9F0000;
+        color:#222;
         }
 p {
         font:12px/20px helvetica, tahoma, arial, verdana, sans-serif;
@@ -82,15 +82,17 @@ th {
 
 
 a {
-        color:#c60;
+        color:#039;
         font-size:12px;
         text-decoration:none;
         font-weight:600;
         font-family:helvetica, tahoma, arial, verdana, sans-serif;
         }
-a:link {color:#c60;}
-a:visited {color:#c60;}
-a:hover {background-color:#ffffaa;}
+a:link {color:#039;}
+a:visited {color:#039;}
+a:hover {
+        color:#69f;
+        background-color:#fff;}
 
 #Header {
         margin:0px 0px 0px 0px;
@@ -124,7 +126,7 @@ body>#Header {height:14px;}
         padding:10px 10px 5px 10px;
         /* For IE5/Win's benefit height = [correct height] + [top padding] + [top and bottom border widths] */
         height:65px; /* 14px + 17px + 2px = 33px */      
-        background-color:#fc0;
+        background-color:#fff;
 		color:#fff;
         voice-family: "\"}\"";
         voice-family:inherit;
@@ -148,7 +150,7 @@ body>#Logo {height:65px;}
         left:20px;
         width:172px;
         padding:10px;
-        background-color:#ffeeaa;
+        background-color:#ccc;
         border:1px solid #999;
         line-height:17px;
 /* Again, the ugly brilliant hack. */
@@ -163,7 +165,7 @@ body>#Menu {width:150px;}
 #Block {
         margin:5px;
         padding:5px;
-        background-color:#ffffee;
+        background-color:#eee;
         border-style:solid;
         border-color:#999;
         border-width:2px 0px 2px 0px;
