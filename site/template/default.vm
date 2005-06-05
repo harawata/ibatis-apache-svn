@@ -21,9 +21,9 @@
 
     #parse("template/menu.vm")
 
-    <hr align="right" height="1" color="black" width="800"/>
+    <hr align="right" height="1" color="black" width="400"/>
     <p align="right">
-    <i>This site is maintained by the iBATIS development community, but this site is not affiliated with the Apache Software Foundation.</i>
+    <i>This site is maintained by the iBATIS development community,<br/>but this site is not affiliated with the Apache Software Foundation.</i>
     <br/><img alt="Apache Software Foundation" src="asf.jpg"/></p>
 </body>
 </html>
