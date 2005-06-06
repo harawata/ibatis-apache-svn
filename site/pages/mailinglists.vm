@@ -19,7 +19,7 @@
         <tr >
           <td width="40%">Java User Mailing List &nbsp;</td>
           <td width="20%"><a href="mailto:ibatis-user-java@incubator.apache.org">New Message</a></td>
-          <td width="20%"><a href="http://www.mail-archive.com/ibatis-user-java@incubator.apache.org/">Archives/Search</a></td>
+          <td width="20%"><a href="http://www.mail-archive.com/ibatis-user-java@incubator.apache.org/" target="_new">Archives/Search</a></td>
           <td width="20%"><a href="mailto:ibatis-user-java-subscribe@incubator.apache.org">Subscribe</a></td>
         </tr>
         <tr >
@@ -35,7 +35,7 @@
         <tr >
           <td width="40%">.NET User Mailing List</td>
           <td width="20%"><a href="mailto:ibatis-user-cs@incubator.apache.org">New Message</a></td>
-          <td width="20%"><a href="http://www.mail-archive.com/ibatis-user-cs@incubator.apache.org/">Archives/Search</a></td>
+          <td width="20%"><a href="http://www.mail-archive.com/ibatis-user-cs@incubator.apache.org/" target="_new">Archives/Search</a></td>
           <td width="20%"><a href="mailto:ibatis-user-cs-subscribe@incubator.apache.org">Subscribe</a></td>
         </tr>
         <tr >
@@ -51,13 +51,13 @@
         <tr >
           <td width="40%">Developer Mailing List</td>
           <td width="20%"><a href="mailto:ibatis-dev@incubator.apache.org">New Message</a></td>
-          <td width="20%"><a href="http://www.mail-archive.com/ibatis-dev@incubator.apache.org/">Archives/Search</a></td>
+          <td width="20%"><a href="http://www.mail-archive.com/ibatis-dev@incubator.apache.org/" target="_new">Archives/Search</a></td>
           <td width="20%"><a href="mailto:ibatis-dev-subscribe@incubator.apache.org">Subscribe</a></td>
         </tr>
         <tr >
           <td width="40%">Subversion Commits List</td>
           <td width="20%">&nbsp;</td>
-          <td width="20%"><a href="http://mail-archives.apache.org/mod_mbox/incubator-ibatis-commits/">Archive</a></td>
+          <td width="20%"><a href="http://mail-archives.apache.org/mod_mbox/incubator-ibatis-commits/" target="_new">Archive</a></td>
           <td width="20%"><a href="mailto:ibatis-commits-subscribe@incubator.apache.org">Subscribe</a></td>
         </tr>
       </table>

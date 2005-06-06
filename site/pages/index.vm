@@ -18,11 +18,11 @@
     procedures at your fingertips.</p>
 
     <p>Are you interested but want to know what others have said? Well, first see the various
-    <a title="iBATIS Articles and Other Coverage" href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Articles+and+other+coverage+of+iBATIS">articles and books</a>
+    <a title="iBATIS Articles and Other Coverage" href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Articles+and+other+coverage+of+iBATIS" target="_new">articles and books</a>
     that have covered iBATIS and read some of our
-    <a title="iBATIS Feedback" href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Feedback+and+Experiences">user feedback</a>.
+    <a title="iBATIS Feedback" href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Feedback+and+Experiences" target="_new">user feedback</a>.
     Then, learn how to simple it is to use the iBATIS Data Mapper by reading our
-    <a title="SQL Maps for Java Tutorial" href="http://prdownloads.sourceforge.net/ibatisdb/iBATIS-SqlMaps-2-Tutorial.pdf?download">Java Tutorial</a> or <a title="iBATIS.NET DataMapper Quick Start Guide" href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Quick+Start+Guide">.NET Quick Start Guide</a>!</p>
+    <a title="SQL Maps for Java Tutorial" href="http://prdownloads.sourceforge.net/ibatisdb/iBATIS-SqlMaps-2-Tutorial.pdf?download">Java Tutorial</a> or <a title="iBATIS.NET DataMapper Quick Start Guide" href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Quick+Start+Guide" target="_new">.NET Quick Start Guide</a>!</p>
 
     <p>iBATIS is in the process of migrating to the Apache Software
     Foundation. Once we have passed through the Apache Incubator, iBATIS will
@@ -128,7 +128,7 @@
     <p>This release includes some cool new features like &lt;discriminator&gt;
     and &lt;subMap&gt; tags for better support of class inheritance. There's
     an example of how to use these new tags <a
-    href="http://svn.apache.org/repos/asf/incubator/ibatis/trunk/java/mapper/mapper2/test/com/ibatis/sqlmap/maps/Documents.xml">here</a>.
+    href="http://svn.apache.org/repos/asf/incubator/ibatis/trunk/java/mapper/mapper2/test/com/ibatis/sqlmap/maps/Documents.xml" target="_new">here</a>.
     Normally 2.x minor releases are feature releases, but a number of bug
     fixes and improvements have made their way into 2.1.0 as well. <br /><a
     href="downloads.html">Download 2.1.0</a></p>

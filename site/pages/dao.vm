@@ -16,10 +16,11 @@ revealing the specifics of the implementation to the rest of your application. U
 be dynamically configured to use different persistence mechanisms. If you have a complex application with a number of different 
 databases and persistence approaches involved, DAOs can help you create a consistent API for the rest of your application.</p>
 
-<p>For Java users, the Data Access Objects framework is bundled as part of the iBATIS Database Layer, which includes the SQL Maps Framework. Although packaged
- together, the DAO Framework is completely independent and can be used without SQL Maps. </p>
+<p>For Java users, the Data Access Objects framework is bundled as part of the iBATIS Database Layer, which
+ includes the SQL Maps Framework. Although packaged together, the DAO Framework is completely independent and can be
+ used without SQL Maps. .NET users can download the DataAccess framework seperately from the DataMapper framework.</p>
 
-<p>.NET users can download the DataAccess framework seperately from the DataMapper framework.</p>
+<p><a href="downloads.html" title="Get the iBATIS DAO framework!">Download the iBATIS Data Access Objects framework and documentation!</a></p>    
 
 </body>
 
