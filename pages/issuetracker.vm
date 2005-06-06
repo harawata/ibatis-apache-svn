@@ -17,8 +17,8 @@
       <table width="100%">
         <tr > 
           <td width="40%">Bugs and Feature Requests</td>
-          <td width="20%"><a title="iBATIS for Java Issue Tracker" href="http://issues.apache.org/jira/browse/IBATIS">JIRA Issue Tracker</a></td>
-          <td width="20%"><a title="iBATIS Issue Tracker Sign Up Page" href="http://issues.apache.org/jira/secure/Signup!default.jspa">JIRA Sign Up Page</a></td>
+          <td width="20%"><a title="iBATIS for Java Issue Tracker" href="http://issues.apache.org/jira/browse/IBATIS" target="_new">JIRA Issue Tracker</a></td>
+          <td width="20%"><a title="iBATIS Issue Tracker Sign Up Page" href="http://issues.apache.org/jira/secure/Signup!default.jspa" target="_new">JIRA Sign Up Page</a></td>
           <td width="20%">&nbsp;</td>
         </tr>
       </table>
@@ -27,8 +27,8 @@
       <table width="100%">
         <tr > 
           <td width="40%">Bugs and Feature Requests</td>
-          <td width="20%"><a title="iBATIS for .NET Issue Tracker" href="http://issues.apache.org/jira/browse/IBATISNET">JIRA Issue Tracker</a></td>
-          <td width="20%"><a title="iBATIS Issue Tracker Sign Up Page" href="http://issues.apache.org/jira/secure/Signup!default.jspa">JIRA Sign Up Page</a></td>
+          <td width="20%"><a title="iBATIS for .NET Issue Tracker" href="http://issues.apache.org/jira/browse/IBATISNET" target="_new">JIRA Issue Tracker</a></td>
+          <td width="20%"><a title="iBATIS Issue Tracker Sign Up Page" href="http://issues.apache.org/jira/secure/Signup!default.jspa" target="_new">JIRA Sign Up Page</a></td>
           <td width="20%">&nbsp;</td>
         </tr>
       </table>

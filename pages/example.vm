@@ -139,7 +139,7 @@ List employeeList = <b>sqlMap.queryForList("getEmployeesByManagerRecursively",
 </pre>
 
 <h3>Want to see more?</h3>
-<p>Check out <a href="jpetstore.html">JPetStore 4</a>, it uses many of the latest features and is a great example 
+<p>Check out <a href="petstore.html">JPetStore 4</a>, it uses many of the latest features and is a great example 
 of a complete application.</p>
 <p>And there is also a comprehensive <a href="download.html">Developer Guide</a> for complete documentation.</p>
 
