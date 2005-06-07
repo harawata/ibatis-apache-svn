@@ -401,7 +401,6 @@ namespace IBatisNet.DataMapper.Configuration
 		{
 			XmlValidatingReader validatingReader = null;
 			Stream xsdFile = null; 
-			StreamReader streamReader = null; 
 
 			_configScope.ErrorContext.Activity = "Validate SqlMap config";
 			try
@@ -411,9 +410,16 @@ namespace IBatisNet.DataMapper.Configuration
 				validatingReader.ValidationType = ValidationType.Schema;
 
 				xsdFile = GetStream( schemaFileName ); 
-				streamReader = new StreamReader( xsdFile ); 
 
-				validatingReader.Schemas.Add( XmlSchema.Read( new XmlTextReader( streamReader ), new ValidationEventHandler(ValidationCallBack) ) );
+				if (xsdFile == null)
+				{
+					// TODO: avoid using hard-coded value "IBatisNet.DataMapper"
+					throw new ConfigurationException( "Unable to locate embedded resource [IBatisNet.DataMapper."+schemaFileName+"]. If you are building from source, verfiy the file is marked as an embedded resource.");
+				}
+				
+				XmlSchema xmlSchema = XmlSchema.Read( xsdFile, new ValidationEventHandler(ValidationCallBack) );
+
+				validatingReader.Schemas.Add(xmlSchema);
 
 				// Wire up the call back.  The ValidationEvent is fired when the
 				// XmlValidatingReader hits an issue validating a section of the xml
@@ -432,7 +438,6 @@ namespace IBatisNet.DataMapper.Configuration
 			{
 				if( validatingReader != null ) validatingReader.Close();
 				if( xsdFile != null ) xsdFile.Close();
-				if( streamReader != null ) streamReader.Close();
 			}
 		}
 
