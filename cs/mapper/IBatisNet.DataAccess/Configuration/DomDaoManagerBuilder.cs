@@ -524,8 +524,7 @@ namespace IBatisNet.DataAccess.Configuration
 		{
 			XmlNode nodeProperties = configurationScope.NodeContext.SelectSingleNode("properties");
 
-			configurationScope.ErrorContext.Resource = nodeProperties.InnerXml.ToString();
-			configurationScope.ErrorContext.MoreInfo = "add global properties";
+			configurationScope.ErrorContext.Activity = "add global properties";
 
 			if (nodeProperties != null)
 			{

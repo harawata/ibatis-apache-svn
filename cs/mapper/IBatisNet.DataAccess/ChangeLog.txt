@@ -3,6 +3,7 @@ IBatisNet DataAccess Change Log
 ------------------------------
 1.6 - 01-June-2005
 ------------------------------
+- Fixed JIRA-38 Removed use of innerXml since properties node could be null/missing
 - Improvement JIRA-75/63
   <properties> 
      <propertie resource="sqlmap-config.xml"/> 
