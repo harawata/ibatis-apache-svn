@@ -95,6 +95,27 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		}
 
 		/// <summary>
+		/// Test collection mapping
+		/// order.LineItems
+		/// </summary>
+		[Test] 
+		public void TestLazyWithStronglyTypedCollectionMapping() 
+		{
+			Order order = (Order) sqlMap.QueryForObject("GetOrderWithLineItemCollection", 1);
+
+			AssertOrder1(order);
+
+			Assert.IsNotNull(order.LineItems);
+			Assert.AreEqual(2, order.LineItems.Count);
+
+			IEnumerator e = ((IEnumerable)order.LineItems).GetEnumerator();
+			while(e.MoveNext())
+			{
+				LineItem item = (LineItem)e.Current;
+				Assert.IsNotNull(item);
+			}
+		}
+		/// <summary>
 		/// Test null value replacement(on string) in a Result property.
 		/// </summary>
 		[Test] 
@@ -197,7 +218,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		}
 
 		/// <summary>
-		/// Test collection mapping: Strongly Typed Collection generated vias CodeSmith.
+		/// Test collection mapping
 		/// order.LineItems
 		/// </summary>
 		[Test] 

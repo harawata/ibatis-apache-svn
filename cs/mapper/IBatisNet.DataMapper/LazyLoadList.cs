@@ -109,7 +109,14 @@ namespace IBatisNet.DataMapper
 
 			ProxyGenerator proxyGenerator = new ProxyGenerator();
 
-			proxList = proxyGenerator.CreateProxy(typeof(IList), handler, new ArrayList());
+			if (mappedSatement.Statement.ListClass != null)
+			{
+				proxList = proxyGenerator.CreateProxy(typeof(IList), handler, mappedSatement.Statement.CreateInstanceOfListClass());
+			}
+			else
+			{
+				proxList = proxyGenerator.CreateProxy(typeof(IList), handler, new ArrayList());
+			}
 
 			return (IList) proxList;
 		}

@@ -37,7 +37,9 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		[Test] 
 		public void TestConfigureRelativePath()
 		{
-			SqlMapper sqlMap = SqlMapper.Configure( _fileName );
+			DomSqlMapBuilder builder = new DomSqlMapBuilder();
+			SqlMapper sqlMap = builder.Configure( _fileName );
+				//SqlMapper.Configure( _fileName );
 
 			Assert.IsNotNull(sqlMap);
 		}
@@ -49,7 +51,10 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		public void TestConfigureAndWatchRelativePath()
 		{
 			ConfigureHandler handler = new ConfigureHandler(Configure);
-			SqlMapper sqlMap = SqlMapper.ConfigureAndWatch( _fileName , handler);
+			DomSqlMapBuilder builder = new DomSqlMapBuilder();
+			SqlMapper sqlMap = builder.ConfigureAndWatch( _fileName , handler);
+
+			//SqlMapper sqlMap = SqlMapper.ConfigureAndWatch( _fileName , handler);
 
 			Assert.IsNotNull(sqlMap);
 		}
@@ -92,7 +97,10 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		{
 			_fileName = Resources.BaseDirectory+Path.DirectorySeparatorChar+_fileName;
 
-			SqlMapper sqlMap = SqlMapper.Configure( _fileName );
+			DomSqlMapBuilder builder = new DomSqlMapBuilder();
+			SqlMapper sqlMap = builder.Configure( _fileName );
+
+			//SqlMapper sqlMap = SqlMapper.Configure( _fileName );
 
 			Assert.IsNotNull(sqlMap);
 		}
@@ -119,7 +127,10 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		{
 			_fileName = "file://"+Resources.BaseDirectory+Path.DirectorySeparatorChar+_fileName;
 
-			SqlMapper sqlMap = SqlMapper.Configure( _fileName );
+			DomSqlMapBuilder builder = new DomSqlMapBuilder();
+			SqlMapper sqlMap = builder.Configure( _fileName );
+
+			//SqlMapper sqlMap = SqlMapper.Configure( _fileName );
 
 			Assert.IsNotNull(sqlMap);
 		}
@@ -177,7 +188,10 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			_fileName = Resources.BaseDirectory+Path.DirectorySeparatorChar+_fileName;
 			ConfigureHandler handler = new ConfigureHandler(Configure);
 
-			SqlMapper sqlMap = SqlMapper.ConfigureAndWatch( _fileName , handler);
+			DomSqlMapBuilder builder = new DomSqlMapBuilder();
+			SqlMapper sqlMap = builder.ConfigureAndWatch( _fileName , handler);
+
+			//SqlMapper sqlMap = SqlMapper.ConfigureAndWatch( _fileName , handler);
 
 			Assert.IsNotNull(sqlMap);
 		}
@@ -192,7 +206,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			ConfigureHandler handler = new ConfigureHandler(Configure);
 
 			DomSqlMapBuilder builder = new DomSqlMapBuilder();
-			SqlMapper sqlMap = SqlMapper.ConfigureAndWatch( _fileName , handler);
+			SqlMapper sqlMap = builder.ConfigureAndWatch( _fileName , handler);
 
 			Assert.IsNotNull(sqlMap);
 		}
@@ -206,7 +220,10 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			_fileName = "file://"+Resources.BaseDirectory+Path.DirectorySeparatorChar+_fileName;
 			ConfigureHandler handler = new ConfigureHandler(Configure);
 
-			SqlMapper sqlMap = SqlMapper.ConfigureAndWatch( _fileName , handler);
+			DomSqlMapBuilder builder = new DomSqlMapBuilder();
+			SqlMapper sqlMap = builder.ConfigureAndWatch( _fileName , handler);
+
+			//SqlMapper sqlMap = SqlMapper.ConfigureAndWatch( _fileName , handler);
 
 			Assert.IsNotNull(sqlMap);
 		}
