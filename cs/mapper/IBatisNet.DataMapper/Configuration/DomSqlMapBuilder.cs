@@ -1160,7 +1160,7 @@ namespace IBatisNet.DataMapper.Configuration
 						string statementName = flushOn.Attributes["statement"].Value;
 						if (_configScope.UseStatementNamespaces == true)
 						{
-							statementName = _configScope.SqlMapNamespace + DOT + statementName;
+							statementName = ApplyNamespace( statementName ); 
 						}
 
 						MappedStatement mappedStatement = _configScope.SqlMapper.GetMappedStatement(statementName);
