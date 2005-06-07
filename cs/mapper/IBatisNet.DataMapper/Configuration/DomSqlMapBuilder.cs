@@ -159,6 +159,22 @@ namespace IBatisNet.DataMapper.Configuration
 			_configScope = new ConfigurationScope();
 			_paramParser = new InlineParameterMapParser(_configScope.ErrorContext);
 		}
+
+		/// <summary>
+		/// Constructs a DomSqlMapBuilder 
+		/// with or without configuration document validation using the 
+		/// SqlMapConfig schema.
+		/// </summary>
+		/// <param name="validateSqlMapConfig">
+		/// Specify whether the configuration Xml document should be 
+		/// validated with the SqlMapConfig schema.
+		/// </param>
+		public DomSqlMapBuilder(bool validateSqlMapConfig)
+		{
+			_configScope = new ConfigurationScope();
+			_configScope.ValidateSqlMapConfig = validateSqlMapConfig;
+			_paramParser = new InlineParameterMapParser(_configScope.ErrorContext);
+		}		
 		#endregion 
 
 		#region Configure
@@ -357,8 +373,6 @@ namespace IBatisNet.DataMapper.Configuration
 			
 			try
 			{
-				ParseValidateSqlMapConfigSetting();
-
 				if (_configScope.ValidateSqlMapConfig) 
 				{
 					ValidateSchema( document.ChildNodes[1], "SqlMapConfig.xsd" );
@@ -371,26 +385,6 @@ namespace IBatisNet.DataMapper.Configuration
 				throw new ConfigurationException(_configScope.ErrorContext.ToString(), e);
 			}
 		}
-
-		private void ParseValidateSqlMapConfigSetting()
-		{
-			_configScope.ErrorContext.Activity = "Checking if configuration document should be validated";
-	
-			XmlNodeList settings = _configScope.SqlMapConfigDocument.SelectNodes(XML_CONFIG_SETTINGS);
-	
-			if (settings!=null)
-			{
-				foreach (XmlNode setting in settings)
-				{
-					if (setting.Attributes[ATR_VALIDATE_SQLMAP_CONFIG] != null )
-					{	
-						string value = setting.Attributes[ATR_VALIDATE_SQLMAP_CONFIG].Value;
-						_configScope.ValidateSqlMapConfig =  Convert.ToBoolean( value ); 
-					}
-				}
-			}
-		}
-
 
 		/// <summary>
 		/// validate againts schema

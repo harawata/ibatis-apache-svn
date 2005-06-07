@@ -3,6 +3,7 @@ IBatisNet Change Log
 ------------------------------
 1.2.* - XX/XX/XXXX
 ------------------------------
+- Added new DomSqlMapBuilder constructor DomSqlMapBuilder(bool validateSqlMapConfig)
 - Exchange order of settings and properties tag in config file
 - Add new API to DomSqlMapBuilder.Configure(...)[old API SqlMapper.Configure(...) are marked as obsolete]
 - Re-Add providers tag (optional) in SqlMap.Config
