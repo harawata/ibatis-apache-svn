@@ -4,7 +4,7 @@
     PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"
     "http://www.ibatis.com/dtd/sql-map-2.dtd">
 
-<sqlMap>
+<sqlMap >
 
   <parameterMap id="dom-parameter-map" class="dom">
     <parameter property="id"/>

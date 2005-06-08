@@ -219,7 +219,25 @@
     from ACCOUNT
     WHERE ACC_ID IN
     <iterate open="(" close=")" conjunction="," property="accountList">
-       #accountList[].id#
+        #accountList[].id#
+    </iterate>
+  </select>
+
+  <select id="iterateNestedListPropertyB"
+    parameterClass="testdomain.Account"
+    resultClass="testdomain.Account">
+    select
+      ACC_ID          as id,
+      ACC_FIRST_NAME  as firstName,
+      ACC_LAST_NAME   as lastName,
+      ACC_EMAIL       as emailAddress
+    from ACCOUNT
+    WHERE ACC_ID IN
+    <iterate open="(" close=")" conjunction="," property="accountList">
+        #accountList[].id#
+        <isNotEqual prepend="," compareProperty="firstName" compareValue="test">
+          #id#
+        </isNotEqual>
     </iterate>
   </select>
 
@@ -375,7 +393,7 @@
         </iterate>
     </dynamic>
   </select>
-  
+
   <select id="dynamicQueryByExample2Literal"
     parameterClass="testdomain.Account"
     resultClass="testdomain.Account">
@@ -393,7 +411,7 @@
         </iterate>
     </dynamic>
   </select>
-<!-- 
+<!--
 issue IBATIS-42 test
 include the following code in the same place where 
 'ACC_ID = #ids[]#' exists in the dynamicQueryByExample2 statement

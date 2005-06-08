@@ -24,6 +24,8 @@ public class IterateContext implements Iterator {
 
   private String property;
   private boolean allowNext = true;
+
+  private boolean isFinal = false;
   private SqlTag tag;
   
   public IterateContext(Object collection,SqlTag tag) {
@@ -86,6 +88,11 @@ public class IterateContext implements Iterator {
   }
   
   /**
+   * This property specifies whether to increment the iterate in
+   * the doEndFragment. The ConditionalTagHandler has the ability
+   * to increment the IterateContext, so it is neccessary to avoid
+   * incrementing in both the ConditionalTag and the IterateTag.
+   *
    * @param property The property to set.
    */
   public void setProperty(String property) {
@@ -100,7 +107,7 @@ public class IterateContext implements Iterator {
   }
   
   /**
-   * @param allowNext The allowNext to set.
+   * @param performIterate The allowNext to set.
    */
   public void setAllowNext(boolean performIterate) {
     this.allowNext = performIterate;
@@ -117,4 +124,25 @@ public class IterateContext implements Iterator {
   public void setTag(SqlTag tag) {
     this.tag = tag;
   }
+
+  /**
+   *
+   * @return
+   */
+  public boolean isFinal() {
+    return isFinal;
+  }
+
+  /**
+   * This attribute is used to mark whether an iterate tag is
+   * in it's final iteration. Since the ConditionalTagHandler
+   * can increment the iterate the final iterate in the doEndFragment
+   * of the IterateTagHandler needs to know it is in it's final iterate.
+   *
+   * @param aFinal
+   */
+  public void setFinal(boolean aFinal) {
+    isFinal = aFinal;
+  }
+
 }

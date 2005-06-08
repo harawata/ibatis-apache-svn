@@ -54,6 +54,9 @@ public abstract class ConditionalTagHandler extends BaseTagHandler {
     if(null != iterate && iterate.isAllowNext()){
       iterate.next();
       iterate.setAllowNext(false);
+      if(!iterate.hasNext()) {
+        iterate.setFinal(true);
+      }
     }
     
     iteratePropertyReplace(bodyContent,ctx.peekIterateContext());

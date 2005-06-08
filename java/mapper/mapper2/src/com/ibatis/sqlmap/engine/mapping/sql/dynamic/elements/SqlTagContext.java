@@ -33,8 +33,6 @@ public class SqlTagContext {
 
   private LinkedList removeFirstPrependStack;
   private LinkedList iterateContextStack;
-  
-  private boolean overridePrepend;
 
   private ArrayList parameterMappings = new ArrayList();
 
@@ -43,7 +41,6 @@ public class SqlTagContext {
     sw = new StringWriter();
     out = new PrintWriter(sw);
     attributes = new HashMap();
-    overridePrepend = false;
     removeFirstPrependStack = new LinkedList();
     iterateContextStack = new LinkedList();
   }
@@ -92,8 +89,8 @@ public class SqlTagContext {
   /**
    * pop the first RemoveFirstPrependMarker once the recursion is on it's way out
    * of the recursion loop and return it's internal value.
-   * 
-   * @return
+   *
+   * @param tag
    */
   public void popRemoveFirstPrependMarker(SqlTag tag) {
         
@@ -108,7 +105,7 @@ public class SqlTagContext {
   /**
    * push a new RemoveFirstPrependMarker object with the specified internal state
    * 
-   * @param removeFirstPrependBoolean
+   * @param tag
    */
   public void pushRemoveFirstPrependMarker(SqlTag tag) {
     
@@ -145,8 +142,7 @@ public class SqlTagContext {
   
   /**
    * set a new internal state for top RemoveFirstPrependMarker object
-   * 
-   * @param removeFirstPrependBoolean
+   *
    */
   public void disableRemoveFirstPrependMarker() {
     ((RemoveFirstPrependMarker) removeFirstPrependStack.get(1)).setRemoveFirstPrepend(false);

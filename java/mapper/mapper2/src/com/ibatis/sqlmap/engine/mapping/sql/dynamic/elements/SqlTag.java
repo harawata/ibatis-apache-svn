@@ -161,7 +161,7 @@ public class SqlTag implements SqlChild, DynamicParent {
   }
   
   /**
-   * @param postParseRequired The postParseRequired to set.
+   * @param iterateAncestor The postParseRequired to set.
    */
   public void setPostParseRequired(boolean iterateAncestor) {
     this.postParseRequired = iterateAncestor;

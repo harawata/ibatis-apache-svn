@@ -52,7 +52,7 @@ public class IterateTagHandler extends BaseTagHandler {
   public int doEndFragment(SqlTagContext ctx, SqlTag tag, Object parameterObject, StringBuffer bodyContent) {
     IterateContext iterate = (IterateContext) ctx.getAttribute(tag);
 
-    if (iterate.hasNext()) {
+    if (iterate.hasNext() || iterate.isFinal()) {
       
       if(iterate.isAllowNext()) {
         iterate.next();
@@ -81,8 +81,12 @@ public class IterateTagHandler extends BaseTagHandler {
       }
       
       iterate.setAllowNext(true);
-      
-      return REPEAT_BODY;
+      if(iterate.isFinal()) {
+        return super.doEndFragment(ctx,tag,parameterObject,bodyContent);
+      } else {
+        return REPEAT_BODY;
+      }
+
     } else {
       return super.doEndFragment(ctx,tag,parameterObject,bodyContent);
     }
