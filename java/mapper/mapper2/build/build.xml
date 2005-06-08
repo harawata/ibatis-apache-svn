@@ -80,6 +80,7 @@
       <entry key="buildDate" type="date" value="now"/>
       <entry key="buildNum" default="0" type="int" operation="+" value="1"/>
     </propertyfile>
+    <property file="version.properties"/>
     <replace
       file="${deploy.path}/release.txt"
       value="value not found in version.properties"
@@ -223,6 +224,14 @@
 
   <target name="jar.sqlmaps" depends="src.compile">
     <jar jarfile="${deploy.path}/ibatis-sqlmap-2.jar">
+      <manifest>
+        <attribute name="Built-On" value="${buildDate}"/>
+	      <section name="com/ibatis/sqlmap/">
+          <attribute name="Implementation-Title" value="iBatis sql map"/>
+          <attribute name="Implementation-Version" value="${version} build# ${buildNum}"/>
+          <attribute name="Implementation-Vendor" value="Apache Software Foundation"/>
+        </section>
+      </manifest>
       <fileset dir="${work.classes}">
         <include name="com/ibatis/sqlmap/**/*"/>
       </fileset>
@@ -235,6 +244,14 @@
 
   <target name="jar.dao" depends="src.compile">
     <jar jarfile="${deploy.path}/ibatis-dao-2.jar">
+      <manifest>
+        <attribute name="Built-On" value="${buildDate}"/>
+	      <section name="com/ibatis/dao/">
+          <attribute name="Implementation-Title" value="iBatis dao"/>
+          <attribute name="Implementation-Version" value="${version} build# ${buildNum}"/>
+          <attribute name="Implementation-Vendor" value="Apache Software Foundation"/>
+        </section>
+      </manifest>
       <fileset dir="${work.classes}">
         <include name="com/ibatis/dao/**/*"/>
       </fileset>
@@ -247,6 +264,14 @@
 
   <target name="jar.common" depends="src.compile">
     <jar jarfile="${deploy.path}/ibatis-common-2.jar">
+      <manifest>
+        <attribute name="Built-On" value="${buildDate}"/>
+	      <section name="com/ibatis/common/">
+          <attribute name="Implementation-Title" value="iBatis common"/>
+          <attribute name="Implementation-Version" value="${version} build# ${buildNum}"/>
+          <attribute name="Implementation-Vendor" value="Apache Software Foundation"/>
+        </section>
+      </manifest>
       <fileset dir="${work.classes}">
         <include name="com/ibatis/common/**/*"/>
       </fileset>
@@ -260,6 +285,14 @@
   <target name="jar.compatibility" depends="src.compile">
     <mkdir dir="${deploy.path}/lib/1-x-Compatibility/"/>
     <jar jarfile="${deploy.path}/lib/1-x-Compatibility/ibatis-sqlmap-1-x.jar">
+      <manifest>
+        <attribute name="Built-On" value="${buildDate}"/>
+	      <section name="com/ibatis/db/">
+          <attribute name="Implementation-Title" value="iBatis compatibility"/>
+          <attribute name="Implementation-Version" value="${version} build# ${buildNum}"/>
+          <attribute name="Implementation-Vendor" value="Apache Software Foundation"/>
+        </section>
+      </manifest>
       <fileset dir="${work.classes}">
         <include name="com/ibatis/db/**/*"/>
       </fileset>
