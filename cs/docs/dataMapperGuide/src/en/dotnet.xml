@@ -298,14 +298,14 @@
   &lt;!-- Optional --&gt;
   &lt;properties resource="properties.config"/&gt;
 
-  &lt;!-- Not required if providers.config is located in default location --&gt;
-  &lt;providers embedded="resources.providers.config, IBatisNet.Test"/&gt;
-
   &lt;settings&gt;
     &lt;setting useStatementNamespaces="false"/&gt;
     &lt;setting cacheModelsEnabled="true"/&gt;
     &lt;setting validateSqlMap="false"/&gt;
   &lt;/settings&gt;
+
+  &lt;!-- Not required if providers.config is located in default location --&gt;
+  &lt;providers embedded="resources.providers.config, IBatisNet.Test"/&gt;
 
   &lt;database&gt;
     &lt;provider name="sqlServer1.1"/&gt;
@@ -2119,12 +2119,81 @@ Product p = (Product) map[“EST-93”];</programlisting>
 
       <para>To log all Prepared SQL command text, enable the logger for
       <classname>IBatisNet.DataMapper.Configuration.Statements.DefaultPreparedCommand</classname>.
-      To log cache usage, enable the logger for
-      <classname>IBatisNet.DataMapper.Configuration.Cache.CacheModel</classname>.
-      To log lazyload usage, enable the logger for
-      <classname>IBatisNet.DataMapper.LazyLoadList</classname>. To log
-      DataMapper session information, enable the logger for
-      <classname>IBatisNet.DataMapper.SqlMapSession</classname>.</para>
+      This will display the statement, parameters, and parameter types used by
+      the DataMapper.</para>
+
+      <example>
+        <title>Sample DefaultPreparedCommand logger output</title>
+
+        <programlisting>2005-06-08 01:39:43,941 [3872] DEBUG IBatisNet.DataMapper.Commands.DefaultPreparedCommand [] - 
+  PreparedStatement : [select LineItem_ID as Id, LineItem_Code as Code, 
+  LineItem_Quantity as Quantity, LineItem_Price as Price     
+  from LineItems where Order_ID =  @param0 order by LineItem_Code]
+2005-06-08 01:39:43,941 [3872] DEBUG IBatisNet.DataMapper.Commands.DefaultPreparedCommand [] - 
+  Parameters: [@param0=[value,1]]
+2005-06-08 01:39:43,941 [3872] DEBUG IBatisNet.DataMapper.Commands.DefaultPreparedCommand [] - 
+  Types: [@param0=[Int32, System.Int32]]</programlisting>
+      </example>
+
+      <para>If you would like to log cache usage in your application, enable
+      the logger for
+      <classname>IBatisNet.DataMapper.Configuration.Cache.CacheModel</classname>.</para>
+
+      <example>
+        <title>Sample CacheModel logger output</title>
+
+        <programlisting>2005-06-08 01:38:34,403 [3648] DEBUG IBatisNet.DataMapper.Configuration.Cache.CacheModel [] - 
+Flush cacheModel named Account.account-cache for statement 'UpdateAccountViaParameterMap'</programlisting>
+      </example>
+
+      <para>To keep track of DataMapper session information, enable the logger
+      for <classname>IBatisNet.DataMapper.SqlMapSession</classname>.</para>
+
+      <example>
+        <title>Sample SqlMapSession logger output</title>
+
+        <programlisting><emphasis role="blue">2005-06-08 01:39:42,660 [3872] DEBUG IBatisNet.DataMapper.SqlMapSession [] - 
+  Open Connection "3194" 
+  to "Microsoft SQL Server 7.0/2000, provider V1.0.5000.0 in framework .NET V1.1".
+</emphasis>2005-06-08 01:39:42,660 [3872] DEBUG IBatisNet.DataMapper.Commands.DefaultPreparedCommand [] - 
+  PreparedStatement : [select * from Orders where Order_ID =  @param0 ]
+2005-06-08 01:39:42,660 [3872] DEBUG IBatisNet.DataMapper.Commands.DefaultPreparedCommand [] - 
+  Parameters: [@param0=[value,1]]
+2005-06-08 01:39:42,660 [3872] DEBUG IBatisNet.DataMapper.Commands.DefaultPreparedCommand [] - 
+  Types: [@param0=[Int32, System.Int32]]
+<emphasis role="blue">2005-06-08 01:39:42,676 [3872] DEBUG IBatisNet.DataMapper.SqlMapSession [] - 
+  Close Connection "3194" to 
+  "Microsoft SQL Server 7.0/2000, provider V1.0.5000.0 in framework .NET V1.1".</emphasis></programlisting>
+      </example>
+
+      <para>To get information about lazyload usage by the DataMapper, enable
+      the logger for
+      <classname>IBatisNet.DataMapper.LazyLoadList</classname>.</para>
+
+      <example>
+        <title>Sample LazyLoadList logger output</title>
+
+        <programlisting><emphasis role="blue">2005-06-08 01:39:42,316 [3872] DEBUG IBatisNet.DataMapper.LazyLoadList [] - 
+  Proxyfying call to get_Count
+2005-06-08 01:39:42,316 [3872] DEBUG IBatisNet.DataMapper.LazyLoadList [] - 
+  Proxyfying call, query statement GetLineItemsForOrder</emphasis>
+2005-06-08 01:39:42,316 [3872] DEBUG IBatisNet.DataMapper.SqlMapSession [] - 
+  Open Connection "3463" to 
+  "Microsoft SQL Server 7.0/2000, provider V1.0.5000.0 in framework .NET V1.1".
+2005-06-08 01:39:42,316 [3872] DEBUG IBatisNet.DataMapper.Commands.DefaultPreparedCommand [] - 
+  PreparedStatement : [select LineItem_ID as Id, LineItem_Code as Code,      
+  LineItem_Quantity as Quantity, LineItem_Price as Price     
+  from LineItems where Order_ID =  @param0 ]
+2005-06-08 01:39:42,316 [3872] DEBUG IBatisNet.DataMapper.Commands.DefaultPreparedCommand [] - 
+  Parameters: [@param0=[value,1]]
+2005-06-08 01:39:42,316 [3872] DEBUG IBatisNet.DataMapper.Commands.DefaultPreparedCommand [] - 
+  Types: [@param0=[Int32, System.Int32]]
+2005-06-08 01:39:42,316 [3872] DEBUG IBatisNet.DataMapper.SqlMapSession [] - 
+  Close Connection "3463" to 
+  "Microsoft SQL Server 7.0/2000, provider V1.0.5000.0 in framework .NET V1.1".
+<emphasis role="blue">2005-06-08 01:39:42,316 [3872] DEBUG IBatisNet.DataMapper.LazyLoadList [] - 
+  End of proxyfied call to get_Count</emphasis></programlisting>
+      </example>
     </sect2>
   </sect1>
 </chapter>
