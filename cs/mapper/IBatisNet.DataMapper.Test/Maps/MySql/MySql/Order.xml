@@ -29,7 +29,7 @@
 				
 		<resultMap id="order-with-lines-collection" class="Order"
 								extends="lite-order-result-by-name" >
-			<result property="LineItems" column="Order_ID"  select="GetLineItemsForOrderWithListClass" />
+			<result property="LineItems" column="Order_ID" lazyLoad="true" select="GetLineItemsForOrderWithListClass" />
 		</resultMap>
 		
 		<resultMap id="order-with-lines-array" class="Order"

@@ -512,16 +512,7 @@
 			select * from Accounts
 			order by Account_ID
 		</select>			
-						
-		<!-- For procedure, the parameters of the parameterMap must in the same order 
-		as for the procedure paramaters-->
-		<procedure id="InsertAccountViaStoreProcedure" parameterMap="insert-params">
-			ps_InsertAccount
-		</procedure>
-		
-		<procedure id="SwapEmailAddresses" parameterMap="swap-params">
-			ps_swap_email_address
-		</procedure>
+
 	</statements>
 
 	<!-- =============================================
