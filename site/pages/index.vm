@@ -40,7 +40,7 @@
 
         <li>Fixed JIRA-78 issue for specifying a cacheModel in another SqlMap.</li>
 
-        <li>Updated a few exception messages and corrected some documentation errors.</li>
+        <li>Updated a few exception messages, corrected some documentation errors, and updated tutorial docs and source.</li>
 
       </ul>
 
