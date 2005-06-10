@@ -334,7 +334,11 @@ public class SqlExecutor {
     for (int i = 0; i < mappings.length; i++) {
       BasicParameterMapping mapping = ((BasicParameterMapping) mappings[i]);
       if (mapping.isOutputAllowed()) {
-        cs.registerOutParameter(i + 1, mapping.getJdbcType());
+        if ( null != mapping.getTypeName() && !mapping.getTypeName().equals("") ) { //@added
+          cs.registerOutParameter(i + 1, mapping.getJdbcType(), mapping.getTypeName() );
+        } else {
+          cs.registerOutParameter(i + 1, mapping.getJdbcType());
+        }
       }
     }
   }

@@ -234,6 +234,7 @@ public class SqlMapParser extends BaseParser {
         Properties childAttributes = NodeletUtils.parseAttributes(node, vars.properties);
         String propertyName = childAttributes.getProperty("property");
         String jdbcType = childAttributes.getProperty("jdbcType");
+        String type     = childAttributes.getProperty("typeName");
         String javaType = childAttributes.getProperty("javaType");
         String nullValue = childAttributes.getProperty("nullValue");
         String mode = childAttributes.getProperty("mode");
@@ -261,6 +262,7 @@ public class SqlMapParser extends BaseParser {
         BasicParameterMapping mapping = new BasicParameterMapping();
         mapping.setPropertyName(propertyName);
         mapping.setJdbcTypeName(jdbcType);
+        mapping.setTypeName(type);
         mapping.setNullValue(nullValue);
         if (mode != null && mode.length() > 0) {
           mapping.setMode(mode);

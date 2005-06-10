@@ -27,6 +27,7 @@ public class BasicParameterMapping implements ParameterMapping {
 
   private String propertyName;
   private TypeHandler typeHandler;
+  private String typeName; // this is used for REF types or user-defined types
   private int jdbcType;
   private String jdbcTypeName;
   private String nullValue;
@@ -129,6 +130,22 @@ public class BasicParameterMapping implements ParameterMapping {
 
   public boolean isOutputAllowed() {
     return outputAllowed;
+  }
+
+  /**
+   *  user-defined or REF types
+   * @return
+   */
+  public String getTypeName() {
+    return typeName;
+  }
+
+  /**
+   * for user-defined or REF types
+   * @param typeName
+   */
+  public void setTypeName(String typeName) {
+    this.typeName = typeName;
   }
 
 }

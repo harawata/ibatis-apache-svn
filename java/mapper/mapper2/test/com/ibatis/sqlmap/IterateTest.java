@@ -116,6 +116,7 @@ public class IterateTest extends BaseSqlMapTest {
 
   public void testIterateNestedListPropertyB() throws SQLException {
     Account account = new Account();
+    account.setId(99);
     account.setAccountList(new ArrayList());
     account.getAccountList().add(new Account(1));
     account.getAccountList().add(new Account(2));
