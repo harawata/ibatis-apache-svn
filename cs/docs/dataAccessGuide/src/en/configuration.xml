@@ -24,16 +24,16 @@
       <title>Setup the Distribution</title>
 
       <para>The official site for iBATIS for .NET is our Apache site
-      &lt;http://incubator.apache.org/ibatis/&gt;. The DataAccess framework is
-      availabe in 2 types of distributions: a binary distribution that
-      includes the required DataAccess assemblies and a source distribution
-      that includes a VSN solution. To download either of the distributions,
-      follow the link to the Downloads area on our web site, and select the
-      either the binary or source distribution for the iBATIS .NET DataAccess
-      V1.5.1 or later release (if you download the binary distribution,
-      extract the files using a utility like WinZip or the extractor built
-      into newer versions of Windows and skip ahead to the Add Assembly
-      References section).</para>
+      &lt;http://ibatis.apache.org/&gt;. The DataAccess framework is availabe
+      in 2 types of distributions: a binary distribution that includes the
+      required DataAccess assemblies and a source distribution that includes a
+      VSN solution. To download either of the distributions, follow the link
+      to the Downloads area on our web site, and select the either the binary
+      or source distribution for the iBATIS .NET DataAccess V1.6.1 or later
+      release (if you download the binary distribution, extract the files
+      using a utility like WinZip or the extractor built into newer versions
+      of Windows and skip ahead to the Add Assembly References
+      section).</para>
 
       <para>The source distribution includes a VSN solution and a number of C#
       projects. The distribution is in the form of a ZIP archive. You can

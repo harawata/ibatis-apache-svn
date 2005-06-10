@@ -34,16 +34,16 @@
 
       <para>The official site for iBATIS DataMapper for .NET is our Apache
       site &lt;<ulink
-      url="http://incubator.apache.org/ibatis/site/">http://incubator.apache.org/ibatis/</ulink>&gt;.
+      url="http://ibatis.apache.org/">http://ibatis.apache.org/</ulink>&gt;.
       The DataMapper is availabe in 2 types of distributions: a binary
       distribution that includes the required DataMapper assemblies and a
       source distribution that includes a VSN solution. To download either of
       the distributions, follow the link to the Downloads area on our web
       site, and select the either the binary or source distribution for the
-      iBATIS .NET DataMapper V1.2 or later release (if you download the binary
-      distribution, extract the files using a utility like WinZip or the
-      extractor built into newer versions of Windows and skip ahead to the Add
-      Assembly References section).</para>
+      iBATIS .NET DataMapper V1.2.1 or later release (if you download the
+      binary distribution, extract the files using a utility like WinZip or
+      the extractor built into newer versions of Windows and skip ahead to the
+      Add Assembly References section).</para>
 
       <para>The DataMapper source distribution includes a VSN solution and a
       number of C# projects. The distribution is in the form of a ZIP archive.
