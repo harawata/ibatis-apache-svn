@@ -15,10 +15,10 @@
     
 <h2>iBATIS.NET</h2>
 
-    <h3>Alpha</h3>
+    <h3>Beta</h3>
     <ul>
-      <li><a href="http://prdownloads.sourceforge.net/ibatisnet/DataMapper-bin-1.2-Alpha.zip?download">DataMapper 1.2 Alpha</a> and <a href="http://prdownloads.sourceforge.net/ibatisnet/DataMapper-doc-1.2.zip?download">Documentation</a></li>
-      <li><a href="http://prdownloads.sourceforge.net/ibatisnet/DataAccess-bin-1.6-Alpha.zip?download">DataAccess 1.6 Alpha</a> and <a href="http://prdownloads.sourceforge.net/ibatisnet/DataAccess-doc-1.6.zip?download">Documentation</a></li>
+      <li><a href="http://prdownloads.sourceforge.net/ibatisnet/DataMapper-bin-1.2.1.zip?download">DataMapper 1.2.1 Beta</a> and <a href="http://prdownloads.sourceforge.net/ibatisnet/DataMapper-doc-1.2.1.zip?download">Documentation</a></li>
+      <li><a href="http://prdownloads.sourceforge.net/ibatisnet/DataAccess-bin-1.6.1.zip?download">DataAccess 1.6.1 Beta</a> and <a href="http://prdownloads.sourceforge.net/ibatisnet/DataAccess-doc-1.6.1.zip?download">Documentation</a></li>
       <li><a href="http://prdownloads.sourceforge.net/ibatisnet/iBATIS-src-SVN-179390.zip?download">Source Revision 179390</a></li>
     </ul>
 
