@@ -63,8 +63,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.ConfigWatcher
 				TimerCallback callBakDelegate = new TimerCallback( ConfigWatcherTest.OnConfigFileChange );
 
 				StateConfig state = new StateConfig();
-				state.fileName = fileName;
-				state.configureHandler = configureDelegate;
+				state.FileName = fileName;
+				state.ConfigureHandler = configureDelegate;
 
 				new ConfigWatcherHandler( callBakDelegate, state );
 
@@ -94,7 +94,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.ConfigWatcher
 			public static void OnConfigFileChange(object obj)
 			{
 				StateConfig state = (StateConfig)obj;
-				state.configureHandler(null);
+				state.ConfigureHandler(null);
 			}
 
 
