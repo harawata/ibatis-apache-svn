@@ -63,8 +63,8 @@
           <td width="20%">Subversion Commits List</td>
           <td width="20%"><a href="mailto:commits-subscribe@ibatis.apache.org">Subscribe</a></td>
           <td width="20%">&nbsp;</td>
-          <td width="20%">&nbsp;</td>
-          <td width="20%"><a href="http://mail-archives.apache.org/mod_mbox/incubator-ibatis-commits/" target="_new">Archives</a></td>
+          <td width="20%"><a href="http://www.mail-archive.com/commits@ibatis.apache.org/" target="_new">Archives/Search</a></td>
+          <td width="20%"><a href="http://mail-archives.apache.org/mod_mbox/incubator-ibatis-commits/" target="_new">Old Incubator Archives</a></td>
         </tr>
       </table>
 
