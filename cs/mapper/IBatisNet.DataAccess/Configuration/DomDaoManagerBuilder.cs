@@ -104,6 +104,14 @@ namespace IBatisNet.DataAccess.Configuration
 			Configure( DomDaoManagerBuilder.DEFAULT_FILE_CONFIG_NAME );
 		}
 
+		/// <summary>
+		/// Configure DaoManagers from an XmlDocument.
+		/// </summary>
+		/// <param name="document">An xml configuration document.</param>
+		public void Configure( XmlDocument document )
+		{
+			BuildDaoManagers( document, false );
+		}
 
 		/// <summary>
 		/// Configure DaoManagers from a file path.
