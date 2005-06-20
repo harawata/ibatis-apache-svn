@@ -94,10 +94,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "ToDo.txt"
-                    BuildAction = "Content"
-                />
-                <File
                     RelPath = "Accounts\Account.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
