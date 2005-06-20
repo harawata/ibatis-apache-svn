@@ -85,11 +85,6 @@
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
-                    Name = "IBatisNet.DataAccess.Extensions"
-                    Project = "{342C92B4-2742-4C55-9374-A504FE3B6972}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
                     Name = "IBatisNet.DataAccess"
                     Project = "{BEFC4A45-7DF9-40E4-942C-82DC1BA5E708}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
@@ -103,11 +98,6 @@
                     Name = "System.Drawing"
                     AssemblyName = "System.Drawing"
                     HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Drawing.dll"
-                />
-                <Reference
-                    Name = "NHibernate"
-                    AssemblyName = "NHibernate"
-                    HintPath = "..\External-Bin\Net\1.1\NHibernate.dll"
                 />
                 <Reference
                     Name = "nunit.framework"
@@ -233,11 +223,6 @@
                 />
                 <File
                     RelPath = "Dao\Implementations\DataMapper\AccountDao.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Dao\Implementations\NHibernate\UserDao.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -545,16 +530,6 @@
                 />
                 <File
                     RelPath = "NUnit\DaoTests\BaseDaoTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "NUnit\DaoTests\MutipleDaoTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "NUnit\DaoTests\NHibernateDaoTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
