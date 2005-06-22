@@ -23,7 +23,7 @@
 				<TR class="gridItem">
 					<TD><%# ((NPetshop.Domain.Catalog.Product)Container.DataItem).Id %></TD>
 					<TD>
-						<asp:LinkButton id=LinkButtonProduct runat="server" CommandArgument="<%# ((NPetshop.Domain.Catalog.Product)Container.DataItem).Id %>" CommandName="showProduct" CausesValidation="False">
+						<asp:LinkButton id=LinkButtonProduct runat="server" CommandName="showProduct" CommandArgument="<%# ((NPetshop.Domain.Catalog.Product)Container.DataItem).Id %>" CausesValidation="False">
 							<%# ((NPetshop.Domain.Catalog.Product)Container.DataItem).Name %>
 						</asp:LinkButton></TD>
 					<TD><%# ((NPetshop.Domain.Catalog.Product)Container.DataItem).Description %></TD>

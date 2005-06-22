@@ -230,22 +230,6 @@
             The navigator coordinates the interactions of views and controllers 
             </summary>
         </member>
-        <member name="T:Castle.MVC.Controllers.ControllerAttribute">
-            <summary>
-            Decorates a page which a controller.
-            </summary>
-        </member>
-        <member name="M:Castle.MVC.Controllers.ControllerAttribute.#ctor(System.Type)">
-            <summary>
-            Default constructor
-            </summary>
-            <param name="controllerType">A Controller Type</param>
-        </member>
-        <member name="P:Castle.MVC.Controllers.ControllerAttribute.ControllerType">
-            <summary>
-            The controller's Type
-            </summary>
-        </member>
         <member name="T:Castle.MVC.Navigation.DefaultNavigator">
             <summary>
             Description résumée de WebNavigator.
