@@ -290,6 +290,9 @@ public class SqlExecutor {
       errorContext.setMoreInfo("Check the results (failed to retrieve results).");
       handleResults(request, rs, skipResults, maxResults, callback);
 
+      // consume additional results
+      while (cs.getMoreResults());
+
       errorContext.setMoreInfo("Check the output parameters (retrieval of output parameters failed).");
       retrieveOutputParameters(cs, mappings, parameters);
 

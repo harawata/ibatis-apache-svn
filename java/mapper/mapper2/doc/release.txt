@@ -8,8 +8,9 @@ Build Number: @buildNum@
  o Fixed IBATIS-136 groupBy not carried forward to extended result maps
  o Fixed IBATIS-139 discriminator being applied to too many result maps (thanks Sven)
  o Fixed IBATIS-152, 149, 116 null result sets now handled properly by JDBC logging classes (thanks Sven)
- o 
-
+ o Fixed IBATIS-146 consumes additional result sets before retrieving output params (JTDS fix)
+ o Fixed IBATIS-130 parameter maps don't allow for complete TypeHandler implementations
+ 
 ------------------------------
  2.1.0 - May 16, 2004
 ------------------------------
