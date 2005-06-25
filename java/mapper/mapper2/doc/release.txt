@@ -5,8 +5,9 @@ Build Number: @buildNum@
  2.1.5 - June ??, 2004
 ------------------------------
 
- o Fixed IBATIS-136, groupBy not carried forward to extended result maps
- o Fixed IBATIS-139, discriminator being applied to too many result maps
+ o Fixed IBATIS-136 groupBy not carried forward to extended result maps
+ o Fixed IBATIS-139 discriminator being applied to too many result maps (thanks Sven)
+ o Fixed IBATIS-152, 149, 116 null result sets now handled properly by JDBC logging classes
 
 ------------------------------
  2.1.0 - May 16, 2004

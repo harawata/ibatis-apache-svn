@@ -52,7 +52,12 @@ public class PreparedStatementLogProxy extends BaseLogProxy implements Invocatio
         clearColumnInfo();
         if ("executeQuery".equals(method.getName())) {
           ResultSet rs = (ResultSet) method.invoke(statement, params);
-          return ResultSetLogProxy.newInstance(rs);
+          if ( rs != null ) {
+            return ResultSetLogProxy.newInstance(rs);
+          }
+          else {
+            return null;
+          }
         } else {
           return method.invoke(statement, params);
         }
@@ -65,7 +70,12 @@ public class PreparedStatementLogProxy extends BaseLogProxy implements Invocatio
         return method.invoke(statement, params);
       } else if ("getResultSet".equals(method.getName())) {
         ResultSet rs = (ResultSet) method.invoke(statement, params);
-        return ResultSetLogProxy.newInstance(rs);
+        if ( rs != null ) {
+          return ResultSetLogProxy.newInstance(rs);
+        }
+        else {
+          return null;
+        }
       } else {
         return method.invoke(statement, params);
       }
