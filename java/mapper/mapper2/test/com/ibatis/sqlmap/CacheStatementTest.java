@@ -48,23 +48,60 @@ public class CacheStatementTest extends BaseSqlMapTest {
 
   public void testFlushDataCache() throws SQLException {
     List list = sqlMap.queryForList("getCachedAccountsViaResultMap", null);
-
     int firstId = System.identityHashCode(list);
-
     list = sqlMap.queryForList("getCachedAccountsViaResultMap", null);
-
     int secondId = System.identityHashCode(list);
-
     assertEquals(firstId, secondId);
-
     sqlMap.flushDataCache();
-
     list = sqlMap.queryForList("getCachedAccountsViaResultMap", null);
-
     int thirdId = System.identityHashCode(list);
-
     assertTrue(firstId != thirdId);
+  }
 
+  public void testFlushDataCacheOnExecute() throws SQLException {
+    List list = sqlMap.queryForList("getCachedAccountsViaResultMap", null);
+    int firstId = System.identityHashCode(list);
+    list = sqlMap.queryForList("getCachedAccountsViaResultMap", null);
+    int secondId = System.identityHashCode(list);
+    assertEquals(firstId, secondId);
+    sqlMap.update("updateAccountViaInlineParameters", list.get(0));
+    list = sqlMap.queryForList("getCachedAccountsViaResultMap", null);
+    int thirdId = System.identityHashCode(list);
+    assertTrue(firstId != thirdId);
+  }
+
+  public void testFlushDataCacheOnExecuteInBatch() throws SQLException {
+    List list = sqlMap.queryForList("getCachedAccountsViaResultMap", null);
+    int firstId = System.identityHashCode(list);
+    list = sqlMap.queryForList("getCachedAccountsViaResultMap", null);
+    int secondId = System.identityHashCode(list);
+    assertEquals(firstId, secondId);
+    sqlMap.startBatch();
+    sqlMap.update("updateAccountViaInlineParameters", list.get(0));
+    sqlMap.executeBatch();
+    list = sqlMap.queryForList("getCachedAccountsViaResultMap", null);
+    int thirdId = System.identityHashCode(list);
+    assertTrue(firstId != thirdId);
+  }
+
+  public void testFlushDataCacheOnExecuteInBatchWithTx() throws SQLException {
+    List list = sqlMap.queryForList("getCachedAccountsViaResultMap", null);
+    int firstId = System.identityHashCode(list);
+    list = sqlMap.queryForList("getCachedAccountsViaResultMap", null);
+    int secondId = System.identityHashCode(list);
+    assertEquals(firstId, secondId);
+    try {
+      sqlMap.startTransaction();
+      sqlMap.startBatch();
+      sqlMap.update("updateAccountViaInlineParameters", list.get(0));
+      sqlMap.executeBatch();
+      sqlMap.commitTransaction();
+    } finally {
+      sqlMap.endTransaction();
+    }
+    list = sqlMap.queryForList("getCachedAccountsViaResultMap", null);
+    int thirdId = System.identityHashCode(list);
+    assertTrue(firstId != thirdId);
   }
 
   public void testMappedStatementQueryWithThreadedCache() throws SQLException {
