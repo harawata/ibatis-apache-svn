@@ -343,6 +343,14 @@ public class SqlMapParser extends BaseParser {
           for (int i = 0; i < resultMappings.length; i++) {
             vars.resultMappingList.add(resultMappings[i]);
           }
+          if (groupBy == null || groupBy.length() == 0) {
+            if (extendedResultMap.hasGroupBy()) {
+              Iterator i = extendedResultMap.groupByProps();
+              while (i.hasNext()) {
+                vars.currentResultMap.addGroupByProperty((String) i.next());
+              }
+            }
+          }
         }
 
         vars.errorCtx.setMoreInfo("Check the result mappings.");

@@ -196,6 +196,14 @@ public class BasicResultMap implements ResultMap {
     groupByProps.add(name);
   }
 
+  public boolean hasGroupBy() {
+    return groupByProps != null && groupByProps.size() > 0;
+  }
+
+  public Iterator groupByProps() {
+    return groupByProps.iterator();
+  }
+
   public void addNestedResultMappings(ResultMapping mapping) {
     if (nestedResultMappings == null) {
       nestedResultMappings = new ArrayList();

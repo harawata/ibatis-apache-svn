@@ -17,6 +17,11 @@ public class RepeatingGroupMappingTest extends BaseSqlMapTest {
     assertEquals (5, list.size());
   }
 
+  public void testGroupByExtended() throws Exception {
+    List list = sqlMap.queryForList("getAllCategoriesExtended",null);
+    assertEquals (5, list.size());
+  }
+
   public void testNestedProperties() throws Exception {
     List list = sqlMap.queryForList("getFish",null);
     assertEquals (1, list.size());

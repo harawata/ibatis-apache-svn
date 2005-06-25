@@ -11,6 +11,10 @@
     <result property="productList" resultMap="productResult"/>
   </resultMap>
 
+  <resultMap id="categoryResultExtended" class="testdomain.Category" extends="categoryResult">
+    <result property="name" column="catname"/>
+  </resultMap>
+
   <resultMap id="productResult" class="testdomain.Product" groupBy="productId">
     <result property="productId" column="productid"/>
     <result property="categoryId" column="category"/>
@@ -31,6 +35,20 @@
   </resultMap>
 
   <select id="getAllCategories" resultMap="categoryResult" >
+    select
+       c.catid, c.name as catname, c.descn as catdescn,
+       p.productid, p.category, p.name as prodname,
+       p.descn as proddescn, i.itemid, i.productid,
+       i.listprice, i.unitcost, i.supplier, i.status,
+       i.attr1, i.attr2, i.attr3, i.attr4, i.attr5,
+       v.itemid, v.qty
+    from category c, product p, item i, inventory v
+    where c.catid = p.category
+      and p.productid = i.productid
+      and i.itemid = v.itemid
+  </select>
+
+  <select id="getAllCategoriesExtended" resultMap="categoryResultExtended" >
     select
        c.catid, c.name as catname, c.descn as catdescn,
        p.productid, p.category, p.name as prodname,
