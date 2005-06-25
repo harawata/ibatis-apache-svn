@@ -288,7 +288,8 @@ public class SqlMapParser extends BaseParser {
         vars.currentResultMap.setResultMappingList(vars.resultMappingList);
 
         vars.currentResultMap.setDiscriminator(vars.discriminator);
-
+        vars.discriminator = null;
+        
         vars.client.getDelegate().addResultMap(vars.currentResultMap);
 
         vars.errorCtx.setMoreInfo(null);
