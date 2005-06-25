@@ -11,7 +11,8 @@ Build Number: @buildNum@
  o Fixed IBATIS-146 consumes additional result sets before retrieving output params (JTDS fix)
  o Fixed IBATIS-130 parameter maps don't allow for complete TypeHandler implementations
  o Removed dependency on Commons Logging, will autodetect and use Commons Logging, Log4J, JDK 1.4 or no logging
- 
+ o Improved entity resolvers to be smarter, checks both system and public IDs, and both ibatis.com and apache.org  
+
 ------------------------------
  2.1.0 - May 16, 2004
 ------------------------------

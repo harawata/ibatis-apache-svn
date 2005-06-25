@@ -21,16 +21,31 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import java.io.InputStream;
+import java.io.IOException;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Collections;
 
 /**
  * Offline entity resolver for the iBATIS DTDs
  */
 public class SqlMapClasspathEntityResolver implements EntityResolver {
 
-  private static final String SYSTEM_ID_SQL_MAP_CONFIG = "http://www.ibatis.com/dtd/sql-map-config-2.dtd";
-  private static final String SYSTEM_ID_SQL_MAP = "http://www.ibatis.com/dtd/sql-map-2.dtd";
-  private static final String DTD_PATH_SQL_MAP_CONFIG = "com/ibatis/sqlmap/engine/builder/xml/sql-map-config-2.dtd";
-  private static final String DTD_PATH_SQL_MAP = "com/ibatis/sqlmap/engine/builder/xml/sql-map-2.dtd";
+  private static final String SQL_MAP_CONFIG_DTD = "com/ibatis/sqlmap/engine/builder/xml/sql-map-config-2.dtd";
+  private static final String SQL_MAP_DTD = "com/ibatis/sqlmap/engine/builder/xml/sql-map-2.dtd";
+
+  private static final Map doctypeMap = new HashMap();
+
+  static {
+    doctypeMap.put("http://www.ibatis.com/dtd/sql-map-config-2.dtd", SQL_MAP_CONFIG_DTD);
+    doctypeMap.put("http://ibatis.apache.org/dtd/sql-map-config-2.dtd", SQL_MAP_CONFIG_DTD);
+    doctypeMap.put("-//iBATIS.com//DTD SQL Map Config 2.0//EN", SQL_MAP_CONFIG_DTD);
+
+    doctypeMap.put("http://www.ibatis.com/dtd/sql-map-2.dtd", SQL_MAP_DTD);
+    doctypeMap.put("http://ibatis.apache.org/dtd/sql-map-2.dtd", SQL_MAP_DTD);
+    doctypeMap.put("-//iBATIS.com//DTD SQL Map 2.0//EN", SQL_MAP_DTD);
+  }
+
 
   /**
    * Converts a public DTD into a local one
@@ -43,21 +58,21 @@ public class SqlMapClasspathEntityResolver implements EntityResolver {
   public InputSource resolveEntity(String publicId, String systemId)
       throws SAXException {
     InputSource source = null;
-
     try {
-      if (systemId.equals(SYSTEM_ID_SQL_MAP_CONFIG)) {
-        InputStream in = Resources.getResourceAsStream(DTD_PATH_SQL_MAP_CONFIG);
-        source = new InputSource(in);
-      } else if (systemId.equals(SYSTEM_ID_SQL_MAP)) {
-        InputStream in = Resources.getResourceAsStream(DTD_PATH_SQL_MAP);
-        source = new InputSource(in);
-      } else {
-        source = null;
+      String path = (String) doctypeMap.get(publicId);
+      path = (String) doctypeMap.get(systemId);
+      if (path != null) {
+        InputStream in = null;
+        try {
+          in = Resources.getResourceAsStream(path);
+          source = new InputSource(in);
+        } catch (IOException e) {
+          // ignore, null is ok
+        }
       }
     } catch (Exception e) {
       throw new SAXException(e.toString());
     }
-
     return source;
   }
 

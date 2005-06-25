@@ -21,11 +21,23 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import java.io.InputStream;
+import java.io.IOException;
+import java.util.Map;
+import java.util.HashMap;
 
 public class DaoClasspathEntityResolver implements EntityResolver {
 
-  private static final String SYSTEM_ID_DAO = "http://www.ibatis.com/dtd/dao-2.dtd";
   private static final String DTD_PATH_DAO = "com/ibatis/dao/engine/builder/xml/dao-2.dtd";
+
+  private static final Map doctypeMap = new HashMap();
+
+  static {
+    doctypeMap.put("http://www.ibatis.com/dtd/dao-2.dtd", DTD_PATH_DAO);
+    doctypeMap.put("http://ibatis.apache.org/dtd/dao-2.dtd", DTD_PATH_DAO);
+    doctypeMap.put("-//iBATIS.com//DTD DAO Configuration 2.0", DTD_PATH_DAO);
+    doctypeMap.put("-//iBATIS.com//DTD DAO Config 2.0", DTD_PATH_DAO);
+  }
+
 
   /**
    * Converts a public DTD into a local one
@@ -40,11 +52,16 @@ public class DaoClasspathEntityResolver implements EntityResolver {
     InputSource source = null;
 
     try {
-      if (systemId.equals(SYSTEM_ID_DAO)) {
-        InputStream in = Resources.getResourceAsStream(DTD_PATH_DAO);
-        source = new InputSource(in);
-      } else {
-        source = null;
+      String path = (String) doctypeMap.get(publicId);
+      path = (String) doctypeMap.get(systemId);
+      if (path != null) {
+        InputStream in = null;
+        try {
+          in = Resources.getResourceAsStream(path);
+          source = new InputSource(in);
+        } catch (IOException e) {
+          // ignore, null is ok
+        }
       }
     } catch (Exception e) {
       throw new SAXException(e.toString());
