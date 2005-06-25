@@ -16,10 +16,10 @@
 package com.ibatis.dao.engine.transaction.jdbc;
 
 import com.ibatis.common.jdbc.logging.ConnectionLogProxy;
+import com.ibatis.common.logging.Log;
+import com.ibatis.common.logging.LogFactory;
 import com.ibatis.dao.client.DaoException;
 import com.ibatis.dao.engine.transaction.ConnectionDaoTransaction;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import javax.sql.DataSource;
 import java.sql.Connection;

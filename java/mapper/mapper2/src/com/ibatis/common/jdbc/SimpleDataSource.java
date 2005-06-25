@@ -18,8 +18,8 @@ package com.ibatis.common.jdbc;
 import com.ibatis.common.beans.ClassInfo;
 import com.ibatis.common.exception.NestedRuntimeException;
 import com.ibatis.common.resources.Resources;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.ibatis.common.logging.LogFactory;
+import com.ibatis.common.logging.Log;
 
 import javax.sql.DataSource;
 import java.io.PrintWriter;

@@ -15,8 +15,8 @@
  */
 package com.ibatis.common.util;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.ibatis.common.logging.Log;
+import com.ibatis.common.logging.LogFactory;
 
 import java.util.HashMap;
 import java.util.Iterator;

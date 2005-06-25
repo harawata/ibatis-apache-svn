@@ -24,8 +24,6 @@ import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
 import com.ibatis.sqlmap.engine.scope.SessionScope;
 import com.ibatis.sqlmap.engine.transaction.Transaction;
 import com.ibatis.sqlmap.engine.transaction.TransactionException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -37,8 +35,6 @@ import java.util.Map;
  * Implementation of SqlMapSession
  */
 public class SqlMapSessionImpl implements SqlMapSession {
-
-  private static final Log log = LogFactory.getLog(SqlMapSessionImpl.class);
 
   protected SqlMapExecutorDelegate delegate;
   protected SessionScope session;

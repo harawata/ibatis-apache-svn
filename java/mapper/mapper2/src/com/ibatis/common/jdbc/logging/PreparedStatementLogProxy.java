@@ -16,8 +16,8 @@
 package com.ibatis.common.jdbc.logging;
 
 import com.ibatis.common.beans.ClassInfo;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.ibatis.common.logging.Log;
+import com.ibatis.common.logging.LogFactory;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

@@ -10,6 +10,7 @@ Build Number: @buildNum@
  o Fixed IBATIS-152, 149, 116 null result sets now handled properly by JDBC logging classes (thanks Sven)
  o Fixed IBATIS-146 consumes additional result sets before retrieving output params (JTDS fix)
  o Fixed IBATIS-130 parameter maps don't allow for complete TypeHandler implementations
+ o Removed dependency on Commons Logging, will autodetect and use Commons Logging, Log4J, JDK 1.4 or no logging
  
 ------------------------------
  2.1.0 - May 16, 2004
