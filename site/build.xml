@@ -34,6 +34,16 @@
         </copy>
 
         <!-- ====================================================== -->
+        <!-- Copy the mirror cgi script into the destination dir    -->
+        <!-- ====================================================== -->
+
+        <copy todir="deploy/">
+          <fileset dir="pages/">
+            <include name="**/*.cgi"/>
+          </fileset>
+        </copy>
+
+        <!-- ====================================================== -->
         <!-- Apply the "default" skin to all the files in the       -->
         <!-- pages directory                                        -->
         <!-- ====================================================== -->
