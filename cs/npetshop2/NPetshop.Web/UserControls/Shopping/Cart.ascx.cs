@@ -101,7 +101,6 @@ namespace NPetshop.Web.UserControls.Shopping
 
 				_shoppingController.UpdateQuantityByItemId(itemId, quantity);
 			}
-			DataBind();	
 		}
 
 		protected void RepeaterCart_ItemCommand(object source, System.Web.UI.WebControls.RepeaterCommandEventArgs e)
@@ -112,7 +111,7 @@ namespace NPetshop.Web.UserControls.Shopping
 			}
 			else if (e.CommandName == "update")
 			{
-				//nothing to do	
+				DataBind();	
 			}
 			else if (e.CommandName == "showItem")
 			{
