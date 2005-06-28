@@ -38,6 +38,7 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using IBatisNet.Common;
 using IBatisNet.Common.Exceptions;
+using IBatisNet.Common.Logging;
 using IBatisNet.Common.Utilities;
 using IBatisNet.DataMapper.Configuration.Alias;
 using IBatisNet.DataMapper.Configuration.Cache;
@@ -52,7 +53,6 @@ using IBatisNet.DataMapper.Configuration.Statements;
 using IBatisNet.DataMapper.MappedStatements;
 using IBatisNet.DataMapper.Scope;
 using IBatisNet.DataMapper.TypeHandlers;
-using log4net;
 
 #endregion
 
@@ -114,6 +114,11 @@ namespace IBatisNet.DataMapper.Configuration
 		/// Token for xml path to SqlMapConfig providers element.
 		/// </summary>
 		private static string XML_CONFIG_PROVIDERS = "/sqlMapConfig/providers";
+
+		/// <summary>
+		/// Token for xml path to global properties elements.
+		/// </summary>
+		private static string XML_GLOBAL_PROPERTIES = "/settings/add";
 
 		// TODO: Other XML paths.
 
@@ -1387,7 +1392,7 @@ namespace IBatisNet.DataMapper.Configuration
 							// Load the file defined by the attribute
 							XmlDocument propertiesConfig = Resources.GetAsXmlDocument(propertyNode, _configScope.Properties); 
 							
-							foreach (XmlNode node in propertiesConfig.SelectNodes("/settings/add"))
+							foreach (XmlNode node in propertiesConfig.SelectNodes(XML_GLOBAL_PROPERTIES))
 							{
 								_configScope.Properties[node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value] = node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value;
 								_logger.Info( string.Format("Add property \"{0}\" value \"{1}\"",node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value,node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value) );

@@ -28,12 +28,11 @@
 using System;
 using System.Collections;
 using System.Xml.Serialization;
-
+using IBatisNet.Common.Logging;
 using IBatisNet.DataAccess.Interfaces;
 using IBatisNet.DataAccess.Exceptions;
 
 using Castle.DynamicProxy;
-using log4net;
 #endregion
 
 namespace IBatisNet.DataAccess.Configuration

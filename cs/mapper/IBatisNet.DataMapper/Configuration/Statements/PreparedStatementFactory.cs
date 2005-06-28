@@ -33,12 +33,12 @@ using System.Data;
 using System.Reflection;
 using System.Text;
 using IBatisNet.Common;
+using IBatisNet.Common.Logging;
 using IBatisNet.Common.Utilities;
 using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.Scope;
-using log4net;
 
 #endregion
 

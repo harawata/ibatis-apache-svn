@@ -25,15 +25,10 @@
 #endregion
 
 #region Imports
-using System;
+
 using System.Data;
-
-using log4net;
-
 using IBatisNet.Common;
-using IBatisNet.DataAccess.Exceptions; 
-using IBatisNet.DataAccess.Interfaces;
-using IBatisNet.DataAccess.DaoSessionHandlers;
+
 #endregion
 
 namespace IBatisNet.DataAccess

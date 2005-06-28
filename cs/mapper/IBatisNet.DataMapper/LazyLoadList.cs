@@ -25,20 +25,16 @@
 #endregion
 
 #region Using
+
 using System;
 using System.Collections;
 using System.Reflection;
-using System.Xml.Serialization;
-
 using Castle.DynamicProxy;
-
 using IBatisNet.Common;
+using IBatisNet.Common.Logging;
 using IBatisNet.Common.Utilities.Objects;
-
-using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.MappedStatements;
 
-using log4net;
 #endregion
 
 namespace IBatisNet.DataMapper
@@ -60,7 +56,7 @@ namespace IBatisNet.DataMapper
 		private object _loadLock = new object();
 		private static ArrayList _passthroughMethods = new ArrayList();
 
-		private static readonly ILog _logger = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
+		private static readonly ILog _logger = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
 		#endregion
 
 		#region  Constructor (s) / Destructor

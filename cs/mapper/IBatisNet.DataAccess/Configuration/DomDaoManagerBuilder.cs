@@ -34,10 +34,10 @@ using System.Xml;
 using System.Xml.Serialization;
 using IBatisNet.Common;
 using IBatisNet.Common.Exceptions;
+using IBatisNet.Common.Logging;
 using IBatisNet.Common.Utilities;
 using IBatisNet.DataAccess.Interfaces;
 using IBatisNet.DataAccess.Scope;
-using log4net;
 
 #endregion
 

@@ -90,11 +90,6 @@
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
-                    Name = "log4net"
-                    AssemblyName = "log4net"
-                    HintPath = "..\External-Bin\Net\1.1\log4net.dll"
-                />
-                <Reference
                     Name = "System.Web"
                     AssemblyName = "System.Web"
                     HintPath = "D:\WINNT\Microsoft.NET\Framework\v1.1.4322\System.Web.dll"

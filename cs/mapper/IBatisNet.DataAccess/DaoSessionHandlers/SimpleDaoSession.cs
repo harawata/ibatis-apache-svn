@@ -25,16 +25,13 @@
 #endregion
 
 #region Imports
+
 using System;
 using System.Data;
-
+using System.Reflection;
 using IBatisNet.Common;
-
-using IBatisNet.DataAccess;
-using IBatisNet.DataAccess.Exceptions; 
-using IBatisNet.DataAccess.Interfaces;
-
-using log4net;
+using IBatisNet.Common.Logging;
+using IBatisNet.DataAccess.Exceptions;
 
 #endregion
 
@@ -48,7 +45,7 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 	{
 
 		#region Fields
-		private static readonly ILog _logger = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
+		private static readonly ILog _logger = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
 
 		private DataSource _dataSource = null;
 		private bool _isOpenTransaction = false;

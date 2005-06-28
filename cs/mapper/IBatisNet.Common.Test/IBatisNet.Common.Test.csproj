@@ -261,6 +261,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "NUnit\CommonTests\Logging\LogTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "NUnit\CommonTests\Pagination\PaginatedArrayListTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

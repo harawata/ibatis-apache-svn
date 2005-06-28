@@ -25,29 +25,23 @@
 #endregion
 
 #region Imports
+
 using System;
-using System.Data;
 using System.Collections;
-using System.Text;
+using System.Data;
 using System.Reflection;
-
+using System.Text;
 using IBatisNet.Common;
-using IBatisNet.Common.Utilities;
+using IBatisNet.Common.Logging;
 using IBatisNet.Common.Utilities.Objects;
-
-using IBatisNet.DataMapper;
 using IBatisNet.DataMapper.Commands;
-using IBatisNet.DataMapper.Configuration;
-using IBatisNet.DataMapper.Configuration.Statements;
-using IBatisNet.DataMapper.Configuration.ResultMapping;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
-using IBatisNet.DataMapper.Configuration.Sql.SimpleDynamic;
-using IBatisNet.DataMapper.Configuration.Sql.Static;
-using IBatisNet.DataMapper.TypeHandlers;
+using IBatisNet.DataMapper.Configuration.ResultMapping;
+using IBatisNet.DataMapper.Configuration.Statements;
 using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.Scope;
+using IBatisNet.DataMapper.TypeHandlers;
 
-using log4net;
 #endregion
 
 namespace IBatisNet.DataMapper.MappedStatements
@@ -150,7 +144,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		// Magic number used to set the the number of rows skipped to 'none'. 
 		private const int NO_SKIPPED_RESULTS = -1;
 
-		private static readonly ILog _logger = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
+		private static readonly ILog _logger = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
 
 		private IStatement _statement = null;
 
@@ -1005,7 +999,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 						object hashValue = reader.GetValue( reader.GetOrdinal(((string)enumerator.Current).Trim()) );
 
 						keyMap.Add(hashKey, hashValue );
-						wasNull = (hashValue == System.DBNull.Value);
+						wasNull = (hashValue == DBNull.Value);
 					}
 				} 
 				else // single parameter key

@@ -29,9 +29,9 @@ using System;
 using System.Data;
 
 using IBatisNet.Common;
+using IBatisNet.Common.Logging;
 using IBatisNet.DataMapper.Exceptions;
 
-using log4net;
 #endregion
 
 

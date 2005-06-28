@@ -24,16 +24,15 @@
  ********************************************************************************/
 #endregion
 
-#region Imports
+#region Using
 using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
 using System.Xml.Serialization;
 
-using log4net;
-
 using IBatisNet.Common.Exceptions;
+using IBatisNet.Common.Logging;
 using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.MappedStatements;
 #endregion

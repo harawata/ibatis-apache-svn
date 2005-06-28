@@ -28,8 +28,7 @@
 using System.Data;
 using System.Collections;
 using System.Text;
-
-using log4net;
+using IBatisNet.Common.Logging;
 
 using IBatisNet.Common;
 using IBatisNet.Common.Utilities.Objects;
@@ -103,7 +102,6 @@ namespace IBatisNet.DataMapper.Commands
 			for ( int i = 0; i < properties.Count; ++i )
 			{
 				IDataParameter sqlParameter = (IDataParameter)parameters[i];
-				string propertyName = (string)properties[i];
 				IDataParameter parameterCopy = command.CreateParameter();
 				ParameterProperty property = request.ParameterMap.GetProperty(i);
 
@@ -153,9 +151,6 @@ namespace IBatisNet.DataMapper.Commands
 				#endregion 					
 
 				request.ParameterMap.SetParameter(property, parameterCopy, parameterObject );
-
-//				// Fix JIRA 20
-//				property.TypeHandler.SetParameter(property, parameterCopy, parameterValue, property.DbType);
 
 				parameterCopy.Direction = sqlParameter.Direction;
 

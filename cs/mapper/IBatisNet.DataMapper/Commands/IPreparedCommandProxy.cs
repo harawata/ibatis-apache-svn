@@ -25,21 +25,14 @@
 #endregion
 
 #region Using
+
 using System;
-using System.Data;
 using System.Collections;
-using System.Reflection;
-using System.Xml.Serialization;
+using System.Data;
 using System.Text;
-
 using Castle.DynamicProxy;
+using IBatisNet.Common.Logging;
 
-using IBatisNet.Common;
-using IBatisNet.Common.Utilities.Objects;
-
-using IBatisNet.Common.Exceptions;
-
-using log4net;
 #endregion
 
 namespace IBatisNet.DataMapper.Commands
@@ -124,7 +117,7 @@ namespace IBatisNet.DataMapper.Commands
 						for ( int i = 0; i < command.Parameters.Count; ++i )
 						{
 							IDataParameter sqlParameter = (IDataParameter)command.Parameters[i];
-							if (sqlParameter.Value == System.DBNull.Value) 
+							if (sqlParameter.Value == DBNull.Value) 
 							{
 								valueList.Append("null,");
 								typeList.Append("null,");

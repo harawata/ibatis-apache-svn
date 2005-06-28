@@ -31,7 +31,6 @@ using IBatisNet.Common;
 using IBatisNet.DataMapper.Configuration.Statements;
 using IBatisNet.DataMapper.Scope;
 
-using log4net;
 #endregion
 
 namespace IBatisNet.DataMapper.Commands
