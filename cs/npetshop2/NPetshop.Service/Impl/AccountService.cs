@@ -1,6 +1,9 @@
 
 
 using System.Collections;
+
+using IBatisNet.DataAccess;
+
 using NPetshop.Domain.Accounts;
 using NPetshop.Persistence.Interfaces.Accounts;
 using NPetshop.Service.Interfaces;
@@ -10,15 +13,17 @@ namespace NPetshop.Service.Impl
 	/// <summary>
 	/// Summary description for AccountService.
 	/// </summary>
-	public class AccountService : BaseService, IAccountService
+	public class AccountService : IAccountService
 	{
 		#region Private Fields 
 		private IAccountDao _accountDao = null;
+		private DaoManager _daoManager = null;
 		#endregion
 
 		#region Constructor
-		public AccountService():base() 
+		public AccountService(DaoManager daoManager) 
 		{
+			_daoManager = daoManager;
 			_accountDao = _daoManager.GetDao( typeof(IAccountDao) ) as IAccountDao;
 		}
 		#endregion

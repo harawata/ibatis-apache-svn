@@ -1,11 +1,15 @@
 
 
+using System;
+using System.Configuration;
 using Castle.Facilities.TypedFactory;
 using Castle.MVC.Navigation;
 using Castle.MVC.StatePersister;
 using Castle.MVC.States;
 using Castle.MVC.Views;
 using Castle.Windsor;
+using IBatisNet.DataAccess;
+using IBatisNet.DataAccess.Configuration;
 using NPetshop.Service.Impl;
 using NPetshop.Service.Interfaces;
 
@@ -16,14 +20,29 @@ namespace NPetshop.Presentation
 	/// </summary>
 	public class NPetshopContainer : WindsorContainer
 	{
-		public NPetshopContainer(bool test): base()
+		public NPetshopContainer(): base()
 		{
 			TypedFactoryFacility facility = new TypedFactoryFacility();
 			AddFacility("typedfactory", facility );
 			facility.AddTypedFactoryEntry( 
 				new FactoryEntry("stateFactory", typeof(IStateFactory), "Create", "Release") );
 
+			// Add DaoManager
+			bool test = Convert.ToBoolean(ConfigurationSettings.AppSettings["test"]);
+			DomDaoManagerBuilder builder = new DomDaoManagerBuilder();
+			if (test)
+			{
+				builder.Configure(@"..\..\..\NPetshop.Persistence\dao.config");
+			}
+			else
+			{
+				builder.Configure(@"..\NPetshop.Persistence\dao.config");							
+			}
+			this.Kernel.AddComponentInstance("DaoManager", typeof(DaoManager),  DaoManager.GetInstance("SqlMapDao") );
+			
+			// Add services
 			AddServices();
+			// Add Controllers
 			AddControllers();
 			AddMVC(test);
 		}

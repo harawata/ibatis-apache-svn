@@ -12,17 +12,19 @@ namespace NPetshop.Service.Impl
 	/// <summary>
 	/// Summary description for CatalogService.
 	/// </summary>
-	public class CatalogService : BaseService, ICatalogService
+	public class CatalogService : ICatalogService
 	{
 		#region Private Fields 
+		private DaoManager _daoManager = null;
 		private IItemDao _itemDao = null;
 		private IProductDao _productDao = null;
 		private ICategoryDao _categoryDao = null;
 		#endregion
 
 		#region Constructor
-		public CatalogService():base() 
+		public CatalogService(DaoManager daoManager) 
 		{
+			_daoManager = daoManager;
 			_categoryDao = _daoManager[typeof(ICategoryDao)] as ICategoryDao;
 			_productDao = _daoManager[typeof(IProductDao)] as IProductDao;
 			_itemDao = _daoManager[typeof(IItemDao)] as IItemDao;

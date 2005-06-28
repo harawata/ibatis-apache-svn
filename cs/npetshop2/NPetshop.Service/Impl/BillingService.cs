@@ -13,17 +13,19 @@ namespace NPetshop.Service.Impl
 	/// <summary>
 	/// Summary description for OrderService.
 	/// </summary>
-	public class BillingService : BaseService, IBillingService
+	public class BillingService : IBillingService
 	{
 		#region Private Fields 
+		private DaoManager _daoManager = null;
 		private IOrderDao _orderDao = null;
 		private IItemDao _itemDao = null;
 		private ISequenceDao _sequenceDao = null;
 		#endregion
 
 		#region Constructor
-		public BillingService():base()
+		public BillingService(DaoManager daoManager) 
 		{
+			_daoManager = daoManager;
 			_itemDao = _daoManager[typeof(IItemDao)] as IItemDao;
 			_orderDao = _daoManager[typeof(IOrderDao)] as IOrderDao;
 			_sequenceDao = _daoManager[typeof(ISequenceDao)] as ISequenceDao;

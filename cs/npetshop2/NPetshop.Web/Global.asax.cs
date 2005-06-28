@@ -41,7 +41,7 @@ namespace NPetshop.Web
 		
 		protected void Application_Start(Object sender, EventArgs e)
 		{
-			_container = new NPetshopContainer(false);
+			_container = new NPetshopContainer();
 		}
  
 		protected void Session_Start(Object sender, EventArgs e)

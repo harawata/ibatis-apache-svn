@@ -23,5 +23,14 @@
 			from Categories 
 			where Category_Id = #value#
 		</select>
+		
+		<select id="GetCategoryList" resultMap="CategoryResult">
+			select 
+				Category_Id, 
+				Category_Name, 
+				Category_Description 
+			from Categories 
+		</select>
+
 	</statements>
 </sqlMap>

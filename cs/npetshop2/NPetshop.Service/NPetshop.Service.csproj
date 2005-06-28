@@ -109,17 +109,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "ServiceConfig.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Impl\AccountService.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Impl\BaseService.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

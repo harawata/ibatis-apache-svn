@@ -124,6 +124,11 @@
                     AssemblyName = "Castle.MVC"
                     HintPath = "..\External-bin\Castle.MVC.dll"
                 />
+                <Reference
+                    Name = "IBatisNet.DataAccess"
+                    AssemblyName = "IBatisNet.DataAccess"
+                    HintPath = "..\External-bin\IBatisNet.DataAccess.dll"
+                />
             </References>
         </Build>
         <Files>

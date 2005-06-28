@@ -27,9 +27,7 @@ namespace NPetshop.Test.Presentation
 			_catalogController = null;
 			_state = null;
 
-			_container = new NPetshopContainer(true);
-
-			ServiceConfig config = ServiceConfig.GetInstance(true);
+			_container = new NPetshopContainer();
 
 			_catalogController = _container[typeof(CatalogController)] as CatalogController;
 			_state = _catalogController.State as NPetshopState;
