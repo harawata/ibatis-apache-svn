@@ -31,9 +31,9 @@ using System.Collections.Specialized;
 namespace IBatisNet.Common.Logging.Impl
 {
 	/// <summary>
-	/// Summary description for SimpleLoggerFactory.
+	/// Description résumée de ConsoleOutLoggerFA.
 	/// </summary>
-	public class SimpleLoggerFA : ILoggerFactoryAdapter 
+	public class ConsoleOutLoggerFA: ILoggerFactoryAdapter 
 	{
 		private Hashtable _logs = Hashtable.Synchronized( new Hashtable() );
 		private LogLevel _Level = LogLevel.All;
@@ -45,7 +45,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// Constructor
 		/// </summary>
 		/// <param name="properties"></param>
-		public SimpleLoggerFA(NameValueCollection properties)
+		public ConsoleOutLoggerFA(NameValueCollection properties)
 		{
 			try
 			{
@@ -96,23 +96,11 @@ namespace IBatisNet.Common.Logging.Impl
 			ILog log = _logs[name] as ILog;
 			if ( log == null )
 			{
-				log = new SimpleLogger( name, _Level, _showDateTime, _showLogName, _dateTimeFormat );
+				log = new ConsoleOutLogger( name, _Level, _showDateTime, _showLogName, _dateTimeFormat );
 				_logs.Add( name, log );
 			}
 			return log;
 		}
-
-//		public ILog GetLogger(Type type)
-//		{
-//			// TODO:  Add SimpleLoggerFactory.GetLogger implementation
-//			return null;
-//		}
-//
-//		ILog Logging.ILoggerFactoryAdapter.GetLogger(string name)
-//		{
-//			// TODO:  Add SimpleLoggerFactory.Logging.ILoggerFactoryAdapter.GetLogger implementation
-//			return null;
-//		}
 
 		#endregion
 	}

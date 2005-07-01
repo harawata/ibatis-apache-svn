@@ -174,7 +174,7 @@ namespace IBatisNet.Common.Logging
 		/// <returns></returns>
 		private static ILoggerFactoryAdapter BuildDefaultLoggerFactoryAdapter()
 		{
-			ILoggerFactoryAdapter simpleLogFactory = new SimpleLoggerFA(new NameValueCollection( null, new CaseInsensitiveComparer() ));
+			ILoggerFactoryAdapter simpleLogFactory = new ConsoleOutLoggerFA(new NameValueCollection( null, new CaseInsensitiveComparer() ));
 			return simpleLogFactory;
 		}
 	}

@@ -30,9 +30,9 @@ using System.Text;
 namespace IBatisNet.Common.Logging.Impl
 {
 	/// <summary>
-	/// Logger sending everything to the standard output error stream.
+	/// Logger sending everything to the trace output stream.
 	/// </summary>
-	public class SimpleLogger : ILog
+	public class TraceLogger: ILog
 	{
 		private bool _showDateTime = false;
 		private bool _showLogName = false;
@@ -48,7 +48,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="showDateTime">Include the current time in the log message </param>
 		/// <param name="showLogName">Include the instance name in the log message</param>
 		/// <param name="dateTimeFormat">The date and time format to use in the log message </param>
-		public SimpleLogger( string logName, LogLevel logLevel
+		public TraceLogger( string logName, LogLevel logLevel
 			, bool showDateTime, bool showLogName, string dateTimeFormat)
 		{
 			_logName = logName;
@@ -97,7 +97,7 @@ namespace IBatisNet.Common.Logging.Impl
 			}
 
 			// Print to the appropriate destination
-			System.Console.Error.WriteLine( sb.ToString() );			
+			System.Diagnostics.Trace.WriteLine( sb.ToString() );			
 		}
 
 		/// <summary>
@@ -203,27 +203,6 @@ namespace IBatisNet.Common.Logging.Impl
 			}
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="message"></param>
-		public void Trace(object message)
-		{
-			Trace( message, null );
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="message"></param>
-		/// <param name="e"></param>
-		public void Trace(object message, Exception e)
-		{
-			if ( IsLevelEnabled( LogLevel.Trace ) )
-			{
-				Write( LogLevel.Trace, message, e );
-			}
-		}
 
 		/// <summary>
 		/// 
@@ -277,14 +256,6 @@ namespace IBatisNet.Common.Logging.Impl
 		public bool IsInfoEnabled
 		{
 			get { return IsLevelEnabled( LogLevel.Info ); }
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public bool IsTraceEnabled
-		{
-			get { return IsLevelEnabled( LogLevel.Trace ); }
 		}
 
 		/// <summary>

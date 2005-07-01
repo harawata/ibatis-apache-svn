@@ -25,22 +25,53 @@
 #endregion
 
 using System;
+using System.Collections;
+using System.Collections.Specialized;
 
 namespace IBatisNet.Common.Logging.Impl
 {
 	/// <summary>
-	/// Summary description for NoOpLoggerFA.
+	/// Summary description for  TraceLoggerFA.
 	/// </summary>
-	public sealed class NoOpLoggerFA : ILoggerFactoryAdapter
+	public class TraceLoggerFA: ILoggerFactoryAdapter 
 	{
-		private ILog _nopLogger = null;
+		private Hashtable _logs = Hashtable.Synchronized( new Hashtable() );
+		private LogLevel _Level = LogLevel.All;
+		private bool _showDateTime = true;
+		private bool _showLogName = true;
+		private string _dateTimeFormat = string.Empty;
 
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		public NoOpLoggerFA()
+		/// <param name="properties"></param>
+		public TraceLoggerFA(NameValueCollection properties)
 		{
-			_nopLogger = new NoOpLogger();
+			try
+			{
+				_Level = (LogLevel)Enum.Parse( typeof(LogLevel), properties["level"], true );
+			}
+			catch ( Exception )
+			{
+				_Level = LogLevel.All;
+			}
+			try
+			{
+				_showDateTime = bool.Parse( properties["showDateTime"] );
+			}
+			catch ( Exception )
+			{
+				_showDateTime = true;
+			}
+			try 
+			{
+				_showLogName = bool.Parse( properties["showLogName"] );
+			}
+			catch ( Exception )
+			{
+				_showLogName = true;
+			}
+			_dateTimeFormat =  properties["dateTimeFormat"];
 		}
 
 		#region ILoggerFactoryAdapter Members
@@ -52,7 +83,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <returns></returns>
 		public ILog GetLogger(Type type)
 		{
-			return _nopLogger;
+			return GetLogger( type.FullName );
 		}
 
 		/// <summary>
@@ -60,10 +91,15 @@ namespace IBatisNet.Common.Logging.Impl
 		/// </summary>
 		/// <param name="name"></param>
 		/// <returns></returns>
-		ILog Logging.ILoggerFactoryAdapter.GetLogger(string name)
+		public ILog GetLogger(string name)
 		{
-			return _nopLogger;
-
+			ILog log = _logs[name] as ILog;
+			if ( log == null )
+			{
+				log = new TraceLogger( name, _Level, _showDateTime, _showLogName, _dateTimeFormat );
+				_logs.Add( name, log );
+			}
+			return log;
 		}
 
 		#endregion

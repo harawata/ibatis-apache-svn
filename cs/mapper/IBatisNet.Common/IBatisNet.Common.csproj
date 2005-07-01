@@ -194,6 +194,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Logging\Impl\ConsoleOutLogger.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Logging\Impl\ConsoleOutLoggerFA.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Logging\Impl\Log4NetLogger.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -214,12 +224,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Logging\Impl\SimpleLogger.cs"
+                    RelPath = "Logging\Impl\TraceLogger.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Logging\Impl\SimpleLoggerFA.cs"
+                    RelPath = "Logging\Impl\TraceLoggerFA.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

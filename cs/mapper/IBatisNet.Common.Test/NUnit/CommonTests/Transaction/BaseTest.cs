@@ -4,7 +4,7 @@ using System.Data;
 using System.IO;
 using System.Reflection;
 using System.Configuration;
-
+using IBatisNet.DataMapper.Configuration;
 using log4net;
 
 using NUnit.Framework;
@@ -63,7 +63,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Transaction
 			//DateTime start = DateTime.Now;
 
 			ConfigureHandler handler = new ConfigureHandler( Configure );
-			sqlMap = SqlMapper.ConfigureAndWatch( "sqlmap"+ "_" +  ConfigurationSettings.AppSettings["database"] + "_"
+			DomSqlMapBuilder builder = new DomSqlMapBuilder();
+			sqlMap = builder.ConfigureAndWatch( "sqlmap"+ "_" +  ConfigurationSettings.AppSettings["database"] + "_"
 				+ ConfigurationSettings.AppSettings["providerType"] +".config", handler );
 
 //			string loadTime = DateTime.Now.Subtract(start).ToString();

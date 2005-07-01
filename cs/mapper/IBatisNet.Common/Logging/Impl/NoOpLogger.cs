@@ -31,7 +31,7 @@ namespace IBatisNet.Common.Logging.Impl
 	/// <summary>
 	/// Summary description for NoOpLogger.
 	/// </summary>
-	public class NoOpLogger: ILog
+	public sealed class NoOpLogger: ILog
 	{
 		/// <summary>
 		/// A NOP implementation.

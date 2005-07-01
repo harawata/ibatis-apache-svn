@@ -52,12 +52,6 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Logging
 		}
 
 		[Test]
-		public void LogTrace()
-		{
-			_log.Trace("test LogTrace");
-		}
-
-		[Test]
 		public void LogWarn()
 		{
 			_log.Warn("test LogWarn");
