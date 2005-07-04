@@ -107,7 +107,8 @@ public class DynamicSql implements Sql, DynamicParent {
         String sqlStatement = sqlText.getText();
         if (sqlText.isWhiteSpace()) {
           out.print(sqlStatement);
-        } else {
+        } else if (!sqlText.isPostParseRequired()) {
+
           // BODY OUT
           out.print(sqlStatement);
 
@@ -116,6 +117,33 @@ public class DynamicSql implements Sql, DynamicParent {
             for (int i = 0, n = mappings.length; i < n; i++) {
               ctx.addParameterMapping(mappings[i]);
             }
+          }
+        } else {
+
+          IterateContext itCtx = ctx.peekIterateContext();
+
+          if(null != itCtx && itCtx.isAllowNext()){
+            itCtx.next();
+            itCtx.setAllowNext(false);
+            if(!itCtx.hasNext()) {
+              itCtx.setFinal(true);
+            }
+          }
+
+          if(itCtx!=null) {
+            StringBuffer sqlStatementBuffer = new StringBuffer(sqlStatement);
+            iteratePropertyReplace(sqlStatementBuffer, itCtx);
+            sqlStatement = sqlStatementBuffer.toString();
+          }
+
+          sqlText = PARAM_PARSER.parseInlineParameterMap(delegate.getTypeHandlerFactory(), sqlStatement);
+
+          ParameterMapping[] mappings = sqlText.getParameterMappings();
+          out.print(sqlText.getText());
+          if (mappings != null) {
+             for (int i = 0, n = mappings.length; i < n; i++) {
+               ctx.addParameterMapping(mappings[i]);
+             }
           }
         }
       } else if (child instanceof SqlTag) {
@@ -139,7 +167,7 @@ public class DynamicSql implements Sql, DynamicParent {
             if (response != SqlTagHandler.SKIP_BODY) {
               if (body.length() > 0) {
                 // BODY OUT
-
+                /*
                 if (tag.isPostParseRequired()) {
                   SqlText sqlText = PARAM_PARSER.parseInlineParameterMap(delegate.getTypeHandlerFactory(), body.toString());
                   out.print(sqlText.getText());
@@ -149,25 +177,48 @@ public class DynamicSql implements Sql, DynamicParent {
                       ctx.addParameterMapping(mappings[i]);
                     }
                   }
+
                 } else {
+                */
                   out.print(body.toString());
-                }
+                //}
+
               }
             }
-            
+
           }
         } while (response == SqlTagHandler.REPEAT_BODY);
-        
+
         ctx.popRemoveFirstPrependMarker(tag);
-        
+
         if(ctx.peekIterateContext()!= null && ctx.peekIterateContext().getTag() == tag) {
           ctx.popIterateContext();
         }
-        
+
       }
     }
   }
 
+  /**
+  * @param bodyContent
+  * @param iterate
+  */
+  protected void iteratePropertyReplace(StringBuffer bodyContent, IterateContext iterate) {
+    if(iterate!=null) {
+      String find = iterate.getProperty() + "[]";
+      String replace = iterate.getProperty() + "[" + iterate.getIndex() + "]";
+      replace(bodyContent, find, replace);
+    }
+  }
+
+  protected static void replace(StringBuffer buffer, String find, String replace) {
+    int pos = buffer.toString().indexOf(find);
+    int len = find.length();
+    while (pos > -1) {
+      buffer.replace(pos, pos + len, replace);
+      pos = buffer.toString().indexOf(find);
+    }
+  }
   public void addChild(SqlChild child) {
     children.add(child);
   }

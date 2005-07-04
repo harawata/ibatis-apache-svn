@@ -21,6 +21,7 @@ public class SqlText implements SqlChild {
 
   private String text;
   private boolean isWhiteSpace;
+  private boolean postParseRequired;
 
   private ParameterMapping[] parameterMappings;
 
@@ -45,5 +46,13 @@ public class SqlText implements SqlChild {
     this.parameterMappings = parameterMappings;
   }
 
+  public boolean isPostParseRequired() {
+    return postParseRequired;
+  }
+
+  public void setPostParseRequired(boolean postParseRequired) {
+    this.postParseRequired = postParseRequired;
+  }
+  
 }
 

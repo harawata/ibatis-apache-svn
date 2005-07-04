@@ -201,11 +201,14 @@ public class SqlStatementParser extends BaseParser {
         data = NodeletUtils.parsePropertyTokens(data, vars.properties);
 
         SqlText sqlText;
+
         if (postParseRequired) {
           sqlText = new SqlText();
+          sqlText.setPostParseRequired(postParseRequired);
           sqlText.setText(data.toString());
         } else {
           sqlText = PARAM_PARSER.parseInlineParameterMap(vars.client.getDelegate().getTypeHandlerFactory(), data.toString(), null);
+          sqlText.setPostParseRequired(postParseRequired);
         }
 
         dynamic.addChild(sqlText);
@@ -248,6 +251,7 @@ public class SqlStatementParser extends BaseParser {
           tag.setConjunctionAttr(attributes.getProperty("conjunction"));
           
           // an iterate ancestor requires a post parse
+
           if(dynamic instanceof SqlTag) {
             SqlTag parentSqlTag = (SqlTag)dynamic;
             if(parentSqlTag.isPostParseRequired() ||
@@ -259,7 +263,7 @@ public class SqlStatementParser extends BaseParser {
                 tag.setPostParseRequired(true);
               }
           }
-          
+
           dynamic.addChild(tag);
           
           if (child.hasChildNodes()) {

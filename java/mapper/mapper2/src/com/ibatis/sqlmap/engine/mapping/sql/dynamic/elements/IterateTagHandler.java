@@ -58,7 +58,7 @@ public class IterateTagHandler extends BaseTagHandler {
         iterate.next();
       }
 
-      iteratePropertyReplace(bodyContent, iterate);
+      //iteratePropertyReplace(bodyContent, iterate);
 
       if (iterate.isFirst()) {
         String open = tag.getOpenAttr();

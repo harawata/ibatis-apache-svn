@@ -59,7 +59,7 @@ public abstract class ConditionalTagHandler extends BaseTagHandler {
       }
     }
     
-    iteratePropertyReplace(bodyContent,ctx.peekIterateContext());
+    //iteratePropertyReplace(bodyContent,ctx.peekIterateContext());
     
     return super.doEndFragment(ctx,tag,parameterObject,bodyContent);
   }
