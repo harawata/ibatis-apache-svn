@@ -166,23 +166,7 @@ public class DynamicSql implements Sql, DynamicParent {
             
             if (response != SqlTagHandler.SKIP_BODY) {
               if (body.length() > 0) {
-                // BODY OUT
-                /*
-                if (tag.isPostParseRequired()) {
-                  SqlText sqlText = PARAM_PARSER.parseInlineParameterMap(delegate.getTypeHandlerFactory(), body.toString());
-                  out.print(sqlText.getText());
-                  ParameterMapping[] mappings = sqlText.getParameterMappings();
-                  if (mappings != null) {
-                    for (int i = 0, n = mappings.length; i < n; i++) {
-                      ctx.addParameterMapping(mappings[i]);
-                    }
-                  }
-
-                } else {
-                */
-                  out.print(body.toString());
-                //}
-
+                out.print(body.toString());
               }
             }
 
