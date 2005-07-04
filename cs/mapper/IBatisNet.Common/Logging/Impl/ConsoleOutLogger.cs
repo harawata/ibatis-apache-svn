@@ -25,6 +25,7 @@
 #endregion
 
 using System;
+using System.Globalization;
 using System.Text;
 
 namespace IBatisNet.Common.Logging.Impl
@@ -39,6 +40,7 @@ namespace IBatisNet.Common.Logging.Impl
 		private string _logName = string.Empty;
 		private LogLevel _currentLogLevel = LogLevel.All;
 		private string _dateTimeFormat = string.Empty;
+		private bool _hasDateTimeFormat = false;
 
 		/// <summary>
 		/// 
@@ -56,6 +58,11 @@ namespace IBatisNet.Common.Logging.Impl
 			_showDateTime = showDateTime;
 			_showLogName = showLogName;
 			_dateTimeFormat = dateTimeFormat;
+
+			if (_dateTimeFormat != null && _dateTimeFormat.Length > 0)
+			{
+				_hasDateTimeFormat = true;
+			}
 		}
 
 		/// <summary>
@@ -75,7 +82,15 @@ namespace IBatisNet.Common.Logging.Impl
 			// Append date-time if so configured
 			if ( _showDateTime )
 			{
-				sb.Append( DateTime.Now );
+				if ( _hasDateTimeFormat )
+				{
+					sb.Append( DateTime.Now.ToString( _dateTimeFormat, CultureInfo.InvariantCulture ));
+				}
+				else
+				{
+					sb.Append( DateTime.Now );
+				}
+				
 				sb.Append( " " );
 			}	
 			// Append a readable representation of the log level
