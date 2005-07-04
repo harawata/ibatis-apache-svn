@@ -304,6 +304,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Utilities\Proxy\CachedProxyGenerator.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Utilities\TypesResolver\CachedTypeResolver.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

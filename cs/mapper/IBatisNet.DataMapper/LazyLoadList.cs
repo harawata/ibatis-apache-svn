@@ -33,6 +33,7 @@ using Castle.DynamicProxy;
 using IBatisNet.Common;
 using IBatisNet.Common.Logging;
 using IBatisNet.Common.Utilities.Objects;
+using IBatisNet.Common.Utilities.Proxy;
 using IBatisNet.DataMapper.MappedStatements;
 
 #endregion
@@ -56,6 +57,7 @@ namespace IBatisNet.DataMapper
 		private object _loadLock = new object();
 		private static ArrayList _passthroughMethods = new ArrayList();
 
+		private static CachedProxyGenerator _proxyGenerator = new CachedProxyGenerator();
 		private static readonly ILog _logger = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
 		#endregion
 
@@ -103,15 +105,13 @@ namespace IBatisNet.DataMapper
 			object proxList = null;
 			IInterceptor handler = new LazyLoadList(dataSource, mappedSatement, param, target, propertyName);
 
-			ProxyGenerator proxyGenerator = new ProxyGenerator();
-
 			if (mappedSatement.Statement.ListClass != null)
 			{
-				proxList = proxyGenerator.CreateProxy(typeof(IList), handler, mappedSatement.Statement.CreateInstanceOfListClass());
+				proxList = _proxyGenerator.CreateProxy(typeof(IList), handler, mappedSatement.Statement.CreateInstanceOfListClass());
 			}
 			else
 			{
-				proxList = proxyGenerator.CreateProxy(typeof(IList), handler, new ArrayList());
+				proxList = _proxyGenerator.CreateProxy(typeof(IList), handler, new ArrayList());
 			}
 
 			return (IList) proxList;
