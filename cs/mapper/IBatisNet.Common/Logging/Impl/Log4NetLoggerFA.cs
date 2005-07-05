@@ -76,6 +76,9 @@ namespace IBatisNet.Common.Logging.Impl
 				case "FILE-WATCH":
 					DOMConfigurator.ConfigureAndWatch( new FileInfo( configurationFile ) );
 					break;
+				case "EXTERNAL":
+					// Log4net will be configured outside of IBatisNet
+					break;
 				default:
 					BasicConfigurator.Configure();
 					break;
