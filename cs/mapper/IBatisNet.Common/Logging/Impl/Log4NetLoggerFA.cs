@@ -56,7 +56,7 @@ namespace IBatisNet.Common.Logging.Impl
 				configurationFile = properties["configFile"];			
 			}
 
-			if ( configurationType == "FILE" )
+			if ( configurationType == "FILE" || configurationType == "FILE-WATCH" )
 			{
 				if ( configurationFile == string.Empty )
 					throw new ConfigurationException( "Configration property 'configurationFile' must be set for log4Net configuration of type 'FILE'."  );
@@ -72,6 +72,9 @@ namespace IBatisNet.Common.Logging.Impl
 					break;
 				case "FILE":
 					DOMConfigurator.Configure( new FileInfo( configurationFile ) );
+					break;
+				case "FILE-WATCH":
+					DOMConfigurator.ConfigureAndWatch( new FileInfo( configurationFile ) );
 					break;
 				default:
 					BasicConfigurator.Configure();
