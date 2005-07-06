@@ -2,7 +2,7 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
- 2.1.5 - June ??, 2004
+ 2.1.5 - July 5, 2005
 ------------------------------
 
  o Fixed IBATIS-136 groupBy not carried forward to extended result maps
@@ -10,11 +10,12 @@ Build Number: @buildNum@
  o Fixed IBATIS-152, 149, 116 null result sets now handled properly by JDBC logging classes (thanks Sven)
  o Fixed IBATIS-146 consumes additional result sets before retrieving output params (JTDS fix)
  o Fixed IBATIS-130 parameter maps don't allow for complete TypeHandler implementations
+ o Fixed IBATIS-148 parameter maps don't allow for complete TypeHandler implementations
  o Removed dependency on Commons Logging, will autodetect and use Commons Logging, Log4J, JDK 1.4 or no logging
  o Improved entity resolvers to be smarter, checks both system and public IDs, and both ibatis.com and apache.org  
 
 ------------------------------
- 2.1.0 - May 16, 2004
+ 2.1.0 - May 16, 2005
 ------------------------------
 
  o Added <discriminator> and <subMap> tags for class inheritance support
@@ -34,7 +35,7 @@ Build Number: @buildNum@
  o Changed SQL executor to always call .execute instead of .executeQuery and .executeUpdate
  
 ------------------------------
- 2.0.9B - Feb 20, 2004
+ 2.0.9B - Feb 20, 2005
 ------------------------------
 
  o Rebuilt on Feb 20th to fix incomplete ZIP file
