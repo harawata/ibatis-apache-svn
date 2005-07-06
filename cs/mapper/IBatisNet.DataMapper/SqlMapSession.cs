@@ -411,6 +411,11 @@ namespace IBatisNet.DataMapper
 				}
 			}
 
+//			if (_logger.IsDebugEnabled)
+//			{
+//				command = IDbCommandProxy.NewInstance(command);
+//			}
+
 			return command;
 		}
 
