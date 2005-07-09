@@ -38,7 +38,7 @@ namespace IBatisNet.DataMapper.Configuration.Alias
 	/// Summary description for TypeHandler.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("typeHandler")]
+	[XmlRoot("typeHandler", Namespace="http://ibatis.apache.org")]
 	public class TypeHandler
 	{
 		#region Fields

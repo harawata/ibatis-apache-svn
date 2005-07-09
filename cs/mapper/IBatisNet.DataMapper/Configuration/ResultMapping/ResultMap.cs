@@ -45,9 +45,24 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 	/// Summary description for ResultMap.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("resultMap")]
+	[XmlRoot("resultMap", Namespace="http://ibatis.apache.org")]
 	public class ResultMap
 	{
+		/// <summary>
+		/// Token for xml path to result elements.
+		/// </summary>
+		private const string XML_RESULT = "result";
+
+		/// <summary>
+		/// Token for xml path to discriminator elements.
+		/// </summary>
+		private const string XML_DISCRIMNATOR = "discriminator";
+
+		/// <summary>
+		/// Token for xml path to subMap elements.
+		/// </summary>
+		private const string XML_SUBMAP = "subMap";
+
 		#region Fields
 		[NonSerialized]
 		private string _id = string.Empty;
@@ -211,7 +226,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			#region Load the Result Properties
 
 			serializer = new XmlSerializer(typeof(ResultProperty));
-			foreach ( XmlNode resultNode in configScope.NodeContext.SelectNodes("result") )
+			foreach ( XmlNode resultNode in configScope.NodeContext.SelectNodes( DomSqlMapBuilder.ApplyNamespacePrefix(XML_RESULT), configScope.XmlNamespaceManager) )
 			{
 				mapping = (ResultProperty) serializer.Deserialize(new XmlNodeReader(resultNode));
 					
@@ -232,7 +247,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			#region Load the Discriminator Property
 
 			serializer = new XmlSerializer(typeof(Discriminator));
-			XmlNode discriminatorNode = configScope.NodeContext.SelectSingleNode("discriminator");
+			XmlNode discriminatorNode = configScope.NodeContext.SelectSingleNode(DomSqlMapBuilder.ApplyNamespacePrefix(XML_DISCRIMNATOR), configScope.XmlNamespaceManager);
 			if (discriminatorNode != null)
 			{
 				configScope.ErrorContext.MoreInfo = "initialize discriminator";
@@ -246,11 +261,11 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			#region Load the SubMap Properties
 
 			serializer = new XmlSerializer(typeof(SubMap));
-			if (configScope.NodeContext.SelectNodes("subMap").Count>0 && this.Discriminator==null)
+			if (configScope.NodeContext.SelectNodes(DomSqlMapBuilder.ApplyNamespacePrefix(XML_SUBMAP), configScope.XmlNamespaceManager).Count>0 && this.Discriminator==null)
 			{
 				throw new ConfigurationException("The discriminator is null, but somehow a subMap was reached.  This is a bug.");
 			}
-			foreach ( XmlNode resultNode in configScope.NodeContext.SelectNodes("subMap") )
+			foreach ( XmlNode resultNode in configScope.NodeContext.SelectNodes(DomSqlMapBuilder.ApplyNamespacePrefix(XML_SUBMAP), configScope.XmlNamespaceManager) )
 			{
 				configScope.ErrorContext.MoreInfo = "initialize subMap";
 				subMap = (SubMap) serializer.Deserialize(new XmlNodeReader(resultNode));

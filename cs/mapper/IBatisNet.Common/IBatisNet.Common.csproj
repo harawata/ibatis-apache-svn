@@ -144,6 +144,10 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "provider.xsd"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "Exceptions\ConfigurationException.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

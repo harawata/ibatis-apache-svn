@@ -34,7 +34,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 	/// Summary description for Select.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("select")]
+	[XmlRoot("select", Namespace="http://ibatis.apache.org")]
 	public class Select : Statement
 	{
 		#region Fields

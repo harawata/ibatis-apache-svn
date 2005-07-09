@@ -42,7 +42,7 @@ namespace IBatisNet.Common
 	/// Information about a data provider.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("provider")]
+	[XmlRoot("provider", Namespace="http://ibatis.apache.org")]
 	public class Provider
 	{
 		#region Fields

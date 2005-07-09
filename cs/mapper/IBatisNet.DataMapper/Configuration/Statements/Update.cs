@@ -34,7 +34,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 	/// Summary description for Update.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("update")]
+	[XmlRoot("update", Namespace="http://ibatis.apache.org")]
 	public class Update : Statement
 	{
 

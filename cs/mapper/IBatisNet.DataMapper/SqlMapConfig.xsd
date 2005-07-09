@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" >
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vs="http://schemas.microsoft.com/Visual-Studio-Intellisense" xmlns="http://ibatis.apache.org"  targetNamespace="http://ibatis.apache.org" elementFormDefault="qualified" attributeFormDefault="unqualified" vs:friendlyname="iBATIS.NET  DataMapper Configuration" vs:ishtmlschema="false" vs:iscasesensitive="true" vs:requireattributequotes="true" vs:defaultnamespacequalifier="" vs:defaultnsprefix="">
+	<xs:annotation>
+		<xs:documentation>
+		DataMapper XML Schema Definition
+	</xs:documentation>
+	</xs:annotation>
+	<xs:element name="typeAlias">
+		<xs:complexType>
+			<xs:attribute name="alias" type="xs:string" use="required"/>
+			<xs:attribute name="type" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="typeHandler">
+		<xs:complexType>
+			<xs:attribute name="type" type="xs:string"/>
+			<xs:attribute name="dbType" type="xs:string"/>
+			<xs:attribute name="callback" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
 	<xs:element name="typeHandlers">
 		<xs:complexType>
 			<xs:sequence>
@@ -32,7 +50,7 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="property" minOccurs="0" maxOccurs="unbounded"/>
-			</xs:sequence>			
+			</xs:sequence>
 			<xs:attribute name="resource" type="xs:string"/>
 			<xs:attribute name="url" type="xs:string"/>
 			<xs:attribute name="embedded" type="xs:string"/>
@@ -56,7 +74,7 @@
 		<xs:complexType>
 			<xs:attribute name="useStatementNamespaces" type="xs:string"/>
 			<xs:attribute name="cacheModelsEnabled" type="xs:string"/>
-			<xs:attribute name="validateSqlMap" default="false" type="xs:string"/>
+			<xs:attribute name="validateSqlMap" type="xs:string" default="false"/>
 			<xs:attribute name="useEmbedStatementParams" type="xs:string" default="false"/>
 		</xs:complexType>
 	</xs:element>
@@ -81,16 +99,21 @@
 			<xs:attribute name="embedded" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
+	<xs:annotation>
+		<xs:documentation>
+		 The document root.
+		</xs:documentation>
+	</xs:annotation>
 	<xs:element name="sqlMapConfig">
 		<xs:complexType mixed="true">
 			<xs:sequence>
-				<xs:element ref="properties" minOccurs="0" maxOccurs="1"/>
-				<xs:element ref="settings" minOccurs="0" maxOccurs="1"/>
-				<xs:element ref="providers" minOccurs="0" maxOccurs="1"/>
-				<xs:element ref="database" minOccurs="0" maxOccurs="1"/>
-				<xs:element ref="alias" minOccurs="0" maxOccurs="1"/>
-				<xs:element ref="typeHandlers" minOccurs="0" maxOccurs="1"/>
-				<xs:element ref="sqlMaps" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="properties" minOccurs="0"/>
+				<xs:element ref="settings" minOccurs="0"/>
+				<xs:element ref="providers" minOccurs="0"/>
+				<xs:element ref="database" minOccurs="0"/>
+				<xs:element ref="alias" minOccurs="0"/>
+				<xs:element ref="typeHandlers" minOccurs="0"/>
+				<xs:element ref="sqlMaps" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -99,19 +122,6 @@
 			<xs:sequence>
 				<xs:element ref="sqlMap" maxOccurs="unbounded"/>
 			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="typeAlias">
-		<xs:complexType>
-			<xs:attribute name="alias" type="xs:string" use="required"/>
-			<xs:attribute name="type" type="xs:string" use="required"/>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="typeHandler">
-		<xs:complexType>
-			<xs:attribute name="type" type="xs:string"/>
-			<xs:attribute name="dbType" type="xs:string"/>
-			<xs:attribute name="callback" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 </xs:schema>

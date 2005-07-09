@@ -38,7 +38,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 	/// Represent a SelectKey tag element.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("selectKey")]
+	[XmlRoot("selectKey", Namespace="http://ibatis.apache.org")]
 	public class SelectKey : Statement 
 	{
 

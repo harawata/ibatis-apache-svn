@@ -37,7 +37,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 	/// Summary description for SubMap.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("subMap")]
+	[XmlRoot("subMap", Namespace="http://ibatis.apache.org")]
 	public class SubMap
 	{
 		// <resultMap id="document" class="Document">

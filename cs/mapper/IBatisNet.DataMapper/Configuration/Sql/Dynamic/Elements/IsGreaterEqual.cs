@@ -35,7 +35,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements
 	/// Represent an isGreaterEqual sql tag element.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("isGreaterEqual")]
+	[XmlRoot("isGreaterEqual", Namespace="http://ibatis.apache.org")]
 	public class IsGreaterEqual : Conditional
 	{
 		/// <summary>

@@ -44,7 +44,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 	/// Summary description for ResultProperty.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("result")]
+	[XmlRoot("result", Namespace="http://ibatis.apache.org")]
 	public class ResultProperty
 	{
 		#region Const

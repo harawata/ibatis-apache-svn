@@ -67,6 +67,7 @@ namespace IBatisNet.DataMapper.Scope
 		private string _sqlMapNamespace = null;
 		private DataSource _dataSource = null;
 		private bool _isXmlValid = true;
+		private XmlNamespaceManager _nsmgr = null;
 
 		#endregion
 	
@@ -84,6 +85,15 @@ namespace IBatisNet.DataMapper.Scope
 		#endregion 
 
 		#region Properties
+
+		/// <summary>
+		/// XmlNamespaceManager
+		/// </summary>
+		public XmlNamespaceManager XmlNamespaceManager
+		{
+			set { _nsmgr = value; }
+			get { return _nsmgr; }
+		}
 
 		/// <summary>
 		/// Indicates whether or not to validate the configuration document

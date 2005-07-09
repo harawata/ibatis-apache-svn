@@ -43,9 +43,14 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 	/// Summary description for ParameterMap.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("parameterMap")]
+	[XmlRoot("parameterMap", Namespace="http://ibatis.apache.org")]
 	public class ParameterMap
 	{
+
+		/// <summary>
+		/// Token for xml path to parameter elements.
+		/// </summary>
+		private const string XML_PARAMATER = "parameter";
 
 		#region private
 		[NonSerialized]
@@ -321,7 +326,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 			ParameterProperty property = null;
 
 			serializer = new XmlSerializer(typeof(ParameterProperty));
-			foreach ( XmlNode parameterNode in configScope.NodeContext.SelectNodes("parameter") )
+			foreach ( XmlNode parameterNode in configScope.NodeContext.SelectNodes(DomSqlMapBuilder.ApplyNamespacePrefix(XML_PARAMATER), configScope.XmlNamespaceManager) )
 			{
 				property = (ParameterProperty) serializer.Deserialize(new XmlNodeReader(parameterNode));
 				property.Initialize( configScope );

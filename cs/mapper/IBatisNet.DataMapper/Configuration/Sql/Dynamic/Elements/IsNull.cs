@@ -35,7 +35,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements
 	/// Represent an isNull sql tag element.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("isNull")]
+	[XmlRoot("isNull", Namespace="http://ibatis.apache.org")]
 	public class IsNull : BaseTag
 	{
 		/// <summary>

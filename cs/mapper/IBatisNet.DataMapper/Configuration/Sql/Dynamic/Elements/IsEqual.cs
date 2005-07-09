@@ -36,7 +36,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements
 	/// Represent an isEqual sql tag element.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("isEqual")]
+	[XmlRoot("isEqual", Namespace="http://ibatis.apache.org")]
 	public class IsEqual : Conditional
 	{
 		/// <summary>

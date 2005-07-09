@@ -37,7 +37,7 @@ namespace IBatisNet.Common
 	/// Information about a data source.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("dataSource")]
+	[XmlRoot("dataSource", Namespace="http://ibatis.apache.org")]
 	public class DataSource
 	{
 
