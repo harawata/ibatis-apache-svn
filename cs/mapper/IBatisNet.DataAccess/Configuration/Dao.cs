@@ -40,7 +40,7 @@ namespace IBatisNet.DataAccess.Configuration
 	/// Summary description for 
 	/// </summary>
 	[Serializable]
-	[XmlRoot("dao")]
+	[XmlRoot("dao", Namespace="http://ibatis.apache.org")]
 	public class Dao
 	{
 		#region Fields

@@ -50,7 +50,12 @@ namespace IBatisNet.DataAccess.Configuration
 	{
 		#region Constants
 
-		
+		/// <summary>
+		/// 
+		/// </summary>
+		public const string XML_NAMESPACE_PREFIX = "ib";
+		private const string IBATIS_XML_NAMESPACE = "http://ibatis.apache.org";
+
 		private const string PROPERTY_ELEMENT_KEY_ATTRIB = "key";
 		private const string PROPERTY_ELEMENT_VALUE_ATTRIB = "value";
 
@@ -68,14 +73,70 @@ namespace IBatisNet.DataAccess.Configuration
 		public const string DEFAULT_DAOSESSIONHANDLER_NAME = "DEFAULT_DAOSESSIONHANDLER_NAME";
 
 		/// <summary>
+		/// Token for xml path to properties elements.
+		/// </summary>
+		private const string XML_PROPERTIES = "properties";
+
+		/// <summary>
+		/// Token for xml path to property elements.
+		/// </summary>
+		private const string XML_PROPERTY = "property";
+
+		/// <summary>
+		/// Token for xml path to settings add elements.
+		/// </summary>
+		private const string XML_SETTINGS_ADD = "/settings/add";
+
+		/// <summary>
 		/// Token for xml path to DaoConfig providers element.
 		/// </summary>
-		private static string XML_CONFIG_PROVIDERS = "/daoConfig/providers";
+		private static string XML_CONFIG_PROVIDERS = "daoConfig/providers";
 
 		/// <summary>
 		/// Token for providers config file name.
 		/// </summary>
 		private const string PROVIDERS_FILE_NAME = "providers.config";
+
+		/// <summary>
+		/// Token for xml path to provider elements.
+		/// </summary>
+		private const string XML_PROVIDER = "providers/provider";
+
+		/// <summary>
+		/// Token for xml path to dao session handlers element.
+		/// </summary>
+		private const string XML_DAO_SESSION_HANDLERS = "daoConfig/daoSessionHandlers";
+
+		/// <summary>
+		/// Token for xml path to handler element.
+		/// </summary>
+		private const string XML_HANDLER = "handler";
+
+		/// <summary>
+		/// Token for xml path to dao context element.
+		/// </summary>
+		private const string XML_DAO_CONTEXT = "daoConfig/context";
+
+		/// <summary>
+		/// Token for xml path to database provider elements.
+		/// </summary>
+		private const string XML_DATABASE_PROVIDER = "database/provider";
+
+		/// <summary>
+		/// Token for xml path to database source elements.
+		/// </summary>
+		private const string XML_DATABASE_DATASOURCE = "database/dataSource";
+
+		/// <summary>
+		/// Token for xml path to dao session handler elements.
+		/// </summary>
+		private const string XML_DAO_SESSION_HANDLER = "daoSessionHandler";
+
+		/// <summary>
+		/// Token for xml path to dao elements.
+		/// </summary>
+		private const string XML_DAO = "daoFactory/dao";
+
 		#endregion
 
 		#region Fields
@@ -273,6 +334,9 @@ namespace IBatisNet.DataAccess.Configuration
 			configurationScope.UseConfigFileWatcher = useConfigFileWatcher;
 			configurationScope.DaoConfigDocument = document;
 
+			configurationScope.XmlNamespaceManager = new XmlNamespaceManager(configurationScope.DaoConfigDocument.NameTable);
+			configurationScope.XmlNamespaceManager.AddNamespace(XML_NAMESPACE_PREFIX, IBATIS_XML_NAMESPACE);
+
 			try
 			{
 				GetConfig( configurationScope );
@@ -290,7 +354,6 @@ namespace IBatisNet.DataAccess.Configuration
 		private void GetConfig(ConfigurationScope configurationScope)
 		{
 			GetProviders( configurationScope );
-
 			GetDaoSessionHandlers( configurationScope );
 			GetContexts( configurationScope );
 		}
@@ -306,10 +369,11 @@ namespace IBatisNet.DataAccess.Configuration
 			Provider provider = null;
 			XmlDocument xmlProviders = null;
 
-			configurationScope.ErrorContext.Activity = "load DataBase Provider";
+			configurationScope.ErrorContext.Activity = "Loading Providers config file";
 
 			XmlNode providersNode = null;
-			providersNode = configurationScope.DaoConfigDocument.SelectSingleNode(XML_CONFIG_PROVIDERS);
+			providersNode = configurationScope.DaoConfigDocument.SelectSingleNode( ApplyNamespacePrefix(XML_CONFIG_PROVIDERS), configurationScope.XmlNamespaceManager);
+
 			if (providersNode != null )
 			{
 				xmlProviders = Resources.GetAsXmlDocument( providersNode, configurationScope.Properties );
@@ -321,7 +385,7 @@ namespace IBatisNet.DataAccess.Configuration
 
 			serializer = new XmlSerializer(typeof(Provider));
 
-			foreach (XmlNode node in xmlProviders.SelectNodes("/providers/provider"))
+			foreach (XmlNode node in xmlProviders.SelectNodes(ApplyNamespacePrefix(XML_PROVIDER), configurationScope.XmlNamespaceManager ) )
 			{
 				configurationScope.ErrorContext.Resource = node.InnerXml.ToString();
 
@@ -362,14 +426,14 @@ namespace IBatisNet.DataAccess.Configuration
 			XmlSerializer serializer = null;
 			XmlNode daoSessionHandlersNode = null;
 
-			configurationScope.ErrorContext.Activity = "load custom DaoSession Handlers";
+			configurationScope.ErrorContext.Activity = "loading custom DaoSession Handlers";
 
 			serializer = new XmlSerializer(typeof(DaoSessionHandler));
-			daoSessionHandlersNode = configurationScope.DaoConfigDocument.SelectSingleNode("daoConfig").SelectSingleNode("daoSessionHandlers");
+			daoSessionHandlersNode = configurationScope.DaoConfigDocument.SelectSingleNode( ApplyNamespacePrefix(XML_DAO_SESSION_HANDLERS), configurationScope.XmlNamespaceManager);
 
 			if (daoSessionHandlersNode != null)
 			{
-				foreach (XmlNode node in daoSessionHandlersNode.SelectNodes("handler"))
+				foreach (XmlNode node in daoSessionHandlersNode.SelectNodes( ApplyNamespacePrefix(XML_HANDLER), configurationScope.XmlNamespaceManager))
 				{
 					configurationScope.ErrorContext.Resource = node.InnerXml.ToString();
 
@@ -401,15 +465,12 @@ namespace IBatisNet.DataAccess.Configuration
 		{
 			DaoManager daoManager = null;
 			XmlAttribute attribute = null;
-			XmlNode section = null;
 
 			// Init
 			DaoManager.Reset();
 
-			section = configurationScope.DaoConfigDocument.SelectSingleNode("daoConfig");
-
 			// Build one daoManager for each context
-			foreach (XmlNode contextNode in section.SelectNodes("context"))
+			foreach (XmlNode contextNode in configurationScope.DaoConfigDocument.SelectNodes(ApplyNamespacePrefix(XML_DAO_CONTEXT), configurationScope.XmlNamespaceManager))
 			{
 				configurationScope.ErrorContext.Activity = "build daoManager";
 				configurationScope.NodeContext = contextNode;
@@ -462,9 +523,9 @@ namespace IBatisNet.DataAccess.Configuration
 
 				#region DaoSessionHandler
 
-				XmlNode nodeSessionHandler = contextNode.SelectSingleNode("daoSessionHandler");
+				XmlNode nodeSessionHandler = contextNode.SelectSingleNode( ApplyNamespacePrefix(XML_DAO_SESSION_HANDLER), configurationScope.XmlNamespaceManager);
 
-				configurationScope.ErrorContext.MoreInfo = "configure DaoSessionHandler";
+				configurationScope.ErrorContext.Activity = "configure DaoSessionHandler";
 
 				// The resources use to initialize the SessionHandler 
 				IDictionary resources = new Hashtable();
@@ -482,7 +543,7 @@ namespace IBatisNet.DataAccess.Configuration
 					sessionHandler = (IDaoSessionHandler)configurationScope.DaoSectionHandlers[nodeSessionHandler.Attributes["id"].Value];
 
 					// Parse property node
-					foreach(XmlNode nodeProperty in nodeSessionHandler.SelectNodes("property"))
+					foreach(XmlNode nodeProperty in nodeSessionHandler.SelectNodes( ApplyNamespacePrefix(XML_PROPERTY), configurationScope.XmlNamespaceManager ))
 					{
 						resources.Add(nodeProperty.Attributes["name"].Value, 
 							Resources.ParsePropertyTokens(nodeProperty.Attributes["value"].Value, configurationScope.Properties));
@@ -523,6 +584,7 @@ namespace IBatisNet.DataAccess.Configuration
 			}
 		}
 
+		
 		/// <summary>
 		/// Initialize the list of variables defined in the
 		/// properties file.
@@ -530,7 +592,7 @@ namespace IBatisNet.DataAccess.Configuration
 		/// <param name="configurationScope">The scope of the configuration</param>
 		private void ParseGlobalProperties(ConfigurationScope configurationScope)
 		{
-			XmlNode nodeProperties = configurationScope.NodeContext.SelectSingleNode("properties");
+			XmlNode nodeProperties = configurationScope.NodeContext.SelectSingleNode(ApplyNamespacePrefix(XML_PROPERTIES), configurationScope.XmlNamespaceManager);
 
 			configurationScope.ErrorContext.Activity = "add global properties";
 
@@ -538,7 +600,7 @@ namespace IBatisNet.DataAccess.Configuration
 			{
 				if (nodeProperties.HasChildNodes)
 				{
-					foreach (XmlNode propertyNode in nodeProperties.SelectNodes("property"))
+					foreach (XmlNode propertyNode in nodeProperties.SelectNodes(ApplyNamespacePrefix(XML_PROPERTY), configurationScope.XmlNamespaceManager))
 					{
 						XmlAttribute keyAttrib = propertyNode.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB];
 						XmlAttribute valueAttrib = propertyNode.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB];
@@ -553,7 +615,7 @@ namespace IBatisNet.DataAccess.Configuration
 							// Load the file defined by the attribute
 							XmlDocument propertiesConfig = Resources.GetAsXmlDocument(propertyNode, configurationScope.Properties); 
 							
-							foreach (XmlNode node in propertiesConfig.SelectNodes("/settings/add"))
+							foreach (XmlNode node in propertiesConfig.SelectNodes(XML_SETTINGS_ADD))
 							{
 								configurationScope.Properties[node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value] = node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value;
 								_logger.Info( string.Format("Add property \"{0}\" value \"{1}\"",node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value,node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value) );
@@ -572,7 +634,7 @@ namespace IBatisNet.DataAccess.Configuration
 					// Load the file defined by the attribute
 					XmlDocument propertiesConfig = Resources.GetAsXmlDocument(nodeProperties, configurationScope.Properties); 
 
-					foreach (XmlNode node in propertiesConfig.SelectNodes("/settings/add"))
+					foreach (XmlNode node in propertiesConfig.SelectNodes(XML_SETTINGS_ADD))
 					{
 						configurationScope.Properties[node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value] = node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value;
 						_logger.Info( string.Format("Add property \"{0}\" value \"{1}\"",node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value,node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value) );
@@ -600,9 +662,9 @@ namespace IBatisNet.DataAccess.Configuration
 		private Provider ParseProvider(ConfigurationScope configurationScope)
 		{
 			XmlAttribute attribute = null;
-			XmlNode node = configurationScope.NodeContext.SelectSingleNode("//database/provider");
+			XmlNode node = configurationScope.NodeContext.SelectSingleNode( ApplyNamespacePrefix(XML_DATABASE_PROVIDER), configurationScope.XmlNamespaceManager);
 
-			configurationScope.ErrorContext.MoreInfo = "configure provider";
+			configurationScope.ErrorContext.Activity = "configure provider";
 
 			if (node != null)
 			{
@@ -638,7 +700,8 @@ namespace IBatisNet.DataAccess.Configuration
 			}
 		}
 
-//		/// <summary>
+
+		//		/// <summary>
 //		/// Build a provider
 //		/// </summary>
 //		/// <param name="node"></param>
@@ -713,7 +776,7 @@ namespace IBatisNet.DataAccess.Configuration
 		{
 			XmlSerializer serializer = null;
 			DataSource dataSource = null;
-			XmlNode node = configurationScope.NodeContext.SelectSingleNode("database/dataSource");
+			XmlNode node = configurationScope.NodeContext.SelectSingleNode( ApplyNamespacePrefix(XML_DATABASE_DATASOURCE), configurationScope.XmlNamespaceManager);
 
 			configurationScope.ErrorContext.Resource = node.InnerXml.ToString();
 			configurationScope.ErrorContext.MoreInfo = "configure data source";
@@ -740,16 +803,12 @@ namespace IBatisNet.DataAccess.Configuration
 		{
 			XmlSerializer serializer = null;
 			Dao dao = null;
-			XmlNode xmlDaoFactory = null;
 
-			xmlDaoFactory = configurationScope.NodeContext.SelectSingleNode("daoFactory");
-
-			configurationScope.ErrorContext.Resource = xmlDaoFactory.InnerXml.ToString();
 			configurationScope.ErrorContext.MoreInfo = "configure dao";
 
 			serializer = new XmlSerializer(typeof(Dao));
 			
-			foreach (XmlNode node in xmlDaoFactory.SelectNodes("dao"))
+			foreach (XmlNode node in configurationScope.NodeContext.SelectNodes(ApplyNamespacePrefix(XML_DAO), configurationScope.XmlNamespaceManager ))
 			{
 				dao = (Dao) serializer.Deserialize(new XmlNodeReader(node));
 				
@@ -762,6 +821,17 @@ namespace IBatisNet.DataAccess.Configuration
 			configurationScope.ErrorContext.Resource = string.Empty;
 			configurationScope.ErrorContext.MoreInfo = string.Empty;
 			configurationScope.ErrorContext.ObjectId = string.Empty;
+		}
+
+		/// <summary>
+		/// Apply an XML NameSpace
+		/// </summary>
+		/// <param name="elementName"></param>
+		/// <returns></returns>
+		public static string ApplyNamespacePrefix( string elementName )
+		{
+			return XML_NAMESPACE_PREFIX+ ":" + elementName.
+				Replace("/","/"+XML_NAMESPACE_PREFIX+":");
 		}
 		#endregion
 

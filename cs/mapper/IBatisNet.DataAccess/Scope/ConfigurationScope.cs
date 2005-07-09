@@ -51,6 +51,8 @@ namespace IBatisNet.DataAccess.Scope
 		private bool _useConfigFileWatcher = false;
 		private XmlDocument _daoConfigDocument = null;
 		private XmlNode _nodeContext = null;
+		private XmlNamespaceManager _nsmgr = null;
+
 		#endregion
 	
 		#region Constructors
@@ -73,6 +75,16 @@ namespace IBatisNet.DataAccess.Scope
 		#endregion 
 
 		#region Properties
+
+		
+		/// <summary>
+		/// XmlNamespaceManager
+		/// </summary>
+		public XmlNamespaceManager XmlNamespaceManager
+		{
+			set { _nsmgr = value; }
+			get { return _nsmgr; }
+		}
 
 		/// <summary>
 		/// The current context node we are analizing

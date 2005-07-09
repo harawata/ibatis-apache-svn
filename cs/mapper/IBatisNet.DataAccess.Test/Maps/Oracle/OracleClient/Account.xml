@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<sqlMap namespace="Account" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xsi:noNamespaceSchemaLocation="Schemas\SqlMap.xsd">
+<sqlMap namespace="Account" xmlns="http://ibatis.apache.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ibatis.apache.org
+http://ibatis.apache.org/xsd/SqlMap.xsd">
 	
 	<!-- =============================================                
                 <resultMap 
