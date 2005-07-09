@@ -73,7 +73,7 @@ namespace IBatisNet.DataMapper.Commands
 
 			if (_logger.IsDebugEnabled)
 			{
-				_logger.Debug("PreparedStatement : [" + command.CommandText + "]");
+				_logger.Debug("Statement Id: [" + statement.Id + "] PreparedStatement : [" + command.CommandText + "]");
 			}
 
 			ApplyParameterMap( session, command, request, statement, parameterObject  );
@@ -233,8 +233,8 @@ namespace IBatisNet.DataMapper.Commands
 
 			if (_logger.IsDebugEnabled && properties.Count>0)
 			{
-				_logger.Debug("Parameters: [" + paramLogList.ToString(0, paramLogList.Length - 2)  + "]");
-				_logger.Debug("Types: [" + typeLogList.ToString(0, typeLogList.Length - 2)  + "]");			
+				_logger.Debug("Statement Id: [" + statement.Id + "] Parameters: [" + paramLogList.ToString(0, paramLogList.Length - 2)  + "]");
+				_logger.Debug("Statement Id: [" + statement.Id + "] Types: [" + typeLogList.ToString(0, typeLogList.Length - 2)  + "]");
 			}
 			#endregion 
 		}

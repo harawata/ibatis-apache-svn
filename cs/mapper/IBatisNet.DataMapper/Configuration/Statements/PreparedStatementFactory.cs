@@ -153,7 +153,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 
 			if (_logger.IsDebugEnabled) 
 			{
-				_logger.Debug("SQL for statement '"+ _statement.Id +"' :" + _preparedStatement.PreparedSql);
+				_logger.Debug("Statement Id: [" + _statement.Id + "] Prepared SQL: [" + _preparedStatement.PreparedSql + "]");
 			}
 
 			return _preparedStatement;
