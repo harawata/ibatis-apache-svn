@@ -117,6 +117,10 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "DaoConfig.xsd"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "DaoManager.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
