@@ -159,6 +159,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Configuration\DataSourceConfig.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Configuration\DomDaoManagerBuilder.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

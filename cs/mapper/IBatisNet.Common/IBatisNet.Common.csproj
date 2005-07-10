@@ -148,11 +148,6 @@
                     BuildAction = "Content"
                 />
                 <File
-                    RelPath = "ProviderDao.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Exceptions\ConfigurationException.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -43,7 +43,7 @@ namespace IBatisNet.DataAccess.Configuration
 	/// Description résumée de DaoSessionHandler.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("handler", Namespace="http://ibatis.apache.org")]
+	[XmlRoot("handler", Namespace="http://ibatis.apache.org/dataAccess")]
 	public class DaoSessionHandler
 	{
 		#region Constants

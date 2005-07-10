@@ -53,8 +53,10 @@ namespace IBatisNet.DataAccess.Configuration
 		/// <summary>
 		/// 
 		/// </summary>
-		public const string XML_NAMESPACE_PREFIX = "ib";
-		private const string IBATIS_XML_NAMESPACE = "http://ibatis.apache.org";
+		public const string DAO_NAMESPACE_PREFIX = "dao";
+		private const string PROVIDERS_NAMESPACE_PREFIX = "provider";
+		private const string PROVIDER_XML_NAMESPACE = "http://ibatis.apache.org/providers";
+		private const string DAO_XML_NAMESPACE = "http://ibatis.apache.org/dataAccess";
 
 		private const string PROPERTY_ELEMENT_KEY_ATTRIB = "key";
 		private const string PROPERTY_ELEMENT_VALUE_ATTRIB = "value";
@@ -335,7 +337,8 @@ namespace IBatisNet.DataAccess.Configuration
 			configurationScope.DaoConfigDocument = document;
 
 			configurationScope.XmlNamespaceManager = new XmlNamespaceManager(configurationScope.DaoConfigDocument.NameTable);
-			configurationScope.XmlNamespaceManager.AddNamespace(XML_NAMESPACE_PREFIX, IBATIS_XML_NAMESPACE);
+			configurationScope.XmlNamespaceManager.AddNamespace(DAO_NAMESPACE_PREFIX, DAO_XML_NAMESPACE);
+			configurationScope.XmlNamespaceManager.AddNamespace(PROVIDERS_NAMESPACE_PREFIX, PROVIDER_XML_NAMESPACE);
 
 			try
 			{
@@ -385,7 +388,7 @@ namespace IBatisNet.DataAccess.Configuration
 
 			serializer = new XmlSerializer(typeof(Provider));
 
-			foreach (XmlNode node in xmlProviders.SelectNodes(ApplyNamespacePrefix(XML_PROVIDER), configurationScope.XmlNamespaceManager ) )
+			foreach (XmlNode node in xmlProviders.SelectNodes(ApplyProviderNamespacePrefix(XML_PROVIDER), configurationScope.XmlNamespaceManager ) )
 			{
 				configurationScope.ErrorContext.Resource = node.InnerXml.ToString();
 
@@ -781,7 +784,7 @@ namespace IBatisNet.DataAccess.Configuration
 			configurationScope.ErrorContext.Resource = node.InnerXml.ToString();
 			configurationScope.ErrorContext.MoreInfo = "configure data source";
 
-			serializer = new XmlSerializer(typeof(DataSource));
+			serializer = new XmlSerializer(typeof(DataSourceConfig));
 
 			dataSource = (DataSource)serializer.Deserialize(new XmlNodeReader(node));
 
@@ -828,10 +831,21 @@ namespace IBatisNet.DataAccess.Configuration
 		/// </summary>
 		/// <param name="elementName"></param>
 		/// <returns></returns>
-		public static string ApplyNamespacePrefix( string elementName )
+		public string ApplyNamespacePrefix( string elementName )
 		{
-			return XML_NAMESPACE_PREFIX+ ":" + elementName.
-				Replace("/","/"+XML_NAMESPACE_PREFIX+":");
+			return DAO_NAMESPACE_PREFIX+ ":" + elementName.
+				Replace("/","/"+DAO_NAMESPACE_PREFIX+":");
+		}
+
+		/// <summary>
+		/// Apply the provider namespace prefix
+		/// </summary>
+		/// <param name="elementName"></param>
+		/// <returns></returns>
+		public string ApplyProviderNamespacePrefix( string elementName )
+		{
+			return PROVIDERS_NAMESPACE_PREFIX+ ":" + elementName.
+				Replace("/","/"+PROVIDERS_NAMESPACE_PREFIX+":");
 		}
 		#endregion
 
