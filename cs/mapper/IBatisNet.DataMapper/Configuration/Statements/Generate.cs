@@ -36,7 +36,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 	/// SqlMapClient instance is built.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("generate", Namespace="http://ibatis.apache.org")]
+	[XmlRoot("generate", Namespace="http://ibatis.apache.org/mapping")]
 	public class Generate : Statement
 	{
 		#region Fields

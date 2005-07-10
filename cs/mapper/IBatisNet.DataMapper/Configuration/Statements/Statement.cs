@@ -50,7 +50,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 	/// Summary description for Statement.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("statement", Namespace="http://ibatis.apache.org")]
+	[XmlRoot("statement", Namespace="http://ibatis.apache.org/mapping")]
 	public class Statement : IStatement
 	{
 		#region Constants

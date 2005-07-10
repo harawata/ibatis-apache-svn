@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vs="http://schemas.microsoft.com/Visual-Studio-Intellisense" xmlns="http://ibatis.apache.org"  targetNamespace="http://ibatis.apache.org" elementFormDefault="qualified" attributeFormDefault="unqualified" vs:friendlyname="iBATIS.NET Providers Configuration" vs:ishtmlschema="false" vs:iscasesensitive="true" vs:requireattributequotes="true" vs:defaultnamespacequalifier="" vs:defaultnsprefix="" >
+<xs:schema targetNamespace="http://ibatis.apache.org/providers" 
+elementFormDefault="qualified" 
+xmlns:mstns="http://tempuri.org/XMLSchema.xsd" 
+xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+xmlns="http://ibatis.apache.org/providers"
+xmlns:vs="http://schemas.microsoft.com/Visual-Studio-Intellisense" 
+vs:friendlyname="iBATIS.NET Providers Configuration Schema" 
+vs:ishtmlschema="false" 
+vs:iscasesensitive="true" 
+vs:requireattributequotes="true" 
+vs:defaultnamespacequalifier="" 
+vs:defaultnsprefix=""> 
 
       <xs:element name="clear">
            <xs:complexType/>

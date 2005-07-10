@@ -211,6 +211,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Configuration\Alias\TypeAliasMapping.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Configuration\Alias\TypeHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

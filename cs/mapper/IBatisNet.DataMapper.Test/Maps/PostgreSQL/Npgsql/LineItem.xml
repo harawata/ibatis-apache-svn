@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<sqlMap namespace="LineItem" xmlns="http://ibatis.apache.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ibatis.apache.org
-http://ibatis.apache.org/xsd/SqlMap.xsd">
+<sqlMap namespace="LineItem" xmlns="http://ibatis.apache.org/mapping/mapping" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 
 	<alias>
 		<typeAlias alias="LineItem" type="IBatisNet.DataMapper.Test.Domain.LineItem, IBatisNet.DataMapper.Test" />

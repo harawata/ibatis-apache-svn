@@ -24,26 +24,22 @@
  ********************************************************************************/
 #endregion
 
+#region Using
+
 using System;
 using System.Xml.Serialization;
 
-using IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers;
+#endregion
 
-namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements
+namespace IBatisNet.DataMapper.Configuration.Alias
 {
 	/// <summary>
-	/// Represent an isGreaterThan sql tag element.
+	/// TypeAlias, used only for serialisation
 	/// </summary>
 	[Serializable]
-	[XmlRoot("isGreaterThan", Namespace="http://ibatis.apache.org/mapping")]
-	public class IsGreaterThan : Conditional
+	[XmlRoot("typeAlias", Namespace="http://ibatis.apache.org/mapping")]
+	public class TypeAliasMapping : TypeAlias
 	{
-		/// <summary>
-		/// 
-		/// </summary>
-		public IsGreaterThan()
-		{
-			this.Handler = new IsGreaterThanTagHandler();
-		}
+
 	}
 }

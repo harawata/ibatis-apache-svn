@@ -38,7 +38,7 @@ namespace IBatisNet.DataMapper.Configuration.Alias
 	/// TypeAlias.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("typeAlias", Namespace="http://ibatis.apache.org")]
+	[XmlRoot("typeAlias", Namespace="http://ibatis.apache.org/dataMapper")]
 	public class TypeAlias
 	{
 

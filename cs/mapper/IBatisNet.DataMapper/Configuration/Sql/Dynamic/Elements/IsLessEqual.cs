@@ -35,7 +35,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements
 	/// Represent an isLessEqual sql tag element.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("isLessEqual", Namespace="http://ibatis.apache.org")]
+	[XmlRoot("isLessEqual", Namespace="http://ibatis.apache.org/mapping")]
 	public class IsLessEqual : Conditional
 	{
 		/// <summary>

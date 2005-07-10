@@ -37,7 +37,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements
 	/// Represent an isNotEmpty sql tag element.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("isNotEmpty", Namespace="http://ibatis.apache.org")]
+	[XmlRoot("isNotEmpty", Namespace="http://ibatis.apache.org/mapping")]
 	public class IsNotEmpty : BaseTag
 	{
 		#region  Constructor (s) / Destructor

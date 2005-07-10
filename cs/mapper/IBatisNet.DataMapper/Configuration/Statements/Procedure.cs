@@ -40,7 +40,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 	/// Represent a store Procedure.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("procedure", Namespace="http://ibatis.apache.org")]
+	[XmlRoot("procedure", Namespace="http://ibatis.apache.org/mapping")]
 	public class Procedure : Statement
 	{
 

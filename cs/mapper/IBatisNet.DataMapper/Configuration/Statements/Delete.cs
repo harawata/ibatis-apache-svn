@@ -37,7 +37,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 	/// Summary description for delete.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("delete", Namespace="http://ibatis.apache.org")]
+	[XmlRoot("delete", Namespace="http://ibatis.apache.org/mapping")]
 	public class Delete : Statement
 	{
 		

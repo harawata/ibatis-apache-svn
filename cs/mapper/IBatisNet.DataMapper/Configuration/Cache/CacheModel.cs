@@ -44,7 +44,7 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 	/// Summary description for CacheModel.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("cacheModel", Namespace="http://ibatis.apache.org")]
+	[XmlRoot("cacheModel", Namespace="http://ibatis.apache.org/mapping")]
 	public class CacheModel
 	{
 		#region Fields

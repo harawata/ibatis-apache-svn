@@ -40,7 +40,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 	/// Summary description for Discriminator.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("discriminator", Namespace="http://ibatis.apache.org")]
+	[XmlRoot("discriminator", Namespace="http://ibatis.apache.org/mapping")]
 	public class Discriminator
 	{
 

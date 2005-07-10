@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vs="http://schemas.microsoft.com/Visual-Studio-Intellisense" xmlns="http://ibatis.apache.org"  targetNamespace="http://ibatis.apache.org" elementFormDefault="qualified" attributeFormDefault="unqualified" vs:friendlyname="iBATIS.NET  DataMapper Configuration" vs:ishtmlschema="false" vs:iscasesensitive="true" vs:requireattributequotes="true" vs:defaultnamespacequalifier="" vs:defaultnsprefix="" >
+<xs:schema 
+targetNamespace="http://ibatis.apache.org/mapping" 
+elementFormDefault="qualified" 
+xmlns:mstns="http://tempuri.org/XMLSchema.xsd" 
+xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+xmlns="http://ibatis.apache.org/mapping"
+xmlns:vs="http://schemas.microsoft.com/Visual-Studio-Intellisense" 
+vs:friendlyname="iBATIS.NET mapping file Configuration Schema" 
+vs:ishtmlschema="false" 
+vs:iscasesensitive="true" 
+vs:requireattributequotes="true" 
+vs:defaultnamespacequalifier="" 
+vs:defaultnsprefix="" >
 
 	<xs:annotation>
 		<xs:documentation>
@@ -17,7 +29,8 @@
 	<xs:element name="discriminator">
 		<xs:complexType>
 			<xs:attribute name="column" type="xs:string"/>
-			<xs:attribute name="formula" type="xs:string"/>
+			<xs:attribute name="type" type="xs:string"/>
+			<xs:attribute name="typeHandler" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 
@@ -155,6 +168,7 @@
 			<xs:attribute name="id" type="xs:string" use="required"/>
 			<xs:attribute name="parameterClass" type="xs:string"/>
 			<xs:attribute name="parameterMap" type="xs:string"/>
+			<xs:attribute name="resultClass" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="isNotParameterPresent">

@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vs="http://schemas.microsoft.com/Visual-Studio-Intellisense" xmlns="http://ibatis.apache.org"  targetNamespace="http://ibatis.apache.org" elementFormDefault="qualified" attributeFormDefault="unqualified" vs:friendlyname="iBATIS.NET  DataMapper Configuration" vs:ishtmlschema="false" vs:iscasesensitive="true" vs:requireattributequotes="true" vs:defaultnamespacequalifier="" vs:defaultnsprefix="">
+<xs:schema targetNamespace="http://ibatis.apache.org/dataMapper" 
+elementFormDefault="qualified" 
+xmlns:mstns="http://tempuri.org/XMLSchema.xsd" 
+xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+xmlns="http://ibatis.apache.org/dataMapper"
+xmlns:vs="http://schemas.microsoft.com/Visual-Studio-Intellisense" 
+vs:friendlyname="iBATIS.NET DataMapper Configuration Schema" 
+vs:ishtmlschema="false" 
+vs:iscasesensitive="true" 
+vs:requireattributequotes="true" 
+vs:defaultnamespacequalifier="" 
+vs:defaultnsprefix=""> 
+
 	<xs:annotation>
 		<xs:documentation>
 		DataMapper XML Schema Definition
@@ -72,10 +84,10 @@
 	</xs:element>
 	<xs:element name="setting">
 		<xs:complexType>
-			<xs:attribute name="useStatementNamespaces" type="xs:string"/>
+			<xs:attribute name="useStatementNamespaces" type="xs:string"  default="false"/>
 			<xs:attribute name="cacheModelsEnabled" type="xs:string"/>
 			<xs:attribute name="validateSqlMap" type="xs:string" default="false"/>
-			<xs:attribute name="useEmbedStatementParams" type="xs:string" default="false"/>
+			<xs:attribute name="useEmbedStatementParams" type="xs:boolean" default="false"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="settings">

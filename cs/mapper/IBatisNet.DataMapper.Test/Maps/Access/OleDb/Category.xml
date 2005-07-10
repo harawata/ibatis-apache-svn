@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<sqlMap namespace="Category" xmlns="http://ibatis.apache.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ibatis.apache.org
+<sqlMap namespace="Category" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ibatis.apache.org
 http://ibatis.apache.org/xsd/SqlMap.xsd">
 	
 	<alias>

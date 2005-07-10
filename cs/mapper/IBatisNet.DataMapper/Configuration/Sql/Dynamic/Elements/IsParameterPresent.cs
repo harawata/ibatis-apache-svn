@@ -35,7 +35,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements
 	/// Represent an isParameterPresent sql tag element.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("isParameterPresent", Namespace="http://ibatis.apache.org")]
+	[XmlRoot("isParameterPresent", Namespace="http://ibatis.apache.org/mapping")]
 	public class IsParameterPresent : SqlTag
 	{
 		/// <summary>

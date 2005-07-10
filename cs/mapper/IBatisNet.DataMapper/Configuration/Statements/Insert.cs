@@ -37,7 +37,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 	/// Represent an insert statement.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("insert", Namespace="http://ibatis.apache.org")]
+	[XmlRoot("insert", Namespace="http://ibatis.apache.org/mapping")]
 	public class Insert : Statement
 	{
 		#region Fields

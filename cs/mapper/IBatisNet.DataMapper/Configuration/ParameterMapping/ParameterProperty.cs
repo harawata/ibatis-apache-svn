@@ -43,7 +43,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 	/// Summary description for ParameterProperty.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("parameter", Namespace="http://ibatis.apache.org")]
+	[XmlRoot("parameter", Namespace="http://ibatis.apache.org/mapping")]
 	public class ParameterProperty
 	{
 

@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<sqlMap namespace="Account" 
+xmlns="http://ibatis.apache.org/mapping" 
+xmlns:vs="http://schemas.microsoft.com/Visual-Studio-Intellisense" 
+xsi:schemaLocation="http://ibatis.apache.org/mapping http://ibatis.apache.org/SqlMap.xsd">
+<alias>
+<typeAlias alias="" type=""></typeAlias>
+</alias>
+
+</sqlMap>

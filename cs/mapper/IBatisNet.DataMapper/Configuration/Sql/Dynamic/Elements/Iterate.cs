@@ -35,7 +35,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements
 	/// Represent an iterate sql tag element.
 	/// </summary>
 	[Serializable]
-	[XmlRoot("iterate", Namespace="http://ibatis.apache.org")]
+	[XmlRoot("iterate", Namespace="http://ibatis.apache.org/mapping")]
 	public class Iterate : BaseTag
 	{
 
