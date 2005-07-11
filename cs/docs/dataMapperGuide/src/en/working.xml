@@ -3628,7 +3628,7 @@ ADOLESCENT = ‘TRUE'
                   <entry>Iterates over a property that is of type IList
                   Example Usage:<programlisting>&lt;iterate prepend="AND" property="UserNameList"
   open="(" close=")" conjunction="OR"&gt;
-  username=<emphasis role="blue">#userNameList[]#</emphasis>
+  username=<emphasis role="blue">#UserNameList[]#</emphasis>
 &lt;/iterate&gt;</programlisting>Note: It is very important to include the
                   square brackets[] at the end of the List property name when
                   using the Iterate element. These brackets distinguish this
