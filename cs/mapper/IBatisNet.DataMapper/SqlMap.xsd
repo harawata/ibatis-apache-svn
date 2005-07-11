@@ -74,6 +74,7 @@ vs:defaultnsprefix="" >
 			<xs:attribute name="resultMap" type="xs:string"/>
 			<xs:attribute name="resultClass" type="xs:string"/>
 			<xs:attribute name="cacheModel" type="xs:string"/>
+			<xs:attribute name="listClass" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="delete">
