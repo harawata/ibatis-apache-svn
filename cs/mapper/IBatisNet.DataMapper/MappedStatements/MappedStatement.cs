@@ -928,11 +928,11 @@ namespace IBatisNet.DataMapper.MappedStatements
 				// We have a 'normal' ResultMap
 
 				#region Not a select statement
-				if (mapping.TypeHandler == null) // Find the TypeHandler
+				if (mapping.TypeHandler == null || mapping.TypeHandler is UnknownTypeHandler) // Find the TypeHandler
 				{
 					lock(mapping) 
 					{
-						if (mapping.TypeHandler == null)
+						if (mapping.TypeHandler == null || mapping.TypeHandler is UnknownTypeHandler)
 						{
 							int columnIndex = 0;
 							if (mapping.ColumnIndex == ResultProperty.UNKNOWN_COLUMN_INDEX) 

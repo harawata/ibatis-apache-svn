@@ -137,6 +137,36 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		}
 
 		/// <summary>
+		/// Test null replacement in ParameterMap/Hahstable property
+		/// for System.DateTime.MinValue
+		/// </summary>
+		[Test] 
+		public void TestNullValueReplacementForDateTimeWithHashtable()
+		{
+			Account account = NewAccount6();
+
+			sqlMap.Insert("InsertAccountViaParameterMap", account);
+
+			Order order = new Order();
+			order.Id = 99;
+			order.CardExpiry = "09/11";
+			order.Account = account;
+			order.CardNumber = "154564656";
+			order.CardType = "Visa";
+			order.City = "Lyon";
+			order.Date = DateTime.MinValue; //<-- null replacement
+			order.PostalCode = "69004";
+			order.Province = "Rhone";
+			order.Street = "rue Durand";
+ 
+			sqlMap.Insert("InsertOrderViaParameterMap", order);
+
+			Hashtable orderTest = (Hashtable) sqlMap.QueryForObject("GetOrderByHashTable", 99);
+
+			Assert.AreEqual(orderTest["Date"], DateTime.MinValue);
+		}
+
+		/// <summary>
 		/// Test null replacement in ParameterMap property
 		/// for Guid
 		/// </summary>

@@ -319,7 +319,14 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			{
 				if (this.HasNullValue) 
 				{
-					value = _typeHandler.ValueOf(_propertyInfo.PropertyType, _nullValue);
+					if (_propertyInfo!=null)
+					{
+						value = _typeHandler.ValueOf(_propertyInfo.PropertyType, _nullValue);
+					}
+					else
+					{
+						value = _typeHandler.ValueOf(null, _nullValue);
+					}
 				}
 				else
 				{

@@ -62,6 +62,10 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			<result property="PostalCode" column="Order_PostalCode"/>
 		</resultMap>
 		
+		<resultMap id="order-hash" class="Hashtable">
+			<result property="Date"       column="Order_Date" nullValue="01/01/0001 00:00:00"/>
+		</resultMap>
+		
 		<resultMap id="order-with-types-result" class="Order">
 			<result property="Id"         column="Order_ID"			dbType="Int"/><!-- Int for SqlClient, Obdc; Integer for Oledb -->
 			<result property="Date"       column="Order_Date"		dbType="DateTime "/>
@@ -185,6 +189,12 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 					parameterClass="Int"
 					resultMap="lite-order-result-by-name" >
 			select * from Orders where Order_ID = #value#
+		</statement>
+		
+		<statement id="GetOrderByHashTable"
+					parameterClass="Int"
+					resultMap="order-hash" >
+			select Order_Date from Orders where Order_ID = #value#
 		</statement>
 		
 		<statement id="GetOrderLiteByColumnIndex"
