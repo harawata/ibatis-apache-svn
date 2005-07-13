@@ -1148,8 +1148,15 @@ namespace IBatisNet.DataMapper.Configuration
 				// Set sql statement SelectKey 
 				if (insert.SelectKey != null)
 				{
+					insert.SelectKey.Id = insert.Id;
 					insert.SelectKey.Initialize( _configScope );
-					insert.SelectKey.Id = insert.Id + DOT + "SelectKey";
+					insert.SelectKey.Id += DOT + "SelectKey";
+
+					// Initialize can also use _configScope.ErrorContext.ObjectId to get the id
+					// of the parent <select> node
+					// insert.SelectKey.Initialize( _configScope );
+					// insert.SelectKey.Id = insert.Id + DOT + "SelectKey";
+					
 					string commandText = xmlNode.SelectSingleNode( ApplyMappingNamespacePrefix(XML_SELECTKEY), _configScope.XmlNamespaceManager).FirstChild.InnerText.Replace('\n', ' ').Replace('\r', ' ').Replace('\t', ' ').Trim();
 					commandText = Resources.ParsePropertyTokens(commandText, _configScope.Properties);
 					StaticSql sql = new StaticSql(insert.SelectKey);

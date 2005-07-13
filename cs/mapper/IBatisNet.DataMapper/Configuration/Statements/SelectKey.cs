@@ -26,10 +26,15 @@
 
 #region Imports
 using System;
+using System.Reflection;
 using System.Xml.Serialization;
-
+using IBatisNet.Common.Exceptions;
+using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.DataMapper.Configuration.Alias;
 using IBatisNet.DataMapper.Exceptions;
+using IBatisNet.DataMapper.MappedStatements;
+using IBatisNet.DataMapper.Scope;
+
 #endregion
 
 namespace IBatisNet.DataMapper.Configuration.Statements
@@ -100,6 +105,42 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		[Obsolete("This public constructor with no parameter is not really obsolete, but is reserved for serialization.", false)]
 		public SelectKey():base()
 		{
+		}
+		#endregion
+
+		#region Methods
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="configurationScope">The scope of the configuration</param>
+		override internal void Initialize(ConfigurationScope configurationScope)
+		{
+			// the propertyName attribute on the selectKey node is optional
+			if (PropertyName.Length > 0)
+			{
+				// Id is equal to the parent <select> node's "id" attribute
+				MappedStatement insert = configurationScope.SqlMapper.GetMappedStatement(Id);
+
+				Type insertParameterClass = insert.Statement.ParameterClass;
+
+				// make sure the PropertyName is a valid settable property of the <insert> node's parameterClass
+				if (insertParameterClass != null && 
+					configurationScope.TypeHandlerFactory.IsSimpleType(insertParameterClass) == false)
+				{
+					configurationScope.ErrorContext.MoreInfo = String.Format("Looking for settable property named '{0}' on type '{1}' for selectKey node of statement id '{2}'.",
+						PropertyName, // 0
+						insert.Statement.ParameterClass.Name, // 1
+						Id); // 2
+
+					// we expect this to throw an exception if the property cannot be found; GetSetter is
+					// called instead of HasWriteableProperty becuase we want the same wording for 
+					// property not found exceptions; GetSetter and HasWritableProperty both use the 
+					// same internal cache for looking up the ProperyInfo object
+					ReflectionInfo.GetInstance(insert.Statement.ParameterClass).GetSetter(PropertyName);
+				}
+			}
+
+			base.Initialize(configurationScope);
 		}
 		#endregion
 
