@@ -30,136 +30,35 @@
 
     <h2>News</h2>
 
-      <h3>June 10: .NET DataMapper 1.2.1 and DataAccess 1.6.1 Beta!</h3>
+      <h3>iBATIS for Java 2.1.5 Released</h3>
+      <p>(July 17, 2005) We've released a maintenance release, with a few bonuses as well.  The most
+      notable changes are: 1) iBATIS no longer depends on commons logging, and 2) the entity resolvers
+      are now smarter so that they should resolve DTDs without the network as long as you have
+      a correct XML DOCTYPE header.  In addition to that, we've fixed a bunch of bugs including:
+      </p>
+      <ul>
+        <li>Fixed IBATIS-136 groupBy not carried forward to extended result maps</li>
+        <li>Fixed IBATIS-139 discriminator being applied to too many result maps (thanks Sven)</li>
+        <li>Fixed IBATIS-152, 149, 116 null result sets now handled properly by JDBC logging classes (thanks Sven)</li>
+        <li>Fixed IBATIS-146 consumes additional result sets before retrieving output params (JTDS fix)</li>
+        <li>Fixed IBATIS-130 parameter maps don't allow for complete TypeHandler implementations</li>
+        <li>Fixed IBATIS-148 fixed dynamic SQL in iterates</li>
+      </ul>
+      <p><a href="downloads.html">Get iBATIS 2.1.5 from the Downloads page.</a><br/>
+      <i>Note:  This will be the last build deployed by SourceForge.
+      Future builds will be deployed using Apache infrastructure.</i>
+      </p>
 
-      <p>Just a few updates for the binary distributions and documentation:</p>
-
+      <h3>.NET DataMapper 1.2.1 and DataAccess 1.6.1 Beta!</h3>
+      <p>(June 10, 2005) Just a few updates for the binary distributions and documentation:</p>
       <ul>
         <li>Added a DomSqlMapBuilder constructor to specify whether or not the SqlMap config
         document should be validated: <strong>DomSqlMapBuilder(bool validateSqlMapConfig)</strong></li>
-
         <li>Fixed JIRA-78 issue for specifying a cacheModel in another SqlMap.</li>
-
         <li>Updated a few exception messages, corrected some documentation errors, and updated tutorial docs and source.</li>
-
       </ul>
-
       <p><strong><a href="downloads.html">Download the iBATIS.NET DataMapper 1.2.1
       and DataAccess 1.6.1 Betas now!</a></strong></p>
 
-    <h3>June 1: .NET DataMapper 1.2 and DataAccess 1.6 Alpha!</h3>
-
-    <p>Yes, after 5 long and productive months, the new Alpha releases of the
-    DataMapper and DataAccess frameworks are ready! We also have updated
-    documentation and the latest source available for download.</p>
-
-    <p>Here's a list of just some of the changes for the
-    <strong>DataMapper</strong> framework:</p>
-
-    <ul>
-      <li>A new <strong>DomSqlMapBuilder configuration API</strong> (accepts
-      Stream, Uri, FileInfo, and XmlDocument).</li>
-
-      <li>Greatly <strong>improved logging</strong> and <strong>exception
-      handling</strong>!</li>
-
-      <li>New <strong>Custom Type Handler</strong> support for parameters and
-      results!</li>
-
-      <li><strong>Class inheritance</strong> mappings using
-      <strong>&lt;discriminator&gt;</strong> and
-      <strong>&lt;submap&gt;</strong> elements.</li>
-
-      <li>Automatic SqlMap.config document validation with an updated
-      schema.</li>
-
-      <li>Optional Data Map (SqlMap) document validation using a new
-      &lt;setting validateSqlMap="true"/&gt; element.</li>
-
-      <li>Added Support for multiple "properties.config" files.</li>
-
-      <li>Improved Oracle and PostgreSQL support!</li>
-
-      <li>Updated the use of Castle.DynamicProxy to v1.1.0.</li>
-
-      <li>And bug fixes too!</li>
-    </ul>
-
-    <p>On the <strong>DataAccess</strong> side, the framework has seen these
-    updates:</p>
-
-    <ul>
-      <li>New <strong>&lt;daoSessionHandler&gt;</strong> configuration syntax
-      (prior syntax is still supported).</li>
-
-      <li>A new DomDaoManagerBuilder configuration API.</li>
-
-      <li>Support for multiple "properties.config" files.</li>
-
-      <li>The ability to define property "keys" and "values" in your
-      dao.config file.</li>
-    </ul>
-
-    <p><strong><a href="downloads.html">Download the iBATIS.NET DataMapper 1.2
-    and DataAccess 1.6 Alphas now!</a></strong></p>
-
-    <h3>May 22: .NET DataMapper 1.1 and DataAccess 1.5 General
-    Availability!</h3>
-
-    <p>Some of the new features for the <strong>DataMapper</strong> framework
-    include:</p>
-
-    <ul>
-      <li>A new <strong>CLR "type" attribute</strong> for parameterMaps and
-      resultMaps.</li>
-
-      <li>New <strong>"extends" attribute</strong> for parameterMaps,
-      resultMaps, and statements.</li>
-
-      <li>Support for <strong>Distributed Transactions</strong> using a
-      TransactionScope object in IBatisNet.Common.</li>
-
-      <li>Added support for <strong>embedded resources</strong> for your
-      properties file and SqlMaps.</li>
-    </ul>
-
-    <p>Some of the new features for the <strong>DataAccess</strong> framework
-    include:</p>
-
-    <ul>
-      <li>New <strong>NHibernate support</strong>.</li>
-
-      <li>Support for <strong>Distributed Transactions</strong> using a
-      TransactionScope object in IBatisNet.Common.</li>
-
-      <li>The use of <strong>Castle.DynamicProxy v1.0.3</strong>.</li>
-    </ul>
-
-    <p>These releases include updated documentation for both the DataMapper
-    and DataAccess frameworks. <br /><a href="downloads.html">Download
-    iBATIS.NET DataMapper 1.1 and DataAccess 1.5</a></p>
-
-    <h3>May 16: iBATIS for Java 2.1.0 Released!</h3>
-
-    <p>This release includes some cool new features like &lt;discriminator&gt;
-    and &lt;subMap&gt; tags for better support of class inheritance. There's
-    an example of how to use these new tags <a
-    href="http://svn.apache.org/repos/asf/incubator/ibatis/trunk/java/mapper/mapper2/test/com/ibatis/sqlmap/maps/Documents.xml" target="_new">here</a>.
-    Normally 2.x minor releases are feature releases, but a number of bug
-    fixes and improvements have made their way into 2.1.0 as well. <br /><a
-    href="downloads.html">Download 2.1.0</a></p>
-
-    <h3>May 9: New Website</h3>
-
-    <p>Welcome to our new website. It's now more focused on the Apache iBATIS
-    tools like Data Mapper and Data Access Objects, and the example Pet Store
-    applications. If there's something missing that you found useful before,
-    please let us know (see issue tracker to the left). The new site is free
-    of tool dependencies and is based on Staticmesh from <a
-    href="http://www.pols.co.uk/downloads/static-mesh/">Pols Consulting</a>.
-    The idea is to maintain a single site, but we'll likely deploy it to both
-    the apache.org site and ibatis.com, or perhaps we'll just forward
-    ibatis.com to apache.org. Either way, we'll have one site that is
-    maintainable by the whole team. Enjoy.</p>
   </body>
 </html>

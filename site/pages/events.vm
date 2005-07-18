@@ -5,7 +5,38 @@
 
 <body>
 
-	
+<h3>December 10, 2005 - San Diego, California, USA</h3>
+<strong>ApacheCon US 2005</strong>
+<p>
+We're not confirmed for it, but you should go anyway! ;-)<br/>
+Visit the <a href="http://apachecon.com/2005/US/" target="_new">ApacheCon homepage</a> for more information.
+</p>
+
+<h3>Sept 30, 2005 - Calgary, Alberta, Canada</h3>
+<strong>Western Canada Java Software Symposium</strong>
+<p>
+Clinton will discuss Dealing with Enterprise Database Challenges In Object Oriented Applications.
+This presentation will focus on database challenges that object oriented developers often face in an
+enterprise environment. Object Relational Mapping (ORM) tools are not ideal for all databases, and
+therefore alternatives must be sought. In this discussion, we'll focus on using the iBATIS Data Mapper
+to achieve similar advantages as provided by an ORM tool, but without some of the complications that
+can arise from an object relational mapping approach. The iBATIS Data Mapping framework is a popular
+alternative to ORM tools, while being a complementary addition to any architecture.<br/>
+Visit the <a href="http://www.nofluffjuststuff.com/" target="_new">No Fluff Just Stuff homepage</a> for more information.
+</p>
+
+<h3>October 5, 2005 - Orlando, Florida, USA</h3>
+<strong>Java In Action</strong>
+<p>Clinton will discuss Dealing with Enterprise Database Challenges In Object Oriented Applications.
+This presentation will focus on database challenges that object oriented developers often face in an
+enterprise environment. Object Relational Mapping (ORM) tools are not ideal for all databases, and
+therefore alternatives must be sought. In this discussion, we'll focus on using the iBATIS Data Mapper
+to achieve similar advantages as provided by an ORM tool, but without some of the complications that
+can arise from an object relational mapping approach. The iBATIS Data Mapping framework is a popular
+alternative to ORM tools, while being a complementary addition to any architecture.<br/>
+Visit the <a href="http://javainaction.techtarget.com/" target="_new">Java In Action homepage</a> for more information.
+</p>
+
 <h3>June 23, 2005 - Milan</h3>
 <strong>SUN Microsystems Java Conference</strong>
 <p>
