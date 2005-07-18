@@ -226,6 +226,6 @@ public interface SqlMapClient extends SqlMapExecutor, SqlMapTransactionManager {
    * @return An instance of iface that can be used to call mapped statements directly in a typesafe
    * manner.
    */
-  public Object getMapper (Class iface);
+  //public Object getMapper (Class iface);
 
 }

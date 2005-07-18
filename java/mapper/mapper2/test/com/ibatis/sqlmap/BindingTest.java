@@ -7,17 +7,23 @@ import java.util.List;
 import java.util.Map;
 
 import com.ibatis.common.util.PaginatedList;
+import com.ibatis.sqlmap.engine.impl.SqlMapClientImpl;
 
 public class BindingTest  extends BaseSqlMapTest {
+
 
    protected void setUp() throws Exception {
     initSqlMap("com/ibatis/sqlmap/maps/SqlMapConfig.xml", null);
     initScript("scripts/docs-init.sql");
   }
 
+  private Object getMapper(Class c) {
+    return ((SqlMapClientImpl)sqlMap).getMapper(c);
+  }
+
   public void testSelectListStatement () throws Exception {
 
-    DocumentMapper dm = (DocumentMapper) sqlMap.getMapper(DocumentMapper.class);
+    DocumentMapper dm = (DocumentMapper) getMapper(DocumentMapper.class);
     List list = dm.getDocuments();
 
     assertNotNull(list);
@@ -26,7 +32,7 @@ public class BindingTest  extends BaseSqlMapTest {
 
   public void testSelectSubListStatement () throws Exception {
 
-    DocumentMapper dm = (DocumentMapper) sqlMap.getMapper(DocumentMapper.class);
+    DocumentMapper dm = (DocumentMapper) getMapper(DocumentMapper.class);
 
     List list = dm.getDocuments(null, 2, 2);
 
@@ -36,7 +42,7 @@ public class BindingTest  extends BaseSqlMapTest {
 
   public void testSelectPaginatedListStatement () throws Exception {
 
-    DocumentMapper dm = (DocumentMapper) sqlMap.getMapper(DocumentMapper.class);
+    DocumentMapper dm = (DocumentMapper) getMapper(DocumentMapper.class);
 
     PaginatedList list = dm.getDocuments(null, 3);
 
@@ -46,7 +52,7 @@ public class BindingTest  extends BaseSqlMapTest {
 
   public void testSelectMapStatement () throws Exception {
 
-    DocumentMapper dm = (DocumentMapper) sqlMap.getMapper(DocumentMapper.class);
+    DocumentMapper dm = (DocumentMapper) getMapper(DocumentMapper.class);
 
     Map map = dm.getDocuments(null, "id");
 
@@ -56,7 +62,7 @@ public class BindingTest  extends BaseSqlMapTest {
 
   public void testSelectMapWithValueStatement () throws Exception {
 
-    DocumentMapper dm = (DocumentMapper) sqlMap.getMapper(DocumentMapper.class);
+    DocumentMapper dm = (DocumentMapper) getMapper(DocumentMapper.class);
 
     Map map = dm.getDocuments(null, "id", "title");
 
@@ -66,7 +72,7 @@ public class BindingTest  extends BaseSqlMapTest {
 
   public void testSelectObjectStatement () throws Exception {
 
-    DocumentMapper dm = (DocumentMapper) sqlMap.getMapper(DocumentMapper.class);
+    DocumentMapper dm = (DocumentMapper) getMapper(DocumentMapper.class);
 
     Document doc = dm.getDocument(1);
 
@@ -76,7 +82,7 @@ public class BindingTest  extends BaseSqlMapTest {
 
   public void testInsertStatement () throws Exception {
 
-    DocumentMapper dm = (DocumentMapper) sqlMap.getMapper(DocumentMapper.class);
+    DocumentMapper dm = (DocumentMapper) getMapper(DocumentMapper.class);
 
     Document doc = dm.getDocument(1);
     doc.setId(99);
@@ -89,7 +95,7 @@ public class BindingTest  extends BaseSqlMapTest {
 
   public void testUpdateStatement () throws Exception {
 
-    DocumentMapper dm = (DocumentMapper) sqlMap.getMapper(DocumentMapper.class);
+    DocumentMapper dm = (DocumentMapper) getMapper(DocumentMapper.class);
 
     Document doc = dm.getDocument(1);
     doc.setTitle("blah");
@@ -102,7 +108,7 @@ public class BindingTest  extends BaseSqlMapTest {
 
   public void testDeleteStatement () throws Exception {
 
-    DocumentMapper dm = (DocumentMapper) sqlMap.getMapper(DocumentMapper.class);
+    DocumentMapper dm = (DocumentMapper) getMapper(DocumentMapper.class);
 
     Document doc = dm.getDocument(1);
     dm.deleteDocument(doc);
