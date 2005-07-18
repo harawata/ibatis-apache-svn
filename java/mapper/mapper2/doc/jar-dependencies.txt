@@ -1,9 +1,7 @@
 JAR File Dependencies
 ---------------------
 
-iBATIS 2.0 has very few dependencies.  If you're running JDK 1.4, then
-the only real dependency is on the Jakarta Commons Logging framework included in
-the /lib directory.
+iBATIS 2.0 has no dependencies, as long as you're running JDK 1.4.
 
   * If you're running less than JDK 1.4 and if your app server also
     doesn't already supply the following, then you may need these:    
@@ -29,8 +27,9 @@ work.
 
       OSCache 2.0.1          (http://www.opensymphony.com/oscache/)
 
-  * If you want to use advanced logging you'll need:
+  * If you want to use advanced logging you'll need one or both of the following:
 
+      Commons Logging        (http://jakarta.apache.org/commons/)
       Log4J 1.2.8            (http://logging.apache.org/log4j/docs/)
 
   * If you want to use legacy (1.x) DAO framework or SQL Map APIs you'll need:
