@@ -25,13 +25,10 @@
 #endregion
 
 #region Imports
+
 using System;
-using System.Reflection;
 using System.Xml.Serialization;
-using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Utilities.Objects;
-using IBatisNet.DataMapper.Configuration.Alias;
-using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.MappedStatements;
 using IBatisNet.DataMapper.Scope;
 
@@ -60,7 +57,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		/// <summary>
 		/// Extend statement attribute
 		/// </summary>
-		[XmlIgnoreAttribute]
+		[XmlIgnore]
 		public override string ExtendSatement
 		{
 			get { return string.Empty;  }
@@ -91,7 +88,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		/// <summary>
 		/// True if it is a post-generated key.
 		/// </summary>
-		[XmlIgnoreAttribute]
+		[XmlIgnore]
 		public bool isAfter
 		{
 			get { return _selectKeyType == SelectKeyType.post; }
