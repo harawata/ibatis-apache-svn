@@ -173,11 +173,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "DaoSessionHandlers\DaoSessionHandlerFactory.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "DaoSessionHandlers\SimpleDaoSession.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

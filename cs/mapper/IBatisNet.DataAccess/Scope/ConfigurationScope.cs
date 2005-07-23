@@ -25,14 +25,12 @@
 #endregion
 
 #region Using
-using System;
-using System.Data;
-using System.Collections;
+
 using System.Collections.Specialized;
 using System.Xml;
-
-using IBatisNet.DataAccess.DaoSessionHandlers;
 using IBatisNet.DataAccess.Configuration;
+using IBatisNet.DataAccess.DaoSessionHandlers;
+
 #endregion
 
 namespace IBatisNet.DataAccess.Scope
@@ -67,9 +65,9 @@ namespace IBatisNet.DataAccess.Scope
 			_providers.Clear();
 			_daoSectionHandlers.Clear();
 
-			_daoSectionHandlers.Add(DomDaoManagerBuilder.DEFAULT_DAOSESSIONHANDLER_NAME, DaoSessionHandlerFactory.GetDaoSessionHandler("ADONET"));
-			_daoSectionHandlers.Add("ADONET", DaoSessionHandlerFactory.GetDaoSessionHandler("ADONET"));
-			_daoSectionHandlers.Add("SqlMap", DaoSessionHandlerFactory.GetDaoSessionHandler("SqlMap"));
+			_daoSectionHandlers.Add(DomDaoManagerBuilder.DEFAULT_DAOSESSIONHANDLER_NAME, typeof(SimpleDaoSessionHandler));
+			_daoSectionHandlers.Add("ADONET", typeof(SimpleDaoSessionHandler));
+			_daoSectionHandlers.Add("SqlMap", typeof(SqlMapDaoSessionHandler));
 
 		}
 		#endregion 

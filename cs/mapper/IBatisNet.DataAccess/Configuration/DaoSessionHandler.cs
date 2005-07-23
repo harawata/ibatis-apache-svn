@@ -25,16 +25,11 @@
 #endregion
 
 #region Imports
+
 using System;
 using System.Xml.Serialization;
-using System.Reflection;
-
-using IBatisNet.Common;
-using IBatisNet.Common.Exceptions;    
 using IBatisNet.Common.Utilities;
 
-using IBatisNet.DataAccess.Interfaces;
-using IBatisNet.DataAccess.Exceptions;
 #endregion
 
 namespace IBatisNet.DataAccess.Configuration
@@ -46,13 +41,6 @@ namespace IBatisNet.DataAccess.Configuration
 	[XmlRoot("handler", Namespace="http://ibatis.apache.org/dataAccess")]
 	public class DaoSessionHandler
 	{
-		#region Constants
-		/// <summary>
-		/// An empty object array.
-		/// </summary>
-		public static readonly object [] EmptyObjects = new object [] {};
-		#endregion
-
 		#region Fields
 		[NonSerialized]
 		private string _name = string.Empty;
@@ -92,6 +80,13 @@ namespace IBatisNet.DataAccess.Configuration
 			}
 		}
 
+		/// <summary>
+		/// The impelmenattion type
+		/// </summary>
+		public Type TypeInstance
+		{
+			get { return Resources.TypeForName(_implementation); }
+		}
 
 		/// <summary>
 		/// 
@@ -134,31 +129,6 @@ namespace IBatisNet.DataAccess.Configuration
 			_name = name;
 		}
 		#endregion
-
-		#region Methods
-		/// <summary>
-		/// Build an implementation of the IDaoSessionHandler
-		/// </summary>
-		/// <returns>An implementation</returns>
-		public IDaoSessionHandler GetIDaoSessionHandler()
-		{
-			Type type = null;
-			
-			try
-			{
-				type = Resources.TypeForName(_implementation);
-
-				return (IDaoSessionHandler)Activator.CreateInstance(type, EmptyObjects);
-			}
-			catch(Exception e)
-			{
-				throw new ConfigurationException(
-					string.Format("DaoManager could not configure DaoSessionHandler. DaoSessionHandler named \"{0}\", failed. Cause: {1}", _name, e.Message),e
-					);
-			}
-		}
-		#endregion
-
 
 	}
 }

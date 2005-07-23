@@ -58,8 +58,11 @@ namespace IBatisNet.DataAccess.Configuration
 		private const string PROVIDER_XML_NAMESPACE = "http://ibatis.apache.org/providers";
 		private const string DAO_XML_NAMESPACE = "http://ibatis.apache.org/dataAccess";
 
-		private const string PROPERTY_ELEMENT_KEY_ATTRIB = "key";
-		private const string PROPERTY_ELEMENT_VALUE_ATTRIB = "value";
+		private const string KEY_ATTRIBUTE = "key";
+		private const string VALUE_ATTRIBUTE = "value";
+		private const string ID_ATTRIBUTE = "id";
+
+		private readonly object [] EmptyObjects = new object [] {};
 
 		/// <summary>
 		/// Key for default config name
@@ -445,13 +448,13 @@ namespace IBatisNet.DataAccess.Configuration
 					configurationScope.ErrorContext.ObjectId = daoSessionHandler.Name;
 					configurationScope.ErrorContext.MoreInfo = "build daoSession handler";
 
-					IDaoSessionHandler sessionHandler = daoSessionHandler.GetIDaoSessionHandler();
+					//IDaoSessionHandler sessionHandler = daoSessionHandler.GetIDaoSessionHandler();
 
-					configurationScope.DaoSectionHandlers[daoSessionHandler.Name] = sessionHandler;
+					configurationScope.DaoSectionHandlers[daoSessionHandler.Name] = daoSessionHandler.TypeInstance;
 
 					if (daoSessionHandler.IsDefault == true)
 					{
-						configurationScope.DaoSectionHandlers[DEFAULT_DAOSESSIONHANDLER_NAME] = sessionHandler;
+						configurationScope.DaoSectionHandlers[DEFAULT_DAOSESSIONHANDLER_NAME] = daoSessionHandler.TypeInstance;
 					}
 				}
 			}
@@ -538,12 +541,13 @@ namespace IBatisNet.DataAccess.Configuration
 				resources.Add( "UseConfigFileWatcher", configurationScope.UseConfigFileWatcher);
 
 				IDaoSessionHandler sessionHandler = null;
+				Type typeSessionHandler = null;
 
 				if (nodeSessionHandler!= null)
 				{
 					configurationScope.ErrorContext.Resource = nodeSessionHandler.InnerXml.ToString();
 					
-					sessionHandler = (IDaoSessionHandler)configurationScope.DaoSectionHandlers[nodeSessionHandler.Attributes["id"].Value];
+					typeSessionHandler = configurationScope.DaoSectionHandlers[nodeSessionHandler.Attributes[ID_ATTRIBUTE].Value] as Type;
 
 					// Parse property node
 					foreach(XmlNode nodeProperty in nodeSessionHandler.SelectNodes( ApplyNamespacePrefix(XML_PROPERTY), configurationScope.XmlNamespaceManager ))
@@ -554,11 +558,22 @@ namespace IBatisNet.DataAccess.Configuration
 				}
 				else
 				{
-					sessionHandler = (IDaoSessionHandler)configurationScope.DaoSectionHandlers[DEFAULT_DAOSESSIONHANDLER_NAME];
+					typeSessionHandler = configurationScope.DaoSectionHandlers[DEFAULT_DAOSESSIONHANDLER_NAME] as Type;
 				}
 
 				// Configure the sessionHandler
 				configurationScope.ErrorContext.ObjectId = sessionHandler.GetType().FullName;
+
+				try
+				{
+					sessionHandler =(IDaoSessionHandler)Activator.CreateInstance(typeSessionHandler, EmptyObjects);
+				}
+				catch(Exception e)
+				{
+					throw new ConfigurationException(
+						string.Format("DaoManager could not configure DaoSessionHandler. DaoSessionHandler of type \"{0}\", failed. Cause: {1}", typeSessionHandler.Name, e.Message),e
+						);
+				}
 
 				sessionHandler.Configure(configurationScope.Properties,  resources );
 
@@ -605,8 +620,8 @@ namespace IBatisNet.DataAccess.Configuration
 				{
 					foreach (XmlNode propertyNode in nodeProperties.SelectNodes(ApplyNamespacePrefix(XML_PROPERTY), configurationScope.XmlNamespaceManager))
 					{
-						XmlAttribute keyAttrib = propertyNode.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB];
-						XmlAttribute valueAttrib = propertyNode.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB];
+						XmlAttribute keyAttrib = propertyNode.Attributes[KEY_ATTRIBUTE];
+						XmlAttribute valueAttrib = propertyNode.Attributes[VALUE_ATTRIBUTE];
 
 						if ( keyAttrib != null && valueAttrib!=null)
 						{
@@ -620,8 +635,8 @@ namespace IBatisNet.DataAccess.Configuration
 							
 							foreach (XmlNode node in propertiesConfig.SelectNodes(XML_SETTINGS_ADD))
 							{
-								configurationScope.Properties[node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value] = node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value;
-								_logger.Info( string.Format("Add property \"{0}\" value \"{1}\"",node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value,node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value) );
+								configurationScope.Properties[node.Attributes[KEY_ATTRIBUTE].Value] = node.Attributes[VALUE_ATTRIBUTE].Value;
+								_logger.Info( string.Format("Add property \"{0}\" value \"{1}\"",node.Attributes[KEY_ATTRIBUTE].Value,node.Attributes[VALUE_ATTRIBUTE].Value) );
 							}
 						}
 					}
@@ -639,8 +654,8 @@ namespace IBatisNet.DataAccess.Configuration
 
 					foreach (XmlNode node in propertiesConfig.SelectNodes(XML_SETTINGS_ADD))
 					{
-						configurationScope.Properties[node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value] = node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value;
-						_logger.Info( string.Format("Add property \"{0}\" value \"{1}\"",node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value,node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value) );
+						configurationScope.Properties[node.Attributes[KEY_ATTRIBUTE].Value] = node.Attributes[VALUE_ATTRIBUTE].Value;
+						_logger.Info( string.Format("Add property \"{0}\" value \"{1}\"",node.Attributes[KEY_ATTRIBUTE].Value,node.Attributes[VALUE_ATTRIBUTE].Value) );
 					}					
 				}
 //				// Load the file defined by the resource attribut
