@@ -835,7 +835,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 						CacheKeyType.Map);
 				}
 
-				object mapAsObject = (IDictionary)_statement.CacheModel[key];
+				object mapAsObject = _statement.CacheModel[key];
 				// check if this query has alreay been run 
 				if (mapAsObject == CacheModel.NULL_OBJECT) 
 				{ 
