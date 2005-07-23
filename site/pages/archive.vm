@@ -7,6 +7,17 @@
 
      <h2>News Archive</h2>
 
+    <h3>.NET DataMapper 1.2.1 and DataAccess 1.6.1 Beta!</h3>
+    <p>(June 10, 2005) Just a few updates for the binary distributions and documentation:</p>
+    <ul>
+      <li>Added a DomSqlMapBuilder constructor to specify whether or not the SqlMap config
+      document should be validated: <strong>DomSqlMapBuilder(bool validateSqlMapConfig)</strong></li>
+      <li>Fixed JIRA-78 issue for specifying a cacheModel in another SqlMap.</li>
+      <li>Updated a few exception messages, corrected some documentation errors, and updated tutorial docs and source.</li>
+    </ul>
+    <p><strong><a href="downloads.html">Download the iBATIS.NET DataMapper 1.2.1
+    and DataAccess 1.6.1 Betas now!</a></strong></p>
+
     <h3>June 1: .NET DataMapper 1.2 and DataAccess 1.6 Alpha!</h3>
 
     <p>Yes, after 5 long and productive months, the new Alpha releases of the
