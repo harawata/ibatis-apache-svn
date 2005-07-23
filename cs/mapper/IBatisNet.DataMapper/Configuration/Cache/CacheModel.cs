@@ -25,16 +25,18 @@
 #endregion
 
 #region Using
+
 using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
 using System.Xml.Serialization;
-
 using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Logging;
+using IBatisNet.Common.Utilities;
 using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.MappedStatements;
+
 #endregion
 
 namespace IBatisNet.DataMapper.Configuration.Cache
@@ -50,7 +52,7 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 		#region Fields
 
 		[NonSerialized]
-		private static readonly ILog _logger = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
+		private static readonly ILog _logger = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
 		
 		/// <summary>
 		/// Constant to turn off periodic cache flushes
@@ -138,9 +140,9 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 		/// </summary>
 		static CacheModel()
 		{
-			_cacheControllerAliases.Add("MEMORY","IBatisNet.DataMapper.Configuration.Cache.Memory.MemoryCacheControler");
-			_cacheControllerAliases.Add("LRU","IBatisNet.DataMapper.Configuration.Cache.Lru.LruCacheController");
-			_cacheControllerAliases.Add("FIFO","IBatisNet.DataMapper.Configuration.Cache.Fifo.FifoCacheController");
+			_cacheControllerAliases.Add("MEMORY","IBatisNet.DataMapper.Configuration.Cache.Memory.MemoryCacheControler, IBatisNet.DataMapper");
+			_cacheControllerAliases.Add("LRU","IBatisNet.DataMapper.Configuration.Cache.Lru.LruCacheController, IBatisNet.DataMapper");
+			_cacheControllerAliases.Add("FIFO","IBatisNet.DataMapper.Configuration.Cache.Fifo.FifoCacheController, IBatisNet.DataMapper");
 		}
 
 		/// <summary>
@@ -148,7 +150,7 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 		/// </summary>
 		public CacheModel() 
 		{
-			_lastFlush = System.DateTime.Now.Ticks;
+			_lastFlush = DateTime.Now.Ticks;
 		}
 		#endregion
 
@@ -162,9 +164,6 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 			_flushInterval.Initialize();
 
 			// Initialize controller
-			Assembly assembly = null;
-			Type type = null;
-
 			_implementation = _cacheControllerAliases[_implementation.ToUpper()] as string;
 
 			try 
@@ -174,10 +173,8 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 					throw new DataMapperException ("Error instantiating cache controller for cache named '"+_id+"'. Cause: The class for name '"+_implementation+"' could not be found.");
 				}
 
-				assembly = Assembly.GetCallingAssembly();
-
 				// Build the CacheController
-				type = assembly.GetType(_implementation, true);
+				Type type = Resources.TypeForName(_implementation);
 				object[] arguments = new object[0];
 
 				_controller = (ICacheController)Activator.CreateInstance(type, arguments);
@@ -234,7 +231,7 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 		/// </summary>
 		public void Flush() 
 		{
-			_lastFlush = System.DateTime.Now.Ticks;
+			_lastFlush = DateTime.Now.Ticks;
 			_controller.Flush();
 		}
 
@@ -255,7 +252,7 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 				lock(this) 
 				{
 					if (_lastFlush != NO_FLUSH_INTERVAL
-						&& (System.DateTime.Now.Ticks - _lastFlush > _flushInterval.Interval)) 
+						&& (DateTime.Now.Ticks - _lastFlush > _flushInterval.Interval)) 
 					{
 						Flush();
 					}

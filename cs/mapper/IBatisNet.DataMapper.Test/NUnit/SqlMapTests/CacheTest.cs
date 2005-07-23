@@ -1,18 +1,15 @@
 
+
+//<-- To access the definition of the deleagte RowDelegate
 using System;
 using System.Collections;
 using System.Threading;
-using System.Configuration;
-
-using NUnit.Framework;
-
 using IBatisNet.Common;
 using IBatisNet.Common.Utilities;
-using IBatisNet.DataMapper; //<-- To access the definition of the deleagte RowDelegate
+using IBatisNet.DataMapper.Configuration.Cache;
 using IBatisNet.DataMapper.MappedStatements;
-
-using IBatisNet.DataMapper.Test;
 using IBatisNet.DataMapper.Test.Domain;
+using NUnit.Framework;
 
 namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 {
@@ -65,14 +62,14 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		{
 			IList list = sqlMap.QueryForList("GetCachedAccountsViaResultMap", null);
 
-			int firstId = IBatisNet.Common.Utilities.HashCodeProvider.GetIdentityHashCode(list);
+			int firstId = HashCodeProvider.GetIdentityHashCode(list);
 				//System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(list);
 
 			list = sqlMap.QueryForList("GetCachedAccountsViaResultMap", null);
 
 			//Console.WriteLine(sqlMap.GetDataCacheStats());
 
-			int secondId = IBatisNet.Common.Utilities.HashCodeProvider.GetIdentityHashCode(list);
+			int secondId = HashCodeProvider.GetIdentityHashCode(list);
 				//System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(list);
 
 			Assert.AreEqual(firstId, secondId);
@@ -83,12 +80,13 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
 			list = sqlMap.QueryForList("GetCachedAccountsViaResultMap", null);
 
-			int thirdId = IBatisNet.Common.Utilities.HashCodeProvider.GetIdentityHashCode(list);
+			int thirdId = HashCodeProvider.GetIdentityHashCode(list);
 
 			Assert.IsTrue(firstId != thirdId);
 
 			//Console.WriteLine(sqlMap.GetDataCacheStats());
 		}
+
 
 		/// <summary>
 		/// Test flush Cache
@@ -98,11 +96,11 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		{
 			IList list = sqlMap.QueryForList("GetCachedAccountsViaResultMap", null);
 
-			int firstId = IBatisNet.Common.Utilities.HashCodeProvider.GetIdentityHashCode(list);
+			int firstId = HashCodeProvider.GetIdentityHashCode(list);
 
 			list = sqlMap.QueryForList("GetCachedAccountsViaResultMap", null);
 
-			int secondId = IBatisNet.Common.Utilities.HashCodeProvider.GetIdentityHashCode(list);
+			int secondId = HashCodeProvider.GetIdentityHashCode(list);
 
 			Assert.AreEqual(firstId, secondId);
 
@@ -110,7 +108,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
 			list = sqlMap.QueryForList("GetCachedAccountsViaResultMap", null);
 
-			int thirdId = IBatisNet.Common.Utilities.HashCodeProvider.GetIdentityHashCode(list);
+			int thirdId = HashCodeProvider.GetIdentityHashCode(list);
 
 			Assert.IsTrue(firstId != thirdId);
 		}
@@ -141,12 +139,90 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
 			list = sqlMap.QueryForList("GetCachedAccountsViaResultMap", null);
 
-			int thirdId = IBatisNet.Common.Utilities.HashCodeProvider.GetIdentityHashCode(list);
+			int thirdId = HashCodeProvider.GetIdentityHashCode(list);
 
 			Assert.IsTrue(firstId != thirdId);
 
 		}
 
+
+		/// <summary>
+		/// Test Cache Null Object
+		/// </summary>
+		[Test]
+		public void TestCacheNullObject()
+		{
+			CacheModel cache = GetCacheModel();
+			cache["testKey"] = null;
+
+			object returnedObject = cache["testKey"];
+			Assert.IsNull(returnedObject);
+		}
+
+
+		/// <summary>
+		/// Test CacheHit
+		/// </summary>
+		[Test]
+		public void TestCacheHit() 
+		{
+			CacheModel cache = GetCacheModel();
+			string value = "testValue";
+			cache["testKey"] = value;
+
+			object returnedObject = cache["testKey"];
+			Assert.AreEqual(value, returnedObject);
+			Assert.AreEqual(HashCodeProvider.GetIdentityHashCode(value), HashCodeProvider.GetIdentityHashCode(returnedObject));
+			Assert.AreEqual(1, cache.HitRatio);
+		}
+
+		/// <summary>
+		/// Test CacheMiss
+		/// </summary>
+		[Test]
+		public void TestCacheMiss() 
+		{
+			CacheModel cache = GetCacheModel();
+			string value = "testValue";
+			cache["testKey"] = value;
+
+			object returnedObject = cache["wrongKey"];
+			Assert.IsTrue(!value.Equals(returnedObject));
+			Assert.IsNull(returnedObject) ;
+			Assert.AreEqual(0, cache.HitRatio);
+		}
+		
+		/// <summary>
+		/// Test CacheHitMiss
+		/// </summary>
+		[Test]
+		public void TestCacheHitMiss() 
+		{
+			CacheModel cache = GetCacheModel();
+			string value = "testValue";
+			cache["testKey"] = value;
+
+			object returnedObject = cache["testKey"];
+			Assert.AreEqual(value, returnedObject);
+			Assert.AreEqual(HashCodeProvider.GetIdentityHashCode(value), HashCodeProvider.GetIdentityHashCode(returnedObject));
+
+			returnedObject = cache["wrongKey"];
+			Assert.IsTrue(!value.Equals(returnedObject));
+			Assert.IsNull(returnedObject) ;
+			Assert.AreEqual(0.5, cache.HitRatio);
+		}
+
+
+		private CacheModel GetCacheModel() 
+		{
+			CacheModel cache = new CacheModel();
+			cache.FlushInterval = new FlushInterval();
+			cache.FlushInterval.Minutes = 5;
+			cache.Implementation = "LRU";
+			cache.Initialize();
+
+			return cache;
+		}
 
 		#endregion
 
@@ -168,15 +244,15 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			{
 				try 
 				{
-					MappedStatement statement = sqlMap.GetMappedStatement( _statementName );
+					MappedStatement statement = _sqlMap.GetMappedStatement( _statementName );
 					IDalSession session = new SqlMapSession(sqlMap.DataSource);
 					session.OpenConnection();
 					IList list = statement.ExecuteQueryForList(session, null);
 
-					int firstId = IBatisNet.Common.Utilities.HashCodeProvider.GetIdentityHashCode(list);
+					//int firstId = HashCodeProvider.GetIdentityHashCode(list);
 
 					list = statement.ExecuteQueryForList(session, null);
-					int secondId = IBatisNet.Common.Utilities.HashCodeProvider.GetIdentityHashCode(list);
+					int secondId = HashCodeProvider.GetIdentityHashCode(list);
 
 					_results.Add("id", secondId );
 					_results.Add("list", list);
