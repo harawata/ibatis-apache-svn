@@ -552,28 +552,11 @@ namespace IBatisNet.DataMapper.MappedStatements
 						CacheKeyType.List);
 				}
 
-				object listAsObject = _statement.CacheModel[key];
-				// check if this query has alreay been run 
-				if (listAsObject == CacheModel.NULL_OBJECT) 
-				{ 
-					// convert the marker object back into a an empty list
-					if (_statement.ListClass == null)
-					{
-						list = new ArrayList();
-					}
-					else
-					{
-						list = _statement.CreateInstanceOfListClass();
-					}
-				} 
-				else if (listAsObject == null) 
+				list = (IList)_statement.CacheModel[key];
+				if (list == null) 
 				{
 					list = RunQueryForList(request, session, parameterObject, skipResults, maxResults, null);
 					_statement.CacheModel[key] = list;
-				}
-				else
-				{
-					list = (IList) listAsObject;
 				}
 			}
 
@@ -835,21 +818,11 @@ namespace IBatisNet.DataMapper.MappedStatements
 						CacheKeyType.Map);
 				}
 
-				object mapAsObject = _statement.CacheModel[key];
-				// check if this query has alreay been run 
-				if (mapAsObject == CacheModel.NULL_OBJECT) 
-				{ 
-					// convert the marker object back into a an empty hashtable
-					map = new Hashtable();
-				} 
-				else if (mapAsObject == null) 
+				map = (IDictionary)_statement.CacheModel[key];
+				if (map == null) 
 				{
 					map = RunQueryForMap( request, session, parameterObject, keyProperty, valueProperty );
 					_statement.CacheModel[key] = map;
-				}
-				else
-				{
-					map = (IDictionary) mapAsObject;
 				}
 			}
 
