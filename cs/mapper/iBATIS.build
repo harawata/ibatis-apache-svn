@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<project name="iBATIS.Net" default="test">
+<project name="iBATIS.Net" default="test" xmlns="http://nant.sf.net/schemas/nant.xsd">
 
 	<!-- 
 		if nunit2report tasks from http://nunit2report.sourceforge.net/ has been installed
@@ -10,13 +10,15 @@
 
 	<!--
 		Cenqua provided a license of Clover.NET for the iBATIS.NET project to use. 
-		To Use.
 	-->
 	<property name="clover.enabled" value="false" />
-<!-- 	<property name="clover.src" value="src\CloverSrc" />
+    <!--
+    <property name="clover.src" value="src\CloverSrc" />
 	<property name="clover.db" value="${clover.src}\clover.cdb" />
 	<property name="clover.home" value="C:/Program Files/Cenqua/Clover.NET" />
- -->
+    -->
+
+	<property name="NDoc.home" value="C:\Program Files\NDoc 1.3\bin\net\1.1"/>
 
     <!-- global project settings -->
     <property name="project.name" value="iBATIS.Net" />
@@ -30,8 +32,6 @@
     <!-- 0618 - do not report deprecation warnings -->
     <property name="nowarn.numbers" value="1591,0618"/>
 
-	<property name="NDoc.home" value="g:\Program Files\NDoc 1.3\bin\net\1.1"/>
-  
     <!-- platform specific properties. These are the defaults -->
     <property name="current.build.defines" value="${build.defines}" />
     
@@ -108,15 +108,13 @@
     <target name="test" depends="build">
 
         <!-- test IBatisNet.Common assembly -->
-        <!--
-        <nant buildfile="IBatisNet.Common.Test/IBatisNet.Common.Test.build" target="test" />
-        -->
+        <!-- <nant buildfile="IBatisNet.Common.Test/IBatisNet.Common.Test.build" target="test" /> -->
 
         <!-- test IBatisNet.DataMapper assembly -->
         <nant buildfile="IBatisNet.DataMapper.Test/IBatisNet.DataMapper.Test.build" target="test" />
 
         <!-- test IBatisNet.DataAccess assembly -->
-        <!--<nant buildfile="IBatisNet.DataAccess.Test/IBatisNet.DataAccess.Test.build" target="test" />-->
+        <!-- <nant buildfile="IBatisNet.DataAccess.Test/IBatisNet.DataAccess.Test.build" target="test" /> -->
 
     </target>
 
@@ -139,9 +137,9 @@
                         <property name="OutputDirectory" value="${build.dir}/doc/sdk-web" />
                         <property name="OutputTarget" value="HtmlHelpAndWeb" />
                         <property name="LinkToSdkDocVersion" value="${link.sdkdoc.version}" />
-                        <property name="HtmlHelpName" value="iBATIS-SDK" />
+                        <property name="HtmlHelpName" value="iBATISNET-SDK" />
                         <property name="IncludeFavorites" value="False" />
-                        <property name="Title" value="iBATIS.NET SDK Documentation - v.${project.version}" />
+                        <property name="Title" value="iBATIS .NET SDK Documentation - v.${project.version}" />
                         <property name="SplitTOCs" value="False" />
                         <property name="DefaulTOC" value="" />
 						<property name="BinaryTOC" value="true" />
@@ -169,8 +167,8 @@
 						<property name="AutoDocumentConstructors" value="True" />
 						<property name="DocumentAttributes" value="False" />
 						<property name="ShowTypeIdInAttributes" value="False" />
-                        <property name="CopyrightText" value="Copyright 2003,2004 The Apache Software Foundation" />
-                        <property name="CopyrightHref" value="http://incubator.apache.org/ibatis/site/" />
+                        <property name="CopyrightText" value="Copyright 2003-2005 The Apache Software Foundation" />
+                        <property name="CopyrightHref" value="http://ibatis.apache.org/" />
                         <property name="EditorBrowsableFilter" value="Off" />
 						<property name="FilesToInclude" value="${build.dir}/testResults/UnitTests.html" />
                     </documenter>
@@ -178,16 +176,16 @@
             </ndoc>
             
 			<mkdir dir="${build.dir}/doc/sdk-web" />
-			<move file="${build.dir}/doc/sdk-web/iBATIS-SDK.chm" tofile="${build.dir}/doc/sdk-help/iBATIS-SDK.chm" />
+			<move file="${build.dir}/doc/sdk-web/iBATISNET-SDK.chm" tofile="${build.dir}/doc/sdk-help/iBATISNET-SDK.chm" />
         </ifnot>
 
 		<!-- copy cover schema -->
         <mkdir dir="${build.dir}/doc/schemas" />
         <copy todir="${build.dir}/doc/schemas">
-	     <fileset basedir="IBatisNet.Schemas">
-                <include name="*.xsd" />		
+    	    <fileset basedir=".">
+                <include name="**/*.xsd" />
             </fileset>
-	</copy>
+	    </copy>
     </target>
 
     <target name="deploy-schema" description="Deploys the Schema to VS.Net schemas dirs. For now it only copies to 7.0 and 7.1">
@@ -195,7 +193,7 @@
         <readregistry property="vs2002.xml.schemas" key="SOFTWARE\Microsoft\VisualStudio\7.0\InstallDir" hive="LocalMachine" failonerror="false" />
         <if propertyexists="vs2002.xml.schemas">
             <!-- deploy schema to VS.NET 2002 schema store -->
-            <copy file="${nant.project.basedir}/doc/schemas/*.xsd" 
+            <copy file="${nant.project.basedir}/doc/schemas/**/*.xsd"
 	          todir="${vs2002.xml.schemas}..\\Packages\schemas\xml" />
         </if>
         
@@ -203,7 +201,7 @@
         <readregistry property="vs2003.xml.schemas" key="SOFTWARE\Microsoft\VisualStudio\7.1\InstallDir" hive="LocalMachine" failonerror="false" />
         <if propertyexists="vs2003.xml.schemas">
             <!-- deploy schema to VS.NET 2002 schema store -->
-            <copy file="${nant.project.basedir}/doc/schemas/*.xsd" 
+            <copy file="${nant.project.basedir}/doc/schemas/**/*.xsd"
 	          todir="${vs2003.xml.schemas}..\\Packages\schemas\xml" />
         </if>
     </target>
@@ -217,10 +215,10 @@
 				<include name="*.config" />
 				<include name="log.*" />
 				<include name="*.xml" />
-				<include name="nunit.framework.dll" />
-				<include name="NHibernate.dll" />
-				<include name="ByteFX.MySqlClient.dll" />
-				<include name="ICSharpCode.SharpZipLib.dll" />
+				<!-- <include name="nunit.framework.dll" /> -->
+                <!-- <include name="NHibernate.dll" /> -->
+				<!-- <include name="ByteFX.MySqlClient.dll" /> -->
+				<!-- <include name="ICSharpCode.SharpZipLib.dll" /> -->
             </fileset>
         </delete>
 
@@ -232,7 +230,7 @@
                 <includes name="IBatisNet.Common/**/*.cs" />
 				<includes name="IBatisNet.DataAccess/**/*.cs" />
 				<includes name="IBatisNet.DataMapper/**/*.cs" />
-				<includes name="IBatisNet.Schemas/*.xsd" />
+				<includes name="**/*.xsd" />
 
 				<includes name="IBatisNet.build"/>
 				<includes name="IBatisNet.sln"/>
@@ -244,6 +242,7 @@
                 <excludes name="**/*j.user" />
                 <excludes name="**/bin/**" />
 				<excludes name="**/.svn/**" />
+                <excludes name="**/_svn/**" />
                 <excludes name="**/obj/**" />
             </fileset>
         </copy>
@@ -262,7 +261,7 @@
         <!-- copy third-party libraries -->
         <mkdir dir="${build.dir}/lib" />
         <copy todir="${build.dir}/lib">
-            <fileset basedir="lib">
+            <fileset basedir="External-Bin">
                 <includes name="**/*.dll" />
                 <includes name="**/*.xml" />
             </fileset>
@@ -325,25 +324,25 @@
         <property name="current.runtime.${current.runtime.config}-${current.runtime.version}" value="true" />
     </target>
     <target name="set-runtime-configuration">
-        <if test="${property::exists('current.runtime.config')}">
-            <if test="${property::exists('nant.settings.currentframework')}">
-                <fail message="No runtime configuration was specified and the default NAnt runtime is not available." />
-            </if>
-            <if test="${target::exists('set-${nant.settings.currentframework}-runtime-configuration')}">
-                <fail message="No runtime configuration was specified and the current runtime (${nant.settings.currentframework}) is not supported by NAnt." />
-            </if>
-            <call target="set-${nant.settings.currentframework}-runtime-configuration"/>
-        </if>
-        <ifnot propertyexists="current.runtime.version">
-            <ifnot propertyexists="nant.settings.currentframework">
+        <ifnot test="${property::exists('current.runtime.config')}">
+            <ifnot test="${property::exists('nant.settings.currentframework')}">
                 <fail message="No runtime configuration was specified and the default NAnt runtime is not available." />
             </ifnot>
-            <ifnot targetexists="set-${nant.settings.currentframework}-runtime-configuration">
+            <ifnot test="${target::exists('set-' + nant.settings.currentframework + '-runtime-configuration')}">
+                <fail message="No runtime configuration was specified and the current runtime (${nant.settings.currentframework}) is not supported by NAnt." />
+            </ifnot>
+            <call target="set-${nant.settings.currentframework}-runtime-configuration"/>
+        </ifnot>
+        <ifnot test="${property::exists('current.runtime.version')}">
+            <ifnot test="${property::exists('nant.settings.currentframework')}">
+                <fail message="No runtime configuration was specified and the default NAnt runtime is not available." />
+            </ifnot>
+            <ifnot test="${target::exists('set-' + nant.settings.currentframework + '-runtime-configuration')}">
                 <fail message="No runtime configuration was specified and the current runtime (${nant.settings.currentframework}) is not supported by NDoc." />
             </ifnot>
             <call target="set-${nant.settings.currentframework}-runtime-configuration" />
         </ifnot>
-        <ifnot targetexists="set-${current.runtime.config}-${current.runtime.version}-runtime-configuration">
+        <ifnot test="${target::exists('set-' + current.runtime.config + '-' + current.runtime.version  + '-runtime-configuration')}">
             <fail message="The ${current.runtime.config}-${current.runtime.version} runtime is not supported by NDoc." />
         </ifnot>
         <call target="set-${current.runtime.config}-${current.runtime.version}-runtime-configuration"/>

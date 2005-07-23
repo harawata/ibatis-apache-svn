@@ -33,9 +33,14 @@
             </references>
         </csc>
 
+        <copy todir="${build.dir}">
+            <fileset basedir="${nant.project.basedir}">
+                <include name="DataBase*.config" />
+            </fileset>
+        </copy>
+
         <copy todir="${build.dir}/${project.config}/bin">
             <fileset basedir="${nant.project.basedir}">
-                <include name="*.config" />
 				<include name="*.jpg" />
             </fileset>
         </copy>
