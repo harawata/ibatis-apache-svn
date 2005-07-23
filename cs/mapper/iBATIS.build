@@ -39,13 +39,15 @@
     <target name="debug" description="Perform a 'debug' build">
         <property name="project.config" value="debug" />
         <property name="build.debug" value="true" />
-        <property name="build.dir" value="${nant.project.basedir}/build/${nant.settings.currentframework}.${nant.platform.name}/${project.name}-${project.version}-${project.config}" />
+        <property name="build.dir" value="${nant.project.basedir}/build/${nant.settings.currentframework}.${nant.platform.name}/${project.name}-${project.version}" />
+        <property name="lib.dir" value="${nant.project.basedir}/External-Bin" />
     </target>
 
     <target name="release" description="Perform a 'release' build">
         <property name="project.config" value="release" />
         <property name="build.debug" value="false" />
-        <property name="build.dir" value="${nant.project.basedir}/build/${project.name}-${project.version}" />
+        <property name="build.dir" value="${nant.project.basedir}/build/${nant.settings.currentframework}.${nant.platform.name}/${project.name}-${project.version}" />
+        <property name="lib.dir" value="${nant.project.basedir}/External-Bin" />
     </target>
 
     <!-- build tasks -->
@@ -53,8 +55,8 @@
 		<!-- import system environment variables -->
 		<sysinfo />
 
-		<loadtasks assembly="G:\Program Files\nant\nantcontrib-0.85-rc1-bin\nantcontrib-0.85-rc1\bin/NAnt.Contrib.Tasks.dll"/>
-		<loadtasks assembly="E:\Projet\NUnit2Report\bin/NAnt.NUnit2ReportTasks.dll"/>
+		<loadtasks assembly="C:\apps\nantcontrib\bin\NAnt.Contrib.Tasks.dll"/>
+		<loadtasks assembly="C:\apps\nunit2report\bin\NAnt.NUnit2ReportTasks.dll"/>
 
         <call target="${project.config}" />
         <call target="set-runtime-configuration" />
@@ -75,10 +77,10 @@
 
         <echo message="Build Directory is ${build.dir}" />
         <!-- prepare build directory -->
-        <mkdir dir="${build.dir}/bin" />
+        <mkdir dir="${build.dir}/${project.config}/bin" />
 
         <!-- copy framework-specific libraries -->
-        <copy todir="${build.dir}/bin">
+        <copy todir="${build.dir}/${project.config}/bin">
             <fileset basedir="${lib.dir}">
                 <include name="*.dll" />
                 <include name="*.xml" />
@@ -96,26 +98,36 @@
         <nant buildfile="IBatisNet.DataAccess/IBatisNet.DataAccess.build" target="build" />
 
         <!-- build IBatisNet.DataAccess.Extensions -->
+        <!--
         <nant buildfile="IBatisNet.DataAccess.Extensions/IBatisNet.DataAccess.Extensions.build" target="build" />
+        -->
 
     </target>
-    
+
     <!-- test the newly built IBatisNet librairies -->
     <target name="test" depends="build">
 
-        <!-- test IBatisNet.Test assembly -->
-        <nant buildfile="IBatisNet.Test/IBatisNet.Test.build" target="test" />
-   
+        <!-- test IBatisNet.Common assembly -->
+        <!--
+        <nant buildfile="IBatisNet.Common.Test/IBatisNet.Common.Test.build" target="test" />
+        -->
+
+        <!-- test IBatisNet.DataMapper assembly -->
+        <nant buildfile="IBatisNet.DataMapper.Test/IBatisNet.DataMapper.Test.build" target="test" />
+
+        <!-- test IBatisNet.DataAccess assembly -->
+        <!--<nant buildfile="IBatisNet.DataAccess.Test/IBatisNet.DataAccess.Test.build" target="test" />-->
+
     </target>
 
     <target name="ndoc" depends="init">
         <!-- use ndoc to build sdk doc if they are not uptodate-->
         <ifnot uptodatefile="${build.dir}/doc/sdk-help/*.chm">
-            <comparefiles basedir="${build.dir}/bin">
+            <comparefiles basedir="${build.dir}/${project.config}/bin">
                 <includes name="IBatisNet.*.dll" />
             </comparefiles>
             <ndoc>
-                <assemblies basedir="${build.dir}/bin">
+                <assemblies basedir="${build.dir}/${project.config}/bin">
                     <includes name="IBatisNet.*.dll" />
                     <excludes name="*Test*.dll" />
                 </assemblies>
@@ -199,7 +211,7 @@
     <target name="package-common" depends="clean test ndoc" description="Creates a package zip file.">
         <!-- remove non-release files -->
         <delete>
-            <fileset basedir="${build.dir}/bin">
+            <fileset basedir="${build.dir}/${project.config}/bin">
                 <!-- remove test files -->
                 <include name="*.Test.*" />
 				<include name="*.config" />

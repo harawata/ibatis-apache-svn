@@ -307,10 +307,10 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Assert.AreEqual(5, ((Account) list[4]).Id);
 		}
 
-		[Test]
 		/// <summary>
 		/// Test ExecuteQueryForPaginatedList
 		/// </summary>
+		[Test]
 		public void TestExecuteQueryForPaginatedList()
 		{
 			// Get List of all 5
