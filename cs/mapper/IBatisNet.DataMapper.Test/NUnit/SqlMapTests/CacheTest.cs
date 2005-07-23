@@ -156,7 +156,9 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			cache["testKey"] = null;
 
 			object returnedObject = cache["testKey"];
-			Assert.IsNull(returnedObject);
+			Assert.AreEqual(CacheModel.NULL_OBJECT, returnedObject);
+			Assert.AreEqual(HashCodeProvider.GetIdentityHashCode(CacheModel.NULL_OBJECT), HashCodeProvider.GetIdentityHashCode(returnedObject));
+			Assert.AreEqual(1, cache.HitRatio);
 		}
 
 

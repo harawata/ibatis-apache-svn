@@ -53,7 +53,13 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 
 		[NonSerialized]
 		private static readonly ILog _logger = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
-		
+		/// <summary>
+		/// This is used to represent null objects that are returned from the cache so 
+		/// that they can be cached, too.
+		/// </summary>
+		[NonSerialized] 
+		public readonly static object NULL_OBJECT = new Object(); 
+
 		/// <summary>
 		/// Constant to turn off periodic cache flushes
 		/// </summary>
@@ -272,6 +278,7 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 			}
 			set
 			{
+				if (null == value) value = NULL_OBJECT;
 				_controller[key] = value;
 			}
 		}
@@ -285,8 +292,7 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 			{
 				if (_requests!=0)
 				{
-					return
-						(double)_hits/(double)_requests;
+					return (double)_hits/(double)_requests;
 				}
 				else
 				{

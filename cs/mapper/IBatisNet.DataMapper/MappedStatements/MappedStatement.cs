@@ -35,6 +35,7 @@ using IBatisNet.Common;
 using IBatisNet.Common.Logging;
 using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.DataMapper.Commands;
+using IBatisNet.DataMapper.Configuration.Cache;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
 using IBatisNet.DataMapper.Configuration.Statements;
@@ -419,7 +420,13 @@ namespace IBatisNet.DataMapper.MappedStatements
 				}
 
 				obj = _statement.CacheModel[key];
-				if (obj == null) 
+				// check if this query has alreay been run 
+				if (obj == CacheModel.NULL_OBJECT) 
+				{ 
+					// convert the marker object back into a null value 
+					obj = null; 
+				} 
+				else if (obj == null) 
 				{
 					obj = RunQueryForObject(request, session, parameterObject, resultObject);
 					_statement.CacheModel[key] = obj;
