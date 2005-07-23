@@ -325,15 +325,15 @@
         <property name="current.runtime.${current.runtime.config}-${current.runtime.version}" value="true" />
     </target>
     <target name="set-runtime-configuration">
-        <ifnot propertyexists="current.runtime.config">
-            <ifnot propertyexists="nant.settings.currentframework">
+        <if test="${property::exists('current.runtime.config')}">
+            <if test="${property::exists('nant.settings.currentframework')}">
                 <fail message="No runtime configuration was specified and the default NAnt runtime is not available." />
-            </ifnot>
-            <ifnot targetexists="set-${nant.settings.currentframework}-runtime-configuration">
+            </if>
+            <if test="${target::exists('set-${nant.settings.currentframework}-runtime-configuration')}">
                 <fail message="No runtime configuration was specified and the current runtime (${nant.settings.currentframework}) is not supported by NAnt." />
-            </ifnot>
+            </if>
             <call target="set-${nant.settings.currentframework}-runtime-configuration"/>
-        </ifnot>
+        </if>
         <ifnot propertyexists="current.runtime.version">
             <ifnot propertyexists="nant.settings.currentframework">
                 <fail message="No runtime configuration was specified and the default NAnt runtime is not available." />

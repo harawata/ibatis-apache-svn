@@ -24,13 +24,16 @@
 				<include name="properties.xml" />
 				<exclude name="bin/**/*.xml" />
 			</resources>
+            <resources prefix="IBatisNet.DataMapper.Test.bin.Debug">
+                <include name="bin/**/SqlMap_MSSQL_SqlClient.config" />
+            </resources>
             <references basedir="${build.dir}/${project.config}/bin">
                 <include name="*.dll"/>
                 <exclude name="${nant.project.name}.dll"/>
             </references>
         </csc>
 
-        <copy todir="${build.dir}">
+        <copy todir="${build.dir}/${project.config}/bin">
             <fileset basedir="${nant.project.basedir}">
                 <include name="*.config" />
 				<include name="*.jpg" />
