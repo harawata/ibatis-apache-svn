@@ -25,14 +25,15 @@
 #endregion
 
 #region Imports
+
 using System;
 using System.Collections;
-using System.Xml.Serialization;
-using IBatisNet.Common.Logging;
-using IBatisNet.DataAccess.Interfaces;
-using IBatisNet.DataAccess.Exceptions;
-
+using System.Reflection;
 using Castle.DynamicProxy;
+using IBatisNet.Common.Logging;
+using IBatisNet.DataAccess.Exceptions;
+using IBatisNet.DataAccess.Interfaces;
+
 #endregion
 
 namespace IBatisNet.DataAccess.Configuration
@@ -45,7 +46,7 @@ namespace IBatisNet.DataAccess.Configuration
 		#region Fields
 		private static ArrayList _passthroughMethods = new ArrayList();
 		private Dao _daoImplementation;
-		private static readonly ILog _logger = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
+		private static readonly ILog _logger = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
 		#endregion
 
 		#region Constructor (s) / Destructor
@@ -126,7 +127,14 @@ namespace IBatisNet.DataAccess.Configuration
 					} 
 					catch (Exception e) 
 					{
-						throw new DataAccessException("Unable to intercept method name "+invocation.Method.Name, e);
+						if (e is DataAccessException)
+						{
+							throw;
+						}
+						else
+						{
+							throw new DataAccessException("Unable to intercept method name "+invocation.Method.Name, e);
+						}
 					}
 				} 
 				else 
@@ -145,7 +153,14 @@ namespace IBatisNet.DataAccess.Configuration
 					} 
 					catch (Exception e) 
 					{
-						throw new DataAccessException("Unable to intercept method name "+invocation.Method.Name, e);
+						if (e is DataAccessException)
+						{
+							throw;
+						}
+						else
+						{
+							throw new DataAccessException("Unable to intercept method name "+invocation.Method.Name, e);
+						}
 					} 
 					finally 
 					{

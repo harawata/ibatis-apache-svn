@@ -562,7 +562,7 @@ namespace IBatisNet.DataAccess.Configuration
 				}
 
 				// Configure the sessionHandler
-				configurationScope.ErrorContext.ObjectId = sessionHandler.GetType().FullName;
+				configurationScope.ErrorContext.ObjectId = typeSessionHandler.FullName;
 
 				try
 				{
