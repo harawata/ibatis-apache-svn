@@ -450,7 +450,6 @@ namespace IBatisNet.DataMapper.MappedStatements
 		{
 			object result = resultObject;
 			
-			//using ( IDbCommand command = CreatePreparedCommand(request, session, parameterObject ))
 			using ( IDbCommand command = _preparedCommand.Create( request, session, this.Statement, parameterObject ) )
 			{
 				using ( IDataReader reader = command.ExecuteReader() )
@@ -495,6 +494,29 @@ namespace IBatisNet.DataMapper.MappedStatements
 			}
 			
 			return RunQueryForList(request, session, parameterObject, NO_SKIPPED_RESULTS, NO_MAXIMUM_RESULTS, rowDelegate);
+		}
+
+		/// <summary>
+		/// Runs a query with a custom object that gets a chance 
+		/// to deal with each row as it is processed.
+		/// </summary>
+		/// <param name="session">The session used to execute the statement</param>
+		/// <param name="parameterObject">The object used to set the parameters in the SQL. </param>
+		/// <param name="keyProperty">The property of the result object to be used as the key. </param>
+		/// <param name="valueProperty">The property of the result object to be used as the value (or null)</param>
+		/// <param name="rowDelegate"></param>
+		/// <returns>A hashtable of object containing the rows keyed by keyProperty.</returns>
+		///<exception cref="DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
+		public virtual IDictionary ExecuteQueryForMapWithRowDelegate( IDalSession session, object parameterObject, string keyProperty, string valueProperty, SqlMapper.DictionaryRowDelegate rowDelegate )
+		{
+			RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session);;
+
+			if (rowDelegate == null) 
+			{
+				throw new DataMapperException("A null DictionaryRowDelegate was passed to QueryForMapWithRowDelegate.");
+			}
+			
+			return RunQueryForMap(request, session, parameterObject, keyProperty, valueProperty, rowDelegate);
 		}
 
 		
@@ -578,7 +600,6 @@ namespace IBatisNet.DataMapper.MappedStatements
 		{
 			IList list = null;
 			
-			//using ( IDbCommand command = CreatePreparedCommand(request, session, parameterObject ))
 			using ( IDbCommand command = _preparedCommand.Create( request, session, this.Statement, parameterObject ) )
 			{
 				if (_statement.ListClass == null)
@@ -769,22 +790,12 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// in the keyProperty parameter.  The value at each key will be the value of the property specified
 		/// in the valueProperty parameter.  If valueProperty is null, the entire result object will be entered.
 		/// </summary>
-		/// <param name="session">
-		/// The session used to execute the statement
-		/// </param>
-		/// <param name="parameterObject">
-		/// The object used to set the parameters in the SQL.
-		/// </param>
-		/// <param name="keyProperty">
-		/// The property of the result object to be used as the key.
-		/// </param>
-		/// <param name="valueProperty">
-		/// The property of the result object to be used as the value (or null)
-		/// </param>
+		/// <param name="session">The session used to execute the statement</param>
+		/// <param name="parameterObject">The object used to set the parameters in the SQL. </param>
+		/// <param name="keyProperty">The property of the result object to be used as the key. </param>
+		/// <param name="valueProperty">The property of the result object to be used as the value (or null)</param>
 		/// <returns>A hashtable of object containing the rows keyed by keyProperty.</returns>
-		///<exception cref="DataMapperException">
-		///If a transaction is not in progress, or the database throws an exception.
-		///</exception>
+		///<exception cref="DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
 		public virtual IDictionary ExecuteQueryForMap( IDalSession session, object parameterObject, string keyProperty, string valueProperty )
 		{
 			IDictionary map = new Hashtable();
@@ -792,7 +803,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 			if (_statement.CacheModel == null) 
 			{
-				map = RunQueryForMap(request, session, parameterObject, keyProperty, valueProperty );
+				map = RunQueryForMap(request, session, parameterObject, keyProperty, valueProperty, null );
 			}
 			else
 			{
@@ -821,7 +832,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 				map = (IDictionary)_statement.CacheModel[key];
 				if (map == null) 
 				{
-					map = RunQueryForMap( request, session, parameterObject, keyProperty, valueProperty );
+					map = RunQueryForMap( request, session, parameterObject, keyProperty, valueProperty, null );
 					_statement.CacheModel[key] = map;
 				}
 			}
@@ -840,32 +851,55 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
 		/// <param name="keyProperty">The property of the result object to be used as the key.</param>
 		/// <param name="valueProperty">The property of the result object to be used as the value (or null)</param>
+		/// <param name="rowDelegate"></param>
 		/// <returns>A hashtable of object containing the rows keyed by keyProperty.</returns>
 		///<exception cref="DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
-		private IDictionary RunQueryForMap( RequestScope request, IDalSession session, 
-			object parameterObject, string keyProperty, string valueProperty )
+		private IDictionary RunQueryForMap( RequestScope request, 
+			IDalSession session, 
+			object parameterObject, 
+			string keyProperty, 
+			string valueProperty, 
+			SqlMapper.DictionaryRowDelegate rowDelegate  )
 		{
 			IDictionary map = new Hashtable();
 
-			IList list = ExecuteQueryForList(session, parameterObject);
-
-			for(int i =0; i<list.Count; i++)
+			using (IDbCommand command = _preparedCommand.Create(request, session, this.Statement, parameterObject))
 			{
-				object obj = list[i];
-				if (obj != null)
+				using (IDataReader reader = command.ExecuteReader())
 				{
-					object key = ObjectProbe.GetPropertyValue(obj, keyProperty);
-
-					object value = obj;
-					if (valueProperty != null) 
+					if (rowDelegate == null)
 					{
-						value = ObjectProbe.GetPropertyValue(obj, valueProperty);
+						while (reader.Read() )
+						{
+							object obj = ApplyResultMap(request, reader, null);
+							object key = ObjectProbe.GetPropertyValue(obj, keyProperty);
+							object value = obj;
+							if (valueProperty != null)
+							{
+								value = ObjectProbe.GetPropertyValue(obj, valueProperty);
+							}
+							map.Add(key, value);
+						}
 					}
-					map.Add(key, value);
-				}
-			}
+					else
+					{
+						while (reader.Read())
+						{
+							object obj = ApplyResultMap(request, reader, null);
+							object key = ObjectProbe.GetPropertyValue(obj, keyProperty);
+							object value = obj;
+							if (valueProperty != null)
+							{
+								value = ObjectProbe.GetPropertyValue(obj, valueProperty);
+							}
+							rowDelegate(key, value, map);
 
+						}
+					}
+					}
+			}
 			return map;
+
 		}
 
 		

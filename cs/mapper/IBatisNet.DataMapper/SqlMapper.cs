@@ -56,9 +56,15 @@ namespace IBatisNet.DataMapper
 	{
 
 		/// <summary>
-		/// 
+		/// A delegate called once per row in the QueryWithRowDelegate method
 		/// </summary>
 		public delegate void RowDelegate(object obj, IList list);
+
+		/// <summary>
+		/// A delegate called once per row in the QueryWithRowDelegate method
+		/// </summary>
+		public delegate void DictionaryRowDelegate(object key, object value, IDictionary dictionary);
+
 
 		#region Fields
 		//(MappedStatement Name, MappedStatement)
@@ -837,7 +843,7 @@ namespace IBatisNet.DataMapper
 		#region QueryWithRowDelegate
 
 		/// <summary>
-		/// Runs a query with a custom object that gets a chance to deal 
+		/// Runs a query for list with a custom object that gets a chance to deal 
 		/// with each row as it is processed.
 		/// <p/>
 		///  The parameter object is generally used to supply the input
@@ -879,6 +885,55 @@ namespace IBatisNet.DataMapper
 			}
 
 			return list;
+		}
+
+
+		/// <summary>
+		/// Runs a query with a custom object that gets a chance to deal 
+		/// with each row as it is processed.
+		/// <p/>
+		///  The parameter object is generally used to supply the input
+		/// data for the WHERE clause parameter(s) of the SELECT statement.
+		/// </summary>
+		/// <param name="statementName">The name of the sql statement to execute.</param>
+		/// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+		/// <param name="keyProperty">The property of the result object to be used as the key.</param>
+		/// <param name="valueProperty">The property of the result object to be used as the value (or null)</param>
+		/// <param name="rowDelegate"></param>
+		/// <returns>A IDictionary (Hashtable) of object containing the rows keyed by keyProperty.</returns>
+		///<exception cref="DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
+		public IDictionary QueryForMapWithRowDelegate(string statementName, object parameterObject, string keyProperty, string valueProperty, DictionaryRowDelegate rowDelegate)
+		{
+			bool isSessionLocal = false;
+			IDalSession session = _sessionContainer.LocalSession;
+			IDictionary map = null;
+ 
+			if (session == null) 
+			{
+				session = new SqlMapSession(this.DataSource);
+				session.OpenConnection();
+				isSessionLocal = true;
+			}
+
+			IMappedStatement statement = GetMappedStatement(statementName);
+
+			try 
+			{
+				map = statement.ExecuteQueryForMapWithRowDelegate(session, parameterObject, keyProperty, valueProperty, rowDelegate);
+			} 
+			catch
+			{
+				throw;
+			}
+			finally
+			{
+				if ( isSessionLocal )
+				{
+					session.CloseConnection();
+				}
+			}
+
+			return map;
 		}
 
 		

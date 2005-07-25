@@ -82,7 +82,6 @@ namespace IBatisNet.DataMapper.MappedStatements
 		}
 		#endregion
 
-		#region Methods
 		#region ExecuteQueryForMap
 
 		/// <summary>
@@ -151,15 +150,6 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 		#endregion
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="session"></param>
-		/// <param name="parameterObject"></param>
-		/// <param name="rowDelegate"></param>
-		/// <returns></returns>
-		IList ExecuteQueryForRowDelegate( IDalSession session, object parameterObject, SqlMapper.RowDelegate rowDelegate );
-
 		#region ExecuteForObject
 
 		/// <summary>
@@ -180,7 +170,32 @@ namespace IBatisNet.DataMapper.MappedStatements
 		object ExecuteQueryForObject( IDalSession session, object parameterObject, object resultObject );
 
 		#endregion
-		#endregion
 
+		#region Delegate
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="session"></param>
+		/// <param name="parameterObject"></param>
+		/// <param name="rowDelegate"></param>
+		/// <returns></returns>
+		IList ExecuteQueryForRowDelegate( IDalSession session, object parameterObject, SqlMapper.RowDelegate rowDelegate );
+
+		/// <summary>
+		/// Runs a query with a custom object that gets a chance 
+		/// to deal with each row as it is processed.
+		/// </summary>
+		/// <param name="session">The session used to execute the statement</param>
+		/// <param name="parameterObject">The object used to set the parameters in the SQL. </param>
+		/// <param name="keyProperty">The property of the result object to be used as the key. </param>
+		/// <param name="valueProperty">The property of the result object to be used as the value (or null)</param>
+		/// <param name="rowDelegate"></param>
+		/// <returns>A hashtable of object containing the rows keyed by keyProperty.</returns>
+		/// <exception cref="IBatisNet.DataMapper.Exceptions.DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
+		IDictionary ExecuteQueryForMapWithRowDelegate( IDalSession session, object parameterObject, string keyProperty, string valueProperty, SqlMapper.DictionaryRowDelegate rowDelegate );
+
+		#endregion 
+		
 	}
 }
