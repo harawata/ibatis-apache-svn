@@ -1,4 +1,3 @@
-
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
@@ -24,75 +23,75 @@
  ********************************************************************************/
 #endregion
 
-#region Imports
-using System;
-using System.Collections;
+#region Using
 
+using System.Collections;
 using IBatisNet.Common;
 using IBatisNet.DataMapper.Commands;
+using IBatisNet.DataMapper.Configuration.Cache;
 using IBatisNet.DataMapper.Configuration.Statements;
-#endregion
+using IBatisNet.DataMapper.Scope;
+using IBatisNet.DataMapper.MappedStatements;
+
+#endregion 
 
 namespace IBatisNet.DataMapper.MappedStatements
 {
 	/// <summary>
-	/// 
+	/// Summary description for CachingStatement.
 	/// </summary>
-	public delegate void ExecuteEventHandler(object sender, ExecuteEventArgs e);
-
-	/// <summary>
-	/// Summary description for IMappedStatement.
-	/// </summary>
-	public interface IMappedStatement
+	public class CachingStatement : IMappedStatement
 	{
-
-		#region Event
+		private MappedStatement _mappedStatement =null;
 
 		/// <summary>
 		/// Event launch on exceute query
 		/// </summary>
-		event ExecuteEventHandler Execute;
+		public event ExecuteEventHandler Execute;
 
-		#endregion 
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="statement"></param>
+		public CachingStatement(MappedStatement statement) 
+		{
+			_mappedStatement = statement;
+		}
 
-		#region Properties
+		#region IMappedStatement Members
 
 		/// <summary>
 		/// The IPreparedCommand to use
 		/// </summary>
-		IPreparedCommand PreparedCommand
+		public IPreparedCommand PreparedCommand
 		{
-			get;
+			get { return _mappedStatement.PreparedCommand; }
 		}
 
 		/// <summary>
 		/// Name used to identify the MappedStatement amongst the others.
 		/// This the name of the SQL statment by default.
 		/// </summary>
-		string Name
+		public string Name
 		{
-			get;
+			get { return _mappedStatement.Name; }
 		}
 
 		/// <summary>
 		/// The SQL statment used by this MappedStatement
 		/// </summary>
-		IStatement Statement
+		public IStatement Statement
 		{
-			get;
+			get { return _mappedStatement.Statement; }
 		}
 
-		
 		/// <summary>
 		/// The SqlMap used by this MappedStatement
 		/// </summary>
-		SqlMapper SqlMap
+		public SqlMapper SqlMap
 		{
-			get;
+			get {return _mappedStatement.SqlMap; }
 		}
-		#endregion
-
-		#region ExecuteQueryForMap
 
 		/// <summary>
 		/// Executes the SQL and retuns all rows selected in a map that is keyed on the property named
@@ -105,12 +104,45 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="valueProperty">The property of the result object to be used as the value (or null)</param>
 		/// <returns>A hashtable of object containing the rows keyed by keyProperty.</returns>
 		///<exception cref="IBatisNet.DataMapper.Exceptions.DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
-		IDictionary ExecuteQueryForMap( IDalSession session, object parameterObject, string keyProperty, string valueProperty );
+		public IDictionary ExecuteQueryForMap(IDalSession session, object parameterObject, string keyProperty, string valueProperty)
+		{
+			IDictionary map = new Hashtable();
+			RequestScope request = this.Statement.Sql.GetRequestScope(parameterObject, session);;
 
-		#endregion
+				CacheKey key = null;
+				if (this.Statement.ParameterMap != null) 
+				{
+					key = new CacheKey(this.SqlMap.TypeHandlerFactory, this.Name, 
+						request.PreparedStatement.PreparedSql, 
+						parameterObject, 
+						request.ParameterMap.GetPropertyNameArray(), 
+						MappedStatement.NO_SKIPPED_RESULTS, 
+						MappedStatement.NO_MAXIMUM_RESULTS, 
+						CacheKeyType.Map);
+				} 
+				else 
+				{
+					key = new CacheKey(this.SqlMap.TypeHandlerFactory, this.Name, 
+						request.PreparedStatement.PreparedSql,  
+						parameterObject, 
+						new string[0], 
+						MappedStatement.NO_SKIPPED_RESULTS, 
+						MappedStatement.NO_MAXIMUM_RESULTS, 
+						CacheKeyType.Map);
+				}
 
-		#region ExecuteUpdate
+				map = (IDictionary)this.Statement.CacheModel[key];
+				if (map == null) 
+				{
+					map = _mappedStatement.RunQueryForMap( request, session, parameterObject, keyProperty, valueProperty, null );
+					this.Statement.CacheModel[key] = map;
+				}
 
+			return map;
+		}
+
+		
+		
 		/// <summary>
 		/// Execute an update statement. Also used for delete statement.
 		/// Return the number of row effected.
@@ -118,11 +150,10 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="session">The session used to execute the statement.</param>
 		/// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
 		/// <returns>The number of row effected.</returns>
-		int ExecuteUpdate(IDalSession session, object parameterObject );
-
-		#endregion
-
-		#region ExecuteInsert
+		public int ExecuteUpdate(IDalSession session, object parameterObject)
+		{
+			return _mappedStatement.ExecuteUpdate(session, parameterObject);
+		}
 
 		/// <summary>
 		/// Execute an insert statement. Fill the parameter object with 
@@ -131,11 +162,11 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="session">The session</param>
 		/// <param name="parameterObject">The parameter object used to fill the statement.</param>
 		/// <returns>Can return the insert generated key.</returns>
-		object ExecuteInsert(IDalSession session, object parameterObject );
+		public object ExecuteInsert(IDalSession session, object parameterObject)
+		{
+			return _mappedStatement.ExecuteInsert(session, parameterObject);
+		}
 
-		#endregion
-
-		#region ExecuteQueryForList
 
 		/// <summary>
 		/// Executes the SQL and and fill a strongly typed collection.
@@ -143,7 +174,10 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="session">The session used to execute the statement.</param>
 		/// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
 		/// <param name="resultObject">A strongly typed collection of result objects.</param>
-		void ExecuteQueryForList(IDalSession session, object parameterObject, IList resultObject );
+		public void ExecuteQueryForList(IDalSession session, object parameterObject, IList resultObject)
+		{
+			_mappedStatement.ExecuteQueryForList(session, parameterObject, resultObject);
+		}
 
 		/// <summary>
 		/// Executes the SQL and retuns a subset of the rows selected.
@@ -153,8 +187,44 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="skipResults">The number of rows to skip over.</param>
 		/// <param name="maxResults">The maximum number of rows to return.</param>
 		/// <returns>A List of result objects.</returns>
-		IList ExecuteQueryForList( IDalSession session, object parameterObject, int skipResults, int maxResults );
+		public IList ExecuteQueryForList(IDalSession session, object parameterObject, int skipResults, int maxResults)
+		{
+			IList list = null;
+			RequestScope request = this.Statement.Sql.GetRequestScope(parameterObject, session);;
 
+			CacheKey key = null;
+			if (this.Statement.ParameterMap != null) 
+			{
+				key = new CacheKey(this.SqlMap.TypeHandlerFactory, this.Name, 
+					request.PreparedStatement.PreparedSql, 
+					parameterObject, 
+					request.ParameterMap.GetPropertyNameArray(), 
+					skipResults, 
+					maxResults, 
+					CacheKeyType.List);
+			} 
+			else 
+			{
+				key = new CacheKey(this.SqlMap.TypeHandlerFactory, this.Name, 
+					request.PreparedStatement.PreparedSql,  
+					parameterObject, 
+					new string[0], 
+					skipResults, 
+					maxResults, 
+					CacheKeyType.List);
+			}
+
+			list = (IList)this.Statement.CacheModel[key];
+			if (list == null) 
+			{
+				list = _mappedStatement.RunQueryForList(request, session, parameterObject, skipResults, maxResults, null);
+				this.Statement.CacheModel[key] = list;
+			}
+
+			return list;
+		}
+
+		
 		/// <summary>
 		/// Executes the SQL and retuns all rows selected. This is exactly the same as
 		/// calling ExecuteQueryForList(session, parameterObject, NO_SKIPPED_RESULTS, NO_MAXIMUM_RESULTS).
@@ -162,11 +232,10 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="session">The session used to execute the statement.</param>
 		/// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
 		/// <returns>A List of result objects.</returns>
-		IList ExecuteQueryForList( IDalSession session, object parameterObject );
-
-		#endregion
-
-		#region ExecuteForObject
+		public IList ExecuteQueryForList(IDalSession session, object parameterObject)
+		{
+			return this.ExecuteQueryForList( session, parameterObject, MappedStatement.NO_SKIPPED_RESULTS, MappedStatement.NO_MAXIMUM_RESULTS);
+		}
 
 		/// <summary>
 		/// Executes an SQL statement that returns a single row as an Object.
@@ -174,7 +243,10 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="session">The session used to execute the statement.</param>
 		/// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
 		/// <returns>The object</returns>
-		object ExecuteQueryForObject( IDalSession session, object parameterObject );
+		public object ExecuteQueryForObject(IDalSession session, object parameterObject)
+		{
+			return this.ExecuteQueryForObject(session, parameterObject, null);
+		}
 
 		/// <summary>
 		/// Executes an SQL statement that returns a single row as an Object of the type of
@@ -184,21 +256,61 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
 		/// <param name="resultObject">The result object.</param>
 		/// <returns>The object</returns>
-		object ExecuteQueryForObject( IDalSession session, object parameterObject, object resultObject );
+		public object ExecuteQueryForObject(IDalSession session, object parameterObject, object resultObject)
+		{
+			object obj = null;
+			RequestScope request = this.Statement.Sql.GetRequestScope(parameterObject, session);;
 
-		#endregion
+			CacheKey key = null;
+			if (this.Statement.ParameterMap != null) 
+			{
+				key = new CacheKey(this.SqlMap.TypeHandlerFactory, this.Name, 
+					request.PreparedStatement.PreparedSql,
+					parameterObject, 
+					request.ParameterMap.GetPropertyNameArray(), 
+					MappedStatement.NO_SKIPPED_RESULTS, 
+					MappedStatement.NO_MAXIMUM_RESULTS, 
+					CacheKeyType.Object);
+			} 
+			else 
+			{
+				key = new CacheKey(this.SqlMap.TypeHandlerFactory, this.Name, 
+					request.PreparedStatement.PreparedSql,
+					parameterObject, 
+					new string[0], 
+					MappedStatement.NO_SKIPPED_RESULTS, 
+					MappedStatement.NO_MAXIMUM_RESULTS, 
+					CacheKeyType.Object);
+			}
 
-		#region Delegate
+			obj = this.Statement.CacheModel[key];
+			// check if this query has alreay been run 
+			if (obj == CacheModel.NULL_OBJECT) 
+			{ 
+				// convert the marker object back into a null value 
+				obj = null; 
+			} 
+			else if (obj == null) 
+			{
+				obj = _mappedStatement.RunQueryForObject(request, session, parameterObject, resultObject);
+				this.Statement.CacheModel[key] = obj;
+			}
 
+			return obj;
+		}
+
+		
 		/// <summary>
 		/// Runs a query with a custom object that gets a chance 
 		/// to deal with each row as it is processed.
 		/// </summary>
 		/// <param name="session">The session used to execute the statement.</param>
 		/// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-		/// <param name="rowDelegate"></param>param>
-		/// <returns></returns>
-		IList ExecuteQueryForRowDelegate( IDalSession session, object parameterObject, SqlMapper.RowDelegate rowDelegate );
+		/// <param name="rowDelegate"></param>
+		public IList ExecuteQueryForRowDelegate(IDalSession session, object parameterObject, SqlMapper.RowDelegate rowDelegate)
+		{
+			return _mappedStatement.ExecuteQueryForRowDelegate(session, parameterObject, rowDelegate);
+		}
 
 		/// <summary>
 		/// Runs a query with a custom object that gets a chance 
@@ -211,9 +323,11 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="rowDelegate"></param>
 		/// <returns>A hashtable of object containing the rows keyed by keyProperty.</returns>
 		/// <exception cref="IBatisNet.DataMapper.Exceptions.DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
-		IDictionary ExecuteQueryForMapWithRowDelegate( IDalSession session, object parameterObject, string keyProperty, string valueProperty, SqlMapper.DictionaryRowDelegate rowDelegate );
+		public IDictionary ExecuteQueryForMapWithRowDelegate(IDalSession session, object parameterObject, string keyProperty, string valueProperty, SqlMapper.DictionaryRowDelegate rowDelegate)
+		{
+			return _mappedStatement.ExecuteQueryForMapWithRowDelegate(session, parameterObject, keyProperty, valueProperty, rowDelegate);
+		}
 
-		#endregion 
-		
+		#endregion
 	}
 }

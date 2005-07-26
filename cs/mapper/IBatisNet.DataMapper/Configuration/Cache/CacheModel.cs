@@ -210,7 +210,7 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 		/// Event listener
 		/// </summary>
 		/// <param name="mappedStatement">A MappedStatement on which we listen ExecuteEventArgs event.</param>
-		public void RegisterTriggerStatement(MappedStatement mappedStatement)
+		public void RegisterTriggerStatement(IMappedStatement mappedStatement)
 		{
 			mappedStatement.Execute +=new ExecuteEventHandler(FlushHandler);
 		}

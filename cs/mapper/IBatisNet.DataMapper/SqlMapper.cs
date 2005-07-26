@@ -1100,13 +1100,13 @@ namespace IBatisNet.DataMapper
 		/// </summary>
 		/// <param name="name"> The name of the statement</param>
 		/// <returns> The MappedStatement</returns>
-		public MappedStatement GetMappedStatement(string name) 
+		public IMappedStatement GetMappedStatement(string name) 
 		{
 			if (_mappedStatements.Contains(name) == false) 
 			{
 				throw new DataMapperException("This SQL map does not contain a MappedStatement named " + name);
 			}
-			return (MappedStatement) _mappedStatements[name];
+			return (IMappedStatement) _mappedStatements[name];
 		}
 
 		/// <summary>
@@ -1114,7 +1114,7 @@ namespace IBatisNet.DataMapper
 		/// </summary>
 		/// <param name="key"> The key name</param>
 		/// <param name="mappedStatement">The statement to add</param>
-		internal void AddMappedStatement(string key, MappedStatement mappedStatement) 
+		internal void AddMappedStatement(string key, IMappedStatement mappedStatement) 
 		{
 			if (_mappedStatements.Contains(key) == true) 
 			{

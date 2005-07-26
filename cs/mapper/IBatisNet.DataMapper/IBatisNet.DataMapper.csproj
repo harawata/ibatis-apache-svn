@@ -596,6 +596,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "MappedStatements\CachingStatement.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "MappedStatements\DeleteMappedStatement.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

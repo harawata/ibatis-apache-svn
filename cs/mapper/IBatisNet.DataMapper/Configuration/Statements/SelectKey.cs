@@ -116,7 +116,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 			if (PropertyName.Length > 0)
 			{
 				// Id is equal to the parent <select> node's "id" attribute
-				MappedStatement insert = configurationScope.SqlMapper.GetMappedStatement(Id);
+				IMappedStatement insert = configurationScope.SqlMapper.GetMappedStatement(Id);
 
 				Type insertParameterClass = insert.Statement.ParameterClass;
 

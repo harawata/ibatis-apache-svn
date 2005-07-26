@@ -118,6 +118,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 		#endregion
 
+		#region Delegate
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -129,6 +131,23 @@ namespace IBatisNet.DataMapper.MappedStatements
 		{
 			throw new DataMapperException("Insert statements cannot be executed as a query for row delegate.");
 		}
+
+		/// <summary>
+		/// Runs a query with a custom object that gets a chance 
+		/// to deal with each row as it is processed.
+		/// </summary>
+		/// <param name="session">The session used to execute the statement</param>
+		/// <param name="parameterObject">The object used to set the parameters in the SQL. </param>
+		/// <param name="keyProperty">The property of the result object to be used as the key. </param>
+		/// <param name="valueProperty">The property of the result object to be used as the value (or null)</param>
+		/// <param name="rowDelegate"></param>
+		/// <returns>A hashtable of object containing the rows keyed by keyProperty.</returns>
+		///<exception cref="DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
+		public override IDictionary ExecuteQueryForMapWithRowDelegate( IDalSession session, object parameterObject, string keyProperty, string valueProperty, SqlMapper.DictionaryRowDelegate rowDelegate )
+		{
+			throw new DataMapperException("Insert statements cannot be executed as a query for row delegate.");
+		}
+		#endregion 
 
 		#region ExecuteForObject
 

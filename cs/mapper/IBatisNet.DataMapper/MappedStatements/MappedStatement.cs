@@ -54,7 +54,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 	public class MappedStatement : IMappedStatement
 	{
 		/// <summary>
-		/// 
+		/// Event launch on exceute query
 		/// </summary>
 		public event ExecuteEventHandler Execute;
 
@@ -80,7 +80,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		private class PostBindind
 		{
 			#region Fields
-			private MappedStatement _statement = null;
+			private IMappedStatement _statement = null;
 			private ResultProperty _property = null;
 			private object _target = null;
 			private object _keys = null;
@@ -91,7 +91,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 			/// <summary>
 			/// 
 			/// </summary>
-			public MappedStatement Statement
+			public IMappedStatement Statement
 			{
 				set { _statement = value; }
 				get { return _statement; }
@@ -141,9 +141,9 @@ namespace IBatisNet.DataMapper.MappedStatements
 		#region Fields 
 
 		// Magic number used to set the the maximum number of rows returned to 'all'. 
-		private const int NO_MAXIMUM_RESULTS = -1;
+		internal const int NO_MAXIMUM_RESULTS = -1;
 		// Magic number used to set the the number of rows skipped to 'none'. 
-		private const int NO_SKIPPED_RESULTS = -1;
+		internal const int NO_SKIPPED_RESULTS = -1;
 
 		private static readonly ILog _logger = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
 
@@ -391,48 +391,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 			object obj = null;
 			RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session);;
 
-			if (_statement.CacheModel == null) 
-			{
-				obj = RunQueryForObject(request, session, parameterObject, resultObject);
-			}
-			else
-			{
-				CacheKey key = null;
-				if (_statement.ParameterMap != null) 
-				{
-					key = new CacheKey(_sqlMap.TypeHandlerFactory, this.Name, 
-						request.PreparedStatement.PreparedSql,
-						parameterObject, 
-						request.ParameterMap.GetPropertyNameArray(), 
-						NO_SKIPPED_RESULTS, 
-						NO_MAXIMUM_RESULTS, 
-						CacheKeyType.Object);
-				} 
-				else 
-				{
-					key = new CacheKey(_sqlMap.TypeHandlerFactory, this.Name, 
-						request.PreparedStatement.PreparedSql,
-						parameterObject, 
-						new string[0], 
-						NO_SKIPPED_RESULTS, 
-						NO_MAXIMUM_RESULTS, 
-						CacheKeyType.Object);
-				}
-
-				obj = _statement.CacheModel[key];
-				// check if this query has alreay been run 
-				if (obj == CacheModel.NULL_OBJECT) 
-				{ 
-					// convert the marker object back into a null value 
-					obj = null; 
-				} 
-				else if (obj == null) 
-				{
-					obj = RunQueryForObject(request, session, parameterObject, resultObject);
-					_statement.CacheModel[key] = obj;
-				}
-			}
-
+			obj = RunQueryForObject(request, session, parameterObject, resultObject);
+			
 			return obj;
 		}
 
@@ -446,7 +406,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
 		/// <param name="resultObject">The result object.</param>
 		/// <returns>The object</returns>
-		private object RunQueryForObject(RequestScope request, IDalSession session, object parameterObject, object resultObject )
+		internal object RunQueryForObject(RequestScope request, IDalSession session, object parameterObject, object resultObject )
 		{
 			object result = resultObject;
 			
@@ -546,42 +506,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 			IList list = null;
 			RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session);;
 
-			if (_statement.CacheModel == null) 
-			{
-				list = RunQueryForList(request, session, parameterObject, skipResults, maxResults, null);
-			}
-			else
-			{
-				CacheKey key = null;
-				if (_statement.ParameterMap != null) 
-				{
-					key = new CacheKey(_sqlMap.TypeHandlerFactory, this.Name, 
-						request.PreparedStatement.PreparedSql, 
-						parameterObject, 
-						request.ParameterMap.GetPropertyNameArray(), 
-						skipResults, 
-						maxResults, 
-						CacheKeyType.List);
-				} 
-				else 
-				{
-					key = new CacheKey(_sqlMap.TypeHandlerFactory, this.Name, 
-						request.PreparedStatement.PreparedSql,  
-						parameterObject, 
-						new string[0], 
-						skipResults, 
-						maxResults, 
-						CacheKeyType.List);
-				}
-
-				list = (IList)_statement.CacheModel[key];
-				if (list == null) 
-				{
-					list = RunQueryForList(request, session, parameterObject, skipResults, maxResults, null);
-					_statement.CacheModel[key] = list;
-				}
-			}
-
+			list = RunQueryForList(request, session, parameterObject, skipResults, maxResults, null);
+			
 			return list;
 		}
 
@@ -596,7 +522,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="maxResults">The maximum number of rows to return.</param>
 		/// <param name="rowDelegate"></param>
 		/// <returns>A List of result objects.</returns>
-		private IList RunQueryForList(RequestScope request, IDalSession session, object parameterObject, int skipResults, int maxResults,  SqlMapper.RowDelegate rowDelegate)
+		internal IList RunQueryForList(RequestScope request, IDalSession session, object parameterObject, int skipResults, int maxResults,  SqlMapper.RowDelegate rowDelegate)
 		{
 			IList list = null;
 			
@@ -739,7 +665,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 			if (selectKeyStatement != null && !selectKeyStatement.isAfter)
 			{
-				MappedStatement mappedStatement = _sqlMap.GetMappedStatement( selectKeyStatement.Id );
+				IMappedStatement mappedStatement = _sqlMap.GetMappedStatement( selectKeyStatement.Id );
 				generatedKey = mappedStatement.ExecuteQueryForObject(session, parameterObject);
 
 				ObjectProbe.SetPropertyValue(parameterObject, selectKeyStatement.PropertyName, generatedKey);
@@ -765,7 +691,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 			
 				if (selectKeyStatement != null && selectKeyStatement.isAfter)
 				{
-					MappedStatement mappedStatement = _sqlMap.GetMappedStatement( selectKeyStatement.Id );
+					IMappedStatement mappedStatement = _sqlMap.GetMappedStatement( selectKeyStatement.Id );
 					generatedKey = mappedStatement.ExecuteQueryForObject(session, parameterObject);
 
 					ObjectProbe.SetPropertyValue(parameterObject, selectKeyStatement.PropertyName, generatedKey);
@@ -801,42 +727,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 			IDictionary map = new Hashtable();
 			RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session);;
 
-			if (_statement.CacheModel == null) 
-			{
-				map = RunQueryForMap(request, session, parameterObject, keyProperty, valueProperty, null );
-			}
-			else
-			{
-				CacheKey key = null;
-				if (_statement.ParameterMap != null) 
-				{
-					key = new CacheKey(_sqlMap.TypeHandlerFactory, this.Name, 
-						request.PreparedStatement.PreparedSql, 
-						parameterObject, 
-						request.ParameterMap.GetPropertyNameArray(), 
-						NO_SKIPPED_RESULTS, 
-						NO_MAXIMUM_RESULTS, 
-						CacheKeyType.Map);
-				} 
-				else 
-				{
-					key = new CacheKey(_sqlMap.TypeHandlerFactory, this.Name, 
-						request.PreparedStatement.PreparedSql,  
-						parameterObject, 
-						new string[0], 
-						NO_SKIPPED_RESULTS, 
-						NO_MAXIMUM_RESULTS, 
-						CacheKeyType.Map);
-				}
-
-				map = (IDictionary)_statement.CacheModel[key];
-				if (map == null) 
-				{
-					map = RunQueryForMap( request, session, parameterObject, keyProperty, valueProperty, null );
-					_statement.CacheModel[key] = map;
-				}
-			}
-
+			map = RunQueryForMap(request, session, parameterObject, keyProperty, valueProperty, null );
+			
 			return map;
 		}
 
@@ -854,7 +746,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="rowDelegate"></param>
 		/// <returns>A hashtable of object containing the rows keyed by keyProperty.</returns>
 		///<exception cref="DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
-		private IDictionary RunQueryForMap( RequestScope request, 
+		internal IDictionary RunQueryForMap( RequestScope request, 
 			IDalSession session, 
 			object parameterObject, 
 			string keyProperty, 
@@ -1014,7 +906,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 			else //'select' ResultProperty 
 			{
 				// Get the select statement
-				MappedStatement queryStatement = _sqlMap.GetMappedStatement(selectStatement);
+				IMappedStatement queryStatement = _sqlMap.GetMappedStatement(selectStatement);
 				string paramString = mapping.ColumnName;
 				object keys = null;
 				bool wasNull = false;

@@ -51,7 +51,7 @@ namespace IBatisNet.DataMapper
 		private object _target = null;
 		private string _propertyName= string.Empty;
 		private DataSource _dataSource;
-		private MappedStatement _mappedSatement;
+		private IMappedStatement _mappedSatement;
 		private bool _loaded = false;
 		private IList _innerList = null;
 		private object _loadLock = new object();
@@ -80,7 +80,7 @@ namespace IBatisNet.DataMapper
 		/// <param name="param">The parameter object used to build the list</param>
 		/// <param name="propertyName">The property's name which been proxified.</param>
 		/// <param name="target">The target object which contains the property proxydied.</param>
-		internal LazyLoadList(DataSource dataSource, MappedStatement mappedSatement, object param, object target,string propertyName)
+		internal LazyLoadList(DataSource dataSource, IMappedStatement mappedSatement, object param, object target,string propertyName)
 		{
 			_param = param;
 			_mappedSatement = mappedSatement;
@@ -100,7 +100,7 @@ namespace IBatisNet.DataMapper
 		/// <param name="propertyName">The property's name which been proxified.</param>
 		/// <param name="target">The target object which contains the property proxydied.</param>
 		/// <returns>A proxy</returns>
-		internal static IList NewInstance(DataSource dataSource, MappedStatement mappedSatement, object param, object target,string propertyName)
+		internal static IList NewInstance(DataSource dataSource, IMappedStatement mappedSatement, object param, object target,string propertyName)
 		{
 			object proxList = null;
 			IInterceptor handler = new LazyLoadList(dataSource, mappedSatement, param, target, propertyName);

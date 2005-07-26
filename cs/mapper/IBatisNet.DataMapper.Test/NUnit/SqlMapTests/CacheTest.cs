@@ -246,7 +246,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			{
 				try 
 				{
-					MappedStatement statement = _sqlMap.GetMappedStatement( _statementName );
+					IMappedStatement statement = _sqlMap.GetMappedStatement( _statementName );
 					IDalSession session = new SqlMapSession(sqlMap.DataSource);
 					session.OpenConnection();
 					IList list = statement.ExecuteQueryForList(session, null);

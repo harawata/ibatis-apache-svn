@@ -822,7 +822,7 @@ namespace IBatisNet.DataMapper.Configuration
 				{
 					_configScope.ErrorContext.Activity = "Set CacheModel to statement";
 
-					MappedStatement mappedStatement = (MappedStatement)entry.Value;
+					IMappedStatement mappedStatement = (IMappedStatement)entry.Value;
 					if (mappedStatement.Statement.CacheModelName.Length >0)
 					{
 						_configScope.ErrorContext.MoreInfo = "statement : "+mappedStatement.Statement.Id;
@@ -1075,8 +1075,6 @@ namespace IBatisNet.DataMapper.Configuration
 				_configScope.ErrorContext.MoreInfo = "loading select tag";
 				_configScope.NodeContext = xmlNode; // A select node
 
-				MappedStatement mappedStatement = null;
-
 				select = (Select) serializer.Deserialize(new XmlNodeReader(xmlNode));
 				select.CacheModelName = ApplyNamespace( select.CacheModelName );
 				select.ParameterMapName = ApplyNamespace( select.ParameterMapName );
@@ -1101,9 +1099,14 @@ namespace IBatisNet.DataMapper.Configuration
 				}
 
 				// Build MappedStatement
-				mappedStatement = new SelectMappedStatement( _configScope.SqlMapper, select);
+				MappedStatement mappedStatement = new SelectMappedStatement( _configScope.SqlMapper, select);
+				IMappedStatement mapStatement = mappedStatement;
+				if (select.CacheModelName != null && select.CacheModelName.Length> 0 && _configScope.IsCacheModelsEnabled)
+				{
+					mapStatement = new CachingStatement( mappedStatement);
+				}
 
-				_configScope.SqlMapper.AddMappedStatement(mappedStatement.Name, mappedStatement);
+				_configScope.SqlMapper.AddMappedStatement(mappedStatement.Name, mapStatement);
 			}
 			#endregion
 
@@ -1307,7 +1310,7 @@ namespace IBatisNet.DataMapper.Configuration
 							statementName = ApplyNamespace( statementName ); 
 						}
 
-						MappedStatement mappedStatement = _configScope.SqlMapper.GetMappedStatement(statementName);
+						IMappedStatement mappedStatement = _configScope.SqlMapper.GetMappedStatement(statementName);
 
 						cacheModel.RegisterTriggerStatement(mappedStatement);
 					}
