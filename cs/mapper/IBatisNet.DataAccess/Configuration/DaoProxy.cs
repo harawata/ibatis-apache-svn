@@ -109,11 +109,10 @@ namespace IBatisNet.DataAccess.Configuration
 				try 
 				{
 					result = invocation.Method.Invoke( _daoImplementation.DaoInstance, arguments);
-						//method.invoke(daoImpl.getDaoInstance(), args);
 				} 
 				catch (Exception e) 
 				{
-					throw new DataAccessException("Unable to intercept method name "+invocation.Method.Name, e);
+					throw UnWrapException(e, invocation.Method.Name);
 				}
 			} 
 			else 
@@ -127,14 +126,7 @@ namespace IBatisNet.DataAccess.Configuration
 					} 
 					catch (Exception e) 
 					{
-						if (e is DataAccessException)
-						{
-							throw;
-						}
-						else
-						{
-							throw new DataAccessException("Unable to intercept method name "+invocation.Method.Name, e);
-						}
+						throw UnWrapException(e, invocation.Method.Name);
 					}
 				} 
 				else 
@@ -153,14 +145,7 @@ namespace IBatisNet.DataAccess.Configuration
 					} 
 					catch (Exception e) 
 					{
-						if (e is DataAccessException)
-						{
-							throw;
-						}
-						else
-						{
-							throw new DataAccessException("Unable to intercept method name "+invocation.Method.Name, e);
-						}
+						throw UnWrapException(e, invocation.Method.Name);
 					} 
 					finally 
 					{
@@ -179,6 +164,28 @@ namespace IBatisNet.DataAccess.Configuration
 			return result;
 		}
 
+		private Exception UnWrapException(Exception ex, string methodName) 
+		{
+			Exception e = ex;
+			while (true) 
+			{
+				if (typeof(DataAccessException).IsInstanceOfType(e))
+				{
+					return e;
+				}
+				else if (e.InnerException != null)
+				{
+					e = e.InnerException;
+				}
+				else
+				{
+					e = new DataAccessException( string.Format("DaoProxy : unable to intercept method name '{0}', cause : {1}", methodName, e.Message), e);
+				}			
+			}
+		}
+
 		#endregion
+
+
 	}
 }
