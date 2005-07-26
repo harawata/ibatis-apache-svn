@@ -108,13 +108,13 @@
     <target name="test" depends="build">
 
         <!-- test IBatisNet.Common assembly -->
-        <!-- <nant buildfile="IBatisNet.Common.Test/IBatisNet.Common.Test.build" target="test" /> -->
+        <nant buildfile="IBatisNet.Common.Test/IBatisNet.Common.Test.build" target="test" />
 
         <!-- test IBatisNet.DataMapper assembly -->
         <nant buildfile="IBatisNet.DataMapper.Test/IBatisNet.DataMapper.Test.build" target="test" />
 
         <!-- test IBatisNet.DataAccess assembly -->
-        <!-- <nant buildfile="IBatisNet.DataAccess.Test/IBatisNet.DataAccess.Test.build" target="test" /> -->
+        <nant buildfile="IBatisNet.DataAccess.Test/IBatisNet.DataAccess.Test.build" target="test" />
 
     </target>
 

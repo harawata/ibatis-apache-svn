@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="IBatisNet.DataMapper.Test" default="build">
+<project name="IBatisNet.DataAccess.Test" default="build">
     <!--
         Required properties:
             * build.dir             - (path) root level to build to, assemblies will go in ${build.dir}/${project.config}/bin
@@ -10,21 +10,23 @@
 
 		<echo message="Build Directory is ${build.dir}/${project.config}/bin" />
 
-        <!-- build IBatisNet.DataMapper.Test -->
-        <csc target="library" define="${current.build.defines}" warnaserror="true"
+        <!-- build IBatisNet.DataAccess.Test -->
+        <csc target="library" define="${current.build.defines}" warnaserror="true" 
 		debug="${build.debug}" output="${build.dir}/${project.config}/bin/${nant.project.name}.dll" doc="${build.dir}/${project.config}/bin/${nant.project.name}.xml">
             <nowarn>
 				<warning number="${nowarn.numbers}" />
 			</nowarn>
 			<sources failonempty="true">
                 <include name="**/*.cs" />
+                <exclude name="Dao/Implementations/NHibernate/*.cs" />
+                <exclude name="NUnit/DaoTests/MutipleDaoTest.cs" />
+                <exclude name="NUnit/DaoTests/NHibernateDaoTest.cs" />
             </sources>
-			<resources prefix="IBatisNet.DataMapper.Test" dynamicprefix="true">
+			<resources prefix="IBatisNet.DataAccess.Test" dynamicprefix="true">
 				<include name="User.hbm.xml" />
-				<include name="properties.xml" />
 				<exclude name="bin/**/*.xml" />
 			</resources>
-            <resources prefix="IBatisNet.DataMapper.Test.bin.Debug">
+            <resources prefix="IBatisNet.DataAccess.Test.bin.Debug">
                 <include name="bin/**/SqlMap_MSSQL_SqlClient.config" />
             </resources>
             <references basedir="${build.dir}/${project.config}/bin">
@@ -36,12 +38,6 @@
         <copy todir="${build.dir}">
             <fileset basedir="${nant.project.basedir}">
                 <include name="DataBase*.config" />
-            </fileset>
-        </copy>
-
-        <copy todir="${build.dir}/${project.config}/bin">
-            <fileset basedir="${nant.project.basedir}">
-				<include name="*.jpg" />
             </fileset>
         </copy>
 
@@ -77,25 +73,22 @@
     </target>
     
     <target name="test" depends="build">
- 		<mkdir dir="${build.dir}/testDataMapperResults" />
+ 		<mkdir dir="${build.dir}/testDataAccessResults" />
         <nunit2 failonerror="false">
             <formatter type="Plain" />
-            <formatter type="Xml" usefile="true" extension=".xml" outputdir="${build.dir}/testDataMapperResults" />
+            <formatter type="Xml" usefile="true" extension=".xml" outputdir="${build.dir}/testDataAccessResults" />
             <test
 				assemblyname="${build.dir}/${project.config}/bin/${nant.project.name}.dll"
 				appconfig="${build.dir}/${project.config}/bin/${nant.project.name}.dll.config">
                 <categories>
-                    <exclude name="EmbedParameter" />
                     <exclude name="MySql" />
                     <exclude name="Oracle" />
-                    <exclude name="PostgreSQL" />
-                    <exclude name="StatementNamespaces" />
                 </categories>
             </test>
          </nunit2>
-		<nunit2report out="${build.dir}/testDataMapperResults/UnitTests.html" verbose="true">
+		<nunit2report out="${build.dir}/testDataAccessResults/UnitTests.html" verbose="true">
 			<fileset>
-				<include name="${build.dir}/testDataMapperResults/*-results.xml"/>
+				<include name="${build.dir}/testDataAccessResults/*-results.xml"/>
 			</fileset>
 		</nunit2report>
     </target>    
