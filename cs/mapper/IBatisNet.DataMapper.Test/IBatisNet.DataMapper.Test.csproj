@@ -456,10 +456,6 @@
                     BuildAction = "Content"
                 />
                 <File
-                    RelPath = "Maps\MSSQL\SqlClient\XMLFile1.xml"
-                    BuildAction = "Content"
-                />
-                <File
                     RelPath = "Maps\MySql\ByteFx\Account.xml"
                     BuildAction = "Content"
                 />

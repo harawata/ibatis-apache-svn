@@ -117,7 +117,7 @@ namespace IBatisNet.DataMapper.Configuration.Cache.Memory
 		/// <summary>
 		/// Configures the cache
 		/// </summary>
-		public void Configure(HybridDictionary properties)
+		public void Configure(IDictionary properties)
 		{
 			string referenceType = (string)properties["Type"];;
 			if (referenceType != null) 

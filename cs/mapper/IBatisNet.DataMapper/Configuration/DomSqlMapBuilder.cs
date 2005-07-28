@@ -625,6 +625,20 @@ namespace IBatisNet.DataMapper.Configuration
 			
 			_configScope.SqlMapper = new SqlMapper( new TypeHandlerFactory() );
 
+			#region Cache Alias
+
+			TypeAlias cacheAlias = new TypeAlias(typeof(IBatisNet.DataMapper.Configuration.Cache.Memory.MemoryCacheControler));
+			cacheAlias.Name = "MEMORY";
+			_configScope.SqlMapper.AddTypeAlias(cacheAlias.Name, cacheAlias);
+			cacheAlias = new TypeAlias(typeof(IBatisNet.DataMapper.Configuration.Cache.Lru.LruCacheController));
+			cacheAlias.Name = "LRU";
+			_configScope.SqlMapper.AddTypeAlias(cacheAlias.Name, cacheAlias);
+			cacheAlias = new TypeAlias(typeof(IBatisNet.DataMapper.Configuration.Cache.Fifo.FifoCacheController));
+			cacheAlias.Name = "FIFO";
+			_configScope.SqlMapper.AddTypeAlias(cacheAlias.Name, cacheAlias);
+
+			#endregion 
+
 			#region Load Global Properties
 			if (_configScope.IsCallFromDao == false)
 			{
@@ -1300,6 +1314,7 @@ namespace IBatisNet.DataMapper.Configuration
 				{
 					cacheModel = (CacheModel) serializer.Deserialize(new XmlNodeReader(xmlNode));
 					cacheModel.Id = ApplyNamespace( cacheModel.Id );
+					cacheModel.Implementation = _configScope.SqlMapper.GetTypeAlias(cacheModel.Implementation).Class.AssemblyQualifiedName;
 
 					// Attach ExecuteEventHandler
 					foreach(XmlNode flushOn in xmlNode.SelectNodes( ApplyMappingNamespacePrefix(XML_FLUSH_ON_EXECUTE), _configScope.XmlNamespaceManager  ))

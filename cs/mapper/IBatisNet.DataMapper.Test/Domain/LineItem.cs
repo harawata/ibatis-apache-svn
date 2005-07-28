@@ -14,7 +14,7 @@ namespace IBatisNet.DataMapper.Test.Domain
 		private Order _order;
 		private string _code;
 		private int _quantity;
-		private decimal _price;
+		private decimal _price = decimal.MinValue;
 		private byte[] _pictureData = null;
 
 		public int Id

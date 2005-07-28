@@ -36,6 +36,7 @@ using IBatisNet.Common.Logging;
 using IBatisNet.Common.Utilities;
 using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.MappedStatements;
+using IBatisNet.DataMapper.Scope;
 
 #endregion
 
@@ -84,8 +85,6 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 		private HybridDictionary _properties = new HybridDictionary();
 		[NonSerialized]
 		private string _implementation = string.Empty;
-		[NonSerialized]
-		static private Hashtable _cacheControllerAliases = new Hashtable();
 
 		#endregion
 
@@ -128,28 +127,13 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 		[XmlElement("flushInterval",typeof(FlushInterval))]
 		public FlushInterval FlushInterval
 		{
-			get 
-			{
-				return _flushInterval;
-			}
-			set 
-			{
-				_flushInterval = value;
-			}
+			get { return _flushInterval; }
+			set { _flushInterval = value; }
 		}
 		#endregion
 
 		#region Constructor (s) / Destructor
 
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		static CacheModel()
-		{
-			_cacheControllerAliases.Add("MEMORY","IBatisNet.DataMapper.Configuration.Cache.Memory.MemoryCacheControler, IBatisNet.DataMapper");
-			_cacheControllerAliases.Add("LRU","IBatisNet.DataMapper.Configuration.Cache.Lru.LruCacheController, IBatisNet.DataMapper");
-			_cacheControllerAliases.Add("FIFO","IBatisNet.DataMapper.Configuration.Cache.Fifo.FifoCacheController, IBatisNet.DataMapper");
-		}
 
 		/// <summary>
 		/// Constructor
@@ -161,6 +145,7 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 		#endregion
 
 		#region Methods
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -168,9 +153,6 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 		{
 			// Initialize FlushInterval
 			_flushInterval.Initialize();
-
-			// Initialize controller
-			_implementation = _cacheControllerAliases[_implementation.ToUpper()] as string;
 
 			try 
 			{

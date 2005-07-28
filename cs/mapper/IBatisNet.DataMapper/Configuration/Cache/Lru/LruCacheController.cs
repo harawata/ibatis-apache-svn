@@ -108,7 +108,7 @@ namespace IBatisNet.DataMapper.Configuration.Cache.Lru
 		/// <summary>
 		/// Configures the cache
 		/// </summary>
-		public void Configure(HybridDictionary properties)
+		public void Configure(IDictionary properties)
 		{
 			string size = (string)properties["CacheSize"];;
 			if (size != null) 

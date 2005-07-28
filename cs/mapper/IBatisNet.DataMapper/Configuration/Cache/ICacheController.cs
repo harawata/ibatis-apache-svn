@@ -60,7 +60,7 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 		/// Configures the CacheController
 		/// </summary>
 		/// <param name="properties"></param>
-		void Configure(HybridDictionary properties);
+		void Configure(IDictionary properties);
 		#endregion
 
 	}

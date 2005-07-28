@@ -220,7 +220,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			CacheModel cache = new CacheModel();
 			cache.FlushInterval = new FlushInterval();
 			cache.FlushInterval.Minutes = 5;
-			cache.Implementation = "LRU";
+			cache.Implementation = "IBatisNet.DataMapper.Configuration.Cache.Lru.LruCacheController, IBatisNet.DataMapper";
 			cache.Initialize();
 
 			return cache;

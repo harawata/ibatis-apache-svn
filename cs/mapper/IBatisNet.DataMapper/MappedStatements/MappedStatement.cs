@@ -430,6 +430,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 				RetrieveOutputParameters(request, session, command, parameterObject);
 			}
 
+			RaiseExecuteEvent();
+
 			return result;
 		}
 
