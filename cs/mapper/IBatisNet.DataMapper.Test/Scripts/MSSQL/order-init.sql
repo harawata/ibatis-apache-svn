@@ -12,7 +12,7 @@ END
 
 CREATE TABLE [dbo].[Orders] (
 	[Order_ID] [int] NOT NULL ,
-	[Account_ID] [int] NOT NULL ,
+	[Account_ID] [int] NULL ,
 	[Order_Date] [datetime] NULL ,
 	[Order_CardType] [varchar] (32) NULL ,
 	[Order_CardNumber] [varchar] (32)  NULL ,
@@ -50,4 +50,5 @@ INSERT INTO [dbo].[Orders] VALUES (7, 4, '2003-02-15 8:15:00', 'MC', '8888888888
 INSERT INTO [dbo].[Orders] VALUES (8, 3, '2003-02-15 8:15:00', 'AMEX', '777777777777', '12/03', '888 Our Street', 'Regina', 'SK', 'S4S 7G4',1);
 INSERT INTO [dbo].[Orders] VALUES (9, 2, '2003-02-15 8:15:00', 'MC', '666666666666', '01/04', '999 Your Street', 'Toronto', 'ON', 'G4D 9F4',2);
 INSERT INTO [dbo].[Orders] VALUES (10, 1, '2003-02-15 8:15:00', 'VISA', '555555555555', '02/04', '99 Some Street', 'Calgary', 'AB', 'W4G 7A4',1);
+INSERT INTO [dbo].[Orders] VALUES (11, null, '2003-02-15 8:15:00', 'VISA', '555555555555', '02/04', 'Null order', 'Calgary', 'ZZ', 'XXX YYY',1);
 

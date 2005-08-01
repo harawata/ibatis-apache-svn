@@ -623,7 +623,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		{
 			IDictionary map = sqlMap.QueryForMap("GetAllOrderWithLineItems", null, "PostalCode");
 
-			Assert.AreEqual(10, map.Count);
+			Assert.AreEqual(11, map.Count);
 			Order order = ((Order) map["T4H 9G4"]);
 
 			Assert.AreEqual(2, order.LineItemsIList.Count);
@@ -647,6 +647,24 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Assert.IsNull(map["Gilles"]);
 		}
 
+		/// <summary>
+		/// Test ExecuteQueryForMap : Hashtable.
+		/// </summary>
+		/// <remarks>
+		/// If the keyProperty is an integer, you must acces the map
+		/// by map[integer] and not by map["integer"]
+		/// </remarks>
+		[Test]
+		public void TestExecuteQueryForWithJoined()
+		{
+			Order order = sqlMap.QueryForObject("GetOrderJoinWithAccount",10) as Order;
+
+			Assert.IsNotNull(order.Account);
+
+			order = sqlMap.QueryForObject("GetOrderJoinWithAccount",11) as Order;
+
+			Assert.IsNull(order.Account);
+		}
 		#endregion
 
 		#region Extends statement

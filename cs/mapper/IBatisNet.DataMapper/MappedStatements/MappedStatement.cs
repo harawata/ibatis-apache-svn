@@ -230,8 +230,11 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="reader"></param>
 		/// <param name="resultMap"></param>
 		/// <param name="resultObject"></param>
-		private void FillObjectWithReaderAndResultMap(RequestScope request,IDataReader reader, ResultMap resultMap, object resultObject)
+		private void FillObjectWithReaderAndResultMap(RequestScope request,IDataReader reader, 
+			ResultMap resultMap, object resultObject)
 		{
+			request.IsRowDataFound = false;
+
 			// For each Property in the ResultMap, set the property in the object 
 			foreach(DictionaryEntry entry in resultMap.ColumnsToPropertiesMap)
 			{
@@ -356,6 +359,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 						}
 						
 						object dataBaseValue = mapping.TypeHandler.GetDataBaseValue( ((IDataParameter)command.Parameters[parameterName]).Value, result.GetType() );
+						request.IsRowDataFound = request.IsRowDataFound || (dataBaseValue != null);
 
 						ObjectProbe.SetPropertyValue(result, mapping.PropertyName, dataBaseValue);
 					}
@@ -673,7 +677,6 @@ namespace IBatisNet.DataMapper.MappedStatements
 				ObjectProbe.SetPropertyValue(parameterObject, selectKeyStatement.PropertyName, generatedKey);
 			}
 
-			//using (IDbCommand command = CreatePreparedCommand(request, session, parameterObject ))
 			using ( IDbCommand command = _preparedCommand.Create( request, session, this.Statement, parameterObject ) )
 			{
 				if (_statement is Insert)
@@ -886,6 +889,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 				}
 
 				object dataBaseValue = mapping.GetDataBaseValue( reader );
+				request.IsRowDataFound = request.IsRowDataFound || (dataBaseValue != null);
 
 				if (resultMap != null) 
 				{
@@ -903,6 +907,10 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 				obj = mapping.NestedResultMap.CreateInstanceOfResult();
 				FillObjectWithReaderAndResultMap(request, reader, mapping.NestedResultMap, obj);
+				if (request.IsRowDataFound == false)
+				{
+					obj = null;
+				}
 				MappedStatement.SetValueOfProperty( ref target, mapping, obj );
 			}
 			else //'select' ResultProperty 

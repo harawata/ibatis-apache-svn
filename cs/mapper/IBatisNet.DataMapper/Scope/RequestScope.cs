@@ -48,6 +48,7 @@ namespace IBatisNet.DataMapper.Scope
 		private ResultMap _resultMap = null;
 		private PreparedStatement _preparedStatement = null;
 		private Queue _properties = new Queue();
+		bool _rowDataFound= false;
 
 		#endregion
 	
@@ -63,6 +64,15 @@ namespace IBatisNet.DataMapper.Scope
 		#endregion 
 
 		#region Properties
+
+		/// <summary>
+		///  Indicate if the statement have find data
+		/// </summary>
+		public bool IsRowDataFound
+		{
+			set { _rowDataFound = value; }
+			get { return _rowDataFound; }
+		}
 
 		/// <summary>
 		///  Get the request's error context

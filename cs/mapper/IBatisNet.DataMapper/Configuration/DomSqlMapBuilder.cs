@@ -1549,7 +1549,7 @@ namespace IBatisNet.DataMapper.Configuration
 							// Load the file defined by the attribute
 							XmlDocument propertiesConfig = Resources.GetAsXmlDocument(propertyNode, _configScope.Properties); 
 							
-							foreach (XmlNode node in propertiesConfig.SelectNodes( ApplyDataMapperNamespacePrefix(XML_GLOBAL_PROPERTIES), _configScope.XmlNamespaceManager))
+							foreach (XmlNode node in propertiesConfig.SelectNodes( XML_GLOBAL_PROPERTIES, _configScope.XmlNamespaceManager))
 							{
 								_configScope.Properties[node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value] = node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value;
 								_logger.Info( string.Format("Add property \"{0}\" value \"{1}\"",node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value,node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value) );
