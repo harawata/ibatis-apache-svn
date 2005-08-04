@@ -182,6 +182,11 @@
                     BuildAction = "None"
                 />
                 <File
+                    RelPath = "Domain\A.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Domain\Account.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -197,7 +202,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Domain\B.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Domain\Book.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Domain\C.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -217,6 +232,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Domain\D.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Domain\Document.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -227,7 +247,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Domain\E.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Domain\Enumeration.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Domain\F.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

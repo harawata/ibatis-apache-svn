@@ -52,7 +52,6 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		{
 			//DateTime start = DateTime.Now;
 
-//			ConfigureHandler handler = new ConfigureHandler(Configure);
 			DomSqlMapBuilder builder = new DomSqlMapBuilder();
 			string fileName = "sqlmap" + "_" + ConfigurationSettings.AppSettings["database"] + "_" + ConfigurationSettings.AppSettings["providerType"] + ".config";
 			sqlMap = builder.Configure(fileName);

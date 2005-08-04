@@ -230,17 +230,23 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="reader"></param>
 		/// <param name="resultMap"></param>
 		/// <param name="resultObject"></param>
-		private void FillObjectWithReaderAndResultMap(RequestScope request,IDataReader reader, 
+		private bool FillObjectWithReaderAndResultMap(RequestScope request,IDataReader reader, 
 			ResultMap resultMap, object resultObject)
 		{
-			request.IsRowDataFound = false;
-
+			bool rowDataFound = request.IsRowDataFound;
+			bool dataFound = false;
+			
 			// For each Property in the ResultMap, set the property in the object 
 			foreach(DictionaryEntry entry in resultMap.ColumnsToPropertiesMap)
 			{
+				request.IsRowDataFound = false;
 				ResultProperty property = (ResultProperty)entry.Value;
 				SetObjectProperty(request, resultMap, property, ref resultObject, reader);
+				dataFound = dataFound || request.IsRowDataFound;
 			}
+
+			request.IsRowDataFound = rowDataFound;
+			return dataFound;
 		}
 
 		/// <summary>
@@ -906,11 +912,11 @@ namespace IBatisNet.DataMapper.MappedStatements
 				object obj = null;
 
 				obj = mapping.NestedResultMap.CreateInstanceOfResult();
-				FillObjectWithReaderAndResultMap(request, reader, mapping.NestedResultMap, obj);
-				if (request.IsRowDataFound == false)
+				if (FillObjectWithReaderAndResultMap(request, reader, mapping.NestedResultMap, obj) == false)
 				{
 					obj = null;
 				}
+
 				MappedStatement.SetValueOfProperty( ref target, mapping, obj );
 			}
 			else //'select' ResultProperty 

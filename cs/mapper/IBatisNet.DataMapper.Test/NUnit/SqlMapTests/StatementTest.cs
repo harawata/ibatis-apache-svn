@@ -648,11 +648,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		}
 
 		/// <summary>
-		/// Test ExecuteQueryForMap : Hashtable.
-		/// </summary>
-		/// <remarks>
-		/// If the keyProperty is an integer, you must acces the map
-		/// by map[integer] and not by map["integer"]
+		/// Test ExecuteQueryForWithJoined
 		/// </remarks>
 		[Test]
 		public void TestExecuteQueryForWithJoined()
@@ -664,6 +660,22 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			order = sqlMap.QueryForObject("GetOrderJoinWithAccount",11) as Order;
 
 			Assert.IsNull(order.Account);
+		}
+
+		/// <summary>
+		/// Test ExecuteQueryFor With Complex Joined
+		/// </remarks>
+		[Test]
+		public void TestExecuteQueryForWithComplexJoined()
+		{
+			A a = sqlMap.QueryForObject("SelectComplexJoined",null) as A;
+
+			Assert.IsNotNull(a);
+			Assert.IsNotNull(a.B);
+			Assert.IsNotNull(a.B.C);
+			Assert.IsNull(a.B.D);
+			Assert.IsNotNull(a.E);
+			Assert.IsNull(a.F);
 		}
 		#endregion
 
