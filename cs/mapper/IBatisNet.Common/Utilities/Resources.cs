@@ -239,7 +239,8 @@ namespace IBatisNet.Common.Utilities
 			}
 			else if (node.Attributes["embedded"] != null)
 			{
-				xmlDocument = Resources.GetEmbeddedResourceAsXmlDocument(node.Attributes["embedded"].Value);
+				string embedded = Resources.ParsePropertyTokens( node.Attributes["embedded"].Value, properties);
+				xmlDocument = Resources.GetEmbeddedResourceAsXmlDocument(embedded);
 			}
 
 			return xmlDocument;
