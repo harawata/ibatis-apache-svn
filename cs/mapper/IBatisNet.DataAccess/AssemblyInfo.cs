@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -14,6 +15,8 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyCopyright("Copyright 2004,2005 The Apache Software Foundation")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
+
+[assembly: CLSCompliant(true)]
 
 //
 // Version information for an assembly consists of the following four values:

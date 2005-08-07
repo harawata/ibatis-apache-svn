@@ -40,6 +40,7 @@ namespace IBatisNet.DataMapper.Commands
 	/// <summary>
 	/// Summary description for IPreparedCommandProxy.
 	/// </summary>
+	[CLSCompliant(false)]
 	public class IPreparedCommandProxy : IInterceptor
 	{
 

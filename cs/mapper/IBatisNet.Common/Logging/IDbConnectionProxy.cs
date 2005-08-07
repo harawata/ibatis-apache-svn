@@ -47,6 +47,7 @@ namespace IBatisNet.Common.Logging
 	/// Summary description for IDbConnectionProxy.
 	/// </summary>
 	/// <remarks>Not used.</remarks>
+	[CLSCompliant(false)]
 	public class IDbConnectionProxy : IInterceptor
 	{
 

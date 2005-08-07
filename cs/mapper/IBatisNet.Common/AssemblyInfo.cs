@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -15,6 +16,8 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]	
 	
+[assembly: CLSCompliant(true)]
+
 //[assembly:AllowPartiallyTrustedCallers]
 
 //

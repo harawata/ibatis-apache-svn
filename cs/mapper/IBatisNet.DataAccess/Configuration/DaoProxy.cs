@@ -41,6 +41,7 @@ namespace IBatisNet.DataAccess.Configuration
 	/// <summary>
 	/// Summary description for DaoProxy.
 	/// </summary>
+	[CLSCompliant(false)]
 	public class DaoProxy : IInterceptor	
 	{
 		#region Fields
