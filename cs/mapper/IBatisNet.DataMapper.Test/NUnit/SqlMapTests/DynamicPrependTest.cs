@@ -19,29 +19,28 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 	{
 		#region SetUp & TearDown
 
-			/// <summary>
-			/// SetUp
-			/// </summary>
-			[SetUp] 
-			public void Init() 
-			{
-				InitSqlMap();
-				InitScript( sqlMap.DataSource, ScriptDirectory + "account-init.sql" );
-				InitScript( sqlMap.DataSource, ScriptDirectory + "account-procedure.sql", false );
-				InitScript( sqlMap.DataSource, ScriptDirectory + "category-init.sql" );
-				InitScript( sqlMap.DataSource, ScriptDirectory + "order-init.sql" );
-				InitScript( sqlMap.DataSource, ScriptDirectory + "line-item-init.sql" );
-				InitScript( sqlMap.DataSource, ScriptDirectory + "other-init.sql" );
-			}
+		/// <summary>
+		/// SetUp
+		/// </summary>
+		[SetUp] 
+		public void Init() 
+		{
+			InitScript( sqlMap.DataSource, ScriptDirectory + "account-init.sql" );
+			InitScript( sqlMap.DataSource, ScriptDirectory + "account-procedure.sql", false );
+			InitScript( sqlMap.DataSource, ScriptDirectory + "category-init.sql" );
+			InitScript( sqlMap.DataSource, ScriptDirectory + "order-init.sql" );
+			InitScript( sqlMap.DataSource, ScriptDirectory + "line-item-init.sql" );
+			InitScript( sqlMap.DataSource, ScriptDirectory + "other-init.sql" );
+		}
 
-			/// <summary>
-			/// TearDown
-			/// </summary>
-			[TearDown] 
-			public void Dispose()
-			{ /* ... */ } 
+		/// <summary>
+		/// TearDown
+		/// </summary>
+		[TearDown] 
+		public void Dispose()
+		{ /* ... */ } 
 
-			#endregion
+		#endregion
 
 		#region Dynamic Prepend tests
 

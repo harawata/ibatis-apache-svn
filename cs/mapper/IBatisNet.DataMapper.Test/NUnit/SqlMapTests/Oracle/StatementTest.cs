@@ -23,7 +23,6 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Oracle
 		[SetUp] 
 		public void Init() 
 		{
-			InitSqlMap();
 			InitScript( sqlMap.DataSource, ScriptDirectory + "category-init.sql" );
 		}
 

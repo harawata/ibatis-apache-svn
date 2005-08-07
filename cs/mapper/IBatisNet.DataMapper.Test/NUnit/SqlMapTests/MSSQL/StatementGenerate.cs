@@ -16,13 +16,13 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL
 	public class StatementGenerate : BaseTest
 	{
 		#region SetUp & TearDown
+
 		/// <summary>
 		/// SetUp
 		/// </summary>
 		[SetUp] 
 		public void Init() 
 		{
-			InitSqlMap();
 			InitScript( sqlMap.DataSource, ScriptDirectory + "category-init.sql" );
 		}
 

@@ -48,7 +48,8 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// <summary>
 		/// Initialize an sqlMap
 		/// </summary>
-		protected static void InitSqlMap()
+		[TestFixtureSetUp]
+		protected void InitSqlMap()
 		{
 			//DateTime start = DateTime.Now;
 
@@ -72,6 +73,17 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 //			string loadTime = DateTime.Now.Subtract(start).ToString();
 //			Console.WriteLine("Loading configuration time :"+loadTime);
 		}
+
+		/// <summary>
+		/// Dispose the SqlMap
+		/// </summary>
+		[TestFixtureTearDown]
+		protected void DisposeSqlMap()
+		{
+			sqlMap = null;
+		}
+
+
 
 		protected static string Normal(string key)
 		{

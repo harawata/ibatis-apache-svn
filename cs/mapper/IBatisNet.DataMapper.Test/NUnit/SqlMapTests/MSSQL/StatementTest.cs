@@ -17,13 +17,13 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL
 	{
 		
 		#region SetUp & TearDown
+
 		/// <summary>
 		/// SetUp
 		/// </summary>
 		[SetUp] 
 		public void Init() 
 		{
-			InitSqlMap();
 			InitScript( sqlMap.DataSource, ScriptDirectory + "account-init.sql" );
 			InitScript( sqlMap.DataSource, ScriptDirectory + "account-procedure.sql", false );
 			InitScript( sqlMap.DataSource, ScriptDirectory + "ps_SelectAccount.sql", false );

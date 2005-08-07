@@ -15,13 +15,13 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 	public class ResultClassTest : BaseTest
 	{
 		#region SetUp & TearDown
+
 		/// <summary>
 		/// SetUp
 		/// </summary>
 		[SetUp] 
 		public void Init() 
 		{
-			InitSqlMap();
 		}
 
 		/// <summary>

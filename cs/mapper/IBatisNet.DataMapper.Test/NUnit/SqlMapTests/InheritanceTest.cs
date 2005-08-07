@@ -23,13 +23,13 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
 		#region SetUp & TearDown
 
+
 		/// <summary>
 		/// SetUp
 		/// </summary>
 		[SetUp] 
 		public void Init() 
 		{
-			InitSqlMap();
 			InitScript( sqlMap.DataSource, ScriptDirectory + "documents-init.sql" );
 		}
 
