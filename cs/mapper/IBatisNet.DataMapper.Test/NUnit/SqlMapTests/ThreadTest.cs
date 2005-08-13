@@ -23,6 +23,8 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		private static readonly ILog _logger = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
 		private static int _numberOfThreads = 10;
+		private ManualResetEvent  _startEvent = new ManualResetEvent(false);
+		private ManualResetEvent  _stopEvent = new ManualResetEvent(false);
 
 		#region SetUp & TearDown
 
@@ -45,6 +47,44 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		#endregion
 
 		#region Thread test
+
+		[Test]
+		public void TestCommonUsageMultiThread()
+		{
+			const int threadCount = 10;
+
+			Thread[] threads = new Thread[threadCount];
+			
+			for(int i = 0; i < threadCount; i++)
+			{
+				threads[i] = new Thread(new ThreadStart(ExecuteMethodUntilSignal));
+				threads[i].Start();
+			}
+
+			_startEvent.Set();
+
+			Thread.CurrentThread.Join(1 * 2000);
+
+			_stopEvent.Set();
+		}
+
+		public void ExecuteMethodUntilSignal()
+		{
+			_startEvent.WaitOne(int.MaxValue, false);
+
+			while (!_stopEvent.WaitOne(1, false))
+			{
+				Assert.IsFalse(sqlMap.IsSessionStarted);
+
+				Account account = (Account) sqlMap.QueryForObject("GetAccountViaColumnIndex", 1);
+				
+				Assert.IsFalse(sqlMap.IsSessionStarted);
+				
+				Assert.AreEqual(1, account.Id, "account.Id");
+				Assert.AreEqual("Joe", account.FirstName, "account.FirstName");
+				Assert.AreEqual("Dalton", account.LastName, "account.LastName");
+			}
+		}
 
 		/// <summary>
 		/// Test BeginTransaction, CommitTransaction

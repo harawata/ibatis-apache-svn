@@ -32,12 +32,10 @@ using System.Data;
 using System.Threading;
 using System.Xml;
 using IBatisNet.Common;
-using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Utilities;
 using IBatisNet.DataAccess.Configuration;
 using IBatisNet.DataAccess.Exceptions;
 using IBatisNet.DataAccess.Interfaces;
-using IBatisNet.DataAccess.SessionContainer;
 
 #endregion
 
@@ -123,7 +121,7 @@ namespace IBatisNet.DataAccess
 		/// <summary>
 		/// Container session unique for each thread. 
 		/// </summary>
-		private ISessionContainer _sessionContainer = null;
+		private SessionHolder _sessionHolder = null;
 		#endregion
 
 		#region Properties
@@ -197,11 +195,11 @@ namespace IBatisNet.DataAccess
 		{
 			get 
 			{ 
-				if (_sessionContainer.LocalSession == null) 
+				if (_sessionHolder.LocalSession == null) 
 				{
 					throw new DataAccessException("DaoManager could not invoke LocalDaoSession. No DaoSession was started. Call OpenConnection() or BeginTransaction first.");
 				}
-				return _sessionContainer.LocalSession;
+				return _sessionHolder.LocalSession;
 			}
 		}
 
@@ -214,7 +212,7 @@ namespace IBatisNet.DataAccess
 		/// </summary>
 		private DaoManager() 
 		{ 
-			_sessionContainer = SessionContainerFactory.GetSessionContainer(this.Name);
+			_sessionHolder = new SessionHolder(this.Name);
 		}
 		#endregion
 
@@ -390,7 +388,7 @@ namespace IBatisNet.DataAccess
 		/// <returns>True or False</returns>
 		public bool IsDaoSessionStarted()
 		{
-			return (_sessionContainer.LocalSession != null);
+			return (_sessionHolder.LocalSession != null);
 		}
 
 		/// <summary>
@@ -403,12 +401,12 @@ namespace IBatisNet.DataAccess
 			{
 				throw new DataAccessException("DaoManager could not get DaoSession.  DaoSessionPool was null (possibly not configured).");
 			}
-			if (_sessionContainer.LocalSession != null) 
+			if (_sessionHolder.LocalSession != null) 
 			{
 				throw new DataAccessException("DaoManager could not invoke OpenConnection(). A connection is already started. Call CloseConnection first.");
 			}
 			IDalSession session = _daoSessionHandler.GetDaoSession(this);
-			_sessionContainer.Store(session);
+			_sessionHolder.Store(session);
 			session.OpenConnection();
 			return session;
 		}
@@ -418,13 +416,13 @@ namespace IBatisNet.DataAccess
 		/// </summary>
 		public void CloseConnection()
 		{
-			if (_sessionContainer.LocalSession == null) 
+			if (_sessionHolder.LocalSession == null) 
 			{
 				throw new DataAccessException("DaoManager could not invoke CloseConnection(). No connection was started. Call OpenConnection() first.");
 			}
 			try
 			{
-				IDalSession session = _sessionContainer.LocalSession;
+				IDalSession session = _sessionHolder.LocalSession;
 				session.CloseConnection();	
 			} 
 			catch(Exception ex)
@@ -433,7 +431,7 @@ namespace IBatisNet.DataAccess
 			}
 			finally 
 			{
-				_sessionContainer.Dispose();
+				_sessionHolder.Dispose();
 			}
 		}
 
@@ -447,12 +445,12 @@ namespace IBatisNet.DataAccess
 			{
 				throw new DataAccessException("DaoManager could not get DaoSession.  DaoSessionPool was null (possibly not configured).");
 			}
-			if (_sessionContainer.LocalSession != null) 
+			if (_sessionHolder.LocalSession != null) 
 			{
 				throw new DataAccessException("DaoManager could not invoke BeginTransaction(). A DaoSession is already started. Call CommitTransaction() or RollbackTransaction first.");
 			}
 			IDalSession session = _daoSessionHandler.GetDaoSession(this);
-			_sessionContainer.Store(session);
+			_sessionHolder.Store(session);
 			session.BeginTransaction();
 			return session;
 		}
@@ -470,13 +468,13 @@ namespace IBatisNet.DataAccess
 			{
 				throw new DataAccessException("DaoManager could not get DaoSession.  DaoSessionPool was null (possibly not configured).");
 			}
-			if (_sessionContainer.LocalSession != null) 
+			if (_sessionHolder.LocalSession != null) 
 			{
 				throw new DataAccessException("DaoManager could not invoke BeginTransaction(). A DaoSession is already started. Call CommitTransaction() or RollbackTransaction first.");
 			}
 
 			IDalSession session = _daoSessionHandler.GetDaoSession(this);
-			_sessionContainer.Store(session);
+			_sessionHolder.Store(session);
 			session.BeginTransaction(isolationLevel);
 			return session;
 		}
@@ -489,18 +487,18 @@ namespace IBatisNet.DataAccess
 		/// </remarks>
 		public void CommitTransaction()
 		{
-			if (_sessionContainer.LocalSession == null) 
+			if (_sessionHolder.LocalSession == null) 
 			{
 				throw new DataAccessException("DaoManager could not invoke CommitTransaction(). No Transaction was started. Call BeginTransaction() first.");
 			}
 			try
 			{
-				IDalSession session = _sessionContainer.LocalSession;
+				IDalSession session = _sessionHolder.LocalSession;
 				session.CommitTransaction();
 			} 
 			finally 
 			{
-				_sessionContainer.Dispose();
+				_sessionHolder.Dispose();
 			}
 		}
 
@@ -512,19 +510,28 @@ namespace IBatisNet.DataAccess
 		/// </remarks>
 		public void RollBackTransaction()
 		{
-			if (_sessionContainer.LocalSession == null) 
+			if (_sessionHolder.LocalSession == null) 
 			{
 				throw new DataAccessException("DaoManager could not invoke RollBackTransaction(). No Transaction was started. Call BeginTransaction() first.");
 			}
 			try
 			{
-				IDalSession session = _sessionContainer.LocalSession;
+				IDalSession session = _sessionHolder.LocalSession;
 				session.RollBackTransaction();	
 			} 
 			finally 
 			{
-				_sessionContainer.Dispose();
+				_sessionHolder.Dispose();
 			}
+		}
+
+		/// <summary>
+		/// Release the local session.
+		/// </summary>
+		/// <remarks>Use in SqlMapDaoSession</remarks>
+		internal void Dispose()
+		{
+			_sessionHolder.Dispose();
 		}
 
 		#endregion

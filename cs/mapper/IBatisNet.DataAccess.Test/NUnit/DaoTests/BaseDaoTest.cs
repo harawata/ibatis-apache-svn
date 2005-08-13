@@ -1,17 +1,13 @@
+// DataSource definition
+	// ScriptRunner definition
 using System;
+using System.Configuration;
 using System.IO;
 using System.Threading;
-using System.Configuration;
-
-using IBatisNet.DataAccess;
-using IBatisNet.Common; // DataSource definition
-using IBatisNet.Common.Utilities; // ScriptRunner definition
-
+using IBatisNet.Common;
+using IBatisNet.Common.Utilities;
 using IBatisNet.DataAccess.Test.Dao.Interfaces;
-
-using IBatisNet.DataAccess.Test.NUnit;
 using IBatisNet.DataAccess.Test.Domain;
-
 using NUnit.Framework;
 
 namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
@@ -19,27 +15,27 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 	/// <summary>
 	/// Summary description for BaseDaoTest.
 	/// </summary>
-	[TestFixture] 
+	[TestFixture]
 	public abstract class BaseDaoTest
 	{
 		/// <summary>
 		/// A daoManager
 		/// </summary>
-		protected static  DaoManager daoManager = null;
+		protected static DaoManager daoManager = null;
+
 		protected static string ScriptDirectory = null;
+
+		private ManualResetEvent _startEvent = new ManualResetEvent(false);
+		private ManualResetEvent _stopEvent = new ManualResetEvent(false);
 
 		/// <summary>
 		/// Constructor
 		/// </summary>
 		static BaseDaoTest()
 		{
-	
-			ScriptDirectory = Path.Combine( Path.Combine( Path.Combine( Path.Combine(Resources.ApplicationBase, ".."), ".."), "Scripts"), ConfigurationSettings.AppSettings["database"]) + Path.DirectorySeparatorChar;
-				
-//				Resources.RootDirectory + Path.DirectorySeparatorChar +
-//				"Scripts" + Path.DirectorySeparatorChar +
-//				ConfigurationSettings.AppSettings["database"]+ Path.DirectorySeparatorChar;
+			ScriptDirectory = Path.Combine(Path.Combine(Path.Combine(Path.Combine(Resources.ApplicationBase, ".."), ".."), "Scripts"), ConfigurationSettings.AppSettings["database"]) + Path.DirectorySeparatorChar;
 		}
+
 
 		/// <summary>
 		/// Run a sql batch for the datasource.
@@ -59,12 +55,12 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 		/// Verify that DaoManager.GetDao("Account")
 		/// return an object that implemetent the interface IAccountDao.
 		/// </summary>
-		[Test] 						
+		[Test]
 		public void TestGetDao()
 		{
-			Type type = typeof(IAccountDao);
+			Type type = typeof (IAccountDao);
 
-			IAccountDao accountDao = (IAccountDao)daoManager[typeof(IAccountDao)];
+			IAccountDao accountDao = (IAccountDao) daoManager[typeof (IAccountDao)];
 
 			Assert.IsNotNull(accountDao);
 			Assert.IsTrue(type.IsInstanceOfType(accountDao));
@@ -74,10 +70,10 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 		/// <summary>
 		/// Test CreateAccount
 		/// </summary>
-		[Test] 
-		public void TestCreateAccount () 
+		[Test]
+		public void TestCreateAccount()
 		{
-			IAccountDao accountDao = (IAccountDao)daoManager[typeof(IAccountDao)];
+			IAccountDao accountDao = (IAccountDao) daoManager[typeof (IAccountDao)];
 
 			Account account = NewAccount();
 
@@ -88,10 +84,10 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 
 				account = accountDao.GetAccountById(1001);
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				// Ignore
-				Console.WriteLine("TestCreateAccount, error cause : "+e.Message);
+				Console.WriteLine("TestCreateAccount, error cause : " + e.Message);
 			}
 			finally
 			{
@@ -105,10 +101,10 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 		/// <summary>
 		/// Test CreateAccount
 		/// </summary>
-		[Test] 
-		public void TestCreateAccountExplicitOpenSession () 
+		[Test]
+		public void TestCreateAccountExplicitOpenSession()
 		{
-			IAccountDao accountDao = daoManager[typeof(IAccountDao)] as IAccountDao;
+			IAccountDao accountDao = daoManager[typeof (IAccountDao)] as IAccountDao;
 
 			Account account = NewAccount();
 
@@ -118,10 +114,10 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 
 				account = accountDao.GetAccountById(1001);
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				// Ignore
-				Console.WriteLine("TestCreateAccount, error cause : "+e.Message);
+				Console.WriteLine("TestCreateAccount, error cause : " + e.Message);
 			}
 			finally
 			{
@@ -134,10 +130,10 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 		/// <summary>
 		/// Test Transaction Rollback
 		/// </summary>
-		[Test] 
-		public void TestTransactionRollback () 
+		[Test]
+		public void TestTransactionRollback()
 		{
-			IAccountDao accountDao = (IAccountDao)daoManager[typeof(IAccountDao)];
+			IAccountDao accountDao = (IAccountDao) daoManager[typeof (IAccountDao)];
 
 			Account account = NewAccount();
 			daoManager.OpenConnection();
@@ -146,7 +142,7 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 
 			account2.EmailAddress = "someotherAddress@somewhere.com";
 
-			try 
+			try
 			{
 				daoManager.BeginTransaction();
 
@@ -155,12 +151,12 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 				throw new Exception("BOOM!");
 
 				//daoManager.CommitTransaction();
-			} 
+			}
 			catch
 			{
 				daoManager.RollBackTransaction();
-			} 
-			finally 
+			}
+			finally
 			{
 			}
 
@@ -177,10 +173,10 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 		/// <summary>
 		/// Test Transaction Commit
 		/// </summary>
-		[Test] 
-		public void TestTransactionCommit () 
+		[Test]
+		public void TestTransactionCommit()
 		{
-			IAccountDao accountDao = (IAccountDao)daoManager[typeof(IAccountDao)];
+			IAccountDao accountDao = (IAccountDao) daoManager[typeof (IAccountDao)];
 
 			Account account = NewAccount();
 
@@ -190,14 +186,14 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 
 			account2.EmailAddress = "someotherAddress@somewhere.com";
 
-			try 
+			try
 			{
 				daoManager.BeginTransaction();
 				accountDao.Create(account);
 				accountDao.Update(account2);
 				daoManager.CommitTransaction();
-			} 
-			finally 
+			}
+			finally
 			{
 				// Nothing
 			}
@@ -214,10 +210,10 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 		/// <summary>
 		/// Test Delete
 		/// </summary>
-		[Test] 
-		public void TestDeleteAccount () 
+		[Test]
+		public void TestDeleteAccount()
 		{
-			IAccountDao accountDao = (IAccountDao)daoManager[typeof(IAccountDao)];
+			IAccountDao accountDao = (IAccountDao) daoManager[typeof (IAccountDao)];
 
 			Account account = NewAccount();
 
@@ -225,7 +221,7 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 
 			accountDao.Create(account);
 			account = accountDao.GetAccountById(1001);
-			
+
 			Assert.IsNotNull(account);
 			Assert.AreEqual("Calamity.Jane@somewhere.com", account.EmailAddress);
 
@@ -240,27 +236,27 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 		/// <summary>
 		/// Test Using syntax on daoManager.OpenConnection
 		/// </summary>
-		[Test] 
-		public void TestUsingConnection() 
+		[Test]
+		public void TestUsingConnection()
 		{
-			IAccountDao accountDao = (IAccountDao)daoManager[typeof(IAccountDao)];
+			IAccountDao accountDao = (IAccountDao) daoManager[typeof (IAccountDao)];
 
-			using ( IDalSession session = daoManager.OpenConnection() )
+			using (IDalSession session = daoManager.OpenConnection())
 			{
 				Account account = NewAccount();
 				accountDao.Create(account);
-			}   // compiler will call Dispose on DaoSession
+			} // compiler will call Dispose on DaoSession
 		}
 
 		/// <summary>
 		/// Test Test Using syntax on daoManager.BeginTransaction
 		/// </summary>
-		[Test] 
-		public void TestUsingTransaction() 
+		[Test]
+		public void TestUsingTransaction()
 		{
-			IAccountDao accountDao = (IAccountDao)daoManager[typeof(IAccountDao)];
+			IAccountDao accountDao = (IAccountDao) daoManager[typeof (IAccountDao)];
 
-			using ( IDalSession session = daoManager.BeginTransaction() )
+			using (IDalSession session = daoManager.BeginTransaction())
 			{
 				Account account = NewAccount();
 				Account account2 = accountDao.GetAccountById(1);
@@ -275,11 +271,55 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 
 		#endregion
 
+		#region Thread test
+
+		[Test]
+		public void TestCommonUsageMultiThread()
+		{
+			const int threadCount = 10;
+
+			Thread[] threads = new Thread[threadCount];
+
+			for (int i = 0; i < threadCount; i++)
+			{
+				threads[i] = new Thread(new ThreadStart(ExecuteMethodUntilSignal));
+				threads[i].Start();
+			}
+
+			_startEvent.Set();
+
+			Thread.CurrentThread.Join(1*2000);
+
+			_stopEvent.Set();
+		}
+
+		public void ExecuteMethodUntilSignal()
+		{
+			_startEvent.WaitOne(int.MaxValue, false);
+
+			IAccountDao accountDao = daoManager[typeof (IAccountDao)] as IAccountDao;
+
+			while (!_stopEvent.WaitOne(1, false))
+			{
+				Assert.IsFalse(daoManager.IsDaoSessionStarted());
+
+				Account account = account = accountDao.GetAccountById(1);
+
+				Assert.IsFalse(daoManager.IsDaoSessionStarted());
+
+				Assert.AreEqual(1, account.Id, "account.Id");
+				Assert.AreEqual("Joe", account.FirstName, "account.FirstName");
+				Assert.AreEqual("Dalton", account.LastName, "account.LastName");
+			}
+		}
+
+		#endregion
+
 		/// <summary>
 		/// Create a new account with id = 1001
 		/// </summary>
 		/// <returns>An account</returns>
-		protected Account NewAccount() 
+		protected Account NewAccount()
 		{
 			Account account = new Account();
 			account.Id = 1001;

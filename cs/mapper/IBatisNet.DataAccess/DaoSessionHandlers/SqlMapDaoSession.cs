@@ -244,6 +244,7 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		public override void Dispose()
 		{
 			_sqlMap.LocalSession.Dispose();
+			daoManager.Dispose();
 		}
 		#endregion
 

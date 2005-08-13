@@ -148,6 +148,11 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "SessionHolder.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Configuration\Dao.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -219,26 +224,6 @@
                 />
                 <File
                     RelPath = "Scope\ErrorContext.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "SessionContainer\ISessionContainer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "SessionContainer\SessionContainerFactory.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "SessionContainer\WebSessionContainer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "SessionContainer\WindowSessionContainer.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
