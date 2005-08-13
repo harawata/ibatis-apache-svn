@@ -32,6 +32,7 @@ using System.Data;
 using System.Xml;
 using System.Xml.Serialization;
 using IBatisNet.Common.Utilities.Objects;
+using IBatisNet.DataMapper.Configuration.Serializers;
 using IBatisNet.DataMapper.Scope;
 using IBatisNet.DataMapper.TypeHandlers;
 
@@ -322,15 +323,11 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// <param name="configScope"></param>
 		private void GetProperties(ConfigurationScope configScope)
 		{
-			XmlSerializer serializer = null;
 			ParameterProperty property = null;
 
-			serializer = new XmlSerializer(typeof(ParameterProperty));
 			foreach ( XmlNode parameterNode in configScope.NodeContext.SelectNodes(DomSqlMapBuilder.ApplyMappingNamespacePrefix(XML_PARAMATER), configScope.XmlNamespaceManager) )
 			{
-				property = (ParameterProperty) serializer.Deserialize(new XmlNodeReader(parameterNode));
-				property.Initialize( configScope );
-					
+				property = ParameterPropertyDeSerializer.Deserialize(parameterNode, configScope);
 				AddParameterProperty(property);
 			}
 		}

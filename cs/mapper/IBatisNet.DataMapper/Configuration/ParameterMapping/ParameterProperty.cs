@@ -49,7 +49,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 
 		#region Fields
 		[NonSerialized]
-		private string _nullValue = string.Empty;
+		private string _nullValue = null;//string.Empty;//null;
 		[NonSerialized]
 		private string _property = string.Empty;
 		[NonSerialized]
@@ -211,12 +211,12 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		}
 
 		/// <summary>
-		/// Tell if a nullValue is defined.
+		/// Tell if a nullValue is defined._nullValue!=null
 		/// </summary>
 		[XmlIgnore]
 		public bool HasNullValue
 		{
-			get { return (_nullValue.Length>0); }
+			get { return (_nullValue!=null); }
 		}
 
 		/// <summary>

@@ -34,6 +34,7 @@ using System.Security.Permissions;
 using System.Xml;
 using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Utilities.TypesResolver;
+using IBatisNet.Common.Xml;
 using log4net;
 
 #endregion
@@ -229,17 +230,17 @@ namespace IBatisNet.Common.Utilities
 
 			if (node.Attributes["resource"] != null)
 			{
-				string ressource = Resources.ParsePropertyTokens( node.Attributes["resource"].Value, properties);
+				string ressource = NodeUtils.ParsePropertyTokens( node.Attributes["resource"].Value, properties);
 				xmlDocument = Resources.GetResourceAsXmlDocument( ressource );
 			}
 			else if (node.Attributes["url"] != null)
 			{
-				string url = Resources.ParsePropertyTokens( node.Attributes["url"].Value, properties);
+				string url = NodeUtils.ParsePropertyTokens( node.Attributes["url"].Value, properties);
 				xmlDocument = Resources.GetUrlAsXmlDocument( url );
 			}
 			else if (node.Attributes["embedded"] != null)
 			{
-				string embedded = Resources.ParsePropertyTokens( node.Attributes["embedded"].Value, properties);
+				string embedded = NodeUtils.ParsePropertyTokens( node.Attributes["embedded"].Value, properties);
 				xmlDocument = Resources.GetEmbeddedResourceAsXmlDocument(embedded);
 			}
 
@@ -259,12 +260,12 @@ namespace IBatisNet.Common.Utilities
 
 			if (node.Attributes["resource"] != null)
 			{
-				string ressource = Resources.ParsePropertyTokens( node.Attributes["resource"].Value, properties);
+				string ressource = NodeUtils.ParsePropertyTokens( node.Attributes["resource"].Value, properties);
 				path = Path.Combine(_applicationBase, ressource);
 			}
 			else if (node.Attributes["url"] != null)
 			{
-				string url = Resources.ParsePropertyTokens( node.Attributes["url"].Value, properties);
+				string url = NodeUtils.ParsePropertyTokens( node.Attributes["url"].Value, properties);
 				path = url;
 			}
 
@@ -493,47 +494,6 @@ namespace IBatisNet.Common.Utilities
 			}
 			return fileInfo;
 
-		}
-
-
-		/// <summary>
-		/// Replace properties by their values in the given string
-		/// </summary>
-		/// <param name="str"></param>
-		/// <param name="properties"></param>
-		/// <returns></returns>
-		public static string ParsePropertyTokens(string str, NameValueCollection  properties) 
-		{
-			string OPEN = "${";
-			string CLOSE = "}";
-
-			string newString = str;
-			if (newString != null && properties != null) 
-			{
-				int start = newString.IndexOf(OPEN);
-				int end = newString.IndexOf(CLOSE);
-
-				while (start > -1 && end > start) 
-				{
-					string prepend = newString.Substring(0, start);
-					string append = newString.Substring(end + CLOSE.Length);
-
-					int index = start + OPEN.Length;
-					string propName = newString.Substring(index, end-index);
-					string propValue = properties.Get(propName);
-					if (propValue == null) 
-					{
-						newString = prepend + propName + append;
-					} 
-					else 
-					{
-						newString = prepend + propValue + append;
-					}
-					start = newString.IndexOf(OPEN);
-					end = newString.IndexOf(CLOSE);
-				}
-			}
-			return newString;
 		}
 
 

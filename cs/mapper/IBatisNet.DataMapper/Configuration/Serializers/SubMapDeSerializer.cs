@@ -1,4 +1,3 @@
-
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
@@ -24,41 +23,38 @@
  ********************************************************************************/
 #endregion
 
-using System;
-using System.Data;
-using System.Xml.Serialization;
+#region Using
 
-namespace IBatisNet.DataMapper.Configuration.Statements
+using System.Collections.Specialized;
+using System.Xml;
+using IBatisNet.Common.Xml;
+using IBatisNet.DataMapper.Configuration.ResultMapping;
+using IBatisNet.DataMapper.Scope;
+#endregion 
+
+
+namespace IBatisNet.DataMapper.Configuration.Serializers
 {
 	/// <summary>
-	/// Summary description for Update.
+	/// Summary description for SubMapDeSerializer.
 	/// </summary>
-	[Serializable]
-	[XmlRoot("update", Namespace="http://ibatis.apache.org/mapping")]
-	public class Update : Statement
+	public class SubMapDeSerializer
 	{
-
-		#region Fields
-		[NonSerialized]
-		private Generate _generate = null;
-		#endregion
-
 		/// <summary>
-		/// The Generate tag used by a generated update statement.
-		/// (CRUD operation)
+		/// Deserialize a ResultMap object
 		/// </summary>
-		[XmlElement("generate",typeof(Generate))]
-		public Generate Generate
+		/// <param name="node"></param>
+		/// <param name="configScope"></param>
+		/// <returns></returns>
+		public static SubMap Deserialize(XmlNode node, ConfigurationScope configScope)
 		{
-			get { return _generate; }
-			set { _generate = value; }
+			SubMap subMap = new SubMap();
+
+			NameValueCollection prop = NodeUtils.ParseAttributes(node, configScope.Properties);
+			subMap.DiscriminatorValue = NodeUtils.GetStringAttribute(prop, "value");
+			subMap.ResultMapName = NodeUtils.GetStringAttribute(prop, "resultMapping");
+
+			return subMap;
 		}
-
-		/// <summary>
-		/// Do not use direclty, only for serialization.
-		/// </summary>
-		public Update():base()
-		{}
-
 	}
 }

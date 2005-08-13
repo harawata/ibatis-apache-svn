@@ -58,9 +58,9 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 
 		#region Fields
 		[NonSerialized]
-		private PropertyInfo _propertyInfo;
+		private PropertyInfo _propertyInfo = null;
 		[NonSerialized]
-		private string _nullValue = string.Empty;
+		private string _nullValue = null;
 		[NonSerialized]
 		private string _propertyName = string.Empty;
 		[NonSerialized]
@@ -214,7 +214,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		[XmlIgnore]
 		public bool HasNullValue
 		{
-			get { return (_nullValue.Length>0); }
+			get { return (_nullValue!=null); }
 		}
 
 		/// <summary>
@@ -262,7 +262,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 				_propertyInfo = ReflectionInfo.GetInstance(resultClass).GetSetter( _propertyName );
 			}
 
-			if (this.CallBackName.Length >0)
+			if (this.CallBackName!=null && this.CallBackName.Length >0)
 			{
 				configScope.ErrorContext.MoreInfo = "Result property '"+_propertyName+"' check the typeHandler attribute '" + this.CallBackName + "' (must be a ITypeHandlerCallback implementation).";
 				try 

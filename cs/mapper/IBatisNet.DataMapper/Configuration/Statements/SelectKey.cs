@@ -58,7 +58,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		/// Extend statement attribute
 		/// </summary>
 		[XmlIgnore]
-		public override string ExtendSatement
+		public override string ExtendStatement
 		{
 			get { return string.Empty;  }
 			set {  }
@@ -99,7 +99,6 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		/// <summary>
 		/// Do not use direclty, only for serialization.
 		/// </summary>
-		[Obsolete("This public constructor with no parameter is not really obsolete, but is reserved for serialization.", false)]
 		public SelectKey():base()
 		{
 		}

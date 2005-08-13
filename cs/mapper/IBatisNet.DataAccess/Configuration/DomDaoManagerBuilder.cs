@@ -29,13 +29,15 @@
 using System;
 using System.Collections;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Xml;
-using System.Xml.Serialization;
 using IBatisNet.Common;
 using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Logging;
 using IBatisNet.Common.Utilities;
+using IBatisNet.Common.Xml;
+using IBatisNet.DataAccess.Configuration.Serializers;
 using IBatisNet.DataAccess.Interfaces;
 using IBatisNet.DataAccess.Scope;
 
@@ -146,7 +148,7 @@ namespace IBatisNet.DataAccess.Configuration
 
 		#region Fields
 
-		private static readonly ILog _logger = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
+		private static readonly ILog _logger = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
 
 		#endregion 
 
@@ -371,7 +373,6 @@ namespace IBatisNet.DataAccess.Configuration
 		/// <param name="configurationScope">The scope of the configuration</param>
 		private void GetProviders(ConfigurationScope configurationScope)
 		{
-			XmlSerializer serializer = null;
 			Provider provider = null;
 			XmlDocument xmlProviders = null;
 
@@ -389,20 +390,18 @@ namespace IBatisNet.DataAccess.Configuration
 				xmlProviders = Resources.GetConfigAsXmlDocument(PROVIDERS_FILE_NAME);
 			}
 
-			serializer = new XmlSerializer(typeof(Provider));
-
 			foreach (XmlNode node in xmlProviders.SelectNodes(ApplyProviderNamespacePrefix(XML_PROVIDER), configurationScope.XmlNamespaceManager ) )
 			{
 				configurationScope.ErrorContext.Resource = node.InnerXml.ToString();
 
-				provider = (Provider) serializer.Deserialize(new XmlNodeReader(node));
+				provider = ProviderDeSerializer.Deserialize(node);
 
 				if (provider.IsEnabled == true)
 				{
 					configurationScope.ErrorContext.ObjectId = provider.Name;
 					configurationScope.ErrorContext.MoreInfo = "initialize provider";
 
-					provider.Initialisation();
+					provider.Initialize() ;
 					configurationScope.Providers.Add(provider.Name, provider);
 					if (provider.IsDefault == true)
 					{
@@ -429,12 +428,10 @@ namespace IBatisNet.DataAccess.Configuration
 		/// <param name="configurationScope">The scope of the configuration</param>
 		private void GetDaoSessionHandlers(ConfigurationScope configurationScope)
 		{
-			XmlSerializer serializer = null;
 			XmlNode daoSessionHandlersNode = null;
 
 			configurationScope.ErrorContext.Activity = "loading custom DaoSession Handlers";
 
-			serializer = new XmlSerializer(typeof(DaoSessionHandler));
 			daoSessionHandlersNode = configurationScope.DaoConfigDocument.SelectSingleNode( ApplyNamespacePrefix(XML_DAO_SESSION_HANDLERS), configurationScope.XmlNamespaceManager);
 
 			if (daoSessionHandlersNode != null)
@@ -443,12 +440,10 @@ namespace IBatisNet.DataAccess.Configuration
 				{
 					configurationScope.ErrorContext.Resource = node.InnerXml.ToString();
 
-					DaoSessionHandler daoSessionHandler =(DaoSessionHandler) serializer.Deserialize(new XmlNodeReader(node));
+					DaoSessionHandler daoSessionHandler = DaoSessionHandlerDeSerializer.Deserialize(node, configurationScope);
 				
 					configurationScope.ErrorContext.ObjectId = daoSessionHandler.Name;
 					configurationScope.ErrorContext.MoreInfo = "build daoSession handler";
-
-					//IDaoSessionHandler sessionHandler = daoSessionHandler.GetIDaoSessionHandler();
 
 					configurationScope.DaoSectionHandlers[daoSessionHandler.Name] = daoSessionHandler.TypeInstance;
 
@@ -553,7 +548,7 @@ namespace IBatisNet.DataAccess.Configuration
 					foreach(XmlNode nodeProperty in nodeSessionHandler.SelectNodes( ApplyNamespacePrefix(XML_PROPERTY), configurationScope.XmlNamespaceManager ))
 					{
 						resources.Add(nodeProperty.Attributes["name"].Value, 
-							Resources.ParsePropertyTokens(nodeProperty.Attributes["value"].Value, configurationScope.Properties));
+						              NodeUtils.ParsePropertyTokens(nodeProperty.Attributes["value"].Value, configurationScope.Properties));
 					}
 				}
 				else
@@ -792,18 +787,16 @@ namespace IBatisNet.DataAccess.Configuration
 		/// <returns>A DataSource</returns>
 		private DataSource ParseDataSource(ConfigurationScope configurationScope)
 		{
-			XmlSerializer serializer = null;
 			DataSource dataSource = null;
 			XmlNode node = configurationScope.NodeContext.SelectSingleNode( ApplyNamespacePrefix(XML_DATABASE_DATASOURCE), configurationScope.XmlNamespaceManager);
 
 			configurationScope.ErrorContext.Resource = node.InnerXml.ToString();
 			configurationScope.ErrorContext.MoreInfo = "configure data source";
 
-			serializer = new XmlSerializer(typeof(DataSourceConfig));
+			dataSource = DataSourceDeSerializer.Deserialize( node );
+//				(DataSource)serializer.Deserialize(new XmlNodeReader(node));
 
-			dataSource = (DataSource)serializer.Deserialize(new XmlNodeReader(node));
-
-			dataSource.ConnectionString = Resources.ParsePropertyTokens(dataSource.ConnectionString, configurationScope.Properties);
+			dataSource.ConnectionString = NodeUtils.ParsePropertyTokens(dataSource.ConnectionString, configurationScope.Properties);
 			
 			configurationScope.ErrorContext.Resource = string.Empty;
 			configurationScope.ErrorContext.MoreInfo = string.Empty;
@@ -819,16 +812,14 @@ namespace IBatisNet.DataAccess.Configuration
 		/// <param name="daoManager"></param>
 		private void ParseDaoFactory(ConfigurationScope configurationScope, DaoManager daoManager)
 		{
-			XmlSerializer serializer = null;
 			Dao dao = null;
 
 			configurationScope.ErrorContext.MoreInfo = "configure dao";
-
-			serializer = new XmlSerializer(typeof(Dao));
 			
 			foreach (XmlNode node in configurationScope.NodeContext.SelectNodes(ApplyNamespacePrefix(XML_DAO), configurationScope.XmlNamespaceManager ))
 			{
-				dao = (Dao) serializer.Deserialize(new XmlNodeReader(node));
+				dao = DaoDeSerializer.Deserialize(node, configurationScope);
+					//(Dao) serializer.Deserialize(new XmlNodeReader(node));
 				
 				configurationScope.ErrorContext.ObjectId = dao.Implementation;
 

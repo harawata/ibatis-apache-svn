@@ -64,7 +64,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		/// <summary>
 		/// Extend statement attribute
 		/// </summary>
-		string ExtendSatement
+		string ExtendStatement
 		{
 			get;
 			set;

@@ -54,7 +54,6 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements
 
 		#endregion
 
-
 		/// <summary>
 		/// Parent tag element
 		/// </summary>

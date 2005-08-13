@@ -103,7 +103,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		/// Extend statement attribute
 		/// </summary>
 		[XmlAttribute("extends")]
-		public virtual string ExtendSatement
+		public virtual string ExtendStatement
 		{
 			get { return _extendStatement; }
 			set { _extendStatement = value; }
@@ -286,7 +286,6 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		/// <summary>
 		/// Do not use direclty, only for serialization.
 		/// </summary>
-		[Obsolete("This public constructor with no parameter is not really obsolete, but is reserved for serialization.", false)]
 		public Statement() {}
 		#endregion
 

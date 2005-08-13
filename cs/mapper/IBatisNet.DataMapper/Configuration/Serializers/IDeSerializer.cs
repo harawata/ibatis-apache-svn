@@ -1,4 +1,3 @@
-
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
@@ -24,41 +23,24 @@
  ********************************************************************************/
 #endregion
 
-using System;
-using System.Data;
-using System.Xml.Serialization;
+#region Using
 
-namespace IBatisNet.DataMapper.Configuration.Statements
+using System.Xml;
+using IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements;
+#endregion 
+
+namespace IBatisNet.DataMapper.Configuration.Serializers
 {
 	/// <summary>
-	/// Summary description for Update.
+	/// Summary description for IDeSerializer.
 	/// </summary>
-	[Serializable]
-	[XmlRoot("update", Namespace="http://ibatis.apache.org/mapping")]
-	public class Update : Statement
+	public interface IDeSerializer
 	{
-
-		#region Fields
-		[NonSerialized]
-		private Generate _generate = null;
-		#endregion
-
 		/// <summary>
-		/// The Generate tag used by a generated update statement.
-		/// (CRUD operation)
+		/// 
 		/// </summary>
-		[XmlElement("generate",typeof(Generate))]
-		public Generate Generate
-		{
-			get { return _generate; }
-			set { _generate = value; }
-		}
-
-		/// <summary>
-		/// Do not use direclty, only for serialization.
-		/// </summary>
-		public Update():base()
-		{}
-
+		/// <param name="node"></param>
+		/// <returns></returns>
+		SqlTag Deserialize(XmlNode node);
 	}
 }

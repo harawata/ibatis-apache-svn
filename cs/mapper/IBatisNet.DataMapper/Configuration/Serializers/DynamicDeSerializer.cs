@@ -1,4 +1,3 @@
-
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
@@ -24,41 +23,52 @@
  ********************************************************************************/
 #endregion
 
-using System;
-using System.Data;
-using System.Xml.Serialization;
+#region Using
 
-namespace IBatisNet.DataMapper.Configuration.Statements
+using System.Collections.Specialized;
+using System.Xml;
+using IBatisNet.Common.Xml;
+using IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements;
+using IBatisNet.DataMapper.Scope;
+
+#endregion 
+
+namespace IBatisNet.DataMapper.Configuration.Serializers
 {
 	/// <summary>
-	/// Summary description for Update.
+	/// Summary description for DynamicDeSerializer.
 	/// </summary>
-	[Serializable]
-	[XmlRoot("update", Namespace="http://ibatis.apache.org/mapping")]
-	public class Update : Statement
+	public class DynamicDeSerializer : IDeSerializer
 	{
-
-		#region Fields
-		[NonSerialized]
-		private Generate _generate = null;
-		#endregion
+		private ConfigurationScope _configScope = null;
 
 		/// <summary>
-		/// The Generate tag used by a generated update statement.
-		/// (CRUD operation)
+		/// Constructor
 		/// </summary>
-		[XmlElement("generate",typeof(Generate))]
-		public Generate Generate
+		/// <param name="configScope"></param>
+		public DynamicDeSerializer(ConfigurationScope configScope)
 		{
-			get { return _generate; }
-			set { _generate = value; }
+			_configScope = configScope;
+		}
+		
+
+		#region IDeSerializer Members
+
+		/// <summary>
+		/// Deserialize a Dynamic object
+		/// </summary>
+		/// <param name="node"></param>
+		/// <returns></returns>
+		public SqlTag Deserialize(XmlNode node)
+		{
+			Dynamic dynamic = new Dynamic();
+
+			NameValueCollection prop = NodeUtils.ParseAttributes(node, _configScope.Properties);
+			dynamic.Prepend = NodeUtils.GetStringAttribute(prop, "prepend");
+
+			return dynamic;
 		}
 
-		/// <summary>
-		/// Do not use direclty, only for serialization.
-		/// </summary>
-		public Update():base()
-		{}
-
+		#endregion
 	}
 }

@@ -163,12 +163,17 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Configuration\DataSourceConfig.cs"
+                    RelPath = "Configuration\DomDaoManagerBuilder.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Configuration\DomDaoManagerBuilder.cs"
+                    RelPath = "Configuration\Serializers\DaoDeSerializer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Configuration\Serializers\DaoSessionHandlerDeSerializer.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

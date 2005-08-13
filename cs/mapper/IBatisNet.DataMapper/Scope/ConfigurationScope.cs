@@ -275,7 +275,7 @@ namespace IBatisNet.DataMapper.Scope
 			else if (typeof(IDictionary).IsAssignableFrom(clazz)) 
 			{
 				// IDictionary
-				if (clrType.Length == 0) 
+				if (clrType ==null ||clrType.Length == 0) 
 				{
 					handler = this.TypeHandlerFactory.GetUnkownTypeHandler(); 
 				} 
@@ -300,7 +300,7 @@ namespace IBatisNet.DataMapper.Scope
 			else 
 			{
 				// .NET object
-				if (clrType.Length == 0) 
+				if (clrType ==null || clrType.Length == 0) 
 				{
 					Type type = ObjectProbe.GetPropertyTypeForGetter(clazz, propertyName);
 					handler = this.TypeHandlerFactory.GetTypeHandler(type, dbType);

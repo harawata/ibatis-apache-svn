@@ -1,4 +1,3 @@
-
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
@@ -26,21 +25,32 @@
 
 #region Using
 
-using System;
-using System.Xml.Serialization;
-using IBatisNet.Common;
+using System.Collections.Specialized;
+using System.Xml;
+using IBatisNet.Common.Xml;
+#endregion 
 
-#endregion
-
-namespace IBatisNet.DataAccess.Configuration
+namespace IBatisNet.Common
 {
 	/// <summary>
-	/// DataSource (used only for serialization)
+	/// Summary description for DataSourceDeSerializer.
 	/// </summary>
-	[Serializable]
-	[XmlRoot("dataSource", Namespace="http://ibatis.apache.org/dataAccess")]
-	public class DataSourceConfig : DataSource
+	public class DataSourceDeSerializer
 	{
+		/// <summary>
+		/// Deserialize a DataSource object
+		/// </summary>
+		/// <param name="node"></param>
+		/// <returns></returns>
+		public static DataSource Deserialize(XmlNode node)
+		{
+			DataSource dataSource = new DataSource();
+			NameValueCollection prop = NodeUtils.ParseAttributes(node);
 
+			dataSource.ConnectionString = prop["connectionString"];
+			dataSource.Name = prop["name"];
+			
+			return dataSource;
+		}
 	}
 }

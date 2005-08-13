@@ -455,7 +455,6 @@ namespace IBatisNet.Common
 		/// <summary>
 		/// Do not use direclty, only for serialization.
 		/// </summary>
-		[Obsolete("This public constructor with no parameter is not really obsolete, but is reserved for serialization.", false)]
 		public Provider()
 		{
 		}
@@ -465,7 +464,7 @@ namespace IBatisNet.Common
 		/// <summary>
 		/// Init the provider.
 		/// </summary>
-		public void Initialisation()
+		public void Initialize()
 		{
 			Assembly assembly;
 			Type type;

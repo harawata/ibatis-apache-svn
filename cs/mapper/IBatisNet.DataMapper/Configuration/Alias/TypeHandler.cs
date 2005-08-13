@@ -101,11 +101,9 @@ namespace IBatisNet.DataMapper.Configuration.Alias
 		/// <summary>
 		/// Do not use direclty, only for serialization.
 		/// </summary>
-		[Obsolete("This public constructor with no parameter is not really obsolete, but is reserved for serialization.", false)]
 		public TypeHandler()
 		{}
 		#endregion 
-
 
 		#region Methods
 		/// <summary>

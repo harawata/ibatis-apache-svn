@@ -1,4 +1,3 @@
-
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
@@ -24,41 +23,38 @@
  ********************************************************************************/
 #endregion
 
-using System;
-using System.Data;
-using System.Xml.Serialization;
+#region Using
 
-namespace IBatisNet.DataMapper.Configuration.Statements
+using System.Collections.Specialized;
+using System.Xml;
+using IBatisNet.Common.Xml;
+using IBatisNet.DataAccess.Scope;
+
+#endregion 
+
+namespace IBatisNet.DataAccess.Configuration.Serializers
 {
 	/// <summary>
-	/// Summary description for Update.
+	/// Summary description for DaoSessionHandlerDeSerializer.
 	/// </summary>
-	[Serializable]
-	[XmlRoot("update", Namespace="http://ibatis.apache.org/mapping")]
-	public class Update : Statement
+	public class DaoSessionHandlerDeSerializer
 	{
-
-		#region Fields
-		[NonSerialized]
-		private Generate _generate = null;
-		#endregion
-
 		/// <summary>
-		/// The Generate tag used by a generated update statement.
-		/// (CRUD operation)
+		/// Deserialize a Dao object
 		/// </summary>
-		[XmlElement("generate",typeof(Generate))]
-		public Generate Generate
+		/// <param name="node"></param>
+		/// <param name="configScope"></param>
+		/// <returns></returns>
+		public static DaoSessionHandler Deserialize(XmlNode node, ConfigurationScope configScope)
 		{
-			get { return _generate; }
-			set { _generate = value; }
+			DaoSessionHandler daoSessionHandler = new DaoSessionHandler();
+
+			NameValueCollection prop = NodeUtils.ParseAttributes(node, configScope.Properties);
+			daoSessionHandler.Implementation = NodeUtils.GetStringAttribute(prop, "implementation");
+			daoSessionHandler.Name = NodeUtils.GetStringAttribute(prop, "id");
+			daoSessionHandler.IsDefault = NodeUtils.GetBooleanAttribute(prop, "default", false);
+
+			return daoSessionHandler;
 		}
-
-		/// <summary>
-		/// Do not use direclty, only for serialization.
-		/// </summary>
-		public Update():base()
-		{}
-
 	}
 }

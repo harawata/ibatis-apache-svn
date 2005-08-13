@@ -1,4 +1,3 @@
-
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
@@ -26,20 +25,35 @@
 
 #region Using
 
-using System;
-using System.Xml.Serialization;
+using System.Collections.Specialized;
+using System.Xml;
+using IBatisNet.Common.Xml;
+using IBatisNet.DataAccess.Scope;
 
-#endregion
+#endregion 
 
-namespace IBatisNet.DataMapper.Configuration.Alias
+namespace IBatisNet.DataAccess.Configuration.Serializers
 {
 	/// <summary>
-	/// TypeAlias, used only for serialisation
+	/// Summary description for DaoDeSerializer.
 	/// </summary>
-	[Serializable]
-	[XmlRoot("typeAlias", Namespace="http://ibatis.apache.org/mapping")]
-	public class TypeAliasMapping : TypeAlias
+	public class DaoDeSerializer
 	{
+		/// <summary>
+		/// Deserialize a Dao object
+		/// </summary>
+		/// <param name="node"></param>
+		/// <param name="configScope"></param>
+		/// <returns></returns>
+		public static Dao Deserialize(XmlNode node, ConfigurationScope configScope)
+		{
+			Dao dao = new Dao();
 
+			NameValueCollection prop = NodeUtils.ParseAttributes(node, configScope.Properties);
+			dao.Implementation = NodeUtils.GetStringAttribute(prop, "implementation");
+			dao.Interface = NodeUtils.GetStringAttribute(prop, "interface");
+
+			return dao;
+		}
 	}
 }

@@ -122,6 +122,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "DataSourceDeSerializer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "IBatisNet.Common.build"
                     BuildAction = "None"
                 />
@@ -146,6 +151,11 @@
                 <File
                     RelPath = "provider.xsd"
                     BuildAction = "Content"
+                />
+                <File
+                    RelPath = "ProviderDeSerializer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Exceptions\ConfigurationException.cs"
@@ -324,6 +334,11 @@
                 />
                 <File
                     RelPath = "Utilities\TypesResolver\TypeResolver.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Xml\NodeUtils.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
