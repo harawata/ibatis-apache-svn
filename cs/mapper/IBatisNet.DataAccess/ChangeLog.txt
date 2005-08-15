@@ -1,7 +1,13 @@
 IBatisNet DataAccess Change Log
 
 ------------------------------
-1.6 - 01-June-2005
+1.7 - XX/XX/XXXX
+------------------------------
+- Removes use of Xml serilization for loading config, boost init
+- IBATISNET-102 Calling DaoManager in different threads causes an Exception
+
+------------------------------
+1.6.1 - 10-June-2005
 ------------------------------
 - Fixed JIRA-38 Removed use of innerXml since properties node could be null/missing
 - Improvement JIRA-75/63
