@@ -3,6 +3,8 @@ IBatisNet DataAccess Change Log
 ------------------------------
 1.7 - XX/XX/XXXX
 ------------------------------
+- Re-add signing on assembly 
+- Added custom logger support
 - Removes use of Xml serilization for loading config, boost init
 - IBATISNET-102 Calling DaoManager in different threads causes an Exception
 
