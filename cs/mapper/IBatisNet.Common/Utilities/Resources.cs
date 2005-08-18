@@ -288,7 +288,7 @@ namespace IBatisNet.Common.Utilities
 			catch(Exception e)
 			{
 				throw new ConfigurationException(
-					string.Format("Unable to load XmlDocument via stream. Cause : {1}", 
+					string.Format("Unable to load XmlDocument via stream. Cause : {0}", 
 					e.Message ) ,e); 
 			}
 
@@ -311,7 +311,7 @@ namespace IBatisNet.Common.Utilities
 			catch(Exception e)
 			{
 				throw new ConfigurationException(
-					string.Format("Unable to load XmlDocument via FileInfo. Cause : {1}", 
+					string.Format("Unable to load XmlDocument via FileInfo. Cause : {0}", 
 					e.Message ) ,e); 
 			}
 
@@ -334,7 +334,7 @@ namespace IBatisNet.Common.Utilities
 			catch(Exception e)
 			{
 				throw new ConfigurationException(
-					string.Format("Unable to load XmlDocument via Uri. Cause : {1}", 
+					string.Format("Unable to load XmlDocument via Uri. Cause : {0}", 
 					e.Message ) ,e); 
 			}
 
