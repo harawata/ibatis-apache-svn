@@ -323,6 +323,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Utilities\Proxy\IProxyGenerator.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Utilities\Proxy\ProxyGeneratorFactory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Utilities\TypesResolver\CachedTypeResolver.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -57,7 +57,7 @@ namespace IBatisNet.DataMapper
 		private object _loadLock = new object();
 		private static ArrayList _passthroughMethods = new ArrayList();
 
-		private static CachedProxyGenerator _proxyGenerator = new CachedProxyGenerator();
+//		private static CachedProxyGenerator _proxyGenerator = new CachedProxyGenerator();
 		private static readonly ILog _logger = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
 		#endregion
 
@@ -107,11 +107,13 @@ namespace IBatisNet.DataMapper
 
 			if (mappedSatement.Statement.ListClass != null)
 			{
-				proxList = _proxyGenerator.CreateProxy(typeof(IList), handler, mappedSatement.Statement.CreateInstanceOfListClass());
+				proxList = ProxyGeneratorFactory.GetProxyGenerator().CreateProxy(typeof(IList), handler, mappedSatement.Statement.CreateInstanceOfListClass());
+					//_proxyGenerator.CreateProxy(typeof(IList), handler, mappedSatement.Statement.CreateInstanceOfListClass());
 			}
 			else
 			{
-				proxList = _proxyGenerator.CreateProxy(typeof(IList), handler, new ArrayList());
+				proxList = ProxyGeneratorFactory.GetProxyGenerator().CreateProxy(typeof(IList), handler, new ArrayList());
+					//_proxyGenerator.CreateProxy(typeof(IList), handler, new ArrayList());
 			}
 
 			return (IList) proxList;
