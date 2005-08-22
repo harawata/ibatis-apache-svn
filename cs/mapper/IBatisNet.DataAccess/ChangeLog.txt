@@ -3,6 +3,7 @@ IBatisNet DataAccess Change Log
 ------------------------------
 1.7 - XX/XX/XXXX
 ------------------------------
+- Updated to Castle.DynamicProxy V1.1.5.0
 - Re-add signing on assembly 
 - Added custom logger support
 - Removes use of Xml serilization for loading config, boost init

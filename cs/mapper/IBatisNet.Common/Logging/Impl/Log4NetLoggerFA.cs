@@ -68,13 +68,13 @@ namespace IBatisNet.Common.Logging.Impl
 			switch ( configurationType )
 			{
 				case "INLINE":
-					DOMConfigurator.Configure();
+					XmlConfigurator.Configure();
 					break;
 				case "FILE":
-					DOMConfigurator.Configure( new FileInfo( configurationFile ) );
+					XmlConfigurator.Configure( new FileInfo( configurationFile ) );
 					break;
 				case "FILE-WATCH":
-					DOMConfigurator.ConfigureAndWatch( new FileInfo( configurationFile ) );
+					XmlConfigurator.ConfigureAndWatch( new FileInfo( configurationFile ) );
 					break;
 				case "EXTERNAL":
 					// Log4net will be configured outside of IBatisNet

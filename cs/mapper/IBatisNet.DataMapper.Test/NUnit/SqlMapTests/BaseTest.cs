@@ -16,7 +16,7 @@ using IBatisNet.DataMapper; // SqlMap API
 using IBatisNet.DataMapper.Test.Domain;
 
 
-[assembly : log4net.Config.DOMConfigurator(Watch=true)]
+[assembly : log4net.Config.XmlConfigurator(Watch=true)]
 
 namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 {
