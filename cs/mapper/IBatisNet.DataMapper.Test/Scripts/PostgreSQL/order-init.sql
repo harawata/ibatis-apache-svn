@@ -3,7 +3,7 @@ DROP TABLE Orders;
 CREATE TABLE Orders
 (
   Order_Id int4 NOT NULL,
-  Account_Id int4 NOT NULL,
+  Account_Id int4 NULL,
   Order_Date timestamp,
   Order_CardType varchar(32),
   Order_CardNumber varchar(32),
@@ -28,4 +28,5 @@ INSERT INTO Orders VALUES (7, 4, '2003-02-15 8:15:00', 'MC', '888888888888', '11
 INSERT INTO Orders VALUES (8, 3, '2003-02-15 8:15:00', 'AMEX', '777777777777', '12/03', '888 Our Street', 'Regina', 'SK', 'S4S 7G4',1);
 INSERT INTO Orders VALUES (9, 2, '2003-02-15 8:15:00', 'MC', '666666666666', '01/04', '999 Your Street', 'Toronto', 'ON', 'G4D 9F4',2);
 INSERT INTO Orders VALUES (10, 1, '2003-02-15 8:15:00', 'VISA', '555555555555', '02/04', '99 Some Street', 'Calgary', 'AB', 'W4G 7A4',1);
+INSERT INTO Orders VALUES (11, null, '2003-02-15 8:15:00', 'VISA', '555555555555', '02/04', 'Null order', 'Calgary', 'ZZ', 'XXX YYY',1);
 
