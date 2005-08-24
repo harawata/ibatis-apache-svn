@@ -24,6 +24,10 @@
            Add assembly references 
         </listitem>
 
+		 <listitem>
+           Visual Studio.NET Integration
+        </listitem>
+
         <listitem>
            Add XML documents 
         </listitem>
@@ -40,7 +44,7 @@
       source distribution that includes a VSN solution. To download either of
       the distributions, follow the link to the Downloads area on our web
       site, and select the either the binary or source distribution for the
-      iBATIS .NET DataMapper V1.2.1 or later release (if you download the
+      iBATIS .NET DataMapper release (if you download the
       binary distribution, extract the files using a utility like WinZip or
       the extractor built into newer versions of Windows and skip ahead to the
       Add Assembly References section).</para>
@@ -191,7 +195,7 @@
       IBatisNet.DataMapper project.</para>
     </sect2>
 
-    <sect2>
+	<sect2>
       <title>Add XML File Items</title>
 
       <para>After adding the assembly references, you will need to add three
@@ -230,20 +234,53 @@
                 <entry>Windows, Library, or Test projects (using NUnit or
                 equivalent)</entry>
 
-                <entry>With the assembly (.dll) files and the
-                <filename>app.config</filename> file</entry>
+                <entry>This would be the binary folder (such as /bin/debug) with the assembly (.dll) files and the  <filename>app.config</filename> file</entry>
               </row>
 
               <row>
                 <entry>Web projects</entry>
 
-                <entry>In the project base directory, with the
-                <filename>web.config</filename> file</entry>
+                <entry>In the application root, where the <filename>web.config</filename>file is located.</entry>
               </row>
             </tbody>
           </tgroup>
         </table></para>
     </sect2>
+
+    <sect2>
+      <title>Visual Studio.NET Integration</title>
+		
+		<para>
+		Each configuration file (SqlMap.config, mappping file, providers.config)  is associated to a schema. The benefits of associating an XML document with a schema are to validate the document (which is done at runtime) and to use editing features such as IntelliSense/content completion assistance. 
+		</para>
+		<para>
+		To allow association of the schemas in VS.NET XML editor to yours configuration files, you should add the schema files (<filename>SqlMap.xsd</filename>, <filename>SqlMapConfig.xsd</filename>, <filename>providers.xsd</filename>) to either your VS.NET project or in your VS.NET installation directory. The VS.NET directory will be either 
+		</para>
+		<para>
+		<filename>C:\Program Files\Microsoft Visual Studio .NET 2003\Common7\Packages\schemas\xml for VS.NET 2003</filename>
+		</para>
+		<para>
+		or
+		</para>
+		<para>
+		<filename>C:\Program Files\Microsoft Visual Studio .NET\Common7\Packages\schemas\xml for VS.NET 2002</filename> 
+		</para>
+		<para>
+		depending on your version of VS.NET. It is typically easier to place the file in the well known location under the VS.NET installation directory than to copy the XSD file for each project you create. 
+		</para>
+		<para>
+		Once you have registered the schema with VS.NET you will be enough to get IntelliSense and validation of the configuration file from within VS.NET.
+		</para>
+		<figure>
+        <title>IntelliSense example</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata align="center" fileref="images/intellisense.gif"
+                       format="GIF" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+	</sect2>
   </sect1>
 
   <sect1>

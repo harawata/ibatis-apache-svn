@@ -177,7 +177,7 @@
 	<target name="prepareDaoDocs" description="Extra preparation for the dao documentation (common to all formats)">
 		<delete file="${xml.src.dir}/xsd.xml" failonerror="false"/>
 
-		<loadfile property="doc.dao.schema" file="${src.dir}/IBatisNet.Schemas/DaoConfig.xsd" />
+		<loadfile property="doc.dao.schema" file="${src.dir}/IBatisNet.DataAccess/DaoConfig.xsd" />
 
 		<copy file="${xml.src.dir}/xsd-template.xml" tofile="${xml.src.dir}/xsd.xml" >
 			<filterchain>
