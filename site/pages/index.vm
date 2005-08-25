@@ -30,6 +30,28 @@
 
     <h2>News</h2>
 
+      <h3>iBATIS for Ruby</h3>
+      <image align="right" src="ruby.gif"><p>(August 25, 2005) It's official.  iBATIS is no longer a simple tool or framework. It is a genuine
+      approach to integrating object oriented applications and relational databases.  We could have said that
+      when the .NET version was released, but now we MUST say it.  We're very excited to be merging with a
+      project headed up by Jon Tirsen, a friend of mine and a fellow ThoughtWorker.  He's ported and innovated
+      iBATIS for the Ruby language, which we're all very excited about.  In the next few weeks we'll be
+      integrating iBATIS for Ruby into our infrastructure, and of course, Jon will become one of our valuable
+      team members.</p>
+
+      <h3>Developers, Developers, Developers...</h3>
+      <p>(August 24, 2005) What a crazy month.  Everyone has been so busy over the summer!  But despite
+      our schedules, we've made some amazing progress.  First and foremost, let's introduce our new
+      committers.  The following people have been voted in as committers and are currently in the process
+      of getting access to the iBATIS resources.
+      </p>
+      <ul>
+        <li>Sven Boden</li>
+        <li>Nathan Maves</li>
+        <li>Jeff Butler</li>
+        <li>Brice Ruth</li>
+      </ul>
+
       <h3>iBATIS for Java 2.1.5 Released</h3>
       <p>(July 17, 2005) We've released a maintenance release, with a few bonuses as well.  The most
       notable changes are: 1) iBATIS no longer depends on commons logging, and 2) the entity resolvers
