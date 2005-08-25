@@ -8,13 +8,7 @@
 <h3>December 10, 2005 - San Diego, California, USA</h3>
 <strong>ApacheCon US 2005</strong>
 <p>
-We're not confirmed for it, but you should go anyway! ;-)<br/>
-Visit the <a href="http://apachecon.com/2005/US/" target="_new">ApacheCon homepage</a> for more information.
-</p>
-
-<h3>Sept 30, 2005 - Calgary, Alberta, Canada</h3>
-<strong>Western Canada Java Software Symposium</strong>
-<p>
+<br/>
 Clinton will discuss Dealing with Enterprise Database Challenges In Object Oriented Applications.
 This presentation will focus on database challenges that object oriented developers often face in an
 enterprise environment. Object Relational Mapping (ORM) tools are not ideal for all databases, and
@@ -22,6 +16,13 @@ therefore alternatives must be sought. In this discussion, we'll focus on using 
 to achieve similar advantages as provided by an ORM tool, but without some of the complications that
 can arise from an object relational mapping approach. The iBATIS Data Mapping framework is a popular
 alternative to ORM tools, while being a complementary addition to any architecture.<br/>
+Visit the <a href="http://apachecon.com/2005/US/" target="_new">ApacheCon homepage</a> for more information.
+</p>
+
+<h3>November 11th, 2005 - Denver, Colorado, USA</h3>
+<strong>Rocky Mountain Software Symposium</strong>
+<p>
+Not confirmed yet, but yes, you should go anyway!
 Visit the <a href="http://www.nofluffjuststuff.com/" target="_new">No Fluff Just Stuff homepage</a> for more information.
 </p>
 
@@ -36,6 +37,19 @@ can arise from an object relational mapping approach. The iBATIS Data Mapping fr
 alternative to ORM tools, while being a complementary addition to any architecture.<br/>
 Visit the <a href="http://javainaction.techtarget.com/" target="_new">Java In Action homepage</a> for more information.
 </p>
+
+<h3>Sept 30, 2005 - Calgary, Alberta, Canada</h3>
+<strong>Western Canada Java Software Symposium</strong>
+<p>
+Unfortunately I can't attend this conference as I had planned.  But you should go anyway! ;-) Super high concentration of talent.
+Visit the <a href="http://www.nofluffjuststuff.com/" target="_new">No Fluff Just Stuff homepage</a> for more information.
+</p>
+
+<h3>Sept 8, 2005 - Detroit, Minnesota, USA</h3>
+<strong>Western Canada Java Software Symposium</strong>
+<strong>Antony Joseph</strong> will be presenting 'Java persistence using iBATIS' at the Detroit
+Java User Group meeting. The meeting is free and open to the public.
+See <a href="http://www.detroitjug.org" target="_new"> http://www.detroitjug.org</a> for more details.
 
 <h3>June 23, 2005 - Milan</h3>
 <strong>SUN Microsystems Java Conference</strong>
