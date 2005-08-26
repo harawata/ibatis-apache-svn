@@ -147,7 +147,7 @@ namespace IBatisNet.DataMapper.Configuration
 		/// <summary>
 		/// Token for xml path to global properties elements.
 		/// </summary>
-		private const string XML_GLOBAL_PROPERTIES = "settings/add";
+		private const string XML_GLOBAL_PROPERTIES = "*/add";
 
 		/// <summary>
 		/// Token for xml path to provider elements.

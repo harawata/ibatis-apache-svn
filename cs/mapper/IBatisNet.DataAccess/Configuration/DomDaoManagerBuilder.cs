@@ -92,7 +92,7 @@ namespace IBatisNet.DataAccess.Configuration
 		/// <summary>
 		/// Token for xml path to settings add elements.
 		/// </summary>
-		private const string XML_SETTINGS_ADD = "/settings/add";
+		private const string XML_SETTINGS_ADD = "/*/add";
 
 		/// <summary>
 		/// Token for xml path to DaoConfig providers element.
