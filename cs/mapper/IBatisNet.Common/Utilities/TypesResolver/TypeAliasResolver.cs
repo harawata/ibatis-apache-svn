@@ -35,11 +35,11 @@ using IBatisNet.Common.Exceptions;
 namespace IBatisNet.Common.Utilities.TypesResolver
 {
 	/// <summary>
-	/// Provides (and resolves) alias' for the common types.
+	/// Provides (and resolves) aliases for the common types.
 	/// </summary>
 	/// <remarks>
 	/// <p>
-	/// It's really just syntactic sugar so that a type definition
+	/// It's really just syntactic sugar so that a type definition can be referenced as 
 	/// (in, say, a config file) can use 'int' instead of 'System.Int32'.
 	/// </p>
 	/// </remarks>
@@ -52,7 +52,7 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 		/// </summary>
 		public const string ArrayListAlias1 = "arraylist";
 		/// <summary>
-		/// An other alias around the 'list' type.
+		/// Another alias around the 'list' type.
 		/// </summary>
 		public const string ArrayListAlias2 = "list";
 
@@ -61,7 +61,7 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 		/// </summary>
 		public const string BoolAlias1 = "boolean";
 		/// <summary>
-		/// An other alias around the 'bool' type.
+		/// Another alias around the 'bool' type.
 		/// </summary>
 		public const string BoolAlias2 = "bool";
 
@@ -80,7 +80,7 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 		/// </summary>
 		public const string DateAlias1 = "datetime";
 		/// <summary>
-		/// An other alias around the 'DateTime' type.
+		/// Another alias around the 'DateTime' type.
 		/// </summary>
 		public const string DateAlias2 = "date";
 
@@ -99,7 +99,7 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 		/// </summary>
 		public const string FloatAlias1 = "float";
 		/// <summary>
-		/// An other alias around the 'float' type.
+		/// Another alias around the 'float' type.
 		/// </summary>
 		public const string FloatAlias2 = "single";
 
@@ -113,11 +113,11 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 		/// </summary>
 		public const string HashtableAlias1 = "hashtable";
 		/// <summary>
-		/// An other alias around the 'Hashtable' type.
+		/// Another alias around the 'Hashtable' type.
 		/// </summary>
 		public const string HashtableAlias2 = "map";
 		/// <summary>
-		/// An other alias around the 'Hashtable' type.
+		/// Another alias around the 'Hashtable' type.
 		/// </summary>
 		public const string HashtableAlias3 = "hashmap";
 
@@ -126,7 +126,7 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 		/// </summary>
 		public const string Int16Alias1 = "int16";
 		/// <summary>
-		/// An other alias around the 'short' type.
+		/// Another alias around the 'short' type.
 		/// </summary>
 		public const string Int16Alias2 = "short";
 
@@ -135,11 +135,11 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 		/// </summary>
 		public const string Int32Alias1 = "Int32";
 		/// <summary>
-		/// An other alias around the 'int' type.
+		/// Another alias around the 'int' type.
 		/// </summary>
 		public const string Int32Alias2 = "int";
 		/// <summary>
-		/// An other alias around the 'int' type.
+		/// Another alias around the 'int' type.
 		/// </summary>
 		public const string Int32Alias3 = "integer";
 
@@ -148,7 +148,7 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 		/// </summary>
 		public const string Int64Alias1 = "int64";
 		/// <summary>
-		/// An other alias around the 'long' type.
+		/// Another alias around the 'long' type.
 		/// </summary>
 		public const string Int64Alias2 = "long";
 
@@ -157,7 +157,7 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 		/// </summary>
 		public const string UInt16Alias1 = "uint16";
 		/// <summary>
-		/// An other alias around the 'unsigned short' type.
+		/// Another alias around the 'unsigned short' type.
 		/// </summary>
 		public const string UInt16Alias2 = "ushort";
 
@@ -166,7 +166,7 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 		/// </summary>
 		public const string UInt32Alias1 = "uint32";
 		/// <summary>
-		/// An other alias around the 'unsigned int' type.
+		/// Another alias around the 'unsigned int' type.
 		/// </summary>
 		public const string UInt32Alias2 = "uint";
 
@@ -175,7 +175,7 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 		/// </summary>
 		public const string UInt64Alias1 = "uint64";
 		/// <summary>
-		/// An other alias around the 'unsigned long' type.
+		/// Another alias around the 'unsigned long' type.
 		/// </summary>
 		public const string UInt64Alias2 = "ulong";
 
