@@ -24,13 +24,13 @@ import java.io.*;
 import java.util.*;
 
 /**
- * 
+ *
  */
 public class CacheModel implements ExecuteListener {
 
   private static final Map lockMap = new HashMap();
   /**
-   * This is used to represent null objects that are returned from the cache so 
+   * This is used to represent null objects that are returned from the cache so
    * that they can be cached, too.
    */
   public static final Object NULL_OBJECT = new Object();
@@ -286,7 +286,7 @@ public class CacheModel implements ExecuteListener {
       }
     }
 
-    return value == NULL_OBJECT ? null : value;
+    return value;
 
   }
 
