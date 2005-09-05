@@ -134,12 +134,30 @@
       are seven projects in the solution, and all should succeed. The
       assemblies we need will be created under
       <filename>\source\IBatisNet.DataMapper\bin\Debug</filename>. The created
-      assemblies are : <filename>IBatisNet.Common.dll</filename> and
-      <filename>iBatisNet.DataMapper.dll</filename>. The DataMapper has
-      external dependencies on <filename>Castle.DynamicProxy.dll</filename>
-      (creating proxies) and <filename>log4net.dll</filename> (logging). Both
-      of these dependencies are found in the External-Bin folder and can also
-      be found in the bin\Debug folder after building the solution.</para>
+      assemblies are : 
+	  <orderedlist>
+          <listitem>
+              <filename>IBatisNet.Common.dll</filename>
+          </listitem>
+
+          <listitem>
+             <filename>iBatisNet.DataMapper.dll</filename> 
+          </listitem>
+
+        </orderedlist>
+	  The DataMapper has
+      external dependencies on :
+	  <orderedlist>
+          <listitem>
+              <filename>Castle.DynamicProxy.dll</filename> (creating proxies)
+          </listitem>
+
+          <listitem>
+             <filename>log4net.dll</filename> (logging) 
+          </listitem>
+
+        </orderedlist>
+	  Both of these dependencies are found in the External-Bin folder and can also be found in the bin\Debug folder after building the solution.</para>
 
       <tip>
         <para>If you will not be using the DataAccess framework and NHibernate
@@ -328,9 +346,8 @@
           same directory as web.config)</title>
 
           <programlisting>&lt;?xml version="1.0" encoding="utf-8"?&gt; 
-&lt;sqlMapConfig 
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-    xsi:noNamespaceSchemaLocation="SqlMapConfig.xsd"&gt;
+&lt;sqlMapConfig xmlns="http://ibatis.apache.org/dataMapper" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" &gt;
 
   &lt;!-- Optional --&gt;
   &lt;properties resource="properties.config"/&gt;

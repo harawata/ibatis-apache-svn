@@ -34,8 +34,9 @@
         <title>A simple Data Map (.NET)</title>
 
         <programlisting>&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
- &lt;sqlMap namespace="LineItem" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-  xsi:noNamespaceSchemaLocation="SqlMap.xsd"&gt;
+  &lt;sqlMap namespace="LineItem" 
+xmlns="http://ibatis.apache.org/mapping" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" &gt;
 
   <emphasis role="comment">&lt;!--Type aliases allow you to use a shorter name for long fully qualified class names.--&gt;</emphasis>
   &lt;alias&gt;
@@ -103,8 +104,9 @@ Mapper.Instance().Insert("InsertLineItem",lineItem);</programlisting></para>
         <title>A Data Map definition file with some bells and whistles</title>
 
         <programlisting>&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
-&lt;sqlMap namespace="Product" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-  xsi:noNamespaceSchemaLocation="SqlMap.xsd"&gt;
+  &lt;sqlMap namespace="Product" 
+xmlns="http://ibatis.apache.org/mapping" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" &gt;
 
 <emphasis role="alias">  &lt;alias&gt;
     &lt;typeAlias alias="Product" type="Example.Domain.Product, Example.Domain" /&gt;
