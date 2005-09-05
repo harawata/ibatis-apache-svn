@@ -663,6 +663,11 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
 		/// <summary>
 		/// Test ExecuteQueryFor With Complex Joined
+		/// </summary>
+		/// <remarks>
+		/// A->B->C
+		///  ->E
+		///  ->F
 		/// </remarks>
 		[Test]
 		public void TestExecuteQueryForWithComplexJoined()

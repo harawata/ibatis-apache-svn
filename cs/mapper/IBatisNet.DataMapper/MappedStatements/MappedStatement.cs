@@ -233,7 +233,6 @@ namespace IBatisNet.DataMapper.MappedStatements
 		private bool FillObjectWithReaderAndResultMap(RequestScope request,IDataReader reader, 
 			ResultMap resultMap, object resultObject)
 		{
-			bool rowDataFound = request.IsRowDataFound;
 			bool dataFound = false;
 			
 			// For each Property in the ResultMap, set the property in the object 
@@ -245,7 +244,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 				dataFound = dataFound || request.IsRowDataFound;
 			}
 
-			request.IsRowDataFound = rowDataFound;
+			request.IsRowDataFound = dataFound;
 			return dataFound;
 		}
 
