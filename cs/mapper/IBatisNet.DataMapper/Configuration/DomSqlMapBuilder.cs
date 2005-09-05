@@ -811,6 +811,30 @@ namespace IBatisNet.DataMapper.Configuration
 			_configScope.ErrorContext.Reset();
 			#endregion 
 
+			#region Register Trigger Statements for Cache Models
+			foreach (DictionaryEntry entry in _configScope.CacheModelFlushOnExecuteStatements)
+			{
+				string cacheModelId = (string)entry.Key;
+				IList statementsToRegister = (IList)entry.Value;
+
+				if (statementsToRegister != null && statementsToRegister.Count > 0)
+				{
+					foreach (string statementName in statementsToRegister)
+					{
+						CacheModel cacheModel = _configScope.SqlMapper.GetCache(cacheModelId);
+						IMappedStatement mappedStatement = (IMappedStatement)_configScope.SqlMapper.MappedStatements[statementName];
+
+						if (_logger.IsDebugEnabled)
+						{
+							_logger.Debug("Registering trigger statement [" + mappedStatement.Name + "] to cache model [" + cacheModel.Id + "]");
+						}
+
+						cacheModel.RegisterTriggerStatement(mappedStatement);
+					}
+				}
+			}
+			#endregion
+
 			#region Resolve "resultMap" attribute on Result Property + initialize Discriminator property 
 
 			foreach(DictionaryEntry entry in _configScope.SqlMapper.ResultMaps)
@@ -1265,9 +1289,14 @@ namespace IBatisNet.DataMapper.Configuration
 							statementName = ApplyNamespace( statementName ); 
 						}
 
-						IMappedStatement mappedStatement = _configScope.SqlMapper.GetMappedStatement(statementName);
-
-						cacheModel.RegisterTriggerStatement(mappedStatement);
+						// delay registering statements to cache model until all sqlMap files have been processed
+						IList statementNames = (IList)_configScope.CacheModelFlushOnExecuteStatements[cacheModel.Id];
+						if (statementNames == null)
+						{
+							statementNames = new ArrayList();
+						}
+						statementNames.Add(statementName);
+						_configScope.CacheModelFlushOnExecuteStatements[cacheModel.Id] = statementNames;
 					}
 
 					// Get Properties

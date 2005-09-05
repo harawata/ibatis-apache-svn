@@ -68,6 +68,7 @@ namespace IBatisNet.DataMapper.Scope
 		private DataSource _dataSource = null;
 		private bool _isXmlValid = true;
 		private XmlNamespaceManager _nsmgr = null;
+		private HybridDictionary _cacheModelFlushOnExecuteStatements = new HybridDictionary();
 
 		#endregion
 	
@@ -166,7 +167,6 @@ namespace IBatisNet.DataMapper.Scope
 			set { _isCacheModelsEnabled = value; }
 			get { return _isCacheModelsEnabled; }
 		}
-		
 
 		/// <summary>
 		/// External data source
@@ -255,6 +255,15 @@ namespace IBatisNet.DataMapper.Scope
 			set { _useEmbedStatementParams = value; }
 		}
 
+		/// <summary>
+		/// Temporary storage for mapping cache model ids (key is System.String) to statements (value is IList which contains IMappedStatements).
+		/// </summary>
+		public HybridDictionary CacheModelFlushOnExecuteStatements
+		{
+			get { return _cacheModelFlushOnExecuteStatements; }
+			set { _cacheModelFlushOnExecuteStatements = value; }
+		}
+
 		#endregion 
 
 		/// <summary>
@@ -321,5 +330,6 @@ namespace IBatisNet.DataMapper.Scope
 
 			return handler;
 		}
+
 	}
 }
