@@ -3,12 +3,33 @@ IBatisNet DataAccess Change Log
 ------------------------------
 1.7 - XX/XX/XXXX
 ------------------------------
+- Updated to log4net V1.2.9
 - Updated to Castle.DynamicProxy V1.1.5.0
 - Re-add signing on assembly 
-- Added custom logger support
+- Added custom logger support, IBATIS now need a custom section in your application config file
+    Exemple (for log4NET) :
+	<configSections>
+		<sectionGroup name="iBATIS">
+			<section name="logging" type="IBatisNet.Common.Logging.ConfigurationSectionHandler, IBatisNet.Common" />
+		</sectionGroup>	
+		<section name="log4net" type="log4net.Config.Log4NetConfigurationSectionHandler, log4net" />
+	</configSections>
+	
+	<iBATIS>
+		<logging>		
+			<logFactoryAdapter type="IBatisNet.Common.Logging.Impl.Log4NetLoggerFA, IBatisNet.Common">
+				<arg key="configType" value="inline" />
+			</logFactoryAdapter>
+		</logging>
+	</iBATIS>
 - Removes use of Xml serilization for loading config, boost init
 - IBATISNET-102 Calling DaoManager in different threads causes an Exception
-
+- Allow Intellisense in Visual Studio 2003 for Dao.config file
+- Updated schemas header
+  dao.config
+  <daoConfig  xmlns="http://ibatis.apache.org/dataAccess" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     
 ------------------------------
 1.6.1 - 10-June-2005
 ------------------------------
