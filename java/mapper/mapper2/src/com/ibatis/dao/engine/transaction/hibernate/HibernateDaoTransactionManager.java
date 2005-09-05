@@ -40,6 +40,9 @@ public class HibernateDaoTransactionManager implements DaoTransactionManager {
         if (key.startsWith("class.")) {
           config.addClass(Resources.classForName(value));
         }
+        if (key.startsWith("map.")) {
+        config.addResource(value);
+        }
       }
 
       Properties props = new Properties();
