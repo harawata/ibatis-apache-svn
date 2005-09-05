@@ -122,11 +122,29 @@
       are seven projects in the solution, and all should succeed. The
       assemblies we need will be created under
       <filename>\source\IBatisNet.DataAccess\bin\Debug</filename>. The created
-      assemblies are : <filename>IBatisNet.Common.dll</filename> and
-      <filename>iBatisNet.DataAccess.dll</filename>. The core DataAccess
+      assemblies are : 
+	  <orderedlist>
+        <listitem>
+           <filename>IBatisNet.Common.dll</filename>
+        </listitem>
+
+        <listitem>
+           <filename>iBatisNet.DataAccess.dll</filename>
+        </listitem>
+      </orderedlist>
+
+      The core DataAccess
       framework has external dependencies on
-      <filename>Castle.DynamicProxy.dll</filename> (creating proxies) and
-      <filename>log4net.dll</filename> (logging). Both of these dependencies
+	   <orderedlist>
+        <listitem>
+          <filename>Castle.DynamicProxy.dll</filename> (creating proxies)
+        </listitem>
+
+        <listitem>
+          <filename>log4net.dll</filename> (logging)
+        </listitem>
+      </orderedlist>
+      Both of these dependencies
       are found in the <filename>External-Bin</filename> folder and can also
       be found in the <filename>bin\Debug</filename> folder after building the
       solution. In addition, the framework's
@@ -176,7 +194,7 @@
 
             <tbody>
               <row>
-                <entry>Castle dynamic proxy 1.0.3.0</entry>
+                <entry>Castle dynamic proxy 1.1.5.0</entry>
 
                 <entry>Dynamic proxy generator</entry>
 
@@ -184,7 +202,7 @@
               </row>
 
               <row>
-                <entry>Log4NET 1.2.0.30714</entry>
+                <entry>Log4NET 1.2.9</entry>
 
                 <entry>Logging framework</entry>
 
@@ -192,7 +210,7 @@
               </row>
 
               <row>
-                <entry>NHibernate 0.6</entry>
+                <entry>NHibernate </entry>
 
                 <entry>Object persistence library; required if using
                 NHibernate DAO Session Handler</entry>
@@ -299,8 +317,8 @@
        Example dao.config file 
 
       <programlisting>&lt;?xml version="1.0" encoding="utf-8"?&gt;
-&lt;daoConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:noNamespaceSchemaLocation="DaoConfig.xsd"&gt;
+&lt;daoConfig  xmlns="http://ibatis.apache.org/dataAccess" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
 
 &lt;providers resource="providers.config"&gt;
 
