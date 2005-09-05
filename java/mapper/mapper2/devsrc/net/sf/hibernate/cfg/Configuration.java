@@ -5,10 +5,16 @@ import net.sf.hibernate.SessionFactory;
 import java.util.Properties;
 
 public class Configuration {
-    public void addClass(Class aClass) {
+    public Configuration addClass(Class aClass) {
+      return this;
     }
 
-    public void setProperties(Properties props) {
+    public Configuration addResource(java.lang.String string){
+      return this;
+    }
+  
+    public Configuration setProperties(Properties props) {
+      return this;
     }
 
     public SessionFactory buildSessionFactory() {

@@ -1,218 +1,63 @@
 package net.sf.hibernate;
-
 import net.sf.hibernate.type.Type;
-
-import java.sql.Connection;
 import java.io.Serializable;
-import java.util.List;
-import java.util.Iterator;
+import java.sql.Connection;
 import java.util.Collection;
-
-
-/**
- * Created by IntelliJ IDEA.
- * User: Clinton
- * Date: 18-Jan-2005
- * Time: 11:00:11 PM
- * To change this template use File | Settings | File Templates.
- */
-public class Session {
-    public void flush() throws HibernateException {
-    }
-
-    public void setFlushMode(FlushMode flushMode) {
-    }
-
-    public FlushMode getFlushMode() {
-        return null;
-    }
-
-    public SessionFactory getSessionFactory() {
-        return null;
-    }
-
-    public Connection connection() throws HibernateException {
-        return null;
-    }
-
-    public Connection disconnect() throws HibernateException {
-        return null;
-    }
-
-    public void reconnect() throws HibernateException {
-    }
-
-    public void reconnect(Connection connection) throws HibernateException {
-    }
-
-    public Connection close() throws HibernateException {
-        return null;
-    }
-
-    public void cancelQuery() throws HibernateException {
-    }
-
-    public boolean isOpen() {
-        return false;
-    }
-
-    public boolean isConnected() {
-        return false;
-    }
-
-    public boolean isDirty() throws HibernateException {
-        return false;
-    }
-
-    public Serializable getIdentifier(Object o) throws HibernateException {
-        return null;
-    }
-
-    public boolean contains(Object o) {
-        return false;
-    }
-
-    public void evict(Object o) throws HibernateException {
-    }
-
-    public Object load(Class aClass, Serializable serializable, LockMode lockMode) throws HibernateException {
-        return null;
-    }
-
-    public Object load(Class aClass, Serializable serializable) throws HibernateException {
-        return null;
-    }
-
-    public void load(Object o, Serializable serializable) throws HibernateException {
-    }
-
-    public void replicate(Object o, ReplicationMode replicationMode) throws HibernateException {
-    }
-
-    public Serializable save(Object o) throws HibernateException {
-        return null;
-    }
-
-    public void save(Object o, Serializable serializable) throws HibernateException {
-    }
-
-    public void saveOrUpdate(Object o) throws HibernateException {
-    }
-
-    public void update(Object o) throws HibernateException {
-    }
-
-    public void update(Object o, Serializable serializable) throws HibernateException {
-    }
-
-    public Object saveOrUpdateCopy(Object o) throws HibernateException {
-        return null;
-    }
-
-    public Object saveOrUpdateCopy(Object o, Serializable serializable) throws HibernateException {
-        return null;
-    }
-
-    public void delete(Object o) throws HibernateException {
-    }
-
-    public List find(String s) throws HibernateException {
-        return null;
-    }
-
-    public List find(String s, Object o, Type type) throws HibernateException {
-        return null;
-    }
-
-    public List find(String s, Object[] objects, Type[] types) throws HibernateException {
-        return null;
-    }
-
-    public Iterator iterate(String s) throws HibernateException {
-        return null;
-    }
-
-    public Iterator iterate(String s, Object o, Type type) throws HibernateException {
-        return null;
-    }
-
-    public Iterator iterate(String s, Object[] objects, Type[] types) throws HibernateException {
-        return null;
-    }
-
-    public Collection filter(Object o, String s) throws HibernateException {
-        return null;
-    }
-
-    public Collection filter(Object o, String s, Object o1, Type type) throws HibernateException {
-        return null;
-    }
-
-    public Collection filter(Object o, String s, Object[] objects, Type[] types) throws HibernateException {
-        return null;
-    }
-
-    public int delete(String s) throws HibernateException {
-        return 0;
-    }
-
-    public int delete(String s, Object o, Type type) throws HibernateException {
-        return 0;
-    }
-
-    public int delete(String s, Object[] objects, Type[] types) throws HibernateException {
-        return 0;
-    }
-
-    public void lock(Object o, LockMode lockMode) throws HibernateException {
-    }
-
-    public void refresh(Object o) throws HibernateException {
-    }
-
-    public void refresh(Object o, LockMode lockMode) throws HibernateException {
-    }
-
-    public LockMode getCurrentLockMode(Object o) throws HibernateException {
-        return null;
-    }
-
-    public Transaction beginTransaction() throws HibernateException {
-        return null;
-    }
-
-    public Criteria createCriteria(Class aClass) {
-        return null;
-    }
-
-    public Query createQuery(String s) throws HibernateException {
-        return null;
-    }
-
-    public Query createFilter(Object o, String s) throws HibernateException {
-        return null;
-    }
-
-    public Query getNamedQuery(String s) throws HibernateException {
-        return null;
-    }
-
-    public Query createSQLQuery(String s, String s1, Class aClass) {
-        return null;
-    }
-
-    public Query createSQLQuery(String s, String[] strings, Class[] classes) {
-        return null;
-    }
-
-    public void clear() {
-    }
-
-    public Object get(Class aClass, Serializable serializable) throws HibernateException {
-        return null;
-    }
-
-    public Object get(Class aClass, Serializable serializable, LockMode lockMode) throws HibernateException {
-        return null;
-    }
+import java.util.Iterator;
+import java.util.List;
+public interface Session extends Serializable {
+	public void flush() throws HibernateException;
+	public void setFlushMode(FlushMode flushMode);
+	public FlushMode getFlushMode();
+	public SessionFactory getSessionFactory();
+	public Connection connection() throws HibernateException;
+	public Connection disconnect() throws HibernateException;
+	public void reconnect() throws HibernateException;
+	public void reconnect(Connection connection) throws HibernateException;
+	public Connection close() throws HibernateException;
+	public void cancelQuery() throws HibernateException;
+	public boolean isOpen();
+	public boolean isConnected();
+	public boolean isDirty() throws HibernateException;
+	public Serializable getIdentifier(Object object) throws HibernateException;
+  public boolean contains(Object object);
+  public void evict(Object object) throws HibernateException;
+	public Object load(Class theClass, Serializable id, LockMode lockMode) throws HibernateException;
+	public Object load(Class theClass, Serializable id) throws HibernateException;
+	public void load(Object object, Serializable id) throws HibernateException;
+	public void replicate(Object object, ReplicationMode replicationMode) throws HibernateException;
+	public Serializable save(Object object) throws HibernateException;
+	public void save(Object object, Serializable id) throws HibernateException;
+	public void saveOrUpdate(Object object) throws HibernateException;
+	public void update(Object object) throws HibernateException;
+	public void update(Object object, Serializable id) throws HibernateException;
+	public Object saveOrUpdateCopy(Object object) throws HibernateException;
+	public Object saveOrUpdateCopy(Object object, Serializable id) throws HibernateException;
+	public void delete(Object object) throws HibernateException;
+	public List find(String query) throws HibernateException;
+	public List find(String query, Object value, Type type) throws HibernateException;
+	public List find(String query, Object[] values, Type[] types) throws HibernateException;
+	public Iterator iterate(String query) throws HibernateException;
+	public Iterator iterate(String query, Object value, Type type) throws HibernateException;
+	public Iterator iterate(String query, Object[] values, Type[] types) throws HibernateException;
+	public Collection filter(Object collection, String filter) throws HibernateException;
+	public Collection filter(Object collection, String filter, Object value, Type type) throws HibernateException;
+	public Collection filter(Object collection, String filter, Object[] values, Type[] types) throws HibernateException;
+	public int delete(String query) throws HibernateException;
+	public int delete(String query, Object value, Type type) throws HibernateException;
+	public int delete(String query, Object[] values, Type[] types) throws HibernateException;
+	public void lock(Object object, LockMode lockMode) throws HibernateException;
+	public void refresh(Object object) throws HibernateException;
+	public void refresh(Object object, LockMode lockMode) throws HibernateException;
+	public LockMode getCurrentLockMode(Object object) throws HibernateException;
+	public Transaction beginTransaction() throws HibernateException;
+	public Criteria createCriteria(Class persistentClass);
+	public Query createQuery(String queryString) throws HibernateException;
+	public Query createFilter(Object collection, String queryString) throws HibernateException;
+	public Query getNamedQuery(String queryName) throws HibernateException;
+	public Query createSQLQuery(String sql, String returnAlias, Class returnClass);
+	public Query createSQLQuery(String sql, String[] returnAliases, Class[] returnClasses);
+	public void clear();
+	public Object get(Class clazz, Serializable id) throws HibernateException;
+	public Object get(Class clazz, Serializable id, LockMode lockMode) throws HibernateException;
 }

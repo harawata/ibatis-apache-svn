@@ -1,9 +1,7 @@
 package net.sf.hibernate;
-
-public class Transaction {
-    public void commit() {
-    }
-
-    public void rollback() {
-    }
+public interface Transaction {
+	public void commit() throws HibernateException;
+	public void rollback() throws HibernateException;
+	public boolean wasRolledBack() throws HibernateException;
+	public boolean wasCommitted() throws HibernateException;
 }
