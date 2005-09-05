@@ -106,7 +106,7 @@ public class SimpleDataSource implements DataSource {
   private int poolPingConnectionsOlderThan;
   private int poolPingConnectionsNotUsedFor;
   //----- END: PROPERTY FIELDS FOR CONFIGURATION -----
-  
+
   /**
    * Constructor to allow passing in a map of properties for configuration
    *
@@ -156,8 +156,7 @@ public class SimpleDataSource implements DataSource {
 
         poolPingEnabled =
             props.containsKey(PROP_POOL_PING_ENABLED)
-            ? Boolean.valueOf((String) props.get(PROP_POOL_PING_ENABLED)).booleanValue()
-            : false;
+                && Boolean.valueOf((String) props.get(PROP_POOL_PING_ENABLED)).booleanValue();
 
         poolPingQuery =
             props.containsKey(PROP_POOL_PING_QUERY)
@@ -176,8 +175,7 @@ public class SimpleDataSource implements DataSource {
 
         jdbcDefaultAutoCommit =
             props.containsKey(PROP_JDBC_DEFAULT_AUTOCOMMIT)
-            ? Boolean.valueOf((String) props.get(PROP_JDBC_DEFAULT_AUTOCOMMIT)).booleanValue()
-            : false;
+                && Boolean.valueOf((String) props.get(PROP_JDBC_DEFAULT_AUTOCOMMIT)).booleanValue();
 
         useDriverProps = false;
         Iterator propIter = props.keySet().iterator();
@@ -251,9 +249,10 @@ public class SimpleDataSource implements DataSource {
   }
 
   /**
-   * No idea what this is used for...
+   * If a connection has not been used in this many milliseconds, ping the
+   * database to make sure the connection is still good.
    *
-   * @return
+   * @return the number of milliseconds of inactivity that will trigger a ping
    */
   public int getPoolPingConnectionsNotUsedFor() {
     return poolPingConnectionsNotUsedFor;
@@ -308,8 +307,8 @@ public class SimpleDataSource implements DataSource {
   }
 
   /**
-   * Getter for the maximum time a connection can be used before it *may* be 
-   * given away again. 
+   * Getter for the maximum time a connection can be used before it *may* be
+   * given away again.
    * @return The maximum time
    */
   public int getPoolMaximumCheckoutTime() {
@@ -423,7 +422,7 @@ public class SimpleDataSource implements DataSource {
   }
 
 
-  /** 
+  /**
    * Getter for the average age of a connection checkout
    * @return The average age
    */
@@ -435,18 +434,18 @@ public class SimpleDataSource implements DataSource {
 
   /**
    * Returns the status of the connection pool
-   * @return The status 
+   * @return The status
    */
   public String getStatus() {
     StringBuffer buffer = new StringBuffer();
 
     buffer.append("\n===============================================================");
-    buffer.append("\n jdbcDriver                     " + jdbcDriver);
-    buffer.append("\n jdbcUrl                        " + jdbcUrl);
-    buffer.append("\n jdbcUsername                   " + jdbcUsername);
-    buffer.append("\n jdbcPassword                   " + (jdbcPassword == null ? "NULL" : "************"));
-    buffer.append("\n poolMaxActiveConnections       " + poolMaximumActiveConnections);
-    buffer.append("\n poolMaxIdleConnections         " + poolMaximumIdleConnections);
+    buffer.append("\n jdbcDriver                     ").append(jdbcDriver);
+    buffer.append("\n jdbcUrl                        ").append(jdbcUrl);
+    buffer.append("\n jdbcUsername                   ").append(jdbcUsername);
+    buffer.append("\n jdbcPassword                   ").append((jdbcPassword == null ? "NULL" : "************"));
+    buffer.append("\n poolMaxActiveConnections       ").append(poolMaximumActiveConnections);
+    buffer.append("\n poolMaxIdleConnections         ").append(poolMaximumIdleConnections);
     buffer.append("\n poolMaxCheckoutTime            " + poolMaximumCheckoutTime);
     buffer.append("\n poolTimeToWait                 " + poolTimeToWait);
     buffer.append("\n poolPingEnabled                " + poolPingEnabled);
