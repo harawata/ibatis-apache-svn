@@ -32,14 +32,17 @@ public class JtaDaoTransactionManager implements DaoTransactionManager {
   public void configure(Properties properties) {
     String utxName = null;
     String dsName = null;
+    String contextMessage = "Error creating JNDI context.";
     try {
       utxName = (String) properties.get("UserTransaction");
       InitialContext initCtx = new InitialContext();
+      contextMessage = "Error looking up user transaction '" + utxName + "'.";
       userTransaction = (UserTransaction) initCtx.lookup(utxName);
       dsName = (String) properties.get("DBJndiContext");
+      contextMessage = "Error looking up data source '" + dsName + "'.";
       dataSource = (DataSource) initCtx.lookup(dsName);
     } catch (Exception e) {
-      throw new DaoException("Error initializing JTA transaction while looking up UserTransaction (" + utxName + ") or DataSource (" + dsName + ").  Cause: " + e);
+      throw new DaoException(contextMessage + "  Cause: " + e);
     }
   }
 
