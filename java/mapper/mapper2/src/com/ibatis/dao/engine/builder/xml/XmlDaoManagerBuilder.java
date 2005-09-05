@@ -15,9 +15,9 @@
  */
 package com.ibatis.dao.engine.builder.xml;
 
+import com.ibatis.common.exception.NestedRuntimeException;
 import com.ibatis.common.io.ReaderInputStream;
 import com.ibatis.common.resources.Resources;
-import com.ibatis.common.exception.NestedRuntimeException;
 import com.ibatis.dao.client.Dao;
 import com.ibatis.dao.client.DaoException;
 import com.ibatis.dao.client.DaoManager;
@@ -25,10 +25,12 @@ import com.ibatis.dao.engine.impl.DaoContext;
 import com.ibatis.dao.engine.impl.DaoImpl;
 import com.ibatis.dao.engine.impl.StandardDaoManager;
 import com.ibatis.dao.engine.transaction.DaoTransactionManager;
+import com.ibatis.dao.engine.transaction.toplink.ToplinkDaoTransactionManager;
 import com.ibatis.dao.engine.transaction.external.ExternalDaoTransactionManager;
 import com.ibatis.dao.engine.transaction.hibernate.HibernateDaoTransactionManager;
 import com.ibatis.dao.engine.transaction.jdbc.JdbcDaoTransactionManager;
 import com.ibatis.dao.engine.transaction.jta.JtaDaoTransactionManager;
+import com.ibatis.dao.engine.transaction.ojb.OjbBrokerTransactionManager;
 import com.ibatis.dao.engine.transaction.sqlmap.SqlMapDaoTransactionManager;
 import org.w3c.dom.*;
 import org.xml.sax.ErrorHandler;
@@ -64,11 +66,13 @@ public class XmlDaoManagerBuilder {
   private Map typeAliases = new HashMap();
 
   public XmlDaoManagerBuilder() {
-    typeAliases.put("JDBC", JdbcDaoTransactionManager.class.getName());
-    typeAliases.put("JTA", JtaDaoTransactionManager.class.getName());
     typeAliases.put("EXTERNAL", ExternalDaoTransactionManager.class.getName());
     typeAliases.put("HIBERNATE", HibernateDaoTransactionManager.class.getName());
+    typeAliases.put("JDBC", JdbcDaoTransactionManager.class.getName());
+    typeAliases.put("JTA", JtaDaoTransactionManager.class.getName());
+    typeAliases.put("OJB", OjbBrokerTransactionManager.class.getName());
     typeAliases.put("SQLMAP", SqlMapDaoTransactionManager.class.getName());
+    typeAliases.put("TOPLINK", ToplinkDaoTransactionManager.class.getName());
   }
 
   public DaoManager buildDaoManager(Reader reader, Properties props)
