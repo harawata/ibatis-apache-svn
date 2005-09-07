@@ -94,6 +94,29 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		}
 
 		/// <summary>
+		/// Test lazyLoad attribute With an Open Connection
+		/// </summary>
+		[Test] 
+		public void TestLazyLoadWithOpenConnection() 
+		{
+			sqlMap.OpenConnection();
+
+			Order order = (Order) sqlMap.QueryForObject("GetOrderWithLineItems", 1);
+
+			AssertOrder1(order);
+			
+			Assert.IsNotNull( order.LineItemsIList );
+			Assert.IsTrue( typeof(IList).IsAssignableFrom( order.LineItemsIList.GetType() ) );
+
+			Assert.AreEqual(2, order.LineItemsIList.Count);
+			// After a call to a method from a proxy object,
+			// the proxy object is replaced by his real object.
+			Assert.IsTrue( order.LineItemsIList is ArrayList  );
+
+			sqlMap.CloseConnection(); 
+		}
+
+		/// <summary>
 		/// Test collection mapping
 		/// order.LineItems
 		/// </summary>

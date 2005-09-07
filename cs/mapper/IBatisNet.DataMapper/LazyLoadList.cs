@@ -30,7 +30,6 @@ using System;
 using System.Collections;
 using System.Reflection;
 using Castle.DynamicProxy;
-using IBatisNet.Common;
 using IBatisNet.Common.Logging;
 using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.Common.Utilities.Proxy;
@@ -50,14 +49,13 @@ namespace IBatisNet.DataMapper
 		private object _param = null;
 		private object _target = null;
 		private string _propertyName= string.Empty;
-		private DataSource _dataSource;
-		private IMappedStatement _mappedSatement;
+		private SqlMapper _sqlMap = null;
+		private string _statementName = string.Empty;
 		private bool _loaded = false;
 		private IList _innerList = null;
 		private object _loadLock = new object();
 		private static ArrayList _passthroughMethods = new ArrayList();
 
-//		private static CachedProxyGenerator _proxyGenerator = new CachedProxyGenerator();
 		private static readonly ILog _logger = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
 		#endregion
 
@@ -75,16 +73,15 @@ namespace IBatisNet.DataMapper
 		/// <summary>
 		/// Constructor for a lazy list loader
 		/// </summary>
-		/// <param name="dataSource">The dataSource used to do the query</param>
 		/// <param name="mappedSatement">The mapped statement used to build the list</param>
 		/// <param name="param">The parameter object used to build the list</param>
 		/// <param name="propertyName">The property's name which been proxified.</param>
 		/// <param name="target">The target object which contains the property proxydied.</param>
-		internal LazyLoadList(DataSource dataSource, IMappedStatement mappedSatement, object param, object target,string propertyName)
+		internal LazyLoadList(IMappedStatement mappedSatement, object param, object target,string propertyName)
 		{
 			_param = param;
-			_mappedSatement = mappedSatement;
-			_dataSource = dataSource;
+			_statementName = mappedSatement.Name;
+			_sqlMap = mappedSatement.SqlMap;
 			_target = target; 
 			_propertyName = propertyName;
 		}		
@@ -94,26 +91,23 @@ namespace IBatisNet.DataMapper
 		/// <summary>
 		/// Static constructor
 		/// </summary>
-		/// <param name="dataSource">The dataSource used the query</param>
 		/// <param name="mappedSatement">The statement used to build the list</param>
 		/// <param name="param">The parameter object used to build the list</param>
 		/// <param name="propertyName">The property's name which been proxified.</param>
 		/// <param name="target">The target object which contains the property proxydied.</param>
 		/// <returns>A proxy</returns>
-		internal static IList NewInstance(DataSource dataSource, IMappedStatement mappedSatement, object param, object target,string propertyName)
+		internal static IList NewInstance(IMappedStatement mappedSatement, object param, object target,string propertyName)
 		{
 			object proxList = null;
-			IInterceptor handler = new LazyLoadList(dataSource, mappedSatement, param, target, propertyName);
+			IInterceptor handler = new LazyLoadList(mappedSatement, param, target, propertyName);
 
 			if (mappedSatement.Statement.ListClass != null)
 			{
 				proxList = ProxyGeneratorFactory.GetProxyGenerator().CreateProxy(typeof(IList), handler, mappedSatement.Statement.CreateInstanceOfListClass());
-					//_proxyGenerator.CreateProxy(typeof(IList), handler, mappedSatement.Statement.CreateInstanceOfListClass());
 			}
 			else
 			{
 				proxList = ProxyGeneratorFactory.GetProxyGenerator().CreateProxy(typeof(IList), handler, new ArrayList());
-					//_proxyGenerator.CreateProxy(typeof(IList), handler, new ArrayList());
 			}
 
 			return (IList) proxList;
@@ -138,19 +132,14 @@ namespace IBatisNet.DataMapper
 			{
 				if ((_loaded == false) && (!_passthroughMethods.Contains(invocation.Method.Name)))
 				{
-					IDalSession session = new SqlMapSession(_dataSource);
-
 					if (_logger.IsDebugEnabled) 
 					{
-						_logger.Debug("Proxyfying call, query statement " + _mappedSatement.Name);
+						_logger.Debug("Proxyfying call, query statement " + _statementName);
 					}
 
-					session.OpenConnection();
-					_innerList = _mappedSatement.ExecuteQueryForList(session, _param); 
-					session.CloseConnection();
+					_innerList = _sqlMap.QueryForList(_statementName, _param);
 
 					_loaded = true;
-					 
 				}
 			}
 

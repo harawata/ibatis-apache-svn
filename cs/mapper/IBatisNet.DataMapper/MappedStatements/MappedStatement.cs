@@ -980,7 +980,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 						if (mapping.IsLazyLoad)
 						{
-							values = LazyLoadList.NewInstance(_sqlMap.DataSource, queryStatement, keys, target, mapping.PropertyName);
+							values = LazyLoadList.NewInstance(queryStatement, keys, target, mapping.PropertyName);
 							ObjectProbe.SetPropertyValue( target, mapping.PropertyName, values);
 						}
 						else
