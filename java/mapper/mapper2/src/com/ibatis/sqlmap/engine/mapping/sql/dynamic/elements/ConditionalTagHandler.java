@@ -17,6 +17,7 @@ package com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements;
 
 import com.ibatis.common.beans.Probe;
 import com.ibatis.common.beans.ProbeFactory;
+import com.ibatis.common.beans.GenericProbe;
 import com.ibatis.common.exception.NestedRuntimeException;
 
 import java.math.BigDecimal;
@@ -33,6 +34,10 @@ public abstract class ConditionalTagHandler extends BaseTagHandler {
   public static final long NOT_COMPARABLE = Long.MIN_VALUE;
   private static final String DATE_MASK = "yyyy/MM/dd hh:mm:ss";
   private static final DateFormat DATE_FORMAT = new SimpleDateFormat(DATE_MASK);
+
+  private static final String START_INDEX = "[";
+  private static final String END_INDEX = "]";
+  private static final String EMPTY_INDEX = "[]";
 
   public abstract boolean isCondition(SqlTagContext ctx, SqlTag tag, Object parameterObject);
 
@@ -72,7 +77,23 @@ public abstract class ConditionalTagHandler extends BaseTagHandler {
     String prop = tag.getPropertyAttr();
     Object value1;
     Class type;
+    IterateContext itCtx = ctx.peekIterateContext();
+
     if (prop != null) {
+
+      if(null != itCtx && itCtx.isAllowNext()){
+        itCtx.next();
+        itCtx.setAllowNext(false);
+        if(!itCtx.hasNext()) {
+          itCtx.setFinal(true);
+        }
+      }
+
+      if(prop.indexOf(START_INDEX) > -1) {
+        propertyName = new StringBuffer(propertyName).insert(
+                        propertyName.indexOf(END_INDEX),itCtx.getIndex()).toString();
+      }
+
       value1 = PROBE.getObject(parameterObject, propertyName);
       type = PROBE.getPropertyTypeForGetter(parameterObject, propertyName);
     } else {

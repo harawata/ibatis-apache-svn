@@ -36,7 +36,7 @@ public class GenericProbe extends BaseProbe {
   private static final BaseProbe DOM_PROBE = new DomProbe();
   private static final String START_INDEX = "[";
   private static final String END_INDEX = "]";
-  
+
   protected GenericProbe() {
   }
 
@@ -49,10 +49,29 @@ public class GenericProbe extends BaseProbe {
    * @see com.ibatis.common.beans.BaseProbe#getObject(java.lang.Object, java.lang.String)
    */
   public Object getObject(Object object, String name) {
+    
     if (object instanceof org.w3c.dom.Document) {
       return DOM_PROBE.getObject(object, name);
     } else if (object instanceof List) {
-      return ((List)object).get(new Integer(name.substring(1,name.indexOf(END_INDEX))).intValue());
+      return BEAN_PROBE.getIndexedProperty(object, name);
+    } else if (object instanceof Object[]) {
+      return BEAN_PROBE.getIndexedProperty(object, name);
+    } else if (object instanceof char[]) {
+      return BEAN_PROBE.getIndexedProperty(object, name);
+    } else if (object instanceof boolean[]) {
+      return BEAN_PROBE.getIndexedProperty(object, name);
+    } else if (object instanceof byte[]) {
+      return BEAN_PROBE.getIndexedProperty(object, name);
+    } else if (object instanceof double[]) {
+      return BEAN_PROBE.getIndexedProperty(object, name);
+    } else if (object instanceof float[]) {
+      return BEAN_PROBE.getIndexedProperty(object, name);
+    } else if (object instanceof int[]) {
+      return BEAN_PROBE.getIndexedProperty(object, name);
+    } else if (object instanceof long[]) {
+      return BEAN_PROBE.getIndexedProperty(object, name);
+    } else if (object instanceof short[]) {
+      return BEAN_PROBE.getIndexedProperty(object, name);
     } else {
       return BEAN_PROBE.getObject(object, name);
     }
@@ -136,6 +155,8 @@ public class GenericProbe extends BaseProbe {
       return getClassPropertyTypeForGetter((Class) object, name);
     } else if (object instanceof org.w3c.dom.Document) {
       return DOM_PROBE.getPropertyTypeForGetter(object, name);
+    } else if (name.indexOf("[") > -1) {
+      return BEAN_PROBE.getIndexedType(object,name);
     } else {
       return BEAN_PROBE.getPropertyTypeForGetter(object, name);
     }

@@ -66,10 +66,13 @@ public class IterateTagHandler extends BaseTagHandler {
           bodyContent.insert(0, open);
         }
       }
-      if (!iterate.isLast()) {
-        String conj = tag.getConjunctionAttr();
-        if (conj != null) {
-          bodyContent.append(conj);
+
+      if (!iterate.isFirst()) {
+        if(!bodyContent.toString().trim().equals("")) {
+          String conj = tag.getConjunctionAttr();
+          if (conj != null) {
+            bodyContent.insert(0,conj);
+          }
         }
       }
 

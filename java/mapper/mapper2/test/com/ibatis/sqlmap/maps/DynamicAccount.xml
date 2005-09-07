@@ -170,6 +170,26 @@
     </iterate>
   </select>
 
+  <select id="dynamicIterateInConditional"
+    parameterClass="list"
+    resultClass="testdomain.Account">
+    select
+      ACC_ID as id,
+      ACC_FIRST_NAME as firstName,
+      ACC_LAST_NAME as lastName,
+      ACC_EMAIL as emailAddress
+    from ACCOUNT
+    WHERE ACC_ID IN
+    <iterate open="(" close=")" conjunction=",">
+        <isEqual property="[]" compareValue="1">
+            #[]#
+        </isEqual>
+        <isEqual property="[]" compareValue="3">
+            #[]#
+        </isEqual>
+    </iterate>
+  </select>
+
   <select id="multiDynamicIterate"
     parameterClass="list"
     resultClass="testdomain.Account">
@@ -480,6 +500,66 @@ include the following code in the same place where
     <dynamic prepend="where">
       <iterate property="myList" open="(" close=")" conjunction="OR">
           ACC_ID = #myList[].id#
+      </iterate>
+    </dynamic>
+  </select>
+
+  <select id="dynamicIterateWithPrepend2d"
+    resultClass="testdomain.Account">
+    select
+      ACC_ID          as id,
+      ACC_FIRST_NAME  as firstName,
+      ACC_LAST_NAME   as lastName,
+      ACC_EMAIL       as emailAddress
+    from ACCOUNT
+    <dynamic prepend="where">
+      <iterate property="myList" open="(" close=")" conjunction="OR">
+          <isEqual property="myList[]" compareValue="1">
+            ACC_ID = #myList[]#
+          </isEqual>
+          <isEqual property="myList[]" compareValue="3">
+            ACC_ID = #myList[]#
+          </isEqual>
+      </iterate>
+    </dynamic>
+  </select>
+
+  <select id="dynamicIterateWithPrepend2e"
+    resultClass="testdomain.Account">
+    select
+      ACC_ID          as id,
+      ACC_FIRST_NAME  as firstName,
+      ACC_LAST_NAME   as lastName,
+      ACC_EMAIL       as emailAddress
+    from ACCOUNT
+    <dynamic prepend="where">
+      <iterate property="myArray" open="(" close=")" conjunction="OR">
+          <isEqual property="myArray[]" compareValue="1">
+            ACC_ID = #myArray[]#
+          </isEqual>
+          <isEqual property="myArray[]" compareValue="3">
+            ACC_ID = #myArray[]#
+          </isEqual>
+      </iterate>
+    </dynamic>
+  </select>
+
+  <select id="dynamicIterateWithPrepend2f"
+    resultClass="testdomain.Account">
+    select
+      ACC_ID          as id,
+      ACC_FIRST_NAME  as firstName,
+      ACC_LAST_NAME   as lastName,
+      ACC_EMAIL       as emailAddress
+    from ACCOUNT
+    <dynamic prepend="where">
+      <iterate property="intArray" open="(" close=")" conjunction="OR">
+          <isEqual property="intArray[]" compareValue="1">
+            ACC_ID = #intArray[]#
+          </isEqual>
+          <isEqual property="intArray[]" compareValue="3">
+            ACC_ID = #intArray[]#
+          </isEqual>
       </iterate>
     </dynamic>
   </select>

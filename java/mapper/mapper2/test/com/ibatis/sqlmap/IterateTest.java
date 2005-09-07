@@ -25,7 +25,16 @@ public class IterateTest extends BaseSqlMapTest {
   }
 
   // Iterate
-  
+
+  public void testIterateInConditional() throws SQLException {
+    List params = Arrays.asList(new Integer[]{new Integer(1), new Integer(2), new Integer(3)});
+    List list = sqlMap.queryForList("dynamicIterateInConditional", params);
+    assertEquals(2, list.size());
+    assertAccount1((Account) list.get(0));
+    assertEquals(1,((Account) list.get(0)).getId());
+    assertEquals(3,((Account) list.get(1)).getId());
+  }
+
   public void testIterateLiteral() throws SQLException {
     List params = Arrays.asList(new Integer[]{new Integer(1), new Integer(2), new Integer(3)});
     List list = sqlMap.queryForList("dynamicIterateLiteral", params);

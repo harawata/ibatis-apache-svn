@@ -11,14 +11,32 @@ import java.util.List;
  */
 public class MyBean {
 
-    public List getMyList() {
-      return myList;
-    }
+  public List getMyList() {
+    return myList;
+  }
 
-    public void setMyList(List myList) {
-      this.myList = myList;
-    }
+  public void setMyList(List myList) {
+    this.myList = myList;
+  }
 
-    private List myList;
+  public Object[] getMyArray() {
+    return myArray;
+  }
+
+  public void setMyArray(Object[] myArray) {
+    this.myArray = myArray;
+  }
+
+  public int[] getIntArray() {
+    return intArray;
+  }
+
+  public void setIntArray(int[] intArray) {
+    this.intArray = intArray;
+  }
+
+  private List myList;
+  private Object[] myArray;
+  private int[] intArray;
 
 }

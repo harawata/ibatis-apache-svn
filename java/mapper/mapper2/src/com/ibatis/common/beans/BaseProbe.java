@@ -49,7 +49,13 @@ public abstract class BaseProbe implements Probe {
     try {
       String name = indexedName.substring(0, indexedName.indexOf("["));
       int i = Integer.parseInt(indexedName.substring(indexedName.indexOf("[") + 1, indexedName.indexOf("]")));
-      Object list = getProperty(object, name);
+      Object list = null;
+      if(name.equals("")) {
+        list = object;        
+      } else {
+        list = getProperty(object, name);
+      }
+
       if (list instanceof List) {
         value = ((List) list).get(i);
       } else if (list instanceof Object[]) {
@@ -70,6 +76,53 @@ public abstract class BaseProbe implements Probe {
         value = new Long(((long[]) list)[i]);
       } else if (list instanceof short[]) {
         value = new Short(((short[]) list)[i]);
+      } else {
+        throw new ProbeException("The '" + name + "' property of the " + object.getClass().getName() + " class is not a List or Array.");
+      }
+
+    } catch (ProbeException e) {
+      throw e;
+    } catch (Exception e) {
+      throw new ProbeException("Error getting ordinal list from JavaBean. Cause " + e, e);
+    }
+
+    return value;
+  }
+
+  protected Class getIndexedType(Object object, String indexedName) {
+
+    Class value = null;
+
+    try {
+      String name = indexedName.substring(0, indexedName.indexOf("["));
+      int i = Integer.parseInt(indexedName.substring(indexedName.indexOf("[") + 1, indexedName.indexOf("]")));
+      Object list = null;
+      if(!name.equals("")) {
+        list = getProperty(object, name);
+      } else {
+        list = object;
+      }
+
+      if (list instanceof List) {
+        value = ((List) list).get(i).getClass();
+      } else if (list instanceof Object[]) {
+        value = ((Object[]) list)[i].getClass();
+      } else if (list instanceof char[]) {
+        value = Character.class;
+      } else if (list instanceof boolean[]) {
+        value = Boolean.class;
+      } else if (list instanceof byte[]) {
+        value = Byte.class;
+      } else if (list instanceof double[]) {
+        value = Double.class;
+      } else if (list instanceof float[]) {
+        value = Float.class;
+      } else if (list instanceof int[]) {
+        value = Integer.class;
+      } else if (list instanceof long[]) {
+        value = Long.class;
+      } else if (list instanceof short[]) {
+        value = Short.class;
       } else {
         throw new ProbeException("The '" + name + "' property of the " + object.getClass().getName() + " class is not a List or Array.");
       }
