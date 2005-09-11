@@ -94,7 +94,7 @@ create table LineItems
 create table Orders
 (
    Order_Id                       int                            not null,
-   Account_Id                     int                            not null,
+   Account_Id                     int                            null,
    Order_Date                     datetime,
    Order_CardType                 varchar(32),
    Order_CardNumber               varchar(32),
@@ -117,6 +117,69 @@ create table Others
    Other_Bit		            bit not null default 0,
    Other_String		              varchar(32) not null   
 ) TYPE=INNODB;
+
+CREATE TABLE F (
+	ID							varchar(50) NOT NULL ,
+	F_Libelle					varchar(50) NULL ,
+   primary key (ID)
+) TYPE=INNODB;
+
+CREATE TABLE E (
+	ID							varchar(50) NOT NULL ,
+	E_Libelle					varchar(50) NULL ,
+   primary key (ID)
+) TYPE=INNODB;
+
+CREATE TABLE D (
+	ID							varchar(50) NOT NULL ,
+	D_Libelle					varchar(50) NULL ,
+   primary key (ID)
+) TYPE=INNODB;
+
+CREATE TABLE C (
+	ID							varchar(50) NOT NULL ,
+	C_Libelle					varchar(50) NULL ,
+   primary key (ID)
+) TYPE=INNODB;
+
+
+CREATE TABLE B (
+	ID							varchar(50) NOT NULL ,
+	C_ID						varchar(50) NULL ,
+	D_ID						varchar(50) NULL ,
+	B_Libelle					varchar(50) NULL ,
+   primary key (ID)
+) TYPE=INNODB;
+
+ALTER TABLE B ADD CONSTRAINT FK_B_C FOREIGN KEY FK_B_C (C_ID)
+    REFERENCES C (ID)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+ ADD CONSTRAINT FK_B_D FOREIGN KEY FK_B_D (D_ID)
+    REFERENCES D (ID)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT;
+
+CREATE TABLE A (
+	ID							varchar(50) NOT NULL ,
+	B_ID						varchar(50)  NULL ,
+	E_ID						varchar(50)  NULL ,
+	F_ID						varchar(50)  NULL ,
+	A_Libelle					varchar(50) NULL ,
+   primary key (ID)
+) TYPE=INNODB;
+
+ALTER TABLE A ADD CONSTRAINT FK_A_B FOREIGN KEY FK_A_B (B_ID)
+    REFERENCES B (ID)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+ ADD CONSTRAINT FK_A_E FOREIGN KEY FK_A_E (E_ID)
+    REFERENCES E (ID)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+ ADD CONSTRAINT FK_A_F FOREIGN KEY FK_A_F (F_ID)
+    REFERENCES F (ID)
+    ON DELETE RESTRICT;
 
 /*==============================================================*/
 /* Table : Documents                                            */
