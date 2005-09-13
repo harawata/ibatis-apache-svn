@@ -114,12 +114,22 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		}
 
 		/// <summary>
+		/// Open a connection, on the specified connection string.
+		/// </summary>
+		/// <param name="connectionString">The connection string</param>
+		public override void OpenConnection(string connectionString)
+		{
+			_sqlMap.OpenConnection(connectionString);
+		}
+
+		/// <summary>
 		/// Closes the connection
 		/// </summary>
 		public override void CloseConnection()
 		{
 			_sqlMap.CloseConnection();
 		}
+
 
 		/// <summary>
 		/// Begins a transaction.

@@ -51,6 +51,8 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 
 		#region Dao statement tests
 
+
+
 		/// <summary>
 		/// Verify that DaoManager.GetDao("Account")
 		/// return an object that implemetent the interface IAccountDao.
@@ -66,6 +68,37 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 			Assert.IsTrue(type.IsInstanceOfType(accountDao));
 		}
 
+		/// <summary>
+		/// Test Open connection with a connection string
+		/// </summary>
+		[Test]
+		public void TestOpenConnection()
+		{
+			IAccountDao accountDao = (IAccountDao) daoManager[typeof (IAccountDao)];
+
+
+			Account account = NewAccount();
+
+			try
+			{
+				daoManager.OpenConnection(daoManager.LocalDataSource.ConnectionString);
+				accountDao.Create(account);
+
+				account = accountDao.GetAccountById(1001);
+			}
+			catch (Exception e)
+			{
+				// Ignore
+				Console.WriteLine("TestCreateAccount, error cause : " + e.Message);
+			}
+			finally
+			{
+				daoManager.CloseConnection();
+			}
+
+			Assert.IsNotNull(account);
+			Assert.AreEqual("Calamity.Jane@somewhere.com", account.EmailAddress);
+		}
 
 		/// <summary>
 		/// Test CreateAccount

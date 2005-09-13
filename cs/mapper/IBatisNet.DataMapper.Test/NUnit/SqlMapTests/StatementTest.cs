@@ -44,6 +44,19 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		#region Object Query tests
 
 		/// <summary>
+		/// Test Open connection with a connection string
+		/// </summary>
+		[Test]
+		public void TestOpenConnection()
+		{
+			sqlMap.OpenConnection(sqlMap.DataSource.ConnectionString);
+			Account account = sqlMap.QueryForObject("SelectWithProperty", null) as Account;
+			sqlMap.CloseConnection();
+
+			AssertAccount1(account);
+		}
+
+		/// <summary>
 		/// Test use a statement with property subtitution
 		/// (JIRA 22)
 		/// </summary>

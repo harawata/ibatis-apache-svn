@@ -145,10 +145,19 @@ namespace IBatisNet.DataMapper
 		/// </summary>
 		public void OpenConnection()
 		{
+			this.OpenConnection(_dataSource.ConnectionString);
+		}
+
+		/// <summary>
+		/// Open a connection, on the specified connection string.
+		/// </summary>
+		/// <param name="connectionString">The connection string</param>
+		public void OpenConnection(string connectionString)
+		{
 			if (_connection == null)
 			{
 				_connection =  _dataSource.Provider.GetConnection();
-				_connection.ConnectionString = _dataSource.ConnectionString;
+				_connection.ConnectionString = connectionString;
 				try
 				{
 					_connection.Open();

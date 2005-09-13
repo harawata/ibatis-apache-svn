@@ -277,7 +277,7 @@ namespace IBatisNet.DataMapper
 		#region Manage Connection, Transaction
 		
 		/// <summary>
-		/// 
+		/// Open a connection
 		/// </summary>
 		/// <returns></returns>
 		public IDalSession OpenConnection() 
@@ -289,6 +289,22 @@ namespace IBatisNet.DataMapper
 			SqlMapSession session = new SqlMapSession(this);
 			_sessionHolder.Store(session);
 			session.OpenConnection();
+			return session;
+		}
+
+		/// <summary>
+		/// Open a connection, on the specified connection string.
+		/// </summary>
+		/// <param name="connectionString">The connection string</param>
+		public IDalSession OpenConnection(string connectionString)
+		{
+			if (_sessionHolder.LocalSession != null) 
+			{
+				throw new DataMapperException("SqlMap could not invoke OpenConnection(). A connection is already started. Call CloseConnection first.");
+			}
+			SqlMapSession session = new SqlMapSession(this);
+			_sessionHolder.Store(session);
+			session.OpenConnection(connectionString);
 			return session;
 		}
 

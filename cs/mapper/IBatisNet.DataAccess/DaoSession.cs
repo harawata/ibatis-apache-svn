@@ -99,6 +99,12 @@ namespace IBatisNet.DataAccess
 		public abstract void OpenConnection();
 
 		/// <summary>
+		/// Open a connection, on the specified connection string.
+		/// </summary>
+		/// <param name="connectionString">The connection string</param>
+		public abstract void OpenConnection(string connectionString);
+
+		/// <summary>
 		/// Closes the connection
 		/// </summary>
 		public abstract void CloseConnection();

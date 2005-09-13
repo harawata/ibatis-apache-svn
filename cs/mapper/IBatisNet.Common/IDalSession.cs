@@ -73,6 +73,12 @@ namespace IBatisNet.Common
 		void OpenConnection();
 
 		/// <summary>
+		/// Open a connection, on the specified connection string.
+		/// </summary>
+		/// <param name="connectionString">The connection string</param>
+		void OpenConnection(string connectionString);
+
+		/// <summary>
 		/// close a connection
 		/// </summary>
 		void CloseConnection();

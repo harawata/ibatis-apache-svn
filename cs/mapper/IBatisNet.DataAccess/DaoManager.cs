@@ -412,6 +412,27 @@ namespace IBatisNet.DataAccess
 		}
 
 		/// <summary>
+		/// Open a connection, on the specified connection string.
+		/// </summary>
+		/// <param name="connectionString">The connection string</param>
+		public IDalSession OpenConnection(string connectionString)
+		{
+			if (_daoSessionHandler== null) 
+			{
+				throw new DataAccessException("DaoManager could not get DaoSession.  DaoSessionPool was null (possibly not configured).");
+			}
+			if (_sessionHolder.LocalSession != null) 
+			{
+				throw new DataAccessException("DaoManager could not invoke OpenConnection(). A connection is already started. Call CloseConnection first.");
+			}
+			IDalSession session = _daoSessionHandler.GetDaoSession(this);
+			_sessionHolder.Store(session);
+			session.OpenConnection(connectionString);
+			return session;	
+
+		}
+
+		/// <summary>
 		/// Close a connection
 		/// </summary>
 		public void CloseConnection()
