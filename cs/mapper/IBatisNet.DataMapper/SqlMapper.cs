@@ -1357,6 +1357,8 @@ namespace IBatisNet.DataMapper
 					} 
 					else 
 					{
+						// this statement has a cache but it hasn't been accessed yet
+						// buffer.Append("Cache has not been accessed."); ???
 						buffer.Append("No Cache.");
 					}
 				}
