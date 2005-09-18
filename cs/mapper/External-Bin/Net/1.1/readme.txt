@@ -1,6 +1,3 @@
-NUnit 2.2.0.0
-=============
-nunit.framework.dll
 
 Log4NET 1.2.9.0
 ===================
