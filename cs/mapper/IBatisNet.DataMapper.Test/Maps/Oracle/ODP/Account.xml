@@ -570,6 +570,27 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			order by Account_ID
 		</select>					
 				
+		<!-- JIRA-110 -->
+		<select id="GetManyAccound" resultClass="Account">
+			<![CDATA[
+			SELECT 
+				Account_ID as Id,
+				Account_FirstName as FirstName,
+				Account_LastName as LastName,
+				Account_Email as EmailAddress
+			FROM Accounts 
+			]]>
+		</select>
+		
+		<select id="Get1Account" extends="GetManyAccound" resultClass="Account">WHERE Account_ID=1</select>
+		
+		<statement id="GetAccounts" resultMap="account-result"> 
+			<![CDATA[SELECT * ]]> 
+			<![CDATA[FROM ]]> 
+			Accounts 
+		</statement> 
+		<!-- JIRA-110 -->
+						
 		<!-- For procedure, the parameters of the parameterMap must in the same order 
 		as for the procedure paramaters-->
 		<!--
