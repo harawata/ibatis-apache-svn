@@ -1182,9 +1182,9 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			int secondId = HashCodeProvider.GetIdentityHashCode(list);
 			Assert.AreEqual(firstId, secondId);
 
-			string cacheStates = sqlMap.GetDataCacheStats();
+			string cacheStats = sqlMap.GetDataCacheStats();
 
-			Assert.IsNotNull(cacheStates);
+			Assert.IsNotNull(cacheStats);
 		}
 
 		#endregion 
