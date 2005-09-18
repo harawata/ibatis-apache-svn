@@ -53,17 +53,22 @@ namespace IBatisNet.DataMapper
 	/// </summary>
 	public class SqlMapper
 	{
-
 		/// <summary>
 		/// A delegate called once per row in the QueryWithRowDelegate method
 		/// </summary>
-		public delegate void RowDelegate(object obj, IList list);
+		/// <param name="obj">The object currently being processed.</param>
+		/// <param name="parameterObject">The optional parameter object passed into the QueryWithRowDelegate method.</param>
+		/// <param name="list">The IList that will be returned to the caller.</param>
+		public delegate void RowDelegate(object obj, object parameterObject, IList list);
 
 		/// <summary>
-		/// A delegate called once per row in the QueryWithRowDelegate method
+		/// A delegate called once per row in the QueryForMapWithRowDelegate method
 		/// </summary>
-		public delegate void DictionaryRowDelegate(object key, object value, IDictionary dictionary);
-
+		/// <param name="key"></param>
+		/// <param name="value"></param>
+		/// <param name="parameterObject">The optional parameter object passed into the QueryForMapWithRowDelegate method.</param>
+		/// <param name="dictionary">The IDictionary that will be returned to the caller.</param>
+		public delegate void DictionaryRowDelegate(object key, object value, object parameterObject, IDictionary dictionary);
 
 		#region Fields
 		//(MappedStatement Name, MappedStatement)

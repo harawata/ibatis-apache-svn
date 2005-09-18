@@ -562,7 +562,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 						{
 							object obj = ApplyResultMap(request, reader, null);
 
-							rowDelegate(obj, list);
+							rowDelegate(obj, parameterObject, list);
 							n++;
 						}
 					}
@@ -777,7 +777,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 							{
 								value = ObjectProbe.GetPropertyValue(obj, valueProperty);
 							}
-							rowDelegate(key, value, map);
+							rowDelegate(key, value, parameterObject, map);
 
 						}
 					}

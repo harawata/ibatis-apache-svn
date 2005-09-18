@@ -1053,7 +1053,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
 		private int _index = 0;
 
-		public void RowHandler(object obj, IList list)
+		public void RowHandler(object obj, object paramterObject, IList list)
 		{
 			_index++;
 			Assert.AreEqual(_index, ((Account) obj).Id);
