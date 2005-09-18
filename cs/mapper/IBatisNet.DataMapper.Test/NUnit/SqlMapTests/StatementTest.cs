@@ -1144,6 +1144,28 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			AssertAccount1(account);
 		}
 
+		/// <summary>
+		/// Test : Whitespace is not maintained properly when CDATA tags are used
+		/// </summary>
+		[Test]
+		public void TestJIRA110()
+		{
+			Account account = sqlMap.QueryForObject("Get1Account", null) as Account;
+			AssertAccount1(account);
+		}
+
+		/// <summary>
+		/// Test : Whitespace is not maintained properly when CDATA tags are used
+		/// </summary>
+		[Test]
+		public void TestJIRA110Bis()
+		{
+			IList list = sqlMap.QueryForList("GetAccounts", null);
+
+			AssertAccount1((Account) list[0]);
+			Assert.AreEqual(5, list.Count);
+		}
+
 		#endregion 
 
 		#region CustomTypeHandler tests

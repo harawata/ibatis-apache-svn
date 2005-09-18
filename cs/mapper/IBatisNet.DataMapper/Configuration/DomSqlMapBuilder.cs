@@ -1382,7 +1382,7 @@ namespace IBatisNet.DataMapper.Configuration
 				XmlNode child = children[i];
 				if ( (child.NodeType == XmlNodeType.CDATA) || (child.NodeType == XmlNodeType.Text) )
 				{
-					string data = child.InnerText.Replace('\n', ' ').Replace('\r', ' ').Replace('\t', ' ').Trim(); //??
+					string data = child.InnerText.Replace('\n', ' ').Replace('\r', ' ').Replace('\t', ' '); //??
 
 					data = NodeUtils.ParsePropertyTokens(data, _configScope.Properties);
 
@@ -1462,6 +1462,8 @@ namespace IBatisNet.DataMapper.Configuration
 			}
 
 			ISql sql = null;
+
+			newSql = newSql.Trim();
 
 			if (SimpleDynamicSql.IsSimpleDynamicSql(newSql)) 
 			{
