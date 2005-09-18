@@ -207,23 +207,6 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 		#region Methods
 		/// <summary>
-		/// Gets a percentage of successful cache hits achieved
-		/// </summary>
-		/// <returns>The percentage of hits (0-1), or -1 if cache is disabled.</returns>
-		public double GetDataCacheHitRatio() 
-		{
-			if (_statement.CacheModel != null) 
-			{
-				return _statement.CacheModel.HitRatio;
-			} 
-			else 
-			{
-				return -1;
-			}
-		}
-		
-
-		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="request"></param>

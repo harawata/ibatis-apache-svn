@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using IBatisNet.Common;
 using IBatisNet.Common.Exceptions;
+using IBatisNet.Common.Utilities;
 using IBatisNet.DataMapper.MappedStatements;
 using IBatisNet.DataMapper.Test.Domain;
 using NUnit.Framework;
@@ -29,7 +30,6 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			InitScript(sqlMap.DataSource, ScriptDirectory + "enumeration-init.sql");
 			InitScript(sqlMap.DataSource, ScriptDirectory + "other-init.sql");
 		}
-
 
 		/// <summary>
 		/// TearDown
@@ -1166,6 +1166,27 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Assert.AreEqual(5, list.Count);
 		}
 
+		/// <summary>
+		/// Test for cache stats only being calculated on CachingStatments
+		/// </summary>
+		[Test]
+		public void TestJIRA113()
+		{
+			sqlMap.FlushCaches();
+
+			// taken from TestFlushDataCache()
+			// first query is not cached, second query is: 50% cache hit
+			IList list = sqlMap.QueryForList("GetCachedAccountsViaResultMap", null);
+			int firstId = HashCodeProvider.GetIdentityHashCode(list);
+			list = sqlMap.QueryForList("GetCachedAccountsViaResultMap", null);
+			int secondId = HashCodeProvider.GetIdentityHashCode(list);
+			Assert.AreEqual(firstId, secondId);
+
+			string cacheStates = sqlMap.GetDataCacheStats();
+
+			Assert.IsNotNull(cacheStates);
+		}
+
 		#endregion 
 
 		#region CustomTypeHandler tests
@@ -1222,8 +1243,5 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Assert.AreEqual(false, anOther.Bool2);
 		}
 		#endregion 
-
-
-
 	}
 }

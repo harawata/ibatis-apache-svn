@@ -1332,26 +1332,42 @@ namespace IBatisNet.DataMapper
 		/// <returns></returns>
 		public string GetDataCacheStats() 
 		{
-			StringBuilder buffer = new StringBuilder("\nCache Data Statistiques");
-			buffer.Append("\n=======================\n");
+			StringBuilder buffer = new StringBuilder();
+			buffer.Append(Environment.NewLine);
+			buffer.Append("Cache Data Statistics");
+			buffer.Append(Environment.NewLine);
+			buffer.Append("=====================");
+			buffer.Append(Environment.NewLine);
+
 			IDictionaryEnumerator enumerator = _mappedStatements.GetEnumerator();
 			while (enumerator.MoveNext()) 
 			{
-				MappedStatement statement = (MappedStatement) enumerator.Value;
-				buffer.Append(statement.Name);
+				IMappedStatement mappedStatement = (IMappedStatement)enumerator.Value;
+
+				buffer.Append(mappedStatement.Name);
 				buffer.Append(": ");
-				double hitRatio = statement.GetDataCacheHitRatio();
-				if (hitRatio != -1) 
+
+				if (mappedStatement is CachingStatement)
 				{
-					buffer.Append(Math.Round(hitRatio * 100));
-					buffer.Append("%");
-				} 
-				else 
+					double hitRatio = ((CachingStatement)mappedStatement).GetDataCacheHitRatio();
+					if (hitRatio != -1) 
+					{
+						buffer.Append(Math.Round(hitRatio * 100));
+						buffer.Append("%");
+					} 
+					else 
+					{
+						buffer.Append("No Cache.");
+					}
+				}
+				else
 				{
 					buffer.Append("No Cache.");
 				}
-				buffer.Append("\n");
+
+				buffer.Append(Environment.NewLine);
 			}
+
 			return buffer.ToString();
 		}
 
