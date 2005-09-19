@@ -354,6 +354,22 @@ namespace IBatisNet.DataMapper
 		}
 
 		/// <summary>
+		/// Open a connection and begin a transaction on the specified connection string.
+		/// </summary>
+		/// <param name="connectionString">The connection string</param>
+		public IDalSession BeginTransaction(string connectionString)
+		{
+			if (_sessionHolder.LocalSession != null) 
+			{
+				throw new DataMapperException("SqlMap could not invoke BeginTransaction(). A Transaction is already started. Call CommitTransaction() or RollbackTransaction first.");
+			}
+			SqlMapSession session = new SqlMapSession(this);
+			_sessionHolder.Store(session);
+			session.BeginTransaction( connectionString );
+			return session ;
+		}
+
+		/// <summary>
 		/// Begins a database transaction on the currect session
 		/// </summary>
 		/// <param name="openConnection">Open a connection.</param>
@@ -397,6 +413,23 @@ namespace IBatisNet.DataMapper
 		}
 
 		/// <summary>
+		/// Open a connection and begin a transaction on the specified connection string.
+		/// </summary>
+		/// <param name="connectionString">The connection string</param>
+		/// <param name="isolationLevel">The transaction isolation level for this connection.</param>
+		public IDalSession BeginTransaction(string connectionString, IsolationLevel isolationLevel)
+		{
+			if (_sessionHolder.LocalSession != null) 
+			{
+				throw new DataMapperException("SqlMap could not invoke BeginTransaction(). A Transaction is already started. Call CommitTransaction() or RollbackTransaction first.");
+			}
+			SqlMapSession session = new SqlMapSession(this);
+			_sessionHolder.Store(session);
+			session.BeginTransaction( connectionString, isolationLevel);
+			return session;
+		}
+
+		/// <summary>
 		/// Start a database transaction on the current session
 		/// with the specified isolation level.
 		/// </summary>
@@ -420,6 +453,33 @@ namespace IBatisNet.DataMapper
 					throw new DataMapperException("SqlMap could not invoke BeginTransaction(). A session must be Open. Call OpenConnection() first.");
 				}
 				session.BeginTransaction(openConnection, isolationLevel);
+			}
+			return session;
+		}
+
+		/// <summary>
+		/// Begins a transaction on the current connection
+		/// with the specified IsolationLevel value.
+		/// </summary>
+		/// <param name="isolationLevel">The transaction isolation level for this connection.</param>
+		/// <param name="connectionString">The connection string</param>
+		/// <param name="openConnection">Open a connection.</param>
+		public IDalSession BeginTransaction(string connectionString, bool openConnection, IsolationLevel isolationLevel)
+		{
+			IDalSession session = null;
+
+			if (openConnection)
+			{
+				session = this.BeginTransaction(connectionString, isolationLevel);
+			}
+			else
+			{
+				session = _sessionHolder.LocalSession;
+				if (session == null) 
+				{
+					throw new DataMapperException("SqlMap could not invoke BeginTransaction(). A session must be Open. Call OpenConnection() first.");
+				}
+				session.BeginTransaction(connectionString, openConnection, isolationLevel);
 			}
 			return session;
 		}

@@ -130,13 +130,21 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 			_sqlMap.CloseConnection();
 		}
 
-
 		/// <summary>
 		/// Begins a transaction.
 		/// </summary>
 		public override void BeginTransaction()
 		{
 			_sqlMap.BeginTransaction();
+		}
+
+		/// <summary>
+		/// Open a connection and begin a transaction on the specified connection string.
+		/// </summary>
+		/// <param name="connectionString">The connection string</param>
+		public override void BeginTransaction(string connectionString)
+		{
+			_sqlMap.BeginTransaction( connectionString );		
 		}
 
 		/// <summary>
@@ -158,6 +166,16 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		}
 
 		/// <summary>
+		/// Open a connection and begin a transaction on the specified connection string.
+		/// </summary>
+		/// <param name="connectionString">The connection string</param>
+		/// <param name="isolationLevel">The transaction isolation level for this connection.</param>
+		public override void BeginTransaction(string connectionString, IsolationLevel isolationLevel)
+		{
+			_sqlMap.BeginTransaction ( connectionString, isolationLevel );
+		}
+
+		/// <summary>
 		/// Begins a transaction on the current connection
 		/// with the specified IsolationLevel value.
 		/// </summary>
@@ -166,6 +184,18 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		public override void BeginTransaction(bool openConnection, IsolationLevel isolationLevel)
 		{
 			_sqlMap.BeginTransaction(openConnection, isolationLevel);
+		}
+
+		/// <summary>
+		/// Begins a transaction on the current connection
+		/// with the specified IsolationLevel value.
+		/// </summary>
+		/// <param name="isolationLevel">The transaction isolation level for this connection.</param>
+		/// <param name="connectionString">The connection string</param>
+		/// <param name="openConnection">Open a connection.</param>
+		public override void BeginTransaction(string connectionString, bool openConnection, IsolationLevel isolationLevel)
+		{
+			_sqlMap.BeginTransaction( connectionString, openConnection, isolationLevel );
 		}
 
 		/// <summary>

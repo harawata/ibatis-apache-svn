@@ -89,10 +89,23 @@ namespace IBatisNet.Common
 		void BeginTransaction();
 
 		/// <summary>
+		/// Open a connection and begin a transaction on the specified connection string.
+		/// </summary>
+		/// <param name="connectionString">The connection string</param>
+		void BeginTransaction(string connectionString);
+
+		/// <summary>
 		/// Begins a database transaction
 		/// </summary>
 		/// <param name="openConnection">Open a connection.</param>
 		void BeginTransaction(bool openConnection);
+
+		/// <summary>
+		/// Open a connection and begin a transaction on the specified connection string.
+		/// </summary>
+		/// <param name="connectionString">The connection string</param>
+		/// <param name="isolationLevel">The transaction isolation level for this connection.</param>
+		void BeginTransaction(string connectionString, IsolationLevel isolationLevel);
 
 		/// <summary>
 		/// Open a connection and begin a transaction at the data source 
@@ -100,6 +113,15 @@ namespace IBatisNet.Common
 		/// </summary>
 		/// <param name="isolationLevel">The transaction isolation level for this connection.</param>
 		void BeginTransaction(IsolationLevel isolationLevel);
+
+		/// <summary>
+		/// Begins a transaction on the current connection
+		/// with the specified IsolationLevel value.
+		/// </summary>
+		/// <param name="isolationLevel">The transaction isolation level for this connection.</param>
+		/// <param name="connectionString">The connection string</param>
+		/// <param name="openConnection">Open a connection.</param>
+		void BeginTransaction(string connectionString, bool openConnection, IsolationLevel isolationLevel);
 
 		/// <summary>
 		/// Begins a transaction on the current connection

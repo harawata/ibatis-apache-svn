@@ -211,9 +211,18 @@ namespace IBatisNet.DataMapper
 		/// </summary>
 		public void BeginTransaction()
 		{
+			this.BeginTransaction(_dataSource.ConnectionString);
+		}
+
+		/// <summary>
+		/// Open a connection and begin a transaction on the specified connection string.
+		/// </summary>
+		/// <param name="connectionString">The connection string</param>
+		public void BeginTransaction(string connectionString)
+		{
 			if (_connection == null || _connection.State != ConnectionState.Open)
 			{
-				OpenConnection();
+				this.OpenConnection( connectionString );
 			}
 			_transaction = _connection.BeginTransaction();
 			if (_logger.IsDebugEnabled)
@@ -256,16 +265,26 @@ namespace IBatisNet.DataMapper
 		/// </param>
 		public void BeginTransaction(IsolationLevel isolationLevel)
 		{
+			this.BeginTransaction(_dataSource.ConnectionString, isolationLevel);
+		}
+
+		/// <summary>
+		/// Open a connection and begin a transaction on the specified connection string.
+		/// </summary>
+		/// <param name="connectionString">The connection string</param>
+		/// <param name="isolationLevel">The transaction isolation level for this connection.</param>
+		public void BeginTransaction(string connectionString, IsolationLevel isolationLevel)
+		{
 			if (_connection == null || _connection.State != ConnectionState.Open)
 			{
-				OpenConnection();
+				this.OpenConnection( connectionString );
 			}
 			_transaction = _connection.BeginTransaction(isolationLevel);
 			if (_logger.IsDebugEnabled)
 			{
 				_logger.Debug("Begin Transaction.");
 			}
-			_isOpenTransaction = true;
+			_isOpenTransaction = true;			
 		}
 
 		/// <summary>
@@ -276,9 +295,21 @@ namespace IBatisNet.DataMapper
 		/// <param name="openConnection">Open a connection.</param>
 		public void BeginTransaction(bool openConnection, IsolationLevel isolationLevel)
 		{
+			this.BeginTransaction(_dataSource.ConnectionString, openConnection, isolationLevel);
+		}
+
+		/// <summary>
+		/// Begins a transaction on the current connection
+		/// with the specified IsolationLevel value.
+		/// </summary>
+		/// <param name="isolationLevel">The transaction isolation level for this connection.</param>
+		/// <param name="connectionString">The connection string</param>
+		/// <param name="openConnection">Open a connection.</param>
+		public void BeginTransaction(string connectionString, bool openConnection, IsolationLevel isolationLevel)
+		{
 			if (openConnection)
 			{
-				this.BeginTransaction(isolationLevel);
+				this.BeginTransaction( connectionString, isolationLevel );
 			}
 			else
 			{
@@ -292,9 +323,8 @@ namespace IBatisNet.DataMapper
 					_logger.Debug("Begin Transaction.");
 				}
 				_isOpenTransaction = true;
-			}
+			}			
 		}
-
 
 		/// <summary>
 		/// Commits the database transaction.

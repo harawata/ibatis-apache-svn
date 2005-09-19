@@ -115,6 +115,12 @@ namespace IBatisNet.DataAccess
 		public abstract void BeginTransaction();
 
 		/// <summary>
+		/// Open a connection and begin a transaction on the specified connection string.
+		/// </summary>
+		/// <param name="connectionString">The connection string</param>
+		public abstract void BeginTransaction(string connectionString);
+
+		/// <summary>
 		/// Begins a database transaction
 		/// </summary>
 		/// <param name="openConnection">Open a connection.</param>
@@ -127,12 +133,28 @@ namespace IBatisNet.DataAccess
 		public abstract void BeginTransaction(IsolationLevel isolationLevel);
 
 		/// <summary>
+		/// Open a connection and begin a transaction on the specified connection string.
+		/// </summary>
+		/// <param name="connectionString">The connection string</param>
+		/// <param name="isolationLevel">The transaction isolation level for this connection.</param>
+		public abstract void BeginTransaction(string connectionString, IsolationLevel isolationLevel);
+
+		/// <summary>
 		/// Begins a transaction on the current connection
 		/// with the specified IsolationLevel value.
 		/// </summary>
 		/// <param name="isolationLevel">The transaction isolation level for this connection.</param>
 		/// <param name="openConnection">Open a connection.</param>
 		public abstract void BeginTransaction(bool openConnection, IsolationLevel isolationLevel);
+
+		/// <summary>
+		/// Begins a transaction on the current connection
+		/// with the specified IsolationLevel value.
+		/// </summary>
+		/// <param name="isolationLevel">The transaction isolation level for this connection.</param>
+		/// <param name="connectionString">The connection string</param>
+		/// <param name="openConnection">Open a connection.</param>
+		public abstract void BeginTransaction(string connectionString, bool openConnection, IsolationLevel isolationLevel);
 
 		/// <summary>
 		/// Commits the database transaction.
