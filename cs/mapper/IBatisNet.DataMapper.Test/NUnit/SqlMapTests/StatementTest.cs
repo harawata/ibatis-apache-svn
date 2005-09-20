@@ -876,6 +876,40 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		}
 
 		/// <summary>
+		/// Test Insert account via public fields
+		/// </summary>
+		public void TestInsertDynamic()
+		{
+			Account account = new Account();
+
+			account.Id = 10;
+			account.FirstName = "Luky";
+			account.LastName = "luke";
+			account.EmailAddress = null;
+
+			sqlMap.Insert("InsertAccountDynamic", account);
+
+			Account testAccount = sqlMap.QueryForObject("GetAccountViaColumnIndex", 10) as Account;
+
+			Assert.IsNotNull(testAccount);
+			Assert.AreEqual(10, testAccount.Id);
+			Assert.AreEqual("no_email@provided.com", testAccount.EmailAddress);
+
+			account.Id = 11;
+			account.FirstName = "Luky";
+			account.LastName = "luke";
+			account.EmailAddress = "luly.luke@somewhere.com";
+
+			sqlMap.Insert("InsertAccountDynamic", account);
+
+			testAccount = sqlMap.QueryForObject("GetAccountViaColumnIndex", 11) as Account;
+
+			Assert.IsNotNull(testAccount);
+			Assert.AreEqual(11, testAccount.Id);
+			Assert.AreEqual("luly.luke@somewhere.com", testAccount.EmailAddress);
+		}
+
+		/// <summary>
 		/// Test Insert account via inline parameters
 		/// </summary>
 		[Test]

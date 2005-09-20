@@ -482,7 +482,22 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 			Accounts 
 		</statement> 
 		<!-- JIRA-110 -->
-				
+
+		<insert id="InsertAccountDynamic" parameterClass="Account">
+			INSERT INTO Accounts
+			(Account_ID, Account_FirstName, Account_LastName, Account_Email)
+			VALUES(#Id#, #FirstName#, #LastName#
+			<dynamic prepend=",">
+				<isNotNull prepend="," property="EmailAddress">
+					#EmailAddress#
+				</isNotNull>
+				<isNull prepend="," property="EmailAddress">
+						null
+				</isNull>
+			</dynamic>
+			)
+        </insert>
+           				
 		<!-- For procedure, the parameters of the parameterMap must in the same order 
 		as for the procedure paramaters-->
 		<procedure id="InsertAccountViaStoreProcedure" parameterMap="insert-params">
