@@ -24,7 +24,13 @@
  ********************************************************************************/
 #endregion
 
+#region Using
+
 using System;
+using IBatisNet.Common.Logging;
+#endregion 
+
+
 
 namespace IBatisNet.Common.Logging.Impl
 {
@@ -41,7 +47,7 @@ namespace IBatisNet.Common.Logging.Impl
 		#endregion 
 
 		/// <summary>
-		/// 
+		/// Constructor
 		/// </summary>
 		/// <param name="log"></param>
 		internal Log4NetLogger( log4net.ILog log )

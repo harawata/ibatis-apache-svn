@@ -25,20 +25,12 @@
 #endregion
 
 #region Using
-using System;
-using System.Data;
-using System.Collections;
-using System.Reflection;
-using System.Xml.Serialization;
 
+using System;
+using System.Collections;
+using System.Data;
 using Castle.DynamicProxy;
 
-using IBatisNet.Common;
-using IBatisNet.Common.Utilities.Objects;
-
-using IBatisNet.Common.Exceptions;
-
-using log4net;
 #endregion
 
 namespace IBatisNet.Common.Logging
@@ -52,7 +44,6 @@ namespace IBatisNet.Common.Logging
 	{
 
 		#region Fields
-		private string _connectionString = string.Empty;
 		private IDbConnection _connection = null;
 		private Provider _provider = null;
 		private static ArrayList _passthroughMethods = new ArrayList();

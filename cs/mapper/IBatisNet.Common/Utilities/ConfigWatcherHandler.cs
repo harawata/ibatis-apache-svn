@@ -28,8 +28,7 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Threading;
-
-using log4net;
+using IBatisNet.Common.Logging;
 
 namespace IBatisNet.Common.Utilities
 {

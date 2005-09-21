@@ -6,7 +6,7 @@ IBatisNet Change Log
 - Updated to log4net V1.2.9
 - Updated to Castle.DynamicProxy V1.1.5.0
 - Re-add signing on assembly 
-- Added custom logger support, IBATIS now need a custom section in your application config file
+- Added custom logger support (remove dependcy on log4net), IBATIS now need a custom section in your application config file
     Exemple (for log4NET) :
 	<configSections>
 		<sectionGroup name="iBATIS">
@@ -17,7 +17,7 @@ IBatisNet Change Log
 	
 	<iBATIS>
 		<logging>		
-			<logFactoryAdapter type="IBatisNet.Common.Logging.Impl.Log4NetLoggerFA, IBatisNet.Common">
+			<logFactoryAdapter type="IBatisNet.Common.Logging.Impl.Log4NetLoggerFA, IBatisNet.Common.Logging.Log4Net">
 				<arg key="configType" value="inline" />
 			</logFactoryAdapter>
 		</logging>

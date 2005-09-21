@@ -90,11 +90,6 @@
                     HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.EnterpriseServices.dll"
                 />
                 <Reference
-                    Name = "log4net"
-                    AssemblyName = "log4net"
-                    HintPath = "..\External-Bin\Net\1.1\log4net.dll"
-                />
-                <Reference
                     Name = "Castle.DynamicProxy"
                     AssemblyName = "Castle.DynamicProxy"
                     HintPath = "..\External-Bin\Net\1.1\Castle.DynamicProxy.dll"
@@ -183,11 +178,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Logging\IDbConnectionProxy.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Logging\ILog.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -214,16 +204,6 @@
                 />
                 <File
                     RelPath = "Logging\Impl\ConsoleOutLoggerFA.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Logging\Impl\Log4NetLogger.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Logging\Impl\Log4NetLoggerFA.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

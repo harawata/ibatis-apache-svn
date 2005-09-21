@@ -24,11 +24,16 @@
  ********************************************************************************/
 #endregion
 
+#region Using
+
 using System;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.IO;
 using log4net.Config;
+
+using IBatisNet.Common.Logging;
+#endregion 
 
 namespace IBatisNet.Common.Logging.Impl
 {

@@ -33,9 +33,9 @@ using System.Reflection;
 using System.Security.Permissions;
 using System.Xml;
 using IBatisNet.Common.Exceptions;
+using IBatisNet.Common.Logging;
 using IBatisNet.Common.Utilities.TypesResolver;
 using IBatisNet.Common.Xml;
-using log4net;
 
 #endregion
 

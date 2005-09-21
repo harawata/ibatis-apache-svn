@@ -105,6 +105,11 @@
                     HintPath = "D:\Program Files\NUnit 2.2\bin\nunit.framework.dll"
                     AssemblyFolderKey = "hklm\dn\nunit.framework"
                 />
+                <Reference
+                    Name = "IBatisNet.Common.Logging.Log4Net"
+                    Project = "{023FE8D7-7E1A-4DDF-A0EA-8FB0E1B3122B}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>

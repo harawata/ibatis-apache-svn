@@ -28,8 +28,8 @@
 using System;
 using System.EnterpriseServices;
 using System.Runtime.Remoting.Messaging;
+using IBatisNet.Common.Logging;
 
-using log4net;
 #endregion
 
 namespace IBatisNet.Common.Transaction
