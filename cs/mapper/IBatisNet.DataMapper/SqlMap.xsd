@@ -100,7 +100,15 @@ vs:defaultnsprefix="" >
 			<xs:attribute name="id" use="required"/>
 			<xs:attribute name="parameterMap" type="xs:string"/>
 			<xs:attribute name="parameterClass" type="xs:string"/>
-			<xs:attribute name="extends" type="xs:string"/>			
+			<xs:attribute name="extends" type="xs:string"/>		
+			<xs:attribute name="remapResults">
+				<xs:simpleType>
+					<xs:restriction base="xs:NMTOKEN">
+						<xs:enumeration value="false"/>
+						<xs:enumeration value="true"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>			
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="dynamic">
@@ -170,6 +178,14 @@ vs:defaultnsprefix="" >
 			<xs:attribute name="parameterClass" type="xs:string"/>
 			<xs:attribute name="parameterMap" type="xs:string"/>
 			<xs:attribute name="resultClass" type="xs:string"/>
+			<xs:attribute name="remapResults">
+				<xs:simpleType>
+					<xs:restriction base="xs:NMTOKEN">
+						<xs:enumeration value="false"/>
+						<xs:enumeration value="true"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="isNotParameterPresent">
@@ -644,6 +660,14 @@ vs:defaultnsprefix="" >
 			<xs:attribute name="cacheModel" type="xs:string"/>
 			<xs:attribute name="listClass" type="xs:string"/>
 			<xs:attribute name="extends" type="xs:string"/>
+			<xs:attribute name="remapResults">
+				<xs:simpleType>
+					<xs:restriction base="xs:NMTOKEN">
+						<xs:enumeration value="false"/>
+						<xs:enumeration value="true"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="selectKey">
@@ -703,6 +727,14 @@ vs:defaultnsprefix="" >
 			<xs:attribute name="parameterMap" type="xs:string"/>
 			<xs:attribute name="listClass" type="xs:string"/>
 			<xs:attribute name="cacheModel" type="xs:string"/>
+			<xs:attribute name="remapResults">
+				<xs:simpleType>
+					<xs:restriction base="xs:NMTOKEN">
+						<xs:enumeration value="false"/>
+						<xs:enumeration value="true"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="statements">
@@ -748,6 +780,14 @@ vs:defaultnsprefix="" >
 			<xs:attribute name="parameterMap" type="xs:string"/>
 			<xs:attribute name="parameterClass" type="xs:string"/>
 			<xs:attribute name="extends" type="xs:string"/>
+			<xs:attribute name="remapResults">
+				<xs:simpleType>
+					<xs:restriction base="xs:NMTOKEN">
+						<xs:enumeration value="false"/>
+						<xs:enumeration value="true"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
 		</xs:complexType>
 	</xs:element>
 </xs:schema>
