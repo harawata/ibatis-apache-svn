@@ -57,6 +57,7 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 			update.Id = NodeUtils.GetStringAttribute(prop, "id");
 			update.ParameterClassName = NodeUtils.GetStringAttribute(prop, "parameterClass");
 			update.ParameterMapName = NodeUtils.GetStringAttribute(prop, "parameterMap");
+			update.RemapResults = NodeUtils.GetBooleanAttribute(prop, "remapResults", false); 
 
 			for(int i=0;i<node.ChildNodes.Count;i++)
 			{

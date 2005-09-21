@@ -1071,25 +1071,33 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 		private void AutoMapReader( IDataReader reader,ref object resultObject) 
 		{
-			if (_readerAutoMapper == null)
+			if (_statement.RemapResults)
 			{
-				lock (this) 
+				ReaderAutoMapper readerAutoMapper = new ReaderAutoMapper(_sqlMap.TypeHandlerFactory, reader, ref resultObject);
+				readerAutoMapper.AutoMapReader( reader, ref resultObject );
+				_logger.Debug("The RemapResults");
+			}
+			else
+			{
+				if (_readerAutoMapper == null)
 				{
-					if (_readerAutoMapper == null) 
+					lock (this) 
 					{
-						_readerAutoMapper = new ReaderAutoMapper(_sqlMap.TypeHandlerFactory, reader, ref resultObject);
+						if (_readerAutoMapper == null) 
+						{
+							_readerAutoMapper = new ReaderAutoMapper(_sqlMap.TypeHandlerFactory, reader, ref resultObject);
+						}
 					}
 				}
+				_logger.Debug("The AutoMapReader");
+				_readerAutoMapper.AutoMapReader( reader, ref resultObject );				
 			}
 
-			_readerAutoMapper.AutoMapReader( reader, ref resultObject );
 		}
 		#endregion
 
 		private class ReaderAutoMapper 
 		{
-
-//			private IList _mappings = new ArrayList();
 			private ResultMap _resultMap = new ResultMap();
 
 			/// <summary>

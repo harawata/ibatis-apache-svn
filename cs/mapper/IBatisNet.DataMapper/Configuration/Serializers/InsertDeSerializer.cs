@@ -58,7 +58,8 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 			insert.ParameterMapName = NodeUtils.GetStringAttribute(prop, "parameterMap");
 			insert.ResultClassName = NodeUtils.GetStringAttribute(prop, "resultClass");
 			insert.ResultMapName = NodeUtils.GetStringAttribute(prop, "resultMap");
-			
+			insert.RemapResults = NodeUtils.GetBooleanAttribute(prop, "remapResults", false); 
+
 			for(int i=0;i<node.ChildNodes.Count;i++)
 			{
 				if (node.ChildNodes[i].LocalName=="generate")

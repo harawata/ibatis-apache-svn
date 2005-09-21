@@ -44,6 +44,16 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 	{
 		
 		#region Properties
+
+		/// <summary>
+		/// Allow remapping of dynamic SQL
+		/// </summary>
+		bool RemapResults
+		{
+			get;
+			set;
+		}
+
 		/// <summary>
 		/// Identifier used to identify the statement amongst the others.
 		/// </summary>

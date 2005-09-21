@@ -41,6 +41,31 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		#region Dynamic tests
 
 		/// <summary>
+		/// Test Dynamic Sql On Column Selection
+		/// JIRA IBATISNET-114
+		/// </summary>
+		[Test]
+		public void TestDynamicSqlOnColumnSelection()
+		{
+			Account paramAccount = new Account();
+			Account resultAccount = new Account();
+			IList list = null;
+
+			paramAccount.LastName = "Dalton";
+			list = sqlMap.QueryForList("DynamicSqlOnColumnSelection", paramAccount);
+			resultAccount = (Account)list[0];
+			AssertAccount1( resultAccount );
+			Assert.AreEqual(5, list.Count);
+
+			paramAccount.LastName = "Bayon";
+			list = sqlMap.QueryForList("DynamicSqlOnColumnSelection", paramAccount);
+			resultAccount = (Account)list[0];
+			Assert.IsNull(resultAccount.FirstName);
+			Assert.IsNull(resultAccount.LastName);
+			Assert.AreEqual(5, list.Count);
+		}
+
+		/// <summary>
 		/// Test IsNotEmpty True
 		/// </summary>
 		[Test] 

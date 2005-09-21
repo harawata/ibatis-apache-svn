@@ -59,6 +59,7 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 			statement.ParameterMapName = NodeUtils.GetStringAttribute(prop, "parameterMap");
 			statement.ResultClassName = NodeUtils.GetStringAttribute(prop, "resultClass");
 			statement.ResultMapName = NodeUtils.GetStringAttribute(prop, "resultMap");
+			statement.RemapResults = NodeUtils.GetBooleanAttribute(prop, "remapResults", false); 
 
 			return statement;
 		}

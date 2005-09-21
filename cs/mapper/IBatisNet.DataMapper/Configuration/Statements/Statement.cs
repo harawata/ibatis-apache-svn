@@ -60,6 +60,8 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		#region Fields
 
 		[NonSerialized]
+		private bool _remapResults = false;
+		[NonSerialized]
 		private string _id = string.Empty;
 		// ResultMap
 		[NonSerialized]
@@ -98,6 +100,16 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		#endregion
 
 		#region Properties
+
+		/// <summary>
+		/// Allow remapping of dynamic SQL
+		/// </summary>
+		[XmlAttribute("remapResults")]
+		public bool RemapResults
+		{
+			get { return _remapResults; }
+			set { _remapResults = value; }
+		}
 
 		/// <summary>
 		/// Extend statement attribute
@@ -268,7 +280,6 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 			get { return _parameterMap; }
 			set { _parameterMap = value; }
 		}
-
 		
 		/// <summary>
 		/// The type of the statement (text or procedure)
