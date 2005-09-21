@@ -2,7 +2,7 @@ DROP TABLE ORDERS CASCADE CONSTRAINTS;
 
 CREATE TABLE ORDERS  (
    ORDER_ID             INTEGER                          NOT NULL,
-   ACCOUNT_ID           INTEGER                          NOT NULL,
+   ACCOUNT_ID           INTEGER                          NULL,
    ORDER_DATE           DATE,
    ORDER_CARDTYPE       VARCHAR2(32),
    ORDER_CARDNUMBER     VARCHAR2(32),
@@ -28,3 +28,4 @@ INSERT INTO ORDERS VALUES (7, 4, TO_DATE('2003-02-15 8:15:00','yyyy-mm-dd hh:mi:
 INSERT INTO ORDERS VALUES (8, 3, TO_DATE('2003-02-15 8:15:00','yyyy-mm-dd hh:mi:ss'), 'AMEX', '777777777777', '12/03', '888 Our Street', 'Regina', 'SK', 'S4S 7G4',1);
 INSERT INTO ORDERS VALUES (9, 2, TO_DATE('2003-02-15 8:15:00','yyyy-mm-dd hh:mi:ss'), 'MC', '666666666666', '01/04', '999 Your Street', 'Toronto', 'ON', 'G4D 9F4',2);
 INSERT INTO ORDERS VALUES (10, 1, TO_DATE('2003-02-15 8:15:00','yyyy-mm-dd hh:mi:ss'), 'VISA', '555555555555', '02/04', '99 Some Street', 'Calgary', 'AB', 'W4G 7A4',1);
+INSERT INTO ORDERS VALUES (11, null, TO_DATE('2003-02-15 8:15:00','yyyy-mm-dd hh:mi:ss'), 'VISA', '555555555555', '02/04', 'Null order', 'Calgary', 'ZZ', 'XXX YYY',1);

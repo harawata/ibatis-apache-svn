@@ -336,8 +336,8 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 				acc.Account_FirstName,
 				acc.Account_LastName,
 				acc.Account_Email 
-			from Orders as ord
-			LEFT OUTER JOIN Accounts as acc on acc.Account_ID = ord.Account_ID
+			from Orders ord
+			LEFT OUTER JOIN Accounts acc on acc.Account_ID = ord.Account_ID
 			where Order_ID = #value#
 		</select>	
 						
