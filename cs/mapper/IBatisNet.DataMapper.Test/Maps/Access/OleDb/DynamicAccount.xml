@@ -8,6 +8,27 @@ http://ibatis.apache.org/xsd/SqlMap.xsd">
 			
 	<statements>
 	
+		<!-- IBATISNET-114: remapResults -->
+		<statement  id="DynamicSqlOnColumnSelection" 
+					parameterClass="Account" 
+					resultClass="Account"
+					remapResults="true">
+			SELECT
+			Account_ID as Id,
+			<dynamic>
+				<isEqual property="LastName" compareValue="Dalton" >
+					Account_FirstName as FirstName,
+				</isEqual>
+				<isEqual property="LastName" compareValue="Dalton" >
+					Account_LastName as LastName,
+				</isEqual>
+			</dynamic>
+
+			Account_Email as EmailAddress
+			FROM
+			Accounts
+		</statement>
+	
 		<statement id="DynamicIsEqual"
 				parameterClass="string"
 				resultClass="Account">

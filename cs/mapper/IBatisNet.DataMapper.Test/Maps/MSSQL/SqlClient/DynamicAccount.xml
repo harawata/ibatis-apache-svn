@@ -9,7 +9,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 			
 	<statements>
 	
-		<!-- IBATISNET-114 -->
+		<!-- IBATISNET-114: remapResults -->
 		<statement  id="DynamicSqlOnColumnSelection" 
 					parameterClass="Account" 
 					resultClass="Account"
