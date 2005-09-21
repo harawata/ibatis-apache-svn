@@ -107,6 +107,12 @@ http://ibatis.apache.org/xsd/SqlMap.xsd">
 			order by Account_ID
 		</select>
   
+		<select id="GetNoAccountWithCache" parameterClass="Integer" resultMap="account-hashtable-result" cacheModel="account-cache">
+			select *
+			from Accounts
+			where Account_ID = #value#
+		</select> 
+		
 		<select id="GetAccountAsHashtableResultClass"
 						parameterClass="int"
 						resultClass="HashMap">
@@ -228,6 +234,15 @@ http://ibatis.apache.org/xsd/SqlMap.xsd">
 			from Accounts
 			where Account_ID = #value#
 		</select>
+		
+		<select id="GetAccountJIRA45" parameterClass="int" resultMap="Account.indexed-account-result">
+			select Account_ID,
+			Account_FirstName,
+			Account_LastName,
+			Account_Email
+			from Accounts
+			where Account_ID = #value#
+		</select> 
  
 		<select id="GetEmailAddressViaResultMap"
 						parameterClass="int"
@@ -326,6 +341,7 @@ http://ibatis.apache.org/xsd/SqlMap.xsd">
 			)
 		</insert>
 		
+		
 		<!-- Inline Parameters -->
 		<update id="UpdateAccountViaInlineParameters"
 			parameterClass="Account">
@@ -398,6 +414,29 @@ http://ibatis.apache.org/xsd/SqlMap.xsd">
 			where Account_ID between #lowID# and #hightID#
 		</select>
 		
+		<select id="SelectAccountJIRA29" parameterClass="map" resultClass="Account">
+			select
+			Account_ID as Id,
+			Account_FirstName as FirstName,
+			Account_LastName as LastName,
+			Account_Email as EmailAddress
+			from Accounts
+			where Account_FirstName = '##$AccountName$##'
+		</select>
+
+		<select id="SelectAccountJIRA29-2" parameterClass="Hashtable" resultClass="Account">
+			select
+			Account_ID as Id,
+			Account_FirstName as FirstName,
+			Account_LastName as LastName,
+			Account_Email as EmailAddress
+			from Accounts
+			where 1=1
+			<isNotEmpty prepend="AND" property="Foo">
+			(Account_FirstName = '##$Foo$##')
+			</isNotEmpty>
+		</select>
+
 		<select id="GetAccountWithRepeatingProperty"
 						parameterClass="Account" 
 						resultMap="account-result">
@@ -412,7 +451,13 @@ http://ibatis.apache.org/xsd/SqlMap.xsd">
 					Account_FirstName = #FirstName# and 
 					Account_LastName = #LastName# and 
 					Account_ID = #Id#				
-		</select>		
+		</select>	
+		
+		<select id="GetAllAccountsViaCustomTypeHandler"
+				resultMap="account-result">
+				select * from Accounts
+				order by Account_ID
+		</select>	
 				
 		<!-- For procedure, the parameters of the parameterMap must in the same order 
 		as for the procedure paramaters-->
@@ -430,6 +475,7 @@ http://ibatis.apache.org/xsd/SqlMap.xsd">
     ============================================= -->
 	<parameterMaps>   
 		
+
 		<parameterMap id="swap-params">
 			<parameter property="email1" column="First_Email" />
 			<parameter property="email2" column="Second_Email" />

@@ -48,15 +48,9 @@ http://ibatis.apache.org/xsd/SqlMap.xsd">
 			select CDbl(99.5) from Orders where Order_ID= #value#
 		</statement>
 
-		<!--
-		System.InvalidCastException
-		No cast function in Access SQL syntax
-		-->
-		<statement id="GetGuid"
-					parameterClass="Int"
-					resultClass="guid" >
-			select CONVERT(UNIQUEIDENTIFIER, 'CD5ABF17-4BBC-4C86-92F1-257735414CF4') from Orders where Order_ID = #value#
-		</statement>
+		<statement id="GetGuid" parameterClass="Int" resultClass="guid" >
+			select {CD5ABF17-4BBC-4C86-92F1-257735414CF4} from Orders where Order_ID = #value# 
+		</statement> 
 		
 		<statement id="GetInt16"
 					parameterClass="Int"
