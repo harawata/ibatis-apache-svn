@@ -28,7 +28,10 @@ IBatisNet DataAccess Change Log
 - Updated schemas header
   dao.config
   <daoConfig  xmlns="http://ibatis.apache.org/dataAccess" 
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  providers.config
+  <providers xmlns="http://ibatis.apache.org/providers" 
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
      
 ------------------------------
 1.6.1 - 10-June-2005

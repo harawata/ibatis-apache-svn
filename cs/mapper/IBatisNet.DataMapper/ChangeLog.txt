@@ -36,10 +36,13 @@ IBatisNet Change Log
 - Updated schemas header
   SqlMap.config
   <sqlMapConfig xmlns=”http://ibatis.apache.org/dataMapper” 
-     xmlns:xsi=”http://www.w3.org/2001/XMLSchema-instance”>
+                xmlns:xsi=”http://www.w3.org/2001/XMLSchema-instance”>
   Mapping files
   <sqlMap namespace=”Product” xmlns=”http://ibatis.apache.org/mapping” 
-  xmlns:xsi=”http://www.w3.org/2001/XMLSchema-instance”>
+          xmlns:xsi=”http://www.w3.org/2001/XMLSchema-instance”>
+  Providers.config
+  <providers xmlns="http://ibatis.apache.org/providers" 
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
 ------------------------------
 1.2.1 - 10/07/2005
