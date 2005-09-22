@@ -38,7 +38,7 @@ using IBatisNet.Common.Logging;
 namespace IBatisNet.Common.Logging.Impl
 {
 	/// <summary>
-	/// Concrete subclass of ILoggerFactoryAdapter specific to log4n. 
+	/// Concrete subclass of ILoggerFactoryAdapter specific to log4net.
 	/// </summary>
 	public class Log4NetLoggerFA : ILoggerFactoryAdapter
 	{

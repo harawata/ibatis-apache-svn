@@ -120,10 +120,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="e"></param>
 		public void Info(object message, Exception e)
 		{
-			if (_log.IsInfoEnabled)
-			{
-				_log.Logger.Log(declaringType, Level.Info, message, e);
-			}
+			_log.Logger.Log(declaringType, Level.Info, message, e);
 		}
 
 		/// <summary>
@@ -132,10 +129,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="message"></param>
 		public void Info(object message)
 		{
-			if (_log.IsInfoEnabled)
-			{
-				_log.Logger.Log(declaringType, Level.Info, message, null);
-			}
+			_log.Logger.Log(declaringType, Level.Info, message, null);
 		}
 
 		/// <summary>
@@ -145,10 +139,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="e"></param>
 		public void Debug(object message, Exception e)
 		{
-			if (_log.IsDebugEnabled)
-			{
-				_log.Logger.Log(declaringType, Level.Debug, message, e);
-			}
+			_log.Logger.Log(declaringType, Level.Debug, message, e);
 		}
 
 		/// <summary>
@@ -157,12 +148,8 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="message"></param>
 		public void Debug(object message)
 		{
-			if (_log.IsDebugEnabled)
-			{
-				_log.Logger.Log(declaringType, Level.Debug, message, null);
-			}
+			_log.Logger.Log(declaringType, Level.Debug, message, null);
 		}
-
 
 		/// <summary>
 		/// 
@@ -171,10 +158,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="e"></param>
 		public void Warn(object message, Exception e)
 		{
-			if (_log.IsWarnEnabled)
-			{
-				_log.Logger.Log(declaringType, Level.Warn, message, e);
-			}
+			_log.Logger.Log(declaringType, Level.Warn, message, e);
 		}
 
 		/// <summary>
@@ -183,12 +167,8 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="message"></param>
 		public void Warn(object message)
 		{
-			if (_log.IsWarnEnabled)
-			{
-				_log.Logger.Log(declaringType, Level.Warn, message, null);
-			}
+			_log.Logger.Log(declaringType, Level.Warn, message, null);
 		}
-
 
 		/// <summary>
 		/// 
@@ -197,11 +177,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="e"></param>
 		public void Trace(object message, Exception e)
 		{
-			// is calling through to _log.Logger slow ???
-			if (_log.Logger.IsEnabledFor(Level.Trace))
-			{
-				_log.Logger.Log(declaringType, Level.Trace, message, e);
-			}
+			_log.Logger.Log(declaringType, Level.Trace, message, e);
 		}
 
 		/// <summary>
@@ -210,11 +186,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="message"></param>
 		public void Trace(object message)
 		{
-			// is calling through to _log.Logger slow ???
-			if (_log.Logger.IsEnabledFor(Level.Trace))
-			{
-				_log.Logger.Log(declaringType, Level.Info, message, null);
-			}
+			_log.Logger.Log(declaringType, Level.Trace, message, null);
 		}
 
 		/// <summary>
@@ -224,10 +196,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="e"></param>
 		public void Fatal(object message, Exception e)
 		{
-			if (_log.IsFatalEnabled)
-			{
-				_log.Logger.Log(declaringType, Level.Fatal, message, e);
-			}
+			_log.Logger.Log(declaringType, Level.Fatal, message, e);
 		}
 
 		/// <summary>
@@ -236,10 +205,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="message"></param>
 		public void Fatal(object message)
 		{
-			if (_log.IsFatalEnabled)
-			{
-				_log.Logger.Log(declaringType, Level.Fatal, message, null);
-			}
+			_log.Logger.Log(declaringType, Level.Fatal, message, null);
 		}
 
 		/// <summary>
@@ -249,10 +215,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="e"></param>
 		public void Error(object message, Exception e)
 		{
-			if (_log.IsErrorEnabled)
-			{
-				_log.Logger.Log(declaringType, Level.Error, message, e);
-			}
+			_log.Logger.Log(declaringType, Level.Error, message, e);
 		}
 
 		/// <summary>
@@ -261,10 +224,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="message"></param>
 		public void Error(object message)
 		{
-			if (_log.IsErrorEnabled)
-			{
-				_log.Logger.Log(declaringType, Level.Error, message, null);
-			}
+			_log.Logger.Log(declaringType, Level.Error, message, null);
 		}
 
 		#endregion
