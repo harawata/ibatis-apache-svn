@@ -49,7 +49,7 @@ namespace IBatisNet.Common.Logging.Impl
 	{
 		#region Fields
 
-		private log4net.ILog _log = null;
+		private log4net.Core.ILogger _logger = null;
 		private readonly static Type declaringType = typeof(LocationInfoLog4NetLogger);
 
 		#endregion 
@@ -60,7 +60,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="log"></param>
 		internal LocationInfoLog4NetLogger(log4net.ILog log )
 		{
-			_log = log;
+			_logger = log.Logger;
 		}
 
 		#region ILog Members
@@ -70,7 +70,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// </summary>
 		public bool IsInfoEnabled
 		{
-			get { return _log.IsInfoEnabled; }
+			get { return _logger.IsEnabledFor(Level.Info); }
 		}
 
 		/// <summary>
@@ -78,7 +78,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// </summary>
 		public bool IsWarnEnabled
 		{
-			get { return _log.IsWarnEnabled; }
+			get { return _logger.IsEnabledFor(Level.Warn); }
 		}
 
 		/// <summary>
@@ -86,7 +86,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// </summary>
 		public bool IsErrorEnabled
 		{
-			get { return _log.IsErrorEnabled; }
+			get { return _logger.IsEnabledFor(Level.Error); }
 		}
 
 		/// <summary>
@@ -94,7 +94,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// </summary>
 		public bool IsFatalEnabled
 		{
-			get { return _log.IsFatalEnabled; }
+			get { return _logger.IsEnabledFor(Level.Fatal); }
 		}
 
 		/// <summary>
@@ -102,7 +102,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// </summary>
 		public bool IsDebugEnabled
 		{
-			get { return _log.IsDebugEnabled; }
+			get { return _logger.IsEnabledFor(Level.Debug); }
 		}
 
 		/// <summary>
@@ -110,7 +110,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// </summary>
 		public bool IsTraceEnabled
 		{
-			get { return _log.IsDebugEnabled; }
+			get { return _logger.IsEnabledFor(Level.Trace); }
 		}
 
 		/// <summary>
@@ -120,7 +120,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="e"></param>
 		public void Info(object message, Exception e)
 		{
-			_log.Logger.Log(declaringType, Level.Info, message, e);
+			_logger.Log(declaringType, Level.Info, message, e);
 		}
 
 		/// <summary>
@@ -129,7 +129,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="message"></param>
 		public void Info(object message)
 		{
-			_log.Logger.Log(declaringType, Level.Info, message, null);
+			_logger.Log(declaringType, Level.Info, message, null);
 		}
 
 		/// <summary>
@@ -139,7 +139,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="e"></param>
 		public void Debug(object message, Exception e)
 		{
-			_log.Logger.Log(declaringType, Level.Debug, message, e);
+			_logger.Log(declaringType, Level.Debug, message, e);
 		}
 
 		/// <summary>
@@ -148,7 +148,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="message"></param>
 		public void Debug(object message)
 		{
-			_log.Logger.Log(declaringType, Level.Debug, message, null);
+			_logger.Log(declaringType, Level.Debug, message, null);
 		}
 
 		/// <summary>
@@ -158,7 +158,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="e"></param>
 		public void Warn(object message, Exception e)
 		{
-			_log.Logger.Log(declaringType, Level.Warn, message, e);
+			_logger.Log(declaringType, Level.Warn, message, e);
 		}
 
 		/// <summary>
@@ -167,7 +167,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="message"></param>
 		public void Warn(object message)
 		{
-			_log.Logger.Log(declaringType, Level.Warn, message, null);
+			_logger.Log(declaringType, Level.Warn, message, null);
 		}
 
 		/// <summary>
@@ -177,7 +177,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="e"></param>
 		public void Trace(object message, Exception e)
 		{
-			_log.Logger.Log(declaringType, Level.Trace, message, e);
+			_logger.Log(declaringType, Level.Trace, message, e);
 		}
 
 		/// <summary>
@@ -186,7 +186,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="message"></param>
 		public void Trace(object message)
 		{
-			_log.Logger.Log(declaringType, Level.Trace, message, null);
+			_logger.Log(declaringType, Level.Trace, message, null);
 		}
 
 		/// <summary>
@@ -196,7 +196,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="e"></param>
 		public void Fatal(object message, Exception e)
 		{
-			_log.Logger.Log(declaringType, Level.Fatal, message, e);
+			_logger.Log(declaringType, Level.Fatal, message, e);
 		}
 
 		/// <summary>
@@ -205,7 +205,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="message"></param>
 		public void Fatal(object message)
 		{
-			_log.Logger.Log(declaringType, Level.Fatal, message, null);
+			_logger.Log(declaringType, Level.Fatal, message, null);
 		}
 
 		/// <summary>
@@ -215,7 +215,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="e"></param>
 		public void Error(object message, Exception e)
 		{
-			_log.Logger.Log(declaringType, Level.Error, message, e);
+			_logger.Log(declaringType, Level.Error, message, e);
 		}
 
 		/// <summary>
@@ -224,7 +224,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="message"></param>
 		public void Error(object message)
 		{
-			_log.Logger.Log(declaringType, Level.Error, message, null);
+			_logger.Log(declaringType, Level.Error, message, null);
 		}
 
 		#endregion
