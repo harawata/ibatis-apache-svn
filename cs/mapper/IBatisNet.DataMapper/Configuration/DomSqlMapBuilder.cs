@@ -964,7 +964,7 @@ namespace IBatisNet.DataMapper.Configuration
 		{
 			XmlNode sqlMapNode = _configScope.NodeContext;
 
-			_configScope.ErrorContext.Activity = "loading SqlMap ";
+			_configScope.ErrorContext.Activity = "loading SqlMap";
 			_configScope.ErrorContext.Resource = sqlMapNode.OuterXml.ToString();
 
 			if (_configScope.UseConfigFileWatcher == true)

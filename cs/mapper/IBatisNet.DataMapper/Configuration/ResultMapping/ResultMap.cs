@@ -228,7 +228,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			{
 				mapping = ResultPropertyDeSerializer.Deserialize( resultNode, configScope );
 					
-				configScope.ErrorContext.MoreInfo = "initialize result property :"+mapping.PropertyName;
+				configScope.ErrorContext.MoreInfo = "initialize result property: "+mapping.PropertyName;
 
 				mapping.Initialize( configScope, _class );
 
