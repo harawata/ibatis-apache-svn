@@ -60,18 +60,26 @@ public class SqlMapClasspathEntityResolver implements EntityResolver {
     InputSource source = null;
     try {
       String path = (String) doctypeMap.get(publicId);
-      path = (String) doctypeMap.get(systemId);
-      if (path != null) {
-        InputStream in = null;
-        try {
-          in = Resources.getResourceAsStream(path);
-          source = new InputSource(in);
-        } catch (IOException e) {
-          // ignore, null is ok
-        }
+      source = getInputSource(path, source);      
+      if (source == null) {
+        path = (String) doctypeMap.get(systemId);
+        source = getInputSource(path, source);
       }
     } catch (Exception e) {
       throw new SAXException(e.toString());
+    }
+    return source;
+  }
+
+  private InputSource getInputSource(String path, InputSource source) {
+    if (path != null) {
+      InputStream in = null;
+      try {
+        in = Resources.getResourceAsStream(path);
+        source = new InputSource(in);
+      } catch (IOException e) {
+        // ignore, null is ok
+      }
     }
     return source;
   }
