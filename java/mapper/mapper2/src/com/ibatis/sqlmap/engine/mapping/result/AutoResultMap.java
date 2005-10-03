@@ -16,6 +16,8 @@
 package com.ibatis.sqlmap.engine.mapping.result;
 
 import com.ibatis.common.beans.ClassInfo;
+import com.ibatis.common.beans.Probe;
+import com.ibatis.common.beans.ProbeFactory;
 import com.ibatis.common.exception.NestedRuntimeException;
 import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
@@ -83,17 +85,26 @@ public class AutoResultMap extends BasicResultMap {
         String columnName = rsmd.getColumnLabel(i + 1);
         String upperColumnName = columnName.toUpperCase();
         String matchedProp = (String) propertyMap.get(upperColumnName);
-        if (matchedProp != null) {
+        Class type = null;
+        if (matchedProp == null) {
+          Probe p = ProbeFactory.getProbe(this.getResultClass());
+          try {
+            type = p.getPropertyTypeForSetter(this.getResultClass(), columnName);
+          } catch (Exception e) {
+            //TODO - add logging to this class?
+          }
+        } else {
+          type = classInfo.getSetterType(matchedProp);
+        }
+        if (type != null || matchedProp != null) {
           BasicResultMapping resultMapping = new BasicResultMapping();
-          resultMapping.setPropertyName(matchedProp);
+          resultMapping.setPropertyName((matchedProp != null ? matchedProp : columnName));
           resultMapping.setColumnName(columnName);
           resultMapping.setColumnIndex(i + 1);
-          Class type = classInfo.getSetterType(matchedProp);
-          resultMapping.setTypeHandler(getDelegate().getTypeHandlerFactory().getTypeHandler(type));
+          resultMapping.setTypeHandler(getDelegate().getTypeHandlerFactory().getTypeHandler(type)); //map SQL to JDBC type
           resultMappingList.add(resultMapping);
         }
       }
-
       setResultMappingList(resultMappingList);
 
     } catch (SQLException e) {
