@@ -14,8 +14,8 @@
 <bookinfo>
     <title>iBATIS.NET - DataMapper Application Framework</title>
     <subtitle>DataMapper Developer Guide</subtitle>
-    <releaseinfo>Version 1.2.1</releaseinfo>
-    <pubdate>9 June 2005</pubdate>
+    <releaseinfo>Version 1.3.0</releaseinfo>
+    <pubdate>3 October 2005</pubdate>
     <authorgroup>
       <author>
         <firstname>Ted</firstname>
