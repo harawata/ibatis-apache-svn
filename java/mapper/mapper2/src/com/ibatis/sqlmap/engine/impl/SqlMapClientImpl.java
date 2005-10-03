@@ -146,7 +146,7 @@ public class SqlMapClientImpl implements ExtendedSqlMapClient {
   }
 
   public DataSource getDataSource() {
-    return getLocalSqlMapSession().getDataSource();
+    return delegate.getDataSource();
   }
 
   public MappedStatement getMappedStatement(String id) {
