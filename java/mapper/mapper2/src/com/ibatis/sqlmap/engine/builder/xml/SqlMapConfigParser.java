@@ -289,7 +289,7 @@ public class SqlMapConfigParser extends BaseParser {
       public void process(Node node) throws Exception {
         vars.errorCtx.setActivity("configuring the data source");
 
-        Properties attributes = NodeletUtils.parseAttributes(node);
+        Properties attributes = NodeletUtils.parseAttributes(node, vars.properties);
 
         String type = attributes.getProperty("type");
         type = vars.typeHandlerFactory.resolveAlias(type);
