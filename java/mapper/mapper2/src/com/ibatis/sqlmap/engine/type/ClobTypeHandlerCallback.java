@@ -42,7 +42,6 @@ public class ClobTypeHandlerCallback implements TypeHandlerCallback {
     } else {
       setter.setString(null);
     }
-    setter.setString((String) parameter);
   }
 
   public Object valueOf(String s) {
