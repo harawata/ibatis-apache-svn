@@ -41,7 +41,7 @@ public class SqlExecutor {
    * Constant to let us know not to skip anything
    */
   public static final int NO_SKIPPED_RESULTS = 0;
-  
+
   /**
    * Constant to let us know to include all records
    */
@@ -53,14 +53,14 @@ public class SqlExecutor {
 
   /**
    * Execute an update
-   * 
+   *
    * @param request - the request scope
    * @param conn - the database connection
    * @param sql - the sql statement to execute
    * @param parameters - the parameters for the sql statement
-   * 
+   *
    * @return - the number of records changed
-   * 
+   *
    * @throws SQLException - if the update fails
    */
   public int executeUpdate(RequestScope request, Connection conn, String sql, Object[] parameters)
@@ -93,12 +93,12 @@ public class SqlExecutor {
 
   /**
    * Adds a statement to a batch
-   * 
+   *
    * @param request - the request scope
    * @param conn - the database connection
    * @param sql - the sql statement
    * @param parameters - the parameters for the statement
-   * 
+   *
    * @throws SQLException - if the statement fails
    */
   public void addBatch(RequestScope request, Connection conn, String sql, Object[] parameters)
@@ -113,11 +113,11 @@ public class SqlExecutor {
 
   /**
    * Execute a batch of statements
-   * 
+   *
    * @param session - the session scope
-   * 
+   *
    * @return - the number of rows impacted by the batch
-   * 
+   *
    * @throws SQLException - if a statement fails
    */
   public int executeBatch(SessionScope session)
@@ -136,7 +136,7 @@ public class SqlExecutor {
 
   /**
    * Long form of the method to execute a query
-   * 
+   *
    * @param request - the request scope
    * @param conn - the database connection
    * @param sql - the SQL statement to execute
@@ -144,7 +144,7 @@ public class SqlExecutor {
    * @param skipResults - the number of results to skip
    * @param maxResults - the maximum number of results to return
    * @param callback - the row handler for the query
-   * 
+   *
    * @throws SQLException - if the query fails
    */
   public void executeQuery(RequestScope request, Connection conn, String sql, Object[] parameters,
@@ -178,7 +178,7 @@ public class SqlExecutor {
       errorContext.setMoreInfo("Check the statement (query failed).");
 
       ps.execute();
-      rs = ps.getResultSet();
+      rs = getFirstResultSet(ps);
 
       errorContext.setMoreInfo("Check the results (failed to retrieve results).");
       handleResults(request, rs, skipResults, maxResults, callback);
@@ -198,14 +198,14 @@ public class SqlExecutor {
 
   /**
    * Execute a stored procedure that updates data
-   * 
+   *
    * @param request - the request scope
    * @param conn - the database connection
    * @param sql - the SQL to call the procedure
    * @param parameters - the parameters for the procedure
-   * 
+   *
    * @return - the rows impacted by the procedure
-   * 
+   *
    * @throws SQLException - if the procedure fails
    */
   public int executeUpdateProcedure(RequestScope request, Connection conn, String sql, Object[] parameters)
@@ -247,7 +247,7 @@ public class SqlExecutor {
 
   /**
    * Execute a stored procedure
-   * 
+   *
    * @param request - the request scope
    * @param conn - the database connection
    * @param sql - the sql to call the procedure
@@ -255,7 +255,7 @@ public class SqlExecutor {
    * @param skipResults - the number of results to skip
    * @param maxResults - the maximum number of results to return
    * @param callback - a row handler for processing the results
-   * 
+   *
    * @throws SQLException - if the procedure fails
    */
   public void executeQueryProcedure(RequestScope request, Connection conn, String sql, Object[] parameters,
@@ -285,7 +285,7 @@ public class SqlExecutor {
       errorContext.setMoreInfo("Check the statement (update procedure failed).");
 
       cs.execute();
-      rs = cs.getResultSet();
+      rs = getFirstResultSet(cs);
 
       errorContext.setMoreInfo("Check the results (failed to retrieve results).");
       handleResults(request, rs, skipResults, maxResults, callback);
@@ -306,9 +306,29 @@ public class SqlExecutor {
 
   }
 
+  private ResultSet getFirstResultSet(Statement stmt) throws SQLException {
+    ResultSet rs = null;
+    boolean hasMoreResults = true;
+    while (hasMoreResults) {
+      rs = stmt.getResultSet();
+      if (rs != null) {
+        break;
+      }
+      hasMoreResults = moveToNextResultSet(stmt);
+    }
+    return rs;
+  }
+
+  private boolean moveToNextResultSet(Statement stmt) throws SQLException {
+    boolean moreResults;
+    // This is the messed up JDBC approach for determining if there are more results
+    moreResults = !(((stmt.getMoreResults() == false) && (stmt.getUpdateCount() == -1)));
+    return moreResults;
+  }
+
   /**
    * Clean up any batches on the session
-   * 
+   *
    * @param session - the session to clean up
    */
   public void cleanup(SessionScope session) {
@@ -423,7 +443,7 @@ public class SqlExecutor {
 
     /**
      * Getter for the batch size
-     * 
+     *
      * @return - the batch size
      */
     public int getSize() {
@@ -432,12 +452,12 @@ public class SqlExecutor {
 
     /**
      * Add a prepared statement to the batch
-     * 
+     *
      * @param request - the request scope
      * @param conn - the database connection
      * @param sql - the SQL to add
      * @param parameters - the parameters for the SQL
-     * 
+     *
      * @throws SQLException - if the prepare for the SQL fails
      */
     public void addBatch(RequestScope request, Connection conn, String sql, Object[] parameters) throws SQLException {
@@ -459,9 +479,9 @@ public class SqlExecutor {
 
     /**
      * Execute the current session's batch
-     * 
+     *
      * @return - the number of rows updated
-     * 
+     *
      * @throws SQLException - if the batch fails
      */
     public int executeBatch() throws SQLException {
