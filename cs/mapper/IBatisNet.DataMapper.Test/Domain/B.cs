@@ -8,6 +8,7 @@ namespace IBatisNet.DataMapper.Test.Domain
 	public class B 
 	{
 		private C _c;
+		private D _d;
 		private string _id;
 		private string _libelle;
 
@@ -29,7 +30,6 @@ namespace IBatisNet.DataMapper.Test.Domain
 			set { _c = value; }
 		}
 
-		private D _d;
 
 		public D D
 		{

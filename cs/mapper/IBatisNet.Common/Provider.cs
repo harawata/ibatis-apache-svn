@@ -32,7 +32,6 @@ using System.Reflection;
 using System.Xml.Serialization;
 using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Utilities.TypesResolver;
-//using log4net;
 
 #endregion
 
