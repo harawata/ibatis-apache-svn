@@ -52,7 +52,7 @@ public class ResultSetLogProxy extends BaseLogProxy implements InvocationHandler
           //      } else {
           //        setColumn(params[0], rs.getObject(((Integer) params[0]).intValue()));
         }
-      } else if ("next".equals(method.getName())) {
+      } else if ("next".equals(method.getName()) || "close".equals(method.getName())) {     
         String s = getValueString();
         if (!"[]".equals(s)) {
           if (first) {
