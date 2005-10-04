@@ -1,4 +1,3 @@
-
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
@@ -30,19 +29,24 @@ using System;
 using IBatisNet.Common.Logging;
 #endregion 
 
-
-
 namespace IBatisNet.Common.Logging.Impl
 {
-	/// <summary>
-	/// Summary description for Log4NetLogger.
-	/// </summary>
+	/// <remarks>
+	/// Log4net is capable of outputting extended debug information about where the current 
+	/// message was generated: class name, method name, file, line, etc. Log4net assumes that the location
+	/// information should be gathered relative to where Debug() was called. In IBatisNet, 
+	/// Debug() is called in IBatisNet.Common.Logging.Impl.Log4NetLogger. This means that
+	/// the location information will indicate that IBatisNet.Common.Logging.Impl.Log4NetLogger always made
+	/// the call to Debug(). We need to know where IBatisNet.Common.Logging.ILog.Debug()
+	/// was called. To do this we need to use the log4net.ILog.Logger.Log method and pass in a Type telling
+	/// log4net where in the stack to begin looking for location information.
+	/// </remarks>
 	public class Log4NetLogger : ILog
 	{
-
 		#region Fields
 
-		private log4net.ILog _log = null;
+		private log4net.Core.ILogger _logger = null;
+		private readonly static Type declaringType = typeof(Log4NetLogger);
 
 		#endregion 
 
@@ -50,9 +54,9 @@ namespace IBatisNet.Common.Logging.Impl
 		/// Constructor
 		/// </summary>
 		/// <param name="log"></param>
-		internal Log4NetLogger( log4net.ILog log )
+		internal Log4NetLogger(log4net.ILog log )
 		{
-			_log = log;
+			_logger = log.Logger;
 		}
 
 		#region ILog Members
@@ -62,7 +66,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// </summary>
 		public bool IsInfoEnabled
 		{
-			get { return _log.IsInfoEnabled; }
+			get { return _logger.IsEnabledFor(log4net.Core.Level.Info); }
 		}
 
 		/// <summary>
@@ -70,7 +74,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// </summary>
 		public bool IsWarnEnabled
 		{
-			get { return _log.IsWarnEnabled; }
+			get { return _logger.IsEnabledFor(log4net.Core.Level.Warn); }
 		}
 
 		/// <summary>
@@ -78,7 +82,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// </summary>
 		public bool IsErrorEnabled
 		{
-			get { return _log.IsErrorEnabled; }
+			get { return _logger.IsEnabledFor(log4net.Core.Level.Error); }
 		}
 
 		/// <summary>
@@ -86,7 +90,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// </summary>
 		public bool IsFatalEnabled
 		{
-			get { return _log.IsFatalEnabled; }
+			get { return _logger.IsEnabledFor(log4net.Core.Level.Fatal); }
 		}
 
 		/// <summary>
@@ -94,7 +98,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// </summary>
 		public bool IsDebugEnabled
 		{
-			get { return _log.IsDebugEnabled; }
+			get { return _logger.IsEnabledFor(log4net.Core.Level.Debug); }
 		}
 
 		/// <summary>
@@ -102,7 +106,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// </summary>
 		public bool IsTraceEnabled
 		{
-			get { return _log.IsDebugEnabled; }
+			get { return _logger.IsEnabledFor(log4net.Core.Level.Trace); }
 		}
 
 		/// <summary>
@@ -112,7 +116,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="e"></param>
 		public void Info(object message, Exception e)
 		{
-			_log.Info( message, e );
+			_logger.Log(declaringType, log4net.Core.Level.Info, message, e);
 		}
 
 		/// <summary>
@@ -121,7 +125,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="message"></param>
 		public void Info(object message)
 		{
-			_log.Info( message );
+			_logger.Log(declaringType, log4net.Core.Level.Info, message, null);
 		}
 
 		/// <summary>
@@ -131,7 +135,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="e"></param>
 		public void Debug(object message, Exception e)
 		{
-			_log.Debug( message, e );
+			_logger.Log(declaringType, log4net.Core.Level.Debug, message, e);
 		}
 
 		/// <summary>
@@ -140,9 +144,8 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="message"></param>
 		public void Debug(object message)
 		{
-			_log.Debug( message );
+			_logger.Log(declaringType, log4net.Core.Level.Debug, message, null);
 		}
-
 
 		/// <summary>
 		/// 
@@ -151,7 +154,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="e"></param>
 		public void Warn(object message, Exception e)
 		{
-			_log.Warn( message, e );
+			_logger.Log(declaringType, log4net.Core.Level.Warn, message, e);
 		}
 
 		/// <summary>
@@ -160,9 +163,8 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="message"></param>
 		public void Warn(object message)
 		{
-			_log.Warn( message );
+			_logger.Log(declaringType, log4net.Core.Level.Warn, message, null);
 		}
-
 
 		/// <summary>
 		/// 
@@ -171,7 +173,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="e"></param>
 		public void Trace(object message, Exception e)
 		{
-			_log.Debug( message, e );
+			_logger.Log(declaringType, log4net.Core.Level.Trace, message, e);
 		}
 
 		/// <summary>
@@ -180,7 +182,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="message"></param>
 		public void Trace(object message)
 		{
-			_log.Debug( message );
+			_logger.Log(declaringType, log4net.Core.Level.Trace, message, null);
 		}
 
 		/// <summary>
@@ -190,7 +192,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="e"></param>
 		public void Fatal(object message, Exception e)
 		{
-			_log.Fatal( message, e );
+			_logger.Log(declaringType, log4net.Core.Level.Fatal, message, e);
 		}
 
 		/// <summary>
@@ -199,7 +201,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="message"></param>
 		public void Fatal(object message)
 		{
-			_log.Fatal( message );
+			_logger.Log(declaringType, log4net.Core.Level.Fatal, message, null);
 		}
 
 		/// <summary>
@@ -209,7 +211,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="e"></param>
 		public void Error(object message, Exception e)
 		{
-			_log.Error( message, e );
+			_logger.Log(declaringType, log4net.Core.Level.Error, message, e);
 		}
 
 		/// <summary>
@@ -218,7 +220,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="message"></param>
 		public void Error(object message)
 		{
-			_log.Error( message );
+			_logger.Log(declaringType, log4net.Core.Level.Error, message, null);
 		}
 
 		#endregion
