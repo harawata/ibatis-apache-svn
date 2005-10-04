@@ -43,7 +43,7 @@ namespace IBatisNet.Common.Logging
 	{
 		private static ILoggerFactoryAdapter _adapter = null;
 		private static object _loadLock = new object();
-		private static readonly string IBATIS_SECTION_LOGIING = "iBATIS/logging";
+		private static readonly string IBATIS_SECTION_LOGGING = "iBATIS/logging";
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="LogManager" /> class. 
@@ -104,7 +104,7 @@ namespace IBatisNet.Common.Logging
 			LogSetting setting = null;
 			try
 			{
-				setting = (LogSetting)ConfigurationSettings.GetConfig( IBATIS_SECTION_LOGIING );
+				setting = (LogSetting)ConfigurationSettings.GetConfig( IBATIS_SECTION_LOGGING );
 			}
 			catch ( Exception ex )
 			{
