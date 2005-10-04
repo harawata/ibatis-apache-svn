@@ -70,6 +70,9 @@
     <mkdir dir="${reports.junit}"/>
     <mkdir dir="${reports.coverage}"/>
     <mkdir dir="${deploy.path}"/>
+    <mkdir dir="${deploy.path}/lib/"/>
+    <mkdir dir="${deploy.path}/src/"/>
+    <mkdir dir="${deploy.path}/doc/"/>
     <!-- Prepare Release Docs -->
     <copy todir="${deploy.path}">
       <fileset dir="${res.txt}">
@@ -223,7 +226,7 @@
   </target>
 
   <target name="jar.sqlmaps" depends="src.compile">
-    <jar jarfile="${deploy.path}/ibatis-sqlmap-2.jar">
+    <jar jarfile="${deploy.path}/lib/ibatis-sqlmap-2.jar">
       <manifest>
         <attribute name="Built-On" value="${buildDate}"/>
 	      <section name="com/ibatis/sqlmap/">
@@ -243,7 +246,7 @@
   </target>
 
   <target name="jar.dao" depends="src.compile">
-    <jar jarfile="${deploy.path}/ibatis-dao-2.jar">
+    <jar jarfile="${deploy.path}/lib/ibatis-dao-2.jar">
       <manifest>
         <attribute name="Built-On" value="${buildDate}"/>
 	      <section name="com/ibatis/dao/">
@@ -263,7 +266,7 @@
   </target>
 
   <target name="jar.common" depends="src.compile">
-    <jar jarfile="${deploy.path}/ibatis-common-2.jar">
+    <jar jarfile="${deploy.path}/lib/ibatis-common-2.jar">
       <manifest>
         <attribute name="Built-On" value="${buildDate}"/>
 	      <section name="com/ibatis/common/">
@@ -304,7 +307,7 @@
   </target>
 
   <target name="jar.src" depends="src.compile">
-    <jar jarfile="${deploy.path}/ibatis-src.zip">
+    <jar jarfile="${deploy.path}/src/ibatis-src.zip">
       <fileset dir="${src.rt}"/>
       <fileset dir="${src.compat}"/>
       <fileset dir="${deploy.path}">
@@ -315,10 +318,10 @@
   </target>
 
   <target name="jar.javadoc" depends="src.compile">
-    <jar jarfile="${deploy.path}/user-javadoc.zip">
+    <jar jarfile="${deploy.path}/doc/user-javadoc.zip">
       <fileset dir="${work.javadoc.user}"/>
     </jar>
-    <jar jarfile="${deploy.path}/dev-javadoc.zip">
+    <jar jarfile="${deploy.path}/doc/dev-javadoc.zip">
       <fileset dir="${work.javadoc.dev}"/>
     </jar>
   </target>
