@@ -10,7 +10,7 @@ IBatisNet DataAccess Change Log
     Exemple (for log4NET) :
 	<configSections>
 		<sectionGroup name="iBATIS">
-			<section name="logging" type="IBatisNet.Common.Logging.ConfigurationSectionHandler, IBatisNet.Common" />
+			<section name="logging" type="IBatisNet.Common.Logging.Impl.LocationInfoLog4NetLoggerFA, IBatisNet.Common.Logging.Log4Net" />
 		</sectionGroup>	
 		<section name="log4net" type="log4net.Config.Log4NetConfigurationSectionHandler, log4net" />
 	</configSections>
