@@ -7,15 +7,14 @@ IBatisNet Change Log
 - Updated to log4net V1.2.9
 - Updated to Castle.DynamicProxy V1.1.5.0
 - Re-add signing on assembly 
-- Added custom logger support (remove dependcy on log4net), IBATIS now need a custom section in your application config file
-    Exemple (for log4NET) :
+- Added custom logger support (removed dependency on log4net), iBATIS now needs a custom section in your application config file
+    Example (for log4NET) :
 	<configSections>
 		<sectionGroup name="iBATIS">
 			<section name="logging" type="IBatisNet.Common.Logging.Impl.LocationInfoLog4NetLoggerFA, IBatisNet.Common.Logging.Log4Net" />
 		</sectionGroup>	
 		<section name="log4net" type="log4net.Config.Log4NetConfigurationSectionHandler, log4net" />
-	</configSections>
-	
+	</configSections>	
 	<iBATIS>
 		<logging>		
 			<logFactoryAdapter type="IBatisNet.Common.Logging.Impl.Log4NetLoggerFA, IBatisNet.Common.Logging.Log4Net">
@@ -23,15 +22,20 @@ IBatisNet Change Log
 			</logFactoryAdapter>
 		</logging>
 	</iBATIS>
+	<log4net>
+		...
+	</log4net>
 	
 - Removes use of Xml serilization for loading config, boost init
 - Improved caching process & performance
+- Corrected issue with flushOnExecute statements being from other namespaces
+- Allow CacheModels, ResultMaps, and ParameterMaps to be in their own seperate files
 - Fixed IBATISNET-58 Allow all attributes in SqlMap.config file to be aware of ${xyz} properties
 - Fixed IBATISNET-97 Improved support for caching null results
 - Fixed IBATISNET-96 Added Informix .NET Provider 2.81 support (Anderson Gomes)
 - Fixed IBATISNET-94 Issue with DaoManager init
 - Fixed IBATISNET-92 Check selectKey's property attribute for writeability during mapper initialization
-- Fixed IBATISNET-91 Added Cach flush on ExecuteQueryForObject
+- Fixed IBATISNET-91 Added Cache flush on ExecuteQueryForObject
 - Fixed IBATISNET-82 Added DomDaoManagerBuilder.Configure(XmlDocument document) 
 - Fixed IBATISNET-77 Allow Intellisense in Visual Studio 2003 for SqlMap/SqlMap.config files 
 - Updated schemas header
