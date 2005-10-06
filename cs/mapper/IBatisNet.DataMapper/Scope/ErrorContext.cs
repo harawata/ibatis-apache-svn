@@ -26,6 +26,7 @@
 
 #region Using
 
+using System;
 using System.Text;
 
 #endregion
@@ -110,7 +111,8 @@ namespace IBatisNet.DataMapper.Scope
 			// activity
 			if (_activity != null && _activity.Length > 0) 
 			{
-				message.Append("\n- The error occurred while ");
+				message.Append(Environment.NewLine);
+				message.Append("- The error occurred while ");
 				message.Append(_activity);
 				message.Append(".");
 			}			
@@ -118,14 +120,16 @@ namespace IBatisNet.DataMapper.Scope
 			// more info
 			if (_moreInfo != null && _moreInfo.Length > 0) 
 			{
-				message.Append("\n- ");
+				message.Append(Environment.NewLine);
+				message.Append("- ");
 				message.Append(_moreInfo);
 			}
 			
 			// resource
 			if (_resource != null && _resource.Length > 0) 
 			{
-				message.Append("\n- The error occurred in ");
+				message.Append(Environment.NewLine);
+				message.Append("- The error occurred in ");
 				message.Append(_resource);
 				message.Append(".");
 			}
@@ -133,7 +137,9 @@ namespace IBatisNet.DataMapper.Scope
 			// object
 			if (_objectId != null && _objectId.Length > 0)
 			{
-				message.Append("  \n- Check the ");
+				message.Append("  ");
+				message.Append(Environment.NewLine);
+				message.Append("- Check the ");
 				message.Append(_objectId);
 				message.Append(".");
 			}
