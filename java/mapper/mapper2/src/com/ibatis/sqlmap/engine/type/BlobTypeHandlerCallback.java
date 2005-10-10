@@ -29,7 +29,7 @@ public class BlobTypeHandlerCallback implements TypeHandlerCallback {
    Blob blob = getter.getBlob();
    byte[] returnValue = null;
    if (null != blob) {
-     returnValue = blob.getBytes(0, (int) blob.length());
+     returnValue = blob.getBytes(1, (int) blob.length());
    } else {
      returnValue = null;
    }
