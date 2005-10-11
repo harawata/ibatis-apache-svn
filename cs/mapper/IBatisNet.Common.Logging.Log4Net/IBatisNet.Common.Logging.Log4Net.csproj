@@ -99,16 +99,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "LocationInfoLog4NetLogger.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "LocationInfoLog4NetLoggerFA.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Log4NetLogger.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
