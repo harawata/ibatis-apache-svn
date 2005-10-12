@@ -40,7 +40,7 @@ namespace IBatisNet.DataMapper
 	/// Summary description for FlushInterval.
 	/// </summary>
 	[Serializable]
-	internal class CacheKey
+	public class CacheKey
 	{
 		#region Fields
 		private string[] _properties = null;
@@ -67,7 +67,7 @@ namespace IBatisNet.DataMapper
 		/// <param name="maxResults"></param>
 		/// <param name="type"></param>
 		/// <param name="typeHandlerFactory"></param>
-		internal CacheKey(TypeHandlerFactory typeHandlerFactory, string statementName, string sql, object parameter, string[] properties, 
+		public CacheKey(TypeHandlerFactory typeHandlerFactory, string statementName, string sql, object parameter, string[] properties, 
 			int skipRecords, int maxResults, CacheKeyType type)
 		{
 			_typeHandlerFactory = typeHandlerFactory;
@@ -81,10 +81,6 @@ namespace IBatisNet.DataMapper
 			_hashCode = GenerateHashCode();
 			_hashCodeString = Convert.ToString(_hashCode);
 		}
-
-
-		// name.GetHashCode() ^  age.GetHashCode(); 
-		// hash algorithms 
 
 
 		/// <summary>
