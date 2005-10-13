@@ -11,17 +11,27 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 	[TestFixture]
 	public class CacheKeyTest
 	{
-		private const long A_LONG = 1L;
-		private const long ANOTHER_LONG_WITH_SAME_HASHCODE = -9223372034707292159;
+		[Test]
+		public void ShouldNotConsider1LAndNegative9223372034707292159LToBeEqual()
+		{
+			// old version of ObjectProbe gave TestClass based on these longs the same HashCode
+			DoTestClassEquals(1L, -9223372034707292159L);
+		}
 
 		[Test]
-		public void ShouldNotBeConsideredEqualWhenParametersHaveTheSameHashCodeButAreNotEqual()
+		public void ShouldNotConsider1LAndNegative9223372036524971138LToBeEqual()
+		{
+			// current version of ObjectProbe gives TestClass based on these longs the same HashCode
+			DoTestClassEquals(1L, -9223372036524971138L);
+		}
+
+		private static void DoTestClassEquals(long firstLong, long secondLong)
 		{
 			TypeHandlerFactory factory = new TypeHandlerFactory();
 
 			// Two cache keys are equal except for the parameter.
-			CacheKey key = new CacheKey(factory, "STATEMENT", "SQL", new TestClass(A_LONG), new string[] {"AProperty"}, 0, 0, CacheKeyType.Object);
-			CacheKey aDifferentKey = new CacheKey(factory, "STATEMENT", "SQL", new TestClass(ANOTHER_LONG_WITH_SAME_HASHCODE), new string[] {"AProperty"}, 0, 0, CacheKeyType.Object);
+			CacheKey key = new CacheKey(factory, "STATEMENT", "SQL", new TestClass(firstLong), new string[] {"AProperty"}, 0, 0, CacheKeyType.Object);
+			CacheKey aDifferentKey = new CacheKey(factory, "STATEMENT", "SQL", new TestClass(secondLong), new string[] {"AProperty"}, 0, 0, CacheKeyType.Object);
 
 			Assert.IsFalse(aDifferentKey.Equals(key)); // should not be equal.
 		}

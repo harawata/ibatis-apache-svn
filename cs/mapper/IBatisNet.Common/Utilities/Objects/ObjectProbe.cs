@@ -680,7 +680,7 @@ namespace IBatisNet.Common.Utilities.Objects
 					if (IsSimpleType(value.GetType())) 
 					{
 						hashcode += value.GetHashCode();
-						hashcode += value.ToString().GetHashCode();
+						hashcode += value.ToString().GetHashCode()*37;
 					} 
 					else 
 					{
