@@ -48,38 +48,38 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="properties"></param>
 		public Log4NetLoggerFA(NameValueCollection properties)
 		{
-			string configurationType = string.Empty;
+			string configType = string.Empty;
 			
 			if ( properties["configType"] != null )
 			{
-				configurationType = properties["configType"].ToUpper();	
+				configType = properties["configType"].ToUpper();	
 			}
 
-			string configurationFile = string.Empty;
+			string configFile = string.Empty;
 			if ( properties["configFile"] != null )
 			{
-				configurationFile = properties["configFile"];			
+				configFile = properties["configFile"];			
 			}
 
-			if ( configurationType == "FILE" || configurationType == "FILE-WATCH" )
+			if ( configType == "FILE" || configType == "FILE-WATCH" )
 			{
-				if ( configurationFile == string.Empty )
-					throw new ConfigurationException( "Configration property 'configurationFile' must be set for log4Net configuration of type 'FILE'."  );
+				if ( configFile == string.Empty )
+					throw new ConfigurationException( "Configration property 'configFile' must be set for log4Net configuration of type 'FILE'."  );
 			
-				if ( !File.Exists( configurationFile ) )
-					throw new ConfigurationException( "log4net configuration file '" + configurationFile + "' does not exists" );
+				if ( !File.Exists( configFile ) )
+					throw new ConfigurationException( "log4net configuration file '" + configFile + "' does not exists" );
 			}
 
-			switch ( configurationType )
+			switch ( configType )
 			{
 				case "INLINE":
 					XmlConfigurator.Configure();
 					break;
 				case "FILE":
-					XmlConfigurator.Configure( new FileInfo( configurationFile ) );
+					XmlConfigurator.Configure( new FileInfo( configFile ) );
 					break;
 				case "FILE-WATCH":
-					XmlConfigurator.ConfigureAndWatch( new FileInfo( configurationFile ) );
+					XmlConfigurator.ConfigureAndWatch( new FileInfo( configFile ) );
 					break;
 				case "EXTERNAL":
 					// Log4net will be configured outside of IBatisNet
