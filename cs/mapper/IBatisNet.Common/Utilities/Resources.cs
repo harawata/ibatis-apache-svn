@@ -617,20 +617,18 @@ namespace IBatisNet.Common.Utilities
 			private void SplitFileAndAssemblyNames (string originalFileName) 
 			{
 				_originalFileName = originalFileName;
-				int separatorIndex = originalFileName.IndexOf (
-					FileAssemblyInfo.FileAssemblySeparator);
+
+				int separatorIndex = originalFileName.IndexOf(FileAssemblyInfo.FileAssemblySeparator);
+				
 				if (separatorIndex < 0)
 				{
-					throw new ConfigurationException(
-						string.Format("Unable to find assembly part to load embedded resource in string \"{0}\".",
-						originalFileName));
+					_unresolvedFileName = originalFileName.Trim();
+					_unresolvedAssemblyName = null; // IsAssemblyQualified will return false
 				} 
 				else
 				{
-					_unresolvedFileName = originalFileName.Substring (
-						0, separatorIndex).Trim ();
-					_unresolvedAssemblyName = originalFileName.Substring (
-						separatorIndex + 1).Trim ();
+					_unresolvedFileName = originalFileName.Substring(0, separatorIndex).Trim();
+					_unresolvedAssemblyName = originalFileName.Substring(separatorIndex + 1).Trim();
 				}
 			}
 			#endregion
