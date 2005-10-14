@@ -14,7 +14,7 @@
   <sect1>
     <title>Installing the DataMapper for .NET</title>
 
-    <para>There are three steps to using iBATIS DataMapper with your
+    <para>There are four steps to using iBATIS DataMapper with your
     application for the first time. <orderedlist>
         <listitem>
            Setup the distribution 
@@ -24,8 +24,8 @@
            Add assembly references 
         </listitem>
 
-		 <listitem>
-           Visual Studio.NET Integration
+        <listitem>
+           Visual Studio.NET Integration 
         </listitem>
 
         <listitem>
@@ -44,10 +44,10 @@
       source distribution that includes a VSN solution. To download either of
       the distributions, follow the link to the Downloads area on our web
       site, and select the either the binary or source distribution for the
-      iBATIS .NET DataMapper release (if you download the
-      binary distribution, extract the files using a utility like WinZip or
-      the extractor built into newer versions of Windows and skip ahead to the
-      Add Assembly References section).</para>
+      iBATIS .NET DataMapper release (if you download the binary distribution,
+      extract the files using a utility like WinZip or the extractor built
+      into newer versions of Windows and skip ahead to the Add Assembly
+      References section).</para>
 
       <para>The DataMapper source distribution includes a VSN solution and a
       number of C# projects. The distribution is in the form of a ZIP archive.
@@ -83,6 +83,12 @@
 
                 <entry>Assembly of classes shared by DataAccess and
                 DataMapper</entry>
+              </row>
+
+              <row>
+                <entry>IBatisNet.Common.Logging.Log4Net</entry>
+
+                <entry>Log4Net factory adapter classes</entry>
               </row>
 
               <row>
@@ -134,30 +140,26 @@
       are seven projects in the solution, and all should succeed. The
       assemblies we need will be created under
       <filename>\source\IBatisNet.DataMapper\bin\Debug</filename>. The created
-      assemblies are : 
-	  <orderedlist>
+      assemblies are : <orderedlist>
           <listitem>
-              <filename>IBatisNet.Common.dll</filename>
+            <filename>IBatisNet.Common.dll</filename>
           </listitem>
 
           <listitem>
-             <filename>iBatisNet.DataMapper.dll</filename> 
+            <filename>iBatisNet.DataMapper.dll</filename>
           </listitem>
-
-        </orderedlist>
-	  The DataMapper has
-      external dependencies on :
-	  <orderedlist>
+        </orderedlist> The DataMapper has external dependencies on :
+      <orderedlist>
           <listitem>
-              <filename>Castle.DynamicProxy.dll</filename> (creating proxies)
-          </listitem>
+             
 
-          <listitem>
-             <filename>log4net.dll</filename> (logging) 
-          </listitem>
+            <filename>Castle.DynamicProxy.dll</filename>
 
-        </orderedlist>
-	  Both of these dependencies are found in the External-Bin folder and can also be found in the bin\Debug folder after building the solution.</para>
+             (creating proxies) 
+          </listitem>
+        </orderedlist> This dependencies can be found in the External-Bin
+      folder and/or in the bin\Debug folder after building the
+      solution.</para>
 
       <tip>
         <para>If you will not be using the DataAccess framework and NHibernate
@@ -192,28 +194,24 @@
           <listitem>
              Castle.DynamicProxy.dll (implied) 
           </listitem>
-
-          <listitem>
-            <para>log4net.dll (implied)</para>
-          </listitem>
         </orderedlist></para>
 
       <para>If you are using the <classname>Mapper</classname> singleton (see
       section 4.4.1), then the only reference you will need is to the
-      DataMapper assembly. The Common, Castle.DynamicProxy, and log4net
-      assemblies are needed at runtime, but Visual Studio.NET will resolve the
-      dependencies for you. If you are using the Data Access Objects
-      framework, then you will need a reference to the DataAccess assembly
-      too. So, start with the first, and add the others only if needed.</para>
+      DataMapper assembly. The Common and Castle.DynamicProxy assemblies are
+      needed at runtime, but Visual Studio.NET will resolve the dependencies
+      for you. If you are using the Data Access Objects framework, then you
+      will need a reference to the DataAccess assembly too. So, start with the
+      first, and add the others only if needed.</para>
 
       <para>If you have built the IBatisNet solution as described in Section
-      4.2.1, the four assemblies (IBatisNet.DataMapper.dll,
-      IBatisNet.Common.dll, Castle.DynamicProxy.dll, and log4net.dll) that you
-      will need should be in the <filename>bin/Debug</filename> folder of the
+      4.2.1, the three assemblies (IBatisNet.DataMapper.dll,
+      IBatisNet.Common.dll, and Castle.DynamicProxy.dll) that you will need
+      should be in the <filename>bin/Debug</filename> folder of the
       IBatisNet.DataMapper project.</para>
     </sect2>
 
-	<sect2>
+    <sect2>
       <title>Add XML File Items</title>
 
       <para>After adding the assembly references, you will need to add three
@@ -252,13 +250,16 @@
                 <entry>Windows, Library, or Test projects (using NUnit or
                 equivalent)</entry>
 
-                <entry>This would be the binary folder (such as /bin/debug) with the assembly (.dll) files and the  <filename>app.config</filename> file</entry>
+                <entry>This would be the binary folder (such as /bin/debug)
+                with the assembly (.dll) files and the
+                <filename>App.config</filename> file</entry>
               </row>
 
               <row>
                 <entry>Web projects</entry>
 
-                <entry>In the application root, where the <filename>web.config</filename>file is located.</entry>
+                <entry>In the application root, where the
+                <filename>Web.config</filename> file is located.</entry>
               </row>
             </tbody>
           </tgroup>
@@ -267,30 +268,39 @@
 
     <sect2>
       <title>Visual Studio.NET Integration</title>
-		
-		<para>
-		Each configuration file (SqlMap.config, mappping file, providers.config)  is associated to a schema. The benefits of associating an XML document with a schema are to validate the document (which is done at runtime) and to use editing features such as IntelliSense/content completion assistance. 
-		</para>
-		<para>
-		To allow association of the schemas in VS.NET XML editor to yours configuration files, you should add the schema files (<filename>SqlMap.xsd</filename>, <filename>SqlMapConfig.xsd</filename>, <filename>providers.xsd</filename>) to either your VS.NET project or in your VS.NET installation directory. The VS.NET directory will be either 
-		</para>
-		<para>
-		<filename>C:\Program Files\Microsoft Visual Studio .NET 2003\Common7\Packages\schemas\xml for VS.NET 2003</filename>
-		</para>
-		<para>
-		or
-		</para>
-		<para>
-		<filename>C:\Program Files\Microsoft Visual Studio .NET\Common7\Packages\schemas\xml for VS.NET 2002</filename> 
-		</para>
-		<para>
-		depending on your version of VS.NET. It is typically easier to place the file in the well known location under the VS.NET installation directory than to copy the XSD file for each project you create. 
-		</para>
-		<para>
-		Once you have registered the schema with VS.NET you will be enough to get IntelliSense and validation of the configuration file from within VS.NET.
-		</para>
-		<figure>
+
+      <para>Each configuration file (SqlMap.config, mappping file,
+      providers.config) is associated to a schema. The benefits of associating
+      an XML document with a schema are to validate the document (which is
+      done at runtime) and to use editing features such as
+      IntelliSense/content completion assistance.</para>
+
+      <para>To allow association of the schemas in VS.NET XML editor to yours
+      configuration files, you should add the schema files
+      (<filename>SqlMap.xsd</filename>, <filename>SqlMapConfig.xsd</filename>,
+      <filename>providers.xsd</filename>) to either your VS.NET project or in
+      your VS.NET installation directory. The VS.NET directory will be
+      either</para>
+
+      <para><filename>C:\Program Files\Microsoft Visual Studio .NET
+      2003\Common7\Packages\schemas\xml for VS.NET 2003</filename></para>
+
+      <para>or</para>
+
+      <para><filename>C:\Program Files\Microsoft Visual Studio
+      .NET\Common7\Packages\schemas\xml for VS.NET 2002</filename></para>
+
+      <para>depending on your version of VS.NET. It is typically easier to
+      place the file in the well known location under the VS.NET installation
+      directory than to copy the XSD file for each project you create.</para>
+
+      <para>Once you have registered the schema with VS.NET you will be enough
+      to get IntelliSense and validation of the configuration file from within
+      VS.NET.</para>
+
+      <figure>
         <title>IntelliSense example</title>
+
         <mediaobject>
           <imageobject>
             <imagedata align="center" fileref="images/intellisense.gif"
@@ -298,7 +308,7 @@
           </imageobject>
         </mediaobject>
       </figure>
-	</sect2>
+    </sect2>
   </sect1>
 
   <sect1>
@@ -365,9 +375,9 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" &gt;
     &lt;provider name="sqlServer1.1"/&gt;
     &lt;dataSource name="NPetshop" 
                 connectionString="user id=${username};
-                  password=${password};
-                  data source=${datasource};
-                  database=${database};"/&gt;
+                password=${password};
+                data source=${datasource};
+                database=${database};"/&gt;
   &lt;/database&gt;
 
   &lt;alias&gt;
@@ -412,7 +422,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" &gt;
 &lt;/settings&gt;</programlisting>
         </informalexample>
 
-        <para>then many elements in the DataMapper configuration can use the
+        <para>then all elements in the DataMapper configuration can use the
         variable <varname>${username}</varname> to insert the value
         "<emphasis>albert</emphasis>". For example:</para>
 
@@ -454,7 +464,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" &gt;
 
                   <entry>Specify the properties file to be loaded through an
                   absolute path.<programlisting>url="<filename>c:\Web\MyApp\Resources\properties</filename>.config"
-or
+-or-
 url="file://<filename>c:\Web\MyApp\Resources\properties</filename>.config"</programlisting></entry>
                 </row>
 
@@ -513,7 +523,7 @@ url="file://<filename>c:\Web\MyApp\Resources\properties</filename>.config"</prog
 
                   <entry>Specify the properties file to be loaded through an
                   absolute path.<programlisting>url="<filename>c:\Web\MyApp\Resources\properties</filename>.config"
-or
+-or-
 url="file://<filename>c:\Web\MyApp\Resources\properties</filename>.config"</programlisting></entry>
                 </row>
 
@@ -548,7 +558,7 @@ url="file://<filename>c:\Web\MyApp\Resources\properties</filename>.config"</prog
       </sect3>
 
       <sect3>
-        <title>The &lt;providers&gt; Element<!--  <emphasis role="updated">Updated</emphasis> --></title>
+        <title>The &lt;providers&gt; Element</title>
 
         <para>Under ADO.NET, a database system is accessed through a provider.
         A database system can use a custom provider or a generic ODBC
@@ -712,7 +722,7 @@ url="file://<filename>c:\Web\MyApp\Resources\properties</filename>.config"</prog
 
                   <entry>Specify the providers.config to be loaded through an
                   absolute path.<programlisting>url="<filename>c:\Web\MyApp\</filename>Resources\providers.config"
-or
+-or-
 url="file://<filename>c:\</filename><filename><filename>Web\MyApp\</filename>Resources\</filename>providers.config"</programlisting></entry>
                 </row>
 
@@ -1042,7 +1052,9 @@ IBatisNet.Test"</programlisting></entry>
                     <entry><emphasis>dbType</emphasis></entry>
 
                     <entry>Indicates the provider dbType to
-                    handle<programlisting>dbType="Varchar2"</programlisting></entry>
+                    handle<programlisting>dbType="Varchar2"</programlisting>Note:
+                    Omit this attribute if you want the type handler to
+                    replace the default iBATIS type handler.</entry>
                   </row>
 
                   <row>
@@ -1650,6 +1662,7 @@ public IList QueryForList(string statementName,
 
         <para><programlisting>public delegate void RowDelegate(object obj,
                                  IList list);
+
 public IList QueryWithRowDelegate(string statementName,
                                   object parameterObject, 
                                   RowDelegate rowDelegate);</programlisting></para>
@@ -1668,6 +1681,39 @@ public IList QueryWithRowDelegate(string statementName,
         <important>
             <para>It is your responsibility to add the objects you want
             returned to the list. If an object is not added, it is not
+            returned.</para>
+          </important></para>
+      </sect3>
+
+      <sect3>
+        <title> QueryForMapWithRowDelegate</title>
+
+        <para><programlisting>public delegate void DictionaryRowDelegate(object key, 
+                                           object value, 
+                                           object parameterObject, 
+                                           IDictionary dictionary);
+
+public IDictionary QueryForMapWithRowDelegate(string statementName,
+                                              object parameterObject, 
+                                              string keyProperty, 
+                                              string valueProperty, 
+                                              DictionaryRowDelegate rowDelegate);</programlisting></para>
+
+        <para>No matter how well our database is designed or how cleverly we
+        describe our maps, the result objects we get back may not be ideal.
+        You may need to perform some post-processing task on the result
+        objects. You might even want to omit an entry omitted from the
+        dictionary. Or, you might want to use the result object to create some
+        other, more useful object. To save filtering the result objects from
+        to one dictionary to another, you can pass a
+        <classname>DictionaryRowDelegate</classname> to the method to do the
+        dirty work. The <classname>SqlMapper</classname> will go through each
+        of the result objects and give the delegate a chance to modify the
+        object and determine if the object should be added to the
+        <interfacename>IDictionary </interfacename> that will be returned.
+        <important>
+            <para>It is your responsibility to add the objects you want
+            returned to the dictionary. If an object is not added, it is not
             returned.</para>
           </important></para>
       </sect3>
@@ -2074,32 +2120,183 @@ Product p = (Product) map[“EST-93”];</programlisting>
   </sect1>
 
   <sect1>
-    <title>Logging SqlMap Activity with Apache Log4Net</title>
+    <title>Logging SqlMap Activity</title>
 
-    <para>The iBATIS DataMapper framework provides logging information through
-    the use of Apache Log4Net (http://logging.apache.org/log4net/). The
-    specifics of Log4Net are beyond the scope of this document. This section
-    provides a sample configuration to help you get started.</para>
+    <para>The iBATIS DataMapper framework records its interaction with the
+    database through an internal logging mechanism patterned after Apache
+    Log4Net. The internal logging mechanism can use one of the three built-in
+    loggers (NoOpLogger, ConsoleOutLogger, TraceLogger) or external logging
+    packages such as Apache Log4Net. In order for iBATIS to generate log
+    messages, the application's config file (App.Config or Web.Config) must
+    contain an appropriate configSection node:</para>
+
+    <example>
+      <title>iBATIS Configuration Section Handler for logging</title>
+
+      <programlisting>&lt;configSections&gt;
+ &lt;sectionGroup name="iBATIS"&gt;
+  &lt;section name="logging" type="IBatisNet.Common.Logging.ConfigurationSectionHandler, IBatisNet.Common" /&gt;
+ &lt;/sectionGroup&gt;
+&lt;/configSections&gt;</programlisting>
+    </example>
+
+    <para>The application's config file must declare one logger
+    implementation. See the examples below on how to configure one of the
+    three built-in loggers.</para>
+
+    <para><programlisting>&lt;iBATIS&gt;
+ &lt;logging&gt;
+  &lt;logFactoryAdapter type="IBatisNet.Common.Logging.Impl.ConsoleOutLoggerFA, IBatisNet.Common"&gt;
+   &lt;arg key="showLogName" value="true" /&gt;
+   &lt;arg key="showDataTime" value="true" /&gt;
+   &lt;arg key="level" value="ALL" /&gt;
+   &lt;arg key="dateTimeFormat" value="yyyy/MM/dd HH:mm:ss:SSS" /&gt;
+  &lt;/logFactoryAdapter&gt;
+ &lt;/logging&gt;
+&lt;/iBATIS&gt;
+</programlisting><programlisting>&lt;iBATIS&gt;
+ &lt;logging&gt;
+  &lt;logFactoryAdapter type="IBatisNet.Common.Logging.Impl.NoOpLoggerFA, IBatisNet.Common" /&gt;
+ &lt;/logging&gt;
+&lt;/iBATIS&gt;
+</programlisting><programlisting>&lt;iBATIS&gt;
+ &lt;logging&gt;
+  &lt;logFactoryAdapter type="IBatisNet.Common.Logging.Impl.TraceLoggerFA, IBatisNet.Common" /&gt;
+ &lt;/logging&gt;
+&lt;/iBATIS&gt;</programlisting></para>
+
+    <para>To configure iBATIS to use another logger implementation, simple
+    specify the appropriate logFactoryAdapter type. To use Apache Log4Net with
+    the iBATIS DataMapper framework, use the following configuration
+    setting:</para>
+
+    <para><programlisting>&lt;iBATIS&gt;
+ &lt;logging&gt;
+  &lt;logFactoryAdapter type="IBatisNet.Common.Logging.Impl.Log4NetLoggerFA, IBatisNet.Common.Logging.Log4Net"&gt;
+   &lt;arg key="configType" value="inline" /&gt;
+  &lt;/logFactoryAdapter&gt;
+ &lt;/logging&gt;
+&lt;/iBATIS&gt;</programlisting></para>
+
+    <para>The Log4NetLoggerFA supports the following values for the
+    configTypes argument:<table>
+        <title>Valid configType values</title>
+
+        <tgroup cols="2">
+          <thead>
+            <row>
+              <entry>configType</entry>
+
+              <entry>Description</entry>
+            </row>
+          </thead>
+
+          <tbody>
+            <row>
+              <entry>inline</entry>
+
+              <entry>log4net node will use the log4net node in the
+              App.Config/Web.Config file when it is configured</entry>
+            </row>
+
+            <row>
+              <entry>file</entry>
+
+              <entry>(also requires configFile argument) - log4net will use an
+              external file for its configuration</entry>
+            </row>
+
+            <row>
+              <entry>file-watch</entry>
+
+              <entry> (also requires configFile argument) - log4net will use
+              an external file for its configuration and will re-configure
+              itself if this file changes</entry>
+            </row>
+
+            <row>
+              <entry>external</entry>
+
+              <entry>iBATIS will not attempt to configure log4net.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table></para>
 
     <sect2>
-      <title>Log Configuration</title>
+      <title>Sample Logging Configurations</title>
 
-      <para>The framework uses Log4Net internally and will automatically
-      include the assembly when your project is built. To use Log4Net with
-      your own application, you just need to provide your own Log4Net
+      <para>The simplest logging configuration is to output log messages to
+      Console.Out:</para>
+
+      <para><programlisting>&lt;configuration&gt;
+ &lt;configSections&gt;
+  &lt;sectionGroup name="iBATIS"&gt;
+   &lt;section name="logging" type="IBatisNet.Common.Logging.ConfigurationSectionHandler, IBatisNet.Common" /&gt;
+  &lt;/sectionGroup&gt;
+ &lt;/configSections&gt;
+ &lt;iBATIS&gt;
+  &lt;logging&gt;
+   &lt;logFactoryAdapter type="IBatisNet.Common.Logging.Impl.ConsoleLoggerFA, IBatisNet.Common.Logging" /&gt;
+  &lt;/logging&gt;
+ &lt;/iBATIS&gt;
+&lt;/configuration&gt;</programlisting></para>
+
+      <para>A common logging configuration is to use Apache Log4Net. To use
+      Log4Net with your own application, you need to provide your own Log4Net
       configuration. You can do this by adding a configuration file for your
       assembly that includes a &lt;log4Net&gt; element. The configuration file
       is named after your assembly but adds a <filename>.config</filename>
-      extension, and is stored in the same folder as your assembly. Example
-      4.26 shows the configuration for the framework's Test project.</para>
+      extension, and is stored in the same folder as your assembly. This is an
+      example of a basic Log4Net configuration block
+      (IBatisNet.DataMapper.Test.dll.Config) that also creates a log4net.txt
+      which contains debug information from log4net. If log4net is not
+      producing output, check the log4net.txt file.</para>
+
+      <para><programlisting>&lt;configuration&gt;
+ &lt;configSections&gt;
+  &lt;sectionGroup name="iBATIS"&gt;
+   &lt;section name="logging" type="IBatisNet.Common.Logging.ConfigurationSectionHandler, IBatisNet.Common" /&gt;
+  &lt;/sectionGroup&gt;
+  &lt;section name="log4net" type="log4net.Config.Log4NetConfigurationSectionHandler, log4net" /&gt;
+ &lt;/configSections&gt;
+ &lt;appSettings&gt;
+  &lt;add key="log4net.Internal.Debug" value="true"/&gt;
+ &lt;/appSettings&gt;
+ &lt;system.diagnostics&gt;
+ &lt;trace autoflush="true"&gt;
+   &lt;listeners&gt;
+    &lt;add name="textWriterTraceListener" 
+     type="System.Diagnostics.TextWriterTraceListener"
+     initializeData="C:\\inetpub\\wwwroot\\log4net.txt" /&gt;
+   &lt;/listeners&gt;
+  &lt;/trace&gt;
+ &lt;/system.diagnostics&gt;
+ &lt;iBATIS&gt;
+  &lt;logging&gt;
+   &lt;logFactoryAdapter type="IBatisNet.Common.Logging.Impl.Log4NetLoggerFA, IBatisNet.Common.Logging.Log4Net"&gt;
+    &lt;arg key="configType" value="inline" /&gt;
+   &lt;/logFactoryAdapter&gt;
+  &lt;/logging&gt;
+ &lt;/iBATIS&gt;
+ &lt;log4net&gt;
+  &lt;appender name="FileAppender" type="log4net.Appender.FileAppender"&gt;
+   &lt;file value="log.txt" /&gt;
+   &lt;appendToFile value="true" /&gt;
+   &lt;layout type="log4net.Layout.SimpleLayout" /&gt;
+  &lt;/appender&gt;
+  &lt;root&gt;
+   &lt;level value="ALL" /&gt;
+   &lt;appender-ref ref="FileAppender" /&gt;
+  &lt;/root&gt;
+ &lt;/log4net&gt;
+&lt;/configuration&gt;</programlisting></para>
 
       <example>
-        <title>A sample Log4Net configuration block
+        <title>A complete Log4Net configuration block
         (IBatisNet.DataMapper.Test.dll.Config)</title>
 
-        <programlisting>
-
-&lt;configuration&gt;
+        <programlisting>&lt;configuration&gt;
  <emphasis role="comment">&lt;!-- Register a section handler for the log4net section --&gt;</emphasis>
  &lt;configSections&gt;
   &lt;section name="log4net" type="log4net.Config.Log4NetConfigurationSectionHandler, log4net" /&gt;
@@ -2179,24 +2376,40 @@ Product p = (Product) map[“EST-93”];</programlisting>
       <example>
         <title>Sample DefaultPreparedCommand logger output</title>
 
-        <programlisting>2005-06-08 01:39:43,941 [3872] DEBUG IBatisNet.DataMapper.Commands.DefaultPreparedCommand [] - 
-  PreparedStatement : [select LineItem_ID as Id, LineItem_Code as Code, 
-  LineItem_Quantity as Quantity, LineItem_Price as Price     
-  from LineItems where Order_ID =  @param0 order by LineItem_Code]
-2005-06-08 01:39:43,941 [3872] DEBUG IBatisNet.DataMapper.Commands.DefaultPreparedCommand [] - 
-  Parameters: [@param0=[value,1]]
-2005-06-08 01:39:43,941 [3872] DEBUG IBatisNet.DataMapper.Commands.DefaultPreparedCommand [] - 
-  Types: [@param0=[Int32, System.Int32]]</programlisting>
+        <programlisting>2005-06-08 01:39:33 [3872] DEBUG IBatisNet.DataMapper.Commands.DefaultPreparedCommand - 
+Statement Id: [User.Update] PreparedStatement : [UPDATE [User] SET [DateLastUpdated] = NOW() WHERE [UserId] = ?]
+2005-06-08 01:39:43 [3872] DEBUG IBatisNet.DataMapper.Commands.DefaultPreparedCommand - 
+Statement Id: [User.Update] Parameters: [param0=[UserId,1]]
+2005-06-08 01:39:53 [3872] DEBUG IBatisNet.DataMapper.Commands.DefaultPreparedCommand - 
+Statement Id: [User.Update] Types: [param0=[String, System.Int32]]
+</programlisting>
       </example>
 
-      <para>If you would like to log cache usage in your application, enable
-      the logger for
+      <para>If your statements are named the same across all sqlMap files, its
+      possible to filter log messages when using Apache Log4Net. The example
+      below only logs Insert, Update, and Delete statements sent to the
+      database. Select or GetMany statements are not logged:</para>
+
+      <para><example>
+          <title>Sample Apache Log4Net appender node that will log Insert,
+          Update, and Delete statements to a file</title>
+
+          <programlisting>&lt;appender name="FileAppender" type="log4net.Appender.FileAppender"&gt;
+ &lt;file value="InsertsUpdatesDeletes.txt" /&gt;
+ &lt;layout type="log4net.Layout.SimpleLayout" /&gt;
+ &lt;filter type="log4net.Filter.StringMatchFilter"&gt;
+  &lt;regExToMatch value="^(?!Statement Id:)|Statement Id: \[\w+?\.(?:Insert|Update|Delete)" /&gt;
+ &lt;/filter&gt;
+ &lt;filter type="log4net.Filter.DenyAllFilter" /&gt;
+&lt;/appender&gt;</programlisting>
+        </example>If you would like to log cache usage in your application,
+      enable the logger for
       <classname>IBatisNet.DataMapper.Configuration.Cache.CacheModel</classname>.</para>
 
       <example>
         <title>Sample CacheModel logger output</title>
 
-        <programlisting>2005-06-08 01:38:34,403 [3648] DEBUG IBatisNet.DataMapper.Configuration.Cache.CacheModel [] - 
+        <programlisting>2005-06-08 01:38:34,403 [3648] DEBUG IBatisNet.DataMapper.Configuration.Cache.CacheModel - 
 Flush cacheModel named Account.account-cache for statement 'UpdateAccountViaParameterMap'</programlisting>
       </example>
 
