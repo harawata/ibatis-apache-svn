@@ -770,11 +770,13 @@ namespace IBatisNet.DataMapper.Configuration
 				} 
 				catch (Exception e) 
 				{
+					NameValueCollection prop = NodeUtils.ParseAttributes(xmlNode, _configScope.Properties);
+
 					throw new ConfigurationException(
 						String.Format("Error registering TypeHandler class \"{0}\" for handling .Net type \"{1}\" and dbType \"{2}\". Cause: {3}", 
-						xmlNode.Attributes["callback"].Value,
-						xmlNode.Attributes["type"].Value,
-						xmlNode.Attributes["dbType"].Value,
+						NodeUtils.GetStringAttribute(prop, "callback"),
+						NodeUtils.GetStringAttribute(prop, "type"),
+						NodeUtils.GetStringAttribute(prop, "dbType"),
 						e.Message), e);
 				}
 			}

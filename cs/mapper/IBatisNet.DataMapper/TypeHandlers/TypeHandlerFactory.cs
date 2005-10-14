@@ -197,7 +197,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 			}
 			if (dbType==null)
 			{
-				map.Add(NULL, handler);
+				map[NULL] = handler;
 			}
 			else
 			{
