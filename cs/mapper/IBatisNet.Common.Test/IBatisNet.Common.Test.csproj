@@ -167,6 +167,10 @@
                     BuildAction = "None"
                 />
                 <File
+                    RelPath = "bin\Debug\OctopusService.dll"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "bin\Debug\providers.config"
                     BuildAction = "None"
                 />
