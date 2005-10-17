@@ -405,12 +405,13 @@ namespace IBatisNet.Common.Utilities
 			if (fileInfo.IsAssemblyQualified)
 			{
 				Assembly assembly = Assembly.LoadWithPartialName (fileInfo.AssemblyName);
-//				foreach(string fileName in assembly.GetManifestResourceNames() ) 
-//				{
-//					Console.WriteLine(fileName);
-//				}
 
 				Stream stream = assembly.GetManifestResourceStream(fileInfo.ResourceFileName);
+				// JIRA - IBATISNET-103 
+				if (stream == null)
+				{
+					stream = assembly.GetManifestResourceStream(fileInfo.FileName);
+				}
 				if (stream != null)
 				{
 					try
@@ -537,10 +538,7 @@ namespace IBatisNet.Common.Utilities
 			/// </summary>
 			public string ResourceFileName
 			{
-				get
-				{
-					return AssemblyName+"."+FileName;
-				}
+				get { return AssemblyName+"."+FileName; }
 			}
 
 			/// <summary>
@@ -548,10 +546,7 @@ namespace IBatisNet.Common.Utilities
 			/// </summary>
 			public string OriginalFileName
 			{
-				get
-				{
-					return _originalFileName;
-				}
+				get { return _originalFileName; }
 			}
 
 			/// <summary>
@@ -559,10 +554,7 @@ namespace IBatisNet.Common.Utilities
 			/// </summary>
 			public string FileName
 			{
-				get
-				{
-					return _unresolvedFileName;
-				}
+				get { return _unresolvedFileName; }
 			}
 
 			/// <summary>
@@ -570,10 +562,7 @@ namespace IBatisNet.Common.Utilities
 			/// </summary>
 			public string AssemblyName
 			{
-				get
-				{
-					return _unresolvedAssemblyName;
-				}
+				get { return _unresolvedAssemblyName; }
 			}
 
 			/// <summary>

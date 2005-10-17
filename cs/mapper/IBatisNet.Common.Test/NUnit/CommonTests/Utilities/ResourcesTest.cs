@@ -42,12 +42,27 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 		{
 			XmlDocument doc = null;
 
-			doc = Resources.GetEmbeddedResourceAsXmlDocument("properties.xml, IBatisNet.Common.Test");
+			doc = Resources.GetEmbeddedResourceAsXmlDocument("IBatisNet.Common.Test.properties.xml, IBatisNet.Common.Test");
 
 			Assert.IsNotNull(doc);
 			Assert.IsTrue(doc.HasChildNodes);
 			Assert.AreEqual(doc.ChildNodes.Count,2);
 			Assert.AreEqual(doc.SelectNodes("/settings/add").Count, 4);
+		}
+
+		/// <summary>
+		/// Test loading Embedded Resource
+		/// </summary>
+		[Test] 
+		public void TestEmbeddedResourceWhenNamespaceDiffersFromAssemblyName() 
+		{
+			XmlDocument doc = null;
+
+			doc = Resources.GetEmbeddedResourceAsXmlDocument("CompanyName.ProductName.Maps.ISCard.xml, OctopusService");
+
+			Assert.IsNotNull(doc);
+			Assert.IsTrue(doc.HasChildNodes);
+			Assert.AreEqual(doc.ChildNodes.Count,2);
 		}
 		#endregion
 
