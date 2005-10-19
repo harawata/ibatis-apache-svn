@@ -903,6 +903,28 @@ namespace WebShop.Domain
             Models, see Section 3.8.</para>
           </example></para>
       </sect3>
+
+	  <sect3>
+        <title>extends</title>
+		    <para>When writing Sql, you often encounter duplicate fragments of SQL. iBATIS offers a simple yet powerful attribute to reuse them.</para>
+
+			 <para><programlisting>
+&lt;select id="<emphasis role="blue">GetAllAccounts</emphasis>"
+  resultMap="indexed-account-result"&gt;
+select
+  Account_ID,
+  Account_FirstName,
+  Account_LastName,
+  Account_Email
+from Accounts
+&lt;/select&gt;
+		
+&lt;select id="GetAllAccountsOrderByName"
+  extends="<emphasis role="blue">GetAllAccounts</emphasis>"
+  resultMap="indexed-account-result"&gt;
+    order by Account_FirstName
+&lt;/select&gt;</programlisting></para>
+	  </sect3>
     </sect2>
   </sect1>
 

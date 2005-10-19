@@ -2178,6 +2178,15 @@ Product p = (Product) map[“EST-93”];</programlisting>
  &lt;/logging&gt;
 &lt;/iBATIS&gt;</programlisting></para>
 
+    <para><programlisting>&lt;iBATIS&gt;
+ &lt;logging&gt;
+  &lt;logFactoryAdapter type="IBatisNet.Common.Logging.Impl.Log4NetLoggerFA, IBatisNet.Common.Logging.Log4Net"&gt;
+   &lt;arg key="configType" value="file" /&gt;
+   &lt;arg key="configFile" value="log4Net.config" /&gt;
+  &lt;/logFactoryAdapter&gt;
+ &lt;/logging&gt;
+&lt;/iBATIS&gt;</programlisting></para>
+
     <para>The Log4NetLoggerFA supports the following values for the
     configTypes argument:<table>
         <title>Valid configType values</title>
