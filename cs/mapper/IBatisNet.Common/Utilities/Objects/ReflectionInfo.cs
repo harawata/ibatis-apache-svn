@@ -170,10 +170,12 @@ namespace IBatisNet.Common.Utilities.Objects
 		public PropertyInfo GetSetter(string propertyName) 
 		{
 			PropertyInfo propertyInfo = (PropertyInfo) _setProperties[propertyName];
+
 			if (propertyInfo == null) 
 			{
 				throw new ProbeException("There is no Set property named '" + propertyName + "' in class '" + _className + "'");
-			}
+			}				
+
 			return propertyInfo;
 		}
 
@@ -289,6 +291,34 @@ namespace IBatisNet.Common.Utilities.Objects
 			}
 		}
 
+//		/// <summary>
+//		///  Returns the type that the get expects to receive as a parameter when
+//		///  setting a property value.
+//		/// </summary>
+//		/// <param name="type">The type to check</param>
+//		/// <param name="propertyName">The name of the property</param>
+//		/// <returns>The type of the property</returns>
+//		public static ReflectionInfo GetReflectionInfoForGetter(Type type, string propertyName) 
+//		{
+//			ReflectionInfo reflectionInfo = null;
+//			if (propertyName.IndexOf('.') > -1) 
+//			{
+//				StringTokenizer parser = new StringTokenizer(propertyName, ".");
+//				IEnumerator enumerator = parser.GetEnumerator();
+//
+//				while (enumerator.MoveNext()) 
+//				{
+//					propertyName = (string)enumerator.Current;
+//					type = ReflectionInfo.GetInstance(type).GetGetterType(propertyName);
+//				}
+//			} 
+//			else 
+//			{
+//				reflectionInfo = ReflectionInfo.GetInstance(type);
+//			}
+//
+//			return type;
+//		}
 
 		/// <summary>
 		/// Gets an instance of ReflectionInfo for the specified type.

@@ -153,6 +153,22 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			<result property="FavouriteLineItem"	resultMapping="LineItem.LineItem" />
 		</resultMap>
 
+		<resultMap id="order-joined-favourite2" class="Order">
+			<result property="Id"					column="Order_ID"/>
+			<result property="Date"					column="Order_Date"/>
+			<result property="CardExpiry"			column="Order_CardExpiry"/>
+			<result property="CardType"				column="Order_CardType"/>
+			<result property="CardNumber"			column="Order_CardNumber"/>
+			<result property="Street"				column="Order_Street"/>
+			<result property="City"					column="Order_City"/>
+			<result property="Province"				column="Order_Province"/>
+			<result property="PostalCode"			column="Order_PostalCode"/>
+			<result property="FavouriteLineItem.Id" column="LineItem_ID"/>
+			<result property="FavouriteLineItem.Code" column="LineItem_Code"/>
+			<result property="FavouriteLineItem.Quantity" column="LineItem_Quantity"/>
+			<result property="FavouriteLineItem.Price" column="LineItem_Price"/>			
+		</resultMap>
+		
 		<resultMap id="order-joined-with-account" class="Order">
 			<result property="Id"         column="Order_ID"/>
 			<result property="Date"       column="Order_Date" nullValue="01/01/0001 00:00:00"/>
@@ -253,6 +269,38 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			and Orders.Order_ID = #value#
 		</statement>
 		
+		<statement id="GetOrderJoinedFavourite2"
+                    parameterClass="Integer"
+                    resultMap="order-joined-favourite2" >
+			select * from Orders, LineItems
+			where Orders.Order_ID = LineItems.Order_ID
+			and Order_FavouriteLineItem = LineItems.LineItem_ID
+			and Orders.Order_ID = #value#
+		</statement>
+
+		<statement id="GetOrderJoinedFavourite3"
+                    parameterClass="Integer"
+                    resultClass="Order" >
+			select 
+				Orders.Order_ID as Id,
+				Order_Date as Date,
+				Order_CardExpiry as CardExpiry,
+				Order_CardType as CardType,
+				Order_CardNumber as CardNumber,
+				Order_Street as Street,
+				Order_City as City,
+				Order_Province as Province,
+				Order_PostalCode as PostalCode,
+				LineItem_ID as "FavouriteLineItem.Id",
+				LineItem_Code as "FavouriteLineItem.Code",
+				LineItem_Quantity as "FavouriteLineItem.Quantity",
+				LineItem_Price as "FavouriteLineItem.Price"
+			from Orders, LineItems
+			where Orders.Order_ID = LineItems.Order_ID
+			and Order_FavouriteLineItem = LineItems.LineItem_ID
+			and Orders.Order_ID = #value#
+		</statement>
+				
 		<statement id="GetOrderWithFavouriteLineItem"
 					parameterClass="int"
 					resultMap="order-with-favourite-line-item" >

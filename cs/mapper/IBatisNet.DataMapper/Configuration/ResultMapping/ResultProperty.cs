@@ -259,7 +259,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		{
 			if ( _propertyName.Length>0 &&_propertyName != "value" && !typeof(IDictionary).IsAssignableFrom(resultClass) )
 			{
-				_propertyInfo = ReflectionInfo.GetInstance(resultClass).GetSetter( _propertyName );
+				_propertyInfo = ObjectProbe.GetPropertyInfoForSetter(resultClass, _propertyName);
 			}
 
 			if (this.CallBackName!=null && this.CallBackName.Length >0)

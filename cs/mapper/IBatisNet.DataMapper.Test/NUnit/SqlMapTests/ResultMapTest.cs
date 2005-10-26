@@ -290,6 +290,38 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		}
 
 		/// <summary>
+		/// Test nested object.
+		/// Order + FavouriteLineItem in order.FavouriteLineItem
+		/// </summary>
+		[Test]
+		public void TestNestedObjects2() 
+		{
+			Order order = (Order) sqlMap.QueryForObject("GetOrderJoinedFavourite2", 1);
+
+			AssertOrder1(order);
+
+			Assert.IsNotNull(order.FavouriteLineItem);
+			Assert.AreEqual(2, order.FavouriteLineItem.Id, "order.FavouriteLineItem.Id");
+			Assert.AreEqual("ESM-23", order.FavouriteLineItem.Code);
+		}
+
+		/// <summary>
+		/// Test Implicit Result Maps
+		/// </summary>
+		[Test]
+		public void TestImplicitResultMaps() 
+		{
+			Order order = (Order) sqlMap.QueryForObject("GetOrderJoinedFavourite3", 1);
+
+			AssertOrder1(order);
+
+			Assert.IsNotNull(order.FavouriteLineItem);
+			Assert.AreEqual(2, order.FavouriteLineItem.Id, "order.FavouriteLineItem.Id");
+			Assert.AreEqual("ESM-23", order.FavouriteLineItem.Code);
+
+		}
+
+		/// <summary>
 		/// Test a composite Key Mapping.
 		/// It must be: property1=column1,property2=column2,...
 		/// </summary>

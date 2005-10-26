@@ -32,6 +32,7 @@ using System.Data;
 using System.Xml;
 using System.Xml.Serialization;
 using IBatisNet.Common.Exceptions;
+using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.Common.Utilities.TypesResolver;
 using IBatisNet.DataMapper.Configuration.Serializers;
 using IBatisNet.DataMapper.Scope;
@@ -315,7 +316,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 
 				if ( property.PropertyInfo != null )
 				{
-					property.PropertyInfo.SetValue( target, dataBaseValue, null );
+					ObjectProbe.SetPropertyValue(target, property.PropertyName, dataBaseValue);
 				}
 				else // Primitive type ('value')
 				{

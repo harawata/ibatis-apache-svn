@@ -35,7 +35,6 @@ using IBatisNet.Common;
 using IBatisNet.Common.Logging;
 using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.DataMapper.Commands;
-using IBatisNet.DataMapper.Configuration.Cache;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
 using IBatisNet.DataMapper.Configuration.Statements;
@@ -744,7 +743,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 			object parameterObject, 
 			string keyProperty, 
 			string valueProperty, 
-			SqlMapper.DictionaryRowDelegate rowDelegate  )
+		                                     SqlMapper.DictionaryRowDelegate rowDelegate  )
 		{
 			IDictionary map = new Hashtable();
 
@@ -1013,25 +1012,28 @@ namespace IBatisNet.DataMapper.MappedStatements
 				{
 					if (dataBaseValue == null)
 					{
-						if (property.PropertyInfo != null)
-						{
-							property.PropertyInfo.SetValue( target, null, null );
-						}
-						else
-						{
-							ObjectProbe.SetPropertyValue( target, property.PropertyName, null);
-						}					
+						ObjectProbe.SetPropertyValue( target, property.PropertyName, null);
+//						if (property.PropertyInfo != null)
+//						{
+//							property.PropertyInfo.SetValue( target, null, null );
+//						}
+//						else
+//						{
+//							ObjectProbe.SetPropertyValue( target, property.PropertyName, null);
+//						}					
 					}
 					else
 					{
-						if (property.PropertyInfo != null)
-						{
-							property.PropertyInfo.SetValue( target, dataBaseValue, null );
-						}
-						else
-						{
-							ObjectProbe.SetPropertyValue( target, property.PropertyName, dataBaseValue);
-						}					
+						ObjectProbe.SetPropertyValue(target, property.PropertyName, dataBaseValue);
+
+//						if (property.PropertyInfo != null)
+//						{
+//							property.PropertyInfo.SetValue( target, dataBaseValue, null );
+//						}
+//						else
+//						{
+//							ObjectProbe.SetPropertyValue( target, property.PropertyName, dataBaseValue);
+//						}					
 					}
 				}
 			}
@@ -1130,33 +1132,60 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 						ResultProperty property = new ResultProperty();
 						property.ColumnName = columnName;
+						property.ColumnIndex = i;
 
-						if (matchedPropertyInfo != null ) 
-						{
-							property.PropertyName = matchedPropertyInfo.Name;
-							property.Initialize(typeHandlerFactory, matchedPropertyInfo );
-							_resultMap.AddResultPropery(property);
-						}
-						else if (resultObject is Hashtable) 
+						if (resultObject is Hashtable) 
 						{
 							property.PropertyName = columnName;
 							_resultMap.AddResultPropery(property);
 						}
 
-						// Fix for IBATISNET-73 (JIRA-73) from Ron Grabowski
-						if (property.PropertyName != null && property.PropertyName.Length > 0)
+						Type propertyType = null;
+
+						if (matchedPropertyInfo == null )
 						{
-							// Set TypeHandler
-							Type propertyType = reflectionInfo.GetSetterType(property.PropertyName);
-							property.TypeHandler = typeHandlerFactory.GetTypeHandler( propertyType );
+							try
+							{
+								propertyType = ObjectProbe.GetPropertyTypeForSetter(resultObject, columnName);
+							}
+							catch
+							{
+								_logger.Error("The column [" + columnName + "] could not be auto mapped to a property on [" + resultObject.ToString() + "]");
+							}
 						}
 						else
 						{
-							if (_logger.IsDebugEnabled)
-							{
-								_logger.Debug("The column [" + columnName + "] could not be auto mapped to a property on [" + resultObject.ToString() + "]");
-							}
+							propertyType = reflectionInfo.GetSetterType(matchedPropertyInfo.Name);
 						}
+
+						if(propertyType != null || matchedPropertyInfo != null) 
+						{
+							property.PropertyName = (matchedPropertyInfo != null ? matchedPropertyInfo.Name : columnName );
+							if (matchedPropertyInfo != null)
+							{
+								property.Initialize(typeHandlerFactory, matchedPropertyInfo );
+							}
+							else
+							{
+								property.TypeHandler = typeHandlerFactory.GetTypeHandler(propertyType);
+							}
+							_resultMap.AddResultPropery(property);
+						} 
+
+//						// Fix for IBATISNET-73 (JIRA-73) from Ron Grabowski
+//						if (property.PropertyName != null && property.PropertyName.Length > 0)
+//						{
+//							// Set TypeHandler
+//							Type propertyType = reflectionInfo.GetSetterType(property.PropertyName);
+//							property.TypeHandler = typeHandlerFactory.GetTypeHandler( propertyType );
+//						}
+//						else
+//						{
+//							if (_logger.IsDebugEnabled)
+//							{
+//								_logger.Debug("The column [" + columnName + "] could not be auto mapped to a property on [" + resultObject.ToString() + "]");
+//							}
+//						}
 					}
 				} 
 				catch (Exception e) 

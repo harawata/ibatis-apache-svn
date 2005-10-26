@@ -99,7 +99,7 @@ namespace IBatisNet.Common.Utilities.Objects
 		/// <param name="obj">The object to check</param>
 		/// <param name="propertyName">The name of the property</param>
 		/// <returns>The type of the property</returns>
-		private static Type GetPropertyTypeForSetter(object obj, string propertyName) 
+		public static Type GetPropertyTypeForSetter(object obj, string propertyName) 
 		{
 			Type type = obj.GetType();
 
@@ -243,11 +243,39 @@ namespace IBatisNet.Common.Utilities.Objects
 			return type;
 		}
 
+		/// <summary>
+		///  Returns the PropertyInfo of the set property on the specified type.
+		/// </summary>
+		/// <param name="type">The type to check</param>
+		/// <param name="propertyName">The name of the property</param>
+		/// <returns>The type of the property</returns>
+		public static PropertyInfo GetPropertyInfoForSetter(Type type, string propertyName) 
+		{
+			PropertyInfo propertyInfo =null;
+			if (propertyName.IndexOf('.') > -1) 
+			{
+				StringTokenizer parser = new StringTokenizer(propertyName, ".");
+				IEnumerator enumerator = parser.GetEnumerator();
+				Type parentType = null;
 
+				while (enumerator.MoveNext()) 
+				{
+					propertyName = (string)enumerator.Current;
+					parentType = type;
+					type = ReflectionInfo.GetInstance(type).GetSetterType(propertyName);
+				}
+				propertyInfo = ReflectionInfo.GetInstance(parentType).GetSetter(propertyName);
+			} 
+			else 
+			{
+				propertyInfo = ReflectionInfo.GetInstance(type).GetSetter(propertyName);
+			}
+
+			return propertyInfo;
+		}
 
 		private static object GetArrayProperty(object obj, string indexedName) 
 		{
-
 			object value = null;
 
 			try 
@@ -614,7 +642,6 @@ namespace IBatisNet.Common.Utilities.Objects
 			
 			return hasProperty;
 		}
-
 
 		/// <summary>
 		/// 
