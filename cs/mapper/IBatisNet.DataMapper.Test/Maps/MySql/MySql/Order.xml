@@ -347,7 +347,15 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			values 
 				(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 		</statement>	
-		
+
+		<statement id="InsertOrderViaPublicFields">
+			insert into Orders  
+				(Order_ID, Account_ID, Order_Date, Order_CardExpiry, Order_CardType, 
+					Order_CardNumber, Order_Street, Order_City, Order_Province, Order_PostalCode ) 
+			values 
+				(#Id#, #Account.Id#, #Date#, #CardExpiry#, #CardType#, #CardNumber#, #Street#, #City#, #Province#, #PostalCode#)
+		</statement>		
+				
 		<select id="GetOrderWithDynFavouriteLineItem"
 				parameterClass="Integer"
 				resultMap="order-with-dyn-favourite-line-item">

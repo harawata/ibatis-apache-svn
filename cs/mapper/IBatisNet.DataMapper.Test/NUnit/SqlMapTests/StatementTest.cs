@@ -875,6 +875,27 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Assert.AreEqual(10, testAccount.Id);
 		}
 
+		public void TestInsertOrderViaProperties()
+		{
+			Account account = NewAccount6();
+
+			sqlMap.Insert("InsertAccountViaParameterMap", account);
+
+			Order order = new Order();
+			order.Id = 99;
+			order.CardExpiry = "09/11";
+			order.Account = account;
+			order.CardNumber = "154564656";
+			order.CardType = "Visa";
+			order.City = "Lyon";
+			order.Date = DateTime.Now;
+			order.PostalCode = "69004";
+			order.Province = "Rhone";
+			order.Street = "rue Durand";
+
+			sqlMap.Insert("InsertOrderViaPublicFields", order);
+		}
+
 		/// <summary>
 		/// Test Insert account via public fields
 		/// </summary>
