@@ -78,6 +78,7 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 				throw new ConfigurationException("The callBack type is not a valid implementation of ITypeHandler or ITypeHandlerCallback");
 			}
 
+			// 
 			configScope.ErrorContext.MoreInfo = "Check the type attribute '" + handler.ClassName + "' (must be a class name) or the dbType '" + handler.DbType + "' (must be a DbType type name).";
 			if (handler.DbType!= null && handler.DbType.Length > 0) 
 			{

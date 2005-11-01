@@ -1061,7 +1061,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 		public override string ToString() 
 		{
 			StringBuilder buffer = new StringBuilder();
-			buffer.Append("\tMappedStatement: " + this.Name + "\n");
+			buffer.Append("\tMappedStatement: " + this.Name);
+			buffer.Append(Environment.NewLine);
 			if (_statement.ParameterMap != null) buffer.Append(_statement.ParameterMap.Id);
 			if (_statement.ResultMap != null) buffer.Append(_statement.ResultMap.Id);
 
