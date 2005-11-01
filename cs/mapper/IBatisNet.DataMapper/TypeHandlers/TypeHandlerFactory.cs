@@ -28,6 +28,8 @@
 
 using System;
 using System.Collections.Specialized;
+using System.Reflection;
+using IBatisNet.Common.Logging;
 
 #endregion 
 
@@ -40,7 +42,8 @@ namespace IBatisNet.DataMapper.TypeHandlers
 	{
 
 		#region Fields
-
+		
+		private static readonly ILog _logger = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
 		private HybridDictionary _typeHandlerMap = new HybridDictionary();
 		private ITypeHandler _unknownTypeHandler = null;
 		private const string NULL = "_NULL_TYPE_";
@@ -185,7 +188,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		/// Register (add) a type handler for a type and dbType
 		/// </summary>
 		/// <param name="type">the type</param>
-		/// <param name="dbType">the dbType</param>
+		/// <param name="dbType">the dbType (optional, if dbType is null the handler will be used for all dbTypes)</param>
 		/// <param name="handler">the handler instance</param>
 		public void Register(Type type, string dbType, ITypeHandler handler) 
 		{
@@ -197,6 +200,33 @@ namespace IBatisNet.DataMapper.TypeHandlers
 			}
 			if (dbType==null)
 			{
+				if (_logger.IsInfoEnabled)
+				{
+					// notify the user that they are no longer using one of the built-in type handlers
+					ITypeHandler oldTypeHandler = (ITypeHandler)map[NULL];
+
+					if (oldTypeHandler != null)
+					{
+						// the replacement will always(?) be a CustomTypeHandler
+						CustomTypeHandler customTypeHandler = handler as CustomTypeHandler;
+						
+						string replacement = string.Empty;
+						
+						if (customTypeHandler != null)
+						{
+							// report the underlying type
+							replacement = customTypeHandler.Callback.ToString();
+						}
+						else
+						{
+							replacement = handler.ToString();
+						}
+
+						// should oldTypeHandler be checked if its a CustomTypeHandler and if so report the Callback property ???
+						_logger.Info("Replacing type handler [" + oldTypeHandler.ToString() + "] with [" + replacement + "].");
+					}
+				}
+
 				map[NULL] = handler;
 			}
 			else

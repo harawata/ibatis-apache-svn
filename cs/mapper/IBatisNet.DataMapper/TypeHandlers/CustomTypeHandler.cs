@@ -45,6 +45,12 @@ namespace IBatisNet.DataMapper.TypeHandlers
 			_callback = callback;
 		}
 
+		public ITypeHandlerCallback Callback
+		{
+			get { return _callback; }
+			set { /* nop */ }
+		}
+
 		/// <summary>
 		/// Performs processing on a value before it is used to set
 		/// the parameter of a IDbCommand.
