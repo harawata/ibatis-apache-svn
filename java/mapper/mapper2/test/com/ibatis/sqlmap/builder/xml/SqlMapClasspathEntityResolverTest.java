@@ -51,6 +51,11 @@ public class SqlMapClasspathEntityResolverTest extends TestCase {
     assertPublicIdCanBeResolved(id);
   }
 
+  public void testOddCase() {
+    String id = "-//iBATIS.apache.org//DTD SQL Map 2.0//EN";
+    assertPublicIdCanBeResolved(id);
+  }
+
   private void assertSystemIdCanBeResolved(String id) {
     SqlMapClasspathEntityResolver resolver = new SqlMapClasspathEntityResolver();
     try {

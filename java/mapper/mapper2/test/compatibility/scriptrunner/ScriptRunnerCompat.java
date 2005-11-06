@@ -11,13 +11,10 @@ import java.sql.SQLException;
 public class ScriptRunnerCompat {
 
   public static void runInitializationScript(Connection conn, String script)
-      throws SQLException, IOException {
+      throws IOException, SQLException {
 
     // -- Create a new ScriptRunner instance using default constructor.
-    ScriptRunner runner = new ScriptRunner();
-
-    // -- Another constructor can accept database configuration information as a property map.
-    // ScriptRunner runner = new ScriptRunner (properties);
+    ScriptRunner runner = new ScriptRunner(conn, false, false);
 
     // -- You can configure logwriters for progress and error reporting.
     // -- Default is System.out and System.err, we'll keep them quiet for the demo.
@@ -28,10 +25,8 @@ public class ScriptRunnerCompat {
     Reader reader = Resources.getResourceAsReader(script);
 
     // -- Run the script from the Reader
-    runner.runScript(conn, reader);
+    runner.runScript(reader);
 
-    // -- If the ScriptRunner was configured with a properties file, you don't need to pass in a connection
-    // runner.runInitializationScript(reader);
 
   }
 

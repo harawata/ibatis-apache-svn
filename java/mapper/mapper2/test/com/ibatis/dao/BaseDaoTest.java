@@ -1,8 +1,8 @@
 package com.ibatis.dao;
 
+import com.ibatis.common.exception.NestedRuntimeException;
 import com.ibatis.common.jdbc.ScriptRunner;
 import com.ibatis.common.resources.Resources;
-import com.ibatis.common.exception.NestedRuntimeException;
 import com.ibatis.dao.client.DaoManager;
 import com.ibatis.dao.client.DaoTransaction;
 import com.ibatis.dao.engine.transaction.jdbc.JdbcDaoTransaction;
@@ -15,8 +15,6 @@ import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 
 public abstract class BaseDaoTest extends TestCase {
 
@@ -141,12 +139,11 @@ public abstract class BaseDaoTest extends TestCase {
 
     Reader reader = Resources.getResourceAsReader(script);
 
-    ScriptRunner runner = new ScriptRunner();
-    runner.setStopOnError(false);
+    ScriptRunner runner = new ScriptRunner(conn, false, false);
     runner.setLogWriter(null);
     runner.setErrorLogWriter(null);
 
-    runner.runScript(conn, reader);
+    runner.runScript(reader);
 
     daoManager.commitTransaction();
   }

@@ -10,10 +10,7 @@ import testdomain.Order;
 
 import javax.sql.DataSource;
 import java.io.Reader;
-import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.*;
 
 public class BaseSqlMapTest extends TestCase {
@@ -33,12 +30,11 @@ public class BaseSqlMapTest extends TestCase {
 
       Reader reader = Resources.getResourceAsReader(script);
 
-      ScriptRunner runner = new ScriptRunner();
-      runner.setStopOnError(false);
+      ScriptRunner runner = new ScriptRunner(conn, false, false);
       runner.setLogWriter(null);
       runner.setErrorLogWriter(null);
 
-      runner.runScript(conn, reader);
+      runner.runScript(reader);
       conn.commit();
       conn.close();
       reader.close();
