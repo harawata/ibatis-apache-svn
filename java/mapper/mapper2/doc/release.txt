@@ -2,6 +2,25 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
+ 2.1.6 - Nov 5, 2005
+------------------------------
+
+ o Fixed IBATIS-198 Call "getDataSource()" of SqlMapClientImpl will cause application to hang
+ o Fixed IBATIS-179 Binaries on webpage use old Hibernate
+ o Fixed IBATIS-174 CacheModel does not support caching null results
+ o Fixed IBATIS-197 Call "getDataSource()" of SqlMapClientImpl will cause application to hang
+ o Fixed IBATIS-131 Fix use of list[]-notation in propertyattributes of dynamic tags
+ o Fixed IBATIS-173 Incorrect resultset retrieve when calling stored procedure
+ o Fixed IBATIS-194 No resultSet found when executing SQL Server stored procedure.
+ o Fixed IBATIS-196 can't use dynamic replace data-source-type over IBATIS ver 2.0.9 library
+ o Fixed IBATIS-191 operation(insert and update) Oracle's(OCI) CLOB and BLOB fail, CLOB will close tomcat, BLOB will miss any DATA
+ o Fixed IBATIS-193 Hidden jar dependicity for iBatis DBL 2.1.5
+ o Fixed IBATIS-175 ResultSetLogProxy doesn't log the result properly
+ o Fixed IBATIS-195 Sqlmap DTD: include tag not permitted in selectKey element
+ o Fixed IBATIS-172 implicit mapping fails on nested column aliases
+ o Fixed IBATIS-185 SqlMapClasspathEntityResolver - Offline public ID resolution value ignored 
+
+------------------------------
  2.1.5 - July 17, 2005
 ------------------------------
 

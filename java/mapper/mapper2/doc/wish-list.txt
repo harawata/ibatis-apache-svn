@@ -10,6 +10,18 @@
       - Optional results/exclusions (i.e. don't require all results)
       - Automap remaining columns, ignore missing columns
       - DAO lazy initialization option (quiet failure?)
+      - <generate> tag for CRUD methods (as per iBATIS.NET)
+      - Improved Dynamic SQL syntax/flexibility
+      - Pluggable SQL Scripting languages
+  Flexibility
+      - Constructor based results (not fields at this time)
+      - Field based results
+      - Improved configuration API and logging
+      - Flush cache at specific time (e.g. 22:30)
+      - Cache dependency on other cache (flush-on-dependant)
+  Database Support
+     - Save point support
+     - Add true autocommit support (mostly for SYBASE procs)
   Database Support
       - Trim whitespace from CHAR data
   Tools
