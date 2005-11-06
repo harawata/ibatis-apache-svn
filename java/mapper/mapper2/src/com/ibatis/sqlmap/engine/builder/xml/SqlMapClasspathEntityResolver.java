@@ -20,11 +20,10 @@ import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import java.io.InputStream;
 import java.io.IOException;
-import java.util.Map;
+import java.io.InputStream;
 import java.util.HashMap;
-import java.util.Collections;
+import java.util.Map;
 
 /**
  * Offline entity resolver for the iBATIS DTDs
@@ -40,10 +39,12 @@ public class SqlMapClasspathEntityResolver implements EntityResolver {
     doctypeMap.put("http://www.ibatis.com/dtd/sql-map-config-2.dtd", SQL_MAP_CONFIG_DTD);
     doctypeMap.put("http://ibatis.apache.org/dtd/sql-map-config-2.dtd", SQL_MAP_CONFIG_DTD);
     doctypeMap.put("-//iBATIS.com//DTD SQL Map Config 2.0//EN", SQL_MAP_CONFIG_DTD);
+    doctypeMap.put("-//ibatis.apache.org//DTD SQL Map Config 2.0//EN", SQL_MAP_CONFIG_DTD);
 
     doctypeMap.put("http://www.ibatis.com/dtd/sql-map-2.dtd", SQL_MAP_DTD);
     doctypeMap.put("http://ibatis.apache.org/dtd/sql-map-2.dtd", SQL_MAP_DTD);
     doctypeMap.put("-//iBATIS.com//DTD SQL Map 2.0//EN", SQL_MAP_DTD);
+    doctypeMap.put("-//ibatis.apache.org//DTD SQL Map 2.0//EN", SQL_MAP_DTD);
   }
 
 
