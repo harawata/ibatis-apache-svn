@@ -38,51 +38,5 @@
       </p>
       <p><a href="downloads.html">Get iBATIS 2.1.6 from the Downloads page.</a><br/>
 
-      <h3>iBATIS for Ruby</h3>
-      <p>(August 25, 2005) It's official.  iBATIS is no longer a simple tool or framework. It is a genuine
-      approach to integrating object oriented applications and relational databases.  We could have said that
-      when the .NET version was released, but now we MUST say it.  We're very excited to be merging with a
-      project headed up by Jon Tirsen, a friend of mine and a fellow ThoughtWorker.  He's ported and innovated
-      iBATIS for the Ruby language, which we're all very excited about.  In the next few weeks we'll be
-      integrating iBATIS for Ruby into our infrastructure, and of course, Jon will become one of our valuable
-      team members.</p>
-
-      <h3>Developers, Developers, Developers...</h3>
-      <p>(August 24, 2005) What a crazy month.  Everyone has been so busy over the summer!  But despite
-      our schedules, we've made some amazing progress.  First and foremost, let's introduce our new
-      committers.  The following people have been voted in as committers and are currently in the process
-      of getting access to the iBATIS resources.
-      </p>
-      <ul>
-        <li>Sven Boden</li>
-        <li>Nathan Maves</li>
-        <li>Jeff Butler</li>
-        <li>Brice Ruth</li>
-      </ul>
-
-      <h3>iBATIS for Java 2.1.5 Released</h3>
-      <p>(July 17, 2005) We've released a maintenance release, with a few bonuses as well.  The most
-      notable changes are: 1) iBATIS no longer depends on commons logging, and 2) the entity resolvers
-      are now smarter so that they should resolve DTDs without the network as long as you have
-      a correct XML DOCTYPE header.  In addition to that, we've fixed a bunch of bugs including:
-      </p>
-      <ul>
-        <li>Fixed IBATIS-136 groupBy not carried forward to extended result maps</li>
-        <li>Fixed IBATIS-139 discriminator being applied to too many result maps (thanks Sven)</li>
-        <li>Fixed IBATIS-152, 149, 116 null result sets now handled properly by JDBC logging classes (thanks Sven)</li>
-        <li>Fixed IBATIS-146 consumes additional result sets before retrieving output params (JTDS fix)</li>
-        <li>Fixed IBATIS-130 parameter maps don't allow for complete TypeHandler implementations</li>
-        <li>Fixed IBATIS-148 fixed dynamic SQL in iterates</li>
-      </ul>
-      <p><a href="downloads.html">Get iBATIS 2.1.5 from the Downloads page.</a><br/>
-      <i>Note:  This will be the last build deployed by SourceForge.
-      Future builds will be deployed using Apache infrastructure.</i>
-      </p>
-
-      <h3>.NET DataMapper 1.2.1 and DataAccess 1.6.1 General Availability!</h3>
-      <p>(June 29, 2005) The votes are in and both distributions are now tagged as GA!</p>
-      <p><strong><a href="downloads.html">Download iBATIS.NET DataMapper 1.2.1
-      and DataAccess 1.6.1!</a></strong></p>
-
   </body>
 </html>
