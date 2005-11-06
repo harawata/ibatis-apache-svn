@@ -4,12 +4,12 @@ import java.util.*;
 
 /**
  * <p/>
+ * <p/>
  * Date: Mar 11, 2004 10:39:51 PM
  *
  * @author Clinton Begin
  */
 public abstract class BaseHttpMap implements Map {
-
   public int size() {
     return keySet().size();
   }
@@ -59,18 +59,18 @@ public abstract class BaseHttpMap implements Map {
 
   public Set keySet() {
     Set keySet = new HashSet();
-    Enumeration enum = getNames();
-    while (enum.hasMoreElements()) {
-      keySet.add(enum.nextElement());
+    Enumeration names = getNames();
+    while (names.hasMoreElements()) {
+      keySet.add(names.nextElement());
     }
     return keySet;
   }
 
   public Collection values() {
     List list = new ArrayList();
-    Enumeration enum = getNames();
-    while (enum.hasMoreElements()) {
-      list.add(getValue(enum.nextElement()));
+    Enumeration names = getNames();
+    while (names.hasMoreElements()) {
+      list.add(getValue(names.nextElement()));
     }
     return list;
   }
@@ -79,7 +79,6 @@ public abstract class BaseHttpMap implements Map {
     return new HashSet();
   }
 
-
   protected abstract Enumeration getNames();
 
   protected abstract Object getValue(Object key);
@@ -87,5 +86,5 @@ public abstract class BaseHttpMap implements Map {
   protected abstract void putValue(Object key, Object value);
 
   protected abstract void removeValue(Object key);
-
 }
+

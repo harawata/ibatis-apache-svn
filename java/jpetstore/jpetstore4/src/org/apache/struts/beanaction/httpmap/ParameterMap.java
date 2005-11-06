@@ -6,12 +6,13 @@ import java.util.Enumeration;
 /**
  * Map to wrap form parameters.
  * <p/>
+ * <p/>
+ * <p/>
  * Date: Mar 11, 2004 10:35:52 PM
  *
  * @author Clinton Begin
  */
 public class ParameterMap extends BaseHttpMap {
-
   private HttpServletRequest request;
 
   public ParameterMap(HttpServletRequest request) {
@@ -37,5 +38,5 @@ public class ParameterMap extends BaseHttpMap {
   protected void removeValue(Object key) {
     throw new UnsupportedOperationException("Cannot remove value from ParameterMap.");
   }
-
 }
+

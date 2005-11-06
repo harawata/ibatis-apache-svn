@@ -7,12 +7,13 @@ import java.util.Enumeration;
 /**
  * Map to wrap cookie names and values (READ ONLY).
  * <p/>
+ * <p/>
+ * <p/>
  * Date: Mar 11, 2004 11:31:35 PM
  *
  * @author Clinton Begin
  */
 public class CookieMap extends BaseHttpMap {
-
   private Cookie[] cookies;
 
   public CookieMap(HttpServletRequest request) {
@@ -44,9 +45,7 @@ public class CookieMap extends BaseHttpMap {
    * Cookie Enumerator Class
    */
   private class CookieEnumerator implements Enumeration {
-
     private int i = 0;
-
     private Cookie[] cookieArray;
 
     public CookieEnumerator(Cookie[] cookies) {
@@ -62,7 +61,6 @@ public class CookieMap extends BaseHttpMap {
       i++;
       return element;
     }
-
   }
-
 }
+

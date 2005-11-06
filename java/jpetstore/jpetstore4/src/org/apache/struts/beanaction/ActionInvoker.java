@@ -3,7 +3,6 @@ package org.apache.struts.beanaction;
 import java.lang.reflect.Method;
 
 public class ActionInvoker {
-
   private Method method;
   private BaseBean bean;
 
@@ -12,12 +11,12 @@ public class ActionInvoker {
     this.bean = bean;
   }
 
-  public String invoke () {
+  public String invoke() {
     try {
       return (String) method.invoke(bean, null);
     } catch (Exception e) {
-      throw new BeanActionException ("Error invoking Action.  Cause: " + e, e);
+      throw new BeanActionException("Error invoking Action.  Cause: " + e, e);
     }
   }
-
 }
+

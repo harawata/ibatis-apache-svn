@@ -11,7 +11,6 @@ import java.util.Enumeration;
  * @author Clinton Begin
  */
 public class RequestMap extends BaseHttpMap {
-
   private HttpServletRequest request;
 
   public RequestMap(HttpServletRequest request) {
@@ -33,5 +32,4 @@ public class RequestMap extends BaseHttpMap {
   protected void removeValue(Object key) {
     request.removeAttribute(String.valueOf(key));
   }
-
 }

@@ -7,12 +7,13 @@ import java.util.Enumeration;
 /**
  * Map to wrap session scope attributes.
  * <p/>
+ * <p/>
+ * <p/>
  * Date: Mar 11, 2004 10:35:42 PM
  *
  * @author Clinton Begin
  */
 public class SessionMap extends BaseHttpMap {
-
   private HttpSession session;
 
   public SessionMap(HttpServletRequest request) {
@@ -34,5 +35,5 @@ public class SessionMap extends BaseHttpMap {
   protected void removeValue(Object key) {
     session.removeAttribute(String.valueOf(key));
   }
-
 }
+

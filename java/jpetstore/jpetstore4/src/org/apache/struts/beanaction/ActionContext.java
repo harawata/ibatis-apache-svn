@@ -9,30 +9,41 @@ import java.util.Map;
 
 /**
  * The ActionContext class gives simplified, thread-safe access to
+ * <p/>
  * the request and response, as well as form parameters, request
+ * <p/>
  * attributes, session attributes, application attributes.  Much
+ * <p/>
  * of this can be accopmplished without using the Struts or even
+ * <p/>
  * the Servlet API, therefore isolating your application from
+ * <p/>
  * presentation framework details.
  * <p/>
+ * <p/>
+ * <p/>
  * This class also provides facilities for simpler message and error
+ * <p/>
  * message handling.  Although not as powerful as that provided by
+ * <p/>
  * Struts, it is great for simple applications that don't require
+ * <p/>
  * internationalization or the flexibility of resource bundles.
  * <p/>
+ * <p/>
+ * <p/>
  * <i>Note: A more complete error and message handling API will be implemented.</i>
+ * <p/>
+ * <p/>
  * <p/>
  * Date: Mar 9, 2004 9:57:39 PM
  *
  * @author Clinton Begin
  */
 public class ActionContext {
-
   private static final ThreadLocal localContext = new ThreadLocal();
-
   private HttpServletRequest request;
   private HttpServletResponse response;
-
   private Map cookieMap;
   private Map parameterMap;
   private Map requestMap;
@@ -110,3 +121,4 @@ public class ActionContext {
     return ctx;
   }
 }
+

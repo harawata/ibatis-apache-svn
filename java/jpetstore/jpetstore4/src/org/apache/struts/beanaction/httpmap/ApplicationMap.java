@@ -7,12 +7,13 @@ import java.util.Enumeration;
 /**
  * Map to wrap application scope attributes.
  * <p/>
+ * <p/>
+ * <p/>
  * Date: Mar 11, 2004 11:21:25 PM
  *
  * @author Clinton Begin
  */
 public class ApplicationMap extends BaseHttpMap {
-
   private ServletContext context;
 
   public ApplicationMap(HttpServletRequest request) {
@@ -34,5 +35,5 @@ public class ApplicationMap extends BaseHttpMap {
   protected void removeValue(Object key) {
     context.removeAttribute(String.valueOf(key));
   }
-
 }
+
