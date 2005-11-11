@@ -111,6 +111,17 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
     -->
 	<statements>
 	
+		<select id="GetAllAccountsAsArrayListViaResultClass"
+						resultClass="ArrayList">
+			select
+			Account_ID as Id,
+			Account_FirstName as FirstName,
+			Account_LastName as LastName,
+			Account_Email as EmailAddress
+			from Accounts
+			order by Account_ID
+		</select>
+			
 		<!--
 		NOTE: Should NOT be a dynamic prepend test for Oracle since the rownum has to be
 		part of the where clause.  Best suited for MSSQL using TOP keyword in SELECT.

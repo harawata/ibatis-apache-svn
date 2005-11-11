@@ -283,12 +283,19 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 						SetObjectProperty(request, request.ResultMap, property, ref outObject, reader);
 					}
-					else if (outObject is Hashtable) 
+					else if (outObject is IDictionary) 
 					{
 						for (int i = 0; i < reader.FieldCount; i++) 
 						{
 							string columnName = reader.GetName(i);
-							((Hashtable) outObject).Add(columnName, reader.GetValue(i));
+							((IDictionary) outObject).Add(columnName, reader.GetValue(i));
+						}
+					}
+					else if (outObject is IList) 
+					{
+						for (int i = 0; i < reader.FieldCount; i++) 
+						{
+							((IList) outObject).Add(reader.GetValue(i));
 						}
 					}
 					else

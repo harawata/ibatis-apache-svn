@@ -190,6 +190,17 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			from Accounts
 			order by Account_ID
 		</select>
+
+		<select id="GetAllAccountsAsArrayListViaResultClass"
+						resultClass="ArrayList">
+			select
+			Account_ID as Id,
+			Account_FirstName as FirstName,
+			Account_LastName as LastName,
+			Account_Email as EmailAddress
+			from Accounts
+			order by Account_ID
+		</select>
     
 		<select id="GetAccountViaColumnName"
 				parameterClass="int"

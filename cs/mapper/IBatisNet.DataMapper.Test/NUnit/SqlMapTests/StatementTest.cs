@@ -303,6 +303,34 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		}
 
 		/// <summary>
+		/// Test QueryForList with IList ResultClass
+		/// </summary>
+		[Test]
+		public void TestQueryForListWithIListResultClass()
+		{
+			IList list = sqlMap.QueryForList("GetAllAccountsAsArrayListViaResultClass", null);
+
+			IList listAccount = (IList) list[0];
+			Assert.AreEqual(1,listAccount[0]);
+			Assert.AreEqual("Joe",listAccount[1]);
+			Assert.AreEqual("Dalton",listAccount[2]);
+			Assert.AreEqual("Joe.Dalton@somewhere.com",listAccount[3]);
+
+			Assert.AreEqual(5, list.Count);
+
+			listAccount = (IList) list[0];
+			Assert.AreEqual(1, listAccount[0]);
+			listAccount = (IList) list[1];
+			Assert.AreEqual(2, listAccount[0]);
+			listAccount = (IList) list[2];
+			Assert.AreEqual(3,listAccount[0]);
+			listAccount = (IList) list[3];
+			Assert.AreEqual(4, listAccount[0]);
+			listAccount = (IList) list[4];
+			Assert.AreEqual(5, listAccount[0]);
+		}
+
+		/// <summary>
 		/// Test QueryForList With ResultMap, result collection as ArrayList
 		/// </summary>
 		[Test]
