@@ -1325,6 +1325,52 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Assert.AreEqual(true, anOther.Bool);
 			Assert.AreEqual(false, anOther.Bool2);
 		}
+
+		/// <summary>
+		/// Test CustomTypeHandler Oui/Non
+		/// </summary>
+		[Test]
+		public void TestInsertInlineCustomTypeHandlerV1()
+		{
+			Other other = new Other();
+			other.Int = 99;
+			other.Long = 1966;
+			other.Bool = true;
+			other.Bool2 = false;
+
+			sqlMap.Insert("InsertInlineCustomTypeHandlerV1", other);
+
+			Other anOther = sqlMap.QueryForObject("SelectByInt", 99) as Other;
+
+			Assert.IsNotNull( anOther );
+			Assert.AreEqual(99, anOther.Int);
+			Assert.AreEqual(1966, anOther.Long);
+			Assert.AreEqual(true, anOther.Bool);
+			Assert.AreEqual(false, anOther.Bool2);
+		}
+
+		/// <summary>
+		/// Test CustomTypeHandler Oui/Non
+		/// </summary>
+		[Test]
+		public void TestInsertInlineCustomTypeHandlerV2()
+		{
+			Other other = new Other();
+			other.Int = 99;
+			other.Long = 1966;
+			other.Bool = true;
+			other.Bool2 = false;
+
+			sqlMap.Insert("InsertInlineCustomTypeHandlerV2", other);
+
+			Other anOther = sqlMap.QueryForObject("SelectByInt", 99) as Other;
+
+			Assert.IsNotNull( anOther );
+			Assert.AreEqual(99, anOther.Int);
+			Assert.AreEqual(1966, anOther.Long);
+			Assert.AreEqual(true, anOther.Bool);
+			Assert.AreEqual(false, anOther.Bool2);
+		}
 		#endregion 
 	}
 }

@@ -120,14 +120,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			values
 			( #Int#, #Long#, #Bool#, 'Yes')
 		</statement>
-		
-		<statement id="InsertCustomTypeHandler" 
-			parameterMap="insert-params">
-			Insert into Others
-				( Other_Int, Other_Long, Other_Bit, Other_String  )
-			values
-			( ?, ?, ?, ?)
-		</statement>
+
 		
 		<statement id="SelectByInt" 
 			parameterClass="int" 
@@ -141,6 +134,29 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			Where Other_Int = #value#
 		</statement>
 		
+		<statement id="InsertCustomTypeHandler" 
+			parameterMap="insert-params">
+			Insert into Others
+				( Other_Int, Other_Long, Other_Bit, Other_String  )
+			values
+			( ?, ?, ?, ?)
+		</statement>
+				
+		<statement id="InsertInlineCustomTypeHandlerV1" 
+			parameterClass="Other">
+			Insert into Others
+				( Other_Int, Other_Long, Other_Bit, Other_String  )
+			values
+			( #Int#, #Long#, #Bool#, #Bool2,type=bool,dbType=Varchar#)
+		</statement>
+		
+		<statement id="InsertInlineCustomTypeHandlerV2" 
+			parameterClass="Other">
+			Insert into Others
+				( Other_Int, Other_Long, Other_Bit, Other_String  )
+			values
+			( #Int#, #Long#, #Bool#, #Bool2,handler=OuiNonBool#)
+		</statement>
 	</statements>
 
 	<parameterMaps>   

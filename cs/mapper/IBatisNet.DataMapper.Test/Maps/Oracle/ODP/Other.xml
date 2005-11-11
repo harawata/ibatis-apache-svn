@@ -153,7 +153,22 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			from Others  
 			Where Other_Int = #value#
 		</statement>
-						
+
+		<statement id="InsertInlineCustomTypeHandlerV1" 
+			parameterClass="Other">
+			Insert into Others
+				( Other_Int, Other_Long, Other_Bit, Other_String  )
+			values
+			( #Int#, #Long#, #Bool#, #Bool2,type=bool,dbType=VarChar#)
+		</statement>
+		
+		<statement id="InsertInlineCustomTypeHandlerV2" 
+			parameterClass="Other">
+			Insert into Others
+				( Other_Int, Other_Long, Other_Bit, Other_String  )
+			values
+			( #Int#, #Long#, #Bool#, #Bool2,handler=OuiNonBool#)
+		</statement>							
 	</statements>
 	
 	<parameterMaps>   

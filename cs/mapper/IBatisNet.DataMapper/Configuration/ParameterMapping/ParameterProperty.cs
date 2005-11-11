@@ -297,35 +297,15 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// 
 		/// </summary>
 		/// <param name="errorContext"></param>
-		/// <param name="typeHandlerFactory"></param>
-		internal void Initialize(TypeHandlerFactory typeHandlerFactory, ErrorContext errorContext)
+		internal void Initialize(ErrorContext errorContext)
 		{
+			errorContext.MoreInfo = "Initialize an inline parameter property '" + this.PropertyName + "' .";
+			
 			if(_directionAttribute.Length >0)
 			{
 				_direction = (ParameterDirection)Enum.Parse( typeof(ParameterDirection), _directionAttribute, true );
 			}
 			
-			errorContext.MoreInfo = "Initialize an inline parameter property '" + this.PropertyName + "' .";
-			if (this.CLRType.Length == 0 )  // Unknown
-			{
-				_typeHandler = typeHandlerFactory.GetUnkownTypeHandler();
-			}
-			else // If we specify a CLR type, use it
-			{ 
-				Type type = Resources.TypeForName(this.CLRType);
-
-				if (typeHandlerFactory.IsSimpleType(type)) 
-				{
-					// Primitive
-					_typeHandler = typeHandlerFactory.GetTypeHandler(type);
-				}
-				else
-				{
-					// .NET object
-					type = ObjectProbe.GetPropertyTypeForGetter(type, this.PropertyName);
-					_typeHandler = typeHandlerFactory.GetTypeHandler(type);
-				}
-			}
 		}
 
 

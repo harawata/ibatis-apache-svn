@@ -297,7 +297,7 @@ namespace IBatisNet.DataMapper.Configuration
 		public DomSqlMapBuilder()
 		{
 			_configScope = new ConfigurationScope();
-			_paramParser = new InlineParameterMapParser(_configScope.ErrorContext);
+			_paramParser = new InlineParameterMapParser(_configScope);
 			_deSerializerFactory = new DeSerializerFactory(_configScope);
 		}
 
@@ -314,7 +314,7 @@ namespace IBatisNet.DataMapper.Configuration
 		{
 			_configScope = new ConfigurationScope();
 			_configScope.ValidateSqlMapConfig = validateSqlMapConfig;
-			_paramParser = new InlineParameterMapParser(_configScope.ErrorContext);
+			_paramParser = new InlineParameterMapParser( _configScope );
 		}		
 		#endregion 
 
