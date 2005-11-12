@@ -59,7 +59,7 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 
 			typeAlias.Initialize();
 
-			configScope.SqlMapper.AddTypeAlias( typeAlias.Name, typeAlias );
+			configScope.SqlMapper.TypeHandlerFactory.AddTypeAlias( typeAlias.Name, typeAlias );
 		}
 	}
 }

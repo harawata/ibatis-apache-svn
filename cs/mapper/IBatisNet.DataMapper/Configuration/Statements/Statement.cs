@@ -25,23 +25,19 @@
 #endregion
 
 #region Using
+
 using System;
-using System.Data;
 using System.Collections;
+using System.Data;
 using System.Xml.Serialization;
-using System.Reflection;
-
-using IBatisNet.Common.Exceptions; 
 using IBatisNet.Common.Utilities.TypesResolver;
-
-using IBatisNet.DataMapper.Configuration.Alias;
-using IBatisNet.DataMapper.TypeHandlers;
-using IBatisNet.DataMapper.Configuration.ResultMapping;
-using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.Cache;
+using IBatisNet.DataMapper.Configuration.ParameterMapping;
+using IBatisNet.DataMapper.Configuration.ResultMapping;
 using IBatisNet.DataMapper.Configuration.Sql;
 using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.Scope;
+
 #endregion
 
 namespace IBatisNet.DataMapper.Configuration.Statements
@@ -53,9 +49,6 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 	[XmlRoot("statement", Namespace="http://ibatis.apache.org/mapping")]
 	public class Statement : IStatement
 	{
-		#region Constants
-		private const string DOT = ".";
-		#endregion
 
 		#region Fields
 
@@ -134,7 +127,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		/// <summary>
 		/// Tell us if a cacheModel is attached to this statement.
 		/// </summary>
-		[XmlIgnoreAttribute]
+		[XmlIgnore]
 		public bool HasCacheModel
 		{
 			get{ return _cacheModelName.Length >0;}
@@ -143,7 +136,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		/// <summary>
 		/// The CacheModel used by this statement.
 		/// </summary>
-		[XmlIgnoreAttribute]
+		[XmlIgnore]
 		public CacheModel CacheModel
 		{
 			get { return _cacheModel; }
@@ -164,7 +157,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		/// <summary>
 		/// The list class type to use for strongly typed collection.
 		/// </summary>
-		[XmlIgnoreAttribute]
+		[XmlIgnore]
 		public Type ListClass
 		{
 			get { return _listClass; }
@@ -183,7 +176,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		/// <summary>
 		/// The result class type to used.
 		/// </summary>
-		[XmlIgnoreAttribute]
+		[XmlIgnore]
 		public Type ResultClass
 		{
 			get { return _resultClass; }
@@ -202,7 +195,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		/// <summary>
 		/// The parameter class type to used.
 		/// </summary>
-		[XmlIgnoreAttribute]
+		[XmlIgnore]
 		public Type ParameterClass
 		{
 			get { return _parameterClass; }
@@ -228,7 +221,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		/// <summary>
 		/// The sql statement
 		/// </summary>
-		[XmlIgnoreAttribute]
+		[XmlIgnore]
 		public ISql Sql 
 		{
 			get { return _sql; }
@@ -265,7 +258,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		/// <summary>
 		/// The ResultMap used by the statement.
 		/// </summary>
-		[XmlIgnoreAttribute]
+		[XmlIgnore]
 		public ResultMap ResultMap
 		{
 			get { return _resultMap; }
@@ -274,7 +267,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		/// <summary>
 		/// The parameterMap used by the statement.
 		/// </summary>
-		[XmlIgnoreAttribute]
+		[XmlIgnore]
 		public ParameterMap ParameterMap
 		{
 			get { return _parameterMap; }
@@ -286,7 +279,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		/// Default Text.
 		/// </summary>
 		/// <example>Text or StoredProcedure</example>
-		[XmlIgnoreAttribute]
+		[XmlIgnore]
 		public virtual CommandType CommandType
 		{
 			get { return CommandType.Text; }
@@ -317,15 +310,15 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 			}
 			if (_resultClassName != string.Empty )
 			{
-				_resultClass = configurationScope.SqlMapper.GetType(_resultClassName);
+				_resultClass = configurationScope.SqlMapper.TypeHandlerFactory.GetType(_resultClassName);
 			}
 			if (_parameterClassName != string.Empty )
 			{
-				_parameterClass = configurationScope.SqlMapper.GetType(_parameterClassName);
+				_parameterClass = configurationScope.SqlMapper.TypeHandlerFactory.GetType(_parameterClassName);
 			}
 			if (_listClassName != string.Empty )
 			{
-				_listClass = configurationScope.SqlMapper.GetType(_listClassName);
+				_listClass = configurationScope.SqlMapper.TypeHandlerFactory.GetType(_listClassName);
 			}
 		}
 

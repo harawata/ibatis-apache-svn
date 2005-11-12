@@ -27,9 +27,13 @@
 #region Using
 
 using System;
+using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
 using IBatisNet.Common.Logging;
+using IBatisNet.Common.Utilities;
+using IBatisNet.DataMapper.Configuration.Alias;
+using IBatisNet.DataMapper.Exceptions;
 
 #endregion 
 
@@ -44,10 +48,11 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		#region Fields
 		
 		private static readonly ILog _logger = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
-		private HybridDictionary _typeHandlerMap = new HybridDictionary();
+		private IDictionary _typeHandlerMap = new HybridDictionary();
 		private ITypeHandler _unknownTypeHandler = null;
 		private const string NULL = "_NULL_TYPE_";
-
+		//(typeAlias name, type alias)
+		private IDictionary _typeAliasMaps = new HybridDictionary();
 		#endregion 
 
 		#region Constructor
@@ -264,5 +269,59 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		}
 
 		#endregion
+
+		/// <summary>
+		/// Gets a named TypeAlias from the list of available TypeAlias
+		/// </summary>
+		/// <param name="name">The name of the TypeAlias.</param>
+		/// <returns>The TypeAlias.</returns>
+		internal TypeAlias GetTypeAlias(string name) 
+		{
+			if (_typeAliasMaps.Contains(name) == true) 
+			{
+				return (TypeAlias) _typeAliasMaps[name];
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		/// <summary>
+		/// Gets the type object from the specific class name.
+		/// </summary>
+		/// <param name="className">The supplied class name.</param>
+		/// <returns>The correpsonding type.
+		/// </returns>
+		internal Type GetType(string className) 
+		{
+			Type type = null;
+			TypeAlias typeAlias = this.GetTypeAlias(className) as TypeAlias;
+
+			if (typeAlias != null)
+			{
+				type = typeAlias.Class;
+			}
+			else
+			{
+				type = Resources.TypeForName(className);
+			}
+
+			return type;
+		}
+
+		/// <summary>
+		/// Adds a named TypeAlias to the list of available TypeAlias.
+		/// </summary>
+		/// <param name="key">The key name.</param>
+		/// <param name="typeAlias"> The TypeAlias.</param>
+		internal void AddTypeAlias(string key, TypeAlias typeAlias) 
+		{
+			if (_typeAliasMaps.Contains(key) == true) 
+			{
+				throw new DataMapperException(" Alias name conflict occurred.  The type alias '" + key + "' is already mapped to the value '"+typeAlias.ClassName+"'.");
+			}
+			_typeAliasMaps.Add(key, typeAlias);
+		}
 	}
 }

@@ -63,7 +63,7 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 			property.Scale = NodeUtils.GetByteAttribute(prop, "scale", 0);
 			property.Size = NodeUtils.GetIntAttribute(prop, "size", -1);
 
-			property.Initialize( configScope );
+			property.Initialize(configScope.TypeHandlerFactory, configScope.ErrorContext);
 
 			return property;
 		}

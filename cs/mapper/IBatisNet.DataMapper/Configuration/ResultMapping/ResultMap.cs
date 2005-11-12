@@ -199,7 +199,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		{
 			try
 			{
-				_class = configScope.SqlMapper.GetType(_className);
+				_class = configScope.SqlMapper.TypeHandlerFactory.GetType(_className);
 
 				// Load the child node
 				GetChildNode(configScope);

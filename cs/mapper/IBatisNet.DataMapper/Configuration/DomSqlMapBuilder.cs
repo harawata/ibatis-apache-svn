@@ -297,7 +297,7 @@ namespace IBatisNet.DataMapper.Configuration
 		public DomSqlMapBuilder()
 		{
 			_configScope = new ConfigurationScope();
-			_paramParser = new InlineParameterMapParser(_configScope);
+			_paramParser = new InlineParameterMapParser( _configScope.ErrorContext );
 			_deSerializerFactory = new DeSerializerFactory(_configScope);
 		}
 
@@ -314,7 +314,7 @@ namespace IBatisNet.DataMapper.Configuration
 		{
 			_configScope = new ConfigurationScope();
 			_configScope.ValidateSqlMapConfig = validateSqlMapConfig;
-			_paramParser = new InlineParameterMapParser( _configScope );
+			_paramParser = new InlineParameterMapParser( _configScope.ErrorContext );
 		}		
 		#endregion 
 
@@ -635,13 +635,13 @@ namespace IBatisNet.DataMapper.Configuration
 
 			TypeAlias cacheAlias = new TypeAlias(typeof(MemoryCacheControler));
 			cacheAlias.Name = "MEMORY";
-			_configScope.SqlMapper.AddTypeAlias(cacheAlias.Name, cacheAlias);
+			_configScope.SqlMapper.TypeHandlerFactory.AddTypeAlias(cacheAlias.Name, cacheAlias);
 			cacheAlias = new TypeAlias(typeof(LruCacheController));
 			cacheAlias.Name = "LRU";
-			_configScope.SqlMapper.AddTypeAlias(cacheAlias.Name, cacheAlias);
+			_configScope.SqlMapper.TypeHandlerFactory.AddTypeAlias(cacheAlias.Name, cacheAlias);
 			cacheAlias = new TypeAlias(typeof(FifoCacheController));
 			cacheAlias.Name = "FIFO";
-			_configScope.SqlMapper.AddTypeAlias(cacheAlias.Name, cacheAlias);
+			_configScope.SqlMapper.TypeHandlerFactory.AddTypeAlias(cacheAlias.Name, cacheAlias);
 
 			#endregion 
 

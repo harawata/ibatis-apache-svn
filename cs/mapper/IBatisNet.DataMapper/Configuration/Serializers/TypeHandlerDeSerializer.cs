@@ -63,7 +63,7 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 
 			configScope.ErrorContext.MoreInfo = "Check the callback attribute '" + handler.CallBackName + "' (must be a classname).";
 			ITypeHandler typeHandler = null;
-			Type type = configScope.SqlMapper.GetType(handler.CallBackName);
+			Type type = configScope.SqlMapper.TypeHandlerFactory.GetType(handler.CallBackName);
 			object impl = Activator.CreateInstance( type );
 			if (impl is ITypeHandlerCallback) 
 			{

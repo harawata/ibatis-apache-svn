@@ -267,7 +267,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 				configScope.ErrorContext.MoreInfo = "Result property '"+_propertyName+"' check the typeHandler attribute '" + this.CallBackName + "' (must be a ITypeHandlerCallback implementation).";
 				try 
 				{
-					Type type = configScope.SqlMapper.GetType(this.CallBackName);
+					Type type = configScope.SqlMapper.TypeHandlerFactory.GetType(this.CallBackName);
 					ITypeHandlerCallback typeHandlerCallback = (ITypeHandlerCallback) Activator.CreateInstance( type );
 					_typeHandler = new CustomTypeHandler(typeHandlerCallback);
 				}

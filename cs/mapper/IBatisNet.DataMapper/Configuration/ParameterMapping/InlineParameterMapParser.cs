@@ -52,7 +52,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		private const string PARAMETER_TOKEN = "#";
 		private const string PARAM_DELIM = ":";
 
-		private ConfigurationScope _configScope = null;
+		private ErrorContext _errorContext= null;
 
 		#endregion 
 
@@ -61,10 +61,10 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		/// <param name="configScope"></param>
-		public InlineParameterMapParser(ConfigurationScope configScope)
+		/// <param name="errorContext"></param>
+		public InlineParameterMapParser(ErrorContext errorContext)
 		{
-			_configScope = configScope;
+			_errorContext = errorContext;
 		}
 		#endregion 
 
@@ -210,7 +210,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 
 			if (mapping.CallBackName.Length >0)
 			{
-				mapping.Initialize( _configScope );
+				mapping.Initialize( typeHandlerFactory, _errorContext );
 			}
 			else
 			{
@@ -226,7 +226,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 						mapping.CLRType, mapping.DbType );
 				}
 				mapping.TypeHandler = handler;
-				mapping.Initialize( _configScope );				
+				mapping.Initialize( typeHandlerFactory, _errorContext );				
 			}
 
 			return mapping;
@@ -272,7 +272,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 						handler = ResolveTypeHandler(typeHandlerFactory, parameterClassType, propertyName, null, dBType);
 					}
 					mapping.TypeHandler = handler;
-					mapping.Initialize( _configScope.ErrorContext );
+					mapping.Initialize( typeHandlerFactory, _errorContext );
 				} 
 				else if (n1 >= 5) 
 				{
@@ -302,7 +302,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 						handler = ResolveTypeHandler(typeHandlerFactory, parameterClassType, propertyName, null, dBType);
 					}
 					mapping.TypeHandler = handler;
-					mapping.Initialize( _configScope.ErrorContext );
+					mapping.Initialize( typeHandlerFactory, _errorContext );
 				} 
 				else 
 				{
@@ -322,7 +322,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 					handler = ResolveTypeHandler(typeHandlerFactory, parameterClassType, token, null, null);
 				}
 				mapping.TypeHandler = handler;
-				mapping.Initialize( _configScope.ErrorContext );
+				mapping.Initialize( typeHandlerFactory, _errorContext );
 			}
 			return mapping;
 		}

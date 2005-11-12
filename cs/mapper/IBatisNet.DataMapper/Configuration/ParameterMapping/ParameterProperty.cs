@@ -245,20 +245,21 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="configScope"></param>
-		public void Initialize(ConfigurationScope configScope)
+		/// <param name="typeHandlerFactory"></param>
+		/// <param name="errorContext"></param>
+		public void Initialize(TypeHandlerFactory typeHandlerFactory, ErrorContext errorContext)
 		{
 			if(_directionAttribute.Length >0)
 			{
 				_direction = (ParameterDirection)Enum.Parse( typeof(ParameterDirection), _directionAttribute, true );
 			}
 			
-			configScope.ErrorContext.MoreInfo = "Check the parameter mapping typeHandler attribute '" + this.CallBackName + "' (must be a ITypeHandlerCallback implementation).";
+			errorContext.MoreInfo = "Check the parameter mapping typeHandler attribute '" + this.CallBackName + "' (must be a ITypeHandlerCallback implementation).";
 			if (this.CallBackName.Length >0)
 			{
 				try 
 				{
-					Type type = configScope.SqlMapper.GetType(this.CallBackName);
+					Type type = typeHandlerFactory.GetType(this.CallBackName);
 					ITypeHandlerCallback typeHandlerCallback = (ITypeHandlerCallback) Activator.CreateInstance( type );
 					_typeHandler = new CustomTypeHandler(typeHandlerCallback);
 				}
@@ -271,22 +272,22 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 			{
 				if (this.CLRType.Length == 0 )  // Unknown
 				{
-					_typeHandler = configScope.TypeHandlerFactory.GetUnkownTypeHandler();
+					_typeHandler = typeHandlerFactory.GetUnkownTypeHandler();
 				}
 				else // If we specify a CLR type, use it
 				{ 
 					Type type = Resources.TypeForName(this.CLRType);
 
-					if (configScope.TypeHandlerFactory.IsSimpleType(type)) 
+					if (typeHandlerFactory.IsSimpleType(type)) 
 					{
 						// Primitive
-						_typeHandler = configScope.TypeHandlerFactory.GetTypeHandler(type, _dbType);
+						_typeHandler = typeHandlerFactory.GetTypeHandler(type, _dbType);
 					}
 					else
 					{
 						// .NET object
 						type = ObjectProbe.GetPropertyTypeForGetter(type, this.PropertyName);
-						_typeHandler = configScope.TypeHandlerFactory.GetTypeHandler(type, _dbType);
+						_typeHandler = typeHandlerFactory.GetTypeHandler(type, _dbType);
 					}
 				}
 			}
@@ -305,6 +306,8 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 			{
 				_direction = (ParameterDirection)Enum.Parse( typeof(ParameterDirection), _directionAttribute, true );
 			}
+
+
 			
 		}
 

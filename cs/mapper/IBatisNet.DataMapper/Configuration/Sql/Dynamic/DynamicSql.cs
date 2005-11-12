@@ -35,6 +35,7 @@ using IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers;
 using IBatisNet.DataMapper.Configuration.Sql.SimpleDynamic;
 using IBatisNet.DataMapper.Configuration.Statements;
 using IBatisNet.DataMapper.Scope;
+using IBatisNet.DataMapper.TypeHandlers;
 
 #endregion
 
@@ -54,7 +55,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 		private IList _children = new ArrayList();
 		private IStatement _statement = null ;
 		private InlineParameterMapParser _paramParser = null;
-		private ConfigurationScope _configScope = null;
+		private TypeHandlerFactory _typeHandlerFactory = null;
 		private bool _usePositionalParameters = false;
 
 		#endregion
@@ -68,7 +69,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 		internal DynamicSql(ConfigurationScope configScope, IStatement statement)
 		{
 			_statement = statement;
-			_configScope = configScope;
+			_typeHandlerFactory = configScope.TypeHandlerFactory;
 			_usePositionalParameters = configScope.DataSource.Provider.UsePositionalParameters;
 		}
 		#endregion
@@ -99,7 +100,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 		public RequestScope GetRequestScope(object parameterObject, IDalSession session)
 		{ 
 			RequestScope request = new RequestScope();
-			_paramParser = new InlineParameterMapParser( _configScope );
+			_paramParser = new InlineParameterMapParser( request.ErrorContext );
 			request.ResultMap = _statement.ResultMap;
 
 			string sqlStatement = Process(request, parameterObject);
@@ -141,7 +142,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 			// Processes $substitutions$ after DynamicSql
 			if ( SimpleDynamicSql.IsSimpleDynamicSql(dynSql) ) 
 			{
-				dynSql = new SimpleDynamicSql(_configScope.TypeHandlerFactory, dynSql, _statement).GetSql(parameterObject);
+				dynSql = new SimpleDynamicSql(_typeHandlerFactory, dynSql, _statement).GetSql(parameterObject);
 			}
 			return dynSql;
 		}
@@ -248,7 +249,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 
 									if (handler.IsPostParseRequired) 
 									{
-										SqlText sqlText = _paramParser.ParseInlineParameterMap(_configScope.TypeHandlerFactory, null, body.ToString() );
+										SqlText sqlText = _paramParser.ParseInlineParameterMap(_typeHandlerFactory, null, body.ToString() );
 										buffer.Append(sqlText.Text);
 										ParameterProperty[] mappings = sqlText.Parameters;
 										if (mappings != null) 

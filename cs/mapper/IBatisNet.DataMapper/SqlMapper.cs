@@ -36,7 +36,6 @@ using System.Xml;
 using IBatisNet.Common;
 using IBatisNet.Common.Utilities;
 using IBatisNet.DataMapper.Configuration;
-using IBatisNet.DataMapper.Configuration.Alias;
 using IBatisNet.DataMapper.Configuration.Cache;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
@@ -79,8 +78,6 @@ namespace IBatisNet.DataMapper
 		private HybridDictionary _parameterMaps = new HybridDictionary();
 		// DataSource
 		private DataSource _dataSource = null;
-		//(typeAlias name, type alias)
-		private HybridDictionary _typeAliasMaps = new HybridDictionary();
 		//(CacheModel name, cache))
 		private HybridDictionary _cacheMaps = new HybridDictionary();
 		private TypeHandlerFactory _typeHandlerFactory = null; 
@@ -1297,60 +1294,10 @@ namespace IBatisNet.DataMapper
 			set { _dataSource = value; }
 		}
 
-		/// <summary>
-		/// Gets a named TypeAlias from the list of available TypeAlias
-		/// </summary>
-		/// <param name="name">The name of the TypeAlias.</param>
-		/// <returns>The TypeAlias.</returns>
-		internal TypeAlias GetTypeAlias(string name) 
-		{
-			if (_typeAliasMaps.Contains(name) == true) 
-			{
-				return (TypeAlias) _typeAliasMaps[name];
-			}
-			else
-			{
-				return null;
-			}
-		}
-
-		/// <summary>
-		/// Adds a named TypeAlias to the list of available TypeAlias.
-		/// </summary>
-		/// <param name="key">The key name.</param>
-		/// <param name="typeAlias"> The TypeAlias.</param>
-		internal void AddTypeAlias(string key, TypeAlias typeAlias) 
-		{
-			if (_typeAliasMaps.Contains(key) == true) 
-			{
-				throw new DataMapperException(" Alias name conflict occurred.  The type alias '" + key + "' is already mapped to the value '"+typeAlias.ClassName+"'.");
-			}
-			_typeAliasMaps.Add(key, typeAlias);
-		}
+		
 
 
-		/// <summary>
-		/// Gets the type object from the specific class name.
-		/// </summary>
-		/// <param name="className">The supplied class name.</param>
-		/// <returns>The correpsonding type.
-		/// </returns>
-		internal Type GetType(string className) 
-		{
-			Type type = null;
-			TypeAlias typeAlias = this.GetTypeAlias(className) as TypeAlias;
 
-			if (typeAlias != null)
-			{
-				type = typeAlias.Class;
-			}
-			else
-			{
-				type = Resources.TypeForName(className);
-			}
-
-			return type;
-		}
 
 		/// <summary>
 		/// Flushes all cached objects that belong to this SqlMap

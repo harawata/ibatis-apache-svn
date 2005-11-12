@@ -53,7 +53,7 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 			NameValueCollection prop = NodeUtils.ParseAttributes(node, configScope.Properties);
 			model.Id = NodeUtils.GetStringAttribute(prop, "id");
 			model.Implementation = NodeUtils.GetStringAttribute(prop, "implementation");
-			model.Implementation = configScope.SqlMapper.GetTypeAlias(model.Implementation).Class.AssemblyQualifiedName;
+			model.Implementation = configScope.SqlMapper.TypeHandlerFactory.GetTypeAlias(model.Implementation).Class.AssemblyQualifiedName;
 
 			for(int i=0;i<node.ChildNodes.Count;i++)
 			{
