@@ -25,12 +25,10 @@ import com.ibatis.dao.engine.impl.DaoContext;
 import com.ibatis.dao.engine.impl.DaoImpl;
 import com.ibatis.dao.engine.impl.StandardDaoManager;
 import com.ibatis.dao.engine.transaction.DaoTransactionManager;
-import com.ibatis.dao.engine.transaction.toplink.ToplinkDaoTransactionManager;
 import com.ibatis.dao.engine.transaction.external.ExternalDaoTransactionManager;
 import com.ibatis.dao.engine.transaction.hibernate.HibernateDaoTransactionManager;
 import com.ibatis.dao.engine.transaction.jdbc.JdbcDaoTransactionManager;
 import com.ibatis.dao.engine.transaction.jta.JtaDaoTransactionManager;
-import com.ibatis.dao.engine.transaction.ojb.OjbBrokerTransactionManager;
 import com.ibatis.dao.engine.transaction.sqlmap.SqlMapDaoTransactionManager;
 import org.w3c.dom.*;
 import org.xml.sax.ErrorHandler;
@@ -70,9 +68,9 @@ public class XmlDaoManagerBuilder {
     typeAliases.put("HIBERNATE", HibernateDaoTransactionManager.class.getName());
     typeAliases.put("JDBC", JdbcDaoTransactionManager.class.getName());
     typeAliases.put("JTA", JtaDaoTransactionManager.class.getName());
-    typeAliases.put("OJB", OjbBrokerTransactionManager.class.getName());
+    typeAliases.put("OJB", "com.ibatis.dao.engine.transaction.ojb.OjbBrokerTransactionManager");
     typeAliases.put("SQLMAP", SqlMapDaoTransactionManager.class.getName());
-    typeAliases.put("TOPLINK", ToplinkDaoTransactionManager.class.getName());
+    typeAliases.put("TOPLINK", "com.ibatis.dao.engine.transaction.toplink.ToplinkDaoTransactionManager");
   }
 
   public DaoManager buildDaoManager(Reader reader, Properties props)
