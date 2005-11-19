@@ -370,11 +370,12 @@ http://ibatis.apache.org/xsd/SqlMap.xsd">
 		select * from Orders where Order_Date = #Foo#
 		</select>
 
+		<!-- Access requires pound signs instead of single quotes for literal dates -->
 		<select id="SelectOrderByDateDynamic" parameterClass="Hashtable" resultMap="lite-order-result-by-name">
 			select * from Orders
 			where 1=1
 			<isNotEmpty prepend="AND" property="Foo">
-			(Order_Date = '$Foo$')
+			(Order_Date = ##$Foo$##)
 			</isNotEmpty>
 		</select>
 
