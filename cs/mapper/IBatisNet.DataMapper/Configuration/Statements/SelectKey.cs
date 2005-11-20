@@ -121,7 +121,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 
 				// make sure the PropertyName is a valid settable property of the <insert> node's parameterClass
 				if (insertParameterClass != null && 
-					configurationScope.TypeHandlerFactory.IsSimpleType(insertParameterClass) == false)
+					ObjectProbe.IsSimpleType(insertParameterClass) == false)
 				{
 					configurationScope.ErrorContext.MoreInfo = String.Format("Looking for settable property named '{0}' on type '{1}' for selectKey node of statement id '{2}'.",
 						PropertyName, // 0
