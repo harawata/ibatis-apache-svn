@@ -33,6 +33,7 @@ using System.Reflection;
 using System.Text;
 using IBatisNet.Common;
 using IBatisNet.Common.Logging;
+using IBatisNet.Common.Utilities;
 using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.DataMapper.Commands;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
@@ -278,7 +279,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 						property.PropertyName = "value";
 						property.ColumnIndex = 0;
 						property.TypeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(outObject.GetType());
-
+						
 						resultMap.AddResultPropery(property);
 
 						SetObjectProperty(request, request.ResultMap, property, ref outObject, reader);
@@ -287,20 +288,59 @@ namespace IBatisNet.DataMapper.MappedStatements
 					{
 						for (int i = 0; i < reader.FieldCount; i++) 
 						{
-							string columnName = reader.GetName(i);
-							((IDictionary) outObject).Add(columnName, reader.GetValue(i));
+							ResultProperty property = new ResultProperty();
+							property.PropertyName = "value";
+							property.ColumnIndex = i;
+							property.TypeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(reader.GetFieldType(i));
+							((IDictionary) outObject).Add(
+								reader.GetName(i), 
+								property.GetDataBaseValue(reader));
 						}
 					}
 					else if (outObject is IList) 
 					{
 						for (int i = 0; i < reader.FieldCount; i++) 
 						{
-							((IList) outObject).Add(reader.GetValue(i));
+							ResultProperty property = new ResultProperty();
+							property.PropertyName = "value";
+							property.ColumnIndex = i;
+							property.TypeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(reader.GetFieldType(i));
+							((IList) outObject).Add(property.GetDataBaseValue(reader));
 						}
 					}
 					else
 					{
 						AutoMapReader( reader, ref outObject);
+					}
+				}
+				else
+				{
+					if (reader.FieldCount == 1)
+					{
+						ResultProperty property = new ResultProperty();
+						property.PropertyName = "value";
+						property.ColumnIndex = 0;
+						property.TypeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(reader.GetFieldType(0));
+						outObject = property.GetDataBaseValue(reader);
+					}
+					else if (reader.FieldCount > 1)
+					{
+						object[] newOutObject = new object[reader.FieldCount];
+
+						for (int i = 0; i < reader.FieldCount; i++) 
+						{
+							ResultProperty property = new ResultProperty();
+							property.PropertyName = "value";
+							property.ColumnIndex = i;
+							property.TypeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(reader.GetFieldType(i));
+							newOutObject[i] = property.GetDataBaseValue(reader);
+						}
+
+						outObject = newOutObject;
+					}
+					else
+					{
+						// do nothing if 0 fields
 					}
 				}
 			}

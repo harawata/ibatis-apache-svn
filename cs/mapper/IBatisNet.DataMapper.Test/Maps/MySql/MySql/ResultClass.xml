@@ -8,12 +8,20 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 					parameterClass="Int"
 					resultClass="bool" >
 			select 1 from Orders where Order_ID = #dummy#
-		</statement>	
+		</statement>
+		<statement id="GetBooleanWithoutResultClass"
+					parameterClass="Int"
+					extends="GetBoolean">
+		</statement>
 
 		<statement id="GetByte"
 					parameterClass="Int"
 					resultClass="byte" >
 			select 155 from Orders where Order_ID = #value#
+		</statement>
+		<statement id="GetByteWithoutResultClass"
+					parameterClass="Int"
+					extends="GetByte">
 		</statement>	
 		
 		<!-- 
@@ -24,11 +32,19 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 					resultClass="char" >
 			select cast('a' as char) from Orders where Order_ID = #value#
 		</statement>
+		<statement id="GetCharWithoutResultClass"
+					parameterClass="Int"
+					extends="GetChar">
+		</statement>
 		
 		<statement id="GetDate"
 					parameterClass="Int"
 					resultClass="date" >
 			select cast('2003-02-15 8:15:00' as datetime) from Orders where Order_ID  = #value#
+		</statement>
+		<statement id="GetDateWithoutResultClass"
+					parameterClass="Int"
+					extends="GetDate">
 		</statement>
 									
 		<statement id="GetDecimal"
@@ -36,11 +52,19 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 					resultClass="decimal" >
 			select 1.56 from Orders where Order_ID = #value#
 		</statement>
+		<statement id="GetDecimalWithoutResultClass"
+					parameterClass="Int"
+					extends="GetDecimal">
+		</statement>
 
 		<statement id="GetDouble"
 					parameterClass="Int"
 					resultClass="double" >
 			select 99.5 from Orders where Order_ID= #value#
+		</statement>
+		<statement id="GetDoubleWithoutResultClass"
+					parameterClass="Int"
+					extends="GetDouble">
 		</statement>
 
 		<!--
@@ -51,17 +75,27 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 					resultClass="guid" >
 			select cast('CD5ABF17-4BBC-4C86-92F1-257735414CF4' as binary) from Orders where Order_ID = #value#
 		</statement>
+		<statement id="GetGuidWithoutResultClass" parameterClass="Int" extends="GetGuid">
+		</statement>
 		
 		<statement id="GetInt16"
 					parameterClass="Int"
 					resultClass="short" >
 			select 32111 from Orders where Order_ID = #value#
-		</statement>	
+		</statement>
+		<statement id="GetInt16WithoutResultClass"
+					parameterClass="Int"
+					extends="GetInt16">
+		</statement>
 		
 		<statement id="GetInt32"
 					parameterClass="Int"
 					resultClass="int" >
 			select 999999 from Orders where Order_ID = #value#
+		</statement>
+		<statement id="GetInt32WithoutResultClass"
+					parameterClass="Int"
+					extends="GetInt32">
 		</statement>
 		
 		<statement id="GetInt64"
@@ -69,11 +103,19 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 					resultClass="long" >
 			select 9223372036854775800 from Orders where Order_ID = #value#
 		</statement>
+		<statement id="GetInt64WithoutResultClass"
+					parameterClass="Int"
+					extends="GetInt64">
+		</statement>
 		
 		<statement id="GetSingle"
 					parameterClass="Int"
 					resultClass="float" >
 			select 92233.5 from Orders where Order_ID = #value#
+		</statement>
+		<statement id="GetSingleWithoutResultClass"
+					parameterClass="Int"
+					extends="GetSingle">
 		</statement>
 						
 		<statement id="GetString"
@@ -82,6 +124,11 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			select 'VISA'
 			from Orders where Order_ID = #value#
 		</statement>
+		<statement id="GetStringWithoutResultClass"
+					parameterClass="Int"
+					extends="GetString">
+		</statement>
+		
 	</statements>
 
 </sqlMap>
