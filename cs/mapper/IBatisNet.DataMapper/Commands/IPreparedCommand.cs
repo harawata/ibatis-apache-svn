@@ -51,6 +51,6 @@ namespace IBatisNet.DataMapper.Commands
 		/// The parameter object that will fill the sql parameter
 		/// </param>
 		/// <returns>An IDbCommand with all the IDataParameter filled.</returns>
-		IDbCommand Create (RequestScope request, IDalSession session, IStatement statement, object parameterObject );
+		void Create (RequestScope request, IDalSession session, IStatement statement, object parameterObject );
 	}
 }

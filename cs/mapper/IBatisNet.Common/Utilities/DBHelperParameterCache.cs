@@ -27,9 +27,7 @@
 using System;
 using System.Collections;
 using System.Data;
-using System.Data.Common;
 using System.Reflection;
-
 using IBatisNet.Common.Exceptions;
 
 namespace IBatisNet.Common.Utilities
@@ -54,17 +52,17 @@ namespace IBatisNet.Common.Utilities
 		/// <summary>
 		/// Resolve at run time the appropriate set of Parameters for a stored procedure
 		/// </summary>
-		/// <param name="session">a valid session</param>
+		/// <param name="dataSource">a valid dataSource</param>
 		/// <param name="spName">the name of the stored procedure</param>
 		/// <param name="includeReturnValueParameter">whether or not to include their return value parameter</param>
 		/// <returns></returns>
-		private static IDataParameter[] DiscoverSpParameterSet(IDalSession session, string spName, bool includeReturnValueParameter)
+		private static IDataParameter[] DiscoverSpParameterSet(DataSource dataSource, string spName, bool includeReturnValueParameter)
 		{
-			using (IDbConnection connection = session.DataSource.Provider.GetConnection())
+			using (IDbConnection connection = dataSource.Provider.GetConnection())
 			{
-				connection.ConnectionString = session.DataSource.ConnectionString;
+				connection.ConnectionString = dataSource.ConnectionString;
 				connection.Open();
-				return InternalDiscoverSpParameterSet(session.DataSource.Provider, connection, spName, includeReturnValueParameter);
+				return InternalDiscoverSpParameterSet(dataSource.Provider, connection, spName, includeReturnValueParameter);
 			}		
 		}
 
@@ -122,7 +120,7 @@ namespace IBatisNet.Common.Utilities
 			try
 			{
 				commandBuilderType.InvokeMember("DeriveParameters",
-					BindingFlags.Public | BindingFlags.InvokeMethod | BindingFlags.Static, null, null,
+				                                BindingFlags.Public | BindingFlags.InvokeMethod | BindingFlags.Static, null, null,
 					new object[] {command});
 			}
 			catch(Exception ex)
@@ -207,12 +205,12 @@ namespace IBatisNet.Common.Utilities
 		/// <remarks>
 		/// This method will query the database for this information, and then store it in a cache for future requests.
 		/// </remarks>
-		/// <param name="session">a valid session</param>
+		/// <param name="dataSource">a valid dataSource</param>
 		/// <param name="spName">the name of the stored procedure</param>
 		/// <returns>an array of IDataParameters</returns>
-		public static IDataParameter[] GetSpParameterSet(IDalSession session, string spName)
+		public static IDataParameter[] GetSpParameterSet(DataSource dataSource, string spName)
 		{
-			return GetSpParameterSet(session, spName, false);
+			return GetSpParameterSet(dataSource, spName, false);
 		}
 
 		/// <summary>
@@ -221,14 +219,14 @@ namespace IBatisNet.Common.Utilities
 		/// <remarks>
 		/// This method will query the database for this information, and then store it in a cache for future requests.
 		/// </remarks>
-		/// <param name="session">a valid csession</param>
+		/// <param name="dataSource">a valid dataSource</param>
 		/// <param name="spName">the name of the stored procedure</param>
 		/// <param name="includeReturnValueParameter">a bool value indicating whether the return value parameter should be included in the results</param>
 		/// <returns>an array of IDataParameters</returns>
-		public static IDataParameter[] GetSpParameterSet(IDalSession session
+		public static IDataParameter[] GetSpParameterSet(DataSource dataSource
 			, string spName, bool includeReturnValueParameter)
 		{
-			string hashKey = session.DataSource.ConnectionString + ":" + spName + (includeReturnValueParameter ? ":include ReturnValue Parameter":"");
+			string hashKey = dataSource.ConnectionString + ":" + spName + (includeReturnValueParameter ? ":include ReturnValue Parameter":"");
 
 			IDataParameter[] cachedParameters;
 			
@@ -236,7 +234,7 @@ namespace IBatisNet.Common.Utilities
 
 			if (cachedParameters == null)
 			{
-				_paramCache[hashKey] = DiscoverSpParameterSet(session, spName, includeReturnValueParameter);
+				_paramCache[hashKey] = DiscoverSpParameterSet(dataSource, spName, includeReturnValueParameter);
 				cachedParameters = (IDataParameter[]) _paramCache[hashKey];
 			}
 			

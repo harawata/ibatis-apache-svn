@@ -47,6 +47,7 @@ namespace IBatisNet.DataMapper.Scope
 		private ParameterMap _parameterMap = null;
 		private ResultMap _resultMap = null;
 		private PreparedStatement _preparedStatement = null;
+		private IDbCommand _command = null;
 		private Queue _properties = new Queue();
 		bool _rowDataFound= false;
 
@@ -64,6 +65,15 @@ namespace IBatisNet.DataMapper.Scope
 		#endregion 
 
 		#region Properties
+
+		/// <summary>
+		///  The IDbCommand to execute
+		/// </summary>
+		public IDbCommand IDbCommand
+		{
+			set { _command = value; }
+			get { return _command; }
+		}
 
 		/// <summary>
 		///  Indicate if the statement have find data

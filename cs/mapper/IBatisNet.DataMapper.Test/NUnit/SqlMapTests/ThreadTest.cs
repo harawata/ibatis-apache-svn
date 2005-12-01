@@ -76,6 +76,8 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			{
 				Assert.IsFalse(sqlMap.IsSessionStarted);
 
+				Console.WriteLine("Begin Thread : " + Thread.CurrentThread.GetHashCode());
+
 				Account account = (Account) sqlMap.QueryForObject("GetAccountViaColumnIndex", 1);
 				
 				Assert.IsFalse(sqlMap.IsSessionStarted);
@@ -83,6 +85,8 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 				Assert.AreEqual(1, account.Id, "account.Id");
 				Assert.AreEqual("Joe", account.FirstName, "account.FirstName");
 				Assert.AreEqual("Dalton", account.LastName, "account.LastName");
+
+				Console.WriteLine("End Thread : " + Thread.CurrentThread.GetHashCode());
 			}
 		}
 

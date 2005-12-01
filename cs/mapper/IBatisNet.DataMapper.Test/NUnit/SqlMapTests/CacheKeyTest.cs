@@ -1,4 +1,5 @@
-using IBatisNet.DataMapper;
+
+using Cache = IBatisNet.DataMapper.Configuration.Cache;
 using IBatisNet.DataMapper.TypeHandlers;
 using NUnit.Framework;
 
@@ -30,8 +31,15 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			TypeHandlerFactory factory = new TypeHandlerFactory();
 
 			// Two cache keys are equal except for the parameter.
-			CacheKey key = new CacheKey(factory, "STATEMENT", "SQL", new TestClass(firstLong), new string[] {"AProperty"}, 0, 0, CacheKeyType.Object);
-			CacheKey aDifferentKey = new CacheKey(factory, "STATEMENT", "SQL", new TestClass(secondLong), new string[] {"AProperty"}, 0, 0, CacheKeyType.Object);
+			Cache.CacheKey key = new Cache.CacheKey();
+			TestClass clazz = new TestClass(firstLong);
+
+			key.Update(clazz.AProperty);
+
+			Cache.CacheKey aDifferentKey = new Cache.CacheKey();
+			clazz = new TestClass(secondLong);
+
+			key.Update(clazz.AProperty);
 
 			Assert.IsFalse(aDifferentKey.Equals(key)); // should not be equal.
 		}

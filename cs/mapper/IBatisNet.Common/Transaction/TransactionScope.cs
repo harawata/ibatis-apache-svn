@@ -349,7 +349,7 @@ namespace IBatisNet.Common.Transaction
 		/// Implementation of IDisposable so that this class 
 		/// can be used with C#'s using statement.
 		/// </summary>
-		void IDisposable.Dispose()
+		public void Dispose()
 		{
 			Close();
 		}

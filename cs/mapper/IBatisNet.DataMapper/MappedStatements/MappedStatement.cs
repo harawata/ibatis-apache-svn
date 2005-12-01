@@ -201,7 +201,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		{
 			_sqlMap = sqlMap;
 			_statement = statement;
-			_preparedCommand = PreparedCommandFactory.GetPreparedCommand(sqlMap.UseEmbedStatementParams);
+			_preparedCommand = PreparedCommandFactory.GetPreparedCommand( false );
 		}
 		#endregion
 
@@ -429,6 +429,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 			object obj = null;
 			RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session);;
 
+			_preparedCommand.Create( request, session, this.Statement, parameterObject );
+
 			obj = RunQueryForObject(request, session, parameterObject, resultObject);
 			
 			return obj;
@@ -448,7 +450,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		{
 			object result = resultObject;
 			
-			using ( IDbCommand command = _preparedCommand.Create( request, session, this.Statement, parameterObject ) )
+			using ( IDbCommand command = request.IDbCommand )
 			{
 				using ( IDataReader reader = command.ExecuteReader() )
 				{				
@@ -488,6 +490,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 		{
 			RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session);;
 
+			_preparedCommand.Create( request, session, this.Statement, parameterObject );
+
 			if (rowDelegate == null) 
 			{
 				throw new DataMapperException("A null RowDelegate was passed to QueryForRowDelegate.");
@@ -516,6 +520,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 				throw new DataMapperException("A null DictionaryRowDelegate was passed to QueryForMapWithRowDelegate.");
 			}
 			
+			_preparedCommand.Create(request, session, this.Statement, parameterObject);
+
 			return RunQueryForMap(request, session, parameterObject, keyProperty, valueProperty, rowDelegate);
 		}
 
@@ -546,6 +552,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 			IList list = null;
 			RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session);;
 
+			_preparedCommand.Create( request, session, this.Statement, parameterObject );
+
 			list = RunQueryForList(request, session, parameterObject, skipResults, maxResults, null);
 			
 			return list;
@@ -566,7 +574,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		{
 			IList list = null;
 			
-			using ( IDbCommand command = _preparedCommand.Create( request, session, this.Statement, parameterObject ) )
+			using ( IDbCommand command = request.IDbCommand )
 			{
 				if (_statement.ListClass == null)
 				{
@@ -633,8 +641,9 @@ namespace IBatisNet.DataMapper.MappedStatements
 		{
 			RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session);;
 
-			//using ( IDbCommand command = CreatePreparedCommand(request, session, parameterObject ) )
-			using ( IDbCommand command = _preparedCommand.Create( request, session, this.Statement, parameterObject ) )
+			_preparedCommand.Create( request, session, this.Statement, parameterObject );
+
+			using ( IDbCommand command = request.IDbCommand )
 			{
 				using ( IDataReader reader = command.ExecuteReader() )
 				{			
@@ -669,8 +678,9 @@ namespace IBatisNet.DataMapper.MappedStatements
 			int rows = 0; // the number of rows affected
 			RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session);;
 
-			//using (IDbCommand command = CreatePreparedCommand(request, session, parameterObject ))		
-			using ( IDbCommand command = _preparedCommand.Create( request, session, this.Statement, parameterObject ) )
+			_preparedCommand.Create( request, session, this.Statement, parameterObject );
+	
+			using ( IDbCommand command = request.IDbCommand )
 			{
 				rows = command.ExecuteNonQuery();
 
@@ -711,7 +721,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 				ObjectProbe.SetPropertyValue(parameterObject, selectKeyStatement.PropertyName, generatedKey);
 			}
 
-			using ( IDbCommand command = _preparedCommand.Create( request, session, this.Statement, parameterObject ) )
+			_preparedCommand.Create( request, session, this.Statement, parameterObject );
+			using ( IDbCommand command = request.IDbCommand)
 			{
 				if (_statement is Insert)
 				{
@@ -764,7 +775,9 @@ namespace IBatisNet.DataMapper.MappedStatements
 		public virtual IDictionary ExecuteQueryForMap( IDalSession session, object parameterObject, string keyProperty, string valueProperty )
 		{
 			IDictionary map = new Hashtable();
-			RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session);;
+			RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session);
+
+			_preparedCommand.Create(request, session, this.Statement, parameterObject);
 
 			map = RunQueryForMap(request, session, parameterObject, keyProperty, valueProperty, null );
 			
@@ -790,11 +803,11 @@ namespace IBatisNet.DataMapper.MappedStatements
 			object parameterObject, 
 			string keyProperty, 
 			string valueProperty, 
-		                                     SqlMapper.DictionaryRowDelegate rowDelegate  )
+		    SqlMapper.DictionaryRowDelegate rowDelegate  )
 		{
 			IDictionary map = new Hashtable();
 
-			using (IDbCommand command = _preparedCommand.Create(request, session, this.Statement, parameterObject))
+			using (IDbCommand command = request.IDbCommand)
 			{
 				using (IDataReader reader = command.ExecuteReader())
 				{

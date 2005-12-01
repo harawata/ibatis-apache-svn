@@ -64,21 +64,19 @@ namespace IBatisNet.DataMapper.Commands
 		/// The parameter object that will fill the sql parameter
 		/// </param>
 		/// <returns>An IDbCommand with all the IDataParameter filled.</returns>
-		public IDbCommand Create(RequestScope request, IDalSession session, IStatement statement, object parameterObject )
+		public void Create(RequestScope request, IDalSession session, IStatement statement, object parameterObject )
 		{
 			// the IDbConnection & the IDbTransaction are assign in the CreateCommand 
-			IDbCommand command = session.CreateCommand(statement.CommandType);
+			request.IDbCommand = session.CreateCommand(statement.CommandType);
 			
-			command.CommandText = request.PreparedStatement.PreparedSql;
+			request.IDbCommand.CommandText = request.PreparedStatement.PreparedSql;
 
 			if (_logger.IsDebugEnabled)
 			{
-				_logger.Debug("Statement Id: [" + statement.Id + "] PreparedStatement : [" + command.CommandText + "]");
+				_logger.Debug("Statement Id: [" + statement.Id + "] PreparedStatement : [" + request.IDbCommand.CommandText + "]");
 			}
 
-			ApplyParameterMap( session, command, request, statement, parameterObject  );
-
-			return command;
+			ApplyParameterMap( session, request.IDbCommand, request, statement, parameterObject  );
 		}
 
 

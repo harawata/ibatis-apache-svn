@@ -25,7 +25,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// SetUp
 		/// </summary>
 		[SetUp] 
-		public void Init() 
+		public void SetUp() 
 		{
 			InitScript( sqlMap.DataSource, ScriptDirectory + "account-init.sql" );
 			InitScript( sqlMap.DataSource, ScriptDirectory + "account-procedure.sql", false );
@@ -35,7 +35,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// TearDown
 		/// </summary>
 		[TearDown] 
-		public void Dispose()
+		public void TearDown()
 		{ /* ... */ } 
 
 		#endregion

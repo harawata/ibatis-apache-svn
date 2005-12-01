@@ -29,9 +29,11 @@ using System.Collections;
 using IBatisNet.Common;
 using IBatisNet.DataMapper.Commands;
 using IBatisNet.DataMapper.Configuration.Cache;
+using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.Statements;
 using IBatisNet.DataMapper.Scope;
 using IBatisNet.DataMapper.MappedStatements;
+using Cache = IBatisNet.DataMapper.Configuration.Cache;
 
 #endregion 
 
@@ -125,34 +127,41 @@ namespace IBatisNet.DataMapper.MappedStatements
 			IDictionary map = new Hashtable();
 			RequestScope request = this.Statement.Sql.GetRequestScope(parameterObject, session);;
 
-				CacheKey key = null;
-				if (this.Statement.ParameterMap != null) 
-				{
-					key = new CacheKey(this.SqlMap.TypeHandlerFactory, this.Name, 
-						request.PreparedStatement.PreparedSql, 
-						parameterObject, 
-						request.ParameterMap.GetPropertyNameArray(), 
-						MappedStatement.NO_SKIPPED_RESULTS, 
-						MappedStatement.NO_MAXIMUM_RESULTS, 
-						CacheKeyType.Map);
-				} 
-				else 
-				{
-					key = new CacheKey(this.SqlMap.TypeHandlerFactory, this.Name, 
-						request.PreparedStatement.PreparedSql,  
-						parameterObject, 
-						new string[0], 
-						MappedStatement.NO_SKIPPED_RESULTS, 
-						MappedStatement.NO_MAXIMUM_RESULTS, 
-						CacheKeyType.Map);
-				}
+			_mappedStatement.PreparedCommand.Create( request, session, this.Statement, parameterObject );
 
-				map = (IDictionary)this.Statement.CacheModel[key];
-				if (map == null) 
-				{
-					map = _mappedStatement.RunQueryForMap( request, session, parameterObject, keyProperty, valueProperty, null );
-					this.Statement.CacheModel[key] = map;
-				}
+			Cache.CacheKey cacheKey = this.GetCacheKey(request);
+			cacheKey.Update("ExecuteQueryForMap");
+			cacheKey.Update(keyProperty);
+			cacheKey.Update(valueProperty);
+
+//			CacheKey key = null;
+//			if (this.Statement.ParameterMap != null) 
+//			{
+//				key = new CacheKey(this.SqlMap.TypeHandlerFactory, this.Name, 
+//					request.PreparedStatement.PreparedSql, 
+//					parameterObject, 
+//					request.ParameterMap.GetPropertyNameArray(), 
+//					MappedStatement.NO_SKIPPED_RESULTS, 
+//					MappedStatement.NO_MAXIMUM_RESULTS, 
+//					CacheKeyType.Map);
+//			} 
+//			else 
+//			{
+//				key = new CacheKey(this.SqlMap.TypeHandlerFactory, this.Name, 
+//					request.PreparedStatement.PreparedSql,  
+//					parameterObject, 
+//					new string[0], 
+//					MappedStatement.NO_SKIPPED_RESULTS, 
+//					MappedStatement.NO_MAXIMUM_RESULTS, 
+//					CacheKeyType.Map);
+//			}
+
+			map = this.Statement.CacheModel[cacheKey] as IDictionary;
+			if (map == null) 
+			{
+				map = _mappedStatement.RunQueryForMap( request, session, parameterObject, keyProperty, valueProperty, null );
+				this.Statement.CacheModel[cacheKey] = map;
+			}
 
 			return map;
 		}
@@ -208,33 +217,18 @@ namespace IBatisNet.DataMapper.MappedStatements
 			IList list = null;
 			RequestScope request = this.Statement.Sql.GetRequestScope(parameterObject, session);;
 
-			CacheKey key = null;
-			if (this.Statement.ParameterMap != null) 
-			{
-				key = new CacheKey(this.SqlMap.TypeHandlerFactory, this.Name, 
-					request.PreparedStatement.PreparedSql, 
-					parameterObject, 
-					request.ParameterMap.GetPropertyNameArray(), 
-					skipResults, 
-					maxResults, 
-					CacheKeyType.List);
-			} 
-			else 
-			{
-				key = new CacheKey(this.SqlMap.TypeHandlerFactory, this.Name, 
-					request.PreparedStatement.PreparedSql,  
-					parameterObject, 
-					new string[0], 
-					skipResults, 
-					maxResults, 
-					CacheKeyType.List);
-			}
+			_mappedStatement.PreparedCommand.Create( request, session, this.Statement, parameterObject );
 
-			list = (IList)this.Statement.CacheModel[key];
+			Cache.CacheKey cacheKey = this.GetCacheKey(request);
+			cacheKey.Update("ExecuteQueryForList");
+			cacheKey.Update(skipResults);
+			cacheKey.Update(maxResults);
+
+			list = this.Statement.CacheModel[cacheKey] as IList;
 			if (list == null) 
 			{
 				list = _mappedStatement.RunQueryForList(request, session, parameterObject, skipResults, maxResults, null);
-				this.Statement.CacheModel[key] = list;
+				this.Statement.CacheModel[cacheKey] = list;
 			}
 
 			return list;
@@ -277,29 +271,12 @@ namespace IBatisNet.DataMapper.MappedStatements
 			object obj = null;
 			RequestScope request = this.Statement.Sql.GetRequestScope(parameterObject, session);;
 
-			CacheKey key = null;
-			if (this.Statement.ParameterMap != null) 
-			{
-				key = new CacheKey(this.SqlMap.TypeHandlerFactory, this.Name, 
-					request.PreparedStatement.PreparedSql,
-					parameterObject, 
-					request.ParameterMap.GetPropertyNameArray(), 
-					MappedStatement.NO_SKIPPED_RESULTS, 
-					MappedStatement.NO_MAXIMUM_RESULTS, 
-					CacheKeyType.Object);
-			} 
-			else 
-			{
-				key = new CacheKey(this.SqlMap.TypeHandlerFactory, this.Name, 
-					request.PreparedStatement.PreparedSql,
-					parameterObject, 
-					new string[0], 
-					MappedStatement.NO_SKIPPED_RESULTS, 
-					MappedStatement.NO_MAXIMUM_RESULTS, 
-					CacheKeyType.Object);
-			}
+			_mappedStatement.PreparedCommand.Create( request, session, this.Statement, parameterObject );
 
-			obj = this.Statement.CacheModel[key];
+			Cache.CacheKey cacheKey = this.GetCacheKey(request);
+			cacheKey.Update("ExecuteQueryForObject");
+
+			obj = this.Statement.CacheModel[cacheKey];
 			// check if this query has alreay been run 
 			if (obj == CacheModel.NULL_OBJECT) 
 			{ 
@@ -309,7 +286,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 			else if (obj == null) 
 			{
 				obj = _mappedStatement.RunQueryForObject(request, session, parameterObject, resultObject);
-				this.Statement.CacheModel[key] = obj;
+				this.Statement.CacheModel[cacheKey] = obj;
 			}
 
 			return obj;
@@ -345,5 +322,26 @@ namespace IBatisNet.DataMapper.MappedStatements
 		}
 
 		#endregion
+
+		private Cache.CacheKey GetCacheKey(RequestScope request) 
+		{
+			Cache.CacheKey cacheKey = new Cache.CacheKey();
+			for (int i = 0; i < request.IDbCommand.Parameters.Count; i++) 
+			{
+				if (request.IDbCommand.Parameters[i] != null) 
+				{
+					cacheKey.Update(request.IDbCommand.Parameters[i]);
+				}
+			}
+			
+			// cf BaseStatement public CacheKey getCacheKey(
+			// cf SqMapExecutor  public int hashCode()
+
+			cacheKey.Update(_mappedStatement.Name);
+			cacheKey.Update(_mappedStatement.SqlMap.DataSource.ConnectionString);
+			cacheKey.Update(request.IDbCommand.CommandText);
+
+			return cacheKey;
+		}
 	}
 }

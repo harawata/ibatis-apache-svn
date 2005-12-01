@@ -170,7 +170,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		{
 			// pull the parameters for this stored procedure from the parameter cache 
 			// (or discover them & populate the cache)
-			IDataParameter[] commandParameters = DBHelperParameterCache.GetSpParameterSet(session, _commandText);
+			IDataParameter[] commandParameters = DBHelperParameterCache.GetSpParameterSet(session.DataSource, _commandText);
 			
 			int start = session.DataSource.Provider.ParameterPrefix.Length;
 			foreach(IDataParameter dataParameter in commandParameters)
