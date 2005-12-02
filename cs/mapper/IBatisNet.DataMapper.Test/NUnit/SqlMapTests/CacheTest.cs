@@ -112,6 +112,19 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Assert.IsTrue(firstId != thirdId);
 		}
 
+		[Test]
+		public void TestFlushDataCacheOnExecute()
+		{
+			IList list = sqlMap.QueryForList("GetCachedAccountsViaResultMap", null);
+			int firstId = HashCodeProvider.GetIdentityHashCode(list);
+			list = sqlMap.QueryForList("GetCachedAccountsViaResultMap", null);
+			int secondId = HashCodeProvider.GetIdentityHashCode(list);
+			Assert.AreEqual(firstId, secondId);
+			sqlMap.Update("UpdateAccountViaInlineParameters", list[0]);
+			list = sqlMap.QueryForList("GetCachedAccountsViaResultMap", null);
+			int thirdId = HashCodeProvider.GetIdentityHashCode(list);
+			Assert.IsTrue(firstId != thirdId);
+		}
 
 		/// <summary>
 		/// Test MappedStatement Query With Threaded Cache
@@ -141,7 +154,6 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			int thirdId = HashCodeProvider.GetIdentityHashCode(list);
 
 			Assert.IsTrue(firstId != thirdId);
-
 		}
 
 

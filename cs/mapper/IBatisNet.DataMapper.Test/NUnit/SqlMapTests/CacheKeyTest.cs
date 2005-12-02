@@ -1,8 +1,6 @@
 
-using Cache = IBatisNet.DataMapper.Configuration.Cache;
-using IBatisNet.DataMapper.TypeHandlers;
-using NUnit.Framework;
 
+using NUnit.Framework;
 
 namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 {
@@ -28,36 +26,45 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
 		private static void DoTestClassEquals(long firstLong, long secondLong)
 		{
-			TypeHandlerFactory factory = new TypeHandlerFactory();
-
 			// Two cache keys are equal except for the parameter.
-			Cache.CacheKey key = new Cache.CacheKey();
-			TestClass clazz = new TestClass(firstLong);
+			Configuration.Cache.CacheKey key = new Configuration.Cache.CacheKey();
 
-			key.Update(clazz.AProperty);
+			key.Update(firstLong);
 
-			Cache.CacheKey aDifferentKey = new Cache.CacheKey();
-			clazz = new TestClass(secondLong);
+			Configuration.Cache.CacheKey aDifferentKey = new Configuration.Cache.CacheKey();
 
-			key.Update(clazz.AProperty);
+			key.Update(secondLong);
 
 			Assert.IsFalse(aDifferentKey.Equals(key)); // should not be equal.
 		}
 
-		private class TestClass
+		[Test]
+		public void CacheKeyWithSameHashcode() 
 		{
-			private long _property = long.MinValue;
+			Configuration.Cache.CacheKey key1 = new Configuration.Cache.CacheKey();
+			Configuration.Cache.CacheKey key2 = new Configuration.Cache.CacheKey();
 
-			public TestClass(long aProperty)
-			{
-				_property = aProperty;
-			}
+			key1.Update("HS1CS001");
+			key2.Update("HS1D4001");
 
-			public long AProperty
-			{
-				get { return _property; }
-				set { _property = value; }
-			}
+			Assert.AreEqual( key1.GetHashCode(), key2.GetHashCode(), "Expect same hashcode.");
+			Assert.IsFalse( key1.Equals(key2),"Expect not equal");
+		}
+
+		[Test]
+		public void CacheKeyWithTwoParamsSameHashcode() 
+		{
+			Configuration.Cache.CacheKey key1 = new Configuration.Cache.CacheKey();
+			Configuration.Cache.CacheKey key2 = new Configuration.Cache.CacheKey();
+
+			key1.Update("HS1CS001");
+			key1.Update("HS1D4001");
+
+			key2.Update("HS1D4001");
+			key2.Update("HS1CS001");
+
+			Assert.AreEqual(key1.GetHashCode(), key2.GetHashCode(), "Expect same hashcode.");
+			Assert.IsFalse(key1.Equals(key2), "Expect not equal");
 		}
 
 	}

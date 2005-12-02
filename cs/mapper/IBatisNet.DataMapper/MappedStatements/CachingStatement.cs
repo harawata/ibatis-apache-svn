@@ -26,6 +26,7 @@
 #region Using
 
 using System.Collections;
+using System.Data;
 using IBatisNet.Common;
 using IBatisNet.DataMapper.Commands;
 using IBatisNet.DataMapper.Configuration.Cache;
@@ -330,7 +331,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 			{
 				if (request.IDbCommand.Parameters[i] != null) 
 				{
-					cacheKey.Update(request.IDbCommand.Parameters[i]);
+					cacheKey.Update( ((IDataParameter)request.IDbCommand.Parameters[i]).Value );
 				}
 			}
 			
