@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using System.Reflection;
 using IBatisNet.Common.Logging;
 using NUnit.Framework;
@@ -12,49 +14,88 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Logging
 	public class LogTest
 	{
 		private ILog _log = null;
+		private StringWriter outWriter = new StringWriter();
+		private StringWriter errorWriter = new StringWriter();
 
-
+		#region SetUp/TearDown
 		[SetUp]
 		public void SetUp()
 		{
 			_log = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
-			_log.Info( "Starting tests..." );
+
+			outWriter.GetStringBuilder().Length = 0;
+			errorWriter.GetStringBuilder().Length = 0;
+
+			Console.SetOut(outWriter);
+			Console.SetError(errorWriter);
 		}
 
 		[TearDown]
 		public void TearDown()
-		{
-			_log.Info( "Ending tests..." );
-		}
+		{}
+		#endregion
 
 		[Test]
 		public void LogDebug()
 		{
-			_log.Debug("test LogDebug");
+			string expectedLogOutput = "[DEBUG] IBatisNet.Common.Test.NUnit.CommonTests.Logging.LogTest - LogDebug";
+			string actualLogOutput = "";
+
+			_log.Debug("LogDebug");
+
+			actualLogOutput = outWriter.GetStringBuilder().ToString();
+			Assert.IsTrue(actualLogOutput.IndexOf(expectedLogOutput)>0);
 		}
 
 		[Test]
 		public void LogInfo()
 		{
-			_log.Info("test LogInfo");
+			string expectedLogOutput = "[INFO]  IBatisNet.Common.Test.NUnit.CommonTests.Logging.LogTest - LogInfo";
+			string actualLogOutput = "";
+
+			_log.Info("LogInfo");
+
+			actualLogOutput = outWriter.GetStringBuilder().ToString();
+			Assert.IsTrue(actualLogOutput.IndexOf(expectedLogOutput)>0);
 		}
 
 		[Test]
 		public void LogError()
 		{
-			_log.Error("test LogError");
+			string expectedLogOutput = "[ERROR] IBatisNet.Common.Test.NUnit.CommonTests.Logging.LogTest - LogError";
+			string actualLogOutput = "";
+
+			_log.Error("LogError");
+
+			actualLogOutput = outWriter.GetStringBuilder().ToString();
+			Assert.IsTrue(actualLogOutput.IndexOf(expectedLogOutput)>0);
 		}
 
 		[Test]
 		public void LogFatal()
 		{
-			_log.Fatal("test LogFatal");
+			string expectedLogOutput = "[FATAL] IBatisNet.Common.Test.NUnit.CommonTests.Logging.LogTest - LogFatal";
+			string actualLogOutput = "";
+
+			_log.Fatal("LogFatal");
+
+			actualLogOutput = outWriter.GetStringBuilder().ToString();
+			Assert.IsTrue(actualLogOutput.IndexOf(expectedLogOutput)>0);
 		}
+
 
 		[Test]
 		public void LogWarn()
 		{
-			_log.Warn("test LogWarn");
+			string expectedLogOutput = "[WARN]  IBatisNet.Common.Test.NUnit.CommonTests.Logging.LogTest - LogWarn";
+			string actualLogOutput = "";
+
+			_log.Warn("LogWarn");
+
+			actualLogOutput = outWriter.GetStringBuilder().ToString();
+			int i = actualLogOutput.IndexOf(expectedLogOutput);
+			Assert.IsTrue(actualLogOutput.IndexOf(expectedLogOutput)>0);
 		}
+
 	}
 }
