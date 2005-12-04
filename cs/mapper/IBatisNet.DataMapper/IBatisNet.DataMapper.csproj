@@ -108,11 +108,6 @@
                     BuildAction = "None"
                 />
                 <File
-                    RelPath = "CacheKey.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "ChangeLog.txt"
                     BuildAction = "Content"
                 />

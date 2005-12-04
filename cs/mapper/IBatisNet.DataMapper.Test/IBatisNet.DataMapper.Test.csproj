@@ -811,7 +811,6 @@
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
-                <Folder RelPath = "NUnit\SqlMapTests\NewFolder1\" />
                 <File
                     RelPath = "NUnit\SqlMapTests\Oracle\ProcedureTest.cs"
                     SubType = "Code"
