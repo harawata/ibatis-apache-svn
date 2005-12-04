@@ -29,8 +29,9 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 					resultClass="char" >
 			select cast('a' as char) from Orders where Order_ID = #value#
 		</statement>
+		<!-- SQL Server provider doesn't know char type, the resultClass type must be specified -->
 		<statement id="GetCharWithoutResultClass"
-					parameterClass="Int"
+					parameterClass="Int" resultClass="char" 
 					extends="GetChar">
 		</statement>
 		

@@ -51,6 +51,14 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 		#endregion
 
 		#region Methods
+	
+		/// <summary>
+		/// Remove an object from a cache model
+		/// </summary>
+		/// <param name="key">the key to the object</param>
+		/// <returns>the removed object(?)</returns>
+		object Remove(object key);
+
 		/// <summary>
 		/// Clears all elements from the cache.
 		/// </summary>

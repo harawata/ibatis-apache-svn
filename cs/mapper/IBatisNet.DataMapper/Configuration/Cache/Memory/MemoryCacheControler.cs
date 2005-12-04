@@ -25,11 +25,10 @@
 #endregion
 
 #region Imports
+
 using System;
 using System.Collections;
-using System.Collections.Specialized;
 
-using IBatisNet.DataMapper.Configuration.Cache;
 #endregion
 
 namespace IBatisNet.DataMapper.Configuration.Cache.Memory
@@ -50,11 +49,34 @@ namespace IBatisNet.DataMapper.Configuration.Cache.Memory
 		/// </summary>
 		public MemoryCacheControler() 
 		{
-			_cache = new Hashtable();
+			_cache = Hashtable.Synchronized( new Hashtable() );
 		}
 		#endregion
 
 		#region ICacheController Members
+
+		/// <summary>
+		/// Remove an object from a cache model
+		/// </summary>
+		/// <param name="key">the key to the object</param>
+		/// <returns>the removed object(?)</returns>
+		public object Remove(object key)
+		{
+			object value = null;
+			object reference = this[key];
+			_cache.Remove(key);
+			if (reference != null) 
+			{
+				if (reference is StrongReference) 
+				{
+					value = ((StrongReference) reference).Target;
+				} 
+				else if (reference is WeakReference) {
+					value = ((WeakReference) reference).Target;
+				}
+			}
+			return value;
+		}
 
 		/// <summary>
 		/// Adds an item with the specified key and value into cached data.
@@ -65,39 +87,34 @@ namespace IBatisNet.DataMapper.Configuration.Cache.Memory
 		{
 			get
 			{
-				lock (this) 
+				object value = null;
+				object reference = _cache[key];
+				if (reference != null) 
 				{
-					object value = null;
-					object reference = _cache[key];
-					if (reference != null) 
+					if (reference is StrongReference) 
 					{
-						if (reference is StrongReference) 
-						{
-							value = ((StrongReference) reference).Target;
-						} 
-						else if (reference is WeakReference) 
-						{
-							value = ((WeakReference) reference).Target;
-						}
-					}				
-					return value;
-				}
+						value = ((StrongReference) reference).Target;
+					} 
+					else if (reference is WeakReference) 
+					{
+						value = ((WeakReference) reference).Target;
+					}
+				}				
+				return value;
 			}
 			set
 			{
-				lock (this) 
+				object reference = null;
+				if (_cacheLevel.Equals(MemoryCacheLevel.Weak)) 
 				{
-					object reference = null;
-					if (_cacheLevel.Equals(MemoryCacheLevel.Weak)) 
-					{
-						reference = new WeakReference(value);
-					} 
-					else if (_cacheLevel.Equals(MemoryCacheLevel.Strong)) 
-					{
-						reference = new StrongReference(value);
-					}
-					_cache[key] = reference;	
-				}			
+					reference = new WeakReference(value);
+				} 
+				else if (_cacheLevel.Equals(MemoryCacheLevel.Strong)) 
+				{
+					reference = new StrongReference(value);
+				}
+				_cache[key] = reference;	
+			
 			}
 		}
 

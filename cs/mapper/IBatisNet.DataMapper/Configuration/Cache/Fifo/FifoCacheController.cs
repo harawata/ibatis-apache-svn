@@ -25,11 +25,10 @@
 #endregion
 
 #region Imports
+
 using System;
 using System.Collections;
-using System.Collections.Specialized;
 
-using IBatisNet.DataMapper.Configuration.Cache;
 #endregion
 
 namespace IBatisNet.DataMapper.Configuration.Cache.Fifo
@@ -52,23 +51,34 @@ namespace IBatisNet.DataMapper.Configuration.Cache.Fifo
 		public FifoCacheController() 
 		{
 			_cacheSize = 100;
-			_cache = new Hashtable();
-			_keyList = new ArrayList();
+			_cache = Hashtable.Synchronized( new Hashtable() );
+			_keyList = ArrayList.Synchronized( new ArrayList() );
 		}
 		#endregion
 
 		#region ICacheController Members
 
 		/// <summary>
+		/// Remove an object from a cache model
+		/// </summary>
+		/// <param name="key">the key to the object</param>
+		/// <returns>the removed object(?)</returns>
+		public object Remove(object key)
+		{
+			object o = this[key];
+
+			_keyList.Remove(key);
+			_cache.Remove(key);
+			return o;
+		}
+
+		/// <summary>
 		/// Clears all elements from the cache.
 		/// </summary>
 		public void Flush()
 		{
-			lock(this) 
-			{
 				_cache.Clear();
 				_keyList.Clear();
-			}		
 		}
 
 
@@ -81,24 +91,18 @@ namespace IBatisNet.DataMapper.Configuration.Cache.Fifo
 		{
 			get
 			{
-				lock (this) 
-				{
-					return _cache[key];
-				}
+				return _cache[key];
 			}
 			set
 			{
-				lock (this) 
+				_cache[key] = value;
+				_keyList.Add(key);
+				if (_keyList.Count > _cacheSize) 
 				{
-					_cache.Add(key, value);
-					_keyList.Add(key);
-					if (_keyList.Count > _cacheSize) 
-					{
-						object oldestKey = _keyList[0];
-						_keyList.Remove(0);
-						_cache.Remove(oldestKey);
-					}		
-				}
+					object oldestKey = _keyList[0];
+					_keyList.Remove(0);
+					_cache.Remove(oldestKey);
+				}		
 			}
 		}
 
@@ -111,7 +115,7 @@ namespace IBatisNet.DataMapper.Configuration.Cache.Fifo
 			string size = (string)properties["CacheSize"];;
 			if (size != null) 
 			{
-				_cacheSize = System.Convert.ToInt32(size);		
+				_cacheSize = Convert.ToInt32(size);		
 			}
 		}
 		
