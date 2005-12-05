@@ -1198,7 +1198,7 @@ namespace IBatisNet.DataMapper
 		{
 			if (_mappedStatements.Contains(key) == true) 
 			{
-				throw new DataMapperException("This SQL map already contains a MappedStatement named " + mappedStatement.Name);
+				throw new DataMapperException("This SQL map already contains a MappedStatement named " + mappedStatement.Id);
 			}
 			_mappedStatements.Add(key, mappedStatement);
 		}
@@ -1356,7 +1356,7 @@ namespace IBatisNet.DataMapper
 			{
 				IMappedStatement mappedStatement = (IMappedStatement)enumerator.Value;
 
-				buffer.Append(mappedStatement.Name);
+				buffer.Append(mappedStatement.Id);
 				buffer.Append(": ");
 
 				if (mappedStatement is CachingStatement)

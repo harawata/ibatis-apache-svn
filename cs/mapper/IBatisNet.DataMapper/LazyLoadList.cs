@@ -80,7 +80,7 @@ namespace IBatisNet.DataMapper
 		internal LazyLoadList(IMappedStatement mappedSatement, object param, object target,string propertyName)
 		{
 			_param = param;
-			_statementName = mappedSatement.Name;
+			_statementName = mappedSatement.Id;
 			_sqlMap = mappedSatement.SqlMap;
 			_target = target; 
 			_propertyName = propertyName;

@@ -169,7 +169,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// Name used to identify the MappedStatement amongst the others.
 		/// This the name of the SQL statement by default.
 		/// </summary>
-		public string Name
+		public string Id
 		{
 			get { return _statement.Id; }
 		}
@@ -1121,7 +1121,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		public override string ToString() 
 		{
 			StringBuilder buffer = new StringBuilder();
-			buffer.Append("\tMappedStatement: " + this.Name);
+			buffer.Append("\tMappedStatement: " + this.Id);
 			buffer.Append(Environment.NewLine);
 			if (_statement.ParameterMap != null) buffer.Append(_statement.ParameterMap.Id);
 			if (_statement.ResultMap != null) buffer.Append(_statement.ResultMap.Id);

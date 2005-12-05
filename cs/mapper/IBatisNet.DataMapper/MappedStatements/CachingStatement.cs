@@ -91,9 +91,9 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// Name used to identify the MappedStatement amongst the others.
 		/// This the name of the SQL statment by default.
 		/// </summary>
-		public string Name
+		public string Id
 		{
-			get { return _mappedStatement.Name; }
+			get { return _mappedStatement.Id; }
 		}
 
 		/// <summary>
@@ -134,28 +134,6 @@ namespace IBatisNet.DataMapper.MappedStatements
 			cacheKey.Update("ExecuteQueryForMap");
 			cacheKey.Update(keyProperty);
 			cacheKey.Update(valueProperty);
-
-//			CacheKey key = null;
-//			if (this.Statement.ParameterMap != null) 
-//			{
-//				key = new CacheKey(this.SqlMap.TypeHandlerFactory, this.Name, 
-//					request.PreparedStatement.PreparedSql, 
-//					parameterObject, 
-//					request.ParameterMap.GetPropertyNameArray(), 
-//					MappedStatement.NO_SKIPPED_RESULTS, 
-//					MappedStatement.NO_MAXIMUM_RESULTS, 
-//					CacheKeyType.Map);
-//			} 
-//			else 
-//			{
-//				key = new CacheKey(this.SqlMap.TypeHandlerFactory, this.Name, 
-//					request.PreparedStatement.PreparedSql,  
-//					parameterObject, 
-//					new string[0], 
-//					MappedStatement.NO_SKIPPED_RESULTS, 
-//					MappedStatement.NO_MAXIMUM_RESULTS, 
-//					CacheKeyType.Map);
-//			}
 
 			map = this.Statement.CacheModel[cacheKey] as IDictionary;
 			if (map == null) 
@@ -329,16 +307,14 @@ namespace IBatisNet.DataMapper.MappedStatements
 			Cache.CacheKey cacheKey = new Cache.CacheKey();
 			for (int i = 0; i < request.IDbCommand.Parameters.Count; i++) 
 			{
-				if (request.IDbCommand.Parameters[i] != null) 
+				IDataParameter dataParameter = (IDataParameter)request.IDbCommand.Parameters[i];
+				if (dataParameter.Value != null) 
 				{
-					cacheKey.Update( ((IDataParameter)request.IDbCommand.Parameters[i]).Value );
+					cacheKey.Update( dataParameter.Value );
 				}
 			}
 			
-			// cf BaseStatement public CacheKey getCacheKey(
-			// cf SqMapExecutor  public int hashCode()
-
-			cacheKey.Update(_mappedStatement.Name);
+			cacheKey.Update(_mappedStatement.Id);
 			cacheKey.Update(_mappedStatement.SqlMap.DataSource.ConnectionString);
 			cacheKey.Update(request.IDbCommand.CommandText);
 

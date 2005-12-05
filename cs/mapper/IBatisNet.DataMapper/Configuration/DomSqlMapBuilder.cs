@@ -828,7 +828,7 @@ namespace IBatisNet.DataMapper.Configuration
 
 						if (_logger.IsDebugEnabled)
 						{
-							_logger.Debug("Registering trigger statement [" + mappedStatement.Name + "] to cache model [" + cacheModel.Id + "]");
+							_logger.Debug("Registering trigger statement [" + mappedStatement.Id + "] to cache model [" + cacheModel.Id + "]");
 						}
 
 						cacheModel.RegisterTriggerStatement(mappedStatement);
@@ -1051,7 +1051,7 @@ namespace IBatisNet.DataMapper.Configuration
 				// Build MappedStatement
 				mappedStatement = new MappedStatement( _configScope.SqlMapper, statement);
 
-				_configScope.SqlMapper.AddMappedStatement(mappedStatement.Name, mappedStatement);
+				_configScope.SqlMapper.AddMappedStatement(mappedStatement.Id, mappedStatement);
 			}
 			#endregion
 
@@ -1093,7 +1093,7 @@ namespace IBatisNet.DataMapper.Configuration
 					mapStatement = new CachingStatement( mappedStatement);
 				}
 
-				_configScope.SqlMapper.AddMappedStatement(mappedStatement.Name, mapStatement);
+				_configScope.SqlMapper.AddMappedStatement(mappedStatement.Id, mapStatement);
 			}
 			#endregion
 
@@ -1131,7 +1131,7 @@ namespace IBatisNet.DataMapper.Configuration
 				// Build MappedStatement
 				mappedStatement = new InsertMappedStatement( _configScope.SqlMapper, insert);
 
-				_configScope.SqlMapper.AddMappedStatement(mappedStatement.Name, mappedStatement);
+				_configScope.SqlMapper.AddMappedStatement(mappedStatement.Id, mappedStatement);
 
 				#region statement SelectKey
 				// Set sql statement SelectKey 
@@ -1156,7 +1156,7 @@ namespace IBatisNet.DataMapper.Configuration
 					// Build MappedStatement
 					mappedStatement = new MappedStatement( _configScope.SqlMapper, insert.SelectKey);
 
-					_configScope.SqlMapper.AddMappedStatement(mappedStatement.Name, mappedStatement);
+					_configScope.SqlMapper.AddMappedStatement(mappedStatement.Id, mappedStatement);
 				}
 				#endregion
 			}
@@ -1197,7 +1197,7 @@ namespace IBatisNet.DataMapper.Configuration
 				// Build MappedStatement
 				mappedStatement = new UpdateMappedStatement( _configScope.SqlMapper, update);
 
-				_configScope.SqlMapper.AddMappedStatement(mappedStatement.Name, mappedStatement);
+				_configScope.SqlMapper.AddMappedStatement(mappedStatement.Id, mappedStatement);
 			}
 			#endregion
 
@@ -1235,7 +1235,7 @@ namespace IBatisNet.DataMapper.Configuration
 				// Build MappedStatement
 				mappedStatement = new DeleteMappedStatement( _configScope.SqlMapper, delete);
 
-				_configScope.SqlMapper.AddMappedStatement(mappedStatement.Name, mappedStatement);
+				_configScope.SqlMapper.AddMappedStatement(mappedStatement.Id, mappedStatement);
 			}
 			#endregion
 
@@ -1266,7 +1266,7 @@ namespace IBatisNet.DataMapper.Configuration
 				// Build MappedStatement
 				mappedStatement = new MappedStatement( _configScope.SqlMapper, procedure);
 
-				_configScope.SqlMapper.AddMappedStatement(mappedStatement.Name, mappedStatement);
+				_configScope.SqlMapper.AddMappedStatement(mappedStatement.Id, mappedStatement);
 			}
 			#endregion
 

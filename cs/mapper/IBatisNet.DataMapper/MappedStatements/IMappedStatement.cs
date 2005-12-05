@@ -69,7 +69,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// Name used to identify the MappedStatement amongst the others.
 		/// This the name of the SQL statment by default.
 		/// </summary>
-		string Name
+		string Id
 		{
 			get;
 		}
