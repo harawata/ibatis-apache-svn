@@ -132,6 +132,10 @@
                     BuildAction = "None"
                 />
                 <File
+                    RelPath = "ReadMe.txt"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "sqlmap.config"
                     BuildAction = "Content"
                 />
