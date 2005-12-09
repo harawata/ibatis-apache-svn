@@ -8,6 +8,7 @@
 	<a href="datamapper.html" title="Simplify data access">Data Mapper</a><br />
 	<a href="dao.html" title="Hide data acess implementation">Data Access Objects</a><br />
 	<a href="petstore.html" title="The official example applications">Example Apps</a><br />
+	<a href="tools.html" title="Tools related to iBATISs">Tools</a><br />
 	<br/>
 	<b>Downloads</b><br/>
 	<a href="downloads.html" title="Everything you need to run iBATIS">Binaries, Documentation, Source</a><br />
