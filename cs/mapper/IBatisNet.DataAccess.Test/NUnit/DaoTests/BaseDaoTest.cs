@@ -6,6 +6,7 @@ using System.IO;
 using System.Threading;
 using IBatisNet.Common;
 using IBatisNet.Common.Utilities;
+using IBatisNet.DataAccess.Configuration;
 using IBatisNet.DataAccess.Test.Dao.Interfaces;
 using IBatisNet.DataAccess.Test.Domain;
 using NUnit.Framework;
@@ -47,6 +48,20 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 			ScriptRunner runner = new ScriptRunner();
 
 			runner.RunScript(datasource, script);
+		}
+
+		[Test]
+		public void MultipleContext() 
+		{
+			DomDaoManagerBuilder builder = new DomDaoManagerBuilder();
+			builder.Configure( "dao_Multiple_Context.config" );
+			DaoManager daoManager1 = DaoManager.GetInstance("Contex1");
+			DaoManager daoManager2 = DaoManager.GetInstance("Contex2");
+
+			Assert.IsNotNull(daoManager1);
+			Assert.IsNotNull(daoManager2);
+			Assert.IsTrue(daoManager2.LocalDataSource.ConnectionString != daoManager1.LocalDataSource.ConnectionString);
+			Assert.IsTrue(daoManager2.LocalDataSource.Provider.Name != daoManager1.LocalDataSource.Provider.Name);
 		}
 
 		#region Dao statement tests

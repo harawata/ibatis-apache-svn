@@ -96,7 +96,7 @@ namespace IBatisNet.DataAccess
 		/// <summary>
 		/// Key for default context name
 		/// </summary>
-		public static string DEFAULT_CONTEXT_NAME = "_DEFAULT_CONTEXT_NAME";
+		public const string DEFAULT_CONTEXT_NAME = "_DEFAULT_CONTEXT_NAME";
 		#endregion
 
 		#region Fields

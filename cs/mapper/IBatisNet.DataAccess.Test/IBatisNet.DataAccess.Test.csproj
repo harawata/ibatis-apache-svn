@@ -155,6 +155,10 @@
                     BuildAction = "None"
                 />
                 <File
+                    RelPath = "bin\Debug\dao_Multiple_Context.config"
+                    BuildAction = "None"
+                />
+                <File
                     RelPath = "bin\Debug\dao_MySql_ByteFx.config"
                     BuildAction = "None"
                 />
