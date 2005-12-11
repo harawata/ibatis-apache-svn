@@ -48,7 +48,7 @@
                     BaseAddress = "285212672"
                     CheckForOverflowUnderflow = "false"
                     ConfigurationOverrideFile = ""
-                    DefineConstants = "TRACE"
+                    DefineConstants = "TRACE;STRONG"
                     DocumentationFile = "IBatisNet.DataAccess.xml"
                     DebugSymbols = "false"
                     FileAlignment = "4096"
@@ -109,12 +109,13 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "AssemblyKey.snk"
-                    BuildAction = "None"
-                />
-                <File
                     RelPath = "ChangeLog.txt"
                     BuildAction = "Content"
+                />
+                <File
+                    RelPath = "CommonAssemblyInfo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
                 />
                 <File
                     RelPath = "DaoConfig.xsd"
