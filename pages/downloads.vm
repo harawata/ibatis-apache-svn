@@ -16,7 +16,7 @@
 
     <h4>Examples</h4>
     <ul>
-      <li><a href="http://prdownloads.sourceforge.net/ibatisjpetstore/iBATIS_JPetStore-4.0.5.zip?download">JPetStore Example Application</a></li>
+      <li><a href="http://cvs.apache.org/builds/ibatis/alpha/JPetStore-5.0.zip">JPetStore 5.0 Example Application</a> (Apache Alpha)</li>
     </ul>
 
     <h4>Documentation </h4>
