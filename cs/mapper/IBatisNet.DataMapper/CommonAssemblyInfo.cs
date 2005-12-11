@@ -44,5 +44,5 @@ using System.Runtime.CompilerServices;
 #if STRONG
 [assembly: AssemblyConfiguration("net-1.1.win32; Release")]
 [assembly: AssemblyDelaySign(false)]
-[assembly: AssemblyKeyFile("..\\..\\AssemblyKey.snk")]
+[assembly: AssemblyKeyFile("..\\..\\..\\AssemblyKey.snk")]
 #endif
