@@ -31,6 +31,10 @@
 <p>Documentation for Abator is integrated into the Eclipse help system.  You can also browse it 
  <a href="http://svn.apache.org/repos/asf/ibatis/trunk/java/mapper/mapper2/tools/abator/org.apache.ibatis.abator.doc/html/gettingstarted/intro.html">
  here</a>.</p>
+ 
+<p>Abator is currently classified as an Alpha level release.  It has been extensively tested with DB2 and MySql.  Please help us test
+ (especially on other platforms), and report any feedback or errors
+ to the Java user list.</p>
 
 <h2>Installing Abator</h2>
 <h3>Requirements</h3>

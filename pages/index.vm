@@ -38,6 +38,12 @@
 </div>
 
 <h2>News</h2>
+<h3>New Tools Section</h3>
+<p>(Dec 10, 2005) We have added a tools section to the site.  The first tool is Abator - a code generator
+ for iBATIS (Java only).  Abator generates SqlMaps, Java domain classes, and Java DAO classes.<p>
+ 
+ <p><a href="tools.html">Check out the Tools Section.</a></p>
+
 <h3>Have a look at JPetStore 5.0</h3>
 <p>(Dec 8, 2005) JPetStore 5.0 is now available. This release focuses on cleaning up some of the mess created by
   JPetStore's heritage as a testbed for performance and comparisons to other implementations including LOC benchmarks,
