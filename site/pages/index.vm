@@ -38,8 +38,28 @@
 </div>
 
 <h2>News</h2>
+<h3>Have a look at JPetStore 5.0</h3>
+<p>(Dec 8, 2005) JPetStore 5.0 is now available. This release focuses on cleaning up some of the mess created by
+  JPetStore's heritage as a testbed for performance and comparisons to other implementations including LOC benchmarks,
+  which are a horrible thing.  Significant changes and additions include:
+</p>
+<ul>
+  <li><b>One step deploy!</b> JPetStore is now easier to deploy, and assuming you already have Tomcat and a JDK
+    installed, it's literally one step.  Drop the WAR file into Tomcat's webapps folder, and you're good to go.
+    JPetStore now includes HSQLDB and, with the default configuration, will deploy an in-memory database for
+    the duration of your run.  Of course, all of the other databases such as Oracle and MS SQL Server are
+    still supported as well.</li>
+  <li><b>93% Unit test coverage.</b>  It's about time, as it was quite embarassing not having adequate unit
+  tests for JPetStore for all of this time.  All layers are covered fairly well, including the actions
+  services and data access objects.</li>
+  <li><b>XHTML/CSS web pages.</b> No more 1990's style web development practices.  JPetStore now features web pages
+    based on XHTML and CSS.  That said, I (Clinton) am not much of an artist, so it still is no marvel of
+    visual style.  However, I think it does look quite a bit better.</li>
+  <li><b>Upgraded dependencies.</b> All of the 3rd party dependencies have been upgraded to their latest versions.</li>
+</ul>
+<p><a href="downloads.html">Get JPetStore 5.0 from the Downloads page.</a><br/>
 
-<h3>JDK 1.4 Required as of 2.2.0, iBATIS 1.x Compat Libs Removed, DTDs moved to Apache, </h3>
+<h3>As of 2.2.0 -- JDK 1.4 Required, iBATIS 1.x Compat Libs Removed, DTDs moved to Apache, </h3>
 
 <p>(Nov 8, 2005) All software systems that last any length of time tend to suffer from compatibility
   baggage. iBATIS is no different. iBATIS has remaind 99% backward compatible for 3.5 years now.
