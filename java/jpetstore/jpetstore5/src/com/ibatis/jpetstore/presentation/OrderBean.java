@@ -2,7 +2,6 @@ package com.ibatis.jpetstore.presentation;
 
 import com.ibatis.common.util.PaginatedList;
 import com.ibatis.jpetstore.domain.Order;
-import com.ibatis.jpetstore.service.AccountService;
 import com.ibatis.jpetstore.service.OrderService;
 import org.apache.struts.beanaction.ActionContext;
 
@@ -15,7 +14,6 @@ public class OrderBean extends AbstractBean {
 
   private static final List CARD_TYPE_LIST;
 
-  private AccountService accountService;
   private OrderService orderService;
 
   private Order order;
@@ -34,14 +32,13 @@ public class OrderBean extends AbstractBean {
   }
 
   public OrderBean() {
-    this(new AccountService(), new OrderService());
+    this(new OrderService());
   }
 
-  public OrderBean(AccountService accountService, OrderService orderService) {
+  public OrderBean(OrderService orderService) {
     order = new Order();
     shippingAddressRequired = false;
     confirmed = false;
-    this.accountService = accountService;
     this.orderService = orderService;
   }
 

@@ -17,15 +17,13 @@ import java.util.Map;
 public class OrderBeanTest extends MockObjectTestCase {
 
   public void testShouldGetCardTypes() {
-    Mock accountServiceMock = mock(AccountService.class);
     Mock orderServiceMock = mock(OrderService.class);
-    OrderBean bean = new OrderBean((AccountService)accountServiceMock.proxy(), (OrderService)orderServiceMock.proxy());
+    OrderBean bean = new OrderBean((OrderService)orderServiceMock.proxy());
     List cardList = bean.getCreditCardTypes();
     assertEquals(3, cardList.size());
   }
 
   public void testListListOrdersByUsername() {
-    Mock accountServiceMock = mock(AccountService.class);
     Mock orderServiceMock = mock(OrderService.class);
     PaginatedArrayList orderList = new PaginatedArrayList(5);
     orderList.add(new Order());
@@ -39,13 +37,12 @@ public class OrderBeanTest extends MockObjectTestCase {
     AccountBean accountBean = new AccountBean();
     accountBean.setUsername("not null");
     sessionMap.put("accountBean", accountBean);
-    OrderBean bean = new OrderBean((AccountService)accountServiceMock.proxy(), (OrderService)orderServiceMock.proxy());
+    OrderBean bean = new OrderBean((OrderService)orderServiceMock.proxy());
     assertEquals(AbstractBean.SUCCESS, bean.listOrders());
     assertEquals(3, bean.getOrderList().size());
   }
 
   public void testShouldSwitchOrderListPagesBackAndForth() {
-    Mock accountServiceMock = mock(AccountService.class);
     Mock orderServiceMock = mock(OrderService.class);
     PaginatedArrayList orderList = new PaginatedArrayList(2);
     orderList.add(new Order());
@@ -59,7 +56,7 @@ public class OrderBeanTest extends MockObjectTestCase {
     AccountBean accountBean = new AccountBean();
     accountBean.setUsername("not null");
     sessionMap.put("accountBean", accountBean);
-    OrderBean bean = new OrderBean((AccountService)accountServiceMock.proxy(), (OrderService)orderServiceMock.proxy());
+    OrderBean bean = new OrderBean((OrderService)orderServiceMock.proxy());
     bean.listOrders();
     bean.setPageDirection("next");
     bean.switchOrderPage();
@@ -70,18 +67,16 @@ public class OrderBeanTest extends MockObjectTestCase {
   }
 
   public void testShouldResetShippingAddressRequirement() {
-    Mock accountServiceMock = mock(AccountService.class);
     Mock orderServiceMock = mock(OrderService.class);
-    OrderBean bean = new OrderBean((AccountService)accountServiceMock.proxy(), (OrderService)orderServiceMock.proxy());
+    OrderBean bean = new OrderBean((OrderService)orderServiceMock.proxy());
     bean.setShippingAddressRequired(true);
     bean.reset();
     assertFalse(bean.isShippingAddressRequired());
   }
 
   public void testShouldClearAllFields() {
-    Mock accountServiceMock = mock(AccountService.class);
     Mock orderServiceMock = mock(OrderService.class);
-    OrderBean bean = new OrderBean((AccountService)accountServiceMock.proxy(), (OrderService)orderServiceMock.proxy());
+    OrderBean bean = new OrderBean((OrderService)orderServiceMock.proxy());
     Order order = new Order();
     bean.setOrder(order);
     bean.setShippingAddressRequired(true);
@@ -102,7 +97,6 @@ public class OrderBeanTest extends MockObjectTestCase {
     accountBean.setUsername("user");
     sessionMap.put("accountBean", accountBean);
 
-    Mock accountServiceMock = mock(AccountService.class);
     Mock orderServiceMock = mock(OrderService.class);
     Order order = new Order();
     order.setUsername("user");
@@ -110,7 +104,7 @@ public class OrderBeanTest extends MockObjectTestCase {
         .method("getOrder")
         .with(NOT_NULL)
         .will(returnValue(order));
-    OrderBean bean = new OrderBean((AccountService)accountServiceMock.proxy(), (OrderService)orderServiceMock.proxy());
+    OrderBean bean = new OrderBean((OrderService)orderServiceMock.proxy());
 
     assertEquals(AbstractBean.SUCCESS, bean.viewOrder());
     assertEquals(order, bean.getOrder());
@@ -122,7 +116,6 @@ public class OrderBeanTest extends MockObjectTestCase {
     accountBean.setUsername("not proper user");
     sessionMap.put("accountBean", accountBean);
 
-    Mock accountServiceMock = mock(AccountService.class);
     Mock orderServiceMock = mock(OrderService.class);
     Order order = new Order();
     order.setUsername("user");
@@ -130,16 +123,15 @@ public class OrderBeanTest extends MockObjectTestCase {
         .method("getOrder")
         .with(NOT_NULL)
         .will(returnValue(order));
-    OrderBean bean = new OrderBean((AccountService)accountServiceMock.proxy(), (OrderService)orderServiceMock.proxy());
+    OrderBean bean = new OrderBean((OrderService)orderServiceMock.proxy());
 
     assertEquals(AbstractBean.FAILURE, bean.viewOrder());
     assertNull(bean.getOrder());
   }
 
   public void testShouldForceSignonWhenAttemptingToCreateANewOrderWithoutBeingSignedIn () {
-    Mock accountServiceMock = mock(AccountService.class);
     Mock orderServiceMock = mock(OrderService.class);
-    OrderBean bean = new OrderBean((AccountService)accountServiceMock.proxy(), (OrderService)orderServiceMock.proxy());
+    OrderBean bean = new OrderBean((OrderService)orderServiceMock.proxy());
     assertEquals(AbstractBean.SIGNON, bean.newOrderForm());
   }
 
@@ -163,7 +155,7 @@ public class OrderBeanTest extends MockObjectTestCase {
     sessionMap.put("accountBean", accountBean);
 
     Mock orderServiceMock = mock(OrderService.class);
-    OrderBean bean = new OrderBean((AccountService)accountServiceMock.proxy(), (OrderService)orderServiceMock.proxy());
+    OrderBean bean = new OrderBean((OrderService)orderServiceMock.proxy());
     assertEquals(AbstractBean.FAILURE, bean.newOrderForm());
   }
 
@@ -188,31 +180,28 @@ public class OrderBeanTest extends MockObjectTestCase {
     sessionMap.put("cartBean", new CartBean());
 
     Mock orderServiceMock = mock(OrderService.class);
-    OrderBean bean = new OrderBean((AccountService)accountServiceMock.proxy(), (OrderService)orderServiceMock.proxy());
+    OrderBean bean = new OrderBean((OrderService)orderServiceMock.proxy());
 
     assertEquals(AbstractBean.SUCCESS, bean.newOrderForm());
   }
 
   public void testShouldRequireShippingAddressBeforeNewOrder() {
-    Mock accountServiceMock = mock(AccountService.class);
     Mock orderServiceMock = mock(OrderService.class);
-    OrderBean bean = new OrderBean((AccountService)accountServiceMock.proxy(), (OrderService)orderServiceMock.proxy());
+    OrderBean bean = new OrderBean((OrderService)orderServiceMock.proxy());
     bean.setShippingAddressRequired(true);
     assertEquals(AbstractBean.SHIPPING,bean.newOrder());
   }
 
   public void testShouldConfirmationBeforeNewOrder() {
-    Mock accountServiceMock = mock(AccountService.class);
     Mock orderServiceMock = mock(OrderService.class);
-    OrderBean bean = new OrderBean((AccountService)accountServiceMock.proxy(), (OrderService)orderServiceMock.proxy());
+    OrderBean bean = new OrderBean((OrderService)orderServiceMock.proxy());
     bean.setConfirmed(false);
     assertEquals(AbstractBean.CONFIRM,bean.newOrder());
   }
 
   public void testShouldFaileDueToMissingNewOrder() {
-    Mock accountServiceMock = mock(AccountService.class);
     Mock orderServiceMock = mock(OrderService.class);
-    OrderBean bean = new OrderBean((AccountService)accountServiceMock.proxy(), (OrderService)orderServiceMock.proxy());
+    OrderBean bean = new OrderBean((OrderService)orderServiceMock.proxy());
     bean.setConfirmed(true);
     bean.setOrder(null);
     assertEquals(AbstractBean.FAILURE,bean.newOrder());
@@ -222,12 +211,11 @@ public class OrderBeanTest extends MockObjectTestCase {
     Map sessionMap = ActionContext.getActionContext().getSessionMap();
     sessionMap.put("cartBean", new CartBean());
 
-    Mock accountServiceMock = mock(AccountService.class);
     Mock orderServiceMock = mock(OrderService.class);
     orderServiceMock.expects(once())
         .method("insertOrder")
         .with(NOT_NULL);
-    OrderBean bean = new OrderBean((AccountService)accountServiceMock.proxy(), (OrderService)orderServiceMock.proxy());
+    OrderBean bean = new OrderBean((OrderService)orderServiceMock.proxy());
     bean.setConfirmed(true);
     assertEquals(AbstractBean.SUCCESS,bean.newOrder());
   }
