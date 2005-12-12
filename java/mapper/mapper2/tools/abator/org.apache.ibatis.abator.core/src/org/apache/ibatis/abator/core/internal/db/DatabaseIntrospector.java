@@ -44,10 +44,26 @@ public class DatabaseIntrospector {
 				.getFullyQualifiedTableName());
 
 		DatabaseMetaData dbmd = connection.getMetaData();
-
-		ResultSet rs = dbmd.getColumns(tc.getTable().getCatalog(), tc
-				.getTable().getSchema(), tc.getTable().getTableName(),
-				null);
+		
+		String localCatalog;
+		String localSchema;
+		String localTableName;
+		
+		if (dbmd.storesLowerCaseIdentifiers()) {
+		    localCatalog = tc.getTable().getCatalog() == null ? null : tc.getTable().getCatalog().toLowerCase();
+		    localSchema = tc.getTable().getSchema() == null ? null : tc.getTable().getSchema().toLowerCase();
+		    localTableName = tc.getTable().getTableName() == null ? null : tc.getTable().getTableName().toLowerCase();
+		} else if (dbmd.storesUpperCaseIdentifiers()) {
+		    localCatalog = tc.getTable().getCatalog() == null ? null : tc.getTable().getCatalog().toUpperCase();
+		    localSchema = tc.getTable().getSchema() == null ? null : tc.getTable().getSchema().toUpperCase();
+		    localTableName = tc.getTable().getTableName() == null ? null : tc.getTable().getTableName().toUpperCase();
+		} else {
+		    localCatalog = tc.getTable().getCatalog();
+		    localSchema = tc.getTable().getSchema();
+		    localTableName = tc.getTable().getTableName();
+		}
+		
+		ResultSet rs = dbmd.getColumns(localCatalog, localSchema, localTableName, null);
 
 		int columnCount = 0;
 		boolean hasNonBlobColumns = false;
@@ -138,8 +154,7 @@ public class DatabaseIntrospector {
 		// now make sure that all columns called out in the configuration actually exist
 		tc.reportWarnings(cds, warnings);
 
-		rs = dbmd.getPrimaryKeys(tc.getTable().getCatalog(), tc
-				.getTable().getSchema(), tc.getTable().getTableName());
+		rs = dbmd.getPrimaryKeys(localCatalog, localSchema, localTableName);
 		while (rs.next()) {
 			cds.addPrimaryKeyColumn(rs.getString("COLUMN_NAME"));
 		}
