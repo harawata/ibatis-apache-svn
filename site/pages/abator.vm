@@ -62,7 +62,7 @@
 </ol>
 <h3>Manual Eclipse Install</h3>
 <p>The automatic install is much preferred, but you can also install Abator manually if you
- desire. To install manually, download the file <a href="http://cvs.apache.org/builds/ibatis/alpha/abator0.5.0.zip">abator0.5.0.zip</a> and unzip
+ desire. To install manually, download the file <a href="http://cvs.apache.org/builds/ibatis/alpha/abator0.5.1.zip">abator0.5.1.zip</a> and unzip
  the file to some convenient location.  Then follow these steps in Eclipse:</p>
 <ol>
   <li>Take the "Help&gt;Software Updates&gt;Find and Install" Menu Option</li>
