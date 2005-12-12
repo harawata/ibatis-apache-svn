@@ -69,12 +69,16 @@ public class FullyQualifiedTable {
 
 		if (StringUtility.stringHasValue(catalog)) {
 			sb.append(catalog);
-			sb.append("."); //$NON-NLS-1$
+			sb.append('.');
 		}
 
 		if (StringUtility.stringHasValue(schema)) {
 			sb.append(schema);
-			sb.append("."); //$NON-NLS-1$
+			sb.append('.');
+		} else {
+		    if (sb.length() > 0) {
+				sb.append('.');
+		    }
 		}
 
 		sb.append(tableName);
@@ -82,6 +86,28 @@ public class FullyQualifiedTable {
 		return sb.toString();
 	}
 
+	public String getFullyQualifiedTableNameWithUnderscores() {
+		StringBuffer sb = new StringBuffer();
+
+		if (StringUtility.stringHasValue(catalog)) {
+			sb.append(catalog);
+			sb.append('_');
+		}
+
+		if (StringUtility.stringHasValue(schema)) {
+			sb.append(schema);
+			sb.append('_');
+		} else {
+		    if (sb.length() > 0) {
+				sb.append('_');
+		    }
+		}
+
+		sb.append(tableName);
+
+		return sb.toString();
+	}
+	
 	public String getDomainObjectName() {
 		if (StringUtility.stringHasValue(domainObjectName)) {
 			return domainObjectName;
@@ -120,20 +146,6 @@ public class FullyQualifiedTable {
     }
     
     public String toString() {
-        StringBuffer sb = new StringBuffer();
-        
-        if (StringUtility.stringHasValue(catalog)) {
-            sb.append(catalog);
-            sb.append('.');
-        }
-        
-        if (StringUtility.stringHasValue(schema)) {
-            sb.append(schema);
-            sb.append('.');
-        }
-        
-        sb.append(tableName);
-        
-        return sb.toString();
+        return getFullyQualifiedTableName();
     }
 }

@@ -253,4 +253,13 @@ public class TableConfiguration extends PropertyHolder {
             warnings.add(sb.toString());
 	    }
 	}
+	
+	public boolean areAnyStatementsEnabled() {
+	    return selectByExampleStatementEnabled
+	    	|| selectByPrimaryKeyStatementEnabled
+	    	|| insertStatementEnabled
+	    	|| updateByPrimaryKeyStatementEnabled
+	    	|| deleteByExampleStatementEnabled
+	    	|| deleteByPrimaryKeyStatementEnabled;
+	}
 }

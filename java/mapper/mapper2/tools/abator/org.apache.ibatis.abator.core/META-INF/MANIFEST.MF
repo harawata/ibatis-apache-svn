@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-Name: Abator Core Plug-in
 Bundle-SymbolicName: org.apache.ibatis.abator.core
-Bundle-Version: 0.5.0
+Bundle-Version: 0.5.1
 Bundle-ClassPath: abatorcore.jar
 Bundle-Localization: plugin
 Eclipse-AutoStart: false

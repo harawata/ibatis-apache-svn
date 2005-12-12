@@ -196,6 +196,15 @@ public class AbatorContext {
 			Iterator iter = tableConfigurations.iterator();
 			while (iter.hasNext()) {
 				TableConfiguration tc = (TableConfiguration) iter.next();
+				if (!tc.areAnyStatementsEnabled()) {
+				    StringBuffer sb = new StringBuffer();
+				    sb.append("There are no statements enabled for table ");
+				    sb.append(tc.getTable().getFullyQualifiedTableName());
+				    sb.append(", table will be ignored.");
+				    warnings.add(sb.toString());
+				    continue;
+				}
+				
 				String tableName = tc.getTable().toString();
 
 				ColumnDefinitions columnDefinitions;

@@ -45,6 +45,7 @@ import org.eclipse.core.runtime.SubProgressMonitor;
  */
 public class RunAbatorThread implements IWorkspaceRunnable {
     private File inputFile;
+
     private List warnings;
 
     /**
@@ -74,48 +75,53 @@ public class RunAbatorThread implements IWorkspaceRunnable {
             monitor.worked(50);
 
             Abator abator = new Abator(config, warnings);
-            
+
             monitor.subTask("Generating Files from Database Tables");
             SubProgressMonitor spm = new SubProgressMonitor(monitor, 475);
             abator.generateFiles(new MyProgressCallback(spm));
 
-            int workStepUnits = 475 / (abator.getGeneratedJavaFiles().size() + abator
-                    .getGeneratedXmlFiles().size());
+            int totalFilesToSave = abator.getGeneratedJavaFiles().size()
+                    + abator.getGeneratedXmlFiles().size();
 
-            EclipseInterface ei = new EclipseInterface();
+            if (totalFilesToSave > 0) {
+                int workStepUnits = 475 / totalFilesToSave;
 
-            Iterator iter = abator.getGeneratedJavaFiles().iterator();
-            while (iter.hasNext()) {
-                GeneratedJavaFile gf = (GeneratedJavaFile) iter.next();
+                EclipseInterface ei = new EclipseInterface();
 
-                checkForCancel(monitor);
-                monitor.subTask("Saving file " + gf.getFileName());
-                ei.saveJavaFile(gf);
-                monitor.worked(workStepUnits);
-            }
+                Iterator iter = abator.getGeneratedJavaFiles().iterator();
+                while (iter.hasNext()) {
+                    GeneratedJavaFile gf = (GeneratedJavaFile) iter.next();
 
-            iter = abator.getGeneratedXmlFiles().iterator();
-            while (iter.hasNext()) {
-                GeneratedXmlFile gf = (GeneratedXmlFile) iter.next();
-
-                checkForCancel(monitor);
-                monitor.subTask("Saving file " + gf.getFileName());
-                try {
-                    ei.saveXmlFile(gf);
-                } catch (UnableToMergeException e) {
-                    warnings.add(e.getMessage());
-
-                    String message = "File merge error while running Abator.";
-
-                    Status status = new Status(IStatus.ERROR, AbatorUIPlugin
-                            .getPluginId(), IStatus.ERROR, message, e);
-
-                    AbatorUIPlugin.getDefault().getLog().log(status);
+                    checkForCancel(monitor);
+                    monitor.subTask("Saving file " + gf.getFileName());
+                    ei.saveJavaFile(gf);
+                    monitor.worked(workStepUnits);
                 }
-                monitor.worked(workStepUnits);
-            }
 
-            ei.refreshAllFolders();
+                iter = abator.getGeneratedXmlFiles().iterator();
+                while (iter.hasNext()) {
+                    GeneratedXmlFile gf = (GeneratedXmlFile) iter.next();
+
+                    checkForCancel(monitor);
+                    monitor.subTask("Saving file " + gf.getFileName());
+                    try {
+                        ei.saveXmlFile(gf);
+                    } catch (UnableToMergeException e) {
+                        warnings.add(e.getMessage());
+
+                        String message = "File merge error while running Abator.";
+
+                        Status status = new Status(IStatus.ERROR,
+                                AbatorUIPlugin.getPluginId(), IStatus.ERROR,
+                                message, e);
+
+                        AbatorUIPlugin.getDefault().getLog().log(status);
+                    }
+                    monitor.worked(workStepUnits);
+                }
+
+                ei.refreshAllFolders();
+            }
         } catch (InterruptedException e) {
             throw new OperationCanceledException();
         } catch (SQLException e) {
@@ -166,32 +172,33 @@ public class RunAbatorThread implements IWorkspaceRunnable {
             throw new OperationCanceledException();
         }
     }
-    
+
     private class MyProgressCallback implements ProgressCallback {
-        
+
         private SubProgressMonitor subMonitor;
-        
+
         public MyProgressCallback(SubProgressMonitor subMonitor) {
             this.subMonitor = subMonitor;
         }
-        
+
         public void checkCancel() throws InterruptedException {
             if (subMonitor.isCanceled()) {
                 throw new InterruptedException();
             }
         }
-        
+
         public void finished() {
             subMonitor.done();
         }
-        
+
         public void setTaskName(String taskName) {
             subMonitor.subTask(taskName);
             subMonitor.worked(1);
         }
-        
+
         public void setTotalSteps(int totalSteps) {
-            subMonitor.beginTask("Generating Files from Database Tables", totalSteps);
+            subMonitor.beginTask("Generating Files from Database Tables",
+                    totalSteps);
         }
     }
 }

@@ -167,7 +167,7 @@ public class JavaModelGeneratorDefaultImpl implements JavaModelGenerator {
 		if (s == null) {
 			StringBuffer sb = new StringBuffer();
 			sb.append(getJavaModelPackage(table));
-			sb.append("."); //$NON-NLS-1$
+			sb.append('.');
 			sb.append(getExampleShortClassName(table));
 
 			s = sb.toString();
@@ -203,7 +203,7 @@ public class JavaModelGeneratorDefaultImpl implements JavaModelGenerator {
 		if (s == null) {
 			StringBuffer sb = new StringBuffer();
 			sb.append(getJavaModelPackage(table));
-			sb.append("."); //$NON-NLS-1$
+			sb.append('.');
 			sb.append(getPrimaryKeyShortClassName(table));
 
 			s = sb.toString();
@@ -252,7 +252,7 @@ public class JavaModelGeneratorDefaultImpl implements JavaModelGenerator {
 		if (s == null) {
 			StringBuffer sb = new StringBuffer();
 			sb.append(getJavaModelPackage(table));
-			sb.append("."); //$NON-NLS-1$
+			sb.append('.');
 			sb.append(getRecordShortClassName(table));
 
 			s = sb.toString();
@@ -271,7 +271,7 @@ public class JavaModelGeneratorDefaultImpl implements JavaModelGenerator {
 		if (s == null) {
 			StringBuffer sb = new StringBuffer();
 			sb.append(getJavaModelPackage(table));
-			sb.append("."); //$NON-NLS-1$
+			sb.append('.');
 			sb.append(getRecordWithBLOBsShortClassName(table));
 
 			s = sb.toString();

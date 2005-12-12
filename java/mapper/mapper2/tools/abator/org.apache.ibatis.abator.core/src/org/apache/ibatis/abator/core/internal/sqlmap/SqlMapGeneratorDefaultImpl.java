@@ -746,21 +746,7 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
 		Map map = getTableStringMap(table);
 		s = (String) map.get(key);
 		if (s == null) {
-			StringBuffer sb = new StringBuffer();
-
-			if (StringUtility.stringHasValue(table.getCatalog())) {
-				sb.append(table.getCatalog());
-				sb.append('_');
-			}
-
-			if (StringUtility.stringHasValue(table.getSchema())) {
-				sb.append(table.getSchema());
-				sb.append('_');
-			}
-
-			sb.append(table.getTableName());
-
-			s = sb.toString();
+		    s = table.getFullyQualifiedTableNameWithUnderscores();
 			map.put(key, s);
 		}
 
@@ -800,18 +786,8 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
 		s = (String) map.get(key);
 		if (s == null) {
 			StringBuffer sb = new StringBuffer();
+			sb.append(table.getFullyQualifiedTableNameWithUnderscores());
 
-			if (StringUtility.stringHasValue(table.getCatalog())) {
-				sb.append(table.getCatalog());
-				sb.append('_');
-			}
-
-			if (StringUtility.stringHasValue(table.getSchema())) {
-				sb.append(table.getSchema());
-				sb.append('_');
-			}
-
-			sb.append(table.getTableName());
 			sb.append("_SqlMap.xml"); //$NON-NLS-1$
 
 			s = sb.toString();
