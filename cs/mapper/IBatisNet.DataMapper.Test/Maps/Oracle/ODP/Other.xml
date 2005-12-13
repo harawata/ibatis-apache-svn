@@ -102,6 +102,10 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 		</statement>
 				
 		<!--
+		Use custom typeHandler to get around error since Oracle column is an integer and 
+		ODP does not have a proper typeHandler to convert bool to Oracle integer data type
+
+		Otherwise...		
 		Throws System.ArgumentException : 
 		Value does not fall within the expected range.
 		
@@ -123,15 +127,19 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 				Other_Bit, 
 				Other_String
 			from Others  
-			Where Other_Bit = #Bool# 
+			Where Other_Bit = #Bool,handler=OneZeroBool# 
 		</statement>
 		
+		<!--
+		Use typeHandler to get around error since Oracle column is an integer and 
+		ODP does not have a proper typeHandler to convert bool to Oracle integer data type
+		-->		
 		<statement id="InsertBool" 
 			parameterClass="Other">
 			Insert into Others
 				( Other_Int, Other_Long, Other_Bit, Other_String )
 			values
-			( #Int#, #Long#, #Bool#, 'Yes')
+			( #Int#, #Long#, #Bool,handler=OneZeroBool#, 'Yes')
 		</statement>	
 		
 		<statement id="InsertCustomTypeHandler" 
@@ -159,7 +167,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			Insert into Others
 				( Other_Int, Other_Long, Other_Bit, Other_String  )
 			values
-			( #Int#, #Long#, #Bool#, #Bool2,type=bool,dbType=VarChar#)
+			( #Int#, #Long#, #Bool,handler=OneZeroBool#, #Bool2,type=bool,dbType=Varchar2#)
 		</statement>
 		
 		<statement id="InsertInlineCustomTypeHandlerV2" 
@@ -167,7 +175,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			Insert into Others
 				( Other_Int, Other_Long, Other_Bit, Other_String  )
 			values
-			( #Int#, #Long#, #Bool#, #Bool2,handler=OuiNonBool#)
+			( #Int#, #Long#, #Bool,handler=OneZeroBool#, #Bool2,handler=OuiNonBool#)
 		</statement>							
 	</statements>
 	

@@ -97,6 +97,10 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 					resultClass="long" >
 			select 9223372036854775800 from dual where 1 = #value#
 		</statement>
+		<statement id="GetInt64WithoutResultClass"
+					parameterClass="Int"
+					extends="GetInt64">
+		</statement>		
 		
 		<statement id="GetSingle"
 					parameterClass="Int"
