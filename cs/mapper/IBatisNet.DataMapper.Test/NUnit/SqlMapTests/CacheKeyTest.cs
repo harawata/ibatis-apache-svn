@@ -1,5 +1,6 @@
 
 
+using IBatisNet.DataMapper.Configuration.Cache;
 using NUnit.Framework;
 
 namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
@@ -27,11 +28,11 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		private static void DoTestClassEquals(long firstLong, long secondLong)
 		{
 			// Two cache keys are equal except for the parameter.
-			Configuration.Cache.CacheKey key = new Configuration.Cache.CacheKey();
+			CacheKey key = new CacheKey();
 
 			key.Update(firstLong);
 
-			Configuration.Cache.CacheKey aDifferentKey = new Configuration.Cache.CacheKey();
+			CacheKey aDifferentKey = new CacheKey();
 
 			key.Update(secondLong);
 
@@ -41,8 +42,8 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		[Test]
 		public void CacheKeyWithSameHashcode() 
 		{
-			Configuration.Cache.CacheKey key1 = new Configuration.Cache.CacheKey();
-			Configuration.Cache.CacheKey key2 = new Configuration.Cache.CacheKey();
+			CacheKey key1 = new CacheKey();
+			CacheKey key2 = new CacheKey();
 
 			key1.Update("HS1CS001");
 			key2.Update("HS1D4001");
@@ -54,8 +55,8 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		[Test]
 		public void CacheKeyWithTwoParamsSameHashcode() 
 		{
-			Configuration.Cache.CacheKey key1 = new Configuration.Cache.CacheKey();
-			Configuration.Cache.CacheKey key2 = new Configuration.Cache.CacheKey();
+			CacheKey key1 = new CacheKey();
+			CacheKey key2 = new CacheKey();
 
 			key1.Update("HS1CS001");
 			key1.Update("HS1D4001");

@@ -164,9 +164,12 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		public void TestCacheNullObject()
 		{
 			CacheModel cache = GetCacheModel();
-			cache["testKey"] = null;
+			CacheKey key = new CacheKey();
+			key.Update("testKey");
 
-			object returnedObject = cache["testKey"];
+			cache[key] = null;
+
+			object returnedObject = cache[key];
 			Assert.AreEqual(CacheModel.NULL_OBJECT, returnedObject);
 			Assert.AreEqual(HashCodeProvider.GetIdentityHashCode(CacheModel.NULL_OBJECT), HashCodeProvider.GetIdentityHashCode(returnedObject));
 			Assert.AreEqual(1, cache.HitRatio);
@@ -180,10 +183,13 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		public void TestCacheHit() 
 		{
 			CacheModel cache = GetCacheModel();
-			string value = "testValue";
-			cache["testKey"] = value;
+			CacheKey key = new CacheKey();
+			key.Update("testKey");
 
-			object returnedObject = cache["testKey"];
+			string value = "testValue";
+			cache[key] = value;
+
+			object returnedObject = cache[key];
 			Assert.AreEqual(value, returnedObject);
 			Assert.AreEqual(HashCodeProvider.GetIdentityHashCode(value), HashCodeProvider.GetIdentityHashCode(returnedObject));
 			Assert.AreEqual(1, cache.HitRatio);
@@ -196,10 +202,16 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		public void TestCacheMiss() 
 		{
 			CacheModel cache = GetCacheModel();
-			string value = "testValue";
-			cache["testKey"] = value;
+			CacheKey key = new CacheKey();
+			key.Update("testKey");
 
-			object returnedObject = cache["wrongKey"];
+			string value = "testValue";
+			cache[key] = value;
+
+			CacheKey wrongKey = new CacheKey();
+			wrongKey.Update("wrongKey");
+
+			object returnedObject = cache[wrongKey];
 			Assert.IsTrue(!value.Equals(returnedObject));
 			Assert.IsNull(returnedObject) ;
 			Assert.AreEqual(0, cache.HitRatio);
@@ -212,19 +224,51 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		public void TestCacheHitMiss() 
 		{
 			CacheModel cache = GetCacheModel();
-			string value = "testValue";
-			cache["testKey"] = value;
+			CacheKey key = new CacheKey();
+			key.Update("testKey");
 
-			object returnedObject = cache["testKey"];
+			string value = "testValue";
+			cache[key] = value;
+
+			object returnedObject = cache[key];
 			Assert.AreEqual(value, returnedObject);
 			Assert.AreEqual(HashCodeProvider.GetIdentityHashCode(value), HashCodeProvider.GetIdentityHashCode(returnedObject));
 
-			returnedObject = cache["wrongKey"];
+			CacheKey wrongKey = new CacheKey();
+			wrongKey.Update("wrongKey");
+
+			returnedObject = cache[wrongKey];
 			Assert.IsTrue(!value.Equals(returnedObject));
 			Assert.IsNull(returnedObject) ;
 			Assert.AreEqual(0.5, cache.HitRatio);
 		}
 
+
+		/// <summary>
+		/// Test Duplicate Add to Cache
+		/// </summary>
+		/// <remarks>IBATISNET-134</remarks>
+		[Test]
+		public void TestDuplicateAddCache() 
+		{
+			CacheModel cache = GetCacheModel();
+			CacheKey key = new CacheKey();
+			key.Update("testKey");
+			string value = "testValue";
+
+			object obj = null;
+			obj = cache[key];
+			Assert.IsNull(obj);
+			obj = cache[key];
+			Assert.IsNull(obj);
+
+			cache[key] = value;
+			cache[key] = value;
+
+			object returnedObject = cache[key];
+			Assert.AreEqual(value, returnedObject);
+			Assert.AreEqual(HashCodeProvider.GetIdentityHashCode(value), HashCodeProvider.GetIdentityHashCode(returnedObject));
+		}
 
 		private CacheModel GetCacheModel() 
 		{

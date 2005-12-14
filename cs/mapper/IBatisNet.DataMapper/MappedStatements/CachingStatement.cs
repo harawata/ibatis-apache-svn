@@ -30,11 +30,8 @@ using System.Data;
 using IBatisNet.Common;
 using IBatisNet.DataMapper.Commands;
 using IBatisNet.DataMapper.Configuration.Cache;
-using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.Statements;
 using IBatisNet.DataMapper.Scope;
-using IBatisNet.DataMapper.MappedStatements;
-using Cache = IBatisNet.DataMapper.Configuration.Cache;
 
 #endregion 
 
@@ -59,22 +56,6 @@ namespace IBatisNet.DataMapper.MappedStatements
 		public CachingStatement(MappedStatement statement) 
 		{
 			_mappedStatement = statement;
-		}
-
-		/// <summary>
-		/// Gets a percentage of successful cache hits achieved
-		/// </summary>
-		/// <returns>The percentage of hits (0-1), or -1 if cache is disabled.</returns>
-		public double GetDataCacheHitRatio() 
-		{
-			if (_mappedStatement.Statement.CacheModel != null) 
-			{
-				return _mappedStatement.Statement.CacheModel.HitRatio;
-			} 
-			else 
-			{
-				return -1;
-			}
 		}
 
 		#region IMappedStatement Members
@@ -130,7 +111,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 			_mappedStatement.PreparedCommand.Create( request, session, this.Statement, parameterObject );
 
-			Cache.CacheKey cacheKey = this.GetCacheKey(request);
+			CacheKey cacheKey = this.GetCacheKey(request);
 			cacheKey.Update("ExecuteQueryForMap");
 			cacheKey.Update(keyProperty);
 			cacheKey.Update(valueProperty);
@@ -198,7 +179,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 			_mappedStatement.PreparedCommand.Create( request, session, this.Statement, parameterObject );
 
-			Cache.CacheKey cacheKey = this.GetCacheKey(request);
+			CacheKey cacheKey = this.GetCacheKey(request);
 			cacheKey.Update("ExecuteQueryForList");
 			cacheKey.Update(skipResults);
 			cacheKey.Update(maxResults);
@@ -252,7 +233,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 			_mappedStatement.PreparedCommand.Create( request, session, this.Statement, parameterObject );
 
-			Cache.CacheKey cacheKey = this.GetCacheKey(request);
+			CacheKey cacheKey = this.GetCacheKey(request);
 			cacheKey.Update("ExecuteQueryForObject");
 
 			obj = this.Statement.CacheModel[cacheKey];
@@ -302,9 +283,25 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 		#endregion
 
-		private Cache.CacheKey GetCacheKey(RequestScope request) 
+		/// <summary>
+		/// Gets a percentage of successful cache hits achieved
+		/// </summary>
+		/// <returns>The percentage of hits (0-1), or -1 if cache is disabled.</returns>
+		public double GetDataCacheHitRatio() 
 		{
-			Cache.CacheKey cacheKey = new Cache.CacheKey();
+			if (_mappedStatement.Statement.CacheModel != null) 
+			{
+				return _mappedStatement.Statement.CacheModel.HitRatio;
+			} 
+			else 
+			{
+				return -1;
+			}
+		}
+
+		private CacheKey GetCacheKey(RequestScope request) 
+		{
+			CacheKey cacheKey = new CacheKey();
 			for (int i = 0; i < request.IDbCommand.Parameters.Count; i++) 
 			{
 				IDataParameter dataParameter = (IDataParameter)request.IDbCommand.Parameters[i];

@@ -30,13 +30,13 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
 using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Logging;
 using IBatisNet.Common.Utilities;
 using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.MappedStatements;
-using IBatisNet.DataMapper.Scope;
 
 #endregion
 
@@ -51,6 +51,8 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 	public class CacheModel
 	{
 		#region Fields
+
+		private static IDictionary  _lockMap = new HybridDictionary();
 
 		[NonSerialized]
 		private static readonly ILog _logger = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
@@ -233,7 +235,7 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 		/// A side effect of this method is that is may clear the cache
 		/// if it has not been cleared in the flushInterval.
 		/// </remarks> 
-		public object this [object key] 
+		public object this [CacheKey key] 
 		{
 			get
 			{
@@ -246,7 +248,11 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 					}
 				}
 
-				object value = _controller[key];
+				object value = null;
+				lock (GetLock(key)) 
+				{
+					value = _controller[key];
+				}
 
 				lock(_statLock) 
 				{
@@ -295,5 +301,24 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 		}
 		#endregion
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="key"></param>
+		/// <returns></returns>
+		[MethodImpl(MethodImplOptions.Synchronized)]
+		public object GetLock(CacheKey key) 
+		{
+			int controllerId = HashCodeProvider.GetIdentityHashCode(_controller);
+			int keyHash = key.GetHashCode();
+			int lockKey = 29 * controllerId + keyHash;
+			object lok =_lockMap[lockKey];
+			if (lok == null) 
+			{
+				lok = lockKey; //might as well use the same object
+				_lockMap[lockKey] = lok;
+			}
+			return lok;
+		}
 	}
 }
