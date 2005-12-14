@@ -305,6 +305,21 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		}
 
 		/// <summary>
+		/// Test Dynamic With Extend
+		/// </summary>
+		[Test]
+		public void TestDynamicWithExtend() 
+		{
+			Account account = new Account();
+			account.Id = -1;
+			
+			IList list = sqlMap.QueryForList("DynamicWithExtend", account);
+			
+			AssertAccount1((Account) list[0]);
+			Assert.AreEqual(5, list.Count);
+		}
+
+		/// <summary>
 		/// Test Multiple Iterate
 		/// </summary>
 		[Test]

@@ -8,6 +8,48 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			
 	<statements>
 	
+		<select  id="DynamicAll"
+					parameterClass="Account"
+					resultClass="Account">
+				select
+				Account_ID			as Id,
+				Account_FirstName	as FirstName,
+				Account_LastName	as LastName,
+				Account_Email		as EmailAddress
+				from Accounts
+		</select>
+		
+		<select id="DynamicWithExtend"
+				extends="DynamicAll"
+				parameterClass="Account"
+				resultClass="Account">
+			<dynamic prepend="WHERE" >
+			<isGreaterThan prepend="AND" property="Id" compareValue="0"  >
+				Account_ID = #Id#
+			</isGreaterThan>
+			<isNotNull prepend="AND" property="Ids" >
+				Account_ID in
+				<iterate property="Ids" open="(" close=")"  conjunction="," >
+					#Ids[]#
+				</iterate>
+			</isNotNull>
+			<isNotEmpty prepend="AND" property="FirstName" >
+				Account_FirstName = #FirstName#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="LastName" >
+				Account_LastName = #LastName#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="EmailAddress" >
+				<isEqual property="EmailAddress" compareValue="Joe">
+				Account_Email = 'clinton.begin@ibatis.com'
+				</isEqual>
+				<isNotEqual property="EmailAddress" compareValue="Joe">
+				Account_Email = #EmailAddress#
+				</isNotEqual>
+			</isNotEmpty>
+			</dynamic>
+		</select>
+			
 		<!-- IBATISNET-114: remapResults -->
 		<statement  id="DynamicSqlOnColumnSelection" 
 					parameterClass="Account" 

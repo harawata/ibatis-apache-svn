@@ -214,7 +214,17 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 			</iterate>
 		</statement>
 
-
+		<select  id="DynamicAll"
+					parameterClass="Account"
+					resultClass="Account">
+				select
+				Account_ID			as Id,
+				Account_FirstName	as FirstName,
+				Account_LastName	as LastName,
+				Account_Email		as EmailAddress
+				from Accounts
+		</select>
+		
 		<statement id="DynamicQueryByExample"
 					parameterClass="Account"
 					resultClass="Account">
@@ -251,6 +261,37 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 			</dynamic>
 		</statement>
 
+		<select id="DynamicWithExtend"
+				extends="DynamicAll"
+				parameterClass="Account"
+				resultClass="Account">
+			<dynamic prepend="WHERE" >
+			<isGreaterThan prepend="AND" property="Id" compareValue="0"  >
+				Account_ID = #Id#
+			</isGreaterThan>
+			<isNotNull prepend="AND" property="Ids" >
+				Account_ID in
+				<iterate property="Ids" open="(" close=")"  conjunction="," >
+					#Ids[]#
+				</iterate>
+			</isNotNull>
+			<isNotEmpty prepend="AND" property="FirstName" >
+				Account_FirstName = #FirstName#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="LastName" >
+				Account_LastName = #LastName#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="EmailAddress" >
+				<isEqual property="EmailAddress" compareValue="Joe">
+				Account_Email = 'clinton.begin@ibatis.com'
+				</isEqual>
+				<isNotEqual property="EmailAddress" compareValue="Joe">
+				Account_Email = #EmailAddress#
+				</isNotEqual>
+			</isNotEmpty>
+			</dynamic>
+		</select>
+		
 		<statement id="DynamicIterateWithPrepend1"
 					parameterClass="list"
 					resultClass="Account">
@@ -266,8 +307,8 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				#[]#
 			</iterate>
 			</dynamic>
-		</statement>
-
+		</statement>	
+		
 		<statement id="DynamicIterateWithPrepend2"
 					parameterClass="list"
 					resultClass="Account">

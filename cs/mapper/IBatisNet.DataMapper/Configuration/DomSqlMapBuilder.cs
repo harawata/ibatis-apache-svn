@@ -314,6 +314,7 @@ namespace IBatisNet.DataMapper.Configuration
 		{
 			_configScope = new ConfigurationScope();
 			_configScope.ValidateSqlMapConfig = validateSqlMapConfig;
+			_deSerializerFactory = new DeSerializerFactory(_configScope);
 			_paramParser = new InlineParameterMapParser( _configScope.ErrorContext );
 		}		
 		#endregion 
