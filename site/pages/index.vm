@@ -38,7 +38,24 @@
 </div>
 
 <h2>News</h2>
-<h3>New Tools Section</h3>
+
+  <h3>iBATIS.NET DataMapper V1.3 Beta and DataAccess V1.7 Beta</h3>
+  <p>The iBATIS.NET team is pleased to announce that the Beta distributions of the DataMapper V1.3 and DataAccess V1.7 frameworks are ready! 
+  Although this is primarily for bug fixes and documentation updates, there are some important changes:</p>
+  <ul>
+    <li><b>Enabling Intellisense in Visual Studio 2003</b> for configuration and mapping files</li>
+    <li><b>Updates to configuration and mapping schemas</b></li>
+    <li>Now uses <b>Castle.DynamicProxy V1.1.5.0</b></li>
+    <li>Added <b>assembly signatures</b></li>
+    <li>Provides <b>custom logger support</b></li>
+    <li><b>Removes the use of Xml serialization</b> for loading configuration files</li>
+  </ul>
+
+  <p>Please see the change log for more details.  Thanks once again for your comments and suggestions. Enjoy!</p>
+
+  <p><a href="downloads.html">Get the DataMapper V1.3 Beta and DataAccess V1.7 Beta from the Downloads page.</a></p>
+
+    <h3>New Tools Section</h3>
 <p>(Dec 10, 2005) We have added a tools section to the site.  The first tool is Abator - a code generator
  for iBATIS (Java only).  Abator generates SqlMaps, Java domain classes, and Java DAO classes.<p>
  
@@ -63,7 +80,9 @@
     visual style.  However, I think it does look quite a bit better.</li>
   <li><b>Upgraded dependencies.</b> All of the 3rd party dependencies have been upgraded to their latest versions.</li>
 </ul>
-<p><a href="downloads.html">Get JPetStore 5.0 from the Downloads page.</a><br/>
+   <p>
+     <a href="downloads.html">Get JPetStore 5.0 from the Downloads page.</a>
+   </p>
 
 <h3>As of 2.2.0 -- JDK 1.4 Required, iBATIS 1.x Compat Libs Removed, DTDs moved to Apache, </h3>
 
@@ -85,8 +104,7 @@
     available from iBATIS.com.  Instead you must change your doctype declarations to point to the new location at
   ibatis.apache.org.  The new doctypes are as follows:</li>
 </ul>
-<pre>
-  &lt;!DOCTYPE sqlMapConfig
+<pre>&lt;!DOCTYPE sqlMapConfig
       PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
       "http://ibatis.apache.org/dtd/sql-map-config-2.dtd"&gt;
 </pre>
@@ -109,7 +127,10 @@
   Java mailing list, then join up to discuss! For now, enjoy the cleanliness of version 2.1.6.
 </p>
 
-<p><a href="downloads.html">Get iBATIS 2.1.6 from the Downloads page.</a><br/>
+  <p>
+    <a href="downloads.html">Get iBATIS 2.1.6 from the Downloads page.</a>
+    <br/>
+  </p>
 
 </body>
 </html>
