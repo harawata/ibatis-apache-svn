@@ -40,7 +40,7 @@
 <h2>News</h2>
 
   <h3>iBATIS.NET DataMapper V1.3 Beta and DataAccess V1.7 Beta</h3>
-  <p>The iBATIS.NET team is pleased to announce that the Beta distributions of the DataMapper V1.3 and DataAccess V1.7 frameworks are ready! 
+  <p>(Dec 15, 2005) The iBATIS.NET team is pleased to announce that the Beta distributions of the DataMapper V1.3 and DataAccess V1.7 frameworks are ready! 
   Although this is primarily for bug fixes and documentation updates, there are some important changes:</p>
   <ul>
     <li><b>Enabling Intellisense in Visual Studio 2003</b> for configuration and mapping files</li>
