@@ -156,7 +156,7 @@ namespace IBatisNet.DataMapper
 
 		#region Methods
 		/// <summary>
-		/// Set the falg to tell us if cache models were enabled
+		/// Set the flag to tell us if cache models were enabled
 		/// or not.
 		/// </summary>
 		internal void SetCacheModelsEnabled(bool value)
@@ -602,10 +602,9 @@ namespace IBatisNet.DataMapper
 				isSessionLocal = true;
 			}
 
-			IMappedStatement statement = GetMappedStatement(statementName);
-
 			try 
 			{
+				IMappedStatement statement = GetMappedStatement(statementName);
 				result = statement.ExecuteQueryForObject(session, parameterObject);
 			} 
 			catch
@@ -622,7 +621,6 @@ namespace IBatisNet.DataMapper
 
 			return result;
 		}
-
 
 		/// <summary>
 		/// Executes a Sql SELECT statement that returns a single object of the type of the
@@ -645,10 +643,9 @@ namespace IBatisNet.DataMapper
 				isSessionLocal = true;
 			}
 
-			IMappedStatement statement = GetMappedStatement(statementName);
-
 			try 
 			{
+				IMappedStatement statement = GetMappedStatement(statementName);
 				result = statement.ExecuteQueryForObject(session, parameterObject, resultObject);
 			} 
 			catch
@@ -665,7 +662,6 @@ namespace IBatisNet.DataMapper
 
 			return result;
 		}
-
 	
 		#endregion
 
@@ -712,7 +708,6 @@ namespace IBatisNet.DataMapper
 			return QueryForMap(statementName, parameterObject, keyProperty, null);
 		}
 
-
 		/// <summary>
 		/// Executes the SQL and retuns all rows selected in a map that is keyed on the property named
 		/// in the keyProperty parameter.  The value at each key will be the value of the property specified
@@ -737,10 +732,9 @@ namespace IBatisNet.DataMapper
 				isSessionLocal = true;
 			}
 
-			IMappedStatement statement = GetMappedStatement(statementName);
-
 			try 
 			{
+				IMappedStatement statement = GetMappedStatement(statementName);
 				map = statement.ExecuteQueryForMap(session, parameterObject, keyProperty, valueProperty);
 			} 
 			catch
@@ -757,7 +751,6 @@ namespace IBatisNet.DataMapper
 
 			return map;
 		}
-
 		
 		#endregion
 
@@ -786,10 +779,9 @@ namespace IBatisNet.DataMapper
 				isSessionLocal = true;
 			}
 
-			IMappedStatement statement = GetMappedStatement(statementName);
-
 			try 
 			{
+				IMappedStatement statement = GetMappedStatement(statementName);
 				list = statement.ExecuteQueryForList(session, parameterObject);				
 			} 
 			catch
@@ -806,7 +798,6 @@ namespace IBatisNet.DataMapper
 
 			return list;
 		}
-		
 		
 		/// <summary>
 		/// Executes the SQL and retuns all rows selected.
@@ -832,10 +823,9 @@ namespace IBatisNet.DataMapper
 				isSessionLocal = true;
 			}
 
-			IMappedStatement statement = GetMappedStatement(statementName);
-
 			try 
 			{
+				IMappedStatement statement = GetMappedStatement(statementName);
 				list = statement.ExecuteQueryForList(session, parameterObject, skipResults, maxResults);
 			} 
 			catch
@@ -882,10 +872,9 @@ namespace IBatisNet.DataMapper
 				isSessionLocal = true;
 			}
 
-			IMappedStatement statement = GetMappedStatement(statementName);
-
 			try 
 			{
+				IMappedStatement statement = GetMappedStatement(statementName);
 				statement.ExecuteQueryForList(session, parameterObject, resultObject);
 			} 
 			catch
@@ -900,7 +889,6 @@ namespace IBatisNet.DataMapper
 				}
 			}
 		}
-		
 		
 		#endregion
 
@@ -946,10 +934,9 @@ namespace IBatisNet.DataMapper
 				isSessionLocal = true;
 			}
 
-			IMappedStatement statement = GetMappedStatement(statementName);
-
 			try 
 			{
+				IMappedStatement statement = GetMappedStatement(statementName);
 				list = statement.ExecuteQueryForRowDelegate(session, parameterObject, rowDelegate);
 			} 
 			catch
@@ -966,7 +953,6 @@ namespace IBatisNet.DataMapper
 
 			return list;
 		}
-
 
 		/// <summary>
 		/// Runs a query with a custom object that gets a chance to deal 
@@ -995,10 +981,9 @@ namespace IBatisNet.DataMapper
 				isSessionLocal = true;
 			}
 
-			IMappedStatement statement = GetMappedStatement(statementName);
-
 			try 
 			{
+				IMappedStatement statement = GetMappedStatement(statementName);
 				map = statement.ExecuteQueryForMapWithRowDelegate(session, parameterObject, keyProperty, valueProperty, rowDelegate);
 			} 
 			catch
@@ -1015,7 +1000,6 @@ namespace IBatisNet.DataMapper
 
 			return map;
 		}
-
 		
 		#endregion
 
@@ -1050,10 +1034,9 @@ namespace IBatisNet.DataMapper
 				isSessionLocal = true;
 			}
 
-			IMappedStatement statement = GetMappedStatement(statementName);
-
 			try 
 			{
+				IMappedStatement statement = GetMappedStatement(statementName);
 				generatedKey = statement.ExecuteInsert(session, parameterObject);
 			} 
 			catch
@@ -1071,7 +1054,6 @@ namespace IBatisNet.DataMapper
 			return generatedKey;
 		}
 
-
 		/// <summary>
 		/// Executes a Sql UPDATE statement.
 		/// Update can also be used for any other update statement type,
@@ -1084,9 +1066,6 @@ namespace IBatisNet.DataMapper
 		/// <param name="statementName">The name of the statement to execute.</param>
 		/// <param name="parameterObject">The parameter object.</param>
 		/// <returns>The number of rows effected.</returns>
-//		/// <exception cref="IBatisNet.Common.Exceptions.DalConcurrentException">
-//		/// If no rows are effected throw this exception.
-//		/// </exception>
 		public int Update(string statementName, object parameterObject)
 		{
 			bool isSessionLocal = false;
@@ -1100,10 +1079,9 @@ namespace IBatisNet.DataMapper
 				isSessionLocal = true;
 			}
 
-			IMappedStatement statement = GetMappedStatement(statementName);
-
 			try 
 			{
+				IMappedStatement statement = GetMappedStatement(statementName);
 				rows = statement.ExecuteUpdate(session, parameterObject);
 			} 
 			catch
@@ -1118,16 +1096,8 @@ namespace IBatisNet.DataMapper
 				}
 			}
 
-//			// check that statement affected a row
-//			if( rows == 0 )
-//			{
-//				// throw concurrency error if no record was affected
-//				throw new ConcurrentException();
-//			}
-
 			return rows;
 		}
-
 
 		/// <summary>
 		///  Executes a Sql DELETE statement.
@@ -1149,10 +1119,9 @@ namespace IBatisNet.DataMapper
 				isSessionLocal = true;
 			}
 
-			IMappedStatement statement = GetMappedStatement(statementName);
-			
 			try 
 			{
+				IMappedStatement statement = GetMappedStatement(statementName);
 				rows = statement.ExecuteUpdate(session, parameterObject);
 			} 
 			catch
@@ -1169,7 +1138,6 @@ namespace IBatisNet.DataMapper
 
 			return rows;
 		}
-
 
 		#endregion
 
@@ -1211,7 +1179,6 @@ namespace IBatisNet.DataMapper
 			get { return _mappedStatements; }
 		}
 
-
 		/// <summary>
 		/// Get a ParameterMap by name
 		/// </summary>
@@ -1226,7 +1193,6 @@ namespace IBatisNet.DataMapper
 			return (ParameterMap) _parameterMaps[name];
 		}
 
-
 		/// <summary>
 		/// Adds a (named) ParameterMap.
 		/// </summary>
@@ -1239,7 +1205,6 @@ namespace IBatisNet.DataMapper
 			}
 			_parameterMaps.Add(parameterMap.Id, parameterMap);
 		}
-
 
 		/// <summary>
 		/// Gets a ResultMap by name
@@ -1284,7 +1249,6 @@ namespace IBatisNet.DataMapper
 			get { return _resultMaps; }
 		}
 
-
 		/// <summary>
 		/// The DataSource
 		/// </summary>
@@ -1293,11 +1257,6 @@ namespace IBatisNet.DataMapper
 			get { return  _dataSource; }
 			set { _dataSource = value; }
 		}
-
-		
-
-
-
 
 		/// <summary>
 		/// Flushes all cached objects that belong to this SqlMap
