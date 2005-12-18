@@ -180,8 +180,10 @@ public class SqlExecutor {
       ps.execute();
       rs = getFirstResultSet(ps);
 
-      errorContext.setMoreInfo("Check the results (failed to retrieve results).");
-      handleResults(request, rs, skipResults, maxResults, callback);
+      if (rs != null) {
+        errorContext.setMoreInfo("Check the results (failed to retrieve results).");
+        handleResults(request, rs, skipResults, maxResults, callback);
+      }
 
       // clear out remaining results
       while (ps.getMoreResults());
@@ -287,8 +289,10 @@ public class SqlExecutor {
       cs.execute();
       rs = getFirstResultSet(cs);
 
-      errorContext.setMoreInfo("Check the results (failed to retrieve results).");
-      handleResults(request, rs, skipResults, maxResults, callback);
+      if (rs != null) {
+        errorContext.setMoreInfo("Check the results (failed to retrieve results).");
+        handleResults(request, rs, skipResults, maxResults, callback);
+      }
 
       // consume additional results
       while (cs.getMoreResults());
