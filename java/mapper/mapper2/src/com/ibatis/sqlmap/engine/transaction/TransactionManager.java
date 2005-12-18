@@ -76,7 +76,7 @@ public class TransactionManager {
           "A user provided connection is currently being used by this session.  " +
           "You must call the commit() method of the Connection directly.  " +
           "The calling .setUserConnection (null) will clear the user provided transaction.");
-    } else if (state != TransactionState.STATE_STARTED) {
+    } else if (state != TransactionState.STATE_STARTED && state != TransactionState.STATE_COMMITTED ) {
       throw new TransactionException("TransactionManager could not commit.  No transaction is started.");
     }
     if (session.isCommitRequired() || forceCommit) {
@@ -138,4 +138,3 @@ public class TransactionManager {
   }
 
 }
-
