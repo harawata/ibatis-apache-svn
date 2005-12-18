@@ -76,14 +76,14 @@ public class AutoResultMap extends BasicResultMap {
 
       Map propertyMap = new HashMap();
       for (int i = 0; i < propertyNames.length; i++) {
-        propertyMap.put(propertyNames[i].toUpperCase(), propertyNames[i]);
+        propertyMap.put(propertyNames[i].toUpperCase(java.util.Locale.ENGLISH), propertyNames[i]);
       }
 
       List resultMappingList = new ArrayList();
       ResultSetMetaData rsmd = rs.getMetaData();
       for (int i = 0, n = rsmd.getColumnCount(); i < n; i++) {
         String columnName = rsmd.getColumnLabel(i + 1);
-        String upperColumnName = columnName.toUpperCase();
+        String upperColumnName = columnName.toUpperCase(java.util.Locale.ENGLISH);
         String matchedProp = (String) propertyMap.get(upperColumnName);
         Class type = null;
         if (matchedProp == null) {
