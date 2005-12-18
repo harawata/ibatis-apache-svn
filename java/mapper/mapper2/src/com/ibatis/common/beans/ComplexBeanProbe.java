@@ -54,7 +54,7 @@ public class ComplexBeanProbe extends BaseProbe {
    * @return The properties
    */
   public String[] getWriteablePropertyNames(Object object) {
-    return ClassInfo.getInstance(object.getClass()).getReadablePropertyNames();
+    return ClassInfo.getInstance(object.getClass()).getWriteablePropertyNames();
   }
 
   /**
