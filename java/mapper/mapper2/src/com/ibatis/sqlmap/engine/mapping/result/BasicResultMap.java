@@ -235,6 +235,9 @@ public class BasicResultMap implements ResultMap {
     if (discriminator != null) {
       BasicResultMapping mapping = (BasicResultMapping)discriminator.getResultMapping();
       Object value = getPrimitiveResultMappingValue(rs, mapping);
+      if (value == null) {
+        value = doNullMapping(value, mapping);
+      }
       subMap = discriminator.getSubMap(String.valueOf(value));
       if (subMap == null) {
         subMap = this;
@@ -307,10 +310,16 @@ public class BasicResultMap implements ResultMap {
           Class type = p.getPropertyTypeForSetter(resultClass, mapping.getPropertyName());
           columnValues[i] = getNestedSelectMappingValue(request, rs, mapping, type);
         }
+        foundData = foundData || columnValues[i] != null;
       } else if (mapping.getNestedResultMapName() == null) {
         columnValues[i] = getPrimitiveResultMappingValue(rs, mapping);
+        if (columnValues[i] == null) {
+          columnValues[i] = doNullMapping(columnValues[i], mapping);
+        }
+        else  {
+          foundData = true;
+        }
       }
-      foundData = foundData || columnValues[i] != null;
     }
 
     request.setRowDataFound(foundData);
@@ -551,15 +560,26 @@ public class BasicResultMap implements ResultMap {
       } else {
         value = typeHandler.getResult(rs, columnName);
       }
-      if (value == null && nullValue != null) {
-        value = typeHandler.valueOf(nullValue);
-      }
     } else {
       throw new SqlMapException("No type handler could be found to map the property '" + mapping.getPropertyName() + "' to the column '" + mapping.getColumnName() + "'.  One or both of the types, or the combination of types is not supported.");
     }
     return value;
   }
 
-
+  protected Object doNullMapping(Object value, BasicResultMapping mapping) throws SqlMapException {
+      if ( value == null )  {
+      	TypeHandler typeHandler = mapping.getTypeHandler();
+        if (typeHandler != null) {
+            String nullValue = mapping.getNullValue();
+            if ( nullValue != null )
+              value = typeHandler.valueOf(nullValue);
+            return value;
+          } else {
+            throw new SqlMapException("No type handler could be found to map the property '" + mapping.getPropertyName() + "' to the column '" + mapping.getColumnName() + "'.  One or both of the types, or the combination of types is not supported.");
+          }
+      }
+      else  {
+        return value;
+      }
+  }
 }
-
