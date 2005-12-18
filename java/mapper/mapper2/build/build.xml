@@ -168,7 +168,6 @@
         <filter excludes="com.ibatis.db.*"/>
         <filter excludes="com.opensymphony"/>
         <filter excludes="net.*"/>
-        <filter excludes="oracle.*"/>
         <filter excludes="*Test"/>
         <filter excludes="testdomain.*"/>
         <filter excludes="compatibility.*"/>
@@ -183,7 +182,6 @@
       <batchtest todir="${reports.junit}" fork="yes" haltonerror="no" failureproperty="testsFailed">
         <fileset dir="${work.tests}">
           <include name="**/*Test.class"/>
-          <exclude name="**/Oracle*Test.class"/>
           <exclude name="**/Base*Test.class"/>
         </fileset>
       </batchtest>
