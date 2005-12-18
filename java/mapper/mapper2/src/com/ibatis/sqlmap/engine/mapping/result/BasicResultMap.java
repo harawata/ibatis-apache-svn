@@ -298,7 +298,11 @@ public class BasicResultMap implements ResultMap {
         if (resultClass == null) {
           throw new SqlMapException("The result class was null when trying to get results for ResultMap named " + getId() + ".");
         } else if (Map.class.isAssignableFrom(resultClass)) {
-          columnValues[i] = getNestedSelectMappingValue(request, rs, mapping, Object.class);
+          Class javaType = mapping.getJavaType();
+          if (javaType == null) {
+            javaType = Object.class;
+          }
+          columnValues[i] = getNestedSelectMappingValue(request, rs, mapping, javaType);
         } else if (DomTypeMarker.class.isAssignableFrom(resultClass)) {
           Class javaType = mapping.getJavaType();
           if (javaType == null) {
@@ -559,6 +563,9 @@ public class BasicResultMap implements ResultMap {
         value = typeHandler.getResult(rs, columnIndex);
       } else {
         value = typeHandler.getResult(rs, columnName);
+      }
+      if (value == null && nullValue != null) {
+        value = typeHandler.valueOf(nullValue);
       }
     } else {
       throw new SqlMapException("No type handler could be found to map the property '" + mapping.getPropertyName() + "' to the column '" + mapping.getColumnName() + "'.  One or both of the types, or the combination of types is not supported.");
