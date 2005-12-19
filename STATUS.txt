@@ -1,11 +1,10 @@
 APACHE IBATIS PROJECT STATUS:
-Last modified at [$Date: $]
 
-Web site: http://Incubator.Apache.Org/ibatis
-Wiki: http://wiki.apache.org/ibatis/
-Mailing Lists: http://incubator.apache.org/ibatis/site/mailinglists.html
-Issue Tracking: http://incubator.apache.org/ibatis/site/issuetracking.html
-Source Code: http://incubator.apache.org/ibatis/site/sourcecode.html
+Web site: http://ibatis.apache.org/
+Wiki: http://opensource2.atlassian.com/confluence/oss/display/IBATIS/Home
+Mailing Lists: http://ibatis.apache.org/mailinglists.html
+Issue Tracking: http://issues.apache.org/jira/browse/IBATIS
+Source Code: http://svn.apache.org/repos/asf/ibatis/trunk/
 
 PMC Members
 * Clinton Begin (cbegin)
