@@ -5,6 +5,10 @@ Wiki: http://opensource2.atlassian.com/confluence/oss/display/IBATIS/Home
 Mailing Lists: http://ibatis.apache.org/mailinglists.html
 Issue Tracking: http://issues.apache.org/jira/browse/IBATIS
 Source Code: http://svn.apache.org/repos/asf/ibatis/trunk/
+Committers: http://ibatis.apache.org/team.html
+Bylaws: http://ibatis.apache.org/bylaws.html
+Announcements: http://ibatis.apache.org/archive.html
+Status File: http://svn.apache.org/repos/asf/ibatis/trunk/STATUS.txt
 
 PMC Members
 * Clinton Begin (cbegin)
@@ -48,8 +52,9 @@ I have been keeping the PMC updated as to general developments in the LGPL/GPL d
 Project Votes
 
 [19 Dec 2005 PMC] Ron Grabowski for PMC
- +1 Ted Husted, Larry Meadors.
- +1* Nathan Maves
+ +1 Ted Husted, Larry Meadors, Clinton Begin, Gilles Bayon, Robert Rabe 
+ +1* Nathan Maves, Jeff Butler
+ +0* Brice Ruth
 
 [06 Nov 2005 DEV] Promote iBATIS 2.1.6 to General Availability
 
