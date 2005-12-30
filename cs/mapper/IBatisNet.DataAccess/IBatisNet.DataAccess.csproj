@@ -114,6 +114,7 @@
                 />
                 <File
                     RelPath = "CommonAssemblyInfo.cs"
+                    Link = "..\CommonAssemblyInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
