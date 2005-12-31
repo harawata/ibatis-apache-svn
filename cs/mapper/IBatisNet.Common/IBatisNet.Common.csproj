@@ -124,6 +124,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "DbProvider.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "IBatisNet.Common.build"
                     BuildAction = "None"
                 />
@@ -138,7 +143,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "IProvider.cs"
+                    RelPath = "IDbProvider.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -149,11 +154,6 @@
                 <File
                     RelPath = "notice.txt"
                     BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Provider.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
                 />
                 <File
                     RelPath = "provider.xsd"
