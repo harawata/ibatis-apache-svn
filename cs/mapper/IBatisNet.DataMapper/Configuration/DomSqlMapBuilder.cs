@@ -704,7 +704,7 @@ namespace IBatisNet.DataMapper.Configuration
 
 			#region Load DataBase
 			#region Choose the  provider
-			Provider provider = null;
+			IDbProvider provider = null;
 			if ( _configScope.IsCallFromDao==false )
 			{
 				provider = ParseProvider();
@@ -737,7 +737,7 @@ namespace IBatisNet.DataMapper.Configuration
 
 					DataSource dataSource = DataSourceDeSerializer.Deserialize( nodeDataSource );
 
-					dataSource.Provider = provider;
+					dataSource.DbProvider = provider;
 					dataSource.ConnectionString = NodeUtils.ParsePropertyTokens(dataSource.ConnectionString, _configScope.Properties);
 
 					_configScope.DataSource = dataSource;
@@ -870,7 +870,7 @@ namespace IBatisNet.DataMapper.Configuration
 		/// </summary>
 		private void GetProviders()
 		{
-			Provider provider = null;
+			IDbProvider provider = null;
 			XmlDocument xmlProviders = null;
 
 			_configScope.ErrorContext.Activity = "loading Providers";
@@ -922,7 +922,7 @@ namespace IBatisNet.DataMapper.Configuration
 		/// Parse the provider tag.
 		/// </summary>
 		/// <returns>A provider object.</returns>
-		private Provider ParseProvider()
+		private IDbProvider ParseProvider()
 		{
 			_configScope.ErrorContext.Activity = "load DataBase Provider";
 			XmlNode node = _configScope.SqlMapConfigDocument.SelectSingleNode( ApplyDataMapperNamespacePrefix(XML_DATABASE_PROVIDER), _configScope.XmlNamespaceManager  );
@@ -936,7 +936,7 @@ namespace IBatisNet.DataMapper.Configuration
 
 				if (_configScope.Providers.Contains(providerName) == true)
 				{
-					return (Provider) _configScope.Providers[providerName];
+					return (IDbProvider) _configScope.Providers[providerName];
 				}
 				else
 				{
@@ -949,7 +949,7 @@ namespace IBatisNet.DataMapper.Configuration
 			{
 				if (_configScope.Providers.Contains(DEFAULT_PROVIDER_NAME) == true)
 				{
-					return (Provider) _configScope.Providers[DEFAULT_PROVIDER_NAME];
+					return (IDbProvider) _configScope.Providers[DEFAULT_PROVIDER_NAME];
 				}
 				else
 				{
@@ -1452,7 +1452,7 @@ namespace IBatisNet.DataMapper.Configuration
 
 				if (sqlText.Parameters.Length > 0)
 				{
-					ParameterMap map = new ParameterMap(_configScope.DataSource.Provider.UsePositionalParameters);
+					ParameterMap map = new ParameterMap(_configScope.DataSource.DbProvider.UsePositionalParameters);
 					map.Id = statement.Id + "-InLineParameterMap";
 					statement.ParameterMap = map;	
 				

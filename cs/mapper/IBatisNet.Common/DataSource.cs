@@ -38,14 +38,14 @@ namespace IBatisNet.Common
 	/// </summary>
 	[Serializable]
 	[XmlRoot("dataSource", Namespace="http://ibatis.apache.org/dataMapper")]
-	public class DataSource
+	public class DataSource : IDataSource
 	{
 
 		#region Fields
 		[NonSerialized]
 		private string _connectionString = string.Empty;
 		[NonSerialized]
-		private Provider _provider;
+		private IDbProvider _provider;
 		[NonSerialized]
 		private string _name = string.Empty;
 		#endregion
@@ -60,15 +60,13 @@ namespace IBatisNet.Common
 			get { return _connectionString; }
 			set
 			{
-				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The connectionString attribute is mandatory in the data source " + _name);
-
+				CheckPropertyString("ConnectionString", value);
 				_connectionString = value;
 			}
 		}
 
 		/// <summary>
-		/// Name used to identify the provider amongst the others.
+		/// DataSource Name
 		/// </summary>
 		[XmlAttribute("name")]
 		public string Name
@@ -76,9 +74,7 @@ namespace IBatisNet.Common
 			get { return _name; }
 			set 
 			{ 
-				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The name attribute is mandatory in the data source.");
-
+				CheckPropertyString("Name", value);
 				_name = value; 
 			}
 		}
@@ -87,13 +83,10 @@ namespace IBatisNet.Common
 		/// The provider to use for this data source.
 		/// </summary>
 		[XmlIgnore]
-		public Provider Provider
+		public IDbProvider DbProvider
 		{
 			get { return _provider; }
-			set
-			{
-				_provider = value;
-			}
+			set { _provider = value; }
 		}
 		#endregion
 
@@ -107,6 +100,17 @@ namespace IBatisNet.Common
 		#endregion
 
 		#region Methods
+
+		private void CheckPropertyString(string propertyName, string value)
+		{
+			if (value == null || value.Trim().Length == 0)
+			{
+				throw new ArgumentException(
+					"The "+propertyName+" property cannot be " +
+					"set to a null or empty string value.", propertyName);
+			}
+		}
+
 		/// <summary>
 		/// ToString implementation.
 		/// </summary>

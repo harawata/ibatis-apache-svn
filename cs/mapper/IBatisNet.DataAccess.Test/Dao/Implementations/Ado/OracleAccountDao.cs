@@ -51,7 +51,7 @@ namespace IBatisNet.DataAccess.Test.Dao.Implementations.Ado
 
 			try
 			{
-				if (daoSession.DataSource.Provider.UseParameterPrefixInSql)
+				if (daoSession.DataSource.DbProvider.UseParameterPrefixInSql)
 				{
 					command.CommandText = INSERT_ACCOUNT;
 				}
@@ -117,7 +117,7 @@ namespace IBatisNet.DataAccess.Test.Dao.Implementations.Ado
 
 			try
 			{
-				if (daoSession.DataSource.Provider.UseParameterPrefixInSql)
+				if (daoSession.DataSource.DbProvider.UseParameterPrefixInSql)
 				{
 					command.CommandText = UPDATE_ACCOUNT;
 				}
@@ -185,7 +185,7 @@ namespace IBatisNet.DataAccess.Test.Dao.Implementations.Ado
 
 			try
 			{
-				if (daoSession.DataSource.Provider.UseParameterPrefixInSql)
+				if (daoSession.DataSource.DbProvider.UseParameterPrefixInSql)
 				{
 					command.CommandText = SELECT_ACCOUNT_BY_ID;
 				}
@@ -240,7 +240,7 @@ namespace IBatisNet.DataAccess.Test.Dao.Implementations.Ado
 
 			try
 			{
-				if (daoSession.DataSource.Provider.UseParameterPrefixInSql)
+				if (daoSession.DataSource.DbProvider.UseParameterPrefixInSql)
 				{
 					command.CommandText = DELETE_ACCOUNT;
 				}

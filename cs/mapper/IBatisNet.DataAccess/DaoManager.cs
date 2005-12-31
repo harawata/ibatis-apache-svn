@@ -109,7 +109,7 @@ namespace IBatisNet.DataAccess
 		protected static HybridDictionary DaoContextMap = new HybridDictionary();
 
 		private DataSource _dataSource = null;
-		private Provider _provider = null;
+		private IDbProvider _provider = null;
 		private string _name = string.Empty;
 		private IDaoSessionHandler _daoSessionHandler = null;
 		private bool _isDefault = false;
@@ -138,7 +138,7 @@ namespace IBatisNet.DataAccess
 		/// <summary>
 		/// 
 		/// </summary>
-		internal Provider Provider
+		internal IDbProvider DbProvider
 		{
 			get { return _provider; }
 			set { _provider = value; }

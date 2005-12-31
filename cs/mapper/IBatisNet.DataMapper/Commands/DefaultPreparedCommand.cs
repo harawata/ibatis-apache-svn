@@ -158,7 +158,7 @@ namespace IBatisNet.DataMapper.Commands
 					if (request.ParameterMap.GetProperty(i).DbType != null && 
 						request.ParameterMap.GetProperty(i).DbType.Length >0)
 					{
-						string dbTypePropertyName = session.DataSource.Provider.ParameterDbTypeProperty;
+						string dbTypePropertyName = session.DataSource.DbProvider.ParameterDbTypeProperty;
 
 						ObjectProbe.SetPropertyValue(parameterCopy, dbTypePropertyName, ObjectProbe.GetPropertyValue(sqlParameter, dbTypePropertyName));
 					}
@@ -204,7 +204,7 @@ namespace IBatisNet.DataMapper.Commands
 				#endregion 
 
 				// JIRA-49 Fixes (size, precision, and scale)
-				if (session.DataSource.Provider.SetDbParameterSize) 
+				if (session.DataSource.DbProvider.SetDbParameterSize) 
 				{
 					if (((IDbDataParameter)sqlParameter).Size > 0) 
 					{
@@ -212,12 +212,12 @@ namespace IBatisNet.DataMapper.Commands
 					}
 				}
 
-				if (session.DataSource.Provider.SetDbParameterPrecision) 
+				if (session.DataSource.DbProvider.SetDbParameterPrecision) 
 				{
 					((IDbDataParameter)parameterCopy).Precision = ((IDbDataParameter)sqlParameter).Precision;
 				}
 				
-				if (session.DataSource.Provider.SetDbParameterScale) 
+				if (session.DataSource.DbProvider.SetDbParameterScale) 
 				{
 					((IDbDataParameter)parameterCopy).Scale = ((IDbDataParameter)sqlParameter).Scale;
 				}				

@@ -65,7 +65,7 @@ namespace IBatisNet.DataAccess
 		/// <summary>
 		/// 
 		/// </summary>
-		public abstract DataSource DataSource
+		public abstract IDataSource DataSource
 		{
 			get;
 		}
@@ -196,7 +196,7 @@ namespace IBatisNet.DataAccess
 		/// Create an IDataParameter
 		/// </summary>
 		/// <returns>An IDataParameter.</returns>
-		public abstract IDataParameter CreateDataParameter();
+		public abstract IDbDataParameter CreateDataParameter();
 
 		/// <summary>
 		/// 

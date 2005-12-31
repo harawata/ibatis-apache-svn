@@ -42,7 +42,7 @@ namespace IBatisNet.Common
 	/// </summary>
 	[Serializable]
 	[XmlRoot("provider", Namespace="http://ibatis.apache.org/providers")]
-	public class Provider
+	public class DbProvider : IDbProvider
 	{
 		#region Fields
 		[NonSerialized]
@@ -51,10 +51,6 @@ namespace IBatisNet.Common
 		private string _connectionClass = string.Empty;
 		[NonSerialized]
 		private string _commandClass = string.Empty;
-		[NonSerialized]
-		private string _dataParameter = string.Empty;
-		[NonSerialized]
-		private Type _dataParameterType = null;
 
 		[NonSerialized]
 		private string _parameterDbTypeClass = string.Empty;
@@ -122,8 +118,7 @@ namespace IBatisNet.Common
 			get { return _assemblyName; }
 			set
 			{
-				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("AssemblyName");
+				CheckPropertyString("AssemblyName", value);
 				_assemblyName = value;
 			}
 		}
@@ -162,13 +157,12 @@ namespace IBatisNet.Common
 		/// "Microsoft.Data.Odbc.OdbcConnection"
 		/// </example>
 		[XmlAttribute("connectionClass")]
-		public string ConnectionClass
+		public string DbConnectionClass
 		{             
 			get { return _connectionClass; }
 			set
 			{
-				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The connectionClass attribute is mandatory in the provider " + _name);
+				CheckPropertyString("DbConnectionClass", value);
 				_connectionClass = value;
 			}
 		}
@@ -281,37 +275,17 @@ namespace IBatisNet.Common
 		/// "System.Data.SqlClient.SqlCommand"
 		/// </example>
 		[XmlAttribute("commandClass")]
-		public string CommandClass
+		public string DbCommandClass
 		{             
 			get { return _commandClass; }
 			set
 			{
-				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The commandClass attribute is mandatory in the provider " + _name);
+				CheckPropertyString("DbCommandClass", value);
 				_commandClass = value;
 			}
 		}
 
 	
-		/// <summary>
-		/// The parameter class name to use.
-		/// </summary>
-		/// <example>
-		/// "System.Data.SqlClient.SqlParameter"
-		/// </example>
-		[XmlAttribute("parameterClass")]
-		public string ParameterClass
-		{             
-			get { return _dataParameter; }
-			set
-			{
-				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The parameterClass attribute is mandatory in the provider " + _name);
-				_dataParameter = value;
-			}
-		}
-
-
 		/// <summary>
 		/// The ParameterDbType class name to use.
 		/// </summary>			
@@ -324,8 +298,7 @@ namespace IBatisNet.Common
 			get { return _parameterDbTypeClass; }
 			set
 			{
-				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The parameterDbTypeClass attribute is mandatory in the provider " + _name);
+				CheckPropertyString("ParameterDbTypeClass", value);
 				_parameterDbTypeClass = value;
 			}
 		}
@@ -344,8 +317,7 @@ namespace IBatisNet.Common
 			get { return _parameterDbTypeProperty; }
 			set
 			{
-				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The parameterDbTypeProperty attribute is mandatory in the provider " + _name);
+				CheckPropertyString("ParameterDbTypeProperty", value);
 				_parameterDbTypeProperty = value;
 			}
 		}
@@ -362,8 +334,7 @@ namespace IBatisNet.Common
 			get { return _dataAdapterClass; }
 			set
 			{
-				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The dataAdapterClass attribute is mandatory in the provider " + _name);
+				CheckPropertyString("DataAdapterClass", value);
 				_dataAdapterClass = value;
 			}
 		}
@@ -382,8 +353,7 @@ namespace IBatisNet.Common
 			get { return _commandBuilderClass; }
 			set
 			{
-				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The commandBuilderClass attribute is mandatory in the provider " + _name);
+				CheckPropertyString("CommandBuilderClass", value);
 				_commandBuilderClass = value;
 			}
 		}
@@ -398,9 +368,7 @@ namespace IBatisNet.Common
 			get { return _name; }
 			set 
 			{ 
-				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The name attribute is mandatory in the provider.");
-
+				CheckPropertyString("Name", value);
 				_name = value; 			
 			}
 		}
@@ -428,7 +396,6 @@ namespace IBatisNet.Common
 				if ((value == null) || (value.Length < 1))
 				{
 					_parameterPrefix = ""; 
-					//throw new ArgumentNullException("The parameterPrefix attribute is mandatory in the provider " + _name);
 				}
 				else
 				{
@@ -443,10 +410,26 @@ namespace IBatisNet.Common
 		[XmlIgnore]
 		public bool IsObdc
 		{
-			get
-			{
-				return (_connectionClass.IndexOf(".Odbc.")>0);
-			}
+			get { return (_connectionClass.IndexOf(".Odbc.")>0); }
+		}
+
+		/// <summary>
+		/// Get the CommandBuilder Type for this provider.
+		/// </summary>
+		/// <returns>An object.</returns>
+		public Type CommandBuilderType
+		{
+			get {return _commandBuilderType;}
+		}
+
+		/// <summary>
+		/// Get the ParameterDb Type for this provider.
+		/// </summary>
+		/// <returns>An object.</returns>
+		[XmlIgnore]
+		public Type ParameterDbType
+		{
+			get { return _parameterDbType; }
 		}
 		#endregion
 
@@ -454,7 +437,7 @@ namespace IBatisNet.Common
 		/// <summary>
 		/// Do not use direclty, only for serialization.
 		/// </summary>
-		public Provider()
+		public DbProvider()
 		{
 		}
 		#endregion
@@ -465,8 +448,8 @@ namespace IBatisNet.Common
 		/// </summary>
 		public void Initialize()
 		{
-			Assembly assembly;
-			Type type;
+			Assembly assembly = null;
+			Type type = null;
 			CachedTypeResolver cachedTypeResolver = new CachedTypeResolver();
 
 			try
@@ -475,15 +458,19 @@ namespace IBatisNet.Common
 
 				// Build the Command template 
 				type = assembly.GetType(_commandClass, true);
+				CheckPropertyType("DbCommandClass", typeof(IDbCommand), type);
 				_templateCommand = (IDbCommand)type.GetConstructor(Type.EmptyTypes).Invoke(null);
+
 				// Build the DataAdapter template 
 				type = assembly.GetType(_dataAdapterClass, true);
+				CheckPropertyType("DataAdapterClass", typeof(IDbDataAdapter), type);
 				_templateDataAdapter = (IDbDataAdapter)type.GetConstructor(Type.EmptyTypes).Invoke(null);
+				
 				// Build the connection template 
 				type = assembly.GetType(_connectionClass, true);
+				CheckPropertyType("DbConnectionClass", typeof(IDbConnection), type);
 				_templateConnection = (IDbConnection)type.GetConstructor(Type.EmptyTypes).Invoke(null);
-				// Get the IDataParameter type
-				_dataParameterType = assembly.GetType(_dataParameter, true);
+
 				// Get the CommandBuilder Type
 				_commandBuilderType = assembly.GetType(_commandBuilderClass, true);
 				if (_parameterDbTypeClass.IndexOf(',')>0)
@@ -508,10 +495,10 @@ namespace IBatisNet.Common
 		}
 
 		/// <summary>
-		/// Get a connection object for this provider.
+		/// Create a connection object for this provider.
 		/// </summary>
 		/// <returns>An 'IDbConnection' object.</returns>
-		public IDbConnection GetConnection()
+		public IDbConnection CreateConnection()
 		{
 			// Cannot do that because on 
 			// IDbCommand.Connection = cmdConnection
@@ -532,10 +519,10 @@ namespace IBatisNet.Common
 		}
 
 		/// <summary>
-		/// Get a command object for this provider.
+		/// Create a command object for this provider.
 		/// </summary>
 		/// <returns>An 'IDbCommand' object.</returns>
-		public IDbCommand GetCommand()
+		public IDbCommand CreateCommand()
 		{
 			if (_templateCommandIsICloneable)
 			{
@@ -548,10 +535,10 @@ namespace IBatisNet.Common
 		}
 
 		/// <summary>
-		/// Get a dataAdapter object for this provider.
+		/// Create a dataAdapter object for this provider.
 		/// </summary>
 		/// <returns>An 'IDbDataAdapter' object.</returns>
-		public IDbDataAdapter GetDataAdapter()
+		public IDbDataAdapter CreateDataAdapter()
 		{
 			if (_templateDataAdapterIsICloneable)
 			{
@@ -564,30 +551,12 @@ namespace IBatisNet.Common
 		}
 
 		/// <summary>
-		/// Get a IDataParameter object for this provider.
+		/// Create a IDbDataParameter object for this provider.
 		/// </summary>
-		/// <returns>An 'IDataParameter' object.</returns>
-		public IDataParameter GetDataParameter()
+		/// <returns>An 'IDbDataParameter' object.</returns>
+		public IDbDataParameter CreateDataParameter()
 		{
-			return (IDataParameter) Activator.CreateInstance(_dataParameterType);
-		}
-
-		/// <summary>
-		/// Get the CommandBuilder Type for this provider.
-		/// </summary>
-		/// <returns>An object.</returns>
-		public Type GetCommandBuilderType()
-		{
-			return _commandBuilderType;
-		}
-
-		/// <summary>
-		/// Get the ParameterDb Type for this provider.
-		/// </summary>
-		/// <returns>An object.</returns>
-		public Type ParameterDbType
-		{
-			get { return _parameterDbType; }
+			return _templateCommand.CreateParameter();
 		}
 
 		/// <summary>
@@ -597,12 +566,12 @@ namespace IBatisNet.Common
 		/// <returns>A boolean.</returns>
 		public override bool Equals(object obj)
 		{
-			if ((obj != null) && (obj is Provider))
+			if ((obj != null) && (obj is IDbProvider))
 			{
-				Provider that = (Provider) obj;
-				return ((this._name == that._name) && 
-					(this._assemblyName == that._assemblyName) &&
-					(this._connectionClass == that._connectionClass));
+				IDbProvider that = (IDbProvider) obj;
+				return ((this._name == that.Name) && 
+					(this._assemblyName == that.AssemblyName) &&
+					(this._connectionClass == that.DbConnectionClass));
 			}
 			return false;
 		}
@@ -623,6 +592,30 @@ namespace IBatisNet.Common
 		public override string ToString()
 		{
 			return "Provider " + _name;
+		}
+
+		private void CheckPropertyString(string propertyName, string value)
+		{
+			if (value == null || value.Trim().Length == 0)
+			{
+				throw new ArgumentException(
+					"The "+propertyName+" property cannot be " +
+					"set to a null or empty string value.", propertyName);
+			}
+		}
+
+		private void CheckPropertyType(string propertyName,Type expectedType, Type value)
+		{
+			if (value == null)
+			{
+				throw new ArgumentNullException(
+					propertyName, "The "+propertyName+" property cannot be null.");
+			}
+			if (!expectedType.IsAssignableFrom(value))
+			{
+				throw new ArgumentException(
+					"The Type passed to the "+propertyName+" property must be an "+expectedType.Name+" implementation.");
+			}
 		}
 		#endregion
 

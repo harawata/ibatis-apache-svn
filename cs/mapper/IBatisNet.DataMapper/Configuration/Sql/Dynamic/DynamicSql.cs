@@ -70,7 +70,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 		{
 			_statement = statement;
 			_typeHandlerFactory = configScope.TypeHandlerFactory;
-			_usePositionalParameters = configScope.DataSource.Provider.UsePositionalParameters;
+			_usePositionalParameters = configScope.DataSource.DbProvider.UsePositionalParameters;
 		}
 		#endregion
 

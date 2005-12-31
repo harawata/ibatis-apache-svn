@@ -46,7 +46,7 @@ namespace IBatisNet.DataMapper
 		#region Fields
 		private static readonly ILog _logger = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 		private SqlMapper _sqlMapper = null;
-		private DataSource _dataSource = null;
+		private IDataSource _dataSource = null;
 			
 		#endregion
 
@@ -95,7 +95,7 @@ namespace IBatisNet.DataMapper
 		/// <summary>
 		/// 
 		/// </summary>
-		public DataSource DataSource
+		public IDataSource DataSource
 		{
 			get { return _dataSource; }
 		}
@@ -156,19 +156,19 @@ namespace IBatisNet.DataMapper
 		{
 			if (_connection == null)
 			{
-				_connection =  _dataSource.Provider.GetConnection();
+				_connection =  _dataSource.DbProvider.CreateConnection();
 				_connection.ConnectionString = connectionString;
 				try
 				{
 					_connection.Open();
 					if (_logger.IsDebugEnabled)
 					{
-						_logger.Debug( string.Format("Open Connection \"{0}\" to \"{1}\".", _connection.GetHashCode().ToString(), _dataSource.Provider.Description) );
+						_logger.Debug( string.Format("Open Connection \"{0}\" to \"{1}\".", _connection.GetHashCode().ToString(), _dataSource.DbProvider.Description) );
 					}
 				}
 				catch(Exception ex)
 				{
-					throw new DataMapperException( string.Format("Unable to open connection to \"{0}\".", _dataSource.Provider.Description), ex );
+					throw new DataMapperException( string.Format("Unable to open connection to \"{0}\".", _dataSource.DbProvider.Description), ex );
 				}
 			}
 			else if (_connection.State != ConnectionState.Open)
@@ -178,12 +178,12 @@ namespace IBatisNet.DataMapper
 					_connection.Open();
 					if (_logger.IsDebugEnabled)
 					{
-						_logger.Debug(string.Format("Open Connection \"{0}\" to \"{1}\".", _connection.GetHashCode().ToString(), _dataSource.Provider.Description) );
+						_logger.Debug(string.Format("Open Connection \"{0}\" to \"{1}\".", _connection.GetHashCode().ToString(), _dataSource.DbProvider.Description) );
 					}
 				}
 				catch(Exception ex)
 				{
-					throw new DataMapperException(string.Format("Unable to open connection to \"{0}\".", _dataSource.Provider.Description), ex );
+					throw new DataMapperException(string.Format("Unable to open connection to \"{0}\".", _dataSource.DbProvider.Description), ex );
 				}
 			}
 		}
@@ -199,7 +199,7 @@ namespace IBatisNet.DataMapper
 				if (_logger.IsDebugEnabled)
 				{
 
-					_logger.Debug(string.Format("Close Connection \"{0}\" to \"{1}\".", _connection.GetHashCode().ToString(), _dataSource.Provider.Description));
+					_logger.Debug(string.Format("Close Connection \"{0}\" to \"{1}\".", _connection.GetHashCode().ToString(), _dataSource.DbProvider.Description));
 				}
 				_connection.Dispose();
 			}
@@ -419,11 +419,18 @@ namespace IBatisNet.DataMapper
 		{
 			IDbCommand command = null;
 
-			command =  _dataSource.Provider.GetCommand();
-			// Assign CommandType
+			if (_connection!=null)
+			{
+				command = _connection.CreateCommand();
+			}
+			else
+			{
+				command = _dataSource.DbProvider.CreateCommand();
+			}
+			
 			command.CommandType = commandType;
-			// Assign connection
 			command.Connection = _connection;
+			
 			// Assign transaction
 			if (_transaction != null)
 			{
@@ -462,13 +469,9 @@ namespace IBatisNet.DataMapper
 		/// Create an IDataParameter
 		/// </summary>
 		/// <returns>An IDataParameter.</returns>
-		public IDataParameter CreateDataParameter()
+		public IDbDataParameter CreateDataParameter()
 		{
-			IDataParameter dataParameter = null;
-
-			dataParameter = _dataSource.Provider.GetDataParameter();
-
-			return dataParameter;
+			return _dataSource.DbProvider.CreateDataParameter();
 		}
 
 		/// <summary>
@@ -477,7 +480,7 @@ namespace IBatisNet.DataMapper
 		/// <returns></returns>
 		public IDbDataAdapter CreateDataAdapter()
 		{
-			return _dataSource.Provider.GetDataAdapter();
+			return _dataSource.DbProvider.CreateDataAdapter();
 		}
 
 		/// <summary>
@@ -489,7 +492,7 @@ namespace IBatisNet.DataMapper
 		{
 			IDbDataAdapter dataAdapter = null;
 
-			dataAdapter = _dataSource.Provider.GetDataAdapter();
+			dataAdapter = _dataSource.DbProvider.CreateDataAdapter();
 			dataAdapter.SelectCommand = command;
 
 			return dataAdapter;

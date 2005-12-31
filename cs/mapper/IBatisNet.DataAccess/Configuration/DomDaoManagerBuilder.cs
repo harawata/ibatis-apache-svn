@@ -373,7 +373,7 @@ namespace IBatisNet.DataAccess.Configuration
 		/// <param name="configurationScope">The scope of the configuration</param>
 		private void GetProviders(ConfigurationScope configurationScope)
 		{
-			Provider provider = null;
+			IDbProvider provider = null;
 			XmlDocument xmlProviders = null;
 
 			configurationScope.ErrorContext.Activity = "Loading Providers config file";
@@ -510,7 +510,7 @@ namespace IBatisNet.DataAccess.Configuration
 				#endregion
 
 				#region provider
-				daoManager.Provider = ParseProvider( configurationScope );
+				daoManager.DbProvider = ParseProvider( configurationScope );
 
 				configurationScope.ErrorContext.Resource = string.Empty;
 				configurationScope.ErrorContext.MoreInfo = string.Empty;
@@ -519,7 +519,7 @@ namespace IBatisNet.DataAccess.Configuration
 
 				#region DataSource 
 				daoManager.DataSource = ParseDataSource( configurationScope );
-				daoManager.DataSource.Provider = daoManager.Provider;
+				daoManager.DataSource.DbProvider = daoManager.DbProvider;
 				#endregion
 
 				#region DaoSessionHandler
@@ -672,7 +672,7 @@ namespace IBatisNet.DataAccess.Configuration
 		/// </summary>
 		/// <param name="configurationScope">The scope of the configuration</param>
 		/// <returns>A provider</returns>
-		private Provider ParseProvider(ConfigurationScope configurationScope)
+		private IDbProvider ParseProvider(ConfigurationScope configurationScope)
 		{
 			XmlAttribute attribute = null;
 			XmlNode node = configurationScope.NodeContext.SelectSingleNode( ApplyNamespacePrefix(XML_DATABASE_PROVIDER), configurationScope.XmlNamespaceManager);
@@ -689,7 +689,7 @@ namespace IBatisNet.DataAccess.Configuration
 
 				if (configurationScope.Providers.Contains(attribute.Value) == true)
 				{
-					return (Provider)configurationScope.Providers[attribute.Value];
+					return (IDbProvider)configurationScope.Providers[attribute.Value];
 				}
 				else
 				{
@@ -702,7 +702,7 @@ namespace IBatisNet.DataAccess.Configuration
 			{
 				if(configurationScope.Providers.Contains(DEFAULT_PROVIDER_NAME) == true)
 				{
-					return (Provider) configurationScope.Providers[DEFAULT_PROVIDER_NAME];
+					return (IDbProvider) configurationScope.Providers[DEFAULT_PROVIDER_NAME];
 				}
 				else
 				{

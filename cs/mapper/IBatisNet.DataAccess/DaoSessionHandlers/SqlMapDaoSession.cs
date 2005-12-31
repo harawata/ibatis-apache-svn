@@ -25,16 +25,11 @@
 #endregion
 
 #region Imports
-using System;
+
 using System.Data;
-
 using IBatisNet.Common;
-
-using IBatisNet.DataAccess;
-using IBatisNet.DataAccess.Exceptions; 
-using IBatisNet.DataAccess.Interfaces;
-
 using IBatisNet.DataMapper;
+
 #endregion
 
 namespace IBatisNet.DataAccess.DaoSessionHandlers
@@ -59,7 +54,7 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		/// <summary>
 		/// 
 		/// </summary>
-		public override DataSource DataSource
+		public override IDataSource DataSource
 		{
 			get { return _sqlMap.LocalSession.DataSource; }
 		}
@@ -252,7 +247,7 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		/// 
 		/// </summary>
 		/// <returns></returns>
-		public override IDataParameter CreateDataParameter()
+		public override IDbDataParameter CreateDataParameter()
 		{
 			return _sqlMap.LocalSession.CreateDataParameter();
 		}

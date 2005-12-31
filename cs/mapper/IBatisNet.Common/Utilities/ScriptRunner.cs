@@ -69,7 +69,7 @@ namespace IBatisNet.Common.Utilities
 			ArrayList sqlStatements = new ArrayList();
 
 			if (doParse) {
-				switch(dataSource.Provider.Name) {         
+				switch(dataSource.DbProvider.Name) {         
 					case "oracle9.2":   
 					case "oracle10.1":   
 					case "oracleClient1.0":   
@@ -94,7 +94,7 @@ namespace IBatisNet.Common.Utilities
 				}
 			}
 			else {
-				switch(dataSource.Provider.Name) {         
+				switch(dataSource.DbProvider.Name) {         
 					case "oracle9.2":   
 					case "oracle10.1":   
 					case "oracleClient1.0":   
@@ -137,12 +137,12 @@ namespace IBatisNet.Common.Utilities
 		/// <param name="dataSource">The dataSouce that will be used.</param>
 		/// <param name="sqlStatements">An ArrayList of sql statements to execute.</param>
 		private void ExecuteStatements(DataSource dataSource, ArrayList sqlStatements) {
-			IDbConnection connection = dataSource.Provider.GetConnection();
+			IDbConnection connection = dataSource.DbProvider.CreateConnection();
 			connection.ConnectionString = dataSource.ConnectionString;
 			connection.Open();
 			IDbTransaction transaction = connection.BeginTransaction();
 			
-			IDbCommand command = dataSource.Provider.GetCommand();
+			IDbCommand command = connection.CreateCommand();
 
 			command.Connection = connection;
 			command.Transaction = transaction;			

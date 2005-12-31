@@ -33,7 +33,6 @@ using System.Reflection;
 using System.Text;
 using IBatisNet.Common;
 using IBatisNet.Common.Logging;
-using IBatisNet.Common.Utilities;
 using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.DataMapper.Commands;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
@@ -369,13 +368,13 @@ namespace IBatisNet.DataMapper.MappedStatements
 						mapping.Direction == ParameterDirection.InputOutput) 
 					{
 						string parameterName = string.Empty;
-						if (session.DataSource.Provider.UseParameterPrefixInParameter == false)
+						if (session.DataSource.DbProvider.UseParameterPrefixInParameter == false)
 						{
 							parameterName =  mapping.ColumnName;
 						}
 						else
 						{
-							parameterName = session.DataSource.Provider.ParameterPrefix + 
+							parameterName = session.DataSource.DbProvider.ParameterPrefix + 
 								mapping.ColumnName;
 						}
 						
@@ -803,7 +802,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 			object parameterObject, 
 			string keyProperty, 
 			string valueProperty, 
-		    SqlMapper.DictionaryRowDelegate rowDelegate  )
+		                                     SqlMapper.DictionaryRowDelegate rowDelegate  )
 		{
 			IDictionary map = new Hashtable();
 

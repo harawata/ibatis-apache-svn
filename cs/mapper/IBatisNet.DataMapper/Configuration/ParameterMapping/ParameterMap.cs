@@ -312,7 +312,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// <param name="configScope"></param>
 		public void Initialize(ConfigurationScope configScope)
 		{
-			_usePositionalParameters = configScope.DataSource.Provider.UsePositionalParameters;
+			_usePositionalParameters = configScope.DataSource.DbProvider.UsePositionalParameters;
 			GetProperties( configScope );
 		}
 

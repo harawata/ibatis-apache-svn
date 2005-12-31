@@ -42,21 +42,20 @@ namespace IBatisNet.Common
 		/// </summary>
 		/// <param name="node"></param>
 		/// <returns></returns>
-		public static Provider Deserialize(XmlNode node)
+		public static IDbProvider Deserialize(XmlNode node)
 		{
-			Provider provider = new Provider();
+			IDbProvider provider = new DbProvider();
 			NameValueCollection prop = NodeUtils.ParseAttributes(node);
 
 			provider.AssemblyName = prop["assemblyName"];
 			provider.CommandBuilderClass = prop["commandBuilderClass"];
-			provider.CommandClass = prop["commandClass"];
-			provider.ConnectionClass = prop["connectionClass"];
+			provider.DbCommandClass = prop["commandClass"];
+			provider.DbConnectionClass = prop["connectionClass"];
 			provider.DataAdapterClass = prop["dataAdapterClass"];
 			provider.Description = prop["description"];
 			provider.IsDefault = NodeUtils.GetBooleanAttribute(prop, "default", false);
 			provider.IsEnabled = NodeUtils.GetBooleanAttribute(prop, "enabled", true);
 			provider.Name = prop["name"];
-			provider.ParameterClass = prop["parameterClass"];
 			provider.ParameterDbTypeClass = prop["parameterDbTypeClass"];
 			provider.ParameterDbTypeProperty = prop["parameterDbTypeProperty"];
 			provider.ParameterPrefix = prop["parameterPrefix"];

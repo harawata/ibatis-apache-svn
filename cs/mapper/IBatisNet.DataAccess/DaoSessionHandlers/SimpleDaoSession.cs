@@ -47,7 +47,7 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		#region Fields
 		private static readonly ILog _logger = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
 
-		private DataSource _dataSource = null;
+		private IDataSource _dataSource = null;
 		private bool _isOpenTransaction = false;
 		private bool _consistent = false;
 
@@ -66,7 +66,7 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		/// <summary>
 		/// 
 		/// </summary>
-		public override DataSource DataSource
+		public override IDataSource DataSource
 		{
 			get { return _dataSource; }
 		}
@@ -138,19 +138,19 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		{
 			if (_connection == null)
 			{
-				_connection =  _dataSource.Provider.GetConnection();
+				_connection =  _dataSource.DbProvider.CreateConnection();
 				_connection.ConnectionString = connectionString;
 				try
 				{
 					_connection.Open();
 					if (_logger.IsDebugEnabled)
 					{
-						_logger.Debug(string.Format("Open Connection \"{0}\" to \"{1}\".", _connection.GetHashCode().ToString(), _dataSource.Provider.Description) );
+						_logger.Debug(string.Format("Open Connection \"{0}\" to \"{1}\".", _connection.GetHashCode().ToString(), _dataSource.DbProvider.Description) );
 					}
 				}
 				catch(Exception ex)
 				{
-					throw new DataAccessException( string.Format("Unable to open connection to \"{0}\".", _dataSource.Provider.Description), ex );
+					throw new DataAccessException( string.Format("Unable to open connection to \"{0}\".", _dataSource.DbProvider.Description), ex );
 				}
 			}
 			else if (_connection.State != ConnectionState.Open)
@@ -160,12 +160,12 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 					_connection.Open();
 					if (_logger.IsDebugEnabled)
 					{
-						_logger.Debug(string.Format("Open Connection \"{0}\" to \"{1}\".", _connection.GetHashCode().ToString(), _dataSource.Provider.Description) );
+						_logger.Debug(string.Format("Open Connection \"{0}\" to \"{1}\".", _connection.GetHashCode().ToString(), _dataSource.DbProvider.Description) );
 					}
 				}
 				catch(Exception ex)
 				{
-					throw new DataAccessException(string.Format("Unable to open connection to \"{0}\".", _dataSource.Provider.Description), ex );
+					throw new DataAccessException(string.Format("Unable to open connection to \"{0}\".", _dataSource.DbProvider.Description), ex );
 				}
 			}
 		}
@@ -180,7 +180,7 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 				_connection.Close();
 				if (_logger.IsDebugEnabled)
 				{
-					_logger.Debug(string.Format("Close Connection \"{0}\" to \"{1}\".", _connection.GetHashCode().ToString(), _dataSource.Provider.Description));
+					_logger.Debug(string.Format("Close Connection \"{0}\" to \"{1}\".", _connection.GetHashCode().ToString(), _dataSource.DbProvider.Description));
 				}
 			}
 			_connection = null;
@@ -403,11 +403,10 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		{
 			IDbCommand command = null;
 
-			command =  _dataSource.Provider.GetCommand();
-			// Assign CommandType
+			command =  _connection.CreateCommand();
 			command.CommandType = commandType;
-			// Assign connection
 			command.Connection = _connection;
+
 			// Assign transaction
 			if (_transaction != null)
 			{
@@ -437,11 +436,9 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		/// Create an IDataParameter
 		/// </summary>
 		/// <returns>An IDataParameter.</returns>
-		public override IDataParameter CreateDataParameter()
+		public override IDbDataParameter CreateDataParameter()
 		{
-			IDataParameter dataParameter = null;
-
-			dataParameter = _dataSource.Provider.GetDataParameter();
+			IDbDataParameter dataParameter = _dataSource.DbProvider.CreateDataParameter();
 
 			return dataParameter;
 		}
@@ -452,7 +449,7 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		/// <returns></returns>
 		public override IDbDataAdapter CreateDataAdapter()
 		{
-			return _dataSource.Provider.GetDataAdapter();
+			return _dataSource.DbProvider.CreateDataAdapter();
 		}
 
 		/// <summary>
@@ -464,7 +461,7 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		{
 			IDbDataAdapter dataAdapter = null;
 
-			dataAdapter = _dataSource.Provider.GetDataAdapter();
+			dataAdapter = _dataSource.DbProvider.CreateDataAdapter();
 			dataAdapter.SelectCommand = command;
 
 			return dataAdapter;

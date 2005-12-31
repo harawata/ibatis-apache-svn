@@ -58,6 +58,7 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 			configScope.ErrorContext.MoreInfo = "Initialize ParameterMap";
 			configScope.NodeContext = node;
 			parameterMap.Initialize( configScope );
+			configScope.ErrorContext.MoreInfo = string.Empty;
 
 			return parameterMap;
 		}

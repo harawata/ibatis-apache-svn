@@ -41,7 +41,7 @@ namespace IBatisNet.Common
 		/// <summary>
 		/// The data source use by the session.
 		/// </summary>
-		DataSource DataSource
+		IDataSource DataSource
 		{
 			get;
 		}
@@ -161,10 +161,10 @@ namespace IBatisNet.Common
 		IDbCommand CreateCommand(CommandType commandType);
 
 		/// <summary>
-		/// Create an IDataParameter
+		/// Create an DataParameter
 		/// </summary>
-		/// <returns>An IDataParameter.</returns>
-		IDataParameter CreateDataParameter();
+		/// <returns>An IDbDataParameter.</returns>
+		IDbDataParameter CreateDataParameter();
 
 		/// <summary>
 		/// Create a DataAdapter

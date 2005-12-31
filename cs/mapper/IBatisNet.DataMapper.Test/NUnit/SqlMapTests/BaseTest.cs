@@ -57,11 +57,11 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			string fileName = "sqlmap" + "_" + ConfigurationSettings.AppSettings["database"] + "_" + ConfigurationSettings.AppSettings["providerType"] + ".config";
 			sqlMap = builder.Configure(fileName);
 
-			if ( sqlMap.DataSource.Provider.Name.IndexOf("PostgreSql")>=0)
+			if ( sqlMap.DataSource.DbProvider.Name.IndexOf("PostgreSql")>=0)
 			{
 				BaseTest.ConvertKey = new KeyConvert(Lower);
 			}
-			else if ( sqlMap.DataSource.Provider.Name.IndexOf("oracle")>=0)
+			else if ( sqlMap.DataSource.DbProvider.Name.IndexOf("oracle")>=0)
 			{
 				BaseTest.ConvertKey = new KeyConvert(Upper);
 			}

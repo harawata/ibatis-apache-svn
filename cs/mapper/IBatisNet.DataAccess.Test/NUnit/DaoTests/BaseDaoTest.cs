@@ -61,7 +61,7 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 			Assert.IsNotNull(daoManager1);
 			Assert.IsNotNull(daoManager2);
 			Assert.IsTrue(daoManager2.LocalDataSource.ConnectionString != daoManager1.LocalDataSource.ConnectionString);
-			Assert.IsTrue(daoManager2.LocalDataSource.Provider.Name != daoManager1.LocalDataSource.Provider.Name);
+			Assert.IsTrue(daoManager2.LocalDataSource.DbProvider.Name != daoManager1.LocalDataSource.DbProvider.Name);
 		}
 
 		#region Dao statement tests

@@ -56,13 +56,13 @@ namespace IBatisNet.Common.Utilities
 		/// <param name="spName">the name of the stored procedure</param>
 		/// <param name="includeReturnValueParameter">whether or not to include their return value parameter</param>
 		/// <returns></returns>
-		private static IDataParameter[] DiscoverSpParameterSet(DataSource dataSource, string spName, bool includeReturnValueParameter)
+		private static IDataParameter[] DiscoverSpParameterSet(IDataSource dataSource, string spName, bool includeReturnValueParameter)
 		{
-			using (IDbConnection connection = dataSource.Provider.GetConnection())
+			using (IDbConnection connection = dataSource.DbProvider.CreateConnection())
 			{
 				connection.ConnectionString = dataSource.ConnectionString;
 				connection.Open();
-				return InternalDiscoverSpParameterSet(dataSource.Provider, connection, spName, includeReturnValueParameter);
+				return InternalDiscoverSpParameterSet(dataSource.DbProvider, connection, spName, includeReturnValueParameter);
 			}		
 		}
 
@@ -74,7 +74,7 @@ namespace IBatisNet.Common.Utilities
 		/// <param name="spName">the name of the stored procedure</param>
 		/// <param name="includeReturnValueParameter">whether or not to include their return value parameter</param>
 		/// <returns></returns>
-		private static IDataParameter[] InternalDiscoverSpParameterSet(Provider provider,
+		private static IDataParameter[] InternalDiscoverSpParameterSet(IDbProvider provider,
 			IDbConnection connection, string spName, bool includeReturnValueParameter)
 		{
 			using (IDbCommand cmd = connection.CreateCommand())
@@ -102,7 +102,7 @@ namespace IBatisNet.Common.Utilities
 			}
 		}
 		
-		private static void DeriveParameters(Provider provider, IDbCommand command)
+		private static void DeriveParameters(IDbProvider provider, IDbCommand command)
 		{
 			Type commandBuilderType;
 
@@ -113,7 +113,7 @@ namespace IBatisNet.Common.Utilities
 				throw new Exception(String.Format(
 					"CommandBuilderClass not defined for provider \"{0}\".",
 					provider.Name));
-			commandBuilderType = provider.GetCommandBuilderType();
+			commandBuilderType = provider.CommandBuilderType;
 
 			// Invoke the static DeriveParameter method on the CommandBuilder class
 			// NOTE: OracleCommandBuilder has no DeriveParameter method
@@ -208,7 +208,7 @@ namespace IBatisNet.Common.Utilities
 		/// <param name="dataSource">a valid dataSource</param>
 		/// <param name="spName">the name of the stored procedure</param>
 		/// <returns>an array of IDataParameters</returns>
-		public static IDataParameter[] GetSpParameterSet(DataSource dataSource, string spName)
+		public static IDataParameter[] GetSpParameterSet(IDataSource dataSource, string spName)
 		{
 			return GetSpParameterSet(dataSource, spName, false);
 		}
@@ -223,7 +223,7 @@ namespace IBatisNet.Common.Utilities
 		/// <param name="spName">the name of the stored procedure</param>
 		/// <param name="includeReturnValueParameter">a bool value indicating whether the return value parameter should be included in the results</param>
 		/// <returns>an array of IDataParameters</returns>
-		public static IDataParameter[] GetSpParameterSet(DataSource dataSource
+		public static IDataParameter[] GetSpParameterSet(IDataSource dataSource
 			, string spName, bool includeReturnValueParameter)
 		{
 			string hashKey = dataSource.ConnectionString + ":" + spName + (includeReturnValueParameter ? ":include ReturnValue Parameter":"");

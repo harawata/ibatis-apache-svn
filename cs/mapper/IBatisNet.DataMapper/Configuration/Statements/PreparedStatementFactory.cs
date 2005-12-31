@@ -88,7 +88,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		public PreparedStatement Prepare()
 		{
 			_preparedStatement = new PreparedStatement();
-			_parameterPrefix = _session.DataSource.Provider.ParameterPrefix;
+			_parameterPrefix = _session.DataSource.DbProvider.ParameterPrefix;
 
 			_preparedStatement.PreparedSql = _commandText;
 
@@ -108,7 +108,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 				}
 				else // use the parameterMap
 				{
-					if (_session.DataSource.Provider.UseDeriveParameters)
+					if (_session.DataSource.DbProvider.UseDeriveParameters)
 					{
 						DiscoverParameter(_session);
 					}
@@ -130,7 +130,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 				// in the MSDN Library. 
 				//http://support.microsoft.com/default.aspx?scid=kb;EN-US;Q309486
 
-				if ( _session.DataSource.Provider.IsObdc == true )
+				if ( _session.DataSource.DbProvider.IsObdc == true )
 				{
 					StringBuilder commandTextBuilder = new StringBuilder("{ call ");
 					commandTextBuilder.Append( _commandText );
@@ -172,12 +172,12 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 			// (or discover them & populate the cache)
 			IDataParameter[] commandParameters = DBHelperParameterCache.GetSpParameterSet(session.DataSource, _commandText);
 			
-			int start = session.DataSource.Provider.ParameterPrefix.Length;
+			int start = session.DataSource.DbProvider.ParameterPrefix.Length;
 			foreach(IDataParameter dataParameter in commandParameters)
 			{
-				if (session.DataSource.Provider.UseParameterPrefixInParameter == false)
+				if (session.DataSource.DbProvider.UseParameterPrefixInParameter == false)
 				{
-					if (dataParameter.ParameterName.StartsWith(session.DataSource.Provider.ParameterPrefix)) {
+					if (dataParameter.ParameterName.StartsWith(session.DataSource.DbProvider.ParameterPrefix)) {
 						dataParameter.ParameterName = dataParameter.ParameterName.Substring(start);
 					}
 				}
@@ -193,12 +193,12 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		private void CreateParametersForTextCommand()
 		{
 			string sqlParamName = string.Empty;
-			string dbTypePropertyName = _session.DataSource.Provider.ParameterDbTypeProperty;
-			Type enumDbType = _session.DataSource.Provider.ParameterDbType;
+			string dbTypePropertyName = _session.DataSource.DbProvider.ParameterDbTypeProperty;
+			Type enumDbType = _session.DataSource.DbProvider.ParameterDbType;
 			IList list = null;
 			int i = 0;
 
-			if (_session.DataSource.Provider.UsePositionalParameters) //obdc/oledb
+			if (_session.DataSource.DbProvider.UsePositionalParameters) //obdc/oledb
 			{
 				list = _request.ParameterMap.Properties;
 			}
@@ -209,7 +209,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 
 			foreach(ParameterProperty property in list)
 			{
-				if (_session.DataSource.Provider.UseParameterPrefixInParameter)
+				if (_session.DataSource.DbProvider.UseParameterPrefixInParameter)
 				{
 					// From Ryan Yao: JIRA-27, used "param" + i++ for sqlParamName
 					sqlParamName = _parameterPrefix + "param" + i++;
@@ -233,7 +233,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 
 				// Set IDbDataParameter
 				// JIRA-49 Fixes (size, precision, and scale)
-				if (_session.DataSource.Provider.SetDbParameterSize) 
+				if (_session.DataSource.DbProvider.SetDbParameterSize) 
 				{
 					if (property.Size != -1)
 					{
@@ -241,12 +241,12 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 					}
 				}
 
-				if (_session.DataSource.Provider.SetDbParameterPrecision) 
+				if (_session.DataSource.DbProvider.SetDbParameterPrecision) 
 				{
 					((IDbDataParameter)dataParameter).Precision = property.Precision;
 				}
 				
-				if (_session.DataSource.Provider.SetDbParameterScale) 
+				if (_session.DataSource.DbProvider.SetDbParameterScale) 
 				{
 					((IDbDataParameter)dataParameter).Scale = property.Scale;
 				}
@@ -259,7 +259,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 				_preparedStatement.DbParametersName.Add( property.PropertyName );
 				_preparedStatement.DbParameters.Add( dataParameter );	
 
-				if ( _session.DataSource.Provider.UsePositionalParameters == false)
+				if ( _session.DataSource.DbProvider.UsePositionalParameters == false)
 				{
 					_propertyDbParameterMap.Add(property, dataParameter);
 				}
@@ -273,11 +273,11 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		private void CreateParametersForProcedureCommand()
 		{
 			string sqlParamName = string.Empty;
-			string dbTypePropertyName = _session.DataSource.Provider.ParameterDbTypeProperty;
-			Type enumDbType = _session.DataSource.Provider.ParameterDbType;
+			string dbTypePropertyName = _session.DataSource.DbProvider.ParameterDbTypeProperty;
+			Type enumDbType = _session.DataSource.DbProvider.ParameterDbType;
 			IList list = null;
 
-			if (_session.DataSource.Provider.UsePositionalParameters) //obdc/oledb
+			if (_session.DataSource.DbProvider.UsePositionalParameters) //obdc/oledb
 			{
 				list = _request.ParameterMap.Properties;
 			}
@@ -293,7 +293,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 			// The column attribute is the name of a procedure parameter.
 			foreach(ParameterProperty property in list)
 			{
-				if (_session.DataSource.Provider.UseParameterPrefixInParameter)
+				if (_session.DataSource.DbProvider.UseParameterPrefixInParameter)
 				{
 					sqlParamName = _parameterPrefix + property.ColumnName;
 				}
@@ -316,7 +316,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 
 				// Set IDbDataParameter
 				// JIRA-49 Fixes (size, precision, and scale)
-				if (_session.DataSource.Provider.SetDbParameterSize) 
+				if (_session.DataSource.DbProvider.SetDbParameterSize) 
 				{
 					if (property.Size != -1)
 					{
@@ -324,12 +324,12 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 					}
 				}
 
-				if (_session.DataSource.Provider.SetDbParameterPrecision) 
+				if (_session.DataSource.DbProvider.SetDbParameterPrecision) 
 				{
 					((IDbDataParameter)dataParameter).Precision = property.Precision;
 				}
 				
-				if (_session.DataSource.Provider.SetDbParameterScale) 
+				if (_session.DataSource.DbProvider.SetDbParameterScale) 
 				{
 					((IDbDataParameter)dataParameter).Scale = property.Scale;
 				}
@@ -342,7 +342,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 				_preparedStatement.DbParametersName.Add( property.PropertyName );
 				_preparedStatement.DbParameters.Add( dataParameter );	
 
-				if ( _session.DataSource.Provider.UsePositionalParameters == false)
+				if ( _session.DataSource.DbProvider.UsePositionalParameters == false)
 				{
 					_propertyDbParameterMap.Add(property, dataParameter);
 				}
@@ -373,7 +373,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 					ParameterProperty property = (ParameterProperty)_request.ParameterMap.Properties[index];
 					IDataParameter dataParameter = null;
 					
-					if (_session.DataSource.Provider.UsePositionalParameters)
+					if (_session.DataSource.DbProvider.UsePositionalParameters)
 					{
 						// TODO Refactor?
 						if (_parameterPrefix.Equals(":"))
@@ -398,11 +398,11 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 						// since CreateParametersForStatementText now does
 						// a check for UseParameterPrefixInParameter before 
 						// creating the parameter name!
-						if (_session.DataSource.Provider.UseParameterPrefixInParameter) 
+						if (_session.DataSource.DbProvider.UseParameterPrefixInParameter) 
 						{
 							// Fix ByteFX.Data.MySqlClient.MySqlParameter
 							// who strip prefix in Parameter Name ?!
-							if (_session.DataSource.Provider.Name.IndexOf("ByteFx")>=0)
+							if (_session.DataSource.DbProvider.Name.IndexOf("ByteFx")>=0)
 							{
 								sqlParamName = _parameterPrefix+dataParameter.ParameterName;
 							}
