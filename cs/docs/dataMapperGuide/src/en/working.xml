@@ -904,11 +904,14 @@ namespace WebShop.Domain
           </example></para>
       </sect3>
 
-	  <sect3>
+      <sect3>
         <title>extends</title>
-		    <para>When writing Sql, you often encounter duplicate fragments of SQL. iBATIS offers a simple yet powerful attribute to reuse them.</para>
 
-			 <para><programlisting>
+        <para>When writing Sql, you often encounter duplicate fragments of
+        SQL. iBATIS offers a simple yet powerful attribute to reuse
+        them.</para>
+
+        <para><programlisting>
 &lt;select id="<emphasis role="blue">GetAllAccounts</emphasis>"
   resultMap="indexed-account-result"&gt;
 select
@@ -924,7 +927,7 @@ from Accounts
   resultMap="indexed-account-result"&gt;
     order by Account_FirstName
 &lt;/select&gt;</programlisting></para>
-	  </sect3>
+      </sect3>
     </sect2>
   </sect1>
 
@@ -1571,17 +1574,15 @@ resultMapping="LineItem.LineItem"
         <title>nullValue</title>
 
         <para>The <parameter>nullValue</parameter> attribute can be set to any
-        valid value (based on property type). The
+        valid value (based on property type). The result element's
         <parameter>nullValue</parameter> attribute is used to specify an
-        outgoing null value replacement. What this means is that when the
-        value is detected in the object property, a NULL will be written to
-        the database (the opposite behavior of an inbound null value
-        replacement). This allows you to use a "magic" null number in your
-        application for types that do not support null values (such as
+        inbound null value replacement. What this means is that when the value
+        is detected in a query's result column, the corresponding object
+        property will be set to the the <parameter>nullValue</parameter>
+        attribute's value. This allows you to use a "magic" null number in
+        your application for types that do not support null values (such as
         <classname>int</classname>, <classname>double</classname>,
-        <classname>float</classname>). When these types of properties contain
-        a matching null value (say, –9999), a NULL will be written to the
-        database instead of the value.</para>
+        <classname>float</classname>).</para>
 
         <para>If your database has a NULLABLE column, but you want your
         application to represent NULL with a constant value, you can specify
