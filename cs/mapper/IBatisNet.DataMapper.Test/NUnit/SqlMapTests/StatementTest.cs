@@ -652,6 +652,32 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		}
 
 		/// <summary>
+		/// Test ExecuteQueryForMap With Cache : Hashtable.
+		/// </summary>
+		[Test]
+		public void TestExecuteQueryForMapWithCache()
+		{
+			IDictionary map = sqlMap.QueryForMap("GetAllAccountsCache", null, "FirstName");
+
+			int firstId = HashCodeProvider.GetIdentityHashCode(map);
+
+			Assert.AreEqual(5, map.Count);
+			AssertAccount1(((Account) map["Joe"]));
+
+			Assert.AreEqual(1, ((Account) map["Joe"]).Id);
+			Assert.AreEqual(2, ((Account) map["Averel"]).Id);
+			Assert.AreEqual(3, ((Account) map["William"]).Id);
+			Assert.AreEqual(4, ((Account) map["Jack"]).Id);
+			Assert.AreEqual(5, ((Account) map["Gilles"]).Id);
+
+			map = sqlMap.QueryForMap("GetAllAccountsCache", null, "FirstName");
+
+			int secondId = HashCodeProvider.GetIdentityHashCode(map);
+
+			Assert.AreEqual(firstId, secondId);
+		}
+
+		/// <summary>
 		/// Test ExecuteQueryForMap : Hashtable.
 		/// </summary>
 		/// <remarks>

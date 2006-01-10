@@ -145,6 +145,13 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			where Account_ID = #value#
 		</select>
   
+		<select id="GetAllAccountsCache" 
+			resultMap="account-result"
+			cacheModel="account-cache">
+			select * from Accounts
+			order by Account_ID
+		</select>
+		
 		<select id="GetAllAccountsAsHashtableViaResultClass"
 						resultClass="Hashtable">
 			select

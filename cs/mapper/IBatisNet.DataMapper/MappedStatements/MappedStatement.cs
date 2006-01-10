@@ -802,7 +802,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 			object parameterObject, 
 			string keyProperty, 
 			string valueProperty, 
-		                                     SqlMapper.DictionaryRowDelegate rowDelegate  )
+		    SqlMapper.DictionaryRowDelegate rowDelegate  )
 		{
 			IDictionary map = new Hashtable();
 

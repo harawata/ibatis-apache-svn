@@ -62,14 +62,12 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			IList list = sqlMap.QueryForList("GetCachedAccountsViaResultMap", null);
 
 			int firstId = HashCodeProvider.GetIdentityHashCode(list);
-				//System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(list);
 
 			list = sqlMap.QueryForList("GetCachedAccountsViaResultMap", null);
 
 			//Console.WriteLine(sqlMap.GetDataCacheStats());
 
 			int secondId = HashCodeProvider.GetIdentityHashCode(list);
-				//System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(list);
 
 			Assert.AreEqual(firstId, secondId);
 

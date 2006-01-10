@@ -113,8 +113,14 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 			CacheKey cacheKey = this.GetCacheKey(request);
 			cacheKey.Update("ExecuteQueryForMap");
-			cacheKey.Update(keyProperty);
-			cacheKey.Update(valueProperty);
+			if (keyProperty!=null)
+			{
+				cacheKey.Update(keyProperty);
+			}
+			if (valueProperty!=null)
+			{
+				cacheKey.Update(valueProperty);
+			}
 
 			map = this.Statement.CacheModel[cacheKey] as IDictionary;
 			if (map == null) 
