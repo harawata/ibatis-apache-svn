@@ -824,15 +824,28 @@ namespace IBatisNet.DataMapper.Configuration
 				{
 					foreach (string statementName in statementsToRegister)
 					{
-						CacheModel cacheModel = _configScope.SqlMapper.GetCache(cacheModelId);
-						IMappedStatement mappedStatement = (IMappedStatement)_configScope.SqlMapper.MappedStatements[statementName];
+						IMappedStatement mappedStatement = _configScope.SqlMapper.MappedStatements[statementName] as IMappedStatement;
 
-						if (_logger.IsDebugEnabled)
+						if (mappedStatement != null)
 						{
-							_logger.Debug("Registering trigger statement [" + mappedStatement.Id + "] to cache model [" + cacheModel.Id + "]");
-						}
+							CacheModel cacheModel = _configScope.SqlMapper.GetCache(cacheModelId);
 
-						cacheModel.RegisterTriggerStatement(mappedStatement);
+							if (_logger.IsDebugEnabled)
+							{
+								_logger.Debug("Registering trigger statement [" + mappedStatement.Id + "] to cache model [" + cacheModel.Id + "]");
+							}
+
+							cacheModel.RegisterTriggerStatement(mappedStatement);
+						}
+						else
+						{
+							if (_logger.IsWarnEnabled)
+							{
+								_logger.Warn("Unable to register trigger statement [" + statementName + "] to cache model [" + cacheModelId + "]. Statement does not exist. Removing statement from list of valid statements.");
+							}
+
+							_configScope.SqlMapper.MappedStatements.Remove(statementName);
+						}
 					}
 				}
 			}
