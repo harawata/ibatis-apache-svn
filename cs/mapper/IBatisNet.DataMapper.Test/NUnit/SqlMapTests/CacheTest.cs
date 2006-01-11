@@ -1,6 +1,4 @@
 
-
-//<-- To access the definition of the deleagte RowDelegate
 using System;
 using System.Collections;
 using System.Threading;

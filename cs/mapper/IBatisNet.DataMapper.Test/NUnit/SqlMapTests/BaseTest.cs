@@ -25,6 +25,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 	/// <summary>
 	/// Summary description for BaseTest.
 	/// </summary>
+	[TestFixture] 
 	public abstract class BaseTest
 	{
 		/// <summary>
@@ -49,7 +50,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// Initialize an sqlMap
 		/// </summary>
 		[TestFixtureSetUp]
-		protected void InitSqlMap()
+		protected virtual void SetUpFixture()
 		{
 			//DateTime start = DateTime.Now;
 
@@ -78,12 +79,20 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// Dispose the SqlMap
 		/// </summary>
 		[TestFixtureTearDown]
-		protected void DisposeSqlMap()
+		protected virtual void TearDownFixture()
 		{
 			sqlMap = null;
 		}
 
-
+//		[SetUp]
+//		public virtual void SetUp()
+//		{
+//		}
+//
+//		[TearDown]
+//		public virtual void TearDown()
+//		{
+//		}
 
 		protected static string Normal(string key)
 		{
