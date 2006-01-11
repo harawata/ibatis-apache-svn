@@ -841,10 +841,8 @@ namespace IBatisNet.DataMapper.Configuration
 						{
 							if (_logger.IsWarnEnabled)
 							{
-								_logger.Warn("Unable to register trigger statement [" + statementName + "] to cache model [" + cacheModelId + "]. Statement does not exist. Removing statement from list of valid statements.");
+								_logger.Warn("Unable to register trigger statement [" + statementName + "] to cache model [" + cacheModelId + "]. Statement does not exist.");
 							}
-
-							_configScope.SqlMapper.MappedStatements.Remove(statementName);
 						}
 					}
 				}
