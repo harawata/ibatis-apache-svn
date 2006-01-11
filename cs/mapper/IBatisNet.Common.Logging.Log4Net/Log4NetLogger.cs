@@ -1,8 +1,7 @@
 #region Apache Notice
 /*****************************************************************************
- * $URL$
  * $Revision$
- * $Date$
+ * $LastChangedDate$
  * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
