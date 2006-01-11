@@ -1,9 +1,10 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
+ * $URL$
  * $Revision$
  * $Date$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
  * Copyright (C) 2004 - Gilles Bayon
