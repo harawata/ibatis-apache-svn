@@ -3,7 +3,7 @@ Bundle-Name: Abator UI Plug-in
 Bundle-SymbolicName: org.apache.ibatis.abator.ui
 Bundle-Version: 0.6.0
 Bundle-ClassPath: abatorui.jar,
- lib2/abator060.jar
+ lib/abator060.jar
 Bundle-Activator: org.apache.ibatis.abator.ui.plugin.AbatorUIPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
