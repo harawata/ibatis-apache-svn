@@ -20,8 +20,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.apache.ibatis.abator.core.api.GeneratedJavaFile;
-import org.apache.ibatis.abator.core.internal.util.StringUtility;
+import org.apache.ibatis.abator.api.FullyQualifiedJavaType;
+import org.apache.ibatis.abator.api.GeneratedJavaFile;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -199,17 +199,17 @@ public class JavaFileMerger {
 			throw new CoreException(status);
 		}
 
-		// reconcile the imports
+		// reconcile the superinterfaces
 		List newSuperInterfaces = getNewSuperInterfaces(typeDeclaration.superInterfaces());
 		Iterator iter = newSuperInterfaces.iterator();
 		while (iter.hasNext()) {
-		    String newSuperInterface = (String) iter.next();
-		    typeDeclaration.superInterfaces().add(ast.newSimpleName(newSuperInterface));
+		    FullyQualifiedJavaType newSuperInterface = (FullyQualifiedJavaType) iter.next();
+		    typeDeclaration.superInterfaces().add(ast.newSimpleName(newSuperInterface.getShortName()));
 		}
 		
 		// set the superclass
-		if (StringUtility.stringHasValue(generatedJavaFile.getSuperClass())) {
-		    typeDeclaration.setSuperclass(ast.newSimpleName(generatedJavaFile.getSuperClass()));
+		if (generatedJavaFile.getSuperClass() != null) {
+		    typeDeclaration.setSuperclass(ast.newSimpleName(generatedJavaFile.getSuperClass().getShortName()));
 		} else {
 		    typeDeclaration.setSuperclass(null);
 		}
@@ -301,19 +301,19 @@ public class JavaFileMerger {
 	private List getNewSuperInterfaces(List existingInterfaces) {
 	    List answer = new ArrayList();
 	    
-	    Iterator newInterfaces = generatedJavaFile.getSuperInterfaces().iterator();
+	    Iterator newInterfaces = generatedJavaFile.getSuperInterfaceTypes().iterator();
 	    while (newInterfaces.hasNext()) {
-	        String newInterface = (String) newInterfaces.next();
+	        FullyQualifiedJavaType newInterface = (FullyQualifiedJavaType) newInterfaces.next();
 		    Iterator iter = existingInterfaces.iterator();
 		    boolean found = false;
 		    while (iter.hasNext()) {
 		        Name name = (Name) iter.next();
 		        if (name.isSimpleName()) {
-		            if (((SimpleName) name).getIdentifier().equals(newInterface)) {
+		            if (((SimpleName) name).getIdentifier().equals(newInterface.getShortName())) {
 		                found = true;
 		            }
 		        } else {
-		            if (((QualifiedName) name).getName().getIdentifier().equals(newInterface)) {
+		            if (((QualifiedName) name).getName().getIdentifier().equals(newInterface.getShortName())) {
 		                found = true;
 		            }
 		        }
@@ -332,18 +332,19 @@ public class JavaFileMerger {
 	    
 	    Iterator newImports = generatedJavaFile.getImportedTypes().iterator();
 	    while (newImports.hasNext()) {
-	        String newImport = (String) newImports.next();
+	        FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) newImports.next();
+	        
 		    Iterator iter = existingImports.iterator();
 		    boolean found = false;
 		    while (iter.hasNext()) {
 		        ImportDeclaration existingImport = (ImportDeclaration) iter.next();
-		        if (existingImport.getName().getFullyQualifiedName().equals(newImport)) {
+		        if (existingImport.getName().getFullyQualifiedName().equals(fqjt.getFullyQualifiedName())) {
 		            found = true;
 		        }
 		    }
 		    
 		    if (!found) {
-		        answer.add(parseName(newImport));
+		        answer.add(parseName(fqjt.getFullyQualifiedName()));
 		    }
 	    }
 	    

@@ -83,5 +83,12 @@
             contributorClass="org.apache.ibatis.abator.ui.editors.ConfigFileEditorActionBarContributor"
             id="org.apache.ibatis.abator.ui.editors.ConfigFileEditor"/>
    </extension>
+   <extension
+         point="org.eclipse.ant.core.antTasks">
+      <antTask
+            class="org.apache.ibatis.abator.ui.ant.AbatorUIAntTask"
+            library="abatoruiant.jar"
+            name="abator.generate"/>
+   </extension>
 
 </plugin>

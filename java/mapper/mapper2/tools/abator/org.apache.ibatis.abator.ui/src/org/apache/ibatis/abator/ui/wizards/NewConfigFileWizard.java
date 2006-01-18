@@ -157,35 +157,59 @@ public class NewConfigFileWizard extends Wizard implements INewWizard {
 	 */
 
 	private InputStream openContentStream() {
+        String lineSeparator = System.getProperty("line.separator"); //$NON-NLS-1$
+        if (lineSeparator == null) {
+            lineSeparator = "\n"; //$NON-NLS-1$
+        }
+        
 		StringBuffer sb = new StringBuffer();
-		sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-		sb.append("<!DOCTYPE abatorConfiguration PUBLIC \"-//Apache Software Foundation//DTD Abator for iBATIS Configuration 1.0//EN\"\n");
-		sb.append("  \"http://ibatis.apache.org/dtd/abator-config_1_0.dtd\">\n");
-		sb.append('\n');
-		sb.append("<abatorConfiguration>\n");
-		sb.append("  <abatorContext>\n");
+		sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"); //$NON-NLS-1$
+		sb.append(lineSeparator);
+		sb.append("<!DOCTYPE abatorConfiguration PUBLIC \"-//Apache Software Foundation//DTD Abator for iBATIS Configuration 1.0//EN\""); //$NON-NLS-1$
+		sb.append(lineSeparator);
+		sb.append("  \"http://ibatis.apache.org/dtd/abator-config_1_0.dtd\">"); //$NON-NLS-1$
+		sb.append(lineSeparator);
+		sb.append(lineSeparator);
+		sb.append("<abatorConfiguration>"); //$NON-NLS-1$
+		sb.append(lineSeparator);
+		sb.append("  <abatorContext>"); //$NON-NLS-1$
 
-		sb.append("    <!-- TODO: Add Database Connection Information -->\n");
-		sb.append("    <jdbcConnection driverClass=\"???\"\n");
-		sb.append("        connectionURL=\"???\"\n");
-		sb.append("        userId=\"???\"\n");
-		sb.append("        password=\"???\">\n");
-		sb.append("      <classPathEntry location=\"???\" />\n");
-		sb.append("    </jdbcConnection>\n");
+		sb.append("    <!-- TODO: Add Database Connection Information -->"); //$NON-NLS-1$
+		sb.append(lineSeparator);
+		sb.append("    <jdbcConnection driverClass=\"???\""); //$NON-NLS-1$
+		sb.append(lineSeparator);
+		sb.append("        connectionURL=\"???\""); //$NON-NLS-1$
+		sb.append(lineSeparator);
+		sb.append("        userId=\"???\""); //$NON-NLS-1$
+		sb.append(lineSeparator);
+		sb.append("        password=\"???\">"); //$NON-NLS-1$
+		sb.append(lineSeparator);
+		sb.append("      <classPathEntry location=\"???\" />"); //$NON-NLS-1$
+		sb.append(lineSeparator);
+		sb.append("    </jdbcConnection>"); //$NON-NLS-1$
+		sb.append(lineSeparator);
 
-		sb.append('\n');
-		sb.append("    <javaModelGenerator targetPackage=\"???\" targetProject=\"???\" />\n");
-		sb.append("    <sqlMapGenerator targetPackage=\"???\" targetProject=\"???\" />\n");
-		sb.append("    <daoGenerator type=\"IBATIS\" targetPackage=\"???\" targetProject=\"???\" />\n");
+		sb.append(lineSeparator);
+		sb.append("    <javaModelGenerator targetPackage=\"???\" targetProject=\"???\" />"); //$NON-NLS-1$
+		sb.append(lineSeparator);
+		sb.append("    <sqlMapGenerator targetPackage=\"???\" targetProject=\"???\" />"); //$NON-NLS-1$
+		sb.append(lineSeparator);
+		sb.append("    <daoGenerator type=\"IBATIS\" targetPackage=\"???\" targetProject=\"???\" />"); //$NON-NLS-1$
+		sb.append(lineSeparator);
+
+		sb.append(lineSeparator);
+		sb.append("    <table schema=\"???\" tableName=\"???\">"); //$NON-NLS-1$
+		sb.append(lineSeparator);
+		sb.append("      <columnOverride column=\"???\" property=\"???\" />"); //$NON-NLS-1$
+		sb.append(lineSeparator);
+		sb.append("    </table>"); //$NON-NLS-1$
+		sb.append(lineSeparator);
 		
-		sb.append('\n');
-		sb.append("    <table schema=\"???\" tableName=\"???\">\n");
-		sb.append("      <columnOverride column=\"???\" property=\"???\" />\n");
-		sb.append("    </table>\n");
-		
-		sb.append('\n');
-		sb.append("  </abatorContext>\n");
-		sb.append("</abatorConfiguration>\n");
+		sb.append(lineSeparator);
+		sb.append("  </abatorContext>"); //$NON-NLS-1$
+		sb.append(lineSeparator);
+		sb.append("</abatorConfiguration>"); //$NON-NLS-1$
+		sb.append(lineSeparator);
 		
 		return new ByteArrayInputStream(sb.toString().getBytes());
 	}

@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.ibatis.abator.core.exception.GenerationRuntimeException;
+import org.apache.ibatis.abator.exception.GenerationRuntimeException;
 import org.apache.ibatis.abator.ui.plugin.AbatorUIPlugin;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
