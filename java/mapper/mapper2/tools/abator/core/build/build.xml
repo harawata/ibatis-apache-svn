@@ -1,5 +1,7 @@
 <project name="Abator for iBATIS" default="buildAbator" basedir=".">
 
+  <!-- this is not finished yet - still building the distro manually -->
+  
   <target name="clean">
   </target>
   
