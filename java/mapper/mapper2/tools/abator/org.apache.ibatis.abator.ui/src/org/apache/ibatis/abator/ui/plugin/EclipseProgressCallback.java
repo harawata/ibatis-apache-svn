@@ -23,7 +23,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public class EclipseProgressCallback implements ProgressCallback {
 
-    IProgressMonitor progressMonitor;
+    private IProgressMonitor progressMonitor;
     
     /**
      * 
@@ -33,19 +33,21 @@ public class EclipseProgressCallback implements ProgressCallback {
         this.progressMonitor = progressMonitor;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.ibatis.abator.core.api.ProgressCallback#setTotalSteps(int)
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.ibatis.abator.api.ProgressCallback#setNumberOfSubTasks(int)
      */
-    public void setTotalSteps(int totalSteps) {
+    public void setNumberOfSubTasks(int totalSubTasks) {
         progressMonitor.beginTask("Generating Files from Database Tables",
-                totalSteps);
+                totalSubTasks);
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.ibatis.abator.core.api.ProgressCallback#setTaskName(java.lang.String)
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.ibatis.abator.api.ProgressCallback#startSubTask(java.lang.String)
      */
-    public void setTaskName(String taskName) {
-        progressMonitor.subTask(taskName);
+    public void startSubTask(String subTaskName) {
+        progressMonitor.subTask(subTaskName);
         progressMonitor.worked(1);
     }
 
