@@ -47,134 +47,134 @@ import org.eclipse.text.edits.TextEdit;
  * @author Jeff Butler
  */
 public class EclipseShellCallback implements ShellCallback {
-    private Map projects;
+	private Map projects;
 
-    private Map folders;
+	private Map folders;
 
-    /**
-     *  
-     */
-    public EclipseShellCallback() {
-        super();
-        projects = new HashMap();
-        folders = new HashMap();
-    }
+	/**
+	 *  
+	 */
+	public EclipseShellCallback() {
+		super();
+		projects = new HashMap();
+		folders = new HashMap();
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.ibatis.abator.core.api.ShellCallback#getDirectory(java.lang.String,
-     *      java.lang.String, java.util.List)
-     */
-    public File getDirectory(String targetProject, String targetPackage,
-            List warnings) throws ShellException {
-        try {
-            IFolder folder = getFolder(targetProject,
-                    targetPackage);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.apache.ibatis.abator.core.api.ShellCallback#getDirectory(java.lang.String,
+	 *      java.lang.String, java.util.List)
+	 */
+	public File getDirectory(String targetProject, String targetPackage,
+			List warnings) throws ShellException {
+		try {
+			IFolder folder = getFolder(targetProject, targetPackage);
 
-            return folder.getRawLocation().toFile();
-        } catch (CoreException e) {
-            // TODO - improve this exception handling
-            throw new ShellException(e.getStatus().getMessage());
-        }
-    }
+			return folder.getRawLocation().toFile();
+		} catch (CoreException e) {
+			// TODO - improve this exception handling
+			throw new ShellException(e.getStatus().getMessage());
+		}
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.ibatis.abator.core.api.ShellCallback#mergeJavaFile(java.io.File,
-     *      org.apache.ibatis.abator.core.api.GeneratedJavaFile,
-     *      java.lang.String, java.util.List)
-     */
-    public String mergeJavaFile(GeneratedJavaFile newFile, String javadocTag,
-            List warnings) throws ShellException {
-        try {
-            IFolder folder = getFolder(newFile
-                    .getTargetProject(), newFile.getTargetPackage());
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.apache.ibatis.abator.core.api.ShellCallback#mergeJavaFile(java.io.File,
+	 *      org.apache.ibatis.abator.core.api.GeneratedJavaFile,
+	 *      java.lang.String, java.util.List)
+	 */
+	public String mergeJavaFile(GeneratedJavaFile newFile, String javadocTag,
+			List warnings) throws ShellException {
+		try {
+			IFolder folder = getFolder(newFile.getTargetProject(), newFile
+					.getTargetPackage());
 
-            IFile file = folder.getFile(newFile.getFileName());
-            String source;
-            if (file.exists()) {
-                JavaFileMerger merger = new JavaFileMerger(newFile, file);
-                source = merger.getMergedSource();
+			IFile file = folder.getFile(newFile.getFileName());
+			String source;
+			if (file.exists()) {
+				JavaFileMerger merger = new JavaFileMerger(newFile, file);
+				source = merger.getMergedSource();
 
-            } else {
-                source = formatJavaSource(newFile.getContent());
-            }
+			} else {
+				source = formatJavaSource(newFile.getContent());
+			}
 
-            return source;
-        } catch (CoreException e) {
-            // TODO - improve this exception handling
-            throw new ShellException(e.getStatus().getMessage());
-        }
-    }
+			return source;
+		} catch (CoreException e) {
+			// TODO - improve this exception handling
+			throw new ShellException(e.getStatus().getMessage());
+		}
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.ibatis.abator.core.api.ShellCallback#refreshProject(java.lang.String)
-     */
-    public void refreshProject(String project) {
-        try {
-            IJavaProject javaProject = getJavaProject(project);
-            javaProject.getCorrespondingResource().refreshLocal(
-                IResource.DEPTH_INFINITE, null);
-        } catch (CoreException e) {
-            // ignore
-            ;
-        }
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.apache.ibatis.abator.core.api.ShellCallback#refreshProject(java.lang.String)
+	 */
+	public void refreshProject(String project) {
+		try {
+			IJavaProject javaProject = getJavaProject(project);
+			javaProject.getCorrespondingResource().refreshLocal(
+					IResource.DEPTH_INFINITE, null);
+		} catch (CoreException e) {
+			// ignore
+			;
+		}
+	}
 
-    private String formatJavaSource(String unformattedSource) {
-        CodeFormatter formatter = ToolFactory.createCodeFormatter(null);
-        TextEdit te = formatter.format(CodeFormatter.K_COMPILATION_UNIT,
-                unformattedSource, 0, unformattedSource.length(), 0, null);
+	private String formatJavaSource(String unformattedSource) {
+		CodeFormatter formatter = ToolFactory.createCodeFormatter(null);
+		TextEdit te = formatter.format(CodeFormatter.K_COMPILATION_UNIT,
+				unformattedSource, 0, unformattedSource.length(), 0, null);
 
-        if (te == null) {
-            // no edits to make
-            return unformattedSource;
-        }
+		if (te == null) {
+			// no edits to make
+			return unformattedSource;
+		}
 
-        IDocument doc = new Document(unformattedSource);
-        String formattedSource;
-        try {
-            te.apply(doc);
-            formattedSource = doc.get();
-        } catch (BadLocationException e) {
-            formattedSource = unformattedSource;
-        }
+		IDocument doc = new Document(unformattedSource);
+		String formattedSource;
+		try {
+			te.apply(doc);
+			formattedSource = doc.get();
+		} catch (BadLocationException e) {
+			formattedSource = unformattedSource;
+		}
 
-        return formattedSource;
-    }
+		return formattedSource;
+	}
 
-    private IJavaProject getJavaProject(String javaProjectName)
-            throws CoreException {
-        IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-        IProject project = root.getProject(javaProjectName);
-        IJavaProject javaProject;
+	private IJavaProject getJavaProject(String javaProjectName)
+			throws CoreException {
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		IProject project = root.getProject(javaProjectName);
+		IJavaProject javaProject;
 
-        if (project.exists()) {
-            if (project.hasNature(JavaCore.NATURE_ID)) {
-                javaProject = JavaCore.create(project);
-            } else {
-                Status status = new Status(IStatus.ERROR, AbatorUIPlugin
-                        .getPluginId(), IStatus.ERROR, "Project "
-                        + javaProjectName + " is not a Java Project", null);
+		if (project.exists()) {
+			if (project.hasNature(JavaCore.NATURE_ID)) {
+				javaProject = JavaCore.create(project);
+			} else {
+				Status status = new Status(IStatus.ERROR, AbatorUIPlugin
+						.getPluginId(), IStatus.ERROR, "Project "
+						+ javaProjectName + " is not a Java Project", null);
 
-                throw new CoreException(status);
-            }
-        } else {
-            Status status = new Status(IStatus.ERROR, AbatorUIPlugin
-                    .getPluginId(), IStatus.ERROR, "Project " + javaProjectName
-                    + " does not exist", null);
+				throw new CoreException(status);
+			}
+		} else {
+			Status status = new Status(IStatus.ERROR, AbatorUIPlugin
+					.getPluginId(), IStatus.ERROR, "Project " + javaProjectName
+					+ " does not exist", null);
 
-            throw new CoreException(status);
-        }
+			throw new CoreException(status);
+		}
 
-        return javaProject;
-    }
+		return javaProject;
+	}
 
-	private IFolder getFolder(String targetProject, String targetPackage) throws CoreException {
+	private IFolder getFolder(String targetProject, String targetPackage)
+			throws CoreException {
 		String key = targetProject + targetPackage;
 		IFolder folder = (IFolder) folders.get(key);
 		if (folder == null) {
@@ -221,7 +221,8 @@ public class EclipseShellCallback implements ShellCallback {
 		if (srcFolder == null) {
 			Status status = new Status(IStatus.ERROR, AbatorUIPlugin
 					.getPluginId(), IStatus.ERROR,
-					"Cannot find source folder for project " + javaProject.getElementName(), null);
+					"Cannot find source folder for project "
+							+ javaProject.getElementName(), null);
 			throw new CoreException(status);
 		}
 
@@ -242,4 +243,10 @@ public class EclipseShellCallback implements ShellCallback {
 		return fragment;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.apache.ibatis.abator.api.ShellCallback#mergeSupported()
+	 */
+	public boolean mergeSupported() {
+		return true;
+	}
 }
