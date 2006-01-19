@@ -16,8 +16,8 @@
   </tr>
   <tr>
     <td><a href="abator.html">Abator</a></td>
-    <td>Abator is a code generator for iBATIS (the Java version only).  It runs as an Eclipse plugin
-        and will generate SqlMaps, Java Domain classes, and DAO classes.
+    <td>Abator is a code generator for iBATIS (the Java version only).  It 
+        will generate SqlMaps, Java Domain classes, and DAO classes.
     </td>
   </tr>
 </table>
