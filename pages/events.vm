@@ -5,6 +5,22 @@
 
 <body>
 
+
+<h3>March 23rd, 2006 - Las Vegas, Nevada, USA</h3>
+<strong>The Server Side Java Symposium</strong>
+<p>
+  A wise man once said: "PowerPoint is the worst thing ever to happen to
+  public speaking." So, in this session, Clinton will use only a Java
+  IDE and real-world examples to demonstrate how iBATIS is used to create
+  an effective persistence layer for your application.  He will risk life
+  and limb (or at least his reputation) coding before an audience, to build
+  the back end of a simple Java application using a Test Driven approach.
+  No code snippets here, the persistence layer will be coded from scratch --
+  with no safety net!  Clinton will also be presenting the
+  <a href="http://javasymposium.techtarget.com/html/det_descriptions.htm#CBeginAgile" target="_new">Bottom 10 Reasons Agile Teams Fail</a>.<br/>
+  Visit the <a href="http://javasymposium.techtarget.com/" target="_new">The Server Side Java Symposium homepage</a> for more information.
+</p>
+
 <h3>December 10, 2005 - San Diego, California, USA</h3>
 <strong>ApacheCon US 2005</strong>
 <p>
