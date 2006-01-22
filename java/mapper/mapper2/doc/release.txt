@@ -2,6 +2,19 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
+ 2.1.7 - Jan 21, 2006
+------------------------------
+
+ o Fixed IBATIS-218 'i' character in property names, with Turkish locale
+ o Fixed IBATIS-219 NoClassDefFoundError: oracle/toplink/sessions/UnitOfWork
+ o Fixed IBATIS-228 Exception is thrown by TransactionManager when multiple commits are issued against a started transaction.
+ o Fixed IBATIS-229 Method getWriteablePropertyNames in com.ibatis.common.beans.ComplexBeanProbe gets the readable property names
+ o Fixed IBATIS-220 Null Pointer in SqlExecutor.handleResults where ResultSet is null.
+ o Fixed IBATIS-213 SELECT statement returns unexpected result when 'groupBy' and 'nullValue' are specified in resultMaps.
+ o Fixed IBATIS-221 Can't store a List in a Map 
+ o Fixed IBATIS-223 Thread deadlock due to CacheModel.flush() 
+
+------------------------------
  2.1.6 - Nov 5, 2005
 ------------------------------
 
