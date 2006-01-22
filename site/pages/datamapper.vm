@@ -18,8 +18,6 @@ execute complex queries. Using iBATIS you have the full power of real SQL at you
 nearly any database to any object model and is very tolerant of legacy designs, or even bad designs. This is all achieved 
 without special database tables, peer objects or code generation.</p>
 
-<p><a href="downloads.html" title="Get the iBATIS Data Mapper framework!">Download the iBATIS Data Mapper framework and documentation!</a></p>
-
 </body>
 
 </html>

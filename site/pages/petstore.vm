@@ -5,11 +5,13 @@
 
 <body>
 
-<img src="jp4.gif" align="left"/><h2>iBATIS PetStore</h2>
+<img src="jp4.gif" />
+
+<h2>iBATIS PetStore</h2>
 
 <p><b>The official example application for iBATIS SQL Maps 2.0 and DAO 2.0</b></p>
 
-<p>JPetStore 4.0 is a fully functional web application based on iBATIS open source persistence layer products, including the 
+<p>JPetStore is a fully functional web application based on iBATIS open source persistence layer products, including the
 SQL Maps 2.0 and Data Access Objects 2.0 frameworks. JPetStore is an excellent example of how these frameworks can be 
 implemented in a typical J2EE web application.</p>
 
@@ -50,12 +52,10 @@ past as a tool for comparison to other platforms. These scars will slowly be era
     <li> Replace the database schema with a better one. The current database is (and has always been) a nightmare of poor database design practices.</li>
     <li> Consider middle tier frameworks with AOP and/or IoC features. I'm totally behind the simplification of J2EE, and I think AOP and IoC are the paths that will lead us to achieving that goal.</li>
   </ul>
-  
+
 <h2>NPetShop</h2>
 <p>The Pet Store application has also been written for .NET and shares much of the same qualities as its Java brother.  However,
 because it was written entirely outside of the context of competition, it doesn't share as many of the battle scars!  :-)</p>
-
-<p>Check out both implementations by downloading them from our <a href="downloads.html">download page</a>.</p>
 
 </body>
 
