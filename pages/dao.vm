@@ -20,8 +20,6 @@ databases and persistence approaches involved, DAOs can help you create a consis
  includes the SQL Maps Framework. Although packaged together, the DAO Framework is completely independent and can be
  used without SQL Maps. .NET users can download the DataAccess framework seperately from the DataMapper framework.</p>
 
-<p><a href="downloads.html" title="Get the iBATIS DAO framework!">Download the iBATIS Data Access Objects framework and documentation!</a></p>    
-
 </body>
 
 </html>

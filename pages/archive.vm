@@ -7,6 +7,17 @@
 
      <h2>News Archive</h2>
 
+     <h3>iBATIS Java 2.1.6 - Maintenance Release</h3>
+     <p>(Nov 5, 2005) Just released a maintenance release to take care of the summer bug list. This puts us
+       in a good spot to start planning for 2.2.0, where we're currently discussing some changes to the current
+       version support levels, which will enable us to add a bunch of new features. If you aren't on the dev or
+       Java mailing list, then join up to discuss! For now, enjoy the cleanliness of version 2.1.6.
+     </p>
+       <p>
+         <a href="downloads.html">Get iBATIS 2.1.6 from the Downloads page.</a>
+         <br/>
+       </p>
+
      <h3>iBATIS for Ruby</h3>
      <p>(August 25, 2005) It's official.  iBATIS is no longer a simple tool or framework. It is a genuine
      approach to integrating object oriented applications and relational databases.  We could have said that
