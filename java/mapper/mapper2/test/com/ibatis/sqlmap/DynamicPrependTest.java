@@ -1,12 +1,11 @@
 package com.ibatis.sqlmap;
 
 import testdomain.Account;
+import testdomain.MyBean;
 
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
-
-import compatibility.domain.MyBean;
 
 public class DynamicPrependTest extends BaseSqlMapTest {
 

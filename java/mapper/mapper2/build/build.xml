@@ -4,7 +4,6 @@
 
   <path id="runtime.src">
     <pathelement location="${src.rt}"/>
-    <pathelement location="${src.compat}"/>
   </path>
 
   <path id="test.src">
@@ -40,11 +39,6 @@
     </delete>
     <delete>
       <fileset dir="${src.rt}">
-        <include name="**/*.class"/>
-      </fileset>
-    </delete>
-    <delete>
-      <fileset dir="${src.compat}">
         <include name="**/*.class"/>
       </fileset>
     </delete>
@@ -99,12 +93,8 @@
 
   <target name="src.compile" depends="prepare">
     <javac srcdir="${src.rt}" sourcepathref="sourcepath" classpathref="classpath" destdir="${work.classes}" deprecation="true" debug="true"/>
-    <javac srcdir="${src.compat}" sourcepathref="sourcepath" classpathref="classpath" destdir="${work.classes}" deprecation="true" debug="true"/>
     <copy todir="${work.classes}">
       <fileset dir="${src.rt}" >
-        <exclude name="**/*.java"/>
-      </fileset>
-      <fileset dir="${src.compat}" >
         <exclude name="**/*.java"/>
       </fileset>
     </copy>
@@ -170,7 +160,6 @@
         <filter excludes="net.*"/>
         <filter excludes="*Test"/>
         <filter excludes="testdomain.*"/>
-        <filter excludes="compatibility.*"/>
         <filter excludes="xmltester.*"/>
       </instr>
     </emma>
@@ -199,14 +188,7 @@
     </junitreport>
   </target>
 
-  <target name="test.compatibility" depends="test.report">
-    <java fork="true" classname="compatibility.RunAllCompat" failonerror="true">
-      <classpath path="${work.instr}"/>
-      <classpath refid="classpath"/>
-    </java>
-  </target>
-
-  <target name="test.coverage" depends="test.compatibility" >
+  <target name="test.coverage" depends="test.report" >
     <emma enabled="${coverage.enabled}">
       <report sourcepath="${src.rt}"
         sort="+block,+name,+method,+class"
@@ -283,31 +265,9 @@
     </jar>
   </target>
 
-  <target name="jar.compatibility" depends="src.compile">
-    <mkdir dir="${deploy.path}/lib/1-x-Compatibility/"/>
-    <jar jarfile="${deploy.path}/lib/1-x-Compatibility/ibatis-sqlmap-1-x.jar">
-      <manifest>
-        <attribute name="Built-On" value="${buildDate}"/>
-	      <section name="com/ibatis/db/">
-          <attribute name="Implementation-Title" value="iBatis compatibility"/>
-          <attribute name="Implementation-Version" value="${version} build# ${buildNum}"/>
-          <attribute name="Implementation-Vendor" value="Apache Software Foundation"/>
-        </section>
-      </manifest>
-      <fileset dir="${work.classes}">
-        <include name="com/ibatis/db/**/*"/>
-      </fileset>
-      <fileset dir="${deploy.path}">
-        <include name="release.txt"/>
-        <include name="license.txt"/>
-      </fileset>
-    </jar>
-  </target>
-
   <target name="jar.src" depends="src.compile">
     <jar jarfile="${deploy.path}/src/ibatis-src.zip">
       <fileset dir="${src.rt}"/>
-      <fileset dir="${src.compat}"/>
       <fileset dir="${deploy.path}">
         <include name="release.txt"/>
         <include name="license.txt"/>
@@ -324,7 +284,7 @@
     </jar>
   </target>
 
-  <target name="deploy.assemble" depends="jar.sqlmaps,jar.dao,jar.common,jar.compatibility,jar.src, jar.javadoc">
+  <target name="deploy.assemble" depends="jar.sqlmaps,jar.dao,jar.common,jar.src, jar.javadoc">
     <copy todir="${deploy.path}/lib">
       <fileset dir="${lib.rt}">
         <include name="**/*.jar"/>
@@ -342,16 +302,5 @@
   <target name="all" depends="test.coverage, src.javadoc, deploy.zipfile">
     <fail if="testsFailed" message="The tests did not pass"/>
   </target>
-
-  <!--
-  <taskdef  name="convertSqlMaps" classname="com.ibatis.db.sqlmap.upgrade.ConvertTask"  classpathref="classpath"/>
-  <target name="convert">
-    <convertSqlMaps todir="F:/out/" overwrite="true">
-      <fileset dir="${tests}/compatibility/">
-        <include name="**/maps/*.xml"/>
-      </fileset>
-    </convertSqlMaps>
-  </target>
-  -->
 
 </project>

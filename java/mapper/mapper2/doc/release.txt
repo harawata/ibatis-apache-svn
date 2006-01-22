@@ -2,6 +2,12 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
+ 2.2.0 - ??? ??, 2006
+------------------------------
+
+ o Removed iBATIS 1.x compatibility libraries, they are no longer supported.
+
+------------------------------
  2.1.7 - Jan 21, 2006
 ------------------------------
 
