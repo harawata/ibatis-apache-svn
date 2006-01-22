@@ -24,17 +24,14 @@ import java.io.*;
 import java.util.*;
 
 /**
- *
+ * Wrapper for Caches.
  */
 public class CacheModel implements ExecuteListener {
-
-  private static final Map lockMap = new HashMap();
   /**
    * This is used to represent null objects that are returned from the cache so
    * that they can be cached, too.
    */
   public static final Object NULL_OBJECT = new Object();
-  private final Object STATS_LOCK = new Object();
   private int requests = 0;
   private int hits = 0;
 
@@ -237,12 +234,9 @@ public class CacheModel implements ExecuteListener {
    * Clears the cache
    */
   public void flush() {
-    lastFlush = System.currentTimeMillis();
-    // use the controller's key
-    CacheKey key = new CacheKey();
-    key.update(controller);
-    synchronized (getLock(key)) {
+  	synchronized (this)  {
       controller.flush(this);
+      lastFlush = System.currentTimeMillis();
     }
   }
 
@@ -255,39 +249,32 @@ public class CacheModel implements ExecuteListener {
    * @return The cached object (or null)
    */
   public Object getObject(CacheKey key) {
+  	Object value = null;
     synchronized (this) {
       if (flushInterval != NO_FLUSH_INTERVAL
           && System.currentTimeMillis() - lastFlush > flushInterval) {
         flush();
       }
-    }
 
-    Object value = null;
-    synchronized (getLock(key)) {
       value = controller.getObject(this, key);
-    }
-
-    if (serialize && !readOnly && (value != NULL_OBJECT && value != null)) {
-      try {
-        ByteArrayInputStream bis = new ByteArrayInputStream((byte[]) value);
-        ObjectInputStream ois = new ObjectInputStream(bis);
-        value = ois.readObject();
-        ois.close();
-      } catch (Exception e) {
-        throw new NestedRuntimeException("Error caching serializable object.  Be sure you're not attempting to use " +
-            "a serialized cache for an object that may be taking advantage of lazy loading.  Cause: " + e, e);
+      if (serialize && !readOnly &&
+       	    (value != NULL_OBJECT && value != null)) {
+        try {
+          ByteArrayInputStream bis = new ByteArrayInputStream((byte[]) value);
+          ObjectInputStream ois = new ObjectInputStream(bis);
+          value = ois.readObject();
+          ois.close();
+        } catch (Exception e) {
+          throw new NestedRuntimeException("Error caching serializable object.  Be sure you're not attempting to use " +
+                                           "a serialized cache for an object that may be taking advantage of lazy loading.  Cause: " + e, e);
+        }
       }
-    }
-
-    synchronized (STATS_LOCK) {
       requests++;
       if (value != null) {
         hits++;
       }
     }
-
     return value;
-
   }
 
   /**
@@ -297,39 +284,21 @@ public class CacheModel implements ExecuteListener {
    * @param value The object to be cached
    */
   public void putObject(CacheKey key, Object value) {
-    if (null == value) value = NULL_OBJECT;
-    if (serialize && !readOnly && value != NULL_OBJECT) {
-      try {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(bos);
-        oos.writeObject(value);
-        oos.flush();
-        oos.close();
-        value = bos.toByteArray();
-      } catch (IOException e) {
-        throw new NestedRuntimeException("Error caching serializable object.  Cause: " + e, e);
+  	if (null == value) value = NULL_OBJECT;
+  	synchronized ( this )  {
+      if (serialize && !readOnly && value != NULL_OBJECT) {
+        try {
+          ByteArrayOutputStream bos = new ByteArrayOutputStream();
+          ObjectOutputStream oos = new ObjectOutputStream(bos);
+          oos.writeObject(value);
+          oos.flush();
+          oos.close();
+          value = bos.toByteArray();
+        } catch (IOException e) {
+          throw new NestedRuntimeException("Error caching serializable object.  Cause: " + e, e);
+        }
       }
-    }
-    synchronized (getLock(key)) {
       controller.putObject(this, key, value);
     }
   }
-
-  /**
-   * OK, honestly, i have no idea what this does.
-   * @param key
-   * @return
-   */
-  public synchronized final Object getLock(CacheKey key) {
-    int controllerId = System.identityHashCode(controller);
-    int keyHash = key.hashCode();
-    Integer lockKey = new Integer(29 * controllerId + keyHash);
-    Object lock = lockMap.get(lockKey);
-    if (lock == null) {
-      lock = lockKey; //might as well use the same object
-      lockMap.put(lockKey, lock);
-    }
-    return lock;
-  }
-
 }
