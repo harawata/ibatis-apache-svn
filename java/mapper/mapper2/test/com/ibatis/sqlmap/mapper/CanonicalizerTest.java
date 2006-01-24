@@ -1,7 +1,7 @@
 package com.ibatis.sqlmap.mapper;
 
 import junit.framework.TestCase;
-import com.ibatis.sqlmap.engine.mapper.Canonicalizer;
+import com.ibatis.sqlmap.engine.mapper.matcher.Canonicalizer;
 
 import java.util.Map;
 

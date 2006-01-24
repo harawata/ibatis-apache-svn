@@ -1,4 +1,4 @@
-package com.ibatis.sqlmap.engine.mapper;
+package com.ibatis.sqlmap.engine.mapper.matcher;
 
 import java.util.Set;
 import java.util.HashSet;

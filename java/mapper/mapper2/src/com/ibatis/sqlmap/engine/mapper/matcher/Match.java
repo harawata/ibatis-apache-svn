@@ -1,4 +1,4 @@
-package com.ibatis.sqlmap.engine.mapper;
+package com.ibatis.sqlmap.engine.mapper.matcher;
 
 public class Match {
 

@@ -1,4 +1,8 @@
-package com.ibatis.sqlmap.engine.mapper;
+package com.ibatis.sqlmap.engine.mapper.matcher;
+
+import com.ibatis.sqlmap.engine.mapper.matcher.Canonicalizer;
+import com.ibatis.sqlmap.engine.mapper.matcher.Match;
+import com.ibatis.sqlmap.engine.mapper.matcher.MatchCalculator;
 
 import java.util.*;
 

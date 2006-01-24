@@ -32,6 +32,7 @@ public class DatabaseMetadataTest extends BaseSqlMapTest {
     assertNotNull(table.getColumn("ACC_DATE_ADDED"));
     assertNotNull(table.getColumn("ACC_AGE"));
     assertNotNull(table.getColumn("ACC_CART_OPTION"));
+    assertEquals(table.getColumn("ACC_ID"), table.getPrimaryKey());
   }
 
 }

@@ -1,7 +1,7 @@
 package com.ibatis.sqlmap.mapper;
 
 import junit.framework.TestCase;
-import com.ibatis.sqlmap.engine.mapper.MatchCalculator;
+import com.ibatis.sqlmap.engine.mapper.matcher.MatchCalculator;
 
 public class MatchCalculatorTest extends TestCase {
 

@@ -1,6 +1,6 @@
 package com.ibatis.sqlmap.mapper;
 
-import com.ibatis.sqlmap.engine.mapper.NameMatcher;
+import com.ibatis.sqlmap.engine.mapper.matcher.NameMatcher;
 import junit.framework.TestCase;
 
 import java.util.Map;
