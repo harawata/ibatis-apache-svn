@@ -5,6 +5,7 @@ import com.ibatis.common.xml.Nodelet;
 import com.ibatis.common.xml.NodeletParser;
 import com.ibatis.common.xml.NodeletUtils;
 import com.ibatis.common.exception.NestedRuntimeException;
+import com.ibatis.common.beans.ClassInfo;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.client.extensions.TypeHandlerCallback;
@@ -145,6 +146,10 @@ public class SqlMapConfigParser extends BaseParser {
         vars.errorCtx.setActivity("loading settings properties");
 
         Properties attributes = NodeletUtils.parseAttributes(node, vars.properties);
+
+        String classInfoCacheEnabledAttr = attributes.getProperty("classInfoCacheEnabled");
+        boolean classInfoCacheEnabled = (classInfoCacheEnabledAttr == null || "true".equals(classInfoCacheEnabledAttr));
+        ClassInfo.setCacheEnabled(classInfoCacheEnabled);
 
         String lazyLoadingEnabledAttr = attributes.getProperty("lazyLoadingEnabled");
         boolean lazyLoadingEnabled = (lazyLoadingEnabledAttr == null || "true".equals(lazyLoadingEnabledAttr));

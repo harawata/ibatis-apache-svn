@@ -28,6 +28,7 @@ import java.util.*;
  */
 public class ClassInfo {
 
+  private static boolean cacheEnabled = true;
   private static final String[] EMPTY_STRING_ARRAY = new String[0];
   private static final Set SIMPLE_TYPE_SET = new HashSet();
   private static final Map CLASS_INFO_MAP = Collections.synchronizedMap(new HashMap());
@@ -259,14 +260,22 @@ public class ClassInfo {
    * @return The method cache for the class
    */
   public static ClassInfo getInstance(Class clazz) {
-    synchronized (clazz) {
-      ClassInfo cache = (ClassInfo) CLASS_INFO_MAP.get(clazz);
-      if (cache == null) {
-        cache = new ClassInfo(clazz);
-        CLASS_INFO_MAP.put(clazz, cache);
+    if (cacheEnabled) {
+      synchronized (clazz) {
+        ClassInfo cache = (ClassInfo) CLASS_INFO_MAP.get(clazz);
+        if (cache == null) {
+          cache = new ClassInfo(clazz);
+          CLASS_INFO_MAP.put(clazz, cache);
+        }
+        return cache;
       }
-      return cache;
+    } else {
+      return new ClassInfo(clazz);
     }
+  }
+
+  public static void setCacheEnabled(boolean cacheEnabled) {
+    ClassInfo.cacheEnabled = cacheEnabled;
   }
 
   /**
