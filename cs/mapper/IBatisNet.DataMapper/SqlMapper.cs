@@ -25,7 +25,9 @@
 #endregion
 
 #region Using
-
+#if dotnet2
+using System.Collections.Generic;
+#endif
 using System;
 using System.Collections;
 using System.Collections.Specialized;
@@ -578,7 +580,7 @@ namespace IBatisNet.DataMapper
 		#endregion
 		
 		#region QueryForObject
-
+  
 		/// <summary>
 		/// Executes a Sql SELECT statement that returns that returns data 
 		/// to populate a single object instance.
@@ -662,12 +664,100 @@ namespace IBatisNet.DataMapper
 
 			return result;
 		}
-	
-		#endregion
 
-		#region QueryForMap, QueryForDictionary
+        #endregion
 
-		/// <summary>
+        #region QueryForObject .NET 2.0
+        #if dotnet2
+        /// <summary>
+        /// Executes a Sql SELECT statement that returns that returns data 
+        /// to populate a single object instance.
+        /// <p/>
+        /// The parameter object is generally used to supply the input
+        /// data for the WHERE clause parameter(s) of the SELECT statement.
+        /// </summary>
+        /// <param name="statementName">The name of the sql statement to execute.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <returns> The single result object populated with the result set data.</returns>
+        public T QueryForObject<T>(string statementName, object parameterObject)
+        {
+            bool isSessionLocal = false;
+            IDalSession session = _sessionHolder.LocalSession;
+            T result;
+
+            if (session == null)
+            {
+                session = new SqlMapSession(this.DataSource);
+                session.OpenConnection();
+                isSessionLocal = true;
+            }
+
+            try
+            {
+                IMappedStatement statement = GetMappedStatement(statementName);
+                result = statement.ExecuteQueryForObject<T>(session, parameterObject);
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                if (isSessionLocal)
+                {
+                    session.CloseConnection();
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Executes a Sql SELECT statement that returns a single object of the type of the
+        /// resultObject parameter.
+        /// </summary>
+        /// <param name="statementName">The name of the sql statement to execute.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="instanceObject">An object of the type to be returned.</param>
+        /// <returns>The single result object populated with the result set data.</returns>
+        public T QueryForObject<T>(string statementName, object parameterObject, T instanceObject)
+        {
+            bool isSessionLocal = false;
+            IDalSession session = _sessionHolder.LocalSession;
+            T result = default(T);
+
+            if (session == null)
+            {
+                session = new SqlMapSession(this.DataSource);
+                session.OpenConnection();
+                isSessionLocal = true;
+            }
+
+            try
+            {
+                IMappedStatement statement = GetMappedStatement(statementName);
+                result = statement.ExecuteQueryForObject<T>(session, parameterObject, instanceObject);
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                if (isSessionLocal)
+                {
+                    session.CloseConnection();
+                }
+            }
+
+            return result;
+        }
+        #endif      
+        #endregion
+
+        #region QueryForMap, QueryForDictionary
+
+        /// <summary>
 		///  Alias to QueryForMap, .NET spirit.
 		///  Feature idea by Ted Husted.
 		/// </summary>
@@ -891,6 +981,143 @@ namespace IBatisNet.DataMapper
 		}
 		
 		#endregion
+
+        #region QueryForList .NET 2.0
+        #if dotnet2
+        /// <summary>
+        /// Executes a Sql SELECT statement that returns data to populate
+        /// a number of result objects.
+        /// <p/>
+        ///  The parameter object is generally used to supply the input
+        /// data for the WHERE clause parameter(s) of the SELECT statement.
+        /// </summary>
+        /// <param name="statementName">The name of the sql statement to execute.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <returns>A List of result objects.</returns>
+        public IList<T> QueryForList<T>(string statementName, object parameterObject)
+        {
+            bool isSessionLocal = false;
+            IDalSession session = _sessionHolder.LocalSession;
+            IList<T> list;
+
+            if (session == null)
+            {
+                session = new SqlMapSession(this.DataSource);
+                session.OpenConnection();
+                isSessionLocal = true;
+            }
+
+            try
+            {
+                IMappedStatement statement = GetMappedStatement(statementName);
+                list = (IList<T>)statement.ExecuteQueryForList(session, parameterObject);
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                if (isSessionLocal)
+                {
+                    session.CloseConnection();
+                }
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// Executes the SQL and retuns all rows selected.
+        /// <p/>
+        ///  The parameter object is generally used to supply the input
+        /// data for the WHERE clause parameter(s) of the SELECT statement.
+        /// </summary>
+        /// <param name="statementName">The name of the sql statement to execute.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="skipResults">The number of rows to skip over.</param>
+        /// <param name="maxResults">The maximum number of rows to return.</param>
+        /// <returns>A List of result objects.</returns>
+        public IList<T> QueryForList<T>(string statementName, object parameterObject, int skipResults, int maxResults)
+        {
+            bool isSessionLocal = false;
+            IDalSession session = _sessionHolder.LocalSession;
+            IList<T> list;
+
+            if (session == null)
+            {
+                session = new SqlMapSession(this.DataSource);
+                session.OpenConnection();
+                isSessionLocal = true;
+            }
+
+            try
+            {
+                IMappedStatement statement = GetMappedStatement(statementName);
+                list = (IList<T>)statement.ExecuteQueryForList(session, parameterObject, skipResults, maxResults);
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                if (isSessionLocal)
+                {
+                    session.CloseConnection();
+                }
+            }
+
+            return list;
+        }
+
+
+        /// <summary>
+        /// Executes a Sql SELECT statement that returns data to populate
+        /// a number of result objects.
+        /// <p/>
+        ///  The parameter object is generally used to supply the input
+        /// data for the WHERE clause parameter(s) of the SELECT statement.
+        /// </summary>
+        /// <param name="statementName">The name of the sql statement to execute.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="resultObject">An Ilist object used to hold the objects.</param>
+        public void QueryForList<T>(string statementName, object parameterObject, IList<T> resultObject)
+        {
+            bool isSessionLocal = false;
+            IDalSession session = _sessionHolder.LocalSession;
+
+            if (resultObject == null)
+            {
+                throw new DataMapperException("resultObject parameter must be instantiated before being passed to SqlMapper.QueryForList");
+            }
+
+            if (session == null)
+            {
+                session = new SqlMapSession(this.DataSource);
+                session.OpenConnection();
+                isSessionLocal = true;
+            }
+
+            try
+            {
+                IMappedStatement statement = GetMappedStatement(statementName);
+                statement.ExecuteQueryForList(session, parameterObject, resultObject);
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                if (isSessionLocal)
+                {
+                    session.CloseConnection();
+                }
+            }
+        }
+        #endif
+        #endregion
 
 		#region QueryForPaginatedList
 		/// <summary>

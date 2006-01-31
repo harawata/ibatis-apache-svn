@@ -27,7 +27,9 @@
 #region Imports
 using System;
 using System.Collections;
-
+#if dotnet2
+using System.Collections.Generic;
+#endif
 using IBatisNet.Common;
 using IBatisNet.DataMapper.Commands;
 using IBatisNet.DataMapper.Configuration.Statements;
@@ -135,7 +137,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 		#endregion
 
-		#region ExecuteQueryForList
+        #region ExecuteQueryForList
 
 		/// <summary>
 		/// Executes the SQL and and fill a strongly typed collection.
@@ -166,6 +168,37 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 		#endregion
 
+        #region ExecuteQueryForList .NET 2.0
+        #if dotnet2
+        /// <summary>
+        /// Executes the SQL and and fill a strongly typed collection.
+        /// </summary>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="resultObject">A strongly typed collection of result objects.</param>
+        void ExecuteQueryForList<T>(IDalSession session, object parameterObject, IList<T> resultObject);
+
+        /// <summary>
+        /// Executes the SQL and retuns a subset of the rows selected.
+        /// </summary>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="skipResults">The number of rows to skip over.</param>
+        /// <param name="maxResults">The maximum number of rows to return.</param>
+        /// <returns>A List of result objects.</returns>
+        IList<T> ExecuteQueryForList<T>(IDalSession session, object parameterObject, int skipResults, int maxResults);
+
+        /// <summary>
+        /// Executes the SQL and retuns all rows selected. This is exactly the same as
+        /// calling ExecuteQueryForList(session, parameterObject, NO_SKIPPED_RESULTS, NO_MAXIMUM_RESULTS).
+        /// </summary>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <returns>A List of result objects.</returns>
+        IList<T> ExecuteQueryForList<T>(IDalSession session, object parameterObject);
+        #endif
+        #endregion
+
 		#region ExecuteForObject
 
 		/// <summary>
@@ -187,6 +220,29 @@ namespace IBatisNet.DataMapper.MappedStatements
 		object ExecuteQueryForObject( IDalSession session, object parameterObject, object resultObject );
 
 		#endregion
+
+        #region ExecuteForObject .NET 2.0
+        #if dotnet2
+
+        /// <summary>
+        /// Executes an SQL statement that returns a single row as an Object.
+        /// </summary>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <returns>The object</returns>
+        T ExecuteQueryForObject<T>(IDalSession session, object parameterObject);
+
+        /// <summary>
+        /// Executes an SQL statement that returns a single row as an Object of the type of
+        /// the resultObject passed in as a parameter.
+        /// </summary>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="resultObject">The result object.</param>
+        /// <returns>The object</returns>
+        T ExecuteQueryForObject<T>(IDalSession session, object parameterObject, T resultObject);
+        #endif
+        #endregion
 
 		#region Delegate
 

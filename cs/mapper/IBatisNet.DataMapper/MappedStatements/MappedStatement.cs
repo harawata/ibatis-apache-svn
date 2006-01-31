@@ -28,6 +28,9 @@
 
 using System;
 using System.Collections;
+#if dotnet2
+using System.Collections.Generic;
+#endif
 using System.Data;
 using System.Reflection;
 using System.Text;
@@ -476,6 +479,82 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 		#endregion
 
+        #region ExecuteForObject .NET 2.0
+        #if dotnet2
+
+        /// <summary>
+        /// Executes an SQL statement that returns a single row as an Object.
+        /// </summary>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <returns>The object</returns>
+        public virtual T ExecuteQueryForObject<T>(IDalSession session, object parameterObject)
+        {
+            return ExecuteQueryForObject<T>(session, parameterObject, default(T));
+        }
+
+
+        /// <summary>
+        /// Executes an SQL statement that returns a single row as an Object of the type of
+        /// the resultObject passed in as a parameter.
+        /// </summary>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="resultObject">The result object.</param>
+        /// <returns>The object</returns>
+        public virtual T ExecuteQueryForObject<T>(IDalSession session, object parameterObject, T resultObject)
+        {
+            T obj = default(T);
+            RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session); ;
+
+            _preparedCommand.Create(request, session, this.Statement, parameterObject);
+
+            obj = (T)RunQueryForObject(request, session, parameterObject, resultObject);
+
+            return obj;
+        }
+
+
+        /// <summary>
+        /// Executes an SQL statement that returns a single row as an Object of the type of
+        /// the resultObject passed in as a parameter.
+        /// </summary>
+        /// <param name="request">The request scope.</param>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="resultObject">The result object.</param>
+        /// <returns>The object</returns>
+        internal T RunQueryForObject<T>(RequestScope request, IDalSession session, object parameterObject, T resultObject)
+        {
+            T result = resultObject;
+
+            using (IDbCommand command = request.IDbCommand)
+            {
+                using (IDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        result = (T)ApplyResultMap(request, reader, resultObject);
+                    }
+                }
+
+                ExecutePostSelect(session, request);
+
+                #region remark
+                // If you are using the OleDb data provider (as you are), you need to close the
+                // DataReader before output parameters are visible.
+                #endregion
+
+                RetrieveOutputParameters(request, session, command, parameterObject);
+            }
+
+            RaiseExecuteEvent();
+
+            return result;
+        }
+        #endif
+        #endregion
+
 		#region ExecuteQueryForList
 
 		/// <summary>
@@ -662,6 +741,171 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 		
 		#endregion
+
+        #region ExecuteQueryForList .NET 2.0
+        #if dotnet2
+
+        /// <summary>
+        /// Runs a query with a custom object that gets a chance 
+        /// to deal with each row as it is processed.
+        /// </summary>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="rowDelegate"></param>
+        public virtual IList<T> ExecuteQueryForRowDelegate<T>(IDalSession session, object parameterObject, SqlMapper.RowDelegate rowDelegate)
+        {
+            RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session); ;
+
+            _preparedCommand.Create(request, session, this.Statement, parameterObject);
+
+            if (rowDelegate == null)
+            {
+                throw new DataMapperException("A null RowDelegate was passed to QueryForRowDelegate.");
+            }
+
+            return RunQueryForList<T>(request, session, parameterObject, NO_SKIPPED_RESULTS, NO_MAXIMUM_RESULTS, rowDelegate);
+        }
+
+
+        /// <summary>
+        /// Executes the SQL and retuns all rows selected. This is exactly the same as
+        /// calling ExecuteQueryForList(session, parameterObject, NO_SKIPPED_RESULTS, NO_MAXIMUM_RESULTS).
+        /// </summary>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <returns>A List of result objects.</returns>
+        public virtual IList<T> ExecuteQueryForList<T>(IDalSession session, object parameterObject)
+        {
+            return ExecuteQueryForList<T>(session, parameterObject, NO_SKIPPED_RESULTS, NO_MAXIMUM_RESULTS);
+        }
+
+
+        /// <summary>
+        /// Executes the SQL and retuns a subset of the rows selected.
+        /// </summary>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="skipResults">The number of rows to skip over.</param>
+        /// <param name="maxResults">The maximum number of rows to return.</param>
+        /// <returns>A List of result objects.</returns>
+        public virtual IList<T> ExecuteQueryForList<T>(IDalSession session, object parameterObject, int skipResults, int maxResults)
+        {
+            IList<T> list = null;
+            RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session); ;
+
+            _preparedCommand.Create(request, session, this.Statement, parameterObject);
+
+            list = RunQueryForList<T>(request, session, parameterObject, skipResults, maxResults, null);
+
+            return list;
+        }
+
+
+        /// <summary>
+        /// Executes the SQL and retuns a List of result objects.
+        /// </summary>
+        /// <param name="request">The request scope.</param>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="skipResults">The number of rows to skip over.</param>
+        /// <param name="maxResults">The maximum number of rows to return.</param>
+        /// <param name="rowDelegate"></param>
+        /// <returns>A List of result objects.</returns>
+        internal IList<T> RunQueryForList<T>(RequestScope request, IDalSession session, object parameterObject, int skipResults, int maxResults, SqlMapper.RowDelegate rowDelegate)
+        {
+            IList<T> list = null;
+
+            using (IDbCommand command = request.IDbCommand)
+            {
+                // TODO:  Should we ignore this?, I think so in the case of generics.  
+                //if (_statement.ListClass == null)
+                //{
+                //    list = new ArrayList();
+                //}
+                //else
+                //{
+                //    list = _statement.CreateInstanceOfListClass();
+                //}
+                list = new List<T>();
+
+                using (IDataReader reader = command.ExecuteReader())
+                {
+                    // skip results
+                    for (int i = 0; i < skipResults; i++)
+                    {
+                        if (!reader.Read())
+                        {
+                            break;
+                        }
+                    }
+
+                    int n = 0;
+
+                    if (rowDelegate == null)
+                    {
+                        while ((maxResults == NO_MAXIMUM_RESULTS || n < maxResults)
+                            && reader.Read())
+                        {
+                            T obj = (T)ApplyResultMap(request, reader, null);
+
+                            list.Add(obj);
+                            n++;
+                        }
+                    }
+                    else
+                    {
+                        while ((maxResults == NO_MAXIMUM_RESULTS || n < maxResults)
+                            && reader.Read())
+                        {
+                            T obj = (T)ApplyResultMap(request, reader, null);
+
+                            rowDelegate(obj, parameterObject, (IList)list);
+                            n++;
+                        }
+                    }
+                }
+
+                ExecutePostSelect(session, request);
+
+                RetrieveOutputParameters(request, session, command, parameterObject);
+            }
+
+            return list;
+        }
+
+
+        /// <summary>
+        /// Executes the SQL and and fill a strongly typed collection.
+        /// </summary>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="resultObject">A strongly typed collection of result objects.</param>
+        public virtual void ExecuteQueryForList<T>(IDalSession session, object parameterObject, IList<T> resultObject)
+        {
+            RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session); ;
+
+            _preparedCommand.Create(request, session, this.Statement, parameterObject);
+
+            using (IDbCommand command = request.IDbCommand)
+            {
+                using (IDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        T obj = (T)ApplyResultMap(request, reader, null);
+
+                        resultObject.Add(obj);
+                    }
+                }
+
+                ExecutePostSelect(session, request);
+
+                RetrieveOutputParameters(request, session, command, parameterObject);
+            }
+        }
+
+        #endif
+        #endregion
 
 		#region ExecuteUpdate, ExecuteInsert
 

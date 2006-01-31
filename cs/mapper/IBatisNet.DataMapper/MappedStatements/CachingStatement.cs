@@ -26,6 +26,9 @@
 #region Using
 
 using System.Collections;
+#if dotnet2
+using System.Collections.Generic;
+#endif
 using System.Data;
 using IBatisNet.Common;
 using IBatisNet.DataMapper.Commands;
@@ -156,10 +159,11 @@ namespace IBatisNet.DataMapper.MappedStatements
 		public object ExecuteInsert(IDalSession session, object parameterObject)
 		{
 			return _mappedStatement.ExecuteInsert(session, parameterObject);
-		}
+        }
 
+        #region ExecuteQueryForList
 
-		/// <summary>
+        /// <summary>
 		/// Executes the SQL and and fill a strongly typed collection.
 		/// </summary>
 		/// <param name="session">The session used to execute the statement.</param>
@@ -198,22 +202,80 @@ namespace IBatisNet.DataMapper.MappedStatements
 			}
 
 			return list;
-		}
+        }
+        /// <summary>
+        /// Executes the SQL and retuns all rows selected. This is exactly the same as
+        /// calling ExecuteQueryForList(session, parameterObject, NO_SKIPPED_RESULTS, NO_MAXIMUM_RESULTS).
+        /// </summary>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <returns>A List of result objects.</returns>
+        public IList ExecuteQueryForList(IDalSession session, object parameterObject)
+        {
+            return this.ExecuteQueryForList(session, parameterObject, MappedStatement.NO_SKIPPED_RESULTS, MappedStatement.NO_MAXIMUM_RESULTS);
+        }
+        #endregion
 
-		
-		/// <summary>
-		/// Executes the SQL and retuns all rows selected. This is exactly the same as
-		/// calling ExecuteQueryForList(session, parameterObject, NO_SKIPPED_RESULTS, NO_MAXIMUM_RESULTS).
-		/// </summary>
-		/// <param name="session">The session used to execute the statement.</param>
-		/// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-		/// <returns>A List of result objects.</returns>
-		public IList ExecuteQueryForList(IDalSession session, object parameterObject)
-		{
-			return this.ExecuteQueryForList( session, parameterObject, MappedStatement.NO_SKIPPED_RESULTS, MappedStatement.NO_MAXIMUM_RESULTS);
-		}
+        #region ExecuteQueryForList .NET 2.0
+        #if dotnet2
 
-		/// <summary>
+        /// <summary>
+        /// Executes the SQL and and fill a strongly typed collection.
+        /// </summary>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="resultObject">A strongly typed collection of result objects.</param>
+        public void ExecuteQueryForList<T>(IDalSession session, object parameterObject, IList<T> resultObject)
+        {
+            _mappedStatement.ExecuteQueryForList(session, parameterObject, resultObject);
+        }
+
+        /// <summary>
+        /// Executes the SQL and retuns a subset of the rows selected.
+        /// </summary>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="skipResults">The number of rows to skip over.</param>
+        /// <param name="maxResults">The maximum number of rows to return.</param>
+        /// <returns>A List of result objects.</returns>
+        public IList<T> ExecuteQueryForList<T>(IDalSession session, object parameterObject, int skipResults, int maxResults)
+        {
+            IList<T> list = null;
+            RequestScope request = this.Statement.Sql.GetRequestScope(parameterObject, session); ;
+
+            _mappedStatement.PreparedCommand.Create(request, session, this.Statement, parameterObject);
+
+            CacheKey cacheKey = this.GetCacheKey(request);
+            cacheKey.Update("ExecuteQueryForList");
+            cacheKey.Update(skipResults);
+            cacheKey.Update(maxResults);
+
+            list = this.Statement.CacheModel[cacheKey] as IList<T>;
+            if (list == null)
+            {
+                list = _mappedStatement.RunQueryForList<T>(request, session, parameterObject, skipResults, maxResults, null);
+                this.Statement.CacheModel[cacheKey] = list;
+            }
+
+            return list;
+        }
+        /// <summary>
+        /// Executes the SQL and retuns all rows selected. This is exactly the same as
+        /// calling ExecuteQueryForList(session, parameterObject, NO_SKIPPED_RESULTS, NO_MAXIMUM_RESULTS).
+        /// </summary>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <returns>A List of result objects.</returns>
+        public IList<T> ExecuteQueryForList<T>(IDalSession session, object parameterObject)
+        {
+            return this.ExecuteQueryForList<T>(session, parameterObject, MappedStatement.NO_SKIPPED_RESULTS, MappedStatement.NO_MAXIMUM_RESULTS);
+        }
+        #endif
+        #endregion
+
+        #region ExecuteQueryForObject
+
+        /// <summary>
 		/// Executes an SQL statement that returns a single row as an Object.
 		/// </summary>
 		/// <param name="session">The session used to execute the statement.</param>
@@ -256,10 +318,59 @@ namespace IBatisNet.DataMapper.MappedStatements
 			}
 
 			return obj;
-		}
+        }
+        #endregion
 
-		
-		/// <summary>
+        #region ExecuteQueryForObject .NET 2.0
+        #if dotnet2
+        /// <summary>
+        /// Executes an SQL statement that returns a single row as an Object.
+        /// </summary>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <returns>The object</returns>
+        public T ExecuteQueryForObject<T>(IDalSession session, object parameterObject)
+        {
+            return this.ExecuteQueryForObject<T>(session, parameterObject, default(T));
+        }
+
+        /// <summary>
+        /// Executes an SQL statement that returns a single row as an Object of the type of
+        /// the resultObject passed in as a parameter.
+        /// </summary>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="resultObject">The result object.</param>
+        /// <returns>The object</returns>
+        public T ExecuteQueryForObject<T>(IDalSession session, object parameterObject, T resultObject)
+        {
+            T obj = default(T);
+            RequestScope request = this.Statement.Sql.GetRequestScope(parameterObject, session); ;
+
+            _mappedStatement.PreparedCommand.Create(request, session, this.Statement, parameterObject);
+
+            CacheKey cacheKey = this.GetCacheKey(request);
+            cacheKey.Update("ExecuteQueryForObject");
+
+            obj = (T)this.Statement.CacheModel[cacheKey];
+            // check if this query has alreay been run 
+            if ((object)obj == CacheModel.NULL_OBJECT)
+            {
+                // convert the marker object back into a null value 
+                obj = default(T);
+            }
+            else if ((object)obj == null)
+            {
+                obj = (T)_mappedStatement.RunQueryForObject(request, session, parameterObject, resultObject);
+                this.Statement.CacheModel[cacheKey] = obj;
+            }
+
+            return obj;
+        }
+        #endif
+        #endregion
+
+        /// <summary>
 		/// Runs a query with a custom object that gets a chance 
 		/// to deal with each row as it is processed.
 		/// </summary>
