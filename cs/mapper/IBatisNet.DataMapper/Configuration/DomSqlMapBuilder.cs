@@ -578,7 +578,7 @@ namespace IBatisNet.DataMapper.Configuration
                 validatingReader = new XmlValidatingReader(new XmlTextReader(new StringReader(section.OuterXml)));
                 validatingReader.ValidationType = ValidationType.Schema;
 
-                validatingReader.Schemas.Add(xmlSchema);
+                validatingReader.Schemas.Add(schema);
 
                 // Wire up the call back.  The ValidationEvent is fired when the
                 // XmlValidatingReader hits an issue validating a section of the xml

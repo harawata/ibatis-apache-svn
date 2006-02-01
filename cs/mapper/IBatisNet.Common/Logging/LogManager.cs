@@ -179,7 +179,11 @@ namespace IBatisNet.Common.Logging
 		/// <returns></returns>
 		private static ILoggerFactoryAdapter BuildDefaultLoggerFactoryAdapter()
 		{
+#if dotnet2
             ILoggerFactoryAdapter simpleLogFactory = new ConsoleOutLoggerFA(new NameValueCollection(StringComparer.InvariantCultureIgnoreCase));
+#else
+			ILoggerFactoryAdapter simpleLogFactory = new ConsoleOutLoggerFA(new NameValueCollection( null, new CaseInsensitiveComparer() ));
+#endif			
 			return simpleLogFactory;
 		}
 	}

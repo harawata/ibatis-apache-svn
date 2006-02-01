@@ -94,8 +94,12 @@ namespace IBatisNet.Common.Logging
 			
 			XmlNodeList propertyNodes = logFactoryElement.SelectNodes( ARGUMENT_ELEMENT );
 
-            NameValueCollection properties = new NameValueCollection(StringComparer.InvariantCultureIgnoreCase);
-
+			NameValueCollection properties = null;
+#if dotnet2
+            properties = new NameValueCollection(StringComparer.InvariantCultureIgnoreCase);
+#else
+			properties = properties = new NameValueCollection( null, new CaseInsensitiveComparer() );
+#endif
 			foreach ( XmlNode propertyNode in propertyNodes )
 			{
 				string key = string.Empty;
