@@ -30,8 +30,8 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.IO;
-using System.Reflection;
 using System.Text;
+using System.Reflection;
 using System.Threading;
 using System.Xml;
 using System.Xml.Schema;
@@ -539,16 +539,17 @@ namespace IBatisNet.DataMapper.Configuration
 		/// <param name="schemaFileName">schema File Name</param>
 		private void ValidateSchema( XmlNode section, string schemaFileName )
 		{
-			XmlValidatingReader validatingReader = null;
-			Stream xsdFile = null; 
+#if dotnet2
+            XmlReader validatingReader = null;
+#else
+            XmlValidatingReader validatingReader = null;
+#endif
+            Stream xsdFile = null; 
 
 			_configScope.ErrorContext.Activity = "Validate SqlMap config";
 			try
-			{
-				//Validate the document using a schema
-				validatingReader = new XmlValidatingReader( new XmlTextReader( new StringReader( section.OuterXml ) ) );
-				validatingReader.ValidationType = ValidationType.Schema;
-
+			{               
+				//Validate the document using a schema               
 				xsdFile = GetStream( schemaFileName ); 
 
 				if (xsdFile == null)
@@ -557,15 +558,33 @@ namespace IBatisNet.DataMapper.Configuration
 					throw new ConfigurationException( "Unable to locate embedded resource [IBatisNet.DataMapper."+schemaFileName+"]. If you are building from source, verfiy the file is marked as an embedded resource.");
 				}
 				
-				XmlSchema xmlSchema = XmlSchema.Read( xsdFile, new ValidationEventHandler(ValidationCallBack) );
+				XmlSchema schema = XmlSchema.Read( xsdFile, new ValidationEventHandler(ValidationCallBack) );
 
-				validatingReader.Schemas.Add(xmlSchema);
+#if dotnet2
+                XmlReaderSettings settings = new XmlReaderSettings();
+                settings.ValidationType = ValidationType.Schema;
+
+                // Create the XmlSchemaSet class.
+                XmlSchemaSet schemas = new XmlSchemaSet();
+                schemas.Add(schema);
+
+                settings.Schemas = schemas;
+                validatingReader = XmlReader.Create( new XmlNodeReader(section) ,  settings);
 
 				// Wire up the call back.  The ValidationEvent is fired when the
 				// XmlValidatingReader hits an issue validating a section of the xml
-				validatingReader.ValidationEventHandler += new ValidationEventHandler(ValidationCallBack);
+                settings.ValidationEventHandler += new ValidationEventHandler(ValidationCallBack);
+#else
+                validatingReader = new XmlValidatingReader(new XmlTextReader(new StringReader(section.OuterXml)));
+                validatingReader.ValidationType = ValidationType.Schema;
 
-				// Validate the document
+                validatingReader.Schemas.Add(xmlSchema);
+
+                // Wire up the call back.  The ValidationEvent is fired when the
+                // XmlValidatingReader hits an issue validating a section of the xml
+                validatingReader.ValidationEventHandler += new ValidationEventHandler(ValidationCallBack);
+#endif
+                // Validate the document
 				while (validatingReader.Read()){}
 
 				if(! _configScope.IsXmlValid )

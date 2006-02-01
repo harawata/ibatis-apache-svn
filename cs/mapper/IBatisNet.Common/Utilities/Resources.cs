@@ -404,9 +404,12 @@ namespace IBatisNet.Common.Utilities
 			FileAssemblyInfo fileInfo = new FileAssemblyInfo (resource);
 			if (fileInfo.IsAssemblyQualified)
 			{
-				Assembly assembly = Assembly.LoadWithPartialName (fileInfo.AssemblyName);
-
-				Stream stream = assembly.GetManifestResourceStream(fileInfo.ResourceFileName);
+                #if dotnet2
+                Assembly assembly = Assembly.Load(fileInfo.AssemblyName);
+                #else
+                Assembly assembly = Assembly.LoadWithPartialName (typeInfo.AssemblyName);
+                #endif
+                Stream stream = assembly.GetManifestResourceStream(fileInfo.ResourceFileName);
 				// JIRA - IBATISNET-103 
 				if (stream == null)
 				{

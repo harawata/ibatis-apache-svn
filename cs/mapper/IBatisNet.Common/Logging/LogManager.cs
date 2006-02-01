@@ -28,6 +28,7 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Configuration;
+using System.Xml;
 using IBatisNet.Common.Logging.Impl;
 
 namespace IBatisNet.Common.Logging
@@ -104,7 +105,11 @@ namespace IBatisNet.Common.Logging
 			LogSetting setting = null;
 			try
 			{
-				setting = (LogSetting)ConfigurationSettings.GetConfig( IBATIS_SECTION_LOGGING );
+#if dotnet2
+                setting = (LogSetting)ConfigurationManager.GetSection(IBATIS_SECTION_LOGGING );
+#else
+ 				setting = (LogSetting)ConfigurationSettings.GetConfig( IBATIS_SECTION_LOGGING );
+#endif
 			}
 			catch ( Exception ex )
 			{
@@ -174,7 +179,7 @@ namespace IBatisNet.Common.Logging
 		/// <returns></returns>
 		private static ILoggerFactoryAdapter BuildDefaultLoggerFactoryAdapter()
 		{
-			ILoggerFactoryAdapter simpleLogFactory = new ConsoleOutLoggerFA(new NameValueCollection( null, new CaseInsensitiveComparer() ));
+            ILoggerFactoryAdapter simpleLogFactory = new ConsoleOutLoggerFA(new NameValueCollection(StringComparer.InvariantCultureIgnoreCase));
 			return simpleLogFactory;
 		}
 	}

@@ -297,8 +297,12 @@ namespace IBatisNet.DataMapper.Scope
 					} 
 					catch (Exception e) 
 					{
-						throw new ConfigurationException("Error. Could not set TypeHandler.  Cause: " + e.Message, e);
-					}
+#if dotnet2
+                        throw new ConfigurationErrorsException("Error. Could not set TypeHandler.  Cause: " + e.Message, e);
+#else       
+                       throw new ConfigurationException("Error. Could not set TypeHandler.  Cause: " + e.Message, e);
+#endif
+                    }
 				}
 			}
 			else if (this.TypeHandlerFactory.GetTypeHandler(clazz, dbType) != null) 
@@ -323,7 +327,11 @@ namespace IBatisNet.DataMapper.Scope
 					} 
 					catch (Exception e) 
 					{
-						throw new ConfigurationException("Error. Could not set TypeHandler.  Cause: " + e.Message, e);
+#if dotnet2
+                        throw new ConfigurationErrorsException("Error. Could not set TypeHandler.  Cause: " + e.Message, e);
+#else       
+                       throw new ConfigurationException("Error. Could not set TypeHandler.  Cause: " + e.Message, e);
+#endif
 					}
 				}
 			}

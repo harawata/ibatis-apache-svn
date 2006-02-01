@@ -43,7 +43,7 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 	/// <p>
 	/// The rationale behind the creation of this class is to centralise the
 	/// resolution of type names to <see cref="System.Type"/> instances beyond that
-	/// offered by the plain vanilla <see cref="System.Type.GetType"/> method call.
+	/// offered by the plain vanilla <see cref="System.Type.GetType()"/> method call.
 	/// </p>
 	/// </remarks>
 	/// <version>$Id: TypeResolver.cs,v 1.5 2004/09/28 07:51:47 springboy Exp $</version>
@@ -87,8 +87,12 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 			if (typeInfo.IsAssemblyQualified)
 			{
 				// assembly qualified... load the assembly, then the Type
-				Assembly assembly = Assembly.LoadWithPartialName (typeInfo.AssemblyName);
-				if (assembly != null)
+                #if dotnet2
+                Assembly assembly = Assembly.Load(typeInfo.AssemblyName);
+                #else
+                Assembly assembly = Assembly.LoadWithPartialName (typeInfo.AssemblyName);
+                #endif
+                if (assembly != null)
 				{
 					type = assembly.GetType (typeInfo.TypeName, true, true);
 				}

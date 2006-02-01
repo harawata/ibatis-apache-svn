@@ -981,7 +981,7 @@ namespace IBatisNet.DataMapper
 		}
 		
 		#endregion
-
+        
         #region QueryForList .NET 2.0
         #if dotnet2
         /// <summary>
