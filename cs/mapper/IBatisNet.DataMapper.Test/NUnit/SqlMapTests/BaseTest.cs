@@ -43,8 +43,14 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// </summary>
 		static BaseTest()
 		{
-			ScriptDirectory = Path.Combine(Path.Combine(Path.Combine(Path.Combine(Resources.ApplicationBase, ".."), ".."), "Scripts"), ConfigurationSettings.AppSettings["database"]) + Path.DirectorySeparatorChar;
-		}
+#if dotnet2
+			ScriptDirectory = Path.Combine(Path.Combine(Path.Combine(Path.Combine(Resources.ApplicationBase, ".."), ".."), "Scripts"),
+                ConfigurationManager.AppSettings["database"]) + Path.DirectorySeparatorChar;
+#else
+            ScriptDirectory = Path.Combine(Path.Combine(Path.Combine(Path.Combine(Resources.ApplicationBase, ".."), ".."), "Scripts"), 
+                ConfigurationSettings.AppSettings["database"]) + Path.DirectorySeparatorChar;
+#endif
+        }
 
 		/// <summary>
 		/// Initialize an sqlMap
@@ -55,8 +61,13 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			//DateTime start = DateTime.Now;
 
 			DomSqlMapBuilder builder = new DomSqlMapBuilder();
+#if dotnet2
+            string fileName = "sqlmap" + "_" + ConfigurationManager.AppSettings["database"] + "_" + ConfigurationManager.AppSettings["providerType"] + ".config";
+#else
 			string fileName = "sqlmap" + "_" + ConfigurationSettings.AppSettings["database"] + "_" + ConfigurationSettings.AppSettings["providerType"] + ".config";
-			sqlMap = builder.Configure(fileName);
+
+#endif
+            sqlMap = builder.Configure(fileName);
 
 			if ( sqlMap.DataSource.DbProvider.Name.IndexOf("PostgreSql")>=0)
 			{

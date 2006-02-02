@@ -25,8 +25,13 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		[SetUp] 
 		public void Init() 
 		{
-			_fileName = "sqlmap" + "_" + ConfigurationSettings.AppSettings["database"] + "_" + ConfigurationSettings.AppSettings["providerType"] + ".config";
-		}
+#if dotnet2
+            _fileName = "sqlmap" + "_" + ConfigurationManager.AppSettings["database"] + "_" + ConfigurationManager.AppSettings["providerType"] + ".config";
+#else
+			_fileName = "sqlmap" + "_" + ConfigurationSettings.AppSettings["database"] + "_" + ConfigurationSettings.AppSettings["providerType"] + ".config";		
+#endif
+
+        }
 		#endregion 
 
 		#region Relatives Path tests
@@ -271,7 +276,11 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		{
 			// embeddedResource = "bin.Debug.SqlMap_MSSQL_SqlClient.config, IBatisNet.DataMapper.Test";
 			
+#if dotnet2
+            Assembly assembly = Assembly.Load("IBatisNet.DataMapper.Test");
+#else
 			Assembly assembly = Assembly.LoadWithPartialName ("IBatisNet.DataMapper.Test");
+#endif
 			Stream stream = assembly.GetManifestResourceStream("IBatisNet.DataMapper.Test.bin.Debug.SqlMap_MSSQL_SqlClient.config");
 
 			DomSqlMapBuilder builder = new DomSqlMapBuilder();

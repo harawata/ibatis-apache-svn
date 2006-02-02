@@ -971,7 +971,7 @@ namespace IBatisNet.DataMapper.Configuration
 				else
 				{
 					throw new ConfigurationException(
-						string.Format("Error while configuring the Provider named \"{0}\". Cause : The provider is not in 'providers.config'.",
+						string.Format("Error while configuring the Provider named \"{0}\". Cause : The provider is not in 'providers.config' or is not enabled.",
 							providerName));
 				}
 			}

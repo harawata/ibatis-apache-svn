@@ -48,12 +48,12 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			key1.Update("HS1CS001");
 			key2.Update("HS1D4001");
 
-            #if dotnet2
+#if dotnet2
             Assert.Ignore("Will not work in .NET 2.0");
-            #else
+#else
 			Assert.AreEqual( key1.GetHashCode(), key2.GetHashCode(), "Expect same hashcode.");
 			Assert.IsFalse( key1.Equals(key2),"Expect not equal");
-            #endif
+#endif
         }
 
 		[Test]
