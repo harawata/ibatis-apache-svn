@@ -47,9 +47,13 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
 			key1.Update("HS1CS001");
 			key2.Update("HS1D4001");
+        /*
+         The string hash algorithm is not an industry standard and is not guaranteed to produce the same behaviour between versions. 
+         And in fact it does not. The .NET 2.0 CLR uses a different algorithm for string hashing than the .NET 1.1 CLR. 
+        */
 
 #if dotnet2
-            Assert.Ignore("Will not work in .NET 2.0");
+            Assert.Ignore("The .NET 2.0 CLR uses a different algorithm for string hashing than the .NET 1.1 CLR.");
 #else
 			Assert.AreEqual( key1.GetHashCode(), key2.GetHashCode(), "Expect same hashcode.");
 			Assert.IsFalse( key1.Equals(key2),"Expect not equal");
@@ -57,6 +61,8 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
         }
 
 		[Test]
+       
+
 		public void CacheKeyWithTwoParamsSameHashcode() 
 		{
 			CacheKey key1 = new CacheKey();
@@ -68,12 +74,12 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			key2.Update("HS1D4001");
 			key2.Update("HS1CS001");
 
-            #if dotnet2
-            Assert.Ignore("Will not work in .NET 2.0");
-            #else
+#if dotnet2
+            Assert.Ignore("The .NET 2.0 CLR uses a different algorithm for string hashing than the .NET 1.1 CLR.");
+#else
 			Assert.AreEqual(key1.GetHashCode(), key2.GetHashCode(), "Expect same hashcode.");
 			Assert.IsFalse(key1.Equals(key2), "Expect not equal");
-            #endif
+#endif
         }
 
 	}

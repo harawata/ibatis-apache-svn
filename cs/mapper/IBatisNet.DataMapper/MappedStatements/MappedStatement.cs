@@ -1256,9 +1256,13 @@ namespace IBatisNet.DataMapper.MappedStatements
 					postSelect.ResultProperty = mapping;
 
 					#region Collection object or .NET object
+					if (mapping.PropertyInfo.PropertyType.BaseType == typeof(Array))
+					{
+						postSelect.Method = ExecuteMethod.ExecuteQueryForArrayList;
+					}
 					// Check if the object to Map implement 'IList' or is IList type
 					// If yes the ResultProperty is map to a IList object
-					if ( (mapping.PropertyInfo.PropertyType.GetInterface("IList") != null) || 
+					else if ( (mapping.PropertyInfo.PropertyType.GetInterface("IList") != null) || 
 						(mapping.PropertyInfo.PropertyType == typeof(IList)))
 					{
 						object values = null;
@@ -1280,10 +1284,6 @@ namespace IBatisNet.DataMapper.MappedStatements
 							}
 						}
 					} 
-					else if (mapping.PropertyInfo.PropertyType.IsArray)
-					{
-						postSelect.Method = ExecuteMethod.ExecuteQueryForArrayList;
-					}
 					else // The ResultProperty is map to a .Net object
 					{
 						postSelect.Method = ExecuteMethod.ExecuteQueryForObject;

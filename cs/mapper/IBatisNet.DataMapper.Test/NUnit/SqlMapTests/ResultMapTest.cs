@@ -232,15 +232,11 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		[Test]
 		public void TestArrayMapping() 
 		{
-            #if dotnet2
-            Assert.Ignore("Will not work in .NET 2.0");
-            #else
 			Order order = (Order)sqlMap.QueryForObject("GetOrderWithLineItemArray", 1);
 
 			AssertOrder1(order);
 			Assert.IsNotNull( order.LineItemsArray );
 			Assert.AreEqual(2, order.LineItemsArray.Length);
-            #endif
         }
 
 		/// <summary>
