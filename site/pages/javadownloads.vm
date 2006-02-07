@@ -7,32 +7,49 @@
 
 <h2>iBATIS for Java Downloads</h2>
 
-    <h4>Releases</h4>
+    <h4>Current Release</h4>
     <ul>
-      <li><a href="http://cvs.apache.org/dist/ibatis/beta/iBATIS_DBL-2.1.7.597.zip"><b>iBATIS Java 2.1.7 w/Binaries and Source</b></a> (Jan 21, 2006 - Beta) </li>
-      <li><a href="http://prdownloads.sourceforge.net/ibatisdb/iBATIS_DBL-2.1.5.582.zip?download">iBATIS Java 2.1.5 w/Binaries and Source</a> (Jul 17, 2005 - General Availability) </li>
-      <li><a href="http://sourceforge.net/project/showfiles.php?group_id=61326">Old Releases (at SourceForge) </a></li>
+      <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/builds/iBATIS_DBL-2.1.7.597.zip"><b>iBATIS Java 2.1.7 w/Binaries and Source</b></a> (Jan 21, 2006) </li>
+    </ul>
+
+    <h4>Release Archive</h4>
+    <ul>
+      <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/builds/"><b>Past Releases at Apache (2.1.5+)</b></a></li>
+      <li><a href="http://sourceforge.net/project/showfiles.php?group_id=61326">Past Releases at SourceForge (1.0 - 2.1.5)</a></li>
     </ul>
 
     <h4>Examples</h4>
     <ul>
-      <li><a href="http://cvs.apache.org/dist/ibatis/beta/JPetStore-5.0.zip">JPetStore 5.0 Example Application</a> (Apache Alpha)</li>
+      <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/builds/JPetStore-5.0.zip">JPetStore 5.0 Example Application</a></li>
     </ul>
 
     <h4>Documentation </h4>
     <ul>
-      <li>English
+      <li><a href="http://svn.apache.org/repos/asf/ibatis/trunk/java/docs/">Latest OpenOffice Documents in Subversion</a></li>
+    </ul>
+    <ul>
+      <li>English PDF
         <ul>
-          <li><a href="http://prdownloads.sourceforge.net/ibatisnet/DevGuide.pdf?download"><b>Generic Developer Guide</b></a></li>
-          <li><a href="http://prdownloads.sourceforge.net/ibatisdb/iBATIS-SqlMaps-2.pdf?download">SQL Maps for Java, Developer Guide </a></li>
-          <li><a href="http://prdownloads.sourceforge.net/ibatisdb/iBATIS-SqlMaps-2-Tutorial.pdf?download">SQL Maps for Java, Tutorial </a></li>
-          <li><a href="http://prdownloads.sourceforge.net/ibatisdb/iBATIS-DAO-2.pdf?download">DAO for Java, Developer Guide</a></li>
+          <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2.pdf">SQL Maps for Java, Developer Guide</a></li>
+          <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2-Tutorial.pdf">SQL Maps for Java, Tutorial</a></li>
+          <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-DAO-2.pdf">DAO for Java, Developer Guide</a></li>
         </ul>
       </li>
-      <li>Chinese
+      <li>Chinese PDF
         <ul>
-          <li><a href="http://prdownloads.sourceforge.net/ibatisdb/iBATIS-SqlMaps-2_cn.pdf?download">SQL Maps for Java, Developer Guide </a></li>
-          <li><a href="http://prdownloads.sourceforge.net/ibatisdb/iBATIS-SqlMaps-2-Tutorial_cn.pdf?download">SQL Maps for Java, Tutorial </a></li>
+          <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2_cn.pdf">SQL Maps for Java, Developer Guide</a></li>
+          <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2-Tutorial_cn.pdf">SQL Maps for Java, Tutorial</a></li>
+        </ul>
+      </li>
+      <li>Korean PDF
+        <ul>
+          <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2_ko.pdf">SQL Maps for Java, Developer Guide</a></li>
+          <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2-Tutorial_ko.pdf">SQL Maps for Java, Tutorial</a></li>
+        </ul>
+      </li>
+      <li>Italian PDF
+        <ul>
+          <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2-Tutorial-it.pdf">SQL Maps for Java, Tutorial</a></li>
         </ul>
       </li>
     </ul>
