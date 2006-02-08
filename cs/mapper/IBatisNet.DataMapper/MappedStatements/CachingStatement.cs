@@ -382,7 +382,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 			return _mappedStatement.ExecuteQueryForRowDelegate(session, parameterObject, rowDelegate);
 		}
 
-                /// <summary>
+#if dotnet2
+        /// <summary>
         /// Runs a query with a custom object that gets a chance 
         /// to deal with each row as it is processed.
         /// </summary>
@@ -393,6 +394,7 @@ namespace IBatisNet.DataMapper.MappedStatements
         {
             return _mappedStatement.ExecuteQueryForRowDelegate<T>(session, parameterObject, rowDelegate);
         }
+#endif
 
 		/// <summary>
 		/// Runs a query with a custom object that gets a chance 

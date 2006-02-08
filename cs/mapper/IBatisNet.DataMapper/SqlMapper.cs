@@ -62,6 +62,7 @@ namespace IBatisNet.DataMapper
 		/// <param name="list">The IList that will be returned to the caller.</param>
 		public delegate void RowDelegate(object obj, object parameterObject, IList list);
 
+#if dotnet2
         /// <summary>
         /// A delegate called once per row in the QueryWithRowDelegate method
         /// </summary>
@@ -69,6 +70,7 @@ namespace IBatisNet.DataMapper
         /// <param name="parameterObject">The optional parameter object passed into the QueryWithRowDelegate method.</param>
         /// <param name="list">The IList that will be returned to the caller.</param>
         public delegate void RowDelegate<T>(object obj, object parameterObject, IList<T> list);
+#endif
 
 		/// <summary>
 		/// A delegate called once per row in the QueryForMapWithRowDelegate method

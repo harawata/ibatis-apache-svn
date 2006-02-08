@@ -169,7 +169,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		#endregion
 
         #region ExecuteQueryForList .NET 2.0
-        #if dotnet2
+#if dotnet2
         /// <summary>
         /// Executes the SQL and and fill a strongly typed collection.
         /// </summary>
@@ -196,7 +196,7 @@ namespace IBatisNet.DataMapper.MappedStatements
         /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
         /// <returns>A List of result objects.</returns>
         IList<T> ExecuteQueryForList<T>(IDalSession session, object parameterObject);
-        #endif
+#endif
         #endregion
 
 		#region ExecuteForObject
@@ -222,7 +222,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		#endregion
 
         #region ExecuteForObject .NET 2.0
-        #if dotnet2
+#if dotnet2
 
         /// <summary>
         /// Executes an SQL statement that returns a single row as an Object.
@@ -241,7 +241,7 @@ namespace IBatisNet.DataMapper.MappedStatements
         /// <param name="resultObject">The result object.</param>
         /// <returns>The object</returns>
         T ExecuteQueryForObject<T>(IDalSession session, object parameterObject, T resultObject);
-        #endif
+#endif
         #endregion
 
 		#region Delegate
@@ -256,16 +256,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <returns></returns>
 		IList ExecuteQueryForRowDelegate( IDalSession session, object parameterObject, SqlMapper.RowDelegate rowDelegate );
 
-        /// <summary>
-        /// Runs a query with a custom object that gets a chance 
-        /// to deal with each row as it is processed.
-        /// </summary>
-        /// <param name="session">The session used to execute the statement.</param>
-        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-        /// <param name="rowDelegate"></param>param>
-        /// <returns></returns>
-        IList<T> ExecuteQueryForRowDelegate<T>(IDalSession session, object parameterObject, SqlMapper.RowDelegate<T> rowDelegate);
-
+ 
 		/// <summary>
 		/// Runs a query with a custom object that gets a chance 
 		/// to deal with each row as it is processed.
@@ -281,5 +272,18 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 		#endregion 
 		
-	}
+        #region ExecuteQueryForRowDelegate .NET 2.0
+#if dotnet2
+        /// <summary>
+        /// Runs a query with a custom object that gets a chance 
+        /// to deal with each row as it is processed.
+        /// </summary>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="rowDelegate"></param>param>
+        /// <returns></returns>
+        IList<T> ExecuteQueryForRowDelegate<T>(IDalSession session, object parameterObject, SqlMapper.RowDelegate<T> rowDelegate);
+#endif
+        #endregion
+    }
 }
