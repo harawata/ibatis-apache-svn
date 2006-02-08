@@ -752,7 +752,7 @@ namespace IBatisNet.DataMapper.MappedStatements
         /// <param name="session">The session used to execute the statement.</param>
         /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
         /// <param name="rowDelegate"></param>
-        public virtual IList<T> ExecuteQueryForRowDelegate<T>(IDalSession session, object parameterObject, SqlMapper.RowDelegate rowDelegate)
+        public virtual IList<T> ExecuteQueryForRowDelegate<T>(IDalSession session, object parameterObject, SqlMapper.RowDelegate<T> rowDelegate)
         {
             RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session); ;
 
@@ -811,7 +811,7 @@ namespace IBatisNet.DataMapper.MappedStatements
         /// <param name="maxResults">The maximum number of rows to return.</param>
         /// <param name="rowDelegate"></param>
         /// <returns>A List of result objects.</returns>
-        internal IList<T> RunQueryForList<T>(RequestScope request, IDalSession session, object parameterObject, int skipResults, int maxResults, SqlMapper.RowDelegate rowDelegate)
+        internal IList<T> RunQueryForList<T>(RequestScope request, IDalSession session, object parameterObject, int skipResults, int maxResults, SqlMapper.RowDelegate<T> rowDelegate)
         {
             IList<T> list = null;
 
@@ -859,7 +859,7 @@ namespace IBatisNet.DataMapper.MappedStatements
                         {
                             T obj = (T)ApplyResultMap(request, reader, null);
 
-                            rowDelegate(obj, parameterObject, (IList)list);
+                            rowDelegate(obj, parameterObject, list);
                             n++;
                         }
                     }

@@ -62,6 +62,14 @@ namespace IBatisNet.DataMapper
 		/// <param name="list">The IList that will be returned to the caller.</param>
 		public delegate void RowDelegate(object obj, object parameterObject, IList list);
 
+        /// <summary>
+        /// A delegate called once per row in the QueryWithRowDelegate method
+        /// </summary>
+        /// <param name="obj">The object currently being processed.</param>
+        /// <param name="parameterObject">The optional parameter object passed into the QueryWithRowDelegate method.</param>
+        /// <param name="list">The IList that will be returned to the caller.</param>
+        public delegate void RowDelegate<T>(object obj, object parameterObject, IList<T> list);
+
 		/// <summary>
 		/// A delegate called once per row in the QueryForMapWithRowDelegate method
 		/// </summary>
@@ -1010,7 +1018,7 @@ namespace IBatisNet.DataMapper
             try
             {
                 IMappedStatement statement = GetMappedStatement(statementName);
-                list = (IList<T>)statement.ExecuteQueryForList(session, parameterObject);
+                list = statement.ExecuteQueryForList<T>(session, parameterObject);
             }
             catch
             {
@@ -1054,7 +1062,7 @@ namespace IBatisNet.DataMapper
             try
             {
                 IMappedStatement statement = GetMappedStatement(statementName);
-                list = (IList<T>)statement.ExecuteQueryForList(session, parameterObject, skipResults, maxResults);
+                list = statement.ExecuteQueryForList<T>(session, parameterObject, skipResults, maxResults);
             }
             catch
             {
@@ -1180,6 +1188,52 @@ namespace IBatisNet.DataMapper
 
 			return list;
 		}
+
+#if dotnet2
+        /// <summary>
+        /// Runs a query for list with a custom object that gets a chance to deal 
+        /// with each row as it is processed.
+        /// <p/>
+        ///  The parameter object is generally used to supply the input
+        /// data for the WHERE clause parameter(s) of the SELECT statement.
+        /// </summary>
+        /// <param name="statementName">The name of the sql statement to execute.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="rowDelegate"></param>
+        /// <returns>A List of result objects.</returns>
+        public IList<T> QueryWithRowDelegate<T>(string statementName, object parameterObject, RowDelegate<T> rowDelegate)
+        {
+            bool isSessionLocal = false;
+            IDalSession session = _sessionHolder.LocalSession;
+            IList<T> list = null;
+
+            if (session == null)
+            {
+                session = new SqlMapSession(this.DataSource);
+                session.OpenConnection();
+                isSessionLocal = true;
+            }
+
+            try
+            {
+                IMappedStatement statement = GetMappedStatement(statementName);
+                list = statement.ExecuteQueryForRowDelegate<T>(session, parameterObject, rowDelegate);
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                if (isSessionLocal)
+                {
+                    session.CloseConnection();
+                }
+            }
+
+            return list;
+        }
+#endif
 
 		/// <summary>
 		/// Runs a query with a custom object that gets a chance to deal 

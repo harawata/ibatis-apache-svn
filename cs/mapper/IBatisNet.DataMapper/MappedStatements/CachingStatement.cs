@@ -382,6 +382,18 @@ namespace IBatisNet.DataMapper.MappedStatements
 			return _mappedStatement.ExecuteQueryForRowDelegate(session, parameterObject, rowDelegate);
 		}
 
+                /// <summary>
+        /// Runs a query with a custom object that gets a chance 
+        /// to deal with each row as it is processed.
+        /// </summary>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="rowDelegate"></param>
+        public IList<T> ExecuteQueryForRowDelegate<T>(IDalSession session, object parameterObject, SqlMapper.RowDelegate<T> rowDelegate)
+        {
+            return _mappedStatement.ExecuteQueryForRowDelegate<T>(session, parameterObject, rowDelegate);
+        }
+
 		/// <summary>
 		/// Runs a query with a custom object that gets a chance 
 		/// to deal with each row as it is processed.
