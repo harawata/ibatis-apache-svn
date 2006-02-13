@@ -558,14 +558,10 @@ public class BasicResultMap implements ResultMap {
     if (typeHandler != null) {
       String columnName = mapping.getColumnName();
       int columnIndex = mapping.getColumnIndex();
-      String nullValue = mapping.getNullValue();
       if (columnName == null) {
         value = typeHandler.getResult(rs, columnIndex);
       } else {
         value = typeHandler.getResult(rs, columnName);
-      }
-      if (value == null && nullValue != null) {
-        value = typeHandler.valueOf(nullValue);
       }
     } else {
       throw new SqlMapException("No type handler could be found to map the property '" + mapping.getPropertyName() + "' to the column '" + mapping.getColumnName() + "'.  One or both of the types, or the combination of types is not supported.");
