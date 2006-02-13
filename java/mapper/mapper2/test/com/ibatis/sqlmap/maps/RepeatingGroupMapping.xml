@@ -34,6 +34,20 @@
     <result property="quantity" column="qty"/>
   </resultMap>
 
+  <resultMap id="categoryResultJIRA250" class="testdomain.Category" groupBy="categoryId">
+    <result property="categoryId" column="catid"/>
+    <result property="name" column="catname"/>
+    <result property="description" column="catdescn"/>
+    <result property="productList" resultMap="productResultJIRA250"/>
+  </resultMap>
+
+  <resultMap id="productResultJIRA250" class="testdomain.Product" groupBy="productId">
+    <result property="productId" column="productid"/>
+    <result property="categoryId" column="category"/>
+    <result property="name" column="prodname" nullValue="unknown"/>
+    <result property="description" column="proddescn"/>
+  </resultMap>
+
   <select id="getAllCategories" resultMap="categoryResult" >
     select
        c.catid, c.name as catname, c.descn as catdescn,
@@ -76,4 +90,13 @@
       and i.itemid = v.itemid
       and c.catid = 'FISH'
   </select>
+  
+  <select id="getAllProductCategoriesJIRA250" resultMap="categoryResultJIRA250" >
+    select
+       c.catid, c.name as catname, c.descn as catdescn,
+       null as productid, null as category, null as prodname,
+       null as proddescn
+    from category c
+  </select>
+  
 </sqlMap>
