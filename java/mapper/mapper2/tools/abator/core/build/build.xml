@@ -1,6 +1,9 @@
 <project name="Abator for iBATIS" default="buildAbator" basedir=".">
 
-  <!-- this is not finished yet - still building the distro manually -->
+  <!-- Note: to update the version of Abator, change the 
+       version.properties file (the "version" property).
+  -->
+  
   <property name="src.dir" value="../src" />
   <property name="doc.dir" value="../doc" />
   <property name="deploy.dir" value="${basedir}/deploy" />
