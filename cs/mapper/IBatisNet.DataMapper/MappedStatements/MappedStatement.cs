@@ -1128,6 +1128,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 					postSelect.ResultProperty.PropertyInfo.SetValue(postSelect.Target, array, null);
 				}
+#if dotnet2
                 else if (postSelect.Method == ExecuteMethod.ExecuteQueryForGenericIList)
                 {
                     // How to: Examine and Instantiate Generic Types with Reflection  
@@ -1162,8 +1163,8 @@ namespace IBatisNet.DataMapper.MappedStatements
                     object values = miConstructed.Invoke(postSelect.Statement, args);
 
                     ObjectProbe.SetPropertyValue(postSelect.Target, postSelect.ResultProperty.PropertyName, values);
-
                 }
+#endif
                 else if (postSelect.Method == ExecuteMethod.ExecuteQueryForObject)
                 {
                     object value = postSelect.Statement.ExecuteQueryForObject(session, postSelect.Keys);
@@ -1321,11 +1322,13 @@ namespace IBatisNet.DataMapper.MappedStatements
 							}
 						}
 					}
+#if dotnet2
                     else if ( mapping.PropertyInfo.PropertyType.IsGenericType && 
                               mapping.PropertyInfo.PropertyType.GetGenericTypeDefinition() == typeof(IList<>)) 
                     {
                         postSelect.Method = ExecuteMethod.ExecuteQueryForGenericIList;
                     }
+#endif
                     else // The ResultProperty is map to a .Net object
                     {
                         postSelect.Method = ExecuteMethod.ExecuteQueryForObject;
