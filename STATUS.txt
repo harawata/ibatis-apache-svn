@@ -17,9 +17,9 @@ PMC Members
 * Brandon Goodin (bgoodin)
 * Larry Meadors (lmeadors)
 * Robert Rabe (roberto)
+* Ron Grabowski (rgrabowski)
 
 Other Committers:
-* Ron Grabowski (rgrabowski)
 * Sven Boden (sboden)
 * Nathan Maves (nmaves)
 * Jeff Butler (jgbutler)
@@ -79,7 +79,17 @@ Hibernate library.
 
 Project Votes
 
+[7 Feb 2006 PMC] Chad Humphries for iBATIS Committer 
+
++1: Gilles Bayon, Roberto Rabe, Ron Grabowski, Ted Husted
++0: Clinton Begin, Brandon Goodin
+
+[22 Jan 2006] Promote iBATIS 2.1.7 to General Availability
+
++1 Clinton Begin.
+
 [19 Dec 2005 PMC] Ron Grabowski for PMC
+
  +1 Ted Husted, Larry Meadors, Clinton Begin, Gilles Bayon, Robert Rabe 
  +1* Nathan Maves, Jeff Butler
  +0* Brice Ruth
