@@ -211,6 +211,7 @@
     <Compile Include="NUnit\SqlMapTests\DynamicTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="NUnit\SqlMapTests\Generics\ResiltMapTest.cs" />
     <Compile Include="NUnit\SqlMapTests\Generics\ResultClassTest.cs" />
     <Compile Include="NUnit\SqlMapTests\Generics\StatementTest.cs" />
     <Compile Include="NUnit\SqlMapTests\InheritanceTest.cs">

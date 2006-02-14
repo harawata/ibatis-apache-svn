@@ -16,7 +16,12 @@ http://ibatis.apache.org/xsd/SqlMap.xsd">
 		<resultMap id="credit-card-result" class="string">
 			<result property="value" column="Order_CardNumber"/>
 		</resultMap>
-  
+
+    <resultMap id="order-with-generic-list-lineitem" class="Order" 
+            extends="lite-order-result-by-name" >
+      <result property="LineItemsGenericList" column="Order_ID" select="GetLineItemsForOrder" />
+    </resultMap>
+    
 		<resultMap id="order-with-lines-result" class="Order" 
 								extends="lite-order-result-by-name" >
 			<result property="LineItemsIList" lazyLoad="true" column="Order_ID" select="GetLineItemsForOrder" />

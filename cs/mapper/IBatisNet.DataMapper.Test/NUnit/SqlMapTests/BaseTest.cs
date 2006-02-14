@@ -67,7 +67,14 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			string fileName = "sqlmap" + "_" + ConfigurationSettings.AppSettings["database"] + "_" + ConfigurationSettings.AppSettings["providerType"] + ".config";
 
 #endif
-            sqlMap = builder.Configure(fileName);
+            try
+            {
+                sqlMap = builder.Configure(fileName);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.StackTrace.ToString());
+            }
 
 			if ( sqlMap.DataSource.DbProvider.Name.IndexOf("PostgreSql")>=0)
 			{

@@ -67,6 +67,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		{
 			ExecuteQueryForObject =0,
 			ExecuteQueryForIList,
+            ExecuteQueryForGenericIList,
 			ExecuteQueryForArrayList,
 			ExecuteQueryForStrongTypedIList
 		}
@@ -1114,7 +1115,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 					postSelect.Statement.ExecuteQueryForList(session, postSelect.Keys, (IList)values);
 					ObjectProbe.SetPropertyValue( postSelect.Target, postSelect.ResultProperty.PropertyName, values);
 				}
-				if (postSelect.Method == ExecuteMethod.ExecuteQueryForArrayList)
+				else if (postSelect.Method == ExecuteMethod.ExecuteQueryForArrayList)
 				{
 					IList values = postSelect.Statement.ExecuteQueryForList(session, postSelect.Keys); 
 					Type elementType = postSelect.ResultProperty.PropertyInfo.PropertyType.GetElementType();
@@ -1127,11 +1128,47 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 					postSelect.ResultProperty.PropertyInfo.SetValue(postSelect.Target, array, null);
 				}
-				else if (postSelect.Method == ExecuteMethod.ExecuteQueryForObject)
-				{
-					object value = postSelect.Statement.ExecuteQueryForObject(session, postSelect.Keys); 
-					ObjectProbe.SetPropertyValue( postSelect.Target, postSelect.ResultProperty.PropertyName, value);
-				}
+                else if (postSelect.Method == ExecuteMethod.ExecuteQueryForGenericIList)
+                {
+                    // How to: Examine and Instantiate Generic Types with Reflection  
+                    // http://msdn2.microsoft.com/en-us/library/b8ytshk6.aspx
+
+                    Type[] typeArgs = postSelect.ResultProperty.PropertyInfo.PropertyType.GetGenericArguments();
+                    Type definition = typeof(IList<>);
+                    Type constructedType = definition.MakeGenericType(typeArgs);
+                    Type elementType = postSelect.ResultProperty.PropertyInfo.PropertyType.GetGenericArguments()[0];
+
+                    Type mappedStatementType = postSelect.Statement.GetType();
+
+                    Type[] typeArguments = {typeof(IDalSession), typeof(object)};
+
+                    MethodInfo[] mis = mappedStatementType.GetMethods(BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.Instance);
+                    MethodInfo mi = null;
+                    foreach(MethodInfo m in mis)
+                    {
+                        if (m.IsGenericMethod && 
+                            m.Name == "ExecuteQueryForList" && 
+                            m.GetParameters().Length==2)
+                        {
+                            mi = m;
+                            break;
+                        }
+                    }
+
+                    MethodInfo miConstructed = mi.MakeGenericMethod(elementType);
+
+                    // Invoke the method.
+                    object[] args = {session, postSelect.Keys};
+                    object values = miConstructed.Invoke(postSelect.Statement, args);
+
+                    ObjectProbe.SetPropertyValue(postSelect.Target, postSelect.ResultProperty.PropertyName, values);
+
+                }
+                else if (postSelect.Method == ExecuteMethod.ExecuteQueryForObject)
+                {
+                    object value = postSelect.Statement.ExecuteQueryForObject(session, postSelect.Keys);
+                    ObjectProbe.SetPropertyValue(postSelect.Target, postSelect.ResultProperty.PropertyName, value);
+                }
 			}
 		}
 
@@ -1283,11 +1320,16 @@ namespace IBatisNet.DataMapper.MappedStatements
 								postSelect.Method = ExecuteMethod.ExecuteQueryForStrongTypedIList;
 							}
 						}
-					} 
-					else // The ResultProperty is map to a .Net object
-					{
-						postSelect.Method = ExecuteMethod.ExecuteQueryForObject;
 					}
+                    else if ( mapping.PropertyInfo.PropertyType.IsGenericType && 
+                              mapping.PropertyInfo.PropertyType.GetGenericTypeDefinition() == typeof(IList<>)) 
+                    {
+                        postSelect.Method = ExecuteMethod.ExecuteQueryForGenericIList;
+                    }
+                    else // The ResultProperty is map to a .Net object
+                    {
+                        postSelect.Method = ExecuteMethod.ExecuteQueryForObject;
+                    }
 					#endregion
 
 					if (!mapping.IsLazyLoad)

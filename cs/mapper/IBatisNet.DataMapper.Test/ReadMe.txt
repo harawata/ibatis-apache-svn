@@ -15,4 +15,7 @@ To pass tests for MS Sql Server
    create a file named DataBase.config with your own value for datasource.
    (WARNInG : don't included it in the solution and don't commit it in SVN)
    Put it in the bin/debug directory
+   
+4/ To test for .NET V2, enabled provider 'sqlServer2.0' and 
+   set <provider name="sqlServer2.0"/> in SqlMap_MSSQL_SqlClient.config
 	

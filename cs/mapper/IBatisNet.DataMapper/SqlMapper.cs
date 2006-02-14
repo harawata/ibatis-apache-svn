@@ -678,7 +678,7 @@ namespace IBatisNet.DataMapper
         #endregion
 
         #region QueryForObject .NET 2.0
-        #if dotnet2
+#if dotnet2
         /// <summary>
         /// Executes a Sql SELECT statement that returns that returns data 
         /// to populate a single object instance.
@@ -762,7 +762,7 @@ namespace IBatisNet.DataMapper
 
             return result;
         }
-        #endif      
+#endif      
         #endregion
 
         #region QueryForMap, QueryForDictionary
@@ -993,7 +993,7 @@ namespace IBatisNet.DataMapper
 		#endregion
         
         #region QueryForList .NET 2.0
-        #if dotnet2
+#if dotnet2
         /// <summary>
         /// Executes a Sql SELECT statement that returns data to populate
         /// a number of result objects.
@@ -1126,7 +1126,7 @@ namespace IBatisNet.DataMapper
                 }
             }
         }
-        #endif
+#endif
         #endregion
 
 		#region QueryForPaginatedList

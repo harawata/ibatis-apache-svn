@@ -18,28 +18,45 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			<result property="value" column="Order_CardNumber"/>
 		</resultMap>
 
-		<resultMap id="order-with-lines-result" class="Order" 
+    <resultMap id="lite-order-result-by-name" class="Order">
+      <result property="Id"         column="Order_ID"/>
+      <result property="Date"       column="Order_Date" nullValue="01/01/0001 00:00:00"/>
+      <result property="CardExpiry" column="Order_CardExpiry"/>
+      <result property="CardType"   column="Order_CardType"/>
+      <result property="CardNumber" column="Order_CardNumber"/>
+      <result property="Street"     column="Order_Street"/>
+      <result property="City"       column="Order_City"/>
+      <result property="Province"   column="Order_Province"/>
+      <result property="PostalCode" column="Order_PostalCode"/>
+    </resultMap>
+
+    <resultMap id="order-with-generic-list-lineitem" class="Order" 
+            extends="lite-order-result-by-name" >
+        <result property="LineItemsGenericList" column="Order_ID" select="GetLineItemsForOrder" />
+    </resultMap>
+    
+    <resultMap id="order-with-lines-result" class="Order" 
 								extends="lite-order-result-by-name" >
-			<result property="LineItemsIList" lazyLoad="true" column="Order_ID" select="GetLineItemsForOrder" />
-		</resultMap>
-		
-		<resultMap id="order-with-lines-result-statement-namespaces" class="Order" 
+        <result property="LineItemsIList" lazyLoad="true" column="Order_ID" select="GetLineItemsForOrder" />
+    </resultMap>
+
+    <resultMap id="order-with-lines-result-statement-namespaces" class="Order" 
 								extends="lite-order-result-by-name" >
-			<result property="LineItemsIList" lazyLoad="true" column="Order_ID" select="LineItem.GetLineItemsForOrder" />
-		</resultMap>		
-		
-		<resultMap id="order-with-lines-collection" class="Order"
+        <result property="LineItemsIList" lazyLoad="true" column="Order_ID" select="LineItem.GetLineItemsForOrder" />
+    </resultMap>
+
+    <resultMap id="order-with-lines-collection" class="Order"
 								extends="lite-order-result-by-name" >
-			<result property="LineItems" column="Order_ID"  lazyLoad="true" select="GetLineItemsForOrderWithListClass" />
-		</resultMap>
-		
-		<resultMap id="order-with-lines-array" class="Order"
+        <result property="LineItems" column="Order_ID"  lazyLoad="true" select="GetLineItemsForOrderWithListClass" />
+    </resultMap>
+
+    <resultMap id="order-with-lines-array" class="Order"
 								extends="lite-order-result-by-name">
-			<result property="LineItemsArray" column="Order_ID" select="GetLineItemsForOrder"/>
-		</resultMap>
-  
-		<resultMap id="lite-order-map-result" class="Hashtable">
-			<result property="Id"         type="Int" column="Order_ID"/>
+        <result property="LineItemsArray" column="Order_ID" select="GetLineItemsForOrder"/>
+    </resultMap>
+
+    <resultMap id="lite-order-map-result" class="Hashtable">
+      <result property="Id"         type="Int" column="Order_ID"/>
 			<result property="Date"       type="date" column="Order_Date"/>
 			<result property="CardExpiry" type="string" column="Order_CardExpiry"/>
 			<result property="CardType"   type="string" column="Order_CardType"/>
@@ -50,18 +67,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			<result property="PostalCode" type="string" column="Order_PostalCode"/>
 		</resultMap>
   
-		<resultMap id="lite-order-result-by-name" class="Order">
-			<result property="Id"         column="Order_ID"/>
-			<result property="Date"       column="Order_Date" nullValue="01/01/0001 00:00:00"/>
-			<result property="CardExpiry" column="Order_CardExpiry"/>
-			<result property="CardType"   column="Order_CardType"/>
-			<result property="CardNumber" column="Order_CardNumber"/>
-			<result property="Street"     column="Order_Street"/>
-			<result property="City"       column="Order_City"/>
-			<result property="Province"   column="Order_Province"/>
-			<result property="PostalCode" column="Order_PostalCode"/>
-		</resultMap>
-		
+	
 		<resultMap id="order-hash" class="Hashtable">
 			<result property="Date"       column="Order_Date" nullValue="01/01/0001 00:00:00"/>
 		</resultMap>
@@ -213,7 +219,9 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 						AND Orders.Order_FavouriteLineItem = LineItems.LineItem_ID
 			WHERE     Orders.Order_ID = #value#
 		</select>-->
-		
+
+
+    
 		<statement id="GetOrderLiteByColumnName"
 					parameterClass="Int"
 					resultMap="lite-order-result-by-name" >
@@ -253,7 +261,13 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 					resultMap="order-with-lines-result" >
 			select * from Orders where Order_ID = #value#
 		</statement>
-		
+
+    <statement id="GetOrderWithGenricListLineItem"
+      parameterClass="Integer"
+      resultMap="order-with-generic-list-lineitem" >
+      select * from Orders where Order_ID = #value#
+    </statement>
+    
 		<statement id="GetOrderWithLineItemsUsingStatementNamespaces"
 					parameterClass="Integer"
 					resultMap="order-with-lines-result-statement-namespaces" >

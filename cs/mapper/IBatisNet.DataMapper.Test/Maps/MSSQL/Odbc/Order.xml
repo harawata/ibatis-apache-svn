@@ -16,7 +16,12 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 		<resultMap id="credit-card-result" class="string">
 			<result property="value" column="Order_CardNumber"/>
 		</resultMap>
-  
+
+    <resultMap id="order-with-generic-list-lineitem" class="Order" 
+            extends="lite-order-result-by-name" >
+      <result property="LineItemsGenericList" column="Order_ID" select="GetLineItemsForOrder" />
+    </resultMap>
+    
 		<resultMap id="order-with-lines-result" class="Order" 
 								extends="lite-order-result-by-name" >
 			<result property="LineItemsIList" lazyLoad="true" column="Order_ID" select="GetLineItemsForOrder" />
@@ -201,6 +206,12 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 	
 	<statements>
 
+    <statement id="GetOrderWithGenricListLineItem"
+      parameterClass="Integer"
+      resultMap="order-with-generic-list-lineitem" >
+          select * from Orders where Order_ID = #value#
+    </statement>
+    
 		<statement id="GetOrderByHashTable"
 					parameterClass="Int"
 					resultMap="order-hash" >

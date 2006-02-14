@@ -1,5 +1,8 @@
 using System;
 using System.Collections;
+#if dotnet2
+using System.Collections.Generic;
+#endif
 
 namespace IBatisNet.DataMapper.Test.Domain
 {
@@ -22,42 +25,31 @@ namespace IBatisNet.DataMapper.Test.Domain
 		private IList _lineItems;//LineItemCollection
 		private LineItem[] _lineItemsArray;
 		private LineItem _favouriteLineItem;
+        private IList<LineItem> _genericList;
+
+        public IList<LineItem> LineItemsGenericList
+        {
+            get { return _genericList; }
+            set { _genericList = value; }
+        }
 
 		public LineItem FavouriteLineItem
 		{
-			get
-			{
-				return _favouriteLineItem; 
-			}
-			set
-			{ 
-				_favouriteLineItem = value; 
-			}
+			get { return _favouriteLineItem; }
+			set { _favouriteLineItem = value; }
 		}
 
 		public IList LineItemsIList
 		{
-			get
-			{
-				return _lineItemsIList; 
-			}
-			set
-			{ 
-				_lineItemsIList = value; 
-			}
+			get { return _lineItemsIList; }
+			set { _lineItemsIList = value; }
 		}
 
 
 		public IList LineItems
 		{
-			get
-			{
-				return _lineItems; 
-			}
-			set
-			{ 
-				_lineItems = value; 
-			}
+			get { return _lineItems; }
+			set { _lineItems = value; }
 		}
 
 		public LineItem[] LineItemsArray
@@ -180,7 +172,7 @@ namespace IBatisNet.DataMapper.Test.Domain
 			}
 		}
 
-		public System.DateTime Date
+		public DateTime Date
 		{
 			get
 			{
@@ -192,7 +184,7 @@ namespace IBatisNet.DataMapper.Test.Domain
 			}
 		}
 
-		public System.DateTime OrderDate {
+		public DateTime OrderDate {
 			get {
 				return _date; 
 			}
