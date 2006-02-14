@@ -1,13 +1,73 @@
 <project name="Abator for iBATIS" default="buildAbator" basedir=".">
 
   <!-- this is not finished yet - still building the distro manually -->
+  <property name="src.dir" value="../src" />
+  <property name="doc.dir" value="../doc" />
+  <property name="deploy.dir" value="${basedir}/deploy" />
+  <property name="deploy.files" value="${deploy.dir}/files" />
+  <property name="work.dir" value="${basedir}/work" />
+  <property name="work.classes" value="${work.dir}/bin" />
+  <property name="work.javadoc" value="${work.dir}/javadoc" />
   
   <target name="clean">
+    <delete dir="${work.dir}" />
+    <delete dir="${deploy.dir}" />
   </target>
   
-  <target name="buildAbator">
-    <mkdir dir="${basedir}/deploy/bin"/>
-    <javac srcdir="../src" destdir="${basedir}/deploy/bin" deprecation="true" debug="true" />
+  <target name="prepare" depends="clean">
+    <mkdir dir="${deploy.dir}"/>
+    <mkdir dir="${work.dir}"/>
+    <mkdir dir="${work.classes}"/>
+
+    <copy todir="${deploy.files}">
+      <fileset dir="${doc.dir}">
+        <include name="**/*.txt"/>
+      </fileset>
+    </copy>
+    
+    <propertyfile file="version.properties" comment="Build version info">
+      <entry key="buildDate" type="date" value="now"/>
+      <entry key="buildNum" default="0" type="int" operation="+" value="1"/>
+    </propertyfile>
   </target>
+  
+  <target name="buildAbatorJar" depends="prepare">
+    <javac srcdir="${src.dir}" destdir="${work.classes}" deprecation="true" debug="true" />
+
+    <!-- copy non-compilable resources -->    
+    <copy todir="${work.classes}">
+      <fileset dir="${src.dir}" >
+        <exclude name="**/*.java"/>
+      </fileset>
+    </copy>
+    
+    <jar destfile="${deploy.files}/abator.jar" basedir="${work.classes}" >
+      <manifest>
+        <attribute name="Main-Class" value="org.apache.ibatis.abator.api.AbatorRunner"/>
+      </manifest>
+    </jar>
+  </target>
+  
+  <target name="abatorJavadoc">
+    <javadoc destdir="${work.javadoc}" use="true" defaultexcludes="false" verbose="false">
+      <packageset dir="${src.dir}">
+        <include name="org/apache/ibatis/abator/**"/>
+      </packageset>
+    </javadoc>
+    
+    <zip destfile="${deploy.files}/abator-javadoc.zip" basedir="${work.javadoc}" />
+  </target>
+  
+  <target name="zipAbatorSource">
+    <zip destfile="${deploy.files}/abator-src.zip" basedir="${src.dir}" />
+  </target>
+  
+  <target name="assemble.zipfile" depends="buildAbatorJar, abatorJavadoc, zipAbatorSource">
+    <property file="version.properties"/>
+    
+    <zip destfile="${deploy.dir}/abator-${version}-${buildNum}.zip" basedir="${deploy.files}" />
+  </target>
+  
+  <target name="buildAbator" depends="assemble.zipfile" />
   
 </project>
