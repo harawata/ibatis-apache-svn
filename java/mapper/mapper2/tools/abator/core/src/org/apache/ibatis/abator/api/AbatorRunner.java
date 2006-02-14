@@ -102,7 +102,7 @@ public class AbatorRunner {
 	
 	private static void usage() {
 		writeLine("Abator code generator for iBATIS.  Usage:");
-		writeLine("   java -jar abatorxx.jar configFile overwrite");
+		writeLine("   java -jar abator.jar configFile overwrite");
 		writeLine();
 		writeLine("Where:");
 		writeLine("   configFile: the name of the abator XML configuration file");
