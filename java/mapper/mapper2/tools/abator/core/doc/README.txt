@@ -271,7 +271,7 @@ I'll discuss each method briefly.
 
 3. Running Abator from Java with an XML Configuration file
 
-   The following code sample shows ow to call Abator from Java.  It does not
+   The following code sample shows how to call Abator from Java.  It does not
    show exception handling, but that should be obvious from the compiler
    errors :)
 
@@ -286,7 +286,7 @@ I'll discuss each method briefly.
    
 4. Running Abator from Java with a Java Based Configuration
 
-   The following code sample shows ow to call Abator from Java only.  It does
+   The following code sample shows how to call Abator from Java only.  It does
    not show exception handling, but that should be obvious from the compiler
    errors :)
 
