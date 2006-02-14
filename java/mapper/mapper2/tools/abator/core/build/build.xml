@@ -41,9 +41,12 @@
       </fileset>
     </copy>
     
+    <property file="version.properties"/>
+    
     <jar destfile="${deploy.files}/abator.jar" basedir="${work.classes}" >
       <manifest>
         <attribute name="Main-Class" value="org.apache.ibatis.abator.api.AbatorRunner"/>
+        <attribute name="Abator-Version" value="${version}"/>
       </manifest>
     </jar>
   </target>

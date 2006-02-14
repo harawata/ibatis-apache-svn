@@ -226,10 +226,10 @@ I'll discuss each method briefly.
    named "abatorConfig.xml", then any of the following command lines will run
    abator:
    
-   java -jar abatorXXX.jar abatorConfig.xml false
-   java -jar abatorXXX.jar abatorConfig.xml true
-   java -cp abatorXXX.jar org.apache.ibatis.abator.api.AbatorRunner abatorConfig.xml false
-   java -cp abatorXXX.jar org.apache.ibatis.abator.api.AbatorRunner abatorConfig.xml true
+   java -jar abator.jar abatorConfig.xml false
+   java -jar abator.jar abatorConfig.xml true
+   java -cp abator.jar org.apache.ibatis.abator.api.AbatorRunner abatorConfig.xml false
+   java -cp abator.jar org.apache.ibatis.abator.api.AbatorRunner abatorConfig.xml true
    
 2. Running Abator from Ant
 
@@ -241,7 +241,7 @@ I'll discuss each method briefly.
      <target name="genfiles" description="Generate the files">
        <taskdef name="abator.genfiles" 
                 classname="org.apache.ibatis.abator.ant.AbatorAntTask" 
-                classpath="abator060.jar" />
+                classpath="abator.jar" />
        <abator.genfiles overwrite="true" configfile="abatorConfig.xml" />
      </target>
    </project>
