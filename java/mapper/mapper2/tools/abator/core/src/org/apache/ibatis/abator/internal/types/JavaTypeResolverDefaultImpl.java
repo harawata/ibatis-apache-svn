@@ -25,6 +25,10 @@ import org.apache.ibatis.abator.api.JavaTypeResolver;
 import org.apache.ibatis.abator.exception.UnsupportedDataTypeException;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
 
+/**
+ * 
+ * @author Jeff Butler
+ */
 public class JavaTypeResolverDefaultImpl implements JavaTypeResolver {
 
 	protected Map properties;

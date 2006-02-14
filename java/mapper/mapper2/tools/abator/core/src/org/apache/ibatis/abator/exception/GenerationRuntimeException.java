@@ -15,6 +15,10 @@
  */
 package org.apache.ibatis.abator.exception;
 
+/**
+ * 
+ * @author Jeff Butler
+ */
 public class GenerationRuntimeException extends RuntimeException {
 
 	private static final long serialVersionUID = 6958105026352206259L;

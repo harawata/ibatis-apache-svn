@@ -30,6 +30,10 @@ import org.apache.ibatis.abator.exception.UnsupportedDataTypeException;
 import org.apache.ibatis.abator.internal.util.JavaBeansUtil;
 import org.apache.ibatis.abator.internal.util.StringUtility;
 
+/**
+ * 
+ * @author Jeff Butler
+ */
 public class DatabaseIntrospector {
 
 	private DatabaseIntrospector() {

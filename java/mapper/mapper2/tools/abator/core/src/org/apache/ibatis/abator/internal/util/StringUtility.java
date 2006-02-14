@@ -15,6 +15,10 @@
  */
 package org.apache.ibatis.abator.internal.util;
 
+/**
+ * 
+ * @author Jeff Butler
+ */
 public class StringUtility {
 
 	/**

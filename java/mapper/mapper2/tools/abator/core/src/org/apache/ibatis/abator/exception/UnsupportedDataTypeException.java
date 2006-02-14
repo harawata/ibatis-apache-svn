@@ -15,6 +15,10 @@
  */
 package org.apache.ibatis.abator.exception;
 
+/**
+ * 
+ * @author Jeff Butler
+ */
 public class UnsupportedDataTypeException extends Exception {
 
 	private static final long serialVersionUID = -1012729279827054627L;

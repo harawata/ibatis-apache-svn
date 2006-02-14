@@ -18,6 +18,10 @@ package org.apache.ibatis.abator.config;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 
+ * @author Jeff Butler
+ */
 public class JDBCConnectionConfiguration extends PropertyHolder {
 
 	private String driverClass;

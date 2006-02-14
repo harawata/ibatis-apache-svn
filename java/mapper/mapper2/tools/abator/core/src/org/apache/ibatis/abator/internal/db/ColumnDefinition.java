@@ -17,6 +17,10 @@ package org.apache.ibatis.abator.internal.db;
 
 import org.apache.ibatis.abator.internal.types.ResolvedJavaType;
 
+/**
+ * 
+ * @author Jeff Butler
+ */
 public class ColumnDefinition {
     private String columnName;
 

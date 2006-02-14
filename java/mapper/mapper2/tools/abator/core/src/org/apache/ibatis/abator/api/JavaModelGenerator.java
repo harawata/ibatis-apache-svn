@@ -22,6 +22,20 @@ import org.apache.ibatis.abator.config.FullyQualifiedTable;
 import org.apache.ibatis.abator.config.TableConfiguration;
 import org.apache.ibatis.abator.internal.db.ColumnDefinitions;
 
+/**
+ * This interface describes methods needed in any Java model generator.
+ * A Java model generator is used to generate POJOs that match the
+ * structure of the table.  Typically this includes:
+ * 
+ * <ul>
+ *   <li>A class to match the primary key (if there is a primary key)</li>
+ *   <li>A class to match the row without BLOBs</li>
+ *   <li>A class to match the row with BLOBs</li>
+ *   <li>A class to hold indicators for the "by example" methods</li>
+ * </ul>
+ * 
+ * @author Jeff Butler
+ */
 public interface JavaModelGenerator {
     
 	/**

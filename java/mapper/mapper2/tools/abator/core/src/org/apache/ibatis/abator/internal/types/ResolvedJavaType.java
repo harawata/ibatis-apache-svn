@@ -17,6 +17,10 @@ package org.apache.ibatis.abator.internal.types;
 
 import org.apache.ibatis.abator.api.FullyQualifiedJavaType;
 
+/**
+ * 
+ * @author Jeff Butler
+ */
 public class ResolvedJavaType {
 	private FullyQualifiedJavaType fullyQualifiedJavaType;
 

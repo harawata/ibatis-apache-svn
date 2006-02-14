@@ -21,6 +21,10 @@ import java.util.List;
 
 import org.apache.ibatis.abator.exception.InvalidConfigurationException;
 
+/**
+ * 
+ * @author Jeff Butler
+ */
 public class AbatorConfiguration {
     
     private List abatorContexts;

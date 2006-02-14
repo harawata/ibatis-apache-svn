@@ -34,6 +34,10 @@ import org.apache.ibatis.abator.internal.sqlmap.ExampleClause;
 import org.apache.ibatis.abator.internal.util.JavaBeansUtil;
 import org.apache.ibatis.abator.internal.util.StringUtility;
 
+/**
+ * 
+ * @author Jeff Butler
+ */
 public class JavaModelGeneratorDefaultImpl extends BaseJavaCodeGenerator implements JavaModelGenerator {
 
     /**

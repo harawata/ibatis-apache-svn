@@ -20,6 +20,14 @@ import java.util.Map;
 import org.apache.ibatis.abator.exception.UnsupportedDataTypeException;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
 
+/**
+ * This interface describes methods that are required in any Java type
+ * resolver.  A Java type resolver is used to make a default translation
+ * between a JDBC type as returned from the database introspection process,
+ * and a Java type.
+ * 
+ * @author Jeff Butler
+ */
 public interface JavaTypeResolver {
 	void setProperties(Map properties);
 

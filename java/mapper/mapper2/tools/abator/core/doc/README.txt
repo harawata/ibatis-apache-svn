@@ -17,7 +17,7 @@ generate the following objects based on the structure of the tables:
    There is an inheritance relationship between these classes as
    appropriate.
    
-2. iBATIS Compatible SQL Map XML Files.  iBATIS generates SQL for simple
+2. iBATIS Compatible SQL Map XML Files.  Abator generates SQL for simple
    CRUD functions on each table in a configuration.  The generated SQL
    statements include:
    
@@ -38,10 +38,10 @@ generate the following objects based on the structure of the tables:
    
    - IBATIS: for the iBATIS DAO Framework (an optional part of iBATIS)
    - SPRING: for the SpringFramework
-   - GENERIC-CI: for DAOs that only use the iBatis SQL mapping API.  In this
+   - GENERIC-CI: for DAOs that only use the iBATIS SQL mapping API.  In this
                  DAO the SQlMapClient must be supplied through constructor
                  injection.
-   - GENERIC-SI: for DAOs that only use the iBatis SQL mapping API.  In this
+   - GENERIC-SI: for DAOs that only use the iBATIS SQL mapping API.  In this
                  DAO the SQlMapClient must be supplied through setter
                  injection.
 
@@ -72,8 +72,7 @@ Quick Start Guide
      can remove the daoGenerator element if you don't wish to generate DAOs).
      The type can be one of the types described above
    - At least one database table
-3. Create a build.xml file for Ant as descibed below
-4. Use Ant to run Abator
+3. Run Abator from the command line (or from Ant) as descibed below
 
 
 ===============================================================================
@@ -138,7 +137,7 @@ Important notes about this file follow:
 
 1. The file specifies that the legacy DB2 CLI driver will be used to connect to
    the database, and also specifies where the driver can be found.
-2. The Java Type Resolver should not force the use of Bigdecimal fields - this
+2. The Java Type Resolver should not force the use of BigDecimal fields - this
    means that integral types (Short, Integer, Long, etc.) will be substituted
    if possible.  This feature is an attempt to make database DECIMAL and
    NUMERIC columns easier to deal with.
@@ -149,7 +148,7 @@ Important notes about this file follow:
    package would be "test.model".  The Java model generator should also trim
    strings.  This means that the setters for any String property will call the
    "trim" function - this is useful if your database will return blank
-   characters at the end of character columns (id CHAR is used instead of
+   characters at the end of character columns (when CHAR is used instead of
    VARCHAR for example).
 4. The SQL Map generator should use sub-packages.  This means that the
    generated XML files will be placed in a package called "test.xml.db2admin"
@@ -206,13 +205,33 @@ Using Abator
 ------------
 Abator can be run in the following ways:
 
-- As an Ant taks with an XML configuration
+- From the command line with an XML configuration
+- As an Ant task with an XML configuration
 - From another Java program with an XML configuration
 - From another Java program with a Java based configuration
 
 I'll discuss each method briefly.
 
-1. Running Abator from Ant
+1. Running Abator from the command line
+
+   Abator can be run from the command line.  The JAR manifest includes the
+   name of the default class, or you can specify it yourself.  The Abator 
+   runner class takes two arguments: the name of the configuration file,
+   and a flag (true or false) specifying whether existing Java files
+   should be overwritten.  If the flag is false, then Abator will write the
+   newly generated Java file to the proper directory with a unique name
+   (e.g. MyClass.java.1, MyClass.java.2, etc.).
+   
+   You must still create an Abator XML configuration file.  If the file is
+   named "abatorConfig.xml", then any of the following command lines will run
+   abator:
+   
+   java -jar abatorXXX.jar abatorConfig.xml false
+   java -jar abatorXXX.jar abatorConfig.xml true
+   java -cp abatorXXX.jar org.apache.ibatis.abator.api.AbatorRunner abatorConfig.xml false
+   java -cp abatorXXX.jar org.apache.ibatis.abator.api.AbatorRunner abatorConfig.xml true
+   
+2. Running Abator from Ant
 
   Abator includes a simple Ant task.  The task must be defined in your
   build.xml file, and the task has two parameters.  Here is an example
@@ -230,7 +249,7 @@ I'll discuss each method briefly.
    Notes:
    
    - The classpath on the <taskdef> is used to tell Ant where the implementing
-     code is.  This is optional if you add Abator to the Ant classpath on one
+     code is.  This is optional if you add Abator to the Ant classpath in one
      of the other ways described in the Ant manual
    - The name of the task can be anything you desire, "abator.genfiles" is
      simply an example
@@ -250,7 +269,7 @@ I'll discuss each method briefly.
      directory structure.  The task will create these directories if necessary.
   
 
-2. Running Abator from Java with an XML Configuration file
+3. Running Abator from Java with an XML Configuration file
 
    The following code sample shows ow to call Abator from Java.  It does not
    show exception handling, but that should be obvious from the compiler
@@ -265,7 +284,7 @@ I'll discuss each method briefly.
    Abator abator = new Abator(config, callback, warnings);
    abator.generate(null);
    
-3. Running Abator from Java with a Java Based Configuration
+4. Running Abator from Java with a Java Based Configuration
 
    The following code sample shows ow to call Abator from Java only.  It does
    not show exception handling, but that should be obvious from the compiler

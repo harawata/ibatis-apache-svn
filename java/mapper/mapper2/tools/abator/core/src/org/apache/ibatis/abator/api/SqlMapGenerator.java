@@ -22,6 +22,15 @@ import org.apache.ibatis.abator.config.FullyQualifiedTable;
 import org.apache.ibatis.abator.config.TableConfiguration;
 import org.apache.ibatis.abator.internal.db.ColumnDefinitions;
 
+/**
+ * This interface describes the operations that are required of an 
+ * Sql Map Generator.  An Sql Map Generator is a class that generates
+ * properly formatted Sql Maps for iBATIS.
+ * 
+ * All setXXX methods will be called before any getXXX method is called.
+ * 
+ * @author Jeff Butler
+ */
 public interface SqlMapGenerator {
     void setProperties(Map properties);
 
