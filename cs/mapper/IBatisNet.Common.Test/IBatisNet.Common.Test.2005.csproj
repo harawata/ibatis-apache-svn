@@ -223,6 +223,10 @@
       <Project>{BEFC4A45-7DF9-40E4-942C-82DC1BA5E708}</Project>
       <Name>IBatisNet.DataAccess.2005</Name>
     </ProjectReference>
+    <ProjectReference Include="..\IBatisNet.DataMapper\IBatisNet.DataMapper.20005.csproj">
+      <Project>{F3E45F39-3224-4EAD-B138-EB5CC0E32824}</Project>
+      <Name>IBatisNet.DataMapper.20005</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
