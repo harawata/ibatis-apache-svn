@@ -25,6 +25,7 @@ namespace IBatisNet.DataMapper.Test.Domain
 		private IList _lineItems;//LineItemCollection
 		private LineItem[] _lineItemsArray;
 		private LineItem _favouriteLineItem;
+#if dotnet2
         private IList<LineItem> _genericList;
 
         public IList<LineItem> LineItemsGenericList
@@ -32,8 +33,17 @@ namespace IBatisNet.DataMapper.Test.Domain
             get { return _genericList; }
             set { _genericList = value; }
         }
+#else
+        private IList _genericList;
 
-		public LineItem FavouriteLineItem
+        public IList LineItemsGenericList
+        {
+            get { return _genericList; }
+            set { _genericList = value; }
+        }
+#endif
+
+        public LineItem FavouriteLineItem
 		{
 			get { return _favouriteLineItem; }
 			set { _favouriteLineItem = value; }
