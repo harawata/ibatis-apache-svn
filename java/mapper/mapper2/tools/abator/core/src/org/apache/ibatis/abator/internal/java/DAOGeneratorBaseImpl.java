@@ -1211,16 +1211,21 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
     /**
      * This method returns a properly formatted method that sets up
      * example parms for an individual column.  In the generated DAO, the 
-     * method will be called by the getExampleParms method.  The expectation
-     * is that there will be one column based method for each column in the table
-     * (except BLOB columns).  We do it this way to avaoid generating on huge
-     * method - whech in some cases can actually be too large to compile.
+     * method will be called by the <code>getExampleParms</code> method.
+     * The expectation is that there will be one column based method for each
+     * column in the table (except BLOB columns).  We do it this way to avoid
+     * generating one huge method - which in some cases can actually be too
+     * large to compile.  The generated method should have this signature:
      * 
-     * The generated method should return a Map of parameters.  
-     *  
-     * @param cd
-     * @param table
-     * @return
+     * <pre>
+     *    private Map getXXXXExampleParms(YYYY example)
+     * </pre>
+     * 
+     * Where XXXX is the column name and YYYY is the example class
+     * 
+     * @param cd the column for which the method should be generated
+     * @param table the table in which the column exists
+     * @return the properly formatted method
      */
     protected String getExampleParmsMethod(ColumnDefinition cd, FullyQualifiedTable table) {
         if (cd.isBLOBColumn()) {
