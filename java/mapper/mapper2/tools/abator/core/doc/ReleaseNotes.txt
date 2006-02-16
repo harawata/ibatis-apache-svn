@@ -2,6 +2,8 @@
 Version 0.6.1:
 1. Added support for running Abator from the command line
 2. Fixed bug: NPE when <generatedKey> specifies an unknown column
+3. Fixed bug: getExampleParms method in generated DAO can grow so enormous
+   that it can't be compiled.  The fix is to break it into smaller methods.
 
 -------------------------------------------------------------------------------
 Version 0.6.0:

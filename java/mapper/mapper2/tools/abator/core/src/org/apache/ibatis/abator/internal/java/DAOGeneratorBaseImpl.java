@@ -1154,6 +1154,8 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
             return null;
         }
         
+        ArrayList answer = new ArrayList();
+        
         StringBuffer buffer = new StringBuffer();
         FullyQualifiedTable table = tableConfiguration.getTable();
         
@@ -1171,6 +1173,7 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
         newLine(buffer);
         indent(buffer, 2);
         buffer.append("Map parms = new HashMap();"); //$NON-NLS-1$
+        newLine(buffer);
     
         Iterator iter = columnDefinitions.getAllColumns().iterator();
         while (iter.hasNext()) {
@@ -1179,83 +1182,17 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
             if (cd.isBLOBColumn()) {
                 continue;
             }
-    
-            newLine(buffer);
-            newLine(buffer);
-            indent(buffer, 2);
-            buffer.append("switch (example."); //$NON-NLS-1$
-            String property = cd.getJavaProperty() + "_Indicator"; //$NON-NLS-1$
-            buffer.append(JavaBeansUtil.getGetterMethodName(property));
-            buffer.append("()) {"); //$NON-NLS-1$
-    
-            Iterator clauseIterator = ExampleClause.getAllExampleClauses();
-            while (clauseIterator.hasNext()) {
-                ExampleClause clause = (ExampleClause) clauseIterator.next();
-    
-                if (clause.isCharacterOnly() && !cd.isCharacterColumn()) {
-                    continue;
-                }
-    
-                newLine(buffer);
-                indent(buffer, 2);
-                buffer.append("case "); //$NON-NLS-1$
-                buffer.append(javaModelGenerator.getExampleType(table)
-                        .getShortName());
-                buffer.append('.');
-                buffer.append(clause.getExamplePropertyName());
-                buffer.append(':');
-                newLine(buffer);
-                indent(buffer, 3);
-                buffer.append("if (example.isCombineTypeOr()) {"); //$NON-NLS-1$
-                newLine(buffer);
-                indent(buffer, 4);
-                buffer.append("parms.put(\""); //$NON-NLS-1$
-                buffer.append(clause.getSelectorOrProperty(cd));
-                buffer.append("\", \"Y\");"); //$NON-NLS-1$
-                newLine(buffer);
-                indent(buffer, 3);
-                buffer.append("} else {"); //$NON-NLS-1$
-                newLine(buffer);
-                indent(buffer, 4);
-                buffer.append("parms.put(\""); //$NON-NLS-1$
-                buffer.append(clause.getSelectorAndProperty(cd));
-                buffer.append("\", \"Y\");"); //$NON-NLS-1$
-                newLine(buffer);
-                indent(buffer, 3);
-                buffer.append('}'); //$NON-NLS-1$
-    
-                if (clause.isPropertyInMapRequired()) {
-                    String exampleProperty = cd.getJavaProperty();
-                    newLine(buffer);
-                    indent(buffer, 3);
-                    buffer.append("parms.put(\""); //$NON-NLS-1$
-                    buffer.append(exampleProperty);
-                    buffer.append("\", ");
-                    FullyQualifiedJavaType fqjt = cd.getResolvedJavaType().getFullyQualifiedJavaType();
-                    if (fqjt.isPrimitive()) {
-                        buffer.append("new ");
-                        buffer.append(fqjt.getWrapperClass());
-                        buffer.append('(');
-                        buffer.append("example."); //$NON-NLS-1$
-                        buffer.append(JavaBeansUtil
-                            .getGetterMethodName(exampleProperty));
-                        buffer.append("()));"); //$NON-NLS-1$
-                    } else {
-                        buffer.append("example."); //$NON-NLS-1$
-                        buffer.append(JavaBeansUtil
-                            .getGetterMethodName(exampleProperty));
-                        buffer.append("());"); //$NON-NLS-1$
-                    }
-                }
+            
+            String method = getExampleParmsMethod(cd, table);
+            if (method != null) {
+                answer.add(method);
                 
                 newLine(buffer);
-                indent(buffer, 3);
-                buffer.append("break;"); //$NON-NLS-1$
-                newLine(buffer);
+                indent(buffer, 2);
+                buffer.append("parms.putAll(get"); //$NON-NLS-1$
+                buffer.append(cd.getColumnName());
+                buffer.append("ExampleParms(example));"); //$NON-NLS-1$
             }
-    
-            indent(buffer, 2);
-            buffer.append('}');
         }
     
         newLine(buffer);
@@ -1266,10 +1203,131 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
         indent(buffer, 1);
         buffer.append('}');
     
-        ArrayList answer = new ArrayList();
         answer.add(buffer.toString());
         
         return answer;
+    }
+    
+    /**
+     * This method returns a properly formatted method that sets up
+     * example parms for an individual column.  In the generated DAO, the 
+     * method will be called by the getExampleParms method.  The expectation
+     * is that there will be one column based method for each column in the table
+     * (except BLOB columns).  We do it this way to avaoid generating on huge
+     * method - whech in some cases can actually be too large to compile.
+     * 
+     * The generated method should return a Map of parameters.  
+     *  
+     * @param cd
+     * @param table
+     * @return
+     */
+    protected String getExampleParmsMethod(ColumnDefinition cd, FullyQualifiedTable table) {
+        if (cd.isBLOBColumn()) {
+            return null;
+        }
+        
+        StringBuffer buffer = new StringBuffer();
+        
+        buffer.append(getMethodComment(table));
+        newLine(buffer);
+        indent(buffer, 1);
+        buffer.append("private Map get"); //$NON-NLS-1$
+        buffer.append(cd.getColumnName());
+        buffer.append("ExampleParms("); //$NON-NLS-1$
+        buffer.append(javaModelGenerator.getExampleType(table).getShortName());
+        buffer.append(" example) {"); //$NON-NLS-1$
+    
+        newLine(buffer);
+        indent(buffer, 2);
+        buffer.append("Map parms = new HashMap();"); //$NON-NLS-1$
+
+        newLine(buffer);
+        newLine(buffer);
+        indent(buffer, 2);
+        buffer.append("switch (example."); //$NON-NLS-1$
+        String property = cd.getJavaProperty() + "_Indicator"; //$NON-NLS-1$
+        buffer.append(JavaBeansUtil.getGetterMethodName(property));
+        buffer.append("()) {"); //$NON-NLS-1$
+
+        Iterator clauseIterator = ExampleClause.getAllExampleClauses();
+        while (clauseIterator.hasNext()) {
+            ExampleClause clause = (ExampleClause) clauseIterator.next();
+
+            if (clause.isCharacterOnly() && !cd.isCharacterColumn()) {
+                continue;
+            }
+
+            newLine(buffer);
+            indent(buffer, 2);
+            buffer.append("case "); //$NON-NLS-1$
+            buffer.append(javaModelGenerator.getExampleType(table)
+                    .getShortName());
+            buffer.append('.');
+            buffer.append(clause.getExamplePropertyName());
+            buffer.append(':');
+            newLine(buffer);
+            indent(buffer, 3);
+            buffer.append("if (example.isCombineTypeOr()) {"); //$NON-NLS-1$
+            newLine(buffer);
+            indent(buffer, 4);
+            buffer.append("parms.put(\""); //$NON-NLS-1$
+            buffer.append(clause.getSelectorOrProperty(cd));
+            buffer.append("\", \"Y\");"); //$NON-NLS-1$
+            newLine(buffer);
+            indent(buffer, 3);
+            buffer.append("} else {"); //$NON-NLS-1$
+            newLine(buffer);
+            indent(buffer, 4);
+            buffer.append("parms.put(\""); //$NON-NLS-1$
+            buffer.append(clause.getSelectorAndProperty(cd));
+            buffer.append("\", \"Y\");"); //$NON-NLS-1$
+            newLine(buffer);
+            indent(buffer, 3);
+            buffer.append('}'); //$NON-NLS-1$
+
+            if (clause.isPropertyInMapRequired()) {
+                String exampleProperty = cd.getJavaProperty();
+                newLine(buffer);
+                indent(buffer, 3);
+                buffer.append("parms.put(\""); //$NON-NLS-1$
+                buffer.append(exampleProperty);
+                buffer.append("\", "); //$NON-NLS-1$
+                FullyQualifiedJavaType fqjt = cd.getResolvedJavaType().getFullyQualifiedJavaType();
+                if (fqjt.isPrimitive()) {
+                    buffer.append("new "); //$NON-NLS-1$
+                    buffer.append(fqjt.getWrapperClass());
+                    buffer.append('(');
+                    buffer.append("example."); //$NON-NLS-1$
+                    buffer.append(JavaBeansUtil
+                        .getGetterMethodName(exampleProperty));
+                    buffer.append("()));"); //$NON-NLS-1$
+                } else {
+                    buffer.append("example."); //$NON-NLS-1$
+                    buffer.append(JavaBeansUtil
+                        .getGetterMethodName(exampleProperty));
+                    buffer.append("());"); //$NON-NLS-1$
+                }
+            }
+            
+            newLine(buffer);
+            indent(buffer, 3);
+            buffer.append("break;"); //$NON-NLS-1$
+            newLine(buffer);
+        }
+
+        indent(buffer, 2);
+        buffer.append('}');
+        
+        newLine(buffer);
+        newLine(buffer);
+        indent(buffer, 2);
+        buffer.append("return parms;"); //$NON-NLS-1$
+        newLine(buffer);
+        indent(buffer, 1);
+        buffer.append('}');
+        
+        return buffer.toString();
     }
     
 	/* (non-Javadoc)
