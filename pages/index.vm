@@ -129,7 +129,7 @@
       "http://ibatis.apache.org/dtd/sql-map-2.dtd"&gt;
 </pre>
 <pre>
-  &lt;!DOCTYPE dao
+  &lt;!DOCTYPE daoConfig
       PUBLIC "-//ibatis.apache.org//DTD DAO Configuration 2.0//EN"
       "http://ibatis.apache.org/dtd/dao-2.dtd"&gt;
 </pre>
