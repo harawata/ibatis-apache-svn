@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.abator.internal;
 
+import java.util.List;
+
 import org.apache.ibatis.abator.api.DAOGenerator;
 import org.apache.ibatis.abator.api.JavaModelGenerator;
 import org.apache.ibatis.abator.api.JavaTypeResolver;
@@ -61,8 +63,10 @@ public class AbatorObjectFactory {
 		return answer;
 	}
 	
-	public static JavaTypeResolver createJavaTypeResolver(JavaTypeResolverConfiguration configuration) {
+	public static JavaTypeResolver createJavaTypeResolver(JavaTypeResolverConfiguration configuration,
+			List warnings) {
 	    JavaTypeResolver answer = (JavaTypeResolver) createObject(configuration.getType());
+	    answer.setWarnings(warnings);
 	    
 	    answer.setProperties(configuration.getProperties());
 	    
@@ -70,8 +74,9 @@ public class AbatorObjectFactory {
 	}
 	
 	public static SqlMapGenerator createSqlMapGenerator(SqlMapGeneratorConfiguration configuration,
-	        JavaModelGenerator javaModelGenerator) {
+	        JavaModelGenerator javaModelGenerator, List warnings) {
 	    SqlMapGenerator answer = (SqlMapGenerator) createObject(configuration.getType());
+	    answer.setWarnings(warnings);
 
 	    answer.setJavaModelGenerator(javaModelGenerator);
 	    answer.setProperties(configuration.getProperties());
@@ -82,8 +87,10 @@ public class AbatorObjectFactory {
 	    
 	}
 	
-	public static JavaModelGenerator createJavaModelGenerator(JavaModelGeneratorConfiguration configuration) {
+	public static JavaModelGenerator createJavaModelGenerator(JavaModelGeneratorConfiguration configuration,
+			List warnings) {
 	    JavaModelGenerator answer = (JavaModelGenerator) createObject(configuration.getType());
+	    answer.setWarnings(warnings);
 	    
 	    answer.setProperties(configuration.getProperties());
 	    answer.setTargetPackage(configuration.getTargetPackage());
@@ -93,12 +100,13 @@ public class AbatorObjectFactory {
 	}
 	
 	public static DAOGenerator createDAOGenerator(DAOGeneratorConfiguration configuration,
-	        JavaModelGenerator javaModelGenerator, SqlMapGenerator sqlMapGenerator) {
+	        JavaModelGenerator javaModelGenerator, SqlMapGenerator sqlMapGenerator, List warnings) {
 	    if (!configuration.isEnabled()) {
 	        return null;
 	    }
 	    
 	    DAOGenerator answer = (DAOGenerator) createObject(configuration.getType());
+	    answer.setWarnings(warnings);
 
 	    answer.setJavaModelGenerator(javaModelGenerator);
 	    answer.setProperties(configuration.getProperties());

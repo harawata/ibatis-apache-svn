@@ -1,6 +1,7 @@
 -------------------------------------------------------------------------------
 Version 0.6.1:
 1. Added support for running Abator from the command line
+2. Fixed bug: NPE when <generatedKey> specifies an unknown column
 
 -------------------------------------------------------------------------------
 Version 0.6.0:

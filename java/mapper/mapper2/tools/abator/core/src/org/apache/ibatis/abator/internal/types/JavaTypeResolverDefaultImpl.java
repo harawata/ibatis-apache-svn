@@ -18,6 +18,7 @@ package org.apache.ibatis.abator.internal.types;
 import java.math.BigDecimal;
 import java.sql.Types;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.abator.api.FullyQualifiedJavaType;
@@ -31,6 +32,8 @@ import org.apache.ibatis.abator.internal.db.ColumnDefinition;
  */
 public class JavaTypeResolverDefaultImpl implements JavaTypeResolver {
 
+	protected List warnings;
+	
 	protected Map properties;
 
 	public JavaTypeResolverDefaultImpl() {
@@ -230,5 +233,12 @@ public class JavaTypeResolverDefaultImpl implements JavaTypeResolver {
 		}
 
 		cd.setResolvedJavaType(type);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.apache.ibatis.abator.api.JavaTypeResolver#setWarnings(java.util.List)
+	 */
+	public void setWarnings(List warnings) {
+		this.warnings = warnings;
 	}
 }

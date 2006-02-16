@@ -37,6 +37,8 @@ import org.apache.ibatis.abator.internal.util.StringUtility;
  * @author Jeff Butler
  */
 public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
+	
+	protected List warnings;
 
     /**
      * Contains any properties passed in from the SqlMap configuration element.
@@ -518,13 +520,17 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
 
         if (tableConfiguration.getGeneratedKey().isConfigured()
                 && !tableConfiguration.getGeneratedKey().isIdentity()) {
-            // pre-generated key
-            newLine(xml);
-            xml.append(getSelectKey(
-                    columnDefinitions.getColumn(tableConfiguration
-                            .getGeneratedKey().getColumn()),
+        	ColumnDefinition cd = columnDefinitions.getColumn(tableConfiguration
+                    .getGeneratedKey().getColumn());
+        	// if the column is null, then it's a configuration error.  The
+        	// warning has already been reported
+        	if (cd != null) {
+        	    // pre-generated key
+        	    newLine(xml);
+        	    xml.append(getSelectKey(cd,
                     tableConfiguration, indentLevel + 1));
-            newLine(xml);
+        	    newLine(xml);
+        	}
         }
 
         StringBuffer insertClause = new StringBuffer();
@@ -1580,4 +1586,11 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
     public void setTargetProject(String targetProject) {
         this.targetProject = targetProject;
     }
+    
+	/* (non-Javadoc)
+	 * @see org.apache.ibatis.abator.api.SqlMapGenerator#setWarnings(java.util.List)
+	 */
+	public void setWarnings(List warnings) {
+		this.warnings = warnings;
+	}
 }

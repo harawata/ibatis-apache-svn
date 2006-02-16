@@ -40,6 +40,8 @@ import org.apache.ibatis.abator.internal.util.StringUtility;
  */
 public class JavaModelGeneratorDefaultImpl extends BaseJavaCodeGenerator implements JavaModelGenerator {
 
+	protected List warnings;
+	
     /**
      * The properties from the JavaModelGenerator congiguration element
      */
@@ -558,4 +560,11 @@ public class JavaModelGeneratorDefaultImpl extends BaseJavaCodeGenerator impleme
 
 		return fqjt;
     }
+    
+	/* (non-Javadoc)
+	 * @see org.apache.ibatis.abator.api.JavaModelGenerator#setWarnings(java.util.List)
+	 */
+	public void setWarnings(List warnings) {
+		this.warnings = warnings;
+	}
 }

@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.abator.api;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.abator.exception.UnsupportedDataTypeException;
@@ -30,6 +31,16 @@ import org.apache.ibatis.abator.internal.db.ColumnDefinition;
  */
 public interface JavaTypeResolver {
 	void setProperties(Map properties);
+	
+	/**
+	 * Abator will supply a list to this method.  The implementation class may
+	 * add strings to the list that will be treated as warning messages and
+	 * displayed to the user.  The concept of a warning is that code generation
+	 * can continue, but that the results may not be what is expected.
+	 * 
+	 * @param warnings
+	 */
+	void setWarnings(List warnings);
 
 	/**
 	 * Initializes the ResolvedJavaType property of the ColumnDescription based

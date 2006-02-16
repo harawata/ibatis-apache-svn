@@ -32,7 +32,17 @@ import org.apache.ibatis.abator.internal.db.ColumnDefinitions;
  * @author Jeff Butler
  */
 public interface SqlMapGenerator {
-    void setProperties(Map properties);
+	/**
+	 * Abator will supply a list to this method.  The implementation class may
+	 * add strings to the list that will be treated as warning messages and
+	 * displayed to the user.  The concept of a warning is that code generation
+	 * can continue, but that the results may not be what is expected.
+	 * 
+	 * @param warnings
+	 */
+	void setWarnings(List warnings);
+
+	void setProperties(Map properties);
 
     void setTargetPackage(String targetPackage);
 

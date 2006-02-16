@@ -244,7 +244,7 @@ public class TableConfiguration extends PropertyHolder {
             if (generatedKey.isIdentity()) {
                 sb.append("Specified identity column \"");
             } else {
-                sb.append("Specified sequenced column \"");
+                sb.append("Specified generated key column \"");
             }
             sb.append(generatedKey.getColumn());
             sb.append("\" in table ");

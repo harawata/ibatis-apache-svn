@@ -180,10 +180,10 @@ public class AbatorContext {
 	        callback = new NullProgressCallback();
 	    }
 	    
-	    JavaTypeResolver javaTypeResolver = AbatorObjectFactory.createJavaTypeResolver(javaTypeResolverConfiguration);
-	    JavaModelGenerator javaModelGenerator = AbatorObjectFactory.createJavaModelGenerator(javaModelGeneratorConfiguration);
-	    SqlMapGenerator sqlMapGenerator = AbatorObjectFactory.createSqlMapGenerator(sqlMapGeneratorConfiguration, javaModelGenerator);
-	    DAOGenerator daoGenerator = AbatorObjectFactory.createDAOGenerator(daoGeneratorConfiguration, javaModelGenerator, sqlMapGenerator);
+	    JavaTypeResolver javaTypeResolver = AbatorObjectFactory.createJavaTypeResolver(javaTypeResolverConfiguration, warnings);
+	    JavaModelGenerator javaModelGenerator = AbatorObjectFactory.createJavaModelGenerator(javaModelGeneratorConfiguration, warnings);
+	    SqlMapGenerator sqlMapGenerator = AbatorObjectFactory.createSqlMapGenerator(sqlMapGeneratorConfiguration, javaModelGenerator, warnings);
+	    DAOGenerator daoGenerator = AbatorObjectFactory.createDAOGenerator(daoGeneratorConfiguration, javaModelGenerator, sqlMapGenerator, warnings);
 
 		Connection connection = null;
 		

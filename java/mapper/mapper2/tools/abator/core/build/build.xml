@@ -28,8 +28,7 @@
       </fileset>
     </copy>
     
-    <propertyfile file="version.properties" comment="Build version info">
-      <entry key="buildDate" type="date" value="now"/>
+    <propertyfile file="version.properties" comment="Abator build version info">
       <entry key="buildNum" default="0" type="int" operation="+" value="1"/>
     </propertyfile>
   </target>
@@ -49,7 +48,9 @@
     <jar destfile="${deploy.files}/abator.jar" basedir="${work.classes}" >
       <manifest>
         <attribute name="Main-Class" value="org.apache.ibatis.abator.api.AbatorRunner"/>
-        <attribute name="Abator-Version" value="${version}"/>
+        <attribute name="Specification-Title" value="Abator for iBATIS"/>
+        <attribute name="Specification-Version" value="${version}"/>
+        <attribute name="Specification-Vendor" value="The Apache Software Foundation"/>
       </manifest>
     </jar>
   </target>

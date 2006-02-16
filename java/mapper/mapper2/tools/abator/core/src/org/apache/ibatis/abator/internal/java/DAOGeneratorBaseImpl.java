@@ -43,6 +43,8 @@ import org.apache.ibatis.abator.internal.util.StringUtility;
  * @author Jeff Butler
  */
 public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator implements DAOGenerator {
+	
+	protected List warnings;
 
     protected Map properties;
 
@@ -411,10 +413,16 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
             ColumnDefinition cd = columnDefinitions
                     .getColumn(tableConfiguration.getGeneratedKey()
                             .getColumn());
-            FullyQualifiedJavaType fqjt = cd.getResolvedJavaType()
+            if (cd == null) {
+            	// the specified column doesn't exist, so don't do the generated key
+            	// (the warning has already been reported)
+                returnType = "void"; //$NON-NLS-1$
+            } else {
+            	FullyQualifiedJavaType fqjt = cd.getResolvedJavaType()
                     .getFullyQualifiedJavaType();
-            returnType = fqjt.getShortName();
-            imports.add(fqjt);
+            	returnType = fqjt.getShortName();
+            	imports.add(fqjt);
+            }
         } else {
             returnType = "void"; //$NON-NLS-1$
         }
@@ -1263,4 +1271,11 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
         
         return answer;
     }
+    
+	/* (non-Javadoc)
+	 * @see org.apache.ibatis.abator.api.DAOGenerator#setWarnings(java.util.List)
+	 */
+	public void setWarnings(List warnings) {
+		this.warnings = warnings;
+	}
 }
