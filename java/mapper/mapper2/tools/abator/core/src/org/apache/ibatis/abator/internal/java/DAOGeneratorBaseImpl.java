@@ -42,9 +42,10 @@ import org.apache.ibatis.abator.internal.util.StringUtility;
  * 
  * @author Jeff Butler
  */
-public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator implements DAOGenerator {
-	
-	protected List warnings;
+public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator
+        implements DAOGenerator {
+
+    protected List warnings;
 
     protected Map properties;
 
@@ -70,9 +71,9 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
     }
 
     /**
-     * Returns the template used to generate DAOs from the implementing final class.
-     * This method will be called before any other method in the class is called, and will
-     * only be called once.
+     * Returns the template used to generate DAOs from the implementing final
+     * class. This method will be called before any other method in the class is
+     * called, and will only be called once.
      * 
      * @return the DAOGeneraotrTemplate used for this instance
      */
@@ -104,7 +105,8 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
         return map;
     }
 
-    protected FullyQualifiedJavaType getDAOImplementationType(FullyQualifiedTable table) {
+    protected FullyQualifiedJavaType getDAOImplementationType(
+            FullyQualifiedTable table) {
         String key = "getDAOImplementationType"; //$NON-NLS-1$
 
         Map map = getTableValueMap(table);
@@ -123,7 +125,8 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
         return fqjt;
     }
 
-    protected FullyQualifiedJavaType getDAOInterfaceType(FullyQualifiedTable table) {
+    protected FullyQualifiedJavaType getDAOInterfaceType(
+            FullyQualifiedTable table) {
         String key = "getDAOInterfaceType"; //$NON-NLS-1$
 
         Map map = getTableValueMap(table);
@@ -172,9 +175,10 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
     protected GeneratedJavaFile getDAOImplementation(
             ColumnDefinitions columnDefinitions,
             TableConfiguration tableConfiguration) {
-        
+
         FullyQualifiedTable table = tableConfiguration.getTable();
-        GeneratedJavaFile answer = new GeneratedJavaFile(getDAOImplementationType(table));
+        GeneratedJavaFile answer = new GeneratedJavaFile(
+                getDAOImplementationType(table));
 
         answer.setJavaInterface(false);
         if (daoGeneratorTemplate.getSuperClass() != null) {
@@ -210,7 +214,7 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
             buffer.append(iter.next());
             answer.addField(buffer.toString());
         }
-        
+
         // add any methods from the template
         iter = daoGeneratorTemplate.getMethods().iterator();
         while (iter.hasNext()) {
@@ -221,7 +225,8 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
             answer.addMethod(buffer.toString());
         }
 
-        List methods = getInsertMethods(columnDefinitions, tableConfiguration, false, answer.getImportedTypes());
+        List methods = getInsertMethods(columnDefinitions, tableConfiguration,
+                false, answer.getImportedTypes());
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
@@ -229,78 +234,87 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
             }
         }
 
-        methods = getUpdateByPrimaryKeyMethods(columnDefinitions, tableConfiguration, false, answer.getImportedTypes());
+        methods = getUpdateByPrimaryKeyMethods(columnDefinitions,
+                tableConfiguration, false, answer.getImportedTypes());
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
                 answer.addMethod((String) iter.next());
             }
         }
-        
-        methods = getUpdateByPrimaryKeyWithBLOBsMethods(columnDefinitions, tableConfiguration, false, answer.getImportedTypes());
+
+        methods = getUpdateByPrimaryKeyWithBLOBsMethods(columnDefinitions,
+                tableConfiguration, false, answer.getImportedTypes());
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
                 answer.addMethod((String) iter.next());
             }
         }
-        
-        methods = getSelectByExampleMethods(columnDefinitions, tableConfiguration, false, answer.getImportedTypes());
+
+        methods = getSelectByExampleMethods(columnDefinitions,
+                tableConfiguration, false, answer.getImportedTypes());
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
                 answer.addMethod((String) iter.next());
             }
         }
-        
-        methods = getSelectByExampleWithBLOBsMethods(columnDefinitions, tableConfiguration, false, answer.getImportedTypes());
+
+        methods = getSelectByExampleWithBLOBsMethods(columnDefinitions,
+                tableConfiguration, false, answer.getImportedTypes());
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
                 answer.addMethod((String) iter.next());
             }
         }
-        
-        methods = getSelectByPrimaryKeyMethods(columnDefinitions, tableConfiguration, false, answer.getImportedTypes());
+
+        methods = getSelectByPrimaryKeyMethods(columnDefinitions,
+                tableConfiguration, false, answer.getImportedTypes());
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
                 answer.addMethod((String) iter.next());
             }
         }
-        
-        methods = getDeleteByExampleMethods(columnDefinitions, tableConfiguration, false, answer.getImportedTypes());
+
+        methods = getDeleteByExampleMethods(columnDefinitions,
+                tableConfiguration, false, answer.getImportedTypes());
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
                 answer.addMethod((String) iter.next());
             }
         }
-        
-        methods = getDeleteByPrimaryKeyMethods(columnDefinitions, tableConfiguration, false, answer.getImportedTypes());
+
+        methods = getDeleteByPrimaryKeyMethods(columnDefinitions,
+                tableConfiguration, false, answer.getImportedTypes());
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
                 answer.addMethod((String) iter.next());
             }
         }
-        
-        methods = getGetExampleParmsMethods(columnDefinitions, tableConfiguration, false, answer.getImportedTypes());
+
+        methods = getGetExampleParmsMethods(columnDefinitions,
+                tableConfiguration, false, answer.getImportedTypes());
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
                 answer.addMethod((String) iter.next());
             }
         }
-        
+
         return answer;
     }
-    
+
     protected GeneratedJavaFile getDAOInterface(
             ColumnDefinitions columnDefinitions,
             TableConfiguration tableConfiguration) {
         FullyQualifiedTable table = tableConfiguration.getTable();
-        GeneratedJavaFile answer = new GeneratedJavaFile(getDAOInterfaceType(table));
+        GeneratedJavaFile answer = new GeneratedJavaFile(
+                getDAOInterfaceType(table));
 
         answer.setJavaInterface(true);
 
@@ -311,7 +325,8 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
             answer.addImportedType((FullyQualifiedJavaType) iter.next());
         }
 
-        List methods = getInsertMethods(columnDefinitions, tableConfiguration, true, answer.getImportedTypes());
+        List methods = getInsertMethods(columnDefinitions, tableConfiguration,
+                true, answer.getImportedTypes());
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
@@ -319,91 +334,105 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
             }
         }
 
-        methods = getUpdateByPrimaryKeyMethods(columnDefinitions, tableConfiguration, true, answer.getImportedTypes());
+        methods = getUpdateByPrimaryKeyMethods(columnDefinitions,
+                tableConfiguration, true, answer.getImportedTypes());
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
                 answer.addMethod((String) iter.next());
             }
         }
-        
-        methods = getUpdateByPrimaryKeyWithBLOBsMethods(columnDefinitions, tableConfiguration, true, answer.getImportedTypes());
+
+        methods = getUpdateByPrimaryKeyWithBLOBsMethods(columnDefinitions,
+                tableConfiguration, true, answer.getImportedTypes());
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
                 answer.addMethod((String) iter.next());
             }
         }
-        
-        methods = getSelectByExampleMethods(columnDefinitions, tableConfiguration, true, answer.getImportedTypes());
+
+        methods = getSelectByExampleMethods(columnDefinitions,
+                tableConfiguration, true, answer.getImportedTypes());
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
                 answer.addMethod((String) iter.next());
             }
         }
-        
-        methods = getSelectByExampleWithBLOBsMethods(columnDefinitions, tableConfiguration, true, answer.getImportedTypes());
+
+        methods = getSelectByExampleWithBLOBsMethods(columnDefinitions,
+                tableConfiguration, true, answer.getImportedTypes());
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
                 answer.addMethod((String) iter.next());
             }
         }
-        
-        methods = getSelectByPrimaryKeyMethods(columnDefinitions, tableConfiguration, true, answer.getImportedTypes());
+
+        methods = getSelectByPrimaryKeyMethods(columnDefinitions,
+                tableConfiguration, true, answer.getImportedTypes());
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
                 answer.addMethod((String) iter.next());
             }
         }
-        
-        methods = getDeleteByExampleMethods(columnDefinitions, tableConfiguration, true, answer.getImportedTypes());
+
+        methods = getDeleteByExampleMethods(columnDefinitions,
+                tableConfiguration, true, answer.getImportedTypes());
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
                 answer.addMethod((String) iter.next());
             }
         }
-        
-        methods = getDeleteByPrimaryKeyMethods(columnDefinitions, tableConfiguration, true, answer.getImportedTypes());
+
+        methods = getDeleteByPrimaryKeyMethods(columnDefinitions,
+                tableConfiguration, true, answer.getImportedTypes());
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
                 answer.addMethod((String) iter.next());
             }
         }
-        
+
         return answer;
     }
-    
+
     public void setTargetProject(String targetProject) {
         this.targetProject = targetProject;
     }
 
     /*
-     *  (non-Javadoc)
-     * @see org.apache.ibatis.abator.api.DAOGenerator#getGeneratedJavaFiles(org.apache.ibatis.abator.internal.db.ColumnDefinitions, org.apache.ibatis.abator.config.TableConfiguration, org.apache.ibatis.abator.api.ProgressCallback)
+     * (non-Javadoc)
+     * 
+     * @see org.apache.ibatis.abator.api.DAOGenerator#getGeneratedJavaFiles(org.apache.ibatis.abator.internal.db.ColumnDefinitions,
+     *      org.apache.ibatis.abator.config.TableConfiguration,
+     *      org.apache.ibatis.abator.api.ProgressCallback)
      */
     public List getGeneratedJavaFiles(ColumnDefinitions columnDefinitions,
             TableConfiguration tableConfiguration, ProgressCallback callback) {
         List list = new ArrayList();
 
-		String tableName = tableConfiguration.getTable().getFullyQualifiedTableName();
-		
-	    callback.startSubTask("Generating DAO Implementation for table " + tableName);
+        String tableName = tableConfiguration.getTable()
+                .getFullyQualifiedTableName();
+
+        callback.startSubTask("Generating DAO Implementation for table "
+                + tableName);
         list.add(getDAOImplementation(columnDefinitions, tableConfiguration));
-        
-	    callback.startSubTask("Generating DAO Interface for table " + tableName);
+
+        callback
+                .startSubTask("Generating DAO Interface for table " + tableName);
         list.add(getDAOInterface(columnDefinitions, tableConfiguration));
 
         return list;
     }
-    
+
     protected List getInsertMethods(ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, boolean interfaceMethod, Set imports) {
-        
+            TableConfiguration tableConfiguration, boolean interfaceMethod,
+            Set imports) {
+
         if (!columnDefinitions.generateInsert(tableConfiguration)) {
             return null;
         }
@@ -411,22 +440,22 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
         String returnType;
         if (tableConfiguration.getGeneratedKey().isConfigured()) {
             ColumnDefinition cd = columnDefinitions
-                    .getColumn(tableConfiguration.getGeneratedKey()
-                            .getColumn());
+                    .getColumn(tableConfiguration.getGeneratedKey().getColumn());
             if (cd == null) {
-            	// the specified column doesn't exist, so don't do the generated key
-            	// (the warning has already been reported)
+                // the specified column doesn't exist, so don't do the generated
+                // key
+                // (the warning has already been reported)
                 returnType = "void"; //$NON-NLS-1$
             } else {
-            	FullyQualifiedJavaType fqjt = cd.getResolvedJavaType()
-                    .getFullyQualifiedJavaType();
-            	returnType = fqjt.getShortName();
-            	imports.add(fqjt);
+                FullyQualifiedJavaType fqjt = cd.getResolvedJavaType()
+                        .getFullyQualifiedJavaType();
+                returnType = fqjt.getShortName();
+                imports.add(fqjt);
             }
         } else {
             returnType = "void"; //$NON-NLS-1$
         }
-        
+
         StringBuffer buffer = new StringBuffer();
         FullyQualifiedTable table = tableConfiguration.getTable();
         buffer.append(getMethodComment(table));
@@ -438,8 +467,7 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
         buffer.append(returnType);
         buffer.append(" insert("); //$NON-NLS-1$
         if (columnDefinitions.generateRecordWithBLOBsExtendingPrimaryKey()
-                || columnDefinitions
-                        .generateRecordWithBLOBsExtendingRecord()) {
+                || columnDefinitions.generateRecordWithBLOBsExtendingRecord()) {
             buffer.append(javaModelGenerator.getRecordWithBLOBsType(table)
                     .getShortName());
             imports.add(javaModelGenerator.getRecordWithBLOBsType(table));
@@ -457,8 +485,9 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
         buffer.append(" record)"); //$NON-NLS-1$
         if (daoGeneratorTemplate.getCheckedExceptions().size() > 0) {
             buffer.append(" throws "); //$NON-NLS-1$
-            
-            Iterator iter = daoGeneratorTemplate.getCheckedExceptions().iterator();
+
+            Iterator iter = daoGeneratorTemplate.getCheckedExceptions()
+                    .iterator();
             boolean comma = false;
             while (iter.hasNext()) {
                 if (comma) {
@@ -466,13 +495,14 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
                 } else {
                     comma = true;
                 }
-                
-                FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter.next();
+
+                FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter
+                        .next();
                 buffer.append(fqjt.getShortName());
                 imports.add(fqjt);
             }
         }
-        
+
         if (interfaceMethod) {
             // generate the interface method
             buffer.append(';');
@@ -511,30 +541,36 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
             indent(buffer, 1);
             buffer.append('}');
         }
-        
+
         ArrayList answer = new ArrayList();
         answer.add(buffer.toString());
-        
+
         return answer;
     }
 
     /**
      * 
-     * @param columnDefinitions column definitions for the current table
-     * @param tableConfiguration table configuration for the current table
-     * @param interfaceMethod true if the method is an interface method, false if the
-     *   method is an implementation method
-     * @param imports the method can add FullyQualifiedJavaType objects to this set
-     *  if they are required by the resulting method
-     * @return a List of methods (as Strings).  A method includes Javadoc.
+     * @param columnDefinitions
+     *            column definitions for the current table
+     * @param tableConfiguration
+     *            table configuration for the current table
+     * @param interfaceMethod
+     *            true if the method is an interface method, false if the method
+     *            is an implementation method
+     * @param imports
+     *            the method can add FullyQualifiedJavaType objects to this set
+     *            if they are required by the resulting method
+     * @return a List of methods (as Strings). A method includes Javadoc.
      */
-    protected List getUpdateByPrimaryKeyMethods(ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, boolean interfaceMethod, Set imports) {
+    protected List getUpdateByPrimaryKeyMethods(
+            ColumnDefinitions columnDefinitions,
+            TableConfiguration tableConfiguration, boolean interfaceMethod,
+            Set imports) {
 
         if (!columnDefinitions.generateUpdateByPrimaryKey(tableConfiguration)) {
             return null;
         }
-        
+
         StringBuffer buffer = new StringBuffer();
         FullyQualifiedTable table = tableConfiguration.getTable();
         imports.add(javaModelGenerator.getRecordType(table));
@@ -546,13 +582,13 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
             buffer.append("public "); //$NON-NLS-1$
         }
         buffer.append("int updateByPrimaryKey("); //$NON-NLS-1$
-        buffer.append(javaModelGenerator.getRecordType(table)
-                .getShortName());
+        buffer.append(javaModelGenerator.getRecordType(table).getShortName());
         buffer.append(" record)"); //$NON-NLS-1$
         if (daoGeneratorTemplate.getCheckedExceptions().size() > 0) {
             buffer.append(" throws "); //$NON-NLS-1$
-            
-            Iterator iter = daoGeneratorTemplate.getCheckedExceptions().iterator();
+
+            Iterator iter = daoGeneratorTemplate.getCheckedExceptions()
+                    .iterator();
             boolean comma = false;
             while (iter.hasNext()) {
                 if (comma) {
@@ -560,13 +596,14 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
                 } else {
                     comma = true;
                 }
-                
-                FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter.next();
+
+                FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter
+                        .next();
                 buffer.append(fqjt.getShortName());
                 imports.add(fqjt);
             }
         }
-        
+
         if (interfaceMethod) {
             // generate the interface method
             buffer.append(';');
@@ -593,20 +630,23 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
             indent(buffer, 1);
             buffer.append('}');
         }
-        
+
         ArrayList answer = new ArrayList();
         answer.add(buffer.toString());
-        
+
         return answer;
     }
 
-    protected List getUpdateByPrimaryKeyWithBLOBsMethods(ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, boolean interfaceMethod, Set imports) {
+    protected List getUpdateByPrimaryKeyWithBLOBsMethods(
+            ColumnDefinitions columnDefinitions,
+            TableConfiguration tableConfiguration, boolean interfaceMethod,
+            Set imports) {
 
-        if (!columnDefinitions.generateUpdateByPrimaryKeyWithBLOBs(tableConfiguration)) {
+        if (!columnDefinitions
+                .generateUpdateByPrimaryKeyWithBLOBs(tableConfiguration)) {
             return null;
         }
-        
+
         StringBuffer buffer = new StringBuffer();
         FullyQualifiedTable table = tableConfiguration.getTable();
         imports.add(javaModelGenerator.getRecordWithBLOBsType(table));
@@ -623,8 +663,9 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
         buffer.append(" record)"); //$NON-NLS-1$
         if (daoGeneratorTemplate.getCheckedExceptions().size() > 0) {
             buffer.append(" throws "); //$NON-NLS-1$
-            
-            Iterator iter = daoGeneratorTemplate.getCheckedExceptions().iterator();
+
+            Iterator iter = daoGeneratorTemplate.getCheckedExceptions()
+                    .iterator();
             boolean comma = false;
             while (iter.hasNext()) {
                 if (comma) {
@@ -632,8 +673,9 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
                 } else {
                     comma = true;
                 }
-                
-                FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter.next();
+
+                FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter
+                        .next();
                 buffer.append(fqjt.getShortName());
                 imports.add(fqjt);
             }
@@ -666,26 +708,28 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
             indent(buffer, 1);
             buffer.append('}');
         }
-        
+
         ArrayList answer = new ArrayList();
         answer.add(buffer.toString());
-        
+
         return answer;
     }
 
-    protected List getSelectByExampleMethods(ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, boolean interfaceMethod, Set imports) {
+    protected List getSelectByExampleMethods(
+            ColumnDefinitions columnDefinitions,
+            TableConfiguration tableConfiguration, boolean interfaceMethod,
+            Set imports) {
 
         if (!columnDefinitions.generateSelectByExample(tableConfiguration)) {
             return null;
         }
-        
+
         StringBuffer buffer1 = new StringBuffer();
         StringBuffer buffer2 = new StringBuffer();
         FullyQualifiedTable table = tableConfiguration.getTable();
         imports.add(javaModelGenerator.getExampleType(table));
         imports.add(new FullyQualifiedJavaType("java.util.List")); //$NON-NLS-1$
-        
+
         buffer1.append(getMethodComment(table));
         newLine(buffer1);
         indent(buffer1, 1);
@@ -693,10 +737,9 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
             buffer1.append("public "); //$NON-NLS-1$
         }
         buffer1.append("List selectByExample("); //$NON-NLS-1$
-        buffer1.append(javaModelGenerator.getExampleType(table)
-                .getShortName());
+        buffer1.append(javaModelGenerator.getExampleType(table).getShortName());
         buffer1.append(" example, String orderByClause)"); //$NON-NLS-1$
-        
+
         buffer2.append(getMethodComment(table));
         newLine(buffer2);
         indent(buffer2, 1);
@@ -704,15 +747,15 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
             buffer2.append("public "); //$NON-NLS-1$
         }
         buffer2.append("List selectByExample("); //$NON-NLS-1$
-        buffer2.append(javaModelGenerator.getExampleType(table)
-                .getShortName());
+        buffer2.append(javaModelGenerator.getExampleType(table).getShortName());
         buffer2.append(" example)"); //$NON-NLS-1$
 
         if (daoGeneratorTemplate.getCheckedExceptions().size() > 0) {
             buffer1.append(" throws "); //$NON-NLS-1$
             buffer2.append(" throws "); //$NON-NLS-1$
-            
-            Iterator iter = daoGeneratorTemplate.getCheckedExceptions().iterator();
+
+            Iterator iter = daoGeneratorTemplate.getCheckedExceptions()
+                    .iterator();
             boolean comma = false;
             while (iter.hasNext()) {
                 if (comma) {
@@ -721,14 +764,15 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
                 } else {
                     comma = true;
                 }
-                
-                FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter.next();
+
+                FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter
+                        .next();
                 buffer1.append(fqjt.getShortName());
                 buffer2.append(fqjt.getShortName());
                 imports.add(fqjt);
             }
         }
-        
+
         if (interfaceMethod) {
             // generate the interface method
             buffer1.append(';');
@@ -775,7 +819,7 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
             buffer1.append('}');
 
             buffer2.append(" {"); //$NON-NLS-1$
-            
+
             newLine(buffer2);
             indent(buffer2, 2);
             buffer2.append("return selectByExample(example, null);"); //$NON-NLS-1$
@@ -787,23 +831,26 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
         ArrayList answer = new ArrayList();
         answer.add(buffer1.toString());
         answer.add(buffer2.toString());
-        
+
         return answer;
     }
 
-    protected List getSelectByExampleWithBLOBsMethods(ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, boolean interfaceMethod, Set imports) {
+    protected List getSelectByExampleWithBLOBsMethods(
+            ColumnDefinitions columnDefinitions,
+            TableConfiguration tableConfiguration, boolean interfaceMethod,
+            Set imports) {
 
-        if (!columnDefinitions.generateSelectByExampleWithBLOBs(tableConfiguration)) {
+        if (!columnDefinitions
+                .generateSelectByExampleWithBLOBs(tableConfiguration)) {
             return null;
         }
-        
+
         StringBuffer buffer1 = new StringBuffer();
         StringBuffer buffer2 = new StringBuffer();
         FullyQualifiedTable table = tableConfiguration.getTable();
         imports.add(javaModelGenerator.getExampleType(table));
         imports.add(new FullyQualifiedJavaType("java.util.List")); //$NON-NLS-1$
-        
+
         buffer1.append(getMethodComment(table));
         newLine(buffer1);
         indent(buffer1, 1);
@@ -811,8 +858,7 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
             buffer1.append("public "); //$NON-NLS-1$
         }
         buffer1.append("List selectByExampleWithBLOBs("); //$NON-NLS-1$
-        buffer1.append(javaModelGenerator.getExampleType(table)
-                .getShortName());
+        buffer1.append(javaModelGenerator.getExampleType(table).getShortName());
         buffer1.append(" example, String orderByClause)"); //$NON-NLS-1$
 
         buffer2.append(getMethodComment(table));
@@ -822,15 +868,15 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
             buffer2.append("public "); //$NON-NLS-1$
         }
         buffer2.append("List selectByExampleWithBLOBs("); //$NON-NLS-1$
-        buffer2.append(javaModelGenerator.getExampleType(table)
-                .getShortName());
+        buffer2.append(javaModelGenerator.getExampleType(table).getShortName());
         buffer2.append(" example)"); //$NON-NLS-1$
 
         if (daoGeneratorTemplate.getCheckedExceptions().size() > 0) {
             buffer1.append(" throws "); //$NON-NLS-1$
             buffer2.append(" throws "); //$NON-NLS-1$
-            
-            Iterator iter = daoGeneratorTemplate.getCheckedExceptions().iterator();
+
+            Iterator iter = daoGeneratorTemplate.getCheckedExceptions()
+                    .iterator();
             boolean comma = false;
             while (iter.hasNext()) {
                 if (comma) {
@@ -839,14 +885,15 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
                 } else {
                     comma = true;
                 }
-                
-                FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter.next();
+
+                FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter
+                        .next();
                 buffer1.append(fqjt.getShortName());
                 buffer2.append(fqjt.getShortName());
                 imports.add(fqjt);
             }
         }
-        
+
         if (interfaceMethod) {
             // generate the interface method
             buffer1.append(';');
@@ -901,25 +948,27 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
             indent(buffer2, 1);
             buffer2.append('}');
         }
-        
+
         ArrayList answer = new ArrayList();
         answer.add(buffer1.toString());
         answer.add(buffer2.toString());
-        
+
         return answer;
     }
 
-    protected List getSelectByPrimaryKeyMethods(ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, boolean interfaceMethod, Set imports) {
+    protected List getSelectByPrimaryKeyMethods(
+            ColumnDefinitions columnDefinitions,
+            TableConfiguration tableConfiguration, boolean interfaceMethod,
+            Set imports) {
 
         if (!columnDefinitions.generateSelectByPrimaryKey(tableConfiguration)) {
             return null;
         }
-        
+
         StringBuffer buffer = new StringBuffer();
         FullyQualifiedTable table = tableConfiguration.getTable();
         imports.add(javaModelGenerator.getPrimaryKeyType(table));
-        
+
         buffer.append(getMethodComment(table));
         newLine(buffer);
         indent(buffer, 1);
@@ -927,11 +976,10 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
         if (!interfaceMethod) {
             buffer.append("public "); //$NON-NLS-1$
         }
-        
+
         FullyQualifiedJavaType returnType;
         if (columnDefinitions.generateRecordWithBLOBsExtendingPrimaryKey()
-                || columnDefinitions
-                        .generateRecordWithBLOBsExtendingRecord()) {
+                || columnDefinitions.generateRecordWithBLOBsExtendingRecord()) {
             returnType = javaModelGenerator.getRecordWithBLOBsType(table);
 
         } else {
@@ -946,8 +994,9 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
         buffer.append(" key)"); //$NON-NLS-1$
         if (daoGeneratorTemplate.getCheckedExceptions().size() > 0) {
             buffer.append(" throws "); //$NON-NLS-1$
-            
-            Iterator iter = daoGeneratorTemplate.getCheckedExceptions().iterator();
+
+            Iterator iter = daoGeneratorTemplate.getCheckedExceptions()
+                    .iterator();
             boolean comma = false;
             while (iter.hasNext()) {
                 if (comma) {
@@ -955,13 +1004,14 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
                 } else {
                     comma = true;
                 }
-                
-                FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter.next();
+
+                FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter
+                        .next();
                 buffer.append(fqjt.getShortName());
                 imports.add(fqjt);
             }
         }
-        
+
         if (interfaceMethod) {
             // generate the interface method
             buffer.append(';');
@@ -991,20 +1041,22 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
             indent(buffer, 1);
             buffer.append('}');
         }
-        
+
         ArrayList answer = new ArrayList();
         answer.add(buffer.toString());
-        
+
         return answer;
     }
 
-    protected List getDeleteByExampleMethods(ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, boolean interfaceMethod, Set imports) {
+    protected List getDeleteByExampleMethods(
+            ColumnDefinitions columnDefinitions,
+            TableConfiguration tableConfiguration, boolean interfaceMethod,
+            Set imports) {
 
         if (!columnDefinitions.generateDeleteByExample(tableConfiguration)) {
             return null;
         }
-        
+
         StringBuffer buffer = new StringBuffer();
         FullyQualifiedTable table = tableConfiguration.getTable();
         imports.add(javaModelGenerator.getExampleType(table));
@@ -1016,13 +1068,13 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
             buffer.append("public "); //$NON-NLS-1$
         }
         buffer.append("int deleteByExample("); //$NON-NLS-1$
-        buffer.append(javaModelGenerator.getExampleType(table)
-                .getShortName());
+        buffer.append(javaModelGenerator.getExampleType(table).getShortName());
         buffer.append(" example)"); //$NON-NLS-1$
         if (daoGeneratorTemplate.getCheckedExceptions().size() > 0) {
             buffer.append(" throws "); //$NON-NLS-1$
-            
-            Iterator iter = daoGeneratorTemplate.getCheckedExceptions().iterator();
+
+            Iterator iter = daoGeneratorTemplate.getCheckedExceptions()
+                    .iterator();
             boolean comma = false;
             while (iter.hasNext()) {
                 if (comma) {
@@ -1030,13 +1082,14 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
                 } else {
                     comma = true;
                 }
-                
-                FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter.next();
+
+                FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter
+                        .next();
                 buffer.append(fqjt.getShortName());
                 imports.add(fqjt);
             }
         }
-        
+
         if (interfaceMethod) {
             // generate the interface method
             buffer.append(';');
@@ -1066,17 +1119,19 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
 
         ArrayList answer = new ArrayList();
         answer.add(buffer.toString());
-        
+
         return answer;
     }
 
-    protected List getDeleteByPrimaryKeyMethods(ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, boolean interfaceMethod, Set imports) {
+    protected List getDeleteByPrimaryKeyMethods(
+            ColumnDefinitions columnDefinitions,
+            TableConfiguration tableConfiguration, boolean interfaceMethod,
+            Set imports) {
 
         if (!columnDefinitions.generateDeleteByPrimaryKey(tableConfiguration)) {
             return null;
         }
-        
+
         StringBuffer buffer = new StringBuffer();
         FullyQualifiedTable table = tableConfiguration.getTable();
         imports.add(javaModelGenerator.getPrimaryKeyType(table));
@@ -1093,8 +1148,9 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
         buffer.append(" key)"); //$NON-NLS-1$
         if (daoGeneratorTemplate.getCheckedExceptions().size() > 0) {
             buffer.append(" throws "); //$NON-NLS-1$
-            
-            Iterator iter = daoGeneratorTemplate.getCheckedExceptions().iterator();
+
+            Iterator iter = daoGeneratorTemplate.getCheckedExceptions()
+                    .iterator();
             boolean comma = false;
             while (iter.hasNext()) {
                 if (comma) {
@@ -1102,8 +1158,9 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
                 } else {
                     comma = true;
                 }
-                
-                FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter.next();
+
+                FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter
+                        .next();
                 buffer.append(fqjt.getShortName());
                 imports.add(fqjt);
             }
@@ -1138,55 +1195,58 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
 
         ArrayList answer = new ArrayList();
         answer.add(buffer.toString());
-        
+
         return answer;
     }
 
-    protected List getGetExampleParmsMethods(ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, boolean interfaceMethod, Set imports) {
-    
+    protected List getGetExampleParmsMethods(
+            ColumnDefinitions columnDefinitions,
+            TableConfiguration tableConfiguration, boolean interfaceMethod,
+            Set imports) {
+
         if (!columnDefinitions.generateDeleteByExample(tableConfiguration)
-                && !columnDefinitions.generateSelectByExample(tableConfiguration)) {
+                && !columnDefinitions
+                        .generateSelectByExample(tableConfiguration)) {
             return null;
         }
-        
+
         if (interfaceMethod) {
             return null;
         }
-        
+
         ArrayList answer = new ArrayList();
-        
+
         StringBuffer buffer = new StringBuffer();
         FullyQualifiedTable table = tableConfiguration.getTable();
-        
+
         imports.add(new FullyQualifiedJavaType("java.util.Map")); //$NON-NLS-1$
         imports.add(new FullyQualifiedJavaType("java.util.HashMap")); //$NON-NLS-1$
         imports.add(javaModelGenerator.getExampleType(table));
-    
+
         buffer.append(getMethodComment(table));
         newLine(buffer);
         indent(buffer, 1);
         buffer.append("private Map getExampleParms("); //$NON-NLS-1$
         buffer.append(javaModelGenerator.getExampleType(table).getShortName());
         buffer.append(" example) {"); //$NON-NLS-1$
-    
+
         newLine(buffer);
         indent(buffer, 2);
         buffer.append("Map parms = new HashMap();"); //$NON-NLS-1$
         newLine(buffer);
-    
+
         Iterator iter = columnDefinitions.getAllColumns().iterator();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
-    
+
             if (cd.isBLOBColumn()) {
                 continue;
             }
-            
+
             String method = getExampleParmsMethod(cd, table);
             if (method != null) {
                 answer.add(method);
-                
+
                 newLine(buffer);
                 indent(buffer, 2);
                 buffer.append("parms.putAll(get"); //$NON-NLS-1$
@@ -1194,7 +1254,7 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
                 buffer.append("ExampleParms(example));"); //$NON-NLS-1$
             }
         }
-    
+
         newLine(buffer);
         newLine(buffer);
         indent(buffer, 2);
@@ -1202,38 +1262,43 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
         newLine(buffer);
         indent(buffer, 1);
         buffer.append('}');
-    
+
         answer.add(buffer.toString());
-        
+
         return answer;
     }
-    
+
     /**
-     * This method returns a properly formatted method that sets up
-     * example parms for an individual column.  In the generated DAO, the 
-     * method will be called by the <code>getExampleParms</code> method.
-     * The expectation is that there will be one column based method for each
-     * column in the table (except BLOB columns).  We do it this way to avoid
-     * generating one huge method - which in some cases can actually be too
-     * large to compile.  The generated method should have this signature:
+     * This method returns a properly formatted method that sets up example
+     * parms for an individual column. In the generated DAO, the method will be
+     * called by the <code>getExampleParms</code> method. The expectation is
+     * that there will be one column based method for each column in the table
+     * (except BLOB columns). We do it this way to avoid generating one huge
+     * method - which in some cases can actually be too large to compile. The
+     * generated method should have this signature:
      * 
      * <pre>
-     *    private Map getXXXXExampleParms(YYYY example)
+     * 
+     *     private Map getXXXXExampleParms(YYYY example)
+     *  
      * </pre>
      * 
      * Where XXXX is the column name and YYYY is the example class
      * 
-     * @param cd the column for which the method should be generated
-     * @param table the table in which the column exists
+     * @param cd
+     *            the column for which the method should be generated
+     * @param table
+     *            the table in which the column exists
      * @return the properly formatted method
      */
-    protected String getExampleParmsMethod(ColumnDefinition cd, FullyQualifiedTable table) {
+    protected String getExampleParmsMethod(ColumnDefinition cd,
+            FullyQualifiedTable table) {
         if (cd.isBLOBColumn()) {
             return null;
         }
-        
+
         StringBuffer buffer = new StringBuffer();
-        
+
         buffer.append(getMethodComment(table));
         newLine(buffer);
         indent(buffer, 1);
@@ -1242,7 +1307,7 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
         buffer.append("ExampleParms("); //$NON-NLS-1$
         buffer.append(javaModelGenerator.getExampleType(table).getShortName());
         buffer.append(" example) {"); //$NON-NLS-1$
-    
+
         newLine(buffer);
         indent(buffer, 2);
         buffer.append("Map parms = new HashMap();"); //$NON-NLS-1$
@@ -1298,23 +1363,24 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
                 buffer.append("parms.put(\""); //$NON-NLS-1$
                 buffer.append(exampleProperty);
                 buffer.append("\", "); //$NON-NLS-1$
-                FullyQualifiedJavaType fqjt = cd.getResolvedJavaType().getFullyQualifiedJavaType();
+                FullyQualifiedJavaType fqjt = cd.getResolvedJavaType()
+                        .getFullyQualifiedJavaType();
                 if (fqjt.isPrimitive()) {
                     buffer.append("new "); //$NON-NLS-1$
                     buffer.append(fqjt.getWrapperClass());
                     buffer.append('(');
                     buffer.append("example."); //$NON-NLS-1$
                     buffer.append(JavaBeansUtil
-                        .getGetterMethodName(exampleProperty));
+                            .getGetterMethodName(exampleProperty));
                     buffer.append("()));"); //$NON-NLS-1$
                 } else {
                     buffer.append("example."); //$NON-NLS-1$
                     buffer.append(JavaBeansUtil
-                        .getGetterMethodName(exampleProperty));
+                            .getGetterMethodName(exampleProperty));
                     buffer.append("());"); //$NON-NLS-1$
                 }
             }
-            
+
             newLine(buffer);
             indent(buffer, 3);
             buffer.append("break;"); //$NON-NLS-1$
@@ -1323,7 +1389,7 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
 
         indent(buffer, 2);
         buffer.append('}');
-        
+
         newLine(buffer);
         newLine(buffer);
         indent(buffer, 2);
@@ -1331,14 +1397,16 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator impleme
         newLine(buffer);
         indent(buffer, 1);
         buffer.append('}');
-        
+
         return buffer.toString();
     }
-    
-	/* (non-Javadoc)
-	 * @see org.apache.ibatis.abator.api.DAOGenerator#setWarnings(java.util.List)
-	 */
-	public void setWarnings(List warnings) {
-		this.warnings = warnings;
-	}
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.ibatis.abator.api.DAOGenerator#setWarnings(java.util.List)
+     */
+    public void setWarnings(List warnings) {
+        this.warnings = warnings;
+    }
 }
