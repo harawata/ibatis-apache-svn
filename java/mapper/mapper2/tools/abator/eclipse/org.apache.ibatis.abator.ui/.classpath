@@ -4,5 +4,6 @@
 	<classpathentry output="antbin" kind="src" path="antsrc"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry sourcepath="/org.apache.ibatis.abator.core/abator-src.zip" kind="lib" path="/org.apache.ibatis.abator.core/abator.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

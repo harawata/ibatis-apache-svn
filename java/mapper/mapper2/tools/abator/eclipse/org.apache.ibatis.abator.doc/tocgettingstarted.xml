@@ -12,5 +12,6 @@
 	</topic>
 	<topic label="Design Philosophy"  href="html/gettingstarted/philosophy.html"/> 
 	<topic label="Future Roadmap"  href="html/gettingstarted/roadmap.html"/> 
+	<topic label="Release Notes"  href="html/gettingstarted/releasenotes.html"/> 
 	<topic label="Licensing Information"  href="html/gettingstarted/license.html"/> 
 </toc>

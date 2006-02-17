@@ -51,104 +51,106 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.text.edits.TextEdit;
 
 /**
- * This class handles the task of merging changes into an existing Java
- * file.
+ * This class handles the task of merging changes into an existing Java file.
  * 
  * @author Jeff Butler
  */
 public class JavaFileMerger {
 
-	private GeneratedJavaFile generatedJavaFile;
+    private GeneratedJavaFile generatedJavaFile;
 
-	private IFile existingFile;
+    private IFile existingFile;
 
-	private class GatherNewItemsVisitor extends ASTVisitor {
-		private List methods;
-		private List fields;
+    private class GatherNewItemsVisitor extends ASTVisitor {
+        private List methods;
 
-		/**
-		 * 
-		 */
-		public GatherNewItemsVisitor() {
-			super();
-			methods = new ArrayList();
-			fields = new ArrayList();
-		}
+        private List fields;
 
-		public boolean visit(FieldDeclaration node) {
-			fields.add(node);
-			
-			return false;
-		}
-		public boolean visit(MethodDeclaration node) {
-			methods.add(node);
+        /**
+         *  
+         */
+        public GatherNewItemsVisitor() {
+            super();
+            methods = new ArrayList();
+            fields = new ArrayList();
+        }
 
-			return false;
-		}
-		
-		public List getFields() {
-			return fields;
-		}
-		
-		public List getMethods() {
-			return methods;
-		}
-	};
-	
-	private class ExistingJavaFileVisitor extends ASTVisitor {
-		private TypeDeclaration typeDeclaration;
-		private CompilationUnit compilationUnit;
-		
-		/**
-		 * 
-		 */
-		public ExistingJavaFileVisitor(CompilationUnit compilationUnit) {
-			super();
-			this.compilationUnit = compilationUnit;
-		}
+        public boolean visit(FieldDeclaration node) {
+            fields.add(node);
 
-		/**
-		 * Find the Abator generated fields and delete them
-		 */
-		public boolean visit(FieldDeclaration node) {
-			Javadoc jd = node.getJavadoc();
-			if (jd != null) {
-				List tags = jd.tags();
-				Iterator tagIterator = tags.iterator();
-				while (tagIterator.hasNext()) {
-					TagElement tag = (TagElement) tagIterator.next();
-					String tagName = tag.getTagName();
-					if ("@abatorgenerated".equals(tagName)) {
-						node.delete();
-						break;
-					}
-				}
-			}
-			
-			return false;
-		}
-		
-		/**
-		 * Find the Abator generated methods and delete them
-		 */
-		public boolean visit(MethodDeclaration node) {
-			Javadoc jd = node.getJavadoc();
-			if (jd != null) {
-				List tags = jd.tags();
-				Iterator tagIterator = tags.iterator();
-				while (tagIterator.hasNext()) {
-					TagElement tag = (TagElement) tagIterator.next();
-					String tagName = tag.getTagName();
-					if ("@abatorgenerated".equals(tagName)) {
-						node.delete();
-						break;
-					}
-				}
-			}
-			
-			return false;
-		}
-		
+            return false;
+        }
+
+        public boolean visit(MethodDeclaration node) {
+            methods.add(node);
+
+            return false;
+        }
+
+        public List getFields() {
+            return fields;
+        }
+
+        public List getMethods() {
+            return methods;
+        }
+    };
+
+    private class ExistingJavaFileVisitor extends ASTVisitor {
+        private TypeDeclaration typeDeclaration;
+
+        private CompilationUnit compilationUnit;
+
+        /**
+         *  
+         */
+        public ExistingJavaFileVisitor(CompilationUnit compilationUnit) {
+            super();
+            this.compilationUnit = compilationUnit;
+        }
+
+        /**
+         * Find the Abator generated fields and delete them
+         */
+        public boolean visit(FieldDeclaration node) {
+            Javadoc jd = node.getJavadoc();
+            if (jd != null) {
+                List tags = jd.tags();
+                Iterator tagIterator = tags.iterator();
+                while (tagIterator.hasNext()) {
+                    TagElement tag = (TagElement) tagIterator.next();
+                    String tagName = tag.getTagName();
+                    if ("@abatorgenerated".equals(tagName)) {
+                        node.delete();
+                        break;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /**
+         * Find the Abator generated methods and delete them
+         */
+        public boolean visit(MethodDeclaration node) {
+            Javadoc jd = node.getJavadoc();
+            if (jd != null) {
+                List tags = jd.tags();
+                Iterator tagIterator = tags.iterator();
+                while (tagIterator.hasNext()) {
+                    TagElement tag = (TagElement) tagIterator.next();
+                    String tagName = tag.getTagName();
+                    if ("@abatorgenerated".equals(tagName)) {
+                        node.delete();
+                        break;
+                    }
+                }
+            }
+
+            return false;
+        }
+
         public boolean visit(TypeDeclaration node) {
             // make sure we only pick up the top level public type
             if (node.getParent().equals(compilationUnit)
@@ -159,208 +161,221 @@ public class JavaFileMerger {
                 return false;
             }
         }
-        
+
         public TypeDeclaration getTypeDeclaration() {
             return typeDeclaration;
         }
-	};
-	
-	/**
-	 *  
-	 */
-	public JavaFileMerger(GeneratedJavaFile generatedJavaFile,
-			IFile existingFile) {
-		super();
-		this.generatedJavaFile = generatedJavaFile;
-		this.existingFile = existingFile;
-	}
+    };
 
-	public String getMergedSource() throws CoreException {
-		ASTParser astParser = ASTParser.newParser(AST.JLS2);
+    /**
+     *  
+     */
+    public JavaFileMerger(GeneratedJavaFile generatedJavaFile,
+            IFile existingFile) {
+        super();
+        this.generatedJavaFile = generatedJavaFile;
+        this.existingFile = existingFile;
+    }
 
-		ICompilationUnit icu = JavaCore.createCompilationUnitFrom(existingFile);
-		IDocument document = new Document(icu.getSource());
+    public String getMergedSource() throws CoreException {
+        ASTParser astParser = ASTParser.newParser(AST.JLS2);
 
-		// delete Abator generated stuff, and collect imports
-		astParser.setSource(icu);
-		CompilationUnit cu = (CompilationUnit) astParser.createAST(null);
-		AST ast = cu.getAST();
-		
-		ExistingJavaFileVisitor visitor = new ExistingJavaFileVisitor(cu);
+        ICompilationUnit icu = JavaCore.createCompilationUnitFrom(existingFile);
+        IDocument document = new Document(icu.getSource());
 
-		cu.recordModifications();
-		cu.accept(visitor);
-		
-		TypeDeclaration typeDeclaration = visitor.getTypeDeclaration();
-		if (typeDeclaration == null) {
-			Status status = new Status(IStatus.ERROR, AbatorUIPlugin
-					.getPluginId(), IStatus.ERROR,
-					"No public types defined in the file " + existingFile.getName(), null);
-			throw new CoreException(status);
-		}
+        // delete Abator generated stuff, and collect imports
+        astParser.setSource(icu);
+        CompilationUnit cu = (CompilationUnit) astParser.createAST(null);
+        AST ast = cu.getAST();
 
-		// reconcile the superinterfaces
-		List newSuperInterfaces = getNewSuperInterfaces(typeDeclaration.superInterfaces());
-		Iterator iter = newSuperInterfaces.iterator();
-		while (iter.hasNext()) {
-		    FullyQualifiedJavaType newSuperInterface = (FullyQualifiedJavaType) iter.next();
-		    typeDeclaration.superInterfaces().add(ast.newSimpleName(newSuperInterface.getShortName()));
-		}
-		
-		// set the superclass
-		if (generatedJavaFile.getSuperClass() != null) {
-		    typeDeclaration.setSuperclass(ast.newSimpleName(generatedJavaFile.getSuperClass().getShortName()));
-		} else {
-		    typeDeclaration.setSuperclass(null);
-		}
-		
-		// interface or class?
-		if (generatedJavaFile.isJavaInterface()) {
-		    typeDeclaration.setInterface(true);
-		} else {
-		    typeDeclaration.setInterface(false);
-		}
-		
-		// reconcile the imports
-		List newImports = getNewImports(cu.imports());
-		iter = newImports.iterator();
-		while (iter.hasNext()) {
-		    String[] newImport = (String[]) iter.next();
-		    ImportDeclaration newImportDeclaration = ast.newImportDeclaration();
-		    newImportDeclaration.setName(ast.newName(newImport));
-		    cu.imports().add(newImportDeclaration);
-		}
+        ExistingJavaFileVisitor visitor = new ExistingJavaFileVisitor(cu);
 
-		TextEdit textEdit = cu.rewrite(document, null);
-		try {
-			textEdit.apply(document);
-		} catch (BadLocationException e) {
-			Status status = new Status(IStatus.ERROR, AbatorUIPlugin
-					.getPluginId(), IStatus.ERROR,
-					"BadLocationException removing prior fields and methods", e);
-			throw new CoreException(status);
-		}
+        cu.recordModifications();
+        cu.accept(visitor);
 
-		// regenerate the CompilationUnit to reflect all the deletes
-		astParser.setSource(document.get().toCharArray());
-		CompilationUnit strippedCu = (CompilationUnit) astParser
-				.createAST(null);
+        TypeDeclaration typeDeclaration = visitor.getTypeDeclaration();
+        if (typeDeclaration == null) {
+            Status status = new Status(IStatus.ERROR, AbatorUIPlugin
+                    .getPluginId(), IStatus.ERROR,
+                    "No public types defined in the file "
+                            + existingFile.getName(), null);
+            throw new CoreException(status);
+        }
 
-		// find the top level public type declaration
-		TypeDeclaration topLevelType = null;
-	    iter = strippedCu.types().iterator();
-	    while (iter.hasNext()) {
-	        TypeDeclaration td = (TypeDeclaration) iter.next();
-	        if (td.getParent().equals(strippedCu)
-	                && (td.getModifiers() & Modifier.PUBLIC) > 0) {
-	            topLevelType = td;
-	            break;
-	        }
-	    }
-		    
-		// Now parse all the new fields and methods, then gather the new
-		// methods and fields with a visitor
-		astParser.setSource(generatedJavaFile.getContent().toCharArray());
-		CompilationUnit newCu = (CompilationUnit) astParser.createAST(null);
+        // reconcile the superinterfaces
+        List newSuperInterfaces = getNewSuperInterfaces(typeDeclaration
+                .superInterfaces());
+        Iterator iter = newSuperInterfaces.iterator();
+        while (iter.hasNext()) {
+            FullyQualifiedJavaType newSuperInterface = (FullyQualifiedJavaType) iter
+                    .next();
+            typeDeclaration.superInterfaces().add(
+                    ast.newSimpleName(newSuperInterface.getShortName()));
+        }
 
-		GatherNewItemsVisitor newVisitor = new GatherNewItemsVisitor();
+        // set the superclass
+        if (generatedJavaFile.getSuperClass() != null) {
+            typeDeclaration.setSuperclass(ast.newSimpleName(generatedJavaFile
+                    .getSuperClass().getShortName()));
+        } else {
+            typeDeclaration.setSuperclass(null);
+        }
 
-		newCu.accept(newVisitor);
+        // interface or class?
+        if (generatedJavaFile.isJavaInterface()) {
+            typeDeclaration.setInterface(true);
+        } else {
+            typeDeclaration.setInterface(false);
+        }
 
-		// now add all the new methods and fields to the existing
-		// CompilationUnit with a ListRewrite
-		ASTRewrite rewrite = ASTRewrite.create(topLevelType.getRoot().getAST());
-		ListRewrite listRewrite = rewrite.getListRewrite(topLevelType,
-				TypeDeclaration.BODY_DECLARATIONS_PROPERTY);
+        // reconcile the imports
+        List newImports = getNewImports(cu.imports());
+        iter = newImports.iterator();
+        while (iter.hasNext()) {
+            String[] newImport = (String[]) iter.next();
+            ImportDeclaration newImportDeclaration = ast.newImportDeclaration();
+            newImportDeclaration.setName(ast.newName(newImport));
+            cu.imports().add(newImportDeclaration);
+        }
 
-		iter = newVisitor.getFields().iterator();
-		int i = 0;
-		while (iter.hasNext()) {
-			listRewrite.insertAt((ASTNode) iter.next(), i++, null);
-		}
+        TextEdit textEdit = cu.rewrite(document, null);
+        try {
+            textEdit.apply(document);
+        } catch (BadLocationException e) {
+            Status status = new Status(IStatus.ERROR, AbatorUIPlugin
+                    .getPluginId(), IStatus.ERROR,
+                    "BadLocationException removing prior fields and methods", e);
+            throw new CoreException(status);
+        }
 
-		iter = newVisitor.getMethods().iterator();
-		while (iter.hasNext()) {
-			listRewrite.insertAt((ASTNode) iter.next(), i++, null);
-		}
+        // regenerate the CompilationUnit to reflect all the deletes
+        astParser.setSource(document.get().toCharArray());
+        CompilationUnit strippedCu = (CompilationUnit) astParser
+                .createAST(null);
 
-		textEdit = rewrite.rewriteAST(document, null);
-		try {
-			textEdit.apply(document);
-		} catch (BadLocationException e) {
-			Status status = new Status(IStatus.ERROR, AbatorUIPlugin
-				.getPluginId(), IStatus.ERROR,
-				"BadLocationException adding new fields and methods", e);
-			throw new CoreException(status);
-		}
-		
-		String newSource = document.get();
-		return newSource;
-	}
-	
-	private List getNewSuperInterfaces(List existingInterfaces) {
-	    List answer = new ArrayList();
-	    
-	    Iterator newInterfaces = generatedJavaFile.getSuperInterfaceTypes().iterator();
-	    while (newInterfaces.hasNext()) {
-	        FullyQualifiedJavaType newInterface = (FullyQualifiedJavaType) newInterfaces.next();
-		    Iterator iter = existingInterfaces.iterator();
-		    boolean found = false;
-		    while (iter.hasNext()) {
-		        Name name = (Name) iter.next();
-		        if (name.isSimpleName()) {
-		            if (((SimpleName) name).getIdentifier().equals(newInterface.getShortName())) {
-		                found = true;
-		            }
-		        } else {
-		            if (((QualifiedName) name).getName().getIdentifier().equals(newInterface.getShortName())) {
-		                found = true;
-		            }
-		        }
-		    }
-		    
-		    if (!found) {
-		        answer.add(newInterface);
-		    }
-	    }
-	    
-	    return answer;
-	}
+        // find the top level public type declaration
+        TypeDeclaration topLevelType = null;
+        iter = strippedCu.types().iterator();
+        while (iter.hasNext()) {
+            TypeDeclaration td = (TypeDeclaration) iter.next();
+            if (td.getParent().equals(strippedCu)
+                    && (td.getModifiers() & Modifier.PUBLIC) > 0) {
+                topLevelType = td;
+                break;
+            }
+        }
 
-	private List getNewImports(List existingImports) {
-	    List answer = new ArrayList();
-	    
-	    Iterator newImports = generatedJavaFile.getImportedTypes().iterator();
-	    while (newImports.hasNext()) {
-	        FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) newImports.next();
-	        
-		    Iterator iter = existingImports.iterator();
-		    boolean found = false;
-		    while (iter.hasNext()) {
-		        ImportDeclaration existingImport = (ImportDeclaration) iter.next();
-		        if (existingImport.getName().getFullyQualifiedName().equals(fqjt.getFullyQualifiedName())) {
-		            found = true;
-		        }
-		    }
-		    
-		    if (!found) {
-		        answer.add(parseName(fqjt.getFullyQualifiedName()));
-		    }
-	    }
-	    
-	    return answer;
-	}
-	
-	private String[] parseName(String name) {
-	    StringTokenizer st = new StringTokenizer(name, ".");
-	    
-	    String[] answer = new String[st.countTokens()];
-	    
-	    int i = 0;
-	    while (st.hasMoreTokens()) {
-	        answer[i++] = st.nextToken();
-	    }
-	    
-	    return answer;
-	}
+        // Now parse all the new fields and methods, then gather the new
+        // methods and fields with a visitor
+        astParser.setSource(generatedJavaFile.getContent().toCharArray());
+        CompilationUnit newCu = (CompilationUnit) astParser.createAST(null);
+
+        GatherNewItemsVisitor newVisitor = new GatherNewItemsVisitor();
+
+        newCu.accept(newVisitor);
+
+        // now add all the new methods and fields to the existing
+        // CompilationUnit with a ListRewrite
+        ASTRewrite rewrite = ASTRewrite.create(topLevelType.getRoot().getAST());
+        ListRewrite listRewrite = rewrite.getListRewrite(topLevelType,
+                TypeDeclaration.BODY_DECLARATIONS_PROPERTY);
+
+        iter = newVisitor.getFields().iterator();
+        int i = 0;
+        while (iter.hasNext()) {
+            listRewrite.insertAt((ASTNode) iter.next(), i++, null);
+        }
+
+        iter = newVisitor.getMethods().iterator();
+        while (iter.hasNext()) {
+            listRewrite.insertAt((ASTNode) iter.next(), i++, null);
+        }
+
+        textEdit = rewrite.rewriteAST(document, null);
+        try {
+            textEdit.apply(document);
+        } catch (BadLocationException e) {
+            Status status = new Status(IStatus.ERROR, AbatorUIPlugin
+                    .getPluginId(), IStatus.ERROR,
+                    "BadLocationException adding new fields and methods", e);
+            throw new CoreException(status);
+        }
+
+        String newSource = document.get();
+        return newSource;
+    }
+
+    private List getNewSuperInterfaces(List existingInterfaces) {
+        List answer = new ArrayList();
+
+        Iterator newInterfaces = generatedJavaFile.getSuperInterfaceTypes()
+                .iterator();
+        while (newInterfaces.hasNext()) {
+            FullyQualifiedJavaType newInterface = (FullyQualifiedJavaType) newInterfaces
+                    .next();
+            Iterator iter = existingInterfaces.iterator();
+            boolean found = false;
+            while (iter.hasNext()) {
+                Name name = (Name) iter.next();
+                if (name.isSimpleName()) {
+                    if (((SimpleName) name).getIdentifier().equals(
+                            newInterface.getShortName())) {
+                        found = true;
+                    }
+                } else {
+                    if (((QualifiedName) name).getName().getIdentifier()
+                            .equals(newInterface.getShortName())) {
+                        found = true;
+                    }
+                }
+            }
+
+            if (!found) {
+                answer.add(newInterface);
+            }
+        }
+
+        return answer;
+    }
+
+    private List getNewImports(List existingImports) {
+        List answer = new ArrayList();
+
+        Iterator newImports = generatedJavaFile.getImportedTypes().iterator();
+        while (newImports.hasNext()) {
+            FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) newImports
+                    .next();
+            if (fqjt.isExplicitlyImported()) {
+                Iterator iter = existingImports.iterator();
+                boolean found = false;
+                while (iter.hasNext()) {
+                    ImportDeclaration existingImport = (ImportDeclaration) iter
+                            .next();
+                    if (existingImport.getName().getFullyQualifiedName()
+                            .equals(fqjt.getFullyQualifiedName())) {
+                        found = true;
+                    }
+                }
+
+                if (!found) {
+                    answer.add(parseName(fqjt.getFullyQualifiedName()));
+                }
+            }
+        }
+
+        return answer;
+    }
+
+    private String[] parseName(String name) {
+        StringTokenizer st = new StringTokenizer(name, ".");
+
+        String[] answer = new String[st.countTokens()];
+
+        int i = 0;
+        while (st.hasMoreTokens()) {
+            answer[i++] = st.nextToken();
+        }
+
+        return answer;
+    }
 }

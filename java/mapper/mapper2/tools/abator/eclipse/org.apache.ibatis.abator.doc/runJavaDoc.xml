@@ -2,8 +2,7 @@
 <project default="javadoc">
   <path id="org.abache.ibatis.abator.doc.javadocclasspath">
   	<pathelement location="../org.apache.ibatis.abator.ui/bin"/>
-  	<pathelement location="../org.apache.ibatis.abator.core/bin"/>
-  	<pathelement location="../org.apache.ibatis.abator.ui/lib/jdom1.0.jar"/>
+  	<pathelement location="../org.apache.ibatis.abator.core/abator.jar"/>
   	<pathelement location="\JavaTools\eclipse_30\plugins\org.eclipse.core.resources_3.0.1\resources.jar"/>
   	<pathelement location="\JavaTools\eclipse_30\plugins\org.eclipse.ui_3.0.2\ui.jar"/>
   	<pathelement location="\JavaTools\eclipse_30\plugins\org.eclipse.ui.workbench_3.0.2\workbench.jar"/>
@@ -24,12 +23,11 @@
   	<pathelement location="\JavaTools\eclipse_30\plugins\org.eclipse.text_3.0.1\text.jar"/>
   	<pathelement location="\JavaTools\eclipse_30\plugins\org.eclipse.swt.win32_3.0.2\ws\win32\swt.jar"/>
   	<pathelement location="\JavaTools\eclipse_30\plugins\org.eclipse.jface_3.0.2\jface.jar"/>
+  	<pathelement location="\JavaTools\eclipse_30\plugins\org.apache.ant_1.6.2\lib\ant.jar"/>
   </path>
 
   <target name="javadoc">
-  	<delete includeemptydirs="true" failonerror="false" >
-  		<fileset dir="html/reference/javadoc" includes="**/*" />
-  	</delete>
+  	<delete dir="html/reference/javadoc"/>
 
     <javadoc 
       access="protected" 
@@ -46,7 +44,7 @@
       use="true" 
       version="true"
       classpathref="org.abache.ibatis.abator.doc.javadocclasspath">
-    	<packageset dir="../org.apache.ibatis.abator.core/src" />
+    	<packageset dir="../../core/src" />
     	<packageset dir="../org.apache.ibatis.abator.ui/src" />
     </javadoc>
   	
@@ -54,6 +52,8 @@
   		<fileset dir="." includes="html/**/*" />
   	</zip>
 
+  	<delete dir="html/reference/javadoc"/>
+  	
   	<eclipse.refreshLocal resource="org.apache.ibatis.abator.doc"/>
   	
   </target>

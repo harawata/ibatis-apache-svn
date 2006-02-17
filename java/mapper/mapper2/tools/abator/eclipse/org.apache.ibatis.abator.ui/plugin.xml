@@ -5,7 +5,6 @@
    <extension
          point="org.eclipse.core.runtime.contentTypes">
       <content-type id="abatorConfigurationFileByElement"
-            priority="high"
             file-extensions="xml"
             name="Abator for iBATIS Configuration File"
             base-type="org.eclipse.core.runtime.xml">
@@ -20,8 +19,13 @@
    <extension point="org.eclipse.ui.popupMenus">
       <objectContribution
             objectClass="org.eclipse.core.resources.IFile"
-            nameFilter="*.xml"
+            nameFilter="*"
             id="org.apache.ibatis.abator.ui.contribution1">
+         <visibility>
+            <objectState
+                  value="org.apache.ibatis.abator.ui.abatorConfigurationFileByElement"
+                  name="contentTypeId"/>
+         </visibility>
          <action
                enablesFor="1"
                label="Generate iBATIS Artifacts"
@@ -30,11 +34,6 @@
                menubarPath="additions"
                id="org.apache.ibatis.abator.ui.actions.RunAbatorAction">
          </action>
-         <visibility>
-            <objectState
-                  value="org.apache.ibatis.abator.ui.abatorConfigurationFileByElement"
-                  name="contentTypeId"/>
-         </visibility>
       </objectContribution>
    </extension>
    

@@ -3,16 +3,17 @@
 
 <toc label="Reference" link_to="toc.xml#reference"> 
 	<topic label="API Reference"  href="html/reference/javadoc/overview-summary.html"> 
-		<topic label="org.apache.ibatis.abator.core.api" href="html/reference/javadoc/org/apache/ibatis/abator/core/api/package-summary.html" />
-		<topic label="org.apache.ibatis.abator.core.config" href="html/reference/javadoc/org/apache/ibatis/abator/core/config/package-summary.html" />
-		<topic label="org.apache.ibatis.abator.core.config.xml" href="html/reference/javadoc/org/apache/ibatis/abator/core/config/xml/package-summary.html" />
-		<topic label="org.apache.ibatis.abator.core.exception" href="html/reference/javadoc/org/apache/ibatis/abator/core/exception/package-summary.html" />
-		<topic label="org.apache.ibatis.abator.core.internal" href="html/reference/javadoc/org/apache/ibatis/abator/core/internal/package-summary.html" />
-		<topic label="org.apache.ibatis.abator.core.internal.db" href="html/reference/javadoc/org/apache/ibatis/abator/core/internal/db/package-summary.html" />
-		<topic label="org.apache.ibatis.abator.core.internal.java" href="html/reference/javadoc/org/apache/ibatis/abator/core/internal/java/package-summary.html" />
-		<topic label="org.apache.ibatis.abator.core.internal.sqlmap" href="html/reference/javadoc/org/apache/ibatis/abator/core/internal/sqlmap/package-summary.html" />
-		<topic label="org.apache.ibatis.abator.core.internal.types" href="html/reference/javadoc/org/apache/ibatis/abator/core/internal/types/package-summary.html" />
-		<topic label="org.apache.ibatis.abator.core.internal.util" href="html/reference/javadoc/org/apache/ibatis/abator/core/internal/util/package-summary.html" />
+		<topic label="org.apache.ibatis.abator.ant" href="html/reference/javadoc/org/apache/ibatis/abator/ant/package-summary.html" />
+		<topic label="org.apache.ibatis.abator.api" href="html/reference/javadoc/org/apache/ibatis/abator/api/package-summary.html" />
+		<topic label="org.apache.ibatis.abator.config" href="html/reference/javadoc/org/apache/ibatis/abator/config/package-summary.html" />
+		<topic label="org.apache.ibatis.abator.config.xml" href="html/reference/javadoc/org/apache/ibatis/abator/config/xml/package-summary.html" />
+		<topic label="org.apache.ibatis.abator.exception" href="html/reference/javadoc/org/apache/ibatis/abator/exception/package-summary.html" />
+		<topic label="org.apache.ibatis.abator.internal" href="html/reference/javadoc/org/apache/ibatis/abator/internal/package-summary.html" />
+		<topic label="org.apache.ibatis.abator.internal.db" href="html/reference/javadoc/org/apache/ibatis/abator/internal/db/package-summary.html" />
+		<topic label="org.apache.ibatis.abator.internal.java" href="html/reference/javadoc/org/apache/ibatis/abator/internal/java/package-summary.html" />
+		<topic label="org.apache.ibatis.abator.internal.sqlmap" href="html/reference/javadoc/org/apache/ibatis/abator/internal/sqlmap/package-summary.html" />
+		<topic label="org.apache.ibatis.abator.internal.types" href="html/reference/javadoc/org/apache/ibatis/abator/internal/types/package-summary.html" />
+		<topic label="org.apache.ibatis.abator.internal.util" href="html/reference/javadoc/org/apache/ibatis/abator/internal/util/package-summary.html" />
 		<topic label="org.apache.ibatis.abator.ui" href="html/reference/javadoc/org/apache/ibatis/abator/ui/package-summary.html" />
 		<topic label="org.apache.ibatis.abator.ui.actions" href="html/reference/javadoc/org/apache/ibatis/abator/ui/actions/package-summary.html" />
 		<topic label="org.apache.ibatis.abator.ui.editors" href="html/reference/javadoc/org/apache/ibatis/abator/ui/editors/package-summary.html" />
