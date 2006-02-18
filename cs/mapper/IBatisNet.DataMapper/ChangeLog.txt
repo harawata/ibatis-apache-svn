@@ -3,6 +3,7 @@ IBatisNet Change Log
 ------------------------------
 1.4 - XX/XX/XXX
 ------------------------------
+- Added support for readOnly & serialize attribut on CacheModel
 - Added Support for .NET V2 and Generic
 	
 	public T QueryForObject<T>(string statementName, object parameterObject);

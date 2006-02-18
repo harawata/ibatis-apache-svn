@@ -8,6 +8,7 @@ namespace IBatisNet.DataMapper.Test.Domain
 	/// <summary>
 	/// Description résumée de LineItem.
 	/// </summary>
+	[Serializable]
 	public class LineItem
 	{
 		private int _id;

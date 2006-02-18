@@ -5,6 +5,7 @@ namespace IBatisNet.DataMapper.Test.Domain
 	/// <summary>
 	/// Description résumée de Account.
 	/// </summary>
+	[Serializable]
 	public class Account
 	{
 		private int _id;

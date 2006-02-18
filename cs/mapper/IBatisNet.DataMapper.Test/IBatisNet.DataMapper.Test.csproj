@@ -767,6 +767,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "NUnit\SqlMapTests\CacheController\CacheModelTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "NUnit\SqlMapTests\CacheController\FifoCacheControllerTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

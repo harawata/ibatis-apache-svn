@@ -9,6 +9,7 @@ namespace IBatisNet.DataMapper.Test.Domain
 	/// <summary>
 	/// Description résumée de Order.
 	/// </summary>
+	[Serializable]
 	public class Order
 	{
 		private int _id;

@@ -29,8 +29,10 @@
 using System;
 using System.Collections;
 using System.Collections.Specialized;
+using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Xml.Serialization;
 using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Logging;
@@ -88,9 +90,9 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 		[NonSerialized]
 		private string _implementation = string.Empty;
 		[NonSerialized]
-		private bool _readOnly = false;
+		private bool _isReadOnly = true;
 		[NonSerialized]
-		private bool _serialize = false;
+		private bool _isSerializable = false;
 
 		#endregion
 
@@ -128,6 +130,14 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 		}
 
 		/// <summary>
+		/// Set the cache controller
+		/// </summary>
+		public ICacheController CacheController
+		{
+			set{ _controller =value; }	
+		}
+
+		/// <summary>
 		/// Set or get the flushInterval (in Ticks)
 		/// </summary>
 		[XmlElement("flushInterval",typeof(FlushInterval))]
@@ -135,6 +145,35 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 		{
 			get { return _flushInterval; }
 			set { _flushInterval = value; }
+		}
+
+		/// <summary>
+		/// Specifie how the cache content should be returned.
+		/// If true a deep copy is returned.
+		/// </summary>
+		/// <remarks>
+		/// Combinaison
+		/// IsReadOnly=true/IsSerializable=false : Returned instance of cached object
+		/// IsReadOnly=false/IsSerializable=true : Returned coopy of cached object
+		/// </remarks>
+		public bool IsSerializable
+		{
+			get { return _isSerializable; }
+			set { _isSerializable = value; }
+		}
+
+		/// <summary>
+		/// Determines if the cache will be used as a read-only cache.
+		/// Tells the cache model that is allowed to pass back a reference to the object
+		/// existing in the cache.
+		/// </summary>
+		/// <remarks>
+		/// The IsReadOnly properties works in conjonction with the IsSerializable propertie.
+		/// </remarks>
+		public bool IsReadOnly
+		{
+			get { return _isReadOnly; }
+			set { _isReadOnly = value; }
 		}
 		#endregion
 
@@ -258,6 +297,23 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 					value = _controller[key];
 				}
 
+				if(_isSerializable && !_isReadOnly &&
+					(value != NULL_OBJECT && value != null))
+				{
+					try
+					{
+						MemoryStream stream = new MemoryStream((byte[]) value);
+						stream.Position = 0;
+						BinaryFormatter formatter = new BinaryFormatter();
+						value = formatter.Deserialize( stream );
+					}
+					catch(Exception ex)
+					{
+						throw new IBatisNetException("Error caching serializable object.  Be sure you're not attempting to use " +
+							"a serialized cache for an object that may be taking advantage of lazy loading.  Cause: "+ex.Message, ex);
+					}
+				}
+
 				lock(_statLock) 
 				{
 					_requests++;
@@ -270,7 +326,21 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 			}
 			set
 			{
-				if (null == value) value = NULL_OBJECT;
+				if (null == value) {value = NULL_OBJECT;}
+				if(_isSerializable && !_isReadOnly && value != NULL_OBJECT)
+				{
+					try
+					{
+						MemoryStream stream = new MemoryStream();
+						BinaryFormatter formatter = new BinaryFormatter();
+						formatter.Serialize(stream, value);
+						value = stream.ToArray();
+					}
+					catch(Exception ex)
+					{
+						throw new IBatisNetException("Error caching serializable object. Cause: "+ex.Message, ex);
+					}
+				}
 				_controller[key] = value;
 			}
 		}

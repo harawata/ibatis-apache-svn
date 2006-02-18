@@ -446,6 +446,11 @@ namespace IBatisNet.DataMapper.MappedStatements
 			cacheKey.Update(_mappedStatement.SqlMap.DataSource.ConnectionString);
 			cacheKey.Update(request.IDbCommand.CommandText);
 
+			CacheModel cacheModel = _mappedStatement.Statement.CacheModel;
+			if (!cacheModel.IsReadOnly && !cacheModel.IsSerializable) 
+			{
+				cacheKey.Update(request);
+			}
 			return cacheKey;
 		}
 	}

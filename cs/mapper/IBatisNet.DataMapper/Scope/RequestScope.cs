@@ -28,6 +28,7 @@
 
 using System.Collections;
 using System.Data;
+using System.Runtime.CompilerServices;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
 using IBatisNet.DataMapper.Configuration.Statements;
@@ -50,20 +51,10 @@ namespace IBatisNet.DataMapper.Scope
 		private IDbCommand _command = null;
 		private Queue _properties = new Queue();
 		bool _rowDataFound= false;
-
+		private static long _nextId = 0;
+		private long _id = 0;
 		#endregion
 	
-		#region Constructors
-
-		/// <summary>
-		/// Default constructor
-		/// </summary>
-		public RequestScope()
-		{
-			_errorContext = new ErrorContext();
-		}
-		#endregion 
-
 		#region Properties
 
 		/// <summary>
@@ -132,8 +123,45 @@ namespace IBatisNet.DataMapper.Scope
 		}
 		#endregion
 
+		#region Constructors
+
+		/// <summary>
+		/// Default constructor
+		/// </summary>
+		public RequestScope()
+		{
+			_errorContext = new ErrorContext();
+			 _id = GetNextId();
+		}
+		#endregion 
+
 		#region Method
 
+		/// <summary>
+		/// Check if the specify object is equal to the current object.
+		/// </summary>
+		/// <param name="obj"></param>
+		/// <returns></returns>
+		public override bool Equals(object obj)
+		{
+			if (this == obj) {return true;}
+			if (!(obj is RequestScope)) {return false;}
+
+			RequestScope scope = (RequestScope) obj;
+
+			if (_id != scope._id) return false;
+
+			return true;
+		}
+
+		/// <summary>
+		/// Get the HashCode for this RequestScope
+		/// </summary>
+		/// <returns></returns>
+		public override int GetHashCode() 
+		{
+			 return (int) (_id ^ (_id >> 32));
+		}
 
 		/// <summary>
 		/// Check if the ResultMap is well set, process case of subMap resultMap.
@@ -145,6 +173,15 @@ namespace IBatisNet.DataMapper.Scope
 			return _resultMap.ResolveSubMap(dataReader);
 		}
 
+		/// <summary>
+		/// Method to get a unique ID
+		/// </summary>
+		/// <returns>The new ID</returns>
+		[MethodImpl(MethodImplOptions.Synchronized)]
+		public static long GetNextId() 
+		{
+			return _nextId++;
+		}
 		#endregion
 	}
 }

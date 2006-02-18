@@ -128,18 +128,17 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		[Test]
 		public void TestMappedStatementQueryWithThreadedCache() 
 		{
-			Hashtable results1 = new Hashtable();
-			Hashtable results2 = new Hashtable();
+			Hashtable results = new Hashtable();
 
-			TestCacheThread.StartThread(sqlMap, results1, "GetCachedAccountsViaResultMap");
-			int firstId = (int) results1["id"];
+			TestCacheThread.StartThread(sqlMap, results, "GetCachedAccountsViaResultMap");
+			int firstId = (int) results["id"];
 
-			TestCacheThread.StartThread(sqlMap, results2, "GetCachedAccountsViaResultMap");
-			int secondId = (int) results2["id"];
+			TestCacheThread.StartThread(sqlMap, results, "GetCachedAccountsViaResultMap");
+			int secondId = (int) results["id"];
 
 			Assert.AreEqual(firstId, secondId);
 
-			IList list = (IList) results1["list"];
+			IList list = (IList) results["list"];
 
 			Account account = (Account) list[1];
 			account.EmailAddress = "new.toto@somewhere.com";
@@ -152,6 +151,34 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Assert.IsTrue(firstId != thirdId);
 		}
 
+		/// <summary>
+		/// Test MappedStatement Query With Threaded Read Write Cache
+		/// </summary>
+		[Test]
+		public void TestMappedStatementQueryWithThreadedReadWriteCache()
+		{
+			Hashtable results = new Hashtable();
+
+			TestCacheThread.StartThread(sqlMap, results, "GetRWCachedAccountsViaResultMap");
+			int firstId = (int) results["id"];
+
+			TestCacheThread.StartThread(sqlMap, results, "GetRWCachedAccountsViaResultMap");
+			int secondId = (int) results["id"];
+
+			Assert.AreNotEqual(firstId, secondId);
+
+			IList list = (IList) results["list"];
+
+			Account account = (Account) list[1];
+			account.EmailAddress = "new.toto@somewhere.com";
+			sqlMap.Update("UpdateAccountViaInlineParameters", account);
+
+			list = sqlMap.QueryForList("GetCachedAccountsViaResultMap", null);
+
+			int thirdId = HashCodeProvider.GetIdentityHashCode(list);
+
+			Assert.AreNotEqual(firstId, thirdId);
+		}
 
 		/// <summary>
 		/// Test Cache Null Object
@@ -307,8 +334,8 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 					list = statement.ExecuteQueryForList(session, null);
 					int secondId = HashCodeProvider.GetIdentityHashCode(list);
 
-					_results.Add("id", secondId );
-					_results.Add("list", list);
+					_results["id"] = secondId ;
+					_results["list"] = list;
 					session.CloseConnection();
 				} 
 				catch (Exception e) 
