@@ -32,7 +32,7 @@ public class ThrottledPool {
   private List pool;
 
   /**
-   * Create a ThrottledPool for a Class 
+   * Create a ThrottledPool for a Class
    * @param type - the type of objects being managed
    * @param size - the size of the pool
    */
@@ -54,16 +54,8 @@ public class ThrottledPool {
    * @return - the Object
    */
   public Object pop() {
-    Object o = null;
-    while (o == null) {
-      try {
-        throttle.increment();
-        o = pool.remove(0);
-      } catch (Exception e) {
-        // thread collision detected, retry
-      }
-    }
-    return o;
+    throttle.increment();
+    return pool.remove(0);
   }
 
   /**
@@ -71,8 +63,10 @@ public class ThrottledPool {
    * @param o - the object to put into the pool
    */
   public void push(Object o) {
-    if (o != null && o.getClass() == type) pool.add(o);
-    throttle.decrement();
+    if (o != null && o.getClass() == type) {
+      pool.add(o);
+      throttle.decrement();
+    }
   }
 
 }

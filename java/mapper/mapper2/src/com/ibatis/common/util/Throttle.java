@@ -52,17 +52,18 @@ public class Throttle {
    */
   public void increment() {
     synchronized (LOCK) {
-      if (count >= limit) {
+      long totalWaitTime = 0;
+      while (count >= limit) {
         if (maxWait > 0) {
           long waitTime = System.currentTimeMillis();
           try {
-            LOCK.wait(maxWait);
+            LOCK.wait(maxWait - totalWaitTime);
           } catch (InterruptedException e) {
             //ignore
           }
-          waitTime = System.currentTimeMillis() - waitTime;
-          if (waitTime > maxWait) {
-            throw new NestedRuntimeException("Throttle waited too long (" + waitTime + ") for lock.");
+          totalWaitTime += System.currentTimeMillis() - waitTime;
+          if (totalWaitTime > maxWait) {
+            throw new NestedRuntimeException("Throttle waited too long (" + totalWaitTime + " milliseconds) for lock.");
           }
         } else {
           try {
