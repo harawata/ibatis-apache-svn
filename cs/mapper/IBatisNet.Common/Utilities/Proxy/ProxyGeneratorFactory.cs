@@ -2,7 +2,7 @@
 /*****************************************************************************
  * $Header: $
  * $Revision: $
- * $Date: $
+ * $Date$
  * 
  * iBATIS.NET Data Mapper
  * Copyright (C) 2004-2005 - Apache Foundation

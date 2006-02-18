@@ -2,8 +2,8 @@
 #region Apache Notice
 /*****************************************************************************
  * $Revision: $
- * $LastChangedDate: $
- * $LastChangedBy: $
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
  * Copyright (C) 2005, 2006 The Apache Software Foundation

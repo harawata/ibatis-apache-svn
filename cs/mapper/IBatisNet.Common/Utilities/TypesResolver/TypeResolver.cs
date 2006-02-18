@@ -3,7 +3,7 @@
 /*****************************************************************************
  * $Header: $
  * $Revision: $
- * $Date: $
+ * $Date$
  * 
  * Copyright 2004 the original author or authors.
  *  

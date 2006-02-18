@@ -3,7 +3,7 @@
 /*****************************************************************************
  * $Header: $
  * $Revision: $
- * $Date: $
+ * $Date$
  * Author : Gilles Bayon
  * iBATIS.NET Data Mapper
  * Copyright (C) 2004 - Apache Fondation

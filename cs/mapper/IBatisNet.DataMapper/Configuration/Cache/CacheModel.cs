@@ -1,12 +1,12 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
- * $Revision: $
- * $Date: $
+ * $Revision: 368065 $
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -87,6 +87,10 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 		private HybridDictionary _properties = new HybridDictionary();
 		[NonSerialized]
 		private string _implementation = string.Empty;
+		[NonSerialized]
+		private bool _readOnly = false;
+		[NonSerialized]
+		private bool _serialize = false;
 
 		#endregion
 
