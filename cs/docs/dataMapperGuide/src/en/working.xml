@@ -113,7 +113,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" &gt;
   &lt;/alias&gt;</emphasis><emphasis role="cache">
 
   &lt;cacheModels&gt;
-    &lt;cacheModel id="productCache" type="LRU"&gt;
+    &lt;cacheModel id="productCache" implementation="LRU"&gt;
       &lt;flushInterval hours="24"/&gt;
       &lt;property name="CacheSize" value="1000" /&gt;
     &lt;/cacheModel&gt;
@@ -186,6 +186,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" &gt;
   [resultClass="<emphasis role="blue">class.name|alias</emphasis>"]
   [listClass="<emphasis role="blue">class.name|alias</emphasis>"]
   [cacheModel="<emphasis role="blue">cache.name</emphasis>"]
+  [extends="<emphasis role="blue">statement.name</emphasis>"]
 &gt;
 
   select * from Products where Product_Id = [?|#propertyName#]
@@ -3061,7 +3062,7 @@ public class Newspaper : Document
     <example>
       <title>Configuation a cache using the Cache Model element</title>
 
-      <programlisting>&lt;cacheModel id="<emphasis role="blue">product-cache</emphasis>" implementation="LRU" &gt;
+      <programlisting>&lt;cacheModel id="<emphasis role="blue">product-cache</emphasis>" implementation="LRU" readOnly="true" serialize="false"&gt;
   &lt;flushInterval hours="24"/&gt;
   &lt;flushOnExecute  statement="insertProduct"/&gt;
   &lt;flushOnExecute  statement="updateProduct"/&gt;
@@ -3093,6 +3094,21 @@ public class Newspaper : Document
   select * from PRODUCT where PRD_CAT_ID = #value#
 &lt;/statement&gt;</programlisting>
     </example>
+
+	 <sect2>
+      <title>Read-Only vs. Read/Write</title>
+	  
+	  The framework supports both read-only and read/write caches.  Read-only caches are shared among all users and therefore offer greater performance benefit.  However, objects read from a read-only cache should not be modified.  Instead, a new object should be read from the database (or a read/write cache) for updating.  On the other hand, if there is an intention to use objects for retrieval and modification, a read/write cache is recommended (i.e. required).  To use a read-only cache, set readOnly="true" on the cache model element.  To use a read/write cache, set readOnly="false".  The default is read-only (true).
+
+	</sect2>
+
+	 <sect2>
+      <title>Serializable Read/Write Caches</title>
+	  
+		As you may agree, caching per-session as described above may offer little benefit to global application performance.  Another type of read/write cache that can offer a performance benefit to the entire application (i.e. not just per session) is a serializable read/write cache. 
+		This cache will return different instances (copies) of the cached object to each session. Therefore each session can safely modify the instance returned.  Realize the difference in semantics here, usually you would expect the same instance to be returned from a cache, but in this case you'll get a different one.    
+		Also note that every object stored by a serializable cache must be serializable. This means that you will have difficulty using both lazy loading features combined with a serializable cache, because lazy proxies are not serializable.  The best way to figure out what combination of caching, lazy loading and table joining is simply to try it out.  To use a serializable cache, set readOnly="false" and serialize="true".  By default cache models are read-only and non-serializable.  Read-only caches will not be serialized (there's no benefit).
+	</sect2>
 
     <sect2>
       <title>Cache Implementation</title>
