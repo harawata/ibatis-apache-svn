@@ -1,12 +1,12 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
- * $Revision: $
- * $Date$
+ * $Revision: 374175 $
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,11 +25,11 @@
 #endregion
 
 #region Imports
+
 using System;
 using System.Collections;
 using System.Collections.Specialized;
 
-using IBatisNet.Common.Exceptions;
 #endregion
 
 namespace IBatisNet.Common.Utilities.TypesResolver
@@ -57,13 +57,17 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 		public const string ArrayListAlias2 = "list";
 
 		/// <summary>
-		/// The alias around the 'bool' type.
-		/// </summary>
-		public const string BoolAlias1 = "boolean";
-		/// <summary>
 		/// Another alias around the 'bool' type.
 		/// </summary>
-		public const string BoolAlias2 = "bool";
+		public const string BoolAlias = "bool";
+		/// <summary>
+		/// The alias around the 'Boolean' type (Visual Basic.NET style).
+		/// </summary>
+		public const string BoolAliasVB = "Boolean";
+		/// <summary>
+		/// The alias around the 'bool' type.
+		/// </summary>
+		public const string BooleanAlias = "boolean";
 
 		/// <summary>
 		/// The alias around the 'byte' type.
@@ -74,6 +78,10 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 		/// The alias around the 'char' type.
 		/// </summary>
 		public const string CharAlias = "char";
+		/// <summary>
+		/// The alias around the 'Char' type (Visual Basic.NET style).
+		/// </summary>
+		public const string CharAliasVB = "Char";
 
 		/// <summary>
 		/// The alias around the 'DateTime' type.
@@ -83,25 +91,41 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 		/// Another alias around the 'DateTime' type.
 		/// </summary>
 		public const string DateAlias2 = "date";
+		/// <summary>
+		/// The alias around the 'DateTime' type (Visual Basic.NET style).
+		/// </summary>
+		public const string DateAliasVB = "Date";
 
 		/// <summary>
 		/// The alias around the 'decimal' type.
 		/// </summary>
 		public const string DecimalAlias = "decimal";
+		/// <summary>
+		/// The alias around the 'Decimal' type (Visual Basic.NET style).
+		/// </summary>
+		public const string DecimalAliasVB = "Decimal";
 
 		/// <summary>
 		/// The alias around the 'double' type.
 		/// </summary>
 		public const string DoubleAlias = "double";
+		/// <summary>
+		/// The alias around the 'Double' type (Visual Basic.NET style).
+		/// </summary>
+		public const string DoubleAliasVB = "Double";
 
 		/// <summary>
 		/// The alias around the 'float' type.
 		/// </summary>
-		public const string FloatAlias1 = "float";
+		public const string FloatAlias = "float";
 		/// <summary>
 		/// Another alias around the 'float' type.
 		/// </summary>
-		public const string FloatAlias2 = "single";
+		public const string FloatAliasVB = "Single";
+		/// <summary>
+		/// Another alias around the 'float' type.
+		/// </summary>
+		public const string SingleAlias = "single";
 
 		/// <summary>
 		/// The alias around the 'guid' type.
@@ -129,6 +153,10 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 		/// Another alias around the 'short' type.
 		/// </summary>
 		public const string Int16Alias2 = "short";
+		/// <summary>
+		/// The alias around the 'Short' type (Visual Basic.NET style).
+		/// </summary>
+		public const string Int16AliasVB = "Short";
 
 		/// <summary>
 		/// The alias around the 'int' type.
@@ -142,6 +170,10 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 		/// Another alias around the 'int' type.
 		/// </summary>
 		public const string Int32Alias3 = "integer";
+		/// <summary>
+		/// The alias around the 'Integer' type (Visual Basic.NET style).
+		/// </summary>
+		public const string Int32AliasVB = "Integer";
 
 		/// <summary>
 		/// The alias around the 'long' type.
@@ -151,6 +183,10 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 		/// Another alias around the 'long' type.
 		/// </summary>
 		public const string Int64Alias2 = "long";
+		/// <summary>
+		/// The alias around the 'Long' type (Visual Basic.NET style).
+		/// </summary>
+		public const string Int64AliasVB = "Long";
 
 		/// <summary>
 		/// The alias around the 'unsigned short' type.
@@ -188,6 +224,10 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 		/// The alias around the 'string' type.
 		/// </summary>
 		public const string StringAlias = "string";
+		/// <summary>
+		/// The alias around the 'string' type (Visual Basic.NET style).
+		/// </summary>
+		public const string StringAliasVB = "String";
 
 		/// <summary>
 		/// The alias around the 'TimeSpan' type.
@@ -197,7 +237,7 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 		#endregion
 
 		#region Fields
-		private static StringDictionary _aliases = new StringDictionary();
+		private static readonly StringDictionary _aliases = new StringDictionary();
 		#endregion
 
 		#region Constructor (s) / Destructor
@@ -221,24 +261,30 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 			_aliases [TypeAliasResolver.ArrayListAlias1] = typeof (ArrayList).FullName;
 			_aliases [TypeAliasResolver.ArrayListAlias2] = typeof (ArrayList).FullName;
 
-			_aliases [TypeAliasResolver.BoolAlias1] = typeof (bool).FullName;
-			_aliases [TypeAliasResolver.BoolAlias2] = typeof (bool).FullName;
+			_aliases [TypeAliasResolver.BoolAlias] = typeof (bool).FullName;
+			_aliases [TypeAliasResolver.BoolAliasVB] = typeof (bool).FullName;
+			_aliases [TypeAliasResolver.BooleanAlias] = typeof (bool).FullName;
 
 			_aliases [TypeAliasResolver.ByteAlias] = typeof (byte).FullName;
 
 			_aliases [TypeAliasResolver.CharAlias] = typeof (char).FullName;
+			_aliases [TypeAliasResolver.CharAliasVB] = typeof (char).FullName;
 
 			_aliases [TypeAliasResolver.DateAlias1] = typeof (DateTime).FullName;
 			_aliases [TypeAliasResolver.DateAlias2] = typeof (DateTime).FullName;
+			_aliases [TypeAliasResolver.DateAliasVB] = typeof (DateTime).FullName;
 
 			_aliases [TypeAliasResolver.DecimalAlias] = typeof (decimal).FullName;
+			_aliases [TypeAliasResolver.DecimalAliasVB] = typeof (decimal).FullName;
 
 			_aliases [TypeAliasResolver.DoubleAlias] = typeof (double).FullName;
+			_aliases [TypeAliasResolver.DoubleAliasVB] = typeof (double).FullName;
 
-			_aliases [TypeAliasResolver.FloatAlias1] = typeof (float).FullName;
-			_aliases [TypeAliasResolver.FloatAlias2] = typeof (float).FullName;
+			_aliases [TypeAliasResolver.FloatAlias] = typeof (float).FullName;
+			_aliases [TypeAliasResolver.FloatAliasVB] = typeof (float).FullName;
+			_aliases [TypeAliasResolver.SingleAlias] = typeof (float).FullName;
 
-			_aliases [TypeAliasResolver.GuidAlias] = typeof (System.Guid).FullName;
+			_aliases [TypeAliasResolver.GuidAlias] = typeof (Guid).FullName;
 
 			_aliases [TypeAliasResolver.HashtableAlias1] = typeof (Hashtable).FullName;
 			_aliases [TypeAliasResolver.HashtableAlias2] = typeof (Hashtable).FullName;
@@ -246,13 +292,16 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 
 			_aliases [TypeAliasResolver.Int16Alias1] = typeof (short).FullName;
 			_aliases [TypeAliasResolver.Int16Alias2] = typeof (short).FullName;
+			_aliases [TypeAliasResolver.Int16AliasVB] = typeof (short).FullName;
 
 			_aliases [TypeAliasResolver.Int32Alias1] = typeof (int).FullName;
 			_aliases [TypeAliasResolver.Int32Alias2] = typeof (int).FullName;
 			_aliases [TypeAliasResolver.Int32Alias3] = typeof (int).FullName;
+			_aliases [TypeAliasResolver.Int32AliasVB] = typeof (int).FullName;
 
 			_aliases [TypeAliasResolver.Int64Alias1] = typeof (long).FullName;
 			_aliases [TypeAliasResolver.Int64Alias2] = typeof (long).FullName;
+			_aliases [TypeAliasResolver.Int64AliasVB] = typeof (long).FullName;
 
 			_aliases [TypeAliasResolver.UInt16Alias1] = typeof (ushort).FullName;
 			_aliases [TypeAliasResolver.UInt16Alias2] = typeof (ushort).FullName;
@@ -266,6 +315,7 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 			_aliases [TypeAliasResolver.SByteAlias] = typeof (sbyte).FullName;
 
 			_aliases [TypeAliasResolver.StringAlias] = typeof (string).FullName;
+			_aliases [TypeAliasResolver.StringAliasVB] = typeof (string).FullName;
 
 			_aliases [TypeAliasResolver.TimeSpanAlias] = typeof (string).FullName;
 
