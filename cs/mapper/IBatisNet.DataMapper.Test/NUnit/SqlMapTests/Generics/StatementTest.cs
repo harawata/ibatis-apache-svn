@@ -1,6 +1,6 @@
 #region Apache Notice
 /*****************************************************************************
- * $Revision: $
+ * $Revision$
  * $LastChangedDate$
  * $LastChangedBy$
  * 

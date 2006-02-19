@@ -2,8 +2,8 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
- * $Date: $
+ * $Revision$
+ * $Date$
  * 
  * iBATIS.NET Data Mapper
  * Copyright (C) 2004 - Gilles Bayon
