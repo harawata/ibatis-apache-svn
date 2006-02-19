@@ -364,6 +364,10 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "Maps\Access\OleDb\ParameterClass.xml"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "Maps\Access\OleDb\ResultClass.xml"
                     BuildAction = "Content"
                 />
@@ -404,6 +408,10 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "Maps\MSSQL\Odbc\ParameterClass.xml"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "Maps\MSSQL\Odbc\ResultClass.xml"
                     BuildAction = "Content"
                 />
@@ -441,6 +449,10 @@
                 />
                 <File
                     RelPath = "Maps\MSSQL\OleDb\Other.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\MSSQL\OleDb\ParameterClass.xml"
                     BuildAction = "Content"
                 />
                 <File
@@ -488,6 +500,10 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "Maps\MSSQL\SqlClient\ParameterClass.xml"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "Maps\MSSQL\SqlClient\ResultClass.xml"
                     BuildAction = "Content"
                 />
@@ -525,6 +541,10 @@
                 />
                 <File
                     RelPath = "Maps\MySql\ByteFx\Other.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\MySql\ByteFx\ParameterClass.xml"
                     BuildAction = "Content"
                 />
                 <File
@@ -568,6 +588,10 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "Maps\MySql\MySql\ParameterClass.xml"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "Maps\MySql\MySql\ResultClass.xml"
                     BuildAction = "Content"
                 />
@@ -605,6 +629,10 @@
                 />
                 <File
                     RelPath = "Maps\Oracle\ODP\Other.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\Oracle\ODP\ParameterClass.xml"
                     BuildAction = "Content"
                 />
                 <File
@@ -648,6 +676,10 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "Maps\Oracle\OracleClient\ParameterClass.xml"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "Maps\Oracle\OracleClient\ResultClass.xml"
                     BuildAction = "Content"
                 />
@@ -685,6 +717,10 @@
                 />
                 <File
                     RelPath = "Maps\PostgreSQL\Npgsql\Other.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\PostgreSQL\Npgsql\ParameterClass.xml"
                     BuildAction = "Content"
                 />
                 <File
@@ -728,6 +764,11 @@
                 />
                 <File
                     RelPath = "NUnit\SqlMapTests\InheritanceTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NUnit\SqlMapTests\ParameterClass.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

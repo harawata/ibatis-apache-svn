@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -63,6 +63,9 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		public TypeHandlerFactory() 
 		{
 			ITypeHandler handler = null;
+
+			handler = new DBNullTypeHandler();
+			this.Register(typeof(DBNull), handler);
 
 			handler = new BooleanTypeHandler();
 			this.Register(typeof(bool), handler); // key= "System.Boolean"
@@ -175,6 +178,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 				}
 
 			}
+
 			return handler;
 		}
 

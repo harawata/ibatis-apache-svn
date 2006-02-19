@@ -848,6 +848,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "TypeHandlers\DBNullTypeHandler.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "TypeHandlers\DecimalTypeHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
