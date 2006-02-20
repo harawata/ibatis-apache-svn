@@ -242,6 +242,7 @@
     <Compile Include="NUnit\SqlMapTests\Oracle\StatementTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="NUnit\SqlMapTests\ParameterClass.cs" />
     <Compile Include="NUnit\SqlMapTests\ParameterMapTest.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -280,6 +281,7 @@
     <Content Include="Maps\Access\OleDb\LineItem.xml" />
     <Content Include="Maps\Access\OleDb\Order.xml" />
     <Content Include="Maps\Access\OleDb\Other.xml" />
+    <Content Include="Maps\Access\OleDb\ParameterClass.xml" />
     <Content Include="Maps\Access\OleDb\ResultClass.xml" />
     <Content Include="Maps\MSSQL\Odbc\Account.xml" />
     <Content Include="Maps\MSSQL\Odbc\Category.xml" />
@@ -290,6 +292,7 @@
     <Content Include="Maps\MSSQL\Odbc\LineItem.xml" />
     <Content Include="Maps\MSSQL\Odbc\Order.xml" />
     <Content Include="Maps\MSSQL\Odbc\Other.xml" />
+    <Content Include="Maps\MSSQL\Odbc\ParameterClass.xml" />
     <Content Include="Maps\MSSQL\Odbc\ResultClass.xml" />
     <Content Include="Maps\MSSQL\OleDb\Account.xml" />
     <Content Include="Maps\MSSQL\OleDb\Category.xml" />
@@ -300,6 +303,7 @@
     <Content Include="Maps\MSSQL\OleDb\LineItem.xml" />
     <Content Include="Maps\MSSQL\OleDb\Order.xml" />
     <Content Include="Maps\MSSQL\OleDb\Other.xml" />
+    <Content Include="Maps\MSSQL\OleDb\ParameterClass.xml" />
     <Content Include="Maps\MSSQL\OleDb\ResultClass.xml" />
     <Content Include="Maps\MSSQL\SqlClient\Category.xml" />
     <Content Include="Maps\MSSQL\SqlClient\Complex.xml" />
@@ -310,6 +314,7 @@
     <Content Include="Maps\MSSQL\SqlClient\LineItem.xml" />
     <Content Include="Maps\MSSQL\SqlClient\Order.xml" />
     <Content Include="Maps\MSSQL\SqlClient\Other.xml" />
+    <Content Include="Maps\MSSQL\SqlClient\ParameterClass.xml" />
     <Content Include="Maps\MSSQL\SqlClient\ResultClass.xml" />
     <Content Include="Maps\MySql\ByteFx\Account.xml" />
     <Content Include="Maps\MySql\ByteFx\Category.xml" />
@@ -320,6 +325,7 @@
     <Content Include="Maps\MySql\ByteFx\LineItem.xml" />
     <Content Include="Maps\MySql\ByteFx\Order.xml" />
     <Content Include="Maps\MySql\ByteFx\Other.xml" />
+    <Content Include="Maps\MySql\ByteFx\ParameterClass.xml" />
     <Content Include="Maps\MySql\ByteFx\ResultClass.xml" />
     <Content Include="Maps\MySql\MySql\Account.xml" />
     <Content Include="Maps\MySql\MySql\Category.xml" />
@@ -330,6 +336,7 @@
     <Content Include="Maps\MySql\MySql\LineItem.xml" />
     <Content Include="Maps\MySql\MySql\Order.xml" />
     <Content Include="Maps\MySql\MySql\Other.xml" />
+    <Content Include="Maps\MySql\MySql\ParameterClass.xml" />
     <Content Include="Maps\MySql\MySql\ResultClass.xml" />
     <Content Include="Maps\Oracle\ODP\Account.xml" />
     <Content Include="Maps\Oracle\ODP\Category.xml" />
@@ -340,6 +347,7 @@
     <Content Include="Maps\Oracle\ODP\LineItem.xml" />
     <Content Include="Maps\Oracle\ODP\Order.xml" />
     <Content Include="Maps\Oracle\ODP\Other.xml" />
+    <Content Include="Maps\Oracle\ODP\ParameterClass.xml" />
     <Content Include="Maps\Oracle\ODP\ResultClass.xml" />
     <Content Include="Maps\Oracle\OracleClient\Account.xml" />
     <Content Include="Maps\Oracle\OracleClient\Category.xml" />
@@ -350,6 +358,7 @@
     <Content Include="Maps\Oracle\OracleClient\LineItem.xml" />
     <Content Include="Maps\Oracle\OracleClient\Order.xml" />
     <Content Include="Maps\Oracle\OracleClient\Other.xml" />
+    <Content Include="Maps\Oracle\OracleClient\ParameterClass.xml" />
     <Content Include="Maps\Oracle\OracleClient\ResultClass.xml" />
     <Content Include="Maps\PostgreSQL\Npgsql\Account.xml" />
     <Content Include="Maps\PostgreSQL\Npgsql\Category.xml" />
@@ -360,6 +369,7 @@
     <Content Include="Maps\PostgreSQL\Npgsql\LineItem.xml" />
     <Content Include="Maps\PostgreSQL\Npgsql\Order.xml" />
     <Content Include="Maps\PostgreSQL\Npgsql\Other.xml" />
+    <Content Include="Maps\PostgreSQL\Npgsql\ParameterClass.xml" />
     <Content Include="Maps\PostgreSQL\Npgsql\ResultClass.xml" />
     <Content Include="ReadMe.txt" />
     <Content Include="Scripts\Access\account-init.sql" />

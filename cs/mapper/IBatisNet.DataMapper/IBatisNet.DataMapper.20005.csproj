@@ -524,6 +524,7 @@
     <Compile Include="TypeHandlers\DateTimeTypeHandler.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="TypeHandlers\DBNullTypeHandler.cs" />
     <Compile Include="TypeHandlers\DecimalTypeHandler.cs">
       <SubType>Code</SubType>
     </Compile>
