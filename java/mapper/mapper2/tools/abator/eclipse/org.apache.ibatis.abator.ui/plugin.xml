@@ -7,7 +7,8 @@
       <content-type id="abatorConfigurationFileByElement"
             file-extensions="xml"
             name="Abator for iBATIS Configuration File"
-            base-type="org.eclipse.core.runtime.xml">
+            base-type="org.eclipse.core.runtime.xml"
+            priority="high">
          <describer class="org.eclipse.core.runtime.content.XMLRootElementContentDescriber">
             <parameter
                   value="abatorConfiguration"
@@ -19,7 +20,7 @@
    <extension point="org.eclipse.ui.popupMenus">
       <objectContribution
             objectClass="org.eclipse.core.resources.IFile"
-            nameFilter="*"
+            nameFilter="*.xml"
             id="org.apache.ibatis.abator.ui.contribution1">
          <visibility>
             <objectState
