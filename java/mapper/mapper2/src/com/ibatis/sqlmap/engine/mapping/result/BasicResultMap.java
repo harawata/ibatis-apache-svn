@@ -47,6 +47,7 @@ import java.util.*;
 public class BasicResultMap implements ResultMap {
 
   private static final Probe PROBE = ProbeFactory.getProbe();
+  private static final String KEY_SEPARATOR = "\002";
 
   private String id;
   private Class resultClass;
@@ -106,9 +107,11 @@ public class BasicResultMap implements ResultMap {
     return resultClass;
   }
 
-  public Object getUniqueKey(Object[] values) {
+  public Object getUniqueKey(String keyPrefix, Object[] values) {
     if (groupByProps != null) {
-      StringBuffer keyBuffer = new StringBuffer();
+      StringBuffer keyBuffer;
+      if ( keyPrefix != null ) keyBuffer = new StringBuffer(keyPrefix);
+      else keyBuffer = new StringBuffer();
       for (int i = 0; i < getResultMappings().length; i++) {
         String propertyName = getResultMappings()[i].getPropertyName();
         if (groupByProps.contains(propertyName)) {
@@ -119,11 +122,17 @@ public class BasicResultMap implements ResultMap {
       if (keyBuffer.length() < 1) {
         return null;
       } else {
+      	// seperator value not likely to appear in a database
+      	keyBuffer.append(KEY_SEPARATOR);
         return keyBuffer.toString();
       }
     } else {
       return null;
     }
+  }
+
+  public Object getUniqueKey(Object[] values) {
+  	return getUniqueKey(null, values);
   }
 
   /**
@@ -277,8 +286,13 @@ public class BasicResultMap implements ResultMap {
   }
 
   /**
-   * @param rs
-   * @return
+   * Read a row from a resultset and map results to an array.
+   *
+   * @param request scope of the request
+   * @param rs ResultSet to read from
+   *
+   * @return row read as an array of column values.
+   *
    * @throws java.sql.SQLException
    */
   public Object[] getResults(RequestScope request, ResultSet rs)
@@ -332,10 +346,12 @@ public class BasicResultMap implements ResultMap {
   }
 
   public Object setResultObjectValues(RequestScope request, Object resultObject, Object[] values) {
-    Object ukey = getUniqueKey(values);
+
+    String ukey = (String)getUniqueKey(request.getCurrentNestedKey(), values);
 
     Map uniqueKeys = request.getUniqueKeys(this);
 
+    request.setCurrentNestedKey(ukey);
     if (uniqueKeys != null && uniqueKeys.containsKey(ukey)) {
       // Unique key is already known, so get the existing result object and process additional results.
       resultObject = uniqueKeys.get(ukey);

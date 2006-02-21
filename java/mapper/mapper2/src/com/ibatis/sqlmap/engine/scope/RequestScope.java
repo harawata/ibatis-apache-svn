@@ -46,6 +46,22 @@ public class RequestScope extends BaseScope {
   private ResultSet resultSet;
   private Map uniqueKeys;
   private boolean rowDataFound;
+  private String  currentNestedKey;
+  
+  /**
+   * @return Returns the currentNestedKey.
+   */
+  public String getCurrentNestedKey() {
+	return currentNestedKey;
+  }
+
+  /**
+   * @param currentNestedKey The currentNestedKey to set.
+   */
+  public void setCurrentNestedKey(String currentNestedKey) {
+	this.currentNestedKey = currentNestedKey;
+  }
+
   /**
    * Default constructor
    */
@@ -201,7 +217,7 @@ public class RequestScope extends BaseScope {
     }
     return (Map)uniqueKeys.get(map);
   }
-
+  
   public void setUniqueKeys(ResultMap map, Map keys) {
     if (uniqueKeys == null) {
       uniqueKeys = new HashMap();

@@ -58,5 +58,6 @@
   <sqlMap resource="${SqlMapPath}/DomStatements.xml"/>
   <sqlMap resource="${SqlMapPath}/RepeatingGroupMapping.xml"/>
   <sqlMap resource="${SqlMapPath}/Documents.xml"/>
+  <sqlMap resource="${SqlMapPath}/Jira.xml"/>
 
 </sqlMapConfig>

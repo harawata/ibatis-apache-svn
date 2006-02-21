@@ -60,6 +60,7 @@ public class RowHandlerCallback {
   public void handleResultObject(RequestScope request, Object[] results, ResultSet rs) throws SQLException {
     Object object;
 
+    request.setCurrentNestedKey(null);
     object = resultMap.resolveSubMap(request, rs).setResultObjectValues(request, resultObject, results);
 
     if (object != ResultMap.NO_VALUE) {
