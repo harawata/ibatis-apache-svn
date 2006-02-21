@@ -47,7 +47,7 @@
 
   <select id="getItemListByProduct" resultMap="itemResult" parameterClass="string">
     select
-      ITEMID, LISTPRICE, UNITCOST, SUPPLIER, I.PRODUCTID, NAME,
+      I.ITEMID, LISTPRICE, UNITCOST, SUPPLIER, I.PRODUCTID, NAME,
       DESCN, CATEGORY, STATUS, ATTR1, ATTR2, ATTR3, ATTR4, ATTR5
     from ITEM I, PRODUCT P where P.PRODUCTID = I.PRODUCTID and I.PRODUCTID = #value#
   </select>

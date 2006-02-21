@@ -20,7 +20,7 @@
 
   <select id="getItemListByProduct" resultClass="item" parameterClass="string" cacheModel="itemCache">
     SELECT
-      ITEMID,
+      I.ITEMID,
       LISTPRICE,
       UNITCOST,
       SUPPLIER AS supplierId,
@@ -41,7 +41,7 @@
 
   <select id="getItem" resultClass="item" parameterClass="string" cacheModel="quantityCache">
     select
-      ITEMID,
+      I.ITEMID,
       LISTPRICE,
       UNITCOST,
       SUPPLIER AS supplierId,
