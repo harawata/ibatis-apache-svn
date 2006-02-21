@@ -30,15 +30,13 @@
  to the Java user list.</p>
 
 <h3>Abator News</h3>
+<p>(February 20, 2006) Updated the Eclipse plugin to 0.6.2  This fixes the problem where Abator
+   conflicted with other XML enabled plugins like oXygen in Eclipse 3.1.</p>
 <p>(February 17, 2006) Updated the Eclipse plugin to 0.6.1  The plugin now has
    the latest version of Abator.  Also added an Eclipse enabled Ant task for running Abator
    with Eclipse's integrated Ant support.</p>
 <p>(February 16, 2006) Updated the standalone version to 0.6.1  Added support for running Abator
   in true standalone mode from the command line.  Also fixed some minor bugs.</p>
-<p>(January 19, 2006) Abator is repackaged as a standalone JAR file and Ant task and is no longer
- dependant on Eclipse.  The Eclipse plugin will continue to be enhanced, but most of the core
- function of Abator now resides in a standalone JAR file with no dependencies.  Also, standalone
- Abator does not support merging of Java files - that will remain in the Eclipse plugin only.</p>
 
 <h2>Standalone Jar Download</h2>
 <ul>
@@ -86,7 +84,7 @@
 <h3>Manual Eclipse Install</h3>
 <p>The automatic install is much preferred, but you can also install Abator manually if you
  desire. To install manually, download the file
- <a href="http://cvs.apache.org/builds/ibatis/alpha/abatorFeature0.6.1.zip">abatorFeature0.6.1.zip</a>
+ <a href="http://cvs.apache.org/builds/ibatis/alpha/AbatorForEclipse0.6.2.zip">AbatorForEclipse0.6.2.zip</a>
  and unzip
  the file to some convenient location.  Then follow these steps in Eclipse:</p>
 <ol>
