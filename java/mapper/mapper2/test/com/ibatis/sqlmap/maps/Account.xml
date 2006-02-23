@@ -140,6 +140,20 @@
     and ACC_ID = #value#
     ]]>
   </select>
+  <select id="getAccountViaResultClassIgnoreCaseTypeAlias"
+    parameterClass="java.lang.Integer"
+    resultClass="AcCoUnT">
+    <![CDATA[
+    select
+      ACC_ID as id,
+      ACC_FIRST_NAME as firstName,
+      ACC_LAST_NAME as lastName,
+      ACC_EMAIL as emailAddress
+    from ACCOUNT
+    where ACC_ID = #value#
+    and ACC_ID = #value#
+    ]]>
+  </select>
   <!--parameterClass="java.math.BigDecimal"-->
   <select id="getAccountViaResultClassPlusOne"
     resultClass="account">

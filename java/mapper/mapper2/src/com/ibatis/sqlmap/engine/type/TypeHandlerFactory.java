@@ -197,26 +197,32 @@ public class TypeHandlerFactory {
    * @return - the REAL name
    */
   public String resolveAlias(String string) {
-    String newString = null;
-    if (typeAliases.containsKey(string)) {
-      newString = (String) typeAliases.get(string);
+    String key = null;
+    if(string != null)
+      key = string.toLowerCase();
+    String value = null;
+    if (typeAliases.containsKey(key)) {
+      value = (String) typeAliases.get(key);
+    } else {
+      value = string;
     }
-    if (newString != null) {
-      string = newString;
-    }
-    return string;
+    
+    return value;
   }
 
   /**
-   * Add an alias
+   * Adds a type alias that is case insensitive.  All of the following String, string, StRiNg will equate to the same alias.
    * @param alias - the alias
    * @param value - the real class name
    */
   public void putTypeAlias(String alias, String value) {
-    if (typeAliases.containsKey(alias) && !typeAliases.get(alias).equals(value)) {
-      throw new SqlMapException("Error in XmlSqlMapClientBuilder.  Alias name conflict occurred.  The alias '" + alias + "' is already mapped to the value '" + typeAliases.get(alias) + "'.");
+    String key = null;
+    if(alias != null)
+      key = alias.toLowerCase();
+    if (typeAliases.containsKey(key) && !typeAliases.get(key).equals(value)) {
+      throw new SqlMapException("Error in XmlSqlMapClientBuilder.  Alias name conflict occurred.  The alias '" + key + "' is already mapped to the value '" + typeAliases.get(alias) + "'.");
     }
-    typeAliases.put(alias, value);
+    typeAliases.put(key, value);
   }
 
 }

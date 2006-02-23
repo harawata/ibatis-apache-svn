@@ -107,6 +107,11 @@ public class StatementTest extends BaseSqlMapTest {
     assertAccount1(account);
   }
 
+  public void testExecuteQueryForObjectViaResultClassIgnoreCaseTypeAliasCase() throws SQLException {
+    Account account = (Account) sqlMap.queryForObject("getAccountViaResultClassIgnoreCaseTypeAlias", new Integer(1));
+    assertAccount1(account);
+  }
+  
   public void testExecuteQueryForObjectViaResultClassPlusOne() throws SQLException {
     List list = sqlMap.queryForList("getAccountViaResultClassPlusOne", new Integer(1));
     assertList(list);
