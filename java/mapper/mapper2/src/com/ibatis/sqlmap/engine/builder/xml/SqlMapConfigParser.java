@@ -343,7 +343,7 @@ public class SqlMapConfigParser extends BaseParser {
           vars.errorCtx.setResource(url);
           reader = Resources.getUrlAsReader(url);
         } else {
-          throw new SqlMapException("The " + "sqlMap" + " element requires either a resource or a url attribute.");
+          throw new SqlMapException("The <sqlMap> element requires either a resource or a url attribute.");
         }
 
         if (vars.sqlMapConv != null) {
@@ -369,7 +369,7 @@ public class SqlMapConfigParser extends BaseParser {
     vars.typeHandlerFactory.putTypeAlias("FIFO", FifoCacheController.class.getName());
     vars.typeHandlerFactory.putTypeAlias("LRU", LruCacheController.class.getName());
     vars.typeHandlerFactory.putTypeAlias("MEMORY", MemoryCacheController.class.getName());
-    // -- use a string for OSCache to avoid uneccessary loading of properties upon init
+    // use a string for OSCache to avoid unnecessary loading of properties upon init
     vars.typeHandlerFactory.putTypeAlias("OSCACHE", "com.ibatis.sqlmap.engine.cache.oscache.OSCacheController");
 
     // TYPE ALIASEs
@@ -378,6 +378,5 @@ public class SqlMapConfigParser extends BaseParser {
     vars.typeHandlerFactory.putTypeAlias("xml", XmlTypeMarker.class.getName());
     vars.typeHandlerFactory.putTypeAlias("xmlCollection", XmlCollectionTypeMarker.class.getName());
   }
-
 
 }
