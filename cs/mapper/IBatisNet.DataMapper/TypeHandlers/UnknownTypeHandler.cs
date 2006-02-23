@@ -1,11 +1,11 @@
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
- * $Revision: $
- * $Date$
+ * $Revision$
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -111,11 +111,13 @@ namespace IBatisNet.DataMapper.TypeHandlers
 
 		public override bool IsSimpleType
 		{
-			get
-			{
-				return true;
-			}
+			get { return true; }
 		}
+
+        //public override object NullValue
+        //{
+        //    get { throw new InvalidCastException("UnknownTypeHandler could not cast a null value in unknown type field."); }
+        //}
 
 		/// <summary>
 		///  Compares two values (that this handler deals with) for equality

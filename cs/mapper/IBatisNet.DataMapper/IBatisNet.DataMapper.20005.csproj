@@ -558,6 +558,17 @@
     <Compile Include="TypeHandlers\ITypeHandlerCallback.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="TypeHandlers\Nullables\NullableBooleanTypeHandler.cs" />
+    <Compile Include="TypeHandlers\Nullables\NullableByteTypeHandler.cs" />
+    <Compile Include="TypeHandlers\Nullables\NullableCharTypeHandler.cs" />
+    <Compile Include="TypeHandlers\Nullables\NullableDateTimeTypeHandler.cs" />
+    <Compile Include="TypeHandlers\Nullables\NullableDecimalTypeHandler.cs" />
+    <Compile Include="TypeHandlers\Nullables\NullableDoubleTypeHandler.cs" />
+    <Compile Include="TypeHandlers\Nullables\NullableGuidTypeHandler.cs" />
+    <Compile Include="TypeHandlers\Nullables\NullableInt16TypeHandler.cs" />
+    <Compile Include="TypeHandlers\Nullables\NullableInt32TypeHandler.cs" />
+    <Compile Include="TypeHandlers\Nullables\NullableInt64TypeHandler.cs" />
+    <Compile Include="TypeHandlers\Nullables\NullableSingleTypeHandler.cs" />
     <Compile Include="TypeHandlers\ObjectTypeHandler.cs">
       <SubType>Code</SubType>
     </Compile>

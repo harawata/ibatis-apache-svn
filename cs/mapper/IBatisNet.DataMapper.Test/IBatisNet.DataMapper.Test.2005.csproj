@@ -160,6 +160,7 @@
     <Compile Include="Domain\Newspaper.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Domain\Nullable.cs" />
     <Compile Include="Domain\OneZeroBoolTypeHandlerCallback.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -211,6 +212,7 @@
     <Compile Include="NUnit\SqlMapTests\DynamicTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="NUnit\SqlMapTests\Generics\NullableTest.cs" />
     <Compile Include="NUnit\SqlMapTests\Generics\ResultMapTest.cs" />
     <Compile Include="NUnit\SqlMapTests\Generics\ResultClassTest.cs" />
     <Compile Include="NUnit\SqlMapTests\Generics\StatementTest.cs" />
@@ -290,6 +292,7 @@
     <Content Include="Maps\MSSQL\Odbc\DynamicAccount.xml" />
     <Content Include="Maps\MSSQL\Odbc\Enumeration.xml" />
     <Content Include="Maps\MSSQL\Odbc\LineItem.xml" />
+    <Content Include="Maps\MSSQL\Odbc\Nullable.xml" />
     <Content Include="Maps\MSSQL\Odbc\Order.xml" />
     <Content Include="Maps\MSSQL\Odbc\Other.xml" />
     <Content Include="Maps\MSSQL\Odbc\ParameterClass.xml" />
@@ -301,6 +304,7 @@
     <Content Include="Maps\MSSQL\OleDb\DynamicAccount.xml" />
     <Content Include="Maps\MSSQL\OleDb\Enumeration.xml" />
     <Content Include="Maps\MSSQL\OleDb\LineItem.xml" />
+    <Content Include="Maps\MSSQL\OleDb\Nullable.xml" />
     <Content Include="Maps\MSSQL\OleDb\Order.xml" />
     <Content Include="Maps\MSSQL\OleDb\Other.xml" />
     <Content Include="Maps\MSSQL\OleDb\ParameterClass.xml" />
@@ -312,6 +316,7 @@
     <Content Include="Maps\MSSQL\SqlClient\EmbedParameter.xml" />
     <Content Include="Maps\MSSQL\SqlClient\Enumeration.xml" />
     <Content Include="Maps\MSSQL\SqlClient\LineItem.xml" />
+    <Content Include="Maps\MSSQL\SqlClient\Nullable.xml" />
     <Content Include="Maps\MSSQL\SqlClient\Order.xml" />
     <Content Include="Maps\MSSQL\SqlClient\Other.xml" />
     <Content Include="Maps\MSSQL\SqlClient\ParameterClass.xml" />
@@ -398,6 +403,7 @@
     <Content Include="Scripts\MSSQL\enumeration-init.sql" />
     <Content Include="Scripts\MSSQL\line-item-init.sql" />
     <Content Include="Scripts\MSSQL\more-account-records.sql" />
+    <Content Include="Scripts\MSSQL\Nullable-init.sql" />
     <Content Include="Scripts\MSSQL\order-init.sql" />
     <Content Include="Scripts\MSSQL\other-init.sql" />
     <Content Include="Scripts\MSSQL\ps_SelectAccount.sql" />

@@ -34,7 +34,9 @@ using IBatisNet.Common.Logging;
 using IBatisNet.Common.Utilities;
 using IBatisNet.DataMapper.Configuration.Alias;
 using IBatisNet.DataMapper.Exceptions;
-
+#if dotnet2
+using IBatisNet.DataMapper.TypeHandlers.Nullables;
+#endif
 #endregion 
 
 namespace IBatisNet.DataMapper.TypeHandlers
@@ -115,7 +117,42 @@ namespace IBatisNet.DataMapper.TypeHandlers
 			handler = new EnumTypeHandler();
 			this.Register( typeof(System.Enum), handler);
 
-			_unknownTypeHandler = new UnknownTypeHandler(this);
+#if dotnet2
+            handler = new NullableBooleanTypeHandler();
+            this.Register(typeof(bool?), handler);
+
+            handler = new NullableByteTypeHandler();
+            this.Register(typeof(byte?), handler);
+
+            handler = new NullableCharTypeHandler();
+            this.Register(typeof(char?), handler);
+
+            handler = new NullableDateTimeTypeHandler();
+            this.Register(typeof(DateTime?), handler);
+
+            handler = new NullableDecimalTypeHandler();
+            this.Register(typeof(decimal?), handler);
+
+            handler = new NullableDoubleTypeHandler();
+            this.Register(typeof(double?), handler);
+
+            handler = new NullableGuidTypeHandler();
+            this.Register(typeof(Guid?), handler);
+
+            handler = new NullableInt16TypeHandler();
+            this.Register(typeof(Int16?), handler);
+            
+            handler = new NullableInt32TypeHandler();
+            this.Register(typeof(Int32?), handler);
+
+            handler = new NullableInt64TypeHandler();
+            this.Register(typeof(Int64?), handler);
+
+            handler = new NullableSingleTypeHandler();
+            this.Register(typeof(Single?), handler);
+#endif
+
+            _unknownTypeHandler = new UnknownTypeHandler(this);
 
 		}
 

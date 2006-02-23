@@ -293,6 +293,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Domain\Nullable.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Domain\OneZeroBoolTypeHandlerCallback.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

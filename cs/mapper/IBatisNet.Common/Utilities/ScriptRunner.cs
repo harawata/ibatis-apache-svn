@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -123,12 +123,18 @@ namespace IBatisNet.Common.Utilities
 				}
 			}
 
-			try {
-				ExecuteStatements(dataSource, sqlStatements);
-			}
-			catch(System.Exception e) {
-				throw new IBatisNetException("Unable to execute the sql: " + fi.Name, e);
-			}
+            try
+            {
+                ExecuteStatements(dataSource, sqlStatements);
+            }
+            catch (System.Exception e)
+            {
+                throw new IBatisNetException("Unable to execute the sql: " + fi.Name, e);
+            }
+            finally
+            {
+                //
+            }
 		}
 
 		/// <summary>

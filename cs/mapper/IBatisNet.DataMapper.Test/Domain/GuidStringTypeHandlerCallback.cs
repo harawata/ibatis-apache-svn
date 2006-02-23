@@ -42,6 +42,10 @@ namespace IBatisNet.DataMapper.Test.Domain
 			setter.Value = parameter.ToString();
 		}
 
+        public object NullValue
+        {
+            get { throw new InvalidCastException("GuidStringTypeHandlerCallback could not cast a null value in a guid field."); }
+        }
 		#endregion
 	}
 }

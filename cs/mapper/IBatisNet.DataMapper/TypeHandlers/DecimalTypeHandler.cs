@@ -1,12 +1,12 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
- * $Revision: $
- * $Date$
+ * $Revision$
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,8 +33,6 @@ using System.Globalization;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
 #endregion 
 
-
-
 namespace IBatisNet.DataMapper.TypeHandlers
 {
 	/// <summary>
@@ -42,9 +40,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 	/// </summary>
 	internal class DecimalTypeHandler : BaseTypeHandler
 	{
-
-
-		/// <summary>
+        /// <summary>
 		/// 
 		/// </summary>
 		/// <param name="mapping"></param>
@@ -79,7 +75,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		public override object ValueOf(Type type, string s)
 		{
 			CultureInfo culture = new CultureInfo( "en-US" );
-			// nullValue decimal must be  in format ######.##
+			// value decimal must be  in format ######.##
 			// where . is separator for decimal
 			return decimal.Parse(s, culture);
 		}
@@ -92,10 +88,12 @@ namespace IBatisNet.DataMapper.TypeHandlers
 
 		public override bool IsSimpleType
 		{
-			get
-			{
-				return true;
-			}
+			get { return true; }
 		}
+
+        //public override object NullValue
+        //{
+        //    get { throw new InvalidCastException("DecimalTypeHandler could not cast a null value in decimal field."); }
+        //}
 	}
 }

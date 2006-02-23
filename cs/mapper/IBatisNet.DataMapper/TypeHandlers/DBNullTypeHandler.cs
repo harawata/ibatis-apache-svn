@@ -1,12 +1,12 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
- * $Revision: 378715 $
- * $Date: 2006-02-18 06:41:00 -0500 (Sat, 18 Feb 2006) $
+ * $Revision: 378879 $
+ * $LastChangedDate: 2006-02-19 12:37:22 +0100 (dim., 19 févr. 2006) $
+ * $LastChangedBy: gbayon $
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -57,10 +57,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 
 		public override bool IsSimpleType
 		{
-			get
-			{
-				return false;
-			}
+			get { return false; }
 		}
 
 		public override object ValueOf(Type type, string s)
@@ -72,5 +69,10 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		{
 			dataParameter.Value = DBNull.Value;
 		}
+
+        //public override object NullValue
+        //{
+        //    get { return null; }
+        //}
 	}
 }

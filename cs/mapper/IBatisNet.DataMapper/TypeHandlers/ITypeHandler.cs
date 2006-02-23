@@ -1,12 +1,12 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
- * $Revision: $
- * $Date$
+ * $Revision$
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -93,5 +93,10 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		/// <param name="str">the other object as a String</param>
 		/// <returns>true if they are equal</returns>
 		 bool Equals(object obj, string str);
+
+        /// <summary>
+        /// The null value for this type
+        /// </summary>
+        object NullValue { get;}
 	}
 }

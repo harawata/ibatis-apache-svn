@@ -1,12 +1,12 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
- * $Revision: $
- * $Date$
+ * $Revision$
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,7 +24,7 @@
  ********************************************************************************/
 #endregion
 
-#region Imports
+#region Using
 
 using System;
 using System.Collections;
@@ -330,12 +330,30 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 				}
 				else
 				{
-					value = null;
+                    value = _typeHandler.NullValue;
 				}			
 			}
 
 			return value;
 		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public object TranslateValue(object value)
+        {
+            if (value == null)
+            {
+                return _typeHandler.NullValue;
+            }
+            else
+            {
+                return value;
+            }
+        }
+
 		#endregion
 	}
 

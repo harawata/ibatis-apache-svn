@@ -64,6 +64,10 @@ namespace IBatisNet.DataMapper.Test.Domain
 			}		
 		}
 
+        public object NullValue
+        {
+            get { throw new InvalidCastException("HundredsTypeHandlerCallback could not cast a null value in the field."); }
+        }
 		#endregion
 	}
 }

@@ -179,7 +179,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			int key = (int)sqlMap.Insert("InsertCategoryNull", category);
 
 			Category categoryRead = null;
-			categoryRead = (Category) sqlMap.QueryForObject("GetCategory", key);
+            categoryRead = (Category)sqlMap.QueryForObject("GetCategoryWithNullValueReplacementGuid", key);
 
 			Assert.AreEqual(category.Name, categoryRead.Name);
 			Assert.AreEqual(category.Guid.ToString(), categoryRead.Guid.ToString());

@@ -6,9 +6,26 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<alias>
 		<typeAlias alias="Category" type="IBatisNet.DataMapper.Test.Domain.Category, IBatisNet.DataMapper.Test"/>
 	</alias>
-	
-	<statements>
-	
+
+  <resultMaps>
+    <resultMap id="Category-result" class="Category">
+      <result property="Id" column="Category_ID"/>
+      <result property="Name" column="Category_Name"/>
+      <result property="Guid" column="Category_Guid" nullValue="00000000-0000-0000-0000-000000000000"/>
+    </resultMap>
+  </resultMaps >
+  
+  <statements>
+
+    <select id="GetCategoryWithNullValueReplacementGuid" resultMap="Category-result" >
+      select
+      Category_ID,
+      Category_Name,
+      Category_Guid
+      from Categories
+      where Category_ID = #value#
+    </select>
+    
 		<select id="GetCategory" parameterClass="Integer" resultClass="Category">
 			select
 			Category_ID as Id,

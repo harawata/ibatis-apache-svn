@@ -42,6 +42,10 @@ namespace IBatisNet.DataMapper.Test.Domain
 			throw new NotImplementedException(); 
 		}
 
+        public object NullValue
+        {
+            get { throw new InvalidCastException("CustomInheritance TypeHandlerCallback could not cast a null value in the field."); }
+        }
 		#endregion
 	}
 }

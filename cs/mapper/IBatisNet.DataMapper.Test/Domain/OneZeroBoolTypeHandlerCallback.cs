@@ -60,6 +60,10 @@ namespace IBatisNet.DataMapper.Test.Domain
 			}			
 		}
 
+        public object NullValue
+        {
+            get { throw new InvalidCastException("OneZeroBoolTypeHandlerCallback could not cast a null value in a bool field."); }
+        }
 		#endregion
 	}
 }

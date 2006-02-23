@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -1303,11 +1303,10 @@ namespace IBatisNet.DataMapper.MappedStatements
 					else if ( (mapping.PropertyInfo.PropertyType.GetInterface("IList") != null) || 
 						(mapping.PropertyInfo.PropertyType == typeof(IList)))
 					{
-						object values = null;
 
 						if (mapping.IsLazyLoad)
 						{
-							values = LazyLoadList.NewInstance(queryStatement, keys, target, mapping.PropertyName);
+							object values = LazyLoadList.NewInstance(queryStatement, keys, target, mapping.PropertyName);
 							ObjectProbe.SetPropertyValue( target, mapping.PropertyName, values);
 						}
 						else
@@ -1326,7 +1325,18 @@ namespace IBatisNet.DataMapper.MappedStatements
                     else if ( mapping.PropertyInfo.PropertyType.IsGenericType && 
                               mapping.PropertyInfo.PropertyType.GetGenericTypeDefinition() == typeof(IList<>)) 
                     {
-                        postSelect.Method = ExecuteMethod.ExecuteQueryForGenericIList;
+                        if (mapping.IsLazyLoad)
+                        {
+                            object values = LazyLoadList.NewInstance(queryStatement, keys, target, mapping.PropertyName);
+                            ObjectProbe.SetPropertyValue(target, mapping.PropertyName, values);
+                        }
+                        else
+                        {
+                            if (mapping.PropertyInfo.PropertyType.GetGenericTypeDefinition() == typeof(IList<>))
+                            {
+                                postSelect.Method = ExecuteMethod.ExecuteQueryForGenericIList;
+                            }
+                        }
                     }
 #endif
                     else // The ResultProperty is map to a .Net object

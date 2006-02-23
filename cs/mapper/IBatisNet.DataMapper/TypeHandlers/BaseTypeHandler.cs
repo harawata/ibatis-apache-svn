@@ -1,12 +1,12 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
- * $Revision: $
- * $Date$
+ * $Revision$
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -73,6 +73,14 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		/// <param name="s">the String value</param>
 		/// <returns>the converted value</returns>
 		public abstract object ValueOf(Type type, string s);
+
+        /// <summary>
+        /// The null value for this type
+        /// </summary>
+        public virtual object NullValue 
+        {
+            get { return null; }
+        }
 
 		/// <summary>
 		///  Sets a parameter on a IDbCommand

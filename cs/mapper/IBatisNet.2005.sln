@@ -20,6 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		External-Bin\Net\1.1\log4net.license.txt = External-Bin\Net\1.1\log4net.license.txt
 		External-Bin\Net\1.1\log4net.xml = External-Bin\Net\1.1\log4net.xml
 		External-Bin\Net\1.1\nunit.framework.dll = External-Bin\Net\1.1\nunit.framework.dll
+		providers.config = providers.config
 		External-Bin\Net\1.1\readme.txt = External-Bin\Net\1.1\readme.txt
 	EndProjectSection
 EndProject

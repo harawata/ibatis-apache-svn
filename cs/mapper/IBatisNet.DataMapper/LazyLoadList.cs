@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -34,7 +34,9 @@ using IBatisNet.Common.Logging;
 using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.Common.Utilities.Proxy;
 using IBatisNet.DataMapper.MappedStatements;
-
+#if dotnet2
+using System.Collections.Generic;
+#endif
 #endregion
 
 namespace IBatisNet.DataMapper
@@ -96,18 +98,44 @@ namespace IBatisNet.DataMapper
 		/// <param name="propertyName">The property's name which been proxified.</param>
 		/// <param name="target">The target object which contains the property proxydied.</param>
 		/// <returns>A proxy</returns>
-		internal static IList NewInstance(IMappedStatement mappedSatement, object param, object target,string propertyName)
+		internal static IList NewInstance(IMappedStatement mappedSatement, object param, object target, string propertyName)
 		{
 			object proxList = null;
 			IInterceptor handler = new LazyLoadList(mappedSatement, param, target, propertyName);
-
-			if (mappedSatement.Statement.ListClass != null)
+            Type listClassType = mappedSatement.Statement.ListClass;
+            if (listClassType != null)
 			{
-				proxList = ProxyGeneratorFactory.GetProxyGenerator().CreateProxy(typeof(IList), handler, mappedSatement.Statement.CreateInstanceOfListClass());
+#if dotnet2
+                if (listClassType.IsGenericType)
+                {
+                }
+                else
+                {
+#endif
+                    proxList = ProxyGeneratorFactory.GetProxyGenerator().CreateProxy(typeof(IList), handler, mappedSatement.Statement.CreateInstanceOfListClass());
+ #if dotnet2
+				}
+#endif
 			}
 			else
 			{
-				proxList = ProxyGeneratorFactory.GetProxyGenerator().CreateProxy(typeof(IList), handler, new ArrayList());
+#if dotnet2
+                if (ObjectProbe.GetPropertyInfoForSetter(target.GetType(), propertyName).GetType().IsGenericType)
+                {
+                    Type[] typeArgs = listClassType.GetGenericArguments();
+                    //Type elementType = postSelect.ResultProperty.PropertyInfo.PropertyType.GetGenericArguments()[0];
+                    Type definition = typeof(List<>);
+                    Type constructedType = definition.MakeGenericType(typeArgs);
+                    object list = Activator.CreateInstance(constructedType);
+                    proxList = ProxyGeneratorFactory.GetProxyGenerator().CreateProxy(typeof(IList), handler, list);
+                }
+                else
+                {
+#endif
+                    proxList = ProxyGeneratorFactory.GetProxyGenerator().CreateProxy(typeof(IList), handler, new ArrayList());
+ #if dotnet2
+                }
+#endif
 			}
 
 			return (IList) proxList;
