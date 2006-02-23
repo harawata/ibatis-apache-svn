@@ -383,7 +383,7 @@ public class SqlExecutor {
         } else {
           for (int i = 0; i < skipResults; i++) {
             if (!rs.next()) {
-              break;
+              return;
             }
           }
         }
