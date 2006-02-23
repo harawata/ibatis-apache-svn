@@ -1,5 +1,7 @@
 package com.ibatis.sqlmap.engine.builder.xml;
 
+import com.ibatis.common.logging.Log;
+import com.ibatis.common.logging.LogFactory;
 import com.ibatis.common.resources.Resources;
 import com.ibatis.common.xml.Nodelet;
 import com.ibatis.common.xml.NodeletException;
@@ -24,6 +26,8 @@ import java.util.Iterator;
 
 public class SqlMapParser extends BaseParser {
 
+  private static final Log log = LogFactory.getLog(SqlMapParser.class);	
+	
   private final NodeletParser parser = new NodeletParser();
 
   public SqlMapParser(Variables vars) {
@@ -75,7 +79,13 @@ public class SqlMapParser extends BaseParser {
         if (vars.useStatementNamespaces) {
           id = applyNamespace(id);
         }
-        vars.sqlIncludes.put(id, node);
+        if (vars.sqlIncludes.containsKey(id)) {
+          // To be upgraded to throwing of a NestedRuntimeException later on
+          log.warn("Duplicate <sql>-include '" + id + "' found.");
+        }
+        else  {
+        	vars.sqlIncludes.put(id, node);
+        }
       }
     });
   }
