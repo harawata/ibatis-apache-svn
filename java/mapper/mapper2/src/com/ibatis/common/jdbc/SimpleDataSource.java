@@ -118,6 +118,8 @@ public class SimpleDataSource implements DataSource {
 
   private void initialize(Map props) {
     try {
+      String prop_pool_ping_query = null;
+    	
       if (props == null) {
         throw new NestedRuntimeException("SimpleDataSource: The properties map passed to the initializer was null.");
       }
@@ -158,9 +160,10 @@ public class SimpleDataSource implements DataSource {
             props.containsKey(PROP_POOL_PING_ENABLED)
                 && Boolean.valueOf((String) props.get(PROP_POOL_PING_ENABLED)).booleanValue();
 
+        prop_pool_ping_query = (String) props.get(PROP_POOL_PING_QUERY); 
         poolPingQuery =
             props.containsKey(PROP_POOL_PING_QUERY)
-            ? (String) props.get(PROP_POOL_PING_QUERY)
+            ? prop_pool_ping_query 
             : "NO PING QUERY SET";
 
         poolPingConnectionsOlderThan =
@@ -194,6 +197,12 @@ public class SimpleDataSource implements DataSource {
         expectedConnectionTypeCode = assembleConnectionTypeCode(jdbcUrl, jdbcUsername, jdbcPassword);
 
         Resources.instantiate(jdbcDriver);
+        
+        if ( poolPingEnabled && (!props.containsKey(PROP_POOL_PING_QUERY) ||
+        		prop_pool_ping_query.trim().length() == 0) ) {
+          throw new NestedRuntimeException("SimpleDataSource: property '" + PROP_POOL_PING_ENABLED + "' is true, but property '" + 
+                                           PROP_POOL_PING_QUERY + "' is not set correctly.");
+        }        
       }
 
     } catch (Exception e) {
@@ -666,6 +675,9 @@ public class SimpleDataSource implements DataSource {
     try {
       result = !conn.getRealConnection().isClosed();
     } catch (SQLException e) {
+      if (log.isDebugEnabled()) {
+        log.debug("Connection " + conn.getRealHashCode() + " is BAD: " + e.getMessage());
+      }    	
       result = false;
     }
 
@@ -676,7 +688,7 @@ public class SimpleDataSource implements DataSource {
 
           try {
             if (log.isDebugEnabled()) {
-              log.debug("Testing connection " + conn.getRealHashCode() + "...");
+              log.debug("Testing connection " + conn.getRealHashCode() + " ...");
             }
             Connection realConn = conn.getRealConnection();
             Statement statement = realConn.createStatement();
@@ -691,6 +703,7 @@ public class SimpleDataSource implements DataSource {
               log.debug("Connection " + conn.getRealHashCode() + " is GOOD!");
             }
           } catch (Exception e) {
+            log.warn("Execution of ping query '" + poolPingQuery + "' failed: " + e.getMessage());          	
             try {
               conn.getRealConnection().close();
             } catch (Exception e2) {
@@ -698,7 +711,7 @@ public class SimpleDataSource implements DataSource {
             }
             result = false;
             if (log.isDebugEnabled()) {
-              log.debug("Connection " + conn.getRealHashCode() + " is BAD!");
+              log.debug("Connection " + conn.getRealHashCode() + " is BAD: " + e.getMessage());
             }
           }
         }
@@ -897,7 +910,7 @@ public class SimpleDataSource implements DataSource {
 
     private Connection getValidConnection() {
       if (!valid) {
-        throw new NestedRuntimeException("Error accessing SimplePooledConnection.  Connection has been invalidated (probably released back to the pool).");
+        throw new NestedRuntimeException("Error accessing SimplePooledConnection. Connection is invalid.");
       }
       return realConnection;
     }
@@ -927,7 +940,7 @@ public class SimpleDataSource implements DataSource {
     // **********************************
 
     /**
-     * Required for InvocationHandler inplementaion.
+     * Required for InvocationHandler implementation.
      *
      * @param proxy  - not used
      * @param method - the method to be executed
