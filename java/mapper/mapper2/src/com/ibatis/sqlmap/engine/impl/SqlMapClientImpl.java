@@ -133,7 +133,7 @@ public class SqlMapClientImpl implements ExtendedSqlMapClient {
   /**
    * TODO Deprecated
    *
-   * @return
+   * @return Current connection
    * @throws SQLException
    * @deprecated
    */

@@ -38,7 +38,7 @@ public interface PaginatedList extends List {
   public boolean isFirstPage();
 
   /**
-   * Is the current page a middle page (i.e. not first or last)?
+   * Is the current page a middle page (ie not first or last)?
    *
    * @return True if the current page is not the first or last page,
    *         and more than one page exists (always returns false if only a

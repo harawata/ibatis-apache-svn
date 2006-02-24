@@ -75,8 +75,9 @@ public class SqlTagContext {
   }
   
   /**
-   * examine the value of the top RemoveFirstPrependMarker object on the stack
-   * @return
+   * examine the value of the top RemoveFirstPrependMarker object on the stack.
+   * 
+   * @return was the first prepend removed
    */
   public boolean peekRemoveFirstPrependMarker(SqlTag sqlTag) {
     
@@ -162,7 +163,7 @@ public class SqlTagContext {
    * iterate context is removed here from the stack when iterate tag is finished being
    * processed
    * 
-   * @return
+   * @return the top element of the context stack
    */
   public IterateContext popIterateContext() {
     IterateContext retVal = null;
@@ -176,7 +177,7 @@ public class SqlTagContext {
    * iterate context is removed here from the stack when iterate tag is finished being
    * processed
    * 
-   * @return
+   * @return the top element on the context stack
    */
   public IterateContext peekIterateContext() {
     IterateContext retVal = null;

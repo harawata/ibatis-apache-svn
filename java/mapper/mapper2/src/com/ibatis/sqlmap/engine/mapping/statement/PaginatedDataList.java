@@ -78,17 +78,6 @@ public class PaginatedDataList implements PaginatedList {
     }
   }
 
-//  private void slowPageTo(int idx) throws SQLException {
-//    index = idx;
-//    if (idx == 0) {
-//      prevPageList = new ArrayList();
-//    } else {
-//      prevPageList = getList(index - 1, pageSize);
-//    }
-//    currentPageList = getList(index, pageSize);
-//    nextPageList = getList(index + 1, pageSize);
-//  }
-
   public void pageTo(int idx) throws SQLException {
     index = idx;
 

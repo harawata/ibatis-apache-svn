@@ -152,7 +152,7 @@ public class SqlMapSessionImpl implements SqlMapSession {
   /**
    * TODO Deprecated
    *
-   * @return
+   * @return Current connection
    * @throws SQLException
    * @deprecated
    */

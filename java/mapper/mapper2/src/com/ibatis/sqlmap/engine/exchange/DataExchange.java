@@ -53,7 +53,7 @@ public interface DataExchange {
    * @param resultObject - the result object
    * @param values - the values to be mapped
    * 
-   * @return
+   * @return the resultObject
    */
   public Object setData(RequestScope request, ResultMap resultMap, Object resultObject, Object[] values);
 
@@ -66,7 +66,7 @@ public interface DataExchange {
    * @param parameterObject - the parameter object
    * @param values - the values to set
    * 
-   * @return
+   * @return parameterObject
    */
   public Object setData(RequestScope request, ParameterMap parameterMap, Object parameterObject, Object[] values);
 

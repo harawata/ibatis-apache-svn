@@ -15,7 +15,6 @@ import com.ibatis.sqlmap.client.SqlMapException;
 
 /**
  * @author Brandon Goodin
- *
  */
 public class IterateContext implements Iterator {
 
@@ -126,8 +125,7 @@ public class IterateContext implements Iterator {
   }
 
   /**
-   *
-   * @return
+   * @return Is the iterate tag is in its final iteration?
    */
   public boolean isFinal() {
     return isFinal;
@@ -135,9 +133,9 @@ public class IterateContext implements Iterator {
 
   /**
    * This attribute is used to mark whether an iterate tag is
-   * in it's final iteration. Since the ConditionalTagHandler
+   * in its final iteration. Since the ConditionalTagHandler
    * can increment the iterate the final iterate in the doEndFragment
-   * of the IterateTagHandler needs to know it is in it's final iterate.
+   * of the IterateTagHandler needs to know it is in its final iterate.
    *
    * @param aFinal
    */

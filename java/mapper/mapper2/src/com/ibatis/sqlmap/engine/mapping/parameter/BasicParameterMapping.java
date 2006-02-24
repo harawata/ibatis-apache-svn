@@ -133,8 +133,9 @@ public class BasicParameterMapping implements ParameterMapping {
   }
 
   /**
-   *  user-defined or REF types
-   * @return
+   * user-defined or REF types
+   * 
+   * @return typeName
    */
   public String getTypeName() {
     return typeName;

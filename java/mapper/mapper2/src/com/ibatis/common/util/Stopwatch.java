@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * This class is used for testing...how else could it be used? You tell us. ;-)
+ * Stopwatch class used for testing.
  */
 public class Stopwatch {
 
