@@ -55,7 +55,6 @@ public class PropertyAccessPlan extends BaseAccessPlan {
   public Object[] getProperties(Object object) {
     Object[] values = new Object[propertyNames.length];
     try {
-      //Object[] arg = new Object[1];
       for (int i = 0; i < propertyNames.length; i++) {
         try {
           values[i] = getters[i].invoke(object, NO_ARGUMENTS);

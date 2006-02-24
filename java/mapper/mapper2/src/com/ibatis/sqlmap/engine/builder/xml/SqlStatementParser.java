@@ -25,7 +25,6 @@ import com.ibatis.sqlmap.engine.mapping.sql.Sql;
 import com.ibatis.sqlmap.engine.mapping.sql.SqlText;
 import com.ibatis.sqlmap.engine.mapping.sql.dynamic.DynamicSql;
 import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.DynamicParent;
-import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.DynamicTagHandler;
 import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.IterateTagHandler;
 import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.SqlTag;
 import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.SqlTagHandler;
@@ -205,9 +204,9 @@ public class SqlStatementParser extends BaseParser {
         if (postParseRequired) {
           sqlText = new SqlText();
           sqlText.setPostParseRequired(postParseRequired);
-          sqlText.setText(data.toString());
+          sqlText.setText(data);
         } else {
-          sqlText = PARAM_PARSER.parseInlineParameterMap(vars.client.getDelegate().getTypeHandlerFactory(), data.toString(), null);
+          sqlText = PARAM_PARSER.parseInlineParameterMap(vars.client.getDelegate().getTypeHandlerFactory(), data, null);
           sqlText.setPostParseRequired(postParseRequired);
         }
 

@@ -17,7 +17,6 @@ package com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements;
 
 import com.ibatis.common.beans.Probe;
 import com.ibatis.common.beans.ProbeFactory;
-import com.ibatis.common.beans.GenericProbe;
 import com.ibatis.common.exception.NestedRuntimeException;
 
 import java.math.BigDecimal;
@@ -37,7 +36,7 @@ public abstract class ConditionalTagHandler extends BaseTagHandler {
 
   private static final String START_INDEX = "[";
   private static final String END_INDEX = "]";
-  private static final String EMPTY_INDEX = "[]";
+  //private static final String EMPTY_INDEX = "[]";
 
   public abstract boolean isCondition(SqlTagContext ctx, SqlTag tag, Object parameterObject);
 

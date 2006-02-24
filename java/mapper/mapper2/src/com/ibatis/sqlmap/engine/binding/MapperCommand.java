@@ -165,10 +165,6 @@ public class MapperCommand {
       // Only select statements can have multiple parameters
       throw new SqlMapException("Too many parameters for statement (must be 1 or 0): " + statementName);
     }
-    if (argCount > 1 && type != StatementType.SELECT) {
-      // Only select statements can have multiple parameters
-      throw new SqlMapException("Too many parameters for statement (must be 1 or 0): " + statementName);
-    }
   }
 
   public Object execute(Object[] args) throws SQLException {

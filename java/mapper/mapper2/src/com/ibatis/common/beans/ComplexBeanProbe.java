@@ -293,7 +293,7 @@ public class ComplexBeanProbe extends BaseProbe {
     ClassInfo classCache = ClassInfo.getInstance(object.getClass());
     try {
       Object value = null;
-      if (name.indexOf("[") > -1) {
+      if (name.indexOf('[') > -1) {
         value = getIndexedProperty(object, name);
       } else {
         if (object instanceof Map) {
@@ -325,7 +325,7 @@ public class ComplexBeanProbe extends BaseProbe {
   protected void setProperty(Object object, String name, Object value) {
     ClassInfo classCache = ClassInfo.getInstance(object.getClass());
     try {
-      if (name.indexOf("[") > -1) {
+      if (name.indexOf('[') > -1) {
         setIndexedProperty(object, name, value);
       } else {
         if (object instanceof Map) {

@@ -9,8 +9,6 @@ import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
 import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
 import com.ibatis.sqlmap.engine.mapping.parameter.BasicParameterMap;
 import com.ibatis.sqlmap.engine.mapping.result.BasicResultMap;
-import com.ibatis.sqlmap.engine.mapping.result.BasicResultMapping;
-import com.ibatis.sqlmap.engine.mapping.result.ResultMapping;
 import com.ibatis.sqlmap.engine.mapping.result.Discriminator;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
 import com.ibatis.sqlmap.engine.scope.ErrorContext;
@@ -85,7 +83,7 @@ public abstract class BaseParser {
 
   public String applyNamespace(String id) {
     String newId = id;
-    if (vars.currentNamespace != null && vars.currentNamespace.length() > 0 && id != null && id.indexOf(".") < 0) {
+    if (vars.currentNamespace != null && vars.currentNamespace.length() > 0 && id != null && id.indexOf('.') < 0) {
       newId = vars.currentNamespace + "." + id;
     }
     return newId;

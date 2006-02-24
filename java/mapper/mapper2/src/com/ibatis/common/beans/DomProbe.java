@@ -15,12 +15,21 @@
  */
 package com.ibatis.common.beans;
 
-import org.w3c.dom.CharacterData;
-import org.w3c.dom.*;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.StringTokenizer;
+
+import org.w3c.dom.CharacterData;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 
 /**
  * A Probe implementation for working with DOM objects
@@ -218,9 +227,9 @@ public class DomProbe extends BaseProbe {
     StringTokenizer parser = new StringTokenizer(name, ".", false);
     while (parser.hasMoreTokens()) {
       String childName = parser.nextToken();
-      if (childName.indexOf("[") > -1) {
-        String propName = childName.substring(0, childName.indexOf("["));
-        int i = Integer.parseInt(childName.substring(childName.indexOf("[") + 1, childName.indexOf("]")));
+      if (childName.indexOf('[') > -1) {
+        String propName = childName.substring(0, childName.indexOf('['));
+        int i = Integer.parseInt(childName.substring(childName.indexOf('[') + 1, childName.indexOf(']')));
         child = findNodeByName(child, propName, i, create);
       } else {
         child = findNodeByName(child, childName, 0, create);

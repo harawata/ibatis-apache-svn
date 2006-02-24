@@ -26,7 +26,7 @@ import java.util.ArrayList;
  */
 public class ThrottledPool {
 
- private Throttle throttle;
+  private Throttle throttle;
 
   private Class type;
   private List pool;

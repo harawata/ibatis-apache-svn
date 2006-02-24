@@ -8,7 +8,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.util.*;
 
@@ -129,8 +128,6 @@ public class NodeletParser {
     factory.setIgnoringElementContentWhitespace(false);
     factory.setCoalescing(false);
     factory.setExpandEntityReferences(true);
-
-    OutputStreamWriter errorWriter = new OutputStreamWriter(System.err);
 
     DocumentBuilder builder = factory.newDocumentBuilder();
     builder.setEntityResolver(entityResolver);

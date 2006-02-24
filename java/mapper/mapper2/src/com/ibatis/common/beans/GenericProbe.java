@@ -34,8 +34,6 @@ public class GenericProbe extends BaseProbe {
 
   private static final BaseProbe BEAN_PROBE = new ComplexBeanProbe();
   private static final BaseProbe DOM_PROBE = new DomProbe();
-  private static final String START_INDEX = "[";
-  private static final String END_INDEX = "]";
 
   protected GenericProbe() {
   }
@@ -155,7 +153,7 @@ public class GenericProbe extends BaseProbe {
       return getClassPropertyTypeForGetter((Class) object, name);
     } else if (object instanceof org.w3c.dom.Document) {
       return DOM_PROBE.getPropertyTypeForGetter(object, name);
-    } else if (name.indexOf("[") > -1) {
+    } else if (name.indexOf('[') > -1) {
       return BEAN_PROBE.getIndexedType(object,name);
     } else {
       return BEAN_PROBE.getPropertyTypeForGetter(object, name);

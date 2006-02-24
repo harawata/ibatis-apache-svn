@@ -47,10 +47,10 @@ public abstract class BaseProbe implements Probe {
     Object value = null;
 
     try {
-      String name = indexedName.substring(0, indexedName.indexOf("["));
-      int i = Integer.parseInt(indexedName.substring(indexedName.indexOf("[") + 1, indexedName.indexOf("]")));
+      String name = indexedName.substring(0, indexedName.indexOf('['));
+      int i = Integer.parseInt(indexedName.substring(indexedName.indexOf('[') + 1, indexedName.indexOf(']')));
       Object list = null;
-      if(name.equals("")) {
+      if("".equals(name)) {
         list = object;        
       } else {
         list = getProperty(object, name);
@@ -94,10 +94,10 @@ public abstract class BaseProbe implements Probe {
     Class value = null;
 
     try {
-      String name = indexedName.substring(0, indexedName.indexOf("["));
-      int i = Integer.parseInt(indexedName.substring(indexedName.indexOf("[") + 1, indexedName.indexOf("]")));
+      String name = indexedName.substring(0, indexedName.indexOf('['));
+      int i = Integer.parseInt(indexedName.substring(indexedName.indexOf('[') + 1, indexedName.indexOf(']')));
       Object list = null;
-      if(!name.equals("")) {
+      if(!"".equals(name)) {
         list = getProperty(object, name);
       } else {
         list = object;
@@ -139,8 +139,8 @@ public abstract class BaseProbe implements Probe {
   protected void setIndexedProperty(Object object, String indexedName, Object value) {
 
     try {
-      String name = indexedName.substring(0, indexedName.indexOf("["));
-      int i = Integer.parseInt(indexedName.substring(indexedName.indexOf("[") + 1, indexedName.indexOf("]")));
+      String name = indexedName.substring(0, indexedName.indexOf('['));
+      int i = Integer.parseInt(indexedName.substring(indexedName.indexOf('[') + 1, indexedName.indexOf(']')));
       Object list = getProperty(object, name);
       if (list instanceof List) {
         ((List) list).set(i, value);
@@ -171,6 +171,4 @@ public abstract class BaseProbe implements Probe {
       throw new ProbeException("Error getting ordinal value from JavaBean. Cause " + e, e);
     }
   }
-
-
 }
