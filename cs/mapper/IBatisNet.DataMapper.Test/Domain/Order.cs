@@ -34,6 +34,14 @@ namespace IBatisNet.DataMapper.Test.Domain
             get { return _genericList; }
             set { _genericList = value; }
         }
+
+        private LineItemCollection2 _genericCollection = null;
+
+        public LineItemCollection2 LineItemsCollection
+        {
+            get { return _genericCollection; }
+            set { _genericCollection = value; }
+        }
 #else
         private IList _genericList;
 
@@ -41,6 +49,14 @@ namespace IBatisNet.DataMapper.Test.Domain
         {
             get { return _genericList; }
             set { _genericList = value; }
+        }
+
+        private LineItemCollection _collection = null;
+
+        public LineItemCollection LineItemsCollection
+        {
+            get { return _collection; }
+            set { _collection = value; }
         }
 #endif
 

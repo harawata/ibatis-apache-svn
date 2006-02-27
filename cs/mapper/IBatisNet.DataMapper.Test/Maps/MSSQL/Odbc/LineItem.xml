@@ -30,6 +30,11 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 	</resultMaps>  
 	
 	<statements>
+
+    <procedure id="SelectLineItemForOrder" parameterMap="select-params" resultClass="LineItem">
+      ps_SelectLineItem
+    </procedure>
+    
 		<statement id="GetLineItemPrice"
 					parameterClass="Hashtable"
 					resultMap="LineItem-Price" >
@@ -175,8 +180,12 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 	
 
   
-	<parameterMaps>   
-		
+	<parameterMaps>
+
+    <parameterMap id="select-params">
+      <parameter property="Order_ID" />
+    </parameterMap>
+    
 		<parameterMap id="insert-params">
 			<parameter property="Id" />
 			<parameter property="Order.Id" />

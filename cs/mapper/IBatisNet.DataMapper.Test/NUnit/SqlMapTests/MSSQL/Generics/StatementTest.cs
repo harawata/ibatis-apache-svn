@@ -29,8 +29,11 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL.Generics
 			InitScript( sqlMap.DataSource, ScriptDirectory + "account-init.sql" );
 			InitScript( sqlMap.DataSource, ScriptDirectory + "account-procedure.sql", false );
 			InitScript( sqlMap.DataSource, ScriptDirectory + "ps_SelectAccount.sql", false );
+
 			InitScript( sqlMap.DataSource, ScriptDirectory + "category-init.sql" );
 			InitScript( sqlMap.DataSource, ScriptDirectory + "order-init.sql" );
+            InitScript(sqlMap.DataSource, ScriptDirectory + "line-item-init.sql");
+            InitScript(sqlMap.DataSource, ScriptDirectory + "ps_SelectLineItem.sql", false);
 		}
 
 		/// <summary>
@@ -167,6 +170,21 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL.Generics
 			AssertOrder1(order);
 			AssertAccount1(order.Account);
 		}
+
+        /// <summary>
+        /// Test generic Collection via store procedure
+        /// </summary>
+        [Test]
+        public void TestGenricCollectionMappingViaSP()
+        {
+            Order order = sqlMap.QueryForObject<Order>("GetOrderWithGenericViaSP", 1);
+
+            AssertOrder1(order);
+
+            // Check generic collection
+            Assert.IsNotNull(order.LineItemsCollection);
+            Assert.AreEqual(2, order.LineItemsCollection.Count);
+        }
 		#endregion
 
 

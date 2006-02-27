@@ -21,7 +21,6 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Generics
         public void Init()
         {
             InitScript(sqlMap.DataSource, ScriptDirectory + "account-init.sql");
-            InitScript(sqlMap.DataSource, ScriptDirectory + "account-procedure.sql", false);
             InitScript(sqlMap.DataSource, ScriptDirectory + "order-init.sql");
             InitScript(sqlMap.DataSource, ScriptDirectory + "line-item-init.sql");
             InitScript(sqlMap.DataSource, ScriptDirectory + "enumeration-init.sql");
@@ -40,12 +39,11 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Generics
 
         /// <summary>
         /// Test generic Ilist  
-        /// order.LineItemsGenericList 
         /// </summary>
         [Test]
         public void TestGenricListMapping()
         {
-            Order order = sqlMap.QueryForObject<Order>("GetOrderWithGenricListLineItem", 1);
+            Order order = sqlMap.QueryForObject<Order>("GetOrderWithGenericListLineItem", 1);
 
             AssertOrder1(order);
 
@@ -54,6 +52,22 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Generics
             Assert.AreEqual(2, order.LineItemsGenericList.Count);
 
         }
+
+        /// <summary>
+        /// Test generic Collection  
+        /// </summary>
+        [Test]
+        public void TestGenricCollectionMapping()
+        {
+            Order order = sqlMap.QueryForObject<Order>("GetOrderWithGenericLineItemCollection", 1);
+
+            AssertOrder1(order);
+
+            // Check generic collection
+            Assert.IsNotNull(order.LineItemsCollection);
+            Assert.AreEqual(2, order.LineItemsCollection.Count);
+        }
+
         #endregion
     }
 }

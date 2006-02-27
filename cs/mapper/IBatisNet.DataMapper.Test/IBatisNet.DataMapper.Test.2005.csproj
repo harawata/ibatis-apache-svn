@@ -157,6 +157,7 @@
     <Compile Include="Domain\LineItemCollection.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Domain\LineItemCollection2.cs" />
     <Compile Include="Domain\Newspaper.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -185,6 +186,7 @@
     <Compile Include="NUnit\SqlMapTests\BaseTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="NUnit\SqlMapTests\CacheController\CacheModelTest.cs" />
     <Compile Include="NUnit\SqlMapTests\CacheController\FifoCacheControllerTest.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -407,6 +409,7 @@
     <Content Include="Scripts\MSSQL\order-init.sql" />
     <Content Include="Scripts\MSSQL\other-init.sql" />
     <Content Include="Scripts\MSSQL\ps_SelectAccount.sql" />
+    <Content Include="Scripts\MSSQL\ps_SelectLineItem.sql" />
     <Content Include="Scripts\MSSQL\README-embed-param.txt" />
     <Content Include="Scripts\MSSQL\swap-procedure.sql" />
     <Content Include="Scripts\MSSQL\user-init.sql" />

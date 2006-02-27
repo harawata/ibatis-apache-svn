@@ -21,7 +21,13 @@ http://ibatis.apache.org/xsd/SqlMap.xsd">
             extends="lite-order-result-by-name" >
       <result property="LineItemsGenericList" column="Order_ID" select="GetLineItemsForOrder" />
     </resultMap>
-    
+
+    <resultMap id="order-with-generic-collection-lineitem" class="Order" 
+        extends="lite-order-result-by-name" >
+      <result property="LineItemsCollection" column="Order_ID" select="GetLineItemsForOrder" />
+    </resultMap>
+
+   
 		<resultMap id="order-with-lines-result" class="Order" 
 								extends="lite-order-result-by-name" >
 			<result property="LineItemsIList" lazyLoad="true" column="Order_ID" select="GetLineItemsForOrder" />
@@ -194,6 +200,19 @@ http://ibatis.apache.org/xsd/SqlMap.xsd">
 	</resultMaps>  
 	
 	<statements>
+
+    <statement id="GetOrderWithGenericListLineItem"
+      parameterClass="Integer"
+      resultMap="order-with-generic-list-lineitem" >
+      select * from Orders where Order_ID = #value#
+    </statement>
+
+    <statement id="GetOrderWithGenericLineItemCollection"
+      parameterClass="Integer"
+      resultMap="order-with-generic-collection-lineitem" >
+      select * from Orders where Order_ID = #value#
+    </statement>
+   
 		<statement id="GetOrderLiteByColumnName"
 					parameterClass="Int"
 					resultMap="lite-order-result-by-name" >

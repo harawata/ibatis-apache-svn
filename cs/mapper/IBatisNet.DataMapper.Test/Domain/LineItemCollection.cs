@@ -4,6 +4,7 @@ using System.Collections;
 
 namespace IBatisNet.DataMapper.Test.Domain 
 {
+	[Serializable]
 	public class LineItemCollection : CollectionBase 
 	{
 		public LineItemCollection() {}

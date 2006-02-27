@@ -51,3 +51,6 @@ INSERT INTO [dbo].[LineItems] VALUES (2, 2, 'FSM-12', 2, 55.78, null);
 INSERT INTO [dbo].[LineItems] VALUES (1, 1, 'ESM-48', 8, 87.60, null);
 INSERT INTO [dbo].[LineItems] VALUES (2, 1, 'ESM-23', 1, 55.40, null);
 
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[ps_SelectLineItem]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[ps_SelectLineItem]
+

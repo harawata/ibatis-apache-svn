@@ -21,6 +21,11 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
             extends="lite-order-result-by-name" >
       <result property="LineItemsGenericList" column="Order_ID" select="GetLineItemsForOrder" />
     </resultMap>
+
+    <resultMap id="order-with-generic-collection-lineitem" class="Order" 
+        extends="lite-order-result-by-name" >
+      <result property="LineItemsCollection" column="Order_ID" select="GetLineItemsForOrder" />
+    </resultMap>
     
     <resultMap id="order-with-lines-result" class="Order" 
 								extends="lite-order-result-by-name" >
@@ -193,9 +198,15 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 	</resultMaps>  
 	
 	<statements>
-    <statement id="GetOrderWithGenricListLineItem"
+    <statement id="GetOrderWithGenericListLineItem"
       parameterClass="Integer"
       resultMap="order-with-generic-list-lineitem" >
+      select * from Orders where Order_ID = #value#
+    </statement>
+
+    <statement id="GetOrderWithGenericLineItemCollection"
+      parameterClass="Integer"
+      resultMap="order-with-generic-collection-lineitem" >
       select * from Orders where Order_ID = #value#
     </statement>
     
