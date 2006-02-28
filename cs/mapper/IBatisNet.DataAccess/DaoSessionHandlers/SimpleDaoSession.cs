@@ -403,7 +403,7 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		{
 			IDbCommand command = null;
 
-			command =  _connection.CreateCommand();
+            command = _dataSource.DbProvider.CreateCommand();
 			command.CommandType = commandType;
 			command.Connection = _connection;
 

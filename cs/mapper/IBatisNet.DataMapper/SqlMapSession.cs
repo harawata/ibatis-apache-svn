@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -417,17 +417,8 @@ namespace IBatisNet.DataMapper
 		/// <returns></returns>
 		public IDbCommand CreateCommand(CommandType commandType)
 		{
-			IDbCommand command = null;
+			IDbCommand command = _dataSource.DbProvider.CreateCommand();
 
-			if (_connection!=null)
-			{
-				command = _connection.CreateCommand();
-			}
-			else
-			{
-				command = _dataSource.DbProvider.CreateCommand();
-			}
-			
 			command.CommandType = commandType;
 			command.Connection = _connection;
 			

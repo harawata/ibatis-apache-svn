@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -75,8 +75,6 @@ namespace IBatisNet.Common
 		[NonSerialized]
 		private IDbConnection _templateConnection = null;
 		[NonSerialized]
-		private IDbCommand _templateCommand= null;
-		[NonSerialized]
 		private IDbDataAdapter _templateDataAdapter= null;
 		[NonSerialized]
 		private Type _commandBuilderType = null;
@@ -90,8 +88,6 @@ namespace IBatisNet.Common
 		private bool _usePositionalParameters = false;
 		[NonSerialized]
 		private bool _templateConnectionIsICloneable = false;
-		[NonSerialized]
-		private bool _templateCommandIsICloneable = false;
 		[NonSerialized]
 		private bool _templateDataAdapterIsICloneable = false;
 		[NonSerialized]
@@ -456,11 +452,6 @@ namespace IBatisNet.Common
 			{
 				assembly = Assembly.Load(_assemblyName);
 
-				// Build the Command template 
-				type = assembly.GetType(_commandClass, true);
-				CheckPropertyType("DbCommandClass", typeof(IDbCommand), type);
-				_templateCommand = (IDbCommand)type.GetConstructor(Type.EmptyTypes).Invoke(null);
-
 				// Build the DataAdapter template 
 				type = assembly.GetType(_dataAdapterClass, true);
 				CheckPropertyType("DataAdapterClass", typeof(IDbDataAdapter), type);
@@ -483,7 +474,6 @@ namespace IBatisNet.Common
 				}
 
 				_templateConnectionIsICloneable = _templateConnection is ICloneable;
-				_templateCommandIsICloneable = _templateCommand is ICloneable;
 				_templateDataAdapterIsICloneable = _templateDataAdapter is ICloneable;
 			}
 			catch(Exception e)
@@ -524,14 +514,7 @@ namespace IBatisNet.Common
 		/// <returns>An 'IDbCommand' object.</returns>
 		public IDbCommand CreateCommand()
 		{
-			if (_templateCommandIsICloneable)
-			{
-				return (IDbCommand) ((ICloneable)_templateCommand).Clone();
-			}
-			else
-			{
-				return (IDbCommand) Activator.CreateInstance(_templateCommand.GetType());
-			}
+            return _templateConnection.CreateCommand();
 		}
 
 		/// <summary>
@@ -556,7 +539,7 @@ namespace IBatisNet.Common
 		/// <returns>An 'IDbDataParameter' object.</returns>
 		public IDbDataParameter CreateDataParameter()
 		{
-			return _templateCommand.CreateParameter();
+            return _templateConnection.CreateCommand().CreateParameter();
 		}
 
 		/// <summary>
