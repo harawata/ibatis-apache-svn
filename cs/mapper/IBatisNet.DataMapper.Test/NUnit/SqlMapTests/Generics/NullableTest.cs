@@ -33,8 +33,77 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Generics
 
         #endregion
 
+        #region NullableClass
+        /// <summary>
+        ///  Test a NullableClass resultClass
+        /// </summary>
+        [Test]
+        public void TestNullableViaResultClass()
+        {
+            NullableClass clazz = new NullableClass();
+
+            sqlMap.Insert("InsertNullable", clazz);
+            clazz = null;
+            clazz = sqlMap.QueryForObject<NullableClass>("GetClassNullable", 1);
+
+            Assert.IsNotNull(clazz);
+            Assert.AreEqual(1, clazz.Id);
+            Assert.IsNull(clazz.TestBool);
+            Assert.IsNull(clazz.TestByte);
+            Assert.IsNull(clazz.TestChar);
+            Assert.IsNull(clazz.TestDateTime);
+            Assert.IsNull(clazz.TestDecimal);
+            Assert.IsNull(clazz.TestDouble);
+            Assert.IsNull(clazz.TestGuid);
+            Assert.IsNull(clazz.TestInt16);
+            Assert.IsNull(clazz.TestInt32);
+            Assert.IsNull(clazz.TestInt64);
+            Assert.IsNull(clazz.TestSingle);
+        }
+
+        /// <summary>
+        ///  Test a NullableClass resultClass
+        /// </summary>
+        [Test]
+        public void TestNullableViaResultClass2()
+        {
+            NullableClass clazz = new NullableClass();
+            clazz.TestBool = true;
+            clazz.TestByte = 155;
+            clazz.TestChar = 'a';
+            DateTime? date = new DateTime?(DateTime.Now);
+            clazz.TestDateTime = date;
+            clazz.TestDecimal = 99.53M;
+            clazz.TestDouble = 99.5125;
+            Guid? guid = new Guid?(Guid.NewGuid());
+            clazz.TestGuid = guid;
+            clazz.TestInt16 = 45;
+            clazz.TestInt32 = 99;
+            clazz.TestInt64 = 1234567890123456789;
+            clazz.TestSingle = 4578.46445454112f;
+
+            sqlMap.Insert("InsertNullable", clazz);
+            clazz = null;
+            clazz = sqlMap.QueryForObject<NullableClass>("GetClassNullable", 1);
+
+            Assert.IsNotNull(clazz);
+            Assert.AreEqual(1, clazz.Id);
+            Assert.IsTrue(clazz.TestBool.Value);
+            Assert.AreEqual(155, clazz.TestByte);
+            Assert.AreEqual('a', clazz.TestChar);
+            Assert.AreEqual(date.Value.ToString(), clazz.TestDateTime.Value.ToString());
+            Assert.AreEqual(99.53M, clazz.TestDecimal);
+            Assert.AreEqual(99.5125, clazz.TestDouble);
+            Assert.AreEqual(guid, clazz.TestGuid);
+            Assert.AreEqual(45, clazz.TestInt16);
+            Assert.AreEqual(99, clazz.TestInt32);
+            Assert.AreEqual(1234567890123456789, clazz.TestInt64);
+            Assert.AreEqual(4578.46445454112f, clazz.TestSingle);
+        } 
+        #endregion
 
         #region bool
+
         /// <summary>
         /// Test nullable bool
         /// </summary>

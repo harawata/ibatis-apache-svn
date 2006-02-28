@@ -283,6 +283,7 @@
     <Content Include="Maps\Access\OleDb\DynamicAccount.xml" />
     <Content Include="Maps\Access\OleDb\Enumeration.xml" />
     <Content Include="Maps\Access\OleDb\LineItem.xml" />
+    <Content Include="Maps\Access\OleDb\Nullable.xml" />
     <Content Include="Maps\Access\OleDb\Order.xml" />
     <Content Include="Maps\Access\OleDb\Other.xml" />
     <Content Include="Maps\Access\OleDb\ParameterClass.xml" />
@@ -330,6 +331,7 @@
     <Content Include="Maps\MySql\ByteFx\DynamicAccount.xml" />
     <Content Include="Maps\MySql\ByteFx\Enumeration.xml" />
     <Content Include="Maps\MySql\ByteFx\LineItem.xml" />
+    <Content Include="Maps\MySql\ByteFx\Nullable.xml" />
     <Content Include="Maps\MySql\ByteFx\Order.xml" />
     <Content Include="Maps\MySql\ByteFx\Other.xml" />
     <Content Include="Maps\MySql\ByteFx\ParameterClass.xml" />
@@ -341,6 +343,7 @@
     <Content Include="Maps\MySql\MySql\DynamicAccount.xml" />
     <Content Include="Maps\MySql\MySql\Enumeration.xml" />
     <Content Include="Maps\MySql\MySql\LineItem.xml" />
+    <Content Include="Maps\MySql\MySql\Nullable.xml" />
     <Content Include="Maps\MySql\MySql\Order.xml" />
     <Content Include="Maps\MySql\MySql\Other.xml" />
     <Content Include="Maps\MySql\MySql\ParameterClass.xml" />
@@ -352,6 +355,7 @@
     <Content Include="Maps\Oracle\ODP\DynamicAccount.xml" />
     <Content Include="Maps\Oracle\ODP\Enumeration.xml" />
     <Content Include="Maps\Oracle\ODP\LineItem.xml" />
+    <Content Include="Maps\Oracle\ODP\Nullable.xml" />
     <Content Include="Maps\Oracle\ODP\Order.xml" />
     <Content Include="Maps\Oracle\ODP\Other.xml" />
     <Content Include="Maps\Oracle\ODP\ParameterClass.xml" />
@@ -363,6 +367,7 @@
     <Content Include="Maps\Oracle\OracleClient\DynamicAccount.xml" />
     <Content Include="Maps\Oracle\OracleClient\Enumeration.xml" />
     <Content Include="Maps\Oracle\OracleClient\LineItem.xml" />
+    <Content Include="Maps\Oracle\OracleClient\Nullable.xml" />
     <Content Include="Maps\Oracle\OracleClient\Order.xml" />
     <Content Include="Maps\Oracle\OracleClient\Other.xml" />
     <Content Include="Maps\Oracle\OracleClient\ParameterClass.xml" />
@@ -374,6 +379,7 @@
     <Content Include="Maps\PostgreSQL\Npgsql\DynamicAccount.xml" />
     <Content Include="Maps\PostgreSQL\Npgsql\Enumeration.xml" />
     <Content Include="Maps\PostgreSQL\Npgsql\LineItem.xml" />
+    <Content Include="Maps\PostgreSQL\Npgsql\Nullable.xml" />
     <Content Include="Maps\PostgreSQL\Npgsql\Order.xml" />
     <Content Include="Maps\PostgreSQL\Npgsql\Other.xml" />
     <Content Include="Maps\PostgreSQL\Npgsql\ParameterClass.xml" />

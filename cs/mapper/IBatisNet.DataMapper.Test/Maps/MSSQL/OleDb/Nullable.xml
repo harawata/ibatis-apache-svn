@@ -33,7 +33,13 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       where Id = #value#
     </select>
 
-
+    <select id="GetClassNullable" resultClass="Nullable" >
+      select
+      *
+      from Nullable
+      where Id = #value#
+    </select>
+    
     <insert id="InsertNullable" parameterClass="Nullable" >
       <selectKey property="Id" type="post" resultClass="int">
         select SCOPE_IDENTITY() as value
