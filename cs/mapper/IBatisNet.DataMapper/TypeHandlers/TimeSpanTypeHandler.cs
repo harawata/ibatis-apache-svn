@@ -41,6 +41,17 @@ namespace IBatisNet.DataMapper.TypeHandlers
 	internal class TimeSpanTypeHandler : BaseTypeHandler
 	{
 
+        /// <summary>
+        ///  Sets a parameter on a IDbCommand
+        /// </summary>
+        /// <param name="dataParameter">the parameter</param>
+        /// <param name="parameterValue">the parameter value</param>
+        /// <param name="dbType">the dbType of the parameter</param>
+        public override void SetParameter(IDataParameter dataParameter, object parameterValue, string dbType)
+        {
+            dataParameter.Value = ((TimeSpan)parameterValue).Ticks;
+        }
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -49,8 +60,16 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		/// <returns></returns>
 		public override object GetValueByName(ResultProperty mapping, IDataReader dataReader)
 		{
-			//return GetValueByIndex(dataReader.GetOrdinal(columnName), dataReader);
-			return "ToDo";
+            int index = dataReader.GetOrdinal(mapping.ColumnName);
+
+            if (dataReader.IsDBNull(index) == true)
+            {
+                return System.DBNull.Value;
+            }
+            else
+            {
+                return new TimeSpan( Convert.ToInt64(dataReader.GetValue(index)) );
+            }
 		}
 
 		/// <summary>
@@ -61,10 +80,14 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		/// <returns></returns>
 		public override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader) 
 		{
-			// dépendra du dbType spécifié ds le ResultProperty (idem pour le StringTypeHandler
-			// des fois en DateTime, d'autre fois en TimeSpan
-			return "To do";
-				//dataReader.GetTimeSpan(columnIndex);
+            if (dataReader.IsDBNull(mapping.ColumnIndex) == true)
+            {
+                return System.DBNull.Value;
+            }
+            else
+            {
+                return new TimeSpan( Convert.ToInt64(dataReader.GetValue(mapping.ColumnIndex)) );
+            }
 		}
 
 		public override object GetDataBaseValue(object outputValue, Type parameterType )
