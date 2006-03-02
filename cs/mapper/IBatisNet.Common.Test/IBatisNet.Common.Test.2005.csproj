@@ -132,6 +132,7 @@
     <Compile Include="NUnit\CommonTests\Utilities\ResourcesTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="NUnit\CommonTests\Utilities\TypeResolverTest.cs" />
     <None Include="bin\Debug\dao_Access_OleDb.config" />
     <None Include="bin\Debug\dao_MSSQL_Odbc.config" />
     <None Include="bin\Debug\dao_MSSQL_OleDb.config" />

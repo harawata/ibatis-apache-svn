@@ -1,12 +1,14 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
- * $Revision: $
- * $Date$
+ * $Revision$
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
- * Copyright 2004 the original author or authors.
+ * iBATIS.NET Data Mapper
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -133,24 +135,34 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 			/// from their attendant <see cref="System.Reflection.Assembly"/>
 			/// names in an assembly qualified type name.
 			/// </summary>
-			public const string TypeAssemblySeparator = ",";
+			public const string TYPE_ASSEMBLY_SEPARATOR = ",";
+            public const string NULLABLE_TYPE = "System.Nullable";
+            public const string NULLABLE_TYPE_ASSEMBLY_SEPARATOR = "]],";
 			#endregion
 
 			#region Fields
-			private string unresolvedAssemblyName;
-			private string unresolvedTypeName;
+			private string _unresolvedAssemblyName = string.Empty;
+            private string _unresolvedTypeName = string.Empty;
+            private bool _isNullable = false;
+
 			#endregion
 
 			#region Properties
+
+            /// <summary>
+            /// Indicatre if the type is a nullable type.
+            /// </summary>
+            public bool IsNullable
+            {
+                get { return _isNullable; }
+            }
+
 			/// <summary>
 			/// The (unresolved) type name portion of the original type name.
 			/// </summary>
 			public string TypeName
 			{
-				get
-				{
-					return unresolvedTypeName;
-				}
+				get { return _unresolvedTypeName; }
 			}
 
 			/// <summary>
@@ -158,10 +170,7 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 			/// </summary>
 			public string AssemblyName
 			{
-				get
-				{
-					return unresolvedAssemblyName;
-				}
+				get { return _unresolvedAssemblyName; }
 			}
 
 			/// <summary>
@@ -189,11 +198,10 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 			{
 				get
 				{
-					System.Text.StringBuilder buffer
-						= new System.Text.StringBuilder (TypeName);
+					System.Text.StringBuilder buffer = new System.Text.StringBuilder (TypeName);
 					if (IsAssemblyQualified) 
 					{
-						buffer.Append (TypeAssemblySeparator);
+                        buffer.Append(TYPE_ASSEMBLY_SEPARATOR);
 						buffer.Append (AssemblyName);
 					}
 					return buffer.ToString ();
@@ -218,20 +226,34 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 			#region Methods
 			private void SplitTypeAndAssemblyNames (string originalTypeName) 
 			{
-				int typeAssemblyIndex
-					= originalTypeName.IndexOf (
-					TypeAssemblyInfo.TypeAssemblySeparator);
-				if (typeAssemblyIndex < 0)
-				{
-					unresolvedTypeName = originalTypeName;
-				} 
-				else
-				{
-					unresolvedTypeName = originalTypeName.Substring (
-						0, typeAssemblyIndex).Trim ();
-					unresolvedAssemblyName = originalTypeName.Substring (
-						typeAssemblyIndex + 1).Trim ();
-				}
+                if (originalTypeName.Contains(TypeAssemblyInfo.NULLABLE_TYPE))
+                {
+                    _isNullable = true;
+                    int typeAssemblyIndex = originalTypeName.IndexOf(TypeAssemblyInfo.NULLABLE_TYPE_ASSEMBLY_SEPARATOR);
+                    if (typeAssemblyIndex < 0)
+                    {
+                        _unresolvedTypeName = originalTypeName;
+                    }
+                    else
+                    {
+                        _unresolvedTypeName = originalTypeName.Substring(0, typeAssemblyIndex + 2).Trim();
+                        _unresolvedAssemblyName = originalTypeName.Substring(typeAssemblyIndex + 3).Trim();
+                    }
+                }
+                else
+                {
+                    int typeAssemblyIndex = originalTypeName.IndexOf(TypeAssemblyInfo.TYPE_ASSEMBLY_SEPARATOR);
+                    _isNullable = false;
+                    if (typeAssemblyIndex < 0)
+                    {
+                        _unresolvedTypeName = originalTypeName;
+                    }
+                    else
+                    {
+                        _unresolvedTypeName = originalTypeName.Substring(0, typeAssemblyIndex).Trim();
+                        _unresolvedAssemblyName = originalTypeName.Substring(typeAssemblyIndex + 1).Trim();
+                    }
+                }
 			}
 			#endregion
 
