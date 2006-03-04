@@ -1,6 +1,5 @@
 package com.ibatis.dao;
 
-import com.ibatis.common.exception.NestedRuntimeException;
 import com.ibatis.common.jdbc.ScriptRunner;
 import com.ibatis.common.resources.Resources;
 import com.ibatis.dao.client.DaoManager;
@@ -45,7 +44,7 @@ public abstract class BaseDaoTest extends TestCase {
       daoManager.startTransaction();
       dao.createAccount(account);
       dao.saveAccount(account2);
-      throw new NestedRuntimeException("BOOM!");
+      throw new RuntimeException("BOOM!");
       //daoManager.commitTransaction();
     } catch (Exception e) {
       // ignore

@@ -17,7 +17,7 @@ package com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements;
 
 import com.ibatis.common.beans.Probe;
 import com.ibatis.common.beans.ProbeFactory;
-import com.ibatis.common.exception.NestedRuntimeException;
+
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -109,7 +109,7 @@ public abstract class ConditionalTagHandler extends BaseTagHandler {
     } else if (compareValue != null) {
       return compareValues(type, value1, compareValue);
     } else {
-      throw new NestedRuntimeException("Error comparing in conditional fragment.  Uknown 'compare to' values.");
+      throw new RuntimeException("Error comparing in conditional fragment.  Uknown 'compare to' values.");
     }
   }
 
@@ -158,7 +158,7 @@ public abstract class ConditionalTagHandler extends BaseTagHandler {
       try {
         return DATE_FORMAT.parse(value);
       } catch (ParseException e) {
-        throw new NestedRuntimeException("Error parsing date.  Cause: " + e, e);
+        throw new RuntimeException("Error parsing date.  Cause: " + e, e);
       }
     } else if (type == BigInteger.class) {
       return new BigInteger(value);

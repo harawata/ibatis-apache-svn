@@ -16,7 +16,7 @@
 package com.ibatis.sqlmap.engine.accessplan;
 
 import com.ibatis.common.beans.ClassInfo;
-import com.ibatis.common.exception.NestedRuntimeException;
+
 
 import java.lang.reflect.Method;
 
@@ -48,7 +48,7 @@ public class PropertyAccessPlan extends BaseAccessPlan {
         }
       }
     } catch (Throwable t) {
-      throw new NestedRuntimeException("Error setting properties of '" + object + "'.  Cause: " + t, t);
+      throw new RuntimeException("Error setting properties of '" + object + "'.  Cause: " + t, t);
     }
   }
 
@@ -63,7 +63,7 @@ public class PropertyAccessPlan extends BaseAccessPlan {
         }
       }
     } catch (Throwable t) {
-      throw new NestedRuntimeException("Error getting properties of '" + object + "'.  Cause: " + t, t);
+      throw new RuntimeException("Error getting properties of '" + object + "'.  Cause: " + t, t);
     }
     return values;
   }

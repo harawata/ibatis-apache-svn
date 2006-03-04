@@ -17,7 +17,7 @@ package com.ibatis.common.jdbc;
 
 import com.ibatis.common.beans.Probe;
 import com.ibatis.common.beans.ProbeFactory;
-import com.ibatis.common.exception.NestedRuntimeException;
+
 import org.apache.commons.dbcp.BasicDataSource;
 
 import javax.sql.DataSource;
@@ -48,7 +48,7 @@ public class DbcpConfiguration {
       }
 
     } catch (Exception e) {
-      throw new NestedRuntimeException("Error initializing DbcpDataSourceFactory.  Cause: " + e, e);
+      throw new RuntimeException("Error initializing DbcpDataSourceFactory.  Cause: " + e, e);
     }
   }
 

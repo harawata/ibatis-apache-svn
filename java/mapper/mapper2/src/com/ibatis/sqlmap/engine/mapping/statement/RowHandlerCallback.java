@@ -19,7 +19,7 @@ import com.ibatis.sqlmap.client.event.RowHandler;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
 import com.ibatis.sqlmap.engine.scope.RequestScope;
 import com.ibatis.sqlmap.engine.type.XmlTypeMarker;
-import com.ibatis.common.exception.NestedRuntimeException;
+
 import org.w3c.dom.Document;
 
 import javax.xml.transform.*;
@@ -92,7 +92,7 @@ public class RowHandlerCallback {
       s = writer.getBuffer().toString();
 
     } catch (TransformerException e) {
-      throw new NestedRuntimeException("Error occurred.  Cause: " + e, e);
+      throw new RuntimeException("Error occurred.  Cause: " + e, e);
     }
 
     return s;

@@ -18,7 +18,7 @@ package com.ibatis.sqlmap.engine.mapping.result;
 import com.ibatis.common.beans.ClassInfo;
 import com.ibatis.common.beans.Probe;
 import com.ibatis.common.beans.ProbeFactory;
-import com.ibatis.common.exception.NestedRuntimeException;
+
 import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
 import com.ibatis.sqlmap.engine.scope.RequestScope;
@@ -108,7 +108,7 @@ public class AutoResultMap extends BasicResultMap {
       setResultMappingList(resultMappingList);
 
     } catch (SQLException e) {
-      throw new NestedRuntimeException("Error automapping columns. Cause: " + e);
+      throw new RuntimeException("Error automapping columns. Cause: " + e);
     }
 
   }
@@ -128,7 +128,7 @@ public class AutoResultMap extends BasicResultMap {
       }
       setResultMappingList(resultMappingList);
     } catch (SQLException e) {
-      throw new NestedRuntimeException("Error automapping columns. Cause: " + e);
+      throw new RuntimeException("Error automapping columns. Cause: " + e);
     }
   }
 
@@ -149,7 +149,7 @@ public class AutoResultMap extends BasicResultMap {
       setResultMappingList(resultMappingList);
 
     } catch (SQLException e) {
-      throw new NestedRuntimeException("Error automapping columns. Cause: " + e);
+      throw new RuntimeException("Error automapping columns. Cause: " + e);
     }
   }
 
@@ -169,7 +169,7 @@ public class AutoResultMap extends BasicResultMap {
       setResultMappingList(resultMappingList);
 
     } catch (SQLException e) {
-      throw new NestedRuntimeException("Error automapping columns. Cause: " + e);
+      throw new RuntimeException("Error automapping columns. Cause: " + e);
     }
   }
 

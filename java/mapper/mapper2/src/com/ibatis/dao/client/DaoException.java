@@ -15,14 +15,14 @@
  */
 package com.ibatis.dao.client;
 
-import com.ibatis.common.exception.NestedRuntimeException;
+
 
 /**
  * General runtime exception thrown by the DAO framework.
  * <p/>
  * <p/>
  */
-public class DaoException extends NestedRuntimeException {
+public class DaoException extends RuntimeException {
 
   public DaoException() {
   }

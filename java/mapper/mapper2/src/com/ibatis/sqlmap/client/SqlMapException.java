@@ -15,7 +15,7 @@
  */
 package com.ibatis.sqlmap.client;
 
-import com.ibatis.common.exception.NestedRuntimeException;
+
 
 /**
  * Thrown to indicate a problem with SQL Map configuration or state.  Generally
@@ -25,7 +25,7 @@ import com.ibatis.common.exception.NestedRuntimeException;
  * Note: Generally this wouldn't be used to indicate that an SQL execution error
  * occurred (that's what SQLException is for).
  */
-public class SqlMapException extends NestedRuntimeException {
+public class SqlMapException extends RuntimeException {
 
   /**
    * Simple constructor

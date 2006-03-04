@@ -15,7 +15,7 @@
  */
 package com.ibatis.common.util;
 
-import com.ibatis.common.exception.NestedRuntimeException;
+
 
 import java.util.List;
 import java.util.Collections;
@@ -45,7 +45,7 @@ public class ThrottledPool {
         this.pool.add(type.newInstance());
       }
     } catch (Exception e) {
-      throw new NestedRuntimeException("Error instantiating class.  Cause: " + e, e);
+      throw new RuntimeException("Error instantiating class.  Cause: " + e, e);
     }
   }
 

@@ -15,9 +15,9 @@
  */
 package com.ibatis.sqlmap.engine.transaction;
 
-import com.ibatis.common.exception.NestedException;
 
-public class TransactionException extends NestedException {
+
+public class TransactionException extends Exception {
 
   public TransactionException() {
   }

@@ -15,12 +15,12 @@
  */
 package com.ibatis.common.beans;
 
-import com.ibatis.common.exception.NestedRuntimeException;
+
 
 /**
  * BeansException for use for by BeanProbe and StaticBeanProbe.
  */
-public class ProbeException extends NestedRuntimeException {
+public class ProbeException extends RuntimeException {
 
   /**
    * Default constructor

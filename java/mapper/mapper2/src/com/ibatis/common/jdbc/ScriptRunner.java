@@ -16,7 +16,7 @@
 package com.ibatis.common.jdbc;
 
 import com.ibatis.common.resources.Resources;
-import com.ibatis.common.exception.NestedRuntimeException;
+
 
 import java.io.IOException;
 import java.io.LineNumberReader;
@@ -114,7 +114,7 @@ public class ScriptRunner {
     } catch (SQLException e) {
       throw e;
     } catch (Exception e) {
-      throw new NestedRuntimeException("Error running script.  Cause: " + e, e);
+      throw new RuntimeException("Error running script.  Cause: " + e, e);
     }
   }
 

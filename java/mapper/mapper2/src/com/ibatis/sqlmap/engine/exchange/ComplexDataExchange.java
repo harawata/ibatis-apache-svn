@@ -17,7 +17,7 @@ package com.ibatis.sqlmap.engine.exchange;
 
 import com.ibatis.common.beans.Probe;
 import com.ibatis.common.beans.ProbeFactory;
-import com.ibatis.common.exception.NestedRuntimeException;
+
 import com.ibatis.common.resources.Resources;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMapping;
@@ -79,7 +79,7 @@ public class ComplexDataExchange extends BaseDataExchange implements DataExchang
         try {
           object = Resources.instantiate(resultMap.getResultClass());
         } catch (Exception e) {
-          throw new NestedRuntimeException("JavaBeansDataExchange could not instantiate result class.  Cause: " + e, e);
+          throw new RuntimeException("JavaBeansDataExchange could not instantiate result class.  Cause: " + e, e);
         }
       }
       ResultMapping[] mappings = resultMap.getResultMappings();
@@ -100,7 +100,7 @@ public class ComplexDataExchange extends BaseDataExchange implements DataExchang
         try {
           object = Resources.instantiate(parameterMap.getParameterClass());
         } catch (Exception e) {
-          throw new NestedRuntimeException("JavaBeansDataExchange could not instantiate result class.  Cause: " + e, e);
+          throw new RuntimeException("JavaBeansDataExchange could not instantiate result class.  Cause: " + e, e);
         }
       }
       ParameterMapping[] mappings = parameterMap.getParameterMappings();

@@ -15,7 +15,7 @@
  */
 package com.ibatis.sqlmap.engine.exchange;
 
-import com.ibatis.common.exception.NestedRuntimeException;
+
 import com.ibatis.common.resources.Resources;
 import com.ibatis.sqlmap.engine.accessplan.AccessPlan;
 import com.ibatis.sqlmap.engine.accessplan.AccessPlanFactory;
@@ -105,7 +105,7 @@ public class JavaBeanDataExchange extends BaseDataExchange implements DataExchan
         try {
           object = Resources.instantiate(resultMap.getResultClass());
         } catch (Exception e) {
-          throw new NestedRuntimeException("JavaBeansDataExchange could not instantiate result class.  Cause: " + e, e);
+          throw new RuntimeException("JavaBeansDataExchange could not instantiate result class.  Cause: " + e, e);
         }
       }
       errorContext.setMoreInfo("The error happened while setting a property on the result object.");
@@ -124,7 +124,7 @@ public class JavaBeanDataExchange extends BaseDataExchange implements DataExchan
         try {
           object = Resources.instantiate(parameterMap.getParameterClass());
         } catch (Exception e) {
-          throw new NestedRuntimeException("JavaBeansDataExchange could not instantiate parameter class. Cause: " + e, e);
+          throw new RuntimeException("JavaBeansDataExchange could not instantiate parameter class. Cause: " + e, e);
         }
       }
       values = getOutputParamValues(parameterMap.getParameterMappings(), values);

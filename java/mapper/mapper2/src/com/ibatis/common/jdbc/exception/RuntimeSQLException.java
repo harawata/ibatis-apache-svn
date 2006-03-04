@@ -15,14 +15,14 @@
  */
 package com.ibatis.common.jdbc.exception;
 
-import com.ibatis.common.exception.NestedRuntimeException;
+
 
 import java.sql.SQLException;
 
 /**
  * Unchecked exception to allow passing an Exception with the original SQLException 
  */
-public class RuntimeSQLException extends NestedRuntimeException {
+public class RuntimeSQLException extends RuntimeException {
 
   /**
    * Default constructor
@@ -32,7 +32,7 @@ public class RuntimeSQLException extends NestedRuntimeException {
 
   /**
    * Constructor to pass along a message
-   * @see com.ibatis.common.exception.NestedRuntimeException
+   * @see com.ibatis.common.exception.RuntimeException
    * @param msg - the message
    */
   public RuntimeSQLException(String msg) {
@@ -41,7 +41,7 @@ public class RuntimeSQLException extends NestedRuntimeException {
 
   /**
    * Constructor to pass along another exception
-   * @see com.ibatis.common.exception.NestedRuntimeException
+   * @see com.ibatis.common.exception.RuntimeException
    * @param sqlException - the exception
    */
   public RuntimeSQLException(SQLException sqlException) {
@@ -50,7 +50,7 @@ public class RuntimeSQLException extends NestedRuntimeException {
 
   /**
    * Constructor to pass along a message and an exception
-   * @see com.ibatis.common.exception.NestedRuntimeException
+   * @see com.ibatis.common.exception.RuntimeException
    * @param msg - the message
    * @param sqlException - the exception
    */

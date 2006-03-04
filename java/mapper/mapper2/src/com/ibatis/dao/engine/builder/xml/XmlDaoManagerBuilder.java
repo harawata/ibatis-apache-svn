@@ -15,7 +15,7 @@
  */
 package com.ibatis.dao.engine.builder.xml;
 
-import com.ibatis.common.exception.NestedRuntimeException;
+
 import com.ibatis.common.io.ReaderInputStream;
 import com.ibatis.common.resources.Resources;
 import com.ibatis.dao.client.Dao;
@@ -317,7 +317,7 @@ public class XmlDaoManagerBuilder {
       Document doc = db.parse(new ReaderInputStream(reader));
       return doc;
     } catch (Exception e) {
-      throw new NestedRuntimeException("XML Parser Error.  Cause: " + e);
+      throw new RuntimeException("XML Parser Error.  Cause: " + e);
     }
   }
 

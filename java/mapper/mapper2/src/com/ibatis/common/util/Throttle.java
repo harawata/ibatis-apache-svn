@@ -15,7 +15,7 @@
  */
 package com.ibatis.common.util;
 
-import com.ibatis.common.exception.NestedRuntimeException;
+
 
 /**
  * This is to help keep from getting too many resources
@@ -63,7 +63,7 @@ public class Throttle {
           }
           totalWaitTime += System.currentTimeMillis() - waitTime;
           if (totalWaitTime > maxWait) {
-            throw new NestedRuntimeException("Throttle waited too long (" + totalWaitTime + " milliseconds) for lock.");
+            throw new RuntimeException("Throttle waited too long (" + totalWaitTime + " milliseconds) for lock.");
           }
         } else {
           try {

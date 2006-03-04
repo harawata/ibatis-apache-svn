@@ -16,7 +16,7 @@
 package com.ibatis.sqlmap.engine.mapping.result.loader;
 
 import com.ibatis.common.beans.ClassInfo;
-import com.ibatis.common.exception.NestedRuntimeException;
+
 import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
 import com.ibatis.sqlmap.engine.type.DomTypeMarker;
 import net.sf.cglib.proxy.Enhancer;
@@ -129,7 +129,7 @@ public class EnhancedLazyResultLoader {
           loaded = true;
           resultObject = ResultLoader.getResult(client, statementName, parameterObject, targetType);
         } catch (SQLException e) {
-          throw new NestedRuntimeException("Error lazy loading result. Cause: " + e, e);
+          throw new RuntimeException("Error lazy loading result. Cause: " + e, e);
         }
       }
     }

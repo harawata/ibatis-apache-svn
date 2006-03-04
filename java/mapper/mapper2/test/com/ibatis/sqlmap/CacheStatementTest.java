@@ -3,7 +3,6 @@ package com.ibatis.sqlmap;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.ibatis.sqlmap.client.SqlMapSession;
 import com.ibatis.sqlmap.engine.cache.CacheKey;
-import com.ibatis.common.exception.NestedRuntimeException;
 import testdomain.Account;
 
 import java.sql.SQLException;
@@ -204,7 +203,7 @@ public class CacheStatementTest extends BaseSqlMapTest {
         results.put("list", list);
         session.close();
       } catch (SQLException e) {
-        throw new NestedRuntimeException("Error.  Cause: " + e);
+        throw new RuntimeException("Error.  Cause: " + e);
       }
     }
 
@@ -214,7 +213,7 @@ public class CacheStatementTest extends BaseSqlMapTest {
       try {
         t.join();
       } catch (InterruptedException e) {
-        throw new NestedRuntimeException("Error.  Cause: " + e);
+        throw new RuntimeException("Error.  Cause: " + e);
       }
     }
   }

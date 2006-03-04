@@ -15,7 +15,7 @@
  */
 package com.ibatis.sqlmap.engine.cache;
 
-import com.ibatis.common.exception.NestedRuntimeException;
+
 import com.ibatis.common.resources.Resources;
 import com.ibatis.sqlmap.engine.mapping.statement.ExecuteListener;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
@@ -265,7 +265,7 @@ public class CacheModel implements ExecuteListener {
           value = ois.readObject();
           ois.close();
         } catch (Exception e) {
-          throw new NestedRuntimeException("Error caching serializable object.  Be sure you're not attempting to use " +
+          throw new RuntimeException("Error caching serializable object.  Be sure you're not attempting to use " +
                                            "a serialized cache for an object that may be taking advantage of lazy loading.  Cause: " + e, e);
         }
       }
@@ -295,7 +295,7 @@ public class CacheModel implements ExecuteListener {
           oos.close();
           value = bos.toByteArray();
         } catch (IOException e) {
-          throw new NestedRuntimeException("Error caching serializable object.  Cause: " + e, e);
+          throw new RuntimeException("Error caching serializable object.  Cause: " + e, e);
         }
       }
       controller.putObject(this, key, value);

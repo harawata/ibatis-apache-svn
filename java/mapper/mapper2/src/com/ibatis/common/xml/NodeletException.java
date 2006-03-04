@@ -1,8 +1,8 @@
 package com.ibatis.common.xml;
 
-import com.ibatis.common.exception.NestedException;
 
-public class NodeletException extends NestedException {
+
+public class NodeletException extends Exception {
 
   public NodeletException() {
     super();

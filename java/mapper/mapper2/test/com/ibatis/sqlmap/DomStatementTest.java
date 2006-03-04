@@ -2,7 +2,6 @@ package com.ibatis.sqlmap;
 
 import com.ibatis.common.beans.Probe;
 import com.ibatis.common.beans.ProbeFactory;
-import com.ibatis.common.exception.NestedRuntimeException;
 import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -86,7 +85,7 @@ public class DomStatementTest extends BaseSqlMapTest {
       doc.appendChild(doc.createElement(root));
       return doc;
     } catch (ParserConfigurationException e) {
-      throw new NestedRuntimeException("Error creating XML document.  Cause: " + e);
+      throw new RuntimeException("Error creating XML document.  Cause: " + e);
     }
   }
 

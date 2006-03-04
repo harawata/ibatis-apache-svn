@@ -19,7 +19,7 @@ import com.ibatis.common.beans.Probe;
 import com.ibatis.common.beans.ProbeFactory;
 import com.ibatis.common.jdbc.exception.NestedSQLException;
 import com.ibatis.common.resources.Resources;
-import com.ibatis.common.exception.NestedRuntimeException;
+
 import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.engine.exchange.DataExchange;
 import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
@@ -501,7 +501,7 @@ public class BasicResultMap implements ResultMap {
       doc.appendChild(doc.createElement(root));
       return doc;
     } catch (ParserConfigurationException e) {
-      throw new NestedRuntimeException("Error creating XML document.  Cause: " + e);
+      throw new RuntimeException("Error creating XML document.  Cause: " + e);
     }
   }
 

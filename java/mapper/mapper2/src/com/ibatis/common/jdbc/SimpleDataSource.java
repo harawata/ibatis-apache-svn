@@ -16,7 +16,7 @@
 package com.ibatis.common.jdbc;
 
 import com.ibatis.common.beans.ClassInfo;
-import com.ibatis.common.exception.NestedRuntimeException;
+
 import com.ibatis.common.resources.Resources;
 import com.ibatis.common.logging.LogFactory;
 import com.ibatis.common.logging.Log;
@@ -121,14 +121,14 @@ public class SimpleDataSource implements DataSource {
       String prop_pool_ping_query = null;
     	
       if (props == null) {
-        throw new NestedRuntimeException("SimpleDataSource: The properties map passed to the initializer was null.");
+        throw new RuntimeException("SimpleDataSource: The properties map passed to the initializer was null.");
       }
 
       if (!(props.containsKey(PROP_JDBC_DRIVER)
           && props.containsKey(PROP_JDBC_URL)
           && props.containsKey(PROP_JDBC_USERNAME)
           && props.containsKey(PROP_JDBC_PASSWORD))) {
-        throw new NestedRuntimeException("SimpleDataSource: Some properties were not set.");
+        throw new RuntimeException("SimpleDataSource: Some properties were not set.");
       } else {
 
         jdbcDriver = (String) props.get(PROP_JDBC_DRIVER);
@@ -200,14 +200,14 @@ public class SimpleDataSource implements DataSource {
         
         if ( poolPingEnabled && (!props.containsKey(PROP_POOL_PING_QUERY) ||
         		prop_pool_ping_query.trim().length() == 0) ) {
-          throw new NestedRuntimeException("SimpleDataSource: property '" + PROP_POOL_PING_ENABLED + "' is true, but property '" + 
+          throw new RuntimeException("SimpleDataSource: property '" + PROP_POOL_PING_ENABLED + "' is true, but property '" +
                                            PROP_POOL_PING_QUERY + "' is not set correctly.");
         }        
       }
 
     } catch (Exception e) {
       log.error("SimpleDataSource: Error while loading properties. Cause: " + e.toString(), e);
-      throw new NestedRuntimeException("SimpleDataSource: Error while loading properties. Cause: " + e, e);
+      throw new RuntimeException("SimpleDataSource: Error while loading properties. Cause: " + e, e);
     }
   }
 
@@ -910,7 +910,7 @@ public class SimpleDataSource implements DataSource {
 
     private Connection getValidConnection() {
       if (!valid) {
-        throw new NestedRuntimeException("Error accessing SimplePooledConnection. Connection is invalid.");
+        throw new RuntimeException("Error accessing SimplePooledConnection. Connection is invalid.");
       }
       return realConnection;
     }

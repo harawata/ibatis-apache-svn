@@ -15,7 +15,7 @@
  */
 package com.ibatis.sqlmap.engine.mapping.statement;
 
-import com.ibatis.common.exception.NestedRuntimeException;
+
 import com.ibatis.common.util.PaginatedList;
 import com.ibatis.sqlmap.client.SqlMapExecutor;
 
@@ -52,7 +52,7 @@ public class PaginatedDataList implements PaginatedList {
       currentPageList = nextPageList;
       nextPageList = getList(index + 1, pageSize);
     } catch (SQLException e) {
-      throw new NestedRuntimeException("Unexpected error while repaginating paged list.  Cause: " + e, e);
+      throw new RuntimeException("Unexpected error while repaginating paged list.  Cause: " + e, e);
     }
   }
 
@@ -66,7 +66,7 @@ public class PaginatedDataList implements PaginatedList {
         prevPageList = new ArrayList();
       }
     } catch (SQLException e) {
-      throw new NestedRuntimeException("Unexpected error while repaginating paged list.  Cause: " + e, e);
+      throw new RuntimeException("Unexpected error while repaginating paged list.  Cause: " + e, e);
     }
   }
 
@@ -74,7 +74,7 @@ public class PaginatedDataList implements PaginatedList {
     try {
       pageTo(idx);
     } catch (SQLException e) {
-      throw new NestedRuntimeException("Unexpected error while repaginating paged list.  Cause: " + e, e);
+      throw new RuntimeException("Unexpected error while repaginating paged list.  Cause: " + e, e);
     }
   }
 

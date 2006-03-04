@@ -3,7 +3,7 @@ package com.ibatis.sqlmap.engine.builder.xml;
 import com.ibatis.common.beans.Probe;
 import com.ibatis.common.beans.ProbeFactory;
 import com.ibatis.common.resources.Resources;
-import com.ibatis.common.exception.NestedRuntimeException;
+
 import com.ibatis.sqlmap.engine.cache.CacheModel;
 import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
 import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
@@ -53,7 +53,7 @@ public abstract class BaseParser {
           Class javaClass = Resources.classForName(javaType);
           handler = typeHandlerFactory.getTypeHandler(javaClass, jdbcType);
         } catch (Exception e) {
-          throw new NestedRuntimeException("Error.  Could not set TypeHandler.  Cause: " + e, e);
+          throw new RuntimeException("Error.  Could not set TypeHandler.  Cause: " + e, e);
         }
       }
     } else if (typeHandlerFactory.getTypeHandler(clazz, jdbcType) != null) {
@@ -74,7 +74,7 @@ public abstract class BaseParser {
           Class javaClass = Resources.classForName(javaType);
           handler = typeHandlerFactory.getTypeHandler(javaClass, jdbcType);
         } catch (Exception e) {
-          throw new NestedRuntimeException("Error.  Could not set TypeHandler.  Cause: " + e, e);
+          throw new RuntimeException("Error.  Could not set TypeHandler.  Cause: " + e, e);
         }
       }
     }

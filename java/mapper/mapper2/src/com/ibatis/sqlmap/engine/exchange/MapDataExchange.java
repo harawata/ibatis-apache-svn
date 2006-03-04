@@ -15,7 +15,7 @@
  */
 package com.ibatis.sqlmap.engine.exchange;
 
-import com.ibatis.common.exception.NestedRuntimeException;
+
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMapping;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
@@ -39,7 +39,7 @@ public class MapDataExchange extends BaseDataExchange implements DataExchange {
 
   public Object[] getData(RequestScope request, ParameterMap parameterMap, Object parameterObject) {
     if (!(parameterObject instanceof Map)) {
-      throw new NestedRuntimeException("Error.  Object passed into MapDataExchange was not an instance of Map.");
+      throw new RuntimeException("Error.  Object passed into MapDataExchange was not an instance of Map.");
     }
 
     Object[] data = new Object[parameterMap.getParameterMappings().length];
@@ -53,7 +53,7 @@ public class MapDataExchange extends BaseDataExchange implements DataExchange {
 
   public Object setData(RequestScope request, ResultMap resultMap, Object resultObject, Object[] values) {
     if (!(resultObject == null || resultObject instanceof Map)) {
-      throw new NestedRuntimeException("Error.  Object passed into MapDataExchange was not an instance of Map.");
+      throw new RuntimeException("Error.  Object passed into MapDataExchange was not an instance of Map.");
     }
 
     Map map = (Map) resultObject;
@@ -71,7 +71,7 @@ public class MapDataExchange extends BaseDataExchange implements DataExchange {
 
   public Object setData(RequestScope request, ParameterMap parameterMap, Object parameterObject, Object[] values) {
     if (!(parameterObject == null || parameterObject instanceof Map)) {
-      throw new NestedRuntimeException("Error.  Object passed into MapDataExchange was not an instance of Map.");
+      throw new RuntimeException("Error.  Object passed into MapDataExchange was not an instance of Map.");
     }
 
     Map map = (Map) parameterObject;

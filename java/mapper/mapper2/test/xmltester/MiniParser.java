@@ -15,21 +15,18 @@
  */
 package xmltester;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
+import com.ibatis.common.io.ReaderInputStream;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.ibatis.common.exception.NestedRuntimeException;
-import com.ibatis.common.io.ReaderInputStream;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 
 public class MiniParser extends DefaultHandler {
 
@@ -41,7 +38,7 @@ public class MiniParser extends DefaultHandler {
       StringReader reader = new StringReader(string);
       parse(reader);
     } catch (Exception e) {
-      throw new NestedRuntimeException("XmlDataExchange error parsing XML.  Cause: " + e, e);
+      throw new RuntimeException("XmlDataExchange error parsing XML.  Cause: " + e, e);
     }
   }
 
@@ -49,7 +46,7 @@ public class MiniParser extends DefaultHandler {
     try {
       parse(reader);
     } catch (Exception e) {
-      throw new NestedRuntimeException("XmlDataExchange error parsing XML.  Cause: " + e, e);
+      throw new RuntimeException("XmlDataExchange error parsing XML.  Cause: " + e, e);
     }
   }
 
@@ -101,7 +98,7 @@ public class MiniParser extends DefaultHandler {
 
 
   public void fatalError(SAXParseException e) throws SAXException {
-    throw new NestedRuntimeException("MiniXmlParser error parsing XML.  Cause: " + e, e);
+    throw new RuntimeException("MiniXmlParser error parsing XML.  Cause: " + e, e);
   }
 
   private void parse(Reader reader) throws ParserConfigurationException, SAXException, IOException {
