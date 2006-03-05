@@ -1,7 +1,7 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Revision$
+ * $Revision: 382490 $
  * $LastChangedDate$
  * $LastChangedBy$
  * 
@@ -226,7 +226,7 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 			#region Methods
 			private void SplitTypeAndAssemblyNames (string originalTypeName) 
 			{
-                if (originalTypeName.Contains(TypeAssemblyInfo.NULLABLE_TYPE))
+                if (originalTypeName.StartsWith(TypeAssemblyInfo.NULLABLE_TYPE))
                 {
                     _isNullable = true;
                     int typeAssemblyIndex = originalTypeName.IndexOf(TypeAssemblyInfo.NULLABLE_TYPE_ASSEMBLY_SEPARATOR);
