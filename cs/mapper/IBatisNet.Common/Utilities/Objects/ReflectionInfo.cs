@@ -149,16 +149,18 @@ namespace IBatisNet.Common.Utilities.Objects
 			for (int i = 0; i < properties.Length; i++) 
 			{
 				string name = properties[i].Name;
-				_setProperties.Add(name, properties[i]);
-				_setTypes.Add(name, properties[i].PropertyType);
+				//For work with Dinaproxy http://support.castleproject.org/jira//browse/DYNPROXY-8?page=all
+				_setProperties[name] = properties[i];
+				_setTypes[name] = properties[i].PropertyType;
 			}
 
 			properties = type.GetProperties(BINDING_FLAGS_GET);
 			for (int i = 0; i < properties.Length; i++) 
 			{
 				string name = properties[i].Name;
-				_getProperties.Add(name, properties[i]);
-				_getTypes.Add(name, properties[i].PropertyType);
+				//For work with Dinaproxy http://support.castleproject.org/jira//browse/DYNPROXY-8?page=all
+				_getProperties[name] = properties[i];
+				_getTypes[name] = properties[i].PropertyType;
 			}
 		}
 
