@@ -15,10 +15,12 @@
  */
 package com.ibatis.sqlmap.engine.type;
 
+import java.lang.reflect.Method;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.lang.NoSuchMethodException;
 
 /**
  * Implementation of TypeHandler for dealing with unknown types
@@ -26,6 +28,20 @@ import java.sql.SQLException;
 public class UnknownTypeHandler extends BaseTypeHandler implements TypeHandler {
 
   private TypeHandlerFactory factory;
+  
+  static private boolean usingJavaPre5 = false;
+  
+  static {
+	  try  {
+		  // try getBaseClass, if it throws no exception
+		  // were in Java 5+
+		  getBaseClass(Class.class);
+		  usingJavaPre5 = true;
+	  }
+	  catch ( NoSuchMethodException ex )  {
+		  usingJavaPre5 = false;
+	  }
+  };
 
   /**
    * Constructor to create via a factory
@@ -37,10 +53,22 @@ public class UnknownTypeHandler extends BaseTypeHandler implements TypeHandler {
   }
 
   public void setParameter(PreparedStatement ps, int i, Object parameter, String jdbcType)
-      throws SQLException {
-    TypeHandler handler = factory.getTypeHandler(parameter.getClass(), jdbcType);
+      throws SQLException {	
+	Class searchClass = parameter.getClass();
+	if ( usingJavaPre5 )  {
+		try  {
+	        searchClass = getBaseClass(searchClass);
+		}
+		catch ( Exception ex ) {
+			searchClass = null;
+		}
+	}
+    if ( searchClass == null )  {
+        searchClass = parameter.getClass();
+    }	
+    TypeHandler handler = factory.getTypeHandler(searchClass, jdbcType);
     handler.setParameter(ps, i, parameter, jdbcType);
-  }
+  } 
 
   public Object getResult(ResultSet rs, String columnName)
       throws SQLException {
@@ -86,4 +114,29 @@ public class UnknownTypeHandler extends BaseTypeHandler implements TypeHandler {
     }
   }
 
+  /**
+   * Get the base class of classParam, for top level classes
+   * this returns null. For enums, inner and anonymous 
+   * classes it returns the enclosing class. The intent 
+   * is to use this for enum support in Java 5+.
+   * 
+   * @param classParam class to get enclosing class of
+   * @return Enclosing class
+   * @throws NoSuchMethodException when run in pre Java 5.
+   */
+  private static Class getBaseClass(Class classParam) 
+  	throws NoSuchMethodException  {
+      String methodName = "getEnclosingClass";
+
+      Method method = null;
+      Class result = null;
+      try  {
+        method = classParam.getClass().getMethod(methodName, (Class[])null);
+	    result = (Class)method.invoke(classParam, (Object[])null);
+      }
+      catch ( Exception ex )  {
+    	  throw new NoSuchMethodException(ex.getMessage());
+      }
+      return result; 
+  } 
 }
