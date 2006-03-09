@@ -223,9 +223,45 @@ namespace IBatisNet.Common
 		/// <returns>An object.</returns>
 		Type ParameterDbType { get; }
 
+        /// <summary>
+        /// Does this Driver support IDbCommand.Prepare().
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// A value of <c>false</c> indicates that an exception would be thrown or the 
+        /// company that produces the Driver we are wrapping does not recommend using
+        /// IDbCommand.Prepare().
+        /// </para>
+        /// <para>
+        /// A value of <c>true</c> indicates that calling IDbCommand.Prepare() will function
+        /// fine on this Driver.
+        /// </para>
+        /// </remarks>
+        bool SupportsPreparingCommands { get; set; }
+
+        /// <summary>
+        /// Change the parameterName into the correct format IDbCommand.CommandText
+        /// for the ConnectionProvider
+        /// </summary>
+        /// <param name="parameterName">The unformatted name of the parameter</param>
+        /// <returns>A parameter formatted for an IDbCommand.CommandText</returns>
+        string FormatNameForSql(string parameterName);
+
+        /// <summary>
+        /// Changes the parameterName into the correct format for an IDbParameter
+        /// for the Driver.
+        /// </summary>
+        /// <remarks>
+        /// For SqlServerConnectionProvider it will change <c>id</c> to <c>@id</c>
+        /// </remarks>
+        /// <param name="parameterName">The unformatted name of the parameter</param>
+        /// <returns>A parameter formatted for an IDbParameter.</returns>
+        string FormatNameForParameter(string parameterName);
+
 		/// <summary>
 		/// Init the provider.
 		/// </summary>
 		void Initialize();
+
 	}
 }

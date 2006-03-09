@@ -11,10 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBatisNet.DataMapper", "IBa
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBatisNet.DataAccess.Extensions", "IBatisNet.DataAccess.Extensions\IBatisNet.DataAccess.Extensions.csproj", "{342C92B4-2742-4C55-9374-A504FE3B6972}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBatisNet.Common.Test", "IBatisNet.Common.Test\IBatisNet.Common.Test.csproj", "{5961F3DE-CB5E-40FE-AE89-D00D6E453907}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
@@ -56,12 +52,6 @@ Global
 		{72F70057-B2E1-4DAD-BA6C-E2962745EEA5}.Debug Test.Build.0 = Debug|.NET
 		{72F70057-B2E1-4DAD-BA6C-E2962745EEA5}.Release.ActiveCfg = Release|.NET
 		{72F70057-B2E1-4DAD-BA6C-E2962745EEA5}.Release.Build.0 = Release|.NET
-		{342C92B4-2742-4C55-9374-A504FE3B6972}.Debug.ActiveCfg = Debug|.NET
-		{342C92B4-2742-4C55-9374-A504FE3B6972}.Debug.Build.0 = Debug|.NET
-		{342C92B4-2742-4C55-9374-A504FE3B6972}.Debug Test.ActiveCfg = Debug|.NET
-		{342C92B4-2742-4C55-9374-A504FE3B6972}.Debug Test.Build.0 = Debug|.NET
-		{342C92B4-2742-4C55-9374-A504FE3B6972}.Release.ActiveCfg = Release|.NET
-		{342C92B4-2742-4C55-9374-A504FE3B6972}.Release.Build.0 = Release|.NET
 		{5961F3DE-CB5E-40FE-AE89-D00D6E453907}.Debug.ActiveCfg = Debug|.NET
 		{5961F3DE-CB5E-40FE-AE89-D00D6E453907}.Debug.Build.0 = Debug|.NET
 		{5961F3DE-CB5E-40FE-AE89-D00D6E453907}.Debug Test.ActiveCfg = Debug|.NET

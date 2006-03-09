@@ -1,7 +1,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -66,6 +66,7 @@ namespace IBatisNet.Common
 			provider.UseParameterPrefixInParameter = NodeUtils.GetBooleanAttribute(prop, "useParameterPrefixInParameter", true);
 			provider.UseParameterPrefixInSql = NodeUtils.GetBooleanAttribute(prop, "useParameterPrefixInSql", true);
 			provider.UsePositionalParameters = NodeUtils.GetBooleanAttribute(prop, "usePositionalParameters", false);
+            provider.SupportsPreparingCommands = NodeUtils.GetBooleanAttribute(prop, "allowPreparingCommands", false);
 
 			return provider;
 		}

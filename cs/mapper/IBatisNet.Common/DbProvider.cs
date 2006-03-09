@@ -44,6 +44,8 @@ namespace IBatisNet.Common
 	[XmlRoot("provider", Namespace="http://ibatis.apache.org/providers")]
 	public class DbProvider : IDbProvider
 	{
+        private const string SQLPARAMETER = "?";
+
 		#region Fields
 		[NonSerialized]
 		private string _assemblyName = string.Empty;
@@ -98,12 +100,35 @@ namespace IBatisNet.Common
 		private bool _setDbParameterScale = true;
 		[NonSerialized]
 		private bool _useDeriveParameters = true;
+        [NonSerialized]
+        private bool _supportsPreparingCommands = true;
 		
 //		private static readonly ILog _connectionLogger = LogManager.GetLogger("System.Data.IDbConnection");
 
 		#endregion
 		
 		#region Properties
+
+        /// <summary>
+        /// Does this Driver support IDbCommand.Prepare().
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// A value of <c>false</c> indicates that an exception would be thrown or the 
+        /// company that produces the Driver we are wrapping does not recommend using
+        /// IDbCommand.Prepare().
+        /// </para>
+        /// <para>
+        /// A value of <c>true</c> indicates that calling IDbCommand.Prepare() will function
+        /// fine on this Driver.
+        /// </para>
+        /// </remarks>
+        public bool SupportsPreparingCommands 
+        {
+            get { return _supportsPreparingCommands; }
+            set { _supportsPreparingCommands = value; }
+        }
+
 		/// <summary>
 		/// The name of the assembly which conatins the definition of the provider.
 		/// </summary>
@@ -533,6 +558,8 @@ namespace IBatisNet.Common
 			}
 		}
 
+
+
 		/// <summary>
 		/// Create a IDbDataParameter object for this provider.
 		/// </summary>
@@ -542,7 +569,32 @@ namespace IBatisNet.Common
             return _templateConnection.CreateCommand().CreateParameter();
 		}
 
-		/// <summary>
+        /// <summary>
+        /// Change the parameterName into the correct format IDbCommand.CommandText
+        /// for the ConnectionProvider
+        /// </summary>
+        /// <param name="parameterName">The unformatted name of the parameter</param>
+        /// <returns>A parameter formatted for an IDbCommand.CommandText</returns>
+        public string FormatNameForSql(string parameterName)
+        {
+            return _useParameterPrefixInSql ? (_parameterPrefix + parameterName) : SQLPARAMETER;
+        }
+
+        /// <summary>
+        /// Changes the parameterName into the correct format for an IDbParameter
+        /// for the Driver.
+        /// </summary>
+        /// <remarks>
+        /// For SqlServerConnectionProvider it will change <c>id</c> to <c>@id</c>
+        /// </remarks>
+        /// <param name="parameterName">The unformatted name of the parameter</param>
+        /// <returns>A parameter formatted for an IDbParameter.</returns>
+        public string FormatNameForParameter(string parameterName)
+        {
+            return _useParameterPrefixInParameter ? (_parameterPrefix + parameterName) : parameterName;
+        }
+        
+        /// <summary>
 		/// Equals implemantation.
 		/// </summary>
 		/// <param name="obj">The test object.</param>

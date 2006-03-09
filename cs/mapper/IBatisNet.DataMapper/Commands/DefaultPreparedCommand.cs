@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -49,7 +49,10 @@ namespace IBatisNet.DataMapper.Commands
 
 		#region Fields
 		private static readonly ILog _logger = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
-		#endregion 
+        private StringBuilder _paramLogList = new StringBuilder(); // Log info
+        private StringBuilder _typeLogList = new StringBuilder(); // Log info
+		
+        #endregion 
 
 		#region IPreparedCommand Members
 
@@ -68,6 +71,10 @@ namespace IBatisNet.DataMapper.Commands
 		{
 			// the IDbConnection & the IDbTransaction are assign in the CreateCommand 
 			request.IDbCommand = session.CreateCommand(statement.CommandType);
+            if (session.DataSource.DbProvider.SupportsPreparingCommands)
+            {
+                request.IDbCommand.Prepare();
+            }
 			
 			request.IDbCommand.CommandText = request.PreparedStatement.PreparedSql;
 
@@ -94,10 +101,8 @@ namespace IBatisNet.DataMapper.Commands
 		{
 			ArrayList properties = request.PreparedStatement.DbParametersName;
 			ArrayList parameters = request.PreparedStatement.DbParameters;
-			StringBuilder paramLogList = new StringBuilder(); // Log info
-			StringBuilder typeLogList = new StringBuilder(); // Log info
 
-			for ( int i = 0; i < properties.Count; ++i )
+            for ( int i = 0; i < properties.Count; ++i )
 			{
 				IDataParameter sqlParameter = (IDataParameter)parameters[i];
 				IDataParameter parameterCopy = command.CreateParameter();
@@ -106,10 +111,13 @@ namespace IBatisNet.DataMapper.Commands
 				#region Logging
 				if (_logger.IsDebugEnabled)
 				{
-					paramLogList.Append(sqlParameter.ParameterName);
-					paramLogList.Append("=[");
-					typeLogList.Append(sqlParameter.ParameterName);
-					typeLogList.Append("=[");
+                    _paramLogList.Remove(0, _paramLogList.Length);
+                    _typeLogList.Remove(0, _paramLogList.Length);
+
+                    _paramLogList.Append(sqlParameter.ParameterName);
+                    _paramLogList.Append("=[");
+                    _typeLogList.Append(sqlParameter.ParameterName);
+                    _typeLogList.Append("=[");
 				}
 				#endregion
 
@@ -143,8 +151,8 @@ namespace IBatisNet.DataMapper.Commands
 				#region Logging
 				if (_logger.IsDebugEnabled)
 				{
-					paramLogList.Append( property.PropertyName );
-					paramLogList.Append( "," );
+                    _paramLogList.Append(property.PropertyName);
+                    _paramLogList.Append(",");
 				}
 				#endregion 					
 
@@ -178,16 +186,16 @@ namespace IBatisNet.DataMapper.Commands
 				{
 					if (parameterCopy.Value == System.DBNull.Value) 
 					{
-						paramLogList.Append("null");
-						paramLogList.Append( "], " );
-						typeLogList.Append("System.DBNull, null");
-						typeLogList.Append( "], " );
+                        _paramLogList.Append("null");
+                        _paramLogList.Append("], ");
+                        _typeLogList.Append("System.DBNull, null");
+                        _typeLogList.Append("], ");
 					} 
 					else 
-					{ 
+					{
 
-						paramLogList.Append( parameterCopy.Value.ToString() );
-						paramLogList.Append( "], " );
+                        _paramLogList.Append(parameterCopy.Value.ToString());
+                        _paramLogList.Append("], ");
 
 						// sqlParameter.DbType could be null (as with Npgsql)
 						// if PreparedStatementFactory did not find a dbType for the parameter in:
@@ -195,10 +203,10 @@ namespace IBatisNet.DataMapper.Commands
 						// Use parameterCopy.DbType
 
 						//typeLogList.Append( sqlParameter.DbType.ToString() );
-						typeLogList.Append( parameterCopy.DbType.ToString() );
-						typeLogList.Append( ", " );
-						typeLogList.Append( parameterCopy.Value.GetType().ToString() );
-						typeLogList.Append( "], " );
+                        _typeLogList.Append(parameterCopy.DbType.ToString());
+                        _typeLogList.Append(", ");
+                        _typeLogList.Append(parameterCopy.Value.GetType().ToString());
+                        _typeLogList.Append("], ");
 					}
 				}
 				#endregion 
@@ -231,8 +239,8 @@ namespace IBatisNet.DataMapper.Commands
 
 			if (_logger.IsDebugEnabled && properties.Count>0)
 			{
-				_logger.Debug("Statement Id: [" + statement.Id + "] Parameters: [" + paramLogList.ToString(0, paramLogList.Length - 2)  + "]");
-				_logger.Debug("Statement Id: [" + statement.Id + "] Types: [" + typeLogList.ToString(0, typeLogList.Length - 2)  + "]");
+                _logger.Debug("Statement Id: [" + statement.Id + "] Parameters: [" + _paramLogList.ToString(0, _paramLogList.Length - 2) + "]");
+                _logger.Debug("Statement Id: [" + statement.Id + "] Types: [" + _typeLogList.ToString(0, _typeLogList.Length - 2) + "]");
 			}
 			#endregion 
 		}

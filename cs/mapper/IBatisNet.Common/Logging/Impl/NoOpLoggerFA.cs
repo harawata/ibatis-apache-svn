@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -25,6 +25,8 @@
 #endregion
 
 using System;
+using System.Collections;
+using System.Collections.Specialized;
 
 namespace IBatisNet.Common.Logging.Impl
 {
@@ -35,10 +37,18 @@ namespace IBatisNet.Common.Logging.Impl
 	{
 		private ILog _nopLogger = null;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public NoOpLoggerFA()
+        {
+            _nopLogger = new NoOpLogger();
+        }
+
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		public NoOpLoggerFA()
+        public NoOpLoggerFA(NameValueCollection properties)
 		{
 			_nopLogger = new NoOpLogger();
 		}

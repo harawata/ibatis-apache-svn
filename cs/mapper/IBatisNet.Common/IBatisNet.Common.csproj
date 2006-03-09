@@ -300,12 +300,27 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Utilities\Objects\ILPropertyAccessor.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Utilities\Objects\IPropertyAccessor.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Utilities\Objects\ObjectProbe.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Utilities\Objects\ReflectionInfo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Utilities\Objects\ReflectionPropertyAccessor.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

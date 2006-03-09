@@ -180,6 +180,7 @@
     <Compile Include="Domain\Search.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Domain\Simple.cs" />
     <Compile Include="Domain\User.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -250,6 +251,7 @@
     <Compile Include="NUnit\SqlMapTests\ParameterMapTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="NUnit\SqlMapTests\Perf\PerformanceTest.cs" />
     <Compile Include="NUnit\SqlMapTests\PostgreSQL\StatementGenerate.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -324,6 +326,7 @@
     <Content Include="Maps\MSSQL\SqlClient\Other.xml" />
     <Content Include="Maps\MSSQL\SqlClient\ParameterClass.xml" />
     <Content Include="Maps\MSSQL\SqlClient\ResultClass.xml" />
+    <Content Include="Maps\MSSQL\SqlClient\Simple.xml" />
     <Content Include="Maps\MySql\ByteFx\Account.xml" />
     <Content Include="Maps\MySql\ByteFx\Category.xml" />
     <Content Include="Maps\MySql\ByteFx\Complex.xml" />
@@ -417,6 +420,7 @@
     <Content Include="Scripts\MSSQL\ps_SelectAccount.sql" />
     <Content Include="Scripts\MSSQL\ps_SelectLineItem.sql" />
     <Content Include="Scripts\MSSQL\README-embed-param.txt" />
+    <Content Include="Scripts\MSSQL\simple-init.sql" />
     <Content Include="Scripts\MSSQL\swap-procedure.sql" />
     <Content Include="Scripts\MSSQL\user-init.sql" />
     <Content Include="Scripts\MySql\account-init.sql" />

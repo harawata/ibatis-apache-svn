@@ -85,6 +85,7 @@
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
@@ -129,6 +130,7 @@
     <Compile Include="NUnit\CommonTests\Transaction\TransactionTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="NUnit\CommonTests\Utilities\PropertyAccessorTest.cs" />
     <Compile Include="NUnit\CommonTests\Utilities\ResourcesTest.cs">
       <SubType>Code</SubType>
     </Compile>

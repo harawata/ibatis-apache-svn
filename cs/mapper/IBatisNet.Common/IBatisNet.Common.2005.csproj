@@ -192,12 +192,15 @@
     <Compile Include="Utilities\HashCodeProvider.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Utilities\Objects\ILPropertyAccessor.cs" />
+    <Compile Include="Utilities\Objects\IPropertyAccessor.cs" />
     <Compile Include="Utilities\Objects\ObjectProbe.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utilities\Objects\ReflectionInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Utilities\Objects\ReflectionPropertyAccessor.cs" />
     <Compile Include="Utilities\Proxy\CachedProxyGenerator.cs">
       <SubType>Code</SubType>
     </Compile>

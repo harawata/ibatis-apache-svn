@@ -7,10 +7,10 @@ namespace IBatisNet.Common.Test.Domain
 	/// </summary>
 	public class Account
 	{
-		private int _id;
-		private string _firstName;
-		private string _lastName;
-		private string _emailAddress;
+		private int _id = 0;
+		private string _firstName = string.Empty;
+        private string _lastName = string.Empty;
+        private string _emailAddress = string.Empty;
 		private int[] _ids = null;
 
 		public int Id

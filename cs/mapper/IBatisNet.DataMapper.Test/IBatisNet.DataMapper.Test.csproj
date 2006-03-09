@@ -328,6 +328,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Domain\Simple.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Domain\User.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -869,6 +874,11 @@
                 />
                 <File
                     RelPath = "NUnit\SqlMapTests\Oracle\StatementTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NUnit\SqlMapTests\Perf\PerformanceTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
