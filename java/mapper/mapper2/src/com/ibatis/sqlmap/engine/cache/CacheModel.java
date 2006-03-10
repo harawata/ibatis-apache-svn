@@ -15,7 +15,8 @@
  */
 package com.ibatis.sqlmap.engine.cache;
 
-
+import com.ibatis.common.logging.Log;
+import com.ibatis.common.logging.LogFactory;
 import com.ibatis.common.resources.Resources;
 import com.ibatis.sqlmap.engine.mapping.statement.ExecuteListener;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
@@ -27,6 +28,11 @@ import java.util.*;
  * Wrapper for Caches.
  */
 public class CacheModel implements ExecuteListener {
+
+  private static final Log log = LogFactory.getLog(CacheModel.class);
+
+  private static final int MAX_OBJECT_LOG_SIZE = 200;
+
   /**
    * This is used to represent null objects that are returned from the cache so
    * that they can be cached, too.
@@ -237,6 +243,9 @@ public class CacheModel implements ExecuteListener {
   	synchronized (this)  {
       controller.flush(this);
       lastFlush = System.currentTimeMillis();
+      if ( log.isDebugEnabled() )  {
+        log("flushed", false, null);
+      }
     }
   }
 
@@ -273,6 +282,14 @@ public class CacheModel implements ExecuteListener {
       if (value != null) {
         hits++;
       }
+      if ( log.isDebugEnabled() )  {
+      	if ( value != null )  {
+            log("retrieved object", true, value);
+      	}
+      	else  {
+      		log("cache miss", false, null);
+      	}
+      }
     }
     return value;
   }
@@ -299,6 +316,49 @@ public class CacheModel implements ExecuteListener {
         }
       }
       controller.putObject(this, key, value);
+      if ( log.isDebugEnabled() )  {
+        log("stored object", true, value);
+      }
     }
+  }
+
+  /**
+   * Get the maximum size of an object in the log output.
+   *
+   * @return Maximum size of a logged object in the output
+   */
+  protected int getMaxObjectLogSize()  {
+      return MAX_OBJECT_LOG_SIZE;
+  }
+
+  /**
+   * Log a cache action. Since this method is pretty heavy
+   * weight, it's best to enclose it with a log.isDebugEnabled()
+   * when called.
+   *
+   * @param action String to output
+   * @param addValue Add the value being cached to the log
+   * @param cacheValue The value being logged
+   */
+  protected void log(String action, boolean addValue,
+  		             Object cacheValue)  {
+    StringBuffer output = new StringBuffer("Cache '");
+    output.append(getId());
+    output.append("': ");
+    output.append(action);
+    if ( addValue )  {
+      String cacheObjectStr = (cacheValue == null ? "null" : cacheValue.toString());
+      output.append(" '");
+      if ( cacheObjectStr.length() < getMaxObjectLogSize() )  {
+      	output.append(cacheObjectStr.toString());
+      }
+      else  {
+      	output.append(cacheObjectStr.substring(1,
+      			                 getMaxObjectLogSize()));
+      	output.append("...");
+      }
+      output.append("'");
+    }
+    log.debug(output.toString());
   }
 }
