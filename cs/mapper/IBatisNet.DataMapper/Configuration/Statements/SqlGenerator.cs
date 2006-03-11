@@ -105,8 +105,8 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 			if (compositeKeyList.Length > 0 && select.Generate.By.Length>0)
 			{
 				output.Append(" WHERE ");
-
-				for (int i = 0; i < compositeKeyList.Length; i++) 
+				int length = compositeKeyList.Length;
+				for (int i = 0; i < length; i++) 
 				{
 					string columnName = compositeKeyList[i];
 						
@@ -224,7 +224,8 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 			output.Append(" WHERE ");
 					
 			// Create the where clause
-			for (int i = 0; i < keysList.Length; i++) 
+			int length = keysList.Length;
+			for (int i = 0; i < length; i++) 
 			{
 				string columnName = keysList[i];
 						
@@ -257,6 +258,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 			output.Append(" WHERE ");
 
 			// Create the where clause
+			int length = keysList.Length;
 			for (int i = 0; i < keysList.Length; i++) 
 			{
 				string columnName = keysList[i].Trim();

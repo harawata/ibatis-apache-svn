@@ -1410,7 +1410,8 @@ namespace IBatisNet.DataMapper.Configuration
 			StringBuilder sqlBuffer, bool isDynamic, bool postParseRequired) 
 		{
 			XmlNodeList children = commandTextNode.ChildNodes;
-			for (int i = 0; i < children.Count; i++) 
+			int count = children.Count;
+			for (int i = 0; i < count; i++) 
 			{
 				XmlNode child = children[i];
 				if ( (child.NodeType == XmlNodeType.CDATA) || (child.NodeType == XmlNodeType.Text) )
@@ -1486,7 +1487,8 @@ namespace IBatisNet.DataMapper.Configuration
 					map.Id = statement.Id + "-InLineParameterMap";
 					statement.ParameterMap = map;	
 				
-					for(int index=0;index<sqlText.Parameters.Length;index++)
+					int lenght = sqlText.Parameters.Length;
+					for(int index=0;index<lenght;index++)
 					{
 						map.AddParameterProperty( sqlText.Parameters[index] );
 					}

@@ -196,7 +196,8 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		public void Initialize(ConfigurationScope configScope)
 		{
 			// Set the ResultMaps
-			for(int index=0; index<_subMaps.Count; index++)
+			int count = _subMaps.Count;
+			for(int index=0; index<count; index++)
 			{
 				SubMap subMap = _subMaps[index] as SubMap;
 				_resultMaps.Add(subMap.DiscriminatorValue, configScope.SqlMapper.GetResultMap( subMap.ResultMapName ) );

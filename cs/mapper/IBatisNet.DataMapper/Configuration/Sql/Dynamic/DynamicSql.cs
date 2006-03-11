@@ -131,7 +131,8 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 
 			// Adds 'dynamic' ParameterProperty
 			IList parameters = ctx.GetParameterMappings();
-			for(int i=0;i<parameters.Count;i++)
+			int count = parameters.Count;
+			for(int i=0;i<count;i++)
 			{
 				map.AddParameterProperty( (ParameterProperty)parameters[i] );
 			}
@@ -209,7 +210,8 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 						ParameterProperty[] parameters = sqlText.Parameters;
 						if (parameters != null) 
 						{
-							for (int i = 0; i< parameters.Length; i++) 
+							int length = parameters.Length;
+							for (int i = 0; i< length; i++) 
 							{
 								ctx.AddParameterMapping(parameters[i]);
 							}
@@ -254,7 +256,8 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 										ParameterProperty[] mappings = sqlText.Parameters;
 										if (mappings != null) 
 										{
-											for (int i = 0; i< mappings.Length; i++) 
+											int length = mappings.Length;
+											for (int i = 0; i< length; i++) 
 											{
 												ctx.AddParameterMapping(mappings[i]);
 											}

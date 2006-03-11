@@ -433,7 +433,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 		private CacheKey GetCacheKey(RequestScope request) 
 		{
 			CacheKey cacheKey = new CacheKey();
-			for (int i = 0; i < request.IDbCommand.Parameters.Count; i++) 
+			int count = request.IDbCommand.Parameters.Count;
+			for (int i = 0; i < count; i++) 
 			{
 				IDataParameter dataParameter = (IDataParameter)request.IDbCommand.Parameters[i];
 				if (dataParameter.Value != null) 

@@ -59,7 +59,8 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 			update.ParameterMapName = NodeUtils.GetStringAttribute(prop, "parameterMap");
 			update.RemapResults = NodeUtils.GetBooleanAttribute(prop, "remapResults", false); 
 
-			for(int i=0;i<node.ChildNodes.Count;i++)
+			int count = node.ChildNodes.Count;
+			for(int i=0;i<count;i++)
 			{
 				if (node.ChildNodes[i].LocalName=="generate")
 				{

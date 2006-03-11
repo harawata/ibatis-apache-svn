@@ -146,7 +146,8 @@ namespace IBatisNet.Common.Utilities.Objects
 		private void AddPropertiess(Type type) 
 		{
 			PropertyInfo[] properties = type.GetProperties(BINDING_FLAGS_SET);
-			for (int i = 0; i < properties.Length; i++) 
+			int length = properties.Length;
+			for (int i = 0; i < length; i++) 
 			{
 				string name = properties[i].Name;
 				//For work with Dinaproxy http://support.castleproject.org/jira//browse/DYNPROXY-8?page=all
@@ -155,7 +156,8 @@ namespace IBatisNet.Common.Utilities.Objects
 			}
 
 			properties = type.GetProperties(BINDING_FLAGS_GET);
-			for (int i = 0; i < properties.Length; i++) 
+			length = properties.Length;
+			for (int i = 0; i < length; i++) 
 			{
 				string name = properties[i].Name;
 				//For work with Dinaproxy http://support.castleproject.org/jira//browse/DYNPROXY-8?page=all

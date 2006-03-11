@@ -138,7 +138,8 @@ namespace IBatisNet.Common.Utilities
 		{
 			IDataParameter[] clonedParameters = new IDataParameter[originalParameters.Length];
 
-			for (int i = 0, j = originalParameters.Length; i < j; i++)
+			int length = originalParameters.Length;
+			for (int i = 0, j = length; i < j; i++)
 			{
 				clonedParameters[i] = (IDataParameter) ((ICloneable) originalParameters[i]).Clone();
 			}

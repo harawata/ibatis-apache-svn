@@ -57,7 +57,8 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 			model.IsReadOnly = NodeUtils.GetBooleanAttribute(prop, "readOnly", true);
 			model.IsSerializable = NodeUtils.GetBooleanAttribute(prop, "serialize", false);
 
-			for(int i=0;i<node.ChildNodes.Count;i++)
+			int count = node.ChildNodes.Count;
+			for(int i=0;i<count;i++)
 			{
 				if (node.ChildNodes[i].LocalName=="flushInterval")
 				{

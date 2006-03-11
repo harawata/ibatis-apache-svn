@@ -55,7 +55,7 @@ namespace IBatisNet.Common
 		/// The connection string.
 		/// </summary>
 		[XmlAttribute("connectionString")]
-		public string ConnectionString
+		public virtual string ConnectionString
 		{
 			get { return _connectionString; }
 			set
@@ -83,7 +83,7 @@ namespace IBatisNet.Common
 		/// The provider to use for this data source.
 		/// </summary>
 		[XmlIgnore]
-		public IDbProvider DbProvider
+		public virtual IDbProvider DbProvider
 		{
 			get { return _provider; }
 			set { _provider = value; }

@@ -127,7 +127,8 @@ namespace IBatisNet.Common.Xml
 		public static NameValueCollection ParseAttributes(XmlNode node, NameValueCollection variables) 
 		{
 			NameValueCollection attributes = new NameValueCollection();
-			for (int i = 0; i < node.Attributes.Count; i++) 
+			int count = node.Attributes.Count;
+			for (int i = 0; i < count; i++) 
 			{
 				XmlAttribute attribute = node.Attributes[i];
 				String value = ParsePropertyTokens(attribute.Value, variables);

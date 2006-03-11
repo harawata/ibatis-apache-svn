@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision$
+ * $Revision: 380205 $
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -289,7 +289,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 					}
 					else if (outObject is IDictionary) 
 					{
-						for (int i = 0; i < reader.FieldCount; i++) 
+						int count = reader.FieldCount;
+						for (int i = 0; i < count; i++) 
 						{
 							ResultProperty property = new ResultProperty();
 							property.PropertyName = "value";
@@ -302,7 +303,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 					}
 					else if (outObject is IList) 
 					{
-						for (int i = 0; i < reader.FieldCount; i++) 
+						int count = reader.FieldCount;
+						for (int i = 0; i < count; i++) 
 						{
 							ResultProperty property = new ResultProperty();
 							property.PropertyName = "value";
@@ -329,8 +331,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 					else if (reader.FieldCount > 1)
 					{
 						object[] newOutObject = new object[reader.FieldCount];
-
-						for (int i = 0; i < reader.FieldCount; i++) 
+						int count = reader.FieldCount;
+						for (int i = 0; i < count; i++) 
 						{
 							ResultProperty property = new ResultProperty();
 							property.PropertyName = "value";
@@ -365,7 +367,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 		{
 			if (request.ParameterMap != null)
 			{
-				for(int i=0; i<request.ParameterMap.PropertiesList.Count; i++)
+				int count = request.ParameterMap.PropertiesList.Count;
+				for(int i=0; i<count; i++)
 				{
 					ParameterProperty  mapping = request.ParameterMap.GetProperty(i);
 					if (mapping.Direction == ParameterDirection.Output || 
@@ -1121,7 +1124,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 					Type elementType = postSelect.ResultProperty.PropertyInfo.PropertyType.GetElementType();
 
 					Array array = Array.CreateInstance(elementType, values.Count);
-					for(int i=0;i<values.Count;i++)
+					int count = values.Count;
+					for(int i=0;i<count;i++)
 					{
 						array.SetValue(values[i],i);
 					}
@@ -1476,7 +1480,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 					string[] propertiesName = reflectionInfo.GetWriteablePropertyNames();
 
 					Hashtable propertyMap = new Hashtable();
-					for (int i = 0; i < propertiesName.Length; i++) 
+					int length = propertiesName.Length;
+					for (int i = 0; i < length; i++) 
 					{
 						propertyMap.Add( propertiesName[i].ToUpper(), reflectionInfo.GetSetter(propertiesName[i]) );
 					}
@@ -1484,7 +1489,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 					// Get all column Name from the reader
 					// and build a resultMap from with the help of the PropertyInfo[].
 					DataTable dataColumn = reader.GetSchemaTable();
-					for (int i = 0; i < dataColumn.Rows.Count; i++) 
+					int count = dataColumn.Rows.Count;
+					for (int i = 0; i < count; i++) 
 					{
 						string columnName = dataColumn.Rows[i][0].ToString();
 						PropertyInfo matchedPropertyInfo = propertyMap[columnName.ToUpper()] as PropertyInfo;

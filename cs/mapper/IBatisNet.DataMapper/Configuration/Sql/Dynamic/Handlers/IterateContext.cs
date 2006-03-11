@@ -62,7 +62,8 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers
 			 {
 				object[] array = (object[])collection;
 				ArrayList list = new ArrayList();
-				for(int i=0;i<array.Length;i++)
+				int lenght = array.Length;
+				for(int i=0;i<lenght;i++)
 				{
 					list.Add(array[i]);
 				}

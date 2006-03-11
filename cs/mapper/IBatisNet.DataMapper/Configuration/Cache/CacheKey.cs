@@ -112,7 +112,8 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 			if (_checksum != cacheKey._checksum) return false;
 			if (_count != cacheKey._count) return false;
 
-			for (int i=0; i < _paramList.Count; i++) 
+			int count = _paramList.Count;
+			for (int i=0; i < count; i++) 
 			{
 				object thisParam = _paramList[i];
 				object thatParam = cacheKey._paramList[i];

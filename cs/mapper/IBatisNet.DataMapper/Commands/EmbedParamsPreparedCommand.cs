@@ -64,7 +64,8 @@ namespace IBatisNet.DataMapper.Commands
 			ArrayList parameters = request.PreparedStatement.DbParameters;
 			object parameterValue = null;
 
-			for (int i = 0; i < properties.Count; ++i)
+			int count = properties.Count;
+			for (int i = 0; i < count; ++i)
 			{
 				IDataParameter sqlParameter = (IDataParameter) parameters[i];
 				string propertyName = (string) properties[i];

@@ -699,7 +699,8 @@ namespace IBatisNet.Common.Utilities.Objects
 			ArrayList alreadyDigested = new ArrayList();
 
 			int hashcode = obj.GetType().FullName.GetHashCode();
-			for (int i = 0; i < properties.Length; i++) 
+			int length = properties.Length;
+			for (int i = 0; i < length; i++) 
 			{
 				object value = GetProperty(obj, properties[i]);
 				if (value != null) 

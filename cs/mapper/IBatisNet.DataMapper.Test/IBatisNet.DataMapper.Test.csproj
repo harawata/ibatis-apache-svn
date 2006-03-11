@@ -518,6 +518,10 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "Maps\MSSQL\SqlClient\Simple.xml"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "Maps\MySql\ByteFx\Account.xml"
                     BuildAction = "Content"
                 />
@@ -1010,6 +1014,10 @@
                 />
                 <File
                     RelPath = "Scripts\MSSQL\README-embed-param.txt"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MSSQL\simple-init.sql"
                     BuildAction = "Content"
                 />
                 <File

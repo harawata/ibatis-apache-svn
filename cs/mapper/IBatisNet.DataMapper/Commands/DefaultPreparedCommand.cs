@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision$
+ * $Revision: 384614 $
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -102,7 +102,8 @@ namespace IBatisNet.DataMapper.Commands
 			ArrayList properties = request.PreparedStatement.DbParametersName;
 			ArrayList parameters = request.PreparedStatement.DbParameters;
 
-            for ( int i = 0; i < properties.Count; ++i )
+			int count = properties.Count;
+            for ( int i = 0; i < count; ++i )
 			{
 				IDataParameter sqlParameter = (IDataParameter)parameters[i];
 				IDataParameter parameterCopy = command.CreateParameter();
