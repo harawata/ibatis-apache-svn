@@ -180,7 +180,9 @@ public interface SqlMapClient extends SqlMapExecutor, SqlMapTransactionManager {
   public void flushDataCache();
 
   /**
-   * Flushes the data cache that matches the cache model ID provided.
+   * Flushes the data cache that matches the cache model ID provided. 
+   * cacheId should include the namespace, even when 
+   * useStatementNamespaces="false".
    *
    * @param cacheId The cache model to flush
    */
@@ -226,6 +228,5 @@ public interface SqlMapClient extends SqlMapExecutor, SqlMapTransactionManager {
    * @return An instance of iface that can be used to call mapped statements directly in a typesafe
    * manner.
    */
-  //public Object getMapper (Class iface);
-
+  //public Object getMapper(Class iface);
 }
