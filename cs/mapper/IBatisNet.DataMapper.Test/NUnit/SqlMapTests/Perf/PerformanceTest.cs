@@ -1,11 +1,15 @@
 using System;
+using System.ComponentModel;
 using System.Data;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using IBatisNet.DataMapper.Test.Domain;
 
 using NUnit.Framework;
 using IBatisNet.DataMapper;
 using IBatisNet.Common;
+using CategoryAttribute = NUnit.Framework.CategoryAttribute;
 
 namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Perf
 {
@@ -21,7 +25,6 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Perf
         {
             for (int n = 2; n < 4000; n *= 2)
             {
-
                 Simple[] simples = new Simple[n];
                 object[] ids = new object[n];
                 for (int i = 0; i < n; i++)
@@ -33,26 +36,32 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Perf
                 }
 
                 //Now do timings
+				Timer timer = new Timer();
+				GC.Collect();
+				GC.WaitForPendingFinalizers();
 
                 sqlMap.OpenConnection();
-                long time = DateTime.Now.Ticks;
+                timer.Start();
                 Ibatis(simples, n, "h1");
-                long ibatis = DateTime.Now.Ticks - time;
+				timer.Stop();
+                double ibatis = 1000000 * (timer.Duration / (double)n);
                 sqlMap.CloseConnection();
 
                 sqlMap.OpenConnection();
-                time = DateTime.Now.Ticks;
+				timer.Start();
                 Ibatis(simples, n, "h2");
-                ibatis += DateTime.Now.Ticks - time;
+				timer.Stop();
+                ibatis += 1000000 * (timer.Duration / (double)n);
                 sqlMap.CloseConnection();
 
                 sqlMap.OpenConnection();
-                time = DateTime.Now.Ticks;
+				timer.Start();
                 Ibatis(simples, n, "h2");
-                ibatis += DateTime.Now.Ticks - time;
+				timer.Stop();
+                ibatis += 1000000 * (timer.Duration / (double)n);
                 sqlMap.CloseConnection();
 
-                System.Console.WriteLine("Objects: " + n + " - iBATIS DataMapper: " + ibatis);
+                System.Console.WriteLine("Objects: " + n + " - iBATIS DataMapper: " + ibatis.ToString("F3"));
             }
             System.GC.Collect();
         }
@@ -97,30 +106,33 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Perf
                 }
 
                 //Now do timings
+				Timer timer = new Timer();
 
                 IDbConnection _connection = sqlMap.DataSource.DbProvider.CreateConnection();
                 _connection.ConnectionString = sqlMap.DataSource.ConnectionString;
 
                 _connection.Open();
 
-                long time = DateTime.Now.Ticks;
+                timer.Start();
                 DirectAdoNet(_connection, simples, n, "j1");
-                long adonet = DateTime.Now.Ticks - time;
+                double adonet = 1000000 * (timer.Duration / (double)n);
                 _connection.Close();
 
                 _connection.Open();
-                time = DateTime.Now.Ticks;
+                timer.Start();
                 DirectAdoNet(_connection, simples, n, "j2");
-                adonet += DateTime.Now.Ticks - time;
+				timer.Stop();
+                adonet += 1000000 * (timer.Duration / (double)n);
                 _connection.Close();
 
                 _connection.Open();
-                time = DateTime.Now.Ticks;
+                timer.Start();
                 DirectAdoNet(_connection, simples, n, "j2");
-                adonet += DateTime.Now.Ticks - time;
+				timer.Stop();
+                adonet += 1000000 * (timer.Duration / (double)n);
                 _connection.Close();
 
-                System.Console.Out.WriteLine("Objects: " + n + " Direct ADO.NET: " + adonet);
+                System.Console.Out.WriteLine("Objects: " + n + " Direct ADO.NET: " + adonet.ToString("F3"));
             }
             System.GC.Collect();
         }
@@ -283,10 +295,9 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Perf
         [Test]
         public void Many()
         {
-            long ibatis = 0;
-            long adonet = 0;
+            double ibatis = 0;
+            double adonet = 0;
 
-            //for(int n = 0; n < 20; n++) 
             for (int n = 0; n < 5; n++)
             {
                 Simple[] simples = new Simple[n];
@@ -320,35 +331,40 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Perf
                 // now do timings
 
                 int loops = 30;
+                Timer timer = new Timer();
 
                 for (int runIndex = 1; runIndex < 4; runIndex++)
                 {
+					GC.Collect();
+					GC.WaitForPendingFinalizers();
 
-                    long time = DateTime.Now.Ticks;
+					timer.Start();
                     for (int i = 0; i < loops; i++)
                     {
-                        //using (IDalSession session = sqlMap.OpenConnection() )
-                        //{
-                        sqlMap.OpenConnection();
-                            Ibatis(simples, n, "h" + runIndex.ToString());
+                        sqlMap.OpenConnection();    
+						Ibatis(simples, n, "h" + runIndex.ToString());
                          sqlMap.CloseConnection();
-                        //}
                     }
-                    ibatis += DateTime.Now.Ticks - time;
+					timer.Stop();
+					ibatis += 1000000 * (timer.Duration / (double)loops);
 
-                    time = DateTime.Now.Ticks;
+					GC.Collect();
+					GC.WaitForPendingFinalizers();
+
+                    timer.Start();
                     for (int i = 0; i < loops; i++)
                     {
                         _connection.Open();
                         DirectAdoNet(_connection, simples, n, "j" + runIndex.ToString());
                         _connection.Close();
                     }
-                    adonet += DateTime.Now.Ticks - time;
+					timer.Stop();
+                    adonet += 1000000 * (timer.Duration / (double)loops);
 
 
                 }
             }
-            System.Console.Out.WriteLine("iBatis DataMapper : " + ibatis + "ms / Direct ADO.NET: " + adonet + "ms = Ratio: " + (((float)ibatis / adonet)).ToString());
+            System.Console.Out.WriteLine("iBatis DataMapper : " + ibatis.ToString("F3") + " / Direct ADO.NET: " + adonet.ToString("F3") + " Ratio: " + ((ibatis / adonet)).ToString("F3"));
 
             System.GC.Collect();
         }
@@ -356,8 +372,8 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Perf
         [Test]
         public void Simultaneous()
         {
-            long ibatis = 0;
-            long adonet = 0;
+            double ibatis = 0;
+            double adonet = 0;
 
             for (int n = 2; n < 4000; n *= 2)
             {
@@ -390,46 +406,95 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Perf
                 _connection.Close();
 
                 //Now do timings
+				Timer timer = new Timer();
+
+				GC.Collect();
+				GC.WaitForPendingFinalizers();
 
                 sqlMap.OpenConnection();
-                long time = DateTime.Now.Ticks;
+                timer.Start();
                 Ibatis(simples, n, "h1");
-                ibatis = DateTime.Now.Ticks - time;
+				timer.Stop();
+                ibatis = 1000000 * (timer.Duration / (double)n);
                 sqlMap.CloseConnection();
 
                 _connection.Open();
-                time = DateTime.Now.Ticks;
+                timer.Start();
                 DirectAdoNet(_connection, simples, n, "j1");
-                adonet = DateTime.Now.Ticks - time;
+				timer.Stop();
+                adonet = 1000000 * (timer.Duration / (double)n);
                 _connection.Close();
 
                 sqlMap.OpenConnection();
-                time = DateTime.Now.Ticks;
+                timer.Start();
                 Ibatis(simples, n, "h2");
-                ibatis += DateTime.Now.Ticks - time;
+				timer.Stop();
+                ibatis += 1000000 * (timer.Duration / (double)n);
                 sqlMap.CloseConnection();
 
                 _connection.Open();
-                time = DateTime.Now.Ticks;
+                timer.Start();
                 DirectAdoNet(_connection, simples, n, "j2");
-                adonet += DateTime.Now.Ticks - time;
+				timer.Stop();
+                adonet += 1000000 * (timer.Duration / (double)n);
                 _connection.Close();
 
                 sqlMap.OpenConnection();
-                time = DateTime.Now.Ticks;
+                timer.Start();
                 Ibatis(simples, n, "h2");
-                ibatis += DateTime.Now.Ticks - time;
+				timer.Stop();
+                ibatis += 1000000 * (timer.Duration / (double)n);
                 sqlMap.CloseConnection();
 
                 _connection.Open();
-                time = DateTime.Now.Ticks;
+                timer.Start();
                 DirectAdoNet(_connection, simples, n, "j2");
-                adonet += DateTime.Now.Ticks - time;
+				timer.Stop();
+                adonet += 1000000 * (timer.Duration / (double)n);
                 _connection.Close();
-                System.Console.Out.WriteLine("Objects " + n + " iBATIS DataMapper : " + ibatis + "ms / Direct ADO.NET: " + adonet + "ms = Ratio: " + (((float)ibatis / adonet)).ToString());
+                System.Console.Out.WriteLine("Objects " + n + " iBATIS DataMapper : " + ibatis.ToString("F3") + " / Direct ADO.NET: " + adonet.ToString("F3") + " Ratio: " + ((ibatis / adonet)).ToString("F3"));
             }
 
             System.GC.Collect();
         }
+
+		internal class Timer
+		{
+			[DllImport("Kernel32.dll")]
+			private static extern bool QueryPerformanceCounter(out long lpPerformanceCount);
+
+			[DllImport("Kernel32.dll")]
+			private static extern bool QueryPerformanceFrequency(out long lpFrequency);
+
+			private long startTime, stopTime;
+			private long freq;
+
+			public Timer()
+			{
+				startTime = 0;
+				stopTime = 0;
+
+				if (QueryPerformanceFrequency(out freq) == false)
+				{
+					throw new Win32Exception();
+				}
+			}
+
+			public void Start()
+			{
+				Thread.Sleep(0);
+				QueryPerformanceCounter(out startTime);
+			}
+
+			public void Stop()
+			{
+				QueryPerformanceCounter(out stopTime);
+			}
+
+			public double Duration
+			{
+				get { return (double) (stopTime - startTime)/(double) freq; }
+			}
+		}
     }
 }
