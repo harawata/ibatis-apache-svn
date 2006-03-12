@@ -212,6 +212,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Domain\Simple.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Maps\Access\OleDb\Account.xml"
                     BuildAction = "Content"
                 />
@@ -281,6 +286,11 @@
                 />
                 <File
                     RelPath = "NUnit\CommonTests\Transaction\TransactionTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NUnit\CommonTests\Utilities\ObjectFactoryTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

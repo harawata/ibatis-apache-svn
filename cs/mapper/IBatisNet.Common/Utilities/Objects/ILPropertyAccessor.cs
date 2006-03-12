@@ -1,11 +1,11 @@
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
- * $Revision: 383310 $
- * $Date$
+ * $Revision: 374175 $
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,11 +24,10 @@
 #endregion
 
 using System;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Threading;
 using System.Collections;
 using System.Collections.Specialized;
+using System.Reflection;
+using System.Reflection.Emit;
 using IBatisNet.Common.Exceptions;
 
 namespace IBatisNet.Common.Utilities.Objects
@@ -83,7 +82,7 @@ namespace IBatisNet.Common.Utilities.Objects
             _typeToOpcode[typeof(double)] = OpCodes.Ldind_R8;
             _typeToOpcode[typeof(float)] = OpCodes.Ldind_R4;
 
-            AssemblyName assemblyName = new AssemblyName();
+        	AssemblyName assemblyName = new AssemblyName();
             assemblyName.Name = "iBATIS.FastPropertyAccessor";
 
             // Create a new assembly with one module
@@ -91,7 +90,8 @@ namespace IBatisNet.Common.Utilities.Objects
             _moduleBuilder = _assemblyBuilder.DefineDynamicModule(assemblyName.Name + ".dll");
         }
 
-        /// <summary>
+        
+		/// <summary>
         /// Generate the IPropertyAccessor object
         /// </summary>
         /// <param name="targetType">Target object type.</param>
@@ -115,6 +115,7 @@ namespace IBatisNet.Common.Utilities.Objects
             }
         }
 
+		
 		/// <summary>
 		/// Creates a new IL property accessor.
 		/// </summary>
@@ -127,9 +128,7 @@ namespace IBatisNet.Common.Utilities.Objects
 
             PropertyInfo propertyInfo = targetType.GetProperty(propertyName);
 
-			//
 			// Make sure the property exists
-			//
 			if(propertyInfo == null)
 			{
 				throw new ProbeException(
@@ -220,7 +219,7 @@ namespace IBatisNet.Common.Utilities.Objects
 			typeBuilder.AddInterfaceImplementation(typeof(IPropertyAccessor));
 
 			// Add a constructor
-			ConstructorBuilder constructorBuilder = typeBuilder.DefineDefaultConstructor(MethodAttributes.Public);
+			typeBuilder.DefineDefaultConstructor(MethodAttributes.Public);
 
 			// Define a method for the get operation. 
 			Type[] getParamTypes = new Type[] {typeof(object)};
@@ -239,14 +238,10 @@ namespace IBatisNet.Common.Utilities.Objects
 
 			if(targetGetMethod != null)
 			{
-				
 				getIL.DeclareLocal(typeof(object));
-				getIL.Emit(OpCodes.Ldarg_1);								//Load the first argument 
-																			//(target object)
-
-				getIL.Emit(OpCodes.Castclass, this._targetType);			//Cast to the source type
-
-				getIL.EmitCall(OpCodes.Call, targetGetMethod, null);		//Get the property value
+				getIL.Emit(OpCodes.Ldarg_1);	//Load the first argument,(target object)
+				getIL.Emit(OpCodes.Castclass, this._targetType);	//Cast to the source type
+				getIL.EmitCall(OpCodes.Call, targetGetMethod, null);	//Get the property value
 
 				if(targetGetMethod.ReturnType.IsValueType)
 				{

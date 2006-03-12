@@ -1,10 +1,7 @@
 using System;
-using System.Text;
 using System.Reflection;
-
-using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.Common.Test.Domain;
-
+using IBatisNet.Common.Utilities.Objects;
 using NUnit.Framework;
 
 namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
@@ -40,12 +37,13 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         public void TestGetIntegerPerformance()
         {
             const int TEST_ITERATIONS = 1000000;
-            Account account = new Account();
+        	Account account = new Account();
             int test = -1;
 
             // IL Property accessor
-            IPropertyAccessor propertyAccessor = ILPropertyAccessor.CreatePropertyAccessor(typeof(Account), "Id");
-            long time = DateTime.Now.Ticks;
+        	IPropertyAccessor propertyAccessor = ILPropertyAccessor.CreatePropertyAccessor(typeof(Account), "Id");
+
+			long time = DateTime.Now.Ticks;
             for (int i = 0; i < TEST_ITERATIONS; i++)
             {
                 test = -1;
@@ -71,7 +69,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             {
                 test = -1;
                 test = (int)type.InvokeMember("Id",
-                    BindingFlags.Public | BindingFlags.GetProperty | BindingFlags.Instance,
+                                              BindingFlags.Public | BindingFlags.GetProperty | BindingFlags.Instance,
                     null, account, null);
                 Assert.AreEqual(0, test);
             }
@@ -85,7 +83,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
                 + "\nReflection : \t\t\t" + reflectionMs.ToString() + " ms Ratio: " + (((float)reflectionMs / directAccessMs)).ToString());
         }
 
-        /// <summary>
+        
+		/// <summary>
         /// Test the performance of getting an integer property.
         /// </summary>
         [Test]
@@ -131,7 +130,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
                 + "\nReflection : \t\t\t" +  reflectionMs +" ms Ratio: " + (((float)reflectionMs / directAccessMs)).ToString());
         }
 
-        /// <summary>
+       
+		/// <summary>
         /// Test the performance of getting an integer property.
         /// </summary>
         [Test]
