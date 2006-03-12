@@ -40,10 +40,20 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         	Account account = new Account();
             int test = -1;
 
-            // IL Property accessor
-        	IPropertyAccessor propertyAccessor = ILPropertyAccessor.CreatePropertyAccessor(typeof(Account), "Id");
-
+			#region Direct access (fastest)
 			long time = DateTime.Now.Ticks;
+			for (int i = 0; i < TEST_ITERATIONS; i++)
+			{
+				test = -1;
+				test = account.Id;
+				Assert.AreEqual(0, test);
+			}
+			long directAccessMs = DateTime.Now.Ticks - time;
+			#endregion
+
+			#region IL Property accessor
+        	IPropertyAccessor propertyAccessor = ILPropertyAccessor.CreatePropertyAccessor(typeof(Account), "Id");
+			time = DateTime.Now.Ticks;
             for (int i = 0; i < TEST_ITERATIONS; i++)
             {
                 test = -1;
@@ -51,38 +61,60 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
                 Assert.AreEqual(0, test);
             }
             long propertyAccessorMs = DateTime.Now.Ticks - time;
+			float propertyAccessorRatio = (float)propertyAccessorMs / directAccessMs;
+			#endregion
 
-            // Direct access
-            time = DateTime.Now.Ticks;
-            for (int i = 0; i < TEST_ITERATIONS; i++)
-            {
-                test = -1;
-                test = account.Id;
-                Assert.AreEqual(0, test);
-            }
-            long directAccessMs = DateTime.Now.Ticks - time;
+			#region IBatisNet.Common.Utilities.Object.ReflectionInfo
+			ReflectionInfo reflectionInfo = ReflectionInfo.GetInstance(account.GetType());
+			time = DateTime.Now.Ticks;
+			for (int i = 0; i < TEST_ITERATIONS; i++)
+			{
+				test = -1;
+				PropertyInfo propertyInfo = reflectionInfo.GetGetter("Id");
+				test = (int)propertyInfo.GetValue(account, null);
+				Assert.AreEqual(0, test);
+			}
+			long reflectionInfoMs = DateTime.Now.Ticks - time;
+			float reflectionInfoRatio = (float)reflectionInfoMs / directAccessMs;
+			#endregion
 
-            // Reflection
-            Type type = account.GetType();
-            time = DateTime.Now.Ticks;
-            for (int i = 0; i < TEST_ITERATIONS; i++)
-            {
-                test = -1;
-                test = (int)type.InvokeMember("Id",
-                                              BindingFlags.Public | BindingFlags.GetProperty | BindingFlags.Instance,
-                    null, account, null);
-                Assert.AreEqual(0, test);
-            }
-            long reflectionMs = DateTime.Now.Ticks - time;
+			#region Reflection
+			Type type = account.GetType();
+			time = DateTime.Now.Ticks;
+			for (int i = 0; i < TEST_ITERATIONS; i++)
+			{
+				test = -1;
+				PropertyInfo propertyInfo = type.GetProperty("Id", BindingFlags.Public | BindingFlags.SetProperty | BindingFlags.Instance);
+				test = (int)propertyInfo.GetValue(account, null);
+				Assert.AreEqual(0, test);
+			}
+			long reflectionMs = DateTime.Now.Ticks - time;
+			float reflectionRatio = (float)reflectionMs / directAccessMs;
+			#endregion
 
-            // Print results
-            Console.WriteLine(
-                TEST_ITERATIONS.ToString() + " property gets on integer..."
-                + "\nDirect access : \t\t" + directAccessMs.ToString() + " ms"
-                + "\nIPropertyAccessor : \t\t" + propertyAccessorMs.ToString()+ " ms Ratio: " + (((float)propertyAccessorMs / directAccessMs)).ToString()
-                + "\nReflection : \t\t\t" + reflectionMs.ToString() + " ms Ratio: " + (((float)reflectionMs / directAccessMs)).ToString());
+			#region ReflectionInvokeMember (slowest)
+			type = account.GetType();
+			time = DateTime.Now.Ticks;
+			for (int i = 0; i < TEST_ITERATIONS; i++)
+			{
+				test = -1;
+				test = (int)type.InvokeMember("Id",
+					BindingFlags.Public | BindingFlags.GetProperty | BindingFlags.Instance,
+					null, account, null);
+				Assert.AreEqual(0, test);
+			}
+			long reflectionInvokeMemberMs = DateTime.Now.Ticks - time;
+			float reflectionInvokeMemberRatio = (float)reflectionInvokeMemberMs / directAccessMs;
+			#endregion
+
+			// Print results
+			Console.WriteLine("{0} property gets on integer...", TEST_ITERATIONS);
+			Console.WriteLine("Direct access: \t\t{0} ms", directAccessMs);
+			Console.WriteLine("IPropertyAccessor: \t\t{0} ms Ratio: {1}", propertyAccessorMs, propertyAccessorRatio);
+			Console.WriteLine("IBatisNet ReflectionInfo: \t{0} ms Ratio: {1}", reflectionInfoMs, reflectionInfoRatio);
+			Console.WriteLine("ReflectionInvokeMember: \t{0} ms Ratio: {1}", reflectionInvokeMemberMs, reflectionInvokeMemberRatio);
+			Console.WriteLine("Reflection: \t\t\t{0} ms Ratio: {1}", reflectionMs, reflectionRatio);
         }
-
         
 		/// <summary>
         /// Test the performance of getting an integer property.
@@ -94,25 +126,53 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             Account account = new Account();
             int value = 123;
 
-            // Property accessor
+			#region Direct access (fastest)
+			long start = DateTime.Now.Ticks;
+			for (int i = 0; i < TEST_ITERATIONS; i++)
+			{
+				account.Id = value;
+			}
+			long directAccessMs = DateTime.Now.Ticks - start;
+			#endregion
+
+			#region Property accessor
             IPropertyAccessor propertyAccessor = ILPropertyAccessor.CreatePropertyAccessor(typeof(Account), "Id");
-            long start = DateTime.Now.Ticks;
+            start = DateTime.Now.Ticks;
             for (int i = 0; i < TEST_ITERATIONS; i++)
             {
                 propertyAccessor.Set(account, value);
             }
             long propertyAccessorMs = DateTime.Now.Ticks - start;
+			float propertyAccessorRatio = (float)propertyAccessorMs / directAccessMs;
+			#endregion
 
-            // Direct access
-            start = DateTime.Now.Ticks;
-            for (int i = 0; i < TEST_ITERATIONS; i++)
-            {
-                account.Id = value;
-            }
-            long directAccessMs = DateTime.Now.Ticks - start;
+			#region IBatisNet.Common.Utilities.Object.ReflectionInfo
+			Type type = account.GetType();
+			ReflectionInfo reflectionInfo = ReflectionInfo.GetInstance(type);
+			start = DateTime.Now.Ticks;
+			for (int i = 0; i < TEST_ITERATIONS; i++)
+			{
+				PropertyInfo propertyInfo = reflectionInfo.GetSetter("Id");
+				propertyInfo.SetValue(account, value, null);
+			}
+			long reflectionInfoMs = DateTime.Now.Ticks - start;
+			float reflectionInfoRatio = (float)reflectionInfoMs / directAccessMs;
+			#endregion
 
-            // Reflection
-            Type type = account.GetType();
+			#region Reflection
+			type = account.GetType();
+			start = DateTime.Now.Ticks;
+			for (int i = 0; i < TEST_ITERATIONS; i++)
+			{
+				PropertyInfo propertyInfo = type.GetProperty("Id", BindingFlags.Public | BindingFlags.SetProperty | BindingFlags.Instance);
+				propertyInfo.SetValue(account, value, null);
+			}
+			long reflectionMs = DateTime.Now.Ticks - start;
+			float reflectionRatio = (float)reflectionMs / directAccessMs;
+			#endregion
+
+			#region ReflectionInvokeMember (slowest)
+            type = account.GetType();
             start = DateTime.Now.Ticks;
             for (int i = 0; i < TEST_ITERATIONS; i++)
             {
@@ -120,16 +180,18 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
                     BindingFlags.Public | BindingFlags.SetProperty | BindingFlags.Instance,
                     null, account, new object[] { value });
             }
-            long reflectionMs = DateTime.Now.Ticks - start;
+            long reflectionInvokeMemberMs = DateTime.Now.Ticks - start;
+			float reflectionInvokeMemberRatio = (float)reflectionInvokeMemberMs / directAccessMs;
+			#endregion
             
-            // Print results
-            Console.WriteLine(
-                TEST_ITERATIONS.ToString() + " property sets on integer..."
-                + "\nDirect access : \t\t" + directAccessMs.ToString() + " ms"
-                + "\nPropertyAccessor : \t\t" + propertyAccessorMs.ToString() + " ms Ratio: " + (((float)propertyAccessorMs / directAccessMs)).ToString()
-                + "\nReflection : \t\t\t" +  reflectionMs +" ms Ratio: " + (((float)reflectionMs / directAccessMs)).ToString());
+			// Print results
+			Console.WriteLine("{0} property sets on integer...", TEST_ITERATIONS);
+			Console.WriteLine("Direct access: \t\t{0} ms", directAccessMs);
+			Console.WriteLine("IPropertyAccessor: \t\t{0} ms Ratio: {1}", propertyAccessorMs, propertyAccessorRatio);
+			Console.WriteLine("IBatisNet ReflectionInfo: \t{0} ms Ratio: {1}", reflectionInfoMs, reflectionInfoRatio);
+			Console.WriteLine("ReflectionInvokeMember: \t{0} ms Ratio: {1}", reflectionInvokeMemberMs, reflectionInvokeMemberRatio);
+			Console.WriteLine("Reflection: \t\t\t{0} ms Ratio: {1}", reflectionMs, reflectionRatio);
         }
-
        
 		/// <summary>
         /// Test the performance of getting an integer property.
