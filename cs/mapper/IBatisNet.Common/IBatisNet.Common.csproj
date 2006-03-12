@@ -305,17 +305,17 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Utilities\Objects\DefaultObjectFactory.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Utilities\Objects\EmitFactory.cs"
+                    RelPath = "Utilities\Objects\ActivatorObjectFactory.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Utilities\Objects\EmitObjectFactory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Utilities\Objects\FactoryBuilder.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
