@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -86,6 +86,14 @@ namespace IBatisNet.DataMapper.Scope
 		#endregion 
 
 		#region Properties
+
+        /// <summary>
+        /// The factory for object
+        /// </summary>
+        public IObjectFactory ObjectFactory
+        {
+            get { return _sqlMapper.ObjectFactory; }
+        }
 
 		/// <summary>
 		/// XmlNamespaceManager

@@ -1,12 +1,12 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
- * $Revision: $
- * $Date$
+ * $Revision$
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,7 +24,7 @@
  ********************************************************************************/
 #endregion
 
-#region Imports
+#region Using
 
 using System;
 using System.Collections;
@@ -62,6 +62,8 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// Token for xml path to subMap elements.
 		/// </summary>
 		private const string XML_SUBMAP = "subMap";
+
+        private IFactory _objectFactory = null;
 
 		#region Fields
 		[NonSerialized]
@@ -200,6 +202,10 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			try
 			{
 				_class = configScope.SqlMapper.TypeHandlerFactory.GetType(_className);
+				if (Type.GetTypeCode(_class) == TypeCode.Object)
+				{
+					_objectFactory = configScope.SqlMapper.ObjectFactory.CreateFactory(_class);
+				}
 
 				// Load the child node
 				GetChildNode(configScope);
@@ -278,7 +284,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 
 			if (typeCode == TypeCode.Object)
 			{
-				return Activator.CreateInstance(_class);
+                return _objectFactory.CreateInstance();
 			}
 			else
 			{

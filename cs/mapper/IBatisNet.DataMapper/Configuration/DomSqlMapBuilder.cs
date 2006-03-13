@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -39,6 +39,7 @@ using IBatisNet.Common;
 using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Logging;
 using IBatisNet.Common.Utilities;
+using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.Common.Xml;
 using IBatisNet.DataMapper.Configuration.Alias;
 using IBatisNet.DataMapper.Configuration.Cache;
@@ -648,8 +649,10 @@ namespace IBatisNet.DataMapper.Configuration
 		private void Initialize()
 		{
 			Reset();
-			
-			_configScope.SqlMapper = new SqlMapper( new TypeHandlerFactory() );
+
+            // To do, analyse config file to set allowCodeGeneration on object factory
+			_configScope.SqlMapper = new SqlMapper( new ObjectFactory(false), new TypeHandlerFactory() );
+
 
 			#region Cache Alias
 

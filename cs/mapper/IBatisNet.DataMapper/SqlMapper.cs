@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -37,6 +37,7 @@ using System.Threading;
 using System.Xml;
 using IBatisNet.Common;
 using IBatisNet.Common.Utilities;
+using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.DataMapper.Configuration;
 using IBatisNet.DataMapper.Configuration.Cache;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
@@ -103,6 +104,7 @@ namespace IBatisNet.DataMapper
 		/// Container session unique for each thread. 
 		/// </summary>
 		private SessionHolder _sessionHolder = null;
+        private IObjectFactory _objectFactory = null;
 
 		#endregion
 
@@ -152,14 +154,23 @@ namespace IBatisNet.DataMapper
 		{
 			get { return _typeHandlerFactory; }
 		}
+
+        /// <summary>
+        /// The factory for object
+        /// </summary>
+        public IObjectFactory ObjectFactory
+        {
+            get { return _objectFactory; }
+        }
 		#endregion
 
 		#region Constructor (s) / Destructor
 		/// <summary>
 		/// Create a new SqlMap
 		/// </summary>
-		internal SqlMapper(TypeHandlerFactory typeHandlerFactory) 
+		internal SqlMapper(IObjectFactory objectFactory, TypeHandlerFactory typeHandlerFactory) 
 		{
+            _objectFactory = objectFactory;
 			_typeHandlerFactory = typeHandlerFactory;
 			_id = HashCodeProvider.GetIdentityHashCode(this).ToString();
 			_sessionHolder = new SessionHolder(_id);

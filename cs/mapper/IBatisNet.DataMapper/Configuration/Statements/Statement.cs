@@ -1,12 +1,12 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
- * $Revision: $
- * $Date$
+ * $Revision$
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,6 +31,7 @@ using System.Collections;
 using System.Data;
 using System.Xml.Serialization;
 using IBatisNet.Common.Utilities.TypesResolver;
+using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.DataMapper.Configuration.Cache;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
@@ -90,6 +91,10 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		private ISql _sql = null;
 		[NonSerialized]
 		private string _extendStatement = string.Empty;
+        [NonSerialized]
+        private IFactory _resultClassFactory = null;
+        private IFactory _listClassFactory = null;
+
 		#endregion
 
 		#region Properties
@@ -311,6 +316,11 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 			if (_resultClassName != string.Empty )
 			{
 				_resultClass = configurationScope.SqlMapper.TypeHandlerFactory.GetType(_resultClassName);
+				if (Type.GetTypeCode(_resultClass) == TypeCode.Object &&
+					(_resultClass.IsValueType == false))
+				{
+					_resultClassFactory = configurationScope.SqlMapper.ObjectFactory.CreateFactory(_resultClass);	
+				}
 			}
 			if (_parameterClassName != string.Empty )
 			{
@@ -319,6 +329,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 			if (_listClassName != string.Empty )
 			{
 				_listClass = configurationScope.SqlMapper.TypeHandlerFactory.GetType(_listClassName);
+                _listClassFactory = configurationScope.SqlMapper.ObjectFactory.CreateFactory(_listClass);
 			}
 		}
 
@@ -329,14 +340,22 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		/// <returns>An object.</returns>
 		public object CreateInstanceOfResultClass()
 		{
-			if (_resultClass.IsPrimitive || _resultClass == typeof (string) )
+			if (_resultClass.IsPrimitive || _resultClass == typeof (string))
 			{
 				TypeCode typeCode = Type.GetTypeCode(_resultClass);
 				return TypeAliasResolver.InstantiatePrimitiveType(typeCode);
 			}
 			else
 			{
-				if (_resultClass == typeof (Guid))
+				if (_resultClass == typeof (DateTime))
+				{
+					return new DateTime();
+				}
+				else if (_resultClass == typeof (Decimal))				
+				{
+					return new Decimal();
+				}
+				else if (_resultClass == typeof (Guid))				
 				{
 					return Guid.Empty;
 				}
@@ -346,7 +365,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 				}
 				else
 				{
-					return Activator.CreateInstance(_resultClass);
+					return _resultClassFactory.CreateInstance();
 				}
 			}
 		}
@@ -358,7 +377,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		/// <returns>An object which implment IList.</returns>
 		public IList CreateInstanceOfListClass()
 		{
-			return (IList)Activator.CreateInstance(_listClass);
+            return (IList)_listClassFactory.CreateInstance(); ;
 		}
 		#endregion
 
