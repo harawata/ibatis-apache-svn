@@ -1,6 +1,3 @@
-using System.ComponentModel;
-using System.Runtime.InteropServices;
-using System.Threading;
 using IBatisNet.Common.Test.Domain;
 using IBatisNet.Common.Utilities.Objects;
 using NUnit.Framework;
@@ -47,7 +44,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			GC.Collect();
 			GC.WaitForPendingFinalizers();
 
-			HiPerformanceTimer timer = new HiPerformanceTimer();
+			Timer timer = new Timer();
 			timer.Start();
 			for (int i = 0; i < TEST_ITERATIONS; i++)
 			{
@@ -112,43 +109,5 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			}
 		}
 
-		internal class HiPerformanceTimer
-		{
-			[DllImport("Kernel32.dll")]
-			private static extern bool QueryPerformanceCounter(out long lpPerformanceCount);
-
-			[DllImport("Kernel32.dll")]
-			private static extern bool QueryPerformanceFrequency(out long lpFrequency);
-
-			private long startTime, stopTime;
-			private long freq;
-
-			public HiPerformanceTimer()
-			{
-				startTime = 0;
-				stopTime = 0;
-
-				if (QueryPerformanceFrequency(out freq) == false)
-				{
-					throw new Win32Exception();
-				}
-			}
-
-			public void Start()
-			{
-				Thread.Sleep(0);
-				QueryPerformanceCounter(out startTime);
-			}
-
-			public void Stop()
-			{
-				QueryPerformanceCounter(out stopTime);
-			}
-
-			public double Duration
-			{
-				get { return (double) (stopTime - startTime)/(double) freq; }
-			}
-		}
 	}
 }

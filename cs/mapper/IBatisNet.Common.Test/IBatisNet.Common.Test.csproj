@@ -305,6 +305,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "NUnit\CommonTests\Utilities\Timer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Scripts\Access\account-init.sql"
                     BuildAction = "Content"
                 />

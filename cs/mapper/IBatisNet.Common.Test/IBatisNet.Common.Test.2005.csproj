@@ -103,6 +103,7 @@
     <Compile Include="Domain\Account.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Domain\Simple.cs" />
     <Compile Include="NUnit\CommonTests\ConfigWatcher\ConfigWatcherTest.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -130,10 +131,12 @@
     <Compile Include="NUnit\CommonTests\Transaction\TransactionTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="NUnit\CommonTests\Utilities\ObjectFactoryTest.cs" />
     <Compile Include="NUnit\CommonTests\Utilities\PropertyAccessorTest.cs" />
     <Compile Include="NUnit\CommonTests\Utilities\ResourcesTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="NUnit\CommonTests\Utilities\Timer.cs" />
     <Compile Include="NUnit\CommonTests\Utilities\TypeResolverTest.cs" />
     <None Include="bin\Debug\dao_Access_OleDb.config" />
     <None Include="bin\Debug\dao_MSSQL_Odbc.config" />

@@ -28,7 +28,7 @@ using System;
 namespace IBatisNet.Common.Utilities.Objects
 {
 	/// <summary>
-	/// Description résumée de ObjectFactory.
+	/// A factory to create objects 
 	/// </summary>
 	public class ObjectFactory : IObjectFactory
 	{

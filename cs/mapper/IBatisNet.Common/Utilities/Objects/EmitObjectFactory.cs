@@ -32,10 +32,12 @@ namespace IBatisNet.Common.Utilities.Objects
 	/// <summary>
 	/// A factory that can create objects via IL code
 	/// </summary>
-	public class EmitObjectFactory : IObjectFactory
+	public sealed class EmitObjectFactory : IObjectFactory
 	{
 		private IDictionary _cachedfactories = new HybridDictionary();
 		private FactoryBuilder _factoryBuilder = null;
+		private object _padlock = new object();
+
 
 		/// <summary>
 		/// 
@@ -55,10 +57,17 @@ namespace IBatisNet.Common.Utilities.Objects
 		public IFactory CreateFactory(Type typeToCreate)
 		{
 			IFactory factory = (IFactory) _cachedfactories[typeToCreate];
-			if (null == factory)
+			if (factory == null)
 			{
-				factory = _factoryBuilder.CreateFactory(typeToCreate);
-				_cachedfactories[typeToCreate] = factory;
+				lock (_padlock)
+				{
+					factory = (IFactory) _cachedfactories[typeToCreate];
+					if (factory == null) // double-check
+					{
+						factory = _factoryBuilder.CreateFactory(typeToCreate);
+						_cachedfactories[typeToCreate] = factory;
+					}
+				}
 			}
 			return factory;
 		}
