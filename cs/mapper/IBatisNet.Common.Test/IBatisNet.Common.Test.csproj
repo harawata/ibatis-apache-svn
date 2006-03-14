@@ -212,6 +212,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Domain\Property.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Domain\Simple.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -38,7 +38,6 @@ namespace IBatisNet.Common.Utilities.Objects
 		private FactoryBuilder _factoryBuilder = null;
 		private object _padlock = new object();
 
-
 		/// <summary>
 		/// 
 		/// </summary>

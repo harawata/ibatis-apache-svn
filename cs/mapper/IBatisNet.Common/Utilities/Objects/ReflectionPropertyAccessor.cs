@@ -34,6 +34,16 @@ namespace IBatisNet.Common.Utilities.Objects
     /// </summary>
     public class ReflectionPropertyAccessor : IPropertyAccessor
     {
+
+		/// <summary>
+		/// Creates a new Reflection property accessor.
+		/// </summary>
+		/// <param name="targetType">Target object type.</param>
+		/// <param name="propertyName">Property name.</param>
+		public ReflectionPropertyAccessor(Type targetType, string propertyName)
+		{
+		}
+
         /// <summary>
         /// Gets the value stored in the property for 
         /// the specified target.

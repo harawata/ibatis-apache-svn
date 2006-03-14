@@ -651,7 +651,7 @@ namespace IBatisNet.DataMapper.Configuration
 			Reset();
 
             // To do, analyse config file to set allowCodeGeneration on object factory
-			_configScope.SqlMapper = new SqlMapper( new ObjectFactory(false), new TypeHandlerFactory() );
+			_configScope.SqlMapper = new SqlMapper( new ObjectFactory(true), new TypeHandlerFactory() );
 
 
 			#region Cache Alias

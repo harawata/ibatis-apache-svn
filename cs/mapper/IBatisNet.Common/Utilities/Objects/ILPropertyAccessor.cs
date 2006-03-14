@@ -42,32 +42,34 @@ namespace IBatisNet.Common.Utilities.Objects
         private string _propertyName = string.Empty;
         private Type _propertyType = null;
         private IPropertyAccessor _emittedPropertyAccessor = null;
-        private static IDictionary _typeToOpcode = new HybridDictionary();
-        private static AssemblyBuilder _assemblyBuilder = null;
-        private static ModuleBuilder _moduleBuilder = null;
-        private static IDictionary _cachedIPropertyAccessor = new HybridDictionary();
+		private AssemblyBuilder _assemblyBuilder = null;
+		private ModuleBuilder _moduleBuilder = null;
+
+		private static IDictionary _typeToOpcode = new HybridDictionary();
         private static IDictionary _defaultValueType = new HybridDictionary();
 
         /// <summary>
         /// Static constructor
         /// "Initialize a private hashtable with type-opCode pairs 
-        /// so we dont have to write a long if/else statement when outputting msil"
         /// </summary>
         static ILPropertyAccessor()
         {
-            _defaultValueType[typeof(sbyte)] = 0;
-            _defaultValueType[typeof(byte)] = 0;
-            _defaultValueType[typeof(char)] = '\0';
-            _defaultValueType[typeof(short)] = 0;
-            _defaultValueType[typeof(ushort)] = 0;
-            _defaultValueType[typeof(int)] = 0;
-            _defaultValueType[typeof(uint)] = 0;
+            _defaultValueType[typeof(sbyte)] = (sbyte)0;
+            _defaultValueType[typeof(byte)] = (byte)0;
+            _defaultValueType[typeof(char)] = (char)'\0';
+            _defaultValueType[typeof(short)] = (short)0;
+            _defaultValueType[typeof(ushort)] = (ushort)0;
+            _defaultValueType[typeof(int)] = (int)0;
+            _defaultValueType[typeof(uint)] = (uint)0;
             _defaultValueType[typeof(long)] = 0L;
             _defaultValueType[typeof(ulong)] = 0L;
             _defaultValueType[typeof(bool)] = false;
             _defaultValueType[typeof(double)] = 0.0D;
             _defaultValueType[typeof(float)] = 0.0F;
-           // _defaultValueType[typeof(decimal)] = 0.0M;
+			_defaultValueType[typeof(decimal)] = 0.0M;
+//			_defaultValueType[typeof(DateTime)] = 0.0M;
+//			_defaultValueType[typeof(Guid)] = 0.0M;
+//			_defaultValueType[typeof(TimeSpan)] = 0.0M;
 
             _typeToOpcode[typeof(sbyte)] = OpCodes.Ldind_I1;
             _typeToOpcode[typeof(byte)] = OpCodes.Ldind_U1;
@@ -81,48 +83,20 @@ namespace IBatisNet.Common.Utilities.Objects
             _typeToOpcode[typeof(bool)] = OpCodes.Ldind_I1;
             _typeToOpcode[typeof(double)] = OpCodes.Ldind_R8;
             _typeToOpcode[typeof(float)] = OpCodes.Ldind_R4;
-
-        	AssemblyName assemblyName = new AssemblyName();
-            assemblyName.Name = "iBATIS.FastPropertyAccessor";
-
-            // Create a new assembly with one module
-            _assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
-            _moduleBuilder = _assemblyBuilder.DefineDynamicModule(assemblyName.Name + ".dll");
         }
 
-        
-		/// <summary>
-        /// Generate the IPropertyAccessor object
-        /// </summary>
-        /// <param name="targetType">Target object type.</param>
-        /// <param name="propertyName">Property name.</param>
-        /// <returns>null if the generation fail</returns>
-        public static IPropertyAccessor CreatePropertyAccessor(Type targetType, string propertyName)
-        {
-            string key = targetType.FullName+propertyName;
-            lock (_assemblyBuilder)
-            {
-                if (_cachedIPropertyAccessor.Contains(key))
-                {
-                    return (IPropertyAccessor)_cachedIPropertyAccessor[key];
-                }
-                else
-                {
-                    IPropertyAccessor propertyAccessor = new ILPropertyAccessor(targetType, propertyName);
-                    _cachedIPropertyAccessor[key] = propertyAccessor;
-                    return propertyAccessor;
-                }
-            }
-        }
-
-		
+        		
 		/// <summary>
 		/// Creates a new IL property accessor.
 		/// </summary>
 		/// <param name="targetType">Target object type.</param>
         /// <param name="propertyName">Property name.</param>
-        private ILPropertyAccessor(Type targetType, string propertyName)
+        /// <param name="assemblyBuilder"></param>
+        /// <param name="moduleBuilder"></param>
+        public ILPropertyAccessor(Type targetType, string propertyName, AssemblyBuilder assemblyBuilder, ModuleBuilder moduleBuilder)
 		{
+			this._assemblyBuilder = assemblyBuilder;
+			this._moduleBuilder = moduleBuilder;
 			this._targetType = targetType;
             this._propertyName = propertyName;
 
@@ -173,24 +147,6 @@ namespace IBatisNet.Common.Utilities.Objects
 
 
 		/// <summary>
-		/// The Type of object this property accessor was
-		/// created for.
-		/// </summary>
-		public Type TargetType
-		{
-			get { return this._targetType; }
-		}
-
-		/// <summary>
-		/// The Type of the Property being accessed.
-		/// </summary>
-		public Type PropertyType
-		{
-			get { return this._propertyType; }
-		}
-
-
-		/// <summary>
 		/// This method generates creates a new assembly containing
 		/// the Type that will provide dynamic access.
 		/// </summary>
@@ -199,7 +155,7 @@ namespace IBatisNet.Common.Utilities.Objects
 			// Create the assembly and an instance of the property accessor class.
             EmitType();
 
-            _emittedPropertyAccessor = _assemblyBuilder.CreateInstance("PropertyAccessorFor" + _propertyName) as IPropertyAccessor;
+            _emittedPropertyAccessor = _assemblyBuilder.CreateInstance("PropertyAccessorFor" + _targetType.FullName + _propertyName) as IPropertyAccessor;
 
 			if(_emittedPropertyAccessor == null)
 			{
@@ -212,8 +168,8 @@ namespace IBatisNet.Common.Utilities.Objects
 		/// </summary>
 		private void EmitType()
 		{
-			//  Define a public class named "Property" in the assembly.
-            TypeBuilder typeBuilder = _moduleBuilder.DefineType("PropertyAccessorFor" + _propertyName, TypeAttributes.Public);
+			//  Define a public class named "Property..." in the assembly.
+            TypeBuilder typeBuilder = _moduleBuilder.DefineType("PropertyAccessorFor" + _targetType.FullName + _propertyName, TypeAttributes.Public);
 
 			// Mark the class as implementing IPropertyAccessor. 
 			typeBuilder.AddInterfaceImplementation(typeof(IPropertyAccessor));
@@ -261,11 +217,10 @@ namespace IBatisNet.Common.Utilities.Objects
 
 			// Define a method for the set operation.
 			Type[] setParamTypes = new Type[] {typeof(object), typeof(object)};
-			Type setReturnType = null;
 			MethodBuilder setMethod = 
 				typeBuilder.DefineMethod("Set", 
 				MethodAttributes.Public | MethodAttributes.Virtual, 
-				setReturnType, 
+				null, 
 				setParamTypes);
 
 			// From the method, get an ILGenerator. This is used to
@@ -280,12 +235,10 @@ namespace IBatisNet.Common.Utilities.Objects
 				setIL.DeclareLocal(paramType);
 				setIL.Emit(OpCodes.Ldarg_1);						//Load the first argument 
 																	//(target object)
-
 				setIL.Emit(OpCodes.Castclass, this._targetType);	//Cast to the source type
 
 				setIL.Emit(OpCodes.Ldarg_2);						//Load the second argument 
 																	//(value object)
-
 				if(paramType.IsValueType)
 				{
 					setIL.Emit(OpCodes.Unbox, paramType);			//Unbox it 	
@@ -311,7 +264,6 @@ namespace IBatisNet.Common.Utilities.Objects
 			{
 				setIL.ThrowException(typeof(MissingMethodException));
 			}
-
 			setIL.Emit(OpCodes.Ret);
 
 			// Load the type

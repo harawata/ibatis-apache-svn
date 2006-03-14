@@ -350,6 +350,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Utilities\Objects\PropertyAccessorFactory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Utilities\Objects\ReflectionInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -375,6 +375,9 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Perf
             double ibatis = 0;
             double adonet = 0;
 
+            IDbConnection _connection = sqlMap.DataSource.DbProvider.CreateConnection();
+            _connection.ConnectionString = sqlMap.DataSource.ConnectionString;
+
             for (int n = 2; n < 4000; n *= 2)
             {
                 Simple[] simples = new Simple[n];
@@ -390,8 +393,6 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Perf
                 Ibatis(simples, n, "h0");
                 sqlMap.CloseConnection();
 
-                IDbConnection _connection = sqlMap.DataSource.DbProvider.CreateConnection();
-                _connection.ConnectionString = sqlMap.DataSource.ConnectionString;
 
                 _connection.Open();
                 DirectAdoNet(_connection, simples, n, "j0");

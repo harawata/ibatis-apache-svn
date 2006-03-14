@@ -204,6 +204,7 @@
     <Compile Include="Utilities\Objects\ObjectProbe.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Utilities\Objects\PropertyAccessorFactory.cs" />
     <Compile Include="Utilities\Objects\ReflectionInfo.cs">
       <SubType>Code</SubType>
     </Compile>
