@@ -43,7 +43,7 @@ namespace IBatisNet.Common.Utilities.Objects
 		public FactoryBuilder()
 		{
 			AssemblyName assemblyName = new AssemblyName();
-			assemblyName.Name = "iBATIS.EmitFactory";
+            assemblyName.Name = "iBATIS.EmitFactory" + HashCodeProvider.GetIdentityHashCode(this).ToString();
 
 			// Create a new assembly with one module
 			AssemblyBuilder _assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);

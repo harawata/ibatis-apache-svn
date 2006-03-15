@@ -44,9 +44,9 @@ namespace IBatisNet.Common.Utilities.Objects
         private IPropertyAccessor _emittedPropertyAccessor = null;
 		private AssemblyBuilder _assemblyBuilder = null;
 		private ModuleBuilder _moduleBuilder = null;
+        private object _nullInternal = null;
 
 		private static IDictionary _typeToOpcode = new HybridDictionary();
-        private static IDictionary _defaultValueType = new HybridDictionary();
 
         /// <summary>
         /// Static constructor
@@ -54,23 +54,6 @@ namespace IBatisNet.Common.Utilities.Objects
         /// </summary>
         static ILPropertyAccessor()
         {
-            _defaultValueType[typeof(sbyte)] = (sbyte)0;
-            _defaultValueType[typeof(byte)] = (byte)0;
-            _defaultValueType[typeof(char)] = '\0';
-            _defaultValueType[typeof(short)] = (short)0;
-            _defaultValueType[typeof(ushort)] = (ushort)0;
-            _defaultValueType[typeof(int)] = 0;
-            _defaultValueType[typeof(uint)] = (uint)0;
-            _defaultValueType[typeof(long)] = 0L;
-            _defaultValueType[typeof(ulong)] = (ulong)0;
-            _defaultValueType[typeof(bool)] = false;
-            _defaultValueType[typeof(double)] = 0.0D;
-            _defaultValueType[typeof(float)] = 0.0F;
-			_defaultValueType[typeof(decimal)] = 0.0M;
-			_defaultValueType[typeof(DateTime)] = DateTime.MinValue;
-			_defaultValueType[typeof(Guid)] = Guid.Empty;
-			_defaultValueType[typeof(TimeSpan)] = TimeSpan.MinValue;
-
             _typeToOpcode[typeof(sbyte)] = OpCodes.Ldind_I1;
             _typeToOpcode[typeof(byte)] = OpCodes.Ldind_U1;
             _typeToOpcode[typeof(char)] = OpCodes.Ldind_U2;
@@ -134,17 +117,49 @@ namespace IBatisNet.Common.Utilities.Objects
 		/// <param name="value">Value to set.</param>
 		public void Set(object target, object value)
 		{
-            // If the value to assign is null and this property
-            // accessor is for a value type, use a default value instead
+            // If the value to assign is null and assign null internal value
             object newValue = value;
-            if (newValue == null && _propertyType.IsValueType)
+            if (newValue == null)
             {
-                newValue = _defaultValueType[_propertyType];
+                newValue = _nullInternal;
             }
 
             this._emittedPropertyAccessor.Set(target, newValue);
 		}
 
+        private object GetNullInternal(Type type)
+        {
+            if (type.IsValueType)
+            {
+                if (type.IsEnum) { return 0; }
+
+                if (type.IsPrimitive)
+                {
+                    if (type == typeof(Int32)) {return 0; }
+                    if (type == typeof(Double)) {return (Double)0; }
+                    if (type == typeof(Int16)) {return (Int16)0; }
+                    if (type == typeof(SByte)) {return (SByte)0; }
+                    if (type == typeof(Int64)) {return (Int64)0; }
+                    if (type == typeof(Byte)) {return (Byte)0; }
+                    if (type == typeof(UInt16)) {return (UInt16)0; }
+                    if (type == typeof(UInt32)) {return (UInt32)0; }
+                    if (type == typeof(UInt64)) {return (UInt64)0; }
+                    if (type == typeof(UInt64)) {return (UInt64)0; }
+                    if (type == typeof(Single)) {return (Single)0; }
+                    if (type == typeof(Boolean)) {return false; }
+                    if (type == typeof(char)) {return '\0'; }
+                }
+                else
+                {
+                    if (type == typeof(DateTime)) {return DateTime.MinValue; }
+                    if (type == typeof(Decimal)) {return 0m; }
+                    if (type == typeof(Guid)) {return Guid.Empty; }
+                    if (type == typeof(TimeSpan)) { return TimeSpan.MinValue; }
+                }
+            }
+ 
+            return null;
+        }
 
 		/// <summary>
 		/// This method generates creates a new assembly containing
@@ -156,6 +171,8 @@ namespace IBatisNet.Common.Utilities.Objects
             EmitType();
 
             _emittedPropertyAccessor = _assemblyBuilder.CreateInstance("PropertyAccessorFor" + _targetType.FullName + _propertyName) as IPropertyAccessor;
+            
+            _nullInternal = GetNullInternal(_propertyType);
 
 			if(_emittedPropertyAccessor == null)
 			{

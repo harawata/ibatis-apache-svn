@@ -300,6 +300,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "NUnit\CommonTests\Utilities\PropertyAccessorPerformance.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "NUnit\CommonTests\Utilities\PropertyAccessorTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

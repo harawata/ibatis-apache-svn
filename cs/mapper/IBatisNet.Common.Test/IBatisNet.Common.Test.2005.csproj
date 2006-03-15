@@ -133,6 +133,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="NUnit\CommonTests\Utilities\ObjectFactoryTest.cs" />
+    <Compile Include="NUnit\CommonTests\Utilities\PropertyAccessorPerformance.cs" />
     <Compile Include="NUnit\CommonTests\Utilities\PropertyAccessorTest.cs" />
     <Compile Include="NUnit\CommonTests\Utilities\ResourcesTest.cs">
       <SubType>Code</SubType>

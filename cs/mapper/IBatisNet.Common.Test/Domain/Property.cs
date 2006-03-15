@@ -2,6 +2,17 @@ using System;
 
 namespace IBatisNet.Common.Test.Domain
 {
+    public enum Days
+    {
+        Sat = 1,
+        Sun,
+        Mon,
+        Tue,
+        Wed,
+        Thu,
+        Fri
+    };
+
 	/// <summary>
 	/// Summary description for Property.
 	/// </summary>
@@ -25,6 +36,7 @@ namespace IBatisNet.Common.Test.Domain
 		private Guid _guid = Guid.Empty;
 		private TimeSpan _timeSpan = TimeSpan.MinValue;
 		private Account _account = null;
+        private Days _day;
 
 #if dotnet2
         private Int32? _intNullable = null;
@@ -35,6 +47,12 @@ namespace IBatisNet.Common.Test.Domain
             set { _intNullable = value; }
         }
 #endif
+
+        public Days Day
+        {
+            get { return _day; }
+            set { _day = value; }
+        }
 
 		public string String
 		{
