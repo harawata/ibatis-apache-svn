@@ -22,6 +22,19 @@ namespace IBatisNet.Common.Test.Domain
 		private bool _bool = false;
 		private double _double = double.MinValue;
 		private float _float = float.MinValue;
+		private Guid _guid = Guid.Empty;
+		private TimeSpan _timeSpan = TimeSpan.MinValue;
+		private Account _account = null;
+
+#if dotnet2
+        private Int32? _intNullable = null;
+
+        public Int32? IntNullable
+        {
+            get { return _intNullable; }
+            set { _intNullable = value; }
+        }
+#endif
 
 		public string String
 		{
@@ -113,6 +126,22 @@ namespace IBatisNet.Common.Test.Domain
 			set { _float = value; }
 		}
 
+		public Guid Guid
+		{
+			get { return _guid; }
+			set { _guid = value; }
+		}
 
+		public TimeSpan TimeSpan
+		{
+			get { return _timeSpan; }
+			set { _timeSpan = value; }
+		}
+
+		public Account Account
+		{
+			get { return _account; }
+			set { _account = value; }
+		}
 	}
 }

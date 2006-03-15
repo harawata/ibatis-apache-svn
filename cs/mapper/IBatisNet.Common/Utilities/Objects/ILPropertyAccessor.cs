@@ -56,20 +56,20 @@ namespace IBatisNet.Common.Utilities.Objects
         {
             _defaultValueType[typeof(sbyte)] = (sbyte)0;
             _defaultValueType[typeof(byte)] = (byte)0;
-            _defaultValueType[typeof(char)] = (char)'\0';
+            _defaultValueType[typeof(char)] = '\0';
             _defaultValueType[typeof(short)] = (short)0;
             _defaultValueType[typeof(ushort)] = (ushort)0;
-            _defaultValueType[typeof(int)] = (int)0;
+            _defaultValueType[typeof(int)] = 0;
             _defaultValueType[typeof(uint)] = (uint)0;
             _defaultValueType[typeof(long)] = 0L;
-            _defaultValueType[typeof(ulong)] = 0L;
+            _defaultValueType[typeof(ulong)] = (ulong)0;
             _defaultValueType[typeof(bool)] = false;
             _defaultValueType[typeof(double)] = 0.0D;
             _defaultValueType[typeof(float)] = 0.0F;
 			_defaultValueType[typeof(decimal)] = 0.0M;
-//			_defaultValueType[typeof(DateTime)] = 0.0M;
-//			_defaultValueType[typeof(Guid)] = 0.0M;
-//			_defaultValueType[typeof(TimeSpan)] = 0.0M;
+			_defaultValueType[typeof(DateTime)] = DateTime.MinValue;
+			_defaultValueType[typeof(Guid)] = Guid.Empty;
+			_defaultValueType[typeof(TimeSpan)] = TimeSpan.MinValue;
 
             _typeToOpcode[typeof(sbyte)] = OpCodes.Ldind_I1;
             _typeToOpcode[typeof(byte)] = OpCodes.Ldind_U1;
