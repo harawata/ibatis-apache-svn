@@ -1,11 +1,11 @@
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
  * $Revision$
- * $Date$
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -66,7 +66,6 @@ namespace IBatisNet.Common
 			provider.UseParameterPrefixInParameter = NodeUtils.GetBooleanAttribute(prop, "useParameterPrefixInParameter", true);
 			provider.UseParameterPrefixInSql = NodeUtils.GetBooleanAttribute(prop, "useParameterPrefixInSql", true);
 			provider.UsePositionalParameters = NodeUtils.GetBooleanAttribute(prop, "usePositionalParameters", false);
-            provider.SupportsPreparingCommands = NodeUtils.GetBooleanAttribute(prop, "allowPreparingCommands", false);
 
 			return provider;
 		}

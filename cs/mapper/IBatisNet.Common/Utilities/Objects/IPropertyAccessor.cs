@@ -23,9 +23,6 @@
  ********************************************************************************/
 #endregion
 
-using System;
-using System.Text;
-
 namespace IBatisNet.Common.Utilities.Objects
 {
     /// <summary>

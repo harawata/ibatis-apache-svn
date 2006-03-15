@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: 384614 $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -71,10 +71,6 @@ namespace IBatisNet.DataMapper.Commands
 		{
 			// the IDbConnection & the IDbTransaction are assign in the CreateCommand 
 			request.IDbCommand = session.CreateCommand(statement.CommandType);
-            if (session.DataSource.DbProvider.SupportsPreparingCommands)
-            {
-                request.IDbCommand.Prepare();
-            }
 			
 			request.IDbCommand.CommandText = request.PreparedStatement.PreparedSql;
 

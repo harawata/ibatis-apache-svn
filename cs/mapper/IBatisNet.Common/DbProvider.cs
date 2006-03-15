@@ -100,8 +100,7 @@ namespace IBatisNet.Common
 		private bool _setDbParameterScale = true;
 		[NonSerialized]
 		private bool _useDeriveParameters = true;
-        [NonSerialized]
-        private bool _supportsPreparingCommands = true;
+
 		
 //		private static readonly ILog _connectionLogger = LogManager.GetLogger("System.Data.IDbConnection");
 
@@ -109,25 +108,6 @@ namespace IBatisNet.Common
 		
 		#region Properties
 
-        /// <summary>
-        /// Does this Driver support IDbCommand.Prepare().
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// A value of <c>false</c> indicates that an exception would be thrown or the 
-        /// company that produces the Driver we are wrapping does not recommend using
-        /// IDbCommand.Prepare().
-        /// </para>
-        /// <para>
-        /// A value of <c>true</c> indicates that calling IDbCommand.Prepare() will function
-        /// fine on this Driver.
-        /// </para>
-        /// </remarks>
-        public bool SupportsPreparingCommands 
-        {
-            get { return _supportsPreparingCommands; }
-            set { _supportsPreparingCommands = value; }
-        }
 
 		/// <summary>
 		/// The name of the assembly which conatins the definition of the provider.
