@@ -132,6 +132,7 @@
     <Compile Include="NUnit\CommonTests\Transaction\TransactionTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="NUnit\CommonTests\Utilities\FieldAccessorTest.cs" />
     <Compile Include="NUnit\CommonTests\Utilities\ObjectFactoryTest.cs" />
     <Compile Include="NUnit\CommonTests\Utilities\PropertyAccessorPerformance.cs" />
     <Compile Include="NUnit\CommonTests\Utilities\PropertyAccessorTest.cs" />

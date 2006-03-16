@@ -3,6 +3,7 @@ using System.Reflection;
 using IBatisNet.Common.Test.Domain;
 using IBatisNet.Common.Utilities;
 using IBatisNet.Common.Utilities.Objects;
+using IBatisNet.Common.Utilities.Objects.Members;
 using NUnit.Framework;
 
 
@@ -62,8 +63,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
-            PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-            IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Int");
+            MemberAccessorFactory factory = new MemberAccessorFactory(true);
+            IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Int");
             timer.Start();
             for (int i = 0; i < TEST_ITERATIONS; i++)
             {
@@ -80,7 +81,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
-            ReflectionInfo reflectionInfo = ReflectionInfo.GetInstance(prop.GetType());
+        	ReflectionInfo reflectionInfo = ReflectionInfo.GetInstance(prop.GetType());
             timer.Start();
             for (int i = 0; i < TEST_ITERATIONS; i++)
             {
@@ -133,7 +134,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             // Print results
             Console.WriteLine("{0} property gets on integer...", TEST_ITERATIONS);
             Console.WriteLine("Direct access: \t\t{0} ", directAccessDuration.ToString("F3"));
-            Console.WriteLine("IPropertyAccessor: \t\t{0} Ratio: {1}", propertyAccessorDuration.ToString("F3"), propertyAccessorRatio.ToString("F3"));
+            Console.WriteLine("IMemberAccessor: \t\t{0} Ratio: {1}", propertyAccessorDuration.ToString("F3"), propertyAccessorRatio.ToString("F3"));
             Console.WriteLine("IBatisNet ReflectionInfo: \t{0} Ratio: {1}", reflectionInfoDuration.ToString("F3"), reflectionInfoRatio.ToString("F3"));
             Console.WriteLine("ReflectionInvokeMember: \t{0} Ratio: {1}", reflectionInvokeMemberDuration.ToString("F3"), reflectionInvokeMemberRatio.ToString("F3"));
             Console.WriteLine("Reflection: \t\t\t{0} Ratio: {1}", reflectionDuration.ToString("F3"), reflectionRatio.ToString("F3"));
@@ -168,8 +169,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
-            PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-            IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Int");
+            MemberAccessorFactory factory = new MemberAccessorFactory(true);
+            IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Int");
             timer.Start();
             for (int i = 0; i < TEST_ITERATIONS; i++)
             {
@@ -231,7 +232,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             // Print results
             Console.WriteLine("{0} property sets on integer...", TEST_ITERATIONS);
             Console.WriteLine("Direct access: \t\t{0} ", directAccessDuration.ToString("F3"));
-            Console.WriteLine("IPropertyAccessor: \t\t{0} Ratio: {1}", propertyAccessorDuration.ToString("F3"), propertyAccessorRatio.ToString("F3"));
+            Console.WriteLine("IMemberAccessor: \t\t{0} Ratio: {1}", propertyAccessorDuration.ToString("F3"), propertyAccessorRatio.ToString("F3"));
             Console.WriteLine("IBatisNet ReflectionInfo: \t{0} Ratio: {1}", reflectionInfoDuration.ToString("F3"), reflectionInfoRatio.ToString("F3"));
             Console.WriteLine("ReflectionInvokeMember: \t{0} Ratio: {1}", reflectionInvokeMemberDuration.ToString("F3"), reflectionInvokeMemberRatio.ToString("F3"));
             Console.WriteLine("Reflection: \t\t\t{0} Ratio: {1}", reflectionDuration.ToString("F3"), reflectionRatio.ToString("F3"));

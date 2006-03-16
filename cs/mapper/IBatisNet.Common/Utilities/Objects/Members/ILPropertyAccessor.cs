@@ -30,18 +30,18 @@ using System.Reflection;
 using System.Reflection.Emit;
 using IBatisNet.Common.Exceptions;
 
-namespace IBatisNet.Common.Utilities.Objects
+namespace IBatisNet.Common.Utilities.Objects.Members
 {
     /// <summary>
-    /// The ILPropertyAccessor class provides an IL-based access   
+    /// The EmitPropertyAccessor class provides an IL-based access   
     /// to a property of a specified target class.
     /// </summary>
-    public class ILPropertyAccessor : IPropertyAccessor
+    public class EmitPropertyAccessor : IMemberAccessor
 	{
         private Type _targetType = null;
         private string _propertyName = string.Empty;
         private Type _propertyType = null;
-        private IPropertyAccessor _emittedPropertyAccessor = null;
+        private IMemberAccessor _emittedPropertyAccessor = null;
 		private AssemblyBuilder _assemblyBuilder = null;
 		private ModuleBuilder _moduleBuilder = null;
         private object _nullInternal = null;
@@ -52,7 +52,7 @@ namespace IBatisNet.Common.Utilities.Objects
         /// Static constructor
         /// "Initialize a private hashtable with type-opCode pairs 
         /// </summary>
-        static ILPropertyAccessor()
+        static EmitPropertyAccessor()
         {
             _typeToOpcode[typeof(sbyte)] = OpCodes.Ldind_I1;
             _typeToOpcode[typeof(byte)] = OpCodes.Ldind_U1;
@@ -76,7 +76,7 @@ namespace IBatisNet.Common.Utilities.Objects
         /// <param name="propertyName">Property name.</param>
         /// <param name="assemblyBuilder"></param>
         /// <param name="moduleBuilder"></param>
-        public ILPropertyAccessor(Type targetType, string propertyName, AssemblyBuilder assemblyBuilder, ModuleBuilder moduleBuilder)
+        public EmitPropertyAccessor(Type targetType, string propertyName, AssemblyBuilder assemblyBuilder, ModuleBuilder moduleBuilder)
 		{
 			this._assemblyBuilder = assemblyBuilder;
 			this._moduleBuilder = moduleBuilder;
@@ -173,7 +173,7 @@ namespace IBatisNet.Common.Utilities.Objects
 			// Create the assembly and an instance of the property accessor class.
             EmitType();
 
-            _emittedPropertyAccessor = _assemblyBuilder.CreateInstance("PropertyAccessorFor" + _targetType.FullName + _propertyName) as IPropertyAccessor;
+            _emittedPropertyAccessor = _assemblyBuilder.CreateInstance("PropertyAccessorFor" + _targetType.FullName + _propertyName) as IMemberAccessor;
             
             _nullInternal = GetNullInternal(_propertyType);
 
@@ -192,7 +192,7 @@ namespace IBatisNet.Common.Utilities.Objects
             TypeBuilder typeBuilder = _moduleBuilder.DefineType("PropertyAccessorFor" + _targetType.FullName + _propertyName, TypeAttributes.Public);
 
 			// Mark the class as implementing IPropertyAccessor. 
-			typeBuilder.AddInterfaceImplementation(typeof(IPropertyAccessor));
+			typeBuilder.AddInterfaceImplementation(typeof(IMemberAccessor));
 
 			// Add a constructor
 			typeBuilder.DefineDefaultConstructor(MethodAttributes.Public);

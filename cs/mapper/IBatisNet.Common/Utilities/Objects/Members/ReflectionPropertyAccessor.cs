@@ -23,21 +23,37 @@
  ********************************************************************************/
 #endregion
 
-namespace IBatisNet.Common.Utilities.Objects
+using System;
+
+namespace IBatisNet.Common.Utilities.Objects.Members
 {
     /// <summary>
-    /// The IPropertyAccessor interface defines a property
-    /// accessor.
+    /// The ReflectionPropertyAccessor class provides an reflection access   
+    /// to a property of a specified target class.
     /// </summary>
-    public interface IPropertyAccessor
+    public class ReflectionPropertyAccessor : IMemberAccessor
     {
+
+		/// <summary>
+		/// Creates a new Reflection property accessor.
+		/// </summary>
+		/// <param name="targetType">Target object type.</param>
+		/// <param name="propertyName">Property name.</param>
+		public ReflectionPropertyAccessor(Type targetType, string propertyName)
+		{
+		}
+
+		#region IMemberAccessor Members
         /// <summary>
         /// Gets the value stored in the property for 
         /// the specified target.
         /// </summary>
         /// <param name="target">Object to retrieve the property from.</param>
         /// <returns>Property value.</returns>
-        object Get(object target);
+        public object Get(object target)
+        {
+            return null;
+        }
 
         /// <summary>
         /// Sets the value for the property of
@@ -45,6 +61,9 @@ namespace IBatisNet.Common.Utilities.Objects
         /// </summary>
         /// <param name="target">Object to set the property on.</param>
         /// <param name="value">Property value.</param>
-        void Set(object target, object value);
+        public void Set(object target, object value)
+        {
+        }
+		#endregion
     }
 }

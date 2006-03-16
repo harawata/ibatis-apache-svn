@@ -2,7 +2,7 @@ using System;
 using System.Reflection;
 using IBatisNet.Common.Test.Domain;
 using IBatisNet.Common.Utilities;
-using IBatisNet.Common.Utilities.Objects;
+using IBatisNet.Common.Utilities.Objects.Members;
 using NUnit.Framework;
 
 namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
@@ -32,30 +32,30 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         #endregion
 
 		/// <summary>
-		/// Test PropertyAccessorFactory
+		/// Test MemberAccessorFactory
 		/// </summary>
 		[Test]
-		public void TestPropertyAccessorFactory()
+		public void TestMemberAccessorFactory()
 		{
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor1 = factory.CreatePropertyAccessor(typeof(Property), "Int");
-			IPropertyAccessor propertyAccessor2 = factory.CreatePropertyAccessor(typeof(Property), "Int");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor1 = factory.CreateMemberAccessor(typeof(Property), "Int");
+			IMemberAccessor propertyAccessor2 = factory.CreateMemberAccessor(typeof(Property), "Int");
 
 			Assert.AreEqual(HashCodeProvider.GetIdentityHashCode(propertyAccessor1), HashCodeProvider.GetIdentityHashCode(propertyAccessor2) );
 		}
 
 		/// <summary>
-		/// Test multiple PropertyAccessorFactory
+		/// Test multiple MemberAccessorFactory
 		/// </summary>
 		[Test]
-		public void TestMultiplePropertyAccessorFactory()
+		public void TestMultipleMemberAccessorFactory()
 		{
 			Property prop = new Property();
-			PropertyAccessorFactory factory1 = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor1 = factory1.CreatePropertyAccessor(typeof(Property), "Int");
+			MemberAccessorFactory factory1 = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor1 = factory1.CreateMemberAccessor(typeof(Property), "Int");
 
-			PropertyAccessorFactory factory2 = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor2 = factory2.CreatePropertyAccessor(typeof(Property), "Int");
+			MemberAccessorFactory factory2 = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor2 = factory2.CreateMemberAccessor(typeof(Property), "Int");
 
 			Assert.AreEqual(int.MinValue, propertyAccessor1.Get(prop));
 			Assert.AreEqual(int.MinValue, propertyAccessor2.Get(prop));
@@ -73,8 +73,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.Int = -99;
 
             // Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Int");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Int");
             propertyAccessor.Set(prop, null);
             Assert.AreEqual(0, prop.Int);
         }
@@ -89,8 +89,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Int = -99;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Int");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Int");
 			int test = 57;
 			propertyAccessor.Set(prop, test);
 			Assert.AreEqual(test, prop.Int);
@@ -107,8 +107,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Int = test;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Int");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Int");
 			Assert.AreEqual(test, propertyAccessor.Get(prop));
 		}
 
@@ -123,8 +123,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Long = 78945566664213223;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Long");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Long");
 			propertyAccessor.Set(prop, null);
 			Assert.AreEqual((long)0, prop.Long);
 		}
@@ -139,8 +139,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Long = 78945566664213223;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Long");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Long");
 			long test = 123456789987456;
 			propertyAccessor.Set(prop, test);
 			Assert.AreEqual(test, prop.Long);
@@ -157,8 +157,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Long = test;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Long");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Long");
 			Assert.AreEqual(test, propertyAccessor.Get(prop));
 		}
 
@@ -173,8 +173,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.SByte = 78;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "SByte");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "SByte");
 			propertyAccessor.Set(prop, null);
 			Assert.AreEqual((sbyte)0, prop.SByte);
 		}
@@ -189,8 +189,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.SByte = 78;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "SByte");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "SByte");
 			sbyte test = 19;
 			propertyAccessor.Set(prop, test);
 			Assert.AreEqual(test, prop.SByte);
@@ -207,8 +207,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.SByte = test;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "SByte");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "SByte");
 			Assert.AreEqual(test, propertyAccessor.Get(prop));
 		}
 
@@ -223,8 +223,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.String = "abc";
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "String");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "String");
 			propertyAccessor.Set(prop, null);
 			Assert.IsNull(prop.String);
 		}
@@ -239,8 +239,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.String = "abc";
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "String");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "String");
 			string test = "wxc";
 			propertyAccessor.Set(prop, test);
 			Assert.AreEqual(test, prop.String);
@@ -257,8 +257,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.String = test;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "String");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "String");
 			Assert.AreEqual(test, propertyAccessor.Get(prop));
 		}
 
@@ -276,8 +276,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 //			propertyInfo.SetValue(prop, null, null);
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "DateTime");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "DateTime");
 			propertyAccessor.Set(prop, null);
 			Assert.AreEqual(DateTime.MinValue, prop.DateTime);
 		}
@@ -292,8 +292,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.DateTime = DateTime.Now;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "DateTime");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "DateTime");
 			DateTime test = new DateTime(1987,11,25);
 			propertyAccessor.Set(prop, test);
 			Assert.AreEqual(test, prop.DateTime);
@@ -310,8 +310,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.DateTime = test;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "DateTime");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "DateTime");
 			Assert.AreEqual(test, propertyAccessor.Get(prop));
 		}
 
@@ -326,8 +326,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Decimal = 45.187M;
 			
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Decimal");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Decimal");
 			propertyAccessor.Set(prop, null);
 			Assert.AreEqual(0.0M, prop.Decimal);
 		}
@@ -342,8 +342,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Decimal = 45.187M;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Decimal");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Decimal");
 			Decimal test = 789456.141516M;
 			propertyAccessor.Set(prop, test);
 			Assert.AreEqual(test, prop.Decimal);
@@ -360,8 +360,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Decimal = test;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Decimal");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Decimal");
 			Assert.AreEqual(test, propertyAccessor.Get(prop));
 		}
 
@@ -376,8 +376,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Byte = 78;
 			
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Byte");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Byte");
 			propertyAccessor.Set(prop, null);
 			Assert.AreEqual((byte)0, prop.Byte);
 		}
@@ -392,8 +392,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Byte = 15;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Byte");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Byte");
 			byte test = 94;
 			propertyAccessor.Set(prop, test);
 			Assert.AreEqual(test, prop.Byte);
@@ -410,8 +410,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Byte = test;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Byte");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Byte");
 			Assert.AreEqual(test, propertyAccessor.Get(prop));
 		}
 
@@ -426,8 +426,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Char = 'r';
 			
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Char");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Char");
 			propertyAccessor.Set(prop, null);
 			Assert.AreEqual('\0', prop.Char);
 		}
@@ -442,8 +442,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Char = 'b';
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Char");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Char");
 			char test = 'j';
 			propertyAccessor.Set(prop, test);
 			Assert.AreEqual(test, prop.Char);
@@ -460,8 +460,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Char = test;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Char");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Char");
 			Assert.AreEqual(test, propertyAccessor.Get(prop));
 		}
 
@@ -476,8 +476,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Short = 5;
 			
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Short");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Short");
 			propertyAccessor.Set(prop, null);
 			Assert.AreEqual((short)0, prop.Short);
 		}
@@ -492,8 +492,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Short = 9;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Short");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Short");
 			short test = 45;
 			propertyAccessor.Set(prop, test);
 			Assert.AreEqual(test, prop.Short);
@@ -510,8 +510,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Short = test;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Short");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Short");
 			Assert.AreEqual(test, propertyAccessor.Get(prop));
 		}
 
@@ -526,8 +526,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.UShort = 5;
 			
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "UShort");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "UShort");
 			propertyAccessor.Set(prop, null);
 			Assert.AreEqual((ushort)0, prop.UShort);
 		}
@@ -542,8 +542,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.UShort = 9;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "UShort");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "UShort");
 			ushort test = 45;
 			propertyAccessor.Set(prop, test);
 			Assert.AreEqual(test, prop.UShort);
@@ -560,8 +560,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.UShort = test;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "UShort");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "UShort");
 			Assert.AreEqual(test, propertyAccessor.Get(prop));
 		}
 
@@ -576,8 +576,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.UInt = 5;
 			
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "UInt");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "UInt");
 			propertyAccessor.Set(prop, null);
 			Assert.AreEqual((uint)0, prop.UInt);
 		}
@@ -592,8 +592,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.UInt = 9;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "UInt");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "UInt");
 			uint test = 45;
 			propertyAccessor.Set(prop, test);
 			Assert.AreEqual(test, prop.UInt);
@@ -610,8 +610,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.UInt = test;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "UInt");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "UInt");
 			Assert.AreEqual(test, propertyAccessor.Get(prop));
 		}
 
@@ -626,8 +626,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.ULong = 5L;
 			
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "ULong");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "ULong");
 			propertyAccessor.Set(prop, null);
 			Assert.AreEqual((ulong)0, prop.ULong);
 		}
@@ -642,8 +642,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.ULong = 45464646578;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "ULong");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "ULong");
 			ulong test = 45;
 			propertyAccessor.Set(prop, test);
 			Assert.AreEqual(test, prop.ULong);
@@ -660,8 +660,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.ULong = test;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "ULong");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "ULong");
 			Assert.AreEqual(test, propertyAccessor.Get(prop));
 		}
 
@@ -676,8 +676,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Bool = true;
 			
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Bool");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Bool");
 			propertyAccessor.Set(prop, null);
 			Assert.AreEqual(false, prop.Bool);
 		}
@@ -692,8 +692,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Bool = false;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Bool");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Bool");
 			bool test = true;
 			propertyAccessor.Set(prop, test);
 			Assert.AreEqual(test, prop.Bool);
@@ -710,8 +710,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Bool = test;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Bool");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Bool");
 			Assert.AreEqual(test, propertyAccessor.Get(prop));
 		}
 
@@ -726,8 +726,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Double = 788956.56D;
 			
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Double");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Double");
 			propertyAccessor.Set(prop, null);
 			Assert.AreEqual(0.0D, prop.Double);
 		}
@@ -742,8 +742,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Double = 56789123.45888D;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Double");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Double");
 			double test = 788956.56D;
 			propertyAccessor.Set(prop, test);
 			Assert.AreEqual(test, prop.Double);
@@ -760,8 +760,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Double = test;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Double");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Double");
 			Assert.AreEqual(test, propertyAccessor.Get(prop));
 		}
 
@@ -776,8 +776,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Float = 565.45F;
 			
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Float");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Float");
 			propertyAccessor.Set(prop, null);
 			Assert.AreEqual(0.0D, prop.Float);
 		}
@@ -792,8 +792,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Float = 565.45F;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Float");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Float");
 			float test = 4567.45F;
 			propertyAccessor.Set(prop, test);
 			Assert.AreEqual(test, prop.Float);
@@ -810,8 +810,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Float = test;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Float");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Float");
 			Assert.AreEqual(test, propertyAccessor.Get(prop));
 		}
 
@@ -826,8 +826,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Guid = Guid.NewGuid();
 			
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Guid");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Guid");
 			propertyAccessor.Set(prop, null);
 			Assert.AreEqual(Guid.Empty, prop.Guid);
 		}
@@ -842,8 +842,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Guid = Guid.NewGuid();
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Guid");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Guid");
 			Guid test = Guid.NewGuid();
 			propertyAccessor.Set(prop, test);
 			Assert.AreEqual(test, prop.Guid);
@@ -860,8 +860,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Guid = test;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Guid");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Guid");
 			Assert.AreEqual(test, propertyAccessor.Get(prop));
 		}
 
@@ -876,8 +876,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.TimeSpan = new TimeSpan(5,12,57,21,13) ;
 			
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "TimeSpan");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "TimeSpan");
 			propertyAccessor.Set(prop, null);
 			Assert.AreEqual(TimeSpan.MinValue, prop.TimeSpan);
 		}
@@ -892,8 +892,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.TimeSpan = new TimeSpan(5,12,57,21,13) ;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "TimeSpan");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "TimeSpan");
 			TimeSpan test =  new TimeSpan(15,5,21,45,35) ;
 			propertyAccessor.Set(prop, test);
 			Assert.AreEqual(test, prop.TimeSpan);
@@ -910,8 +910,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.TimeSpan = test;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "TimeSpan");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "TimeSpan");
 			Assert.AreEqual(test, propertyAccessor.Get(prop));
 		}
 
@@ -928,8 +928,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Account.FirstName = "test";
 			
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Account");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Account");
 			propertyAccessor.Set(prop, null);
 			Assert.AreEqual(null, prop.Account);
 		}
@@ -947,8 +947,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Account = test;
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Account");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Account");
 
 			Assert.AreEqual(HashCodeProvider.GetIdentityHashCode(test), HashCodeProvider.GetIdentityHashCode(prop.Account));
 
@@ -966,8 +966,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Account.FirstName = "test";
 
 			// Property accessor
-			PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-			IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Account");
+			MemberAccessorFactory factory = new MemberAccessorFactory(true);
+			IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Account");
 			Account test = new Account();
 			test.FirstName = "Gilles";
 			propertyAccessor.Set(prop, test);
@@ -988,8 +988,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             propertyInfo.SetValue(prop, null, null);
 
             // Property accessor
-            PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-            IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Day");
+            MemberAccessorFactory factory = new MemberAccessorFactory(true);
+            IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Day");
             propertyAccessor.Set(prop, null);
             //Assert.AreEqual(TimeSpan.MinValue, prop.TimeSpan);
         }
@@ -1004,8 +1004,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.Day = Days.Thu;
 
             // Property accessor
-            PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-            IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Day");
+            MemberAccessorFactory factory = new MemberAccessorFactory(true);
+            IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Day");
             Days test = Days.Wed;
             propertyAccessor.Set(prop, test);
             Assert.AreEqual(test, prop.Day);
@@ -1022,8 +1022,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.Day = test;
 
             // Property accessor
-            PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-            IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "Day");
+            MemberAccessorFactory factory = new MemberAccessorFactory(true);
+            IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Day");
             Assert.AreEqual(test, propertyAccessor.Get(prop));
         }
 
@@ -1039,8 +1039,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.IntNullable = 85;
 
             // Property accessor
-            PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-            IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "IntNullable");
+            MemberAccessorFactory factory = new MemberAccessorFactory(true);
+            IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "IntNullable");
             propertyAccessor.Set(prop, null);
             Assert.AreEqual(null, prop.IntNullable);
         }
@@ -1056,8 +1056,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.IntNullable = test;
 
             // Property accessor
-            PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-            IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "IntNullable");
+            MemberAccessorFactory factory = new MemberAccessorFactory(true);
+            IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "IntNullable");
 
             Assert.AreEqual(test, propertyAccessor.Get(prop));
         }
@@ -1072,8 +1072,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.IntNullable = 99;
 
             // Property accessor
-            PropertyAccessorFactory factory = new PropertyAccessorFactory(true);
-            IPropertyAccessor propertyAccessor = factory.CreatePropertyAccessor(typeof(Property), "IntNullable");
+            MemberAccessorFactory factory = new MemberAccessorFactory(true);
+            IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "IntNullable");
             Int32? test = 55;
             propertyAccessor.Set(prop, test);
             Assert.AreEqual(test, prop.IntNullable);

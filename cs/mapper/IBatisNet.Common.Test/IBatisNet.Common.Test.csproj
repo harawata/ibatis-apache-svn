@@ -295,6 +295,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "NUnit\CommonTests\Utilities\FieldAccessorTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "NUnit\CommonTests\Utilities\ObjectFactoryTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

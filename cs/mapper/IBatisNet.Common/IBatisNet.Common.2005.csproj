@@ -197,18 +197,20 @@
     <Compile Include="Utilities\Objects\EmitObjectFactory.cs" />
     <Compile Include="Utilities\Objects\FactoryBuilder.cs" />
     <Compile Include="Utilities\Objects\IFactory.cs" />
-    <Compile Include="Utilities\Objects\ILPropertyAccessor.cs" />
     <Compile Include="Utilities\Objects\IObjectFactory.cs" />
-    <Compile Include="Utilities\Objects\IPropertyAccessor.cs" />
+    <Compile Include="Utilities\Objects\Members\EmitFieldAccessor.cs" />
+    <Compile Include="Utilities\Objects\Members\ILPropertyAccessor.cs" />
+    <Compile Include="Utilities\Objects\Members\IMemberAccessor.cs" />
+    <Compile Include="Utilities\Objects\Members\MemberAccessorFactory.cs" />
+    <Compile Include="Utilities\Objects\Members\ReflectionFieldAccessor.cs" />
+    <Compile Include="Utilities\Objects\Members\ReflectionPropertyAccessor.cs" />
     <Compile Include="Utilities\Objects\ObjectFactory.cs" />
     <Compile Include="Utilities\Objects\ObjectProbe.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Utilities\Objects\PropertyAccessorFactory.cs" />
     <Compile Include="Utilities\Objects\ReflectionInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Utilities\Objects\ReflectionPropertyAccessor.cs" />
     <Compile Include="Utilities\Proxy\CachedProxyGenerator.cs">
       <SubType>Code</SubType>
     </Compile>
