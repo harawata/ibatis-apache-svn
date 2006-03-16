@@ -131,7 +131,10 @@ namespace IBatisNet.Common.Utilities.Objects
         {
             if (type.IsValueType)
             {
-                if (type.IsEnum) { return 0; }
+                if (type.IsEnum) 
+				{ 
+					return GetNullInternal(  Enum.GetUnderlyingType(type) );
+				}
 
                 if (type.IsPrimitive)
                 {
