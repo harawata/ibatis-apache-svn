@@ -24,6 +24,7 @@
 #endregion
 
 using System;
+using System.Reflection;
 
 namespace IBatisNet.Common.Utilities.Objects.Members
 {
@@ -33,6 +34,8 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 	/// </summary>
 	public class ReflectionFieldAccessor : IMemberAccessor
 	{
+		private FieldInfo _fieldInfo = null;
+
 		/// <summary>
 		/// Creates a new Reflection field accessor.
 		/// </summary>
@@ -40,9 +43,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 		/// <param name="fieldName">Field name.</param>
 		public ReflectionFieldAccessor(Type targetType, string fieldName)
 		{
-			//
-			// TODO: Add constructor logic here
-			//
+			_fieldInfo = targetType.GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
 		}
 
 		#region IMemberAccessor Members
@@ -55,8 +56,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 		/// <returns>Property value.</returns>
 		public object Get(object target)
 		{
-			// TODO:  Add ReflectionFieldAccessor.Get implementation
-			return null;
+			return _fieldInfo.GetValue(target);
 		}
 
 		/// <summary>
@@ -67,7 +67,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 		/// <param name="value">Property value.</param>
 		public void Set(object target, object value)
 		{
-			// TODO:  Add ReflectionFieldAccessor.Set implementation
+			_fieldInfo.SetValue(target, value);
 		}
 
 		#endregion

@@ -24,6 +24,7 @@
 #endregion
 
 using System;
+using System.Reflection;
 
 namespace IBatisNet.Common.Utilities.Objects.Members
 {
@@ -33,6 +34,14 @@ namespace IBatisNet.Common.Utilities.Objects.Members
     /// </summary>
     public class ReflectionPropertyAccessor : IMemberAccessor
     {
+//		private static BindingFlags BINDING_FLAGS
+//			= BindingFlags.Public 
+//			| BindingFlags.Instance 
+//			;
+
+		private PropertyInfo _propertyInfo = null;
+		private string _propertyName = string.Empty;
+		private Type _targetType = null;
 
 		/// <summary>
 		/// Creates a new Reflection property accessor.
@@ -41,6 +50,10 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 		/// <param name="propertyName">Property name.</param>
 		public ReflectionPropertyAccessor(Type targetType, string propertyName)
 		{
+			_propertyInfo = ObjectProbe.GetPropertyInfoForSetter(targetType, propertyName);
+				//targetType.GetProperty(propertyName, BINDING_FLAGS);
+			_targetType = targetType;
+			_propertyName = propertyName;
 		}
 
 		#region IMemberAccessor Members
@@ -52,8 +65,17 @@ namespace IBatisNet.Common.Utilities.Objects.Members
         /// <returns>Property value.</returns>
         public object Get(object target)
         {
-            return null;
-        }
+			if (_propertyInfo.CanRead)
+			{
+				return _propertyInfo.GetValue(target, null);
+			}
+			else
+			{
+				throw new MissingMethodException(
+					string.Format("Property \"{0}\" on type "
+					+ "{1} doesn't have a get method.", _propertyName, _targetType));
+			}        
+		}
 
         /// <summary>
         /// Sets the value for the property of
@@ -63,6 +85,16 @@ namespace IBatisNet.Common.Utilities.Objects.Members
         /// <param name="value">Property value.</param>
         public void Set(object target, object value)
         {
+			if (_propertyInfo.CanWrite)
+			{
+				_propertyInfo.SetValue(target, value, null);
+			}
+			else
+			{
+				throw new MissingMethodException(
+					string.Format("Property \"{0}\" on type "
+					+ "{1} doesn't have a set method.", _propertyName, _targetType));
+			}
         }
 		#endregion
     }

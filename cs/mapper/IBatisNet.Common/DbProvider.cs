@@ -1,12 +1,12 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
- * $Revision$
- * $Date$
+ * $Revision: 374175 $
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -489,11 +489,12 @@ namespace IBatisNet.Common
 			}
 		}
 
+
 		/// <summary>
 		/// Create a connection object for this provider.
 		/// </summary>
 		/// <returns>An 'IDbConnection' object.</returns>
-		public IDbConnection CreateConnection()
+		public virtual IDbConnection CreateConnection()
 		{
 			// Cannot do that because on 
 			// IDbCommand.Connection = cmdConnection
@@ -513,11 +514,12 @@ namespace IBatisNet.Common
 			}
 		}
 
+		
 		/// <summary>
 		/// Create a command object for this provider.
 		/// </summary>
 		/// <returns>An 'IDbCommand' object.</returns>
-		public IDbCommand CreateCommand()
+		public virtual IDbCommand CreateCommand()
 		{
             return _templateConnection.CreateCommand();
 		}
@@ -526,7 +528,7 @@ namespace IBatisNet.Common
 		/// Create a dataAdapter object for this provider.
 		/// </summary>
 		/// <returns>An 'IDbDataAdapter' object.</returns>
-		public IDbDataAdapter CreateDataAdapter()
+		public virtual IDbDataAdapter CreateDataAdapter()
 		{
 			if (_templateDataAdapterIsICloneable)
 			{
@@ -539,12 +541,11 @@ namespace IBatisNet.Common
 		}
 
 
-
 		/// <summary>
 		/// Create a IDbDataParameter object for this provider.
 		/// </summary>
 		/// <returns>An 'IDbDataParameter' object.</returns>
-		public IDbDataParameter CreateDataParameter()
+		public virtual IDbDataParameter CreateDataParameter()
 		{
             return _templateConnection.CreateCommand().CreateParameter();
 		}
@@ -555,7 +556,7 @@ namespace IBatisNet.Common
         /// </summary>
         /// <param name="parameterName">The unformatted name of the parameter</param>
         /// <returns>A parameter formatted for an IDbCommand.CommandText</returns>
-        public string FormatNameForSql(string parameterName)
+        public virtual string FormatNameForSql(string parameterName)
         {
             return _useParameterPrefixInSql ? (_parameterPrefix + parameterName) : SQLPARAMETER;
         }
@@ -569,7 +570,7 @@ namespace IBatisNet.Common
         /// </remarks>
         /// <param name="parameterName">The unformatted name of the parameter</param>
         /// <returns>A parameter formatted for an IDbParameter.</returns>
-        public string FormatNameForParameter(string parameterName)
+        public virtual string FormatNameForParameter(string parameterName)
         {
             return _useParameterPrefixInParameter ? (_parameterPrefix + parameterName) : parameterName;
         }

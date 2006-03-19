@@ -19,7 +19,7 @@ namespace IBatisNet.Common.Test.Domain
 	public class Property
 	{
 		private string _string = string.Empty;
-		private int _int = int.MinValue;
+		public int _int = int.MinValue;
 		private DateTime _dateTime = DateTime.MinValue;
 		private decimal _decimal = decimal.MinValue;
 		private sbyte _sbyte = sbyte.MinValue;

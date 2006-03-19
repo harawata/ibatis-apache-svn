@@ -75,7 +75,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 				else
 				{
 					_createPropertyAccessor = new CreateMemberPropertyAccessor(CreateEmitPropertyAccessor);
-					_createFieldAccessor = new CreateMemberFieldAccessor(CreateEmitFieldAccessor);
+					_createFieldAccessor = new CreateMemberFieldAccessor(CreateReflectionFieldAccessor);//CreateEmitFieldAccessor
 				}
 			}
 			else
@@ -118,7 +118,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 						else 
 						{
 							// Field
-							FieldInfo fieldInfo = targetType.GetField(name);
+							FieldInfo fieldInfo = targetType.GetField(name, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
 
 							if (fieldInfo!=null)
 							{

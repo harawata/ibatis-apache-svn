@@ -350,7 +350,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Utilities\Objects\Members\ILPropertyAccessor.cs"
+                    RelPath = "Utilities\Objects\Members\EmitPropertyAccessor.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
