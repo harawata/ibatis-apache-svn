@@ -37,9 +37,10 @@ public class PropertyAccessPlan extends BaseAccessPlan {
   }
 
   public void setProperties(Object object, Object[] values) {
+  	int i = 0;
     try {
       Object[] arg = new Object[1];
-      for (int i = 0; i < propertyNames.length; i++) {
+      for (i = 0; i < propertyNames.length; i++) {
         arg[0] = values[i];
         try {
           setters[i].invoke(object, arg);
@@ -48,14 +49,16 @@ public class PropertyAccessPlan extends BaseAccessPlan {
         }
       }
     } catch (Throwable t) {
-      throw new RuntimeException("Error setting properties of '" + object + "'.  Cause: " + t, t);
+      throw new RuntimeException("Error setting property '" + setters[i].getName() + "' of '" + 
+      		                     object + "'.  Cause: " + t, t);
     }
   }
 
   public Object[] getProperties(Object object) {
+  	int i = 0;
     Object[] values = new Object[propertyNames.length];
     try {
-      for (int i = 0; i < propertyNames.length; i++) {
+      for (i = 0; i < propertyNames.length; i++) {
         try {
           values[i] = getters[i].invoke(object, NO_ARGUMENTS);
         } catch (Throwable t) {
@@ -63,7 +66,7 @@ public class PropertyAccessPlan extends BaseAccessPlan {
         }
       }
     } catch (Throwable t) {
-      throw new RuntimeException("Error getting properties of '" + object + "'.  Cause: " + t, t);
+      throw new RuntimeException("Error getting property '" + getters[i].getName() + "' of '" + object + "'.  Cause: " + t, t);
     }
     return values;
   }
