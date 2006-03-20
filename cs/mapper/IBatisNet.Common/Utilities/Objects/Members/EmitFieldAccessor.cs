@@ -29,60 +29,28 @@ using System.Collections.Specialized;
 using System.Reflection;
 using System.Reflection.Emit;
 
-
 namespace IBatisNet.Common.Utilities.Objects.Members
 {
 	/// <summary>
 	/// The EmitFieldAccessor class provides an IL-based access   
 	/// to a field of a specified target class.
 	/// </summary>
-	/// <remarks>Not Finish. Throw FieldAccessException on SetValue</remarks>
-	public class EmitFieldAccessor : IMemberAccessor
+	/// <remarks>Will Throw FieldAccessException on private field</remarks>
+    public sealed class EmitFieldAccessor : BaseEmitAccessor
 	{
-		private Type _targetType = null;
-		private string _fieldName = string.Empty;
-		private Type _fieldType = null;
-		private IMemberAccessor _emittedFieldAccessor = null;
-		private AssemblyBuilder _assemblyBuilder = null;
-		private ModuleBuilder _moduleBuilder = null;
-		private object _nullInternal = null;
-
-		private static IDictionary _typeToOpcode = new HybridDictionary();
-
-		/// <summary>
-		/// Static constructor
-		/// "Initialize a private hashtable with type-opCode pairs 
-		/// </summary>
-		static EmitFieldAccessor()
-		{
-			_typeToOpcode[typeof(sbyte)] = OpCodes.Ldind_I1;
-			_typeToOpcode[typeof(byte)] = OpCodes.Ldind_U1;
-			_typeToOpcode[typeof(char)] = OpCodes.Ldind_U2;
-			_typeToOpcode[typeof(short)] = OpCodes.Ldind_I2;
-			_typeToOpcode[typeof(ushort)] = OpCodes.Ldind_U2;
-			_typeToOpcode[typeof(int)] = OpCodes.Ldind_I4;
-			_typeToOpcode[typeof(uint)] = OpCodes.Ldind_U4;
-			_typeToOpcode[typeof(long)] = OpCodes.Ldind_I8;
-			_typeToOpcode[typeof(ulong)] = OpCodes.Ldind_I8;
-			_typeToOpcode[typeof(bool)] = OpCodes.Ldind_I1;
-			_typeToOpcode[typeof(double)] = OpCodes.Ldind_R8;
-			_typeToOpcode[typeof(float)] = OpCodes.Ldind_R4;
-		}
-
-
 		/// <summary>
 		/// Creates a new IL field accessor.
 		/// </summary>
-		/// <param name="targetType">Target object type.</param>
+        /// <param name="targetObjectType">Target object type.</param>
 		/// <param name="fieldName">Field name.</param>
-		/// <param name="assemblyBuilder"></param>
-		/// <param name="moduleBuilder"></param>
-		public EmitFieldAccessor(Type targetType, string fieldName, AssemblyBuilder assemblyBuilder, ModuleBuilder moduleBuilder)
+        /// <param name="assemBuilder"></param>
+        /// <param name="modBuilder"></param>
+		public EmitFieldAccessor(Type targetObjectType, string fieldName, AssemblyBuilder assemBuilder, ModuleBuilder modBuilder)
 		{
-			_assemblyBuilder = assemblyBuilder;
-			_moduleBuilder = moduleBuilder;
-			_targetType = targetType;
-			_fieldName = fieldName;
+            assemblyBuilder = assemBuilder;
+            moduleBuilder = modBuilder;
+            targetType = targetObjectType;
+            memberName = fieldName;
 
 			FieldInfo fieldInfo = targetType.GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
 
@@ -91,45 +59,23 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 			{
 				throw new MissingMethodException(
 					string.Format("Field \"{0}\" does not exist for type "
-					+ "{1}.", fieldName, targetType));
+                    + "{1}.", fieldName, targetObjectType));
 			}
 			else
 			{
-				this._fieldType = fieldInfo.FieldType;
+                memberType = fieldInfo.FieldType;
 				this.EmitIL();
 			}
 		}
 
-		
-		/// <summary>
-		/// This method a new type oject for the the field accessor class 
-		/// that will provide dynamic access.
-		/// </summary>
-		private void EmitIL()
-		{
-			// Create a new type oject for the the field accessor class.
-			EmitType();
-
-			// Create a new instance
-			_emittedFieldAccessor = _assemblyBuilder.CreateInstance("FieldAccessorFor" + _targetType.FullName + _fieldName) as IMemberAccessor;
-            
-			_nullInternal = GetNullInternal(_fieldType);
-
-			if(_emittedFieldAccessor == null)
-			{
-				throw new MethodAccessException(
-					string.Format("Unable to create field accessor for \"{0}\".", _fieldType));
-			}
-		}
-
-		
+				
 		/// <summary>
 		/// Create an type that will provide the get and set methods.
 		/// </summary>
-		private void EmitType()
+        protected override void EmitType()
 		{
 			// Define a public class named "FieldAccessorFor.FullTagetTypeName.FieldName" in the assembly.
-			TypeBuilder typeBuilder = _moduleBuilder.DefineType("FieldAccessorFor" + _targetType.FullName + _fieldName, TypeAttributes.Class | TypeAttributes.Public | TypeAttributes.Sealed);
+            TypeBuilder typeBuilder = moduleBuilder.DefineType("MemberAccessorFor" + targetType.FullName + memberName, TypeAttributes.Class | TypeAttributes.Public | TypeAttributes.Sealed);
 
 			// Mark the class as implementing IMemberAccessor. 
 			typeBuilder.AddInterfaceImplementation(typeof(IMemberAccessor));
@@ -147,25 +93,21 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 			// Get an ILGenerator and used it to emit the IL that we want.
 			ILGenerator getIL = getMethod.GetILGenerator();
 
-			FieldInfo targetField = _targetType.GetField(_fieldName, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
+            FieldInfo targetField = targetType.GetField(memberName, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
 			
 			// Emit the IL for get access. 
 			if(targetField != null)
 			{
+                // We need a reference to the current instance (stored in local argument index 1) 
+                // so Ldfld can load from the correct instance (this one).
 				getIL.Emit(OpCodes.Ldarg_1); 
-				getIL.Emit(OpCodes.Castclass, targetField.DeclaringType); 
-				getIL.Emit(OpCodes.Ldfld, targetField); 
-
-//				getIL.DeclareLocal(typeof(object));
-//				getIL.Emit(OpCodes.Ldarg_0);//Load the first argument,(target object)
-//				getIL.Emit(OpCodes.Castclass, _targetType);	//Cast to the source type
-//				getIL.Emit(OpCodes.Ldfld, targetField);
-//				if(targetField.FieldType.IsValueType)
-//				{
-//					getIL.Emit(OpCodes.Box, targetField.FieldType); //Box if necessary
-//				}
-//				getIL.Emit(OpCodes.Stloc_0);
-//				getIL.Emit(OpCodes.Ldloc_0);
+				getIL.Emit(OpCodes.Ldfld, targetField);
+                if (memberType.IsValueType)
+                {
+                    // Now, we execute the box opcode, which pops the value of field 'x',
+                    // returning a reference to the filed value boxed as an object.
+                    getIL.Emit(OpCodes.Box, targetField.FieldType); 
+                }
 			}
 			else
 			{
@@ -185,8 +127,26 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 			// Emit the IL for the set access. 
 			if(targetField != null)
 			{
-				setIL.Emit(OpCodes.Ldarg_0);//Load the first argument (target object)
-				setIL.Emit(OpCodes.Ldarg_1);//Load the second argument (value object)
+				setIL.Emit(OpCodes.Ldarg_1);//Load the first argument (target object)
+                setIL.Emit(OpCodes.Castclass, targetType); //Cast to the source type
+				setIL.Emit(OpCodes.Ldarg_2);//Load the second argument (value object)
+                if (memberType.IsValueType)
+                {
+                    setIL.Emit(OpCodes.Unbox, memberType); //Unbox it 	
+                    if (typeToOpcode[memberType] != null)
+                    {
+                        OpCode load = (OpCode)typeToOpcode[memberType];
+                        setIL.Emit(load); //and load
+                    }
+                    else
+                    {
+                        setIL.Emit(OpCodes.Ldobj, memberType);
+                    }
+                }
+                else
+                {
+                    setIL.Emit(OpCodes.Castclass, memberType); //Cast class
+                }
 				setIL.Emit(OpCodes.Stfld, targetField); //Set the field value
 			}
 			else
@@ -199,48 +159,6 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 			typeBuilder.CreateType();
 		}
 
-		/// <summary>
-		/// Get the null value for a given type
-		/// </summary>
-		/// <param name="type"></param>
-		/// <returns></returns>
-		private object GetNullInternal(Type type)
-		{
-			if (type.IsValueType)
-			{
-				if (type.IsEnum) 
-				{ 
-					return GetNullInternal(  Enum.GetUnderlyingType(type) );
-				}
-
-				if (type.IsPrimitive)
-				{
-					if (type == typeof(Int32)) {return 0; }
-					if (type == typeof(Double)) {return (Double)0; }
-					if (type == typeof(Int16)) {return (Int16)0; }
-					if (type == typeof(SByte)) {return (SByte)0; }
-					if (type == typeof(Int64)) {return (Int64)0; }
-					if (type == typeof(Byte)) {return (Byte)0; }
-					if (type == typeof(UInt16)) {return (UInt16)0; }
-					if (type == typeof(UInt32)) {return (UInt32)0; }
-					if (type == typeof(UInt64)) {return (UInt64)0; }
-					if (type == typeof(UInt64)) {return (UInt64)0; }
-					if (type == typeof(Single)) {return (Single)0; }
-					if (type == typeof(Boolean)) {return false; }
-					if (type == typeof(char)) {return '\0'; }
-				}
-				else
-				{
-					if (type == typeof(DateTime)) {return DateTime.MinValue; }
-					if (type == typeof(Decimal)) {return 0m; }
-					if (type == typeof(Guid)) {return Guid.Empty; }
-					if (type == typeof(TimeSpan)) { return TimeSpan.MinValue; }
-				}
-			}
- 
-			return null;
-		}
-
 
 		#region IMemberAccessor Members
 
@@ -249,9 +167,9 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 		/// </summary>
 		/// <param name="target">Target object.</param>
 		/// <returns>Property value.</returns>
-		public object Get(object target)
+        public override object Get(object target)
 		{
-			return _emittedFieldAccessor.Get(target);
+            return emittedMemberAccessor.Get(target);
 		}
 
 		/// <summary>
@@ -259,15 +177,15 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 		/// </summary>
 		/// <param name="target">Target object.</param>
 		/// <param name="value">Value to set.</param>
-		public void Set(object target, object value)
+        public override void Set(object target, object value)
 		{
 			object newValue = value;
 			if (newValue == null)
 			{
 				// If the value to assign is null, assign null internal value
-				newValue = _nullInternal;
+				newValue = nullInternal;
 			}
-			_emittedFieldAccessor.Set(target, newValue);
+            emittedMemberAccessor.Set(target, newValue);
 		}
 
 		#endregion

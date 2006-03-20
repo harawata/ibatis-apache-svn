@@ -66,16 +66,16 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 				// Detect runtime environment and create the appropriate factory
 				if (Environment.Version.Major >= 2)
 				{
-					// To Do : a custom factory for .NET V2
+					// To Do : a custom factory for .NET V2 ?
 					// optimize with DynamicMethod or Delegate.CreateDelegate
 					_createPropertyAccessor = new CreateMemberPropertyAccessor(CreateEmitPropertyAccessor);
-					_createFieldAccessor = new CreateMemberFieldAccessor(CreateEmitFieldAccessor);
+                    _createFieldAccessor = new CreateMemberFieldAccessor(CreateFieldAccessor);
 					
 				}
 				else
 				{
 					_createPropertyAccessor = new CreateMemberPropertyAccessor(CreateEmitPropertyAccessor);
-					_createFieldAccessor = new CreateMemberFieldAccessor(CreateReflectionFieldAccessor);//CreateEmitFieldAccessor
+                    _createFieldAccessor = new CreateMemberFieldAccessor(CreateFieldAccessor);
 				}
 			}
 			else
@@ -160,9 +160,18 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 		/// <param name="targetType">Target object type.</param>
 		/// <param name="fieldName">Field name.</param>
 		/// <returns>null if the generation fail</returns>
-		private IMemberAccessor CreateEmitFieldAccessor(Type targetType, string fieldName)
+        private IMemberAccessor CreateFieldAccessor(Type targetType, string fieldName)
 		{
-			return new EmitFieldAccessor(targetType, fieldName, _assemblyBuilder, _moduleBuilder);
+            FieldInfo fieldInfo = targetType.GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
+
+            if (fieldInfo.FieldType.IsPublic)
+            {
+			    return new EmitFieldAccessor(targetType, fieldName, _assemblyBuilder, _moduleBuilder);
+            }
+            else
+            {
+                return new ReflectionFieldAccessor(targetType, fieldName);
+            }
 		}
 
 		/// <summary>

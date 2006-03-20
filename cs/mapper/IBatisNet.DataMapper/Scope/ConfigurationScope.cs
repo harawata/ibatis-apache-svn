@@ -34,6 +34,7 @@ using System.Xml;
 using IBatisNet.Common;
 using IBatisNet.Common.Utilities;
 using IBatisNet.Common.Utilities.Objects;
+using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.TypeHandlers;
 
 #endregion
@@ -93,6 +94,14 @@ namespace IBatisNet.DataMapper.Scope
         public IObjectFactory ObjectFactory
         {
             get { return _sqlMapper.ObjectFactory; }
+        }
+
+        /// <summary>
+        /// The factory which build MemberAccessorFactory
+        /// </summary>
+        public MemberAccessorFactory MemberAccessorFactory
+        {
+            get { return _sqlMapper.MemberAccessorFactory; }
         }
 
 		/// <summary>

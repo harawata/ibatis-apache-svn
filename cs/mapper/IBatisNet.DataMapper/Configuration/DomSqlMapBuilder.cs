@@ -40,6 +40,7 @@ using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Logging;
 using IBatisNet.Common.Utilities;
 using IBatisNet.Common.Utilities.Objects;
+using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.Common.Xml;
 using IBatisNet.DataMapper.Configuration.Alias;
 using IBatisNet.DataMapper.Configuration.Cache;
@@ -651,7 +652,7 @@ namespace IBatisNet.DataMapper.Configuration
 			Reset();
 
             // To do, analyse config file to set allowCodeGeneration on object factory
-			_configScope.SqlMapper = new SqlMapper( new ObjectFactory(true), new TypeHandlerFactory() );
+			_configScope.SqlMapper = new SqlMapper( new ObjectFactory(true), new TypeHandlerFactory() , new MemberAccessorFactory(true) );
 
 
 			#region Cache Alias

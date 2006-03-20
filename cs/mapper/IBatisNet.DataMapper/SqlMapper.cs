@@ -38,6 +38,7 @@ using System.Xml;
 using IBatisNet.Common;
 using IBatisNet.Common.Utilities;
 using IBatisNet.Common.Utilities.Objects;
+using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.Configuration;
 using IBatisNet.DataMapper.Configuration.Cache;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
@@ -105,7 +106,7 @@ namespace IBatisNet.DataMapper
 		/// </summary>
 		private SessionHolder _sessionHolder = null;
         private IObjectFactory _objectFactory = null;
-
+        private MemberAccessorFactory _memberAccessorFactory = null;
 		#endregion
 
 		#region Properties
@@ -162,15 +163,27 @@ namespace IBatisNet.DataMapper
         {
             get { return _objectFactory; }
         }
+
+        /// <summary>
+        /// The factory which build MemberAccessorFactory
+        /// </summary>
+        public MemberAccessorFactory MemberAccessorFactory
+        {
+            get { return _memberAccessorFactory; }
+        }
 		#endregion
 
 		#region Constructor (s) / Destructor
 		/// <summary>
 		/// Create a new SqlMap
 		/// </summary>
-		internal SqlMapper(IObjectFactory objectFactory, TypeHandlerFactory typeHandlerFactory) 
+        /// <param name="objectFactory"></param>
+        /// <param name="typeHandlerFactory"></param>
+        /// <param name="memberAccessorFactory"></param>
+        internal SqlMapper(IObjectFactory objectFactory, TypeHandlerFactory typeHandlerFactory, MemberAccessorFactory memberAccessorFactory) 
 		{
             _objectFactory = objectFactory;
+			_memberAccessorFactory = memberAccessorFactory;
 			_typeHandlerFactory = typeHandlerFactory;
 			_id = HashCodeProvider.GetIdentityHashCode(this).ToString();
 			_sessionHolder = new SessionHolder(_id);
