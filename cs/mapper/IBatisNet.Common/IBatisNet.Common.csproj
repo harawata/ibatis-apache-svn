@@ -360,12 +360,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Utilities\Objects\Members\IEmitPropertyAccessor.cs"
+                    RelPath = "Utilities\Objects\Members\IMemberAccessor.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Utilities\Objects\Members\IMemberAccessor.cs"
+                    RelPath = "Utilities\Objects\Members\IPropertyAccessor.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
