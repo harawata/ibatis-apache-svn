@@ -42,7 +42,7 @@ public class AbatorRunner {
 		}
 		
 		String configfile = args[0];
-		boolean overwrite = "true".equalsIgnoreCase(args[1]);
+		boolean overwrite = "true".equalsIgnoreCase(args[1]); //$NON-NLS-1$
 		
         List warnings = new ArrayList();
         

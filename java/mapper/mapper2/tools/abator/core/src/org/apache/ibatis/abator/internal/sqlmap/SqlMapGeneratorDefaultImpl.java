@@ -31,6 +31,7 @@ import org.apache.ibatis.abator.config.FullyQualifiedTable;
 import org.apache.ibatis.abator.config.TableConfiguration;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
 import org.apache.ibatis.abator.internal.db.ColumnDefinitions;
+import org.apache.ibatis.abator.internal.rules.AbatorRules;
 import org.apache.ibatis.abator.internal.util.StringUtility;
 
 /**
@@ -77,9 +78,9 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
     public SqlMapGeneratorDefaultImpl() {
         super();
         tableStringMaps = new HashMap();
-        lineSeparator = System.getProperty("line.separator");
+        lineSeparator = System.getProperty("line.separator"); //$NON-NLS-1$
         if (lineSeparator == null) {
-            lineSeparator = "\n";
+            lineSeparator = "\n"; //$NON-NLS-1$
         }
     }
 
@@ -208,7 +209,7 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
         newLine(xml);
 
         String element;
-        if (columnDefinitions.generateBaseResultMap(tableConfiguration)) {
+        if (AbatorRules.generateBaseResultMap(tableConfiguration)) {
             element = getBaseResultMapElement(columnDefinitions,
                     tableConfiguration, 1);
             if (StringUtility.stringHasValue(element)) {
@@ -217,7 +218,7 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
             }
         }
 
-        if (columnDefinitions.generateResultMapWithBLOBs(tableConfiguration)) {
+        if (AbatorRules.generateResultMapWithBLOBs(columnDefinitions, tableConfiguration)) {
             element = getResultMapWithBLOBsElement(columnDefinitions,
                     tableConfiguration, 1);
             if (StringUtility.stringHasValue(element)) {
@@ -236,7 +237,7 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
             }
         }
 
-        if (columnDefinitions.generateSelectByPrimaryKey(tableConfiguration)) {
+        if (AbatorRules.generateSelectByPrimaryKey(columnDefinitions, tableConfiguration)) {
             element = getSelectByPrimaryKey(columnDefinitions,
                     tableConfiguration, 1);
             if (StringUtility.stringHasValue(element)) {
@@ -245,7 +246,7 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
             }
         }
 
-        if (columnDefinitions.generateSelectByExample(tableConfiguration)) {
+        if (AbatorRules.generateSelectByExample(tableConfiguration)) {
             element = getSelectByExample(columnDefinitions, tableConfiguration,
                     1);
             if (StringUtility.stringHasValue(element)) {
@@ -254,8 +255,8 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
             }
         }
 
-        if (columnDefinitions
-                .generateSelectByExampleWithBLOBs(tableConfiguration)) {
+        if (AbatorRules
+                .generateSelectByExampleWithBLOBs(columnDefinitions, tableConfiguration)) {
             element = getSelectByExampleWithBLOBs(columnDefinitions,
                     tableConfiguration, 1);
             if (StringUtility.stringHasValue(element)) {
@@ -264,7 +265,7 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
             }
         }
 
-        if (columnDefinitions.generateDeleteByPrimaryKey(tableConfiguration)) {
+        if (AbatorRules.generateDeleteByPrimaryKey(columnDefinitions, tableConfiguration)) {
             element = getDeleteByPrimaryKey(columnDefinitions,
                     tableConfiguration, 1);
             if (StringUtility.stringHasValue(element)) {
@@ -273,7 +274,7 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
             }
         }
 
-        if (columnDefinitions.generateDeleteByExample(tableConfiguration)) {
+        if (AbatorRules.generateDeleteByExample(tableConfiguration)) {
             element = getDeleteByExample(columnDefinitions, tableConfiguration,
                     1);
             if (StringUtility.stringHasValue(element)) {
@@ -282,7 +283,7 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
             }
         }
 
-        if (columnDefinitions.generateInsert(tableConfiguration)) {
+        if (AbatorRules.generateInsert(tableConfiguration)) {
             element = getInsertElement(columnDefinitions, tableConfiguration, 1);
             if (StringUtility.stringHasValue(element)) {
                 newLine(xml);
@@ -290,8 +291,8 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
             }
         }
 
-        if (columnDefinitions
-                .generateUpdateByPrimaryKeyWithBLOBs(tableConfiguration)) {
+        if (AbatorRules
+                .generateUpdateByPrimaryKeyWithBLOBs(columnDefinitions, tableConfiguration)) {
             element = getUpdateByPrimaryKeyWithBLOBs(columnDefinitions,
                     tableConfiguration, 1);
             if (StringUtility.stringHasValue(element)) {
@@ -300,7 +301,7 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
             }
         }
 
-        if (columnDefinitions.generateUpdateByPrimaryKey(tableConfiguration)) {
+        if (AbatorRules.generateUpdateByPrimaryKey(columnDefinitions, tableConfiguration)) {
             element = getUpdateByPrimaryKey(columnDefinitions,
                     tableConfiguration, 1);
             if (StringUtility.stringHasValue(element)) {
@@ -376,8 +377,8 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
         indent(xml, indentLevel);
         xml.append("<resultMap"); //$NON-NLS-1$
         addAttribute(xml, "id", getResultMapName(tableConfiguration.getTable())); //$NON-NLS-1$
-        if (columnDefinitions.generateRecordExtendingNothing()
-                || columnDefinitions.generateRecordExtendingPrimaryKey()) {
+        if (AbatorRules.generateRecordExtendingNothing(columnDefinitions)
+                || AbatorRules.generateRecordExtendingPrimaryKey(columnDefinitions)) {
             addAttribute(xml, "class", javaModelGenerator //$NON-NLS-1$
                     .getRecordType(tableConfiguration.getTable())
                     .getFullyQualifiedName());
@@ -437,14 +438,14 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
         xml.append("<resultMap"); //$NON-NLS-1$
         addAttribute(
                 xml,
-                "id", getResultMapName(tableConfiguration.getTable()) + "WithBLOBs"); //$NON-NLS-1$
+                "id", getResultMapName(tableConfiguration.getTable()) + "WithBLOBs"); //$NON-NLS-1$ //$NON-NLS-2$
         addAttribute(xml, "class", javaModelGenerator //$NON-NLS-1$
                 .getRecordWithBLOBsType(tableConfiguration.getTable())
                 .getFullyQualifiedName());
 
-        addAttribute(xml, "extends", getSqlMapNamespace(tableConfiguration
+        addAttribute(xml, "extends", getSqlMapNamespace(tableConfiguration //$NON-NLS-1$
                 .getTable())
-                + "." + getResultMapName(tableConfiguration.getTable()));
+                + "." + getResultMapName(tableConfiguration.getTable())); //$NON-NLS-1$
 
         xml.append('>');
         newLine(xml);
@@ -497,13 +498,13 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
         indent(xml, indentLevel);
         xml.append("<insert"); //$NON-NLS-1$
         addAttribute(xml, "id", getInsertStatementId()); //$NON-NLS-1$
-        if (columnDefinitions.generateRecordWithBLOBsExtendingPrimaryKey()
-                || columnDefinitions.generateRecordWithBLOBsExtendingRecord()) {
+        if (AbatorRules.generateRecordWithBLOBsExtendingPrimaryKey(columnDefinitions)
+                || AbatorRules.generateRecordWithBLOBsExtendingRecord(columnDefinitions)) {
             addAttribute(xml, "parameterClass", javaModelGenerator //$NON-NLS-1$
                     .getRecordWithBLOBsType(tableConfiguration.getTable())
                     .getFullyQualifiedName());
-        } else if (columnDefinitions.generateRecordExtendingNothing()
-                || columnDefinitions.generateRecordExtendingPrimaryKey()) {
+        } else if (AbatorRules.generateRecordExtendingNothing(columnDefinitions)
+                || AbatorRules.generateRecordExtendingPrimaryKey(columnDefinitions)) {
             addAttribute(xml, "parameterClass", javaModelGenerator //$NON-NLS-1$
                     .getRecordType(tableConfiguration.getTable())
                     .getFullyQualifiedName());
@@ -913,10 +914,10 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
         indent(xml, indentLevel);
         xml.append("<select"); //$NON-NLS-1$
         addAttribute(xml, "id", getSelectByPrimaryKeyStatementId()); //$NON-NLS-1$
-        if (columnDefinitions.generateResultMapWithBLOBs(tableConfiguration)) {
+        if (AbatorRules.generateResultMapWithBLOBs(columnDefinitions, tableConfiguration)) {
             addAttribute(
                     xml,
-                    "resultMap", getResultMapName(tableConfiguration.getTable()) + "WithBLOBs"); //$NON-NLS-1$
+                    "resultMap", getResultMapName(tableConfiguration.getTable()) + "WithBLOBs"); //$NON-NLS-1$ //$NON-NLS-2$
         } else {
             addAttribute(
                     xml,
@@ -1160,7 +1161,7 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
         if (s == null) {
             StringBuffer sb = new StringBuffer();
 
-            sb.append("abatorgenerated_");
+            sb.append("abatorgenerated_"); //$NON-NLS-1$
             sb.append(table.getDomainObjectName());
             sb.append("Result"); //$NON-NLS-1$
 
@@ -1305,7 +1306,7 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
      * @return the name of the example where clause element
      */
     protected String getExampleWhereClauseId() {
-        return "abatorgenerated_Example_Where_Clause";
+        return "abatorgenerated_Example_Where_Clause"; //$NON-NLS-1$
     }
 
     /**
@@ -1509,7 +1510,7 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
         addAttribute(xml, "id", getSelectByExampleWithBLOBsStatementId()); //$NON-NLS-1$
         addAttribute(
                 xml,
-                "resultMap", getResultMapName(tableConfiguration.getTable()) + "WithBLOBs"); //$NON-NLS-1$
+                "resultMap", getResultMapName(tableConfiguration.getTable()) + "WithBLOBs"); //$NON-NLS-1$ //$NON-NLS-2$
         addAttribute(xml, "parameterClass", "java.util.Map"); //$NON-NLS-1$ //$NON-NLS-2$
         xml.append('>');
         newLine(xml);

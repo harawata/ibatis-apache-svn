@@ -161,7 +161,7 @@ public class DatabaseIntrospector {
 
 		rs = dbmd.getPrimaryKeys(localCatalog, localSchema, localTableName);
 		while (rs.next()) {
-			cds.addPrimaryKeyColumn(rs.getString("COLUMN_NAME"));
+			cds.addPrimaryKeyColumn(rs.getString("COLUMN_NAME")); //$NON-NLS-1$
 		}
 
 		rs.close();

@@ -37,32 +37,32 @@ public class FullyQualifiedJavaType {
 		if (lastIndex == -1) {
 		    shortName = fullyQualifiedName;
 		    explicitlyImported = false;
-		    packageName = "";
+		    packageName = ""; //$NON-NLS-1$
 		    
-		    if ("byte".equals(fullyQualifiedName)) {
+		    if ("byte".equals(fullyQualifiedName)) { //$NON-NLS-1$
 		        primitive = true;
-		        wrapperClass = "Byte";
-		    } else if ("short".equals(fullyQualifiedName)) {
+		        wrapperClass = "Byte"; //$NON-NLS-1$
+		    } else if ("short".equals(fullyQualifiedName)) { //$NON-NLS-1$
 		        primitive = true;
-		        wrapperClass = "Short";
-		    } else if ("int".equals(fullyQualifiedName)) {
+		        wrapperClass = "Short"; //$NON-NLS-1$
+		    } else if ("int".equals(fullyQualifiedName)) { //$NON-NLS-1$
 		        primitive = true;
-		        wrapperClass = "Integer";
-		    } else if ("long".equals(fullyQualifiedName)) {
+		        wrapperClass = "Integer"; //$NON-NLS-1$
+		    } else if ("long".equals(fullyQualifiedName)) { //$NON-NLS-1$
 		        primitive = true;
-		        wrapperClass = "Long";
-		    } else if ("char".equals(fullyQualifiedName)) {
+		        wrapperClass = "Long"; //$NON-NLS-1$
+		    } else if ("char".equals(fullyQualifiedName)) { //$NON-NLS-1$
 		        primitive = true;
-		        wrapperClass = "Character";
-		    } else if ("float".equals(fullyQualifiedName)) {
+		        wrapperClass = "Character"; //$NON-NLS-1$
+		    } else if ("float".equals(fullyQualifiedName)) { //$NON-NLS-1$
 		        primitive = true;
-		        wrapperClass = "Float";
-		    } else if ("double".equals(fullyQualifiedName)) {
+		        wrapperClass = "Float"; //$NON-NLS-1$
+		    } else if ("double".equals(fullyQualifiedName)) { //$NON-NLS-1$
 		        primitive = true;
-		        wrapperClass = "Double";
-		    } else if ("boolean".equals(fullyQualifiedName)) {
+		        wrapperClass = "Double"; //$NON-NLS-1$
+		    } else if ("boolean".equals(fullyQualifiedName)) { //$NON-NLS-1$
 		        primitive = true;
-		        wrapperClass = "Boolean";
+		        wrapperClass = "Boolean"; //$NON-NLS-1$
 		    } else {
 		        primitive = false;
 		        wrapperClass = null;

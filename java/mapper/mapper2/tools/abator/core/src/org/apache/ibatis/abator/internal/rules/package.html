@@ -1,0 +1,273 @@
+<html>
+<head>
+  <title>Package Description for Abator Rules Classes</title>
+</head>
+<body>
+<p>Provides the classes that implement Abator's code generation rules.</p>
+<h1>Code Generation Rules</h1>
+<p>Abator generates different objects and methods depending on the structure of
+the table, and configuration options set by the user.  This document describes
+the rules.</p>
+
+<h2>Table Types</h2>
+<p>Abator defines different types of tables, based on the structure of the table.
+  The table types are defined as follows:</p>
+  
+<table border="1" cellspacing="0" cellpadding="5">
+  <tr>
+    <th>Table Type</th>
+    <th>Table has a Primary Key?</th>
+    <th>Table has BLOB Fields?</th>
+    <th>Table has non-BLOB fields not in the primary kay?</th>
+  </tr>
+  <tr>
+    <td>UNSUPPORTED - table with no columns</td>
+    <td>No</td>
+    <td>No</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>TableType.NO_PK_FIELDS_NO_BLOBS</td>
+    <td>No</td>
+    <td>No</td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <td>UNSUPPORTED - table with only BLOB fields</td>
+    <td>No</td>
+    <td>Yes</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>TableType.NO_PK_FIELDS_BLOBS</td>
+    <td>No</td>
+    <td>Yes</td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <td>TableType.PK_NO_FIELDS_NO_BLOBS</td>
+    <td>Yes</td>
+    <td>No</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>TableType.PK_FIELDS_NO_BLOBS</td>
+    <td>Yes</td>
+    <td>No</td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <td>TableType.PK_NO_FIELDS_BLOBS</td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>TableType.PK_FIELDS_BLOBS</td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>Yes</td>
+  </tr>
+</table>
+
+<h2>SQL Map and DAO Method Rules</h2>
+<p>Abator generates different SQL Map elements based on the table type, and the 
+user configuration.  The following table describes what SQL Map elements will be
+generated based on the structure of the table.  The notes following the table describe
+how user configuration options can alter these rules.</p>
+
+<table border="1" cellspacing="0" cellpadding="5">
+  <tr>
+    <th>Table Type</th>
+    <th>Result Map Without BLOBs?</th>
+    <th>Result Map With BLOBs?</th>
+    <th>SQL Example Where Clause?</th>
+    <th>Select By Example Without BLOBs?</th>
+    <th>Select By Example With BLOBs?</th>
+    <th>Select By Primary Key?</th>
+    <th>Insert?</th>
+    <th>Update By Primary Key Without BLOBs?</th>
+    <th>Update By Primary Key With BLOBs?</th>
+    <th>Delete By Primary Key?</th>
+    <th>Delete By Example?</th>
+  </tr>
+  <tr>
+    <th>NO_PK_FIELDS_NO_BLOBS</th>
+    <td>Yes</td>
+    <td>No</td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>No</td>
+    <td>No</td>
+    <td>Yes</td>
+    <td>No</td>
+    <td>No</td>
+    <td>No</td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <th>NO_PK_FIELDS_BLOBS</th>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>No</td>
+    <td>Yes</td>
+    <td>No</td>
+    <td>No</td>
+    <td>No</td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <th>PK_NO_FIELDS_NO_BLOBS</th>
+    <td>Yes</td>
+    <td>No</td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>No</td>
+    <td>No</td>
+    <td>Yes</td>
+    <td>No</td>
+    <td>No</td>
+    <td>Yes</td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <th>PK_FIELDS_NO_BLOBS</th>
+    <td>Yes</td>
+    <td>No</td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>No</td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>No</td>
+    <td>Yes</td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <th>PK_NO_FIELDS_BLOBS</th>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>No</td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <th>PK_FIELDS_BLOBS</th>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>Yes</td>
+  </tr>
+</table>
+
+<p>Notes:</p>
+<ul>
+  <li></li>
+</ul>
+
+<h2>Domain Object Rules</h2>
+<p>Abator generates different domain objects based on the structure of the table.
+The following table describes the rules.  One important note is that
+Abator will not include BLOB columns in the Example classes - because 
+most databases do not support BLOB columns in the WHERE clause.  In
+the table, we use the term "base record" to mean the class that
+holds the non-BLOB and non-Primary Key fields.  The notes following the table
+describe how user configuration options can alter these rules.</p>
+
+<table border="1" cellspacing="0" cellpadding="5">
+  <tr>
+    <th>Table Type</th>
+    <th>Primary Key?</th>
+    <th>Base Record Extending Primary Key?</th>
+    <th>Base Record with no Base Class?</th>
+    <th>Record with BLOBs Extending Primary Key?</th>
+    <th>Record with BLOBs Extending Base Record?</th>
+    <th>Example Extending Primary Key?</th>
+    <th>Example Extending Base Record?</th>
+  </tr>
+  <tr>
+    <th>NO_PK_FIELDS_NO_BLOBS</th>
+    <td>No</td>
+    <td>No</td>
+    <td>Yes</td>
+    <td>No</td>
+    <td>No</td>
+    <td>No</td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <th>NO_PK_FIELDS_BLOBS</th>
+    <td>No</td>
+    <td>No</td>
+    <td>Yes</td>
+    <td>No</td>
+    <td>Yes</td>
+    <td>No</td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <th>PK_NO_FIELDS_NO_BLOBS</th>
+    <td>Yes</td>
+    <td>No</td>
+    <td>No</td>
+    <td>No</td>
+    <td>No</td>
+    <td>Yes</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <th>PK_FIELDS_NO_BLOBS</th>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>No</td>
+    <td>No</td>
+    <td>No</td>
+    <td>No</td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <th>PK_NO_FIELDS_BLOBS</th>
+    <td>Yes</td>
+    <td>No</td>
+    <td>No</td>
+    <td>Yes</td>
+    <td>No</td>
+    <td>Yes</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <th>PK_FIELDS_BLOBS</th>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>No</td>
+    <td>No</td>
+    <td>Yes</td>
+    <td>No</td>
+    <td>Yes</td>
+  </tr>
+</table>
+
+<p>Notes:</p>
+<ul>
+  <li></li>
+</ul>
+
+</body>
+</html>

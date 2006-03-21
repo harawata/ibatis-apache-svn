@@ -38,13 +38,13 @@ public class DAOGeneratorSpringImpl extends DAOGeneratorBaseImpl {
         
         StringBuffer sb = new StringBuffer();
         indent(sb, 1);
-        sb.append("public {0}() '{'");
+        sb.append("public {0}() '{'"); //$NON-NLS-1$
         newLine(sb);
         indent(sb, 2);
-        sb.append("super();");
+        sb.append("super();"); //$NON-NLS-1$
         newLine(sb);
         indent(sb, 1);
-        sb.append("}");
+        sb.append("}"); //$NON-NLS-1$
         template.setConstructorTemplate(sb.toString());
 
         template

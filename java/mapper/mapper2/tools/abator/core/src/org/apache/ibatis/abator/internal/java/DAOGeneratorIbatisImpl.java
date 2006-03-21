@@ -35,13 +35,13 @@ public class DAOGeneratorIbatisImpl extends DAOGeneratorBaseImpl {
 
         StringBuffer sb = new StringBuffer();
         indent(sb, 1);
-        sb.append("public {0}(DaoManager daoManager) '{'");
+        sb.append("public {0}(DaoManager daoManager) '{'"); //$NON-NLS-1$
         newLine(sb);
         indent(sb, 2);
-        sb.append("super(daoManager);");
+        sb.append("super(daoManager);"); //$NON-NLS-1$
         newLine(sb);
         indent(sb, 1);
-        sb.append("}");
+        sb.append("}"); //$NON-NLS-1$
         template.setConstructorTemplate(sb.toString());
         
         template.setSuperClass(new FullyQualifiedJavaType(
