@@ -12,12 +12,6 @@
     <property name="size" value="100"/>
   </cacheModel>
 
-  <resultMap id="categoryResult" class="category">
-    <result property="categoryId" column="CATID"/>
-    <result property="name" column="NAME"/>
-    <result property="description" column="DESCN"/>
-  </resultMap>
-
   <select id="getCategory" resultClass="category" parameterClass="string" cacheModel="categoryCache">
     SELECT
       CATID AS categoryId,
