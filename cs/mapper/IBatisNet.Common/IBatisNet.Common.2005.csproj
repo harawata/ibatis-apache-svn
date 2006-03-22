@@ -202,6 +202,7 @@
     <Compile Include="Utilities\Objects\Members\EmitFieldAccessor.cs" />
     <Compile Include="Utilities\Objects\Members\EmitPropertyAccessor.cs" />
     <Compile Include="Utilities\Objects\Members\IMemberAccessor.cs" />
+    <Compile Include="Utilities\Objects\Members\IMemberAccessorFactory.cs" />
     <Compile Include="Utilities\Objects\Members\IPropertyAccessor.cs" />
     <Compile Include="Utilities\Objects\Members\MemberAccessorFactory.cs" />
     <Compile Include="Utilities\Objects\Members\ReflectionFieldAccessor.cs" />

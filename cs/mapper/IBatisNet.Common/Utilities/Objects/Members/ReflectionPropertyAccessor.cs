@@ -28,16 +28,16 @@ using System.Reflection;
 
 namespace IBatisNet.Common.Utilities.Objects.Members
 {
-    /// <summary>
-    /// The ReflectionPropertyAccessor class provides an reflection access   
-    /// to a property of a specified target class.
-    /// </summary>
-    public class ReflectionPropertyAccessor : IMemberAccessor
-    {
-//		private static BindingFlags BINDING_FLAGS
-//			= BindingFlags.Public 
-//			| BindingFlags.Instance 
-//			;
+	/// <summary>
+	/// The ReflectionPropertyAccessor class provides an reflection access   
+	/// to a property of a specified target class.
+	/// </summary>
+	public class ReflectionPropertyAccessor : IMemberAccessor, IPropertyAccessor
+	{
+		//		private static BindingFlags BINDING_FLAGS
+		//			= BindingFlags.Public 
+		//			| BindingFlags.Instance 
+		//			;
 
 		private PropertyInfo _propertyInfo = null;
 		private string _propertyName = string.Empty;
@@ -51,20 +51,55 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 		public ReflectionPropertyAccessor(Type targetType, string propertyName)
 		{
 			_propertyInfo = ObjectProbe.GetPropertyInfoForSetter(targetType, propertyName);
-				//targetType.GetProperty(propertyName, BINDING_FLAGS);
+			//targetType.GetProperty(propertyName, BINDING_FLAGS);
 			_targetType = targetType;
 			_propertyName = propertyName;
 		}
 
+		#region IPropertyAccessor
+		/// <summary>
+		/// Gets a value indicating whether the property can be read. 
+		/// </summary>
+		public bool CanRead
+		{
+			get { return _propertyInfo.CanRead; }
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether the property can be written to. 
+		/// </summary>
+		public bool CanWrite
+		{
+			get { return _propertyInfo.CanWrite; }
+		}
+		#endregion
+
 		#region IMemberAccessor Members
-        /// <summary>
-        /// Gets the value stored in the property for 
-        /// the specified target.
-        /// </summary>
-        /// <param name="target">Object to retrieve the property from.</param>
-        /// <returns>Property value.</returns>
-        public object Get(object target)
-        {
+
+		/// <summary>
+		/// Gets the member name.
+		/// </summary>
+		public string Name
+		{
+			get { return _propertyInfo.Name; }
+		}
+
+		/// <summary>
+		/// Gets the type of this member, such as field, property.
+		/// </summary>
+		public Type MemberType
+		{
+			get { return _propertyInfo.PropertyType; }
+		}
+
+		/// <summary>
+		/// Gets the value stored in the property for 
+		/// the specified target.
+		/// </summary>
+		/// <param name="target">Object to retrieve the property from.</param>
+		/// <returns>Property value.</returns>
+		public object Get(object target)
+		{
 			if (_propertyInfo.CanRead)
 			{
 				return _propertyInfo.GetValue(target, null);
@@ -77,14 +112,14 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 			}        
 		}
 
-        /// <summary>
-        /// Sets the value for the property of
-        /// the specified target.
-        /// </summary>
-        /// <param name="target">Object to set the property on.</param>
-        /// <param name="value">Property value.</param>
-        public void Set(object target, object value)
-        {
+		/// <summary>
+		/// Sets the value for the property of
+		/// the specified target.
+		/// </summary>
+		/// <param name="target">Object to set the property on.</param>
+		/// <param name="value">Property value.</param>
+		public void Set(object target, object value)
+		{
 			if (_propertyInfo.CanWrite)
 			{
 				_propertyInfo.SetValue(target, value, null);
@@ -95,7 +130,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 					string.Format("Property \"{0}\" on type "
 					+ "{1} doesn't have a set method.", _propertyName, _targetType));
 			}
-        }
+		}
 		#endregion
-    }
+	}
 }

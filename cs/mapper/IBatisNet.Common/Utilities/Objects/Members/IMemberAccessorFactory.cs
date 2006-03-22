@@ -28,32 +28,16 @@ using System;
 namespace IBatisNet.Common.Utilities.Objects.Members
 {
 	/// <summary>
-	/// The IMemberAccessor interface defines a field/property accessor.
+	/// Factory contact to build IMemberAccessor for a type.
 	/// </summary>
-	public interface IMemberAccessor
+	public interface IMemberAccessorFactory
 	{
 		/// <summary>
-		/// Gets the member name.
+		/// Generate an IMemberAccessor object
 		/// </summary>
-		string Name { get; }
-
-		/// <summary>
-		/// Gets the type of this member (field or property).
-		/// </summary>
-		Type MemberType { get; }
-
-		/// <summary>
-		/// Gets the value stored in the field/property for the specified target.
-		/// </summary>
-		/// <param name="target">Object to retrieve the field/property from.</param>
-		/// <returns>Value.</returns>
-		object Get(object target);
-
-		/// <summary>
-		/// Sets the value for the field/property of the specified target.
-		/// </summary>
-		/// <param name="target">Object to set the field/property on.</param>
-		/// <param name="value">Value.</param>
-		void Set(object target, object value);
+		/// <param name="targetType">Target object type.</param>
+		/// <param name="name">Field or Property name.</param>
+		/// <returns>null if the generation fail</returns>
+		IMemberAccessor CreateMemberAccessor(Type targetType, string name);
 	}
 }

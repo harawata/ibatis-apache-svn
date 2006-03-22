@@ -35,7 +35,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 	/// <summary>
 	/// A factory to build IMemberAccessor for a type.
 	/// </summary>
-	public class MemberAccessorFactory
+	public class MemberAccessorFactory : IMemberAccessorFactory
 	{
 		private delegate IMemberAccessor CreateMemberPropertyAccessor(Type targetType, string propertyName);
 		private delegate IMemberAccessor CreateMemberFieldAccessor(Type targetType, string fieldName);
@@ -46,7 +46,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 		private IDictionary _cachedIMemberAccessor = new HybridDictionary();
 		private AssemblyBuilder _assemblyBuilder = null;
 		private ModuleBuilder _moduleBuilder = null;
-		private object _padlock = new object();
+		private object _syncObject = new object();
 
 		/// <summary>
 		/// Constructor
@@ -87,7 +87,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 		}
 
 		/// <summary>
-		/// Generate an IPropertyAccessor object
+		/// Generate an IMemberAccessor object
 		/// </summary>
 		/// <param name="targetType">Target object type.</param>
 		/// <param name="name">Field or Property name.</param>
@@ -103,7 +103,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 			else
 			{
 				IMemberAccessor memberAccessor = null;
-				lock (_padlock)
+				lock (_syncObject)
 				{
 					if (!_cachedIMemberAccessor.Contains(key))
 					{
@@ -144,7 +144,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 
 		
 		/// <summary>
-		/// Generate a ILPropertyAccessor object
+		/// Create a ILPropertyAccessor object
 		/// </summary>
 		/// <param name="targetType">Target object type.</param>
 		/// <param name="propertyName">Property name.</param>
@@ -155,7 +155,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 		}
 
 		/// <summary>
-		/// Generate a EmitPropertyAccessor object
+		/// Create a field IMemberAccessor object
 		/// </summary>
 		/// <param name="targetType">Target object type.</param>
 		/// <param name="fieldName">Field name.</param>
@@ -175,7 +175,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 		}
 
 		/// <summary>
-		/// Generate a ReflectionPropertyAccessor object
+		/// Create a ReflectionPropertyAccessor object
 		/// </summary>
 		/// <param name="targetType">Target object type.</param>
 		/// <param name="propertyName">Property name.</param>
@@ -186,7 +186,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 		}
 
 		/// <summary>
-		/// Generate a ReflectionFieldAccessor object
+		/// Create a ReflectionFieldAccessor object
 		/// </summary>
 		/// <param name="targetType">Target object type.</param>
 		/// <param name="fieldName">field name.</param>

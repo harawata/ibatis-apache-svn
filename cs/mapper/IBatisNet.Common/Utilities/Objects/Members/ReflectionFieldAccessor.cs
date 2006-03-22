@@ -49,6 +49,22 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 		#region IMemberAccessor Members
 
 		/// <summary>
+		/// Gets the member name.
+		/// </summary>
+		public string Name
+		{
+			get { return _fieldInfo.Name; }
+		}
+
+		/// <summary>
+		/// Gets the type of this member, such as field, property.
+		/// </summary>
+		public Type MemberType
+		{
+			get { return _fieldInfo.FieldType; }
+		}
+
+		/// <summary>
 		/// Gets the value stored in the field for 
 		/// the specified target.
 		/// </summary>

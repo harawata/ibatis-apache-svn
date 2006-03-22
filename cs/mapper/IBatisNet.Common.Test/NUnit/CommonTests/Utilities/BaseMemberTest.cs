@@ -13,7 +13,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 	[TestFixture] 
 	public abstract class BaseMemberTest
     {
-        protected MemberAccessorFactory factory = null;
+        protected IMemberAccessorFactory factory = null;
         protected IMemberAccessor intAccessor = null;
         protected IMemberAccessor longAccessor = null;
         protected IMemberAccessor sbyteAccessor = null;

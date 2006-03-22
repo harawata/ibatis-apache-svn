@@ -24,22 +24,21 @@
 #endregion
 
 using System;
-using System.Collections;
-using System.Collections.Specialized;
 using System.Reflection;
 using System.Reflection.Emit;
 
 namespace IBatisNet.Common.Utilities.Objects.Members
 {
-    /// <summary>
-    /// The EmitPropertyAccessor class provides an IL-based access   
-    /// to a property of a specified target class.
-    /// </summary>
-    public sealed class EmitPropertyAccessor : BaseEmitAccessor, IPropertyAccessor
+	/// <summary>
+	/// The EmitPropertyAccessor class provides an IL-based access   
+	/// to a property of a specified target class.
+	/// </summary>
+	public sealed class EmitPropertyAccessor : BaseEmitAccessor, IPropertyAccessor
 	{
 		private bool _canRead = false;
 		private bool _canWrite = false;
 
+		#region IPropertyAccessor
 		/// <summary>
 		/// Gets a value indicating whether the property can be read. 
 		/// </summary>
@@ -55,20 +54,21 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 		{
 			get { return _canWrite; }
 		}
-       		
+		#endregion
+
 		/// <summary>
 		/// Creates a new IL property accessor.
 		/// </summary>
-        /// <param name="targetObjectType">Target object type.</param>
-        /// <param name="propertyName">Property name.</param>
-        /// <param name="assBuilder"></param>
-        /// <param name="modBuilder"></param>
-        public EmitPropertyAccessor(Type targetObjectType, string propertyName, AssemblyBuilder assBuilder, ModuleBuilder modBuilder)
+		/// <param name="targetObjectType">Target object type.</param>
+		/// <param name="propertyName">Property name.</param>
+		/// <param name="assBuilder"></param>
+		/// <param name="modBuilder"></param>
+		public EmitPropertyAccessor(Type targetObjectType, string propertyName, AssemblyBuilder assBuilder, ModuleBuilder modBuilder)
 		{
-            assemblyBuilder = assBuilder;
-            moduleBuilder = modBuilder;
-            targetType = targetObjectType;
-            memberName = propertyName;
+			assemblyBuilder = assBuilder;
+			moduleBuilder = modBuilder;
+			targetType = targetObjectType;
+			memberName = propertyName;
 
 			PropertyInfo propertyInfo = targetType.GetProperty(propertyName);
 
@@ -77,24 +77,26 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 			{
 				throw new MissingMethodException(
 					string.Format("Property \"{0}\" does not exist for type "
-                    + "{1}.", propertyName, targetType));
+					+ "{1}.", propertyName, targetType));
 			}
 			else
 			{
-				memberType = propertyInfo.PropertyType;
+				baseMemberType = propertyInfo.PropertyType;
 				_canRead = propertyInfo.CanRead;
 				_canWrite = propertyInfo.CanWrite;
-                this.EmitIL();
+				this.EmitIL();
 			}
 		}
 
+		
 		#region IMemberAccessor Members
+
 		/// <summary>
 		/// Gets the property value from the specified target.
 		/// </summary>
 		/// <param name="target">Target object.</param>
 		/// <returns>Property value.</returns>
-        public override object Get(object target)
+		public override object Get(object target)
 		{
 			if (_canRead)
 			{
@@ -114,7 +116,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 		/// </summary>
 		/// <param name="target">Target object.</param>
 		/// <param name="value">Value to set.</param>
-        public override void Set(object target, object value)
+		public override void Set(object target, object value)
 		{
 			if (_canWrite)
 			{
@@ -137,43 +139,122 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 
 
 		#endregion
-
 		
+		private void ImplementProperty(TypeBuilder type, FieldBuilder field, PropertyInfo prop)
+		{
+			MethodBuilder getter = type.DefineMethod("get_" + prop.Name, MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig | MethodAttributes.SpecialName, prop.PropertyType, null);
+			type.DefineMethodOverride(getter, prop.GetGetMethod());
+			ILGenerator getterIL = getter.GetILGenerator();
+			getterIL.Emit(OpCodes.Ldarg_0); 
+			getterIL.Emit(OpCodes.Ldfld, field);
+			getterIL.Emit(OpCodes.Ret);
+		}
+
 		/// <summary>
 		/// Create an type that will provide the get and set access method.
 		/// </summary>
-        protected override void EmitType()
+		/// <remarks>
+		///  new ReflectionPermission(PermissionState.Unrestricted).Assert();
+		///  CodeAccessPermission.RevertAssert();
+		/// </remarks>
+		protected override void EmitType()
 		{
 			// Define a public class named "PropertyAccessorFor.FullTagetTypeName.PropertyName" in the assembly.
-            TypeBuilder typeBuilder = moduleBuilder.DefineType("MemberAccessorFor" + targetType.FullName + memberName, TypeAttributes.Class | TypeAttributes.Public | TypeAttributes.Sealed);
+			TypeBuilder typeBuilder = moduleBuilder.DefineType("MemberAccessorFor" + targetType.FullName + memberName, TypeAttributes.Class | TypeAttributes.Public | TypeAttributes.Sealed);
 
 			// Mark the class as implementing IMemberAccessor. 
 			typeBuilder.AddInterfaceImplementation(typeof(IMemberAccessor));
 
-			// Add a constructor
-			typeBuilder.DefineDefaultConstructor(MethodAttributes.Public);
+			// Define 2 private fields
+			FieldBuilder fieldBuilderMemberType = typeBuilder.DefineField("_memberType",
+				typeof(Type),
+				FieldAttributes.Private);
 
+			FieldBuilder fieldBuilderName = typeBuilder.DefineField("_name",
+				typeof(string),
+				FieldAttributes.Private);
+
+			#region Emit constructor
+			// Create a new constructor (public)
+			ConstructorBuilder cb = typeBuilder.DefineConstructor(MethodAttributes.Public, 
+				CallingConventions.Standard, Type.EmptyTypes);
+			// Get the constructor's IL generator
+			ILGenerator constructorIL = cb.GetILGenerator();
+
+			// Load "this"
+			constructorIL.Emit(OpCodes.Ldarg_0);
+			// Call the base constructor (no args)
+			constructorIL.Emit(OpCodes.Call, typeof(object).GetConstructor(Type.EmptyTypes));
+			// Load "this"
+			constructorIL.Emit(OpCodes.Ldarg_0);
+			// Store name in field "_name"
+			constructorIL.Emit(OpCodes.Ldstr, memberName);
+			constructorIL.Emit(OpCodes.Stfld, fieldBuilderName);
+			// Store type in field "_memberType"
+			//			constructorIL.Emit(OpCodes.Ldtoken, baseMemberType);
+			//			MethodInfo miGetTypeFromHandle = typeof(System.Type).GetMethod("GetTypeFromHandle", new Type[] {typeof(System.RuntimeTypeHandle)});
+			//			constructorIL.EmitCall(OpCodes.Call, miGetTypeFromHandle, null); 
+			//			constructorIL.Emit(OpCodes.Stfld, fieldBuilderMemberType);
+			// Emit return opcode
+			constructorIL.Emit(OpCodes.Ret);
+			#endregion
+
+			PropertyInfo prop =typeof(IMemberAccessor).GetProperty("MemberType");
+			ImplementProperty(typeBuilder, fieldBuilderMemberType, prop);
+
+			prop =typeof(IMemberAccessor).GetProperty("Name");
+			ImplementProperty(typeBuilder, fieldBuilderName, prop);
+
+			//            #region Emit MemberType
+			//            // Define the property MemberType (IMemberAccessor). 
+			//            PropertyBuilder propertyBuilder = typeBuilder.DefineProperty("MemberType",
+			//                             PropertyAttributes.None,
+			//                             typeof(Type),
+			//                             new Type[] { typeof(Type) });
+			//
+			//			// Define the get method for the property for MemberType
+			//            MethodBuilder getMethodBuilder = typeBuilder.DefineMethod("get_MemberType",
+			//                                    MethodAttributes.Public | MethodAttributes.Virtual ,
+			//                                    typeof(Type),
+			//                                    Type.EmptyTypes);
+			//			typeBuilder.DefineMethodOverride(getMethodBuilder, typeof(IMemberAccessor).GetProperty("MemberType").GetGetMethod());
+			//
+			//            // Get an ILGenerator and used it to emit the IL that we want.
+			//            ILGenerator getMethod  = getMethodBuilder.GetILGenerator();
+			//
+			//            // Emit the IL for get access. 
+			//            getMethod.Emit(OpCodes.Ldarg_0);
+			//            getMethod.Emit(OpCodes.Ldfld, fieldBuilder);
+			//            getMethod.Emit(OpCodes.Ret);
+			//
+			//            // Last, we must map the method created above to our PropertyBuilder to 
+			//            // the corresponding behavior "get". 
+			//            propertyBuilder.SetGetMethod(getMethodBuilder);
+			//
+			//
+			//            #endregion	
+
+			#region Emit Get
 			// Define a method named "Get" for the get operation (IMemberAccessor). 
-			Type[] getParamTypes = new Type[] {typeof(object)};
-			MethodBuilder getMethod = 
-				typeBuilder.DefineMethod("Get", 
+			Type[] getParamTypes = new Type[] { typeof(object) };
+			MethodBuilder methodBuilder = typeBuilder.DefineMethod("Get",
 				MethodAttributes.Public | MethodAttributes.Virtual,
-                typeof(object), 
+				typeof(object),
 				getParamTypes);
 
 			// Get an ILGenerator and used it to emit the IL that we want.
-			ILGenerator getIL = getMethod.GetILGenerator();
+			ILGenerator getIL = methodBuilder.GetILGenerator();
 
 			// Emit the IL for get access. 
 			MethodInfo targetGetMethod = targetType.GetMethod("get_" + memberName);
 
-			if(targetGetMethod != null)
+			if (targetGetMethod != null)
 			{
 				getIL.DeclareLocal(typeof(object));
 				getIL.Emit(OpCodes.Ldarg_1);	//Load the first argument,(target object)
 				getIL.Emit(OpCodes.Castclass, targetType);	//Cast to the source type
 				getIL.EmitCall(OpCodes.Call, targetGetMethod, null); //Get the property value
-				if(targetGetMethod.ReturnType.IsValueType)
+				if (targetGetMethod.ReturnType.IsValueType)
 				{
 					getIL.Emit(OpCodes.Box, targetGetMethod.ReturnType); //Box if necessary
 				}
@@ -185,39 +266,39 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 				getIL.ThrowException(typeof(MissingMethodException));
 			}
 			getIL.Emit(OpCodes.Ret);
+			#endregion			
 
-
+			#region Emit Set
 			// Define a method named "Set" for the set operation (IMemberAccessor).
-			Type[] setParamTypes = new Type[] {typeof(object), typeof(object)};
-			MethodBuilder setMethod = 
-				typeBuilder.DefineMethod("Set", 
-				MethodAttributes.Public | MethodAttributes.Virtual, 
-				null, 
+			Type[] setParamTypes = new Type[] { typeof(object), typeof(object) };
+			methodBuilder = typeBuilder.DefineMethod("Set",
+				MethodAttributes.Public | MethodAttributes.Virtual,
+				null,
 				setParamTypes);
 
 			// Get an ILGenerator and  used to emit the IL that we want.
-            // Set(object, value);
-			ILGenerator setIL = setMethod.GetILGenerator();
+			// Set(object, value);
+			ILGenerator setIL = methodBuilder.GetILGenerator();
 			// Emit the IL for the set access. 
 			MethodInfo targetSetMethod = targetType.GetMethod("set_" + memberName);
-			if(targetSetMethod != null)
+			if (targetSetMethod != null)
 			{
 				Type paramType = targetSetMethod.GetParameters()[0].ParameterType;
 				setIL.DeclareLocal(paramType);
 				setIL.Emit(OpCodes.Ldarg_1); //Load the first argument (target object)
 				setIL.Emit(OpCodes.Castclass, targetType); //Cast to the source type
 				setIL.Emit(OpCodes.Ldarg_2); //Load the second argument (value object)
-				if(paramType.IsValueType)
+				if (paramType.IsValueType)
 				{
 					setIL.Emit(OpCodes.Unbox, paramType); //Unbox it 	
-					if(typeToOpcode[paramType]!=null)					
+					if (typeToOpcode[paramType] != null)
 					{
 						OpCode load = (OpCode)typeToOpcode[paramType];
 						setIL.Emit(load); //and load
 					}
 					else
 					{
-						setIL.Emit(OpCodes.Ldobj,paramType);
+						setIL.Emit(OpCodes.Ldobj, paramType);
 					}
 				}
 				else
@@ -230,7 +311,8 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 			{
 				setIL.ThrowException(typeof(MissingMethodException));
 			}
-			setIL.Emit(OpCodes.Ret);
+			setIL.Emit(OpCodes.Ret); 
+			#endregion
 
 			// Load the type
 			typeBuilder.CreateType();
