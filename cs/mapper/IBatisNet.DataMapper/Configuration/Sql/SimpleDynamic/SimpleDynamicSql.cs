@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -25,11 +25,12 @@
 #endregion
 
 #region Imports
-using System;
+
 using System.Collections;
 using System.Text;
 
 using IBatisNet.Common;
+using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.Configuration.Sql;
 using IBatisNet.DataMapper.Configuration.Statements;
 using IBatisNet.DataMapper.Scope;
@@ -55,6 +56,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.SimpleDynamic
 		private string _simpleSqlStatement = string.Empty;
 		private IStatement _statement = null ;
 		private TypeHandlerFactory _typeHandlerFactory = null;
+		private IMemberAccessorFactory _memberAccessorFactory = null;
 
 		#endregion
 
@@ -64,12 +66,15 @@ namespace IBatisNet.DataMapper.Configuration.Sql.SimpleDynamic
 		/// </summary>
 		/// <param name="sqlStatement">The sql statement.</param>
 		/// <param name="statement"></param>
-		/// <param name="typeHandlerFactory"></param>
-		internal SimpleDynamicSql(TypeHandlerFactory typeHandlerFactory,string sqlStatement, IStatement statement)
+		/// <param name="scope"></param>
+		internal SimpleDynamicSql(IScope scope,
+			string sqlStatement, 
+			IStatement statement)
 		{
 			_simpleSqlStatement = sqlStatement;
 			_statement = statement;
-			_typeHandlerFactory = typeHandlerFactory;
+			_typeHandlerFactory = scope.TypeHandlerFactory;
+			_memberAccessorFactory = scope.MemberAccessorFactory;
 		}
 		#endregion
 
@@ -103,7 +108,6 @@ namespace IBatisNet.DataMapper.Configuration.Sql.SimpleDynamic
 		private string ProcessDynamicElements(object parameterObject) 
 		{
 			// define which character is seperating fields
-			char[] splitter  = ELEMENT_TOKEN.ToCharArray();
 
 			StringTokenizer parser = new StringTokenizer(_simpleSqlStatement, ELEMENT_TOKEN, true);
 
@@ -181,7 +185,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.SimpleDynamic
 		{
 			string sqlStatement = ProcessDynamicElements(parameterObject);
 			
-			RequestScope request = new RequestScope();
+			RequestScope request = new RequestScope(_typeHandlerFactory, _memberAccessorFactory);
 
 			request.ParameterMap = _statement.ParameterMap;
 			request.ResultMap = _statement.ResultMap;

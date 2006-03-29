@@ -63,7 +63,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// </summary>
 		private const string XML_SUBMAP = "subMap";
 
-        private IFactory _objectFactory = null;
+		private IFactory _objectFactory = null;
 
 		#region Fields
 		[NonSerialized]
@@ -284,7 +284,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 
 			if (typeCode == TypeCode.Object)
 			{
-                return _objectFactory.CreateInstance();
+				return _objectFactory.CreateInstance();
 			}
 			else
 			{
@@ -320,9 +320,16 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 					throw new ArgumentException( "Could not set value of type '"+ target.GetType() +"' in property '"+property.PropertyName+"' of type '"+_class+"'" );
 				}
 
-				if ( property.PropertyInfo != null )
+				if ( property.MemberAccessor != null )
 				{
-					ObjectProbe.SetPropertyValue(target, property.PropertyName, dataBaseValue);
+					if (property.IsComplexMemberName)
+					{
+						ObjectProbe.SetPropertyValue(target, property.PropertyName, dataBaseValue);
+					}
+					else
+					{
+						property.MemberAccessor.Set(target, dataBaseValue);
+					}
 				}
 				else // Primitive type ('value')
 				{
@@ -338,7 +345,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// <returns></returns>
 		public ResultMap ResolveSubMap(IDataReader dataReader)
 		{
-			 ResultMap subMap = this;
+			ResultMap subMap = this;
 			if (_discriminator != null)
 			{	
 				ResultProperty mapping = _discriminator.ResultProperty;

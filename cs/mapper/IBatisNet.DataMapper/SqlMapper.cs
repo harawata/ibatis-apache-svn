@@ -97,7 +97,7 @@ namespace IBatisNet.DataMapper
 		private TypeHandlerFactory _typeHandlerFactory = null; 
 
 		private bool _cacheModelsEnabled = false;
-		private bool _useEmbedStatementParams = false;
+		private bool _useReflectionOptimizer = false;
 		// An identifiant 
 		private string _id = string.Empty;
 
@@ -106,7 +106,7 @@ namespace IBatisNet.DataMapper
 		/// </summary>
 		private SessionHolder _sessionHolder = null;
         private IObjectFactory _objectFactory = null;
-        private MemberAccessorFactory _memberAccessorFactory = null;
+        private IMemberAccessorFactory _memberAccessorFactory = null;
 		#endregion
 
 		#region Properties
@@ -139,14 +139,6 @@ namespace IBatisNet.DataMapper
 			get { return _cacheModelsEnabled; }
 		}
 
-		/// <summary>
-		/// A flag that determines whether statements use
-		/// embedded parameters.
-		/// </summary>
-		public bool UseEmbedStatementParams
-		{
-			get { return _useEmbedStatementParams; }
-		}
 
 		/// <summary>
 		/// The TypeHandlerFactory
@@ -165,25 +157,43 @@ namespace IBatisNet.DataMapper
         }
 
         /// <summary>
-        /// The factory which build MemberAccessorFactory
+        /// The factory which build IMemberAccessor
         /// </summary>
-        public MemberAccessorFactory MemberAccessorFactory
+        public IMemberAccessorFactory MemberAccessorFactory
         {
             get { return _memberAccessorFactory; }
         }
+
+		/// <summary>
+		/// Set the flag to tell us if cache models were enabled
+		/// or not.
+		/// </summary>
+		internal bool CacheModelsEnabled
+		{
+			set { _cacheModelsEnabled = value; }
+		}
+
+		/// <summary>
+		/// A flag indicating if we use reflection optimizer.
+		/// </summary>
+		internal bool UseReflectionOptimizer
+		{
+			get { return _useReflectionOptimizer; }
+		}
+
 		#endregion
 
 		#region Constructor (s) / Destructor
 		/// <summary>
 		/// Create a new SqlMap
 		/// </summary>
-        /// <param name="objectFactory"></param>
         /// <param name="typeHandlerFactory"></param>
-        /// <param name="memberAccessorFactory"></param>
-        internal SqlMapper(IObjectFactory objectFactory, TypeHandlerFactory typeHandlerFactory, MemberAccessorFactory memberAccessorFactory) 
+        /// <param name="useReflectionOptimizer"></param>
+        internal SqlMapper(bool useReflectionOptimizer, TypeHandlerFactory typeHandlerFactory) 
 		{
-            _objectFactory = objectFactory;
-			_memberAccessorFactory = memberAccessorFactory;
+			_useReflectionOptimizer = useReflectionOptimizer;
+            _objectFactory = new ObjectFactory(useReflectionOptimizer);
+			_memberAccessorFactory = new MemberAccessorFactory(useReflectionOptimizer);
 			_typeHandlerFactory = typeHandlerFactory;
 			_id = HashCodeProvider.GetIdentityHashCode(this).ToString();
 			_sessionHolder = new SessionHolder(_id);
@@ -191,23 +201,6 @@ namespace IBatisNet.DataMapper
 		#endregion
 
 		#region Methods
-		/// <summary>
-		/// Set the flag to tell us if cache models were enabled
-		/// or not.
-		/// </summary>
-		internal void SetCacheModelsEnabled(bool value)
-		{
-			_cacheModelsEnabled = value;
-		}
-
-		/// <summary>
-		/// Sets the flag indicating if statements should used embedded
-		/// parameters
-		/// </summary>
-		internal void SetUseEmbedStatementParams(bool value)
-		{
-			_useEmbedStatementParams = value;
-		}
 
 		#region Configure
 
@@ -633,7 +626,7 @@ namespace IBatisNet.DataMapper
  
 			if (session == null) 
 			{
-				session = new SqlMapSession(this.DataSource);
+				session = new SqlMapSession(this);
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -674,7 +667,7 @@ namespace IBatisNet.DataMapper
  
 			if (session == null) 
 			{
-				session = new SqlMapSession(this.DataSource);
+				session = new SqlMapSession(this);
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -721,7 +714,7 @@ namespace IBatisNet.DataMapper
 
             if (session == null)
             {
-                session = new SqlMapSession(this.DataSource);
+                session = new SqlMapSession(this);
                 session.OpenConnection();
                 isSessionLocal = true;
             }
@@ -762,7 +755,7 @@ namespace IBatisNet.DataMapper
 
             if (session == null)
             {
-                session = new SqlMapSession(this.DataSource);
+                session = new SqlMapSession(this);
                 session.OpenConnection();
                 isSessionLocal = true;
             }
@@ -851,7 +844,7 @@ namespace IBatisNet.DataMapper
  
 			if (session == null) 
 			{
-				session = new SqlMapSession(this.DataSource);
+				session = new SqlMapSession(this);
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -898,7 +891,7 @@ namespace IBatisNet.DataMapper
  
 			if (session == null) 
 			{
-				session = new SqlMapSession(this.DataSource);
+				session = new SqlMapSession(this);
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -942,7 +935,7 @@ namespace IBatisNet.DataMapper
  
 			if (session == null) 
 			{
-				session = new SqlMapSession(this.DataSource);
+				session = new SqlMapSession(this);
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -991,7 +984,7 @@ namespace IBatisNet.DataMapper
 
 			if (session == null) 
 			{
-				session = new SqlMapSession(this.DataSource);
+				session = new SqlMapSession(this);
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -1036,7 +1029,7 @@ namespace IBatisNet.DataMapper
 
             if (session == null)
             {
-                session = new SqlMapSession(this.DataSource);
+                session = new SqlMapSession(this);
                 session.OpenConnection();
                 isSessionLocal = true;
             }
@@ -1080,7 +1073,7 @@ namespace IBatisNet.DataMapper
 
             if (session == null)
             {
-                session = new SqlMapSession(this.DataSource);
+                session = new SqlMapSession(this);
                 session.OpenConnection();
                 isSessionLocal = true;
             }
@@ -1128,7 +1121,7 @@ namespace IBatisNet.DataMapper
 
             if (session == null)
             {
-                session = new SqlMapSession(this.DataSource);
+                session = new SqlMapSession(this);
                 session.OpenConnection();
                 isSessionLocal = true;
             }
@@ -1190,7 +1183,7 @@ namespace IBatisNet.DataMapper
  
 			if (session == null) 
 			{
-				session = new SqlMapSession(this.DataSource);
+				session = new SqlMapSession(this);
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -1235,7 +1228,7 @@ namespace IBatisNet.DataMapper
 
             if (session == null)
             {
-                session = new SqlMapSession(this.DataSource);
+                session = new SqlMapSession(this);
                 session.OpenConnection();
                 isSessionLocal = true;
             }
@@ -1283,7 +1276,7 @@ namespace IBatisNet.DataMapper
  
 			if (session == null) 
 			{
-				session = new SqlMapSession(this.DataSource);
+				session = new SqlMapSession(this);
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -1336,7 +1329,7 @@ namespace IBatisNet.DataMapper
  
 			if (session == null) 
 			{
-				session = new SqlMapSession(this.DataSource);
+				session = new SqlMapSession(this);
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -1381,7 +1374,7 @@ namespace IBatisNet.DataMapper
 
 			if (session == null) 
 			{
-				session = new SqlMapSession(this.DataSource);
+				session = new SqlMapSession(this);
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -1421,7 +1414,7 @@ namespace IBatisNet.DataMapper
 
 			if (session == null) 
 			{
-				session = new SqlMapSession(this.DataSource);
+				session = new SqlMapSession(this);
 				session.OpenConnection();
 				isSessionLocal = true;
 			}

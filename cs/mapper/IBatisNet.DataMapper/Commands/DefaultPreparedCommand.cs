@@ -25,18 +25,20 @@
 #endregion
 
 #region Using
+
+using System;
+using System.Collections.Specialized;
 using System.Data;
-using System.Collections;
+using System.Reflection;
 using System.Text;
-using IBatisNet.Common.Logging;
-
 using IBatisNet.Common;
+using IBatisNet.Common.Logging;
 using IBatisNet.Common.Utilities.Objects;
-
-using IBatisNet.DataMapper.Configuration.Statements;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
+using IBatisNet.DataMapper.Configuration.Statements;
 using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.Scope;
+
 #endregion
 
 namespace IBatisNet.DataMapper.Commands
@@ -48,7 +50,7 @@ namespace IBatisNet.DataMapper.Commands
 	{
 
 		#region Fields
-		private static readonly ILog _logger = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
+		private static readonly ILog _logger = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
         private StringBuilder _paramLogList = new StringBuilder(); // Log info
         private StringBuilder _typeLogList = new StringBuilder(); // Log info
 		
@@ -95,13 +97,13 @@ namespace IBatisNet.DataMapper.Commands
 			( IDalSession session, IDbCommand command,
 			RequestScope request, IStatement statement, object parameterObject )
 		{
-			ArrayList properties = request.PreparedStatement.DbParametersName;
-			ArrayList parameters = request.PreparedStatement.DbParameters;
+			StringCollection properties = request.PreparedStatement.DbParametersName;
+			IDataParameter[] parameters = request.PreparedStatement.DbParameters;
 
 			int count = properties.Count;
             for ( int i = 0; i < count; ++i )
 			{
-				IDataParameter sqlParameter = (IDataParameter)parameters[i];
+				IDataParameter sqlParameter = parameters[i];
 				IDataParameter parameterCopy = command.CreateParameter();
 				ParameterProperty property = request.ParameterMap.GetProperty(i);
 
@@ -164,8 +166,8 @@ namespace IBatisNet.DataMapper.Commands
 						request.ParameterMap.GetProperty(i).DbType.Length >0)
 					{
 						string dbTypePropertyName = session.DataSource.DbProvider.ParameterDbTypeProperty;
-
-						ObjectProbe.SetPropertyValue(parameterCopy, dbTypePropertyName, ObjectProbe.GetPropertyValue(sqlParameter, dbTypePropertyName));
+						object propertyValue = ObjectProbe.GetPropertyValue(sqlParameter, dbTypePropertyName);
+						ObjectProbe.SetPropertyValue(parameterCopy, dbTypePropertyName, propertyValue);
 					}
 					else
 					{
@@ -181,7 +183,7 @@ namespace IBatisNet.DataMapper.Commands
 				#region Logging
 				if (_logger.IsDebugEnabled)
 				{
-					if (parameterCopy.Value == System.DBNull.Value) 
+					if (parameterCopy.Value == DBNull.Value) 
 					{
                         _paramLogList.Append("null");
                         _paramLogList.Append("], ");

@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -325,8 +325,6 @@ namespace IBatisNet.Common.Utilities.Objects
 		/// <returns></returns>
 		protected static object GetProperty(object obj, string propertyName) 
 		{
-			ReflectionInfo reflectionCache = ReflectionInfo.GetInstance(obj.GetType());
-
 			try 
 			{
 				object value = null;
@@ -343,6 +341,7 @@ namespace IBatisNet.Common.Utilities.Objects
 					} 
 					else 
 					{
+						ReflectionInfo reflectionCache = ReflectionInfo.GetInstance(obj.GetType());
 						PropertyInfo propertyInfo = reflectionCache.GetGetter(propertyName);
 						if (propertyInfo == null) 
 						{
@@ -431,8 +430,6 @@ namespace IBatisNet.Common.Utilities.Objects
 		/// <param name="propertyValue"></param>
 		protected static void SetProperty(object obj, string propertyName, object propertyValue)
 		{
-			ReflectionInfo reflectionCache = ReflectionInfo.GetInstance(obj.GetType());
-
 			try 
 			{
 				if (propertyName.IndexOf("[") > -1) 
@@ -447,6 +444,7 @@ namespace IBatisNet.Common.Utilities.Objects
 					} 
 					else 
 					{
+						ReflectionInfo reflectionCache = ReflectionInfo.GetInstance(obj.GetType());
 						PropertyInfo propertyInfo = reflectionCache.GetSetter(propertyName);
 						
 						if (propertyInfo == null) 

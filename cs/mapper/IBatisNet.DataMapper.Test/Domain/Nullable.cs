@@ -6,7 +6,7 @@ using System.Text;
 
 namespace IBatisNet.DataMapper.Test.Domain
 {
-    class NullableClass
+    public class NullableClass
     {
 
 #if dotnet2

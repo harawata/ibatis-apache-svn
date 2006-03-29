@@ -38,6 +38,7 @@ namespace IBatisNet.Common.Test.Domain
 		private TimeSpan _timeSpan = TimeSpan.MinValue;
 		private Account _account = null;
         private Days _day;
+		private Type _type = null;
 
 #if dotnet2
         private Int32? _intNullable = null;
@@ -48,6 +49,11 @@ namespace IBatisNet.Common.Test.Domain
             set { _intNullable = value; }
         }
 #endif
+
+		public Property()
+        {
+			_type = typeof(int);
+        }
 
         public Days Day
         {

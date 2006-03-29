@@ -275,9 +275,9 @@ namespace IBatisNet.DataMapper.Configuration
 		/// </summary>
 		private const string ATR_VALIDATE_SQLMAP = "validateSqlMap";
 		/// <summary>
-		/// Token for embedStatementParams attribute.
+		/// Token for useReflectionOptimizer attribute.
 		/// </summary>
-		private const string ATR_EMBED_STATEMENT_PARAMS = "useEmbedStatementParams";
+		private const string ATR_USE_REFLECTION_OPTIMIZER = "useReflectionOptimizer";
 
 		#endregion
 
@@ -299,7 +299,7 @@ namespace IBatisNet.DataMapper.Configuration
 		public DomSqlMapBuilder()
 		{
 			_configScope = new ConfigurationScope();
-			_paramParser = new InlineParameterMapParser( _configScope.ErrorContext );
+			_paramParser = new InlineParameterMapParser();
 			_deSerializerFactory = new DeSerializerFactory(_configScope);
 		}
 
@@ -317,7 +317,7 @@ namespace IBatisNet.DataMapper.Configuration
 			_configScope = new ConfigurationScope();
 			_configScope.ValidateSqlMapConfig = validateSqlMapConfig;
 			_deSerializerFactory = new DeSerializerFactory(_configScope);
-			_paramParser = new InlineParameterMapParser( _configScope.ErrorContext );
+			_paramParser = new InlineParameterMapParser();
 		}		
 		#endregion 
 
@@ -651,24 +651,6 @@ namespace IBatisNet.DataMapper.Configuration
 		{
 			Reset();
 
-            // To do, analyse config file to set allowCodeGeneration on object factory
-			_configScope.SqlMapper = new SqlMapper( new ObjectFactory(true), new TypeHandlerFactory() , new MemberAccessorFactory(true) );
-
-
-			#region Cache Alias
-
-			TypeAlias cacheAlias = new TypeAlias(typeof(MemoryCacheControler));
-			cacheAlias.Name = "MEMORY";
-			_configScope.SqlMapper.TypeHandlerFactory.AddTypeAlias(cacheAlias.Name, cacheAlias);
-			cacheAlias = new TypeAlias(typeof(LruCacheController));
-			cacheAlias.Name = "LRU";
-			_configScope.SqlMapper.TypeHandlerFactory.AddTypeAlias(cacheAlias.Name, cacheAlias);
-			cacheAlias = new TypeAlias(typeof(FifoCacheController));
-			cacheAlias.Name = "FIFO";
-			_configScope.SqlMapper.TypeHandlerFactory.AddTypeAlias(cacheAlias.Name, cacheAlias);
-
-			#endregion 
-
 			#region Load Global Properties
 			if (_configScope.IsCallFromDao == false)
 			{
@@ -683,7 +665,6 @@ namespace IBatisNet.DataMapper.Configuration
 			_configScope.ErrorContext.Activity = "loading global settings";
 
 			XmlNodeList settings = _configScope.SqlMapConfigDocument.SelectNodes( ApplyDataMapperNamespacePrefix(XML_CONFIG_SETTINGS), _configScope.XmlNamespaceManager);
-				//XML_CONFIG_SETTINGS);
 
 			if (settings!=null)
 			{
@@ -699,12 +680,11 @@ namespace IBatisNet.DataMapper.Configuration
 						string value = NodeUtils.ParsePropertyTokens(setting.Attributes[ATR_CACHE_MODELS_ENABLED].Value, _configScope.Properties);
 						_configScope.IsCacheModelsEnabled =  Convert.ToBoolean( value ); 
 					}
-					if (setting.Attributes[ATR_EMBED_STATEMENT_PARAMS] != null )
+					if (setting.Attributes[ATR_USE_REFLECTION_OPTIMIZER] != null )
 					{		
-						string value = NodeUtils.ParsePropertyTokens(setting.Attributes[ATR_EMBED_STATEMENT_PARAMS].Value, _configScope.Properties);
-						_configScope.UseEmbedStatementParams =  Convert.ToBoolean( value ); 
+						string value = NodeUtils.ParsePropertyTokens(setting.Attributes[ATR_USE_REFLECTION_OPTIMIZER].Value, _configScope.Properties);
+						_configScope.UseReflectionOptimizer =  Convert.ToBoolean( value ); 
 					}
-
 					if (setting.Attributes[ATR_VALIDATE_SQLMAP] != null )
 					{		
 						string value = NodeUtils.ParsePropertyTokens(setting.Attributes[ATR_VALIDATE_SQLMAP].Value, _configScope.Properties);
@@ -713,10 +693,24 @@ namespace IBatisNet.DataMapper.Configuration
 				}
 			}
 
-			_configScope.SqlMapper.SetCacheModelsEnabled(_configScope.IsCacheModelsEnabled);
-			_configScope.SqlMapper.SetUseEmbedStatementParams(_configScope.UseEmbedStatementParams);
+			#endregion            
+			
+			_configScope.SqlMapper = new SqlMapper( _configScope.UseReflectionOptimizer, new TypeHandlerFactory() );
+			_configScope.SqlMapper.CacheModelsEnabled =_configScope.IsCacheModelsEnabled;
 
-			#endregion
+			#region Cache Alias
+
+			TypeAlias cacheAlias = new TypeAlias(typeof(MemoryCacheControler));
+			cacheAlias.Name = "MEMORY";
+			_configScope.SqlMapper.TypeHandlerFactory.AddTypeAlias(cacheAlias.Name, cacheAlias);
+			cacheAlias = new TypeAlias(typeof(LruCacheController));
+			cacheAlias.Name = "LRU";
+			_configScope.SqlMapper.TypeHandlerFactory.AddTypeAlias(cacheAlias.Name, cacheAlias);
+			cacheAlias = new TypeAlias(typeof(FifoCacheController));
+			cacheAlias.Name = "FIFO";
+			_configScope.SqlMapper.TypeHandlerFactory.AddTypeAlias(cacheAlias.Name, cacheAlias);
+
+			#endregion 
 
 			#region Load providers
 			if (_configScope.IsCallFromDao == false)
@@ -1112,7 +1106,7 @@ namespace IBatisNet.DataMapper.Configuration
 
 				if (select.Generate != null)
 				{
-					GenerateCommandText(_configScope.SqlMapper, select);
+					GenerateCommandText(_configScope, select);
 				}
 				else
 				{
@@ -1156,7 +1150,7 @@ namespace IBatisNet.DataMapper.Configuration
 				// Build ISql (analyse sql command text)
 				if (insert.Generate != null)
 				{
-					GenerateCommandText(_configScope.SqlMapper, insert);
+					GenerateCommandText(_configScope, insert);
 				}
 				else
 				{
@@ -1183,8 +1177,8 @@ namespace IBatisNet.DataMapper.Configuration
 					
 					string commandText = xmlNode.SelectSingleNode( ApplyMappingNamespacePrefix(XML_SELECTKEY), _configScope.XmlNamespaceManager).FirstChild.InnerText.Replace('\n', ' ').Replace('\r', ' ').Replace('\t', ' ').Trim();
 					commandText = NodeUtils.ParsePropertyTokens(commandText, _configScope.Properties);
-					StaticSql sql = new StaticSql(insert.SelectKey);
-					IDalSession session = new SqlMapSession( _configScope.SqlMapper.DataSource );
+					StaticSql sql = new StaticSql(_configScope, insert.SelectKey);
+					IDalSession session = new SqlMapSession( _configScope.SqlMapper );
 					sql.BuildPreparedStatement( session, commandText );
 					insert.SelectKey.Sql = sql;					
 					
@@ -1221,7 +1215,7 @@ namespace IBatisNet.DataMapper.Configuration
 				// Build ISql (analyse sql statement)	
 				if (update.Generate != null)
 				{
-					GenerateCommandText(_configScope.SqlMapper, update);
+					GenerateCommandText(_configScope, update);
 				}
 				else
 				{
@@ -1259,7 +1253,7 @@ namespace IBatisNet.DataMapper.Configuration
 				// Build ISql (analyse sql statement)
 				if (delete.Generate != null)
 				{
-					GenerateCommandText(_configScope.SqlMapper, delete);
+					GenerateCommandText(_configScope, delete);
 				}
 				else
 				{
@@ -1387,7 +1381,7 @@ namespace IBatisNet.DataMapper.Configuration
 
 			_configScope.ErrorContext.MoreInfo = "parse dynamic tags on sql statement";
 
-			isDynamic = ParseDynamicTags( commandTextNode, dynamic, sqlBuffer, isDynamic, false);
+			isDynamic = ParseDynamicTags( commandTextNode, dynamic, sqlBuffer, isDynamic, false, statement);
 
 			if (isDynamic) 
 			{
@@ -1411,7 +1405,7 @@ namespace IBatisNet.DataMapper.Configuration
 		/// <param name="postParseRequired"></param>
 		/// <returns></returns>
 		private bool ParseDynamicTags( XmlNode commandTextNode, IDynamicParent dynamic, 
-			StringBuilder sqlBuffer, bool isDynamic, bool postParseRequired) 
+			StringBuilder sqlBuffer, bool isDynamic, bool postParseRequired, IStatement statement) 
 		{
 			XmlNodeList children = commandTextNode.ChildNodes;
 			int count = children.Count;
@@ -1432,7 +1426,7 @@ namespace IBatisNet.DataMapper.Configuration
 					} 
 					else 
 					{
-						sqlText = _paramParser.ParseInlineParameterMap(_configScope.TypeHandlerFactory, null, data );
+						sqlText = _paramParser.ParseInlineParameterMap(_configScope, statement, data );
 					}
 
 					dynamic.AddChild(sqlText);
@@ -1454,7 +1448,7 @@ namespace IBatisNet.DataMapper.Configuration
 
 						if (child.HasChildNodes == true) 
 						{
-							isDynamic = ParseDynamicTags( child, tag, sqlBuffer, isDynamic, tag.Handler.IsPostParseRequired );
+							isDynamic = ParseDynamicTags( child, tag, sqlBuffer, isDynamic, tag.Handler.IsPostParseRequired, statement );
 						}
 					}
 				}
@@ -1483,12 +1477,17 @@ namespace IBatisNet.DataMapper.Configuration
 				// Build a Parametermap with the inline parameters.
 				// if they exist. Then delete inline infos from sqltext.
 				
-				SqlText sqlText = _paramParser.ParseInlineParameterMap(_configScope.TypeHandlerFactory,  statement, newSql );
+				SqlText sqlText = _paramParser.ParseInlineParameterMap(_configScope,  statement, newSql );
 
 				if (sqlText.Parameters.Length > 0)
 				{
-					ParameterMap map = new ParameterMap(_configScope.DataSource.DbProvider.UsePositionalParameters);
+					ParameterMap map = new ParameterMap();
 					map.Id = statement.Id + "-InLineParameterMap";
+					if (statement.ParameterClass!=null)
+					{
+						map.Class = statement.ParameterClass;
+					}
+					map.Initialize(_configScope.DataSource.DbProvider.UsePositionalParameters,_configScope);
 					statement.ParameterMap = map;	
 				
 					int lenght = sqlText.Parameters.Length;
@@ -1506,21 +1505,21 @@ namespace IBatisNet.DataMapper.Configuration
 
 			if (SimpleDynamicSql.IsSimpleDynamicSql(newSql)) 
 			{
-				sql = new SimpleDynamicSql(_configScope.TypeHandlerFactory, newSql, statement);
+				sql = new SimpleDynamicSql(_configScope, newSql, statement);
 			} 
 			else 
 			{
 				if (statement is Procedure)
 				{
-					sql = new ProcedureSql(newSql, statement);
+					sql = new ProcedureSql(_configScope, newSql, statement);
 					// Could not call BuildPreparedStatement for procedure because when NUnit Test
 					// the database is not here (but in theory procedure must be prepared like statement)
 					// It's even better as we can then switch DataSource.
 				}
 				else if (statement is Statement)
 				{
-					sql = new StaticSql(statement);
-					IDalSession session = new SqlMapSession(_configScope.SqlMapper.DataSource);
+					sql = new StaticSql(_configScope, statement);
+					IDalSession session = new SqlMapSession(_configScope.SqlMapper);
 
 					((StaticSql)sql).BuildPreparedStatement( session, newSql );
 				}					
@@ -1593,17 +1592,17 @@ namespace IBatisNet.DataMapper.Configuration
 		/// <summary>
 		/// Generate the command text for CRUD operation
 		/// </summary>
-		/// <param name="sqlMap"></param>
+		/// <param name="configScope"></param>
 		/// <param name="statement"></param>
-		private void GenerateCommandText(SqlMapper sqlMap, IStatement statement)
+		private void GenerateCommandText(ConfigurationScope configScope, IStatement statement)
 		{
 			string generatedSQL = string.Empty;
 
 			//------ Build SQL CommandText
 			generatedSQL = SqlGenerator.BuildQuery(statement);
 
-			ISql sql = new StaticSql(statement);
-			IDalSession session = new SqlMapSession(sqlMap.DataSource);
+			ISql sql = new StaticSql(configScope, statement);
+			IDalSession session = new SqlMapSession(configScope.SqlMapper);
 
 			((StaticSql)sql).BuildPreparedStatement( session, generatedSQL );
 			statement.Sql = sql;

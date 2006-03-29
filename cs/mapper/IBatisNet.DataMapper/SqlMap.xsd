@@ -576,7 +576,7 @@ vs:defaultnsprefix="" >
 				<xs:element ref="parameter" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
 			<xs:attribute name="id" type="xs:string" use="required"/>
-			<xs:attribute name="class" type="xs:string"/>
+			<xs:attribute name="class" type="xs:string" use="required"/>
 			<xs:attribute name="extends" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>

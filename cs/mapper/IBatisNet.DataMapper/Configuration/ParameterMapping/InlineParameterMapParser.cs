@@ -1,7 +1,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -52,8 +52,6 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		private const string PARAMETER_TOKEN = "#";
 		private const string PARAM_DELIM = ":";
 
-		private ErrorContext _errorContext= null;
-
 		#endregion 
 
 		#region Constructors
@@ -61,10 +59,8 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		/// <param name="errorContext"></param>
-		public InlineParameterMapParser(ErrorContext errorContext)
+		public InlineParameterMapParser()
 		{
-			_errorContext = errorContext;
 		}
 		#endregion 
 
@@ -74,8 +70,8 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// <param name="statement"></param>
 		/// <param name="sqlStatement"></param>
 		/// <returns>A new sql command text.</returns>
-		/// <param name="typeHandlerFactory"></param>
-		public SqlText ParseInlineParameterMap(TypeHandlerFactory typeHandlerFactory, IStatement statement, string sqlStatement)
+		/// <param name="scope"></param>
+		public SqlText ParseInlineParameterMap(IScope scope, IStatement statement, string sqlStatement)
 		{
 			string newSql = sqlStatement;
 			ArrayList mappingList = new ArrayList();
@@ -110,11 +106,11 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 						ParameterProperty mapping = null; 
 						if (token.IndexOf(PARAM_DELIM) > -1) 
 						{
-							mapping =  OldParseMapping(token, parameterClassType, typeHandlerFactory);
+							mapping =  OldParseMapping(token, parameterClassType, scope);
 						} 
 						else 
 						{
-							mapping = NewParseMapping(token, parameterClassType, typeHandlerFactory);
+							mapping = NewParseMapping(token, parameterClassType, scope);
 						}															 
 
 						mappingList.Add(mapping);
@@ -158,9 +154,9 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// </summary>
 		/// <param name="token"></param>
 		/// <param name="parameterClassType"></param>
-		/// <param name="typeHandlerFactory"></param>
+		/// <param name="scope"></param>
 		/// <returns></returns>
-		private ParameterProperty NewParseMapping(string token, Type parameterClassType, TypeHandlerFactory typeHandlerFactory) 
+		private ParameterProperty NewParseMapping(string token, Type parameterClassType, IScope scope) 
 		{
 			ParameterProperty mapping = new ParameterProperty();
 
@@ -210,23 +206,23 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 
 			if (mapping.CallBackName.Length >0)
 			{
-				mapping.Initialize( typeHandlerFactory, _errorContext );
+				mapping.Initialize( scope, parameterClassType );
 			}
 			else
 			{
 				ITypeHandler handler = null;
 				if (parameterClassType == null) 
 				{
-					handler = typeHandlerFactory.GetUnkownTypeHandler();
+					handler = scope.TypeHandlerFactory.GetUnkownTypeHandler();
 				} 
 				else 
 				{
-					handler = ResolveTypeHandler(typeHandlerFactory, 
+					handler = ResolveTypeHandler( scope.TypeHandlerFactory, 
 						parameterClassType, mapping.PropertyName,  
 						mapping.CLRType, mapping.DbType );
 				}
 				mapping.TypeHandler = handler;
-				mapping.Initialize( typeHandlerFactory, _errorContext );				
+				mapping.Initialize(  scope, parameterClassType );				
 			}
 
 			return mapping;
@@ -239,9 +235,9 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// </summary>
 		/// <param name="token"></param>
 		/// <param name="parameterClassType"></param>
-		/// <param name="typeHandlerFactory"></param>
+		/// <param name="scope"></param>
 		/// <returns></returns>
-		private ParameterProperty OldParseMapping(string token, Type parameterClassType, TypeHandlerFactory typeHandlerFactory) 
+		private ParameterProperty OldParseMapping(string token, Type parameterClassType, IScope scope) 
 		{
 			ParameterProperty mapping = new ParameterProperty();
 
@@ -265,14 +261,14 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 					ITypeHandler handler = null;
 					if (parameterClassType == null) 
 					{
-						handler = typeHandlerFactory.GetUnkownTypeHandler();
+						handler = scope.TypeHandlerFactory.GetUnkownTypeHandler();
 					} 
 					else 
 					{
-						handler = ResolveTypeHandler(typeHandlerFactory, parameterClassType, propertyName, null, dBType);
+						handler = ResolveTypeHandler(scope.TypeHandlerFactory, parameterClassType, propertyName, null, dBType);
 					}
 					mapping.TypeHandler = handler;
-					mapping.Initialize( typeHandlerFactory, _errorContext );
+					mapping.Initialize( scope, parameterClassType );
 				} 
 				else if (n1 >= 5) 
 				{
@@ -295,14 +291,14 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 					ITypeHandler handler = null;
 					if (parameterClassType == null) 
 					{
-						handler = typeHandlerFactory.GetUnkownTypeHandler();
+						handler = scope.TypeHandlerFactory.GetUnkownTypeHandler();
 					} 
 					else 
 					{
-						handler = ResolveTypeHandler(typeHandlerFactory, parameterClassType, propertyName, null, dBType);
+						handler = ResolveTypeHandler(scope.TypeHandlerFactory, parameterClassType, propertyName, null, dBType);
 					}
 					mapping.TypeHandler = handler;
-					mapping.Initialize( typeHandlerFactory, _errorContext );
+					mapping.Initialize( scope, parameterClassType );
 				} 
 				else 
 				{
@@ -315,14 +311,14 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 				ITypeHandler handler = null;
 				if (parameterClassType == null) 
 				{
-					handler = typeHandlerFactory.GetUnkownTypeHandler();
+					handler = scope.TypeHandlerFactory.GetUnkownTypeHandler();
 				} 
 				else 
 				{
-					handler = ResolveTypeHandler(typeHandlerFactory, parameterClassType, token, null, null);
+					handler = ResolveTypeHandler(scope.TypeHandlerFactory, parameterClassType, token, null, null);
 				}
 				mapping.TypeHandler = handler;
-				mapping.Initialize( typeHandlerFactory, _errorContext );
+				mapping.Initialize( scope, parameterClassType );
 			}
 			return mapping;
 		}

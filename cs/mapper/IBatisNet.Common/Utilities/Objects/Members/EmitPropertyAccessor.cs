@@ -160,7 +160,8 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 		protected override void EmitType()
 		{
 			// Define a public class named "PropertyAccessorFor.FullTagetTypeName.PropertyName" in the assembly.
-			TypeBuilder typeBuilder = moduleBuilder.DefineType("MemberAccessorFor" + targetType.FullName + memberName, TypeAttributes.Class | TypeAttributes.Public | TypeAttributes.Sealed);
+			TypeBuilder typeBuilder = moduleBuilder.DefineType("MemberAccessorFor" + targetType.FullName + memberName, 
+				TypeAttributes.Class | TypeAttributes.Public | TypeAttributes.Sealed);
 
 			// Mark the class as implementing IMemberAccessor. 
 			typeBuilder.AddInterfaceImplementation(typeof(IMemberAccessor));
@@ -176,7 +177,8 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 
 			#region Emit constructor
 			// Create a new constructor (public)
-			ConstructorBuilder cb = typeBuilder.DefineConstructor(MethodAttributes.Public, 
+			ConstructorBuilder cb = typeBuilder.DefineConstructor(MethodAttributes.Public 
+				| MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName, 
 				CallingConventions.Standard, Type.EmptyTypes);
 			// Get the constructor's IL generator
 			ILGenerator constructorIL = cb.GetILGenerator();
@@ -191,10 +193,10 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 			constructorIL.Emit(OpCodes.Ldstr, memberName);
 			constructorIL.Emit(OpCodes.Stfld, fieldBuilderName);
 			// Store type in field "_memberType"
-			//			constructorIL.Emit(OpCodes.Ldtoken, baseMemberType);
-			//			MethodInfo miGetTypeFromHandle = typeof(System.Type).GetMethod("GetTypeFromHandle", new Type[] {typeof(System.RuntimeTypeHandle)});
-			//			constructorIL.EmitCall(OpCodes.Call, miGetTypeFromHandle, null); 
-			//			constructorIL.Emit(OpCodes.Stfld, fieldBuilderMemberType);
+//			constructorIL.Emit(OpCodes.Ldtoken, baseMemberType);
+//			MethodInfo miGetTypeFromHandle = typeof(System.Type).GetMethod("GetTypeFromHandle", new Type[] {typeof(System.RuntimeTypeHandle)});
+//			constructorIL.EmitCall(OpCodes.Call, miGetTypeFromHandle, null); 
+//			constructorIL.Emit(OpCodes.Stfld, fieldBuilderMemberType);
 			// Emit return opcode
 			constructorIL.Emit(OpCodes.Ret);
 			#endregion

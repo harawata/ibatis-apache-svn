@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -28,8 +28,11 @@
 using System;
 
 using IBatisNet.Common;
+using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.Configuration.Statements;
 using IBatisNet.DataMapper.Scope;
+using IBatisNet.DataMapper.TypeHandlers;
+
 #endregion
 
 
@@ -46,6 +49,8 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Static
 		private PreparedStatement _preparedStatement = null ;
 		private string _sqlStatement = string.Empty;
 		private object _synRoot = new Object();
+		private TypeHandlerFactory _typeHandlerFactory = null;
+		private IMemberAccessorFactory _memberAccessorFactory = null;
 
 		#endregion
 
@@ -55,10 +60,13 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Static
 		/// </summary>
 		/// <param name="statement">The statement.</param>
 		/// <param name="sqlStatement"></param>
-		public ProcedureSql(string sqlStatement, IStatement statement)
+		/// <param name="scope"></param>
+		public ProcedureSql(IScope scope, string sqlStatement, IStatement statement)
 		{
 			_sqlStatement = sqlStatement;
 			_statement = statement;
+			_typeHandlerFactory = scope.TypeHandlerFactory;
+			_memberAccessorFactory = scope.MemberAccessorFactory;
 		}
 		#endregion
 
@@ -72,7 +80,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Static
 		/// <returns></returns>
 		public RequestScope GetRequestScope(object parameterObject, IDalSession session)
 		{
-			RequestScope request = new RequestScope();
+			RequestScope request = new RequestScope(_typeHandlerFactory, _memberAccessorFactory);
 
 			request.ParameterMap = _statement.ParameterMap;
 			request.ResultMap = _statement.ResultMap;

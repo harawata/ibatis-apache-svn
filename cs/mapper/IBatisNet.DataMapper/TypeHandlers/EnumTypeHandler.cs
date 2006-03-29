@@ -28,12 +28,8 @@
 
 using System;
 using System.Data;
-using System.Globalization;
-using System.Reflection;
-using IBatisNet.Common.Utilities.Objects;
-using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
-using IBatisNet.DataMapper.Exceptions;
+
 #endregion 
 
 namespace IBatisNet.DataMapper.TypeHandlers
@@ -67,11 +63,11 @@ namespace IBatisNet.DataMapper.TypeHandlers
 
 			if (dataReader.IsDBNull(index) == true)
 			{
-				return System.DBNull.Value;
+				return DBNull.Value;
 			}
 			else
 			{  
-				return Enum.Parse(mapping.PropertyInfo.PropertyType, dataReader.GetValue(index).ToString());
+				return Enum.Parse(mapping.MemberAccessor.MemberType, dataReader.GetValue(index).ToString());
 			}
 		}
 
@@ -79,11 +75,11 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		{
 			if (dataReader.IsDBNull(mapping.ColumnIndex) == true)
 			{
-				return System.DBNull.Value;
+				return DBNull.Value;
 			}
 			else
 			{
-				return Enum.Parse(mapping.PropertyInfo.PropertyType, dataReader.GetValue(mapping.ColumnIndex).ToString());
+				return Enum.Parse(mapping.MemberAccessor.MemberType, dataReader.GetValue(mapping.ColumnIndex).ToString());
 			}
 		}
 

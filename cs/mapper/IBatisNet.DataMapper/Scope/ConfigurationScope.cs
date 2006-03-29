@@ -44,7 +44,7 @@ namespace IBatisNet.DataMapper.Scope
 	/// <summary>
 	/// The ConfigurationScope maintains the state of the build process.
 	/// </summary>
-	public class ConfigurationScope
+	public class ConfigurationScope : IScope
 	{
 		#region Fields
 		
@@ -59,7 +59,7 @@ namespace IBatisNet.DataMapper.Scope
 		private bool _useConfigFileWatcher = false;
 		private bool _useStatementNamespaces = false;
 		private bool _isCacheModelsEnabled = false;
-		private bool _useEmbedStatementParams = false;
+		private bool _useReflectionOptimizer = true;
 		private bool _validateSqlMap = false;
 		private bool _validateSqlMapConfig = true;
 		private bool _isCallFromDao = false;
@@ -99,7 +99,7 @@ namespace IBatisNet.DataMapper.Scope
         /// <summary>
         /// The factory which build MemberAccessorFactory
         /// </summary>
-        public MemberAccessorFactory MemberAccessorFactory
+        public IMemberAccessorFactory MemberAccessorFactory
         {
             get { return _sqlMapper.MemberAccessorFactory; }
         }
@@ -162,7 +162,7 @@ namespace IBatisNet.DataMapper.Scope
 		/// <summary>
 		/// The current TypeHandlerFactory
 		/// </summary>
-		internal TypeHandlerFactory TypeHandlerFactory
+		public TypeHandlerFactory TypeHandlerFactory
 		{
 			get { return _sqlMapper.TypeHandlerFactory; }
 		}
@@ -264,12 +264,12 @@ namespace IBatisNet.DataMapper.Scope
 		}
 
 		/// <summary>
-		/// Indicates if parameters should be embedded in the sql statement.
+		/// Indicates if we can use reflection optimizer.
 		/// </summary>
-		public bool UseEmbedStatementParams
+		public bool UseReflectionOptimizer
 		{
-			get { return _useEmbedStatementParams; }
-			set { _useEmbedStatementParams = value; }
+			get { return _useReflectionOptimizer; }
+			set { _useReflectionOptimizer = value; }
 		}
 
 		/// <summary>

@@ -33,6 +33,7 @@ using System.Reflection;
 using System.Xml.Serialization;
 using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Utilities.Objects;
+using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.Scope;
 using IBatisNet.DataMapper.TypeHandlers;
 
@@ -58,7 +59,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 
 		#region Fields
 		[NonSerialized]
-		private PropertyInfo _propertyInfo = null;
+		private IMemberAccessor _memberAccessor = null;
 		[NonSerialized]
 		private string _nullValue = null;
 		[NonSerialized]
@@ -83,6 +84,8 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		private ITypeHandler _typeHandler = null;
 		[NonSerialized]
 		private string _callBackName= string.Empty;
+		[NonSerialized]
+		private bool _isComplexMemberName = false;
 		#endregion
 
 		#region Properties
@@ -196,16 +199,27 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		public string PropertyName
 		{
 			get { return _propertyName; }
-			set { _propertyName = value; }
+			set
+			{
+				_propertyName = value;
+				if (_propertyName.IndexOf('.')<0)
+				{
+					_isComplexMemberName = false;
+				}
+				else // complex member name FavouriteLineItem.Id
+				{
+					_isComplexMemberName = true;
+				}
+			}
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
 		[XmlIgnore]
-		public PropertyInfo PropertyInfo
+		public IMemberAccessor MemberAccessor
 		{
-			get { return _propertyInfo; }
+			get { return _memberAccessor; }
 		}
 
 		/// <summary>
@@ -237,6 +251,15 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			get { return _nestedResultMap; }
 			set { _nestedResultMap = value; }
 		}
+
+		/// <summary>
+		/// Indicate if we have a complex member name as [FavouriteLineItem.Id]
+		/// </summary>
+		public bool IsComplexMemberName
+		{
+			get { return _isComplexMemberName; }
+		}
+
 		#endregion
 
 		#region Constructor (s) / Destructor
@@ -257,9 +280,20 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// <param name="configScope"></param>
 		public void Initialize( ConfigurationScope configScope, Type resultClass )
 		{
-			if ( _propertyName.Length>0 &&_propertyName != "value" && !typeof(IDictionary).IsAssignableFrom(resultClass) )
+			if ( _propertyName.Length>0 && 
+				 _propertyName != "value" && 
+				!typeof(IDictionary).IsAssignableFrom(resultClass) )
 			{
-				_propertyInfo = ObjectProbe.GetPropertyInfoForSetter(resultClass, _propertyName);
+				if (!_isComplexMemberName)
+				{
+					_memberAccessor = configScope.MemberAccessorFactory.CreateMemberAccessor( resultClass, _propertyName);
+				}
+				else // complex member name FavouriteLineItem.Id
+				{
+					PropertyInfo propertyInfo = ObjectProbe.GetPropertyInfoForSetter(resultClass, _propertyName);
+					string memberName = _propertyName.Substring( _propertyName.LastIndexOf('.')+1);
+					_memberAccessor = configScope.MemberAccessorFactory.CreateMemberAccessor( propertyInfo.ReflectedType, memberName);
+				}
 			}
 
 			if (this.CallBackName!=null && this.CallBackName.Length >0)
@@ -287,13 +321,12 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// Initialize the PropertyInfo of the result property
 		/// for AutoMapper
 		/// </summary>
-		/// <param name="propertyInfo">A PropertyInfoot.</param>
+		/// <param name="memberAccessor">An IMemberAccessor.</param>
 		/// <param name="typeHandlerFactory"></param>
-		internal void Initialize(TypeHandlerFactory typeHandlerFactory, PropertyInfo propertyInfo )
+		internal void Initialize(TypeHandlerFactory typeHandlerFactory, IMemberAccessor memberAccessor )
 		{
-			_propertyInfo = propertyInfo;
-
-			_typeHandler =  typeHandlerFactory.GetTypeHandler(propertyInfo.PropertyType);
+			_memberAccessor = memberAccessor;
+			_typeHandler =  typeHandlerFactory.GetTypeHandler(memberAccessor.MemberType);
 		}
 
 		/// <summary>
@@ -319,9 +352,9 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			{
 				if (this.HasNullValue) 
 				{
-					if (_propertyInfo!=null)
+					if (_memberAccessor!=null)
 					{
-						value = _typeHandler.ValueOf(_propertyInfo.PropertyType, _nullValue);
+						value = _typeHandler.ValueOf(_memberAccessor.MemberType, _nullValue);
 					}
 					else
 					{
@@ -330,29 +363,29 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 				}
 				else
 				{
-                    value = _typeHandler.NullValue;
+					value = _typeHandler.NullValue;
 				}			
 			}
 
 			return value;
 		}
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public object TranslateValue(object value)
-        {
-            if (value == null)
-            {
-                return _typeHandler.NullValue;
-            }
-            else
-            {
-                return value;
-            }
-        }
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="value"></param>
+		/// <returns></returns>
+		public object TranslateValue(object value)
+		{
+			if (value == null)
+			{
+				return _typeHandler.NullValue;
+			}
+			else
+			{
+				return value;
+			}
+		}
 
 		#endregion
 	}

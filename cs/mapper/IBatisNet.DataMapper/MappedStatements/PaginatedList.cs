@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -206,7 +206,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 			if (session == null) 
 			{
-				session = new SqlMapSession(_mappedStatement.SqlMap.DataSource);
+				session = new SqlMapSession(_mappedStatement.SqlMap);
 				session.OpenConnection();
 				isSessionLocal = true;
 			}

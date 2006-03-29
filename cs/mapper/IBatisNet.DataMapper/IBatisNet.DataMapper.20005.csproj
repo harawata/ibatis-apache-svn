@@ -101,9 +101,6 @@
     <Compile Include="Commands\DefaultPreparedCommand.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Commands\EmbedParamsPreparedCommand.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Commands\IPreparedCommand.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -155,6 +152,7 @@
     <Compile Include="Configuration\ParameterMapping\ParameterProperty.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Configuration\ParameterMapping\ParameterPropertyCollection.cs" />
     <Compile Include="Configuration\ResultMapping\Discriminator.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -491,6 +489,7 @@
     <Compile Include="Scope\ErrorContext.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Scope\IConfigurationScope.cs" />
     <Compile Include="Scope\RequestScope.cs">
       <SubType>Code</SubType>
     </Compile>

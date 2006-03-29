@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -29,6 +29,7 @@
 using System.Collections;
 using System.Text;
 using IBatisNet.Common;
+using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements;
 using IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers;
@@ -56,6 +57,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 		private IStatement _statement = null ;
 		private InlineParameterMapParser _paramParser = null;
 		private TypeHandlerFactory _typeHandlerFactory = null;
+		private IMemberAccessorFactory _memberAccessorFactory = null;
 		private bool _usePositionalParameters = false;
 
 		#endregion
@@ -70,6 +72,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 		{
 			_statement = statement;
 			_typeHandlerFactory = configScope.TypeHandlerFactory;
+			_memberAccessorFactory = configScope.MemberAccessorFactory;
 			_usePositionalParameters = configScope.DataSource.DbProvider.UsePositionalParameters;
 		}
 		#endregion
@@ -99,8 +102,8 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 		/// <returns></returns>
 		public RequestScope GetRequestScope(object parameterObject, IDalSession session)
 		{ 
-			RequestScope request = new RequestScope();
-			_paramParser = new InlineParameterMapParser( request.ErrorContext );
+			RequestScope request = new RequestScope(_typeHandlerFactory, _memberAccessorFactory);
+			_paramParser = new InlineParameterMapParser();
 			request.ResultMap = _statement.ResultMap;
 
 			string sqlStatement = Process(request, parameterObject);
@@ -126,8 +129,10 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 			ProcessBodyChildren(request, ctx, parameterObject, localChildren);
 
 			// Builds a 'dynamic' ParameterMap
-			ParameterMap map = new ParameterMap(_usePositionalParameters);
+			ParameterMap map = new ParameterMap();
 			map.Id = _statement.Id + "-InlineParameterMap";
+			map.Initialize(_usePositionalParameters, request);
+			map.Class = _statement.ParameterClass;
 
 			// Adds 'dynamic' ParameterProperty
 			IList parameters = ctx.GetParameterMappings();
@@ -143,7 +148,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 			// Processes $substitutions$ after DynamicSql
 			if ( SimpleDynamicSql.IsSimpleDynamicSql(dynSql) ) 
 			{
-				dynSql = new SimpleDynamicSql(_typeHandlerFactory, dynSql, _statement).GetSql(parameterObject);
+				dynSql = new SimpleDynamicSql(request, dynSql, _statement).GetSql(parameterObject);
 			}
 			return dynSql;
 		}
@@ -251,7 +256,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 
 									if (handler.IsPostParseRequired) 
 									{
-										SqlText sqlText = _paramParser.ParseInlineParameterMap(_typeHandlerFactory, null, body.ToString() );
+										SqlText sqlText = _paramParser.ParseInlineParameterMap(request, null, body.ToString() );
 										buffer.Append(sqlText.Text);
 										ParameterProperty[] mappings = sqlText.Parameters;
 										if (mappings != null) 

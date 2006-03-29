@@ -1,7 +1,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -62,8 +62,6 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 			property.Precision = NodeUtils.GetByteAttribute(prop, "precision", 0);
 			property.Scale = NodeUtils.GetByteAttribute(prop, "scale", 0);
 			property.Size = NodeUtils.GetIntAttribute(prop, "size", -1);
-
-			property.Initialize(configScope.TypeHandlerFactory, configScope.ErrorContext);
 
 			return property;
 		}

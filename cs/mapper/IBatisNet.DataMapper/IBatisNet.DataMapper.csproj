@@ -178,11 +178,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Commands\EmbedParamsPreparedCommand.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Commands\IPreparedCommand.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -264,6 +259,11 @@
                 />
                 <File
                     RelPath = "Configuration\ParameterMapping\ParameterProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Configuration\ParameterMapping\ParameterPropertyCollection.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -804,6 +804,11 @@
                 />
                 <File
                     RelPath = "Scope\ErrorContext.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Scope\IConfigurationScope.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

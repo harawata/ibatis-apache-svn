@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -26,7 +26,8 @@
 
 #region Using
 
-using System.Collections;
+using System.Collections.Specialized;
+using System.Data;
 
 #endregion 
 
@@ -41,16 +42,18 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		#region Fields
 
 		private string _preparedSsql = string.Empty;
-		private ArrayList _dbParametersName = new ArrayList();
-		private ArrayList _dbParameters = new ArrayList();
+		private StringCollection  _dbParametersName = new StringCollection ();
+		private IDataParameter[] _dbParameters = null;
 
 		#endregion
 
 		#region Properties
+
+
 		/// <summary>
 		/// The list of IDataParameter name used by the PreparedSql.
 		/// </summary>
-		public ArrayList DbParametersName
+		public StringCollection DbParametersName
 		{
 			get { return _dbParametersName; }
 		}
@@ -58,9 +61,10 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		/// <summary>
 		/// The list of IDataParameter to use for the PreparedSql.
 		/// </summary>
-		public ArrayList DbParameters
+		public IDataParameter[] DbParameters
 		{
 			get { return _dbParameters;}
+			set { _dbParameters =value;}
 		}
 
 		/// <summary>

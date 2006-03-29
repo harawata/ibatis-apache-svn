@@ -28,7 +28,6 @@
 
 using System;
 using System.Data;
-using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
 
 #endregion 
@@ -90,7 +89,16 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		/// <param name="dbType">the dbType of the parameter</param>
 		public virtual void SetParameter(IDataParameter dataParameter, object parameterValue, string dbType)
 		{
-			dataParameter.Value = parameterValue;
+			if (parameterValue != null) 
+			{
+				dataParameter.Value = parameterValue;
+			}
+			else
+			{
+				// When sending a null parameter value to the server,
+				// the user must specify DBNull, not null. 
+				dataParameter.Value = DBNull.Value;
+			}
 		}
 
 		/// <summary>

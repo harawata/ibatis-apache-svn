@@ -4,7 +4,7 @@ using System.Text;
 namespace IBatisNet.DataMapper.Test.Domain
 {
     [Serializable]
-    class Simple
+    public class Simple
     {
         private string _name = string.Empty;
         private string _address = string.Empty;

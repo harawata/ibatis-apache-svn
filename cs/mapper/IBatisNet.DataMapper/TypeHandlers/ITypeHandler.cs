@@ -28,8 +28,8 @@
 
 using System;
 using System.Data;
-using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
+
 #endregion 
 
 namespace IBatisNet.DataMapper.TypeHandlers

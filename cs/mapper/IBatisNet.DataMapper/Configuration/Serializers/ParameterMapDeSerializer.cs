@@ -1,7 +1,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -54,10 +54,12 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 
 			parameterMap.ExtendMap = NodeUtils.GetStringAttribute(prop, "extends");
 			parameterMap.Id =  NodeUtils.GetStringAttribute(prop, "id");
+			parameterMap.ClassName = NodeUtils.GetStringAttribute(prop,"class");
 
 			configScope.ErrorContext.MoreInfo = "Initialize ParameterMap";
 			configScope.NodeContext = node;
-			parameterMap.Initialize( configScope );
+			parameterMap.Initialize( configScope.DataSource.DbProvider.UsePositionalParameters, configScope );
+			parameterMap.BuildProperties(configScope);
 			configScope.ErrorContext.MoreInfo = string.Empty;
 
 			return parameterMap;

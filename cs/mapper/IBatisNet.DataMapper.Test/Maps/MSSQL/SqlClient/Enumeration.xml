@@ -50,7 +50,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	</statements>
 	
 	<parameterMaps>
-		<parameterMap id="insert-params">
+		<parameterMap id="insert-params" class="Enumeration">
 			<parameter property="Id" column="Enum_ID" />
 			<parameter property="Day" column="Enum_Day"/>
 			<parameter property="Color" column="Enum_Color" />

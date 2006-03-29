@@ -1,7 +1,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -241,7 +241,7 @@ namespace IBatisNet.DataMapper.MappedStatements
         public IList<T> ExecuteQueryForList<T>(IDalSession session, object parameterObject, int skipResults, int maxResults)
         {
             IList<T> list = null;
-            RequestScope request = this.Statement.Sql.GetRequestScope(parameterObject, session); ;
+            RequestScope request = this.Statement.Sql.GetRequestScope(parameterObject, session);
 
             _mappedStatement.PreparedCommand.Create(request, session, this.Statement, parameterObject);
 
@@ -297,7 +297,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		public object ExecuteQueryForObject(IDalSession session, object parameterObject, object resultObject)
 		{
 			object obj = null;
-			RequestScope request = this.Statement.Sql.GetRequestScope(parameterObject, session);;
+			RequestScope request = this.Statement.Sql.GetRequestScope(parameterObject, session);
 
 			_mappedStatement.PreparedCommand.Create( request, session, this.Statement, parameterObject );
 
@@ -345,7 +345,7 @@ namespace IBatisNet.DataMapper.MappedStatements
         public T ExecuteQueryForObject<T>(IDalSession session, object parameterObject, T resultObject)
         {
             T obj = default(T);
-            RequestScope request = this.Statement.Sql.GetRequestScope(parameterObject, session); ;
+            RequestScope request = this.Statement.Sql.GetRequestScope(parameterObject, session);
 
             _mappedStatement.PreparedCommand.Create(request, session, this.Statement, parameterObject);
 

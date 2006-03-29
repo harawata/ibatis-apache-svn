@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -27,11 +27,14 @@
 #region Using
 
 using System;
+using System.Collections;
 using System.Data;
+using System.Reflection;
 using System.Xml.Serialization;
 using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Utilities;
 using IBatisNet.Common.Utilities.Objects;
+using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.Scope;
 using IBatisNet.DataMapper.TypeHandlers;
 
@@ -51,7 +54,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		[NonSerialized]
 		private string _nullValue = null;//string.Empty;//null;
 		[NonSerialized]
-		private string _property = string.Empty;
+		private string _propertyName = string.Empty;
 		[NonSerialized]
 		private ParameterDirection _direction = ParameterDirection.Input;
 		[NonSerialized]
@@ -72,9 +75,22 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		private string _clrType = string.Empty;
 		[NonSerialized]
 		private string _callBackName= string.Empty;
+		[NonSerialized]
+		private IMemberAccessor _memberAccessor = null;
+		[NonSerialized]
+		private bool _isComplexMemberName = false;
+
 		#endregion
 
 		#region Properties
+
+		/// <summary>
+		/// Indicate if we have a complex member name as [avouriteLineItem.Id]
+		/// </summary>
+		public bool IsComplexMemberName
+		{
+			get { return _isComplexMemberName; }
+		}
 
 		/// <summary>
 		/// Specify the custom type handlers to used.
@@ -200,13 +216,21 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		[XmlAttribute("property")]
 		public string PropertyName
 		{
-			get { return _property; }
+			get { return _propertyName; }
 			set 
 			{ 
 				if ((value == null) || (value.Length < 1))
 					throw new ArgumentNullException("The property attribute is mandatory in a paremeter property.");
 
-				_property = value; 
+				_propertyName = value; 
+				if (_propertyName.IndexOf('.')<0)
+				{
+					_isComplexMemberName = false;
+				}
+				else // complex member name FavouriteLineItem.Id
+				{
+					_isComplexMemberName = true;
+				}
 			}
 		}
 
@@ -229,6 +253,15 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 			get { return _nullValue; }
 			set { _nullValue = value; }
 		}
+
+		/// <summary>
+		/// The IMemberAccessor
+		/// </summary>
+		[XmlIgnore]
+		public IMemberAccessor MemberAccessor
+		{
+			get { return _memberAccessor; }
+		}
 		#endregion
 
 		#region Constructor (s) / Destructor
@@ -243,23 +276,39 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 
 		#region Methods
 		/// <summary>
-		/// 
+		/// Initialize the parameter property
 		/// </summary>
-		/// <param name="typeHandlerFactory"></param>
-		/// <param name="errorContext"></param>
-		public void Initialize(TypeHandlerFactory typeHandlerFactory, ErrorContext errorContext)
+		/// <param name="scope"></param>
+		/// <param name="parameterClass"></param>
+		public void Initialize(IScope scope, Type parameterClass)
 		{
 			if(_directionAttribute.Length >0)
 			{
 				_direction = (ParameterDirection)Enum.Parse( typeof(ParameterDirection), _directionAttribute, true );
 			}
-			
-			errorContext.MoreInfo = "Check the parameter mapping typeHandler attribute '" + this.CallBackName + "' (must be a ITypeHandlerCallback implementation).";
+
+			if (!typeof(IDictionary).IsAssignableFrom(parameterClass) // Hashtable parameter map
+				&& parameterClass !=null // value property
+				&& !scope.TypeHandlerFactory.IsSimpleType(parameterClass) ) // value property
+			{
+				if (!_isComplexMemberName)
+				{
+					_memberAccessor = scope.MemberAccessorFactory.CreateMemberAccessor( parameterClass, _propertyName);
+				}
+				else // complex member name FavouriteLineItem.Id
+				{
+					PropertyInfo propertyInfo = ObjectProbe.GetPropertyInfoForSetter(parameterClass, _propertyName);
+					string memberName = _propertyName.Substring( _propertyName.LastIndexOf('.')+1);
+					_memberAccessor = scope.MemberAccessorFactory.CreateMemberAccessor( propertyInfo.ReflectedType, memberName);
+				}
+			}
+
+			scope.ErrorContext.MoreInfo = "Check the parameter mapping typeHandler attribute '" + this.CallBackName + "' (must be a ITypeHandlerCallback implementation).";
 			if (this.CallBackName.Length >0)
 			{
 				try 
 				{
-					Type type = typeHandlerFactory.GetType(this.CallBackName);
+					Type type = scope.TypeHandlerFactory.GetType(this.CallBackName);
 					ITypeHandlerCallback typeHandlerCallback = (ITypeHandlerCallback) Activator.CreateInstance( type );
 					_typeHandler = new CustomTypeHandler(typeHandlerCallback);
 				}
@@ -272,44 +321,27 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 			{
 				if (this.CLRType.Length == 0 )  // Unknown
 				{
-					_typeHandler = typeHandlerFactory.GetUnkownTypeHandler();
+					_typeHandler = scope.TypeHandlerFactory.GetUnkownTypeHandler();
 				}
 				else // If we specify a CLR type, use it
 				{ 
 					Type type = Resources.TypeForName(this.CLRType);
 
-					if (typeHandlerFactory.IsSimpleType(type)) 
+					if (scope.TypeHandlerFactory.IsSimpleType(type)) 
 					{
 						// Primitive
-						_typeHandler = typeHandlerFactory.GetTypeHandler(type, _dbType);
+						_typeHandler = scope.TypeHandlerFactory.GetTypeHandler(type, _dbType);
 					}
 					else
 					{
 						// .NET object
 						type = ObjectProbe.GetPropertyTypeForGetter(type, this.PropertyName);
-						_typeHandler = typeHandlerFactory.GetTypeHandler(type, _dbType);
+						_typeHandler = scope.TypeHandlerFactory.GetTypeHandler(type, _dbType);
 					}
 				}
 			}
 		}
 
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="errorContext"></param>
-		internal void Initialize(ErrorContext errorContext)
-		{
-			errorContext.MoreInfo = "Initialize an inline parameter property '" + this.PropertyName + "' .";
-			
-			if(_directionAttribute.Length >0)
-			{
-				_direction = (ParameterDirection)Enum.Parse( typeof(ParameterDirection), _directionAttribute, true );
-			}
-
-
-			
-		}
 
 
 		/// <summary>
@@ -331,7 +363,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// <returns></returns>
 		public override int GetHashCode() 
 		{
-			return _property.GetHashCode();
+			return _propertyName.GetHashCode();
 		}
 		#endregion
 

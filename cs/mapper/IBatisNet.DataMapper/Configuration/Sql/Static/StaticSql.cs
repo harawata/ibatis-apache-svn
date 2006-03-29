@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -25,11 +25,13 @@
 #endregion
 
 #region Imports
-using System;
 
 using IBatisNet.Common;
+using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.Configuration.Statements;
 using IBatisNet.DataMapper.Scope;
+using IBatisNet.DataMapper.TypeHandlers;
+
 #endregion
 
 namespace IBatisNet.DataMapper.Configuration.Sql.Static
@@ -44,6 +46,8 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Static
 
 		private IStatement _statement = null ;
 		private PreparedStatement _preparedStatement = null ;
+		private TypeHandlerFactory _typeHandlerFactory = null;
+		private IMemberAccessorFactory _memberAccessorFactory = null;
 
 		#endregion
 
@@ -52,14 +56,16 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Static
 		/// Constructor
 		/// </summary>
 		/// <param name="statement">The statement.</param>
-		public StaticSql(IStatement statement)
+		/// <param name="scope"></param>
+		public StaticSql(IScope scope, IStatement statement)
 		{
 			_statement = statement;
+			_typeHandlerFactory = scope.TypeHandlerFactory ;
+			_memberAccessorFactory = scope.MemberAccessorFactory;
 		}
 		#endregion
 
 		#region ISql Members
-
 
 		/// <summary>
 		/// Get the sql command text to execute.
@@ -69,7 +75,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Static
 		/// <returns>The sql command text.</returns>
 		public RequestScope GetRequestScope(object parameterObject, IDalSession session)
 		{
-			RequestScope request = new RequestScope();
+			RequestScope request = new RequestScope(_typeHandlerFactory, _memberAccessorFactory);
 
 			request.ParameterMap = _statement.ParameterMap;
 			request.ResultMap = _statement.ResultMap;
@@ -85,7 +91,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Static
 		/// <param name="sqlStatement"></param>
 		public void BuildPreparedStatement(IDalSession session, string sqlStatement)
 		{
-			RequestScope request = new RequestScope();
+			RequestScope request = new RequestScope(_typeHandlerFactory, _memberAccessorFactory);
 
 			request.ParameterMap = _statement.ParameterMap;
 

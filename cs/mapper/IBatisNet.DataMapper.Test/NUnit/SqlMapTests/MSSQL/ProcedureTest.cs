@@ -92,7 +92,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL
 			map.Add("Name", "Toto");
 			map.Add("Guid", Guid.NewGuid());
 
-			sqlMap.Insert("InsertCategoryViaStoreProcedure", map);
+			sqlMap.Insert("InsertCategoryViaStoreProcedureWithMap", map);
 			Assert.AreEqual(1, map["Id"] );
 
 		}

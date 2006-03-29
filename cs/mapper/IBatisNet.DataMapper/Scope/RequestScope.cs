@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -29,9 +29,11 @@
 using System.Collections;
 using System.Data;
 using System.Runtime.CompilerServices;
+using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
 using IBatisNet.DataMapper.Configuration.Statements;
+using IBatisNet.DataMapper.TypeHandlers;
 
 #endregion
 
@@ -40,7 +42,7 @@ namespace IBatisNet.DataMapper.Scope
 	/// <summary>
 	/// Hold data during the process of a mapped statement.
 	/// </summary>
-	public class RequestScope
+	public class RequestScope : IScope
 	{
 		#region Fields
 		
@@ -53,6 +55,8 @@ namespace IBatisNet.DataMapper.Scope
 		bool _rowDataFound= false;
 		private static long _nextId = 0;
 		private long _id = 0;
+		private TypeHandlerFactory _typeHandlerFactory = null;
+		private IMemberAccessorFactory _memberAccessorFactory = null;
 		#endregion
 	
 		#region Properties
@@ -73,17 +77,6 @@ namespace IBatisNet.DataMapper.Scope
 		{
 			set { _rowDataFound = value; }
 			get { return _rowDataFound; }
-		}
-
-		/// <summary>
-		///  Get the request's error context
-		/// </summary>
-		public ErrorContext ErrorContext
-		{
-			get
-			{
-				return _errorContext;
-			}
 		}
 
 		/// <summary>
@@ -128,9 +121,13 @@ namespace IBatisNet.DataMapper.Scope
 		/// <summary>
 		/// Default constructor
 		/// </summary>
-		public RequestScope()
+		/// <param name="memberAccessorFactory"></param>
+		/// <param name="typeHandlerFactory"></param>
+		public RequestScope(TypeHandlerFactory typeHandlerFactory, IMemberAccessorFactory memberAccessorFactory)
 		{
 			_errorContext = new ErrorContext();
+			_typeHandlerFactory = typeHandlerFactory;
+			_memberAccessorFactory = memberAccessorFactory;
 			 _id = GetNextId();
 		}
 		#endregion 
@@ -181,6 +178,33 @@ namespace IBatisNet.DataMapper.Scope
 		public static long GetNextId() 
 		{
 			return _nextId++;
+		}
+		#endregion
+
+		#region IScope Members
+
+		/// <summary>
+		/// The current TypeHandlerFactory
+		/// </summary>
+		public TypeHandlerFactory TypeHandlerFactory
+		{
+			get { return _typeHandlerFactory; }
+		}
+
+		/// <summary>
+		/// The factory which build MemberAccessorFactory
+		/// </summary>
+		public IMemberAccessorFactory MemberAccessorFactory
+		{
+			get { return _memberAccessorFactory; }
+		}
+
+		/// <summary>
+		///  Get the request's error context
+		/// </summary>
+		public ErrorContext ErrorContext
+		{
+			get { return _errorContext; }
 		}
 		#endregion
 	}

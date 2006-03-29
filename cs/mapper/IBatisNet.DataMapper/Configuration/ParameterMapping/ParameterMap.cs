@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -31,6 +31,7 @@ using System.Collections;
 using System.Data;
 using System.Xml;
 using System.Xml.Serialization;
+using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.DataMapper.Configuration.Serializers;
 using IBatisNet.DataMapper.Scope;
@@ -47,7 +48,6 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 	[XmlRoot("parameterMap", Namespace="http://ibatis.apache.org/mapping")]
 	public class ParameterMap
 	{
-
 		/// <summary>
 		/// Token for xml path to parameter elements.
 		/// </summary>
@@ -57,11 +57,11 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		[NonSerialized]
 		private string _id = string.Empty;
 		[NonSerialized]
-			// Properties list
-		private ArrayList _properties = new ArrayList();
+		// Properties list
+		private ParameterPropertyCollection _properties = new ParameterPropertyCollection();
 		// Same list as _properties but without doubled (Test UpdateAccountViaParameterMap2)
 		[NonSerialized]
-		private ArrayList _propertiesList = new ArrayList();
+		private ParameterPropertyCollection _propertiesList = new ParameterPropertyCollection();
 		//(property Name, property)
 		[NonSerialized]
 		private Hashtable _propertiesMap = new Hashtable(); // Corrected ?? Support Request 1043181, move to HashTable
@@ -69,11 +69,40 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		private string _extendMap = string.Empty;
 		[NonSerialized]
 		private bool _usePositionalParameters =false;
-
+		[NonSerialized]
+		private string _className = string.Empty;
+		[NonSerialized]
+		private Type _class = null;
 
 		#endregion
 
 		#region Properties
+		/// <summary>
+		/// The parameter class name.
+		/// </summary>
+		[XmlAttribute("class")]
+		public string ClassName
+		{
+			get { return _className; }
+			set 
+			{ 
+				if ((value == null) || (value.Length < 1))
+					throw new ArgumentNullException("The class attribute is mandatory in a ParameterMap tag '"+_id+"'.");
+
+				_className = value; 
+			}
+		}
+
+		/// <summary>
+		/// The parameter type class.
+		/// </summary>
+		[XmlIgnore]
+		public Type Class
+		{
+			set { _class = value; }
+			get { return _class; }
+		}
+
 		/// <summary>
 		/// Identifier used to identify the ParameterMap amongst the others.
 		/// </summary>
@@ -81,7 +110,13 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		public string Id
 		{
 			get { return _id; }
-			set { _id = value; }
+			set
+			{ 
+				if ((value == null) || (value.Length < 1))
+					throw new ArgumentNullException("The id attribute is mandatory in a ParameterMap tag.");
+
+				_id = value;
+			}
 		}
 
 
@@ -89,27 +124,16 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// The collection of ParameterProperty
 		/// </summary>
 		[XmlIgnore]
-		public ArrayList Properties
+		public ParameterPropertyCollection Properties
 		{
-			get
-			{
-				//				if (_usePositionalParameters) //obdc/oledb
-				//				{
-				//					return _properties;
-				//				}
-				//				else 
-				//				{
-				//					return _propertiesList;
-				//				}
-				return _properties;
-			}
+			get { return _properties; }
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
 		[XmlIgnore]
-		public ArrayList PropertiesList
+		public ParameterPropertyCollection PropertiesList
 		{
 			get { return _propertiesList; }
 		}
@@ -134,15 +158,6 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		public ParameterMap()
 		{}
 
-		/// <summary>
-		/// Default constructor
-		/// </summary>
-		/// <param name="usePositionalParameters"></param>
-		public ParameterMap(bool usePositionalParameters)
-		{
-			_usePositionalParameters = usePositionalParameters;
-
-		}
 		#endregion
 
 		#region Methods
@@ -155,13 +170,12 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		{
 			if (_usePositionalParameters) //obdc/oledb
 			{
-				return (ParameterProperty)_properties[index];
+				return _properties[index];
 			}
 			else 
 			{
-				return (ParameterProperty)_propertiesList[index];
+				return _propertiesList[index];
 			}
-			//return (ParameterProperty)_properties[index];
 		}
 
 		/// <summary>
@@ -256,27 +270,42 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		{
 			object value = parameterValue;
 			ITypeHandler typeHandler = mapping.TypeHandler;
+			Type parameterType = parameterValue.GetType();
 
 			// "The primitive types are Boolean, Byte, SByte, Int16, UInt16, Int32,
 			// UInt32, Int64, UInt64, Char, Double, and Single."
 
-			if (parameterValue.GetType() != typeof(string) && 
-				parameterValue.GetType() != typeof(Guid) &&
-				parameterValue.GetType() != typeof(Decimal) &&
-				parameterValue.GetType() != typeof(DateTime) &&
-				!parameterValue.GetType().IsPrimitive)
-			{
-				value = ObjectProbe.GetPropertyValue(value, mapping.PropertyName);
+			// To Do impelement something like DataExchange as Java
 
-				// This code is obsolete
-				// if we realy need it we must put it in the SetParameter method 
-				// of theByteArrayTypeHandler
-//				if (value != null && value.GetType() == typeof(byte[]))
-//				{
-//					MemoryStream stream = new MemoryStream((byte[])value);
-//
-//					value = stream.ToArray();
-//				}
+			if (parameterType != typeof(string) && 
+				parameterType != typeof(Guid) &&
+				parameterType != typeof(Decimal) &&
+				parameterType != typeof(DateTime) &&
+				!parameterType.IsPrimitive)
+			{
+				if (typeof(IDictionary).IsAssignableFrom(parameterType) || typeof(IList).IsAssignableFrom(parameterType) || mapping.IsComplexMemberName)
+				{
+					value = ObjectProbe.GetPropertyValue(value, mapping.PropertyName);
+				}
+				else
+				{
+					if (_class == null || _class!=parameterValue.GetType())
+					{
+						value = ObjectProbe.GetPropertyValue(value, mapping.PropertyName);
+					}
+					else
+					{
+						if (mapping.MemberAccessor!=null)
+						{
+							value = mapping.MemberAccessor.Get(value);
+						}
+						else
+						{
+							//Dynamic Iterate Id[0]
+							value = ObjectProbe.GetPropertyValue(value, mapping.PropertyName);
+						}
+					}
+				}
 			}
 
 			// Apply Null Value
@@ -288,34 +317,36 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 				}
 			}
 
-			// Set Parameter
-			if (value != null) 
-			{
-				typeHandler.SetParameter(dataParameter, value, mapping.DbType);
-			}
-			else if(typeHandler is CustomTypeHandler)
-			{
-				typeHandler.SetParameter(dataParameter, value, mapping.DbType);
-			}
-			else 
-			{
-				// When sending a null parameter value to the server,
-				// the user must specify DBNull, not null. 
-				dataParameter.Value = DBNull.Value;
-			}
+
+			typeHandler.SetParameter(dataParameter, value, mapping.DbType);
 		}
 
+
 		#region Configuration
+
 		/// <summary>
 		/// Initialize the parameter properties child.
 		/// </summary>
-		/// <param name="configScope"></param>
-		public void Initialize(ConfigurationScope configScope)
+		/// <param name="scope"></param>
+		/// <param name="usePositionalParameters"></param>
+		public void Initialize(bool usePositionalParameters, IScope scope)
 		{
-			_usePositionalParameters = configScope.DataSource.DbProvider.UsePositionalParameters;
-			GetProperties( configScope );
+			_usePositionalParameters = usePositionalParameters;
+			if (_className.Length>0 )
+			{
+				_class = scope.TypeHandlerFactory.GetType(_className);
+			}
 		}
 
+
+		/// <summary>
+		/// Build the properties
+		/// </summary>
+		/// <param name="scope"></param>
+		public void BuildProperties(ConfigurationScope scope)
+		{
+			GetProperties( scope );
+		}
 
 		/// <summary>
 		///  Get the parameter properties child for the xmlNode parameter.
@@ -328,6 +359,9 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 			foreach ( XmlNode parameterNode in configScope.NodeContext.SelectNodes(DomSqlMapBuilder.ApplyMappingNamespacePrefix(XML_PARAMATER), configScope.XmlNamespaceManager) )
 			{
 				property = ParameterPropertyDeSerializer.Deserialize(parameterNode, configScope);
+
+				property.Initialize(configScope, _class);
+
 				AddParameterProperty(property);
 			}
 		}

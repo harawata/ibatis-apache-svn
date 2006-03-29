@@ -60,15 +60,6 @@ namespace IBatisNet.DataMapper
 			_dataSource = sqlMapper.DataSource;
 			_sqlMapper = sqlMapper;
 		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="dataSource"></param>
-		public SqlMapSession(DataSource dataSource) 
-		{
-			_dataSource = dataSource;
-		}
 		#endregion
 
 		#region IDalSession Members
@@ -92,6 +83,15 @@ namespace IBatisNet.DataMapper
 		#endregion
 
 		#region Properties
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public SqlMapper SqlMapper
+		{
+			get { return _sqlMapper; }
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>

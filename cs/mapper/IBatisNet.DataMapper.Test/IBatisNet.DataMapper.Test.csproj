@@ -502,6 +502,10 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "Maps\MSSQL\SqlClient\Nullable.xml"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "Maps\MSSQL\SqlClient\Order.xml"
                     BuildAction = "Content"
                 />
@@ -723,6 +727,10 @@
                 />
                 <File
                     RelPath = "Maps\PostgreSQL\Npgsql\LineItem.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\PostgreSQL\Npgsql\Nullable.xml"
                     BuildAction = "Content"
                 />
                 <File

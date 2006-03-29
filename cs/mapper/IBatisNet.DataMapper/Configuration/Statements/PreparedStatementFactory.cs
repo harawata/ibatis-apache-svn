@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -56,7 +56,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 
 		private string _parameterPrefix = string.Empty;
 		private IStatement _statement = null;
-		private IDalSession _session = null;
+		private SqlMapSession _session = null;
 		private string _commandText = string.Empty;
 		private RequestScope _request = null;
 		// (property, DbParameter)
@@ -75,7 +75,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		/// <param name="request"></param>
 		public PreparedStatementFactory(IDalSession session, RequestScope request, IStatement statement, string commandText)
 		{
-			_session = session;
+			_session = (SqlMapSession)session;
 			_request = request;
 			_statement = statement;
 			_commandText = commandText;
@@ -115,7 +115,6 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 					else
 					{
 						CreateParametersForProcedureCommand();
-						// EvaluateParameterMap(); // Did we need that ? I don't think for the procedure
 					}
 				}
 
@@ -135,10 +134,10 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 					StringBuilder commandTextBuilder = new StringBuilder("{ call ");
 					commandTextBuilder.Append( _commandText );
 
-					if (_preparedStatement.DbParameters.Count >0)
+					if (_preparedStatement.DbParameters.Length >0)
 					{
 						commandTextBuilder.Append(" (");
-						int supIndex = _preparedStatement.DbParameters.Count-1;
+						int supIndex = _preparedStatement.DbParameters.Length-1;
 						for(int i=0;i<supIndex;i++)
 						{
 							commandTextBuilder.Append("?,");
@@ -166,15 +165,19 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		/// For store procedure, auto discover IDataParameters for stored procedures at run-time.
 		/// </summary>
 		/// <param name="session">The current session.</param>
-		private void DiscoverParameter(IDalSession session)
+		private void DiscoverParameter(SqlMapSession session)
 		{
 			// pull the parameters for this stored procedure from the parameter cache 
 			// (or discover them & populate the cache)
 			IDataParameter[] commandParameters = DBHelperParameterCache.GetSpParameterSet(session.DataSource, _commandText);
-			
+
+			_preparedStatement.DbParameters = new IDataParameter[commandParameters.Length];
+
 			int start = session.DataSource.DbProvider.ParameterPrefix.Length;
-			foreach(IDataParameter dataParameter in commandParameters)
+			for(int i=0; i< commandParameters.Length;i++)
 			{
+				IDataParameter dataParameter = commandParameters[i];
+
 				if (session.DataSource.DbProvider.UseParameterPrefixInParameter == false)
 				{
 					if (dataParameter.ParameterName.StartsWith(session.DataSource.DbProvider.ParameterPrefix)) {
@@ -182,7 +185,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 					}
 				}
 				_preparedStatement.DbParametersName.Add( dataParameter.ParameterName );
-				_preparedStatement.DbParameters.Add( dataParameter );
+				_preparedStatement.DbParameters[i] = dataParameter;
 			}
 		}
 
@@ -195,8 +198,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 			string sqlParamName = string.Empty;
 			string dbTypePropertyName = _session.DataSource.DbProvider.ParameterDbTypeProperty;
 			Type enumDbType = _session.DataSource.DbProvider.ParameterDbType;
-			IList list = null;
-			int i = 0;
+			ParameterPropertyCollection list = null;
 
 			if (_session.DataSource.DbProvider.UsePositionalParameters) //obdc/oledb
 			{
@@ -207,12 +209,16 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 				list = _request.ParameterMap.PropertiesList;
 			}
 
-			foreach(ParameterProperty property in list)
+			_preparedStatement.DbParameters = new IDataParameter[list.Count];
+ 
+			for(int i =0; i<list.Count; i++)
 			{
+				ParameterProperty property = list[i];
+
 				if (_session.DataSource.DbProvider.UseParameterPrefixInParameter)
 				{
 					// From Ryan Yao: JIRA-27, used "param" + i++ for sqlParamName
-					sqlParamName = _parameterPrefix + "param" + i++;
+					sqlParamName = _parameterPrefix + "param" + i;
 				}
 				else
 				{
@@ -257,7 +263,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 				dataParameter.ParameterName = sqlParamName;
 
 				_preparedStatement.DbParametersName.Add( property.PropertyName );
-				_preparedStatement.DbParameters.Add( dataParameter );	
+				_preparedStatement.DbParameters[i] = dataParameter ;	
 
 				if ( _session.DataSource.DbProvider.UsePositionalParameters == false)
 				{
@@ -275,7 +281,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 			string sqlParamName = string.Empty;
 			string dbTypePropertyName = _session.DataSource.DbProvider.ParameterDbTypeProperty;
 			Type enumDbType = _session.DataSource.DbProvider.ParameterDbType;
-			IList list = null;
+			ParameterPropertyCollection list = null;
 
 			if (_session.DataSource.DbProvider.UsePositionalParameters) //obdc/oledb
 			{
@@ -286,13 +292,17 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 				list = _request.ParameterMap.PropertiesList;
 			}
 
+			_preparedStatement.DbParameters = new IDataParameter[list.Count];
+
 			// ParemeterMap are required for procedure and we tested existance in Prepare() method
 			// so we don't have to test existence here.
 			// A ParameterMap used in CreateParametersForProcedureText must
 			// have property and column attributes set.
 			// The column attribute is the name of a procedure parameter.
-			foreach(ParameterProperty property in list)
+			for(int i =0; i<list.Count;  i++)
 			{
+				ParameterProperty property = list[i];
+
 				if (_session.DataSource.DbProvider.UseParameterPrefixInParameter)
 				{
 					sqlParamName = _parameterPrefix + property.ColumnName;
@@ -340,7 +350,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 				dataParameter.ParameterName = sqlParamName;
 
 				_preparedStatement.DbParametersName.Add( property.PropertyName );
-				_preparedStatement.DbParameters.Add( dataParameter );	
+				_preparedStatement.DbParameters[i] = dataParameter;	
 
 				if ( _session.DataSource.DbProvider.UsePositionalParameters == false)
 				{
@@ -370,7 +380,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 
 				if (delimiter.Equals(token)) // ?
 				{
-					ParameterProperty property = (ParameterProperty)_request.ParameterMap.Properties[index];
+					ParameterProperty property = _request.ParameterMap.Properties[index];
 					IDataParameter dataParameter = null;
 					
 					if (_session.DataSource.DbProvider.UsePositionalParameters)
