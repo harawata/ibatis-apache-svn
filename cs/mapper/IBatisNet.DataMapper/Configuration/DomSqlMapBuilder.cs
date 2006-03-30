@@ -1166,6 +1166,9 @@ namespace IBatisNet.DataMapper.Configuration
 				// Set sql statement SelectKey 
 				if (insert.SelectKey != null)
 				{
+					_configScope.ErrorContext.MoreInfo = "loading selectKey tag";
+					_configScope.NodeContext = xmlNode.SelectSingleNode( ApplyMappingNamespacePrefix(XML_SELECTKEY), _configScope.XmlNamespaceManager);
+
 					insert.SelectKey.Id = insert.Id;
 					insert.SelectKey.Initialize( _configScope );
 					insert.SelectKey.Id += DOT + "SelectKey";
@@ -1174,13 +1177,8 @@ namespace IBatisNet.DataMapper.Configuration
 					// of the parent <select> node
 					// insert.SelectKey.Initialize( _configScope );
 					// insert.SelectKey.Id = insert.Id + DOT + "SelectKey";
-					
-					string commandText = xmlNode.SelectSingleNode( ApplyMappingNamespacePrefix(XML_SELECTKEY), _configScope.XmlNamespaceManager).FirstChild.InnerText.Replace('\n', ' ').Replace('\r', ' ').Replace('\t', ' ').Trim();
-					commandText = NodeUtils.ParsePropertyTokens(commandText, _configScope.Properties);
-					StaticSql sql = new StaticSql(_configScope, insert.SelectKey);
-					IDalSession session = new SqlMapSession( _configScope.SqlMapper );
-					sql.BuildPreparedStatement( session, commandText );
-					insert.SelectKey.Sql = sql;					
+
+					ProcessSqlStatement(insert.SelectKey);
 					
 					// Build MappedStatement
 					mappedStatement = new MappedStatement( _configScope.SqlMapper, insert.SelectKey);

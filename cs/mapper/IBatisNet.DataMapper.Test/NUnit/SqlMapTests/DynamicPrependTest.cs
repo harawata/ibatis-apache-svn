@@ -432,6 +432,26 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Assert.AreEqual(1234, testAccount.Id);
 			Assert.AreEqual("#The Pound Signs#", testAccount.FirstName);
 		}
+
+		[Test]
+		public void TestSelectKeyWithDynamicSql()
+		{
+			Account account = new Account();
+			account.Id = 99998;
+			account.FirstName = "R";
+			account.LastName = "G";
+
+			Hashtable param = new Hashtable(2);
+			param["Account"] = account;
+			param["AccountsTableName"] = "Accounts";
+			object selectKeyValue = sqlMap.Insert("SelectKeyWithDynamicSql", param);
+
+			Assert.IsNotNull(selectKeyValue);
+			Assert.AreEqual(99998, Convert.ToInt32(selectKeyValue));
+
+			Assert.IsTrue(param.ContainsKey("AccountId"));
+			Assert.AreEqual(99998, (int)param["AccountId"]);
+		}
 		#endregion
 
 	}
