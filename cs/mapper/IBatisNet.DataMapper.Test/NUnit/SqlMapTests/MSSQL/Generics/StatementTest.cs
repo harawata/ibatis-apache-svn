@@ -175,7 +175,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL.Generics
         /// Test generic Collection via store procedure
         /// </summary>
         [Test]
-        public void TestGenricCollectionMappingViaSP()
+        public void TestGenericCollectionMappingViaSP()
         {
             Order order = sqlMap.QueryForObject<Order>("GetOrderWithGenericViaSP", 1);
 

@@ -47,7 +47,7 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 		/// <returns></returns>
 		public static ParameterMap Deserialize(XmlNode node, ConfigurationScope configScope)
 		{
-			ParameterMap parameterMap = new ParameterMap();
+			ParameterMap parameterMap = new ParameterMap(configScope.DataExchangeFactory);
 			NameValueCollection prop = NodeUtils.ParseAttributes(node, configScope.Properties);
 
 			configScope.ErrorContext.MoreInfo = "ParameterMap DeSerializer";

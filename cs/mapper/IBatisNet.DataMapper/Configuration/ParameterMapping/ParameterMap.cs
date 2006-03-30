@@ -31,9 +31,8 @@ using System.Collections;
 using System.Data;
 using System.Xml;
 using System.Xml.Serialization;
-using IBatisNet.Common.Exceptions;
-using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.DataMapper.Configuration.Serializers;
+using IBatisNet.DataMapper.DataExchange;
 using IBatisNet.DataMapper.Scope;
 using IBatisNet.DataMapper.TypeHandlers;
 
@@ -72,8 +71,11 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		[NonSerialized]
 		private string _className = string.Empty;
 		[NonSerialized]
-		private Type _class = null;
-
+		private Type _parameterClass = null;
+		[NonSerialized]
+		private DataExchangeFactory _dataExchangeFactory = null;
+		[NonSerialized]
+		private IDataExchange _dataExchange = null;
 		#endregion
 
 		#region Properties
@@ -99,8 +101,8 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		[XmlIgnore]
 		public Type Class
 		{
-			set { _class = value; }
-			get { return _class; }
+			set { _parameterClass = value; }
+			get { return _parameterClass; }
 		}
 
 		/// <summary>
@@ -148,6 +150,15 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 			get { return _extendMap; }
 			set { _extendMap = value; }
 		}
+
+		/// <summary>
+		/// Sets the IDataExchange
+		/// </summary>
+		[XmlIgnore]
+		public IDataExchange DataExchange
+		{
+			set { _dataExchange = value; }
+		}
 		#endregion
 
 		#region Constructor (s) / Destructor
@@ -155,8 +166,11 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// <summary>
 		/// Do not use direclty, only for serialization.
 		/// </summary>
-		public ParameterMap()
-		{}
+		/// <param name="dataExchangeFactory"></param>
+		public ParameterMap(DataExchangeFactory dataExchangeFactory)
+		{
+			_dataExchangeFactory = dataExchangeFactory;
+		}
 
 		#endregion
 
@@ -268,45 +282,9 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// <param name="parameterValue"></param>
 		public void SetParameter(ParameterProperty mapping, IDataParameter dataParameter, object parameterValue)
 		{
-			object value = parameterValue;
+			object value = _dataExchange.GetData(mapping, parameterValue);
+
 			ITypeHandler typeHandler = mapping.TypeHandler;
-			Type parameterType = parameterValue.GetType();
-
-			// "The primitive types are Boolean, Byte, SByte, Int16, UInt16, Int32,
-			// UInt32, Int64, UInt64, Char, Double, and Single."
-
-			// To Do impelement something like DataExchange as Java
-
-			if (parameterType != typeof(string) && 
-				parameterType != typeof(Guid) &&
-				parameterType != typeof(Decimal) &&
-				parameterType != typeof(DateTime) &&
-				!parameterType.IsPrimitive)
-			{
-				if (typeof(IDictionary).IsAssignableFrom(parameterType) || typeof(IList).IsAssignableFrom(parameterType) || mapping.IsComplexMemberName)
-				{
-					value = ObjectProbe.GetPropertyValue(value, mapping.PropertyName);
-				}
-				else
-				{
-					if (_class == null || _class!=parameterValue.GetType())
-					{
-						value = ObjectProbe.GetPropertyValue(value, mapping.PropertyName);
-					}
-					else
-					{
-						if (mapping.MemberAccessor!=null)
-						{
-							value = mapping.MemberAccessor.Get(value);
-						}
-						else
-						{
-							//Dynamic Iterate Id[0]
-							value = ObjectProbe.GetPropertyValue(value, mapping.PropertyName);
-						}
-					}
-				}
-			}
 
 			// Apply Null Value
 			if (mapping.HasNullValue) 
@@ -316,7 +294,6 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 					value = null;
 				}
 			}
-
 
 			typeHandler.SetParameter(dataParameter, value, mapping.DbType);
 		}
@@ -334,8 +311,10 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 			_usePositionalParameters = usePositionalParameters;
 			if (_className.Length>0 )
 			{
-				_class = scope.TypeHandlerFactory.GetType(_className);
+				_parameterClass = scope.TypeHandlerFactory.GetType(_className);
 			}
+
+			_dataExchange = _dataExchangeFactory.GetDataExchangeForClass(_parameterClass);
 		}
 
 
@@ -360,7 +339,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 			{
 				property = ParameterPropertyDeSerializer.Deserialize(parameterNode, configScope);
 
-				property.Initialize(configScope, _class);
+				property.Initialize(configScope, _parameterClass);
 
 				AddParameterProperty(property);
 			}

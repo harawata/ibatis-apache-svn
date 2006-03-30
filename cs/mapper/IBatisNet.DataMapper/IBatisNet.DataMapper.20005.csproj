@@ -444,6 +444,14 @@
     <Compile Include="Configuration\Statements\Update.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DataExchange\BaseDataExchange.cs" />
+    <Compile Include="DataExchange\ComplexDataExchange.cs" />
+    <Compile Include="DataExchange\DataExchangeFactory.cs" />
+    <Compile Include="DataExchange\DictionaryDataExchange.cs" />
+    <Compile Include="DataExchange\DotNetObjectDataExchange.cs" />
+    <Compile Include="DataExchange\IDataExchange.cs" />
+    <Compile Include="DataExchange\ListDataExchange.cs" />
+    <Compile Include="DataExchange\PrimitiveDataExchange.cs" />
     <Compile Include="Enumeration.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -489,7 +497,7 @@
     <Compile Include="Scope\ErrorContext.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Scope\IConfigurationScope.cs" />
+    <Compile Include="Scope\IScope.cs" />
     <Compile Include="Scope\RequestScope.cs">
       <SubType>Code</SubType>
     </Compile>

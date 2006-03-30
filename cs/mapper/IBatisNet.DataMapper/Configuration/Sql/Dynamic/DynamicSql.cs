@@ -35,6 +35,7 @@ using IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements;
 using IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers;
 using IBatisNet.DataMapper.Configuration.Sql.SimpleDynamic;
 using IBatisNet.DataMapper.Configuration.Statements;
+using IBatisNet.DataMapper.DataExchange;
 using IBatisNet.DataMapper.Scope;
 using IBatisNet.DataMapper.TypeHandlers;
 
@@ -55,10 +56,11 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 
 		private IList _children = new ArrayList();
 		private IStatement _statement = null ;
+		private bool _usePositionalParameters = false;
 		private InlineParameterMapParser _paramParser = null;
 		private TypeHandlerFactory _typeHandlerFactory = null;
 		private IMemberAccessorFactory _memberAccessorFactory = null;
-		private bool _usePositionalParameters = false;
+		private DataExchangeFactory _dataExchangeFactory = null;
 
 		#endregion
 
@@ -74,6 +76,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 			_typeHandlerFactory = configScope.TypeHandlerFactory;
 			_memberAccessorFactory = configScope.MemberAccessorFactory;
 			_usePositionalParameters = configScope.DataSource.DbProvider.UsePositionalParameters;
+			_dataExchangeFactory = configScope.DataExchangeFactory;
 		}
 		#endregion
 
@@ -102,7 +105,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 		/// <returns></returns>
 		public RequestScope GetRequestScope(object parameterObject, IDalSession session)
 		{ 
-			RequestScope request = new RequestScope(_typeHandlerFactory, _memberAccessorFactory);
+			RequestScope request = new RequestScope(_typeHandlerFactory, _memberAccessorFactory, _dataExchangeFactory);
 			_paramParser = new InlineParameterMapParser();
 			request.ResultMap = _statement.ResultMap;
 
@@ -129,7 +132,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 			ProcessBodyChildren(request, ctx, parameterObject, localChildren);
 
 			// Builds a 'dynamic' ParameterMap
-			ParameterMap map = new ParameterMap();
+			ParameterMap map = new ParameterMap(request.DataExchangeFactory);
 			map.Id = _statement.Id + "-InlineParameterMap";
 			map.Initialize(_usePositionalParameters, request);
 			map.Class = _statement.ParameterClass;

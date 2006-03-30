@@ -753,6 +753,46 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "DataExchange\BaseDataExchange.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "DataExchange\ComplexDataExchange.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "DataExchange\DataExchangeFactory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "DataExchange\DictionaryDataExchange.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "DataExchange\DotNetObjectDataExchange.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "DataExchange\IDataExchange.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "DataExchange\ListDataExchange.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "DataExchange\PrimitiveDataExchange.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Exceptions\DataMapperException.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -808,7 +848,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Scope\IConfigurationScope.cs"
+                    RelPath = "Scope\IScope.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

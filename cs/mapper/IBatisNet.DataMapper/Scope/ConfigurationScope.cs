@@ -35,6 +35,7 @@ using IBatisNet.Common;
 using IBatisNet.Common.Utilities;
 using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.Common.Utilities.Objects.Members;
+using IBatisNet.DataMapper.DataExchange;
 using IBatisNet.DataMapper.TypeHandlers;
 
 #endregion
@@ -165,6 +166,14 @@ namespace IBatisNet.DataMapper.Scope
 		public TypeHandlerFactory TypeHandlerFactory
 		{
 			get { return _sqlMapper.TypeHandlerFactory; }
+		}
+
+		/// <summary>
+		/// A factory for DataExchange objects
+		/// </summary>
+		public DataExchangeFactory DataExchangeFactory
+		{
+			get { return _sqlMapper.DataExchangeFactory; }
 		}
 
 		/// <summary>

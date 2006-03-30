@@ -441,7 +441,24 @@ http://ibatis.apache.org/xsd/SqlMap.xsd">
 				</isEqual>
 			</dynamic>
 		</statement>	
+		
+		<insert id="SelectKeyWithDynamicSql">
+			INSERT INTO $AccountsTableName$
+			(
+				Account_ID, 
+				Account_FirstName,
+				Account_LastName
+			) 
+			VALUES 
+			(
+				#Account.Id#, 
+				#Account.FirstName#,
+				#Account.LastName#
+			)
+			<selectKey property="AccountId" type="post" resultClass="int">
+				SELECT Account_ID FROM $AccountsTableName$ WHERE Account_ID = #Account.Id#
+			</selectKey>			
+		</insert>
+				
 	</statements>
-
-	
 </sqlMap>

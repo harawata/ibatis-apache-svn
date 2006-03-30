@@ -24,7 +24,7 @@
  ********************************************************************************/
 #endregion
 
-#region Imports
+#region Using
 
 using System;
 using System.Collections;
@@ -1148,8 +1148,8 @@ namespace IBatisNet.DataMapper.MappedStatements
                     // http://msdn2.microsoft.com/en-us/library/b8ytshk6.aspx
 
                     Type[] typeArgs = postSelect.ResultProperty.MemberAccessor.MemberType.GetGenericArguments();
-                    Type definition = typeof(IList<>);
-                    Type constructedType = definition.MakeGenericType(typeArgs);
+                    Type genericList = typeof(IList<>);
+                    Type constructedType = genericList.MakeGenericType(typeArgs);
                     Type elementType = postSelect.ResultProperty.MemberAccessor.MemberType.GetGenericArguments()[0];
 
                     Type mappedStatementType = postSelect.Statement.GetType();
@@ -1185,7 +1185,6 @@ namespace IBatisNet.DataMapper.MappedStatements
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// 
@@ -1307,12 +1306,13 @@ namespace IBatisNet.DataMapper.MappedStatements
 					postSelect.ResultProperty = mapping;
 
 					#region Collection object or .NET object
-					if (mapping.MemberAccessor.MemberType.BaseType == typeof(Array))
+					
+                    if (mapping.MemberAccessor.MemberType.BaseType == typeof(Array))
 					{
 						postSelect.Method = ExecuteMethod.ExecuteQueryForArrayList;
 					}
-						// Check if the object to Map implement 'IList' or is IList type
-						// If yes the ResultProperty is map to a IList object
+					// Check if the object to Map implement 'IList' or is IList type
+					// If yes the ResultProperty is map to a IList object
 					else if ( typeof(IList).IsAssignableFrom(mapping.MemberAccessor.MemberType) )
 					{
 						if (mapping.IsLazyLoad)
@@ -1328,8 +1328,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 							}
 							else
 							{
-								postSelect.Method = ExecuteMethod.ExecuteQueryForStrongTypedIList;
-							}
+                                postSelect.Method = ExecuteMethod.ExecuteQueryForStrongTypedIList;
+                            }
 						}
 					}
 #if dotnet2

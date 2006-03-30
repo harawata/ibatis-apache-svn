@@ -33,6 +33,7 @@ using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
 using IBatisNet.DataMapper.Configuration.Statements;
+using IBatisNet.DataMapper.DataExchange;
 using IBatisNet.DataMapper.TypeHandlers;
 
 #endregion
@@ -57,6 +58,7 @@ namespace IBatisNet.DataMapper.Scope
 		private long _id = 0;
 		private TypeHandlerFactory _typeHandlerFactory = null;
 		private IMemberAccessorFactory _memberAccessorFactory = null;
+		private DataExchangeFactory _dataExchangeFactory = null;
 		#endregion
 	
 		#region Properties
@@ -116,6 +118,14 @@ namespace IBatisNet.DataMapper.Scope
 		}
 		#endregion
 
+		/// <summary>
+		/// A factory for DataExchange objects
+		/// </summary>
+		public DataExchangeFactory DataExchangeFactory
+		{
+			get { return _dataExchangeFactory; }
+		}
+
 		#region Constructors
 
 		/// <summary>
@@ -123,11 +133,15 @@ namespace IBatisNet.DataMapper.Scope
 		/// </summary>
 		/// <param name="memberAccessorFactory"></param>
 		/// <param name="typeHandlerFactory"></param>
-		public RequestScope(TypeHandlerFactory typeHandlerFactory, IMemberAccessorFactory memberAccessorFactory)
+		/// <param name="dataExchangeFactory"></param>
+		public RequestScope(TypeHandlerFactory typeHandlerFactory, 
+			IMemberAccessorFactory memberAccessorFactory,
+			DataExchangeFactory dataExchangeFactory)
 		{
 			_errorContext = new ErrorContext();
 			_typeHandlerFactory = typeHandlerFactory;
 			_memberAccessorFactory = memberAccessorFactory;
+			_dataExchangeFactory = dataExchangeFactory;
 			 _id = GetNextId();
 		}
 		#endregion 

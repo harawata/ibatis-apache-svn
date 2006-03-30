@@ -443,7 +443,24 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 
 			order by Account_LastName
 		</statement>
+		
+		<insert id="SelectKeyWithDynamicSql">
+			INSERT INTO $AccountsTableName$
+			(
+				Account_ID, 
+				Account_FirstName,
+				Account_LastName
+			) 
+			VALUES 
+			(
+				#Account.Id#, 
+				#Account.FirstName#,
+				#Account.LastName#
+			)
+			<selectKey property="AccountId" type="post" resultClass="int">
+				SELECT Account_ID FROM $AccountsTableName$ WHERE Account_ID = #Account.Id#
+			</selectKey>			
+		</insert>
+				
 	</statements>
-
-	
 </sqlMap>

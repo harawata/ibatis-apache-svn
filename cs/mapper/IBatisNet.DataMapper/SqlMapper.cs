@@ -43,6 +43,7 @@ using IBatisNet.DataMapper.Configuration;
 using IBatisNet.DataMapper.Configuration.Cache;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
+using IBatisNet.DataMapper.DataExchange;
 using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.MappedStatements;
 using IBatisNet.DataMapper.TypeHandlers;
@@ -107,6 +108,7 @@ namespace IBatisNet.DataMapper
 		private SessionHolder _sessionHolder = null;
         private IObjectFactory _objectFactory = null;
         private IMemberAccessorFactory _memberAccessorFactory = null;
+        private DataExchangeFactory _dataExchangeFactory = null;
 		#endregion
 
 		#region Properties
@@ -139,6 +141,13 @@ namespace IBatisNet.DataMapper
 			get { return _cacheModelsEnabled; }
 		}
 
+		/// <summary>
+		/// Factory for DataExchange objects
+		/// </summary>
+		internal DataExchangeFactory DataExchangeFactory
+		{
+			get { return _dataExchangeFactory; }
+		}
 
 		/// <summary>
 		/// The TypeHandlerFactory
@@ -194,6 +203,7 @@ namespace IBatisNet.DataMapper
 			_useReflectionOptimizer = useReflectionOptimizer;
             _objectFactory = new ObjectFactory(useReflectionOptimizer);
 			_memberAccessorFactory = new MemberAccessorFactory(useReflectionOptimizer);
+			_dataExchangeFactory = new DataExchangeFactory(typeHandlerFactory);
 			_typeHandlerFactory = typeHandlerFactory;
 			_id = HashCodeProvider.GetIdentityHashCode(this).ToString();
 			_sessionHolder = new SessionHolder(_id);

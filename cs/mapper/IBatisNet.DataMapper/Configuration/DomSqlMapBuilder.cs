@@ -1401,6 +1401,7 @@ namespace IBatisNet.DataMapper.Configuration
 		/// <param name="sqlBuffer"></param>
 		/// <param name="isDynamic"></param>
 		/// <param name="postParseRequired"></param>
+		/// <param name="statement"></param>
 		/// <returns></returns>
 		private bool ParseDynamicTags( XmlNode commandTextNode, IDynamicParent dynamic, 
 			StringBuilder sqlBuffer, bool isDynamic, bool postParseRequired, IStatement statement) 
@@ -1479,13 +1480,18 @@ namespace IBatisNet.DataMapper.Configuration
 
 				if (sqlText.Parameters.Length > 0)
 				{
-					ParameterMap map = new ParameterMap();
+					ParameterMap map = new ParameterMap(_configScope.DataExchangeFactory);
 					map.Id = statement.Id + "-InLineParameterMap";
 					if (statement.ParameterClass!=null)
 					{
 						map.Class = statement.ParameterClass;
 					}
 					map.Initialize(_configScope.DataSource.DbProvider.UsePositionalParameters,_configScope);
+					if (statement.ParameterClass==null && 
+						sqlText.Parameters.Length==1)//#value# parameter with no parameterClass attribut
+					{
+						map.DataExchange = _configScope.DataExchangeFactory.GetDataExchangeForClass( typeof(int) );//Get the primitiveDataExchange
+					}
 					statement.ParameterMap = map;	
 				
 					int lenght = sqlText.Parameters.Length;
