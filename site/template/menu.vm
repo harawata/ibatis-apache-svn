@@ -22,7 +22,8 @@
      target="_new">FAQ</a><br/>
   <a href="mailinglists.html" title="iBATIS Mailing Lists">Mailing Lists</a><br/>
   <a href="issuetracker.html" title="iBATIS Issue Tracker">Issue Tracker</a><br/>
-  <a href="http://svn.apache.org/repos/asf/ibatis/trunk" title="Subversion Repository" target="_new">SVN Repository</a>
+  <a href="http://svn.apache.org/repos/asf/ibatis/trunk" title="Subversion Repository" target="_new">SVN Repository</a><br/>
+  <a href="http://fisheye3.cenqua.com/viewrep/ibatis" title="FishEye Repository Browser" target="_new">FishEye Repository Browser</a><br/>
   <br/>
   <br/>
   <b>Project</b><br/>
@@ -31,4 +32,7 @@
   <a href="team.html" title="Who's responsible for iBATIS?">Team</a><br/>
   <a href="bylaws.html" title="How do we operate?">Bylaws</a><br/>
   <a href="status.html" title="Where are we at?">Status</a><br/>
+  <br/>
+  <br/>
+  <a href="http://www.cenqua.com/fisheye"><img src="http://www.cenqua.com/images/fisheyed2.gif" width="89" height="33" border="0" alt="Source Perspective by FishEye"/></a>
 </div>
