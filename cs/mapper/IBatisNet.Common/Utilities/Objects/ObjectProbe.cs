@@ -652,19 +652,19 @@ namespace IBatisNet.Common.Utilities.Objects
 			{
 				return true;
 			} 
-			else if (type.IsSubclassOf(typeof(ICollection)))
+			else if (typeof(ICollection).IsAssignableFrom(type))
 			{
 				return true;
 			} 
-			else if (type.IsSubclassOf(typeof(IDictionary))) 
+			else if (typeof(IDictionary).IsAssignableFrom(type)) 
 			{
 				return true;
 			} 
-			else if (type.IsSubclassOf(typeof(IList))) 
+			else if (typeof(IList).IsAssignableFrom(type)) 
 			{
 				return true;
 			} 
-			else if (type.IsSubclassOf(typeof(IEnumerable))) 
+			else if (typeof(IEnumerable).IsAssignableFrom(type)) 
 			{
 				return true;
 			} 
