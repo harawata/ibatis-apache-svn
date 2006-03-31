@@ -222,7 +222,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 				}
 				else
 				{
-					sqlParamName = "param" + i++;
+					sqlParamName = "param" + i;
 				}
 
 				IDataParameter dataParameter = _session.CreateCommand(_statement.CommandType).CreateParameter();
