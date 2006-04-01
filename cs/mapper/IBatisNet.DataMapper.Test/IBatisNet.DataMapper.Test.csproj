@@ -630,6 +630,10 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "Maps\MySql\MySql\Simple.xml"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "Maps\Oracle\ODP\Account.xml"
                     BuildAction = "Content"
                 />
@@ -1094,6 +1098,10 @@
                 />
                 <File
                     RelPath = "Scripts\MySql\other-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MySql\simple-init.sql"
                     BuildAction = "Content"
                 />
                 <File

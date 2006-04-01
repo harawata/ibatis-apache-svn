@@ -351,6 +351,7 @@
     <Content Include="Maps\MySql\MySql\Other.xml" />
     <Content Include="Maps\MySql\MySql\ParameterClass.xml" />
     <Content Include="Maps\MySql\MySql\ResultClass.xml" />
+    <Content Include="Maps\MySql\MySql\Simple.xml" />
     <Content Include="Maps\Oracle\ODP\Account.xml" />
     <Content Include="Maps\Oracle\ODP\Category.xml" />
     <Content Include="Maps\Oracle\ODP\Complex.xml" />
@@ -434,6 +435,7 @@
     <Content Include="Scripts\MySql\more-account-records.sql" />
     <Content Include="Scripts\MySql\order-init.sql" />
     <Content Include="Scripts\MySql\other-init.sql" />
+    <Content Include="Scripts\MySql\simple-init.sql" />
     <Content Include="Scripts\MySql\swap-procedure.sql" />
     <Content Include="Scripts\MySql\user-init.sql" />
     <Content Include="Scripts\Oracle\account-init.sql" />
