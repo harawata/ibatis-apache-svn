@@ -1,7 +1,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -47,7 +47,7 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 		/// <returns></returns>
 		public static ResultMap Deserialize(XmlNode node, ConfigurationScope configScope)
 		{
-			ResultMap resultMap = new ResultMap();
+			ResultMap resultMap = new ResultMap( configScope.DataExchangeFactory );
 
 			NameValueCollection prop = NodeUtils.ParseAttributes(node, configScope.Properties);
 			resultMap.ClassName = prop["class"];

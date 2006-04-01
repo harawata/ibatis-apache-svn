@@ -45,6 +45,7 @@ using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.Scope;
 using IBatisNet.DataMapper.TypeHandlers;
 using IBatisNet.Common.Utilities.Objects.Members;
+using IBatisNet.DataMapper.DataExchange;
 
 #endregion
 
@@ -276,7 +277,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 					if (_sqlMap.TypeHandlerFactory.IsSimpleType(_statement.ResultClass))
 					{
 						// Create a ResultMap
-						ResultMap resultMap = new ResultMap();
+						ResultMap resultMap = new ResultMap(request.DataExchangeFactory);
 
 						// Create a ResultProperty
 						ResultProperty property = new ResultProperty();
@@ -285,8 +286,9 @@ namespace IBatisNet.DataMapper.MappedStatements
 						property.TypeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(outObject.GetType());
 						
 						resultMap.AddResultPropery(property);
+						resultMap.DataExchange = request.DataExchangeFactory.GetDataExchangeForClass( typeof(int) );// set the PrimitiveDataExchange
 
-						SetObjectProperty(request, request.ResultMap, property, ref outObject, reader);
+						SetObjectProperty(request, resultMap, property, ref outObject, reader);
 					}
 					else if (outObject is IDictionary) 
 					{
@@ -402,14 +404,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 						object dataBaseValue = mapping.TypeHandler.GetDataBaseValue( ((IDataParameter)command.Parameters[parameterName]).Value, result.GetType() );
 						request.IsRowDataFound = request.IsRowDataFound || (dataBaseValue != null);
 
-						if (mapping.IsComplexMemberName || typeof(IDictionary).IsAssignableFrom(request.ParameterMap.Class))
-						{	
-							ObjectProbe.SetPropertyValue(result, mapping.PropertyName, dataBaseValue);
-						}
-						else
-						{
-							mapping.MemberAccessor.Set(result, dataBaseValue);
-						}
+						request.ParameterMap.SetOutputParameter(ref result, mapping, dataBaseValue);
 					}
 				}
 			}
@@ -1231,14 +1226,14 @@ namespace IBatisNet.DataMapper.MappedStatements
 				object dataBaseValue = mapping.GetDataBaseValue( reader );
 				request.IsRowDataFound = request.IsRowDataFound || (dataBaseValue != null);
 
-				if (resultMap != null) 
-				{
+//				if (resultMap != null) 
+//				{
 					resultMap.SetValueOfProperty( ref target, mapping, dataBaseValue );
-				}
-				else
-				{
-					MappedStatement.SetValueOfProperty( ref target, mapping, dataBaseValue );
-				}
+//				}
+//				else
+//				{
+//					MappedStatement.SetValueOfProperty( ref target, mapping, dataBaseValue );
+//				}
 				#endregion
 			}
 			else if (mapping.NestedResultMap != null) // 'resultMap' ResultProperty
@@ -1251,7 +1246,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 					obj = null;
 				}
 
-				MappedStatement.SetValueOfProperty( ref target, mapping, obj );
+				resultMap.SetValueOfProperty( ref target, mapping, obj );
 			}
 			else //'select' ResultProperty 
 			{
@@ -1364,47 +1359,6 @@ namespace IBatisNet.DataMapper.MappedStatements
 			}
 		}
 	
-
-		private static void SetValueOfProperty( ref object target, ResultProperty property, object dataBaseValue )
-		{
-			if (target is Hashtable)
-			{
-				((Hashtable) target).Add(property.PropertyName, dataBaseValue);
-			}
-			else
-			{
-				if (property.PropertyName == "value")
-				{
-					target = dataBaseValue;
-				}
-				else
-				{
-					if (dataBaseValue == null)
-					{
-						if (property.IsComplexMemberName)
-                    	{
-  							ObjectProbe.SetPropertyValue( target, property.PropertyName, null);					
-                  		}
-						else
-                    	{
-							property.MemberAccessor.Set(target, null);
-                    	}
-					}
-					else
-					{
-						if (property.IsComplexMemberName)
-						{
-							ObjectProbe.SetPropertyValue(target, property.PropertyName, dataBaseValue);	
-						}
-						else
-                    	{
-							property.MemberAccessor.Set(target, dataBaseValue);
-                    	}
-					}
-				}
-			}
-		}
-
 			
 		/// <summary>
 		/// Raise an event ExecuteEventArgs
@@ -1444,6 +1398,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 			{
 				ReaderAutoMapper readerAutoMapper = new ReaderAutoMapper(_sqlMap.TypeHandlerFactory, 
 					_sqlMap.MemberAccessorFactory,
+					_sqlMap.DataExchangeFactory,
 					reader, 
 					ref resultObject);
 				readerAutoMapper.AutoMapReader( reader, ref resultObject );
@@ -1460,6 +1415,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 							_readerAutoMapper = new ReaderAutoMapper(
 								_sqlMap.TypeHandlerFactory, 
 								_sqlMap.MemberAccessorFactory,
+								_sqlMap.DataExchangeFactory,
 								reader, 
 								ref resultObject);
 						}
@@ -1474,7 +1430,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 		private class ReaderAutoMapper 
 		{
-			private ResultMap _resultMap = new ResultMap();
+			private ResultMap _resultMap = null;
 
 			/// <summary>
 			/// 
@@ -1483,15 +1439,19 @@ namespace IBatisNet.DataMapper.MappedStatements
 			/// <param name="resultObject"></param>
 			/// <param name="typeHandlerFactory"></param>
 			/// <param name="memberAccessorFactory"></param>
+			/// <param name="dataExchangeFactory"></param>
 			public ReaderAutoMapper(TypeHandlerFactory typeHandlerFactory, 
 				IMemberAccessorFactory memberAccessorFactory,
+				DataExchangeFactory dataExchangeFactory,
 				IDataReader reader,
 				ref object resultObject) 
 			{
+				Type targetType = resultObject.GetType();
+				_resultMap = new ResultMap(dataExchangeFactory);
+				_resultMap.DataExchange = dataExchangeFactory.GetDataExchangeForClass( targetType );
 				try 
 				{
 					// Get all PropertyInfo from the resultObject properties
-					Type targetType = resultObject.GetType();
 					ReflectionInfo reflectionInfo = ReflectionInfo.GetInstance(targetType);
 					string[] propertiesName = reflectionInfo.GetWriteablePropertyNames();
 
@@ -1538,7 +1498,6 @@ namespace IBatisNet.DataMapper.MappedStatements
 						else
 						{
 							propertyType = matchedMemberAccessor.MemberType;
-							//reflectionInfo.GetSetterType(matchedPropertyInfo.Name);
 						}
 
 						if(propertyType != null || matchedMemberAccessor != null) 
@@ -1554,21 +1513,6 @@ namespace IBatisNet.DataMapper.MappedStatements
 							}
 							_resultMap.AddResultPropery(property);
 						} 
-
-						//						// Fix for IBATISNET-73 (JIRA-73) from Ron Grabowski
-						//						if (property.PropertyName != null && property.PropertyName.Length > 0)
-						//						{
-						//							// Set TypeHandler
-						//							Type propertyType = reflectionInfo.GetSetterType(property.PropertyName);
-						//							property.TypeHandler = typeHandlerFactory.GetTypeHandler( propertyType );
-						//						}
-						//						else
-						//						{
-						//							if (_logger.IsDebugEnabled)
-						//							{
-						//								_logger.Debug("The column [" + columnName + "] could not be auto mapped to a property on [" + resultObject.ToString() + "]");
-						//							}
-						//						}
 					}
 				} 
 				catch (Exception e) 
@@ -1587,7 +1531,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 				foreach (string key in _resultMap.ColumnsToPropertiesMap.Keys) 
 				{
 					ResultProperty property = (ResultProperty) _resultMap.ColumnsToPropertiesMap[key];
-					MappedStatement.SetValueOfProperty( ref resultObject, property, 
+					_resultMap.SetValueOfProperty( ref resultObject, property, 
 						property.GetDataBaseValue( reader ));
 				}
 			}

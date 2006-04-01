@@ -63,15 +63,6 @@ namespace IBatisNet.DataMapper.DataExchange
 			}
 			else
 			{
-//				if (mapping.MemberAccessor!=null)
-//				{
-//					return mapping.MemberAccessor.Get(parameterObject);
-//				}
-//				else//Dynamic Iterate Id[0]
-//				{
-//					
-//					return ObjectProbe.GetPropertyValue(parameterObject, mapping.PropertyName);
-//				}
 				return mapping.MemberAccessor.Get(parameterObject);
 			}
 		}
@@ -80,11 +71,41 @@ namespace IBatisNet.DataMapper.DataExchange
 		/// Sets the value to the result property.
 		/// </summary>
 		/// <param name="mapping"></param>
-		/// <param name="parameterObject"></param>
+		/// <param name="target"></param>
 		/// <param name="dataBaseValue"></param>
-		public override void SetData(ResultProperty mapping, object parameterObject, object dataBaseValue)
+		public override void SetData(ref object target, ResultProperty mapping, object dataBaseValue)
 		{
-			mapping.MemberAccessor.Set(parameterObject, dataBaseValue);
+			if ( target.GetType() != _clazz )
+			{
+				throw new ArgumentException( "Could not set value of type '"+ target.GetType() +"' in property '"+mapping.PropertyName+"' of type '"+_clazz+"'" );
+			}
+			if ( mapping.IsComplexMemberName)
+			{
+				ObjectProbe.SetPropertyValue(target, mapping.PropertyName, dataBaseValue);
+			}
+			else
+			{
+				mapping.MemberAccessor.Set(target, dataBaseValue);
+			}
+		}
+
+		/// <summary>
+		/// Sets the value to the parameter property.
+		/// </summary>
+		/// <remarks>Use to set value on output parameter</remarks>
+		/// <param name="mapping"></param>
+		/// <param name="target"></param>
+		/// <param name="dataBaseValue"></param>
+		public override void SetData(ref object target, ParameterProperty mapping, object dataBaseValue)
+		{
+			if (mapping.IsComplexMemberName)
+			{	
+				ObjectProbe.SetPropertyValue(target, mapping.PropertyName, dataBaseValue);
+			}
+			else
+			{
+				mapping.MemberAccessor.Set(target, dataBaseValue);
+			}
 		}
 
 		#endregion

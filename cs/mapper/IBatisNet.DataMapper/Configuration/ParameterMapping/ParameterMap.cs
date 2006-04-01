@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: 390227 $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -294,6 +294,16 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 			typeHandler.SetParameter(dataParameter, value, mapping.DbType);
 		}
 
+		/// <summary>
+		/// Set output parameter value.
+		/// </summary>
+		/// <param name="mapping"></param>
+		/// <param name="dataBaseValue"></param>
+		/// <param name="target"></param>
+		public void SetOutputParameter(ref object target, ParameterProperty mapping, object dataBaseValue )
+		{
+			_dataExchange.SetData(ref target, mapping, dataBaseValue);
+		}
 
 		#region Configuration
 

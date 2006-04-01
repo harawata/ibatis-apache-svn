@@ -35,6 +35,7 @@ using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.Common.Utilities.TypesResolver;
 using IBatisNet.DataMapper.Configuration.Serializers;
+using IBatisNet.DataMapper.DataExchange;
 using IBatisNet.DataMapper.Scope;
 
 #endregion
@@ -63,7 +64,6 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// </summary>
 		private const string XML_SUBMAP = "subMap";
 
-		private IFactory _objectFactory = null;
 
 		#region Fields
 		[NonSerialized]
@@ -81,6 +81,12 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		private Discriminator _discriminator = null;
 		[NonSerialized]
 		private string _sqlMapNameSpace = string.Empty;
+		[NonSerialized]
+		private IFactory _objectFactory = null;
+		[NonSerialized]
+		private DataExchangeFactory _dataExchangeFactory = null;
+		[NonSerialized]
+		private IDataExchange _dataExchange = null;
 		#endregion
 
 		#region Properties
@@ -91,14 +97,8 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		[XmlIgnore]
 		public string SqlMapNameSpace
 		{
-			get
-			{
-				return _sqlMapNameSpace;
-			}	
-			set
-			{
-				_sqlMapNameSpace = value;
-			}	
+			get { return _sqlMapNameSpace; }	
+			set { _sqlMapNameSpace = value; }	
 		}
 
 		/// <summary>
@@ -107,14 +107,8 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		[XmlIgnore]
 		public Discriminator Discriminator
 		{
-			get
-			{
-				return _discriminator;
-			}	
-			set
-			{
-				_discriminator = value;
-			}	
+			get { return _discriminator; }	
+			set { _discriminator = value; }	
 		}
 
 		/// <summary>
@@ -179,14 +173,24 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 				_className = value; 
 			}
 		}
+
+		/// <summary>
+		/// Sets the IDataExchange
+		/// </summary>
+		[XmlIgnore]
+		public IDataExchange DataExchange
+		{
+			set { _dataExchange = value; }
+		}
 		#endregion
 
 		#region Constructor (s) / Destructor
 		/// <summary>
 		/// Do not use direclty, only for serialization.
 		/// </summary>
-		public ResultMap()
+		public ResultMap(DataExchangeFactory dataExchangeFactory)
 		{
+			_dataExchangeFactory = dataExchangeFactory;
 		}
 		#endregion
 
@@ -202,6 +206,8 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			try
 			{
 				_class = configScope.SqlMapper.TypeHandlerFactory.GetType(_className);
+				_dataExchange = _dataExchangeFactory.GetDataExchangeForClass(_class);
+
 				if (Type.GetTypeCode(_class) == TypeCode.Object)
 				{
 					_objectFactory = configScope.SqlMapper.ObjectFactory.CreateFactory(_class);
@@ -309,33 +315,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// <param name="dataBaseValue">The database value to set.</param>
 		public void SetValueOfProperty( ref object target, ResultProperty property, object dataBaseValue )
 		{
-			if (target is Hashtable)
-			{
-				((Hashtable) target).Add(property.PropertyName, dataBaseValue);
-			}
-			else
-			{
-				if ( target.GetType() != _class )
-				{
-					throw new ArgumentException( "Could not set value of type '"+ target.GetType() +"' in property '"+property.PropertyName+"' of type '"+_class+"'" );
-				}
-
-				if ( property.MemberAccessor != null )
-				{
-					if (property.IsComplexMemberName)
-					{
-						ObjectProbe.SetPropertyValue(target, property.PropertyName, dataBaseValue);
-					}
-					else
-					{
-						property.MemberAccessor.Set(target, dataBaseValue);
-					}
-				}
-				else // Primitive type ('value')
-				{
-					target = dataBaseValue;
-				}
-			}
+			_dataExchange.SetData(ref target, property, dataBaseValue);
 		}
 
 		/// <summary>
