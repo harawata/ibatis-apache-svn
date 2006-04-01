@@ -23,94 +23,148 @@
  ********************************************************************************/
 #endregion
 
-using System.Collections;
+using System;
 
 namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 {
 	/// <summary>
 	/// A ParameterProperty Collection.
 	/// </summary>
-	public class ParameterPropertyCollection: CollectionBase 
+	public class ParameterPropertyCollection
 	{
+		private const int _defaultCapacity = 8;
+		private const int _capacityMultiplier = 2;
+		private int _count = 0;
+		private ParameterProperty[] _innerList = null;
+
+
 		/// <summary>
-		/// Constructeur
+		/// ead-only property describing how many elements are in the Collection.
 		/// </summary>
-		public ParameterPropertyCollection() {}
+		public int Count 
+		{
+			get { return _count; }
+		}
 
 
 		/// <summary>
-		/// Acces element in collection by index
+		/// Constructs a ArrayList. The list is initially empty and has a capacity
+		/// of zero. Upon adding the first element to the list the capacity is
+		/// increased to 8, and then increased in multiples of two as required.
+		/// </summary>
+		public ParameterPropertyCollection() 
+		{
+			_innerList = new ParameterProperty[_defaultCapacity];
+			_count = 0;
+		}
+
+		/// <summary>
+		///  Constructs a ParameterPropertyCollection with a given initial capacity. 
+		///  The list is initially empty, but will have room for the given number of elements
+		///  before any reallocations are required.
+		/// </summary>
+		/// <param name="capacity">The initial capacity of the list</param>
+		public ParameterPropertyCollection(int capacity) 
+		{
+			if (capacity < 0)
+			{
+				throw new ArgumentOutOfRangeException("Capacity", "The size of the list must be >0.");
+			}
+			_innerList = new ParameterProperty[capacity];
+		}
+
+		/// <summary>
+		/// Length of the collection
+		/// </summary>
+		public int Length
+		{
+			get{ return _innerList.Length; }
+		}
+
+ 
+		/// <summary>
+		/// Sets or Gets the ParameterProperty at the given index.
 		/// </summary>
 		public ParameterProperty this[int index] 
 		{
-			get	{ return (ParameterProperty)List[index]; }
-			set { List[index] = value; }
+			get
+			{
+				if (index < 0 || index >= _count) 
+				{
+					throw new ArgumentOutOfRangeException("index");
+				}
+				return _innerList[index];
+			}
+			set
+			{
+				if (index < 0 || index >= _count) 
+				{
+					throw new ArgumentOutOfRangeException("index");
+				}
+				_innerList[index] = value;
+			}
 		}
+ 
 
 		/// <summary>
 		/// Add an ParameterProperty
 		/// </summary>
 		/// <param name="value"></param>
+		/// <returns>Index</returns>
 		public int Add(ParameterProperty value) 
 		{
-			return List.Add(value);
+			Resize(_count + 1);
+			int index = _count++;
+			_innerList[index] = value;
+
+			return index;
 		}
 
+ 
 		/// <summary>
 		/// Add a list of ParameterProperty to the collection
 		/// </summary>
 		/// <param name="value"></param>
 		public void AddRange(ParameterProperty[] value) 
 		{
-			for (int i = 0;	i < value.Length; i++) 
+			for (int i = 0;   i < value.Length; i++) 
 			{
 				Add(value[i]);
 			}
 		}
 
+ 
 		/// <summary>
 		/// Add a list of ParameterProperty to the collection
 		/// </summary>
 		/// <param name="value"></param>
 		public void AddRange(ParameterPropertyCollection value) 
 		{
-			for (int i = 0;	i < value.Count; i++) 
+			for (int i = 0;   i < value.Length; i++) 
 			{
 				Add(value[i]);
 			}
 		}
+ 
 
 		/// <summary>
 		/// Indicate if a ParameterProperty is in the collection
 		/// </summary>
-		/// <param name="value">Un(e) ParameterProperty</param>
-		/// <returns>Renvoir vrai s'il/elle appartinet à la collection</returns>
+		/// <param name="value">A ParameterProperty</param>
+		/// <returns>True fi is in</returns>
 		public bool Contains(ParameterProperty value) 
 		{
-			return List.Contains(value);
+			for (int i = 0;   i < _count; i++) 
+			{
+				if(_innerList[i].PropertyName==value.PropertyName)
+				{
+					return true;
+				}
+			}
+			return false;
 		}
+      
 
-
-		/// <summary>
-		/// Copy a collection in a ParameterProperty array
-		/// </summary>
-		/// <param name="array">A ParameterProperty array</param>
-		/// <param name="index">Start index of the copy</param>
-		public void CopyTo(ParameterProperty[] array, int index) 
-		{
-			List.CopyTo(array, index);
-		}
-
-		/// <summary>
-		/// Position of the ParameterProperty in the collection.
-		/// </summary>
-		/// <param name="value">A ParameterProperty</param>
-		/// <returns>Index found.</returns>
-		public int IndexOf(ParameterProperty value) 
-		{
-			return List.IndexOf(value);
-		}
-		
 		/// <summary>
 		/// Insert a ParameterProperty in the collection.
 		/// </summary>
@@ -118,16 +172,81 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// <param name="value">A ParameterProperty</param>
 		public void Insert(int index, ParameterProperty value) 
 		{
-			List.Insert(index, value);
+			if (index < 0 || index > _count) 
+			{
+				throw new ArgumentOutOfRangeException("index");
+			}
+			
+			Resize(_count + 1);
+			Array.Copy(_innerList, index, _innerList, index + 1, _count - index);
+			_innerList[index] = value;
+			_count++;
 		}
-		
+            
+
 		/// <summary>
 		/// Remove a ParameterProperty of the collection.
 		/// </summary>
 		public void Remove(ParameterProperty value) 
 		{
-			List.Remove(value);
+			for(int i = 0; i < _count; i++) 
+			{
+				if(_innerList[i].PropertyName==value.PropertyName)
+				{
+					RemoveAt(i);
+					return;
+				}
+			}
+
+		}
+
+		/// <summary>
+		/// Removes a ParameterProperty at the given index. The size of the list is
+		/// decreased by one.
+		/// </summary>
+		/// <param name="index"></param>
+		public void RemoveAt(int index) 
+		{
+			if (index < 0 || index >= _count) 
+			{
+				throw new ArgumentOutOfRangeException("index");
+			}
+			
+			int remaining = _count - index - 1;
+						
+			if (remaining > 0) 
+			{
+				Array.Copy(_innerList, index + 1, _innerList, index, remaining);
+			}
+			
+			_count--;
+			_innerList[_count] = null;
+		}
+
+		/// <summary>
+		/// Ensures that the capacity of this collection is at least the given minimum
+		/// value. If the currect capacity of the list is less than min, the
+		/// capacity is increased to twice the current capacity.
+		/// </summary>
+		/// <param name="minSize"></param>
+		private void Resize(int minSize) 
+		{
+			int oldSize = _innerList.Length;
+
+			if (minSize > oldSize) 
+			{
+				ParameterProperty[] oldEntries = _innerList;
+				int newSize = oldEntries.Length * _capacityMultiplier;
+		
+				if (newSize < minSize) 
+				{
+					newSize = minSize;
+				}
+				_innerList = new ParameterProperty[newSize];
+				Array.Copy(oldEntries, 0, _innerList, 0, _count);
+			}
 		}
 	}
+
 }
 

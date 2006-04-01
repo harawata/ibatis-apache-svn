@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision$
+ * $Revision: 390227 $
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -262,15 +262,11 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		{
 			string[] propertyNameArray = new string[_propertiesMap.Count];
 
-			IEnumerator myEnumerator = _propertiesList.GetEnumerator();
-			int index =0;
-			while ( myEnumerator.MoveNext() )
+			for (int index=0;index<_propertiesList.Count;index++)
 			{
-				propertyNameArray[index] = ((ParameterProperty)myEnumerator.Current).PropertyName;
-				index++;
+				propertyNameArray[index] = _propertiesList[index].PropertyName;
 			}
-
-			return (propertyNameArray); 
+			return propertyNameArray; 
 		}
 
 
