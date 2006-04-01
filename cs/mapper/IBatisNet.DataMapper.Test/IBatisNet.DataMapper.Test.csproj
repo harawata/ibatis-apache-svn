@@ -410,6 +410,10 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "Maps\MSSQL\Odbc\Nullable.xml"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "Maps\MSSQL\Odbc\Order.xml"
                     BuildAction = "Content"
                 />
@@ -423,6 +427,10 @@
                 />
                 <File
                     RelPath = "Maps\MSSQL\Odbc\ResultClass.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\MSSQL\Odbc\Simple.xml"
                     BuildAction = "Content"
                 />
                 <File
@@ -454,6 +462,10 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "Maps\MSSQL\OleDb\Nullable.xml"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "Maps\MSSQL\OleDb\Order.xml"
                     BuildAction = "Content"
                 />
@@ -467,6 +479,10 @@
                 />
                 <File
                     RelPath = "Maps\MSSQL\OleDb\ResultClass.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\MSSQL\OleDb\Simple.xml"
                     BuildAction = "Content"
                 />
                 <File

@@ -540,16 +540,16 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     ============================================= -->
 	<parameterMaps>   
 		
-		<parameterMap id="swap-params">
+		<parameterMap id="swap-params" class="Hashtable">
 			<parameter property="email1" column="First_Email" />
 			<parameter property="email2" column="Second_Email" />
 		</parameterMap>
 
-		<parameterMap id="select-params">
+		<parameterMap id="select-params" class="Hashtable">
 			<parameter property="Account_ID" />
 		</parameterMap>
 				
-		<parameterMap id="insert-params">
+		<parameterMap id="insert-params" class="Account">
 			<parameter property="Id" />
 			<parameter property="FirstName" />
 			<parameter property="LastName" />			
@@ -558,14 +558,14 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 			<parameter property="CartOption"	column="Account_Cart_Option" typeHandler="HundredsBool"/>
 		</parameterMap>
 		
-		<parameterMap id="update-params">
+		<parameterMap id="update-params" class="Account">
 			<parameter property="FirstName" />
 			<parameter property="LastName" />			
 			<parameter property="EmailAddress" nullValue="no_email@provided.com"/>
 			<parameter property="Id" />
 		</parameterMap>
 		
-		<parameterMap id="update-params2">
+		<parameterMap id="update-params2" class="Account">
 			<parameter property="Id" />
 			<parameter property="FirstName" />
 			<parameter property="LastName" />			

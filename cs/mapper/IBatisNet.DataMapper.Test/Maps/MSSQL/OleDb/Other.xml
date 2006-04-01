@@ -167,7 +167,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 	</statements>
 	
 	<parameterMaps>   
-		<parameterMap id="insert-params">
+		<parameterMap id="insert-params" class="Other" >
 			<parameter property="Int" />
 			<parameter property="Long" />
 			<parameter property="Bool" />			

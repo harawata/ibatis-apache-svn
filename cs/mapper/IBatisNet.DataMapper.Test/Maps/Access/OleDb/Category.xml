@@ -8,6 +8,15 @@ http://ibatis.apache.org/xsd/SqlMap.xsd">
 	
 	<statements>
 	
+		<select id="GetCategoryWithNullValueReplacementGuid" resultMap="Category-result" >
+		select
+		Category_ID,
+		Category_Name,
+		Category_Guid
+		from Categories
+		where Category_ID = #value#
+		</select>
+    	
 		<select id="GetCategory" parameterClass="Integer" resultClass="Category">
 			select
 			Category_ID as [Id],
@@ -90,6 +99,10 @@ http://ibatis.apache.org/xsd/SqlMap.xsd">
 			Category_Id = ?
 		</update>
 				
+		<procedure id="InsertCategoryViaStoreProcedureWithMap" parameterMap="insertMap-params">
+			ps_InsertCategorie
+		</procedure>
+
 		<procedure id="InsertCategoryViaStoreProcedure" parameterMap="insert-params">
 			ps_InsertCategorie
 		</procedure>
@@ -134,18 +147,25 @@ http://ibatis.apache.org/xsd/SqlMap.xsd">
 	</statements>
 	
 	<parameterMaps>
-		<parameterMap id="insert-params">
+
+		<parameterMap id="insertMap-params" class="Hashtable">
+			<parameter property="Id" column="Category_Id" dbType="Integer" /><!-- Int for SqlClient, Obdc; Integer for Oledb -->
+			<parameter property="Name" column="Category_Name"/>
+			<parameter property="Guid" column="Category_Guid" dbType="Guid"/><!--Guid for Oledb, UniqueIdentifier for SqlClient,Odbc -->
+		</parameterMap>
+			
+		<parameterMap id="insert-params"  class="Category">
 			<parameter property="Id" column="Category_Id" dbType="Integer" /><!-- Int for SqlClient, Obdc; Integer for Oledb -->
 			<parameter property="Name" column="Category_Name"/>
 			<parameter property="Guid" column="Category_Guid" dbType="Guid"/><!--Guid for Oledb, UniqueIdentifier for SqlClient,Odbc -->
 		</parameterMap>
 		
-		<parameterMap id="InsertParam">
+		<parameterMap id="InsertParam" class="Category">
 			<parameter property="Name" column="Category_Name"/>
 			<parameter property="Guid" column="Category_Guid" dbType="Guid"/><!--Guid for Oledb, UniqueIdentifier for SqlClient,Odbc -->
 		</parameterMap>
 		
-		<parameterMap id="insert-null-params">
+		<parameterMap id="insert-null-params" class="Category">
 			<parameter property="Name" column="Category_Name"/>
 			<parameter property="Guid" column="Category_Guid" nullValue="00000000-0000-0000-0000-000000000000" dbType="Guid"/><!--Guid for Oledb, UniqueIdentifier for SqlClient,Odbc -->
 		</parameterMap>
@@ -156,7 +176,7 @@ http://ibatis.apache.org/xsd/SqlMap.xsd">
 
 		<!-- Used by generated statement -->
 		
-		<parameterMap id="insert-generate-params">
+		<parameterMap id="insert-generate-params" class="Category">
 			<parameter property="Name" column="Category_Name"/>
 			<parameter property="Guid" column="Category_Guid" dbType="Guid"/><!--Guid for Oledb, UniqueIdentifier for SqlClient,Odbc -->
 		</parameterMap>

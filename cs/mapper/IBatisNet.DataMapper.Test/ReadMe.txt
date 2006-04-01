@@ -18,4 +18,7 @@ To pass tests for MS Sql Server
    
 4/ To test for .NET V2, enabled provider 'sqlServer2.0' and 
    set <provider name="sqlServer2.0"/> in SqlMap_MSSQL_SqlClient.config
-	
+   
+Remarks :
+- TestSelectByPK fails for MSSQL with Oledb [it's normal]
+- TestJIRA11 fails for MSSQL with Oledb/odbc [it's normal]	
