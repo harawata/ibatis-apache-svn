@@ -774,6 +774,10 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "Maps\PostgreSQL\Npgsql\Simple.xml"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "NUnit\SqlMapTests\BaseTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -1226,6 +1230,10 @@
                 />
                 <File
                     RelPath = "Scripts\PostgreSQL\other-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\PostgreSQL\simple-init.sql"
                     BuildAction = "Content"
                 />
                 <File

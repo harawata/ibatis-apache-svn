@@ -105,7 +105,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 		<statement id="GetSingle"
 					parameterClass="Int"
 					resultClass="float" >
-			select CAST(92233.5as float4) from Orders where Order_ID = #value#
+			select CAST(92233.5 as float4) from Orders where Order_ID = #value#
 		</statement>
 		<statement id="GetSingleWithoutResultClass"
 					parameterClass="Int"

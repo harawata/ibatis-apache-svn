@@ -14,10 +14,29 @@ using CategoryAttribute = NUnit.Framework.CategoryAttribute;
 namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Perf
 {
     [TestFixture]
-    [Category("MSSQL")]
     [Category("Performance")]
     public class PerformanceTest : BaseTest
     {
+
+		#region SetUp & TearDown
+
+		/// <summary>
+		/// SetUp
+		/// </summary>
+		[SetUp] 
+		public void Init() 
+		{
+			InitScript( sqlMap.DataSource, ScriptDirectory + "simple-init.sql" );
+		}
+
+		/// <summary>
+		/// TearDown
+		/// </summary>
+		[TearDown] 
+		public void Dispose()
+		{ /* ... */ } 
+
+		#endregion
 
         #region DataMapper
         [Test]
