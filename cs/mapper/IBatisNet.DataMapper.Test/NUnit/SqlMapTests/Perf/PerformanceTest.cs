@@ -197,13 +197,13 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Perf
         private IDbCommand DeleteCommand()
         {
             string sql = "delete from Simples where id = ";
-            sql += "@id";
+            sql += sqlMap.DataSource.DbProvider.FormatNameForSql("id");
 
             IDbCommand cmd = sqlMap.DataSource.DbProvider.CreateCommand();
             cmd.CommandText = sql;
 
             IDbDataParameter prm = cmd.CreateParameter();
-            prm.ParameterName = "@id";
+            prm.ParameterName = sqlMap.DataSource.DbProvider.FormatNameForParameter("id");
             prm.DbType = DbType.Int32;
             cmd.Parameters.Add(prm);
 
@@ -216,7 +216,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Perf
             for (int i = 0; i < 6; i++)
             {
                 if (i > 0) sql += ", ";
-                sql += "@param" + i.ToString();
+                sql += sqlMap.DataSource.DbProvider.FormatNameForSql("param" + i.ToString());
             }
 
             sql += ")";
@@ -241,12 +241,12 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Perf
         private IDbCommand UpdateCommand()
         {
             string sql = "update Simples set";
-            sql += (" name = " + "@param0");
-            sql += (", address = " + "@param1");
-            sql += (", count = " + "@param2");
-            sql += (", date = " + "@param3");
-            sql += (", pay = " + "@param4");
-            sql += " where id = " + "@param5";
+            sql += (" name = " + sqlMap.DataSource.DbProvider.FormatNameForSql("param0"));
+            sql += (", address = " + sqlMap.DataSource.DbProvider.FormatNameForSql("param1"));
+            sql += (", count = " + sqlMap.DataSource.DbProvider.FormatNameForSql("param2"));
+            sql += (", date = " + sqlMap.DataSource.DbProvider.FormatNameForSql("param3"));
+            sql += (", pay = " + sqlMap.DataSource.DbProvider.FormatNameForSql("param4"));
+            sql += " where id = " + sqlMap.DataSource.DbProvider.FormatNameForSql("param5");
 
             IDbCommand cmd = sqlMap.DataSource.DbProvider.CreateCommand();
             cmd.CommandText = sql;
@@ -262,7 +262,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Perf
             for (int j = 0; j < 6; j++)
             {
                 prm[j] = cmd.CreateParameter();
-                prm[j].ParameterName = "@param" + j.ToString();
+                prm[j].ParameterName = sqlMap.DataSource.DbProvider.FormatNameForParameter("param" + j.ToString());
                 cmd.Parameters.Add(prm[j]);
             }
 
