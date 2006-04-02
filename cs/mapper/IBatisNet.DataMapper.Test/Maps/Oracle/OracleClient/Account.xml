@@ -54,11 +54,11 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			<property name="Type" value="Weak"/>
 		</cacheModel>
 		
+		
 		<cacheModel id="rw-account-cache" implementation="FIFO" serialize="true" readOnly="false">
 			<flushInterval hours="24"/>
 			<flushOnExecute statement="UpdateAccountViaInlineParameters"/>
 		</cacheModel>
-		
     </cacheModels>
        
 	<alias>
@@ -161,7 +161,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 				resultMap="account-result"
 				cacheModel="rw-account-cache" extends="GetCachedAccountsViaResultMap">
 		</select>
-		 
+
   		<select id="GetNoAccountWithCache"
 						parameterClass="Integer"
 						resultMap="account-hashtable-result"
@@ -450,6 +450,18 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 		
 
 		<!-- Inline Parameters -->
+		
+		<!-- Inline Parameters #EmailAddress:VarChar:no_email@provided.com#-->
+		<update id="UpdateAccountViaInlineParameters"
+			parameterClass="Account">
+			update Accounts set
+			Account_FirstName = #FirstName#,
+			Account_LastName = #LastName#,
+			Account_Email = #EmailAddress,type=string,dbType=Varchar,nullValue=no_email@provided.com#
+			where
+			Account_ID = #Id#
+		</update>
+		<!--		
 		<update id="UpdateAccountViaInlineParameters"
 			parameterClass="Account">
 			update Accounts set
@@ -459,6 +471,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			where
 			Account_ID = #Id#
 		</update>
+		-->
 
 		<insert id="InsertAccountViaInlineParameters"
 			parameterClass="Account" >
@@ -631,24 +644,24 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
     ============================================= -->
 	<parameterMaps>   
 		
-		<parameterMap id="stored-proc-refcursor-param">
+		<parameterMap id="stored-proc-refcursor-param" class="Hashtable">
 			<!--
 			<parameter direction="Output" column="P_ACCOUNTS" dbType="RefCursor"/>
 			-->
 			<parameter property="P_ACCOUNTS" direction="Output" column="P_ACCOUNTS" dbType="Cursor"/>
 		</parameterMap>	
 		
-		<parameterMap id="stored-proc-refcursor-param-with-input">
+		<parameterMap id="stored-proc-refcursor-param-with-input" class="Hashtable">
 			<parameter property="P_ACCOUNTS" direction="Output" column="P_ACCOUNTS" dbType="Cursor"/>
 			<parameter property="P_ACCOUNT_ID" direction="Input" column="P_ACCOUNT_ID" dbType="Int"/>
 		</parameterMap>					
 				
-		<parameterMap id="swap-params">
+		<parameterMap id="swap-params" class="Hashtable">
 			<parameter property="email1" column="p_First" />
 			<parameter property="email2" column="p_Second" />
 		</parameterMap>
 		
-		<parameterMap id="insert-params">
+		<parameterMap id="insert-params" class="Account">
 			<parameter property="Id" />
 			<parameter property="FirstName" />
 			<parameter property="LastName" />			
@@ -657,14 +670,14 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			<parameter property="CartOption"	column="Account_Cart_Option" typeHandler="HundredsBool"/>			
 		</parameterMap>
 		
-		<parameterMap id="update-params">
+		<parameterMap id="update-params" class="Account">
 			<parameter property="FirstName" />
 			<parameter property="LastName" />			
 			<parameter property="EmailAddress" nullValue="no_email@provided.com"/>
 			<parameter property="Id" />
 		</parameterMap>
 		
-		<parameterMap id="update-params2">
+		<parameterMap id="update-params2" class="Account">
 			<parameter property="Id" />
 			<parameter property="FirstName" />
 			<parameter property="LastName" />			

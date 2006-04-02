@@ -193,7 +193,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
   
 	<parameterMaps>   
 		
-		<parameterMap id="insert-params">
+		<parameterMap id="insert-params" class="LineItem">
 			<parameter property="Id" dbType="Int32" />
 			<parameter property="Order.Id" dbType="Int32" />
 			<parameter property="Code" dbType="Varchar2" size="32" />			
@@ -201,7 +201,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			<parameter property="Price" dbType="Decimal" precision="18" scale="2" nullValue="-99.99"/>
 		</parameterMap>
 				
-		<parameterMap id="insert-params-picture">
+		<parameterMap id="insert-params-picture" class="LineItem">
 			<parameter property="Id" dbType="Int32" />
 			<parameter property="Order.Id" dbType="Int32" />
 			<parameter property="Code" dbType="Varchar2" size="32" />			

@@ -722,6 +722,10 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "Maps\Oracle\OracleClient\Simple.xml"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "Maps\PostgreSQL\Npgsql\Account.xml"
                     BuildAction = "Content"
                 />
@@ -1166,6 +1170,10 @@
                 />
                 <File
                     RelPath = "Scripts\Oracle\other-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\Oracle\simple-init.sql"
                     BuildAction = "Content"
                 />
                 <File

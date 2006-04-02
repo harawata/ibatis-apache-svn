@@ -312,7 +312,8 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 		</select>
 		
 		<select id="GetAccountViaInlineParameters"
-				resultMap="indexed-account-result">
+				resultMap="indexed-account-result"
+				parameterClass="Account">
 			select
 			Account_ID,
 			Account_FirstName,
@@ -664,24 +665,24 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
     ============================================= -->
 	<parameterMaps>   
 	
-		<parameterMap id="stored-proc-refcursor-param">
+		<parameterMap id="stored-proc-refcursor-param" class="Hashtable">
 			<!--
 			<parameter direction="Output" column="P_ACCOUNTS" dbType="RefCursor"/>
 			-->
 			<parameter property="P_ACCOUNTS" direction="Output" column="P_ACCOUNTS" dbType="RefCursor"/>
 		</parameterMap>	
 
-		<parameterMap id="stored-proc-refcursor-param-with-input">
+		<parameterMap id="stored-proc-refcursor-param-with-input" class="Hashtable">
 			<parameter property="P_ACCOUNTS" direction="Output" column="P_ACCOUNTS" dbType="RefCursor"/>
 			<parameter property="P_ACCOUNT_ID" direction="Input" column="P_ACCOUNT_ID" dbType="Int32"/>
 		</parameterMap>			
 
-		<parameterMap id="swap-params">
+		<parameterMap id="swap-params" class="Hashtable">
 			<parameter property="email1" column="p_First" direction="InputOutput" dbType="Varchar2" size="64"/>
 			<parameter property="email2" column="p_Second" direction="InputOutput" dbType="Varchar2" size="64"/>
 		</parameterMap>
 		
-		<parameterMap id="insert-params">
+		<parameterMap id="insert-params" class="Account">
 			<parameter property="Id"/>
 			<parameter property="FirstName" dbType="Varchar2" size="32"/>
 			<parameter property="LastName" dbType="Varchar2" size="32"/>			
@@ -690,14 +691,14 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			<parameter property="CartOption"	column="Account_Cart_Option" typeHandler="HundredsBool"/>			
 		</parameterMap>
 		
-		<parameterMap id="update-params">
+		<parameterMap id="update-params" class="Account">
 			<parameter property="FirstName" dbType="Varchar2" size="32"/>
 			<parameter property="LastName" dbType="Varchar2" size="32"/>			
 			<parameter property="EmailAddress" dbType="Varchar2" size="128" nullValue="no_email@provided.com"/>
 			<parameter property="Id" dbType="Int32"/>
 		</parameterMap>
 		
-		<parameterMap id="update-params2">
+		<parameterMap id="update-params2" class="Account">
 			<parameter property="Id" dbType="Int32"/>
 			<parameter property="FirstName" dbType="Varchar2" size="32" />
 			<parameter property="LastName" dbType="Varchar2" size="32" />			
@@ -705,7 +706,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			<parameter property="Id" dbType="Int32"/>
 		</parameterMap>
 		
-		<parameterMap id="account-repeat-param">
+		<parameterMap id="account-repeat-param" class="Account">
 			<parameter property="Id" dbType="Int32"/>
 			<parameter property="Id" dbType="Int32"/>
 			<parameter property="FirstName" dbType="Varchar2" size="32"/>
