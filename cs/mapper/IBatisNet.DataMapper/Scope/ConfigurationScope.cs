@@ -341,7 +341,7 @@ namespace IBatisNet.DataMapper.Scope
 				// .NET object
 				if (clrType ==null || clrType.Length == 0) 
 				{
-					Type type = ObjectProbe.GetPropertyTypeForGetter(clazz, propertyName);
+					Type type = ObjectProbe.GetMemberTypeForGetter(clazz, propertyName);
 					handler = this.TypeHandlerFactory.GetTypeHandler(type, dbType);
 				} 
 				else 

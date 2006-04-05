@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -42,21 +42,31 @@ namespace IBatisNet.Common.Utilities.Objects
 		/// <summary>
 		/// 
 		/// </summary>
-		public static BindingFlags BINDING_FLAGS_GET
+		public static BindingFlags BINDING_FLAGS_PROPERTY_GET
 			= BindingFlags.Public 
 			| BindingFlags.GetProperty
 			| BindingFlags.Instance 
-			| BindingFlags.GetField
+			;
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public static BindingFlags BINDING_FLAGS_PROPERTY_SET
+			= BindingFlags.Public 
+			| BindingFlags.SetProperty
+			| BindingFlags.Instance 
 			;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public static BindingFlags BINDING_FLAGS_SET
-			= BindingFlags.Public 
+		public static BindingFlags BINDING_FLAGS_FIELD
+			= BindingFlags.NonPublic 
 			| BindingFlags.SetProperty
 			| BindingFlags.Instance 
 			| BindingFlags.SetField
+			| BindingFlags.GetField
 			;
 
 		private static readonly string[] _emptyStringArray = new string[0];
@@ -64,15 +74,15 @@ namespace IBatisNet.Common.Utilities.Objects
 		private static Hashtable _reflectionInfoMap = Hashtable.Synchronized(new Hashtable());
 
 		private string _className = string.Empty;
-		private string[] _readablePropertyNames = _emptyStringArray;
-		private string[] _writeablePropertyNames = _emptyStringArray;
-		// (propertyName, property)
-		private Hashtable _setProperties = new Hashtable();
-		// (propertyName, property)
-		private Hashtable _getProperties = new Hashtable();
-		// (propertyName, property type)
+		private string[] _readableMemberNames = _emptyStringArray;
+		private string[] _writeableMemberNames = _emptyStringArray;
+		// (memberName, member)
+		private Hashtable _setMembers = new Hashtable();
+		// (memberName, member)
+		private Hashtable _getMembers = new Hashtable();
+		// (memberName, member type)
 		private Hashtable _setTypes = new Hashtable();
-		// (propertyName, property type)
+		// (memberName, member type)
 		private Hashtable _getTypes = new Hashtable();
 
 		/// <summary>
@@ -80,10 +90,7 @@ namespace IBatisNet.Common.Utilities.Objects
 		/// </summary>
 		public string ClassName 
 		{
-			get
-			{
-				return _className;
-			}
+			get { return _className; }
 		}
 
 		/// <summary>
@@ -128,87 +135,97 @@ namespace IBatisNet.Common.Utilities.Objects
 		private ReflectionInfo(Type type) 
 		{
 			_className = type.Name;
-			AddPropertiess(type);
+			AddMembers(type);
 
-			string[] getArray = new string[_getProperties.Count];
-			_getProperties.Keys.CopyTo(getArray,0);
-			_readablePropertyNames = getArray;
+			string[] getArray = new string[_getMembers.Count];
+			_getMembers.Keys.CopyTo(getArray,0);
+			_readableMemberNames = getArray;
 
-			string[] setArray = new string[_setProperties.Count];
-			_setProperties.Keys.CopyTo(setArray,0);
-			_writeablePropertyNames = setArray;
+			string[] setArray = new string[_setMembers.Count];
+			_setMembers.Keys.CopyTo(setArray,0);
+			_writeableMemberNames = setArray;
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="type"></param>
-		private void AddPropertiess(Type type) 
+		private void AddMembers(Type type) 
 		{
-			PropertyInfo[] properties = type.GetProperties(BINDING_FLAGS_SET);
-			int length = properties.Length;
-			for (int i = 0; i < length; i++) 
+			#region Properties
+			PropertyInfo[] properties = type.GetProperties(BINDING_FLAGS_PROPERTY_SET) ;
+			for (int i = 0; i < properties.Length; i++) 
 			{
 				string name = properties[i].Name;
-				//For work with Dinaproxy http://support.castleproject.org/jira//browse/DYNPROXY-8?page=all
-				_setProperties[name] = properties[i];
+				_setMembers[name] = properties[i];
 				_setTypes[name] = properties[i].PropertyType;
 			}
 
-			properties = type.GetProperties(BINDING_FLAGS_GET);
-			length = properties.Length;
-			for (int i = 0; i < length; i++) 
+			properties = type.GetProperties(BINDING_FLAGS_PROPERTY_GET);
+			for (int i = 0; i < properties.Length; i++) 
 			{
 				string name = properties[i].Name;
-				//For work with Dinaproxy http://support.castleproject.org/jira//browse/DYNPROXY-8?page=all
-				_getProperties[name] = properties[i];
+				_getMembers[name] = properties[i];
 				_getTypes[name] = properties[i].PropertyType;
 			}
+			#endregion
+
+			#region Fields
+			FieldInfo[] fields = type.GetFields(BINDING_FLAGS_FIELD) ;
+			for (int i = 0; i < fields.Length; i++) 
+			{
+				string name = fields[i].Name;
+				_setMembers[name] = fields[i];
+				_setTypes[name] = fields[i].FieldType;
+				_getMembers[name] = fields[i];
+				_getTypes[name] = fields[i].FieldType;
+			}
+			#endregion
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="propertyName"></param>
+		/// <param name="memberName"></param>
 		/// <returns></returns>
-		public PropertyInfo GetSetter(string propertyName) 
+		public MemberInfo GetSetter(string memberName) 
 		{
-			PropertyInfo propertyInfo = (PropertyInfo) _setProperties[propertyName];
+			MemberInfo memberInfo = (MemberInfo) _setMembers[memberName];
 
-			if (propertyInfo == null) 
+			if (memberInfo == null) 
 			{
-				throw new ProbeException("There is no Set property named '" + propertyName + "' in class '" + _className + "'");
+				throw new ProbeException("There is no Set member named '" + memberName + "' in class '" + _className + "'");
 			}				
 
-			return propertyInfo;
+			return memberInfo;
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="propertyName"></param>
+		/// <param name="memberName"></param>
 		/// <returns></returns>
-		public PropertyInfo GetGetter(string propertyName) 
+		public MemberInfo GetGetter(string memberName) 
 		{
-			PropertyInfo propertyInfo = (PropertyInfo) _getProperties[propertyName];
-			if (propertyInfo == null) 
+			MemberInfo memberInfo = (MemberInfo) _getMembers[memberName];
+			if (memberInfo == null) 
 			{
-				throw new ProbeException("There is no Get property named '" + propertyName + "' in class '" + _className + "'");
+				throw new ProbeException("There is no Get member named '" + memberName + "' in class '" + _className + "'");
 			}
-			return propertyInfo;
+			return memberInfo;
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="propertyName"></param>
+		/// <param name="memberName"></param>
 		/// <returns></returns>
-		public Type GetSetterType(string propertyName) 
+		public Type GetSetterType(string memberName) 
 		{
-			Type type = (Type) _setTypes[propertyName];
+			Type type = (Type) _setTypes[memberName];
 			if (type == null) 
 			{
-				throw new ProbeException("There is no Set property named '" + propertyName + "' in class '" + _className + "'");
+				throw new ProbeException("There is no Set member named '" + memberName + "' in class '" + _className + "'");
 			}
 			return type;
 		}
@@ -216,14 +233,14 @@ namespace IBatisNet.Common.Utilities.Objects
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="propertyName"></param>
+		/// <param name="memberName"></param>
 		/// <returns></returns>
-		public Type GetGetterType(string propertyName) 
+		public Type GetGetterType(string memberName) 
 		{
-			Type type = (Type) _getTypes[propertyName];
+			Type type = (Type) _getTypes[memberName];
 			if (type == null) 
 			{
-				throw new ProbeException("There is no Get property named '" + propertyName + "' in class '" + _className + "'");
+				throw new ProbeException("There is no Get mmeber named '" + memberName + "' in class '" + _className + "'");
 			}
 			return type;
 		}
@@ -232,38 +249,38 @@ namespace IBatisNet.Common.Utilities.Objects
 		/// 
 		/// </summary>
 		/// <returns></returns>
-		public string[] GetReadablePropertyNames() 
+		public string[] GetReadableMemberNames() 
 		{
-			return _readablePropertyNames;
+			return _readableMemberNames;
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <returns></returns>
-		public string[] GetWriteablePropertyNames() 
+		public string[] GetWriteableMemberNames() 
 		{
-			return _writeablePropertyNames;
+			return _writeableMemberNames;
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="propertyName"></param>
+		/// <param name="memberName"></param>
 		/// <returns></returns>
-		public bool HasWritableProperty(string propertyName) 
+		public bool HasWritableMember(string memberName) 
 		{
-			return _setProperties.ContainsKey(propertyName);
+			return _setMembers.ContainsKey(memberName);
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="propertyName"></param>
+		/// <param name="memberName"></param>
 		/// <returns></returns>
-		public bool HasReadableProperty(string propertyName) 
+		public bool HasReadableMember(string memberName) 
 		{
-			return _getProperties.ContainsKey(propertyName);
+			return _getMembers.ContainsKey(memberName);
 		}
 
 		/// <summary>
@@ -294,35 +311,6 @@ namespace IBatisNet.Common.Utilities.Objects
 				return false;
 			}
 		}
-
-//		/// <summary>
-//		///  Returns the type that the get expects to receive as a parameter when
-//		///  setting a property value.
-//		/// </summary>
-//		/// <param name="type">The type to check</param>
-//		/// <param name="propertyName">The name of the property</param>
-//		/// <returns>The type of the property</returns>
-//		public static ReflectionInfo GetReflectionInfoForGetter(Type type, string propertyName) 
-//		{
-//			ReflectionInfo reflectionInfo = null;
-//			if (propertyName.IndexOf('.') > -1) 
-//			{
-//				StringTokenizer parser = new StringTokenizer(propertyName, ".");
-//				IEnumerator enumerator = parser.GetEnumerator();
-//
-//				while (enumerator.MoveNext()) 
-//				{
-//					propertyName = (string)enumerator.Current;
-//					type = ReflectionInfo.GetInstance(type).GetGetterType(propertyName);
-//				}
-//			} 
-//			else 
-//			{
-//				reflectionInfo = ReflectionInfo.GetInstance(type);
-//			}
-//
-//			return type;
-//		}
 
 		/// <summary>
 		/// Gets an instance of ReflectionInfo for the specified type.

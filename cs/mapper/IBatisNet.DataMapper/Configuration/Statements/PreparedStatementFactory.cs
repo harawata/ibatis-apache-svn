@@ -234,7 +234,8 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 					object dbType = Enum.Parse( enumDbType, property.DbType, true );
 
 					// Exemple : ObjectHelper.SetProperty(sqlparameter, 'SqlDbType', SqlDbType.Int);
-					ObjectProbe.SetPropertyValue(dataParameter, dbTypePropertyName, dbType);
+					ObjectProbe.SetMemberValue(dataParameter, dbTypePropertyName, dbType, 
+						_request.ObjectFactory, _request.MemberAccessorFactory );
 				}
 
 				// Set IDbDataParameter
@@ -321,7 +322,8 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 					object dbType = Enum.Parse( enumDbType, property.DbType, true );
 
 					// Exemple : ObjectHelper.SetProperty(sqlparameter, 'SqlDbType', SqlDbType.Int);
-					ObjectProbe.SetPropertyValue(dataParameter, dbTypePropertyName, dbType);
+					ObjectProbe.SetMemberValue(dataParameter, dbTypePropertyName, dbType, 
+						_request.ObjectFactory, _request.MemberAccessorFactory );
 				}
 
 				// Set IDbDataParameter

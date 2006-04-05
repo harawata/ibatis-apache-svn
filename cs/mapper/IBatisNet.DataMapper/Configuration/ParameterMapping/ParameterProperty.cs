@@ -297,7 +297,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 				}
 				else // complex member name FavouriteLineItem.Id
 				{
-					PropertyInfo propertyInfo = ObjectProbe.GetPropertyInfoForSetter(parameterClass, _propertyName);
+					MemberInfo propertyInfo = ObjectProbe.GetMemberInfoForSetter(parameterClass, _propertyName);
 					string memberName = _propertyName.Substring( _propertyName.LastIndexOf('.')+1);
 					_memberAccessor = scope.MemberAccessorFactory.CreateMemberAccessor( propertyInfo.ReflectedType, memberName);
 				}
@@ -335,7 +335,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 					else
 					{
 						// .NET object
-						type = ObjectProbe.GetPropertyTypeForGetter(type, this.PropertyName);
+						type = ObjectProbe.GetMemberTypeForGetter(type, this.PropertyName);
 						_typeHandler = scope.TypeHandlerFactory.GetTypeHandler(type, _dbType);
 					}
 				}

@@ -394,7 +394,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 							{
 								if (mapping.TypeHandler == null)
 								{
-									Type propertyType =ObjectProbe.GetPropertyTypeForGetter(result,mapping.PropertyName);
+									Type propertyType =ObjectProbe.GetMemberTypeForGetter(result,mapping.PropertyName);
 
 									mapping.TypeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(propertyType);
 								}
@@ -968,7 +968,9 @@ namespace IBatisNet.DataMapper.MappedStatements
 				IMappedStatement mappedStatement = _sqlMap.GetMappedStatement( selectKeyStatement.Id );
 				generatedKey = mappedStatement.ExecuteQueryForObject(session, parameterObject);
 
-				ObjectProbe.SetPropertyValue(parameterObject, selectKeyStatement.PropertyName, generatedKey);
+				ObjectProbe.SetMemberValue(parameterObject, selectKeyStatement.PropertyName, generatedKey, 
+					request.ObjectFactory,
+					request.MemberAccessorFactory);
 			}
 
 			_preparedCommand.Create( request, session, this.Statement, parameterObject );
@@ -994,7 +996,9 @@ namespace IBatisNet.DataMapper.MappedStatements
 					IMappedStatement mappedStatement = _sqlMap.GetMappedStatement( selectKeyStatement.Id );
 					generatedKey = mappedStatement.ExecuteQueryForObject(session, parameterObject);
 
-					ObjectProbe.SetPropertyValue(parameterObject, selectKeyStatement.PropertyName, generatedKey);
+					ObjectProbe.SetMemberValue(parameterObject, selectKeyStatement.PropertyName, generatedKey, 
+						request.ObjectFactory,
+						request.MemberAccessorFactory);
 				}
 
 				ExecutePostSelect( session, request);
@@ -1066,11 +1070,11 @@ namespace IBatisNet.DataMapper.MappedStatements
 						while (reader.Read() )
 						{
 							object obj = ApplyResultMap(request, reader, null);
-							object key = ObjectProbe.GetPropertyValue(obj, keyProperty);
+							object key = ObjectProbe.GetMemberValue(obj, keyProperty, request.MemberAccessorFactory);
 							object value = obj;
 							if (valueProperty != null)
 							{
-								value = ObjectProbe.GetPropertyValue(obj, valueProperty);
+								value = ObjectProbe.GetMemberValue(obj, valueProperty, request.MemberAccessorFactory);
 							}
 							map.Add(key, value);
 						}
@@ -1080,11 +1084,11 @@ namespace IBatisNet.DataMapper.MappedStatements
 						while (reader.Read())
 						{
 							object obj = ApplyResultMap(request, reader, null);
-							object key = ObjectProbe.GetPropertyValue(obj, keyProperty);
+							object key = ObjectProbe.GetMemberValue(obj, keyProperty,request.MemberAccessorFactory);
 							object value = obj;
 							if (valueProperty != null)
 							{
-								value = ObjectProbe.GetPropertyValue(obj, valueProperty);
+								value = ObjectProbe.GetMemberValue(obj, valueProperty, request.MemberAccessorFactory);
 							}
 							rowDelegate(key, value, parameterObject, map);
 
@@ -1453,14 +1457,14 @@ namespace IBatisNet.DataMapper.MappedStatements
 				{
 					// Get all PropertyInfo from the resultObject properties
 					ReflectionInfo reflectionInfo = ReflectionInfo.GetInstance(targetType);
-					string[] propertiesName = reflectionInfo.GetWriteablePropertyNames();
+					string[] membersName = reflectionInfo.GetWriteableMemberNames();
 
 					Hashtable propertyMap = new Hashtable();
-					int length = propertiesName.Length;
+					int length = membersName.Length;
 					for (int i = 0; i < length; i++) 
 					{
-						IMemberAccessor memberAccessor = memberAccessorFactory.CreateMemberAccessor(targetType, propertiesName[i]);
-						propertyMap.Add( propertiesName[i].ToUpper(), memberAccessor );
+						IMemberAccessor memberAccessor = memberAccessorFactory.CreateMemberAccessor(targetType, membersName[i]);
+						propertyMap.Add( membersName[i].ToUpper(), memberAccessor );
 					}
 
 					// Get all column Name from the reader
@@ -1488,7 +1492,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 						{
 							try
 							{
-								propertyType = ObjectProbe.GetPropertyTypeForSetter(resultObject, columnName);
+								propertyType = ObjectProbe.GetMemberTypeForSetter(resultObject, columnName);
 							}
 							catch
 							{

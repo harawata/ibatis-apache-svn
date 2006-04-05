@@ -25,6 +25,8 @@
 
 using System;
 using System.Collections;
+using IBatisNet.Common.Utilities.Objects;
+using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.TypeHandlers;
 
 #if dotnet2
@@ -39,12 +41,14 @@ namespace IBatisNet.DataMapper.DataExchange
 	public class DataExchangeFactory
 	{
 		private TypeHandlerFactory _typeHandlerFactory = null;
+		private IObjectFactory _objectFactory = null;
+		private IMemberAccessorFactory _memberAccessorFactory = null;
+
 		private IDataExchange _primitiveDataExchange = null;
 		private IDataExchange _complexDataExchange = null;
 		private IDataExchange _listDataExchange = null;
 		private IDataExchange _dictionaryDataExchange = null;
 
-		
 		/// <summary>
 		///  Getter for the type handler factory
 		/// </summary>
@@ -54,12 +58,34 @@ namespace IBatisNet.DataMapper.DataExchange
 		}
 
 		/// <summary>
+		/// The factory for object
+		/// </summary>
+		public IObjectFactory ObjectFactory
+		{
+			get{ return _objectFactory; }
+		}
+		
+		/// <summary>
+		/// The factory which build IMemberAccessor
+		/// </summary>
+		public IMemberAccessorFactory MemberAccessorFactory
+		{
+			get{ return _memberAccessorFactory; }
+		}
+
+		/// <summary>
 		/// Constructor for the factory
 		/// </summary>
 		/// <param name="typeHandlerFactory">A type handler factory for the factory</param>
-		public DataExchangeFactory(TypeHandlerFactory typeHandlerFactory)
+		/// <param name="memberAccessorFactory"></param>
+		/// <param name="objectFactory"></param>
+		public DataExchangeFactory(TypeHandlerFactory typeHandlerFactory,
+			IObjectFactory objectFactory, IMemberAccessorFactory memberAccessorFactory)
 		{
+			_objectFactory = objectFactory;
 			_typeHandlerFactory = typeHandlerFactory;
+			_memberAccessorFactory = memberAccessorFactory;
+
 			_primitiveDataExchange = new PrimitiveDataExchange(this);
 			_complexDataExchange = new ComplexDataExchange(this);
 			_listDataExchange = new ListDataExchange(this);

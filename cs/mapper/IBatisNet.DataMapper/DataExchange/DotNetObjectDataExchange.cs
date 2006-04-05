@@ -59,7 +59,8 @@ namespace IBatisNet.DataMapper.DataExchange
 		{
 			if ( mapping.IsComplexMemberName || _clazz!=parameterObject.GetType())
 			{
-				return ObjectProbe.GetPropertyValue(parameterObject, mapping.PropertyName);
+				return ObjectProbe.GetMemberValue(parameterObject, mapping.PropertyName,
+					this.DataExchangeFactory.MemberAccessorFactory);
 			}
 			else
 			{
@@ -81,7 +82,9 @@ namespace IBatisNet.DataMapper.DataExchange
 			}
 			if ( mapping.IsComplexMemberName)
 			{
-				ObjectProbe.SetPropertyValue(target, mapping.PropertyName, dataBaseValue);
+				ObjectProbe.SetMemberValue(target, mapping.PropertyName, dataBaseValue, 
+					this.DataExchangeFactory.ObjectFactory,
+					this.DataExchangeFactory.MemberAccessorFactory);
 			}
 			else
 			{
@@ -100,7 +103,9 @@ namespace IBatisNet.DataMapper.DataExchange
 		{
 			if (mapping.IsComplexMemberName)
 			{	
-				ObjectProbe.SetPropertyValue(target, mapping.PropertyName, dataBaseValue);
+				ObjectProbe.SetMemberValue(target, mapping.PropertyName, dataBaseValue, 
+					this.DataExchangeFactory.ObjectFactory,
+					this.DataExchangeFactory.MemberAccessorFactory);
 			}
 			else
 			{

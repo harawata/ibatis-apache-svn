@@ -203,7 +203,7 @@ namespace IBatisNet.DataMapper
 			_useReflectionOptimizer = useReflectionOptimizer;
             _objectFactory = new ObjectFactory(useReflectionOptimizer);
 			_memberAccessorFactory = new MemberAccessorFactory(useReflectionOptimizer);
-			_dataExchangeFactory = new DataExchangeFactory(typeHandlerFactory);
+			_dataExchangeFactory = new DataExchangeFactory(typeHandlerFactory, _objectFactory, _memberAccessorFactory);
 			_typeHandlerFactory = typeHandlerFactory;
 			_id = HashCodeProvider.GetIdentityHashCode(this).ToString();
 			_sessionHolder = new SessionHolder(_id);

@@ -1,12 +1,12 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
- * $Revision: $
- * $Date$
+ * $Revision$
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,13 +25,12 @@
 #endregion
 
 #region Imports
-using System;
+
 using System.Collections;
 using System.Text;
-using System.IO;
-
-using IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
+using IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements;
+
 #endregion
 
 

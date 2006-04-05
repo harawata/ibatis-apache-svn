@@ -368,7 +368,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 			} 
 			else 
 			{
-				Type typeClass = ObjectProbe.GetPropertyTypeForGetter(parameterClassType, propertyName);
+				Type typeClass = ObjectProbe.GetMemberTypeForGetter(parameterClassType, propertyName);
 				handler = typeHandlerFactory.GetTypeHandler(typeClass, dbType);
 			}
 

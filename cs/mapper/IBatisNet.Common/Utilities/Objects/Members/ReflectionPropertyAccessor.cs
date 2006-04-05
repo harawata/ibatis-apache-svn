@@ -50,8 +50,10 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 		/// <param name="propertyName">Property name.</param>
 		public ReflectionPropertyAccessor(Type targetType, string propertyName)
 		{
-			_propertyInfo = ObjectProbe.GetPropertyInfoForSetter(targetType, propertyName);
-			//targetType.GetProperty(propertyName, BINDING_FLAGS);
+			ReflectionInfo reflectionCache = ReflectionInfo.GetInstance( targetType );
+			_propertyInfo = (PropertyInfo)reflectionCache.GetGetter(propertyName);
+
+			//_propertyInfo = (PropertyInfo)ObjectProbe.GetPropertyInfoForSetter(targetType, propertyName);
 			_targetType = targetType;
 			_propertyName = propertyName;
 		}

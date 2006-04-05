@@ -1,7 +1,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -62,7 +62,7 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 		/// <returns></returns>
 		public SqlTag Deserialize(XmlNode node)
 		{
-			IsNotEqual isNotEqual = new IsNotEqual();
+			IsNotEqual isNotEqual = new IsNotEqual(_configScope.MemberAccessorFactory);
 
 			NameValueCollection prop = NodeUtils.ParseAttributes(node, _configScope.Properties);
 			isNotEqual.Prepend = NodeUtils.GetStringAttribute(prop, "prepend");

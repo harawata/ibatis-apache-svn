@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -27,9 +27,10 @@
 #region Imports
 using System;
 using System.Collections;
-
+using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements;
 using IBatisNet.Common.Utilities.Objects;
+
 #endregion
 
 
@@ -40,6 +41,13 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers
 	/// </summary>
 	public class IsEmptyTagHandler : ConditionalTagHandler 
 	{
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="memberAccessorFactory"></param>
+		public IsEmptyTagHandler(IMemberAccessorFactory memberAccessorFactory):base(memberAccessorFactory)
+		{
+		}
 
 		#region Methods
 		/// <summary>
@@ -61,7 +69,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers
 				object value = null;
 				if (propertyName != null && propertyName.Length>0) 
 				{
-					value = ObjectProbe.GetPropertyValue(parameterObject, propertyName);
+					value = ObjectProbe.GetMemberValue(parameterObject, propertyName, this.MemberAccessorFactory);
 				} 
 				else 
 				{

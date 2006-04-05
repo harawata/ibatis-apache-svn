@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -27,7 +27,7 @@
 #region Imports
 using System;
 using System.Xml.Serialization;
-
+using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers;
 #endregion
 
@@ -44,9 +44,9 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements
 		/// <summary>
 		/// 
 		/// </summary>
-		public Dynamic()
+		public Dynamic(IMemberAccessorFactory memberAccessorFactory)
 		{
-			this.Handler = new DynamicTagHandler();
+			this.Handler = new DynamicTagHandler(memberAccessorFactory);
 		}
 
 	}

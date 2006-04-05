@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -26,7 +26,7 @@
 
 #region Imports
 using System;
-
+using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements;
 #endregion
 
@@ -39,6 +39,14 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers
 	/// </summary>
 	public class IsGreaterEqualTagHandler : ConditionalTagHandler
 	{
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="memberAccessorFactory"></param>
+		public IsGreaterEqualTagHandler(IMemberAccessorFactory memberAccessorFactory):base(memberAccessorFactory)
+		{
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>

@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -26,7 +26,7 @@
 
 using System;
 using System.Xml.Serialization;
-
+using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers;
 
 namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements
@@ -41,9 +41,9 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements
 		/// <summary>
 		/// 
 		/// </summary>
-		public IsGreaterEqual()
+		public IsGreaterEqual(IMemberAccessorFactory memberAccessorFactory)
 		{
-			this.Handler = new IsGreaterEqualTagHandler();
+			this.Handler = new IsGreaterEqualTagHandler(memberAccessorFactory);
 		}
 	}
 }

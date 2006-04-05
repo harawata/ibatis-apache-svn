@@ -166,8 +166,9 @@ namespace IBatisNet.DataMapper.Commands
 						request.ParameterMap.GetProperty(i).DbType.Length >0)
 					{
 						string dbTypePropertyName = session.DataSource.DbProvider.ParameterDbTypeProperty;
-						object propertyValue = ObjectProbe.GetPropertyValue(sqlParameter, dbTypePropertyName);
-						ObjectProbe.SetPropertyValue(parameterCopy, dbTypePropertyName, propertyValue);
+						object propertyValue = ObjectProbe.GetMemberValue(sqlParameter, dbTypePropertyName, request.MemberAccessorFactory);
+						ObjectProbe.SetMemberValue(parameterCopy, dbTypePropertyName, propertyValue, 
+							request.ObjectFactory, request.MemberAccessorFactory);
 					}
 					else
 					{

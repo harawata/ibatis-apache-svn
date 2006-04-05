@@ -120,7 +120,7 @@ namespace IBatisNet.DataMapper
 			else
 			{
 #if dotnet2
-                if (ObjectProbe.GetPropertyInfoForSetter(target.GetType(), propertyName).GetType().IsGenericType)
+                if (ObjectProbe.GetMemberInfoForSetter(target.GetType(), propertyName).GetType().IsGenericType)
                 {
                     Type[] typeArgs = listClassType.GetGenericArguments();
                     //Type elementType = postSelect.ResultProperty.PropertyInfo.PropertyType.GetGenericArguments()[0];
@@ -173,7 +173,7 @@ namespace IBatisNet.DataMapper
 
 			object returnValue = invocation.Method.Invoke( _innerList, arguments);
 			
-			ObjectProbe.SetPropertyValue( _target, _propertyName, _innerList);
+			ObjectProbe.SetMemberValue( _target, _propertyName, _innerList, _sqlMap.ObjectFactory,  _sqlMap.MemberAccessorFactory);
 
 			if (_logger.IsDebugEnabled) 
 			{

@@ -29,6 +29,7 @@
 using System.Collections;
 using System.Data;
 using System.Runtime.CompilerServices;
+using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
@@ -59,6 +60,7 @@ namespace IBatisNet.DataMapper.Scope
 		private TypeHandlerFactory _typeHandlerFactory = null;
 		private IMemberAccessorFactory _memberAccessorFactory = null;
 		private DataExchangeFactory _dataExchangeFactory = null;
+		private IObjectFactory _objectFactory = null;
 		#endregion
 	
 		#region Properties
@@ -116,15 +118,9 @@ namespace IBatisNet.DataMapper.Scope
 			get { return _preparedStatement; }
 			set { _preparedStatement = value; }
 		}
-		#endregion
 
-		/// <summary>
-		/// A factory for DataExchange objects
-		/// </summary>
-		public DataExchangeFactory DataExchangeFactory
-		{
-			get { return _dataExchangeFactory; }
-		}
+
+		#endregion
 
 		#region Constructors
 
@@ -134,11 +130,15 @@ namespace IBatisNet.DataMapper.Scope
 		/// <param name="memberAccessorFactory"></param>
 		/// <param name="typeHandlerFactory"></param>
 		/// <param name="dataExchangeFactory"></param>
+		/// <param name="objectFactory"></param>
 		public RequestScope(TypeHandlerFactory typeHandlerFactory, 
 			IMemberAccessorFactory memberAccessorFactory,
+			IObjectFactory objectFactory,
 			DataExchangeFactory dataExchangeFactory)
 		{
 			_errorContext = new ErrorContext();
+
+			_objectFactory = objectFactory;
 			_typeHandlerFactory = typeHandlerFactory;
 			_memberAccessorFactory = memberAccessorFactory;
 			_dataExchangeFactory = dataExchangeFactory;
@@ -197,6 +197,22 @@ namespace IBatisNet.DataMapper.Scope
 
 		#region IScope Members
 
+		/// <summary>
+		/// The factory for object
+		/// </summary>
+		public IObjectFactory ObjectFactory
+		{
+			get{ return _objectFactory; }
+		}
+
+		/// <summary>
+		/// A factory for DataExchange objects
+		/// </summary>
+		public DataExchangeFactory DataExchangeFactory
+		{
+			get { return _dataExchangeFactory; }
+		}		
+		
 		/// <summary>
 		/// The current TypeHandlerFactory
 		/// </summary>

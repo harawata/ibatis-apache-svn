@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -25,7 +25,7 @@
 #endregion
 
 using System;
-
+using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements;
 
 namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers
@@ -35,6 +35,14 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers
 	/// </summary>
 	public class IsNotEmptyTagHandler : IsEmptyTagHandler
 	{
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="memberAccessorFactory"></param>
+		public IsNotEmptyTagHandler(IMemberAccessorFactory memberAccessorFactory):base(memberAccessorFactory)
+		{
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>

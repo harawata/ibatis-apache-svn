@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -26,7 +26,7 @@
 
 using System;
 using System.Xml.Serialization;
-
+using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers;
 
 
@@ -42,9 +42,10 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements
 		/// <summary>
 		/// 
 		/// </summary>
-		public IsEqual()
+		/// <param name="memberAccessorFactory"></param>
+		public IsEqual(IMemberAccessorFactory memberAccessorFactory)
 		{
-			this.Handler = new IsEqualTagHandler();
+			this.Handler = new IsEqualTagHandler(memberAccessorFactory);
 		}
 	}
 }

@@ -27,6 +27,7 @@
 #region Imports
 
 using IBatisNet.Common;
+using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.Configuration.Statements;
 using IBatisNet.DataMapper.DataExchange;
@@ -50,6 +51,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Static
 		private TypeHandlerFactory _typeHandlerFactory = null;
 		private IMemberAccessorFactory _memberAccessorFactory = null;
 		private DataExchangeFactory _dataExchangeFactory = null;
+		private IObjectFactory _objectFactory = null;
 
 		#endregion
 
@@ -62,9 +64,12 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Static
 		public StaticSql(IScope scope, IStatement statement)
 		{
 			_statement = statement;
+
 			_typeHandlerFactory = scope.TypeHandlerFactory ;
 			_memberAccessorFactory = scope.MemberAccessorFactory;
 			_dataExchangeFactory = scope.DataExchangeFactory;
+			_objectFactory = scope.ObjectFactory;
+
 		}
 		#endregion
 
@@ -78,7 +83,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Static
 		/// <returns>The sql command text.</returns>
 		public RequestScope GetRequestScope(object parameterObject, IDalSession session)
 		{
-			RequestScope request = new RequestScope(_typeHandlerFactory, _memberAccessorFactory, _dataExchangeFactory);
+			RequestScope request = new RequestScope(_typeHandlerFactory, _memberAccessorFactory, _objectFactory, _dataExchangeFactory);
 
 			request.ParameterMap = _statement.ParameterMap;
 			request.ResultMap = _statement.ResultMap;
@@ -94,7 +99,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Static
 		/// <param name="sqlStatement"></param>
 		public void BuildPreparedStatement(IDalSession session, string sqlStatement)
 		{
-			RequestScope request = new RequestScope(_typeHandlerFactory, _memberAccessorFactory, _dataExchangeFactory);
+			RequestScope request = new RequestScope(_typeHandlerFactory, _memberAccessorFactory, _objectFactory, _dataExchangeFactory);
 
 			request.ParameterMap = _statement.ParameterMap;
 

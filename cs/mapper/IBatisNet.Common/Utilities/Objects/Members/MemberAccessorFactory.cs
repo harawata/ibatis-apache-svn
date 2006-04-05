@@ -164,7 +164,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 		{
             FieldInfo fieldInfo = targetType.GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
 
-            if (fieldInfo.FieldType.IsPublic)
+            if (fieldInfo.IsPublic)
             {
 			    return new EmitFieldAccessor(targetType, fieldName, _assemblyBuilder, _moduleBuilder);
             }

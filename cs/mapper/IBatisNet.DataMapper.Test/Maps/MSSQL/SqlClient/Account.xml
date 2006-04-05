@@ -75,7 +75,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 	<resultMaps>            
 		                      
 		<resultMap id="account-result"  class="Account" >
-			<result property="Id"           column="Account_ID"/>
+			<result property="_id"           column="Account_ID"/>
 			<result property="FirstName"    column="Account_FirstName"/>
 			<result property="LastName"     column="Account_LastName"/>
 			<result property="EmailAddress" column="Account_Email" nullValue="no_email@provided.com"/>
@@ -247,7 +247,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 		<select id="GetAllAccountsViaResultClass" 
 			resultClass="Account">
 			select
-			Account_ID as Id,
+			Account_ID as _id,
 			Account_FirstName as FirstName,
 			Account_LastName as LastName,
 			Account_Email as EmailAddress

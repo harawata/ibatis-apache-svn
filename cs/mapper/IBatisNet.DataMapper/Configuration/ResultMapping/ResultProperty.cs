@@ -290,7 +290,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 				}
 				else // complex member name FavouriteLineItem.Id
 				{
-					PropertyInfo propertyInfo = ObjectProbe.GetPropertyInfoForSetter(resultClass, _propertyName);
+					MemberInfo propertyInfo = ObjectProbe.GetMemberInfoForSetter(resultClass, _propertyName);
 					string memberName = _propertyName.Substring( _propertyName.LastIndexOf('.')+1);
 					_memberAccessor = configScope.MemberAccessorFactory.CreateMemberAccessor( propertyInfo.ReflectedType, memberName);
 				}

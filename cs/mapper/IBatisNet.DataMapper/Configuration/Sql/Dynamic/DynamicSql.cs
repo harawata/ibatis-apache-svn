@@ -29,6 +29,7 @@
 using System.Collections;
 using System.Text;
 using IBatisNet.Common;
+using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements;
@@ -61,6 +62,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 		private TypeHandlerFactory _typeHandlerFactory = null;
 		private IMemberAccessorFactory _memberAccessorFactory = null;
 		private DataExchangeFactory _dataExchangeFactory = null;
+		private IObjectFactory _objectFactory = null;
 
 		#endregion
 
@@ -73,10 +75,12 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 		internal DynamicSql(ConfigurationScope configScope, IStatement statement)
 		{
 			_statement = statement;
+
 			_typeHandlerFactory = configScope.TypeHandlerFactory;
 			_memberAccessorFactory = configScope.MemberAccessorFactory;
 			_usePositionalParameters = configScope.DataSource.DbProvider.UsePositionalParameters;
 			_dataExchangeFactory = configScope.DataExchangeFactory;
+			_objectFactory = configScope.ObjectFactory;
 		}
 		#endregion
 
@@ -105,7 +109,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 		/// <returns></returns>
 		public RequestScope GetRequestScope(object parameterObject, IDalSession session)
 		{ 
-			RequestScope request = new RequestScope(_typeHandlerFactory, _memberAccessorFactory, _dataExchangeFactory);
+			RequestScope request = new RequestScope(_typeHandlerFactory, _memberAccessorFactory, _objectFactory, _dataExchangeFactory);
 			_paramParser = new InlineParameterMapParser();
 			request.ResultMap = _statement.ResultMap;
 

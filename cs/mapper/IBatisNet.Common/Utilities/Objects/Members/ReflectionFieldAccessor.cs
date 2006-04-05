@@ -43,7 +43,8 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 		/// <param name="fieldName">Field name.</param>
 		public ReflectionFieldAccessor(Type targetType, string fieldName)
 		{
-			_fieldInfo = targetType.GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
+			ReflectionInfo reflectionCache = ReflectionInfo.GetInstance( targetType );
+			_fieldInfo = (FieldInfo)reflectionCache.GetGetter(fieldName);
 		}
 
 		#region IMemberAccessor Members

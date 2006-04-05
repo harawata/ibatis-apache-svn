@@ -1,12 +1,12 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
- * $Revision: $
- * $Date$
+ * $Revision$
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,10 +24,9 @@
  ********************************************************************************/
 #endregion
 
-#region Imports
-using System;
+#region Using
 using System.Text;
-
+using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements;
 #endregion
 
@@ -53,6 +52,25 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers
 		/// </summary>
 		public const int REPEAT_BODY = 2;
 		#endregion
+
+		private IMemberAccessorFactory _memberAccessorFactory = null;
+
+		/// <summary>
+		/// The factory which build IMemberAccessor
+		/// </summary>
+		public IMemberAccessorFactory MemberAccessorFactory
+		{
+			get { return _memberAccessorFactory; }
+		}
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="memberAccessorFactory"></param>
+		public BaseTagHandler(IMemberAccessorFactory memberAccessorFactory)
+		{
+			_memberAccessorFactory = memberAccessorFactory;
+		}
 
 		#region Methods
 		/// <summary>

@@ -1,7 +1,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -61,7 +61,7 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 		/// <returns></returns>
 		public SqlTag Deserialize(XmlNode node)
 		{
-			IsNotParameterPresent isNotParameterPresent = new IsNotParameterPresent();
+			IsNotParameterPresent isNotParameterPresent = new IsNotParameterPresent(_configScope.MemberAccessorFactory);
 
 			NameValueCollection prop = NodeUtils.ParseAttributes(node, _configScope.Properties);
 			isNotParameterPresent.Prepend = NodeUtils.GetStringAttribute(prop, "prepend");

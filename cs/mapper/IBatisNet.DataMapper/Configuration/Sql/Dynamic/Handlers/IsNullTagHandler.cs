@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -24,10 +24,9 @@
  ********************************************************************************/
 #endregion
 
-using System;
-
-using IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements;
 using IBatisNet.Common.Utilities.Objects;
+using IBatisNet.Common.Utilities.Objects.Members;
+using IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements;
 
 namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers
 {
@@ -36,6 +35,14 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers
 	/// </summary>
 	public class IsNullTagHandler : ConditionalTagHandler
 	{
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="memberAccessorFactory"></param>
+		public IsNullTagHandler(IMemberAccessorFactory memberAccessorFactory):base(memberAccessorFactory)
+		{
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -55,7 +62,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers
 				object value;
 				if (propertyName != null && propertyName.Length>0 ) 
 				{
-					value = ObjectProbe.GetPropertyValue(parameterObject, propertyName);
+					value = ObjectProbe.GetMemberValue(parameterObject, propertyName, this.MemberAccessorFactory);
 				} 
 				else 
 				{

@@ -59,6 +59,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.SimpleDynamic
 		private TypeHandlerFactory _typeHandlerFactory = null;
 		private IMemberAccessorFactory _memberAccessorFactory = null;
 		private DataExchangeFactory _dataExchangeFactory = null;
+		private IObjectFactory _objectFactory = null;
 
 		#endregion
 
@@ -75,9 +76,11 @@ namespace IBatisNet.DataMapper.Configuration.Sql.SimpleDynamic
 		{
 			_simpleSqlStatement = sqlStatement;
 			_statement = statement;
+
 			_typeHandlerFactory = scope.TypeHandlerFactory;
 			_memberAccessorFactory = scope.MemberAccessorFactory;
 			_dataExchangeFactory = scope.DataExchangeFactory;
+			_objectFactory = scope.ObjectFactory;
 		}
 		#endregion
 		
@@ -142,7 +145,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.SimpleDynamic
 							} 
 							else 
 							{
-								value = ObjectProbe.GetPropertyValue(parameterObject, token);
+								value = ObjectProbe.GetMemberValue(parameterObject, token, _memberAccessorFactory);
 							}
 						}
 						if (value != null) 
@@ -187,7 +190,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.SimpleDynamic
 		{
 			string sqlStatement = ProcessDynamicElements(parameterObject);
 			
-			RequestScope request = new RequestScope(_typeHandlerFactory, _memberAccessorFactory, _dataExchangeFactory);
+			RequestScope request = new RequestScope(_typeHandlerFactory, _memberAccessorFactory, _objectFactory, _dataExchangeFactory);
 
 			request.ParameterMap = _statement.ParameterMap;
 			request.ResultMap = _statement.ResultMap;

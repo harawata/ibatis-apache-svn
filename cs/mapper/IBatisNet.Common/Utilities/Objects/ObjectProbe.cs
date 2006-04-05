@@ -29,6 +29,7 @@ using System.Collections;
 using System.Reflection;
 
 using IBatisNet.Common.Exceptions;
+using IBatisNet.Common.Utilities.Objects.Members;
 
 namespace IBatisNet.Common.Utilities.Objects
 {
@@ -78,35 +79,36 @@ namespace IBatisNet.Common.Utilities.Objects
 		/// <returns>The properties name</returns>
 		public static string[] GetReadablePropertyNames(object obj) 
 		{
-			return ReflectionInfo.GetInstance(obj.GetType()).GetReadablePropertyNames();
+			return ReflectionInfo.GetInstance(obj.GetType()).GetReadableMemberNames();
 		}
 
 	
 		/// <summary>
-		/// Returns an array of the writeable properties name exposed by a object
+		/// Returns an array of the writeable members name exposed by a object
 		/// </summary>
 		/// <param name="obj">The object</param>
-		/// <returns>The properties name</returns>
-		public static string[] GetWriteablePropertyNames(object obj) 
+		/// <returns>The members name</returns>
+		public static string[] GetWriteableMemberNames(object obj) 
 		{
-			return ReflectionInfo.GetInstance(obj.GetType()).GetWriteablePropertyNames();
+			return ReflectionInfo.GetInstance(obj.GetType()).GetWriteableMemberNames();
 		}
+
 
 		/// <summary>
 		///  Returns the type that the set expects to receive as a parameter when
-		///  setting a property value.
+		///  setting a member value.
 		/// </summary>
 		/// <param name="obj">The object to check</param>
-		/// <param name="propertyName">The name of the property</param>
-		/// <returns>The type of the property</returns>
-		public static Type GetPropertyTypeForSetter(object obj, string propertyName) 
+		/// <param name="memberName">The name of the member</param>
+		/// <returns>The type of the member</returns>
+		public static Type GetMemberTypeForSetter(object obj, string memberName) 
 		{
 			Type type = obj.GetType();
 
 			if (obj is IDictionary) 
 			{
 				IDictionary map = (IDictionary) obj;
-				object value = map[propertyName];
+				object value = map[memberName];
 				if (value == null) 
 				{
 					type = typeof(object);
@@ -118,50 +120,21 @@ namespace IBatisNet.Common.Utilities.Objects
 			} 
 			else 
 			{
-				if (propertyName.IndexOf('.') > -1) 
+				if (memberName.IndexOf('.') > -1) 
 				{
-					StringTokenizer parser = new StringTokenizer(propertyName, ".");
+					StringTokenizer parser = new StringTokenizer(memberName, ".");
 					IEnumerator enumerator = parser.GetEnumerator();
 
 					while (enumerator.MoveNext()) 
 					{
-						propertyName = (string)enumerator.Current;
-						type = ReflectionInfo.GetInstance(type).GetSetterType(propertyName);
+						memberName = (string)enumerator.Current;
+						type = ReflectionInfo.GetInstance(type).GetSetterType(memberName);
 					}
 				} 
 				else 
 				{
-					type = ReflectionInfo.GetInstance(type).GetSetterType(propertyName);
+					type = ReflectionInfo.GetInstance(type).GetSetterType(memberName);
 				}
-			}
-
-			return type;
-		}
-
-
-		/// <summary>
-		///  Returns the type that the set expects to receive as a parameter when
-		///  setting a property value.
-		/// </summary>
-		/// <param name="type">The type to check</param>
-		/// <param name="propertyName">The name of the property</param>
-		/// <returns>The type of the property</returns>
-		private static Type GetPropertyTypeForSetter(Type type, string propertyName) 
-		{
-			if (propertyName.IndexOf('.') > -1) 
-			{
-				StringTokenizer parser = new StringTokenizer(propertyName, ".");
-				IEnumerator enumerator = parser.GetEnumerator();
-
-				while (enumerator.MoveNext()) 
-				{
-					propertyName = (string)enumerator.Current;
-					type = ReflectionInfo.GetInstance(type).GetSetterType(propertyName);
-				}
-			} 
-			else 
-			{
-				type = ReflectionInfo.GetInstance(type).GetSetterType(propertyName);
 			}
 
 			return type;
@@ -170,19 +143,19 @@ namespace IBatisNet.Common.Utilities.Objects
 
 		/// <summary>
 		///  Returns the type that the get expects to receive as a parameter when
-		///  setting a property value.
+		///  setting a member value.
 		/// </summary>
 		/// <param name="obj">The object to check</param>
-		/// <param name="propertyName">The name of the property</param>
-		/// <returns>The type of the property</returns>
-		public static Type GetPropertyTypeForGetter(object obj, string propertyName) 
+		/// <param name="memberName">The name of the member</param>
+		/// <returns>The type of the member</returns>
+		public static Type GetMemberTypeForGetter(object obj, string memberName) 
 		{
 			Type type = obj.GetType();
 
 			if (obj is IDictionary) 
 			{
 				IDictionary map = (IDictionary) obj;
-				object value = map[propertyName];
+				object value = map[memberName];
 				if (value == null) 
 				{
 					type = typeof(object);
@@ -194,20 +167,20 @@ namespace IBatisNet.Common.Utilities.Objects
 			} 
 			else 
 			{
-				if (propertyName.IndexOf('.') > -1) 
+				if (memberName.IndexOf('.') > -1) 
 				{
-					StringTokenizer parser = new StringTokenizer(propertyName, ".");
+					StringTokenizer parser = new StringTokenizer(memberName, ".");
 					IEnumerator enumerator = parser.GetEnumerator();
 
 					while (enumerator.MoveNext()) 
 					{
-						propertyName = (string)enumerator.Current;
-						type = ReflectionInfo.GetInstance(type).GetGetterType(propertyName);
+						memberName = (string)enumerator.Current;
+						type = ReflectionInfo.GetInstance(type).GetGetterType(memberName);
 					}
 				} 
 				else 
 				{
-					type = ReflectionInfo.GetInstance(type).GetGetterType(propertyName);
+					type = ReflectionInfo.GetInstance(type).GetGetterType(memberName);
 				}
 			}
 
@@ -217,64 +190,66 @@ namespace IBatisNet.Common.Utilities.Objects
 
 		/// <summary>
 		///  Returns the type that the get expects to receive as a parameter when
-		///  setting a property value.
+		///  setting a member value.
 		/// </summary>
 		/// <param name="type">The type to check</param>
-		/// <param name="propertyName">The name of the property</param>
-		/// <returns>The type of the property</returns>
-		public static Type GetPropertyTypeForGetter(Type type, string propertyName) 
+		/// <param name="memberName">The name of the member</param>
+		/// <returns>The type of the member</returns>
+		public static Type GetMemberTypeForGetter(Type type, string memberName) 
 		{
-			if (propertyName.IndexOf('.') > -1) 
+			if (memberName.IndexOf('.') > -1) 
 			{
-				StringTokenizer parser = new StringTokenizer(propertyName, ".");
+				StringTokenizer parser = new StringTokenizer(memberName, ".");
 				IEnumerator enumerator = parser.GetEnumerator();
 
 				while (enumerator.MoveNext()) 
 				{
-					propertyName = (string)enumerator.Current;
-					type = ReflectionInfo.GetInstance(type).GetGetterType(propertyName);
+					memberName = (string)enumerator.Current;
+					type = ReflectionInfo.GetInstance(type).GetGetterType(memberName);
 				}
 			} 
 			else 
 			{
-				type = ReflectionInfo.GetInstance(type).GetGetterType(propertyName);
+				type = ReflectionInfo.GetInstance(type).GetGetterType(memberName);
 			}
 
 			return type;
 		}
 
+
 		/// <summary>
-		///  Returns the PropertyInfo of the set property on the specified type.
+		///  Returns the MemberInfo of the set member on the specified type.
 		/// </summary>
 		/// <param name="type">The type to check</param>
-		/// <param name="propertyName">The name of the property</param>
-		/// <returns>The type of the property</returns>
-		public static PropertyInfo GetPropertyInfoForSetter(Type type, string propertyName) 
+		/// <param name="memberName">The name of the member</param>
+		/// <returns>The type of the member</returns>
+		public static MemberInfo GetMemberInfoForSetter(Type type, string memberName) 
 		{
-			PropertyInfo propertyInfo =null;
-			if (propertyName.IndexOf('.') > -1) 
+			MemberInfo memberInfo =null;
+			if (memberName.IndexOf('.') > -1) 
 			{
-				StringTokenizer parser = new StringTokenizer(propertyName, ".");
+				StringTokenizer parser = new StringTokenizer(memberName, ".");
 				IEnumerator enumerator = parser.GetEnumerator();
 				Type parentType = null;
 
 				while (enumerator.MoveNext()) 
 				{
-					propertyName = (string)enumerator.Current;
+					memberName = (string)enumerator.Current;
 					parentType = type;
-					type = ReflectionInfo.GetInstance(type).GetSetterType(propertyName);
+					type = ReflectionInfo.GetInstance(type).GetSetterType(memberName);
 				}
-				propertyInfo = ReflectionInfo.GetInstance(parentType).GetSetter(propertyName);
+				memberInfo = ReflectionInfo.GetInstance(parentType).GetSetter(memberName);
 			} 
 			else 
 			{
-				propertyInfo = ReflectionInfo.GetInstance(type).GetSetter(propertyName);
+				memberInfo = ReflectionInfo.GetInstance(type).GetSetter(memberName);
 			}
 
-			return propertyInfo;
+			return memberInfo;
 		}
 
-		private static object GetArrayProperty(object obj, string indexedName) 
+
+		private static object GetArrayMember(object obj, string indexedName, IMemberAccessorFactory memberAccessorFactory)
 		{
 			object value = null;
 
@@ -288,7 +263,7 @@ namespace IBatisNet.Common.Utilities.Objects
 				
 				if (name.Length > 0)
 				{
-					value = GetProperty(obj, name);
+					value = GetMember(obj, name, memberAccessorFactory);
 				}
 				else
 				{
@@ -301,7 +276,7 @@ namespace IBatisNet.Common.Utilities.Objects
 				} 
 				else 
 				{
-					throw new ProbeException("The '" + name + "' property of the " + obj.GetType().Name + " class is not a List or Array.");
+					throw new ProbeException("The '" + name + "' member of the " + obj.GetType().Name + " class is not a List or Array.");
 				}
 			}
 			catch (ProbeException pe) 
@@ -317,72 +292,10 @@ namespace IBatisNet.Common.Utilities.Objects
 		}
 
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="obj"></param>
-		/// <param name="propertyName"></param>
-		/// <returns></returns>
-		protected static object GetProperty(object obj, string propertyName) 
-		{
-			try 
-			{
-				object value = null;
-
-				if (propertyName.IndexOf("[") > -1) 
-				{
-					value = GetArrayProperty(obj, propertyName);
-				} 
-				else 
-				{
-					if (obj is IDictionary) 
-					{
-						value = ((IDictionary) obj)[propertyName];
-					} 
-					else 
-					{
-						ReflectionInfo reflectionCache = ReflectionInfo.GetInstance(obj.GetType());
-						PropertyInfo propertyInfo = reflectionCache.GetGetter(propertyName);
-						if (propertyInfo == null) 
-						{
-							throw new ProbeException("No Get method for property " + propertyName + " on instance of " + obj.GetType().Name);
-						}
-						try 
-						{
-							value = propertyInfo.GetValue(obj, null);
-						} 
-						catch (ArgumentException ae) 
-						{
-							throw new ProbeException(ae);
-						}
-						catch (TargetException t) 
-						{
-							throw new ProbeException(t);
-						}
-						catch (TargetParameterCountException tp) 
-						{
-							throw new ProbeException(tp);
-						}
-						catch (MethodAccessException ma) 
-						{
-							throw new ProbeException(ma);
-						}						
-					}
-				}
-				return value;
-			} 
-			catch (ProbeException pe) 
-			{
-				throw pe;
-			} 
-			catch(Exception e)
-			{
-				throw new ProbeException("Could not Set property '" + propertyName + "' for " + obj.GetType().Name + ".  Cause: " + e.Message, e);
-			}
-		}
 
 
-		private static void SetArrayProperty(object obj, string indexedName, object value) 
+		private static void SetArrayMember(object obj, string indexedName, object value,
+			IMemberAccessorFactory memberAccessorFactory)
 		{
 			try 
 			{
@@ -395,7 +308,7 @@ namespace IBatisNet.Common.Utilities.Objects
 				object list = null;
 				if (name.Length > 0)
 				{
-					list = GetProperty(obj, name);
+					list = GetMember(obj, name, memberAccessorFactory);
 				}
 				else
 				{
@@ -408,7 +321,7 @@ namespace IBatisNet.Common.Utilities.Objects
 				} 
 				else 
 				{
-					throw new ProbeException("The '" + name + "' property of the " + obj.GetType().Name + " class is not a List or Array.");
+					throw new ProbeException("The '" + name + "' member of the " + obj.GetType().Name + " class is not a List or Array.");
 				}
 			} 
 			catch (ProbeException pe) 
@@ -423,79 +336,18 @@ namespace IBatisNet.Common.Utilities.Objects
 
 
 		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="obj"></param>
-		/// <param name="propertyName"></param>
-		/// <param name="propertyValue"></param>
-		protected static void SetProperty(object obj, string propertyName, object propertyValue)
-		{
-			try 
-			{
-				if (propertyName.IndexOf("[") > -1) 
-				{
-					SetArrayProperty(obj, propertyName, propertyValue);
-				} 
-				else 
-				{
-					if (obj is IDictionary) 
-					{
-						((IDictionary) obj)[propertyName] = propertyValue;
-					} 
-					else 
-					{
-						ReflectionInfo reflectionCache = ReflectionInfo.GetInstance(obj.GetType());
-						PropertyInfo propertyInfo = reflectionCache.GetSetter(propertyName);
-						
-						if (propertyInfo == null) 
-						{
-							throw new ProbeException("No Set method for property " + propertyName + " on instance of " + obj.GetType().Name);
-						}
-						try 
-						{
-							propertyInfo.SetValue(obj, propertyValue, null);
-						}
-						catch (ArgumentException ae) 
-						{
-							throw new ProbeException(ae);
-						}
-						catch (TargetException t) 
-						{
-							throw new ProbeException(t);
-						}
-						catch (TargetParameterCountException tp) 
-						{
-							throw new ProbeException(tp);
-						}
-						catch (MethodAccessException ma) 
-						{
-							throw new ProbeException(ma);
-						}						
-					}
-				}
-			}
-			catch (ProbeException pe) 
-			{
-				throw pe;
-			} 
-			catch (Exception e) 
-			{
-				throw new ProbeException("Could not Get property '" + propertyName + "' for " + obj.GetType().Name + ".  Cause: " + e.Message, e);
-			}
-		}
-
-
-		/// <summary>
-		/// Return the specified property on an object. 
+		/// Return the specified member on an object. 
 		/// </summary>
 		/// <param name="obj">The Object on which to invoke the specified property.</param>
-		/// <param name="propertyName">The name of the property.</param>
+		/// <param name="memberName">The name of the property.</param>
+		/// <param name="memberAccessorFactory"></param>
 		/// <returns>An Object representing the return value of the invoked property.</returns>
-		public static object GetPropertyValue(object obj, string propertyName) 
+		public static object GetMemberValue(object obj, string memberName,
+			IMemberAccessorFactory memberAccessorFactory)
 		{
-			if (propertyName.IndexOf('.') > -1) 
+			if (memberName.IndexOf('.') > -1) 
 			{
-				StringTokenizer parser = new StringTokenizer(propertyName, ".");
+				StringTokenizer parser = new StringTokenizer(memberName, ".");
 				IEnumerator enumerator = parser.GetEnumerator();
 				object value = obj;
 				string token = null;
@@ -503,7 +355,7 @@ namespace IBatisNet.Common.Utilities.Objects
 				while (enumerator.MoveNext()) 
 				{
 					token = (string)enumerator.Current;
-					value = GetProperty(value, token);
+					value = GetMember(value, token, memberAccessorFactory);
 
 					if (value == null) 
 					{
@@ -514,22 +366,82 @@ namespace IBatisNet.Common.Utilities.Objects
 			} 
 			else 
 			{
-				return GetProperty(obj, propertyName);
+				return GetMember(obj, memberName, memberAccessorFactory);
 			}
 		}
 
 
 		/// <summary>
-		/// Set the specified property on an object 
+		/// 
+		/// </summary>
+		/// <param name="obj"></param>
+		/// <param name="memberName"></param>
+		/// <param name="memberAccessorFactory"></param>
+		/// <returns></returns>
+		protected static object GetMember(object obj, string memberName,
+			IMemberAccessorFactory memberAccessorFactory)
+		{
+			try 
+			{
+				object value = null;
+
+				if (memberName.IndexOf("[") > -1) 
+				{
+					value = GetArrayMember(obj, memberName, memberAccessorFactory);
+				} 
+				else 
+				{
+					if (obj is IDictionary) 
+					{
+						value = ((IDictionary) obj)[memberName];
+					} 
+					else 
+					{
+						Type targetType = obj.GetType();
+						IMemberAccessor memberAccessor = memberAccessorFactory.CreateMemberAccessor(targetType, memberName);
+
+						if (memberAccessor == null) 
+						{
+							throw new ProbeException("No Get method for member " + memberName + " on instance of " + obj.GetType().Name);
+						}
+						try 
+						{
+							value = memberAccessor.Get(obj);
+						} 
+						catch (Exception ae) 
+						{
+							throw new ProbeException(ae);
+						}					
+					}
+				}
+				return value;
+			} 
+			catch (ProbeException pe) 
+			{
+				throw pe;
+			} 
+			catch(Exception e)
+			{
+				throw new ProbeException("Could not Set property '" + memberName + "' for " + obj.GetType().Name + ".  Cause: " + e.Message, e);
+			}
+		}
+
+
+		/// <summary>
+		/// Set the specified member on an object 
 		/// </summary>
 		/// <param name="obj">The Object on which to invoke the specified property.</param>
-		/// <param name="propertyName">The name of the property to set.</param>
-		/// <param name="propertyValue">The new value to set.</param>
-		public static void SetPropertyValue(object obj, string propertyName, object propertyValue)
+		/// <param name="memberName">The name of the property to set.</param>
+		/// <param name="memberValue">The new value to set.</param>
+		/// <param name="memberAccessorFactory"></param>
+		/// <param name="objectFactory"></param>
+		public static void SetMemberValue(object obj, string memberName, object memberValue,
+			IObjectFactory objectFactory,
+			IMemberAccessorFactory memberAccessorFactory)
 		{
-			if (propertyName.IndexOf('.') > -1) 
+			if (memberName.IndexOf('.') > -1) 
 			{
-				StringTokenizer parser = new StringTokenizer(propertyName, ".");
+				StringTokenizer parser = new StringTokenizer(memberName, ".");
 				IEnumerator enumerator = parser.GetEnumerator();
 				enumerator.MoveNext();
 
@@ -538,28 +450,83 @@ namespace IBatisNet.Common.Utilities.Objects
       
 				while (enumerator.MoveNext()) 
 				{
-					Type type = GetPropertyTypeForSetter(child, currentPropertyName);
+					Type type = GetMemberTypeForSetter(child, currentPropertyName);
 					object parent = child;
-					child = GetProperty(parent, currentPropertyName);
+					child = GetMember(parent, currentPropertyName, memberAccessorFactory);
 					if (child == null) 
 					{
 						try 
 						{
-							child = Activator.CreateInstance(type);
-							SetPropertyValue(parent, currentPropertyName, child);
+							IFactory factory = objectFactory.CreateFactory(type);
+							child = factory.CreateInstance();
+
+							SetMemberValue(parent, currentPropertyName, child, objectFactory, memberAccessorFactory);
 						} 
 						catch (Exception e) 
 						{
-							throw new ProbeException("Cannot set value of property '" + propertyName + "' because '" + currentPropertyName + "' is null and cannot be instantiated on instance of " + type.Name + ". Cause:" + e.Message, e);
+							throw new ProbeException("Cannot set value of property '" + memberName + "' because '" + currentPropertyName + "' is null and cannot be instantiated on instance of " + type.Name + ". Cause:" + e.Message, e);
 						}
 					}
 					currentPropertyName = (string)enumerator.Current;
 				}
-				SetProperty(child, currentPropertyName, propertyValue);
+				SetMember(child, currentPropertyName, memberValue, memberAccessorFactory);
 			} 
 			else 
 			{
-				SetProperty(obj, propertyName, propertyValue);
+				SetMember(obj, memberName, memberValue, memberAccessorFactory);
+			}
+		}
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="obj"></param>
+		/// <param name="memberName"></param>
+		/// <param name="memberValue"></param>
+		/// <param name="memberAccessorFactory"></param>
+		protected static void SetMember(object obj, string memberName, object memberValue,
+			IMemberAccessorFactory memberAccessorFactory)
+		{
+			try 
+			{
+				if (memberName.IndexOf("[") > -1) 
+				{
+					SetArrayMember(obj, memberName, memberValue, memberAccessorFactory);
+				} 
+				else 
+				{
+					if (obj is IDictionary) 
+					{
+						((IDictionary) obj)[memberName] = memberValue;
+					} 
+					else 
+					{
+						Type targetType = obj.GetType();
+						IMemberAccessor memberAccessor = memberAccessorFactory.CreateMemberAccessor(targetType, memberName);
+						
+						if (memberAccessor == null) 
+						{
+							throw new ProbeException("No Set method for member " + memberName + " on instance of " + obj.GetType().Name);
+						}
+						try 
+						{
+							memberAccessorFactory.CreateMemberAccessor(targetType, memberName).Set(obj, memberValue);
+						}
+						catch (Exception ex) 
+						{
+							throw new ProbeException(ex);
+						}					
+					}
+				}
+			}
+			catch (ProbeException pe) 
+			{
+				throw pe;
+			} 
+			catch (Exception e) 
+			{
+				throw new ProbeException("Could not Get property '" + memberName + "' for " + obj.GetType().Name + ".  Cause: " + e.Message, e);
 			}
 		}
 
@@ -589,12 +556,12 @@ namespace IBatisNet.Common.Utilities.Objects
 					{ 
 						propertyName = (string)enumerator.Current;
 						type = ReflectionInfo.GetInstance(type).GetGetterType(propertyName);
-						hasProperty = ReflectionInfo.GetInstance(type).HasWritableProperty(propertyName);
+						hasProperty = ReflectionInfo.GetInstance(type).HasWritableMember(propertyName);
 					}
 				} 
 				else 
 				{
-					hasProperty = ReflectionInfo.GetInstance(obj.GetType()).HasWritableProperty(propertyName);
+					hasProperty = ReflectionInfo.GetInstance(obj.GetType()).HasWritableMember(propertyName);
 				}
 			}
 			return hasProperty;
@@ -629,12 +596,12 @@ namespace IBatisNet.Common.Utilities.Objects
 					{ 
 						propertyName = (string)enumerator.Current;
 						type = ReflectionInfo.GetInstance(type).GetGetterType(propertyName);
-						hasProperty = ReflectionInfo.GetInstance(type).HasReadableProperty(propertyName);
+						hasProperty = ReflectionInfo.GetInstance(type).HasReadableMember(propertyName);
 					}
 				} 
 				else 
 				{
-					hasProperty = ReflectionInfo.GetInstance(obj.GetType()).HasReadableProperty(propertyName);
+					hasProperty = ReflectionInfo.GetInstance(obj.GetType()).HasReadableMember(propertyName);
 				}
 			}
 			
@@ -675,57 +642,57 @@ namespace IBatisNet.Common.Utilities.Objects
 		}
 
 
-		/// <summary>
-		///  Calculates a hash code for all readable properties of a object.
-		/// </summary>
-		/// <param name="obj">The object to calculate the hash code for.</param>
-		/// <returns>The hash code.</returns>
-		public static int ObjectHashCode(object obj) 
-		{
-			return ObjectHashCode(obj, GetReadablePropertyNames(obj));
-		}
-
-
-		/// <summary>
-		/// Calculates a hash code for a subset of the readable properties of a object.
-		/// </summary>
-		/// <param name="obj">The object to calculate the hash code for.</param>
-		/// <param name="properties">A list of the properties to hash.</param>
-		/// <returns>The hash code.</returns>
-		public static int ObjectHashCode(object obj, string[] properties ) 
-		{
-			ArrayList alreadyDigested = new ArrayList();
-
-			int hashcode = obj.GetType().FullName.GetHashCode();
-			int length = properties.Length;
-			for (int i = 0; i < length; i++) 
-			{
-				object value = GetProperty(obj, properties[i]);
-				if (value != null) 
-				{
-					if (IsSimpleType(value.GetType())) 
-					{
-						hashcode += value.GetHashCode();
-						hashcode += value.ToString().GetHashCode()*37;
-					} 
-					else 
-					{
-						// It's a Object 
-						// Check to avoid endless loop (circular dependency)
-						if (value != obj) 
-						{
-							if (!alreadyDigested.Contains(value)) 
-							{
-								alreadyDigested.Add(value);
-								hashcode += ObjectHashCode(value);
-							}
-						}
-					}
-					hashcode *= 29;
-				}
-			}
-			return hashcode;
-		}
+//		/// <summary>
+//		///  Calculates a hash code for all readable properties of a object.
+//		/// </summary>
+//		/// <param name="obj">The object to calculate the hash code for.</param>
+//		/// <returns>The hash code.</returns>
+//		public static int ObjectHashCode(object obj) 
+//		{
+//			return ObjectHashCode(obj, GetReadablePropertyNames(obj));
+//		}
+//
+//
+//		/// <summary>
+//		/// Calculates a hash code for a subset of the readable properties of a object.
+//		/// </summary>
+//		/// <param name="obj">The object to calculate the hash code for.</param>
+//		/// <param name="properties">A list of the properties to hash.</param>
+//		/// <returns>The hash code.</returns>
+//		public static int ObjectHashCode(object obj, string[] properties ) 
+//		{
+//			ArrayList alreadyDigested = new ArrayList();
+//
+//			int hashcode = obj.GetType().FullName.GetHashCode();
+//			int length = properties.Length;
+//			for (int i = 0; i < length; i++) 
+//			{
+//				object value = GetProperty(obj, properties[i]);
+//				if (value != null) 
+//				{
+//					if (IsSimpleType(value.GetType())) 
+//					{
+//						hashcode += value.GetHashCode();
+//						hashcode += value.ToString().GetHashCode()*37;
+//					} 
+//					else 
+//					{
+//						// It's a Object 
+//						// Check to avoid endless loop (circular dependency)
+//						if (value != obj) 
+//						{
+//							if (!alreadyDigested.Contains(value)) 
+//							{
+//								alreadyDigested.Add(value);
+//								hashcode += ObjectHashCode(value);
+//							}
+//						}
+//					}
+//					hashcode *= 29;
+//				}
+//			}
+//			return hashcode;
+//		}
 
 	}
 }

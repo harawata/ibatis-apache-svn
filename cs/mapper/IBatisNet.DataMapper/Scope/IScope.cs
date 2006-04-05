@@ -1,3 +1,4 @@
+using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.DataExchange;
 using IBatisNet.DataMapper.TypeHandlers;
@@ -48,6 +49,11 @@ namespace IBatisNet.DataMapper.Scope
 		/// The factory which build MemberAccessorFactory
 		/// </summary>
 		IMemberAccessorFactory MemberAccessorFactory { get; }
+
+		/// <summary>
+		/// The factory for object
+		/// </summary>
+		IObjectFactory ObjectFactory { get; }
 
 		/// <summary>
 		/// The factory for DataExchange objects
