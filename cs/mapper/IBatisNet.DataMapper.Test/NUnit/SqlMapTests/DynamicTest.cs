@@ -414,6 +414,43 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			AssertAccount1(account);
 		}
 
+		/// <summary>
+		/// Test Query By Example via private field
+		/// </summary>
+		[Test]
+		public void TestQueryByExampleViaField() 
+		{
+			Account account;
+	
+			account = new Account();
+	
+			account.Id = 1;
+			account = sqlMap.QueryForObject("DynamicQueryByExampleViaPrivateField", account) as Account;
+			AssertAccount1(account);
+	
+			account = new Account();
+			account.FirstName = "Joe";
+			account = sqlMap.QueryForObject("DynamicQueryByExampleViaPrivateField", account) as Account;
+			AssertAccount1(account);
+	
+			account = new Account();
+			account.LastName = "Dalton";
+			account = sqlMap.QueryForObject("DynamicQueryByExampleViaPrivateField", account) as Account;
+			AssertAccount1(account);
+	
+			account = new Account();
+			account.EmailAddress = "Joe.Dalton@somewhere.com";
+			account = (Account) sqlMap.QueryForObject("DynamicQueryByExampleViaPrivateField", account) as Account;
+			AssertAccount1(account);
+	
+			account = new Account();
+			account.Id = 1;
+			account.FirstName = "Joe";
+			account.LastName = "Dalton";
+			account.EmailAddress = "Joe.Dalton@somewhere.com";
+			account = sqlMap.QueryForObject("DynamicQueryByExampleViaPrivateField", account) as Account;
+			AssertAccount1(account);
+		}
 		#endregion
 	}
 }

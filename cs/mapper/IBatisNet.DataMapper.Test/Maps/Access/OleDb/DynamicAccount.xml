@@ -8,6 +8,42 @@ http://ibatis.apache.org/xsd/SqlMap.xsd">
 			
 	<statements>
 
+		<statement id="DynamicQueryByExampleViaPrivateField"
+					parameterClass="Account"
+					resultClass="Account">
+			select
+			Account_ID			as _id,
+			Account_FirstName	as _firstName,
+			Account_LastName	as _lastName,
+			Account_Email		as _emailAddress
+			from Accounts
+			<dynamic prepend="WHERE" >
+			<isGreaterThan prepend="AND" property="_id" compareValue="0"  >
+				Account_ID = #_id#
+			</isGreaterThan>
+			<isNotNull prepend="AND" property="Ids" >
+				Account_ID in
+				<iterate property="_ids" open="(" close=")"  conjunction="," >
+					#_ids[]#
+				</iterate>
+			</isNotNull>
+			<isNotEmpty prepend="AND" property="_firstName" >
+				Account_FirstName = #FirstName#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="_lastName" >
+				Account_LastName = #LastName#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="EmailAddress" >
+				<isEqual property="_emailAddress" compareValue="Joe">
+				Account_Email = 'clinton.begin@ibatis.com'
+				</isEqual>
+				<isNotEqual property="_emailAddress" compareValue="Joe">
+				Account_Email = #_emailAddress#
+				</isNotEqual>
+			</isNotEmpty>
+			</dynamic>
+		</statement>
+		
 		<select  id="DynamicAll"
 					parameterClass="Account"
 					resultClass="Account">
