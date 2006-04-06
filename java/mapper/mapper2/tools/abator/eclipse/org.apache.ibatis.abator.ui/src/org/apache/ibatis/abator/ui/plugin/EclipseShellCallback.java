@@ -47,206 +47,274 @@ import org.eclipse.text.edits.TextEdit;
  * @author Jeff Butler
  */
 public class EclipseShellCallback implements ShellCallback {
-	private Map projects;
+    private Map projects;
 
-	private Map folders;
+    private Map folders;
 
-	/**
-	 *  
-	 */
-	public EclipseShellCallback() {
-		super();
-		projects = new HashMap();
-		folders = new HashMap();
-	}
+    private Map sourceFolders;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.apache.ibatis.abator.core.api.ShellCallback#getDirectory(java.lang.String,
-	 *      java.lang.String, java.util.List)
-	 */
-	public File getDirectory(String targetProject, String targetPackage,
-			List warnings) throws ShellException {
-		try {
-			IFolder folder = getFolder(targetProject, targetPackage);
+    /**
+     *  
+     */
+    public EclipseShellCallback() {
+        super();
+        projects = new HashMap();
+        folders = new HashMap();
+        sourceFolders = new HashMap();
+    }
 
-			return folder.getRawLocation().toFile();
-		} catch (CoreException e) {
-			// TODO - improve this exception handling
-			throw new ShellException(e.getStatus().getMessage());
-		}
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.ibatis.abator.core.api.ShellCallback#getDirectory(java.lang.String,
+     *      java.lang.String, java.util.List)
+     */
+    public File getDirectory(String targetProject, String targetPackage,
+            List warnings) throws ShellException {
+        try {
+            IFolder folder = getFolder(targetProject, targetPackage);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.apache.ibatis.abator.core.api.ShellCallback#mergeJavaFile(java.io.File,
-	 *      org.apache.ibatis.abator.core.api.GeneratedJavaFile,
-	 *      java.lang.String, java.util.List)
-	 */
-	public String mergeJavaFile(GeneratedJavaFile newFile, String javadocTag,
-			List warnings) throws ShellException {
-		try {
-			IFolder folder = getFolder(newFile.getTargetProject(), newFile
-					.getTargetPackage());
+            return folder.getRawLocation().toFile();
+        } catch (CoreException e) {
+            // TODO - improve this exception handling
+            throw new ShellException(e.getStatus().getMessage());
+        }
+    }
 
-			IFile file = folder.getFile(newFile.getFileName());
-			String source;
-			if (file.exists()) {
-				JavaFileMerger merger = new JavaFileMerger(newFile, file);
-				source = merger.getMergedSource();
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.ibatis.abator.core.api.ShellCallback#mergeJavaFile(java.io.File,
+     *      org.apache.ibatis.abator.core.api.GeneratedJavaFile,
+     *      java.lang.String, java.util.List)
+     */
+    public String mergeJavaFile(GeneratedJavaFile newFile, String javadocTag,
+            List warnings) throws ShellException {
+        try {
+            IFolder folder = getFolder(newFile.getTargetProject(), newFile
+                    .getTargetPackage());
 
-			} else {
-				source = formatJavaSource(newFile.getContent());
-			}
+            IFile file = folder.getFile(newFile.getFileName());
+            String source;
+            if (file.exists()) {
+                JavaFileMerger merger = new JavaFileMerger(newFile, file);
+                source = merger.getMergedSource();
 
-			return source;
-		} catch (CoreException e) {
-			// TODO - improve this exception handling
-			throw new ShellException(e.getStatus().getMessage());
-		}
-	}
+            } else {
+                source = formatJavaSource(newFile.getContent());
+            }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.apache.ibatis.abator.core.api.ShellCallback#refreshProject(java.lang.String)
-	 */
-	public void refreshProject(String project) {
-		try {
-			IJavaProject javaProject = getJavaProject(project);
-			javaProject.getCorrespondingResource().refreshLocal(
-					IResource.DEPTH_INFINITE, null);
-		} catch (CoreException e) {
-			// ignore
-			;
-		}
-	}
+            return source;
+        } catch (CoreException e) {
+            // TODO - improve this exception handling
+            throw new ShellException(e.getStatus().getMessage());
+        }
+    }
 
-	private String formatJavaSource(String unformattedSource) {
-		CodeFormatter formatter = ToolFactory.createCodeFormatter(null);
-		TextEdit te = formatter.format(CodeFormatter.K_COMPILATION_UNIT,
-				unformattedSource, 0, unformattedSource.length(), 0, null);
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.ibatis.abator.core.api.ShellCallback#refreshProject(java.lang.String)
+     */
+    public void refreshProject(String project) {
+        try {
+            IPackageFragmentRoot root = getSourceFolder(project);
+            root.getCorrespondingResource().refreshLocal(
+                    IResource.DEPTH_INFINITE, null);
+        } catch (CoreException e) {
+            // ignore
+            ;
+        }
+    }
 
-		if (te == null) {
-			// no edits to make
-			return unformattedSource;
-		}
+    private String formatJavaSource(String unformattedSource) {
+        CodeFormatter formatter = ToolFactory.createCodeFormatter(null);
+        TextEdit te = formatter.format(CodeFormatter.K_COMPILATION_UNIT,
+                unformattedSource, 0, unformattedSource.length(), 0, null);
 
-		IDocument doc = new Document(unformattedSource);
-		String formattedSource;
-		try {
-			te.apply(doc);
-			formattedSource = doc.get();
-		} catch (BadLocationException e) {
-			formattedSource = unformattedSource;
-		}
+        if (te == null) {
+            // no edits to make
+            return unformattedSource;
+        }
 
-		return formattedSource;
-	}
+        IDocument doc = new Document(unformattedSource);
+        String formattedSource;
+        try {
+            te.apply(doc);
+            formattedSource = doc.get();
+        } catch (BadLocationException e) {
+            formattedSource = unformattedSource;
+        }
 
-	private IJavaProject getJavaProject(String javaProjectName)
-			throws CoreException {
-		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		IProject project = root.getProject(javaProjectName);
-		IJavaProject javaProject;
+        return formattedSource;
+    }
 
-		if (project.exists()) {
-			if (project.hasNature(JavaCore.NATURE_ID)) {
-				javaProject = JavaCore.create(project);
-			} else {
-				Status status = new Status(IStatus.ERROR, AbatorUIPlugin
-						.getPluginId(), IStatus.ERROR, "Project "
-						+ javaProjectName + " is not a Java Project", null);
+    private IJavaProject getJavaProject(String javaProjectName)
+            throws CoreException {
+        IJavaProject javaProject = (IJavaProject) projects.get(javaProjectName);
+        if (javaProject == null) {
+            IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+            IProject project = root.getProject(javaProjectName);
 
-				throw new CoreException(status);
-			}
-		} else {
-			Status status = new Status(IStatus.ERROR, AbatorUIPlugin
-					.getPluginId(), IStatus.ERROR, "Project " + javaProjectName
-					+ " does not exist", null);
+            if (project.exists()) {
+                if (project.hasNature(JavaCore.NATURE_ID)) {
+                    javaProject = JavaCore.create(project);
+                } else {
+                    Status status = new Status(IStatus.ERROR, AbatorUIPlugin
+                            .getPluginId(), IStatus.ERROR, "Project "
+                            + javaProjectName + " is not a Java Project", null);
 
-			throw new CoreException(status);
-		}
+                    throw new CoreException(status);
+                }
+            } else {
+                Status status = new Status(IStatus.ERROR, AbatorUIPlugin
+                        .getPluginId(), IStatus.ERROR, "Project "
+                        + javaProjectName + " does not exist", null);
 
-		return javaProject;
-	}
+                throw new CoreException(status);
+            }
 
-	private IFolder getFolder(String targetProject, String targetPackage)
-			throws CoreException {
-		String key = targetProject + targetPackage;
-		IFolder folder = (IFolder) folders.get(key);
-		if (folder == null) {
-			IJavaProject project = (IJavaProject) projects.get(targetProject);
-			if (project == null) {
-				project = getJavaProject(targetProject);
-				projects.put(targetProject, project);
-			}
+            projects.put(javaProjectName, javaProject);
+        }
 
-			IPackageFragmentRoot root = getPackageRoot(project);
-			IPackageFragment packageFragment = getPackage(root, targetPackage);
+        return javaProject;
+    }
 
-			folder = (IFolder) packageFragment.getCorrespondingResource();
+    private IFolder getFolder(String targetProject, String targetPackage)
+            throws CoreException {
+        String key = targetProject + targetPackage;
+        IFolder folder = (IFolder) folders.get(key);
+        if (folder == null) {
+            IPackageFragmentRoot root = getSourceFolder(targetProject);
+            IPackageFragment packageFragment = getPackage(root, targetPackage);
 
-			folders.put(key, folder);
-		}
+            folder = (IFolder) packageFragment.getCorrespondingResource();
 
-		return folder;
-	}
+            folders.put(key, folder);
+        }
 
-	/**
-	 * This method returns the first modifiable package fragment root in the
-	 * java project
-	 * 
-	 * @param javaProject
-	 * @return
-	 */
-	private IPackageFragmentRoot getPackageRoot(IJavaProject javaProject)
-			throws CoreException {
+        return folder;
+    }
 
-		// find the first non-JAR package fragment root
-		IPackageFragmentRoot[] roots = javaProject.getPackageFragmentRoots();
-		IPackageFragmentRoot srcFolder = null;
-		for (int i = 0; i < roots.length; i++) {
-			if (roots[i].isArchive() || roots[i].isReadOnly()
-					|| roots[i].isExternal()) {
-				continue;
-			} else {
-				srcFolder = roots[i];
-				break;
-			}
-		}
+    /**
+     * This method returns the first modifiable package fragment root in the
+     * java project
+     * 
+     * @param javaProject
+     * @return
+     */
+    private IPackageFragmentRoot getFirstSourceFolder(IJavaProject javaProject)
+            throws CoreException {
 
-		if (srcFolder == null) {
-			Status status = new Status(IStatus.ERROR, AbatorUIPlugin
-					.getPluginId(), IStatus.ERROR,
-					"Cannot find source folder for project "
-							+ javaProject.getElementName(), null);
-			throw new CoreException(status);
-		}
+        // find the first non-JAR package fragment root
+        IPackageFragmentRoot[] roots = javaProject.getPackageFragmentRoots();
+        IPackageFragmentRoot srcFolder = null;
+        for (int i = 0; i < roots.length; i++) {
+            if (roots[i].isArchive() || roots[i].isReadOnly()
+                    || roots[i].isExternal()) {
+                continue;
+            } else {
+                srcFolder = roots[i];
+                break;
+            }
+        }
 
-		return srcFolder;
-	}
+        if (srcFolder == null) {
+            Status status = new Status(IStatus.ERROR, AbatorUIPlugin
+                    .getPluginId(), IStatus.ERROR,
+                    "Cannot find source folder for project "
+                            + javaProject.getElementName(), null);
+            throw new CoreException(status);
+        }
 
-	private IPackageFragment getPackage(IPackageFragmentRoot srcFolder,
-			String packageName) throws CoreException {
+        return srcFolder;
+    }
 
-		IPackageFragment fragment = srcFolder.getPackageFragment(packageName);
-		if (!fragment.exists()) {
-			fragment = srcFolder.createPackageFragment(packageName, true, null);
-		}
+    private IPackageFragmentRoot getSpecificSourceFolder(
+            IJavaProject javaProject, String sourceFolder) throws CoreException {
 
-		fragment.getCorrespondingResource().refreshLocal(IResource.DEPTH_ONE,
-				null);
+        // find the first non-JAR package fragment root
+        IPackageFragmentRoot[] roots = javaProject.getPackageFragmentRoots();
+        IPackageFragmentRoot srcFolder = null;
+        for (int i = 0; i < roots.length; i++) {
+            if (roots[i].isArchive() || roots[i].isReadOnly()
+                    || roots[i].isExternal()) {
+                continue;
+            } else {
+                if (roots[i].getElementName().equals(sourceFolder)) {
+                    srcFolder = roots[i];
+                    break;
+                }
+            }
+        }
 
-		return fragment;
-	}
+        if (srcFolder == null) {
+            Status status = new Status(IStatus.ERROR, AbatorUIPlugin
+                    .getPluginId(), IStatus.ERROR, "Cannot find source folder "
+                    + sourceFolder + " for project "
+                    + javaProject.getElementName(), null);
+            throw new CoreException(status);
+        }
 
-	/* (non-Javadoc)
-	 * @see org.apache.ibatis.abator.api.ShellCallback#mergeSupported()
-	 */
-	public boolean mergeSupported() {
-		return true;
-	}
+        return srcFolder;
+    }
+
+    private IPackageFragment getPackage(IPackageFragmentRoot srcFolder,
+            String packageName) throws CoreException {
+
+        IPackageFragment fragment = srcFolder.getPackageFragment(packageName);
+        if (!fragment.exists()) {
+            fragment = srcFolder.createPackageFragment(packageName, true, null);
+        }
+
+        fragment.getCorrespondingResource().refreshLocal(IResource.DEPTH_ONE,
+                null);
+
+        return fragment;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.ibatis.abator.api.ShellCallback#mergeSupported()
+     */
+    public boolean mergeSupported() {
+        return true;
+    }
+
+    private IPackageFragmentRoot getSourceFolder(String targetProject)
+            throws CoreException {
+        IPackageFragmentRoot answer = (IPackageFragmentRoot) sourceFolders
+                .get(targetProject);
+        if (answer == null) {
+            // first parse the targetProject into project and source folder
+            // values
+            int index = targetProject.indexOf('/');
+            if (index == -1) {
+                index = targetProject.indexOf('\\');
+            }
+
+            String project;
+            String sourceFolder;
+            if (index == -1) {
+                project = targetProject;
+                sourceFolder = null;
+            } else {
+                project = targetProject.substring(0, index);
+                sourceFolder = targetProject.substring(index + 1);
+            }
+
+            IJavaProject javaProject = getJavaProject(project);
+
+            if (sourceFolder == null || sourceFolder.length() == 0) {
+                answer = getFirstSourceFolder(javaProject);
+            } else {
+                answer = getSpecificSourceFolder(javaProject, sourceFolder);
+            }
+            
+            sourceFolders.put(targetProject, answer);
+        }
+
+        return answer;
+    }
 }
