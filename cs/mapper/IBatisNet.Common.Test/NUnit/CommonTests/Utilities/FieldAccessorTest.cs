@@ -11,20 +11,40 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 	/// Summary description for FieldAccessorTest.
 	/// </summary>
 	[TestFixture] 
-	public class FieldAccessorTest
+	public class FieldAccessorTest : BaseMemberTest
 	{
-        private MemberAccessorFactory _factory = null;
 
         #region SetUp & TearDown
 
         /// <summary>
         /// SetUp
         /// </summary>
-        [SetUp]
-        public void SetUp()
-        {
-            _factory = new MemberAccessorFactory(true);
-        }
+		[SetUp]
+		public void SetUp()
+		{
+			intAccessor = factory.CreateMemberAccessor(typeof(Property), "Int");
+			longAccessor = factory.CreateMemberAccessor(typeof(Property), "Long");
+			sbyteAccessor = factory.CreateMemberAccessor(typeof(Property), "SByte");
+			stringAccessor = factory.CreateMemberAccessor(typeof(Property), "String");
+			datetimeAccessor = factory.CreateMemberAccessor(typeof(Property), "DateTime");
+			decimalAccessor = factory.CreateMemberAccessor(typeof(Property), "Decimal");
+			byteAccessor = factory.CreateMemberAccessor(typeof(Property), "Byte");
+			charAccessor = factory.CreateMemberAccessor(typeof(Property), "Char");
+			shortAccessor = factory.CreateMemberAccessor(typeof(Property), "Short");
+			ushortAccessor = factory.CreateMemberAccessor(typeof(Property), "UShort");
+			uintAccessor = factory.CreateMemberAccessor(typeof(Property), "UInt");
+			ulongAccessor = factory.CreateMemberAccessor(typeof(Property), "ULong");
+			boolAccessor = factory.CreateMemberAccessor(typeof(Property), "Bool");
+			doubleAccessor = factory.CreateMemberAccessor(typeof(Property), "Double");
+			floatAccessor = factory.CreateMemberAccessor(typeof(Property), "Float");
+			guidAccessor = factory.CreateMemberAccessor(typeof(Property), "Guid");
+			timespanAccessor = factory.CreateMemberAccessor(typeof(Property), "TimeSpan");
+			accountAccessor = factory.CreateMemberAccessor(typeof(Property), "Account");
+			enumAccessor = factory.CreateMemberAccessor(typeof(Property), "Day");
+#if dotnet2
+            nullableAccessor = factory.CreateMemberAccessor(typeof(Property), "IntNullable");
+#endif
+		}
 
 
         /// <summary>
@@ -47,7 +67,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.publicInt = -99;
 
             // Property accessor
-            IMemberAccessor memberAccessor = _factory.CreateMemberAccessor(typeof(Property), "publicInt");
+            IMemberAccessor memberAccessor = factory.CreateMemberAccessor(typeof(Property), "publicInt");
             memberAccessor.Set(prop, null);
             Assert.AreEqual(0, prop.publicInt);
         }
@@ -63,7 +83,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 
             // Property accessor
             int test = 57;
-            IMemberAccessor memberAccessor = _factory.CreateMemberAccessor(typeof(Property), "publicInt");
+            IMemberAccessor memberAccessor = factory.CreateMemberAccessor(typeof(Property), "publicInt");
             memberAccessor.Set(prop, test);
             Assert.AreEqual(test, prop.publicInt);
         }
@@ -79,7 +99,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.publicInt = test;
 
             // Property accessor
-            IMemberAccessor memberAccessor = _factory.CreateMemberAccessor(typeof(Property), "publicInt");
+            IMemberAccessor memberAccessor = factory.CreateMemberAccessor(typeof(Property), "publicInt");
             Assert.AreEqual(test, memberAccessor.Get(prop));
         }
 
@@ -87,7 +107,6 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         /// Test setting an integer private field.
         /// </summary>
         [Test]
-        [ExpectedException(typeof(FieldAccessException))]
         public void TestSetPrivateFieldInteger()
         {
             Property prop = new Property();
@@ -95,7 +114,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 
             // Property accessor
             int test = 57;
-            IMemberAccessor memberAccessor = _factory.CreateMemberAccessor(typeof(Property), "_int");
+            IMemberAccessor memberAccessor = factory.CreateMemberAccessor(typeof(Property), "_int");
             memberAccessor.Set(prop, test);
             Assert.AreEqual(test, prop.Int);
         }
@@ -104,7 +123,6 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         /// Test getting an integer private field.
         /// </summary>
         [Test]
-        [ExpectedException(typeof(FieldAccessException))]
         public void TestGetPrivateFieldInteger()
         {
             int test = -99;
@@ -112,7 +130,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.Int = test;
 
             // Property accessor
-            IMemberAccessor memberAccessor = _factory.CreateMemberAccessor(typeof(Property), "_int");
+            IMemberAccessor memberAccessor = factory.CreateMemberAccessor(typeof(Property), "_int");
             Assert.AreEqual(test, memberAccessor.Get(prop));
         }
 	}

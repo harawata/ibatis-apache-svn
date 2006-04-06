@@ -1,11 +1,9 @@
 using System;
 using System.Reflection;
 using IBatisNet.Common.Test.Domain;
-using IBatisNet.Common.Utilities;
 using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.Common.Utilities.Objects.Members;
 using NUnit.Framework;
-
 
 namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 {
@@ -40,12 +38,12 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         public void TestGetIntegerPerformance()
         {
             const int TEST_ITERATIONS = 1000000;
-            Property prop = new Property();
+        	Property prop = new Property();
             int test = -1;
             Timer timer = new Timer();
 
             #region Direct access (fastest)
-            GC.Collect();
+        	GC.Collect();
             GC.WaitForPendingFinalizers();
 
             timer.Start();
@@ -63,7 +61,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
-            MemberAccessorFactory factory = new MemberAccessorFactory(true);
+        	MemberAccessorFactory factory = new MemberAccessorFactory(true);
             IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Int");
             timer.Start();
             for (int i = 0; i < TEST_ITERATIONS; i++)
@@ -86,7 +84,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             for (int i = 0; i < TEST_ITERATIONS; i++)
             {
                 test = -1;
-                PropertyInfo propertyInfo = reflectionInfo.GetGetter("Int");
+            	PropertyInfo propertyInfo = (PropertyInfo)reflectionInfo.GetGetter("Int");
                 test = (int)propertyInfo.GetValue(prop, null);
                 Assert.AreEqual(int.MinValue, test);
             }
@@ -190,7 +188,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             timer.Start();
             for (int i = 0; i < TEST_ITERATIONS; i++)
             {
-                PropertyInfo propertyInfo = reflectionInfo.GetSetter("Int");
+                PropertyInfo propertyInfo = (PropertyInfo)reflectionInfo.GetSetter("Int");
                 propertyInfo.SetValue(prop, value, null);
             }
             timer.Stop();
