@@ -91,7 +91,7 @@ public class DatabaseIntrospector {
 					|| !StringUtility.stringHasValue(columnOverride
 							.getJavaProperty())) {
 				if ("true".equals(tc.getProperties().get("useActualColumnNames"))) { //$NON-NLS-1$ //$NON-NLS-2$
-					cd.setJavaProperty(cd.getColumnName());
+					cd.setJavaProperty(JavaBeansUtil.getValidPropertyName(cd.getColumnName()));
 				} else {
 					cd.setJavaProperty(JavaBeansUtil.getCamelCaseString(cd
 							.getColumnName(), false));

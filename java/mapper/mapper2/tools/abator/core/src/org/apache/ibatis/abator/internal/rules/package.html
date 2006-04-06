@@ -4,10 +4,18 @@
 </head>
 <body>
 <p>Provides the classes that implement Abator's code generation rules.</p>
-<h1>Code Generation Rules</h1>
+<h2>Code Generation Rules</h2>
 <p>Abator generates different objects and methods depending on the structure of
 the table, and configuration options set by the user.  This document describes
 the rules.</p>
+
+<h2>Basic Assumptions</h2>
+<p>The rules classes assume that the following things are true (other layers of
+Abator enforce these rules):</p>
+<ul>
+  <li>The table is of one of the supported table types</li>
+  <li>At least one operation is allowed (insert, update, delete, etc.)</li>
+</ul>
 
 <h2>Table Types</h2>
 <p>Abator defines different types of tables, based on the structure of the table.
@@ -179,7 +187,22 @@ how user configuration options can alter these rules.</p>
 
 <p>Notes:</p>
 <ul>
-  <li></li>
+  <li>The result map elements will only be generated if the selectByExample
+      or selectByPrimaryKey statements are allowed</li>
+  <li>The SQL example where clause element will only be generated
+      if the selectByExample or deleteByExample statements are allowed</li>
+  <li>Select by example elements and DAO methods will only be generated
+      if the selectByExample statement is allowed</li>
+  <li>The select by primary key element and DAO method will only be generated
+      if the selectByPrimaryKey statement is allowed</li>
+  <li>The insert element and DAO method will only be generated
+      if the insert statement is allowed</li>
+  <li>Update by primary key elements and DAO methods will only be generated
+      if the updateByPrimaryKey statement is allowed</li>
+  <li>The delete by primary key element and DAO method will only be generated
+      if the deleteByPrimaryKey statement is allowed</li>
+  <li>The delete by example element and DAO method will only be generated
+      if the deleteByExample statement is allowed</li>
 </ul>
 
 <h2>Domain Object Rules</h2>
@@ -196,7 +219,7 @@ describe how user configuration options can alter these rules.</p>
     <th>Table Type</th>
     <th>Primary Key?</th>
     <th>Base Record Extending Primary Key?</th>
-    <th>Base Record with no Base Class?</th>
+    <th>Base Record with no Super Class?</th>
     <th>Record with BLOBs Extending Primary Key?</th>
     <th>Record with BLOBs Extending Base Record?</th>
     <th>Example Extending Primary Key?</th>
@@ -266,7 +289,8 @@ describe how user configuration options can alter these rules.</p>
 
 <p>Notes:</p>
 <ul>
-  <li></li>
+  <li>If the selectByExample and deleteByExample methods are disallowed, then 
+      Abator will not generate the Example class</li>
 </ul>
 
 </body>

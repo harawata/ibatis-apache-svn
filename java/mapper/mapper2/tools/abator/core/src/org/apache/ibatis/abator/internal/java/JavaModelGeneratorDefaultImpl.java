@@ -249,7 +249,7 @@ public class JavaModelGeneratorDefaultImpl extends BaseJavaCodeGenerator impleme
 	protected GeneratedJavaFile getExample(ColumnDefinitions columnDefinitions,
 			TableConfiguration tableConfiguration) {
 		if (!AbatorRules.generateExampleExtendingPrimaryKey(columnDefinitions, tableConfiguration)
-				&& !AbatorRules.generateExampleExtendingRecord(columnDefinitions, tableConfiguration)) {
+				&& !AbatorRules.generateExampleExtendingBaseRecord(columnDefinitions, tableConfiguration)) {
 			return null;
 		}
 		
@@ -407,8 +407,8 @@ public class JavaModelGeneratorDefaultImpl extends BaseJavaCodeGenerator impleme
 	protected GeneratedJavaFile getRecord(ColumnDefinitions columnDefinitions,
 			TableConfiguration tableConfiguration) {
 		
-		if (!AbatorRules.generateRecordExtendingNothing(columnDefinitions)
-				&& ! AbatorRules.generateRecordExtendingPrimaryKey(columnDefinitions)) {
+		if (!AbatorRules.generateBaseRecordWithNoSuperclass(columnDefinitions)
+				&& ! AbatorRules.generateBaseRecordExtendingPrimaryKey(columnDefinitions)) {
 			return null;
 		}
 		
@@ -416,7 +416,7 @@ public class JavaModelGeneratorDefaultImpl extends BaseJavaCodeGenerator impleme
 		
 		answer.setJavaInterface(false);
 
-		if (AbatorRules.generateRecordExtendingPrimaryKey(columnDefinitions)) {
+		if (AbatorRules.generateBaseRecordExtendingPrimaryKey(columnDefinitions)) {
 			answer.setSuperClass(getPrimaryKeyType(tableConfiguration.getTable()));
 		} else {
 		    if (properties.containsKey("rootClass")) { //$NON-NLS-1$
@@ -435,7 +435,7 @@ public class JavaModelGeneratorDefaultImpl extends BaseJavaCodeGenerator impleme
 			TableConfiguration tableConfiguration) {
 		
 		if (!AbatorRules.generateRecordWithBLOBsExtendingPrimaryKey(columnDefinitions)
-				&& !AbatorRules.generateRecordWithBLOBsExtendingRecord(columnDefinitions)) {
+				&& !AbatorRules.generateRecordWithBLOBsExtendingBaseRecord(columnDefinitions)) {
 			return null;
 		}
 		

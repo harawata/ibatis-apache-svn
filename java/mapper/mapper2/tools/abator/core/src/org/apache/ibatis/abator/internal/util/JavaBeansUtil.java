@@ -86,4 +86,31 @@ public class JavaBeansUtil {
 
 		return sb.toString();
 	}
+	
+	/**
+	 * This method ensures that the specified input string is a valid
+	 * Java property name as iBATIS sees it.  The rules are as follows:
+	 * 
+	 * 1. If the first character is lower case, then OK
+	 * 2. If the first two characters are upper case, then OK
+	 * 3. If the first character is upper case, and the second character is lower case,
+	 *    then the first character should be made lower case
+	 * 
+	 * @param inputString
+	 * @return
+	 */
+	public static String getValidPropertyName(String inputString) {
+	    if (inputString.length() < 2) {
+	        return inputString.toLowerCase();
+	    }
+	    
+	    if (Character.isUpperCase(inputString.charAt(0))
+	            && Character.isLowerCase(inputString.charAt(1))) {
+	        StringBuffer sb = new StringBuffer(inputString);
+			sb.setCharAt(0, Character.toLowerCase(sb.charAt(0)));
+	        return sb.toString();
+	    } else {
+	        return inputString;
+	    }
+	}
 }

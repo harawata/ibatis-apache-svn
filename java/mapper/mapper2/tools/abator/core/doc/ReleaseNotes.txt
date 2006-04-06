@@ -1,4 +1,14 @@
 -------------------------------------------------------------------------------
+Version 0.6.2:
+1. Added support for specifying rootClass for the model objects and
+   rootInterface for the DAO interface
+2. Refactored code generation rules and added lots of documentation for
+   the rules (see new org.apache.ibatis.abator.internal.rules package)
+3. Improved documentation
+4. Ensure that property names are valid for iBATIS even if the user
+   specifies "useActualColumnNames"
+
+-------------------------------------------------------------------------------
 Version 0.6.1:
 1. Added support for running Abator from the command line
 2. Fixed bug: NPE when <generatedKey> specifies an unknown column

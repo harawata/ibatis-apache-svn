@@ -40,111 +40,41 @@ public class TableType {
     
 	/**
 	 * A table that has no primary key and all columns are not BLOBs.
-	 * Generate these objects/methods:
-	 * <ul>
-	 *   <li>Base Result Map (if either select method enabled)</li>
-	 *   <li>Select By Example Method (if enabled)</li>
-	 *   <li>Insert Method (if enabled)</li>
-	 *   <li>Delete By Example Method (if enabled)</li>
-	 *   <li>Record with No Superclass</li>
-	 *   <li>Example class extending Record (if either "by example" method enabled)</li>
-	 * </ul>
 	 */
     public static final TableType NO_PK_FIELDS_NO_BLOBS = new TableType("No primary key, no BLOBs");
     
 	/**
 	 * A table that has no primary key and columns that are both BLOBs and non BLOBs.
-	 * Generate these objects/methods:
-	 * <ul>
-	 *   <li>Base Result Map (if either select method enabled)</li>
-	 *   <li>Result Map with BLOBs (if either select method enabled)</li>
-	 *   <li>Select By Example Method (if enabled)</li>
-	 *   <li>Select By Example with BLOBs Method (if enabled)</li>
-	 *   <li>Insert Method (if enabled)</li>
-	 *   <li>Delete By Example Method (if enabled)</li>
-	 *   <li>Record with No Superclass</li>
-	 *   <li>Record with BLOBS extending Record</li>
-	 *   <li>Example class extending Record (if either "by example" method enabled)</li>
-	 * </ul>
 	 */
     public static final TableType NO_PK_FIELDS_BLOBS = new TableType("No primary key, contains BLOBs and non-BLOBs");
     
 	/**
 	 * A table with a primary key only.
-	 * Generate these objects/methods:
-	 * <ul>
-	 *   <li>Base Result Map (if either select method enabled)</li>
-	 *   <li>Select By Example Method (if enabled)</li>
-	 *   <li>Insert Method (if enabled)</li>
-	 *   <li>Delete By Primary Key Method (if enabled)</li>
-	 *   <li>Delete By Example Method (if enabled)</li>
-	 *   <li>Primary Key</li>
-	 *   <li>Example class extending Primary Key (if either "by example" method enabled)</li>
-	 * </ul>
 	 */
     public static final TableType PK_NO_FIELDS_NO_BLOBS = new TableType("Primary key only");
     
 	/**
 	 * A table with a primary key, and all other columns are not BLOBs.
-	 * Generate these objects/methods:
-	 * <ul>
-	 *   <li>Base Result Map (if either select method enabled)</li>
-	 *   <li>Select By Example Method (if enabled)</li>
-	 *   <li>Select By Primary Key Method (if enabled)</li>
-	 *   <li>Insert Method (if enabled)</li>
-	 *   <li>Update By Primary Key (No BLOBs) Method (if enabled)</li>
-	 *   <li>Delete By Primary Key Method (if enabled)</li>
-	 *   <li>Delete By Example Method (if enabled)</li>
-	 *   <li>Primary Key</li>
-	 *   <li>Record class extending Primary Key</li>
-	 *   <li>Example class extending Record class (if either "by example" method enabled)</li>
-	 * </ul>
 	 */
     public static final TableType PK_FIELDS_NO_BLOBS = new TableType("Primary key, all other fields are not BLOBs");
     
 	/**
 	 * A table with a primary key, and all other columns are BLOBs.
-	 * Generate these objects/methods:
-	 * <ul>
-	 *   <li>Base Result Map (if either select method enabled)</li>
-	 *   <li>Result Map with BLOBs (if either select method enabled)</li>
-	 *   <li>Select By Example Method (if enabled)</li>
-	 *   <li>Select By Example with BLOBs Method (if enabled)</li>
-	 *   <li>Select By Primary Key Method (if enabled)</li>
-	 *   <li>Insert Method (if enabled)</li>
-	 *   <li>Update By Primary Key (BLOBs) Method (if enabled)</li>
-	 *   <li>Delete By Primary Key Method (if enabled)</li>
-	 *   <li>Delete By Example Method (if enabled)</li>
-	 *   <li>Primary Key</li>
-	 *   <li>Record with BLOBs class extending Primary Key</li>
-	 *   <li>Example class extending primary key class (if either "by example" method enabled)</li>
-	 * </ul>
 	 */
     public static final TableType PK_NO_FIELDS_BLOBS = new TableType("Primary key, all other fields are BLOBs");
     
 	/**
 	 * A table with a primary key and other columns that are both BLOBs and
 	 * non BLOBs.
-	 * Generate these objects/methods:
-	 * <ul>
-	 *   <li>Base Result Map (if either select method enabled)</li>
-	 *   <li>Result Map with BLOBs (if either select method enabled)</li>
-	 *   <li>Select By Example Method (if enabled)</li>
-	 *   <li>Select By Example with BLOBs Method (if enabled)</li>
-	 *   <li>Select By Primary Key Method (if enabled)</li>
-	 *   <li>Insert Method (if enabled)</li>
-	 *   <li>Update By Primary Key (BLOBs) Method (if enabled)</li>
-	 *   <li>Update By Primary Key (no BLOBs) Method (if enabled)</li>
-	 *   <li>Delete By Primary Key Method (if enabled)</li>
-	 *   <li>Delete By Example Method (if enabled)</li>
-	 *   <li>Primary Key</li>
-	 *   <li>Record class extending Primary Key</li>
-	 *   <li>Record with BLOBs class extending record class</li>
-	 *   <li>Example class extending record class (if either "by example" method enabled)</li>
-	 * </ul>
 	 */
     public static final TableType PK_FIELDS_BLOBS = new TableType("Primary key, BLOB and non BLOB fields");
-    
+
+    /**
+     * Calculates the table type from the physical structure of the table.
+     * 
+     * @param columnDefinitions the introspected table columns
+     * @return the calculated TableType
+     */
     public static TableType calculateTableType(ColumnDefinitions columnDefinitions) {
         TableType tableType;
         

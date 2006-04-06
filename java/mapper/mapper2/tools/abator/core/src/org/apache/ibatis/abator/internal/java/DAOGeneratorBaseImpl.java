@@ -486,12 +486,12 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator
         buffer.append(returnType);
         buffer.append(" insert("); //$NON-NLS-1$
         if (AbatorRules.generateRecordWithBLOBsExtendingPrimaryKey(columnDefinitions)
-                || AbatorRules.generateRecordWithBLOBsExtendingRecord(columnDefinitions)) {
+                || AbatorRules.generateRecordWithBLOBsExtendingBaseRecord(columnDefinitions)) {
             buffer.append(javaModelGenerator.getRecordWithBLOBsType(table)
                     .getShortName());
             imports.add(javaModelGenerator.getRecordWithBLOBsType(table));
-        } else if (AbatorRules.generateRecordExtendingNothing(columnDefinitions)
-                || AbatorRules.generateRecordExtendingPrimaryKey(columnDefinitions)) {
+        } else if (AbatorRules.generateBaseRecordWithNoSuperclass(columnDefinitions)
+                || AbatorRules.generateBaseRecordExtendingPrimaryKey(columnDefinitions)) {
             buffer.append(javaModelGenerator.getRecordType(table)
                     .getShortName());
             imports.add(javaModelGenerator.getRecordType(table));
@@ -586,7 +586,7 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator
             TableConfiguration tableConfiguration, boolean interfaceMethod,
             Set imports) {
 
-        if (!AbatorRules.generateUpdateByPrimaryKey(columnDefinitions, tableConfiguration)) {
+        if (!AbatorRules.generateUpdateByPrimaryKeyWithoutBLOBs(columnDefinitions, tableConfiguration)) {
             return null;
         }
 
@@ -739,7 +739,7 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator
             TableConfiguration tableConfiguration, boolean interfaceMethod,
             Set imports) {
 
-        if (!AbatorRules.generateSelectByExample(tableConfiguration)) {
+        if (!AbatorRules.generateSelectByExampleWithoutBLOBs(tableConfiguration)) {
             return null;
         }
 
@@ -998,7 +998,7 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator
 
         FullyQualifiedJavaType returnType;
         if (AbatorRules.generateRecordWithBLOBsExtendingPrimaryKey(columnDefinitions)
-                || AbatorRules.generateRecordWithBLOBsExtendingRecord(columnDefinitions)) {
+                || AbatorRules.generateRecordWithBLOBsExtendingBaseRecord(columnDefinitions)) {
             returnType = javaModelGenerator.getRecordWithBLOBsType(table);
 
         } else {
@@ -1225,7 +1225,7 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator
 
         if (!AbatorRules.generateDeleteByExample(tableConfiguration)
                 && !AbatorRules
-                        .generateSelectByExample(tableConfiguration)) {
+                        .generateSelectByExampleWithoutBLOBs(tableConfiguration)) {
             return null;
         }
 
