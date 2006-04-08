@@ -1,12 +1,11 @@
-
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
- * $Revision$
- * $Date$
+ * $Revision: 374175 $
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,7 +23,7 @@
  ********************************************************************************/
 #endregion
 
-#region Imports
+#region Using
 using System;
 
 using IBatisNet.Common;
@@ -36,7 +35,6 @@ using IBatisNet.DataMapper.Scope;
 using IBatisNet.DataMapper.TypeHandlers;
 
 #endregion
-
 
 namespace IBatisNet.DataMapper.Configuration.Sql.Static
 {

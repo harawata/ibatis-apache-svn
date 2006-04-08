@@ -52,18 +52,13 @@ namespace IBatisNet.Common.Utilities
 		/// <summary>
 		/// Resolve at run time the appropriate set of Parameters for a stored procedure
 		/// </summary>
-		/// <param name="dataSource">a valid dataSource</param>
+		/// <param name="session">An IDalSession object</param>
 		/// <param name="spName">the name of the stored procedure</param>
 		/// <param name="includeReturnValueParameter">whether or not to include their return value parameter</param>
 		/// <returns></returns>
-		private static IDataParameter[] DiscoverSpParameterSet(IDataSource dataSource, string spName, bool includeReturnValueParameter)
+		private static IDataParameter[] DiscoverSpParameterSet(IDalSession session, string spName, bool includeReturnValueParameter)
 		{
-			using (IDbConnection connection = dataSource.DbProvider.CreateConnection())
-			{
-				connection.ConnectionString = dataSource.ConnectionString;
-				connection.Open();
-				return InternalDiscoverSpParameterSet(dataSource.DbProvider, connection, spName, includeReturnValueParameter);
-			}		
+			return InternalDiscoverSpParameterSet(session.DataSource.DbProvider, session.Connection, spName, includeReturnValueParameter);	
 		}
 
 		/// <summary>
@@ -206,12 +201,12 @@ namespace IBatisNet.Common.Utilities
 		/// <remarks>
 		/// This method will query the database for this information, and then store it in a cache for future requests.
 		/// </remarks>
-		/// <param name="dataSource">a valid dataSource</param>
+		/// <param name="session">a valid session</param>
 		/// <param name="spName">the name of the stored procedure</param>
 		/// <returns>an array of IDataParameters</returns>
-		public static IDataParameter[] GetSpParameterSet(IDataSource dataSource, string spName)
+		public static IDataParameter[] GetSpParameterSet(IDalSession session, string spName)
 		{
-			return GetSpParameterSet(dataSource, spName, false);
+			return GetSpParameterSet(session, spName, false);
 		}
 
 		/// <summary>
@@ -220,14 +215,14 @@ namespace IBatisNet.Common.Utilities
 		/// <remarks>
 		/// This method will query the database for this information, and then store it in a cache for future requests.
 		/// </remarks>
-		/// <param name="dataSource">a valid dataSource</param>
+		/// <param name="session">a valid session</param>
 		/// <param name="spName">the name of the stored procedure</param>
 		/// <param name="includeReturnValueParameter">a bool value indicating whether the return value parameter should be included in the results</param>
 		/// <returns>an array of IDataParameters</returns>
-		public static IDataParameter[] GetSpParameterSet(IDataSource dataSource
-			, string spName, bool includeReturnValueParameter)
+		public static IDataParameter[] GetSpParameterSet(IDalSession session, 
+			string spName, bool includeReturnValueParameter)
 		{
-			string hashKey = dataSource.ConnectionString + ":" + spName + (includeReturnValueParameter ? ":include ReturnValue Parameter":"");
+			string hashKey = session.DataSource.ConnectionString + ":" + spName + (includeReturnValueParameter ? ":include ReturnValue Parameter":"");
 
 			IDataParameter[] cachedParameters;
 			
@@ -235,7 +230,7 @@ namespace IBatisNet.Common.Utilities
 
 			if (cachedParameters == null)
 			{
-				_paramCache[hashKey] = DiscoverSpParameterSet(dataSource, spName, includeReturnValueParameter);
+				_paramCache[hashKey] = DiscoverSpParameterSet(session, spName, includeReturnValueParameter);
 				cachedParameters = (IDataParameter[]) _paramCache[hashKey];
 			}
 			

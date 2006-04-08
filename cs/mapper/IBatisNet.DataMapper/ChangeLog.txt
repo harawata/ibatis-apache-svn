@@ -4,6 +4,7 @@ IBatisNet Change Log
 1.4 - XX/XX/XXX
 ------------------------------
 - Fixed IBATISNET-153 Supporting private field accessor
+- Fixed IBATISNET-151 Pre-load stored procedure parameters should use the already-open connection 
 - Added useReflectionOptimizer attribut setting in SqlMap.config
 - Added class attribute to parameterMap tags [it is required !]
 - Added support for readOnly & serialize attribut on CacheModel
