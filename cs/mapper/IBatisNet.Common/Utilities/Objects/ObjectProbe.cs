@@ -457,8 +457,8 @@ namespace IBatisNet.Common.Utilities.Objects
 					{
 						try 
 						{
-							IFactory factory = objectFactory.CreateFactory(type);
-							child = factory.CreateInstance();
+							IFactory factory = objectFactory.CreateFactory(type, Type.EmptyTypes);
+							child = factory.CreateInstance(Type.EmptyTypes);
 
 							SetMemberValue(parent, currentPropertyName, child, objectFactory, memberAccessorFactory);
 						} 

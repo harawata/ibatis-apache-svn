@@ -24,6 +24,7 @@
 #endregion
 
 using System;
+using System.Collections;
 using System.Reflection;
 using System.Reflection.Emit;
 using IBatisNet.Common.Exceptions;
@@ -52,14 +53,15 @@ namespace IBatisNet.Common.Utilities.Objects
 
 
 		/// <summary>
-		/// 
+		/// Create a factory which build class of type typeToCreate
 		/// </summary>
-		/// <param name="typeToCreate"></param>
-		/// <returns></returns>
-		public IFactory CreateFactory(Type typeToCreate)
+		/// <param name="typeToCreate">The type instance to build</param>
+		/// <param name="types">The types of the constructor arguments</param>
+		/// <returns>Returns a new instance factory</returns>
+		public IFactory CreateFactory(Type typeToCreate, Type[] types)
 		{
-			Type innerType = CreateFactoryType(typeToCreate);
-			ConstructorInfo ctor = innerType.GetConstructor(new Type[] {});
+			Type innerType = CreateFactoryType(typeToCreate, types);
+			ConstructorInfo ctor = innerType.GetConstructor(Type.EmptyTypes);
 			return (IFactory) ctor.Invoke(new object[] {});
 		}
 
@@ -68,31 +70,108 @@ namespace IBatisNet.Common.Utilities.Objects
 		/// 
 		/// </summary>
 		/// <param name="typeToCreate"></param>
+		/// <param name="types"></param>
 		/// <returns></returns>
-		private Type CreateFactoryType(Type typeToCreate)
+		private Type CreateFactoryType(Type typeToCreate, Type[] types)
 		{
 			TypeBuilder typeBuilder = _moduleBuilder.DefineType("EmitFactoryFor" + typeToCreate.Name, TypeAttributes.Public);
 			typeBuilder.AddInterfaceImplementation(typeof (IFactory));
-			ImplementCreateInstance(typeBuilder, typeToCreate);
+			ImplementCreateInstance(typeBuilder, typeToCreate, types);
 			return typeBuilder.CreateType();
 		}
 
 		
 		private MethodAttributes createMethodAttributes = MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.NewSlot | MethodAttributes.Virtual | MethodAttributes.Final;
 
-		private void ImplementCreateInstance(TypeBuilder typeBuilder, Type typeToCreate)
+		private void ImplementCreateInstance(TypeBuilder typeBuilder, Type typeToCreate, Type[] argumentTypes )
 		{
-			MethodBuilder meth = typeBuilder.DefineMethod("CreateInstance", createMethodAttributes, typeof (object), Type.EmptyTypes);
+			// object CreateInstance(object[] parameters);
+			MethodBuilder meth = typeBuilder.DefineMethod("CreateInstance", createMethodAttributes, typeof (object), new Type[]{typeof(object[])} );
 			ILGenerator il = meth.GetILGenerator();
 
 			// Add test if contructeur not public
-			ConstructorInfo ctor = typeToCreate.GetConstructor(Type.EmptyTypes);
+			ConstructorInfo ctor = typeToCreate.GetConstructor(argumentTypes);
 			if (!ctor.IsPublic)
 			{
-				throw new ProbeException(string.Format("Unable to optimize create instance for type \"{0}\". Cause no public constructor on type. ", typeToCreate.Name));
+				throw new ProbeException(
+					string.Format("Unable to optimize create instance. Cause : Could not find public constructor matching specified arguments for type \"{0}\".", typeToCreate.Name));
 			}
-			il.Emit(OpCodes.Newobj, ctor);
-			il.Emit(OpCodes.Ret);
+			if (argumentTypes==Type.EmptyTypes)// no parameters
+			{
+				// new typeToCreate()
+				il.Emit(OpCodes.Newobj, ctor);
+				il.Emit(OpCodes.Ret);
+			}
+			else
+			{
+				// new typeToCreate(... arguments ...)
+				EmitArgsIL(il, argumentTypes);
+				il.Emit(OpCodes.Newobj, ctor);
+				il.Emit(OpCodes.Ret);				
+			}
 		}
+
+		/// <summary>   
+		/// Emit parameter IL for a method call.   
+		/// </summary>   
+		/// <param name="il">IL generator.</param>   
+		/// <param name="argumentTypes">Arguments type defined for a the constructor.</param>   
+		private void EmitArgsIL(ILGenerator il, Type[] argumentTypes)   
+		{   
+			// Add args. Since all args are objects, value types are unboxed. 
+			// Refs to value types are to be converted to values themselves.   
+			for (int i = 0; i < argumentTypes.Length; i++)   
+			{   
+				// Push args array reference on the stack , followed by the index.   
+				// Ldelem will resolve them to args[i].   
+				il.Emit(OpCodes.Ldarg_1);   // Argument 1 is argument array.
+				il.Emit(OpCodes.Ldc_I4, i);   
+				il.Emit(OpCodes.Ldelem_Ref);
+
+				// If param is a value type then we need to unbox it.   
+				Type paramType = argumentTypes[i];   
+				if (paramType.IsValueType)   
+				{   
+					il.Emit(OpCodes.Unbox, paramType);  
+					il.Emit(BoxingOpCodes.GetOpCode(paramType)); 
+				}  
+
+			}   
+		 }   
+
+		/// <summary>  
+		/// Helper class that returns appropriate boxing opcode based on type  
+		/// </summary>  
+		/// <remarks>From Spring.NET</remarks>
+		internal class BoxingOpCodes  
+		{  
+			private static IDictionary boxingOpCodes;  
+ 
+			static BoxingOpCodes()  
+			{  
+				boxingOpCodes = new Hashtable();  
+				boxingOpCodes[typeof(sbyte)] = OpCodes.Ldind_I1;  
+				boxingOpCodes[typeof(short)] = OpCodes.Ldind_I2;  
+				boxingOpCodes[typeof(int)] = OpCodes.Ldind_I4;  
+				boxingOpCodes[typeof(long)] = OpCodes.Ldind_I8;  
+				boxingOpCodes[typeof(byte)] = OpCodes.Ldind_U1;  
+				boxingOpCodes[typeof(ushort)] = OpCodes.Ldind_U2;  
+				boxingOpCodes[typeof(uint)] = OpCodes.Ldind_U4;  
+				boxingOpCodes[typeof(ulong)] = OpCodes.Ldind_I8;  
+				boxingOpCodes[typeof(float)] = OpCodes.Ldind_R4;  
+				boxingOpCodes[typeof(double)] = OpCodes.Ldind_R8;  
+				boxingOpCodes[typeof(char)] = OpCodes.Ldind_U2;  
+				boxingOpCodes[typeof(bool)] = OpCodes.Ldind_I1;  
+			}  
+ 
+			public static OpCode GetOpCode(Type type)  
+			{  
+				if (type.IsEnum)  
+				{  
+					type = Enum.GetUnderlyingType(type);  
+				}  
+				return (OpCode) boxingOpCodes[type];  
+			}  
+		} 
 	}
 }

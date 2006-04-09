@@ -13,6 +13,53 @@ namespace IBatisNet.Common.Test.Domain
         private string _lastName = string.Empty;
         private string _emailAddress = string.Empty;
 		private int[] _ids = null;
+		private string _test = string.Empty;
+		private Days _days ;
+		private Property _prop = null ;
+
+		public Account()
+		{}
+
+		public Account(int id)
+		{
+			_id = id;
+		}
+
+		public Account(string test)
+		{
+			_test = test;
+		}
+
+		public Account(Days days)
+		{
+			_days = days;
+		}
+
+		public Account(Property prop)
+		{
+			_prop = prop;
+		}
+
+		public Account(string firstName, Property prop)
+		{
+			_firstName = firstName;
+			_prop = prop;
+		}
+
+		public Property Property
+		{
+			get { return _prop; }
+		}
+
+		public Days Days
+		{
+			get { return _days; }
+		}
+
+		public string Test
+		{
+			get { return _test; }
+		}
 
 		public int Id
 		{

@@ -210,7 +210,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 
 				if (Type.GetTypeCode(_class) == TypeCode.Object)
 				{
-					_objectFactory = configScope.SqlMapper.ObjectFactory.CreateFactory(_class);
+					_objectFactory = configScope.SqlMapper.ObjectFactory.CreateFactory(_class, Type.EmptyTypes);
 				}
 
 				// Load the child node
@@ -290,7 +290,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 
 			if (typeCode == TypeCode.Object)
 			{
-				return _objectFactory.CreateInstance();
+				return _objectFactory.CreateInstance(null);
 			}
 			else
 			{

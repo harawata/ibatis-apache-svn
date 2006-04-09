@@ -2,15 +2,15 @@ using System;
 
 namespace IBatisNet.Common.Test.Domain
 {
-    public enum Days
+    public enum Days : int
     {
         Sat = 1,
-        Sun,
-        Mon,
-        Tue,
-        Wed,
-        Thu,
-        Fri
+        Sun = 2,
+        Mon = 3,
+        Tue = 4,
+        Wed = 5,
+        Thu = 6,
+        Fri = 7
     };
 
 	/// <summary>

@@ -11,20 +11,131 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 	{
 
 		[Test]
+		public void DynamicFactoryWithConstructor0()
+		{
+			IObjectFactory objectFactory = new ObjectFactory(true);
+
+			Type[] types = {typeof(string)};
+			IFactory factory = objectFactory.CreateFactory(typeof (Account), types );
+
+			object[] parameters = {"gilles"};
+			object obj = factory.CreateInstance(parameters);
+
+			Assert.IsTrue(obj is Account);
+			Account account = (Account)obj;
+			Assert.AreEqual("gilles", account.Test);
+		}
+
+		[Test]
+		public void DynamicFactoryWithConstructor1()
+		{
+			IObjectFactory objectFactory = new ObjectFactory(true);
+
+			Type[] types = {typeof(string)};
+			IFactory factory = objectFactory.CreateFactory(typeof (Account), types );
+
+			object[] parameters = new object[1];
+			parameters[0] = null;
+			object obj = factory.CreateInstance(parameters);
+
+			Assert.IsTrue(obj is Account);
+			Account account = (Account)obj;
+			Assert.AreEqual(null, account.Test);
+		}
+
+		[Test]
+		public void DynamicFactoryWithConstructor2()
+		{
+			IObjectFactory objectFactory = new ObjectFactory(true);
+
+			Type[] types = {typeof(int)};
+			IFactory factory = objectFactory.CreateFactory(typeof (Account), types );
+
+			object[] parameters = new object[1];
+			parameters[0] = -55;
+			object obj = factory.CreateInstance(parameters);
+
+			Assert.IsTrue(obj is Account);
+			Account account = (Account)obj;
+			Assert.AreEqual( -55, account.Id);
+		}
+
+		[Test]
+		public void DynamicFactoryWithConstructor3()
+		{
+			IObjectFactory objectFactory = new ObjectFactory(true);
+
+			Type[] types = {typeof(Days)};
+			IFactory factory = objectFactory.CreateFactory(typeof (Account), types );
+
+			object[] parameters = new object[1];
+			parameters[0] = Days.Sun;
+			object obj = factory.CreateInstance(parameters);
+
+			Assert.IsTrue(obj is Account);
+			Account account = (Account)obj;
+			Assert.AreEqual( Days.Sun, account.Days);
+		}
+
+		[Test]
+		public void DynamicFactoryWithConstructor4()
+		{
+			IObjectFactory objectFactory = new ObjectFactory(true);
+
+			Type[] types = {typeof(Property)};
+			IFactory factory = objectFactory.CreateFactory(typeof (Account), types );
+
+			object[] parameters = new object[1];
+			Property prop = new Property();
+			prop.String = "Gilles";
+			parameters[0] = prop;
+			object obj = factory.CreateInstance(parameters);
+
+			Assert.IsTrue(obj is Account);
+			Account account = (Account)obj;
+			Assert.IsNotNull(account.Property);
+			Assert.AreEqual( "Gilles", account.Property.String);
+		}
+
+		[Test]
+		public void DynamicFactoryWithConstructor5()
+		{
+			IObjectFactory objectFactory = new ObjectFactory(true);
+
+			Type[] types = {typeof(string), typeof(Property)};
+			IFactory factory = objectFactory.CreateFactory(typeof (Account), types );
+
+			object[] parameters = new object[2];
+			Property prop = new Property();
+			prop.String = "Gilles";
+			parameters[0] = "Héloïse";
+			parameters[1] = prop;
+			object obj = factory.CreateInstance(parameters);
+
+			Assert.IsTrue(obj is Account);
+			Account account = (Account)obj;
+			Assert.AreEqual("Héloïse", account.FirstName);
+			Assert.IsNotNull(account.Property);
+			Assert.AreEqual( "Gilles", account.Property.String);
+		}
+
+
+
+		[Test]
 		public void DynamicFactoryCreatesTypes()
 		{
 			IObjectFactory objectFactory = new ObjectFactory(true);
 
-			IFactory factory = objectFactory.CreateFactory(typeof (Account));
-			object obj = factory.CreateInstance();
+			IFactory factory = objectFactory.CreateFactory(typeof (Account), Type.EmptyTypes);
+			object obj = factory.CreateInstance(null);
 			Assert.IsTrue(obj is Account);
 
-			factory = objectFactory.CreateFactory(typeof (Account));
-			obj = factory.CreateInstance();
+			factory = objectFactory.CreateFactory(typeof (Account), Type.EmptyTypes);
+			obj = factory.CreateInstance(Type.EmptyTypes);
 			Assert.IsTrue(obj is Account);
 
-			factory = objectFactory.CreateFactory(typeof (Simple));
-			obj = factory.CreateInstance();
+			factory = objectFactory.CreateFactory(typeof (Simple), Type.EmptyTypes);
+			obj = factory.CreateInstance(Type.EmptyTypes);
 			Assert.IsTrue(obj is Simple);
 		}
 
@@ -39,7 +150,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 
 			// create an instance so that Activators can
 			// cache the type/constructor/whatever
-			factory.CreateInstance();
+			factory.CreateInstance(Type.EmptyTypes);
 
 			GC.Collect();
 			GC.WaitForPendingFinalizers();
@@ -48,18 +159,18 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			timer.Start();
 			for (int i = 0; i < TEST_ITERATIONS; i++)
 			{
-				factory.CreateInstance();
+				factory.CreateInstance(Type.EmptyTypes);
 			}
 			timer.Stop();
 			double newFactoryResult = 1000000 * (timer.Duration / (double)TEST_ITERATIONS);
 			#endregion
 
 			#region activator
-			factory = new ActivatorObjectFactory().CreateFactory(typeof(Account));
+			factory = new ActivatorObjectFactory().CreateFactory(typeof(Account), Type.EmptyTypes);
 
 			// create an instance so that Activators can
 			// cache the type/constructor/whatever
-			factory.CreateInstance();
+			factory.CreateInstance(Type.EmptyTypes);
 
 			GC.Collect();
 			GC.WaitForPendingFinalizers();
@@ -67,18 +178,18 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			timer.Start();
 			for (int i = 0; i < TEST_ITERATIONS; i++)
 			{
-				factory.CreateInstance();
+				factory.CreateInstance(Type.EmptyTypes);
 			}
 			timer.Stop();
 			double activatorFactoryResult = 1000000 * (timer.Duration / (double)TEST_ITERATIONS);
 			#endregion
 
 			#region Emit
-			factory = new EmitObjectFactory().CreateFactory(typeof(Account));
+			factory = new EmitObjectFactory().CreateFactory(typeof(Account), Type.EmptyTypes);
 
 			// create an instance so that Activators can
 			// cache the type/constructor/whatever
-			factory.CreateInstance();
+			factory.CreateInstance(Type.EmptyTypes);
 
 			GC.Collect();
 			GC.WaitForPendingFinalizers();
@@ -86,7 +197,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			timer.Start();
 			for (int i = 0; i < TEST_ITERATIONS; i++)
 			{
-				factory.CreateInstance();
+				factory.CreateInstance(Type.EmptyTypes);
 			}
 			timer.Stop();
 			double emitFactoryResult = 1000000 * (timer.Duration / (double)TEST_ITERATIONS);
@@ -103,10 +214,11 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 
 		internal class NewAccountFactory : IFactory
 		{
-			public object CreateInstance()
+			public object CreateInstance(object[] parameters)
 			{
 				return new Account();
 			}
+
 		}
 
 	}

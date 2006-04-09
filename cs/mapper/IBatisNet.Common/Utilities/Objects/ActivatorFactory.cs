@@ -44,14 +44,32 @@ namespace IBatisNet.Common.Utilities.Objects
 		}
 
 		#region IFactory members
+//
+//		/// <summary>
+//		/// Create a new object instance via via Activator.CreateInstance
+//		/// </summary>
+//		/// <returns>A new instance</returns>
+//		public object CreateInstance()
+//		{
+//			return Activator.CreateInstance( _typeToCreate );
+//		}
 
+		
 		/// <summary>
-		/// Create a new object instance via via Activator.CreateInstance
+		/// Create a new instance with the specified parameters
 		/// </summary>
-		/// <returns></returns>
-		public object CreateInstance()
+		/// <param name="parameters">
+		/// An array of values that matches the number, order and type 
+		/// of the parameters for this constructor. 
+		/// </param>
+		/// <remarks>
+		/// If you call a constructor with no parameters, pass null. 
+		/// Anyway, what you pass will be ignore.
+		/// </remarks>
+		/// <returns>A new instance</returns>
+		public object CreateInstance(object[] parameters)
 		{
-			return Activator.CreateInstance( _typeToCreate );
+			return Activator.CreateInstance( _typeToCreate, parameters );
 		}
 
 		#endregion

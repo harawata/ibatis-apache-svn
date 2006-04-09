@@ -26,6 +26,7 @@
 using System;
 using System.Collections;
 using System.Collections.Specialized;
+using System.Text;
 
 namespace IBatisNet.Common.Utilities.Objects
 {
@@ -51,26 +52,49 @@ namespace IBatisNet.Common.Utilities.Objects
 		/// <summary>
 		/// Create a new factory instance for a given type
 		/// </summary>
-		/// <param name="typeToCreate"></param>
-		/// <returns></returns>
-		public IFactory CreateFactory(Type typeToCreate)
+		/// <param name="typeToCreate">The type instance to build</param>
+		/// <param name="types">The types of the constructor arguments</param>
+		/// <returns>Returns a new instance factory</returns>
+		public IFactory CreateFactory(Type typeToCreate, Type[] types)
 		{
-			IFactory factory = (IFactory) _cachedfactories[typeToCreate];
+			string key = GenerateKey(typeToCreate, types);
+
+			IFactory factory = _cachedfactories[key] as IFactory;
 			if (factory == null)
 			{
 				lock (_padlock)
 				{
-					factory = (IFactory) _cachedfactories[typeToCreate];
+					factory = _cachedfactories[key] as IFactory;
 					if (factory == null) // double-check
 					{
-						factory = _factoryBuilder.CreateFactory(typeToCreate);
-						_cachedfactories[typeToCreate] = factory;
+						factory = _factoryBuilder.CreateFactory(typeToCreate, types);
+						_cachedfactories[key] = factory;
 					}
 				}
 			}
 			return factory;
 		}
 
+		/// <summary>
+		/// Generates the key for a cache entry.
+		/// </summary>
+		/// <param name="typeToCreate">The type instance to build.</param>
+		/// <param name="arguments">The types of the constructor arguments</param>
+		/// <returns>The key for a cache entry.</returns>
+		private string GenerateKey(Type typeToCreate, object[] arguments)
+		{
+			StringBuilder cacheKey = new StringBuilder();
+			cacheKey.Append(typeToCreate.ToString());
+			cacheKey.Append(".");
+			if ((arguments != null) && (arguments.Length != 0)) 
+			{
+				for (int i=0; i<arguments.Length; i++) 
+				{
+					cacheKey.Append(".").Append(arguments[i]);
+				}
+			}
+			return cacheKey.ToString();
+		}
 		#endregion
 	}
 }

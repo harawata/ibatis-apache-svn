@@ -66,11 +66,12 @@ namespace IBatisNet.Common.Utilities.Objects
 		/// <summary>
 		/// Create a new factory instance for a given type
 		/// </summary>
-		/// <param name="typeToCreate"></param>
-		/// <returns></returns>
-		public IFactory CreateFactory(Type typeToCreate)
+		/// <param name="typeToCreate">The type instance to build</param>
+		/// <param name="types">The types of the constructor arguments</param>
+		/// <returns>Returns a new instance factory</returns>
+		public IFactory CreateFactory(Type typeToCreate, Type[] types)
 		{
-			return _objectFactory.CreateFactory(typeToCreate);
+			return _objectFactory.CreateFactory(typeToCreate, types);
 		}
 
 		#endregion

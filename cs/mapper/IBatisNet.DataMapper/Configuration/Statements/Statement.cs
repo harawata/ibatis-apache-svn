@@ -319,7 +319,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 				if (Type.GetTypeCode(_resultClass) == TypeCode.Object &&
 					(_resultClass.IsValueType == false))
 				{
-					_resultClassFactory = configurationScope.SqlMapper.ObjectFactory.CreateFactory(_resultClass);	
+					_resultClassFactory = configurationScope.SqlMapper.ObjectFactory.CreateFactory(_resultClass, Type.EmptyTypes);	
 				}
 			}
 			if (_parameterClassName != string.Empty )
@@ -329,7 +329,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 			if (_listClassName != string.Empty )
 			{
 				_listClass = configurationScope.SqlMapper.TypeHandlerFactory.GetType(_listClassName);
-                _listClassFactory = configurationScope.SqlMapper.ObjectFactory.CreateFactory(_listClass);
+                _listClassFactory = configurationScope.SqlMapper.ObjectFactory.CreateFactory(_listClass, Type.EmptyTypes);
 			}
 		}
 
@@ -365,7 +365,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 				}
 				else
 				{
-					return _resultClassFactory.CreateInstance();
+					return _resultClassFactory.CreateInstance(null);
 				}
 			}
 		}
@@ -377,7 +377,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		/// <returns>An object which implment IList.</returns>
 		public IList CreateInstanceOfListClass()
 		{
-            return (IList)_listClassFactory.CreateInstance(); ;
+            return (IList)_listClassFactory.CreateInstance(null); ;
 		}
 		#endregion
 

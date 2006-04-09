@@ -187,11 +187,13 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 			constructorIL.Emit(OpCodes.Ldarg_0);
 			// Call the base constructor (no args)
 			constructorIL.Emit(OpCodes.Call, typeof(object).GetConstructor(Type.EmptyTypes));
+			// this._name = memberName
 			// Load "this"
 			constructorIL.Emit(OpCodes.Ldarg_0);
 			// Store name in field "_name"
 			constructorIL.Emit(OpCodes.Ldstr, memberName);
 			constructorIL.Emit(OpCodes.Stfld, fieldBuilderName);
+			// this._memberType = baseMemberType
 			// Store type in field "_memberType"
 //			constructorIL.Emit(OpCodes.Ldtoken, baseMemberType);
 //			MethodInfo miGetTypeFromHandle = typeof(System.Type).GetMethod("GetTypeFromHandle", new Type[] {typeof(System.RuntimeTypeHandle)});
