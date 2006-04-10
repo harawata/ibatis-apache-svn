@@ -96,19 +96,10 @@ namespace IBatisNet.Common.Utilities.Objects
 				throw new ProbeException(
 					string.Format("Unable to optimize create instance. Cause : Could not find public constructor matching specified arguments for type \"{0}\".", typeToCreate.Name));
 			}
-			if (argumentTypes==Type.EmptyTypes)// no parameters
-			{
-				// new typeToCreate()
-				il.Emit(OpCodes.Newobj, ctor);
-				il.Emit(OpCodes.Ret);
-			}
-			else
-			{
-				// new typeToCreate(... arguments ...)
-				EmitArgsIL(il, argumentTypes);
-				il.Emit(OpCodes.Newobj, ctor);
-				il.Emit(OpCodes.Ret);				
-			}
+			// new typeToCreate() or new typeToCreate(... arguments ...)
+			EmitArgsIL(il, argumentTypes);
+			il.Emit(OpCodes.Newobj, ctor);
+			il.Emit(OpCodes.Ret);				
 		}
 
 		/// <summary>   
@@ -128,14 +119,21 @@ namespace IBatisNet.Common.Utilities.Objects
 				il.Emit(OpCodes.Ldc_I4, i);   
 				il.Emit(OpCodes.Ldelem_Ref);
 
-				// If param is a value type then we need to unbox it.   
+				// If param is a primitive/value type then we need to unbox it.   
 				Type paramType = argumentTypes[i];   
 				if (paramType.IsValueType)   
 				{   
-					il.Emit(OpCodes.Unbox, paramType);  
-					il.Emit(BoxingOpCodes.GetOpCode(paramType)); 
+					if (paramType.IsPrimitive || paramType.IsEnum) 
+					{
+						il.Emit(OpCodes.Unbox, paramType);
+						il.Emit(BoxingOpCodes.GetOpCode(paramType));
+					}
+					else if (paramType.IsValueType) 
+					{
+						il.Emit(OpCodes.Unbox, paramType);
+						il.Emit(OpCodes.Ldobj, paramType);
+					}
 				}  
-
 			}   
 		 }   
 

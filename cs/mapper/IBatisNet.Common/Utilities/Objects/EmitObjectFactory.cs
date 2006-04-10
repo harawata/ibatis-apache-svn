@@ -40,7 +40,7 @@ namespace IBatisNet.Common.Utilities.Objects
 		private object _padlock = new object();
 
 		/// <summary>
-		/// 
+		/// Default constructor
 		/// </summary>
 		public EmitObjectFactory()
 		{

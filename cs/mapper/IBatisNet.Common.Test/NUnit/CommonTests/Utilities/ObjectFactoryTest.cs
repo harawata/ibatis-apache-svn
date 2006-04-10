@@ -102,6 +102,24 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 		{
 			IObjectFactory objectFactory = new ObjectFactory(true);
 
+			Type[] types = {typeof(DateTime)};
+			IFactory factory = objectFactory.CreateFactory(typeof (Account), types );
+
+			object[] parameters = new object[1];
+			DateTime date = DateTime.Now;
+			parameters[0] = date;
+			object obj = factory.CreateInstance(parameters);
+
+			Assert.IsTrue(obj is Account);
+			Account account = (Account)obj;
+			Assert.AreEqual( date, account.Date);
+		}
+
+		[Test]
+		public void DynamicFactoryWithConstructor6()
+		{
+			IObjectFactory objectFactory = new ObjectFactory(true);
+
 			Type[] types = {typeof(string), typeof(Property)};
 			IFactory factory = objectFactory.CreateFactory(typeof (Account), types );
 

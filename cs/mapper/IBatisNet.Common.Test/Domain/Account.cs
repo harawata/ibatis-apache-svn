@@ -16,9 +16,15 @@ namespace IBatisNet.Common.Test.Domain
 		private string _test = string.Empty;
 		private Days _days ;
 		private Property _prop = null ;
+		private DateTime _date = DateTime.MinValue;
 
 		public Account()
 		{}
+
+		public Account(DateTime date)
+		{
+			_date = date;
+		}
 
 		public Account(int id)
 		{
@@ -49,6 +55,11 @@ namespace IBatisNet.Common.Test.Domain
 		public Property Property
 		{
 			get { return _prop; }
+		}
+
+		public DateTime Date
+		{
+			get { return _date; }
 		}
 
 		public Days Days
