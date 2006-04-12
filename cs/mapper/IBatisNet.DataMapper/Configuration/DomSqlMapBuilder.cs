@@ -873,9 +873,9 @@ namespace IBatisNet.DataMapper.Configuration
 				_configScope.ErrorContext.Activity = "Resolve 'resultMap' attribute on Result Property";
 
 				ResultMap resultMap = (ResultMap)entry.Value;
-				foreach(DictionaryEntry item in resultMap.ColumnsToPropertiesMap)
+				for(int index=0; index< resultMap.Properties.Count; index++)
 				{
-					ResultProperty result = (ResultProperty)item.Value;
+					ResultProperty result = resultMap.Properties[index];
 					if(result.NestedResultMapName.Length >0)
 					{
 						result.NestedResultMap = _configScope.SqlMapper.GetResultMap(result.NestedResultMapName);
@@ -1722,9 +1722,9 @@ namespace IBatisNet.DataMapper.Configuration
 					}
 
 					// Add parent property
-					foreach(DictionaryEntry dicoEntry in superMap.ColumnsToPropertiesMap)
+					for(int index=0; index< superMap.Properties.Count; index++)
 					{
-						ResultProperty property = (ResultProperty)dicoEntry.Value;
+						ResultProperty property = superMap.Properties[index];
 						resultMap.AddResultPropery(property);
 					}
 				}

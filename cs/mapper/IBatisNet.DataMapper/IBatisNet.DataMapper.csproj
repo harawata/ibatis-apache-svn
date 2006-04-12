@@ -283,6 +283,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Configuration\ResultMapping\ResultPropertyCollection.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Configuration\ResultMapping\SubMap.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -224,10 +224,11 @@ namespace IBatisNet.DataMapper.MappedStatements
 			bool dataFound = false;
 			
 			// For each Property in the ResultMap, set the property in the object 
-			foreach(DictionaryEntry entry in resultMap.ColumnsToPropertiesMap)
+			for(int index=0; index< resultMap.Properties.Count; index++)
+
 			{
 				request.IsRowDataFound = false;
-				ResultProperty property = (ResultProperty)entry.Value;
+				ResultProperty property = resultMap.Properties[index];
 				SetObjectProperty(request, resultMap, property, ref resultObject, reader);
 				dataFound = dataFound || request.IsRowDataFound;
 			}
@@ -258,9 +259,9 @@ namespace IBatisNet.DataMapper.MappedStatements
 				}
 
 				// For each Property in the ResultMap, set the property in the object 
-				foreach(DictionaryEntry entry in resultMap.ColumnsToPropertiesMap)
+				for(int index=0; index< resultMap.Properties.Count; index++)
 				{
-					ResultProperty property = (ResultProperty)entry.Value;
+					ResultProperty property = resultMap.Properties[index];
 					SetObjectProperty(request, resultMap, property, ref outObject, reader);
 				}
 			} 
@@ -1532,9 +1533,10 @@ namespace IBatisNet.DataMapper.MappedStatements
 			/// <param name="resultObject"></param>
 			public void AutoMapReader(IDataReader reader, ref object resultObject)
 			{
-				foreach (string key in _resultMap.ColumnsToPropertiesMap.Keys) 
+				for(int index=0; index< _resultMap.Properties.Count; index++)
+
 				{
-					ResultProperty property = (ResultProperty) _resultMap.ColumnsToPropertiesMap[key];
+					ResultProperty property = _resultMap.Properties[index];
 					_resultMap.SetValueOfProperty( ref resultObject, property, 
 						property.GetDataBaseValue( reader ));
 				}

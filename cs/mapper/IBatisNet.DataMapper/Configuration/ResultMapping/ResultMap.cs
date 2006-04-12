@@ -27,7 +27,6 @@
 #region Using
 
 using System;
-using System.Collections;
 using System.Data;
 using System.Xml;
 using System.Xml.Serialization;
@@ -76,7 +75,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		private Type _class = null;
 		//(columnName, property)
 		[NonSerialized]
-		private Hashtable _columnsToPropertiesMap = new Hashtable();
+		private ResultPropertyCollection _properties = new ResultPropertyCollection();
 		[NonSerialized]
 		private Discriminator _discriminator = null;
 		[NonSerialized]
@@ -112,12 +111,12 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		}
 
 		/// <summary>
-		/// The collection of result properties.
+		/// The collection of ResultProperty.
 		/// </summary>
 		[XmlIgnore]
-		public Hashtable ColumnsToPropertiesMap
+		public ResultPropertyCollection Properties
 		{
-			get { return _columnsToPropertiesMap; }
+			get { return _properties; }
 		}
 
 		/// <summary>
@@ -304,7 +303,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// <param name="property">The property to add.</param>
 		public void AddResultPropery(ResultProperty property)
 		{
-			_columnsToPropertiesMap.Add( property.PropertyName, property  );
+			_properties.Add( property  );
 		}
 
 		/// <summary>

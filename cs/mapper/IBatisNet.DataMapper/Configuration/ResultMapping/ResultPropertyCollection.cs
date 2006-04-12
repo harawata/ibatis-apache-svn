@@ -25,21 +25,21 @@
 
 using System;
 
-namespace IBatisNet.DataMapper.Configuration.ParameterMapping
+namespace IBatisNet.DataMapper.Configuration.ResultMapping
 {
 	/// <summary>
-	/// A ParameterProperty Collection.
+	/// A ResultProperty Collection.
 	/// </summary>
-	public class ParameterPropertyCollection
+	public class ResultPropertyCollection
 	{
 		private const int _defaultCapacity = 8;
 		private const int _capacityMultiplier = 2;
 		private int _count = 0;
-		private ParameterProperty[] _innerList = null;
+		private ResultProperty[] _innerList = null;
 
 
 		/// <summary>
-		/// Read-only property describing how many elements are in the Collection.
+		/// ead-only property describing how many elements are in the Collection.
 		/// </summary>
 		public int Count 
 		{
@@ -48,29 +48,29 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 
 
 		/// <summary>
-		/// Constructs a ParameterProperty collection. The list is initially empty and has a capacity
+		/// Constructs a ResultPropertyCollection. The list is initially empty and has a capacity
 		/// of zero. Upon adding the first element to the list the capacity is
 		/// increased to 8, and then increased in multiples of two as required.
 		/// </summary>
-		public ParameterPropertyCollection() 
+		public ResultPropertyCollection() 
 		{
-			_innerList = new ParameterProperty[_defaultCapacity];
+			_innerList = new ResultProperty[_defaultCapacity];
 			_count = 0;
 		}
 
 		/// <summary>
-		///  Constructs a ParameterPropertyCollection with a given initial capacity. 
+		///  Constructs a ResultPropertyCollection with a given initial capacity. 
 		///  The list is initially empty, but will have room for the given number of elements
 		///  before any reallocations are required.
 		/// </summary>
 		/// <param name="capacity">The initial capacity of the list</param>
-		public ParameterPropertyCollection(int capacity) 
+		public ResultPropertyCollection(int capacity) 
 		{
 			if (capacity < 0)
 			{
 				throw new ArgumentOutOfRangeException("Capacity", "The size of the list must be >0.");
 			}
-			_innerList = new ParameterProperty[capacity];
+			_innerList = new ResultProperty[capacity];
 		}
 
 		/// <summary>
@@ -83,9 +83,9 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 
  
 		/// <summary>
-		/// Sets or Gets the ParameterProperty at the given index.
+		/// Sets or Gets the ResultProperty at the given index.
 		/// </summary>
-		public ParameterProperty this[int index] 
+		public ResultProperty this[int index] 
 		{
 			get
 			{
@@ -107,11 +107,11 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
  
 
 		/// <summary>
-		/// Add an ParameterProperty
+		/// Add an ResultProperty
 		/// </summary>
 		/// <param name="value"></param>
 		/// <returns>Index</returns>
-		public int Add(ParameterProperty value) 
+		public int Add(ResultProperty value) 
 		{
 			Resize(_count + 1);
 			int index = _count++;
@@ -122,10 +122,10 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 
  
 		/// <summary>
-		/// Add a list of ParameterProperty to the collection
+		/// Add a list of ResultProperty to the collection
 		/// </summary>
 		/// <param name="value"></param>
-		public void AddRange(ParameterProperty[] value) 
+		public void AddRange(ResultProperty[] value) 
 		{
 			for (int i = 0;   i < value.Length; i++) 
 			{
@@ -135,10 +135,10 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 
  
 		/// <summary>
-		/// Add a list of ParameterProperty to the collection
+		/// Add a list of ResultProperty to the collection
 		/// </summary>
 		/// <param name="value"></param>
-		public void AddRange(ParameterPropertyCollection value) 
+		public void AddRange(ResultPropertyCollection value) 
 		{
 			for (int i = 0;   i < value.Length; i++) 
 			{
@@ -148,11 +148,11 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
  
 
 		/// <summary>
-		/// Indicate if a ParameterProperty is in the collection
+		/// Indicate if a ResultProperty is in the collection
 		/// </summary>
-		/// <param name="value">A ParameterProperty</param>
+		/// <param name="value">A ResultProperty</param>
 		/// <returns>True fi is in</returns>
-		public bool Contains(ParameterProperty value) 
+		public bool Contains(ResultProperty value) 
 		{
 			for (int i = 0;   i < _count; i++) 
 			{
@@ -166,11 +166,11 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
       
 
 		/// <summary>
-		/// Insert a ParameterProperty in the collection.
+		/// Insert a ResultProperty in the collection.
 		/// </summary>
 		/// <param name="index">Index where to insert.</param>
-		/// <param name="value">A ParameterProperty</param>
-		public void Insert(int index, ParameterProperty value) 
+		/// <param name="value">A ResultProperty</param>
+		public void Insert(int index, ResultProperty value) 
 		{
 			if (index < 0 || index > _count) 
 			{
@@ -185,9 +185,9 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
             
 
 		/// <summary>
-		/// Remove a ParameterProperty of the collection.
+		/// Remove a ResultProperty of the collection.
 		/// </summary>
-		public void Remove(ParameterProperty value) 
+		public void Remove(ResultProperty value) 
 		{
 			for(int i = 0; i < _count; i++) 
 			{
@@ -201,7 +201,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		}
 
 		/// <summary>
-		/// Removes a ParameterProperty at the given index. The size of the list is
+		/// Removes a ResultProperty at the given index. The size of the list is
 		/// decreased by one.
 		/// </summary>
 		/// <param name="index"></param>
@@ -235,18 +235,16 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 
 			if (minSize > oldSize) 
 			{
-				ParameterProperty[] oldEntries = _innerList;
+				ResultProperty[] oldEntries = _innerList;
 				int newSize = oldEntries.Length * _capacityMultiplier;
 		
 				if (newSize < minSize) 
 				{
 					newSize = minSize;
 				}
-				_innerList = new ParameterProperty[newSize];
+				_innerList = new ResultProperty[newSize];
 				Array.Copy(oldEntries, 0, _innerList, 0, _count);
 			}
 		}
 	}
-
 }
-
