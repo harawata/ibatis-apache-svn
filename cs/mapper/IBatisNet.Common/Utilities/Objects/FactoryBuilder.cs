@@ -74,7 +74,12 @@ namespace IBatisNet.Common.Utilities.Objects
 		/// <returns></returns>
 		private Type CreateFactoryType(Type typeToCreate, Type[] types)
 		{
-			TypeBuilder typeBuilder = _moduleBuilder.DefineType("EmitFactoryFor" + typeToCreate.Name, TypeAttributes.Public);
+			string typesName = string.Empty;
+			for(int i = 0; i < types.Length; i++)
+			{
+				typesName += types[i].Name;
+			}
+			TypeBuilder typeBuilder = _moduleBuilder.DefineType("EmitFactoryFor" + typeToCreate.Name + typesName, TypeAttributes.Public);
 			typeBuilder.AddInterfaceImplementation(typeof (IFactory));
 			ImplementCreateInstance(typeBuilder, typeToCreate, types);
 			return typeBuilder.CreateType();
