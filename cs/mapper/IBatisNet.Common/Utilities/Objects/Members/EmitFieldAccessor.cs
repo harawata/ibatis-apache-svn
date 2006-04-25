@@ -55,7 +55,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 			// Make sure the field exists
 			if(fieldInfo == null)
 			{
-				throw new MissingMethodException(
+				throw new NotSupportedException(
 					string.Format("Field \"{0}\" does not exist for type "
 					+ "{1}.", fieldName, targetObjectType));
 			}

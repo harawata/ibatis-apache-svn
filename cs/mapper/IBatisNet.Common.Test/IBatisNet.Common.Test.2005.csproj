@@ -103,6 +103,8 @@
     <Compile Include="Domain\Account.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Domain\Item.cs" />
+    <Compile Include="Domain\Order.cs" />
     <Compile Include="Domain\Property.cs" />
     <Compile Include="Domain\Simple.cs" />
     <Compile Include="NUnit\CommonTests\ConfigWatcher\ConfigWatcherTest.cs">

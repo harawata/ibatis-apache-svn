@@ -37,6 +37,7 @@ namespace IBatisNet.Common.Utilities.Objects
 	public class FactoryBuilder
 	{
 		private ModuleBuilder _moduleBuilder = null;
+		private const BindingFlags VISIBILITY = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
 		/// <summary>
 		/// constructor
@@ -77,7 +78,7 @@ namespace IBatisNet.Common.Utilities.Objects
 			string typesName = string.Empty;
 			for(int i = 0; i < types.Length; i++)
 			{
-				typesName += types[i].Name;
+				typesName += types[i].Name.Replace("[]",string.Empty)+i.ToString();
 			}
 			TypeBuilder typeBuilder = _moduleBuilder.DefineType("EmitFactoryFor" + typeToCreate.Name + typesName, TypeAttributes.Public);
 			typeBuilder.AddInterfaceImplementation(typeof (IFactory));
@@ -95,7 +96,7 @@ namespace IBatisNet.Common.Utilities.Objects
 			ILGenerator il = meth.GetILGenerator();
 
 			// Add test if contructeur not public
-			ConstructorInfo ctor = typeToCreate.GetConstructor(argumentTypes);
+			ConstructorInfo ctor = typeToCreate.GetConstructor(VISIBILITY, null, argumentTypes, null);
 			if (!ctor.IsPublic)
 			{
 				throw new ProbeException(

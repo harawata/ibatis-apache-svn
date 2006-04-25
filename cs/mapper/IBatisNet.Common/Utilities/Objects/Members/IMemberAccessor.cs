@@ -28,7 +28,10 @@ using System;
 namespace IBatisNet.Common.Utilities.Objects.Members
 {
 	/// <summary>
-	/// The IMemberAccessor interface defines a field/property accessor.
+	/// The IMemberAccessor interface defines a field/property accessor and
+	/// provides <c>Reflection.Emit</c>-generated <see cref="Get"/> and <see cref="Set"/> 
+	/// implementations for drastically improved performance over default late-bind 
+	/// invoke.
 	/// </summary>
 	public interface IMemberAccessor
 	{

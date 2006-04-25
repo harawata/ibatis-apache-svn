@@ -21,6 +21,11 @@ namespace IBatisNet.Common.Test.Domain
 		public Account()
 		{}
 
+        public Account(int[] ids)
+        {
+            _ids = ids;
+        }
+
 		public Account(DateTime date)
 		{
 			_date = date;

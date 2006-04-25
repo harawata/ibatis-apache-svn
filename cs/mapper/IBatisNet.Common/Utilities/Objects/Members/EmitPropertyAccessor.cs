@@ -57,7 +57,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 		#endregion
 
 		/// <summary>
-		/// Creates a new IL property accessor.
+		/// Initializes the property and generates the implementation for getter and setter methods.
 		/// </summary>
 		/// <param name="targetObjectType">Target object type.</param>
 		/// <param name="propertyName">Property name.</param>
@@ -75,7 +75,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 			// Make sure the property exists
 			if(propertyInfo == null)
 			{
-				throw new MissingMethodException(
+				throw new NotSupportedException(
 					string.Format("Property \"{0}\" does not exist for type "
 					+ "{1}.", propertyName, targetType));
 			}
@@ -104,7 +104,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 			}
 			else
 			{
-				throw new MissingMethodException(
+				throw new NotSupportedException(
 					string.Format("Property \"{0}\" on type "
 					+ "{1} doesn't have a get method.", memberName, targetType));
 			}
@@ -131,7 +131,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 			}
 			else
 			{
-				throw new MissingMethodException(
+				throw new NotSupportedException(
 					string.Format("Property \"{0}\" on type "
 					+ "{1} doesn't have a set method.", memberName, targetType));
 			}

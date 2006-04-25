@@ -212,6 +212,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Domain\Item.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Domain\Order.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Domain\Property.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

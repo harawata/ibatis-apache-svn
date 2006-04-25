@@ -1,3 +1,4 @@
+using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Test.Domain;
 using IBatisNet.Common.Utilities.Objects;
 using NUnit.Framework;
@@ -9,9 +10,54 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
     [TestFixture] 
 	public class ObjectFactoryTest
 	{
+		[Test]
+		[ExpectedException(typeof(ProbeException))]
+		public void PrivateConstructor()
+		{
+			IObjectFactory objectFactory = new ObjectFactory(true);
+
+			IFactory factory = objectFactory.CreateFactory(typeof (Order), Type.EmptyTypes );
+
+			object obj = factory.CreateInstance(null);
+		}
 
 		[Test]
-		public void DynamicFactoryWithConstructor0()
+		[ExpectedException(typeof(ProbeException))]
+		public void ProtectedConstructor()
+		{
+			IObjectFactory objectFactory = new ObjectFactory(true);
+
+			IFactory factory = objectFactory.CreateFactory(typeof (Item), Type.EmptyTypes );
+
+			object obj = factory.CreateInstance(null);
+
+			Assert.IsTrue(obj is Item);
+		}
+
+		[Test]
+		public void ClassWithMultipleConstructor()
+		{
+			IObjectFactory objectFactory = new ObjectFactory(true);
+
+			Type[] types = {typeof(string)};
+			IFactory factory0 = objectFactory.CreateFactory(typeof (Account), types );
+
+			object[] parameters = {"gilles"};
+			object obj0 = factory0.CreateInstance(parameters);
+
+			Assert.IsTrue(obj0 is Account);
+			Account account = (Account)obj0;
+			Assert.AreEqual("gilles", account.Test);
+
+			IFactory factory1 = objectFactory.CreateFactory(typeof (Account), Type.EmptyTypes );
+
+			object obj1 = factory1.CreateInstance(parameters);
+
+			Assert.IsTrue(obj1 is Account);
+		}
+
+		[Test]
+		public void StringConstructor()
 		{
 			IObjectFactory objectFactory = new ObjectFactory(true);
 
@@ -27,7 +73,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 		}
 
 		[Test]
-		public void DynamicFactoryWithConstructor1()
+		public void MultipleParamConstructor1()
 		{
 			IObjectFactory objectFactory = new ObjectFactory(true);
 
@@ -44,7 +90,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 		}
 
 		[Test]
-		public void DynamicFactoryWithConstructor2()
+		public void IntConstructor()
 		{
 			IObjectFactory objectFactory = new ObjectFactory(true);
 
@@ -61,7 +107,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 		}
 
 		[Test]
-		public void DynamicFactoryWithConstructor3()
+		public void EnumConstructorEnum()
 		{
 			IObjectFactory objectFactory = new ObjectFactory(true);
 
@@ -78,7 +124,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 		}
 
 		[Test]
-		public void DynamicFactoryWithConstructor4()
+		public void ClassConstructor()
 		{
 			IObjectFactory objectFactory = new ObjectFactory(true);
 
@@ -98,7 +144,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 		}
 
 		[Test]
-		public void DynamicFactoryWithConstructor5()
+		public void DateTimeConstructor()
 		{
 			IObjectFactory objectFactory = new ObjectFactory(true);
 
@@ -115,8 +161,33 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			Assert.AreEqual( date, account.Date);
 		}
 
+        [Test]
+        public void ArrayParamConstructor()
+        {
+            IObjectFactory objectFactory = new ObjectFactory(true);
+
+            Type[] types = { typeof(int[]) };
+            IFactory factory = objectFactory.CreateFactory(typeof(Account), types);
+
+            object[] parameters = new object[1];
+
+            int[] ids = new int[2];
+            ids[0] = 1;
+            ids[1] = 2;
+
+            parameters[0] = ids;
+            object obj = factory.CreateInstance(parameters);
+
+            Assert.IsTrue(obj is Account);
+            Account account = (Account)obj;
+
+            Assert.AreEqual(2, account.Ids.Length);
+            Assert.AreEqual(1, account.Ids[0]);
+            Assert.AreEqual(2, account.Ids[1]);
+        }
+
 		[Test]
-		public void DynamicFactoryWithConstructor6()
+		public void MultipleParamConstructor0()
 		{
 			IObjectFactory objectFactory = new ObjectFactory(true);
 
