@@ -1,7 +1,7 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Revision: 374175 $
+ * $Revision$
  * $LastChangedDate$
  * $LastChangedBy$
  * 
@@ -100,6 +100,8 @@ namespace IBatisNet.Common
 		private bool _setDbParameterScale = true;
 		[NonSerialized]
 		private bool _useDeriveParameters = true;
+		[NonSerialized]
+		private bool _allowMARS = false;
 
 		
 //		private static readonly ILog _connectionLogger = LogManager.GetLogger("System.Data.IDbConnection");
@@ -148,6 +150,22 @@ namespace IBatisNet.Common
 			set {_isEnabled = value;}
 		}
 
+		/// <summary>
+		/// Tell us if this provider allows having multiple open <see cref="IDataReader"/> with
+		/// the same <see cref="IDbConnection"/>.
+		/// </summary>
+		/// <remarks>
+		/// It's a new feature in ADO.NET 2.0 and Sql Server 2005 that allows for multiple forward only read only result sets (MARS).
+		/// Some databases have supported this functionality for a long time :
+		/// Not Supported : DB2, MySql.Data, OLE DB provider [except Sql Server 2005 when using MDAC 9], SQLite, Obdc 
+		/// Supported :  Sql Server 2005, Npgsql
+		/// </remarks>
+		[XmlAttribute("allowMARS")]
+		public bool AllowMARS
+		{             
+			get { return _allowMARS; }
+			set {_allowMARS = value;}
+		}
 	
 		/// <summary>
 		/// The connection class name to use.

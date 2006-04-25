@@ -31,6 +31,13 @@ namespace IBatisNet.Common
 		bool IsEnabled { get; set; }
 
 		/// <summary>
+		/// Tell us if this provider allows having multiple open <see cref="IDataReader"/> with
+		/// the same <see cref="IDbConnection"/>.
+		/// </summary>
+		[XmlAttribute("allowMultipleActiveDataReaders")]
+		bool AllowMARS { get; set; }
+
+		/// <summary>
 		/// The connection class name to use.
 		/// </summary>
 		/// <example>
