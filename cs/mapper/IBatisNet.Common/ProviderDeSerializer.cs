@@ -37,11 +37,12 @@ namespace IBatisNet.Common
 	/// </summary>
 	public class ProviderDeSerializer
 	{
-		/// <summary>
-		/// Deserialize a Provider object
-		/// </summary>
-		/// <param name="node"></param>
-		/// <returns></returns>
+
+        /// <summary>
+        /// Deserializes the specified node in a <see cref="IDbProvider"/>.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <returns>The <see cref="IDbProvider"/></returns>
 		public static IDbProvider Deserialize(XmlNode node)
 		{
 			IDbProvider provider = new DbProvider();
@@ -66,6 +67,7 @@ namespace IBatisNet.Common
 			provider.UseParameterPrefixInParameter = NodeUtils.GetBooleanAttribute(prop, "useParameterPrefixInParameter", true);
 			provider.UseParameterPrefixInSql = NodeUtils.GetBooleanAttribute(prop, "useParameterPrefixInSql", true);
 			provider.UsePositionalParameters = NodeUtils.GetBooleanAttribute(prop, "usePositionalParameters", false);
+            provider.AllowMARS = NodeUtils.GetBooleanAttribute(prop, "allowMARS", false);
 
 			return provider;
 		}
