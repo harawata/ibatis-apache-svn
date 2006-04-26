@@ -28,6 +28,7 @@
 
 using System;
 using System.Data;
+using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
 using IBatisNet.Common.Exceptions;
@@ -35,6 +36,7 @@ using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.Common.Utilities.TypesResolver;
 using IBatisNet.DataMapper.Configuration.Serializers;
 using IBatisNet.DataMapper.DataExchange;
+using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.Scope;
 
 #endregion
@@ -49,9 +51,19 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 	public class ResultMap
 	{
 		/// <summary>
+		/// Token for xml path to argument constructor elements.
+		/// </summary>
+		public static BindingFlags ANY_VISIBILITY_INSTANCE = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+
+		/// <summary>
 		/// Token for xml path to result elements.
 		/// </summary>
 		private const string XML_RESULT = "result";
+
+		/// <summary>
+		/// Token for xml path to result elements.
+		/// </summary>
+		private const string XML_CONSTRUCTOR_ARGUMENT = "constructor/argument";
 
 		/// <summary>
 		/// Token for xml path to discriminator elements.
@@ -73,9 +85,12 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		private string _extendMap = string.Empty;
 		[NonSerialized]
 		private Type _class = null;
-		//(columnName, property)
+		
 		[NonSerialized]
 		private ResultPropertyCollection _properties = new ResultPropertyCollection();
+		[NonSerialized]
+		private ResultPropertyCollection _parameters = new ResultPropertyCollection();
+
 		[NonSerialized]
 		private Discriminator _discriminator = null;
 		[NonSerialized]
@@ -117,6 +132,15 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		public ResultPropertyCollection Properties
 		{
 			get { return _properties; }
+		}
+
+		/// <summary>
+		/// The collection of constructor parameters.
+		/// </summary>
+		[XmlIgnore]
+		public ResultPropertyCollection Parameters
+		{
+			get { return _parameters; }
 		}
 
 		/// <summary>
@@ -167,7 +191,9 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			set 
 			{ 
 				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The class attribute is mandatory in a ResultMap tag.");
+				{
+					throw new ArgumentNullException("The class attribute is mandatory in a ResultMap tag.");				
+				}
 
 				_className = value; 
 			}
@@ -207,11 +233,6 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 				_class = configScope.SqlMapper.TypeHandlerFactory.GetType(_className);
 				_dataExchange = _dataExchangeFactory.GetDataExchangeForClass(_class);
 
-				if (Type.GetTypeCode(_class) == TypeCode.Object)
-				{
-					_objectFactory = configScope.SqlMapper.ObjectFactory.CreateFactory(_class, Type.EmptyTypes);
-				}
-
 				// Load the child node
 				GetChildNode(configScope);
 			}
@@ -233,6 +254,39 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			ResultProperty mapping = null;
 			SubMap subMap = null;
 
+			#region Load the parameters constructor
+			XmlNodeList nodeList = configScope.NodeContext.SelectNodes( DomSqlMapBuilder.ApplyMappingNamespacePrefix(XML_CONSTRUCTOR_ARGUMENT), configScope.XmlNamespaceManager);
+			if (nodeList.Count>0)
+			{
+				Type[] parametersType= new Type[nodeList.Count];
+				string[] parametersName = new string[nodeList.Count];
+				for( int i =0; i<nodeList.Count; i++)
+				{
+					ArgumentProperty argumentMapping = ArgumentPropertyDeSerializer.Deserialize( nodeList[i], configScope );
+					_parameters.Add( argumentMapping  );
+					parametersName[i] = argumentMapping.ArgumentName;
+				}
+				ConstructorInfo constructorInfo = this.GetConstructor( _class, parametersName );
+				for(int i=0;i<_parameters.Count;i++)
+				{
+					ArgumentProperty argumentMapping = (ArgumentProperty)_parameters[i];
+
+					configScope.ErrorContext.MoreInfo = "initialize argument property : " + argumentMapping.ArgumentName;
+					argumentMapping.Initialize( configScope, constructorInfo);
+					parametersType[i] = argumentMapping.MemberType;
+				}		
+				// Init the object factory
+				_objectFactory = configScope.SqlMapper.ObjectFactory.CreateFactory(_class, parametersType);
+			}
+			else
+			{
+				if (Type.GetTypeCode(_class) == TypeCode.Object)
+				{
+					_objectFactory = configScope.SqlMapper.ObjectFactory.CreateFactory(_class, Type.EmptyTypes);
+				}
+			}
+
+			#endregion
 
 			#region Load the Result Properties
 
@@ -277,19 +331,65 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			#endregion 
 		}
 
+		/// <summary>
+		/// Finds the constructor that takes the parameters.
+		/// </summary>
+		/// <param name="type">The <see cref="System.Type"/> to find the constructor in.</param> 
+		/// <param name="parametersName">The parameters name to use to find the appropriate constructor.</param>
+		/// <returns>
+		/// An <see cref="ConstructorInfo"/> that can be used to create the type with 
+		/// the specified parameters.
+		/// </returns>
+		/// <exception cref="DataMapperException">
+		/// Thrown when no constructor with the correct signature can be found.
+		/// </exception> 
+		public ConstructorInfo GetConstructor( System.Type type, string[] parametersName )
+		{
+			ConstructorInfo[] candidates = type.GetConstructors(ANY_VISIBILITY_INSTANCE);
+			foreach( ConstructorInfo constructor in candidates )
+			{
+				ParameterInfo[] parameters = constructor.GetParameters();
+
+				if( parameters.Length == parametersName.Length )
+				{
+					bool found = true;
+
+					for( int j = 0; j < parameters.Length; j++ )
+					{
+						bool ok = (parameters[ j ].Name == parametersName[ j ]);
+						if( !ok )
+						{
+							found = false;
+							break;
+						}
+					}
+
+					if( found )
+					{
+						return constructor;
+					}
+				}
+			}
+			throw new DataMapperException( "Cannot find an appropriate constructor which map parameters in class: "+ type.Name );
+		}
+
 		#endregion
 
 		/// <summary>
 		/// Create an instance Of result.
 		/// </summary>
+		/// <param name="parameters">
+		/// An array of values that matches the number, order and type 
+		/// of the parameters for this constructor. 
+		/// </param>
 		/// <returns>An object.</returns>
-		public object CreateInstanceOfResult()
+		public object CreateInstanceOfResult(object[] parameters)
 		{
 			TypeCode typeCode = Type.GetTypeCode(_class);
 
 			if (typeCode == TypeCode.Object)
 			{
-				return _objectFactory.CreateInstance(null);
+				return _objectFactory.CreateInstance(parameters);
 			}
 			else
 			{

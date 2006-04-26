@@ -23,6 +23,15 @@ namespace IBatisNet.DataMapper.Test.Domain
         private Int64? _testInt64 = null;
         private Single? _testSingle = null;
 
+        public NullableClass()
+        {
+        }
+
+        public NullableClass(Int32? id)
+        {
+            _testInt32 = id;
+        }
+
         public int Id
         {
             get { return _id; }

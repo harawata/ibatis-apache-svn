@@ -255,7 +255,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		}
 
 		/// <summary>
-		/// The IMemberAccessor
+		/// Defines a field/property accessor
 		/// </summary>
 		[XmlIgnore]
 		public IMemberAccessor MemberAccessor
@@ -275,11 +275,12 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		#endregion
 
 		#region Methods
-		/// <summary>
-		/// Initialize the parameter property
-		/// </summary>
-		/// <param name="scope"></param>
-		/// <param name="parameterClass"></param>
+
+        /// <summary>
+        /// Initializes the parameter property
+        /// </summary>
+        /// <param name="scope">The scope.</param>
+        /// <param name="parameterClass">The parameter class.</param>
 		public void Initialize(IScope scope, Type parameterClass)
 		{
 			if(_directionAttribute.Length >0)

@@ -98,7 +98,6 @@ namespace IBatisNet.DataMapper
 		private TypeHandlerFactory _typeHandlerFactory = null; 
 
 		private bool _cacheModelsEnabled = false;
-		private bool _useReflectionOptimizer = false;
 		// An identifiant 
 		private string _id = string.Empty;
 
@@ -182,29 +181,20 @@ namespace IBatisNet.DataMapper
 			set { _cacheModelsEnabled = value; }
 		}
 
-		/// <summary>
-		/// A flag indicating if we use reflection optimizer.
-		/// </summary>
-		internal bool UseReflectionOptimizer
-		{
-			get { return _useReflectionOptimizer; }
-		}
-
 		#endregion
 
 		#region Constructor (s) / Destructor
 		/// <summary>
 		/// Create a new SqlMap
 		/// </summary>
-        /// <param name="typeHandlerFactory"></param>
-        /// <param name="useReflectionOptimizer"></param>
-        internal SqlMapper(bool useReflectionOptimizer, TypeHandlerFactory typeHandlerFactory) 
+        /// <param name="objectFactory"></param>
+        /// <param name="memberAccessorFactory"></param>
+        internal SqlMapper(IObjectFactory objectFactory, IMemberAccessorFactory memberAccessorFactory) 
 		{
-			_useReflectionOptimizer = useReflectionOptimizer;
-            _objectFactory = new ObjectFactory(useReflectionOptimizer);
-			_memberAccessorFactory = new MemberAccessorFactory(useReflectionOptimizer);
-			_dataExchangeFactory = new DataExchangeFactory(typeHandlerFactory, _objectFactory, _memberAccessorFactory);
-			_typeHandlerFactory = typeHandlerFactory;
+            _typeHandlerFactory = new TypeHandlerFactory();
+            _objectFactory = objectFactory;
+            _memberAccessorFactory = memberAccessorFactory;
+            _dataExchangeFactory = new DataExchangeFactory(_typeHandlerFactory, _objectFactory, _memberAccessorFactory);
 			_id = HashCodeProvider.GetIdentityHashCode(this).ToString();
 			_sessionHolder = new SessionHolder(_id);
 		}
@@ -469,15 +459,15 @@ namespace IBatisNet.DataMapper
 		/// Start a database transaction on the current session
 		/// with the specified isolation level.
 		/// </summary>
-		/// <param name="openConnection">Open a connection.</param>
+		/// <param name="openNewConnection">Open a connection.</param>
 		/// <param name="isolationLevel">
 		/// The isolation level under which the transaction should run.
 		/// </param>
-		public IDalSession BeginTransaction(bool openConnection, IsolationLevel isolationLevel)
+		public IDalSession BeginTransaction(bool openNewConnection, IsolationLevel isolationLevel)
 		{
 			IDalSession session = null;
 
-			if (openConnection)
+			if (openNewConnection)
 			{
 				session = this.BeginTransaction(isolationLevel);
 			}
@@ -488,7 +478,7 @@ namespace IBatisNet.DataMapper
 				{
 					throw new DataMapperException("SqlMap could not invoke BeginTransaction(). A session must be Open. Call OpenConnection() first.");
 				}
-				session.BeginTransaction(openConnection, isolationLevel);
+				session.BeginTransaction(openNewConnection, isolationLevel);
 			}
 			return session;
 		}
@@ -499,12 +489,12 @@ namespace IBatisNet.DataMapper
 		/// </summary>
 		/// <param name="isolationLevel">The transaction isolation level for this connection.</param>
 		/// <param name="connectionString">The connection string</param>
-		/// <param name="openConnection">Open a connection.</param>
-		public IDalSession BeginTransaction(string connectionString, bool openConnection, IsolationLevel isolationLevel)
+		/// <param name="openNewConnection">Open a connection.</param>
+		public IDalSession BeginTransaction(string connectionString, bool openNewConnection, IsolationLevel isolationLevel)
 		{
 			IDalSession session = null;
 
-			if (openConnection)
+			if (openNewConnection)
 			{
 				session = this.BeginTransaction(connectionString, isolationLevel);
 			}
@@ -515,7 +505,7 @@ namespace IBatisNet.DataMapper
 				{
 					throw new DataMapperException("SqlMap could not invoke BeginTransaction(). A session must be Open. Call OpenConnection() first.");
 				}
-				session.BeginTransaction(connectionString, openConnection, isolationLevel);
+				session.BeginTransaction(connectionString, openNewConnection, isolationLevel);
 			}
 			return session;
 		}

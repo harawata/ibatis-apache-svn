@@ -67,11 +67,13 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 		#endregion
 
 		#region Constructor (s) / Destructor
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		/// <param name="statement">The mapped statement.</param>
-		/// <param name="configScope"></param>
+
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DynamicSql"/> class.
+        /// </summary>
+        /// <param name="configScope">The config scope.</param>
+        /// <param name="statement">The statement.</param>
 		internal DynamicSql(ConfigurationScope configScope, IStatement statement)
 		{
 			_statement = statement;
@@ -109,7 +111,9 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 		/// <returns></returns>
 		public RequestScope GetRequestScope(object parameterObject, IDalSession session)
 		{ 
-			RequestScope request = new RequestScope(_typeHandlerFactory, _memberAccessorFactory, _objectFactory, _dataExchangeFactory);
+			RequestScope request = new RequestScope(_typeHandlerFactory, _memberAccessorFactory,
+                _objectFactory, _dataExchangeFactory, session);
+
 			_paramParser = new InlineParameterMapParser();
 			request.ResultMap = _statement.ResultMap;
 

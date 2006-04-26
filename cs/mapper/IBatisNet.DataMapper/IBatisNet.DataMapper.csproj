@@ -173,6 +173,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Commands\DataReaderAdapter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Commands\DataReaderTransformer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Commands\DefaultPreparedCommand.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -268,7 +278,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Configuration\ResultMapping\ArgumentProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Configuration\ResultMapping\Discriminator.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Configuration\ResultMapping\IColumn.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -289,6 +309,11 @@
                 />
                 <File
                     RelPath = "Configuration\ResultMapping\SubMap.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Configuration\Serializers\ArgumentPropertyDeSerializer.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

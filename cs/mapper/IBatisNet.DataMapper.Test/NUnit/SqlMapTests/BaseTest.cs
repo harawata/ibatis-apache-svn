@@ -73,7 +73,9 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
             }
             catch(Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 Console.WriteLine(ex.StackTrace.ToString());
+				throw;
             }
 
 			if ( sqlMap.DataSource.DbProvider.Name.IndexOf("PostgreSql")>=0)

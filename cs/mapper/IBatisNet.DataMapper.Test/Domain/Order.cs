@@ -26,9 +26,40 @@ namespace IBatisNet.DataMapper.Test.Domain
 		private IList _lineItems;//LineItemCollection
 		private LineItem[] _lineItemsArray;
 		private LineItem _favouriteLineItem;
+
+		public Order()
+		{}
+
+		public Order(int id, Account account)
+		{
+			_id = id;
+			_account = account;
+		}
+
+		public Order(int id, Account account, IList lineItems)
+		{
+			_id = id;
+			_account = account;
+			_lineItemsIList = lineItems;
+		}
+
+		public Order(int id, Account account, LineItem[] lineItemsArray)
+		{
+			_id = id;
+			_account = account;
+			_lineItemsArray = lineItemsArray;
+		}
+
+		public Order(int id, Account account, LineItemCollection collection)
+		{
+			_id = id;
+			_account = account;
+			_lineItems = collection;
+		}
+
+
 #if dotnet2
         private IList<LineItem> _genericList;
-
         public IList<LineItem> LineItemsGenericList
         {
             get { return _genericList; }
@@ -36,15 +67,23 @@ namespace IBatisNet.DataMapper.Test.Domain
         }
 
         private LineItemCollection2 _genericCollection = null;
-
         public LineItemCollection2 LineItemsCollection
         {
             get { return _genericCollection; }
             set { _genericCollection = value; }
         }
+
+        public Order(IList<LineItem> lineItems)
+        {
+            _genericList = lineItems;
+        }
+
+        public Order(LineItemCollection2 collection)
+        {
+            _genericCollection = collection;
+        }
 #else
         private IList _genericList;
-
         public IList LineItemsGenericList
         {
             get { return _genericList; }
@@ -52,11 +91,20 @@ namespace IBatisNet.DataMapper.Test.Domain
         }
 
         private LineItemCollection _collection = null;
-
         public LineItemCollection LineItemsCollection
         {
             get { return _collection; }
             set { _collection = value; }
+        }
+
+        public Order(IList lineItems)
+        {
+            _genericList = lineItems;
+        }
+
+        public Order(LineItemCollection collection)
+        {
+            _collection = collection;
         }
 #endif
 
@@ -81,38 +129,20 @@ namespace IBatisNet.DataMapper.Test.Domain
 
 		public LineItem[] LineItemsArray
 		{
-			get
-			{
-				return _lineItemsArray; 
-			}
-			set
-			{ 
-				_lineItemsArray = value; 
-			}
+			get { return _lineItemsArray; }
+			set { _lineItemsArray = value; }
 		}
 
 		public string PostalCode
 		{
-			get
-			{
-				return _postalCode; 
-			}
-			set
-			{ 
-				_postalCode = value; 
-			}
+			get { return _postalCode; }
+			set { _postalCode = value; }
 		}
 
 		public string Province
 		{
-			get
-			{
-				return _province; 
-			}
-			set
-			{ 
-				_province = value; 
-			}
+			get { return _province; }
+			set { _province = value; }
 		}
 
 		public string City

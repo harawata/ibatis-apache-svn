@@ -209,6 +209,7 @@
     <Compile Include="NUnit\SqlMapTests\ConfigureTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="NUnit\SqlMapTests\ConstructorTest.cs" />
     <Compile Include="NUnit\SqlMapTests\DynamicPrependTest.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -463,8 +464,10 @@
     <Content Include="Scripts\PostgreSQL\enumeration-init.sql" />
     <Content Include="Scripts\PostgreSQL\line-item-init.sql" />
     <Content Include="Scripts\PostgreSQL\more-account-records.sql" />
+    <Content Include="Scripts\PostgreSQL\nullable-init.sql" />
     <Content Include="Scripts\PostgreSQL\order-init.sql" />
     <Content Include="Scripts\PostgreSQL\other-init.sql" />
+    <Content Include="Scripts\PostgreSQL\simple-init.sql" />
     <Content Include="Scripts\PostgreSQL\swap-procedure.sql" />
     <Content Include="Scripts\PostgreSQL\user-init.sql" />
     <None Include="bin\Debug\IBatisNet.DataMapper.Test.dll.config" />

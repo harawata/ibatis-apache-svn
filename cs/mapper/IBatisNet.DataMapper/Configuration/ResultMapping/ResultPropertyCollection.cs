@@ -32,8 +32,8 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 	/// </summary>
 	public class ResultPropertyCollection
 	{
-		private const int _defaultCapacity = 8;
-		private const int _capacityMultiplier = 2;
+		private const int DEFAULT_CAPACITY = 4;
+		private const int CAPACITY_MULTIPLIER = 2;
 		private int _count = 0;
 		private ResultProperty[] _innerList = null;
 
@@ -54,7 +54,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// </summary>
 		public ResultPropertyCollection() 
 		{
-			_innerList = new ResultProperty[_defaultCapacity];
+			_innerList = new ResultProperty[DEFAULT_CAPACITY];
 			_count = 0;
 		}
 
@@ -236,7 +236,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			if (minSize > oldSize) 
 			{
 				ResultProperty[] oldEntries = _innerList;
-				int newSize = oldEntries.Length * _capacityMultiplier;
+				int newSize = oldEntries.Length * CAPACITY_MULTIPLIER;
 		
 				if (newSize < minSize) 
 				{

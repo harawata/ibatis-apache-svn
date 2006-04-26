@@ -803,6 +803,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "NUnit\SqlMapTests\ConstructorTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "NUnit\SqlMapTests\DynamicPrependTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

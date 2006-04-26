@@ -152,15 +152,6 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			set { _clrType = value; }
 		}
 
-		/// <summary>
-		/// Column Index
-		/// </summary>
-		[XmlAttribute("columnIndex")]
-		public int ColumnIndex
-		{
-			get { return _columnIndex; }
-			set { _columnIndex = value; }
-		}
 
 		/// <summary>
 		/// The name of the statement to retrieve the property
@@ -180,16 +171,6 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		{
 			get { return _nestedResultMapName; }
 			set { _nestedResultMapName = value; }
-		}
-
-		/// <summary>
-		/// Column Name
-		/// </summary>
-		[XmlAttribute("column")]
-		public string ColumnName
-		{
-			get { return _columnName; }
-			set { _columnName = value; }
 		}
 
 		/// <summary>
@@ -214,12 +195,21 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		}
 
 		/// <summary>
-		/// 
+		/// Defines a field/property accessor
 		/// </summary>
 		[XmlIgnore]
 		public IMemberAccessor MemberAccessor
 		{
 			get { return _memberAccessor; }
+		}
+
+		/// <summary>
+		/// Get the field/property type
+		/// </summary>
+		[XmlIgnore]
+		public virtual Type MemberType
+		{
+			get { return _memberAccessor.MemberType; }
 		}
 
 		/// <summary>
@@ -258,6 +248,26 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		public bool IsComplexMemberName
 		{
 			get { return _isComplexMemberName; }
+		}
+
+		/// <summary>
+		/// Column Index
+		/// </summary>
+		[XmlAttribute("columnIndex")]
+		public int ColumnIndex
+		{
+			get { return _columnIndex; }
+			set { _columnIndex = value; }
+		}
+
+		/// <summary>
+		/// Column Name
+		/// </summary>
+		[XmlAttribute("column")]
+		public string ColumnName
+		{
+			get { return _columnName; }
+			set { _columnName = value; }
 		}
 
 		#endregion

@@ -29,6 +29,7 @@
 using System.Collections;
 using System.Data;
 using System.Runtime.CompilerServices;
+using IBatisNet.Common;
 using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
@@ -53,7 +54,7 @@ namespace IBatisNet.DataMapper.Scope
 		private ResultMap _resultMap = null;
 		private PreparedStatement _preparedStatement = null;
 		private IDbCommand _command = null;
-		private Queue _properties = new Queue();
+		private Queue _selects = new Queue();
 		bool _rowDataFound= false;
 		private static long _nextId = 0;
 		private long _id = 0;
@@ -61,9 +62,18 @@ namespace IBatisNet.DataMapper.Scope
 		private IMemberAccessorFactory _memberAccessorFactory = null;
 		private DataExchangeFactory _dataExchangeFactory = null;
 		private IObjectFactory _objectFactory = null;
+		private IDalSession _session = null;
 		#endregion
 	
 		#region Properties
+
+		/// <summary>
+		///  The current session
+		/// </summary>
+		public IDalSession Session
+		{
+            get { return _session; }
+		}
 
 		/// <summary>
 		///  The IDbCommand to execute
@@ -88,8 +98,8 @@ namespace IBatisNet.DataMapper.Scope
 		/// </summary>
 		public Queue QueueSelect
 		{
-			get { return _properties; }
-			set { _properties = value; }
+			get { return _selects; }
+			set { _selects = value; }
 		}
 
 		/// <summary>
@@ -124,20 +134,25 @@ namespace IBatisNet.DataMapper.Scope
 
 		#region Constructors
 
-		/// <summary>
-		/// Default constructor
-		/// </summary>
-		/// <param name="memberAccessorFactory"></param>
-		/// <param name="typeHandlerFactory"></param>
-		/// <param name="dataExchangeFactory"></param>
-		/// <param name="objectFactory"></param>
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RequestScope"/> class.
+        /// </summary>
+        /// <param name="typeHandlerFactory">The type handler factory.</param>
+        /// <param name="memberAccessorFactory">The member accessor factory.</param>
+        /// <param name="objectFactory">The object factory.</param>
+        /// <param name="dataExchangeFactory">The data exchange factory.</param>
+        /// <param name="session">The session.</param>
 		public RequestScope(TypeHandlerFactory typeHandlerFactory, 
 			IMemberAccessorFactory memberAccessorFactory,
 			IObjectFactory objectFactory,
-			DataExchangeFactory dataExchangeFactory)
+			DataExchangeFactory dataExchangeFactory,
+            IDalSession session
+            )
 		{
 			_errorContext = new ErrorContext();
 
+            _session = session;
 			_objectFactory = objectFactory;
 			_typeHandlerFactory = typeHandlerFactory;
 			_memberAccessorFactory = memberAccessorFactory;

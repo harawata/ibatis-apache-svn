@@ -32,8 +32,8 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 	/// </summary>
 	public class ParameterPropertyCollection
 	{
-		private const int _defaultCapacity = 8;
-		private const int _capacityMultiplier = 2;
+		private const int DEFAULT_CAPACITY = 4;
+		private const int CAPACITY_MULTIPLIER = 2;
 		private int _count = 0;
 		private ParameterProperty[] _innerList = null;
 
@@ -54,7 +54,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// </summary>
 		public ParameterPropertyCollection() 
 		{
-			_innerList = new ParameterProperty[_defaultCapacity];
+			_innerList = new ParameterProperty[DEFAULT_CAPACITY];
 			_count = 0;
 		}
 
@@ -236,7 +236,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 			if (minSize > oldSize) 
 			{
 				ParameterProperty[] oldEntries = _innerList;
-				int newSize = oldEntries.Length * _capacityMultiplier;
+				int newSize = oldEntries.Length * CAPACITY_MULTIPLIER;
 		
 				if (newSize < minSize) 
 				{

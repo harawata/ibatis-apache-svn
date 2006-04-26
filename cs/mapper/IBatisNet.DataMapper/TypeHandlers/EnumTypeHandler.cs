@@ -67,7 +67,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 			}
 			else
 			{  
-				return Enum.Parse(mapping.MemberAccessor.MemberType, dataReader.GetValue(index).ToString());
+				return Enum.Parse(mapping.MemberType, dataReader.GetValue(index).ToString());
 			}
 		}
 
@@ -79,7 +79,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 			}
 			else
 			{
-				return Enum.Parse(mapping.MemberAccessor.MemberType, dataReader.GetValue(mapping.ColumnIndex).ToString());
+				return Enum.Parse(mapping.MemberType, dataReader.GetValue(mapping.ColumnIndex).ToString());
 			}
 		}
 

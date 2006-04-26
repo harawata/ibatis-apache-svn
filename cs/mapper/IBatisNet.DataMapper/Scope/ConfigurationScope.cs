@@ -62,7 +62,6 @@ namespace IBatisNet.DataMapper.Scope
 		private bool _isCacheModelsEnabled = false;
 		private bool _useReflectionOptimizer = true;
 		private bool _validateSqlMap = false;
-		private bool _validateSqlMapConfig = true;
 		private bool _isCallFromDao = false;
 
 		private SqlMapper _sqlMapper = null;
@@ -113,18 +112,9 @@ namespace IBatisNet.DataMapper.Scope
 			set { _nsmgr = value; }
 			get { return _nsmgr; }
 		}
-
-		/// <summary>
-		/// Indicates whether or not to validate the configuration document
-		/// </summary>
-		public bool ValidateSqlMapConfig
-		{
-			set { _validateSqlMapConfig = value; }
-			get { return _validateSqlMapConfig; }
-		}
 		
 		/// <summary>
-		/// Set if theparser should validate the sqlMap documents
+		/// Set if the parser should validate the sqlMap documents
 		/// </summary>
 		public bool ValidateSqlMap
 		{

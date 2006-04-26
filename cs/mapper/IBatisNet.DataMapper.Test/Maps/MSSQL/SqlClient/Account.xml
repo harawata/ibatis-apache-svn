@@ -72,9 +72,20 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
     </cacheModels>
 
 	
-	<resultMaps>            
-		                      
-		<resultMap id="account-result"  class="Account" >
+	<resultMaps>        
+	
+		<resultMap id="account-result-constructor"  class="Account" >
+			<constructor>
+				<argument argumentName="id"			column="Account_ID"/>
+				<argument argumentName="firstName"  column="Account_FirstName"/>
+				<argument argumentName="lastName"   column="Account_LastName"/>
+			</constructor>
+			<result property="EmailAddress" column="Account_Email" nullValue="no_email@provided.com"/>
+			<result property="BannerOption" column="Account_Banner_Option" dbType="Varchar" type="bool"/>
+			<result property="CartOption"	column="Account_Cart_Option" typeHandler="HundredsBool"/>
+		</resultMap>
+   
+    <resultMap id="account-result"  class="Account" >
 			<result property="_id"           column="Account_ID"/>
 			<result property="FirstName"    column="Account_FirstName"/>
 			<result property="LastName"     column="Account_LastName"/>
@@ -82,12 +93,12 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			<result property="BannerOption" column="Account_Banner_Option" dbType="Varchar" type="bool"/>
 			<result property="CartOption"	column="Account_Cart_Option" typeHandler="HundredsBool"/>
 		</resultMap>
-		
-		<resultMap id="indexed-account-result" class="Account">
-			<result property="Id"           column="Account_ID"			columnIndex="0"/>
-			<result property="FirstName"    column="Account_FirstName"	columnIndex="1"/>
-			<result property="LastName"     column="Account_LastName"	columnIndex="2"/>
-			<result property="EmailAddress" column="Account_Email"		columnIndex="3"	nullValue="no_email@provided.com"/>
+    
+    <resultMap id="indexed-account-result" class="Account">
+			<result property="Id"           	columnIndex="0"/>
+			<result property="FirstName"    	columnIndex="1"/>
+			<result property="LastName"     	columnIndex="2"/>
+			<result property="EmailAddress" 	columnIndex="3"	nullValue="no_email@provided.com"/>
 		</resultMap>
 		
 		<resultMap id="account-result-nullable-email" class="Account">
@@ -116,6 +127,13 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
     -->
 	<statements>
 	
+	  <select id="SelectAccountConstructor" parameterClass="Integer"
+					resultMap="account-result-constructor">
+			select *
+			from Accounts
+			where Account_ID = #value#
+		</select>
+		
 		<select id="GetAccountsDynamic" resultMap="account-result" parameterClass="Hashtable" >
 			select top $MaximumAllowed$ * from Accounts
 			<dynamic prepend="where">
@@ -277,7 +295,6 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			where Account_ID > 1000
 			order by Account_ID
 		</select>
-
   
 		<select id="GetAccountNullableEmail" 
 			resultMap="account-result-nullable-email">

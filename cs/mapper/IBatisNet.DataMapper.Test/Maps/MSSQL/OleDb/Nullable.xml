@@ -8,6 +8,24 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   </alias>
 
   <resultMaps>
+
+    <resultMap id="Nullable-result-constructor"  class="Nullable" >
+      <constructor>
+        <argument argumentName="id"		 column="TestInt32"/>
+      </constructor>
+      <result property="Id" column="Id"/>
+      <result property="TestBool" column="TestBool" />
+      <result property="TestByte" column="TestByte" />
+      <result property="TestChar" column="TestChar" />
+      <result property="TestDateTime" column="TestDateTime" />
+      <result property="TestDecimal" column="TestDecimal" />
+      <result property="TestDouble" column="TestDouble" />
+      <result property="TestGuid" column="TestGuid"/>
+      <result property="TestInt16" column="TestInt16"/>
+      <result property="TestInt64" column="TestInt64"/>
+      <result property="TestSingle" column="TestSingle" />
+    </resultMap>
+    
     <resultMap id="Nullable-result" class="Nullable">
       <result property="Id" column="Id"/>
       <result property="TestBool" column="TestBool" />
@@ -26,6 +44,13 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
   <statements>
 
+    <select id="GetNullableConstructor" resultMap="Nullable-result-constructor" >
+      select
+      *
+      from Nullable
+      where Id = #value#
+    </select>
+    
     <select id="GetNullable" resultMap="Nullable-result" >
       select
       *

@@ -16,64 +16,44 @@ namespace IBatisNet.DataMapper.Test.Domain
 		private bool _bannerOption = false;
 		private bool _cartOption = false;
 
+		public Account()
+		{}
+
+		public Account(int id, string firstName, string lastName)
+		{
+			_id = id;
+			_firstName = firstName;
+			_lastName = lastName;
+		}
+
 		public int Id
 		{
-			get
-			{
-				return _id; 
-			}
-			set
-			{ 
-				_id = value; 
-			}
+			get { return _id; }
+			set { _id = value; }
 		}
 
 		public string FirstName
 		{
-			get
-			{
-				return _firstName; 
-			}
-			set
-			{ 
-				_firstName = value; 
-			}
+			get { return _firstName; }
+			set { _firstName = value; }
 		}
 
 		public string LastName
 		{
-			get
-			{
-				return _lastName; 
-			}
-			set
-			{ 
-				_lastName = value; 
-			}
+			get { return _lastName; }
+			set { _lastName = value; }
 		}
 
 		public string EmailAddress
 		{
-			get
-			{
-				return _emailAddress; 
-			}
-			set
-			{ 
-				_emailAddress = value; 
-			}
+			get { return _emailAddress; }
+			set { _emailAddress = value; }
 		}
 
 		public int[] Ids
 		{
-			get
-			{
-				return _ids; 
-			}
-			set
-			{ 
-				_ids = value; 
-			}
+			get { return _ids; }
+			set { _ids = value; }
 		}
 
 		public bool BannerOption

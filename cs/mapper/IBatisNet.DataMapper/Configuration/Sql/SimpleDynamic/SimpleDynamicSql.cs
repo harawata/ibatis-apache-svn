@@ -190,7 +190,8 @@ namespace IBatisNet.DataMapper.Configuration.Sql.SimpleDynamic
 		{
 			string sqlStatement = ProcessDynamicElements(parameterObject);
 			
-			RequestScope request = new RequestScope(_typeHandlerFactory, _memberAccessorFactory, _objectFactory, _dataExchangeFactory);
+			RequestScope request = new RequestScope(_typeHandlerFactory, _memberAccessorFactory,
+                _objectFactory, _dataExchangeFactory, session);
 
 			request.ParameterMap = _statement.ParameterMap;
 			request.ResultMap = _statement.ResultMap;

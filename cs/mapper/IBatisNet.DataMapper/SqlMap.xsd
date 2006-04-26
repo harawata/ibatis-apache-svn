@@ -26,6 +26,7 @@ vs:defaultnsprefix="" >
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
+
 	<xs:element name="discriminator">
 		<xs:complexType>
 			<xs:attribute name="column" type="xs:string"/>
@@ -614,9 +615,30 @@ vs:defaultnsprefix="" >
 			<xs:attribute name="typeHandler" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
+	<xs:element name="argument">
+		<xs:complexType>
+			<xs:attribute name="argumentName" type="xs:string" use="required"/>
+			<xs:attribute name="column" type="xs:string"/>
+			<xs:attribute name="select" type="xs:string"/>
+			<xs:attribute name="nullValue" type="xs:string"/>
+			<xs:attribute name="type" type="xs:string"/>
+			<xs:attribute name="dbType" type="xs:string"/>
+			<xs:attribute name="columnIndex" type="xs:string"/>
+			<xs:attribute name="resultMapping" type="xs:string"/>
+			<xs:attribute name="typeHandler" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="constructor">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="argument" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
 	<xs:element name="resultMap">
 		<xs:complexType>
 			<xs:sequence>
+				<xs:element ref="constructor" minOccurs="0" maxOccurs="1"/>
 				<xs:element ref="result" maxOccurs="unbounded"/>
 				<xs:element ref="discriminator" minOccurs="0" maxOccurs="1"/>
 				<xs:element ref="subMap" minOccurs="0" maxOccurs="unbounded"/>

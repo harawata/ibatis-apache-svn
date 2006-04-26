@@ -1,6 +1,6 @@
 #region Apache Notice
 /*****************************************************************************
- * $Revision: 374175 $
+ * $Revision$
  * $LastChangedDate$
  * $LastChangedBy$
  * 
@@ -85,7 +85,8 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Static
 		/// <returns></returns>
 		public RequestScope GetRequestScope(object parameterObject, IDalSession session)
 		{
-			RequestScope request = new RequestScope(_typeHandlerFactory, _memberAccessorFactory, _objectFactory, _dataExchangeFactory);
+			RequestScope request = new RequestScope(_typeHandlerFactory, _memberAccessorFactory,
+                _objectFactory, _dataExchangeFactory, session);
 
 			request.ParameterMap = _statement.ParameterMap;
 			request.ResultMap = _statement.ResultMap;

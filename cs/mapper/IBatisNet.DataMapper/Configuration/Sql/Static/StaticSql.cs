@@ -83,7 +83,8 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Static
 		/// <returns>The sql command text.</returns>
 		public RequestScope GetRequestScope(object parameterObject, IDalSession session)
 		{
-			RequestScope request = new RequestScope(_typeHandlerFactory, _memberAccessorFactory, _objectFactory, _dataExchangeFactory);
+			RequestScope request = new RequestScope(_typeHandlerFactory, _memberAccessorFactory,
+                _objectFactory, _dataExchangeFactory, session);
 
 			request.ParameterMap = _statement.ParameterMap;
 			request.ResultMap = _statement.ResultMap;
@@ -99,7 +100,8 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Static
 		/// <param name="sqlStatement"></param>
 		public void BuildPreparedStatement(IDalSession session, string sqlStatement)
 		{
-			RequestScope request = new RequestScope(_typeHandlerFactory, _memberAccessorFactory, _objectFactory, _dataExchangeFactory);
+			RequestScope request = new RequestScope(_typeHandlerFactory, _memberAccessorFactory,
+                _objectFactory, _dataExchangeFactory, session);
 
 			request.ParameterMap = _statement.ParameterMap;
 

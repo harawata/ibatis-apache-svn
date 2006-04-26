@@ -110,7 +110,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		public IDictionary ExecuteQueryForMap(IDalSession session, object parameterObject, string keyProperty, string valueProperty)
 		{
 			IDictionary map = new Hashtable();
-			RequestScope request = this.Statement.Sql.GetRequestScope(parameterObject, session);;
+			RequestScope request = this.Statement.Sql.GetRequestScope(parameterObject, session);
 
 			_mappedStatement.PreparedCommand.Create( request, session, this.Statement, parameterObject );
 
@@ -185,7 +185,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		public IList ExecuteQueryForList(IDalSession session, object parameterObject, int skipResults, int maxResults)
 		{
 			IList list = null;
-			RequestScope request = this.Statement.Sql.GetRequestScope(parameterObject, session);;
+			RequestScope request = this.Statement.Sql.GetRequestScope(parameterObject, session);
 
 			_mappedStatement.PreparedCommand.Create( request, session, this.Statement, parameterObject );
 

@@ -11,9 +11,117 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			  data provider Type of the Parameter from the Value property 
 			  of the Parameter object. -->
 
-	<resultMaps>  
-	
-		<resultMap id="credit-card-result" class="string">
+	<resultMaps>
+
+    <resultMap id="order-result-constructor1"  class="Order" >
+      <constructor>
+        <argument argumentName="id"		 column="Order_ID"/>
+        <argument argumentName="account" column="Account_ID" resultMapping="Account.account-result-nullable-email" />
+      </constructor>
+      <result property="Date"       column="Order_Date"/>
+      <result property="CardExpiry" column="Order_CardExpiry"/>
+      <result property="CardType"   column="Order_CardType"/>
+      <result property="CardNumber" column="Order_CardNumber"/>
+      <result property="Street"     column="Order_Street"/>
+      <result property="City"       column="Order_City"/>
+      <result property="Province"   column="Order_Province"/>
+      <result property="PostalCode" column="Order_PostalCode"/>
+    </resultMap>
+
+    <resultMap id="order-result-constructor2"  class="Order" >
+      <constructor>
+        <argument argumentName="id"		 column="Order_ID"/>
+        <argument argumentName="account" column="Account_ID" select="GetAccountViaColumnName" />
+      </constructor>
+      <result property="Date"       column="Order_Date"/>
+      <result property="CardExpiry" column="Order_CardExpiry"/>
+      <result property="CardType"   column="Order_CardType"/>
+      <result property="CardNumber" column="Order_CardNumber"/>
+      <result property="Street"     column="Order_Street"/>
+      <result property="City"       column="Order_City"/>
+      <result property="Province"   column="Order_Province"/>
+      <result property="PostalCode" column="Order_PostalCode"/>
+    </resultMap>
+
+    <resultMap id="order-result-constructor3"  class="Order" >
+      <constructor>
+        <argument argumentName="id"		 column="Order_ID"/>
+        <argument argumentName="account" column="Account_ID" select="GetAccountViaColumnName" />
+        <argument argumentName="lineItems"	column="Order_ID" select="GetLineItemsForOrder" />
+      </constructor>
+      <result property="Date"       column="Order_Date"/>
+      <result property="CardExpiry" column="Order_CardExpiry"/>
+      <result property="CardType"   column="Order_CardType"/>
+      <result property="CardNumber" column="Order_CardNumber"/>
+      <result property="Street"     column="Order_Street"/>
+      <result property="City"       column="Order_City"/>
+      <result property="Province"   column="Order_Province"/>
+      <result property="PostalCode" column="Order_PostalCode"/>
+    </resultMap>
+
+    <resultMap id="order-result-constructor4"  class="Order" >
+      <constructor>
+        <argument argumentName="id"		 column="Order_ID"/>
+        <argument argumentName="account" column="Account_ID" select="GetAccountViaColumnName" />
+        <argument argumentName="lineItemsArray" column="Order_ID" select="GetLineItemsForOrder"/>
+      </constructor>
+      <result property="Date"       column="Order_Date"/>
+      <result property="CardExpiry" column="Order_CardExpiry"/>
+      <result property="CardType"   column="Order_CardType"/>
+      <result property="CardNumber" column="Order_CardNumber"/>
+      <result property="Street"     column="Order_Street"/>
+      <result property="City"       column="Order_City"/>
+      <result property="Province"   column="Order_Province"/>
+      <result property="PostalCode" column="Order_PostalCode"/>
+    </resultMap>
+
+    <resultMap id="order-result-constructor5"  class="Order" >
+      <constructor>
+        <argument argumentName="id"		 column="Order_ID"/>
+        <argument argumentName="account" column="Account_ID" select="GetAccountViaColumnName" />
+        <argument argumentName="collection" column="Order_ID"  select="GetLineItemsForOrderWithListClass" />
+      </constructor>
+      <result property="Date"       column="Order_Date"/>
+      <result property="CardExpiry" column="Order_CardExpiry"/>
+      <result property="CardType"   column="Order_CardType"/>
+      <result property="CardNumber" column="Order_CardNumber"/>
+      <result property="Street"     column="Order_Street"/>
+      <result property="City"       column="Order_City"/>
+      <result property="Province"   column="Order_Province"/>
+      <result property="PostalCode" column="Order_PostalCode"/>
+    </resultMap>
+
+    <resultMap id="order-result-constructor6"  class="Order" >
+      <constructor>
+        <argument argumentName="lineItems" column="Order_ID"  select="GetLineItemsForOrderWithListClass" />
+      </constructor>
+      <result property="Id"         column="Order_ID"/>
+      <result property="Date"       column="Order_Date"/>
+      <result property="CardExpiry" column="Order_CardExpiry"/>
+      <result property="CardType"   column="Order_CardType"/>
+      <result property="CardNumber" column="Order_CardNumber"/>
+      <result property="Street"     column="Order_Street"/>
+      <result property="City"       column="Order_City"/>
+      <result property="Province"   column="Order_Province"/>
+      <result property="PostalCode" column="Order_PostalCode"/>
+    </resultMap>
+
+    <resultMap id="order-result-constructor7"  class="Order" >
+      <constructor>
+        <argument argumentName="collection" column="Order_ID"  select="GetLineItemsForOrderWithListClass" />
+      </constructor>
+      <result property="Id"         column="Order_ID"/>
+      <result property="Date"       column="Order_Date"/>
+      <result property="CardExpiry" column="Order_CardExpiry"/>
+      <result property="CardType"   column="Order_CardType"/>
+      <result property="CardNumber" column="Order_CardNumber"/>
+      <result property="Street"     column="Order_Street"/>
+      <result property="City"       column="Order_City"/>
+      <result property="Province"   column="Order_Province"/>
+      <result property="PostalCode" column="Order_PostalCode"/>
+    </resultMap>
+
+    <resultMap id="credit-card-result" class="string">
 			<result property="value" column="Order_CardNumber"/>
 		</resultMap>
 
@@ -462,7 +570,66 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			from Orders as ord
 			LEFT OUTER JOIN Accounts as acc on acc.Account_ID = ord.Account_ID
 			where Order_ID = #value#
-		</select>	
+		</select>
+
+    <select id="GetOrderConstructor1"
+				parameterClass="Integer"
+				resultMap="order-result-constructor1">
+      select
+      Order_ID,
+      Order_Date,
+      Order_CardExpiry,
+      Order_CardType,
+      Order_CardNumber,
+      Order_Street,
+      Order_City,
+      Order_Province,
+      Order_PostalCode,
+      acc.Account_ID,
+      acc.Account_FirstName,
+      acc.Account_LastName,
+      acc.Account_Email
+      from Orders as ord
+      LEFT OUTER JOIN Accounts as acc on acc.Account_ID = ord.Account_ID
+      where Order_ID = #value#
+    </select>
+
+    <statement id="GetOrderConstructor2"
+					parameterClass="int"
+					resultMap="order-result-constructor2">
+      select * from Orders where Order_ID = #value#
+    </statement>
+
+    <statement id="GetOrderConstructor3"
+					parameterClass="int"
+					resultMap="order-result-constructor3">
+      select * from Orders where Order_ID = #value#
+    </statement>
+
+    <statement id="GetOrderConstructor4"
+					parameterClass="int"
+					resultMap="order-result-constructor4">
+      select * from Orders where Order_ID = #value#
+    </statement>
+
+    <statement id="GetOrderConstructor5"
+			parameterClass="int"
+			resultMap="order-result-constructor5">
+      select * from Orders where Order_ID = #value#
+    </statement>
+
+    <statement id="GetOrderConstructor6"
+      parameterClass="int"
+      resultMap="order-result-constructor6">
+      select * from Orders where Order_ID = #value#
+    </statement>
+
+    <statement id="GetOrderConstructor7"
+      parameterClass="int"
+      resultMap="order-result-constructor7">
+      select * from Orders where Order_ID = #value#
+    </statement>
+    
 	</statements>
 
 	<parameterMaps>   

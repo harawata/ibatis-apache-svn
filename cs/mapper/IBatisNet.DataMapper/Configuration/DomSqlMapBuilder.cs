@@ -288,19 +288,46 @@ namespace IBatisNet.DataMapper.Configuration
 		private ConfigurationScope _configScope = null;
 		private DeSerializerFactory _deSerializerFactory = null; 
 		private InlineParameterMapParser _paramParser = null;
+        private IObjectFactory _objectFactory = null;
+        private IMemberAccessorFactory _memberAccessorFactory = null;
+        private bool _validateSqlMapConfig = true;
 
 		#endregion 		
 		
+        /// <summary>
+        /// Allow to set a custom member accessor factory, see <see cref="IMemberAccessorFactory"/>
+        /// </summary>
+        public IMemberAccessorFactory MemberAccessorFactory
+        {
+            set { _memberAccessorFactory = value; }
+        }
+
+        /// <summary>
+        /// Allow to set a custom object factory, see <see cref="IObjectFactory"/> 
+        /// </summary>
+        public IObjectFactory IObjectFactory
+        {
+            set { _objectFactory = value; }
+        }
+
+        /// <summary>
+        /// Enable whether or not the validation of configuration document.
+        /// </summary>
+        public bool ValidateSqlMapConfig
+        {
+            set { _validateSqlMapConfig = value; }
+        }
+
 		#region Constructor
 
 		/// <summary>
-		/// Default constructor
+        /// Constructs a DomSqlMapBuilder.
 		/// </summary>
 		public DomSqlMapBuilder()
 		{
-			_configScope = new ConfigurationScope();
-			_paramParser = new InlineParameterMapParser();
-			_deSerializerFactory = new DeSerializerFactory(_configScope);
+            _configScope = new ConfigurationScope();
+            _paramParser = new InlineParameterMapParser();
+            _deSerializerFactory = new DeSerializerFactory(_configScope);
 		}
 
 		/// <summary>
@@ -312,10 +339,11 @@ namespace IBatisNet.DataMapper.Configuration
 		/// Specify whether the configuration Xml document should be 
 		/// validated with the SqlMapConfig schema.
 		/// </param>
+        [Obsolete("Use property ValidateSqlMapConfig before call Configure method.")]
 		public DomSqlMapBuilder(bool validateSqlMapConfig)
 		{
 			_configScope = new ConfigurationScope();
-			_configScope.ValidateSqlMapConfig = validateSqlMapConfig;
+            _validateSqlMapConfig = validateSqlMapConfig;
 			_deSerializerFactory = new DeSerializerFactory(_configScope);
 			_paramParser = new InlineParameterMapParser();
 		}		
@@ -521,7 +549,7 @@ namespace IBatisNet.DataMapper.Configuration
 
 			try
 			{
-				if (_configScope.ValidateSqlMapConfig) 
+                if (_validateSqlMapConfig) 
 				{
 					ValidateSchema( document.ChildNodes[1], "SqlMapConfig.xsd" );
 				}
@@ -695,7 +723,16 @@ namespace IBatisNet.DataMapper.Configuration
 
 			#endregion            
 			
-			_configScope.SqlMapper = new SqlMapper( _configScope.UseReflectionOptimizer, new TypeHandlerFactory() );
+            if (_objectFactory == null)
+            {
+                _objectFactory = new ObjectFactory(_configScope.UseReflectionOptimizer);
+            }
+            if (_memberAccessorFactory == null)
+            {
+                _memberAccessorFactory = new MemberAccessorFactory(_configScope.UseReflectionOptimizer);
+            }
+
+            _configScope.SqlMapper = new SqlMapper(_objectFactory, _memberAccessorFactory);
 			_configScope.SqlMapper.CacheModelsEnabled =_configScope.IsCacheModelsEnabled;
 
 			#region Cache Alias
@@ -866,7 +903,7 @@ namespace IBatisNet.DataMapper.Configuration
 			}
 			#endregion
 
-			#region Resolve "resultMap" attribute on Result Property + initialize Discriminator property 
+			#region Resolve "resultMap" attribute on Result/Argument Property + initialize Discriminator property 
 
 			foreach(DictionaryEntry entry in _configScope.SqlMapper.ResultMaps)
 			{
@@ -876,6 +913,14 @@ namespace IBatisNet.DataMapper.Configuration
 				for(int index=0; index< resultMap.Properties.Count; index++)
 				{
 					ResultProperty result = resultMap.Properties[index];
+					if(result.NestedResultMapName.Length >0)
+					{
+						result.NestedResultMap = _configScope.SqlMapper.GetResultMap(result.NestedResultMapName);
+					}
+				}
+				for(int index=0; index< resultMap.Parameters.Count; index++)
+				{
+					ResultProperty result = resultMap.Parameters[index];
 					if(result.NestedResultMapName.Length >0)
 					{
 						result.NestedResultMap = _configScope.SqlMapper.GetResultMap(result.NestedResultMapName);

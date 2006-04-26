@@ -98,6 +98,8 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Commands\DataReaderAdapter.cs" />
+    <Compile Include="Commands\DataReaderTransformer.cs" />
     <Compile Include="Commands\DefaultPreparedCommand.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -153,6 +155,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Configuration\ParameterMapping\ParameterPropertyCollection.cs" />
+    <Compile Include="Configuration\ResultMapping\ArgumentProperty.cs" />
     <Compile Include="Configuration\ResultMapping\Discriminator.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -162,9 +165,11 @@
     <Compile Include="Configuration\ResultMapping\ResultProperty.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Configuration\ResultMapping\ResultPropertyCollection.cs" />
     <Compile Include="Configuration\ResultMapping\SubMap.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Configuration\Serializers\ArgumentPropertyDeSerializer.cs" />
     <Compile Include="Configuration\Serializers\CacheModelDeSerializer.cs">
       <SubType>Code</SubType>
     </Compile>
