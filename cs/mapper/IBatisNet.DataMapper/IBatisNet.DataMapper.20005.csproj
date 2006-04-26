@@ -98,15 +98,15 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Commands\DataReaderAdapter.cs" />
     <Compile Include="Commands\DataReaderTransformer.cs" />
     <Compile Include="Commands\DefaultPreparedCommand.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Commands\InMemoryDataReader.cs" />
     <Compile Include="Commands\IPreparedCommand.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Commands\IPreparedCommandProxy.cs">
+    <Compile Include="Commands\PreparedCommandProxy.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Commands\PreparedCommandFactory.cs">
