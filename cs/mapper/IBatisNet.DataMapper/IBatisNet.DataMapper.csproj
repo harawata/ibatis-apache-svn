@@ -173,17 +173,17 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Commands\DataReaderAdapter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Commands\DataReaderTransformer.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Commands\DefaultPreparedCommand.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Commands\InMemoryDataReader.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

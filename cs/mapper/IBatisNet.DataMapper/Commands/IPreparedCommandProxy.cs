@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -41,7 +41,7 @@ namespace IBatisNet.DataMapper.Commands
 	/// Summary description for IPreparedCommandProxy.
 	/// </summary>
 	[CLSCompliant(false)]
-	public class IPreparedCommandProxy : IInterceptor
+	public class PreparedCommandProxy : IInterceptor
 	{
 
 		#region Fields
@@ -53,7 +53,7 @@ namespace IBatisNet.DataMapper.Commands
 
 		#region Constructors
 
-		static IPreparedCommandProxy()
+		static PreparedCommandProxy()
 		{
 			_passthroughMethods.Add("GetType");
 			_passthroughMethods.Add("ToString");
@@ -63,7 +63,7 @@ namespace IBatisNet.DataMapper.Commands
 		/// Constructor for a connection proxy
 		/// </summary>
 		/// <param name="preparedCommand">The connection which been proxified.</param>
-		internal IPreparedCommandProxy(IPreparedCommand preparedCommand)
+		internal PreparedCommandProxy(IPreparedCommand preparedCommand)
 		{
 			_preparedCommand = preparedCommand;
 		}
@@ -79,7 +79,7 @@ namespace IBatisNet.DataMapper.Commands
 		internal static IPreparedCommand NewInstance(IPreparedCommand preparedCommand)
 		{
 			object proxyIPreparedCommand = null;
-			IInterceptor handler = new IPreparedCommandProxy(preparedCommand);
+			IInterceptor handler = new PreparedCommandProxy(preparedCommand);
 
 			ProxyGenerator proxyGenerator = new ProxyGenerator();
 
