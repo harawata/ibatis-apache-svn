@@ -108,7 +108,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// <param name="configScope"></param>
 		public void Initialize( ConfigurationScope configScope, ConstructorInfo constructorInfo )
 		{
-			// Recherche l'argument et son index / à son nom
+            // Search argument by his name to set his type
 			ParameterInfo[] parameters = constructorInfo.GetParameters();
 
 			bool found = false;
@@ -121,7 +121,6 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 					break;
 				}
 			}
-
 			if (this.CallBackName!=null && this.CallBackName.Length >0)
 			{
 				configScope.ErrorContext.MoreInfo = "Argument property ("+_argumentName+"), check the typeHandler attribute '" + this.CallBackName + "' (must be a ITypeHandlerCallback implementation).";

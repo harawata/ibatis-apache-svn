@@ -1135,7 +1135,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 				}
 				else if (postSelect.Method == ExecuteMethod.ExecuteQueryForStrongTypedIList)
 				{
-					object values = Activator.CreateInstance(postSelect.ResultProperty.MemberAccessor.MemberType);
+                    IFactory factory =  request.ObjectFactory.CreateFactory(postSelect.ResultProperty.MemberAccessor.MemberType, Type.EmptyTypes);
+                    object values = factory.CreateInstance(null);
 					postSelect.Statement.ExecuteQueryForList(session, postSelect.Keys, (IList)values);
 
 					postSelect.ResultProperty.MemberAccessor.Set(postSelect.Target, values);
@@ -1529,7 +1530,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 						else // Strongly typed List
 						{
 							reader = DataReaderTransformer.Transforme(reader, request.Session.DataSource.DbProvider);
-							object values = Activator.CreateInstance(mapping.MemberType);
+                            IFactory factory = request.ObjectFactory.CreateFactory(mapping.MemberType, Type.EmptyTypes);
+                            object values = factory.CreateInstance(null);
 							queryStatement.ExecuteQueryForList(request.Session, keys, (IList)values);
 							return values;
 						}
