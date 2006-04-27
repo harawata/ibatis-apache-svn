@@ -305,7 +305,7 @@ namespace IBatisNet.DataMapper.Configuration
         /// <summary>
         /// Allow to set a custom object factory, see <see cref="IObjectFactory"/> 
         /// </summary>
-        public IObjectFactory IObjectFactory
+        public IObjectFactory ObjectFactory
         {
             set { _objectFactory = value; }
         }
