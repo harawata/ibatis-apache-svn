@@ -27,6 +27,7 @@ import org.apache.ibatis.abator.config.xml.AbatorConfigurationParser;
 import org.apache.ibatis.abator.exception.InvalidConfigurationException;
 import org.apache.ibatis.abator.exception.XMLParserException;
 import org.apache.ibatis.abator.internal.DefaultShellCallback;
+import org.apache.ibatis.abator.internal.util.messages.Messages;
 
 /**
  * This class allows Abator to be run from the command line.
@@ -48,7 +49,7 @@ public class AbatorRunner {
         
         File configurationFile = new File(configfile);
         if (!configurationFile.exists()) {
-            writeLine("configFile " + configfile + " does not exist");
+            writeLine(Messages.getString("AbatorAntTask.1", configfile)); //$NON-NLS-1$
             return;
         }
 
@@ -64,7 +65,7 @@ public class AbatorRunner {
             abator.generate(null);
             
         } catch (XMLParserException e) {
-        	writeLine("XML Parser Errors occured:");
+        	writeLine(Messages.getString("AbatorRunner.0")); //$NON-NLS-1$
         	writeLine();
             List errors = e.getErrors();
             Iterator iter = errors.iterator();
@@ -93,20 +94,20 @@ public class AbatorRunner {
         }
         
         if (warnings.size() == 0) {
-        	writeLine("Abator finshed successfully.");
+        	writeLine(Messages.getString("AbatorRunner.1")); //$NON-NLS-1$
         } else {
         	writeLine();
-        	writeLine("Abator finshed successfully, there were warninigs.");
+        	writeLine(Messages.getString("AbatorRunner.2")); //$NON-NLS-1$
         }
 	}
 	
 	private static void usage() {
-		writeLine("Abator code generator for iBATIS.  Usage:");
-		writeLine("   java -jar abator.jar configFile overwrite");
+		writeLine(Messages.getString("AbatorRunner.usage.0")); //$NON-NLS-1$
+		writeLine(Messages.getString("AbatorRunner.usage.1")); //$NON-NLS-1$
 		writeLine();
-		writeLine("Where:");
-		writeLine("   configFile: the name of the abator XML configuration file");
-		writeLine("   overwrite: true if exsting Java files should be overwritten");
+		writeLine(Messages.getString("AbatorRunner.usage.2")); //$NON-NLS-1$
+		writeLine(Messages.getString("AbatorRunner.usage.3")); //$NON-NLS-1$
+		writeLine(Messages.getString("AbatorRunner.usage.4")); //$NON-NLS-1$
 	}
 	
 	private static void writeLine(String message) {

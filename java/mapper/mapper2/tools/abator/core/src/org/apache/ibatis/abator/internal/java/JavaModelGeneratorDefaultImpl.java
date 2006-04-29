@@ -34,6 +34,7 @@ import org.apache.ibatis.abator.internal.rules.AbatorRules;
 import org.apache.ibatis.abator.internal.sqlmap.ExampleClause;
 import org.apache.ibatis.abator.internal.util.JavaBeansUtil;
 import org.apache.ibatis.abator.internal.util.StringUtility;
+import org.apache.ibatis.abator.internal.util.messages.Messages;
 
 /**
  * This class supports the following properties:
@@ -493,25 +494,25 @@ public class JavaModelGeneratorDefaultImpl extends BaseJavaCodeGenerator impleme
         
 		String tableName = tableConfiguration.getTable().getFullyQualifiedTableName();
 		
-		callback.startSubTask("Generating Example class for table " + tableName);
+		callback.startSubTask(Messages.getString("JavaModelGeneratorDefaultImpl.0", tableName)); //$NON-NLS-1$
         GeneratedJavaFile gjf = getExample(columnDefinitions, tableConfiguration);
         if (gjf != null) {
             list.add(gjf);
         }
         
-		callback.startSubTask("Generating Primary Key class for table " + tableName);
+		callback.startSubTask(Messages.getString("JavaModelGeneratorDefaultImpl.1", tableName)); //$NON-NLS-1$
         gjf = getPrimaryKey(columnDefinitions, tableConfiguration);
         if (gjf != null) {
             list.add(gjf);
         }
         
-		callback.startSubTask("Generating Record Class for table " + tableName);
+		callback.startSubTask(Messages.getString("JavaModelGeneratorDefaultImpl.2", tableName)); //$NON-NLS-1$
         gjf = getRecord(columnDefinitions, tableConfiguration);
         if (gjf != null) {
             list.add(gjf);
         }
         
-		callback.startSubTask("Generating Record Class(With BLOBs) for table " + tableName);
+		callback.startSubTask(Messages.getString("JavaModelGeneratorDefaultImpl.3", tableName)); //$NON-NLS-1$
         gjf = getRecordWithBLOBs(columnDefinitions, tableConfiguration);
         if (gjf != null) {
             list.add(gjf);

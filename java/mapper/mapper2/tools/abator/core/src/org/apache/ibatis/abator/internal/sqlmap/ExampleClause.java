@@ -129,7 +129,16 @@ public class ExampleClause {
 	}
 
 	public String getClause(ColumnDefinition cd) {
-		Object[] arguments = { cd.getColumnName(), cd.getJavaProperty() };
+        StringBuffer sb = new StringBuffer();
+        sb.append(cd.getJavaProperty());
+
+	    if ("DATE".equalsIgnoreCase(cd.getResolvedJavaType().getJdbcTypeName())) { //$NON-NLS-1$
+	        sb.append(":DATE"); //$NON-NLS-1$
+	    } else if ("TIME".equalsIgnoreCase(cd.getResolvedJavaType().getJdbcTypeName())) { //$NON-NLS-1$
+	        sb.append(":TIME"); //$NON-NLS-1$
+	    }
+	    
+		Object[] arguments = { cd.getColumnName(), sb.toString() };
 
 		return MessageFormat.format(clause, arguments);
 	}

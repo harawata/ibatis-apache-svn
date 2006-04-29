@@ -1,5 +1,5 @@
 /*
- *  Copyright 2005 The Apache Software Foundation
+ *  Copyright 2005, 2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -33,7 +33,14 @@ public abstract class TypedPropertyHolder extends PropertyHolder {
 		return type;
 	}
 
-	public void setType(String type) {
+	/**
+	 * This method is protected because subclasses should override it and allow
+	 * using special values (like "DEFAULT", or the alias names for the different
+	 * DAO generator types).
+	 * 
+	 * @param type
+	 */
+	protected void setType(String type) {
 		this.type = type;
 	}
 }

@@ -16,11 +16,15 @@
 package org.apache.ibatis.abator.config;
 
 import org.apache.ibatis.abator.internal.java.JavaModelGeneratorDefaultImpl;
+import org.apache.ibatis.abator.internal.java.model.JavaModelGeneratorJava2Impl;
 
 /**
  * @author Jeff Butler
  */
 public class JavaModelGeneratorConfiguration extends TypedPropertyHolder {
+    // TODO - this value is only for debugging the new generators, remove when finished
+    public static final boolean USE_NEW_GENERATORS = false;
+    
 	private String targetPackage;
 
 	private String targetProject;
@@ -30,7 +34,11 @@ public class JavaModelGeneratorConfiguration extends TypedPropertyHolder {
 	 */
 	public JavaModelGeneratorConfiguration() {
 		super();
-		setType(JavaModelGeneratorDefaultImpl.class.getName());
+		if (USE_NEW_GENERATORS) {
+		    super.setType(JavaModelGeneratorJava2Impl.class.getName());
+		} else {
+		    super.setType(JavaModelGeneratorDefaultImpl.class.getName());
+		}
 	}
 
 	public String getTargetProject() {
@@ -48,4 +56,13 @@ public class JavaModelGeneratorConfiguration extends TypedPropertyHolder {
 	public void setTargetPackage(String targetPackage) {
 		this.targetPackage = targetPackage;
 	}
+	
+    /* (non-Javadoc)
+     * @see org.apache.ibatis.abator.config.TypedPropertyHolder#setType(java.lang.String)
+     */
+    public void setType(String type) {
+		if (!"DEFAULT".equalsIgnoreCase(type)) { //$NON-NLS-1$
+		    super.setType(type);
+		}
+    }
 }

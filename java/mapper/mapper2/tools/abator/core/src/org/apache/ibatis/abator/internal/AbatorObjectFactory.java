@@ -26,6 +26,7 @@ import org.apache.ibatis.abator.config.JavaModelGeneratorConfiguration;
 import org.apache.ibatis.abator.config.JavaTypeResolverConfiguration;
 import org.apache.ibatis.abator.config.SqlMapGeneratorConfiguration;
 import org.apache.ibatis.abator.exception.GenerationRuntimeException;
+import org.apache.ibatis.abator.internal.util.messages.Messages;
 
 /**
  * This class creates the different configurable Abator generators
@@ -46,18 +47,9 @@ public class AbatorObjectFactory {
 
 		try {
 			answer = Class.forName(className).newInstance();
-		} catch (InstantiationException e) {
+		} catch (Exception e) {
 			throw new GenerationRuntimeException(
-					"Cannot instantiate object of type: " + className
-							+ " (InstantiationException)", e);
-		} catch (ClassNotFoundException e) {
-			throw new GenerationRuntimeException(
-					"Cannot instantiate object of type: " + className
-							+ " (ClassNotFoundException)", e);
-		} catch (IllegalAccessException e) {
-			throw new GenerationRuntimeException(
-					"Cannot instantiate object of type: " + className
-							+ " (IllegalAccessException)", e);
+			        Messages.getString("AbatorObjectFactory.0", className), e); //$NON-NLS-1$
 		}
 
 		return answer;

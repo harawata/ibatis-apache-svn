@@ -29,6 +29,7 @@ import org.apache.ibatis.abator.exception.InvalidConfigurationException;
 import org.apache.ibatis.abator.exception.XMLParserException;
 import org.apache.ibatis.abator.internal.DefaultShellCallback;
 import org.apache.ibatis.abator.internal.util.StringUtility;
+import org.apache.ibatis.abator.internal.util.messages.Messages;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
@@ -66,14 +67,14 @@ public class AbatorAntTask extends Task {
      */
     public void execute() throws BuildException {
         if (!StringUtility.stringHasValue(configfile)) {
-            throw new BuildException("configfile is a required parameter");
+            throw new BuildException(Messages.getString("AbatorAntTask.0")); //$NON-NLS-1$
         }
 
         List warnings = new ArrayList();
         
         File configurationFile = new File(configfile);
         if (!configurationFile.exists()) {
-            throw new BuildException("configfile " + configfile + " does not exist");
+            throw new BuildException(Messages.getString("AbatorAntTask.1", configfile)); //$NON-NLS-1$
         }
 
         try {

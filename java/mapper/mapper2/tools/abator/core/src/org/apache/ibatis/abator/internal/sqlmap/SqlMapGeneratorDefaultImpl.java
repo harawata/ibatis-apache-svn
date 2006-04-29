@@ -33,6 +33,7 @@ import org.apache.ibatis.abator.internal.db.ColumnDefinition;
 import org.apache.ibatis.abator.internal.db.ColumnDefinitions;
 import org.apache.ibatis.abator.internal.rules.AbatorRules;
 import org.apache.ibatis.abator.internal.util.StringUtility;
+import org.apache.ibatis.abator.internal.util.messages.Messages;
 
 /**
  * @author Jeff Butler
@@ -126,8 +127,8 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
             TableConfiguration tableConfiguration, ProgressCallback callback) {
         ArrayList list = new ArrayList();
 
-        callback.startSubTask("Generating SQL Map for table "
-                + tableConfiguration.getTable().getFullyQualifiedTableName());
+        callback.startSubTask(Messages.getString("SqlMapGeneratorDefaultImpl.0", //$NON-NLS-1$
+                tableConfiguration.getTable().getFullyQualifiedTableName()));
         list.add(getSqlMap(columnDefinitions, tableConfiguration));
 
         return list;

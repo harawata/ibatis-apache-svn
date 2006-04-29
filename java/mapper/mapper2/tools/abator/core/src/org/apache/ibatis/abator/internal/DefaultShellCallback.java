@@ -22,6 +22,7 @@ import java.util.StringTokenizer;
 import org.apache.ibatis.abator.api.GeneratedJavaFile;
 import org.apache.ibatis.abator.api.ShellCallback;
 import org.apache.ibatis.abator.exception.ShellException;
+import org.apache.ibatis.abator.internal.util.messages.Messages;
 
 /**
  * @author Jeff Butler
@@ -51,11 +52,12 @@ public class DefaultShellCallback implements ShellCallback {
         
         File project = new File(targetProject);
         if (!project.isDirectory()) {
-            throw new ShellException("The specified target project directory " + targetProject + " does not exist");
+            throw new ShellException(Messages.getString("DefaultShellCallback.0", //$NON-NLS-1$
+                    targetProject));
         }
         
         StringBuffer sb = new StringBuffer();
-        StringTokenizer st = new StringTokenizer(targetPackage, ".");
+        StringTokenizer st = new StringTokenizer(targetPackage, "."); //$NON-NLS-1$
         while (st.hasMoreTokens()) {
             sb.append(st.nextToken());
             sb.append(File.separatorChar);
@@ -65,7 +67,8 @@ public class DefaultShellCallback implements ShellCallback {
         if (!directory.isDirectory()) {
             boolean rc = directory.mkdirs();
             if (!rc) {
-                throw new ShellException("Cannot create directory: " + directory.getAbsolutePath());
+                throw new ShellException(Messages.getString("DefaultShellCallback.1", //$NON-NLS-1$
+                        directory.getAbsolutePath()));
             }
         }
         
@@ -81,7 +84,8 @@ public class DefaultShellCallback implements ShellCallback {
         if (overwrite) {
             File directory = getDirectory(newFile.getTargetProject(), newFile.getTargetPackage(), warnings);
             File file = new File(directory, newFile.getFileName());
-            warnings.add("Existing file " + file.getAbsolutePath() + " overwritten");
+            warnings.add(Messages.getString("DefaultShellCallback.2", //$NON-NLS-1$
+                    file.getAbsolutePath()));
             
             return newFile.getContent();
         } else {

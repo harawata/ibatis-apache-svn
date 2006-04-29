@@ -36,6 +36,7 @@ import org.apache.ibatis.abator.internal.rules.AbatorRules;
 import org.apache.ibatis.abator.internal.sqlmap.ExampleClause;
 import org.apache.ibatis.abator.internal.util.JavaBeansUtil;
 import org.apache.ibatis.abator.internal.util.StringUtility;
+import org.apache.ibatis.abator.internal.util.messages.Messages;
 
 /**
  * This class generates DAO classes based on the values in the supplied
@@ -437,12 +438,12 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator
         String tableName = tableConfiguration.getTable()
                 .getFullyQualifiedTableName();
 
-        callback.startSubTask("Generating DAO Implementation for table "
-                + tableName);
+        callback.startSubTask(Messages.getString("DAOGeneratorBaseImpl.0", //$NON-NLS-1$
+                tableName));
         list.add(getDAOImplementation(columnDefinitions, tableConfiguration));
 
-        callback
-                .startSubTask("Generating DAO Interface for table " + tableName);
+        callback.startSubTask(Messages.getString("DAOGeneratorBaseImpl.1", //$NON-NLS-1$
+                tableName));
         list.add(getDAOInterface(columnDefinitions, tableConfiguration));
 
         return list;

@@ -34,6 +34,7 @@ import org.apache.ibatis.abator.internal.db.ColumnDefinitions;
 import org.apache.ibatis.abator.internal.db.ConnectionFactory;
 import org.apache.ibatis.abator.internal.db.DatabaseIntrospector;
 import org.apache.ibatis.abator.internal.util.StringUtility;
+import org.apache.ibatis.abator.internal.util.messages.Messages;
 
 /**
  * @author Jeff Butler
@@ -101,21 +102,21 @@ public class AbatorContext {
 		validateJdbcConnectionConfiguration(errors);
 
 		if (!StringUtility.stringHasValue(javaModelGeneratorConfiguration.getTargetProject())) {
-			errors.add("Java Model Target Project is Required for context " + id);
+			errors.add(Messages.getString("AbatorContext.0", id)); //$NON-NLS-1$
 		}
 
 		if (!StringUtility.stringHasValue(sqlMapGeneratorConfiguration.getTargetProject())) {
-			errors.add("SQL Map Generator Target Project is Required for context " + id);
+			errors.add(Messages.getString("AbatorContext.1", id)); //$NON-NLS-1$
 		}
 
 		if (daoGeneratorConfiguration.isEnabled()) {
 			if (!StringUtility.stringHasValue(daoGeneratorConfiguration.getTargetProject())) {
-				errors.add("DAO Generator Target Project is Required for context " + id);
+				errors.add(Messages.getString("AbatorContext.2", id)); //$NON-NLS-1$
 			}
 		}
 		
 		if (tableConfigurations.size() == 0) {
-			errors.add("No Tables Specified");
+			errors.add(Messages.getString("AbatorContext.3")); //$NON-NLS-1$
 		} else {
 			for (int i = 0; i < tableConfigurations.size(); i++) {
 				TableConfiguration tc = (TableConfiguration) tableConfigurations
@@ -129,28 +130,27 @@ public class AbatorContext {
 	private void validateJdbcConnectionConfiguration(List errors) {
 		if (!StringUtility.stringHasValue(jdbcConnectionConfiguration
 				.getDriverClass())) {
-			errors.add("JDBC Driver Class Must Be Specified");
+			errors.add(Messages.getString("AbatorContext.4")); //$NON-NLS-1$
 		}
 
 		if (!StringUtility.stringHasValue(jdbcConnectionConfiguration
 				.getConnectionURL())) {
-			errors.add("JDBC Connection URL Must Be Specified");
+			errors.add(Messages.getString("AbatorContext.5")); //$NON-NLS-1$
 		}
 	}
 
 	private void validateTableConfiguration(TableConfiguration tc, List errors,
 			int listPosition) {
 		if (!StringUtility.stringHasValue(tc.getTable().getTableName())) {
-			errors.add("Missing table name in table configuration at index "
-					+ listPosition);
+			errors.add(Messages.getString("AbatorContext.6", Integer.toString(listPosition))); //$NON-NLS-1$
 		}
 
 		if (tc.getGeneratedKey().isConfigured()
 				&& !StringUtility.stringHasValue(tc.getGeneratedKey()
 						.getSqlStatement())) {
 	        errors
-				.add("SQL Statement is required if a generated key is specified in table configuration for table "
-						+ tc.getTable().getFullyQualifiedTableName());
+				.add(Messages.getString("AbatorContext.7",  //$NON-NLS-1$
+						tc.getTable().getFullyQualifiedTableName()));
 		}
 	}
 
@@ -188,35 +188,27 @@ public class AbatorContext {
 		Connection connection = null;
 		
 		try {
-			callback.startSubTask("Connecting to the Database");
+			callback.startSubTask(Messages.getString("AbatorContext.8")); //$NON-NLS-1$
 			connection = getConnection();
 			
 			Iterator iter = tableConfigurations.iterator();
 			while (iter.hasNext()) {
 				TableConfiguration tc = (TableConfiguration) iter.next();
+				String tableName = tc.getTable().getFullyQualifiedTableName();
+				
 				if (!tc.areAnyStatementsEnabled()) {
-				    StringBuffer sb = new StringBuffer();
-				    sb.append("There are no statements enabled for table ");
-				    sb.append(tc.getTable().getFullyQualifiedTableName());
-				    sb.append(", table will be ignored.");
-				    warnings.add(sb.toString());
+				    warnings.add(Messages.getString("AbatorContext.9", tableName)); //$NON-NLS-1$
 				    continue;
 				}
 				
-				String tableName = tc.getTable().getFullyQualifiedTableName();
 
 				ColumnDefinitions columnDefinitions;
 				try {
-					callback.startSubTask("Introspecting table " + tableName);
+					callback.startSubTask(Messages.getString("AbatorContext.11", tableName)); //$NON-NLS-1$
 					columnDefinitions  = DatabaseIntrospector.generateColumnDefinitions(connection, tc, javaTypeResolver, warnings);
 					callback.checkCancel();
 				} catch (UnknownTableException e) {
-					StringBuffer sb = new StringBuffer();
-					sb.append("Table ");
-					sb.append(tc.getTable().getFullyQualifiedTableName());
-					sb.append(" does not exist, or contains only LOB fields");
-
-					warnings.add(sb.toString());
+					warnings.add(Messages.getString("AbatorContext.12", tableName)); //$NON-NLS-1$
 					continue;
 				}
 

@@ -18,6 +18,7 @@ package org.apache.ibatis.abator.config.xml;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.apache.ibatis.abator.internal.util.messages.Messages;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -51,8 +52,7 @@ public class ParserEntityResolver implements EntityResolver {
 
 			return ins;
 		} else {
-			throw new SAXException(
-					"This is not an iBATIS Generator Configuration File");
+			throw new SAXException(Messages.getString("ParserEntityResolver.0")); //$NON-NLS-1$
 		}
 	}
 }

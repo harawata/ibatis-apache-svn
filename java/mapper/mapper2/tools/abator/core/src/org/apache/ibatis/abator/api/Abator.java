@@ -33,6 +33,7 @@ import org.apache.ibatis.abator.exception.ShellException;
 import org.apache.ibatis.abator.internal.DefaultShellCallback;
 import org.apache.ibatis.abator.internal.NullProgressCallback;
 import org.apache.ibatis.abator.internal.XmlFileMergerJaxp;
+import org.apache.ibatis.abator.internal.util.messages.Messages;
 
 /**
  * This class is the main interface to the Abator for iBATIS code generator. A
@@ -82,7 +83,7 @@ public class Abator {
             ShellCallback shellCallback, List warnings) {
         super();
         if (abatorConfiguration == null) {
-            throw new IllegalArgumentException("Abator Configuration is required");
+            throw new IllegalArgumentException(Messages.getString("Abator.0")); //$NON-NLS-1$
         } else {
             this.abatorConfiguration = abatorConfiguration;
         }
@@ -138,7 +139,7 @@ public class Abator {
 
         callback.setNumberOfSubTasks(totalSteps);
 
-        callback.startSubTask("Validating Configuration");
+        callback.startSubTask(Messages.getString("Abator.1")); //$NON-NLS-1$
         abatorConfiguration.validate();
 
         iter = abatorConfiguration.getAbatorContexts().iterator();
@@ -191,7 +192,7 @@ public class Abator {
                     } else {
                         source = gjf.getContent();
                         targetFile = getUniqueFileName(directory, gjf);
-                        warnings.add("Existing file not overwritten, the generated Java file is saved as " + targetFile.getAbsolutePath());
+                        warnings.add(Messages.getString("Abator.2", targetFile.getAbsolutePath())); //$NON-NLS-1$
                     }
                 } else {
                     source = gjf.getContent();
@@ -232,10 +233,15 @@ public class Abator {
             sb.append('.');
             sb.append(i);
             
-            answer = new File(directory, sb.toString());
-            if (!answer.exists()) {
+            File testFile = new File(directory, sb.toString());
+            if (!testFile.exists()) {
+                answer = testFile;
                 break;
             }
+        }
+        
+        if (answer == null) {
+            throw new RuntimeException(Messages.getString("Abator.3", directory.getAbsolutePath())); //$NON-NLS-1$
         }
         
         return answer;

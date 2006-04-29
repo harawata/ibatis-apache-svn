@@ -19,6 +19,8 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.ibatis.abator.api.FullyQualifiedJavaType;
@@ -29,6 +31,7 @@ import org.apache.ibatis.abator.exception.UnknownTableException;
 import org.apache.ibatis.abator.exception.UnsupportedDataTypeException;
 import org.apache.ibatis.abator.internal.util.JavaBeansUtil;
 import org.apache.ibatis.abator.internal.util.StringUtility;
+import org.apache.ibatis.abator.internal.util.messages.Messages;
 
 /**
  * 
@@ -105,13 +108,9 @@ public class DatabaseIntrospector {
 			} catch (UnsupportedDataTypeException e) {
 				// if the type is not supported, then we'll report a warning and
 				// ignore the column
-				StringBuffer sb = new StringBuffer();
-				sb.append("Unsupported Data Type in table ");
-				sb.append(tc.getTable().getFullyQualifiedTableName());
-				sb.append(", column: ");
-				sb.append(cd.getColumnName());
-
-				warnings.add(sb.toString());
+				warnings.add(Messages.getString("DatabaseIntrospector.0", //$NON-NLS-1$
+				        tc.getTable().getFullyQualifiedTableName(),
+				        cd.getColumnName()));
 				continue;
 			}
 
@@ -159,13 +158,52 @@ public class DatabaseIntrospector {
 		// now make sure that all columns called out in the configuration actually exist
 		tc.reportWarnings(cds, warnings);
 
-		rs = dbmd.getPrimaryKeys(localCatalog, localSchema, localTableName);
-		while (rs.next()) {
-			cds.addPrimaryKeyColumn(rs.getString("COLUMN_NAME")); //$NON-NLS-1$
+		// now calculate the primary key
+		List primaryKeyColumns = findPrimaryKeyColumns(dbmd, localCatalog, localSchema,
+		        localTableName, warnings);
+		Iterator iter = primaryKeyColumns.iterator();
+		while (iter.hasNext()) {
+		    cds.addPrimaryKeyColumn((String) iter.next());
 		}
 
-		rs.close();
-
 		return cds;
+	}
+	
+	private static List findPrimaryKeyColumns(DatabaseMetaData dbmd, String localCatalog,
+	        String localSchema, String localTableName, List warnings) {
+	    List answer = new ArrayList();
+	    ResultSet rs = null;
+	    
+		try {
+		    rs = dbmd.getPrimaryKeys(localCatalog, localSchema, localTableName);
+		} catch (SQLException e) {
+		    warnings.add(Messages.getString("DatabaseIntrospector.1")); //$NON-NLS-1$
+		}
+
+		if (rs != null) {
+		    try {
+		        while (rs.next()) {
+		            answer.add(rs.getString("COLUMN_NAME")); //$NON-NLS-1$
+		        }
+		    } catch (SQLException e) {
+		        // ignore the primary key if there's any error
+		        answer.clear();
+		    } finally {
+		        closeResultSet(rs);
+		    }
+		}
+		
+		return answer;
+	}
+	
+	private static void closeResultSet(ResultSet rs) {
+	    if (rs != null) {
+	        try {
+	            rs.close();
+	        } catch (SQLException e) {
+	            // ignore
+	            ;
+	        }
+	    }
 	}
 }

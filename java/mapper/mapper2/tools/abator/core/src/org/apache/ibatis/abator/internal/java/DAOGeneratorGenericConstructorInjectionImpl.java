@@ -41,16 +41,16 @@ public class DAOGeneratorGenericConstructorInjectionImpl extends
         
         StringBuffer sb = new StringBuffer();
         indent(sb, 1);
-        sb.append("public {0}(SqlMapClient sqlMapClient) '{'");
+        sb.append("public {0}(SqlMapClient sqlMapClient) '{'"); //$NON-NLS-1$
         newLine(sb);
         indent(sb, 2);
-        sb.append("super();");
+        sb.append("super();"); //$NON-NLS-1$
         newLine(sb);
         indent(sb, 2);
-        sb.append("this.sqlMapClient = sqlMapClient;");
+        sb.append("this.sqlMapClient = sqlMapClient;"); //$NON-NLS-1$
         newLine(sb);
         indent(sb, 1);
-        sb.append("}");
+        sb.append('}');
         template.setConstructorTemplate(sb.toString());
 
         template.addField("private SqlMapClient sqlMapClient;"); //$NON-NLS-1$

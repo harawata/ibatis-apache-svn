@@ -4,9 +4,13 @@ Version 0.6.2:
    rootInterface for the DAO interface
 2. Refactored code generation rules and added lots of documentation for
    the rules (see new org.apache.ibatis.abator.internal.rules package)
-3. Improved documentation
-4. Ensure that property names are valid for iBATIS even if the user
+3. Ensure that property names are valid for iBATIS even if the user
    specifies "useActualColumnNames"
+4. Added JDBC types for DATE and TIME fields to the mapping properties
+   in the by example where clause fragment
+5. Externalized all message strings
+6. Abator will now survive if the JDBC driver does not support the
+   getPrimaryKeys() function - but with reduced function
 
 -------------------------------------------------------------------------------
 Version 0.6.1:

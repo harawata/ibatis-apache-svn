@@ -31,6 +31,7 @@ import java.util.Properties;
 import org.apache.ibatis.abator.config.JDBCConnectionConfiguration;
 import org.apache.ibatis.abator.exception.GenerationRuntimeException;
 import org.apache.ibatis.abator.internal.util.StringUtility;
+import org.apache.ibatis.abator.internal.util.messages.Messages;
 
 /**
  * This class caches drivers for performance reasons, but also to make sure
@@ -75,8 +76,7 @@ public class ConnectionFactory {
 		Connection conn = driver.connect(config.getConnectionURL(), props);
 
 		if (conn == null) {
-			throw new SQLException(
-					"Cannot connect to database (possibly bad driver/URL combination)");
+			throw new SQLException(Messages.getString("ConnectionFactory.0")); //$NON-NLS-1$
 		}
 
 		return conn;
@@ -93,15 +93,9 @@ public class ConnectionFactory {
 						.loadClass(driverClass);
 				driver = (Driver) clazz.newInstance();
 				drivers.put(driverClass, driver);
-			} catch (ClassNotFoundException e) {
+			} catch (Exception e) {
 				throw new GenerationRuntimeException(
-						"ClassNotFoundException getting JDBC driver", e);
-			} catch (IllegalAccessException e) {
-				throw new GenerationRuntimeException(
-						"IllegalAccessException getting JDBC driver", e);
-			} catch (InstantiationException e) {
-				throw new GenerationRuntimeException(
-						"InstantiationException getting JDBC driver", e);
+				        Messages.getString("ConnectionFactory.1"), e); //$NON-NLS-1$
 			}
 		}
 
@@ -119,7 +113,7 @@ public class ConnectionFactory {
 			file = new File(classPathEntry);
 			if (!file.exists()) {
 				throw new GenerationRuntimeException(
-						"Can't resolve classpath entry: " + classPathEntry);
+				        Messages.getString("ConnectionFactory.2", classPathEntry)); //$NON-NLS-1$
 			}
 
 			try {
@@ -127,7 +121,7 @@ public class ConnectionFactory {
 			} catch (MalformedURLException e) {
 				// this shouldn't happen, but just in case...
 				throw new GenerationRuntimeException(
-						"Can't resolve classpath entry: " + classPathEntry);
+				        Messages.getString("ConnectionFactory.2", classPathEntry)); //$NON-NLS-1$
 			}
 		}
 

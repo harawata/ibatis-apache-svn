@@ -23,6 +23,7 @@ import java.util.Map;
 import org.apache.ibatis.abator.internal.db.ColumnDefinitions;
 import org.apache.ibatis.abator.internal.util.EqualsUtil;
 import org.apache.ibatis.abator.internal.util.HashCodeUtil;
+import org.apache.ibatis.abator.internal.util.messages.Messages;
 
 /**
  * 
@@ -211,13 +212,8 @@ public class TableConfiguration extends PropertyHolder {
 	    while (iter.hasNext()) {
 	        ColumnOverride columnOverride = (ColumnOverride) iter.next();
 	        if (columnDefinitions.getColumn(columnOverride.getColumnName().toUpperCase()) == null) {
-	            StringBuffer sb = new StringBuffer();
-	            sb.append("Specified column override \"");
-	            sb.append(columnOverride.getColumnName());
-	            sb.append("\" in table ");
-	            sb.append(table.toString());
-	            sb.append(" does not exist in the table.");
-	            warnings.add(sb.toString());
+	            warnings.add(Messages.getString("TableConfiguration.0", //$NON-NLS-1$
+	                    columnOverride.getColumnName(), table.toString()));
 	        }
 	    }
 	    
@@ -228,13 +224,8 @@ public class TableConfiguration extends PropertyHolder {
 	        Boolean value = (Boolean) entry.getValue();
 	        
 	        if (!value.booleanValue()) {
-	            StringBuffer sb = new StringBuffer();
-	            sb.append("Specified ignored column \"");
-	            sb.append(entry.getKey());
-	            sb.append("\" in table ");
-	            sb.append(table.toString());
-	            sb.append(" does not exist in the table.");
-	            warnings.add(sb.toString());
+	            warnings.add(Messages.getString("TableConfiguration.1", //$NON-NLS-1$
+	                    entry.getKey().toString(), table.toString()));
 	        }
 	    }
 	    
@@ -242,15 +233,12 @@ public class TableConfiguration extends PropertyHolder {
 	            && columnDefinitions.getColumn(generatedKey.getColumn().toUpperCase()) == null) {
             StringBuffer sb = new StringBuffer();
             if (generatedKey.isIdentity()) {
-                sb.append("Specified identity column \"");
+	            warnings.add(Messages.getString("TableConfiguration.2", //$NON-NLS-1$
+	                    generatedKey.getColumn(), table.toString()));
             } else {
-                sb.append("Specified generated key column \"");
+	            warnings.add(Messages.getString("TableConfiguration.3", //$NON-NLS-1$
+	                    generatedKey.getColumn(), table.toString()));
             }
-            sb.append(generatedKey.getColumn());
-            sb.append("\" in table ");
-            sb.append(table.toString());
-            sb.append(" does not exist in the table.");
-            warnings.add(sb.toString());
 	    }
 	}
 	

@@ -22,10 +22,8 @@ import java.io.StringReader;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -34,6 +32,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.ibatis.abator.api.GeneratedXmlFile;
 import org.apache.ibatis.abator.exception.ShellException;
 import org.apache.ibatis.abator.internal.sqlmap.XmlConstants;
+import org.apache.ibatis.abator.internal.util.messages.Messages;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
@@ -88,10 +87,8 @@ public class XmlFileMergerJaxp {
             DocumentType existingDocType = existingDocument.getDoctype();
 
             if (!newDocType.getName().equals(existingDocType.getName())) {
-                throw new ShellException(
-                        "The exisiting XML file "
-                                + existingFile.getName()
-                                + " is not the same format as the generated file.  The existing file will not be changed.");
+                throw new ShellException(Messages.getString("XmlFileMergerJaxp.0", //$NON-NLS-1$
+                        existingFile.getName()));
             }
 
             Element existingRootElement = existingDocument.getDocumentElement();
@@ -129,51 +126,27 @@ public class XmlFileMergerJaxp {
 
             // pretty print the result
             return prettyPrint(existingDocument);
-        } catch (ParserConfigurationException e) {
-            throw new ShellException(
-                    "ParserConfigurationException while attempting to merge the XML file "
-                            + existingFile.getName()
-                            + ".  The existing file will not be changed.", e);
-        } catch (SAXException e) {
-            throw new ShellException(
-                    "SAXException while attempting to merge the XML file "
-                            + existingFile.getName()
-                            + ".  The existing file will not be changed.", e);
-        } catch (IOException e) {
-            throw new ShellException(
-                    "IOException while attempting to merge the XML file "
-                            + existingFile.getName()
-                            + ".  The existing file will not be changed.", e);
+        } catch (Exception e) {
+            throw new ShellException(Messages.getString("XmlFileMergerJaxp.1", //$NON-NLS-1$
+                existingFile.getName()), e);
         }
     }
 
-    private static String prettyPrint(Document document) throws ShellException {
-        try {
-            TransformerFactory factory = TransformerFactory.newInstance();
+    private static String prettyPrint(Document document) throws TransformerException {
+        TransformerFactory factory = TransformerFactory.newInstance();
 
-            Transformer transformer = factory.newTransformer();
-            transformer
-                    .setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no"); //$NON-NLS-1$
-            transformer.setOutputProperty(OutputKeys.METHOD, "xml"); //$NON-NLS-1$
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
-            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8"); //$NON-NLS-1$
-            transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC,
-                    XmlConstants.SQL_MAP_PUBLIC_ID);
-            transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM,
-                    XmlConstants.SQL_MAP_SYSTEM_ID);
+        Transformer transformer = factory.newTransformer();
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no"); //$NON-NLS-1$
+        transformer.setOutputProperty(OutputKeys.METHOD, "xml"); //$NON-NLS-1$
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
+        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8"); //$NON-NLS-1$
+        transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, XmlConstants.SQL_MAP_PUBLIC_ID);
+        transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, XmlConstants.SQL_MAP_SYSTEM_ID);
 
-            ByteArrayOutputStream bas = new ByteArrayOutputStream();
+        ByteArrayOutputStream bas = new ByteArrayOutputStream();
 
-            transformer.transform(new DOMSource(document),
-                    new StreamResult(bas));
+        transformer.transform(new DOMSource(document), new StreamResult(bas));
 
-            return bas.toString();
-        } catch (TransformerConfigurationException e) {
-            throw new ShellException(
-                    "TransformerConfigurationException during prettyPrint", e);
-        } catch (TransformerException e) {
-            throw new ShellException("TransformerException during prettyPrint",
-                    e);
-        }
+        return bas.toString();
     }
 }

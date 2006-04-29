@@ -1,5 +1,5 @@
 /*
- *  Copyright 2005 The Apache Software Foundation
+ *  Copyright 2005, 2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -37,13 +37,7 @@ import org.apache.ibatis.abator.config.TableConfiguration;
 import org.apache.ibatis.abator.exception.GenerationRuntimeException;
 import org.apache.ibatis.abator.exception.XMLParserException;
 import org.apache.ibatis.abator.internal.db.DatabaseDialects;
-import org.apache.ibatis.abator.internal.java.DAOGeneratorGenericConstructorInjectionImpl;
-import org.apache.ibatis.abator.internal.java.DAOGeneratorGenericSetterInjectionImpl;
-import org.apache.ibatis.abator.internal.java.DAOGeneratorIbatisImpl;
-import org.apache.ibatis.abator.internal.java.DAOGeneratorSpringImpl;
-import org.apache.ibatis.abator.internal.java.JavaModelGeneratorDefaultImpl;
-import org.apache.ibatis.abator.internal.sqlmap.SqlMapGeneratorDefaultImpl;
-import org.apache.ibatis.abator.internal.types.JavaTypeResolverDefaultImpl;
+import org.apache.ibatis.abator.internal.util.messages.Messages;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -89,10 +83,9 @@ public class AbatorConfigurationParser {
 				throw new XMLParserException(parseErrors);
 			} catch (SAXException e) {
 				if (e.getException() == null) {
-					throw new GenerationRuntimeException("SAXException", e);
+					throw new GenerationRuntimeException(e);
 				} else {
-					throw new GenerationRuntimeException("SAXException", e
-							.getException());
+					throw new GenerationRuntimeException(e.getException());
 				}
 			}
 
@@ -118,10 +111,9 @@ public class AbatorConfigurationParser {
 
 			return gc;
 		} catch (ParserConfigurationException e) {
-			throw new GenerationRuntimeException(
-					"ParserConfigurationException", e);
+			throw new GenerationRuntimeException(e);
 		} catch (IOException e) {
-			throw new GenerationRuntimeException("IOException", e);
+			throw new GenerationRuntimeException(e);
 		}
 	}
 
@@ -189,12 +181,7 @@ public class AbatorConfigurationParser {
 
 		Node attribute = nnm.getNamedItem("type"); //$NON-NLS-1$
 		if (attribute != null) {
-			if ("DEFAULT".equalsIgnoreCase(attribute.getNodeValue())) { //$NON-NLS-1$
-				sqlMapGenerator.setType(SqlMapGeneratorDefaultImpl.class
-						.getName());
-			} else {
-				sqlMapGenerator.setType(attribute.getNodeValue());
-			}
+		    sqlMapGenerator.setType(attribute.getNodeValue());
 		}
 
 		attribute = nnm.getNamedItem("targetPackage"); //$NON-NLS-1$
@@ -348,47 +335,47 @@ public class AbatorConfigurationParser {
 			tc.getGeneratedKey().setSqlStatement(
 					DatabaseDialects.getIdentityClause(DatabaseDialects.DB2));
 			if (!tc.getGeneratedKey().isIdentity()) {
-			    warnings.add("You specified \"DB2\" as the generated key SQL Statement, but did not specify that the column is an identity column in table configuration "
-			            + tc.getTable().getFullyQualifiedTableName());
+			    warnings.add(Messages.getString("AbatorConfigurationParser.0", //$NON-NLS-1$ 
+			            value, tc.getTable().getFullyQualifiedTableName()));
 			}
 		} else if ("MySQL".equalsIgnoreCase(value)) { //$NON-NLS-1$
 			tc.getGeneratedKey().setSqlStatement(
 					DatabaseDialects.getIdentityClause(DatabaseDialects.MYSQL));
 			if (!tc.getGeneratedKey().isIdentity()) {
-			    warnings.add("You specified \"MySql\" as the generated key SQL Statement, but did not specify that the column is an identity column in table configuration "
-			            + tc.getTable().getFullyQualifiedTableName());
+			    warnings.add(Messages.getString("AbatorConfigurationParser.0", //$NON-NLS-1$ 
+			            value, tc.getTable().getFullyQualifiedTableName()));
 			}
 		} else if ("SqlServer".equalsIgnoreCase(value)) { //$NON-NLS-1$
 			tc.getGeneratedKey().setSqlStatement(
 					DatabaseDialects
 							.getIdentityClause(DatabaseDialects.SQLSERVER));
 			if (!tc.getGeneratedKey().isIdentity()) {
-			    warnings.add("You specified \"SqlServer\" as the generated key SQL Statement, but did not specify that the column is an identity column in table configuration "
-			            + tc.getTable().getFullyQualifiedTableName());
+			    warnings.add(Messages.getString("AbatorConfigurationParser.0", //$NON-NLS-1$ 
+			            value, tc.getTable().getFullyQualifiedTableName()));
 			}
 		} else if ("Cloudscape".equalsIgnoreCase(value)) { //$NON-NLS-1$
 			tc.getGeneratedKey().setSqlStatement(
 					DatabaseDialects
 							.getIdentityClause(DatabaseDialects.CLOUDSCAPE));
 			if (!tc.getGeneratedKey().isIdentity()) {
-			    warnings.add("You specified \"Cloudscape\" as the generated key SQL Statement, but did not specify that the column is an identity column in table configuration "
-			            + tc.getTable().getFullyQualifiedTableName());
+			    warnings.add(Messages.getString("AbatorConfigurationParser.0", //$NON-NLS-1$ 
+			            value, tc.getTable().getFullyQualifiedTableName()));
 			}
 		} else if ("Derby".equalsIgnoreCase(value)) { //$NON-NLS-1$
 			tc.getGeneratedKey().setSqlStatement(
 					DatabaseDialects
 							.getIdentityClause(DatabaseDialects.DERBY));
 			if (!tc.getGeneratedKey().isIdentity()) {
-			    warnings.add("You specified \"Derby\" as the generated key SQL Statement, but did not specify that the column is an identity column in table configuration "
-			            + tc.getTable().getFullyQualifiedTableName());
+			    warnings.add(Messages.getString("AbatorConfigurationParser.0", //$NON-NLS-1$ 
+			            value, tc.getTable().getFullyQualifiedTableName()));
 			}
 		} else if ("HSQLDB".equalsIgnoreCase(value)) { //$NON-NLS-1$
 			tc.getGeneratedKey().setSqlStatement(
 					DatabaseDialects
 							.getIdentityClause(DatabaseDialects.HSQLDB));
 			if (!tc.getGeneratedKey().isIdentity()) {
-			    warnings.add("You specified \"HSQLDB\" as the generated key SQL Statement, but did not specify that the column is an identity column in table configuration "
-			            + tc.getTable().getFullyQualifiedTableName());
+			    warnings.add(Messages.getString("AbatorConfigurationParser.0", //$NON-NLS-1$ 
+			            value, tc.getTable().getFullyQualifiedTableName()));
 			}
 		} else {
 			tc.getGeneratedKey().setSqlStatement(value);
@@ -411,12 +398,7 @@ public class AbatorConfigurationParser {
 
 		Node attribute = nnm.getNamedItem("type"); //$NON-NLS-1$
 		if (attribute != null) {
-			if ("DEFAULT".equalsIgnoreCase(attribute.getNodeValue())) { //$NON-NLS-1$
-				javaTypeResolverConfiguration
-						.setType(JavaTypeResolverDefaultImpl.class.getName());
-			} else {
-				javaTypeResolverConfiguration.setType(attribute.getNodeValue());
-			}
+			javaTypeResolverConfiguration.setType(attribute.getNodeValue());
 		}
 
 		NodeList nodeList = node.getChildNodes();
@@ -442,13 +424,7 @@ public class AbatorConfigurationParser {
 
 		Node attribute = nnm.getNamedItem("type"); //$NON-NLS-1$
 		if (attribute != null) {
-			if ("DEFAULT".equalsIgnoreCase(attribute.getNodeValue())) { //$NON-NLS-1$
-				javaModelGeneratorConfiguration
-						.setType(JavaModelGeneratorDefaultImpl.class.getName());
-			} else {
-				javaModelGeneratorConfiguration.setType(attribute
-						.getNodeValue());
-			}
+			javaModelGeneratorConfiguration.setType(attribute.getNodeValue());
 		}
 
 		attribute = nnm.getNamedItem("targetPackage"); //$NON-NLS-1$
@@ -481,24 +457,7 @@ public class AbatorConfigurationParser {
 		NamedNodeMap nnm = node.getAttributes();
 
 		Node attribute = nnm.getNamedItem("type"); //$NON-NLS-1$
-		String type = attribute.getNodeValue();
-		if ("IBATIS".equalsIgnoreCase(type)) { //$NON-NLS-1$
-			daoGeneratorConfiguration.setType(DAOGeneratorIbatisImpl.class
-					.getName());
-		} else if ("SPRING".equalsIgnoreCase(type)) { //$NON-NLS-1$
-			daoGeneratorConfiguration.setType(DAOGeneratorSpringImpl.class
-					.getName());
-		} else if ("GENERIC-CI".equalsIgnoreCase(type)) { //$NON-NLS-1$
-			daoGeneratorConfiguration
-					.setType(DAOGeneratorGenericConstructorInjectionImpl.class
-							.getName());
-		} else if ("GENERIC-SI".equalsIgnoreCase(type)) { //$NON-NLS-1$
-			daoGeneratorConfiguration
-					.setType(DAOGeneratorGenericSetterInjectionImpl.class
-							.getName());
-		} else {
-			daoGeneratorConfiguration.setType(type);
-		}
+		daoGeneratorConfiguration.setType(attribute.getNodeValue());
 
 		attribute = nnm.getNamedItem("targetPackage"); //$NON-NLS-1$
 		daoGeneratorConfiguration.setTargetPackage(attribute.getNodeValue());

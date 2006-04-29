@@ -17,6 +17,7 @@ package org.apache.ibatis.abator.config.xml;
 
 import java.util.List;
 
+import org.apache.ibatis.abator.internal.util.messages.Messages;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -44,14 +45,9 @@ public class ParserErrorHandler implements ErrorHandler {
 	 * @see org.xml.sax.ErrorHandler#warning(org.xml.sax.SAXParseException)
 	 */
 	public void warning(SAXParseException exception) throws SAXException {
-		StringBuffer sb = new StringBuffer();
-
-		sb.append("XML Parser Warning on line ");
-		sb.append(exception.getLineNumber());
-		sb.append(": ");
-		sb.append(exception.getMessage());
-
-		warnings.add(sb.toString());
+		warnings.add(Messages.getString("ParserErrorHandler.0", //$NON-NLS-1$
+		        Integer.toString(exception.getLineNumber()),
+		        exception.getMessage()));
 	}
 
 	/*
@@ -60,14 +56,9 @@ public class ParserErrorHandler implements ErrorHandler {
 	 * @see org.xml.sax.ErrorHandler#error(org.xml.sax.SAXParseException)
 	 */
 	public void error(SAXParseException exception) throws SAXException {
-		StringBuffer sb = new StringBuffer();
-
-		sb.append("Line ");
-		sb.append(exception.getLineNumber());
-		sb.append(": ");
-		sb.append(exception.getMessage());
-
-		errors.add(sb.toString());
+		errors.add(Messages.getString("ParserErrorHandler.1", //$NON-NLS-1$
+		        Integer.toString(exception.getLineNumber()),
+		        exception.getMessage()));
 	}
 
 	/*
@@ -76,13 +67,8 @@ public class ParserErrorHandler implements ErrorHandler {
 	 * @see org.xml.sax.ErrorHandler#fatalError(org.xml.sax.SAXParseException)
 	 */
 	public void fatalError(SAXParseException exception) throws SAXException {
-		StringBuffer sb = new StringBuffer();
-
-		sb.append("Line ");
-		sb.append(exception.getLineNumber());
-		sb.append(": ");
-		sb.append(exception.getMessage());
-
-		errors.add(sb.toString());
+		errors.add(Messages.getString("ParserErrorHandler.1", //$NON-NLS-1$
+		        Integer.toString(exception.getLineNumber()),
+		        exception.getMessage()));
 	}
 }

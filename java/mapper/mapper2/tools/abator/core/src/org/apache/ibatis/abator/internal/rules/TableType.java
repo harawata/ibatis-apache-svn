@@ -16,6 +16,7 @@
 package org.apache.ibatis.abator.internal.rules;
 
 import org.apache.ibatis.abator.internal.db.ColumnDefinitions;
+import org.apache.ibatis.abator.internal.util.messages.Messages;
 
 /**
  * Typesafe enum (from "Effective Java" #21) of table types supported by Abator.
@@ -24,50 +25,43 @@ import org.apache.ibatis.abator.internal.db.ColumnDefinitions;
  * @author Jeff Butler
  */
 public class TableType {
-    private final String name;
-
     /**
      * 
      */
-    private TableType(String name) {
+    private TableType() {
         super();
-        this.name = name;
-    }
-    
-    public String toString() {
-        return name;
     }
     
 	/**
 	 * A table that has no primary key and all columns are not BLOBs.
 	 */
-    public static final TableType NO_PK_FIELDS_NO_BLOBS = new TableType("No primary key, no BLOBs");
+    public static final TableType NO_PK_FIELDS_NO_BLOBS = new TableType();
     
 	/**
 	 * A table that has no primary key and columns that are both BLOBs and non BLOBs.
 	 */
-    public static final TableType NO_PK_FIELDS_BLOBS = new TableType("No primary key, contains BLOBs and non-BLOBs");
+    public static final TableType NO_PK_FIELDS_BLOBS = new TableType();
     
 	/**
 	 * A table with a primary key only.
 	 */
-    public static final TableType PK_NO_FIELDS_NO_BLOBS = new TableType("Primary key only");
+    public static final TableType PK_NO_FIELDS_NO_BLOBS = new TableType();
     
 	/**
 	 * A table with a primary key, and all other columns are not BLOBs.
 	 */
-    public static final TableType PK_FIELDS_NO_BLOBS = new TableType("Primary key, all other fields are not BLOBs");
+    public static final TableType PK_FIELDS_NO_BLOBS = new TableType();
     
 	/**
 	 * A table with a primary key, and all other columns are BLOBs.
 	 */
-    public static final TableType PK_NO_FIELDS_BLOBS = new TableType("Primary key, all other fields are BLOBs");
+    public static final TableType PK_NO_FIELDS_BLOBS = new TableType();
     
 	/**
 	 * A table with a primary key and other columns that are both BLOBs and
 	 * non BLOBs.
 	 */
-    public static final TableType PK_FIELDS_BLOBS = new TableType("Primary key, BLOB and non BLOB fields");
+    public static final TableType PK_FIELDS_BLOBS = new TableType();
 
     /**
      * Calculates the table type from the physical structure of the table.
@@ -103,7 +97,7 @@ public class TableType {
 				&& columnDefinitions.hasNonBLOBColumns()) {
 			tableType = PK_FIELDS_BLOBS;
 		} else {
-		    throw new RuntimeException("Internal Error - Unsupported Table Type");
+		    throw new RuntimeException(Messages.getString("TableType.0")); //$NON-NLS-1$
 		}
 		
 		return tableType;

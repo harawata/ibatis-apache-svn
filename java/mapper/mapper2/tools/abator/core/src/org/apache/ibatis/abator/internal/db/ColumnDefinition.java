@@ -84,22 +84,25 @@ public class ColumnDefinition {
         this.typeName = typeName;
     }
 
+	/*
+	 * This method is primarily used for debugging, so we don't externalize the strings
+	 */
     public String toString() {
         StringBuffer sb = new StringBuffer();
 
-        sb.append("Column Name: ");
+        sb.append("Column Name: "); //$NON-NLS-1$
         sb.append(columnName);
-        sb.append(", JDBC Type: ");
+        sb.append(", JDBC Type: "); //$NON-NLS-1$
         sb.append(jdbcType);
-        sb.append(", Type Name: ");
+        sb.append(", Type Name: "); //$NON-NLS-1$
         sb.append(typeName);
-        sb.append(", Nullable: ");
+        sb.append(", Nullable: "); //$NON-NLS-1$
         sb.append(nullable);
-        sb.append(", Length: ");
+        sb.append(", Length: "); //$NON-NLS-1$
         sb.append(length);
-        sb.append(", Scale: ");
+        sb.append(", Scale: "); //$NON-NLS-1$
         sb.append(scale);
-        sb.append(", Identity: ");
+        sb.append(", Identity: "); //$NON-NLS-1$
         sb.append(identity);
 
         return sb.toString();
