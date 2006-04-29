@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision$
+ * $Revision: 397590 $
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -34,18 +34,21 @@ using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using System.Text;
+
 using IBatisNet.Common;
 using IBatisNet.Common.Logging;
 using IBatisNet.Common.Utilities.Objects;
+using IBatisNet.Common.Utilities.Objects.Members;
+
 using IBatisNet.DataMapper.Commands;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
 using IBatisNet.DataMapper.Configuration.Statements;
-using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.Scope;
+using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.TypeHandlers;
-using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.DataExchange;
+using IBatisNet.DataMapper.Proxy;
 
 #endregion
 
@@ -1328,6 +1331,10 @@ namespace IBatisNet.DataMapper.MappedStatements
 					
                     if (mapping.MemberAccessor.MemberType.BaseType == typeof(Array))
 					{
+						if (mapping.IsLazyLoad)
+						{
+							throw new NotImplementedException("Lazy load no supported for System.Array property:" + mapping.MemberAccessor.Name);
+						}
 						postSelect.Method = ExecuteMethod.ExecuteQueryForArrayList;
 					}
 					// Check if the object to Map implement 'IList' or is IList type
@@ -1336,7 +1343,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 					{
 						if (mapping.IsLazyLoad)
 						{
-							object values = LazyLoadList.NewInstance(queryStatement, keys, target, mapping.PropertyName);
+							object values = LazyLoadProxyFactory.Build(queryStatement, keys, target, mapping.MemberAccessor);
 							mapping.MemberAccessor.Set(target, values);
 						}
 						else
@@ -1357,7 +1364,7 @@ namespace IBatisNet.DataMapper.MappedStatements
                     {
                         if (mapping.IsLazyLoad)
                         {
-                            object values = LazyLoadList.NewInstance(queryStatement, keys, target, mapping.PropertyName);
+							object values = LazyLoadProxyFactory.Build(queryStatement, keys, target, mapping.MemberAccessor);
 							mapping.MemberAccessor.Set(target, values);
                         }
                         else

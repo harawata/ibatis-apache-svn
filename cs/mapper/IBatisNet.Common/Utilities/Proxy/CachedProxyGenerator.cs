@@ -63,7 +63,7 @@ namespace IBatisNet.Common.Utilities.Proxy
 		/// </summary>
 		/// <param name="theInterface">Interface to be implemented</param>
 		/// <param name="interceptor">instance of <see cref="IInterceptor"/></param>
-		/// <param name="target"></param>
+		/// <param name="target">The target object.</param>
 		/// <returns>Proxy instance</returns>
 		public override object CreateProxy(Type theInterface, IInterceptor interceptor, object target)
 		{
@@ -76,7 +76,7 @@ namespace IBatisNet.Common.Utilities.Proxy
 		/// </summary>
 		/// <param name="interfaces">Array of interfaces to be implemented</param>
 		/// <param name="interceptor">instance of <see cref="IInterceptor"/></param>
-		/// <param name="target"></param>
+		/// <param name="target">The target object.</param>
 		/// <returns>Proxy instance</returns>
 		public override object CreateProxy(Type[] interfaces, IInterceptor interceptor, object target)
 		{
@@ -102,10 +102,43 @@ namespace IBatisNet.Common.Utilities.Proxy
 				_log.Error( "Castle Dynamic Proxy Generator failed", e );
 				throw new IBatisNetException( "Castle Proxy Generator failed", e );
 			}
-
-
 		}
 
 
+		
+		/// <summary>
+		/// Generates a proxy implementing all the specified interfaces and
+		/// redirecting method invocations to the specifed interceptor.
+		/// This proxy is for object different from IList or ICollection
+		/// </summary>
+		/// <param name="targetType">The target type</param>
+		/// <param name="interceptor">The interceptor.</param>
+		/// <param name="argumentsForConstructor">The arguments for constructor.</param>
+		/// <returns></returns>
+		public override object CreateClassProxy(Type targetType, IInterceptor interceptor, params object[] argumentsForConstructor)
+		{
+			try
+			{
+				System.Type proxyType = null;
+
+				lock( _cachedProxyTypes.SyncRoot )
+				{
+					proxyType = _cachedProxyTypes[ targetType ] as System.Type;
+
+					if( proxyType == null )
+					{
+						proxyType = ProxyBuilder.CreateClassProxy(targetType);
+						_cachedProxyTypes[ targetType ] = proxyType;
+					}
+				}
+				return CreateClassProxyInstance( proxyType, interceptor, argumentsForConstructor ); 
+			}
+			catch( Exception e )
+			{
+				_log.Error( "Castle Dynamic Class-Proxy Generator failed", e );
+				throw new IBatisNetException( "Castle Proxy Generator failed", e );
+			}
+	
+		}
 	}
 }

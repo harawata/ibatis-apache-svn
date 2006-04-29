@@ -40,7 +40,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.CacheController
 			Order order = new Order(); 
 			order.CardNumber = "CardNumber";
 			order.Date = DateTime.Now;
-			order.LineItems = new ArrayList();
+			order.LineItems = new LineItemCollection();
 			LineItem item = new LineItem();
 			item.Code = "Code1";
 			order.LineItems.Add( item );
@@ -83,7 +83,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.CacheController
 			Order order = new Order(); 
 			order.CardNumber = "CardNumber";
 			order.Date = DateTime.Now;
-			order.LineItems = new ArrayList();
+			order.LineItems = new LineItemCollection();
 			LineItem item = new LineItem();
 			item.Code = "Code1";
 			order.LineItems.Add( item );

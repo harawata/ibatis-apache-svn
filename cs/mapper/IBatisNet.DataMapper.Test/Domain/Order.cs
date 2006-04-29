@@ -23,7 +23,7 @@ namespace IBatisNet.DataMapper.Test.Domain
 		private string _province;
 		private string _postalCode;
 		private IList _lineItemsIList;
-		private IList _lineItems;//LineItemCollection
+		private LineItemCollection _lineItems;//LineItemCollection
 		private LineItem[] _lineItemsArray;
 		private LineItem _favouriteLineItem;
 
@@ -121,7 +121,7 @@ namespace IBatisNet.DataMapper.Test.Domain
 		}
 
 
-		public IList LineItems
+		public LineItemCollection LineItems
 		{
 			get { return _lineItems; }
 			set { _lineItems = value; }
