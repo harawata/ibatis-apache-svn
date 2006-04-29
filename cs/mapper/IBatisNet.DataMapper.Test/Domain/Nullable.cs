@@ -9,6 +9,10 @@ namespace IBatisNet.DataMapper.Test.Domain
     public class NullableClass
     {
 
+		public NullableClass()
+		{
+		}
+
 #if dotnet2
         private int _id = int.MinValue;
         private bool? _testBool = null;
@@ -22,10 +26,6 @@ namespace IBatisNet.DataMapper.Test.Domain
         private Int32? _testInt32 = null;
         private Int64? _testInt64 = null;
         private Single? _testSingle = null;
-
-        public NullableClass()
-        {
-        }
 
         public NullableClass(Int32? id)
         {
@@ -117,6 +117,11 @@ namespace IBatisNet.DataMapper.Test.Domain
         private Int32 _testInt32 = 0;
         private Int64 _testInt64 = 0;
         private Single _testSingle = 0;
+
+		public NullableClass(int id)
+		{
+			_id = id;
+		}
 
         public int Id
         {
