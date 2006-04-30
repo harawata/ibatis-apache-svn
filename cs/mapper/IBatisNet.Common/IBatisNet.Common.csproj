@@ -310,6 +310,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Utilities\Objects\BoxingOpCodes.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Utilities\Objects\EmitObjectFactory.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

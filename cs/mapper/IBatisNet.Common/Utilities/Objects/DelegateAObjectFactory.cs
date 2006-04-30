@@ -34,7 +34,7 @@ namespace IBatisNet.Common.Utilities.Objects
     /// <summary>
     /// A <see cref="IObjectFactory"/> implementation that can create objects via DynamicMethod.
     /// </summary>
-    public sealed class DelegateAObjectFactory : IObjectFactory
+    public sealed class DelegateObjectFactory : IObjectFactory
     {
         private IDictionary _cachedfactories = new HybridDictionary();
 		private object _padlock = new object();
@@ -43,7 +43,7 @@ namespace IBatisNet.Common.Utilities.Objects
         /// <summary>
         /// Initializes a new instance of the <see cref="T:DelegateAObjectFactory"/> class.
         /// </summary>
-        public DelegateAObjectFactory()
+        public DelegateObjectFactory()
 		{
 		}
 

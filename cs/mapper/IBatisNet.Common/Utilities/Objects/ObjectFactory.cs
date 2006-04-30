@@ -46,7 +46,7 @@ namespace IBatisNet.Common.Utilities.Objects
 				if (Environment.Version.Major >= 2)
 				{
 #if dotnet2
-					_objectFactory = new DelegateAObjectFactory();
+                    _objectFactory = new DelegateObjectFactory();
 #endif					
 				}
 				else

@@ -37,11 +37,11 @@ namespace IBatisNet.Common.Utilities.Objects
 		#region IObjectFactory members
 
 		/// <summary>
-        /// Create a new see <cref="IFactory"/> instance for a given type
+        /// Create a new see <see cref="IObjectFactory"/> instance for a given type
 		/// </summary>
 		/// <param name="typeToCreate">The type instance to build</param>
 		/// <param name="types">The types of the constructor arguments</param>
-        /// <returns>Returns a new see <cref="IFactory"/> instance.</returns>
+        /// <returns>Returns a new <see cref="IObjectFactory"/> instance.</returns>
 		public IFactory CreateFactory(Type typeToCreate, Type[] types)
 		{
 			return new ActivatorFactory( typeToCreate );
