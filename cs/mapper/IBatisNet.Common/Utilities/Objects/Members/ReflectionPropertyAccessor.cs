@@ -34,17 +34,13 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 	/// </summary>
 	public class ReflectionPropertyAccessor : IMemberAccessor, IPropertyAccessor
 	{
-		//		private static BindingFlags BINDING_FLAGS
-		//			= BindingFlags.Public 
-		//			| BindingFlags.Instance 
-		//			;
-
 		private PropertyInfo _propertyInfo = null;
 		private string _propertyName = string.Empty;
 		private Type _targetType = null;
 
 		/// <summary>
 		/// Creates a new Reflection property accessor.
+		/// Generates the implementation for getter and setter methods.
 		/// </summary>
 		/// <param name="targetType">Target object type.</param>
 		/// <param name="propertyName">Property name.</param>
@@ -53,7 +49,6 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 			ReflectionInfo reflectionCache = ReflectionInfo.GetInstance( targetType );
 			_propertyInfo = (PropertyInfo)reflectionCache.GetGetter(propertyName);
 
-			//_propertyInfo = (PropertyInfo)ObjectProbe.GetPropertyInfoForSetter(targetType, propertyName);
 			_targetType = targetType;
 			_propertyName = propertyName;
 		}
@@ -108,15 +103,14 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 			}
 			else
 			{
-				throw new MissingMethodException(
+				throw new NotSupportedException(
 					string.Format("Property \"{0}\" on type "
 					+ "{1} doesn't have a get method.", _propertyName, _targetType));
 			}        
 		}
 
 		/// <summary>
-		/// Sets the value for the property of
-		/// the specified target.
+		/// Sets the value for the property of the specified target.
 		/// </summary>
 		/// <param name="target">Object to set the property on.</param>
 		/// <param name="value">Property value.</param>
@@ -128,7 +122,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 			}
 			else
 			{
-				throw new MissingMethodException(
+				throw new NotSupportedException(
 					string.Format("Property \"{0}\" on type "
 					+ "{1} doesn't have a set method.", _propertyName, _targetType));
 			}

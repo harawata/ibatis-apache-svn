@@ -36,7 +36,7 @@ using IBatisNet.DataMapper.MappedStatements;
 namespace IBatisNet.DataMapper.Proxy
 {
 	/// <summary>
-	/// This class is responsible of create all lazy load proxies.
+	/// This class is responsible of create all <see cref="IList"/> lazy load proxies.
 	/// </summary>
 	public class LazyLoadProxyFactory
 	{
@@ -67,7 +67,7 @@ namespace IBatisNet.DataMapper.Proxy
 			object proxy = null;
 			Type typeProxified = memberAccessor.MemberType; 
 	
-			bool isIList = typeof(IList).IsAssignableFrom(memberAccessor.MemberType);
+			bool isIList = typeof(IList).IsAssignableFrom(memberAccessor.MemberType) || memberAccessor.MemberType.IsSubclassOf(typeof(IList));
 			Type returnedTypeByStatement = LazyLoadProxyFactory.GetTypeReturnedByStatemet(mappedStatement, isIList); 
 	
 			//Test if the result of the lazy load is assigable to property, test now load time instead
@@ -95,20 +95,9 @@ namespace IBatisNet.DataMapper.Proxy
 					proxy = ProxyGeneratorFactory.GetProxyGenerator().CreateClassProxy(typeProxified, handler, Type.EmptyTypes);
 				}	
 			}
-			else if (typeProxified.IsClass)
-			{
-				if (_logger.IsDebugEnabled) 
-				{
-					_logger.Debug(string.Format("Statement '{0}', create class proxy for member {1}.", mappedStatement.Id ,memberAccessor.MemberType));
-				}
-
-				//TODO test if param fit with constructor arguments 
-				proxy = ProxyGeneratorFactory.GetProxyGenerator().CreateClassProxy(typeProxified, handler, 
-					LazyLoadProxyFactory.CreateArgumentsForConstructor(typeProxified, param));
-			}
 			else
 			{
-				throw new DataMapperException(string.Format("Not implemented: the type ({0}) of property to proxify is not and interface or class.", typeProxified) ); 
+				throw new DataMapperException(string.Format("Only proxy on IList type are supported, the member type ({0}) cannot be proxyfied.", typeProxified) ); 
 			}
 
 			return proxy;
@@ -160,40 +149,7 @@ namespace IBatisNet.DataMapper.Proxy
 		}
 
 		
-		/// <summary>
-		/// Creates the arguments for constructor.
-		/// </summary>
-		/// <param name="type">The object type.</param>
-		/// <param name="lazyLoadParam">The lazy load param.</param>
-		/// <returns>A list of objects argument</returns>
-		private static object[] CreateArgumentsForConstructor(Type type,object lazyLoadParam)
-		{
-			object[] argumentsForConstructor = null;
 
-			if (type.GetInterface(typeof(ICollection).FullName) != null)
-			{
-				//the collection build whitout arguments
-				argumentsForConstructor = new object[]{};
-			}
-			else
-			{
-				if (lazyLoadParam == null)
-				{
-					argumentsForConstructor = new object[]{};
-				}
-				if (lazyLoadParam is object[])
-				{
-					//Multiple primary key
-					argumentsForConstructor = (object[])lazyLoadParam;
-				}
-				else
-				{
-					argumentsForConstructor = new object[]{lazyLoadParam};
-				}
-			}
-
-			return argumentsForConstructor;
-		}
 
 
 	}

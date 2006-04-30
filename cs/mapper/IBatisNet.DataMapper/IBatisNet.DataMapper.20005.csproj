@@ -466,9 +466,6 @@
     <Compile Include="ExecuteEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="LazyLoadList.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="MappedStatements\CachingStatement.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -496,6 +493,8 @@
     <Compile Include="Mapper.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Proxy\LazyLoadInterceptor.cs" />
+    <Compile Include="Proxy\LazyLoadProxyFactory.cs" />
     <Compile Include="Scope\ConfigurationScope.cs">
       <SubType>Code</SubType>
     </Compile>

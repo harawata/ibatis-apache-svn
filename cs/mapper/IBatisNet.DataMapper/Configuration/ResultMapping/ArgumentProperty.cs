@@ -80,6 +80,16 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		}
 
 		/// <summary>
+		/// Tell us if we must lazy load this property..
+		/// </summary>
+		[XmlAttribute("lazyLoad")]
+		public override bool IsLazyLoad
+		{
+			get { return false; }
+			set { throw new InvalidOperationException("Argument property cannot be lazy load."); }
+		}
+
+		/// <summary>
 		/// Get the argument type
 		/// </summary>
 		[XmlIgnore]

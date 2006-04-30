@@ -128,11 +128,6 @@
                     BuildAction = "None"
                 />
                 <File
-                    RelPath = "LazyLoadList.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "licence.txt"
                     BuildAction = "Content"
                 />

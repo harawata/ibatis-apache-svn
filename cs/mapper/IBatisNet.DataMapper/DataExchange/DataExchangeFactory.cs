@@ -125,6 +125,13 @@ namespace IBatisNet.DataMapper.DataExchange
 		}
 
 #if dotnet2
+        /// <summary>
+        /// Determines whether [is implement generic Ilist interface] [the specified type].
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>
+        /// 	<c>true</c> if [is implement generic I list interface] [the specified type]; otherwise, <c>false</c>.
+        /// </returns>
         public bool IsImplementGenericIListInterface(Type type)
         {
             Type[] interfaceTypes = type.GetInterfaces();

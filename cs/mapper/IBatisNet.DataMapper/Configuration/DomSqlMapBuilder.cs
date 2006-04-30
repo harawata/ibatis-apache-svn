@@ -294,6 +294,7 @@ namespace IBatisNet.DataMapper.Configuration
 
 		#endregion 		
 		
+		#region Properties
         /// <summary>
         /// Allow to set a custom member accessor factory, see <see cref="IMemberAccessorFactory"/>
         /// </summary>
@@ -317,6 +318,7 @@ namespace IBatisNet.DataMapper.Configuration
         {
             set { _validateSqlMapConfig = value; }
         }
+		#endregion
 
 		#region Constructor
 

@@ -105,7 +105,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// Tell us if we must lazy load this property..
 		/// </summary>
 		[XmlAttribute("lazyLoad")]
-		public bool IsLazyLoad
+		public virtual bool IsLazyLoad
 		{
 			get { return _isLazyLoad; }
 			set { _isLazyLoad = value; }
