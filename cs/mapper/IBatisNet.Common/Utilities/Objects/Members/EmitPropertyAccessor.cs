@@ -55,39 +55,6 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 			get { return _canWrite; }
 		}
 		#endregion
-
-		/// <summary>
-		/// Initializes the property and generates the implementation for getter and setter methods.
-		/// </summary>
-		/// <param name="targetObjectType">Target object type.</param>
-		/// <param name="propertyName">Property name.</param>
-		/// <param name="assBuilder"></param>
-		/// <param name="modBuilder"></param>
-		public EmitPropertyAccessor(Type targetObjectType, string propertyName, AssemblyBuilder assBuilder, ModuleBuilder modBuilder)
-		{
-			assemblyBuilder = assBuilder;
-			moduleBuilder = modBuilder;
-			targetType = targetObjectType;
-			memberName = propertyName;
-
-			PropertyInfo propertyInfo = targetType.GetProperty(propertyName);
-
-			// Make sure the property exists
-			if(propertyInfo == null)
-			{
-				throw new NotSupportedException(
-					string.Format("Property \"{0}\" does not exist for type "
-					+ "{1}.", propertyName, targetType));
-			}
-			else
-			{
-				baseMemberType = propertyInfo.PropertyType;
-				_canRead = propertyInfo.CanRead;
-				_canWrite = propertyInfo.CanWrite;
-				this.EmitIL();
-			}
-		}
-
 		
 		#region IMemberAccessor Members
 
@@ -139,7 +106,46 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 
 
 		#endregion
-		
+
+		/// <summary>
+		/// Initializes the property and generates the implementation for getter and setter methods.
+		/// </summary>
+		/// <param name="targetObjectType">Target object type.</param>
+		/// <param name="propertyName">Property name.</param>
+		/// <param name="assBuilder"></param>
+		/// <param name="modBuilder"></param>
+		public EmitPropertyAccessor(Type targetObjectType, string propertyName, AssemblyBuilder assBuilder, ModuleBuilder modBuilder)
+		{
+			assemblyBuilder = assBuilder;
+			moduleBuilder = modBuilder;
+			targetType = targetObjectType;
+			memberName = propertyName;
+
+			PropertyInfo propertyInfo = targetType.GetProperty(propertyName);
+
+			// Make sure the property exists
+			if(propertyInfo == null)
+			{
+				throw new NotSupportedException(
+					string.Format("Property \"{0}\" does not exist for type "
+					+ "{1}.", propertyName, targetType));
+			}
+			else
+			{
+				this.baseMemberType = propertyInfo.PropertyType;
+				_canRead = propertyInfo.CanRead;
+				_canWrite = propertyInfo.CanWrite;
+				this.EmitIL();
+			}
+		}
+
+        
+		/// <summary>
+        /// Implements the property.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="field">The field.</param>
+        /// <param name="prop">The prop.</param>
 		private void ImplementProperty(TypeBuilder type, FieldBuilder field, PropertyInfo prop)
 		{
 			MethodBuilder getter = type.DefineMethod("get_" + prop.Name, MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig | MethodAttributes.SpecialName, prop.PropertyType, null);
@@ -242,80 +248,77 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 			// Define a method named "Get" for the get operation (IMemberAccessor). 
 			Type[] getParamTypes = new Type[] { typeof(object) };
 			MethodBuilder methodBuilder = typeBuilder.DefineMethod("Get",
-				MethodAttributes.Public | MethodAttributes.Virtual,
-				typeof(object),
-				getParamTypes);
+				MethodAttributes.Public | MethodAttributes.Virtual, typeof(object), getParamTypes);
+            // Get an ILGenerator and used it to emit the IL that we want.
+            ILGenerator generatorIL = methodBuilder.GetILGenerator();
+			if (_canRead)
+            {
+                // Emit the IL for get access. 
+                MethodInfo targetGetMethod = targetType.GetMethod("get_" + memberName);
 
-			// Get an ILGenerator and used it to emit the IL that we want.
-			ILGenerator getIL = methodBuilder.GetILGenerator();
-
-			// Emit the IL for get access. 
-			MethodInfo targetGetMethod = targetType.GetMethod("get_" + memberName);
-
-			if (targetGetMethod != null)
-			{
-				getIL.DeclareLocal(typeof(object));
-				getIL.Emit(OpCodes.Ldarg_1);	//Load the first argument,(target object)
-				getIL.Emit(OpCodes.Castclass, targetType);	//Cast to the source type
-				getIL.EmitCall(OpCodes.Call, targetGetMethod, null); //Get the property value
-				if (targetGetMethod.ReturnType.IsValueType)
-				{
-					getIL.Emit(OpCodes.Box, targetGetMethod.ReturnType); //Box if necessary
-				}
-				getIL.Emit(OpCodes.Stloc_0); //Store it
-				getIL.Emit(OpCodes.Ldloc_0);
-			}
+                generatorIL.DeclareLocal(typeof(object));
+                generatorIL.Emit(OpCodes.Ldarg_1);	//Load the first argument,(target object)
+                generatorIL.Emit(OpCodes.Castclass, targetType);	//Cast to the source type
+                generatorIL.EmitCall(OpCodes.Call, targetGetMethod, null); //Get the property value
+                if (targetGetMethod.ReturnType.IsValueType)
+                {
+                    generatorIL.Emit(OpCodes.Box, targetGetMethod.ReturnType); //Box if necessary
+                }
+                generatorIL.Emit(OpCodes.Stloc_0); //Store it
+                generatorIL.Emit(OpCodes.Ldloc_0);
+                generatorIL.Emit(OpCodes.Ret);
+            }
 			else
 			{
-				getIL.ThrowException(typeof(MissingMethodException));
+				 generatorIL.ThrowException(typeof(MissingMethodException));
 			}
-			getIL.Emit(OpCodes.Ret);
 			#endregion			
 
 			#region Emit Set
-			// Define a method named "Set" for the set operation (IMemberAccessor).
-			Type[] setParamTypes = new Type[] { typeof(object), typeof(object) };
-			methodBuilder = typeBuilder.DefineMethod("Set",
-				MethodAttributes.Public | MethodAttributes.Virtual,
-				null,
-				setParamTypes);
+            // Define a method named "Set" for the set operation (IMemberAccessor).
+            Type[] setParamTypes = new Type[] { typeof(object), typeof(object) };
+            methodBuilder = typeBuilder.DefineMethod("Set",
+                MethodAttributes.Public | MethodAttributes.Virtual,
+                null,
+                setParamTypes);
 
 			// Get an ILGenerator and  used to emit the IL that we want.
 			// Set(object, value);
-			ILGenerator setIL = methodBuilder.GetILGenerator();
-			// Emit the IL for the set access. 
-			MethodInfo targetSetMethod = targetType.GetMethod("set_" + memberName);
-			if (targetSetMethod != null)
-			{
-				Type paramType = targetSetMethod.GetParameters()[0].ParameterType;
-				setIL.DeclareLocal(paramType);
-				setIL.Emit(OpCodes.Ldarg_1); //Load the first argument (target object)
-				setIL.Emit(OpCodes.Castclass, targetType); //Cast to the source type
-				setIL.Emit(OpCodes.Ldarg_2); //Load the second argument (value object)
-				if (paramType.IsValueType)
-				{
-					setIL.Emit(OpCodes.Unbox, paramType); //Unbox it 	
-					if (typeToOpcode[paramType] != null)
-					{
-						OpCode load = (OpCode)typeToOpcode[paramType];
-						setIL.Emit(load); //and load
-					}
-					else
-					{
-						setIL.Emit(OpCodes.Ldobj, paramType);
-					}
-				}
-				else
-				{
-					setIL.Emit(OpCodes.Castclass, paramType); //Cast class
-				}
-				setIL.EmitCall(OpCodes.Callvirt, targetSetMethod, null); //Set the property value
-			}
+			generatorIL = methodBuilder.GetILGenerator();
+			if (_canWrite)
+            {
+                // Emit the IL for the set access. 
+                MethodInfo targetSetMethod = targetType.GetMethod("set_" + memberName);
+                Type paramType = targetSetMethod.GetParameters()[0].ParameterType;
+
+                generatorIL.DeclareLocal(paramType);
+                generatorIL.Emit(OpCodes.Ldarg_1); //Load the first argument (target object)
+                generatorIL.Emit(OpCodes.Castclass, targetType); //Cast to the source type
+                generatorIL.Emit(OpCodes.Ldarg_2); //Load the second argument (value object)
+                if (paramType.IsValueType)
+                {
+                    generatorIL.Emit(OpCodes.Unbox, paramType); //Unbox it 	
+                    if (typeToOpcode[paramType] != null)
+                    {
+                        OpCode load = (OpCode)typeToOpcode[paramType];
+                        generatorIL.Emit(load); //and load
+                    }
+                    else
+                    {
+                        generatorIL.Emit(OpCodes.Ldobj, paramType);
+                    }
+                }
+                else
+                {
+                    generatorIL.Emit(OpCodes.Castclass, paramType); //Cast class
+                }
+                generatorIL.EmitCall(OpCodes.Callvirt, targetSetMethod, null); //Set the property value
+                generatorIL.Emit(OpCodes.Ret);
+            }
 			else
 			{
-				setIL.ThrowException(typeof(MissingMethodException));
+				generatorIL.ThrowException(typeof(MissingMethodException));
 			}
-			setIL.Emit(OpCodes.Ret); 
 			#endregion
 
 			// Load the type

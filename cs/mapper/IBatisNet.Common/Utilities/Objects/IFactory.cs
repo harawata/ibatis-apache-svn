@@ -31,12 +31,6 @@ namespace IBatisNet.Common.Utilities.Objects
 	/// </summary>
 	public interface IFactory
 	{
-//		/// <summary>
-//		/// Create a new instance
-//		/// </summary>
-//		/// <returns>A new instance</returns>
-//		object CreateInstance();
-
 		/// <summary>
 		/// Create a new instance with the specified parameters
 		/// </summary>

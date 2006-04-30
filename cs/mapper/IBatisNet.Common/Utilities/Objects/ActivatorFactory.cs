@@ -44,16 +44,6 @@ namespace IBatisNet.Common.Utilities.Objects
 		}
 
 		#region IFactory members
-//
-//		/// <summary>
-//		/// Create a new object instance via via Activator.CreateInstance
-//		/// </summary>
-//		/// <returns>A new instance</returns>
-//		public object CreateInstance()
-//		{
-//			return Activator.CreateInstance( _typeToCreate );
-//		}
-
 		
 		/// <summary>
 		/// Create a new instance with the specified parameters

@@ -194,11 +194,18 @@
     </Compile>
     <Compile Include="Utilities\Objects\ActivatorFactory.cs" />
     <Compile Include="Utilities\Objects\ActivatorObjectFactory.cs" />
+    <Compile Include="Utilities\Objects\BaseBuilder.cs" />
+    <Compile Include="Utilities\Objects\DelegateAObjectFactory.cs" />
+    <Compile Include="Utilities\Objects\DelegateObjectFactory.cs" />
     <Compile Include="Utilities\Objects\EmitObjectFactory.cs" />
     <Compile Include="Utilities\Objects\FactoryBuilder.cs" />
     <Compile Include="Utilities\Objects\IFactory.cs" />
     <Compile Include="Utilities\Objects\IObjectFactory.cs" />
+    <Compile Include="Utilities\Objects\Members\BaseAccessor.cs" />
     <Compile Include="Utilities\Objects\Members\BaseEmitAccessor.cs" />
+    <Compile Include="Utilities\Objects\Members\DelegateFieldAccessor.cs" />
+    <Compile Include="Utilities\Objects\Members\DelegateObjectFactory.cs" />
+    <Compile Include="Utilities\Objects\Members\DelegatePropertyAccessor.cs" />
     <Compile Include="Utilities\Objects\Members\EmitFieldAccessor.cs" />
     <Compile Include="Utilities\Objects\Members\EmitPropertyAccessor.cs" />
     <Compile Include="Utilities\Objects\Members\IMemberAccessor.cs" />

@@ -18,9 +18,10 @@ namespace IBatisNet.Common.Test.Domain
 	/// </summary>
 	public class Property
 	{
+        public int publicInt = int.MinValue;
+
 		private string _string = string.Empty;
         private int _int = int.MinValue;
-        public int publicInt = int.MinValue;
 		private DateTime _dateTime = DateTime.MinValue;
 		private decimal _decimal = decimal.MinValue;
 		private sbyte _sbyte = sbyte.MinValue;

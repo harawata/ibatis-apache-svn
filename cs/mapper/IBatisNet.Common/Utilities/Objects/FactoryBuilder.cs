@@ -36,10 +36,12 @@ namespace IBatisNet.Common.Utilities.Objects
 	/// </summary>
 	public class FactoryBuilder
 	{
-		private ModuleBuilder _moduleBuilder = null;
 		private const BindingFlags VISIBILITY = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-
-		/// <summary>
+        private const MethodAttributes CREATE_METHOD_ATTRIBUTES = MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.NewSlot | MethodAttributes.Virtual | MethodAttributes.Final;
+ 		
+        private ModuleBuilder _moduleBuilder = null;
+       
+        /// <summary>
 		/// constructor
 		/// </summary>
 		public FactoryBuilder()
@@ -58,7 +60,7 @@ namespace IBatisNet.Common.Utilities.Objects
 		/// </summary>
 		/// <param name="typeToCreate">The type instance to build</param>
 		/// <param name="types">The types of the constructor arguments</param>
-		/// <returns>Returns a new instance factory</returns>
+        /// <returns>Returns a new <see cref="IFactory"/> instance.</returns>
 		public IFactory CreateFactory(Type typeToCreate, Type[] types)
 		{
 			Type innerType = CreateFactoryType(typeToCreate, types);
@@ -67,12 +69,12 @@ namespace IBatisNet.Common.Utilities.Objects
 		}
 
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="typeToCreate"></param>
-		/// <param name="types"></param>
-		/// <returns></returns>
+        /// <summary>
+        /// Creates a <see cref="IFactory"/>.
+        /// </summary>
+        /// <param name="typeToCreate">The type instance to create.</param>
+        /// <param name="types">The types.</param>
+        /// <returns>The <see cref="IFactory"/></returns>
 		private Type CreateFactoryType(Type typeToCreate, Type[] types)
 		{
 			string typesName = string.Empty;
@@ -86,13 +88,16 @@ namespace IBatisNet.Common.Utilities.Objects
 			return typeBuilder.CreateType();
 		}
 
-		
-		private MethodAttributes createMethodAttributes = MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.NewSlot | MethodAttributes.Virtual | MethodAttributes.Final;
-
+        /// <summary>
+        /// Implements the create instance.
+        /// </summary>
+        /// <param name="typeBuilder">The type builder.</param>
+        /// <param name="typeToCreate">The type to create.</param>
+        /// <param name="argumentTypes">The argument types.</param>
 		private void ImplementCreateInstance(TypeBuilder typeBuilder, Type typeToCreate, Type[] argumentTypes )
 		{
 			// object CreateInstance(object[] parameters);
-			MethodBuilder meth = typeBuilder.DefineMethod("CreateInstance", createMethodAttributes, typeof (object), new Type[]{typeof(object[])} );
+			MethodBuilder meth = typeBuilder.DefineMethod("CreateInstance", CREATE_METHOD_ATTRIBUTES, typeof (object), new Type[]{typeof(object[])} );
 			ILGenerator il = meth.GetILGenerator();
 
 			// Add test if contructeur not public
@@ -143,39 +148,6 @@ namespace IBatisNet.Common.Utilities.Objects
 			}   
 		 }   
 
-		/// <summary>  
-		/// Helper class that returns appropriate boxing opcode based on type  
-		/// </summary>  
-		/// <remarks>From Spring.NET</remarks>
-		internal class BoxingOpCodes  
-		{  
-			private static IDictionary boxingOpCodes;  
- 
-			static BoxingOpCodes()  
-			{  
-				boxingOpCodes = new Hashtable();  
-				boxingOpCodes[typeof(sbyte)] = OpCodes.Ldind_I1;  
-				boxingOpCodes[typeof(short)] = OpCodes.Ldind_I2;  
-				boxingOpCodes[typeof(int)] = OpCodes.Ldind_I4;  
-				boxingOpCodes[typeof(long)] = OpCodes.Ldind_I8;  
-				boxingOpCodes[typeof(byte)] = OpCodes.Ldind_U1;  
-				boxingOpCodes[typeof(ushort)] = OpCodes.Ldind_U2;  
-				boxingOpCodes[typeof(uint)] = OpCodes.Ldind_U4;  
-				boxingOpCodes[typeof(ulong)] = OpCodes.Ldind_I8;  
-				boxingOpCodes[typeof(float)] = OpCodes.Ldind_R4;  
-				boxingOpCodes[typeof(double)] = OpCodes.Ldind_R8;  
-				boxingOpCodes[typeof(char)] = OpCodes.Ldind_U2;  
-				boxingOpCodes[typeof(bool)] = OpCodes.Ldind_I1;  
-			}  
- 
-			public static OpCode GetOpCode(Type type)  
-			{  
-				if (type.IsEnum)  
-				{  
-					type = Enum.GetUnderlyingType(type);  
-				}  
-				return (OpCode) boxingOpCodes[type];  
-			}  
-		} 
+
 	}
 }

@@ -345,6 +345,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Utilities\Objects\Members\BaseAccessor.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Utilities\Objects\Members\BaseEmitAccessor.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

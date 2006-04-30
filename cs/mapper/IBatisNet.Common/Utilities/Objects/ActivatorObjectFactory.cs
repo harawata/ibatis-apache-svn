@@ -28,7 +28,7 @@ using System;
 namespace IBatisNet.Common.Utilities.Objects
 {
 	/// <summary>
-	/// A factory that can create objects 
+    /// A <see cref="IObjectFactory"/> implementation that can create objects 
 	/// via Activator.CreateInstance
 	/// </summary>
 	public class ActivatorObjectFactory : IObjectFactory
@@ -37,11 +37,11 @@ namespace IBatisNet.Common.Utilities.Objects
 		#region IObjectFactory members
 
 		/// <summary>
-		/// Create a new factory instance for a given type
+        /// Create a new see <cref="IFactory"/> instance for a given type
 		/// </summary>
 		/// <param name="typeToCreate">The type instance to build</param>
 		/// <param name="types">The types of the constructor arguments</param>
-		/// <returns>Returns a new instance factory</returns>
+        /// <returns>Returns a new see <cref="IFactory"/> instance.</returns>
 		public IFactory CreateFactory(Type typeToCreate, Type[] types)
 		{
 			return new ActivatorFactory( typeToCreate );

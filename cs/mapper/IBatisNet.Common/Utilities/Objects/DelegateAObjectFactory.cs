@@ -26,35 +26,36 @@
 using System;
 using System.Collections;
 using System.Collections.Specialized;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace IBatisNet.Common.Utilities.Objects
 {
-	/// <summary>
-    /// A <see cref="IObjectFactory"/> implementation that can create objects via IL code
-	/// </summary>
-	public sealed class EmitObjectFactory : IObjectFactory
-	{
-		private IDictionary _cachedfactories = new HybridDictionary();
-		private FactoryBuilder _factoryBuilder = null;
+    /// <summary>
+    /// A <see cref="IObjectFactory"/> implementation that can create objects via DynamicMethod.
+    /// </summary>
+    public sealed class DelegateAObjectFactory : IObjectFactory
+    {
+        private IDictionary _cachedfactories = new HybridDictionary();
 		private object _padlock = new object();
-        
+
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:EmitObjectFactory"/> class.
+        /// Initializes a new instance of the <see cref="T:DelegateAObjectFactory"/> class.
         /// </summary>
-		public EmitObjectFactory()
+        public DelegateAObjectFactory()
 		{
-			_factoryBuilder = new FactoryBuilder();
 		}
 
 		#region IObjectFactory members
-
-		/// <summary>
+        
+        /// <summary>
         /// Create a new <see cref="IFactory"/> instance for a given type
         /// </summary>
-		/// <param name="typeToCreate">The type instance to build</param>
-		/// <param name="types">The types of the constructor arguments</param>
-        /// <returns>Returns a new <see cref="IFactory"/> instance.</returns>
+        /// <param name="typeToCreate">The type instance to build</param>
+        /// <param name="types">The types of the constructor arguments</param>
+        /// <returns>Returns a new see <cref="IFactory"/> instance.</returns>
+        [MethodImpl(MethodImplOptions.Synchronized)]
 		public IFactory CreateFactory(Type typeToCreate, Type[] types)
 		{
 			string key = GenerateKey(typeToCreate, types);
@@ -67,7 +68,7 @@ namespace IBatisNet.Common.Utilities.Objects
 					factory = _cachedfactories[key] as IFactory;
 					if (factory == null) // double-check
 					{
-						factory = _factoryBuilder.CreateFactory(typeToCreate, types);
+                        factory = new DelegateFactory(typeToCreate, types);
 						_cachedfactories[key] = factory;
 					}
 				}
@@ -96,5 +97,5 @@ namespace IBatisNet.Common.Utilities.Objects
 			return cacheKey.ToString();
 		}
 		#endregion
-	}
+    }
 }

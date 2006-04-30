@@ -28,6 +28,7 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using IBatisNet.Common.Exceptions;
 
 namespace IBatisNet.Common.Utilities.Objects.Members
@@ -48,34 +49,34 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 		private ModuleBuilder _moduleBuilder = null;
 		private object _syncObject = new object();
 
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		/// <param name="allowCodeGeneration"></param>
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:MemberAccessorFactory"/> class.
+        /// </summary>
+        /// <param name="allowCodeGeneration">if set to <c>true</c> [allow code generation].</param>
 		public MemberAccessorFactory(bool allowCodeGeneration)
 		{
 			if (allowCodeGeneration)
-			{
-				AssemblyName assemblyName = new AssemblyName();
+            {
+                // Detect runtime environment and create the appropriate factory
+				if (Environment.Version.Major >= 2)
+				{
+#if dotnet2
+                    _createPropertyAccessor = new CreateMemberPropertyAccessor(CreateDelegatePropertyAccessor);
+                    _createFieldAccessor = new CreateMemberFieldAccessor(CreateDynamicFieldAccessor);
+#endif
+				}
+				else
+				{
+                AssemblyName assemblyName = new AssemblyName();
 				assemblyName.Name = "iBATIS.FastPropertyAccessor"+HashCodeProvider.GetIdentityHashCode(this).ToString();
 
 				// Create a new assembly with one module
 				_assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
 				_moduleBuilder = _assemblyBuilder.DefineDynamicModule(assemblyName.Name + ".dll");
-
-				// Detect runtime environment and create the appropriate factory
-				if (Environment.Version.Major >= 2)
-				{
-					// To Do : a custom factory for .NET V2 ?
-					// optimize with DynamicMethod or Delegate.CreateDelegate
-					_createPropertyAccessor = new CreateMemberPropertyAccessor(CreateEmitPropertyAccessor);
-                    _createFieldAccessor = new CreateMemberFieldAccessor(CreateFieldAccessor);
-					
-				}
-				else
-				{
-					_createPropertyAccessor = new CreateMemberPropertyAccessor(CreateEmitPropertyAccessor);
-                    _createFieldAccessor = new CreateMemberFieldAccessor(CreateFieldAccessor);
+				
+                _createPropertyAccessor = new CreateMemberPropertyAccessor(CreateEmitPropertyAccessor);
+                _createFieldAccessor = new CreateMemberFieldAccessor(CreateFieldAccessor);
 				}
 			}
 			else
@@ -92,6 +93,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 		/// <param name="targetType">Target object type.</param>
 		/// <param name="name">Field or Property name.</param>
 		/// <returns>null if the generation fail</returns>
+		[MethodImpl(MethodImplOptions.Synchronized)]
 		public IMemberAccessor CreateMemberAccessor(Type targetType, string name)
 		{
 			string key = targetType.FullName+name;
@@ -128,7 +130,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 							else
 							{
 								throw new ProbeException(
-									string.Format("No property or field named \"{0}\" exist for type "
+									string.Format("No property or field named \"{0}\" exists for type "
 									+ "{1}.",name, targetType));
 							}
 						}
@@ -141,10 +143,40 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 				return memberAccessor;
 			}
 		}
+#if dotnet2
+        /// <summary>
+        /// Create a Dynamic IMemberAccessor instance for a property
+        /// </summary>
+        /// <param name="targetType">Target object type.</param>
+        /// <param name="propertyName">Property name.</param>
+        /// <returns>null if the generation fail</returns>
+        private IMemberAccessor CreateDelegatePropertyAccessor(Type targetType, string propertyName)
+        {
+            return new DelegatePropertyAccessor(targetType, propertyName);
+        }
 
-		
+        /// <summary>
+        /// Create a Dynamic IMemberAccessor instance for a field
+        /// </summary>
+        /// <param name="targetType">Target object type.</param>
+        /// <param name="fieldName">Property name.</param>
+        /// <returns>null if the generation fail</returns>
+        private IMemberAccessor CreateDynamicFieldAccessor(Type targetType, string fieldName)
+        {
+            FieldInfo fieldInfo = targetType.GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
+
+            if (fieldInfo.IsPublic)
+            {
+                return new DelegateFieldAccessor(targetType, fieldName);
+            }
+            else
+            {
+                return new ReflectionFieldAccessor(targetType, fieldName);
+            }
+        }
+#endif
 		/// <summary>
-		/// Create a ILPropertyAccessor object
+        /// Create an IL IMemberAccessor instance for a property
 		/// </summary>
 		/// <param name="targetType">Target object type.</param>
 		/// <param name="propertyName">Property name.</param>
@@ -155,7 +187,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 		}
 
 		/// <summary>
-		/// Create a field IMemberAccessor object
+        /// Create a IMemberAccessor instance for a fiedl
 		/// </summary>
 		/// <param name="targetType">Target object type.</param>
 		/// <param name="fieldName">Field name.</param>
@@ -175,7 +207,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 		}
 
 		/// <summary>
-		/// Create a ReflectionPropertyAccessor object
+        /// Create a Reflection IMemberAccessor instance for a property
 		/// </summary>
 		/// <param name="targetType">Target object type.</param>
 		/// <param name="propertyName">Property name.</param>
@@ -186,7 +218,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 		}
 
 		/// <summary>
-		/// Create a ReflectionFieldAccessor object
+        /// Create Reflection IMemberAccessor instance for a field
 		/// </summary>
 		/// <param name="targetType">Target object type.</param>
 		/// <param name="fieldName">field name.</param>

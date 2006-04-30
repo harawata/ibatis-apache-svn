@@ -36,6 +36,8 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 	/// <remarks>Will Throw FieldAccessException on private field</remarks>
 	public sealed class EmitFieldAccessor : BaseEmitAccessor
 	{
+        private const BindingFlags VISIBILITY = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+
 		/// <summary>
 		/// Creates a new IL field accessor.
 		/// </summary>
@@ -50,7 +52,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 			targetType = targetObjectType;
 			memberName = fieldName;
 
-			FieldInfo fieldInfo = targetType.GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
+            FieldInfo fieldInfo = targetType.GetField(fieldName, VISIBILITY);
 
 			// Make sure the field exists
 			if(fieldInfo == null)
@@ -135,7 +137,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 			// Get an ILGenerator and used it to emit the IL that we want.
 			ILGenerator getIL = getMethod.GetILGenerator();
 
-			FieldInfo targetField = targetType.GetField(memberName, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
+            FieldInfo targetField = targetType.GetField(memberName, VISIBILITY);
 
 			// Emit the IL for get access. 
 			if (targetField != null)
@@ -150,12 +152,12 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 					// returning a reference to the filed value boxed as an object.
 					getIL.Emit(OpCodes.Box, targetField.FieldType);
 				}
+			    getIL.Emit(OpCodes.Ret); 
 			}
 			else
 			{
 				getIL.ThrowException(typeof(MissingMethodException));
 			}
-			getIL.Emit(OpCodes.Ret); 
 			#endregion
 
 			#region Emit Set
@@ -186,12 +188,12 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 					{
 						setIL.Emit(OpCodes.Ldobj, baseMemberType);
 					}
+				    setIL.Emit(OpCodes.Stfld, targetField); //Set the field value
 				}
 				else
 				{
 					setIL.Emit(OpCodes.Castclass, baseMemberType); //Cast class
 				}
-				setIL.Emit(OpCodes.Stfld, targetField); //Set the field value
 			}
 			else
 			{

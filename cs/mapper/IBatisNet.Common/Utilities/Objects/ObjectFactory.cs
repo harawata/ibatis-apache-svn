@@ -45,10 +45,9 @@ namespace IBatisNet.Common.Utilities.Objects
 				// Detect runtime environment and create the appropriate factory
 				if (Environment.Version.Major >= 2)
 				{
-					// To Do : a custom factory for .NET V2
-					// optimize with DynamicMethod or Delegate.CreateDelegate
-					_objectFactory = new EmitObjectFactory();
-					
+#if dotnet2
+					_objectFactory = new DelegateAObjectFactory();
+#endif					
 				}
 				else
 				{
