@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-Name: Abator UI Plug-in
 Bundle-SymbolicName: org.apache.ibatis.abator.ui
-Bundle-Version: 0.6.2
+Bundle-Version: 0.6.5
 Bundle-ClassPath: abatorui.jar
 Bundle-Activator: org.apache.ibatis.abator.ui.plugin.AbatorUIPlugin
 Bundle-Localization: plugin

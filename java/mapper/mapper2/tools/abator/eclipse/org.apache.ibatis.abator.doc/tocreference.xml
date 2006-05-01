@@ -11,9 +11,13 @@
 		<topic label="org.apache.ibatis.abator.internal" href="html/reference/javadoc/org/apache/ibatis/abator/internal/package-summary.html" />
 		<topic label="org.apache.ibatis.abator.internal.db" href="html/reference/javadoc/org/apache/ibatis/abator/internal/db/package-summary.html" />
 		<topic label="org.apache.ibatis.abator.internal.java" href="html/reference/javadoc/org/apache/ibatis/abator/internal/java/package-summary.html" />
+		<topic label="org.apache.ibatis.abator.internal.java.dao" href="html/reference/javadoc/org/apache/ibatis/abator/internal/java/dao/package-summary.html" />
+		<topic label="org.apache.ibatis.abator.internal.java.model" href="html/reference/javadoc/org/apache/ibatis/abator/internal/java/model/package-summary.html" />
+		<topic label="org.apache.ibatis.abator.internal.rules" href="html/reference/javadoc/org/apache/ibatis/abator/internal/rules/package-summary.html" />
 		<topic label="org.apache.ibatis.abator.internal.sqlmap" href="html/reference/javadoc/org/apache/ibatis/abator/internal/sqlmap/package-summary.html" />
 		<topic label="org.apache.ibatis.abator.internal.types" href="html/reference/javadoc/org/apache/ibatis/abator/internal/types/package-summary.html" />
 		<topic label="org.apache.ibatis.abator.internal.util" href="html/reference/javadoc/org/apache/ibatis/abator/internal/util/package-summary.html" />
+		<topic label="org.apache.ibatis.abator.internal.util.messages" href="html/reference/javadoc/org/apache/ibatis/abator/internal/util/messages/package-summary.html" />
 		<topic label="org.apache.ibatis.abator.ui" href="html/reference/javadoc/org/apache/ibatis/abator/ui/package-summary.html" />
 		<topic label="org.apache.ibatis.abator.ui.actions" href="html/reference/javadoc/org/apache/ibatis/abator/ui/actions/package-summary.html" />
 		<topic label="org.apache.ibatis.abator.ui.editors" href="html/reference/javadoc/org/apache/ibatis/abator/ui/editors/package-summary.html" />

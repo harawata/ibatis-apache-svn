@@ -1,8 +1,23 @@
 -------------------------------------------------------------------------------
-Version 0.6.2:
+Version 0.6.5:
 1. Added support for specifying rootClass for the model objects and
-   rootInterface for the DAO interface
-2. Refactored code generation rules and added lots of documentation for
+   rootInterface for the DAO interface.  To use, specify the "rootClass"
+   optional property on the <javaModelGenerator> element, or the
+   "rootInterface" optional property on the <daoGenerator> element.
+   
+   For example:
+     <javaModelGenerator ... >
+       <property name="rootClass" value="com.somedomain.SomeClass" />
+     </javaModelGenerator>
+   
+     <daoGenerator ... >
+       <property name="rootInterface" value="com.somedomain.SomeInterface" />
+     </daoGenerator>
+     
+   Note that Abator uses these values "as is" - no checking is done to 
+   validate their existance or validity.
+   
+2. Refactored code generation rules and added better documentation for
    the rules (see new org.apache.ibatis.abator.internal.rules package)
 3. Ensure that property names are valid for iBATIS even if the user
    specifies "useActualColumnNames"

@@ -5,13 +5,13 @@
 </head>
 <body>
 <h1>Introduction to Abator</h1>
-<p><b>Abator:</b> <i>One who abates a nuisance.</i> 
+<p><b>Abator:</b> <i>One who abates a nuisance.</i>
 <font size="-2">(<a href="http://dictionary.reference.com/search?q=abator">
 http://dictionary.reference.com/search?q=abator</a>)</font></p>
 
 <p>Abator is a code generator for <a href="http://ibatis.apache.org">iBATIS</a>.
  Abator will introspect a database
- table (or many tables) and will generate iBATIS artifacts that can be used to 
+ table (or many tables) and will generate iBATIS artifacts that can be used to
  access the table(s).  This lessens the initial nuisance of setting up objects and configuration
  files to interact with database tables.  Abator seeks to make a major impact on the large
 percentage of database operations that are simple CRUD (Create, Retrieve, Update, Delete).  You will
@@ -19,16 +19,49 @@ percentage of database operations that are simple CRUD (Create, Retrieve, Update
 </p>
 <p>Abator will generate:</p>
 <ul>
-  <li>SqlMap XML Files</li>
-  <li>Java Classes to match the primary key and fields of the table(s)</li>
-  <li>DAO Classes that use the above objects (optional)</li>
+  <li>Java POJOs that match the table structure including:
+    <ul>
+      <li>a class to match the primary key of the table (if there is a primary key)</li>
+      <li>a class to match the non-primary key fields of the table (except BLOB fields)</li>
+      <li>a class to include the BLOB fields of a table (if the table has BLOB fields)</li>
+      <li>a class to hold indicators for "Query By Example" functionality</li>
+    </ul>
+    <p>There is an inheritance relationship between these classes as appropriate.</p>
+  </li>
+  <li>iBATIS Compatible SQL Map XML Files.  Abator generates SQL for simple
+   CRUD functions on each table in a configuration.  The generated SQL
+   statements include:
+    <ul>
+      <li>insert</li>
+      <li>update by primary key</li>
+      <li>delete by primary key</li>
+      <li>delete by example (using a "query by example" strategy)</li>
+      <li>select by primary key</li>
+      <li>select by example (using a "query by example" strategy)</li>
+    </ul>
+   <p>There are different variations of these statements depending on the
+   structure of the table (e.g. - if the table doesn't have a primary key,
+   then Abator will not generate an update by primary key function, etc.)</p>
+  </li>
+  <li>DAO interface and implementation classes that make appropriate use of the
+    above objects.  The generation of DAO classes is optional.  Abator will
+    generate DAOs of the following types:
+    <ul>
+      <li>IBATIS: for the iBATIS DAO Framework (an optional part of iBATIS)</li>
+      <li>SPRING: for the SpringFramework</li>
+      <li>GENERIC-CI: for DAOs that only use the iBATIS SQL mapping API.  In this
+          DAO the SQlMapClient must be supplied through constructor injection.</li>
+      <li>GENERIC-SI: for DAOs that only use the iBATIS SQL mapping API.  In this
+          DAO the SQlMapClient must be supplied through setter injection.</li>
+    </ul>
+  </li>
 </ul>
 
 <p>Abator can be run iteratively multiple time as the database design matures
 - and any hand coded additions to generated Java classes or SqlMap files will remain undisturbed.</p>
 
 <h2>Running Abator</h2>
-<p>Within Eclipse, Abator can be run in several ways:</p>
+<p>Abator can be run in several ways:</p>
 <ul>
   <li>Through a popup menu item that is added to all Abator configuration files</li>
   <li>Through an Eclipse integrated Ant task</li>

@@ -2,7 +2,7 @@
 <feature
       id="org.apache.ibatis.abator"
       label="Abator Code Generator for iBATIS"
-      version="0.6.2"
+      version="0.6.5"
       provider-name="ibatis.apache.org">
 
    <install-handler/>
@@ -232,18 +232,18 @@ END OF TERMS AND CONDITIONS
          id="org.apache.ibatis.abator.doc"
          download-size="0"
          install-size="0"
-         version="0.6.2"/>
+         version="0.6.5"/>
 
    <plugin
          id="org.apache.ibatis.abator.ui"
          download-size="0"
          install-size="0"
-         version="0.6.2"/>
+         version="0.6.5"/>
 
    <plugin
          id="org.apache.ibatis.abator.core"
          download-size="0"
          install-size="0"
-         version="0.6.1"/>
+         version="0.6.5"/>
 
 </feature>
