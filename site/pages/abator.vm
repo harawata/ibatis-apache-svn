@@ -30,6 +30,10 @@
  to the Java user list.</p>
 
 <h3>Abator News</h3>
+<p>(April 30, 2006) <b>Version 0.6.5 is that last version of the Eclipse plugin that will be
+   compatible with Eclipse 3.0 or the Rational 6.0 Tools.</b></p>
+<p>(April 30, 2006) Updated Abator and the Eclipse plugin to 0.6.5  Several minor features and
+   bug fixes are included.  See the release notes for more information.</p>
 <p>(February 20, 2006) Updated the Eclipse plugin to 0.6.2  This fixes the problem where Abator
    conflicted with other XML enabled plugins like oXygen in Eclipse 3.1.</p>
 <p>(February 17, 2006) Updated the Eclipse plugin to 0.6.1  The plugin now has
@@ -40,8 +44,8 @@
 
 <h2>Standalone Jar Download</h2>
 <ul>
-  <li><a href="http://cvs.apache.org/builds/ibatis/alpha/abator-0.6.1-119.zip">
-      Abator 0.6.1 w/Binaries and Source</a>
+  <li><a href="http://cvs.apache.org/builds/ibatis/alpha/abator-0.6.5-124.zip">
+      Abator 0.6.5 w/Binaries and Source</a>
   </li>
 </ul>
 <p>Use this download to run Abator Standalone or with Ant.  
@@ -84,7 +88,7 @@
 <h3>Manual Eclipse Install</h3>
 <p>The automatic install is much preferred, but you can also install Abator manually if you
  desire. To install manually, download the file
- <a href="http://cvs.apache.org/builds/ibatis/alpha/AbatorForEclipse0.6.2.zip">AbatorForEclipse0.6.2.zip</a>
+ <a href="http://cvs.apache.org/builds/ibatis/alpha/AbatorForEclipse0.6.5.zip">AbatorForEclipse0.6.5.zip</a>
  and unzip
  the file to some convenient location.  Then follow these steps in Eclipse:</p>
 <ol>
