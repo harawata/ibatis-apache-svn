@@ -35,25 +35,11 @@ namespace IBatisNet.DataMapper.Scope
 	/// </summary>
 	public interface IScope
 	{
+
 		/// <summary>
 		///  Get the error context
 		/// </summary>
 		ErrorContext ErrorContext { get; }
-
-		/// <summary>
-		/// The current TypeHandlerFactory
-		/// </summary>
-		TypeHandlerFactory TypeHandlerFactory { get; }
-
-		/// <summary>
-		/// The factory which build MemberAccessorFactory
-		/// </summary>
-		IMemberAccessorFactory MemberAccessorFactory { get; }
-
-		/// <summary>
-		/// The factory for object
-		/// </summary>
-		IObjectFactory ObjectFactory { get; }
 
 		/// <summary>
 		/// The factory for DataExchange objects

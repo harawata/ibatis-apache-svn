@@ -53,7 +53,7 @@ namespace IBatisNet.DataMapper.DataExchange
 		public override object GetData(ParameterProperty mapping, object parameterObject)
 		{
 			return ObjectProbe.GetMemberValue(parameterObject, mapping.PropertyName,
-				this.DataExchangeFactory.MemberAccessorFactory);
+				this.DataExchangeFactory.AccessorFactory);
 		}
 
 		/// <summary>
@@ -66,7 +66,7 @@ namespace IBatisNet.DataMapper.DataExchange
 		{
 			ObjectProbe.SetMemberValue(target, mapping.PropertyName, dataBaseValue, 
 				this.DataExchangeFactory.ObjectFactory,
-				this.DataExchangeFactory.MemberAccessorFactory);
+				this.DataExchangeFactory.AccessorFactory);
 		}
 
 		/// <summary>
@@ -80,7 +80,7 @@ namespace IBatisNet.DataMapper.DataExchange
 		{
 			ObjectProbe.SetMemberValue(target, mapping.PropertyName, dataBaseValue, 
 				this.DataExchangeFactory.ObjectFactory,
-				this.DataExchangeFactory.MemberAccessorFactory);
+				this.DataExchangeFactory.AccessorFactory);
 		}
 
 		#endregion

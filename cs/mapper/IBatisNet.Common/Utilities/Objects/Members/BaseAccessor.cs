@@ -33,28 +33,15 @@ namespace IBatisNet.Common.Utilities.Objects.Members
     /// <summary>
     /// Abstract base class for member accessor
     /// </summary>
-    public abstract class BaseAccessor : IMemberAccessor    
+    public abstract class BaseAccessor    
     {
-        /// <summary>
-        /// The property/field name
-        /// </summary>
-        protected string memberName = string.Empty;
-        /// <summary>
-        /// The property/field type
-        /// </summary>
-        protected Type baseMemberType = null;
-
-        /// <summary>
-        /// The class parent type
-        /// </summary>
-        protected Type targetType = null;
         /// <summary>
         /// The null internal value used by this member type 
         /// </summary>
         protected object nullInternal = null;
 
-        		/// <summary>
-		/// 
+        /// <summary>
+        /// List of type-opCode
 		/// </summary>
 		protected static IDictionary typeToOpcode = new HybridDictionary();
 
@@ -113,47 +100,12 @@ namespace IBatisNet.Common.Utilities.Objects.Members
                     if (type == typeof(DateTime)) { return DateTime.MinValue; }
                     if (type == typeof(Decimal)) { return 0m; }
                     if (type == typeof(Guid)) { return Guid.Empty; }
-                    if (type == typeof(TimeSpan)) { return TimeSpan.MinValue; }
+                    if (type == typeof(TimeSpan)) { return new TimeSpan(0, 0, 0); }
                 }
             }
 
             return null;
         }
 
-        #region IMemberAccessor Members
-
-        /// <summary>
-        /// Gets the member name.
-        /// </summary>
-        /// <value></value>
-        public string Name
-        {
-            get { return memberName; }
-        }
-
-        /// <summary>
-        /// Gets the type of this member (field or property).
-        /// </summary>
-        /// <value></value>
-        public Type MemberType
-        {
-            get { return baseMemberType; }
-        }
-
-        /// <summary>
-        /// Gets the value stored in the field/property for the specified target.
-        /// </summary>
-        /// <param name="target">Object to retrieve the field/property from.</param>
-        /// <returns>Value.</returns>
-        public abstract object Get(object target);
-
-        /// <summary>
-        /// Sets the value for the field/property of the specified target.
-        /// </summary>
-        /// <param name="target">Object to set the field/property on.</param>
-        /// <param name="value">Value.</param>
-        public abstract void Set(object target, object value);
-
-        #endregion
     }
 }

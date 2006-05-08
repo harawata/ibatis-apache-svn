@@ -213,11 +213,11 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 				ITypeHandler handler = null;
 				if (parameterClassType == null) 
 				{
-					handler = scope.TypeHandlerFactory.GetUnkownTypeHandler();
+					handler = scope.DataExchangeFactory.TypeHandlerFactory.GetUnkownTypeHandler();
 				} 
 				else 
 				{
-					handler = ResolveTypeHandler( scope.TypeHandlerFactory, 
+					handler = ResolveTypeHandler( scope.DataExchangeFactory.TypeHandlerFactory, 
 						parameterClassType, mapping.PropertyName,  
 						mapping.CLRType, mapping.DbType );
 				}
@@ -261,11 +261,11 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 					ITypeHandler handler = null;
 					if (parameterClassType == null) 
 					{
-						handler = scope.TypeHandlerFactory.GetUnkownTypeHandler();
+						handler = scope.DataExchangeFactory.TypeHandlerFactory.GetUnkownTypeHandler();
 					} 
 					else 
 					{
-						handler = ResolveTypeHandler(scope.TypeHandlerFactory, parameterClassType, propertyName, null, dBType);
+                        handler = ResolveTypeHandler(scope.DataExchangeFactory.TypeHandlerFactory, parameterClassType, propertyName, null, dBType);
 					}
 					mapping.TypeHandler = handler;
 					mapping.Initialize( scope, parameterClassType );
@@ -291,11 +291,11 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 					ITypeHandler handler = null;
 					if (parameterClassType == null) 
 					{
-						handler = scope.TypeHandlerFactory.GetUnkownTypeHandler();
+                        handler = scope.DataExchangeFactory.TypeHandlerFactory.GetUnkownTypeHandler();
 					} 
 					else 
 					{
-						handler = ResolveTypeHandler(scope.TypeHandlerFactory, parameterClassType, propertyName, null, dBType);
+                        handler = ResolveTypeHandler(scope.DataExchangeFactory.TypeHandlerFactory, parameterClassType, propertyName, null, dBType);
 					}
 					mapping.TypeHandler = handler;
 					mapping.Initialize( scope, parameterClassType );
@@ -311,11 +311,11 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 				ITypeHandler handler = null;
 				if (parameterClassType == null) 
 				{
-					handler = scope.TypeHandlerFactory.GetUnkownTypeHandler();
+                    handler = scope.DataExchangeFactory.TypeHandlerFactory.GetUnkownTypeHandler();
 				} 
 				else 
 				{
-					handler = ResolveTypeHandler(scope.TypeHandlerFactory, parameterClassType, token, null, null);
+                    handler = ResolveTypeHandler(scope.DataExchangeFactory.TypeHandlerFactory, parameterClassType, token, null, null);
 				}
 				mapping.TypeHandler = handler;
 				mapping.Initialize( scope, parameterClassType );

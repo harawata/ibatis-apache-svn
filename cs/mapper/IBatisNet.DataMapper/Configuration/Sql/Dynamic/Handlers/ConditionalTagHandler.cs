@@ -1,12 +1,12 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
  * $Revision$
- * $Date$
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -49,11 +49,13 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers
 		public const long NOT_COMPARABLE = long.MinValue;
 		#endregion
 
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		/// <param name="memberAccessorFactory"></param>
-		public ConditionalTagHandler(IMemberAccessorFactory memberAccessorFactory):base(memberAccessorFactory)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConditionalTagHandler"/> class.
+        /// </summary>
+        /// <param name="accessorFactory">The accessor factory.</param>
+        public ConditionalTagHandler(AccessorFactory accessorFactory)
+            : base(accessorFactory)
 		{
 		}
 
@@ -117,7 +119,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers
 			Type type = null;
 			if (propertyName != null && propertyName.Length > 0) 
 			{
-				value1 = ObjectProbe.GetMemberValue(parameterObject, propertyName, MemberAccessorFactory);
+				value1 = ObjectProbe.GetMemberValue(parameterObject, propertyName, this.AccessorFactory);
 				type = value1.GetType();
 			} 
 			else 
@@ -134,7 +136,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers
 			}
 			if (comparePropertyName != null && comparePropertyName.Length > 0) 
 			{
-				object value2 = ObjectProbe.GetMemberValue(parameterObject, comparePropertyName, MemberAccessorFactory);
+                object value2 = ObjectProbe.GetMemberValue(parameterObject, comparePropertyName, this.AccessorFactory);
 				return CompareValues(type, value1, value2);
 			} 
 			else if (compareValue != null && compareValue != "") 

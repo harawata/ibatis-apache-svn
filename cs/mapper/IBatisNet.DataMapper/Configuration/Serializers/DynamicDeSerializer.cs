@@ -61,7 +61,7 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 		/// <returns></returns>
 		public SqlTag Deserialize(XmlNode node)
 		{
-			Dynamic dynamic = new Dynamic(_configScope.MemberAccessorFactory);
+			Dynamic dynamic = new Dynamic(_configScope.DataExchangeFactory.AccessorFactory);
 
 			NameValueCollection prop = NodeUtils.ParseAttributes(node, _configScope.Properties);
 			dynamic.Prepend = NodeUtils.GetStringAttribute(prop, "prepend");

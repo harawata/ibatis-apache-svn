@@ -1,12 +1,12 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
  * $Revision$
- * $Date$
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -106,7 +106,7 @@ namespace IBatisNet.DataMapper
 		/// </summary>
 		private SessionHolder _sessionHolder = null;
         private IObjectFactory _objectFactory = null;
-        private IMemberAccessorFactory _memberAccessorFactory = null;
+        private AccessorFactory _accessorFactory = null;
         private DataExchangeFactory _dataExchangeFactory = null;
 		#endregion
 
@@ -157,7 +157,7 @@ namespace IBatisNet.DataMapper
 		}
 
         /// <summary>
-        /// The factory for object
+        /// The meta factory for object factory
         /// </summary>
         public IObjectFactory ObjectFactory
         {
@@ -165,11 +165,11 @@ namespace IBatisNet.DataMapper
         }
 
         /// <summary>
-        /// The factory which build IMemberAccessor
+        /// The factory which build <see cref="IAccessor"/>
         /// </summary>
-        public IMemberAccessorFactory MemberAccessorFactory
+        public AccessorFactory AccessorFactory
         {
-            get { return _memberAccessorFactory; }
+            get { return _accessorFactory; }
         }
 
 		/// <summary>
@@ -184,17 +184,21 @@ namespace IBatisNet.DataMapper
 		#endregion
 
 		#region Constructor (s) / Destructor
-		/// <summary>
-		/// Create a new SqlMap
-		/// </summary>
-        /// <param name="objectFactory"></param>
-        /// <param name="memberAccessorFactory"></param>
-        internal SqlMapper(IObjectFactory objectFactory, IMemberAccessorFactory memberAccessorFactory) 
+
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SqlMapper"/> class.
+        /// </summary>
+        /// <param name="objectFactory">The object factory.</param>
+        /// <param name="accessorFactory">The accessor factory.</param>
+        internal SqlMapper(IObjectFactory objectFactory,
+            AccessorFactory accessorFactory) 
 		{
             _typeHandlerFactory = new TypeHandlerFactory();
             _objectFactory = objectFactory;
-            _memberAccessorFactory = memberAccessorFactory;
-            _dataExchangeFactory = new DataExchangeFactory(_typeHandlerFactory, _objectFactory, _memberAccessorFactory);
+            _accessorFactory = accessorFactory;
+
+            _dataExchangeFactory = new DataExchangeFactory(_typeHandlerFactory, _objectFactory, accessorFactory);
 			_id = HashCodeProvider.GetIdentityHashCode(this).ToString();
 			_sessionHolder = new SessionHolder(_id);
 		}
@@ -1446,15 +1450,15 @@ namespace IBatisNet.DataMapper
 		/// <summary>
 		/// Gets a MappedStatement by name
 		/// </summary>
-		/// <param name="name"> The name of the statement</param>
+		/// <param name="id"> The id of the statement</param>
 		/// <returns> The MappedStatement</returns>
-		public IMappedStatement GetMappedStatement(string name) 
+		public IMappedStatement GetMappedStatement(string id) 
 		{
-			if (_mappedStatements.Contains(name) == false) 
+			if (_mappedStatements.Contains(id) == false) 
 			{
-				throw new DataMapperException("This SQL map does not contain a MappedStatement named " + name);
+				throw new DataMapperException("This SQL map does not contain a MappedStatement named " + id);
 			}
-			return (IMappedStatement) _mappedStatements[name];
+			return (IMappedStatement) _mappedStatements[id];
 		}
 
 		/// <summary>

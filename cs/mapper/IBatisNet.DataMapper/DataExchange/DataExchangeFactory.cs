@@ -42,7 +42,7 @@ namespace IBatisNet.DataMapper.DataExchange
 	{
 		private TypeHandlerFactory _typeHandlerFactory = null;
 		private IObjectFactory _objectFactory = null;
-		private IMemberAccessorFactory _memberAccessorFactory = null;
+        private AccessorFactory _accessorFactory = null;
 
 		private IDataExchange _primitiveDataExchange = null;
 		private IDataExchange _complexDataExchange = null;
@@ -66,25 +66,27 @@ namespace IBatisNet.DataMapper.DataExchange
 		}
 		
 		/// <summary>
-		/// The factory which build IMemberAccessor
+        /// The factory which build <see cref="ISetAccessor"/>
 		/// </summary>
-		public IMemberAccessorFactory MemberAccessorFactory
+        public AccessorFactory AccessorFactory
 		{
-			get{ return _memberAccessorFactory; }
+            get { return _accessorFactory; }
 		}
 
-		/// <summary>
-		/// Constructor for the factory
-		/// </summary>
-		/// <param name="typeHandlerFactory">A type handler factory for the factory</param>
-		/// <param name="memberAccessorFactory"></param>
-		/// <param name="objectFactory"></param>
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataExchangeFactory"/> class.
+        /// </summary>
+        /// <param name="typeHandlerFactory">The type handler factory.</param>
+        /// <param name="objectFactory">The object factory.</param>
+        /// <param name="accessorFactory">The accessor factory.</param>
 		public DataExchangeFactory(TypeHandlerFactory typeHandlerFactory,
-			IObjectFactory objectFactory, IMemberAccessorFactory memberAccessorFactory)
+			IObjectFactory objectFactory,
+            AccessorFactory accessorFactory)
 		{
 			_objectFactory = objectFactory;
 			_typeHandlerFactory = typeHandlerFactory;
-			_memberAccessorFactory = memberAccessorFactory;
+            _accessorFactory = accessorFactory;
 
 			_primitiveDataExchange = new PrimitiveDataExchange(this);
 			_complexDataExchange = new ComplexDataExchange(this);

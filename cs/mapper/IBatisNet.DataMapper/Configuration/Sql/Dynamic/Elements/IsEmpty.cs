@@ -1,12 +1,12 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
  * $Revision$
- * $Date$
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,12 +40,14 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements
 	public class IsEmpty : BaseTag
 	{
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public IsEmpty(IMemberAccessorFactory memberAccessorFactory)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IsEmpty"/> class.
+        /// </summary>
+        /// <param name="accessorFactory">The accessor factory.</param>
+        public IsEmpty(AccessorFactory accessorFactory)
 		{
-			this.Handler = new IsEmptyTagHandler(memberAccessorFactory);
+            this.Handler = new IsEmptyTagHandler(accessorFactory);
 		}
 
 	}

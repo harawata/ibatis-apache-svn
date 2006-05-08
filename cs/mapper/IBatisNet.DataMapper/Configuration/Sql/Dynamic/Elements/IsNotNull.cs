@@ -1,12 +1,12 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
  * $Revision$
- * $Date$
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -38,13 +38,14 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements
 	[XmlRoot("isNotNull", Namespace="http://ibatis.apache.org/mapping")]
 	public class IsNotNull : BaseTag
 	{
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="memberAccessorFactory"></param>
-		public IsNotNull(IMemberAccessorFactory memberAccessorFactory)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IsNotNull"/> class.
+        /// </summary>
+        /// <param name="accessorFactory">The accessor factory.</param>
+        public IsNotNull(AccessorFactory accessorFactory)
 		{
-			this.Handler = new IsNotNullTagHandler(memberAccessorFactory);
+            this.Handler = new IsNotNullTagHandler(accessorFactory);
 		}
 	}
 }

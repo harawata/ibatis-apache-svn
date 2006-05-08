@@ -34,6 +34,8 @@ using System.Xml.Serialization;
 using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.Common.Utilities.Objects.Members;
+using IBatisNet.DataMapper.MappedStatements.ArgumentStrategy;
+using IBatisNet.DataMapper.MappedStatements.PropertyStrategy;
 using IBatisNet.DataMapper.Scope;
 using IBatisNet.DataMapper.TypeHandlers;
 
@@ -59,7 +61,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 
 		#region Fields
 		[NonSerialized]
-		private IMemberAccessor _memberAccessor = null;
+		private ISetAccessor _setAccessor = null;
 		[NonSerialized]
 		private string _nullValue = null;
 		[NonSerialized]
@@ -86,9 +88,31 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		private string _callBackName= string.Empty;
 		[NonSerialized]
 		private bool _isComplexMemberName = false;
+		[NonSerialized]
+		private IPropertyStrategy _propertyStrategy = null;
 		#endregion
 
 		#region Properties
+
+		/// <summary>
+		/// Sets or gets the <see cref="IArgumentStrategy"/> used to fill the object property.
+		/// </summary>
+		[XmlIgnore]
+		public virtual IArgumentStrategy ArgumentStrategy
+		{
+			set { throw new NotImplementedException("Valid on ArgumentProperty") ; }
+			get { throw new NotImplementedException("Valid on ArgumentProperty") ; }
+		}
+
+		/// <summary>
+		/// Sets or gets the <see cref="IPropertyStrategy"/> used to fill the object property.
+		/// </summary>
+		[XmlIgnore]
+		public IPropertyStrategy PropertyStrategy
+		{
+			set { _propertyStrategy = value ; }
+			get { return _propertyStrategy; }
+		}
 
 		/// <summary>
 		/// Specify the custom type handlers to used.
@@ -195,12 +219,12 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		}
 
 		/// <summary>
-		/// Defines a field/property accessor
+        /// Defines a field/property <see cref="ISetAccessor"/>
 		/// </summary>
 		[XmlIgnore]
-		public IMemberAccessor MemberAccessor
+		public ISetAccessor SetAccessor
 		{
-			get { return _memberAccessor; }
+			get { return _setAccessor; }
 		}
 
 		/// <summary>
@@ -209,7 +233,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		[XmlIgnore]
 		public virtual Type MemberType
 		{
-			get { return _memberAccessor.MemberType; }
+            get { return _setAccessor.MemberType; }
 		}
 
 		/// <summary>
@@ -296,13 +320,13 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			{
 				if (!_isComplexMemberName)
 				{
-					_memberAccessor = configScope.MemberAccessorFactory.CreateMemberAccessor( resultClass, _propertyName);
+                    _setAccessor = configScope.DataExchangeFactory.AccessorFactory.SetAccessorFactory.CreateSetAccessor(resultClass, _propertyName);
 				}
 				else // complex member name FavouriteLineItem.Id
 				{
 					MemberInfo propertyInfo = ObjectProbe.GetMemberInfoForSetter(resultClass, _propertyName);
 					string memberName = _propertyName.Substring( _propertyName.LastIndexOf('.')+1);
-					_memberAccessor = configScope.MemberAccessorFactory.CreateMemberAccessor( propertyInfo.ReflectedType, memberName);
+                    _setAccessor = configScope.DataExchangeFactory.AccessorFactory.SetAccessorFactory.CreateSetAccessor(propertyInfo.ReflectedType, memberName);
 				}
 			}
 
@@ -328,15 +352,15 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		}
 
 		/// <summary>
-		/// Initialize the PropertyInfo of the result property
+		/// Initialize a the result property
 		/// for AutoMapper
 		/// </summary>
-		/// <param name="memberAccessor">An IMemberAccessor.</param>
+        /// <param name="setAccessor">An <see cref="ISetAccessor"/>.</param>
 		/// <param name="typeHandlerFactory"></param>
-		internal void Initialize(TypeHandlerFactory typeHandlerFactory, IMemberAccessor memberAccessor )
+		internal void Initialize(TypeHandlerFactory typeHandlerFactory, ISetAccessor setAccessor )
 		{
-			_memberAccessor = memberAccessor;
-			_typeHandler =  typeHandlerFactory.GetTypeHandler(memberAccessor.MemberType);
+            _setAccessor = setAccessor;
+            _typeHandler = typeHandlerFactory.GetTypeHandler(setAccessor.MemberType);
 		}
 
 		/// <summary>
@@ -362,9 +386,9 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			{
 				if (this.HasNullValue) 
 				{
-					if (_memberAccessor!=null)
+                    if (_setAccessor != null)
 					{
-						value = _typeHandler.ValueOf(_memberAccessor.MemberType, _nullValue);
+                        value = _typeHandler.ValueOf(_setAccessor.MemberType, _nullValue);
 					}
 					else
 					{

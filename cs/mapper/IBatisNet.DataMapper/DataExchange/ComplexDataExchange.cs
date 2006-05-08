@@ -58,7 +58,7 @@ namespace IBatisNet.DataMapper.DataExchange
 			}
 			else
 			{
-				return ObjectProbe.GetMemberValue(parameterObject, mapping.PropertyName, this.DataExchangeFactory.MemberAccessorFactory);
+				return ObjectProbe.GetMemberValue(parameterObject, mapping.PropertyName, this.DataExchangeFactory.AccessorFactory);
 			}
 		}
 
@@ -72,7 +72,7 @@ namespace IBatisNet.DataMapper.DataExchange
 		{
 			ObjectProbe.SetMemberValue(target, mapping.PropertyName, dataBaseValue, 
 				this.DataExchangeFactory.ObjectFactory,
-				this.DataExchangeFactory.MemberAccessorFactory);
+				this.DataExchangeFactory.AccessorFactory);
 		}
 
 		/// <summary>
@@ -86,7 +86,7 @@ namespace IBatisNet.DataMapper.DataExchange
 		{
 			ObjectProbe.SetMemberValue(target, mapping.PropertyName, dataBaseValue, 
 				this.DataExchangeFactory.ObjectFactory,
-				this.DataExchangeFactory.MemberAccessorFactory);
+				this.DataExchangeFactory.AccessorFactory);
 		}
 
 		#endregion

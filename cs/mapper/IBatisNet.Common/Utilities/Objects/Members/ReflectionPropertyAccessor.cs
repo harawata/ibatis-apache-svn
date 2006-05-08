@@ -47,7 +47,14 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 		public ReflectionPropertyAccessor(Type targetType, string propertyName)
 		{
 			ReflectionInfo reflectionCache = ReflectionInfo.GetInstance( targetType );
-			_propertyInfo = (PropertyInfo)reflectionCache.GetGetter(propertyName);
+            try
+            {
+                _propertyInfo = (PropertyInfo)reflectionCache.GetGetter(propertyName);
+            }
+            catch 
+            {
+               _propertyInfo = (PropertyInfo)reflectionCache.GetSetter(propertyName);
+            }
 
 			_targetType = targetType;
 			_propertyName = propertyName;

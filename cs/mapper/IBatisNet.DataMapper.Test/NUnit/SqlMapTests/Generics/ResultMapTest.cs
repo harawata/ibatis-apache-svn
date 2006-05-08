@@ -50,7 +50,21 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Generics
             // Check generic IList collection
             Assert.IsNotNull(order.LineItemsGenericList);
             Assert.AreEqual(2, order.LineItemsGenericList.Count);
+        }
 
+        /// <summary>
+        /// Test generic Ilist with lazy loadind
+        /// </summary>
+        [Test]
+        public void TestGenricListLazyLoad()
+        {
+            Order order = sqlMap.QueryForObject<Order>("GetOrderWithGenericLazyLoad", 1);
+
+            AssertOrder1(order);
+
+            // Check generic IList collection
+            Assert.IsNotNull(order.LineItemsGenericList);
+            Assert.AreEqual(2, order.LineItemsGenericList.Count);
         }
 
         /// <summary>

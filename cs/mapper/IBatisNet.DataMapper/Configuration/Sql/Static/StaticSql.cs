@@ -1,12 +1,12 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
  * $Revision$
- * $Date$
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,6 +31,7 @@ using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.Configuration.Statements;
 using IBatisNet.DataMapper.DataExchange;
+using IBatisNet.DataMapper.MappedStatements;
 using IBatisNet.DataMapper.Scope;
 using IBatisNet.DataMapper.TypeHandlers;
 
@@ -48,10 +49,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Static
 
 		private IStatement _statement = null ;
 		private PreparedStatement _preparedStatement = null ;
-		private TypeHandlerFactory _typeHandlerFactory = null;
-		private IMemberAccessorFactory _memberAccessorFactory = null;
 		private DataExchangeFactory _dataExchangeFactory = null;
-		private IObjectFactory _objectFactory = null;
 
 		#endregion
 
@@ -65,30 +63,26 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Static
 		{
 			_statement = statement;
 
-			_typeHandlerFactory = scope.TypeHandlerFactory ;
-			_memberAccessorFactory = scope.MemberAccessorFactory;
 			_dataExchangeFactory = scope.DataExchangeFactory;
-			_objectFactory = scope.ObjectFactory;
-
 		}
 		#endregion
 
 		#region ISql Members
 
 		/// <summary>
-		/// Get the sql command text to execute.
+		/// Builds a new <see cref="RequestScope"/> and the sql command text to execute.
 		/// </summary>
 		/// <param name="parameterObject">The parameter object (used in DynamicSql)</param>
-		/// <param name="session"></param>
-		/// <returns>The sql command text.</returns>
-		public RequestScope GetRequestScope(object parameterObject, IDalSession session)
+		/// <param name="session">The current session</param>
+		/// <param name="mappedStatement">The <see cref="IMappedStatement"/>.</param>
+		/// <returns>A new <see cref="RequestScope"/>.</returns>
+		public RequestScope GetRequestScope(IMappedStatement mappedStatement,
+			object parameterObject, IDalSession session)
 		{
-			RequestScope request = new RequestScope(_typeHandlerFactory, _memberAccessorFactory,
-                _objectFactory, _dataExchangeFactory, session);
+			RequestScope request = new RequestScope(_dataExchangeFactory, session, _statement);
 
-			request.ParameterMap = _statement.ParameterMap;
-			request.ResultMap = _statement.ResultMap;
 			request.PreparedStatement = _preparedStatement;
+			request.MappedStatement = mappedStatement;
 
 			return request;
 		}
@@ -100,10 +94,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Static
 		/// <param name="sqlStatement"></param>
 		public void BuildPreparedStatement(IDalSession session, string sqlStatement)
 		{
-			RequestScope request = new RequestScope(_typeHandlerFactory, _memberAccessorFactory,
-                _objectFactory, _dataExchangeFactory, session);
-
-			request.ParameterMap = _statement.ParameterMap;
+			RequestScope request = new RequestScope( _dataExchangeFactory, session, _statement);
 
 			PreparedStatementFactory factory = new PreparedStatementFactory( session, request, _statement, sqlStatement);
 			_preparedStatement = factory.Prepare();

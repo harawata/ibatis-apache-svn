@@ -1,12 +1,12 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
  * $Revision$
- * $Date$
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,6 +34,7 @@ using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.Configuration.Sql;
 using IBatisNet.DataMapper.Configuration.Statements;
 using IBatisNet.DataMapper.DataExchange;
+using IBatisNet.DataMapper.MappedStatements;
 using IBatisNet.DataMapper.Scope;
 using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.TypeHandlers;
@@ -56,20 +57,18 @@ namespace IBatisNet.DataMapper.Configuration.Sql.SimpleDynamic
 
 		private string _simpleSqlStatement = string.Empty;
 		private IStatement _statement = null ;
-		private TypeHandlerFactory _typeHandlerFactory = null;
-		private IMemberAccessorFactory _memberAccessorFactory = null;
 		private DataExchangeFactory _dataExchangeFactory = null;
-		private IObjectFactory _objectFactory = null;
 
 		#endregion
 
 		#region Constructor (s) / Destructor
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		/// <param name="sqlStatement">The sql statement.</param>
-		/// <param name="statement"></param>
-		/// <param name="scope"></param>
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SimpleDynamicSql"/> class.
+        /// </summary>
+        /// <param name="scope">The scope.</param>
+        /// <param name="sqlStatement">The SQL statement.</param>
+        /// <param name="statement">The statement.</param>
 		internal SimpleDynamicSql(IScope scope,
 			string sqlStatement, 
 			IStatement statement)
@@ -77,10 +76,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.SimpleDynamic
 			_simpleSqlStatement = sqlStatement;
 			_statement = statement;
 
-			_typeHandlerFactory = scope.TypeHandlerFactory;
-			_memberAccessorFactory = scope.MemberAccessorFactory;
 			_dataExchangeFactory = scope.DataExchangeFactory;
-			_objectFactory = scope.ObjectFactory;
 		}
 		#endregion
 		
@@ -139,13 +135,13 @@ namespace IBatisNet.DataMapper.Configuration.Sql.SimpleDynamic
 						object value = null;
 						if (parameterObject != null) 
 						{
-							if ( _typeHandlerFactory.IsSimpleType( parameterObject.GetType() ) == true) 
+							if ( _dataExchangeFactory.TypeHandlerFactory.IsSimpleType( parameterObject.GetType() ) == true) 
 							{
 								value = parameterObject;
 							} 
 							else 
 							{
-								value = ObjectProbe.GetMemberValue(parameterObject, token, _memberAccessorFactory);
+                                value = ObjectProbe.GetMemberValue(parameterObject, token, _dataExchangeFactory.AccessorFactory);
 							}
 						}
 						if (value != null) 
@@ -181,22 +177,22 @@ namespace IBatisNet.DataMapper.Configuration.Sql.SimpleDynamic
 		#region ISql Members
 
 		/// <summary>
-		/// 
+		/// Builds a new <see cref="RequestScope"/> and the sql command text to execute.
 		/// </summary>
-		/// <param name="parameterObject"></param>
-		/// <param name="session"></param>
-		/// <returns></returns>
-		public RequestScope GetRequestScope(object parameterObject, IDalSession session)
+		/// <param name="parameterObject">The parameter object (used in DynamicSql)</param>
+		/// <param name="session">The current session</param>
+		/// <param name="mappedStatement">The <see cref="IMappedStatement"/>.</param>
+		/// <returns>A new <see cref="RequestScope"/>.</returns>
+		public RequestScope GetRequestScope(IMappedStatement mappedStatement, 
+			object parameterObject, IDalSession session)
 		{
 			string sqlStatement = ProcessDynamicElements(parameterObject);
 			
-			RequestScope request = new RequestScope(_typeHandlerFactory, _memberAccessorFactory,
-                _objectFactory, _dataExchangeFactory, session);
+			RequestScope request = new RequestScope( _dataExchangeFactory, session, _statement);
 
-			request.ParameterMap = _statement.ParameterMap;
-			request.ResultMap = _statement.ResultMap;
 			request.PreparedStatement = BuildPreparedStatement(session, request, sqlStatement);
-			
+			request.MappedStatement = mappedStatement;
+
 			return request;
 		}
 

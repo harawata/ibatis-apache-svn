@@ -33,44 +33,8 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 	/// </summary>
     public abstract class BaseEmitAccessor : BaseAccessor
 	{
-		/// <summary>
-		/// The IL emitted IMemberAccessor
-		/// </summary>
-		protected IMemberAccessor emittedMemberAccessor = null;
-		/// <summary>
-		/// The AssemblyBuilder use to keep the type
-		/// </summary>
-		protected AssemblyBuilder assemblyBuilder = null;
-		/// <summary>
-		/// The ModuleBuilder use to create the type
-		/// </summary>
-		protected ModuleBuilder moduleBuilder = null;
 
-		/// <summary>
-		/// This method create a new type oject for the the field accessor class 
-		/// that will provide dynamic access.
-		/// </summary>
-		protected void EmitIL()
-		{
-			// Create a new type oject for the the field accessor class.
-			EmitType();
 
-			// Create a new instance
-			emittedMemberAccessor = assemblyBuilder.CreateInstance("MemberAccessorFor" + targetType.FullName + memberName) as IMemberAccessor;
-
-			this.nullInternal = this.GetNullInternal(baseMemberType);
-
-			if (emittedMemberAccessor == null)
-			{
-                throw new NotSupportedException(
-					string.Format("Unable to create propert/field accessor for \"{0}\".", baseMemberType));
-			}
-		}
-
-		/// <summary>
-		/// Create an type that will provide the get and set methods.
-		/// </summary>
-		protected abstract void EmitType();
 
 	}
 }

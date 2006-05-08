@@ -53,23 +53,23 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers
 		public const int REPEAT_BODY = 2;
 		#endregion
 
-		private IMemberAccessorFactory _memberAccessorFactory = null;
+        private AccessorFactory _accessorFactory = null;
 
 		/// <summary>
-		/// The factory which build IMemberAccessor
+        /// The factory which build <see cref="IAccessor"/>
 		/// </summary>
-		public IMemberAccessorFactory MemberAccessorFactory
+        public AccessorFactory AccessorFactory
 		{
-			get { return _memberAccessorFactory; }
+            get { return _accessorFactory; }
 		}
 
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		/// <param name="memberAccessorFactory"></param>
-		public BaseTagHandler(IMemberAccessorFactory memberAccessorFactory)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseTagHandler"/> class.
+        /// </summary>
+        /// <param name="accessorFactory">The accessor factory.</param>
+        public BaseTagHandler(AccessorFactory accessorFactory)
 		{
-			_memberAccessorFactory = memberAccessorFactory;
+            _accessorFactory = accessorFactory;
 		}
 
 		#region Methods

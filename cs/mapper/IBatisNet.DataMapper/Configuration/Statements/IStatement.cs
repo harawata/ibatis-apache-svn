@@ -1,12 +1,12 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
- * $Revision: $
- * $Date$
+ * $Revision$
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,6 +27,9 @@
 #region Imports
 using System;
 using System.Collections;
+#if dotnet2
+using System.Collections.Generic;
+#endif
 using System.Data;
 
 using IBatisNet.DataMapper.Configuration.ResultMapping;
@@ -160,8 +163,15 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		/// <summary>
 		/// Create an instance of 'IList' class.
 		/// </summary>
-		/// <returns>An object which implment IList.</returns>
+		/// <returns>An object which implement IList.</returns>
 		IList CreateInstanceOfListClass();
+#if dotnet2
+        /// <summary>
+        /// Create an instance of a generic 'IList' class.
+        /// </summary>
+        /// <returns>An object which implement IList.</returns>
+        IList<T> CreateInstanceOfGenericListClass<T>();
+#endif
 		#endregion
 
 	}

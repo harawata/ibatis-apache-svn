@@ -42,31 +42,21 @@ namespace IBatisNet.Common.Utilities.Objects
 		/// <summary>
 		/// 
 		/// </summary>
-		public static BindingFlags BINDING_FLAGS_PROPERTY_GET
-			= BindingFlags.Public 
-			| BindingFlags.GetProperty
+		public static BindingFlags BINDING_FLAGS_PROPERTY
+			= BindingFlags.Public
+            | BindingFlags.NonPublic
 			| BindingFlags.Instance 
 			;
 
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public static BindingFlags BINDING_FLAGS_PROPERTY_SET
-			= BindingFlags.Public 
-			| BindingFlags.SetProperty
-			| BindingFlags.Instance 
-			;
 
 		/// <summary>
 		/// 
 		/// </summary>
 		public static BindingFlags BINDING_FLAGS_FIELD
-			= BindingFlags.NonPublic 
-			| BindingFlags.SetProperty
+            = BindingFlags.Public
+            | BindingFlags.NonPublic 
 			| BindingFlags.Instance 
-			| BindingFlags.SetField
-			| BindingFlags.GetField
+
 			;
 
 		private static readonly string[] _emptyStringArray = new string[0];
@@ -76,9 +66,9 @@ namespace IBatisNet.Common.Utilities.Objects
 		private string _className = string.Empty;
 		private string[] _readableMemberNames = _emptyStringArray;
 		private string[] _writeableMemberNames = _emptyStringArray;
-		// (memberName, member)
+		// (memberName, MemberInfo)
 		private Hashtable _setMembers = new Hashtable();
-		// (memberName, member)
+        // (memberName, MemberInfo)
 		private Hashtable _getMembers = new Hashtable();
 		// (memberName, member type)
 		private Hashtable _setTypes = new Hashtable();
@@ -153,21 +143,23 @@ namespace IBatisNet.Common.Utilities.Objects
 		private void AddMembers(Type type) 
 		{
 			#region Properties
-			PropertyInfo[] properties = type.GetProperties(BINDING_FLAGS_PROPERTY_SET) ;
+            PropertyInfo[] properties = type.GetProperties(BINDING_FLAGS_PROPERTY);
 			for (int i = 0; i < properties.Length; i++) 
 			{
-				string name = properties[i].Name;
-				_setMembers[name] = properties[i];
-				_setTypes[name] = properties[i].PropertyType;
-			}
-
-			properties = type.GetProperties(BINDING_FLAGS_PROPERTY_GET);
-			for (int i = 0; i < properties.Length; i++) 
-			{
-				string name = properties[i].Name;
-				_getMembers[name] = properties[i];
-				_getTypes[name] = properties[i].PropertyType;
-			}
+                if (properties[i].CanWrite)
+                {
+                    string name = properties[i].Name;
+                    _setMembers[name] = properties[i];
+                    _setTypes[name] = properties[i].PropertyType;
+                }
+                if (properties[i].CanRead)
+                {
+                    string name = properties[i].Name;
+                    _getMembers[name] = properties[i];
+                    _getTypes[name] = properties[i].PropertyType;
+                }
+            }
+            
 			#endregion
 
 			#region Fields
@@ -200,14 +192,15 @@ namespace IBatisNet.Common.Utilities.Objects
 			return memberInfo;
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="memberName"></param>
-		/// <returns></returns>
+
+        /// <summary>
+        /// Gets the <see cref="MemberInfo"/>.
+        /// </summary>
+        /// <param name="memberName">Member's name.</param>
+        /// <returns>The <see cref="MemberInfo"/></returns>
 		public MemberInfo GetGetter(string memberName) 
 		{
-			MemberInfo memberInfo = (MemberInfo) _getMembers[memberName];
+			MemberInfo memberInfo = _getMembers[memberName] as MemberInfo;
 			if (memberInfo == null) 
 			{
 				throw new ProbeException("There is no Get member named '" + memberName + "' in class '" + _className + "'");
@@ -215,11 +208,12 @@ namespace IBatisNet.Common.Utilities.Objects
 			return memberInfo;
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="memberName"></param>
-		/// <returns></returns>
+
+        /// <summary>
+        /// Gets the type of the member.
+        /// </summary>
+        /// <param name="memberName">Member's name.</param>
+        /// <returns></returns>
 		public Type GetSetterType(string memberName) 
 		{
 			Type type = (Type) _setTypes[memberName];

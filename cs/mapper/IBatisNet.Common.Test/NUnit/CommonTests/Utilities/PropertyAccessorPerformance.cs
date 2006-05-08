@@ -61,8 +61,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
-        	MemberAccessorFactory factory = new MemberAccessorFactory(true);
-            IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Int");
+            IGetAccessorFactory factory = new GetAccessorFactory(true);
+            IGetAccessor propertyAccessor = factory.CreateGetAccessor(typeof(Property), "Int");
             timer.Start();
             for (int i = 0; i < TEST_ITERATIONS; i++)
             {
@@ -167,8 +167,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
-            MemberAccessorFactory factory = new MemberAccessorFactory(true);
-            IMemberAccessor propertyAccessor = factory.CreateMemberAccessor(typeof(Property), "Int");
+            ISetAccessorFactory factory = new SetAccessorFactory(true);
+            ISetAccessor propertyAccessor = factory.CreateSetAccessor(typeof(Property), "Int");
             timer.Start();
             for (int i = 0; i < TEST_ITERATIONS; i++)
             {

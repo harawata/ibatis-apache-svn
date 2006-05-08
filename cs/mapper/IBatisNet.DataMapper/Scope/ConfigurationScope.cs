@@ -88,22 +88,6 @@ namespace IBatisNet.DataMapper.Scope
 
 		#region Properties
 
-        /// <summary>
-        /// The factory for object
-        /// </summary>
-        public IObjectFactory ObjectFactory
-        {
-            get { return _sqlMapper.ObjectFactory; }
-        }
-
-        /// <summary>
-        /// The factory which build MemberAccessorFactory
-        /// </summary>
-        public IMemberAccessorFactory MemberAccessorFactory
-        {
-            get { return _sqlMapper.MemberAccessorFactory; }
-        }
-
 		/// <summary>
 		/// XmlNamespaceManager
 		/// </summary>
@@ -150,13 +134,6 @@ namespace IBatisNet.DataMapper.Scope
 			get { return _sqlMapper; }
 		}
 
-		/// <summary>
-		/// The current TypeHandlerFactory
-		/// </summary>
-		public TypeHandlerFactory TypeHandlerFactory
-		{
-			get { return _sqlMapper.TypeHandlerFactory; }
-		}
 
 		/// <summary>
 		/// A factory for DataExchange objects
@@ -295,21 +272,21 @@ namespace IBatisNet.DataMapper.Scope
 			ITypeHandler handler = null;
 			if (clazz==null)
 			{
-				handler = this.TypeHandlerFactory.GetUnkownTypeHandler();
+                handler = this.DataExchangeFactory.TypeHandlerFactory.GetUnkownTypeHandler();
 			}
 			else if (typeof(IDictionary).IsAssignableFrom(clazz)) 
 			{
 				// IDictionary
 				if (clrType ==null ||clrType.Length == 0) 
 				{
-					handler = this.TypeHandlerFactory.GetUnkownTypeHandler(); 
+                    handler = this.DataExchangeFactory.TypeHandlerFactory.GetUnkownTypeHandler(); 
 				} 
 				else 
 				{
 					try 
 					{
 						Type type = Resources.TypeForName(clrType);
-						handler = this.TypeHandlerFactory.GetTypeHandler(type, dbType);
+                        handler = this.DataExchangeFactory.TypeHandlerFactory.GetTypeHandler(type, dbType);
 					} 
 					catch (Exception e) 
 					{
@@ -321,10 +298,10 @@ namespace IBatisNet.DataMapper.Scope
                     }
 				}
 			}
-			else if (this.TypeHandlerFactory.GetTypeHandler(clazz, dbType) != null) 
+            else if (this.DataExchangeFactory.TypeHandlerFactory.GetTypeHandler(clazz, dbType) != null) 
 			{
 				// Primitive
-				handler = this.TypeHandlerFactory.GetTypeHandler(clazz, dbType);
+                handler = this.DataExchangeFactory.TypeHandlerFactory.GetTypeHandler(clazz, dbType);
 			}
 			else 
 			{
@@ -332,14 +309,14 @@ namespace IBatisNet.DataMapper.Scope
 				if (clrType ==null || clrType.Length == 0) 
 				{
 					Type type = ObjectProbe.GetMemberTypeForGetter(clazz, propertyName);
-					handler = this.TypeHandlerFactory.GetTypeHandler(type, dbType);
+                    handler = this.DataExchangeFactory.TypeHandlerFactory.GetTypeHandler(type, dbType);
 				} 
 				else 
 				{
 					try 
 					{
 						Type type = Resources.TypeForName(clrType);
-						handler = this.TypeHandlerFactory.GetTypeHandler(type, dbType);
+                        handler = this.DataExchangeFactory.TypeHandlerFactory.GetTypeHandler(type, dbType);
 					} 
 					catch (Exception e) 
 					{

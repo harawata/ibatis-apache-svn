@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Revision: 374175 $
- * $LastChangedDate: 2006-03-22 22:39:21 +0100 (mer., 22 mars 2006) $
+ * $LastChangedDate: 2006-04-25 19:40:27 +0200 (mar., 25 avr. 2006) $
  * $LastChangedBy: gbayon $
  * 
  * iBATIS.NET Data Mapper
@@ -52,7 +52,7 @@ namespace IBatisNet.DataMapper.Proxy
 		#region Fields
 		private object _param = null;
 		private object _target = null;
-		private IMemberAccessor _memberAccessor= null;
+		private ISetAccessor _setAccessor= null;
 		private SqlMapper _sqlMap = null;
 		private string _statementName = string.Empty;
 		private bool _loaded = false;
@@ -79,16 +79,16 @@ namespace IBatisNet.DataMapper.Proxy
 		/// </summary>
 		/// <param name="mappedSatement">The mapped statement used to build the list</param>
 		/// <param name="param">The parameter object used to build the list</param>
-		/// <param name="memberAccessor">The proxified member accessor.</param>
+		/// <param name="setAccessor">The proxified member accessor.</param>
 		/// <param name="target">The target object which contains the property proxydied.</param>
-		internal LazyLoadInterceptor(IMappedStatement mappedSatement, object param, 
-			object target, IMemberAccessor memberAccessor)
+		internal LazyLoadInterceptor(IMappedStatement mappedSatement, object param,
+            object target, ISetAccessor setAccessor)
 		{
 			_param = param;
 			_statementName = mappedSatement.Id;
 			_sqlMap = mappedSatement.SqlMap;
-			_target = target; 
-			_memberAccessor = memberAccessor;
+			_target = target;
+            _setAccessor = setAccessor;
 		}		
 		#endregion
 
@@ -117,7 +117,7 @@ namespace IBatisNet.DataMapper.Proxy
 					}
 					_innerList = _sqlMap.QueryForList(_statementName, _param);
 					_loaded = true;
-					_memberAccessor.Set(_target, _innerList);
+                    _setAccessor.Set(_target, _innerList);
 				}
 			}
 

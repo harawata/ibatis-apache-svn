@@ -1,12 +1,12 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
  * $Revision$
- * $Date$
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,6 +27,7 @@
 #region Imports
 
 using System.Collections;
+using System.Data;
 using System.Text;
 using IBatisNet.Common;
 using IBatisNet.Common.Utilities.Objects;
@@ -37,6 +38,7 @@ using IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers;
 using IBatisNet.DataMapper.Configuration.Sql.SimpleDynamic;
 using IBatisNet.DataMapper.Configuration.Statements;
 using IBatisNet.DataMapper.DataExchange;
+using IBatisNet.DataMapper.MappedStatements;
 using IBatisNet.DataMapper.Scope;
 using IBatisNet.DataMapper.TypeHandlers;
 
@@ -59,10 +61,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 		private IStatement _statement = null ;
 		private bool _usePositionalParameters = false;
 		private InlineParameterMapParser _paramParser = null;
-		private TypeHandlerFactory _typeHandlerFactory = null;
-		private IMemberAccessorFactory _memberAccessorFactory = null;
 		private DataExchangeFactory _dataExchangeFactory = null;
-		private IObjectFactory _objectFactory = null;
 
 		#endregion
 
@@ -78,11 +77,8 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 		{
 			_statement = statement;
 
-			_typeHandlerFactory = configScope.TypeHandlerFactory;
-			_memberAccessorFactory = configScope.MemberAccessorFactory;
 			_usePositionalParameters = configScope.DataSource.DbProvider.UsePositionalParameters;
 			_dataExchangeFactory = configScope.DataExchangeFactory;
-			_objectFactory = configScope.ObjectFactory;
 		}
 		#endregion
 
@@ -103,23 +99,25 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 
 		#region ISql Members
 
+
 		/// <summary>
-		/// 
+		/// Builds a new <see cref="RequestScope"/> and the <see cref="IDbCommand"/> text to execute.
 		/// </summary>
-		/// <param name="parameterObject"></param>
-		/// <param name="session"></param>
-		/// <returns></returns>
-		public RequestScope GetRequestScope(object parameterObject, IDalSession session)
+		/// <param name="parameterObject">The parameter object (used in DynamicSql)</param>
+		/// <param name="session">The current session</param>
+		/// <param name="mappedStatement">The <see cref="IMappedStatement"/>.</param>
+		/// <returns>A new <see cref="RequestScope"/>.</returns>
+		public RequestScope GetRequestScope(IMappedStatement mappedStatement, 
+			object parameterObject, IDalSession session)
 		{ 
-			RequestScope request = new RequestScope(_typeHandlerFactory, _memberAccessorFactory,
-                _objectFactory, _dataExchangeFactory, session);
+			RequestScope request = new RequestScope( _dataExchangeFactory, session, _statement);
 
 			_paramParser = new InlineParameterMapParser();
-			request.ResultMap = _statement.ResultMap;
 
 			string sqlStatement = Process(request, parameterObject);
 			request.PreparedStatement = BuildPreparedStatement(session, request, sqlStatement);
-			
+			request.MappedStatement = mappedStatement;
+
 			return request;
 		}
 	

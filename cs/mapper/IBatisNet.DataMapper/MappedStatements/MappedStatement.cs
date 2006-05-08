@@ -1,12 +1,12 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
- * $Revision: 397590 $
- * $Date$
+ * $Revision$
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -38,17 +38,19 @@ using System.Text;
 using IBatisNet.Common;
 using IBatisNet.Common.Logging;
 using IBatisNet.Common.Utilities.Objects;
-using IBatisNet.Common.Utilities.Objects.Members;
+
 
 using IBatisNet.DataMapper.Commands;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
 using IBatisNet.DataMapper.Configuration.Statements;
+using IBatisNet.DataMapper.MappedStatements.ResultStrategy;
 using IBatisNet.DataMapper.Scope;
+using IBatisNet.DataMapper.MappedStatements.PostSelectStrategy;
 using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.TypeHandlers;
 using IBatisNet.DataMapper.DataExchange;
-using IBatisNet.DataMapper.Proxy;
+
 
 #endregion
 
@@ -65,87 +67,6 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// </summary>
 		public event ExecuteEventHandler Execute;
 
-		/// <summary>
-		/// Enumeration of the ExecuteQuery method.
-		/// </summary>
-		private enum ExecuteMethod : int
-		{
-			ExecuteQueryForObject =0,
-			ExecuteQueryForIList,
-			ExecuteQueryForGenericIList,
-			ExecuteQueryForArrayList,
-			ExecuteQueryForStrongTypedIList
-		}
-
-
-		/// <summary>
-		/// All data tor retrieve 'select' result property
-		/// </summary>
-		/// <remarks>
-		/// As ADO.NET allows to open DataReader per connection at once, we keep
-		/// all th data to make the open the 'whish' DataReader after having closed the current. 
-		/// </remarks>
-		private class PostBindind
-		{
-			#region Fields
-			private IMappedStatement _statement = null;
-			private ResultProperty _property = null;
-			private object _target = null;
-			private object _keys = null;
-			private ExecuteMethod _method = ExecuteMethod.ExecuteQueryForIList;
-			#endregion
-
-			#region Properties
-			/// <summary>
-			/// 
-			/// </summary>
-			public IMappedStatement Statement
-			{
-				set { _statement = value; }
-				get { return _statement; }
-			}
-
-			/// <summary>
-			/// 
-			/// </summary>
-			public ResultProperty ResultProperty
-			{
-				set { _property = value; }
-				get { return _property; }
-			}
-
-			/// <summary>
-			/// 
-			/// </summary>
-			public object Target
-			{
-				set { _target = value; }
-				get { return _target; }
-			}
-
-
-			/// <summary>
-			/// 
-			/// </summary>
-			public object Keys
-			{
-				set { _keys = value; }
-				get { return _keys; }
-			}
-
-			/// <summary>
-			/// 
-			/// </summary>
-			public ExecuteMethod Method
-			{
-				set { _method = value; }
-				get { return _method; }
-			}
-			#endregion
-
-		}
-
-
 		#region Fields 
 
 		// Magic number used to set the the maximum number of rows returned to 'all'. 
@@ -154,16 +75,24 @@ namespace IBatisNet.DataMapper.MappedStatements
 		internal const int NO_SKIPPED_RESULTS = -1;
 
 		private static readonly ILog _logger = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
-
 		private IStatement _statement = null;
-
 		private SqlMapper _sqlMap = null;
-
 		private IPreparedCommand _preparedCommand = null;
-
+		private IResultStrategy _resultStrategy = null;
+		private ReaderAutoMapper _readerAutoMapper = null;
 		#endregion
 
 		#region Properties
+
+		/// <summary>
+		/// Gets or sets the <see cref="ReaderAutoMapper"/>.
+		/// </summary>
+		/// <value>The <see cref="ReaderAutoMapper"/>.</value>
+		public ReaderAutoMapper ReaderAutoMapper
+		{
+			set {  _readerAutoMapper = value; }
+			get { return _readerAutoMapper; }
+		}
 
 		/// <summary>
 		/// The IPreparedCommand to use
@@ -210,170 +139,12 @@ namespace IBatisNet.DataMapper.MappedStatements
 			_sqlMap = sqlMap;
 			_statement = statement;
 			_preparedCommand = PreparedCommandFactory.GetPreparedCommand( false );
+			_resultStrategy = ResultStrategyFactory.Get(_statement);
 		}
 		#endregion
 
 		#region Methods
-
-        /// <summary>
-        /// Fills the object with reader and result map.
-        /// </summary>
-        /// <param name="request">The request.</param>
-        /// <param name="reader">The reader.</param>
-        /// <param name="resultMap">The result map.</param>
-        /// <param name="resultObject">The result object.</param>
-        /// <returns>Indicates if we have found a row.</returns>
-		private bool FillObjectWithReaderAndResultMap(RequestScope request,IDataReader reader, 
-			ResultMap resultMap, object resultObject)
-		{
-			bool dataFound = false;
-			
-			// For each Property in the ResultMap, set the property in the object 
-			for(int index=0; index< resultMap.Properties.Count; index++)
-			{
-				request.IsRowDataFound = false;
-				ResultProperty property = resultMap.Properties[index];
-				SetObjectProperty(request, resultMap, property, ref resultObject, reader);
-				dataFound = dataFound || request.IsRowDataFound;
-			}
-
-			request.IsRowDataFound = dataFound;
-			return dataFound;
-		}
-
-
-        /// <summary>
-        /// Applies the result map.
-        /// </summary>
-        /// <param name="request">The request.</param>
-        /// <param name="reader">The reader.</param>
-        /// <param name="resultObject">The result object.</param>
-        /// <returns>The result object.</returns>
-		private object ApplyResultMap(RequestScope request, IDataReader reader, object resultObject)
-		{
-			object outObject = resultObject; 
-
-			// If there's an ResultMap, use it
-			if (request.ResultMap != null) 
-			{
-				ResultMap resultMap = request.GetResultMap(reader);
-				if (outObject == null) 
-				{
-					object[] parameters = null;
-					if (resultMap.Parameters.Count >0)
-					{
-						parameters = new object[resultMap.Parameters.Count];
-						// Fill parameters array
-						for(int index=0; index< resultMap.Parameters.Count; index++)
-						{
-							ResultProperty resultProperty = resultMap.Parameters[index];
-							parameters[index] = this.GetObjectArgument(request, resultMap, resultProperty, ref reader);
-						}
-					}
-
-					outObject = resultMap.CreateInstanceOfResult(parameters);
-				}
-
-				// For each Property in the ResultMap, set the property in the object 
-				for(int index=0; index< resultMap.Properties.Count; index++)
-				{
-					ResultProperty property = resultMap.Properties[index];
-					SetObjectProperty(request, resultMap, property, ref outObject, reader);
-				}
-			} 
-			else // else try to use a ResultClass
-			{
-				if (_statement.ResultClass != null) 
-				{
-					if (outObject == null) 
-					{
-						outObject = _statement.CreateInstanceOfResultClass();
-					}
-
-					// Check if the ResultClass is a 'primitive' Type
-					if (_sqlMap.TypeHandlerFactory.IsSimpleType(_statement.ResultClass))
-					{
-						// Create a ResultMap
-						ResultMap resultMap = new ResultMap(request.DataExchangeFactory);
-
-						// Create a ResultProperty
-						ResultProperty property = new ResultProperty();
-						property.PropertyName = "value";
-						property.ColumnIndex = 0;
-						property.TypeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(outObject.GetType());
-						
-						resultMap.AddResultPropery(property);
-						resultMap.DataExchange = request.DataExchangeFactory.GetDataExchangeForClass( typeof(int) );// set the PrimitiveDataExchange
-
-						SetObjectProperty(request, resultMap, property, ref outObject, reader);
-					}
-					else if (outObject is IDictionary) 
-					{
-						int count = reader.FieldCount;
-						for (int i = 0; i < count; i++) 
-						{
-							ResultProperty property = new ResultProperty();
-							property.PropertyName = "value";
-							property.ColumnIndex = i;
-							property.TypeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(reader.GetFieldType(i));
-							((IDictionary) outObject).Add(
-								reader.GetName(i), 
-								property.GetDataBaseValue(reader));
-						}
-					}
-					else if (outObject is IList) 
-					{
-						int count = reader.FieldCount;
-						for (int i = 0; i < count; i++) 
-						{
-							ResultProperty property = new ResultProperty();
-							property.PropertyName = "value";
-							property.ColumnIndex = i;
-							property.TypeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(reader.GetFieldType(i));
-							((IList) outObject).Add(property.GetDataBaseValue(reader));
-						}
-					}
-					else
-					{
-						AutoMapReader( reader, ref outObject);
-					}
-				}
-				else
-				{
-					if (reader.FieldCount == 1)
-					{
-						ResultProperty property = new ResultProperty();
-						property.PropertyName = "value";
-						property.ColumnIndex = 0;
-						property.TypeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(reader.GetFieldType(0));
-						outObject = property.GetDataBaseValue(reader);
-					}
-					else if (reader.FieldCount > 1)
-					{
-						object[] newOutObject = new object[reader.FieldCount];
-						int count = reader.FieldCount;
-						for (int i = 0; i < count; i++) 
-						{
-							ResultProperty property = new ResultProperty();
-							property.PropertyName = "value";
-							property.ColumnIndex = i;
-							property.TypeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(reader.GetFieldType(i));
-							newOutObject[i] = property.GetDataBaseValue(reader);
-						}
-
-						outObject = newOutObject;
-					}
-					else
-					{
-						// do nothing if 0 fields
-					}
-				}
-			}
-
-			return outObject;
-		}		
-
-		
+	
 		/// <summary>
 		/// Retrieve the output parameter and map them on the result object.
 		/// This routine is only use is you specified a ParameterMap and some output attribute
@@ -413,7 +184,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 								{
 									Type propertyType =ObjectProbe.GetMemberTypeForGetter(result,mapping.PropertyName);
 
-									mapping.TypeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(propertyType);
+									mapping.TypeHandler = request.DataExchangeFactory.TypeHandlerFactory.GetTypeHandler(propertyType);
 								}
 							}					
 						}
@@ -453,7 +224,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		public virtual object ExecuteQueryForObject(IDalSession session, object parameterObject, object resultObject )
 		{
 			object obj = null;
-			RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session);
+			RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
 
 			_preparedCommand.Create( request, session, this.Statement, parameterObject );
 
@@ -482,11 +253,11 @@ namespace IBatisNet.DataMapper.MappedStatements
 				{				
 					if ( reader.Read() )
 					{
-						result = ApplyResultMap(request, reader, resultObject);		
+						result = _resultStrategy.Process(request, reader, resultObject);		
 					}
 				}
 
-				ExecutePostSelect( session, request);
+				ExecutePostSelect(request);
 
 				#region remark
 				// If you are using the OleDb data provider (as you are), you need to close the
@@ -529,7 +300,7 @@ namespace IBatisNet.DataMapper.MappedStatements
         public virtual T ExecuteQueryForObject<T>(IDalSession session, object parameterObject, T resultObject)
         {
             T obj = default(T);
-            RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session);
+            RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
 
             _preparedCommand.Create(request, session, this.Statement, parameterObject);
 
@@ -558,11 +329,11 @@ namespace IBatisNet.DataMapper.MappedStatements
                 {
                     if (reader.Read())
                     {
-                        result = (T)ApplyResultMap(request, reader, resultObject);
+                        result = (T)_resultStrategy.Process(request, reader, resultObject);
                     }
                 }
 
-                ExecutePostSelect(session, request);
+                ExecutePostSelect( request );
 
 		#region remark
                 // If you are using the OleDb data provider (as you are), you need to close the
@@ -590,7 +361,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="rowDelegate"></param>
 		public virtual IList ExecuteQueryForRowDelegate( IDalSession session, object parameterObject, SqlMapper.RowDelegate rowDelegate )
 		{
-			RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session);
+			RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
 
 			_preparedCommand.Create( request, session, this.Statement, parameterObject );
 
@@ -615,7 +386,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		///<exception cref="DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
 		public virtual IDictionary ExecuteQueryForMapWithRowDelegate( IDalSession session, object parameterObject, string keyProperty, string valueProperty, SqlMapper.DictionaryRowDelegate rowDelegate )
 		{
-			RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session);
+			RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
 
 			if (rowDelegate == null) 
 			{
@@ -652,7 +423,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		public virtual IList ExecuteQueryForList( IDalSession session, object parameterObject, int skipResults, int maxResults )
 		{
 			IList list = null;
-			RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session);
+			RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
 
 			_preparedCommand.Create( request, session, this.Statement, parameterObject );
 
@@ -705,7 +476,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 						while ( (maxResults == NO_MAXIMUM_RESULTS || n < maxResults) 
 							&& reader.Read() )
 						{
-							object obj = ApplyResultMap(request, reader, null);
+							object obj = _resultStrategy.Process(request, reader, null);
 						
 							list.Add( obj );
 							n++;
@@ -716,7 +487,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 						while ( (maxResults == NO_MAXIMUM_RESULTS || n < maxResults) 
 							&& reader.Read() )
 						{
-							object obj = ApplyResultMap(request, reader, null);
+							object obj = _resultStrategy.Process(request, reader, null);
 
 							rowDelegate(obj, parameterObject, list);
 							n++;
@@ -724,7 +495,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 					}
 				}
 
-				ExecutePostSelect( session, request);
+				ExecutePostSelect(request);
 
 				RetrieveOutputParameters(request, session, command, parameterObject);
 			}
@@ -741,7 +512,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="resultObject">A strongly typed collection of result objects.</param>
 		public virtual void ExecuteQueryForList(IDalSession session, object parameterObject, IList resultObject )
 		{
-			RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session);
+			RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
 
 			_preparedCommand.Create( request, session, this.Statement, parameterObject );
 
@@ -751,13 +522,13 @@ namespace IBatisNet.DataMapper.MappedStatements
 				{			
 					while ( reader.Read() )
 					{
-						object obj = ApplyResultMap(request, reader, null);
+						object obj = _resultStrategy.Process(request, reader, null);
 				
 						resultObject.Add( obj );
 					}
 				}
 
-				ExecutePostSelect( session, request);
+				ExecutePostSelect(request);
 
 				RetrieveOutputParameters(request, session, command, parameterObject);
 			}
@@ -778,7 +549,7 @@ namespace IBatisNet.DataMapper.MappedStatements
         /// <param name="rowDelegate"></param>
         public virtual IList<T> ExecuteQueryForRowDelegate<T>(IDalSession session, object parameterObject, SqlMapper.RowDelegate<T> rowDelegate)
         {
-            RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session);
+            RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
 
             _preparedCommand.Create(request, session, this.Statement, parameterObject);
 
@@ -815,7 +586,7 @@ namespace IBatisNet.DataMapper.MappedStatements
         public virtual IList<T> ExecuteQueryForList<T>(IDalSession session, object parameterObject, int skipResults, int maxResults)
         {
             IList<T> list = null;
-            RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session);
+            RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
 
             _preparedCommand.Create(request, session, this.Statement, parameterObject);
 
@@ -842,15 +613,15 @@ namespace IBatisNet.DataMapper.MappedStatements
             using (IDbCommand command = request.IDbCommand)
             {
                 // TODO:  Should we ignore this?, I think so in the case of generics.  
-                //if (_statement.ListClass == null)
-                //{
-                //    list = new ArrayList();
-                //}
-                //else
-                //{
-                //    list = _statement.CreateInstanceOfListClass();
-                //}
-                list = new List<T>();
+                if (_statement.ListClass == null)
+                {
+                    list = new List<T>();
+                }
+                else
+                {
+                    list = new List<T>();
+                    //list = _statement.CreateInstanceOfGenericListClass<T>();
+                }
 
                 using (IDataReader reader = command.ExecuteReader())
                 {
@@ -870,7 +641,7 @@ namespace IBatisNet.DataMapper.MappedStatements
                         while ((maxResults == NO_MAXIMUM_RESULTS || n < maxResults)
                             && reader.Read())
                         {
-                            T obj = (T)ApplyResultMap(request, reader, null);
+                            T obj = (T)_resultStrategy.Process(request, reader, null);
 
                             list.Add(obj);
                             n++;
@@ -881,7 +652,7 @@ namespace IBatisNet.DataMapper.MappedStatements
                         while ((maxResults == NO_MAXIMUM_RESULTS || n < maxResults)
                             && reader.Read())
                         {
-                            T obj = (T)ApplyResultMap(request, reader, null);
+                            T obj = (T)_resultStrategy.Process(request, reader, null);
 
                             rowDelegate(obj, parameterObject, list);
                             n++;
@@ -889,7 +660,7 @@ namespace IBatisNet.DataMapper.MappedStatements
                     }
                 }
 
-                ExecutePostSelect(session, request);
+                ExecutePostSelect( request );
 
                 RetrieveOutputParameters(request, session, command, parameterObject);
             }
@@ -906,7 +677,7 @@ namespace IBatisNet.DataMapper.MappedStatements
         /// <param name="resultObject">A strongly typed collection of result objects.</param>
         public virtual void ExecuteQueryForList<T>(IDalSession session, object parameterObject, IList<T> resultObject)
         {
-            RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session);
+            RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
 
             _preparedCommand.Create(request, session, this.Statement, parameterObject);
 
@@ -916,13 +687,13 @@ namespace IBatisNet.DataMapper.MappedStatements
                 {
                     while (reader.Read())
                     {
-                        T obj = (T)ApplyResultMap(request, reader, null);
+                        T obj = (T)_resultStrategy.Process(request, reader, null);
 
                         resultObject.Add(obj);
                     }
                 }
 
-                ExecutePostSelect(session, request);
+                ExecutePostSelect( request );
 
                 RetrieveOutputParameters(request, session, command, parameterObject);
             }
@@ -943,7 +714,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		public virtual int ExecuteUpdate(IDalSession session, object parameterObject )
 		{
 			int rows = 0; // the number of rows affected
-			RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session);
+			RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
 
 			_preparedCommand.Create( request, session, this.Statement, parameterObject );
 	
@@ -951,7 +722,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 			{
 				rows = command.ExecuteNonQuery();
 
-				ExecutePostSelect( session, request);
+				ExecutePostSelect(request);
 
 				RetrieveOutputParameters(request, session, command, parameterObject);
 			}
@@ -973,7 +744,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		{
 			object generatedKey = null;
 			SelectKey selectKeyStatement = null;
-			RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session);
+			RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
 
 			if (_statement is Insert)
 			{
@@ -986,8 +757,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 				generatedKey = mappedStatement.ExecuteQueryForObject(session, parameterObject);
 
 				ObjectProbe.SetMemberValue(parameterObject, selectKeyStatement.PropertyName, generatedKey, 
-					request.ObjectFactory,
-					request.MemberAccessorFactory);
+					request.DataExchangeFactory.ObjectFactory,
+                    request.DataExchangeFactory.AccessorFactory);
 			}
 
 			_preparedCommand.Create( request, session, this.Statement, parameterObject );
@@ -1013,12 +784,12 @@ namespace IBatisNet.DataMapper.MappedStatements
 					IMappedStatement mappedStatement = _sqlMap.GetMappedStatement( selectKeyStatement.Id );
 					generatedKey = mappedStatement.ExecuteQueryForObject(session, parameterObject);
 
-					ObjectProbe.SetMemberValue(parameterObject, selectKeyStatement.PropertyName, generatedKey, 
-						request.ObjectFactory,
-						request.MemberAccessorFactory);
+					ObjectProbe.SetMemberValue(parameterObject, selectKeyStatement.PropertyName, generatedKey,
+                        request.DataExchangeFactory.ObjectFactory,
+                        request.DataExchangeFactory.AccessorFactory);
 				}
 
-				ExecutePostSelect( session, request);
+				ExecutePostSelect(request);
 
 				RetrieveOutputParameters(request, session, command, parameterObject);
 			}
@@ -1046,7 +817,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		public virtual IDictionary ExecuteQueryForMap( IDalSession session, object parameterObject, string keyProperty, string valueProperty )
 		{
 			IDictionary map = new Hashtable();
-			RequestScope request = _statement.Sql.GetRequestScope(parameterObject, session);
+			RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
 
 			_preparedCommand.Create(request, session, this.Statement, parameterObject);
 
@@ -1086,12 +857,12 @@ namespace IBatisNet.DataMapper.MappedStatements
 					{
 						while (reader.Read() )
 						{
-							object obj = ApplyResultMap(request, reader, null);
-							object key = ObjectProbe.GetMemberValue(obj, keyProperty, request.MemberAccessorFactory);
+							object obj = _resultStrategy.Process(request, reader, null);
+							object key = ObjectProbe.GetMemberValue(obj, keyProperty, request.DataExchangeFactory.AccessorFactory);
 							object value = obj;
 							if (valueProperty != null)
 							{
-								value = ObjectProbe.GetMemberValue(obj, valueProperty, request.MemberAccessorFactory);
+								value = ObjectProbe.GetMemberValue(obj, valueProperty, request.DataExchangeFactory.AccessorFactory);
 							}
 							map.Add(key, value);
 						}
@@ -1100,12 +871,12 @@ namespace IBatisNet.DataMapper.MappedStatements
 					{
 						while (reader.Read())
 						{
-							object obj = ApplyResultMap(request, reader, null);
-							object key = ObjectProbe.GetMemberValue(obj, keyProperty,request.MemberAccessorFactory);
+							object obj = _resultStrategy.Process(request, reader, null);
+							object key = ObjectProbe.GetMemberValue(obj, keyProperty,request.DataExchangeFactory.AccessorFactory);
 							object value = obj;
 							if (valueProperty != null)
 							{
-								value = ObjectProbe.GetMemberValue(obj, valueProperty, request.MemberAccessorFactory);
+								value = ObjectProbe.GetMemberValue(obj, valueProperty, request.DataExchangeFactory.AccessorFactory);
 							}
 							rowDelegate(key, value, parameterObject, map);
 
@@ -1120,477 +891,22 @@ namespace IBatisNet.DataMapper.MappedStatements
 		
 		#endregion
 
+
 		/// <summary>
-		/// Process 'select' result properties
+		/// Executes the <see cref="PostBindind"/>.
 		/// </summary>
-		/// <param name="request"></param>
-		/// <param name="session"></param>
-		private void ExecutePostSelect(IDalSession session, RequestScope request)
+		/// <param name="request">The current <see cref="RequestScope"/>.</param>
+		private void ExecutePostSelect(RequestScope request)
 		{
 			while (request.QueueSelect.Count>0)
 			{
 				PostBindind postSelect = request.QueueSelect.Dequeue() as PostBindind;
 
-				if (postSelect.Method == ExecuteMethod.ExecuteQueryForIList)
-				{
-					object values = postSelect.Statement.ExecuteQueryForList(session, postSelect.Keys); 
-					postSelect.ResultProperty.MemberAccessor.Set(postSelect.Target, values);
-				}
-				else if (postSelect.Method == ExecuteMethod.ExecuteQueryForStrongTypedIList)
-				{
-                    IFactory factory =  request.ObjectFactory.CreateFactory(postSelect.ResultProperty.MemberAccessor.MemberType, Type.EmptyTypes);
-                    object values = factory.CreateInstance(null);
-					postSelect.Statement.ExecuteQueryForList(session, postSelect.Keys, (IList)values);
-
-					postSelect.ResultProperty.MemberAccessor.Set(postSelect.Target, values);
-				}
-				else if (postSelect.Method == ExecuteMethod.ExecuteQueryForArrayList)
-				{
-					IList values = postSelect.Statement.ExecuteQueryForList(session, postSelect.Keys); 
-					Type elementType = postSelect.ResultProperty.MemberAccessor.MemberType.GetElementType();
-
-					Array array = Array.CreateInstance(elementType, values.Count);
-					int count = values.Count;
-					for(int i=0;i<count;i++)
-					{
-						array.SetValue(values[i],i);
-					}
-
-					postSelect.ResultProperty.MemberAccessor.Set(postSelect.Target, array);
-				}
-#if dotnet2
-                else if (postSelect.Method == ExecuteMethod.ExecuteQueryForGenericIList)
-                {
-                    // How to: Examine and Instantiate Generic Types with Reflection  
-                    // http://msdn2.microsoft.com/en-us/library/b8ytshk6.aspx
-
-                    Type[] typeArgs = postSelect.ResultProperty.MemberAccessor.MemberType.GetGenericArguments();
-                    Type genericList = typeof(IList<>);
-                    Type constructedType = genericList.MakeGenericType(typeArgs);
-                    Type elementType = postSelect.ResultProperty.MemberAccessor.MemberType.GetGenericArguments()[0];
-
-                    Type mappedStatementType = postSelect.Statement.GetType();
-
-                    Type[] typeArguments = {typeof(IDalSession), typeof(object)};
-
-                    MethodInfo[] mis = mappedStatementType.GetMethods(BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.Instance);
-                    MethodInfo mi = null;
-                    foreach(MethodInfo m in mis)
-                    {
-                        if (m.IsGenericMethod && 
-                            m.Name == "ExecuteQueryForList" && 
-                            m.GetParameters().Length==2)
-                        {
-                            mi = m;
-                            break;
-                        }
-                    }
-
-                    MethodInfo miConstructed = mi.MakeGenericMethod(elementType);
-
-                    // Invoke the method.
-                    object[] args = {session, postSelect.Keys};
-                    object values = miConstructed.Invoke(postSelect.Statement, args);
-
-					postSelect.ResultProperty.MemberAccessor.Set(postSelect.Target, values);
-                }
-#endif
-				else if (postSelect.Method == ExecuteMethod.ExecuteQueryForObject)
-				{
-					object value = postSelect.Statement.ExecuteQueryForObject(session, postSelect.Keys);
-					postSelect.ResultProperty.MemberAccessor.Set(postSelect.Target, value);
-				}
+				PostSelectStrategyFactory.Get(postSelect.Method).Execute(postSelect, request);
 			}
 		}
+	
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="request"></param>
-		/// <param name="resultMap"></param>
-		/// <param name="mapping"></param>
-		/// <param name="target"></param>
-		/// <param name="reader"></param>
-		private void SetObjectProperty(RequestScope request, ResultMap resultMap, 
-			ResultProperty mapping, ref object target, IDataReader reader)
-		{
-			string selectStatement = mapping.Select;
-
-			if (selectStatement.Length == 0 && mapping.NestedResultMap == null)
-			{
-				// If the property is not a 'select' ResultProperty 
-				//                     or a 'resultMap' ResultProperty
-				// We have a 'normal' ResultMap
-
-				#region Not a select statement
-				if (mapping.TypeHandler == null || mapping.TypeHandler is UnknownTypeHandler) // Find the TypeHandler
-				{
-					lock(mapping) 
-					{
-						if (mapping.TypeHandler == null || mapping.TypeHandler is UnknownTypeHandler)
-						{
-							int columnIndex = 0;
-							if (mapping.ColumnIndex == ResultProperty.UNKNOWN_COLUMN_INDEX) 
-							{
-								columnIndex = reader.GetOrdinal(mapping.ColumnName);
-							} 
-							else 
-							{
-								columnIndex = mapping.ColumnIndex;
-							}
-							Type systemType =((IDataRecord)reader).GetFieldType(columnIndex);
-
-							mapping.TypeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(systemType);
-						}
-					}					
-				}
-
-				object dataBaseValue = mapping.GetDataBaseValue( reader );
-				request.IsRowDataFound = request.IsRowDataFound || (dataBaseValue != null);
-
-				resultMap.SetValueOfProperty( ref target, mapping, dataBaseValue );
-
-				#endregion
-			}
-			else if (mapping.NestedResultMap != null) // 'resultMap' ResultProperty
-			{
-				object[] parameters = null;
-				if (mapping.NestedResultMap.Parameters.Count >0)
-				{
-					parameters = new object[resultMap.Parameters.Count];
-					// Fill parameters array
-					for(int index=0; index< mapping.NestedResultMap.Parameters.Count; index++)
-					{
-						ResultProperty resultProperty = mapping.NestedResultMap.Parameters[index];
-						parameters[index] = GetObjectArgument(request, resultMap, resultProperty, ref reader);
-						request.IsRowDataFound = request.IsRowDataFound || (parameters[index] != null);
-					}
-				}
-
-				object obj = mapping.NestedResultMap.CreateInstanceOfResult(parameters);
-				if (FillObjectWithReaderAndResultMap(request, reader, mapping.NestedResultMap, obj) == false)
-				{
-					obj = null;
-				}
-
-				resultMap.SetValueOfProperty( ref target, mapping, obj );
-			}
-			else //'select' ResultProperty 
-			{
-				// Get the select statement
-				IMappedStatement queryStatement = _sqlMap.GetMappedStatement(selectStatement);
-				string paramString = mapping.ColumnName;
-				object keys = null;
-				bool wasNull = false;
-
-				#region Find Key(s)
-				if (paramString.IndexOf(',')>0 || paramString.IndexOf('=')>0) // composite parameters key
-				{
-					IDictionary keyMap = new Hashtable();
-					keys = keyMap;
-					// define which character is seperating fields
-					char[] splitter  = {'=',','};
-
-					string[] paramTab = paramString.Split(splitter);
-					if (paramTab.Length % 2 != 0) 
-					{
-						throw new DataMapperException("Invalid composite key string format in '"+mapping.PropertyName+". It must be: property1=column1,property2=column2,..."); 
-					}
-					IEnumerator enumerator = paramTab.GetEnumerator();
-					while (!wasNull && enumerator.MoveNext()) 
-					{
-						string hashKey = ((string)enumerator.Current).Trim();
-						enumerator.MoveNext();
-						object hashValue = reader.GetValue( reader.GetOrdinal(((string)enumerator.Current).Trim()) );
-
-						keyMap.Add(hashKey, hashValue );
-						wasNull = (hashValue == DBNull.Value);
-					}
-				} 
-				else // single parameter key
-				{
-					keys = reader.GetValue(reader.GetOrdinal(paramString));
-					wasNull = reader.IsDBNull(reader.GetOrdinal(paramString));
-				}
-				#endregion
-
-				if (wasNull) 
-				{
-					// set the value of an object property to null
-					mapping.MemberAccessor.Set(target, null);
-				} 
-				else // Collection object or .Net object
-				{
-					PostBindind postSelect = new PostBindind();
-					postSelect.Statement = queryStatement;
-					postSelect.Keys = keys;
-					postSelect.Target = target;
-					postSelect.ResultProperty = mapping;
-
-					#region Collection object or .NET object
-					
-                    if (mapping.MemberAccessor.MemberType.BaseType == typeof(Array))
-					{
-						if (mapping.IsLazyLoad)
-						{
-							throw new NotImplementedException("Lazy load no supported for System.Array property:" + mapping.MemberAccessor.Name);
-						}
-						postSelect.Method = ExecuteMethod.ExecuteQueryForArrayList;
-					}
-					// Check if the object to Map implement 'IList' or is IList type
-					// If yes the ResultProperty is map to a IList object
-					else if ( typeof(IList).IsAssignableFrom(mapping.MemberAccessor.MemberType) )
-					{
-						if (mapping.IsLazyLoad)
-						{
-							object values = LazyLoadProxyFactory.Build(queryStatement, keys, target, mapping.MemberAccessor);
-							mapping.MemberAccessor.Set(target, values);
-						}
-						else
-						{
-							if (mapping.MemberAccessor.MemberType == typeof(IList))
-							{
-								postSelect.Method = ExecuteMethod.ExecuteQueryForIList;
-							}
-							else
-							{
-                                postSelect.Method = ExecuteMethod.ExecuteQueryForStrongTypedIList;
-                            }
-						}
-					}
-#if dotnet2
-                    else if (mapping.MemberAccessor.MemberType.IsGenericType &&
-                         mapping.MemberAccessor.MemberType.GetGenericTypeDefinition() == typeof(IList<>)) 
-                    {
-                        if (mapping.IsLazyLoad)
-                        {
-							object values = LazyLoadProxyFactory.Build(queryStatement, keys, target, mapping.MemberAccessor);
-							mapping.MemberAccessor.Set(target, values);
-                        }
-                        else
-                        {
-                            if (mapping.MemberAccessor.MemberType.GetGenericTypeDefinition() == typeof(IList<>))
-                            {
-                                postSelect.Method = ExecuteMethod.ExecuteQueryForGenericIList;
-                            }
-                        }
-                    }
-#endif
-					else // The ResultProperty is map to a .Net object
-					{
-						postSelect.Method = ExecuteMethod.ExecuteQueryForObject;
-					}
-					#endregion
-
-					if (!mapping.IsLazyLoad)
-					{
-						request.QueueSelect.Enqueue(postSelect);
-					}
-				}
-			}
-		}
-
-        /// <summary>
-        /// Gets the argument value for an argument constructor.
-        /// </summary>
-        /// <param name="request">The request.</param>
-        /// <param name="resultMap">The result map.</param>
-        /// <param name="mapping">The mapping.</param>
-        /// <param name="reader">The reader.</param>
-        /// <returns>The argument value</returns>
-		private object GetObjectArgument(RequestScope request, ResultMap resultMap, ResultProperty mapping, ref IDataReader reader)
-		{
-			string selectStatement = mapping.Select;
-
-			if (selectStatement.Length == 0 && mapping.NestedResultMap == null)
-			{
-				// If the property is not a 'select' ResultProperty 
-				//                     or a 'resultMap' ResultProperty
-				// We have a 'normal' ResultMap
-
-				#region Not a select statement
-				if (mapping.TypeHandler == null || mapping.TypeHandler is UnknownTypeHandler) // Find the TypeHandler
-				{
-					lock(mapping) 
-					{
-						if (mapping.TypeHandler == null || mapping.TypeHandler is UnknownTypeHandler)
-						{
-							int columnIndex = 0;
-							if (mapping.ColumnIndex == ResultProperty.UNKNOWN_COLUMN_INDEX) 
-							{
-								columnIndex = reader.GetOrdinal(mapping.ColumnName);
-							} 
-							else 
-							{
-								columnIndex = mapping.ColumnIndex;
-							}
-							Type systemType =((IDataRecord)reader).GetFieldType(columnIndex);
-
-							mapping.TypeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(systemType);
-						}
-					}					
-				}
-
-				object dataBaseValue = mapping.GetDataBaseValue( reader );
-				request.IsRowDataFound = request.IsRowDataFound || (dataBaseValue != null);
-
-				return dataBaseValue;
-
-				#endregion
-			}
-			else if (mapping.NestedResultMap != null) // 'resultMap' ResultProperty
-			{
-				object[] parameters = null;
-				if (mapping.NestedResultMap.Parameters.Count >0)
-				{
-					parameters = new object[resultMap.Parameters.Count];
-					// Fill parameters array
-					for(int index=0; index< mapping.NestedResultMap.Parameters.Count; index++)
-					{
-						ResultProperty property = mapping.NestedResultMap.Parameters[index];
-						parameters[index] = property.GetDataBaseValue( reader );
-						request.IsRowDataFound = request.IsRowDataFound || (parameters[index] != null);
-					}
-				}
-
-				object obj = mapping.NestedResultMap.CreateInstanceOfResult(parameters);
-				if (FillObjectWithReaderAndResultMap(request, reader, mapping.NestedResultMap, obj) == false)
-				{
-					obj = null;
-				}
-
-				return obj;
-			}
-			else //'select' ResultProperty 
-			{
-				// Get the select statement
-				IMappedStatement queryStatement = _sqlMap.GetMappedStatement(selectStatement);
-				string paramString = mapping.ColumnName;
-				object keys = null;
-				bool wasNull = false;
-
-				#region Find Key(s)
-				if (paramString.IndexOf(',')>0 || paramString.IndexOf('=')>0) // composite parameters key
-				{
-					IDictionary keyMap = new Hashtable();
-					keys = keyMap;
-					// define which character is seperating fields
-					char[] splitter  = {'=',','};
-
-					string[] paramTab = paramString.Split(splitter);
-					if (paramTab.Length % 2 != 0) 
-					{
-						throw new DataMapperException("Invalid composite key string format in '"+mapping.PropertyName+". It must be: property1=column1,property2=column2,..."); 
-					}
-					IEnumerator enumerator = paramTab.GetEnumerator();
-					while (!wasNull && enumerator.MoveNext()) 
-					{
-						string hashKey = ((string)enumerator.Current).Trim();
-						enumerator.MoveNext();
-						object hashValue = reader.GetValue( reader.GetOrdinal(((string)enumerator.Current).Trim()) );
-
-						keyMap.Add(hashKey, hashValue );
-						wasNull = (hashValue == DBNull.Value);
-					}
-				} 
-				else // single parameter key
-				{
-					keys = reader.GetValue(reader.GetOrdinal(paramString));
-					wasNull = reader.IsDBNull(reader.GetOrdinal(paramString));
-				}
-				#endregion
-
-				if (wasNull) 
-				{
-					// set the value of an object property to null
-					return null;
-				} 
-				else // Collection object or .Net object
-				{
-					// lazyLoading is not permit for argument constructor
-
-					#region Collection object or .NET object
-					
-					if (mapping.MemberType.BaseType == typeof(Array))
-					{
-						reader = DataReaderTransformer.Transforme(reader, request.Session.DataSource.DbProvider);
-						IList values = queryStatement.ExecuteQueryForList(request.Session, keys); 
-
-						Type elementType = mapping.MemberType.GetElementType();
-						Array array = Array.CreateInstance(elementType, values.Count);
-						int count = values.Count;
-						for(int i=0;i<count;i++)
-						{
-							array.SetValue(values[i],i);
-						}
-						return array;
-					}
-					// Check if the object to Map implement 'IList' or is IList type
-					// If yes the ResultProperty is map to a IList object
-					else if ( typeof(IList).IsAssignableFrom(mapping.MemberType) )
-					{
-						if (mapping.MemberType == typeof(IList))
-						{
-							reader = DataReaderTransformer.Transforme(reader, request.Session.DataSource.DbProvider);
-							return queryStatement.ExecuteQueryForList(request.Session, keys); 
-						}
-						else // Strongly typed List
-						{
-							reader = DataReaderTransformer.Transforme(reader, request.Session.DataSource.DbProvider);
-                            IFactory factory = request.ObjectFactory.CreateFactory(mapping.MemberType, Type.EmptyTypes);
-                            object values = factory.CreateInstance(null);
-							queryStatement.ExecuteQueryForList(request.Session, keys, (IList)values);
-							return values;
-						}
-					}
-#if dotnet2
-                    else if (mapping.MemberType.IsGenericType &&
-                         mapping.MemberType.GetGenericTypeDefinition() == typeof(IList<>)) 
-                    {
-                        reader = DataReaderTransformer.Transforme(reader, request.Session.DataSource.DbProvider);
-
-                        Type[] typeArgs = mapping.MemberType.GetGenericArguments();
-                        Type genericList = typeof(IList<>);
-                        Type constructedType = genericList.MakeGenericType(typeArgs);
-                        Type elementType = mapping.MemberType.GetGenericArguments()[0];
-
-                        Type mappedStatementType = queryStatement.GetType();
-
-                        Type[] typeArguments = { typeof(IDalSession), typeof(object) };
-
-                        MethodInfo[] mis = mappedStatementType.GetMethods(BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.Instance);
-                        MethodInfo mi = null;
-                        foreach (MethodInfo m in mis)
-                        {
-                            if (m.IsGenericMethod &&
-                                m.Name == "ExecuteQueryForList" &&
-                                m.GetParameters().Length == 2)
-                            {
-                                mi = m;
-                                break;
-                            }
-                        }
-
-                        MethodInfo miConstructed = mi.MakeGenericMethod(elementType);
-
-                        // Invoke the method.
-                        object[] args = { request.Session, keys };
-                        object values = miConstructed.Invoke(queryStatement, args);
-
-                        return values;
-                    }
-#endif
-					else // The ResultProperty is map to a .Net object
-					{
-						reader = DataReaderTransformer.Transforme(reader, request.Session.DataSource.DbProvider);
-						return queryStatement.ExecuteQueryForObject(request.Session, keys);
-					}
-					#endregion
-
-				}
-			}
-		}
-			
 		/// <summary>
 		/// Raise an event ExecuteEventArgs
 		/// (Used when a query is executed)
@@ -1621,158 +937,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		}
 	
 
-		private ReaderAutoMapper _readerAutoMapper = null;
-
-        /// <summary>
-        /// Auto-map the reader to the result object.
-        /// </summary>
-        /// <param name="reader">The reader.</param>
-        /// <param name="resultObject">The result object.</param>
-		private void AutoMapReader( IDataReader reader,ref object resultObject) 
-		{
-			if (_statement.RemapResults)
-			{
-				ReaderAutoMapper readerAutoMapper = new ReaderAutoMapper(_sqlMap.TypeHandlerFactory, 
-					_sqlMap.MemberAccessorFactory,
-					_sqlMap.DataExchangeFactory,
-					reader, 
-					ref resultObject);
-				readerAutoMapper.AutoMapReader( reader, ref resultObject );
-				_logger.Debug("The RemapResults");
-			}
-			else
-			{
-				if (_readerAutoMapper == null)
-				{
-					lock (this) 
-					{
-						if (_readerAutoMapper == null) 
-						{
-							_readerAutoMapper = new ReaderAutoMapper(
-								_sqlMap.TypeHandlerFactory, 
-								_sqlMap.MemberAccessorFactory,
-								_sqlMap.DataExchangeFactory,
-								reader, 
-								ref resultObject);
-						}
-					}
-				}
-				_logger.Debug("The AutoMapReader");
-				_readerAutoMapper.AutoMapReader( reader, ref resultObject );				
-			}
-
-		}
 		#endregion
 
-		private class ReaderAutoMapper 
-		{
-			private ResultMap _resultMap = null;
-
-			/// <summary>
-			/// 
-			/// </summary>
-			/// <param name="reader"></param>
-			/// <param name="resultObject"></param>
-			/// <param name="typeHandlerFactory"></param>
-			/// <param name="memberAccessorFactory"></param>
-			/// <param name="dataExchangeFactory"></param>
-			public ReaderAutoMapper(TypeHandlerFactory typeHandlerFactory, 
-				IMemberAccessorFactory memberAccessorFactory,
-				DataExchangeFactory dataExchangeFactory,
-				IDataReader reader,
-				ref object resultObject) 
-			{
-				Type targetType = resultObject.GetType();
-				_resultMap = new ResultMap(dataExchangeFactory);
-				_resultMap.DataExchange = dataExchangeFactory.GetDataExchangeForClass( targetType );
-				try 
-				{
-					// Get all PropertyInfo from the resultObject properties
-					ReflectionInfo reflectionInfo = ReflectionInfo.GetInstance(targetType);
-					string[] membersName = reflectionInfo.GetWriteableMemberNames();
-
-					Hashtable propertyMap = new Hashtable();
-					int length = membersName.Length;
-					for (int i = 0; i < length; i++) 
-					{
-						IMemberAccessor memberAccessor = memberAccessorFactory.CreateMemberAccessor(targetType, membersName[i]);
-						propertyMap.Add( membersName[i].ToUpper(), memberAccessor );
-					}
-
-					// Get all column Name from the reader
-					// and build a resultMap from with the help of the PropertyInfo[].
-					DataTable dataColumn = reader.GetSchemaTable();
-					int count = dataColumn.Rows.Count;
-					for (int i = 0; i < count; i++) 
-					{
-						string columnName = dataColumn.Rows[i][0].ToString();
-						IMemberAccessor matchedMemberAccessor = propertyMap[columnName.ToUpper()] as IMemberAccessor;
-
-						ResultProperty property = new ResultProperty();
-						property.ColumnName = columnName;
-						property.ColumnIndex = i;
-
-						if (resultObject is Hashtable) 
-						{
-							property.PropertyName = columnName;
-							_resultMap.AddResultPropery(property);
-						}
-
-						Type propertyType = null;
-
-						if (matchedMemberAccessor == null )
-						{
-							try
-							{
-								propertyType = ObjectProbe.GetMemberTypeForSetter(resultObject, columnName);
-							}
-							catch
-							{
-								_logger.Error("The column [" + columnName + "] could not be auto mapped to a property on [" + resultObject.ToString() + "]");
-							}
-						}
-						else
-						{
-							propertyType = matchedMemberAccessor.MemberType;
-						}
-
-						if(propertyType != null || matchedMemberAccessor != null) 
-						{
-							property.PropertyName = (matchedMemberAccessor != null ? matchedMemberAccessor.Name : columnName );
-							if (matchedMemberAccessor != null)
-							{
-								property.Initialize(typeHandlerFactory, matchedMemberAccessor );
-							}
-							else
-							{
-								property.TypeHandler = typeHandlerFactory.GetTypeHandler(propertyType);
-							}
-							_resultMap.AddResultPropery(property);
-						} 
-					}
-				} 
-				catch (Exception e) 
-				{
-					throw new DataMapperException("Error automapping columns. Cause: " + e.Message, e);
-				}
-			}
-
-			/// <summary>
-			/// 
-			/// </summary>
-			/// <param name="reader"></param>
-			/// <param name="resultObject"></param>
-			public void AutoMapReader(IDataReader reader, ref object resultObject)
-			{
-				for(int index=0; index< _resultMap.Properties.Count; index++)
-
-				{
-					ResultProperty property = _resultMap.Properties[index];
-					_resultMap.SetValueOfProperty( ref resultObject, property, 
-						property.GetDataBaseValue( reader ));
-				}
-			}
-
-		}
 	}
 }

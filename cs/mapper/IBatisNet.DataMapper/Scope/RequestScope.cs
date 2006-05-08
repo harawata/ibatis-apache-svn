@@ -36,6 +36,7 @@ using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
 using IBatisNet.DataMapper.Configuration.Statements;
 using IBatisNet.DataMapper.DataExchange;
+using IBatisNet.DataMapper.MappedStatements;
 using IBatisNet.DataMapper.TypeHandlers;
 
 #endregion
@@ -48,27 +49,44 @@ namespace IBatisNet.DataMapper.Scope
 	public class RequestScope : IScope
 	{
 		#region Fields
-		
+
+		private IStatement _statement = null ;
 		private ErrorContext _errorContext = null;
 		private ParameterMap _parameterMap = null;
-		private ResultMap _resultMap = null;
 		private PreparedStatement _preparedStatement = null;
 		private IDbCommand _command = null;
 		private Queue _selects = new Queue();
 		bool _rowDataFound= false;
 		private static long _nextId = 0;
 		private long _id = 0;
-		private TypeHandlerFactory _typeHandlerFactory = null;
-		private IMemberAccessorFactory _memberAccessorFactory = null;
 		private DataExchangeFactory _dataExchangeFactory = null;
-		private IObjectFactory _objectFactory = null;
 		private IDalSession _session = null;
+		private IMappedStatement _mappedStatement = null;
+
 		#endregion
 	
 		#region Properties
 
 		/// <summary>
-		///  The current session
+		///  The current <see cref="IMappedStatement"/>.
+		/// </summary>
+		public IMappedStatement MappedStatement 
+		{
+			set { _mappedStatement = value; }
+			get { return _mappedStatement; }
+		}
+
+		/// <summary>
+		/// Gets the current <see cref="IStatement"/>.
+		/// </summary>
+		/// <value>The statement.</value>
+		public IStatement Statement
+		{
+			get{ return _statement; }
+		}
+
+		/// <summary>
+		///  The current <see cref="IDalSession"/>.
 		/// </summary>
 		public IDalSession Session
 		{
@@ -76,7 +94,7 @@ namespace IBatisNet.DataMapper.Scope
 		}
 
 		/// <summary>
-		///  The IDbCommand to execute
+		///  The <see cref="IDbCommand"/> to execute
 		/// </summary>
 		public IDbCommand IDbCommand
 		{
@@ -103,25 +121,24 @@ namespace IBatisNet.DataMapper.Scope
 		}
 
 		/// <summary>
-		/// The ResultMap used by this request.
+		/// The <see cref="ResultMap"/> used by this request.
 		/// </summary>
 		public ResultMap ResultMap
 		{
-			get { return _resultMap; }
-			set { _resultMap = value; }
+			get { return _statement.ResultMap; }
 		}
 
 		/// <summary>
-		/// The parameterMap used by this request.
+		/// The <see cref="ParameterMap"/> used by this request.
 		/// </summary>
 		public ParameterMap ParameterMap
 		{
-			get { return _parameterMap; }
 			set { _parameterMap = value; }
+			get { return _parameterMap; }
 		}
 
 		/// <summary>
-		/// The PreparedStatement used by this request.
+		/// The <see cref="PreparedStatement"/> used by this request.
 		/// </summary>
 		public PreparedStatement PreparedStatement
 		{
@@ -138,24 +155,20 @@ namespace IBatisNet.DataMapper.Scope
         /// <summary>
         /// Initializes a new instance of the <see cref="RequestScope"/> class.
         /// </summary>
-        /// <param name="typeHandlerFactory">The type handler factory.</param>
-        /// <param name="memberAccessorFactory">The member accessor factory.</param>
-        /// <param name="objectFactory">The object factory.</param>
         /// <param name="dataExchangeFactory">The data exchange factory.</param>
         /// <param name="session">The session.</param>
-		public RequestScope(TypeHandlerFactory typeHandlerFactory, 
-			IMemberAccessorFactory memberAccessorFactory,
-			IObjectFactory objectFactory,
+        /// <param name="statement">The statement</param>
+		public RequestScope(
 			DataExchangeFactory dataExchangeFactory,
-            IDalSession session
+            IDalSession session,
+			IStatement statement
             )
 		{
 			_errorContext = new ErrorContext();
 
+			_statement = statement;
+			_parameterMap = statement.ParameterMap;
             _session = session;
-			_objectFactory = objectFactory;
-			_typeHandlerFactory = typeHandlerFactory;
-			_memberAccessorFactory = memberAccessorFactory;
 			_dataExchangeFactory = dataExchangeFactory;
 			 _id = GetNextId();
 		}
@@ -196,7 +209,7 @@ namespace IBatisNet.DataMapper.Scope
 		/// <returns>the resultMap to use</returns>
 		public ResultMap GetResultMap(IDataReader dataReader)
 		{
-			return _resultMap.ResolveSubMap(dataReader);
+			return _statement.ResultMap.ResolveSubMap(dataReader);
 		}
 
 		/// <summary>
@@ -213,14 +226,6 @@ namespace IBatisNet.DataMapper.Scope
 		#region IScope Members
 
 		/// <summary>
-		/// The factory for object
-		/// </summary>
-		public IObjectFactory ObjectFactory
-		{
-			get{ return _objectFactory; }
-		}
-
-		/// <summary>
 		/// A factory for DataExchange objects
 		/// </summary>
 		public DataExchangeFactory DataExchangeFactory
@@ -228,22 +233,6 @@ namespace IBatisNet.DataMapper.Scope
 			get { return _dataExchangeFactory; }
 		}		
 		
-		/// <summary>
-		/// The current TypeHandlerFactory
-		/// </summary>
-		public TypeHandlerFactory TypeHandlerFactory
-		{
-			get { return _typeHandlerFactory; }
-		}
-
-		/// <summary>
-		/// The factory which build MemberAccessorFactory
-		/// </summary>
-		public IMemberAccessorFactory MemberAccessorFactory
-		{
-			get { return _memberAccessorFactory; }
-		}
-
 		/// <summary>
 		///  Get the request's error context
 		/// </summary>

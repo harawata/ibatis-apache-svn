@@ -350,52 +350,97 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Utilities\Objects\Members\AccessorFactory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Utilities\Objects\Members\BaseAccessor.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Utilities\Objects\Members\BaseEmitAccessor.cs"
+                    RelPath = "Utilities\Objects\Members\EmitFieldGetAccessor.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Utilities\Objects\Members\EmitFieldAccessor.cs"
+                    RelPath = "Utilities\Objects\Members\EmitFieldSetAccessor.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Utilities\Objects\Members\EmitPropertyAccessor.cs"
+                    RelPath = "Utilities\Objects\Members\EmitPropertyGetAccessor.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Utilities\Objects\Members\IMemberAccessor.cs"
+                    RelPath = "Utilities\Objects\Members\EmitPropertySetAccessor.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Utilities\Objects\Members\IMemberAccessorFactory.cs"
+                    RelPath = "Utilities\Objects\Members\GetAccessorFactory.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Utilities\Objects\Members\IPropertyAccessor.cs"
+                    RelPath = "Utilities\Objects\Members\IAccessor.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Utilities\Objects\Members\MemberAccessorFactory.cs"
+                    RelPath = "Utilities\Objects\Members\IGet.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Utilities\Objects\Members\ReflectionFieldAccessor.cs"
+                    RelPath = "Utilities\Objects\Members\IGetAccessor.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Utilities\Objects\Members\ReflectionPropertyAccessor.cs"
+                    RelPath = "Utilities\Objects\Members\IGetAccessorFactory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Utilities\Objects\Members\ISet.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Utilities\Objects\Members\ISetAccessor.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Utilities\Objects\Members\ISetAccessorFactory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Utilities\Objects\Members\ReflectionFieldGetAccessor.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Utilities\Objects\Members\ReflectionFieldSetAccessor.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Utilities\Objects\Members\ReflectionPropertyGetAccessor.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Utilities\Objects\Members\ReflectionPropertySetAccessor.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Utilities\Objects\Members\SetAccessorFactory.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

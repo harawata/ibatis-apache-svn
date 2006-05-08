@@ -58,7 +58,7 @@ namespace IBatisNet.DataMapper.DataExchange
 			if (mapping.IsComplexMemberName)
 			{
 				return ObjectProbe.GetMemberValue(parameterObject, mapping.PropertyName, 
-					this.DataExchangeFactory.MemberAccessorFactory);
+					this.DataExchangeFactory.AccessorFactory);
 			}
 			else
 			{

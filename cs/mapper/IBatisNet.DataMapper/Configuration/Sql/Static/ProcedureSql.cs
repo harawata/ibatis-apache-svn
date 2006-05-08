@@ -31,6 +31,7 @@ using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.Configuration.Statements;
 using IBatisNet.DataMapper.DataExchange;
+using IBatisNet.DataMapper.MappedStatements;
 using IBatisNet.DataMapper.Scope;
 using IBatisNet.DataMapper.TypeHandlers;
 
@@ -49,10 +50,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Static
 		private PreparedStatement _preparedStatement = null ;
 		private string _sqlStatement = string.Empty;
 		private object _synRoot = new Object();
-		private TypeHandlerFactory _typeHandlerFactory = null;
-		private IMemberAccessorFactory _memberAccessorFactory = null;
 		private DataExchangeFactory _dataExchangeFactory = null;
-		private IObjectFactory _objectFactory = null;
 
 		#endregion
 
@@ -68,29 +66,26 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Static
 			_sqlStatement = sqlStatement;
 			_statement = statement;
 
-			_typeHandlerFactory = scope.TypeHandlerFactory;
-			_memberAccessorFactory = scope.MemberAccessorFactory;
 			_dataExchangeFactory = scope.DataExchangeFactory;
-			_objectFactory = scope.ObjectFactory;
 		}
 		#endregion
 
 		#region ISql Members
 
 		/// <summary>
-		/// 
+		/// Builds a new <see cref="RequestScope"/> and the sql command text to execute.
 		/// </summary>
-		/// <param name="parameterObject"></param>
-		/// <param name="session"></param>
-		/// <returns></returns>
-		public RequestScope GetRequestScope(object parameterObject, IDalSession session)
+		/// <param name="parameterObject">The parameter object (used in DynamicSql)</param>
+		/// <param name="session">The current session</param>
+		/// <param name="mappedStatement">The <see cref="IMappedStatement"/>.</param>
+		/// <returns>A new <see cref="RequestScope"/>.</returns>
+		public RequestScope GetRequestScope(IMappedStatement mappedStatement, 
+			object parameterObject, IDalSession session)
 		{
-			RequestScope request = new RequestScope(_typeHandlerFactory, _memberAccessorFactory,
-                _objectFactory, _dataExchangeFactory, session);
+			RequestScope request = new RequestScope(_dataExchangeFactory, session, _statement);
 
-			request.ParameterMap = _statement.ParameterMap;
-			request.ResultMap = _statement.ResultMap;
 			request.PreparedStatement = BuildPreparedStatement(session, request, _sqlStatement);
+			request.MappedStatement = mappedStatement;
 
 			return request;
 		}

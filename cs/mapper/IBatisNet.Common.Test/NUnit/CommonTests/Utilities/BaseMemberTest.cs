@@ -13,28 +13,68 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 	[TestFixture] 
 	public abstract class BaseMemberTest
     {
-        protected IMemberAccessorFactory factory = null;
-        protected IMemberAccessor intAccessor = null;
-        protected IMemberAccessor longAccessor = null;
-        protected IMemberAccessor sbyteAccessor = null;
-        protected IMemberAccessor datetimeAccessor = null;
-        protected IMemberAccessor decimalAccessor = null;
-        protected IMemberAccessor byteAccessor = null;
-        protected IMemberAccessor stringAccessor = null;
-        protected IMemberAccessor charAccessor = null;
-        protected IMemberAccessor shortAccessor = null;
-        protected IMemberAccessor ushortAccessor = null;
-        protected IMemberAccessor uintAccessor = null;
-        protected IMemberAccessor ulongAccessor = null;
-        protected IMemberAccessor boolAccessor = null;
-        protected IMemberAccessor doubleAccessor = null;
-        protected IMemberAccessor floatAccessor = null;
-        protected IMemberAccessor guidAccessor = null;
-        protected IMemberAccessor timespanAccessor = null;
-        protected IMemberAccessor accountAccessor = null;
-        protected IMemberAccessor enumAccessor = null;
+        protected ISetAccessorFactory factorySet = null;
+        protected IGetAccessorFactory factoryGet = null;
+
+        protected ISetAccessor intSetAccessor = null;
+        protected IGetAccessor intGetAccessor = null;
+
+        protected ISetAccessor longSetAccessor = null;
+        protected IGetAccessor longGetAccessor = null;
+
+        protected ISetAccessor sbyteSetAccessor = null;
+        protected IGetAccessor sbyteGetAccessor = null;
+
+        protected ISetAccessor datetimeSetAccessor = null;
+        protected IGetAccessor datetimeGetAccessor = null;
+
+        protected ISetAccessor decimalSetAccessor = null;
+        protected IGetAccessor decimalGetAccessor = null;
+
+        protected ISetAccessor byteSetAccessor = null;
+        protected IGetAccessor byteGetAccessor = null;
+
+        protected ISetAccessor stringSetAccessor = null;
+        protected IGetAccessor stringGetAccessor = null;
+
+        protected ISetAccessor charSetAccessor = null;
+        protected IGetAccessor charGetAccessor = null;
+
+        protected ISetAccessor shortSetAccessor = null;
+        protected IGetAccessor shortGetAccessor = null;
+
+        protected ISetAccessor ushortSetAccessor = null;
+        protected IGetAccessor ushortGetAccessor = null;
+
+        protected ISetAccessor uintSetAccessor = null;
+        protected IGetAccessor uintGetAccessor = null;
+
+        protected ISetAccessor ulongSetAccessor = null;
+        protected IGetAccessor ulongGetAccessor = null;
+
+        protected ISetAccessor boolSetAccessor = null;
+        protected IGetAccessor boolGetAccessor = null;
+
+        protected ISetAccessor doubleSetAccessor = null;
+        protected IGetAccessor doubleGetAccessor = null;
+
+        protected ISetAccessor floatSetAccessor = null;
+        protected IGetAccessor floatGetAccessor = null;
+
+        protected ISetAccessor guidSetAccessor = null;
+        protected IGetAccessor guidGetAccessor = null;
+
+        protected ISetAccessor timespanSetAccessor = null;
+        protected IGetAccessor timespanGetAccessor = null;
+
+        protected ISetAccessor accountSetAccessor = null;
+        protected IGetAccessor accountGetAccessor = null;
+
+        protected ISetAccessor enumSetAccessor = null;
+        protected IGetAccessor enumGetAccessor = null;
 #if dotnet2
-        protected IMemberAccessor nullableAccessor = null;
+        protected ISetAccessor nullableSetAccessor = null;
+        protected IGetAccessor nullableGetAccessor = null;
 #endif
 
 
@@ -44,7 +84,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         [TestFixtureSetUp]
         protected virtual void SetUpFixture()
         {
-            factory = new MemberAccessorFactory(true);
+            factoryGet = new GetAccessorFactory(true);
+            factorySet = new SetAccessorFactory(true);
         }
 
         /// <summary>
@@ -53,7 +94,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         [TestFixtureTearDown]
         protected virtual void TearDownFixture()
         {
-            factory = null;
+            factoryGet = null;
+            factorySet = null;
         }
 
         /// <summary>
@@ -66,7 +108,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.Int = -99;
 
             // Property accessor
-            intAccessor.Set(prop, null);
+            intSetAccessor.Set(prop, null);
             Assert.AreEqual(0, prop.Int);
         }
 
@@ -81,7 +123,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 
             // Property accessor
             int test = 57;
-            intAccessor.Set(prop, test);
+            intSetAccessor.Set(prop, test);
             Assert.AreEqual(test, prop.Int);
         }
 
@@ -96,7 +138,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.Int = test;
 
             // Property accessor
-            Assert.AreEqual(test, intAccessor.Get(prop));
+            Assert.AreEqual(test, intGetAccessor.Get(prop));
         }
 
         /// <summary>
@@ -109,7 +151,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.Long = 78945566664213223;
 
             // Property accessor
-            longAccessor.Set(prop, null);
+            longSetAccessor.Set(prop, null);
             Assert.AreEqual((long)0, prop.Long);
         }
 
@@ -124,7 +166,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 
             // Property accessor
             long test = 123456789987456;
-            longAccessor.Set(prop, test);
+            longSetAccessor.Set(prop, test);
             Assert.AreEqual(test, prop.Long);
         }
 
@@ -139,7 +181,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.Long = test;
 
             // Property accessor
-            Assert.AreEqual(test, longAccessor.Get(prop));
+            Assert.AreEqual(test, longGetAccessor.Get(prop));
         }
 
         /// <summary>
@@ -152,7 +194,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.SByte = 78;
 
             // Property accessor
-            sbyteAccessor.Set(prop, null);
+            sbyteSetAccessor.Set(prop, null);
             Assert.AreEqual((sbyte)0, prop.SByte);
         }
 
@@ -167,7 +209,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 
             // Property accessor
             sbyte test = 19;
-            sbyteAccessor.Set(prop, test);
+            sbyteSetAccessor.Set(prop, test);
             Assert.AreEqual(test, prop.SByte);
         }
 
@@ -182,7 +224,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.SByte = test;
 
             // Property accessor
-            Assert.AreEqual(test, sbyteAccessor.Get(prop));
+            Assert.AreEqual(test, sbyteGetAccessor.Get(prop));
         }
 
         /// <summary>
@@ -195,7 +237,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.String = "abc";
 
 			// Property accessor
-            stringAccessor.Set(prop, null);
+            stringSetAccessor.Set(prop, null);
 			Assert.IsNull(prop.String);
 		}
 
@@ -210,7 +252,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 
 			// Property accessor
 			string test = "wxc";
-            stringAccessor.Set(prop, test);
+            stringSetAccessor.Set(prop, test);
 			Assert.AreEqual(test, prop.String);
 		}
 
@@ -225,7 +267,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.String = test;
 
             // Property accessor
-            Assert.AreEqual(test, stringAccessor.Get(prop));
+            Assert.AreEqual(test, stringGetAccessor.Get(prop));
         }
 
         		/// <summary>
@@ -238,7 +280,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.DateTime = DateTime.Now;
 			
 			// Property accessor
-			datetimeAccessor.Set(prop, null);
+            datetimeSetAccessor.Set(prop, null);
 			Assert.AreEqual(DateTime.MinValue, prop.DateTime);
 		}
 
@@ -253,7 +295,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 
 			// Property accessor
 			DateTime test = new DateTime(1987,11,25);
-			datetimeAccessor.Set(prop, test);
+            datetimeSetAccessor.Set(prop, test);
 			Assert.AreEqual(test, prop.DateTime);
 		}
 
@@ -268,7 +310,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.DateTime = test;
 
             // Property accessor
-            Assert.AreEqual(test, datetimeAccessor.Get(prop));
+            Assert.AreEqual(test, datetimeGetAccessor.Get(prop));
         }
 
         /// <summary>
@@ -281,7 +323,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.Decimal = 45.187M;
 
             // Property accessor
-            decimalAccessor.Set(prop, null);
+            decimalSetAccessor.Set(prop, null);
             Assert.AreEqual(0.0M, prop.Decimal);
         }
 
@@ -296,7 +338,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 
             // Property accessor
             Decimal test = 789456.141516M;
-            decimalAccessor.Set(prop, test);
+            decimalSetAccessor.Set(prop, test);
             Assert.AreEqual(test, prop.Decimal);
         }
 
@@ -311,7 +353,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.Decimal = test;
 
             // Property accessor
-            Assert.AreEqual(test, decimalAccessor.Get(prop));
+            Assert.AreEqual(test, decimalGetAccessor.Get(prop));
         }
 
         /// <summary>
@@ -324,7 +366,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.Byte = 78;
 
             // Property accessor
-            byteAccessor.Set(prop, null);
+            byteSetAccessor.Set(prop, null);
             Assert.AreEqual((byte)0, prop.Byte);
         }
 
@@ -339,7 +381,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 
             // Property accessor
             byte test = 94;
-            byteAccessor.Set(prop, test);
+            byteSetAccessor.Set(prop, test);
             Assert.AreEqual(test, prop.Byte);
         }
 
@@ -354,7 +396,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.Byte = test;
 
             // Property accessor
-            Assert.AreEqual(test, byteAccessor.Get(prop));
+            Assert.AreEqual(test, byteGetAccessor.Get(prop));
         }
 
         /// <summary>
@@ -367,7 +409,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.Char = 'r';
 
             // Property accessor
-            charAccessor.Set(prop, null);
+            charSetAccessor.Set(prop, null);
             Assert.AreEqual('\0', prop.Char);
         }
 
@@ -382,7 +424,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 
             // Property accessor
             char test = 'j';
-            charAccessor.Set(prop, test);
+            charSetAccessor.Set(prop, test);
             Assert.AreEqual(test, prop.Char);
         }
 
@@ -397,7 +439,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.Char = test;
 
             // Property accessor
-            Assert.AreEqual(test, charAccessor.Get(prop));
+            Assert.AreEqual(test, charGetAccessor.Get(prop));
         }
 
         /// <summary>
@@ -410,7 +452,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.Short = 5;
 
             // Property accessor
-            shortAccessor.Set(prop, null);
+            shortSetAccessor.Set(prop, null);
             Assert.AreEqual((short)0, prop.Short);
         }
 
@@ -425,7 +467,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 
             // Property accessor
             short test = 45;
-            shortAccessor.Set(prop, test);
+            shortSetAccessor.Set(prop, test);
             Assert.AreEqual(test, prop.Short);
         }
 
@@ -440,7 +482,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.Short = test;
 
             // Property accessor
-            Assert.AreEqual(test, shortAccessor.Get(prop));
+            Assert.AreEqual(test, shortGetAccessor.Get(prop));
         }
 
         /// <summary>
@@ -453,7 +495,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.UShort = 5;
 
             // Property accessor
-            ushortAccessor.Set(prop, null);
+            ushortSetAccessor.Set(prop, null);
             Assert.AreEqual((ushort)0, prop.UShort);
         }
 
@@ -468,7 +510,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 
             // Property accessor
             ushort test = 45;
-            ushortAccessor.Set(prop, test);
+            ushortSetAccessor.Set(prop, test);
             Assert.AreEqual(test, prop.UShort);
         }
 
@@ -483,7 +525,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.UShort = test;
 
             // Property accessor
-            Assert.AreEqual(test, ushortAccessor.Get(prop));
+            Assert.AreEqual(test, ushortGetAccessor.Get(prop));
         }
 
         /// <summary>
@@ -496,7 +538,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.UInt = 5;
 
             // Property accessor
-            uintAccessor.Set(prop, null);
+            uintSetAccessor.Set(prop, null);
             Assert.AreEqual((uint)0, prop.UInt);
         }
 
@@ -511,7 +553,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 
             // Property accessor
             uint test = 45;
-            uintAccessor.Set(prop, test);
+            uintSetAccessor.Set(prop, test);
             Assert.AreEqual(test, prop.UInt);
         }
 
@@ -526,7 +568,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.UInt = test;
 
             // Property accessor
-            Assert.AreEqual(test, uintAccessor.Get(prop));
+            Assert.AreEqual(test, uintGetAccessor.Get(prop));
         }
 
         /// <summary>
@@ -539,7 +581,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.ULong = 5L;
 
             // Property accessor
-            ulongAccessor.Set(prop, null);
+            ulongSetAccessor.Set(prop, null);
             Assert.AreEqual((ulong)0, prop.ULong);
         }
 
@@ -554,7 +596,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 
             // Property accessor
             ulong test = 45;
-            ulongAccessor.Set(prop, test);
+            ulongSetAccessor.Set(prop, test);
             Assert.AreEqual(test, prop.ULong);
         }
 
@@ -569,7 +611,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.ULong = test;
 
             // Property accessor
-            Assert.AreEqual(test, ulongAccessor.Get(prop));
+            Assert.AreEqual(test, ulongGetAccessor.Get(prop));
         }
 
         /// <summary>
@@ -582,7 +624,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.Bool = true;
 
             // Property accessor
-            boolAccessor.Set(prop, null);
+            boolSetAccessor.Set(prop, null);
             Assert.AreEqual(false, prop.Bool);
         }
 
@@ -597,7 +639,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 
             // Property accessor
             bool test = true;
-            boolAccessor.Set(prop, test);
+            boolSetAccessor.Set(prop, test);
             Assert.AreEqual(test, prop.Bool);
         }
 
@@ -612,7 +654,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.Bool = test;
 
             // Property accessor
-            Assert.AreEqual(test, boolAccessor.Get(prop));
+            Assert.AreEqual(test, boolGetAccessor.Get(prop));
         }
 
         		/// <summary>
@@ -625,7 +667,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Double = 788956.56D;
 			
 			// Property accessor
-            doubleAccessor.Set(prop, null);
+            doubleSetAccessor.Set(prop, null);
 			Assert.AreEqual(0.0D, prop.Double);
 		}
 
@@ -640,7 +682,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 
 			// Property accessor
 			double test = 788956.56D;
-            doubleAccessor.Set(prop, test);
+            doubleSetAccessor.Set(prop, test);
 			Assert.AreEqual(test, prop.Double);
 		}
 
@@ -655,7 +697,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.Double = test;
 
             // Property accessor
-            Assert.AreEqual(test, doubleAccessor.Get(prop));
+            Assert.AreEqual(test, doubleGetAccessor.Get(prop));
         }
 
         /// <summary>
@@ -668,7 +710,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.Float = 565.45F;
 
             // Property accessor
-            floatAccessor.Set(prop, null);
+            floatSetAccessor.Set(prop, null);
             Assert.AreEqual(0.0D, prop.Float);
         }
 
@@ -683,7 +725,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 
             // Property accessor
             float test = 4567.45F;
-            floatAccessor.Set(prop, test);
+            floatSetAccessor.Set(prop, test);
             Assert.AreEqual(test, prop.Float);
         }
 
@@ -698,7 +740,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.Float = test;
 
             // Property accessor
-            Assert.AreEqual(test, floatAccessor.Get(prop));
+            Assert.AreEqual(test, floatGetAccessor.Get(prop));
         }
 
 
@@ -712,7 +754,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.Guid = Guid.NewGuid();
 
             // Property accessor
-            guidAccessor.Set(prop, null);
+            guidSetAccessor.Set(prop, null);
             Assert.AreEqual(Guid.Empty, prop.Guid);
         }
 
@@ -727,7 +769,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 
             // Property accessor
             Guid test = Guid.NewGuid();
-            guidAccessor.Set(prop, test);
+            guidSetAccessor.Set(prop, test);
             Assert.AreEqual(test, prop.Guid);
         }
 
@@ -742,7 +784,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.Guid = test;
 
             // Property accessor
-            Assert.AreEqual(test, guidAccessor.Get(prop));
+            Assert.AreEqual(test, guidGetAccessor.Get(prop));
         }
 
 
@@ -756,8 +798,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.TimeSpan = new TimeSpan(5, 12, 57, 21, 13);
 
             // Property accessor
-            timespanAccessor.Set(prop, null);
-            Assert.AreEqual(TimeSpan.MinValue, prop.TimeSpan);
+            timespanSetAccessor.Set(prop, null);
+            Assert.AreEqual(new TimeSpan(0,0,0), prop.TimeSpan);
         }
 
         /// <summary>
@@ -771,7 +813,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 
             // Property accessor
             TimeSpan test = new TimeSpan(15, 5, 21, 45, 35);
-            timespanAccessor.Set(prop, test);
+            timespanSetAccessor.Set(prop, test);
             Assert.AreEqual(test, prop.TimeSpan);
         }
 
@@ -786,7 +828,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.TimeSpan = test;
 
             // Property accessor
-            Assert.AreEqual(test, timespanAccessor.Get(prop));
+            Assert.AreEqual(test, timespanGetAccessor.Get(prop));
         }
 
         		/// <summary>
@@ -800,7 +842,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			prop.Account.FirstName = "test";
 			
 			// Property accessor
-            accountAccessor.Set(prop, null);
+            accountSetAccessor.Set(prop, null);
 			Assert.AreEqual(null, prop.Account);
 		}
 
@@ -818,7 +860,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 
 			// Property accessor
 			Assert.AreEqual(HashCodeProvider.GetIdentityHashCode(test), HashCodeProvider.GetIdentityHashCode(prop.Account));
-            Assert.AreEqual(test.FirstName, ((Account)accountAccessor.Get(prop)).FirstName);
+            Assert.AreEqual(test.FirstName, ((Account)accountGetAccessor.Get(prop)).FirstName);
 		}
 		
 		/// <summary>
@@ -835,7 +877,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             string firstName = "Gilles";
 			Account test = new Account();
             test.FirstName = firstName;
-            accountAccessor.Set(prop, test);
+            accountSetAccessor.Set(prop, test);
 
             Assert.AreEqual(firstName, prop.Account.FirstName);
         }
@@ -853,7 +895,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             propertyInfo.SetValue(prop, null, null);
 
             // Property accessor
-            enumAccessor.Set(prop, null);
+            enumSetAccessor.Set(prop, null);
             Assert.AreEqual(TimeSpan.MinValue, prop.TimeSpan);
         }
 
@@ -868,7 +910,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 
             // Property accessor
             Days test = Days.Wed;
-            enumAccessor.Set(prop, test);
+            enumSetAccessor.Set(prop, test);
             Assert.AreEqual(test, prop.Day);
         }
 
@@ -883,7 +925,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.Day = test;
 
             // Property accessor
-            Assert.AreEqual(test, enumAccessor.Get(prop));
+            Assert.AreEqual(test, enumGetAccessor.Get(prop));
         }
 
 #if dotnet2
@@ -897,7 +939,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.IntNullable = 85;
 
             // Property accessor
-            nullableAccessor.Set(prop, null);
+            nullableSetAccessor.Set(prop, null);
             Assert.AreEqual(null, prop.IntNullable);
         }
 
@@ -912,7 +954,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.IntNullable = test;
 
             // Property accessor
-            Assert.AreEqual(test, nullableAccessor.Get(prop));
+            Assert.AreEqual(test, nullableGetAccessor.Get(prop));
         }
 
         /// <summary>
@@ -926,7 +968,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 
             // Property accessor
             Int32? test = 55;
-            nullableAccessor.Set(prop, test);
+            nullableSetAccessor.Set(prop, test);
             Assert.AreEqual(test, prop.IntNullable);
 
         }

@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * Author : Gilles Bayon
  * iBATIS.NET Data Mapper
@@ -30,6 +30,7 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Xml.Serialization;
+using IBatisNet.DataMapper.MappedStatements.PropertyStrategy;
 using IBatisNet.DataMapper.Scope;
 
 #endregion

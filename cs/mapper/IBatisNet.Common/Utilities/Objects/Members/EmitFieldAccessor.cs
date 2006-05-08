@@ -68,63 +68,19 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 			}
 		}
 
-			
-		private void ImplementProperty(TypeBuilder type, FieldBuilder field, PropertyInfo prop)
-		{
-			MethodBuilder getter = type.DefineMethod("get_" + prop.Name, MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig | MethodAttributes.SpecialName, prop.PropertyType, null);
-			type.DefineMethodOverride(getter, prop.GetGetMethod());
-			ILGenerator getterIL = getter.GetILGenerator();
-			getterIL.Emit(OpCodes.Ldarg_0); 
-			getterIL.Emit(OpCodes.Ldfld, field);
-			getterIL.Emit(OpCodes.Ret);
-		}
-
 		/// <summary>
 		/// Create an type that will provide the get and set methods.
 		/// </summary>
 		protected override void EmitType()
 		{
 			// Define a public class named "FieldAccessorFor.FullTagetTypeName.FieldName" in the assembly.
-			TypeBuilder typeBuilder = moduleBuilder.DefineType("MemberAccessorFor" + targetType.FullName + memberName, TypeAttributes.Class | TypeAttributes.Public | TypeAttributes.Sealed);
+			TypeBuilder typeBuilder = moduleBuilder.DefineType("SetGetFor" + targetType.FullName + memberName, TypeAttributes.Class | TypeAttributes.Public | TypeAttributes.Sealed);
 
 			// Mark the class as implementing IMemberAccessor. 
-			typeBuilder.AddInterfaceImplementation(typeof(IMemberAccessor));
+            typeBuilder.AddInterfaceImplementation(typeof(ISetGet));
 
-			// Define 2 private fields
-			FieldBuilder fieldBuilderMemberType = typeBuilder.DefineField("_memberType",
-				typeof(Type),
-				FieldAttributes.Private);
-
-			FieldBuilder fieldBuilderName = typeBuilder.DefineField("_name",
-				typeof(Type),
-				FieldAttributes.Private);
-
-			#region Emit constructor
-			// Create a new constructor (public)
-			ConstructorBuilder cb = typeBuilder.DefineConstructor(MethodAttributes.Public, 
-				CallingConventions.Standard, Type.EmptyTypes);
-			// Get the constructor's IL generator
-			ILGenerator constructorIL = cb.GetILGenerator();
-
-			// Load "this"
-			constructorIL.Emit(OpCodes.Ldarg_0);
-			// Call the base constructor (no args)
-			constructorIL.Emit(OpCodes.Call, typeof(Object).GetConstructor(Type.EmptyTypes));
-			//            // Load "this"
-			//            constructorIL.Emit(OpCodes.Ldarg_0);
-			//            // Load member type
-			//            constructorIL.Emit(OpCodes.Call, baseMemberType.GetType());
-			//            // Store in field "_memberType"
-			//            constructorIL.Emit(OpCodes.Stfld, fieldBuilder);
-			// Emit return opcode
-			constructorIL.Emit(OpCodes.Ret);
-			#endregion
-
-			PropertyInfo prop =typeof(IMemberAccessor).GetProperty("MemberType");
-			ImplementProperty(typeBuilder, fieldBuilderMemberType, prop);
-
-			prop =typeof(IMemberAccessor).GetProperty("Name");
-			ImplementProperty(typeBuilder, fieldBuilderName, prop);
+            // Add a constructor
+            ConstructorBuilder constructor = typeBuilder.DefineDefaultConstructor(MethodAttributes.Public);
 
 			#region Emit Get
 			// Define a method named "Get" for the get operation (IMemberAccessor). 
@@ -204,19 +160,19 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 
 			// Load the type
 			typeBuilder.CreateType();
-		}
+        }
 
 
-		#region IMemberAccessor Members
+        #region ISetGet Members
 
-		/// <summary>
+        /// <summary>
 		/// Gets the field value from the specified target.
 		/// </summary>
 		/// <param name="target">Target object.</param>
 		/// <returns>Property value.</returns>
 		public override object Get(object target)
 		{
-			return emittedMemberAccessor.Get(target);
+			return emittedSetGet.Get(target);
 		}
 
 		/// <summary>
@@ -232,7 +188,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 				// If the value to assign is null, assign null internal value
 				newValue = nullInternal;
 			}
-			emittedMemberAccessor.Set(target, newValue);
+			emittedSetGet.Set(target, newValue);
 		}
 
 		#endregion

@@ -55,10 +55,10 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 			get { return _canWrite; }
 		}
 		#endregion
-		
-		#region IMemberAccessor Members
 
-		/// <summary>
+        #region ISetGet Members
+
+        /// <summary>
 		/// Gets the property value from the specified target.
 		/// </summary>
 		/// <param name="target">Target object.</param>
@@ -67,7 +67,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 		{
 			if (_canRead)
 			{
-				return emittedMemberAccessor.Get(target);
+				return emittedSetGet.Get(target);
 			}
 			else
 			{
@@ -94,7 +94,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 					newValue = nullInternal;
 				}
 
-				emittedMemberAccessor.Set(target, newValue);
+				emittedSetGet.Set(target, newValue);
 			}
 			else
 			{
@@ -139,24 +139,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 			}
 		}
 
-        
-		/// <summary>
-        /// Implements the property.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <param name="field">The field.</param>
-        /// <param name="prop">The prop.</param>
-		private void ImplementProperty(TypeBuilder type, FieldBuilder field, PropertyInfo prop)
-		{
-			MethodBuilder getter = type.DefineMethod("get_" + prop.Name, MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig | MethodAttributes.SpecialName, prop.PropertyType, null);
-			type.DefineMethodOverride(getter, prop.GetGetMethod());
-			ILGenerator getterIL = getter.GetILGenerator();
-			getterIL.Emit(OpCodes.Ldarg_0); 
-			getterIL.Emit(OpCodes.Ldfld, field);
-			getterIL.Emit(OpCodes.Ret);
-		}
-
-		/// <summary>
+        		/// <summary>
 		/// Create an type that will provide the get and set access method.
 		/// </summary>
 		/// <remarks>
@@ -166,83 +149,14 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 		protected override void EmitType()
 		{
 			// Define a public class named "PropertyAccessorFor.FullTagetTypeName.PropertyName" in the assembly.
-			TypeBuilder typeBuilder = moduleBuilder.DefineType("MemberAccessorFor" + targetType.FullName + memberName, 
+            TypeBuilder typeBuilder = moduleBuilder.DefineType("SetGetFor" + targetType.FullName + memberName, 
 				TypeAttributes.Class | TypeAttributes.Public | TypeAttributes.Sealed);
 
 			// Mark the class as implementing IMemberAccessor. 
-			typeBuilder.AddInterfaceImplementation(typeof(IMemberAccessor));
+            typeBuilder.AddInterfaceImplementation(typeof(ISetGet));
 
-			// Define 2 private fields
-			FieldBuilder fieldBuilderMemberType = typeBuilder.DefineField("_memberType",
-				typeof(Type),
-				FieldAttributes.Private);
-
-			FieldBuilder fieldBuilderName = typeBuilder.DefineField("_name",
-				typeof(string),
-				FieldAttributes.Private);
-
-			#region Emit constructor
-			// Create a new constructor (public)
-			ConstructorBuilder cb = typeBuilder.DefineConstructor(MethodAttributes.Public 
-				| MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName, 
-				CallingConventions.Standard, Type.EmptyTypes);
-			// Get the constructor's IL generator
-			ILGenerator constructorIL = cb.GetILGenerator();
-
-			// Load "this"
-			constructorIL.Emit(OpCodes.Ldarg_0);
-			// Call the base constructor (no args)
-			constructorIL.Emit(OpCodes.Call, typeof(object).GetConstructor(Type.EmptyTypes));
-			// this._name = memberName
-			// Load "this"
-			constructorIL.Emit(OpCodes.Ldarg_0);
-			// Store name in field "_name"
-			constructorIL.Emit(OpCodes.Ldstr, memberName);
-			constructorIL.Emit(OpCodes.Stfld, fieldBuilderName);
-			// this._memberType = baseMemberType
-			// Store type in field "_memberType"
-//			constructorIL.Emit(OpCodes.Ldtoken, baseMemberType);
-//			MethodInfo miGetTypeFromHandle = typeof(System.Type).GetMethod("GetTypeFromHandle", new Type[] {typeof(System.RuntimeTypeHandle)});
-//			constructorIL.EmitCall(OpCodes.Call, miGetTypeFromHandle, null); 
-//			constructorIL.Emit(OpCodes.Stfld, fieldBuilderMemberType);
-			// Emit return opcode
-			constructorIL.Emit(OpCodes.Ret);
-			#endregion
-
-			PropertyInfo prop =typeof(IMemberAccessor).GetProperty("MemberType");
-			ImplementProperty(typeBuilder, fieldBuilderMemberType, prop);
-
-			prop =typeof(IMemberAccessor).GetProperty("Name");
-			ImplementProperty(typeBuilder, fieldBuilderName, prop);
-
-			//            #region Emit MemberType
-			//            // Define the property MemberType (IMemberAccessor). 
-			//            PropertyBuilder propertyBuilder = typeBuilder.DefineProperty("MemberType",
-			//                             PropertyAttributes.None,
-			//                             typeof(Type),
-			//                             new Type[] { typeof(Type) });
-			//
-			//			// Define the get method for the property for MemberType
-			//            MethodBuilder getMethodBuilder = typeBuilder.DefineMethod("get_MemberType",
-			//                                    MethodAttributes.Public | MethodAttributes.Virtual ,
-			//                                    typeof(Type),
-			//                                    Type.EmptyTypes);
-			//			typeBuilder.DefineMethodOverride(getMethodBuilder, typeof(IMemberAccessor).GetProperty("MemberType").GetGetMethod());
-			//
-			//            // Get an ILGenerator and used it to emit the IL that we want.
-			//            ILGenerator getMethod  = getMethodBuilder.GetILGenerator();
-			//
-			//            // Emit the IL for get access. 
-			//            getMethod.Emit(OpCodes.Ldarg_0);
-			//            getMethod.Emit(OpCodes.Ldfld, fieldBuilder);
-			//            getMethod.Emit(OpCodes.Ret);
-			//
-			//            // Last, we must map the method created above to our PropertyBuilder to 
-			//            // the corresponding behavior "get". 
-			//            propertyBuilder.SetGetMethod(getMethodBuilder);
-			//
-			//
-			//            #endregion	
+            // Add a constructor
+            ConstructorBuilder constructor = typeBuilder.DefineDefaultConstructor(MethodAttributes.Public);
 
 			#region Emit Get
 			// Define a method named "Get" for the get operation (IMemberAccessor). 

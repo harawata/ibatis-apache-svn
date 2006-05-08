@@ -1,12 +1,12 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
  * $Revision$
- * $Date$
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,11 +37,13 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers
 	/// </summary>
 	public class DynamicTagHandler : BaseTagHandler
 	{
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		/// <param name="memberAccessorFactory"></param>
-		public DynamicTagHandler(IMemberAccessorFactory memberAccessorFactory):base(memberAccessorFactory)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DynamicTagHandler"/> class.
+        /// </summary>
+        /// <param name="accessorFactory">The accessor factory.</param>
+        public DynamicTagHandler(AccessorFactory accessorFactory)
+            : base(accessorFactory)
 		{
 		}
 

@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -24,9 +24,9 @@
  ********************************************************************************/
 #endregion
 
-using System;
-
+using System.Data;
 using IBatisNet.Common;
+using IBatisNet.DataMapper.MappedStatements;
 using IBatisNet.DataMapper.Scope;
 
 namespace IBatisNet.DataMapper.Configuration.Sql
@@ -39,15 +39,16 @@ namespace IBatisNet.DataMapper.Configuration.Sql
 
 		#region Methods
 		/// <summary>
-		/// Get the RequestScope for this request.
+		/// Builds a new <see cref="RequestScope"/> and the <see cref="IDbCommand"/> text to execute.
 		/// </summary>
 		/// <param name="parameterObject">
 		/// The parameter object (used by DynamicSql/SimpleDynamicSql).
 		/// Use to complete the sql statement.
 		/// </param>
-		/// <param name="session"></param>
-		/// <returns>The RequestScope.</returns>
-		RequestScope GetRequestScope(object parameterObject, IDalSession session);
+		/// <param name="session">The current session</param>
+		/// <param name="mappedStatement">The <see cref="IMappedStatement"/>.</param>
+		/// <returns>A new <see cref="RequestScope"/>.</returns>
+		RequestScope GetRequestScope(IMappedStatement mappedStatement, object parameterObject, IDalSession session);
 		#endregion
 
 	}

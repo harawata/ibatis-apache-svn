@@ -22,27 +22,66 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 		[SetUp]
 		public void SetUp()
 		{
-			intAccessor = factory.CreateMemberAccessor(typeof(Property), "Int");
-			longAccessor = factory.CreateMemberAccessor(typeof(Property), "Long");
-			sbyteAccessor = factory.CreateMemberAccessor(typeof(Property), "SByte");
-			stringAccessor = factory.CreateMemberAccessor(typeof(Property), "String");
-			datetimeAccessor = factory.CreateMemberAccessor(typeof(Property), "DateTime");
-			decimalAccessor = factory.CreateMemberAccessor(typeof(Property), "Decimal");
-			byteAccessor = factory.CreateMemberAccessor(typeof(Property), "Byte");
-			charAccessor = factory.CreateMemberAccessor(typeof(Property), "Char");
-			shortAccessor = factory.CreateMemberAccessor(typeof(Property), "Short");
-			ushortAccessor = factory.CreateMemberAccessor(typeof(Property), "UShort");
-			uintAccessor = factory.CreateMemberAccessor(typeof(Property), "UInt");
-			ulongAccessor = factory.CreateMemberAccessor(typeof(Property), "ULong");
-			boolAccessor = factory.CreateMemberAccessor(typeof(Property), "Bool");
-			doubleAccessor = factory.CreateMemberAccessor(typeof(Property), "Double");
-			floatAccessor = factory.CreateMemberAccessor(typeof(Property), "Float");
-			guidAccessor = factory.CreateMemberAccessor(typeof(Property), "Guid");
-			timespanAccessor = factory.CreateMemberAccessor(typeof(Property), "TimeSpan");
-			accountAccessor = factory.CreateMemberAccessor(typeof(Property), "Account");
-			enumAccessor = factory.CreateMemberAccessor(typeof(Property), "Day");
+            intSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "_int");
+            intGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "_int");
+
+            longSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "_long");
+            longGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "_long");
+
+            sbyteSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "_sbyte");
+            sbyteGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "_sbyte");
+
+            stringSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "_string");
+            stringGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "_string");
+
+            datetimeSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "_dateTime");
+            datetimeGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "_dateTime");
+
+            decimalSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "_decimal");
+            decimalGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "_decimal");
+
+            byteSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "_byte");
+            byteGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "_byte");
+
+            charSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "_char");
+            charGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "_char");
+
+            shortSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "_short");
+            shortGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "_short");
+
+            ushortSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "_ushort");
+            ushortGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "_ushort");
+
+            uintSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "_uint");
+            uintGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "_uint");
+
+            ulongSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "_ulong");
+            ulongGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "_ulong");
+
+            boolSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "_bool");
+            boolGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "_bool");
+
+            doubleSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "_double");
+            doubleGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "_double");
+
+            floatSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "_float");
+            floatGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "_float");
+
+            guidSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "_guid");
+            guidGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "_guid");
+
+            timespanSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "_timeSpan");
+            timespanGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "_timeSpan");
+
+            accountSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "_account");
+            accountGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "_account");
+
+            enumSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "_day");
+            enumGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "_day");
+
 #if dotnet2
-            nullableAccessor = factory.CreateMemberAccessor(typeof(Property), "IntNullable");
+            nullableSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "_intNullable");
+            nullableGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "_intNullable");
 #endif
 		}
 
@@ -67,8 +106,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.publicInt = -99;
 
             // Property accessor
-            IMemberAccessor memberAccessor = factory.CreateMemberAccessor(typeof(Property), "publicInt");
-            memberAccessor.Set(prop, null);
+            ISetAccessor setAccessor = factorySet.CreateSetAccessor(typeof(Property), "publicInt");
+            setAccessor.Set(prop, null);
             Assert.AreEqual(0, prop.publicInt);
         }
 
@@ -83,8 +122,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 
             // Property accessor
             int test = 57;
-            IMemberAccessor memberAccessor = factory.CreateMemberAccessor(typeof(Property), "publicInt");
-            memberAccessor.Set(prop, test);
+            ISetAccessor setAccessor = factorySet.CreateSetAccessor(typeof(Property), "publicInt");
+            setAccessor.Set(prop, test);
             Assert.AreEqual(test, prop.publicInt);
         }
 
@@ -99,39 +138,9 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             prop.publicInt = test;
 
             // Property accessor
-            IMemberAccessor memberAccessor = factory.CreateMemberAccessor(typeof(Property), "publicInt");
-            Assert.AreEqual(test, memberAccessor.Get(prop));
+            IGetAccessor getAccessor = factoryGet.CreateGetAccessor(typeof(Property), "publicInt");
+            Assert.AreEqual(test, getAccessor.Get(prop));
         }
 
-        /// <summary>
-        /// Test setting an integer private field.
-        /// </summary>
-        [Test]
-        public void TestSetPrivateFieldInteger()
-        {
-            Property prop = new Property();
-            prop.Int = -99;
-
-            // Property accessor
-            int test = 57;
-            IMemberAccessor memberAccessor = factory.CreateMemberAccessor(typeof(Property), "_int");
-            memberAccessor.Set(prop, test);
-            Assert.AreEqual(test, prop.Int);
-        }
-
-        /// <summary>
-        /// Test getting an integer private field.
-        /// </summary>
-        [Test]
-        public void TestGetPrivateFieldInteger()
-        {
-            int test = -99;
-            Property prop = new Property();
-            prop.Int = test;
-
-            // Property accessor
-            IMemberAccessor memberAccessor = factory.CreateMemberAccessor(typeof(Property), "_int");
-            Assert.AreEqual(test, memberAccessor.Get(prop));
-        }
 	}
 }

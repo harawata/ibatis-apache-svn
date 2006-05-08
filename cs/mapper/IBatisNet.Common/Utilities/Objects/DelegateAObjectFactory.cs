@@ -54,7 +54,7 @@ namespace IBatisNet.Common.Utilities.Objects
         /// </summary>
         /// <param name="typeToCreate">The type instance to build</param>
         /// <param name="types">The types of the constructor arguments</param>
-        /// <returns>Returns a new see <cref="IFactory"/> instance.</returns>
+        /// <returns>Returns a new see <see cref="IFactory"/> instance.</returns>
         [MethodImpl(MethodImplOptions.Synchronized)]
 		public IFactory CreateFactory(Type typeToCreate, Type[] types)
 		{

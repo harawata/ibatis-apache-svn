@@ -39,7 +39,6 @@ namespace IBatisNet.Common.Test.Domain
 		private TimeSpan _timeSpan = TimeSpan.MinValue;
 		private Account _account = null;
         private Days _day;
-		private Type _type = null;
 
 #if dotnet2
         private Int32? _intNullable = null;
@@ -53,7 +52,6 @@ namespace IBatisNet.Common.Test.Domain
 
 		public Property()
         {
-			_type = typeof(int);
         }
 
         public Days Day
@@ -68,13 +66,13 @@ namespace IBatisNet.Common.Test.Domain
 			set { _string = value; }
 		}
 
-		public int Int
+		public virtual int Int
 		{
 			get { return _int; }
 			set { _int = value; }
 		}
 
-		public DateTime DateTime
+		public virtual DateTime DateTime
 		{
 			get { return _dateTime; }
 			set { _dateTime = value; }
@@ -140,7 +138,7 @@ namespace IBatisNet.Common.Test.Domain
 			set { _bool = value; }
 		}
 
-		public double Double
+		public virtual double Double
 		{
 			get { return _double; }
 			set { _double = value; }
@@ -158,16 +156,55 @@ namespace IBatisNet.Common.Test.Domain
 			set { _guid = value; }
 		}
 
-		public TimeSpan TimeSpan
+		public virtual TimeSpan TimeSpan
 		{
 			get { return _timeSpan; }
 			set { _timeSpan = value; }
 		}
 
-		public Account Account
+		public virtual Account Account
 		{
 			get { return _account; }
 			set { _account = value; }
 		}
 	}
+
+
+    public class PropertySon : Property
+    {
+        private int _int = int.MinValue;
+
+        private int PrivateIndex
+        {
+            set { _int = value; }
+        }
+
+        public int Index
+        {
+            get { return _int; }
+#if dotnet2
+            protected set { _int = value; }
+#else
+			set { _int = value; }
+#endif
+        }
+
+        public override Account Account
+        {
+            get { return new Account(Days.Wed); }
+            set { throw new InvalidOperationException("Test virtual"); }
+        }
+
+        public override int Int
+        {
+            get { return -88; }
+            set { throw new InvalidOperationException("Test virtual"); }
+        }
+
+        public override DateTime DateTime
+        {
+            get { return new DateTime(2000,1,1); }
+            set { throw new InvalidOperationException("Test virtual"); }
+        }
+    }
 }

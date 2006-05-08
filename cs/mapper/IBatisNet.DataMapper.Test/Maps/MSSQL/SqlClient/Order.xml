@@ -138,6 +138,11 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			<result property="PostalCode" column="Order_PostalCode"/>
 		</resultMap>
 
+    <resultMap id="order-with-generic-lazy-load" class="Order" 
+      extends="lite-order-result-by-name" >
+      <result property="LineItemsGenericList" lazyLoad="true" column="Order_ID" select="GetLineItemsForOrder" />
+    </resultMap>
+    
 		<resultMap id="order-with-generic-list-lineitem" class="Order" 
 				extends="lite-order-result-by-name" >
 			<result property="LineItemsGenericList" column="Order_ID" select="GetLineItemsForOrder" />
@@ -338,16 +343,22 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			WHERE     Orders.Order_ID = #value#
 		</select>-->
 
+    <statement id="GetOrderWithGenericLazyLoad"
+      parameterClass="Integer"
+      resultMap="order-with-generic-lazy-load" >
+      select * from Orders where Order_ID = #value#
+    </statement>
+    
    
 		<statement id="GetOrderWithGenericListLineItem"
-		parameterClass="Integer"
-		resultMap="order-with-generic-list-lineitem" >
+		  parameterClass="Integer"
+		  resultMap="order-with-generic-list-lineitem" >
 			select * from Orders where Order_ID = #value#
 		</statement>
 	    
 		<statement id="GetOrderWithGenericLineItemCollection"
-		parameterClass="Integer"
-		resultMap="order-with-generic-collection-lineitem" >
+		  parameterClass="Integer"
+		  resultMap="order-with-generic-collection-lineitem" >
 			select * from Orders where Order_ID = #value#
 		</statement>
 
@@ -398,8 +409,8 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 		</statement>
 
 		<statement id="GetOrderWithGenricListLineItem"
-		parameterClass="Integer"
-		resultMap="order-with-generic-list-lineitem" >
+		    parameterClass="Integer"
+		    resultMap="order-with-generic-list-lineitem" >
 			select * from Orders where Order_ID = #value#
 		</statement>
     

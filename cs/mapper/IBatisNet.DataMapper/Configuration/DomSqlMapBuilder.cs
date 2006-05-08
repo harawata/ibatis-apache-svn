@@ -57,6 +57,8 @@ using IBatisNet.DataMapper.Configuration.Sql.SimpleDynamic;
 using IBatisNet.DataMapper.Configuration.Sql.Static;
 using IBatisNet.DataMapper.Configuration.Statements;
 using IBatisNet.DataMapper.MappedStatements;
+using IBatisNet.DataMapper.MappedStatements.ArgumentStrategy;
+using IBatisNet.DataMapper.MappedStatements.PropertyStrategy;
 using IBatisNet.DataMapper.Scope;
 using IBatisNet.DataMapper.TypeHandlers;
 
@@ -289,18 +291,27 @@ namespace IBatisNet.DataMapper.Configuration
 		private DeSerializerFactory _deSerializerFactory = null; 
 		private InlineParameterMapParser _paramParser = null;
         private IObjectFactory _objectFactory = null;
-        private IMemberAccessorFactory _memberAccessorFactory = null;
+        private ISetAccessorFactory _setAccessorFactory = null;
+        private IGetAccessorFactory _getAccessorFactory = null;
         private bool _validateSqlMapConfig = true;
 
 		#endregion 		
 		
 		#region Properties
         /// <summary>
-        /// Allow to set a custom member accessor factory, see <see cref="IMemberAccessorFactory"/>
+        /// Allow to set a custom set accessor factory, see <see cref="ISetAccessorFactory"/>
         /// </summary>
-        public IMemberAccessorFactory MemberAccessorFactory
+        public ISetAccessorFactory SetAccessorFactory
         {
-            set { _memberAccessorFactory = value; }
+            set { _setAccessorFactory = value; }
+        }
+
+        /// <summary>
+        /// Allow to set a custom get accessor factory, see <see cref="IGetAccessorFactory"/>
+        /// </summary>
+        public IGetAccessorFactory GetAccessorFactory
+        {
+            set { _getAccessorFactory = value; }
         }
 
         /// <summary>
@@ -729,12 +740,17 @@ namespace IBatisNet.DataMapper.Configuration
             {
                 _objectFactory = new ObjectFactory(_configScope.UseReflectionOptimizer);
             }
-            if (_memberAccessorFactory == null)
+            if (_setAccessorFactory == null)
             {
-                _memberAccessorFactory = new MemberAccessorFactory(_configScope.UseReflectionOptimizer);
+                _setAccessorFactory = new SetAccessorFactory(_configScope.UseReflectionOptimizer);
             }
+            if (_getAccessorFactory == null)
+            {
+                _getAccessorFactory = new GetAccessorFactory(_configScope.UseReflectionOptimizer);
+            }
+            AccessorFactory accessorFactory = new AccessorFactory(_setAccessorFactory, _getAccessorFactory);
 
-            _configScope.SqlMapper = new SqlMapper(_objectFactory, _memberAccessorFactory);
+            _configScope.SqlMapper = new SqlMapper(_objectFactory, accessorFactory);
 			_configScope.SqlMapper.CacheModelsEnabled =_configScope.IsCacheModelsEnabled;
 
 			#region Cache Alias
@@ -905,7 +921,7 @@ namespace IBatisNet.DataMapper.Configuration
 			}
 			#endregion
 
-			#region Resolve "resultMap" attribute on Result/Argument Property + initialize Discriminator property 
+			#region Resolve resultMap / Discriminator / PropertyStategy attributes on Result/Argument Property 
 
 			foreach(DictionaryEntry entry in _configScope.SqlMapper.ResultMaps)
 			{
@@ -919,6 +935,7 @@ namespace IBatisNet.DataMapper.Configuration
 					{
 						result.NestedResultMap = _configScope.SqlMapper.GetResultMap(result.NestedResultMapName);
 					}
+					result.PropertyStrategy = PropertyStrategyFactory.Get(result);
 				}
 				for(int index=0; index< resultMap.Parameters.Count; index++)
 				{
@@ -927,6 +944,7 @@ namespace IBatisNet.DataMapper.Configuration
 					{
 						result.NestedResultMap = _configScope.SqlMapper.GetResultMap(result.NestedResultMapName);
 					}
+					result.ArgumentStrategy = ArgumentStrategyFactory.Get( (ArgumentProperty)result );
 				}
 				if (resultMap.Discriminator != null)
 				{

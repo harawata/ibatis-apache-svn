@@ -283,11 +283,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Configuration\ResultMapping\IColumn.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Configuration\ResultMapping\ResultMap.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -823,6 +818,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "MappedStatements\BaseStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "MappedStatements\CachingStatement.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -853,12 +853,187 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "MappedStatements\PostBindind.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\ReaderAutoMapper.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "MappedStatements\SelectMappedStatement.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "MappedStatements\UpdateMappedStatement.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\ArgumentStrategy\ArgumentStrategyFactory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\ArgumentStrategy\DefaultStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\ArgumentStrategy\IArgumentStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\ArgumentStrategy\ResultMapStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\ArgumentStrategy\SelectArrayStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\ArgumentStrategy\SelectListStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\ArgumentStrategy\SelectObjectStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\ArgumentStrategy\SelectStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\PostSelectStrategy\ArrayStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\PostSelectStrategy\IPostSelectStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\PostSelectStrategy\ListStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\PostSelectStrategy\ObjectStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\PostSelectStrategy\PostSelectStrategyFactory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\PostSelectStrategy\StrongTypedListStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\PropertStrategy\BaseSelectStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\PropertStrategy\DefaultStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\PropertStrategy\IPropertyStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\PropertStrategy\PropertyStrategyFactory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\PropertStrategy\ResultMapStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\PropertStrategy\SelectArrayStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\PropertStrategy\SelectListStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\PropertStrategy\SelectObjectStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\PropertStrategy\SelectStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\ResultStrategy\AutoMapStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\ResultStrategy\BaseResultStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\ResultStrategy\DictionaryStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\ResultStrategy\IResultStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\ResultStrategy\ListStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\ResultStrategy\ObjectStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\ResultStrategy\ResultClassStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\ResultStrategy\ResultMapStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\ResultStrategy\ResultStrategyFactory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\ResultStrategy\SimpleTypeStrategy.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -143,6 +143,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 				return memberAccessor;
 			}
 		}
+
 #if dotnet2
         /// <summary>
         /// Create a Dynamic IMemberAccessor instance for a property
@@ -175,6 +176,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
             }
         }
 #endif
+
 		/// <summary>
         /// Create an IL IMemberAccessor instance for a property
 		/// </summary>

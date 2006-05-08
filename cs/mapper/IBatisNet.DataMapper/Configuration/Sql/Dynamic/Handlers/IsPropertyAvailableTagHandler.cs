@@ -1,12 +1,12 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
  * $Revision$
- * $Date$
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,7 +31,6 @@ using IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements;
 using IBatisNet.Common.Utilities.Objects;
 #endregion
 
-
 namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers
 {
 	/// <summary>
@@ -39,21 +38,23 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers
 	/// </summary>
 	public class IsPropertyAvailableTagHandler : ConditionalTagHandler
 	{
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		/// <param name="memberAccessorFactory"></param>
-		public IsPropertyAvailableTagHandler(IMemberAccessorFactory memberAccessorFactory):base(memberAccessorFactory)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IsPropertyAvailableTagHandler"/> class.
+        /// </summary>
+        /// <param name="accessorFactory">The accessor factory.</param>
+        public IsPropertyAvailableTagHandler(AccessorFactory accessorFactory)
+            : base(accessorFactory)
 		{
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="ctx"></param>
-		/// <param name="tag"></param>
-		/// <param name="parameterObject"></param>
-		/// <returns></returns>
+
+        /// <summary>
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="tag"></param>
+        /// <param name="parameterObject"></param>
+        /// <returns></returns>
 		public override bool IsCondition(SqlTagContext ctx, SqlTag tag, object parameterObject)
 		{
 			if (parameterObject == null) 

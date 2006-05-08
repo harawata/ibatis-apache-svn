@@ -1,12 +1,12 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
  * $Revision$
- * $Date$
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -38,12 +38,14 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements
 	[XmlRoot("isLessThan", Namespace="http://ibatis.apache.org/mapping")]
 	public class IsLessThan : Conditional
 	{
-		/// <summary>
-		/// 
-		/// </summary>
-		public IsLessThan(IMemberAccessorFactory memberAccessorFactory)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IsLessThan"/> class.
+        /// </summary>
+        /// <param name="accessorFactory">The accessor factory.</param>
+        public IsLessThan(AccessorFactory accessorFactory)
 		{
-			this.Handler = new IsLessThanTagHandler(memberAccessorFactory);
+            this.Handler = new IsLessThanTagHandler(accessorFactory);
 		}
 	}
 }

@@ -28,12 +28,9 @@ using System;
 namespace IBatisNet.Common.Utilities.Objects.Members
 {
 	/// <summary>
-	/// The IMemberAccessor interface defines a field/property accessor and
-	/// provides <c>Reflection.Emit</c>-generated <see cref="Get"/> and <see cref="Set"/> 
-	/// implementations for drastically improved performance over default late-bind 
-	/// invoke.
+	/// The IMemberAccessor interface defines a field/property accessor for a field/property.
 	/// </summary>
-	public interface IMemberAccessor
+    public interface IMemberAccessor : ISetGet
 	{
 		/// <summary>
 		/// Gets the member name.
@@ -44,19 +41,5 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 		/// Gets the type of this member (field or property).
 		/// </summary>
 		Type MemberType { get; }
-
-		/// <summary>
-		/// Gets the value stored in the field/property for the specified target.
-		/// </summary>
-		/// <param name="target">Object to retrieve the field/property from.</param>
-		/// <returns>Value.</returns>
-		object Get(object target);
-
-		/// <summary>
-		/// Sets the value for the field/property of the specified target.
-		/// </summary>
-		/// <param name="target">Object to set the field/property on.</param>
-		/// <param name="value">Value.</param>
-		void Set(object target, object value);
 	}
 }

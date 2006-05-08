@@ -60,7 +60,7 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 		/// <returns></returns>
 		public SqlTag Deserialize(XmlNode node)
 		{
-			IsNotPropertyAvailable isNotPropertyAvailable = new IsNotPropertyAvailable(_configScope.MemberAccessorFactory);
+			IsNotPropertyAvailable isNotPropertyAvailable = new IsNotPropertyAvailable(_configScope.DataExchangeFactory.AccessorFactory);
 
 			NameValueCollection prop = NodeUtils.ParseAttributes(node, _configScope.Properties);
 			isNotPropertyAvailable.Prepend = NodeUtils.GetStringAttribute(prop, "prepend");

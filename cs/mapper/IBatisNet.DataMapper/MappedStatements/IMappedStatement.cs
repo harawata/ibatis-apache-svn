@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -59,6 +59,15 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 		#region Properties
 
+		/// <summary>
+		/// Gets or sets the <see cref="ReaderAutoMapper"/>.
+		/// </summary>
+		/// <value>The <see cref="ReaderAutoMapper"/>.</value>
+		ReaderAutoMapper ReaderAutoMapper
+		{
+			set;
+			get;
+		}
 		/// <summary>
 		/// The IPreparedCommand to use
 		/// </summary>

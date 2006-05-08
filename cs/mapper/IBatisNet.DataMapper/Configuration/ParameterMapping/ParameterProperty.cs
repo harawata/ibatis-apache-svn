@@ -1,12 +1,12 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
  * $Revision$
- * $Date$
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -76,7 +76,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		[NonSerialized]
 		private string _callBackName= string.Empty;
 		[NonSerialized]
-		private IMemberAccessor _memberAccessor = null;
+		private IGetAccessor _getAccessor = null;
 		[NonSerialized]
 		private bool _isComplexMemberName = false;
 
@@ -255,13 +255,14 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		}
 
 		/// <summary>
-		/// Defines a field/property accessor
+		/// Defines a field/property get accessor
 		/// </summary>
 		[XmlIgnore]
-		public IMemberAccessor MemberAccessor
+        public IGetAccessor GetAccessor
 		{
-			get { return _memberAccessor; }
+            get { return _getAccessor; }
 		}
+
 		#endregion
 
 		#region Constructor (s) / Destructor
@@ -290,17 +291,20 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 
 			if (!typeof(IDictionary).IsAssignableFrom(parameterClass) // Hashtable parameter map
 				&& parameterClass !=null // value property
-				&& !scope.TypeHandlerFactory.IsSimpleType(parameterClass) ) // value property
+				&& !scope.DataExchangeFactory.TypeHandlerFactory.IsSimpleType(parameterClass) ) // value property
 			{
 				if (!_isComplexMemberName)
 				{
-					_memberAccessor = scope.MemberAccessorFactory.CreateMemberAccessor( parameterClass, _propertyName);
+                    IGetAccessorFactory getAccessorFactory = scope.DataExchangeFactory.AccessorFactory.GetAccessorFactory;
+                    _getAccessor = getAccessorFactory.CreateGetAccessor(parameterClass, _propertyName);
 				}
 				else // complex member name FavouriteLineItem.Id
 				{
 					MemberInfo propertyInfo = ObjectProbe.GetMemberInfoForSetter(parameterClass, _propertyName);
 					string memberName = _propertyName.Substring( _propertyName.LastIndexOf('.')+1);
-					_memberAccessor = scope.MemberAccessorFactory.CreateMemberAccessor( propertyInfo.ReflectedType, memberName);
+
+                    IGetAccessorFactory getAccessorFactory = scope.DataExchangeFactory.AccessorFactory.GetAccessorFactory;
+                    _getAccessor = getAccessorFactory.CreateGetAccessor(propertyInfo.ReflectedType, memberName);
 				}
 			}
 
@@ -309,7 +313,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 			{
 				try 
 				{
-					Type type = scope.TypeHandlerFactory.GetType(this.CallBackName);
+                    Type type = scope.DataExchangeFactory.TypeHandlerFactory.GetType(this.CallBackName);
 					ITypeHandlerCallback typeHandlerCallback = (ITypeHandlerCallback) Activator.CreateInstance( type );
 					_typeHandler = new CustomTypeHandler(typeHandlerCallback);
 				}
@@ -322,22 +326,22 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 			{
 				if (this.CLRType.Length == 0 )  // Unknown
 				{
-					_typeHandler = scope.TypeHandlerFactory.GetUnkownTypeHandler();
+                    _typeHandler = scope.DataExchangeFactory.TypeHandlerFactory.GetUnkownTypeHandler();
 				}
 				else // If we specify a CLR type, use it
 				{ 
 					Type type = Resources.TypeForName(this.CLRType);
 
-					if (scope.TypeHandlerFactory.IsSimpleType(type)) 
+                    if (scope.DataExchangeFactory.TypeHandlerFactory.IsSimpleType(type)) 
 					{
 						// Primitive
-						_typeHandler = scope.TypeHandlerFactory.GetTypeHandler(type, _dbType);
+                        _typeHandler = scope.DataExchangeFactory.TypeHandlerFactory.GetTypeHandler(type, _dbType);
 					}
 					else
 					{
 						// .NET object
 						type = ObjectProbe.GetMemberTypeForGetter(type, this.PropertyName);
-						_typeHandler = scope.TypeHandlerFactory.GetTypeHandler(type, _dbType);
+						_typeHandler = scope.DataExchangeFactory.TypeHandlerFactory.GetTypeHandler(type, _dbType);
 					}
 				}
 			}
@@ -345,11 +349,14 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 
 
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="obj"></param>
-		/// <returns></returns>
+
+        /// <summary>
+        /// Determines whether the specified <see cref="System.Object"></see> is equal to the current <see cref="System.Object"></see>.
+        /// </summary>
+        /// <param name="obj">The <see cref="System.Object"></see> to compare with the current <see cref="System.Object"></see>.</param>
+        /// <returns>
+        /// true if the specified <see cref="System.Object"></see> is equal to the current <see cref="System.Object"></see>; otherwise, false.
+        /// </returns>
 		public override bool Equals(object obj) 
 		{
 			//Check for null and compare run-time types.
@@ -358,10 +365,13 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 			return (this.PropertyName == p.PropertyName);
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <returns></returns>
+
+        /// <summary>
+        /// Serves as a hash function for a particular type. <see cref="System.Object.GetHashCode"></see> is suitable for use in hashing algorithms and data structures like a hash table.
+        /// </summary>
+        /// <returns>
+        /// A hash code for the current <see cref="System.Object"></see>.
+        /// </returns>
 		public override int GetHashCode() 
 		{
 			return _propertyName.GetHashCode();

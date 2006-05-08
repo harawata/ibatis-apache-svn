@@ -249,7 +249,15 @@ namespace IBatisNet.Common.Utilities.Objects
 		}
 
 
-		private static object GetArrayMember(object obj, string indexedName, IMemberAccessorFactory memberAccessorFactory)
+        /// <summary>
+        /// Gets the value of an array member on the specified object.
+        /// </summary>
+        /// <param name="obj">The obj.</param>
+        /// <param name="indexedName">The array index.</param>
+        /// <param name="accessorFactory">The accessor factory.</param>
+        /// <returns>The member value.</returns>
+		private static object GetArrayMember(object obj, string indexedName,
+            AccessorFactory accessorFactory)
 		{
 			object value = null;
 
@@ -263,7 +271,7 @@ namespace IBatisNet.Common.Utilities.Objects
 				
 				if (name.Length > 0)
 				{
-					value = GetMember(obj, name, memberAccessorFactory);
+                    value = GetMember(obj, name, accessorFactory);
 				}
 				else
 				{
@@ -291,12 +299,16 @@ namespace IBatisNet.Common.Utilities.Objects
 			return value;
 		}
 
-
-
-
+        /// <summary>
+        /// Sets the array member.
+        /// </summary>
+        /// <param name="obj">The obj.</param>
+        /// <param name="indexedName">Name of the indexed.</param>
+        /// <param name="value">The value.</param>
+        /// <param name="accessorFactory">The accessor factory.</param>
 		private static void SetArrayMember(object obj, string indexedName, object value,
-			IMemberAccessorFactory memberAccessorFactory)
-		{
+            AccessorFactory accessorFactory)
+        {
 			try 
 			{
 				int startIndex  = indexedName.IndexOf("[");
@@ -308,7 +320,7 @@ namespace IBatisNet.Common.Utilities.Objects
 				object list = null;
 				if (name.Length > 0)
 				{
-					list = GetMember(obj, name, memberAccessorFactory);
+                    list = GetMember(obj, name, accessorFactory);
 				}
 				else
 				{
@@ -335,15 +347,15 @@ namespace IBatisNet.Common.Utilities.Objects
 		}
 
 
-		/// <summary>
-		/// Return the specified member on an object. 
-		/// </summary>
-		/// <param name="obj">The Object on which to invoke the specified property.</param>
-		/// <param name="memberName">The name of the property.</param>
-		/// <param name="memberAccessorFactory"></param>
-		/// <returns>An Object representing the return value of the invoked property.</returns>
+        /// <summary>
+        /// Return the specified member on an object. 
+        /// </summary>
+        /// <param name="obj">The Object on which to invoke the specified property.</param>
+        /// <param name="memberName">Name of the member.</param>
+        /// <param name="accessorFactory">The accessor factory.</param>
+        /// <returns>An Object representing the return value of the invoked property.</returns>
 		public static object GetMemberValue(object obj, string memberName,
-			IMemberAccessorFactory memberAccessorFactory)
+            AccessorFactory accessorFactory)
 		{
 			if (memberName.IndexOf('.') > -1) 
 			{
@@ -355,7 +367,7 @@ namespace IBatisNet.Common.Utilities.Objects
 				while (enumerator.MoveNext()) 
 				{
 					token = (string)enumerator.Current;
-					value = GetMember(value, token, memberAccessorFactory);
+                    value = GetMember(value, token, accessorFactory);
 
 					if (value == null) 
 					{
@@ -366,20 +378,20 @@ namespace IBatisNet.Common.Utilities.Objects
 			} 
 			else 
 			{
-				return GetMember(obj, memberName, memberAccessorFactory);
+                return GetMember(obj, memberName, accessorFactory);
 			}
 		}
+        
 
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="obj"></param>
-		/// <param name="memberName"></param>
-		/// <param name="memberAccessorFactory"></param>
-		/// <returns></returns>
+        /// <summary>
+        /// Gets the member's value on the specified object.
+        /// </summary>
+        /// <param name="obj">The obj.</param>
+        /// <param name="memberName">Name of the member.</param>
+        /// <param name="accessorFactory">The accessor factory.</param>
+        /// <returns>The member's value</returns>
 		protected static object GetMember(object obj, string memberName,
-			IMemberAccessorFactory memberAccessorFactory)
+            AccessorFactory accessorFactory)
 		{
 			try 
 			{
@@ -387,7 +399,7 @@ namespace IBatisNet.Common.Utilities.Objects
 
 				if (memberName.IndexOf("[") > -1) 
 				{
-					value = GetArrayMember(obj, memberName, memberAccessorFactory);
+                    value = GetArrayMember(obj, memberName, accessorFactory);
 				} 
 				else 
 				{
@@ -398,15 +410,16 @@ namespace IBatisNet.Common.Utilities.Objects
 					else 
 					{
 						Type targetType = obj.GetType();
-						IMemberAccessor memberAccessor = memberAccessorFactory.CreateMemberAccessor(targetType, memberName);
+                        IGetAccessorFactory getAccessorFactory = accessorFactory.GetAccessorFactory;
+                        IGetAccessor getAccessor = getAccessorFactory.CreateGetAccessor(targetType, memberName);
 
-						if (memberAccessor == null) 
+                        if (getAccessor == null) 
 						{
 							throw new ProbeException("No Get method for member " + memberName + " on instance of " + obj.GetType().Name);
 						}
 						try 
 						{
-							value = memberAccessor.Get(obj);
+                            value = getAccessor.Get(obj);
 						} 
 						catch (Exception ae) 
 						{
@@ -425,19 +438,18 @@ namespace IBatisNet.Common.Utilities.Objects
 				throw new ProbeException("Could not Set property '" + memberName + "' for " + obj.GetType().Name + ".  Cause: " + e.Message, e);
 			}
 		}
-
-
-		/// <summary>
-		/// Set the specified member on an object 
-		/// </summary>
-		/// <param name="obj">The Object on which to invoke the specified property.</param>
-		/// <param name="memberName">The name of the property to set.</param>
-		/// <param name="memberValue">The new value to set.</param>
-		/// <param name="memberAccessorFactory"></param>
-		/// <param name="objectFactory"></param>
-		public static void SetMemberValue(object obj, string memberName, object memberValue,
+        
+        /// <summary>
+        /// Sets the member value.
+        /// </summary>
+        /// <param name="obj">he Object on which to invoke the specified mmber.</param>
+        /// <param name="memberName">Name of the member.</param>
+        /// <param name="memberValue">The member value.</param>
+        /// <param name="objectFactory">The object factory.</param>
+        /// <param name="accessorFactory">The accessor factory.</param>
+        public static void SetMemberValue(object obj, string memberName, object memberValue,
 			IObjectFactory objectFactory,
-			IMemberAccessorFactory memberAccessorFactory)
+            AccessorFactory accessorFactory)
 		{
 			if (memberName.IndexOf('.') > -1) 
 			{
@@ -452,7 +464,7 @@ namespace IBatisNet.Common.Utilities.Objects
 				{
 					Type type = GetMemberTypeForSetter(child, currentPropertyName);
 					object parent = child;
-					child = GetMember(parent, currentPropertyName, memberAccessorFactory);
+                    child = GetMember(parent, currentPropertyName, accessorFactory);
 					if (child == null) 
 					{
 						try 
@@ -460,7 +472,7 @@ namespace IBatisNet.Common.Utilities.Objects
 							IFactory factory = objectFactory.CreateFactory(type, Type.EmptyTypes);
 							child = factory.CreateInstance(Type.EmptyTypes);
 
-							SetMemberValue(parent, currentPropertyName, child, objectFactory, memberAccessorFactory);
+                            SetMemberValue(parent, currentPropertyName, child, objectFactory, accessorFactory);
 						} 
 						catch (Exception e) 
 						{
@@ -469,30 +481,30 @@ namespace IBatisNet.Common.Utilities.Objects
 					}
 					currentPropertyName = (string)enumerator.Current;
 				}
-				SetMember(child, currentPropertyName, memberValue, memberAccessorFactory);
+                SetMember(child, currentPropertyName, memberValue, accessorFactory);
 			} 
 			else 
 			{
-				SetMember(obj, memberName, memberValue, memberAccessorFactory);
+                SetMember(obj, memberName, memberValue, accessorFactory);
 			}
 		}
 
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="obj"></param>
-		/// <param name="memberName"></param>
-		/// <param name="memberValue"></param>
-		/// <param name="memberAccessorFactory"></param>
+        /// <summary>
+        /// Sets the member.
+        /// </summary>
+        /// <param name="obj">The obj.</param>
+        /// <param name="memberName">Name of the member.</param>
+        /// <param name="memberValue">The member value.</param>
+        /// <param name="accessorFactory">The accessor factory.</param>
 		protected static void SetMember(object obj, string memberName, object memberValue,
-			IMemberAccessorFactory memberAccessorFactory)
+            AccessorFactory accessorFactory)
 		{
 			try 
 			{
 				if (memberName.IndexOf("[") > -1) 
 				{
-					SetArrayMember(obj, memberName, memberValue, memberAccessorFactory);
+                    SetArrayMember(obj, memberName, memberValue, accessorFactory);
 				} 
 				else 
 				{
@@ -503,15 +515,16 @@ namespace IBatisNet.Common.Utilities.Objects
 					else 
 					{
 						Type targetType = obj.GetType();
-						IMemberAccessor memberAccessor = memberAccessorFactory.CreateMemberAccessor(targetType, memberName);
-						
-						if (memberAccessor == null) 
+                        ISetAccessorFactory setAccessorFactory = accessorFactory.SetAccessorFactory;
+                        ISetAccessor setAccessor = setAccessorFactory.CreateSetAccessor(targetType, memberName);
+
+                        if (setAccessor == null) 
 						{
 							throw new ProbeException("No Set method for member " + memberName + " on instance of " + obj.GetType().Name);
 						}
 						try 
 						{
-							memberAccessorFactory.CreateMemberAccessor(targetType, memberName).Set(obj, memberValue);
+                            setAccessorFactory.CreateSetAccessor(targetType, memberName).Set(obj, memberValue);
 						}
 						catch (Exception ex) 
 						{

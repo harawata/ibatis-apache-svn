@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: 391784 $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -235,7 +235,8 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 
 					// Exemple : ObjectHelper.SetProperty(sqlparameter, 'SqlDbType', SqlDbType.Int);
 					ObjectProbe.SetMemberValue(dataParameter, dbTypePropertyName, dbType, 
-						_request.ObjectFactory, _request.MemberAccessorFactory );
+						_request.DataExchangeFactory.ObjectFactory, 
+                        _request.DataExchangeFactory.AccessorFactory );
 				}
 
 				// Set IDbDataParameter
@@ -322,8 +323,9 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 					object dbType = Enum.Parse( enumDbType, property.DbType, true );
 
 					// Exemple : ObjectHelper.SetProperty(sqlparameter, 'SqlDbType', SqlDbType.Int);
-					ObjectProbe.SetMemberValue(dataParameter, dbTypePropertyName, dbType, 
-						_request.ObjectFactory, _request.MemberAccessorFactory );
+					ObjectProbe.SetMemberValue(dataParameter, dbTypePropertyName, dbType,
+                        _request.DataExchangeFactory.ObjectFactory, 
+                        _request.DataExchangeFactory.AccessorFactory);
 				}
 
 				// Set IDbDataParameter

@@ -59,7 +59,7 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 		/// <returns></returns>
 		public SqlTag Deserialize(XmlNode node)
 		{
-			IsLessEqual isLessEqual = new IsLessEqual(_configScope.MemberAccessorFactory);
+			IsLessEqual isLessEqual = new IsLessEqual(_configScope.DataExchangeFactory.AccessorFactory);
 
 			NameValueCollection prop = NodeUtils.ParseAttributes(node, _configScope.Properties);
 			isLessEqual.Prepend = NodeUtils.GetStringAttribute(prop, "prepend");

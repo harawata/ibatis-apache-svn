@@ -317,7 +317,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 			_usePositionalParameters = usePositionalParameters;
 			if (_className.Length>0 )
 			{
-				_parameterClass = scope.TypeHandlerFactory.GetType(_className);
+                _parameterClass = _dataExchangeFactory.TypeHandlerFactory.GetType(_className);
 			}
 
 			_dataExchange = _dataExchangeFactory.GetDataExchangeForClass(_parameterClass);

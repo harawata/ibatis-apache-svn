@@ -1,11 +1,11 @@
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
  * $Revision$
- * $Date$
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,13 +39,14 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements
 	[XmlRoot("isNotEqual", Namespace="http://ibatis.apache.org/mapping")]
 	public class IsNotEqual: Conditional
 	{
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="memberAccessorFactory"></param>
-		public IsNotEqual(IMemberAccessorFactory memberAccessorFactory)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IsNotEqual"/> class.
+        /// </summary>
+        /// <param name="accessorFactory">The accessor factory.</param>
+        public IsNotEqual(AccessorFactory accessorFactory)
 		{
-			this.Handler = new IsNotEqualTagHandler(memberAccessorFactory);
+            this.Handler = new IsNotEqualTagHandler(accessorFactory);
 		}
 	}
 }

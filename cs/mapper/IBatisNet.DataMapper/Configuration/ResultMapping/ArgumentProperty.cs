@@ -36,7 +36,7 @@ using System.Xml.Serialization;
 
 using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Utilities;
-
+using IBatisNet.DataMapper.MappedStatements.ArgumentStrategy;
 using IBatisNet.DataMapper.Scope;
 using IBatisNet.DataMapper.TypeHandlers;
 
@@ -58,9 +58,21 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		private string _argumentName = string.Empty;
 		[NonSerialized]
 		private Type _argumentType = null;
+		[NonSerialized]
+		private IArgumentStrategy _argumentStrategy = null;
 		#endregion
 
 		#region Properties
+
+		/// <summary>
+		/// Sets or gets the <see cref="IArgumentStrategy"/> used to fill the object property.
+		/// </summary>
+		[XmlIgnore]
+		public override IArgumentStrategy ArgumentStrategy
+		{
+			set { _argumentStrategy = value ; }
+			get { return _argumentStrategy ; }
+		}
 
 		/// <summary>
 		/// Specify the constructor argument name.
@@ -169,21 +181,21 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			ITypeHandler handler = null;
 			if (argumenType==null)
 			{
-				handler = configScope.TypeHandlerFactory.GetUnkownTypeHandler();
+				handler = configScope.DataExchangeFactory.TypeHandlerFactory.GetUnkownTypeHandler();
 			}
 			else if (typeof(IDictionary).IsAssignableFrom(argumenType)) 
 			{
 				// IDictionary
 				if (clrType ==null ||clrType.Length == 0) 
 				{
-					handler = configScope.TypeHandlerFactory.GetUnkownTypeHandler(); 
+					handler = configScope.DataExchangeFactory.TypeHandlerFactory.GetUnkownTypeHandler(); 
 				} 
 				else 
 				{
 					try 
 					{
 						Type type = Resources.TypeForName(clrType);
-						handler = configScope.TypeHandlerFactory.GetTypeHandler(type, dbType);
+						handler = configScope.DataExchangeFactory.TypeHandlerFactory.GetTypeHandler(type, dbType);
 					} 
 					catch (Exception e) 
 					{
@@ -195,24 +207,24 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 					}
 				}
 			}
-			else if (configScope.TypeHandlerFactory.GetTypeHandler(argumenType, dbType) != null) 
+			else if (configScope.DataExchangeFactory.TypeHandlerFactory.GetTypeHandler(argumenType, dbType) != null) 
 			{
 				// Primitive
-				handler = configScope.TypeHandlerFactory.GetTypeHandler(argumenType, dbType);
+				handler = configScope.DataExchangeFactory.TypeHandlerFactory.GetTypeHandler(argumenType, dbType);
 			}
 			else 
 			{
 				// .NET object
 				if (clrType ==null || clrType.Length == 0) 
 				{
-					handler =  configScope.TypeHandlerFactory.GetUnkownTypeHandler(); 
+					handler =  configScope.DataExchangeFactory.TypeHandlerFactory.GetUnkownTypeHandler(); 
 				} 
 				else 
 				{
 					try 
 					{
 						Type type = Resources.TypeForName(clrType);
-						handler = configScope.TypeHandlerFactory.GetTypeHandler(type, dbType);
+						handler = configScope.DataExchangeFactory.TypeHandlerFactory.GetTypeHandler(type, dbType);
 					} 
 					catch (Exception e) 
 					{

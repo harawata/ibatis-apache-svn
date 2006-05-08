@@ -25,6 +25,7 @@
 
 using System;
 using IBatisNet.Common.Utilities.Objects;
+using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
 
@@ -36,16 +37,17 @@ namespace IBatisNet.DataMapper.DataExchange
 	public sealed class DotNetObjectDataExchange : BaseDataExchange
 	{
 
-		private Type _clazz =null;
+        private Type _parameterClass = null;
 
 		/// <summary>
 		/// Cosntructor
 		/// </summary>
 		/// <param name="dataExchangeFactory"></param>
-		/// <param name="clazz"></param>
-		public DotNetObjectDataExchange(Type clazz, DataExchangeFactory dataExchangeFactory):base(dataExchangeFactory)
+        /// <param name="parameterClass"></param>
+        public DotNetObjectDataExchange(Type parameterClass, DataExchangeFactory dataExchangeFactory)
+            : base(dataExchangeFactory)
 		{
-			_clazz = clazz;
+            _parameterClass = parameterClass;
 		}
 
 		#region IDataExchange Members
@@ -57,14 +59,14 @@ namespace IBatisNet.DataMapper.DataExchange
 		/// <param name="parameterObject"></param>
 		public override object GetData(ParameterProperty mapping, object parameterObject)
 		{
-			if ( mapping.IsComplexMemberName || _clazz!=parameterObject.GetType())
+            if (mapping.IsComplexMemberName || _parameterClass!=parameterObject.GetType())
 			{
 				return ObjectProbe.GetMemberValue(parameterObject, mapping.PropertyName,
-					this.DataExchangeFactory.MemberAccessorFactory);
+					this.DataExchangeFactory.AccessorFactory);
 			}
 			else
 			{
-				return mapping.MemberAccessor.Get(parameterObject);
+				return mapping.GetAccessor.Get(parameterObject);
 			}
 		}
 
@@ -76,19 +78,19 @@ namespace IBatisNet.DataMapper.DataExchange
 		/// <param name="dataBaseValue"></param>
 		public override void SetData(ref object target, ResultProperty mapping, object dataBaseValue)
 		{
-			if ( target.GetType() != _clazz )
+            if (target.GetType() != _parameterClass)
 			{
-				throw new ArgumentException( "Could not set value of type '"+ target.GetType() +"' in property '"+mapping.PropertyName+"' of type '"+_clazz+"'" );
+                throw new ArgumentException("Could not set value of type '" + target.GetType() + "' in property '" + mapping.PropertyName + "' of type '" + _parameterClass + "'");
 			}
 			if ( mapping.IsComplexMemberName)
 			{
 				ObjectProbe.SetMemberValue(target, mapping.PropertyName, dataBaseValue, 
 					this.DataExchangeFactory.ObjectFactory,
-					this.DataExchangeFactory.MemberAccessorFactory);
+					this.DataExchangeFactory.AccessorFactory);
 			}
 			else
 			{
-				mapping.MemberAccessor.Set(target, dataBaseValue);
+                mapping.SetAccessor.Set(target, dataBaseValue);
 			}
 		}
 
@@ -105,11 +107,14 @@ namespace IBatisNet.DataMapper.DataExchange
 			{	
 				ObjectProbe.SetMemberValue(target, mapping.PropertyName, dataBaseValue, 
 					this.DataExchangeFactory.ObjectFactory,
-					this.DataExchangeFactory.MemberAccessorFactory);
+					this.DataExchangeFactory.AccessorFactory);
 			}
 			else
 			{
-				mapping.MemberAccessor.Set(target, dataBaseValue);
+                ISetAccessorFactory setAccessorFactory = this.DataExchangeFactory.AccessorFactory.SetAccessorFactory;
+                ISetAccessor _setAccessor = setAccessorFactory.CreateSetAccessor(_parameterClass, mapping.PropertyName);
+
+                _setAccessor.Set(target, dataBaseValue);
 			}
 		}
 

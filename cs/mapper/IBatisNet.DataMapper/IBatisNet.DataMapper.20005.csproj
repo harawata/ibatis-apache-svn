@@ -466,6 +466,16 @@
     <Compile Include="ExecuteEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MappedStatements\ArgumentStrategy\ArgumentStrategyFactory.cs" />
+    <Compile Include="MappedStatements\ArgumentStrategy\DefaultStrategy.cs" />
+    <Compile Include="MappedStatements\ArgumentStrategy\IArgumentStrategy.cs" />
+    <Compile Include="MappedStatements\ArgumentStrategy\ResultMapStrategy.cs" />
+    <Compile Include="MappedStatements\ArgumentStrategy\SelectArrayStrategy.cs" />
+    <Compile Include="MappedStatements\ArgumentStrategy\SelectGenericListStrategy.cs" />
+    <Compile Include="MappedStatements\ArgumentStrategy\SelectListStrategy.cs" />
+    <Compile Include="MappedStatements\ArgumentStrategy\SelectObjectStrategy.cs" />
+    <Compile Include="MappedStatements\ArgumentStrategy\SelectStrategy.cs" />
+    <Compile Include="MappedStatements\BaseStrategy.cs" />
     <Compile Include="MappedStatements\CachingStatement.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -484,6 +494,33 @@
     <Compile Include="MappedStatements\PaginatedList.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MappedStatements\PostBindind.cs" />
+    <Compile Include="MappedStatements\PostSelectStrategy\ArrayStrategy.cs" />
+    <Compile Include="MappedStatements\PostSelectStrategy\GenericListStrategy.cs" />
+    <Compile Include="MappedStatements\PostSelectStrategy\IPostSelectStrategy.cs" />
+    <Compile Include="MappedStatements\PostSelectStrategy\ListStrategy.cs" />
+    <Compile Include="MappedStatements\PostSelectStrategy\ObjectStrategy.cs" />
+    <Compile Include="MappedStatements\PostSelectStrategy\PostSelectStrategyFactory.cs" />
+    <Compile Include="MappedStatements\PostSelectStrategy\StrongTypedListStrategy.cs" />
+    <Compile Include="MappedStatements\PropertStrategy\DefaultStrategy.cs" />
+    <Compile Include="MappedStatements\PropertStrategy\IPropertyStrategy.cs" />
+    <Compile Include="MappedStatements\PropertStrategy\PropertyStrategyFactory.cs" />
+    <Compile Include="MappedStatements\PropertStrategy\ResultMapStrategy.cs" />
+    <Compile Include="MappedStatements\PropertStrategy\SelectArrayStrategy.cs" />
+    <Compile Include="MappedStatements\PropertStrategy\SelectGenericListStrategy.cs" />
+    <Compile Include="MappedStatements\PropertStrategy\SelectListStrategy.cs" />
+    <Compile Include="MappedStatements\PropertStrategy\SelectObjectStrategy.cs" />
+    <Compile Include="MappedStatements\PropertStrategy\SelectStrategy.cs" />
+    <Compile Include="MappedStatements\ReaderAutoMapper.cs" />
+    <Compile Include="MappedStatements\ResultStrategy\AutoMapStrategy.cs" />
+    <Compile Include="MappedStatements\ResultStrategy\DictionaryStrategy.cs" />
+    <Compile Include="MappedStatements\ResultStrategy\IResultStrategy.cs" />
+    <Compile Include="MappedStatements\ResultStrategy\ListStrategy.cs" />
+    <Compile Include="MappedStatements\ResultStrategy\ObjectStrategy.cs" />
+    <Compile Include="MappedStatements\ResultStrategy\ResultClassStrategy.cs" />
+    <Compile Include="MappedStatements\ResultStrategy\ResultMapStrategy.cs" />
+    <Compile Include="MappedStatements\ResultStrategy\ResultStrategyFactory.cs" />
+    <Compile Include="MappedStatements\ResultStrategy\SimpleTypeStrategy.cs" />
     <Compile Include="MappedStatements\SelectMappedStatement.cs">
       <SubType>Code</SubType>
     </Compile>

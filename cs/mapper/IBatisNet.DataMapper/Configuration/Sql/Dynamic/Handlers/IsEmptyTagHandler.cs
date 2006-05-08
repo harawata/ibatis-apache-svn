@@ -1,12 +1,12 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
  * $Revision$
- * $Date$
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -41,11 +41,13 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers
 	/// </summary>
 	public class IsEmptyTagHandler : ConditionalTagHandler 
 	{
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		/// <param name="memberAccessorFactory"></param>
-		public IsEmptyTagHandler(IMemberAccessorFactory memberAccessorFactory):base(memberAccessorFactory)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IsEmptyTagHandler"/> class.
+        /// </summary>
+        /// <param name="accessorFactory">The accessor factory.</param>
+        public IsEmptyTagHandler(AccessorFactory accessorFactory)
+            : base(accessorFactory)
 		{
 		}
 
@@ -69,7 +71,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers
 				object value = null;
 				if (propertyName != null && propertyName.Length>0) 
 				{
-					value = ObjectProbe.GetMemberValue(parameterObject, propertyName, this.MemberAccessorFactory);
+					value = ObjectProbe.GetMemberValue(parameterObject, propertyName, this.AccessorFactory);
 				} 
 				else 
 				{

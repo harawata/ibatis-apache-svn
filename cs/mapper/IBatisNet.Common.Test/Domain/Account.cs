@@ -3,7 +3,7 @@ using System;
 namespace IBatisNet.Common.Test.Domain
 {
 	/// <summary>
-	/// Description résumée de Account.
+	/// Account.
 	/// </summary>
 	[Serializable]
 	public class Account
