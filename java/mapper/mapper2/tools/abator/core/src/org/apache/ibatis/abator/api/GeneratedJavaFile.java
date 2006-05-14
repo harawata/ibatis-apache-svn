@@ -15,187 +15,48 @@
  */
 package org.apache.ibatis.abator.api;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
+
+import org.apache.ibatis.abator.api.dom.java.CompilationUnit;
+import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
 
 
 /**
  * @author Jeff Butler
  */
 public class GeneratedJavaFile extends GeneratedFile {
-	private Set importedTypes;
-
-	private List fields;
-
-	private List methods;
-
-	private boolean javaInterface;
-
-	private FullyQualifiedJavaType type;
-
-	private FullyQualifiedJavaType superClass;
-
-	private Set superInterfaceTypes;
-
-    private String lineSeparator;
+    private CompilationUnit compilationUnit;
     
 	/**
 	 *  Default constructor
 	 */
-	public GeneratedJavaFile(FullyQualifiedJavaType type) {
-		super();
-		this.type = type;
-		importedTypes = new HashSet();
-		fields = new ArrayList();
-		methods = new ArrayList();
-		superInterfaceTypes = new HashSet();
-
-        lineSeparator = System.getProperty("line.separator"); //$NON-NLS-1$
-        if (lineSeparator == null) {
-            lineSeparator = "\n"; //$NON-NLS-1$
-        }
-	}
-
-	public List getFields() {
-		return fields;
+	public GeneratedJavaFile(CompilationUnit compilationUnit,
+            String targetProject) {
+		super(targetProject);
+        this.compilationUnit = compilationUnit;
 	}
 
 	public Set getImportedTypes() {
-		return importedTypes;
-	}
-
-	public List getMethods() {
-		return methods;
+		return compilationUnit.getImportedTypes();
 	}
 
 	/*
 	 *  (non-Javadoc)
-	 * @see org.apache.ibatis.abator.api.GeneratedFile#getContent()
+	 * @see org.apache.ibatis.abator.api.GeneratedFile#getFormattedContent()
 	 */
-	public String getContent() {
-		StringBuffer content = new StringBuffer();
-
-		content.append("package "); //$NON-NLS-1$
-		content.append(type.getPackageName());
-		content.append(';');
-		newLine(content);
-
-		Iterator iter = importedTypes.iterator();
-		while (iter.hasNext()) {
-		    FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter.next();
-
-		    if (fqjt.isExplicitlyImported()
-		            && !fqjt.getPackageName().equals(type.getPackageName())) {
-		        newLine(content);
-		        content.append("import "); //$NON-NLS-1$
-		        content.append(fqjt.getFullyQualifiedName());
-		        content.append(';');
-		    }
-		}
-
-        newLine(content);
-        newLine(content);
-		content.append("public "); //$NON-NLS-1$
-		content.append(javaInterface ? "interface " : "class "); //$NON-NLS-1$ //$NON-NLS-2$
-		content.append(type.getShortName());
-		
-		if (superClass != null) {
-			content.append(" extends "); //$NON-NLS-1$
-			content.append(superClass.getShortName());
-		}
-		
-		if (superInterfaceTypes.size() > 0) {
-			content.append(" implements "); //$NON-NLS-1$
-			iter = superInterfaceTypes.iterator();
-			boolean comma = false; 
-			while (iter.hasNext()) {
-			    FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter.next();
-				if (comma) {
-					content.append(", "); //$NON-NLS-1$
-				}
-				
-				content.append(fqjt.getShortName());
-				
-				comma = true;
-			}
-		}
-
-		content.append(" {"); //$NON-NLS-1$
-		
-		iter = fields.iterator();
-		while (iter.hasNext()) {
-	        newLine(content);
-	        newLine(content);
-			content.append(iter.next());
-		}
-
-		iter = methods.iterator();
-		while (iter.hasNext()) {
-	        newLine(content);
-	        newLine(content);
-			content.append(iter.next());
-		}
-
-        newLine(content);
-		content.append('}');
-        newLine(content);
-
-		return content.toString();
-	}
-
-	public boolean isJavaInterface() {
-		return javaInterface;
-	}
-
-	public void setJavaInterface(boolean javaInterface) {
-		this.javaInterface = javaInterface;
+	public String getFormattedContent() {
+	    return compilationUnit.getFormattedContent();
 	}
 
 	public Set getSuperInterfaceTypes() {
-		return superInterfaceTypes;
+		return compilationUnit.getSuperInterfaceTypes();
 	}
 
-	public void addSuperInterfaceType(FullyQualifiedJavaType superInterfaceType) {
-        addImportedType(superInterfaceType);
-		superInterfaceTypes.add(superInterfaceType);
-	}
-
-	/**
-	 * The underlying Set does not allow duplicates, so clients do
-	 * not need to be concerned with duplicate resolution.
-	 * 
-	 * @param importedType the type to import.
-	 */
-	public void addImportedType(FullyQualifiedJavaType importedType) {
-	    if (importedType.isExplicitlyImported()
-	            && !type.getPackageName().equals(importedType.getPackageName())) {
-	        importedTypes.add(importedType);
-	    }
-	}
-	
-	public void addField(String field) {
-		fields.add(field);
-	}
-	
-	public void addMethod(String method) {
-		methods.add(method);
-	}
-	
     /**
      * @return Returns the superClass.
      */
     public FullyQualifiedJavaType getSuperClass() {
-        return superClass;
-    }
-    /**
-     * @param superClass The superClass to set.
-     */
-    public void setSuperClass(FullyQualifiedJavaType superClass) {
-        addImportedType(superClass);
-        this.superClass = superClass;
+        return compilationUnit.getSuperClass();
     }
 
     /*
@@ -203,7 +64,7 @@ public class GeneratedJavaFile extends GeneratedFile {
      * @see org.apache.ibatis.abator.api.GeneratedFile#getFileName()
      */
     public String getFileName() {
-        return type.getShortName() + ".java"; //$NON-NLS-1$
+        return compilationUnit.getType().getShortName() + ".java"; //$NON-NLS-1$
     }
 
     /*
@@ -211,15 +72,6 @@ public class GeneratedJavaFile extends GeneratedFile {
      * @see org.apache.ibatis.abator.api.GeneratedFile#getTargetPackage()
      */
     public String getTargetPackage() {
-        return type.getPackageName();
-    }
-
-    /**
-     * Utility method, adds a newline character to a StringBuffer.
-     * 
-     * @param sb the StringBuffer to be appended to
-     */
-    public void newLine(StringBuffer sb) {
-        sb.append(lineSeparator);
+        return compilationUnit.getType().getPackageName();
     }
 }

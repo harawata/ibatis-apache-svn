@@ -22,6 +22,8 @@ import org.apache.ibatis.abator.config.TableConfiguration;
  */
 public class UnknownTableException extends Exception {
 
+    static final long serialVersionUID = 5497249646334807301L;
+    
 	private TableConfiguration tableConfiguration;
 
 	/**

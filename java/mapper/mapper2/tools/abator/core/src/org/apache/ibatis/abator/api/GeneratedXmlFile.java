@@ -15,11 +15,13 @@
  */
 package org.apache.ibatis.abator.api;
 
+import org.apache.ibatis.abator.api.dom.xml.Document;
+
 /**
  * @author Jeff Butler
  */
 public class GeneratedXmlFile extends GeneratedFile {
-    private String content;
+    private Document document;
 
     private String fileName;
 
@@ -28,20 +30,19 @@ public class GeneratedXmlFile extends GeneratedFile {
     /**
      *  
      */
-    public GeneratedXmlFile() {
-        super();
+    public GeneratedXmlFile(Document document, String fileName, String targetPackage, String targetProject) {
+        super(targetProject);
+        this.document = document;
+        this.fileName = fileName;
+        this.targetPackage = targetPackage;
     }
 
     /*
      *  (non-Javadoc)
-     * @see org.apache.ibatis.abator.api.GeneratedFile#getContent()
+     * @see org.apache.ibatis.abator.api.GeneratedFile#getFormattedContent()
      */
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
+    public String getFormattedContent() {
+        return document.getFormattedContent();
     }
 
     /**
@@ -52,25 +53,9 @@ public class GeneratedXmlFile extends GeneratedFile {
     }
 
     /**
-     * @param fileName
-     *            The fileName to set.
-     */
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    /**
      * @return Returns the targetPackage.
      */
     public String getTargetPackage() {
         return targetPackage;
-    }
-
-    /**
-     * @param targetPackage
-     *            The targetPackage to set.
-     */
-    public void setTargetPackage(String targetPackage) {
-        this.targetPackage = targetPackage;
     }
 }

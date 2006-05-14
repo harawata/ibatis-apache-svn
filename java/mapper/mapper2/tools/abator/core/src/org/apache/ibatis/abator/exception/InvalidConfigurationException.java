@@ -21,7 +21,8 @@ import java.util.List;
  * @author Jeff Butler
  */
 public class InvalidConfigurationException extends Exception {
-
+    static final long serialVersionUID = 4902307610148543411L;
+    
 	private List errors;
 
 	/**

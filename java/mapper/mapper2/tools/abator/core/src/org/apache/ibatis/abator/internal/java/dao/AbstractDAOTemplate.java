@@ -17,149 +17,235 @@ package org.apache.ibatis.abator.internal.java.dao;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-import org.apache.ibatis.abator.api.FullyQualifiedJavaType;
-import org.apache.ibatis.abator.internal.java.BaseJavaCodeGenerator;
+import org.apache.ibatis.abator.api.dom.java.Field;
+import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
+import org.apache.ibatis.abator.api.dom.java.Method;
+import org.apache.ibatis.abator.api.dom.java.Parameter;
+import org.apache.ibatis.abator.config.FullyQualifiedTable;
 
 /**
  * @author Jeff Butler
  */
-public abstract class AbstractDAOTemplate extends BaseJavaCodeGenerator {
-	private List interfaceImports;
+public abstract class AbstractDAOTemplate {
+    private List interfaceImports;
 
-	private List implementationImports;
+    private List implementationImports;
 
-	private String constructorTemplate;
+    private FullyQualifiedJavaType superClass;
 
-	private FullyQualifiedJavaType superClass;
+    private List checkedExceptions;
 
-	private String deleteMethod;
+    private List fields;
 
-	private String insertMethod;
+    private List methods;
 
-	private String updateMethod;
+    private Method constructorTemplate;
 
-	private String queryForObjectMethod;
+    private String deleteMethodTemplate;
 
-	private String queryForListMethod;
+    private String insertMethodTemplate;
 
-	private List checkedExceptions;
+    private String updateMethodTemplate;
 
-	private List fields;
+    private String queryForObjectMethodTemplate;
 
-	private List methods;
+    private String queryForListMethodTemplate;
 
-	/**
-	 *  
-	 */
-	public AbstractDAOTemplate() {
-		super();
-		interfaceImports = new ArrayList();
-		implementationImports = new ArrayList();
-		fields = new ArrayList();
-		methods = new ArrayList();
-		checkedExceptions = new ArrayList();
-	}
+    /**
+     *  
+     */
+    public AbstractDAOTemplate() {
+        super();
+        interfaceImports = new ArrayList();
+        implementationImports = new ArrayList();
+        fields = new ArrayList();
+        methods = new ArrayList();
+        checkedExceptions = new ArrayList();
+    }
 
-	public String getConstructor(FullyQualifiedJavaType type) {
-		return MessageFormat.format(constructorTemplate,
-				new Object[] { type.getShortName() });
-	}
+    public Method getConstructorClone(FullyQualifiedJavaType type, FullyQualifiedTable table) {
+        Method answer = new Method();
+        answer.addMethodComment(table);
+        answer.setConstructor(true);
+        answer.setName(type.getShortName());
+        answer.setVisibility(constructorTemplate.getVisibility());
+        Iterator iter = constructorTemplate.getParameters().iterator();
+        while (iter.hasNext()) {
+            answer.addParameter((Parameter) iter.next());
+        }
+        iter = constructorTemplate.getBodyLines().iterator();
+        while (iter.hasNext()) {
+            answer.addBodyLine((String) iter.next());
+        }
+        iter = constructorTemplate.getExceptions().iterator();
+        while (iter.hasNext()) {
+            answer.addException((FullyQualifiedJavaType) iter.next());
+        }
+        
+        return answer;
+    }
 
-	public String getDeleteMethod() {
-		return deleteMethod;
-	}
+    public String getDeleteMethod(String sqlMapNamespace, String statementId,
+            String parameter) {
+        String answer = MessageFormat.format(deleteMethodTemplate,
+                new String[] { sqlMapNamespace, statementId, parameter });
 
-	public List getInterfaceImports() {
-		return interfaceImports;
-	}
+        return answer;
+    }
 
-	public List getImplementationImports() {
-		return implementationImports;
-	}
+    public List getInterfaceImports() {
+        return interfaceImports;
+    }
 
-	public String getInsertMethod() {
-		return insertMethod;
-	}
+    public List getImplementationImports() {
+        return implementationImports;
+    }
 
-	public String getQueryForListMethod() {
-		return queryForListMethod;
-	}
+    public String getInsertMethod(String sqlMapNamespace, String statementId,
+            String parameter) {
+        String answer = MessageFormat.format(insertMethodTemplate,
+                new String[] { sqlMapNamespace, statementId, parameter });
 
-	public String getQueryForObjectMethod() {
-		return queryForObjectMethod;
-	}
+        return answer;
+    }
 
-	public FullyQualifiedJavaType getSuperClass() {
-		return superClass;
-	}
+    public String getQueryForListMethod(String sqlMapNamespace, String statementId,
+            String parameter) {
+        String answer = MessageFormat.format(queryForListMethodTemplate,
+                new String[] { sqlMapNamespace, statementId, parameter });
 
-	public String getUpdateMethod() {
-		return updateMethod;
-	}
+        return answer;
+    }
 
-	public List getCheckedExceptions() {
-		return checkedExceptions;
-	}
+    public String getQueryForObjectMethod(String sqlMapNamespace, String statementId,
+            String parameter) {
+        String answer = MessageFormat.format(queryForObjectMethodTemplate,
+                new String[] { sqlMapNamespace, statementId, parameter });
 
-	public List getFields() {
-		return fields;
-	}
+        return answer;
+    }
 
-	public List getMethods() {
-		return methods;
-	}
+    public FullyQualifiedJavaType getSuperClass() {
+        return superClass;
+    }
 
-	public String getConstructorTemplate() {
-		return constructorTemplate;
-	}
+    public String getUpdateMethod(String sqlMapNamespace, String statementId,
+            String parameter) {
+        String answer = MessageFormat.format(updateMethodTemplate,
+                new String[] { sqlMapNamespace, statementId, parameter });
 
-	protected void setConstructorTemplate(String constructorTemplate) {
-		this.constructorTemplate = constructorTemplate;
-	}
+        return answer;
+    }
 
-	protected void setDeleteMethod(String deleteMethod) {
-		this.deleteMethod = deleteMethod;
-	}
+    public List getCheckedExceptions() {
+        return checkedExceptions;
+    }
 
-	protected void addField(String field) {
-		fields.add(field);
-	}
+    public Iterator getFieldClones(FullyQualifiedTable table) {
+        ArrayList answer = new ArrayList();
+        Iterator iter = fields.iterator();
+        while (iter.hasNext()) {
+            Field field = new Field();
+            Field oldField = (Field) iter.next();
+            
+            field.addFieldComment(table);
+            field.setInitializationString(oldField.getInitializationString());
+            field.setModifierFinal(oldField.isModifierFinal());
+            field.setModifierStatic(oldField.isModifierStatic());
+            field.setName(oldField.getName());
+            field.setType(oldField.getType());
+            field.setVisibility(oldField.getVisibility());
+            answer.add(field);
+        }
+        
+        return answer.iterator();
+    }
 
-	protected void setInsertMethod(String insertMethod) {
-		this.insertMethod = insertMethod;
-	}
+    public Iterator getMethodClones(FullyQualifiedTable table) {
+        ArrayList answer = new ArrayList();
+        Iterator iter = methods.iterator();
+        while (iter.hasNext()) {
+            Method method = new Method();
+            Method oldMethod = (Method) iter.next();
 
-	protected void addMethod(String method) {
-		methods.add(method);
-	}
+            Iterator iter2 = oldMethod.getBodyLines().iterator();
+            while (iter2.hasNext()) {
+                method.addBodyLine((String) iter2.next());
+            }
+            
+            iter2 = oldMethod.getExceptions().iterator();
+            while (iter2.hasNext()) {
+                method.addException((FullyQualifiedJavaType) iter2.next());
+            }
+            
+            method.addMethodComment(table);
+            
+            iter2 = oldMethod.getParameters().iterator();
+            while (iter2.hasNext()) {
+                method.addParameter((Parameter) iter2.next());
+            }
+            
+            method.setConstructor(oldMethod.isConstructor());
+            method.setModifierFinal(oldMethod.isModifierFinal());
+            method.setModifierStatic(oldMethod.isModifierStatic());
+            method.setName(oldMethod.getName());
+            method.setReturnType(oldMethod.getReturnType());
+            method.setVisibility(oldMethod.getVisibility());
+            
+            answer.add(method);
+        }
+        
+        return answer.iterator();
+    }
 
-	protected void setQueryForListMethod(String queryForListMethod) {
-		this.queryForListMethod = queryForListMethod;
-	}
+    protected void setConstructorTemplate(Method constructorTemplate) {
+        this.constructorTemplate = constructorTemplate;
+    }
 
-	protected void setQueryForObjectMethod(String queryForObjectMethod) {
-		this.queryForObjectMethod = queryForObjectMethod;
-	}
+    protected void setDeleteMethodTemplate(String deleteMethodTemplate) {
+        this.deleteMethodTemplate = deleteMethodTemplate;
+    }
 
-	protected void setSuperClass(FullyQualifiedJavaType superClass) {
-		this.superClass = superClass;
-	}
+    protected void addField(Field field) {
+        fields.add(field);
+    }
 
-	protected void setUpdateMethod(String updateMethod) {
-		this.updateMethod = updateMethod;
-	}
+    protected void setInsertMethodTemplate(String insertMethodTemplate) {
+        this.insertMethodTemplate = insertMethodTemplate;
+    }
 
-	protected void addInterfaceImport(FullyQualifiedJavaType type) {
-		interfaceImports.add(type);
-	}
+    protected void addMethod(Method method) {
+        methods.add(method);
+    }
 
-	protected void addImplementationImport(FullyQualifiedJavaType type) {
-		implementationImports.add(type);
-	}
+    protected void setQueryForListMethodTemplate(String queryForListMethodTemplate) {
+        this.queryForListMethodTemplate = queryForListMethodTemplate;
+    }
 
-	protected void addCheckedException(FullyQualifiedJavaType type) {
-		checkedExceptions.add(type);
-	}
+    protected void setQueryForObjectMethodTemplate(String queryForObjectMethodTemplate) {
+        this.queryForObjectMethodTemplate = queryForObjectMethodTemplate;
+    }
+
+    protected void setSuperClass(FullyQualifiedJavaType superClass) {
+        this.superClass = superClass;
+    }
+
+    protected void setUpdateMethodTemplate(String updateMethodTemplate) {
+        this.updateMethodTemplate = updateMethodTemplate;
+    }
+
+    protected void addInterfaceImport(FullyQualifiedJavaType type) {
+        interfaceImports.add(type);
+    }
+
+    protected void addImplementationImport(FullyQualifiedJavaType type) {
+        implementationImports.add(type);
+    }
+
+    protected void addCheckedException(FullyQualifiedJavaType type) {
+        checkedExceptions.add(type);
+    }
 }

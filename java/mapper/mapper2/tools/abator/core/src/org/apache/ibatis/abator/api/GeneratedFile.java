@@ -26,8 +26,9 @@ public abstract class GeneratedFile {
 	/**
 	 *  
 	 */
-	public GeneratedFile() {
+	public GeneratedFile(String targetProject) {
 		super();
+		this.targetProject = targetProject;
 	}
 
 	/**
@@ -39,7 +40,7 @@ public abstract class GeneratedFile {
 	 * 
 	 * @return Returns the content.
 	 */
-	public abstract String getContent();
+	public abstract String getFormattedContent();
 	
 	/**
 	 * Get the file name (without any path).  Clients should use this method to determine how to save
@@ -59,16 +60,6 @@ public abstract class GeneratedFile {
 		return targetProject;
 	}
 
-	/**
-	 * Sets the target project.  This property is set from the configuration.
-	 * Clients should not call this method.
-	 * 
-	 * @param targetProject the target project
-	 */
-	public void setTargetProject(String targetProject) {
-		this.targetProject = targetProject;
-	}
-	
 	/**
 	 * Get the target package for the file.  Clients should use this method to determine how to save
 	 * the results.

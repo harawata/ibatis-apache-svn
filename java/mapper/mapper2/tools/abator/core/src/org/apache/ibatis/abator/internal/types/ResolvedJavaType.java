@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.abator.internal.types;
 
-import org.apache.ibatis.abator.api.FullyQualifiedJavaType;
+import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
 
 /**
  * 

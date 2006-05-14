@@ -77,7 +77,7 @@ public interface ShellCallback {
      * </ol>
      * 
      * If you do not want to support merging in your shell, simply return
-     * <code>newFile.getContent()</code>.
+     * <code>newFile.getFormattedContent()</code>.
      * However, this will overwrite any modifications to the generated files.
      * 
      * @param newFile the newly generated Java file

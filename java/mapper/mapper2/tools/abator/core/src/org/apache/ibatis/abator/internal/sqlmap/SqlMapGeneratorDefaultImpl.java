@@ -16,17 +16,20 @@
 package org.apache.ibatis.abator.internal.sqlmap;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import org.apache.ibatis.abator.api.GeneratedXmlFile;
 import org.apache.ibatis.abator.api.JavaModelGenerator;
 import org.apache.ibatis.abator.api.ProgressCallback;
 import org.apache.ibatis.abator.api.SqlMapGenerator;
+import org.apache.ibatis.abator.api.dom.OutputUtilities;
+import org.apache.ibatis.abator.api.dom.xml.Attribute;
+import org.apache.ibatis.abator.api.dom.xml.Document;
+import org.apache.ibatis.abator.api.dom.xml.TextElement;
+import org.apache.ibatis.abator.api.dom.xml.XmlElement;
 import org.apache.ibatis.abator.config.FullyQualifiedTable;
 import org.apache.ibatis.abator.config.TableConfiguration;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
@@ -39,8 +42,8 @@ import org.apache.ibatis.abator.internal.util.messages.Messages;
  * @author Jeff Butler
  */
 public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
-	
-	protected List warnings;
+
+    protected List warnings;
 
     /**
      * Contains any properties passed in from the SqlMap configuration element.
@@ -66,12 +69,10 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
 
     /**
      * This is a map of maps. The map is keyed by a FullyQualifiedTable object.
-     * The inner map holds generated strings keyed by the String name. This
-     * Map is used to cache generated Strings.
+     * The inner map holds generated strings keyed by the String name. This Map
+     * is used to cache generated Strings.
      */
     private Map tableStringMaps;
-
-    private String lineSeparator;
 
     /**
      * Constructs an instance of SqlMapGeneratorDefaultImpl
@@ -79,10 +80,6 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
     public SqlMapGeneratorDefaultImpl() {
         super();
         tableStringMaps = new HashMap();
-        lineSeparator = System.getProperty("line.separator"); //$NON-NLS-1$
-        if (lineSeparator == null) {
-            lineSeparator = "\n"; //$NON-NLS-1$
-        }
     }
 
     private Map getTableStringMap(FullyQualifiedTable table) {
@@ -96,7 +93,8 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.ibatis.abator.api.SqlMapGenerator#setProperties(java.util.Map)
      */
     public void setProperties(Map properties) {
@@ -104,7 +102,8 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.ibatis.abator.api.SqlMapGenerator#setTargetPackage(java.lang.String)
      */
     public void setTargetPackage(String targetPackage) {
@@ -112,7 +111,8 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.ibatis.abator.api.SqlMapGenerator#setJavaModelGenerator(org.apache.ibatis.abator.api.JavaModelGenerator)
      */
     public void setJavaModelGenerator(JavaModelGenerator javaModelGenerator) {
@@ -120,14 +120,18 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
     }
 
     /*
-     *  (non-Javadoc)
-     * @see org.apache.ibatis.abator.api.SqlMapGenerator#getGeneratedXMLFiles(org.apache.ibatis.abator.internal.db.ColumnDefinitions, org.apache.ibatis.abator.config.TableConfiguration, org.apache.ibatis.abator.api.ProgressCallback)
+     * (non-Javadoc)
+     * 
+     * @see org.apache.ibatis.abator.api.SqlMapGenerator#getGeneratedXMLFiles(org.apache.ibatis.abator.internal.db.ColumnDefinitions,
+     *      org.apache.ibatis.abator.config.TableConfiguration,
+     *      org.apache.ibatis.abator.api.ProgressCallback)
      */
     public List getGeneratedXMLFiles(ColumnDefinitions columnDefinitions,
             TableConfiguration tableConfiguration, ProgressCallback callback) {
         ArrayList list = new ArrayList();
 
-        callback.startSubTask(Messages.getString("SqlMapGeneratorDefaultImpl.0", //$NON-NLS-1$
+        callback.startSubTask(Messages.getString(
+                "SqlMapGeneratorDefaultImpl.0", //$NON-NLS-1$
                 tableConfiguration.getTable().getFullyQualifiedTableName()));
         list.add(getSqlMap(columnDefinitions, tableConfiguration));
 
@@ -137,261 +141,168 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
     /**
      * Creates the default implementation of the Sql Map
      * 
-     * @param columnDefinitions introspected column definitions for the current table
-     * @param tableConfiguration table configuration for the current table
+     * @param columnDefinitions
+     *            introspected column definitions for the current table
+     * @param tableConfiguration
+     *            table configuration for the current table
      * @return A GeneratedXMLFile for the current table
      */
     protected GeneratedXmlFile getSqlMap(ColumnDefinitions columnDefinitions,
             TableConfiguration tableConfiguration) {
-        StringBuffer xml = new StringBuffer();
 
-        xml.append("<?xml"); //$NON-NLS-1$
-        addAttribute(xml, "version", "1.0"); //$NON-NLS-1$ //$NON-NLS-2$
-        addAttribute(xml, "encoding", "UTF-8"); //$NON-NLS-1$ //$NON-NLS-2$
-        xml.append("?>"); //$NON-NLS-1$
+        Document document = new Document(XmlConstants.SQL_MAP_PUBLIC_ID,
+                XmlConstants.SQL_MAP_SYSTEM_ID);
+        document.setRootElement(getSqlMapElement(columnDefinitions,
+                tableConfiguration));
 
-        newLine(xml);
-        xml.append(getDocType());
-        newLine(xml);
-
-        String comment = getFileComment(tableConfiguration);
-        if (StringUtility.stringHasValue(comment)) {
-            newLine(xml);
-            xml.append(comment);
-        }
-
-        newLine(xml);
-        xml.append(getSqlMapElement(columnDefinitions, tableConfiguration));
-        newLine(xml);
-
-        GeneratedXmlFile answer = new GeneratedXmlFile();
-        answer.setContent(xml.toString());
-        answer.setFileName(getSqlMapFileName(tableConfiguration.getTable()));
-        answer
-                .setTargetPackage(getSqlMapPackage(tableConfiguration
-                        .getTable()));
-        answer.setTargetProject(targetProject);
+        GeneratedXmlFile answer = new GeneratedXmlFile(document,
+                getSqlMapFileName(tableConfiguration.getTable()),
+                getSqlMapPackage(tableConfiguration.getTable()), targetProject);
 
         return answer;
     }
 
     /**
-     * Creates the DOCTYPE for the SqlMap
-     * 
-     * @return the DOCTYPE
-     */
-    protected String getDocType() {
-        StringBuffer xml = new StringBuffer();
-
-        xml.append("<!DOCTYPE sqlMap PUBLIC"); //$NON-NLS-1$
-        addQuotedString(xml, XmlConstants.SQL_MAP_PUBLIC_ID, true);
-        addQuotedString(xml, XmlConstants.SQL_MAP_SYSTEM_ID, true);
-        xml.append('>');
-
-        return xml.toString();
-    }
-
-    /**
      * Creates the sqlMap element (the root element, and all child elements).
-     * 
-     * @param columnDefinitions introspected column definitions for the current table
-     * @param tableConfiguration table configuration for the current table
-     * @return a well formatted String containing the sqlMap element, and all
-     *         child elements
-     */
-    protected String getSqlMapElement(ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration) {
-        StringBuffer xml = new StringBuffer();
-
-        xml.append("<sqlMap"); //$NON-NLS-1$
-        addAttribute(xml,
-                "namespace", getSqlMapNamespace(tableConfiguration.getTable())); //$NON-NLS-1$
-        xml.append('>');
-        newLine(xml);
-
-        String element;
-        if (AbatorRules.generateResultMapWithoutBLOBs(tableConfiguration)) {
-            element = getBaseResultMapElement(columnDefinitions,
-                    tableConfiguration, 1);
-            if (StringUtility.stringHasValue(element)) {
-                newLine(xml);
-                xml.append(element);
-            }
-        }
-
-        if (AbatorRules.generateResultMapWithBLOBs(columnDefinitions, tableConfiguration)) {
-            element = getResultMapWithBLOBsElement(columnDefinitions,
-                    tableConfiguration, 1);
-            if (StringUtility.stringHasValue(element)) {
-                newLine(xml);
-                xml.append(element);
-            }
-        }
-
-        if (AbatorRules.generateSQLExampleWhereClause(tableConfiguration)) {
-            element = getByExampleWhereClauseFragment(columnDefinitions,
-                    tableConfiguration, 1);
-            if (StringUtility.stringHasValue(element)) {
-                newLine(xml);
-                xml.append(element);
-            }
-        }
-
-        if (AbatorRules.generateSelectByPrimaryKey(columnDefinitions, tableConfiguration)) {
-            element = getSelectByPrimaryKey(columnDefinitions,
-                    tableConfiguration, 1);
-            if (StringUtility.stringHasValue(element)) {
-                newLine(xml);
-                xml.append(element);
-            }
-        }
-
-        if (AbatorRules.generateSelectByExampleWithoutBLOBs(tableConfiguration)) {
-            element = getSelectByExample(columnDefinitions, tableConfiguration,
-                    1);
-            if (StringUtility.stringHasValue(element)) {
-                newLine(xml);
-                xml.append(element);
-            }
-        }
-
-        if (AbatorRules
-                .generateSelectByExampleWithBLOBs(columnDefinitions, tableConfiguration)) {
-            element = getSelectByExampleWithBLOBs(columnDefinitions,
-                    tableConfiguration, 1);
-            if (StringUtility.stringHasValue(element)) {
-                newLine(xml);
-                xml.append(element);
-            }
-        }
-
-        if (AbatorRules.generateDeleteByPrimaryKey(columnDefinitions, tableConfiguration)) {
-            element = getDeleteByPrimaryKey(columnDefinitions,
-                    tableConfiguration, 1);
-            if (StringUtility.stringHasValue(element)) {
-                newLine(xml);
-                xml.append(element);
-            }
-        }
-
-        if (AbatorRules.generateDeleteByExample(tableConfiguration)) {
-            element = getDeleteByExample(columnDefinitions, tableConfiguration,
-                    1);
-            if (StringUtility.stringHasValue(element)) {
-                newLine(xml);
-                xml.append(element);
-            }
-        }
-
-        if (AbatorRules.generateInsert(tableConfiguration)) {
-            element = getInsertElement(columnDefinitions, tableConfiguration, 1);
-            if (StringUtility.stringHasValue(element)) {
-                newLine(xml);
-                xml.append(element);
-            }
-        }
-
-        if (AbatorRules
-                .generateUpdateByPrimaryKeyWithBLOBs(columnDefinitions, tableConfiguration)) {
-            element = getUpdateByPrimaryKeyWithBLOBs(columnDefinitions,
-                    tableConfiguration, 1);
-            if (StringUtility.stringHasValue(element)) {
-                newLine(xml);
-                xml.append(element);
-            }
-        }
-
-        if (AbatorRules.generateUpdateByPrimaryKeyWithoutBLOBs(columnDefinitions, tableConfiguration)) {
-            element = getUpdateByPrimaryKey(columnDefinitions,
-                    tableConfiguration, 1);
-            if (StringUtility.stringHasValue(element)) {
-                newLine(xml);
-                xml.append(element);
-            }
-        }
-
-        newLine(xml);
-        xml.append("</sqlMap>"); //$NON-NLS-1$
-
-        return xml.toString();
-    }
-
-    /**
-     * Returns a file level comment. The default implementation returns null,
-     * but this can be overridden to provide a file level comment (such as a
-     * copyright notice).
-     * 
-     * @param tableConfiguration table configuration for the current table
-     * @return a properly formatted comment
-     */
-    protected String getFileComment(TableConfiguration tableConfiguration) {
-        return null;
-    }
-
-    /**
-     * Returns a suitable comment to warn users that the element was generated,
-     * and when it was generated. The returned string should be well formatted,
-     * and indented at the specified level.
-     * 
-     * @param indentLevel the required indent level
-     * @return a properly formatted comment
-     */
-    protected String getElementComment(int indentLevel) {
-        StringBuffer sb = new StringBuffer();
-
-        indent(sb, indentLevel);
-        sb.append("<!--"); //$NON-NLS-1$
-        newLine(sb);
-        indent(sb, indentLevel);
-        sb
-                .append("  WARNING - This element is automatically generated by Abator for iBATIS, do not modify."); //$NON-NLS-1$
-        newLine(sb);
-        indent(sb, indentLevel);
-        sb.append("  This element was generated on "); //$NON-NLS-1$
-        sb.append(new Date());
-        sb.append('.');
-        newLine(sb);
-        indent(sb, indentLevel);
-        sb.append("-->"); //$NON-NLS-1$
-
-        return sb.toString();
-    }
-
-    /**
-     * This method should return a String which is formatted XML for the result
-     * map (without any BLOBs if they exist in the table).
      * 
      * @param columnDefinitions
      *            introspected column definitions for the current table
      * @param tableConfiguration
      *            table configuration for the current table
-     * @param indentLevel
-     *            the required indent level
-     * @return a well formatted String containing the resultMap element
+     * @return the sqlMap element including all child elements
      */
-    protected String getBaseResultMapElement(
-            ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, int indentLevel) {
-        StringBuffer xml = new StringBuffer();
+    protected XmlElement getSqlMapElement(ColumnDefinitions columnDefinitions,
+            TableConfiguration tableConfiguration) {
 
-        indent(xml, indentLevel);
-        xml.append("<resultMap"); //$NON-NLS-1$
-        addAttribute(xml, "id", getResultMapName(tableConfiguration.getTable())); //$NON-NLS-1$
-        if (AbatorRules.generateBaseRecordWithNoSuperclass(columnDefinitions)
-                || AbatorRules.generateBaseRecordExtendingPrimaryKey(columnDefinitions)) {
-            addAttribute(xml, "class", javaModelGenerator //$NON-NLS-1$
-                    .getRecordType(tableConfiguration.getTable())
-                    .getFullyQualifiedName());
-        } else {
-            addAttribute(xml, "class", javaModelGenerator //$NON-NLS-1$
-                    .getPrimaryKeyType(tableConfiguration.getTable())
-                    .getFullyQualifiedName());
+        XmlElement answer = new XmlElement("sqlMap"); //$NON-NLS-1$
+        answer.addAttribute(new Attribute("namespace", //$NON-NLS-1$
+                getSqlMapNamespace(tableConfiguration.getTable())));
+
+        XmlElement element;
+        if (AbatorRules.generateResultMapWithoutBLOBs(tableConfiguration)) {
+            element = getBaseResultMapElement(columnDefinitions,
+                    tableConfiguration);
+            if (element != null) {
+                answer.addElement(element);
+            }
         }
-        xml.append('>');
-        newLine(xml);
 
-        xml.append(getElementComment(indentLevel + 1));
-        newLine(xml);
+        if (AbatorRules.generateResultMapWithBLOBs(columnDefinitions,
+                tableConfiguration)) {
+            element = getResultMapWithBLOBsElement(columnDefinitions,
+                    tableConfiguration);
+            if (element != null) {
+                answer.addElement(element);
+            }
+        }
+
+        if (AbatorRules.generateSQLExampleWhereClause(tableConfiguration)) {
+            element = getByExampleWhereClauseFragment(columnDefinitions,
+                    tableConfiguration);
+            if (element != null) {
+                answer.addElement(element);
+            }
+        }
+
+        if (AbatorRules.generateSelectByPrimaryKey(columnDefinitions,
+                tableConfiguration)) {
+            element = getSelectByPrimaryKey(columnDefinitions,
+                    tableConfiguration);
+            if (element != null) {
+                answer.addElement(element);
+            }
+        }
+
+        if (AbatorRules.generateSelectByExampleWithoutBLOBs(tableConfiguration)) {
+            element = getSelectByExample(columnDefinitions, tableConfiguration);
+            if (element != null) {
+                answer.addElement(element);
+            }
+        }
+
+        if (AbatorRules.generateSelectByExampleWithBLOBs(columnDefinitions,
+                tableConfiguration)) {
+            element = getSelectByExampleWithBLOBs(columnDefinitions,
+                    tableConfiguration);
+            if (element != null) {
+                answer.addElement(element);
+            }
+        }
+
+        if (AbatorRules.generateDeleteByPrimaryKey(columnDefinitions,
+                tableConfiguration)) {
+            element = getDeleteByPrimaryKey(columnDefinitions,
+                    tableConfiguration);
+            if (element != null) {
+                answer.addElement(element);
+            }
+        }
+
+        if (AbatorRules.generateDeleteByExample(tableConfiguration)) {
+            element = getDeleteByExample(columnDefinitions, tableConfiguration);
+            if (element != null) {
+                answer.addElement(element);
+            }
+        }
+
+        if (AbatorRules.generateInsert(tableConfiguration)) {
+            element = getInsertElement(columnDefinitions, tableConfiguration);
+            if (element != null) {
+                answer.addElement(element);
+            }
+        }
+
+        if (AbatorRules.generateUpdateByPrimaryKeyWithBLOBs(columnDefinitions,
+                tableConfiguration)) {
+            element = getUpdateByPrimaryKeyWithBLOBs(columnDefinitions,
+                    tableConfiguration);
+            if (element != null) {
+                answer.addElement(element);
+            }
+        }
+
+        if (AbatorRules.generateUpdateByPrimaryKeyWithoutBLOBs(
+                columnDefinitions, tableConfiguration)) {
+            element = getUpdateByPrimaryKey(columnDefinitions,
+                    tableConfiguration);
+            if (element != null) {
+                answer.addElement(element);
+            }
+        }
+
+        return answer;
+    }
+
+    /**
+     * This method should return an XmlElement for the result map (without any
+     * BLOBs if they exist in the table).
+     * 
+     * @param columnDefinitions
+     *            introspected column definitions for the current table
+     * @param tableConfiguration
+     *            table configuration for the current table
+     * @return the resultMap element
+     */
+    protected XmlElement getBaseResultMapElement(
+            ColumnDefinitions columnDefinitions,
+            TableConfiguration tableConfiguration) {
+        XmlElement answer = new XmlElement("resultMap"); //$NON-NLS-1$
+        answer.addAttribute(new Attribute(
+                "id", getResultMapName(tableConfiguration.getTable()))); //$NON-NLS-1$
+
+        if (AbatorRules.generateBaseRecordWithNoSuperclass(columnDefinitions)
+                || AbatorRules
+                        .generateBaseRecordExtendingPrimaryKey(columnDefinitions)) {
+            answer.addAttribute(new Attribute("class", javaModelGenerator //$NON-NLS-1$
+                    .getRecordType(tableConfiguration.getTable())
+                    .getFullyQualifiedName()));
+        } else {
+            answer.addAttribute(new Attribute("class", javaModelGenerator //$NON-NLS-1$
+                    .getPrimaryKeyType(tableConfiguration.getTable())
+                    .getFullyQualifiedName()));
+        }
+
+        answer.addElementComment();
 
         Iterator iter = columnDefinitions.getAllColumns().iterator();
         while (iter.hasNext()) {
@@ -400,58 +311,54 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
                 continue;
             }
 
-            indent(xml, indentLevel + 1);
-            xml.append("<result"); //$NON-NLS-1$
-            addAttribute(xml, "column", cd.getColumnName()); //$NON-NLS-1$
-            addAttribute(xml, "property", cd.getJavaProperty()); //$NON-NLS-1$
-            addAttribute(xml,
-                    "jdbcType", cd.getResolvedJavaType().getJdbcTypeName()); //$NON-NLS-1$
-            xml.append((" />")); //$NON-NLS-1$
-            newLine(xml);
+            XmlElement resultElement = new XmlElement("result"); //$NON-NLS-1$
+
+            resultElement.addAttribute(new Attribute(
+                    "column", cd.getColumnName())); //$NON-NLS-1$
+            resultElement.addAttribute(new Attribute(
+                    "property", cd.getJavaProperty())); //$NON-NLS-1$
+            resultElement.addAttribute(new Attribute("jdbcType", //$NON-NLS-1$
+                    cd.getResolvedJavaType().getJdbcTypeName()));
+
+            answer.addElement(resultElement);
         }
 
-        indent(xml, indentLevel);
-        xml.append("</resultMap>"); //$NON-NLS-1$
-
-        return xml.toString();
+        return answer;
     }
 
     /**
-     * This method should return a String which is formatted XML for the result
-     * map (with any BLOBs if they exist in the table). Typically this result
-     * map extends the base result map.
+     * This method should return an XmlElement which is the result map (with any
+     * BLOBs if they exist in the table). Typically this result map extends the
+     * base result map.
      * 
      * @param columnDefinitions
      *            introspected column definitions for the current table
      * @param tableConfiguration
      *            table configuration for the current table
-     * @param indentLevel
-     *            the required indent level
-     * @return a well formatted String containing the resultMap element
+     * @return the resultMap element
      */
-    protected String getResultMapWithBLOBsElement(
+    protected XmlElement getResultMapWithBLOBsElement(
             ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, int indentLevel) {
-        StringBuffer xml = new StringBuffer();
+            TableConfiguration tableConfiguration) {
 
-        indent(xml, indentLevel);
-        xml.append("<resultMap"); //$NON-NLS-1$
-        addAttribute(
-                xml,
-                "id", getResultMapName(tableConfiguration.getTable()) + "WithBLOBs"); //$NON-NLS-1$ //$NON-NLS-2$
-        addAttribute(xml, "class", javaModelGenerator //$NON-NLS-1$
+        XmlElement answer = new XmlElement("resultMap"); //$NON-NLS-1$
+
+        StringBuffer sb = new StringBuffer();
+        sb.append(getResultMapName(tableConfiguration.getTable()));
+        sb.append("WithBLOBs"); //$NON-NLS-1$
+
+        answer.addAttribute(new Attribute("id", sb.toString())); //$NON-NLS-1$
+        answer.addAttribute(new Attribute("class", javaModelGenerator //$NON-NLS-1$
                 .getRecordWithBLOBsType(tableConfiguration.getTable())
-                .getFullyQualifiedName());
+                .getFullyQualifiedName()));
 
-        addAttribute(xml, "extends", getSqlMapNamespace(tableConfiguration //$NON-NLS-1$
-                .getTable())
-                + "." + getResultMapName(tableConfiguration.getTable())); //$NON-NLS-1$
+        sb.setLength(0);
+        sb.append(getSqlMapNamespace(tableConfiguration.getTable()));
+        sb.append('.');
+        sb.append(getResultMapName(tableConfiguration.getTable()));
+        answer.addAttribute(new Attribute("extends", sb.toString())); //$NON-NLS-1$
 
-        xml.append('>');
-        newLine(xml);
-
-        xml.append(getElementComment(indentLevel + 1));
-        newLine(xml);
+        answer.addElementComment();
 
         Iterator iter = columnDefinitions.getAllColumns().iterator();
         while (iter.hasNext()) {
@@ -460,84 +367,75 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
                 continue;
             }
 
-            indent(xml, indentLevel + 1);
-            xml.append("<result"); //$NON-NLS-1$
-            addAttribute(xml, "column", cd.getColumnName()); //$NON-NLS-1$
-            addAttribute(xml, "property", cd.getJavaProperty()); //$NON-NLS-1$
-            addAttribute(xml,
-                    "jdbcType", cd.getResolvedJavaType().getJdbcTypeName()); //$NON-NLS-1$
-            xml.append((" />")); //$NON-NLS-1$
-            newLine(xml);
+            XmlElement resultElement = new XmlElement("result"); //$NON-NLS-1$
+            resultElement.addAttribute(new Attribute(
+                    "column", cd.getColumnName())); //$NON-NLS-1$
+            resultElement.addAttribute(new Attribute(
+                    "property", cd.getJavaProperty())); //$NON-NLS-1$
+            resultElement.addAttribute(new Attribute(
+                    "jdbcType", cd.getResolvedJavaType().getJdbcTypeName())); //$NON-NLS-1$
+
+            answer.addElement(resultElement);
         }
 
-        indent(xml, indentLevel);
-        xml.append("</resultMap>"); //$NON-NLS-1$
-
-        return xml.toString();
+        return answer;
     }
 
     /**
-     * This method should return a String which is formatted XML for the insert
-     * statement.
+     * This method should return an XmlElement which is the insert statement.
      * 
      * @param columnDefinitions
      *            introspected column definitions for the current table
      * @param tableConfiguration
      *            table configuration for the current table
-     * @param indentLevel
-     *            the required indent level
-     * @return a well formatted String containing the insert element
+     * @return the insert element
      */
-    protected String getInsertElement(ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, int indentLevel) {
+    protected XmlElement getInsertElement(ColumnDefinitions columnDefinitions,
+            TableConfiguration tableConfiguration) {
 
-        StringBuffer xml = new StringBuffer();
+        XmlElement answer = new XmlElement("insert"); //$NON-NLS-1$
 
-        ColumnDefinition identityColumn = null;
-
-        indent(xml, indentLevel);
-        xml.append("<insert"); //$NON-NLS-1$
-        addAttribute(xml, "id", getInsertStatementId()); //$NON-NLS-1$
-        if (AbatorRules.generateRecordWithBLOBsExtendingPrimaryKey(columnDefinitions)
-                || AbatorRules.generateRecordWithBLOBsExtendingBaseRecord(columnDefinitions)) {
-            addAttribute(xml, "parameterClass", javaModelGenerator //$NON-NLS-1$
-                    .getRecordWithBLOBsType(tableConfiguration.getTable())
-                    .getFullyQualifiedName());
-        } else if (AbatorRules.generateBaseRecordWithNoSuperclass(columnDefinitions)
-                || AbatorRules.generateBaseRecordExtendingPrimaryKey(columnDefinitions)) {
-            addAttribute(xml, "parameterClass", javaModelGenerator //$NON-NLS-1$
-                    .getRecordType(tableConfiguration.getTable())
-                    .getFullyQualifiedName());
+        answer.addAttribute(new Attribute("id", getInsertStatementId())); //$NON-NLS-1$
+        if (AbatorRules
+                .generateRecordWithBLOBsExtendingPrimaryKey(columnDefinitions)
+                || AbatorRules
+                        .generateRecordWithBLOBsExtendingBaseRecord(columnDefinitions)) {
+            answer.addAttribute(new Attribute(
+                    "parameterClass", javaModelGenerator //$NON-NLS-1$
+                            .getRecordWithBLOBsType(
+                                    tableConfiguration.getTable())
+                            .getFullyQualifiedName()));
+        } else if (AbatorRules
+                .generateBaseRecordWithNoSuperclass(columnDefinitions)
+                || AbatorRules
+                        .generateBaseRecordExtendingPrimaryKey(columnDefinitions)) {
+            answer.addAttribute(new Attribute(
+                    "parameterClass", javaModelGenerator //$NON-NLS-1$
+                            .getRecordType(tableConfiguration.getTable())
+                            .getFullyQualifiedName()));
         } else {
-            addAttribute(xml, "parameterClass", javaModelGenerator //$NON-NLS-1$
-                    .getPrimaryKeyType(tableConfiguration.getTable())
-                    .getFullyQualifiedName());
+            answer.addAttribute(new Attribute(
+                    "parameterClass", javaModelGenerator //$NON-NLS-1$
+                            .getPrimaryKeyType(tableConfiguration.getTable())
+                            .getFullyQualifiedName()));
         }
-        xml.append('>');
-        newLine(xml);
 
-        xml.append(getElementComment(indentLevel + 1));
-        newLine(xml);
+        answer.addElementComment();
 
         if (tableConfiguration.getGeneratedKey().isConfigured()
                 && !tableConfiguration.getGeneratedKey().isIdentity()) {
-        	ColumnDefinition cd = columnDefinitions.getColumn(tableConfiguration
-                    .getGeneratedKey().getColumn());
-        	// if the column is null, then it's a configuration error.  The
-        	// warning has already been reported
-        	if (cd != null) {
-        	    // pre-generated key
-        	    newLine(xml);
-        	    xml.append(getSelectKey(cd,
-                    tableConfiguration, indentLevel + 1));
-        	    newLine(xml);
-        	}
+            ColumnDefinition cd = columnDefinitions
+                    .getColumn(tableConfiguration.getGeneratedKey().getColumn());
+            // if the column is null, then it's a configuration error. The
+            // warning has already been reported
+            if (cd != null) {
+                // pre-generated key
+                answer.addElement(getSelectKey(cd, tableConfiguration));
+            }
         }
 
         StringBuffer insertClause = new StringBuffer();
         StringBuffer valuesClause = new StringBuffer();
-        StringBuffer insertFragment = new StringBuffer();
-        StringBuffer valuesFragment = new StringBuffer();
 
         insertClause.append("insert into "); //$NON-NLS-1$
         insertClause.append(tableConfiguration.getTable()
@@ -546,6 +444,7 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
 
         valuesClause.append("values ("); //$NON-NLS-1$
 
+        ColumnDefinition identityColumn = null;
         boolean comma = false;
         Iterator iter = columnDefinitions.getAllColumns().iterator();
         while (iter.hasNext()) {
@@ -557,51 +456,36 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
                 continue;
             }
 
-            insertFragment.setLength(0);
-            valuesFragment.setLength(0);
-
-            valuesFragment.setLength(0);
-            valuesFragment.append('#');
-            valuesFragment.append(cd.getJavaProperty());
-            valuesFragment.append(':');
-            valuesFragment.append(cd.getResolvedJavaType().getJdbcTypeName());
-            valuesFragment.append('#');
-
-            insertFragment.append(cd.getColumnName());
-
             if (comma) {
-                insertFragment.insert(0, ", "); //$NON-NLS-1$
-                valuesFragment.insert(0, ", "); //$NON-NLS-1$
+                insertClause.append(", "); //$NON-NLS-1$
+                valuesClause.append(", "); //$NON-NLS-1$
             } else {
-                comma = true;
+                comma = true; // turn on comma for next time
             }
 
-            insertClause.append(insertFragment);
-            valuesClause.append(valuesFragment);
+            insertClause.append(cd.getColumnName());
+
+            valuesClause.append('#');
+            valuesClause.append(cd.getJavaProperty());
+            valuesClause.append(':');
+            valuesClause.append(cd.getResolvedJavaType().getJdbcTypeName());
+            valuesClause.append('#');
         }
         insertClause.append(')');
         valuesClause.append(')');
 
-        xml.append(formatLongString(insertClause.toString(), 80,
-                indentLevel + 1));
-        xml.append(formatLongString(valuesClause.toString(), 80,
-                indentLevel + 1));
+        answer.addElement(new TextElement(insertClause.toString()));
+        answer.addElement(new TextElement(valuesClause.toString()));
 
         if (identityColumn != null) {
-            newLine(xml);
-            xml.append(getSelectKey(identityColumn, tableConfiguration,
-                    indentLevel + 1));
-            newLine(xml);
+            answer.addElement(getSelectKey(identityColumn, tableConfiguration));
         }
 
-        indent(xml, indentLevel);
-        xml.append("</insert>"); //$NON-NLS-1$
-
-        return xml.toString();
+        return answer;
     }
 
     /**
-     * This method should return well formatted XML for the update by primary
+     * This method should return an XmlElement for the update by primary
      * key statement that updates all fields in the table (including BLOB
      * fields).
      * 
@@ -609,91 +493,80 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
      *            introspected column definitions for the current table
      * @param tableConfiguration
      *            table configuration for the current table
-     * @param indentLevel
-     *            the required indent level
-     * @return a well formatted String containing the update element
+     * @return the update element
      */
-    protected String getUpdateByPrimaryKeyWithBLOBs(
+    protected XmlElement getUpdateByPrimaryKeyWithBLOBs(
             ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, int indentLevel) {
+            TableConfiguration tableConfiguration) {
 
-        StringBuffer xml = new StringBuffer();
+        XmlElement answer = new XmlElement("update"); //$NON-NLS-1$
 
-        indent(xml, indentLevel);
-        xml.append("<update"); //$NON-NLS-1$
-        addAttribute(xml, "id", getUpdateByPrimaryKeyWithBLOBsStatementId()); //$NON-NLS-1$
-        addAttribute(xml, "parameterClass", javaModelGenerator //$NON-NLS-1$
+        answer.addAttribute(new Attribute("id", getUpdateByPrimaryKeyWithBLOBsStatementId())); //$NON-NLS-1$
+        answer.addAttribute(new Attribute("parameterClass", javaModelGenerator //$NON-NLS-1$
                 .getRecordWithBLOBsType(tableConfiguration.getTable())
-                .getFullyQualifiedName());
-        xml.append('>');
-        newLine(xml);
+                .getFullyQualifiedName()));
 
-        xml.append(getElementComment(indentLevel + 1));
-        newLine(xml);
+        answer.addElementComment();
 
-        indent(xml, indentLevel + 1);
-        xml.append("update "); //$NON-NLS-1$
-        xml.append(tableConfiguration.getTable().getFullyQualifiedTableName());
-        newLine(xml);
-        indent(xml, indentLevel + 1);
-        xml.append("set "); //$NON-NLS-1$
+        StringBuffer sb = new StringBuffer();
+        
+        sb.append("update "); //$NON-NLS-1$
+        sb.append(tableConfiguration.getTable().getFullyQualifiedTableName());
+        answer.addElement(new TextElement(sb.toString()));
 
-        StringBuffer fragment = new StringBuffer();
-        boolean comma = false;
+        // set up for first column
+        sb.setLength(0);
+        sb.append("set "); //$NON-NLS-1$
+
         Iterator iter = columnDefinitions.getNonPrimaryKeyColumns().iterator();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
-            fragment.setLength(0);
+            
+            sb.append(cd.getColumnName());
+            sb.append(" = #"); //$NON-NLS-1$
+            sb.append(cd.getJavaProperty());
+            sb.append(':');
+            sb.append(cd.getResolvedJavaType().getJdbcTypeName());
+            sb.append('#');
 
-            fragment.append(cd.getColumnName());
-            fragment.append(" = #"); //$NON-NLS-1$
-            fragment.append(cd.getJavaProperty());
-            fragment.append(':');
-            fragment.append(cd.getResolvedJavaType().getJdbcTypeName());
-            fragment.append('#');
-
-            if (comma) {
-                xml.append(',');
-                newLine(xml);
-                indent(xml, indentLevel + 2);
-            } else {
-                comma = true;
+            if (iter.hasNext()) {
+                sb.append(',');
             }
-
-            xml.append(fragment);
+            
+            answer.addElement(new TextElement(sb.toString()));
+            
+            // set up for the next column
+            if (iter.hasNext()) {
+                sb.setLength(0);
+                OutputUtilities.xmlIndent(sb, 1);
+            }
         }
 
-        newLine(xml);
-        indent(xml, indentLevel + 1);
-        xml.append("where "); //$NON-NLS-1$
         boolean and = false;
         iter = columnDefinitions.getPrimaryKey().iterator();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
 
+            sb.setLength(0);
             if (and) {
-                xml.append(" and"); //$NON-NLS-1$
-                newLine(xml);
-                indent(xml, indentLevel + 2);
+                sb.append("  and "); //$NON-NLS-1$
             } else {
+                sb.append("where "); //$NON-NLS-1$
                 and = true;
             }
 
-            xml.append(cd.getColumnName());
-            xml.append(" = #"); //$NON-NLS-1$
-            xml.append(cd.getJavaProperty());
-            xml.append('#');
+            sb.append(cd.getColumnName());
+            sb.append(" = #"); //$NON-NLS-1$
+            sb.append(cd.getJavaProperty());
+            sb.append('#');
+            answer.addElement(new TextElement(sb.toString()));
         }
 
-        newLine(xml);
-        indent(xml, indentLevel);
-        xml.append("</update>"); //$NON-NLS-1$
-
-        return xml.toString();
+        return answer;
     }
 
     /**
-     * This method should return well formatted XML for the update by primary
+     * This method should return an XmlElement for the update by primary
      * key statement that updates all fields in the table (excluding BLOB
      * fields).
      * 
@@ -701,200 +574,165 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
      *            introspected column definitions for the current table
      * @param tableConfiguration
      *            table configuration for the current table
-     * @param indentLevel
-     *            the required indent level
-     * @return a well formatted String containing the update element
+     * @return the update element
      */
-    protected String getUpdateByPrimaryKey(ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, int indentLevel) {
+    protected XmlElement getUpdateByPrimaryKey(ColumnDefinitions columnDefinitions,
+            TableConfiguration tableConfiguration) {
 
-        StringBuffer xml = new StringBuffer();
-
-        indent(xml, indentLevel);
-        xml.append("<update"); //$NON-NLS-1$
-        addAttribute(xml, "id", getUpdateByPrimaryKeyStatementId()); //$NON-NLS-1$
-        addAttribute(xml, "parameterClass", javaModelGenerator //$NON-NLS-1$
+        XmlElement answer = new XmlElement("update"); //$NON-NLS-1$
+        
+        answer.addAttribute(new Attribute("id", getUpdateByPrimaryKeyStatementId())); //$NON-NLS-1$
+        answer.addAttribute(new Attribute("parameterClass", javaModelGenerator //$NON-NLS-1$
                 .getRecordType(tableConfiguration.getTable())
-                .getFullyQualifiedName());
-        xml.append('>');
-        newLine(xml);
+                .getFullyQualifiedName()));
 
-        xml.append(getElementComment(indentLevel + 1));
-        newLine(xml);
+        answer.addElementComment();
 
-        indent(xml, indentLevel + 1);
-        xml.append("update "); //$NON-NLS-1$
-        xml.append(tableConfiguration.getTable().getFullyQualifiedTableName());
-        newLine(xml);
-        indent(xml, indentLevel + 1);
-        xml.append("set "); //$NON-NLS-1$
+        StringBuffer sb = new StringBuffer();
+        sb.append("update "); //$NON-NLS-1$
+        sb.append(tableConfiguration.getTable().getFullyQualifiedTableName());
+        answer.addElement(new TextElement(sb.toString()));
+        
+        // set up for first column
+        sb.setLength(0);
+        sb.append("set "); //$NON-NLS-1$
 
-        StringBuffer fragment = new StringBuffer();
-        boolean comma = false;
         Iterator iter = columnDefinitions.getNonBLOBColumns().iterator();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
 
-            fragment.setLength(0);
+            sb.append(cd.getColumnName());
+            sb.append(" = #"); //$NON-NLS-1$
+            sb.append(cd.getJavaProperty());
+            sb.append(':');
+            sb.append(cd.getResolvedJavaType().getJdbcTypeName());
+            sb.append('#');
 
-            fragment.append(cd.getColumnName());
-            fragment.append(" = #"); //$NON-NLS-1$
-            fragment.append(cd.getJavaProperty());
-            fragment.append(':');
-            fragment.append(cd.getResolvedJavaType().getJdbcTypeName());
-            fragment.append('#');
-
-            if (comma) {
-                xml.append(',');
-                newLine(xml);
-                indent(xml, indentLevel + 2);
-            } else {
-                comma = true;
+            if (iter.hasNext()) {
+                sb.append(',');
             }
-
-            xml.append(fragment);
+            
+            answer.addElement(new TextElement(sb.toString()));
+            
+            // set up for the next column
+            if (iter.hasNext()) {
+                sb.setLength(0);
+                OutputUtilities.xmlIndent(sb, 1);
+            }
         }
 
-        newLine(xml);
-        indent(xml, indentLevel + 1);
-        xml.append("where "); //$NON-NLS-1$
         boolean and = false;
         iter = columnDefinitions.getPrimaryKey().iterator();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
-            if (cd.isBLOBColumn()) {
-                continue;
-            }
 
+            sb.setLength(0);
             if (and) {
-                xml.append(" and"); //$NON-NLS-1$
-                newLine(xml);
-                indent(xml, indentLevel + 2);
+                sb.append("  and "); //$NON-NLS-1$
             } else {
+                sb.append("where "); //$NON-NLS-1$
                 and = true;
             }
 
-            xml.append(cd.getColumnName());
-            xml.append(" = #"); //$NON-NLS-1$
-            xml.append(cd.getJavaProperty());
-            xml.append('#');
+            sb.append(cd.getColumnName());
+            sb.append(" = #"); //$NON-NLS-1$
+            sb.append(cd.getJavaProperty());
+            sb.append('#');
+            answer.addElement(new TextElement(sb.toString()));
         }
 
-        newLine(xml);
-        indent(xml, indentLevel);
-        xml.append("</update>"); //$NON-NLS-1$
-
-        return xml.toString();
+        return answer;
     }
 
     /**
-     * This method should return well formatted XML for the delete by primary
+     * This method should return an XmlElement for the delete by primary
      * key statement.
      * 
      * @param columnDefinitions
      *            introspected column definitions for the current table
      * @param tableConfiguration
      *            table configuration for the current table
-     * @param indentLevel
-     *            the required indent level
-     * @return a well formatted String containing the delete element
+     * @return the delete element
      */
-    protected String getDeleteByPrimaryKey(ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, int indentLevel) {
-        StringBuffer xml = new StringBuffer();
+    protected XmlElement getDeleteByPrimaryKey(ColumnDefinitions columnDefinitions,
+            TableConfiguration tableConfiguration) {
+        XmlElement answer = new XmlElement("delete"); //$NON-NLS-1$
 
-        indent(xml, indentLevel);
-        xml.append("<delete"); //$NON-NLS-1$
-        addAttribute(xml, "id", getDeleteByPrimaryKeyStatementId()); //$NON-NLS-1$
-        addAttribute(xml, "parameterClass", javaModelGenerator //$NON-NLS-1$
+        answer.addAttribute(new Attribute("id", getDeleteByPrimaryKeyStatementId())); //$NON-NLS-1$
+        answer.addAttribute(new Attribute("parameterClass", javaModelGenerator //$NON-NLS-1$
                 .getPrimaryKeyType(tableConfiguration.getTable())
-                .getFullyQualifiedName());
-        xml.append('>');
-        newLine(xml);
+                .getFullyQualifiedName()));
 
-        xml.append(getElementComment(indentLevel + 1));
-        newLine(xml);
+        answer.addElementComment();
 
-        indent(xml, indentLevel + 1);
-        xml.append("delete from "); //$NON-NLS-1$
-        xml.append(tableConfiguration.getTable().getFullyQualifiedTableName());
-        newLine(xml);
+        StringBuffer sb = new StringBuffer();
+        sb.append("delete from "); //$NON-NLS-1$
+        sb.append(tableConfiguration.getTable().getFullyQualifiedTableName());
+        answer.addElement(new TextElement(sb.toString()));
 
-        indent(xml, indentLevel + 1);
-        xml.append("where "); //$NON-NLS-1$
         boolean and = false;
         Iterator iter = columnDefinitions.getPrimaryKey().iterator();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
+
+            sb.setLength(0);
             if (and) {
-                xml.append(" and"); //$NON-NLS-1$
-                newLine(xml);
-                indent(xml, indentLevel + 2);
+                sb.append("  and "); //$NON-NLS-1$
             } else {
+                sb.append("where "); //$NON-NLS-1$
                 and = true;
             }
 
-            xml.append(cd.getColumnName());
-            xml.append(" = #"); //$NON-NLS-1$
-            xml.append(cd.getJavaProperty());
-            xml.append('#');
+            sb.append(cd.getColumnName());
+            sb.append(" = #"); //$NON-NLS-1$
+            sb.append(cd.getJavaProperty());
+            sb.append('#');
+            answer.addElement(new TextElement(sb.toString()));
         }
 
-        newLine(xml);
-        indent(xml, indentLevel);
-        xml.append("</delete>"); //$NON-NLS-1$
-
-        return xml.toString();
+        return answer;
     }
 
     /**
-     * This method should return well formatted XML for the delete by example
+     * This method should return an XmlElement for the delete by example
      * statement. This statement uses the "by example" SQL fragment
      * 
      * @param columnDefinitions
      *            introspected column definitions for the current table
      * @param tableConfiguration
      *            table configuration for the current table
-     * @param indentLevel
-     *            the required indent level
-     * @return a well formatted String containing the delete element
+     * @return the delete element
      */
-    protected String getDeleteByExample(ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, int indentLevel) {
+    protected XmlElement getDeleteByExample(ColumnDefinitions columnDefinitions,
+            TableConfiguration tableConfiguration) {
 
-        StringBuffer xml = new StringBuffer();
+        XmlElement answer = new XmlElement("delete"); //$NON-NLS-1$
 
-        indent(xml, indentLevel);
-        xml.append("<delete"); //$NON-NLS-1$
-        addAttribute(xml, "id", getDeleteByExampleStatementId()); //$NON-NLS-1$
-        addAttribute(xml, "parameterClass", "java.util.Map"); //$NON-NLS-1$ //$NON-NLS-2$
-        xml.append('>');
-        newLine(xml);
+        answer.addAttribute(new Attribute("id", getDeleteByExampleStatementId())); //$NON-NLS-1$
+        answer.addAttribute(new Attribute("parameterClass", "java.util.Map")); //$NON-NLS-1$ //$NON-NLS-2$
 
-        xml.append(getElementComment(indentLevel + 1));
-        newLine(xml);
+        answer.addElementComment();
 
-        indent(xml, indentLevel + 1);
-        xml.append("delete from "); //$NON-NLS-1$
-        xml.append(tableConfiguration.getTable().getFullyQualifiedTableName());
-        newLine(xml);
+        StringBuffer sb = new StringBuffer();
+        sb.append("delete from "); //$NON-NLS-1$
+        sb.append(tableConfiguration.getTable().getFullyQualifiedTableName());
+        answer.addElement(new TextElement(sb.toString()));
 
-        indent(xml, indentLevel + 1);
-        xml.append("<include"); //$NON-NLS-1$
-        addAttribute(xml, "refid", //$NON-NLS-1$
-                getSqlMapNamespace(tableConfiguration.getTable())
-                        + "." + getExampleWhereClauseId()); //$NON-NLS-1$
-        xml.append("/>"); //$NON-NLS-1$
-        newLine(xml);
+        XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
+        sb.setLength(0);
+        sb.append(getSqlMapNamespace(tableConfiguration.getTable()));
+        sb.append('.');
+        sb.append(getExampleWhereClauseId());
+        includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
+                sb.toString()));
+        
+        answer.addElement(includeElement);
 
-        indent(xml, indentLevel);
-        xml.append("</delete>"); //$NON-NLS-1$
-
-        return xml.toString();
+        return answer;
     }
 
     /**
-     * This method should return well formatted XML for the select by primary
+     * This method should return an XmlElement for the select by primary
      * key statement. The statement should include all fields in the table,
      * including BLOB fields.
      * 
@@ -902,46 +740,36 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
      *            introspected column definitions for the current table
      * @param tableConfiguration
      *            table configuration for the current table
-     * @param indentLevel
-     *            the required indent level
-     * @return a well formatted String containing the select element
+     * @return the select element
      */
-    protected String getSelectByPrimaryKey(ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, int indentLevel) {
+    protected XmlElement getSelectByPrimaryKey(ColumnDefinitions columnDefinitions,
+            TableConfiguration tableConfiguration) {
 
-        StringBuffer xml = new StringBuffer();
-
-        indent(xml, indentLevel);
-        xml.append("<select"); //$NON-NLS-1$
-        addAttribute(xml, "id", getSelectByPrimaryKeyStatementId()); //$NON-NLS-1$
+        XmlElement answer = new XmlElement("select"); //$NON-NLS-1$
+        
+        answer.addAttribute(new Attribute("id", getSelectByPrimaryKeyStatementId())); //$NON-NLS-1$
         if (AbatorRules.generateResultMapWithBLOBs(columnDefinitions, tableConfiguration)) {
-            addAttribute(
-                    xml,
-                    "resultMap", getResultMapName(tableConfiguration.getTable()) + "WithBLOBs"); //$NON-NLS-1$ //$NON-NLS-2$
+            answer.addAttribute(new Attribute("resultMap", //$NON-NLS-1$
+                    getResultMapName(tableConfiguration.getTable()) + "WithBLOBs")); //$NON-NLS-1$
         } else {
-            addAttribute(
-                    xml,
-                    "resultMap", getResultMapName(tableConfiguration.getTable())); //$NON-NLS-1$
+            answer.addAttribute(new Attribute("resultMap", //$NON-NLS-1$
+                    getResultMapName(tableConfiguration.getTable())));
         }
-        addAttribute(xml, "parameterClass", javaModelGenerator //$NON-NLS-1$
+        answer.addAttribute(new Attribute("parameterClass", javaModelGenerator //$NON-NLS-1$
                 .getPrimaryKeyType(tableConfiguration.getTable())
-                .getFullyQualifiedName());
-        xml.append('>');
-        newLine(xml);
+                .getFullyQualifiedName()));
 
-        xml.append(getElementComment(indentLevel + 1));
-        newLine(xml);
+        answer.addElementComment();
 
-        indent(xml, indentLevel + 1);
-        xml.append("select "); //$NON-NLS-1$
+        StringBuffer sb = new StringBuffer();
+        sb.append("select "); //$NON-NLS-1$
 
         boolean comma = false;
-
         if (StringUtility.stringHasValue(tableConfiguration
                 .getSelectByPrimaryKeyQueryId())) {
-            xml.append('\'');
-            xml.append(tableConfiguration.getSelectByPrimaryKeyQueryId());
-            xml.append("' as QUERYID"); //$NON-NLS-1$
+            sb.append('\'');
+            sb.append(tableConfiguration.getSelectByPrimaryKeyQueryId());
+            sb.append("' as QUERYID"); //$NON-NLS-1$
             comma = true;
         }
 
@@ -949,184 +777,72 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
             if (comma) {
-                xml.append(',');
-                newLine(xml);
-                indent(xml, indentLevel + 2);
+                sb.append(", "); //$NON-NLS-1$
             } else {
                 comma = true;
             }
 
-            xml.append(cd.getColumnName());
+            sb.append(cd.getColumnName());
         }
+        
+        answer.addElement(new TextElement(sb.toString()));
 
-        newLine(xml);
-        indent(xml, indentLevel + 1);
-        xml.append("from "); //$NON-NLS-1$
-        xml.append(tableConfiguration.getTable().getFullyQualifiedTableName());
-        newLine(xml);
-        indent(xml, indentLevel + 1);
-        xml.append("where "); //$NON-NLS-1$
+        sb.setLength(0);
+        sb.append("from "); //$NON-NLS-1$
+        sb.append(tableConfiguration.getTable().getFullyQualifiedTableName());
+        answer.addElement(new TextElement(sb.toString()));
 
         boolean and = false;
         iter = columnDefinitions.getPrimaryKey().iterator();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
+            
+            sb.setLength(0);
             if (and) {
-                xml.append(" and"); //$NON-NLS-1$
-                newLine(xml);
-                indent(xml, indentLevel + 2);
+                sb.append("  and "); //$NON-NLS-1$
             } else {
+                sb.append("where "); //$NON-NLS-1$
                 and = true;
             }
 
-            xml.append(cd.getColumnName());
-            xml.append(" = #"); //$NON-NLS-1$
-            xml.append(cd.getJavaProperty());
-            xml.append('#');
+            sb.append(cd.getColumnName());
+            sb.append(" = #"); //$NON-NLS-1$
+            sb.append(cd.getJavaProperty());
+            sb.append('#');
+            answer.addElement(new TextElement(sb.toString()));
         }
 
-        newLine(xml);
-        indent(xml, indentLevel);
-        xml.append("</select>"); //$NON-NLS-1$
-
-        return xml.toString();
+        return answer;
     }
 
     /**
-     * Utility method that indents the buffer by the default amount (two spaces
-     * per indent level).
-     * 
-     * @param sb a StringBuffer to append to
-     * @param indentLevel the required indent level
-     */
-    protected void indent(StringBuffer sb, int indentLevel) {
-        for (int i = 0; i < indentLevel; i++) {
-            sb.append("  "); //$NON-NLS-1$
-        }
-    }
-
-    /**
-     * Utility method that adds an XML attribute to a StringBuffer.
-     * 
-     * @param sb the StringBuffer to append to
-     * @param name the name of the attribute
-     * @param value the value of the attribute (this method will add the enclosing
-     *            quotation marks automatically)
-     */
-    protected void addAttribute(StringBuffer sb, String name, String value) {
-        sb.append(' ');
-        sb.append(name);
-        sb.append('=');
-        addQuotedString(sb, value, false);
-    }
-
-    /**
-     * Utility method .  Adds a string surround with quotation marks to a
-     * StringBuffer
-     * 
-     * @param sb the StringBuffer to append to
-     * @param value the value to append (the value will be surrounded by quotation
-     *            marks by this method)
-     * @param spaceBefore if true, a space will be added before the value
-     */
-    protected void addQuotedString(StringBuffer sb, String value,
-            boolean spaceBefore) {
-        if (spaceBefore) {
-            sb.append(' ');
-        }
-
-        sb.append('\"');
-        sb.append(value);
-        sb.append('\"');
-    }
-
-    /**
-     * Utility method.  Adds a newline character to a StringBuffer.
-     * 
-     * @param sb the StringBuffer to be appended to
-     */
-    protected void newLine(StringBuffer sb) {
-        sb.append(lineSeparator);
-    }
-
-    /**
-     * Utility method.  Takes a long string and breaks it into multiple lines of
-     * whose width is no longer that the specified maximum line length.
-     * 
-     * @param s the String to be formatted
-     * @param maxLineLength the maximum line length
-     * @param indentLevel the required indent level of all lines
-     * @return the formatted String
-     */
-    protected String formatLongString(String s, int maxLineLength,
-            int indentLevel) {
-        ArrayList lines = new ArrayList();
-        StringTokenizer st = new StringTokenizer(s, " "); //$NON-NLS-1$
-
-        StringBuffer sb = new StringBuffer();
-        indent(sb, indentLevel);
-
-        while (st.hasMoreTokens()) {
-            String token = st.nextToken();
-
-            if (sb.length() + token.length() + 1 > maxLineLength) {
-                lines.add(sb.toString());
-                sb.setLength(0);
-                indent(sb, indentLevel + 1);
-            }
-
-            sb.append(token);
-            sb.append(' ');
-        }
-
-        if (sb.length() > 0) {
-            lines.add(sb.toString());
-        }
-
-        sb.setLength(0);
-        Iterator iter = lines.iterator();
-        while (iter.hasNext()) {
-            sb.append(iter.next());
-            newLine(sb);
-        }
-
-        return sb.toString();
-    }
-
-    /**
-     * This method should return well formatted XML for the select key element 
+     * This method should return an XmlElement for the select key 
      * used to automatically generate keys.
      * 
-     * @param columnDefinition the column related to the select key statement
-     * @param tableConfiguration table configuration for the current table
-     * @param indentLevel the required indent level
-     * @return a well formatted String containing the selectKey element
+     * @param columnDefinition
+     *            the column related to the select key statement
+     * @param tableConfiguration
+     *            table configuration for the current table
+     * @return the selectKey element
      */
-    protected String getSelectKey(ColumnDefinition columnDefinition,
-            TableConfiguration tableConfiguration, int indentLevel) {
-        StringBuffer xml = new StringBuffer();
-
-        //ResolvedJavaType rjt = columnDefinition.getResolvedJavaType();
+    protected XmlElement getSelectKey(ColumnDefinition columnDefinition,
+            TableConfiguration tableConfiguration) {
         String identityColumnType = columnDefinition.getResolvedJavaType()
                 .getFullyQualifiedJavaType().getFullyQualifiedName();
 
-        indent(xml, indentLevel);
-        xml.append("<selectKey"); //$NON-NLS-1$
-        addAttribute(xml, "resultClass", identityColumnType); //$NON-NLS-1$
-        addAttribute(xml, "keyProperty", columnDefinition.getJavaProperty()); //$NON-NLS-1$
-        xml.append('>');
-        newLine(xml);
-        indent(xml, indentLevel + 1);
-        xml.append(tableConfiguration.getGeneratedKey().getSqlStatement());
-        newLine(xml);
-        indent(xml, indentLevel);
-        xml.append("</selectKey>"); //$NON-NLS-1$
+        XmlElement answer = new XmlElement("selectKey"); //$NON-NLS-1$
+        answer.addAttribute(new Attribute("resultClass", identityColumnType)); //$NON-NLS-1$
+        answer.addAttribute(new Attribute(
+                "keyProperty", columnDefinition.getJavaProperty())); //$NON-NLS-1$
+        answer.addElement(new TextElement(tableConfiguration.getGeneratedKey()
+                .getSqlStatement()));
 
-        return xml.toString();
+        return answer;
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.ibatis.abator.api.SqlMapGenerator#getSqlMapNamespace(org.apache.ibatis.abator.config.FullyQualifiedTable)
      */
     public String getSqlMapNamespace(FullyQualifiedTable table) {
@@ -1146,10 +862,11 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
     /**
      * Calculates the name of the result map. Typically this is the String
      * "abatorgenerated_XXXXResult" where XXXX is the name of the domain object
-     * related to this table. The prefix "abatorgenerated_" is important because it
-     * allows Abator to regenerate this element on subsequent runs.
+     * related to this table. The prefix "abatorgenerated_" is important because
+     * it allows Abator to regenerate this element on subsequent runs.
      * 
-     * @param table the current table
+     * @param table
+     *            the current table
      * @return the name of the result map
      */
     protected String getResultMapName(FullyQualifiedTable table) {
@@ -1177,7 +894,8 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
      * "XXXX_SqlMap.xml" where XXXX is the fully qualified table name (delimited
      * with underscores).
      * 
-     * @param table the current table
+     * @param table
+     *            the current table
      * @return tha name of the SqlMap file
      */
     protected String getSqlMapFileName(FullyQualifiedTable table) {
@@ -1200,7 +918,8 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.ibatis.abator.api.SqlMapGenerator#getDeleteByPrimaryKeyStatementId()
      */
     public String getDeleteByPrimaryKeyStatementId() {
@@ -1208,7 +927,8 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.ibatis.abator.api.SqlMapGenerator#getDeleteByExampleStatementId()
      */
     public String getDeleteByExampleStatementId() {
@@ -1216,7 +936,8 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.ibatis.abator.api.SqlMapGenerator#getInsertStatementId()
      */
     public String getInsertStatementId() {
@@ -1224,7 +945,8 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.ibatis.abator.api.SqlMapGenerator#getSelectByPrimaryKeyStatementId()
      */
     public String getSelectByPrimaryKeyStatementId() {
@@ -1232,7 +954,8 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.ibatis.abator.api.SqlMapGenerator#getSelectByExampleStatementId()
      */
     public String getSelectByExampleStatementId() {
@@ -1240,7 +963,8 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.ibatis.abator.api.SqlMapGenerator#getSelectByExampleWithBLOBsStatementId()
      */
     public String getSelectByExampleWithBLOBsStatementId() {
@@ -1248,7 +972,8 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.ibatis.abator.api.SqlMapGenerator#getUpdateByPrimaryKeyWithBLOBsStatementId()
      */
     public String getUpdateByPrimaryKeyWithBLOBsStatementId() {
@@ -1256,7 +981,8 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.ibatis.abator.api.SqlMapGenerator#getUpdateByPrimaryKeyStatementId()
      */
     public String getUpdateByPrimaryKeyStatementId() {
@@ -1266,7 +992,8 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
     /**
      * Calculates the package for the current table.
      * 
-     * @param table the current table
+     * @param table
+     *            the current table
      * @return the package for the SqlMap for the current table
      */
     protected String getSqlMapPackage(FullyQualifiedTable table) {
@@ -1310,33 +1037,27 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
     }
 
     /**
-     * This method should return well formatted XML for the example where clause
+     * This method should return an XmlElement for the example where clause
      * SQL fragment (an sql fragment).
      * 
-     * @param columnDefinitions introspected column definitions for the current table
-     * @param tableConfiguration table configuration for the current table
-     * @param indentLevel the required indent level
+     * @param columnDefinitions
+     *            introspected column definitions for the current table
+     * @param tableConfiguration
+     *            table configuration for the current table
      * @return a well formatted String containing the SQL element
      */
-    protected String getByExampleWhereClauseFragment(
+    protected XmlElement getByExampleWhereClauseFragment(
             ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, int indentLevel) {
-        StringBuffer xml = new StringBuffer();
+            TableConfiguration tableConfiguration) {
 
-        indent(xml, indentLevel);
-        xml.append("<sql"); //$NON-NLS-1$
-        addAttribute(xml, "id", getExampleWhereClauseId()); //$NON-NLS-1$ //$NON-NLS-2$
-        xml.append('>');
-        newLine(xml);
+        XmlElement answer = new XmlElement("sql"); //$NON-NLS-1$
+        
+        answer.addAttribute(new Attribute("id", getExampleWhereClauseId())); //$NON-NLS-1$
+        
+        answer.addElementComment();
 
-        xml.append(getElementComment(indentLevel + 1));
-        newLine(xml);
-
-        indent(xml, indentLevel + 1);
-        xml.append("<dynamic"); //$NON-NLS-1$
-        addAttribute(xml, "prepend", "where"); //$NON-NLS-1$ //$NON-NLS-2$
-        xml.append('>');
-        newLine(xml);
+        XmlElement dynamicElement = new XmlElement("dynamic"); //$NON-NLS-1$
+        dynamicElement.addAttribute(new Attribute("prepend", "where")); //$NON-NLS-1$ //$NON-NLS-2$
 
         Iterator iter = columnDefinitions.getAllColumns().iterator();
         while (iter.hasNext()) {
@@ -1355,84 +1076,56 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
                     continue;
                 }
 
-                indent(xml, indentLevel + 2);
-                xml.append("<isPropertyAvailable"); //$NON-NLS-1$
-                addAttribute(xml, "prepend", "and"); //$NON-NLS-1$ //$NON-NLS-2$
-                addAttribute(xml, "property", ec.getSelectorAndProperty(cd)); //$NON-NLS-1$
-                xml.append('>');
-                newLine(xml);
+                XmlElement isPropAvail = new XmlElement("isPropertyAvailable"); //$NON-NLS-1$
+                isPropAvail.addAttribute(new Attribute("prepend", "and")); //$NON-NLS-1$ //$NON-NLS-2$
+                isPropAvail.addAttribute(new Attribute("property", ec.getSelectorAndProperty(cd))); //$NON-NLS-1$
+                isPropAvail.addElement(new TextElement(ec.getClause(cd)));
+                dynamicElement.addElement(isPropAvail);
 
-                indent(xml, indentLevel + 3);
-                xml.append(ec.getClause(cd));
-                newLine(xml);
-
-                indent(xml, indentLevel + 2);
-                xml.append("</isPropertyAvailable>"); //$NON-NLS-1$
-                newLine(xml);
-
-                indent(xml, indentLevel + 2);
-                xml.append("<isPropertyAvailable"); //$NON-NLS-1$
-                addAttribute(xml, "prepend", "or"); //$NON-NLS-1$ //$NON-NLS-2$
-                addAttribute(xml, "property", ec.getSelectorOrProperty(cd)); //$NON-NLS-1$
-                xml.append('>');
-                newLine(xml);
-
-                indent(xml, indentLevel + 3);
-                xml.append(ec.getClause(cd));
-                newLine(xml);
-
-                indent(xml, indentLevel + 2);
-                xml.append("</isPropertyAvailable>"); //$NON-NLS-1$
-                newLine(xml);
+                isPropAvail = new XmlElement("isPropertyAvailable"); //$NON-NLS-1$
+                isPropAvail.addAttribute(new Attribute("prepend", "or")); //$NON-NLS-1$ //$NON-NLS-2$
+                isPropAvail.addAttribute(new Attribute("property", ec.getSelectorOrProperty(cd))); //$NON-NLS-1$
+                isPropAvail.addElement(new TextElement(ec.getClause(cd)));
+                dynamicElement.addElement(isPropAvail);
             }
         }
 
-        indent(xml, indentLevel + 1);
-        xml.append("</dynamic>"); //$NON-NLS-1$
-        newLine(xml);
+        answer.addElement(dynamicElement);
 
-        indent(xml, indentLevel);
-        xml.append("</sql>"); //$NON-NLS-1$
-
-        return xml.toString();
+        return answer;
     }
 
     /**
-     * This method should return well formatted XML for the select by example
+     * This method should return an XmlElement for the select by example
      * statement that returns all fields in the table (except BLOB fields).
      * 
-     * @param columnDefinitions introspected column definitions for the current table
-     * @param tableConfiguration table configuration for the current table
-     * @param indentLevel the required indent level
-     * @return a well formatted String containing the update element
+     * @param columnDefinitions
+     *            introspected column definitions for the current table
+     * @param tableConfiguration
+     *            table configuration for the current table
+     * @return the select element
      */
-    protected String getSelectByExample(ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, int indentLevel) {
+    protected XmlElement getSelectByExample(ColumnDefinitions columnDefinitions,
+            TableConfiguration tableConfiguration) {
 
-        StringBuffer xml = new StringBuffer();
+        XmlElement answer = new XmlElement("select"); //$NON-NLS-1$
+        
+        answer.addAttribute(new Attribute("id", getSelectByExampleStatementId())); //$NON-NLS-1$
+        answer.addAttribute(new Attribute("resultMap", //$NON-NLS-1$
+                getResultMapName(tableConfiguration.getTable())));
+        answer.addAttribute(new Attribute("parameterClass", "java.util.Map")); //$NON-NLS-1$ //$NON-NLS-2$
 
-        indent(xml, indentLevel);
-        xml.append("<select"); //$NON-NLS-1$
-        addAttribute(xml, "id", getSelectByExampleStatementId()); //$NON-NLS-1$
-        addAttribute(xml,
-                "resultMap", getResultMapName(tableConfiguration.getTable())); //$NON-NLS-1$
-        addAttribute(xml, "parameterClass", "java.util.Map"); //$NON-NLS-1$ //$NON-NLS-2$
-        xml.append('>');
-        newLine(xml);
+        answer.addElementComment();
 
-        xml.append(getElementComment(indentLevel + 1));
-        newLine(xml);
-
-        indent(xml, indentLevel + 1);
-        xml.append("select "); //$NON-NLS-1$
+        StringBuffer sb = new StringBuffer();
+        sb.append("select "); //$NON-NLS-1$
 
         boolean comma = false;
-
         if (StringUtility.stringHasValue(tableConfiguration
                 .getSelectByExampleQueryId())) {
-            xml.append('\'');
-            xml.append(tableConfiguration.getSelectByExampleQueryId());
-            xml.append("' as QUERYID"); //$NON-NLS-1$
+            sb.append('\'');
+            sb.append(tableConfiguration.getSelectByExampleQueryId());
+            sb.append("' as QUERYID"); //$NON-NLS-1$
             comma = true;
         }
 
@@ -1446,88 +1139,66 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
             }
 
             if (comma) {
-                xml.append(',');
-                newLine(xml);
-                indent(xml, indentLevel + 2);
+                sb.append(", "); //$NON-NLS-1$
             } else {
                 comma = true;
             }
 
-            xml.append(cd.getColumnName());
+            sb.append(cd.getColumnName());
         }
+        answer.addElement((new TextElement(sb.toString())));
 
-        newLine(xml);
-        indent(xml, indentLevel + 1);
-        xml.append("from "); //$NON-NLS-1$
-        xml.append(tableConfiguration.getTable().getFullyQualifiedTableName());
-        newLine(xml);
+        sb.setLength(0);
+        sb.append("from "); //$NON-NLS-1$
+        sb.append(tableConfiguration.getTable().getFullyQualifiedTableName());
+        answer.addElement((new TextElement(sb.toString())));
 
-        indent(xml, indentLevel + 1);
-        xml.append("<include"); //$NON-NLS-1$
-        addAttribute(xml, "refid", //$NON-NLS-1$
+        XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
+        includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
                 getSqlMapNamespace(tableConfiguration.getTable())
-                        + "." + getExampleWhereClauseId()); //$NON-NLS-1$
-        xml.append("/>"); //$NON-NLS-1$
-        newLine(xml);
+                        + "." + getExampleWhereClauseId())); //$NON-NLS-1$
+        answer.addElement(includeElement);
 
-        indent(xml, indentLevel + 1);
-        xml.append("<isPropertyAvailable"); //$NON-NLS-1$
-        addAttribute(xml, "property", "ABATOR_ORDER_BY_CLAUSE"); //$NON-NLS-1$ //$NON-NLS-2$
-        xml.append('>');
-        newLine(xml);
+        XmlElement isPropAvail = new XmlElement("isPropertyAvailable"); //$NON-NLS-1$
+        isPropAvail.addAttribute(new Attribute("property", "ABATOR_ORDER_BY_CLAUSE")); //$NON-NLS-1$ //$NON-NLS-2$
+        isPropAvail.addElement(new TextElement("order by $ABATOR_ORDER_BY_CLAUSE$")); //$NON-NLS-1$
+        answer.addElement(isPropAvail);
 
-        indent(xml, indentLevel + 2);
-        xml.append("order by $ABATOR_ORDER_BY_CLAUSE$"); //$NON-NLS-1$
-        newLine(xml);
-
-        indent(xml, indentLevel + 1);
-        xml.append("</isPropertyAvailable>"); //$NON-NLS-1$
-        newLine(xml);
-
-        indent(xml, indentLevel);
-        xml.append("</select>"); //$NON-NLS-1$
-
-        return xml.toString();
+        return answer;
     }
 
     /**
-     * This method should return well formatted XML for the select by example
+     * This method should return an XmlElement for the select by example
      * statement that returns all fields in the table (including BLOB fields).
      * 
-     * @param columnDefinitions introspected column definitions for the current table
-     * @param tableConfiguration table configuration for the current table
-     * @param indentLevel the required indent level
-     * @return a well formatted String containing the update element
+     * @param columnDefinitions
+     *            introspected column definitions for the current table
+     * @param tableConfiguration
+     *            table configuration for the current table
+     * @return the select element
      */
-    protected String getSelectByExampleWithBLOBs(
+    protected XmlElement getSelectByExampleWithBLOBs(
             ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, int indentLevel) {
+            TableConfiguration tableConfiguration) {
 
-        StringBuffer xml = new StringBuffer();
+        XmlElement answer = new XmlElement("select"); //$NON-NLS-1$
+        
+        answer.addAttribute(new Attribute("id", getSelectByExampleWithBLOBsStatementId())); //$NON-NLS-1$
+        answer.addAttribute(new Attribute("resultMap", //$NON-NLS-1$
+                getResultMapName(tableConfiguration.getTable()) + "WithBLOBs")); //$NON-NLS-1$
+        answer.addAttribute(new Attribute("parameterClass", "java.util.Map")); //$NON-NLS-1$ //$NON-NLS-2$
 
-        indent(xml, indentLevel);
-        xml.append("<select"); //$NON-NLS-1$
-        addAttribute(xml, "id", getSelectByExampleWithBLOBsStatementId()); //$NON-NLS-1$
-        addAttribute(
-                xml,
-                "resultMap", getResultMapName(tableConfiguration.getTable()) + "WithBLOBs"); //$NON-NLS-1$ //$NON-NLS-2$
-        addAttribute(xml, "parameterClass", "java.util.Map"); //$NON-NLS-1$ //$NON-NLS-2$
-        xml.append('>');
-        newLine(xml);
+        answer.addElementComment();
 
-        xml.append(getElementComment(indentLevel + 1));
-        newLine(xml);
-
-        indent(xml, indentLevel + 1);
-        xml.append("select "); //$NON-NLS-1$
+        StringBuffer sb = new StringBuffer();
+        sb.append("select "); //$NON-NLS-1$
 
         boolean comma = false;
-
         if (StringUtility.stringHasValue(tableConfiguration
                 .getSelectByExampleQueryId())) {
-            xml.append('\'');
-            xml.append(tableConfiguration.getSelectByExampleQueryId());
-            xml.append("' as QUERYID"); //$NON-NLS-1$
+            sb.append('\'');
+            sb.append(tableConfiguration.getSelectByExampleQueryId());
+            sb.append("' as QUERYID"); //$NON-NLS-1$
             comma = true;
         }
 
@@ -1536,62 +1207,49 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
 
             if (comma) {
-                xml.append(',');
-                newLine(xml);
-                indent(xml, indentLevel + 2);
+                sb.append(", "); //$NON-NLS-1$
             } else {
                 comma = true;
             }
 
-            xml.append(cd.getColumnName());
+            sb.append(cd.getColumnName());
         }
+        answer.addElement((new TextElement(sb.toString())));
 
-        newLine(xml);
-        indent(xml, indentLevel + 1);
-        xml.append("from "); //$NON-NLS-1$
-        xml.append(tableConfiguration.getTable().getFullyQualifiedTableName());
-        newLine(xml);
+        sb.setLength(0);
+        sb.append("from "); //$NON-NLS-1$
+        sb.append(tableConfiguration.getTable().getFullyQualifiedTableName());
+        answer.addElement((new TextElement(sb.toString())));
 
-        indent(xml, indentLevel + 1);
-        xml.append("<include"); //$NON-NLS-1$
-        addAttribute(
-                xml,
-                "refid", getSqlMapNamespace(tableConfiguration.getTable()) + "." + getExampleWhereClauseId()); //$NON-NLS-1$ //$NON-NLS-2$
-        xml.append("/>"); //$NON-NLS-1$
-        newLine(xml);
+        XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
+        includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
+                getSqlMapNamespace(tableConfiguration.getTable())
+                        + "." + getExampleWhereClauseId())); //$NON-NLS-1$
+        answer.addElement(includeElement);
 
-        indent(xml, indentLevel + 1);
-        xml.append("<isPropertyAvailable"); //$NON-NLS-1$
-        addAttribute(xml, "property", "ABATOR_ORDER_BY_CLAUSE"); //$NON-NLS-1$ //$NON-NLS-2$
-        xml.append('>');
-        newLine(xml);
-
-        indent(xml, indentLevel + 2);
-        xml.append("order by $ABATOR_ORDER_BY_CLAUSE$"); //$NON-NLS-1$
-        newLine(xml);
-
-        indent(xml, indentLevel + 1);
-        xml.append("</isPropertyAvailable>"); //$NON-NLS-1$
-        newLine(xml);
-
-        indent(xml, indentLevel);
-        xml.append("</select>"); //$NON-NLS-1$
-
-        return xml.toString();
+        XmlElement isPropAvail = new XmlElement("isPropertyAvailable"); //$NON-NLS-1$
+        isPropAvail.addAttribute(new Attribute("property", "ABATOR_ORDER_BY_CLAUSE")); //$NON-NLS-1$ //$NON-NLS-2$
+        isPropAvail.addElement(new TextElement("order by $ABATOR_ORDER_BY_CLAUSE$")); //$NON-NLS-1$
+        answer.addElement(isPropAvail);
+        
+        return answer;
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.ibatis.abator.api.SqlMapGenerator#setTargetProject(java.lang.String)
      */
     public void setTargetProject(String targetProject) {
         this.targetProject = targetProject;
     }
-    
-	/* (non-Javadoc)
-	 * @see org.apache.ibatis.abator.api.SqlMapGenerator#setWarnings(java.util.List)
-	 */
-	public void setWarnings(List warnings) {
-		this.warnings = warnings;
-	}
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.ibatis.abator.api.SqlMapGenerator#setWarnings(java.util.List)
+     */
+    public void setWarnings(List warnings) {
+        this.warnings = warnings;
+    }
 }

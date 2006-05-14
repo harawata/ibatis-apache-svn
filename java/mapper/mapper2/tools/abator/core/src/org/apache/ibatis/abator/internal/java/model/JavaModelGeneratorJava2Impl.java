@@ -22,15 +22,21 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.abator.api.FullyQualifiedJavaType;
 import org.apache.ibatis.abator.api.GeneratedJavaFile;
 import org.apache.ibatis.abator.api.JavaModelGenerator;
 import org.apache.ibatis.abator.api.ProgressCallback;
+import org.apache.ibatis.abator.api.dom.java.CompilationUnit;
+import org.apache.ibatis.abator.api.dom.java.Field;
+import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
+import org.apache.ibatis.abator.api.dom.java.InnerClass;
+import org.apache.ibatis.abator.api.dom.java.JavaVisibility;
+import org.apache.ibatis.abator.api.dom.java.Method;
+import org.apache.ibatis.abator.api.dom.java.Parameter;
+import org.apache.ibatis.abator.api.dom.java.TopLevelClass;
 import org.apache.ibatis.abator.config.FullyQualifiedTable;
 import org.apache.ibatis.abator.config.TableConfiguration;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
 import org.apache.ibatis.abator.internal.db.ColumnDefinitions;
-import org.apache.ibatis.abator.internal.java.BaseJavaCodeGenerator;
 import org.apache.ibatis.abator.internal.rules.AbatorRules;
 import org.apache.ibatis.abator.internal.util.JavaBeansUtil;
 import org.apache.ibatis.abator.internal.util.StringUtility;
@@ -59,7 +65,7 @@ import org.apache.ibatis.abator.internal.util.messages.Messages;
  * 
  * @author Jeff Butler
  */
-public class JavaModelGeneratorJava2Impl extends BaseJavaCodeGenerator implements JavaModelGenerator {
+public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
 
 	protected List warnings;
@@ -124,90 +130,72 @@ public class JavaModelGeneratorJava2Impl extends BaseJavaCodeGenerator implement
 	 * @param answer the generated fields and methods will be added to this object
 	 */
 	protected void generateClassParts(FullyQualifiedTable table, Collection columnDefinitions,
-			GeneratedJavaFile answer) {
+			TopLevelClass topLevelClass) {
 
 		boolean trimStrings = "true".equalsIgnoreCase((String) properties //$NON-NLS-1$
 				.get("trimStrings")); //$NON-NLS-1$
 		
-		StringBuffer buffer = new StringBuffer();
+		StringBuffer sb = new StringBuffer();
+		Field field;
+		Method method;
 
 		Iterator iter = columnDefinitions.iterator();
 		while (iter.hasNext()) {
 			ColumnDefinition cd = (ColumnDefinition) iter.next();
 			FullyQualifiedJavaType fqjt = cd.getResolvedJavaType().getFullyQualifiedJavaType();
 			
-			answer.addImportedType(fqjt);
+			topLevelClass.addImportedType(fqjt);
 
 			String property = cd.getJavaProperty();
+			
+			field = new Field();
+			field.addFieldComment(table, cd.getColumnName());
+			field.setVisibility(JavaVisibility.PRIVATE);
+			field.setType(fqjt);
+			field.setName(property);
+			topLevelClass.addField(field);
+			
+			method = new Method();
+			method.addGetterMethodComment(table, cd);
+	        method.setVisibility(JavaVisibility.PUBLIC);
+			method.setReturnType(fqjt);
+			method.setName(JavaBeansUtil.getGetterMethodName(property));
+			sb.setLength(0);
+			sb.append("return "); //$NON-NLS-1$
+			sb.append(property);
+			sb.append(';');
+			method.addBodyLine(sb.toString());
+			topLevelClass.addMethod(method);
 
-			buffer.setLength(0);
-			buffer.append(getFieldComment(table, cd.getColumnName()));
-			newLine(buffer);
-			indent(buffer, 1);
-			buffer.append("private "); //$NON-NLS-1$
-			buffer.append(fqjt.getShortName());
-			buffer.append(' ');
-			buffer.append(property);
-			buffer.append(';');
-			answer.addField(buffer.toString());
+			method = new Method();
+			method.addSetterMethodComment(table, cd);
+	        method.setVisibility(JavaVisibility.PUBLIC);
+			method.setName(JavaBeansUtil.getSetterMethodName(property));
+			method.addParameter(new Parameter(fqjt, property));
 
-			buffer.setLength(0);
-			buffer.append(getGetterMethodComment(table, cd));
-			newLine(buffer);
-			indent(buffer, 1);
-			buffer.append("public "); //$NON-NLS-1$
-			buffer.append(fqjt.getShortName());
-			buffer.append(' ');
-			buffer.append(JavaBeansUtil.getGetterMethodName(property));
-			buffer.append("() {"); //$NON-NLS-1$
-			newLine(buffer);
-			indent(buffer, 2);
-			buffer.append("return "); //$NON-NLS-1$
-			buffer.append(property);
-			buffer.append(';');
-			newLine(buffer);
-			indent(buffer, 1);
-			buffer.append('}');
-			answer.addMethod(buffer.toString());
-
-			buffer.setLength(0);
-			buffer.append(getSetterMethodComment(table, cd));
-			newLine(buffer);
-			indent(buffer, 1);
-			buffer.append("public void "); //$NON-NLS-1$
-			buffer.append(JavaBeansUtil.getSetterMethodName(property));
-			buffer.append('(');
-			buffer.append(fqjt.getShortName());
-			buffer.append(' ');
-			buffer.append(property);
-			buffer.append(") {"); //$NON-NLS-1$
 			if (trimStrings && cd.isCharacterColumn()) {
-				newLine(buffer);
-				indent(buffer, 2);
-				buffer.append("if ("); //$NON-NLS-1$
-				buffer.append(property);
-				buffer.append(" != null) {"); //$NON-NLS-1$
-				newLine(buffer);
-				indent(buffer, 3);
-				buffer.append(property);
-				buffer.append(" = "); //$NON-NLS-1$
-				buffer.append(property);
-				buffer.append(".trim();"); //$NON-NLS-1$
-				newLine(buffer);
-				indent(buffer, 2);
-				buffer.append('}');
+				sb.setLength(0);
+				sb.append("if ("); //$NON-NLS-1$
+				sb.append(property);
+				sb.append(" != null) {"); //$NON-NLS-1$
+				method.addBodyLine(sb.toString());
+				sb.setLength(0);
+				sb.append(property);
+				sb.append(" = "); //$NON-NLS-1$
+				sb.append(property);
+				sb.append(".trim();"); //$NON-NLS-1$
+				method.addBodyLine(sb.toString());
+				method.addBodyLine("}"); //$NON-NLS-1$
 			}
-			newLine(buffer);
-			indent(buffer, 2);
-			buffer.append("this."); //$NON-NLS-1$
-			buffer.append(property);
-			buffer.append(" = "); //$NON-NLS-1$
-			buffer.append(property);
-			buffer.append(';');
-			newLine(buffer);
-			indent(buffer, 1);
-			buffer.append('}');
-			answer.addMethod(buffer.toString());
+
+			sb.setLength(0);
+			sb.append("this."); //$NON-NLS-1$
+			sb.append(property);
+			sb.append(" = "); //$NON-NLS-1$
+			sb.append(property);
+			sb.append(';');
+			method.addBodyLine(sb.toString());
+			topLevelClass.addMethod(method);
 		}
 	}
 
@@ -248,360 +236,96 @@ public class JavaModelGeneratorJava2Impl extends BaseJavaCodeGenerator implement
 		return s;
 	}
 	
-	protected GeneratedJavaFile getExample(ColumnDefinitions columnDefinitions,
+	protected CompilationUnit getExample(ColumnDefinitions columnDefinitions,
 			TableConfiguration tableConfiguration) {
 		if (!AbatorRules.generateExampleExtendingPrimaryKey(columnDefinitions, tableConfiguration)
 				&& !AbatorRules.generateExampleExtendingBaseRecord(columnDefinitions, tableConfiguration)) {
 			return null;
 		}
 		
-		GeneratedJavaFile answer = new GeneratedJavaFile(getExampleType(tableConfiguration.getTable()));
+		FullyQualifiedJavaType type = getExampleType(tableConfiguration.getTable());
+		TopLevelClass topLevelClass = new TopLevelClass(type);
+		topLevelClass.setVisibility(JavaVisibility.PUBLIC);
 		
-		answer.setJavaInterface(false);
-		
-		if (AbatorRules.generateExampleExtendingPrimaryKey(columnDefinitions, tableConfiguration)) {
-			answer.setSuperClass(getPrimaryKeyType(tableConfiguration.getTable()));
-		} else {
-			answer.setSuperClass(getRecordType(tableConfiguration.getTable()));
-		}
-		
-		answer.setTargetProject(targetProject);
-		
-		StringBuffer buffer = new StringBuffer();
-		buffer.append(getFieldComment(tableConfiguration.getTable()));
-		newLine(buffer);
-		indent(buffer, 1);
-		buffer.append("public static final int EXAMPLE_IGNORE = 0;"); //$NON-NLS-1$
-		answer.addField(buffer.toString());
+		Field field = new Field();
+		field.addFieldComment(tableConfiguration.getTable());
+		field.setVisibility(JavaVisibility.PUBLIC);
+		field.setModifierStatic(true);
+		field.setModifierFinal(true);
+		field.setType(FullyQualifiedJavaType.getIntInstance());
+		field.setName("EXAMPLE_IGNORE"); //$NON-NLS-1$
+		field.setInitializationString("0"); //$NON-NLS-1$
+		topLevelClass.addField(field);
 		
 		Iterator iter = ExampleClause.getAllExampleClauses();
 		while (iter.hasNext()) {
 			ExampleClause clause = (ExampleClause) iter.next();
-			buffer.setLength(0);
-			buffer.append(getFieldComment(tableConfiguration.getTable()));
-			newLine(buffer);
-			indent(buffer, 1);
-			buffer.append("public static final int "); //$NON-NLS-1$
-			buffer.append(clause.getExamplePropertyName());
-			buffer.append(" = "); //$NON-NLS-1$
-			buffer.append(clause.getExamplePropertyValue());
-			buffer.append(';');
-			answer.addField(buffer.toString());
+			field = new Field();
+			field.addFieldComment(tableConfiguration.getTable());
+			field.setVisibility(JavaVisibility.PUBLIC);
+			field.setModifierStatic(true);
+			field.setModifierFinal(true);
+			field.setType(FullyQualifiedJavaType.getIntInstance());
+			field.setName(clause.getExamplePropertyName());
+			field.setInitializationString(Integer.toString(clause.getExamplePropertyValue()));
+			topLevelClass.addField(field);
 		}
 
-		buffer.setLength(0);
-		buffer.append(getFieldComment(tableConfiguration.getTable()));
-		newLine(buffer);
-		indent(buffer, 1);
-		buffer.append("private boolean combineTypeOr;"); //$NON-NLS-1$
-		answer.addField(buffer.toString());
-
-		buffer.setLength(0);
-		buffer.append(getMethodComment(tableConfiguration.getTable()));
-		newLine(buffer);
-		indent(buffer, 1);
-		buffer
-				.append("public void setCombineTypeOr(boolean combineTypeOr) {"); //$NON-NLS-1$
-		newLine(buffer);
-		indent(buffer, 2);
-		buffer.append("this.combineTypeOr = combineTypeOr;"); //$NON-NLS-1$
-		newLine(buffer);
-		indent(buffer, 1);
-		buffer.append('}');
-		answer.addMethod(buffer.toString());
-
-		buffer.setLength(0);
-		buffer.append(getMethodComment(tableConfiguration.getTable()));
-		newLine(buffer);
-		indent(buffer, 1);
-		buffer.append("public boolean isCombineTypeOr() {"); //$NON-NLS-1$
-		newLine(buffer);
-		indent(buffer, 2);
-		buffer.append("return combineTypeOr;"); //$NON-NLS-1$
-		newLine(buffer);
-		indent(buffer, 1);
-		buffer.append('}');
-		answer.addMethod(buffer.toString());
-		
 		// add field, getter, setter for orderby clause
-		buffer.setLength(0);
-		buffer.append(getFieldComment(tableConfiguration.getTable()));
-		newLine(buffer);
-		indent(buffer, 1);
-		buffer.append("private String orderByClause;"); //$NON-NLS-1$
-		answer.addField(buffer.toString());
+		field = new Field();
+		field.addFieldComment(tableConfiguration.getTable());
+		field.setVisibility(JavaVisibility.PRIVATE);
+		field.setType(FullyQualifiedJavaType.getStringInstance());
+		field.setName("orderByClause"); //$NON-NLS-1$
+		topLevelClass.addField(field);
+		
+		Method method = new Method();
+		method.addMethodComment(tableConfiguration.getTable());
+        method.setVisibility(JavaVisibility.PUBLIC);
+		method.setName("setOrderByClause"); //$NON-NLS-1$
+		method.addParameter(new Parameter(FullyQualifiedJavaType.getStringInstance(),
+		        "orderByClause")); //$NON-NLS-1$
+		method.addBodyLine("this.orderByClause = orderByClause;"); //$NON-NLS-1$
+		topLevelClass.addMethod(method);
+		
+		method = new Method();
+		method.addMethodComment(tableConfiguration.getTable());
+        method.setVisibility(JavaVisibility.PUBLIC);
+		method.setReturnType(FullyQualifiedJavaType.getStringInstance());
+		method.setName("getOrderByClause"); //$NON-NLS-1$
+		method.addBodyLine("return orderByClause;"); //$NON-NLS-1$
+		topLevelClass.addMethod(method);
+		
+		// add field and methods for the list of conditions
+		field = new Field();
+		field.addFieldComment(tableConfiguration.getTable());
+		field.setVisibility(JavaVisibility.PRIVATE);
+		field.setType(FullyQualifiedJavaType.getListInstance());
+		field.setName("orConditions"); //$NON-NLS-1$
+		field.setInitializationString("new ArrayList()"); //$NON-NLS-1$
+		topLevelClass.addField(field);
+		
+		method = new Method();
+		method.addMethodComment(tableConfiguration.getTable());
+		method.setVisibility(JavaVisibility.PUBLIC);
+		method.setReturnType(FullyQualifiedJavaType.getListInstance());
+		method.setName("getOrConditions"); //$NON-NLS-1$
+		method.addBodyLine("return orConditions;"); //$NON-NLS-1$
+		topLevelClass.addMethod(method);
+		
+		method = new Method();
+		method.addMethodComment(tableConfiguration.getTable());
+		method.setVisibility(JavaVisibility.PUBLIC);
+		method.setName("addOrCondition"); //$NON-NLS-1$
+		method.addParameter(new Parameter(new FullyQualifiedJavaType("AndCondition"), //$NON-NLS-1$
+		        "andCondition")); //$NON-NLS-1$
+		method.addBodyLine("orConditions.add(andCondition);"); //$NON-NLS-1$
+		topLevelClass.addMethod(method);
 
-		buffer.setLength(0);
-		buffer.append(getMethodComment(tableConfiguration.getTable()));
-		newLine(buffer);
-		indent(buffer, 1);
-		buffer
-				.append("public void setOrderByClause(String orderByClause) {"); //$NON-NLS-1$
-		newLine(buffer);
-		indent(buffer, 2);
-		buffer.append("this.orderByClause = orderByClause;"); //$NON-NLS-1$
-		newLine(buffer);
-		indent(buffer, 1);
-		buffer.append('}');
-		answer.addMethod(buffer.toString());
-
-		buffer.setLength(0);
-		buffer.append(getMethodComment(tableConfiguration.getTable()));
-		newLine(buffer);
-		indent(buffer, 1);
-		buffer.append("public String getOrderByClause() {"); //$NON-NLS-1$
-		newLine(buffer);
-		indent(buffer, 2);
-		buffer.append("return orderByClause;"); //$NON-NLS-1$
-		newLine(buffer);
-		indent(buffer, 1);
-		buffer.append('}');
-		answer.addMethod(buffer.toString());
+		// now generate the inner class that holds the AND conditions
+		topLevelClass.addInnerClass(getAndConditionInnerClass(topLevelClass, columnDefinitions, tableConfiguration));
 		
-		
-		iter = columnDefinitions.getAllColumns().iterator();
-		while (iter.hasNext()) {
-			ColumnDefinition cd = (ColumnDefinition) iter.next();
-
-			if (cd.isBLOBColumn()) {
-				continue;
-			}
-
-			String fieldName = cd.getJavaProperty() + "_Indicator"; //$NON-NLS-1$
-
-			buffer.setLength(0);
-			buffer.append(getFieldComment(tableConfiguration.getTable()));
-			newLine(buffer);
-			indent(buffer, 1);
-			buffer.append("private int "); //$NON-NLS-1$
-			buffer.append(fieldName);
-			buffer.append(';');
-			answer.addField(buffer.toString());
-
-			buffer.setLength(0);
-			buffer.append(getMethodComment(tableConfiguration.getTable()));
-			newLine(buffer);
-			indent(buffer, 1);
-			buffer.append("public int "); //$NON-NLS-1$
-			buffer.append(JavaBeansUtil.getGetterMethodName(fieldName));
-			buffer.append("() {"); //$NON-NLS-1$
-			newLine(buffer);
-			indent(buffer, 2);
-			buffer.append("return "); //$NON-NLS-1$
-			buffer.append(fieldName);
-			buffer.append(';');
-			newLine(buffer);
-			indent(buffer, 1);
-			buffer.append('}');
-			answer.addMethod(buffer.toString());
-
-			buffer.setLength(0);
-			buffer.append(getMethodComment(tableConfiguration.getTable()));
-			newLine(buffer);
-			indent(buffer, 1);
-			buffer.append("public void "); //$NON-NLS-1$
-			buffer.append(JavaBeansUtil.getSetterMethodName(fieldName));
-			buffer.append("("); //$NON-NLS-1$
-			buffer.append("int "); //$NON-NLS-1$
-			buffer.append(fieldName);
-			buffer.append(") {"); //$NON-NLS-1$
-			newLine(buffer);
-			indent(buffer, 2);
-			buffer.append("this."); //$NON-NLS-1$
-			buffer.append(fieldName);
-			buffer.append(" = "); //$NON-NLS-1$
-			buffer.append(fieldName);
-			buffer.append(';');
-			newLine(buffer);
-			indent(buffer, 1);
-			buffer.append('}');
-			answer.addMethod(buffer.toString());
-		}
-		
-		// we now have the indicators and corresponding getters/setters generated.
-		// now we need to generate the methods that will be used in the SqlMap to
-		// generate the dynamic where clause
-		answer.addImportedType(new FullyQualifiedJavaType("java.util.Map")); //$NON-NLS-1$
-		answer.addImportedType(new FullyQualifiedJavaType("java.util.List")); //$NON-NLS-1$
-		answer.addImportedType(new FullyQualifiedJavaType("java.util.HashMap")); //$NON-NLS-1$
-		answer.addImportedType(new FullyQualifiedJavaType("java.util.ArrayList")); //$NON-NLS-1$
-		
-		buffer.setLength(0);
-		buffer.append(getFieldComment(tableConfiguration.getTable()));
-		newLine(buffer);
-		indent(buffer, 1);
-		buffer.append("private List conditionsWithoutValues;"); //$NON-NLS-1$
-		answer.addField(buffer.toString());
-
-		buffer.setLength(0);
-		buffer.append(getFieldComment(tableConfiguration.getTable()));
-		newLine(buffer);
-		indent(buffer, 1);
-		buffer.append("private List conditionsWithValues;"); //$NON-NLS-1$
-		answer.addField(buffer.toString());
-		
-		buffer.setLength(0);
-		buffer.append(getFieldComment(tableConfiguration.getTable()));
-		newLine(buffer);
-		indent(buffer, 1);
-		buffer.append("private List conditionsWithDateValues;"); //$NON-NLS-1$
-		answer.addField(buffer.toString());
-		
-		buffer.setLength(0);
-		buffer.append(getFieldComment(tableConfiguration.getTable()));
-		newLine(buffer);
-		indent(buffer, 1);
-		buffer.append("private List conditionsWithTimeValues;"); //$NON-NLS-1$
-		answer.addField(buffer.toString());
-		
-		buffer.setLength(0);
-		buffer.append(getMethodComment(tableConfiguration.getTable()));
-		newLine(buffer);
-		indent(buffer, 1);
-		buffer.append("public List getConditionsWithoutValues() {"); //$NON-NLS-1$
-		newLine(buffer);
-		indent(buffer, 2);
-		buffer.append("if (conditionsWithoutValues == null) {"); //$NON-NLS-1$
-		newLine(buffer);
-		indent(buffer, 3);
-		buffer.append("calculateConditions();"); //$NON-NLS-1$
-		newLine(buffer);
-		indent(buffer, 2);
-		buffer.append('}');
-		newLine(buffer);
-		newLine(buffer);
-		indent(buffer, 2);
-		buffer.append("return conditionsWithoutValues;"); //$NON-NLS-1$
-		newLine(buffer);
-		indent(buffer, 1);
-		buffer.append('}');
-		answer.addMethod(buffer.toString());
-		
-		buffer.setLength(0);
-		buffer.append(getMethodComment(tableConfiguration.getTable()));
-		newLine(buffer);
-		indent(buffer, 1);
-		buffer.append("public List getConditionsWithValues() {"); //$NON-NLS-1$
-		newLine(buffer);
-		indent(buffer, 2);
-		buffer.append("if (conditionsWithValues == null) {"); //$NON-NLS-1$
-		newLine(buffer);
-		indent(buffer, 3);
-		buffer.append("calculateConditions();"); //$NON-NLS-1$
-		newLine(buffer);
-		indent(buffer, 2);
-		buffer.append('}');
-		newLine(buffer);
-		newLine(buffer);
-		indent(buffer, 2);
-		buffer.append("return conditionsWithValues;"); //$NON-NLS-1$
-		newLine(buffer);
-		indent(buffer, 1);
-		buffer.append('}');
-		answer.addMethod(buffer.toString());
-		
-		buffer.setLength(0);
-		buffer.append(getMethodComment(tableConfiguration.getTable()));
-		newLine(buffer);
-		indent(buffer, 1);
-		buffer.append("public List getConditionsWithDateValues() {"); //$NON-NLS-1$
-		newLine(buffer);
-		indent(buffer, 2);
-		buffer.append("if (conditionsWithDateValues == null) {"); //$NON-NLS-1$
-		newLine(buffer);
-		indent(buffer, 3);
-		buffer.append("calculateConditions();"); //$NON-NLS-1$
-		newLine(buffer);
-		indent(buffer, 2);
-		buffer.append('}');
-		newLine(buffer);
-		newLine(buffer);
-		indent(buffer, 2);
-		buffer.append("return conditionsWithDateValues;"); //$NON-NLS-1$
-		newLine(buffer);
-		indent(buffer, 1);
-		buffer.append('}');
-		answer.addMethod(buffer.toString());
-		
-		buffer.setLength(0);
-		buffer.append(getMethodComment(tableConfiguration.getTable()));
-		newLine(buffer);
-		indent(buffer, 1);
-		buffer.append("public List getConditionsWithTimeValues() {"); //$NON-NLS-1$
-		newLine(buffer);
-		indent(buffer, 2);
-		buffer.append("if (conditionsWithTimeValues == null) {"); //$NON-NLS-1$
-		newLine(buffer);
-		indent(buffer, 3);
-		buffer.append("calculateConditions();"); //$NON-NLS-1$
-		newLine(buffer);
-		indent(buffer, 2);
-		buffer.append('}');
-		newLine(buffer);
-		newLine(buffer);
-		indent(buffer, 2);
-		buffer.append("return conditionsWithTimeValues;"); //$NON-NLS-1$
-		newLine(buffer);
-		indent(buffer, 1);
-		buffer.append('}');
-		answer.addMethod(buffer.toString());
-		
-		buffer.setLength(0);
-		buffer.append(getMethodComment(tableConfiguration.getTable()));
-		newLine(buffer);
-		indent(buffer, 1);
-		buffer.append("private void calculateConditions() {"); //$NON-NLS-1$
-		newLine(buffer);
-		indent(buffer, 2);
-		buffer.append("if (conditionsWithoutValues == null || conditionsWithValues == null"); //$NON-NLS-1$
-		newLine(buffer);
-		indent(buffer, 4);
-		buffer.append("|| conditionsWithDateValues == null"); //$NON-NLS-1$
-		newLine(buffer);
-		indent(buffer, 4);
-		buffer.append("|| conditionsWithTimeValues == null) {"); //$NON-NLS-1$
-		newLine(buffer);
-		indent(buffer, 3);
-		buffer.append("conditionsWithoutValues = new ArrayList();"); //$NON-NLS-1$
-		newLine(buffer);
-		indent(buffer, 3);
-		buffer.append("conditionsWithValues = new ArrayList();"); //$NON-NLS-1$
-		newLine(buffer);
-		indent(buffer, 3);
-		buffer.append("conditionsWithDateValues = new ArrayList();"); //$NON-NLS-1$
-		newLine(buffer);
-		indent(buffer, 3);
-		buffer.append("conditionsWithTimeValues = new ArrayList();"); //$NON-NLS-1$
-		newLine(buffer);
-        iter = columnDefinitions.getAllColumns().iterator();
-        while (iter.hasNext()) {
-            ColumnDefinition cd = (ColumnDefinition) iter.next();
-
-            if (cd.isBLOBColumn()) {
-                continue;
-            }
-
-            String method = getCalculateConditionMethod(cd, tableConfiguration.getTable());
-            if (method != null) {
-                answer.addMethod(method);
-
-                newLine(buffer);
-                indent(buffer, 3);
-                buffer.append("calculate"); //$NON-NLS-1$
-                buffer.append(cd.getColumnName());
-                buffer.append("Condition();"); //$NON-NLS-1$
-            }
-        }
-		
-        newLine(buffer);
-        indent(buffer, 2);
-		buffer.append('}');
-        newLine(buffer);
-        indent(buffer, 1);
-		buffer.append('}');
-		answer.addMethod(buffer.toString());
-		
-		return answer;
+		return topLevelClass;
 	}
 	
     /**
@@ -625,31 +349,33 @@ public class JavaModelGeneratorJava2Impl extends BaseJavaCodeGenerator implement
      *            the table in which the column exists
      * @return the properly formatted method
      */
-	protected String getCalculateConditionMethod(ColumnDefinition cd, FullyQualifiedTable table) {
+	protected Method getCalculateConditionMethod(ColumnDefinition cd, FullyQualifiedTable table) {
         if (cd.isBLOBColumn()) {
             return null;
         }
+        StringBuffer sb = new StringBuffer();
 
-        StringBuffer buffer = new StringBuffer();
+        Method answer = new Method();
+		answer.addMethodComment(table);
+        answer.setVisibility(JavaVisibility.PRIVATE);
+        sb.setLength(0);
+        sb.append("calculate"); //$NON-NLS-1$
+        sb.append(cd.getColumnName());
+        sb.append("Condition"); //$NON-NLS-1$
+        answer.setName(sb.toString());
+        
+        answer.addBodyLine("Map exampleMap;"); //$NON-NLS-1$
+        answer.addBodyLine(""); //$NON-NLS-1$
 
-        buffer.append(getMethodComment(table));
-        newLine(buffer);
-        indent(buffer, 1);
-        buffer.append("private void calculate"); //$NON-NLS-1$
-        buffer.append(cd.getColumnName());
-        buffer.append("Condition() {"); //$NON-NLS-1$
-
-        newLine(buffer);
-        indent(buffer, 2);
-        buffer.append("Map exampleMap;"); //$NON-NLS-1$
-
-        newLine(buffer);
-        newLine(buffer);
-        indent(buffer, 2);
-        buffer.append("switch ("); //$NON-NLS-1$
-        String property = cd.getJavaProperty() + "_Indicator"; //$NON-NLS-1$
-        buffer.append(JavaBeansUtil.getGetterMethodName(property));
-        buffer.append("()) {"); //$NON-NLS-1$
+        sb.setLength(0);
+        sb.append(cd.getJavaProperty());
+        sb.append("_Indicator"); //$NON-NLS-1$
+        String getterMethodName = JavaBeansUtil.getGetterMethodName(sb.toString());
+        sb.setLength(0);
+        sb.append("switch ("); //$NON-NLS-1$
+        sb.append(getterMethodName);
+        sb.append("()) {"); //$NON-NLS-1$
+        answer.addBodyLine(sb.toString());
 
         Iterator clauseIterator = ExampleClause.getAllExampleClauses();
         while (clauseIterator.hasNext()) {
@@ -659,92 +385,81 @@ public class JavaModelGeneratorJava2Impl extends BaseJavaCodeGenerator implement
                 continue;
             }
 
-            newLine(buffer);
-            indent(buffer, 2);
-            buffer.append("case "); //$NON-NLS-1$
-            buffer.append(clause.getExamplePropertyName());
-            buffer.append(':');
+            sb.setLength(0);
+            sb.append("case "); //$NON-NLS-1$
+            sb.append(clause.getExamplePropertyName());
+            sb.append(':');
+            answer.addBodyLine(sb.toString());
             
             if (clause.isPropertyInMapRequired()) {
-                newLine(buffer);
-                indent(buffer, 3);
-                buffer.append("exampleMap = new HashMap();"); //$NON-NLS-1$
-                newLine(buffer);
-                indent(buffer, 3);
-                buffer.append("exampleMap.put(\"condition\", \""); //$NON-NLS-1$
-                buffer.append(clause.getClause(cd));
-                buffer.append("\");"); //$NON-NLS-1$
-                newLine(buffer);
-                indent(buffer, 3);
-                buffer.append("exampleMap.put(\"value\", "); //$NON-NLS-1$
+                answer.addBodyLine("exampleMap = new HashMap();"); //$NON-NLS-1$
+
+                sb.setLength(0);
+                sb.append("exampleMap.put(\"condition\", \""); //$NON-NLS-1$
+                sb.append(clause.getClause(cd));
+                sb.append("\");"); //$NON-NLS-1$
+                answer.addBodyLine(sb.toString());
+
+                sb.setLength(0);
+                sb.append("exampleMap.put(\"value\", "); //$NON-NLS-1$
 
                 String exampleProperty = cd.getJavaProperty();
                 FullyQualifiedJavaType fqjt = cd.getResolvedJavaType()
                 .getFullyQualifiedJavaType();
                 if (fqjt.isPrimitive()) {
-                    buffer.append("new "); //$NON-NLS-1$
-                    buffer.append(fqjt.getWrapperClass());
-                    buffer.append('(');
-                    buffer.append(JavaBeansUtil
-                            .getGetterMethodName(exampleProperty));
-                    buffer.append("()));"); //$NON-NLS-1$
+                    sb.append("new "); //$NON-NLS-1$
+                    sb.append(fqjt.getWrapperClass());
+                    sb.append('(');
+                    sb.append(JavaBeansUtil.getGetterMethodName(exampleProperty));
+                    sb.append("()));"); //$NON-NLS-1$
                 } else {
-                    buffer.append(JavaBeansUtil
-                            .getGetterMethodName(exampleProperty));
-                    buffer.append("());"); //$NON-NLS-1$
+                    sb.append(JavaBeansUtil.getGetterMethodName(exampleProperty));
+                    sb.append("());"); //$NON-NLS-1$
                 }
-                
-                newLine(buffer);
-                indent(buffer, 3);
+                answer.addBodyLine(sb.toString());
                 
                 if ("DATE".equalsIgnoreCase(cd.getResolvedJavaType().getJdbcTypeName())) { //$NON-NLS-1$
-                    buffer.append("conditionsWithDateValues.add(exampleMap);"); //$NON-NLS-1$
+                    answer.addBodyLine("conditionsWithDateValues.add(exampleMap);"); //$NON-NLS-1$
                 } else if ("TIME".equalsIgnoreCase(cd.getResolvedJavaType().getJdbcTypeName())) { //$NON-NLS-1$
-                    buffer.append("conditionsWithTimeValues.add(exampleMap);"); //$NON-NLS-1$
+                    answer.addBodyLine("conditionsWithTimeValues.add(exampleMap);"); //$NON-NLS-1$
                 } else {
-                    buffer.append("conditionsWithValues.add(exampleMap);"); //$NON-NLS-1$
+                    answer.addBodyLine("conditionsWithValues.add(exampleMap);"); //$NON-NLS-1$
                 }
                 
-                newLine(buffer);
-                indent(buffer, 3);
-                buffer.append("break;"); //$NON-NLS-1$
+                answer.addBodyLine("break;"); //$NON-NLS-1$
             } else {
-                newLine(buffer);
-                indent(buffer, 3);
-                buffer.append("conditionsWithoutValues.add(\""); //$NON-NLS-1$
-                buffer.append(clause.getClause(cd));
-                buffer.append("\");"); //$NON-NLS-1$
-                newLine(buffer);
-                indent(buffer, 3);
-                buffer.append("break;"); //$NON-NLS-1$
+                sb.setLength(0);
+                sb.append("conditionsWithoutValues.add(\""); //$NON-NLS-1$
+                sb.append(clause.getClause(cd));
+                sb.append("\");"); //$NON-NLS-1$
+                answer.addBodyLine(sb.toString());
+                answer.addBodyLine("break;"); //$NON-NLS-1$
             }
         }
+        
+        answer.addBodyLine("}"); //$NON-NLS-1$
 
-        newLine(buffer);
-        indent(buffer, 2);
-        buffer.append('}');
-        newLine(buffer);
-        indent(buffer, 1);
-        buffer.append('}');
-
-        return buffer.toString();
+        return answer;
 	}
 	
 	
-	protected GeneratedJavaFile getPrimaryKey(ColumnDefinitions columnDefinitions,
+	protected CompilationUnit getPrimaryKey(ColumnDefinitions columnDefinitions,
 			TableConfiguration tableConfiguration) {
 
 		if (!AbatorRules.generatePrimaryKey(columnDefinitions)) {
 			return null;
 		}
-		
-		GeneratedJavaFile answer = new GeneratedJavaFile(getPrimaryKeyType(tableConfiguration.getTable()));
-		
-		answer.setJavaInterface(false);
-		answer.setTargetProject(targetProject);
 
+		FullyQualifiedJavaType type = getPrimaryKeyType(tableConfiguration.getTable());
+		TopLevelClass answer = new TopLevelClass(type);
+		answer.setVisibility(JavaVisibility.PUBLIC);
+		
 		if (properties.containsKey("rootClass")) { //$NON-NLS-1$
-	        answer.setSuperClass(new FullyQualifiedJavaType((String) properties.get("rootClass"))); //$NON-NLS-1$
+		    FullyQualifiedJavaType fqjt =
+		        new FullyQualifiedJavaType((String) properties.get("rootClass")); //$NON-NLS-1$
+		    
+	        answer.setSuperClass(fqjt);
+	        answer.addImportedType(fqjt);
 	    }
 
 		generateClassParts(tableConfiguration.getTable(), columnDefinitions.getPrimaryKey(), answer);
@@ -752,7 +467,7 @@ public class JavaModelGeneratorJava2Impl extends BaseJavaCodeGenerator implement
 		return answer;
 	}
 	
-	protected GeneratedJavaFile getRecord(ColumnDefinitions columnDefinitions,
+	protected CompilationUnit getRecord(ColumnDefinitions columnDefinitions,
 			TableConfiguration tableConfiguration) {
 		
 		if (!AbatorRules.generateBaseRecordWithNoSuperclass(columnDefinitions)
@@ -760,45 +475,44 @@ public class JavaModelGeneratorJava2Impl extends BaseJavaCodeGenerator implement
 			return null;
 		}
 		
-		GeneratedJavaFile answer = new GeneratedJavaFile(getRecordType(tableConfiguration.getTable()));
-		
-		answer.setJavaInterface(false);
+		FullyQualifiedJavaType type = getRecordType(tableConfiguration.getTable());
+		TopLevelClass answer = new TopLevelClass(type);
+		answer.setVisibility(JavaVisibility.PUBLIC);
 
 		if (AbatorRules.generateBaseRecordExtendingPrimaryKey(columnDefinitions)) {
 			answer.setSuperClass(getPrimaryKeyType(tableConfiguration.getTable()));
 		} else {
 		    if (properties.containsKey("rootClass")) { //$NON-NLS-1$
-		        answer.setSuperClass(new FullyQualifiedJavaType((String) properties.get("rootClass"))); //$NON-NLS-1$
+		        FullyQualifiedJavaType fqjt =
+		            new FullyQualifiedJavaType((String) properties.get("rootClass")); //$NON-NLS-1$
+		        answer.setSuperClass(fqjt);
+		        answer.addImportedType(fqjt);
 		    }
 		}
-		
-		answer.setTargetProject(targetProject);
 		
 		generateClassParts(tableConfiguration.getTable(), columnDefinitions.getNonBLOBColumns(), answer);
 
 		return answer;
 	}
 	
-	protected GeneratedJavaFile getRecordWithBLOBs(ColumnDefinitions columnDefinitions,
+	protected CompilationUnit getRecordWithBLOBs(ColumnDefinitions columnDefinitions,
 			TableConfiguration tableConfiguration) {
 		
 		if (!AbatorRules.generateRecordWithBLOBsExtendingPrimaryKey(columnDefinitions)
 				&& !AbatorRules.generateRecordWithBLOBsExtendingBaseRecord(columnDefinitions)) {
 			return null;
 		}
-		
-		GeneratedJavaFile answer = new GeneratedJavaFile(getRecordWithBLOBsType(tableConfiguration.getTable()));
-		
-		answer.setJavaInterface(false);
 
+		FullyQualifiedJavaType type = getRecordWithBLOBsType(tableConfiguration.getTable());
+		TopLevelClass answer = new TopLevelClass(type);
+		answer.setVisibility(JavaVisibility.PUBLIC);
+		
 		if (AbatorRules.generateRecordWithBLOBsExtendingPrimaryKey(columnDefinitions)) {
 			answer.setSuperClass(getPrimaryKeyType(tableConfiguration.getTable()));
 		} else {
 			answer.setSuperClass(getRecordType(tableConfiguration.getTable()));
 		}
 		
-		answer.setTargetProject(targetProject);
-
 		generateClassParts(tableConfiguration.getTable(), columnDefinitions.getBLOBColumns(), answer);
 
 		return answer;
@@ -843,29 +557,33 @@ public class JavaModelGeneratorJava2Impl extends BaseJavaCodeGenerator implement
 		
 		callback.startSubTask(Messages.getString("JavaModelGeneratorDefaultImpl.0", //$NON-NLS-1$
 		        tableName));
-        GeneratedJavaFile gjf = getExample(columnDefinitions, tableConfiguration);
-        if (gjf != null) {
+        CompilationUnit cu = getExample(columnDefinitions, tableConfiguration);
+        if (cu != null) {
+            GeneratedJavaFile gjf = new GeneratedJavaFile(cu, targetProject);
             list.add(gjf);
         }
         
 		callback.startSubTask(Messages.getString("JavaModelGeneratorDefaultImpl.1", //$NON-NLS-1$
 		        tableName));
-        gjf = getPrimaryKey(columnDefinitions, tableConfiguration);
-        if (gjf != null) {
+		cu = getPrimaryKey(columnDefinitions, tableConfiguration);
+        if (cu != null) {
+            GeneratedJavaFile gjf = new GeneratedJavaFile(cu, targetProject);
             list.add(gjf);
         }
         
 		callback.startSubTask(Messages.getString("JavaModelGeneratorDefaultImpl.2", //$NON-NLS-1$
 		        tableName));
-        gjf = getRecord(columnDefinitions, tableConfiguration);
-        if (gjf != null) {
+		cu = getRecord(columnDefinitions, tableConfiguration);
+        if (cu != null) {
+            GeneratedJavaFile gjf = new GeneratedJavaFile(cu, targetProject);
             list.add(gjf);
         }
         
 		callback.startSubTask(Messages.getString("JavaModelGeneratorDefaultImpl.3", //$NON-NLS-1$
 		        tableName));
-        gjf = getRecordWithBLOBs(columnDefinitions, tableConfiguration);
-        if (gjf != null) {
+		cu = getRecordWithBLOBs(columnDefinitions, tableConfiguration);
+        if (cu != null) {
+            GeneratedJavaFile gjf = new GeneratedJavaFile(cu, targetProject);
             list.add(gjf);
         }
 
@@ -946,5 +664,184 @@ public class JavaModelGeneratorJava2Impl extends BaseJavaCodeGenerator implement
 	 */
 	public void setWarnings(List warnings) {
 		this.warnings = warnings;
+	}
+	
+	protected InnerClass getAndConditionInnerClass(TopLevelClass topLevelClass, ColumnDefinitions columnDefinitions, TableConfiguration tableConfiguration) {
+	    InnerClass answer = new InnerClass(new FullyQualifiedJavaType("AndCondition")); //$NON-NLS-1$
+	    Field field;
+	    Method method;
+	    answer.setVisibility(JavaVisibility.PUBLIC);
+	    answer.setModifierStatic(true);
+	    
+		if (AbatorRules.generateExampleExtendingPrimaryKey(columnDefinitions, tableConfiguration)) {
+		    answer.setSuperClass(getPrimaryKeyType(tableConfiguration.getTable()));
+		} else {
+		    answer.setSuperClass(getRecordType(tableConfiguration.getTable()));
+		}
+
+		// generate indicator field getters and setters
+		StringBuffer sb = new StringBuffer();
+		Iterator iter = columnDefinitions.getAllColumns().iterator();
+		while (iter.hasNext()) {
+			ColumnDefinition cd = (ColumnDefinition) iter.next();
+
+			if (cd.isBLOBColumn()) {
+				continue;
+			}
+
+			sb.setLength(0);
+			sb.append((cd.getJavaProperty()));
+			sb.append("_Indicator"); //$NON-NLS-1$
+			String fieldName = sb.toString();
+			
+			field = new Field();
+			field.addFieldComment(tableConfiguration.getTable(), fieldName);
+			field.setVisibility(JavaVisibility.PRIVATE);
+			field.setType(FullyQualifiedJavaType.getIntInstance());
+			field.setName(fieldName);
+			answer.addField(field);
+			
+			method = new Method();
+			method.addMethodComment(tableConfiguration.getTable());
+	        method.setVisibility(JavaVisibility.PUBLIC);
+			method.setReturnType(FullyQualifiedJavaType.getIntInstance());
+			method.setName(JavaBeansUtil.getGetterMethodName(fieldName));
+			sb.setLength(0);
+			sb.append("return "); //$NON-NLS-1$
+			sb.append(fieldName);
+			sb.append(';');
+			method.addBodyLine(sb.toString());
+			answer.addMethod(method);
+
+			method = new Method();
+			method.addMethodComment(tableConfiguration.getTable());
+	        method.setVisibility(JavaVisibility.PUBLIC);
+			method.setName(JavaBeansUtil.getSetterMethodName(fieldName));
+			method.addParameter(new Parameter(FullyQualifiedJavaType.getIntInstance(), fieldName));
+			sb.setLength(0);
+			sb.append("this."); //$NON-NLS-1$
+			sb.append(fieldName);
+			sb.append(" = "); //$NON-NLS-1$
+			sb.append(fieldName);
+			sb.append(';');
+			method.addBodyLine(sb.toString());
+			answer.addMethod(method);
+		}
+		
+		// we now have the indicators and corresponding getters/setters generated.
+		// now we need to generate the methods that will be used in the SqlMap to
+		// generate the dynamic where clause
+		topLevelClass.addImportedType(FullyQualifiedJavaType.getMapInstance());
+		topLevelClass.addImportedType(FullyQualifiedJavaType.getListInstance());
+		topLevelClass.addImportedType(FullyQualifiedJavaType.getHashMapInstance());
+		topLevelClass.addImportedType(FullyQualifiedJavaType.getArrayListInstance());
+
+		field = new Field();
+		field.addFieldComment(tableConfiguration.getTable());
+		field.setVisibility(JavaVisibility.PRIVATE);
+		field.setType(FullyQualifiedJavaType.getListInstance());
+		field.setName("conditionsWithoutValues"); //$NON-NLS-1$
+		answer.addField(field);
+		
+		field = new Field();
+		field.addFieldComment(tableConfiguration.getTable());
+		field.setVisibility(JavaVisibility.PRIVATE);
+		field.setType(FullyQualifiedJavaType.getListInstance());
+		field.setName("conditionsWithValues"); //$NON-NLS-1$
+		answer.addField(field);
+		
+		field = new Field();
+		field.addFieldComment(tableConfiguration.getTable());
+		field.setVisibility(JavaVisibility.PRIVATE);
+		field.setType(FullyQualifiedJavaType.getListInstance());
+		field.setName("conditionsWithDateValues"); //$NON-NLS-1$
+		answer.addField(field);
+
+		field = new Field();
+		field.addFieldComment(tableConfiguration.getTable());
+		field.setVisibility(JavaVisibility.PRIVATE);
+		field.setType(FullyQualifiedJavaType.getListInstance());
+		field.setName("conditionsWithTimeValues"); //$NON-NLS-1$
+		answer.addField(field);
+		
+		method = new Method();
+		method.addMethodComment(tableConfiguration.getTable());
+        method.setVisibility(JavaVisibility.PUBLIC);
+		method.setReturnType(FullyQualifiedJavaType.getListInstance());
+		method.setName("getConditionsWithoutValues"); //$NON-NLS-1$
+		method.addBodyLine("if (conditionsWithoutValues == null) {"); //$NON-NLS-1$
+		method.addBodyLine("calculateConditions();"); //$NON-NLS-1$
+		method.addBodyLine("}"); //$NON-NLS-1$
+		method.addBodyLine(""); //$NON-NLS-1$
+		method.addBodyLine("return conditionsWithoutValues;"); //$NON-NLS-1$
+		answer.addMethod(method);
+
+		method = new Method();
+		method.addMethodComment(tableConfiguration.getTable());
+        method.setVisibility(JavaVisibility.PUBLIC);
+		method.setReturnType(FullyQualifiedJavaType.getListInstance());
+		method.setName("getConditionsWithValues"); //$NON-NLS-1$
+		method.addBodyLine("if (conditionsWithValues == null) {"); //$NON-NLS-1$
+		method.addBodyLine("calculateConditions();"); //$NON-NLS-1$
+		method.addBodyLine("}"); //$NON-NLS-1$
+		method.addBodyLine(""); //$NON-NLS-1$
+		method.addBodyLine("return conditionsWithValues;"); //$NON-NLS-1$
+		answer.addMethod(method);
+		
+		method = new Method();
+		method.addMethodComment(tableConfiguration.getTable());
+        method.setVisibility(JavaVisibility.PUBLIC);
+		method.setReturnType(FullyQualifiedJavaType.getListInstance());
+		method.setName("getConditionsWithDateValues"); //$NON-NLS-1$
+		method.addBodyLine("if (conditionsWithDateValues == null) {"); //$NON-NLS-1$
+		method.addBodyLine("calculateConditions();"); //$NON-NLS-1$
+		method.addBodyLine("}"); //$NON-NLS-1$
+		method.addBodyLine(""); //$NON-NLS-1$
+		method.addBodyLine("return conditionsWithDateValues;"); //$NON-NLS-1$
+		answer.addMethod(method);
+		
+		method = new Method();
+		method.addMethodComment(tableConfiguration.getTable());
+        method.setVisibility(JavaVisibility.PUBLIC);
+		method.setReturnType(FullyQualifiedJavaType.getListInstance());
+		method.setName("getConditionsWithTimeValues"); //$NON-NLS-1$
+		method.addBodyLine("if (conditionsWithTimeValues == null) {"); //$NON-NLS-1$
+		method.addBodyLine("calculateConditions();"); //$NON-NLS-1$
+		method.addBodyLine("}"); //$NON-NLS-1$
+		method.addBodyLine(""); //$NON-NLS-1$
+		method.addBodyLine("return conditionsWithTimeValues;"); //$NON-NLS-1$
+		answer.addMethod(method);
+		
+		method = new Method();
+		method.addMethodComment(tableConfiguration.getTable());
+		method.setVisibility(JavaVisibility.PRIVATE);
+		method.setName("calculateConditions"); //$NON-NLS-1$
+		method.addBodyLine("conditionsWithoutValues = new ArrayList();"); //$NON-NLS-1$
+		method.addBodyLine("conditionsWithValues = new ArrayList();"); //$NON-NLS-1$
+		method.addBodyLine("conditionsWithDateValues = new ArrayList();"); //$NON-NLS-1$
+		method.addBodyLine("conditionsWithTimeValues = new ArrayList();"); //$NON-NLS-1$
+		method.addBodyLine(""); //$NON-NLS-1$
+		answer.addMethod(method);
+
+        iter = columnDefinitions.getAllColumns().iterator();
+        while (iter.hasNext()) {
+            ColumnDefinition cd = (ColumnDefinition) iter.next();
+
+            if (cd.isBLOBColumn()) {
+                continue;
+            }
+
+            Method otherMethod = getCalculateConditionMethod(cd, tableConfiguration.getTable());
+            if (otherMethod != null) {
+                answer.addMethod(otherMethod);
+
+                sb.setLength(0);
+                sb.append(otherMethod.getName());
+                sb.append("();"); //$NON-NLS-1$
+                method.addBodyLine(sb.toString());
+            }
+        }
+		
+		return answer;
 	}
 }

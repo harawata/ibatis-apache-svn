@@ -231,7 +231,6 @@ public class TableConfiguration extends PropertyHolder {
 	    
 	    if (generatedKey.isConfigured()
 	            && columnDefinitions.getColumn(generatedKey.getColumn().toUpperCase()) == null) {
-            StringBuffer sb = new StringBuffer();
             if (generatedKey.isIdentity()) {
 	            warnings.add(Messages.getString("TableConfiguration.2", //$NON-NLS-1$
 	                    generatedKey.getColumn(), table.toString()));

@@ -20,18 +20,25 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.ibatis.abator.api.DAOGenerator;
-import org.apache.ibatis.abator.api.FullyQualifiedJavaType;
 import org.apache.ibatis.abator.api.GeneratedJavaFile;
 import org.apache.ibatis.abator.api.JavaModelGenerator;
 import org.apache.ibatis.abator.api.ProgressCallback;
 import org.apache.ibatis.abator.api.SqlMapGenerator;
+import org.apache.ibatis.abator.api.dom.java.CompilationUnit;
+import org.apache.ibatis.abator.api.dom.java.Field;
+import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
+import org.apache.ibatis.abator.api.dom.java.Interface;
+import org.apache.ibatis.abator.api.dom.java.JavaVisibility;
+import org.apache.ibatis.abator.api.dom.java.Method;
+import org.apache.ibatis.abator.api.dom.java.Parameter;
+import org.apache.ibatis.abator.api.dom.java.TopLevelClass;
 import org.apache.ibatis.abator.config.FullyQualifiedTable;
 import org.apache.ibatis.abator.config.TableConfiguration;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
 import org.apache.ibatis.abator.internal.db.ColumnDefinitions;
+import org.apache.ibatis.abator.internal.java.dao.AbstractDAOTemplate;
 import org.apache.ibatis.abator.internal.rules.AbatorRules;
 import org.apache.ibatis.abator.internal.sqlmap.ExampleClause;
 import org.apache.ibatis.abator.internal.util.JavaBeansUtil;
@@ -58,8 +65,7 @@ import org.apache.ibatis.abator.internal.util.messages.Messages;
  * 
  * @author Jeff Butler
  */
-public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator
-        implements DAOGenerator {
+public class DAOGeneratorBaseImpl implements DAOGenerator {
 
     protected List warnings;
 
@@ -75,25 +81,16 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator
 
     protected SqlMapGenerator sqlMapGenerator;
 
-    protected DAOGeneratorTemplate daoGeneratorTemplate;
+    protected AbstractDAOTemplate daoTemplate;
 
     /**
      *  
      */
-    public DAOGeneratorBaseImpl() {
+    public DAOGeneratorBaseImpl(AbstractDAOTemplate daoTemplate) {
         super();
+        this.daoTemplate = daoTemplate;
         tableValueMaps = new HashMap();
-        this.daoGeneratorTemplate = getDAOGeneratorTemplate();
     }
-
-    /**
-     * Returns the template used to generate DAOs from the implementing final
-     * class. This method will be called before any other method in the class is
-     * called, and will only be called once.
-     * 
-     * @return the DAOGeneraotrTemplate used for this instance
-     */
-    public abstract DAOGeneratorTemplate getDAOGeneratorTemplate();
 
     public void setProperties(Map properties) {
         this.properties = properties;
@@ -188,232 +185,213 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator
         return s;
     }
 
-    protected GeneratedJavaFile getDAOImplementation(
+    protected TopLevelClass getDAOImplementation(
             ColumnDefinitions columnDefinitions,
             TableConfiguration tableConfiguration) {
 
         FullyQualifiedTable table = tableConfiguration.getTable();
-        GeneratedJavaFile answer = new GeneratedJavaFile(
-                getDAOImplementationType(table));
+        TopLevelClass answer = new TopLevelClass(getDAOImplementationType(table));
+        answer.setVisibility(JavaVisibility.PUBLIC);
+        answer.setSuperClass(daoTemplate.getSuperClass());
+        answer.addImportedType(daoTemplate.getSuperClass());
+        answer.addSuperInterface(getDAOInterfaceType(table));
+        answer.addImportedType(getDAOInterfaceType(table));
 
-        answer.setJavaInterface(false);
-        if (daoGeneratorTemplate.getSuperClass() != null) {
-            answer.setSuperClass(daoGeneratorTemplate.getSuperClass());
-        }
-
-        answer.addSuperInterfaceType(getDAOInterfaceType(table));
-
-        answer.setTargetProject(targetProject);
-
-        Iterator iter = daoGeneratorTemplate.getImplementationImports()
+        Iterator iter = daoTemplate.getImplementationImports()
                 .iterator();
         while (iter.hasNext()) {
             answer.addImportedType((FullyQualifiedJavaType) iter.next());
         }
 
-        StringBuffer buffer = new StringBuffer();
-
         // add constructor
-        buffer.append(getMethodComment(table));
-        newLine(buffer);
-        buffer.append(daoGeneratorTemplate
-                .getConstructor(getDAOImplementationType(table)));
-        answer.addMethod(buffer.toString());
+        Method method = daoTemplate
+                .getConstructorClone(getDAOImplementationType(table), table);
+        answer.addMethod(method);
 
         // add any fields from the template
-        iter = daoGeneratorTemplate.getFields().iterator();
+        iter = daoTemplate.getFieldClones(table);
         while (iter.hasNext()) {
-            buffer.setLength(0);
-            buffer.append(getFieldComment(table));
-            newLine(buffer);
-            indent(buffer, 1);
-            buffer.append(iter.next());
-            answer.addField(buffer.toString());
+            answer.addField((Field) iter.next());
         }
 
         // add any methods from the template
-        iter = daoGeneratorTemplate.getMethods().iterator();
+        iter = daoTemplate.getMethodClones(table);
         while (iter.hasNext()) {
-            buffer.setLength(0);
-            buffer.append(getMethodComment(table));
-            newLine(buffer);
-            buffer.append(iter.next());
-            answer.addMethod(buffer.toString());
+            answer.addMethod((Method) iter.next());
         }
 
         List methods = getInsertMethods(columnDefinitions, tableConfiguration,
-                false, answer.getImportedTypes());
+                false, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
-                answer.addMethod((String) iter.next());
+                answer.addMethod((Method) iter.next());
             }
         }
 
         methods = getUpdateByPrimaryKeyMethods(columnDefinitions,
-                tableConfiguration, false, answer.getImportedTypes());
+                tableConfiguration, false, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
-                answer.addMethod((String) iter.next());
+                answer.addMethod((Method) iter.next());
             }
         }
 
         methods = getUpdateByPrimaryKeyWithBLOBsMethods(columnDefinitions,
-                tableConfiguration, false, answer.getImportedTypes());
+                tableConfiguration, false, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
-                answer.addMethod((String) iter.next());
+                answer.addMethod((Method) iter.next());
             }
         }
 
         methods = getSelectByExampleMethods(columnDefinitions,
-                tableConfiguration, false, answer.getImportedTypes());
+                tableConfiguration, false, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
-                answer.addMethod((String) iter.next());
+                answer.addMethod((Method) iter.next());
             }
         }
 
         methods = getSelectByExampleWithBLOBsMethods(columnDefinitions,
-                tableConfiguration, false, answer.getImportedTypes());
+                tableConfiguration, false, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
-                answer.addMethod((String) iter.next());
+                answer.addMethod((Method) iter.next());
             }
         }
 
         methods = getSelectByPrimaryKeyMethods(columnDefinitions,
-                tableConfiguration, false, answer.getImportedTypes());
+                tableConfiguration, false, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
-                answer.addMethod((String) iter.next());
+                answer.addMethod((Method) iter.next());
             }
         }
 
         methods = getDeleteByExampleMethods(columnDefinitions,
-                tableConfiguration, false, answer.getImportedTypes());
+                tableConfiguration, false, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
-                answer.addMethod((String) iter.next());
+                answer.addMethod((Method) iter.next());
             }
         }
 
         methods = getDeleteByPrimaryKeyMethods(columnDefinitions,
-                tableConfiguration, false, answer.getImportedTypes());
+                tableConfiguration, false, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
-                answer.addMethod((String) iter.next());
+                answer.addMethod((Method) iter.next());
             }
         }
 
         methods = getGetExampleParmsMethods(columnDefinitions,
-                tableConfiguration, false, answer.getImportedTypes());
+                tableConfiguration, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
-                answer.addMethod((String) iter.next());
+                answer.addMethod((Method) iter.next());
             }
         }
 
         return answer;
     }
 
-    protected GeneratedJavaFile getDAOInterface(
+    protected Interface getDAOInterface(
             ColumnDefinitions columnDefinitions,
             TableConfiguration tableConfiguration) {
         FullyQualifiedTable table = tableConfiguration.getTable();
-        GeneratedJavaFile answer = new GeneratedJavaFile(
-                getDAOInterfaceType(table));
-
-        answer.setJavaInterface(true);
-
-        answer.setTargetProject(targetProject);
+        Interface answer = new Interface(getDAOInterfaceType(table));
+        answer.setVisibility(JavaVisibility.PUBLIC);
 
 		if (properties.containsKey("rootInterface")) { //$NON-NLS-1$
-	        answer.setSuperClass(new FullyQualifiedJavaType((String) properties.get("rootInterface"))); //$NON-NLS-1$
+            FullyQualifiedJavaType fqjt =
+                new FullyQualifiedJavaType((String) properties.get("rootInterface")); //$NON-NLS-1$
+	        answer.addSuperInterface(fqjt);
+	        answer.addImportedType(fqjt);
 	    }
 
-        Iterator iter = daoGeneratorTemplate.getInterfaceImports().iterator();
+        Iterator iter = daoTemplate.getInterfaceImports().iterator();
         while (iter.hasNext()) {
             answer.addImportedType((FullyQualifiedJavaType) iter.next());
         }
 
         List methods = getInsertMethods(columnDefinitions, tableConfiguration,
-                true, answer.getImportedTypes());
+                true, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
-                answer.addMethod((String) iter.next());
+                answer.addMethod((Method) iter.next());
             }
         }
 
         methods = getUpdateByPrimaryKeyMethods(columnDefinitions,
-                tableConfiguration, true, answer.getImportedTypes());
+                tableConfiguration, true, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
-                answer.addMethod((String) iter.next());
+                answer.addMethod((Method) iter.next());
             }
         }
 
         methods = getUpdateByPrimaryKeyWithBLOBsMethods(columnDefinitions,
-                tableConfiguration, true, answer.getImportedTypes());
+                tableConfiguration, true, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
-                answer.addMethod((String) iter.next());
+                answer.addMethod((Method) iter.next());
             }
         }
 
         methods = getSelectByExampleMethods(columnDefinitions,
-                tableConfiguration, true, answer.getImportedTypes());
+                tableConfiguration, true, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
-                answer.addMethod((String) iter.next());
+                answer.addMethod((Method) iter.next());
             }
         }
 
         methods = getSelectByExampleWithBLOBsMethods(columnDefinitions,
-                tableConfiguration, true, answer.getImportedTypes());
+                tableConfiguration, true, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
-                answer.addMethod((String) iter.next());
+                answer.addMethod((Method) iter.next());
             }
         }
 
         methods = getSelectByPrimaryKeyMethods(columnDefinitions,
-                tableConfiguration, true, answer.getImportedTypes());
+                tableConfiguration, true, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
-                answer.addMethod((String) iter.next());
+                answer.addMethod((Method) iter.next());
             }
         }
 
         methods = getDeleteByExampleMethods(columnDefinitions,
-                tableConfiguration, true, answer.getImportedTypes());
+                tableConfiguration, true, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
-                answer.addMethod((String) iter.next());
+                answer.addMethod((Method) iter.next());
             }
         }
 
         methods = getDeleteByPrimaryKeyMethods(columnDefinitions,
-                tableConfiguration, true, answer.getImportedTypes());
+                tableConfiguration, true, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
-                answer.addMethod((String) iter.next());
+                answer.addMethod((Method) iter.next());
             }
         }
 
@@ -440,24 +418,33 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator
 
         callback.startSubTask(Messages.getString("DAOGeneratorBaseImpl.0", //$NON-NLS-1$
                 tableName));
-        list.add(getDAOImplementation(columnDefinitions, tableConfiguration));
+        CompilationUnit cu = getDAOImplementation(columnDefinitions,
+                tableConfiguration);
+        GeneratedJavaFile gjf = new GeneratedJavaFile(cu, targetProject);
+        list.add(gjf);
 
         callback.startSubTask(Messages.getString("DAOGeneratorBaseImpl.1", //$NON-NLS-1$
                 tableName));
-        list.add(getDAOInterface(columnDefinitions, tableConfiguration));
+        cu = getDAOInterface(columnDefinitions, tableConfiguration);
+        gjf = new GeneratedJavaFile(cu, targetProject);
+        list.add(gjf);
 
         return list;
     }
 
     protected List getInsertMethods(ColumnDefinitions columnDefinitions,
             TableConfiguration tableConfiguration, boolean interfaceMethod,
-            Set imports) {
+            CompilationUnit compilationUnit) {
 
         if (!AbatorRules.generateInsert(tableConfiguration)) {
             return null;
         }
 
-        String returnType;
+        FullyQualifiedTable table = tableConfiguration.getTable();
+        Method method = new Method();
+        method.addMethodComment(table);
+        
+        FullyQualifiedJavaType returnType;
         if (tableConfiguration.getGeneratedKey().isConfigured()) {
             ColumnDefinition cd = columnDefinitions
                     .getColumn(tableConfiguration.getGeneratedKey().getColumn());
@@ -465,194 +452,113 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator
                 // the specified column doesn't exist, so don't do the generated
                 // key
                 // (the warning has already been reported)
-                returnType = "void"; //$NON-NLS-1$
+                returnType = null;
             } else {
-                FullyQualifiedJavaType fqjt = cd.getResolvedJavaType()
+                returnType = cd.getResolvedJavaType()
                         .getFullyQualifiedJavaType();
-                returnType = fqjt.getShortName();
-                imports.add(fqjt);
+                compilationUnit.addImportedType(returnType);
             }
         } else {
-            returnType = "void"; //$NON-NLS-1$
+            returnType = null;
         }
+        method.setReturnType(returnType);
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setName("insert"); //$NON-NLS-1$
 
-        StringBuffer buffer = new StringBuffer();
-        FullyQualifiedTable table = tableConfiguration.getTable();
-        buffer.append(getMethodComment(table));
-        newLine(buffer);
-        indent(buffer, 1);
-        if (!interfaceMethod) {
-            buffer.append("public "); //$NON-NLS-1$
-        }
-        buffer.append(returnType);
-        buffer.append(" insert("); //$NON-NLS-1$
+        FullyQualifiedJavaType parameterType;
         if (AbatorRules.generateRecordWithBLOBsExtendingPrimaryKey(columnDefinitions)
                 || AbatorRules.generateRecordWithBLOBsExtendingBaseRecord(columnDefinitions)) {
-            buffer.append(javaModelGenerator.getRecordWithBLOBsType(table)
-                    .getShortName());
-            imports.add(javaModelGenerator.getRecordWithBLOBsType(table));
+            parameterType = javaModelGenerator.getRecordWithBLOBsType(table);
         } else if (AbatorRules.generateBaseRecordWithNoSuperclass(columnDefinitions)
                 || AbatorRules.generateBaseRecordExtendingPrimaryKey(columnDefinitions)) {
-            buffer.append(javaModelGenerator.getRecordType(table)
-                    .getShortName());
-            imports.add(javaModelGenerator.getRecordType(table));
+            parameterType = javaModelGenerator.getRecordType(table);
         } else {
-            buffer.append(javaModelGenerator.getPrimaryKeyType(table)
-                    .getShortName());
-            imports.add(javaModelGenerator.getPrimaryKeyType(table));
+            parameterType = javaModelGenerator.getPrimaryKeyType(table);
+        }
+        compilationUnit.addImportedType(parameterType);
+        method.addParameter(new Parameter(parameterType, "record")); //$NON-NLS-1$
+        Iterator iter = daoTemplate.getCheckedExceptions().iterator();
+        while (iter.hasNext()) {
+            FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter
+                    .next();
+            method.addException(fqjt);
+            compilationUnit.addImportedType(fqjt);
         }
 
-        buffer.append(" record)"); //$NON-NLS-1$
-        if (daoGeneratorTemplate.getCheckedExceptions().size() > 0) {
-            buffer.append(" throws "); //$NON-NLS-1$
-
-            Iterator iter = daoGeneratorTemplate.getCheckedExceptions()
-                    .iterator();
-            boolean comma = false;
-            while (iter.hasNext()) {
-                if (comma) {
-                    buffer.append(", "); //$NON-NLS-1$
-                } else {
-                    comma = true;
-                }
-
-                FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter
-                        .next();
-                buffer.append(fqjt.getShortName());
-                imports.add(fqjt);
-            }
-        }
-
-        if (interfaceMethod) {
-            // generate the interface method
-            buffer.append(';');
-        } else {
+        if (!interfaceMethod) {
             // generate the implementation method
-            buffer.append(" {"); //$NON-NLS-1$
-
-            newLine(buffer);
-            indent(buffer, 2);
-            if (!"void".equals(returnType)) { //$NON-NLS-1$
-                buffer.append("Object newKey = "); //$NON-NLS-1$
+            StringBuffer sb = new StringBuffer();
+            
+            if (returnType != null) {
+                sb.append("Object newKey = "); //$NON-NLS-1$
             }
 
-            buffer.append(daoGeneratorTemplate.getInsertMethod());
-            buffer.append("(\""); //$NON-NLS-1$
-            buffer.append(sqlMapGenerator.getSqlMapNamespace(table));
-            buffer.append('.');
-            buffer.append(sqlMapGenerator.getInsertStatementId());
-            buffer.append("\", record);"); //$NON-NLS-1$
+            sb.append(daoTemplate.getInsertMethod(sqlMapGenerator
+                    .getSqlMapNamespace(table), sqlMapGenerator
+                    .getInsertStatementId(), "record")); //$NON-NLS-1$
+            method.addBodyLine(sb.toString());
 
-            if ("Object".equals(returnType)) { //$NON-NLS-1$
-                newLine(buffer);
-                newLine(buffer);
-                indent(buffer, 2);
-                buffer.append("return newKey;"); //$NON-NLS-1$
-            } else if (!"void".equals(returnType)) { //$NON-NLS-1$
-                newLine(buffer);
-                newLine(buffer);
-                indent(buffer, 2);
-                buffer.append("return ("); //$NON-NLS-1$
-                buffer.append(returnType);
-                buffer.append(") newKey;"); //$NON-NLS-1$
+            if (returnType != null) {
+                if ("Object".equals(returnType.getShortName())) { //$NON-NLS-1$
+                    method.addBodyLine("return newKey;"); //$NON-NLS-1$
+                } else {
+                    sb.setLength(0);
+                    sb.append("return ("); //$NON-NLS-1$
+                    sb.append(returnType.getShortName());
+                    sb.append(") newKey;"); //$NON-NLS-1$
+                    method.addBodyLine(sb.toString());
+                }
             }
-
-            newLine(buffer);
-            indent(buffer, 1);
-            buffer.append('}');
         }
 
         ArrayList answer = new ArrayList();
-        answer.add(buffer.toString());
+        answer.add(method);
 
         return answer;
     }
 
-    /**
-     * 
-     * @param columnDefinitions
-     *            column definitions for the current table
-     * @param tableConfiguration
-     *            table configuration for the current table
-     * @param interfaceMethod
-     *            true if the method is an interface method, false if the method
-     *            is an implementation method
-     * @param imports
-     *            the method can add FullyQualifiedJavaType objects to this set
-     *            if they are required by the resulting method
-     * @return a List of methods (as Strings). A method includes Javadoc.
-     */
     protected List getUpdateByPrimaryKeyMethods(
             ColumnDefinitions columnDefinitions,
             TableConfiguration tableConfiguration, boolean interfaceMethod,
-            Set imports) {
+            CompilationUnit compilationUnit) {
 
         if (!AbatorRules.generateUpdateByPrimaryKeyWithoutBLOBs(columnDefinitions, tableConfiguration)) {
             return null;
         }
 
-        StringBuffer buffer = new StringBuffer();
         FullyQualifiedTable table = tableConfiguration.getTable();
-        imports.add(javaModelGenerator.getRecordType(table));
+        FullyQualifiedJavaType type = javaModelGenerator.getRecordType(table);
+        compilationUnit.addImportedType(type);
+        
+        Method method = new Method();
+        method.addMethodComment(table);
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setReturnType(FullyQualifiedJavaType.getIntInstance());
+        method.setName("updateByPrimaryKey"); //$NON-NLS-1$
+        method.addParameter(new Parameter(type, "record")); //$NON-NLS-1$
 
-        buffer.append(getMethodComment(table));
-        newLine(buffer);
-        indent(buffer, 1);
+        Iterator iter = daoTemplate.getCheckedExceptions().iterator();
+        while (iter.hasNext()) {
+            FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter.next();
+            method.addException(fqjt);
+            compilationUnit.addImportedType(fqjt);
+        }
+
         if (!interfaceMethod) {
-            buffer.append("public "); //$NON-NLS-1$
-        }
-        buffer.append("int updateByPrimaryKey("); //$NON-NLS-1$
-        buffer.append(javaModelGenerator.getRecordType(table).getShortName());
-        buffer.append(" record)"); //$NON-NLS-1$
-        if (daoGeneratorTemplate.getCheckedExceptions().size() > 0) {
-            buffer.append(" throws "); //$NON-NLS-1$
-
-            Iterator iter = daoGeneratorTemplate.getCheckedExceptions()
-                    .iterator();
-            boolean comma = false;
-            while (iter.hasNext()) {
-                if (comma) {
-                    buffer.append(", "); //$NON-NLS-1$
-                } else {
-                    comma = true;
-                }
-
-                FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter
-                        .next();
-                buffer.append(fqjt.getShortName());
-                imports.add(fqjt);
-            }
-        }
-
-        if (interfaceMethod) {
-            // generate the interface method
-            buffer.append(';');
-        } else {
             // generate the implementation method
-            buffer.append(" {"); //$NON-NLS-1$
+            StringBuffer sb = new StringBuffer();
 
-            newLine(buffer);
-            indent(buffer, 2);
-            buffer.append("int rows = "); //$NON-NLS-1$
-            buffer.append(daoGeneratorTemplate.getUpdateMethod());
-            buffer.append("(\""); //$NON-NLS-1$
-            buffer.append(sqlMapGenerator.getSqlMapNamespace(table));
-            buffer.append('.');
-            buffer.append(sqlMapGenerator.getUpdateByPrimaryKeyStatementId());
-            buffer.append("\", record);"); //$NON-NLS-1$
-
-            newLine(buffer);
-            newLine(buffer);
-            indent(buffer, 2);
-            buffer.append("return rows;"); //$NON-NLS-1$
-
-            newLine(buffer);
-            indent(buffer, 1);
-            buffer.append('}');
+            sb.append("int rows = "); //$NON-NLS-1$
+            sb.append(daoTemplate.getUpdateMethod(sqlMapGenerator.getSqlMapNamespace(table),
+                    sqlMapGenerator.getUpdateByPrimaryKeyStatementId(),
+                    "record")); //$NON-NLS-1$
+            method.addBodyLine(sb.toString());
+            
+            method.addBodyLine("return rows;"); //$NON-NLS-1$
         }
 
         ArrayList answer = new ArrayList();
-        answer.add(buffer.toString());
+        answer.add(method);
 
         return answer;
     }
@@ -660,77 +566,46 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator
     protected List getUpdateByPrimaryKeyWithBLOBsMethods(
             ColumnDefinitions columnDefinitions,
             TableConfiguration tableConfiguration, boolean interfaceMethod,
-            Set imports) {
+            CompilationUnit compilationUnit) {
 
         if (!AbatorRules
                 .generateUpdateByPrimaryKeyWithBLOBs(columnDefinitions, tableConfiguration)) {
             return null;
         }
 
-        StringBuffer buffer = new StringBuffer();
         FullyQualifiedTable table = tableConfiguration.getTable();
-        imports.add(javaModelGenerator.getRecordWithBLOBsType(table));
+        FullyQualifiedJavaType type = javaModelGenerator.getRecordWithBLOBsType(table);
+        compilationUnit.addImportedType(type);
+        
+        Method method = new Method();
+        method.addMethodComment(table);
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setReturnType(FullyQualifiedJavaType.getIntInstance());
+        method.setName("updateByPrimaryKey"); //$NON-NLS-1$
+        method.addParameter(new Parameter(type, "record")); //$NON-NLS-1$
 
-        buffer.append(getMethodComment(table));
-        newLine(buffer);
-        indent(buffer, 1);
+        Iterator iter = daoTemplate.getCheckedExceptions().iterator();
+        while (iter.hasNext()) {
+            FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter.next();
+            method.addException(fqjt);
+            compilationUnit.addImportedType(fqjt);
+        }
+        
         if (!interfaceMethod) {
-            buffer.append("public "); //$NON-NLS-1$
-        }
-        buffer.append("int updateByPrimaryKey("); //$NON-NLS-1$
-        buffer.append(javaModelGenerator.getRecordWithBLOBsType(table)
-                .getShortName());
-        buffer.append(" record)"); //$NON-NLS-1$
-        if (daoGeneratorTemplate.getCheckedExceptions().size() > 0) {
-            buffer.append(" throws "); //$NON-NLS-1$
-
-            Iterator iter = daoGeneratorTemplate.getCheckedExceptions()
-                    .iterator();
-            boolean comma = false;
-            while (iter.hasNext()) {
-                if (comma) {
-                    buffer.append(", "); //$NON-NLS-1$
-                } else {
-                    comma = true;
-                }
-
-                FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter
-                        .next();
-                buffer.append(fqjt.getShortName());
-                imports.add(fqjt);
-            }
-        }
-
-        if (interfaceMethod) {
-            // generate the interface method
-            buffer.append(';');
-        } else {
             // generate the implementation method
-            buffer.append(" {"); //$NON-NLS-1$
+            StringBuffer sb = new StringBuffer();
 
-            newLine(buffer);
-            indent(buffer, 2);
-            buffer.append("int rows = "); //$NON-NLS-1$
-            buffer.append(daoGeneratorTemplate.getUpdateMethod());
-            buffer.append("(\""); //$NON-NLS-1$
-            buffer.append(sqlMapGenerator.getSqlMapNamespace(table));
-            buffer.append('.');
-            buffer.append(sqlMapGenerator
-                    .getUpdateByPrimaryKeyWithBLOBsStatementId());
-            buffer.append("\", record);"); //$NON-NLS-1$
-
-            newLine(buffer);
-            newLine(buffer);
-            indent(buffer, 2);
-            buffer.append("return rows;"); //$NON-NLS-1$
-
-            newLine(buffer);
-            indent(buffer, 1);
-            buffer.append('}');
+            sb.append("int rows = "); //$NON-NLS-1$
+            sb.append(daoTemplate.getUpdateMethod(sqlMapGenerator.getSqlMapNamespace(table),
+                    sqlMapGenerator.getUpdateByPrimaryKeyWithBLOBsStatementId(),
+                    "record")); //$NON-NLS-1$
+            method.addBodyLine(sb.toString());
+            
+            method.addBodyLine("return rows;"); //$NON-NLS-1$
         }
 
         ArrayList answer = new ArrayList();
-        answer.add(buffer.toString());
+        answer.add(method);
 
         return answer;
     }
@@ -738,119 +613,65 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator
     protected List getSelectByExampleMethods(
             ColumnDefinitions columnDefinitions,
             TableConfiguration tableConfiguration, boolean interfaceMethod,
-            Set imports) {
+            CompilationUnit compilationUnit) {
 
         if (!AbatorRules.generateSelectByExampleWithoutBLOBs(tableConfiguration)) {
             return null;
         }
 
-        StringBuffer buffer1 = new StringBuffer();
-        StringBuffer buffer2 = new StringBuffer();
         FullyQualifiedTable table = tableConfiguration.getTable();
-        imports.add(javaModelGenerator.getExampleType(table));
-        imports.add(new FullyQualifiedJavaType("java.util.List")); //$NON-NLS-1$
+        FullyQualifiedJavaType type = javaModelGenerator.getExampleType(table);
+        compilationUnit.addImportedType(type);
+        compilationUnit.addImportedType(FullyQualifiedJavaType.getListInstance());
 
-        buffer1.append(getMethodComment(table));
-        newLine(buffer1);
-        indent(buffer1, 1);
+        Method method1 = new Method();
+        method1.addMethodComment(table);
+        method1.setVisibility(JavaVisibility.PUBLIC);
+        method1.setReturnType(FullyQualifiedJavaType.getListInstance());
+        method1.setName("selectByExample"); //$NON-NLS-1$
+        method1.addParameter(new Parameter(type, "example")); //$NON-NLS-1$
+        method1.addParameter(new Parameter(FullyQualifiedJavaType.getStringInstance(),
+                "orderByClause")); //$NON-NLS-1$
+        
+        Method method2 = new Method();
+        method2.addMethodComment(table);
+        method2.setVisibility(JavaVisibility.PUBLIC);
+        method2.setReturnType(FullyQualifiedJavaType.getListInstance());
+        method2.setName("selectByExample"); //$NON-NLS-1$
+        method2.addParameter(new Parameter(type, "example")); //$NON-NLS-1$
+        
+        Iterator iter = daoTemplate.getCheckedExceptions().iterator();
+        while (iter.hasNext()) {
+            FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter.next();
+            method1.addException(fqjt);
+            method2.addException(fqjt);
+            compilationUnit.addImportedType(fqjt);
+        }
+
         if (!interfaceMethod) {
-            buffer1.append("public "); //$NON-NLS-1$
-        }
-        buffer1.append("List selectByExample("); //$NON-NLS-1$
-        buffer1.append(javaModelGenerator.getExampleType(table).getShortName());
-        buffer1.append(" example, String orderByClause)"); //$NON-NLS-1$
-
-        buffer2.append(getMethodComment(table));
-        newLine(buffer2);
-        indent(buffer2, 1);
-        if (!interfaceMethod) {
-            buffer2.append("public "); //$NON-NLS-1$
-        }
-        buffer2.append("List selectByExample("); //$NON-NLS-1$
-        buffer2.append(javaModelGenerator.getExampleType(table).getShortName());
-        buffer2.append(" example)"); //$NON-NLS-1$
-
-        if (daoGeneratorTemplate.getCheckedExceptions().size() > 0) {
-            buffer1.append(" throws "); //$NON-NLS-1$
-            buffer2.append(" throws "); //$NON-NLS-1$
-
-            Iterator iter = daoGeneratorTemplate.getCheckedExceptions()
-                    .iterator();
-            boolean comma = false;
-            while (iter.hasNext()) {
-                if (comma) {
-                    buffer1.append(", "); //$NON-NLS-1$
-                    buffer2.append(", "); //$NON-NLS-1$
-                } else {
-                    comma = true;
-                }
-
-                FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter
-                        .next();
-                buffer1.append(fqjt.getShortName());
-                buffer2.append(fqjt.getShortName());
-                imports.add(fqjt);
-            }
-        }
-
-        if (interfaceMethod) {
-            // generate the interface method
-            buffer1.append(';');
-            buffer2.append(';');
-        } else {
             // generate the implementation method
-            imports.add(new FullyQualifiedJavaType("java.util.Map")); //$NON-NLS-1$
+            compilationUnit.addImportedType(FullyQualifiedJavaType.getMapInstance());
+            
+            StringBuffer sb = new StringBuffer();
 
-            buffer1.append(" {"); //$NON-NLS-1$
+            method1.addBodyLine("Map parms = getExampleParms(example);"); //$NON-NLS-1$
+            method1.addBodyLine("if (orderByClause != null) {"); //$NON-NLS-1$
+            method1.addBodyLine("parms.put(\"ABATOR_ORDER_BY_CLAUSE\", orderByClause);"); //$NON-NLS-1$
+            method1.addBodyLine("}"); //$NON-NLS-1$
 
-            newLine(buffer1);
-            indent(buffer1, 2);
-            buffer1.append("Map parms = getExampleParms(example);"); //$NON-NLS-1$
+            sb.append("List list = "); //$NON-NLS-1$
+            sb.append(daoTemplate.getQueryForListMethod(sqlMapGenerator.getSqlMapNamespace(table),
+                    sqlMapGenerator.getSelectByExampleStatementId(),
+                    "parms")); //$NON-NLS-1$
+            method1.addBodyLine(sb.toString());
+            method1.addBodyLine("return list;"); //$NON-NLS-1$
 
-            newLine(buffer1);
-            newLine(buffer1);
-            indent(buffer1, 2);
-            buffer1.append("if (orderByClause != null) {"); //$NON-NLS-1$
-            newLine(buffer1);
-            indent(buffer1, 3);
-            buffer1
-                    .append("parms.put(\"ABATOR_ORDER_BY_CLAUSE\", orderByClause);"); //$NON-NLS-1$
-            newLine(buffer1);
-            indent(buffer1, 2);
-            buffer1.append("}"); //$NON-NLS-1$
-
-            newLine(buffer1);
-            newLine(buffer1);
-            indent(buffer1, 2);
-            buffer1.append("List list = "); //$NON-NLS-1$
-            buffer1.append(daoGeneratorTemplate.getQueryForListMethod());
-            buffer1.append("(\""); //$NON-NLS-1$
-            buffer1.append(sqlMapGenerator.getSqlMapNamespace(table));
-            buffer1.append('.');
-            buffer1.append(sqlMapGenerator.getSelectByExampleStatementId());
-            buffer1.append("\", parms);"); //$NON-NLS-1$
-
-            newLine(buffer1);
-            newLine(buffer1);
-            indent(buffer1, 2);
-            buffer1.append("return list;"); //$NON-NLS-1$
-            newLine(buffer1);
-            indent(buffer1, 1);
-            buffer1.append('}');
-
-            buffer2.append(" {"); //$NON-NLS-1$
-
-            newLine(buffer2);
-            indent(buffer2, 2);
-            buffer2.append("return selectByExample(example, null);"); //$NON-NLS-1$
-            newLine(buffer2);
-            indent(buffer2, 1);
-            buffer2.append('}');
+            method2.addBodyLine("return selectByExample(example, null);"); //$NON-NLS-1$
         }
 
         ArrayList answer = new ArrayList();
-        answer.add(buffer1.toString());
-        answer.add(buffer2.toString());
+        answer.add(method1);
+        answer.add(method2);
 
         return answer;
     }
@@ -858,120 +679,66 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator
     protected List getSelectByExampleWithBLOBsMethods(
             ColumnDefinitions columnDefinitions,
             TableConfiguration tableConfiguration, boolean interfaceMethod,
-            Set imports) {
+            CompilationUnit compilationUnit) {
 
         if (!AbatorRules
                 .generateSelectByExampleWithBLOBs(columnDefinitions, tableConfiguration)) {
             return null;
         }
 
-        StringBuffer buffer1 = new StringBuffer();
-        StringBuffer buffer2 = new StringBuffer();
         FullyQualifiedTable table = tableConfiguration.getTable();
-        imports.add(javaModelGenerator.getExampleType(table));
-        imports.add(new FullyQualifiedJavaType("java.util.List")); //$NON-NLS-1$
+        FullyQualifiedJavaType type = javaModelGenerator.getExampleType(table);
+        compilationUnit.addImportedType(type);
+        compilationUnit.addImportedType(FullyQualifiedJavaType.getListInstance());
 
-        buffer1.append(getMethodComment(table));
-        newLine(buffer1);
-        indent(buffer1, 1);
+        Method method1 = new Method();
+        method1.addMethodComment(table);
+        method1.setVisibility(JavaVisibility.PUBLIC);
+        method1.setReturnType(FullyQualifiedJavaType.getListInstance());
+        method1.setName("selectByExampleWithBLOBs"); //$NON-NLS-1$
+        method1.addParameter(new Parameter(type, "example")); //$NON-NLS-1$
+        method1.addParameter(new Parameter(FullyQualifiedJavaType.getStringInstance(),
+                "orderByClause")); //$NON-NLS-1$
+        
+        Method method2 = new Method();
+        method2.addMethodComment(table);
+        method2.setVisibility(JavaVisibility.PUBLIC);
+        method2.setReturnType(FullyQualifiedJavaType.getListInstance());
+        method2.setName("selectByExampleWithBLOBs"); //$NON-NLS-1$
+        method2.addParameter(new Parameter(type, "example")); //$NON-NLS-1$
+
+        Iterator iter = daoTemplate.getCheckedExceptions().iterator();
+        while (iter.hasNext()) {
+            FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter.next();
+            method1.addException(fqjt);
+            method2.addException(fqjt);
+            compilationUnit.addImportedType(fqjt);
+        }
+
         if (!interfaceMethod) {
-            buffer1.append("public "); //$NON-NLS-1$
-        }
-        buffer1.append("List selectByExampleWithBLOBs("); //$NON-NLS-1$
-        buffer1.append(javaModelGenerator.getExampleType(table).getShortName());
-        buffer1.append(" example, String orderByClause)"); //$NON-NLS-1$
-
-        buffer2.append(getMethodComment(table));
-        newLine(buffer2);
-        indent(buffer2, 1);
-        if (!interfaceMethod) {
-            buffer2.append("public "); //$NON-NLS-1$
-        }
-        buffer2.append("List selectByExampleWithBLOBs("); //$NON-NLS-1$
-        buffer2.append(javaModelGenerator.getExampleType(table).getShortName());
-        buffer2.append(" example)"); //$NON-NLS-1$
-
-        if (daoGeneratorTemplate.getCheckedExceptions().size() > 0) {
-            buffer1.append(" throws "); //$NON-NLS-1$
-            buffer2.append(" throws "); //$NON-NLS-1$
-
-            Iterator iter = daoGeneratorTemplate.getCheckedExceptions()
-                    .iterator();
-            boolean comma = false;
-            while (iter.hasNext()) {
-                if (comma) {
-                    buffer1.append(", "); //$NON-NLS-1$
-                    buffer2.append(", "); //$NON-NLS-1$
-                } else {
-                    comma = true;
-                }
-
-                FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter
-                        .next();
-                buffer1.append(fqjt.getShortName());
-                buffer2.append(fqjt.getShortName());
-                imports.add(fqjt);
-            }
-        }
-
-        if (interfaceMethod) {
-            // generate the interface method
-            buffer1.append(';');
-            buffer2.append(';');
-        } else {
             // generate the implementation method
-            imports.add(new FullyQualifiedJavaType("java.util.Map")); //$NON-NLS-1$
+            compilationUnit.addImportedType(FullyQualifiedJavaType.getMapInstance());
 
-            buffer1.append(" {"); //$NON-NLS-1$
+            StringBuffer sb = new StringBuffer();
 
-            newLine(buffer1);
-            indent(buffer1, 2);
-            buffer1.append("Map parms = getExampleParms(example);"); //$NON-NLS-1$
+            method1.addBodyLine("Map parms = getExampleParms(example);"); //$NON-NLS-1$
+            method1.addBodyLine("if (orderByClause != null) {"); //$NON-NLS-1$
+            method1.addBodyLine("parms.put(\"ABATOR_ORDER_BY_CLAUSE\", orderByClause);"); //$NON-NLS-1$
+            method1.addBodyLine("}"); //$NON-NLS-1$
 
-            newLine(buffer1);
-            newLine(buffer1);
-            indent(buffer1, 2);
-            buffer1.append("if (orderByClause != null) {"); //$NON-NLS-1$
-            newLine(buffer1);
-            indent(buffer1, 3);
-            buffer1
-                    .append("parms.put(\"ABATOR_ORDER_BY_CLAUSE\", orderByClause);"); //$NON-NLS-1$
-            newLine(buffer1);
-            indent(buffer1, 2);
-            buffer1.append('}');
+            sb.append("List list = "); //$NON-NLS-1$
+            sb.append(daoTemplate.getQueryForListMethod(sqlMapGenerator.getSqlMapNamespace(table),
+                    sqlMapGenerator.getSelectByExampleWithBLOBsStatementId(),
+                    "parms")); //$NON-NLS-1$
+            method1.addBodyLine(sb.toString());
+            method1.addBodyLine("return list;"); //$NON-NLS-1$
 
-            newLine(buffer1);
-            newLine(buffer1);
-            indent(buffer1, 2);
-            buffer1.append("List list = "); //$NON-NLS-1$
-            buffer1.append(daoGeneratorTemplate.getQueryForListMethod());
-            buffer1.append("(\""); //$NON-NLS-1$
-            buffer1.append(sqlMapGenerator.getSqlMapNamespace(table));
-            buffer1.append('.');
-            buffer1.append(sqlMapGenerator
-                    .getSelectByExampleWithBLOBsStatementId());
-            buffer1.append("\", parms);"); //$NON-NLS-1$
-
-            newLine(buffer1);
-            newLine(buffer1);
-            indent(buffer1, 2);
-            buffer1.append("return list;"); //$NON-NLS-1$
-            newLine(buffer1);
-            indent(buffer1, 1);
-            buffer1.append('}');
-
-            buffer2.append(" {"); //$NON-NLS-1$
-            newLine(buffer2);
-            indent(buffer2, 2);
-            buffer2.append("return selectByExampleWithBLOBs(example, null);"); //$NON-NLS-1$
-            newLine(buffer2);
-            indent(buffer2, 1);
-            buffer2.append('}');
+            method2.addBodyLine("return selectByExampleWithBLOBs(example, null);"); //$NON-NLS-1$
         }
 
         ArrayList answer = new ArrayList();
-        answer.add(buffer1.toString());
-        answer.add(buffer2.toString());
+        answer.add(method1);
+        answer.add(method2);
 
         return answer;
     }
@@ -979,23 +746,19 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator
     protected List getSelectByPrimaryKeyMethods(
             ColumnDefinitions columnDefinitions,
             TableConfiguration tableConfiguration, boolean interfaceMethod,
-            Set imports) {
+            CompilationUnit compilationUnit) {
 
         if (!AbatorRules.generateSelectByPrimaryKey(columnDefinitions, tableConfiguration)) {
             return null;
         }
 
-        StringBuffer buffer = new StringBuffer();
         FullyQualifiedTable table = tableConfiguration.getTable();
-        imports.add(javaModelGenerator.getPrimaryKeyType(table));
-
-        buffer.append(getMethodComment(table));
-        newLine(buffer);
-        indent(buffer, 1);
-
-        if (!interfaceMethod) {
-            buffer.append("public "); //$NON-NLS-1$
-        }
+        FullyQualifiedJavaType type = javaModelGenerator.getPrimaryKeyType(table);
+        compilationUnit.addImportedType(type);
+        
+        Method method = new Method();
+        method.addMethodComment(table);
+        method.setVisibility(JavaVisibility.PUBLIC);
 
         FullyQualifiedJavaType returnType;
         if (AbatorRules.generateRecordWithBLOBsExtendingPrimaryKey(columnDefinitions)
@@ -1005,65 +768,36 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator
         } else {
             returnType = javaModelGenerator.getRecordType(table);
         }
-        buffer.append(returnType.getShortName());
-        imports.add(returnType);
+        method.setReturnType(returnType);
+        compilationUnit.addImportedType(returnType);
+        method.setName("selectByPrimaryKey"); //$NON-NLS-1$
+        method.addParameter(new Parameter(type, "key")); //$NON-NLS-1$
 
-        buffer.append(" selectByPrimaryKey("); //$NON-NLS-1$
-        buffer.append(javaModelGenerator.getPrimaryKeyType(table)
-                .getShortName());
-        buffer.append(" key)"); //$NON-NLS-1$
-        if (daoGeneratorTemplate.getCheckedExceptions().size() > 0) {
-            buffer.append(" throws "); //$NON-NLS-1$
-
-            Iterator iter = daoGeneratorTemplate.getCheckedExceptions()
-                    .iterator();
-            boolean comma = false;
-            while (iter.hasNext()) {
-                if (comma) {
-                    buffer.append(", "); //$NON-NLS-1$
-                } else {
-                    comma = true;
-                }
-
-                FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter
-                        .next();
-                buffer.append(fqjt.getShortName());
-                imports.add(fqjt);
-            }
+        Iterator iter = daoTemplate.getCheckedExceptions().iterator();
+        while (iter.hasNext()) {
+            FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter.next();
+            method.addException(fqjt);
+            compilationUnit.addImportedType(fqjt);
         }
 
-        if (interfaceMethod) {
-            // generate the interface method
-            buffer.append(';');
-        } else {
+        if (!interfaceMethod) {
             // generate the implementation method
-            buffer.append(" {"); //$NON-NLS-1$
+            StringBuffer sb = new StringBuffer();
 
-            newLine(buffer);
-            indent(buffer, 2);
-            buffer.append(returnType.getShortName());
-            buffer.append(" record = ("); //$NON-NLS-1$
-            buffer.append(returnType.getShortName());
-            buffer.append(") "); //$NON-NLS-1$
-            buffer.append(daoGeneratorTemplate.getQueryForObjectMethod());
-            buffer.append("(\""); //$NON-NLS-1$
-            buffer.append(sqlMapGenerator.getSqlMapNamespace(table));
-            buffer.append('.');
-            buffer.append(sqlMapGenerator.getSelectByPrimaryKeyStatementId());
-            buffer.append("\", key);"); //$NON-NLS-1$
-
-            newLine(buffer);
-            newLine(buffer);
-            indent(buffer, 2);
-            buffer.append("return record;"); //$NON-NLS-1$
-
-            newLine(buffer);
-            indent(buffer, 1);
-            buffer.append('}');
+            sb.append(returnType.getShortName());
+            sb.append(" record = ("); //$NON-NLS-1$
+            sb.append(returnType.getShortName());
+            sb.append(") "); //$NON-NLS-1$
+            sb.append(daoTemplate.getQueryForObjectMethod(sqlMapGenerator.getSqlMapNamespace(table),
+                    sqlMapGenerator.getSelectByPrimaryKeyStatementId(),
+                    "key")); //$NON-NLS-1$
+            method.addBodyLine(sb.toString());
+            
+            method.addBodyLine("return record;"); //$NON-NLS-1$
         }
 
         ArrayList answer = new ArrayList();
-        answer.add(buffer.toString());
+        answer.add(method);
 
         return answer;
     }
@@ -1071,74 +805,45 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator
     protected List getDeleteByExampleMethods(
             ColumnDefinitions columnDefinitions,
             TableConfiguration tableConfiguration, boolean interfaceMethod,
-            Set imports) {
+            CompilationUnit compilationUnit) {
 
         if (!AbatorRules.generateDeleteByExample(tableConfiguration)) {
             return null;
         }
 
-        StringBuffer buffer = new StringBuffer();
         FullyQualifiedTable table = tableConfiguration.getTable();
-        imports.add(javaModelGenerator.getExampleType(table));
+        FullyQualifiedJavaType type = javaModelGenerator.getExampleType(table);
+        compilationUnit.addImportedType(type);
 
-        buffer.append(getMethodComment(table));
-        newLine(buffer);
-        indent(buffer, 1);
+        Method method = new Method();
+        method.addMethodComment(table);
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setReturnType(FullyQualifiedJavaType.getIntInstance());
+        method.setName("deleteByExample"); //$NON-NLS-1$
+        method.addParameter(new Parameter(type, "example")); //$NON-NLS-1$
+        
+        Iterator iter = daoTemplate.getCheckedExceptions().iterator();
+        while (iter.hasNext()) {
+            FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter.next();
+            method.addException(fqjt);
+            compilationUnit.addImportedType(fqjt);
+        }
+
         if (!interfaceMethod) {
-            buffer.append("public "); //$NON-NLS-1$
-        }
-        buffer.append("int deleteByExample("); //$NON-NLS-1$
-        buffer.append(javaModelGenerator.getExampleType(table).getShortName());
-        buffer.append(" example)"); //$NON-NLS-1$
-        if (daoGeneratorTemplate.getCheckedExceptions().size() > 0) {
-            buffer.append(" throws "); //$NON-NLS-1$
-
-            Iterator iter = daoGeneratorTemplate.getCheckedExceptions()
-                    .iterator();
-            boolean comma = false;
-            while (iter.hasNext()) {
-                if (comma) {
-                    buffer.append(", "); //$NON-NLS-1$
-                } else {
-                    comma = true;
-                }
-
-                FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter
-                        .next();
-                buffer.append(fqjt.getShortName());
-                imports.add(fqjt);
-            }
-        }
-
-        if (interfaceMethod) {
-            // generate the interface method
-            buffer.append(';');
-        } else {
             // generate the implementation method
-            buffer.append(" {"); //$NON-NLS-1$
+            StringBuffer sb = new StringBuffer();
 
-            newLine(buffer);
-            indent(buffer, 2);
-            buffer.append("int rows = "); //$NON-NLS-1$
-            buffer.append(daoGeneratorTemplate.getDeleteMethod());
-            buffer.append("(\""); //$NON-NLS-1$
-            buffer.append(sqlMapGenerator.getSqlMapNamespace(table));
-            buffer.append('.');
-            buffer.append(sqlMapGenerator.getDeleteByExampleStatementId());
-            buffer.append("\", getExampleParms(example));"); //$NON-NLS-1$
-
-            newLine(buffer);
-            newLine(buffer);
-            indent(buffer, 2);
-            buffer.append("return rows;"); //$NON-NLS-1$
-
-            newLine(buffer);
-            indent(buffer, 1);
-            buffer.append('}');
+            sb.append("int rows = "); //$NON-NLS-1$
+            sb.append(daoTemplate.getDeleteMethod(sqlMapGenerator.getSqlMapNamespace(table),
+                    sqlMapGenerator.getDeleteByExampleStatementId(),
+                    "getExampleParms(example)")); //$NON-NLS-1$
+            method.addBodyLine(sb.toString());
+            
+            method.addBodyLine("return rows;"); //$NON-NLS-1$
         }
 
         ArrayList answer = new ArrayList();
-        answer.add(buffer.toString());
+        answer.add(method);
 
         return answer;
     }
@@ -1146,83 +851,53 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator
     protected List getDeleteByPrimaryKeyMethods(
             ColumnDefinitions columnDefinitions,
             TableConfiguration tableConfiguration, boolean interfaceMethod,
-            Set imports) {
+            CompilationUnit compilationUnit) {
 
         if (!AbatorRules.generateDeleteByPrimaryKey(columnDefinitions, tableConfiguration)) {
             return null;
         }
 
-        StringBuffer buffer = new StringBuffer();
         FullyQualifiedTable table = tableConfiguration.getTable();
-        imports.add(javaModelGenerator.getPrimaryKeyType(table));
+        FullyQualifiedJavaType type = javaModelGenerator.getPrimaryKeyType(table);
+        compilationUnit.addImportedType(type);
 
-        buffer.append(getMethodComment(table));
-        newLine(buffer);
-        indent(buffer, 1);
+        Method method = new Method();
+        method.addMethodComment(table);
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setReturnType(FullyQualifiedJavaType.getIntInstance());
+        method.setName("deleteByPrimaryKey"); //$NON-NLS-1$
+        method.addParameter(new Parameter(type, "key")); //$NON-NLS-1$
+        
+        Iterator iter = daoTemplate.getCheckedExceptions().iterator();
+        while (iter.hasNext()) {
+            FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter.next();
+            method.addException(fqjt);
+            compilationUnit.addImportedType(fqjt);
+        }
+
         if (!interfaceMethod) {
-            buffer.append("public "); //$NON-NLS-1$
-        }
-        buffer.append("int deleteByPrimaryKey("); //$NON-NLS-1$
-        buffer.append(javaModelGenerator.getPrimaryKeyType(table)
-                .getShortName());
-        buffer.append(" key)"); //$NON-NLS-1$
-        if (daoGeneratorTemplate.getCheckedExceptions().size() > 0) {
-            buffer.append(" throws "); //$NON-NLS-1$
-
-            Iterator iter = daoGeneratorTemplate.getCheckedExceptions()
-                    .iterator();
-            boolean comma = false;
-            while (iter.hasNext()) {
-                if (comma) {
-                    buffer.append(", "); //$NON-NLS-1$
-                } else {
-                    comma = true;
-                }
-
-                FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter
-                        .next();
-                buffer.append(fqjt.getShortName());
-                imports.add(fqjt);
-            }
-        }
-
-        if (interfaceMethod) {
-            // generate the interface method
-            buffer.append(';');
-        } else {
             // generate the implementation method
-            buffer.append(" {"); //$NON-NLS-1$
+            StringBuffer sb = new StringBuffer();
 
-            newLine(buffer);
-            indent(buffer, 2);
-            buffer.append("int rows = "); //$NON-NLS-1$
-            buffer.append(daoGeneratorTemplate.getDeleteMethod());
-            buffer.append("(\""); //$NON-NLS-1$
-            buffer.append(sqlMapGenerator.getSqlMapNamespace(table));
-            buffer.append('.');
-            buffer.append(sqlMapGenerator.getDeleteByPrimaryKeyStatementId());
-            buffer.append("\", key);"); //$NON-NLS-1$
+            sb.append("int rows = "); //$NON-NLS-1$
+            sb.append(daoTemplate.getDeleteMethod(sqlMapGenerator.getSqlMapNamespace(table),
+                    sqlMapGenerator.getDeleteByPrimaryKeyStatementId(),
+                    "key")); //$NON-NLS-1$
+            method.addBodyLine(sb.toString());
 
-            newLine(buffer);
-            newLine(buffer);
-            indent(buffer, 2);
-            buffer.append("return rows;"); //$NON-NLS-1$
-
-            newLine(buffer);
-            indent(buffer, 1);
-            buffer.append('}');
+            method.addBodyLine("return rows;"); //$NON-NLS-1$
         }
 
         ArrayList answer = new ArrayList();
-        answer.add(buffer.toString());
+        answer.add(method);
 
         return answer;
     }
 
     protected List getGetExampleParmsMethods(
             ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, boolean interfaceMethod,
-            Set imports) {
+            TableConfiguration tableConfiguration,
+            CompilationUnit compilationUnit) {
 
         if (!AbatorRules.generateDeleteByExample(tableConfiguration)
                 && !AbatorRules
@@ -1230,60 +905,48 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator
             return null;
         }
 
-        if (interfaceMethod) {
-            return null;
-        }
-
         ArrayList answer = new ArrayList();
 
-        StringBuffer buffer = new StringBuffer();
         FullyQualifiedTable table = tableConfiguration.getTable();
+        FullyQualifiedJavaType type = javaModelGenerator.getExampleType(table);
+        
+        compilationUnit.addImportedType(FullyQualifiedJavaType.getMapInstance());
+        compilationUnit.addImportedType(FullyQualifiedJavaType.getHashMapInstance());
+        compilationUnit.addImportedType(type);
 
-        imports.add(new FullyQualifiedJavaType("java.util.Map")); //$NON-NLS-1$
-        imports.add(new FullyQualifiedJavaType("java.util.HashMap")); //$NON-NLS-1$
-        imports.add(javaModelGenerator.getExampleType(table));
-
-        buffer.append(getMethodComment(table));
-        newLine(buffer);
-        indent(buffer, 1);
-        buffer.append("private Map getExampleParms("); //$NON-NLS-1$
-        buffer.append(javaModelGenerator.getExampleType(table).getShortName());
-        buffer.append(" example) {"); //$NON-NLS-1$
-
-        newLine(buffer);
-        indent(buffer, 2);
-        buffer.append("Map parms = new HashMap();"); //$NON-NLS-1$
-        newLine(buffer);
+        Method method = new Method();
+        method.addMethodComment(table);
+        method.setVisibility(JavaVisibility.PRIVATE);
+        method.setReturnType(FullyQualifiedJavaType.getMapInstance());
+        method.setName("getExampleParms"); //$NON-NLS-1$
+        method.addParameter(new Parameter(type, "example")); //$NON-NLS-1$
+        
+        method.addBodyLine("Map parms = new HashMap();"); //$NON-NLS-1$
 
         Iterator iter = columnDefinitions.getAllColumns().iterator();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
+            StringBuffer sb = new StringBuffer();
 
             if (cd.isBLOBColumn()) {
                 continue;
             }
 
-            String method = getExampleParmsMethod(cd, table);
-            if (method != null) {
-                answer.add(method);
+            Method method1 = getExampleParmsMethod(cd, table);
+            if (method1 != null) {
+                answer.add(method1);
 
-                newLine(buffer);
-                indent(buffer, 2);
-                buffer.append("parms.putAll(get"); //$NON-NLS-1$
-                buffer.append(cd.getColumnName());
-                buffer.append("ExampleParms(example));"); //$NON-NLS-1$
+                sb.setLength(0);
+                sb.append("parms.putAll("); //$NON-NLS-1$
+                sb.append(method1.getName());
+                sb.append("(example));"); //$NON-NLS-1$
+                method.addBodyLine(sb.toString());
             }
         }
 
-        newLine(buffer);
-        newLine(buffer);
-        indent(buffer, 2);
-        buffer.append("return parms;"); //$NON-NLS-1$
-        newLine(buffer);
-        indent(buffer, 1);
-        buffer.append('}');
+        method.addBodyLine("return parms;"); //$NON-NLS-1$
 
-        answer.add(buffer.toString());
+        answer.add(method);
 
         return answer;
     }
@@ -1309,36 +972,36 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator
      *            the column for which the method should be generated
      * @param table
      *            the table in which the column exists
-     * @return the properly formatted method
+     * @return the method
      */
-    protected String getExampleParmsMethod(ColumnDefinition cd,
+    protected Method getExampleParmsMethod(ColumnDefinition cd,
             FullyQualifiedTable table) {
         if (cd.isBLOBColumn()) {
             return null;
         }
+        
+        StringBuffer sb = new StringBuffer();
 
-        StringBuffer buffer = new StringBuffer();
+        Method method = new Method();
+        method.addMethodComment(table);
+        method.setVisibility(JavaVisibility.PRIVATE);
+        method.setReturnType(FullyQualifiedJavaType.getMapInstance());
+        sb.append("get"); //$NON-NLS-1$
+        sb.append(cd.getColumnName());
+        sb.append("ExampleParms"); //$NON-NLS-1$
+        method.setName(sb.toString());
 
-        buffer.append(getMethodComment(table));
-        newLine(buffer);
-        indent(buffer, 1);
-        buffer.append("private Map get"); //$NON-NLS-1$
-        buffer.append(cd.getColumnName());
-        buffer.append("ExampleParms("); //$NON-NLS-1$
-        buffer.append(javaModelGenerator.getExampleType(table).getShortName());
-        buffer.append(" example) {"); //$NON-NLS-1$
+        method.addParameter(new Parameter(javaModelGenerator.getExampleType(table),
+                "example")); //$NON-NLS-1$
 
-        newLine(buffer);
-        indent(buffer, 2);
-        buffer.append("Map parms = new HashMap();"); //$NON-NLS-1$
+        method.addBodyLine("Map parms = new HashMap();"); //$NON-NLS-1$
 
-        newLine(buffer);
-        newLine(buffer);
-        indent(buffer, 2);
-        buffer.append("switch (example."); //$NON-NLS-1$
+        sb.setLength(0);
+        sb.append("switch (example."); //$NON-NLS-1$
         String property = cd.getJavaProperty() + "_Indicator"; //$NON-NLS-1$
-        buffer.append(JavaBeansUtil.getGetterMethodName(property));
-        buffer.append("()) {"); //$NON-NLS-1$
+        sb.append(JavaBeansUtil.getGetterMethodName(property));
+        sb.append("()) {"); //$NON-NLS-1$
+        method.addBodyLine(sb.toString());
 
         Iterator clauseIterator = ExampleClause.getAllExampleClauses();
         while (clauseIterator.hasNext()) {
@@ -1348,77 +1011,67 @@ public abstract class DAOGeneratorBaseImpl extends BaseJavaCodeGenerator
                 continue;
             }
 
-            newLine(buffer);
-            indent(buffer, 2);
-            buffer.append("case "); //$NON-NLS-1$
-            buffer.append(javaModelGenerator.getExampleType(table)
+            sb.setLength(0);
+            sb.append("case "); //$NON-NLS-1$
+            sb.append(javaModelGenerator.getExampleType(table)
                     .getShortName());
-            buffer.append('.');
-            buffer.append(clause.getExamplePropertyName());
-            buffer.append(':');
-            newLine(buffer);
-            indent(buffer, 3);
-            buffer.append("if (example.isCombineTypeOr()) {"); //$NON-NLS-1$
-            newLine(buffer);
-            indent(buffer, 4);
-            buffer.append("parms.put(\""); //$NON-NLS-1$
-            buffer.append(clause.getSelectorOrProperty(cd));
-            buffer.append("\", \"Y\");"); //$NON-NLS-1$
-            newLine(buffer);
-            indent(buffer, 3);
-            buffer.append("} else {"); //$NON-NLS-1$
-            newLine(buffer);
-            indent(buffer, 4);
-            buffer.append("parms.put(\""); //$NON-NLS-1$
-            buffer.append(clause.getSelectorAndProperty(cd));
-            buffer.append("\", \"Y\");"); //$NON-NLS-1$
-            newLine(buffer);
-            indent(buffer, 3);
-            buffer.append('}'); //$NON-NLS-1$
+            sb.append('.');
+            sb.append(clause.getExamplePropertyName());
+            sb.append(':');
+            method.addBodyLine(sb.toString());
+            
+            method.addBodyLine("if (example.isCombineTypeOr()) {"); //$NON-NLS-1$
+
+            sb.setLength(0);
+            sb.append("parms.put(\""); //$NON-NLS-1$
+            sb.append(clause.getSelectorOrProperty(cd));
+            sb.append("\", \"Y\");"); //$NON-NLS-1$
+            method.addBodyLine(sb.toString());
+
+            method.addBodyLine("} else {"); //$NON-NLS-1$
+
+            sb.setLength(0);
+            sb.append("parms.put(\""); //$NON-NLS-1$
+            sb.append(clause.getSelectorAndProperty(cd));
+            sb.append("\", \"Y\");"); //$NON-NLS-1$
+            method.addBodyLine(sb.toString());
+
+            method.addBodyLine("}"); //$NON-NLS-1$
 
             if (clause.isPropertyInMapRequired()) {
                 String exampleProperty = cd.getJavaProperty();
-                newLine(buffer);
-                indent(buffer, 3);
-                buffer.append("parms.put(\""); //$NON-NLS-1$
-                buffer.append(exampleProperty);
-                buffer.append("\", "); //$NON-NLS-1$
+                
+                sb.setLength(0);
+                sb.append("parms.put(\""); //$NON-NLS-1$
+                sb.append(exampleProperty);
+                sb.append("\", "); //$NON-NLS-1$
                 FullyQualifiedJavaType fqjt = cd.getResolvedJavaType()
                         .getFullyQualifiedJavaType();
                 if (fqjt.isPrimitive()) {
-                    buffer.append("new "); //$NON-NLS-1$
-                    buffer.append(fqjt.getWrapperClass());
-                    buffer.append('(');
-                    buffer.append("example."); //$NON-NLS-1$
-                    buffer.append(JavaBeansUtil
+                    sb.append("new "); //$NON-NLS-1$
+                    sb.append(fqjt.getWrapperClass());
+                    sb.append('(');
+                    sb.append("example."); //$NON-NLS-1$
+                    sb.append(JavaBeansUtil
                             .getGetterMethodName(exampleProperty));
-                    buffer.append("()));"); //$NON-NLS-1$
+                    sb.append("()));"); //$NON-NLS-1$
                 } else {
-                    buffer.append("example."); //$NON-NLS-1$
-                    buffer.append(JavaBeansUtil
+                    sb.append("example."); //$NON-NLS-1$
+                    sb.append(JavaBeansUtil
                             .getGetterMethodName(exampleProperty));
-                    buffer.append("());"); //$NON-NLS-1$
+                    sb.append("());"); //$NON-NLS-1$
                 }
+                method.addBodyLine(sb.toString());
             }
 
-            newLine(buffer);
-            indent(buffer, 3);
-            buffer.append("break;"); //$NON-NLS-1$
-            newLine(buffer);
+            method.addBodyLine("break;"); //$NON-NLS-1$
         }
 
-        indent(buffer, 2);
-        buffer.append('}');
+        method.addBodyLine("}"); //$NON-NLS-1$
 
-        newLine(buffer);
-        newLine(buffer);
-        indent(buffer, 2);
-        buffer.append("return parms;"); //$NON-NLS-1$
-        newLine(buffer);
-        indent(buffer, 1);
-        buffer.append('}');
+        method.addBodyLine("return parms;"); //$NON-NLS-1$
 
-        return buffer.toString();
+        return method;
     }
 
     /*

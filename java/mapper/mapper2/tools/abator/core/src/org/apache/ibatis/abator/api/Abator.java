@@ -164,7 +164,7 @@ public class Abator {
                 if (targetFile.exists()) {
                     source = XmlFileMergerJaxp.getMergedSource(gxf, targetFile);
                 } else {
-                    source = gxf.getContent();
+                    source = gxf.getFormattedContent();
                 }
             } catch (ShellException e) {
                 warnings.add(e.getMessage());
@@ -190,12 +190,12 @@ public class Abator {
                         source = shellCallback.mergeJavaFile(gjf,
                             "@abatorgenerated", warnings); //$NON-NLS-1$
                     } else {
-                        source = gjf.getContent();
+                        source = gjf.getFormattedContent();
                         targetFile = getUniqueFileName(directory, gjf);
                         warnings.add(Messages.getString("Abator.2", targetFile.getAbsolutePath())); //$NON-NLS-1$
                     }
                 } else {
-                    source = gjf.getContent();
+                    source = gjf.getFormattedContent();
                 }
                 
                 writeFile(targetFile, source);

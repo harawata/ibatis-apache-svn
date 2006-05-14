@@ -18,6 +18,7 @@ package org.apache.ibatis.abator.api;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.abator.config.FullyQualifiedTable;
 import org.apache.ibatis.abator.config.TableConfiguration;
 import org.apache.ibatis.abator.internal.db.ColumnDefinitions;

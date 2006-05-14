@@ -22,6 +22,8 @@ import java.util.List;
  */
 public class XMLParserException extends Exception {
 
+    static final long serialVersionUID = 5172525430401340573L;
+    
 	private List errors;
 
 	/**

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2005 The Apache Software Foundation
+ *  Copyright 2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,17 +13,35 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.apache.ibatis.abator.internal.java;
+package org.apache.ibatis.abator.api.dom.java;
 
-import org.apache.ibatis.abator.internal.java.dao.IbatisDAOTemplate;
 
 /**
- * This class generates DAO classes based on the iBATIS DAO framework.
- * 
  * @author Jeff Butler
  */
-public class DAOGeneratorIbatisImpl extends DAOGeneratorBaseImpl {
-    public DAOGeneratorIbatisImpl() {
-        super(new IbatisDAOTemplate());
+public class Parameter {
+    private String name;
+    private FullyQualifiedJavaType type;
+
+    /**
+     * @param fullyQualifiedName
+     */
+    public Parameter(FullyQualifiedJavaType type, String name) {
+        super();
+        this.name = name;
+        this.type = type;
+    }
+
+    /**
+     * @return Returns the name.
+     */
+    public String getName() {
+        return name;
+    }
+    /**
+     * @return Returns the type.
+     */
+    public FullyQualifiedJavaType getType() {
+        return type;
     }
 }

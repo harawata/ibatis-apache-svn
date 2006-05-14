@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.abator.internal.java;
 
-import org.apache.ibatis.abator.api.FullyQualifiedJavaType;
+import org.apache.ibatis.abator.internal.java.dao.SpringDAOTemplate;
 
 /**
  * This class generates DAO classes based on the Spring Framework DAO support.
@@ -27,38 +27,6 @@ public class DAOGeneratorSpringImpl extends DAOGeneratorBaseImpl {
      *  
      */
     public DAOGeneratorSpringImpl() {
-        super();
-    }
-    
-    /* (non-Javadoc)
-     * @see org.apache.ibatis.abator.internal.java.DAOGeneratorBaseImpl#getDAOGeneratorTemplate()
-     */
-    public DAOGeneratorTemplate getDAOGeneratorTemplate() {
-        DAOGeneratorTemplate template = new DAOGeneratorTemplate();
-        
-        StringBuffer sb = new StringBuffer();
-        indent(sb, 1);
-        sb.append("public {0}() '{'"); //$NON-NLS-1$
-        newLine(sb);
-        indent(sb, 2);
-        sb.append("super();"); //$NON-NLS-1$
-        newLine(sb);
-        indent(sb, 1);
-        sb.append("}"); //$NON-NLS-1$
-        template.setConstructorTemplate(sb.toString());
-
-        template
-                .setSuperClass(new FullyQualifiedJavaType(
-                        "org.springframework.orm.ibatis.support.SqlMapClientDaoSupport")); //$NON-NLS-1$
-
-        template.setDeleteMethod("getSqlMapClientTemplate().delete"); //$NON-NLS-1$
-        template.setInsertMethod("getSqlMapClientTemplate().insert"); //$NON-NLS-1$
-        template
-                .setQueryForObjectMethod("getSqlMapClientTemplate().queryForObject"); //$NON-NLS-1$
-        template
-                .setQueryForListMethod("getSqlMapClientTemplate().queryForList"); //$NON-NLS-1$
-        template.setUpdateMethod("getSqlMapClientTemplate().update"); //$NON-NLS-1$
-        
-        return template;
+        super(new SpringDAOTemplate());
     }
 }

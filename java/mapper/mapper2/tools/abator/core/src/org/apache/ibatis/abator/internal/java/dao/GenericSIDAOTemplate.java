@@ -15,7 +15,11 @@
  */
 package org.apache.ibatis.abator.internal.java.dao;
 
-import org.apache.ibatis.abator.api.FullyQualifiedJavaType;
+import org.apache.ibatis.abator.api.dom.java.Field;
+import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
+import org.apache.ibatis.abator.api.dom.java.JavaVisibility;
+import org.apache.ibatis.abator.api.dom.java.Method;
+import org.apache.ibatis.abator.api.dom.java.Parameter;
 
 /**
  * @author Jeff Butler
@@ -28,49 +32,41 @@ public class GenericSIDAOTemplate extends AbstractDAOTemplate {
     public GenericSIDAOTemplate() {
         super();
 
-        StringBuffer sb = new StringBuffer();
-        indent(sb, 1);
-        sb.append("public {0}() '{'"); //$NON-NLS-1$
-        newLine(sb);
-        indent(sb, 2);
-        sb.append("super();"); //$NON-NLS-1$
-        newLine(sb);
-        indent(sb, 1);
-        sb.append('}');
-        setConstructorTemplate(sb.toString());
+        FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(
+        	"com.ibatis.sqlmap.client.SqlMapClient"); //$NON-NLS-1$
 
-        addField("private SqlMapClient sqlMapClient;"); //$NON-NLS-1$
+        addImplementationImport(fqjt);
+        
+        Method method = new Method();
+        method.setConstructor(true);
+        method.addBodyLine("super();"); //$NON-NLS-1$
+        setConstructorTemplate(method);
 
-        sb.setLength(0);
-        indent(sb, 1);
-        sb.append("public void setSqlMapClient(SqlMapClient sqlMapClient) {"); //$NON-NLS-1$
-        newLine(sb);
-        indent(sb, 2);
-        sb.append("this.sqlMapClient = sqlMapClient;"); //$NON-NLS-1$
-        newLine(sb);
-        indent(sb, 1);
-        sb.append('}');
-        addMethod(sb.toString());
+        Field field = new Field();
+        field.setVisibility(JavaVisibility.PRIVATE);
+        field.setType(fqjt);
+        field.setName("sqlMapClient"); //$NON-NLS-1$
+        addField(field);
+        
+        method = new Method();
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setName("setSqlMapClient"); //$NON-NLS-1$
+        method.addParameter(new Parameter(fqjt, "sqlMapClient")); //$NON-NLS-1$
+        method.addBodyLine("this.sqlMapClient = sqlMapClient;"); //$NON-NLS-1$
+        addMethod(method);
 
-        sb.setLength(0);
-        indent(sb, 1);
-        sb.append("public SqlMapClient getSqlMapClient() {"); //$NON-NLS-1$
-        newLine(sb);
-        indent(sb, 2);
-        sb.append("return sqlMapClient;"); //$NON-NLS-1$
-        newLine(sb);
-        indent(sb, 1);
-        sb.append('}');
-        addMethod(sb.toString());
-
-        addImplementationImport(new FullyQualifiedJavaType(
-                "com.ibatis.sqlmap.client.SqlMapClient")); //$NON-NLS-1$
+        method = new Method();
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setName("getSqlMapClient"); //$NON-NLS-1$
+        method.setReturnType(fqjt);
+        method.addBodyLine("return sqlMapClient;"); //$NON-NLS-1$
+        addMethod(method);
 
         addCheckedException(new FullyQualifiedJavaType("java.sql.SQLException")); //$NON-NLS-1$
-        setDeleteMethod("sqlMapClient.delete"); //$NON-NLS-1$
-        setInsertMethod("sqlMapClient.insert"); //$NON-NLS-1$
-        setQueryForObjectMethod("sqlMapClient.queryForObject"); //$NON-NLS-1$
-        setQueryForListMethod("sqlMapClient.queryForList"); //$NON-NLS-1$
-        setUpdateMethod("sqlMapClient.update"); //$NON-NLS-1$
+        setDeleteMethodTemplate("sqlMapClient.delete(\"{0}.{1}\", {2});"); //$NON-NLS-1$
+        setInsertMethodTemplate("sqlMapClient.insert(\"{0}.{1}\", {2});"); //$NON-NLS-1$
+        setQueryForObjectMethodTemplate("sqlMapClient.queryForObject(\"{0}.{1}\", {2});"); //$NON-NLS-1$
+        setQueryForListMethodTemplate("sqlMapClient.queryForList(\"{0}.{1}\", {2});"); //$NON-NLS-1$
+        setUpdateMethodTemplate("sqlMapClient.update(\"{0}.{1}\", {2});"); //$NON-NLS-1$
     }
 }

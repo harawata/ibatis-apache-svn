@@ -1,5 +1,5 @@
 /*
- *  Copyright 2005 The Apache Software Foundation
+ *  Copyright 2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,40 +13,44 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.apache.ibatis.abator.exception;
+package org.apache.ibatis.abator.api.dom.xml;
 
 /**
- * This class is used by the ShellCallback methods to denote unrecoverable
- * errors.
- * 
  * @author Jeff Butler
  */
-public class ShellException extends Exception {
-    static final long serialVersionUID = -2026841561754434544L;
-    
+public class Attribute {
+    private String name;
+    private String value;
+
     /**
      * 
      */
-    public ShellException() {
+    public Attribute(String name, String value) {
         super();
+        this.name = name;
+        this.value = value;
+    }
+
+    /**
+     * @return Returns the name.
+     */
+    public String getName() {
+        return name;
     }
     /**
-     * @param arg0
+     * @return Returns the value.
      */
-    public ShellException(String arg0) {
-        super(arg0);
+    public String getValue() {
+        return value;
     }
-    /**
-     * @param arg0
-     * @param arg1
-     */
-    public ShellException(String arg0, Throwable arg1) {
-        super(arg0, arg1);
-    }
-    /**
-     * @param arg0
-     */
-    public ShellException(Throwable arg0) {
-        super(arg0);
+    
+    public String getFormattedContent() {
+        StringBuffer sb = new StringBuffer();
+        sb.append(name);
+        sb.append("=\""); //$NON-NLS-1$
+        sb.append(value);
+        sb.append('\"');
+        
+        return sb.toString();
     }
 }

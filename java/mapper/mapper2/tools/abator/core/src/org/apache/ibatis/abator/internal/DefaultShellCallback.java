@@ -87,7 +87,7 @@ public class DefaultShellCallback implements ShellCallback {
             warnings.add(Messages.getString("DefaultShellCallback.2", //$NON-NLS-1$
                     file.getAbsolutePath()));
             
-            return newFile.getContent();
+            return newFile.getFormattedContent();
         } else {
             return null;
         }

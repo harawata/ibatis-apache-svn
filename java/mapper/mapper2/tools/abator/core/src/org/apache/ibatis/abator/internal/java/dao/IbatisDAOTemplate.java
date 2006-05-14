@@ -15,7 +15,10 @@
  */
 package org.apache.ibatis.abator.internal.java.dao;
 
-import org.apache.ibatis.abator.api.FullyQualifiedJavaType;
+import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
+import org.apache.ibatis.abator.api.dom.java.JavaVisibility;
+import org.apache.ibatis.abator.api.dom.java.Method;
+import org.apache.ibatis.abator.api.dom.java.Parameter;
 
 /**
  * @author Jeff Butler
@@ -28,27 +31,25 @@ public class IbatisDAOTemplate extends AbstractDAOTemplate {
     public IbatisDAOTemplate() {
         super();
 
-        StringBuffer sb = new StringBuffer();
-        indent(sb, 1);
-        sb.append("public {0}(DaoManager daoManager) '{'"); //$NON-NLS-1$
-        newLine(sb);
-        indent(sb, 2);
-        sb.append("super(daoManager);"); //$NON-NLS-1$
-        newLine(sb);
-        indent(sb, 1);
-        sb.append('}');
-        setConstructorTemplate(sb.toString());
+        FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(
+        	"com.ibatis.dao.client.DaoManager"); //$NON-NLS-1$
+
+        Method method = new Method();
+        method.setConstructor(true);
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.addParameter(new Parameter(fqjt, "daoManager")); //$NON-NLS-1$
+        method.addBodyLine("super(daoManager);"); //$NON-NLS-1$
+        setConstructorTemplate(method);
 
         setSuperClass(new FullyQualifiedJavaType(
                 "com.ibatis.dao.client.template.SqlMapDaoTemplate")); //$NON-NLS-1$
 
-        addImplementationImport(new FullyQualifiedJavaType(
-                "com.ibatis.dao.client.DaoManager")); //$NON-NLS-1$
+        addImplementationImport(fqjt);
 
-        setDeleteMethod("delete"); //$NON-NLS-1$
-        setInsertMethod("insert"); //$NON-NLS-1$
-        setQueryForObjectMethod("queryForObject"); //$NON-NLS-1$
-        setQueryForListMethod("queryForList"); //$NON-NLS-1$
-        setUpdateMethod("update"); //$NON-NLS-1$
+        setDeleteMethodTemplate("delete(\"{0}.{1}\", {2});"); //$NON-NLS-1$
+        setInsertMethodTemplate("insert(\"{0}.{1}\", {2});"); //$NON-NLS-1$
+        setQueryForObjectMethodTemplate("queryForObject(\"{0}.{1}\", {2});"); //$NON-NLS-1$
+        setQueryForListMethodTemplate("queryForList(\"{0}.{1}\", {2});"); //$NON-NLS-1$
+        setUpdateMethodTemplate("update(\"{0}.{1}\", {2});"); //$NON-NLS-1$
     }
 }

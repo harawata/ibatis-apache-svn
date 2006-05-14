@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.abator.internal.java;
 
-import org.apache.ibatis.abator.api.FullyQualifiedJavaType;
+import org.apache.ibatis.abator.internal.java.dao.GenericCIDAOTemplate;
 
 /**
  * This class generates DAO classes that are generic and utilize sql maps
@@ -30,41 +30,6 @@ public class DAOGeneratorGenericConstructorInjectionImpl extends
      *  
      */
     public DAOGeneratorGenericConstructorInjectionImpl() {
-        super();
-    }
-    
-    /* (non-Javadoc)
-     * @see org.apache.ibatis.abator.internal.java.DAOGeneratorBaseImpl#getDAOGeneratorTemplate()
-     */
-    public DAOGeneratorTemplate getDAOGeneratorTemplate() {
-        DAOGeneratorTemplate template = new DAOGeneratorTemplate();
-        
-        StringBuffer sb = new StringBuffer();
-        indent(sb, 1);
-        sb.append("public {0}(SqlMapClient sqlMapClient) '{'"); //$NON-NLS-1$
-        newLine(sb);
-        indent(sb, 2);
-        sb.append("super();"); //$NON-NLS-1$
-        newLine(sb);
-        indent(sb, 2);
-        sb.append("this.sqlMapClient = sqlMapClient;"); //$NON-NLS-1$
-        newLine(sb);
-        indent(sb, 1);
-        sb.append('}');
-        template.setConstructorTemplate(sb.toString());
-
-        template.addField("private SqlMapClient sqlMapClient;"); //$NON-NLS-1$
-
-        template.addImplementationImport(new FullyQualifiedJavaType(
-                "com.ibatis.sqlmap.client.SqlMapClient")); //$NON-NLS-1$
-
-        template.addCheckedException(new FullyQualifiedJavaType("java.sql.SQLException")); //$NON-NLS-1$
-        template.setDeleteMethod("sqlMapClient.delete"); //$NON-NLS-1$
-        template.setInsertMethod("sqlMapClient.insert"); //$NON-NLS-1$
-        template.setQueryForObjectMethod("sqlMapClient.queryForObject"); //$NON-NLS-1$
-        template.setQueryForListMethod("sqlMapClient.queryForList"); //$NON-NLS-1$
-        template.setUpdateMethod("sqlMapClient.update"); //$NON-NLS-1$
-
-        return template;
+        super(new GenericCIDAOTemplate());
     }
 }

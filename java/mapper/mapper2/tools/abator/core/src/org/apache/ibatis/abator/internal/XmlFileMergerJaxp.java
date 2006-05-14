@@ -64,10 +64,9 @@ public class XmlFileMergerJaxp {
     }
 
     /**
-     *  
+     * Utility class - no instances allowed  
      */
-    private XmlFileMergerJaxp(GeneratedXmlFile generatedXmlFile,
-            File existingFile) {
+    private XmlFileMergerJaxp() {
         super();
     }
 
@@ -80,7 +79,7 @@ public class XmlFileMergerJaxp {
             builder.setEntityResolver(new NullEntityResolver());
 
             Document existingDocument = builder.parse(existingFile);
-            StringReader sr = new StringReader(generatedXmlFile.getContent());
+            StringReader sr = new StringReader(generatedXmlFile.getFormattedContent());
             Document newDocument = builder.parse(new InputSource(sr));
 
             DocumentType newDocType = newDocument.getDoctype();

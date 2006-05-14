@@ -15,7 +15,9 @@
  */
 package org.apache.ibatis.abator.internal.java.dao;
 
-import org.apache.ibatis.abator.api.FullyQualifiedJavaType;
+import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
+import org.apache.ibatis.abator.api.dom.java.JavaVisibility;
+import org.apache.ibatis.abator.api.dom.java.Method;
 
 /**
  * @author Jeff Butler
@@ -28,24 +30,19 @@ public class SpringDAOTemplate extends AbstractDAOTemplate {
     public SpringDAOTemplate() {
         super();
 
-        StringBuffer sb = new StringBuffer();
-        indent(sb, 1);
-        sb.append("public {0}() '{'"); //$NON-NLS-1$
-        newLine(sb);
-        indent(sb, 2);
-        sb.append("super();"); //$NON-NLS-1$
-        newLine(sb);
-        indent(sb, 1);
-        sb.append('}');
-        setConstructorTemplate(sb.toString());
+        Method method = new Method();
+        method.setConstructor(true);
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.addBodyLine("super();"); //$NON-NLS-1$
+        setConstructorTemplate(method);
 
         setSuperClass(new FullyQualifiedJavaType(
                 "org.springframework.orm.ibatis.support.SqlMapClientDaoSupport")); //$NON-NLS-1$
 
-        setDeleteMethod("getSqlMapClientTemplate().delete"); //$NON-NLS-1$
-        setInsertMethod("getSqlMapClientTemplate().insert"); //$NON-NLS-1$
-        setQueryForObjectMethod("getSqlMapClientTemplate().queryForObject"); //$NON-NLS-1$
-        setQueryForListMethod("getSqlMapClientTemplate().queryForList"); //$NON-NLS-1$
-        setUpdateMethod("getSqlMapClientTemplate().update"); //$NON-NLS-1$
+        setDeleteMethodTemplate("getSqlMapClientTemplate().delete(\"{0}.{1}\", {2});"); //$NON-NLS-1$
+        setInsertMethodTemplate("getSqlMapClientTemplate().insert(\"{0}.{1}\", {2});"); //$NON-NLS-1$
+        setQueryForObjectMethodTemplate("getSqlMapClientTemplate().queryForObject(\"{0}.{1}\", {2});"); //$NON-NLS-1$
+        setQueryForListMethodTemplate("getSqlMapClientTemplate().queryForList(\"{0}.{1}\", {2});"); //$NON-NLS-1$
+        setUpdateMethodTemplate("getSqlMapClientTemplate().update(\"{0}.{1}\", {2});"); //$NON-NLS-1$
     }
 }
