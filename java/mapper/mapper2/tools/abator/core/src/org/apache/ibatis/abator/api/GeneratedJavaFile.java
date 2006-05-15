@@ -74,4 +74,8 @@ public class GeneratedJavaFile extends GeneratedFile {
     public String getTargetPackage() {
         return compilationUnit.getType().getPackageName();
     }
+    
+    public boolean isJavaInterface() {
+        return compilationUnit.isJavaInterface();
+    }
 }
