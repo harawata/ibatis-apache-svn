@@ -29,7 +29,7 @@ public class IsEmptyTagHandler extends ConditionalTagHandler {
     if (parameterObject == null) {
       return true;
     } else {
-      String prop = tag.getPropertyAttr();
+      String prop = getResolvedProperty(ctx, tag);
       Object value;
       if (prop != null) {
         value = PROBE.getObject(parameterObject, prop);

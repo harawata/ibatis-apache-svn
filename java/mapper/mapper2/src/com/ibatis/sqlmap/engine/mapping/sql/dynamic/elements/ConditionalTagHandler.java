@@ -35,8 +35,6 @@ public abstract class ConditionalTagHandler extends BaseTagHandler {
   private static final DateFormat DATE_FORMAT = new SimpleDateFormat(DATE_MASK);
 
   private static final String START_INDEX = "[";
-  private static final String END_INDEX = "]";
-  //private static final String EMPTY_INDEX = "[]";
 
   public abstract boolean isCondition(SqlTagContext ctx, SqlTag tag, Object parameterObject);
 
@@ -69,32 +67,16 @@ public abstract class ConditionalTagHandler extends BaseTagHandler {
   }
 
   protected long compare(SqlTagContext ctx, SqlTag tag, Object parameterObject) {
-    String propertyName = tag.getPropertyAttr();
     String comparePropertyName = tag.getComparePropertyAttr();
     String compareValue = tag.getCompareValueAttr();
 
-    String prop = tag.getPropertyAttr();
+    String prop = getResolvedProperty(ctx, tag);
     Object value1;
     Class type;
-    IterateContext itCtx = ctx.peekIterateContext();
 
     if (prop != null) {
-
-      if(null != itCtx && itCtx.isAllowNext()){
-        itCtx.next();
-        itCtx.setAllowNext(false);
-        if(!itCtx.hasNext()) {
-          itCtx.setFinal(true);
-        }
-      }
-
-      if(prop.indexOf(START_INDEX) > -1) {
-        propertyName = new StringBuffer(propertyName).insert(
-                        propertyName.indexOf(END_INDEX),itCtx.getIndex()).toString();
-      }
-
-      value1 = PROBE.getObject(parameterObject, propertyName);
-      type = PROBE.getPropertyTypeForGetter(parameterObject, propertyName);
+      value1 = PROBE.getObject(parameterObject, prop);
+      type = PROBE.getPropertyTypeForGetter(parameterObject, prop);
     } else {
       value1 = parameterObject;
       if (value1 != null) {
@@ -169,5 +151,36 @@ public abstract class ConditionalTagHandler extends BaseTagHandler {
     }
 
   }
+  
+  /**
+   * This method will add the proper index values to an indexed property
+   * string if we are inside an iterate tag
+   * 
+   * @param ctx
+   * @param tag
+   * @return
+   */
+  protected String getResolvedProperty(SqlTagContext ctx, SqlTag tag) {
+    String prop = tag.getPropertyAttr();
+    IterateContext itCtx = ctx.peekIterateContext();
 
+    if (prop != null) {
+
+      if(null != itCtx && itCtx.isAllowNext()){
+        itCtx.next();
+        itCtx.setAllowNext(false);
+        if(!itCtx.hasNext()) {
+          itCtx.setFinal(true);
+        }
+      }
+
+      if(prop.indexOf(START_INDEX) > -1) {
+        if (itCtx != null) {
+          prop = itCtx.addIndexToTagProperty(prop);
+        }
+      }
+    }
+      
+    return prop;
+  }
 }

@@ -176,6 +176,7 @@ public class DynamicSql implements Sql, DynamicParent {
         ctx.popRemoveFirstPrependMarker(tag);
 
         if(ctx.peekIterateContext()!= null && ctx.peekIterateContext().getTag() == tag) {
+          ctx.setAttribute(ctx.peekIterateContext().getTag(), null);
           ctx.popIterateContext();
         }
 
@@ -184,14 +185,24 @@ public class DynamicSql implements Sql, DynamicParent {
   }
 
   /**
-  * @param bodyContent
-  * @param iterate
-  */
+   * 
+   * @param bodyContent
+   * @param iterate
+   */
   protected void iteratePropertyReplace(StringBuffer bodyContent, IterateContext iterate) {
     if(iterate!=null) {
-      String find = iterate.getProperty() + "[]";
-      String replace = iterate.getProperty() + "[" + iterate.getIndex() + "]";
-      replace(bodyContent, find, replace);
+      String[] mappings = new String[] {"#", "$"};
+      for (int i = 0; i < mappings.length; i++) {
+          int startIndex = 0;
+          int endIndex = -1;
+          while (startIndex > -1 && startIndex < bodyContent.length()) {
+              startIndex = bodyContent.indexOf(mappings[i], endIndex + 1);
+              endIndex = bodyContent.indexOf(mappings[i], startIndex + 1);
+              if (startIndex > -1 && endIndex > -1) {
+                  bodyContent.replace(startIndex + 1, endIndex, iterate.addIndexToTagProperty(bodyContent.substring(startIndex + 1, endIndex)));
+              }
+          }
+      }
     }
   }
 

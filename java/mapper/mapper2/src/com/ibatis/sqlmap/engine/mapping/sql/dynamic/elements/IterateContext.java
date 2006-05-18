@@ -8,8 +8,10 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.ibatis.sqlmap.client.SqlMapException;
 
@@ -17,7 +19,10 @@ import com.ibatis.sqlmap.client.SqlMapException;
  * @author Brandon Goodin
  */
 public class IterateContext implements Iterator {
-
+  
+  private static final String PROCESS_INDEX = "ProcessIndex";
+  private static final String PROCESS_STRING = "ProcessString";
+  
   private Iterator iterator;
   private int index = -1;
 
@@ -27,7 +32,32 @@ public class IterateContext implements Iterator {
   private boolean isFinal = false;
   private SqlTag tag;
   
-  public IterateContext(Object collection,SqlTag tag) {
+  private IterateContext parent;
+  
+  /**
+   * This variable is true if some of the sub elements have
+   * actually produced content.  This is used to test
+   * whether to add the open and conjunction text to the
+   * generated statement.
+   * 
+   * This variable is used to replace the deprecated and dangerous
+   * isFirst method.
+   */
+  private boolean someSubElementsHaveContent;
+  
+  /**
+   * This variable is set by the doEndFragment method in IterateTagHandler
+   * to specify that the first content producing sub element has happened.
+   * The doPrepend method will test the value to know whether or not
+   * to process the prepend.
+   * 
+   * This variable is used to replace the deprecated and dangerous
+   * isFirst method.
+   */
+  private boolean isPrependEnabled;
+  
+  public IterateContext(Object collection,SqlTag tag, IterateContext parent) {
+    this.parent = parent;
     this.tag = tag;
     if (collection instanceof Collection) {
       this.iterator = ((Collection) collection).iterator();
@@ -58,6 +88,13 @@ public class IterateContext implements Iterator {
     return index;
   }
 
+  /**
+   * 
+   * @return
+   * @deprecated This method should not be used to decide whether or not to
+   * add prepend and open text to the generated statement.  Rather, use the
+   * methods isPrependEnabled() and someSubElementsHaveContent().
+   */
   public boolean isFirst() {
     return index == 0;
   }
@@ -125,7 +162,8 @@ public class IterateContext implements Iterator {
   }
 
   /**
-   * @return Is the iterate tag is in its final iteration?
+   *
+   * @return
    */
   public boolean isFinal() {
     return isFinal;
@@ -133,14 +171,110 @@ public class IterateContext implements Iterator {
 
   /**
    * This attribute is used to mark whether an iterate tag is
-   * in its final iteration. Since the ConditionalTagHandler
+   * in it's final iteration. Since the ConditionalTagHandler
    * can increment the iterate the final iterate in the doEndFragment
-   * of the IterateTagHandler needs to know it is in its final iterate.
+   * of the IterateTagHandler needs to know it is in it's final iterate.
    *
    * @param aFinal
    */
   public void setFinal(boolean aFinal) {
     isFinal = aFinal;
   }
+  
+  
+  /**
+   * Returns the last property of any bean specified in this IterateContext.
+   * @return The last property of any bean specified in this IterateContext.
+   */
+  public String getEndProperty() {
+      if (parent != null) {
+          int parentPropertyIndex = property.indexOf(parent.getProperty());
+          if (parentPropertyIndex > -1) {
+              int endPropertyIndex1 = property.indexOf(']', parentPropertyIndex);
+              int endPropertyIndex2 = property.indexOf('.', parentPropertyIndex);
+              return property.substring(parentPropertyIndex + Math.max(endPropertyIndex1, endPropertyIndex2) + 1, property.length());
+          }
+          else {
+              return property;
+          }
+      }
+      else {
+          return property;
+      }
+  }
+  
+  /**
+   * Replaces value of a tag property to match it's value with current iteration and all other iterations.
+   * @param tagProperty the property of a TagHandler.
+   * @return A Map containing the modified tag property in PROCESS_STRING key and the index where the modification occured in PROCESS_INDEX key.
+   */
+  protected Map processTagProperty(String tagProperty) {
+      if (parent != null) {
+          Map parentResult = parent.processTagProperty(tagProperty);
+          return this.addIndex((String) parentResult.get(PROCESS_STRING), ((Integer) parentResult.get(PROCESS_INDEX)).intValue());
+      }
+      else {
+          return this.addIndex(tagProperty, 0);
+      }
+  }
+  
+  /**
+   * Replaces value of a tag property to match it's value with current iteration and all other iterations.
+   * @param tagProperty the property of a TagHandler.
+   * @return The tag property with all "[]" replaced with the correct iteration value.
+   */
+  public String addIndexToTagProperty(String tagProperty) {
+      Map map = this.processTagProperty(tagProperty);
+      return (String) map.get(PROCESS_STRING);
+  }
+  
+  /**
+   * Adds index value to the first found property matching this Iteration starting at index startIndex.
+   * @param input The input String.
+   * @param startIndex The index where search for property begins.
+   * @return A Map containing the modified tag property in PROCESS_STRING key and the index where the modification occured in PROCESS_INDEX key.
+   */
+  protected Map addIndex(String input, int startIndex) {
+      String endProperty = getEndProperty() + "[";
+      int propertyIndex = input.indexOf(endProperty, startIndex);
+      int modificationIndex = 0;
+      // Is the iterate property in the tag property at all?
+      if (propertyIndex > -1) {
+          // Make sure the tag property does not already have a number.
+          if (input.charAt(propertyIndex + endProperty.length()) == ']') {
+              // Add iteration number to property.
+              input = input.substring(0, propertyIndex + endProperty.length()) + this.getIndex() + input.substring(propertyIndex + endProperty.length());
+              modificationIndex = propertyIndex + endProperty.length();
+          }
+      }
+      Map ret = new HashMap();
+      ret.put(PROCESS_INDEX, new Integer(modificationIndex));
+      ret.put(PROCESS_STRING, input);
+      return ret;
+  }
+  
+  
+  public IterateContext getParent() {
+    return parent;
+  }
 
+  public void setParent(IterateContext parent) {
+    this.parent = parent;
+  }
+
+  public boolean someSubElementsHaveContent() {
+    return someSubElementsHaveContent;
+  }
+
+  public void setSomeSubElementsHaveContent(boolean someSubElementsHaveContent) {
+    this.someSubElementsHaveContent = someSubElementsHaveContent;
+  }
+
+  public boolean isPrependEnabled() {
+    return isPrependEnabled;
+  }
+
+  public void setPrependEnabled(boolean isPrependEnabled) {
+    this.isPrependEnabled = isPrependEnabled;
+  }
 }

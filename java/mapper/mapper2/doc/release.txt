@@ -7,6 +7,9 @@ Build Number: @buildNum@
 
  o Removed iBATIS 1.x compatibility libraries, they are no longer supported.
  o Removed deprectated JtaDaoTemplate
+ o Fixed IBATIS-281 Nested iterate tags are broken
+ o Fixed IBATIS-293 Certain dynamic tags do not work within an iterate (<isNull>, <isEmpty>, etc.)
+ 
 
 ------------------------------
  2.1.7 - Jan 21, 2006

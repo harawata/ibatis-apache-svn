@@ -25,17 +25,30 @@ public class IterateTagHandler extends BaseTagHandler {
   public int doStartFragment(SqlTagContext ctx, SqlTag tag, Object parameterObject) {
     IterateContext iterate = (IterateContext) ctx.getAttribute(tag);
     if (iterate == null) {
+      IterateContext parentIterate = ctx.peekIterateContext();
       
       ctx.pushRemoveFirstPrependMarker(tag);
       
       Object collection;
       String prop = tag.getPropertyAttr();
-      if (prop != null) {
+      if (prop != null && !prop.equals("")) {
+          if(null != parentIterate && parentIterate.isAllowNext()){
+            parentIterate.next();
+            parentIterate.setAllowNext(false);
+            if(!parentIterate.hasNext()) {
+              parentIterate.setFinal(true);
+            }
+          }
+          
+          if (parentIterate != null) {
+              prop = parentIterate.addIndexToTagProperty(prop);
+          }
+          
         collection = PROBE.getObject(parameterObject, prop);
       } else {
         collection = parameterObject;
       }
-      iterate = new IterateContext(collection,tag);
+      iterate = new IterateContext(collection,tag, parentIterate);
       
       iterate.setProperty( null == prop ? "" : prop );
       
@@ -58,25 +71,31 @@ public class IterateTagHandler extends BaseTagHandler {
         iterate.next();
       }
 
-      //iteratePropertyReplace(bodyContent, iterate);
-
-      if (iterate.isFirst()) {
-        String open = tag.getOpenAttr();
-        if (open != null) {
-          bodyContent.insert(0, open);
-        }
-      }
-
-      if (!iterate.isFirst()) {
-        if(!bodyContent.toString().trim().equals("")) {
+      if (bodyContent.toString().trim().length() > 0) {
+        // the sub element produced a result.  If it is the first one
+        // to produce a result, then we need to add the open
+        // text.  If it is not the first to produce a result then
+        // we need to add the conjunction text
+        if (iterate.someSubElementsHaveContent()) {
           String conj = tag.getConjunctionAttr();
           if (conj != null) {
             bodyContent.insert(0,conj);
           }
+        } else {
+            // we need to specify that this is the first content
+            // producing element so that the doPrepend method will
+            // add the prepend
+            iterate.setPrependEnabled(true);
+            
+            String open = tag.getOpenAttr();
+            if (open != null) {
+              bodyContent.insert(0, open);
+            }
         }
+        iterate.setSomeSubElementsHaveContent(true);
       }
-
-      if (iterate.isLast()) {
+      
+      if (iterate.isLast() && iterate.someSubElementsHaveContent()) {
         String close = tag.getCloseAttr();
         if (close != null) {
           bodyContent.append(close);
@@ -97,8 +116,9 @@ public class IterateTagHandler extends BaseTagHandler {
 
   public void doPrepend(SqlTagContext ctx, SqlTag tag, Object parameterObject, StringBuffer bodyContent) {
     IterateContext iterate = (IterateContext) ctx.getAttribute(tag);
-    if (iterate.isFirst()) {
+    if (iterate.isPrependEnabled()) {
       super.doPrepend(ctx, tag, parameterObject, bodyContent);
+      iterate.setPrependEnabled(false);  // only do the prepend one time
     }
   }
 
