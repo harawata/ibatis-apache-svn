@@ -1033,6 +1033,26 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Proxy\ILazyFactory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Proxy\LazyFactoryBuilder.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Proxy\LazyList.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Proxy\LazyListFactory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Proxy\LazyLoadInterceptor.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

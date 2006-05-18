@@ -294,12 +294,23 @@ namespace IBatisNet.DataMapper.Configuration
         private ISetAccessorFactory _setAccessorFactory = null;
         private IGetAccessorFactory _getAccessorFactory = null;
         private bool _validateSqlMapConfig = true;
+        private NameValueCollection _properties = new NameValueCollection();
 
 		#endregion 		
 		
 		#region Properties
+        
+        /// <summary>
+        /// Allow to set properties before configuration
+        /// </summary>
+        public NameValueCollection Properties
+        {
+            set { _configScope.Properties.Add(value); }
+        }
+
         /// <summary>
         /// Allow to set a custom set accessor factory, see <see cref="ISetAccessorFactory"/>
+        /// before configuration
         /// </summary>
         public ISetAccessorFactory SetAccessorFactory
         {
@@ -308,6 +319,7 @@ namespace IBatisNet.DataMapper.Configuration
 
         /// <summary>
         /// Allow to set a custom get accessor factory, see <see cref="IGetAccessorFactory"/>
+        /// before configuration
         /// </summary>
         public IGetAccessorFactory GetAccessorFactory
         {
@@ -316,6 +328,7 @@ namespace IBatisNet.DataMapper.Configuration
 
         /// <summary>
         /// Allow to set a custom object factory, see <see cref="IObjectFactory"/> 
+        /// before configuration
         /// </summary>
         public IObjectFactory ObjectFactory
         {
@@ -323,7 +336,8 @@ namespace IBatisNet.DataMapper.Configuration
         }
 
         /// <summary>
-        /// Enable whether or not the validation of configuration document.
+        /// Enable whether or not the validation of configuration document
+        /// before configuration
         /// </summary>
         public bool ValidateSqlMapConfig
         {
@@ -1730,7 +1744,9 @@ namespace IBatisNet.DataMapper.Configuration
 
 					foreach(string propertyName in superMap.GetPropertyNameArray())
 					{
-						parameterMap.InsertParameterProperty( index, superMap.GetProperty(propertyName) );
+                        ParameterProperty property = superMap.GetProperty(propertyName).Clone();
+                        property.Initialize(_configScope, parameterMap.Class);
+                        parameterMap.InsertParameterProperty(index, property);
 						index++;
 					}
 				}
@@ -1789,7 +1805,8 @@ namespace IBatisNet.DataMapper.Configuration
 					// Add parent property
 					for(int index=0; index< superMap.Properties.Count; index++)
 					{
-						ResultProperty property = superMap.Properties[index];
+						ResultProperty property = superMap.Properties[index].Clone();
+                        property.Initialize(_configScope, resultMap.Class);
 						resultMap.AddResultPropery(property);
 					}
 				}

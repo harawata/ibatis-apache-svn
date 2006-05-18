@@ -612,15 +612,13 @@ namespace IBatisNet.DataMapper.MappedStatements
 
             using (IDbCommand command = request.IDbCommand)
             {
-                // TODO:  Should we ignore this?, I think so in the case of generics.  
                 if (_statement.ListClass == null)
                 {
                     list = new List<T>();
                 }
                 else
                 {
-                    list = new List<T>();
-                    //list = _statement.CreateInstanceOfGenericListClass<T>();
+                    list = _statement.CreateInstanceOfGenericListClass<T>();
                 }
 
                 using (IDataReader reader = command.ExecuteReader())

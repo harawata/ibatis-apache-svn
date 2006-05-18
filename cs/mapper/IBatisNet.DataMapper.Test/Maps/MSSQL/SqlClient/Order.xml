@@ -94,7 +94,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
     
 		<resultMap id="order-result-constructor6"  class="Order" >
 			<constructor>
-				<argument argumentName="lineItems" column="Order_ID"  select="GetLineItemsForOrderWithListClass" />
+				<argument argumentName="lineItems" column="Order_ID"  select="GetLineItemsForOrderWithListClass2" />
 			</constructor>
       <result property="Id"         column="Order_ID"/>
       <result property="Date"       column="Order_Date"/>
@@ -109,7 +109,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 
     <resultMap id="order-result-constructor7"  class="Order" >
       <constructor>
-        <argument argumentName="collection" column="Order_ID"  select="GetLineItemsForOrderWithListClass" />
+        <argument argumentName="collection" column="Order_ID"  select="GetLineItemsForOrderWithListClass2" />
       </constructor>
       <result property="Id"         column="Order_ID"/>
       <result property="Date"       column="Order_Date"/>
@@ -137,22 +137,32 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			<result property="Province"   column="Order_Province"/>
 			<result property="PostalCode" column="Order_PostalCode"/>
 		</resultMap>
-
-    <resultMap id="order-with-generic-lazy-load" class="Order" 
-      extends="lite-order-result-by-name" >
-      <result property="LineItemsGenericList" lazyLoad="true" column="Order_ID" select="GetLineItemsForOrder" />
-    </resultMap>
     
 		<resultMap id="order-with-generic-list-lineitem" class="Order" 
 				extends="lite-order-result-by-name" >
 			<result property="LineItemsGenericList" column="Order_ID" select="GetLineItemsForOrder" />
 		</resultMap>
 
+    <resultMap id="order-with-generic-lazy-load" class="Order" 
+      extends="lite-order-result-by-name" >
+      <result property="LineItemsGenericList" lazyLoad="true" column="Order_ID" select="GetLineItemsForOrder" />
+    </resultMap>
+
 		<resultMap id="order-with-generic-collection-lineitem" class="Order" 
 				extends="lite-order-result-by-name" >
-			<result property="LineItemsCollection" column="Order_ID" select="GetLineItemsForOrder" />
+			<result property="LineItemsGenericList" column="Order_ID" select="GetLineItemsForOrderWithListClass2" />
 		</resultMap>
 
+    <resultMap id="order-with-generic-typed-collection-lineitem" class="Order" 
+      extends="lite-order-result-by-name" >
+      <result property="LineItemsCollection2" column="Order_ID" select="GetLineItemsForOrderWithListClass2" />
+    </resultMap>
+
+    <resultMap id="order-with-generic-typed-collection-lineitem-lazy" class="Order" 
+      extends="lite-order-result-by-name" >
+      <result property="LineItemsCollection2" lazyLoad="true" column="Order_ID" select="GetLineItemsForOrderWithListClass2" />
+    </resultMap>
+    
 		<resultMap id="order-with-generic-collection-via-sp" class="Order" 
 			extends="lite-order-result-by-name" >
 			<result property="LineItemsCollection" column="Order_ID" select="SelectLineItemForOrder" />
@@ -163,6 +173,21 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			<result property="LineItemsIList" lazyLoad="true" column="Order_ID" select="GetLineItemsForOrder" />
 		</resultMap>
 
+    <resultMap id="order-with-generic-lines-result" class="Order" 
+            extends="lite-order-result-by-name" >
+      <result property="LineItemsGenericList" column="Order_ID" select="GetLineItemsForOrderWithListClass2" />
+    </resultMap>
+
+    <resultMap id="order-with-generic-lines-result-lazy" class="Order" 
+        extends="lite-order-result-by-name" >
+      <result property="LineItemsGenericList" column="Order_ID" lazyLoad="true" select="GetLineItemsForOrderWithListClass2" />
+    </resultMap>
+
+    <resultMap id="order-with-generic-collection" class="Order" 
+            extends="lite-order-result-by-name" >
+      <result property="LineItemsCollection2" column="Order_ID" select="GetLineItemsForOrderWithListClass2" />
+    </resultMap>
+    
 		<resultMap id="order-with-lines-result-statement-namespaces" class="Order" 
 								extends="lite-order-result-by-name" >
 			<result property="LineItemsIList" lazyLoad="true" column="Order_ID" select="LineItem.GetLineItemsForOrder" />
@@ -170,7 +195,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 
 		<resultMap id="order-with-lines-collection" class="Order"
 								extends="lite-order-result-by-name" >
-			<result property="LineItems" column="Order_ID"  lazyLoad="true" select="GetLineItemsForOrderWithListClass" />
+			<result property="LineItemsCollection" column="Order_ID"  lazyLoad="true" select="GetLineItemsForOrderWithListClass" />
 		</resultMap>
 
 		<resultMap id="order-with-lines-array" class="Order"
@@ -256,7 +281,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			<result property="Province"			column="Order_Province"/>
 			<result property="PostalCode"		column="Order_PostalCode"/>
 			<result property="LineItemsIList"	column="Order_ID" select="GetLineItemsForOrder" />	
-			<result property="LineItems"		column="Order_ID" select="GetLineItemsForOrder" lazyLoad="false" />
+			<result property="LineItemsCollection"		column="Order_ID" select="GetLineItemsForOrder" lazyLoad="false" />
 		</resultMap>
 		
 		<resultMap id="order-with-favourite-line-item" class="Order">
@@ -343,6 +368,18 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			WHERE     Orders.Order_ID = #value#
 		</select>-->
 
+    <statement id="GetOrderWithGenericLineItems"
+      parameterClass="Integer"
+      resultMap="order-with-generic-lines-result" >
+      select * from Orders where Order_ID = #value#
+    </statement>
+
+    <statement id="GetOrderWithGenericLineItemsLazy"
+      parameterClass="Integer"
+      resultMap="order-with-generic-lines-result-lazy" >
+      select * from Orders where Order_ID = #value#
+    </statement>
+    
     <statement id="GetOrderWithGenericLazyLoad"
       parameterClass="Integer"
       resultMap="order-with-generic-lazy-load" >
@@ -362,6 +399,18 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			select * from Orders where Order_ID = #value#
 		</statement>
 
+    <statement id="GetOrderWithGenericTypedLineItemCollection"
+      parameterClass="Integer"
+      resultMap="order-with-generic-typed-collection-lineitem" >
+      select * from Orders where Order_ID = #value#
+    </statement>
+
+    <statement id="GetOrderWithGenericTypedLineItemCollectionLazy"
+     parameterClass="Integer"
+     resultMap="order-with-generic-typed-collection-lineitem-lazy" >
+      select * from Orders where Order_ID = #value#
+    </statement>
+    
 		<statement id="GetOrderWithGenericViaSP"
 		parameterClass="Integer"
 		resultMap="order-with-generic-collection-via-sp" >

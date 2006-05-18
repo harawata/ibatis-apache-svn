@@ -7,6 +7,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 	<alias>
 		<typeAlias alias="LineItem" type="IBatisNet.DataMapper.Test.Domain.LineItem, IBatisNet.DataMapper.Test" />
 		<typeAlias alias="LineItemCollection" type="IBatisNet.DataMapper.Test.Domain.LineItemCollection, IBatisNet.DataMapper.Test" />
+    <typeAlias alias="LineItemCollection2" type="${collection2Namespace}" />
 	</alias>
 	
 	<resultMaps>  	
@@ -69,7 +70,20 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			from LineItems where Order_ID = #value#
 			order by LineItem_Code
 		</statement>
-		
+
+    <statement id="GetLineItemsForOrderWithListClass2"
+      parameterClass="int"
+      listClass="LineItemCollection2"
+      resultClass="LineItem">
+        select
+        LineItem_ID as Id,
+        LineItem_Code as Code,
+        LineItem_Quantity as Quantity,
+        LineItem_Price as Price
+        from LineItems where Order_ID = #value#
+        order by LineItem_Code
+    </statement>
+    
 		<statement id="GetSpecificLineItem"
 					parameterClass="Hashtable"
 					resultClass="LineItem">

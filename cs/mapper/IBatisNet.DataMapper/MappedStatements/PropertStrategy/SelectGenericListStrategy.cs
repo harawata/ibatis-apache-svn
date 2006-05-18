@@ -67,7 +67,7 @@ namespace IBatisNet.DataMapper.MappedStatements.PropertyStrategy
 
             if (mapping.IsLazyLoad)
             {
-                object values = LazyLoadProxyFactory.Build(selectStatement, keys, target, mapping.SetAccessor);
+                object values = mapping.LazyFactory.CreateProxy(selectStatement, keys, target, mapping.SetAccessor);
                 mapping.SetAccessor.Set(target, values);
             }
             else

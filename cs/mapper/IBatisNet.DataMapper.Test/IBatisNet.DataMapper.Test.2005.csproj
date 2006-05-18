@@ -389,6 +389,7 @@
     <Content Include="Maps\PostgreSQL\Npgsql\Other.xml" />
     <Content Include="Maps\PostgreSQL\Npgsql\ParameterClass.xml" />
     <Content Include="Maps\PostgreSQL\Npgsql\ResultClass.xml" />
+    <Content Include="NUnit\SqlMapTests\Generics\GenericListTests.txt" />
     <Content Include="ReadMe.txt" />
     <Content Include="Scripts\Access\account-init.sql" />
     <Content Include="Scripts\Access\account-procedure.sql" />

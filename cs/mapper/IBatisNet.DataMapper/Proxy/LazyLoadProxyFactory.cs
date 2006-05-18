@@ -36,9 +36,9 @@ using IBatisNet.DataMapper.MappedStatements;
 namespace IBatisNet.DataMapper.Proxy
 {
 	/// <summary>
-	/// This class is responsible of create all <see cref="IList"/> lazy load proxies.
+    /// This class is responsible of create lazy load proxies for a concrete class with virtual method.
 	/// </summary>
-	public class LazyLoadProxyFactory
+	public class LazyLoadProxyFactory :ILazyFactory
 	{
 		#region Fields
 		private static readonly ILog _logger = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
@@ -46,65 +46,71 @@ namespace IBatisNet.DataMapper.Proxy
 
 		#region Constructor
 		/// <summary>
-		/// Private constructor
+		/// constructor
 		/// </summary>
-		private LazyLoadProxyFactory()
+		public LazyLoadProxyFactory()
 		{
 		}
 		#endregion
-		
-		/// <summary>
-		/// Builds the specified lazy load proxy.
+
+        #region ILazyFactory Members
+        /// <summary>
+		/// Builds the specified lazy load proxy for a concrete class with virtual method.
 		/// </summary>
         /// <param name="selectStatement">The mapped statement used to build the lazy loaded object.</param>
 		/// <param name="param">The parameter object used to build lazy loaded object.</param>
 		/// <param name="target">The target object which contains the property proxydied..</param>
         /// <param name="setAccessor">The proxified member accessor.</param>
 		/// <returns>Return a proxy object</returns>
-		public static object Build(IMappedStatement selectStatement, object param, 
+        public object CreateProxy(IMappedStatement selectStatement, object param, 
 			object target, ISetAccessor setAccessor)
 		{
 			object proxy = null;
 			Type typeProxified = setAccessor.MemberType;
 
-            bool isIList = typeof(IList).IsAssignableFrom(setAccessor.MemberType) || setAccessor.MemberType.IsSubclassOf(typeof(IList));
-			Type returnedTypeByStatement = LazyLoadProxyFactory.GetTypeReturnedByStatemet(selectStatement, isIList); 
+            //bool isIList = typeof(IList).IsAssignableFrom(setAccessor.MemberType) || setAccessor.MemberType.IsSubclassOf(typeof(IList));
+            //Type returnedTypeByStatement = LazyLoadProxyFactory.GetTypeReturnedByStatemet(selectStatement, isIList); 
 	
-			//Test if the result of the lazy load is assigable to property, test now load time instead
-			//wait to error when the method of proxy are called
-			if (typeProxified.IsAssignableFrom(returnedTypeByStatement) == false)
-			{
-                throw new DataMapperException("Error building LazyLoad proxy for " + target.GetType() + "." + setAccessor.Name + " can not assing " + typeProxified + " to " + returnedTypeByStatement);
-			}
+            ////Test if the result of the lazy load is assigable to property, test now load time instead
+            ////wait to error when the method of proxy are called
+            //if (typeProxified.IsAssignableFrom(returnedTypeByStatement) == false)
+            //{
+            //    throw new DataMapperException("Error building LazyLoad proxy for " + target.GetType() + "." + setAccessor.Name + " can not assing " + typeProxified + " to " + returnedTypeByStatement);
+            //}
 
-			//Build the proxy
+            ////Build the proxy
             IInterceptor handler = new LazyLoadInterceptor(selectStatement, param, target, setAccessor);
-			if (isIList)
-			{
-				if (_logger.IsDebugEnabled) 
-				{
-                    _logger.Debug(string.Format("Statement '{0}', create list proxy for member {1}.", selectStatement.Id, setAccessor.MemberType));
-				}
+            //if (isIList)
+            //{
+            //    if (_logger.IsDebugEnabled) 
+            //    {
+            //        _logger.Debug(string.Format("Statement '{0}', create list proxy for member {1}.", selectStatement.Id, setAccessor.MemberType));
+            //    }
 
-				if (selectStatement.Statement.ListClass == null)
-				{
-					 proxy = ProxyGeneratorFactory.GetProxyGenerator().CreateProxy(typeof(IList), handler, new ArrayList());
-				}
-				else
-				{
-					proxy = ProxyGeneratorFactory.GetProxyGenerator().CreateClassProxy(typeProxified, handler, Type.EmptyTypes);
-				}	
-			}
-			else
-			{
-				throw new DataMapperException(string.Format("Only proxy on IList type are supported, the member type ({0}) cannot be proxyfied.", typeProxified) ); 
-			}
+            //    if (selectStatement.Statement.ListClass == null)
+            //    {
+            //         proxy = ProxyGeneratorFactory.GetProxyGenerator().CreateProxy(typeof(IList), handler, new ArrayList());
+            //    }
+            //    else
+            //    {
+                    // if you want to proxy concrete classes, there are also two requirements: 
+                    // the class can not be sealed and only virtual methods can be intercepted. 
+                    // The reason is that DynamicProxy will create a subclass of your class overriding all methods 
+                    // so it can dispatch the invocations to the interceptor.
+                    proxy = ProxyGeneratorFactory.GetProxyGenerator().CreateClassProxy(typeProxified, handler, Type.EmptyTypes);
+            //    }	
+            //}
+            //else
+            //{
+            //    throw new DataMapperException(string.Format("Only proxy on IList type are supported, the member type ({0}) cannot be proxyfied.", typeProxified) ); 
+            //}
 
 			return proxy;
-		}
+        }
 
-
-		/// <summary>
+        #endregion
+        
+        /// <summary>
 		/// Gets the type returned by statemet.
 		/// </summary>
 		/// <param name="mappedStatement">The mapped statement.</param>
@@ -148,9 +154,5 @@ namespace IBatisNet.DataMapper.Proxy
 			return returnedType;
 		}
 
-		
-
-
-
-	}
+    }
 }

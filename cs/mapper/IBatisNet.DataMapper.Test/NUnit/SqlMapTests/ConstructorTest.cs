@@ -161,8 +161,8 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			AssertOrder1(order);
 			AssertAccount1(order.Account);
 			
-			Assert.IsNotNull( order.LineItems );
-			Assert.AreEqual(2, order.LineItems.Count);
+			Assert.IsNotNull( order.LineItemsCollection );
+            Assert.AreEqual(2, order.LineItemsCollection.Count);
 		}
 
 #if dotnet2
@@ -188,8 +188,8 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
             Order order = (Order)sqlMap.QueryForObject("GetOrderConstructor7", 1);
             AssertOrder1(order);
 
-            Assert.IsNotNull(order.LineItemsCollection);
-            Assert.AreEqual(2, order.LineItemsCollection.Count);
+            Assert.IsNotNull(order.LineItemsCollection2);
+            Assert.AreEqual(2, order.LineItemsCollection2.Count);
         }
 #endif
 		#endregion

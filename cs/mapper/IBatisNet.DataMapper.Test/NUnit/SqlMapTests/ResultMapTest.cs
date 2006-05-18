@@ -127,16 +127,17 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
 			AssertOrder1(order);
 
-			Assert.IsNotNull(order.LineItems);
-			Assert.AreEqual(2, order.LineItems.Count);
+			Assert.IsNotNull(order.LineItemsCollection);
+            Assert.AreEqual(2, order.LineItemsCollection.Count);
 
-			IEnumerator e = ((IEnumerable)order.LineItems).GetEnumerator();
+            IEnumerator e = ((IEnumerable)order.LineItemsCollection).GetEnumerator();
 			while(e.MoveNext())
 			{
 				LineItem item = (LineItem)e.Current;
 				Assert.IsNotNull(item);
 			}
 		}
+
 		/// <summary>
 		/// Test null value replacement(on string) in a Result property.
 		/// </summary>
@@ -205,8 +206,8 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			AssertOrder1(order);
 
 			// Check strongly typed collection
-			Assert.IsNotNull(order.LineItems);
-			Assert.AreEqual(2, order.LineItems.Count);
+            Assert.IsNotNull(order.LineItemsCollection);
+            Assert.AreEqual(2, order.LineItemsCollection.Count);
 		}
 
 		/// <summary>
@@ -223,7 +224,6 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			// Check IList collection
 			Assert.IsNotNull(order.LineItemsIList);
 			Assert.AreEqual(2, order.LineItemsIList.Count);
-
 		}
 
 		/// <summary>
@@ -250,10 +250,10 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
 			AssertOrder1(order);
 
-			Assert.IsNotNull(order.LineItems);
-			Assert.AreEqual(2, order.LineItems.Count);
+            Assert.IsNotNull(order.LineItemsCollection);
+            Assert.AreEqual(2, order.LineItemsCollection.Count);
 
-			IEnumerator e = ((IEnumerable)order.LineItems).GetEnumerator();
+            IEnumerator e = ((IEnumerable)order.LineItemsCollection).GetEnumerator();
 			while(e.MoveNext())
 			{
 				LineItem item = (LineItem)e.Current;
@@ -500,7 +500,31 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
 			Assert.AreEqual(System.DateTime.MinValue, orderTest.Date);		
 		}
+//#if dotnet2
+        
 
+
+//        /// <summary>
+//        /// Test lazy mapping
+//        /// </summary>
+//        [Test]
+//        public void TestLazyWithGenericStronglyTypedCollection()
+//        {
+//            Order order = (Order)sqlMap.QueryForObject("GetOrderWithLineItemCollection2", 1);
+
+//            AssertOrder1(order);
+
+//            Assert.IsNotNull(order.LineItemsCollection2);
+//            Assert.AreEqual(2, order.LineItemsCollection2.Count);
+
+//            IEnumerator<LineItem> e = ((IEnumerable<LineItem>)order.LineItemsCollection2).GetEnumerator();
+//            while (e.MoveNext())
+//            {
+//                LineItem item = e.Current;
+//                Assert.IsNotNull(item);
+//            }
+//        }
+//#endif
 		#endregion
 
 	}

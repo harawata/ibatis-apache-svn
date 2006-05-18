@@ -38,6 +38,7 @@ using IBatisNet.DataMapper.MappedStatements.ArgumentStrategy;
 using IBatisNet.DataMapper.MappedStatements.PropertyStrategy;
 using IBatisNet.DataMapper.Scope;
 using IBatisNet.DataMapper.TypeHandlers;
+using IBatisNet.DataMapper.Proxy;
 
 #endregion
 
@@ -48,7 +49,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 	/// </summary>
 	[Serializable]
 	[XmlRoot("result", Namespace="http://ibatis.apache.org/mapping")]
-	public class ResultProperty
+	public class ResultProperty 
 	{
 		#region Const
 
@@ -90,9 +91,20 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		private bool _isComplexMemberName = false;
 		[NonSerialized]
 		private IPropertyStrategy _propertyStrategy = null;
+        [NonSerialized]
+        private ILazyFactory _lazyFactory = null;
 		#endregion
 
 		#region Properties
+
+        /// <summary>
+        /// The lazy loader factory
+        /// </summary>
+        [XmlIgnore]
+        public ILazyFactory LazyFactory
+        {
+            get { return _lazyFactory; }
+        }
 
 		/// <summary>
 		/// Sets or gets the <see cref="IArgumentStrategy"/> used to fill the object property.
@@ -349,6 +361,11 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 				configScope.ErrorContext.MoreInfo = "Result property '"+_propertyName+"' set the typeHandler attribute.";
 				_typeHandler = configScope.ResolveTypeHandler( resultClass, _propertyName, _clrType, _dbType);
 			}
+
+            if (this.IsLazyLoad)
+            {
+                _lazyFactory = new LazyFactoryBuilder().GetLazyFactory(_setAccessor.MemberType);
+            }
 		}
 
 		/// <summary>
@@ -422,6 +439,32 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		}
 
 		#endregion
-	}
+
+        #region ICloneable Members
+
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns>An <see cref="ResultProperty"/></returns>
+        public ResultProperty Clone()
+        {
+            ResultProperty resultProperty = new ResultProperty();
+
+            resultProperty.CLRType = this.CLRType;
+            resultProperty.CallBackName = this.CallBackName;
+            resultProperty.ColumnIndex = this.ColumnIndex;
+            resultProperty.ColumnName = this.ColumnName;
+            resultProperty.DbType = this.DbType;
+            resultProperty.IsLazyLoad = this.IsLazyLoad;
+            resultProperty.NestedResultMapName = this.NestedResultMapName;
+            resultProperty.NullValue = this.NullValue;
+            resultProperty.PropertyName = this.PropertyName;
+            resultProperty.Select = this.Select;
+
+            return resultProperty;
+        }
+
+        #endregion
+    }
 
 }

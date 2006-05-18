@@ -40,13 +40,13 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.CacheController
 			Order order = new Order(); 
 			order.CardNumber = "CardNumber";
 			order.Date = DateTime.Now;
-			order.LineItems = new LineItemCollection();
+            order.LineItemsCollection = new LineItemCollection();
 			LineItem item = new LineItem();
 			item.Code = "Code1";
-			order.LineItems.Add( item );
+            order.LineItemsCollection.Add(item);
 			item = new LineItem();
 			item.Code = "Code2";
-			order.LineItems.Add( item );
+            order.LineItemsCollection.Add(item);
 
 			CacheKey key = new CacheKey();
 			key.Update(order);
@@ -83,13 +83,13 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.CacheController
 			Order order = new Order(); 
 			order.CardNumber = "CardNumber";
 			order.Date = DateTime.Now;
-			order.LineItems = new LineItemCollection();
+            order.LineItemsCollection = new LineItemCollection();
 			LineItem item = new LineItem();
 			item.Code = "Code1";
-			order.LineItems.Add( item );
+            order.LineItemsCollection.Add(item);
 			item = new LineItem();
 			item.Code = "Code2";
-			order.LineItems.Add( item );
+            order.LineItemsCollection.Add(item);
 
 			CacheKey key = new CacheKey();
 			key.Update(order);

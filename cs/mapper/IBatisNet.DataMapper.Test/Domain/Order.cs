@@ -23,7 +23,7 @@ namespace IBatisNet.DataMapper.Test.Domain
 		private string _province;
 		private string _postalCode;
 		private IList _lineItemsIList;
-		private LineItemCollection _lineItems;//LineItemCollection
+        private LineItemCollection _collection;
 		private LineItem[] _lineItemsArray;
 		private LineItem _favouriteLineItem;
 
@@ -54,7 +54,7 @@ namespace IBatisNet.DataMapper.Test.Domain
 		{
 			_id = id;
 			_account = account;
-			_lineItems = collection;
+            _collection = collection;
 		}
 
 
@@ -67,7 +67,7 @@ namespace IBatisNet.DataMapper.Test.Domain
         }
 
         private LineItemCollection2 _genericCollection = null;
-        public LineItemCollection2 LineItemsCollection
+        public LineItemCollection2 LineItemsCollection2
         {
             get { return _genericCollection; }
             set { _genericCollection = value; }
@@ -90,12 +90,11 @@ namespace IBatisNet.DataMapper.Test.Domain
             set { _genericList = value; }
         }
 
-        private LineItemCollection _collection = null;
-        public LineItemCollection LineItemsCollection
-        {
-            get { return _collection; }
-            set { _collection = value; }
-        }
+		public LineItemCollection LineItemsCollection2
+		{
+			get { return _collection; }
+			set { _collection = value; }
+		}
 
         public Order(IList lineItems)
         {
@@ -121,10 +120,10 @@ namespace IBatisNet.DataMapper.Test.Domain
 		}
 
 
-		public LineItemCollection LineItems
+        public LineItemCollection LineItemsCollection
 		{
-			get { return _lineItems; }
-			set { _lineItems = value; }
+            get { return _collection; }
+            set { _collection = value; }
 		}
 
 		public LineItem[] LineItemsArray

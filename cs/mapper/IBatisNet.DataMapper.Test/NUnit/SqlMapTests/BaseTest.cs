@@ -14,6 +14,7 @@ using IBatisNet.Common; // DataSource definition
 using IBatisNet.Common.Utilities; // ScriptRunner definition
 using IBatisNet.DataMapper; // SqlMap API
 using IBatisNet.DataMapper.Test.Domain;
+using System.Collections.Specialized;
 
 
 [assembly : log4net.Config.XmlConfigurator(Watch=true)]
@@ -62,10 +63,17 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
 			DomSqlMapBuilder builder = new DomSqlMapBuilder();
 #if dotnet2
+            NameValueCollection properties = new NameValueCollection();
+            properties.Add("collection2Namespace","IBatisNet.DataMapper.Test.Domain.LineItemCollection2, IBatisNet.DataMapper.Test");
+            builder.Properties = properties;
+
             string fileName = "sqlmap" + "_" + ConfigurationManager.AppSettings["database"] + "_" + ConfigurationManager.AppSettings["providerType"] + ".config";
 #else
-			string fileName = "sqlmap" + "_" + ConfigurationSettings.AppSettings["database"] + "_" + ConfigurationSettings.AppSettings["providerType"] + ".config";
+            NameValueCollection properties = new NameValueCollection();
+            properties.Add("collection2Namespace","IBatisNet.DataMapper.Test.Domain.LineItemCollection, IBatisNet.DataMapper.Test");
+            builder.Properties = properties;
 
+			string fileName = "sqlmap" + "_" + ConfigurationSettings.AppSettings["database"] + "_" + ConfigurationSettings.AppSettings["providerType"] + ".config";
 #endif
             try
             {

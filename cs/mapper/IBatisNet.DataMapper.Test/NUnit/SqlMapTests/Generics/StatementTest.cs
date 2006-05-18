@@ -298,6 +298,25 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Generics
         /// Test QueryForList with Hashtable ResultMap
         /// </summary>
         [Test]
+        public void TestQueryForListWithGeneric()
+        {
+            List<Account> accounts = new List<Account>();
+
+            sqlMap.QueryForList("GetAllAccountsViaResultMap", null, (System.Collections.IList)accounts);
+
+            AssertAccount1(accounts[0]);
+            Assert.AreEqual(5, accounts.Count);
+            Assert.AreEqual(1, accounts[0].Id);
+            Assert.AreEqual(2, accounts[1].Id);
+            Assert.AreEqual(3, accounts[2].Id);
+            Assert.AreEqual(4, accounts[3].Id);
+            Assert.AreEqual(5, accounts[4].Id);
+        }
+
+        /// <summary>
+        /// Test QueryForList with Hashtable ResultMap
+        /// </summary>
+        [Test]
         public void TestQueryForListWithHashtableResultMap()
         {
             IList<Hashtable> list = sqlMap.QueryForList<Hashtable>("GetAllAccountsAsHashMapViaResultMap", null);

@@ -530,6 +530,12 @@
     <Compile Include="Mapper.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Proxy\ILazyFactory.cs" />
+    <Compile Include="Proxy\LazyFactoryBuilder.cs" />
+    <Compile Include="Proxy\LazyList.cs" />
+    <Compile Include="Proxy\LazyListFactory.cs" />
+    <Compile Include="Proxy\LazyListGeneric.cs" />
+    <Compile Include="Proxy\LazyListGenericFactory.cs" />
     <Compile Include="Proxy\LazyLoadInterceptor.cs" />
     <Compile Include="Proxy\LazyLoadProxyFactory.cs" />
     <Compile Include="Scope\ConfigurationScope.cs">

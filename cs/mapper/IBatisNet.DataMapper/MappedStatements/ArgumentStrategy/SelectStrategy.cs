@@ -67,7 +67,7 @@ namespace IBatisNet.DataMapper.MappedStatements.ArgumentStrategy
 			}
 #if dotnet2
             else if (mapping.MemberType.IsGenericType &&
-                 mapping.MemberType.GetGenericTypeDefinition() == typeof(IList<>)) 
+                 typeof(IList<>).IsAssignableFrom(mapping.MemberType.GetGenericTypeDefinition())) 
             {
                 _selectStrategy = selectGenericListStrategy;
             }

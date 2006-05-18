@@ -378,5 +378,30 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		}
 		#endregion
 
-	}
+        #region ICloneable Members
+
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns>An <see cref="ParameterProperty"/></returns>
+        public ParameterProperty Clone()
+        {
+            ParameterProperty property = new ParameterProperty();
+
+            property.CallBackName = this.CallBackName;
+            property.CLRType = this.CLRType;
+            property.ColumnName = this.ColumnName;
+            property.DbType = this.DbType;
+            property.DirectionAttribute = this.DirectionAttribute;
+            property.NullValue = this.NullValue;
+            property.PropertyName = this.PropertyName;
+            property.Precision = this.Precision;
+            property.Scale = this.Scale;
+            property.Size = this.Size;
+
+            return property;
+        }
+        #endregion
+
+    }
 }
