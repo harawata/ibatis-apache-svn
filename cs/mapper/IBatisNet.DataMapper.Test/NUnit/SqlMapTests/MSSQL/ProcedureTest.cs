@@ -116,6 +116,29 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL
 			Assert.IsNotNull(testAccount);
 			Assert.AreEqual(99, testAccount.Id);
 		}
+
+        /// <summary>
+        /// Test DBHelperParameterCache in transaction
+        /// </summary>
+        [Test]
+        public void TestDBHelperParameterCache()
+        {
+            Account account = new Account();
+
+            account.Id = 99;
+            account.FirstName = "Achille";
+            account.LastName = "Talon";
+            account.EmailAddress = "Achille.Talon@somewhere.com";
+
+            sqlMap.BeginTransaction();
+            sqlMap.Insert("InsertAccountViaStoreProcedure", account);
+
+            Account testAccount = sqlMap.QueryForObject("GetAccountViaColumnName", 99) as Account;
+            sqlMap.CommitTransaction();
+
+            Assert.IsNotNull(testAccount);
+            Assert.AreEqual(99, testAccount.Id);
+        }
 		#endregion
 	}
 }

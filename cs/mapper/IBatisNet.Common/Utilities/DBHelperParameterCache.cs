@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -58,22 +58,34 @@ namespace IBatisNet.Common.Utilities
 		/// <returns></returns>
 		private static IDataParameter[] DiscoverSpParameterSet(IDalSession session, string spName, bool includeReturnValueParameter)
 		{
-			return InternalDiscoverSpParameterSet(session.DataSource.DbProvider, session.Connection, spName, includeReturnValueParameter);	
+			return InternalDiscoverSpParameterSet(
+                session.DataSource.DbProvider, 
+                session.Connection, 
+                session.Transaction,
+                spName, 
+                includeReturnValueParameter);	
 		}
 
-		/// <summary>
-		/// resolve at run time the appropriate set of Parameters for a stored procedure
-		/// </summary>
-		/// <param name="provider"></param>
-		/// <param name="connection">a valid open IDbConnection</param>
-		/// <param name="spName">the name of the stored procedure</param>
-		/// <param name="includeReturnValueParameter">whether or not to include their return value parameter</param>
-		/// <returns></returns>
+
+        /// <summary>
+        /// Discover at run time the appropriate set of Parameters for a stored procedure
+        /// </summary>
+        /// <param name="provider">The provider.</param>
+        /// <param name="connection">A valid open <see cref="IDbConnection"/>.</param>
+        /// <param name="transaction">A <see cref="IDbTransaction"/>.</param>
+        /// <param name="spName">Name of the stored procedure.</param>
+        /// <param name="includeReturnValueParameter">if set to <c>true</c> [include return value parameter].</param>
+        /// <returns>The stored procedure parameters.</returns>
 		private static IDataParameter[] InternalDiscoverSpParameterSet(IDbProvider provider,
-			IDbConnection connection, string spName, bool includeReturnValueParameter)
+			IDbConnection connection, IDbTransaction transaction, string spName, 
+            bool includeReturnValueParameter)
 		{
 			using (IDbCommand cmd = connection.CreateCommand())
 			{
+                if (transaction != null)
+                {
+                    cmd.Transaction = transaction;
+                }
 				cmd.CommandType = CommandType.StoredProcedure;
 				cmd.CommandText = spName;
 
