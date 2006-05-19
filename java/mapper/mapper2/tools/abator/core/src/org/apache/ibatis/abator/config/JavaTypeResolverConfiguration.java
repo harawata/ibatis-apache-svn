@@ -27,15 +27,18 @@ public class JavaTypeResolverConfiguration extends TypedPropertyHolder {
 	 */
 	public JavaTypeResolverConfiguration() {
 		super();
-		super.setType(JavaTypeResolverDefaultImpl.class.getName());
 	}
-	
-    /* (non-Javadoc)
-     * @see org.apache.ibatis.abator.config.TypedPropertyHolder#setType(java.lang.String)
-     */
-    public void setType(String type) {
-		if (!"DEFAULT".equalsIgnoreCase(type)) { //$NON-NLS-1$
-		    super.setType(type);
-		}
+
+    public String getImplementationType() {
+        String configurationType = getConfigurationType();
+        String answer;
+        
+        if (configurationType == null || configurationType.length() == 0) {
+            answer = JavaTypeResolverDefaultImpl.class.getName();
+        } else {
+            answer = configurationType;
+        }
+        
+        return answer;
     }
 }

@@ -36,6 +36,7 @@ import org.apache.ibatis.abator.api.dom.java.Parameter;
 import org.apache.ibatis.abator.api.dom.java.TopLevelClass;
 import org.apache.ibatis.abator.config.FullyQualifiedTable;
 import org.apache.ibatis.abator.config.TableConfiguration;
+import org.apache.ibatis.abator.exception.GenerationRuntimeException;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
 import org.apache.ibatis.abator.internal.db.ColumnDefinitions;
 import org.apache.ibatis.abator.internal.rules.AbatorRules;
@@ -65,7 +66,7 @@ import org.apache.ibatis.abator.internal.util.messages.Messages;
  * 
  * @author Jeff Butler
  */
-public class BaseJava2DAOGenerator implements DAOGenerator {
+public class BaseDAOGenerator implements DAOGenerator {
 
     private AbstractDAOTemplate daoTemplate;
 
@@ -82,13 +83,16 @@ public class BaseJava2DAOGenerator implements DAOGenerator {
     protected SqlMapGenerator sqlMapGenerator;
 
     private Map tableValueMaps;
+    
+    private boolean useJava5Features;
 
     /**
      *  
      */
-    public BaseJava2DAOGenerator(AbstractDAOTemplate daoTemplate) {
+    public BaseDAOGenerator(AbstractDAOTemplate daoTemplate, boolean useJava5Features) {
         super();
         this.daoTemplate = daoTemplate;
+        this.useJava5Features = useJava5Features;
         tableValueMaps = new HashMap();
     }
 
@@ -410,7 +414,7 @@ public class BaseJava2DAOGenerator implements DAOGenerator {
 
         FullyQualifiedTable table = tableConfiguration.getTable();
         Method method = new Method();
-        method.addMethodComment(table);
+        method.addComment(table);
 
         FullyQualifiedJavaType returnType;
         if (tableConfiguration.getGeneratedKey().isConfigured()) {
@@ -504,7 +508,7 @@ public class BaseJava2DAOGenerator implements DAOGenerator {
         compilationUnit.addImportedType(type);
 
         Method method = new Method();
-        method.addMethodComment(table);
+        method.addComment(table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         method.setName("updateByPrimaryKey"); //$NON-NLS-1$
@@ -552,7 +556,7 @@ public class BaseJava2DAOGenerator implements DAOGenerator {
         compilationUnit.addImportedType(type);
 
         Method method = new Method();
-        method.addMethodComment(table);
+        method.addComment(table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         method.setName("updateByPrimaryKey"); //$NON-NLS-1$
@@ -600,9 +604,29 @@ public class BaseJava2DAOGenerator implements DAOGenerator {
         compilationUnit.addImportedType(FullyQualifiedJavaType.getListInstance());
 
         Method method = new Method();
-        method.addMethodComment(table);
+        method.addComment(table);
         method.setVisibility(JavaVisibility.PUBLIC);
-        method.setReturnType(FullyQualifiedJavaType.getListInstance());
+        
+        FullyQualifiedJavaType returnType;
+        if (useJava5Features) {
+            FullyQualifiedJavaType fqjt;
+            if (AbatorRules.generateBaseRecordExtendingPrimaryKey(columnDefinitions)
+                    || AbatorRules.generateBaseRecordWithNoSuperclass(columnDefinitions)) {
+                fqjt = javaModelGenerator.getRecordType(tableConfiguration.getTable());
+            } else if (AbatorRules.generatePrimaryKey(columnDefinitions)) {
+                fqjt = javaModelGenerator.getPrimaryKeyType(tableConfiguration.getTable());
+            } else {
+                throw new GenerationRuntimeException(Messages.getString("BaseDAOGenerator.0")); //$NON-NLS-1$
+            }
+            
+            compilationUnit.addImportedType(fqjt);
+            returnType = new FullyQualifiedJavaType("java.util.List", //$NON-NLS-1$
+                    new FullyQualifiedJavaType[] {fqjt});
+        } else {
+            returnType = FullyQualifiedJavaType.getListInstance();
+        }
+        method.setReturnType(returnType);
+        
         method.setName("selectByExample"); //$NON-NLS-1$
         method.addParameter(new Parameter(type, "example")); //$NON-NLS-1$
 
@@ -617,7 +641,16 @@ public class BaseJava2DAOGenerator implements DAOGenerator {
             // generate the implementation method
             StringBuffer sb = new StringBuffer();
 
-            sb.append("List list = "); //$NON-NLS-1$
+            if (useJava5Features) {
+                method.addAnnotation("@SuppressWarnings(\"unchecked\")"); //$NON-NLS-1$
+                sb.append(returnType.getShortName());
+                sb.append(" list = ("); //$NON-NLS-1$
+                sb.append(returnType.getShortName());
+                sb.append(") "); //$NON-NLS-1$
+            } else {
+                sb.append("List list = "); //$NON-NLS-1$
+            }
+            
             sb.append(daoTemplate.getQueryForListMethod(sqlMapGenerator.getSqlMapNamespace(table),
                     sqlMapGenerator.getSelectByExampleStatementId(), "example")); //$NON-NLS-1$
             method.addBodyLine(sb.toString());
@@ -646,9 +679,20 @@ public class BaseJava2DAOGenerator implements DAOGenerator {
         compilationUnit.addImportedType(FullyQualifiedJavaType.getListInstance());
 
         Method method = new Method();
-        method.addMethodComment(table);
+        method.addComment(table);
         method.setVisibility(JavaVisibility.PUBLIC);
-        method.setReturnType(FullyQualifiedJavaType.getListInstance());
+
+        FullyQualifiedJavaType returnType;
+        if (useJava5Features) {
+            FullyQualifiedJavaType fqjt = javaModelGenerator.getRecordWithBLOBsType(tableConfiguration.getTable());
+            compilationUnit.addImportedType(fqjt);
+            returnType = new FullyQualifiedJavaType("java.util.List", //$NON-NLS-1$
+                    new FullyQualifiedJavaType[] {fqjt});
+        } else {
+            returnType = FullyQualifiedJavaType.getListInstance();
+        }
+        method.setReturnType(returnType);
+        
         method.setName("selectByExampleWithBLOBs"); //$NON-NLS-1$
         method.addParameter(new Parameter(type, "example")); //$NON-NLS-1$
         
@@ -663,7 +707,17 @@ public class BaseJava2DAOGenerator implements DAOGenerator {
             // generate the implementation method
 
             StringBuffer sb = new StringBuffer();
-            sb.append("List list = "); //$NON-NLS-1$
+
+            if (useJava5Features) {
+                method.addAnnotation("@SuppressWarnings(\"unchecked\")"); //$NON-NLS-1$
+                sb.append(returnType.getShortName());
+                sb.append(" list = ("); //$NON-NLS-1$
+                sb.append(returnType.getShortName());
+                sb.append(") "); //$NON-NLS-1$
+            } else {
+                sb.append("List list = "); //$NON-NLS-1$
+            }
+            
             sb.append(daoTemplate.getQueryForListMethod(sqlMapGenerator.getSqlMapNamespace(table),
                     sqlMapGenerator.getSelectByExampleWithBLOBsStatementId(),
                     "example")); //$NON-NLS-1$
@@ -692,7 +746,7 @@ public class BaseJava2DAOGenerator implements DAOGenerator {
         compilationUnit.addImportedType(type);
         
         Method method = new Method();
-        method.addMethodComment(table);
+        method.addComment(table);
         method.setVisibility(JavaVisibility.PUBLIC);
 
         FullyQualifiedJavaType returnType;
@@ -753,7 +807,7 @@ public class BaseJava2DAOGenerator implements DAOGenerator {
         compilationUnit.addImportedType(type);
         
         Method method = new Method();
-        method.addMethodComment(table);
+        method.addComment(table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         method.setName("deleteByExample"); //$NON-NLS-1$
@@ -799,7 +853,7 @@ public class BaseJava2DAOGenerator implements DAOGenerator {
         compilationUnit.addImportedType(type);
 
         Method method = new Method();
-        method.addMethodComment(table);
+        method.addComment(table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         method.setName("deleteByPrimaryKey"); //$NON-NLS-1$

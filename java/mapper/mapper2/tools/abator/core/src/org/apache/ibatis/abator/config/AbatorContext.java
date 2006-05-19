@@ -39,7 +39,7 @@ import org.apache.ibatis.abator.internal.util.messages.Messages;
 /**
  * @author Jeff Butler
  */
-public class AbatorContext {
+public class AbatorContext extends PropertyHolder {
     private String id;
     
 	private JDBCConnectionConfiguration jdbcConnectionConfiguration;
@@ -60,10 +60,10 @@ public class AbatorContext {
     public AbatorContext() {
         super();
 		jdbcConnectionConfiguration = new JDBCConnectionConfiguration();
-		sqlMapGeneratorConfiguration = new SqlMapGeneratorConfiguration();
+		sqlMapGeneratorConfiguration = new SqlMapGeneratorConfiguration(this);
 		javaTypeResolverConfiguration = new JavaTypeResolverConfiguration();
-		javaModelGeneratorConfiguration = new JavaModelGeneratorConfiguration();
-		daoGeneratorConfiguration = new DAOGeneratorConfiguration();
+		javaModelGeneratorConfiguration = new JavaModelGeneratorConfiguration(this);
+		daoGeneratorConfiguration = new DAOGeneratorConfiguration(this);
 		tableConfigurations = new ArrayList();
     }
 

@@ -442,7 +442,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
 
         FullyQualifiedTable table = tableConfiguration.getTable();
         Method method = new Method();
-        method.addMethodComment(table);
+        method.addComment(table);
         
         FullyQualifiedJavaType returnType;
         if (tableConfiguration.getGeneratedKey().isConfigured()) {
@@ -531,7 +531,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
         compilationUnit.addImportedType(type);
         
         Method method = new Method();
-        method.addMethodComment(table);
+        method.addComment(table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         method.setName("updateByPrimaryKey"); //$NON-NLS-1$
@@ -578,7 +578,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
         compilationUnit.addImportedType(type);
         
         Method method = new Method();
-        method.addMethodComment(table);
+        method.addComment(table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         method.setName("updateByPrimaryKey"); //$NON-NLS-1$
@@ -625,7 +625,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
         compilationUnit.addImportedType(FullyQualifiedJavaType.getListInstance());
 
         Method method1 = new Method();
-        method1.addMethodComment(table);
+        method1.addComment(table);
         method1.setVisibility(JavaVisibility.PUBLIC);
         method1.setReturnType(FullyQualifiedJavaType.getListInstance());
         method1.setName("selectByExample"); //$NON-NLS-1$
@@ -634,7 +634,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
                 "orderByClause")); //$NON-NLS-1$
         
         Method method2 = new Method();
-        method2.addMethodComment(table);
+        method2.addComment(table);
         method2.setVisibility(JavaVisibility.PUBLIC);
         method2.setReturnType(FullyQualifiedJavaType.getListInstance());
         method2.setName("selectByExample"); //$NON-NLS-1$
@@ -692,7 +692,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
         compilationUnit.addImportedType(FullyQualifiedJavaType.getListInstance());
 
         Method method1 = new Method();
-        method1.addMethodComment(table);
+        method1.addComment(table);
         method1.setVisibility(JavaVisibility.PUBLIC);
         method1.setReturnType(FullyQualifiedJavaType.getListInstance());
         method1.setName("selectByExampleWithBLOBs"); //$NON-NLS-1$
@@ -701,7 +701,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
                 "orderByClause")); //$NON-NLS-1$
         
         Method method2 = new Method();
-        method2.addMethodComment(table);
+        method2.addComment(table);
         method2.setVisibility(JavaVisibility.PUBLIC);
         method2.setReturnType(FullyQualifiedJavaType.getListInstance());
         method2.setName("selectByExampleWithBLOBs"); //$NON-NLS-1$
@@ -757,7 +757,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
         compilationUnit.addImportedType(type);
         
         Method method = new Method();
-        method.addMethodComment(table);
+        method.addComment(table);
         method.setVisibility(JavaVisibility.PUBLIC);
 
         FullyQualifiedJavaType returnType;
@@ -816,7 +816,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
         compilationUnit.addImportedType(type);
 
         Method method = new Method();
-        method.addMethodComment(table);
+        method.addComment(table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         method.setName("deleteByExample"); //$NON-NLS-1$
@@ -862,7 +862,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
         compilationUnit.addImportedType(type);
 
         Method method = new Method();
-        method.addMethodComment(table);
+        method.addComment(table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         method.setName("deleteByPrimaryKey"); //$NON-NLS-1$
@@ -915,7 +915,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
         compilationUnit.addImportedType(type);
 
         Method method = new Method();
-        method.addMethodComment(table);
+        method.addComment(table);
         method.setVisibility(JavaVisibility.PRIVATE);
         method.setReturnType(FullyQualifiedJavaType.getMapInstance());
         method.setName("getExampleParms"); //$NON-NLS-1$
@@ -983,7 +983,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
         StringBuffer sb = new StringBuffer();
 
         Method method = new Method();
-        method.addMethodComment(table);
+        method.addComment(table);
         method.setVisibility(JavaVisibility.PRIVATE);
         method.setReturnType(FullyQualifiedJavaType.getMapInstance());
         sb.append("get"); //$NON-NLS-1$

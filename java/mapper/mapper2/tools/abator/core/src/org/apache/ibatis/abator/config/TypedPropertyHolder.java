@@ -20,7 +20,7 @@ package org.apache.ibatis.abator.config;
  */
 public abstract class TypedPropertyHolder extends PropertyHolder {
 
-	private String type;
+	private String configurationType;
 
 	/**
 	 *  
@@ -29,8 +29,8 @@ public abstract class TypedPropertyHolder extends PropertyHolder {
 		super();
 	}
 
-	public String getType() {
-		return type;
+	public String getConfigurationType() {
+		return configurationType;
 	}
 
 	/**
@@ -40,7 +40,19 @@ public abstract class TypedPropertyHolder extends PropertyHolder {
 	 * 
 	 * @param type
 	 */
-	protected void setType(String type) {
-		this.type = type;
+	public void setConfigurationType(String configurationType) {
+        if (!"DEFAULT".equalsIgnoreCase(configurationType)) { //$NON-NLS-1$
+            this.configurationType = configurationType;
+        }
 	}
+
+    /**
+     * This method should calculate and return the proper fully qualified class
+     * name for the generator.  If the configuration type is set,
+     * then we will use that type.  Otherwise we will calculate
+     * a default from the properties in the context.
+     * 
+     * @return
+     */
+    public abstract String getImplementationType();
 }

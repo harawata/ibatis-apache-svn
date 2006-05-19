@@ -18,12 +18,12 @@ package org.apache.ibatis.abator.internal.java.dao;
 /**
  * @author Jeff Butler
  */
-public class GenericCIJava2DAOGenerator extends BaseJava2DAOGenerator {
+public class GenericCIJava2DAOGenerator extends BaseDAOGenerator {
 
     /**
      * @param daoTemplate
      */
     public GenericCIJava2DAOGenerator() {
-        super(new GenericCIDAOTemplate());
+        super(new GenericCIDAOTemplate(), false);
     }
 }

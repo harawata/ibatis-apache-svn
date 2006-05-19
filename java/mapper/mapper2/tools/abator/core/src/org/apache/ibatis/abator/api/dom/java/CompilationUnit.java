@@ -25,6 +25,7 @@ public interface CompilationUnit {
     Set getImportedTypes();
     FullyQualifiedJavaType getSuperClass();
     boolean isJavaInterface();
+    boolean isJavaEnumeration();
     Set getSuperInterfaceTypes();
     FullyQualifiedJavaType getType();
     void addImportedType(FullyQualifiedJavaType importedType);

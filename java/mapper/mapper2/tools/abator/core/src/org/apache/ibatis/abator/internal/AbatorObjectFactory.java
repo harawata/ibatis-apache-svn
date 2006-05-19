@@ -42,14 +42,15 @@ public class AbatorObjectFactory {
         super();
     }
 
-	private static Object createObject(String className) {
+	private static Object createObject(String type) {
 		Object answer;
 
 		try {
-			answer = Class.forName(className).newInstance();
+            Class clazz = Class.forName(type);
+			answer = clazz.newInstance();
 		} catch (Exception e) {
 			throw new GenerationRuntimeException(
-			        Messages.getString("AbatorObjectFactory.0", className), e); //$NON-NLS-1$
+			        Messages.getString("AbatorObjectFactory.0", type), e); //$NON-NLS-1$
 		}
 
 		return answer;
@@ -57,7 +58,7 @@ public class AbatorObjectFactory {
 	
 	public static JavaTypeResolver createJavaTypeResolver(JavaTypeResolverConfiguration configuration,
 			List warnings) {
-	    JavaTypeResolver answer = (JavaTypeResolver) createObject(configuration.getType());
+	    JavaTypeResolver answer = (JavaTypeResolver) createObject(configuration.getImplementationType());
 	    answer.setWarnings(warnings);
 	    
 	    answer.setProperties(configuration.getProperties());
@@ -67,7 +68,7 @@ public class AbatorObjectFactory {
 	
 	public static SqlMapGenerator createSqlMapGenerator(SqlMapGeneratorConfiguration configuration,
 	        JavaModelGenerator javaModelGenerator, List warnings) {
-	    SqlMapGenerator answer = (SqlMapGenerator) createObject(configuration.getType());
+	    SqlMapGenerator answer = (SqlMapGenerator) createObject(configuration.getImplementationType());
 	    answer.setWarnings(warnings);
 
 	    answer.setJavaModelGenerator(javaModelGenerator);
@@ -81,7 +82,7 @@ public class AbatorObjectFactory {
 	
 	public static JavaModelGenerator createJavaModelGenerator(JavaModelGeneratorConfiguration configuration,
 			List warnings) {
-	    JavaModelGenerator answer = (JavaModelGenerator) createObject(configuration.getType());
+	    JavaModelGenerator answer = (JavaModelGenerator) createObject(configuration.getImplementationType());
 	    answer.setWarnings(warnings);
 	    
 	    answer.setProperties(configuration.getProperties());
@@ -97,7 +98,7 @@ public class AbatorObjectFactory {
 	        return null;
 	    }
 	    
-	    DAOGenerator answer = (DAOGenerator) createObject(configuration.getType());
+	    DAOGenerator answer = (DAOGenerator) createObject(configuration.getImplementationType());
 	    answer.setWarnings(warnings);
 
 	    answer.setJavaModelGenerator(javaModelGenerator);

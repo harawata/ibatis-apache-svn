@@ -158,4 +158,8 @@ public class ColumnDefinition {
     public void setResolvedJavaType(ResolvedJavaType resolvedJavaType) {
         this.resolvedJavaType = resolvedJavaType;
     }
+    
+    public String getByExampleIndicatorProperty() {
+        return javaProperty + "_Indicator"; //$NON-NLS-1$
+    }
 }

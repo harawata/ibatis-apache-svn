@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * This class holds the results of introspecting the database table.
@@ -157,7 +158,7 @@ public class ColumnDefinitions {
 		return rc;
 	}
 	
-	public Collection getAllColumns() {
+	public List getAllColumns() {
 		if (allColumns == null) {
 			allColumns = new ArrayList();
 

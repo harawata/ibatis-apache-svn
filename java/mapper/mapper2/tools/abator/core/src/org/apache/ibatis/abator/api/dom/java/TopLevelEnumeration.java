@@ -13,6 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package org.apache.ibatis.abator.api.dom.java;
 
 import java.util.Collections;
@@ -21,35 +22,26 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.ibatis.abator.api.dom.OutputUtilities;
+import org.apache.ibatis.abator.internal.util.messages.Messages;
 
 /**
  * @author Jeff Butler
+ *
  */
-public class TopLevelClass extends InnerClass implements CompilationUnit {
+public class TopLevelEnumeration extends InnerEnum implements CompilationUnit {
     private Set importedTypes;
 
     /**
-     *  
+     * @param type
      */
-    public TopLevelClass(FullyQualifiedJavaType type) {
+    public TopLevelEnumeration(FullyQualifiedJavaType type) {
         super(type);
         importedTypes = new TreeSet();
     }
 
-    /**
-     * @return Returns the importedTypes.
+    /* (non-Javadoc)
+     * @see org.apache.ibatis.abator.api.dom.java.CompilationUnit#getFormattedContent()
      */
-    public Set getImportedTypes() {
-        return Collections.unmodifiableSet(importedTypes);
-    }
-
-    public void addImportedType(FullyQualifiedJavaType importedType) {
-        if (importedType != null && importedType.isExplicitlyImported() &&
-                !importedType.getPackageName().equals(getType().getPackageName())) {
-            importedTypes.add(importedType);
-        }
-    }
-
     public String getFormattedContent() {
         StringBuffer sb = new StringBuffer();
 
@@ -82,16 +74,41 @@ public class TopLevelClass extends InnerClass implements CompilationUnit {
         return sb.toString();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.ibatis.abator.internal.java.dom.CompilationUnit#isJavaInterface()
+    /* (non-Javadoc)
+     * @see org.apache.ibatis.abator.api.dom.java.CompilationUnit#getImportedTypes()
+     */
+    public Set getImportedTypes() {
+        return Collections.unmodifiableSet(importedTypes);
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.ibatis.abator.api.dom.java.CompilationUnit#getSuperClass()
+     */
+    public FullyQualifiedJavaType getSuperClass() {
+        throw new UnsupportedOperationException(Messages.getString("TopLevelEnumeration.0")); //$NON-NLS-1$
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.ibatis.abator.api.dom.java.CompilationUnit#isJavaInterface()
      */
     public boolean isJavaInterface() {
         return false;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.ibatis.abator.api.dom.java.CompilationUnit#isJavaEnumeration()
+     */
     public boolean isJavaEnumeration() {
-        return false;
+        return true;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.ibatis.abator.api.dom.java.CompilationUnit#addImportedType(org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType)
+     */
+    public void addImportedType(FullyQualifiedJavaType importedType) {
+        if (importedType.isExplicitlyImported() &&
+                !importedType.getPackageName().equals(getType().getPackageName())) {
+            importedTypes.add(importedType);
+        }
     }
 }

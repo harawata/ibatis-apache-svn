@@ -285,7 +285,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
                     .getFullyQualifiedName()));
         }
         
-        answer.addElementComment();
+        answer.addComment();
 
         Iterator iter = columnDefinitions.getAllColumns().iterator();
         while (iter.hasNext()) {
@@ -339,7 +339,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         sb.append(getResultMapName(tableConfiguration.getTable()));
         answer.addAttribute(new Attribute("extends", sb.toString())); //$NON-NLS-1$
 
-        answer.addElementComment();
+        answer.addComment();
 
         Iterator iter = columnDefinitions.getAllColumns().iterator();
         while (iter.hasNext()) {
@@ -392,7 +392,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
                     .getFullyQualifiedName()));
         }
         
-        answer.addElementComment();
+        answer.addComment();
 
         if (tableConfiguration.getGeneratedKey().isConfigured()
                 && !tableConfiguration.getGeneratedKey().isIdentity()) {
@@ -478,7 +478,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
                 .getRecordWithBLOBsType(tableConfiguration.getTable())
                 .getFullyQualifiedName()));
 
-        answer.addElementComment();
+        answer.addComment();
 
         StringBuffer sb = new StringBuffer();
         
@@ -558,7 +558,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
                 .getRecordType(tableConfiguration.getTable())
                 .getFullyQualifiedName()));
 
-        answer.addElementComment();
+        answer.addComment();
 
         StringBuffer sb = new StringBuffer();
         sb.append("update "); //$NON-NLS-1$
@@ -636,7 +636,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
                 .getPrimaryKeyType(tableConfiguration.getTable())
                 .getFullyQualifiedName()));
 
-        answer.addElementComment();
+        answer.addComment();
 
         StringBuffer sb = new StringBuffer();
         sb.append("delete from "); //$NON-NLS-1$
@@ -686,7 +686,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         answer.addAttribute(new Attribute("id", getDeleteByExampleStatementId())); //$NON-NLS-1$
         answer.addAttribute(new Attribute("parameterClass", fqjt.getFullyQualifiedName())); //$NON-NLS-1$
 
-        answer.addElementComment();
+        answer.addComment();
 
         StringBuffer sb = new StringBuffer();
         sb.append("delete from "); //$NON-NLS-1$
@@ -734,7 +734,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
                 .getPrimaryKeyType(tableConfiguration.getTable())
                 .getFullyQualifiedName()));
 
-        answer.addElementComment();
+        answer.addComment();
 
         StringBuffer sb = new StringBuffer();
         sb.append("select "); //$NON-NLS-1$
@@ -1007,46 +1007,65 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         answer.addAttribute(new Attribute("id", getExampleWhereClauseId())); //$NON-NLS-1$
 
-        answer.addElementComment();
+        answer.addComment();
 
-        XmlElement dynamicElement = new XmlElement("dynamic"); //$NON-NLS-1$
-        dynamicElement.addAttribute(new Attribute("prepend", "where")); //$NON-NLS-1$ //$NON-NLS-2$
-        answer.addElement(dynamicElement);
-        
         XmlElement outerIterateElement = new XmlElement("iterate"); //$NON-NLS-1$
-        outerIterateElement.addAttribute(new Attribute("property", "orConditions")); //$NON-NLS-1$ //$NON-NLS-2$
+        outerIterateElement.addAttribute(new Attribute("property", "oredConditions")); //$NON-NLS-1$ //$NON-NLS-2$
         outerIterateElement.addAttribute(new Attribute("conjunction", "or")); //$NON-NLS-1$ //$NON-NLS-2$
-        dynamicElement.addElement(outerIterateElement);
+        outerIterateElement.addAttribute(new Attribute("prepend", "where")); //$NON-NLS-1$ //$NON-NLS-2$
+        answer.addElement(outerIterateElement);
 
         outerIterateElement.addElement(new TextElement("(")); //$NON-NLS-1$
 
         XmlElement innerIterateElement = new XmlElement("iterate"); //$NON-NLS-1$
-        innerIterateElement.addAttribute(new Attribute("prepend", "and")); //$NON-NLS-1$ //$NON-NLS-2$
-        innerIterateElement.addAttribute(new Attribute("property", "orConditions[].conditionsWithValues")); //$NON-NLS-1$ //$NON-NLS-2$
+        innerIterateElement.addAttribute(new Attribute("property", "oredConditions[].conditionsWithValues")); //$NON-NLS-1$ //$NON-NLS-2$
         innerIterateElement.addAttribute(new Attribute("conjunction", "and")); //$NON-NLS-1$ //$NON-NLS-2$
         innerIterateElement.addElement(
-                new TextElement("$orConditions[].conditionsWithValues[].condition$ #orConditions[].conditionsWithValues[].value#")); //$NON-NLS-1$
+                new TextElement("$oredConditions[].conditionsWithValues[].condition$ #oredConditions[].conditionsWithValues[].value#")); //$NON-NLS-1$
         outerIterateElement.addElement(innerIterateElement);
         
+        XmlElement isEqualElement = new XmlElement("isEqual"); //$NON-NLS-1$
+        isEqualElement.addAttribute(new Attribute("property", //$NON-NLS-1$
+                "oredConditions[].firstAndNeeded")); //$NON-NLS-1$
+        isEqualElement.addAttribute(new Attribute("compareValue", //$NON-NLS-1$
+                "true")); //$NON-NLS-1$
+        isEqualElement.addElement(new TextElement("and")); //$NON-NLS-1$
+        outerIterateElement.addElement(isEqualElement);
+
         innerIterateElement = new XmlElement("iterate"); //$NON-NLS-1$
-        innerIterateElement.addAttribute(new Attribute("prepend", "and")); //$NON-NLS-1$ //$NON-NLS-2$
-        innerIterateElement.addAttribute(new Attribute("property", "orConditions[].conditionsWithDateValues")); //$NON-NLS-1$ //$NON-NLS-2$
+        innerIterateElement.addAttribute(new Attribute("property", "oredConditions[].conditionsWithDateValues")); //$NON-NLS-1$ //$NON-NLS-2$
         innerIterateElement.addAttribute(new Attribute("conjunction", "and")); //$NON-NLS-1$ //$NON-NLS-2$
-        innerIterateElement.addElement(new TextElement("$orConditions[].conditionsWithDateValues[].condition$ #orConditions[].conditionsWithDateValues[].value:DATE#")); //$NON-NLS-1$
+        innerIterateElement.addElement(
+                new TextElement("$oredConditions[].conditionsWithDateValues[].condition$ #oredConditions[].conditionsWithDateValues[].value:DATE#")); //$NON-NLS-1$
         outerIterateElement.addElement(innerIterateElement);
         
+        isEqualElement = new XmlElement("isEqual"); //$NON-NLS-1$
+        isEqualElement.addAttribute(new Attribute("property", //$NON-NLS-1$
+                "oredConditions[].secondAndNeeded")); //$NON-NLS-1$
+        isEqualElement.addAttribute(new Attribute("compareValue", //$NON-NLS-1$
+                "true")); //$NON-NLS-1$
+        isEqualElement.addElement(new TextElement("and")); //$NON-NLS-1$
+        outerIterateElement.addElement(isEqualElement);
+
         innerIterateElement = new XmlElement("iterate"); //$NON-NLS-1$
-        innerIterateElement.addAttribute(new Attribute("prepend", "and")); //$NON-NLS-1$ //$NON-NLS-2$
-        innerIterateElement.addAttribute(new Attribute("property", "orConditions[].conditionsWithTimeValues")); //$NON-NLS-1$ //$NON-NLS-2$
+        innerIterateElement.addAttribute(new Attribute("property", "oredConditions[].conditionsWithTimeValues")); //$NON-NLS-1$ //$NON-NLS-2$
         innerIterateElement.addAttribute(new Attribute("conjunction", "and")); //$NON-NLS-1$ //$NON-NLS-2$
-        innerIterateElement.addElement(new TextElement("$orConditions[].conditionsWithTimeValues[].condition$ #orConditions[].conditionsWithTimeValues[].value:TIME#")); //$NON-NLS-1$
+        innerIterateElement.addElement(
+                new TextElement("$oredConditions[].conditionsWithTimeValues[].condition$ #oredConditions[].conditionsWithTimeValues[].value:TIME#")); //$NON-NLS-1$
         outerIterateElement.addElement(innerIterateElement);
-        
+
+        isEqualElement = new XmlElement("isEqual"); //$NON-NLS-1$
+        isEqualElement.addAttribute(new Attribute("property", //$NON-NLS-1$
+                "oredConditions[].thirdAndNeeded")); //$NON-NLS-1$
+        isEqualElement.addAttribute(new Attribute("compareValue", //$NON-NLS-1$
+                "true")); //$NON-NLS-1$
+        isEqualElement.addElement(new TextElement("and")); //$NON-NLS-1$
+        outerIterateElement.addElement(isEqualElement);
+
         innerIterateElement = new XmlElement("iterate"); //$NON-NLS-1$
-        innerIterateElement.addAttribute(new Attribute("prepend", "and")); //$NON-NLS-1$ //$NON-NLS-2$
-        innerIterateElement.addAttribute(new Attribute("property", "orConditions[].conditionsWithoutValues")); //$NON-NLS-1$ //$NON-NLS-2$
+        innerIterateElement.addAttribute(new Attribute("property", "oredConditions[].conditionsWithoutValues")); //$NON-NLS-1$ //$NON-NLS-2$
         innerIterateElement.addAttribute(new Attribute("conjunction", "and")); //$NON-NLS-1$ //$NON-NLS-2$
-        innerIterateElement.addElement(new TextElement("$orConditions[].conditionsWithoutValues[]$")); //$NON-NLS-1$
+        innerIterateElement.addElement(new TextElement("$oredConditions[].conditionsWithoutValues[]$")); //$NON-NLS-1$
         outerIterateElement.addElement(innerIterateElement);
         
         outerIterateElement.addElement(new TextElement(")")); //$NON-NLS-1$
@@ -1073,7 +1092,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
                 "resultMap", getResultMapName(tableConfiguration.getTable()))); //$NON-NLS-1$
         answer.addAttribute(new Attribute("parameterClass", fqjt.getFullyQualifiedName())); //$NON-NLS-1$
 
-        answer.addElementComment();
+        answer.addComment();
 
         StringBuffer sb = new StringBuffer();
         sb.append("select "); //$NON-NLS-1$
@@ -1145,7 +1164,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
                 new Attribute("resultMap", getResultMapName(tableConfiguration.getTable()) + "WithBLOBs")); //$NON-NLS-1$ //$NON-NLS-2$
         answer.addAttribute(new Attribute("parameterClass", fqjt.getFullyQualifiedName())); //$NON-NLS-1$
 
-        answer.addElementComment();
+        answer.addComment();
 
         StringBuffer sb = new StringBuffer();
         sb.append("select "); //$NON-NLS-1$

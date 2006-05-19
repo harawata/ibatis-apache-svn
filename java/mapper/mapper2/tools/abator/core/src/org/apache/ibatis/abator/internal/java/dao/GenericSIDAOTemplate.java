@@ -39,6 +39,7 @@ public class GenericSIDAOTemplate extends AbstractDAOTemplate {
         
         Method method = new Method();
         method.setConstructor(true);
+        method.setVisibility(JavaVisibility.PUBLIC);
         method.addBodyLine("super();"); //$NON-NLS-1$
         setConstructorTemplate(method);
 

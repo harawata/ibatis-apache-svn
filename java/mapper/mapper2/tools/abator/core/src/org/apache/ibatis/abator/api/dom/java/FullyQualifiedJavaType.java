@@ -33,57 +33,91 @@ public class FullyQualifiedJavaType implements Comparable {
     private String packageName;
     private boolean primitive;
     private String wrapperClass;
-
+    
+    /**
+     * Use this constructor to construct a generic type with the specified
+     * type parameters
+     * 
+     * @param fullyQualifiedName
+     * @param typeParameters
+     */
+    public FullyQualifiedJavaType(String fullyQualifiedName, FullyQualifiedJavaType[] typeParameters) {
+        super();
+        this.fullyQualifiedName = fullyQualifiedName;
+        
+        int lastIndex = fullyQualifiedName.lastIndexOf('.');
+        if (lastIndex == -1) {
+            shortName = fullyQualifiedName;
+            explicitlyImported = false;
+            packageName = ""; //$NON-NLS-1$
+            
+            if ("byte".equals(fullyQualifiedName)) { //$NON-NLS-1$
+                primitive = true;
+                wrapperClass = "Byte"; //$NON-NLS-1$
+            } else if ("short".equals(fullyQualifiedName)) { //$NON-NLS-1$
+                primitive = true;
+                wrapperClass = "Short"; //$NON-NLS-1$
+            } else if ("int".equals(fullyQualifiedName)) { //$NON-NLS-1$
+                primitive = true;
+                wrapperClass = "Integer"; //$NON-NLS-1$
+            } else if ("long".equals(fullyQualifiedName)) { //$NON-NLS-1$
+                primitive = true;
+                wrapperClass = "Long"; //$NON-NLS-1$
+            } else if ("char".equals(fullyQualifiedName)) { //$NON-NLS-1$
+                primitive = true;
+                wrapperClass = "Character"; //$NON-NLS-1$
+            } else if ("float".equals(fullyQualifiedName)) { //$NON-NLS-1$
+                primitive = true;
+                wrapperClass = "Float"; //$NON-NLS-1$
+            } else if ("double".equals(fullyQualifiedName)) { //$NON-NLS-1$
+                primitive = true;
+                wrapperClass = "Double"; //$NON-NLS-1$
+            } else if ("boolean".equals(fullyQualifiedName)) { //$NON-NLS-1$
+                primitive = true;
+                wrapperClass = "Boolean"; //$NON-NLS-1$
+            } else {
+                primitive = false;
+                wrapperClass = null;
+            }
+        } else {
+            shortName = fullyQualifiedName.substring(lastIndex + 1);
+            packageName = fullyQualifiedName.substring(0, lastIndex);
+            if ("java.lang".equals(packageName)) { //$NON-NLS-1$
+                explicitlyImported = false;
+            } else {
+                explicitlyImported = true;
+            }
+        }
+        
+        if (typeParameters != null && typeParameters.length > 0) {
+            StringBuffer sb = new StringBuffer();
+            sb.append(shortName);
+            sb.append('<');
+            
+            boolean comma = false;
+            for (int i = 0; i < typeParameters.length; i++) {
+                FullyQualifiedJavaType fqjt = typeParameters[i];
+                
+                if (comma) {
+                    sb.append(", "); //$NON-NLS-1$
+                } else {
+                    comma = true;
+                }
+                
+                sb.append(fqjt.getShortName());
+            }
+            
+            sb.append('>');
+            
+            shortName = sb.toString();
+        }
+    }
+    
     /**
      * 
      */
     public FullyQualifiedJavaType(String fullyQualifiedName) {
-        super();
-        this.fullyQualifiedName = fullyQualifiedName;
-        
-		int lastIndex = fullyQualifiedName.lastIndexOf('.');
-		if (lastIndex == -1) {
-		    shortName = fullyQualifiedName;
-		    explicitlyImported = false;
-		    packageName = ""; //$NON-NLS-1$
-		    
-		    if ("byte".equals(fullyQualifiedName)) { //$NON-NLS-1$
-		        primitive = true;
-		        wrapperClass = "Byte"; //$NON-NLS-1$
-		    } else if ("short".equals(fullyQualifiedName)) { //$NON-NLS-1$
-		        primitive = true;
-		        wrapperClass = "Short"; //$NON-NLS-1$
-		    } else if ("int".equals(fullyQualifiedName)) { //$NON-NLS-1$
-		        primitive = true;
-		        wrapperClass = "Integer"; //$NON-NLS-1$
-		    } else if ("long".equals(fullyQualifiedName)) { //$NON-NLS-1$
-		        primitive = true;
-		        wrapperClass = "Long"; //$NON-NLS-1$
-		    } else if ("char".equals(fullyQualifiedName)) { //$NON-NLS-1$
-		        primitive = true;
-		        wrapperClass = "Character"; //$NON-NLS-1$
-		    } else if ("float".equals(fullyQualifiedName)) { //$NON-NLS-1$
-		        primitive = true;
-		        wrapperClass = "Float"; //$NON-NLS-1$
-		    } else if ("double".equals(fullyQualifiedName)) { //$NON-NLS-1$
-		        primitive = true;
-		        wrapperClass = "Double"; //$NON-NLS-1$
-		    } else if ("boolean".equals(fullyQualifiedName)) { //$NON-NLS-1$
-		        primitive = true;
-		        wrapperClass = "Boolean"; //$NON-NLS-1$
-		    } else {
-		        primitive = false;
-		        wrapperClass = null;
-		    }
-		} else {
-		    shortName = fullyQualifiedName.substring(lastIndex + 1);
-			packageName = fullyQualifiedName.substring(0, lastIndex);
-			if ("java.lang".equals(packageName)) { //$NON-NLS-1$
-			    explicitlyImported = false;
-			} else {
-			    explicitlyImported = true;
-			}
-		}
+        this(fullyQualifiedName, null);
     }
     
     /**
@@ -93,6 +127,9 @@ public class FullyQualifiedJavaType implements Comparable {
         return explicitlyImported;
     }
     /**
+     * This method returns the fully qualified name that is suitable
+     * for an import statement (i.e. - without the genercs specified)
+     * 
      * @return Returns the fullyQualifiedName.
      */
     public String getFullyQualifiedName() {

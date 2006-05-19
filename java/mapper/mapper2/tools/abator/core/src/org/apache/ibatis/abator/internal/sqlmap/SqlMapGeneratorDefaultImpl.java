@@ -302,7 +302,7 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
                     .getFullyQualifiedName()));
         }
 
-        answer.addElementComment();
+        answer.addComment();
 
         Iterator iter = columnDefinitions.getAllColumns().iterator();
         while (iter.hasNext()) {
@@ -358,7 +358,7 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
         sb.append(getResultMapName(tableConfiguration.getTable()));
         answer.addAttribute(new Attribute("extends", sb.toString())); //$NON-NLS-1$
 
-        answer.addElementComment();
+        answer.addComment();
 
         Iterator iter = columnDefinitions.getAllColumns().iterator();
         while (iter.hasNext()) {
@@ -420,7 +420,7 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
                             .getFullyQualifiedName()));
         }
 
-        answer.addElementComment();
+        answer.addComment();
 
         if (tableConfiguration.getGeneratedKey().isConfigured()
                 && !tableConfiguration.getGeneratedKey().isIdentity()) {
@@ -506,7 +506,7 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
                 .getRecordWithBLOBsType(tableConfiguration.getTable())
                 .getFullyQualifiedName()));
 
-        answer.addElementComment();
+        answer.addComment();
 
         StringBuffer sb = new StringBuffer();
         
@@ -586,7 +586,7 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
                 .getRecordType(tableConfiguration.getTable())
                 .getFullyQualifiedName()));
 
-        answer.addElementComment();
+        answer.addComment();
 
         StringBuffer sb = new StringBuffer();
         sb.append("update "); //$NON-NLS-1$
@@ -663,7 +663,7 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
                 .getPrimaryKeyType(tableConfiguration.getTable())
                 .getFullyQualifiedName()));
 
-        answer.addElementComment();
+        answer.addComment();
 
         StringBuffer sb = new StringBuffer();
         sb.append("delete from "); //$NON-NLS-1$
@@ -711,7 +711,7 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
         answer.addAttribute(new Attribute("id", getDeleteByExampleStatementId())); //$NON-NLS-1$
         answer.addAttribute(new Attribute("parameterClass", "java.util.Map")); //$NON-NLS-1$ //$NON-NLS-2$
 
-        answer.addElementComment();
+        answer.addComment();
 
         StringBuffer sb = new StringBuffer();
         sb.append("delete from "); //$NON-NLS-1$
@@ -759,7 +759,7 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
                 .getPrimaryKeyType(tableConfiguration.getTable())
                 .getFullyQualifiedName()));
 
-        answer.addElementComment();
+        answer.addComment();
 
         StringBuffer sb = new StringBuffer();
         sb.append("select "); //$NON-NLS-1$
@@ -1054,7 +1054,7 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
         
         answer.addAttribute(new Attribute("id", getExampleWhereClauseId())); //$NON-NLS-1$
         
-        answer.addElementComment();
+        answer.addComment();
 
         XmlElement dynamicElement = new XmlElement("dynamic"); //$NON-NLS-1$
         dynamicElement.addAttribute(new Attribute("prepend", "where")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -1115,7 +1115,7 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
                 getResultMapName(tableConfiguration.getTable())));
         answer.addAttribute(new Attribute("parameterClass", "java.util.Map")); //$NON-NLS-1$ //$NON-NLS-2$
 
-        answer.addElementComment();
+        answer.addComment();
 
         StringBuffer sb = new StringBuffer();
         sb.append("select "); //$NON-NLS-1$
@@ -1188,7 +1188,7 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
                 getResultMapName(tableConfiguration.getTable()) + "WithBLOBs")); //$NON-NLS-1$
         answer.addAttribute(new Attribute("parameterClass", "java.util.Map")); //$NON-NLS-1$ //$NON-NLS-2$
 
-        answer.addElementComment();
+        answer.addComment();
 
         StringBuffer sb = new StringBuffer();
         sb.append("select "); //$NON-NLS-1$

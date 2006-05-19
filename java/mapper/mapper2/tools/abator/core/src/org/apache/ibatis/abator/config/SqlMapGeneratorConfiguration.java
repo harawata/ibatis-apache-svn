@@ -17,6 +17,7 @@ package org.apache.ibatis.abator.config;
 
 import org.apache.ibatis.abator.internal.sqlmap.SqlMapGeneratorDefaultImpl;
 import org.apache.ibatis.abator.internal.sqlmap.SqlMapGeneratorIterateImpl;
+import org.apache.ibatis.abator.internal.util.StringUtility;
 
 /**
  * @author Jeff Butler
@@ -26,16 +27,14 @@ public class SqlMapGeneratorConfiguration extends TypedPropertyHolder {
 
 	private String targetProject;
 
+    private AbatorContext abatorContext;
+
 	/**
 	 *  
 	 */
-	public SqlMapGeneratorConfiguration() {
+	public SqlMapGeneratorConfiguration(AbatorContext abatorContext) {
 		super();
-		if (JavaModelGeneratorConfiguration.USE_NEW_GENERATORS) {
-		    super.setType(SqlMapGeneratorIterateImpl.class.getName());
-		} else {
-		    super.setType(SqlMapGeneratorDefaultImpl.class.getName());
-		}
+        this.abatorContext = abatorContext;
 	}
 
 	public String getTargetProject() {
@@ -53,13 +52,26 @@ public class SqlMapGeneratorConfiguration extends TypedPropertyHolder {
 	public void setTargetPackage(String targetPackage) {
 		this.targetPackage = targetPackage;
 	}
-	
-    /* (non-Javadoc)
-     * @see org.apache.ibatis.abator.config.TypedPropertyHolder#setType(java.lang.String)
-     */
-    public void setType(String type) {
-		if (!"DEFAULT".equalsIgnoreCase(type)) { //$NON-NLS-1$
-		    super.setType(type);
-		}
+
+    public String getImplementationType() {
+        String answer;
+        String value = (String) abatorContext.getProperties().get(
+                "defaultGeneratorConfiguration"); //$NON-NLS-1$
+
+        if (StringUtility.stringHasValue(getConfigurationType())) {
+            answer = getConfigurationType();
+        } else {
+            if ("Java5Iterator".equalsIgnoreCase(value)) { //$NON-NLS-1$
+                answer = SqlMapGeneratorIterateImpl.class.getName();
+            } else if ("Java2Iterator".equalsIgnoreCase(value)) { //$NON-NLS-1$
+                answer = SqlMapGeneratorIterateImpl.class.getName();
+            } else if ("Java2NonIterator".equalsIgnoreCase(value)) { //$NON-NLS-1$
+                answer = SqlMapGeneratorDefaultImpl.class.getName();
+            } else {
+                answer = SqlMapGeneratorDefaultImpl.class.getName();
+            }
+        }
+
+        return answer;
     }
 }

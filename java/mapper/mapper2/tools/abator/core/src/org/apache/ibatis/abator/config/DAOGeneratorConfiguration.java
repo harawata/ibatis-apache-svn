@@ -20,9 +20,13 @@ import org.apache.ibatis.abator.internal.java.DAOGeneratorGenericSetterInjection
 import org.apache.ibatis.abator.internal.java.DAOGeneratorIbatisImpl;
 import org.apache.ibatis.abator.internal.java.DAOGeneratorSpringImpl;
 import org.apache.ibatis.abator.internal.java.dao.GenericCIJava2DAOGenerator;
+import org.apache.ibatis.abator.internal.java.dao.GenericCIJava5DAOGenerator;
 import org.apache.ibatis.abator.internal.java.dao.GenericSIJava2DAOGenerator;
+import org.apache.ibatis.abator.internal.java.dao.GenericSIJava5DAOGenerator;
 import org.apache.ibatis.abator.internal.java.dao.IbatisJava2DAOGenerator;
+import org.apache.ibatis.abator.internal.java.dao.IbatisJava5DAOGenerator;
 import org.apache.ibatis.abator.internal.java.dao.SpringJava2DAOGenerator;
+import org.apache.ibatis.abator.internal.java.dao.SpringJava5DAOGenerator;
 
 /**
  * @author Jeff Butler
@@ -33,13 +37,16 @@ public class DAOGeneratorConfiguration extends TypedPropertyHolder {
 	private String targetProject;
 
 	private boolean enabled;
+    
+    private AbatorContext abatorContext;
 
 	/**
 	 *  
 	 */
-	public DAOGeneratorConfiguration() {
+	public DAOGeneratorConfiguration(AbatorContext abatorContext) {
 		super();
 		enabled = false;
+        this.abatorContext = abatorContext;
 	}
 
 	public boolean isEnabled() {
@@ -66,34 +73,58 @@ public class DAOGeneratorConfiguration extends TypedPropertyHolder {
 		this.targetPackage = targetPackage;
 	}
 	
-    /* (non-Javadoc)
-     * @see org.apache.ibatis.abator.config.TypedPropertyHolder#setType(java.lang.String)
-     */
-    public void setType(String type) {
-        if (JavaModelGeneratorConfiguration.USE_NEW_GENERATORS) {
-            if ("IBATIS".equalsIgnoreCase(type)) { //$NON-NLS-1$
-                super.setType(IbatisJava2DAOGenerator.class.getName());
-            } else if ("SPRING".equalsIgnoreCase(type)) { //$NON-NLS-1$
-                super.setType(SpringJava2DAOGenerator.class.getName());
-            } else if ("GENERIC-CI".equalsIgnoreCase(type)) { //$NON-NLS-1$
-                super.setType(GenericCIJava2DAOGenerator.class.getName());
-            } else if ("GENERIC-SI".equalsIgnoreCase(type)) { //$NON-NLS-1$
-                super.setType(GenericSIJava2DAOGenerator.class.getName());
+    public String getImplementationType() {
+        String answer;
+        String value = (String) abatorContext.getProperties().get("defaultGeneratorConfiguration"); //$NON-NLS-1$
+        
+        if ("Java5Iterator".equalsIgnoreCase(value)) { //$NON-NLS-1$
+            if ("IBATIS".equalsIgnoreCase(getConfigurationType())) { //$NON-NLS-1$
+                answer = IbatisJava5DAOGenerator.class.getName();
+            } else if ("SPRING".equalsIgnoreCase(getConfigurationType())) { //$NON-NLS-1$
+                answer =SpringJava5DAOGenerator.class.getName();
+            } else if ("GENERIC-CI".equalsIgnoreCase(getConfigurationType())) { //$NON-NLS-1$
+                answer =GenericCIJava5DAOGenerator.class.getName();
+            } else if ("GENERIC-SI".equalsIgnoreCase(getConfigurationType())) { //$NON-NLS-1$
+                answer = GenericSIJava5DAOGenerator.class.getName();
             } else {
-                super.setType(type);
+                answer = getConfigurationType();
             }
+        } else if ("Java2Iterator".equalsIgnoreCase(value)) { //$NON-NLS-1$
+            if ("IBATIS".equalsIgnoreCase(getConfigurationType())) { //$NON-NLS-1$
+                answer = IbatisJava2DAOGenerator.class.getName();
+            } else if ("SPRING".equalsIgnoreCase(getConfigurationType())) { //$NON-NLS-1$
+                answer =SpringJava2DAOGenerator.class.getName();
+            } else if ("GENERIC-CI".equalsIgnoreCase(getConfigurationType())) { //$NON-NLS-1$
+                answer =GenericCIJava2DAOGenerator.class.getName();
+            } else if ("GENERIC-SI".equalsIgnoreCase(getConfigurationType())) { //$NON-NLS-1$
+                answer = GenericSIJava2DAOGenerator.class.getName();
+            } else {
+                answer = getConfigurationType();
+            }
+        } else if ("Java2NonIterator".equalsIgnoreCase(value)) { //$NON-NLS-1$
+            answer = getDefaultGeneratorType();
         } else {
-            if ("IBATIS".equalsIgnoreCase(type)) { //$NON-NLS-1$
-                super.setType(DAOGeneratorIbatisImpl.class.getName());
-            } else if ("SPRING".equalsIgnoreCase(type)) { //$NON-NLS-1$
-                super.setType(DAOGeneratorSpringImpl.class.getName());
-            } else if ("GENERIC-CI".equalsIgnoreCase(type)) { //$NON-NLS-1$
-                super.setType(DAOGeneratorGenericConstructorInjectionImpl.class.getName());
-            } else if ("GENERIC-SI".equalsIgnoreCase(type)) { //$NON-NLS-1$
-                super.setType(DAOGeneratorGenericSetterInjectionImpl.class.getName());
-            } else {
-                super.setType(type);
-            }
+            answer = getDefaultGeneratorType();
         }
+        
+        return answer;
+    }
+    
+    private String getDefaultGeneratorType() {
+        String answer;
+        
+        if ("IBATIS".equalsIgnoreCase(getConfigurationType())) { //$NON-NLS-1$
+            answer = DAOGeneratorIbatisImpl.class.getName();
+        } else if ("SPRING".equalsIgnoreCase(getConfigurationType())) { //$NON-NLS-1$
+            answer = DAOGeneratorSpringImpl.class.getName();
+        } else if ("GENERIC-CI".equalsIgnoreCase(getConfigurationType())) { //$NON-NLS-1$
+            answer = DAOGeneratorGenericConstructorInjectionImpl.class.getName();
+        } else if ("GENERIC-SI".equalsIgnoreCase(getConfigurationType())) { //$NON-NLS-1$
+            answer = DAOGeneratorGenericSetterInjectionImpl.class.getName();
+        } else {
+            answer = getConfigurationType();
+        }
+        
+        return answer;
     }
 }

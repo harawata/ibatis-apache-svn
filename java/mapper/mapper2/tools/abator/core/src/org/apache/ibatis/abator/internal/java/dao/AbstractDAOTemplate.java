@@ -68,7 +68,7 @@ public abstract class AbstractDAOTemplate {
 
     public Method getConstructorClone(FullyQualifiedJavaType type, FullyQualifiedTable table) {
         Method answer = new Method();
-        answer.addMethodComment(table);
+        answer.addComment(table);
         answer.setConstructor(true);
         answer.setName(type.getShortName());
         answer.setVisibility(constructorTemplate.getVisibility());
@@ -151,7 +151,7 @@ public abstract class AbstractDAOTemplate {
             Field field = new Field();
             Field oldField = (Field) iter.next();
             
-            field.addFieldComment(table);
+            field.addComment(table);
             field.setInitializationString(oldField.getInitializationString());
             field.setModifierFinal(oldField.isModifierFinal());
             field.setModifierStatic(oldField.isModifierStatic());
@@ -181,7 +181,7 @@ public abstract class AbstractDAOTemplate {
                 method.addException((FullyQualifiedJavaType) iter2.next());
             }
             
-            method.addMethodComment(table);
+            method.addComment(table);
             
             iter2 = oldMethod.getParameters().iterator();
             while (iter2.hasNext()) {

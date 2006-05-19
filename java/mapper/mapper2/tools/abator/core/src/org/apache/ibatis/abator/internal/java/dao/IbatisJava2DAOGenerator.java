@@ -18,12 +18,12 @@ package org.apache.ibatis.abator.internal.java.dao;
 /**
  * @author Jeff Butler
  */
-public class IbatisJava2DAOGenerator extends BaseJava2DAOGenerator {
+public class IbatisJava2DAOGenerator extends BaseDAOGenerator {
 
     /**
      * @param daoTemplate
      */
     public IbatisJava2DAOGenerator() {
-        super(new IbatisDAOTemplate());
+        super(new IbatisDAOTemplate(), false);
     }
 }

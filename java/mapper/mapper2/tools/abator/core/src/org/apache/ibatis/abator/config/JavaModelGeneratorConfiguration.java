@@ -17,52 +17,63 @@ package org.apache.ibatis.abator.config;
 
 import org.apache.ibatis.abator.internal.java.JavaModelGeneratorDefaultImpl;
 import org.apache.ibatis.abator.internal.java.model.JavaModelGeneratorJava2Impl;
+import org.apache.ibatis.abator.internal.java.model.JavaModelGeneratorJava5Impl;
+import org.apache.ibatis.abator.internal.util.StringUtility;
 
 /**
  * @author Jeff Butler
  */
 public class JavaModelGeneratorConfiguration extends TypedPropertyHolder {
-    // TODO - this value is only for debugging the new generators, remove when finished
-    public static final boolean USE_NEW_GENERATORS = false;
-    
-	private String targetPackage;
 
-	private String targetProject;
-	
-	/**
-	 *  
-	 */
-	public JavaModelGeneratorConfiguration() {
-		super();
-		if (USE_NEW_GENERATORS) {
-		    super.setType(JavaModelGeneratorJava2Impl.class.getName());
-		} else {
-		    super.setType(JavaModelGeneratorDefaultImpl.class.getName());
-		}
-	}
+    private String targetPackage;
 
-	public String getTargetProject() {
-		return targetProject;
-	}
+    private String targetProject;
 
-	public void setTargetProject(String targetProject) {
-		this.targetProject = targetProject;
-	}
-	
-	public String getTargetPackage() {
-		return targetPackage;
-	}
-	
-	public void setTargetPackage(String targetPackage) {
-		this.targetPackage = targetPackage;
-	}
-	
-    /* (non-Javadoc)
-     * @see org.apache.ibatis.abator.config.TypedPropertyHolder#setType(java.lang.String)
+    private AbatorContext abatorContext;
+
+    /**
+     * 
      */
-    public void setType(String type) {
-		if (!"DEFAULT".equalsIgnoreCase(type)) { //$NON-NLS-1$
-		    super.setType(type);
-		}
+    public JavaModelGeneratorConfiguration(AbatorContext abatorContext) {
+        super();
+        this.abatorContext = abatorContext;
+    }
+
+    public String getTargetProject() {
+        return targetProject;
+    }
+
+    public void setTargetProject(String targetProject) {
+        this.targetProject = targetProject;
+    }
+
+    public String getTargetPackage() {
+        return targetPackage;
+    }
+
+    public void setTargetPackage(String targetPackage) {
+        this.targetPackage = targetPackage;
+    }
+
+    public String getImplementationType() {
+        String answer;
+        String value = (String) abatorContext.getProperties().get(
+                "defaultGeneratorConfiguration"); //$NON-NLS-1$
+
+        if (StringUtility.stringHasValue(getConfigurationType())) {
+            answer = getConfigurationType();
+        } else {
+            if ("Java5Iterator".equalsIgnoreCase(value)) { //$NON-NLS-1$
+                answer = JavaModelGeneratorJava5Impl.class.getName();
+            } else if ("Java2Iterator".equalsIgnoreCase(value)) { //$NON-NLS-1$
+                answer = JavaModelGeneratorJava2Impl.class.getName();
+            } else if ("Java2NonIterator".equalsIgnoreCase(value)) { //$NON-NLS-1$
+                answer = JavaModelGeneratorDefaultImpl.class.getName();
+            } else {
+                answer = JavaModelGeneratorDefaultImpl.class.getName();
+            }
+        }
+
+        return answer;
     }
 }

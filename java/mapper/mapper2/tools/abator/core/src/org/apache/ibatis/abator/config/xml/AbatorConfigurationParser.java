@@ -157,7 +157,9 @@ public class AbatorConfigurationParser {
 				continue;
 			}
 
-			if ("jdbcConnection".equals(childNode.getNodeName())) { //$NON-NLS-1$
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(abatorContext, childNode);
+            } else if ("jdbcConnection".equals(childNode.getNodeName())) { //$NON-NLS-1$
 				parseJdbcConnection(abatorContext, childNode);
 			} else if ("javaModelGenerator".equals(childNode.getNodeName())) { //$NON-NLS-1$
 				parseJavaModelGenerator(abatorContext, childNode);
@@ -181,7 +183,7 @@ public class AbatorConfigurationParser {
 
 		Node attribute = nnm.getNamedItem("type"); //$NON-NLS-1$
 		if (attribute != null) {
-		    sqlMapGenerator.setType(attribute.getNodeValue());
+		    sqlMapGenerator.setConfigurationType(attribute.getNodeValue());
 		}
 
 		attribute = nnm.getNamedItem("targetPackage"); //$NON-NLS-1$
@@ -398,7 +400,7 @@ public class AbatorConfigurationParser {
 
 		Node attribute = nnm.getNamedItem("type"); //$NON-NLS-1$
 		if (attribute != null) {
-			javaTypeResolverConfiguration.setType(attribute.getNodeValue());
+			javaTypeResolverConfiguration.setConfigurationType(attribute.getNodeValue());
 		}
 
 		NodeList nodeList = node.getChildNodes();
@@ -424,7 +426,7 @@ public class AbatorConfigurationParser {
 
 		Node attribute = nnm.getNamedItem("type"); //$NON-NLS-1$
 		if (attribute != null) {
-			javaModelGeneratorConfiguration.setType(attribute.getNodeValue());
+			javaModelGeneratorConfiguration.setConfigurationType(attribute.getNodeValue());
 		}
 
 		attribute = nnm.getNamedItem("targetPackage"); //$NON-NLS-1$
@@ -457,7 +459,7 @@ public class AbatorConfigurationParser {
 		NamedNodeMap nnm = node.getAttributes();
 
 		Node attribute = nnm.getNamedItem("type"); //$NON-NLS-1$
-		daoGeneratorConfiguration.setType(attribute.getNodeValue());
+		daoGeneratorConfiguration.setConfigurationType(attribute.getNodeValue());
 
 		attribute = nnm.getNamedItem("targetPackage"); //$NON-NLS-1$
 		daoGeneratorConfiguration.setTargetPackage(attribute.getNodeValue());

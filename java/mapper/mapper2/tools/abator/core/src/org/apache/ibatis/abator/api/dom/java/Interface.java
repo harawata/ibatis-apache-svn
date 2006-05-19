@@ -95,6 +95,13 @@ public class Interface extends JavaElement implements CompilationUnit {
             OutputUtilities.newLine(sb);
         }
 
+        iter = getAnnotations().iterator();
+        while (iter.hasNext()) {
+            OutputUtilities.javaIndent(sb, indentLevel);
+            sb.append(iter.next());
+            OutputUtilities.newLine(sb);
+        }
+        
         OutputUtilities.javaIndent(sb, indentLevel);
         if (getVisibility() == JavaVisibility.PRIVATE) {
             sb.append("private "); //$NON-NLS-1$
@@ -141,6 +148,9 @@ public class Interface extends JavaElement implements CompilationUnit {
             OutputUtilities.newLine(sb);
             Method method = (Method) iter.next();
             sb.append(method.getFormattedContent(indentLevel, true));
+            if (iter.hasNext()) {
+                OutputUtilities.newLine(sb);
+            }
         }
 
         indentLevel--;
@@ -199,5 +209,9 @@ public class Interface extends JavaElement implements CompilationUnit {
      */
     public boolean isJavaInterface() {
         return true;
+    }
+
+    public boolean isJavaEnumeration() {
+        return false;
     }
 }

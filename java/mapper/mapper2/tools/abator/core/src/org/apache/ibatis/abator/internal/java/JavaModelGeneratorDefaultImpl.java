@@ -148,14 +148,14 @@ public class JavaModelGeneratorDefaultImpl implements JavaModelGenerator {
 			String property = cd.getJavaProperty();
 			
 			field = new Field();
-			field.addFieldComment(table, cd.getColumnName());
+			field.addComment(table, cd.getColumnName());
 			field.setVisibility(JavaVisibility.PRIVATE);
 			field.setType(fqjt);
 			field.setName(property);
 			topLevelClass.addField(field);
 
 			method = new Method();
-			method.addGetterMethodComment(table, cd);
+			method.addGetterComment(table, cd);
 	        method.setVisibility(JavaVisibility.PUBLIC);
 			method.setReturnType(fqjt);
 			method.setName(JavaBeansUtil.getGetterMethodName(property));
@@ -167,7 +167,7 @@ public class JavaModelGeneratorDefaultImpl implements JavaModelGenerator {
 			topLevelClass.addMethod(method);
 			
 			method = new Method();
-			method.addSetterMethodComment(table, cd);
+			method.addSetterComment(table, cd);
 	        method.setVisibility(JavaVisibility.PUBLIC);
 			method.setName(JavaBeansUtil.getSetterMethodName(property));
 			method.addParameter(new Parameter(fqjt, property));
@@ -254,7 +254,7 @@ public class JavaModelGeneratorDefaultImpl implements JavaModelGenerator {
 		
 		StringBuffer sb = new StringBuffer();
 		Field field = new Field();
-		field.addFieldComment(tableConfiguration.getTable());
+		field.addComment(tableConfiguration.getTable());
 		field.setVisibility(JavaVisibility.PUBLIC);
 		field.setModifierStatic(true);
 		field.setModifierFinal(true);
@@ -267,7 +267,7 @@ public class JavaModelGeneratorDefaultImpl implements JavaModelGenerator {
 		while (iter.hasNext()) {
 			ExampleClause clause = (ExampleClause) iter.next();
 			field = new Field();
-			field.addFieldComment(tableConfiguration.getTable());
+			field.addComment(tableConfiguration.getTable());
 			field.setVisibility(JavaVisibility.PUBLIC);
 			field.setModifierStatic(true);
 			field.setModifierFinal(true);
@@ -278,14 +278,14 @@ public class JavaModelGeneratorDefaultImpl implements JavaModelGenerator {
 		}
 		
 		field = new Field();
-		field.addFieldComment(tableConfiguration.getTable());
+		field.addComment(tableConfiguration.getTable());
 		field.setVisibility(JavaVisibility.PRIVATE);
 		field.setType(FullyQualifiedJavaType.getBooleanInstance());
 		field.setName("combineTypeOr"); //$NON-NLS-1$
 		topLevelClass.addField(field);
 
 		Method method = new Method();
-		method.addMethodComment(tableConfiguration.getTable());
+		method.addComment(tableConfiguration.getTable());
 		method.setVisibility(JavaVisibility.PUBLIC);
 		method.setName("setCombineTypeOr"); //$NON-NLS-1$
 		method.addParameter(new Parameter(FullyQualifiedJavaType.getBooleanInstance(),
@@ -294,7 +294,7 @@ public class JavaModelGeneratorDefaultImpl implements JavaModelGenerator {
 		topLevelClass.addMethod(method);
 		
 		method = new Method();
-		method.addMethodComment(tableConfiguration.getTable());
+		method.addComment(tableConfiguration.getTable());
 		method.setVisibility(JavaVisibility.PUBLIC);
 		method.setReturnType(FullyQualifiedJavaType.getBooleanInstance());
 		method.setName("isCombineTypeOr"); //$NON-NLS-1$
@@ -312,14 +312,14 @@ public class JavaModelGeneratorDefaultImpl implements JavaModelGenerator {
 			String fieldName = cd.getJavaProperty() + "_Indicator"; //$NON-NLS-1$
 			
 			field = new Field();
-			field.addFieldComment(tableConfiguration.getTable());
+			field.addComment(tableConfiguration.getTable());
 			field.setVisibility(JavaVisibility.PRIVATE);
 			field.setType(FullyQualifiedJavaType.getIntInstance());
 			field.setName(fieldName);
 			topLevelClass.addField(field);
 			
 			method = new Method();
-			method.addMethodComment(tableConfiguration.getTable());
+			method.addComment(tableConfiguration.getTable());
 			method.setVisibility(JavaVisibility.PUBLIC);
 			method.setReturnType(FullyQualifiedJavaType.getIntInstance());
 			method.setName(JavaBeansUtil.getGetterMethodName(fieldName));
@@ -331,7 +331,7 @@ public class JavaModelGeneratorDefaultImpl implements JavaModelGenerator {
 			topLevelClass.addMethod(method);
 
 			method = new Method();
-			method.addMethodComment(tableConfiguration.getTable());
+			method.addComment(tableConfiguration.getTable());
 			method.setVisibility(JavaVisibility.PUBLIC);
 			method.setName(JavaBeansUtil.getSetterMethodName(fieldName));
 			method.addParameter(new Parameter(FullyQualifiedJavaType.getIntInstance(), fieldName));

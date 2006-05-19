@@ -22,13 +22,15 @@ import java.util.List;
  * @author Jeff Butler
  */
 public abstract class JavaElement {
-    protected List javaDocLines;
+    private List javaDocLines;
 
     private JavaVisibility visibility;
 
     private boolean modifierStatic;
 
     private boolean modifierFinal;
+    
+    private List annotations;
 
     /**
      *  
@@ -36,6 +38,7 @@ public abstract class JavaElement {
     public JavaElement() {
         super();
         javaDocLines = new ArrayList();
+        annotations = new ArrayList();
     }
 
     /**
@@ -43,6 +46,18 @@ public abstract class JavaElement {
      */
     public List getJavaDocLines() {
         return javaDocLines;
+    }
+    
+    public void addJavaDocLine(String javaDocLine) {
+        javaDocLines.add(javaDocLine);
+    }
+    
+    public List getAnnotations() {
+        return annotations;
+    }
+    
+    public void addAnnotation(String annotation) {
+        annotations.add(annotation);
     }
 
     /**
