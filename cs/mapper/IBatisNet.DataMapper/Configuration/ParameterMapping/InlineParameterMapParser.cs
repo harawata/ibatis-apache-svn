@@ -353,7 +353,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 				{
 					try 
 					{
-						Type typeClass = Resources.TypeForName( propertyType );
+                        Type typeClass = TypeUtils.ResolveType(propertyType);
 						handler = typeHandlerFactory.GetTypeHandler(typeClass, dbType);
 					} 
 					catch (Exception e) 

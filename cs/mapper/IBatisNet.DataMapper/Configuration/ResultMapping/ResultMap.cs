@@ -38,6 +38,7 @@ using IBatisNet.DataMapper.Configuration.Serializers;
 using IBatisNet.DataMapper.DataExchange;
 using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.Scope;
+using IBatisNet.Common.Utilities;
 
 #endregion
 
@@ -393,7 +394,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			}
 			else
 			{
-				return TypeAliasResolver.InstantiatePrimitiveType(typeCode);
+                return TypeUtils.InstantiatePrimitiveType(typeCode);
 			}
 		}
 

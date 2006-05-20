@@ -82,11 +82,11 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 			configScope.ErrorContext.MoreInfo = "Check the type attribute '" + handler.ClassName + "' (must be a class name) or the dbType '" + handler.DbType + "' (must be a DbType type name).";
 			if (handler.DbType!= null && handler.DbType.Length > 0) 
 			{
-				configScope.DataExchangeFactory.TypeHandlerFactory.Register(Resources.TypeForName(handler.ClassName), handler.DbType, typeHandler);
+                configScope.DataExchangeFactory.TypeHandlerFactory.Register(TypeUtils.ResolveType(handler.ClassName), handler.DbType, typeHandler);
 			} 
 			else 
 			{
-				configScope.DataExchangeFactory.TypeHandlerFactory.Register(Resources.TypeForName(handler.ClassName), typeHandler);
+                configScope.DataExchangeFactory.TypeHandlerFactory.Register(TypeUtils.ResolveType(handler.ClassName), typeHandler);
 			}
 		}
 	}

@@ -31,7 +31,7 @@ using System.Data;
 using System.Reflection;
 using System.Xml.Serialization;
 using IBatisNet.Common.Exceptions;
-using IBatisNet.Common.Utilities.TypesResolver;
+using IBatisNet.Common.Utilities;
 
 #endregion
 
@@ -469,7 +469,6 @@ namespace IBatisNet.Common
 		{
 			Assembly assembly = null;
 			Type type = null;
-			CachedTypeResolver cachedTypeResolver = new CachedTypeResolver();
 
 			try
 			{
@@ -489,7 +488,7 @@ namespace IBatisNet.Common
 				_commandBuilderType = assembly.GetType(_commandBuilderClass, true);
 				if (_parameterDbTypeClass.IndexOf(',')>0)
 				{
-					_parameterDbType = cachedTypeResolver.Resolve(_parameterDbTypeClass);
+                    _parameterDbType = TypeUtils.ResolveType(_parameterDbTypeClass);
 				}
 				else
 				{

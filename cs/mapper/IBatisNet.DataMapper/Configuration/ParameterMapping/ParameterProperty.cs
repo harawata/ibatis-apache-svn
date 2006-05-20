@@ -329,8 +329,8 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
                     _typeHandler = scope.DataExchangeFactory.TypeHandlerFactory.GetUnkownTypeHandler();
 				}
 				else // If we specify a CLR type, use it
-				{ 
-					Type type = Resources.TypeForName(this.CLRType);
+				{
+                    Type type = TypeUtils.ResolveType(this.CLRType);
 
                     if (scope.DataExchangeFactory.TypeHandlerFactory.IsSimpleType(type)) 
 					{

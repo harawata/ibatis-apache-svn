@@ -41,6 +41,7 @@ using IBatisNet.DataMapper.Configuration.ResultMapping;
 using IBatisNet.DataMapper.Configuration.Sql;
 using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.Scope;
+using IBatisNet.Common.Utilities;
 
 #endregion
 
@@ -346,7 +347,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 			if (_resultClass.IsPrimitive || _resultClass == typeof (string))
 			{
 				TypeCode typeCode = Type.GetTypeCode(_resultClass);
-				return TypeAliasResolver.InstantiatePrimitiveType(typeCode);
+                return TypeUtils.InstantiatePrimitiveType(typeCode);
 			}
 			else
 			{

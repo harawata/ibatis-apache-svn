@@ -1,7 +1,7 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Revision: 382490 $
+ * $Revision$
  * $LastChangedDate$
  * $LastChangedBy$
  * 
@@ -25,15 +25,22 @@
 #endregion
 
 #region Remarks
-// Code from Spring.NET
+// Inpspired from Spring.NET
 #endregion
 
-#region Imports
+#region Using
 
 using System;
+using System.Collections;
+#if dotnet2
+using System.Collections.Generic;
+#endif
 using System.Reflection;
 
 using IBatisNet.Common.Exceptions;
+using System.IO;
+using System.Text;
+using System.Text.RegularExpressions;
 #endregion
 
 namespace IBatisNet.Common.Utilities.TypesResolver
@@ -49,8 +56,10 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 	/// </p>
 	/// </remarks>
 	/// <version>$Id: TypeResolver.cs,v 1.5 2004/09/28 07:51:47 springboy Exp $</version>
-	public class TypeResolver
+    public class TypeResolver : ITypeResolver
 	{
+        private const string NULLABLE_TYPE = "System.Nullable";
+
 		#region Constructor (s) / Destructor
 		/// <summary>
 		/// Creates a new instance of the TypeResolver class.
@@ -58,177 +67,553 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 		public TypeResolver () {}
 		#endregion
 
-		#region Methods
-		/// <summary>
-		/// Resolves the supplied type name into a <see cref="System.Type"/>
-		/// instance.
-		/// </summary>
-		/// <param name="typeName">
-		/// The (possibly partially assembly qualified) name of a <see cref="System.Type"/>.
-		/// </param>
-		/// <returns>
-		/// A resolved <see cref="System.Type"/> instance.
-		/// </returns>
-		/// <exception cref="System.TypeLoadException">
-		/// If the type could not be resolved.
-		/// </exception>
-		public virtual Type Resolve (string typeName)
-		{
+        #region ITypeResolver Members
+        /// <summary>
+        /// Resolves the supplied <paramref name="typeName"/> to a
+        /// <see cref="System.Type"/> instance.
+        /// </summary>
+        /// <param name="typeName">
+        /// The unresolved name of a <see cref="System.Type"/>.
+        /// </param>
+        /// <returns>
+        /// A resolved <see cref="System.Type"/> instance.
+        /// </returns>
+        /// <exception cref="System.TypeLoadException">
+        /// If the supplied <paramref name="typeName"/> could not be resolved
+        /// to a <see cref="System.Type"/>.
+        /// </exception>
+        public virtual Type Resolve(string typeName)
+        {
+#if dotnet2
+            Type type = ResolveGenericType(typeName);
+            if (type == null)
+            {
+                type = ResolveType(typeName);
+            }
+            return type;
+#else
+            return ResolveType(typeName);
+#endif
+        }
+        #endregion
 
-			#region Sanity Check
+#if dotnet2
+        /// <summary>
+        /// Resolves the supplied generic <paramref name="typeName"/>,
+        /// substituting recursively all its type parameters., 
+        /// to a <see cref="System.Type"/> instance.
+        /// </summary>
+        /// <param name="typeName">
+        /// The (possibly generic) name of a <see cref="System.Type"/>.
+        /// </param>
+        /// <returns>
+        /// A resolved <see cref="System.Type"/> instance.
+        /// </returns>
+        /// <exception cref="System.TypeLoadException">
+        /// If the supplied <paramref name="typeName"/> could not be resolved
+        /// to a <see cref="System.Type"/>.
+        /// </exception>
+        private Type ResolveGenericType(string typeName)
+        {
+            #region Sanity Check
 			if (typeName ==  null || typeName.Trim().Length==0)
 			{
-				throw new ConfigurationException (
-					"Could not load type with a null or zero length parameter.");
+                throw BuildTypeLoadException(typeName);
 			}
 			#endregion
 
-			Type type = null;
-			string canonicalTypeName = TypeAliasResolver.Resolve (typeName);
-			TypeAssemblyInfo typeInfo = new TypeAssemblyInfo (canonicalTypeName);
-			if (typeInfo.IsAssemblyQualified)
-			{
-				// assembly qualified... load the assembly, then the Type
-				Assembly assembly = null;
-#if dotnet2
-                assembly = Assembly.Load(typeInfo.AssemblyName);
-#else
-                assembly = Assembly.LoadWithPartialName (typeInfo.AssemblyName);
+            if (typeName.Contains(NULLABLE_TYPE))
+            {
+                return null;
+            }
+            else
+            {
+                GenericArgumentsInfo genericInfo = new GenericArgumentsInfo(typeName);
+                Type type = null;
+                try
+                {
+                    if (genericInfo.ContainsGenericArguments)
+                    {
+                        type = TypeUtils.ResolveType(genericInfo.GenericTypeName);
+                        if (!genericInfo.IsGenericDefinition)
+                        {
+                            string[] unresolvedGenericArgs = genericInfo.GetGenericArguments();
+                            Type[] genericArgs = new Type[unresolvedGenericArgs.Length];
+                            for (int i = 0; i < unresolvedGenericArgs.Length; i++)
+                            {
+                                genericArgs[i] = TypeUtils.ResolveType(unresolvedGenericArgs[i]);
+                            }
+                            type = type.MakeGenericType(genericArgs);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (ex is TypeLoadException)
+                    {
+                        throw;
+                    }
+                    throw BuildTypeLoadException(typeName, ex);
+                }
+                return type;
+            }
+        }
 #endif
-                if (assembly != null)
-				{
-					type = assembly.GetType (typeInfo.TypeName, true, true);
-				}
-			} 
-			else
-			{
-				// bare type name... loop thru all loaded assemblies
-				Assembly [] assemblies = AppDomain.CurrentDomain.GetAssemblies ();
-				foreach (Assembly assembly in assemblies)
-				{
-					type = assembly.GetType (typeInfo.TypeName, false, false);
-					if (type != null)
-					{
-						break;
-					}
-				}
-			}
-			if (type == null) 
-			{
-				throw new TypeLoadException (
-					"Could not load type : " + typeName);
-			}
-			return type;
-		}
-		#endregion
 
-		#region Inner Class : TypeAssemblyInfo
-		/// <summary>
-		/// Holds data about a <see cref="System.Type"/> and it's
-		/// attendant <see cref="System.Reflection.Assembly"/>.
-		/// </summary>
-		internal class TypeAssemblyInfo
-		{
-			#region Constants
-			/// <summary>
-			/// The string that separates <see cref="System.Type"/> names
-			/// from their attendant <see cref="System.Reflection.Assembly"/>
-			/// names in an assembly qualified type name.
-			/// </summary>
-			public const string TYPE_ASSEMBLY_SEPARATOR = ",";
-            public const string NULLABLE_TYPE = "System.Nullable";
-            public const string NULLABLE_TYPE_ASSEMBLY_SEPARATOR = "]],";
-			#endregion
+        /// <summary>
+        /// Resolves the supplied <paramref name="typeName"/> to a
+        /// <see cref="System.Type"/>
+        /// instance.
+        /// </summary>
+        /// <param name="typeName">
+        /// The (possibly partially assembly qualified) name of a
+        /// <see cref="System.Type"/>.
+        /// </param>
+        /// <returns>
+        /// A resolved <see cref="System.Type"/> instance.
+        /// </returns>
+        /// <exception cref="System.TypeLoadException">
+        /// If the supplied <paramref name="typeName"/> could not be resolved
+        /// to a <see cref="System.Type"/>.
+        /// </exception>
+        private Type ResolveType(string typeName)
+        {
+            #region Sanity Check
+            if (typeName == null || typeName.Trim().Length == 0)
+            {
+                throw BuildTypeLoadException(typeName);
+            }
+            #endregion
 
-			#region Fields
-			private string _unresolvedAssemblyName = string.Empty;
-            private string _unresolvedTypeName = string.Empty;
-            private bool _isNullable = false;
+            TypeAssemblyInfo typeInfo = new TypeAssemblyInfo(typeName);
+            Type type = null;
+            try
+            {
+                type = (typeInfo.IsAssemblyQualified) ?
+                     LoadTypeDirectlyFromAssembly(typeInfo) :
+                     LoadTypeByIteratingOverAllLoadedAssemblies(typeInfo);
+            }
+            catch (Exception ex)
+            {
+                throw BuildTypeLoadException(typeName, ex);
+            }
+            if (type == null)
+            {
+                throw BuildTypeLoadException(typeName);
+            }
+            return type;
+        }
 
-			#endregion
+        /// <summary>
+        /// Uses <see cref="System.Reflection.Assembly.LoadWithPartialName(string)"/>
+        /// to load an <see cref="System.Reflection.Assembly"/> and then the attendant
+        /// <see cref="System.Type"/> referred to by the <paramref name="typeInfo"/>
+        /// parameter.
+        /// </summary>
+        /// <remarks>
+        /// <p>
+        /// <see cref="System.Reflection.Assembly.LoadWithPartialName(string)"/> is
+        /// deprecated in .NET 2.0, but is still used here (even when this class is
+        /// compiled for .NET 2.0);
+        /// <see cref="System.Reflection.Assembly.LoadWithPartialName(string)"/> will
+        /// still resolve (non-.NET Framework) local assemblies when given only the
+        /// display name of an assembly (the behaviour for .NET Framework assemblies
+        /// and strongly named assemblies is documented in the docs for the
+        /// <see cref="System.Reflection.Assembly.LoadWithPartialName(string)"/> method).
+        /// </p>
+        /// </remarks>
+        /// <param name="typeInfo">
+        /// The assembly and type to be loaded.
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.Type"/>, or <see lang="null"/>.
+        /// </returns>
+        /// <exception cref="System.Exception">
+        /// <see cref="System.Reflection.Assembly.LoadWithPartialName(string)"/>
+        /// </exception>
+        private static Type LoadTypeDirectlyFromAssembly(TypeAssemblyInfo typeInfo)
+        {
+            Type type = null;
+            // assembly qualified... load the assembly, then the Type
+            Assembly assembly = null;
 
-			#region Properties
+#if dotnet2
+            assembly = Assembly.Load(typeInfo.AssemblyName);
+#else
+            assembly = Assembly.LoadWithPartialName (typeInfo.AssemblyName);
+#endif
+
+            if (assembly != null)
+            {
+                type = assembly.GetType(typeInfo.TypeName, true, true);
+            }
+            return type;
+        }
+
+        /// <summary>
+        /// Check all assembly
+        /// to load the attendant <see cref="System.Type"/> referred to by 
+        /// the <paramref name="typeInfo"/> parameter.
+        /// </summary>
+        /// <param name="typeInfo">
+        /// The type to be loaded.
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.Type"/>, or <see lang="null"/>.
+        /// </returns>
+        private static Type LoadTypeByIteratingOverAllLoadedAssemblies(TypeAssemblyInfo typeInfo)
+        {
+            Type type = null;
+            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (Assembly assembly in assemblies)
+            {
+                type = assembly.GetType(typeInfo.TypeName, false, false);
+                if (type != null)
+                {
+                    break;
+                }
+            }
+            return type;
+        }
+
+        private static TypeLoadException BuildTypeLoadException(string typeName)
+        {
+            return new TypeLoadException("Could not load type from string value '" + typeName + "'.");
+        }
+
+        private static TypeLoadException BuildTypeLoadException(string typeName, Exception ex)
+        {
+            return new TypeLoadException("Could not load type from string value '" + typeName + "'.", ex);
+        }
+
+#if dotnet2
+        #region Inner Class : GenericArgumentsInfo
+
+        /// <summary>
+        /// Holder for the generic arguments when using type parameters.
+        /// </summary>
+        /// <remarks>
+        /// <p>
+        /// Type parameters can be applied to classes, interfaces, 
+        /// structures, methods, delegates, etc...
+        /// </p>
+        /// </remarks>
+        internal class GenericArgumentsInfo
+        {
+        #region Constants
 
             /// <summary>
-            /// Indicatre if the type is a nullable type.
+            /// The generic arguments prefix.
             /// </summary>
-            public bool IsNullable
+            public const string GENERIC_ARGUMENTS_PREFIX = "[[";
+
+            /// <summary>
+            /// The generic arguments suffix.
+            /// </summary>
+            public const string GENERIC_ARGUMENTS_SUFFIX = "],";
+
+            /// <summary>
+            /// The character that separates a list of generic arguments.
+            /// </summary>
+            public const string GENERIC_ARGUMENTS_SEPARATOR = "],[";
+            
+            private const char GENERIC_ARGUMENT_SUFFIX = '[';
+            private const char GENERIC_ARGUMENT_PREFIX = ']';
+
+        #endregion
+
+        #region Fields
+
+            private string _unresolvedGenericTypeName = string.Empty;
+            private string _unresolvedGenericMethodName = string.Empty;
+            private string[] _unresolvedGenericArguments = null;
+
+            #endregion
+
+        #region Constructor (s) / Destructor
+
+            /// <summary>
+            /// Creates a new instance of the GenericArgumentsInfo class.
+            /// </summary>
+            /// <param name="value">
+            /// The string value to parse looking for a generic definition
+            /// and retrieving its generic arguments.
+            /// </param>
+            public GenericArgumentsInfo(string value)
             {
-                get { return _isNullable; }
+                ParseGenericArguments(value);
             }
 
-			/// <summary>
-			/// The (unresolved) type name portion of the original type name.
-			/// </summary>
-			public string TypeName
-			{
-				get { return _unresolvedTypeName; }
-			}
+            #endregion
 
-			/// <summary>
-			/// The (unresolved, possibly partial) name of the attandant assembly.
-			/// </summary>
-			public string AssemblyName
-			{
-				get { return _unresolvedAssemblyName; }
-			}
+        #region Properties
 
-			/// <summary>
-			/// Is the type name being resolved assembly qualified?
-			/// </summary>
-			public bool IsAssemblyQualified
-			{
-				get
-				{
-					if (AssemblyName ==  null || AssemblyName.Trim().Length==0)
-					{
-						return false;
-					}
-					else
-					{
-						return true;
-					}
-				}
-			}
+            /// <summary>
+            /// The (unresolved) generic type name portion 
+            /// of the original value when parsing a generic type.
+            /// </summary>
+            public string GenericTypeName
+            {
+                get { return _unresolvedGenericTypeName; }
+            }
 
-			/// <summary>
-			/// The (possibly assembly qualified) <see cref="System.Type"/> name.
-			/// </summary>
-			public string OriginalTypeName
-			{
-				get
-				{
-					System.Text.StringBuilder buffer = new System.Text.StringBuilder (TypeName);
-					if (IsAssemblyQualified) 
-					{
-                        buffer.Append(TYPE_ASSEMBLY_SEPARATOR);
-						buffer.Append (AssemblyName);
-					}
-					return buffer.ToString ();
-				}
-			}
-			#endregion
+            /// <summary>
+            /// The (unresolved) generic method name portion 
+            /// of the original value when parsing a generic method.
+            /// </summary>
+            public string GenericMethodName
+            {
+                get { return _unresolvedGenericMethodName; }
+            }
 
-			#region Constructor (s) / Destructor
-			/// <summary>
-			/// Creates a new instance of the TypeAssemblyInfo class.
-			/// </summary>
-			/// <param name="unresolvedTypeName">
-			/// The unresolved name of a <see cref="System.Type"/>.
-			/// </param>
-			public TypeAssemblyInfo (string unresolvedTypeName)
-			{
-				SplitTypeAndAssemblyNames (unresolvedTypeName);
-			}
-			#endregion
+            /// <summary>
+            /// Is the string value contains generic arguments ?
+            /// </summary>
+            /// <remarks>
+            /// <p>
+            /// A generic argument can be a type parameter or a type argument.
+            /// </p>
+            /// </remarks>
+            public bool ContainsGenericArguments
+            {
+                get
+                {
+                    return (_unresolvedGenericArguments != null &&
+                        _unresolvedGenericArguments.Length > 0);
+                }
+            }
 
+            /// <summary>
+            /// Is generic arguments only contains type parameters ?
+            /// </summary>
+            public bool IsGenericDefinition
+            {
+                get
+                {
+                    if (_unresolvedGenericArguments == null)
+                        return false;
 
-			#region Methods
-			private void SplitTypeAndAssemblyNames (string originalTypeName) 
-			{
+                    foreach (string arg in _unresolvedGenericArguments)
+                    {
+                        if (arg.Length > 0)
+                            return false;
+                    }
+                    return true;
+                }
+            }
+
+            #endregion
+
+        #region Methods
+
+            /// <summary>
+            /// Returns an array of unresolved generic arguments types.
+            /// </summary>
+            /// <remarks>
+            /// <p>
+            /// A empty string represents a type parameter that 
+            /// did not have been substituted by a specific type.
+            /// </p>
+            /// </remarks>
+            /// <returns>
+            /// An array of strings that represents the unresolved generic 
+            /// arguments types or an empty array if not generic.
+            /// </returns>
+            public string[] GetGenericArguments()
+            {
+                if (_unresolvedGenericArguments == null)
+                {
+                    return new string[] { };
+                }
+
+                return _unresolvedGenericArguments;
+            }
+
+            private void ParseGenericArguments(string originalString)
+            {
+                RegexOptions options = RegexOptions.None;
+                Regex regex = new Regex(@".*`\d*\[\[", options);
+                // Check for match
+                bool isMatch = regex.IsMatch(originalString);
+
+                if (!isMatch)
+                {
+                    _unresolvedGenericTypeName = originalString;
+                    _unresolvedGenericMethodName = originalString;
+                }
+                else
+                {
+                    //.*'\d*\[\[
+                    //http://developpeur.journaldunet.com/tutoriel/php/030303php_regexp1a.shtml
+                    //http://www.asp-php.net/tutorial/asp-php/regexp.php
+
+                    int argsStartIndex = originalString.IndexOf(GENERIC_ARGUMENTS_PREFIX);
+                    int argsEndIndex = originalString.LastIndexOf(GENERIC_ARGUMENTS_SUFFIX);
+                    if (argsEndIndex != -1)
+                    {
+                        _unresolvedGenericMethodName = originalString.Remove(
+                            argsStartIndex, argsEndIndex - argsStartIndex + 1);
+
+                        SplitGenericArguments(originalString.Substring(
+                            argsStartIndex + 1, argsEndIndex - argsStartIndex - 1));
+
+                        _unresolvedGenericTypeName = originalString.Replace(
+                            originalString.Substring(argsStartIndex-2, argsEndIndex - argsStartIndex + 3),
+                            "`" + _unresolvedGenericArguments.Length);
+                    }
+                }
+            }
+
+            private void SplitGenericArguments(string originalArgs)
+            {
+                IList<string> arguments = new List<string>();
+
+                if (originalArgs.Contains(GENERIC_ARGUMENTS_SEPARATOR))
+                {
+                    arguments = Parse(originalArgs);
+                }
+                else
+                {
+                    string argument = originalArgs.Substring(1, originalArgs.Length - 2).Trim();
+                    arguments.Add(argument);
+                }
+                _unresolvedGenericArguments = new string[arguments.Count];
+                 arguments.CopyTo(_unresolvedGenericArguments, 0);
+           }
+
+            private IList<string> Parse(string args)
+            {
+                StringBuilder argument = null;
+                IList<string> arguments = new List<string>();
+
+                TextReader input = new StringReader(args);
+                bool hasReadRightDelimiter = false;
+                do
+                {
+                    char ch = (char)input.Read();
+                    if (ch == '[')
+                    {
+                        argument = new StringBuilder();
+                        hasReadRightDelimiter = false;
+                    }
+                    else if (ch == ']')
+                    {
+                        arguments.Add(argument.ToString());
+                        hasReadRightDelimiter = true;
+                    }
+                    else if (ch == ',' && hasReadRightDelimiter)
+                    {
+                        hasReadRightDelimiter = false;
+                    }
+                    else
+                    {
+                        argument.Append(ch);
+                        hasReadRightDelimiter = false;
+                    }
+                }
+                while (input.Peek() != -1);
+
+                return arguments;
+            }
+            #endregion
+        }
+
+        #endregion
+#endif
+
+        #region Inner Class : TypeAssemblyInfo
+
+        /// <summary>
+        /// Holds data about a <see cref="System.Type"/> and it's
+        /// attendant <see cref="System.Reflection.Assembly"/>.
+        /// </summary>
+        internal class TypeAssemblyInfo
+        {
+            #region Constants
+
+            /// <summary>
+            /// The string that separates a <see cref="System.Type"/> name
+            /// from the name of it's attendant <see cref="System.Reflection.Assembly"/>
+            /// in an assembly qualified type name.
+            /// </summary>
+            public const string TYPE_ASSEMBLY_SEPARATOR = ",";
+            public const string NULLABLE_TYPE = "System.Nullable";
+            public const string NULLABLE_TYPE_ASSEMBLY_SEPARATOR = "]],";
+            #endregion
+
+            #region Fields
+
+            private string _unresolvedAssemblyName = string.Empty;
+            private string _unresolvedTypeName = string.Empty;
+
+            #endregion
+
+            #region Constructor (s) / Destructor
+
+            /// <summary>
+            /// Creates a new instance of the TypeAssemblyInfo class.
+            /// </summary>
+            /// <param name="unresolvedTypeName">
+            /// The unresolved name of a <see cref="System.Type"/>.
+            /// </param>
+            public TypeAssemblyInfo(string unresolvedTypeName)
+            {
+                SplitTypeAndAssemblyNames(unresolvedTypeName);
+            }
+
+            #endregion
+
+            #region Properties
+
+            /// <summary>
+            /// The (unresolved) type name portion of the original type name.
+            /// </summary>
+            public string TypeName
+            {
+                get { return _unresolvedTypeName; }
+            }
+
+            /// <summary>
+            /// The (unresolved, possibly partial) name of the attandant assembly.
+            /// </summary>
+            public string AssemblyName
+            {
+                get { return _unresolvedAssemblyName; }
+            }
+
+            /// <summary>
+            /// Is the type name being resolved assembly qualified?
+            /// </summary>
+            public bool IsAssemblyQualified
+            {
+                get { return HasText(AssemblyName); }
+            }
+
+            #endregion
+
+            #region Methods
+
+            private bool HasText(string target)
+            {
+                if (target == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return HasLength(target.Trim());
+                }
+            }
+
+            private bool HasLength(string target)
+            {
+                return (target != null && target.Length > 0);
+            }
+
+            private void SplitTypeAndAssemblyNames(string originalTypeName)
+            {
                 if (originalTypeName.StartsWith(TypeAssemblyInfo.NULLABLE_TYPE))
                 {
-                    _isNullable = true;
                     int typeAssemblyIndex = originalTypeName.IndexOf(TypeAssemblyInfo.NULLABLE_TYPE_ASSEMBLY_SEPARATOR);
                     if (typeAssemblyIndex < 0)
                     {
@@ -242,8 +627,7 @@ namespace IBatisNet.Common.Utilities.TypesResolver
                 }
                 else
                 {
-                    int typeAssemblyIndex = originalTypeName.IndexOf(TypeAssemblyInfo.TYPE_ASSEMBLY_SEPARATOR);
-                    _isNullable = false;
+                    int typeAssemblyIndex = originalTypeName.IndexOf(TYPE_ASSEMBLY_SEPARATOR);
                     if (typeAssemblyIndex < 0)
                     {
                         _unresolvedTypeName = originalTypeName;
@@ -254,10 +638,11 @@ namespace IBatisNet.Common.Utilities.TypesResolver
                         _unresolvedAssemblyName = originalTypeName.Substring(typeAssemblyIndex + 1).Trim();
                     }
                 }
-			}
-			#endregion
+            }
 
-		}
-		#endregion
-	}
+            #endregion
+        }
+
+        #endregion
+    }
 }

@@ -97,6 +97,11 @@ namespace IBatisNet.Common.Utilities.Objects.Members
                 }
                 else
                 {
+                    //DateTime : 01/01/0001 00:00:00
+                    //TimeSpan : 00:00:00
+                    //Guid : 00000000-0000-0000-0000-000000000000
+                    //Decimal : 0
+
                     if (type == typeof(DateTime)) { return DateTime.MinValue; }
                     if (type == typeof(Decimal)) { return 0m; }
                     if (type == typeof(Guid)) { return Guid.Empty; }

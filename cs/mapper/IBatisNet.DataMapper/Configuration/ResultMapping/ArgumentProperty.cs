@@ -194,7 +194,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 				{
 					try 
 					{
-						Type type = Resources.TypeForName(clrType);
+                        Type type = TypeUtils.ResolveType(clrType);
 						handler = configScope.DataExchangeFactory.TypeHandlerFactory.GetTypeHandler(type, dbType);
 					} 
 					catch (Exception e) 
@@ -223,7 +223,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 				{
 					try 
 					{
-						Type type = Resources.TypeForName(clrType);
+                        Type type = TypeUtils.ResolveType(clrType);
 						handler = configScope.DataExchangeFactory.TypeHandlerFactory.GetTypeHandler(type, dbType);
 					} 
 					catch (Exception e) 

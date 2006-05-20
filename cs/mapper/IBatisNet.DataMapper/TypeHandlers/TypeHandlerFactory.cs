@@ -345,7 +345,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 			}
 			else
 			{
-				type = Resources.TypeForName(className);
+                type = TypeUtils.ResolveType(className);
 			}
 
 			return type;

@@ -96,6 +96,26 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 
         #endregion
 
+#if dotnet2
+
+        private T GetDefault<T>()
+        {
+            T frm = default(T);
+            return frm;
+        }
+
+        /// <summary>
+        /// Test Default value.
+        /// </summary>
+        [Test]
+        public void TestDefault()
+        {
+            Console.WriteLine("DateTime : " + GetDefault<DateTime>());
+            Console.WriteLine("TimeSpan : " + GetDefault<TimeSpan>());
+            Console.WriteLine("Guid : " + GetDefault<Guid>());
+            Console.WriteLine("Decimal : " + GetDefault<Decimal>());
+        }
+#endif
         /// <summary>
         /// Test setting null on integer public field.
         /// </summary>

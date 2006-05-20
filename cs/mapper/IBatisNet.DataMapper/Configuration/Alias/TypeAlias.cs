@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -124,7 +124,7 @@ namespace IBatisNet.DataMapper.Configuration.Alias
 		/// </summary>
 		public void Initialize()
 		{
-			_class = Resources.TypeForName(_className);
+            _class = TypeUtils.ResolveType(_className);
 		}
 		#endregion
 

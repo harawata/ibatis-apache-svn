@@ -1,12 +1,12 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Header: $
- * $Revision: $
- * $Date$
+ * $Revision$
+ * $LastChangedDate$
+ * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2004 - Gilles Bayon
+ * Copyright (C) 2006/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -56,7 +56,7 @@ namespace IBatisNet.Common.Utilities
 		#region Fields
 		private static string _applicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
 		private static string _baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-		private static CachedTypeResolver _cachedTypeResolver = null;
+        //private static CachedTypeResolver _cachedTypeResolver = null;
 
 		private static readonly ILog _logger = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
 
@@ -91,7 +91,7 @@ namespace IBatisNet.Common.Utilities
 		#region Constructor (s) / Destructor
 		static Resources()
 		{
-			_cachedTypeResolver = new CachedTypeResolver();
+            //_cachedTypeResolver = new CachedTypeResolver();
 		}
 		#endregion
 
@@ -503,12 +503,22 @@ namespace IBatisNet.Common.Utilities
 
 
 		/// <summary>
-		/// Find a type by his class name
+        /// Resolves the supplied type name into a <see cref="System.Type"/> instance.
 		/// </summary>
-		/// <param name="className">The className ot the type to find.</param>
-		public static Type TypeForName(string className)
+        /// <param name="typeName">
+        /// The (possibly partially assembly qualified) name of a <see cref="System.Type"/>.
+        /// </param>
+        /// <returns>
+        /// A resolved <see cref="System.Type"/> instance.
+        /// </returns>
+        /// <exception cref="System.TypeLoadException">
+        /// If the type cannot be resolved.
+        /// </exception>
+        [Obsolete("Use IBatisNet.Common.Utilities.TypeUtils")]
+		public static Type TypeForName(string typeName)
 		{
-			return _cachedTypeResolver.Resolve(className);
+			return TypeUtils.ResolveType(typeName);
+                //_cachedTypeResolver.Resolve(className);
 		}
 
 		#endregion

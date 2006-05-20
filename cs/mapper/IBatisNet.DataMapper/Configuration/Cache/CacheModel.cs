@@ -1,7 +1,7 @@
 
 #region Apache Notice
 /*****************************************************************************
- * $Revision: 368065 $
+ * $Revision$
  * $LastChangedDate$
  * $LastChangedBy$
  * 
@@ -207,7 +207,7 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 				}
 
 				// Build the CacheController
-				Type type = Resources.TypeForName(_implementation);
+                Type type = TypeUtils.ResolveType(_implementation);
 				object[] arguments = new object[0];
 
 				_controller = (ICacheController)Activator.CreateInstance(type, arguments);

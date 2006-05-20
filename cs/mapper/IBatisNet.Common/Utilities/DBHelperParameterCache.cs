@@ -59,9 +59,7 @@ namespace IBatisNet.Common.Utilities
 		private static IDataParameter[] DiscoverSpParameterSet(IDalSession session, string spName, bool includeReturnValueParameter)
 		{
 			return InternalDiscoverSpParameterSet(
-                session.DataSource.DbProvider, 
-                session.Connection, 
-                session.Transaction,
+                session,
                 spName, 
                 includeReturnValueParameter);	
 		}
@@ -70,43 +68,46 @@ namespace IBatisNet.Common.Utilities
         /// <summary>
         /// Discover at run time the appropriate set of Parameters for a stored procedure
         /// </summary>
-        /// <param name="provider">The provider.</param>
-        /// <param name="connection">A valid open <see cref="IDbConnection"/>.</param>
-        /// <param name="transaction">A <see cref="IDbTransaction"/>.</param>
-        /// <param name="spName">Name of the stored procedure.</param>
+		/// <param name="session">An IDalSession object</param>
+		/// <param name="spName">Name of the stored procedure.</param>
         /// <param name="includeReturnValueParameter">if set to <c>true</c> [include return value parameter].</param>
         /// <returns>The stored procedure parameters.</returns>
-		private static IDataParameter[] InternalDiscoverSpParameterSet(IDbProvider provider,
-			IDbConnection connection, IDbTransaction transaction, string spName, 
+		private static IDataParameter[] InternalDiscoverSpParameterSet(IDalSession session, string spName, 
             bool includeReturnValueParameter)
 		{
-			using (IDbCommand cmd = connection.CreateCommand())
+#if !dotnet2
+			using (IDbConnection connection = session.DataSource.DbProvider.CreateConnection())
 			{
-                if (transaction != null)
-                {
-                    cmd.Transaction = transaction;
-                }
+				connection.ConnectionString = session.DataSource.ConnectionString;
+				connection.Open();
+				using (IDbCommand cmd = connection.CreateCommand())
+				{
 				cmd.CommandType = CommandType.StoredProcedure;
-				cmd.CommandText = spName;
+#else
+				using (IDbCommand cmd = session.CreateCommand(CommandType.StoredProcedure))
+				{
+#endif
+					cmd.CommandText = spName;
 
-				DeriveParameters(provider, cmd);
+					DeriveParameters(session.DataSource.DbProvider, cmd);
 
-				if (cmd.Parameters.Count > 0) {
-					IDataParameter firstParameter = (IDataParameter)cmd.Parameters[0];
-					if (firstParameter.Direction == ParameterDirection.ReturnValue) {
-						if (!includeReturnValueParameter) {
-							cmd.Parameters.RemoveAt(0);
-						}
-					}	
+					if (cmd.Parameters.Count > 0) {
+						IDataParameter firstParameter = (IDataParameter)cmd.Parameters[0];
+						if (firstParameter.Direction == ParameterDirection.ReturnValue) {
+							if (!includeReturnValueParameter) {
+								cmd.Parameters.RemoveAt(0);
+							}
+						}	
+					}
+
+
+					IDataParameter[] discoveredParameters = new IDataParameter[cmd.Parameters.Count];
+					cmd.Parameters.CopyTo(discoveredParameters, 0);
+					return discoveredParameters;
 				}
-
-
-				IDataParameter[] discoveredParameters = new IDataParameter[cmd.Parameters.Count];
-
-				cmd.Parameters.CopyTo(discoveredParameters, 0);
-
-				return discoveredParameters;
+#if !dotnet2
 			}
+#endif
 		}
 		
 		private static void DeriveParameters(IDbProvider provider, IDbCommand command)

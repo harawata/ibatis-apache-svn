@@ -1,10 +1,7 @@
 using System;
 using System.Collections;
-
-using NUnit.Framework;
-
-using IBatisNet.DataMapper.Test.NUnit;
 using IBatisNet.DataMapper.Test.Domain;
+using NUnit.Framework;
 
 namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL
 {
@@ -133,11 +130,16 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL
             sqlMap.BeginTransaction();
             sqlMap.Insert("InsertAccountViaStoreProcedure", account);
 
-            Account testAccount = sqlMap.QueryForObject("GetAccountViaColumnName", 99) as Account;
+            Hashtable map = new Hashtable();
+            map.Add("Id", 0);
+            map.Add("Name", "Toto");
+            map.Add("Guid", Guid.NewGuid());
+
+            sqlMap.Insert("InsertCategoryViaStoreProcedureWithMap", map);
+            Assert.AreEqual(1, map["Id"]);
+
             sqlMap.CommitTransaction();
 
-            Assert.IsNotNull(testAccount);
-            Assert.AreEqual(99, testAccount.Id);
         }
 		#endregion
 	}

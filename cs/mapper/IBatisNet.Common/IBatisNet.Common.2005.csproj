@@ -253,12 +253,14 @@
     <Compile Include="Utilities\TypesResolver\CachedTypeResolver.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Utilities\TypesResolver\ITypeResolver.cs" />
     <Compile Include="Utilities\TypesResolver\TypeAliasResolver.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utilities\TypesResolver\TypeResolver.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Utilities\TypeUtils.cs" />
     <Compile Include="Xml\NodeUtils.cs">
       <SubType>Code</SubType>
     </Compile>

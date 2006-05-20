@@ -300,6 +300,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Utilities\TypeUtils.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Utilities\Objects\ActivatorFactory.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -461,6 +466,11 @@
                 />
                 <File
                     RelPath = "Utilities\TypesResolver\CachedTypeResolver.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Utilities\TypesResolver\ITypeResolver.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
