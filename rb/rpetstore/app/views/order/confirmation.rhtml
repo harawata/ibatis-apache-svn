@@ -1,0 +1,73 @@
+<div id="BackLink">
+  <html:link page="/shop/index.shtml">Return to Main Menu</html:link>
+</div>
+
+<div id="Catalog">
+
+  Please confirm the information below and then press continue...
+
+  <table>
+    <tr><th align="center" colspan="2">
+      <font size="4"><b>Order</b></font>
+      <br/><font size="3"><b><%= @order.order_date %></b></font>
+    </th></tr>
+
+    <tr><th colspan="2">
+      Billing Address
+    </th></tr>
+    <tr><td>
+      First name:</td><td><%= @order.bill_to_first_name %>
+    </td></tr>
+    <tr><td>
+      Last name:</td><td><%= @order.bill_to_last_name %>
+    </td></tr>
+    <tr><td>
+      Address 1:</td><td><%= @order.bill_address1 %>
+    </td></tr>
+    <tr><td>
+      Address 2:</td><td><%= @order.bill_address2%>
+    </td></tr>
+    <tr><td>
+      City: </td><td><%= @order.bill_city%>
+    </td></tr>
+    <tr><td>
+      State:</td><td><%= @order.bill_state %>
+    </td></tr>
+    <tr><td>
+      Zip:</td><td><%= @order.bill_zip %>
+    </td></tr>
+    <tr><td>
+      Country: </td><td><%= @order.bill_country %>
+    </td></tr>
+    <tr><th colspan="2">
+      Shipping Address
+    </th></tr><tr><td>
+    First name:</td><td><%= @order.ship_to_first_name %>
+  </td></tr>
+    <tr><td>
+      Last name:</td><td><%= @order.ship_to_last_name %>
+    </td></tr>
+    <tr><td>
+      Address 1:</td><td><%= @order.ship_address1 %>
+    </td></tr>
+    <tr><td>
+      Address 2:</td><td><%= @order.ship_address2 %>
+    </td></tr>
+    <tr><td>
+      City: </td><td><%= @order.ship_city %>
+    </td></tr>
+    <tr><td>
+      State:</td><td><%= @order.ship_state %>
+    </td></tr>
+    <tr><td>
+      Zip:</td><td><%= @order.ship_zip %>
+    </td></tr>
+    <tr><td>
+      Country: </td><td><%= @order.ship_country %>
+    </td></tr>
+
+  </table>
+
+	<%= link_to 'Confirm', {:action => :confirm, :item => @order.order_id}, :class => 'Button' %>
+
+</div>

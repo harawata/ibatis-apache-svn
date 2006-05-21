@@ -1,0 +1,19 @@
+<div id="Catalog">
+	<%= flash[:error] %>
+	
+	<%= start_form_tag %>
+
+    <p>Please enter your username and password.</p>
+    <p>
+      Username:<input type="text" name="username" value="j2ee"/>
+      <br/>
+      Password:<input type="password" name="password" value="j2ee"/>
+    </p>
+    <input type="submit" name="submit" value="Login"/>
+
+	<%= end_form_tag %>
+
+  Need a username and password?
+	<%= link_to 'Register Now!', :controller => 'login', :action => :register %>
+
+</div>

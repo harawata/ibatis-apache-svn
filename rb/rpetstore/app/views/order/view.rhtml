@@ -1,0 +1,122 @@
+<div id="BackLink">
+	<%= link_to 'Return to Main Menu', :controller => 'shop' %>
+</div>
+
+<div id="Catalog">
+
+<table>
+<tr><th align="center" colspan="2">
+  Order #<%= @order.order_id %>
+	<%= @order.order_date %>
+  <bean:write name="order" property="orderDate" format="yyyy/MM/dd hh:mm:ss"/>
+</th></tr>
+<tr><th colspan="2">
+  Payment Details
+</th></tr>
+<tr><td>
+  Card Type:</td><td>
+	<%= @order.card_type %>
+</td></tr>
+<tr><td>
+  Card Number:</td><td><%= @order.credit_card %> * Fake number!
+</td></tr>
+<tr><td>
+  Expiry Date (MM/YYYY):</td><td><%= @order.expiry_date %>
+</td></tr>
+<tr><th colspan="2">
+  Billing Address
+</th></tr>
+<tr><td>
+  First name:</td><td><%= @order.bill_to_first_name %>
+</td></tr>
+<tr><td>
+  Last name:</td><td><%= @order.bill_to_last_name %>
+</td></tr>
+<tr><td>
+  Address 1:</td><td><%= @order.bill_address1 %>
+</td></tr>
+<tr><td>
+  Address 2:</td><td><%= @order.bill_address2 %>
+</td></tr>
+<tr><td>
+  City: </td><td><%= @order.bill_city %>
+</td></tr>
+<tr><td>
+  State:</td><td><%= @order.bill_state %>
+</td></tr>
+<tr><td>
+  Zip:</td><td><%= @order.bill_zip %>
+</td></tr>
+<tr><td>
+  Country: </td><td><%= @order.bill_country %>
+</td></tr>
+<tr><th colspan="2">
+  Shipping Address
+</th></tr><tr><td>
+  First name:</td><td><%= @order.ship_to_first_name %>
+</td></tr>
+<tr><td>
+  Last name:</td><td><%= @order.ship_to_last_name %>
+</td></tr>
+<tr><td>
+  Address 1:</td><td><%= @order.ship_address1 %>
+</td></tr>
+<tr><td>
+  Address 2:</td><td><%= @order.ship_address2 %>
+</td></tr>
+<tr><td>
+  City: </td><td><%= @order.ship_city %>
+</td></tr>
+<tr><td>
+  State:</td><td><%= @order.ship_state %>
+</td></tr>
+<tr><td>
+  Zip:</td><td><%= @order.ship_zip %>
+</td></tr>
+<tr><td>
+  Country: </td><td><%= @order.ship_country %>
+</td></tr>
+<tr><td>
+  Courier: </td><td><%= @order.courier %>
+</td></tr>
+<tr><td colspan="2">
+  Status: <%= @order.status %>
+</td></tr>
+<tr><td colspan="2">
+  <table>
+    <tr>
+      <th>Item ID</th>
+      <th>Description</th>
+      <th>Quantity</th>
+      <th>Price</th>
+      <th>Total Cost</th>
+    </tr>
+		<% @order.line_items.each do |item| %>
+      <tr>
+        <td><%= link_to item.item.item_id, :controller => 'shop', :action => 'item', :item => item.item.item_id %></td>
+        <td>
+					<% if item.item then %>
+	          <%= item.item.description %>
+					<% else %>
+	          <i>{description unavailable}</i>
+					<% end %>
+        </td>
+
+        <td><%= item.quantity %></td>
+        <td><%= format_money item.unit_price %></td>
+        <td><%= format_money item.total_price %></td>
+      </tr>
+		<% end %>
+    <tr>
+      <th colspan="5">Total: <%= format_money @order.total_price %>
+      </th>
+    </tr>
+  </table>
+</td></tr>
+
+</table>
+
+</div>
+
+
+

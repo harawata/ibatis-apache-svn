@@ -1,0 +1,55 @@
+<div id="BackLink">
+	<%= link_to 'Return to Shopping Cart', :action => :index %>
+</div>
+
+<div id="Catalog">
+
+  <table>
+    <tr>
+      <td>
+        <h2>Checkout Summary</h2>
+
+        <table>
+
+          <tr>
+            <td><b>Item ID</b></td>  <td><b>Product ID</b></td>  <td><b>Description</b></td> <td><b>In Stock?</b></td>
+            <td><b>Quantity</b></td>  <td><b>List Price</b></td> <td><b>Total Cost</b></td>
+          </tr>
+
+          <% @items.each do |item|%>
+            <tr>
+	            <td>
+					<%= link_to item.item_id, :controller => 'shop', :action => 'item', :item => item.item_id %>
+				</td>
+	            <td><%= item.product.product_id %></td>
+	            <td><%= item.description %></td>
+	            <td><%= item.in_stock? %></td>
+	            <td><%= item.quantity %></td>
+	            <td><%= format_money item.list_price %></td>
+	            <td><%= format_money item.total %></td>
+            </tr>
+          <% end %>
+          <tr>
+            <td colspan="7">
+	            Sub Total: <%= format_money @cart.subtotal %>
+            </td>
+          </tr>
+			    <tr><td>
+					<% if @item_pages.current.previous %>
+					<%= link_to '&lt;&lt; Prev', {:page => @item_pages.current.previous}, :class => 'Button' %>
+					<% end %>
+					<% if @item_pages.current.next %>
+					<%= link_to 'Next &gt;&gt;', {:page => @item_pages.current.next}, :class => 'Button' %>
+					<% end %>
+			    </td></tr>
+        </table>
+		<%= link_to 'Continue', {:controller => 'order'}, :class => 'Button' %>
+      </td>
+      <td>
+        &nbsp;
+      </td>
+
+    </tr>
+  </table>
+
+</div>

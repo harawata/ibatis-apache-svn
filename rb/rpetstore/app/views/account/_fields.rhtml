@@ -1,0 +1,42 @@
+<h3>Account Information</h3>
+
+<table>
+  <tr>
+    <td>First name:</td><td><%= text_field 'account', 'first_name' %></td>
+  </tr><tr>
+  <td>Last name:</td><td><%= text_field 'account', 'last_name' %></td>
+</tr><tr>
+  <td>Email:</td><td><%= text_field 'account', 'email' %></td>
+</tr><tr>
+  <td>Phone:</td><td><%= text_field 'account', 'phone' %></td>
+</tr><tr>
+  <td>Address 1:</td><td><%= text_field 'account', 'address1' %></td>
+</tr><tr>
+  <td>Address 2:</td><td><%= text_field 'account', 'address2' %></td>
+</tr><tr>
+  <td>City:</td><td><%= text_field 'account', 'city' %></td>
+</tr><tr>
+  <td>State:</td><td><%= text_field 'account', 'state', :size => 4 %></td>
+</tr><tr>
+  <td>Zip:</td><td><%= text_field 'account', 'zip', :size => 10 %></td>
+</tr><tr>
+  <td>Country:</td><td><%= text_field 'account', 'country' %></td>
+</tr>
+</table>
+
+<h3>Profile Information</h3>
+
+<table>
+  <tr>
+    <td>Language Preference:</td><td>
+		<%= select("account", "language_preference", Account::LANGUAGES) %>
+  </tr><tr>
+	  <td>Favourite Category:</td><td>
+		<%= select("account", "favourite_category", Account::CATEGORIES) %>
+</tr><tr>
+  <td>Enable MyList</td><td><%= check_box "account", "list_option" %></td>
+</tr><tr>
+  <td>Enable MyBanner</td><td><%= check_box "account", "banner_option" %></td>
+</tr>
+
+</table>

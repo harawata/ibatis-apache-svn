@@ -1,0 +1,256 @@
+<html>
+<head><title>CreateAccount</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">CreateAccount</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/shop</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>JPetStore Demo</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Sign In</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>JPetStore Demo</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Register Now!</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>JPetStore Demo</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>JPetStore Demo</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>address1 can't be blank</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>city can't be blank</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>address2 can't be blank</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>zip can't be blank</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>username can't be blank</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>country can't be blank</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>phone can't be blank</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>phone can't be blank</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>first_name can't be blank</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>last_name can't be blank</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>email can't be blank</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>email is invalid</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>state can't be blank</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>account_username</td>
+	<td>userid</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>account_password</td>
+	<td>password</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>account_first_name</td>
+	<td>First</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>account_last_name</td>
+	<td>Last</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>account_email</td>
+	<td>invalidemail</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>account_phone</td>
+	<td>12345</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>account_address1</td>
+	<td>Address 1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>account_address2</td>
+	<td>Address 2</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>account_city</td>
+	<td>City</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>account_state</td>
+	<td>STAT</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>account_zip</td>
+	<td>12345</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>account_country</td>
+	<td>COUNTRY</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>account_list_option</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>account_banner_option</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>JPetStore Demo</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>password doesn't match confirmation</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>email is invalid</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>account_password_confirmation</td>
+	<td>password</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>account_email</td>
+	<td>email@email.com</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>JPetStore Demo</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>username</td>
+	<td>user</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>username</td>
+	<td>userid</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>password</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>JPetStore Demo</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Sign Out </td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
