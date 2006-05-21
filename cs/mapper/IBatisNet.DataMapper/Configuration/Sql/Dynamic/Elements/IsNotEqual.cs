@@ -37,7 +37,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements
 	/// </summary>
 	[Serializable]
 	[XmlRoot("isNotEqual", Namespace="http://ibatis.apache.org/mapping")]
-	public class IsNotEqual: Conditional
+	public sealed class IsNotEqual: Conditional
 	{
 
         /// <summary>

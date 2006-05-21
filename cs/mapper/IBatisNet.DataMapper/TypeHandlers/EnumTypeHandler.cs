@@ -37,7 +37,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 	/// <summary>
 	/// Summary description for EnumTypeHandler.
 	/// </summary>
-	internal class EnumTypeHandler : BaseTypeHandler
+    internal sealed class EnumTypeHandler : BaseTypeHandler
 	{
 
 		/// <summary>

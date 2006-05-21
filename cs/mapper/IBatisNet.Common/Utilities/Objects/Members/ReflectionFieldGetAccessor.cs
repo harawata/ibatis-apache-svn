@@ -32,7 +32,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
     /// The <see cref="ReflectionFieldGetAccessor"/> class provides an reflection get access   
     /// to a field of a specified target class.
     /// </summary>
-    public class ReflectionFieldGetAccessor : IGetAccessor
+    public sealed class ReflectionFieldGetAccessor : IGetAccessor
     {
         private FieldInfo _fieldInfo = null;
 

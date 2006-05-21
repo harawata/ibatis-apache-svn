@@ -37,7 +37,7 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 	/// <summary>
 	/// Summary description for ResultMapDeSerializer.
 	/// </summary>
-	public class ResultMapDeSerializer
+	public sealed class ResultMapDeSerializer
 	{
 		/// <summary>
 		/// Deserialize a ResultMap object

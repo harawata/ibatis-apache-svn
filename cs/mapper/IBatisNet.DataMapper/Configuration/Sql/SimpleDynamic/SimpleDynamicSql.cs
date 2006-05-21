@@ -48,7 +48,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.SimpleDynamic
 	/// <summary>
 	/// Summary description for SimpleDynamicSql.
 	/// </summary>
-	internal class SimpleDynamicSql : ISql
+	internal sealed class SimpleDynamicSql : ISql
 	{
 
 		#region private

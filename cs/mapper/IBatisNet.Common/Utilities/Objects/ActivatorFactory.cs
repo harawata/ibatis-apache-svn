@@ -30,7 +30,7 @@ namespace IBatisNet.Common.Utilities.Objects
 	/// <summary>
 	/// Create objects via Activator.CreateInstance
 	/// </summary>
-	public class ActivatorFactory : IFactory
+    public sealed class ActivatorFactory : IFactory
 	{
 		private Type _typeToCreate = null;
 

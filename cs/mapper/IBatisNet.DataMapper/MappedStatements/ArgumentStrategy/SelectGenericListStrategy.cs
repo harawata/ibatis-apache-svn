@@ -42,7 +42,7 @@ namespace IBatisNet.DataMapper.MappedStatements.ArgumentStrategy
     /// on an <see cref="ArgumentProperty"/> and the object property is 
     /// different from an <see cref="Array"/> or an <see cref="IList"/>.
     /// </summary>
-    public class SelectGenericListStrategy : IArgumentStrategy
+    public sealed class SelectGenericListStrategy : IArgumentStrategy
     {
         #region IArgumentStrategy Members
 

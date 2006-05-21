@@ -32,7 +32,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// <summary>
 		/// The sqlMap
 		/// </summary>
-		protected static SqlMapper sqlMap = null;
+		protected static ISqlMapper sqlMap = null;
 		private static readonly ILog _logger = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
 		protected static string ScriptDirectory = null;
@@ -156,7 +156,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// </summary>
 		/// <param name="datasource">The datasource.</param>
 		/// <param name="script">The sql batch</param>
-		protected static void InitScript(DataSource datasource, string script)
+		protected static void InitScript(IDataSource datasource, string script)
 		{
 			InitScript(datasource, script, true);
 		}
@@ -167,7 +167,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		/// <param name="datasource">The datasource.</param>
 		/// <param name="script">The sql batch</param>
 		/// <param name="doParse">parse out the statements in the sql script file.</param>
-		protected static void InitScript(DataSource datasource, string script, bool doParse)
+        protected static void InitScript(IDataSource datasource, string script, bool doParse)
 		{
 			ScriptRunner runner = new ScriptRunner();
 

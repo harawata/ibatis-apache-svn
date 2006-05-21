@@ -1567,7 +1567,7 @@ namespace IBatisNet.DataMapper.Configuration
 					}
 					map.Initialize(_configScope.DataSource.DbProvider.UsePositionalParameters,_configScope);
 					if (statement.ParameterClass==null && 
-						sqlText.Parameters.Length==1)//#value# parameter with no parameterClass attribut
+						sqlText.Parameters.Length==1 && sqlText.Parameters[0].PropertyName=="value")//#value# parameter with no parameterClass attribut
 					{
 						map.DataExchange = _configScope.DataExchangeFactory.GetDataExchangeForClass( typeof(int) );//Get the primitiveDataExchange
 					}

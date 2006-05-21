@@ -1,7 +1,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -38,7 +38,7 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 	/// <summary>
 	/// Summary description for DeleteDeSerializer.
 	/// </summary>
-	public class DeleteDeSerializer
+	public sealed class DeleteDeSerializer
 	{
 		/// <summary>
 		/// Deserialize a TypeHandler object

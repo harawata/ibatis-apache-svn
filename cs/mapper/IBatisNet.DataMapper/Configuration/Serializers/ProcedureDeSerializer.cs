@@ -1,7 +1,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -38,7 +38,7 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 	/// <summary>
 	/// Summary description for ProcedureDeSerializer.
 	/// </summary>
-	public class ProcedureDeSerializer
+	public sealed class ProcedureDeSerializer
 	{
 		/// <summary>
 		/// Deserialize a Procedure object

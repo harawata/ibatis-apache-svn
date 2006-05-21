@@ -35,7 +35,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 	/// <summary>
 	/// A ParameterSetter implementation
 	/// </summary>
-	public class ParameterSetterImpl  : IParameterSetter	
+    public sealed class ParameterSetterImpl : IParameterSetter	
 	{
 		#region Fields
 

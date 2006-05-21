@@ -37,7 +37,7 @@ namespace IBatisNet.Common.Utilities.Objects
 	/// This class represents a cached set of class definition information that
 	/// allows for easy mapping between property names and get/set methods.
 	/// </summary>
-	public class ReflectionInfo
+    public sealed class ReflectionInfo
 	{
 		/// <summary>
 		/// 

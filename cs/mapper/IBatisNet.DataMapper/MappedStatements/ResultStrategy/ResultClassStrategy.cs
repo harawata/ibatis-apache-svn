@@ -33,7 +33,7 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
 	/// <see cref="IResultStrategy"/> implementation when 
 	/// a 'resultClass' attribute is specified.
 	/// </summary>
-	public class ResultClassStrategy : IResultStrategy
+    public sealed class ResultClassStrategy : IResultStrategy
 	{
 		private static IResultStrategy _simpleTypeStrategy = null;
 		private static IResultStrategy _dictionaryStrategy = null;

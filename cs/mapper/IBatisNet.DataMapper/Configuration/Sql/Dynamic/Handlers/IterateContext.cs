@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -39,7 +39,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers
 	/// http://www.microsoft.com/mspress/books/sampchap/6173.asp
 	/// http://www.dur.ac.uk/barry.cornelius/java/a.taste.of.csharp/onefile/
 	/// </summary>
-	public class IterateContext : IEnumerator
+	public sealed class IterateContext : IEnumerator
 	{
 		#region Fields
 		private ICollection _collection;

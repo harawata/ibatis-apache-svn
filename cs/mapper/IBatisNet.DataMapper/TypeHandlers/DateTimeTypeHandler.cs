@@ -38,7 +38,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 	/// <summary>
 	/// Description résumée de DateTimeTypeHandler.
 	/// </summary>
-	internal class DateTimeTypeHandler : BaseTypeHandler
+    internal sealed class DateTimeTypeHandler : BaseTypeHandler
 	{
 
 		/// <summary>

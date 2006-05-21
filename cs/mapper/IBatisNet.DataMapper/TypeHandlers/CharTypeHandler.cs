@@ -38,7 +38,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 	/// <summary>
 	/// Description résumée de CharTypeHandler.
 	/// </summary>
-	internal class CharTypeHandler : BaseTypeHandler
+    internal sealed class CharTypeHandler : BaseTypeHandler
 	{
 
 		/// <summary>

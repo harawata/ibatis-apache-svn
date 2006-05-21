@@ -137,6 +137,11 @@
                     BuildAction = "None"
                 />
                 <File
+                    RelPath = "IDaoManager.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "licence.txt"
                     BuildAction = "Content"
                 />

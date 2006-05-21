@@ -85,7 +85,7 @@ namespace IBatisNet.DataAccess.Configuration
 		/// </summary>
 		public Type TypeInstance
 		{
-			get { return Resources.TypeForName(_implementation); }
+			get { return TypeUtils.ResolveType(_implementation); }
 		}
 
 		/// <summary>

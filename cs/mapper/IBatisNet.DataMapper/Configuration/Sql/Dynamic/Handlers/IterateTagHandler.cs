@@ -38,7 +38,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers
 	/// <summary>
 	/// Summary description for IterateTagHandler.
 	/// </summary>
-	public class IterateTagHandler : BaseTagHandler
+	public sealed class IterateTagHandler : BaseTagHandler
 	{
 
         /// <summary>

@@ -34,7 +34,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 	/// <summary>
 	/// Description résumée de ResultGetterImpl.
 	/// </summary>
-	public class ResultGetterImpl : IResultGetter
+    public sealed class ResultGetterImpl : IResultGetter
 	{
 
 		#region Fields

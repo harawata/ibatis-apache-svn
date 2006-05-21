@@ -52,7 +52,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 	/// <example>
 	///      <dynamic prepend="where">...</dynamic>
 	/// </example>
-	internal class DynamicSql : ISql, IDynamicParent  
+	internal sealed class DynamicSql : ISql, IDynamicParent  
 	{
 
 		#region Fields

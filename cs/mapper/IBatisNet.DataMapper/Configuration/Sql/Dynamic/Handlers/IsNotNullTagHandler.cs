@@ -33,7 +33,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers
 	/// <summary>
 	/// Summary description for IsNotNullTagHandler.
 	/// </summary>
-	public class IsNotNullTagHandler : IsNullTagHandler
+	public sealed class IsNotNullTagHandler : IsNullTagHandler
 	{
 
 

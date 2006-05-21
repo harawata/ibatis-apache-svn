@@ -407,26 +407,26 @@
     ============================================= -->
 	<parameterMaps>   
 		
-		<parameterMap id="swap-params">
+		<parameterMap id="swap-params" class="hashtable">
 			<parameter property="email1" column="First_Email" />
 			<parameter property="email2" column="Second_Email" />
 		</parameterMap>
 		
-		<parameterMap id="insert-params">
+		<parameterMap id="insert-params" class="Account">
 			<parameter property="Id" />
 			<parameter property="FirstName" />
 			<parameter property="LastName" />			
 			<parameter property="EmailAddress" nullValue="no_email@provided.com"/>
 		</parameterMap>
 		
-		<parameterMap id="update-params">
+		<parameterMap id="update-params" class="Account">
 			<parameter property="FirstName" />
 			<parameter property="LastName" />			
 			<parameter property="EmailAddress" nullValue="no_email@provided.com"/>
 			<parameter property="Id" />
 		</parameterMap>
 		
-		<parameterMap id="update-params2">
+		<parameterMap id="update-params2" class="Account">
 			<parameter property="Id" />
 			<parameter property="FirstName" />
 			<parameter property="LastName" />			

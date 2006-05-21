@@ -22,7 +22,7 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 		/// <summary>
 		/// A daoManager
 		/// </summary>
-		protected static DaoManager daoManager = null;
+		protected static IDaoManager daoManager = null;
 
 		protected static string ScriptDirectory = null;
 
@@ -55,8 +55,8 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 		{
 			DomDaoManagerBuilder builder = new DomDaoManagerBuilder();
 			builder.Configure( "dao_Multiple_Context.config" );
-			DaoManager daoManager1 = DaoManager.GetInstance("Contex1");
-			DaoManager daoManager2 = DaoManager.GetInstance("Contex2");
+			IDaoManager daoManager1 = DaoManager.GetInstance("Contex1");
+			IDaoManager daoManager2 = DaoManager.GetInstance("Contex2");
 
 			Assert.IsNotNull(daoManager1);
 			Assert.IsNotNull(daoManager2);

@@ -37,7 +37,7 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 	/// <summary>
 	/// Summary description for ArgumentPropertyDeSerializer.
 	/// </summary>
-	public class ArgumentPropertyDeSerializer
+	public sealed class ArgumentPropertyDeSerializer
 	{
 		/// <summary>
 		/// Deserialize a ResultProperty object

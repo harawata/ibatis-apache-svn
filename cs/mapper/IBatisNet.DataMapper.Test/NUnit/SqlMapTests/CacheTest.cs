@@ -309,11 +309,11 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
 		private class TestCacheThread
 		{
-			private SqlMapper _sqlMap = null;
+			private ISqlMapper _sqlMap = null;
 			private Hashtable _results = null;
 			private string _statementName = string.Empty;
 
-			public TestCacheThread(SqlMapper sqlMap, Hashtable results, string statementName) 
+			public TestCacheThread(ISqlMapper sqlMap, Hashtable results, string statementName) 
 			{
 				_sqlMap = sqlMap;
 				_results = results;
@@ -344,7 +344,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 				}
 			}
 
-			public static void StartThread(SqlMapper sqlMap, Hashtable results, string statementName) 
+			public static void StartThread(ISqlMapper sqlMap, Hashtable results, string statementName) 
 			{
 				TestCacheThread tct = new TestCacheThread(sqlMap, results, statementName);
 				Thread thread = new Thread( new ThreadStart(tct.Run) );

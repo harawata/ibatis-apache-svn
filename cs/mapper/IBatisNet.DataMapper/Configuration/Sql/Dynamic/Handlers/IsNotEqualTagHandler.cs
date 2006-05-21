@@ -33,7 +33,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers
 	/// <summary>
 	/// Summary description for IsNotEqualTagHandler.
 	/// </summary>
-	public class IsNotEqualTagHandler : IsEqualTagHandler
+	public sealed class IsNotEqualTagHandler : IsEqualTagHandler
 	{
 
         /// <summary>

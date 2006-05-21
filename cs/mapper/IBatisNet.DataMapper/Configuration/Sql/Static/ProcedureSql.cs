@@ -42,7 +42,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Static
 	/// <summary>
 	/// Summary description for ProcedureSql.
 	/// </summary>
-	public class ProcedureSql : ISql
+	public sealed class ProcedureSql : ISql
 	{
 		#region Fields
 

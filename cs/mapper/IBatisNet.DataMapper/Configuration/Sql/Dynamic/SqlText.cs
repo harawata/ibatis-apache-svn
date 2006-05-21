@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -37,7 +37,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 	/// <summary>
 	/// Summary description for SqlText.
 	/// </summary>
-	public class SqlText : ISqlChild 	
+	public sealed class SqlText : ISqlChild 	
 	{
 
 		#region Fields

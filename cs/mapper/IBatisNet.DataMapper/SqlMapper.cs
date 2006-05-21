@@ -55,7 +55,7 @@ namespace IBatisNet.DataMapper
 	/// <summary>
 	/// Summary description for SqlMap.
 	/// </summary>
-	public class SqlMapper
+	public class SqlMapper : ISqlMapper
 	{
 		/// <summary>
 		/// A delegate called once per row in the QueryWithRowDelegate method
@@ -92,7 +92,7 @@ namespace IBatisNet.DataMapper
 		//(ParameterMap name, ParameterMap)
 		private HybridDictionary _parameterMaps = new HybridDictionary();
 		// DataSource
-		private DataSource _dataSource = null;
+        private IDataSource _dataSource = null;
 		//(CacheModel name, cache))
 		private HybridDictionary _cacheMaps = new HybridDictionary();
 		private TypeHandlerFactory _typeHandlerFactory = null; 
@@ -121,11 +121,12 @@ namespace IBatisNet.DataMapper
 			get { return _sessionHolder.LocalSession; }
 		}
 
-
-		/// <summary>
-		/// Tell if the session is started.
-		/// </summary>
-		/// <returns></returns>
+        /// <summary>
+        /// Gets a value indicating whether this instance is session started.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance is session started; otherwise, <c>false</c>.
+        /// </value>
 		public bool IsSessionStarted
 		{
 			get { return (_sessionHolder.LocalSession != null); }
@@ -159,7 +160,7 @@ namespace IBatisNet.DataMapper
         /// <summary>
         /// The meta factory for object factory
         /// </summary>
-        public IObjectFactory ObjectFactory
+        internal IObjectFactory ObjectFactory
         {
             get { return _objectFactory; }
         }
@@ -167,7 +168,7 @@ namespace IBatisNet.DataMapper
         /// <summary>
         /// The factory which build <see cref="IAccessor"/>
         /// </summary>
-        public AccessorFactory AccessorFactory
+        internal AccessorFactory AccessorFactory
         {
             get { return _accessorFactory; }
         }
@@ -1556,7 +1557,7 @@ namespace IBatisNet.DataMapper
 		/// <summary>
 		/// The DataSource
 		/// </summary>
-		public DataSource DataSource
+        public IDataSource DataSource
 		{
 			get { return  _dataSource; }
 			set { _dataSource = value; }

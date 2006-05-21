@@ -13,16 +13,23 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests.Ado.MSSQL
 		/// <summary>
 		/// Initialisation
 		/// </summary>
-		[SetUp] 
-		public void SetUp() 
+		[TestFixtureSetUp] 
+		public void FixtureSetUp() 
 		{
 			DomDaoManagerBuilder builder = new DomDaoManagerBuilder();
 			builder.Configure( "dao_MSSQL_"
 				 + ConfigurationSettings.AppSettings["providerType"] + ".config" );
 			daoManager = DaoManager.GetInstance();
 
-			InitScript( daoManager.LocalDataSource, ScriptDirectory + "account-init.sql" );
 		}
 
+		/// <summary>
+		/// Initialisation
+		/// </summary>
+		[SetUp] 
+		public void SetUp() 
+		{			
+			InitScript( daoManager.LocalDataSource, ScriptDirectory + "account-init.sql" );
+		}
 	}
 }

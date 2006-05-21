@@ -34,7 +34,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers
 	/// <summary>
 	/// Summary description for IsLessEqualTagHandler.
 	/// </summary>
-	public class IsLessEqualTagHandler : ConditionalTagHandler
+	public sealed class IsLessEqualTagHandler : ConditionalTagHandler
 	{
 
         /// <summary>

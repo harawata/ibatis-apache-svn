@@ -37,7 +37,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements
 	/// </summary>
 	[Serializable]
 	[XmlRoot("isEmpty", Namespace="http://ibatis.apache.org/mapping")]
-	public class IsEmpty : BaseTag
+	public sealed class IsEmpty : BaseTag
 	{
 
 

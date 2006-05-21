@@ -43,7 +43,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 	/// <summary>
 	/// Summary description for CachingStatement.
 	/// </summary>
-	public class CachingStatement : IMappedStatement
+    public sealed class CachingStatement : IMappedStatement
 	{
 		private MappedStatement _mappedStatement =null;
 

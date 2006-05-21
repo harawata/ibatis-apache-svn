@@ -71,7 +71,7 @@ namespace IBatisNet.DataMapper.MappedStatements
     /// <summary>
     /// Build a dynamic instance of a ResultMap
     /// </summary>
-    public class ReaderAutoMapper 
+    public sealed class ReaderAutoMapper 
 	{
 		private ResultMap _resultMap = null;
         private static readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);

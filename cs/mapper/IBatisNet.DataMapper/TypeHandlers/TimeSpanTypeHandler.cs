@@ -38,7 +38,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 	/// <summary>
 	/// Description résumée de TimespanTypeHandler.
 	/// </summary>
-	internal class TimeSpanTypeHandler : BaseTypeHandler
+    internal sealed class TimeSpanTypeHandler : BaseTypeHandler
 	{
 
         /// <summary>

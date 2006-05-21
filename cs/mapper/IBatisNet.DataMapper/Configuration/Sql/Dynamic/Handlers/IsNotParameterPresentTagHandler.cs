@@ -34,7 +34,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers
 	/// <summary>
 	/// Summary description for IsNotParameterPresentTagHandler.
 	/// </summary>
-	public class IsNotParameterPresentTagHandler : IsParameterPresentTagHandler
+	public sealed class IsNotParameterPresentTagHandler : IsParameterPresentTagHandler
 	{
 
         /// <summary>

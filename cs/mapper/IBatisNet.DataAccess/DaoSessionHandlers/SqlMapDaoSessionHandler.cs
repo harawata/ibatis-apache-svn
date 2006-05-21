@@ -82,7 +82,6 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 
 			try
 			{
-//				string fileName = (string) resources["sqlMapConfigFile"];
 				DataSource dataSource = (DataSource) resources["DataSource"];
 				bool useConfigFileWatcher = (bool) resources["UseConfigFileWatcher"];
 				

@@ -38,7 +38,7 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 	/// <summary>
 	/// Summary description for IsLessThanDeSerializer.
 	/// </summary>
-	public class IsLessThanDeSerializer : IDeSerializer
+	public sealed class IsLessThanDeSerializer : IDeSerializer
 	{
 		private ConfigurationScope _configScope = null;
 

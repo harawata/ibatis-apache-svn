@@ -32,7 +32,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
     /// The <see cref="ReflectionPropertyGetAccessor"/> class provides an reflection get access   
     /// to a property of a specified target class.
     /// </summary>
-    public class ReflectionPropertyGetAccessor : IGetAccessor
+    public sealed class ReflectionPropertyGetAccessor : IGetAccessor
     {
         private PropertyInfo _propertyInfo = null;
 		private string _propertyName = string.Empty;

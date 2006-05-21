@@ -36,7 +36,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements
 	/// </summary>
 	[Serializable]
 	[XmlRoot("isPropertyAvailable", Namespace="http://ibatis.apache.org/mapping")]
-	public class IsPropertyAvailable : BaseTag
+	public sealed class IsPropertyAvailable : BaseTag
 	{
 
         /// <summary>

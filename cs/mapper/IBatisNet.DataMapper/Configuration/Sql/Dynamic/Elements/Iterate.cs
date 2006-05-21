@@ -36,7 +36,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements
 	/// </summary>
 	[Serializable]
 	[XmlRoot("iterate", Namespace="http://ibatis.apache.org/mapping")]
-	public class Iterate : BaseTag
+	public sealed class Iterate : BaseTag
 	{
 
 		#region Fields

@@ -39,7 +39,7 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 	/// <summary>
 	/// Summary description for IterateSerializer.
 	/// </summary>
-	public class IterateSerializer : IDeSerializer
+	public sealed class IterateSerializer : IDeSerializer
 	{
 		private ConfigurationScope _configScope = null;
 

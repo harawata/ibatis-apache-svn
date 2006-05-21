@@ -50,7 +50,7 @@ namespace IBatisNet.Common.Utilities
 		/// </summary>
 		/// <param name="dataSource">The dataSouce that will be used to run the script.</param>
 		/// <param name="sqlScriptPath">a path to an sql script file.</param>
-		public void RunScript(DataSource dataSource, string sqlScriptPath) {
+		public void RunScript(IDataSource dataSource, string sqlScriptPath) {
 			RunScript(dataSource, sqlScriptPath, true);
 		}
 
@@ -60,7 +60,7 @@ namespace IBatisNet.Common.Utilities
 		/// <param name="dataSource">The dataSouce that will be used to run the script.</param>
 		/// <param name="sqlScriptPath">a path to an sql script file.</param>
 		/// <param name="doParse">parse out the statements in the sql script file.</param>
-		public void RunScript(DataSource dataSource, string sqlScriptPath, bool doParse)
+		public void RunScript(IDataSource dataSource, string sqlScriptPath, bool doParse)
 		{
 			// Get script file
 			FileInfo fi = new FileInfo(sqlScriptPath);
@@ -142,7 +142,7 @@ namespace IBatisNet.Common.Utilities
 		/// </summary>
 		/// <param name="dataSource">The dataSouce that will be used.</param>
 		/// <param name="sqlStatements">An ArrayList of sql statements to execute.</param>
-		private void ExecuteStatements(DataSource dataSource, ArrayList sqlStatements) {
+		private void ExecuteStatements(IDataSource dataSource, ArrayList sqlStatements) {
 			IDbConnection connection = dataSource.DbProvider.CreateConnection();
 			connection.ConnectionString = dataSource.ConnectionString;
 			connection.Open();

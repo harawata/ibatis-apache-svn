@@ -42,7 +42,7 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 	/// <summary>
 	/// Summary description for TypeHandlerDeSerializer.
 	/// </summary>
-	public class TypeHandlerDeSerializer
+	public sealed class TypeHandlerDeSerializer
 	{
 		/// <summary>
 		/// Deserialize a TypeHandler object

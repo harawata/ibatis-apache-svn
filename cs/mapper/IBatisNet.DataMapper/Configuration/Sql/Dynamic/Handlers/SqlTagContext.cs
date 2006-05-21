@@ -39,7 +39,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers
 	/// <summary>
 	/// Summary description for SqlTagContext.
 	/// </summary>
-	public class SqlTagContext
+	public sealed class SqlTagContext
 	{
 		#region Fields
 		private Hashtable _attributes = new Hashtable();

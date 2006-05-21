@@ -90,7 +90,7 @@ namespace IBatisNet.DataAccess
 	///	daoManager.RollBackTransaction();
 	///}<pre/>
 	///</example>
-	public class DaoManager
+	public class DaoManager : IDaoManager
 	{
 		#region Constants
 		/// <summary>
@@ -143,10 +143,11 @@ namespace IBatisNet.DataAccess
 			get { return _provider; }
 			set { _provider = value; }
 		}
-		
-		/// <summary>
-		/// 
-		/// </summary>
+
+        /// <summary>
+        /// Gets the local data source.
+        /// </summary>
+        /// <value>The local data source.</value>
 		public DataSource LocalDataSource
 		{
 			get { return _dataSource; }
@@ -188,9 +189,10 @@ namespace IBatisNet.DataAccess
 			set { _daoMap = value; }
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
+        /// <summary>
+        /// Gets the local DAO session.
+        /// </summary>
+        /// <value>The local DAO session.</value>
 		public IDalSession LocalDaoSession
 		{
 			get 
@@ -382,10 +384,12 @@ namespace IBatisNet.DataAccess
 			return _daoSessionHandler.GetDaoSession(this);
 		}
 
-		/// <summary>
-		/// Check if a DaoSession is started.
-		/// </summary>
-		/// <returns>True or False</returns>
+        /// <summary>
+        /// Determines whether [is DAO session started].
+        /// </summary>
+        /// <returns>
+        /// 	<c>true</c> if [is DAO session started]; otherwise, <c>false</c>.
+        /// </returns>
 		public bool IsDaoSessionStarted()
 		{
 			return (_sessionHolder.LocalSession != null);

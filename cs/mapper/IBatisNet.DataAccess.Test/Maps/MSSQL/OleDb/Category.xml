@@ -166,47 +166,47 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	</statements>
 	
 	<parameterMaps>
-		<parameterMap id="insert-params">
+		<parameterMap id="insert-params" class="Category">
 			<parameter property="Id" column="Category_Id" dbType="Integer" /><!-- Int for SqlClient, Obdc; Integer for Oledb -->
 			<parameter property="Name" column="Category_Name"/>
 			<parameter property="Guid" column="Category_Guid" dbType="Guid"/><!--Guid for Oledb, UniqueIdentifier for SqlClient,Odbc -->
 		</parameterMap>
 		
-		<parameterMap id="InsertParam">
+		<parameterMap id="InsertParam" class="Category">
 			<parameter property="Name" column="Category_Name"/>
 			<parameter property="Guid" column="Category_Guid" dbType="Guid"/><!--Guid for Oledb, UniqueIdentifier for SqlClient,Odbc -->
 		</parameterMap>
 		
-		<parameterMap id="insert-null-params">
+		<parameterMap id="insert-null-params" class="Category">
 			<parameter property="Name" column="Category_Name"/>
 			<parameter property="Guid" column="Category_Guid" nullValue="00000000-0000-0000-0000-000000000000" dbType="Guid"/><!--Guid for Oledb, UniqueIdentifier for SqlClient,Odbc -->
 		</parameterMap>
 				
-		<parameterMap id="UpdateParam" extends="InsertParam">
+		<parameterMap id="UpdateParam" extends="InsertParam" class="Category">
 			<parameter property="Id" column="Category_Id" />
 		</parameterMap>
 
 		<!-- Used by generated statement -->
 		
-		<parameterMap id="insert-generate-params">
+		<parameterMap id="insert-generate-params" class="Category">
 			<parameter property="Name" column="Category_Name"/>
 			<parameter property="Guid" column="Category_Guid" dbType="Guid"/><!--Guid for Oledb, UniqueIdentifier for SqlClient,Odbc -->
 		</parameterMap>
 		
-		<parameterMap id="update-generate-params" extends="insert-generate-params">
+		<parameterMap id="update-generate-params" extends="insert-generate-params" class="Category">
 			<parameter property="Id" column="Category_Id" />
 		</parameterMap>
 		
-		<parameterMap id="delete-generate-params">
+		<parameterMap id="delete-generate-params" class="Category">
 			<parameter property="Id" column="Category_Id" />
 			<parameter property="Name" column="Category_Name"/>
 		</parameterMap>
 			
-		<parameterMap id="selectByPK-generate-params">
+		<parameterMap id="selectByPK-generate-params" class="Category">
 			<parameter property="Id" column="Category_Id" />
 		</parameterMap>
 						
-		<parameterMap id="select-generate-params">
+		<parameterMap id="select-generate-params" class="Category">
 			<parameter property="Id" column="Category_Id" />
 			<parameter property="Name" column="Category_Name"/>
 			<parameter property="Guid" column="Category_Guid" dbType="Guid"/>

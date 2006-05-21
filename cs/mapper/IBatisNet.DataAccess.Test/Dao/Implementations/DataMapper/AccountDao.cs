@@ -30,7 +30,7 @@ namespace IBatisNet.DataAccess.Test.Dao.Implementations.DataMapper
 			{
 				sqlMapDaoSession = (SqlMapDaoSession)this.GetContext();
 
-				SqlMapper sqlMap = sqlMapDaoSession.SqlMap;
+				ISqlMapper sqlMap = sqlMapDaoSession.SqlMap;
 
 				sqlMap.Insert("InsertAccountViaParameterMap", account);
 			}
@@ -52,7 +52,7 @@ namespace IBatisNet.DataAccess.Test.Dao.Implementations.DataMapper
 			{
 				sqlMapDaoSession = (SqlMapDaoSession)this.GetContext();
 
-				SqlMapper sqlMap = sqlMapDaoSession.SqlMap;
+				ISqlMapper sqlMap = sqlMapDaoSession.SqlMap;
 
 				sqlMap.Update("UpdateAccountViaParameterMap", account);
 			}
@@ -74,7 +74,7 @@ namespace IBatisNet.DataAccess.Test.Dao.Implementations.DataMapper
 			{
 				sqlMapDaoSession = (SqlMapDaoSession)this.GetContext();
 
-				SqlMapper sqlMap = sqlMapDaoSession.SqlMap;
+				ISqlMapper sqlMap = sqlMapDaoSession.SqlMap;
 
 				sqlMap.Delete("DeleteAccountViaInlineParameters", account);
 			}
@@ -97,7 +97,7 @@ namespace IBatisNet.DataAccess.Test.Dao.Implementations.DataMapper
 			{
 				sqlMapDaoSession = (SqlMapDaoSession)this.GetContext();
 
-				SqlMapper sqlMap = sqlMapDaoSession.SqlMap;
+				ISqlMapper sqlMap = sqlMapDaoSession.SqlMap;
 
 				return (Account) sqlMap.QueryForObject("GetAccountViaColumnName", accountID);
 			}

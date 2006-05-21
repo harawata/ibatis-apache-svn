@@ -195,7 +195,7 @@
     <Compile Include="Utilities\Objects\ActivatorFactory.cs" />
     <Compile Include="Utilities\Objects\ActivatorObjectFactory.cs" />
     <Compile Include="Utilities\Objects\BoxingOpCodes.cs" />
-    <Compile Include="Utilities\Objects\DelegateAObjectFactory.cs" />
+    <Compile Include="Utilities\Objects\DelegateObjectFactory.cs" />
     <Compile Include="Utilities\Objects\DelegateFactory.cs" />
     <Compile Include="Utilities\Objects\EmitObjectFactory.cs" />
     <Compile Include="Utilities\Objects\FactoryBuilder.cs" />
@@ -204,7 +204,6 @@
     <Compile Include="Utilities\Objects\Members\AccessorFactory.cs" />
     <Compile Include="Utilities\Objects\Members\BaseAccessor.cs" />
     <Compile Include="Utilities\Objects\Members\DelegateGetFieldAccessor.cs" />
-    <Compile Include="Utilities\Objects\Members\DelegateObjectFactory.cs" />
     <Compile Include="Utilities\Objects\Members\DelegatePropertyGetAccessor.cs" />
     <Compile Include="Utilities\Objects\Members\DelegatePropertySetAccessor.cs" />
     <Compile Include="Utilities\Objects\Members\DelegateSetFieldAccessor.cs" />
@@ -254,7 +253,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utilities\TypesResolver\ITypeResolver.cs" />
-    <Compile Include="Utilities\TypesResolver\TypeAliasResolver.cs">
+    <Compile Include="Utilities\TypesResolver\TypeRegistry.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utilities\TypesResolver\TypeResolver.cs">

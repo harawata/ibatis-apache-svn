@@ -475,7 +475,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Utilities\TypesResolver\TypeAliasResolver.cs"
+                    RelPath = "Utilities\TypesResolver\TypeRegistry.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

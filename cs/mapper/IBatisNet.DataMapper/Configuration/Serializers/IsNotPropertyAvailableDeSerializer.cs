@@ -38,7 +38,7 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 	/// <summary>
 	/// Summary description for IsNotPropertyAvailableDeSerializer.
 	/// </summary>
-	public class IsNotPropertyAvailableDeSerializer : IDeSerializer
+	public sealed class IsNotPropertyAvailableDeSerializer : IDeSerializer
 	{
 		private ConfigurationScope _configScope = null;
 

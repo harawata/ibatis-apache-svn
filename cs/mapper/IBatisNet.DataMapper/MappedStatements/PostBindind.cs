@@ -35,7 +35,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 	/// As ADO.NET allows one open <see cref="IDataReader"/> per connection at once, we keep
 	/// all the datas to open the next <see cref="IDataReader"/> after having closed the current. 
 	/// </remarks>
-	public class PostBindind
+    public sealed class PostBindind
 	{
 		/// <summary>
 		/// Enumeration of the ExecuteQuery method.

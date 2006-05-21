@@ -136,6 +136,7 @@
     <Compile Include="Exceptions\DataAccessException.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="IDaoManager.cs" />
     <Compile Include="Interfaces\IDao.cs">
       <SubType>Code</SubType>
     </Compile>

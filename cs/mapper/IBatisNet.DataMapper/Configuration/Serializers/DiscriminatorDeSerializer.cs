@@ -1,7 +1,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -37,7 +37,7 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 	/// <summary>
 	/// Summary description for DiscriminatorDeSerializer.
 	/// </summary>
-	public class DiscriminatorDeSerializer
+	public sealed class DiscriminatorDeSerializer
 	{
 		/// <summary>
 		/// Deserialize a ResultMap object

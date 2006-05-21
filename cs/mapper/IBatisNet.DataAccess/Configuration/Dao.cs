@@ -166,8 +166,8 @@ namespace IBatisNet.DataAccess.Configuration
 			try
 			{
 				_daoManager = daoManager;
-				_daoImplementation = Resources.TypeForName(this.Implementation);
-				_daoInterface = Resources.TypeForName(this.Interface);
+                _daoImplementation = TypeUtils.ResolveType(this.Implementation);
+                _daoInterface = TypeUtils.ResolveType(this.Interface);
 				// Create a new instance of the Dao object.
 				_daoInstance = _daoImplementation.GetConstructor(Type.EmptyTypes).Invoke(null) as IDao;
 				_proxy = DaoProxy.NewInstance(this);

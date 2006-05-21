@@ -36,7 +36,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 	/// <summary>
 	/// Custom type handler for adding a TypeHandlerCallback
 	/// </summary>
-	internal class CustomTypeHandler : BaseTypeHandler
+    internal sealed class CustomTypeHandler : BaseTypeHandler
 	{
 		private ITypeHandlerCallback _callback = null;
 

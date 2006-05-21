@@ -1,21 +1,21 @@
 IBatisNet Change Log
 
 ------------------------------
-1.4 - XX/XX/XXX
+1.5 - XX/XX/XXX
 ------------------------------
 Issues
-- Fixed IBATISNET-151 Pre-load stored procedure parameters should use the already-open connection 
-- Fixed IBATISNET-143  Allow selectKey node to process dynamic sql  
-- Fixed IBATISNET-141  DataMapper Developer Guilde document bug  
-- Fixed IBATISNET-139  DBNull.Value as parameter object raises NullReferenceException in UnknownTypeHandler  
-- Fixed IBATISNET-138  QueryForMap with cache Bug/Regression  
-- Fixed IBATISNET-137  TypeHandlers for "System.Nullable(Of" fails with custom types  
+- IBATISNET-158 : Add support for generic type in TypeAssemblyInfo
+- IBATISNET-151 : Pre-load stored procedure parameters should use the already-open connection 
+- IBATISNET-143 : Allow selectKey node to process dynamic sql  
+- IBATISNET-141 : DataMapper Developer Guide document bug  
+- IBATISNET-139 : DBNull.Value as parameter object raises NullReferenceException in UnknownTypeHandler  
+- IBATISNET-138 : QueryForMap with cache Bug/Regression  
+- IBATISNET-137 : TypeHandlers for "System.Nullable(Of" fails with custom types  
 
 Improvements/Changes
-- Fixed IBATISNET-156 Added support for MARS  
-   added allowMARS attribute on provider tag.
-- Added class attribute to parameterMap tags [it is required !]
-- Fixed IBATISNET-155 Allow Constructor Initialization on resultMap 
+- IBATISNET-156 : Added support for MARS  
+  Added allowMARS attribute on provider tag (used by SqlServer 2005, PostgreSQL).
+- IBATISNET-155 Allow Constructor Initialization on resultMap 
   use
   <resultMap id="account-result-constructor" class="Account" > 
         <constructor> 
@@ -27,10 +27,14 @@ Improvements/Changes
        <result property="BannerOption" column="Account_Banner_Option" dbType="Varchar" type="bool"/> 
         <result property="CartOption" column="Account_Cart_Option" typeHandler="HundredsBool"/> 
   </resultMap> 
-  
-- Fixed IBATISNET-153 Supporting private field accessor
-- Added useReflectionOptimizer attribut setting in SqlMap.config
+
+- IBATISNET-153 Supporting private field accessor
+- IBATISNET-147 : Emitted types for populating and instantiating result  
+  Added useReflectionOptimizer attribut setting in SqlMap.config
+- IBATISNET-105 : Added Lazy load support for Strong typed collections
+- Added ISqlMapper interface to simplify mock or stub
 - Added support for readOnly & serialize attribut on CacheModel
+- Added class attribute to parameterMap tags [it is required !]
 - Added Support for nullable type in .NET V2
 - Added Support for .NET V2 and Generic
 	

@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -36,7 +36,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 	/// <summary>
 	/// Summary description for DeleteMappedStatement.
 	/// </summary>
-	public class DeleteMappedStatement : MappedStatement
+    public sealed class DeleteMappedStatement : MappedStatement
 	{
 		/// <summary>
 		/// Constructor

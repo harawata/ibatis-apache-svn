@@ -38,7 +38,7 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 	/// <summary>
 	/// Summary description for IsParameterPresentDeSerializer.
 	/// </summary>
-	public class IsParameterPresentDeSerializer : IDeSerializer
+	public sealed class IsParameterPresentDeSerializer : IDeSerializer
 	{
 		private ConfigurationScope _configScope = null;
 

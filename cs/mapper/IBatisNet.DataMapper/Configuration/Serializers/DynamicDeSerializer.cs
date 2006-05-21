@@ -38,7 +38,7 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 	/// <summary>
 	/// Summary description for DynamicDeSerializer.
 	/// </summary>
-	public class DynamicDeSerializer : IDeSerializer
+	public sealed class DynamicDeSerializer : IDeSerializer
 	{
 		private ConfigurationScope _configScope = null;
 

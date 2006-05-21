@@ -45,7 +45,7 @@ namespace IBatisNet.DataMapper
 	{
 		#region Fields
 		private static readonly ILog _logger = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
-		private SqlMapper _sqlMapper = null;
+		private ISqlMapper _sqlMapper = null;
 		private IDataSource _dataSource = null;
 			
 		#endregion
@@ -55,7 +55,7 @@ namespace IBatisNet.DataMapper
 		/// 
 		/// </summary>
 		/// <param name="sqlMapper"></param>
-		public SqlMapSession(SqlMapper sqlMapper) 
+		public SqlMapSession(ISqlMapper sqlMapper) 
 		{
 			_dataSource = sqlMapper.DataSource;
 			_sqlMapper = sqlMapper;
@@ -87,7 +87,7 @@ namespace IBatisNet.DataMapper
 		/// <summary>
 		/// 
 		/// </summary>
-		public SqlMapper SqlMapper
+		public ISqlMapper SqlMapper
 		{
 			get { return _sqlMapper; }
 		}

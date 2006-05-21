@@ -33,11 +33,11 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers
 	/// <summary>
 	/// Summary description for IsGreaterThanTagHandler.
 	/// </summary>
-	public class IsGreaterThanTagHandler : ConditionalTagHandler
+	public sealed class IsGreaterThanTagHandler : ConditionalTagHandler
 	{
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:IsGreaterThanTagHandler"/> class.
+        /// Initializes a new instance of the <see cref="IsGreaterThanTagHandler"/> class.
         /// </summary>
         /// <param name="accessorFactory">The accessor factory.</param>
         public IsGreaterThanTagHandler(AccessorFactory accessorFactory)

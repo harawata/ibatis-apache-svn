@@ -40,14 +40,14 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 	public class SqlMapDaoSession : DaoSession
 	{
 		#region Fields
-		private SqlMapper _sqlMap = null;
+		private ISqlMapper _sqlMap = null;
 		#endregion
 
 		#region Properties
 		/// <summary>
 		/// 
 		/// </summary>
-		public SqlMapper SqlMap
+		public ISqlMapper SqlMap
 		{
 			get { return _sqlMap; }
 		}
@@ -81,7 +81,7 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		/// </summary>
 		/// <param name="daoManager"></param>
 		/// <param name="sqlMap"></param>
-		public SqlMapDaoSession(DaoManager daoManager, SqlMapper sqlMap):base(daoManager) 
+		public SqlMapDaoSession(DaoManager daoManager, ISqlMapper sqlMap):base(daoManager) 
 		{
 			_sqlMap = sqlMap;
 		}

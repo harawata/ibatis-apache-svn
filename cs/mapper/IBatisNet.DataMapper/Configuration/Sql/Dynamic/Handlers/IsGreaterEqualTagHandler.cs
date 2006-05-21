@@ -33,11 +33,11 @@ using IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements;
 
 namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers
 {
-	#region Methods
+
 	/// <summary>
 	/// Summary description for IsGreaterEqualTagHandler.
 	/// </summary>
-	public class IsGreaterEqualTagHandler : ConditionalTagHandler
+	public sealed class IsGreaterEqualTagHandler : ConditionalTagHandler
 	{
 
         /// <summary>
@@ -49,6 +49,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers
 		{
 		}
 
+		#region Methods
 		/// <summary>
 		/// 
 		/// </summary>
@@ -61,7 +62,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers
 			long x = this.Compare(ctx, tag, parameterObject);
 			return ((x >= 0) && (x != ConditionalTagHandler.NOT_COMPARABLE));
 		}
+		#endregion
 	}
-	#endregion
 
 }

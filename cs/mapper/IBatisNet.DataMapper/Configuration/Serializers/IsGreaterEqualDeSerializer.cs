@@ -38,7 +38,7 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 	/// <summary>
 	/// Summary description for IsGreaterEqualDeSerializer.
 	/// </summary>
-	public class IsGreaterEqualDeSerializer : IDeSerializer
+	public sealed class IsGreaterEqualDeSerializer : IDeSerializer
 	{
 		private ConfigurationScope _configScope = null;
 

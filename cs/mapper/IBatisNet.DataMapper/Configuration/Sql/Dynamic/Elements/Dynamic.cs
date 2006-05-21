@@ -38,7 +38,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements
 	/// </summary>
 	[Serializable]
 	[XmlRoot("dynamic", Namespace="http://ibatis.apache.org/mapping")]
-	public class Dynamic : SqlTag
+	public sealed class Dynamic : SqlTag
 	{
 
         /// <summary>

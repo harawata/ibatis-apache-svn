@@ -42,7 +42,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Static
 	/// <summary>
 	/// Summary description for StaticSql.
 	/// </summary>
-	public class StaticSql : ISql
+	public sealed class StaticSql : ISql
 	{
 
 		#region Fields

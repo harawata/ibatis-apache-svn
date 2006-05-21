@@ -30,7 +30,7 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
 	/// <summary>
 	/// Factory to get <see cref="IResultStrategy"/> implementation.
 	/// </summary>
-    public class ResultStrategyFactory
+    public sealed class ResultStrategyFactory
     {
 		private static IResultStrategy _resultClassStrategy = null;
 		private static IResultStrategy _resultMapStrategy = null;

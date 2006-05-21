@@ -38,7 +38,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements
 	/// </summary>
 	[Serializable]
 	[XmlRoot("isNotEmpty", Namespace="http://ibatis.apache.org/mapping")]
-	public class IsNotEmpty : BaseTag
+	public sealed class IsNotEmpty : BaseTag
 	{
         /// <summary>
         /// Initializes a new instance of the <see cref="IsNotEmpty"/> class.

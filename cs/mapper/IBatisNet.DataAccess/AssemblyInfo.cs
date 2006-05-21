@@ -4,4 +4,4 @@ using System.Reflection;
 [assembly: AssemblyDescription("Data Access Object (DAO) design pattern implementation.")]
 
 
-[assembly: AssemblyVersion("1.7.0")]
+[assembly: AssemblyVersion("1.8")]

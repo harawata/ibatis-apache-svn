@@ -38,7 +38,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 	/// <summary>
 	/// DBNull TypeHandler.
 	/// </summary>
-	internal class DBNullTypeHandler : BaseTypeHandler
+    internal sealed class DBNullTypeHandler : BaseTypeHandler
 	{
 		public override object GetValueByName(ResultProperty mapping, IDataReader dataReader)
 		{

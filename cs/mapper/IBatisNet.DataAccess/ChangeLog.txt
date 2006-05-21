@@ -1,7 +1,12 @@
 IBatisNet DataAccess Change Log
 
 ------------------------------
-1.7 - XX/XX/XXXX
+1.8 - DD/MM/AAAA
+------------------------------
+- Added IDaoManager interface to simplify mock or stub
+
+------------------------------
+1.7 - 15/12/2005
 ------------------------------
 - Updated to log4net V1.2.9
 - Updated to Castle.DynamicProxy V1.1.5.0

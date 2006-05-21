@@ -36,9 +36,9 @@ using IBatisNet.DataMapper.Configuration.ResultMapping;
 namespace IBatisNet.DataMapper.TypeHandlers
 {
 	/// <summary>
-	/// Description résumée de DecimalTypeHandler.
+	/// DecimalTypeHandler.
 	/// </summary>
-	internal class DecimalTypeHandler : BaseTypeHandler
+    internal sealed class DecimalTypeHandler : BaseTypeHandler
 	{
         /// <summary>
 		/// 
