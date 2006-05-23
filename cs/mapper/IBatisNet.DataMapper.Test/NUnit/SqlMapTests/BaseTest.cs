@@ -65,12 +65,14 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 #if dotnet2
             NameValueCollection properties = new NameValueCollection();
             properties.Add("collection2Namespace","IBatisNet.DataMapper.Test.Domain.LineItemCollection2, IBatisNet.DataMapper.Test");
+            properties.Add("nullableInt", "int?");
             builder.Properties = properties;
 
             string fileName = "sqlmap" + "_" + ConfigurationManager.AppSettings["database"] + "_" + ConfigurationManager.AppSettings["providerType"] + ".config";
 #else
             NameValueCollection properties = new NameValueCollection();
             properties.Add("collection2Namespace","IBatisNet.DataMapper.Test.Domain.LineItemCollection, IBatisNet.DataMapper.Test");
+            properties.Add("nullableInt", "int");
             builder.Properties = properties;
 
 			string fileName = "sqlmap" + "_" + ConfigurationSettings.AppSettings["database"] + "_" + ConfigurationSettings.AppSettings["providerType"] + ".config";

@@ -2,7 +2,7 @@ using System;
 #if dotnet2
 using System.Collections.Generic;
 #endif
-using System.Text;
+
 
 namespace IBatisNet.DataMapper.Test.Domain
 {

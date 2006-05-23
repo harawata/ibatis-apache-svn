@@ -14,7 +14,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 	/// Description résumée de ConfigureTest.
 	/// </summary>
 	[TestFixture] 
-	public class ConfigureTest : BaseTest
+	public class ConfigureTest : BaseTest 
 	{
 		private string _fileName = string.Empty;
 
@@ -47,11 +47,12 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             NameValueCollection properties = new NameValueCollection();
             properties.Add("collection2Namespace", "IBatisNet.DataMapper.Test.Domain.LineItemCollection, IBatisNet.DataMapper.Test");
+            properties.Add("nullableInt", "int");
             builder.Properties = properties;
 
-			SqlMapper sqlMap = builder.Configure( _fileName );
+			SqlMapper mapper = builder.Configure( _fileName );
 
-			Assert.IsNotNull(sqlMap);
+			Assert.IsNotNull(mapper);
 		}
 
 		/// <summary>
@@ -67,11 +68,13 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             NameValueCollection properties = new NameValueCollection();
             properties.Add("collection2Namespace", "IBatisNet.DataMapper.Test.Domain.LineItemCollection, IBatisNet.DataMapper.Test");
+            properties.Add("nullableInt", "int");
+
             builder.Properties = properties;
 
-			SqlMapper sqlMap = builder.ConfigureAndWatch( _fileName , handler);
+			SqlMapper mapper = builder.ConfigureAndWatch( _fileName , handler);
 
-			Assert.IsNotNull(sqlMap);
+			Assert.IsNotNull(mapper);
 		}
 
 		/// <summary>
@@ -84,11 +87,13 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             NameValueCollection properties = new NameValueCollection();
             properties.Add("collection2Namespace", "IBatisNet.DataMapper.Test.Domain.LineItemCollection, IBatisNet.DataMapper.Test");
+            properties.Add("nullableInt", "int");
+
             builder.Properties = properties;
 
-			SqlMapper sqlMap = builder.Configure( _fileName );
+			SqlMapper mapper = builder.Configure( _fileName );
 
-			Assert.IsNotNull(sqlMap);
+			Assert.IsNotNull(mapper);
 		}
 
 		/// <summary>
@@ -103,11 +108,13 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             NameValueCollection properties = new NameValueCollection();
             properties.Add("collection2Namespace", "IBatisNet.DataMapper.Test.Domain.LineItemCollection, IBatisNet.DataMapper.Test");
+            properties.Add("nullableInt", "int");
+
             builder.Properties = properties;
 
-			SqlMapper sqlMap = builder.ConfigureAndWatch( _fileName , handler);
+			SqlMapper mapper = builder.ConfigureAndWatch( _fileName , handler);
 
-			Assert.IsNotNull(sqlMap);
+			Assert.IsNotNull(mapper);
 		}
 		#endregion 
 
@@ -125,11 +132,12 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             NameValueCollection properties = new NameValueCollection();
             properties.Add("collection2Namespace", "IBatisNet.DataMapper.Test.Domain.LineItemCollection, IBatisNet.DataMapper.Test");
+            properties.Add("nullableInt", "int");
             builder.Properties = properties;
 
-			SqlMapper sqlMap = builder.Configure( _fileName );
+			SqlMapper mapper = builder.Configure( _fileName );
 
-			Assert.IsNotNull(sqlMap);
+			Assert.IsNotNull(mapper);
 		}
 
 		/// <summary>
@@ -144,11 +152,13 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             NameValueCollection properties = new NameValueCollection();
             properties.Add("collection2Namespace", "IBatisNet.DataMapper.Test.Domain.LineItemCollection, IBatisNet.DataMapper.Test");
+            properties.Add("nullableInt", "int");
+
             builder.Properties = properties;
 
-			SqlMapper sqlMap = builder.Configure( _fileName );
+			SqlMapper mapper = builder.Configure( _fileName );
 
-			Assert.IsNotNull(sqlMap);
+			Assert.IsNotNull(mapper);
 		}
 
 		/// <summary>
@@ -163,13 +173,13 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             NameValueCollection properties = new NameValueCollection();
             properties.Add("collection2Namespace", "IBatisNet.DataMapper.Test.Domain.LineItemCollection, IBatisNet.DataMapper.Test");
+            properties.Add("nullableInt", "int");
+
             builder.Properties = properties;
 
-			SqlMapper sqlMap = builder.Configure( _fileName );
+			SqlMapper mapper = builder.Configure( _fileName );
 
-			//SqlMapper sqlMap = SqlMapper.Configure( _fileName );
-
-			Assert.IsNotNull(sqlMap);
+			Assert.IsNotNull(mapper);
 		}
 
 		/// <summary>
@@ -184,11 +194,13 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             NameValueCollection properties = new NameValueCollection();
             properties.Add("collection2Namespace", "IBatisNet.DataMapper.Test.Domain.LineItemCollection, IBatisNet.DataMapper.Test");
+            properties.Add("nullableInt", "int");
+
             builder.Properties = properties;
 
-			SqlMapper sqlMap = builder.Configure( _fileName );
+			SqlMapper mapper = builder.Configure( _fileName );
 
-			Assert.IsNotNull(sqlMap);
+			Assert.IsNotNull(mapper);
 		}
 
 		/// <summary>
@@ -204,11 +216,13 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             NameValueCollection properties = new NameValueCollection();
             properties.Add("collection2Namespace", "IBatisNet.DataMapper.Test.Domain.LineItemCollection, IBatisNet.DataMapper.Test");
+            properties.Add("nullableInt", "int");
+
             builder.Properties = properties;
 
-			SqlMapper sqlMap = builder.Configure( fileInfo );
+			SqlMapper mapper = builder.Configure( fileInfo );
 
-			Assert.IsNotNull(sqlMap);
+			Assert.IsNotNull(mapper);
 		}
 
 		/// <summary>
@@ -224,11 +238,13 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             NameValueCollection properties = new NameValueCollection();
             properties.Add("collection2Namespace", "IBatisNet.DataMapper.Test.Domain.LineItemCollection, IBatisNet.DataMapper.Test");
+            properties.Add("nullableInt", "int");
+
             builder.Properties = properties;
 
-			SqlMapper sqlMap = builder.Configure( uri );
+			SqlMapper mapper = builder.Configure( uri );
 
-			Assert.IsNotNull(sqlMap);
+			Assert.IsNotNull(mapper);
 		}
 
 		/// <summary>
@@ -244,11 +260,13 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             NameValueCollection properties = new NameValueCollection();
             properties.Add("collection2Namespace", "IBatisNet.DataMapper.Test.Domain.LineItemCollection, IBatisNet.DataMapper.Test");
+            properties.Add("nullableInt", "int");
+
             builder.Properties = properties;
 
-			SqlMapper sqlMap = builder.ConfigureAndWatch( _fileName , handler);
+			SqlMapper mapper = builder.ConfigureAndWatch( _fileName , handler);
 
-			Assert.IsNotNull(sqlMap);
+			Assert.IsNotNull(mapper);
 		}
 
 		/// <summary>
@@ -264,11 +282,13 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             NameValueCollection properties = new NameValueCollection();
             properties.Add("collection2Namespace", "IBatisNet.DataMapper.Test.Domain.LineItemCollection, IBatisNet.DataMapper.Test");
+            properties.Add("nullableInt", "int");
+
             builder.Properties = properties;
 
-			SqlMapper sqlMap = builder.ConfigureAndWatch( _fileName , handler);
+			SqlMapper mapper = builder.ConfigureAndWatch( _fileName , handler);
 
-			Assert.IsNotNull(sqlMap);
+			Assert.IsNotNull(mapper);
 		}
 
 		/// <summary>
@@ -284,11 +304,13 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             NameValueCollection properties = new NameValueCollection();
             properties.Add("collection2Namespace", "IBatisNet.DataMapper.Test.Domain.LineItemCollection, IBatisNet.DataMapper.Test");
+            properties.Add("nullableInt", "int");
+
             builder.Properties = properties;
 
-            SqlMapper sqlMap = builder.ConfigureAndWatch( _fileName , handler);
+            SqlMapper mapper = builder.ConfigureAndWatch( _fileName , handler);
 
-			Assert.IsNotNull(sqlMap);
+			Assert.IsNotNull(mapper);
 		}
 
 		/// <summary>
@@ -304,11 +326,13 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             NameValueCollection properties = new NameValueCollection();
             properties.Add("collection2Namespace", "IBatisNet.DataMapper.Test.Domain.LineItemCollection, IBatisNet.DataMapper.Test");
+            properties.Add("nullableInt", "int");
+
             builder.Properties = properties;
 
-			SqlMapper sqlMap = builder.ConfigureAndWatch( _fileName , handler);
+			SqlMapper mapper = builder.ConfigureAndWatch( _fileName , handler);
 
-			Assert.IsNotNull(sqlMap);
+			Assert.IsNotNull(mapper);
 		}
 
 		/// <summary>
@@ -326,11 +350,13 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             NameValueCollection properties = new NameValueCollection();
             properties.Add("collection2Namespace", "IBatisNet.DataMapper.Test.Domain.LineItemCollection, IBatisNet.DataMapper.Test");
+            properties.Add("nullableInt", "int");
+
             builder.Properties = properties;
 
-			SqlMapper sqlMap = builder.ConfigureAndWatch( fileInfo , handler);
+			SqlMapper mapper = builder.ConfigureAndWatch( fileInfo , handler);
 
-			Assert.IsNotNull(sqlMap);
+			Assert.IsNotNull(mapper);
 		}
 		#endregion 
 
@@ -355,11 +381,13 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             NameValueCollection properties = new NameValueCollection();
             properties.Add("collection2Namespace", "IBatisNet.DataMapper.Test.Domain.LineItemCollection, IBatisNet.DataMapper.Test");
+            properties.Add("nullableInt", "int");
+
             builder.Properties = properties;
 
-			SqlMapper sqlMap = builder.Configure( stream );
+			SqlMapper mapper = builder.Configure( stream );
 
-			Assert.IsNotNull(sqlMap);
+			Assert.IsNotNull(mapper);
 		}
 		#endregion 
 

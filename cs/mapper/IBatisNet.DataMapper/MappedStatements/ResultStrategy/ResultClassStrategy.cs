@@ -61,23 +61,16 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
 		/// <param name="resultObject">The result object.</param>
 		public object Process(RequestScope request, IDataReader reader, object resultObject)
 		{
-			object outObject = resultObject; 
-
-			if (outObject == null) 
-			{
-				outObject = request.Statement.CreateInstanceOfResultClass();
-			}
-
 			// Check if the ResultClass is a 'primitive' Type
 			if (request.DataExchangeFactory.TypeHandlerFactory.IsSimpleType(request.Statement.ResultClass))
 			{
 				return _simpleTypeStrategy.Process(request, reader, resultObject);
 			}
-			else if (outObject is IDictionary) 
+            else if (typeof(IDictionary).IsAssignableFrom(request.Statement.ResultClass)) 
 			{
 				return _dictionaryStrategy.Process(request, reader, resultObject);
 			}
-			else if (outObject is IList) 
+            else if (typeof(IList).IsAssignableFrom(request.Statement.ResultClass)) 
 			{
 				return _listStrategy.Process(request, reader, resultObject);
 			}

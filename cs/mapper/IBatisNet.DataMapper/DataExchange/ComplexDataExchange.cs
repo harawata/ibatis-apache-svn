@@ -52,14 +52,22 @@ namespace IBatisNet.DataMapper.DataExchange
 		/// <param name="parameterObject"></param>
 		public override object GetData(ParameterProperty mapping, object parameterObject)
 		{
-			if (this.DataExchangeFactory.TypeHandlerFactory.IsSimpleType(parameterObject.GetType()))
-			{
-				return parameterObject;
-			}
-			else
-			{
-				return ObjectProbe.GetMemberValue(parameterObject, mapping.PropertyName, this.DataExchangeFactory.AccessorFactory);
-			}
+            if (parameterObject!=null)
+            {
+ 			    if (this.DataExchangeFactory.TypeHandlerFactory.IsSimpleType(parameterObject.GetType()))
+			    {
+				    return parameterObject;
+			    }
+			    else
+			    {
+				    return ObjectProbe.GetMemberValue(parameterObject, mapping.PropertyName, this.DataExchangeFactory.AccessorFactory);
+			    }               
+            }
+		    else
+            {
+                return null;
+            }
+
 		}
 
 		/// <summary>

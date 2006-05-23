@@ -97,6 +97,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		private string _extendStatement = string.Empty;
         [NonSerialized]
         private IFactory _resultClassFactory = null;
+	    [NonSerialized]
         private IFactory _listClassFactory = null;
 
 		#endregion
@@ -299,7 +300,10 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		/// <summary>
 		/// Do not use direclty, only for serialization.
 		/// </summary>
-		public Statement() {}
+		public Statement()
+		{
+		    
+		}
 		#endregion
 
 		#region Methods
@@ -343,7 +347,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		/// </summary>
 		/// <returns>An object.</returns>
 		public object CreateInstanceOfResultClass()
-		{
+		{		    
 			if (_resultClass.IsPrimitive || _resultClass == typeof (string))
 			{
 				TypeCode typeCode = Type.GetTypeCode(_resultClass);
@@ -351,22 +355,36 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 			}
 			else
 			{
-				if (_resultClass == typeof (DateTime))
-				{
-					return new DateTime();
-				}
-				else if (_resultClass == typeof (Decimal))				
-				{
-					return new Decimal();
-				}
-				else if (_resultClass == typeof (Guid))				
-				{
-					return Guid.Empty;
-				}
-				else if (_resultClass == typeof (TimeSpan))
-				{
-					return new TimeSpan(0);
-				}
+                if (_resultClass.IsValueType)
+                {
+ 				    if (_resultClass == typeof (DateTime))
+				    {
+					    return new DateTime();
+				    }
+				    else if (_resultClass == typeof (Decimal))				
+				    {
+					    return new Decimal();
+				    }
+				    else if (_resultClass == typeof (Guid))				
+				    {
+					    return Guid.Empty;
+				    }
+				    else if (_resultClass == typeof (TimeSpan))
+				    {
+					    return new TimeSpan(0);
+                    }
+#if dotnet2
+                    else if (_resultClass.IsGenericType && typeof(Nullable<>).IsAssignableFrom(_resultClass.GetGenericTypeDefinition()))
+                    {
+                        return TypeUtils.InstantiateNullableType(_resultClass);
+                    }
+#endif                   
+				    else
+                    {
+                        throw new NotImplementedException("Unable to instanciate value type");
+                    }                    
+
+                }
 				else
 				{
 					return _resultClassFactory.CreateInstance(null);

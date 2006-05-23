@@ -146,5 +146,76 @@ namespace IBatisNet.Common.Utilities
             }
             return resultObject;
         }
+
+#if dotnet2
+        /// <summary>
+        /// Instantiate a Nullable Type.
+        /// </summary>
+        /// <param name="type">The nullable type.</param>
+        /// <returns>An object.</returns>
+        public static object InstantiateNullableType(Type type)
+        {
+            object resultObject = null;
+
+            if (type== typeof(bool?))
+            {
+                resultObject = new Nullable<bool>(false);
+            }
+            else if (type== typeof(byte?))
+            {
+                resultObject = new Nullable<byte>(byte.MinValue);
+            }               
+            else if (type== typeof(char?))
+            {
+                resultObject = new Nullable<char>(char.MinValue);
+            }
+            else if (type == typeof(DateTime?))
+            {
+                resultObject = new Nullable<DateTime>(DateTime.MinValue);
+            }
+            else if (type == typeof(decimal?))
+            {
+                resultObject = new Nullable<decimal>(decimal.MinValue);
+            }
+            else if (type == typeof(double?))
+            {
+                resultObject = new Nullable<double>(double.MinValue);
+            }
+            else if (type == typeof(Int16?))
+            {
+                resultObject = new Nullable<Int16>(Int16.MinValue);
+            }
+            else if (type == typeof(Int32?))
+            {
+                resultObject = new Nullable<Int32>(Int32.MinValue);
+            }
+            else if (type == typeof(Int64?))
+            {
+                resultObject = new Nullable<Int64>(Int64.MinValue);
+            }
+            else if (type == typeof(SByte?))
+            {
+                resultObject = new Nullable<SByte>(SByte.MinValue);
+            }
+            else if (type == typeof(Single?))
+            {
+                resultObject = new Nullable<Single>(Single.MinValue);
+            }
+            else if (type == typeof(UInt16?))
+            {
+                resultObject = new Nullable<UInt16>(UInt16.MinValue);
+            }
+            else if (type == typeof(UInt32?))
+            {
+                resultObject = new Nullable<UInt32>(UInt32.MinValue);
+            }
+            else if (type == typeof(UInt64?))
+            {
+                resultObject = new Nullable<UInt64>(UInt64.MinValue);
+            }              
+
+            return resultObject;
+        }
+#endif
     }
 }

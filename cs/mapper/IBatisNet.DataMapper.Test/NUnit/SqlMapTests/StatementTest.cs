@@ -1154,7 +1154,20 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Assert.IsTrue(rowNumber == 4);
 		}
 
+        /// <summary>
+        /// Test Execute delete Via Inline Parameters
+        /// </summary>
+        [Test]
+        public void TestDeleteViaInlineParameters()
+        {
+            Account account = NewAccount6();
 
+            sqlMap.Insert("InsertAccountViaParameterMap", account);
+
+            int rowNumber = sqlMap.Delete("DeleteAccountViaInlineParameters", 6);
+
+            Assert.IsTrue(rowNumber == 1);
+        }
 
 		#endregion
 
