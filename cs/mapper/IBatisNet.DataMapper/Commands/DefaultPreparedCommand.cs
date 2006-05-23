@@ -111,7 +111,7 @@ namespace IBatisNet.DataMapper.Commands
 				if (_logger.IsDebugEnabled)
 				{
                     _paramLogList.Remove(0, _paramLogList.Length);
-                    _typeLogList.Remove(0, _paramLogList.Length);
+                    _typeLogList.Remove(0, _typeLogList.Length);
 
                     _paramLogList.Append(sqlParameter.ParameterName);
                     _paramLogList.Append("=[");
