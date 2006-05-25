@@ -78,8 +78,9 @@ namespace IBatisNet.DataMapper.DataExchange
 		/// <param name="dataBaseValue"></param>
 		public override void SetData(ref object target, ResultProperty mapping, object dataBaseValue)
 		{
-            if ( (target.GetType() != _parameterClass)
-                && !_parameterClass.IsSubclassOf(target.GetType())) 
+		    Type targetType = target.GetType();
+            if ((targetType != _parameterClass)
+                && !targetType.IsSubclassOf(_parameterClass)) 
 			{
                 throw new ArgumentException("Could not set value of type '" + target.GetType() + "' in property '" + mapping.PropertyName + "' of type '" + _parameterClass + "'");
 			}

@@ -1,8 +1,7 @@
 using System;
-using System.Reflection;
+
 using IBatisNet.Common.Test.Domain;
 using IBatisNet.Common.Utilities;
-using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.Common.Utilities.Objects.Members;
 using NUnit.Framework;
 
@@ -138,8 +137,6 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             IGetAccessor accessorGet = factoryGet.CreateGetAccessor(typeof(PropertySon), "Account");
             ISetAccessor accessorSet = factorySet.CreateSetAccessor(typeof(PropertySon), "Account");
 
-            PropertySon prop = new PropertySon();
-
             PropertySon son = new PropertySon();
             Account account = (Account)accessorGet.Get(son);
 
@@ -156,8 +153,6 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         {
             IGetAccessor accessorGet = factoryGet.CreateGetAccessor(typeof(PropertySon), "Int");
             ISetAccessor accessorSet = factorySet.CreateSetAccessor(typeof(PropertySon), "Int");
-
-            PropertySon prop = new PropertySon();
 
             PropertySon son = new PropertySon();
             Int32 i = (Int32)accessorGet.Get(son);
@@ -176,8 +171,6 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             IGetAccessor accessorGet = factoryGet.CreateGetAccessor(typeof(PropertySon), "DateTime");
             ISetAccessor accessorSet = factorySet.CreateSetAccessor(typeof(PropertySon), "DateTime");
 
-            PropertySon prop = new PropertySon();
-
             PropertySon son = new PropertySon();
             DateTime date = (DateTime)accessorGet.Get(son);
 
@@ -193,8 +186,6 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         {
             ISetAccessor accessorSet = factorySet.CreateSetAccessor(typeof(PropertySon), "PrivateIndex");
 
-            PropertySon prop = new PropertySon();
-
             PropertySon son = new PropertySon();
             accessorSet.Set(son, -99);
 
@@ -209,14 +200,39 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         {
             ISetAccessor accessorSet = factorySet.CreateSetAccessor(typeof(PropertySon), "Index");
 
-            PropertySon prop = new PropertySon();
-
             PropertySon son = new PropertySon();
             accessorSet.Set(son, -99);
 
             Assert.AreEqual(-99, son.Index);
         }
 
+        /// <summary>
+        /// Test set IMemberAccessor on a property override by new
+        /// </summary>
+        [Test]
+        public void TestSetPropertyOverrideByNew()
+        {
+            ISetAccessor accessorSet = factorySet.CreateSetAccessor(typeof(PropertySon), "Float");
+
+            PropertySon son = new PropertySon();
+            accessorSet.Set(son, -99.99f);
+
+            Assert.AreEqual(-99.99f*2, son.Float);
+        }
+
+        /// <summary>
+        /// Test get IMemberAccessor on a property override by new
+        /// </summary>
+        [Test]
+        public void TestGetPropertyOverrideByNew()
+        {
+            IGetAccessor accessorGet = factoryGet.CreateGetAccessor(typeof(PropertySon), "Float");
+
+            PropertySon son = new PropertySon();
+            son.Float = -99.99f;
+
+            Assert.AreEqual(-99.99f * 2, accessorGet.Get(son));
+        }
     }
 
 }

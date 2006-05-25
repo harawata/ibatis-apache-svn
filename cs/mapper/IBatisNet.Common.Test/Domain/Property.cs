@@ -173,6 +173,7 @@ namespace IBatisNet.Common.Test.Domain
     public class PropertySon : Property
     {
         private int _int = int.MinValue;
+        private float _float = float.MinValue;
 
         private int PrivateIndex
         {
@@ -205,6 +206,12 @@ namespace IBatisNet.Common.Test.Domain
         {
             get { return new DateTime(2000,1,1); }
             set { throw new InvalidOperationException("Test virtual"); }
+        }
+
+        public new float Float
+        {
+            get { return _float; }
+            set { _float = value*2; }
         }
     }
 }

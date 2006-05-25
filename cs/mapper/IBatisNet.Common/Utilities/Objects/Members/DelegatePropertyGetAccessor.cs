@@ -51,7 +51,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
         private Type _targetType = null;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:DelegatePropertyGetAccessor"/> class
+        /// Initializes a new instance of the <see cref="DelegatePropertyGetAccessor"/> class
         /// for get property access via DynamicMethod.
         /// </summary>
         /// <param name="targetObjectType">Type of the target object.</param>
