@@ -15,24 +15,31 @@
  */
 package org.apache.ibatis.abator.api.dom.java;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * @author Jeff Butler
  */
 public class FullyQualifiedJavaType implements Comparable {
     private static FullyQualifiedJavaType intInstance = null;
-    private static FullyQualifiedJavaType listInstance = null;
-    private static FullyQualifiedJavaType mapInstance = null;
-    private static FullyQualifiedJavaType hashMapInstance = null;
-    private static FullyQualifiedJavaType arrayListInstance = null;
     private static FullyQualifiedJavaType stringInstance = null;
     private static FullyQualifiedJavaType booleanInstance = null;
+    private static FullyQualifiedJavaType objectInstance = null;
+    private static FullyQualifiedJavaType dateInstance = null;
     
-    private String shortName;
+    private String baseShortName;
+    
+    //  this is the short name including the parameterized types and wildcards
+    private String calculatedShortName;
+    
     private String fullyQualifiedName;
     private boolean explicitlyImported;
     private String packageName;
     private boolean primitive;
     private String wrapperClass;
+    private List typeArguments;
     
     /**
      * Use this constructor to construct a generic type with the specified
@@ -41,13 +48,14 @@ public class FullyQualifiedJavaType implements Comparable {
      * @param fullyQualifiedName
      * @param typeParameters
      */
-    public FullyQualifiedJavaType(String fullyQualifiedName, FullyQualifiedJavaType[] typeParameters) {
+    public FullyQualifiedJavaType(String fullyQualifiedName) {
         super();
+        typeArguments = new ArrayList();
         this.fullyQualifiedName = fullyQualifiedName;
         
         int lastIndex = fullyQualifiedName.lastIndexOf('.');
         if (lastIndex == -1) {
-            shortName = fullyQualifiedName;
+            baseShortName = fullyQualifiedName;
             explicitlyImported = false;
             packageName = ""; //$NON-NLS-1$
             
@@ -80,7 +88,7 @@ public class FullyQualifiedJavaType implements Comparable {
                 wrapperClass = null;
             }
         } else {
-            shortName = fullyQualifiedName.substring(lastIndex + 1);
+            baseShortName = fullyQualifiedName.substring(lastIndex + 1);
             packageName = fullyQualifiedName.substring(0, lastIndex);
             if ("java.lang".equals(packageName)) { //$NON-NLS-1$
                 explicitlyImported = false;
@@ -89,35 +97,7 @@ public class FullyQualifiedJavaType implements Comparable {
             }
         }
         
-        if (typeParameters != null && typeParameters.length > 0) {
-            StringBuffer sb = new StringBuffer();
-            sb.append(shortName);
-            sb.append('<');
-            
-            boolean comma = false;
-            for (int i = 0; i < typeParameters.length; i++) {
-                FullyQualifiedJavaType fqjt = typeParameters[i];
-                
-                if (comma) {
-                    sb.append(", "); //$NON-NLS-1$
-                } else {
-                    comma = true;
-                }
-                
-                sb.append(fqjt.getShortName());
-            }
-            
-            sb.append('>');
-            
-            shortName = sb.toString();
-        }
-    }
-    
-    /**
-     * 
-     */
-    public FullyQualifiedJavaType(String fullyQualifiedName) {
-        this(fullyQualifiedName, null);
+        calculatedShortName = baseShortName;
     }
     
     /**
@@ -145,7 +125,7 @@ public class FullyQualifiedJavaType implements Comparable {
      * @return Returns the shortName.
      */
     public String getShortName() {
-        return shortName;
+        return calculatedShortName;
     }
     
     /* (non-Javadoc)
@@ -206,36 +186,24 @@ public class FullyQualifiedJavaType implements Comparable {
         return intInstance;
     }
 
-    public static FullyQualifiedJavaType getMapInstance() {
-        if (mapInstance == null) {
-            mapInstance = new FullyQualifiedJavaType("java.util.Map"); //$NON-NLS-1$
-        }
-        
-        return mapInstance;
+    public static FullyQualifiedJavaType getNewMapInstance() {
+        // always return a new instance because the type may be parameterized
+        return new FullyQualifiedJavaType("java.util.Map"); //$NON-NLS-1$
     }
 
-    public static FullyQualifiedJavaType getListInstance() {
-        if (listInstance == null) {
-            listInstance = new FullyQualifiedJavaType("java.util.List"); //$NON-NLS-1$
-        }
-        
-        return listInstance;
+    public static FullyQualifiedJavaType getNewListInstance() {
+        // always return a new instance because the type may be parameterized
+        return new FullyQualifiedJavaType("java.util.List"); //$NON-NLS-1$
     }
 
-    public static FullyQualifiedJavaType getHashMapInstance() {
-        if (hashMapInstance == null) {
-            hashMapInstance = new FullyQualifiedJavaType("java.util.HashMap"); //$NON-NLS-1$
-        }
-        
-        return hashMapInstance;
+    public static FullyQualifiedJavaType getNewHashMapInstance() {
+        // always return a new instance because the type may be parameterized
+        return new FullyQualifiedJavaType("java.util.HashMap"); //$NON-NLS-1$
     }
 
-    public static FullyQualifiedJavaType getArrayListInstance() {
-        if (arrayListInstance == null) {
-            arrayListInstance = new FullyQualifiedJavaType("java.util.ArrayList"); //$NON-NLS-1$
-        }
-        
-        return arrayListInstance;
+    public static FullyQualifiedJavaType getNewArrayListInstance() {
+        // always return a new instance because the type may be parameterized
+        return new FullyQualifiedJavaType("java.util.ArrayList"); //$NON-NLS-1$
     }
 
     public static FullyQualifiedJavaType getStringInstance() {
@@ -254,10 +222,48 @@ public class FullyQualifiedJavaType implements Comparable {
         return booleanInstance;
     }
     
+    public static FullyQualifiedJavaType getObjectInstance() {
+        if (objectInstance == null) {
+            objectInstance = new FullyQualifiedJavaType("java.lang.Object"); //$NON-NLS-1$
+        }
+        
+        return objectInstance;
+    }
+
+    public static FullyQualifiedJavaType getDateInstance() {
+        if (dateInstance == null) {
+            dateInstance = new FullyQualifiedJavaType("java.util.Date"); //$NON-NLS-1$
+        }
+        
+        return dateInstance;
+    }
+
     /* (non-Javadoc)
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     public int compareTo(Object o) {
         return fullyQualifiedName.compareTo(((FullyQualifiedJavaType)o).fullyQualifiedName);
+    }
+    
+    public void addTypeArgument(FullyQualifiedJavaType type) {
+        typeArguments.add(type);
+        
+        StringBuffer sb = new StringBuffer();
+        sb.append(baseShortName);
+        sb.append('<');
+        
+        boolean comma = false;
+        Iterator iter = typeArguments.iterator();
+        while (iter.hasNext()) {
+            FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter.next();
+            if (comma) {
+                sb.append(", "); //$NON-NLS-1$
+            } else {
+                comma = true;
+            }
+            sb.append(fqjt.getShortName());
+        }
+        sb.append('>');
+        calculatedShortName = sb.toString();
     }
 }

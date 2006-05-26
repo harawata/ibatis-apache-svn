@@ -234,4 +234,12 @@ public class ColumnDefinition {
     public String getSelectListPhrase() {
         return selectListPhrase;
     }
+    
+    public boolean isJDBCDateColumn() {
+        return resolvedJavaType.isJDBCDate();
+    }
+    
+    public boolean isJDBCTimeColumn() {
+        return resolvedJavaType.isJDBCTime();
+    }
 }

@@ -132,9 +132,9 @@ public class ExampleClause {
         StringBuffer sb = new StringBuffer();
         sb.append(cd.getJavaProperty());
 
-	    if ("DATE".equalsIgnoreCase(cd.getResolvedJavaType().getJdbcTypeName())) { //$NON-NLS-1$
+	    if (cd.isJDBCDateColumn()) {
 	        sb.append(":DATE"); //$NON-NLS-1$
-	    } else if ("TIME".equalsIgnoreCase(cd.getResolvedJavaType().getJdbcTypeName())) { //$NON-NLS-1$
+	    } else if (cd.isJDBCTimeColumn()) {
 	        sb.append(":TIME"); //$NON-NLS-1$
 	    }
 	    

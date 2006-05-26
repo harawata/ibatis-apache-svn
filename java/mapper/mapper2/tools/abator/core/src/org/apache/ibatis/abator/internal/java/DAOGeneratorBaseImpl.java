@@ -622,12 +622,12 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
         FullyQualifiedTable table = tableConfiguration.getTable();
         FullyQualifiedJavaType type = javaModelGenerator.getExampleType(table);
         compilationUnit.addImportedType(type);
-        compilationUnit.addImportedType(FullyQualifiedJavaType.getListInstance());
+        compilationUnit.addImportedType(FullyQualifiedJavaType.getNewListInstance());
 
         Method method1 = new Method();
         method1.addComment(table);
         method1.setVisibility(JavaVisibility.PUBLIC);
-        method1.setReturnType(FullyQualifiedJavaType.getListInstance());
+        method1.setReturnType(FullyQualifiedJavaType.getNewListInstance());
         method1.setName("selectByExample"); //$NON-NLS-1$
         method1.addParameter(new Parameter(type, "example")); //$NON-NLS-1$
         method1.addParameter(new Parameter(FullyQualifiedJavaType.getStringInstance(),
@@ -636,7 +636,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
         Method method2 = new Method();
         method2.addComment(table);
         method2.setVisibility(JavaVisibility.PUBLIC);
-        method2.setReturnType(FullyQualifiedJavaType.getListInstance());
+        method2.setReturnType(FullyQualifiedJavaType.getNewListInstance());
         method2.setName("selectByExample"); //$NON-NLS-1$
         method2.addParameter(new Parameter(type, "example")); //$NON-NLS-1$
         
@@ -650,7 +650,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
 
         if (!interfaceMethod) {
             // generate the implementation method
-            compilationUnit.addImportedType(FullyQualifiedJavaType.getMapInstance());
+            compilationUnit.addImportedType(FullyQualifiedJavaType.getNewMapInstance());
             
             StringBuffer sb = new StringBuffer();
 
@@ -689,12 +689,12 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
         FullyQualifiedTable table = tableConfiguration.getTable();
         FullyQualifiedJavaType type = javaModelGenerator.getExampleType(table);
         compilationUnit.addImportedType(type);
-        compilationUnit.addImportedType(FullyQualifiedJavaType.getListInstance());
+        compilationUnit.addImportedType(FullyQualifiedJavaType.getNewListInstance());
 
         Method method1 = new Method();
         method1.addComment(table);
         method1.setVisibility(JavaVisibility.PUBLIC);
-        method1.setReturnType(FullyQualifiedJavaType.getListInstance());
+        method1.setReturnType(FullyQualifiedJavaType.getNewListInstance());
         method1.setName("selectByExampleWithBLOBs"); //$NON-NLS-1$
         method1.addParameter(new Parameter(type, "example")); //$NON-NLS-1$
         method1.addParameter(new Parameter(FullyQualifiedJavaType.getStringInstance(),
@@ -703,7 +703,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
         Method method2 = new Method();
         method2.addComment(table);
         method2.setVisibility(JavaVisibility.PUBLIC);
-        method2.setReturnType(FullyQualifiedJavaType.getListInstance());
+        method2.setReturnType(FullyQualifiedJavaType.getNewListInstance());
         method2.setName("selectByExampleWithBLOBs"); //$NON-NLS-1$
         method2.addParameter(new Parameter(type, "example")); //$NON-NLS-1$
 
@@ -717,7 +717,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
 
         if (!interfaceMethod) {
             // generate the implementation method
-            compilationUnit.addImportedType(FullyQualifiedJavaType.getMapInstance());
+            compilationUnit.addImportedType(FullyQualifiedJavaType.getNewMapInstance());
 
             StringBuffer sb = new StringBuffer();
 
@@ -910,14 +910,14 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
         FullyQualifiedTable table = tableConfiguration.getTable();
         FullyQualifiedJavaType type = javaModelGenerator.getExampleType(table);
         
-        compilationUnit.addImportedType(FullyQualifiedJavaType.getMapInstance());
-        compilationUnit.addImportedType(FullyQualifiedJavaType.getHashMapInstance());
+        compilationUnit.addImportedType(FullyQualifiedJavaType.getNewMapInstance());
+        compilationUnit.addImportedType(FullyQualifiedJavaType.getNewHashMapInstance());
         compilationUnit.addImportedType(type);
 
         Method method = new Method();
         method.addComment(table);
         method.setVisibility(JavaVisibility.PRIVATE);
-        method.setReturnType(FullyQualifiedJavaType.getMapInstance());
+        method.setReturnType(FullyQualifiedJavaType.getNewMapInstance());
         method.setName("getExampleParms"); //$NON-NLS-1$
         method.addParameter(new Parameter(type, "example")); //$NON-NLS-1$
         
@@ -985,7 +985,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
         Method method = new Method();
         method.addComment(table);
         method.setVisibility(JavaVisibility.PRIVATE);
-        method.setReturnType(FullyQualifiedJavaType.getMapInstance());
+        method.setReturnType(FullyQualifiedJavaType.getNewMapInstance());
         sb.append("get"); //$NON-NLS-1$
         sb.append(cd.getColumnName());
         sb.append("ExampleParms"); //$NON-NLS-1$

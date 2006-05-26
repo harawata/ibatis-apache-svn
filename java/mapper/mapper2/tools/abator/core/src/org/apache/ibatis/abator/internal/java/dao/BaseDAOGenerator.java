@@ -601,7 +601,7 @@ public class BaseDAOGenerator implements DAOGenerator {
         FullyQualifiedTable table = tableConfiguration.getTable();
         FullyQualifiedJavaType type = javaModelGenerator.getExampleType(table);
         compilationUnit.addImportedType(type);
-        compilationUnit.addImportedType(FullyQualifiedJavaType.getListInstance());
+        compilationUnit.addImportedType(FullyQualifiedJavaType.getNewListInstance());
 
         Method method = new Method();
         method.addComment(table);
@@ -620,10 +620,10 @@ public class BaseDAOGenerator implements DAOGenerator {
             }
             
             compilationUnit.addImportedType(fqjt);
-            returnType = new FullyQualifiedJavaType("java.util.List", //$NON-NLS-1$
-                    new FullyQualifiedJavaType[] {fqjt});
+            returnType = FullyQualifiedJavaType.getNewListInstance();
+            returnType.addTypeArgument(fqjt);
         } else {
-            returnType = FullyQualifiedJavaType.getListInstance();
+            returnType = FullyQualifiedJavaType.getNewListInstance();
         }
         method.setReturnType(returnType);
         
@@ -676,7 +676,7 @@ public class BaseDAOGenerator implements DAOGenerator {
         FullyQualifiedTable table = tableConfiguration.getTable();
         FullyQualifiedJavaType type = javaModelGenerator.getExampleType(table);
         compilationUnit.addImportedType(type);
-        compilationUnit.addImportedType(FullyQualifiedJavaType.getListInstance());
+        compilationUnit.addImportedType(FullyQualifiedJavaType.getNewListInstance());
 
         Method method = new Method();
         method.addComment(table);
@@ -686,10 +686,10 @@ public class BaseDAOGenerator implements DAOGenerator {
         if (useJava5Features) {
             FullyQualifiedJavaType fqjt = javaModelGenerator.getRecordWithBLOBsType(tableConfiguration.getTable());
             compilationUnit.addImportedType(fqjt);
-            returnType = new FullyQualifiedJavaType("java.util.List", //$NON-NLS-1$
-                    new FullyQualifiedJavaType[] {fqjt});
+            returnType = FullyQualifiedJavaType.getNewListInstance();
+            returnType.addTypeArgument(fqjt);
         } else {
-            returnType = FullyQualifiedJavaType.getListInstance();
+            returnType = FullyQualifiedJavaType.getNewListInstance();
         }
         method.setReturnType(returnType);
         

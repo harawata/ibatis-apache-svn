@@ -50,4 +50,14 @@ public class ResolvedJavaType {
             FullyQualifiedJavaType fullyQualifiedJavaType) {
         this.fullyQualifiedJavaType = fullyQualifiedJavaType;
     }
+    
+    public boolean isJDBCDate() {
+        return fullyQualifiedJavaType.equals(FullyQualifiedJavaType.getDateInstance())
+            && "DATE".equalsIgnoreCase(jdbcTypeName); //$NON-NLS-1$
+    }
+    
+    public boolean isJDBCTime() {
+        return fullyQualifiedJavaType.equals(FullyQualifiedJavaType.getDateInstance())
+            && "TIME".equalsIgnoreCase(jdbcTypeName); //$NON-NLS-1$
+    }
 }

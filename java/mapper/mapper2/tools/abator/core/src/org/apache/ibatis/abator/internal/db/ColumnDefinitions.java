@@ -179,4 +179,56 @@ public class ColumnDefinitions {
 
 		return cd;
 	}
+    
+    public boolean hasJDBCDateColumns() {
+        boolean rc = false;
+        
+        Iterator iter = columns.values().iterator();
+        while (iter.hasNext()) {
+            ColumnDefinition cd = (ColumnDefinition) iter.next();
+            if (cd.isJDBCDateColumn()) {
+                rc = true;
+                break;
+            }
+        }
+        
+        if (!rc) {
+            iter = primaryKey.values().iterator();
+            while (iter.hasNext()) {
+                ColumnDefinition cd = (ColumnDefinition) iter.next();
+                if (cd.isJDBCDateColumn()) {
+                    rc = true;
+                    break;
+                }
+            }
+        }
+        
+        return rc;
+    }
+    
+    public boolean hasJDBCTimeColumns() {
+        boolean rc = false;
+        
+        Iterator iter = columns.values().iterator();
+        while (iter.hasNext()) {
+            ColumnDefinition cd = (ColumnDefinition) iter.next();
+            if (cd.isJDBCTimeColumn()) {
+                rc = true;
+                break;
+            }
+        }
+        
+        if (!rc) {
+            iter = primaryKey.values().iterator();
+            while (iter.hasNext()) {
+                ColumnDefinition cd = (ColumnDefinition) iter.next();
+                if (cd.isJDBCTimeColumn()) {
+                    rc = true;
+                    break;
+                }
+            }
+        }
+        
+        return rc;
+    }
 }
