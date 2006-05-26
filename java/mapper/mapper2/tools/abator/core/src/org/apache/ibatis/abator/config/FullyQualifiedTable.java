@@ -32,6 +32,8 @@ public class FullyQualifiedTable {
 	private String tableName;
 
 	private String domainObjectName;
+    
+    private String alias;
 
 	/**
 	 *  
@@ -86,7 +88,34 @@ public class FullyQualifiedTable {
 		return sb.toString();
 	}
 
-	public String getFullyQualifiedTableNameWithUnderscores() {
+    public String getAliasedFullyQualifiedTableName() {
+        StringBuffer sb = new StringBuffer();
+
+        if (StringUtility.stringHasValue(catalog)) {
+            sb.append(catalog);
+            sb.append('.');
+        }
+
+        if (StringUtility.stringHasValue(schema)) {
+            sb.append(schema);
+            sb.append('.');
+        } else {
+            if (sb.length() > 0) {
+                sb.append('.');
+            }
+        }
+
+        sb.append(tableName);
+        
+        if(StringUtility.stringHasValue(alias)) {
+            sb.append(' ');
+            sb.append(alias);
+        }
+
+        return sb.toString();
+    }
+
+    public String getFullyQualifiedTableNameWithUnderscores() {
 		StringBuffer sb = new StringBuffer();
 
 		if (StringUtility.stringHasValue(catalog)) {
@@ -147,5 +176,17 @@ public class FullyQualifiedTable {
     
     public String toString() {
         return getFullyQualifiedTableName();
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        if (alias == null) {
+            this.alias = null;
+        } else {
+            this.alias = alias.trim();
+        }
     }
 }

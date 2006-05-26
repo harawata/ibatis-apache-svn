@@ -254,6 +254,9 @@
                         or if there is a default schema.</dd>
     <dt>catalog</dt> <dd>The database catalog - not required if your database does not use catalogs,
                          or if there is a default catalog.</dd>
+    <dt>alias</dt> <dd>If specified, this value will be used to alias the table and all column names in
+                       any generated SQL select statement.  Column names will be aliased with the pattern
+                       alias_actualColumnName.</dd>
     <dt>domainObjectName</dt> <dd>The base name from which generated object names will be generated.
                                   If not specified, Abator will generate a name automatically based on
                                   the tableName.  The name (either specified here, or generated
@@ -290,6 +293,7 @@
   catalog CDATA #IMPLIED
   schema CDATA #IMPLIED
   tableName CDATA #REQUIRED
+  alias CDATA #IMPLIED
   domainObjectName CDATA #IMPLIED
   enableInsert %Boolean; #IMPLIED
   enableSelectByPrimaryKey %Boolean; #IMPLIED

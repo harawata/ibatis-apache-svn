@@ -138,7 +138,7 @@ public class ExampleClause {
 	        sb.append(":TIME"); //$NON-NLS-1$
 	    }
 	    
-		Object[] arguments = { cd.getColumnName(), sb.toString() };
+		Object[] arguments = { cd.getAliasedColumnName(), sb.toString() };
 
 		return MessageFormat.format(clause, arguments);
 	}

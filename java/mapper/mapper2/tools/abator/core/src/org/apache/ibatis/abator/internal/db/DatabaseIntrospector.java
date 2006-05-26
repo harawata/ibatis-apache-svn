@@ -77,7 +77,7 @@ public class DatabaseIntrospector {
 		boolean hasNonBlobColumns = false;
 		while (rs.next()) {
 			columnCount++;
-			ColumnDefinition cd = new ColumnDefinition();
+			ColumnDefinition cd = new ColumnDefinition(tc.getTable().getAlias());
 
 			cd.setJdbcType(rs.getInt("DATA_TYPE")); //$NON-NLS-1$
 			cd.setLength(rs.getInt("COLUMN_SIZE")); //$NON-NLS-1$

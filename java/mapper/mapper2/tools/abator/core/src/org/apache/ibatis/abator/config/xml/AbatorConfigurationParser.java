@@ -276,6 +276,11 @@ public class AbatorConfigurationParser {
 			tc.setSelectByExampleQueryId(attribute.getNodeValue());
 		}
 
+        attribute = nnm.getNamedItem("alias"); //$NON-NLS-1$
+        if (attribute != null) {
+            tc.getTable().setAlias(attribute.getNodeValue());
+        }
+
 		NodeList nodeList = node.getChildNodes();
 		for (int i = 0; i < nodeList.getLength(); i++) {
 			Node childNode = nodeList.item(i);

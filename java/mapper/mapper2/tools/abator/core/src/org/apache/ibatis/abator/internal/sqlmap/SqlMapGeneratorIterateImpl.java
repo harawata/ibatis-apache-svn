@@ -296,7 +296,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
             
             XmlElement resultElement = new XmlElement("result"); //$NON-NLS-1$
 
-            resultElement.addAttribute(new Attribute("column", cd.getColumnName())); //$NON-NLS-1$
+            resultElement.addAttribute(new Attribute("column", cd.getRenamedColumnName())); //$NON-NLS-1$
             resultElement.addAttribute(new Attribute("property", cd.getJavaProperty())); //$NON-NLS-1$
             resultElement.addAttribute(new Attribute("jdbcType", //$NON-NLS-1$
                     cd.getResolvedJavaType().getJdbcTypeName()));
@@ -349,7 +349,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
             }
 
             XmlElement resultElement = new XmlElement("result"); //$NON-NLS-1$
-            resultElement.addAttribute(new Attribute("column", cd.getColumnName())); //$NON-NLS-1$
+            resultElement.addAttribute(new Attribute("column", cd.getRenamedColumnName())); //$NON-NLS-1$
             resultElement.addAttribute(new Attribute("property", cd.getJavaProperty())); //$NON-NLS-1$
             resultElement.addAttribute(new Attribute(
                     "jdbcType", cd.getResolvedJavaType().getJdbcTypeName())); //$NON-NLS-1$
@@ -690,7 +690,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         StringBuffer sb = new StringBuffer();
         sb.append("delete from "); //$NON-NLS-1$
-        sb.append(tableConfiguration.getTable().getFullyQualifiedTableName());
+        sb.append(tableConfiguration.getTable().getAliasedFullyQualifiedTableName());
         answer.addElement(new TextElement(sb.toString()));
 
         XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
@@ -757,14 +757,14 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
                 comma = true;
             }
 
-            sb.append(cd.getColumnName());
+            sb.append(cd.getSelectListPhrase());
         }
         
         answer.addElement(new TextElement(sb.toString()));
 
         sb.setLength(0);
         sb.append("from "); //$NON-NLS-1$
-        sb.append(tableConfiguration.getTable().getFullyQualifiedTableName());
+        sb.append(tableConfiguration.getTable().getAliasedFullyQualifiedTableName());
         answer.addElement(new TextElement(sb.toString()));
 
         boolean and = false;
@@ -780,7 +780,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
                 and = true;
             }
 
-            sb.append(cd.getColumnName());
+            sb.append(cd.getAliasedColumnName());
             sb.append(" = #"); //$NON-NLS-1$
             sb.append(cd.getJavaProperty());
             sb.append('#');
@@ -1121,13 +1121,13 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
                 comma = true;
             }
 
-            sb.append(cd.getColumnName());
+            sb.append(cd.getSelectListPhrase());
         }
         answer.addElement((new TextElement(sb.toString())));
 
         sb.setLength(0);
         sb.append("from "); //$NON-NLS-1$
-        sb.append(tableConfiguration.getTable().getFullyQualifiedTableName());
+        sb.append(tableConfiguration.getTable().getAliasedFullyQualifiedTableName());
         answer.addElement((new TextElement(sb.toString())));
 
         XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
@@ -1189,13 +1189,13 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
                 comma = true;
             }
 
-            sb.append(cd.getColumnName());
+            sb.append(cd.getSelectListPhrase());
         }
         answer.addElement(new TextElement(sb.toString()));
 
         sb.setLength(0);
         sb.append("from "); //$NON-NLS-1$
-        sb.append(tableConfiguration.getTable().getFullyQualifiedTableName());
+        sb.append(tableConfiguration.getTable().getAliasedFullyQualifiedTableName());
         answer.addElement(new TextElement(sb.toString()));
 
         XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$

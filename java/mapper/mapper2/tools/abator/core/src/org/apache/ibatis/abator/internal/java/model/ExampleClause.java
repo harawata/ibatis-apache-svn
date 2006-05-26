@@ -102,7 +102,7 @@ public class ExampleClause {
     }
 
     public String getClause(ColumnDefinition cd) {
-        Object[] arguments = { cd.getColumnName() };
+        Object[] arguments = { cd.getAliasedColumnName() };
 
         return MessageFormat.format(clause, arguments);
     }

@@ -313,8 +313,10 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
 
             XmlElement resultElement = new XmlElement("result"); //$NON-NLS-1$
 
+            cd.getRenamedColumnName();
+            
             resultElement.addAttribute(new Attribute(
-                    "column", cd.getColumnName())); //$NON-NLS-1$
+                    "column", cd.getRenamedColumnName())); //$NON-NLS-1$
             resultElement.addAttribute(new Attribute(
                     "property", cd.getJavaProperty())); //$NON-NLS-1$
             resultElement.addAttribute(new Attribute("jdbcType", //$NON-NLS-1$
@@ -368,8 +370,9 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
             }
 
             XmlElement resultElement = new XmlElement("result"); //$NON-NLS-1$
+            
             resultElement.addAttribute(new Attribute(
-                    "column", cd.getColumnName())); //$NON-NLS-1$
+                    "column", cd.getRenamedColumnName())); //$NON-NLS-1$
             resultElement.addAttribute(new Attribute(
                     "property", cd.getJavaProperty())); //$NON-NLS-1$
             resultElement.addAttribute(new Attribute(
@@ -715,7 +718,7 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
 
         StringBuffer sb = new StringBuffer();
         sb.append("delete from "); //$NON-NLS-1$
-        sb.append(tableConfiguration.getTable().getFullyQualifiedTableName());
+        sb.append(tableConfiguration.getTable().getAliasedFullyQualifiedTableName());
         answer.addElement(new TextElement(sb.toString()));
 
         XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
@@ -746,7 +749,7 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
             TableConfiguration tableConfiguration) {
 
         XmlElement answer = new XmlElement("select"); //$NON-NLS-1$
-        
+
         answer.addAttribute(new Attribute("id", getSelectByPrimaryKeyStatementId())); //$NON-NLS-1$
         if (AbatorRules.generateResultMapWithBLOBs(columnDefinitions, tableConfiguration)) {
             answer.addAttribute(new Attribute("resultMap", //$NON-NLS-1$
@@ -781,15 +784,15 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
             } else {
                 comma = true;
             }
-
-            sb.append(cd.getColumnName());
+            
+            sb.append(cd.getSelectListPhrase());
         }
         
         answer.addElement(new TextElement(sb.toString()));
 
         sb.setLength(0);
         sb.append("from "); //$NON-NLS-1$
-        sb.append(tableConfiguration.getTable().getFullyQualifiedTableName());
+        sb.append(tableConfiguration.getTable().getAliasedFullyQualifiedTableName());
         answer.addElement(new TextElement(sb.toString()));
 
         boolean and = false;
@@ -805,7 +808,8 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
                 and = true;
             }
 
-            sb.append(cd.getColumnName());
+            sb.append(cd.getAliasedColumnName());
+            
             sb.append(" = #"); //$NON-NLS-1$
             sb.append(cd.getJavaProperty());
             sb.append('#');
@@ -1144,13 +1148,13 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
                 comma = true;
             }
 
-            sb.append(cd.getColumnName());
+            sb.append(cd.getSelectListPhrase());
         }
         answer.addElement((new TextElement(sb.toString())));
 
         sb.setLength(0);
         sb.append("from "); //$NON-NLS-1$
-        sb.append(tableConfiguration.getTable().getFullyQualifiedTableName());
+        sb.append(tableConfiguration.getTable().getAliasedFullyQualifiedTableName());
         answer.addElement((new TextElement(sb.toString())));
 
         XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
@@ -1212,13 +1216,13 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
                 comma = true;
             }
 
-            sb.append(cd.getColumnName());
+            sb.append(cd.getSelectListPhrase());
         }
         answer.addElement((new TextElement(sb.toString())));
 
         sb.setLength(0);
         sb.append("from "); //$NON-NLS-1$
-        sb.append(tableConfiguration.getTable().getFullyQualifiedTableName());
+        sb.append(tableConfiguration.getTable().getAliasedFullyQualifiedTableName());
         answer.addElement((new TextElement(sb.toString())));
 
         XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$

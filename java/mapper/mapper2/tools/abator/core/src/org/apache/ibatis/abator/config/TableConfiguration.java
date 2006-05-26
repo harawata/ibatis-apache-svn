@@ -53,7 +53,7 @@ public class TableConfiguration extends PropertyHolder {
 	private String selectByPrimaryKeyQueryId;
 
 	private String selectByExampleQueryId;
-
+    
 	public TableConfiguration() {
 		super();
 		

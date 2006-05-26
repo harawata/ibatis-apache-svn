@@ -19,6 +19,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -38,6 +41,7 @@ import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -97,24 +101,62 @@ public class XmlFileMergerJaxp {
             String namespace = newRootElement.getAttribute("namespace"); //$NON-NLS-1$
             existingRootElement.setAttribute("namespace", namespace); //$NON-NLS-1$
 
-            // remove the old Abator generated elements
+            // remove the old Abator generated elements and any
+            // white space before the old abator nodes
+            List nodesToDelete = new ArrayList();
             NodeList children = existingRootElement.getChildNodes();
-            for (int i = 0; i < children.getLength(); i++) {
+            int length = children.getLength();
+            for (int i = 0; i < length; i++) {
                 Node node = children.item(i);
-                if (node.getNodeType() == Node.ELEMENT_NODE) {
-                    Element element = (Element) node;
-                    String id = element.getAttribute("id"); //$NON-NLS-1$
-                    if (id != null && id.startsWith("abatorgenerated_")) { //$NON-NLS-1$
-                        existingRootElement.removeChild(node);
+                if (isAnAbatorNode(node)) {
+                    nodesToDelete.add(node);
+                }
+                
+                short nodeType = node.getNodeType();
+                if (nodeType == Element.TEXT_NODE) {
+                    // remove any nodes that are only white space
+                    // if the next node is an Abator node, or if this
+                    // is the last node.
+                    // this ensures that we don't end up with
+                    // lots of blank lines at the end of a merged file
+                    Text tn = (Text) node;
+                    String text = tn.getData();
+                    
+                    if (text.trim().length() == 0) {
+                        // node is just whitespace. if next node is an Abator
+                        //node, then remove the node.  Or if this is the last node
+                        // then delete the node
+                        if (i == length - 1) {
+                            nodesToDelete.add(tn);
+                        } else if (isAnAbatorNode(children.item(i + 1))) {
+                            nodesToDelete.add(tn);
+                        }
                     }
                 }
+            }
+            
+            Iterator iter = nodesToDelete.iterator();
+            while (iter.hasNext()) {
+                existingRootElement.removeChild((Node) iter.next());
             }
 
             // add the new Abator generated elements
             children = newRootElement.getChildNodes();
+            length = children.getLength();
             Node firstChild = existingRootElement.getFirstChild();
-            for (int i = 0; i < children.getLength(); i++) {
+            for (int i = 0; i < length; i++) {
                 Node node = children.item(i);
+                // don't add the last node if it is only white space
+                if (i == length - 1) {
+                    // last node - only add if it isn't whitespace
+                    if (node.getNodeType() == Node.TEXT_NODE) {
+                        Text tn = (Text) node;
+                        if (tn.getData().trim().length() == 0) {
+                            break;
+                        }
+                    }
+                }
+                
                 Node newNode = existingDocument.importNode(node, true);
                 if (firstChild == null) {
                     existingRootElement.appendChild(newNode);
@@ -147,5 +189,19 @@ public class XmlFileMergerJaxp {
         transformer.transform(new DOMSource(document), new StreamResult(bas));
 
         return bas.toString();
+    }
+    
+    private static boolean isAnAbatorNode(Node node) {
+        boolean rc = false;
+        
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+            Element element = (Element) node;
+            String id = element.getAttribute("id"); //$NON-NLS-1$
+            if (id != null && id.startsWith("abatorgenerated_")) { //$NON-NLS-1$
+                rc = true;
+            }
+        }
+        
+        return rc;
     }
 }

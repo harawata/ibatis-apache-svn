@@ -16,6 +16,7 @@
 package org.apache.ibatis.abator.internal.db;
 
 import org.apache.ibatis.abator.internal.types.ResolvedJavaType;
+import org.apache.ibatis.abator.internal.util.StringUtility;
 
 /**
  * 
@@ -39,9 +40,39 @@ public class ColumnDefinition {
     private String javaProperty;
 
     private ResolvedJavaType resolvedJavaType;
+    
+    private String tableAlias;
 
-    public ColumnDefinition() {
+    /**
+     * The aliased column name for a select statement.  If there
+     * is a table alias, the value will be alias.columnName
+     */
+    private String aliasedColumnName;
+
+    /**
+     * The renamed column name for a select statement.  If there
+     * is a table alias, the value will be alias_columnName
+     */
+    private String renamedColumnName;
+    
+    /**
+     * The phrase to use in a select list.  If there
+     * is a table alias, the value will be 
+     * "alias.columnName as alias_columnName"
+     */
+    private String selectListPhrase;
+    
+    /**
+     * Constructs a Column definition.  This object holds all the 
+     * information about a column that is required to generate
+     * Java objects and SQL maps;
+     * 
+     * @param tableAlias The specified table alias, or null.  This
+     *   value is used to rename and alias column names for select statements
+     */
+    public ColumnDefinition(String tableAlias) {
         super();
+        this.tableAlias = tableAlias;
     }
 
     public int getJdbcType() {
@@ -114,6 +145,35 @@ public class ColumnDefinition {
 
     public void setColumnName(String columnName) {
         this.columnName = columnName;
+        
+        if (StringUtility.stringHasValue(tableAlias)) {
+            StringBuffer sb = new StringBuffer();
+            
+            sb.append(tableAlias);
+            sb.append('.');
+            sb.append(columnName);
+            aliasedColumnName = sb.toString();
+            
+            sb.setLength(0);
+            sb.append(tableAlias);
+            sb.append('_');
+            sb.append(columnName);
+            renamedColumnName = sb.toString();
+            
+            sb.setLength(0);
+            sb.append(tableAlias);
+            sb.append('.');
+            sb.append(columnName);
+            sb.append(" as "); //$NON-NLS-1$
+            sb.append(tableAlias);
+            sb.append('_');
+            sb.append(columnName);
+            selectListPhrase = sb.toString();
+        } else {
+            aliasedColumnName = columnName;
+            renamedColumnName = columnName;
+            selectListPhrase = columnName;
+        }
     }
 
     /**
@@ -161,5 +221,17 @@ public class ColumnDefinition {
     
     public String getByExampleIndicatorProperty() {
         return javaProperty + "_Indicator"; //$NON-NLS-1$
+    }
+    
+    public String getRenamedColumnName() {
+        return renamedColumnName;
+    }
+
+    public String getAliasedColumnName() {
+        return aliasedColumnName;
+    }
+    
+    public String getSelectListPhrase() {
+        return selectListPhrase;
     }
 }
