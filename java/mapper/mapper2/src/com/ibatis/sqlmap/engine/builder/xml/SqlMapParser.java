@@ -28,7 +28,7 @@ public class SqlMapParser extends BaseParser {
 
   private static final Log log = LogFactory.getLog(SqlMapParser.class);	
 	
-  private final NodeletParser parser = new NodeletParser();
+  protected final NodeletParser parser = new NodeletParser();
 
   public SqlMapParser(Variables vars) {
     super(vars);
@@ -514,7 +514,7 @@ public class SqlMapParser extends BaseParser {
     });
   }
 
-  private void addStatementNodelets() {
+  protected void addStatementNodelets() {
     parser.addNodelet("/sqlMap/statement", new Nodelet() {
       public void process(Node node) throws Exception {
         vars.currentStatement = new SqlStatementParser(vars).parseGeneralStatement(node, new GeneralStatement());

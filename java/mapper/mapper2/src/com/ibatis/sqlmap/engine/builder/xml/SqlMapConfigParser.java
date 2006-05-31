@@ -35,7 +35,7 @@ import java.util.Properties;
 
 public class SqlMapConfigParser extends BaseParser {
 
-  private final NodeletParser parser = new NodeletParser();
+  protected final NodeletParser parser = new NodeletParser();
 
   public SqlMapConfigParser() {
     this(null, null);
@@ -325,7 +325,7 @@ public class SqlMapConfigParser extends BaseParser {
     });
   }
 
-  private void addSqlMapNodelets() {
+  protected void addSqlMapNodelets() {
     parser.addNodelet("/sqlMapConfig/sqlMap", new Nodelet() {
       public void process(Node node) throws Exception {
         vars.errorCtx.setActivity("loading the SQL Map resource");

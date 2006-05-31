@@ -87,7 +87,7 @@ public class SqlMapExecutorDelegate {
   private ThrottledPool requestPool;
   private ThrottledPool sessionPool;
 
-  private SqlExecutor sqlExecutor;
+  protected SqlExecutor sqlExecutor;
   private TypeHandlerFactory typeHandlerFactory;
   private DataExchangeFactory dataExchangeFactory;
 
@@ -853,21 +853,21 @@ public class SqlMapExecutorDelegate {
     return session.getTransaction();
   }
 
-  // -- Private Methods
+  // -- Protected Methods
 
-  private void autoEndTransaction(SessionScope session, boolean autoStart) throws SQLException {
+  protected void autoEndTransaction(SessionScope session, boolean autoStart) throws SQLException {
     if (autoStart) {
       session.getSqlMapTxMgr().endTransaction();
     }
   }
 
-  private void autoCommitTransaction(SessionScope session, boolean autoStart) throws SQLException {
+  protected void autoCommitTransaction(SessionScope session, boolean autoStart) throws SQLException {
     if (autoStart) {
       session.getSqlMapTxMgr().commitTransaction();
     }
   }
 
-  private Transaction autoStartTransaction(SessionScope session, boolean autoStart, Transaction trans) throws SQLException {
+  protected Transaction autoStartTransaction(SessionScope session, boolean autoStart, Transaction trans) throws SQLException {
     Transaction transaction = trans;
     if (autoStart) {
       session.getSqlMapTxMgr().startTransaction();

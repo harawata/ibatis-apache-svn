@@ -47,7 +47,7 @@ public class SqlMapClientBuilder {
   /**
    * No instantiation allowed.
    */
-  private SqlMapClientBuilder() {
+  protected SqlMapClientBuilder() {
   }
 
   /**

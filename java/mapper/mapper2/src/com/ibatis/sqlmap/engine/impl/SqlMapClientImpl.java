@@ -43,7 +43,7 @@ public class SqlMapClientImpl implements ExtendedSqlMapClient {
    */
   public SqlMapExecutorDelegate delegate;
 
-  private ThreadLocal localSqlMapSession = new ThreadLocal();
+  protected ThreadLocal localSqlMapSession = new ThreadLocal();
 
   /**
    * Constructor to supply a delegate
@@ -208,7 +208,7 @@ public class SqlMapClientImpl implements ExtendedSqlMapClient {
     return MapperProxy.newMapperProxy(this, c);
   }
 
-  private SqlMapSessionImpl getLocalSqlMapSession() {
+  protected SqlMapSessionImpl getLocalSqlMapSession() {
     SqlMapSessionImpl sqlMapSession = (SqlMapSessionImpl) localSqlMapSession.get();
     if (sqlMapSession == null || sqlMapSession.isClosed()) {
       sqlMapSession = new SqlMapSessionImpl(this);
