@@ -29,8 +29,10 @@
 using System;
 using System.Collections;
 using System.Data;
+using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
+using IBatisNet.Common.Logging;
 using IBatisNet.DataMapper.Configuration.Serializers;
 using IBatisNet.DataMapper.DataExchange;
 using IBatisNet.DataMapper.Scope;
@@ -53,6 +55,8 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		private const string XML_PARAMATER = "parameter";
 
 		#region private
+		private static readonly ILog _logger = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
+		
 		[NonSerialized]
 		private string _id = string.Empty;
 		[NonSerialized]
@@ -88,8 +92,14 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 			get { return _className; }
 			set 
 			{ 
-				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The class attribute is mandatory in a ParameterMap tag '"+_id+"'.");
+				if (_logger.IsInfoEnabled)
+				{
+					if ((value == null) || (value.Length < 1))
+					{
+						_logger.Info("The class attribute is recommended for better performance in a ParameterMap tag '"+_id+"'.");
+					}					
+				}
+
 
 				_className = value; 
 			}
@@ -318,9 +328,13 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 			if (_className.Length>0 )
 			{
                 _parameterClass = _dataExchangeFactory.TypeHandlerFactory.GetType(_className);
+				_dataExchange = _dataExchangeFactory.GetDataExchangeForClass(_parameterClass);
 			}
-
-			_dataExchange = _dataExchangeFactory.GetDataExchangeForClass(_parameterClass);
+			else
+			{
+				// Get the ComplexDataExchange
+				_dataExchange = _dataExchangeFactory.GetDataExchangeForClass(null);
+			}
 		}
 
 

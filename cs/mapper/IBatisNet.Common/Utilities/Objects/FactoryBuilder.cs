@@ -24,10 +24,10 @@
 #endregion
 
 using System;
-using System.Collections;
 using System.Reflection;
 using System.Reflection.Emit;
 using IBatisNet.Common.Exceptions;
+using IBatisNet.Common.Logging;
 
 namespace IBatisNet.Common.Utilities.Objects
 {
@@ -38,7 +38,8 @@ namespace IBatisNet.Common.Utilities.Objects
 	{
 		private const BindingFlags VISIBILITY = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
         private const MethodAttributes CREATE_METHOD_ATTRIBUTES = MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.NewSlot | MethodAttributes.Virtual | MethodAttributes.Final;
- 		
+		private static readonly ILog _logger = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
+
         private ModuleBuilder _moduleBuilder = null;
        
         /// <summary>
@@ -63,9 +64,20 @@ namespace IBatisNet.Common.Utilities.Objects
         /// <returns>Returns a new <see cref="IFactory"/> instance.</returns>
 		public IFactory CreateFactory(Type typeToCreate, Type[] types)
 		{
-			Type innerType = CreateFactoryType(typeToCreate, types);
-			ConstructorInfo ctor = innerType.GetConstructor(Type.EmptyTypes);
-			return (IFactory) ctor.Invoke(new object[] {});
+			if (typeToCreate.IsAbstract)
+			{
+				if (_logger.IsInfoEnabled)
+				{
+                    _logger.Info("Create a stub IFactory for abstract type " + typeToCreate.Name);
+                }
+                return new AbstractFactory(typeToCreate);
+			}
+			else
+			{
+				Type innerType = CreateFactoryType(typeToCreate, types);
+				ConstructorInfo ctor = innerType.GetConstructor(Type.EmptyTypes);
+				return (IFactory) ctor.Invoke(new object[] {});			
+			}
 		}
 
 

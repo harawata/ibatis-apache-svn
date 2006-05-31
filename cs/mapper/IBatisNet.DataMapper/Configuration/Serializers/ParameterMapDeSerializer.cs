@@ -54,7 +54,7 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 
 			parameterMap.ExtendMap = NodeUtils.GetStringAttribute(prop, "extends");
 			parameterMap.Id =  NodeUtils.GetStringAttribute(prop, "id");
-			parameterMap.ClassName = NodeUtils.GetStringAttribute(prop,"class");
+			parameterMap.ClassName = NodeUtils.GetStringAttribute(prop, "class");
 
 			configScope.ErrorContext.MoreInfo = "Initialize ParameterMap";
 			configScope.NodeContext = node;

@@ -14,7 +14,7 @@ Issues
 
 Improvements/Changes
 - IBATISNET-156 : Added support for MARS  
-  Added allowMARS attribute on provider tag (used by SqlServer 2005, PostgreSQL).
+				  Added allowMARS attribute on provider tag (used by SqlServer 2005, PostgreSQL).
 - IBATISNET-155 Allow Constructor Initialization on resultMap 
   use
   <resultMap id="account-result-constructor" class="Account" > 
@@ -30,11 +30,11 @@ Improvements/Changes
 
 - IBATISNET-153 Supporting private field accessor
 - IBATISNET-147 : Emitted types for populating and instantiating result  
-  Added useReflectionOptimizer attribut setting in SqlMap.config
+				  Added useReflectionOptimizer attribut setting in SqlMap.config
 - IBATISNET-105 : Added Lazy load support for Strong typed collections
 - Added ISqlMapper interface to simplify mock or stub
 - Added support for readOnly & serialize attribut on CacheModel
-- Added class attribute to parameterMap tags [it is required !]
+- Added class attribute to parameterMap tags [it is recommended !]
 - Added Support for nullable type in .NET V2
 - Added Support for .NET V2 and Generic
 	

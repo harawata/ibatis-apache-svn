@@ -611,16 +611,16 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
     ============================================= -->
 	<parameterMaps>   
 		
-		<parameterMap id="swap-params" class="Hashtable">
+		<parameterMap id="swap-params" >
 			<parameter property="email1" column="First_Email" />
 			<parameter property="email2" column="Second_Email" />
 		</parameterMap>
 		
-		<parameterMap id="select-params" class="Hashtable">
+		<parameterMap id="select-params">
 			<parameter property="Account_ID" />
 		</parameterMap>
 				
-		<parameterMap id="insert-params" class="Account">
+		<parameterMap id="insert-params" >
 			<parameter property="Id" />
 			<parameter property="FirstName" />
 			<parameter property="LastName" />			

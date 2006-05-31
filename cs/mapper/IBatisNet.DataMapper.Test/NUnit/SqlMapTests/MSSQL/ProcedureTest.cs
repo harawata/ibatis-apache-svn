@@ -25,6 +25,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL
 			InitScript( sqlMap.DataSource, ScriptDirectory + "category-procedure.sql" );		
 			InitScript( sqlMap.DataSource, ScriptDirectory + "account-init.sql" );	
 			InitScript( sqlMap.DataSource, ScriptDirectory + "account-procedure.sql", false );
+			InitScript( sqlMap.DataSource, ScriptDirectory + "ps_SelectAccount.sql", false );		
 			InitScript( sqlMap.DataSource, ScriptDirectory + "swap-procedure.sql" );	
 		}
 
@@ -39,6 +40,16 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL
 
 		#region Specific statement store procedure tests for sql server
 
+		/// <summary>
+		/// Test get an account via a store procedure.
+		/// </summary>
+		[Test] 
+		public void GetAccountViaProcedure()
+		{
+			Account account = sqlMap.QueryForObject("GetAccountViaSP", 1) as Account;
+			Assert.AreEqual(1, account.Id );
+		}
+		
 		/// <summary>
 		/// Test an insert with identity key via a store procedure.
 		/// </summary>

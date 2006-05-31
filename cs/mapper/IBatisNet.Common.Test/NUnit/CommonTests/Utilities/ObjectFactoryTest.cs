@@ -11,6 +11,27 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 	public class ObjectFactoryTest
 	{
 		[Test]
+        [ExpectedException(typeof(ProbeException))]
+		public void AbstractConstructor()
+		{
+			IObjectFactory objectFactory = new ObjectFactory(true);
+
+			IFactory factory = objectFactory.CreateFactory(typeof (Document), Type.EmptyTypes );
+
+            object obj = factory.CreateInstance(null);
+		}
+    	
+		[Test]
+		public void DevivedClassConstructor()
+		{
+			IObjectFactory objectFactory = new ObjectFactory(true);
+
+			IFactory factory = objectFactory.CreateFactory(typeof (Book), Type.EmptyTypes );
+
+			Assert.IsNotNull(factory);
+		}
+    	
+		[Test]
 		[ExpectedException(typeof(ProbeException))]
 		public void PrivateConstructor()
 		{
@@ -298,7 +319,6 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 				+ "\nNew : \t\t\t" + newFactoryResult.ToString("F3")
 				+ "\nActivator : \t\t" + activatorFactoryResult.ToString("F3")+ " Ratio : " + ((activatorFactoryResult / newFactoryResult)).ToString("F3")
 				+ "\nEmit IL : \t\t\t" + emitFactoryResult.ToString("F3") + " Ratio : " + ((emitFactoryResult / newFactoryResult)).ToString("F3"));
-
 		}
 
 		internal class NewAccountFactory : IFactory

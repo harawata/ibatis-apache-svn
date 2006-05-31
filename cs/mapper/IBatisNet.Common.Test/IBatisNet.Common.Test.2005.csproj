@@ -100,6 +100,8 @@
     <Compile Include="Domain\Account.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Domain\Book.cs" />
+    <Compile Include="Domain\Document.cs" />
     <Compile Include="Domain\Item.cs" />
     <Compile Include="Domain\Order.cs" />
     <Compile Include="Domain\Property.cs" />

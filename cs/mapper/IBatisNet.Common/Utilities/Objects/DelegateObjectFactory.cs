@@ -26,8 +26,10 @@
 using System;
 using System.Collections;
 using System.Collections.Specialized;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
+using IBatisNet.Common.Logging;
 
 namespace IBatisNet.Common.Utilities.Objects
 {
@@ -38,14 +40,7 @@ namespace IBatisNet.Common.Utilities.Objects
     {
         private IDictionary _cachedfactories = new HybridDictionary();
 		private object _padlock = new object();
-
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:DelegateAObjectFactory"/> class.
-        /// </summary>
-        public DelegateObjectFactory()
-		{
-		}
+        private static readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		#region IObjectFactory members
         
@@ -68,7 +63,18 @@ namespace IBatisNet.Common.Utilities.Objects
 					factory = _cachedfactories[key] as IFactory;
 					if (factory == null) // double-check
 					{
-                        factory = new DelegateFactory(typeToCreate, types);
+                        if (typeToCreate.IsAbstract)
+                        {
+                            if (_logger.IsInfoEnabled)
+                            {
+                                _logger.Info("Create a stub IFactory for abstract type " + typeToCreate.Name);
+                            }
+                            factory = new AbstractFactory(typeToCreate);
+                        }
+					    else
+                        {
+                             factory = new DelegateFactory(typeToCreate, types);
+                        }
 						_cachedfactories[key] = factory;
 					}
 				}

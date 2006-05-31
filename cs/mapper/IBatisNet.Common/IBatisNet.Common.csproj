@@ -305,6 +305,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Utilities\Objects\AbstractFactory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Utilities\Objects\ActivatorFactory.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

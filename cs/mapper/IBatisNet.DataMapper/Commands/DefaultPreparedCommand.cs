@@ -85,14 +85,14 @@ namespace IBatisNet.DataMapper.Commands
 		}
 
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="session"></param>
-		/// <param name="command"></param>
-		/// <param name="request"></param>
-		/// <param name="statement"></param>
-		/// <param name="parameterObject"></param>
+        /// <summary>
+        /// Applies the parameter map.
+        /// </summary>
+        /// <param name="session">The session.</param>
+        /// <param name="command">The command.</param>
+        /// <param name="request">The request.</param>
+        /// <param name="statement">The statement.</param>
+        /// <param name="parameterObject">The parameter object.</param>
 		protected virtual void ApplyParameterMap
 			( IDalSession session, IDbCommand command,
 			RequestScope request, IStatement statement, object parameterObject )

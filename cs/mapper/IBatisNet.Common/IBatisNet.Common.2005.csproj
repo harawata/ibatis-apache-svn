@@ -192,6 +192,7 @@
     <Compile Include="Utilities\HashCodeProvider.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Utilities\Objects\AbstractFactory.cs" />
     <Compile Include="Utilities\Objects\ActivatorFactory.cs" />
     <Compile Include="Utilities\Objects\ActivatorObjectFactory.cs" />
     <Compile Include="Utilities\Objects\BoxingOpCodes.cs" />

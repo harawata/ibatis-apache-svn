@@ -63,7 +63,7 @@ namespace IBatisNet.Common.Utilities.Objects
         #endregion
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:DelegateObjectFactory"/> class.
+        /// Initializes a new instance of the <see cref="DelegateFactory"/> class.
         /// </summary>
         /// <param name="typeToCreate">The instance type to create.</param>
         /// <param name="argumentTypes">The types argument.</param>

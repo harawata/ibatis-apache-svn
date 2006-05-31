@@ -40,7 +40,7 @@ namespace IBatisNet.Common.Utilities.Objects
 		private object _padlock = new object();
         
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:EmitObjectFactory"/> class.
+        /// Initializes a new instance of the <see cref="EmitObjectFactory"/> class.
         /// </summary>
 		public EmitObjectFactory()
 		{
