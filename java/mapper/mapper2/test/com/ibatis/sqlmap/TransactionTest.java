@@ -99,6 +99,26 @@ public class TransactionTest extends BaseSqlMapTest {
     assertAccount6(account);
   }
 
+  public void testTransactionFailed2() throws SQLException {
+    // testes method that does not require a parameter object
+    Account account = newAccount6();
+
+
+    boolean exceptionThrownAsExpected = false;
+    try {
+      sqlMap.update("insertAccountViaParameterMap");
+    } catch (SQLException e) {
+      exceptionThrownAsExpected = true;
+    }
+
+    sqlMap.update("insertAccountViaParameterMap", account);
+
+    // This will use autocommit...
+    assertTrue(exceptionThrownAsExpected);
+    account = (Account) sqlMap.queryForObject("getAccountNullableEmail", new Integer(6));
+    assertAccount6(account);
+  }
+
   public void testStartRollbackTransaction() throws SQLException {
     Account account = newAccount6();
 

@@ -360,6 +360,161 @@ public class StatementTest extends BaseSqlMapTest {
 
   }
 
+  public void testExecuteQueryForPaginatedList2() throws SQLException {
+    // tests methods that don't require a parameter object
+
+    // Get List of all 5
+    PaginatedList list = sqlMap.queryForPaginatedList("getAllAccountsViaResultMap", 2);
+
+    // Test initial state (page 0)
+    assertFalse(list.isPreviousPageAvailable());
+    assertTrue(list.isNextPageAvailable());
+    assertAccount1((Account) list.get(0));
+    assertEquals(2, list.size());
+    assertEquals(1, ((Account) list.get(0)).getId());
+    assertEquals(2, ((Account) list.get(1)).getId());
+
+    // Test illegal previous page (no effect, state should be same)
+    list.previousPage();
+    assertFalse(list.isPreviousPageAvailable());
+    assertTrue(list.isNextPageAvailable());
+    assertAccount1((Account) list.get(0));
+    assertEquals(2, list.size());
+    assertEquals(1, ((Account) list.get(0)).getId());
+    assertEquals(2, ((Account) list.get(1)).getId());
+
+    // Test next (page 1)
+    list.nextPage();
+    assertTrue(list.isPreviousPageAvailable());
+    assertTrue(list.isNextPageAvailable());
+    assertEquals(2, list.size());
+    assertEquals(3, ((Account) list.get(0)).getId());
+    assertEquals(4, ((Account) list.get(1)).getId());
+
+    // Test next (page 2 -last)
+    list.nextPage();
+    assertTrue(list.isPreviousPageAvailable());
+    assertFalse(list.isNextPageAvailable());
+    assertEquals(1, list.size());
+    assertEquals(5, ((Account) list.get(0)).getId());
+
+    // Test previous (page 1)
+    list.previousPage();
+    assertTrue(list.isPreviousPageAvailable());
+    assertTrue(list.isNextPageAvailable());
+    assertEquals(2, list.size());
+    assertEquals(3, ((Account) list.get(0)).getId());
+    assertEquals(4, ((Account) list.get(1)).getId());
+
+    // Test previous (page 0 -first)
+    list.previousPage();
+    assertFalse(list.isPreviousPageAvailable());
+    assertTrue(list.isNextPageAvailable());
+    assertAccount1((Account) list.get(0));
+    assertEquals(2, list.size());
+    assertEquals(1, ((Account) list.get(0)).getId());
+    assertEquals(2, ((Account) list.get(1)).getId());
+
+    // Test goto (page 0)
+    list.gotoPage(0);
+    assertFalse(list.isPreviousPageAvailable());
+    assertTrue(list.isNextPageAvailable());
+    assertEquals(2, list.size());
+    assertEquals(1, ((Account) list.get(0)).getId());
+    assertEquals(2, ((Account) list.get(1)).getId());
+
+    // Test goto (page 1)
+    list.gotoPage(1);
+    assertTrue(list.isPreviousPageAvailable());
+    assertTrue(list.isNextPageAvailable());
+    assertEquals(2, list.size());
+    assertEquals(3, ((Account) list.get(0)).getId());
+    assertEquals(4, ((Account) list.get(1)).getId());
+
+    // Test goto (page 2)
+    list.gotoPage(2);
+    assertTrue(list.isPreviousPageAvailable());
+    assertFalse(list.isNextPageAvailable());
+    assertEquals(1, list.size());
+    assertEquals(5, ((Account) list.get(0)).getId());
+
+    // Test illegal goto (page 0)
+    list.gotoPage(3);
+    assertTrue(list.isPreviousPageAvailable());
+    assertFalse(list.isNextPageAvailable());
+    assertEquals(0, list.size());
+
+    list = sqlMap.queryForPaginatedList("getNoAccountsViaResultMap", 2);
+
+    // Test empty list
+    assertFalse(list.isPreviousPageAvailable());
+    assertFalse(list.isNextPageAvailable());
+    assertEquals(0, list.size());
+
+    // Test next
+    list.nextPage();
+    assertFalse(list.isPreviousPageAvailable());
+    assertFalse(list.isNextPageAvailable());
+    assertEquals(0, list.size());
+
+    // Test previous
+    list.previousPage();
+    assertFalse(list.isPreviousPageAvailable());
+    assertFalse(list.isNextPageAvailable());
+    assertEquals(0, list.size());
+
+    // Test previous
+    list.gotoPage(0);
+    assertFalse(list.isPreviousPageAvailable());
+    assertFalse(list.isNextPageAvailable());
+    assertEquals(0, list.size());
+
+    list = sqlMap.queryForPaginatedList("getFewAccountsViaResultMap", 2);
+
+    assertFalse(list.isPreviousPageAvailable());
+    assertFalse(list.isNextPageAvailable());
+    assertEquals(1, list.size());
+
+    // Test next
+    list.nextPage();
+    assertFalse(list.isPreviousPageAvailable());
+    assertFalse(list.isNextPageAvailable());
+    assertEquals(1, list.size());
+
+    // Test previous
+    list.previousPage();
+    assertFalse(list.isPreviousPageAvailable());
+    assertFalse(list.isNextPageAvailable());
+    assertEquals(1, list.size());
+
+    // Test previous
+    list.gotoPage(0);
+    assertFalse(list.isPreviousPageAvailable());
+    assertFalse(list.isNextPageAvailable());
+    assertEquals(1, list.size());
+
+    // Test Even - Two Pages
+    try {
+      initScript("scripts/more-account-records.sql");
+    } catch (Exception e) {
+      fail(e.toString());
+    }
+
+    list = sqlMap.queryForPaginatedList("getAllAccountsViaResultMap", 5);
+
+    assertEquals(5, list.size());
+
+    list.nextPage();
+    assertEquals(5, list.size());
+
+
+    list.isPreviousPageAvailable();
+    list.previousPage();
+    assertEquals(5, list.size());
+
+
+  }
+
   public void testExecuteQueryForListWithResultMapWithDynamicElement() throws SQLException {
 
     List list = sqlMap.queryForList("getAllAccountsViaResultMapWithDynamicElement", "LIKE");
@@ -437,6 +592,22 @@ public class StatementTest extends BaseSqlMapTest {
   public void testExecuteQueryForListWithRowHandler() throws SQLException {
     TestRowHandler handler = new TestRowHandler();
     sqlMap.queryWithRowHandler("getAllAccountsViaResultMap", null, handler);
+    List list = handler.getList();
+    assertEquals(5, handler.getIndex());
+    assertEquals(5, list.size());
+    assertAccount1((Account) list.get(0));
+    assertEquals(1, ((Account) list.get(0)).getId());
+    assertEquals(2, ((Account) list.get(1)).getId());
+    assertEquals(3, ((Account) list.get(2)).getId());
+    assertEquals(4, ((Account) list.get(3)).getId());
+    assertEquals(5, ((Account) list.get(4)).getId());
+
+  }
+
+  public void testExecuteQueryForListWithRowHandler2() throws SQLException {
+    // tests method that does not require a parameter object
+    TestRowHandler handler = new TestRowHandler();
+    sqlMap.queryWithRowHandler("getAllAccountsViaResultMap", handler);
     List list = handler.getList();
     assertEquals(5, handler.getIndex());
     assertEquals(5, list.size());

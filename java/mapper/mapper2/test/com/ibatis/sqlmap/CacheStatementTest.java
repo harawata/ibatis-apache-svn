@@ -45,6 +45,30 @@ public class CacheStatementTest extends BaseSqlMapTest {
 
   }
 
+  public void testMappedStatementQueryWithCache2() throws SQLException {
+    // tests the new methods that don't require a parameter object
+    List list = sqlMap.queryForList("getCachedAccountsViaResultMap");
+
+    int firstId = System.identityHashCode(list);
+
+    list = sqlMap.queryForList("getCachedAccountsViaResultMap");
+
+    int secondId = System.identityHashCode(list);
+
+    assertEquals(firstId, secondId);
+
+    Account account = (Account) list.get(1);
+    account.setEmailAddress("new.clinton@ibatis.com");
+    sqlMap.update("updateAccountViaInlineParameters", account);
+
+    list = sqlMap.queryForList("getCachedAccountsViaResultMap");
+
+    int thirdId = System.identityHashCode(list);
+
+    assertTrue(firstId != thirdId);
+
+  }
+
   public void testFlushDataCache() throws SQLException {
     List list = sqlMap.queryForList("getCachedAccountsViaResultMap", null);
     int firstId = System.identityHashCode(list);
@@ -53,6 +77,19 @@ public class CacheStatementTest extends BaseSqlMapTest {
     assertEquals(firstId, secondId);
     sqlMap.flushDataCache();
     list = sqlMap.queryForList("getCachedAccountsViaResultMap", null);
+    int thirdId = System.identityHashCode(list);
+    assertTrue(firstId != thirdId);
+  }
+
+  public void testFlushDataCache2() throws SQLException {
+    // tests the new methods that don't require a parameter object
+    List list = sqlMap.queryForList("getCachedAccountsViaResultMap");
+    int firstId = System.identityHashCode(list);
+    list = sqlMap.queryForList("getCachedAccountsViaResultMap");
+    int secondId = System.identityHashCode(list);
+    assertEquals(firstId, secondId);
+    sqlMap.flushDataCache();
+    list = sqlMap.queryForList("getCachedAccountsViaResultMap");
     int thirdId = System.identityHashCode(list);
     assertTrue(firstId != thirdId);
   }
@@ -69,6 +106,19 @@ public class CacheStatementTest extends BaseSqlMapTest {
     assertTrue(firstId != thirdId);
   }
 
+  public void testFlushDataCacheOnExecute2() throws SQLException {
+    // tests the new methods that don't require a parameter object
+    List list = sqlMap.queryForList("getCachedAccountsViaResultMap");
+    int firstId = System.identityHashCode(list);
+    list = sqlMap.queryForList("getCachedAccountsViaResultMap");
+    int secondId = System.identityHashCode(list);
+    assertEquals(firstId, secondId);
+    sqlMap.update("updateAccountViaInlineParameters", list.get(0));
+    list = sqlMap.queryForList("getCachedAccountsViaResultMap");
+    int thirdId = System.identityHashCode(list);
+    assertTrue(firstId != thirdId);
+  }
+
   public void testFlushDataCacheOnExecuteInBatch() throws SQLException {
     List list = sqlMap.queryForList("getCachedAccountsViaResultMap", null);
     int firstId = System.identityHashCode(list);
@@ -79,6 +129,21 @@ public class CacheStatementTest extends BaseSqlMapTest {
     sqlMap.update("updateAccountViaInlineParameters", list.get(0));
     sqlMap.executeBatch();
     list = sqlMap.queryForList("getCachedAccountsViaResultMap", null);
+    int thirdId = System.identityHashCode(list);
+    assertTrue(firstId != thirdId);
+  }
+
+  public void testFlushDataCacheOnExecuteInBatch2() throws SQLException {
+    // tests the new methods that don't require a parameter object
+    List list = sqlMap.queryForList("getCachedAccountsViaResultMap");
+    int firstId = System.identityHashCode(list);
+    list = sqlMap.queryForList("getCachedAccountsViaResultMap");
+    int secondId = System.identityHashCode(list);
+    assertEquals(firstId, secondId);
+    sqlMap.startBatch();
+    sqlMap.update("updateAccountViaInlineParameters", list.get(0));
+    sqlMap.executeBatch();
+    list = sqlMap.queryForList("getCachedAccountsViaResultMap");
     int thirdId = System.identityHashCode(list);
     assertTrue(firstId != thirdId);
   }

@@ -81,16 +81,32 @@ public class SqlMapSessionImpl implements SqlMapSession {
     return delegate.insert(session, id, param);
   }
 
+  public Object insert(String id) throws SQLException {
+    return insert(id, null);
+  }
+
   public int update(String id, Object param) throws SQLException {
     return delegate.update(session, id, param);
+  }
+
+  public int update(String id) throws SQLException {
+    return update(id, null);
   }
 
   public int delete(String id, Object param) throws SQLException {
     return delegate.delete(session, id, param);
   }
 
+  public int delete(String id) throws SQLException {
+    return delete(id, null);
+  }
+
   public Object queryForObject(String id, Object paramObject) throws SQLException {
     return delegate.queryForObject(session, id, paramObject);
+  }
+
+  public Object queryForObject(String id) throws SQLException {
+    return queryForObject(id, null);
   }
 
   public Object queryForObject(String id, Object paramObject, Object resultObject) throws SQLException {
@@ -101,12 +117,24 @@ public class SqlMapSessionImpl implements SqlMapSession {
     return delegate.queryForList(session, id, paramObject);
   }
 
+  public List queryForList(String id) throws SQLException {
+    return queryForList(id, null);
+  }
+
   public List queryForList(String id, Object paramObject, int skip, int max) throws SQLException {
     return delegate.queryForList(session, id, paramObject, skip, max);
   }
 
+  public List queryForList(String id, int skip, int max) throws SQLException {
+    return queryForList(id, null, skip, max);
+  }
+
   public PaginatedList queryForPaginatedList(String id, Object paramObject, int pageSize) throws SQLException {
     return delegate.queryForPaginatedList(session, id, paramObject, pageSize);
+  }
+
+  public PaginatedList queryForPaginatedList(String id, int pageSize) throws SQLException {
+    return queryForPaginatedList(id, null, pageSize);
   }
 
   public Map queryForMap(String id, Object paramObject, String keyProp) throws SQLException {
@@ -119,6 +147,10 @@ public class SqlMapSessionImpl implements SqlMapSession {
 
   public void queryWithRowHandler(String id, Object paramObject, RowHandler rowHandler) throws SQLException {
     delegate.queryWithRowHandler(session, id, paramObject, rowHandler);
+  }
+
+  public void queryWithRowHandler(String id, RowHandler rowHandler) throws SQLException {
+    queryWithRowHandler(id, null, rowHandler);
   }
 
   public void startTransaction() throws SQLException {

@@ -58,16 +58,32 @@ public class SqlMapClientImpl implements ExtendedSqlMapClient {
     return getLocalSqlMapSession().insert(id, param);
   }
 
+  public Object insert(String id) throws SQLException {
+    return getLocalSqlMapSession().insert(id);
+  }
+
   public int update(String id, Object param) throws SQLException {
     return getLocalSqlMapSession().update(id, param);
+  }
+
+  public int update(String id) throws SQLException {
+    return getLocalSqlMapSession().update(id);
   }
 
   public int delete(String id, Object param) throws SQLException {
     return getLocalSqlMapSession().delete(id, param);
   }
 
+  public int delete(String id) throws SQLException {
+    return getLocalSqlMapSession().delete(id);
+  }
+
   public Object queryForObject(String id, Object paramObject) throws SQLException {
     return getLocalSqlMapSession().queryForObject(id, paramObject);
+  }
+
+  public Object queryForObject(String id) throws SQLException {
+    return getLocalSqlMapSession().queryForObject(id);
   }
 
   public Object queryForObject(String id, Object paramObject, Object resultObject) throws SQLException {
@@ -78,12 +94,24 @@ public class SqlMapClientImpl implements ExtendedSqlMapClient {
     return getLocalSqlMapSession().queryForList(id, paramObject);
   }
 
+  public List queryForList(String id) throws SQLException {
+    return getLocalSqlMapSession().queryForList(id);
+  }
+
   public List queryForList(String id, Object paramObject, int skip, int max) throws SQLException {
     return getLocalSqlMapSession().queryForList(id, paramObject, skip, max);
   }
 
+  public List queryForList(String id, int skip, int max) throws SQLException {
+    return getLocalSqlMapSession().queryForList(id, skip, max);
+  }
+
   public PaginatedList queryForPaginatedList(String id, Object paramObject, int pageSize) throws SQLException {
     return getLocalSqlMapSession().queryForPaginatedList(id, paramObject, pageSize);
+  }
+
+  public PaginatedList queryForPaginatedList(String id, int pageSize) throws SQLException {
+    return getLocalSqlMapSession().queryForPaginatedList(id, pageSize);
   }
 
   public Map queryForMap(String id, Object paramObject, String keyProp) throws SQLException {
@@ -96,6 +124,10 @@ public class SqlMapClientImpl implements ExtendedSqlMapClient {
 
   public void queryWithRowHandler(String id, Object paramObject, RowHandler rowHandler) throws SQLException {
     getLocalSqlMapSession().queryWithRowHandler(id, paramObject, rowHandler);
+  }
+
+  public void queryWithRowHandler(String id, RowHandler rowHandler) throws SQLException {
+    getLocalSqlMapSession().queryWithRowHandler(id, rowHandler);
   }
 
   public void startTransaction() throws SQLException {
