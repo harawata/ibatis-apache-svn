@@ -6,6 +6,7 @@
   
   <property name="src.dir" value="../src" />
   <property name="doc.dir" value="../doc" />
+  <property name="html.doc.dir" value="../htmldoc" />
   <property name="deploy.dir" value="${basedir}/deploy" />
   <property name="deploy.files" value="${deploy.dir}/files" />
   <property name="work.dir" value="${basedir}/work" />
@@ -24,10 +25,16 @@
 
     <copy todir="${deploy.files}">
       <fileset dir="${doc.dir}">
-        <include name="**/*.txt"/>
+        <exclude name="**/.svn/**"/>
       </fileset>
     </copy>
     
+    <copy todir="${deploy.files}/doc">
+      <fileset dir="${html.doc.dir}">
+        <exclude name="**/.svn/**"/>
+      </fileset>
+    </copy>
+  	
     <propertyfile file="version.properties" comment="Abator build version info">
       <entry key="buildNum" default="0" type="int" operation="+" value="1"/>
     </propertyfile>

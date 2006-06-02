@@ -2,15 +2,16 @@
 Version 0.7.0: ??
 1. Major refactoring of code generators to use new DOM classes.  This makes
    adding and extending code generators much easier.
-2. Added a new code generator that takes advantage of iBATIS' new support for
-   nested iterate tags.
-3. Added another new code generator that takes advantage of iBATIS' new
-   support for nested iterate tags, and builds code that uses many JSE 5.0
-   features including generic types, annotations, and enums.
+2. Added a new set of code generators that take advantage of iBATIS' new
+   support for nested iterate tags.
+3. Added another new set of code generators that take advantage of iBATIS'
+   new support for nested iterate tags, and builds code that uses many JSE 5.0
+   features including parameterized types and annotations.
 4. Added support for "alias" on table configuration
 5. Fixed the XML file merger so that extraneous blank lines in an XML merge
    are removed
-6. Major overhaul of the documentation
+6. Major overhaul of the documentation in my efforts to become the best
+   documented project at Apache!
 7. (??) Added support for generating  objects from a query
 
 -------------------------------------------------------------------------------
@@ -30,7 +31,7 @@ Version 0.6.5:
      </daoGenerator>
      
    Note that Abator uses these values "as is" - no checking is done to 
-   validate their existance or validity.
+   validate their existence or validity.
    
 2. Refactored code generation rules and added better documentation for
    the rules (see new org.apache.ibatis.abator.internal.rules package)
@@ -57,10 +58,10 @@ Version 0.6.0:
 3. Added support for wrapping primitive data types in the "by example" methods
 4. Removed dependency on JDOM
 5. Greatly improved extensibility of the default code generators
-6. Added support for disovering the case sensitivity of the database in regard
+6. Added support for discovering the case sensitivity of the database in regard
    to table names.
 
 -------------------------------------------------------------------------------
 Version 0.5.0:
 
-Initial Release
+Initial Release - as an Eclipse plugin only

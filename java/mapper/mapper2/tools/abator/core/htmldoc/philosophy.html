@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Abator Philosophy and Apology</title>
+  <link type="text/css" rel="stylesheet" href="abator.css"/>
 </head>
 <body>
 <h1>Abator Philosophy and Apology</h1>
@@ -11,7 +12,7 @@
 
 <p>First of all, this tool does what it does.  I am not making any kind of statement
 about how projects should, or should not, be structured.  In general I am a strong proponant
-of rich domain models - but creating a rich domain model is quite a different thing from 
+of rich domain models - but creating a rich domain model is quite a different thing from
 answering the question of how that model should be persisted.</p>
 
 <p>If your particular design itch is that the domain model drives all decisions, and
@@ -30,13 +31,13 @@ database tables.</p>
 <p>In the large projects I have worked on, I have found these things to be
 quite common:
 <ul>
-  <li>Database design is often a seperate function (with seperate management) from OO domain 
+  <li>Database design is often a seperate function (with seperate management) from OO domain
       design
   </li>
   <li>Database designers do not have OO tools (like inheritance), so they don't think
       in OO terms</li>
   <li>Application designers do not have complete control over the final form of database tables.
-    For example, the data that seems to fit in one object for the application, may be split 
+    For example, the data that seems to fit in one object for the application, may be split
     into several tables in the database.</li>
   <li>The database design often ends up quite different from the OO design, leading to
    a significant mismatch between tables and objects.</li>
@@ -54,7 +55,7 @@ persistence needs of a domain object
 and make use of one or more Abator DAOs in a single transaction.</p>
 
 <p>As an example, consider a typical <code>Order</code> object - the typical header/detail problem.
-In some environments that I work in, such an object would be persisted into at least 4 tables - 
+In some environments that I work in, such an object would be persisted into at least 4 tables -
 two key tables, a "header" table, and a "detail" table (again, I am not making any kind of
 statement about whether this is "correct" design, just stating a fact).
 My application will still interact with interact with the <code>Order</code> object, and there would

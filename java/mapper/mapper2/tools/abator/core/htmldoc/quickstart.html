@@ -2,45 +2,43 @@
 <html>
 <head>
   <title>Abator Quick Start Guide</title>
+  <link type="text/css" rel="stylesheet" href="abator.css"/>
 </head>
 <body>
 <h1>Abator Quick Start Guide</h1>
 <p>To get up and running quickly with Abator, follow these steps:</p>
 <ol>
-  <li>Create an Abator configuration file:</li>
+  <li>Create and fill out a configuration file appropriately.
+      At a minimum, you must specify:</li>
     <ol>
-      <li>File&gt;New&gt;Abator for iBATIS Configuration File</li>
-      <li>Specify the location of the file, and the name of the file (defaults to abatorConfig.xml)</li>
-      <li>Finish the wizard</li>
+      <li>A <code>&lt;jdbcConnection&gt;</code> element to specify how to connect to
+          the target database</li>
+      <li>A <code>&lt;javaModelGenerator&gt;</code> element to specify target package
+          and target project for generated Java model objects</li>
+      <li>A <code>&lt;sqlMapGenerator&gt;</code> element to specify target package
+          and target project for generated SQL map files</li>
+      <li>(Optionally) A <code>&lt;daoGenerator&gt;</code> element to specify target package
+           and target project for generated DAO interfaces and classes (you can
+          omit the <code>&lt;daoGenerator&gt;</code> element if you don't wish to generate DAOs)</li>
+      <li>At least one database <code>&lt;table&gt;</code> element</li>
     </ol>
-  <li>Fill out the configuration file appropriately.  At a minimum, you must specify:</li>
-    <ol>
-      <li>jdbcConnection information to specify how to connect to the target database</li>
-      <li>A target package, and target project for the javaModelGenerator</li>
-      <li>A target package, and target project for the sqlMapGenerator</li>
-      <li>A target package, target project, and type for the daoGenerator (or you can remove the
-          daoGenerator element if you don't wish to generate DAOs)</li>
-      <li>At least one database table</li>
-    </ol>
-  <li>Save the file</li>
-  <li>Right click on the configuration file in Eclipse's navigator, or package explorer, view and take the
-      menu option to "Generate iBATIS Artifacts"</li>
+  <li>Save the file in some convenient location (like \temp\abatorConfig.xml)</li>
+  <li>Run Abator from the command line with a command like this:
+    <pre>
+      java -jar abator.jar \temp\abatorConfig.xml true
+    </pre>
+    This will tell Abator to run using your configuration file.  It will also tell Abator
+    to overwrite any existing Java files with the same name.  If you want to save any existing
+    Java files, specify "false" for the second parameter.  If there is a conflict, Abator
+    will save the newly generated file with a unique name (e.g. MyClass.java.1).
+  </li>
+  <li>After running Abator, you will need to create or modify the standard iBATIS
+      configuration files to make use of your newly generated code.  See the
+      <a href="afterRunning.html">Tasks After Running Abator</a> page for more
+      information.</li>
 </ol>
-<p>Important things to note:</p>
-<ol>
-  <li>Abator will not overwrite any custom changes you make to the objects it generates.  You can
-      run it over and over again without fear of losing custom changes.</li>
-  <li>Currently, the configuration options are most fully documented in the DTD.  Look there for
-      any questions.</li>
-  <li>Abator does supply a custom editor for Abator configuration files, but it is very low
-      function and currently only associated with files named "abatorConfig.xml".  With
-      Eclipse 3.1, the editor will be more full function.  If you are using RAD/RSA, then
-      the included XML editor is much more useful.  Or if you use some other XML plugin (like 
-      XML Buddy),
-      it it likely that the editor supplied with the plugin will be more useful.</li>
-  <li>The generated Java classes will not, and should not, contain any JDK 5.0 features.  The next 
-      version of Abator will support Eclipse 3.1 and JDK 5.0.  Until that time, do not add any JDK
-      5.0 features to the generated Java classes - Abator will likely fail if you do.</li>
-</ol>
+<p><b>Important:</b> The Abator generated code requires that statement namespaces are enabled
+  in your iBATIS configuration.  See the <a href="afterRunning.html">Tasks After Running Abator</a>
+  page for more information.</p>
 </body>
 </html>
