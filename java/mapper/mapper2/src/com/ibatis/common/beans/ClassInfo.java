@@ -22,11 +22,16 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
 
+import com.ibatis.common.logging.Log;
+import com.ibatis.common.logging.LogFactory;
+
 /**
  * This class represents a cached set of class definition information that
  * allows for easy mapping between property names and getter/setter methods.
  */
 public class ClassInfo {
+  
+  private static final Log log = LogFactory.getLog(ClassInfo.class);
 
   private static boolean cacheEnabled = true;
   private static final String[] EMPTY_STRING_ARRAY = new String[0];
@@ -90,6 +95,11 @@ public class ClassInfo {
       if (name.startsWith("set") && name.length() > 3) {
         if (methods[i].getParameterTypes().length == 1) {
           name = dropCase(name);
+          if (setMethods.containsKey(name)) {
+            // TODO(JGB) - this should probably be a RuntimeException at some point???
+            log.error("Illegal overloaded setter method for property " + name + " in class " + cls.getName() +
+                ".  This breaks the JavaBeans specification and can cause unpredicatble results.");
+          }
           setMethods.put(name, methods[i]);
           setTypes.put(name, methods[i].getParameterTypes()[0]);
         }

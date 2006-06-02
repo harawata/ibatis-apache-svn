@@ -19,6 +19,10 @@ public class Jdk14LoggingImpl implements com.ibatis.common.logging.Log {
       log.log(Level.SEVERE, s, e);
     }
 
+    public void error(String s) {
+      log.log(Level.SEVERE, s);
+    }
+
     public void debug(String s) {
       log.log(Level.FINE, s);
     }

@@ -19,6 +19,10 @@ public class JakartaCommonsLoggingImpl implements com.ibatis.common.logging.Log 
     log.error(s,e);
   }
 
+  public void error(String s) {
+    log.error(s);
+  }
+
   public void debug(String s) {
     log.debug(s);
   }

@@ -6,6 +6,8 @@ public interface Log {
 
   void error(String s, Exception e);
 
+  void error(String s);
+  
   public void debug(String s);
 
   public void warn(String s);

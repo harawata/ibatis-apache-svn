@@ -14,6 +14,9 @@ public class NoLoggingImpl implements Log {
   public void error(String s, Exception e) {
   }
 
+  public void error(String s) {
+  }
+
   public void debug(String s) {
   }
 
