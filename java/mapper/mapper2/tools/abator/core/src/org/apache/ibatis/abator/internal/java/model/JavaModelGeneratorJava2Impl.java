@@ -594,50 +594,50 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
     }
 
     /**
+     * Generates methods that set between and not between conditions
      * 
      * @param cd
-     * @param inMethod
-     *            if true generates an "in" method, else generates a "not in"
-     *            method
+     * @param betweenMethod
      * @return
      */
-    protected Method getSetInOrNotInMethod(ColumnDefinition cd, boolean inMethod) {
+    protected Method getSetBetweenOrNotBetweenMethod(ColumnDefinition cd, boolean betweenMethod) {
         Method method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
-        FullyQualifiedJavaType type = FullyQualifiedJavaType
-                .getNewListInstance();
-        method.addParameter(new Parameter(type, "values")); //$NON-NLS-1$
+        FullyQualifiedJavaType type = cd.getResolvedJavaType().getFullyQualifiedJavaType();
+        
+        method.addParameter(new Parameter(type, "value1")); //$NON-NLS-1$
+        method.addParameter(new Parameter(type, "value2")); //$NON-NLS-1$
         StringBuffer sb = new StringBuffer();
         sb.append(cd.getJavaProperty());
         sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
         sb.insert(0, "add"); //$NON-NLS-1$
-        if (inMethod) {
-            sb.append("IsInCondition"); //$NON-NLS-1$
+        if (betweenMethod) {
+            sb.append("BetweenCondition"); //$NON-NLS-1$
         } else {
-            sb.append("IsNotInCondition"); //$NON-NLS-1$
+            sb.append("NotBetweenCondition"); //$NON-NLS-1$
         }
         method.setName(sb.toString());
         sb.setLength(0);
-
+    
         if (cd.isJDBCDateColumn()) {
-            sb.append("addDateListValueCondition(\""); //$NON-NLS-1$
+            sb.append("addDateBetweenCondition(\""); //$NON-NLS-1$
         } else if (cd.isJDBCTimeColumn()) {
-            sb.append("addTimeListValueCondition(\""); //$NON-NLS-1$
+            sb.append("addTimeBetweenCondition(\""); //$NON-NLS-1$
         } else {
-            sb.append("addListValueCondition(\""); //$NON-NLS-1$
+            sb.append("addBetweenCondition(\""); //$NON-NLS-1$
         }
-
+    
         sb.append(cd.getAliasedColumnName());
-        if (inMethod) {
-            sb.append(" in"); //$NON-NLS-1$
+        if (betweenMethod) {
+            sb.append(" between"); //$NON-NLS-1$
         } else {
-            sb.append(" not in"); //$NON-NLS-1$
+            sb.append(" not between"); //$NON-NLS-1$
         }
-        sb.append("\", values, \""); //$NON-NLS-1$
+        sb.append("\", value1, value2, \""); //$NON-NLS-1$
         sb.append(cd.getJavaProperty());
         sb.append("\");"); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
-
+    
         return method;
     }
 
@@ -748,15 +748,9 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         method
                 .addBodyLine("conditionsWithSingleValue = new ArrayList();"); //$NON-NLS-1$
         method
-                .addBodyLine("conditionsWithSingleDateValue = new ArrayList();"); //$NON-NLS-1$
-        method
-                .addBodyLine("conditionsWithSingleTimeValue = new ArrayList();"); //$NON-NLS-1$
-        method
                 .addBodyLine("conditionsWithListValue = new ArrayList();"); //$NON-NLS-1$
         method
-                .addBodyLine("conditionsWithDateListValue = new ArrayList();"); //$NON-NLS-1$
-        method
-                .addBodyLine("conditionsWithTimeListValue = new ArrayList();"); //$NON-NLS-1$
+                .addBodyLine("conditionsWithBetweenValue = new ArrayList();"); //$NON-NLS-1$
         answer.addMethod(method);
 
         // now we need to generate the methods that will be used in the SqlMap
@@ -791,32 +785,6 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         field = new Field();
         field.setVisibility(JavaVisibility.PRIVATE);
         field.setType(listOfMaps);
-        field.setName("conditionsWithSingleDateValue"); //$NON-NLS-1$
-        answer.addField(field);
-
-        method = new Method();
-        method.setVisibility(JavaVisibility.PUBLIC);
-        method.setReturnType(field.getType());
-        method.setName(JavaBeansUtil.getGetterMethodName(field.getName()));
-        method.addBodyLine("return conditionsWithSingleDateValue;"); //$NON-NLS-1$
-        answer.addMethod(method);
-
-        field = new Field();
-        field.setVisibility(JavaVisibility.PRIVATE);
-        field.setType(listOfMaps);
-        field.setName("conditionsWithSingleTimeValue"); //$NON-NLS-1$
-        answer.addField(field);
-
-        method = new Method();
-        method.setVisibility(JavaVisibility.PUBLIC);
-        method.setReturnType(field.getType());
-        method.setName(JavaBeansUtil.getGetterMethodName(field.getName()));
-        method.addBodyLine("return conditionsWithSingleTimeValue;"); //$NON-NLS-1$
-        answer.addMethod(method);
-
-        field = new Field();
-        field.setVisibility(JavaVisibility.PRIVATE);
-        field.setType(listOfMaps);
         field.setName("conditionsWithSingleValue"); //$NON-NLS-1$
         answer.addField(field);
 
@@ -843,42 +811,22 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         field = new Field();
         field.setVisibility(JavaVisibility.PRIVATE);
         field.setType(listOfMaps);
-        field.setName("conditionsWithDateListValue"); //$NON-NLS-1$
+        field.setName("conditionsWithBetweenValue"); //$NON-NLS-1$
         answer.addField(field);
 
         method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(field.getType());
         method.setName(JavaBeansUtil.getGetterMethodName(field.getName()));
-        method.addBodyLine("return conditionsWithDateListValue;"); //$NON-NLS-1$
-        answer.addMethod(method);
-
-        field = new Field();
-        field.setVisibility(JavaVisibility.PRIVATE);
-        field.setType(listOfMaps);
-        field.setName("conditionsWithTimeListValue"); //$NON-NLS-1$
-        answer.addField(field);
-
-        method = new Method();
-        method.setVisibility(JavaVisibility.PUBLIC);
-        method.setReturnType(field.getType());
-        method.setName(JavaBeansUtil.getGetterMethodName(field.getName()));
-        method.addBodyLine("return conditionsWithTimeListValue;"); //$NON-NLS-1$
+        method.addBodyLine("return conditionsWithBetweenValue;"); //$NON-NLS-1$
         answer.addMethod(method);
 
         method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
-        method.setReturnType(FullyQualifiedJavaType.getBooleanInstance());
+        method.setReturnType(FullyQualifiedJavaType
+                .getBooleanPrimitiveInstance());
         method.setName("isValid"); //$NON-NLS-1$
         method.addBodyLine("return conditionsWithoutValue.size() > 0"); //$NON-NLS-1$
-        sb.setLength(0);
-        OutputUtilities.javaIndent(sb, 2);
-        sb.append("|| conditionsWithSingleDateValue.size() > 0"); //$NON-NLS-1$
-        method.addBodyLine(sb.toString());
-        sb.setLength(0);
-        OutputUtilities.javaIndent(sb, 2);
-        sb.append("|| conditionsWithSingleTimeValue.size() > 0"); //$NON-NLS-1$
-        method.addBodyLine(sb.toString());
         sb.setLength(0);
         OutputUtilities.javaIndent(sb, 2);
         sb.append("|| conditionsWithSingleValue.size() > 0"); //$NON-NLS-1$
@@ -889,11 +837,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         method.addBodyLine(sb.toString());
         sb.setLength(0);
         OutputUtilities.javaIndent(sb, 2);
-        sb.append("|| conditionsWithDateListValue.size() > 0"); //$NON-NLS-1$
-        method.addBodyLine(sb.toString());
-        sb.setLength(0);
-        OutputUtilities.javaIndent(sb, 2);
-        sb.append("|| conditionsWithTimeListValue.size() > 0;"); //$NON-NLS-1$
+        sb.append("|| conditionsWithBetweenValue.size() > 0;"); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
         answer.addMethod(method);
 
@@ -940,12 +884,39 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         method.addBodyLine("conditionsWithListValue.add(map);"); //$NON-NLS-1$
         answer.addMethod(method);
 
+        method = new Method();
+        method.setVisibility(JavaVisibility.PRIVATE);
+        method.setName("addBetweenCondition"); //$NON-NLS-1$
+        method.addParameter(new Parameter(FullyQualifiedJavaType
+                .getStringInstance(), "condition")); //$NON-NLS-1$
+        method.addParameter(new Parameter(FullyQualifiedJavaType
+                .getObjectInstance(), "value1")); //$NON-NLS-1$
+        method.addParameter(new Parameter(FullyQualifiedJavaType
+                .getObjectInstance(), "value2")); //$NON-NLS-1$
+        method.addParameter(new Parameter(FullyQualifiedJavaType
+                .getStringInstance(), "property")); //$NON-NLS-1$
+        method.addBodyLine("if (value1 == null || value2 == null) {"); //$NON-NLS-1$
+        method
+                .addBodyLine("throw new RuntimeException(\"Between values for \" + property + \" cannot be null\");"); //$NON-NLS-1$
+        method.addBodyLine("}"); //$NON-NLS-1$
+        method.addBodyLine("List list = new ArrayList();"); //$NON-NLS-1$
+        method.addBodyLine("list.add(value1);"); //$NON-NLS-1$
+        method.addBodyLine("list.add(value2);"); //$NON-NLS-1$
+        method
+                .addBodyLine("Map map = new HashMap();"); //$NON-NLS-1$
+        method.addBodyLine("map.put(\"condition\", condition);"); //$NON-NLS-1$
+        method.addBodyLine("map.put(\"values\", list);"); //$NON-NLS-1$
+        method.addBodyLine("conditionsWithBetweenValue.add(map);"); //$NON-NLS-1$
+        answer.addMethod(method);
+
         FullyQualifiedJavaType listOfDates = FullyQualifiedJavaType
                 .getNewListInstance();
 
         if (columnDefinitions.hasJDBCDateColumns()) {
             topLevelClass.addImportedType(FullyQualifiedJavaType
                     .getDateInstance());
+            topLevelClass.addImportedType(FullyQualifiedJavaType
+                    .getNewIteratorInstance());
             method = new Method();
             method.setVisibility(JavaVisibility.PRIVATE);
             method.setName("addSingleDateValueCondition"); //$NON-NLS-1$
@@ -955,15 +926,8 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
                     .getDateInstance(), "value")); //$NON-NLS-1$
             method.addParameter(new Parameter(FullyQualifiedJavaType
                     .getStringInstance(), "property")); //$NON-NLS-1$
-            method.addBodyLine("if (value == null) {"); //$NON-NLS-1$
             method
-                    .addBodyLine("throw new RuntimeException(\"Value for \" + property + \" cannot be null\");"); //$NON-NLS-1$
-            method.addBodyLine("}"); //$NON-NLS-1$
-            method
-                    .addBodyLine("Map map = new HashMap();"); //$NON-NLS-1$
-            method.addBodyLine("map.put(\"condition\", condition);"); //$NON-NLS-1$
-            method.addBodyLine("map.put(\"value\", value);"); //$NON-NLS-1$
-            method.addBodyLine("conditionsWithSingleDateValue.add(map);"); //$NON-NLS-1$
+                    .addBodyLine("addSingleValueCondition(condition, new java.sql.Date(value.getTime()), property);"); //$NON-NLS-1$
             answer.addMethod(method);
 
             method = new Method();
@@ -979,16 +943,41 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
                     .addBodyLine("throw new RuntimeException(\"Value list for \" + property + \" cannot be null or empty\");"); //$NON-NLS-1$
             method.addBodyLine("}"); //$NON-NLS-1$
             method
-                    .addBodyLine("Map map = new HashMap();"); //$NON-NLS-1$
-            method.addBodyLine("map.put(\"condition\", condition);"); //$NON-NLS-1$
-            method.addBodyLine("map.put(\"values\", values);"); //$NON-NLS-1$
-            method.addBodyLine("conditionsWithDateListValue.add(map);"); //$NON-NLS-1$
+                    .addBodyLine("List dateList = new ArrayList();"); //$NON-NLS-1$
+            method.addBodyLine("Iterator iter = values.iterator();"); //$NON-NLS-1$
+            method.addBodyLine("while (iter.hasNext()) {"); //$NON-NLS-1$
+            method
+                    .addBodyLine("dateList.add(new java.sql.Date(((Date)iter.next()).getTime()));"); //$NON-NLS-1$
+            method.addBodyLine("}"); //$NON-NLS-1$
+            method
+                    .addBodyLine("addListValueCondition(condition, dateList, property);"); //$NON-NLS-1$
+            answer.addMethod(method);
+
+            method = new Method();
+            method.setVisibility(JavaVisibility.PRIVATE);
+            method.setName("addDateBetweenCondition"); //$NON-NLS-1$
+            method.addParameter(new Parameter(FullyQualifiedJavaType
+                    .getStringInstance(), "condition")); //$NON-NLS-1$
+            method.addParameter(new Parameter(FullyQualifiedJavaType
+                    .getDateInstance(), "value1")); //$NON-NLS-1$
+            method.addParameter(new Parameter(FullyQualifiedJavaType
+                    .getDateInstance(), "value2")); //$NON-NLS-1$
+            method.addParameter(new Parameter(FullyQualifiedJavaType
+                    .getStringInstance(), "property")); //$NON-NLS-1$
+            method.addBodyLine("if (value1 == null || value2 == null) {"); //$NON-NLS-1$
+            method
+                    .addBodyLine("throw new RuntimeException(\"Between values for \" + property + \" cannot be null\");"); //$NON-NLS-1$
+            method.addBodyLine("}"); //$NON-NLS-1$
+            method
+                    .addBodyLine("addBetweenCondition(condition, new java.sql.Date(value1.getTime()), new java.sql.Date(value2.getTime()), property);"); //$NON-NLS-1$
             answer.addMethod(method);
         }
 
         if (columnDefinitions.hasJDBCTimeColumns()) {
             topLevelClass.addImportedType(FullyQualifiedJavaType
                     .getDateInstance());
+            topLevelClass.addImportedType(FullyQualifiedJavaType
+                    .getNewIteratorInstance());
             method = new Method();
             method.setVisibility(JavaVisibility.PRIVATE);
             method.setName("addSingleTimeValueCondition"); //$NON-NLS-1$
@@ -998,15 +987,8 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
                     .getDateInstance(), "value")); //$NON-NLS-1$
             method.addParameter(new Parameter(FullyQualifiedJavaType
                     .getStringInstance(), "property")); //$NON-NLS-1$
-            method.addBodyLine("if (value == null) {"); //$NON-NLS-1$
             method
-                    .addBodyLine("throw new RuntimeException(\"Value for \" + property + \" cannot be null\");"); //$NON-NLS-1$
-            method.addBodyLine("}"); //$NON-NLS-1$
-            method
-                    .addBodyLine("Map map = new HashMap();"); //$NON-NLS-1$
-            method.addBodyLine("map.put(\"condition\", condition);"); //$NON-NLS-1$
-            method.addBodyLine("map.put(\"value\", value);"); //$NON-NLS-1$
-            method.addBodyLine("conditionsWithSingleTimeValue.add(map);"); //$NON-NLS-1$
+                    .addBodyLine("addSingleValueCondition(condition, new java.sql.Time(value.getTime()), property);"); //$NON-NLS-1$
             answer.addMethod(method);
 
             method = new Method();
@@ -1022,10 +1004,33 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
                     .addBodyLine("throw new RuntimeException(\"Value list for \" + property + \" cannot be null or empty\");"); //$NON-NLS-1$
             method.addBodyLine("}"); //$NON-NLS-1$
             method
-                    .addBodyLine("Map map = new HashMap();"); //$NON-NLS-1$
-            method.addBodyLine("map.put(\"condition\", condition);"); //$NON-NLS-1$
-            method.addBodyLine("map.put(\"values\", values);"); //$NON-NLS-1$
-            method.addBodyLine("conditionsWithTimeListValue.add(map);"); //$NON-NLS-1$
+                    .addBodyLine("List dateList = new ArrayList();"); //$NON-NLS-1$
+            method.addBodyLine("Iterator iter = values.iterator();"); //$NON-NLS-1$
+            method.addBodyLine("while (iter.hasNext()) {"); //$NON-NLS-1$
+            method
+                    .addBodyLine("dateList.add(new java.sql.Time(((Date)iter.next()).getTime()));"); //$NON-NLS-1$
+            method.addBodyLine("}"); //$NON-NLS-1$
+            method
+                    .addBodyLine("addListValueCondition(condition, dateList, property);"); //$NON-NLS-1$
+            answer.addMethod(method);
+
+            method = new Method();
+            method.setVisibility(JavaVisibility.PRIVATE);
+            method.setName("addTimeBetweenCondition"); //$NON-NLS-1$
+            method.addParameter(new Parameter(FullyQualifiedJavaType
+                    .getStringInstance(), "condition")); //$NON-NLS-1$
+            method.addParameter(new Parameter(FullyQualifiedJavaType
+                    .getDateInstance(), "value1")); //$NON-NLS-1$
+            method.addParameter(new Parameter(FullyQualifiedJavaType
+                    .getDateInstance(), "value2")); //$NON-NLS-1$
+            method.addParameter(new Parameter(FullyQualifiedJavaType
+                    .getStringInstance(), "property")); //$NON-NLS-1$
+            method.addBodyLine("if (value1 == null || value2 == null) {"); //$NON-NLS-1$
+            method
+                    .addBodyLine("throw new RuntimeException(\"Between values for \" + property + \" cannot be null\");"); //$NON-NLS-1$
+            method.addBodyLine("}"); //$NON-NLS-1$
+            method
+                    .addBodyLine("addBetweenCondition(condition, new java.sql.Time(value1.getTime()), new java.sql.Time(value2.getTime()), property);"); //$NON-NLS-1$
             answer.addMethod(method);
         }
 
@@ -1034,37 +1039,25 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
          * is too complex a calculation to be done inside the sql map. The
          * methods assume that the SQL map clause is layed out in this order:
          * 
-         * conditionsWithouttValue 
+         * conditionsWithouttValue
          * 
          * (possible first and)
          * 
-         * conditionsWithSingleValue 
+         * conditionsWithSingleValue
          * 
          * (possible second and)
          * 
-         * conditionsWithSingleDateValue 
+         * conditionsWithListValue
          * 
          * (possible third and)
          * 
-         * conditionsWithSingleTimeValue 
-         * 
-         * (possible fourth and)
-         * 
-         * conditionsWithListValue 
-         * 
-         * (possible fifth and)
-         * 
-         * conditionsWithDateListValue 
-         * 
-         * (possible sixth and)
-         * 
-         * conditionsWithTimeListValue
-         * 
+         * conditionsWithBetweenValue
          */
 
         method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
-        method.setReturnType(FullyQualifiedJavaType.getBooleanInstance());
+        method.setReturnType(FullyQualifiedJavaType
+                .getBooleanPrimitiveInstance());
         method.setName("isFirstAndNeeded"); //$NON-NLS-1$
         method.addBodyLine("return conditionsWithoutValue.size() > 0"); //$NON-NLS-1$
         sb.setLength(0);
@@ -1075,77 +1068,29 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
         method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
-        method.setReturnType(FullyQualifiedJavaType.getBooleanInstance());
+        method.setReturnType(FullyQualifiedJavaType
+                .getBooleanPrimitiveInstance());
         method.setName("isSecondAndNeeded"); //$NON-NLS-1$
-        method.addBodyLine("return (conditionsWithoutValue.size() > 0");
+        method.addBodyLine("return (conditionsWithoutValue.size() > 0"); //$NON-NLS-1$
         sb.setLength(0);
         OutputUtilities.javaIndent(sb, 2);
         sb.append("|| conditionsWithSingleValue.size() > 0)"); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
         sb.setLength(0);
         OutputUtilities.javaIndent(sb, 2);
-        sb.append("&& conditionsWithSingleDateValue.size() > 0;"); //$NON-NLS-1$
+        sb.append("&& conditionsWithListValue.size() > 0;"); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
         answer.addMethod(method);
 
         method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
-        method.setReturnType(FullyQualifiedJavaType.getBooleanInstance());
+        method.setReturnType(FullyQualifiedJavaType
+                .getBooleanPrimitiveInstance());
         method.setName("isThirdAndNeeded"); //$NON-NLS-1$
-        method.addBodyLine("return (conditionsWithoutValue.size() > 0");
+        method.addBodyLine("return (conditionsWithoutValue.size() > 0"); //$NON-NLS-1$
         sb.setLength(0);
         OutputUtilities.javaIndent(sb, 2);
         sb.append("|| conditionsWithSingleValue.size() > 0"); //$NON-NLS-1$
-        method.addBodyLine(sb.toString());
-        sb.setLength(0);
-        OutputUtilities.javaIndent(sb, 2);
-        sb.append("|| conditionsWithSingleDateValue.size() > 0)"); //$NON-NLS-1$
-        method.addBodyLine(sb.toString());
-        sb.setLength(0);
-        OutputUtilities.javaIndent(sb, 2);
-        sb.append("&& conditionsWithSingleTimeValue.size() > 0;"); //$NON-NLS-1$
-        method.addBodyLine(sb.toString());
-        answer.addMethod(method);
-        
-        method = new Method();
-        method.setVisibility(JavaVisibility.PUBLIC);
-        method.setReturnType(FullyQualifiedJavaType.getBooleanInstance());
-        method.setName("isFourthAndNeeded"); //$NON-NLS-1$
-        method.addBodyLine("return (conditionsWithoutValue.size() > 0");
-        sb.setLength(0);
-        OutputUtilities.javaIndent(sb, 2);
-        sb.append("|| conditionsWithSingleValue.size() > 0"); //$NON-NLS-1$
-        method.addBodyLine(sb.toString());
-        sb.setLength(0);
-        OutputUtilities.javaIndent(sb, 2);
-        sb.append("|| conditionsWithSingleDateValue.size() > 0"); //$NON-NLS-1$
-        method.addBodyLine(sb.toString());
-        sb.setLength(0);
-        OutputUtilities.javaIndent(sb, 2);
-        sb.append("|| conditionsWithSingleTimeValue.size() > 0)"); //$NON-NLS-1$
-        method.addBodyLine(sb.toString());
-        sb.setLength(0);
-        OutputUtilities.javaIndent(sb, 2);
-        sb.append("&& conditionsWithListValue.size() > 0;"); //$NON-NLS-1$
-        method.addBodyLine(sb.toString());
-        answer.addMethod(method);
-        
-        method = new Method();
-        method.setVisibility(JavaVisibility.PUBLIC);
-        method.setReturnType(FullyQualifiedJavaType.getBooleanInstance());
-        method.setName("isFifthAndNeeded"); //$NON-NLS-1$
-        method.addBodyLine("return (conditionsWithoutValue.size() > 0");
-        sb.setLength(0);
-        OutputUtilities.javaIndent(sb, 2);
-        sb.append("|| conditionsWithSingleValue.size() > 0"); //$NON-NLS-1$
-        method.addBodyLine(sb.toString());
-        sb.setLength(0);
-        OutputUtilities.javaIndent(sb, 2);
-        sb.append("|| conditionsWithSingleDateValue.size() > 0"); //$NON-NLS-1$
-        method.addBodyLine(sb.toString());
-        sb.setLength(0);
-        OutputUtilities.javaIndent(sb, 2);
-        sb.append("|| conditionsWithSingleTimeValue.size() > 0"); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
         sb.setLength(0);
         OutputUtilities.javaIndent(sb, 2);
@@ -1153,41 +1098,10 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         method.addBodyLine(sb.toString());
         sb.setLength(0);
         OutputUtilities.javaIndent(sb, 2);
-        sb.append("&& conditionsWithDateListValue.size() > 0;"); //$NON-NLS-1$
+        sb.append("&& conditionsWithBetweenValue.size() > 0;"); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
         answer.addMethod(method);
-        
-        method = new Method();
-        method.setVisibility(JavaVisibility.PUBLIC);
-        method.setReturnType(FullyQualifiedJavaType.getBooleanInstance());
-        method.setName("isSixthAndNeeded"); //$NON-NLS-1$
-        method.addBodyLine("return (conditionsWithoutValue.size() > 0");
-        sb.setLength(0);
-        OutputUtilities.javaIndent(sb, 2);
-        sb.append("|| conditionsWithSingleValue.size() > 0"); //$NON-NLS-1$
-        method.addBodyLine(sb.toString());
-        sb.setLength(0);
-        OutputUtilities.javaIndent(sb, 2);
-        sb.append("|| conditionsWithSingleDateValue.size() > 0"); //$NON-NLS-1$
-        method.addBodyLine(sb.toString());
-        sb.setLength(0);
-        OutputUtilities.javaIndent(sb, 2);
-        sb.append("|| conditionsWithSingleTimeValue.size() > 0"); //$NON-NLS-1$
-        method.addBodyLine(sb.toString());
-        sb.setLength(0);
-        OutputUtilities.javaIndent(sb, 2);
-        sb.append("|| conditionsWithListValue.size() > 0"); //$NON-NLS-1$
-        method.addBodyLine(sb.toString());
-        sb.setLength(0);
-        OutputUtilities.javaIndent(sb, 2);
-        sb.append("|| conditionsWithDateListValue.size() > 0)"); //$NON-NLS-1$
-        method.addBodyLine(sb.toString());
-        sb.setLength(0);
-        OutputUtilities.javaIndent(sb, 2);
-        sb.append("&& conditionsWithTimeListValue.size() > 0;"); //$NON-NLS-1$
-        method.addBodyLine(sb.toString());
-        answer.addMethod(method);
-        
+
         Iterator iter = columnDefinitions.getAllColumns().iterator();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
@@ -1217,8 +1131,58 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
             answer.addMethod(getSetInOrNotInMethod(cd, true));
             answer.addMethod(getSetInOrNotInMethod(cd, false));
+            answer.addMethod(getSetBetweenOrNotBetweenMethod(cd, true));
+            answer.addMethod(getSetBetweenOrNotBetweenMethod(cd, false));
         }
 
         return answer;
+    }
+
+    /**
+     * 
+     * @param cd
+     * @param inMethod
+     *            if true generates an "in" method, else generates a "not in"
+     *            method
+     * @return
+     */
+    protected Method getSetInOrNotInMethod(ColumnDefinition cd, boolean inMethod) {
+        Method method = new Method();
+        method.setVisibility(JavaVisibility.PUBLIC);
+        FullyQualifiedJavaType type = FullyQualifiedJavaType
+                .getNewListInstance();
+        method.addParameter(new Parameter(type, "values")); //$NON-NLS-1$
+        StringBuffer sb = new StringBuffer();
+        sb.append(cd.getJavaProperty());
+        sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
+        sb.insert(0, "add"); //$NON-NLS-1$
+        if (inMethod) {
+            sb.append("InCondition"); //$NON-NLS-1$
+        } else {
+            sb.append("NotInCondition"); //$NON-NLS-1$
+        }
+        method.setName(sb.toString());
+        sb.setLength(0);
+
+        if (cd.isJDBCDateColumn()) {
+            sb.append("addDateListValueCondition(\""); //$NON-NLS-1$
+        } else if (cd.isJDBCTimeColumn()) {
+            sb.append("addTimeListValueCondition(\""); //$NON-NLS-1$
+        } else {
+            sb.append("addListValueCondition(\""); //$NON-NLS-1$
+        }
+
+        sb.append(cd.getAliasedColumnName());
+        if (inMethod) {
+            sb.append(" in"); //$NON-NLS-1$
+        } else {
+            sb.append(" not in"); //$NON-NLS-1$
+        }
+        sb.append("\", values, \""); //$NON-NLS-1$
+        sb.append(cd.getJavaProperty());
+        sb.append("\");"); //$NON-NLS-1$
+        method.addBodyLine(sb.toString());
+
+        return method;
     }
 }

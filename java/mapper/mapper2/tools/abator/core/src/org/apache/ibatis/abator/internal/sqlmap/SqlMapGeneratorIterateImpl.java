@@ -609,6 +609,8 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
             sb.append(cd.getColumnName());
             sb.append(" = #"); //$NON-NLS-1$
             sb.append(cd.getJavaProperty());
+            sb.append(':');
+            sb.append(cd.getResolvedJavaType().getJdbcTypeName());
             sb.append('#');
             answer.addElement(new TextElement(sb.toString()));
         }
@@ -659,6 +661,8 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
             sb.append(cd.getColumnName());
             sb.append(" = #"); //$NON-NLS-1$
             sb.append(cd.getJavaProperty());
+            sb.append(':');
+            sb.append(cd.getResolvedJavaType().getJdbcTypeName());
             sb.append('#');
             answer.addElement(new TextElement(sb.toString()));
         }
@@ -783,6 +787,8 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
             sb.append(cd.getAliasedColumnName());
             sb.append(" = #"); //$NON-NLS-1$
             sb.append(cd.getJavaProperty());
+            sb.append(':');
+            sb.append(cd.getResolvedJavaType().getJdbcTypeName());
             sb.append('#');
             answer.addElement(new TextElement(sb.toString()));
         }
@@ -1047,36 +1053,6 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         outerIterateElement.addElement(isEqualElement);
 
         innerIterateElement = new XmlElement("iterate"); //$NON-NLS-1$
-        innerIterateElement.addAttribute(new Attribute("property", "oredConditions[].conditionsWithSingleDateValue")); //$NON-NLS-1$ //$NON-NLS-2$
-        innerIterateElement.addAttribute(new Attribute("conjunction", "and")); //$NON-NLS-1$ //$NON-NLS-2$
-        innerIterateElement.addElement(
-                new TextElement("$oredConditions[].conditionsWithSingleDateValue[].condition$ #oredConditions[].conditionsWithSingleDateValue[].value:DATE#")); //$NON-NLS-1$
-        outerIterateElement.addElement(innerIterateElement);
-        
-        isEqualElement = new XmlElement("isEqual"); //$NON-NLS-1$
-        isEqualElement.addAttribute(new Attribute("property", //$NON-NLS-1$
-                "oredConditions[].thirdAndNeeded")); //$NON-NLS-1$
-        isEqualElement.addAttribute(new Attribute("compareValue", //$NON-NLS-1$
-                "true")); //$NON-NLS-1$
-        isEqualElement.addElement(new TextElement("and")); //$NON-NLS-1$
-        outerIterateElement.addElement(isEqualElement);
-
-        innerIterateElement = new XmlElement("iterate"); //$NON-NLS-1$
-        innerIterateElement.addAttribute(new Attribute("property", "oredConditions[].conditionsWithSingleTimeValue")); //$NON-NLS-1$ //$NON-NLS-2$
-        innerIterateElement.addAttribute(new Attribute("conjunction", "and")); //$NON-NLS-1$ //$NON-NLS-2$
-        innerIterateElement.addElement(
-                new TextElement("$oredConditions[].conditionsWithSingleTimeValue[].condition$ #oredConditions[].conditionsWithSingleTimeValue[].value:TIME#")); //$NON-NLS-1$
-        outerIterateElement.addElement(innerIterateElement);
-
-        isEqualElement = new XmlElement("isEqual"); //$NON-NLS-1$
-        isEqualElement.addAttribute(new Attribute("property", //$NON-NLS-1$
-                "oredConditions[].fourthAndNeeded")); //$NON-NLS-1$
-        isEqualElement.addAttribute(new Attribute("compareValue", //$NON-NLS-1$
-                "true")); //$NON-NLS-1$
-        isEqualElement.addElement(new TextElement("and")); //$NON-NLS-1$
-        outerIterateElement.addElement(isEqualElement);
-
-        innerIterateElement = new XmlElement("iterate"); //$NON-NLS-1$
         innerIterateElement.addAttribute(new Attribute("property", "oredConditions[].conditionsWithListValue")); //$NON-NLS-1$ //$NON-NLS-2$
         innerIterateElement.addAttribute(new Attribute("conjunction", "and")); //$NON-NLS-1$ //$NON-NLS-2$
         innerIterateElement.addElement(
@@ -1093,48 +1069,21 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         isEqualElement = new XmlElement("isEqual"); //$NON-NLS-1$
         isEqualElement.addAttribute(new Attribute("property", //$NON-NLS-1$
-                "oredConditions[].fifthAndNeeded")); //$NON-NLS-1$
+                "oredConditions[].thirdAndNeeded")); //$NON-NLS-1$
         isEqualElement.addAttribute(new Attribute("compareValue", //$NON-NLS-1$
                 "true")); //$NON-NLS-1$
         isEqualElement.addElement(new TextElement("and")); //$NON-NLS-1$
         outerIterateElement.addElement(isEqualElement);
-        
+
         innerIterateElement = new XmlElement("iterate"); //$NON-NLS-1$
-        innerIterateElement.addAttribute(new Attribute("property", "oredConditions[].conditionsWithDateListValue")); //$NON-NLS-1$ //$NON-NLS-2$
+        innerIterateElement.addAttribute(new Attribute("property", "oredConditions[].conditionsWithBetweenValue")); //$NON-NLS-1$ //$NON-NLS-2$
         innerIterateElement.addAttribute(new Attribute("conjunction", "and")); //$NON-NLS-1$ //$NON-NLS-2$
         innerIterateElement.addElement(
-                new TextElement("$oredConditions[].conditionsWithDateListValue[].condition$")); //$NON-NLS-1$
-        innerInnerIterateElement = new XmlElement("iterate"); //$NON-NLS-1$
-        innerInnerIterateElement.addAttribute(new Attribute("property", //$NON-NLS-1$
-                "oredConditions[].conditionsWithDateListValue[].values")); //$NON-NLS-1$
-        innerInnerIterateElement.addAttribute(new Attribute("open", "(")); //$NON-NLS-1$ //$NON-NLS-2$
-        innerInnerIterateElement.addAttribute(new Attribute("close", ")")); //$NON-NLS-1$ //$NON-NLS-2$
-        innerInnerIterateElement.addAttribute(new Attribute("conjunction", ",")); //$NON-NLS-1$ //$NON-NLS-2$
-        innerInnerIterateElement.addElement(new TextElement("#oredConditions[].conditionsWithDateListValue[].values[]:DATE#")); //$NON-NLS-1$
-        innerIterateElement.addElement(innerInnerIterateElement);
-        outerIterateElement.addElement(innerIterateElement);
-        
-        isEqualElement = new XmlElement("isEqual"); //$NON-NLS-1$
-        isEqualElement.addAttribute(new Attribute("property", //$NON-NLS-1$
-                "oredConditions[].sixthAndNeeded")); //$NON-NLS-1$
-        isEqualElement.addAttribute(new Attribute("compareValue", //$NON-NLS-1$
-                "true")); //$NON-NLS-1$
-        isEqualElement.addElement(new TextElement("and")); //$NON-NLS-1$
-        outerIterateElement.addElement(isEqualElement);
-        
-        innerIterateElement = new XmlElement("iterate"); //$NON-NLS-1$
-        innerIterateElement.addAttribute(new Attribute("property", "oredConditions[].conditionsWithTimeListValue")); //$NON-NLS-1$ //$NON-NLS-2$
-        innerIterateElement.addAttribute(new Attribute("conjunction", "and")); //$NON-NLS-1$ //$NON-NLS-2$
+                new TextElement("$oredConditions[].conditionsWithBetweenValue[].condition$")); //$NON-NLS-1$
         innerIterateElement.addElement(
-                new TextElement("$oredConditions[].conditionsWithTimeListValue[].condition$")); //$NON-NLS-1$
-        innerInnerIterateElement = new XmlElement("iterate"); //$NON-NLS-1$
-        innerInnerIterateElement.addAttribute(new Attribute("property", //$NON-NLS-1$
-                "oredConditions[].conditionsWithTimeListValue[].values")); //$NON-NLS-1$
-        innerInnerIterateElement.addAttribute(new Attribute("open", "(")); //$NON-NLS-1$ //$NON-NLS-2$
-        innerInnerIterateElement.addAttribute(new Attribute("close", ")")); //$NON-NLS-1$ //$NON-NLS-2$
-        innerInnerIterateElement.addAttribute(new Attribute("conjunction", ",")); //$NON-NLS-1$ //$NON-NLS-2$
-        innerInnerIterateElement.addElement(new TextElement("#oredConditions[].conditionsWithTimeListValue[].values[]:TIME#")); //$NON-NLS-1$
-        innerIterateElement.addElement(innerInnerIterateElement);
+                new TextElement("#oredConditions[].conditionsWithBetweenValue[].values[0]# and")); //$NON-NLS-1$
+        innerIterateElement.addElement(
+                new TextElement("#oredConditions[].conditionsWithBetweenValue[].values[1]#")); //$NON-NLS-1$
         outerIterateElement.addElement(innerIterateElement);
 
         outerIterateElement.addElement(new TextElement(")")); //$NON-NLS-1$

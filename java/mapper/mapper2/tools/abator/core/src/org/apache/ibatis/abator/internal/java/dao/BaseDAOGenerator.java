@@ -33,6 +33,7 @@ import org.apache.ibatis.abator.api.dom.java.Interface;
 import org.apache.ibatis.abator.api.dom.java.JavaVisibility;
 import org.apache.ibatis.abator.api.dom.java.Method;
 import org.apache.ibatis.abator.api.dom.java.Parameter;
+import org.apache.ibatis.abator.api.dom.java.PrimitiveTypeWrapper;
 import org.apache.ibatis.abator.api.dom.java.TopLevelClass;
 import org.apache.ibatis.abator.config.FullyQualifiedTable;
 import org.apache.ibatis.abator.config.TableConfiguration;
@@ -476,12 +477,25 @@ public class BaseDAOGenerator implements DAOGenerator {
 
             if (returnType != null) {
                 if ("Object".equals(returnType.getShortName())) { //$NON-NLS-1$
+                    // no need to cast if the return type is Object
                     method.addBodyLine("return newKey;"); //$NON-NLS-1$
                 } else {
                     sb.setLength(0);
-                    sb.append("return ("); //$NON-NLS-1$
-                    sb.append(returnType.getShortName());
-                    sb.append(") newKey;"); //$NON-NLS-1$
+                    
+                    if (returnType.isPrimitive()) {
+                        PrimitiveTypeWrapper ptw = returnType.getPrimitiveTypeWrapper();
+                        sb.append("return (("); //$NON-NLS-1$
+                        sb.append(ptw.getShortName());
+                        sb.append(") newKey"); //$NON-NLS-1$
+                        sb.append(")."); //$NON-NLS-1$
+                        sb.append(ptw.getToPrimitiveMethod());
+                        sb.append(';');
+                    } else {
+                        sb.append("return ("); //$NON-NLS-1$
+                        sb.append(returnType.getShortName());
+                        sb.append(") newKey;"); //$NON-NLS-1$
+                    }
+                    
                     method.addBodyLine(sb.toString());
                 }
             }

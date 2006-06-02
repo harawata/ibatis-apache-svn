@@ -640,6 +640,8 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
             sb.append(cd.getColumnName());
             sb.append(" = #"); //$NON-NLS-1$
             sb.append(cd.getJavaProperty());
+            sb.append(':');
+            sb.append(cd.getResolvedJavaType().getJdbcTypeName());
             sb.append('#');
             answer.addElement(new TextElement(sb.toString()));
         }
@@ -689,6 +691,8 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
             sb.append(cd.getColumnName());
             sb.append(" = #"); //$NON-NLS-1$
             sb.append(cd.getJavaProperty());
+            sb.append(':');
+            sb.append(cd.getResolvedJavaType().getJdbcTypeName());
             sb.append('#');
             answer.addElement(new TextElement(sb.toString()));
         }
@@ -812,6 +816,8 @@ public class SqlMapGeneratorDefaultImpl implements SqlMapGenerator {
             
             sb.append(" = #"); //$NON-NLS-1$
             sb.append(cd.getJavaProperty());
+            sb.append(':');
+            sb.append(cd.getResolvedJavaType().getJdbcTypeName());
             sb.append('#');
             answer.addElement(new TextElement(sb.toString()));
         }

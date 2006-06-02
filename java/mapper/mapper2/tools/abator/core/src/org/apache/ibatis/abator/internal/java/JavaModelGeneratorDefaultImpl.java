@@ -280,7 +280,7 @@ public class JavaModelGeneratorDefaultImpl implements JavaModelGenerator {
 		field = new Field();
 		field.addComment(tableConfiguration.getTable());
 		field.setVisibility(JavaVisibility.PRIVATE);
-		field.setType(FullyQualifiedJavaType.getBooleanInstance());
+		field.setType(FullyQualifiedJavaType.getBooleanPrimitiveInstance());
 		field.setName("combineTypeOr"); //$NON-NLS-1$
 		topLevelClass.addField(field);
 
@@ -288,7 +288,7 @@ public class JavaModelGeneratorDefaultImpl implements JavaModelGenerator {
 		method.addComment(tableConfiguration.getTable());
 		method.setVisibility(JavaVisibility.PUBLIC);
 		method.setName("setCombineTypeOr"); //$NON-NLS-1$
-		method.addParameter(new Parameter(FullyQualifiedJavaType.getBooleanInstance(),
+		method.addParameter(new Parameter(FullyQualifiedJavaType.getBooleanPrimitiveInstance(),
 		        "combineTypeOr")); //$NON-NLS-1$
 		method.addBodyLine("this.combineTypeOr = combineTypeOr;"); //$NON-NLS-1$
 		topLevelClass.addMethod(method);
@@ -296,7 +296,7 @@ public class JavaModelGeneratorDefaultImpl implements JavaModelGenerator {
 		method = new Method();
 		method.addComment(tableConfiguration.getTable());
 		method.setVisibility(JavaVisibility.PUBLIC);
-		method.setReturnType(FullyQualifiedJavaType.getBooleanInstance());
+		method.setReturnType(FullyQualifiedJavaType.getBooleanPrimitiveInstance());
 		method.setName("isCombineTypeOr"); //$NON-NLS-1$
 		method.addBodyLine("return combineTypeOr;"); //$NON-NLS-1$
 		topLevelClass.addMethod(method);

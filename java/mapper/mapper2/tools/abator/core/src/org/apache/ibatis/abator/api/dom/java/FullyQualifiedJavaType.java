@@ -25,7 +25,7 @@ import java.util.List;
 public class FullyQualifiedJavaType implements Comparable {
     private static FullyQualifiedJavaType intInstance = null;
     private static FullyQualifiedJavaType stringInstance = null;
-    private static FullyQualifiedJavaType booleanInstance = null;
+    private static FullyQualifiedJavaType booleanPrimitiveInstance = null;
     private static FullyQualifiedJavaType objectInstance = null;
     private static FullyQualifiedJavaType dateInstance = null;
     
@@ -38,7 +38,7 @@ public class FullyQualifiedJavaType implements Comparable {
     private boolean explicitlyImported;
     private String packageName;
     private boolean primitive;
-    private String wrapperClass;
+    private PrimitiveTypeWrapper primitiveTypeWrapper;
     private List typeArguments;
     
     /**
@@ -61,31 +61,31 @@ public class FullyQualifiedJavaType implements Comparable {
             
             if ("byte".equals(fullyQualifiedName)) { //$NON-NLS-1$
                 primitive = true;
-                wrapperClass = "Byte"; //$NON-NLS-1$
+                primitiveTypeWrapper = PrimitiveTypeWrapper.getByteInstance();
             } else if ("short".equals(fullyQualifiedName)) { //$NON-NLS-1$
                 primitive = true;
-                wrapperClass = "Short"; //$NON-NLS-1$
+                primitiveTypeWrapper = PrimitiveTypeWrapper.getShortInstance();
             } else if ("int".equals(fullyQualifiedName)) { //$NON-NLS-1$
                 primitive = true;
-                wrapperClass = "Integer"; //$NON-NLS-1$
+                primitiveTypeWrapper = PrimitiveTypeWrapper.getIntegerInstance();
             } else if ("long".equals(fullyQualifiedName)) { //$NON-NLS-1$
                 primitive = true;
-                wrapperClass = "Long"; //$NON-NLS-1$
+                primitiveTypeWrapper = PrimitiveTypeWrapper.getLongInstance();
             } else if ("char".equals(fullyQualifiedName)) { //$NON-NLS-1$
                 primitive = true;
-                wrapperClass = "Character"; //$NON-NLS-1$
+                primitiveTypeWrapper = PrimitiveTypeWrapper.getCharacterInstance();
             } else if ("float".equals(fullyQualifiedName)) { //$NON-NLS-1$
                 primitive = true;
-                wrapperClass = "Float"; //$NON-NLS-1$
+                primitiveTypeWrapper = PrimitiveTypeWrapper.getFloatInstance();
             } else if ("double".equals(fullyQualifiedName)) { //$NON-NLS-1$
                 primitive = true;
-                wrapperClass = "Double"; //$NON-NLS-1$
+                primitiveTypeWrapper = PrimitiveTypeWrapper.getDoubleInstance();
             } else if ("boolean".equals(fullyQualifiedName)) { //$NON-NLS-1$
                 primitive = true;
-                wrapperClass = "Boolean"; //$NON-NLS-1$
+                primitiveTypeWrapper = PrimitiveTypeWrapper.getBooleanInstance();
             } else {
                 primitive = false;
-                wrapperClass = null;
+                primitiveTypeWrapper = null;
             }
         } else {
             baseShortName = fullyQualifiedName.substring(lastIndex + 1);
@@ -169,8 +169,8 @@ public class FullyQualifiedJavaType implements Comparable {
     /**
      * @return Returns the wrapperClass.
      */
-    public String getWrapperClass() {
-        return wrapperClass;
+    public PrimitiveTypeWrapper getPrimitiveTypeWrapper() {
+        return primitiveTypeWrapper;
     }
     
     /**
@@ -178,7 +178,7 @@ public class FullyQualifiedJavaType implements Comparable {
      * 
      * @return
      */
-    public static FullyQualifiedJavaType getIntInstance() {
+    public static final FullyQualifiedJavaType getIntInstance() {
         if (intInstance == null) {
             intInstance = new FullyQualifiedJavaType("int"); //$NON-NLS-1$
         }
@@ -186,27 +186,32 @@ public class FullyQualifiedJavaType implements Comparable {
         return intInstance;
     }
 
-    public static FullyQualifiedJavaType getNewMapInstance() {
+    public static final FullyQualifiedJavaType getNewMapInstance() {
         // always return a new instance because the type may be parameterized
         return new FullyQualifiedJavaType("java.util.Map"); //$NON-NLS-1$
     }
 
-    public static FullyQualifiedJavaType getNewListInstance() {
+    public static final FullyQualifiedJavaType getNewListInstance() {
         // always return a new instance because the type may be parameterized
         return new FullyQualifiedJavaType("java.util.List"); //$NON-NLS-1$
     }
 
-    public static FullyQualifiedJavaType getNewHashMapInstance() {
+    public static final FullyQualifiedJavaType getNewHashMapInstance() {
         // always return a new instance because the type may be parameterized
         return new FullyQualifiedJavaType("java.util.HashMap"); //$NON-NLS-1$
     }
 
-    public static FullyQualifiedJavaType getNewArrayListInstance() {
+    public static final FullyQualifiedJavaType getNewArrayListInstance() {
         // always return a new instance because the type may be parameterized
         return new FullyQualifiedJavaType("java.util.ArrayList"); //$NON-NLS-1$
     }
 
-    public static FullyQualifiedJavaType getStringInstance() {
+    public static final FullyQualifiedJavaType getNewIteratorInstance() {
+        // always return a new instance because the type may be parameterized
+        return new FullyQualifiedJavaType("java.util.Iterator"); //$NON-NLS-1$
+    }
+
+    public static final FullyQualifiedJavaType getStringInstance() {
         if (stringInstance == null) {
             stringInstance = new FullyQualifiedJavaType("java.lang.String"); //$NON-NLS-1$
         }
@@ -214,15 +219,15 @@ public class FullyQualifiedJavaType implements Comparable {
         return stringInstance;
     }
     
-    public static FullyQualifiedJavaType getBooleanInstance() {
-        if (booleanInstance == null) {
-            booleanInstance = new FullyQualifiedJavaType("boolean"); //$NON-NLS-1$
+    public static final FullyQualifiedJavaType getBooleanPrimitiveInstance() {
+        if (booleanPrimitiveInstance == null) {
+            booleanPrimitiveInstance = new FullyQualifiedJavaType("boolean"); //$NON-NLS-1$
         }
         
-        return booleanInstance;
+        return booleanPrimitiveInstance;
     }
     
-    public static FullyQualifiedJavaType getObjectInstance() {
+    public static final FullyQualifiedJavaType getObjectInstance() {
         if (objectInstance == null) {
             objectInstance = new FullyQualifiedJavaType("java.lang.Object"); //$NON-NLS-1$
         }
@@ -230,7 +235,7 @@ public class FullyQualifiedJavaType implements Comparable {
         return objectInstance;
     }
 
-    public static FullyQualifiedJavaType getDateInstance() {
+    public static final FullyQualifiedJavaType getDateInstance() {
         if (dateInstance == null) {
             dateInstance = new FullyQualifiedJavaType("java.util.Date"); //$NON-NLS-1$
         }

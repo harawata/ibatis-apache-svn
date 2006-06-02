@@ -33,6 +33,7 @@ import org.apache.ibatis.abator.api.dom.java.Interface;
 import org.apache.ibatis.abator.api.dom.java.JavaVisibility;
 import org.apache.ibatis.abator.api.dom.java.Method;
 import org.apache.ibatis.abator.api.dom.java.Parameter;
+import org.apache.ibatis.abator.api.dom.java.PrimitiveTypeWrapper;
 import org.apache.ibatis.abator.api.dom.java.TopLevelClass;
 import org.apache.ibatis.abator.config.FullyQualifiedTable;
 import org.apache.ibatis.abator.config.TableConfiguration;
@@ -503,9 +504,21 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
                     method.addBodyLine("return newKey;"); //$NON-NLS-1$
                 } else {
                     sb.setLength(0);
-                    sb.append("return ("); //$NON-NLS-1$
-                    sb.append(returnType.getShortName());
-                    sb.append(") newKey;"); //$NON-NLS-1$
+                    
+                    if (returnType.isPrimitive()) {
+                        PrimitiveTypeWrapper ptw = returnType.getPrimitiveTypeWrapper();
+                        sb.append("return (("); //$NON-NLS-1$
+                        sb.append(ptw.getShortName());
+                        sb.append(") newKey"); //$NON-NLS-1$
+                        sb.append(")."); //$NON-NLS-1$
+                        sb.append(ptw.getToPrimitiveMethod());
+                        sb.append(';');
+                    } else {
+                        sb.append("return ("); //$NON-NLS-1$
+                        sb.append(returnType.getShortName());
+                        sb.append(") newKey;"); //$NON-NLS-1$
+                    }
+                    
                     method.addBodyLine(sb.toString());
                 }
             }
@@ -1049,7 +1062,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
                         .getFullyQualifiedJavaType();
                 if (fqjt.isPrimitive()) {
                     sb.append("new "); //$NON-NLS-1$
-                    sb.append(fqjt.getWrapperClass());
+                    sb.append(fqjt.getPrimitiveTypeWrapper().getShortName());
                     sb.append('(');
                     sb.append("example."); //$NON-NLS-1$
                     sb.append(JavaBeansUtil

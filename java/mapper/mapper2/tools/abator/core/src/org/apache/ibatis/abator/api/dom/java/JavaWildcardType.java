@@ -26,7 +26,9 @@ public class JavaWildcardType extends FullyQualifiedJavaType {
     private boolean extendsType;
 
     /**
-     * @param fullyQualifiedName
+     * @param fullyQualifiedName the fully qualified base type name
+     * @param extendsType if true, this is an "extends" wildcard, else it is
+     *  a "super" wildcard
      */
     public JavaWildcardType(String fullyQualifiedName, boolean extendsType) {
         super(fullyQualifiedName);
