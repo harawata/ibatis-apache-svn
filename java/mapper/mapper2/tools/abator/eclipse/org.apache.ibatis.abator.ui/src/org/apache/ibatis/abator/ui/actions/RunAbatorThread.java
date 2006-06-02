@@ -128,10 +128,4 @@ public class RunAbatorThread implements IWorkspaceRunnable {
             monitor.done();
         }
     }
-
-    private void checkForCancel(IProgressMonitor monitor) {
-        if (monitor != null && monitor.isCanceled()) {
-            throw new OperationCanceledException();
-        }
-    }
 }

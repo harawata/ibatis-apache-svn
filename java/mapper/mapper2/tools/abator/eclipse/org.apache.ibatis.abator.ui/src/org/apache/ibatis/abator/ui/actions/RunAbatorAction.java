@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.ibatis.abator.exception.GenerationRuntimeException;
+import org.apache.ibatis.abator.ui.content.AbatorConfigurationFileAdapter;
 import org.apache.ibatis.abator.ui.plugin.AbatorUIPlugin;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -96,8 +97,10 @@ public class RunAbatorAction implements IObjectActionDelegate {
      */
     public void selectionChanged(IAction action, ISelection selection) {
         StructuredSelection ss = (StructuredSelection) selection;
-        IFile file = (IFile) ss.getFirstElement();
-        selectedFile = file;
+        AbatorConfigurationFileAdapter adapter = (AbatorConfigurationFileAdapter) ss.getFirstElement();
+        if (adapter != null) {
+            selectedFile = adapter.getBaseFile();
+        }
     }
 
     private void handleException(Exception exception, Shell shell) {

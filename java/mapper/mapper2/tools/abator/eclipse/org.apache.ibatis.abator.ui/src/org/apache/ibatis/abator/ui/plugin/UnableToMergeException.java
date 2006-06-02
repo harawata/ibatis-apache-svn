@@ -20,6 +20,8 @@ package org.apache.ibatis.abator.ui.plugin;
  */
 public class UnableToMergeException extends Exception {
 
+    static final long serialVersionUID = 4789070198337946683L;
+    
 	/**
 	 * 
 	 */

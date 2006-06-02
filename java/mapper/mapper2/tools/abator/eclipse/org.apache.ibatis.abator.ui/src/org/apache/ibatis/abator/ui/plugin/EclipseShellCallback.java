@@ -30,8 +30,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
@@ -54,7 +52,7 @@ public class EclipseShellCallback implements ShellCallback {
     private Map sourceFolders;
 
     /**
-     *  
+     * 
      */
     public EclipseShellCallback() {
         super();
@@ -71,14 +69,9 @@ public class EclipseShellCallback implements ShellCallback {
      */
     public File getDirectory(String targetProject, String targetPackage,
             List warnings) throws ShellException {
-        try {
-            IFolder folder = getFolder(targetProject, targetPackage);
+        IFolder folder = getFolder(targetProject, targetPackage);
 
-            return folder.getRawLocation().toFile();
-        } catch (CoreException e) {
-            // TODO - improve this exception handling
-            throw new ShellException(e.getStatus().getMessage());
-        }
+        return folder.getRawLocation().toFile();
     }
 
     /*
@@ -90,25 +83,20 @@ public class EclipseShellCallback implements ShellCallback {
      */
     public String mergeJavaFile(GeneratedJavaFile newFile, String javadocTag,
             List warnings) throws ShellException {
-        try {
-            IFolder folder = getFolder(newFile.getTargetProject(), newFile
-                    .getTargetPackage());
+        IFolder folder = getFolder(newFile.getTargetProject(), newFile
+                .getTargetPackage());
 
-            IFile file = folder.getFile(newFile.getFileName());
-            String source;
-            if (file.exists()) {
-                JavaFileMerger merger = new JavaFileMerger(newFile, file);
-                source = merger.getMergedSource();
+        IFile file = folder.getFile(newFile.getFileName());
+        String source;
+        if (file.exists()) {
+            JavaFileMerger merger = new JavaFileMerger(newFile, file);
+            source = merger.getMergedSource();
 
-            } else {
-                source = formatJavaSource(newFile.getContent());
-            }
-
-            return source;
-        } catch (CoreException e) {
-            // TODO - improve this exception handling
-            throw new ShellException(e.getStatus().getMessage());
+        } else {
+            source = formatJavaSource(newFile.getFormattedContent());
         }
+
+        return source;
     }
 
     /*
@@ -121,7 +109,7 @@ public class EclipseShellCallback implements ShellCallback {
             IPackageFragmentRoot root = getSourceFolder(project);
             root.getCorrespondingResource().refreshLocal(
                     IResource.DEPTH_INFINITE, null);
-        } catch (CoreException e) {
+        } catch (Exception e) {
             // ignore
             ;
         }
@@ -150,28 +138,36 @@ public class EclipseShellCallback implements ShellCallback {
     }
 
     private IJavaProject getJavaProject(String javaProjectName)
-            throws CoreException {
+            throws ShellException {
         IJavaProject javaProject = (IJavaProject) projects.get(javaProjectName);
         if (javaProject == null) {
             IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
             IProject project = root.getProject(javaProjectName);
 
             if (project.exists()) {
-                if (project.hasNature(JavaCore.NATURE_ID)) {
+                boolean isJavaProject;
+                try {
+                    isJavaProject = project.hasNature(JavaCore.NATURE_ID);
+                } catch (CoreException e) {
+                    throw new ShellException(e.getStatus().getMessage(), e);
+                }
+                if (isJavaProject) {
                     javaProject = JavaCore.create(project);
                 } else {
-                    Status status = new Status(IStatus.ERROR, AbatorUIPlugin
-                            .getPluginId(), IStatus.ERROR, "Project "
-                            + javaProjectName + " is not a Java Project", null);
+                    StringBuffer sb = new StringBuffer();
+                    sb.append("Project ");
+                    sb.append(javaProjectName);
+                    sb.append(" is not a Java project");
 
-                    throw new CoreException(status);
+                    throw new ShellException(sb.toString());
                 }
             } else {
-                Status status = new Status(IStatus.ERROR, AbatorUIPlugin
-                        .getPluginId(), IStatus.ERROR, "Project "
-                        + javaProjectName + " does not exist", null);
+                StringBuffer sb = new StringBuffer();
+                sb.append("Project ");
+                sb.append(javaProjectName);
+                sb.append(" does not exist");
 
-                throw new CoreException(status);
+                throw new ShellException(sb.toString());
             }
 
             projects.put(javaProjectName, javaProject);
@@ -181,16 +177,20 @@ public class EclipseShellCallback implements ShellCallback {
     }
 
     private IFolder getFolder(String targetProject, String targetPackage)
-            throws CoreException {
+            throws ShellException {
         String key = targetProject + targetPackage;
         IFolder folder = (IFolder) folders.get(key);
         if (folder == null) {
             IPackageFragmentRoot root = getSourceFolder(targetProject);
             IPackageFragment packageFragment = getPackage(root, targetPackage);
 
-            folder = (IFolder) packageFragment.getCorrespondingResource();
+            try {
+                folder = (IFolder) packageFragment.getCorrespondingResource();
 
-            folders.put(key, folder);
+                folders.put(key, folder);
+            } catch (CoreException e) {
+                throw new ShellException(e.getStatus().getMessage(), e);
+            }
         }
 
         return folder;
@@ -204,10 +204,16 @@ public class EclipseShellCallback implements ShellCallback {
      * @return
      */
     private IPackageFragmentRoot getFirstSourceFolder(IJavaProject javaProject)
-            throws CoreException {
+            throws ShellException {
 
         // find the first non-JAR package fragment root
-        IPackageFragmentRoot[] roots = javaProject.getPackageFragmentRoots();
+        IPackageFragmentRoot[] roots;
+        try {
+            roots = javaProject.getPackageFragmentRoots();
+        } catch (CoreException e) {
+            throw new ShellException(e.getStatus().getMessage(), e);
+        }
+
         IPackageFragmentRoot srcFolder = null;
         for (int i = 0; i < roots.length; i++) {
             if (roots[i].isArchive() || roots[i].isReadOnly()
@@ -220,21 +226,28 @@ public class EclipseShellCallback implements ShellCallback {
         }
 
         if (srcFolder == null) {
-            Status status = new Status(IStatus.ERROR, AbatorUIPlugin
-                    .getPluginId(), IStatus.ERROR,
-                    "Cannot find source folder for project "
-                            + javaProject.getElementName(), null);
-            throw new CoreException(status);
+            StringBuffer sb = new StringBuffer();
+            sb.append("Cannot find source folder for project ");
+            sb.append(javaProject.getElementName());
+
+            throw new ShellException(sb.toString());
         }
 
         return srcFolder;
     }
 
     private IPackageFragmentRoot getSpecificSourceFolder(
-            IJavaProject javaProject, String sourceFolder) throws CoreException {
+            IJavaProject javaProject, String sourceFolder)
+            throws ShellException {
 
         // find the first non-JAR package fragment root
-        IPackageFragmentRoot[] roots = javaProject.getPackageFragmentRoots();
+        IPackageFragmentRoot[] roots;
+        try {
+            roots = javaProject.getPackageFragmentRoots();
+        } catch (CoreException e) {
+            throw new ShellException(e.getStatus().getMessage(), e);
+        }
+
         IPackageFragmentRoot srcFolder = null;
         for (int i = 0; i < roots.length; i++) {
             if (roots[i].isArchive() || roots[i].isReadOnly()
@@ -249,26 +262,34 @@ public class EclipseShellCallback implements ShellCallback {
         }
 
         if (srcFolder == null) {
-            Status status = new Status(IStatus.ERROR, AbatorUIPlugin
-                    .getPluginId(), IStatus.ERROR, "Cannot find source folder "
-                    + sourceFolder + " for project "
-                    + javaProject.getElementName(), null);
-            throw new CoreException(status);
+            StringBuffer sb = new StringBuffer();
+            sb.append("Cannot find source folder ");
+            sb.append(sourceFolder);
+            sb.append(" for project ");
+            sb.append(javaProject.getElementName());
+
+            throw new ShellException(sb.toString());
         }
 
         return srcFolder;
     }
 
     private IPackageFragment getPackage(IPackageFragmentRoot srcFolder,
-            String packageName) throws CoreException {
+            String packageName) throws ShellException {
 
         IPackageFragment fragment = srcFolder.getPackageFragment(packageName);
-        if (!fragment.exists()) {
-            fragment = srcFolder.createPackageFragment(packageName, true, null);
-        }
 
-        fragment.getCorrespondingResource().refreshLocal(IResource.DEPTH_ONE,
-                null);
+        try {
+            if (!fragment.exists()) {
+                fragment = srcFolder.createPackageFragment(packageName, true,
+                        null);
+            }
+
+            fragment.getCorrespondingResource().refreshLocal(
+                    IResource.DEPTH_ONE, null);
+        } catch (CoreException e) {
+            throw new ShellException(e.getStatus().getMessage(), e);
+        }
 
         return fragment;
     }
@@ -283,7 +304,7 @@ public class EclipseShellCallback implements ShellCallback {
     }
 
     private IPackageFragmentRoot getSourceFolder(String targetProject)
-            throws CoreException {
+            throws ShellException {
         IPackageFragmentRoot answer = (IPackageFragmentRoot) sourceFolders
                 .get(targetProject);
         if (answer == null) {
@@ -311,7 +332,7 @@ public class EclipseShellCallback implements ShellCallback {
             } else {
                 answer = getSpecificSourceFolder(javaProject, sourceFolder);
             }
-            
+
             sourceFolders.put(targetProject, answer);
         }
 

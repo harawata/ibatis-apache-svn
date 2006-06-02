@@ -2,31 +2,11 @@
 <?eclipse version="3.0"?>
 <plugin>
 
-   <extension
-         point="org.eclipse.core.runtime.contentTypes">
-      <content-type id="abatorConfigurationFileByElement"
-            file-extensions="xml"
-            name="Abator for iBATIS Configuration File"
-            base-type="org.eclipse.core.runtime.xml"
-            priority="high">
-         <describer class="org.eclipse.core.runtime.content.XMLRootElementContentDescriber">
-            <parameter
-                  value="abatorConfiguration"
-                  name="element"/>
-         </describer>
-      </content-type>
-   </extension>
-
    <extension point="org.eclipse.ui.popupMenus">
       <objectContribution
-            objectClass="org.eclipse.core.resources.IFile"
-            nameFilter="*.xml"
+            objectClass="org.apache.ibatis.abator.ui.content.AbatorConfigurationFileAdapter"
+            adaptable="true"
             id="org.apache.ibatis.abator.ui.contribution1">
-         <visibility>
-            <objectState
-                  value="org.apache.ibatis.abator.ui.abatorConfigurationFileByElement"
-                  name="contentTypeId"/>
-         </visibility>
          <action
                enablesFor="1"
                label="Generate iBATIS Artifacts"
@@ -89,6 +69,14 @@
             class="org.apache.ibatis.abator.ui.ant.AbatorUIAntTask"
             library="abatoruiant.jar"
             name="abator.generate"/>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.eclipse.core.resources.IFile"
+            class="org.apache.ibatis.abator.ui.content.AdapterFactory">
+         <adapter type="org.apache.ibatis.abator.ui.content.AbatorConfigurationFileAdapter"/>
+      </factory>
    </extension>
 
 </plugin>

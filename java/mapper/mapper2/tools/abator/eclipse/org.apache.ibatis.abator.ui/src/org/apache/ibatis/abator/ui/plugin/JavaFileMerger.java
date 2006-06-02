@@ -1,5 +1,5 @@
 /*
- *  Copyright 2005 The Apache Software Foundation
+ *  Copyright 2005, 2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,28 +20,27 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.apache.ibatis.abator.api.FullyQualifiedJavaType;
 import org.apache.ibatis.abator.api.GeneratedJavaFile;
+import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
+import org.apache.ibatis.abator.exception.ShellException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
+import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Modifier;
-import org.eclipse.jdt.core.dom.Name;
-import org.eclipse.jdt.core.dom.QualifiedName;
-import org.eclipse.jdt.core.dom.SimpleName;
+import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.TagElement;
+import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
@@ -62,69 +61,59 @@ public class JavaFileMerger {
     private IFile existingFile;
 
     private class GatherNewItemsVisitor extends ASTVisitor {
-        private List methods;
-
-        private List fields;
+        private List newNodes;
 
         /**
-         *  
+         * 
          */
         public GatherNewItemsVisitor() {
             super();
-            methods = new ArrayList();
-            fields = new ArrayList();
+            newNodes = new ArrayList();
         }
 
         public boolean visit(FieldDeclaration node) {
-            fields.add(node);
+            newNodes.add(node);
 
             return false;
         }
 
         public boolean visit(MethodDeclaration node) {
-            methods.add(node);
+            newNodes.add(node);
 
             return false;
         }
-
-        public List getFields() {
-            return fields;
+        
+        public boolean visit(TypeDeclaration node) {
+            // make sure we don't pick up the top level class
+            if (node.getParent().getNodeType() == ASTNode.COMPILATION_UNIT) {
+                return true;
+            } else {
+                newNodes.add(node);
+                return false;
+            }
         }
-
-        public List getMethods() {
-            return methods;
+        
+        public List getNewNodes() {
+            return newNodes;
         }
     };
 
     private class ExistingJavaFileVisitor extends ASTVisitor {
         private TypeDeclaration typeDeclaration;
 
-        private CompilationUnit compilationUnit;
-
         /**
-         *  
+         * 
          */
-        public ExistingJavaFileVisitor(CompilationUnit compilationUnit) {
+        public ExistingJavaFileVisitor() {
             super();
-            this.compilationUnit = compilationUnit;
         }
 
         /**
          * Find the Abator generated fields and delete them
          */
         public boolean visit(FieldDeclaration node) {
-            Javadoc jd = node.getJavadoc();
-            if (jd != null) {
-                List tags = jd.tags();
-                Iterator tagIterator = tags.iterator();
-                while (tagIterator.hasNext()) {
-                    TagElement tag = (TagElement) tagIterator.next();
-                    String tagName = tag.getTagName();
-                    if ("@abatorgenerated".equals(tagName)) {
-                        node.delete();
-                        break;
-                    }
-                }
+            if (isAbatorGenerated(node)) {
+                node.delete();
             }
 
             return false;
@@ -134,30 +123,24 @@ public class JavaFileMerger {
          * Find the Abator generated methods and delete them
          */
         public boolean visit(MethodDeclaration node) {
-            Javadoc jd = node.getJavadoc();
-            if (jd != null) {
-                List tags = jd.tags();
-                Iterator tagIterator = tags.iterator();
-                while (tagIterator.hasNext()) {
-                    TagElement tag = (TagElement) tagIterator.next();
-                    String tagName = tag.getTagName();
-                    if ("@abatorgenerated".equals(tagName)) {
-                        node.delete();
-                        break;
-                    }
-                }
+            if (isAbatorGenerated(node)) {
+                node.delete();
             }
 
             return false;
         }
 
         public boolean visit(TypeDeclaration node) {
-            // make sure we only pick up the top level public type
-            if (node.getParent().equals(compilationUnit)
-                    && (node.getModifiers() & Modifier.PUBLIC) > 0) {
+            // make sure we only pick up the top level type
+            if (node.getParent().getNodeType() == ASTNode.COMPILATION_UNIT) {
                 typeDeclaration = node;
                 return true;
             } else {
+                // is this an Abator generated inner class?  If so, then delete
+                if (isAbatorGenerated(node)) {
+                    node.delete();
+                }
+
                 return false;
             }
         }
@@ -165,10 +148,29 @@ public class JavaFileMerger {
         public TypeDeclaration getTypeDeclaration() {
             return typeDeclaration;
         }
+        
+        private boolean isAbatorGenerated(BodyDeclaration node) {
+            boolean rc = false;
+            Javadoc jd = node.getJavadoc();
+            if (jd != null) {
+                List tags = jd.tags();
+                Iterator tagIterator = tags.iterator();
+                while (tagIterator.hasNext()) {
+                    TagElement tag = (TagElement) tagIterator.next();
+                    String tagName = tag.getTagName();
+                    if ("@abatorgenerated".equals(tagName)) { //$NON-NLS-1$
+                        rc = true;
+                        break;
+                    }
+                }
+            }
+            
+            return rc;
+        }
     };
 
     /**
-     *  
+     * 
      */
     public JavaFileMerger(GeneratedJavaFile generatedJavaFile,
             IFile existingFile) {
@@ -177,48 +179,55 @@ public class JavaFileMerger {
         this.existingFile = existingFile;
     }
 
-    public String getMergedSource() throws CoreException {
-        ASTParser astParser = ASTParser.newParser(AST.JLS2);
+    public String getMergedSource() throws ShellException {
+        ASTParser astParser = ASTParser.newParser(AST.JLS3);
 
         ICompilationUnit icu = JavaCore.createCompilationUnitFrom(existingFile);
-        IDocument document = new Document(icu.getSource());
+        IDocument document;
+        try {
+            document = new Document(icu.getSource());
+        } catch (CoreException e) {
+            throw new ShellException(e.getStatus().getMessage(), e);
+        }
 
         // delete Abator generated stuff, and collect imports
         astParser.setSource(icu);
         CompilationUnit cu = (CompilationUnit) astParser.createAST(null);
         AST ast = cu.getAST();
 
-        ExistingJavaFileVisitor visitor = new ExistingJavaFileVisitor(cu);
+        ExistingJavaFileVisitor visitor = new ExistingJavaFileVisitor();
 
         cu.recordModifications();
         cu.accept(visitor);
 
         TypeDeclaration typeDeclaration = visitor.getTypeDeclaration();
         if (typeDeclaration == null) {
-            Status status = new Status(IStatus.ERROR, AbatorUIPlugin
-                    .getPluginId(), IStatus.ERROR,
-                    "No public types defined in the file "
-                            + existingFile.getName(), null);
-            throw new CoreException(status);
+            StringBuffer sb = new StringBuffer();
+            sb.append("No types defined in the file ");
+            sb.append(existingFile.getName());
+
+            throw new ShellException(sb.toString());
         }
 
         // reconcile the superinterfaces
         List newSuperInterfaces = getNewSuperInterfaces(typeDeclaration
-                .superInterfaces());
+                .superInterfaceTypes());
         Iterator iter = newSuperInterfaces.iterator();
         while (iter.hasNext()) {
             FullyQualifiedJavaType newSuperInterface = (FullyQualifiedJavaType) iter
                     .next();
-            typeDeclaration.superInterfaces().add(
-                    ast.newSimpleName(newSuperInterface.getShortName()));
+            typeDeclaration.superInterfaceTypes().add(
+                    ast.newSimpleType(ast.newSimpleName(newSuperInterface
+                            .getShortName())));
         }
 
         // set the superclass
         if (generatedJavaFile.getSuperClass() != null) {
-            typeDeclaration.setSuperclass(ast.newSimpleName(generatedJavaFile
-                    .getSuperClass().getShortName()));
+            typeDeclaration.setSuperclassType(ast.newSimpleType(ast
+                    .newSimpleName(generatedJavaFile.getSuperClass()
+                            .getShortName())));
         } else {
-            typeDeclaration.setSuperclass(null);
+            typeDeclaration.setSuperclassType(null);
         }
 
         // interface or class?
@@ -242,10 +251,8 @@ public class JavaFileMerger {
         try {
             textEdit.apply(document);
         } catch (BadLocationException e) {
-            Status status = new Status(IStatus.ERROR, AbatorUIPlugin
-                    .getPluginId(), IStatus.ERROR,
-                    "BadLocationException removing prior fields and methods", e);
-            throw new CoreException(status);
+            throw new ShellException(
+                    "BadLocationException removing prior fields and methods");
         }
 
         // regenerate the CompilationUnit to reflect all the deletes
@@ -267,7 +274,8 @@ public class JavaFileMerger {
 
         // Now parse all the new fields and methods, then gather the new
         // methods and fields with a visitor
-        astParser.setSource(generatedJavaFile.getContent().toCharArray());
+        astParser.setSource(generatedJavaFile.getFormattedContent()
+                .toCharArray());
         CompilationUnit newCu = (CompilationUnit) astParser.createAST(null);
 
         GatherNewItemsVisitor newVisitor = new GatherNewItemsVisitor();
@@ -280,13 +288,8 @@ public class JavaFileMerger {
         ListRewrite listRewrite = rewrite.getListRewrite(topLevelType,
                 TypeDeclaration.BODY_DECLARATIONS_PROPERTY);
 
-        iter = newVisitor.getFields().iterator();
+        iter = newVisitor.getNewNodes().iterator();
         int i = 0;
-        while (iter.hasNext()) {
-            listRewrite.insertAt((ASTNode) iter.next(), i++, null);
-        }
-
-        iter = newVisitor.getMethods().iterator();
         while (iter.hasNext()) {
             listRewrite.insertAt((ASTNode) iter.next(), i++, null);
         }
@@ -295,10 +298,8 @@ public class JavaFileMerger {
         try {
             textEdit.apply(document);
         } catch (BadLocationException e) {
-            Status status = new Status(IStatus.ERROR, AbatorUIPlugin
-                    .getPluginId(), IStatus.ERROR,
-                    "BadLocationException adding new fields and methods", e);
-            throw new CoreException(status);
+            throw new ShellException(
+                    "BadLocationException adding new fields and methods");
         }
 
         String newSource = document.get();
@@ -316,15 +317,13 @@ public class JavaFileMerger {
             Iterator iter = existingInterfaces.iterator();
             boolean found = false;
             while (iter.hasNext()) {
-                Name name = (Name) iter.next();
-                if (name.isSimpleName()) {
-                    if (((SimpleName) name).getIdentifier().equals(
-                            newInterface.getShortName())) {
-                        found = true;
-                    }
-                } else {
-                    if (((QualifiedName) name).getName().getIdentifier()
-                            .equals(newInterface.getShortName())) {
+                Type type = (Type) iter.next();
+                if (type.isSimpleType()) {
+                    SimpleType st = (SimpleType) type;
+
+                    String s = st.getName().getFullyQualifiedName();
+
+                    if (s.equals(newInterface.getShortName())) {
                         found = true;
                     }
                 }
@@ -367,7 +366,7 @@ public class JavaFileMerger {
     }
 
     private String[] parseName(String name) {
-        StringTokenizer st = new StringTokenizer(name, ".");
+        StringTokenizer st = new StringTokenizer(name, "."); //$NON-NLS-1$
 
         String[] answer = new String[st.countTokens()];
 
