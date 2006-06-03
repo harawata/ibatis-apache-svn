@@ -36,6 +36,7 @@ typeName CDATA #IMPLIED
 nullValue CDATA #IMPLIED
 mode (IN | OUT | INOUT) #IMPLIED
 typeHandler CDATA #IMPLIED
+resultMap CDATA #IMPLIED
 >
 <!ELEMENT resultMap (result+, discriminator?)>
 <!ATTLIST resultMap

@@ -35,6 +35,7 @@ public class BasicParameterMapping implements ParameterMapping {
   private boolean inputAllowed;
   private boolean outputAllowed;
   private Class javaType;
+  private String resultMapName;
 
   private String errorString;
 
@@ -134,7 +135,7 @@ public class BasicParameterMapping implements ParameterMapping {
 
   /**
    * user-defined or REF types
-   * 
+   *
    * @return typeName
    */
   public String getTypeName() {
@@ -147,6 +148,14 @@ public class BasicParameterMapping implements ParameterMapping {
    */
   public void setTypeName(String typeName) {
     this.typeName = typeName;
+  }
+
+  public String getResultMapName() {
+	  return resultMapName;
+  }
+
+  public void setResultMapName(String resultMapName) {
+	  this.resultMapName = resultMapName;
   }
 
 }

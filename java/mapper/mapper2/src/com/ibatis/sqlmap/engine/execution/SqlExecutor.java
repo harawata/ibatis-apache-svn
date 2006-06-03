@@ -23,6 +23,8 @@ import com.ibatis.sqlmap.engine.mapping.statement.RowHandlerCallback;
 import com.ibatis.sqlmap.engine.scope.ErrorContext;
 import com.ibatis.sqlmap.engine.scope.RequestScope;
 import com.ibatis.sqlmap.engine.scope.SessionScope;
+import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
+import com.ibatis.sqlmap.engine.mapping.statement.DefaultRowHandler;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -239,7 +241,7 @@ public class SqlExecutor {
       rows = cs.getUpdateCount();
 
       errorContext.setMoreInfo("Check the output parameters (retrieval of output parameters failed).");
-      retrieveOutputParameters(cs, mappings, parameters);
+      retrieveOutputParameters(request, cs, mappings, parameters, null);
     } finally {
       closeStatement(cs);
     }
@@ -298,7 +300,7 @@ public class SqlExecutor {
       while (cs.getMoreResults());
 
       errorContext.setMoreInfo("Check the output parameters (retrieval of output parameters failed).");
-      retrieveOutputParameters(cs, mappings, parameters);
+      retrieveOutputParameters( request, cs, mappings, parameters, callback);
 
     } finally {
       try {
@@ -347,12 +349,30 @@ public class SqlExecutor {
   // Private Methods
   //
 
-  private void retrieveOutputParameters(CallableStatement cs, ParameterMapping[] mappings, Object[] parameters) throws SQLException {
+  private void retrieveOutputParameters(RequestScope request, CallableStatement cs, ParameterMapping[] mappings, Object[] parameters, RowHandlerCallback callback) throws SQLException {
     for (int i = 0; i < mappings.length; i++) {
       BasicParameterMapping mapping = ((BasicParameterMapping) mappings[i]);
       if (mapping.isOutputAllowed()) {
-        Object o = mapping.getTypeHandler().getResult(cs, i + 1);
-        parameters[i] = o;
+		if ( "java.sql.ResultSet".equalsIgnoreCase(mapping.getJavaTypeName()) )  {
+    		  ResultSet rs = (ResultSet) cs.getObject( i + 1 );
+    		  ResultMap resultMap;
+    		  if ( mapping.getResultMapName() == null ) {
+    			 resultMap =  request.getResultMap();
+    			 handleResults(request, resultMap, rs, callback);
+    		  }
+    		  else {
+    			 ExtendedSqlMapClient client = (ExtendedSqlMapClient)request.getSession().getSqlMapClient();
+    		     resultMap =  client.getDelegate().getResultMap( mapping.getResultMapName() );
+    		     DefaultRowHandler rowHandler = new DefaultRowHandler();
+    		     RowHandlerCallback handlerCallback = new RowHandlerCallback(resultMap, null, rowHandler);
+    		     handleResults(request, resultMap, rs, handlerCallback);
+    		     parameters[i] = rowHandler.getList();
+    		  }
+    		  rs.close();
+    	  }
+    	  else {
+              parameters[i] = mapping.getTypeHandler().getResult(cs, i + 1);
+	      }
       }
     }
   }
@@ -367,6 +387,26 @@ public class SqlExecutor {
           cs.registerOutParameter(i + 1, mapping.getJdbcType());
         }
       }
+    }
+  }
+
+  private void handleResults(RequestScope request, ResultMap resultMap, ResultSet rs, RowHandlerCallback callback) throws SQLException {
+	ResultMap orig = request.getResultMap();
+    try {
+      request.setResultSet(rs);
+      if (resultMap != null) {
+    	request.setResultMap( resultMap );
+
+
+        // Get Results
+        while (rs.next()) {
+          Object[] columnValues = resultMap.resolveSubMap(request, rs).getResults(request, rs);
+          callback.handleResultObject(request, columnValues, rs);
+        }
+      }
+    } finally {
+      request.setResultSet(null);
+      request.setResultMap(orig);
     }
   }
 

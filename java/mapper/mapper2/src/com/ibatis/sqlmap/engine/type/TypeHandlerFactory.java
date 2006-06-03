@@ -106,6 +106,7 @@ public class TypeHandlerFactory {
     putTypeAlias("arraylist", ArrayList.class.getName());
     putTypeAlias("collection", Collection.class.getName());
     putTypeAlias("iterator", Iterator.class.getName());
+    putTypeAlias("cursor", java.sql.ResultSet.class.getName());
 
   }
 
@@ -206,7 +207,7 @@ public class TypeHandlerFactory {
     } else {
       value = string;
     }
-    
+
     return value;
   }
 

@@ -26,8 +26,8 @@ import java.util.Iterator;
 
 public class SqlMapParser extends BaseParser {
 
-  private static final Log log = LogFactory.getLog(SqlMapParser.class);	
-	
+  private static final Log log = LogFactory.getLog(SqlMapParser.class);
+
   protected final NodeletParser parser = new NodeletParser();
 
   public SqlMapParser(Variables vars) {
@@ -246,12 +246,14 @@ public class SqlMapParser extends BaseParser {
         String jdbcType = childAttributes.getProperty("jdbcType");
         String type     = childAttributes.getProperty("typeName");
         String javaType = childAttributes.getProperty("javaType");
+        String resultMap = childAttributes.getProperty("resultMap");
         String nullValue = childAttributes.getProperty("nullValue");
         String mode = childAttributes.getProperty("mode");
         String callback = childAttributes.getProperty("typeHandler");
 
         callback = vars.typeHandlerFactory.resolveAlias(callback);
         javaType = vars.typeHandlerFactory.resolveAlias(javaType);
+        resultMap = applyNamespace( resultMap );
 
         vars.errorCtx.setObjectId(propertyName + " mapping of the " + vars.currentParameterMap.getId() + " parameter map");
 
@@ -279,6 +281,7 @@ public class SqlMapParser extends BaseParser {
         mapping.setPropertyName(propertyName);
         mapping.setJdbcTypeName(jdbcType);
         mapping.setTypeName(type);
+        mapping.setResultMapName( resultMap );
         mapping.setNullValue(nullValue);
         if (mode != null && mode.length() > 0) {
           mapping.setMode(mode);
@@ -305,7 +308,7 @@ public class SqlMapParser extends BaseParser {
 
         vars.currentResultMap.setDiscriminator(vars.discriminator);
         vars.discriminator = null;
-        
+
         vars.client.getDelegate().addResultMap(vars.currentResultMap);
 
         vars.errorCtx.setMoreInfo(null);
