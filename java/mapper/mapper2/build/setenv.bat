@@ -1,3 +1,4 @@
+echo Using %JAVA_HOME%
 
 set BUILD_CP=%CLASSPATH%
 set BUILD_CP=%BUILD_CP%;%JAVA_HOME%\lib\tools.jar;
