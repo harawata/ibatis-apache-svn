@@ -187,6 +187,16 @@ public class SqlMapConfigParser extends BaseParser {
         }
 
         AccessPlanFactory.setBytecodeEnhancementEnabled(vars.client.getDelegate().isEnhancementEnabled());
+        
+        String defaultStatementTimeout = attributes.getProperty("defaultStatementTimeout");
+        if (defaultStatementTimeout != null) {
+          try {
+            Integer defaultTimeout = Integer.valueOf(defaultStatementTimeout);
+            vars.defaultStatementTimeout = defaultTimeout;
+          } catch (NumberFormatException e) {
+            throw new SqlMapException("Specified defaultStatementTimeout is not a valid integer");
+          }
+        }
       }
     });
   }

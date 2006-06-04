@@ -115,6 +115,8 @@ public abstract class BaseParser {
     public DataSource dataSource;
 
     public boolean useStatementNamespaces = false;
+    
+    public Integer defaultStatementTimeout = null;
 
     // SQL Map Vars
     public Properties currentProperties;

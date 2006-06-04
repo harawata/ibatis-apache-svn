@@ -38,6 +38,7 @@ useStatementNamespaces (true | false) #IMPLIED
 maxSessions CDATA #IMPLIED
 maxTransactions CDATA #IMPLIED
 maxRequests CDATA #IMPLIED
+defaultStatementTimeout CDATA #IMPLIED
 >
 
 <!ELEMENT transactionManager (property*,dataSource)>

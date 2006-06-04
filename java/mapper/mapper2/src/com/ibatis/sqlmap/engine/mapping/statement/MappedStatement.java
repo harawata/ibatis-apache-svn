@@ -66,5 +66,6 @@ public interface MappedStatement {
 
   public Integer getFetchSize();
 
+  public Integer getTimeout();
 
 }

@@ -38,6 +38,7 @@ public abstract class BaseStatement implements MappedStatement {
   private Sql sql;
   private int baseCacheKey;
   private ExtendedSqlMapClient sqlMapClient;
+  private Integer timeout;
 
   private List executeListeners = new ArrayList();
 
@@ -148,6 +149,14 @@ public abstract class BaseStatement implements MappedStatement {
     request.setParameterMap(parameterMap);
     request.setResultMap(resultMap);
     request.setSql(sql);
+  }
+
+  public Integer getTimeout() {
+    return timeout;
+  }
+
+  public void setTimeout(Integer timeout) {
+    this.timeout = timeout;
   }
 
 }

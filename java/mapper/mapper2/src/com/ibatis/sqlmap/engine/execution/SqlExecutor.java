@@ -19,6 +19,7 @@ import com.ibatis.sqlmap.engine.mapping.parameter.BasicParameterMapping;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMapping;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
+import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
 import com.ibatis.sqlmap.engine.mapping.statement.RowHandlerCallback;
 import com.ibatis.sqlmap.engine.scope.ErrorContext;
 import com.ibatis.sqlmap.engine.scope.RequestScope;
@@ -77,6 +78,8 @@ public class SqlExecutor {
     try {
       errorContext.setMoreInfo("Check the SQL Statement (preparation failed).");
       ps = conn.prepareStatement(sql);
+      
+      setStatementTimeout(request.getStatement(), ps);
 
       errorContext.setMoreInfo("Check the parameters (set parameters failed).");
       request.getParameterMap().setParameters(request, ps, parameters);
@@ -169,6 +172,8 @@ public class SqlExecutor {
         ps = conn.prepareStatement(sql);
       }
 
+      setStatementTimeout(request.getStatement(), ps);
+
       Integer fetchSize = request.getStatement().getFetchSize();
       if (fetchSize != null) {
         ps.setFetchSize(fetchSize.intValue());
@@ -225,6 +230,8 @@ public class SqlExecutor {
       errorContext.setMoreInfo("Check the SQL Statement (preparation failed).");
       cs = conn.prepareCall(sql);
 
+      setStatementTimeout(request.getStatement(), cs);
+
       ParameterMap parameterMap = request.getParameterMap();
 
       ParameterMapping[] mappings = parameterMap.getParameterMappings();
@@ -275,6 +282,8 @@ public class SqlExecutor {
     try {
       errorContext.setMoreInfo("Check the SQL Statement (preparation failed).");
       cs = conn.prepareCall(sql);
+
+      setStatementTimeout(request.getStatement(), cs);
 
       ParameterMap parameterMap = request.getParameterMap();
 
@@ -466,6 +475,15 @@ public class SqlExecutor {
       }
     }
   }
+  
+  private static void setStatementTimeout(MappedStatement mappedStatement,
+      Statement statement) throws SQLException {
+    if (mappedStatement.getTimeout() != null) {
+      statement.setQueryTimeout(mappedStatement.getTimeout().intValue());
+    } else {
+      statement.setQueryTimeout(0); // no timeout
+    }
+  }
 
   //
   // Inner Classes
@@ -513,6 +531,9 @@ public class SqlExecutor {
         ps = (PreparedStatement) statementList.get(last);
       } else {
         ps = conn.prepareStatement(sql);
+
+        setStatementTimeout(request.getStatement(), ps);
+
         currentSql = sql;
         statementList.add(ps);
       }

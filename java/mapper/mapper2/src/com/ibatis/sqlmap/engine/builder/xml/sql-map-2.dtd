@@ -125,6 +125,7 @@ resultSetType (FORWARD_ONLY | SCROLL_INSENSITIVE | SCROLL_SENSITIVE) #IMPLIED
 fetchSize CDATA #IMPLIED
 xmlResultName CDATA #IMPLIED
 remapResults (true|false) #IMPLIED
+timeout CDATA #IMPLIED
 >
 
 <!ELEMENT select (#PCDATA | include | dynamic | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
@@ -139,6 +140,7 @@ resultSetType (FORWARD_ONLY | SCROLL_INSENSITIVE | SCROLL_SENSITIVE) #IMPLIED
 fetchSize CDATA #IMPLIED
 xmlResultName CDATA #IMPLIED
 remapResults (true|false) #IMPLIED
+timeout CDATA #IMPLIED
 >
 
 <!ELEMENT insert (#PCDATA | include | dynamic | selectKey | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
@@ -146,6 +148,7 @@ remapResults (true|false) #IMPLIED
 id CDATA #REQUIRED
 parameterMap CDATA #IMPLIED
 parameterClass CDATA #IMPLIED
+timeout CDATA #IMPLIED
 >
 
 <!ELEMENT selectKey (#PCDATA | include)*>
@@ -159,6 +162,7 @@ keyProperty CDATA #IMPLIED
 id CDATA #REQUIRED
 parameterMap CDATA #IMPLIED
 parameterClass CDATA #IMPLIED
+timeout CDATA #IMPLIED
 >
 
 <!ELEMENT delete (#PCDATA | include | dynamic | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
@@ -166,6 +170,7 @@ parameterClass CDATA #IMPLIED
 id CDATA #REQUIRED
 parameterMap CDATA #IMPLIED
 parameterClass CDATA #IMPLIED
+timeout CDATA #IMPLIED
 >
 
 <!ELEMENT procedure (#PCDATA | include | dynamic | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
@@ -178,6 +183,7 @@ resultClass CDATA #IMPLIED
 cacheModel CDATA #IMPLIED
 xmlResultName CDATA #IMPLIED
 remapResults (true|false) #IMPLIED
+timeout CDATA #IMPLIED
 >
 
 <!-- - - - - - - - - - - - - - - - - - - - - - - - -

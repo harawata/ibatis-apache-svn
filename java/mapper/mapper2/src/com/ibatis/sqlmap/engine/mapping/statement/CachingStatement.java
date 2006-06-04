@@ -139,4 +139,8 @@ public class CachingStatement implements MappedStatement {
     return statement.getParameterClass();
   }
 
+  public Integer getTimeout() {
+    return statement.getTimeout();
+  }
+
 }

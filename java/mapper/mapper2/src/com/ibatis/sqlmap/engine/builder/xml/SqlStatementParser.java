@@ -67,6 +67,7 @@ public class SqlStatementParser extends BaseParser {
     String resultSetType = attributes.getProperty("resultSetType");
     String fetchSize = attributes.getProperty("fetchSize");
     String allowRemapping = attributes.getProperty("remapResults");
+    String timeout = attributes.getProperty("timeout");
 
     vars.errorCtx.setObjectId(id + " statement");
 
@@ -148,6 +149,16 @@ public class SqlStatementParser extends BaseParser {
       resultMap.setResource(statement.getResource());
       statement.setResultMap(resultMap);
 
+    }
+    
+    statement.setTimeout(vars.defaultStatementTimeout);
+    if (timeout != null) {
+      try {
+        statement.setTimeout(Integer.valueOf(timeout));
+      } catch (NumberFormatException e) {
+        throw new SqlMapException("Specified timeout value for statement "
+            + statement.getId() + " is not a valid integer");
+      }
     }
 
     vars.errorCtx.setMoreInfo(null);
