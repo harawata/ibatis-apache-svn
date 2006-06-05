@@ -29,6 +29,7 @@ Build Number: @buildNum@
  o Fixed IBATIS-128 - log an error if there are overloaded setter methods
  o Added IBATIS-22 - specify statement timeouts using the JDBC driver support
  o Fixed IBATIS-269 Added check for multiple result set support
+ o FIXED IBATIS-293 Fix use of list[]-notation in propertyattributes of dynamic tags 
 
 ------------------------------
  2.1.7 - Jan 21, 2006
