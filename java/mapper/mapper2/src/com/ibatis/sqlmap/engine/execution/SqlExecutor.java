@@ -193,7 +193,7 @@ public class SqlExecutor {
       }
 
       // clear out remaining results
-      while (ps.getMoreResults());
+      while (getMoreResults(ps));
 
     } finally {
       try {
@@ -306,7 +306,7 @@ public class SqlExecutor {
       }
 
       // consume additional results
-      while (cs.getMoreResults());
+      while (getMoreResults(cs));
 
       errorContext.setMoreInfo("Check the output parameters (retrieval of output parameters failed).");
       retrieveOutputParameters( request, cs, mappings, parameters, callback);
@@ -337,7 +337,7 @@ public class SqlExecutor {
   private boolean moveToNextResultSet(Statement stmt) throws SQLException {
     boolean moreResults;
     // This is the messed up JDBC approach for determining if there are more results
-    moreResults = !(((stmt.getMoreResults() == false) && (stmt.getUpdateCount() == -1)));
+    moreResults = !(((getMoreResults(stmt) == false) && (stmt.getUpdateCount() == -1)));
     return moreResults;
   }
 
@@ -354,9 +354,12 @@ public class SqlExecutor {
     }
   }
 
-  //
-  // Private Methods
-  //
+  private boolean getMoreResults(Statement stmt) throws SQLException {
+    if (!stmt.getConnection().getMetaData().supportsMultipleResultSets()) {
+      return false;
+    }
+    return stmt.getMoreResults();
+  }
 
   private void retrieveOutputParameters(RequestScope request, CallableStatement cs, ParameterMapping[] mappings, Object[] parameters, RowHandlerCallback callback) throws SQLException {
     for (int i = 0; i < mappings.length; i++) {
