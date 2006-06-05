@@ -159,8 +159,14 @@ public class SqlMapClientImpl implements ExtendedSqlMapClient {
   }
 
   public void setUserConnection(Connection connection) throws SQLException {
+  try {
     getLocalSqlMapSession().setUserConnection(connection);
+  } finally {
+    if (connection == null) {
+      getLocalSqlMapSession().close();
+    }
   }
+}
 
   /**
    * TODO Deprecated
