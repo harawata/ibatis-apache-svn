@@ -79,11 +79,6 @@ public class ClassInfo {
   private ClassInfo(Class clazz) {
     className = clazz.getName();
     addMethods(clazz);
-    Class superClass = clazz.getSuperclass();
-    while (superClass != null) {
-      addMethods(superClass);
-      superClass = superClass.getSuperclass();
-    }
     readablePropertyNames = (String[]) getMethods.keySet().toArray(new String[getMethods.keySet().size()]);
     writeablePropertyNames = (String[]) setMethods.keySet().toArray(new String[setMethods.keySet().size()]);
   }
