@@ -66,7 +66,13 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 			_targetType = targetObjectType;
 			_propertyName = propertyName;
 
-			PropertyInfo propertyInfo = _targetType.GetProperty(propertyName);
+        	// deals with Overriding a property using new and reflection
+        	// http://blogs.msdn.com/thottams/archive/2006/03/17/553376.aspx
+			PropertyInfo propertyInfo = _targetType.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+			if (propertyInfo == null)
+			{
+				propertyInfo = _targetType.GetProperty(propertyName);
+			}
 
 			// Make sure the property exists
 			if(propertyInfo == null)
@@ -137,7 +143,11 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 			if (_canRead)
             {
                 // Emit the IL for get access. 
-                MethodInfo targetGetMethod = _targetType.GetMethod("get_" + _propertyName);
+				MethodInfo targetGetMethod = _targetType.GetMethod("get_" + _propertyName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+				if (targetGetMethod == null)
+				{
+					targetGetMethod =  _targetType.GetMethod("get_" + _propertyName);
+				}                	
 
                 generatorIL.DeclareLocal(typeof(object));
                 generatorIL.Emit(OpCodes.Ldarg_1);	//Load the first argument,(target object)

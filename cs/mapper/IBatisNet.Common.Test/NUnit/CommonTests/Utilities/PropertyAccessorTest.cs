@@ -215,9 +215,9 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             ISetAccessor accessorSet = factorySet.CreateSetAccessor(typeof(PropertySon), "Float");
 
             PropertySon son = new PropertySon();
-            accessorSet.Set(son, -99.99f);
+            accessorSet.Set(son, -99);
 
-            Assert.AreEqual(-99.99f*2, son.Float);
+            Assert.AreEqual(-99*2, son.Float);
         }
 
         /// <summary>
@@ -229,9 +229,9 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             IGetAccessor accessorGet = factoryGet.CreateGetAccessor(typeof(PropertySon), "Float");
 
             PropertySon son = new PropertySon();
-            son.Float = -99.99f;
+            son.Float = -99;
 
-            Assert.AreEqual(-99.99f * 2, accessorGet.Get(son));
+            Assert.AreEqual(-99 * 2, accessorGet.Get(son));
         }
     }
 

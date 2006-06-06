@@ -600,10 +600,18 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			ps_swap_email_address
 		</procedure>
 
-		<procedure id="GetAccountViaSP" parameterMap="select-params" resultClass="Account">
+		<procedure id="GetAccountViaSP0" parameterMap="select-params0" resultClass="Account">
 			ps_SelectAccount
 		</procedure>
 		
+		<procedure id="GetAccountViaSP1" parameterMap="select-params1" resultClass="Account">
+			ps_SelectAccount
+		</procedure>
+	
+		<procedure id="GetAccountViaSP2" parameterMap="select-params2" resultClass="Account">
+			ps_SelectAccount
+		</procedure>
+			
 	</statements>
 
 	<!-- =============================================
@@ -616,10 +624,18 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			<parameter property="email2" column="Second_Email" />
 		</parameterMap>
 		
-		<parameterMap id="select-params">
-			<parameter property="Account_ID" />
+		<parameterMap id="select-params0">
+			<parameter property="Account_ID" column="Account_ID" />
 		</parameterMap>
-				
+			
+		<parameterMap id="select-params1" class="int">
+			<parameter property="Account_ID" column="Account_ID" />
+		</parameterMap>
+
+		<parameterMap id="select-params2" class="Hashtable">
+			<parameter property="Account_ID" column="Account_ID" />
+		</parameterMap>
+								
 		<parameterMap id="insert-params" >
 			<parameter property="Id" />
 			<parameter property="FirstName" />

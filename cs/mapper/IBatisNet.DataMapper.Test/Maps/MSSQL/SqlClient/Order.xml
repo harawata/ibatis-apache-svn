@@ -267,7 +267,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			<result property="City"       column="Order_City"/>
 			<result property="Province"   column="Order_Province"/>
 			<result property="PostalCode" column="Order_PostalCode"/>
-			<result property="Account"    column="Account_ID=Account_ID" select="GetAccountViaSP" />
+			<result property="Account"    column="Account_ID=Account_ID" select="GetAccountViaSP0" />
 		</resultMap>
 		
 		<resultMap id="order-with-collection-result" class="Order">

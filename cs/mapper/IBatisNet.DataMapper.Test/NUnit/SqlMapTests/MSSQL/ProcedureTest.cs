@@ -44,9 +44,31 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL
 		/// Test get an account via a store procedure.
 		/// </summary>
 		[Test] 
-		public void GetAccountViaProcedure()
+		public void GetAccountViaProcedure0()
 		{
-			Account account = sqlMap.QueryForObject("GetAccountViaSP", 1) as Account;
+			Account account = sqlMap.QueryForObject("GetAccountViaSP0", 1) as Account;
+			Assert.AreEqual(1, account.Id );
+		}
+		
+		/// <summary>
+		/// Test get an account via a store procedure.
+		/// </summary>
+		[Test] 
+		public void GetAccountViaProcedure1()
+		{
+			Account account = sqlMap.QueryForObject("GetAccountViaSP1", 1) as Account;
+			Assert.AreEqual(1, account.Id );
+		}
+		
+		/// <summary>
+		/// Test get an account via a store procedure.
+		/// </summary>
+		[Test] 
+		public void GetAccountViaProcedure2()
+		{
+			Hashtable hash = new Hashtable();
+			hash.Add("Account_ID",1);
+			Account account = sqlMap.QueryForObject("GetAccountViaSP2", hash) as Account;
 			Assert.AreEqual(1, account.Id );
 		}
 		

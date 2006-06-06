@@ -25,6 +25,7 @@
 
 #region Using
 
+using System;
 using System.Collections.Specialized;
 using System.Xml;
 using IBatisNet.Common.Xml;

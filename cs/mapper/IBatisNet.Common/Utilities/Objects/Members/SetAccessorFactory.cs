@@ -163,7 +163,11 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 #if dotnet2
                 methodInfo = propertyInfo.GetSetMethod();
 #else
-                methodInfo = targetType.GetMethod("set_" + propertyName);
+                methodInfo = targetType.GetMethod("set_" + propertyName,BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+				if (methodInfo == null)
+				{
+					methodInfo =  targetType.GetMethod("set_" + propertyName);
+				}
 #endif
                 if (methodInfo != null)// == visibilty public
                 {

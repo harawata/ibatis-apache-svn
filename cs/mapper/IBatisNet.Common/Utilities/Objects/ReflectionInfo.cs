@@ -234,7 +234,7 @@ namespace IBatisNet.Common.Utilities.Objects
 			Type type = (Type) _getTypes[memberName];
 			if (type == null) 
 			{
-				throw new ProbeException("There is no Get mmeber named '" + memberName + "' in class '" + _className + "'");
+				throw new ProbeException("There is no Get member named '" + memberName + "' in class '" + _className + "'");
 			}
 			return type;
 		}

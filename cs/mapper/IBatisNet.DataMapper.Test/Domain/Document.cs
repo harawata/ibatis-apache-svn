@@ -19,5 +19,11 @@ namespace IBatisNet.DataMapper.Test.Domain
 			get { return _title; }
 			set { _title = value; }
 		}
+		
+		public string Test
+		{
+			set { _title = value; }
+		}
+		
 	}
 }

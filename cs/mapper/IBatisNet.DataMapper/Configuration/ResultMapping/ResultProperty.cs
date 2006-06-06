@@ -359,7 +359,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			else
 			{
 				configScope.ErrorContext.MoreInfo = "Result property '"+_propertyName+"' set the typeHandler attribute.";
-				_typeHandler = configScope.ResolveTypeHandler( resultClass, _propertyName, _clrType, _dbType);
+				_typeHandler = configScope.ResolveTypeHandler( resultClass, _propertyName, _clrType, _dbType, true);
 			}
 
             if (this.IsLazyLoad)

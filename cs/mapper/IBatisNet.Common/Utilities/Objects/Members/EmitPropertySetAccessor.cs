@@ -67,8 +67,14 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 			_targetType = targetObjectType;
 			_propertyName = propertyName;
 
-			PropertyInfo propertyInfo = _targetType.GetProperty(propertyName);
-
+			// deals with Overriding a property using new and reflection
+			// http://blogs.msdn.com/thottams/archive/2006/03/17/553376.aspx
+			PropertyInfo propertyInfo = _targetType.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+			if (propertyInfo == null)
+			{
+				propertyInfo = _targetType.GetProperty(propertyName);
+			}
+        	
 			// Make sure the property exists
 			if(propertyInfo == null)
 			{
@@ -104,7 +110,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
             if (_emittedSet == null)
             {
                 throw new NotSupportedException(
-                    string.Format("Unable to create a get propert accessor for '{0}' property on class  '{0}'.", _propertyName, _propertyType));
+                    string.Format("Unable to create a get propert accessor for '{0}' property on class  '{1}'.", _propertyName, _propertyType.ToString()));
             }
         }
 
@@ -137,16 +143,17 @@ namespace IBatisNet.Common.Utilities.Objects.Members
                 null,
                 setParamTypes);
 
-            // Get an ILGenerator and used it to emit the IL that we want.
-            ILGenerator generatorIL = methodBuilder.GetILGenerator();
-
 			// Get an ILGenerator and  used to emit the IL that we want.
 			// Set(object, value);
-			generatorIL = methodBuilder.GetILGenerator();
+			ILGenerator generatorIL = methodBuilder.GetILGenerator();
 			if (_canWrite)
             {
                 // Emit the IL for the set access. 
-                MethodInfo targetSetMethod = _targetType.GetMethod("set_" + _propertyName);
+				MethodInfo targetSetMethod = _targetType.GetMethod("set_" + _propertyName,BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+				if (targetSetMethod == null)
+				{
+					targetSetMethod =  _targetType.GetMethod("set_" + _propertyName);
+				}
                 Type paramType = targetSetMethod.GetParameters()[0].ParameterType;
 
                 generatorIL.DeclareLocal(paramType);

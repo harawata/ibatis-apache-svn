@@ -142,6 +142,35 @@ namespace IBatisNet.Common.Utilities.Objects
 
 
 		/// <summary>
+		///  Returns the type that the set expects to receive as a parameter when
+		///  setting a member value.
+		/// </summary>
+		/// <param name="type">The class type to check</param>
+		/// <param name="memberName">The name of the member</param>
+		/// <returns>The type of the member</returns>
+		public static Type GetMemberTypeForSetter(Type type, string memberName) 
+		{
+			Type memberType = type;
+			if (memberName.IndexOf('.') > -1) 
+			{
+				StringTokenizer parser = new StringTokenizer(memberName, ".");
+				IEnumerator enumerator = parser.GetEnumerator();
+
+				while (enumerator.MoveNext()) 
+				{
+					memberName = (string)enumerator.Current;
+					memberType = ReflectionInfo.GetInstance(memberType).GetSetterType(memberName);
+				}
+			} 
+			else 
+			{
+				memberType = ReflectionInfo.GetInstance(type).GetSetterType(memberName);
+			}
+
+			return memberType;
+		}
+
+		/// <summary>
 		///  Returns the type that the get expects to receive as a parameter when
 		///  setting a member value.
 		/// </summary>

@@ -15,6 +15,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 		<resultMap id="document" class="Document">
 			<result property="Id"			column="Document_ID"/>
 			<result property="Title"		column="Document_Title"/>
+			<result property="Test"			column="Document_Title"/>
 			<discriminator column="Document_Type" type="string"/> 
 			<subMap value="Book" resultMapping="book" />
 			<subMap value="Newspaper" resultMapping="newspaper" />

@@ -284,6 +284,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
         /// <param name="parameterClass">The parameter class.</param>
 		public void Initialize(IScope scope, Type parameterClass)
 		{
+
 			if(_directionAttribute.Length >0)
 			{
 				_direction = (ParameterDirection)Enum.Parse( typeof(ParameterDirection), _directionAttribute, true );
@@ -326,7 +327,15 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 			{
 				if (this.CLRType.Length == 0 )  // Unknown
 				{
-                    _typeHandler = scope.DataExchangeFactory.TypeHandlerFactory.GetUnkownTypeHandler();
+					if (scope.DataExchangeFactory.TypeHandlerFactory.IsSimpleType(parameterClass)) 
+					{
+						// Primitive
+						_typeHandler = scope.DataExchangeFactory.TypeHandlerFactory.GetTypeHandler(parameterClass, _dbType);
+					}
+					else
+					{
+	                    _typeHandler = scope.DataExchangeFactory.TypeHandlerFactory.GetUnkownTypeHandler();
+					}
 				}
 				else // If we specify a CLR type, use it
 				{

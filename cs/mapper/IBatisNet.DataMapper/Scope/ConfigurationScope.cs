@@ -259,15 +259,17 @@ namespace IBatisNet.DataMapper.Scope
 
 		#endregion 
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="clazz">Type of the ResultMap</param>
-		/// <param name="propertyName">Property name to map</param>
-		/// <param name="clrType"></param>
-		/// <param name="dbType"></param>
-		/// <returns></returns>
-		public ITypeHandler ResolveTypeHandler(Type clazz, string propertyName, string clrType, string dbType)
+
+        /// <summary>
+        /// Resolves the type handler.
+        /// </summary>
+        /// <param name="clazz">The clazz.</param>
+        /// <param name="memberName">Name of the member.</param>
+        /// <param name="clrType">Type of the CLR.</param>
+        /// <param name="dbType">Type of the db.</param>
+        /// <param name="forSetter">if set to <c>true</c> [for setter].</param>
+        /// <returns></returns>
+		public ITypeHandler ResolveTypeHandler(Type clazz, string memberName, string clrType, string dbType, bool forSetter)
 		{
 			ITypeHandler handler = null;
 			if (clazz==null)
@@ -308,7 +310,15 @@ namespace IBatisNet.DataMapper.Scope
 				// .NET object
 				if (clrType ==null || clrType.Length == 0) 
 				{
-					Type type = ObjectProbe.GetMemberTypeForGetter(clazz, propertyName);
+					Type type = null;
+					if (forSetter)
+					{
+						type = ObjectProbe.GetMemberTypeForSetter(clazz, memberName);
+					}
+					else
+					{
+						type = ObjectProbe.GetMemberTypeForGetter(clazz, memberName);	
+					}
                     handler = this.DataExchangeFactory.TypeHandlerFactory.GetTypeHandler(type, dbType);
 				} 
 				else 

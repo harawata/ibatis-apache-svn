@@ -89,16 +89,16 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			book = (Book) list[1];
 			AssertBook(book, 3, "Lord of the Rings", 3587);
 
-			Document document = (Document) list[2];
+			Document document = list[2];
 			AssertDocument(document, 5, "Le Monde");
 
-			document = (Document) list[3];
+			document = list[3];
 			AssertDocument(document, 6, "Foundation");
 
 			Newspaper news = (Newspaper) list[4];
 			AssertNewspaper(news, 2, "Le Progres de Lyon", "Lyon");
 
-			document = (Document) list[5];
+			document = list[5];
 			AssertDocument(document, 4, "Le Canard enchaine");
 		}
 
