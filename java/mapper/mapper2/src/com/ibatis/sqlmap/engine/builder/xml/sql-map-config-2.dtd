@@ -16,7 +16,7 @@
    limitations under the License.
  -->
 
-<!ELEMENT sqlMapConfig (properties?, settings?, typeAlias*, typeHandler*, transactionManager?, sqlMap+)+>
+<!ELEMENT sqlMapConfig (properties?, settings?, resultObjectFactory?, typeAlias*, typeHandler*, transactionManager?, sqlMap+)+>
 <!ATTLIST sqlMapConfig
 xmlns:fo CDATA #IMPLIED
 >
@@ -75,4 +75,9 @@ type CDATA #REQUIRED
 javaType CDATA #REQUIRED
 jdbcType CDATA #IMPLIED
 callback CDATA #REQUIRED
+>
+
+<!ELEMENT resultObjectFactory (property*)>
+<!ATTLIST resultObjectFactory
+type CDATA #REQUIRED
 >

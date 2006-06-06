@@ -20,6 +20,7 @@ import com.ibatis.sqlmap.engine.datasource.JndiDataSourceFactory;
 import com.ibatis.sqlmap.engine.datasource.SimpleDataSourceFactory;
 import com.ibatis.sqlmap.engine.impl.SqlMapClientImpl;
 import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
+import com.ibatis.sqlmap.engine.mapping.result.ResultObjectFactory;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
 import com.ibatis.sqlmap.engine.transaction.TransactionConfig;
 import com.ibatis.sqlmap.engine.transaction.TransactionManager;
@@ -62,6 +63,7 @@ public class SqlMapConfigParser extends BaseParser {
     addTypeHandlerNodelets();
     addTransactionManagerNodelets();
     addSqlMapNodelets();
+    addResultObjectFactoryNodelets();
 
   }
 
@@ -364,6 +366,34 @@ public class SqlMapConfigParser extends BaseParser {
     });
   }
 
+  private void addResultObjectFactoryNodelets() {
+    parser.addNodelet("/sqlMapConfig/resultObjectFactory", new Nodelet() {
+      public void process(Node node) throws Exception {
+        vars.errorCtx.setActivity("configuring the Result Object Factory");
+
+        Properties attributes = NodeletUtils.parseAttributes(node, vars.properties);
+
+        String type = attributes.getProperty("type");
+
+        ResultObjectFactory rof;
+        try {
+          rof = (ResultObjectFactory) Resources.instantiate(type);
+          vars.delegate.setResultObjectFactory(rof);
+        } catch (Exception e) {
+          throw new SqlMapException("Error instantiating resultObjectFactory: " + type, e);
+        }
+      }
+    });
+    parser.addNodelet("/sqlMapConfig/resultObjectFactory/property", new Nodelet() {
+      public void process(Node node) throws Exception {
+        Properties attributes = NodeletUtils.parseAttributes(node, vars.properties);
+        String name = attributes.getProperty("name");
+        String value = NodeletUtils.parsePropertyTokens(attributes.getProperty("value"), vars.properties);
+        vars.delegate.getResultObjectFactory().setProperty(name, value);
+      }
+    });
+  }
+  
   private void registerDefaultTypeAliases() {
     // TRANSACTION ALIASES
     vars.typeHandlerFactory.putTypeAlias("JDBC", JdbcTransactionConfig.class.getName());

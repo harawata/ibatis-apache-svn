@@ -18,7 +18,6 @@ package com.ibatis.sqlmap.engine.mapping.result;
 import com.ibatis.common.beans.Probe;
 import com.ibatis.common.beans.ProbeFactory;
 import com.ibatis.common.jdbc.exception.NestedSQLException;
-import com.ibatis.common.resources.Resources;
 
 import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.engine.exchange.DataExchange;
@@ -442,14 +441,14 @@ public class BasicResultMap implements ResultMap {
       Object parameterObject = null;
 
       if (parameterType == null) {
-        parameterObject = prepareBeanParameterObject(rs, mapping, parameterType);
+        parameterObject = prepareBeanParameterObject(request, rs, mapping, parameterType);
       } else {
         if (typeHandlerFactory.hasTypeHandler(parameterType)) {
           parameterObject = preparePrimitiveParameterObject(rs, mapping, parameterType);
         } else if (DomTypeMarker.class.isAssignableFrom(parameterType)) {
           parameterObject = prepareDomParameterObject(rs, mapping);
         } else {
-          parameterObject = prepareBeanParameterObject(rs, mapping, parameterType);
+          parameterObject = prepareBeanParameterObject(request, rs, mapping, parameterType);
         }
       }
 
@@ -533,7 +532,7 @@ public class BasicResultMap implements ResultMap {
   }
 
 
-  private Object prepareBeanParameterObject(ResultSet rs, BasicResultMapping mapping, Class parameterType)
+  private Object prepareBeanParameterObject(RequestScope request, ResultSet rs, BasicResultMapping mapping, Class parameterType)
       throws InstantiationException, IllegalAccessException, SQLException {
     TypeHandlerFactory typeHandlerFactory = getDelegate().getTypeHandlerFactory();
 
@@ -541,7 +540,9 @@ public class BasicResultMap implements ResultMap {
     if (parameterType == null) {
       parameterObject = new HashMap();
     } else {
-      parameterObject = Resources.instantiate(parameterType);
+      ExtendedSqlMapClient client = (ExtendedSqlMapClient) request.getSession().getSqlMapClient();
+      parameterObject = ResultObjectFactoryUtil.createObjectThroughFactory(client.getResultObjectFactory(),
+          request.getStatement().getId(), parameterType);
     }
     String complexName = mapping.getColumnName();
 

@@ -16,13 +16,14 @@
 package com.ibatis.sqlmap.engine.exchange;
 
 
-import com.ibatis.common.resources.Resources;
 import com.ibatis.sqlmap.engine.accessplan.AccessPlan;
 import com.ibatis.sqlmap.engine.accessplan.AccessPlanFactory;
+import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMapping;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMapping;
+import com.ibatis.sqlmap.engine.mapping.result.ResultObjectFactoryUtil;
 import com.ibatis.sqlmap.engine.scope.ErrorContext;
 import com.ibatis.sqlmap.engine.scope.RequestScope;
 
@@ -103,7 +104,9 @@ public class JavaBeanDataExchange extends BaseDataExchange implements DataExchan
       if (object == null) {
         errorContext.setMoreInfo("The error occured while instantiating the result object");
         try {
-          object = Resources.instantiate(resultMap.getResultClass());
+          ExtendedSqlMapClient client = (ExtendedSqlMapClient) request.getSession().getSqlMapClient();
+          object = ResultObjectFactoryUtil.createObjectThroughFactory(client.getResultObjectFactory(),
+              request.getStatement().getId(), resultMap.getResultClass());
         } catch (Exception e) {
           throw new RuntimeException("JavaBeansDataExchange could not instantiate result class.  Cause: " + e, e);
         }
@@ -122,7 +125,9 @@ public class JavaBeanDataExchange extends BaseDataExchange implements DataExchan
       Object object = parameterObject;
       if (object == null) {
         try {
-          object = Resources.instantiate(parameterMap.getParameterClass());
+          ExtendedSqlMapClient client = (ExtendedSqlMapClient) request.getSession().getSqlMapClient();
+          object = ResultObjectFactoryUtil.createObjectThroughFactory(client.getResultObjectFactory(),
+              request.getStatement().getId(), parameterMap.getParameterClass());
         } catch (Exception e) {
           throw new RuntimeException("JavaBeansDataExchange could not instantiate parameter class. Cause: " + e, e);
         }

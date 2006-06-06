@@ -17,6 +17,7 @@ package com.ibatis.sqlmap.engine.impl;
 
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.ibatis.sqlmap.engine.execution.SqlExecutor;
+import com.ibatis.sqlmap.engine.mapping.result.ResultObjectFactory;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
 
 /**
@@ -60,5 +61,7 @@ public interface ExtendedSqlMapClient extends SqlMapClient {
    * @return - the status
    */
   public boolean isEnhancementEnabled();
+  
+  public ResultObjectFactory getResultObjectFactory();
 
 }

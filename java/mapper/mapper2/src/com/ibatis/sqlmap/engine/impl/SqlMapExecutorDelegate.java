@@ -28,6 +28,7 @@ import com.ibatis.sqlmap.engine.exchange.DataExchangeFactory;
 import com.ibatis.sqlmap.engine.execution.SqlExecutor;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
+import com.ibatis.sqlmap.engine.mapping.result.ResultObjectFactory;
 import com.ibatis.sqlmap.engine.mapping.statement.InsertStatement;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
 import com.ibatis.sqlmap.engine.mapping.statement.PaginatedDataList;
@@ -90,6 +91,8 @@ public class SqlMapExecutorDelegate {
   protected SqlExecutor sqlExecutor;
   private TypeHandlerFactory typeHandlerFactory;
   private DataExchangeFactory dataExchangeFactory;
+  
+  private ResultObjectFactory resultObjectFactory;
 
   /**
    * Default constructor
@@ -913,6 +916,14 @@ public class SqlMapExecutorDelegate {
   protected void pushSession(SessionScope session) {
     session.reset();
     sessionPool.push(session);
+  }
+
+  public ResultObjectFactory getResultObjectFactory() {
+    return resultObjectFactory;
+  }
+
+  public void setResultObjectFactory(ResultObjectFactory resultObjectFactory) {
+    this.resultObjectFactory = resultObjectFactory;
   }
 
 }
