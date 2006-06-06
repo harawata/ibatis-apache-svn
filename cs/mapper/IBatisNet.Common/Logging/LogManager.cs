@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -25,10 +25,7 @@
 #endregion
 
 using System;
-using System.Collections;
-using System.Collections.Specialized;
 using System.Configuration;
-using System.Xml;
 using IBatisNet.Common.Logging.Impl;
 
 namespace IBatisNet.Common.Logging
@@ -55,10 +52,12 @@ namespace IBatisNet.Common.Logging
 		private LogManager()
 		{ }
 
-		/// <summary>
-		/// 
-		/// </summary>
-		private static ILoggerFactoryAdapter Adapter
+
+        /// <summary>
+        /// Gets or sets the adapter.
+        /// </summary>
+        /// <value>The adapter.</value>
+        public static ILoggerFactoryAdapter Adapter
 		{
 			get
 			{
@@ -74,32 +73,43 @@ namespace IBatisNet.Common.Logging
 				}
 				return _adapter;				
 			}
+		    set
+			{
+				lock (_loadLock)
+				{
+					_adapter = value;
+				}
+			}
+
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="type"></param>
-		/// <returns></returns>
+
+        /// <summary>
+        /// Gets the logger.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns></returns>
 		public static ILog GetLogger( Type type )
 		{
 			return Adapter.GetLogger( type );
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="name"></param>
-		/// <returns></returns>
+
+        /// <summary>
+        /// Gets the logger.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
 		public static ILog GetLogger( string name )
 		{
 			return Adapter.GetLogger(name);
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <returns></returns>
+
+        /// <summary>
+        /// Builds the logger factory adapter.
+        /// </summary>
+        /// <returns></returns>
 		private static ILoggerFactoryAdapter BuildLoggerFactoryAdapter()
 		{
 			LogSetting setting = null;
@@ -173,18 +183,14 @@ namespace IBatisNet.Common.Logging
 			return instance;
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <returns></returns>
+
+        /// <summary>
+        /// Builds the default logger factory adapter.
+        /// </summary>
+        /// <returns></returns>
 		private static ILoggerFactoryAdapter BuildDefaultLoggerFactoryAdapter()
 		{
-#if dotnet2
-            ILoggerFactoryAdapter simpleLogFactory = new ConsoleOutLoggerFA(new NameValueCollection(StringComparer.InvariantCultureIgnoreCase));
-#else
-			ILoggerFactoryAdapter simpleLogFactory = new ConsoleOutLoggerFA(new NameValueCollection( null, new CaseInsensitiveComparer() ));
-#endif			
-			return simpleLogFactory;
+            return new NoOpLoggerFA();
 		}
 	}
 }

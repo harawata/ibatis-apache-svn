@@ -6,6 +6,7 @@ IBatisNet Change Log
 Issues
 - IBATISNET-158 : Add support for generic type in TypeAssemblyInfo
 - IBATISNET-151 : Pre-load stored procedure parameters should use the already-open connection 
+- IBATISNET-145 : Make NoOpLoggerFA the default logger when logging config is missing or malformed. Allow FactoryAdapter to be set by the application
 - IBATISNET-143 : Allow selectKey node to process dynamic sql  
 - IBATISNET-141 : DataMapper Developer Guide document bug  
 - IBATISNET-139 : DBNull.Value as parameter object raises NullReferenceException in UnknownTypeHandler  
