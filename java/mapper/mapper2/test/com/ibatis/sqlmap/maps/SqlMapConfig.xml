@@ -23,6 +23,10 @@
     maxTransactions="5"
     useStatementNamespaces="false"
     />
+    
+  <resultObjectFactory type="com.ibatis.sqlmap.ResultObjectFactoryImpl">
+    <property name="someProperty" value="someValue" />
+  </resultObjectFactory>
 
   <typeAlias alias="order" type="testdomain.Order"/>
   <typeAlias alias="OuiNonBool" type="com.ibatis.sqlmap.extensions.PirateTypeHandlerCallback"/>
@@ -60,5 +64,6 @@
   <sqlMap resource="${SqlMapPath}/Documents.xml"/>
   <sqlMap resource="${SqlMapPath}/Jira.xml"/>
   <sqlMap resource="${SqlMapPath}/NestedIterateStatements.xml"/>
+  <sqlMap resource="${SqlMapPath}/ResultObjectFactoryStatements.xml"/>
 
 </sqlMapConfig>
