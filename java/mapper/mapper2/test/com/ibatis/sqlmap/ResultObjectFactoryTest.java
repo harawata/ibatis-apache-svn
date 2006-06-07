@@ -7,7 +7,7 @@ import testdomain.IItem;
 public class ResultObjectFactoryTest extends BaseSqlMapTest {
 
   protected void setUp() throws Exception {
-    initSqlMap("com/ibatis/sqlmap/maps/SqlMapConfig.xml", null);
+    initSqlMap("com/ibatis/sqlmap/maps/SqlMapConfig_rof.xml", null);
     initScript("scripts/jpetstore-hsqldb-schema.sql");
     initScript("scripts/jpetstore-hsqldb-dataload.sql");
   }
