@@ -39,11 +39,22 @@ public interface ResultObjectFactory {
    *   <li>When processing a nested select - to create instances of parameter
    *       objects on the nested select
    *   </li>
+   *   <li>When processing result maps with nested result maps.  In this case
+   *     iBATIS needs to create instances of embedded objects.  If the
+   *     embedded object is a List or Collection the default behavior is to
+   *     create an ArrayList.  If the embedded object is a Set the default behavior
+   *     is to create a HashSet.</li>
    * </ul>
    *
    * If you return <code>null</code> from this method, iBATIS will attempt
    * to create in instance of the class with it's normal mechanism.  This means
    * that you can selectively choose which objects to create with this interface.
+   * In the event that you choose not to create an object, iBATIS will translate some
+   * common interfaces to their common implementations.  If the requested
+   * class is List or Collection iBATIS will create an ArrayList.  If the requested
+   * class is Set then iBATIS will create a HashSet.  But these rules only apply
+   * if you choose not to create the object.  So you can use this factory to
+   * supply custom implementations of those interfaces if you so desire.
    * 
    * @param statementId the ID of the statement that generated the call to this method
    * @param clazz the type of object to create

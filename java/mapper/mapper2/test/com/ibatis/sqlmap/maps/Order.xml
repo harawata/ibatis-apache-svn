@@ -70,6 +70,19 @@
     <result property="lineItems" column="ORD_ID" select="getLineItemsForOrder"/>
   </resultMap>
 
+  <resultMap id="lineItemNestedResult" class="testdomain.LineItem">
+    <result column="LIN_ID" property="id"/>
+    <result column="LIN_ORD_ID" property="orderId"/>
+    <result column="LIN_ITM_CODE" property="itemCode"/>
+    <result column="LIN_QUANTITY" property="quantity"/>
+    <result column="LIN_PRICE" property="price"/>
+  </resultMap>
+  
+  <resultMap id="orderResultWithNestedMaps" class="order"
+    extends="lite-order-result-by-name" groupBy="id">
+    <result property="account" resultMap="Account.account-result" />
+    <result property="lineItems" resultMap="lineItemNestedResult"/>
+  </resultMap>
 
   <resultMap id="order-with-lines-array" class="order"
     extends="lite-order-result-by-name">
@@ -232,6 +245,13 @@
     resultMap="credit-card-result">
     select distinct ORD_CARD_NUMBER from ORDERS
     order by ORD_CARD_NUMBER
+  </select>
+  
+  <select id="getAllOrdersWithNestedResultMaps" resultMap="orderResultWithNestedMaps">
+    select o.*, a.*, l.*
+    from Orders o join Account a on o.ord_acc_id = a.acc_id
+      join Line_Item l on l.lin_ord_id = o.ord_id
+    order by o.ord_id
   </select>
 
 </sqlMap>

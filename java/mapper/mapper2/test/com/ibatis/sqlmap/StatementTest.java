@@ -6,6 +6,7 @@ import com.ibatis.sqlmap.client.event.RowHandler;
 import com.ibatis.sqlmap.engine.impl.SqlMapClientImpl;
 import testdomain.Account;
 import testdomain.LineItem;
+import testdomain.Order;
 import testdomain.SuperAccount;
 
 import javax.sql.DataSource;
@@ -837,4 +838,49 @@ public class StatementTest extends BaseSqlMapTest {
 
   }
 
+  public void testNestedResultMaps() throws SQLException {
+    List list = sqlMap.queryForList("getAllOrdersWithNestedResultMaps");
+    
+    assertEquals(10, list.size());
+    
+    Order order = (Order) list.get(0);
+    assertEquals(1, order.getAccount().getId());
+    assertEquals(2, order.getLineItems().size());
+    
+    order = (Order) list.get(1);
+    assertEquals(4, order.getAccount().getId());
+    assertEquals(2, order.getLineItems().size());
+    
+    order = (Order) list.get(2);
+    assertEquals(3, order.getAccount().getId());
+    assertEquals(2, order.getLineItems().size());
+    
+    order = (Order) list.get(3);
+    assertEquals(2, order.getAccount().getId());
+    assertEquals(2, order.getLineItems().size());
+    
+    order = (Order) list.get(4);
+    assertEquals(5, order.getAccount().getId());
+    assertEquals(2, order.getLineItems().size());
+    
+    order = (Order) list.get(5);
+    assertEquals(5, order.getAccount().getId());
+    assertEquals(2, order.getLineItems().size());
+    
+    order = (Order) list.get(6);
+    assertEquals(4, order.getAccount().getId());
+    assertEquals(2, order.getLineItems().size());
+    
+    order = (Order) list.get(7);
+    assertEquals(3, order.getAccount().getId());
+    assertEquals(2, order.getLineItems().size());
+    
+    order = (Order) list.get(8);
+    assertEquals(2, order.getAccount().getId());
+    assertEquals(2, order.getLineItems().size());
+    
+    order = (Order) list.get(9);
+    assertEquals(1, order.getAccount().getId());
+    assertEquals(2, order.getLineItems().size());
+  }
 }

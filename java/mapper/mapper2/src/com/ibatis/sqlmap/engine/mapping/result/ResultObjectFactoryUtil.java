@@ -15,6 +15,12 @@
  */
 package com.ibatis.sqlmap.engine.mapping.result;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import com.ibatis.common.resources.Resources;
 
 /**
@@ -34,9 +40,9 @@ public class ResultObjectFactoryUtil {
    * Algorithm:
    * 
    * <ul>
-   *   <li>If factory is null, then create object through Resources.instantiate()</li>
+   *   <li>If factory is null, then create object internally()</li>
    *   <li>Otherwise try to create object through factory</li>
-   *   <li>If null returned from factory, then try to create object through Resources.instantiate()</li>
+   *   <li>If null returned from factory, then create object internally</li>
    * </ul>
    * 
    * This allows the factory to selectively create objects, also allows for
@@ -64,14 +70,39 @@ public class ResultObjectFactoryUtil {
     
     Object obj;
     if (factory == null) {
-      obj = Resources.instantiate(clazz);
+      obj = createObjectInternally(clazz);
     } else {
       obj = factory.createInstance(statementId, clazz);
       if (obj == null) {
-        obj = Resources.instantiate(clazz);
+        obj = createObjectInternally(clazz);
       }
     }
     
+    return obj;
+  }
+
+  /**
+   * This method creates object using iBATIS' normal mechanism.  We
+   * translate List and Collection to ArrayList, and Set to HashSet
+   * because these interfaces may be requested in nested resultMaps
+   * and we want to supply default implementations.
+   * 
+   * @param clazz
+   * @return
+   * @throws InstantiationException
+   * @throws IllegalAccessException
+   */
+  private static Object createObjectInternally(Class clazz) throws InstantiationException, IllegalAccessException {
+    Class classToCreate;
+    if (clazz == List.class || clazz == Collection.class) {
+      classToCreate = ArrayList.class;
+    } else if (clazz == Set.class) {
+      classToCreate = HashSet.class;
+    } else {
+      classToCreate = clazz;
+    }
+    
+    Object obj = Resources.instantiate(classToCreate);
     return obj;
   }
 }

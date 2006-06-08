@@ -387,6 +387,20 @@ public class BasicResultMap implements ResultMap {
     }
   }
 
+  /**
+   * Some changes in this method for IBATIS-225:
+   * <ul>
+   *   <li>We no longer require the nested property to be a collection.  This
+   *       will allow reuses of resultMaps on 1:1 relationships</li>
+   *   <li>If the nested property is not a collection, then it will be
+   *       created/replaced by the values generated from the current row.</li>
+   * </ul>
+   * 
+   * @param mapping
+   * @param request
+   * @param resultObject
+   * @param values
+   */
   protected void setNestedResultMappingValue(BasicResultMapping mapping, RequestScope request, Object resultObject, Object[] values) {
     try {
 
@@ -395,37 +409,53 @@ public class BasicResultMap implements ResultMap {
       Class type = mapping.getJavaType();
       String propertyName = mapping.getPropertyName();
 
-      Collection c = (Collection) PROBE.getObject(resultObject, propertyName);
+      Object obj = PROBE.getObject(resultObject, propertyName);
 
-      if (c == null) {
+      ExtendedSqlMapClient client = (ExtendedSqlMapClient) request.getSession().getSqlMapClient();
+      boolean isCollection = false;
+      
+      if (obj == null) {
         if (type == null) {
           type = PROBE.getPropertyTypeForSetter(resultObject, propertyName);
         }
-        if (type == Collection.class || type == List.class || type == ArrayList.class) {
-          c = new ArrayList();
-        } else if (type == Set.class || type == HashSet.class) {
-          c = new HashSet();
-        } else {
-          try {
-            c = (Collection) type.newInstance();
-          } catch (Exception e) {
-            throw new SqlMapException("Error instantiating collection property for mapping '" + mapping.getPropertyName() + "'.  Cause: " + e, e);
+        
+        try {
+          if (type == Collection.class
+              || type == List.class
+              || type == ArrayList.class
+              || type == Set.class
+              || type == HashSet.class
+              || type.isAssignableFrom(Collection.class)) {
+            obj = ResultObjectFactoryUtil.createObjectThroughFactory(client.getResultObjectFactory(),
+                request.getStatement().getId(), type);
+            isCollection = true;
           }
+        } catch (Exception e) {
+          throw new SqlMapException("Error instantiating collection property for mapping '" + mapping.getPropertyName() + "'.  Cause: " + e, e);
         }
-        PROBE.setObject(resultObject, propertyName, c);
+
+        // obj will be null if it is not one of our recognized collection types
+        if (obj != null) {
+          PROBE.setObject(resultObject, propertyName, obj);
+        }
+      } else {
+        isCollection = obj instanceof Collection;
       }
 
       values = resultMap.getResults(request, request.getResultSet());
       if (request.isRowDataFound()) {
         Object o = resultMap.setResultObjectValues(request, null, values);
         if (o != NO_VALUE) {
-          c.add(o);
+          if (isCollection) {
+            ((Collection) obj).add(o);
+          } else {
+            PROBE.setObject(resultObject, propertyName, o);
+          }
         }
       }
     } catch (SQLException e) {
       throw new SqlMapException("Error getting nested result map values for '" + mapping.getPropertyName() + "'.  Cause: " + e, e);
     }
-
   }
 
   protected Object getNestedSelectMappingValue(RequestScope request, ResultSet rs, BasicResultMapping mapping, Class targetType)
