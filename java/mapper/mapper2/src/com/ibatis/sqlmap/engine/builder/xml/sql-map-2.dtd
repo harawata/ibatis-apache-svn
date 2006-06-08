@@ -16,6 +16,8 @@
    limitations under the License.
  -->
 
+<!ENTITY % SelectKeyType "(pre|post)">
+
 <!ELEMENT sqlMap (typeAlias* | cacheModel* | resultMap* | parameterMap* | sql* | statement* | insert* | update* | delete* | select* | procedure*)+>
 <!ATTLIST sqlMap
 xmlns:fo CDATA #IMPLIED
@@ -155,6 +157,7 @@ timeout CDATA #IMPLIED
 <!ATTLIST selectKey
 resultClass CDATA #IMPLIED
 keyProperty CDATA #IMPLIED
+type %SelectKeyType; #IMPLIED
 >
 
 <!ELEMENT update (#PCDATA | include | dynamic | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>

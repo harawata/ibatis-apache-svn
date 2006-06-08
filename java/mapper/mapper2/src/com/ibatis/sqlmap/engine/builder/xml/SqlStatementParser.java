@@ -292,6 +292,7 @@ public class SqlStatementParser extends BaseParser {
     SelectKeyStatement selectKeyStatement = null;
 
     boolean foundTextFirst = false;
+    boolean hasType = false;
 
     NodeList children = n.getChildNodes();
     for (int i = 0; i < children.getLength(); i++) {
@@ -304,18 +305,28 @@ public class SqlStatementParser extends BaseParser {
         }
       } else if (child.getNodeType() == Node.ELEMENT_NODE
           && "selectKey".equals(child.getNodeName())) {
-        selectKeyStatement = parseSelectKey(child, insertStatement);
+        selectKeyStatement = new SelectKeyStatement();
+        hasType = parseSelectKey(child, insertStatement, selectKeyStatement);
         break;
       }
     }
-    if (selectKeyStatement != null) {
+    if (selectKeyStatement != null && !hasType) {
       selectKeyStatement.setAfter(foundTextFirst);
     }
     vars.errorCtx.setMoreInfo(null);
     return selectKeyStatement;
   }
 
-  private SelectKeyStatement parseSelectKey(Node node, GeneralStatement insertStatement) {
+  /**
+   * 
+   * @param node
+   * @param insertStatement
+   * @param selectKeyStatement
+   * @return true is the type (pre or post) was set from the configuration
+   *   false if the type (pre or post) should be inferred from the position
+   *   of the element in the text (the legacy behavior)
+   */
+  private boolean parseSelectKey(Node node, GeneralStatement insertStatement, SelectKeyStatement selectKeyStatement) {
     vars.errorCtx.setActivity("parsing a select key");
 
     // get attributes
@@ -326,12 +337,21 @@ public class SqlStatementParser extends BaseParser {
     Class resultClass = null;
 
     // get parameter and result maps
-    SelectKeyStatement selectKeyStatement = new SelectKeyStatement();
     selectKeyStatement.setSqlMapClient(vars.client);
 
     selectKeyStatement.setId(insertStatement.getId() + "-SelectKey");
     selectKeyStatement.setResource(vars.errorCtx.getResource());
     selectKeyStatement.setKeyProperty(keyPropName);
+    
+    // process the type (pre or post) attribute
+    boolean hasType;
+    String type = attributes.getProperty("type");
+    if (type == null) {
+      hasType = false;
+    } else {
+      hasType = true;
+      selectKeyStatement.setAfter("post".equals(type));
+    }
 
     try {
       if (resultClassName != null) {
@@ -363,7 +383,7 @@ public class SqlStatementParser extends BaseParser {
     selectKeyStatement.setResultMap(resultMap);
 
     vars.errorCtx.setMoreInfo(null);
-    return selectKeyStatement;
+    return hasType;
   }
 
   private void applyInlineParameterMap(GeneralStatement statement, String sqlStatement) {
