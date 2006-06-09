@@ -38,7 +38,15 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 /**
  * Basic implementation of ResultMap interface
@@ -411,42 +419,31 @@ public class BasicResultMap implements ResultMap {
 
       Object obj = PROBE.getObject(resultObject, propertyName);
 
-      ExtendedSqlMapClient client = (ExtendedSqlMapClient) request.getSession().getSqlMapClient();
-      boolean isCollection = false;
-      
       if (obj == null) {
         if (type == null) {
           type = PROBE.getPropertyTypeForSetter(resultObject, propertyName);
         }
         
         try {
-          if (type == Collection.class
-              || type == List.class
-              || type == ArrayList.class
-              || type == Set.class
-              || type == HashSet.class
-              || type.isAssignableFrom(Collection.class)) {
+          // create the object if is it a Collection.  If not a Collection
+          // then we will just set the property to the object created
+          // in processing the nested result map
+          if (Collection.class.isAssignableFrom(type)) {
+            ExtendedSqlMapClient client = (ExtendedSqlMapClient) request.getSession().getSqlMapClient();
             obj = ResultObjectFactoryUtil.createObjectThroughFactory(client.getResultObjectFactory(),
                 request.getStatement().getId(), type);
-            isCollection = true;
+            PROBE.setObject(resultObject, propertyName, obj);
           }
         } catch (Exception e) {
           throw new SqlMapException("Error instantiating collection property for mapping '" + mapping.getPropertyName() + "'.  Cause: " + e, e);
         }
-
-        // obj will be null if it is not one of our recognized collection types
-        if (obj != null) {
-          PROBE.setObject(resultObject, propertyName, obj);
-        }
-      } else {
-        isCollection = obj instanceof Collection;
       }
 
       values = resultMap.getResults(request, request.getResultSet());
       if (request.isRowDataFound()) {
         Object o = resultMap.setResultObjectValues(request, null, values);
         if (o != NO_VALUE) {
-          if (isCollection) {
+          if (obj != null && obj instanceof Collection) {
             ((Collection) obj).add(o);
           } else {
             PROBE.setObject(resultObject, propertyName, o);
