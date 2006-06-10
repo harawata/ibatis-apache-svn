@@ -33,6 +33,7 @@ Build Number: @buildNum@
  o Added IBATIS-205 - Change access modifiers from private to protected in many classes to allow developers to create extensions and subclasses to the iBatis classes
  o Added IBATIS-225 - Reuse resultmap for single bean property
  o Added IBATIS-230 - Warn when two ids of a <sql> tag are identical
+ o Added IBATIS-242 - Add property getters for ParameterSetter index and ResultGetter name and index
  o Added IBATIS-263 - Ignore case on type aliases
  o Added IBATIS-271 - Create no arg methods in the SqlMapDaoTemplate
  o Added IBATIS-277 - selectKey execution order attribute

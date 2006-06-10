@@ -163,4 +163,7 @@ public class ParameterSetterImpl implements ParameterSetter {
     return ps;
   }
 
+  public int getParameterIndex() {
+    return index;
+  }
 }

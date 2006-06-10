@@ -254,4 +254,11 @@ public interface ParameterSetter {
    */
   public PreparedStatement getPreparedStatement();
 
+  /**
+   * Returns the index of the parameter being set.
+   * 
+   * @return the parameter index used to set the value in the underlying
+   *   PreparedStatement
+   */
+  public int getParameterIndex();
 }

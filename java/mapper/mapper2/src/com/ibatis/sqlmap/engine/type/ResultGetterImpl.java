@@ -246,4 +246,12 @@ public class ResultGetterImpl implements ResultGetter {
   public ResultSet getResultSet() {
     return rs;
   }
+
+  public int getColumnIndex() {
+    return index;
+  }
+
+  public String getColumnName() {
+    return name;
+  }
 }

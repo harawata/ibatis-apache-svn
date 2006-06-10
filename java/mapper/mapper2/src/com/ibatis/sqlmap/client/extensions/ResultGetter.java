@@ -213,4 +213,21 @@ public interface ResultGetter {
    */
   public ResultSet getResultSet();
 
+  /**
+   * Returns the name of the column being got in the underlying ResultSet.
+   * May be <code>null</code> in which case the <code>getColumnIndex</code>
+   * method should be used.
+   * 
+   * @return the column name (may be null)
+   */
+  public String getColumnName();
+  
+  /**
+   * Returns the index of the column being got in the underlying ResultSet.
+   * Only use this method if the value returned from <code>getColumnName</code>
+   * is null.
+   * 
+   * @return the index of the column (if zero then use the column name)
+   */
+  public int getColumnIndex();
 }
