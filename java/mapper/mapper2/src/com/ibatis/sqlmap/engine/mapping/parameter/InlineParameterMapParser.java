@@ -80,7 +80,7 @@ public class InlineParameterMapParser {
   private ParameterMapping newParseMapping(String token, Class parameterClass, TypeHandlerFactory typeHandlerFactory) {
     BasicParameterMapping mapping = new BasicParameterMapping();
 
-    // #propertyName,javaType=string,jdbcType=VARCHAR,mode=IN,nullValue=N/A,handler=string#
+    // #propertyName,javaType=string,jdbcType=VARCHAR,mode=IN,nullValue=N/A,handler=string,numericScale=2#
 
     StringTokenizer paramParser = new StringTokenizer(token, "=,", false);
     mapping.setPropertyName(paramParser.nextToken());
@@ -104,6 +104,16 @@ public class InlineParameterMapParser {
             mapping.setTypeHandler(new CustomTypeHandler((TypeHandlerCallback) Resources.classForName(value).newInstance()));
           } catch (Exception e) {
             throw new SqlMapException("Error loading class specified by handler field in " + token + ".  Cause: " + e, e);
+          }
+        } else if ("numericScale".equals(field)) {
+          try {
+            Integer numericScale = Integer.valueOf(value);
+            if (numericScale.intValue() < 0) {
+              throw new SqlMapException("Value specified for numericScale must be greater than or equal to zero");
+            }
+            mapping.setNumericScale(numericScale);
+          } catch (NumberFormatException e) {
+            throw new SqlMapException("Value specified for numericScale is not a valid Integer");
           }
         } else {
           throw new SqlMapException("Unrecognized parameter mapping field: '" + field + "' in " + token);

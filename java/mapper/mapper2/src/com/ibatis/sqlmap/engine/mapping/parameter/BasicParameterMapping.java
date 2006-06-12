@@ -36,6 +36,7 @@ public class BasicParameterMapping implements ParameterMapping {
   private boolean outputAllowed;
   private Class javaType;
   private String resultMapName;
+  private Integer numericScale;
 
   private String errorString;
 
@@ -156,6 +157,14 @@ public class BasicParameterMapping implements ParameterMapping {
 
   public void setResultMapName(String resultMapName) {
 	  this.resultMapName = resultMapName;
+  }
+
+  public Integer getNumericScale() {
+    return numericScale;
+  }
+
+  public void setNumericScale(Integer numericScale) {
+    this.numericScale = numericScale;
   }
 
 }

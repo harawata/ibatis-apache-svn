@@ -250,6 +250,7 @@ public class SqlMapParser extends BaseParser {
         String nullValue = childAttributes.getProperty("nullValue");
         String mode = childAttributes.getProperty("mode");
         String callback = childAttributes.getProperty("typeHandler");
+        String numericScale = childAttributes.getProperty("numericScale");
 
         callback = vars.typeHandlerFactory.resolveAlias(callback);
         javaType = vars.typeHandlerFactory.resolveAlias(javaType);
@@ -293,6 +294,19 @@ public class SqlMapParser extends BaseParser {
           }
         } catch (ClassNotFoundException e) {
           throw new RuntimeException("Error setting javaType on parameter mapping.  Cause: " + e);
+        }
+        
+        if (numericScale != null) {
+          try {
+            Integer scale = Integer.valueOf(numericScale);
+            if (scale.intValue() < 0) {
+              throw new RuntimeException("Error setting numericScale on parameter mapping.  Cause: scale must be greater than or equal to zero");
+            }
+            
+            mapping.setNumericScale(scale);
+          } catch (NumberFormatException e) {
+            throw new RuntimeException("Error setting numericScale on parameter mapping.  Cause: " + numericScale + " is not a valid integer");
+          }
         }
 
         vars.parameterMappingList.add(mapping);

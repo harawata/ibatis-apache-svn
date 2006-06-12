@@ -396,7 +396,12 @@ public class SqlExecutor {
         if ( null != mapping.getTypeName() && !mapping.getTypeName().equals("") ) { //@added
           cs.registerOutParameter(i + 1, mapping.getJdbcType(), mapping.getTypeName() );
         } else {
-          cs.registerOutParameter(i + 1, mapping.getJdbcType());
+          if (mapping.getNumericScale() != null
+              && (mapping.getJdbcType() == Types.NUMERIC || mapping.getJdbcType() == Types.DECIMAL)) {
+            cs.registerOutParameter(i + 1, mapping.getJdbcType(), mapping.getNumericScale().intValue());
+          } else {
+            cs.registerOutParameter(i + 1, mapping.getJdbcType());
+          }
         }
       }
     }
