@@ -40,7 +40,7 @@ namespace IBatisNet.DataMapper.MappedStatements.PropertyStrategy
 		/// <summary>
 		/// Sets value of the specified <see cref="ResultProperty"/> on the target object
 		/// when a 'resultMapping' attribute exists
-		/// on the <see cref="ResultProperty"/> is not empty.
+		/// on the <see cref="ResultProperty"/>.
 		/// </summary>
 		/// <param name="request">The request.</param>
 		/// <param name="resultMap">The result map.</param>
@@ -74,7 +74,8 @@ namespace IBatisNet.DataMapper.MappedStatements.PropertyStrategy
 			}
 
 			// Sets created object on the property
-			resultMap.SetValueOfProperty( ref target, mapping, obj );		}
+			resultMap.SetValueOfProperty( ref target, mapping, obj );		
+		}
 
 		#endregion
 	}

@@ -440,6 +440,11 @@ namespace IBatisNet.DataMapper.MappedStatements
 			}
 		}
 
+        /// <summary>
+        /// Gets the cache key.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns>the cache key</returns>
 		private CacheKey GetCacheKey(RequestScope request) 
 		{
 			CacheKey cacheKey = new CacheKey();

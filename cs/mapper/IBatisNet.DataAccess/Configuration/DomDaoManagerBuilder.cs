@@ -682,20 +682,19 @@ namespace IBatisNet.DataAccess.Configuration
 			if (node != null)
 			{
 				configurationScope.ErrorContext.Resource = node.OuterXml.ToString();
-				// name
-				attribute = node.Attributes["name"];
+                string providerName = NodeUtils.ParsePropertyTokens(node.Attributes["name"].Value, configurationScope.Properties);
 
-				configurationScope.ErrorContext.ObjectId = attribute.Value;
+                configurationScope.ErrorContext.ObjectId = providerName;
 
-				if (configurationScope.Providers.Contains(attribute.Value) == true)
+                if (configurationScope.Providers.Contains(providerName) == true)
 				{
-					return (IDbProvider)configurationScope.Providers[attribute.Value];
+                    return (IDbProvider)configurationScope.Providers[providerName];
 				}
 				else
 				{
 					throw new ConfigurationException(
 						string.Format("Error while configuring the Provider named \"{0}\" in the Context named \"{1}\".",
-						attribute.Value, configurationScope.NodeContext.Attributes["name"].Value));
+                        providerName, configurationScope.NodeContext.Attributes["name"].Value));
 				}
 			}
 			else
