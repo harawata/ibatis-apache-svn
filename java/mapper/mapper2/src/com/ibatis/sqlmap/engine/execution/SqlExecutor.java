@@ -140,6 +140,32 @@ public class SqlExecutor {
   }
 
   /**
+   * Execute a batch of statements
+   *
+   * @param session - the session scope
+   *
+   * @return - a List of BatchResult objects (may be null if no batch
+   *  has been initiated).  There will be one BatchResult object in the
+   *  list for each sub-batch executed
+   * @throws SQLException if a database access error occurs, or the drive
+   *   does not support batch statements
+   * @throws BatchException if the driver throws BatchUpdateException
+   */
+  public List executeBatchDetailed(SessionScope session)
+      throws SQLException, BatchException {
+    List answer = null;
+    Batch batch = (Batch) session.getBatch();
+    if (batch != null) {
+      try {
+        answer = batch.executeBatchDetailed();
+      } finally {
+        batch.cleanupBatch();
+      }
+    }
+    return answer;
+  }
+  
+  /**
    * Long form of the method to execute a query
    *
    * @param request - the request scope
@@ -500,9 +526,8 @@ public class SqlExecutor {
   private static class Batch {
     private String currentSql;
     private List statementList = new ArrayList();
+    private List batchResultList = new ArrayList();
     private int size;
-    private static final int SUCCESS_NO_INFO = -2;
-    private static final int EXECUTE_FAILED = -3;
 
     /**
      * Create a new batch
@@ -544,6 +569,7 @@ public class SqlExecutor {
 
         currentSql = sql;
         statementList.add(ps);
+        batchResultList.add(new BatchResult(request.getStatement().getId(), sql));
       }
       request.getParameterMap().setParameters(request, ps, parameters);
       ps.addBatch();
@@ -551,6 +577,10 @@ public class SqlExecutor {
     }
 
     /**
+     * TODO (Jeff Butler) - maybe this method should be deprecated in some release,
+     *  and then removed in some even later release.  executeBatchDetailed gives
+     *  much more complete information.
+     *  
      * Execute the current session's batch
      *
      * @return - the number of rows updated
@@ -563,9 +593,9 @@ public class SqlExecutor {
         PreparedStatement ps = (PreparedStatement) statementList.get(i);
         int[] rowCounts = ps.executeBatch();
         for (int j = 0; j < rowCounts.length; j++) {
-          if (rowCounts[j] == SUCCESS_NO_INFO) {
+          if (rowCounts[j] == Statement.SUCCESS_NO_INFO) {
             // do nothing
-          } else if (rowCounts[j] == EXECUTE_FAILED) {
+          } else if (rowCounts[j] == Statement.EXECUTE_FAILED) {
             throw new SQLException("The batched statement at index " + j + " failed to execute.");
           } else {
             totalRowCount += rowCounts[j];
@@ -576,6 +606,44 @@ public class SqlExecutor {
     }
 
     /**
+     * Batch execution method that returns all the information
+     * the driver has to offer.
+     * 
+     * @return a List of BatchResult objects
+     * @throws BatchException (an SQLException sub class) if any nested
+     *  batch fails
+     * @throws SQLException if a database access error occurs, or the drive
+     *   does not support batch statements
+     * @throws BatchException if the driver throws BatchUpdateException
+     */
+    public List executeBatchDetailed() throws SQLException, BatchException {
+      List answer = new ArrayList();
+      
+      for (int i = 0, n = statementList.size(); i < n; i++) {
+        BatchResult br = (BatchResult) batchResultList.get(i);
+        PreparedStatement ps = (PreparedStatement) statementList.get(i);
+        try {
+          br.setUpdateCounts(ps.executeBatch());
+        } catch (BatchUpdateException e) {
+          StringBuffer message = new StringBuffer();
+          message.append("Sub batch number ");
+          message.append(i + 1);
+          message.append(" failed.");
+          if (i > 0) {
+            message.append(" ");
+            message.append(i);
+            message.append(" prior sub batch(s) completed successfully, but will be rolled back.");
+          }
+          
+          throw new BatchException(message.toString(), e, answer, br.getStatementId(), br.getSql());
+        }
+        answer.add(br);
+      }
+      
+      return answer;
+    }
+    
+    /**
      * Close all the statements in the batch and clear all the statements
      */
     public void cleanupBatch() {
@@ -585,6 +653,7 @@ public class SqlExecutor {
       }
       currentSql = null;
       statementList.clear();
+      batchResultList.clear();
       size = 0;
     }
   }

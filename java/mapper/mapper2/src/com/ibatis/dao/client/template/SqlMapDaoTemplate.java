@@ -22,6 +22,7 @@ import com.ibatis.dao.engine.transaction.sqlmap.SqlMapDaoTransaction;
 import com.ibatis.sqlmap.client.SqlMapExecutor;
 import com.ibatis.sqlmap.client.SqlMapTransactionManager;
 import com.ibatis.sqlmap.client.event.RowHandler;
+import com.ibatis.sqlmap.engine.execution.BatchException;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -503,4 +504,20 @@ public abstract class SqlMapDaoTemplate extends DaoTemplate implements SqlMapExe
     }
   }
 
+  /**
+   * Executes (flushes) all statements currently batched.
+   * 
+   * @return a List of BatchResult objects.  There will be one element in the
+   *  list for each sub-batch executed.  A sub-batch is created by adding a statement
+   *  to the batch that does not equal the prior statement. 
+   */
+  public List executeBatchDetailed() {
+    try {
+      return getSqlMapExecutor().executeBatchDetailed();
+    } catch (BatchException e) {
+      throw new DaoException("Failed to executeBatch.  Cause: " + e, e);
+    } catch (SQLException e) {
+      throw new DaoException("Failed to executeBatch.  Cause: " + e, e);
+    }
+  }
 }

@@ -17,6 +17,7 @@ package com.ibatis.sqlmap.client;
 
 import com.ibatis.common.util.PaginatedList;
 import com.ibatis.sqlmap.client.event.RowHandler;
+import com.ibatis.sqlmap.engine.execution.BatchException;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -333,4 +334,17 @@ public interface SqlMapExecutor {
    *                               fails.
    */
   int executeBatch() throws SQLException;
+
+  /**
+   * Executes (flushes) all statements currently batched.
+   *
+   * @return a List of BatchResult objects.  There will be one element in the
+   *  list for each sub-batch executed.  A sub-batch is created by adding a statement
+   *  to the batch that does not equal the prior statement. 
+   * @throws SQLException if a database access error occurs, or the drive
+   *   does not support batch statements
+   * @throws BatchException if the driver throws BatchUpdateException
+   * @see com.ibatis.sqlmap.engine.execution.BatchException
+   */
+  List executeBatchDetailed() throws SQLException, BatchException;
 }

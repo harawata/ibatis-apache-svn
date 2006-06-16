@@ -25,6 +25,7 @@ import com.ibatis.sqlmap.client.event.RowHandler;
 import com.ibatis.sqlmap.engine.cache.CacheKey;
 import com.ibatis.sqlmap.engine.cache.CacheModel;
 import com.ibatis.sqlmap.engine.exchange.DataExchangeFactory;
+import com.ibatis.sqlmap.engine.execution.BatchException;
 import com.ibatis.sqlmap.engine.execution.SqlExecutor;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
@@ -804,6 +805,22 @@ public class SqlMapExecutorDelegate {
     return sqlExecutor.executeBatch(session);
   }
 
+  /**
+   * Execute a batch for a session
+   *
+   * @param session - the session
+   * @return - a List of BatchResult objects (may be null if no batch
+   *  has been initiated).  There will be one BatchResult object in the
+   *  list for each sub-batch executed
+   * @throws SQLException if a database access error occurs, or the drive
+   *   does not support batch statements
+   * @throws BatchException if the driver throws BatchUpdateException
+   */
+  public List executeBatchDetailed(SessionScope session) throws SQLException, BatchException {
+    session.setInBatch(false);
+    return sqlExecutor.executeBatchDetailed(session);
+  }
+  
   /**
    * Use a user-provided transaction for a session
    *

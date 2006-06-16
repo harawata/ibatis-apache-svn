@@ -16,9 +16,9 @@ Build Number: @buildNum@
  o Fixed IBATIS-258 - Invalid DOCTYPE instruction in example SQL Map file in documentation bundle.
  o Fixed IBATIS-260 - Hash conflict with groupBy resultMaps
  o Fixed IBATIS-261 - CLONE -The method executor.executeBatch() always returns 0.
- o Fixed IBATIS-269 (??) - SqlExecutor calls getMoreResults without checking supportsMultipleResultSets
+ o Fixed IBATIS-269 - SqlExecutor calls getMoreResults without checking supportsMultipleResultSets
  o Fixed IBATIS-281 - Nested iterate tags does not work
- o Fixed IBATIS-286 (??) - close session upon null user connection
+ o Fixed IBATIS-286 - close session upon null user connection
  o Fixed IBATIS-293 - Fix use of list[]-notation in propertyattributes of dynamic tags
  
  o Added IBATIS-22 - Specify Query Timeout
@@ -27,6 +27,7 @@ Build Number: @buildNum@
  o Added IBATIS-127 - PropertyAccessPlan should put more context information when throwing an exception
  o Added IBATIS-128 - Detect illegal overloaded JavaBeans properties methods (e.g. setters)
  o Added IBATIS-150 - Requirement and benefit of groupBy attribute is not clear in SQL Maps Dev Guide
+ o Added IBATIS-159 - A new executeBatchDetailed() method that returns all driver information from batch execution
  o Added IBATIS-166 - Add overloads for common SqlMapClient methods without parameterObject parameter
  o Added IBATIS-167 - Improvements in SimpleDataSource
  o Added IBATIS-176 - Add support for DECIMAL/NUMERIC scale on Stored Procedure Output Parameters

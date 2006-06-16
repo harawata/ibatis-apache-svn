@@ -21,6 +21,7 @@ import com.ibatis.common.logging.LogFactory;
 import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.client.SqlMapSession;
 import com.ibatis.sqlmap.client.event.RowHandler;
+import com.ibatis.sqlmap.engine.execution.BatchException;
 import com.ibatis.sqlmap.engine.execution.SqlExecutor;
 import com.ibatis.sqlmap.engine.mapping.result.ResultObjectFactory;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
@@ -159,6 +160,10 @@ public class SqlMapClientImpl implements ExtendedSqlMapClient {
     return getLocalSqlMapSession().executeBatch();
   }
 
+  public List executeBatchDetailed() throws SQLException, BatchException {
+    return getLocalSqlMapSession().executeBatchDetailed();
+  }
+  
   public void setUserConnection(Connection connection) throws SQLException {
   try {
     getLocalSqlMapSession().setUserConnection(connection);

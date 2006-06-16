@@ -19,6 +19,7 @@ import com.ibatis.common.jdbc.exception.NestedSQLException;
 import com.ibatis.common.util.PaginatedList;
 import com.ibatis.sqlmap.client.SqlMapSession;
 import com.ibatis.sqlmap.client.event.RowHandler;
+import com.ibatis.sqlmap.engine.execution.BatchException;
 import com.ibatis.sqlmap.engine.execution.SqlExecutor;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
 import com.ibatis.sqlmap.engine.scope.SessionScope;
@@ -177,6 +178,10 @@ public class SqlMapSessionImpl implements SqlMapSession {
     return delegate.executeBatch(session);
   }
 
+  public List executeBatchDetailed() throws SQLException, BatchException {
+    return delegate.executeBatchDetailed(session);
+  }
+  
   public void setUserConnection(Connection connection) throws SQLException {
     delegate.setUserProvidedTransaction(session, connection);
   }
