@@ -156,7 +156,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Content Include="ChangeLog.txt" />
-    <Content Include="DaoConfig.xsd" />
+    <EmbeddedResource Include="DaoConfig.xsd" />
     <Content Include="licence.txt" />
     <Content Include="notice.txt" />
     <None Include="IBatisNet.DataAccess.build" />
