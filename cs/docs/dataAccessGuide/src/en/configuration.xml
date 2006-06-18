@@ -141,8 +141,7 @@
         </listitem>
 
       </orderedlist>
-      The dependency
-      is found in the <filename>External-Bin</filename> folder and can also
+      The dependency is found in the <filename>External-Bin</filename> folder and can also
       be found in the <filename>bin\Debug</filename> folder after building the
       solution. In addition, the framework's
       <filename>IBatisNet.DataAccess.Extensions</filename> and
@@ -256,6 +255,52 @@
           </tbody>
         </tgroup>
       </table>
+    </sect2>
+
+<sect2>
+      <title>Visual Studio.NET Integration</title>
+
+      <para>The configuration file (dao.config) is associated to a schema. The benefits of associating
+      an XML document with a schema are to validate the document (which is
+      done at runtime) and to use editing features such as
+      IntelliSense/content completion assistance.</para>
+
+      <para>To allow association of the schemas in VS.NET XML editor to your
+      configuration file, you should add the schema file
+      (<filename>DaoConfig.xsd</filename>  to either your VS.NET project or in
+      your VS.NET installation directory. The VS.NET directory will be
+      either</para>
+
+      <para><filename>C:\Program Files\Microsoft Visual Studio 8\Xml\Schemas for VS.NET 2005</filename></para>
+
+      <para>or</para>
+
+      <para><filename>C:\Program Files\Microsoft Visual Studio .NET
+      2003\Common7\Packages\schemas\xml for VS.NET 2003</filename></para>
+
+      <para>or</para>
+
+      <para><filename>C:\Program Files\Microsoft Visual Studio
+      .NET\Common7\Packages\schemas\xml for VS.NET 2002</filename></para>
+
+      <para>depending on your version of VS.NET. It is typically easier to
+      place the file in the well known location under the VS.NET installation
+      directory than to copy the XSD file for each project you create.</para>
+
+      <para>Once you have registered the schema with VS.NET you will be enough
+      to get IntelliSense and validation of the configuration file from within
+      VS.NET.</para>
+
+      <figure>
+        <title>IntelliSense example</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata align="center" fileref="images/intellisense.gif"
+                       format="GIF" />
+          </imageobject>
+        </mediaobject>
+      </figure>
     </sect2>
   </sect1>
 

@@ -282,6 +282,10 @@
       your VS.NET installation directory. The VS.NET directory will be
       either</para>
 
+      <para><filename>C:\Program Files\Microsoft Visual Studio 8\Xml\Schemas for VS.NET 2005</filename></para>
+
+      <para>or</para>
+
       <para><filename>C:\Program Files\Microsoft Visual Studio .NET
       2003\Common7\Packages\schemas\xml for VS.NET 2003</filename></para>
 
