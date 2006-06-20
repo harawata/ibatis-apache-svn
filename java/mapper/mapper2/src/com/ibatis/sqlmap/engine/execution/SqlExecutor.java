@@ -311,6 +311,11 @@ public class SqlExecutor {
 
       setStatementTimeout(request.getStatement(), cs);
 
+      Integer fetchSize = request.getStatement().getFetchSize();
+      if (fetchSize != null) {
+        cs.setFetchSize(fetchSize.intValue());
+      }
+      
       ParameterMap parameterMap = request.getParameterMap();
 
       ParameterMapping[] mappings = parameterMap.getParameterMappings();
