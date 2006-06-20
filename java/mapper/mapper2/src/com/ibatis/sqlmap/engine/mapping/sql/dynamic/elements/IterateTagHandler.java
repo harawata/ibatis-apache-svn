@@ -55,6 +55,7 @@ public class IterateTagHandler extends BaseTagHandler {
       ctx.setAttribute(tag, iterate);
       ctx.pushIterateContext(iterate);
     }
+    
     if (iterate != null && iterate.hasNext()) {
       return INCLUDE_BODY;
     } else {
@@ -77,9 +78,8 @@ public class IterateTagHandler extends BaseTagHandler {
         // text.  If it is not the first to produce a result then
         // we need to add the conjunction text
         if (iterate.someSubElementsHaveContent()) {
-          String conj = tag.getConjunctionAttr();
-          if (conj != null) {
-            bodyContent.insert(0,conj);
+          if (tag.isConjunctionAvailable()) {
+            bodyContent.insert(0, tag.getConjunctionAttr());
           }
         } else {
             // we need to specify that this is the first content
@@ -87,18 +87,16 @@ public class IterateTagHandler extends BaseTagHandler {
             // add the prepend
             iterate.setPrependEnabled(true);
             
-            String open = tag.getOpenAttr();
-            if (open != null) {
-              bodyContent.insert(0, open);
+            if (tag.isOpenAvailable()) {
+              bodyContent.insert(0, tag.getOpenAttr());
             }
         }
         iterate.setSomeSubElementsHaveContent(true);
       }
       
       if (iterate.isLast() && iterate.someSubElementsHaveContent()) {
-        String close = tag.getCloseAttr();
-        if (close != null) {
-          bodyContent.append(close);
+        if (tag.isCloseAvailable()) {
+          bodyContent.append(tag.getCloseAttr());
         }
       }
       

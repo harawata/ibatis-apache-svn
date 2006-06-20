@@ -148,7 +148,7 @@ public class SqlTagContext {
   public void disableRemoveFirstPrependMarker() {
     ((RemoveFirstPrependMarker) removeFirstPrependStack.get(1)).setRemoveFirstPrepend(false);
   }
-  
+
   /**
    * iterate context is stored here for nested dynamic tags in
    * the body of the iterate tag

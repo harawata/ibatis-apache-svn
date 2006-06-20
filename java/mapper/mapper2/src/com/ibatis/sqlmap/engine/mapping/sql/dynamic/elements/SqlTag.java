@@ -73,6 +73,10 @@ public class SqlTag implements SqlChild, DynamicParent {
     return openAttr != null && openAttr.length() > 0;
   }
   
+  public boolean isConjunctionAvailable() {
+    return conjunctionAttr != null && conjunctionAttr.length() > 0;
+  }
+  
   public String getPrependAttr() {
     return prependAttr;
   }

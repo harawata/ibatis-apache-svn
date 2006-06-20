@@ -16,8 +16,6 @@
    limitations under the License.
  -->
 
-<!ENTITY % SelectKeyType "(pre|post)">
-
 <!ELEMENT sqlMap (typeAlias* | cacheModel* | resultMap* | parameterMap* | sql* | statement* | insert* | update* | delete* | select* | procedure*)+>
 <!ATTLIST sqlMap
 xmlns:fo CDATA #IMPLIED
@@ -158,7 +156,7 @@ timeout CDATA #IMPLIED
 <!ATTLIST selectKey
 resultClass CDATA #IMPLIED
 keyProperty CDATA #IMPLIED
-type %SelectKeyType; #IMPLIED
+type (pre|post) #IMPLIED
 >
 
 <!ELEMENT update (#PCDATA | include | dynamic | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
@@ -207,7 +205,7 @@ prepend CDATA #IMPLIED
 open CDATA #IMPLIED
 close CDATA #IMPLIED
 property CDATA #IMPLIED
-removeFirstPrepend CDATA #IMPLIED
+removeFirstPrepend (true|false) #IMPLIED
 >
 
 <!ELEMENT isNull (#PCDATA | include | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
@@ -216,7 +214,7 @@ prepend CDATA #IMPLIED
 open CDATA #IMPLIED
 close CDATA #IMPLIED
 property CDATA #IMPLIED
-removeFirstPrepend CDATA #IMPLIED
+removeFirstPrepend (true|false) #IMPLIED
 >
 
 <!ELEMENT isNotPropertyAvailable (#PCDATA | include | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
@@ -225,7 +223,7 @@ prepend CDATA #IMPLIED
 open CDATA #IMPLIED
 close CDATA #IMPLIED
 property CDATA #REQUIRED
-removeFirstPrepend CDATA #IMPLIED
+removeFirstPrepend (true|false) #IMPLIED
 >
 
 <!ELEMENT isPropertyAvailable (#PCDATA | include | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
@@ -234,7 +232,7 @@ prepend CDATA #IMPLIED
 open CDATA #IMPLIED
 close CDATA #IMPLIED
 property CDATA #REQUIRED
-removeFirstPrepend CDATA #IMPLIED
+removeFirstPrepend (true|false) #IMPLIED
 >
 
 <!ELEMENT isEqual (#PCDATA | include | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
@@ -243,7 +241,7 @@ prepend CDATA #IMPLIED
 open CDATA #IMPLIED
 close CDATA #IMPLIED
 property CDATA #IMPLIED
-removeFirstPrepend CDATA #IMPLIED
+removeFirstPrepend (true|false) #IMPLIED
 compareProperty CDATA #IMPLIED
 compareValue CDATA #IMPLIED
 >
@@ -254,7 +252,7 @@ prepend CDATA #IMPLIED
 open CDATA #IMPLIED
 close CDATA #IMPLIED
 property CDATA #IMPLIED
-removeFirstPrepend CDATA #IMPLIED
+removeFirstPrepend (true|false) #IMPLIED
 compareProperty CDATA #IMPLIED
 compareValue CDATA #IMPLIED
 >
@@ -265,7 +263,7 @@ prepend CDATA #IMPLIED
 open CDATA #IMPLIED
 close CDATA #IMPLIED
 property CDATA #IMPLIED
-removeFirstPrepend CDATA #IMPLIED
+removeFirstPrepend (true|false) #IMPLIED
 compareProperty CDATA #IMPLIED
 compareValue CDATA #IMPLIED
 >
@@ -276,7 +274,7 @@ prepend CDATA #IMPLIED
 open CDATA #IMPLIED
 close CDATA #IMPLIED
 property CDATA #IMPLIED
-removeFirstPrepend CDATA #IMPLIED
+removeFirstPrepend (true|false) #IMPLIED
 compareProperty CDATA #IMPLIED
 compareValue CDATA #IMPLIED
 >
@@ -287,7 +285,7 @@ prepend CDATA #IMPLIED
 open CDATA #IMPLIED
 close CDATA #IMPLIED
 property CDATA #IMPLIED
-removeFirstPrepend CDATA #IMPLIED
+removeFirstPrepend (true|false) #IMPLIED
 compareProperty CDATA #IMPLIED
 compareValue CDATA #IMPLIED
 >
@@ -298,7 +296,7 @@ prepend CDATA #IMPLIED
 open CDATA #IMPLIED
 close CDATA #IMPLIED
 property CDATA #IMPLIED
-removeFirstPrepend CDATA #IMPLIED
+removeFirstPrepend (true|false) #IMPLIED
 compareProperty CDATA #IMPLIED
 compareValue CDATA #IMPLIED
 >
@@ -309,7 +307,7 @@ prepend CDATA #IMPLIED
 open CDATA #IMPLIED
 close CDATA #IMPLIED
 property CDATA #IMPLIED
-removeFirstPrepend CDATA #IMPLIED
+removeFirstPrepend (true|false) #IMPLIED
 >
 
 <!ELEMENT isNotEmpty (#PCDATA | include | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
@@ -318,7 +316,7 @@ prepend CDATA #IMPLIED
 open CDATA #IMPLIED
 close CDATA #IMPLIED
 property CDATA #IMPLIED
-removeFirstPrepend CDATA #IMPLIED
+removeFirstPrepend (true|false) #IMPLIED
 >
 
 <!ELEMENT isParameterPresent (#PCDATA | include | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
@@ -326,7 +324,7 @@ removeFirstPrepend CDATA #IMPLIED
 prepend CDATA #IMPLIED
 open CDATA #IMPLIED
 close CDATA #IMPLIED
-removeFirstPrepend CDATA #IMPLIED
+removeFirstPrepend (true|false) #IMPLIED
 >
 
 <!ELEMENT isNotParameterPresent (#PCDATA | include | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
@@ -334,14 +332,14 @@ removeFirstPrepend CDATA #IMPLIED
 prepend CDATA #IMPLIED
 open CDATA #IMPLIED
 close CDATA #IMPLIED
-removeFirstPrepend CDATA #IMPLIED
+removeFirstPrepend (true|false) #IMPLIED
 >
 
 <!ELEMENT iterate (#PCDATA | include | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>
 <!ATTLIST iterate
 prepend CDATA #IMPLIED
 property CDATA #IMPLIED
-removeFirstPrepend CDATA #IMPLIED
+removeFirstPrepend (true|false) #IMPLIED
 open CDATA #IMPLIED
 close CDATA #IMPLIED
 conjunction CDATA #IMPLIED
