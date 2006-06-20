@@ -43,6 +43,7 @@ Build Number: @buildNum@
  o Added IBATIS-217 - I would like to see korean document on iBATIS website's document page
  o Fixed IBATIS-275 - Add comments only to indicate flushDataCache(string) always uses namespace.
  o Added IBATIS-308 - fetchSize for procedures
+ o Added IBATIS-311 - Allow removeFirstPrepend to fire repeatedly in an <iterate> tag
  
  
 ------------------------------

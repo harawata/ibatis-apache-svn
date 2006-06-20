@@ -340,7 +340,7 @@ removeFirstPrepend (true|false) #IMPLIED
 <!ATTLIST iterate
 prepend CDATA #IMPLIED
 property CDATA #IMPLIED
-removeFirstPrepend (true|false) #IMPLIED
+removeFirstPrepend (true|false|iterate) #IMPLIED
 open CDATA #IMPLIED
 close CDATA #IMPLIED
 conjunction CDATA #IMPLIED

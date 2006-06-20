@@ -257,6 +257,29 @@ public class NestedIterateTest extends BaseSqlMapTest {
     }
   }
 
+  public void test09a() {
+    NestedIterateParameterObject po = new NestedIterateParameterObject();
+
+    NestedIterateParameterObject.AndCondition andCondition = new NestedIterateParameterObject.AndCondition();
+    andCondition.addCondition("first_name =", "Jeff", new Boolean(true));
+    andCondition.addCondition("last_name =", "Jones", new Boolean(true));
+    po.addOrCondition(andCondition);
+
+    andCondition = new NestedIterateParameterObject.AndCondition();
+    andCondition.addCondition("first_name =", "Matt", new Boolean(true));
+    andCondition.addCondition("last_name =", "Jones", new Boolean(true));
+    po.addOrCondition(andCondition);
+
+    try {
+      List results = sqlMap.queryForList("NestedIterateTest9a", po);
+      assertEquals(2, results.size());
+      assertEquals(1, ((Person) results.get(0)).getId().intValue());
+      assertEquals(2, ((Person) results.get(1)).getId().intValue());
+    } catch (Exception e) {
+      fail(e.getMessage());
+    }
+  }
+  
   /**
    * This test shoud return 1 row: id 4
    */

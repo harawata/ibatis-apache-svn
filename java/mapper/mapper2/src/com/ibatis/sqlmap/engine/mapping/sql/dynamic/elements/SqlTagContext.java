@@ -119,7 +119,8 @@ public class SqlTagContext {
         removeFirstPrependStack.addFirst(
             new RemoveFirstPrependMarker(tag,false));
       }
-    } else if("true".equals(tag.getRemoveFirstPrepend())){
+    } else if("true".equals(tag.getRemoveFirstPrepend())
+        || "iterate".equals(tag.getRemoveFirstPrepend())){
       // you must be specific about the removal otherwise it
       // will function as ibatis has always functioned and add
       // the prepend
@@ -127,10 +128,12 @@ public class SqlTagContext {
           new RemoveFirstPrependMarker(tag,true));
     } else if(!tag.isPrependAvailable() && 
         !"true".equals(tag.getRemoveFirstPrepend()) &&
+        !"iterate".equals(tag.getRemoveFirstPrepend()) &&
         tag.getParent() != null) {
       // if no prepend or removeFirstPrepend is specified 
       // we need to look to the parent tag for default values
-      if("true".equals(tag.getParent().getRemoveFirstPrepend())) {
+      if("true".equals(tag.getParent().getRemoveFirstPrepend())
+          || "iterate".equals(tag.getParent().getRemoveFirstPrepend())) {
         removeFirstPrependStack.addFirst(
             new RemoveFirstPrependMarker(tag,true));
       }
@@ -149,6 +152,10 @@ public class SqlTagContext {
     ((RemoveFirstPrependMarker) removeFirstPrependStack.get(1)).setRemoveFirstPrepend(false);
   }
 
+  public void reEnableRemoveFirstPrependMarker() {
+    ((RemoveFirstPrependMarker) removeFirstPrependStack.get(0)).setRemoveFirstPrepend(true);
+  }
+  
   /**
    * iterate context is stored here for nested dynamic tags in
    * the body of the iterate tag

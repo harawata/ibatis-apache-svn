@@ -54,6 +54,8 @@ public class IterateTagHandler extends BaseTagHandler {
       
       ctx.setAttribute(tag, iterate);
       ctx.pushIterateContext(iterate);
+    } else if ("iterate".equals(tag.getRemoveFirstPrepend())) {
+      ctx.reEnableRemoveFirstPrependMarker();
     }
     
     if (iterate != null && iterate.hasNext()) {

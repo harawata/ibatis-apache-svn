@@ -127,6 +127,22 @@
     order by id
   </select>
   
+  <!-- This test makes sure that removeFirstPrepend works for every iteration -->
+  <select id="NestedIterateTest9a" resultMap="personResult" parameterClass="testdomain.NestedIterateParameterObject">
+    select id, first_name, last_name
+    from person
+    <dynamic prepend="where">
+      <iterate property="orConditions" conjunction="or" removeFirstPrepend="iterate">
+      (
+        <iterate prepend="and" property="orConditions[].conditions" conjunction="and">
+          $orConditions[].conditions[].condition$ #orConditions[].conditions[].value#
+        </iterate>
+      )
+      </iterate>
+    </dynamic>
+    order by id
+  </select>
+  
   <select id="NestedIterateTest10" resultMap="personResult" parameterClass="testdomain.NestedIterateParameterObject">
     select id, first_name, last_name
     from person
