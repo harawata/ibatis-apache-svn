@@ -100,7 +100,16 @@ namespace IBatisNet.DataMapper.Commands
 			StringCollection properties = request.PreparedStatement.DbParametersName;
 			IDataParameter[] parameters = request.PreparedStatement.DbParameters;
 
+            #region Logging
+            if (_logger.IsDebugEnabled)
+            {
+                _paramLogList.Remove(0, _paramLogList.Length);
+                _typeLogList.Remove(0, _typeLogList.Length);
+            }
+            #endregion
+            
 			int count = properties.Count;
+
             for ( int i = 0; i < count; ++i )
 			{
 				IDataParameter sqlParameter = parameters[i];
@@ -110,9 +119,6 @@ namespace IBatisNet.DataMapper.Commands
 				#region Logging
 				if (_logger.IsDebugEnabled)
 				{
-                    _paramLogList.Remove(0, _paramLogList.Length);
-                    _typeLogList.Remove(0, _typeLogList.Length);
-
                     _paramLogList.Append(sqlParameter.ParameterName);
                     _paramLogList.Append("=[");
                     _typeLogList.Append(sqlParameter.ParameterName);
