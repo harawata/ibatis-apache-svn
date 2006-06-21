@@ -11,4 +11,11 @@ namespace IBatisNet.Common.Test.Domain
 		{
 		}
 	}
+
+    public class ItemBis
+    {
+        public ItemBis(string description)
+        {
+        }
+    }
 }

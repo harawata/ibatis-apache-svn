@@ -301,11 +301,12 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 				}
 				else // complex member name FavouriteLineItem.Id
 				{
-					MemberInfo propertyInfo = ObjectProbe.GetMemberInfoForSetter(parameterClass, _propertyName);
-					string memberName = _propertyName.Substring( _propertyName.LastIndexOf('.')+1);
+				    string memberName = _propertyName.Substring( _propertyName.LastIndexOf('.')+1);
+                    string parentName = _propertyName.Substring(0,_propertyName.LastIndexOf('.'));
+                    Type parentType = ObjectProbe.GetMemberTypeForGetter(parameterClass, parentName);
 
                     IGetAccessorFactory getAccessorFactory = scope.DataExchangeFactory.AccessorFactory.GetAccessorFactory;
-                    _getAccessor = getAccessorFactory.CreateGetAccessor(propertyInfo.ReflectedType, memberName);
+                    _getAccessor = getAccessorFactory.CreateGetAccessor(parentType, memberName);
 				}
 			}
 

@@ -114,7 +114,7 @@ namespace IBatisNet.Common.Utilities.Objects
 
 			// Add test if contructeur not public
 			ConstructorInfo ctor = typeToCreate.GetConstructor(VISIBILITY, null, argumentTypes, null);
-			if (!ctor.IsPublic)
+			if (ctor==null || !ctor.IsPublic)
 			{
 				throw new ProbeException(
 					string.Format("Unable to optimize create instance. Cause : Could not find public constructor matching specified arguments for type \"{0}\".", typeToCreate.Name));

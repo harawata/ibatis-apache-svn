@@ -42,6 +42,17 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			object obj = factory.CreateInstance(null);
 		}
 
+        [Test]
+        [ExpectedException(typeof(ProbeException))]
+        public void NoMatchConstructor()
+        {
+            IObjectFactory objectFactory = new ObjectFactory(true);
+
+            IFactory factory = objectFactory.CreateFactory(typeof(ItemBis), Type.EmptyTypes);
+
+            object obj = factory.CreateInstance(null);
+        }
+
 		[Test]
 		[ExpectedException(typeof(ProbeException))]
 		public void ProtectedConstructor()

@@ -103,7 +103,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
             {
                 MethodInfo methodInfo = null;
 #if dotnet2
-                methodInfo = propertyInfo.GetSetMethod();
+                methodInfo = propertyInfo.GetGetMethod();
 #else
                 methodInfo = targetType.GetMethod("get_" + propertyName);
 #endif
@@ -162,7 +162,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
             {
                 MethodInfo methodInfo = null;
 #if dotnet2
-                methodInfo = propertyInfo.GetSetMethod();
+                methodInfo = propertyInfo.GetGetMethod();
 #else
 				methodInfo = targetType.GetMethod("get_" + propertyName,BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 				if (methodInfo == null)
