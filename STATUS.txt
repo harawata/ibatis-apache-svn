@@ -11,9 +11,9 @@ Announcements: http://ibatis.apache.org/archive.html
 Status File: http://svn.apache.org/repos/asf/ibatis/trunk/STATUS.txt
 
 PMC Members
-* Clinton Begin (cbegin)
+* Clinton Begin (cbegin) (ASF)
 * Gilles Bayon (gbayon)
-* Ted Husted (husted) [Chair]
+* Ted Husted (husted) [Chair] (ASF)
 * Brandon Goodin (bgoodin)
 * Larry Meadors (lmeadors)
 * Robert Rabe (roberto)
@@ -24,10 +24,52 @@ Other Committers:
 * Nathan Maves (nmaves)
 * Jeff Butler (jgbutler)
 * Brice Ruth (bdruth)
+* Jon Tirsen (bdruth)
+
+(ASF) = Also ASF Member
 
 ----
 
 Board Reports 
+
+June 2006
+
+Since our March 2006 report, the iBATIS community has continue to 
+make positive advances. 
+
+The team has been using "issue driven development" with good effect. 
+Development discussions are being attached as comments to JIRA tickets, 
+helping to keep the discussions focussed, organized, and easy to find 
+for future reference. Since the comments are posted to dev@, it's still 
+easy to follow along with only a mailreader. 
+
+iBATIS continues to find acceptance in the wider development community. 
+High profile sites like MySpace, DevX, JavaLobby, and dzone, all use 
+either the .NET or Java implementation in production. 
+
+Also since our last report, one new committer (Jon Tirsen) has joined 
+the team, and the 1.3 version of our .NET implemented was found to be 
+of "General Availability" quality.
+
+Team Member Clinton Begin has beeninvited to join the ASF as a Member. 
+Other team members are submitting proposals for iBATIS talks for 
+ApacheCon 2006 US, which will hopefully draw additional iBATIS 
+committers to Texas this year.
+
+March 2006
+
+Since our December Report, iBATIS has nominated one new committer,
+Chad Humphries, and another committer, Rob Grabowski, has joined the
+PMC. The project now hosts implementations for Java and C#, and we
+hope to add Ruby. Several PMC members have shown an intertest in
+working with Ruby, and a new "committer-in-waiting", Jon Tirsen, has a
+Ruby implementation that he would like to donate to the foundation.
+However, Jon's CLA seems to be stuck in limbo. It was sent to post
+office box several weeks ago, but it is still not on file. If the
+postal mail has been collected recently, and the Secretary does not
+have the CLA, please let the iBATIS PMC know, and we will ask Jon to
+fax in another copy. Jon has a CCLA on file, but we are looking for
+his individual CLA.
 
 December 2005 
 
