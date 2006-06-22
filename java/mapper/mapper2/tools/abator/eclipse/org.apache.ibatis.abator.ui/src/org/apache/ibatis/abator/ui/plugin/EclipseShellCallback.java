@@ -30,6 +30,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
@@ -69,6 +70,15 @@ public class EclipseShellCallback implements ShellCallback {
      */
     public File getDirectory(String targetProject, String targetPackage,
             List warnings) throws ShellException {
+        if (targetProject.startsWith("/") || targetProject.startsWith("\\")) {
+            StringBuffer sb = new StringBuffer();
+            sb.append("targetProject ");
+            sb.append(targetProject);
+            sb.append(" is invalid - it cannot start with / or \\");
+
+            throw new ShellException(sb.toString());
+        }
+        
         IFolder folder = getFolder(targetProject, targetPackage);
 
         return folder.getRawLocation().toFile();
@@ -237,41 +247,25 @@ public class EclipseShellCallback implements ShellCallback {
     }
 
     private IPackageFragmentRoot getSpecificSourceFolder(
-            IJavaProject javaProject, String sourceFolder)
+            IJavaProject javaProject, String targetProject)
             throws ShellException {
 
-        // find the first non-JAR package fragment root
-        IPackageFragmentRoot[] roots;
         try {
-            roots = javaProject.getPackageFragmentRoots();
+            Path path = new Path("/" + targetProject);
+            IPackageFragmentRoot pfr = javaProject
+                    .findPackageFragmentRoot(path);
+            if (pfr == null) {
+                StringBuffer sb = new StringBuffer();
+                sb.append("Cannot find source folder ");
+                sb.append(targetProject);
+
+                throw new ShellException(sb.toString());
+            }
+
+            return pfr;
         } catch (CoreException e) {
             throw new ShellException(e.getStatus().getMessage(), e);
         }
-
-        IPackageFragmentRoot srcFolder = null;
-        for (int i = 0; i < roots.length; i++) {
-            if (roots[i].isArchive() || roots[i].isReadOnly()
-                    || roots[i].isExternal()) {
-                continue;
-            } else {
-                if (roots[i].getElementName().equals(sourceFolder)) {
-                    srcFolder = roots[i];
-                    break;
-                }
-            }
-        }
-
-        if (srcFolder == null) {
-            StringBuffer sb = new StringBuffer();
-            sb.append("Cannot find source folder ");
-            sb.append(sourceFolder);
-            sb.append(" for project ");
-            sb.append(javaProject.getElementName());
-
-            throw new ShellException(sb.toString());
-        }
-
-        return srcFolder;
     }
 
     private IPackageFragment getPackage(IPackageFragmentRoot srcFolder,
@@ -315,22 +309,14 @@ public class EclipseShellCallback implements ShellCallback {
                 index = targetProject.indexOf('\\');
             }
 
-            String project;
-            String sourceFolder;
             if (index == -1) {
-                project = targetProject;
-                sourceFolder = null;
-            } else {
-                project = targetProject.substring(0, index);
-                sourceFolder = targetProject.substring(index + 1);
-            }
-
-            IJavaProject javaProject = getJavaProject(project);
-
-            if (sourceFolder == null || sourceFolder.length() == 0) {
+                // no source folder specified
+                IJavaProject javaProject = getJavaProject(targetProject);
                 answer = getFirstSourceFolder(javaProject);
             } else {
-                answer = getSpecificSourceFolder(javaProject, sourceFolder);
+                IJavaProject javaProject = getJavaProject(targetProject
+                        .substring(0, index));
+                answer = getSpecificSourceFolder(javaProject, targetProject);
             }
 
             sourceFolders.put(targetProject, answer);
