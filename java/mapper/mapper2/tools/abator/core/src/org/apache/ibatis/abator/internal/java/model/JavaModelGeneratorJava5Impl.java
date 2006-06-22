@@ -27,9 +27,9 @@ import org.apache.ibatis.abator.api.dom.java.JavaWildcardType;
 import org.apache.ibatis.abator.api.dom.java.Method;
 import org.apache.ibatis.abator.api.dom.java.Parameter;
 import org.apache.ibatis.abator.api.dom.java.TopLevelClass;
-import org.apache.ibatis.abator.config.TableConfiguration;
+import org.apache.ibatis.abator.config.FullyQualifiedTable;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
-import org.apache.ibatis.abator.internal.db.ColumnDefinitions;
+import org.apache.ibatis.abator.internal.db.IntrospectedTable;
 import org.apache.ibatis.abator.internal.rules.AbatorRules;
 import org.apache.ibatis.abator.internal.util.JavaBeansUtil;
 
@@ -45,30 +45,29 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         super();
     }
 
-    protected CompilationUnit getExample(ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration) {
-        if (!AbatorRules.generateExampleExtendingPrimaryKey(columnDefinitions,
-                tableConfiguration)
-                && !AbatorRules.generateExampleExtendingBaseRecord(
-                        columnDefinitions, tableConfiguration)) {
+    protected CompilationUnit getExample(IntrospectedTable introspectedTable) {
+        if (!AbatorRules.generateExampleExtendingPrimaryKey(introspectedTable)
+                && !AbatorRules
+                        .generateExampleExtendingBaseRecord(introspectedTable)) {
             return null;
         }
 
-        FullyQualifiedJavaType type = getExampleType(tableConfiguration
-                .getTable());
+        FullyQualifiedTable table = introspectedTable.getTableConfiguration()
+                .getTable();
+        FullyQualifiedJavaType type = getExampleType(table);
         TopLevelClass topLevelClass = new TopLevelClass(type);
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
 
         // add field, getter, setter for orderby clause
         Field field = new Field();
-        field.addComment(tableConfiguration.getTable());
+        field.addComment(table);
         field.setVisibility(JavaVisibility.PRIVATE);
         field.setType(FullyQualifiedJavaType.getStringInstance());
         field.setName("orderByClause"); //$NON-NLS-1$
         topLevelClass.addField(field);
 
         Method method = new Method();
-        method.addComment(tableConfiguration.getTable());
+        method.addComment(table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setName("setOrderByClause"); //$NON-NLS-1$
         method.addParameter(new Parameter(FullyQualifiedJavaType
@@ -77,7 +76,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         topLevelClass.addMethod(method);
 
         method = new Method();
-        method.addComment(tableConfiguration.getTable());
+        method.addComment(table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType.getStringInstance());
         method.setName("getOrderByClause"); //$NON-NLS-1$
@@ -86,7 +85,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
 
         // add field and methods for the list of conditions
         field = new Field();
-        field.addComment(tableConfiguration.getTable());
+        field.addComment(table);
         field.setVisibility(JavaVisibility.PRIVATE);
 
         FullyQualifiedJavaType fqjt = FullyQualifiedJavaType
@@ -99,7 +98,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         topLevelClass.addField(field);
 
         method = new Method();
-        method.addComment(tableConfiguration.getTable());
+        method.addComment(table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(fqjt);
         method.setName("getOredConditions"); //$NON-NLS-1$
@@ -107,7 +106,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         topLevelClass.addMethod(method);
 
         method = new Method();
-        method.addComment(tableConfiguration.getTable());
+        method.addComment(table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setName("addOredCondition"); //$NON-NLS-1$
         method.addParameter(new Parameter(new FullyQualifiedJavaType(
@@ -125,14 +124,13 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
 
         // now generate the inner class that holds the AND conditions
         topLevelClass.addInnerClass(getAndedConditionInnerClass(topLevelClass,
-                columnDefinitions, tableConfiguration));
+                introspectedTable));
 
         return topLevelClass;
     }
 
     protected InnerClass getAndedConditionInnerClass(
-            TopLevelClass topLevelClass, ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration) {
+            TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
         Field field;
         Method method;
         StringBuffer sb = new StringBuffer();
@@ -142,7 +140,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
 
         answer.setVisibility(JavaVisibility.PUBLIC);
         answer.setModifierStatic(true);
-        answer.addComment(tableConfiguration.getTable());
+        answer.addComment(introspectedTable.getTableConfiguration().getTable());
 
         method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
@@ -330,7 +328,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
                 .getNewListInstance();
         listOfDates.addTypeArgument(FullyQualifiedJavaType.getDateInstance());
 
-        if (columnDefinitions.hasJDBCDateColumns()) {
+        if (introspectedTable.getColumnDefinitions().hasJDBCDateColumns()) {
             topLevelClass.addImportedType(FullyQualifiedJavaType
                     .getDateInstance());
             topLevelClass.addImportedType(FullyQualifiedJavaType
@@ -391,7 +389,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
             answer.addMethod(method);
         }
 
-        if (columnDefinitions.hasJDBCTimeColumns()) {
+        if (introspectedTable.getColumnDefinitions().hasJDBCTimeColumns()) {
             topLevelClass.addImportedType(FullyQualifiedJavaType
                     .getDateInstance());
             topLevelClass.addImportedType(FullyQualifiedJavaType
@@ -452,75 +450,8 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
             answer.addMethod(method);
         }
 
-        /*
-         * now add the methods that determine if the "ands" are required - this
-         * is too complex a calculation to be done inside the sql map. The
-         * methods assume that the SQL map clause is layed out in this order:
-         * 
-         * conditionsWithouttValue
-         * 
-         * (possible first and)
-         * 
-         * conditionsWithSingleValue
-         * 
-         * (possible second and)
-         * 
-         * conditionsWithListValue
-         * 
-         * (possible third and)
-         * 
-         * conditionsWithBetweenValue
-         */
-
-        method = new Method();
-        method.setVisibility(JavaVisibility.PUBLIC);
-        method.setReturnType(FullyQualifiedJavaType
-                .getBooleanPrimitiveInstance());
-        method.setName("isFirstAndNeeded"); //$NON-NLS-1$
-        method.addBodyLine("return conditionsWithoutValue.size() > 0"); //$NON-NLS-1$
-        sb.setLength(0);
-        OutputUtilities.javaIndent(sb, 2);
-        sb.append("&& conditionsWithSingleValue.size() > 0;"); //$NON-NLS-1$
-        method.addBodyLine(sb.toString());
-        answer.addMethod(method);
-
-        method = new Method();
-        method.setVisibility(JavaVisibility.PUBLIC);
-        method.setReturnType(FullyQualifiedJavaType
-                .getBooleanPrimitiveInstance());
-        method.setName("isSecondAndNeeded"); //$NON-NLS-1$
-        method.addBodyLine("return (conditionsWithoutValue.size() > 0"); //$NON-NLS-1$
-        sb.setLength(0);
-        OutputUtilities.javaIndent(sb, 2);
-        sb.append("|| conditionsWithSingleValue.size() > 0)"); //$NON-NLS-1$
-        method.addBodyLine(sb.toString());
-        sb.setLength(0);
-        OutputUtilities.javaIndent(sb, 2);
-        sb.append("&& conditionsWithListValue.size() > 0;"); //$NON-NLS-1$
-        method.addBodyLine(sb.toString());
-        answer.addMethod(method);
-
-        method = new Method();
-        method.setVisibility(JavaVisibility.PUBLIC);
-        method.setReturnType(FullyQualifiedJavaType
-                .getBooleanPrimitiveInstance());
-        method.setName("isThirdAndNeeded"); //$NON-NLS-1$
-        method.addBodyLine("return (conditionsWithoutValue.size() > 0"); //$NON-NLS-1$
-        sb.setLength(0);
-        OutputUtilities.javaIndent(sb, 2);
-        sb.append("|| conditionsWithSingleValue.size() > 0"); //$NON-NLS-1$
-        method.addBodyLine(sb.toString());
-        sb.setLength(0);
-        OutputUtilities.javaIndent(sb, 2);
-        sb.append("|| conditionsWithListValue.size() > 0)"); //$NON-NLS-1$
-        method.addBodyLine(sb.toString());
-        sb.setLength(0);
-        OutputUtilities.javaIndent(sb, 2);
-        sb.append("&& conditionsWithBetweenValue.size() > 0;"); //$NON-NLS-1$
-        method.addBodyLine(sb.toString());
-        answer.addMethod(method);
-
-        Iterator iter = columnDefinitions.getAllColumns().iterator();
+        Iterator iter = introspectedTable.getColumnDefinitions()
+                .getAllColumns().iterator();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
 

@@ -15,10 +15,6 @@
  */
 package org.apache.ibatis.abator.config;
 
-import org.apache.ibatis.abator.internal.java.JavaModelGeneratorDefaultImpl;
-import org.apache.ibatis.abator.internal.java.model.JavaModelGeneratorJava2Impl;
-import org.apache.ibatis.abator.internal.java.model.JavaModelGeneratorJava5Impl;
-import org.apache.ibatis.abator.internal.util.StringUtility;
 
 /**
  * @author Jeff Butler
@@ -29,14 +25,11 @@ public class JavaModelGeneratorConfiguration extends TypedPropertyHolder {
 
     private String targetProject;
 
-    private AbatorContext abatorContext;
-
     /**
      * 
      */
-    public JavaModelGeneratorConfiguration(AbatorContext abatorContext) {
+    public JavaModelGeneratorConfiguration() {
         super();
-        this.abatorContext = abatorContext;
     }
 
     public String getTargetProject() {
@@ -53,27 +46,5 @@ public class JavaModelGeneratorConfiguration extends TypedPropertyHolder {
 
     public void setTargetPackage(String targetPackage) {
         this.targetPackage = targetPackage;
-    }
-
-    public String getImplementationType() {
-        String answer;
-        String value = (String) abatorContext.getProperties().get(
-                "defaultGeneratorConfiguration"); //$NON-NLS-1$
-
-        if (StringUtility.stringHasValue(getConfigurationType())) {
-            answer = getConfigurationType();
-        } else {
-            if ("Java5Iterator".equalsIgnoreCase(value)) { //$NON-NLS-1$
-                answer = JavaModelGeneratorJava5Impl.class.getName();
-            } else if ("Java2Iterator".equalsIgnoreCase(value)) { //$NON-NLS-1$
-                answer = JavaModelGeneratorJava2Impl.class.getName();
-            } else if ("Java2NonIterator".equalsIgnoreCase(value)) { //$NON-NLS-1$
-                answer = JavaModelGeneratorDefaultImpl.class.getName();
-            } else {
-                answer = JavaModelGeneratorDefaultImpl.class.getName();
-            }
-        }
-
-        return answer;
     }
 }

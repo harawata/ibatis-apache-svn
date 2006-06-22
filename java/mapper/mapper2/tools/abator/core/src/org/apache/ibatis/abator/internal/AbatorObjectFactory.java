@@ -15,17 +15,18 @@
  */
 package org.apache.ibatis.abator.internal;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.abator.api.DAOGenerator;
 import org.apache.ibatis.abator.api.JavaModelGenerator;
 import org.apache.ibatis.abator.api.JavaTypeResolver;
 import org.apache.ibatis.abator.api.SqlMapGenerator;
+import org.apache.ibatis.abator.config.AbatorContext;
 import org.apache.ibatis.abator.config.DAOGeneratorConfiguration;
 import org.apache.ibatis.abator.config.JavaModelGeneratorConfiguration;
 import org.apache.ibatis.abator.config.JavaTypeResolverConfiguration;
 import org.apache.ibatis.abator.config.SqlMapGeneratorConfiguration;
-import org.apache.ibatis.abator.exception.GenerationRuntimeException;
 import org.apache.ibatis.abator.internal.util.messages.Messages;
 
 /**
@@ -42,70 +43,107 @@ public class AbatorObjectFactory {
         super();
     }
 
-	private static Object createObject(String type) {
+	public static Object createObject(String type) {
 		Object answer;
 
 		try {
             Class clazz = Class.forName(type);
 			answer = clazz.newInstance();
 		} catch (Exception e) {
-			throw new GenerationRuntimeException(
+			throw new RuntimeException(
 			        Messages.getString("AbatorObjectFactory.0", type), e); //$NON-NLS-1$
 		}
 
 		return answer;
 	}
 	
-	public static JavaTypeResolver createJavaTypeResolver(JavaTypeResolverConfiguration configuration,
+	public static JavaTypeResolver createJavaTypeResolver(AbatorContext context,
 			List warnings) {
-	    JavaTypeResolver answer = (JavaTypeResolver) createObject(configuration.getImplementationType());
+        JavaTypeResolverConfiguration config = context.getJavaTypeResolverConfiguration();
+        String type;
+        
+        if (config != null && config.getConfigurationType() != null) {
+            type = config.getConfigurationType();
+        } else {
+            type = context.getGeneratorSet().getJavaTypeResolverType();
+        }
+        
+	    JavaTypeResolver answer = (JavaTypeResolver) createObject(type);
 	    answer.setWarnings(warnings);
-	    
-	    answer.setProperties(configuration.getProperties());
+
+        if (config == null) {
+            answer.setProperties(new HashMap());
+        } else {
+            answer.setProperties(config.getProperties());
+        }
 	    
 	    return answer;
 	}
 	
-	public static SqlMapGenerator createSqlMapGenerator(SqlMapGeneratorConfiguration configuration,
+	public static SqlMapGenerator createSqlMapGenerator(AbatorContext context,
 	        JavaModelGenerator javaModelGenerator, List warnings) {
-	    SqlMapGenerator answer = (SqlMapGenerator) createObject(configuration.getImplementationType());
+        
+        SqlMapGeneratorConfiguration config = context.getSqlMapGeneratorConfiguration();
+        String type;
+
+        if (config.getConfigurationType() != null) {
+            type = config.getConfigurationType();
+        } else {
+            type = context.getGeneratorSet().getSqlMapGeneratorType();
+        }
+        
+	    SqlMapGenerator answer = (SqlMapGenerator) createObject(type);
 	    answer.setWarnings(warnings);
 
 	    answer.setJavaModelGenerator(javaModelGenerator);
-	    answer.setProperties(configuration.getProperties());
-	    answer.setTargetPackage(configuration.getTargetPackage());
-	    answer.setTargetProject(configuration.getTargetProject());
+	    answer.setProperties(config.getProperties());
+	    answer.setTargetPackage(config.getTargetPackage());
+	    answer.setTargetProject(config.getTargetProject());
 	    
 	    return answer;
-	    
 	}
 	
-	public static JavaModelGenerator createJavaModelGenerator(JavaModelGeneratorConfiguration configuration,
+	public static JavaModelGenerator createJavaModelGenerator(AbatorContext context,
 			List warnings) {
-	    JavaModelGenerator answer = (JavaModelGenerator) createObject(configuration.getImplementationType());
+
+        JavaModelGeneratorConfiguration config = context.getJavaModelGeneratorConfiguration();
+        String type;
+
+        if (config.getConfigurationType() != null) {
+            type = config.getConfigurationType();
+        } else {
+            type = context.getGeneratorSet().getJavaModelGeneratorType();
+        }
+        
+	    JavaModelGenerator answer = (JavaModelGenerator) createObject(type);
 	    answer.setWarnings(warnings);
 	    
-	    answer.setProperties(configuration.getProperties());
-	    answer.setTargetPackage(configuration.getTargetPackage());
-	    answer.setTargetProject(configuration.getTargetProject());
+	    answer.setProperties(config.getProperties());
+	    answer.setTargetPackage(config.getTargetPackage());
+	    answer.setTargetProject(config.getTargetProject());
 	    
 	    return answer;
 	}
 	
-	public static DAOGenerator createDAOGenerator(DAOGeneratorConfiguration configuration,
+	public static DAOGenerator createDAOGenerator(AbatorContext context,
 	        JavaModelGenerator javaModelGenerator, SqlMapGenerator sqlMapGenerator, List warnings) {
-	    if (!configuration.isEnabled()) {
+        
+        DAOGeneratorConfiguration config = context.getDaoGeneratorConfiguration();
+        
+	    if (config == null) {
 	        return null;
 	    }
+        
+        String type = context.getGeneratorSet().translateDAOGeneratorType(config.getConfigurationType());
 	    
-	    DAOGenerator answer = (DAOGenerator) createObject(configuration.getImplementationType());
+	    DAOGenerator answer = (DAOGenerator) createObject(type);
 	    answer.setWarnings(warnings);
 
 	    answer.setJavaModelGenerator(javaModelGenerator);
-	    answer.setProperties(configuration.getProperties());
+	    answer.setProperties(config.getProperties());
 	    answer.setSqlMapGenerator(sqlMapGenerator);
-	    answer.setTargetPackage(configuration.getTargetPackage());
-	    answer.setTargetProject(configuration.getTargetProject());
+	    answer.setTargetPackage(config.getTargetPackage());
+	    answer.setTargetProject(config.getTargetProject());
 	    
 	    return answer;
 	}

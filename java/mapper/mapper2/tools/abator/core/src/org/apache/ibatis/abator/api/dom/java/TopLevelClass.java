@@ -15,8 +15,10 @@
  */
 package org.apache.ibatis.abator.api.dom.java;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -28,13 +30,16 @@ import org.apache.ibatis.abator.api.dom.OutputUtilities;
 public class TopLevelClass extends InnerClass implements CompilationUnit {
     private Set importedTypes;
 
+    private List fileCommentLines;
+    
     /**
      *  
      */
     public TopLevelClass(FullyQualifiedJavaType type) {
         super(type);
         importedTypes = new TreeSet();
-    }
+        fileCommentLines = new ArrayList();
+}
 
     /**
      * @return Returns the importedTypes.
@@ -53,6 +58,12 @@ public class TopLevelClass extends InnerClass implements CompilationUnit {
     public String getFormattedContent() {
         StringBuffer sb = new StringBuffer();
 
+        Iterator iter = fileCommentLines.iterator();
+        while (iter.hasNext()) {
+            sb.append(iter.next());
+            OutputUtilities.newLine(sb);
+        }
+
         if (getType().getPackageName() != null
                 && getType().getPackageName().length() > 0) {
             sb.append("package "); //$NON-NLS-1$
@@ -62,7 +73,7 @@ public class TopLevelClass extends InnerClass implements CompilationUnit {
             OutputUtilities.newLine(sb);
         }
 
-        Iterator iter = importedTypes.iterator();
+        iter = importedTypes.iterator();
         while (iter.hasNext()) {
             FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter.next();
             if (fqjt.isExplicitlyImported()) {
@@ -93,5 +104,13 @@ public class TopLevelClass extends InnerClass implements CompilationUnit {
 
     public boolean isJavaEnumeration() {
         return false;
+    }
+
+    public void addFileCommentLine(String commentLine) {
+        fileCommentLines.add(commentLine);
+    }
+
+    public List getFileCommentLines() {
+        return fileCommentLines;
     }
 }

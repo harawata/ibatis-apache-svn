@@ -29,6 +29,7 @@ import org.apache.ibatis.abator.config.ColumnOverride;
 import org.apache.ibatis.abator.config.TableConfiguration;
 import org.apache.ibatis.abator.exception.UnknownTableException;
 import org.apache.ibatis.abator.exception.UnsupportedDataTypeException;
+import org.apache.ibatis.abator.internal.rules.TableType;
 import org.apache.ibatis.abator.internal.util.JavaBeansUtil;
 import org.apache.ibatis.abator.internal.util.StringUtility;
 import org.apache.ibatis.abator.internal.util.messages.Messages;
@@ -43,13 +44,12 @@ public class DatabaseIntrospector {
 		super();
 	}
 
-	public static ColumnDefinitions generateColumnDefinitions(
+	public static IntrospectedTable introspectTable(
 			Connection connection, TableConfiguration tc,
 			JavaTypeResolver javaTypeResolver, List warnings)
 			throws SQLException, UnknownTableException {
 
-		ColumnDefinitions cds = new ColumnDefinitions(tc.getTable()
-				.getFullyQualifiedTableName());
+		ColumnDefinitions cds = new ColumnDefinitions();
 
 		DatabaseMetaData dbmd = connection.getMetaData();
 		
@@ -166,7 +166,8 @@ public class DatabaseIntrospector {
 		    cds.addPrimaryKeyColumn((String) iter.next());
 		}
 
-		return cds;
+        IntrospectedTable answer = new IntrospectedTable(tc, cds, TableType.calculateTableType(cds));
+		return answer;
 	}
 	
 	private static List findPrimaryKeyColumns(DatabaseMetaData dbmd, String localCatalog,

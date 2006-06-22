@@ -18,8 +18,7 @@ package org.apache.ibatis.abator.api;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.abator.config.TableConfiguration;
-import org.apache.ibatis.abator.internal.db.ColumnDefinitions;
+import org.apache.ibatis.abator.internal.db.IntrospectedTable;
 
 /**
  * The DAOGenerator interface describes the methods needed to generate DAO
@@ -96,11 +95,9 @@ public interface DAOGenerator {
      * <li>A DAO Implementation Class</li>
      * </ul>
      * 
-     * @param columnDefinitions
-     * @param tableConfiguration
+     * @param introspectedTable
      * @param callback
      * @return a list of GeneratedJavaFile objects
      */
-    List getGeneratedJavaFiles(ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, ProgressCallback callback);
+    List getGeneratedJavaFiles(IntrospectedTable introspectedTable, ProgressCallback callback);
 }

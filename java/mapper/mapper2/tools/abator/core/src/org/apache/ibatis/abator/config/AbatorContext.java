@@ -30,16 +30,16 @@ import org.apache.ibatis.abator.exception.InvalidConfigurationException;
 import org.apache.ibatis.abator.exception.UnknownTableException;
 import org.apache.ibatis.abator.internal.AbatorObjectFactory;
 import org.apache.ibatis.abator.internal.NullProgressCallback;
-import org.apache.ibatis.abator.internal.db.ColumnDefinitions;
 import org.apache.ibatis.abator.internal.db.ConnectionFactory;
 import org.apache.ibatis.abator.internal.db.DatabaseIntrospector;
+import org.apache.ibatis.abator.internal.db.IntrospectedTable;
 import org.apache.ibatis.abator.internal.util.StringUtility;
 import org.apache.ibatis.abator.internal.util.messages.Messages;
 
 /**
  * @author Jeff Butler
  */
-public class AbatorContext extends PropertyHolder {
+public class AbatorContext {
     private String id;
     
 	private JDBCConnectionConfiguration jdbcConnectionConfiguration;
@@ -53,17 +53,29 @@ public class AbatorContext extends PropertyHolder {
 	private DAOGeneratorConfiguration daoGeneratorConfiguration;
 
 	private ArrayList tableConfigurations;
+    
+    private GeneratorSet generatorSet;
 	
+    public AbatorContext() {
+        // TODO - make Java2 the default in some future release
+        this("Legacy");
+    }
+    
     /**
      * 
      */
-    public AbatorContext() {
+    public AbatorContext(String generatorSetType) {
         super();
-		jdbcConnectionConfiguration = new JDBCConnectionConfiguration();
-		sqlMapGeneratorConfiguration = new SqlMapGeneratorConfiguration(this);
-		javaTypeResolverConfiguration = new JavaTypeResolverConfiguration();
-		javaModelGeneratorConfiguration = new JavaModelGeneratorConfiguration(this);
-		daoGeneratorConfiguration = new DAOGeneratorConfiguration(this);
+        if ("Legacy".equalsIgnoreCase(generatorSetType)) {
+            generatorSet = new LegacyGeneratorSet();
+        } else if ("Java2".equalsIgnoreCase(generatorSetType)) {
+            generatorSet = new Java2GeneratorSet();
+        } else if ("Java5".equalsIgnoreCase(generatorSetType)) {
+            generatorSet = new Java5GeneratorSet();
+        } else {
+            generatorSet = (GeneratorSet) AbatorObjectFactory.createObject(generatorSetType);
+        }
+        
 		tableConfigurations = new ArrayList();
     }
 
@@ -101,20 +113,24 @@ public class AbatorContext extends PropertyHolder {
 	public void validate(List errors) {
 		validateJdbcConnectionConfiguration(errors);
 
-		if (!StringUtility.stringHasValue(javaModelGeneratorConfiguration.getTargetProject())) {
+        if (javaModelGeneratorConfiguration == null) {
+            errors.add(Messages.getString("AbatorContext.13")); //$NON-NLS-1$
+        } else if (!StringUtility.stringHasValue(javaModelGeneratorConfiguration.getTargetProject())) {
 			errors.add(Messages.getString("AbatorContext.0", id)); //$NON-NLS-1$
 		}
 
-		if (!StringUtility.stringHasValue(sqlMapGeneratorConfiguration.getTargetProject())) {
+        if (sqlMapGeneratorConfiguration == null) {
+            errors.add(Messages.getString("AbatorContext.14")); //$NON-NLS-1$
+        } else if (!StringUtility.stringHasValue(sqlMapGeneratorConfiguration.getTargetProject())) {
 			errors.add(Messages.getString("AbatorContext.1", id)); //$NON-NLS-1$
 		}
 
-		if (daoGeneratorConfiguration.isEnabled()) {
+		if (daoGeneratorConfiguration != null) {
 			if (!StringUtility.stringHasValue(daoGeneratorConfiguration.getTargetProject())) {
 				errors.add(Messages.getString("AbatorContext.2", id)); //$NON-NLS-1$
 			}
 		}
-		
+        
 		if (tableConfigurations.size() == 0) {
 			errors.add(Messages.getString("AbatorContext.3")); //$NON-NLS-1$
 		} else {
@@ -128,6 +144,11 @@ public class AbatorContext extends PropertyHolder {
 	}
 	
 	private void validateJdbcConnectionConfiguration(List errors) {
+        if (jdbcConnectionConfiguration == null) {
+            errors.add(Messages.getString("AbatorContext.15")); //$NON-NLS-1$
+            return;
+        }
+        
 		if (!StringUtility.stringHasValue(jdbcConnectionConfiguration
 				.getDriverClass())) {
 			errors.add(Messages.getString("AbatorContext.4")); //$NON-NLS-1$
@@ -180,10 +201,10 @@ public class AbatorContext extends PropertyHolder {
 	        callback = new NullProgressCallback();
 	    }
 	    
-	    JavaTypeResolver javaTypeResolver = AbatorObjectFactory.createJavaTypeResolver(javaTypeResolverConfiguration, warnings);
-	    JavaModelGenerator javaModelGenerator = AbatorObjectFactory.createJavaModelGenerator(javaModelGeneratorConfiguration, warnings);
-	    SqlMapGenerator sqlMapGenerator = AbatorObjectFactory.createSqlMapGenerator(sqlMapGeneratorConfiguration, javaModelGenerator, warnings);
-	    DAOGenerator daoGenerator = AbatorObjectFactory.createDAOGenerator(daoGeneratorConfiguration, javaModelGenerator, sqlMapGenerator, warnings);
+	    JavaTypeResolver javaTypeResolver = AbatorObjectFactory.createJavaTypeResolver(this, warnings);
+	    JavaModelGenerator javaModelGenerator = AbatorObjectFactory.createJavaModelGenerator(this, warnings);
+	    SqlMapGenerator sqlMapGenerator = AbatorObjectFactory.createSqlMapGenerator(this, javaModelGenerator, warnings);
+	    DAOGenerator daoGenerator = AbatorObjectFactory.createDAOGenerator(this, javaModelGenerator, sqlMapGenerator, warnings);
 
 		Connection connection = null;
 		
@@ -202,10 +223,10 @@ public class AbatorContext extends PropertyHolder {
 				}
 				
 
-				ColumnDefinitions columnDefinitions;
+				IntrospectedTable introspectedTable;
 				try {
 					callback.startSubTask(Messages.getString("AbatorContext.11", tableName)); //$NON-NLS-1$
-					columnDefinitions  = DatabaseIntrospector.generateColumnDefinitions(connection, tc, javaTypeResolver, warnings);
+                    introspectedTable  = DatabaseIntrospector.introspectTable(connection, tc, javaTypeResolver, warnings);
 					callback.checkCancel();
 				} catch (UnknownTableException e) {
 					warnings.add(Messages.getString("AbatorContext.12", tableName)); //$NON-NLS-1$
@@ -213,10 +234,10 @@ public class AbatorContext extends PropertyHolder {
 				}
 
 				if (daoGenerator != null) {
-				    generatedJavaFiles.addAll(daoGenerator.getGeneratedJavaFiles(columnDefinitions, tc, callback));
+				    generatedJavaFiles.addAll(daoGenerator.getGeneratedJavaFiles(introspectedTable, callback));
 				}
-				generatedJavaFiles.addAll(javaModelGenerator.getGeneratedJavaFiles(columnDefinitions, tc, callback));
-				generatedXmlFiles.addAll(sqlMapGenerator.getGeneratedXMLFiles(columnDefinitions, tc, callback));
+				generatedJavaFiles.addAll(javaModelGenerator.getGeneratedJavaFiles(introspectedTable, callback));
+				generatedXmlFiles.addAll(sqlMapGenerator.getGeneratedXMLFiles(introspectedTable, callback));
 			}
 		} finally {
 			closeConnection(connection);
@@ -257,5 +278,34 @@ public class AbatorContext extends PropertyHolder {
     
     public void setId(String id) {
         this.id = id;
+    }
+
+    public GeneratorSet getGeneratorSet() {
+        return generatorSet;
+    }
+
+    public void setDaoGeneratorConfiguration(
+            DAOGeneratorConfiguration daoGeneratorConfiguration) {
+        this.daoGeneratorConfiguration = daoGeneratorConfiguration;
+    }
+
+    public void setJavaModelGeneratorConfiguration(
+            JavaModelGeneratorConfiguration javaModelGeneratorConfiguration) {
+        this.javaModelGeneratorConfiguration = javaModelGeneratorConfiguration;
+    }
+
+    public void setJavaTypeResolverConfiguration(
+            JavaTypeResolverConfiguration javaTypeResolverConfiguration) {
+        this.javaTypeResolverConfiguration = javaTypeResolverConfiguration;
+    }
+
+    public void setJdbcConnectionConfiguration(
+            JDBCConnectionConfiguration jdbcConnectionConfiguration) {
+        this.jdbcConnectionConfiguration = jdbcConnectionConfiguration;
+    }
+
+    public void setSqlMapGeneratorConfiguration(
+            SqlMapGeneratorConfiguration sqlMapGeneratorConfiguration) {
+        this.sqlMapGeneratorConfiguration = sqlMapGeneratorConfiguration;
     }
 }

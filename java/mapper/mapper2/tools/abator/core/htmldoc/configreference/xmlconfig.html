@@ -66,46 +66,63 @@ attributes.</p>
 <ul>
   <li>The file specifies that the legacy DB2 CLI driver will be used to connect to the database,
       and also specifies where the driver can be found.</li>
-  <li>The Java Type Resolver should not force the use of Bigdecimal fields - this means that
+  <li>The Java Type Resolver should not force the use of BigDecimal fields - this means that
       integral types (Short, Integer, Long, etc.) will be substituted if possible.  This feature
       is an attempt to make database DECIMAL and NUMERIC columns easier to deal with.</li>
   <li>The Java model generator should use sub-packages.  This means that the generated model
-      objects will be placed in a package called "test.model.db2admin" in this case (because the table
-      is in the "DB2ADMIN" schema).  If the "enableSubPackages" attribute was set to "false",
-      then the package would be "test.model".  The Java model generator should also trim strings.
-      This means that the setters for any String property will call the "trim" function -
+      objects will be placed in a package called <code>test.model.db2admin</code> in this case
+      (because the table
+      is in the DB2ADMIN schema).  If the <code>enableSubPackages</code> attribute was set to
+      <code>false</code>,
+      then the package would be <code>test.model</code>.  The Java model generator should
+      also trim strings.
+      This means that the setters for any String property will call the <code>trim</code>
+      function -
       this is useful if your database will return blank characters at the end of character
       columns.</li>
   <li>The SQL Map generator should use sub-packages.  This means that the generated XML files
-      will be placed in a package called "test.xml.db2admin" in this case (because the table
-      is in the "DB2ADMIN" schema).  If the "enableSubPackages" attribute was set to "false",
+      will be placed in a package called <code>test.xml.db2admin</code> in this case
+      (because the table
+      is in the DB2ADMIN schema).  If the <code>enableSubPackages</code> attribute was set
+      to <code>false</code>,
       then the package would be "test.xml".</li>
   <li>The DAO generator should use sub-packages.  This means that the generated DAO classes
-      will be placed in a package called "test.dao.db2admin" in this case (because the table
-      is in the "DB2ADMIN" schema).  If the "enableSubPackages" attribute was set to "false",
-      then the package would be "test.dao".  The DAO generator should generate DAO classes
+      will be placed in a package called <code>test.dao.db2admin</code> in this case
+      (because the table
+      is in the DB2ADMIN schema).  If the <code>enableSubPackages</code> attribute was set
+      to <code>false</code>,
+      then the package would be <code>test.dao</code>.  The DAO generator should generate
+      DAO classes
       that conform to the iBATIS DAO framework.
   </li>
   <li>The file specifies only one table will be introspected, but many more could be specified.
       Important note about that table are as follows:
     <ul>
-      <li>The generated objects will be based on the name "Customer" (CustomerKey, Customer,
-          CustomerDAO, etc.) - rather than on the table name.</li>
+      <li>The generated objects will be based on the name Customer (<code>CustomerKey</code>,
+          <code>Customer</code>,
+          <code>CustomerDAO</code>, etc.) - rather than on the table name.</li>
       <li>Actual column names will be used as properties.  If this property were set to
-          "false" (or not specified), then Abator would attempt to camel case the column
-          names.  In either case, the name can be overridden by the &lt;columnOverride&gt;
+          <code>false</code> (or not specified), then Abator would attempt to camel case
+          the column
+          names.  In either case, the name can be overridden by the
+          <code>&lt;columnOverride&gt;</code>
           element</li>
       <li>The column has a generated key, it is an identity column, and the database type is DB2.
           This will cause
-          Abator to generate the proper &lt;selectKey&gt; element in the generated &lt;insert&gt;
+          Abator to generate the proper
+          <code>&lt;selectKey&gt;</code> element in the generated
+          <code>&lt;insert&gt;</code>
           statement so that the newly generated key can be returned (using DB2 specific SQL).</li>
-      <li>The column "DATE_FIELD" will be mapped to a property called "startDate".  This will
-          override the default property which would be "DATE_FIELD" in this case, or "dateField"
-          if the "useActualColumnNames" property was set to "false".</li>
-      <li>The column "FRED" will be ignored.  No SQL will list the field, and no Java property will
-          be generated.</li>
-      <li>The column "LONG_VARCHAR_FIELD" will be treated as a VARCHAR field, regardless of the
-          actual datatype.</li>
+      <li>The column <code>DATE_FIELD</code> will be mapped to a property called
+          <code>startDate</code>.  This will
+          override the default property which would be
+          <code>DATE_FIELD</code> in this case, or <code>dateField</code>
+          if the <code>useActualColumnNames</code> property was set to
+          <code>false</code>.</li>
+      <li>The column <code>FRED</code> will be ignored.  No SQL will list the field,
+          and no Java property will be generated.</li>
+      <li>The column <code>LONG_VARCHAR_FIELD</code> will be treated as a
+          <code>VARCHAR</code> field, regardless of the actual data type.</li>
     </ul>
   </li>
 </ul>

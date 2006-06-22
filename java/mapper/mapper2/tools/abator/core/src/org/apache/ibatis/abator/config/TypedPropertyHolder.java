@@ -45,14 +45,4 @@ public abstract class TypedPropertyHolder extends PropertyHolder {
             this.configurationType = configurationType;
         }
 	}
-
-    /**
-     * This method should calculate and return the proper fully qualified class
-     * name for the generator.  If the configuration type is set,
-     * then we will use that type.  Otherwise we will calculate
-     * a default from the properties in the context.
-     * 
-     * @return
-     */
-    public abstract String getImplementationType();
 }

@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>Tasks After Running Abator</h1>
-<p>After you run Abator, you will need to create or modify some other iABTIS configuration
+<p>After you run Abator, you will need to create or modify other iBATIS configuration
    artifacts.  The main tasks are as follows:</p>
 <ul>
   <li>Create or Modify the SqlMapConfig.xml file</li>
@@ -16,7 +16,8 @@
 <p>Each task is described in detail below.</p>
 
 <h2>Updating the SqlMapConfig.xml File</h2>
-<p>iBATIS uses an XML file, commonly named "SqlMapConfig.xml", to control configuration
+<p>iBATIS uses an XML file, commonly named <code>SqlMapConfig.xml</code>,
+to control configuration
 information for database connection, transaction management, and SQL map XML
 files that will be used in an iBATIS session.  Abator cannot create this file for you
 because Abator knows nothing about your execution environment.  However, some of the
@@ -63,7 +64,7 @@ of your project.  The <code>SqlMapConfig.xml</code> file should have these entri
 framework.</p>
 <p>The iBATIS DAO framework is configured by an xml file commonly called
 <code>dao.xml</code>.  The iBATIS DAO framework uses this file to control the
-database connection onformation for DAOs, and also to list the DAO implementation
+database connection information for DAOs, and also to list the DAO implementation
 classes and DAO interfaces.  In this file you should specify the path to your
 <code>SqlMapConfig.xml</code> file, and all the Abator generated DAO interfaces
 and implementation classes.</p>

@@ -7,10 +7,10 @@
 <body>
 <h1>Introduction to Abator</h1>
 <p><b>Abator:</b> <i>One who abates a nuisance.</i>
-<font size="-2">(<a href="http://dictionary.reference.com/search?q=abator">
+<font size="-2">(<a target="_blank" href="http://dictionary.reference.com/search?q=abator">
 http://dictionary.reference.com/search?q=abator</a>)</font></p>
 
-<p>Abator is a code generator for <a href="http://ibatis.apache.org">iBATIS</a>.
+<p>Abator is a code generator for <a target="_blank" href="http://ibatis.apache.org">iBATIS</a>.
  Abator will introspect a database
  table (or many tables) and will generate iBATIS artifacts that can be used to
  access the table(s).  This lessens the initial nuisance of setting up objects and configuration
@@ -36,12 +36,12 @@ percentage of database operations that are simple CRUD (Create, Retrieve, Update
       <li>insert</li>
       <li>update by primary key</li>
       <li>delete by primary key</li>
-      <li>delete by example (using a "query by example" strategy)</li>
+      <li>delete by example (using a dynamic where clause)</li>
       <li>select by primary key</li>
-      <li>select by example (using a "query by example" strategy)</li>
+      <li>select by example (using a dynamic where clause)</li>
     </ul>
    <p>There are different variations of these statements depending on the
-   structure of the table (e.g. - if the table doesn't have a primary key,
+   structure of the table (for example, if the table doesn't have a primary key,
    then Abator will not generate an update by primary key function, etc.)</p>
   </li>
   <li>DAO interface and implementation classes that make appropriate use of the
@@ -51,7 +51,7 @@ percentage of database operations that are simple CRUD (Create, Retrieve, Update
       <li>DAOs that conform to the iBATIS DAO Framework (an optional part of iBATIS)</li>
       <li>DAOs that conform to the SpringFramework</li>
       <li>DAOs that only use the iBATIS SQL mapping API.  These DAOs can be
-          generated in two varieties: supplying the SqlMapClient through
+          generated in two varieties: supplying the <code>SqlMapClient</code> through
           either constructor or setter injection.</li>
     </ul>
   </li>
@@ -71,15 +71,16 @@ percentage of database operations that are simple CRUD (Create, Retrieve, Update
   <li>Abator will not merge Java files, it can either overwrite existing files
       or save newly generated files with a different unique name.  If you make changes
       to the generated Java files and run Abator iteratively you will have to
-      merge the changes by hand.  When run as an <a href="http://www.eclipse.org">Eclipse</a>
+      merge the changes by hand.  When run as an
+      <a target="_blank" href="http://www.eclipse.org">Eclipse</a>
       plugin, then Abator can automatically merge Java files.</li>
 </ol>
 
 <h2>Dependencies</h2>
 <p>Abator has no dependencies beyond the JRE.  Abator does require JRE 1.4 or
 above.  Abator also requires that the JDBC driver implements the
-DatabaseMetaData interface, especially the "getColumns" and "getPrimaryKeys"
-methods.</p>
+DatabaseMetaData interface, especially the <code>getColumns</code> and
+<code>getPrimaryKeys</code> methods.</p>
 
 <h2>Support</h2>
 <p>Support for Abator is provided through the iBATIS user mailing list.  Mail

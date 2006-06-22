@@ -29,7 +29,6 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.ibatis.abator.config.JDBCConnectionConfiguration;
-import org.apache.ibatis.abator.exception.GenerationRuntimeException;
 import org.apache.ibatis.abator.internal.util.StringUtility;
 import org.apache.ibatis.abator.internal.util.messages.Messages;
 
@@ -94,7 +93,7 @@ public class ConnectionFactory {
 				driver = (Driver) clazz.newInstance();
 				drivers.put(driverClass, driver);
 			} catch (Exception e) {
-				throw new GenerationRuntimeException(
+				throw new RuntimeException(
 				        Messages.getString("ConnectionFactory.1"), e); //$NON-NLS-1$
 			}
 		}
@@ -112,7 +111,7 @@ public class ConnectionFactory {
 			String classPathEntry = (String) iter.next();
 			file = new File(classPathEntry);
 			if (!file.exists()) {
-				throw new GenerationRuntimeException(
+				throw new RuntimeException(
 				        Messages.getString("ConnectionFactory.2", classPathEntry)); //$NON-NLS-1$
 			}
 
@@ -120,7 +119,7 @@ public class ConnectionFactory {
 				urls.add(file.toURL());
 			} catch (MalformedURLException e) {
 				// this shouldn't happen, but just in case...
-				throw new GenerationRuntimeException(
+				throw new RuntimeException(
 				        Messages.getString("ConnectionFactory.2", classPathEntry)); //$NON-NLS-1$
 			}
 		}

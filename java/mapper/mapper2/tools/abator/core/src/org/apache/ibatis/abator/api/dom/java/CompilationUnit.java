@@ -15,9 +15,13 @@
  */
 package org.apache.ibatis.abator.api.dom.java;
 
+import java.util.List;
 import java.util.Set;
 
 /**
+ * This interface describes metods common to all Java compilation
+ * units (Java classes, interfaces, and enums).
+ * 
  * @author Jeff Butler
  */
 public interface CompilationUnit {
@@ -29,4 +33,17 @@ public interface CompilationUnit {
     Set getSuperInterfaceTypes();
     FullyQualifiedJavaType getType();
     void addImportedType(FullyQualifiedJavaType importedType);
+    
+    /**
+     * Comments will be written at the top of the file as is,
+     * we do not append any start or end comment characters.
+     * 
+     * Note that in the Eclipse plugin, file comments will not be
+     * merged.
+     * 
+     * @param commentLine
+     */
+    void addFileCommentLine(String commentLine);
+    
+    List getFileCommentLines();
 }

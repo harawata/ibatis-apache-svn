@@ -15,8 +15,6 @@
  */
 package org.apache.ibatis.abator.config;
 
-import org.apache.ibatis.abator.internal.types.JavaTypeResolverDefaultImpl;
-
 /**
  * @author Jeff Butler
  */
@@ -28,17 +26,4 @@ public class JavaTypeResolverConfiguration extends TypedPropertyHolder {
 	public JavaTypeResolverConfiguration() {
 		super();
 	}
-
-    public String getImplementationType() {
-        String configurationType = getConfigurationType();
-        String answer;
-        
-        if (configurationType == null || configurationType.length() == 0) {
-            answer = JavaTypeResolverDefaultImpl.class.getName();
-        } else {
-            answer = configurationType;
-        }
-        
-        return answer;
-    }
 }

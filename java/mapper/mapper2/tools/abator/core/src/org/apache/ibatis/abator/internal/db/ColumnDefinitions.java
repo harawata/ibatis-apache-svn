@@ -28,18 +28,16 @@ import java.util.List;
  */
 public class ColumnDefinitions {
 	
-	private String fullyQualifiedTableName;
 	private LinkedHashMap columns;
 	private LinkedHashMap primaryKey;
 
 	// used by the getAllColumns convenience method only
 	private ArrayList allColumns;
 
-	public ColumnDefinitions(String fullyQualifiedTableName) {
+	public ColumnDefinitions() {
 		super();
 		columns = new LinkedHashMap();
 		primaryKey = new LinkedHashMap();
-		this.fullyQualifiedTableName = fullyQualifiedTableName;
 	}
 
 	public Collection getBLOBColumns() {
@@ -89,41 +87,6 @@ public class ColumnDefinitions {
 
 			allColumns = null;
 		}
-	}
-
-	/*
-	 * This method is primarily used for debugging, so we don't externalize the strings
-	 */
-	public String toString() {
-	    String newLine = System.getProperty("line.separator"); //$NON-NLS-1$
-	    if (newLine == null) {
-	        newLine = "\n"; //$NON-NLS-1$
-	    }
-	    
-		StringBuffer sb = new StringBuffer();
-
-		sb.append("Table: "); //$NON-NLS-1$
-		sb.append(fullyQualifiedTableName);
-		sb.append(newLine);
-
-		sb.append("Primary Key:"); //$NON-NLS-1$
-		sb.append(newLine);
-		Iterator iter = primaryKey.values().iterator();
-		while (iter.hasNext()) {
-			sb.append("   "); //$NON-NLS-1$
-			sb.append(iter.next());
-			sb.append(newLine);
-		}
-
-		sb.append("Columns:"); //$NON-NLS-1$
-		sb.append(newLine);
-		iter = columns.values().iterator();
-		while (iter.hasNext()) {
-			sb.append("   "); //$NON-NLS-1$
-			sb.append(iter.next());
-			sb.append(newLine);
-		}
-		return sb.toString();
 	}
 
 	public boolean hasPrimaryKey() {

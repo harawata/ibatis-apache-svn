@@ -6,32 +6,32 @@
 </head>
 <body>
 <h1>Abator Philosophy and Apology</h1>
-<p>I am sure that some philosophical questions could be raised by this tool because the
+<p>Some philosophical questions might be raised by this tool because the
  tool is more focused on database tables than on the domain model.
- So I want to take a few paragraphs to talk about this approach.</p>
+ We will take a few paragraphs to talk about this approach.</p>
 
-<p>First of all, this tool does what it does.  I am not making any kind of statement
-about how projects should, or should not, be structured.  In general I am a strong proponant
+<p>First of all, this tool does what it does.  We are not making any kind of statement
+about how projects should, or should not, be structured.  In general we are strong proponents
 of rich domain models - but creating a rich domain model is quite a different thing from
 answering the question of how that model should be persisted.</p>
 
-<p>If your particular design itch is that the domain model drives all decisions, and
+<p>If your particular design philosophy  is that the domain model drives all decisions, and
  that the database design is subservient to the domain model, then this tool - and iBATIS
- itself - may not be the proper fit for your application.  In that case, I would suggest
- taking a serious look at <a href="http://www.hibernate.org">Hibernate</a> - it may fit
+ itself - may not be the proper fit for your application.  In that case, we would suggest
+ taking a serious look at <a target="_blank" href="http://www.hibernate.org">Hibernate</a>
+ - it may fit
  more closely with your application design and philosophy.</p>
 
-<p>But not all projects fit that paradigm.  In my experience, very few truly enterprise
+<p>But not all projects fit that paradigm.  Very few truly enterprise
  class applications do.  iBATIS and Abator can be of great help in projects where
  database design is seen as a co-equal to domain object design.
-iBATIS is not an object relational mapper, and does not attempt to transparantly
+iBATIS is not an object relational mapper, and does not attempt to transparently
 persist objects.  So it falls on application developers to write SQL to interact with
 database tables.</p>
 
-<p>In the large projects I have worked on, I have found these things to be
-quite common:
+<p>In large or enterprise class projects, many of these factors are quite common:
 <ul>
-  <li>Database design is often a seperate function (with seperate management) from OO domain
+  <li>Database design is often a separate function (with separate management) from OO domain
       design
   </li>
   <li>Database designers do not have OO tools (like inheritance), so they don't think
@@ -43,7 +43,7 @@ quite common:
    a significant mismatch between tables and objects.</li>
 </ul>
 <p>
-In my mind, these factors are primary indicators that iBATIS is the correct tool for your
+These factors are primary indicators that iBATIS is a good candidate tool for your
 application, and this is the type of project where Abator can make a significant impact.
 So how should iBATIS and Abator be used in this case?</p>
 
@@ -55,10 +55,11 @@ persistence needs of a domain object
 and make use of one or more Abator DAOs in a single transaction.</p>
 
 <p>As an example, consider a typical <code>Order</code> object - the typical header/detail problem.
-In some environments that I work in, such an object would be persisted into at least 4 tables -
-two key tables, a "header" table, and a "detail" table (again, I am not making any kind of
+In some environments such an object would be persisted into at least 4 tables -
+two key tables, a "header" table, and a "detail" table (again, we are not making any kind of
 statement about whether this is "correct" design, just stating a fact).
-My application will still interact with interact with the <code>Order</code> object, and there would
+Your application should still interact with interact with the <code>Order</code> object, and
+there might
 be a <code>saveOrder(Order order)</code> method
 somewhere (in an OrderDAO, or a service object).  That method
 would interact with the Abator created DAOs for each of the 4 tables involved.</p>

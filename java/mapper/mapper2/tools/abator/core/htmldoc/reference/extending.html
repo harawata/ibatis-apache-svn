@@ -17,7 +17,7 @@ use them on other projects if you so desire.</p>
 <p>Using options in the Abator configuration file, you can provide your own implementations
 of any of Abator's key interfaces.  You can also subclass any of the provided implementations
 to provide customized behaviors.  This page will describe the public APIs available in
-Abator and provide prointers to the source code for further investigation.  If you have
+Abator and provide pointers to the source code for further investigation.  If you have
 any difficulty understanding how to extend Abator, feel free to send a note to the
 support mailing list at
 <a href="mailto:user-java@ibatis.apache.org">user-java@ibatis.apache.org</a>.</p>
@@ -26,25 +26,25 @@ support mailing list at
 <p>Abator calls methods in this interface to generate the Java model POJOs.
    You can provide your own implementation, and the default implementations have
    been designed for extensibility.  The default implementation of the interface
-   is dependant on the value of the <code>defaultGeneratorConfiguration</code>
+   is dependant on the value of the <code>generatorSet</code>
    property of the <a href="../configreference/abatorContext.html">&lt;abatorContext&gt;</a>
    configuration element.  The following table shows the different possibilities:</p>
 
-<table border="1" cellspacing="0" cellpadding="2">
+<table border="1" cellspacing="0" cellpadding="5">
   <tr>
-    <th>defaultGeneratorConfiguration</th>
+    <th>generatorSet</th>
     <th>Implementation Class</th>
   </tr>
   <tr>
-    <td>Java2NonIterator (the default value)</td>
+    <td>Legacy (the default value)</td>
     <td><code>org.apache.ibatis.abator.internal.java.JavaModelGeneratorDefaultImpl</code>.</td>
   </tr>
   <tr>
-    <td>Java2Iterator</td>
+    <td>Java2</td>
     <td><code>org.apache.ibatis.abator.internal.java.model.JavaModelGeneratorJava2Impl</code>.</td>
   </tr>
   <tr>
-    <td>Java5Iterator</td>
+    <td>Java5</td>
     <td><code>org.apache.ibatis.abator.internal.java.model.JavaModelGeneratorJava5Impl</code>.</td>
   </tr>
 </table>
@@ -61,21 +61,21 @@ support mailing list at
 <p>Abator calls methods in this interface to generate the SQL Maps.
    You can provide your own implementation, and the default implementations have
    been designed for extensibility.  The default implementation of the interface
-   is dependant on the value of the <code>defaultGeneratorConfiguration</code>
+   is dependant on the value of the <code>generatorSet</code>
    property of the <a href="../configreference/abatorContext.html">&lt;abatorContext&gt;</a>
    configuration element.  The following table shows the different possibilities:</p>
 
-<table border="1" cellspacing="0" cellpadding="2">
+<table border="1" cellspacing="0" cellpadding="5">
   <tr>
-    <th>defaultGeneratorConfiguration</th>
+    <th>generatorSet</th>
     <th>Implementation Class</th>
   </tr>
   <tr>
-    <td>Java2NonIterator (the default value)</td>
+    <td>Legacy (the default value)</td>
     <td><code>org.apache.ibatis.abator.internal.sqlmap.SqlMapGeneratorDefaultImpl</code>.</td>
   </tr>
   <tr>
-    <td>Java2Iterator or Java5Iterator</td>
+    <td>Java2 or Java5</td>
     <td><code>org.apache.ibatis.abator.internal.sqlmap.SqlMapGeneratorIterateImpl</code>.</td>
   </tr>
 </table>
@@ -98,57 +98,57 @@ configuration element and the value of the <code>type</code> attribute
 of the <a href="../configreference/daoGenerator.html">&lt;daoGenerator&gt;</a> element.
 The implementations are:</p>
 
-<table border="1" cellspacing="0" cellpadding="2">
+<table border="1" cellspacing="0" cellpadding="5">
   <tr>
-    <th>defaultGeneratorConfiguration/type</th>
+    <th>generatorSet/type</th>
     <th>Implementation Class</th>
   </tr>
   <tr>
-    <td>Java2NonIterator/IBATIS</td>
+    <td nowrap="nowrap">Legacy/IBATIS</td>
     <td><code>org.apache.ibatis.abator.internal.java.DAOGeneratorIbatisImpl</code>.</td>
   </tr>
   <tr>
-    <td>Java2NonIterator/GENERIC-CI</td>
+    <td>Legacy/GENERIC-CI</td>
     <td><code>org.apache.ibatis.abator.internal.java.DAOGeneratorGenericConstructorInjectionImpl</code>.</td>
   </tr>
   <tr>
-    <td>Java2NonIterator/GENERIC-SI</td>
+    <td nowrap="nowrap">Legacy/GENERIC-SI</td>
     <td><code>org.apache.ibatis.abator.internal.java.DAOGeneratorGenericSetterInjectionImpl</code>.</td>
   </tr>
   <tr>
-    <td>Java2NonIterator/SPRING</td>
+    <td nowrap="nowrap">Legacy/SPRING</td>
     <td><code>org.apache.ibatis.abator.internal.java.DAOGeneratorSpringImpl</code>.</td>
   </tr>
   <tr>
-    <td>Java2Iterator/IBATIS</td>
+    <td nowrap="nowrap">Java2/IBATIS</td>
     <td><code>org.apache.ibatis.abator.internal.java.dao.IbatisJava2DAOGenerator</code>.</td>
   </tr>
   <tr>
-    <td>Java2Iterator/GENERIC-CI</td>
+    <td nowrap="nowrap">Java2/GENERIC-CI</td>
     <td><code>org.apache.ibatis.abator.internal.java.dao.GenericCIJava2DAOGenerator</code>.</td>
   </tr>
   <tr>
-    <td>Java2Iterator/GENERIC-SI</td>
+    <td nowrap="nowrap">Java2/GENERIC-SI</td>
     <td><code>org.apache.ibatis.abator.internal.java.dao.GenericSIJava2DAOGenerator</code>.</td>
   </tr>
   <tr>
-    <td>Java2Iterator/SPRING</td>
+    <td nowrap="nowrap">Java2/SPRING</td>
     <td><code>org.apache.ibatis.abator.internal.java.dao.SpringJava2DAOGenerator</code>.</td>
   </tr>
   <tr>
-    <td>Java5Iterator/IBATIS</td>
+    <td nowrap="nowrap">Java5/IBATIS</td>
     <td><code>org.apache.ibatis.abator.internal.java.dao.IbatisJava5DAOGenerator</code>.</td>
   </tr>
   <tr>
-    <td>Java5Iterator/GENERIC-CI</td>
+    <td nowrap="nowrap">Java5/GENERIC-CI</td>
     <td><code>org.apache.ibatis.abator.internal.java.dao.GenericCIJava5DAOGenerator</code>.</td>
   </tr>
   <tr>
-    <td>Java5Iterator/GENERIC-SI</td>
+    <td nowrap="nowrap">Java5/GENERIC-SI</td>
     <td><code>org.apache.ibatis.abator.internal.java.dao.GenericSIJava5DAOGenerator</code>.</td>
   </tr>
   <tr>
-    <td>Java5Iterator/SPRING</td>
+    <td nowrap="nowrap">Java5/SPRING</td>
     <td><code>org.apache.ibatis.abator.internal.java.dao.SpringJava5DAOGenerator</code>.</td>
   </tr>
 </table>

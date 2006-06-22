@@ -20,7 +20,7 @@ class will be untouched by Abator.
 With this in mind, you can add other fields and methods to the classes without fear of losing them in
 subsequent runs of Abator - simply DO NOT include the <code>@abatorgenerated</code>
 JavaDoc tag on anything that you add to the class.</p>
-<p>Outside of the Eclipse plugin, Java files need to be mrged by hand, but you can use the
+<p>Outside of the Eclipse plugin, Java files need to be merged by hand, but you can use the
 <code>@abatorgenerated</code> JavaDoc tag to know what is safe to delete from a prior
 version of a file.</p>
 <p>The following sections describe the different types of "domain" classes that will be
@@ -34,8 +34,8 @@ with a data type of BLOB, CLOB, LONGVARCHAR, or LONGVARBINARY.</p>
 
 <h2>Primary Key Class</h2>
 <p>This class will contain properties for each field in the primary key of a table.
-The property names will be generated automtically by Abator, and based on the column name
-in the table.  The abator generated property names can be overridded with a
+The property names will be generated automatically by Abator, and based on the column name
+in the table.  The abator generated property names can be overridden with a
 <code>&lt;columnOverride&gt;</code> configuration element.
 </p>
 <p>The name of the class will be <code>&laquo;TableName&raquo;Key</code> by default, or
@@ -47,8 +47,8 @@ attribute is specified on the <code>&lt;table&gt;</code> configuration element.<
 <h2>Record Class</h2>
 <p>This class will contain properties for each non-BLOB and non-primary key column in the table.
 The class will extend the primary key class, if there is a primary key.
-The property names will be generated automtically by Abator, and based on the column name
-in the table.  The abator generated property names can be overridded with a
+The property names will be generated automatically by Abator, and based on the column name
+in the table.  The abator generated property names can be overridden with a
 <code>&lt;columnOverride&gt;</code> configuration element.</p>
 
 <p>The name of the class will be <code>&laquo;TableName&raquo;</code> by default, or
@@ -62,8 +62,8 @@ attribute is specified on the <code>&lt;table&gt;</code> configuration element.<
 The class will extend the record class, if there are other non-BLOB and non-Primary Key
 columns in the table, else it will extend the primary key (note that Abator does not support
 tables that only contain BLOB columns).
-The property names will be generated automtically by Abator, and based on the column name
-in the table.  The abator generated property names can be overridded with a
+The property names will be generated automatically by Abator, and based on the column name
+in the table.  The abator generated property names can be overridden with a
 <code>&lt;columnOverride&gt;</code> configuration element.</p>
 
 <p>This class will be the return value from the <code>selectByPrimaryKey</code> method,
@@ -81,7 +81,7 @@ attribute is specified on the <code>&lt;table&gt;</code> configuration element.<
 <code>selectByExampleWithBLOBs</code>, and
 <code>deleteByExample</code> methods.
 This class may or may not extend one of the other generated domain classes based on the
-table configuration, and the value of the <code>defaultGeneratorConfiguration</code>
+table configuration, and the value of the <code>generatorSet</code>
 property of the <a href="../configreference/abatorContext.html">&lt;abatorContext&gt;</a>
 configuration element.</p>
 
@@ -94,12 +94,12 @@ methods are enabled.</p>
 
 <h2>Example Class Usage Notes</h2>
 <p>Using the example class is different depending on the value of the
-<code>defaultGeneratorConfiguration</code>
+<code>generatorSet</code>
 property of the <a href="../configreference/abatorContext.html">&lt;abatorContext&gt;</a>
 configuration element.</p>
 
 <p>The example class specifies how to build a dynamic where clause.  Each non-BLOB column in the
-can can optionally be included in the where clause, and several different operators are available
+can optionally be included in the where clause, and several different operators are available
 to specify how the different query constraints should work.  Examples are the best way
 to demonstrate the usage of this class.</p>
 <h3>Using the example Class with the Java2NonIterator Generators</h3>
@@ -107,7 +107,7 @@ to demonstrate the usage of this class.</p>
 where clauses.  This set of generators is the default set of generators, and classes
 generated work with all versions of iBATIS.  However, the function of the example class
 if somewhat limited.  If at all possible, we recommend using one of the other generator
-sets - but thos generator sets are dependant on iBATIS 2.2.0 or higher.</p>
+sets - but those generator sets are dependant on iBATIS 2.2.0 or higher.</p>
 <p>This example shows how to generate a simple where clause using the generated
 example class:</p>
 <pre>
@@ -155,7 +155,7 @@ outer class holds a list of <code>AndedCondition</code> objects and all the clau
 from the inner classes will be ored together.  Using different sets of
 <code>AndedCondition</code> classes allows you to generate virtually unlimited
 types of where clauses.</p>
-<p>This example shows how to generate a comlex where clause using the generated
+<p>This example shows how to generate a complex where clause using the generated
 example class (using JSE 5.0 parameterized types):</p>
 <pre>
   TestTableExample example = new TestTableExample();

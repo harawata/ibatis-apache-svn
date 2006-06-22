@@ -16,7 +16,10 @@
 package org.apache.ibatis.abator.config.xml;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +37,6 @@ import org.apache.ibatis.abator.config.JavaTypeResolverConfiguration;
 import org.apache.ibatis.abator.config.PropertyHolder;
 import org.apache.ibatis.abator.config.SqlMapGeneratorConfiguration;
 import org.apache.ibatis.abator.config.TableConfiguration;
-import org.apache.ibatis.abator.exception.GenerationRuntimeException;
 import org.apache.ibatis.abator.exception.XMLParserException;
 import org.apache.ibatis.abator.internal.db.DatabaseDialects;
 import org.apache.ibatis.abator.internal.util.messages.Messages;
@@ -42,6 +44,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
@@ -63,60 +66,83 @@ public class AbatorConfigurationParser {
 	}
 
 	public AbatorConfiguration parseAbatorConfiguration(
-			File inputFile) throws XMLParserException {
-		parseErrors.clear();
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		factory.setValidating(true);
+			File inputFile) throws IOException, XMLParserException {
 
-		try {
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			builder.setEntityResolver(new ParserEntityResolver());
-
-			ParserErrorHandler handler = new ParserErrorHandler(warnings,
-					parseErrors);
-			builder.setErrorHandler(handler);
-
-			Document document;
-			try {
-				document = builder.parse(inputFile);
-			} catch (SAXParseException e) {
-				throw new XMLParserException(parseErrors);
-			} catch (SAXException e) {
-				if (e.getException() == null) {
-					throw new GenerationRuntimeException(e);
-				} else {
-					throw new GenerationRuntimeException(e.getException());
-				}
-			}
-
-			if (parseErrors.size() > 0) {
-				throw new XMLParserException(parseErrors);
-			}
-
-			NodeList nodeList = document.getChildNodes();
-			AbatorConfiguration gc = null;
-			for (int i = 0; i < nodeList.getLength(); i++) {
-				Node node = nodeList.item(i);
-
-				if (node.getNodeType() == 1
-						&& "abatorConfiguration".equals(node.getNodeName())) { //$NON-NLS-1$
-					gc = parseAbatorConfiguration(node);
-					break;
-				}
-			}
-
-			if (parseErrors.size() > 0) {
-				throw new XMLParserException(parseErrors);
-			}
-
-			return gc;
-		} catch (ParserConfigurationException e) {
-			throw new GenerationRuntimeException(e);
-		} catch (IOException e) {
-			throw new GenerationRuntimeException(e);
-		}
+        FileReader fr = new FileReader(inputFile);
+        
+        return parseAbatorConfiguration(fr);
 	}
 
+    public AbatorConfiguration parseAbatorConfiguration(
+            Reader reader) throws IOException, XMLParserException {
+
+        InputSource is = new InputSource(reader);
+        
+        return parseAbatorConfiguration(is);
+    }
+
+    public AbatorConfiguration parseAbatorConfiguration(
+            InputStream inputStream) throws IOException, XMLParserException {
+
+        InputSource is = new InputSource(inputStream);
+        
+        return parseAbatorConfiguration(is);
+    }
+
+    private AbatorConfiguration parseAbatorConfiguration(
+            InputSource inputSource) throws IOException, XMLParserException {
+        parseErrors.clear();
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setValidating(true);
+
+        try {
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            builder.setEntityResolver(new ParserEntityResolver());
+
+            ParserErrorHandler handler = new ParserErrorHandler(warnings,
+                    parseErrors);
+            builder.setErrorHandler(handler);
+
+            Document document = null;
+            try {
+                document = builder.parse(inputSource);
+            } catch (SAXParseException e) {
+                throw new XMLParserException(parseErrors);
+            } catch (SAXException e) {
+                if (e.getException() == null) {
+                    parseErrors.add(e.getMessage());
+                } else {
+                    parseErrors.add(e.getException().getMessage());
+                }
+            }
+
+            if (parseErrors.size() > 0) {
+                throw new XMLParserException(parseErrors);
+            }
+
+            NodeList nodeList = document.getChildNodes();
+            AbatorConfiguration gc = null;
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                Node node = nodeList.item(i);
+
+                if (node.getNodeType() == 1
+                        && "abatorConfiguration".equals(node.getNodeName())) { //$NON-NLS-1$
+                    gc = parseAbatorConfiguration(node);
+                    break;
+                }
+            }
+
+            if (parseErrors.size() > 0) {
+                throw new XMLParserException(parseErrors);
+            }
+
+            return gc;
+        } catch (ParserConfigurationException e) {
+            parseErrors.add(e.getMessage());
+            throw new XMLParserException(parseErrors);
+        }
+    }
+    
 	private AbatorConfiguration parseAbatorConfiguration(Node node) {
 
 		AbatorConfiguration abatorConfiguration = new AbatorConfiguration();
@@ -139,12 +165,19 @@ public class AbatorConfigurationParser {
 
 	private void parseAbatorContext(AbatorConfiguration abatorConfiguration, Node node) {
 	    
-	    AbatorContext abatorContext = new AbatorContext();
-	    
-	    abatorConfiguration.addAbatorContext(abatorContext);
 
 		NamedNodeMap nnm = node.getAttributes();
-		Node attribute = nnm.getNamedItem("id"); //$NON-NLS-1$
+        Node attribute = nnm.getNamedItem("generatorSet"); //$NON-NLS-1$
+        AbatorContext abatorContext;
+        if (attribute == null) {
+            abatorContext = new AbatorContext();
+        } else {
+            abatorContext = new AbatorContext(attribute.getNodeValue());
+        }
+        
+        abatorConfiguration.addAbatorContext(abatorContext);
+        
+		attribute = nnm.getNamedItem("id"); //$NON-NLS-1$
 		if (attribute != null) {
 		    abatorContext.setId(attribute.getNodeValue());
 		}
@@ -157,9 +190,7 @@ public class AbatorConfigurationParser {
 				continue;
 			}
 
-            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
-                parseProperty(abatorContext, childNode);
-            } else if ("jdbcConnection".equals(childNode.getNodeName())) { //$NON-NLS-1$
+            if ("jdbcConnection".equals(childNode.getNodeName())) { //$NON-NLS-1$
 				parseJdbcConnection(abatorContext, childNode);
 			} else if ("javaModelGenerator".equals(childNode.getNodeName())) { //$NON-NLS-1$
 				parseJavaModelGenerator(abatorContext, childNode);
@@ -176,21 +207,23 @@ public class AbatorConfigurationParser {
 	}
 	
 	private void parseSqlMapGenerator(AbatorContext abatorContext, Node node) {
-		SqlMapGeneratorConfiguration sqlMapGenerator = abatorContext
-				.getSqlMapGeneratorConfiguration();
+		SqlMapGeneratorConfiguration sqlMapGeneratorConfiguration =
+            new SqlMapGeneratorConfiguration(); 
+            
+        abatorContext.setSqlMapGeneratorConfiguration(sqlMapGeneratorConfiguration);
 
 		NamedNodeMap nnm = node.getAttributes();
 
 		Node attribute = nnm.getNamedItem("type"); //$NON-NLS-1$
 		if (attribute != null) {
-		    sqlMapGenerator.setConfigurationType(attribute.getNodeValue());
+		    sqlMapGeneratorConfiguration.setConfigurationType(attribute.getNodeValue());
 		}
 
 		attribute = nnm.getNamedItem("targetPackage"); //$NON-NLS-1$
-		sqlMapGenerator.setTargetPackage(attribute.getNodeValue());
+		sqlMapGeneratorConfiguration.setTargetPackage(attribute.getNodeValue());
 
 		attribute = nnm.getNamedItem("targetProject"); //$NON-NLS-1$
-		sqlMapGenerator.setTargetProject(attribute.getNodeValue());
+		sqlMapGeneratorConfiguration.setTargetProject(attribute.getNodeValue());
 
 		NodeList nodeList = node.getChildNodes();
 		for (int i = 0; i < nodeList.getLength(); i++) {
@@ -201,7 +234,7 @@ public class AbatorConfigurationParser {
 			}
 
 			if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
-				parseProperty(sqlMapGenerator, childNode);
+				parseProperty(sqlMapGeneratorConfiguration, childNode);
 			}
 		}
 	}
@@ -398,8 +431,10 @@ public class AbatorConfigurationParser {
 
 	private void parseJavaTypeResolver(AbatorContext abatorContext,
 			Node node) {
-		JavaTypeResolverConfiguration javaTypeResolverConfiguration = abatorContext
-				.getJavaTypeResolverConfiguration();
+		JavaTypeResolverConfiguration javaTypeResolverConfiguration =
+            new JavaTypeResolverConfiguration();
+            
+        abatorContext.setJavaTypeResolverConfiguration(javaTypeResolverConfiguration);
 
 		NamedNodeMap nnm = node.getAttributes();
 
@@ -424,8 +459,10 @@ public class AbatorConfigurationParser {
 
 	private void parseJavaModelGenerator(AbatorContext abatorContext,
 			Node node) {
-		JavaModelGeneratorConfiguration javaModelGeneratorConfiguration = abatorContext
-				.getJavaModelGeneratorConfiguration();
+		JavaModelGeneratorConfiguration javaModelGeneratorConfiguration =
+            new JavaModelGeneratorConfiguration();
+        
+        abatorContext.setJavaModelGeneratorConfiguration(javaModelGeneratorConfiguration);
 
 		NamedNodeMap nnm = node.getAttributes();
 
@@ -457,9 +494,10 @@ public class AbatorConfigurationParser {
 	}
 
 	private void parseDaoGenerator(AbatorContext abatorContext, Node node) {
-		DAOGeneratorConfiguration daoGeneratorConfiguration = abatorContext
-				.getDaoGeneratorConfiguration();
-		daoGeneratorConfiguration.setEnabled(true);
+		DAOGeneratorConfiguration daoGeneratorConfiguration =
+            new DAOGeneratorConfiguration();
+            
+        abatorContext.setDaoGeneratorConfiguration(daoGeneratorConfiguration);
 
 		NamedNodeMap nnm = node.getAttributes();
 
@@ -487,25 +525,27 @@ public class AbatorConfigurationParser {
 	}
 
 	private void parseJdbcConnection(AbatorContext abatorContext, Node node) {
-		JDBCConnectionConfiguration jdbcConnection = abatorContext
-				.getJdbcConnectionConfiguration();
+		JDBCConnectionConfiguration jdbcConnectionConfiguration =
+            new JDBCConnectionConfiguration();
+            
+        abatorContext.setJdbcConnectionConfiguration(jdbcConnectionConfiguration);
 
 		NamedNodeMap nnm = node.getAttributes();
 
 		Node attribute = nnm.getNamedItem("driverClass"); //$NON-NLS-1$
-		jdbcConnection.setDriverClass(attribute.getNodeValue());
+		jdbcConnectionConfiguration.setDriverClass(attribute.getNodeValue());
 
 		attribute = nnm.getNamedItem("connectionURL"); //$NON-NLS-1$
-		jdbcConnection.setConnectionURL(attribute.getNodeValue());
+		jdbcConnectionConfiguration.setConnectionURL(attribute.getNodeValue());
 
 		attribute = nnm.getNamedItem("userId"); //$NON-NLS-1$
 		if (attribute != null) {
-			jdbcConnection.setUserId(attribute.getNodeValue());
+			jdbcConnectionConfiguration.setUserId(attribute.getNodeValue());
 		}
 
 		attribute = nnm.getNamedItem("password"); //$NON-NLS-1$
 		if (attribute != null) {
-			jdbcConnection.setPassword(attribute.getNodeValue());
+			jdbcConnectionConfiguration.setPassword(attribute.getNodeValue());
 		}
 
 		NodeList nodeList = node.getChildNodes();
@@ -517,9 +557,9 @@ public class AbatorConfigurationParser {
 			}
 
 			if ("classPathEntry".equals(childNode.getNodeName())) { //$NON-NLS-1$
-				parseClassPathEntry(jdbcConnection, childNode);
+				parseClassPathEntry(jdbcConnectionConfiguration, childNode);
 			} else if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
-				parseProperty(jdbcConnection, childNode);
+				parseProperty(jdbcConnectionConfiguration, childNode);
 			}
 		}
 	}

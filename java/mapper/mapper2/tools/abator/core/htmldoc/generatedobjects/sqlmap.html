@@ -7,8 +7,8 @@
 <body>
 <h1>Abator Generated SQL Map Files</h1>
 <p>Abator generates SQL Map files that conform to iBATIS' SQL Map DTD.  The files contain many different
-elements based on the characterisitcs of the table, and on the configuration options you specify.
-Abator generates a different SQL Map file for every table you specify.  The namespace of the
+elements based on the characteristics of the table, and on the configuration options you specify.
+Abator generates a different SQL Map file for every table you specify.  The name space of the
 SQL Map is the name of the table (qualified by schema and catalog if present).  Abator does not
 add the SQL Map entries to the iBATIS SQLMapConfig file - you must do that manually.</p>
 
@@ -73,7 +73,7 @@ is enabled.</p>
 <p>This element contains a select statement with rows that match the example object.
 This implements a simple "query by example" functionality that can be used to generate many
 different database queries.  The returned rows will not include any BLOB fields that exist in the table
-(see the select by example with BLOBs stamenet below).</p>
+(see the select by example with BLOBs statement below).</p>
 <p>This element will be generated if the select by example statement is enabled.</p>
 
 <h2>Select by Example With BLOBs</h2>
@@ -84,7 +84,7 @@ different database queries.  The returned rows will include any BLOB fields that
  statement is enabled.</p>
 
 <h2>Insert</h2>
-<p>This element is an insert statament that includes all fields in the table (including BLOBs),
+<p>This element is an insert statement that includes all fields in the table (including BLOBs),
 unless the field is specifically ignored with the <code>&lt;ignoreColumn&gt;</code> configuration
 element.</p>
 <p>If the table has an auto generated key (an identity column or from a sequence), and the
@@ -94,7 +94,7 @@ generated key.</p>
 <p>This element will be generated if the insert statement is enabled.</p>
 
 <h2>Update By Primary Key</h2>
-<p>This element is an update stament that will update one row - designated by the primary
+<p>This element is an update statement that will update one row - designated by the primary
 key.  The update statement will update all fields in the table unless:</p>
 <ul>
   <li>The field has been ignored by the <code>&lt;ignoreColumn&gt;</code> configuration element</li>
@@ -104,7 +104,7 @@ key.  The update statement will update all fields in the table unless:</p>
 key statement is enabled.</p>
 
 <h2>Update By Primary Key With BLOBs</h2>
-<p>This element is an update stament that will update one row - designated by the primary
+<p>This element is an update statement that will update one row - designated by the primary
 key.  The update statement will update all fields in the table (including BLOB fields) unless:</p>
 <ul>
   <li>The field has been ignored by the <code>&lt;ignoreColumn&gt;</code> configuration element</li>
@@ -120,7 +120,7 @@ primary key.<p>
 
 <h2>Delete By Example</h2>
 <p>This element is a delete statement that will delete one or more rows in the table - designated by
-the the example object.<p>
+the example object.<p>
 <p>This element will be generated if the delete by example statement is enabled.</p>
 </body>
 </html>

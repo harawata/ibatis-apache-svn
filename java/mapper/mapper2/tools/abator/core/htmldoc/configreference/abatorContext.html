@@ -18,46 +18,25 @@ databases, or with different generation parameters, in the same run of Abator.</
 <p>None</p>
 
 <h2>Optional Attributes</h2>
-<table border="1" cellspacing="0" cellpadding="2">
+<table border="1" cellspacing="0" cellpadding="5">
   <tr>
     <th>Attribute</th>
     <th>Description</th>
   </tr>
   <tr>
     <td>id</td>
-    <td>A unique identifier for this context.  This value is not used
-      within Abator currently.</td>
-  </tr>
-</table>
-
-<h2>Child Elements</h2>
-<ul>
-  <li><a href="property.html">&lt;property&gt;</a> (0..N)</li>
-  <li><a href="jdbcConnection.html">&lt;jdbcConnection&gt;</a> (1 Required)</li>
-  <li><a href="javaTypeResolver.html">&lt;javaTypeResolver&gt;</a> (0 or 1)</li>
-  <li><a href="javaModelGenerator.html">&lt;javaModelGenerator&gt;</a> (1 Required)</li>
-  <li><a href="sqlMapGenerator.html">&lt;sqlMapGenerator&gt;</a> (1 Required)</li>
-  <li><a href="daoGenerator.html">&lt;daoGenerator&gt;</a> (0 or 1)</li>
-  <li><a href="table.html">&lt;table&gt;</a> (1..N)</li>
-</ul>
-
-<h2>Supported Properties</h2>
-<p>This table lists the properties that can be specified with the
-<a href="property.html">&lt;property&gt;</a> child element:</p>
-<table border="1" cellspacing="0" cellpadding="2">
-  <tr>
-    <th>Property Name</th>
-    <th>Property Values</th>
+    <td>A unique identifier for this context.  This value will be used in some
+      error messages.</td>
   </tr>
   <tr>
-    <td valign="top">defaultGeneratorConfiguration</td>
+    <td valign="top">generatorSet</td>
     <td>
       This property is used to select different sets of code generators,
       with different behaviors.
       The property supports these values:
       <table>
         <tr>
-          <th valign="top">Java2NonIterator</th>
+          <th valign="top">Legacy</th>
           <td><i>This is the default value</i>
               <br/>This set of code generators generate objects that are compatible
             with all iBATIS versions and all levels of Java 2.  The "by example"
@@ -66,7 +45,7 @@ databases, or with different generation parameters, in the same run of Abator.</
             the original code generators shipped with Abator.</td>
         </tr>
         <tr>
-          <th valign="top">Java2Iterator</th>
+          <th valign="top">Java2</th>
           <td>This set of code generators generate objects that are compatible
             with iBATIS versions 2.2.0 and higher, and all levels of Java 2.
             The "by example" methods in these generated objects support virtually
@@ -76,13 +55,13 @@ databases, or with different generation parameters, in the same run of Abator.</
             of the other sets of code generators.</td>
         </tr>
         <tr>
-          <th valign="top">Java5Iterator</th>
+          <th valign="top">Java5</th>
           <td>This set of code generators generate objects that are compatible
             with iBATIS versions 2.2.0 and higher, and JSE 5.0 and higher.
             The "by example" methods in these generated objects support virtually
             unlimited dynamic where clauses.  Additionally, the Java objects
             generated with these generators support many JSE 5.0 features including
-            generic types, and annotations. The objects generated with
+            parameterized types and annotations. The objects generated with
             this set of generators are not 100% compatible with the
             objects generated with the original version of Abator, or one
             of the other sets of code generators.</td>
@@ -91,6 +70,16 @@ databases, or with different generation parameters, in the same run of Abator.</
     </td>
   </tr>
 </table>
+
+<h2>Child Elements</h2>
+<ul>
+  <li><a href="jdbcConnection.html">&lt;jdbcConnection&gt;</a> (1 Required)</li>
+  <li><a href="javaTypeResolver.html">&lt;javaTypeResolver&gt;</a> (0 or 1)</li>
+  <li><a href="javaModelGenerator.html">&lt;javaModelGenerator&gt;</a> (1 Required)</li>
+  <li><a href="sqlMapGenerator.html">&lt;sqlMapGenerator&gt;</a> (1 Required)</li>
+  <li><a href="daoGenerator.html">&lt;daoGenerator&gt;</a> (0 or 1)</li>
+  <li><a href="table.html">&lt;table&gt;</a> (1..N)</li>
+</ul>
 
 </body>
 </html>

@@ -19,8 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.abator.config.FullyQualifiedTable;
-import org.apache.ibatis.abator.config.TableConfiguration;
-import org.apache.ibatis.abator.internal.db.ColumnDefinitions;
+import org.apache.ibatis.abator.internal.db.IntrospectedTable;
 
 /**
  * This interface describes the operations that are required of an 
@@ -68,6 +67,5 @@ public interface SqlMapGenerator {
 
     String getSelectByExampleWithBLOBsStatementId();
 
-    List getGeneratedXMLFiles(ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, ProgressCallback callback);
+    List getGeneratedXMLFiles(IntrospectedTable introspectedTable, ProgressCallback callback);
 }

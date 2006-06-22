@@ -36,9 +36,8 @@ import org.apache.ibatis.abator.api.dom.java.Parameter;
 import org.apache.ibatis.abator.api.dom.java.PrimitiveTypeWrapper;
 import org.apache.ibatis.abator.api.dom.java.TopLevelClass;
 import org.apache.ibatis.abator.config.FullyQualifiedTable;
-import org.apache.ibatis.abator.config.TableConfiguration;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
-import org.apache.ibatis.abator.internal.db.ColumnDefinitions;
+import org.apache.ibatis.abator.internal.db.IntrospectedTable;
 import org.apache.ibatis.abator.internal.java.dao.AbstractDAOTemplate;
 import org.apache.ibatis.abator.internal.rules.AbatorRules;
 import org.apache.ibatis.abator.internal.sqlmap.ExampleClause;
@@ -186,11 +185,9 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
         return s;
     }
 
-    protected TopLevelClass getDAOImplementation(
-            ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration) {
+    protected TopLevelClass getDAOImplementation(IntrospectedTable introspectedTable) {
 
-        FullyQualifiedTable table = tableConfiguration.getTable();
+        FullyQualifiedTable table = introspectedTable.getTableConfiguration().getTable();
         TopLevelClass answer = new TopLevelClass(getDAOImplementationType(table));
         answer.setVisibility(JavaVisibility.PUBLIC);
         answer.setSuperClass(daoTemplate.getSuperClass());
@@ -221,7 +218,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
             answer.addMethod((Method) iter.next());
         }
 
-        List methods = getInsertMethods(columnDefinitions, tableConfiguration,
+        List methods = getInsertMethods(introspectedTable,
                 false, answer);
         if (methods != null) {
             iter = methods.iterator();
@@ -230,8 +227,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
             }
         }
 
-        methods = getUpdateByPrimaryKeyMethods(columnDefinitions,
-                tableConfiguration, false, answer);
+        methods = getUpdateByPrimaryKeyMethods(introspectedTable, false, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
@@ -239,8 +235,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
             }
         }
 
-        methods = getUpdateByPrimaryKeyWithBLOBsMethods(columnDefinitions,
-                tableConfiguration, false, answer);
+        methods = getUpdateByPrimaryKeyWithBLOBsMethods(introspectedTable, false, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
@@ -248,8 +243,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
             }
         }
 
-        methods = getSelectByExampleMethods(columnDefinitions,
-                tableConfiguration, false, answer);
+        methods = getSelectByExampleMethods(introspectedTable, false, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
@@ -257,8 +251,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
             }
         }
 
-        methods = getSelectByExampleWithBLOBsMethods(columnDefinitions,
-                tableConfiguration, false, answer);
+        methods = getSelectByExampleWithBLOBsMethods(introspectedTable, false, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
@@ -266,8 +259,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
             }
         }
 
-        methods = getSelectByPrimaryKeyMethods(columnDefinitions,
-                tableConfiguration, false, answer);
+        methods = getSelectByPrimaryKeyMethods(introspectedTable, false, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
@@ -275,8 +267,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
             }
         }
 
-        methods = getDeleteByExampleMethods(columnDefinitions,
-                tableConfiguration, false, answer);
+        methods = getDeleteByExampleMethods(introspectedTable, false, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
@@ -284,8 +275,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
             }
         }
 
-        methods = getDeleteByPrimaryKeyMethods(columnDefinitions,
-                tableConfiguration, false, answer);
+        methods = getDeleteByPrimaryKeyMethods(introspectedTable, false, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
@@ -293,8 +283,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
             }
         }
 
-        methods = getGetExampleParmsMethods(columnDefinitions,
-                tableConfiguration, answer);
+        methods = getGetExampleParmsMethods(introspectedTable, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
@@ -305,10 +294,8 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
         return answer;
     }
 
-    protected Interface getDAOInterface(
-            ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration) {
-        FullyQualifiedTable table = tableConfiguration.getTable();
+    protected Interface getDAOInterface(IntrospectedTable introspectedTable) {
+        FullyQualifiedTable table = introspectedTable.getTableConfiguration().getTable();
         Interface answer = new Interface(getDAOInterfaceType(table));
         answer.setVisibility(JavaVisibility.PUBLIC);
 
@@ -324,7 +311,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
             answer.addImportedType((FullyQualifiedJavaType) iter.next());
         }
 
-        List methods = getInsertMethods(columnDefinitions, tableConfiguration,
+        List methods = getInsertMethods(introspectedTable,
                 true, answer);
         if (methods != null) {
             iter = methods.iterator();
@@ -333,8 +320,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
             }
         }
 
-        methods = getUpdateByPrimaryKeyMethods(columnDefinitions,
-                tableConfiguration, true, answer);
+        methods = getUpdateByPrimaryKeyMethods(introspectedTable, true, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
@@ -342,8 +328,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
             }
         }
 
-        methods = getUpdateByPrimaryKeyWithBLOBsMethods(columnDefinitions,
-                tableConfiguration, true, answer);
+        methods = getUpdateByPrimaryKeyWithBLOBsMethods(introspectedTable, true, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
@@ -351,8 +336,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
             }
         }
 
-        methods = getSelectByExampleMethods(columnDefinitions,
-                tableConfiguration, true, answer);
+        methods = getSelectByExampleMethods(introspectedTable, true, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
@@ -360,8 +344,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
             }
         }
 
-        methods = getSelectByExampleWithBLOBsMethods(columnDefinitions,
-                tableConfiguration, true, answer);
+        methods = getSelectByExampleWithBLOBsMethods(introspectedTable, true, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
@@ -369,8 +352,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
             }
         }
 
-        methods = getSelectByPrimaryKeyMethods(columnDefinitions,
-                tableConfiguration, true, answer);
+        methods = getSelectByPrimaryKeyMethods(introspectedTable, true, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
@@ -378,8 +360,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
             }
         }
 
-        methods = getDeleteByExampleMethods(columnDefinitions,
-                tableConfiguration, true, answer);
+        methods = getDeleteByExampleMethods(introspectedTable, true, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
@@ -387,8 +368,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
             }
         }
 
-        methods = getDeleteByPrimaryKeyMethods(columnDefinitions,
-                tableConfiguration, true, answer);
+        methods = getDeleteByPrimaryKeyMethods(introspectedTable, true, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
@@ -404,51 +384,46 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.ibatis.abator.api.DAOGenerator#getGeneratedJavaFiles(org.apache.ibatis.abator.internal.db.ColumnDefinitions,
-     *      org.apache.ibatis.abator.config.TableConfiguration,
-     *      org.apache.ibatis.abator.api.ProgressCallback)
+     *  (non-Javadoc)
+     * @see org.apache.ibatis.abator.api.DAOGenerator#getGeneratedJavaFiles(org.apache.ibatis.abator.internal.db.IntrospectedTable, org.apache.ibatis.abator.api.ProgressCallback)
      */
-    public List getGeneratedJavaFiles(ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, ProgressCallback callback) {
+    public List getGeneratedJavaFiles(IntrospectedTable introspectedTable,
+            ProgressCallback callback) {
         List list = new ArrayList();
 
-        String tableName = tableConfiguration.getTable()
+        String tableName = introspectedTable.getTableConfiguration().getTable()
                 .getFullyQualifiedTableName();
 
         callback.startSubTask(Messages.getString("DAOGeneratorBaseImpl.0", //$NON-NLS-1$
                 tableName));
-        CompilationUnit cu = getDAOImplementation(columnDefinitions,
-                tableConfiguration);
+        CompilationUnit cu = getDAOImplementation(introspectedTable);
         GeneratedJavaFile gjf = new GeneratedJavaFile(cu, targetProject);
         list.add(gjf);
 
         callback.startSubTask(Messages.getString("DAOGeneratorBaseImpl.1", //$NON-NLS-1$
                 tableName));
-        cu = getDAOInterface(columnDefinitions, tableConfiguration);
+        cu = getDAOInterface(introspectedTable);
         gjf = new GeneratedJavaFile(cu, targetProject);
         list.add(gjf);
 
         return list;
     }
 
-    protected List getInsertMethods(ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, boolean interfaceMethod,
+    protected List getInsertMethods(IntrospectedTable introspectedTable, boolean interfaceMethod,
             CompilationUnit compilationUnit) {
 
-        if (!AbatorRules.generateInsert(tableConfiguration)) {
+        if (!AbatorRules.generateInsert(introspectedTable)) {
             return null;
         }
 
-        FullyQualifiedTable table = tableConfiguration.getTable();
+        FullyQualifiedTable table = introspectedTable.getTableConfiguration().getTable();
         Method method = new Method();
         method.addComment(table);
         
         FullyQualifiedJavaType returnType;
-        if (tableConfiguration.getGeneratedKey().isConfigured()) {
-            ColumnDefinition cd = columnDefinitions
-                    .getColumn(tableConfiguration.getGeneratedKey().getColumn());
+        if (introspectedTable.getTableConfiguration().getGeneratedKey().isConfigured()) {
+            ColumnDefinition cd = introspectedTable.getColumnDefinitions()
+                    .getColumn(introspectedTable.getTableConfiguration().getGeneratedKey().getColumn());
             if (cd == null) {
                 // the specified column doesn't exist, so don't do the generated
                 // key
@@ -467,11 +442,11 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
         method.setName("insert"); //$NON-NLS-1$
 
         FullyQualifiedJavaType parameterType;
-        if (AbatorRules.generateRecordWithBLOBsExtendingPrimaryKey(columnDefinitions)
-                || AbatorRules.generateRecordWithBLOBsExtendingBaseRecord(columnDefinitions)) {
+        if (AbatorRules.generateRecordWithBLOBsExtendingPrimaryKey(introspectedTable)
+                || AbatorRules.generateRecordWithBLOBsExtendingBaseRecord(introspectedTable)) {
             parameterType = javaModelGenerator.getRecordWithBLOBsType(table);
-        } else if (AbatorRules.generateBaseRecordWithNoSuperclass(columnDefinitions)
-                || AbatorRules.generateBaseRecordExtendingPrimaryKey(columnDefinitions)) {
+        } else if (AbatorRules.generateBaseRecordWithNoSuperclass(introspectedTable)
+                || AbatorRules.generateBaseRecordExtendingPrimaryKey(introspectedTable)) {
             parameterType = javaModelGenerator.getRecordType(table);
         } else {
             parameterType = javaModelGenerator.getPrimaryKeyType(table);
@@ -531,15 +506,15 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
     }
 
     protected List getUpdateByPrimaryKeyMethods(
-            ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, boolean interfaceMethod,
+            IntrospectedTable introspectedTable,
+            boolean interfaceMethod,
             CompilationUnit compilationUnit) {
 
-        if (!AbatorRules.generateUpdateByPrimaryKeyWithoutBLOBs(columnDefinitions, tableConfiguration)) {
+        if (!AbatorRules.generateUpdateByPrimaryKeyWithoutBLOBs(introspectedTable)) {
             return null;
         }
 
-        FullyQualifiedTable table = tableConfiguration.getTable();
+        FullyQualifiedTable table = introspectedTable.getTableConfiguration().getTable();
         FullyQualifiedJavaType type = javaModelGenerator.getRecordType(table);
         compilationUnit.addImportedType(type);
         
@@ -577,16 +552,16 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
     }
 
     protected List getUpdateByPrimaryKeyWithBLOBsMethods(
-            ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, boolean interfaceMethod,
+            IntrospectedTable introspectedTable,
+            boolean interfaceMethod,
             CompilationUnit compilationUnit) {
 
         if (!AbatorRules
-                .generateUpdateByPrimaryKeyWithBLOBs(columnDefinitions, tableConfiguration)) {
+                .generateUpdateByPrimaryKeyWithBLOBs(introspectedTable)) {
             return null;
         }
 
-        FullyQualifiedTable table = tableConfiguration.getTable();
+        FullyQualifiedTable table = introspectedTable.getTableConfiguration().getTable();
         FullyQualifiedJavaType type = javaModelGenerator.getRecordWithBLOBsType(table);
         compilationUnit.addImportedType(type);
         
@@ -624,15 +599,15 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
     }
 
     protected List getSelectByExampleMethods(
-            ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, boolean interfaceMethod,
+            IntrospectedTable introspectedTable,
+            boolean interfaceMethod,
             CompilationUnit compilationUnit) {
 
-        if (!AbatorRules.generateSelectByExampleWithoutBLOBs(tableConfiguration)) {
+        if (!AbatorRules.generateSelectByExampleWithoutBLOBs(introspectedTable)) {
             return null;
         }
 
-        FullyQualifiedTable table = tableConfiguration.getTable();
+        FullyQualifiedTable table = introspectedTable.getTableConfiguration().getTable();
         FullyQualifiedJavaType type = javaModelGenerator.getExampleType(table);
         compilationUnit.addImportedType(type);
         compilationUnit.addImportedType(FullyQualifiedJavaType.getNewListInstance());
@@ -690,16 +665,16 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
     }
 
     protected List getSelectByExampleWithBLOBsMethods(
-            ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, boolean interfaceMethod,
+            IntrospectedTable introspectedTable,
+            boolean interfaceMethod,
             CompilationUnit compilationUnit) {
 
         if (!AbatorRules
-                .generateSelectByExampleWithBLOBs(columnDefinitions, tableConfiguration)) {
+                .generateSelectByExampleWithBLOBs(introspectedTable)) {
             return null;
         }
 
-        FullyQualifiedTable table = tableConfiguration.getTable();
+        FullyQualifiedTable table = introspectedTable.getTableConfiguration().getTable();
         FullyQualifiedJavaType type = javaModelGenerator.getExampleType(table);
         compilationUnit.addImportedType(type);
         compilationUnit.addImportedType(FullyQualifiedJavaType.getNewListInstance());
@@ -757,15 +732,15 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
     }
 
     protected List getSelectByPrimaryKeyMethods(
-            ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, boolean interfaceMethod,
+            IntrospectedTable introspectedTable,
+            boolean interfaceMethod,
             CompilationUnit compilationUnit) {
 
-        if (!AbatorRules.generateSelectByPrimaryKey(columnDefinitions, tableConfiguration)) {
+        if (!AbatorRules.generateSelectByPrimaryKey(introspectedTable)) {
             return null;
         }
 
-        FullyQualifiedTable table = tableConfiguration.getTable();
+        FullyQualifiedTable table = introspectedTable.getTableConfiguration().getTable();
         FullyQualifiedJavaType type = javaModelGenerator.getPrimaryKeyType(table);
         compilationUnit.addImportedType(type);
         
@@ -774,8 +749,8 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
         method.setVisibility(JavaVisibility.PUBLIC);
 
         FullyQualifiedJavaType returnType;
-        if (AbatorRules.generateRecordWithBLOBsExtendingPrimaryKey(columnDefinitions)
-                || AbatorRules.generateRecordWithBLOBsExtendingBaseRecord(columnDefinitions)) {
+        if (AbatorRules.generateRecordWithBLOBsExtendingPrimaryKey(introspectedTable)
+                || AbatorRules.generateRecordWithBLOBsExtendingBaseRecord(introspectedTable)) {
             returnType = javaModelGenerator.getRecordWithBLOBsType(table);
 
         } else {
@@ -816,15 +791,15 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
     }
 
     protected List getDeleteByExampleMethods(
-            ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, boolean interfaceMethod,
+            IntrospectedTable introspectedTable,
+            boolean interfaceMethod,
             CompilationUnit compilationUnit) {
 
-        if (!AbatorRules.generateDeleteByExample(tableConfiguration)) {
+        if (!AbatorRules.generateDeleteByExample(introspectedTable)) {
             return null;
         }
 
-        FullyQualifiedTable table = tableConfiguration.getTable();
+        FullyQualifiedTable table = introspectedTable.getTableConfiguration().getTable();
         FullyQualifiedJavaType type = javaModelGenerator.getExampleType(table);
         compilationUnit.addImportedType(type);
 
@@ -862,15 +837,15 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
     }
 
     protected List getDeleteByPrimaryKeyMethods(
-            ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration, boolean interfaceMethod,
+            IntrospectedTable introspectedTable,
+            boolean interfaceMethod,
             CompilationUnit compilationUnit) {
 
-        if (!AbatorRules.generateDeleteByPrimaryKey(columnDefinitions, tableConfiguration)) {
+        if (!AbatorRules.generateDeleteByPrimaryKey(introspectedTable)) {
             return null;
         }
 
-        FullyQualifiedTable table = tableConfiguration.getTable();
+        FullyQualifiedTable table = introspectedTable.getTableConfiguration().getTable();
         FullyQualifiedJavaType type = javaModelGenerator.getPrimaryKeyType(table);
         compilationUnit.addImportedType(type);
 
@@ -908,19 +883,18 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
     }
 
     protected List getGetExampleParmsMethods(
-            ColumnDefinitions columnDefinitions,
-            TableConfiguration tableConfiguration,
+            IntrospectedTable introspectedTable,
             CompilationUnit compilationUnit) {
 
-        if (!AbatorRules.generateDeleteByExample(tableConfiguration)
+        if (!AbatorRules.generateDeleteByExample(introspectedTable)
                 && !AbatorRules
-                        .generateSelectByExampleWithoutBLOBs(tableConfiguration)) {
+                        .generateSelectByExampleWithoutBLOBs(introspectedTable)) {
             return null;
         }
 
         ArrayList answer = new ArrayList();
 
-        FullyQualifiedTable table = tableConfiguration.getTable();
+        FullyQualifiedTable table = introspectedTable.getTableConfiguration().getTable();
         FullyQualifiedJavaType type = javaModelGenerator.getExampleType(table);
         
         compilationUnit.addImportedType(FullyQualifiedJavaType.getNewMapInstance());
@@ -936,7 +910,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
         
         method.addBodyLine("Map parms = new HashMap();"); //$NON-NLS-1$
 
-        Iterator iter = columnDefinitions.getAllColumns().iterator();
+        Iterator iter = introspectedTable.getColumnDefinitions().getAllColumns().iterator();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
             StringBuffer sb = new StringBuffer();

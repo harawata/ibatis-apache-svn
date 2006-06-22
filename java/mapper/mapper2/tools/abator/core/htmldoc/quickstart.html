@@ -22,15 +22,19 @@
           omit the <code>&lt;daoGenerator&gt;</code> element if you don't wish to generate DAOs)</li>
       <li>At least one database <code>&lt;table&gt;</code> element</li>
     </ol>
+    <p>See the <a href="configreference/xmlconfig.html">XML Configuration File Reference</a>
+       page for an example of an Abator configuration file.</p>
+  </li>
   <li>Save the file in some convenient location (like \temp\abatorConfig.xml)</li>
   <li>Run Abator from the command line with a command like this:
     <pre>
+
       java -jar abator.jar \temp\abatorConfig.xml true
     </pre>
-    This will tell Abator to run using your configuration file.  It will also tell Abator
+    <p>This will tell Abator to run using your configuration file.  It will also tell Abator
     to overwrite any existing Java files with the same name.  If you want to save any existing
     Java files, specify "false" for the second parameter.  If there is a conflict, Abator
-    will save the newly generated file with a unique name (e.g. MyClass.java.1).
+    will save the newly generated file with a unique name (e.g. MyClass.java.1).</p>
   </li>
   <li>After running Abator, you will need to create or modify the standard iBATIS
       configuration files to make use of your newly generated code.  See the

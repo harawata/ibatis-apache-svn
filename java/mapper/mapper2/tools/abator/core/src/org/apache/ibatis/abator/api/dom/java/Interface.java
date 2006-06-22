@@ -36,6 +36,8 @@ public class Interface extends JavaElement implements CompilationUnit {
     private Set superInterfaceTypes;
 
     private List methods;
+    
+    private List fileCommentLines;
 
     /**
      *  
@@ -46,6 +48,7 @@ public class Interface extends JavaElement implements CompilationUnit {
         superInterfaceTypes = new LinkedHashSet();
         methods = new ArrayList();
         importedTypes = new TreeSet();
+        fileCommentLines = new ArrayList();
     }
 
     public Set getImportedTypes() {
@@ -62,6 +65,12 @@ public class Interface extends JavaElement implements CompilationUnit {
     public String getFormattedContent() {
         StringBuffer sb = new StringBuffer();
 
+        Iterator iter = fileCommentLines.iterator();
+        while (iter.hasNext()) {
+            sb.append(iter.next());
+            OutputUtilities.newLine(sb);
+        }
+
         if (getType().getPackageName() != null
                 && getType().getPackageName().length() > 0) {
             sb.append("package "); //$NON-NLS-1$
@@ -71,7 +80,7 @@ public class Interface extends JavaElement implements CompilationUnit {
             OutputUtilities.newLine(sb);
         }
 
-        Iterator iter = importedTypes.iterator();
+        iter = importedTypes.iterator();
         while (iter.hasNext()) {
             FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter.next();
             if (fqjt.isExplicitlyImported()) {
@@ -213,5 +222,13 @@ public class Interface extends JavaElement implements CompilationUnit {
 
     public boolean isJavaEnumeration() {
         return false;
+    }
+
+    public void addFileCommentLine(String commentLine) {
+        fileCommentLines.add(commentLine);
+    }
+
+    public List getFileCommentLines() {
+        return fileCommentLines;
     }
 }

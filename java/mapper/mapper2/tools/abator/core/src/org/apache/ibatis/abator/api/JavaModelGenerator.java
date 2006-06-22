@@ -20,8 +20,7 @@ import java.util.Map;
 
 import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.abator.config.FullyQualifiedTable;
-import org.apache.ibatis.abator.config.TableConfiguration;
-import org.apache.ibatis.abator.internal.db.ColumnDefinitions;
+import org.apache.ibatis.abator.internal.db.IntrospectedTable;
 
 /**
  * This interface describes methods needed in any Java model generator.
@@ -113,11 +112,9 @@ public interface JavaModelGenerator {
 	 *   <li>An example class to be used on the "by example" queries</li>
 	 * </ul>
 	 * 
-	 * @param columnDefinitions
-	 * @param tableConfiguration
+	 * @param introspectedTable
 	 * @param callback
 	 * @return a list of GeneratedJavaFile objects
 	 */
-	List getGeneratedJavaFiles(ColumnDefinitions columnDefinitions,
-			TableConfiguration tableConfiguration, ProgressCallback callback);
+	List getGeneratedJavaFiles(IntrospectedTable introspectedTable, ProgressCallback callback);
 }
