@@ -213,7 +213,10 @@ namespace IBatisNet.DataMapper.TypeHandlers
 						handler = (ITypeHandler) dbTypeHandlerMap[ NULL ];
 					}					
 				}
-
+				if (handler==null)
+				{
+					throw new DataMapperException(String.Format("Type handler for {0} not registered.",type.Name));
+				}
 			}
 
 			return handler;

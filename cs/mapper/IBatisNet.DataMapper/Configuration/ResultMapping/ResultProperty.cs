@@ -34,6 +34,7 @@ using System.Xml.Serialization;
 using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.Common.Utilities.Objects.Members;
+using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.MappedStatements.ArgumentStrategy;
 using IBatisNet.DataMapper.MappedStatements.PropertyStrategy;
 using IBatisNet.DataMapper.Scope;
@@ -153,7 +154,15 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		[XmlIgnore]
 		public ITypeHandler TypeHandler
 		{
-			get { return _typeHandler; }
+			get
+			{
+                if (_typeHandler == null)
+                {
+                    throw new DataMapperException(
+                        String.Format("Error on Result property {0}, type handler for {1} is not registered.", this.PropertyName , this.MemberType.Name));
+                }
+			    return _typeHandler;
+			}
 			set { _typeHandler = value; }
 		}
 
@@ -391,11 +400,11 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 
 			if (_columnIndex == UNKNOWN_COLUMN_INDEX)  
 			{
-				value = _typeHandler.GetValueByName(this, dataReader);
+                value = this.TypeHandler.GetValueByName(this, dataReader);
 			} 
 			else 
 			{
-				value = _typeHandler.GetValueByIndex(this, dataReader);
+                value = this.TypeHandler.GetValueByIndex(this, dataReader);
 			}
 
 			bool wasNull = (value == DBNull.Value);
@@ -405,16 +414,16 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 				{
                     if (_setAccessor != null)
 					{
-                        value = _typeHandler.ValueOf(_setAccessor.MemberType, _nullValue);
+                        value = this.TypeHandler.ValueOf(_setAccessor.MemberType, _nullValue);
 					}
 					else
 					{
-						value = _typeHandler.ValueOf(null, _nullValue);
+                        value = this.TypeHandler.ValueOf(null, _nullValue);
 					}
 				}
 				else
 				{
-					value = _typeHandler.NullValue;
+                    value = this.TypeHandler.NullValue;
 				}			
 			}
 
@@ -430,7 +439,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		{
 			if (value == null)
 			{
-				return _typeHandler.NullValue;
+                return this.TypeHandler.NullValue;
 			}
 			else
 			{

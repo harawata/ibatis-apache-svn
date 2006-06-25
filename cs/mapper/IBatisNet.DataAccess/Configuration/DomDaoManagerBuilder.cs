@@ -674,7 +674,6 @@ namespace IBatisNet.DataAccess.Configuration
 		/// <returns>A provider</returns>
 		private IDbProvider ParseProvider(ConfigurationScope configurationScope)
 		{
-			XmlAttribute attribute = null;
 			XmlNode node = configurationScope.NodeContext.SelectSingleNode( ApplyNamespacePrefix(XML_DATABASE_PROVIDER), configurationScope.XmlNamespaceManager);
 
 			configurationScope.ErrorContext.Activity = "configure provider";
