@@ -1542,15 +1542,23 @@ public int Update(string statementName, object parameterObject);
 public int Delete(string statementName, object parameterObject);
 
 public object QueryForObject(string statementName, object parameterObject);
+public T QueryForObject&lt;T&gt;(string statementName, object parameterObject);
 public object QueryForObject(string statementName, object parameterObject, object resultObject);
+public T QueryForObject&lt;T&gt;(string statementName, object parameterObject, T resultObject);
 
 public IList QueryForList(string statementName, object parameterObject);
+public IList&lt;T&gt; QueryForList&lt;T&gt;(string statementName, object parameterObject);
 public void QueryForList(string statementName, object parameterObject, IList resultObject);
+public void QueryForList&lt;T&gt;(string statementName, object parameterObject, IList&lt;T&gt; resultObject);
 public IList QueryForList(string statementName, object parameterObject, 
+                          int skipResults, int maxResults);
+public IList&lt;T&gt; QueryForList&lt;T&gt;(string statementName, object parameterObject, 
                           int skipResults, int maxResults);
 
 public IList QueryWithRowDelegate(string statementName, object parameterObject, 
                                   RowDelegate rowDelegate);
+public IList&lt;T&gt; QueryWithRowDelegate&lt;T&gt;(string statementName, object parameterObject, 
+                                SqlMapper.RowDelegate&lt;T&gt; rowDelegate);
 
 public PaginatedList QueryForPaginatedList(String statementName, object parameterObject, 
                                            int pageSize);
@@ -1620,8 +1628,12 @@ public int Delete(string statementName,
                              object parameterObject);
 public object QueryForObject(string statementName, 
                              object parameterObject,
-                             object resultObject);</programlisting></para>
+                             object resultObject);
 
+public T QueryForObject&lt;T&gt;(string statementName, object parameterObject);
+public T QueryForObject&lt;T&gt;(string statementName, object parameterObject, T resultObject);
+
+</programlisting></para>
         <para>If a Mapped Statement is expected to select a single row, then
         call it using <methodname>QueryForObject</methodname>. Since the
         Mapped Statement definition specifies the result class expected, the
@@ -1643,7 +1655,16 @@ public void QueryForList(string statementName,
 public IList QueryForList(string statementName,
                           object parameterObject,
                           int skipResults,
-                          int maxResults);</programlisting></para>
+                          int maxResults);
+
+public IList&lt;T&gt; QueryForList&lt;T&gt;(string statementName, object parameterObject);
+public void QueryForList&lt;T&gt;(string statementName, 
+                                  object parameterObject, 
+								  IList&lt;T&gt; resultObject);
+public IList&lt;T&gt; QueryForList&lt;T&gt;(string statementName, 
+                                            object parameterObject,
+                                            int skipResults, int maxResults);						  
+						  </programlisting></para>
 
         <para>If a Mapped Statement is expected to select multiple rows, then
         call it using <methodname>QueryForList</methodname> . Each entry in
@@ -1669,7 +1690,11 @@ public IList QueryForList(string statementName,
 
 public IList QueryWithRowDelegate(string statementName,
                                   object parameterObject, 
-                                  RowDelegate rowDelegate);</programlisting></para>
+                                  RowDelegate rowDelegate);
+
+public IList&lt;T&gt; QueryWithRowDelegate&lt;T&gt;(string statementName, object parameterObject, 
+                                SqlMapper.RowDelegate&lt;T&gt; rowDelegate);								  
+								  </programlisting></para>
 
         <para>No matter how well our database is designed or how cleverly we
         describe our maps, the result objects we get back may not be ideal.
