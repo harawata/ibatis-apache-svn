@@ -10,25 +10,24 @@
 
 <h2>Generator Sets</h2>
 <p>Version 0.7.0 introduces the concept of generator sets.  A generator set is a set of
-code generators (SQL Map Generator, Java Model Generator, DAO Generator).  Abator now
-ships three different generator sets.  The generated code from these three
+code generators (SQL Map Generator, Java Model Generator, DAO Generator, and Java Type Resolver).
+Abator now ships three different generator sets.  The generated code from these three
 generator sets is slightly different, and the use of the generated objects is slightly
 different too.  The concepts are exactly the same.</p>
 <p>The three generator sets shipped with Abator are as follows:</p>
 <dl>
   <dt>Legacy</dt>
   <dd>This generator set generates code that is the same as previous versions of
-      Abator.  There are some limitations with the generator set and we strongly
+      Abator.  There are some limitations with this generator set and we strongly
       recommend that you choose one of the other sets.  However, this set remains
       the default for now.  <b>This generator set will likely be removed in a future
       version of Abator.</b></dd>
   <dt>Java2</dt>
   <dd>This generator set generates code that is compatible with iBATIS versions 2.2.0 and
-      higher.  In that version of iBATIS a longstanding bug with nested iterate
-      tags was fixed.  With this new support in iBATIS, Abator can generate
-      much more functional SQL WHERE clauses.  It is now possible to generate
+      higher.  With this generator set the "by example" methods are much more powerful
+      than in the legacy set.  It is now possible to generate
       virtually unlimited SQL WHERE clauses with Abator generated code (including "IN"
-      clauses).  <b>This generator set will likely become the default set in a
+      and "BETWEEN" clauses).  <b>This generator set will likely become the default set in a
       future version of Abator.</b></dd>
   <dt>Java5</dt>
   <dd>This generator set has the same capabilities as the Java2 generator set with the
@@ -37,8 +36,8 @@ different too.  The concepts are exactly the same.</p>
 </dl>
 <p><b>Important:</b> code generated with the Java2 or Java5 generator sets is not 100%
 compatible with code generated with the Legacy set - especially in the use of the
-"byExample" methods.  Also note that the "byExample" methods in these generator sets rely
-on iBATIS dynamic SQL support that is missing in versions prior to iBATIS version 2.2.0.</p>
+"by example" methods.  Also note that the "by example" methods in these generator sets rely
+on iBATIS dynamic SQL support that is missing in iBATIS versions prior to version 2.2.0.</p>
 <p>A generator set is selected with the <code>generatorSet</code> attribute of the
 <code>&lt;abatorContext&gt;</code> element.  See the
 <a href="configreference/abatorContext.html">&lt;abatorContext&gt;</a> reference page for

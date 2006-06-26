@@ -82,7 +82,7 @@ attribute is specified on the <code>&lt;table&gt;</code> configuration element.<
 <code>deleteByExample</code> methods.
 This class may or may not extend one of the other generated domain classes based on the
 table configuration, and the value of the <code>generatorSet</code>
-property of the <a href="../configreference/abatorContext.html">&lt;abatorContext&gt;</a>
+attribute of the <a href="../configreference/abatorContext.html">&lt;abatorContext&gt;</a>
 configuration element.</p>
 
 <p>The name of the class will be <code>&laquo;TableName&raquo;Example</code> by default, or
@@ -95,14 +95,14 @@ methods are enabled.</p>
 <h2>Example Class Usage Notes</h2>
 <p>Using the example class is different depending on the value of the
 <code>generatorSet</code>
-property of the <a href="../configreference/abatorContext.html">&lt;abatorContext&gt;</a>
+attribute of the <a href="../configreference/abatorContext.html">&lt;abatorContext&gt;</a>
 configuration element.</p>
 
 <p>The example class specifies how to build a dynamic where clause.  Each non-BLOB column in the
 can optionally be included in the where clause, and several different operators are available
 to specify how the different query constraints should work.  Examples are the best way
 to demonstrate the usage of this class.</p>
-<h3>Using the example Class with the Java2NonIterator Generators</h3>
+<h3>Using the example Class with the Legacy Generator Set</h3>
 <p>With this set of generators the example class can be used to generate simple
 where clauses.  This set of generators is the default set of generators, and classes
 generated work with all versions of iBATIS.  However, the function of the example class
@@ -145,7 +145,7 @@ instead, the you can call the method <code>setCombineTypeOr(true)</code> on the 
   </li>
 </ul>
 
-<h3>Using the example Class with the Java2Iterator of Java5Iterator Generators</h3>
+<h3>Using the example Class with the Java2 of Java5 Generator Set</h3>
 <p>With these generators the example class can be used to generate a virtually
 unlimited where clauses.  These generators require that you are using iBATIS version
 2.2.0 or higher.</p>
