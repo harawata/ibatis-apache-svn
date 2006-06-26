@@ -1,7 +1,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -35,7 +35,7 @@ namespace IBatisNet.DataMapper
 	public class Mapper
 	{
 		#region Fields
-		private static volatile SqlMapper _mapper = null;
+        private static volatile ISqlMapper _mapper = null;
 		#endregion
 
 		/// <summary>
@@ -60,7 +60,7 @@ namespace IBatisNet.DataMapper
 		/// Get the instance of the SqlMapper defined by the SqlMap.Config file.
 		/// </summary>
 		/// <returns>A SqlMapper initalized via the SqlMap.Config file.</returns>
-		public static SqlMapper Instance()
+        public static ISqlMapper Instance()
 		{
 			if (_mapper == null)
 			{
@@ -79,7 +79,7 @@ namespace IBatisNet.DataMapper
 		/// Get the instance of the SqlMapper defined by the SqlMap.Config file. (Convenience form of Instance method.)
 		/// </summary>
 		/// <returns>A SqlMapper initalized via the SqlMap.Config file.</returns>
-		public static SqlMapper Get()
+        public static ISqlMapper Get()
 		{
 			return Instance();
 		}

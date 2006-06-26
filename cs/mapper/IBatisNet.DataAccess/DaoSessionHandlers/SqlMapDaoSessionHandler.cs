@@ -47,14 +47,14 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 	public class SqlMapDaoSessionHandler : IDaoSessionHandler
 	{
 		#region Fields
-		private SqlMapper _sqlMap;
+        private ISqlMapper _sqlMap;
 		#endregion
 
 		#region Properties
 		/// <summary>
 		/// 
 		/// </summary>
-		public SqlMapper SqlMap
+        public ISqlMapper SqlMap
 		{
 			get { return _sqlMap; }
 		}

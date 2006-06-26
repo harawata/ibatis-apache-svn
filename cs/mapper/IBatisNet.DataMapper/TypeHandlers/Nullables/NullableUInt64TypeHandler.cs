@@ -35,7 +35,7 @@ using IBatisNet.DataMapper.Configuration.ResultMapping;
 
 namespace IBatisNet.DataMapper.TypeHandlers.Nullables
 {
-    internal class NullableInt64TypeHandler : BaseTypeHandler
+    internal class NullableUInt64TypeHandler : BaseTypeHandler
     {
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace IBatisNet.DataMapper.TypeHandlers.Nullables
         /// <param name="dbType">the dbType of the parameter</param>
         public override void SetParameter(IDataParameter dataParameter, object parameterValue, string dbType)
         {
-            Int64? nullableValue = (Int64?)parameterValue;
+            UInt64? nullableValue = (UInt64?)parameterValue;
 
             if (nullableValue.HasValue)
             {
@@ -75,7 +75,7 @@ namespace IBatisNet.DataMapper.TypeHandlers.Nullables
             }
             else
             {
-                return new Int64?(Convert.ToInt64(dataReader.GetValue(index)));
+                return new UInt64?(Convert.ToUInt64(dataReader.GetValue(index)));
             }
         }
 
@@ -93,19 +93,19 @@ namespace IBatisNet.DataMapper.TypeHandlers.Nullables
             }
             else
             {
-                return new Int64?(Convert.ToInt64(dataReader.GetValue(mapping.ColumnIndex)));
+                return new UInt64?(Convert.ToUInt64(dataReader.GetValue(mapping.ColumnIndex)));
             }
         }
 
         /// <summary>
-        /// Retrieve ouput database value 
+        /// Retrieve ouput database value of an output parameter
         /// </summary>
         /// <param name="outputValue">ouput database value</param>
-        /// <param name="parameterType">type used</param>
+        /// <param name="parameterType">type used in EnumTypeHandler</param>
         /// <returns></returns>
         public override object GetDataBaseValue(object outputValue, Type parameterType)
         {
-            return new Int64?(Convert.ToInt64(outputValue));
+            return new UInt64?(Convert.ToUInt64(outputValue));
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace IBatisNet.DataMapper.TypeHandlers.Nullables
         /// <returns>the converted value</returns>
         public override object ValueOf(Type type, string s)
         {
-            return new Int64?(Int64.Parse(s));
+            return new UInt64?(UInt64.Parse(s));
         }
 
 
@@ -138,7 +138,7 @@ namespace IBatisNet.DataMapper.TypeHandlers.Nullables
         /// <value></value>
         public override object NullValue
         {
-            get { return new Int64?(); }
+            get { return new UInt64?(); }
         }
 
         //public override bool Equals(object x, object y)

@@ -624,6 +624,9 @@
     <Compile Include="TypeHandlers\Nullables\NullableInt32TypeHandler.cs" />
     <Compile Include="TypeHandlers\Nullables\NullableInt64TypeHandler.cs" />
     <Compile Include="TypeHandlers\Nullables\NullableSingleTypeHandler.cs" />
+    <Compile Include="TypeHandlers\Nullables\NullableUInt16TypeHandler.cs" />
+    <Compile Include="TypeHandlers\Nullables\NullableUInt32TypeHandler.cs" />
+    <Compile Include="TypeHandlers\Nullables\NullableUInt64TypeHandler.cs" />
     <Compile Include="TypeHandlers\ObjectTypeHandler.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -645,6 +648,9 @@
     <Compile Include="TypeHandlers\TypeHandlerFactory.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="TypeHandlers\UInt16TypeHandler.cs" />
+    <Compile Include="TypeHandlers\UInt32TypeHandler.cs" />
+    <Compile Include="TypeHandlers\UInt64TypeHandler.cs" />
     <Compile Include="TypeHandlers\UnknownTypeHandler.cs">
       <SubType>Code</SubType>
     </Compile>

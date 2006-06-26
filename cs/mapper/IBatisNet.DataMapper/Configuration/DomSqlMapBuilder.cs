@@ -383,7 +383,7 @@ namespace IBatisNet.DataMapper.Configuration
 		/// </summary>
 		/// <returns>An SqlMap</returns>
 		/// <remarks>The file path is relative to the application root.</remarks>
-		public SqlMapper Configure()
+        public ISqlMapper Configure()
 		{
 			return Configure( Resources.GetConfigAsXmlDocument(DomSqlMapBuilder.DEFAULT_FILE_CONFIG_NAME) );
 		}
@@ -394,7 +394,7 @@ namespace IBatisNet.DataMapper.Configuration
 		/// </summary>
 		/// <param name="document">An xml sql map configuration document.</param>
 		/// <returns>the SqlMap</returns>
-		public SqlMapper Configure( XmlDocument document )
+        public ISqlMapper Configure(XmlDocument document)
 		{
 			return Build( document, false );
 		}
@@ -408,7 +408,7 @@ namespace IBatisNet.DataMapper.Configuration
 		/// or a absolue file path file:\\c:\dir\a.config
 		/// </param>
 		/// <returns>An SqlMap</returns>
-		public SqlMapper Configure(string resource)
+        public ISqlMapper Configure(string resource)
 		{
 			XmlDocument document = null;
 			if (resource.StartsWith("file://"))
@@ -428,7 +428,7 @@ namespace IBatisNet.DataMapper.Configuration
 		/// </summary>
 		/// <param name="resource">A stream resource</param>
 		/// <returns>An SqlMap</returns>
-		public SqlMapper Configure(Stream resource)
+		public ISqlMapper Configure(Stream resource)
 		{
 			XmlDocument document = Resources.GetStreamAsXmlDocument( resource );
 			return Build( document, false);
@@ -440,7 +440,7 @@ namespace IBatisNet.DataMapper.Configuration
 		/// </summary>
 		/// <param name="resource">A FileInfo resource</param>
 		/// <returns>An SqlMap</returns>
-		public SqlMapper Configure(FileInfo resource)
+		public ISqlMapper Configure(FileInfo resource)
 		{
 			XmlDocument document = Resources.GetFileInfoAsXmlDocument( resource );
 			return Build( document, false);
@@ -452,7 +452,7 @@ namespace IBatisNet.DataMapper.Configuration
 		/// </summary>
 		/// <param name="resource">A Uri resource</param>
 		/// <returns></returns>
-		public SqlMapper Configure(Uri resource)
+		public ISqlMapper Configure(Uri resource)
 		{
 			XmlDocument document = Resources.GetUriAsXmlDocument( resource );
 			return Build( document, false);
@@ -464,7 +464,7 @@ namespace IBatisNet.DataMapper.Configuration
 		/// and automatically reconfigure SqlMap. 
 		/// </summary>
 		/// <returns>An SqlMap</returns>
-		public SqlMapper ConfigureAndWatch(ConfigureHandler configureDelegate)
+		public ISqlMapper ConfigureAndWatch(ConfigureHandler configureDelegate)
 		{
 			return ConfigureAndWatch( DEFAULT_FILE_CONFIG_NAME, configureDelegate ) ;
 		}
@@ -482,7 +482,7 @@ namespace IBatisNet.DataMapper.Configuration
 		/// Delegate called when the file has changed, to rebuild the dal.
 		/// </param>
 		/// <returns>An SqlMap</returns>
-		public SqlMapper ConfigureAndWatch( string resource, ConfigureHandler configureDelegate )
+		public ISqlMapper ConfigureAndWatch( string resource, ConfigureHandler configureDelegate )
 		{
 			XmlDocument document = null;
 			if (resource.StartsWith("file://"))
@@ -520,7 +520,7 @@ namespace IBatisNet.DataMapper.Configuration
 		/// Delegate called when the file has changed, to rebuild the dal.
 		/// </param>
 		/// <returns>An SqlMap</returns>
-		public SqlMapper ConfigureAndWatch( FileInfo resource, ConfigureHandler configureDelegate )
+		public ISqlMapper ConfigureAndWatch( FileInfo resource, ConfigureHandler configureDelegate )
 		{
 			XmlDocument document = Resources.GetFileInfoAsXmlDocument(resource);
 
@@ -561,7 +561,7 @@ namespace IBatisNet.DataMapper.Configuration
 		/// <param name="useConfigFileWatcher"></param>
 		/// <param name="isCallFromDao"></param>
 		/// <returns>return an a SqlMapper instance</returns>
-		private SqlMapper Build(XmlDocument document,DataSource dataSource, 
+		private ISqlMapper Build(XmlDocument document,DataSource dataSource, 
 			bool useConfigFileWatcher, bool isCallFromDao)
 		{
 			_configScope.SqlMapConfigDocument = document;
@@ -673,7 +673,7 @@ namespace IBatisNet.DataMapper.Configuration
 		/// <param name="properties"></param>
 		/// <returns></returns>
 		/// <remarks>Used by Dao</remarks>
-		public SqlMapper Build(XmlDocument document, DataSource dataSource, bool useConfigFileWatcher, NameValueCollection properties)
+		public ISqlMapper Build(XmlDocument document, DataSource dataSource, bool useConfigFileWatcher, NameValueCollection properties)
 		{
 			_configScope.Properties.Add(properties);
 			return Build(document, dataSource, useConfigFileWatcher, true);
@@ -686,7 +686,7 @@ namespace IBatisNet.DataMapper.Configuration
 		/// </summary>
 		/// <param name="document">The xml sql map configuration.</param>
 		/// <param name="useConfigFileWatcher"></param>
-		public SqlMapper Build(XmlDocument document, bool useConfigFileWatcher)
+		public ISqlMapper Build(XmlDocument document, bool useConfigFileWatcher)
 		{
 			return Build(document, null, useConfigFileWatcher, false);
 		}

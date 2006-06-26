@@ -117,6 +117,15 @@ namespace IBatisNet.DataMapper.TypeHandlers
 			handler = new EnumTypeHandler();
 			this.Register( typeof(System.Enum), handler);
 
+            handler = new UInt16TypeHandler();
+            this.Register(typeof(UInt16), handler);
+
+            handler = new UInt32TypeHandler();
+            this.Register(typeof(UInt32), handler);
+
+            handler = new UInt64TypeHandler();
+            this.Register(typeof(UInt64), handler);
+		    
 #if dotnet2
             handler = new NullableBooleanTypeHandler();
             this.Register(typeof(bool?), handler);
@@ -150,6 +159,15 @@ namespace IBatisNet.DataMapper.TypeHandlers
 
             handler = new NullableSingleTypeHandler();
             this.Register(typeof(Single?), handler);
+
+            handler = new NullableUInt16TypeHandler();
+            this.Register(typeof(UInt16?), handler);
+
+            handler = new NullableUInt32TypeHandler();
+            this.Register(typeof(UInt32?), handler);
+
+            handler = new NullableUInt64TypeHandler();
+            this.Register(typeof(UInt64?), handler);
 #endif
 
             _unknownTypeHandler = new UnknownTypeHandler(this);

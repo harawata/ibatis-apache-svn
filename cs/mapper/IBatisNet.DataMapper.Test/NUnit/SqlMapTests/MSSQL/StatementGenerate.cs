@@ -79,7 +79,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL
 
 			IList categorieList = sqlMap.QueryForList("SelectAllCategoryGenerate",null) as IList;
 			Assert.AreEqual(2, categorieList.Count);
-
+            Assert.AreEqual("toto", ((Category)categorieList[0]).Name); 
 		}
 
 		/// <summary>

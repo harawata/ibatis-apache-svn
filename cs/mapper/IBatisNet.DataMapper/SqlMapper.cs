@@ -215,7 +215,7 @@ namespace IBatisNet.DataMapper
 		/// <param name="document">An xml sql map configuration document.</param>
 		/// <returns>the SqlMap</returns>
 		[Obsolete("This method will be remove in next version, use DomSqlMapBuilder.Configure.", false)]
-		static public SqlMapper Configure( XmlDocument document )
+        static public ISqlMapper Configure(XmlDocument document)
 		{
 			return new DomSqlMapBuilder().Build( document, false );
 		}
@@ -226,7 +226,7 @@ namespace IBatisNet.DataMapper
 		/// <returns>An SqlMap</returns>
 		/// <remarks>The file path is relative to the application root.</remarks>
 		[Obsolete("This method will be remove in future version, use DomSqlMapBuilder.Configure.", false)]
-		static public SqlMapper Configure()
+        static public ISqlMapper Configure()
 		{
 			return Configure( Resources.GetConfigAsXmlDocument(DomSqlMapBuilder.DEFAULT_FILE_CONFIG_NAME) );
 		}
@@ -241,7 +241,7 @@ namespace IBatisNet.DataMapper
 		/// </param>
 		/// <returns>An SqlMap</returns>
 		[Obsolete("This method will be remove in future version, use DomSqlMapBuilder.Configure.", false)]
-		public static SqlMapper Configure(string resource)
+        public static ISqlMapper Configure(string resource)
 		{
 			XmlDocument document = null;
 			if (resource.StartsWith("file://"))
@@ -262,7 +262,7 @@ namespace IBatisNet.DataMapper
 		/// </summary>
 		/// <returns>An SqlMap</returns>
 		[Obsolete("This method will be remove in future version, use DomSqlMapBuilder.Configure.", false)]
-		public static SqlMapper ConfigureAndWatch(ConfigureHandler configureDelegate)
+        public static ISqlMapper ConfigureAndWatch(ConfigureHandler configureDelegate)
 		{
 			return ConfigureAndWatch( DomSqlMapBuilder.DEFAULT_FILE_CONFIG_NAME, configureDelegate ) ;
 		}
@@ -281,7 +281,7 @@ namespace IBatisNet.DataMapper
 		/// </param>
 		/// <returns>An SqlMap</returns>
 		[Obsolete("This method will be remove in future version, use DomSqlMapBuilder.Configure.", false)]
-		public static SqlMapper ConfigureAndWatch( string resource, ConfigureHandler configureDelegate )
+        public static ISqlMapper ConfigureAndWatch(string resource, ConfigureHandler configureDelegate)
 		{
 			XmlDocument document = null;
 			if (resource.StartsWith("file://"))

@@ -50,7 +50,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
             properties.Add("nullableInt", "int");
             builder.Properties = properties;
 
-			SqlMapper mapper = builder.Configure( _fileName );
+            ISqlMapper mapper = builder.Configure(_fileName);
 
 			Assert.IsNotNull(mapper);
 		}
@@ -72,7 +72,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             builder.Properties = properties;
 
-			SqlMapper mapper = builder.ConfigureAndWatch( _fileName , handler);
+            ISqlMapper mapper = builder.ConfigureAndWatch(_fileName, handler);
 
 			Assert.IsNotNull(mapper);
 		}
@@ -91,7 +91,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             builder.Properties = properties;
 
-			SqlMapper mapper = builder.Configure( _fileName );
+            ISqlMapper mapper = builder.Configure(_fileName);
 
 			Assert.IsNotNull(mapper);
 		}
@@ -112,7 +112,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             builder.Properties = properties;
 
-			SqlMapper mapper = builder.ConfigureAndWatch( _fileName , handler);
+            ISqlMapper mapper = builder.ConfigureAndWatch(_fileName, handler);
 
 			Assert.IsNotNull(mapper);
 		}
@@ -135,7 +135,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
             properties.Add("nullableInt", "int");
             builder.Properties = properties;
 
-			SqlMapper mapper = builder.Configure( _fileName );
+            ISqlMapper mapper = builder.Configure(_fileName);
 
 			Assert.IsNotNull(mapper);
 		}
@@ -156,7 +156,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             builder.Properties = properties;
 
-			SqlMapper mapper = builder.Configure( _fileName );
+            ISqlMapper mapper = builder.Configure(_fileName);
 
 			Assert.IsNotNull(mapper);
 		}
@@ -177,7 +177,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             builder.Properties = properties;
 
-			SqlMapper mapper = builder.Configure( _fileName );
+            ISqlMapper mapper = builder.Configure(_fileName);
 
 			Assert.IsNotNull(mapper);
 		}
@@ -198,7 +198,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             builder.Properties = properties;
 
-			SqlMapper mapper = builder.Configure( _fileName );
+            ISqlMapper mapper = builder.Configure(_fileName);
 
 			Assert.IsNotNull(mapper);
 		}
@@ -220,7 +220,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             builder.Properties = properties;
 
-			SqlMapper mapper = builder.Configure( fileInfo );
+            ISqlMapper mapper = builder.Configure(fileInfo);
 
 			Assert.IsNotNull(mapper);
 		}
@@ -242,7 +242,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             builder.Properties = properties;
 
-			SqlMapper mapper = builder.Configure( uri );
+            ISqlMapper mapper = builder.Configure(uri);
 
 			Assert.IsNotNull(mapper);
 		}
@@ -264,7 +264,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             builder.Properties = properties;
 
-			SqlMapper mapper = builder.ConfigureAndWatch( _fileName , handler);
+            ISqlMapper mapper = builder.ConfigureAndWatch(_fileName, handler);
 
 			Assert.IsNotNull(mapper);
 		}
@@ -286,7 +286,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             builder.Properties = properties;
 
-			SqlMapper mapper = builder.ConfigureAndWatch( _fileName , handler);
+            ISqlMapper mapper = builder.ConfigureAndWatch(_fileName, handler);
 
 			Assert.IsNotNull(mapper);
 		}
@@ -308,7 +308,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             builder.Properties = properties;
 
-            SqlMapper mapper = builder.ConfigureAndWatch( _fileName , handler);
+            ISqlMapper mapper = builder.ConfigureAndWatch(_fileName, handler);
 
 			Assert.IsNotNull(mapper);
 		}
@@ -330,7 +330,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             builder.Properties = properties;
 
-			SqlMapper mapper = builder.ConfigureAndWatch( _fileName , handler);
+            ISqlMapper mapper = builder.ConfigureAndWatch(_fileName, handler);
 
 			Assert.IsNotNull(mapper);
 		}
@@ -354,7 +354,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             builder.Properties = properties;
 
-			SqlMapper mapper = builder.ConfigureAndWatch( fileInfo , handler);
+            ISqlMapper mapper = builder.ConfigureAndWatch(fileInfo, handler);
 
 			Assert.IsNotNull(mapper);
 		}
@@ -385,7 +385,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             builder.Properties = properties;
 
-			SqlMapper mapper = builder.Configure( stream );
+            ISqlMapper mapper = builder.Configure(stream);
 
 			Assert.IsNotNull(mapper);
 		}

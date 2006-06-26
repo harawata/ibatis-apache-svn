@@ -24,6 +24,7 @@
 #endregion
 
 #if dotnet2
+
 #region Using
 using System;
 using System.Data;
@@ -35,7 +36,7 @@ using IBatisNet.DataMapper.Configuration.ResultMapping;
 
 namespace IBatisNet.DataMapper.TypeHandlers.Nullables
 {
-    internal class NullableInt64TypeHandler : BaseTypeHandler
+    internal class NullableUInt16TypeHandler : BaseTypeHandler
     {
 
         /// <summary>
@@ -46,7 +47,7 @@ namespace IBatisNet.DataMapper.TypeHandlers.Nullables
         /// <param name="dbType">the dbType of the parameter</param>
         public override void SetParameter(IDataParameter dataParameter, object parameterValue, string dbType)
         {
-            Int64? nullableValue = (Int64?)parameterValue;
+            UInt16? nullableValue = (UInt16?)parameterValue;
 
             if (nullableValue.HasValue)
             {
@@ -75,7 +76,7 @@ namespace IBatisNet.DataMapper.TypeHandlers.Nullables
             }
             else
             {
-                return new Int64?(Convert.ToInt64(dataReader.GetValue(index)));
+                return new UInt16?(Convert.ToUInt16(dataReader.GetValue(index)));
             }
         }
 
@@ -93,30 +94,24 @@ namespace IBatisNet.DataMapper.TypeHandlers.Nullables
             }
             else
             {
-                return new Int64?(Convert.ToInt64(dataReader.GetValue(mapping.ColumnIndex)));
+                return new UInt16?(Convert.ToUInt16(dataReader.GetValue(mapping.ColumnIndex)));
             }
         }
 
         /// <summary>
-        /// Retrieve ouput database value 
+        /// Retrieve ouput database value of an output parameter
         /// </summary>
         /// <param name="outputValue">ouput database value</param>
-        /// <param name="parameterType">type used</param>
+        /// <param name="parameterType">type used in EnumTypeHandler</param>
         /// <returns></returns>
         public override object GetDataBaseValue(object outputValue, Type parameterType)
         {
-            return new Int64?(Convert.ToInt64(outputValue));
+            return new UInt16?(Convert.ToUInt16(outputValue));
         }
 
-        /// <summary>
-        /// Converts the String to the type that this handler deals with
-        /// </summary>
-        /// <param name="type">the tyepe of the property (used only for enum conversion)</param>
-        /// <param name="s">the String value</param>
-        /// <returns>the converted value</returns>
         public override object ValueOf(Type type, string s)
         {
-            return new Int64?(Int64.Parse(s));
+            return new UInt16?(UInt16.Parse(s));
         }
 
 
@@ -138,13 +133,13 @@ namespace IBatisNet.DataMapper.TypeHandlers.Nullables
         /// <value></value>
         public override object NullValue
         {
-            get { return new Int64?(); }
+            get { return new UInt16?(); }
         }
 
         //public override bool Equals(object x, object y)
         //{
         //    //get boxed values.
-        //    Int64? xTyped = (Int64?)x;
+        //    Int16? xTyped = (Int16?)x;
         //    return xTyped.Equals(y);
         //}
     }

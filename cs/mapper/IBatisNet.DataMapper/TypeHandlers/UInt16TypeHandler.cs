@@ -1,6 +1,7 @@
+
 #region Apache Notice
 /*****************************************************************************
- * $Revision: 378879 $
+ * $Revision: 408164 $
  * $LastChangedDate$
  * $LastChangedBy$
  * 
@@ -23,40 +24,18 @@
  ********************************************************************************/
 #endregion
 
-#if dotnet2
 #region Using
+
 using System;
 using System.Data;
-
-using System.Collections.Generic;
-using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
-#endregion
 
-namespace IBatisNet.DataMapper.TypeHandlers.Nullables
+#endregion 
+
+namespace IBatisNet.DataMapper.TypeHandlers
 {
-    internal class NullableInt64TypeHandler : BaseTypeHandler
+    internal sealed class UInt16TypeHandler : BaseTypeHandler
     {
-
-        /// <summary>
-        /// Sets a parameter on a IDbCommand
-        /// </summary>
-        /// <param name="dataParameter">the parameter</param>
-        /// <param name="parameterValue">the parameter value</param>
-        /// <param name="dbType">the dbType of the parameter</param>
-        public override void SetParameter(IDataParameter dataParameter, object parameterValue, string dbType)
-        {
-            Int64? nullableValue = (Int64?)parameterValue;
-
-            if (nullableValue.HasValue)
-            {
-                dataParameter.Value = nullableValue.Value;
-            }
-            else
-            {
-                dataParameter.Value = DBNull.Value;
-            }
-        }
 
 
         /// <summary>
@@ -75,7 +54,8 @@ namespace IBatisNet.DataMapper.TypeHandlers.Nullables
             }
             else
             {
-                return new Int64?(Convert.ToInt64(dataReader.GetValue(index)));
+                // Don't used dataReader.GetInt32 to fix oracle who alwray return decimal type
+                return Convert.ToUInt16(dataReader.GetValue(index));
             }
         }
 
@@ -93,19 +73,20 @@ namespace IBatisNet.DataMapper.TypeHandlers.Nullables
             }
             else
             {
-                return new Int64?(Convert.ToInt64(dataReader.GetValue(mapping.ColumnIndex)));
+                // Don't used dataReader.GetInt32 to fix oracle who alwray return decimal type
+                return Convert.ToUInt16(dataReader.GetValue(mapping.ColumnIndex));
             }
         }
 
         /// <summary>
-        /// Retrieve ouput database value 
+        /// Retrieve ouput database value of an output parameter
         /// </summary>
         /// <param name="outputValue">ouput database value</param>
-        /// <param name="parameterType">type used</param>
+        /// <param name="parameterType">type used in EnumTypeHandler</param>
         /// <returns></returns>
         public override object GetDataBaseValue(object outputValue, Type parameterType)
         {
-            return new Int64?(Convert.ToInt64(outputValue));
+            return Convert.ToUInt16(outputValue);
         }
 
         /// <summary>
@@ -116,9 +97,8 @@ namespace IBatisNet.DataMapper.TypeHandlers.Nullables
         /// <returns>the converted value</returns>
         public override object ValueOf(Type type, string s)
         {
-            return new Int64?(Int64.Parse(s));
+            return Convert.ToUInt16(s);
         }
-
 
         /// <summary>
         /// Gets a value indicating whether this instance is simple type.
@@ -131,23 +111,9 @@ namespace IBatisNet.DataMapper.TypeHandlers.Nullables
             get { return true; }
         }
 
-
-        /// <summary>
-        /// The null value for this type
-        /// </summary>
-        /// <value></value>
-        public override object NullValue
-        {
-            get { return new Int64?(); }
-        }
-
-        //public override bool Equals(object x, object y)
+        //public override object NullValue
         //{
-        //    //get boxed values.
-        //    Int64? xTyped = (Int64?)x;
-        //    return xTyped.Equals(y);
+        //    get { throw new InvalidCastException("Int16TypeHandler could not cast a null value in int16 field."); }
         //}
     }
 }
-
-#endif
