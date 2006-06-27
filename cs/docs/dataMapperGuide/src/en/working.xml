@@ -1075,7 +1075,7 @@ from Accounts
         <title>property</title>
 
         <para>The <parameter>property</parameter> attribute of
-        &lt;parameter&gt; is the name of a property of the parameter object.
+        &lt;parameter&gt; is the name of a field or property of the parameter object.
         It may also be the name of an entry in a
         <interfacename>IDictionary</interfacename> object. The name can be
         used more than once depending on the number of times it is needed in
@@ -1504,7 +1504,7 @@ from Accounts
         <title>property</title>
 
         <para>The <parameter>property</parameter> attribute is the name of a
-        property of the result object that will be returned by the Mapped
+        field or a property of the result object that will be returned by the Mapped
         Statement. The name can be used more than once depending on the number
         of times it is needed to populate the results.</para>
       </sect3>
@@ -1628,7 +1628,82 @@ resultMapping="LineItem.LineItem"
         <para>Use the lazyLoad attribute with the select attribute to indicate
         whether or not the select statement's results should be lazy loaded.
         This can provide a performance boost by delaying the loading of the
-        select statement's results until they are needed/accessed.</para>
+        select statement's results until they are needed/accessed.
+		
+		Lazy loading is supported transparently for IList and IList&lt;T&gt;  implementation.
+		Lazy loading is supported on strongly typed collection via Castle.DynamicProxy component. In this case you must set the listClass attribute and declare all methods/properties of the typed collection that you want to proxy as virtual.
+		</para>
+
+		<para><example>
+          <title>Sample of strongly typed collection used with proxy call</title>
+
+		<programlisting>
+[C#]
+
+[Serializable]
+public class LineItemCollection : CollectionBase 
+{
+	public LineItemCollection() {}
+
+	public virtual LineItem this[int index] 
+	{
+		get	{ return (LineItem)List[index]; }
+		set { List[index] = value; }
+	}
+
+	public virtual int Add(LineItem value) 
+	{
+		return List.Add(value);
+	}
+
+	public virtual void AddRange(LineItem[] value) 
+	{
+		for (int i = 0;	i &lt; value.Length; i++) 
+		{
+			Add(value[i]);
+		}
+	}
+
+	public virtual void AddRange(LineItemCollection value) 
+	{
+		for (int i = 0;	i &lt; value.Count; i++) 
+		{
+			Add(value[i]);
+		}
+	}
+
+	public virtual bool Contains(LineItem value) 
+	{
+		return List.Contains(value);
+	}
+
+	public virtual void CopyTo(LineItem[] array, int index) 
+	{
+		List.CopyTo(array, index);
+	}
+
+	public virtual int IndexOf(LineItem value) 
+	{
+		return List.IndexOf(value);
+	}
+	
+	public virtual void Insert(int index, LineItem value) 
+	{
+		List.Insert(index, value);
+	}
+	
+	public virtual void Remove(LineItem value) 
+	{
+		List.Remove(value);
+	}
+
+	public new virtual int Count
+	{
+		get {return this.List.Count;}
+	}
+}
+</programlisting>
+		 </example></para>
       </sect3>
 
       <sect3>
@@ -2553,7 +2628,14 @@ public class Newspaper : Document
 
     <para>Table 3.4 shows the basic Supported Types for Parameter Maps and
     Result Maps for .NET. You can extend the framework's support for
-    additional types by using a Custom Type Handler.<table>
+    additional types by using a Custom Type Handler.</para>
+	
+	<note>
+	<para>Nuallable type from .NET 2.0 are fully supported by iBATIS.NET.</para>
+	</note>
+
+	<para>
+	<table>
         <title>Supported Types for Parameter Maps and Result Maps
         (.NET)</title>
 
@@ -2760,6 +2842,133 @@ public class Newspaper : Document
 
               <entry>Ulong, ulong</entry>
             </row>
+
+			<row>
+              <entry>Nullable&lt;bool&gt;</entry>
+
+              <entry>Yes</entry>
+
+              <entry>Yes</entry>
+
+              <entry>bool?</entry>
+            </row>
+			<row>
+              <entry>Nullable&lt;byte&gt;</entry>
+
+              <entry>Yes</entry>
+
+              <entry>Yes</entry>
+
+              <entry>byte?</entry>
+            </row>
+			<row>
+              <entry>Nullable&lt;char&gt;</entry>
+
+              <entry>Yes</entry>
+
+              <entry>Yes</entry>
+
+              <entry>char?</entry>
+            </row>
+			<row>
+              <entry>Nullable&lt;DateTime&gt;</entry>
+
+              <entry>Yes</entry>
+
+              <entry>Yes</entry>
+
+              <entry>DateTime?</entry>
+            </row>
+			<row>
+              <entry>Nullable&lt;decimal&gt;</entry>
+
+              <entry>Yes</entry>
+
+              <entry>Yes</entry>
+
+              <entry>decimal?</entry>
+            </row>
+			<row>
+              <entry>Nullable&lt;double&gt;</entry>
+
+              <entry>Yes</entry>
+
+              <entry>Yes</entry>
+
+              <entry>double?</entry>
+            </row>
+			<row>
+              <entry>Nullable&lt;Int16&gt;</entry>
+
+              <entry>Yes</entry>
+
+              <entry>Yes</entry>
+
+              <entry>Int16?</entry>
+            </row>
+			<row>
+              <entry>Nullable&lt;Int32&gt;</entry>
+
+              <entry>Yes</entry>
+
+              <entry>Yes</entry>
+
+              <entry>Int32?</entry>
+            </row>
+			<row>
+              <entry>Nullable&lt;Int64&gt;</entry>
+
+              <entry>Yes</entry>
+
+              <entry>Yes</entry>
+
+              <entry>Int64?</entry>
+            </row>
+			<row>
+              <entry>Nullable&lt;SByte&gt;</entry>
+
+              <entry>Yes</entry>
+
+              <entry>Yes</entry>
+
+              <entry>SByte?</entry>
+            </row>
+			<row>
+              <entry>Nullable&lt;Single&gt;</entry>
+
+              <entry>Yes</entry>
+
+              <entry>Yes</entry>
+
+              <entry>Single?</entry>
+            </row>
+			<row>
+              <entry>Nullable&lt;UInt16&gt;</entry>
+
+              <entry>Yes</entry>
+
+              <entry>Yes</entry>
+
+              <entry>UInt16?</entry>
+            </row>
+			<row>
+              <entry>Nullable&lt;UInt32&gt;</entry>
+
+              <entry>Yes</entry>
+
+              <entry>Yes</entry>
+
+              <entry>UInt32?</entry>
+            </row>
+			<row>
+              <entry>Nullable&lt;UInt64&gt;</entry>
+
+              <entry>Yes</entry>
+
+              <entry>Yes</entry>
+
+              <entry>UInt64?</entry>
+            </row>
           </tbody>
         </tgroup>
       </table></para>
@@ -2772,6 +2981,10 @@ public class Newspaper : Document
     Result Maps for .NET that come with the System.Data and
     System.Data.OracleClient assemblies. See the .NET Developer Guide section
     on configuring the DataMapper to work with your provider's DbTypes.</para>
+
+	<note>
+	<para>Nuallable type from .NET 2.0 are fully supported by iBATIS.NET.</para>
+	</note>
 
     <para>The .NET Framework data provider type of a Parameter object is
     inferred from the .NET Framework type of the Value of the Parameter
@@ -2817,7 +3030,7 @@ public class Newspaper : Document
             </row>
 
             <row>
-              <entry>Boolean</entry>
+              <entry>Boolean, bool?</entry>
 
               <entry>Yes</entry>
 
@@ -2831,9 +3044,9 @@ public class Newspaper : Document
             </row>
 
             <row>
-              <entry>Byte</entry>
+              <entry>Byte, byte?</entry>
 
-              <entry>-</entry>
+              <entry>Yes</entry>
 
               <entry>TinyInt</entry>
 
@@ -2845,7 +3058,7 @@ public class Newspaper : Document
             </row>
 
             <row>
-              <entry>DateTime</entry>
+              <entry>DateTime, DateTime?</entry>
 
               <entry>Yes</entry>
 
@@ -2859,7 +3072,7 @@ public class Newspaper : Document
             </row>
 
             <row>
-              <entry>char</entry>
+              <entry>char, char?</entry>
 
               <entry>Yes</entry>
 
@@ -2873,7 +3086,7 @@ public class Newspaper : Document
             </row>
 
             <row>
-              <entry>Decimal</entry>
+              <entry>Decimal, decimal?</entry>
 
               <entry>Yes</entry>
 
@@ -2887,7 +3100,7 @@ public class Newspaper : Document
             </row>
 
             <row>
-              <entry>Double</entry>
+              <entry>Double, double?</entry>
 
               <entry>Yes</entry>
 
@@ -2901,7 +3114,7 @@ public class Newspaper : Document
             </row>
 
             <row>
-              <entry>Guid</entry>
+              <entry>Guid, Guid?</entry>
 
               <entry>Yes</entry>
 
@@ -2915,7 +3128,7 @@ public class Newspaper : Document
             </row>
 
             <row>
-              <entry>Int16</entry>
+              <entry>Int16, Int16?</entry>
 
               <entry>Yes</entry>
 
@@ -2929,7 +3142,7 @@ public class Newspaper : Document
             </row>
 
             <row>
-              <entry>Int32</entry>
+              <entry>Int32, Int32?</entry>
 
               <entry>Yes</entry>
 
@@ -2943,7 +3156,7 @@ public class Newspaper : Document
             </row>
 
             <row>
-              <entry>Int64</entry>
+              <entry>Int64, Int64?</entry>
 
               <entry>Yes</entry>
 
@@ -2957,7 +3170,7 @@ public class Newspaper : Document
             </row>
 
             <row>
-              <entry>Single</entry>
+              <entry>Single, Single?</entry>
 
               <entry>Yes</entry>
 
@@ -2999,7 +3212,7 @@ public class Newspaper : Document
             </row>
 
             <row>
-              <entry>UInt16</entry>
+              <entry>UInt16, UInt16?</entry>
 
               <entry>yes</entry>
 
@@ -3013,7 +3226,7 @@ public class Newspaper : Document
             </row>
 
             <row>
-              <entry>UInt32</entry>
+              <entry>UInt32, UInt32?</entry>
 
               <entry>yes</entry>
 
@@ -3027,7 +3240,7 @@ public class Newspaper : Document
             </row>
 
             <row>
-              <entry>UInt64</entry>
+              <entry>UInt64, UInt64?</entry>
 
               <entry>yes</entry>
 

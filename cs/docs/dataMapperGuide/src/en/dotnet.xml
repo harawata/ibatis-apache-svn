@@ -800,6 +800,15 @@ Default: false (disabled)</programlisting></entry>
                 debugging.</para><programlisting>Example: validateSqlMap=”false”
 Default: false (disabled)</programlisting></entry>
               </row>
+
+			  <row>
+                <entry><emphasis>useReflectionOptimizer </emphasis></entry>
+
+                <entry><para>This setting globally enables or disables the
+               usage of reflection to access property/filed value of C# object. The reflection optimizer use will emit types for retrieving, populating, instantiating parameter and result objects. 
+</para><programlisting>Example: useReflectionOptimizer=”true”
+Default: true (enabled)</programlisting></entry>
+              </row>
             </tbody>
           </tgroup>
         </table>
@@ -1267,7 +1276,7 @@ namespace IBatisNet.DataMapper
 {
  public class Mapper
  {
-  private static volatile SqlMapper _mapper = null;
+  private static volatile ISqlMapper _mapper = null;
 
   protected static void Configure (object obj)
   {
@@ -1281,7 +1290,7 @@ namespace IBatisNet.DataMapper
    _mapper = builder.ConfigureAndWatch(handler);
   }
 
-  public static SqlMapper Instance()
+  public static ISqlMapper Instance()
   {
    if (_mapper == null)
    {
@@ -1296,7 +1305,7 @@ namespace IBatisNet.DataMapper
    return _mapper;
   }
   
-  public static SqlMapper Get()
+  public static ISqlMapper Get()
   {
    return Instance();
   }
@@ -1304,11 +1313,11 @@ namespace IBatisNet.DataMapper
 }</programlisting>
         </example></para>
 
-      <para>To obtain the <classname>SqlMapper</classname> instance, just
+      <para>To obtain the <classname>ISqlMapper</classname> instance, just
       call</para>
 
       <para><programlisting>[C#]
-SqlMapper mapper = Mapper.Instance();</programlisting></para>
+ISqlMapper mapper = Mapper.Instance();</programlisting></para>
 
       <para>anywhere in your application, and specify one of the
       <classname>SqlMapper</classname> methods (see Section 5.3.2) . Here's an
@@ -1350,7 +1359,7 @@ IList list = Mapper.Instance().QueryForList("PermitNoForYearList", values);</pro
       instead:</para>
 
       <para><programlisting>[C#]
-SqlMapper mapper = builder.Configure();</programlisting></para>
+ISqlMapper mapper = builder.Configure();</programlisting></para>
 
       <sect3>
         <title>Multiple Databases</title>
@@ -1362,15 +1371,15 @@ SqlMapper mapper = builder.Configure();</programlisting></para>
         <methodname>ConfigureAndWatch</methodname> to</para>
 
         <para><programlisting>[C#]
-SqlMapper mapper = builder.ConfigureAndWatch("anotherSqlMapConfig.config", handler);</programlisting></para>
+ISqlMapper mapper = builder.ConfigureAndWatch("anotherSqlMapConfig.config", handler);</programlisting></para>
 
         <para>and substitute the name of your configuration file. Each
         database then has their own singleton you can call from your
         application:</para>
 
         <para><programlisting>[C#]
-SqlMapper sqlServer = SqlServerMapper.Get();
-SqlMapper access = AccessMapper.Get();</programlisting></para>
+ISqlMapper sqlServer = SqlServerMapper.Get();
+ISqlMapper access = AccessMapper.Get();</programlisting></para>
       </sect3>
 
       <sect3>
@@ -1394,7 +1403,7 @@ SqlMapper access = AccessMapper.Get();</programlisting></para>
         <example>
           <title>Basic SqlMapper Configuration Call</title>
 
-          <programlisting>SqlMapper mapper = builder.Configure();</programlisting>
+          <programlisting>ISqlMapper mapper = builder.Configure();</programlisting>
         </example>
 
         <para>If you have named your configuration file something other than
@@ -1410,7 +1419,7 @@ SqlMapper access = AccessMapper.Get();</programlisting></para>
           <programlisting><emphasis role="comment">/* Configure a SqlMapper from a file path.
    Uses a relative resource path from your application root 
    or an absolute file path such as "file:\\c:\dir\a.config" */
-</emphasis>SqlMapper mapper = builder.Configure(strPath);</programlisting>
+</emphasis>ISqlMapper mapper = builder.Configure(strPath);</programlisting>
         </example>
 
         <tip>
@@ -1435,11 +1444,11 @@ SqlMapper access = AccessMapper.Get();</programlisting></para>
 
           <programlisting><emphasis role="comment">/* Configure a SqlMapper with FileInfo. */</emphasis>
 FileInfo aFileInfo = someSupportClass.GetDynamicFileInfo();
-SqlMapper mapper = builder.Configure(aFileInfo);
+ISqlMapper mapper = builder.Configure(aFileInfo);
 
 <emphasis role="comment">/* Configure a SqlMapper through a Uri. */</emphasis>
 Uri aUri = someSupportClass.GetDynamicUri();
-SqlMapper anotherMapper = builder.Configure(aUri);</programlisting>
+ISqlMapper anotherMapper = builder.Configure(aUri);</programlisting>
         </example>
 
         <para>If you find that you already have loaded your DataMapper
@@ -1454,11 +1463,11 @@ SqlMapper anotherMapper = builder.Configure(aUri);</programlisting>
 
           <programlisting><emphasis role="comment">/* Configure a SqlMapper with an XmlDocument */</emphasis>
 XmlDocument anXmlDoc = someSupportClass.GetDynamicXmlDocument();
-SqlMapper mapper = builder.Configure(anXmlDoc);
+ISqlMapper mapper = builder.Configure(anXmlDoc);
 
 <emphasis role="comment">/* Configure a SqlMapper from a stream. */</emphasis>
 Stream aStream = someSupportClass.GetDynamicStream();
-SqlMapper anotherMapper = builder.Configure(aStream);</programlisting>
+ISqlMapper anotherMapper = builder.Configure(aStream);</programlisting>
         </example>
 
         <para>The <classname>DomSqlMapBuilder</classname> API provides
@@ -1508,20 +1517,77 @@ SqlMapper anotherMapper = builder.Configure(aStream);</programlisting>
    and automatically reconfigure the SqlMapper. 
    This basic ConfigureAndWatch method looks for a file with the 
    default name of SqlMap.config in the application root directory. */
-</emphasis>public SqlMapper ConfigureAndWatch(ConfigureHandler configureDelegate)
+</emphasis>public ISqlMapper ConfigureAndWatch(ConfigureHandler configureDelegate)
 
 <emphasis role="comment">/* Configure and monitor the configuration file for modifications 
    and automatically reconfigure the SqlMapper. 
    Uses a relative path from your application root 
    or an absolute file path such as "file:\\c:\dir\a.config" */
-</emphasis>public SqlMapper ConfigureAndWatch( string resource, ConfigureHandler configureDelegate )
+</emphasis>public ISqlMapper ConfigureAndWatch( string resource, ConfigureHandler configureDelegate )
 
 <emphasis role="comment">/* Configure and monitor the configuration file for modifications 
    and automatically reconfigure the SqlMapper. 
    Uses a FileInfo instance for your config file. */</emphasis>
-public SqlMapper ConfigureAndWatch( FileInfo resource, ConfigureHandler configureDelegate )</programlisting>
+public ISqlMapper ConfigureAndWatch( FileInfo resource, ConfigureHandler configureDelegate )</programlisting>
         </example>
       </sect3>
+
+	  <sect3>
+        <title>DomSqlMapBuilder : Advanced settings</title>
+			<para>Before launching the 'Configure' method to build the ISqlMapper instance, you can set those porperties.</para>
+			
+			<para>
+			<table>
+          <title>Advanced settings</title>
+
+          <tgroup cols="2">
+            <thead>
+              <row>
+                <entry>Propertie</entry>
+
+                <entry>Description</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>Properties</entry>
+
+                <entry>Allow to set properties before configuration. Those properties will be added to the properties list defined in the properties.config.
+<programlisting>NameValueCollection properties = new NameValueCollection();
+properties.Add("connectionString", "...");
+builder.Properties = properties;
+
+ISqlMapper mapper = builder.Configure("sqlMap.config");</programlisting>
+				</entry>
+              </row>
+			  <row>
+                <entry>GetAccessorFactory</entry>
+
+                <entry>Allow to set a custom get accessor factory before configuration, see IGetAccessorFactory interface which defines the contract for the factory responsible to build set accessor for a member object in iBATIS.
+				</entry>
+              </row>
+			  <row>
+                <entry>SetAccessorFactory</entry>
+
+                <entry>Allow to set a custom set accessor factory before configuration, see ISetAccessorFactory interface which defines the contract for the factory responsible to build get accessor for a member object in iBATIS.
+				</entry>
+              </row>
+			  <row>
+                <entry>ObjectFactory</entry>
+                <entry>Allow to set a custom object factory before configuration, see IObjectFactory interface which defines the contract for the factory responsible for object creation in iBATIS.
+				</entry>
+              </row>
+			  <row>
+                <entry>ValidateSqlMapConfig</entry>
+                <entry>Enable whether or not the validation of configuration document before configuration </entry>
+              </row>
+			  </tbody>
+          </tgroup>
+        </table>
+		</para>
+
+		</sect3>
     </sect2>
 
     <sect2>
