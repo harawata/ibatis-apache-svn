@@ -59,8 +59,6 @@ namespace IBatisNet.Common.Utilities
 		{
 		}
 
-		// CLOVER:ON
-
 		#endregion
 
         /// <summary>

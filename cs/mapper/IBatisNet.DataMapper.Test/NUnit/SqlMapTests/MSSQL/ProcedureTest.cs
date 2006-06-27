@@ -25,6 +25,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL
 			InitScript( sqlMap.DataSource, ScriptDirectory + "category-procedure.sql" );		
 			InitScript( sqlMap.DataSource, ScriptDirectory + "account-init.sql" );	
 			InitScript( sqlMap.DataSource, ScriptDirectory + "account-procedure.sql", false );
+            InitScript( sqlMap.DataSource, ScriptDirectory + "category-procedureWithReturn.sql", false);
 			InitScript( sqlMap.DataSource, ScriptDirectory + "ps_SelectAccount.sql", false );		
 			InitScript( sqlMap.DataSource, ScriptDirectory + "swap-procedure.sql" );	
 		}
@@ -39,6 +40,34 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL
 		#endregion
 
 		#region Specific statement store procedure tests for sql server
+
+	    /// <summary>
+        /// Test an insert with via a store procedure and getting the generatedKey from a t-sql return statement
+        /// </summary>
+        [Test]
+        public void InsertTestIdentityViaProcedureWithReturn ( )
+        {
+            Category category = new Category ( );
+            category.Name = "Mapping object relational";
+
+            int categoryID = ( int ) sqlMap.Insert ( "InsertCategoryViaStoreProcedureWithReturn", category );
+            Assert.AreEqual ( 1, categoryID );
+
+            Category category2 = new Category ( );
+            category2.Name = "Nausicaa";
+
+            int categoryID2 = ( int ) sqlMap.Insert ( "InsertCategoryViaStoreProcedureWithReturn", category2 );
+            Assert.AreEqual ( 2, categoryID2 );
+
+            Category category3 = sqlMap.QueryForObject<Category> ( "GetCategory", categoryID2 ) ;
+            Category category4 = sqlMap.QueryForObject<Category> ( "GetCategory", categoryID );
+            
+            Assert.AreEqual ( categoryID2, category3.Id );
+            Assert.AreEqual ( category2.Name, category3.Name );
+
+            Assert.AreEqual ( categoryID, category4.Id );
+            Assert.AreEqual ( category.Name, category4.Name );
+        }
 
 		/// <summary>
 		/// Test get an account via a store procedure.

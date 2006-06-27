@@ -17,6 +17,10 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   
   <statements>
 
+    <procedure id="InsertCategoryViaStoreProcedureWithReturn" parameterMap="insert-params" resultClass="int">
+    		ps_InsertCategorieWithReturnValue
+    </procedure>
+    
     <select id="GetCategoryWithNullValueReplacementGuid" resultMap="Category-result" >
       select
       Category_ID,

@@ -125,6 +125,9 @@ namespace IBatisNet.DataMapper.TypeHandlers
 
             handler = new UInt64TypeHandler();
             this.Register(typeof(UInt64), handler);
+
+            handler = new SByteTypeHandler();
+            this.Register(typeof(SByte), handler);
 		    
 #if dotnet2
             handler = new NullableBooleanTypeHandler();
@@ -168,6 +171,9 @@ namespace IBatisNet.DataMapper.TypeHandlers
 
             handler = new NullableUInt64TypeHandler();
             this.Register(typeof(UInt64?), handler);
+
+            handler = new NullableSByteTypeHandler();
+            this.Register(typeof(SByte?), handler);
 #endif
 
             _unknownTypeHandler = new UnknownTypeHandler(this);

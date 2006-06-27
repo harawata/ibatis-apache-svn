@@ -766,7 +766,21 @@ namespace IBatisNet.DataMapper.MappedStatements
 				{
 					command.ExecuteNonQuery();
 				}
-				else
+                else if (_statement is Procedure && (_statement.ResultClass != null) &&
+                        _sqlMap.TypeHandlerFactory.IsSimpleType(_statement.ResultClass) )
+                {
+                    IDataParameter returnValueParameter = command.CreateParameter();
+                    returnValueParameter.Direction = ParameterDirection.ReturnValue;
+                    command.Parameters.Add(returnValueParameter);
+                    
+                    command.ExecuteNonQuery ( );
+                    generatedKey = returnValueParameter.Value;
+
+                    ITypeHandler typeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler ( _statement.ResultClass );
+                    generatedKey = typeHandler.GetDataBaseValue ( generatedKey, _statement.ResultClass );
+				}
+			    else
+
 				{
 					generatedKey = command.ExecuteScalar();
 					if ( (_statement.ResultClass!=null) && 
