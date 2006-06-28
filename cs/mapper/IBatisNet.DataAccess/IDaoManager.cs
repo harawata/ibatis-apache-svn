@@ -97,7 +97,7 @@ namespace IBatisNet.DataAccess
         /// Gets the local data source.
         /// </summary>
         /// <value>The local data source.</value>
-        DataSource LocalDataSource { get; }
+        IDataSource LocalDataSource { get; }
 
 
         /// <summary>

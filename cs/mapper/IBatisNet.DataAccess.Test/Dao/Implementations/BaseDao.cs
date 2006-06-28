@@ -17,7 +17,7 @@ namespace IBatisNet.DataAccess.Test.Implementations
 		/// <returns>A DaoSession</returns>
 		protected DaoSession GetContext()
 		{
-			DaoManager daoManager = DaoManager.GetInstance(this);
+			IDaoManager daoManager = DaoManager.GetInstance(this);
 			return (daoManager.LocalDaoSession as DaoSession);
 		}
 	}

@@ -53,7 +53,7 @@ namespace IBatisNet.DataAccess
 	/// <example>
 	/// <pre/>
 	/// <b>Exemple 1:</b>
-	/// DaoManager daoManager = DaoManager.GetInstance("PetStore"); 
+    /// IDaoManager daoManager = DaoManager.GetInstance("PetStore"); 
 	/// ICategoryDao categoryDao = (ICategoryDao) daoManager.GetDao("Category");
 	/// DaoSession daoSession = daoManager.GetDaoSession();
 	/// daoSession.OpenConnection();
@@ -61,7 +61,7 @@ namespace IBatisNet.DataAccess
 	/// daoSession.CloseConnection(daoSession);
 	/// <p/>
 	/// <b>Exemple 2:</b>
-	/// DaoManager daoManager = DaoManager.GetInstance("PetStore"); 
+	/// IDaoManager daoManager = DaoManager.GetInstance("PetStore"); 
 	/// ICategoryDao categoryDao = (ICategoryDao) daoManager.GetDao("Category");
 	/// daoManager.OpenConnection();
 	/// ArrayList categoryList = categoryGetCategoryList(5);
@@ -74,7 +74,7 @@ namespace IBatisNet.DataAccess
 	/// c1.Add(p1);
 	/// c2.Add(p2);
 	/// <p/>
-	/// DaoManager daoManager = DaoManager.GetInstance("PetStore"); 
+    /// IDaoManager daoManager = DaoManager.GetInstance("PetStore"); 
 	/// ICategoryDao categoryDao = (ICategoryDao) daoManager.GetDao("Category");
 	/// IProductDao productDao = (IProductDao) daoManager.GetDao("Product");
 	/// daoManager.BeginTransaction();
@@ -108,7 +108,7 @@ namespace IBatisNet.DataAccess
 		///</remarks>
 		protected static HybridDictionary DaoContextMap = new HybridDictionary();
 
-		private DataSource _dataSource = null;
+		private IDataSource _dataSource = null;
 		private IDbProvider _provider = null;
 		private string _name = string.Empty;
 		private IDaoSessionHandler _daoSessionHandler = null;
@@ -129,7 +129,7 @@ namespace IBatisNet.DataAccess
 		/// <summary>
 		/// 
 		/// </summary>
-		internal DataSource DataSource
+		internal IDataSource DataSource
 		{
 			get { return _dataSource; }
 			set { _dataSource = value; }
@@ -148,7 +148,7 @@ namespace IBatisNet.DataAccess
         /// Gets the local data source.
         /// </summary>
         /// <value>The local data source.</value>
-		public DataSource LocalDataSource
+		public IDataSource LocalDataSource
 		{
 			get { return _dataSource; }
 		}
@@ -315,7 +315,7 @@ namespace IBatisNet.DataAccess
 		/// Gets the default DaoManager.
 		/// </summary>
 		/// <returns>A DaoManager.</returns>
-		public static DaoManager GetInstance() 
+		public static IDaoManager GetInstance() 
 		{
 			return (DaoManager)DaoContextMap[DEFAULT_CONTEXT_NAME];
 		}
@@ -325,7 +325,7 @@ namespace IBatisNet.DataAccess
 		/// </summary>
 		/// <param name="contextName">The name of the DaoManger.</param>
 		/// <returns>A DaoManager.</returns>
-		public static DaoManager GetInstance(string contextName) 
+		public static IDaoManager GetInstance(string contextName) 
 		{
 			return (DaoManager) DaoContextMap[contextName];
 		}
@@ -335,7 +335,7 @@ namespace IBatisNet.DataAccess
 		/// </summary>
 		/// <param name="dao">A Dao instance.</param>
 		/// <returns>A DaoManager</returns>
-		public static DaoManager GetInstance(IDao dao) 
+		public static IDaoManager GetInstance(IDao dao) 
 		{
 			Dao daoImplementation = _daoImplementationMap[dao] as Dao;
 			return daoImplementation.DaoManager;

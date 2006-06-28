@@ -34,8 +34,13 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 		/// </summary>
 		static BaseDaoTest()
 		{
+		    #if dotnet2
+            ScriptDirectory = Path.Combine(Path.Combine(Path.Combine(Path.Combine(Resources.ApplicationBase, ".."), ".."), "Scripts"), ConfigurationManager.AppSettings["database"]) + Path.DirectorySeparatorChar;
+		    
+		    #else
 			ScriptDirectory = Path.Combine(Path.Combine(Path.Combine(Path.Combine(Resources.ApplicationBase, ".."), ".."), "Scripts"), ConfigurationSettings.AppSettings["database"]) + Path.DirectorySeparatorChar;
-		}
+            #endif
+           }
 
 
 		/// <summary>
@@ -43,7 +48,7 @@ namespace IBatisNet.DataAccess.Test.NUnit.DaoTests
 		/// </summary>
 		/// <param name="datasource">The datasource.</param>
 		/// <param name="script">The sql batch</param>
-		protected static void InitScript(DataSource datasource, string script)
+		protected static void InitScript(IDataSource datasource, string script)
 		{
 			ScriptRunner runner = new ScriptRunner();
 
