@@ -72,7 +72,7 @@
 
       <programlisting>DomDaoManagerBuilder builder = new DomDaoManagerBuilder();
 builder.Configure();
-DaoManager daoManager = DaoManager.GetInstance("SqlMapDaoContext");</programlisting>
+IDaoManager daoManager = DaoManager.GetInstance("SqlMapDaoContext");</programlisting>
     </example>
 
     <para>If you have named your configuration file something other than
@@ -89,7 +89,7 @@ DaoManager daoManager = DaoManager.GetInstance("SqlMapDaoContext");</programlist
    or an absolute file path such as "file://c:\dir\a.config" */
 </emphasis>DomDaoManagerBuilder builder = new DomDaoManagerBuilder();
 builder.Configure(strPath);
-DaoManager daoManager = DaoManager.GetInstance("AnotherContext");</programlisting>
+IDaoManager daoManager = DaoManager.GetInstance("AnotherContext");</programlisting>
     </example>
 
     <tip>
@@ -115,13 +115,13 @@ DaoManager daoManager = DaoManager.GetInstance("AnotherContext");</programlistin
 FileInfo aFileInfo = someSupportClass.GetDynamicFileInfo();
 DomDaoManagerBuilder builder = new DomDaoManagerBuilder();
 builder.Configure(aFileInfo);
-DaoManager daoManager = DaoManager.GetInstance("NHibernateContext");
+IDaoManager daoManager = DaoManager.GetInstance("NHibernateContext");
 
 <emphasis role="comment">/* Configure through a Uri. */</emphasis>
 Uri aUri = someSupportClass.GetDynamicUri();
 DomDaoManagerBuilder builder = new DomDaoManagerBuilder();
 builder.Configure(aUri);
-DaoManager daoManager = DaoManager.GetInstance("SimpleDao");</programlisting>
+IDaoManager daoManager = DaoManager.GetInstance("SimpleDao");</programlisting>
     </example>
 
     <para>If you find that you already have loaded your DAO configuration
@@ -138,13 +138,13 @@ DaoManager daoManager = DaoManager.GetInstance("SimpleDao");</programlisting>
 XmlDocument anXmlDoc = someSupportClass.GetDynamicXmlDocument();
 DomDaoManagerBuilder builder = new DomDaoManagerBuilder();
 builder.Configure(anXmlDoc);
-DaoManager daoManager = DaoManager.GetInstance("Petstore");
+IDaoManager daoManager = DaoManager.GetInstance("Petstore");
 
 <emphasis role="comment">/* Configure from a stream. */</emphasis>
 Stream aStream = someSupportClass.GetDynamicStream();
 DomDaoManagerBuilder builder = new DomDaoManagerBuilder();
 builder.Configure(aStream);
-DaoManager daoManager = DaoManager.GetInstance("AnotherPetstore");</programlisting>
+IDaoManager daoManager = DaoManager.GetInstance("AnotherPetstore");</programlisting>
     </example>
 
     <para>In addition to the straightforward
@@ -212,7 +212,7 @@ public void ConfigureAndWatch( FileInfo resource, ConfigureHandler configureDele
     method <literal>DaoManager[type]</literal>) For example:</para>
 
     <programlisting>[C#]
-DaoManager daoManager = DaoManager.GetInstance("daoContextName"); 
+IDaoManager daoManager = DaoManager.GetInstance("daoContextName"); 
 <emphasis role="comment">// gets the dao of type 'ICategoryDao'</emphasis>
 ICategoryDao categoryDao = daoManager.GetDao(typeof(ICategoryDao)) as ICategoryDao; 
 <emphasis role="comment">// same thing, just using the indexer</emphasis>
@@ -237,7 +237,7 @@ Category c 1= new Category()
 c1.Add(p1);
 c2.Add(p2);
 
-DaoManager daoManager = DaoManager.GetInstance("PetStore"); 
+IDaoManager daoManager = DaoManager.GetInstance("PetStore"); 
 ICategoryDao categoryDao = daoManager[typeof(ICategoryDao)] as ICategoryDao;
 IProductDao productDao = daoManager[typeof(IProductDao)] as IProductDao;
 
@@ -271,7 +271,7 @@ catch {
     the <methodname>using</methodname> syntax as in the examples below.</para>
 
     <para><programlisting>[C#]
-DaoManager daoManager = DaoManager.GetInstance("PetStore"); 
+IDaoManager daoManager = DaoManager.GetInstance("PetStore"); 
 IAccountDao accountDao = daoManager[typeof(IAccountDao)] as IAccountDao;
 
 using ( IDalSession session = daoManager.OpenConnection() )

@@ -88,7 +88,7 @@ using IBatisNet.DataAccess.Interfaces; //IDao</emphasis>
 namespace IBatisNet.Test.Implementations {
  public class <emphasis role="blue">BaseDao: IDao</emphasis> {
   <emphasis role="blue">protected DaoSession GetContext()</emphasis> {
-   DaoManager daoManager = DaoManager.GetInstance(this);
+   IDaoManager daoManager = DaoManager.GetInstance(this);
    return (daoManager.LocalDaoSession as DaoSession);
   }
  }
@@ -339,7 +339,7 @@ namespace Examples.Services {
 
  public class AccountService {
 
-  protected static DaoManager daoManager = null;
+  protected static IDaoManager daoManager = null;
 
   static AccountService() {
    daoManager = DaoManager.GetInstance();

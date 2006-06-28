@@ -1403,6 +1403,18 @@ from Accounts
            [class="<emphasis role="blue">fullyQualifiedClassName, assembly|typeAlias</emphasis>"] 
            [extends="<emphasis role="blue">[sqlMapNamespace.]resultMapId</emphasis>"]&gt;
 
+   &lt;constructor &gt; 
+       &lt;argument property="<emphasis role="blue">argumentName</emphasis>" 
+           column="<emphasis role="blue">columnName</emphasis>"
+           [columnIndex="<emphasis role="blue">columnIndex</emphasis>"] 
+           [dbType="<emphasis role="blue">databaseType</emphasis>"] 
+           [type="<emphasis role="blue">propertyCLRType</emphasis>"]
+           [resultMapping="<emphasis role="blue">resultMapName</emphasis>"]
+           [nullValue="<emphasis role="blue">nullValueReplacement</emphasis>"] 
+           [select="<emphasis role="blue">someOtherStatementName</emphasis>"] 
+           [typeHandler="<emphasis role="blue">fullyQualifiedClassName, assembly|typeAlias</emphasis>"] /&gt;
+   &lt;/constructor &gt; 
+
    &lt;result property="<emphasis role="blue">propertyName</emphasis>" 
            column="<emphasis role="blue">columnName</emphasis>"
            [columnIndex="<emphasis role="blue">columnIndex</emphasis>"] 
@@ -1494,6 +1506,139 @@ from Accounts
       </sect3>
     </sect2>
 
+	<sect2>
+      <title>&lt;constructor&gt; element</title>
+
+	<para>The &lt;constructor&gt; element must match the signature of one of the result class constructor. If specify, this element is used by iBATIS to instanciate the result object.</para>
+
+		 <para>The &lt;constructor&gt; element holds one or more &lt;argument&gt;
+      child elements that map SQL resultsets to object argument constructor.</para>
+
+		<para>
+        <example>
+          <title>Constructor element example</title>
+
+          <programlisting>&lt;resultMap id="account-result-constructor" class="Account" &gt;
+	 <emphasis role="blue">&lt;constructor&gt;
+		&lt;argument argumentName="id" column="Account_ID"/&gt;
+		&lt;argument argumentName="firstName" column="Account_FirstName"/&gt;
+		&lt;argument argumentName="lastName" column="Account_LastName"/&gt;
+	&lt;/constructor&gt;</emphasis>
+	&lt;result property="EmailAddress" column="Account_Email" nullValue="no_email@provided.com"/&gt;
+	&lt;result property="BannerOption" column="Account_Banner_Option" dbType="Varchar" type="bool"/&gt;
+	&lt;result property="CartOption"	column="Account_Cart_Option" typeHandler="HundredsBool"/&gt;
+&lt;/resultMap&gt;</programlisting>
+        </example>
+		</para>
+
+		<sect3>
+        <title>argumentName</title>
+
+        <para>The <parameter>argumentName</parameter> attribute is the name of a
+        constructor argument of the result object that will be returned by the Mapped
+        Statement.</para>
+      </sect3>
+
+      <sect3>
+        <title>column</title>
+
+        <para>The <parameter>column</parameter> attribute value is the name of
+        the column in the result set from which the value will be used to
+        populate the argument.</para>
+      </sect3>
+
+      <sect3>
+        <title>columnIndex</title>
+
+        <para>As an optional (minimal) performance enhancement, the
+        <parameter>columnIndex</parameter> attribute value is the index of the
+        column in the ResultSet from which the value will be used to populate
+        the object argument. This is not likely needed in 99% of applications
+        and sacrifices maintainability and readability for speed. Some
+        providers may not realize any performance benefit, while others will
+        speed up dramatically.</para>
+      </sect3>
+
+      <sect3>
+        <title>dbType</title>
+
+        <para>The dbType attribute is used to explicitly specify the database
+        column type of the ResultSet column that will be used to populate the
+        argument. Although Result Maps do not have the same
+        difficulties with null values, specifying the type can be useful for
+        certain mapping types such as Date properties. Because an application
+        language has one Date value type and SQL databases may have many
+        (usually at least 3), specifying the date may become necessary in some
+        cases to ensure that dates (or other types) are set correctly.
+        Similarly, String types may be populated by a VarChar, Char or CLOB,
+        so specifying the type might be needed in those cases too.</para>
+      </sect3>
+
+      <sect3>
+        <title>type</title>
+
+        <para>The type attribute is used to explicitly specify the CLR
+        argument type. Normally this can be derived
+        from a argument through reflection, but certain mappings that use
+        objects such as a Map cannot provide the type to the framework. If the
+        attribute type is not set and the framework cannot otherwise determine
+        the type, the type is assumed to be Object. Section 6 details the CLR
+        types and available aliases that are supported by the
+        framework.</para>
+      </sect3>
+
+      <sect3>
+        <title>resultMapping</title>
+
+        <para>The <parameter>resultMapping</parameter> attribute can be set to
+        the name of another resultMap used to fill the argument. If the
+        resultMap is in an other mapping file, you must specified the fully
+        qualified name.</para>
+      </sect3>
+
+      <sect3>
+        <title>nullValue</title>
+
+        <para>The <parameter>nullValue</parameter> attribute can be set to any
+        valid value (based on argument type). The result element's
+        <parameter>nullValue</parameter> attribute is used to specify an
+        inbound null value replacement. What this means is that when the value
+        is detected in a query's result column, the corresponding object
+        argument will be set to the the <parameter>nullValue</parameter>
+        attribute's value. This allows you to use a "magic" null number in
+        your application for types that do not support null values (such as
+        <classname>int</classname>, <classname>double</classname>,
+        <classname>float</classname>).</para>
+
+      </sect3>
+
+      <sect3>
+        <title>select</title>
+
+        <para>The select attribute is used to describe a relationship between
+        objects and to automatically load complex (i.e. user defined) property
+        types. The value of the statement property must be the name of another
+        mapped statement. The value of the database column (the column
+        attribute) that is defined in the same property element as this
+        statement attribute will be passed to the related mapped statement as
+        the parameter. More information about supported primitive types and
+        complex property mappings/relationships is discussed later in this
+        document. The lazyLoad attribute can be specified with the
+        select</para>
+      </sect3>
+
+      <sect3>
+        <title>typeHandler</title>
+
+        <para>The typeHandler attribute allows the use of a Custom Type
+        Handler (see the Custom Type Handler section). This allows you to
+        extend the DataMapper's capabilities in handling types that are
+        specific to your database provider, are not handled by your database
+        provider, or just happen to be a part of your application design. You
+        can create custom type handlers to deal with storing and retrieving
+        booleans and Guids from your database for example.</para>
+      </sect3>
+	</sect2>
     <sect2>
       <title>&lt;result&gt; Elements</title>
 
