@@ -101,7 +101,14 @@ public class InlineParameterMapParser {
         } else if ("handler".equals(field)) {
           try {
             value = typeHandlerFactory.resolveAlias(value);
-            mapping.setTypeHandler(new CustomTypeHandler((TypeHandlerCallback) Resources.classForName(value).newInstance()));
+            Object impl = Resources.classForName(value).newInstance();
+            if (impl instanceof TypeHandlerCallback) {
+              mapping.setTypeHandler(new CustomTypeHandler((TypeHandlerCallback) impl));
+            } else if (impl instanceof TypeHandler) {
+              mapping.setTypeHandler((TypeHandler) impl);
+            } else {
+              throw new SqlMapException ("The class " + value + " is not a valid implementation of TypeHandler or TypeHandlerCallback");
+            }
           } catch (Exception e) {
             throw new SqlMapException("Error loading class specified by handler field in " + token + ".  Cause: " + e, e);
           }
