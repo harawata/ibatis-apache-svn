@@ -46,6 +46,7 @@ using IBatisNet.DataMapper.Configuration.ResultMapping;
 using IBatisNet.DataMapper.DataExchange;
 using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.MappedStatements;
+using IBatisNet.DataMapper.SessionStore;
 using IBatisNet.DataMapper.TypeHandlers;
 
 #endregion
@@ -104,7 +105,7 @@ namespace IBatisNet.DataMapper
 		/// <summary>
 		/// Container session unique for each thread. 
 		/// </summary>
-		private SessionHolder _sessionHolder = null;
+        private ISessionStore _sessionHolder = null;
         private IObjectFactory _objectFactory = null;
         private AccessorFactory _accessorFactory = null;
         private DataExchangeFactory _dataExchangeFactory = null;
@@ -201,7 +202,7 @@ namespace IBatisNet.DataMapper
 
             _dataExchangeFactory = new DataExchangeFactory(_typeHandlerFactory, _objectFactory, accessorFactory);
 			_id = HashCodeProvider.GetIdentityHashCode(this).ToString();
-			_sessionHolder = new SessionHolder(_id);
+            _sessionHolder = SessionStoreFactory.GetSessionStore(_id);
 		}
 		#endregion
 

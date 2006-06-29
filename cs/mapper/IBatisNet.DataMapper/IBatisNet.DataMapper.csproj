@@ -1088,6 +1088,31 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "SessionStore\AbstractSessionStore.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SessionStore\CallContextSessionStore.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SessionStore\ISessionStore.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SessionStore\SessionStoreFactory .cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SessionStore\WebSessionStore.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "TypeHandlers\BaseTypeHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -1198,6 +1223,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "TypeHandlers\SByteTypeHandler.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "TypeHandlers\SingleTypeHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -1214,6 +1244,21 @@
                 />
                 <File
                     RelPath = "TypeHandlers\TypeHandlerFactory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "TypeHandlers\UInt16TypeHandler.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "TypeHandlers\UInt32TypeHandler.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "TypeHandlers\UInt64TypeHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

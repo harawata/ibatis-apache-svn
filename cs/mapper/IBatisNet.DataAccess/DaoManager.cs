@@ -36,6 +36,7 @@ using IBatisNet.Common.Utilities;
 using IBatisNet.DataAccess.Configuration;
 using IBatisNet.DataAccess.Exceptions;
 using IBatisNet.DataAccess.Interfaces;
+using IBatisNet.DataAccess.SessionStore;
 
 #endregion
 
@@ -119,9 +120,9 @@ namespace IBatisNet.DataAccess
 		private static HybridDictionary _daoImplementationMap = new HybridDictionary();
 
 		/// <summary>
-		/// Container session unique for each thread. 
+		/// Container session unique for each 'thread'. 
 		/// </summary>
-		private SessionHolder _sessionHolder = null;
+		private ISessionStore _sessionHolder = null;
 		#endregion
 
 		#region Properties
@@ -213,8 +214,8 @@ namespace IBatisNet.DataAccess
 		/// instances from being created.
 		/// </summary>
 		private DaoManager() 
-		{ 
-			_sessionHolder = new SessionHolder(this.Name);
+		{
+            _sessionHolder = SessionStoreFactory.GetSessionStore(this.Name);
 		}
 		#endregion
 
