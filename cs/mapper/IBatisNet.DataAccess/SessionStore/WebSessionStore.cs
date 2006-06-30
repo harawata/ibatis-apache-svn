@@ -51,7 +51,6 @@ namespace IBatisNet.DataAccess.SessionStore
 			get
 			{
 				HttpContext currentContext = ObtainSessionContext();
-
 				return currentContext.Items[sessionName] as IDalSession;
 			}
 		}
@@ -64,7 +63,6 @@ namespace IBatisNet.DataAccess.SessionStore
 		public override void Store(IDalSession session)
 		{
 			HttpContext currentContext = ObtainSessionContext();
-
 			currentContext.Items[sessionName] = session;
 		}
 
@@ -73,7 +71,8 @@ namespace IBatisNet.DataAccess.SessionStore
 		/// </summary>
 		public override void Dispose()
 		{
-			// Will be remove by the system
+			HttpContext currentContext = ObtainSessionContext();
+			currentContext.Items[sessionName] = null;
 		}
 
 		

@@ -24,7 +24,6 @@
 #endregion
 
 using System.Web;
-using IBatisNet.Common;
 using IBatisNet.Common.Exceptions;
 
 namespace IBatisNet.DataMapper.SessionStore
@@ -52,7 +51,6 @@ namespace IBatisNet.DataMapper.SessionStore
 			get
 			{
 				HttpContext currentContext = ObtainSessionContext();
-
                 return currentContext.Items[sessionName] as SqlMapSession;
 			}
 		}
@@ -64,7 +62,6 @@ namespace IBatisNet.DataMapper.SessionStore
         public override void Store(SqlMapSession session)
 		{
 			HttpContext currentContext = ObtainSessionContext();
-
 			currentContext.Items[sessionName] = session;
 		}
 
@@ -73,7 +70,8 @@ namespace IBatisNet.DataMapper.SessionStore
 		/// </summary>
 		public override void Dispose()
 		{
-			// Will be remove by the system
+			HttpContext currentContext = ObtainSessionContext();
+			currentContext.Items[sessionName] = null;
 		}
 
 		
