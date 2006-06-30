@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.abator.config.FullyQualifiedTable;
-import org.apache.ibatis.abator.internal.db.IntrospectedTable;
 
 /**
  * This interface describes the operations that are required of an 

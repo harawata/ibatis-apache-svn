@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.ibatis.abator.api.DAOGenerator;
+import org.apache.ibatis.abator.api.IntrospectedTable;
 import org.apache.ibatis.abator.api.JavaModelGenerator;
 import org.apache.ibatis.abator.api.JavaTypeResolver;
 import org.apache.ibatis.abator.api.ProgressCallback;
@@ -32,7 +33,6 @@ import org.apache.ibatis.abator.internal.AbatorObjectFactory;
 import org.apache.ibatis.abator.internal.NullProgressCallback;
 import org.apache.ibatis.abator.internal.db.ConnectionFactory;
 import org.apache.ibatis.abator.internal.db.DatabaseIntrospector;
-import org.apache.ibatis.abator.internal.db.IntrospectedTable;
 import org.apache.ibatis.abator.internal.util.StringUtility;
 import org.apache.ibatis.abator.internal.util.messages.Messages;
 
@@ -58,7 +58,7 @@ public class AbatorContext {
 	
     public AbatorContext() {
         // TODO - make Java2 the default in some future release
-        this("Legacy");
+        this("Legacy"); //$NON-NLS-1$
     }
     
     /**
@@ -66,11 +66,11 @@ public class AbatorContext {
      */
     public AbatorContext(String generatorSetType) {
         super();
-        if ("Legacy".equalsIgnoreCase(generatorSetType)) {
+        if ("Legacy".equalsIgnoreCase(generatorSetType)) { //$NON-NLS-1$
             generatorSet = new LegacyGeneratorSet();
-        } else if ("Java2".equalsIgnoreCase(generatorSetType)) {
+        } else if ("Java2".equalsIgnoreCase(generatorSetType)) { //$NON-NLS-1$
             generatorSet = new Java2GeneratorSet();
-        } else if ("Java5".equalsIgnoreCase(generatorSetType)) {
+        } else if ("Java5".equalsIgnoreCase(generatorSetType)) { //$NON-NLS-1$
             generatorSet = new Java5GeneratorSet();
         } else {
             generatorSet = (GeneratorSet) AbatorObjectFactory.createObject(generatorSetType);
@@ -114,25 +114,25 @@ public class AbatorContext {
 		validateJdbcConnectionConfiguration(errors);
 
         if (javaModelGeneratorConfiguration == null) {
-            errors.add(Messages.getString("AbatorContext.13")); //$NON-NLS-1$
+            errors.add(Messages.getString("ValidationError.8")); //$NON-NLS-1$
         } else if (!StringUtility.stringHasValue(javaModelGeneratorConfiguration.getTargetProject())) {
-			errors.add(Messages.getString("AbatorContext.0", id)); //$NON-NLS-1$
+			errors.add(Messages.getString("ValidationError.0", id)); //$NON-NLS-1$
 		}
 
         if (sqlMapGeneratorConfiguration == null) {
-            errors.add(Messages.getString("AbatorContext.14")); //$NON-NLS-1$
+            errors.add(Messages.getString("ValidationError.9")); //$NON-NLS-1$
         } else if (!StringUtility.stringHasValue(sqlMapGeneratorConfiguration.getTargetProject())) {
-			errors.add(Messages.getString("AbatorContext.1", id)); //$NON-NLS-1$
+			errors.add(Messages.getString("ValidationError.1", id)); //$NON-NLS-1$
 		}
 
 		if (daoGeneratorConfiguration != null) {
 			if (!StringUtility.stringHasValue(daoGeneratorConfiguration.getTargetProject())) {
-				errors.add(Messages.getString("AbatorContext.2", id)); //$NON-NLS-1$
+				errors.add(Messages.getString("ValidationError.2", id)); //$NON-NLS-1$
 			}
 		}
         
 		if (tableConfigurations.size() == 0) {
-			errors.add(Messages.getString("AbatorContext.3")); //$NON-NLS-1$
+			errors.add(Messages.getString("ValidationError.3")); //$NON-NLS-1$
 		} else {
 			for (int i = 0; i < tableConfigurations.size(); i++) {
 				TableConfiguration tc = (TableConfiguration) tableConfigurations
@@ -145,32 +145,32 @@ public class AbatorContext {
 	
 	private void validateJdbcConnectionConfiguration(List errors) {
         if (jdbcConnectionConfiguration == null) {
-            errors.add(Messages.getString("AbatorContext.15")); //$NON-NLS-1$
+            errors.add(Messages.getString("ValidationError.10")); //$NON-NLS-1$
             return;
         }
         
 		if (!StringUtility.stringHasValue(jdbcConnectionConfiguration
 				.getDriverClass())) {
-			errors.add(Messages.getString("AbatorContext.4")); //$NON-NLS-1$
+			errors.add(Messages.getString("ValidationError.4")); //$NON-NLS-1$
 		}
 
 		if (!StringUtility.stringHasValue(jdbcConnectionConfiguration
 				.getConnectionURL())) {
-			errors.add(Messages.getString("AbatorContext.5")); //$NON-NLS-1$
+			errors.add(Messages.getString("ValidationError.5")); //$NON-NLS-1$
 		}
 	}
 
 	private void validateTableConfiguration(TableConfiguration tc, List errors,
 			int listPosition) {
 		if (!StringUtility.stringHasValue(tc.getTable().getTableName())) {
-			errors.add(Messages.getString("AbatorContext.6", Integer.toString(listPosition))); //$NON-NLS-1$
+			errors.add(Messages.getString("ValidationError.6", Integer.toString(listPosition))); //$NON-NLS-1$
 		}
 
-		if (tc.getGeneratedKey().isConfigured()
+		if (tc.getGeneratedKey() != null
 				&& !StringUtility.stringHasValue(tc.getGeneratedKey()
 						.getSqlStatement())) {
 	        errors
-				.add(Messages.getString("AbatorContext.7",  //$NON-NLS-1$
+				.add(Messages.getString("ValidationError.7",  //$NON-NLS-1$
 						tc.getTable().getFullyQualifiedTableName()));
 		}
 	}
@@ -209,7 +209,7 @@ public class AbatorContext {
 		Connection connection = null;
 		
 		try {
-			callback.startSubTask(Messages.getString("AbatorContext.8")); //$NON-NLS-1$
+			callback.startSubTask(Messages.getString("Progress.0")); //$NON-NLS-1$
 			connection = getConnection();
 			
 			Iterator iter = tableConfigurations.iterator();
@@ -218,18 +218,18 @@ public class AbatorContext {
 				String tableName = tc.getTable().getFullyQualifiedTableName();
 				
 				if (!tc.areAnyStatementsEnabled()) {
-				    warnings.add(Messages.getString("AbatorContext.9", tableName)); //$NON-NLS-1$
+				    warnings.add(Messages.getString("Warning.0", tableName)); //$NON-NLS-1$
 				    continue;
 				}
 				
 
 				IntrospectedTable introspectedTable;
 				try {
-					callback.startSubTask(Messages.getString("AbatorContext.11", tableName)); //$NON-NLS-1$
+					callback.startSubTask(Messages.getString("Progress.1", tableName)); //$NON-NLS-1$
                     introspectedTable  = DatabaseIntrospector.introspectTable(connection, tc, javaTypeResolver, warnings);
 					callback.checkCancel();
 				} catch (UnknownTableException e) {
-					warnings.add(Messages.getString("AbatorContext.12", tableName)); //$NON-NLS-1$
+					warnings.add(Messages.getString("Warning.1", tableName)); //$NON-NLS-1$
 					continue;
 				}
 

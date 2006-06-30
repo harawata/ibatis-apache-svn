@@ -10,9 +10,11 @@ Version 0.7.0: ??
 4. Added support for "alias" on table configuration
 5. Fixed the XML file merger so that extraneous blank lines in an XML merge
    are removed
-6. Major overhaul of the documentation in my efforts to become the best
-   documented project at Apache!
-7. (??) Added support for generating  objects from a query
+6. Major overhaul and improvement of the documentation
+7. Added a typeHandler attribute to <columnOverride>
+8. Added exampleMethodVisibility as a property for the DAO generator
+9. Added methodNameCalculator as a property for the DAO generator
+10. (??) Added support for generating  objects from a query
 
 -------------------------------------------------------------------------------
 Version 0.6.5:

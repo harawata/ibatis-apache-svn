@@ -68,30 +68,30 @@ public class ExampleClause {
 		list.add(new ExampleClause("{0}_{1}_NOT_NULL", //$NON-NLS-1$
 				"{0} is not null", false, false, "EXAMPLE_NOT_NULL", //$NON-NLS-1$  //$NON-NLS-2$
 				IS_NOT_NULL_CLAUSE_ID));
-		list.add(new ExampleClause("{0}_{1}_EQUALS", "{0} = #{1}#", //$NON-NLS-1$  //$NON-NLS-2$
+		list.add(new ExampleClause("{0}_{1}_EQUALS", "{0} = {1}", //$NON-NLS-1$  //$NON-NLS-2$
 				true, false, "EXAMPLE_EQUALS", EQUALS_CLAUSE_ID)); //$NON-NLS-1$
 		list
 				.add(new ExampleClause(
 						"{0}_{1}_NOT_EQUALS", //$NON-NLS-1$
-						"{0} <![CDATA[ <> ]]> #{1}#", true, false, "EXAMPLE_NOT_EQUALS", //$NON-NLS-1$ //$NON-NLS-2$
+						"{0} <![CDATA[ <> ]]> {1}", true, false, "EXAMPLE_NOT_EQUALS", //$NON-NLS-1$ //$NON-NLS-2$
 						NOT_EQUALS_CLAUSE_ID));
 		list
 				.add(new ExampleClause(
 						"{0}_{1}_GT", //$NON-NLS-1$
-						"{0} <![CDATA[ > ]]> #{1}#", true, false, "EXAMPLE_GREATER_THAN", //$NON-NLS-1$ //$NON-NLS-2$
+						"{0} <![CDATA[ > ]]> {1}", true, false, "EXAMPLE_GREATER_THAN", //$NON-NLS-1$ //$NON-NLS-2$
 						GREATER_THAN_CLAUSE_ID));
 		list
 				.add(new ExampleClause(
 						"{0}_{1}_GE", //$NON-NLS-1$
-						"{0} <![CDATA[ >= ]]> #{1}#", true, false, //$NON-NLS-1$
+						"{0} <![CDATA[ >= ]]> {1}", true, false, //$NON-NLS-1$
 						"EXAMPLE_GREATER_THAN_OR_EQUAL", GREATER_THAN_OR_EQUAL_CLAUSE_ID)); //$NON-NLS-1$
 		list.add(new ExampleClause("{0}_{1}_LT", //$NON-NLS-1$
-				"{0} <![CDATA[ < ]]> #{1}#", true, false, "EXAMPLE_LESS_THAN", //$NON-NLS-1$ //$NON-NLS-2$
+				"{0} <![CDATA[ < ]]> {1}", true, false, "EXAMPLE_LESS_THAN", //$NON-NLS-1$ //$NON-NLS-2$
 				LESS_THAN_CLAUSE_ID));
 		list.add(new ExampleClause("{0}_{1}_LE", //$NON-NLS-1$
-				"{0} <![CDATA[ <= ]]> #{1}#", true, false, //$NON-NLS-1$
+				"{0} <![CDATA[ <= ]]> {1}", true, false, //$NON-NLS-1$
 				"EXAMPLE_LESS_THAN_OR_EQUAL", LESS_THAN_OR_EQUAL_CLAUSE_ID)); //$NON-NLS-1$
-		list.add(new ExampleClause("{0}_{1}_LIKE", "{0} like #{1}#", //$NON-NLS-1$ //$NON-NLS-2$
+		list.add(new ExampleClause("{0}_{1}_LIKE", "{0} like {1}", //$NON-NLS-1$ //$NON-NLS-2$
 				true, true, "EXAMPLE_LIKE", LIKE_CLAUSE_ID)); //$NON-NLS-1$
 
 		clauses = Collections.unmodifiableList(list);
@@ -129,16 +129,7 @@ public class ExampleClause {
 	}
 
 	public String getClause(ColumnDefinition cd) {
-        StringBuffer sb = new StringBuffer();
-        sb.append(cd.getJavaProperty());
-
-	    if (cd.isJDBCDateColumn()) {
-	        sb.append(":DATE"); //$NON-NLS-1$
-	    } else if (cd.isJDBCTimeColumn()) {
-	        sb.append(":TIME"); //$NON-NLS-1$
-	    }
-	    
-		Object[] arguments = { cd.getAliasedColumnName(), sb.toString() };
+		Object[] arguments = { cd.getAliasedColumnName(), cd.getIbatisFormattedParameterClause() };
 
 		return MessageFormat.format(clause, arguments);
 	}

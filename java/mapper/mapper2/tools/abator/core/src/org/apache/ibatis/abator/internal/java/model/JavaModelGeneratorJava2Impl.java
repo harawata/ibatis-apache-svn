@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.abator.api.GeneratedJavaFile;
+import org.apache.ibatis.abator.api.IntrospectedTable;
 import org.apache.ibatis.abator.api.JavaModelGenerator;
 import org.apache.ibatis.abator.api.ProgressCallback;
-import org.apache.ibatis.abator.api.dom.OutputUtilities;
 import org.apache.ibatis.abator.api.dom.java.CompilationUnit;
 import org.apache.ibatis.abator.api.dom.java.Field;
 import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
@@ -36,7 +36,6 @@ import org.apache.ibatis.abator.api.dom.java.Parameter;
 import org.apache.ibatis.abator.api.dom.java.TopLevelClass;
 import org.apache.ibatis.abator.config.FullyQualifiedTable;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
-import org.apache.ibatis.abator.internal.db.IntrospectedTable;
 import org.apache.ibatis.abator.internal.rules.AbatorRules;
 import org.apache.ibatis.abator.internal.util.JavaBeansUtil;
 import org.apache.ibatis.abator.internal.util.StringUtility;
@@ -252,7 +251,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
             return null;
         }
 
-        FullyQualifiedTable table = introspectedTable.getTableConfiguration().getTable();
+        FullyQualifiedTable table = introspectedTable.getTable();
         FullyQualifiedJavaType type = getPrimaryKeyType(table);
         TopLevelClass answer = new TopLevelClass(type);
         answer.setVisibility(JavaVisibility.PUBLIC);
@@ -279,7 +278,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
             return null;
         }
 
-        FullyQualifiedTable table = introspectedTable.getTableConfiguration().getTable();
+        FullyQualifiedTable table = introspectedTable.getTable();
         FullyQualifiedJavaType type = getRecordType(table);
         TopLevelClass answer = new TopLevelClass(type);
         answer.setVisibility(JavaVisibility.PUBLIC);
@@ -311,7 +310,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
             return null;
         }
 
-        FullyQualifiedTable table = introspectedTable.getTableConfiguration().getTable();
+        FullyQualifiedTable table = introspectedTable.getTable();
         FullyQualifiedJavaType type = getRecordWithBLOBsType(table);
         TopLevelClass answer = new TopLevelClass(type);
         answer.setVisibility(JavaVisibility.PUBLIC);
@@ -367,11 +366,11 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
     public List getGeneratedJavaFiles(IntrospectedTable introspectedTable, ProgressCallback callback) {
         List list = new ArrayList();
 
-        String tableName = introspectedTable.getTableConfiguration().getTable()
+        String tableName = introspectedTable.getTable()
                 .getFullyQualifiedTableName();
 
         callback.startSubTask(Messages.getString(
-                "JavaModelGeneratorDefaultImpl.0", //$NON-NLS-1$
+                "Progress.6", //$NON-NLS-1$
                 tableName));
         CompilationUnit cu = getExample(introspectedTable);
         if (cu != null) {
@@ -380,7 +379,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         }
 
         callback.startSubTask(Messages.getString(
-                "JavaModelGeneratorDefaultImpl.1", //$NON-NLS-1$
+                "Progress.7", //$NON-NLS-1$
                 tableName));
         cu = getPrimaryKey(introspectedTable);
         if (cu != null) {
@@ -389,7 +388,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         }
 
         callback.startSubTask(Messages.getString(
-                "JavaModelGeneratorDefaultImpl.2", //$NON-NLS-1$
+                "Progress.8", //$NON-NLS-1$
                 tableName));
         cu = getRecord(introspectedTable);
         if (cu != null) {
@@ -398,7 +397,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         }
 
         callback.startSubTask(Messages.getString(
-                "JavaModelGeneratorDefaultImpl.3", //$NON-NLS-1$
+                "Progress.9", //$NON-NLS-1$
                 tableName));
         cu = getRecordWithBLOBs(introspectedTable);
         if (cu != null) {
@@ -491,19 +490,19 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
     }
 
     protected Method getSetNullMethod(ColumnDefinition cd) {
-        return getNoValueMethod(cd, "Null", "is null"); //$NON-NLS-1$ //$NON-NLS-2$
+        return getNoValueMethod(cd, "IsNull", "is null"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     protected Method getSetNotNullMethod(ColumnDefinition cd) {
-        return getNoValueMethod(cd, "NotNull", "is not null"); //$NON-NLS-1$ //$NON-NLS-2$
+        return getNoValueMethod(cd, "IsNotNull", "is not null"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     protected Method getSetEqualMethod(ColumnDefinition cd) {
-        return getSingleValueMethod(cd, "Equal", "="); //$NON-NLS-1$ //$NON-NLS-2$
+        return getSingleValueMethod(cd, "EqualTo", "="); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     protected Method getSetNotEqualMethod(ColumnDefinition cd) {
-        return getSingleValueMethod(cd, "NotEqual", "<>"); //$NON-NLS-1$ //$NON-NLS-2$
+        return getSingleValueMethod(cd, "NotEqualTo", "<>"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     protected Method getSetGreaterThanMethod(ColumnDefinition cd) {
@@ -511,7 +510,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
     }
 
     protected Method getSetGreaterThenOrEqualMethod(ColumnDefinition cd) {
-        return getSingleValueMethod(cd, "GreaterThanOrEqual", ">="); //$NON-NLS-1$ //$NON-NLS-2$
+        return getSingleValueMethod(cd, "GreaterThanOrEqualTo", ">="); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     protected Method getSetLessThanMethod(ColumnDefinition cd) {
@@ -519,7 +518,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
     }
 
     protected Method getSetLessThanOrEqualMethod(ColumnDefinition cd) {
-        return getSingleValueMethod(cd, "LessThanOrEqual", "<="); //$NON-NLS-1$ //$NON-NLS-2$
+        return getSingleValueMethod(cd, "LessThanOrEqualTo", "<="); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     protected Method getSetLikeMethod(ColumnDefinition cd) {
@@ -538,18 +537,23 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         StringBuffer sb = new StringBuffer();
         sb.append(cd.getJavaProperty());
         sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
-        sb.insert(0, "add"); //$NON-NLS-1$
+        sb.insert(0, "and"); //$NON-NLS-1$
         sb.append(nameFragment);
-        sb.append("Condition"); //$NON-NLS-1$
         method.setName(sb.toString());
+        method.setReturnType(FullyQualifiedJavaType.getCriteriaInstance());
         sb.setLength(0);
     
         if (cd.isJDBCDateColumn()) {
-            sb.append("addSingleDateValueCondition(\""); //$NON-NLS-1$
+            sb.append("addCriterionForJDBCDate(\""); //$NON-NLS-1$
         } else if (cd.isJDBCTimeColumn()) {
-            sb.append("addSingleTimeValueCondition(\""); //$NON-NLS-1$
+            sb.append("addCriterionForJDBCTime(\""); //$NON-NLS-1$
+        } else if (StringUtility.stringHasValue(cd.getTypeHandler())) {
+            sb.append("add"); //$NON-NLS-1$
+            sb.append(cd.getJavaProperty());
+            sb.setCharAt(3, Character.toUpperCase(sb.charAt(3)));
+            sb.append("Criterion(\""); //$NON-NLS-1$
         } else {
-            sb.append("addSingleValueCondition(\""); //$NON-NLS-1$
+            sb.append("addCriterion(\""); //$NON-NLS-1$
         }
     
         sb.append(cd.getAliasedColumnName());
@@ -559,6 +563,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         sb.append(cd.getJavaProperty());
         sb.append("\");"); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
+        method.addBodyLine("return this;"); //$NON-NLS-1$
     
         return method;
     }
@@ -569,17 +574,18 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         StringBuffer sb = new StringBuffer();
         sb.append(cd.getJavaProperty());
         sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
-        sb.insert(0, "add"); //$NON-NLS-1$
+        sb.insert(0, "and"); //$NON-NLS-1$
         sb.append(nameFragment);
-        sb.append("Condition"); //$NON-NLS-1$
         method.setName(sb.toString());
+        method.setReturnType(FullyQualifiedJavaType.getCriteriaInstance());
         sb.setLength(0);
-        sb.append("conditionsWithoutValue.add(\""); //$NON-NLS-1$
+        sb.append("criteriaWithoutValue.add(\""); //$NON-NLS-1$
         sb.append(cd.getAliasedColumnName());
         sb.append(' ');
         sb.append(operator);
         sb.append("\");"); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
+        method.addBodyLine("return this;"); //$NON-NLS-1$
     
         return method;
     }
@@ -601,21 +607,27 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         StringBuffer sb = new StringBuffer();
         sb.append(cd.getJavaProperty());
         sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
-        sb.insert(0, "add"); //$NON-NLS-1$
+        sb.insert(0, "and"); //$NON-NLS-1$
         if (betweenMethod) {
-            sb.append("BetweenCondition"); //$NON-NLS-1$
+            sb.append("Between"); //$NON-NLS-1$
         } else {
-            sb.append("NotBetweenCondition"); //$NON-NLS-1$
+            sb.append("NotBetween"); //$NON-NLS-1$
         }
         method.setName(sb.toString());
+        method.setReturnType(FullyQualifiedJavaType.getCriteriaInstance());
         sb.setLength(0);
     
         if (cd.isJDBCDateColumn()) {
-            sb.append("addDateBetweenCondition(\""); //$NON-NLS-1$
+            sb.append("addCriterionForJDBCDate(\""); //$NON-NLS-1$
         } else if (cd.isJDBCTimeColumn()) {
-            sb.append("addTimeBetweenCondition(\""); //$NON-NLS-1$
+            sb.append("addCriterionForJDBCTime(\""); //$NON-NLS-1$
+        } else if (StringUtility.stringHasValue(cd.getTypeHandler())) {
+            sb.append("add"); //$NON-NLS-1$
+            sb.append(cd.getJavaProperty());
+            sb.setCharAt(3, Character.toUpperCase(sb.charAt(3)));
+            sb.append("Criterion(\""); //$NON-NLS-1$
         } else {
-            sb.append("addBetweenCondition(\""); //$NON-NLS-1$
+            sb.append("addCriterion(\""); //$NON-NLS-1$
         }
     
         sb.append(cd.getAliasedColumnName());
@@ -628,17 +640,17 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         sb.append(cd.getJavaProperty());
         sb.append("\");"); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
+        method.addBodyLine("return this;"); //$NON-NLS-1$
     
         return method;
     }
 
     protected CompilationUnit getExample(IntrospectedTable introspectedTable) {
-        if (!AbatorRules.generateExampleExtendingPrimaryKey(introspectedTable)
-                && !AbatorRules.generateExampleExtendingBaseRecord(introspectedTable)) {
+        if (!AbatorRules.generateExample(introspectedTable)) {
             return null;
         }
 
-        FullyQualifiedTable table = introspectedTable.getTableConfiguration().getTable();
+        FullyQualifiedTable table = introspectedTable.getTable();
         FullyQualifiedJavaType type = getExampleType(table);
         TopLevelClass topLevelClass = new TopLevelClass(type);
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
@@ -668,7 +680,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         method.addBodyLine("return orderByClause;"); //$NON-NLS-1$
         topLevelClass.addMethod(method);
 
-        // add field and methods for the list of conditions
+        // add field and methods for the list of ored criteria
         field = new Field();
         field.addComment(table);
         field.setVisibility(JavaVisibility.PRIVATE);
@@ -677,7 +689,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
                 .getNewListInstance();
 
         field.setType(fqjt);
-        field.setName("oredConditions"); //$NON-NLS-1$
+        field.setName("oredCriteria"); //$NON-NLS-1$
         field.setInitializationString("new ArrayList()"); //$NON-NLS-1$
         topLevelClass.addField(field);
 
@@ -685,60 +697,72 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         method.addComment(table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(fqjt);
-        method.setName("getOredConditions"); //$NON-NLS-1$
-        method.addBodyLine("return oredConditions;"); //$NON-NLS-1$
+        method.setName("getOredCriteria"); //$NON-NLS-1$
+        method.addBodyLine("return oredCriteria;"); //$NON-NLS-1$
         topLevelClass.addMethod(method);
 
         method = new Method();
         method.addComment(table);
         method.setVisibility(JavaVisibility.PUBLIC);
-        method.setName("addOredCondition"); //$NON-NLS-1$
-        method.addParameter(new Parameter(new FullyQualifiedJavaType(
-                "AndedCondition"), //$NON-NLS-1$
-                "andedCondition")); //$NON-NLS-1$
+        method.setName("or"); //$NON-NLS-1$
+        method.addParameter(new Parameter(FullyQualifiedJavaType.getCriteriaInstance(),
+                "criteria")); //$NON-NLS-1$
+        method.addBodyLine("oredCriteria.add(criteria);"); //$NON-NLS-1$
 
-        method.addBodyLine("if (andedCondition.isValid()) {"); //$NON-NLS-1$
-        method.addBodyLine("oredConditions.add(andedCondition);"); //$NON-NLS-1$
-        method.addBodyLine("} else {"); //$NON-NLS-1$
-        method
-                .addBodyLine("throw new RuntimeException(\"At least one condition must be specified\");"); //$NON-NLS-1$
+        topLevelClass.addMethod(method);
+        
+        method = new Method();
+        method.addComment(table);
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setName("createCriteria"); //$NON-NLS-1$
+        method.setReturnType(FullyQualifiedJavaType.getCriteriaInstance());
+        method.addBodyLine("Criteria criteria = new Criteria();"); //$NON-NLS-1$
+        method.addBodyLine("if (oredCriteria.size() == 0) {"); //$NON-NLS-1$
+        method.addBodyLine("oredCriteria.add(criteria);"); //$NON-NLS-1$
         method.addBodyLine("}"); //$NON-NLS-1$
-
+        method.addBodyLine("return criteria;"); //$NON-NLS-1$
         topLevelClass.addMethod(method);
 
         // now generate the inner class that holds the AND conditions
-        topLevelClass.addInnerClass(getAndedConditionInnerClass(topLevelClass,
+        topLevelClass.addInnerClass(getCriteriaInnerClass(topLevelClass,
                 introspectedTable));
 
         return topLevelClass;
     }
 
-    protected InnerClass getAndedConditionInnerClass(
+    protected InnerClass getCriteriaInnerClass(
             TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
         Field field;
         Method method;
-        StringBuffer sb = new StringBuffer();
 
-        InnerClass answer = new InnerClass(new FullyQualifiedJavaType(
-                "AndedCondition")); //$NON-NLS-1$
+        InnerClass answer = new InnerClass(FullyQualifiedJavaType.getCriteriaInstance());
 
         answer.setVisibility(JavaVisibility.PUBLIC);
         answer.setModifierStatic(true);
-        answer.addComment(introspectedTable.getTableConfiguration().getTable());
+        answer.addComment(introspectedTable.getTable());
 
         method = new Method();
-        method.setVisibility(JavaVisibility.PUBLIC);
-        method.setName("AndedCondition"); //$NON-NLS-1$
+        method.setVisibility(JavaVisibility.PRIVATE);
+        method.setName("Criteria"); //$NON-NLS-1$
         method.setConstructor(true);
         method.addBodyLine("super();"); //$NON-NLS-1$
-        method.addBodyLine("conditionsWithoutValue = new ArrayList();"); //$NON-NLS-1$
+        method.addBodyLine("criteriaWithoutValue = new ArrayList();"); //$NON-NLS-1$
         method
-                .addBodyLine("conditionsWithSingleValue = new ArrayList();"); //$NON-NLS-1$
+                .addBodyLine("criteriaWithSingleValue = new ArrayList();"); //$NON-NLS-1$
         method
-                .addBodyLine("conditionsWithListValue = new ArrayList();"); //$NON-NLS-1$
+                .addBodyLine("criteriaWithListValue = new ArrayList();"); //$NON-NLS-1$
         method
-                .addBodyLine("conditionsWithBetweenValue = new ArrayList();"); //$NON-NLS-1$
+                .addBodyLine("criteriaWithBetweenValue = new ArrayList();"); //$NON-NLS-1$
         answer.addMethod(method);
+
+        Iterator iter = introspectedTable.getColumnDefinitions()
+                .getNonBLOBColumns().iterator();
+        while (iter.hasNext()) {
+            ColumnDefinition cd = (ColumnDefinition) iter.next();
+            if (StringUtility.stringHasValue(cd.getTypeHandler())) {
+                addtypeHandledObjectsAndMethods(cd, method, answer);
+            }
+        }
 
         // now we need to generate the methods that will be used in the SqlMap
         // to generate the dynamic where clause
@@ -756,14 +780,14 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         FullyQualifiedJavaType listOfStrings = FullyQualifiedJavaType
                 .getNewListInstance();
         field.setType(listOfStrings);
-        field.setName("conditionsWithoutValue"); //$NON-NLS-1$
+        field.setName("criteriaWithoutValue"); //$NON-NLS-1$
         answer.addField(field);
 
         method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(field.getType());
         method.setName(JavaBeansUtil.getGetterMethodName(field.getName()));
-        method.addBodyLine("return conditionsWithoutValue;"); //$NON-NLS-1$
+        method.addBodyLine("return criteriaWithoutValue;"); //$NON-NLS-1$
         answer.addMethod(method);
 
         FullyQualifiedJavaType listOfMaps = FullyQualifiedJavaType
@@ -772,66 +796,46 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         field = new Field();
         field.setVisibility(JavaVisibility.PRIVATE);
         field.setType(listOfMaps);
-        field.setName("conditionsWithSingleValue"); //$NON-NLS-1$
+        field.setName("criteriaWithSingleValue"); //$NON-NLS-1$
         answer.addField(field);
 
         method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(field.getType());
         method.setName(JavaBeansUtil.getGetterMethodName(field.getName()));
-        method.addBodyLine("return conditionsWithSingleValue;"); //$NON-NLS-1$
+        method.addBodyLine("return criteriaWithSingleValue;"); //$NON-NLS-1$
         answer.addMethod(method);
 
         field = new Field();
         field.setVisibility(JavaVisibility.PRIVATE);
         field.setType(listOfMaps);
-        field.setName("conditionsWithListValue"); //$NON-NLS-1$
+        field.setName("criteriaWithListValue"); //$NON-NLS-1$
         answer.addField(field);
 
         method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(field.getType());
         method.setName(JavaBeansUtil.getGetterMethodName(field.getName()));
-        method.addBodyLine("return conditionsWithListValue;"); //$NON-NLS-1$
+        method.addBodyLine("return criteriaWithListValue;"); //$NON-NLS-1$
         answer.addMethod(method);
 
         field = new Field();
         field.setVisibility(JavaVisibility.PRIVATE);
         field.setType(listOfMaps);
-        field.setName("conditionsWithBetweenValue"); //$NON-NLS-1$
+        field.setName("criteriaWithBetweenValue"); //$NON-NLS-1$
         answer.addField(field);
 
         method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(field.getType());
         method.setName(JavaBeansUtil.getGetterMethodName(field.getName()));
-        method.addBodyLine("return conditionsWithBetweenValue;"); //$NON-NLS-1$
-        answer.addMethod(method);
-
-        method = new Method();
-        method.setVisibility(JavaVisibility.PUBLIC);
-        method.setReturnType(FullyQualifiedJavaType
-                .getBooleanPrimitiveInstance());
-        method.setName("isValid"); //$NON-NLS-1$
-        method.addBodyLine("return conditionsWithoutValue.size() > 0"); //$NON-NLS-1$
-        sb.setLength(0);
-        OutputUtilities.javaIndent(sb, 2);
-        sb.append("|| conditionsWithSingleValue.size() > 0"); //$NON-NLS-1$
-        method.addBodyLine(sb.toString());
-        sb.setLength(0);
-        OutputUtilities.javaIndent(sb, 2);
-        sb.append("|| conditionsWithListValue.size() > 0"); //$NON-NLS-1$
-        method.addBodyLine(sb.toString());
-        sb.setLength(0);
-        OutputUtilities.javaIndent(sb, 2);
-        sb.append("|| conditionsWithBetweenValue.size() > 0;"); //$NON-NLS-1$
-        method.addBodyLine(sb.toString());
+        method.addBodyLine("return criteriaWithBetweenValue;"); //$NON-NLS-1$
         answer.addMethod(method);
 
         // now add the methods for simplifying the individual field set methods
         method = new Method();
         method.setVisibility(JavaVisibility.PRIVATE);
-        method.setName("addSingleValueCondition"); //$NON-NLS-1$
+        method.setName("addCriterion"); //$NON-NLS-1$
         method.addParameter(new Parameter(FullyQualifiedJavaType
                 .getStringInstance(), "condition")); //$NON-NLS-1$
         method.addParameter(new Parameter(FullyQualifiedJavaType
@@ -846,7 +850,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
                 .addBodyLine("Map map = new HashMap();"); //$NON-NLS-1$
         method.addBodyLine("map.put(\"condition\", condition);"); //$NON-NLS-1$
         method.addBodyLine("map.put(\"value\", value);"); //$NON-NLS-1$
-        method.addBodyLine("conditionsWithSingleValue.add(map);"); //$NON-NLS-1$
+        method.addBodyLine("criteriaWithSingleValue.add(map);"); //$NON-NLS-1$
         answer.addMethod(method);
 
         FullyQualifiedJavaType listOfObjects = FullyQualifiedJavaType
@@ -854,7 +858,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
         method = new Method();
         method.setVisibility(JavaVisibility.PRIVATE);
-        method.setName("addListValueCondition"); //$NON-NLS-1$
+        method.setName("addCriterion"); //$NON-NLS-1$
         method.addParameter(new Parameter(FullyQualifiedJavaType
                 .getStringInstance(), "condition")); //$NON-NLS-1$
         method.addParameter(new Parameter(listOfObjects, "values")); //$NON-NLS-1$
@@ -868,12 +872,12 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
                 .addBodyLine("Map map = new HashMap();"); //$NON-NLS-1$
         method.addBodyLine("map.put(\"condition\", condition);"); //$NON-NLS-1$
         method.addBodyLine("map.put(\"values\", values);"); //$NON-NLS-1$
-        method.addBodyLine("conditionsWithListValue.add(map);"); //$NON-NLS-1$
+        method.addBodyLine("criteriaWithListValue.add(map);"); //$NON-NLS-1$
         answer.addMethod(method);
 
         method = new Method();
         method.setVisibility(JavaVisibility.PRIVATE);
-        method.setName("addBetweenCondition"); //$NON-NLS-1$
+        method.setName("addCriterion"); //$NON-NLS-1$
         method.addParameter(new Parameter(FullyQualifiedJavaType
                 .getStringInstance(), "condition")); //$NON-NLS-1$
         method.addParameter(new Parameter(FullyQualifiedJavaType
@@ -893,7 +897,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
                 .addBodyLine("Map map = new HashMap();"); //$NON-NLS-1$
         method.addBodyLine("map.put(\"condition\", condition);"); //$NON-NLS-1$
         method.addBodyLine("map.put(\"values\", list);"); //$NON-NLS-1$
-        method.addBodyLine("conditionsWithBetweenValue.add(map);"); //$NON-NLS-1$
+        method.addBodyLine("criteriaWithBetweenValue.add(map);"); //$NON-NLS-1$
         answer.addMethod(method);
 
         FullyQualifiedJavaType listOfDates = FullyQualifiedJavaType
@@ -906,7 +910,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
                     .getNewIteratorInstance());
             method = new Method();
             method.setVisibility(JavaVisibility.PRIVATE);
-            method.setName("addSingleDateValueCondition"); //$NON-NLS-1$
+            method.setName("addCriterionForJDBCDate"); //$NON-NLS-1$
             method.addParameter(new Parameter(FullyQualifiedJavaType
                     .getStringInstance(), "condition")); //$NON-NLS-1$
             method.addParameter(new Parameter(FullyQualifiedJavaType
@@ -914,12 +918,12 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
             method.addParameter(new Parameter(FullyQualifiedJavaType
                     .getStringInstance(), "property")); //$NON-NLS-1$
             method
-                    .addBodyLine("addSingleValueCondition(condition, new java.sql.Date(value.getTime()), property);"); //$NON-NLS-1$
+                    .addBodyLine("addCriterion(condition, new java.sql.Date(value.getTime()), property);"); //$NON-NLS-1$
             answer.addMethod(method);
 
             method = new Method();
             method.setVisibility(JavaVisibility.PRIVATE);
-            method.setName("addDateListValueCondition"); //$NON-NLS-1$
+            method.setName("addCriterionForJDBCDate"); //$NON-NLS-1$
             method.addParameter(new Parameter(FullyQualifiedJavaType
                     .getStringInstance(), "condition")); //$NON-NLS-1$
             method.addParameter(new Parameter(listOfDates, "values")); //$NON-NLS-1$
@@ -937,12 +941,12 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
                     .addBodyLine("dateList.add(new java.sql.Date(((Date)iter.next()).getTime()));"); //$NON-NLS-1$
             method.addBodyLine("}"); //$NON-NLS-1$
             method
-                    .addBodyLine("addListValueCondition(condition, dateList, property);"); //$NON-NLS-1$
+                    .addBodyLine("addCriterion(condition, dateList, property);"); //$NON-NLS-1$
             answer.addMethod(method);
 
             method = new Method();
             method.setVisibility(JavaVisibility.PRIVATE);
-            method.setName("addDateBetweenCondition"); //$NON-NLS-1$
+            method.setName("addCriterionForJDBCDate"); //$NON-NLS-1$
             method.addParameter(new Parameter(FullyQualifiedJavaType
                     .getStringInstance(), "condition")); //$NON-NLS-1$
             method.addParameter(new Parameter(FullyQualifiedJavaType
@@ -956,7 +960,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
                     .addBodyLine("throw new RuntimeException(\"Between values for \" + property + \" cannot be null\");"); //$NON-NLS-1$
             method.addBodyLine("}"); //$NON-NLS-1$
             method
-                    .addBodyLine("addBetweenCondition(condition, new java.sql.Date(value1.getTime()), new java.sql.Date(value2.getTime()), property);"); //$NON-NLS-1$
+                    .addBodyLine("addCriterion(condition, new java.sql.Date(value1.getTime()), new java.sql.Date(value2.getTime()), property);"); //$NON-NLS-1$
             answer.addMethod(method);
         }
 
@@ -967,7 +971,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
                     .getNewIteratorInstance());
             method = new Method();
             method.setVisibility(JavaVisibility.PRIVATE);
-            method.setName("addSingleTimeValueCondition"); //$NON-NLS-1$
+            method.setName("addCriterionForJDBCTime"); //$NON-NLS-1$
             method.addParameter(new Parameter(FullyQualifiedJavaType
                     .getStringInstance(), "condition")); //$NON-NLS-1$
             method.addParameter(new Parameter(FullyQualifiedJavaType
@@ -975,12 +979,12 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
             method.addParameter(new Parameter(FullyQualifiedJavaType
                     .getStringInstance(), "property")); //$NON-NLS-1$
             method
-                    .addBodyLine("addSingleValueCondition(condition, new java.sql.Time(value.getTime()), property);"); //$NON-NLS-1$
+                    .addBodyLine("addCriterion(condition, new java.sql.Time(value.getTime()), property);"); //$NON-NLS-1$
             answer.addMethod(method);
 
             method = new Method();
             method.setVisibility(JavaVisibility.PRIVATE);
-            method.setName("addTimeListValueCondition"); //$NON-NLS-1$
+            method.setName("addCriterionForJDBCTime"); //$NON-NLS-1$
             method.addParameter(new Parameter(FullyQualifiedJavaType
                     .getStringInstance(), "condition")); //$NON-NLS-1$
             method.addParameter(new Parameter(listOfDates, "values")); //$NON-NLS-1$
@@ -998,12 +1002,12 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
                     .addBodyLine("dateList.add(new java.sql.Time(((Date)iter.next()).getTime()));"); //$NON-NLS-1$
             method.addBodyLine("}"); //$NON-NLS-1$
             method
-                    .addBodyLine("addListValueCondition(condition, dateList, property);"); //$NON-NLS-1$
+                    .addBodyLine("addCriterion(condition, dateList, property);"); //$NON-NLS-1$
             answer.addMethod(method);
 
             method = new Method();
             method.setVisibility(JavaVisibility.PRIVATE);
-            method.setName("addTimeBetweenCondition"); //$NON-NLS-1$
+            method.setName("addCriterionForJDBCTime"); //$NON-NLS-1$
             method.addParameter(new Parameter(FullyQualifiedJavaType
                     .getStringInstance(), "condition")); //$NON-NLS-1$
             method.addParameter(new Parameter(FullyQualifiedJavaType
@@ -1017,11 +1021,12 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
                     .addBodyLine("throw new RuntimeException(\"Between values for \" + property + \" cannot be null\");"); //$NON-NLS-1$
             method.addBodyLine("}"); //$NON-NLS-1$
             method
-                    .addBodyLine("addBetweenCondition(condition, new java.sql.Time(value1.getTime()), new java.sql.Time(value2.getTime()), property);"); //$NON-NLS-1$
+                    .addBodyLine("addCriterion(condition, new java.sql.Time(value1.getTime()), new java.sql.Time(value2.getTime()), property);"); //$NON-NLS-1$
             answer.addMethod(method);
         }
 
-        Iterator iter = introspectedTable.getColumnDefinitions().getAllColumns().iterator();
+        iter = introspectedTable.getColumnDefinitions().getAllColumns()
+                .iterator();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
 
@@ -1074,21 +1079,27 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         StringBuffer sb = new StringBuffer();
         sb.append(cd.getJavaProperty());
         sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
-        sb.insert(0, "add"); //$NON-NLS-1$
+        sb.insert(0, "and"); //$NON-NLS-1$
         if (inMethod) {
-            sb.append("InCondition"); //$NON-NLS-1$
+            sb.append("In"); //$NON-NLS-1$
         } else {
-            sb.append("NotInCondition"); //$NON-NLS-1$
+            sb.append("NotIn"); //$NON-NLS-1$
         }
         method.setName(sb.toString());
+        method.setReturnType(FullyQualifiedJavaType.getCriteriaInstance());
         sb.setLength(0);
 
         if (cd.isJDBCDateColumn()) {
-            sb.append("addDateListValueCondition(\""); //$NON-NLS-1$
+            sb.append("addCriterionForJDBCDate(\""); //$NON-NLS-1$
         } else if (cd.isJDBCTimeColumn()) {
-            sb.append("addTimeListValueCondition(\""); //$NON-NLS-1$
+            sb.append("addCriterionForJDBCTime(\""); //$NON-NLS-1$
+        } else if (StringUtility.stringHasValue(cd.getTypeHandler())) {
+            sb.append("add"); //$NON-NLS-1$
+            sb.append(cd.getJavaProperty());
+            sb.setCharAt(3, Character.toUpperCase(sb.charAt(3)));
+            sb.append("Criterion(\""); //$NON-NLS-1$
         } else {
-            sb.append("addListValueCondition(\""); //$NON-NLS-1$
+            sb.append("addCriterion(\""); //$NON-NLS-1$
         }
 
         sb.append(cd.getAliasedColumnName());
@@ -1101,7 +1112,196 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         sb.append(cd.getJavaProperty());
         sb.append("\");"); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
+        method.addBodyLine("return this;"); //$NON-NLS-1$
 
         return method;
+    }
+
+    /**
+     * This method adds all the extra methods and fields required 
+     * to support a user defined type handler on some column.
+     * 
+     * @param cd
+     * @param constructor
+     * @param innerClass
+     */
+    private void addtypeHandledObjectsAndMethods(ColumnDefinition cd,
+            Method constructor, InnerClass innerClass) {
+        StringBuffer sb = new StringBuffer();
+
+        // add new private fields and public accessors in the class
+        FullyQualifiedJavaType listOfMaps = FullyQualifiedJavaType
+                .getNewListInstance();
+        
+        sb.setLength(0);
+        sb.append(cd.getJavaProperty());
+        sb.append("CriteriaWithSingleValue"); //$NON-NLS-1$
+
+        Field field = new Field();
+        field.setVisibility(JavaVisibility.PRIVATE);
+        field.setType(listOfMaps);
+        field.setName(sb.toString());
+        innerClass.addField(field);
+
+        Method method = new Method();
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setReturnType(field.getType());
+        method.setName(JavaBeansUtil.getGetterMethodName(field.getName()));
+        sb.insert(0, "return "); //$NON-NLS-1$
+        sb.append(';');
+        method.addBodyLine(sb.toString());
+        innerClass.addMethod(method);
+
+        sb.setLength(0);
+        sb.append(cd.getJavaProperty());
+        sb.append("CriteriaWithListValue"); //$NON-NLS-1$
+
+        field = new Field();
+        field.setVisibility(JavaVisibility.PRIVATE);
+        field.setType(listOfMaps);
+        field.setName(sb.toString());
+        innerClass.addField(field);
+
+        method = new Method();
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setReturnType(field.getType());
+        method.setName(JavaBeansUtil.getGetterMethodName(field.getName()));
+        sb.insert(0, "return "); //$NON-NLS-1$
+        sb.append(';');
+        method.addBodyLine(sb.toString());
+        innerClass.addMethod(method);
+
+        sb.setLength(0);
+        sb.append(cd.getJavaProperty());
+        sb.append("CriteriaWithBetweenValue"); //$NON-NLS-1$
+        
+        field = new Field();
+        field.setVisibility(JavaVisibility.PRIVATE);
+        field.setType(listOfMaps);
+        field.setName(sb.toString());
+        innerClass.addField(field);
+
+        method = new Method();
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setReturnType(field.getType());
+        method.setName(JavaBeansUtil.getGetterMethodName(field.getName()));
+        sb.insert(0, "return "); //$NON-NLS-1$
+        sb.append(';');
+        method.addBodyLine(sb.toString());
+        innerClass.addMethod(method);
+
+        // add constructor initialization
+        sb.setLength(0);
+        sb.append(cd.getJavaProperty());
+        sb
+                .append("CriteriaWithSingleValue = new ArrayList();"); //$NON-NLS-1$;
+        constructor.addBodyLine(sb.toString());
+
+        sb.setLength(0);
+        sb.append(cd.getJavaProperty());
+        sb
+                .append("CriteriaWithListValue = new ArrayList();"); //$NON-NLS-1$
+        constructor.addBodyLine(sb.toString());
+
+        sb.setLength(0);
+        sb.append(cd.getJavaProperty());
+        sb
+                .append("CriteriaWithBetweenValue = new ArrayList();"); //$NON-NLS-1$
+        constructor.addBodyLine(sb.toString());
+
+        // now add the methods for simplifying the individual field set methods
+        method = new Method();
+        method.setVisibility(JavaVisibility.PRIVATE);
+        sb.setLength(0);
+        sb.append("add"); //$NON-NLS-1$
+        sb.append(cd.getJavaProperty());
+        sb.setCharAt(3, Character.toUpperCase(sb.charAt(3)));
+        sb.append("Criterion"); //$NON-NLS-1$
+        
+        method.setName(sb.toString());
+        method.addParameter(new Parameter(FullyQualifiedJavaType
+                .getStringInstance(), "condition")); //$NON-NLS-1$
+        method.addParameter(new Parameter(cd.getResolvedJavaType().getFullyQualifiedJavaType(), "value")); //$NON-NLS-1$
+        method.addParameter(new Parameter(FullyQualifiedJavaType
+                .getStringInstance(), "property")); //$NON-NLS-1$
+        method.addBodyLine("if (value == null) {"); //$NON-NLS-1$
+        method
+                .addBodyLine("throw new RuntimeException(\"Value for \" + property + \" cannot be null\");"); //$NON-NLS-1$
+        method.addBodyLine("}"); //$NON-NLS-1$
+        method
+                .addBodyLine("Map map = new HashMap();"); //$NON-NLS-1$
+        method.addBodyLine("map.put(\"condition\", condition);"); //$NON-NLS-1$
+        method.addBodyLine("map.put(\"value\", value);"); //$NON-NLS-1$
+        
+        sb.setLength(0);
+        sb.append(cd.getJavaProperty());
+        sb.append("CriteriaWithSingleValue.add(map);"); //$NON-NLS-1$
+        method.addBodyLine(sb.toString());
+        innerClass.addMethod(method);
+
+        FullyQualifiedJavaType listOfObjects = FullyQualifiedJavaType
+                .getNewListInstance();
+
+        sb.setLength(0);
+        sb.append("add"); //$NON-NLS-1$
+        sb.append(cd.getJavaProperty());
+        sb.setCharAt(3, Character.toUpperCase(sb.charAt(3)));
+        sb.append("Criterion"); //$NON-NLS-1$
+        
+        method = new Method();
+        method.setVisibility(JavaVisibility.PRIVATE);
+        method.setName(sb.toString());
+        method.addParameter(new Parameter(FullyQualifiedJavaType
+                .getStringInstance(), "condition")); //$NON-NLS-1$
+        method.addParameter(new Parameter(listOfObjects, "values")); //$NON-NLS-1$
+        method.addParameter(new Parameter(FullyQualifiedJavaType
+                .getStringInstance(), "property")); //$NON-NLS-1$
+        method.addBodyLine("if (values == null || values.size() == 0) {"); //$NON-NLS-1$
+        method
+                .addBodyLine("throw new RuntimeException(\"Value list for \" + property + \" cannot be null or empty\");"); //$NON-NLS-1$
+        method.addBodyLine("}"); //$NON-NLS-1$
+        method
+                .addBodyLine("Map map = new HashMap();"); //$NON-NLS-1$
+        method.addBodyLine("map.put(\"condition\", condition);"); //$NON-NLS-1$
+        method.addBodyLine("map.put(\"values\", values);"); //$NON-NLS-1$
+        
+        sb.setLength(0);
+        sb.append(cd.getJavaProperty());
+        sb.append("CriteriaWithListValue.add(map);"); //$NON-NLS-1$
+        method.addBodyLine(sb.toString());
+        innerClass.addMethod(method);
+
+        sb.setLength(0);
+        sb.append("add"); //$NON-NLS-1$
+        sb.append(cd.getJavaProperty());
+        sb.setCharAt(3, Character.toUpperCase(sb.charAt(3)));
+        sb.append("Criterion"); //$NON-NLS-1$
+
+        method = new Method();
+        method.setVisibility(JavaVisibility.PRIVATE);
+        method.setName(sb.toString());
+        method.addParameter(new Parameter(FullyQualifiedJavaType
+                .getStringInstance(), "condition")); //$NON-NLS-1$
+        method.addParameter(new Parameter(cd.getResolvedJavaType().getFullyQualifiedJavaType(), "value1")); //$NON-NLS-1$
+        method.addParameter(new Parameter(cd.getResolvedJavaType().getFullyQualifiedJavaType(), "value2")); //$NON-NLS-1$
+        method.addParameter(new Parameter(FullyQualifiedJavaType
+                .getStringInstance(), "property")); //$NON-NLS-1$
+        method.addBodyLine("if (value1 == null || value2 == null) {"); //$NON-NLS-1$
+        method
+                .addBodyLine("throw new RuntimeException(\"Between values for \" + property + \" cannot be null\");"); //$NON-NLS-1$
+        method.addBodyLine("}"); //$NON-NLS-1$
+        method.addBodyLine("List list = new ArrayList();"); //$NON-NLS-1$
+        method.addBodyLine("list.add(value1);"); //$NON-NLS-1$
+        method.addBodyLine("list.add(value2);"); //$NON-NLS-1$
+        method
+                .addBodyLine("Map map = new HashMap();"); //$NON-NLS-1$
+        method.addBodyLine("map.put(\"condition\", condition);"); //$NON-NLS-1$
+        method.addBodyLine("map.put(\"values\", list);"); //$NON-NLS-1$
+        
+        sb.setLength(0);
+        sb.append(cd.getJavaProperty());
+        sb.append("CriteriaWithBetweenValue.add(map);"); //$NON-NLS-1$
+        method.addBodyLine(sb.toString());
+        innerClass.addMethod(method);
     }
 }

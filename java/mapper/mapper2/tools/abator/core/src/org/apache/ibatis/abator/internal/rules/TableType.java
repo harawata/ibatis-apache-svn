@@ -97,7 +97,7 @@ public class TableType {
 				&& columnDefinitions.hasNonBLOBColumns()) {
 			tableType = PK_FIELDS_BLOBS;
 		} else {
-		    throw new RuntimeException(Messages.getString("TableType.0")); //$NON-NLS-1$
+		    throw new RuntimeException(Messages.getString("RuntimeError.10")); //$NON-NLS-1$
 		}
 		
 		return tableType;

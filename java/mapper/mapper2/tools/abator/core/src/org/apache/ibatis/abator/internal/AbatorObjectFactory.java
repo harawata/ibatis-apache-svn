@@ -51,7 +51,7 @@ public class AbatorObjectFactory {
 			answer = clazz.newInstance();
 		} catch (Exception e) {
 			throw new RuntimeException(
-			        Messages.getString("AbatorObjectFactory.0", type), e); //$NON-NLS-1$
+			        Messages.getString("RuntimeError.6", type), e); //$NON-NLS-1$
 		}
 
 		return answer;

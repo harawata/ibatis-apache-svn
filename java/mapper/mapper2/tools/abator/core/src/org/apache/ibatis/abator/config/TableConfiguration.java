@@ -59,8 +59,6 @@ public class TableConfiguration extends PropertyHolder {
 		
 		columnOverrides = new HashMap();
 		ignoredColumns = new HashMap();
-		table = new FullyQualifiedTable();
-		generatedKey = new GeneratedKey();
 
 		insertStatementEnabled = true;
 		selectByPrimaryKeyStatementEnabled = true;
@@ -212,7 +210,7 @@ public class TableConfiguration extends PropertyHolder {
 	    while (iter.hasNext()) {
 	        ColumnOverride columnOverride = (ColumnOverride) iter.next();
 	        if (columnDefinitions.getColumn(columnOverride.getColumnName().toUpperCase()) == null) {
-	            warnings.add(Messages.getString("TableConfiguration.0", //$NON-NLS-1$
+	            warnings.add(Messages.getString("Warning.3", //$NON-NLS-1$
 	                    columnOverride.getColumnName(), table.toString()));
 	        }
 	    }
@@ -224,18 +222,18 @@ public class TableConfiguration extends PropertyHolder {
 	        Boolean value = (Boolean) entry.getValue();
 	        
 	        if (!value.booleanValue()) {
-	            warnings.add(Messages.getString("TableConfiguration.1", //$NON-NLS-1$
+	            warnings.add(Messages.getString("Warning.4", //$NON-NLS-1$
 	                    entry.getKey().toString(), table.toString()));
 	        }
 	    }
 	    
-	    if (generatedKey.isConfigured()
+	    if (generatedKey != null
 	            && columnDefinitions.getColumn(generatedKey.getColumn().toUpperCase()) == null) {
             if (generatedKey.isIdentity()) {
-	            warnings.add(Messages.getString("TableConfiguration.2", //$NON-NLS-1$
+	            warnings.add(Messages.getString("Warning.5", //$NON-NLS-1$
 	                    generatedKey.getColumn(), table.toString()));
             } else {
-	            warnings.add(Messages.getString("TableConfiguration.3", //$NON-NLS-1$
+	            warnings.add(Messages.getString("Warning.6", //$NON-NLS-1$
 	                    generatedKey.getColumn(), table.toString()));
             }
 	    }
@@ -249,4 +247,8 @@ public class TableConfiguration extends PropertyHolder {
 	    	|| deleteByExampleStatementEnabled
 	    	|| deleteByPrimaryKeyStatementEnabled;
 	}
+
+    public void setGeneratedKey(GeneratedKey generatedKey) {
+        this.generatedKey = generatedKey;
+    }
 }

@@ -291,6 +291,9 @@ describe how user configuration options can alter these rules.</p>
 <ul>
   <li>If the selectByExample and deleteByExample methods are disallowed, then 
       Abator will not generate the Example class</li>
+  <li>The example class will subclass the Primary Key or the Base Record only when
+      using the "Legacy" generator set.  Otherwise, the example class will not subclass
+      any other class.</li>
 </ul>
 
 </body>

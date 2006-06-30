@@ -49,7 +49,7 @@ public class AbatorRunner {
         
         File configurationFile = new File(configfile);
         if (!configurationFile.exists()) {
-            writeLine(Messages.getString("AbatorAntTask.1", configfile)); //$NON-NLS-1$
+            writeLine(Messages.getString("RuntimeError.1", configfile)); //$NON-NLS-1$
             return;
         }
 
@@ -65,7 +65,7 @@ public class AbatorRunner {
             abator.generate(null);
             
         } catch (XMLParserException e) {
-        	writeLine(Messages.getString("AbatorRunner.0")); //$NON-NLS-1$
+        	writeLine(Messages.getString("Progress.3")); //$NON-NLS-1$
         	writeLine();
             List errors = e.getErrors();
             Iterator iter = errors.iterator();
@@ -94,20 +94,20 @@ public class AbatorRunner {
         }
         
         if (warnings.size() == 0) {
-        	writeLine(Messages.getString("AbatorRunner.1")); //$NON-NLS-1$
+        	writeLine(Messages.getString("Progress.4")); //$NON-NLS-1$
         } else {
         	writeLine();
-        	writeLine(Messages.getString("AbatorRunner.2")); //$NON-NLS-1$
+        	writeLine(Messages.getString("Progress.5")); //$NON-NLS-1$
         }
 	}
 	
 	private static void usage() {
-		writeLine(Messages.getString("AbatorRunner.usage.0")); //$NON-NLS-1$
-		writeLine(Messages.getString("AbatorRunner.usage.1")); //$NON-NLS-1$
-		writeLine();
-		writeLine(Messages.getString("AbatorRunner.usage.2")); //$NON-NLS-1$
-		writeLine(Messages.getString("AbatorRunner.usage.3")); //$NON-NLS-1$
-		writeLine(Messages.getString("AbatorRunner.usage.4")); //$NON-NLS-1$
+		writeLine(Messages.getString("Usage.0")); //$NON-NLS-1$
+		writeLine(Messages.getString("Usage.1")); //$NON-NLS-1$
+		writeLine(Messages.getString("Usage.2")); //$NON-NLS-1$
+		writeLine(Messages.getString("Usage.3")); //$NON-NLS-1$
+		writeLine(Messages.getString("Usage.4")); //$NON-NLS-1$
+        writeLine(Messages.getString("Usage.5")); //$NON-NLS-1$
 	}
 	
 	private static void writeLine(String message) {

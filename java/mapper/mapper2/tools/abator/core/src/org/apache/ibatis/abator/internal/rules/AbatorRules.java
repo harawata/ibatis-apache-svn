@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.abator.internal.rules;
 
-import org.apache.ibatis.abator.internal.db.IntrospectedTable;
+import org.apache.ibatis.abator.api.IntrospectedTable;
 
 /**
  * This class centralizes all the rules related to code generation - including
@@ -171,7 +171,8 @@ public class AbatorRules {
      * Implements the rule for generating an example class extending the primary
      * key. If there is a primary key, and there are no non-Primary Key non-Blob
      * fields, then generate the class. Also, the class should only be generated
-     * if the selectByExample or deleteByExample methods are allowed.
+     * if the selectByExample or deleteByExample methods are allowed. This
+     * method only applies to the "Legacy" generator set.
      * 
      * @param introspectedTable
      *            the introspected table
@@ -192,10 +193,7 @@ public class AbatorRules {
         }
 
         if (rc) {
-            rc = introspectedTable.getTableConfiguration()
-                    .isSelectByExampleStatementEnabled()
-                    || introspectedTable.getTableConfiguration()
-                            .isDeleteByExampleStatementEnabled();
+            rc = generateExample(introspectedTable);
         }
 
         return rc;
@@ -205,7 +203,8 @@ public class AbatorRules {
      * Implements the rule for generating an example class extending the base
      * record. If there are non non-Primary Key non-Blob fields, then generate
      * the class. Also, the class should only be generated if the
-     * selectByExample or deleteByExample methods are allowed.
+     * selectByExample or deleteByExample methods are allowed. This method only
+     * applies to the "Legacy" generator set.
      * 
      * @param introspectedTable
      *            the introspected table
@@ -230,11 +229,25 @@ public class AbatorRules {
         }
 
         if (rc) {
-            rc = introspectedTable.getTableConfiguration()
-                    .isSelectByExampleStatementEnabled()
-                    || introspectedTable.getTableConfiguration()
-                            .isDeleteByExampleStatementEnabled();
+            rc = generateExample(introspectedTable);
         }
+
+        return rc;
+    }
+
+    /**
+     * Implements the rule for generating an example class with no super class.
+     * The class should only be generated if the
+     * selectByExample or deleteByExample methods are allowed. This method only
+     * applies to the "Java2" and "Java5" generator sets.
+     * 
+     * @param introspectedTable
+     *            the introspected table
+     * @return true if the example class should be generated
+     */
+    public static boolean generateExample(IntrospectedTable introspectedTable) {
+        boolean rc = introspectedTable.isSelectByExampleStatementEnabled()
+                || introspectedTable.isDeleteByExampleStatementEnabled();
 
         return rc;
     }
@@ -252,10 +265,8 @@ public class AbatorRules {
      */
     public static boolean generateResultMapWithoutBLOBs(
             IntrospectedTable introspectedTable) {
-        return introspectedTable.getTableConfiguration()
-                .isSelectByExampleStatementEnabled()
-                || introspectedTable.getTableConfiguration()
-                        .isSelectByPrimaryKeyStatementEnabled();
+        return introspectedTable.isSelectByExampleStatementEnabled()
+                || introspectedTable.isSelectByPrimaryKeyStatementEnabled();
     }
 
     /**
@@ -284,10 +295,8 @@ public class AbatorRules {
         }
 
         if (rc) {
-            rc = introspectedTable.getTableConfiguration()
-                    .isSelectByExampleStatementEnabled()
-                    || introspectedTable.getTableConfiguration()
-                            .isSelectByPrimaryKeyStatementEnabled();
+            rc = introspectedTable.isSelectByExampleStatementEnabled()
+                    || introspectedTable.isSelectByPrimaryKeyStatementEnabled();
         }
 
         return rc;
@@ -304,10 +313,8 @@ public class AbatorRules {
      */
     public static boolean generateSQLExampleWhereClause(
             IntrospectedTable introspectedTable) {
-        return introspectedTable.getTableConfiguration()
-                .isSelectByExampleStatementEnabled()
-                || introspectedTable.getTableConfiguration()
-                        .isDeleteByExampleStatementEnabled();
+        return introspectedTable.isSelectByExampleStatementEnabled()
+                || introspectedTable.isDeleteByExampleStatementEnabled();
     }
 
     /**
@@ -321,8 +328,7 @@ public class AbatorRules {
      */
     public static boolean generateSelectByExampleWithoutBLOBs(
             IntrospectedTable introspectedTable) {
-        return introspectedTable.getTableConfiguration()
-                .isSelectByExampleStatementEnabled();
+        return introspectedTable.isSelectByExampleStatementEnabled();
     }
 
     /**
@@ -352,8 +358,7 @@ public class AbatorRules {
         }
 
         if (rc) {
-            rc = introspectedTable.getTableConfiguration()
-                    .isSelectByExampleStatementEnabled();
+            rc = introspectedTable.isSelectByExampleStatementEnabled();
         }
 
         return rc;
@@ -386,8 +391,7 @@ public class AbatorRules {
         }
 
         if (rc) {
-            rc = introspectedTable.getTableConfiguration()
-                    .isSelectByPrimaryKeyStatementEnabled();
+            rc = introspectedTable.isSelectByPrimaryKeyStatementEnabled();
         }
 
         return rc;
@@ -403,8 +407,7 @@ public class AbatorRules {
      * @return true if the element and method should be generated
      */
     public static boolean generateInsert(IntrospectedTable introspectedTable) {
-        return introspectedTable.getTableConfiguration()
-                .isInsertStatementEnabled();
+        return introspectedTable.isInsertStatementEnabled();
     }
 
     /**
@@ -432,8 +435,7 @@ public class AbatorRules {
         }
 
         if (rc) {
-            rc = introspectedTable.getTableConfiguration()
-                    .isUpdateByPrimaryKeyStatementEnabled();
+            rc = introspectedTable.isUpdateByPrimaryKeyStatementEnabled();
         }
 
         return rc;
@@ -464,8 +466,7 @@ public class AbatorRules {
         }
 
         if (rc) {
-            rc = introspectedTable.getTableConfiguration()
-                    .isUpdateByPrimaryKeyStatementEnabled();
+            rc = introspectedTable.isUpdateByPrimaryKeyStatementEnabled();
         }
 
         return rc;
@@ -500,8 +501,7 @@ public class AbatorRules {
         }
 
         if (rc) {
-            rc = introspectedTable.getTableConfiguration()
-                    .isDeleteByPrimaryKeyStatementEnabled();
+            rc = introspectedTable.isDeleteByPrimaryKeyStatementEnabled();
         }
 
         return rc;
@@ -518,7 +518,6 @@ public class AbatorRules {
      */
     public static boolean generateDeleteByExample(
             IntrospectedTable introspectedTable) {
-        return introspectedTable.getTableConfiguration()
-                .isDeleteByExampleStatementEnabled();
+        return introspectedTable.isDeleteByExampleStatementEnabled();
     }
 }

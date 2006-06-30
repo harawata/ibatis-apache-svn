@@ -42,6 +42,8 @@ public class ColumnDefinition {
     private ResolvedJavaType resolvedJavaType;
     
     private String tableAlias;
+    
+    private String typeHandler;
 
     /**
      * The aliased column name for a select statement.  If there
@@ -236,10 +238,41 @@ public class ColumnDefinition {
     }
     
     public boolean isJDBCDateColumn() {
-        return resolvedJavaType.isJDBCDate();
+        return resolvedJavaType.isJDBCDate()
+            && !StringUtility.stringHasValue(typeHandler);
     }
     
     public boolean isJDBCTimeColumn() {
-        return resolvedJavaType.isJDBCTime();
+        return resolvedJavaType.isJDBCTime()
+            && !StringUtility.stringHasValue(typeHandler);
+    }
+    
+    public String getIbatisFormattedParameterClause() {
+        StringBuffer sb = new StringBuffer();
+        
+        sb.append('#');
+        sb.append(getJavaProperty());
+        
+        if (StringUtility.stringHasValue(typeHandler)) {
+            sb.append(",jdbcType="); //$NON-NLS-1$
+            sb.append(getResolvedJavaType().getJdbcTypeName());
+            sb.append(",handler="); //$NON-NLS-1$
+            sb.append(typeHandler);
+        } else {
+            sb.append(':');
+            sb.append(getResolvedJavaType().getJdbcTypeName());
+        }
+        
+        sb.append('#');
+        
+        return sb.toString();
+    }
+
+    public String getTypeHandler() {
+        return typeHandler;
+    }
+
+    public void setTypeHandler(String typeHandler) {
+        this.typeHandler = typeHandler;
     }
 }

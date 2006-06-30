@@ -96,7 +96,7 @@ public class TopLevelEnumeration extends InnerEnum implements CompilationUnit {
      * @see org.apache.ibatis.abator.api.dom.java.CompilationUnit#getSuperClass()
      */
     public FullyQualifiedJavaType getSuperClass() {
-        throw new UnsupportedOperationException(Messages.getString("TopLevelEnumeration.0")); //$NON-NLS-1$
+        throw new UnsupportedOperationException(Messages.getString("RuntimeError.11")); //$NON-NLS-1$
     }
 
     /* (non-Javadoc)

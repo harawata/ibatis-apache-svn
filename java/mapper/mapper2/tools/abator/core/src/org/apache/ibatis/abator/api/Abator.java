@@ -83,7 +83,7 @@ public class Abator {
             ShellCallback shellCallback, List warnings) {
         super();
         if (abatorConfiguration == null) {
-            throw new IllegalArgumentException(Messages.getString("Abator.0")); //$NON-NLS-1$
+            throw new IllegalArgumentException(Messages.getString("RuntimeError.2")); //$NON-NLS-1$
         } else {
             this.abatorConfiguration = abatorConfiguration;
         }
@@ -139,7 +139,7 @@ public class Abator {
 
         callback.setNumberOfSubTasks(totalSteps);
 
-        callback.startSubTask(Messages.getString("Abator.1")); //$NON-NLS-1$
+        callback.startSubTask(Messages.getString("Progress.2")); //$NON-NLS-1$
         abatorConfiguration.validate();
 
         iter = abatorConfiguration.getAbatorContexts().iterator();
@@ -192,7 +192,7 @@ public class Abator {
                     } else {
                         source = gjf.getFormattedContent();
                         targetFile = getUniqueFileName(directory, gjf);
-                        warnings.add(Messages.getString("Abator.2", targetFile.getAbsolutePath())); //$NON-NLS-1$
+                        warnings.add(Messages.getString("Warning.2", targetFile.getAbsolutePath())); //$NON-NLS-1$
                     }
                 } else {
                     source = gjf.getFormattedContent();
@@ -241,7 +241,7 @@ public class Abator {
         }
         
         if (answer == null) {
-            throw new RuntimeException(Messages.getString("Abator.3", directory.getAbsolutePath())); //$NON-NLS-1$
+            throw new RuntimeException(Messages.getString("RuntimeError.3", directory.getAbsolutePath())); //$NON-NLS-1$
         }
         
         return answer;

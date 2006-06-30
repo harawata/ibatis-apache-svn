@@ -52,7 +52,7 @@ public class ParserEntityResolver implements EntityResolver {
 
 			return ins;
 		} else {
-			throw new SAXException(Messages.getString("ParserEntityResolver.0")); //$NON-NLS-1$
+			throw new SAXException(Messages.getString("RuntimeError.5")); //$NON-NLS-1$
 		}
 	}
 }

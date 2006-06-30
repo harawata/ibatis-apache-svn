@@ -110,6 +110,67 @@ specified with the <a href="property.html">&lt;property&gt;</a> child element:</
         <p><i>The default value is false.</i></p></td>
   </tr>
   <tr>
+    <td valign="top">exampleMethodVisibility</td>
+    <td>This property is used to set the visibility of the different "ByExample"
+        methods - selectByExample, deleteByExample, etc.  If not specified, the
+        methods will be public and will be declared in the DAO interface.
+        This property allows you to hide these methods if you only want to use them
+        to implement other specialized DAO methods.
+        <table cellpadding="5">
+          <tr>
+            <th nowrap="nowrap" valign="top">public</th>
+            <td><i>This is the default value</i><br/>
+              The generated methods in the implementation class will be public,
+              and the methods will be declared in the DAO interface.</td>
+          </tr>
+          <tr>
+            <th nowrap="nowrap" valign="top">private</th>
+            <td>The generated methods in the implementation class will be private,
+                and the methods will not be declared in the DAO interface
+            </td>
+          </tr>
+          <tr>
+            <th nowrap="nowrap" valign="top">protected</th>
+            <td>The generated methods in the implementation class will be protected,
+                and the methods will not be declared in the DAO interface
+            </td>
+          </tr>
+          <tr>
+            <th nowrap="nowrap" valign="top">default</th>
+            <td>The generated methods in the implementation class will have default
+                (package) visibility,
+                and the methods will not be declared in the DAO interface
+            </td>
+          </tr>
+        </table>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">methodNameCalculator</td>
+    <td>This property is used to select a method name calculator.  A method name
+        calculator can be used to provide different names for the DAO methods.
+        You can select one of the predefined values, or you can specify the
+        fully qualified name of a class that implements the
+        <code>org.apache.ibatis.abator.api.DAOMethodNameCalculator</code> interface
+        if neither of the supplied options are appropriate in your environment.
+        <table cellpadding="5">
+          <tr>
+            <th nowrap="nowrap" valign="top">default</th>
+            <td><i>This is the default value</i><br/>
+              The generated methods names will be very simple ("insert",
+              "updateByPrimaryKey", etc.)  This is the same behavior as earlier versions
+              of Abator.</td>
+          </tr>
+          <tr>
+            <th nowrap="nowrap" valign="top">extended</th>
+            <td>The generated method names will include the name of the domain object
+              associated with the method ("insertWidget", "updateWidgetByPrimaryKey", etc.)
+            </td>
+          </tr>
+        </table>
+    </td>
+  </tr>
+  <tr>
     <td valign="top">rootInterface</td>
     <td>This property can be used to specify a super interface for all generated
       DAO interface objects.

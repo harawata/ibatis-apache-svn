@@ -38,32 +38,31 @@ public class FullyQualifiedTable {
 	/**
 	 *  
 	 */
-	public FullyQualifiedTable() {
+	public FullyQualifiedTable(String catalog, String schema, String tableName,
+            String domainObjectName, String alias) {
 		super();
+        this.catalog = catalog;
+        this.schema = schema;
+        this.tableName = tableName;
+        this.domainObjectName = domainObjectName;
+        
+        if (alias == null) {
+            this.alias = null;
+        } else {
+            this.alias = alias.trim();
+        }
 	}
 
 	public String getCatalog() {
 		return catalog;
 	}
 
-	public void setCatalog(String catalog) {
-		this.catalog = catalog;
-	}
-
 	public String getSchema() {
 		return schema;
 	}
 
-	public void setSchema(String schema) {
-		this.schema = schema;
-	}
-
 	public String getTableName() {
 		return tableName;
-	}
-
-	public void setTableName(String tableName) {
-		this.tableName = tableName;
 	}
 
 	public String getFullyQualifiedTableName() {
@@ -145,10 +144,6 @@ public class FullyQualifiedTable {
 		}
 	}
 
-	public void setDomainObjectName(String domainObjectName) {
-		this.domainObjectName = domainObjectName;
-	}
-	
     public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -180,13 +175,5 @@ public class FullyQualifiedTable {
 
     public String getAlias() {
         return alias;
-    }
-
-    public void setAlias(String alias) {
-        if (alias == null) {
-            this.alias = null;
-        } else {
-            this.alias = alias.trim();
-        }
     }
 }

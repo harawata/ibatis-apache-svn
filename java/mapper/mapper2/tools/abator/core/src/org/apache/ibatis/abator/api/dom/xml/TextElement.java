@@ -62,15 +62,17 @@ public class TextElement extends Element {
         StringBuffer sb = new StringBuffer();
         OutputUtilities.xmlIndent(sb, indentLevel);
         sb.append(s);
-        if (sb.length() <= maxLineLength) {
+        if (sb.length() <= maxLineLength || s.indexOf(' ') == -1) {
+            // line is short, or has no spaces - return as is
             return sb.toString();
         }
         
         ArrayList lines = new ArrayList();
         StringTokenizer st = new StringTokenizer(s, " "); //$NON-NLS-1$
-
+        
         sb.setLength(0);
         OutputUtilities.xmlIndent(sb, indentLevel);
+        sb.append(st.nextToken());
         while (st.hasMoreTokens()) {
             String token = st.nextToken();
 
@@ -78,10 +80,11 @@ public class TextElement extends Element {
                 lines.add(sb.toString());
                 sb.setLength(0);
                 OutputUtilities.xmlIndent(sb, indentLevel + 1);
+                sb.append(token);
+            } else {
+                sb.append(' ');
+                sb.append(token);
             }
-
-            sb.append(token);
-            sb.append(' ');
         }
 
         if (sb.toString().trim().length() > 0) {

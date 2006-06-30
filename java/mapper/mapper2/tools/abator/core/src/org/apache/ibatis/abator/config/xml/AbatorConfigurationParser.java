@@ -31,6 +31,8 @@ import org.apache.ibatis.abator.config.AbatorConfiguration;
 import org.apache.ibatis.abator.config.AbatorContext;
 import org.apache.ibatis.abator.config.ColumnOverride;
 import org.apache.ibatis.abator.config.DAOGeneratorConfiguration;
+import org.apache.ibatis.abator.config.FullyQualifiedTable;
+import org.apache.ibatis.abator.config.GeneratedKey;
 import org.apache.ibatis.abator.config.JDBCConnectionConfiguration;
 import org.apache.ibatis.abator.config.JavaModelGeneratorConfiguration;
 import org.apache.ibatis.abator.config.JavaTypeResolverConfiguration;
@@ -38,8 +40,6 @@ import org.apache.ibatis.abator.config.PropertyHolder;
 import org.apache.ibatis.abator.config.SqlMapGeneratorConfiguration;
 import org.apache.ibatis.abator.config.TableConfiguration;
 import org.apache.ibatis.abator.exception.XMLParserException;
-import org.apache.ibatis.abator.internal.db.DatabaseDialects;
-import org.apache.ibatis.abator.internal.util.messages.Messages;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -52,45 +52,45 @@ import org.xml.sax.SAXParseException;
  * @author Jeff Butler
  */
 public class AbatorConfigurationParser {
-	private List warnings;
+    private List warnings;
 
-	private List parseErrors;
+    private List parseErrors;
 
-	/**
-	 *  
-	 */
-	public AbatorConfigurationParser(List warnings) {
-		super();
-		this.warnings = warnings;
-		parseErrors = new ArrayList();
-	}
+    /**
+     * 
+     */
+    public AbatorConfigurationParser(List warnings) {
+        super();
+        this.warnings = warnings;
+        parseErrors = new ArrayList();
+    }
 
-	public AbatorConfiguration parseAbatorConfiguration(
-			File inputFile) throws IOException, XMLParserException {
+    public AbatorConfiguration parseAbatorConfiguration(File inputFile)
+            throws IOException, XMLParserException {
 
         FileReader fr = new FileReader(inputFile);
-        
-        return parseAbatorConfiguration(fr);
-	}
 
-    public AbatorConfiguration parseAbatorConfiguration(
-            Reader reader) throws IOException, XMLParserException {
+        return parseAbatorConfiguration(fr);
+    }
+
+    public AbatorConfiguration parseAbatorConfiguration(Reader reader)
+            throws IOException, XMLParserException {
 
         InputSource is = new InputSource(reader);
-        
+
         return parseAbatorConfiguration(is);
     }
 
-    public AbatorConfiguration parseAbatorConfiguration(
-            InputStream inputStream) throws IOException, XMLParserException {
+    public AbatorConfiguration parseAbatorConfiguration(InputStream inputStream)
+            throws IOException, XMLParserException {
 
         InputSource is = new InputSource(inputStream);
-        
+
         return parseAbatorConfiguration(is);
     }
 
-    private AbatorConfiguration parseAbatorConfiguration(
-            InputSource inputSource) throws IOException, XMLParserException {
+    private AbatorConfiguration parseAbatorConfiguration(InputSource inputSource)
+            throws IOException, XMLParserException {
         parseErrors.clear();
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setValidating(true);
@@ -142,31 +142,31 @@ public class AbatorConfigurationParser {
             throw new XMLParserException(parseErrors);
         }
     }
-    
-	private AbatorConfiguration parseAbatorConfiguration(Node node) {
 
-		AbatorConfiguration abatorConfiguration = new AbatorConfiguration();
+    private AbatorConfiguration parseAbatorConfiguration(Node node) {
 
-		NodeList nodeList = node.getChildNodes();
-		for (int i = 0; i < nodeList.getLength(); i++) {
-			Node childNode = nodeList.item(i);
+        AbatorConfiguration abatorConfiguration = new AbatorConfiguration();
 
-			if (childNode.getNodeType() != 1) {
-				continue;
-			}
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
 
-			if ("abatorContext".equals(childNode.getNodeName())) { //$NON-NLS-1$
-				parseAbatorContext(abatorConfiguration, childNode);
-			}
-		}
+            if (childNode.getNodeType() != 1) {
+                continue;
+            }
 
-		return abatorConfiguration;
-	}
+            if ("abatorContext".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseAbatorContext(abatorConfiguration, childNode);
+            }
+        }
 
-	private void parseAbatorContext(AbatorConfiguration abatorConfiguration, Node node) {
-	    
+        return abatorConfiguration;
+    }
 
-		NamedNodeMap nnm = node.getAttributes();
+    private void parseAbatorContext(AbatorConfiguration abatorConfiguration,
+            Node node) {
+
+        NamedNodeMap nnm = node.getAttributes();
         Node attribute = nnm.getNamedItem("generatorSet"); //$NON-NLS-1$
         AbatorContext abatorContext;
         if (attribute == null) {
@@ -174,410 +174,363 @@ public class AbatorConfigurationParser {
         } else {
             abatorContext = new AbatorContext(attribute.getNodeValue());
         }
-        
+
         abatorConfiguration.addAbatorContext(abatorContext);
-        
-		attribute = nnm.getNamedItem("id"); //$NON-NLS-1$
-		if (attribute != null) {
-		    abatorContext.setId(attribute.getNodeValue());
-		}
-		
-		NodeList nodeList = node.getChildNodes();
-		for (int i = 0; i < nodeList.getLength(); i++) {
-			Node childNode = nodeList.item(i);
 
-			if (childNode.getNodeType() != 1) {
-				continue;
-			}
-
-            if ("jdbcConnection".equals(childNode.getNodeName())) { //$NON-NLS-1$
-				parseJdbcConnection(abatorContext, childNode);
-			} else if ("javaModelGenerator".equals(childNode.getNodeName())) { //$NON-NLS-1$
-				parseJavaModelGenerator(abatorContext, childNode);
-			} else if ("javaTypeResolver".equals(childNode.getNodeName())) { //$NON-NLS-1$
-				parseJavaTypeResolver(abatorContext, childNode);
-			} else if ("sqlMapGenerator".equals(childNode.getNodeName())) { //$NON-NLS-1$
-				parseSqlMapGenerator(abatorContext, childNode);
-			} else if ("daoGenerator".equals(childNode.getNodeName())) { //$NON-NLS-1$
-				parseDaoGenerator(abatorContext, childNode);
-			} else if ("table".equals(childNode.getNodeName())) { //$NON-NLS-1$
-				parseTable(abatorContext, childNode);
-			}
-		}
-	}
-	
-	private void parseSqlMapGenerator(AbatorContext abatorContext, Node node) {
-		SqlMapGeneratorConfiguration sqlMapGeneratorConfiguration =
-            new SqlMapGeneratorConfiguration(); 
-            
-        abatorContext.setSqlMapGeneratorConfiguration(sqlMapGeneratorConfiguration);
-
-		NamedNodeMap nnm = node.getAttributes();
-
-		Node attribute = nnm.getNamedItem("type"); //$NON-NLS-1$
-		if (attribute != null) {
-		    sqlMapGeneratorConfiguration.setConfigurationType(attribute.getNodeValue());
-		}
-
-		attribute = nnm.getNamedItem("targetPackage"); //$NON-NLS-1$
-		sqlMapGeneratorConfiguration.setTargetPackage(attribute.getNodeValue());
-
-		attribute = nnm.getNamedItem("targetProject"); //$NON-NLS-1$
-		sqlMapGeneratorConfiguration.setTargetProject(attribute.getNodeValue());
-
-		NodeList nodeList = node.getChildNodes();
-		for (int i = 0; i < nodeList.getLength(); i++) {
-			Node childNode = nodeList.item(i);
-
-			if (childNode.getNodeType() != 1) {
-				continue;
-			}
-
-			if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
-				parseProperty(sqlMapGeneratorConfiguration, childNode);
-			}
-		}
-	}
-
-	private void parseTable(AbatorContext abatorContext, Node node) {
-		TableConfiguration tc = new TableConfiguration();
-		abatorContext.addTableConfiguration(tc);
-
-		NamedNodeMap nnm = node.getAttributes();
-
-		Node attribute = nnm.getNamedItem("catalog"); //$NON-NLS-1$
-		if (attribute != null) {
-			tc.getTable().setCatalog(attribute.getNodeValue());
-		}
-
-		attribute = nnm.getNamedItem("schema"); //$NON-NLS-1$
-		if (attribute != null) {
-			tc.getTable().setSchema(attribute.getNodeValue());
-		}
-
-		attribute = nnm.getNamedItem("domainObjectName"); //$NON-NLS-1$
-		if (attribute != null) {
-			tc.getTable().setDomainObjectName(attribute.getNodeValue());
-		}
-
-		attribute = nnm.getNamedItem("tableName"); //$NON-NLS-1$
-		tc.getTable().setTableName(attribute.getNodeValue());
-
-		attribute = nnm.getNamedItem("enableInsert"); //$NON-NLS-1$
-		if (attribute != null) {
-			tc.setInsertStatementEnabled("true" //$NON-NLS-1$
-					.equals(attribute.getNodeValue()));
-		}
-
-		attribute = nnm.getNamedItem("enableSelectByPrimaryKey"); //$NON-NLS-1$
-		if (attribute != null) {
-			tc.setSelectByPrimaryKeyStatementEnabled("true".equals(attribute //$NON-NLS-1$
-					.getNodeValue()));
-		}
-
-		attribute = nnm.getNamedItem("enableSelectByExample"); //$NON-NLS-1$
-		if (attribute != null) {
-			tc.setSelectByExampleStatementEnabled("true".equals(attribute //$NON-NLS-1$
-					.getNodeValue()));
-		}
-
-		attribute = nnm.getNamedItem("enableUpdateByPrimaryKey"); //$NON-NLS-1$
-		if (attribute != null) {
-			tc.setUpdateByPrimaryKeyStatementEnabled("true".equals(attribute //$NON-NLS-1$
-					.getNodeValue()));
-		}
-
-		attribute = nnm.getNamedItem("enableDeleteByPrimaryKey"); //$NON-NLS-1$
-		if (attribute != null) {
-			tc.setDeleteByPrimaryKeyStatementEnabled("true".equals(attribute //$NON-NLS-1$
-					.getNodeValue()));
-		}
-
-		attribute = nnm.getNamedItem("enableDeleteByExample"); //$NON-NLS-1$
-		if (attribute != null) {
-			tc.setDeleteByExampleStatementEnabled("true".equals(attribute //$NON-NLS-1$
-					.getNodeValue()));
-		}
-
-		attribute = nnm.getNamedItem("selectByPrimaryKeyQueryId"); //$NON-NLS-1$
-		if (attribute != null) {
-			tc.setSelectByPrimaryKeyQueryId(attribute.getNodeValue());
-		}
-
-		attribute = nnm.getNamedItem("selectByExampleQueryId"); //$NON-NLS-1$
-		if (attribute != null) {
-			tc.setSelectByExampleQueryId(attribute.getNodeValue());
-		}
-
-        attribute = nnm.getNamedItem("alias"); //$NON-NLS-1$
+        attribute = nnm.getNamedItem("id"); //$NON-NLS-1$
         if (attribute != null) {
-            tc.getTable().setAlias(attribute.getNodeValue());
+            abatorContext.setId(attribute.getNodeValue());
         }
 
-		NodeList nodeList = node.getChildNodes();
-		for (int i = 0; i < nodeList.getLength(); i++) {
-			Node childNode = nodeList.item(i);
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
 
-			if (childNode.getNodeType() != 1) {
-				continue;
-			}
+            if (childNode.getNodeType() != 1) {
+                continue;
+            }
 
-			if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
-				parseProperty(tc, childNode);
-			} else if ("columnOverride".equals(childNode.getNodeName())) { //$NON-NLS-1$
-				parseColumnOverride(tc, childNode);
-			} else if ("ignoreColumn".equals(childNode.getNodeName())) { //$NON-NLS-1$
-				parseIgnoreColumn(tc, childNode);
-			} else if ("generatedKey".equals(childNode.getNodeName())) { //$NON-NLS-1$
-				parseGeneratedKey(tc, childNode);
-			}
-		}
-	}
+            if ("jdbcConnection".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseJdbcConnection(abatorContext, childNode);
+            } else if ("javaModelGenerator".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseJavaModelGenerator(abatorContext, childNode);
+            } else if ("javaTypeResolver".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseJavaTypeResolver(abatorContext, childNode);
+            } else if ("sqlMapGenerator".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseSqlMapGenerator(abatorContext, childNode);
+            } else if ("daoGenerator".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseDaoGenerator(abatorContext, childNode);
+            } else if ("table".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseTable(abatorContext, childNode);
+            }
+        }
+    }
 
-	private void parseColumnOverride(TableConfiguration tc, Node node) {
-		NamedNodeMap nnm = node.getAttributes();
+    private void parseSqlMapGenerator(AbatorContext abatorContext, Node node) {
+        SqlMapGeneratorConfiguration sqlMapGeneratorConfiguration = new SqlMapGeneratorConfiguration();
 
-		ColumnOverride co = new ColumnOverride();
+        abatorContext
+                .setSqlMapGeneratorConfiguration(sqlMapGeneratorConfiguration);
 
-		Node attribute = nnm.getNamedItem("column"); //$NON-NLS-1$
-		co.setColumnName(attribute.getNodeValue());
+        NamedNodeMap nnm = node.getAttributes();
 
-		tc.addColumnOverride(co);
+        Node attribute = nnm.getNamedItem("type"); //$NON-NLS-1$
+        if (attribute != null) {
+            sqlMapGeneratorConfiguration.setConfigurationType(attribute
+                    .getNodeValue());
+        }
 
-		attribute = nnm.getNamedItem("property"); //$NON-NLS-1$
-		if (attribute != null) {
-			co.setJavaProperty(attribute.getNodeValue());
-		}
+        attribute = nnm.getNamedItem("targetPackage"); //$NON-NLS-1$
+        sqlMapGeneratorConfiguration.setTargetPackage(attribute.getNodeValue());
 
-		attribute = nnm.getNamedItem("javaType"); //$NON-NLS-1$
-		if (attribute != null) {
-			co.setJavaType(attribute.getNodeValue());
-		}
+        attribute = nnm.getNamedItem("targetProject"); //$NON-NLS-1$
+        sqlMapGeneratorConfiguration.setTargetProject(attribute.getNodeValue());
 
-		attribute = nnm.getNamedItem("jdbcType"); //$NON-NLS-1$
-		if (attribute != null) {
-			co.setJdbcType(attribute.getNodeValue());
-		}
-	}
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
 
-	private void parseGeneratedKey(TableConfiguration tc, Node node) {
-		NamedNodeMap nnm = node.getAttributes();
+            if (childNode.getNodeType() != 1) {
+                continue;
+            }
 
-		Node attribute = nnm.getNamedItem("column"); //$NON-NLS-1$
-		tc.getGeneratedKey().setColumn(attribute.getNodeValue());
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(sqlMapGeneratorConfiguration, childNode);
+            }
+        }
+    }
 
-		attribute = nnm.getNamedItem("identity"); //$NON-NLS-1$
-		tc.getGeneratedKey().setIdentity("true".equalsIgnoreCase(attribute.getNodeValue())); //$NON-NLS-1$
+    private void parseTable(AbatorContext abatorContext, Node node) {
+        TableConfiguration tc = new TableConfiguration();
+        abatorContext.addTableConfiguration(tc);
 
-		attribute = nnm.getNamedItem("sqlStatement"); //$NON-NLS-1$
-		String value = attribute.getNodeValue();
-		if ("DB2".equalsIgnoreCase(value)) { //$NON-NLS-1$
-			tc.getGeneratedKey().setSqlStatement(
-					DatabaseDialects.getIdentityClause(DatabaseDialects.DB2));
-			if (!tc.getGeneratedKey().isIdentity()) {
-			    warnings.add(Messages.getString("AbatorConfigurationParser.0", //$NON-NLS-1$ 
-			            value, tc.getTable().getFullyQualifiedTableName()));
-			}
-		} else if ("MySQL".equalsIgnoreCase(value)) { //$NON-NLS-1$
-			tc.getGeneratedKey().setSqlStatement(
-					DatabaseDialects.getIdentityClause(DatabaseDialects.MYSQL));
-			if (!tc.getGeneratedKey().isIdentity()) {
-			    warnings.add(Messages.getString("AbatorConfigurationParser.0", //$NON-NLS-1$ 
-			            value, tc.getTable().getFullyQualifiedTableName()));
-			}
-		} else if ("SqlServer".equalsIgnoreCase(value)) { //$NON-NLS-1$
-			tc.getGeneratedKey().setSqlStatement(
-					DatabaseDialects
-							.getIdentityClause(DatabaseDialects.SQLSERVER));
-			if (!tc.getGeneratedKey().isIdentity()) {
-			    warnings.add(Messages.getString("AbatorConfigurationParser.0", //$NON-NLS-1$ 
-			            value, tc.getTable().getFullyQualifiedTableName()));
-			}
-		} else if ("Cloudscape".equalsIgnoreCase(value)) { //$NON-NLS-1$
-			tc.getGeneratedKey().setSqlStatement(
-					DatabaseDialects
-							.getIdentityClause(DatabaseDialects.CLOUDSCAPE));
-			if (!tc.getGeneratedKey().isIdentity()) {
-			    warnings.add(Messages.getString("AbatorConfigurationParser.0", //$NON-NLS-1$ 
-			            value, tc.getTable().getFullyQualifiedTableName()));
-			}
-		} else if ("Derby".equalsIgnoreCase(value)) { //$NON-NLS-1$
-			tc.getGeneratedKey().setSqlStatement(
-					DatabaseDialects
-							.getIdentityClause(DatabaseDialects.DERBY));
-			if (!tc.getGeneratedKey().isIdentity()) {
-			    warnings.add(Messages.getString("AbatorConfigurationParser.0", //$NON-NLS-1$ 
-			            value, tc.getTable().getFullyQualifiedTableName()));
-			}
-		} else if ("HSQLDB".equalsIgnoreCase(value)) { //$NON-NLS-1$
-			tc.getGeneratedKey().setSqlStatement(
-					DatabaseDialects
-							.getIdentityClause(DatabaseDialects.HSQLDB));
-			if (!tc.getGeneratedKey().isIdentity()) {
-			    warnings.add(Messages.getString("AbatorConfigurationParser.0", //$NON-NLS-1$ 
-			            value, tc.getTable().getFullyQualifiedTableName()));
-			}
-		} else {
-			tc.getGeneratedKey().setSqlStatement(value);
-		}
-	}
+        NamedNodeMap nnm = node.getAttributes();
 
-	private void parseIgnoreColumn(TableConfiguration tc, Node node) {
-		NamedNodeMap nnm = node.getAttributes();
+        Node attribute = nnm.getNamedItem("catalog"); //$NON-NLS-1$
+        String catalog = attribute == null ? null : attribute.getNodeValue();
 
-		Node attribute = nnm.getNamedItem("column"); //$NON-NLS-1$
-		tc.addIgnoredColumn(attribute.getNodeValue());
-	}
+        attribute = nnm.getNamedItem("schema"); //$NON-NLS-1$
+        String schema = attribute == null ? null : attribute.getNodeValue();
 
-	private void parseJavaTypeResolver(AbatorContext abatorContext,
-			Node node) {
-		JavaTypeResolverConfiguration javaTypeResolverConfiguration =
-            new JavaTypeResolverConfiguration();
-            
-        abatorContext.setJavaTypeResolverConfiguration(javaTypeResolverConfiguration);
+        attribute = nnm.getNamedItem("domainObjectName"); //$NON-NLS-1$
+        String domainObjectName = attribute == null ? null : attribute
+                .getNodeValue();
 
-		NamedNodeMap nnm = node.getAttributes();
+        attribute = nnm.getNamedItem("tableName"); //$NON-NLS-1$
+        String tableName = attribute.getNodeValue();
 
-		Node attribute = nnm.getNamedItem("type"); //$NON-NLS-1$
-		if (attribute != null) {
-			javaTypeResolverConfiguration.setConfigurationType(attribute.getNodeValue());
-		}
+        attribute = nnm.getNamedItem("alias"); //$NON-NLS-1$
+        String alias = attribute == null ? null : attribute.getNodeValue();
 
-		NodeList nodeList = node.getChildNodes();
-		for (int i = 0; i < nodeList.getLength(); i++) {
-			Node childNode = nodeList.item(i);
+        FullyQualifiedTable table = new FullyQualifiedTable(catalog, schema,
+                tableName, domainObjectName, alias);
 
-			if (childNode.getNodeType() != 1) {
-				continue;
-			}
+        tc.setTable(table);
 
-			if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
-				parseProperty(javaTypeResolverConfiguration, childNode);
-			}
-		}
-	}
+        attribute = nnm.getNamedItem("enableInsert"); //$NON-NLS-1$
+        if (attribute != null) {
+            tc.setInsertStatementEnabled("true" //$NON-NLS-1$
+                    .equals(attribute.getNodeValue()));
+        }
 
-	private void parseJavaModelGenerator(AbatorContext abatorContext,
-			Node node) {
-		JavaModelGeneratorConfiguration javaModelGeneratorConfiguration =
-            new JavaModelGeneratorConfiguration();
-        
-        abatorContext.setJavaModelGeneratorConfiguration(javaModelGeneratorConfiguration);
+        attribute = nnm.getNamedItem("enableSelectByPrimaryKey"); //$NON-NLS-1$
+        if (attribute != null) {
+            tc.setSelectByPrimaryKeyStatementEnabled("true".equals(attribute //$NON-NLS-1$
+                    .getNodeValue()));
+        }
 
-		NamedNodeMap nnm = node.getAttributes();
+        attribute = nnm.getNamedItem("enableSelectByExample"); //$NON-NLS-1$
+        if (attribute != null) {
+            tc.setSelectByExampleStatementEnabled("true".equals(attribute //$NON-NLS-1$
+                    .getNodeValue()));
+        }
 
-		Node attribute = nnm.getNamedItem("type"); //$NON-NLS-1$
-		if (attribute != null) {
-			javaModelGeneratorConfiguration.setConfigurationType(attribute.getNodeValue());
-		}
+        attribute = nnm.getNamedItem("enableUpdateByPrimaryKey"); //$NON-NLS-1$
+        if (attribute != null) {
+            tc.setUpdateByPrimaryKeyStatementEnabled("true".equals(attribute //$NON-NLS-1$
+                    .getNodeValue()));
+        }
 
-		attribute = nnm.getNamedItem("targetPackage"); //$NON-NLS-1$
-		javaModelGeneratorConfiguration
-				.setTargetPackage(attribute.getNodeValue());
+        attribute = nnm.getNamedItem("enableDeleteByPrimaryKey"); //$NON-NLS-1$
+        if (attribute != null) {
+            tc.setDeleteByPrimaryKeyStatementEnabled("true".equals(attribute //$NON-NLS-1$
+                    .getNodeValue()));
+        }
 
-		attribute = nnm.getNamedItem("targetProject"); //$NON-NLS-1$
-		javaModelGeneratorConfiguration.setTargetProject(attribute
-				.getNodeValue());
+        attribute = nnm.getNamedItem("enableDeleteByExample"); //$NON-NLS-1$
+        if (attribute != null) {
+            tc.setDeleteByExampleStatementEnabled("true".equals(attribute //$NON-NLS-1$
+                    .getNodeValue()));
+        }
 
-		NodeList nodeList = node.getChildNodes();
-		for (int i = 0; i < nodeList.getLength(); i++) {
-			Node childNode = nodeList.item(i);
+        attribute = nnm.getNamedItem("selectByPrimaryKeyQueryId"); //$NON-NLS-1$
+        if (attribute != null) {
+            tc.setSelectByPrimaryKeyQueryId(attribute.getNodeValue());
+        }
 
-			if (childNode.getNodeType() != 1) {
-				continue;
-			}
+        attribute = nnm.getNamedItem("selectByExampleQueryId"); //$NON-NLS-1$
+        if (attribute != null) {
+            tc.setSelectByExampleQueryId(attribute.getNodeValue());
+        }
 
-			if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
-				parseProperty(javaModelGeneratorConfiguration, childNode);
-			}
-		}
-	}
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
 
-	private void parseDaoGenerator(AbatorContext abatorContext, Node node) {
-		DAOGeneratorConfiguration daoGeneratorConfiguration =
-            new DAOGeneratorConfiguration();
-            
+            if (childNode.getNodeType() != 1) {
+                continue;
+            }
+
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(tc, childNode);
+            } else if ("columnOverride".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseColumnOverride(tc, childNode);
+            } else if ("ignoreColumn".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseIgnoreColumn(tc, childNode);
+            } else if ("generatedKey".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseGeneratedKey(tc, childNode);
+            }
+        }
+    }
+
+    private void parseColumnOverride(TableConfiguration tc, Node node) {
+        NamedNodeMap nnm = node.getAttributes();
+
+        ColumnOverride co = new ColumnOverride();
+
+        Node attribute = nnm.getNamedItem("column"); //$NON-NLS-1$
+        co.setColumnName(attribute.getNodeValue());
+
+        tc.addColumnOverride(co);
+
+        attribute = nnm.getNamedItem("property"); //$NON-NLS-1$
+        if (attribute != null) {
+            co.setJavaProperty(attribute.getNodeValue());
+        }
+
+        attribute = nnm.getNamedItem("javaType"); //$NON-NLS-1$
+        if (attribute != null) {
+            co.setJavaType(attribute.getNodeValue());
+        }
+
+        attribute = nnm.getNamedItem("jdbcType"); //$NON-NLS-1$
+        if (attribute != null) {
+            co.setJdbcType(attribute.getNodeValue());
+        }
+
+        attribute = nnm.getNamedItem("typeHandler"); //$NON-NLS-1$
+        if (attribute != null) {
+            co.setTypeHandler(attribute.getNodeValue());
+        }
+    }
+
+    private void parseGeneratedKey(TableConfiguration tc, Node node) {
+        NamedNodeMap nnm = node.getAttributes();
+
+        String column = nnm.getNamedItem("column").getNodeValue(); //$NON-NLS-1$
+        boolean identity = "true".equals(nnm.getNamedItem("identity").getNodeValue()); //$NON-NLS-1$ //$NON-NLS-2$
+        String sqlStatement = nnm.getNamedItem("sqlStatement").getNodeValue(); //$NON-NLS-1$
+
+        GeneratedKey gk = new GeneratedKey(column, sqlStatement, identity);
+        tc.setGeneratedKey(gk);
+    }
+
+    private void parseIgnoreColumn(TableConfiguration tc, Node node) {
+        NamedNodeMap nnm = node.getAttributes();
+
+        Node attribute = nnm.getNamedItem("column"); //$NON-NLS-1$
+        tc.addIgnoredColumn(attribute.getNodeValue());
+    }
+
+    private void parseJavaTypeResolver(AbatorContext abatorContext, Node node) {
+        JavaTypeResolverConfiguration javaTypeResolverConfiguration = new JavaTypeResolverConfiguration();
+
+        abatorContext
+                .setJavaTypeResolverConfiguration(javaTypeResolverConfiguration);
+
+        NamedNodeMap nnm = node.getAttributes();
+
+        Node attribute = nnm.getNamedItem("type"); //$NON-NLS-1$
+        if (attribute != null) {
+            javaTypeResolverConfiguration.setConfigurationType(attribute
+                    .getNodeValue());
+        }
+
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
+
+            if (childNode.getNodeType() != 1) {
+                continue;
+            }
+
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(javaTypeResolverConfiguration, childNode);
+            }
+        }
+    }
+
+    private void parseJavaModelGenerator(AbatorContext abatorContext, Node node) {
+        JavaModelGeneratorConfiguration javaModelGeneratorConfiguration = new JavaModelGeneratorConfiguration();
+
+        abatorContext
+                .setJavaModelGeneratorConfiguration(javaModelGeneratorConfiguration);
+
+        NamedNodeMap nnm = node.getAttributes();
+
+        Node attribute = nnm.getNamedItem("type"); //$NON-NLS-1$
+        if (attribute != null) {
+            javaModelGeneratorConfiguration.setConfigurationType(attribute
+                    .getNodeValue());
+        }
+
+        attribute = nnm.getNamedItem("targetPackage"); //$NON-NLS-1$
+        javaModelGeneratorConfiguration.setTargetPackage(attribute
+                .getNodeValue());
+
+        attribute = nnm.getNamedItem("targetProject"); //$NON-NLS-1$
+        javaModelGeneratorConfiguration.setTargetProject(attribute
+                .getNodeValue());
+
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
+
+            if (childNode.getNodeType() != 1) {
+                continue;
+            }
+
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(javaModelGeneratorConfiguration, childNode);
+            }
+        }
+    }
+
+    private void parseDaoGenerator(AbatorContext abatorContext, Node node) {
+        DAOGeneratorConfiguration daoGeneratorConfiguration = new DAOGeneratorConfiguration();
+
         abatorContext.setDaoGeneratorConfiguration(daoGeneratorConfiguration);
 
-		NamedNodeMap nnm = node.getAttributes();
+        NamedNodeMap nnm = node.getAttributes();
 
-		Node attribute = nnm.getNamedItem("type"); //$NON-NLS-1$
-		daoGeneratorConfiguration.setConfigurationType(attribute.getNodeValue());
+        Node attribute = nnm.getNamedItem("type"); //$NON-NLS-1$
+        daoGeneratorConfiguration
+                .setConfigurationType(attribute.getNodeValue());
 
-		attribute = nnm.getNamedItem("targetPackage"); //$NON-NLS-1$
-		daoGeneratorConfiguration.setTargetPackage(attribute.getNodeValue());
+        attribute = nnm.getNamedItem("targetPackage"); //$NON-NLS-1$
+        daoGeneratorConfiguration.setTargetPackage(attribute.getNodeValue());
 
-		attribute = nnm.getNamedItem("targetProject"); //$NON-NLS-1$
-		daoGeneratorConfiguration.setTargetProject(attribute.getNodeValue());
+        attribute = nnm.getNamedItem("targetProject"); //$NON-NLS-1$
+        daoGeneratorConfiguration.setTargetProject(attribute.getNodeValue());
 
-		NodeList nodeList = node.getChildNodes();
-		for (int i = 0; i < nodeList.getLength(); i++) {
-			Node childNode = nodeList.item(i);
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
 
-			if (childNode.getNodeType() != 1) {
-				continue;
-			}
+            if (childNode.getNodeType() != 1) {
+                continue;
+            }
 
-			if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
-				parseProperty(daoGeneratorConfiguration, childNode);
-			}
-		}
-	}
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(daoGeneratorConfiguration, childNode);
+            }
+        }
+    }
 
-	private void parseJdbcConnection(AbatorContext abatorContext, Node node) {
-		JDBCConnectionConfiguration jdbcConnectionConfiguration =
-            new JDBCConnectionConfiguration();
-            
-        abatorContext.setJdbcConnectionConfiguration(jdbcConnectionConfiguration);
+    private void parseJdbcConnection(AbatorContext abatorContext, Node node) {
+        JDBCConnectionConfiguration jdbcConnectionConfiguration = new JDBCConnectionConfiguration();
 
-		NamedNodeMap nnm = node.getAttributes();
+        abatorContext
+                .setJdbcConnectionConfiguration(jdbcConnectionConfiguration);
 
-		Node attribute = nnm.getNamedItem("driverClass"); //$NON-NLS-1$
-		jdbcConnectionConfiguration.setDriverClass(attribute.getNodeValue());
+        NamedNodeMap nnm = node.getAttributes();
 
-		attribute = nnm.getNamedItem("connectionURL"); //$NON-NLS-1$
-		jdbcConnectionConfiguration.setConnectionURL(attribute.getNodeValue());
+        Node attribute = nnm.getNamedItem("driverClass"); //$NON-NLS-1$
+        jdbcConnectionConfiguration.setDriverClass(attribute.getNodeValue());
 
-		attribute = nnm.getNamedItem("userId"); //$NON-NLS-1$
-		if (attribute != null) {
-			jdbcConnectionConfiguration.setUserId(attribute.getNodeValue());
-		}
+        attribute = nnm.getNamedItem("connectionURL"); //$NON-NLS-1$
+        jdbcConnectionConfiguration.setConnectionURL(attribute.getNodeValue());
 
-		attribute = nnm.getNamedItem("password"); //$NON-NLS-1$
-		if (attribute != null) {
-			jdbcConnectionConfiguration.setPassword(attribute.getNodeValue());
-		}
+        attribute = nnm.getNamedItem("userId"); //$NON-NLS-1$
+        if (attribute != null) {
+            jdbcConnectionConfiguration.setUserId(attribute.getNodeValue());
+        }
 
-		NodeList nodeList = node.getChildNodes();
-		for (int i = 0; i < nodeList.getLength(); i++) {
-			Node childNode = nodeList.item(i);
+        attribute = nnm.getNamedItem("password"); //$NON-NLS-1$
+        if (attribute != null) {
+            jdbcConnectionConfiguration.setPassword(attribute.getNodeValue());
+        }
 
-			if (childNode.getNodeType() != 1) {
-				continue;
-			}
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
 
-			if ("classPathEntry".equals(childNode.getNodeName())) { //$NON-NLS-1$
-				parseClassPathEntry(jdbcConnectionConfiguration, childNode);
-			} else if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
-				parseProperty(jdbcConnectionConfiguration, childNode);
-			}
-		}
-	}
+            if (childNode.getNodeType() != 1) {
+                continue;
+            }
 
-	private void parseClassPathEntry(
-			JDBCConnectionConfiguration jdbcConnectionConfiguration, Node node) {
-		NamedNodeMap nnm = node.getAttributes();
+            if ("classPathEntry".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseClassPathEntry(jdbcConnectionConfiguration, childNode);
+            } else if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(jdbcConnectionConfiguration, childNode);
+            }
+        }
+    }
 
-		jdbcConnectionConfiguration.addClasspathEntry(nnm.getNamedItem(
-				"location").getNodeValue()); //$NON-NLS-1$
-	}
+    private void parseClassPathEntry(
+            JDBCConnectionConfiguration jdbcConnectionConfiguration, Node node) {
+        NamedNodeMap nnm = node.getAttributes();
 
-	private void parseProperty(PropertyHolder propertyHolder, Node node) {
-		NamedNodeMap nnm = node.getAttributes();
+        jdbcConnectionConfiguration.addClasspathEntry(nnm.getNamedItem(
+                "location").getNodeValue()); //$NON-NLS-1$
+    }
 
-		String name = nnm.getNamedItem("name").getNodeValue(); //$NON-NLS-1$
-		String value = nnm.getNamedItem("value").getNodeValue(); //$NON-NLS-1$
+    private void parseProperty(PropertyHolder propertyHolder, Node node) {
+        NamedNodeMap nnm = node.getAttributes();
 
-		propertyHolder.addProperty(name, value);
-	}
+        String name = nnm.getNamedItem("name").getNodeValue(); //$NON-NLS-1$
+        String value = nnm.getNamedItem("value").getNodeValue(); //$NON-NLS-1$
+
+        propertyHolder.addProperty(name, value);
+    }
 }

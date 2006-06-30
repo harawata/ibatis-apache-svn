@@ -26,17 +26,4 @@ public class UnsupportedDataTypeException extends Exception {
 	public UnsupportedDataTypeException() {
 		super();
 	}
-
-	public UnsupportedDataTypeException(String arg0) {
-		super(arg0);
-	}
-
-	public UnsupportedDataTypeException(String arg0, Throwable arg1) {
-		super(arg0, arg1);
-	}
-
-	public UnsupportedDataTypeException(Throwable arg0) {
-		super(arg0);
-	}
-
 }

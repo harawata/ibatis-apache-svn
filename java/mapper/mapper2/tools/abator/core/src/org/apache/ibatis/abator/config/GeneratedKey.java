@@ -15,53 +15,61 @@
  */
 package org.apache.ibatis.abator.config;
 
-import org.apache.ibatis.abator.internal.util.StringUtility;
+import org.apache.ibatis.abator.internal.db.DatabaseDialects;
 
 /**
- * This class specifies that a key is auto-generated, either as an identity column
- * (post insert), or as some other query like a sequences (pre insert).
+ * This class specifies that a key is auto-generated, either as an identity
+ * column (post insert), or as some other query like a sequences (pre insert).
  * 
  * @author Jeff Butler
  */
 public class GeneratedKey {
-	private String column;
+    private String column;
 
-	private String sqlStatement;
-	
-	private boolean identity;
+    private String sqlStatement;
 
-	/**
-	 *  
-	 */
-	public GeneratedKey() {
-		super();
-	}
+    private boolean isIdentity;
 
-	public String getColumn() {
-		return column;
-	}
+    /**
+     * 
+     */
+    public GeneratedKey(String column, String sqlStatement, boolean isIdentity) {
+        super();
+        this.column = column;
+        this.isIdentity = isIdentity;
 
-	public void setColumn(String column) {
-		this.column = column;
-	}
-	
+        if ("DB2".equalsIgnoreCase(sqlStatement)) { //$NON-NLS-1$
+            this.sqlStatement = DatabaseDialects
+                    .getIdentityClause(DatabaseDialects.DB2);
+        } else if ("MySQL".equalsIgnoreCase(sqlStatement)) { //$NON-NLS-1$
+            this.sqlStatement = DatabaseDialects
+                    .getIdentityClause(DatabaseDialects.MYSQL);
+        } else if ("SqlServer".equalsIgnoreCase(sqlStatement)) { //$NON-NLS-1$
+            this.sqlStatement = DatabaseDialects
+                    .getIdentityClause(DatabaseDialects.SQLSERVER);
+        } else if ("Cloudscape".equalsIgnoreCase(sqlStatement)) { //$NON-NLS-1$
+            this.sqlStatement = DatabaseDialects
+                    .getIdentityClause(DatabaseDialects.CLOUDSCAPE);
+        } else if ("Derby".equalsIgnoreCase(sqlStatement)) { //$NON-NLS-1$
+            this.sqlStatement = DatabaseDialects
+                    .getIdentityClause(DatabaseDialects.DERBY);
+        } else if ("HSQLDB".equalsIgnoreCase(sqlStatement)) { //$NON-NLS-1$
+            this.sqlStatement = DatabaseDialects
+                    .getIdentityClause(DatabaseDialects.HSQLDB);
+        } else {
+            this.sqlStatement = sqlStatement;
+        }
+    }
+
+    public String getColumn() {
+        return column;
+    }
+
     public boolean isIdentity() {
-        return identity;
+        return isIdentity;
     }
-    
-    public void setIdentity(boolean identity) {
-        this.identity = identity;
-    }
-    
+
     public String getSqlStatement() {
         return sqlStatement;
-    }
-    
-    public void setSqlStatement(String sqlStatement) {
-        this.sqlStatement = sqlStatement;
-    }
-    
-    public boolean isConfigured() {
-        return StringUtility.stringHasValue(column);
     }
 }

@@ -90,7 +90,7 @@ public class XmlFileMergerJaxp {
             DocumentType existingDocType = existingDocument.getDoctype();
 
             if (!newDocType.getName().equals(existingDocType.getName())) {
-                throw new ShellException(Messages.getString("XmlFileMergerJaxp.0", //$NON-NLS-1$
+                throw new ShellException(Messages.getString("Warning.12", //$NON-NLS-1$
                         existingFile.getName()));
             }
 
@@ -168,7 +168,7 @@ public class XmlFileMergerJaxp {
             // pretty print the result
             return prettyPrint(existingDocument);
         } catch (Exception e) {
-            throw new ShellException(Messages.getString("XmlFileMergerJaxp.1", //$NON-NLS-1$
+            throw new ShellException(Messages.getString("Warning.13", //$NON-NLS-1$
                 existingFile.getName()), e);
         }
     }

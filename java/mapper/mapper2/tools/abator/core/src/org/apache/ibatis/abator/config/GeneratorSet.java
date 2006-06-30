@@ -50,7 +50,7 @@ public abstract class GeneratorSet {
     }
 
     public void setJavaModelGeneratorType(String javaModelGeneratorType) {
-        if (!"DEFAULT".equalsIgnoreCase(javaModelGeneratorType)) {
+        if (!"DEFAULT".equalsIgnoreCase(javaModelGeneratorType)) { //$NON-NLS-1$
             this.javaModelGeneratorType = javaModelGeneratorType;
         }
     }
@@ -60,7 +60,7 @@ public abstract class GeneratorSet {
     }
 
     public void setJavaTypeResolverType(String javaTypeResolverType) {
-        if (!"DEFAULT".equalsIgnoreCase(javaTypeResolverType)) {
+        if (!"DEFAULT".equalsIgnoreCase(javaTypeResolverType)) { //$NON-NLS-1$
             this.javaTypeResolverType = javaTypeResolverType;
         }
     }
@@ -70,7 +70,7 @@ public abstract class GeneratorSet {
     }
 
     public void setSqlMapGeneratorType(String sqlMapGeneratorType) {
-        if (!"DEFAULT".equalsIgnoreCase(sqlMapGeneratorType)) {
+        if (!"DEFAULT".equalsIgnoreCase(sqlMapGeneratorType)) { //$NON-NLS-1$
             this.sqlMapGeneratorType = sqlMapGeneratorType;
         }
     }

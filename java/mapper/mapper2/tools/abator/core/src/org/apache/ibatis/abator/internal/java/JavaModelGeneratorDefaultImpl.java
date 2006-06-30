@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.abator.api.GeneratedJavaFile;
+import org.apache.ibatis.abator.api.IntrospectedTable;
 import org.apache.ibatis.abator.api.JavaModelGenerator;
 import org.apache.ibatis.abator.api.ProgressCallback;
 import org.apache.ibatis.abator.api.dom.java.CompilationUnit;
@@ -34,7 +35,6 @@ import org.apache.ibatis.abator.api.dom.java.Parameter;
 import org.apache.ibatis.abator.api.dom.java.TopLevelClass;
 import org.apache.ibatis.abator.config.FullyQualifiedTable;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
-import org.apache.ibatis.abator.internal.db.IntrospectedTable;
 import org.apache.ibatis.abator.internal.rules.AbatorRules;
 import org.apache.ibatis.abator.internal.sqlmap.ExampleClause;
 import org.apache.ibatis.abator.internal.util.JavaBeansUtil;
@@ -252,8 +252,7 @@ public class JavaModelGeneratorDefaultImpl implements JavaModelGenerator {
             return null;
         }
 
-        FullyQualifiedTable table = introspectedTable.getTableConfiguration()
-                .getTable();
+        FullyQualifiedTable table = introspectedTable.getTable();
         FullyQualifiedJavaType type = getExampleType(table);
         TopLevelClass topLevelClass = new TopLevelClass(type);
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
@@ -370,8 +369,7 @@ public class JavaModelGeneratorDefaultImpl implements JavaModelGenerator {
             return null;
         }
 
-        FullyQualifiedTable table = introspectedTable.getTableConfiguration()
-                .getTable();
+        FullyQualifiedTable table = introspectedTable.getTable();
         TopLevelClass answer = new TopLevelClass(getPrimaryKeyType(table));
         answer.setVisibility(JavaVisibility.PUBLIC);
 
@@ -396,8 +394,7 @@ public class JavaModelGeneratorDefaultImpl implements JavaModelGenerator {
             return null;
         }
 
-        FullyQualifiedTable table = introspectedTable.getTableConfiguration()
-                .getTable();
+        FullyQualifiedTable table = introspectedTable.getTable();
         TopLevelClass answer = new TopLevelClass(getRecordType(table));
         answer.setVisibility(JavaVisibility.PUBLIC);
 
@@ -429,8 +426,7 @@ public class JavaModelGeneratorDefaultImpl implements JavaModelGenerator {
             return null;
         }
 
-        FullyQualifiedTable table = introspectedTable.getTableConfiguration()
-                .getTable();
+        FullyQualifiedTable table = introspectedTable.getTable();
         TopLevelClass answer = new TopLevelClass(getRecordWithBLOBsType(table));
         answer.setVisibility(JavaVisibility.PUBLIC);
 
@@ -485,11 +481,11 @@ public class JavaModelGeneratorDefaultImpl implements JavaModelGenerator {
             ProgressCallback callback) {
         List list = new ArrayList();
 
-        String tableName = introspectedTable.getTableConfiguration().getTable()
+        String tableName = introspectedTable.getTable()
                 .getFullyQualifiedTableName();
 
         callback.startSubTask(Messages.getString(
-                "JavaModelGeneratorDefaultImpl.0", tableName)); //$NON-NLS-1$
+                "Progress.6", tableName)); //$NON-NLS-1$
         CompilationUnit cu = getExample(introspectedTable);
         if (cu != null) {
             GeneratedJavaFile gjf = new GeneratedJavaFile(cu, targetProject);
@@ -497,7 +493,7 @@ public class JavaModelGeneratorDefaultImpl implements JavaModelGenerator {
         }
 
         callback.startSubTask(Messages.getString(
-                "JavaModelGeneratorDefaultImpl.1", tableName)); //$NON-NLS-1$
+                "Progress.7", tableName)); //$NON-NLS-1$
         cu = getPrimaryKey(introspectedTable);
         if (cu != null) {
             GeneratedJavaFile gjf = new GeneratedJavaFile(cu, targetProject);
@@ -505,7 +501,7 @@ public class JavaModelGeneratorDefaultImpl implements JavaModelGenerator {
         }
 
         callback.startSubTask(Messages.getString(
-                "JavaModelGeneratorDefaultImpl.2", tableName)); //$NON-NLS-1$
+                "Progress.8", tableName)); //$NON-NLS-1$
         cu = getRecord(introspectedTable);
         if (cu != null) {
             GeneratedJavaFile gjf = new GeneratedJavaFile(cu, targetProject);
@@ -513,7 +509,7 @@ public class JavaModelGeneratorDefaultImpl implements JavaModelGenerator {
         }
 
         callback.startSubTask(Messages.getString(
-                "JavaModelGeneratorDefaultImpl.3", tableName)); //$NON-NLS-1$
+                "Progress.9", tableName)); //$NON-NLS-1$
         cu = getRecordWithBLOBs(introspectedTable);
         if (cu != null) {
             GeneratedJavaFile gjf = new GeneratedJavaFile(cu, targetProject);

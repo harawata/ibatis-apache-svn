@@ -28,6 +28,7 @@ public class FullyQualifiedJavaType implements Comparable {
     private static FullyQualifiedJavaType booleanPrimitiveInstance = null;
     private static FullyQualifiedJavaType objectInstance = null;
     private static FullyQualifiedJavaType dateInstance = null;
+    private static FullyQualifiedJavaType criteriaInstance = null;
     
     private String baseShortName;
     
@@ -243,6 +244,14 @@ public class FullyQualifiedJavaType implements Comparable {
         return dateInstance;
     }
 
+    public static final FullyQualifiedJavaType getCriteriaInstance() {
+        if (criteriaInstance == null) {
+            criteriaInstance = new FullyQualifiedJavaType("Criteria"); //$NON-NLS-1$
+        }
+        
+        return criteriaInstance;
+    }
+    
     /* (non-Javadoc)
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */

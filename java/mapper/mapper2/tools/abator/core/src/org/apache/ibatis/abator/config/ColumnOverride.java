@@ -27,6 +27,8 @@ public class ColumnOverride {
 	private String jdbcType;
 
 	private String javaType;
+    
+    private String typeHandler;
 
 	/**
 	 *  
@@ -66,4 +68,12 @@ public class ColumnOverride {
 	public void setJdbcType(String jdbcType) {
 		this.jdbcType = jdbcType;
 	}
+
+    public String getTypeHandler() {
+        return typeHandler;
+    }
+
+    public void setTypeHandler(String typeHandler) {
+        this.typeHandler = typeHandler;
+    }
 }

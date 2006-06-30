@@ -43,13 +43,13 @@ public class LegacyGeneratorSet extends GeneratorSet {
     public String translateDAOGeneratorType(String configurationType) {
         String answer;
         
-        if ("IBATIS".equalsIgnoreCase(configurationType)) {
+        if ("IBATIS".equalsIgnoreCase(configurationType)) { //$NON-NLS-1$
             answer = DAOGeneratorIbatisImpl.class.getName();
-        } else if ("SPRING".equalsIgnoreCase(configurationType)) {
+        } else if ("SPRING".equalsIgnoreCase(configurationType)) { //$NON-NLS-1$
             answer = DAOGeneratorSpringImpl.class.getName();
-        } else if ("GENERIC-CI".equalsIgnoreCase(configurationType)) {
+        } else if ("GENERIC-CI".equalsIgnoreCase(configurationType)) { //$NON-NLS-1$
             answer = DAOGeneratorGenericConstructorInjectionImpl.class.getName();
-        } else if ("GENERIC-SI".equalsIgnoreCase(configurationType)) {
+        } else if ("GENERIC-SI".equalsIgnoreCase(configurationType)) { //$NON-NLS-1$
             answer = DAOGeneratorGenericSetterInjectionImpl.class.getName();
         } else {
             answer = configurationType;

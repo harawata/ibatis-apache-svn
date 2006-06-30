@@ -67,14 +67,14 @@ public class AbatorAntTask extends Task {
      */
     public void execute() throws BuildException {
         if (!StringUtility.stringHasValue(configfile)) {
-            throw new BuildException(Messages.getString("AbatorAntTask.0")); //$NON-NLS-1$
+            throw new BuildException(Messages.getString("RuntimeError.0")); //$NON-NLS-1$
         }
 
         List warnings = new ArrayList();
         
         File configurationFile = new File(configfile);
         if (!configurationFile.exists()) {
-            throw new BuildException(Messages.getString("AbatorAntTask.1", configfile)); //$NON-NLS-1$
+            throw new BuildException(Messages.getString("RuntimeError.1", configfile)); //$NON-NLS-1$
         }
 
         try {

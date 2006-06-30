@@ -52,7 +52,7 @@ public class DefaultShellCallback implements ShellCallback {
         
         File project = new File(targetProject);
         if (!project.isDirectory()) {
-            throw new ShellException(Messages.getString("DefaultShellCallback.0", //$NON-NLS-1$
+            throw new ShellException(Messages.getString("Warning.9", //$NON-NLS-1$
                     targetProject));
         }
         
@@ -67,7 +67,7 @@ public class DefaultShellCallback implements ShellCallback {
         if (!directory.isDirectory()) {
             boolean rc = directory.mkdirs();
             if (!rc) {
-                throw new ShellException(Messages.getString("DefaultShellCallback.1", //$NON-NLS-1$
+                throw new ShellException(Messages.getString("Warning.10", //$NON-NLS-1$
                         directory.getAbsolutePath()));
             }
         }
@@ -84,7 +84,7 @@ public class DefaultShellCallback implements ShellCallback {
         if (overwrite) {
             File directory = getDirectory(newFile.getTargetProject(), newFile.getTargetPackage(), warnings);
             File file = new File(directory, newFile.getFileName());
-            warnings.add(Messages.getString("DefaultShellCallback.2", //$NON-NLS-1$
+            warnings.add(Messages.getString("Warning.11", //$NON-NLS-1$
                     file.getAbsolutePath()));
             
             return newFile.getFormattedContent();

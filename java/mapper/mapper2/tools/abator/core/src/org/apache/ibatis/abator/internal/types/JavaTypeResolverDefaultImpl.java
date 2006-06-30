@@ -25,7 +25,6 @@ import org.apache.ibatis.abator.api.JavaTypeResolver;
 import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.abator.exception.UnsupportedDataTypeException;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
-import org.apache.ibatis.abator.internal.util.messages.Messages;
 
 /**
  * 
@@ -229,9 +228,7 @@ public class JavaTypeResolverDefaultImpl implements JavaTypeResolver {
 			break;
 
 		default:
-			throw new UnsupportedDataTypeException(
-			        Messages.getString("JavaTypeResolverDefaultImpl.0", //$NON-NLS-1$
-					Integer.toString(cd.getJdbcType())));
+			throw new UnsupportedDataTypeException();
 		}
 
 		cd.setResolvedJavaType(type);

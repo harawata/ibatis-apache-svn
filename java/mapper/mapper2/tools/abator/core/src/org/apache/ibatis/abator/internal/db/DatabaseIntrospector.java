@@ -23,13 +23,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.ibatis.abator.api.IntrospectedTable;
 import org.apache.ibatis.abator.api.JavaTypeResolver;
 import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.abator.config.ColumnOverride;
 import org.apache.ibatis.abator.config.TableConfiguration;
 import org.apache.ibatis.abator.exception.UnknownTableException;
 import org.apache.ibatis.abator.exception.UnsupportedDataTypeException;
-import org.apache.ibatis.abator.internal.rules.TableType;
 import org.apache.ibatis.abator.internal.util.JavaBeansUtil;
 import org.apache.ibatis.abator.internal.util.StringUtility;
 import org.apache.ibatis.abator.internal.util.messages.Messages;
@@ -108,7 +108,7 @@ public class DatabaseIntrospector {
 			} catch (UnsupportedDataTypeException e) {
 				// if the type is not supported, then we'll report a warning and
 				// ignore the column
-				warnings.add(Messages.getString("DatabaseIntrospector.0", //$NON-NLS-1$
+				warnings.add(Messages.getString("Warning.14", //$NON-NLS-1$
 				        tc.getTable().getFullyQualifiedTableName(),
 				        cd.getColumnName()));
 				continue;
@@ -128,7 +128,13 @@ public class DatabaseIntrospector {
 						columnOverride.getJdbcType());
 			}
 
-			if (tc.getGeneratedKey().isConfigured()
+            if (columnOverride != null
+                    && StringUtility.stringHasValue(columnOverride
+                            .getTypeHandler())) {
+                cd.setTypeHandler(columnOverride.getTypeHandler());
+            }
+            
+			if (tc.getGeneratedKey() != null
 			        && tc.getGeneratedKey().isIdentity()
 			        && cd.getColumnName().equalsIgnoreCase(tc.getGeneratedKey().getColumn())) {
 			    cd.setIdentity(true);
@@ -166,7 +172,7 @@ public class DatabaseIntrospector {
 		    cds.addPrimaryKeyColumn((String) iter.next());
 		}
 
-        IntrospectedTable answer = new IntrospectedTable(tc, cds, TableType.calculateTableType(cds));
+        IntrospectedTable answer = new IntrospectedTableImpl(tc, cds);
 		return answer;
 	}
 	
@@ -178,7 +184,7 @@ public class DatabaseIntrospector {
 		try {
 		    rs = dbmd.getPrimaryKeys(localCatalog, localSchema, localTableName);
 		} catch (SQLException e) {
-		    warnings.add(Messages.getString("DatabaseIntrospector.1")); //$NON-NLS-1$
+		    warnings.add(Messages.getString("Warning.15")); //$NON-NLS-1$
 		}
 
 		if (rs != null) {

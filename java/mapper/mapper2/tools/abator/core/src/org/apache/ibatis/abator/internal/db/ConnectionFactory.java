@@ -75,7 +75,7 @@ public class ConnectionFactory {
 		Connection conn = driver.connect(config.getConnectionURL(), props);
 
 		if (conn == null) {
-			throw new SQLException(Messages.getString("ConnectionFactory.0")); //$NON-NLS-1$
+			throw new SQLException(Messages.getString("RuntimeError.7")); //$NON-NLS-1$
 		}
 
 		return conn;
@@ -94,7 +94,7 @@ public class ConnectionFactory {
 				drivers.put(driverClass, driver);
 			} catch (Exception e) {
 				throw new RuntimeException(
-				        Messages.getString("ConnectionFactory.1"), e); //$NON-NLS-1$
+				        Messages.getString("RuntimeError.8"), e); //$NON-NLS-1$
 			}
 		}
 
@@ -112,7 +112,7 @@ public class ConnectionFactory {
 			file = new File(classPathEntry);
 			if (!file.exists()) {
 				throw new RuntimeException(
-				        Messages.getString("ConnectionFactory.2", classPathEntry)); //$NON-NLS-1$
+				        Messages.getString("RuntimeError.9", classPathEntry)); //$NON-NLS-1$
 			}
 
 			try {
@@ -120,7 +120,7 @@ public class ConnectionFactory {
 			} catch (MalformedURLException e) {
 				// this shouldn't happen, but just in case...
 				throw new RuntimeException(
-				        Messages.getString("ConnectionFactory.2", classPathEntry)); //$NON-NLS-1$
+				        Messages.getString("RuntimeError.9", classPathEntry)); //$NON-NLS-1$
 			}
 		}
 

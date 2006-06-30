@@ -43,13 +43,13 @@ public class Java5GeneratorSet extends GeneratorSet {
     public String translateDAOGeneratorType(String configurationType) {
         String answer;
         
-        if ("IBATIS".equalsIgnoreCase(configurationType)) {
+        if ("IBATIS".equalsIgnoreCase(configurationType)) { //$NON-NLS-1$
             answer = IbatisJava5DAOGenerator.class.getName();
-        } else if ("SPRING".equalsIgnoreCase(configurationType)) {
+        } else if ("SPRING".equalsIgnoreCase(configurationType)) { //$NON-NLS-1$
             answer = SpringJava5DAOGenerator.class.getName();
-        } else if ("GENERIC-CI".equalsIgnoreCase(configurationType)) {
+        } else if ("GENERIC-CI".equalsIgnoreCase(configurationType)) { //$NON-NLS-1$
             answer = GenericCIJava5DAOGenerator.class.getName();
-        } else if ("GENERIC-SI".equalsIgnoreCase(configurationType)) {
+        } else if ("GENERIC-SI".equalsIgnoreCase(configurationType)) { //$NON-NLS-1$
             answer = GenericSIJava5DAOGenerator.class.getName();
         } else {
             answer = configurationType;

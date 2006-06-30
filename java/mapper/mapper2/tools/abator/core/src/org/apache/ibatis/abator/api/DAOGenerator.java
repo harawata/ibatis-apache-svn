@@ -18,8 +18,6 @@ package org.apache.ibatis.abator.api;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.abator.internal.db.IntrospectedTable;
-
 /**
  * The DAOGenerator interface describes the methods needed to generate DAO
  * objects for a table.

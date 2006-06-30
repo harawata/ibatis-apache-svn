@@ -133,14 +133,18 @@ public class ColumnDefinitions {
 	}
 
 	public ColumnDefinition getColumn(String columnName) {
-		String key = columnName.toUpperCase();
-		ColumnDefinition cd = (ColumnDefinition) primaryKey.get(key);
+        if (columnName == null) {
+            return null;
+        } else {
+            String key = columnName.toUpperCase();
+            ColumnDefinition cd = (ColumnDefinition) primaryKey.get(key);
 
-		if (cd == null) {
-			cd = (ColumnDefinition) columns.get(key);
-		}
+            if (cd == null) {
+                cd = (ColumnDefinition) columns.get(key);
+            }
 
-		return cd;
+            return cd;
+        }
 	}
     
     public boolean hasJDBCDateColumns() {
