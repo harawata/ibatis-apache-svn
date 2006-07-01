@@ -10,9 +10,8 @@
 simple DOM representation of Java and XML elements that is included with Abator.</p>
 <p>The Java DOM is included in the package <code>org.apache.ibatis.abator.api.dom.java</code>.</p>
 <p>The XML DOM is included in the package <code>org.apache.ibatis.abator.api.dom.xml</code>.</p>
-<p>These classes are not sufficient for all code generation possibilities, but they are quite
-useful for generating simple to moderately complex Java and XML code.  Feel free to
-use them on other projects if you so desire.</p>
+<p>These classes are not sufficient for every conceivable code generation possibility, but they are quite
+useful for generating simple to moderately complex Java and XML code.</p>
 
 <p>Using options in the Abator configuration file, you can provide your own implementations
 of any of Abator's key interfaces.  You can also subclass any of the provided implementations
@@ -194,7 +193,7 @@ The implementations are:</p>
 <p>The default implementation of this interface is
    <code>org.apache.ibatis.abator.internal.DefaultShellCallback</code>.  The default
    implementation simply concatenates project and package together and creates
-   the necessary directory if needed.  The default implementation does not
+   the necessary package directories if needed.  The default implementation does not
    support merging of Java files, and will either overwrite or ignore files.</p>
 
 <p>You can provide your own implementation.  This would be the most important

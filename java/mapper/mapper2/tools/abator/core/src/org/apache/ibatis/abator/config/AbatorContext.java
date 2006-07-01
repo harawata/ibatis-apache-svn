@@ -115,20 +115,39 @@ public class AbatorContext {
 
         if (javaModelGeneratorConfiguration == null) {
             errors.add(Messages.getString("ValidationError.8")); //$NON-NLS-1$
-        } else if (!StringUtility.stringHasValue(javaModelGeneratorConfiguration.getTargetProject())) {
-			errors.add(Messages.getString("ValidationError.0", id)); //$NON-NLS-1$
-		}
+        } else {
+            if (!StringUtility.stringHasValue(javaModelGeneratorConfiguration.getTargetProject())) {
+                errors.add(Messages.getString("ValidationError.0", id)); //$NON-NLS-1$
+            }
+
+            if (!StringUtility.stringHasValue(javaModelGeneratorConfiguration.getTargetPackage())) {
+                errors.add(Messages.getString("ValidationError.12",
+                        "JavaModelGenerator", id)); //$NON-NLS-1$
+            }
+        }
 
         if (sqlMapGeneratorConfiguration == null) {
             errors.add(Messages.getString("ValidationError.9")); //$NON-NLS-1$
-        } else if (!StringUtility.stringHasValue(sqlMapGeneratorConfiguration.getTargetProject())) {
-			errors.add(Messages.getString("ValidationError.1", id)); //$NON-NLS-1$
+        } else {
+            if (!StringUtility.stringHasValue(sqlMapGeneratorConfiguration.getTargetProject())) {
+                errors.add(Messages.getString("ValidationError.1", id)); //$NON-NLS-1$
+            }
+
+            if (!StringUtility.stringHasValue(sqlMapGeneratorConfiguration.getTargetPackage())) {
+                errors.add(Messages.getString("ValidationError.12",
+                        "SQLMapGenerator", id)); //$NON-NLS-1$
+            }
 		}
 
 		if (daoGeneratorConfiguration != null) {
 			if (!StringUtility.stringHasValue(daoGeneratorConfiguration.getTargetProject())) {
 				errors.add(Messages.getString("ValidationError.2", id)); //$NON-NLS-1$
 			}
+
+            if (!StringUtility.stringHasValue(daoGeneratorConfiguration.getTargetPackage())) {
+                errors.add(Messages.getString("ValidationError.12",
+                        "DAOGenerator", id)); //$NON-NLS-1$
+            }
 		}
         
 		if (tableConfigurations.size() == 0) {
@@ -162,7 +181,9 @@ public class AbatorContext {
 
 	private void validateTableConfiguration(TableConfiguration tc, List errors,
 			int listPosition) {
-		if (!StringUtility.stringHasValue(tc.getTable().getTableName())) {
+        if (tc.getTable() == null) {
+            errors.add(Messages.getString("ValidationError.13", id)); //$NON-NLS-1$
+        } else if (!StringUtility.stringHasValue(tc.getTable().getTableName())) {
 			errors.add(Messages.getString("ValidationError.6", Integer.toString(listPosition))); //$NON-NLS-1$
 		}
 

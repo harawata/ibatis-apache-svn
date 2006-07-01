@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.ibatis.abator.exception.InvalidConfigurationException;
+import org.apache.ibatis.abator.internal.util.messages.Messages;
 
 /**
  * 
@@ -43,12 +44,16 @@ public class AbatorConfiguration {
 	 */
 	public void validate() throws InvalidConfigurationException {
 		List errors = new ArrayList();
-		
-		Iterator iter = abatorContexts.iterator();
-		while (iter.hasNext()) {
-		    AbatorContext abatorContext = (AbatorContext) iter.next();
-		    abatorContext.validate(errors);
-		}
+        
+        if (abatorContexts.size() == 0) {
+            errors.add(Messages.getString("ValidationError.11")); //$NON-NLS-1$
+        } else {
+            Iterator iter = abatorContexts.iterator();
+            while (iter.hasNext()) {
+                AbatorContext abatorContext = (AbatorContext) iter.next();
+                abatorContext.validate(errors);
+            }
+        }
 
 		if (errors.size() > 0) {
 			throw new InvalidConfigurationException(errors);

@@ -16,14 +16,13 @@ configuration element.</p>
 notes <a href="#java2">here</a>.</p>
 
 <p>The example class specifies how to build a dynamic where clause.  Each non-BLOB column in the
-can optionally be included in the where clause, and several different operators are available
-to specify how the different query constraints should work.  Examples are the best way
+can optionally be included in the where clause.  Examples are the best way
 to demonstrate the usage of this class.</p>
 
 <a name="legacy"/>
 <h2>Using the example Class with the Legacy Generator Set</h2>
-<p>With this set of generators the example class can be used to generate simple
-where clauses.  This set of generators is the default set of generators, and classes
+<p>With this generator set the example class can be used to generate simple
+where clauses.  This generator set is the default generator set, and classes
 generated work with all versions of iBATIS.  However, the function of the example class
 if somewhat limited.  If at all possible, we recommend using one of the other generator
 sets - but those generator sets are dependant on iBATIS 2.2.0 or higher.</p>
@@ -66,11 +65,12 @@ instead, the you can call the method <code>setCombineTypeOr(true)</code> on the 
 
 <a name="java2"/>
 <h2>Using the example Class with the Java2 or Java5 Generator Set</h2>
-<p>With these generators the example class can be used to generate a virtually
-unlimited where clauses.  These generators require that you are using iBATIS version
+<p>With these generator sets the example class can be used to generate a virtually
+unlimited where clauses.  These generator sets require that you are using iBATIS version
 2.2.0 or higher.</p>
-<p>The example classes with these generators use an inner class called <code>Criteria</code>
-to hold a list of conditions that will be <b>anded</b> together in the where clause.  The
+<p>The example classes created with these generator sets contain
+an inner static class called <code>Criteria</code>
+that holds a list of conditions that will be <b>anded</b> together in the where clause.  The
 outer class holds a list of <code>Criteria</code> objects and all the clauses
 from the inner classes will be <b>ored</b> together.  Using different sets of
 <code>Criteria</code> classes allows you to generate virtually unlimited

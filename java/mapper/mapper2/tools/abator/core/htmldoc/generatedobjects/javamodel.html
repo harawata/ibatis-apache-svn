@@ -96,9 +96,11 @@ attribute is specified on the <code>&lt;table&gt;</code> configuration element.<
 
 <p>This class will be generated if the <code>selectByExample</code> or <code>deleteByExample</code>
 methods are enabled.  Note that the configuration elements produced by these options can grow quite large.
-With the "Legacy" generator set, the generated XML and the generated DAO class will have many
-extra methods that relate to this capability.  With the "Java2" or "Java5" generator sets
-the example class itself can grow quite large, but the DAO and generated XML are smaller.
+With the "Legacy" generator set, the generated XML will have a very large SQL fragment
+related to this capability, and the generated DAO class will have many
+extra methods.  With the "Java2" or "Java5" generator sets
+the example class itself can grow quite large, but the DAO methods are small as is the generated XML
+fragment.
 If you do not plan to use the dynamic WHERE clause features of Abator, you may prefer to
 disable the generation of these methods.</p>
 

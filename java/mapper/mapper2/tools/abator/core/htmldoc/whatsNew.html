@@ -6,14 +6,17 @@
 </head>
 <body>
 <h1>What's New in Abator</h1>
-<p>This page lists new, or recent, changes to Abator.</p>
-
-<h2>Generator Sets</h2>
-<p>Version 0.7.0 introduces the concept of generator sets.  A generator set is a set of
+<h2>Generator Sets (Version 0.7.0)</h2>
+<p>A generator set is a set of
 code generators (SQL Map Generator, Java Model Generator, DAO Generator, and Java Type Resolver).
 Abator now ships three different generator sets.  The generated code from these three
 generator sets is slightly different, and the use of the generated objects is slightly
-different too.  The concepts are exactly the same.</p>
+different too.  The concepts are exactly the same.  With the newer generator sets, the
+"by example" methods have been vastly improved.  It is now possible to generate
+<b>virtually any</b> WHERE clause (including IN and BETWEEN predicates).  Lastly, the new
+generator sets generate much more concise code - the DAOs and SQL Maps are of
+normal size, and there are no extraneous methods.  The example class in the new generator
+sets encapsulates all the function needed to generate dynamic queries.</p>
 <p>The three generator sets shipped with Abator are as follows:</p>
 <dl>
   <dt>Legacy</dt>
@@ -42,5 +45,27 @@ on iBATIS dynamic SQL support that is missing in iBATIS versions prior to versio
 <code>&lt;abatorContext&gt;</code> element.  See the
 <a href="configreference/abatorContext.html">&lt;abatorContext&gt;</a> reference page for
 more information.</p>
+
+<p>Use of the example classes is different with the different generator sets.  See the
+<a href="generatedobjects/exampleClassUsage.html">Example Class Usage</a> page for more
+information.</a>
+<h2>Version 0.7.0 Miscellaneous Changes</h2>
+<ul>
+  <li>Added the ability to specify a table alias.  This aids in reuse of generated
+    SQL map elements.  See the <a href="configreference/table.html">&lt;table&gt;</a>
+    reference page for more information.</li>
+  <li>Fixed the XML file merger so that extraneous blank lines at the end of the
+      file are removed.</li>
+  <li>Added the ability to specify a type handler for table columns.
+    See the <a href="configreference/columnOverride.html">&lt;columnOverride&gt;</a>
+    reference page for more information.</li>
+  <li>Added the ability to specify the visibility of the DAO "by example" methods.
+    This allows you to make the methods private for internal use only.
+    See the <a href="configreference/daoGenerator.html">&lt;daoGenerator&gt;</a>
+    reference page for more information.</li>
+  <li>Added the ability to override the naming convention for DAO method names.
+    See the <a href="configreference/daoGenerator.html">&lt;daoGenerator&gt;</a>
+    reference page for more information.</li>
+</ul>
 </body>
 </html>

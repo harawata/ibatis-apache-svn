@@ -23,8 +23,8 @@ for each table:
           configuration of the table.</li>
       <li>A class that is used to generate dynamic where clauses in the
           different "by example" methods (selectByExample, deleteByExample).
-          This class may, or may not, extend one of the previous classes
-          depending on the type of generators selected.</li>
+          This class may, or may not, extend one of the other model classes
+          depending on the current generator set and the structure of the table.</li>
     </ul>
   </li>
   <li>(Optionally) A DAO interface and class</li>
