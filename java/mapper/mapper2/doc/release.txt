@@ -33,6 +33,7 @@ Build Number: @buildNum@
  o Added IBATIS-176 - Add support for DECIMAL/NUMERIC scale on Stored Procedure Output Parameters
  o Added IBATIS-204 - Cache layer does no logging of puts, gets, flushes, or removals.
  o Added IBATIS-205 - Change access modifiers from private to protected in many classes to allow developers to create extensions and subclasses to the iBatis classes
+ o Added IBATIS-209 - Inline TypeHandler Support
  o Added IBATIS-225 - Reuse resultmap for single bean property
  o Added IBATIS-230 - Warn when two ids of a <sql> tag are identical
  o Added IBATIS-242 - Add property getters for ParameterSetter index and ResultGetter name and index
