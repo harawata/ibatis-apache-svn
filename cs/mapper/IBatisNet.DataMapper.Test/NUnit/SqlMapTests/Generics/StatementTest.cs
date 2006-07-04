@@ -490,6 +490,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Generics
         [Test]
         public void TestQueryWithRowDelegate()
         {
+            _index = 0;
             SqlMapper.RowDelegate<Account> handler = new SqlMapper.RowDelegate<Account>(this.RowHandler);
 
             IList<Account> list = sqlMap.QueryWithRowDelegate<Account>("GetAllAccountsViaResultMap", null, handler);

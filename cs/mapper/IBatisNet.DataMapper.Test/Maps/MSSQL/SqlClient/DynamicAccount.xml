@@ -470,10 +470,10 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 					(Account_ID $Operande$ #NumberSearch#)) 
 				</isNotNull>
 				<isEqual prepend="and" property="StartDate" compareValue="25/12/2004">
-						<![CDATA[Account_FirstName >= #StartDate# ]]>
+						<![CDATA[Account_FirstName >= #Operande# ]]>
 				</isEqual>
 				<isEqual prepend="and" property="StartDateAnd" compareValue="true">
-						<![CDATA[Account_LastName >= #StartDate# ]]>
+						<![CDATA[Account_LastName >= #Operande# ]]>
 				</isEqual>
 			</dynamic>
 
