@@ -16,6 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Files\Maps\Access\Author.xml = Files\Maps\Access\Author.xml
 		Files\Maps\Access\Blog.xml = Files\Maps\Access\Blog.xml
 		Files\Blogs.mdb = Files\Blogs.mdb
+		Files\dao.config = Files\dao.config
 		Files\Maps\Access\Post.xml = Files\Maps\Access\Post.xml
 		Files\properties.config = Files\properties.config
 		Files\sqlMap.config = Files\sqlMap.config
