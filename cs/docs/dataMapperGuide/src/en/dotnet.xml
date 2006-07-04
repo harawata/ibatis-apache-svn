@@ -591,6 +591,18 @@ url="file://<filename>c:\Web\MyApp\Resources\properties</filename>.config"</prog
             </listitem>
 
             <listitem>
+               sqlServer2.0 -Microsoft SQL Server 7.0/2000/2005 provider available with .NET Framework 2.0
+            </listitem>
+
+            <listitem>
+               OleDb2.0 - OleDb provider available with .NET Framework 2.0
+            </listitem>
+
+            <listitem>
+               Odbc2.0 - Odbc provider available with .NET Framework 2.0 
+            </listitem>
+
+            <listitem>
                oracle9.2 - Oracle provider V9.2.0.401 
             </listitem>
 
@@ -626,6 +638,10 @@ url="file://<filename>c:\Web\MyApp\Resources\properties</filename>.config"</prog
                iDb2.10 - IBM DB2 iSeries provider V10.0.0.0 
             </listitem>
           </itemizedlist></para>
+
+		  <para>
+			<note>If you use SQL Server 2005, you can configure the provider to allow Multiple Active Result Set (allowMARS="true") and add MultipleActiveResultSets=true in your connection string.</note>
+		  </para>
 
         <para>The <filename>providers.config</filename> file can be found
         under <filename>\source\IBatisNet.DataMapper.Test\bin\Debug</filename>
