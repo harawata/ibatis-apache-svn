@@ -1,7 +1,7 @@
 IBatisNet DataAccess Change Log
 
 ------------------------------
-1.8 - DD/MM/AAAA
+1.8 - 05/07/2006 BETA
 ------------------------------
 - Added IDaoManager interface to simplify mock or stub, methods returning DaoManager instance now return IDaoManager DaoManager.
 

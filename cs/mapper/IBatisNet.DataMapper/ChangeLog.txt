@@ -1,9 +1,10 @@
 IBatisNet Change Log
 
 ------------------------------
-1.5 - XX/XX/XXX
+1.5 - 05/07/2006 BETA
 ------------------------------
 Issues
+- IBATISNET-163 : Missing datatype can throw null pointer exception 
 - IBATISNET-158 : Add support for generic type in TypeAssemblyInfo
 - IBATISNET-151 : Pre-load stored procedure parameters should use the already-open connection 
 - IBATISNET-145 : Make NoOpLoggerFA the default logger when logging config is missing or malformed. Allow FactoryAdapter to be set by the application
@@ -14,6 +15,9 @@ Issues
 - IBATISNET-137 : TypeHandlers for "System.Nullable(Of" fails with custom types  
 
 Improvements/Changes
+- IBATISNET-165 : Getting return value generatedKeys from stored procedures in inserts 
+- IBATISNET-162 : Ability to override the default result object creation mechanism 
+- IBATISNET-161 : Update log4net to last stable version 1.2.10 
 - IBATISNET-156 : Added support for MARS  
 				  Added allowMARS attribute on provider tag (used by SqlServer 2005, PostgreSQL).
 - IBATISNET-155 Allow Constructor Initialization on resultMap 
