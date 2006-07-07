@@ -40,7 +40,7 @@
 <h2>News</h2>
 
 <h3>iBATIS.NET DataMapper 1.5 and DataAccess 1.8 Beta!</h3>
-<p>The iBATIS.NET team is pleased to announce that the BETA releases of the DataMapper 1.5 and DataAccess 1.8 frameworks are ready!</p>
+<p>(Jul 5, 2006) The iBATIS.NET team is pleased to announce that the BETA releases of the DataMapper 1.5 and DataAccess 1.8 frameworks are ready!</p>
 
 <p>This release is primarily a bug fix and documentation enhancement release.  However, the first public binaries for .NET 2.0 have also been included:</p>
 
@@ -56,7 +56,7 @@
 
 
 <h3>iBATIS.NET DataMapper 1.3 and DataAccess 1.7 General Availability!</h3>
-<p>(June 12, 2006) The votes are in and both distributions are now tagged as GA!</p>
+<p>(Jun 12, 2006) The votes are in and both distributions are now tagged as GA!</p>
 <p><b><a href="dotnetdownloads.cgi">Download iBATIS.NET DataMapper 1.3 and DataAccess 1.7!</a></b></p>
 
 <h3>iBATIS Java 2.1.7 - Maintenance Release - Last 1.3 Compatible Release!</h3>
