@@ -40,17 +40,22 @@
     </ul>
 
     <ul>
-      <li><a href="http://prdownloads.sourceforge.net/ibatisnet/DataMapper-bin-1.2.1.zip?download">DataMapper 1.2.1</a> (Apache General Availability)</li>
-      <li><a href="http://prdownloads.sourceforge.net/ibatisnet/DataAccess-bin-1.6.1.zip?download">DataAccess 1.6.1</a> (Apache General Availability)</li>
-      <li><a href="http://prdownloads.sourceforge.net/ibatisnet/iBATIS-src-SVN-179390.zip?download">Source Revision 179390</a></li>
-      <li><a href="http://sourceforge.net/project/showfiles.php?group_id=109704">Old Releases (at SourceForge)</a></li>
+      <li><a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/IBatisNet.DataMapper-bin-1.5.0.zip">DataMapper 1.5</a> [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/IBatisNet.DataMapper-bin-1.5.0.zip.md5">MD5</a>] [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/IBatisNet.DataMapper-bin-1.5.0.zip.asc">PGP</a>] (Beta)</li>
+      <li><a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/IBatisNet.DataAccess-bin-1.8.0.zip">DataAccess 1.8</a> [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/IBatisNet.DataAccess-bin-1.8.0.zip.md5">MD5</a>] [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/IBatisNet.DataAccess-bin-1.8.0.zip.asc">PGP</a>] (Beta)</li>
+      <li><a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/Source-revision-419277.zip">Source Revision 419277</a>  [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/Source-revision-419277.zip.md5">MD5</a>] [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/Source-revision-419277.zip.asc">PGP</a>] (Beta)</li>
     </ul>
 
+    <ul>
+          <li><a href="http://sourceforge.net/project/showfiles.php?group_id=109704">Old Releases (at SourceForge)</a></li>
+    </ul>
 
   <h4>Examples</h4>
     <ul>
       <li><a href="http://prdownloads.sourceforge.net/ibatisnet/Tutorial-1.2.1.zip?download">DataMapper Tutorial 1.2.1 Docs and Source</a></li>
       <li><a href="http://prdownloads.sourceforge.net/ibatisnet/NPetshop-1.0.0.RC1.zip?download">NPetShop Example Application</a></li>
+    </ul>
+    <ul>
+      <li><a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/tutorial2.zip">DataMapper Tutorial .NET 2.0 Beta</a> [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/tutorial2.zip.md5">MD5</a>] [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/tutorial2.zip.asc">PGP</a>]</li>
     </ul>
 
     <h4>Documentation </h4>
@@ -63,10 +68,8 @@
           <li><a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataAccess-1.7.0.zip">DataAccess 1.7 GA Docs</a> [<a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataAccess-1.7.0.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataAccess-1.7.0.zip.asc">PGP</a>] (CHM, PDF, and SDK Help)</li>
         </ul><br/>
         <ul>
-          <li><a href="http://prdownloads.sourceforge.net/ibatisnet/Tutorial-1.2.1.zip?download">DataMapper Tutorial 1.2.1</a> Docs and Source</li>
-          <li><a href="http://prdownloads.sourceforge.net/ibatisnet/DataMapper-doc-1.2.1.zip?download">DataMapper 1.2.1 Docs</a> (CHM, PDF, and SDK Help)</li>
-          <li><a href="http://prdownloads.sourceforge.net/ibatisnet/DataAccess-doc-1.6.1.zip?download">DataAccess 1.6.1 Docs</a> (CHM, PDF, and SDK Help)</li>
-          <li><a href="http://ibatisnet.sourceforge.net/docs/en/sdkhelp/web/">DataMapper 1.2.1 and DataAccess 1.6.1 Online SDK Help</a></li>
+          <li><a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/Doc-DataMapper-1.5.0.zip">DataMapper 1.5 Beta Docs</a> [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/Doc-DataMapper-1.5.0.zip.md5">MD5</a>] [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/Doc-DataMapper-1.5.0.zip.asc">PGP</a>] (CHM, PDF, and SDK Help)</li>
+          <li><a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/Doc-DataAccess-1.8.0.zip">DataAccess 1.8 Beta Docs</a> [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/Doc-DataAccess-1.8.0.zip.md5">MD5</a>] [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/Doc-DataAccess-1.8.0.zip.asc">PGP</a>] (CHM, PDF, and SDK Help)</li>
         </ul>
       </li>
     </ul>
