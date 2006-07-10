@@ -15,7 +15,7 @@ public class JakartaCommonsLoggingImpl implements com.ibatis.common.logging.Log 
     return log.isDebugEnabled();
   }
 
-  public void error(String s, Exception e) {
+  public void error(String s, Throwable e) {
     log.error(s,e);
   }
 

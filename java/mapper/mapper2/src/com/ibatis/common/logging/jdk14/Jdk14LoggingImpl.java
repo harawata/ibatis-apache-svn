@@ -15,7 +15,7 @@ public class Jdk14LoggingImpl implements com.ibatis.common.logging.Log {
       return log.isLoggable(Level.FINE);
     }
 
-    public void error(String s, Exception e) {
+    public void error(String s, Throwable e) {
       log.log(Level.SEVERE, s, e);
     }
 

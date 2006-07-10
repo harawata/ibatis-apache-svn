@@ -45,7 +45,7 @@ public class PreparedStatementLogProxy extends BaseLogProxy implements Invocatio
     try {
       if (EXECUTE_METHODS.contains(method.getName())) {
         if (log.isDebugEnabled()) {
-          log.debug("{pstm-" + id + "} PreparedStatement: " + removeBreakingWhitespace(sql));
+          log.debug("{pstm-" + id + "} Executing Statement: " + removeBreakingWhitespace(sql));
           log.debug("{pstm-" + id + "} Parameters: " + getValueString());
           log.debug("{pstm-" + id + "} Types: " + getTypeString());
         }

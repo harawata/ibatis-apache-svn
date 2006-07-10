@@ -4,7 +4,7 @@ public interface Log {
 
   boolean isDebugEnabled();
 
-  void error(String s, Exception e);
+  void error(String s, Throwable e);
 
   void error(String s);
   

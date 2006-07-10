@@ -11,7 +11,7 @@ public class NoLoggingImpl implements Log {
     return false;
   }
 
-  public void error(String s, Exception e) {
+  public void error(String s, Throwable e) {
   }
 
   public void error(String s) {

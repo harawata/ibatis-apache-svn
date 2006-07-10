@@ -47,10 +47,16 @@ public class ConnectionLogProxy extends BaseLogProxy implements InvocationHandle
       throws Throwable {
     try {
       if ("prepareStatement".equals(method.getName())) {
+        if (log.isDebugEnabled()) {
+          log.debug("{conn-" + id + "} Preparing Statement: " + removeBreakingWhitespace((String) params[0]));
+        }
         PreparedStatement stmt = (PreparedStatement) method.invoke(connection, params);
         stmt = PreparedStatementLogProxy.newInstance(stmt, (String) params[0]);
         return stmt;
       } else if ("prepareCall".equals(method.getName())) {
+        if (log.isDebugEnabled()) {
+          log.debug("{conn-" + id + "} Preparing Call: " + removeBreakingWhitespace((String) params[0]));
+        }
         PreparedStatement stmt = (PreparedStatement) method.invoke(connection, params);
         stmt = PreparedStatementLogProxy.newInstance(stmt, (String) params[0]);
         return stmt;
@@ -62,7 +68,9 @@ public class ConnectionLogProxy extends BaseLogProxy implements InvocationHandle
         return method.invoke(connection, params);
       }
     } catch (Throwable t) {
-      throw ClassInfo.unwrapThrowable(t);
+      Throwable t1 = ClassInfo.unwrapThrowable(t);
+      log.error("Error calling Connection." + method.getName() + ':', t1);
+      throw t1;
     }
 
   }
