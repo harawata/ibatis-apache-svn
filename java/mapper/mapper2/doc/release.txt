@@ -46,6 +46,7 @@ Build Number: @buildNum@
  o Added IBATIS-308 - fetchSize for procedures
  o Added IBATIS-305 - corrected the documentation about logging, and added some methods to select specific log implementations
  o Added IBATIS-311 - Allow removeFirstPrepend to fire repeatedly in an <iterate> tag
+ o Added IBATIS-321 - Add logging of prepare operations
  
  
 ------------------------------
