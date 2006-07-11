@@ -2,6 +2,8 @@ package com.ibatis.common.logging;
 
 import java.lang.reflect.Constructor;
 
+import com.ibatis.common.resources.Resources;
+
 public class LogFactory {
 
   private static Constructor logConstructor;
@@ -16,8 +18,8 @@ public class LogFactory {
   private static void tryImplementation(String testClassName, String implClassName) {
     if (logConstructor == null) {
       try {
-        Class.forName(testClassName);
-        Class implClass = Class.forName(implClassName);
+        Resources.classForName(testClassName);
+        Class implClass = Resources.classForName(implClassName);
         logConstructor = implClass.getConstructor(new Class[]{Class.class});
       } catch (Throwable t) {
       }
@@ -44,8 +46,8 @@ public class LogFactory {
    */
   public static synchronized void selectLog4JLogging() {
     try {
-      Class.forName("org.apache.log4j.Logger");
-      Class implClass = Class.forName("com.ibatis.common.logging.log4j.Log4jImpl");
+      Resources.classForName("org.apache.log4j.Logger");
+      Class implClass = Resources.classForName("com.ibatis.common.logging.log4j.Log4jImpl");
       logConstructor = implClass.getConstructor(new Class[]{Class.class});
     } catch (Throwable t) {
     }
@@ -62,8 +64,8 @@ public class LogFactory {
    */
   public static synchronized void selectJavaLogging() {
     try {
-      Class.forName("java.util.logging.Logger");
-      Class implClass = Class.forName("com.ibatis.common.logging.jdk14.Jdk14LoggingImpl");
+      Resources.classForName("java.util.logging.Logger");
+      Class implClass = Resources.classForName("com.ibatis.common.logging.jdk14.Jdk14LoggingImpl");
       logConstructor = implClass.getConstructor(new Class[]{Class.class});
     } catch (Throwable t) {
     }

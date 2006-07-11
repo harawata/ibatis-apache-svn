@@ -31,6 +31,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
+import com.ibatis.common.resources.Resources;
+
 /**
  * A Probe implementation for working with DOM objects
  */
@@ -60,7 +62,7 @@ public class DomProbe extends BaseProbe {
     Element e = findNestedNodeByName(resolveElement(object), name, false);
     //todo alias types, don't use exceptions like this
     try {
-      return Class.forName(e.getAttribute("type"));
+      return Resources.classForName(e.getAttribute("type"));
     } catch (ClassNotFoundException e1) {
       return Object.class;
     }
@@ -70,7 +72,7 @@ public class DomProbe extends BaseProbe {
     Element e = findNestedNodeByName(resolveElement(object), name, false);
     //todo alias types, don't use exceptions like this
     try {
-      return Class.forName(e.getAttribute("type"));
+      return Resources.classForName(e.getAttribute("type"));
     } catch (ClassNotFoundException e1) {
       return Object.class;
     }

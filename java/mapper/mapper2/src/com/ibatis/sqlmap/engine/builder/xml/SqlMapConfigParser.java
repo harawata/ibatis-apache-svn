@@ -164,7 +164,7 @@ public class SqlMapConfigParser extends BaseParser {
         String enhancementEnabledAttr = attributes.getProperty("enhancementEnabled");
         boolean enhancementEnabled = (enhancementEnabledAttr == null || "true".equals(enhancementEnabledAttr));
         try {
-          enhancementEnabled = enhancementEnabled && Class.forName("net.sf.cglib.proxy.InvocationHandler") != null;
+          enhancementEnabled = enhancementEnabled && Resources.classForName("net.sf.cglib.proxy.InvocationHandler") != null;
         } catch (ClassNotFoundException e) {
           enhancementEnabled = false;
         }

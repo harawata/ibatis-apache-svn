@@ -290,7 +290,7 @@ public class SqlMapParser extends BaseParser {
         mapping.setTypeHandler(handler);
         try {
           if (javaType != null && javaType.length() > 0) {
-            mapping.setJavaType(Class.forName(javaType));
+            mapping.setJavaType(Resources.classForName(javaType));
           }
         } catch (ClassNotFoundException e) {
           throw new RuntimeException("Error setting javaType on parameter mapping.  Cause: " + e);
@@ -446,7 +446,7 @@ public class SqlMapParser extends BaseParser {
 
         try {
           if (javaType != null && javaType.length() > 0) {
-            mapping.setJavaType(Class.forName(javaType));
+            mapping.setJavaType(Resources.classForName(javaType));
           }
         } catch (ClassNotFoundException e) {
           throw new RuntimeException("Error setting javaType on result mapping.  Cause: " + e);
@@ -516,7 +516,7 @@ public class SqlMapParser extends BaseParser {
 
         try {
           if (javaType != null && javaType.length() > 0) {
-            mapping.setJavaType(Class.forName(javaType));
+            mapping.setJavaType(Resources.classForName(javaType));
           }
         } catch (ClassNotFoundException e) {
           throw new RuntimeException("Error setting javaType on result mapping.  Cause: " + e);

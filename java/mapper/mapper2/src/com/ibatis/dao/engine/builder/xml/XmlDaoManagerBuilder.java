@@ -177,7 +177,7 @@ public class XmlDaoManagerBuilder {
 
 
     try {
-      txMgr = (DaoTransactionManager) Class.forName(implementation).newInstance();
+      txMgr = (DaoTransactionManager) Resources.classForName(implementation).newInstance();
     } catch (Exception e) {
       throw new DaoException("Error while configuring DaoManager.  Cause: " + e.toString(), e);
     }
