@@ -50,6 +50,8 @@
   	
   	<zip destfile="doc.zip" >
   		<fileset dir="." includes="html/**/*" />
+  		<fileset dir="../.." includes="core/htmldoc/**/*" />
+  		
   	</zip>
 
   	<delete dir="html/reference/javadoc"/>
