@@ -2,8 +2,11 @@
 <?NLS TYPE="org.eclipse.help.toc"?>
 
 <toc label="Abator for iBATIS User Guide">
-  <topic label="Getting Started"  href="html/gettingstarted/intro.html">
-    <anchor id="gettingstarted"/>
+  <topic label="Getting Started">
+	<topic label="Quick Start Guide"  href="html/quickstart.html"/>
+	<topic label="Using the Eclipse User Interface"  href="html/eclipseui.html"/> 
+	<topic label="Future Roadmap"  href="html/roadmap.html"/> 
+	<topic label="Release Notes"  href="html/releasenotes.html"/> 
   </topic>
   
   <topic label="Core Abator Documentation">
