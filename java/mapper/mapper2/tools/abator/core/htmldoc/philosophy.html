@@ -1,5 +1,8 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3c.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <title>Abator Philosophy and Apology</title>
   <link type="text/css" rel="stylesheet" href="abator.css"/>
@@ -29,7 +32,7 @@ iBATIS is not an object relational mapper, and does not attempt to transparently
 persist objects.  So it falls on application developers to write SQL to interact with
 database tables.</p>
 
-<p>In large or enterprise class projects, many of these factors are quite common:
+<p>In large or enterprise class projects, many of these factors are quite common:</p>
 <ul>
   <li>Database design is often a separate function (with separate management) from OO domain
       design
@@ -64,7 +67,7 @@ be a <code>saveOrder(Order order)</code> method
 somewhere (in an OrderDAO, or a service object).  That method
 would interact with the Abator created DAOs for each of the 4 tables involved.</p>
 
-<p>What has Abator bought us in this case?  Several things:
+<p>What has Abator bought us in this case?  Several things:</p>
 <ul>
   <li>Reuse - it is likely that some tables will need to be accessed from multiple different DAOs
   or service methods.  Creating a DAO for each table promotes reuse and consistency within the

@@ -121,7 +121,7 @@ public class AbatorContext {
             }
 
             if (!StringUtility.stringHasValue(javaModelGeneratorConfiguration.getTargetPackage())) {
-                errors.add(Messages.getString("ValidationError.12",
+                errors.add(Messages.getString("ValidationError.12", //$NON-NLS-1$
                         "JavaModelGenerator", id)); //$NON-NLS-1$
             }
         }
@@ -134,7 +134,7 @@ public class AbatorContext {
             }
 
             if (!StringUtility.stringHasValue(sqlMapGeneratorConfiguration.getTargetPackage())) {
-                errors.add(Messages.getString("ValidationError.12",
+                errors.add(Messages.getString("ValidationError.12", //$NON-NLS-1$
                         "SQLMapGenerator", id)); //$NON-NLS-1$
             }
 		}
@@ -145,7 +145,7 @@ public class AbatorContext {
 			}
 
             if (!StringUtility.stringHasValue(daoGeneratorConfiguration.getTargetPackage())) {
-                errors.add(Messages.getString("ValidationError.12",
+                errors.add(Messages.getString("ValidationError.12", //$NON-NLS-1$
                         "DAOGenerator", id)); //$NON-NLS-1$
             }
 		}
