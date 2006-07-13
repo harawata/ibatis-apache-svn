@@ -20,6 +20,7 @@ Build Number: @buildNum@
  o Fixed IBATIS-281 - Nested iterate tags does not work
  o Fixed IBATIS-286 - close session upon null user connection
  o Fixed IBATIS-293 - Fix use of list[]-notation in propertyattributes of dynamic tags
+ o Fixed IBATIS-322 - consistently use the Resources class methods rather than Class.forName() 
  
  o Added IBATIS-22 - Specify Query Timeout
  o Added IBATIS-50 - Ability to override the default bean creation mechanism
