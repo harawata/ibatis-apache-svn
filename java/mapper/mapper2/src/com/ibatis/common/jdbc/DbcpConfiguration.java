@@ -125,6 +125,14 @@ public class DbcpConfiguration {
         basicDataSource.setMaxWait(Integer.parseInt(maxWait));
       }
 
+      Iterator props = map.keySet().iterator();
+      while (props.hasNext()) {
+        String propertyName = (String) props.next();
+        if (propertyName.startsWith(ADD_DRIVER_PROPS_PREFIX)) {
+          String value = (String) map.get(propertyName);
+          basicDataSource.addConnectionProperty(propertyName.substring(ADD_DRIVER_PROPS_PREFIX_LENGTH), value);
+        }
+      }
     }
     return basicDataSource;
   }
