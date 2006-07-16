@@ -58,12 +58,12 @@ namespace IBatisNet.DataMapper.MappedStatements.ArgumentStrategy
 
 			if (mapping.MemberType == typeof(IList))
 			{
-				reader = DataReaderTransformer.Transforme(reader, request.Session.DataSource.DbProvider);
+				reader = DataReaderTransformer.Transform(reader, request.Session.DataSource.DbProvider);
 				return selectStatement.ExecuteQueryForList(request.Session, keys); 
 			}
 			else // Strongly typed List
 			{
-				reader = DataReaderTransformer.Transforme(reader, request.Session.DataSource.DbProvider);
+				reader = DataReaderTransformer.Transform(reader, request.Session.DataSource.DbProvider);
 				IFactory factory = request.DataExchangeFactory.ObjectFactory.CreateFactory(mapping.MemberType, Type.EmptyTypes);
 				object values = factory.CreateInstance(null);
 				selectStatement.ExecuteQueryForList(request.Session, keys, (IList)values);

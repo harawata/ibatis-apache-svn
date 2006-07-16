@@ -165,7 +165,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 //					
 //					if (mapping.MemberType.BaseType == typeof(Array))
 //					{
-//						reader = DataReaderTransformer.Transforme(reader, request.Session.DataSource.DbProvider);
+//						reader = DataReaderTransformer.Transform(reader, request.Session.DataSource.DbProvider);
 //						IList values = queryStatement.ExecuteQueryForList(request.Session, keys); 
 //
 //						Type elementType = mapping.MemberType.GetElementType();
@@ -183,12 +183,12 @@ namespace IBatisNet.DataMapper.MappedStatements
 //					{
 //						if (mapping.MemberType == typeof(IList))
 //						{
-//							reader = DataReaderTransformer.Transforme(reader, request.Session.DataSource.DbProvider);
+//							reader = DataReaderTransformer.Transform(reader, request.Session.DataSource.DbProvider);
 //							return queryStatement.ExecuteQueryForList(request.Session, keys); 
 //						}
 //						else // Strongly typed List
 //						{
-//							reader = DataReaderTransformer.Transforme(reader, request.Session.DataSource.DbProvider);
+//							reader = DataReaderTransformer.Transform(reader, request.Session.DataSource.DbProvider);
 //							IFactory factory = request.ObjectFactory.CreateFactory(mapping.MemberType, Type.EmptyTypes);
 //							object values = factory.CreateInstance(null);
 //							queryStatement.ExecuteQueryForList(request.Session, keys, (IList)values);
@@ -199,7 +199,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 //                    else if (mapping.MemberType.IsGenericType &&
 //                         mapping.MemberType.GetGenericTypeDefinition() == typeof(IList<>)) 
 //                    {
-//                        reader = DataReaderTransformer.Transforme(reader, request.Session.DataSource.DbProvider);
+//                        reader = DataReaderTransformer.Transform(reader, request.Session.DataSource.DbProvider);
 //
 //                        Type[] typeArgs = mapping.MemberType.GetGenericArguments();
 //                        Type genericList = typeof(IList<>);
@@ -234,7 +234,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 //#endif
 //					else // The ResultProperty is map to a .Net object
 //					{
-//						reader = DataReaderTransformer.Transforme(reader, request.Session.DataSource.DbProvider);
+//						reader = DataReaderTransformer.Transform(reader, request.Session.DataSource.DbProvider);
 //						return queryStatement.ExecuteQueryForObject(request.Session, keys);
 //					}
 //					#endregion

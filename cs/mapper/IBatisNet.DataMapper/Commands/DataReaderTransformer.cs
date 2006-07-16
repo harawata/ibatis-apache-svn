@@ -40,7 +40,7 @@ namespace IBatisNet.DataMapper.Commands
 		/// </summary>
 		/// <param name="reader">The <see cref="IDataReader" /> which holds the records from the Database.</param>
 		/// <param name="dbProvider">The databse provider <see cref="IDbProvider"/></param>
-		public static IDataReader Transforme(IDataReader reader, IDbProvider dbProvider)
+		public static IDataReader Transform(IDataReader reader, IDbProvider dbProvider)
 		{
 			if (!dbProvider.AllowMARS)
 			{

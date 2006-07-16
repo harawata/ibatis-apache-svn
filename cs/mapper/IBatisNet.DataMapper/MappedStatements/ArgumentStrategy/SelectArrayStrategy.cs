@@ -55,7 +55,7 @@ namespace IBatisNet.DataMapper.MappedStatements.ArgumentStrategy
 			// Get the select statement
 			IMappedStatement selectStatement = request.MappedStatement.SqlMap.GetMappedStatement(mapping.Select);
 
-			reader = DataReaderTransformer.Transforme(reader, request.Session.DataSource.DbProvider);
+			reader = DataReaderTransformer.Transform(reader, request.Session.DataSource.DbProvider);
 			IList values = selectStatement.ExecuteQueryForList(request.Session, keys); 
 
 			Type elementType = mapping.MemberType.GetElementType();
