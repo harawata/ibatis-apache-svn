@@ -39,7 +39,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 				
 		<resultMap id="order-with-lines-collection" class="Order"
 								extends="lite-order-result-by-name" >
-			<result property="LineItems" column="Order_ID" lazyLoad="true" select="GetLineItemsForOrderWithListClass" />
+			<result property="LineItemsCollection" column="Order_ID" lazyLoad="true" select="GetLineItemsForOrderWithListClass" />
 		</resultMap>
 		
 		<resultMap id="order-with-lines-array" class="Order"
@@ -123,7 +123,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			<result property="Province"			column="Order_Province"/>
 			<result property="PostalCode"		column="Order_PostalCode"/>
 			<result property="LineItemsIList"	column="Order_ID" select="GetLineItemsForOrder" />	
-			<result property="LineItems"		column="Order_ID" select="GetLineItemsForOrder" lazyLoad="false" />
+			<result property="LineItemsCollection"		column="Order_ID" select="GetLineItemsForOrder" lazyLoad="false" />
 		</resultMap>
 		
 		<resultMap id="order-with-favourite-line-item" class="Order">
