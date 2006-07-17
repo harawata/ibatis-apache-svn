@@ -1,8 +1,0 @@
-Description:
-    Generates a RBatis::Base stub.
-
-Examples:
-    ./script/generate rbatis order
-    will generate:
-		    /app/models/order.rb
-		    /test/unit/order.rb
