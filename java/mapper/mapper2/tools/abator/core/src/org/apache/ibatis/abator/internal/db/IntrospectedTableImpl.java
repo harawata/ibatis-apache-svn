@@ -16,6 +16,8 @@
 
 package org.apache.ibatis.abator.internal.db;
 
+import java.util.Iterator;
+
 import org.apache.ibatis.abator.api.IntrospectedTable;
 import org.apache.ibatis.abator.config.FullyQualifiedTable;
 import org.apache.ibatis.abator.config.GeneratedKey;
@@ -47,13 +49,6 @@ public class IntrospectedTableImpl implements IntrospectedTable {
      */
     public FullyQualifiedTable getTable() {
         return tableConfiguration.getTable();
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.ibatis.abator.api.IntrospectedTable#getColumnDefinitions()
-     */
-    public ColumnDefinitions getColumnDefinitions() {
-        return columnDefinitions;
     }
 
     /* (non-Javadoc)
@@ -124,5 +119,37 @@ public class IntrospectedTableImpl implements IntrospectedTable {
      */
     public GeneratedKey getGeneratedKey() {
         return tableConfiguration.getGeneratedKey();
+    }
+
+    public Iterator getAllColumns() {
+        return columnDefinitions.getAllColumns().iterator();
+    }
+
+    public Iterator getBLOBColumns() {
+        return columnDefinitions.getBLOBColumns().iterator();
+    }
+
+    public ColumnDefinition getColumn(String columnName) {
+        return columnDefinitions.getColumn(columnName);
+    }
+
+    public Iterator getNonBLOBColumns() {
+        return columnDefinitions.getNonBLOBColumns().iterator();
+    }
+
+    public Iterator getNonPrimaryKeyColumns() {
+        return columnDefinitions.getNonPrimaryKeyColumns().iterator();
+    }
+
+    public Iterator getPrimaryKeyColumns() {
+        return columnDefinitions.getPrimaryKey().iterator();
+    }
+
+    public boolean hasJDBCDateColumns() {
+        return columnDefinitions.hasJDBCDateColumns();
+    }
+
+    public boolean hasJDBCTimeColumns() {
+        return columnDefinitions.hasJDBCTimeColumns();
     }
 }

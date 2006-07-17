@@ -4,9 +4,9 @@
        version.properties file (the "version" property).
   -->
   
-  <property name="src.dir" value="../src" />
-  <property name="doc.dir" value="../doc" />
-  <property name="html.doc.dir" value="../htmldoc" />
+  <property name="src.dir" value="${basedir}/../src" />
+  <property name="doc.dir" value="${basedir}/../doc" />
+  <property name="html.doc.dir" value="${basedir}/../htmldoc" />
   <property name="deploy.dir" value="${basedir}/deploy" />
   <property name="deploy.files" value="${deploy.dir}/files" />
   <property name="work.dir" value="${basedir}/work" />

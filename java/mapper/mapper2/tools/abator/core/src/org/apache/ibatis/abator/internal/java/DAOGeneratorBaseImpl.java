@@ -478,8 +478,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
         
         FullyQualifiedJavaType returnType;
         if (introspectedTable.getGeneratedKey() != null) {
-            ColumnDefinition cd = introspectedTable.getColumnDefinitions()
-                    .getColumn(introspectedTable.getGeneratedKey().getColumn());
+            ColumnDefinition cd = introspectedTable.getColumn(introspectedTable.getGeneratedKey().getColumn());
             if (cd == null) {
                 // the specified column doesn't exist, so don't do the generated
                 // key
@@ -978,7 +977,7 @@ public class DAOGeneratorBaseImpl implements DAOGenerator {
         
         method.addBodyLine("Map parms = new HashMap();"); //$NON-NLS-1$
 
-        Iterator iter = introspectedTable.getColumnDefinitions().getAllColumns().iterator();
+        Iterator iter = introspectedTable.getAllColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
             StringBuffer sb = new StringBuffer();

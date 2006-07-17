@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.ibatis.abator.exception.GenerationRuntimeException;
 import org.apache.ibatis.abator.ui.content.AbatorConfigurationFileAdapter;
 import org.apache.ibatis.abator.ui.plugin.AbatorUIPlugin;
 import org.eclipse.core.resources.IFile;
@@ -117,10 +116,6 @@ public class RunAbatorAction implements IObjectActionDelegate {
         if (exceptionToHandle instanceof InterruptedException) {
             status = new Status(IStatus.CANCEL, AbatorUIPlugin.getPluginId(),
                     IStatus.CANCEL, "Cancelled by User", exceptionToHandle);
-        } else if (exceptionToHandle instanceof GenerationRuntimeException) {
-            status = new Status(IStatus.ERROR, AbatorUIPlugin.getPluginId(),
-                    IStatus.ERROR, exceptionToHandle.getMessage(),
-                    exceptionToHandle);
         } else if (exceptionToHandle instanceof CoreException) {
             status = ((CoreException) exceptionToHandle).getStatus();
         } else {

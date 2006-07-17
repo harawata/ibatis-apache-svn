@@ -156,8 +156,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
                 .addBodyLine("criteriaWithBetweenValue = new ArrayList<Map<String, Object>>();"); //$NON-NLS-1$
         answer.addMethod(method);
 
-        Iterator iter = introspectedTable.getColumnDefinitions()
-                .getNonBLOBColumns().iterator();
+        Iterator iter = introspectedTable.getNonBLOBColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
             if (StringUtility.stringHasValue(cd.getTypeHandler())) {
@@ -317,7 +316,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
                 .getNewListInstance();
         listOfDates.addTypeArgument(FullyQualifiedJavaType.getDateInstance());
 
-        if (introspectedTable.getColumnDefinitions().hasJDBCDateColumns()) {
+        if (introspectedTable.hasJDBCDateColumns()) {
             topLevelClass.addImportedType(FullyQualifiedJavaType
                     .getDateInstance());
             topLevelClass.addImportedType(FullyQualifiedJavaType
@@ -378,7 +377,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
             answer.addMethod(method);
         }
 
-        if (introspectedTable.getColumnDefinitions().hasJDBCTimeColumns()) {
+        if (introspectedTable.hasJDBCTimeColumns()) {
             topLevelClass.addImportedType(FullyQualifiedJavaType
                     .getDateInstance());
             topLevelClass.addImportedType(FullyQualifiedJavaType
@@ -439,8 +438,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
             answer.addMethod(method);
         }
 
-        iter = introspectedTable.getColumnDefinitions().getAllColumns()
-                .iterator();
+        iter = introspectedTable.getAllColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
 

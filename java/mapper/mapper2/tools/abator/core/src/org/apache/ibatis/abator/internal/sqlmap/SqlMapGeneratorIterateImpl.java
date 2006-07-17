@@ -283,8 +283,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         answer.addComment();
 
-        Iterator iter = introspectedTable.getColumnDefinitions()
-                .getAllColumns().iterator();
+        Iterator iter = introspectedTable.getAllColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
             if (cd.isBLOBColumn()) {
@@ -342,8 +341,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         answer.addComment();
 
-        Iterator iter = introspectedTable.getColumnDefinitions()
-                .getAllColumns().iterator();
+        Iterator iter = introspectedTable.getAllColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
             if (!cd.isBLOBColumn()) {
@@ -409,8 +407,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         GeneratedKey gk = introspectedTable.getGeneratedKey();
 
         if (gk != null && !gk.isIdentity()) {
-            ColumnDefinition cd = introspectedTable.getColumnDefinitions()
-                    .getColumn(gk.getColumn());
+            ColumnDefinition cd = introspectedTable.getColumn(gk.getColumn());
             // if the column is null, then it's a configuration error. The
             // warning has already been reported
             if (cd != null) {
@@ -430,8 +427,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         ColumnDefinition identityColumn = null;
         boolean comma = false;
-        Iterator iter = introspectedTable.getColumnDefinitions()
-                .getAllColumns().iterator();
+        Iterator iter = introspectedTable.getAllColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
 
@@ -495,8 +491,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         sb.setLength(0);
         sb.append("set "); //$NON-NLS-1$
 
-        Iterator iter = introspectedTable.getColumnDefinitions()
-                .getNonPrimaryKeyColumns().iterator();
+        Iterator iter = introspectedTable.getNonPrimaryKeyColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
 
@@ -518,8 +513,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         }
 
         boolean and = false;
-        iter = introspectedTable.getColumnDefinitions().getPrimaryKey()
-                .iterator();
+        iter = introspectedTable.getPrimaryKeyColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
 
@@ -571,8 +565,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         sb.setLength(0);
         sb.append("set "); //$NON-NLS-1$
 
-        Iterator iter = introspectedTable.getColumnDefinitions()
-                .getNonBLOBColumns().iterator();
+        Iterator iter = introspectedTable.getNonBLOBColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
 
@@ -594,8 +587,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         }
 
         boolean and = false;
-        iter = introspectedTable.getColumnDefinitions().getPrimaryKey()
-                .iterator();
+        iter = introspectedTable.getPrimaryKeyColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
 
@@ -643,8 +635,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         answer.addElement(new TextElement(sb.toString()));
 
         boolean and = false;
-        Iterator iter = introspectedTable.getColumnDefinitions()
-                .getPrimaryKey().iterator();
+        Iterator iter = introspectedTable.getPrimaryKeyColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
 
@@ -746,8 +737,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
             comma = true;
         }
 
-        Iterator iter = introspectedTable.getColumnDefinitions()
-                .getAllColumns().iterator();
+        Iterator iter = introspectedTable.getAllColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
             if (comma) {
@@ -767,8 +757,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         answer.addElement(new TextElement(sb.toString()));
 
         boolean and = false;
-        iter = introspectedTable.getColumnDefinitions().getPrimaryKey()
-                .iterator();
+        iter = introspectedTable.getPrimaryKeyColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
 
@@ -1089,7 +1078,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         
         // if any of the columns have a user defined type handler, then we need
         // to add additional inner iterate elements that specify the type handler
-        Iterator iter = introspectedTable.getColumnDefinitions().getNonBLOBColumns().iterator();
+        Iterator iter = introspectedTable.getNonBLOBColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
             if (StringUtility.stringHasValue(cd.getTypeHandler())) {
@@ -1242,8 +1231,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
             comma = true;
         }
 
-        Iterator iter = introspectedTable.getColumnDefinitions()
-                .getAllColumns().iterator();
+        Iterator iter = introspectedTable.getAllColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
 
@@ -1318,8 +1306,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
             comma = true;
         }
 
-        Iterator iter = introspectedTable.getColumnDefinitions()
-                .getAllColumns().iterator();
+        Iterator iter = introspectedTable.getAllColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
 

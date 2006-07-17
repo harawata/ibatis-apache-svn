@@ -16,9 +16,11 @@
 
 package org.apache.ibatis.abator.api;
 
+import java.util.Iterator;
+
 import org.apache.ibatis.abator.config.FullyQualifiedTable;
 import org.apache.ibatis.abator.config.GeneratedKey;
-import org.apache.ibatis.abator.internal.db.ColumnDefinitions;
+import org.apache.ibatis.abator.internal.db.ColumnDefinition;
 import org.apache.ibatis.abator.internal.rules.TableType;
 
 /**
@@ -29,7 +31,6 @@ import org.apache.ibatis.abator.internal.rules.TableType;
  */
 public interface IntrospectedTable {
     FullyQualifiedTable getTable();
-    ColumnDefinitions getColumnDefinitions();
     TableType getTableType();
     boolean isSelectByExampleStatementEnabled();
     boolean isDeleteByExampleStatementEnabled();
@@ -40,4 +41,61 @@ public interface IntrospectedTable {
     String getSelectByExampleQueryId();
     String getSelectByPrimaryKeyQueryId();
     GeneratedKey getGeneratedKey();
+
+    ColumnDefinition getColumn(String columnName);
+    
+    /**
+     * Returns an iterator containing every column in the table except for
+     * BLOB columns.
+     * 
+     * @return iterator of ColumnDefinition objects
+     */
+    Iterator getNonBLOBColumns();
+    
+    /**
+     * Returns an iterator containing every BLOB column in the table
+     * (may be empty if the table doesn't have BLOBs).
+     * 
+     * @return iterator of ColumnDefinition objects
+     */
+    Iterator getBLOBColumns();
+
+    /**
+     * Returns an iterator containing every column in the table
+     * 
+     * @return iterator of ColumnDefinition objects
+     */
+    Iterator getAllColumns();
+    
+    /**
+     * Returns an iterator containing every column in the table's
+     * primary key (may be empty if the table doesn't have a primary key)
+     * 
+     * @return iterator of ColumnDefinition objects
+     */
+    Iterator getPrimaryKeyColumns();
+    
+    /**
+     * Returns an iterator containing every column in the table
+     * that is not in the primary key (including BLOB columns)
+     * 
+     * @return iterator of ColumnDefinition objects
+     */
+    Iterator getNonPrimaryKeyColumns();
+
+    /**
+     * Returns true if any of the columns in the table are JDBC Dates
+     * (as opposed to timestamps).
+     * 
+     * @return
+     */
+    boolean hasJDBCDateColumns();
+
+    /**
+     * Returns true if any of the columns in the table are JDBC Times
+     * (as opposed to timestamps).
+     * 
+     * @return
+     */
+    boolean hasJDBCTimeColumns();
 }

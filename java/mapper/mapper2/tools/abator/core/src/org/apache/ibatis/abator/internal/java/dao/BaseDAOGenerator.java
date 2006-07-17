@@ -455,8 +455,7 @@ public class BaseDAOGenerator implements DAOGenerator {
 
         FullyQualifiedJavaType returnType;
         if (introspectedTable.getGeneratedKey() != null) {
-            ColumnDefinition cd = introspectedTable.getColumnDefinitions()
-                    .getColumn(
+            ColumnDefinition cd = introspectedTable.getColumn(
                             introspectedTable.getGeneratedKey().getColumn());
             if (cd == null) {
                 // the specified column doesn't exist, so don't do the generated

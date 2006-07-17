@@ -16,7 +16,6 @@
 package org.apache.ibatis.abator.internal.java;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -137,7 +136,7 @@ public class JavaModelGeneratorDefaultImpl implements JavaModelGenerator {
      *            the generated fields and methods will be added to this object
      */
     protected void generateClassParts(FullyQualifiedTable table,
-            Collection columnDefinitions, TopLevelClass topLevelClass) {
+            Iterator columnDefinitions, TopLevelClass topLevelClass) {
 
         boolean trimStrings = "true".equalsIgnoreCase((String) properties //$NON-NLS-1$
                 .get("trimStrings")); //$NON-NLS-1$
@@ -146,9 +145,8 @@ public class JavaModelGeneratorDefaultImpl implements JavaModelGenerator {
         Field field;
         Method method;
 
-        Iterator iter = columnDefinitions.iterator();
-        while (iter.hasNext()) {
-            ColumnDefinition cd = (ColumnDefinition) iter.next();
+        while (columnDefinitions.hasNext()) {
+            ColumnDefinition cd = (ColumnDefinition) columnDefinitions.next();
             FullyQualifiedJavaType fqjt = cd.getResolvedJavaType()
                     .getFullyQualifiedJavaType();
 
@@ -314,8 +312,7 @@ public class JavaModelGeneratorDefaultImpl implements JavaModelGenerator {
         method.addBodyLine("return combineTypeOr;"); //$NON-NLS-1$
         topLevelClass.addMethod(method);
 
-        iter = introspectedTable.getColumnDefinitions().getAllColumns()
-                .iterator();
+        iter = introspectedTable.getAllColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
 
@@ -380,8 +377,7 @@ public class JavaModelGeneratorDefaultImpl implements JavaModelGenerator {
             answer.addImportedType(fqjt);
         }
 
-        generateClassParts(table, introspectedTable.getColumnDefinitions()
-                .getPrimaryKey(), answer);
+        generateClassParts(table, introspectedTable.getPrimaryKeyColumns(), answer);
 
         return answer;
     }
@@ -410,8 +406,7 @@ public class JavaModelGeneratorDefaultImpl implements JavaModelGenerator {
             }
         }
 
-        generateClassParts(table, introspectedTable.getColumnDefinitions()
-                .getNonBLOBColumns(), answer);
+        generateClassParts(table, introspectedTable.getNonBLOBColumns(), answer);
 
         return answer;
     }
@@ -437,8 +432,7 @@ public class JavaModelGeneratorDefaultImpl implements JavaModelGenerator {
             answer.setSuperClass(getRecordType(table));
         }
 
-        generateClassParts(table, introspectedTable.getColumnDefinitions()
-                .getBLOBColumns(), answer);
+        generateClassParts(table, introspectedTable.getBLOBColumns(), answer);
 
         return answer;
     }

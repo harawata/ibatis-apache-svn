@@ -7,6 +7,7 @@
 	<topic label="Using the Eclipse User Interface"  href="html/eclipseui.html"/> 
 	<topic label="Plugin Future Roadmap"  href="html/roadmap.html"/> 
 	<topic label="Plugin Release Notes"  href="html/releasenotes.html"/> 
+	<topic label="Building the Plugins from Subversion"  href="html/buildingFromSVN.html"/> 
   </topic>
   
   <topic label="Core Abator Documentation">
