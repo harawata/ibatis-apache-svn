@@ -1,7 +1,11 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3c.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <title>Abator Feature Debug Reference</title>
+  <link type="text/css" rel="stylesheet" href="../core/htmldoc/abator.css"/>
 </head>
 <body>
 <h1>Abator Feature Debug Reference</h1>
@@ -71,12 +75,11 @@ code is not supported in versions of Eclipse prior to version 3.1.</p>
         you did the SVN checkout (for example, /Abator/source/eclipse)</li>
       <li>Select the four projects under the directory, do not copy the projects into
         your workspace.  The filled out wizard looks like this: <br />
-        <p><img src="importWizard.gif"/></p>
+        <p><img src="importWizard.gif" alt="Eclipse Project Import Wizard"/></p>
       </li>
       <li>Press "Finish", wait for the workspace to build.</li>
     </ol>
   </li>
-  <p />
   <li>Note that there may be errors in the build depending on which JDK you have installed
     (for the official release, Abator is compiled with JDK 1.4.2).
     If you see an error stating that <code>java.lang.Object</code> cannot be resolved,
@@ -95,6 +98,7 @@ code is not supported in versions of Eclipse prior to version 3.1.</p>
         the errors should be removed.  You may see warnings in the workspace, but you
         can ignore them</li>
     </ol>
+  </li>
 </ol>
 
 <h2>Debugging</h2>
@@ -146,7 +150,30 @@ like to rebuild the archive, simply execute the <code>buildDoc.xml</code> file
 in the <code>org.apache.ibatis.abator.doc</code> project (an Ant build file).</p>
 
 <h2>Building the Abator Core JAR in Eclipse</h2>
+<p>If you would like to debug the Abator core JAR, then you can create a
+Java project for the core JAR by following these steps:</p>
+<ol>
+  <li>Start the Eclipse new project wizard
+     (File&gt;New&gt;Project...)
+  </li>
+  <li>Select the "Java Project from Existing Ant Buildfile" wizard, press "Next"</li>
+  <li>Browse to the "build.xml" file in the checked out project (for example
+    /Abator/source/core/build\build.xml).  Accept the default for the
+    other fields and press "Finish".</li>
+  <li>Wait for the workspace to build.</li>
+</ol>
 
+<p>Note that Abator is compiled with JDK 1.4.2 for distribution.  If you are using a
+JSE 5.0 or later compiler you will see many warnings in the workspace related to
+type safety.  To disable these warnings, set the compiler compliance level for the
+new project to 1.4.</p>
+
+<p>If you make a change in the Abator core files, you can use the <code>buildAbator.xml</code>
+Ant build file in the <code>org.apache.ibatis.abator.core</code> project to update the
+JAR in the plug-in.  If you have both a JDK 1.4 and JDK 5.0 installed on your machine,
+there could be errors when running this build file.  To fix the errors, make sure
+that the JRE for the "Abator for iBATIS" project is set to the 1.4.2 JRE.  You might need
+to configure a new JRE in Eclipse to make this happen.</p>
 
 </body>
 </html>
