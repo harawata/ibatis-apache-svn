@@ -41,7 +41,11 @@
   </target>
   
   <target name="buildAbatorJar" depends="prepare">
-    <javac srcdir="${src.dir}" destdir="${work.classes}" deprecation="true" debug="true" />
+    <javac srcdir="${src.dir}"
+    	destdir="${work.classes}"
+    	deprecation="true" 
+    	debug="true" 
+        classpath="../devlib/ant.jar"/>
 
     <!-- copy non-compilable resources -->    
     <copy todir="${work.classes}">

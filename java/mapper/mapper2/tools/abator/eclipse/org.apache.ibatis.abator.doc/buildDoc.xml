@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project default="javadoc">
+<project default="refresh">
   <path id="org.abache.ibatis.abator.doc.javadocclasspath">
   	<pathelement location="../org.apache.ibatis.abator.ui/bin"/>
   	<pathelement location="../org.apache.ibatis.abator.core/abator.jar"/>
@@ -35,7 +35,10 @@
 
   	<delete dir="html/javadoc"/>
   	
-  	<eclipse.refreshLocal resource="org.apache.ibatis.abator.doc"/>
-  	
   </target>
+	
+  <target name="refresh" depends="javadoc" if="eclipse.running">
+  	<eclipse.refreshLocal resource="org.apache.ibatis.abator.doc"/>
+  </target>
+	
 </project>
