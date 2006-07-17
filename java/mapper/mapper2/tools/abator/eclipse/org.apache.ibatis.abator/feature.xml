@@ -232,7 +232,7 @@ END OF TERMS AND CONDITIONS
          id="org.apache.ibatis.abator.doc"
          download-size="0"
          install-size="0"
-         version="0.6.5"/>
+         version="0.7.0"/>
 
    <plugin
          id="org.apache.ibatis.abator.ui"

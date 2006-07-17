@@ -25,6 +25,7 @@ import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.abator.exception.ShellException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
@@ -180,6 +181,10 @@ public class JavaFileMerger {
     }
 
     public String getMergedSource() throws ShellException {
+        if (Platform.inDebugMode()) {
+            System.out.println("Starting Abator Java merge for file " + generatedJavaFile.getFileName());
+        }
+        
         ASTParser astParser = ASTParser.newParser(AST.JLS3);
 
         ICompilationUnit icu = JavaCore.createCompilationUnitFrom(existingFile);

@@ -3,36 +3,15 @@
   <path id="org.abache.ibatis.abator.doc.javadocclasspath">
   	<pathelement location="../org.apache.ibatis.abator.ui/bin"/>
   	<pathelement location="../org.apache.ibatis.abator.core/abator.jar"/>
-  	<pathelement location="\JavaTools\eclipse_30\plugins\org.eclipse.core.resources_3.0.1\resources.jar"/>
-  	<pathelement location="\JavaTools\eclipse_30\plugins\org.eclipse.ui_3.0.2\ui.jar"/>
-  	<pathelement location="\JavaTools\eclipse_30\plugins\org.eclipse.ui.workbench_3.0.2\workbench.jar"/>
-  	<pathelement location="\JavaTools\eclipse_30\plugins\org.eclipse.osgi_3.0.1\osgi.jar"/>
-  	<pathelement location="\JavaTools\eclipse_30\plugins\org.eclipse.jdt.core_3.0.2\jdtcore.jar"/>
-  	<pathelement location="\JavaTools\eclipse_30\plugins\org.eclipse.osgi_3.0.1\defaultAdaptor.jar"/>
-  	<pathelement location="\JavaTools\eclipse_30\plugins\org.eclipse.ui.workbench.texteditor_3.0.1\texteditor.jar"/>
-  	<pathelement location="\JavaTools\eclipse_30\plugins\org.eclipse.osgi_3.0.1\resolver.jar"/>
-  	<pathelement location="\JavaTools\eclipse_30\plugins\org.eclipse.osgi_3.0.1\eclipseAdaptor.jar"/>
-  	<pathelement location="\JavaTools\eclipse_30\plugins\org.eclipse.osgi_3.0.1\core.jar"/>
-  	<pathelement location="\JavaTools\eclipse_30\plugins\org.eclipse.ui.editors_3.0.1\editors.jar"/>
-  	<pathelement location="\JavaTools\eclipse_30\plugins\org.eclipse.jdt.launching_3.0.2\launching.jar"/>
-  	<pathelement location="\JavaTools\eclipse_30\plugins\org.eclipse.core.filebuffers_3.0.1\filebuffers.jar"/>
-  	<pathelement location="\JavaTools\eclipse_30\plugins\org.eclipse.ui.ide_3.0.2\ide.jar"/>
-  	<pathelement location="\JavaTools\eclipse_30\plugins\org.eclipse.core.runtime_3.0.2\runtime.jar"/>
-  	<pathelement location="\JavaTools\eclipse_30\plugins\org.eclipse.jface.text_3.0.2\jfacetext.jar"/>
-  	<pathelement location="\JavaTools\eclipse_30\plugins\org.eclipse.osgi_3.0.1\console.jar"/>
-  	<pathelement location="\JavaTools\eclipse_30\plugins\org.eclipse.text_3.0.1\text.jar"/>
-  	<pathelement location="\JavaTools\eclipse_30\plugins\org.eclipse.swt.win32_3.0.2\ws\win32\swt.jar"/>
-  	<pathelement location="\JavaTools\eclipse_30\plugins\org.eclipse.jface_3.0.2\jface.jar"/>
-  	<pathelement location="\JavaTools\eclipse_30\plugins\org.apache.ant_1.6.2\lib\ant.jar"/>
   </path>
 
   <target name="javadoc">
-  	<delete dir="html/reference/javadoc"/>
+  	<delete dir="html/javadoc"/>
 
     <javadoc 
       access="protected" 
       author="true" 
-      destdir="html/reference/javadoc" 
+      destdir="html/javadoc" 
       doctitle="Abator for iBATIS" 
       nodeprecated="false" 
       nodeprecatedlist="false" 
@@ -54,7 +33,7 @@
   		
   	</zip>
 
-  	<delete dir="html/reference/javadoc"/>
+  	<delete dir="html/javadoc"/>
   	
   	<eclipse.refreshLocal resource="org.apache.ibatis.abator.doc"/>
   	
