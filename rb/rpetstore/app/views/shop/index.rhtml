@@ -1,8 +1,10 @@
+<% if @user then %>
 <div id="Welcome">
   <div id="WelcomeContent">
-    Welcome TODO!
+    Welcome <%= @user.first_name %>!
   </div>
 </div>
+<% end %>
 
 <div id="Main">
   <div id="Sidebar">

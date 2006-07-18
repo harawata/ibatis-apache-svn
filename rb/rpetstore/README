@@ -1,3 +1,24 @@
 == Rails PetStore
 
 This is the demo app for RBatis, the Ruby port of iBatis.
+
+=== Setting up the database
+
+RPetstore is configured out of the box for MySQL. You may need to edit something in 'config/database.yml' for everything to work on your system. To set up the MySQL database issue the following commands:
+
+mysql -u root -e 'create database rpetstore_development'
+mysql -u root rpetstore_development -e "source db/mysql/schema.sql"
+mysql -u root rpetstore_development -e "source db/mysql/dataload.sql"
+
+If you want to use another database load the equivalent SQL files from the 'db' directory into that database and change 'config/database.yml'.
+
+=== Starting the app
+
+Either use mongrel:
+
+sudo gem install mongrel
+mongrel_rails start
+
+Or use built in webrick:
+
+./script/server

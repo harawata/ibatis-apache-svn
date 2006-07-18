@@ -20,6 +20,7 @@ class Account < RBatis::Base
   attr_accessor :list_option
   attr_accessor :banner_option
   attr_reader :banner
+  attr_reader :mylist
   
   validates_presence_of :username
   #validates_uniqueness_of :username
@@ -51,6 +52,11 @@ class Account < RBatis::Base
     order.bill_zip = self.zip
     order.bill_country = self.country
   end
+  
+  def mylist
+    return nil unless favourite_category
+    favourite_category.products
+  end
 
   resultmap :default,
     :username => ['userid', String],
@@ -64,11 +70,12 @@ class Account < RBatis::Base
     :zip => ['zip', String],
     :country => ['country', String],
     :phone => ['phone', String],
-    :favourite_category => ['favcategory', String],
+    :favourite_category_name => ['favcategory', String],
     :language_preference => ['langpref', String],
     :list_option => ['mylistopt', boolean],
     :banner_option => ['banneropt', boolean],
-    :banner => RBatis::LazyAssociation.new(:to => Banner, :select => :find_by_favcategory, :key => :favourite_category)
+    :banner => RBatis::LazyAssociation.new(:to => Banner, :select => :find_by_favcategory, :key => :favourite_category_name),
+    :favourite_category => RBatis::LazyAssociation.new(:to => Category, :select => :find_by_name, :key => :favourite_category_name)
   
   statement :select_one, :authenticate do |username, password|
     [%{

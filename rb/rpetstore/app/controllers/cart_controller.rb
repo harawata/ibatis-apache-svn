@@ -22,6 +22,18 @@ class CartController < ApplicationController
     @items = @cart.items
   end
   
+  def remove
+    @cart.items.delete_if{|i| i.item_id == params[:item]}
+    redirect_to :action => :index
+  end
+  
+  def update_quantities
+    params[:quantity].each_with_index do |quantity, index|
+      @cart.items[index].quantity = quantity.to_i
+    end
+    redirect_to :action => :index
+  end
+  
   private
   
   def create_or_get_cart

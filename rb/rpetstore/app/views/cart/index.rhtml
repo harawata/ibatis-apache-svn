@@ -27,7 +27,7 @@
             <td><%= item.description %></td>
             <td><%= item.in_stock? %></td>
             <td>				
-              <input type="text" size="3" name="<%= item.id %>" value="<%= item.quantity %>"/>
+              <input type="text" size="3" name="quantity[]" value="<%= item.quantity %>"/>
             </td>
             <td><%= format_money item.list_price %></td>
             <td><%= format_money item.total %></td>
