@@ -639,7 +639,7 @@ vs:defaultnsprefix="" >
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="constructor" minOccurs="0" maxOccurs="1"/>
-				<xs:element ref="result" maxOccurs="unbounded"/>
+				<xs:element ref="result" minOccurs="0" maxOccurs="unbounded"/>
 				<xs:element ref="discriminator" minOccurs="0" maxOccurs="1"/>
 				<xs:element ref="subMap" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
