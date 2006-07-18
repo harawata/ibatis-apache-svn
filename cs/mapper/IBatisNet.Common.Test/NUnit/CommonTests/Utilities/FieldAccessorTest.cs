@@ -76,8 +76,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             accountSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "_account");
             accountGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "_account");
 
-            enumSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "_day");
-            enumGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "_day");
+            enumSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "day");
+            enumGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "day");
 
 #if dotnet2
             nullableSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "_intNullable");

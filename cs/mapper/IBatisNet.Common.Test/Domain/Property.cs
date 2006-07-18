@@ -38,7 +38,7 @@ namespace IBatisNet.Common.Test.Domain
 		private Guid _guid = Guid.Empty;
 		private TimeSpan _timeSpan = TimeSpan.MinValue;
 		private Account _account = null;
-        private Days _day;
+        private Days day;
 
 #if dotnet2
         private Int32? _intNullable = null;
@@ -56,8 +56,8 @@ namespace IBatisNet.Common.Test.Domain
 
         public Days Day
         {
-            get { return _day; }
-            set { _day = value; }
+            get { return day; }
+            set { day = value; }
         }
 
 		public string String

@@ -44,7 +44,7 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
         /// <param name="request">The request.</param>
         /// <param name="reader">The reader.</param>
         /// <param name="resultObject">The result object.</param>
-        public object Process(RequestScope request, IDataReader reader, object resultObject)
+        public object Process(RequestScope request, ref IDataReader reader, object resultObject)
         {
             object outObject = resultObject; 
 

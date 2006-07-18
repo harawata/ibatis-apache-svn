@@ -40,6 +40,6 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
         /// <param name="request">The request.</param>
         /// <param name="reader">The reader.</param>
         /// <param name="resultObject">The result object.</param>
-        object Process(RequestScope request, IDataReader reader, object resultObject);
+        object Process(RequestScope request, ref IDataReader reader, object resultObject);
     }
 }

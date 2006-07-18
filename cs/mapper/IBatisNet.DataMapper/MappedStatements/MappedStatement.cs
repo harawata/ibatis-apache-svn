@@ -249,13 +249,23 @@ namespace IBatisNet.DataMapper.MappedStatements
 			
 			using ( IDbCommand command = request.IDbCommand )
 			{
-				using ( IDataReader reader = command.ExecuteReader() )
-				{				
+                IDataReader reader = command.ExecuteReader();
+			    try
+			    {
 					if ( reader.Read() )
 					{
-						result = _resultStrategy.Process(request, reader, resultObject);		
-					}
-				}
+                        result = _resultStrategy.Process(request, ref reader, resultObject);		
+					}			        
+			    }
+                catch
+                {
+                    throw;
+                }
+                finally
+                {
+                    reader.Close();
+                    reader.Dispose();
+                }	    
 
 				ExecutePostSelect(request);
 
@@ -325,12 +335,22 @@ namespace IBatisNet.DataMapper.MappedStatements
 
             using (IDbCommand command = request.IDbCommand)
             {
-                using (IDataReader reader = command.ExecuteReader())
+                IDataReader reader = command.ExecuteReader();
+                try 
                 {
                     if (reader.Read())
                     {
-                        result = (T)_resultStrategy.Process(request, reader, resultObject);
+                        result = (T)_resultStrategy.Process(request, ref reader, resultObject);
                     }
+			    }
+                catch
+                {
+                    throw;
+                }
+                finally
+                {
+                    reader.Close();
+                    reader.Dispose();
                 }
 
                 ExecutePostSelect( request );
@@ -457,9 +477,10 @@ namespace IBatisNet.DataMapper.MappedStatements
 				{
 					list = _statement.CreateInstanceOfListClass();
 				}
-
-				using ( IDataReader reader = command.ExecuteReader() )
-				{			
+                
+			    IDataReader reader = command.ExecuteReader();
+                try		
+                {
 					// skip results
 					for (int i = 0; i < skipResults; i++) 
 					{
@@ -476,7 +497,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 						while ( (maxResults == NO_MAXIMUM_RESULTS || n < maxResults) 
 							&& reader.Read() )
 						{
-							object obj = _resultStrategy.Process(request, reader, null);
+                            object obj = _resultStrategy.Process(request, ref reader, null);
 						
 							list.Add( obj );
 							n++;
@@ -487,13 +508,22 @@ namespace IBatisNet.DataMapper.MappedStatements
 						while ( (maxResults == NO_MAXIMUM_RESULTS || n < maxResults) 
 							&& reader.Read() )
 						{
-							object obj = _resultStrategy.Process(request, reader, null);
+                            object obj = _resultStrategy.Process(request, ref reader, null);
 
 							rowDelegate(obj, parameterObject, list);
 							n++;
 						}
 					}
-				}
+			    }
+			    catch
+			    {
+			        throw;
+			    }
+			    finally
+                {
+			        reader.Close();
+			        reader.Dispose();                    
+                }
 
 				ExecutePostSelect(request);
 
@@ -518,15 +548,25 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 			using ( IDbCommand command = request.IDbCommand )
 			{
-				using ( IDataReader reader = command.ExecuteReader() )
-				{			
+				IDataReader reader = command.ExecuteReader();
+                try 
+                {			
 					while ( reader.Read() )
 					{
-						object obj = _resultStrategy.Process(request, reader, null);
+                        object obj = _resultStrategy.Process(request, ref reader, null);
 				
 						resultObject.Add( obj );
 					}
-				}
+			    }
+                catch
+                {
+                    throw;
+                }
+                finally
+                {
+                    reader.Close();
+                    reader.Dispose();
+                }
 
 				ExecutePostSelect(request);
 
@@ -620,8 +660,9 @@ namespace IBatisNet.DataMapper.MappedStatements
                 {
                     list = _statement.CreateInstanceOfGenericListClass<T>();
                 }
-
-                using (IDataReader reader = command.ExecuteReader())
+                
+                IDataReader reader = command.ExecuteReader();
+                try 
                 {
                     // skip results
                     for (int i = 0; i < skipResults; i++)
@@ -639,7 +680,7 @@ namespace IBatisNet.DataMapper.MappedStatements
                         while ((maxResults == NO_MAXIMUM_RESULTS || n < maxResults)
                             && reader.Read())
                         {
-                            T obj = (T)_resultStrategy.Process(request, reader, null);
+                            T obj = (T)_resultStrategy.Process(request, ref reader, null);
 
                             list.Add(obj);
                             n++;
@@ -650,12 +691,21 @@ namespace IBatisNet.DataMapper.MappedStatements
                         while ((maxResults == NO_MAXIMUM_RESULTS || n < maxResults)
                             && reader.Read())
                         {
-                            T obj = (T)_resultStrategy.Process(request, reader, null);
+                            T obj = (T)_resultStrategy.Process(request, ref reader, null);
 
                             rowDelegate(obj, parameterObject, list);
                             n++;
                         }
                     }
+			    }
+                catch
+                {
+                    throw;
+                }
+                finally
+                {
+                    reader.Close();
+                    reader.Dispose();
                 }
 
                 ExecutePostSelect( request );
@@ -681,14 +731,24 @@ namespace IBatisNet.DataMapper.MappedStatements
 
             using (IDbCommand command = request.IDbCommand)
             {
-                using (IDataReader reader = command.ExecuteReader())
+                IDataReader reader = command.ExecuteReader();
+                try 
                 {
                     while (reader.Read())
                     {
-                        T obj = (T)_resultStrategy.Process(request, reader, null);
+                        T obj = (T)_resultStrategy.Process(request, ref reader, null);
 
                         resultObject.Add(obj);
                     }
+ 			    }
+                catch
+                {
+                    throw;
+                }
+                finally
+                {
+                    reader.Close();
+                    reader.Dispose();
                 }
 
                 ExecutePostSelect( request );
@@ -863,13 +923,14 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 			using (IDbCommand command = request.IDbCommand)
 			{
-				using (IDataReader reader = command.ExecuteReader())
-				{
+			    IDataReader reader = command.ExecuteReader();
+                try 
+                {
 					if (rowDelegate == null)
 					{
 						while (reader.Read() )
 						{
-							object obj = _resultStrategy.Process(request, reader, null);
+                            object obj = _resultStrategy.Process(request, ref reader, null);
 							object key = ObjectProbe.GetMemberValue(obj, keyProperty, request.DataExchangeFactory.AccessorFactory);
 							object value = obj;
 							if (valueProperty != null)
@@ -883,7 +944,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 					{
 						while (reader.Read())
 						{
-							object obj = _resultStrategy.Process(request, reader, null);
+                            object obj = _resultStrategy.Process(request, ref reader, null);
 							object key = ObjectProbe.GetMemberValue(obj, keyProperty,request.DataExchangeFactory.AccessorFactory);
 							object value = obj;
 							if (valueProperty != null)
@@ -894,7 +955,16 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 						}
 					}
-				}
+                }
+                catch
+                {
+                    throw;
+                }
+                finally
+                {
+                    reader.Close();
+                    reader.Dispose();
+                }
 			}
 			return map;
 

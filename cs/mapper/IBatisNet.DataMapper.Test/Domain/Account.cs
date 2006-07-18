@@ -8,7 +8,7 @@ namespace IBatisNet.DataMapper.Test.Domain
 	[Serializable]
 	public class Account
 	{
-		private int _id;
+		private int id;
 		private string _firstName;
 		private string _lastName;
 		private string _emailAddress;
@@ -19,17 +19,17 @@ namespace IBatisNet.DataMapper.Test.Domain
 		public Account()
 		{}
 
-		public Account(int id, string firstName, string lastName)
+        public Account(int identifiant, string firstName, string lastName)
 		{
-			_id = id;
+            id = identifiant;
 			_firstName = firstName;
 			_lastName = lastName;
 		}
 
 		public int Id
 		{
-			get { return _id; }
-			set { _id = value; }
+			get { return id; }
+			set { id = value; }
 		}
 
 		public string FirstName

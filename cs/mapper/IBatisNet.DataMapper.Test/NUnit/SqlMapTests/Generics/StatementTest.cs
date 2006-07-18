@@ -506,6 +506,17 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Generics
 
         }
 
+        /// <summary>
+        /// Test  QueryForList with constructor use on result object
+        /// </summary>
+        [Test]
+        public void TestQueryForListWithConstructor()
+        {
+            IList<Order> list = sqlMap.QueryForList<Order>("GetManyOrderWithConstructor", null);
+
+            Assert.IsTrue(list.Count>0);
+        }
+
         #endregion
 
         #region Row delegate

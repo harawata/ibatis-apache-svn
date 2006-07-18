@@ -59,24 +59,24 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
 		/// <param name="request">The request.</param>
 		/// <param name="reader">The reader.</param>
 		/// <param name="resultObject">The result object.</param>
-		public object Process(RequestScope request, IDataReader reader, object resultObject)
+        public object Process(RequestScope request, ref IDataReader reader, object resultObject)
 		{
 			// Check if the ResultClass is a 'primitive' Type
 			if (request.DataExchangeFactory.TypeHandlerFactory.IsSimpleType(request.Statement.ResultClass))
 			{
-				return _simpleTypeStrategy.Process(request, reader, resultObject);
+                return _simpleTypeStrategy.Process(request, ref reader, resultObject);
 			}
             else if (typeof(IDictionary).IsAssignableFrom(request.Statement.ResultClass)) 
 			{
-				return _dictionaryStrategy.Process(request, reader, resultObject);
+                return _dictionaryStrategy.Process(request, ref reader, resultObject);
 			}
             else if (typeof(IList).IsAssignableFrom(request.Statement.ResultClass)) 
 			{
-				return _listStrategy.Process(request, reader, resultObject);
+                return _listStrategy.Process(request, ref reader, resultObject);
 			}
 			else
 			{
-				return _autoMapStrategy.Process(request, reader, resultObject);
+                return _autoMapStrategy.Process(request, ref reader, resultObject);
 			}
 		}
 

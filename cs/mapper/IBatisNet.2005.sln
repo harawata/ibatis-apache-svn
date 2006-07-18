@@ -14,12 +14,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		External-Bin\Net\1.1\Castle.DynamicProxy.dll = External-Bin\Net\1.1\Castle.DynamicProxy.dll
 		External-Bin\Net\1.1\Castle.DynamicProxy.license.txt = External-Bin\Net\1.1\Castle.DynamicProxy.license.txt
-		IBatisNet.Schemas\DaoConfig.xsd = IBatisNet.Schemas\DaoConfig.xsd
 		iBATIS.build = iBATIS.build
 		External-Bin\Net\1.1\log4net.dll = External-Bin\Net\1.1\log4net.dll
 		External-Bin\Net\1.1\log4net.license.txt = External-Bin\Net\1.1\log4net.license.txt
 		External-Bin\Net\1.1\log4net.xml = External-Bin\Net\1.1\log4net.xml
-		External-Bin\Net\1.1\nunit.framework.dll = External-Bin\Net\1.1\nunit.framework.dll
 		providers.config = providers.config
 		External-Bin\Net\1.1\readme.txt = External-Bin\Net\1.1\readme.txt
 	EndProjectSection

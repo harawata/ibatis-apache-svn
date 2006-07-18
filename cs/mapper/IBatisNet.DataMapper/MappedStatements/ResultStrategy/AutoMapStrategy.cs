@@ -43,7 +43,7 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
 		/// <param name="request">The request.</param>
 		/// <param name="reader">The reader.</param>
 		/// <param name="resultObject">The result object.</param>
-		private void AutoMapReader(RequestScope request, IDataReader reader,ref object resultObject) 
+		private void AutoMapReader(RequestScope request, ref IDataReader reader,ref object resultObject) 
 		{
 			if (request.Statement.RemapResults)
 			{
@@ -84,7 +84,7 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
         /// <param name="request">The request.</param>
         /// <param name="reader">The reader.</param>
         /// <param name="resultObject">The result object.</param>
-        public object Process(RequestScope request, IDataReader reader, object resultObject)
+        public object Process(RequestScope request, ref IDataReader reader, object resultObject)
         {
 			object outObject = resultObject; 
 
@@ -93,7 +93,7 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
 				outObject = request.Statement.CreateInstanceOfResultClass();
 			}
 
-            AutoMapReader(request, reader, ref outObject);
+            AutoMapReader(request, ref reader, ref outObject);
 
 			return outObject;
         }

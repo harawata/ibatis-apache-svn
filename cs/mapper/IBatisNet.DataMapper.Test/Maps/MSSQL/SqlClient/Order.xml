@@ -686,6 +686,11 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 					resultMap="order-result-constructor3">
 			select * from Orders where Order_ID = #value#
 		</statement>
+
+    <statement id="GetManyOrderWithConstructor"
+					resultMap="order-result-constructor3">
+      select * from Orders
+    </statement>
 		
 		<statement id="GetOrderConstructor4"
 					parameterClass="int"

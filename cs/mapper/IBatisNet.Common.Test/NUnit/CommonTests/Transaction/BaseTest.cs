@@ -29,15 +29,15 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Transaction
 		/// <summary>
 		/// The sqlMap
 		/// </summary>
-		protected static SqlMapper sqlMap;
+		protected static ISqlMapper sqlMap;
 		/// <summary>
 		/// A daoManager with a SimpledaoSession
 		/// </summary>
-		protected static DaoManager daoManager = null;
+		protected static IDaoManager daoManager = null;
 		/// <summary>
 		/// A daoManager with a sqlMapSession
 		/// </summary>
-		protected static DaoManager daoManagerSqlMap = null;
+		protected static IDaoManager daoManagerSqlMap = null;
 
 		private static readonly ILog _logger = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 		
@@ -91,7 +91,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Transaction
 		/// </param>
 		protected static void Configure(object obj)
 		{
-			sqlMap = (SqlMapper)obj;
+			sqlMap = (ISqlMapper)obj;
 		}
 
 		/// <summary>

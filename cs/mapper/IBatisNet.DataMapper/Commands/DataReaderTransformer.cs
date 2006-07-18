@@ -42,7 +42,7 @@ namespace IBatisNet.DataMapper.Commands
 		/// <param name="dbProvider">The databse provider <see cref="IDbProvider"/></param>
 		public static IDataReader Transform(IDataReader reader, IDbProvider dbProvider)
 		{
-			if (!dbProvider.AllowMARS)
+            if (!dbProvider.AllowMARS && !(reader is InMemoryDataReader))
 			{
 				// The underlying reader will be closed.
 				return new InMemoryDataReader(reader);

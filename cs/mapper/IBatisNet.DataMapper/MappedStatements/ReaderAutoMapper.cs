@@ -101,7 +101,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 				{
                     ISetAccessorFactory setAccessorFactory = dataExchangeFactory.AccessorFactory.SetAccessorFactory;
                     ISetAccessor setAccessor = setAccessorFactory.CreateSetAccessor(targetType, membersName[i]);
-                    propertyMap.Add(membersName[i].ToUpper(), setAccessor);
+                    propertyMap.Add(membersName[i], setAccessor);
 				}
 
 				// Get all column Name from the reader
@@ -111,7 +111,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 				for (int i = 0; i < count; i++) 
 				{
 					string columnName = dataColumn.Rows[i][0].ToString();
-                    ISetAccessor matchedSetAccessor = propertyMap[columnName.ToUpper()] as ISetAccessor;
+                    ISetAccessor matchedSetAccessor = propertyMap[columnName] as ISetAccessor;
 
 					ResultProperty property = new ResultProperty();
 					property.ColumnName = columnName;
