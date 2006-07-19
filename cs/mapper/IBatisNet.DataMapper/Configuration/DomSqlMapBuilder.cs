@@ -1439,6 +1439,11 @@ namespace IBatisNet.DataMapper.Configuration
 			DynamicSql dynamic = new DynamicSql( _configScope,  statement );
 			StringBuilder sqlBuffer = new StringBuilder();
 
+			if (statement.Id=="DynamicJIRA")
+			{
+				Console.Write("tt");
+			}
+			
 			_configScope.ErrorContext.MoreInfo = "process the Sql statement";
 
 			// Resolve "extend" attribute on Statement
@@ -1504,7 +1509,7 @@ namespace IBatisNet.DataMapper.Configuration
 					} 
 					else 
 					{
-						sqlText = _paramParser.ParseInlineParameterMap(_configScope, statement, data );
+						sqlText = _paramParser.ParseInlineParameterMap(_configScope, null, data );
 					}
 
 					dynamic.AddChild(sqlText);

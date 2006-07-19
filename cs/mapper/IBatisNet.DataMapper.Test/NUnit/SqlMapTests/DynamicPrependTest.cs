@@ -45,6 +45,22 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		#region Dynamic Prepend tests
 
 		/// <summary>
+		/// Test Dynamic With Prepend (1)
+		/// </summary>
+		[Test] 
+		public void TestDynamicJIRA168()  
+		{
+			Query query = new Query();
+			Account account = new Account();
+			account.Id = 1;
+			query.DataObject = account;
+
+			account = (Account) sqlMap.QueryForObject("DynamicJIRA168", query);
+
+			AssertAccount1(account);
+		}
+		
+		/// <summary>
 		/// Test Iterate With Prepend (1)
 		/// </summary>
 		[Test] 
