@@ -1,6 +1,18 @@
 IBatisNet Change Log
 
 ------------------------------
+1.5.1 - BETA
+------------------------------
+Issues
+- IBATISNET-172 : Issue with QueryForList with constructor resultMap and select argument  
+- IBATISNET-170 : auto-result-map Bug  
+- IBATISNET-169 : SqlMap.xsd Correction   
+- IBATISNET-168 : The parameter class reflection does not work anymore  
+
+Improvements/Changes
+- IBATISNET-167 : Update nunit to last stable version 2.2.8 
+
+------------------------------
 1.5 - 05/07/2006 BETA
 ------------------------------
 Issues
