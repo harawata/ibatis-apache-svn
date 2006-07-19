@@ -1,3 +1,9 @@
+#
+# 
+# Author::    Jon Tirsen  (mailto:jtirsen@apache.org)
+# Copyright:: Copyright (c) 2006 Apache Software Foundation
+# License::   Apache Version 2.0 (see http://www.apache.org/licenses/)
+
 module RBatis
   module Sanitizer
     # Accepts an array or string.  The string is returned untouched, but the array has each value

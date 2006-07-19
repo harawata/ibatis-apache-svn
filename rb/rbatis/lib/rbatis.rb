@@ -1,13 +1,22 @@
+#
+# 
+# Author::    Jon Tirsen  (mailto:jtirsen@apache.org)
+# Copyright:: Copyright (c) 2006 Apache Software Foundation
+# License::   Apache Version 2.0 (see http://www.apache.org/licenses/)
+
 require 'rbatis/sanitizer'
 
+# Converts Fixnum from a database record.
 def Fixnum.from_database(record, column)
   record[column].to_i
 end
 
+# Converts String from a database record.
 def String.from_database(record, column)
   record[column].to_s
 end
 
+# Converts Time from a database record.
 def Time.from_database(record, column)
   Time.parse(record[column])
 end
@@ -150,7 +159,8 @@ module RBatis
     # except that all columns are prefixed with the specified +prefix+.
     # Use with EagerAssociation to fetch associated items from an OUTER JOIN fetch
     # to accomplish eager loading and avoiding the N+1 select problem.
-    def prefix(prefix)
+    # TODO: Not implemented correctly yet.
+    def prefix(prefix) # :nodoc:
       ResultMap.new(factory, fields.collect{|n,f| [n, f.prefix(prefix)]})
     end
     
@@ -184,13 +194,15 @@ module RBatis
       type.from_database(record, column)
     end
     
-    # Creates a new column mapping with the column name prefixed with +prefix+.
-    def prefix(prefix)
+    # Creates a new column mapping with the column name prefixed with +prefix+. Useful when
+    # doing eager associations.
+    # TODO: not implemented correctly yet.
+    def prefix(prefix)  # :nodoc:
       self.class.new(prefix + column, type)
     end
   end
   
-  class LazyLoadProxy
+  class LazyLoadProxy # :nodoc:
     def initialize(loader, container)
       @loader = loader
       @container = container
@@ -241,7 +253,9 @@ module RBatis
     end
   end
   
-  class EagerAssociation
+  # Implements loading of eager outer join associations.
+  # TODO: Not implemented correctly yet.
+  class EagerAssociation # :nodoc:
     attr_accessor :name
     attr_reader :resultmap
     
@@ -263,64 +277,125 @@ module RBatis
       included_into.instance_variable_set(:@resultmaps, {})
       included_into.instance_variable_set(:@statements, {})
       class <<included_into
+        
+        include ClassMethods
 
-        def statements
-          @statements
-        end
-        
-        alias selects statements
-        alias inserts statements
-        alias updates statements
-        
-        def resultmaps
-          @resultmaps
-        end
+      end
+    end
+    
+    module ClassMethods
+      def statements
+        @statements
+      end
+      
+      alias selects statements # :nodoc:
+      alias inserts statements # :nodoc:
+      alias updates statements # :nodoc:
+      
+      # Returns Hash of all #resultmaps defined by #resultmap.
+      def resultmaps
+        @resultmaps
+      end
 
-        def maps(cls)
-          @maps = cls
-        end
-        
-        def mapped_class
-          @maps || self
-        end
-        
-        def boolean
-          BooleanMapper.new
-        end
-        
-        def get_or_allocate(recordmap, record)
-          mapped_class.allocate
-        end
-        
-        def resultmap(name = :default, fields = {})
-          resultmaps[name] = ResultMap.new(self, fields)
-        end
+      # Specify which class this Repository maps to.
+      def maps(cls)
+        @maps = cls
+      end
+      
+      # Returns the mapped_class (specified with #maps) or +self+ if not specified.
+      def mapped_class
+        @maps || self
+      end
+      
+      # Returns a BooleanMapper, useful for #resultmaps like this:
+      #   resultmap :default,
+      #     :username => ['userid', String],
+      #     :email_offers => ['offersopt', boolean],
+      def boolean
+        BooleanMapper.new
+      end
+      
+      def get_or_allocate(recordmap, record) # :nodoc:
+        mapped_class.allocate
+      end
+      
+      # Defines a named ResultMap which is a map from field name to mapping specification.
+      # For example:
+      #   resultmap :default,
+      #     :username => ['userid', String],
+      #     :email => ['email', String],
+      #     :first_name => ['firstname', String],
+      #     :last_name => ['lastname', String],
+      #     :address1 => ['addr1', String],
+      #     :address2 => ['addr2', String],
+      #     :city => ['city', String],
+      #     :state => ['state', String],
+      #     :zip => ['zip', String],
+      #     :country => ['country', String],
+      #     :phone => ['phone', String],
+      #     :favourite_category_name => ['favcategory', String],
+      #     :language_preference => ['langpref', String],
+      #     :list_option => ['mylistopt', boolean],
+      #     :banner_option => ['banneropt', boolean],
+      #     :banner => RBatis::LazyAssociation.new(:to => Banner, 
+      #                                           :select => :find_by_favcategory,
+      #                                           :key => :favourite_category_name),
+      #     :favourite_category => RBatis::LazyAssociation.new(:to => Category, 
+      #                                                       :select => :find_by_name,
+      #                                                       :key => :favourite_category_name)
+      #
+      def resultmap(name = :default, fields = {})
+        resultmaps[name] = ResultMap.new(self, fields)
+      end
 
-        def extend_resultmap(name, base, fields)
-          resultmaps[name] = base.extend(fields)
-        end
-        
-        def statement(statement_type, name = statement_type, params = {}, &proc)
-          statement_type = Statement::SHORTCUTS[statement_type] unless statement_type.respond_to?(:new)
-          statement = statement_type.new(params, &proc)
-          statement.connection_provider = self
-          statement.resultmap = resultmaps[:default] if statement.respond_to?(:resultmap=) && statement.resultmap.nil?
-          statement.validate
-          statements[name] = statement
-          eval <<-EVAL
-            def #{name}(*args)
-              statements[:#{name}].execute(*args)
-            end
-          EVAL
-        end
+      # Useful for eager loading.
+      # TODO not implemented properly yet.
+      def extend_resultmap(name, base, fields) # :nodoc:
+        resultmaps[name] = base.extend(fields)
+      end
+      
+      # Instantiates the statement and puts it into #statements also generates a class method with the same name that invokes the statement. For example:
+      #
+      #   class Product < RBatis::Base
+      #     statement :select_one, :find do |productid|
+  		#   	  ["SELECT * FROM product WHERE productid = ?", productid]
+  		#     end
+  		#   end
+  		#
+  		# Can be invoked with:
+  		#   Product.select_one(id)
+  		#
+  		# Note: This also needs a +resultmap+ named +:default+:
+      #  
+      # +statement_type+ is one of:
+      # :select:: Selects and maps multiple object (see Select)
+      # :select_one:: Selects and maps one object (see SelectOne)
+      # :select_value:: Selects a single value such as an integer or a string (see SelectValue)
+      # :insert:: Inserts new records into the database (see Insert)
+      # :update:: Updates the database (see Update)
+      # :delete:: Deletes records from the database (see Delete)
+      #
+      def statement(statement_type, name = statement_type, params = {}, &proc)
+        statement_type = Statement::SHORTCUTS[statement_type] unless statement_type.respond_to?(:new)
+        statement = statement_type.new(params, &proc)
+        statement.connection_provider = self
+        statement.resultmap = resultmaps[:default] if statement.respond_to?(:resultmap=) && statement.resultmap.nil?
+        statement.validate
+        statements[name] = statement
+        eval <<-EVAL
+          def #{name}(*args)
+            statements[:#{name}].execute(*args)
+          end
+        EVAL
+      end
 
-        def create(*args, &proc)
-          mapped_class.new(*args, &proc)
-        end
-        
-        def reset_statistics
-          selects.each_value{|s| s.reset_statistics}
-        end
+      # Creates a new instance of mapped_class.
+      def create(*args, &proc)
+        mapped_class.new(*args, &proc)
+      end
+      
+      def reset_statistics # :nodoc:
+        selects.each_value{|s| s.reset_statistics}
       end
     end
   end

@@ -1,25 +1,25 @@
-class Dispatcher
-  def reset_application!
-    Controllers.clear!
-    Dependencies.clear
-    ActiveRecord::Base.reset_subclasses
-    Dependencies.remove_subclasses_for(ActiveRecord::Base, ActiveRecord::Observer, ActionController::Base)
-    Dependencies.remove_subclasses_for(RBatis::Base)
-    Dependencies.remove_subclasses_for(ActionMailer::Base) if defined?(ActionMailer::Base)
-  end
-end
+# Integration of RBatis with the Ruby on Rails framework.
+# 
+# Author::    Jon Tirsen  (mailto:jtirsen@apache.org)
+# Copyright:: Copyright (c) 2006 Apache Software Foundation
+# License::   Apache Version 2.0 (see http://www.apache.org/licenses/)
 
 module RBatis
+
+  # This is class should be used as a base-class when using RBatis with 
+  # the Ruby on Rails framework.
   class Base
     include Repository
     include ::Reloadable::Subclasses
   
     cattr_accessor :logger
     
+    # Creates new instance can optionally pass Hash to initialize all attributes.
     def initialize(attributes={})
       self.attributes = attributes
     end
     
+    # Updates attributes in passed Hash.
     def attributes=(attributes)
       attributes.each do |key, value|
         send("#{key}=", value)
@@ -39,10 +39,13 @@ module RBatis
       end
     end
     
+    # Just calls #save, hook for Ruby on Rails.
     def save!
       save
     end
     
+    # If new_record? returns true it calls the +insert+ statement defined 
+    # on this class, otherwise it calls the +update+ statement.
     def save
       if new_record?
         id = self.class.insert(self)
@@ -53,11 +56,14 @@ module RBatis
       end
     end
     
+    # Calls name= with new value.
     def update_attribute(name, value)
       send(name.to_s + '=', value)
       save
     end
     
+    # Called by the RBatis framework when loaded, sets new_record? to false so that #save
+    # works properly.
     def on_load
       @new_record = false
     end
