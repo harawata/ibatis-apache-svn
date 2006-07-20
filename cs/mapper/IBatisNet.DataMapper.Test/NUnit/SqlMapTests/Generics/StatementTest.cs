@@ -510,7 +510,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Generics
         /// Test  QueryForList with constructor use on result object
         /// </summary>
         [Test]
-        public void TestQueryForListWithConstructor()
+        public void TestJIRA172()
         {
             IList<Order> list = sqlMap.QueryForList<Order>("GetManyOrderWithConstructor", null);
 

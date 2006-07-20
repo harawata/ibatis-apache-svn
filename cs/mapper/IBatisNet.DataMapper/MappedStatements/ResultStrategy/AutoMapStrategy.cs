@@ -79,7 +79,7 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
 
         /// <summary>
         /// Processes the specified <see cref="IDataReader"/> 
-        /// when ..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.
+        /// a an auto result map is used.
         /// </summary>
         /// <param name="request">The request.</param>
         /// <param name="reader">The reader.</param>
