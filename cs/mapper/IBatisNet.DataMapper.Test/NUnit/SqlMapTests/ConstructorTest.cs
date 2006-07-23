@@ -111,6 +111,34 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
 			Assert.IsNull(order.Account);
 		}
+
+		/// <summary>
+		/// Test constructor with an argument using a resultMapping where
+		/// - the resulMap argument use another constructor
+		/// - all second constructor arguments are null.
+		/// </remarks>
+		[Test]
+		public void TestJIRA173()
+		{
+			Order order = sqlMap.QueryForObject("GetOrderConstructor8",11) as Order;
+
+			Assert.IsTrue(order.Id == 11);
+			Assert.IsNull(order.Account);
+		}
+
+		/// <summary>
+		/// Test resultMap with a result property using another resultMap and where
+		/// - the result property resultMap use a constructor
+		/// - all the constructor arguments are null.
+		/// </remarks>
+		[Test]
+		public void TestJIRA174()
+		{
+			Order order = sqlMap.QueryForObject("GetOrderConstructor9",11) as Order;
+
+			Assert.IsTrue(order.Id == 11);
+			Assert.IsNull(order.Account);
+		}
 		
 		/// <summary>
 		/// Test constructor with select attribute on argument

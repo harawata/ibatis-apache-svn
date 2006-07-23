@@ -50,22 +50,34 @@ namespace IBatisNet.DataMapper.MappedStatements.ArgumentStrategy
 			ResultProperty mapping, ref IDataReader reader, object keys)
 		{
 			object[] parameters = null;
+			bool isParameterFound = false;
+
 			if (mapping.NestedResultMap.Parameters.Count >0)
 			{
-				parameters = new object[resultMap.Parameters.Count];
+				parameters = new object[mapping.NestedResultMap.Parameters.Count];
 				// Fill parameters array
 				for(int index=0; index< mapping.NestedResultMap.Parameters.Count; index++)
 				{
 					ResultProperty property = mapping.NestedResultMap.Parameters[index];
 					parameters[index] = property.GetDataBaseValue( reader );
 					request.IsRowDataFound = request.IsRowDataFound || (parameters[index] != null);
+					isParameterFound = isParameterFound || (parameters[index] != null);
 				}
 			}
 
-			object obj = mapping.NestedResultMap.CreateInstanceOfResult(parameters);
-			if (FillObjectWithReaderAndResultMap(request, reader, mapping.NestedResultMap, obj) == false)
+			object obj = null;
+			// If I have a constructor tag and all argumments values are null, the obj is null
+			if (mapping.NestedResultMap.Parameters.Count >0 && isParameterFound==false)
 			{
 				obj = null;
+			}
+			else
+			{
+				obj = mapping.NestedResultMap.CreateInstanceOfResult(parameters);
+				if (FillObjectWithReaderAndResultMap(request, reader, mapping.NestedResultMap, obj) == false)
+				{
+					obj = null;
+				}
 			}
 
 			return obj;

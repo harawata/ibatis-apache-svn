@@ -53,24 +53,36 @@ namespace IBatisNet.DataMapper.MappedStatements.PropertyStrategy
 		{
 			// Creates object
 			object[] parameters = null;
+			bool isParameterFound = false;
+
 			if (mapping.NestedResultMap.Parameters.Count >0)
 			{
-				parameters = new object[resultMap.Parameters.Count];
+				parameters = new object[mapping.NestedResultMap.Parameters.Count];
 				// Fill parameters array
 				for(int index=0; index< mapping.NestedResultMap.Parameters.Count; index++)
 				{
 					ResultProperty resultProperty = mapping.NestedResultMap.Parameters[index];
-					parameters[index] = resultProperty.ArgumentStrategy.GetValue(request, resultMap, resultProperty, ref reader, null);
+					parameters[index] = resultProperty.ArgumentStrategy.GetValue(request, mapping.NestedResultMap, resultProperty, ref reader, null);
 					request.IsRowDataFound = request.IsRowDataFound || (parameters[index] != null);
+					isParameterFound = isParameterFound || (parameters[index] != null);
 				}
 			}
 
-			object obj = mapping.NestedResultMap.CreateInstanceOfResult(parameters);
-			
-			// Fills properties on the new object
-			if (this.FillObjectWithReaderAndResultMap(request, reader, mapping.NestedResultMap, obj) == false)
+			object obj = null;
+			// If I have a constructor tag and all argumments values are null, the obj is null
+			if (mapping.NestedResultMap.Parameters.Count >0 && isParameterFound==false)
 			{
 				obj = null;
+			}
+			else
+			{
+				obj = mapping.NestedResultMap.CreateInstanceOfResult(parameters);
+				
+				// Fills properties on the new object
+				if (this.FillObjectWithReaderAndResultMap(request, reader, mapping.NestedResultMap, obj) == false)
+				{
+					obj = null;
+				}				
 			}
 
 			// Sets created object on the property
