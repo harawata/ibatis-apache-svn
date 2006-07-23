@@ -1,8 +1,11 @@
+using System;
+
 namespace IBatisNet.DataMapper.Test.Domain
 {
 	/// <summary>
 	/// Summary for Document.
 	/// </summary>
+    [Serializable]
 	public class Document
 	{
 		private int _id = -1;
