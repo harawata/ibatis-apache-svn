@@ -93,6 +93,16 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			<result property="BannerOption" column="Account_Banner_Option" dbType="Varchar" type="bool"/>
 			<result property="CartOption"	column="Account_Cart_Option" typeHandler="HundredsBool"/>
 		</resultMap>
+
+    <resultMap id="account-result-joined-document"  class="Account" >
+      <result property="id"           column="Account_ID"/>
+      <result property="FirstName"    column="Account_FirstName"/>
+      <result property="LastName"     column="Account_LastName"/>
+      <result property="EmailAddress" column="Account_Email" nullValue="no_email@provided.com"/>
+      <result property="BannerOption" column="Account_Banner_Option" dbType="Varchar" type="bool"/>
+      <result property="CartOption"	column="Account_Cart_Option" typeHandler="HundredsBool"/>
+      <result property="Document" resultMapping="Document.document"/>
+    </resultMap>
     
     <resultMap id="indexed-account-result" class="Account">
 			<result property="Id"           	columnIndex="0"/>
@@ -126,7 +136,15 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
     ============================================= 
     -->
 	<statements>
-	
+
+    <select id="JIRA175" parameterClass="Integer"
+         resultMap="account-result-joined-document">
+      select *
+      from Accounts a, Documents d
+      where a.Account_ID = d.Account_ID
+      And a.Account_ID = #value#
+    </select>
+    
 	  <select id="SelectAccountConstructor" parameterClass="Integer"
 					resultMap="account-result-constructor">
 			select *

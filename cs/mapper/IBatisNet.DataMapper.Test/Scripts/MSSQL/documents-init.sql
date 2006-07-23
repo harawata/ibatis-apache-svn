@@ -15,7 +15,8 @@ CREATE TABLE [dbo].[Documents] (
 	[Document_Title] [varchar] (32) NULL ,
 	[Document_Type] [varchar] (32)  NULL ,
 	[Document_PageNumber] [int] NULL  ,
-	[Document_City] [varchar] (32)  NULL
+	[Document_City] [varchar] (32)  NULL,
+	[Account_Id] int null
 ) ON [PRIMARY]
 
 ALTER TABLE [dbo].[Documents] WITH NOCHECK ADD 
@@ -26,9 +27,9 @@ ALTER TABLE [dbo].[Documents] WITH NOCHECK ADD
 
 -- Creating Test Data 
 
-INSERT INTO [dbo].[Documents] VALUES (1, 'The World of Null-A', 'Book', 55, null);
-INSERT INTO [dbo].[Documents] VALUES (2, 'Le Progres de Lyon', 'Newspaper', null , 'Lyon');
-INSERT INTO [dbo].[Documents] VALUES (3, 'Lord of the Rings', 'Book', 3587, null);
-INSERT INTO [dbo].[Documents] VALUES (4, 'Le Canard enchaine', 'Tabloid', null , 'Paris');
-INSERT INTO [dbo].[Documents] VALUES (5, 'Le Monde', 'Broadsheet', null , 'Paris');
-INSERT INTO [dbo].[Documents] VALUES (6, 'Foundation', 'Monograph', 557, null);
+INSERT INTO [dbo].[Documents] VALUES (1, 'The World of Null-A', 'Book', 55, null, 5);
+INSERT INTO [dbo].[Documents] VALUES (2, 'Le Progres de Lyon', 'Newspaper', null , 'Lyon', NULL);
+INSERT INTO [dbo].[Documents] VALUES (3, 'Lord of the Rings', 'Book', 3587, null, NULL);
+INSERT INTO [dbo].[Documents] VALUES (4, 'Le Canard enchaine', 'Tabloid', null , 'Paris', NULL);
+INSERT INTO [dbo].[Documents] VALUES (5, 'Le Monde', 'Broadsheet', null , 'Paris', NULL);
+INSERT INTO [dbo].[Documents] VALUES (6, 'Foundation', 'Monograph', 557, null, NULL);

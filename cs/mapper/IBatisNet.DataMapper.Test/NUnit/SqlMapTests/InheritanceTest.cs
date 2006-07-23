@@ -30,6 +30,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		[SetUp] 
 		public void Init() 
 		{
+            InitScript(sqlMap.DataSource, ScriptDirectory + "account-init.sql");
 			InitScript( sqlMap.DataSource, ScriptDirectory + "documents-init.sql" );
 		}
 
@@ -129,6 +130,22 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			news = (Newspaper) list[5];
 			AssertNewspaper(news, 4, "Le Canard enchaine", "Paris");
 		}
+	    
+	    /// <summary>
+		/// Test Inheritance On Result Property
+		/// </summary>
+        [Test]
+        public void TestJIRA175()
+	    {
+            Account account = sqlMap.QueryForObject("JIRA175", 5) as Account;
+            Assert.AreEqual(5, account.Id, "account.Id");
+            Assert.AreEqual("Gilles", account.FirstName, "account.FirstName");
+	        
+            Book book = account.Document as Book;
+            Assert.IsNotNull(book);
+            AssertBook(book, 1, "The World of Null-A", 55);
+	    }
+	    
 		#endregion 
 
 		void AssertDocument(Document document, int id, string title)

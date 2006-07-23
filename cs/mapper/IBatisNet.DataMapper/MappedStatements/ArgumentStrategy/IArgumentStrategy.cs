@@ -38,12 +38,10 @@ namespace IBatisNet.DataMapper.MappedStatements.ArgumentStrategy
 		/// Gets the value of an argument constructor.
 		/// </summary>
 		/// <param name="request">The current <see cref="RequestScope"/>.</param>
-		/// <param name="resultMap">The result map.</param>
 		/// <param name="mapping">The <see cref="ResultProperty"/> with the argument infos.</param>
 		/// <param name="reader">The current <see cref="IDataReader"/>.</param>
 		/// <param name="keys">The keys</param>
 		/// <returns>The paremeter value.</returns>
-		object GetValue(RequestScope request, ResultMap resultMap, 
-			ResultProperty mapping, ref IDataReader reader, object keys);
+		object GetValue(RequestScope request, ResultProperty mapping, ref IDataReader reader, object keys);
 	}
 }

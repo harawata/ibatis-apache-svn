@@ -15,6 +15,7 @@ namespace IBatisNet.DataMapper.Test.Domain
 		private int[] _ids = null;
 		private bool _bannerOption = false;
 		private bool _cartOption = false;
+	    private Document _document = null;
 
 		public Account()
 		{}
@@ -67,5 +68,11 @@ namespace IBatisNet.DataMapper.Test.Domain
 			get { return _cartOption; }
 			set { _cartOption = value; }
 		}
+
+        public Document Document
+        {
+            get { return _document; }
+            set { _document = value; }
+        }
 	}
 }

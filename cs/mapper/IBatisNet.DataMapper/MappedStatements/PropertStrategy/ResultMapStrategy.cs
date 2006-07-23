@@ -55,14 +55,16 @@ namespace IBatisNet.DataMapper.MappedStatements.PropertyStrategy
 			object[] parameters = null;
 			bool isParameterFound = false;
 
-			if (mapping.NestedResultMap.Parameters.Count >0)
+            ResultMap resultMapping = mapping.NestedResultMap.ResolveSubMap(reader);
+
+            if (resultMapping.Parameters.Count > 0)
 			{
-				parameters = new object[mapping.NestedResultMap.Parameters.Count];
+                parameters = new object[resultMapping.Parameters.Count];
 				// Fill parameters array
-				for(int index=0; index< mapping.NestedResultMap.Parameters.Count; index++)
+                for (int index = 0; index < resultMapping.Parameters.Count; index++)
 				{
-					ResultProperty resultProperty = mapping.NestedResultMap.Parameters[index];
-					parameters[index] = resultProperty.ArgumentStrategy.GetValue(request, mapping.NestedResultMap, resultProperty, ref reader, null);
+                    ResultProperty resultProperty = resultMapping.Parameters[index];
+                    parameters[index] = resultProperty.ArgumentStrategy.GetValue(request, resultProperty, ref reader, null);
 					request.IsRowDataFound = request.IsRowDataFound || (parameters[index] != null);
 					isParameterFound = isParameterFound || (parameters[index] != null);
 				}
@@ -70,16 +72,16 @@ namespace IBatisNet.DataMapper.MappedStatements.PropertyStrategy
 
 			object obj = null;
 			// If I have a constructor tag and all argumments values are null, the obj is null
-			if (mapping.NestedResultMap.Parameters.Count >0 && isParameterFound==false)
+            if (resultMapping.Parameters.Count > 0 && isParameterFound == false)
 			{
 				obj = null;
 			}
 			else
 			{
-				obj = mapping.NestedResultMap.CreateInstanceOfResult(parameters);
+                obj = resultMapping.CreateInstanceOfResult(parameters);
 				
 				// Fills properties on the new object
-				if (this.FillObjectWithReaderAndResultMap(request, reader, mapping.NestedResultMap, obj) == false)
+                if (this.FillObjectWithReaderAndResultMap(request, reader, resultMapping, obj) == false)
 				{
 					obj = null;
 				}				

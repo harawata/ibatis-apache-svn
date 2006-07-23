@@ -30,14 +30,11 @@ using System.Collections;
 using System.Data;
 using System.Runtime.CompilerServices;
 using IBatisNet.Common;
-using IBatisNet.Common.Utilities.Objects;
-using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
 using IBatisNet.DataMapper.Configuration.Statements;
 using IBatisNet.DataMapper.DataExchange;
 using IBatisNet.DataMapper.MappedStatements;
-using IBatisNet.DataMapper.TypeHandlers;
 
 #endregion
 
@@ -200,16 +197,6 @@ namespace IBatisNet.DataMapper.Scope
 		public override int GetHashCode() 
 		{
 			 return (int) (_id ^ (_id >> 32));
-		}
-
-		/// <summary>
-		/// Check if the ResultMap is well set, process case of subMap resultMap.
-		/// </summary>
-		/// <param name="dataReader">The current IDataReader</param>
-		/// <returns>the resultMap to use</returns>
-		public ResultMap GetResultMap(IDataReader dataReader)
-		{
-			return _statement.ResultMap.ResolveSubMap(dataReader);
 		}
 
 		/// <summary>

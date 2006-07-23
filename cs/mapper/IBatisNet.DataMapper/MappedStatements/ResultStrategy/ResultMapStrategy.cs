@@ -46,9 +46,10 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
         /// <param name="resultObject">The result object.</param>
         public object Process(RequestScope request, ref IDataReader reader, object resultObject)
         {
-            object outObject = resultObject; 
+            object outObject = resultObject;
 
-        	ResultMap resultMap = request.GetResultMap(reader);
+            ResultMap resultMap = request.Statement.ResultMap.ResolveSubMap(reader);
+
             if (outObject == null)
             {
                 object[] parameters = null;
@@ -59,7 +60,7 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
                     for (int index = 0; index < resultMap.Parameters.Count; index++)
                     {
                         ResultProperty resultProperty = resultMap.Parameters[index];
-                        parameters[index] = resultProperty.ArgumentStrategy.GetValue(request, resultMap, resultProperty, ref reader, null);
+                        parameters[index] = resultProperty.ArgumentStrategy.GetValue(request, resultProperty, ref reader, null);
                     }
                 }
 
