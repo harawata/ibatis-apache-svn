@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.abator.api.FullyQualifiedTable;
 import org.apache.ibatis.abator.api.GeneratedXmlFile;
 import org.apache.ibatis.abator.api.IntrospectedTable;
 import org.apache.ibatis.abator.api.JavaModelGenerator;
@@ -32,7 +33,6 @@ import org.apache.ibatis.abator.api.dom.xml.Attribute;
 import org.apache.ibatis.abator.api.dom.xml.Document;
 import org.apache.ibatis.abator.api.dom.xml.TextElement;
 import org.apache.ibatis.abator.api.dom.xml.XmlElement;
-import org.apache.ibatis.abator.config.FullyQualifiedTable;
 import org.apache.ibatis.abator.config.GeneratedKey;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
 import org.apache.ibatis.abator.internal.rules.AbatorRules;
@@ -1078,9 +1078,13 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         
         // if any of the columns have a user defined type handler, then we need
         // to add additional inner iterate elements that specify the type handler
-        Iterator iter = introspectedTable.getNonBLOBColumns();
+        Iterator iter = introspectedTable.getAllColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
+            if (cd.isBLOBColumn()) {
+                continue;
+            }
+            
             if (StringUtility.stringHasValue(cd.getTypeHandler())) {
                 // name the property based on the column name, then
                 // add the type handler to the parameter declaration

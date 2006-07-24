@@ -80,25 +80,6 @@ code is not supported in versions of Eclipse prior to version 3.1.</p>
       <li>Press "Finish", wait for the workspace to build.</li>
     </ol>
   </li>
-  <li>Note that there may be errors in the build depending on which JDK you have installed
-    (for the official release, Abator is compiled with JDK 1.4.2).
-    If you see an error stating that <code>java.lang.Object</code> cannot be resolved,
-    then follow these steps to fix the problem:
-    <ol type="a">
-      <li>Right click on the project "org.apache.ibatis.abator.ui", then select "Properties"</li>
-      <li>Select "Java Build Path" in the left pane</li>
-      <li>Select the "Libraries" tab in the right pane, then highlight the
-        "JRE System Library" entry (there will also be the word "unbound" in the
-        entry), press the "Remove" button</li>
-      <li>Press the "Add Library..." button</li>
-      <li>Select "JRE System Library" from the dialog, press "Next"</li>
-      <li>Select an installed JRE (the default is fine as long as it is JDK 1.4 or better),
-        press "Finish"</li>
-      <li>Press "OK" to close the properties dialog.  The workspace will rebuild and
-        the errors should be removed.  You may see warnings in the workspace, but you
-        can ignore them</li>
-    </ol>
-  </li>
 </ol>
 
 <h2>Debugging</h2>
@@ -158,7 +139,7 @@ Java project for the core JAR by following these steps:</p>
   </li>
   <li>Select the "Java Project from Existing Ant Buildfile" wizard, press "Next"</li>
   <li>Browse to the "build.xml" file in the checked out project (for example
-    /Abator/source/core/build\build.xml).  Accept the default for the
+    /Abator/source/core/build/build.xml).  Accept the default for the
     other fields and press "Finish".</li>
   <li>Wait for the workspace to build.</li>
 </ol>

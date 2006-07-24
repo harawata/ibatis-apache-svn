@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.abator.api.FullyQualifiedTable;
 import org.apache.ibatis.abator.api.GeneratedJavaFile;
 import org.apache.ibatis.abator.api.IntrospectedTable;
 import org.apache.ibatis.abator.api.JavaModelGenerator;
@@ -33,7 +34,6 @@ import org.apache.ibatis.abator.api.dom.java.JavaVisibility;
 import org.apache.ibatis.abator.api.dom.java.Method;
 import org.apache.ibatis.abator.api.dom.java.Parameter;
 import org.apache.ibatis.abator.api.dom.java.TopLevelClass;
-import org.apache.ibatis.abator.config.FullyQualifiedTable;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
 import org.apache.ibatis.abator.internal.rules.AbatorRules;
 import org.apache.ibatis.abator.internal.util.JavaBeansUtil;
@@ -750,9 +750,13 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
                 .addBodyLine("criteriaWithBetweenValue = new ArrayList();"); //$NON-NLS-1$
         answer.addMethod(method);
 
-        Iterator iter = introspectedTable.getNonBLOBColumns();
+        Iterator iter = introspectedTable.getAllColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
+            if (cd.isBLOBColumn()) {
+                continue;
+            }
+            
             if (StringUtility.stringHasValue(cd.getTypeHandler())) {
                 addtypeHandledObjectsAndMethods(cd, method, answer);
             }

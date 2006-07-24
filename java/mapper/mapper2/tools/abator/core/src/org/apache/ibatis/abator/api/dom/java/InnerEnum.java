@@ -23,8 +23,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.ibatis.abator.api.FullyQualifiedTable;
 import org.apache.ibatis.abator.api.dom.OutputUtilities;
-import org.apache.ibatis.abator.config.FullyQualifiedTable;
 
 /**
  * This class encapsulates the idea of an inner enum - it has methods that make

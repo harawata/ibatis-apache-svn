@@ -18,8 +18,8 @@ package org.apache.ibatis.abator.api.dom.java;
 import java.util.Date;
 import java.util.Iterator;
 
+import org.apache.ibatis.abator.api.FullyQualifiedTable;
 import org.apache.ibatis.abator.api.dom.OutputUtilities;
-import org.apache.ibatis.abator.config.FullyQualifiedTable;
 
 /**
  * @author Jeff Butler

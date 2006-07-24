@@ -18,8 +18,6 @@ package org.apache.ibatis.abator.api;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.abator.config.FullyQualifiedTable;
-
 /**
  * This interface describes the operations that are required of an 
  * Sql Map Generator.  An Sql Map Generator is a class that generates

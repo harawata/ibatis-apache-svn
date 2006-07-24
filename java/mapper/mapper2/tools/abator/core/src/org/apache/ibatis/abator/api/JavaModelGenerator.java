@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
-import org.apache.ibatis.abator.config.FullyQualifiedTable;
 
 /**
  * This interface describes methods needed in any Java model generator.

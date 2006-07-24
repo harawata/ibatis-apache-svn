@@ -21,8 +21,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.apache.ibatis.abator.api.FullyQualifiedTable;
 import org.apache.ibatis.abator.api.dom.OutputUtilities;
-import org.apache.ibatis.abator.config.FullyQualifiedTable;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
 
 /**

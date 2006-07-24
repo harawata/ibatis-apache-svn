@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.apache.ibatis.abator.api.DAOGenerator;
 import org.apache.ibatis.abator.api.DAOMethodNameCalculator;
+import org.apache.ibatis.abator.api.FullyQualifiedTable;
 import org.apache.ibatis.abator.api.GeneratedJavaFile;
 import org.apache.ibatis.abator.api.IntrospectedTable;
 import org.apache.ibatis.abator.api.JavaModelGenerator;
@@ -37,7 +38,6 @@ import org.apache.ibatis.abator.api.dom.java.Method;
 import org.apache.ibatis.abator.api.dom.java.Parameter;
 import org.apache.ibatis.abator.api.dom.java.PrimitiveTypeWrapper;
 import org.apache.ibatis.abator.api.dom.java.TopLevelClass;
-import org.apache.ibatis.abator.config.FullyQualifiedTable;
 import org.apache.ibatis.abator.internal.AbatorObjectFactory;
 import org.apache.ibatis.abator.internal.DefaultDAOMethodNameCalculator;
 import org.apache.ibatis.abator.internal.ExtendedDAOMethodNameCalculator;

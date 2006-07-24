@@ -38,6 +38,7 @@
   </target>
 	
   <target name="refresh" depends="javadoc" if="eclipse.running">
+  	<echo message="Refreshing the Eclipse Project..."/>
   	<eclipse.refreshLocal resource="org.apache.ibatis.abator.doc"/>
   </target>
 	

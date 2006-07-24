@@ -18,11 +18,11 @@ package org.apache.ibatis.abator.internal.db;
 
 import java.util.Iterator;
 
+import org.apache.ibatis.abator.api.FullyQualifiedTable;
 import org.apache.ibatis.abator.api.IntrospectedTable;
-import org.apache.ibatis.abator.config.FullyQualifiedTable;
+import org.apache.ibatis.abator.api.TableType;
 import org.apache.ibatis.abator.config.GeneratedKey;
 import org.apache.ibatis.abator.config.TableConfiguration;
-import org.apache.ibatis.abator.internal.rules.TableType;
 
 /**
  * @author Jeff Butler

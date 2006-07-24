@@ -35,12 +35,6 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.ToolFactory;
-import org.eclipse.jdt.core.formatter.CodeFormatter;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.Document;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.text.edits.TextEdit;
 
 /**
  * @author Jeff Butler
@@ -103,7 +97,7 @@ public class EclipseShellCallback implements ShellCallback {
             source = merger.getMergedSource();
 
         } else {
-            source = formatJavaSource(newFile.getFormattedContent());
+            source = newFile.getFormattedContent();
         }
 
         return source;
@@ -123,28 +117,6 @@ public class EclipseShellCallback implements ShellCallback {
             // ignore
             ;
         }
-    }
-
-    private String formatJavaSource(String unformattedSource) {
-        CodeFormatter formatter = ToolFactory.createCodeFormatter(null);
-        TextEdit te = formatter.format(CodeFormatter.K_COMPILATION_UNIT,
-                unformattedSource, 0, unformattedSource.length(), 0, null);
-
-        if (te == null) {
-            // no edits to make
-            return unformattedSource;
-        }
-
-        IDocument doc = new Document(unformattedSource);
-        String formattedSource;
-        try {
-            te.apply(doc);
-            formattedSource = doc.get();
-        } catch (BadLocationException e) {
-            formattedSource = unformattedSource;
-        }
-
-        return formattedSource;
     }
 
     private IJavaProject getJavaProject(String javaProjectName)

@@ -18,10 +18,8 @@ package org.apache.ibatis.abator.api;
 
 import java.util.Iterator;
 
-import org.apache.ibatis.abator.config.FullyQualifiedTable;
 import org.apache.ibatis.abator.config.GeneratedKey;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
-import org.apache.ibatis.abator.internal.rules.TableType;
 
 /**
  * Read only interface for dealing with introspected tables.

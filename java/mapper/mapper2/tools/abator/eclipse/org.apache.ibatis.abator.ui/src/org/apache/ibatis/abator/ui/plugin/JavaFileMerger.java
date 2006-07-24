@@ -18,6 +18,7 @@ package org.apache.ibatis.abator.ui.plugin;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.apache.ibatis.abator.api.GeneratedJavaFile;
@@ -25,7 +26,6 @@ import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.abator.exception.ShellException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
@@ -45,6 +45,7 @@ import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
+import org.eclipse.jdt.core.formatter.DefaultCodeFormatterConstants;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
@@ -181,10 +182,6 @@ public class JavaFileMerger {
     }
 
     public String getMergedSource() throws ShellException {
-        if (Platform.inDebugMode()) {
-            System.out.println("Starting Abator Java merge for file " + generatedJavaFile.getFileName());
-        }
-        
         ASTParser astParser = ASTParser.newParser(AST.JLS3);
 
         ICompilationUnit icu = JavaCore.createCompilationUnitFrom(existingFile);
@@ -282,7 +279,7 @@ public class JavaFileMerger {
         astParser.setSource(generatedJavaFile.getFormattedContent()
                 .toCharArray());
         CompilationUnit newCu = (CompilationUnit) astParser.createAST(null);
-
+        
         GatherNewItemsVisitor newVisitor = new GatherNewItemsVisitor();
 
         newCu.accept(newVisitor);
@@ -299,7 +296,9 @@ public class JavaFileMerger {
             listRewrite.insertAt((ASTNode) iter.next(), i++, null);
         }
 
-        textEdit = rewrite.rewriteAST(document, null);
+        Map options = DefaultCodeFormatterConstants.getJavaConventionsSettings();
+        
+        textEdit = rewrite.rewriteAST(document, options);
         try {
             textEdit.apply(document);
         } catch (BadLocationException e) {

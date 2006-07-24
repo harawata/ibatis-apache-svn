@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.apache.ibatis.abator.config;
+package org.apache.ibatis.abator.api;
 
 import org.apache.ibatis.abator.internal.util.EqualsUtil;
 import org.apache.ibatis.abator.internal.util.HashCodeUtil;
@@ -21,7 +21,6 @@ import org.apache.ibatis.abator.internal.util.JavaBeansUtil;
 import org.apache.ibatis.abator.internal.util.StringUtility;
 
 /**
- * TODO - move to the API package
  * @author Jeff Butler
  */
 public class FullyQualifiedTable {

@@ -36,7 +36,6 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
@@ -57,9 +56,6 @@ public class RunAbatorAction implements IObjectActionDelegate {
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
     }
 
-    /**
-     * @see IActionDelegate#run(IAction)
-     */
     public void run(IAction action) {
         Shell shell = new Shell();
 
@@ -91,9 +87,6 @@ public class RunAbatorAction implements IObjectActionDelegate {
         }
     }
 
-    /**
-     * @see IActionDelegate#selectionChanged(IAction, ISelection)
-     */
     public void selectionChanged(IAction action, ISelection selection) {
         StructuredSelection ss = (StructuredSelection) selection;
         AbatorConfigurationFileAdapter adapter = (AbatorConfigurationFileAdapter) ss.getFirstElement();

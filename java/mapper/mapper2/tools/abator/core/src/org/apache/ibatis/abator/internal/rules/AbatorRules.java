@@ -16,6 +16,7 @@
 package org.apache.ibatis.abator.internal.rules;
 
 import org.apache.ibatis.abator.api.IntrospectedTable;
+import org.apache.ibatis.abator.api.TableType;
 
 /**
  * This class centralizes all the rules related to code generation - including
