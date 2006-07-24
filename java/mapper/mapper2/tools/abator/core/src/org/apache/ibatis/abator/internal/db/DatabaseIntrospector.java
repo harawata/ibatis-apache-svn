@@ -19,16 +19,18 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
-import org.apache.ibatis.abator.api.IntrospectedTable;
 import org.apache.ibatis.abator.api.JavaTypeResolver;
 import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.abator.config.ColumnOverride;
+import org.apache.ibatis.abator.config.FullyQualifiedTable;
+import org.apache.ibatis.abator.config.GeneratedKey;
 import org.apache.ibatis.abator.config.TableConfiguration;
-import org.apache.ibatis.abator.exception.UnknownTableException;
 import org.apache.ibatis.abator.exception.UnsupportedDataTypeException;
 import org.apache.ibatis.abator.internal.util.JavaBeansUtil;
 import org.apache.ibatis.abator.internal.util.StringUtility;
@@ -40,177 +42,249 @@ import org.apache.ibatis.abator.internal.util.messages.Messages;
  */
 public class DatabaseIntrospector {
 
-	private DatabaseIntrospector() {
-		super();
-	}
+    private DatabaseIntrospector() {
+        super();
+    }
 
-	public static IntrospectedTable introspectTable(
-			Connection connection, TableConfiguration tc,
-			JavaTypeResolver javaTypeResolver, List warnings)
-			throws SQLException, UnknownTableException {
+    public static Collection introspectTables(Connection connection,
+            TableConfiguration tc, JavaTypeResolver javaTypeResolver,
+            List warnings) throws SQLException {
 
-		ColumnDefinitions cds = new ColumnDefinitions();
+        Map introspectedTables = new HashMap();
+        DatabaseMetaData dbmd = connection.getMetaData();
 
-		DatabaseMetaData dbmd = connection.getMetaData();
-		
-		String localCatalog;
-		String localSchema;
-		String localTableName;
-		
-		if (dbmd.storesLowerCaseIdentifiers()) {
-		    localCatalog = tc.getTable().getCatalog() == null ? null : tc.getTable().getCatalog().toLowerCase();
-		    localSchema = tc.getTable().getSchema() == null ? null : tc.getTable().getSchema().toLowerCase();
-		    localTableName = tc.getTable().getTableName() == null ? null : tc.getTable().getTableName().toLowerCase();
-		} else if (dbmd.storesUpperCaseIdentifiers()) {
-		    localCatalog = tc.getTable().getCatalog() == null ? null : tc.getTable().getCatalog().toUpperCase();
-		    localSchema = tc.getTable().getSchema() == null ? null : tc.getTable().getSchema().toUpperCase();
-		    localTableName = tc.getTable().getTableName() == null ? null : tc.getTable().getTableName().toUpperCase();
-		} else {
-		    localCatalog = tc.getTable().getCatalog();
-		    localSchema = tc.getTable().getSchema();
-		    localTableName = tc.getTable().getTableName();
-		}
-		
-		ResultSet rs = dbmd.getColumns(localCatalog, localSchema, localTableName, null);
+        String localCatalog;
+        String localSchema;
+        String localTableName;
 
-		int columnCount = 0;
-		boolean hasNonBlobColumns = false;
-		while (rs.next()) {
-			columnCount++;
-			ColumnDefinition cd = new ColumnDefinition(tc.getTable().getAlias());
+        if (dbmd.storesLowerCaseIdentifiers()) {
+            localCatalog = tc.getCatalog() == null ? null : tc.getCatalog()
+                    .toLowerCase();
+            localSchema = tc.getSchema() == null ? null : tc.getSchema()
+                    .toLowerCase();
+            localTableName = tc.getTableName() == null ? null : tc
+                    .getTableName().toLowerCase();
+        } else if (dbmd.storesUpperCaseIdentifiers()) {
+            localCatalog = tc.getCatalog() == null ? null : tc.getCatalog()
+                    .toUpperCase();
+            localSchema = tc.getSchema() == null ? null : tc.getSchema()
+                    .toUpperCase();
+            localTableName = tc.getTableName() == null ? null : tc
+                    .getTableName().toUpperCase();
+        } else {
+            localCatalog = tc.getCatalog();
+            localSchema = tc.getSchema();
+            localTableName = tc.getTableName();
+        }
 
-			cd.setJdbcType(rs.getInt("DATA_TYPE")); //$NON-NLS-1$
-			cd.setLength(rs.getInt("COLUMN_SIZE")); //$NON-NLS-1$
-			cd.setColumnName(rs.getString("COLUMN_NAME")); //$NON-NLS-1$
-			cd
-					.setNullable(rs.getInt("NULLABLE") == DatabaseMetaData.columnNullable); //$NON-NLS-1$
-			cd.setScale(rs.getInt("DECIMAL_DIGITS")); //$NON-NLS-1$
-			cd.setTypeName(rs.getString("TYPE_NAME")); //$NON-NLS-1$
+        ResultSet rs = dbmd.getColumns(localCatalog, localSchema,
+                localTableName, null);
 
-			ColumnOverride columnOverride = tc.getColumnOverride(cd
-					.getColumnName());
+        while (rs.next()) {
+            ColumnDefinition cd = new ColumnDefinition(tc.getAlias());
 
-			if (columnOverride == null
-					|| !StringUtility.stringHasValue(columnOverride
-							.getJavaProperty())) {
-				if ("true".equals(tc.getProperties().get("useActualColumnNames"))) { //$NON-NLS-1$ //$NON-NLS-2$
-					cd.setJavaProperty(JavaBeansUtil.getValidPropertyName(cd.getColumnName()));
-				} else {
-					cd.setJavaProperty(JavaBeansUtil.getCamelCaseString(cd
-							.getColumnName(), false));
-				}
-			} else {
-				cd.setJavaProperty(columnOverride.getJavaProperty());
-			}
+            cd.setJdbcType(rs.getInt("DATA_TYPE")); //$NON-NLS-1$
+            cd.setLength(rs.getInt("COLUMN_SIZE")); //$NON-NLS-1$
+            cd.setColumnName(rs.getString("COLUMN_NAME")); //$NON-NLS-1$
+            cd
+                    .setNullable(rs.getInt("NULLABLE") == DatabaseMetaData.columnNullable); //$NON-NLS-1$
+            cd.setScale(rs.getInt("DECIMAL_DIGITS")); //$NON-NLS-1$
+            cd.setTypeName(rs.getString("TYPE_NAME")); //$NON-NLS-1$
+            
+            String tableName = rs.getString("TABLE_NAME"); //$NON-NLS-1$
+            String catalog = rs.getString("TABLE_CAT"); //$NON-NLS-1$
+            String schema = rs.getString("TABLE_SCHEM"); //$NON-NLS-1$
+            
+            String fullyQualifiedTableName = StringUtility.composeFullyQualifiedTableName(catalog, schema, tableName);
 
-			try {
-				javaTypeResolver.initializeResolvedJavaType(cd);
-			} catch (UnsupportedDataTypeException e) {
-				// if the type is not supported, then we'll report a warning and
-				// ignore the column
-				warnings.add(Messages.getString("Warning.14", //$NON-NLS-1$
-				        tc.getTable().getFullyQualifiedTableName(),
-				        cd.getColumnName()));
-				continue;
-			}
+            ColumnOverride columnOverride = tc.getColumnOverride(cd
+                    .getColumnName());
 
-			if (columnOverride != null
-					&& StringUtility.stringHasValue(columnOverride
-							.getJavaType())) {
-				cd.getResolvedJavaType().setFullyQualifiedJavaType(
-						new FullyQualifiedJavaType(columnOverride.getJavaType()));
-			}
+            if (columnOverride == null
+                    || !StringUtility.stringHasValue(columnOverride
+                            .getJavaProperty())) {
+                if ("true".equals(tc.getProperties().get("useActualColumnNames"))) { //$NON-NLS-1$ //$NON-NLS-2$
+                    cd.setJavaProperty(JavaBeansUtil.getValidPropertyName(cd
+                            .getColumnName()));
+                } else {
+                    cd.setJavaProperty(JavaBeansUtil.getCamelCaseString(cd
+                            .getColumnName(), false));
+                }
+            } else {
+                cd.setJavaProperty(columnOverride.getJavaProperty());
+            }
 
-			if (columnOverride != null
-					&& StringUtility.stringHasValue(columnOverride
-							.getJdbcType())) {
-				cd.getResolvedJavaType().setJdbcTypeName(
-						columnOverride.getJdbcType());
-			}
+            try {
+                javaTypeResolver.initializeResolvedJavaType(cd);
+            } catch (UnsupportedDataTypeException e) {
+                // if the type is not supported, then we'll report a warning and
+                // ignore the column
+                warnings.add(Messages.getString("Warning.14", //$NON-NLS-1$
+                        fullyQualifiedTableName, cd
+                                .getColumnName()));
+                continue;
+            }
+
+            if (columnOverride != null
+                    && StringUtility.stringHasValue(columnOverride
+                            .getJavaType())) {
+                cd.getResolvedJavaType()
+                        .setFullyQualifiedJavaType(
+                                new FullyQualifiedJavaType(columnOverride
+                                        .getJavaType()));
+            }
+
+            if (columnOverride != null
+                    && StringUtility.stringHasValue(columnOverride
+                            .getJdbcType())) {
+                cd.getResolvedJavaType().setJdbcTypeName(
+                        columnOverride.getJdbcType());
+            }
 
             if (columnOverride != null
                     && StringUtility.stringHasValue(columnOverride
                             .getTypeHandler())) {
                 cd.setTypeHandler(columnOverride.getTypeHandler());
             }
+
+            if (tc.getGeneratedKey() != null
+                    && tc.getGeneratedKey().isIdentity()
+                    && cd.getColumnName().equalsIgnoreCase(
+                            tc.getGeneratedKey().getColumn())) {
+                cd.setIdentity(true);
+            } else {
+                cd.setIdentity(false);
+            }
+
+            if (!tc.isColumnIgnored(cd.getColumnName())) {
+                IntrospectedTableImpl introspectedTable =
+                    (IntrospectedTableImpl) introspectedTables.get(fullyQualifiedTableName);
+                if (introspectedTable == null) {
+                    FullyQualifiedTable table = new FullyQualifiedTable(catalog,
+                            schema, tableName, tc.getDomainObjectName(), tc.getAlias());
+                    introspectedTable = new IntrospectedTableImpl(tc, new ColumnDefinitions(), table);
+                    introspectedTables.put(fullyQualifiedTableName, introspectedTable);
+                }
+                
+                introspectedTable.getColumnDefinitions().addColumn(cd);
+            }
+        }
+
+        rs.close();
+        
+        Iterator iter = introspectedTables.values().iterator();
+        while (iter.hasNext()) {
+            IntrospectedTableImpl it = (IntrospectedTableImpl) iter.next();
+            calculatePrimaryKey(dbmd, it, warnings);
+        }
+        
+        // now introspectedTables has all the columns from all the 
+        // tables in the configuration.  Do some validation...
+
+        iter = introspectedTables.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry entry = (Map.Entry) iter.next();
             
-			if (tc.getGeneratedKey() != null
-			        && tc.getGeneratedKey().isIdentity()
-			        && cd.getColumnName().equalsIgnoreCase(tc.getGeneratedKey().getColumn())) {
-			    cd.setIdentity(true);
-			} else {
-				cd.setIdentity(false);
-			}
-			
-			if (!tc.isColumnIgnored(cd.getColumnName())) {
-				if (!cd.isBLOBColumn()) {
-					hasNonBlobColumns = true;
-				}
-				cds.addColumn(cd);
-			}
-		}
+            IntrospectedTableImpl introspectedTable = 
+                (IntrospectedTableImpl) entry.getValue();
+            
+            ColumnDefinitions cds = introspectedTable.getColumnDefinitions();
+            
+            if (cds.getAllColumns().size() == 0) {
+                // add warning that the table has no columns, remove from the list
+                warnings.add(Messages.getString("Warning.1", introspectedTable.getTable().getFullyQualifiedTableName())); //$NON-NLS-1$
+                iter.remove();
+            } else if (cds.getPrimaryKey().size() == 0
+                    && cds.getNonBLOBColumns().size() == 0) {
+                // add warning that the table has only BLOB columns, remove from the list
+                warnings.add(Messages.getString("Warning.18", introspectedTable.getTable().getFullyQualifiedTableName())); //$NON-NLS-1$
+                iter.remove();
+            } else {
+                // now make sure that all columns called out in the configuration
+                // actually exist
+                reportIntrospectionWarnings(cds, tc, introspectedTable.getTable(), warnings);
+            }
+        }
 
-		rs.close();
+        return introspectedTables.values();
+    }
 
-		if (columnCount == 0) {
-			throw new UnknownTableException(tc);
-		}
-		
-		if (!hasNonBlobColumns) {
-			// we don't support tables that only have BLOB columns
-			throw new UnknownTableException(tc); 
-		}
-		
-		// now make sure that all columns called out in the configuration actually exist
-		tc.reportWarnings(cds, warnings);
+    private static void calculatePrimaryKey(DatabaseMetaData dbmd,
+            IntrospectedTableImpl introspectedTable, List warnings) {
+        ResultSet rs = null;
 
-		// now calculate the primary key
-		List primaryKeyColumns = findPrimaryKeyColumns(dbmd, localCatalog, localSchema,
-		        localTableName, warnings);
-		Iterator iter = primaryKeyColumns.iterator();
-		while (iter.hasNext()) {
-		    cds.addPrimaryKeyColumn((String) iter.next());
-		}
+        try {
+            rs = dbmd.getPrimaryKeys(introspectedTable.getTable().getCatalog(),
+                    introspectedTable.getTable().getSchema(),
+                    introspectedTable.getTable().getTableName());
+        } catch (SQLException e) {
+            closeResultSet(rs);
+            warnings.add(Messages.getString("Warning.15")); //$NON-NLS-1$
+            return;
+        }
 
-        IntrospectedTable answer = new IntrospectedTableImpl(tc, cds);
-		return answer;
-	}
-	
-	private static List findPrimaryKeyColumns(DatabaseMetaData dbmd, String localCatalog,
-	        String localSchema, String localTableName, List warnings) {
-	    List answer = new ArrayList();
-	    ResultSet rs = null;
-	    
-		try {
-		    rs = dbmd.getPrimaryKeys(localCatalog, localSchema, localTableName);
-		} catch (SQLException e) {
-		    warnings.add(Messages.getString("Warning.15")); //$NON-NLS-1$
-		}
+        try {
+            while (rs.next()) {
+                String columnName = rs.getString("COLUMN_NAME"); //$NON-NLS-1$
+                
+                introspectedTable.getColumnDefinitions().addPrimaryKeyColumn(columnName);
+            }
+        } catch (SQLException e) {
+            // ignore the primary key if there's any error
+        } finally {
+            closeResultSet(rs);
+        }
+    }
 
-		if (rs != null) {
-		    try {
-		        while (rs.next()) {
-		            answer.add(rs.getString("COLUMN_NAME")); //$NON-NLS-1$
-		        }
-		    } catch (SQLException e) {
-		        // ignore the primary key if there's any error
-		        answer.clear();
-		    } finally {
-		        closeResultSet(rs);
-		    }
-		}
-		
-		return answer;
-	}
-	
-	private static void closeResultSet(ResultSet rs) {
-	    if (rs != null) {
-	        try {
-	            rs.close();
-	        } catch (SQLException e) {
-	            // ignore
-	            ;
-	        }
-	    }
-	}
+    private static void closeResultSet(ResultSet rs) {
+        if (rs != null) {
+            try {
+                rs.close();
+            } catch (SQLException e) {
+                // ignore
+                ;
+            }
+        }
+    }
+
+    private static void reportIntrospectionWarnings(
+            ColumnDefinitions columnDefinitions,
+            TableConfiguration tableConfiguration, 
+            FullyQualifiedTable table, List warnings) {
+        // make sure that every column listed in column overrides
+        // actually exists in the table
+        Iterator iter = tableConfiguration.getColumnOverrides();
+        while (iter.hasNext()) {
+            ColumnOverride columnOverride = (ColumnOverride) iter.next();
+            if (columnDefinitions.getColumn(columnOverride.getColumnName()) == null) {
+                warnings.add(Messages.getString("Warning.3", //$NON-NLS-1$
+                        columnOverride.getColumnName(), table.toString()));
+            }
+        }
+
+        // make sure that every column listed in ignored columns
+        // actually exists in the table
+        iter = tableConfiguration.getIgnoredColumns();
+        while (iter.hasNext()) {
+            String ignoredColumn = (String) iter.next();
+
+            if (columnDefinitions.getColumn(ignoredColumn) == null) {
+                warnings.add(Messages.getString("Warning.4", //$NON-NLS-1$
+                        ignoredColumn, table.toString()));
+            }
+        }
+
+        GeneratedKey generatedKey = tableConfiguration.getGeneratedKey();
+        if (generatedKey != null
+                && columnDefinitions.getColumn(generatedKey.getColumn()
+                        .toUpperCase()) == null) {
+            if (generatedKey.isIdentity()) {
+                warnings.add(Messages.getString("Warning.5", //$NON-NLS-1$
+                        generatedKey.getColumn(), table.toString()));
+            } else {
+                warnings.add(Messages.getString("Warning.6", //$NON-NLS-1$
+                        generatedKey.getColumn(), table.toString()));
+            }
+        }
+    }
 }

@@ -67,4 +67,8 @@ public abstract class GeneratedFile {
 	 * @return Returns the target project.
 	 */
 	public abstract String getTargetPackage();
+
+    public String toString() {
+        return getFormattedContent();
+    }
 }

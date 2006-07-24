@@ -16,22 +16,19 @@
 package org.apache.ibatis.abator.config;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import org.apache.ibatis.abator.internal.db.ColumnDefinitions;
 import org.apache.ibatis.abator.internal.util.EqualsUtil;
 import org.apache.ibatis.abator.internal.util.HashCodeUtil;
-import org.apache.ibatis.abator.internal.util.messages.Messages;
 
 /**
  * 
  * @author Jeff Butler
  */
 public class TableConfiguration extends PropertyHolder {
-	private FullyQualifiedTable table;
-
 	private boolean insertStatementEnabled;
 
 	private boolean selectByPrimaryKeyStatementEnabled;
@@ -46,7 +43,7 @@ public class TableConfiguration extends PropertyHolder {
 
 	private Map columnOverrides;
 
-	private Map ignoredColumns;
+	private Set ignoredColumns;
 
 	private GeneratedKey generatedKey;
 
@@ -54,11 +51,17 @@ public class TableConfiguration extends PropertyHolder {
 
 	private String selectByExampleQueryId;
     
+    private String catalog;
+    private String schema;
+    private String tableName;
+    private String domainObjectName;
+    private String alias;
+    
 	public TableConfiguration() {
 		super();
 		
 		columnOverrides = new HashMap();
-		ignoredColumns = new HashMap();
+		ignoredColumns = new HashSet();
 
 		insertStatementEnabled = true;
 		selectByPrimaryKeyStatementEnabled = true;
@@ -105,22 +108,12 @@ public class TableConfiguration extends PropertyHolder {
 
 	public boolean isColumnIgnored(String column) {
 	    String key = column.toUpperCase();
-	    boolean rc = false;
 	    
-	    if (ignoredColumns.containsKey(key)) {
-	        // column has been accessed, it must exist in the table
-	        rc = true;
-	        ignoredColumns.put(key, new Boolean(true));
-	    }
-	    
-		return rc;
+	    return ignoredColumns.contains(key);
 	}
 
 	public void addIgnoredColumn(String column) {
-	    // put a false in the map to designate that the column has not
-	    // been accessed yet.  We use this to report warnings if the user
-	    // specifies an ignored column that does not exist in the table.
-		ignoredColumns.put(column.toUpperCase(), new Boolean(false));
+		ignoredColumns.add(column.toUpperCase());
 	}
 
 	public void addColumnOverride(ColumnOverride columnOverride) {
@@ -139,12 +132,16 @@ public class TableConfiguration extends PropertyHolder {
 
 		TableConfiguration other = (TableConfiguration) obj;
 
-		return EqualsUtil.areEqual(this.table, other.table);
+		return EqualsUtil.areEqual(this.catalog, other.catalog)
+        && EqualsUtil.areEqual(this.schema, other.schema)
+        && EqualsUtil.areEqual(this.tableName, other.tableName);
 	}
 
 	public int hashCode() {
 		int result = HashCodeUtil.SEED;
-		result = HashCodeUtil.hash(result, table);
+		result = HashCodeUtil.hash(result, catalog);
+        result = HashCodeUtil.hash(result, schema);
+        result = HashCodeUtil.hash(result, tableName);
 
 		return result;
 	}
@@ -156,14 +153,6 @@ public class TableConfiguration extends PropertyHolder {
 	public void setSelectByExampleStatementEnabled(
 			boolean selectByExampleStatementEnabled) {
 		this.selectByExampleStatementEnabled = selectByExampleStatementEnabled;
-	}
-
-	public FullyQualifiedTable getTable() {
-		return table;
-	}
-
-	public void setTable(FullyQualifiedTable tableName) {
-		this.table = tableName;
 	}
 
 	/**
@@ -205,40 +194,6 @@ public class TableConfiguration extends PropertyHolder {
 		this.deleteByExampleStatementEnabled = deleteByExampleStatementEnabled;
 	}
 	
-	public void reportWarnings(ColumnDefinitions columnDefinitions, List warnings) {
-	    Iterator iter = columnOverrides.values().iterator();
-	    while (iter.hasNext()) {
-	        ColumnOverride columnOverride = (ColumnOverride) iter.next();
-	        if (columnDefinitions.getColumn(columnOverride.getColumnName().toUpperCase()) == null) {
-	            warnings.add(Messages.getString("Warning.3", //$NON-NLS-1$
-	                    columnOverride.getColumnName(), table.toString()));
-	        }
-	    }
-	    
-	    iter = ignoredColumns.entrySet().iterator();
-	    while (iter.hasNext()) {
-	        Map.Entry entry = (Map.Entry) iter.next();
-	        
-	        Boolean value = (Boolean) entry.getValue();
-	        
-	        if (!value.booleanValue()) {
-	            warnings.add(Messages.getString("Warning.4", //$NON-NLS-1$
-	                    entry.getKey().toString(), table.toString()));
-	        }
-	    }
-	    
-	    if (generatedKey != null
-	            && columnDefinitions.getColumn(generatedKey.getColumn().toUpperCase()) == null) {
-            if (generatedKey.isIdentity()) {
-	            warnings.add(Messages.getString("Warning.5", //$NON-NLS-1$
-	                    generatedKey.getColumn(), table.toString()));
-            } else {
-	            warnings.add(Messages.getString("Warning.6", //$NON-NLS-1$
-	                    generatedKey.getColumn(), table.toString()));
-            }
-	    }
-	}
-	
 	public boolean areAnyStatementsEnabled() {
 	    return selectByExampleStatementEnabled
 	    	|| selectByPrimaryKeyStatementEnabled
@@ -250,5 +205,53 @@ public class TableConfiguration extends PropertyHolder {
 
     public void setGeneratedKey(GeneratedKey generatedKey) {
         this.generatedKey = generatedKey;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
+    public String getCatalog() {
+        return catalog;
+    }
+
+    public void setCatalog(String catalog) {
+        this.catalog = catalog;
+    }
+
+    public String getDomainObjectName() {
+        return domainObjectName;
+    }
+
+    public void setDomainObjectName(String domainObjectName) {
+        this.domainObjectName = domainObjectName;
+    }
+
+    public String getSchema() {
+        return schema;
+    }
+
+    public void setSchema(String schema) {
+        this.schema = schema;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
+
+    public Iterator getColumnOverrides() {
+        return columnOverrides.values().iterator();
+    }
+
+    public Iterator getIgnoredColumns() {
+        return ignoredColumns.iterator();
     }
 }

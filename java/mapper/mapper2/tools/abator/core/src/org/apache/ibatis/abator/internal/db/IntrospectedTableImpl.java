@@ -33,28 +33,33 @@ public class IntrospectedTableImpl implements IntrospectedTable {
     private TableConfiguration tableConfiguration;
     private ColumnDefinitions columnDefinitions;
     private TableType tableType;
+    private FullyQualifiedTable table;
     
     /**
      * 
      */
-    public IntrospectedTableImpl(TableConfiguration tableConfiguration, ColumnDefinitions columnDefinitions) {
+    public IntrospectedTableImpl(TableConfiguration tableConfiguration, ColumnDefinitions columnDefinitions,
+            FullyQualifiedTable table) {
         super();
         this.columnDefinitions = columnDefinitions;
         this.tableConfiguration = tableConfiguration;
-        this.tableType = TableType.calculateTableType(columnDefinitions);
+        this.table = table;
     }
 
     /* (non-Javadoc)
      * @see org.apache.ibatis.abator.api.IntrospectedTable#getTable()
      */
     public FullyQualifiedTable getTable() {
-        return tableConfiguration.getTable();
+        return table;
     }
 
     /* (non-Javadoc)
      * @see org.apache.ibatis.abator.api.IntrospectedTable#getTableType()
      */
     public TableType getTableType() {
+        if (tableType == null) {
+            tableType = TableType.calculateTableType(columnDefinitions);
+        }
         return tableType;
     }
 
@@ -151,5 +156,9 @@ public class IntrospectedTableImpl implements IntrospectedTable {
 
     public boolean hasJDBCTimeColumns() {
         return columnDefinitions.hasJDBCTimeColumns();
+    }
+
+    public ColumnDefinitions getColumnDefinitions() {
+        return columnDefinitions;
     }
 }

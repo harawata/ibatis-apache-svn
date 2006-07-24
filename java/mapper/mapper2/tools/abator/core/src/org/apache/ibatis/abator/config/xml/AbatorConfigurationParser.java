@@ -31,7 +31,6 @@ import org.apache.ibatis.abator.config.AbatorConfiguration;
 import org.apache.ibatis.abator.config.AbatorContext;
 import org.apache.ibatis.abator.config.ColumnOverride;
 import org.apache.ibatis.abator.config.DAOGeneratorConfiguration;
-import org.apache.ibatis.abator.config.FullyQualifiedTable;
 import org.apache.ibatis.abator.config.GeneratedKey;
 import org.apache.ibatis.abator.config.JDBCConnectionConfiguration;
 import org.apache.ibatis.abator.config.JavaModelGeneratorConfiguration;
@@ -69,7 +68,7 @@ public class AbatorConfigurationParser {
             throws IOException, XMLParserException {
 
         FileReader fr = new FileReader(inputFile);
-
+        
         return parseAbatorConfiguration(fr);
     }
 
@@ -85,7 +84,7 @@ public class AbatorConfigurationParser {
             throws IOException, XMLParserException {
 
         InputSource is = new InputSource(inputStream);
-
+        
         return parseAbatorConfiguration(is);
     }
 
@@ -247,25 +246,19 @@ public class AbatorConfigurationParser {
         NamedNodeMap nnm = node.getAttributes();
 
         Node attribute = nnm.getNamedItem("catalog"); //$NON-NLS-1$
-        String catalog = attribute == null ? null : attribute.getNodeValue();
+        tc.setCatalog(attribute == null ? null : attribute.getNodeValue());
 
         attribute = nnm.getNamedItem("schema"); //$NON-NLS-1$
-        String schema = attribute == null ? null : attribute.getNodeValue();
+        tc.setSchema(attribute == null ? null : attribute.getNodeValue());
 
         attribute = nnm.getNamedItem("domainObjectName"); //$NON-NLS-1$
-        String domainObjectName = attribute == null ? null : attribute
-                .getNodeValue();
+        tc.setDomainObjectName(attribute == null ? null : attribute.getNodeValue());
 
         attribute = nnm.getNamedItem("tableName"); //$NON-NLS-1$
-        String tableName = attribute.getNodeValue();
+        tc.setTableName(attribute.getNodeValue());
 
         attribute = nnm.getNamedItem("alias"); //$NON-NLS-1$
-        String alias = attribute == null ? null : attribute.getNodeValue();
-
-        FullyQualifiedTable table = new FullyQualifiedTable(catalog, schema,
-                tableName, domainObjectName, alias);
-
-        tc.setTable(table);
+        tc.setAlias(attribute == null ? null : attribute.getNodeValue());
 
         attribute = nnm.getNamedItem("enableInsert"); //$NON-NLS-1$
         if (attribute != null) {

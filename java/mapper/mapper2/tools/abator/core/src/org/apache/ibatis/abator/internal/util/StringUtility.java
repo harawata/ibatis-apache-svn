@@ -31,4 +31,27 @@ public class StringUtility {
 	public static boolean stringHasValue(String s) {
 		return s != null && s.length() > 0;
 	}
+
+    public static String composeFullyQualifiedTableName(String catalog, String schema,
+            String tableName) {
+        StringBuffer sb = new StringBuffer();
+
+        if (stringHasValue(catalog)) {
+            sb.append(catalog);
+            sb.append('.');
+        }
+
+        if (stringHasValue(schema)) {
+            sb.append(schema);
+            sb.append('.');
+        } else {
+            if (sb.length() > 0) {
+                sb.append('.');
+            }
+        }
+
+        sb.append(tableName);
+
+        return sb.toString();
+    }
 }

@@ -21,6 +21,7 @@ import org.apache.ibatis.abator.internal.util.JavaBeansUtil;
 import org.apache.ibatis.abator.internal.util.StringUtility;
 
 /**
+ * TODO - move to the API package
  * @author Jeff Butler
  */
 public class FullyQualifiedTable {
@@ -66,45 +67,13 @@ public class FullyQualifiedTable {
 	}
 
 	public String getFullyQualifiedTableName() {
-		StringBuffer sb = new StringBuffer();
-
-		if (StringUtility.stringHasValue(catalog)) {
-			sb.append(catalog);
-			sb.append('.');
-		}
-
-		if (StringUtility.stringHasValue(schema)) {
-			sb.append(schema);
-			sb.append('.');
-		} else {
-		    if (sb.length() > 0) {
-				sb.append('.');
-		    }
-		}
-
-		sb.append(tableName);
-
-		return sb.toString();
+        return StringUtility.composeFullyQualifiedTableName(catalog, schema, tableName);
 	}
 
     public String getAliasedFullyQualifiedTableName() {
         StringBuffer sb = new StringBuffer();
 
-        if (StringUtility.stringHasValue(catalog)) {
-            sb.append(catalog);
-            sb.append('.');
-        }
-
-        if (StringUtility.stringHasValue(schema)) {
-            sb.append(schema);
-            sb.append('.');
-        } else {
-            if (sb.length() > 0) {
-                sb.append('.');
-            }
-        }
-
-        sb.append(tableName);
+        sb.append(getFullyQualifiedTableName());
         
         if(StringUtility.stringHasValue(alias)) {
             sb.append(' ');

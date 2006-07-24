@@ -18,6 +18,7 @@ package org.apache.ibatis.abator.config;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -28,7 +29,6 @@ import org.apache.ibatis.abator.api.JavaTypeResolver;
 import org.apache.ibatis.abator.api.ProgressCallback;
 import org.apache.ibatis.abator.api.SqlMapGenerator;
 import org.apache.ibatis.abator.exception.InvalidConfigurationException;
-import org.apache.ibatis.abator.exception.UnknownTableException;
 import org.apache.ibatis.abator.internal.AbatorObjectFactory;
 import org.apache.ibatis.abator.internal.NullProgressCallback;
 import org.apache.ibatis.abator.internal.db.ConnectionFactory;
@@ -181,18 +181,18 @@ public class AbatorContext {
 
 	private void validateTableConfiguration(TableConfiguration tc, List errors,
 			int listPosition) {
-        if (tc.getTable() == null) {
-            errors.add(Messages.getString("ValidationError.13", id)); //$NON-NLS-1$
-        } else if (!StringUtility.stringHasValue(tc.getTable().getTableName())) {
+        if (!StringUtility.stringHasValue(tc.getTableName())) {
 			errors.add(Messages.getString("ValidationError.6", Integer.toString(listPosition))); //$NON-NLS-1$
 		}
 
 		if (tc.getGeneratedKey() != null
 				&& !StringUtility.stringHasValue(tc.getGeneratedKey()
 						.getSqlStatement())) {
+            String tableName = StringUtility.composeFullyQualifiedTableName(
+                    tc.getCatalog(), tc.getSchema(), tc.getTableName());
 	        errors
 				.add(Messages.getString("ValidationError.7",  //$NON-NLS-1$
-						tc.getTable().getFullyQualifiedTableName()));
+						tableName));
 		}
 	}
 
@@ -236,7 +236,8 @@ public class AbatorContext {
 			Iterator iter = tableConfigurations.iterator();
 			while (iter.hasNext()) {
 				TableConfiguration tc = (TableConfiguration) iter.next();
-				String tableName = tc.getTable().getFullyQualifiedTableName();
+				String tableName = StringUtility.composeFullyQualifiedTableName(
+                        tc.getCatalog(), tc.getSchema(), tc.getTableName());
 				
 				if (!tc.areAnyStatementsEnabled()) {
 				    warnings.add(Messages.getString("Warning.0", tableName)); //$NON-NLS-1$
@@ -244,21 +245,22 @@ public class AbatorContext {
 				}
 				
 
-				IntrospectedTable introspectedTable;
-				try {
-					callback.startSubTask(Messages.getString("Progress.1", tableName)); //$NON-NLS-1$
-                    introspectedTable  = DatabaseIntrospector.introspectTable(connection, tc, javaTypeResolver, warnings);
-					callback.checkCancel();
-				} catch (UnknownTableException e) {
-					warnings.add(Messages.getString("Warning.1", tableName)); //$NON-NLS-1$
-					continue;
-				}
+				Collection introspectedTables;
+				callback.startSubTask(Messages.getString("Progress.1", tableName)); //$NON-NLS-1$
+                introspectedTables  = DatabaseIntrospector.introspectTables(connection, tc, javaTypeResolver, warnings);
+				callback.checkCancel();
+                
+                Iterator iter2 = introspectedTables.iterator();
+                while (iter2.hasNext()) {
+                    callback.checkCancel();
+                    IntrospectedTable introspectedTable = (IntrospectedTable) iter2.next();
 
-				if (daoGenerator != null) {
-				    generatedJavaFiles.addAll(daoGenerator.getGeneratedJavaFiles(introspectedTable, callback));
-				}
-				generatedJavaFiles.addAll(javaModelGenerator.getGeneratedJavaFiles(introspectedTable, callback));
-				generatedXmlFiles.addAll(sqlMapGenerator.getGeneratedXMLFiles(introspectedTable, callback));
+                    if (daoGenerator != null) {
+                        generatedJavaFiles.addAll(daoGenerator.getGeneratedJavaFiles(introspectedTable, callback));
+                    }
+                    generatedJavaFiles.addAll(javaModelGenerator.getGeneratedJavaFiles(introspectedTable, callback));
+                    generatedXmlFiles.addAll(sqlMapGenerator.getGeneratedXMLFiles(introspectedTable, callback));
+                }
 			}
 		} finally {
 			closeConnection(connection);

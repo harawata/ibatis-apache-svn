@@ -14,7 +14,7 @@ Version 0.7.0: ??
 7. Added a typeHandler attribute to <columnOverride>
 8. Added exampleMethodVisibility as a property for the DAO generator
 9. Added methodNameCalculator as a property for the DAO generator
-10. (??) Added support for generating  objects from a query
+10. Added the ability to specify wildcards for schema and/or tableName in <table>
 
 -------------------------------------------------------------------------------
 Version 0.6.5:
