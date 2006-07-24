@@ -196,6 +196,7 @@
     <Compile Include="Utilities\Objects\DelegateFactory.cs" />
     <Compile Include="Utilities\Objects\EmitObjectFactory.cs" />
     <Compile Include="Utilities\Objects\FactoryBuilder.cs" />
+    <Compile Include="Utilities\Objects\FactoryLogAdapter.cs" />
     <Compile Include="Utilities\Objects\IFactory.cs" />
     <Compile Include="Utilities\Objects\IObjectFactory.cs" />
     <Compile Include="Utilities\Objects\Members\AccessorFactory.cs" />

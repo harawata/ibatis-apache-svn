@@ -4,6 +4,9 @@ IBatisNet Change Log
 1.5.1 - BETA
 ------------------------------
 Issues
+- IBATISNET-175 : Support discriminators when used via the "resultMapping" attribute  
+- IBATISNET-174 : Issue with a result map constructor in a result property  
+- IBATISNET-173 : Issue with constructor tag where an argument use another constructor tag  
 - IBATISNET-172 : Issue with QueryForList with constructor resultMap and select argument  
 - IBATISNET-170 : auto-result-map Bug  
 - IBATISNET-169 : SqlMap.xsd Correction   

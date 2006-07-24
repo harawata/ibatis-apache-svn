@@ -24,6 +24,8 @@
 #endregion
 
 using System;
+using System.Reflection;
+using IBatisNet.Common.Logging;
 
 namespace IBatisNet.Common.Utilities.Objects
 {
@@ -33,6 +35,7 @@ namespace IBatisNet.Common.Utilities.Objects
 	public class ObjectFactory : IObjectFactory
 	{
 		private IObjectFactory _objectFactory = null;
+        private static readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
 		/// Constructor
@@ -70,7 +73,14 @@ namespace IBatisNet.Common.Utilities.Objects
 		/// <returns>Returns a new instance factory</returns>
 		public IFactory CreateFactory(Type typeToCreate, Type[] types)
 		{
-			return _objectFactory.CreateFactory(typeToCreate, types);
+            if (_logger.IsDebugEnabled)
+            {
+                return new FactoryLogAdapter(typeToCreate, types, _objectFactory.CreateFactory(typeToCreate, types));
+            }
+		    else
+            {
+                return _objectFactory.CreateFactory(typeToCreate, types);
+            }
 		}
 
 		#endregion
