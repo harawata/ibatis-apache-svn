@@ -151,6 +151,8 @@
     <Compile Include="Domain\HundredsTypeHandlerCallback.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Domain\ImmutableCategory.cs" />
+    <Compile Include="Domain\ImmutableCategoryPropertyContainer.cs" />
     <Compile Include="Domain\LineItem.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -318,6 +320,7 @@
     <Content Include="Maps\MSSQL\OleDb\ResultClass.xml" />
     <Content Include="Maps\MSSQL\SqlClient\Category.xml" />
     <Content Include="Maps\MSSQL\SqlClient\Complex.xml" />
+    <Content Include="Maps\MSSQL\SqlClient\ConstructorInjection.xml" />
     <Content Include="Maps\MSSQL\SqlClient\Document.xml" />
     <Content Include="Maps\MSSQL\SqlClient\DynamicAccount.xml" />
     <Content Include="Maps\MSSQL\SqlClient\EmbedParameter.xml" />

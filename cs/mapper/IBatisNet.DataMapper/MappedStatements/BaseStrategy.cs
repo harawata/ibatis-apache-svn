@@ -54,18 +54,26 @@ namespace IBatisNet.DataMapper.MappedStatements
 		                                                ResultMap resultMap, object resultObject)
 		{
 			bool dataFound = false;
-			
-			// For each Property in the ResultMap, set the property in the object 
-			for(int index=0; index< resultMap.Properties.Count; index++)
-			{
-				request.IsRowDataFound = false;
-				ResultProperty property = resultMap.Properties[index];
-				property.PropertyStrategy.Set(request, resultMap, property, ref resultObject, reader, null);
-				dataFound = dataFound || request.IsRowDataFound;
-			}
 
-			request.IsRowDataFound = dataFound;
-			return dataFound;
-		}
+            if (resultMap.Properties.Count>0)
+            {
+ 			    // For each Property in the ResultMap, set the property in the object 
+			    for(int index=0; index< resultMap.Properties.Count; index++)
+			    {
+				    request.IsRowDataFound = false;
+				    ResultProperty property = resultMap.Properties[index];
+				    property.PropertyStrategy.Set(request, resultMap, property, ref resultObject, reader, null);
+				    dataFound = dataFound || request.IsRowDataFound;
+			    }
+
+			    request.IsRowDataFound = dataFound;
+			    return dataFound;
+		    }
+		    else
+            {
+                return true;
+            }
+        }
+
 	}
 }

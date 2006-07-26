@@ -29,6 +29,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			InitScript(sqlMap.DataSource, ScriptDirectory + "enumeration-init.sql");
 			InitScript(sqlMap.DataSource, ScriptDirectory + "other-init.sql");
             InitScript(sqlMap.DataSource, ScriptDirectory + "Nullable-init.sql");
+            InitScript(sqlMap.DataSource, ScriptDirectory + "category-init.sql");
 		}
 
 		/// <summary>
@@ -96,6 +97,28 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
         }
 #endif
 
+        /// <summary>
+        /// Test constructor injection using a resultMapping where
+        /// - the resultmapping object performs *only* constructor injection.
+        /// </remarks>
+        [Test]
+        public void TestJIRA176()
+        {
+
+            Category category = new Category();
+            category.Name = "toto";
+            category.Guid = Guid.Empty;
+
+            int key = (int)sqlMap.Insert("InsertCategory", category);
+
+            ImmutableCategoryPropertyContainer categoryContainerFromDB = (ImmutableCategoryPropertyContainer)sqlMap.QueryForObject("GetImmutableCategoryInContainer", key);
+            Assert.IsNotNull(categoryContainerFromDB);
+            Assert.IsNotNull(categoryContainerFromDB.ImmutableCategory);
+            Assert.AreEqual(category.Name, categoryContainerFromDB.ImmutableCategory.Name);
+            Assert.AreEqual(key, categoryContainerFromDB.ImmutableCategory.Id);
+            Assert.AreEqual(category.Guid, categoryContainerFromDB.ImmutableCategory.Guid);
+        }
+	    
 		/// <summary>
 		/// Test constructor with resultMapping attribute on argument
 		/// </remarks>

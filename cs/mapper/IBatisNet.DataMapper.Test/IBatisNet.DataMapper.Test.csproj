@@ -278,6 +278,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Domain\ImmutableCategory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Domain\ImmutableCategoryPropertyContainer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Domain\LineItem.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -500,6 +510,10 @@
                 />
                 <File
                     RelPath = "Maps\MSSQL\SqlClient\Complex.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\MSSQL\SqlClient\ConstructorInjection.xml"
                     BuildAction = "Content"
                 />
                 <File
