@@ -1,6 +1,11 @@
 IBatisNet DataAccess Change Log
 
 ------------------------------
+1.8.1 - 27/07/2006 BETA
+------------------------------
+- Support for DataMapper 1.5.1 
+
+------------------------------
 1.8 - 05/07/2006 BETA
 ------------------------------
 - Added IDaoManager interface to simplify mock or stub, methods returning DaoManager instance now return IDaoManager DaoManager.
