@@ -104,16 +104,16 @@ th.java {
   text-align: center;
   color: #ffffff;
   font-weight: bold;
-  background-color: #FF851A;
+  background-color: #4343c8;
 }
 th.java:hover {
-  background-color: #CCCCCC;
+  background-color: #8787ff;
 }
 th.java>a, th.java>a:link, th.java>a:visited, th.java>a:hover  {
   color: #ffffff;
 }
 th.java>a:hover {
-  background-color: #CCCCCC;
+  background-color: #8787ff;
 }
 
 th.cs {
@@ -127,16 +127,16 @@ th.cs {
   text-align: center;
   color: #ffffff;
   font-weight: bold;
-  background-color: #FFF957;
+  background-color: #43c843;
 }
 th.cs:hover {
-  background-color: #CCCCCC;
+  background-color: #87ff87;
 }
 th.cs>a, th.cs>a:link, th.cs>a:visited, th.cs>a:hover  {
   color: #ffffff;
 }
 th.cs>a:hover {
-  background-color: #CCCCCC;
+  background-color: #87ff87;
 }
 
 th.rb {
@@ -150,16 +150,16 @@ th.rb {
   text-align: center;
   color: #ffffff;
   font-weight: bold;
-  background-color: #57B0FF;
+  background-color: #c84343;
 }
 th.rb:hover {
-  background-color: #CCCCCC;
+  background-color: #ff8787;
 }
 th.rb>a, th.rb>a:link, th.rb>a:visited, th.rb>a:hover  {
   color: #ffffff;
 }
 th.rb>a:hover {
-  background-color: #CCCCCC;
+  background-color: #ff8787;
 }
 
 #Content>li {
