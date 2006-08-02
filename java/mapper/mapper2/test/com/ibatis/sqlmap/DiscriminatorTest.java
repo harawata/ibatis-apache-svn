@@ -3,6 +3,7 @@ package com.ibatis.sqlmap;
 import testdomain.Book;
 import testdomain.Magazine;
 import testdomain.Document;
+import testdomain.PersonDocument;
 
 import java.util.List;
 
@@ -46,4 +47,13 @@ public class DiscriminatorTest extends BaseSqlMapTest {
   }
 
 
+  public void testDiscriminatorInNestedResultMap() throws Exception {
+    List list = sqlMap.queryForList("getPersonDocuments");
+    assertEquals(3, list.size());
+    
+    assertTrue(((PersonDocument)list.get(0)).getFavoriteDocument() instanceof Magazine);
+    assertTrue(((PersonDocument)list.get(1)).getFavoriteDocument() instanceof Book);
+    assertTrue(((PersonDocument)list.get(2)).getFavoriteDocument() instanceof Document);
+    
+  }
 }

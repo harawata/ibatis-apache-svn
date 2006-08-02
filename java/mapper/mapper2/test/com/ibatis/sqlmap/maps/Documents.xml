@@ -6,6 +6,14 @@
 
 <sqlMap namespace="Documents">
 
+  <!-- this tests that the discriminator tags are picked up in
+   a single valued nested result map -->
+  <resultMap id="personDocument" class="testdomain.PersonDocument">
+    <result property="id" column="PERSON_ID" />
+    <result property="name" column="PERSON_NAME" />
+    <result property="favoriteDocument" resultMap="Documents.document"/>
+  </resultMap>
+
   <resultMap id="document" class="testdomain.Document">
     <result property="id" column="DOCUMENT_ID"/>
     <result property="title" column="DOCUMENT_TITLE"/>
@@ -23,6 +31,15 @@
   <resultMap id="news" class="testdomain.Magazine" extends="document">
     <result property="city" column="DOCUMENT_CITY"/>
   </resultMap>
+  
+  <select id="getPersonDocuments" resultMap="personDocument" >
+    select a.person_id, a.person_name, b.document_id,
+      b.document_title, b.document_type, b.document_city,
+      b.document_pagenumber
+    from person_documents a join documents b
+      on a.document_id = b.document_id
+    order by a.person_id
+  </select>
 
   <select id="getDocuments" resultMap="document">
     select * from DOCUMENTS

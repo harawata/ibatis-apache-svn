@@ -1,4 +1,5 @@
 DROP TABLE DOCUMENTS;
+DROP TABLE PERSON_DOCUMENTS;
 
 CREATE TABLE DOCUMENTS  (
    DOCUMENT_ID           INTEGER                          NOT NULL,
@@ -15,3 +16,14 @@ INSERT INTO DOCUMENTS VALUES (3, 'Lord of the Rings', 'Book', 3587, null);
 INSERT INTO DOCUMENTS VALUES (4, 'Le Canard enchaine', 'Newspaper', null , 'Paris');
 INSERT INTO DOCUMENTS VALUES (5, 'Le Monde', 'Broadsheet', null , 'Paris');
 INSERT INTO DOCUMENTS VALUES (6, 'Foundation', 'Monograph', 557, null);
+
+CREATE TABLE PERSON_DOCUMENTS (
+  PERSON_ID INTEGER NOT NULL,
+  PERSON_NAME VARCHAR(50),
+  DOCUMENT_ID INTEGER NOT NULL,
+  PRIMARY KEY (PERSON_ID)
+);
+
+insert into person_documents values (1, 'Jeff', 2);
+insert into person_documents values (2, 'Matt', 3);
+insert into person_documents values (3, 'Amy', 6);

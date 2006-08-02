@@ -414,6 +414,9 @@ public class BasicResultMap implements ResultMap {
 
       String resultMapName = mapping.getNestedResultMapName();
       ResultMap resultMap = getDelegate().getResultMap(resultMapName);
+      // get the discriminated submap if it exists
+      resultMap = resultMap.resolveSubMap(request, request.getResultSet());
+      
       Class type = mapping.getJavaType();
       String propertyName = mapping.getPropertyName();
 
