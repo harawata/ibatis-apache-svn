@@ -82,7 +82,7 @@ public interface JavaModelGenerator {
 	 *  key and non-BLOB fields).  Note that
 	 *  the value will be calculated regardless of whether the table has these columns or not.
 	 */
-	FullyQualifiedJavaType getRecordType(FullyQualifiedTable table);
+	FullyQualifiedJavaType getBaseRecordType(FullyQualifiedTable table);
 
 	/**
 	 * 
@@ -115,4 +115,13 @@ public interface JavaModelGenerator {
 	 * @return a list of GeneratedJavaFile objects
 	 */
 	List getGeneratedJavaFiles(IntrospectedTable introspectedTable, ProgressCallback callback);
+
+    /**
+     * Returns the value of a set property, or null if the
+     * property is not set.
+     * 
+     * @param key
+     * @return the property value
+     */
+    String getProperty(String key);
 }

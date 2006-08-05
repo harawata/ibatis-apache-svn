@@ -16,11 +16,11 @@
 
 package org.apache.ibatis.abator.config;
 
-import org.apache.ibatis.abator.internal.java.DAOGeneratorGenericConstructorInjectionImpl;
-import org.apache.ibatis.abator.internal.java.DAOGeneratorGenericSetterInjectionImpl;
-import org.apache.ibatis.abator.internal.java.DAOGeneratorIbatisImpl;
-import org.apache.ibatis.abator.internal.java.DAOGeneratorSpringImpl;
-import org.apache.ibatis.abator.internal.java.JavaModelGeneratorDefaultImpl;
+import org.apache.ibatis.abator.internal.java.dao.GenericCILegacyDAOGenerator;
+import org.apache.ibatis.abator.internal.java.dao.GenericSILegacyDAOGenerator;
+import org.apache.ibatis.abator.internal.java.dao.IbatisLegacyDAOGenerator;
+import org.apache.ibatis.abator.internal.java.dao.SpringLegacyDAOGenerator;
+import org.apache.ibatis.abator.internal.java.model.JavaModelGeneratorLegacyImpl;
 import org.apache.ibatis.abator.internal.sqlmap.SqlMapGeneratorDefaultImpl;
 import org.apache.ibatis.abator.internal.types.JavaTypeResolverDefaultImpl;
 
@@ -35,7 +35,7 @@ public class LegacyGeneratorSet extends GeneratorSet {
      */
     public LegacyGeneratorSet() {
         super();
-        super.javaModelGeneratorType = JavaModelGeneratorDefaultImpl.class.getName();
+        super.javaModelGeneratorType = JavaModelGeneratorLegacyImpl.class.getName();
         super.javaTypeResolverType = JavaTypeResolverDefaultImpl.class.getName();
         super.sqlMapGeneratorType = SqlMapGeneratorDefaultImpl.class.getName();
     }
@@ -44,13 +44,13 @@ public class LegacyGeneratorSet extends GeneratorSet {
         String answer;
         
         if ("IBATIS".equalsIgnoreCase(configurationType)) { //$NON-NLS-1$
-            answer = DAOGeneratorIbatisImpl.class.getName();
+            answer = IbatisLegacyDAOGenerator.class.getName();
         } else if ("SPRING".equalsIgnoreCase(configurationType)) { //$NON-NLS-1$
-            answer = DAOGeneratorSpringImpl.class.getName();
+            answer = SpringLegacyDAOGenerator.class.getName();
         } else if ("GENERIC-CI".equalsIgnoreCase(configurationType)) { //$NON-NLS-1$
-            answer = DAOGeneratorGenericConstructorInjectionImpl.class.getName();
+            answer = GenericCILegacyDAOGenerator.class.getName();
         } else if ("GENERIC-SI".equalsIgnoreCase(configurationType)) { //$NON-NLS-1$
-            answer = DAOGeneratorGenericSetterInjectionImpl.class.getName();
+            answer = GenericSILegacyDAOGenerator.class.getName();
         } else {
             answer = configurationType;
         }

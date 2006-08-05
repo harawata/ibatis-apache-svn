@@ -15,11 +15,8 @@
  */
 package org.apache.ibatis.abator.internal.db;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 /**
  * This class holds the results of introspecting the database table.
@@ -28,174 +25,99 @@ import java.util.List;
  */
 public class ColumnDefinitions {
 	
-	private LinkedHashMap columns;
-	private LinkedHashMap primaryKey;
-
-	// used by the getAllColumns convenience method only
-	private ArrayList allColumns;
+    private LinkedHashMap primaryKeyColumns;
+	private LinkedHashMap baseColumns;
+    private LinkedHashMap blobColumns;
+    private boolean hasJDBCDateColumns;
+    private boolean hasJDBCTimeColumns;
 
 	public ColumnDefinitions() {
 		super();
-		columns = new LinkedHashMap();
-		primaryKey = new LinkedHashMap();
+		primaryKeyColumns = new LinkedHashMap();
+        baseColumns = new LinkedHashMap();
+        blobColumns = new LinkedHashMap();
 	}
 
 	public Collection getBLOBColumns() {
-		Collection answer = new ArrayList();
-		Iterator iter = columns.values().iterator();
-		while (iter.hasNext()) {
-			ColumnDefinition cd = (ColumnDefinition) iter.next();
-			if (cd.isBLOBColumn()) {
-				answer.add(cd);
-			}
-		}
-		
-		return answer;
+        return blobColumns.values();
 	}
 
-	public Collection getNonBLOBColumns() {
-		Collection answer = new ArrayList();
-		Iterator iter = columns.values().iterator();
-		while (iter.hasNext()) {
-			ColumnDefinition cd = (ColumnDefinition) iter.next();
-			if (!cd.isBLOBColumn()) {
-				answer.add(cd);
-			}
-		}
-		
-		return answer;
+	public Collection getBaseColumns() {
+        return baseColumns.values();
 	}
 	
-	public Collection getNonPrimaryKeyColumns() {
-		return columns.values();
-	}
-
-	public Collection getPrimaryKey() {
-		return primaryKey.values();
+	public Collection getPrimaryKeyColumns() {
+		return primaryKeyColumns.values();
 	}
 
 	public void addColumn(ColumnDefinition cd) {
-		columns.put(cd.getColumnName().toUpperCase(), cd);
-
-		allColumns = null;
+        if (cd.isBLOBColumn()) {
+            blobColumns.put(cd.getColumnName().toUpperCase(), cd);
+        } else {
+            baseColumns.put(cd.getColumnName().toUpperCase(), cd);
+        }
+        
+        if (cd.isJDBCDateColumn()) {
+            hasJDBCDateColumns = true;
+        }
+        
+        if (cd.isJDBCTimeColumn()) {
+            hasJDBCTimeColumns = true;
+        }
 	}
 
 	public void addPrimaryKeyColumn(String columnName) {
 		String key = columnName.toUpperCase();
-		if (columns.containsKey(key)) {
-			primaryKey.put(key, columns.remove(key));
+		if (baseColumns.containsKey(key)) {
+			primaryKeyColumns.put(key, baseColumns.remove(key));
+		} else if (blobColumns.containsKey(key)) {
+            // in the wierd event that a BLOB is a key column
+            primaryKeyColumns.put(key, blobColumns.remove(key));
+        }
+    }
 
-			allColumns = null;
-		}
-	}
-
-	public boolean hasPrimaryKey() {
-		return primaryKey.size() > 0;
+	public boolean hasPrimaryKeyColumns() {
+		return primaryKeyColumns.size() > 0;
 	}
 
 	public boolean hasBLOBColumns() {
-		boolean rc = false;
-		Iterator iter = columns.values().iterator();
-		while (iter.hasNext()) {
-			ColumnDefinition cd = (ColumnDefinition) iter.next();
-			if (cd.isBLOBColumn()) {
-				rc = true;
-				break;
-			}
-		}
-		
-		return rc;
+        return blobColumns.size() > 0;
 	}
 
-	public boolean hasNonBLOBColumns() {
-		boolean rc = false;
-		Iterator iter = columns.values().iterator();
-		while (iter.hasNext()) {
-			ColumnDefinition cd = (ColumnDefinition) iter.next();
-			if (!cd.isBLOBColumn()) {
-				rc = true;
-				break;
-			}
-		}
-		
-		return rc;
+	public boolean hasBaseColumns() {
+        return baseColumns.size() > 0;
 	}
 	
-	public List getAllColumns() {
-		if (allColumns == null) {
-			allColumns = new ArrayList();
-
-			allColumns.addAll(primaryKey.values());
-			allColumns.addAll(columns.values());
-		}
-
-		return allColumns;
-	}
-
 	public ColumnDefinition getColumn(String columnName) {
         if (columnName == null) {
             return null;
         } else {
             String key = columnName.toUpperCase();
-            ColumnDefinition cd = (ColumnDefinition) primaryKey.get(key);
+            ColumnDefinition cd = (ColumnDefinition) primaryKeyColumns.get(key);
 
             if (cd == null) {
-                cd = (ColumnDefinition) columns.get(key);
+                cd = (ColumnDefinition) baseColumns.get(key);
             }
 
+            if (cd == null) {
+                cd = (ColumnDefinition) blobColumns.get(key);
+            }
+            
             return cd;
         }
 	}
     
     public boolean hasJDBCDateColumns() {
-        boolean rc = false;
-        
-        Iterator iter = columns.values().iterator();
-        while (iter.hasNext()) {
-            ColumnDefinition cd = (ColumnDefinition) iter.next();
-            if (cd.isJDBCDateColumn()) {
-                rc = true;
-                break;
-            }
-        }
-        
-        if (!rc) {
-            iter = primaryKey.values().iterator();
-            while (iter.hasNext()) {
-                ColumnDefinition cd = (ColumnDefinition) iter.next();
-                if (cd.isJDBCDateColumn()) {
-                    rc = true;
-                    break;
-                }
-            }
-        }
-        
-        return rc;
+        return hasJDBCDateColumns;
     }
     
     public boolean hasJDBCTimeColumns() {
-        boolean rc = false;
-        
-        Iterator iter = columns.values().iterator();
-        while (iter.hasNext()) {
-            ColumnDefinition cd = (ColumnDefinition) iter.next();
-            if (cd.isJDBCTimeColumn()) {
-                rc = true;
-                break;
-            }
-        }
-        
-        if (!rc) {
-            iter = primaryKey.values().iterator();
-            while (iter.hasNext()) {
-                ColumnDefinition cd = (ColumnDefinition) iter.next();
-                if (cd.isJDBCTimeColumn()) {
-                    rc = true;
-                    break;
-                }
-            }
-        }
-        
-        return rc;
+        return hasJDBCTimeColumns;
+    }
+    
+    public boolean hasAnyColumns() {
+        return primaryKeyColumns.size() > 0
+            || baseColumns.size() > 0
+            || blobColumns.size() > 0;
     }
 }

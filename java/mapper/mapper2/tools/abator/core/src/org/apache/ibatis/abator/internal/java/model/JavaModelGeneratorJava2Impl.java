@@ -35,7 +35,6 @@ import org.apache.ibatis.abator.api.dom.java.Method;
 import org.apache.ibatis.abator.api.dom.java.Parameter;
 import org.apache.ibatis.abator.api.dom.java.TopLevelClass;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
-import org.apache.ibatis.abator.internal.rules.AbatorRules;
 import org.apache.ibatis.abator.internal.util.JavaBeansUtil;
 import org.apache.ibatis.abator.internal.util.StringUtility;
 import org.apache.ibatis.abator.internal.util.messages.Messages;
@@ -245,7 +244,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
     protected CompilationUnit getPrimaryKey(IntrospectedTable introspectedTable) {
 
-        if (!AbatorRules.generatePrimaryKey(introspectedTable)) {
+        if (!introspectedTable.getRules().generatePrimaryKeyClass()) {
             return null;
         }
 
@@ -254,55 +253,56 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         TopLevelClass answer = new TopLevelClass(type);
         answer.setVisibility(JavaVisibility.PUBLIC);
 
-        if (properties.containsKey("rootClass")) { //$NON-NLS-1$
-            FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(
-                    (String) properties.get("rootClass")); //$NON-NLS-1$
-
-            answer.setSuperClass(fqjt);
-            answer.addImportedType(fqjt);
+        String rootClass = (String) properties.get("rootClass"); //$NON-NLS-1$
+        if (rootClass != null) {
+            answer.setSuperClass(new FullyQualifiedJavaType(rootClass));
+            answer.addImportedType(answer.getSuperClass());
         }
-
+        
         generateClassParts(table, introspectedTable.getPrimaryKeyColumns(), answer);
 
         return answer;
     }
 
-    protected CompilationUnit getRecord(IntrospectedTable introspectedTable) {
+    protected CompilationUnit getBaseRecord(IntrospectedTable introspectedTable) {
 
-        if (!AbatorRules.generateBaseRecordWithNoSuperclass(introspectedTable)
-                && !AbatorRules
-                        .generateBaseRecordExtendingPrimaryKey(introspectedTable)) {
+        if (!introspectedTable.getRules().generateBaseRecordClass()) {
             return null;
         }
 
         FullyQualifiedTable table = introspectedTable.getTable();
-        FullyQualifiedJavaType type = getRecordType(table);
+        FullyQualifiedJavaType type = getBaseRecordType(table);
         TopLevelClass answer = new TopLevelClass(type);
         answer.setVisibility(JavaVisibility.PUBLIC);
-
-        if (AbatorRules
-                .generateBaseRecordExtendingPrimaryKey(introspectedTable)) {
+        
+        if (introspectedTable.getRules().generatePrimaryKeyClass()) {
             answer.setSuperClass(getPrimaryKeyType(table));
         } else {
-            if (properties.containsKey("rootClass")) { //$NON-NLS-1$
-                FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(
-                        (String) properties.get("rootClass")); //$NON-NLS-1$
-                answer.setSuperClass(fqjt);
-                answer.addImportedType(fqjt);
+            String rootClass = (String) properties.get("rootClass"); //$NON-NLS-1$
+            if (rootClass != null) {
+                answer.setSuperClass(new FullyQualifiedJavaType(rootClass));
+                answer.addImportedType(answer.getSuperClass());
             }
         }
+        
+        if (!introspectedTable.getRules().generatePrimaryKeyClass()
+                && introspectedTable.hasPrimaryKeyColumns()) {
+            generateClassParts(table, introspectedTable.getPrimaryKeyColumns(), answer);
+        }
 
-        generateClassParts(table, introspectedTable.getNonBLOBColumns(), answer);
+        generateClassParts(table, introspectedTable.getBaseColumns(), answer);
 
+        if (!introspectedTable.getRules().generateRecordWithBLOBsClass()
+                && introspectedTable.hasBLOBColumns()) {
+            generateClassParts(table, introspectedTable.getBLOBColumns(), answer);
+        }
+        
         return answer;
     }
 
     protected CompilationUnit getRecordWithBLOBs(IntrospectedTable introspectedTable) {
 
-        if (!AbatorRules
-                .generateRecordWithBLOBsExtendingPrimaryKey(introspectedTable)
-                && !AbatorRules
-                        .generateRecordWithBLOBsExtendingBaseRecord(introspectedTable)) {
+        if (!introspectedTable.getRules().generateRecordWithBLOBsClass()) {
             return null;
         }
 
@@ -310,14 +310,13 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         FullyQualifiedJavaType type = getRecordWithBLOBsType(table);
         TopLevelClass answer = new TopLevelClass(type);
         answer.setVisibility(JavaVisibility.PUBLIC);
-
-        if (AbatorRules
-                .generateRecordWithBLOBsExtendingPrimaryKey(introspectedTable)) {
-            answer.setSuperClass(getPrimaryKeyType(table));
+        
+        if (introspectedTable.getRules().generateBaseRecordClass()) {
+            answer.setSuperClass(getBaseRecordType(table));
         } else {
-            answer.setSuperClass(getRecordType(table));
+            answer.setSuperClass(getPrimaryKeyType(table));
         }
-
+        
         generateClassParts(table, introspectedTable.getBLOBColumns(), answer);
 
         return answer;
@@ -352,11 +351,8 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.ibatis.abator.api.JavaModelGenerator#getGeneratedJavaFiles(org.apache.ibatis.abator.internal.db.ColumnDefinitions,
-     *      org.apache.ibatis.abator.config.TableConfiguration,
-     *      org.apache.ibatis.abator.api.ProgressCallback)
+     *  (non-Javadoc)
+     * @see org.apache.ibatis.abator.api.JavaModelGenerator#getGeneratedJavaFiles(org.apache.ibatis.abator.api.IntrospectedTable, org.apache.ibatis.abator.api.ProgressCallback)
      */
     public List getGeneratedJavaFiles(IntrospectedTable introspectedTable, ProgressCallback callback) {
         List list = new ArrayList();
@@ -385,7 +381,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         callback.startSubTask(Messages.getString(
                 "Progress.8", //$NON-NLS-1$
                 tableName));
-        cu = getRecord(introspectedTable);
+        cu = getBaseRecord(introspectedTable);
         if (cu != null) {
             GeneratedJavaFile gjf = new GeneratedJavaFile(cu, targetProject);
             list.add(gjf);
@@ -432,7 +428,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
      * 
      * @see org.apache.ibatis.abator.api.JavaModelGenerator#getRecordType(org.apache.ibatis.abator.config.FullyQualifiedTable)
      */
-    public FullyQualifiedJavaType getRecordType(FullyQualifiedTable table) {
+    public FullyQualifiedJavaType getBaseRecordType(FullyQualifiedTable table) {
         String key = "getRecordType"; //$NON-NLS-1$
 
         Map map = getTableValueMap(table);
@@ -640,8 +636,8 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         return method;
     }
 
-    protected CompilationUnit getExample(IntrospectedTable introspectedTable) {
-        if (!AbatorRules.generateExample(introspectedTable)) {
+    protected TopLevelClass getExample(IntrospectedTable introspectedTable) {
+        if (!introspectedTable.getRules().generateExampleClass()) {
             return null;
         }
 
@@ -750,12 +746,9 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
                 .addBodyLine("criteriaWithBetweenValue = new ArrayList();"); //$NON-NLS-1$
         answer.addMethod(method);
 
-        Iterator iter = introspectedTable.getAllColumns();
+        Iterator iter = introspectedTable.getNonBLOBColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
-            if (cd.isBLOBColumn()) {
-                continue;
-            }
             
             if (StringUtility.stringHasValue(cd.getTypeHandler())) {
                 addtypeHandledObjectsAndMethods(cd, method, answer);
@@ -1023,13 +1016,9 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
             answer.addMethod(method);
         }
 
-        iter = introspectedTable.getAllColumns();
+        iter = introspectedTable.getNonBLOBColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
-
-            if (cd.isBLOBColumn()) {
-                continue;
-            }
 
             topLevelClass.addImportedType(cd.getResolvedJavaType()
                     .getFullyQualifiedJavaType());
@@ -1300,5 +1289,9 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         sb.append("CriteriaWithBetweenValue.add(map);"); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
         innerClass.addMethod(method);
+    }
+
+    public String getProperty(String property) {
+        return (String) properties.get(property);
     }
 }

@@ -40,11 +40,33 @@ public class ExtendedDAOMethodNameCalculator implements DAOMethodNameCalculator 
         return sb.toString();
     }
 
-    public String getUpdateByPrimaryKeyMethodName(IntrospectedTable introspectedTable) {
+    public String getUpdateByPrimaryKeyWithoutBLOBsMethodName(IntrospectedTable introspectedTable) {
+        StringBuffer sb = new StringBuffer();
+
+        sb.append("update"); //$NON-NLS-1$
+        sb.append(introspectedTable.getTable().getDomainObjectName());
+        
+        if (introspectedTable.getRules().generateUpdateByPrimaryKeyWithBLOBs()
+                && !introspectedTable.getRules().generateRecordWithBLOBsClass()) {
+            // can't use the same method name for both methods...
+            sb.append("ByPrimaryKeyWithoutBLOBs"); //$NON-NLS-1$
+        } else {
+            sb.append("ByPrimaryKey"); //$NON-NLS-1$
+        }
+        
+        return sb.toString();
+    }
+
+    public String getUpdateByPrimaryKeyWithBLOBsMethodName(IntrospectedTable introspectedTable) {
         StringBuffer sb = new StringBuffer();
         sb.append("update"); //$NON-NLS-1$
         sb.append(introspectedTable.getTable().getDomainObjectName());
-        sb.append("ByPrimaryKey"); //$NON-NLS-1$
+        
+        if (introspectedTable.getRules().generateRecordWithBLOBsClass()) {
+            sb.append("ByPrimaryKey"); //$NON-NLS-1$
+        } else {
+            sb.append("ByPrimaryKeyWithBLOBs"); //$NON-NLS-1$
+        }
         
         return sb.toString();
     }
@@ -67,7 +89,7 @@ public class ExtendedDAOMethodNameCalculator implements DAOMethodNameCalculator 
         return sb.toString();
     }
 
-    public String getSelectByExampleMethodName(IntrospectedTable introspectedTable) {
+    public String getSelectByExampleWithoutBLOBsMethodName(IntrospectedTable introspectedTable) {
         StringBuffer sb = new StringBuffer();
         sb.append("select"); //$NON-NLS-1$
         sb.append(introspectedTable.getTable().getDomainObjectName());

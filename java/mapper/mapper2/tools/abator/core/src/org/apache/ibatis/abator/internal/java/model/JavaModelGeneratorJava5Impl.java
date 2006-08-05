@@ -19,7 +19,6 @@ import java.util.Iterator;
 
 import org.apache.ibatis.abator.api.FullyQualifiedTable;
 import org.apache.ibatis.abator.api.IntrospectedTable;
-import org.apache.ibatis.abator.api.dom.java.CompilationUnit;
 import org.apache.ibatis.abator.api.dom.java.Field;
 import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.abator.api.dom.java.InnerClass;
@@ -29,7 +28,6 @@ import org.apache.ibatis.abator.api.dom.java.Method;
 import org.apache.ibatis.abator.api.dom.java.Parameter;
 import org.apache.ibatis.abator.api.dom.java.TopLevelClass;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
-import org.apache.ibatis.abator.internal.rules.AbatorRules;
 import org.apache.ibatis.abator.internal.util.JavaBeansUtil;
 import org.apache.ibatis.abator.internal.util.StringUtility;
 
@@ -45,8 +43,8 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         super();
     }
 
-    protected CompilationUnit getExample(IntrospectedTable introspectedTable) {
-        if (!AbatorRules.generateExample(introspectedTable)) {
+    protected TopLevelClass getExample(IntrospectedTable introspectedTable) {
+        if (!introspectedTable.getRules().generateExampleClass()) {
             return null;
         }
 
@@ -156,12 +154,9 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
                 .addBodyLine("criteriaWithBetweenValue = new ArrayList<Map<String, Object>>();"); //$NON-NLS-1$
         answer.addMethod(method);
 
-        Iterator iter = introspectedTable.getAllColumns();
+        Iterator iter = introspectedTable.getNonBLOBColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
-            if (cd.isBLOBColumn()) {
-                continue;
-            }
             
             if (StringUtility.stringHasValue(cd.getTypeHandler())) {
                 addtypeHandledObjectsAndMethods(cd, method, answer);
@@ -442,13 +437,9 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
             answer.addMethod(method);
         }
 
-        iter = introspectedTable.getAllColumns();
+        iter = introspectedTable.getNonBLOBColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
-
-            if (cd.isBLOBColumn()) {
-                continue;
-            }
 
             topLevelClass.addImportedType(cd.getResolvedJavaType()
                     .getFullyQualifiedJavaType());

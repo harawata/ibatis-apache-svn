@@ -34,14 +34,22 @@ public interface DAOMethodNameCalculator {
     String getInsertMethodName(IntrospectedTable introspectedTable);
     
     /**
-     * Calculates and returns a name for the update by primary key method.
-     * There can be up to two overloads of this method depending on whether
-     * the table contains BLOBs or not.
+     * Calculates and returns a name for the update by primary key without BLOBs
+     * method.
      * 
      * @param introspectedTable
      * @return the calculated name
      */
-    String getUpdateByPrimaryKeyMethodName(IntrospectedTable introspectedTable);
+    String getUpdateByPrimaryKeyWithoutBLOBsMethodName(IntrospectedTable introspectedTable);
+    
+    /**
+     * Calculates and returns a name for the update by primary key with BLOBs
+     * method.
+     * 
+     * @param introspectedTable
+     * @return the calculated name
+     */
+    String getUpdateByPrimaryKeyWithBLOBsMethodName(IntrospectedTable introspectedTable);
     
     /**
      * Calculates and returns a name for the select by primary key method.
@@ -57,7 +65,7 @@ public interface DAOMethodNameCalculator {
      * @param introspectedTable
      * @return the calculated name
      */
-    String getSelectByExampleMethodName(IntrospectedTable introspectedTable);
+    String getSelectByExampleWithoutBLOBsMethodName(IntrospectedTable introspectedTable);
     
     /**
      * Calculates and returns a name for the select by example with BLOBs method.

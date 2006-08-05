@@ -190,12 +190,12 @@ public class DatabaseIntrospector {
             
             ColumnDefinitions cds = introspectedTable.getColumnDefinitions();
             
-            if (cds.getAllColumns().size() == 0) {
+            if (!cds.hasAnyColumns()) {
                 // add warning that the table has no columns, remove from the list
                 warnings.add(Messages.getString("Warning.1", introspectedTable.getTable().getFullyQualifiedTableName())); //$NON-NLS-1$
                 iter.remove();
-            } else if (cds.getPrimaryKey().size() == 0
-                    && cds.getNonBLOBColumns().size() == 0) {
+            } else if (!cds.hasPrimaryKeyColumns()
+                    && !cds.hasBaseColumns()) {
                 // add warning that the table has only BLOB columns, remove from the list
                 warnings.add(Messages.getString("Warning.18", introspectedTable.getTable().getFullyQualifiedTableName())); //$NON-NLS-1$
                 iter.remove();

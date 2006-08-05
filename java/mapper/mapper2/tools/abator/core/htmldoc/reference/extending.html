@@ -39,7 +39,7 @@ support mailing list at
   </tr>
   <tr>
     <td>Legacy (the default value)</td>
-    <td><code>org.apache.ibatis.abator.internal.java.JavaModelGeneratorDefaultImpl</code>.</td>
+    <td><code>org.apache.ibatis.abator.internal.java.model.JavaModelGeneratorLegacyImpl</code>.</td>
   </tr>
   <tr>
     <td>Java2</td>
@@ -107,19 +107,19 @@ The implementations are:</p>
   </tr>
   <tr>
     <td nowrap="nowrap">Legacy/IBATIS</td>
-    <td><code>org.apache.ibatis.abator.internal.java.DAOGeneratorIbatisImpl</code>.</td>
+    <td><code>org.apache.ibatis.abator.internal.java.dao.IbatisLegacyDAOGenerator</code>.</td>
   </tr>
   <tr>
     <td>Legacy/GENERIC-CI</td>
-    <td><code>org.apache.ibatis.abator.internal.java.DAOGeneratorGenericConstructorInjectionImpl</code>.</td>
+    <td><code>org.apache.ibatis.abator.internal.java.dao.GenericCILegacyDAOGenerator</code>.</td>
   </tr>
   <tr>
     <td nowrap="nowrap">Legacy/GENERIC-SI</td>
-    <td><code>org.apache.ibatis.abator.internal.java.DAOGeneratorGenericSetterInjectionImpl</code>.</td>
+    <td><code>org.apache.ibatis.abator.internal.java.dao.GenericSILegacyDAOGenerator</code>.</td>
   </tr>
   <tr>
     <td nowrap="nowrap">Legacy/SPRING</td>
-    <td><code>org.apache.ibatis.abator.internal.java.DAOGeneratorSpringImpl</code>.</td>
+    <td><code>org.apache.ibatis.abator.internal.java.dao.SpringLegacyDAOGenerator</code>.</td>
   </tr>
   <tr>
     <td nowrap="nowrap">Java2/IBATIS</td>

@@ -20,7 +20,7 @@ Abator enforce these rules):</p>
 <h2>Table Types</h2>
 <p>Abator defines different types of tables, based on the structure of the table.
   The table types are defined as follows:</p>
-  
+
 <table border="1" cellspacing="0" cellpadding="5">
   <tr>
     <th>Table Type</th>
@@ -79,7 +79,7 @@ Abator enforce these rules):</p>
 </table>
 
 <h2>SQL Map and DAO Method Rules</h2>
-<p>Abator generates different SQL Map elements based on the table type, and the 
+<p>Abator generates different SQL Map elements based on the table type, and the
 user configuration.  The following table describes what SQL Map elements will be
 generated based on the structure of the table.  The notes following the table describe
 how user configuration options can alter these rules.</p>
@@ -206,9 +206,10 @@ how user configuration options can alter these rules.</p>
 </ul>
 
 <h2>Domain Object Rules</h2>
-<p>Abator generates different domain objects based on the structure of the table.
+<p>Abator generates different domain objects based on the structure of the table,
+and user configuration options.
 The following table describes the rules.  One important note is that
-Abator will not include BLOB columns in the Example classes - because 
+Abator will not include BLOB columns in the Example classes - because
 most databases do not support BLOB columns in the WHERE clause.  In
 the table, we use the term "base record" to mean the class that
 holds the non-BLOB and non-Primary Key fields.  The notes following the table
@@ -217,79 +218,142 @@ describe how user configuration options can alter these rules.</p>
 <table border="1" cellspacing="0" cellpadding="5">
   <tr>
     <th>Table Type</th>
-    <th>Primary Key?</th>
-    <th>Base Record Extending Primary Key?</th>
-    <th>Base Record with no Super Class?</th>
-    <th>Record with BLOBs Extending Primary Key?</th>
-    <th>Record with BLOBs Extending Base Record?</th>
-    <th>Example Extending Primary Key?</th>
-    <th>Example Extending Base Record?</th>
+    <th>Generate Primary Key?</th>
+    <th>Generate Base Record?</th>
+    <th>Generate Record with BLOBs?</th>
   </tr>
   <tr>
     <th>NO_PK_FIELDS_NO_BLOBS</th>
     <td>No</td>
-    <td>No</td>
     <td>Yes</td>
     <td>No</td>
-    <td>No</td>
-    <td>No</td>
-    <td>Yes</td>
   </tr>
   <tr>
     <th>NO_PK_FIELDS_BLOBS</th>
     <td>No</td>
-    <td>No</td>
-    <td>Yes</td>
-    <td>No</td>
-    <td>Yes</td>
-    <td>No</td>
-    <td>Yes</td>
+    <td>c: Yes
+        <br />f: Yes, include ALL fields
+        <br />h: Yes
+    </td>
+    <td>c: Yes
+      <br />f: No
+      <br />h: Yes
+    </td>
   </tr>
   <tr>
     <th>PK_NO_FIELDS_NO_BLOBS</th>
-    <td>Yes</td>
-    <td>No</td>
-    <td>No</td>
-    <td>No</td>
-    <td>No</td>
-    <td>Yes</td>
+    <td>c: No
+        <br />f: No
+        <br />h: Yes
+    </td>
+    <td>c(1): No
+        <br />c(>1): Yes, include ALL fields
+        <br />f: Yes, include ALL fields
+        <br />h: No
+    </td>
     <td>No</td>
   </tr>
   <tr>
     <th>PK_FIELDS_NO_BLOBS</th>
-    <td>Yes</td>
-    <td>Yes</td>
+    <td>c(1): No
+        <br />c(>1): Yes
+        <br />f: No
+        <br />h: Yes
+    </td>
+    <td>c(1): Yes, include key field
+      <br />c(>1): Yes, do not include key fields
+      <br />f: Yes, include ALL fields
+      <br />h: Yes, do not include key field(s)
+    </td>
     <td>No</td>
-    <td>No</td>
-    <td>No</td>
-    <td>No</td>
-    <td>Yes</td>
   </tr>
   <tr>
     <th>PK_NO_FIELDS_BLOBS</th>
-    <td>Yes</td>
-    <td>No</td>
-    <td>No</td>
-    <td>Yes</td>
-    <td>No</td>
-    <td>Yes</td>
-    <td>No</td>
+    <td>c(1): No
+        <br />c(>1): Yes
+        <br />f: No
+        <br />h: Yes
+    </td>
+    <td>c(1): Yes, include ALL fields
+        <br />c(>1): No
+        <br />f: Yes, include ALL fields
+        <br />h: No
+    </td>
+    <td>c(1): No
+        <br />c(>1): Yes, BLOBs only
+      <br />f: No
+      <br />h: Yes
+    </td>
   </tr>
   <tr>
     <th>PK_FIELDS_BLOBS</th>
-    <td>Yes</td>
-    <td>Yes</td>
-    <td>No</td>
-    <td>No</td>
-    <td>Yes</td>
-    <td>No</td>
-    <td>Yes</td>
+    <td>c(1): No
+        <br />c(>1): Yes
+        <br />f: No
+        <br />h: Yes
+    </td>
+    <td>c(1): Yes, include key field
+        <br />c(>1): Yes, do not include key fields
+        <br />f: Yes, include ALL fields
+        <br />h: Yes
+    </td>
+    <td>c: Yes
+      <br />f: No
+      <br />h: Yes
+    </td>
+  </tr>
+</table>
+
+<p />
+
+<table border="1" cellspacing="0" cellpadding="5">
+  <tr>
+    <th>Table Type</th>
+    <th>Base Record Super Class</th>
+    <th>Record with BLOBs Super Class</th>
+    <th>Example Super Class</th>
+  </tr>
+  <tr>
+    <th>NO_PK_FIELDS_NO_BLOBS</th>
+    <td>None</td>
+    <td>N/A</td>
+    <td>Base Record</td>
+  </tr>
+  <tr>
+    <th>NO_PK_FIELDS_BLOBS</th>
+    <td>None</td>
+    <td>Base Record</td>
+    <td>Base Record</td>
+  </tr>
+  <tr>
+    <th>PK_NO_FIELDS_NO_BLOBS</th>
+    <td>N/A</td>
+    <td>N/A</td>
+    <td>Primary Key</td>
+  </tr>
+  <tr>
+    <th>PK_FIELDS_NO_BLOBS</th>
+    <td>Primary Key</td>
+    <td>N/A</td>
+    <td>Base Record</td>
+  </tr>
+  <tr>
+    <th>PK_NO_FIELDS_BLOBS</th>
+    <td>N/A</td>
+    <td>Primary Key</td>
+    <td>Primary Key</td>
+  </tr>
+  <tr>
+    <th>PK_FIELDS_BLOBS</th>
+    <td>Primary Key</td>
+    <td>Base Record</td>
+    <td>Base Record</td>
   </tr>
 </table>
 
 <p>Notes:</p>
 <ul>
-  <li>If the selectByExample and deleteByExample methods are disallowed, then 
+  <li>If the selectByExample and deleteByExample methods are disallowed, then
       Abator will not generate the Example class</li>
   <li>The example class will subclass the Primary Key or the Base Record only when
       using the "Legacy" generator set.  Otherwise, the example class will not subclass

@@ -44,17 +44,30 @@ public class AbatorObjectFactory {
     }
 
 	public static Object createObject(String type) {
-		Object answer;
-
-		try {
-            Class clazz = Class.forName(type);
-			answer = clazz.newInstance();
-		} catch (Exception e) {
-			throw new RuntimeException(
-			        Messages.getString("RuntimeError.6", type), e); //$NON-NLS-1$
-		}
-
-		return answer;
+        Class clazz = null;
+        
+        try {
+            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+            clazz = cl.loadClass(type);
+        } catch (Exception e) {
+            // ignore - failsafe below
+        }
+        
+        Object answer;
+        
+        try {
+            if (clazz == null) {
+                clazz = Class.forName(type);
+            }
+        
+            answer = clazz.newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException(
+              Messages.getString("RuntimeError.6", type), e); //$NON-NLS-1$
+            
+        }
+        
+        return answer;
 	}
 	
 	public static JavaTypeResolver createJavaTypeResolver(AbatorContext context,

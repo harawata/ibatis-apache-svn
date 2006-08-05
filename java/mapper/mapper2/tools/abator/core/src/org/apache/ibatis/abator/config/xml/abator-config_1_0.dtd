@@ -23,6 +23,7 @@
 -->
 
 <!ENTITY % Boolean "(true|false)">
+<!ENTITY % ModelType "(hierarchical|flat|conditional)">
 
 <!--
   The abatorConfiguration element is the root element for Abator configurations.
@@ -36,6 +37,7 @@
 <!ELEMENT abatorContext (jdbcConnection, javaTypeResolver?, javaModelGenerator,
                         sqlMapGenerator, daoGenerator?, table+)>
 <!ATTLIST abatorContext id CDATA #IMPLIED
+  defaultModelType %ModelType; #IMPLIED
   generatorSet CDATA #IMPLIED>
 
 <!--
@@ -129,7 +131,8 @@
   enableDeleteByPrimaryKey %Boolean; #IMPLIED
   enableDeleteByExample %Boolean; #IMPLIED
   selectByPrimaryKeyQueryId CDATA #IMPLIED
-  selectByExampleQueryId CDATA #IMPLIED>
+  selectByExampleQueryId CDATA #IMPLIED
+  modelType %ModelType; #IMPLIED>
 
 <!--
   The columnOverride element is used to change certain attributes of the column

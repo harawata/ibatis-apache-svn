@@ -15,8 +15,11 @@
  */
 package org.apache.ibatis.abator.internal.rules;
 
-import org.apache.ibatis.abator.api.IntrospectedTable;
-import org.apache.ibatis.abator.api.TableType;
+import org.apache.ibatis.abator.api.FullyQualifiedTable;
+import org.apache.ibatis.abator.api.JavaModelGenerator;
+import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
+import org.apache.ibatis.abator.config.TableConfiguration;
+import org.apache.ibatis.abator.internal.db.ColumnDefinitions;
 
 /**
  * This class centralizes all the rules related to code generation - including
@@ -27,375 +30,19 @@ import org.apache.ibatis.abator.api.TableType;
  * 
  * @author Jeff Butler
  */
-public class AbatorRules {
+public abstract class AbatorRules {
+
+    protected TableConfiguration tableConfiguration;
+    protected ColumnDefinitions columnDefinitions;
 
     /**
-     * Utility class - no instances allowed.
+     * 
      */
-    private AbatorRules() {
+    public AbatorRules(TableConfiguration tableConfiguration,
+            ColumnDefinitions columnDefinitions) {
         super();
-    }
-
-    // start of domain object generation rules
-
-    /**
-     * Implements the rule for determining whether to generate a primary key
-     * class. If the physical table has a primary key, then we generate the
-     * class.
-     * 
-     * @param introspectedTable
-     *            the introspected table
-     * @return true if the primary key should be generated
-     */
-    public static boolean generatePrimaryKey(IntrospectedTable introspectedTable) {
-        TableType tableType = introspectedTable.getTableType();
-
-        boolean rc;
-
-        if (tableType == TableType.PK_NO_FIELDS_NO_BLOBS) {
-            rc = true;
-        } else if (tableType == TableType.PK_FIELDS_NO_BLOBS) {
-            rc = true;
-        } else if (tableType == TableType.PK_NO_FIELDS_BLOBS) {
-            rc = true;
-        } else if (tableType == TableType.PK_FIELDS_BLOBS) {
-            rc = true;
-        } else {
-            rc = false;
-        }
-
-        return rc;
-    }
-
-    /**
-     * Implements the rule for generating a base record that extends the primary
-     * key. If the table has a primary key, and has non-BLOB non-Primary Key
-     * fields, then generate the class.
-     * 
-     * @param introspectedTable
-     *            the introspected table
-     * @return true if the base record class should be generated
-     */
-    public static boolean generateBaseRecordExtendingPrimaryKey(
-            IntrospectedTable introspectedTable) {
-        TableType tableType = introspectedTable.getTableType();
-
-        boolean rc;
-
-        if (tableType == TableType.PK_FIELDS_NO_BLOBS) {
-            rc = true;
-        } else if (tableType == TableType.PK_FIELDS_BLOBS) {
-            rc = true;
-        } else {
-            rc = false;
-        }
-
-        return rc;
-    }
-
-    /**
-     * Implements the rule for generating a base record with no super class. If
-     * the table does not have a primary key, then generate the class.
-     * 
-     * @param introspectedTable
-     *            the introspected table
-     * @return true if the base record class should be generated
-     */
-    public static boolean generateBaseRecordWithNoSuperclass(
-            IntrospectedTable introspectedTable) {
-        TableType tableType = introspectedTable.getTableType();
-
-        boolean rc;
-
-        if (tableType == TableType.NO_PK_FIELDS_NO_BLOBS) {
-            rc = true;
-        } else if (tableType == TableType.NO_PK_FIELDS_BLOBS) {
-            rc = true;
-        } else {
-            rc = false;
-        }
-
-        return rc;
-    }
-
-    /**
-     * Implements the rule for generating a record with BLOBs class extending
-     * the primary key class. If the table has a primary key, but all other
-     * fields are BLOBs, then generate the class.
-     * 
-     * @param introspectedTable
-     *            the introspected table
-     * @return true if the record with BLOBs class should be generated
-     */
-    public static boolean generateRecordWithBLOBsExtendingPrimaryKey(
-            IntrospectedTable introspectedTable) {
-        TableType tableType = introspectedTable.getTableType();
-
-        boolean rc;
-
-        if (tableType == TableType.PK_NO_FIELDS_BLOBS) {
-            rc = true;
-        } else {
-            rc = false;
-        }
-
-        return rc;
-    }
-
-    /**
-     * Implements the rule for generating a record with BLOBs class extending
-     * the base record class. If the table has non-BLOB non-Primary Key fields,
-     * then generate the class.
-     * 
-     * @param introspectedTable
-     *            the introspected table
-     * @return true if the record with BLOBs class should be generated
-     */
-    public static boolean generateRecordWithBLOBsExtendingBaseRecord(
-            IntrospectedTable introspectedTable) {
-        TableType tableType = introspectedTable.getTableType();
-
-        boolean rc;
-
-        if (tableType == TableType.NO_PK_FIELDS_BLOBS) {
-            rc = true;
-        } else if (tableType == TableType.PK_FIELDS_BLOBS) {
-            rc = true;
-        } else {
-            rc = false;
-        }
-
-        return rc;
-    }
-
-    /**
-     * Implements the rule for generating an example class extending the primary
-     * key. If there is a primary key, and there are no non-Primary Key non-Blob
-     * fields, then generate the class. Also, the class should only be generated
-     * if the selectByExample or deleteByExample methods are allowed. This
-     * method only applies to the "Legacy" generator set.
-     * 
-     * @param introspectedTable
-     *            the introspected table
-     * @return true if the example class should be generated
-     */
-    public static boolean generateExampleExtendingPrimaryKey(
-            IntrospectedTable introspectedTable) {
-        TableType tableType = introspectedTable.getTableType();
-
-        boolean rc;
-
-        if (tableType == TableType.PK_NO_FIELDS_NO_BLOBS) {
-            rc = true;
-        } else if (tableType == TableType.PK_NO_FIELDS_BLOBS) {
-            rc = true;
-        } else {
-            rc = false;
-        }
-
-        if (rc) {
-            rc = generateExample(introspectedTable);
-        }
-
-        return rc;
-    }
-
-    /**
-     * Implements the rule for generating an example class extending the base
-     * record. If there are non non-Primary Key non-Blob fields, then generate
-     * the class. Also, the class should only be generated if the
-     * selectByExample or deleteByExample methods are allowed. This method only
-     * applies to the "Legacy" generator set.
-     * 
-     * @param introspectedTable
-     *            the introspected table
-     * @return true if the example class should be generated
-     */
-    public static boolean generateExampleExtendingBaseRecord(
-            IntrospectedTable introspectedTable) {
-        TableType tableType = introspectedTable.getTableType();
-
-        boolean rc;
-
-        if (tableType == TableType.NO_PK_FIELDS_NO_BLOBS) {
-            rc = true;
-        } else if (tableType == TableType.NO_PK_FIELDS_BLOBS) {
-            rc = true;
-        } else if (tableType == TableType.PK_FIELDS_NO_BLOBS) {
-            rc = true;
-        } else if (tableType == TableType.PK_FIELDS_BLOBS) {
-            rc = true;
-        } else {
-            rc = false;
-        }
-
-        if (rc) {
-            rc = generateExample(introspectedTable);
-        }
-
-        return rc;
-    }
-
-    /**
-     * Implements the rule for generating an example class with no super class.
-     * The class should only be generated if the
-     * selectByExample or deleteByExample methods are allowed. This method only
-     * applies to the "Java2" and "Java5" generator sets.
-     * 
-     * @param introspectedTable
-     *            the introspected table
-     * @return true if the example class should be generated
-     */
-    public static boolean generateExample(IntrospectedTable introspectedTable) {
-        boolean rc = introspectedTable.isSelectByExampleStatementEnabled()
-                || introspectedTable.isDeleteByExampleStatementEnabled();
-
-        return rc;
-    }
-
-    // end of domain object generation rules
-    // start of SqlMAP and DAO Method rules rules
-
-    /**
-     * Implements the rule for generating the result map without BLOBs. If
-     * either select method is allowed, then generate the result map.
-     * 
-     * @param introspectedTable
-     *            the introspected table
-     * @return true if the result map should be generated
-     */
-    public static boolean generateResultMapWithoutBLOBs(
-            IntrospectedTable introspectedTable) {
-        return introspectedTable.isSelectByExampleStatementEnabled()
-                || introspectedTable.isSelectByPrimaryKeyStatementEnabled();
-    }
-
-    /**
-     * Implements the rule for generating the result map with BLOBs. If the
-     * table has BLOB columns, and either select method is allowed, then
-     * generate the result map.
-     * 
-     * @param introspectedTable
-     *            the introspected table
-     * @return true if the result map should be generated
-     */
-    public static boolean generateResultMapWithBLOBs(
-            IntrospectedTable introspectedTable) {
-        TableType tableType = introspectedTable.getTableType();
-
-        boolean rc;
-
-        if (tableType == TableType.NO_PK_FIELDS_BLOBS) {
-            rc = true;
-        } else if (tableType == TableType.PK_NO_FIELDS_BLOBS) {
-            rc = true;
-        } else if (tableType == TableType.PK_FIELDS_BLOBS) {
-            rc = true;
-        } else {
-            rc = false;
-        }
-
-        if (rc) {
-            rc = introspectedTable.isSelectByExampleStatementEnabled()
-                    || introspectedTable.isSelectByPrimaryKeyStatementEnabled();
-        }
-
-        return rc;
-    }
-
-    /**
-     * Implements the rule for generating the SQL example where clause element.
-     * Generate the element if either the selectByExample or deleteByExample
-     * statement is allowed.
-     * 
-     * @param introspectedTable
-     *            the introspected table
-     * @return true if the SQL where clause element should be generated
-     */
-    public static boolean generateSQLExampleWhereClause(
-            IntrospectedTable introspectedTable) {
-        return introspectedTable.isSelectByExampleStatementEnabled()
-                || introspectedTable.isDeleteByExampleStatementEnabled();
-    }
-
-    /**
-     * Implements the rule for generating the select by example without BLOBs
-     * SQL Map element and DAO method. If the selectByExample statement is
-     * allowed, then generate the element and method.
-     * 
-     * @param tc
-     *            the table configuration object
-     * @return true if the element and method should be generated
-     */
-    public static boolean generateSelectByExampleWithoutBLOBs(
-            IntrospectedTable introspectedTable) {
-        return introspectedTable.isSelectByExampleStatementEnabled();
-    }
-
-    /**
-     * Implements the rule for generating the select by example with BLOBs SQL
-     * Map element and DAO method. If the table has BLOB fields and the
-     * selectByExample statement is allowed, then generate the element and
-     * method.
-     * 
-     * @param introspectedTable
-     *            the introspected table
-     * @return true if the element and method should be generated
-     */
-    public static boolean generateSelectByExampleWithBLOBs(
-            IntrospectedTable introspectedTable) {
-        TableType tableType = introspectedTable.getTableType();
-
-        boolean rc;
-
-        if (tableType == TableType.NO_PK_FIELDS_BLOBS) {
-            rc = true;
-        } else if (tableType == TableType.PK_NO_FIELDS_BLOBS) {
-            rc = true;
-        } else if (tableType == TableType.PK_FIELDS_BLOBS) {
-            rc = true;
-        } else {
-            rc = false;
-        }
-
-        if (rc) {
-            rc = introspectedTable.isSelectByExampleStatementEnabled();
-        }
-
-        return rc;
-    }
-
-    /**
-     * Implements the rule for generating the select by primary key SQL Map
-     * element and DAO method. If the table has a primary key as well as other
-     * fields, and the selectByPrimaryKey statement is allowed, then generate
-     * the element and method.
-     * 
-     * @param introspectedTable
-     *            the introspected table
-     * @return true if the element and method should be generated
-     */
-    public static boolean generateSelectByPrimaryKey(
-            IntrospectedTable introspectedTable) {
-        TableType tableType = introspectedTable.getTableType();
-
-        boolean rc;
-
-        if (tableType == TableType.PK_FIELDS_NO_BLOBS) {
-            rc = true;
-        } else if (tableType == TableType.PK_NO_FIELDS_BLOBS) {
-            rc = true;
-        } else if (tableType == TableType.PK_FIELDS_BLOBS) {
-            rc = true;
-        } else {
-            rc = false;
-        }
-
-        if (rc) {
-            rc = introspectedTable.isSelectByPrimaryKeyStatementEnabled();
-        }
-
-        return rc;
+        this.tableConfiguration = tableConfiguration;
+        this.columnDefinitions = columnDefinitions;
     }
 
     /**
@@ -403,73 +50,67 @@ public class AbatorRules {
      * method. If the insert statement is allowed, then generate the element and
      * method.
      * 
-     * @param introspectedTable
-     *            the introspected table
      * @return true if the element and method should be generated
      */
-    public static boolean generateInsert(IntrospectedTable introspectedTable) {
-        return introspectedTable.isInsertStatementEnabled();
+    public boolean generateInsert() {
+        return tableConfiguration.isInsertStatementEnabled();
     }
 
+    /**
+     * Calculates the class that contains all fields.  This class is used
+     * as the insert statement parameter, as well as the returned value
+     * from the select by primary key method.  The actual class depends
+     * on how the domain model is generated.
+     * 
+     * @param javaModelGenerator
+     * @param table
+     * @return
+     */
+    public FullyQualifiedJavaType calculateAllFieldsClass(JavaModelGenerator javaModelGenerator,
+            FullyQualifiedTable table) {
+        
+        FullyQualifiedJavaType answer;
+        
+        if (generateRecordWithBLOBsClass()) {
+            answer = javaModelGenerator.getRecordWithBLOBsType(table);
+        } else if (generateBaseRecordClass()) {
+            answer = javaModelGenerator.getBaseRecordType(table);
+        } else {
+            answer = javaModelGenerator.getPrimaryKeyType(table);
+        }
+        
+        return answer;
+    }
+    
     /**
      * Implements the rule for generating the update by primary key without
      * BLOBs SQL Map element and DAO method. If the table has a primary key as
      * well as other non-BLOB fields, and the updateByPrimaryKey statement is
      * allowed, then generate the element and method.
      * 
-     * @param introspectedTable
-     *            the introspected table
      * @return true if the element and method should be generated
      */
-    public static boolean generateUpdateByPrimaryKeyWithoutBLOBs(
-            IntrospectedTable introspectedTable) {
-        TableType tableType = introspectedTable.getTableType();
-
-        boolean rc;
-
-        if (tableType == TableType.PK_FIELDS_NO_BLOBS) {
-            rc = true;
-        } else if (tableType == TableType.PK_FIELDS_BLOBS) {
-            rc = true;
-        } else {
-            rc = false;
-        }
-
-        if (rc) {
-            rc = introspectedTable.isUpdateByPrimaryKeyStatementEnabled();
-        }
-
+    public boolean generateUpdateByPrimaryKeyWithoutBLOBs() {
+        boolean rc = tableConfiguration.isUpdateByPrimaryKeyStatementEnabled()
+            && columnDefinitions.hasPrimaryKeyColumns()
+            && columnDefinitions.hasBaseColumns();
+        
         return rc;
     }
-
+    
     /**
      * Implements the rule for generating the update by primary key with BLOBs
      * SQL Map element and DAO method. If the table has a primary key as well as
      * other BLOB fields, and the updateByPrimaryKey statement is allowed, then
      * generate the element and method.
      * 
-     * @param introspectedTable
-     *            the introspected table
      * @return true if the element and method should be generated
      */
-    public static boolean generateUpdateByPrimaryKeyWithBLOBs(
-            IntrospectedTable introspectedTable) {
-        TableType tableType = introspectedTable.getTableType();
-
-        boolean rc;
-
-        if (tableType == TableType.PK_NO_FIELDS_BLOBS) {
-            rc = true;
-        } else if (tableType == TableType.PK_FIELDS_BLOBS) {
-            rc = true;
-        } else {
-            rc = false;
-        }
-
-        if (rc) {
-            rc = introspectedTable.isUpdateByPrimaryKeyStatementEnabled();
-        }
-
+    public boolean generateUpdateByPrimaryKeyWithBLOBs() {
+        boolean rc = tableConfiguration.isUpdateByPrimaryKeyStatementEnabled()
+            && columnDefinitions.hasPrimaryKeyColumns()
+            && columnDefinitions.hasBLOBColumns();
+    
         return rc;
     }
 
@@ -479,46 +120,150 @@ public class AbatorRules {
      * deleteByPrimaryKey statement is allowed, then generate the element and
      * method.
      * 
-     * @param introspectedTable
-     *            the introspected table
      * @return true if the element and method should be generated
      */
-    public static boolean generateDeleteByPrimaryKey(
-            IntrospectedTable introspectedTable) {
-        TableType tableType = introspectedTable.getTableType();
-
-        boolean rc;
-
-        if (tableType == TableType.PK_NO_FIELDS_NO_BLOBS) {
-            rc = true;
-        } else if (tableType == TableType.PK_FIELDS_NO_BLOBS) {
-            rc = true;
-        } else if (tableType == TableType.PK_NO_FIELDS_BLOBS) {
-            rc = true;
-        } else if (tableType == TableType.PK_FIELDS_BLOBS) {
-            rc = true;
-        } else {
-            rc = false;
-        }
-
-        if (rc) {
-            rc = introspectedTable.isDeleteByPrimaryKeyStatementEnabled();
-        }
+    public boolean generateDeleteByPrimaryKey() {
+        boolean rc = tableConfiguration.isDeleteByPrimaryKeyStatementEnabled()
+            && columnDefinitions.hasPrimaryKeyColumns();
 
         return rc;
     }
-
+    
     /**
      * Implements the rule for generating the delete by example SQL Map element
      * and DAO method. If the deleteByExample statement is allowed, then
      * generate the element and method.
      * 
-     * @param introspectedTable
-     *            the introspected table
      * @return true if the element and method should be generated
      */
-    public static boolean generateDeleteByExample(
-            IntrospectedTable introspectedTable) {
-        return introspectedTable.isDeleteByExampleStatementEnabled();
+    public boolean generateDeleteByExample() {
+        boolean rc = tableConfiguration.isDeleteByExampleStatementEnabled();
+
+        return rc;
     }
+    
+    /**
+     * Implements the rule for generating the result map without BLOBs. If
+     * either select method is allowed, then generate the result map.
+     * 
+     * @return true if the result map should be generated
+     */
+    public boolean generateBaseResultMap() {
+        boolean rc = tableConfiguration.isSelectByExampleStatementEnabled()
+            || tableConfiguration.isSelectByPrimaryKeyStatementEnabled();
+        
+        return rc;
+    }
+    
+    /**
+     * Implements the rule for generating the result map with BLOBs. If the
+     * table has BLOB columns, and either select method is allowed, then
+     * generate the result map.
+     * 
+     * @return true if the result map should be generated
+     */
+    public boolean generateResultMapWithBLOBs() {
+        boolean rc = (tableConfiguration.isSelectByExampleStatementEnabled()
+            || tableConfiguration.isSelectByPrimaryKeyStatementEnabled())
+            && columnDefinitions.hasBLOBColumns();
+    
+        return rc;
+    }
+    
+    /**
+     * Implements the rule for generating the SQL example where clause element.
+     * Generate the element if either the selectByExample or deleteByExample
+     * statement is allowed.
+     * 
+     * @return true if the SQL where clause element should be generated
+     */
+    public boolean generateSQLExampleWhereClause() {
+        boolean rc = tableConfiguration.isSelectByExampleStatementEnabled()
+            || tableConfiguration.isDeleteByExampleStatementEnabled();
+        
+        return rc;
+    }
+    
+    /**
+     * Implements the rule for generating the select by primary key SQL Map
+     * element and DAO method. If the table has a primary key as well as other
+     * fields, and the selectByPrimaryKey statement is allowed, then generate
+     * the element and method.
+     * 
+     * @return true if the element and method should be generated
+     */
+    public boolean generateSelectByPrimaryKey() {
+        boolean rc = tableConfiguration.isSelectByPrimaryKeyStatementEnabled()
+            && columnDefinitions.hasPrimaryKeyColumns()
+            && (columnDefinitions.hasBaseColumns()
+                    || columnDefinitions.hasBLOBColumns());
+        
+        return rc;
+    }
+    
+    /**
+     * Implements the rule for generating the select by example without BLOBs
+     * SQL Map element and DAO method. If the selectByExample statement is
+     * allowed, then generate the element and method.
+     * 
+     * @return true if the element and method should be generated
+     */
+    public boolean generateSelectByExampleWithoutBLOBs() {
+        return tableConfiguration.isSelectByExampleStatementEnabled();
+    }
+    
+    /**
+     * Implements the rule for generating the select by example with BLOBs SQL
+     * Map element and DAO method. If the table has BLOB fields and the
+     * selectByExample statement is allowed, then generate the element and
+     * method.
+     * 
+     * @return true if the element and method should be generated
+     */
+    public boolean generateSelectByExampleWithBLOBs() {
+        boolean rc = tableConfiguration.isSelectByExampleStatementEnabled()
+            && columnDefinitions.hasBLOBColumns();
+        
+        return rc;
+    }
+
+    /**
+     * Implements the rule for generating an example class with no super class.
+     * The class should only be generated if the selectByExample or
+     * deleteByExample methods are allowed.
+     * 
+     * @return true if the example class should be generated
+     */
+    public boolean generateExampleClass() {
+        boolean rc = tableConfiguration.isSelectByExampleStatementEnabled()
+                || tableConfiguration.isDeleteByExampleStatementEnabled();
+    
+        return rc;
+    }
+
+    /**
+     * Implements the rule for determining whether to generate a primary key
+     * class.  If you return false from this method, and the table has
+     * primary key columns, then the primary key columns will be
+     * added to the base class.
+     * 
+     * @return true if a seperate primary key class should be generated
+     */
+    public abstract boolean generatePrimaryKeyClass();
+
+    /**
+     * Implements the rule for generating a base record.
+     * 
+     * @return true if the class should be generated
+     */
+    public abstract boolean generateBaseRecordClass();
+
+    /**
+     * Implements the rule for generating a record with BLOBs.  If you 
+     * return false from this method, and the table had BLOB columns,
+     * then the BLOB columns will be added to the base class.  
+     * 
+     * @return true if the record with BLOBs class should be generated
+     */
+    public abstract boolean generateRecordWithBLOBsClass();
 }

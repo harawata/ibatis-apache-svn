@@ -35,6 +35,7 @@ import org.apache.ibatis.abator.config.GeneratedKey;
 import org.apache.ibatis.abator.config.JDBCConnectionConfiguration;
 import org.apache.ibatis.abator.config.JavaModelGeneratorConfiguration;
 import org.apache.ibatis.abator.config.JavaTypeResolverConfiguration;
+import org.apache.ibatis.abator.config.ModelType;
 import org.apache.ibatis.abator.config.PropertyHolder;
 import org.apache.ibatis.abator.config.SqlMapGeneratorConfiguration;
 import org.apache.ibatis.abator.config.TableConfiguration;
@@ -167,12 +168,13 @@ public class AbatorConfigurationParser {
 
         NamedNodeMap nnm = node.getAttributes();
         Node attribute = nnm.getNamedItem("generatorSet"); //$NON-NLS-1$
-        AbatorContext abatorContext;
-        if (attribute == null) {
-            abatorContext = new AbatorContext();
-        } else {
-            abatorContext = new AbatorContext(attribute.getNodeValue());
-        }
+        String generatorSet = attribute == null ? null : attribute.getNodeValue();
+
+        attribute = nnm.getNamedItem("defaultModelType"); //$NON-NLS-1$
+        String defaultModelType = attribute == null ? null : attribute.getNodeValue();
+        ModelType mt = defaultModelType == null ? null : ModelType.getModelType(defaultModelType);
+        
+        AbatorContext abatorContext = new AbatorContext(generatorSet, mt);
 
         abatorConfiguration.addAbatorContext(abatorContext);
 
@@ -240,7 +242,7 @@ public class AbatorConfigurationParser {
     }
 
     private void parseTable(AbatorContext abatorContext, Node node) {
-        TableConfiguration tc = new TableConfiguration();
+        TableConfiguration tc = new TableConfiguration(abatorContext);
         abatorContext.addTableConfiguration(tc);
 
         NamedNodeMap nnm = node.getAttributes();
@@ -306,6 +308,11 @@ public class AbatorConfigurationParser {
             tc.setSelectByExampleQueryId(attribute.getNodeValue());
         }
 
+        attribute = nnm.getNamedItem("modelType"); //$NON-NLS-1$
+        if (attribute != null) {
+            tc.setModelType(ModelType.getModelType(attribute.getNodeValue()));
+        }
+        
         NodeList nodeList = node.getChildNodes();
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node childNode = nodeList.item(i);

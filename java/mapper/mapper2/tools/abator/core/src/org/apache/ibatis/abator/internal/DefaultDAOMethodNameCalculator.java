@@ -36,10 +36,24 @@ public class DefaultDAOMethodNameCalculator implements DAOMethodNameCalculator {
         return "insert"; //$NON-NLS-1$
     }
 
-    public String getUpdateByPrimaryKeyMethodName(IntrospectedTable introspectedTable) {
-        return "updateByPrimaryKey"; //$NON-NLS-1$
+    public String getUpdateByPrimaryKeyWithoutBLOBsMethodName(IntrospectedTable introspectedTable) {
+        if (introspectedTable.getRules().generateUpdateByPrimaryKeyWithBLOBs()
+                && !introspectedTable.getRules().generateRecordWithBLOBsClass()) {
+            // can't use the same method name for both methods...
+            return "updateByPrimaryKeyWithoutBLOBs"; //$NON-NLS-1$
+        } else {
+            return "updateByPrimaryKey"; //$NON-NLS-1$
+        }
     }
 
+    public String getUpdateByPrimaryKeyWithBLOBsMethodName(IntrospectedTable introspectedTable) {
+        if (introspectedTable.getRules().generateRecordWithBLOBsClass()) {
+            return "updateByPrimaryKey"; //$NON-NLS-1$
+        } else {
+            return "updateByPrimaryKeyWithBLOBs"; //$NON-NLS-1$
+        }
+    }
+    
     public String getDeleteByExampleMethodName(IntrospectedTable introspectedTable) {
         return "deleteByExample"; //$NON-NLS-1$
     }
@@ -48,7 +62,7 @@ public class DefaultDAOMethodNameCalculator implements DAOMethodNameCalculator {
         return "deleteByPrimaryKey"; //$NON-NLS-1$
     }
 
-    public String getSelectByExampleMethodName(IntrospectedTable introspectedTable) {
+    public String getSelectByExampleWithoutBLOBsMethodName(IntrospectedTable introspectedTable) {
         return "selectByExample"; //$NON-NLS-1$
     }
 

@@ -20,9 +20,14 @@ import java.util.Iterator;
 
 import org.apache.ibatis.abator.api.FullyQualifiedTable;
 import org.apache.ibatis.abator.api.IntrospectedTable;
-import org.apache.ibatis.abator.api.TableType;
 import org.apache.ibatis.abator.config.GeneratedKey;
+import org.apache.ibatis.abator.config.ModelType;
 import org.apache.ibatis.abator.config.TableConfiguration;
+import org.apache.ibatis.abator.internal.rules.AbatorRules;
+import org.apache.ibatis.abator.internal.rules.ConditionalModelRules;
+import org.apache.ibatis.abator.internal.rules.FlatModelRules;
+import org.apache.ibatis.abator.internal.rules.HierarchicalModelRules;
+import org.apache.ibatis.abator.internal.util.AggregatingIterator;
 
 /**
  * @author Jeff Butler
@@ -32,8 +37,8 @@ public class IntrospectedTableImpl implements IntrospectedTable {
 
     private TableConfiguration tableConfiguration;
     private ColumnDefinitions columnDefinitions;
-    private TableType tableType;
     private FullyQualifiedTable table;
+    private AbatorRules rules;
     
     /**
      * 
@@ -44,6 +49,14 @@ public class IntrospectedTableImpl implements IntrospectedTable {
         this.columnDefinitions = columnDefinitions;
         this.tableConfiguration = tableConfiguration;
         this.table = table;
+        
+        if (tableConfiguration.getModelType() == ModelType.HIERARCHICAL) {
+            this.rules = new HierarchicalModelRules(tableConfiguration, columnDefinitions);
+        } else if (tableConfiguration.getModelType() == ModelType.FLAT) {
+            this.rules = new FlatModelRules(tableConfiguration, columnDefinitions);
+        } else {
+            this.rules = new ConditionalModelRules(tableConfiguration, columnDefinitions);
+        }
     }
 
     /* (non-Javadoc)
@@ -51,58 +64,6 @@ public class IntrospectedTableImpl implements IntrospectedTable {
      */
     public FullyQualifiedTable getTable() {
         return table;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.ibatis.abator.api.IntrospectedTable#getTableType()
-     */
-    public TableType getTableType() {
-        if (tableType == null) {
-            tableType = TableType.calculateTableType(columnDefinitions);
-        }
-        return tableType;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.ibatis.abator.api.IntrospectedTable#isSelectByExampleStatementEnabled()
-     */
-    public boolean isSelectByExampleStatementEnabled() {
-        return tableConfiguration.isSelectByExampleStatementEnabled();
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.ibatis.abator.api.IntrospectedTable#isDeleteByExampleStatementEnabled()
-     */
-    public boolean isDeleteByExampleStatementEnabled() {
-        return tableConfiguration.isDeleteByExampleStatementEnabled();
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.ibatis.abator.api.IntrospectedTable#isSelectByPrimaryKeyStatementEnabled()
-     */
-    public boolean isSelectByPrimaryKeyStatementEnabled() {
-        return tableConfiguration.isSelectByPrimaryKeyStatementEnabled();
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.ibatis.abator.api.IntrospectedTable#isUpdateByPrimaryKeyStatementEnabled()
-     */
-    public boolean isUpdateByPrimaryKeyStatementEnabled() {
-        return tableConfiguration.isUpdateByPrimaryKeyStatementEnabled();
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.ibatis.abator.api.IntrospectedTable#isDeleteByPrimaryKeyStatementEnabled()
-     */
-    public boolean isDeleteByPrimaryKeyStatementEnabled() {
-        return tableConfiguration.isDeleteByPrimaryKeyStatementEnabled();
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.ibatis.abator.api.IntrospectedTable#isInsertStatementEnabled()
-     */
-    public boolean isInsertStatementEnabled() {
-        return tableConfiguration.isInsertStatementEnabled();
     }
 
     /* (non-Javadoc)
@@ -126,28 +87,8 @@ public class IntrospectedTableImpl implements IntrospectedTable {
         return tableConfiguration.getGeneratedKey();
     }
 
-    public Iterator getAllColumns() {
-        return columnDefinitions.getAllColumns().iterator();
-    }
-
-    public Iterator getBLOBColumns() {
-        return columnDefinitions.getBLOBColumns().iterator();
-    }
-
     public ColumnDefinition getColumn(String columnName) {
         return columnDefinitions.getColumn(columnName);
-    }
-
-    public Iterator getNonBLOBColumns() {
-        return columnDefinitions.getNonBLOBColumns().iterator();
-    }
-
-    public Iterator getNonPrimaryKeyColumns() {
-        return columnDefinitions.getNonPrimaryKeyColumns().iterator();
-    }
-
-    public Iterator getPrimaryKeyColumns() {
-        return columnDefinitions.getPrimaryKey().iterator();
     }
 
     public boolean hasJDBCDateColumns() {
@@ -160,5 +101,45 @@ public class IntrospectedTableImpl implements IntrospectedTable {
 
     public ColumnDefinitions getColumnDefinitions() {
         return columnDefinitions;
+    }
+
+    public AbatorRules getRules() {
+        return rules;
+    }
+
+    public Iterator getAllColumns() {
+        return new AggregatingIterator(columnDefinitions.getPrimaryKeyColumns().iterator(),
+                columnDefinitions.getBaseColumns().iterator(),
+                columnDefinitions.getBLOBColumns().iterator());
+    }
+
+    public Iterator getNonBLOBColumns() {
+        return new AggregatingIterator(columnDefinitions.getPrimaryKeyColumns().iterator(),
+                columnDefinitions.getBaseColumns().iterator());
+    }
+
+    public Iterator getPrimaryKeyColumns() {
+        return columnDefinitions.getPrimaryKeyColumns().iterator();
+    }
+
+    public Iterator getBaseColumns() {
+        return columnDefinitions.getBaseColumns().iterator();
+    }
+
+    public boolean hasPrimaryKeyColumns() {
+        return columnDefinitions.hasPrimaryKeyColumns();
+    }
+
+    public Iterator getBLOBColumns() {
+        return columnDefinitions.getBLOBColumns().iterator();
+    }
+
+    public boolean hasBLOBColumns() {
+        return columnDefinitions.hasBLOBColumns();
+    }
+
+    public Iterator getNonPrimaryKeyColumns() {
+        return new AggregatingIterator(columnDefinitions.getBaseColumns().iterator(),
+                columnDefinitions.getBLOBColumns().iterator());
     }
 }

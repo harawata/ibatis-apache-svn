@@ -56,9 +56,12 @@ public class TableConfiguration extends PropertyHolder {
     private String tableName;
     private String domainObjectName;
     private String alias;
+    private ModelType modelType;
     
-	public TableConfiguration() {
+	public TableConfiguration(AbatorContext abatorContext) {
 		super();
+        
+        this.modelType = abatorContext.getDefaultModelType();
 		
 		columnOverrides = new HashMap();
 		ignoredColumns = new HashSet();
@@ -253,5 +256,13 @@ public class TableConfiguration extends PropertyHolder {
 
     public Iterator getIgnoredColumns() {
         return ignoredColumns.iterator();
+    }
+
+    public ModelType getModelType() {
+        return modelType;
+    }
+
+    public void setModelType(ModelType modelType) {
+        this.modelType = modelType;
     }
 }

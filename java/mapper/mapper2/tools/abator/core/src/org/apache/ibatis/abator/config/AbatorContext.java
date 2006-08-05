@@ -55,18 +55,27 @@ public class AbatorContext {
 	private ArrayList tableConfigurations;
     
     private GeneratorSet generatorSet;
-	
-    public AbatorContext() {
-        // TODO - make Java2 the default in some future release
-        this("Legacy"); //$NON-NLS-1$
-    }
     
+    private ModelType defaultModelType;
+	
     /**
+     * Constructs an AbatorContext object.
      * 
+     * @param generatorSetType - may be null
+     * @param defaultModelType - may be null
      */
-    public AbatorContext(String generatorSetType) {
+    public AbatorContext(String generatorSetType, ModelType defaultModelType) {
         super();
-        if ("Legacy".equalsIgnoreCase(generatorSetType)) { //$NON-NLS-1$
+        if (defaultModelType == null) {
+            this.defaultModelType = ModelType.CONDITIONAL;
+        } else {
+            this.defaultModelType = defaultModelType;
+        }
+        
+        if (generatorSetType == null) {
+            // TODO - make Java2 the default in some future release
+            generatorSet = new LegacyGeneratorSet();
+        } else if ("Legacy".equalsIgnoreCase(generatorSetType)) { //$NON-NLS-1$
             generatorSet = new LegacyGeneratorSet();
         } else if ("Java2".equalsIgnoreCase(generatorSetType)) { //$NON-NLS-1$
             generatorSet = new Java2GeneratorSet();
@@ -330,5 +339,9 @@ public class AbatorContext {
     public void setSqlMapGeneratorConfiguration(
             SqlMapGeneratorConfiguration sqlMapGeneratorConfiguration) {
         this.sqlMapGeneratorConfiguration = sqlMapGeneratorConfiguration;
+    }
+
+    public ModelType getDefaultModelType() {
+        return defaultModelType;
     }
 }

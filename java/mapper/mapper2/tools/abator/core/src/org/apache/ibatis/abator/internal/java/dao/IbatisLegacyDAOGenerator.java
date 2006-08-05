@@ -1,5 +1,5 @@
 /*
- *  Copyright 2005 The Apache Software Foundation
+ *  Copyright 2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,20 +13,20 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.apache.ibatis.abator.internal.java;
 
-import org.apache.ibatis.abator.internal.java.dao.SpringDAOTemplate;
+package org.apache.ibatis.abator.internal.java.dao;
 
 /**
- * This class generates DAO classes based on the Spring Framework DAO support.
+ * This class generates DAO classes based on the iBATIS DAO framework.
  * 
  * @author Jeff Butler
  */
-public class DAOGeneratorSpringImpl extends DAOGeneratorBaseImpl {
+public class IbatisLegacyDAOGenerator extends BaseLegacyDAOGenerator {
+
     /**
-     *  
+     * 
      */
-    public DAOGeneratorSpringImpl() {
-        super(new SpringDAOTemplate());
+    public IbatisLegacyDAOGenerator() {
+        super(new IbatisDAOTemplate());
     }
 }

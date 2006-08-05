@@ -1,5 +1,5 @@
 /*
- *  Copyright 2005 The Apache Software Foundation
+ *  Copyright 2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,23 +13,20 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.apache.ibatis.abator.internal.java;
 
-import org.apache.ibatis.abator.internal.java.dao.GenericSIDAOTemplate;
+package org.apache.ibatis.abator.internal.java.dao;
 
 /**
- * This class generates DAO classes that are generic and utilize sql maps
- * directly. The pattern is setter injection.
+ * This class generates DAO classes based on the Spring framework.
  * 
  * @author Jeff Butler
  */
-public class DAOGeneratorGenericSetterInjectionImpl extends
-		DAOGeneratorBaseImpl {
+public class SpringLegacyDAOGenerator extends BaseLegacyDAOGenerator {
 
-	/**
-	 *  
-	 */
-	public DAOGeneratorGenericSetterInjectionImpl() {
-		super(new GenericSIDAOTemplate());
-	}
+    /**
+     * 
+     */
+    public SpringLegacyDAOGenerator() {
+        super(new SpringDAOTemplate());
+    }
 }

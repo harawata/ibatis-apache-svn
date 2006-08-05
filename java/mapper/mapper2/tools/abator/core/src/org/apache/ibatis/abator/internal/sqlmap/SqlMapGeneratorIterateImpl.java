@@ -35,7 +35,6 @@ import org.apache.ibatis.abator.api.dom.xml.TextElement;
 import org.apache.ibatis.abator.api.dom.xml.XmlElement;
 import org.apache.ibatis.abator.config.GeneratedKey;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
-import org.apache.ibatis.abator.internal.rules.AbatorRules;
 import org.apache.ibatis.abator.internal.util.StringUtility;
 import org.apache.ibatis.abator.internal.util.messages.Messages;
 
@@ -121,10 +120,8 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.ibatis.abator.api.SqlMapGenerator#getGeneratedXMLFiles(org.apache.ibatis.abator.internal.db.IntrospectedTable,
-     *      org.apache.ibatis.abator.api.ProgressCallback)
+     *  (non-Javadoc)
+     * @see org.apache.ibatis.abator.api.SqlMapGenerator#getGeneratedXMLFiles(org.apache.ibatis.abator.api.IntrospectedTable, org.apache.ibatis.abator.api.ProgressCallback)
      */
     public List getGeneratedXMLFiles(IntrospectedTable introspectedTable,
             ProgressCallback callback) {
@@ -143,7 +140,6 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      * Creates the default implementation of the Sql Map
      * 
      * @param introspectedTable
-     *            the introspected table
      * @return A GeneratedXMLFile for the current table
      */
     protected GeneratedXmlFile getSqlMap(IntrospectedTable introspectedTable) {
@@ -164,7 +160,6 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      * Creates the sqlMap element (the root element, and all child elements).
      * 
      * @param introspectedTable
-     *            the introspected table
      * @return the sqlMap element including all child elements
      */
     protected XmlElement getSqlMapElement(IntrospectedTable introspectedTable) {
@@ -175,79 +170,78 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
                 getSqlMapNamespace(table)));
 
         XmlElement element;
-        if (AbatorRules.generateResultMapWithoutBLOBs(introspectedTable)) {
+        if (introspectedTable.getRules().generateBaseResultMap()) {
             element = getBaseResultMapElement(introspectedTable);
             if (element != null) {
                 answer.addElement(element);
             }
         }
 
-        if (AbatorRules.generateResultMapWithBLOBs(introspectedTable)) {
+        if (introspectedTable.getRules().generateResultMapWithBLOBs()) {
             element = getResultMapWithBLOBsElement(introspectedTable);
             if (element != null) {
                 answer.addElement(element);
             }
         }
 
-        if (AbatorRules.generateSQLExampleWhereClause(introspectedTable)) {
+        if (introspectedTable.getRules().generateSQLExampleWhereClause()) {
             element = getByExampleWhereClauseFragment(introspectedTable);
             if (element != null) {
                 answer.addElement(element);
             }
         }
 
-        if (AbatorRules.generateSelectByPrimaryKey(introspectedTable)) {
+        if (introspectedTable.getRules().generateSelectByPrimaryKey()) {
             element = getSelectByPrimaryKey(introspectedTable);
             if (element != null) {
                 answer.addElement(element);
             }
         }
 
-        if (AbatorRules.generateSelectByExampleWithoutBLOBs(introspectedTable)) {
+        if (introspectedTable.getRules().generateSelectByExampleWithoutBLOBs()) {
             element = getSelectByExample(introspectedTable);
             if (element != null) {
                 answer.addElement(element);
             }
         }
 
-        if (AbatorRules.generateSelectByExampleWithBLOBs(introspectedTable)) {
+        if (introspectedTable.getRules().generateSelectByExampleWithBLOBs()) {
             element = getSelectByExampleWithBLOBs(introspectedTable);
             if (element != null) {
                 answer.addElement(element);
             }
         }
 
-        if (AbatorRules.generateDeleteByPrimaryKey(introspectedTable)) {
+        if (introspectedTable.getRules().generateDeleteByPrimaryKey()) {
             element = getDeleteByPrimaryKey(introspectedTable);
             if (element != null) {
                 answer.addElement(element);
             }
         }
 
-        if (AbatorRules.generateDeleteByExample(introspectedTable)) {
+        if (introspectedTable.getRules().generateDeleteByExample()) {
             element = getDeleteByExample(introspectedTable);
             if (element != null) {
                 answer.addElement(element);
             }
         }
 
-        if (AbatorRules.generateInsert(introspectedTable)) {
+        if (introspectedTable.getRules().generateInsert()) {
             element = getInsertElement(introspectedTable);
             if (element != null) {
                 answer.addElement(element);
             }
         }
 
-        if (AbatorRules.generateUpdateByPrimaryKeyWithBLOBs(introspectedTable)) {
+        if (introspectedTable.getRules().generateUpdateByPrimaryKeyWithBLOBs()) {
             element = getUpdateByPrimaryKeyWithBLOBs(introspectedTable);
             if (element != null) {
                 answer.addElement(element);
             }
         }
 
-        if (AbatorRules
-                .generateUpdateByPrimaryKeyWithoutBLOBs(introspectedTable)) {
-            element = getUpdateByPrimaryKey(introspectedTable);
+        if (introspectedTable.getRules().generateUpdateByPrimaryKeyWithoutBLOBs()) {
+            element = getUpdateByPrimaryKeyWithoutBLOBs(introspectedTable);
             if (element != null) {
                 answer.addElement(element);
             }
@@ -261,34 +255,29 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      * any BLOBs if they exist in the table).
      * 
      * @param introspectedTable
-     *            the introspected table
      * @return the resultMap element
      */
-    protected XmlElement getBaseResultMapElement(
-            IntrospectedTable introspectedTable) {
+    protected XmlElement getBaseResultMapElement(IntrospectedTable introspectedTable) {
         XmlElement answer = new XmlElement("resultMap"); //$NON-NLS-1$
         FullyQualifiedTable table = introspectedTable.getTable();
         answer.addAttribute(new Attribute("id", //$NON-NLS-1$
                 getResultMapName(table)));
 
-        if (AbatorRules.generateBaseRecordWithNoSuperclass(introspectedTable)
-                || AbatorRules
-                        .generateBaseRecordExtendingPrimaryKey(introspectedTable)) {
-            answer.addAttribute(new Attribute("class", javaModelGenerator //$NON-NLS-1$
-                    .getRecordType(table).getFullyQualifiedName()));
+        FullyQualifiedJavaType returnType;
+        if (introspectedTable.getRules().generateBaseRecordClass()) {
+            returnType = javaModelGenerator.getBaseRecordType(table);
         } else {
-            answer.addAttribute(new Attribute("class", javaModelGenerator //$NON-NLS-1$
-                    .getPrimaryKeyType(table).getFullyQualifiedName()));
+            returnType = javaModelGenerator.getPrimaryKeyType(table);
         }
+        
+        answer.addAttribute(new Attribute("class", //$NON-NLS-1$
+                returnType.getFullyQualifiedName()));
 
         answer.addComment();
 
-        Iterator iter = introspectedTable.getAllColumns();
+        Iterator iter = introspectedTable.getNonBLOBColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
-            if (cd.isBLOBColumn()) {
-                continue;
-            }
 
             XmlElement resultElement = new XmlElement("result"); //$NON-NLS-1$
 
@@ -316,11 +305,9 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      * base result map.
      * 
      * @param introspectedTable
-     *            the introspected table
      * @return the resultMap element
      */
-    protected XmlElement getResultMapWithBLOBsElement(
-            IntrospectedTable introspectedTable) {
+    protected XmlElement getResultMapWithBLOBsElement(IntrospectedTable introspectedTable) {
 
         XmlElement answer = new XmlElement("resultMap"); //$NON-NLS-1$
         FullyQualifiedTable table = introspectedTable.getTable();
@@ -330,8 +317,18 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         sb.append("WithBLOBs"); //$NON-NLS-1$
 
         answer.addAttribute(new Attribute("id", sb.toString())); //$NON-NLS-1$
-        answer.addAttribute(new Attribute("class", javaModelGenerator //$NON-NLS-1$
-                .getRecordWithBLOBsType(table).getFullyQualifiedName()));
+        
+        FullyQualifiedJavaType returnType;
+        if (introspectedTable.getRules().generateRecordWithBLOBsClass()) {
+            returnType = javaModelGenerator.getRecordWithBLOBsType(table);
+        } else {
+            // table has BLOBs, but no BLOB class - BLOB fields must be
+            // in the base class
+            returnType = javaModelGenerator.getBaseRecordType(table);
+        }
+        
+        answer.addAttribute(new Attribute("class", //$NON-NLS-1$
+                returnType.getFullyQualifiedName()));
 
         sb.setLength(0);
         sb.append(getSqlMapNamespace(table));
@@ -341,12 +338,9 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         answer.addComment();
 
-        Iterator iter = introspectedTable.getAllColumns();
+        Iterator iter = introspectedTable.getBLOBColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
-            if (!cd.isBLOBColumn()) {
-                continue;
-            }
 
             XmlElement resultElement = new XmlElement("result"); //$NON-NLS-1$
             
@@ -372,35 +366,20 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      * This method should return an XmlElement which the insert statement.
      * 
      * @param introspectedTable
-     *            the introspected table
      * @return the insert element
      */
     protected XmlElement getInsertElement(IntrospectedTable introspectedTable) {
-
+        
         XmlElement answer = new XmlElement("insert"); //$NON-NLS-1$
 
         FullyQualifiedTable table = introspectedTable.getTable();
         answer.addAttribute(new Attribute("id", getInsertStatementId())); //$NON-NLS-1$
-        if (AbatorRules
-                .generateRecordWithBLOBsExtendingPrimaryKey(introspectedTable)
-                || AbatorRules
-                        .generateRecordWithBLOBsExtendingBaseRecord(introspectedTable)) {
-            answer.addAttribute(new Attribute(
-                    "parameterClass", javaModelGenerator //$NON-NLS-1$
-                            .getRecordWithBLOBsType(table)
-                            .getFullyQualifiedName()));
-        } else if (AbatorRules
-                .generateBaseRecordWithNoSuperclass(introspectedTable)
-                || AbatorRules
-                        .generateBaseRecordExtendingPrimaryKey(introspectedTable)) {
-            answer.addAttribute(new Attribute(
-                    "parameterClass", javaModelGenerator //$NON-NLS-1$
-                            .getRecordType(table).getFullyQualifiedName()));
-        } else {
-            answer.addAttribute(new Attribute(
-                    "parameterClass", javaModelGenerator //$NON-NLS-1$
-                            .getPrimaryKeyType(table).getFullyQualifiedName()));
-        }
+        
+        FullyQualifiedJavaType parameterType =
+            introspectedTable.getRules().calculateAllFieldsClass(javaModelGenerator, table);
+        
+        answer.addAttribute(new Attribute("parameterClass", //$NON-NLS-1$
+                parameterType.getFullyQualifiedName()));
 
         answer.addComment();
 
@@ -465,19 +444,26 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      * statement that updates all fields in the table (including BLOB fields).
      * 
      * @param introspectedTable
-     *            the introspected table
      * @return the update element
      */
-    protected XmlElement getUpdateByPrimaryKeyWithBLOBs(
-            IntrospectedTable introspectedTable) {
+    protected XmlElement getUpdateByPrimaryKeyWithBLOBs(IntrospectedTable introspectedTable) {
 
         XmlElement answer = new XmlElement("update"); //$NON-NLS-1$
         FullyQualifiedTable table = introspectedTable.getTable();
 
         answer.addAttribute(new Attribute(
                 "id", getUpdateByPrimaryKeyWithBLOBsStatementId())); //$NON-NLS-1$
-        answer.addAttribute(new Attribute("parameterClass", javaModelGenerator //$NON-NLS-1$
-                .getRecordWithBLOBsType(table).getFullyQualifiedName()));
+
+        FullyQualifiedJavaType parameterType;
+        
+        if (introspectedTable.getRules().generateRecordWithBLOBsClass()) {
+            parameterType = javaModelGenerator.getRecordWithBLOBsType(table);
+        } else {
+            parameterType = javaModelGenerator.getBaseRecordType(table);
+        }
+        
+        answer.addAttribute(new Attribute("parameterClass", //$NON-NLS-1$
+                parameterType.getFullyQualifiedName()));
 
         answer.addComment();
 
@@ -540,19 +526,17 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      * statement that updates all fields in the table (excluding BLOB fields).
      * 
      * @param introspectedTable
-     *            the introspected table
      * @return the update element
      */
-    protected XmlElement getUpdateByPrimaryKey(
-            IntrospectedTable introspectedTable) {
+    protected XmlElement getUpdateByPrimaryKeyWithoutBLOBs(IntrospectedTable introspectedTable) {
 
         XmlElement answer = new XmlElement("update"); //$NON-NLS-1$
         FullyQualifiedTable table = introspectedTable.getTable();
 
         answer.addAttribute(new Attribute(
                 "id", getUpdateByPrimaryKeyStatementId())); //$NON-NLS-1$
-        answer.addAttribute(new Attribute("parameterClass", javaModelGenerator //$NON-NLS-1$
-                .getRecordType(table).getFullyQualifiedName()));
+        answer.addAttribute(new Attribute("parameterClass", //$NON-NLS-1$
+                javaModelGenerator.getBaseRecordType(table).getFullyQualifiedName()));
 
         answer.addComment();
 
@@ -565,7 +549,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         sb.setLength(0);
         sb.append("set "); //$NON-NLS-1$
 
-        Iterator iter = introspectedTable.getNonBLOBColumns();
+        Iterator iter = introspectedTable.getBaseColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
 
@@ -613,19 +597,23 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      * statement.
      * 
      * @param introspectedTable
-     *            the introspected table
      * @return the delete element
      */
-    protected XmlElement getDeleteByPrimaryKey(
-            IntrospectedTable introspectedTable) {
+    protected XmlElement getDeleteByPrimaryKey(IntrospectedTable introspectedTable) {
 
         XmlElement answer = new XmlElement("delete"); //$NON-NLS-1$
         FullyQualifiedTable table = introspectedTable.getTable();
 
         answer.addAttribute(new Attribute(
                 "id", getDeleteByPrimaryKeyStatementId())); //$NON-NLS-1$
-        answer.addAttribute(new Attribute("parameterClass", javaModelGenerator //$NON-NLS-1$
-                .getPrimaryKeyType(table).getFullyQualifiedName()));
+        FullyQualifiedJavaType parameterClass;
+        if (introspectedTable.getRules().generatePrimaryKeyClass()) {
+            parameterClass = javaModelGenerator.getPrimaryKeyType(table);
+        } else {
+            parameterClass = javaModelGenerator.getBaseRecordType(table);
+        }
+        answer.addAttribute(new Attribute("parameterClass", //$NON-NLS-1$
+                parameterClass.getFullyQualifiedName()));
 
         answer.addComment();
 
@@ -661,7 +649,6 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      * statement. This statement uses the "by example" SQL fragment
      * 
      * @param introspectedTable
-     *            the introspected table
      * @return the delete by example element
      */
     protected XmlElement getDeleteByExample(IntrospectedTable introspectedTable) {
@@ -703,26 +690,34 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      * including BLOB fields.
      * 
      * @param introspectedTable
-     *            the introspected table
      * @return the select by primary key element
      */
-    protected XmlElement getSelectByPrimaryKey(
-            IntrospectedTable introspectedTable) {
+    protected XmlElement getSelectByPrimaryKey(IntrospectedTable introspectedTable) {
 
         XmlElement answer = new XmlElement("select"); //$NON-NLS-1$
         FullyQualifiedTable table = introspectedTable.getTable();
 
         answer.addAttribute(new Attribute(
                 "id", getSelectByPrimaryKeyStatementId())); //$NON-NLS-1$
-        if (AbatorRules.generateResultMapWithBLOBs(introspectedTable)) {
+        if (introspectedTable.getRules().generateResultMapWithBLOBs()) {
             answer.addAttribute(new Attribute("resultMap", //$NON-NLS-1$
                     getResultMapName(table) + "WithBLOBs")); //$NON-NLS-1$
         } else {
             answer.addAttribute(new Attribute("resultMap", //$NON-NLS-1$
                     getResultMapName(table)));
         }
-        answer.addAttribute(new Attribute("parameterClass", javaModelGenerator //$NON-NLS-1$
-                .getPrimaryKeyType(table).getFullyQualifiedName()));
+        
+        FullyQualifiedJavaType parameterType;
+        if (introspectedTable.getRules().generatePrimaryKeyClass()) {
+            parameterType = javaModelGenerator.getPrimaryKeyType(table);
+        } else {
+            // select by primary key, but no primary key class.  Fields
+            // must be in the base record
+            parameterType = javaModelGenerator.getBaseRecordType(table);
+        }
+        
+        answer.addAttribute(new Attribute("parameterClass", //$NON-NLS-1$
+                parameterType.getFullyQualifiedName()));
 
         answer.addComment();
 
@@ -1002,8 +997,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      * This method should return an XmlElement for the example where clause SQL
      * fragment (an sql fragment).
      *
-     * @param introspectedTable the current table for which the where clause
-     *   should be generated
+     * @param introspectedTable 
      * @return the SQL element
      */
     protected XmlElement getByExampleWhereClauseFragment(IntrospectedTable introspectedTable) {
@@ -1078,12 +1072,9 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         
         // if any of the columns have a user defined type handler, then we need
         // to add additional inner iterate elements that specify the type handler
-        Iterator iter = introspectedTable.getAllColumns();
+        Iterator iter = introspectedTable.getNonBLOBColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
-            if (cd.isBLOBColumn()) {
-                continue;
-            }
             
             if (StringUtility.stringHasValue(cd.getTypeHandler())) {
                 // name the property based on the column name, then
@@ -1204,7 +1195,6 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      * returns all fields in the table (except BLOB fields).
      * 
      * @param introspectedTable
-     *            the introspected table
      * @return the select element
      */
     protected XmlElement getSelectByExample(IntrospectedTable introspectedTable) {
@@ -1235,14 +1225,9 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
             comma = true;
         }
 
-        Iterator iter = introspectedTable.getAllColumns();
+        Iterator iter = introspectedTable.getNonBLOBColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
-
-            if (cd.isBLOBColumn()) {
-                // don't return BLOBs in select be examples
-                continue;
-            }
 
             if (comma) {
                 sb.append(", "); //$NON-NLS-1$
@@ -1279,11 +1264,9 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      * statement that returns all fields in the table (including BLOB fields).
      * 
      * @param introspectedTable
-     *            the introspected table
      * @return the select element
      */
-    protected XmlElement getSelectByExampleWithBLOBs(
-            IntrospectedTable introspectedTable) {
+    protected XmlElement getSelectByExampleWithBLOBs(IntrospectedTable introspectedTable) {
 
         FullyQualifiedTable table = introspectedTable.getTable();
         FullyQualifiedJavaType fqjt = javaModelGenerator.getExampleType(table);

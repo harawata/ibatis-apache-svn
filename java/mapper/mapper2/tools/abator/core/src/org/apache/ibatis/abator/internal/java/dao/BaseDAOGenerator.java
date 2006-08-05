@@ -42,7 +42,7 @@ import org.apache.ibatis.abator.internal.AbatorObjectFactory;
 import org.apache.ibatis.abator.internal.DefaultDAOMethodNameCalculator;
 import org.apache.ibatis.abator.internal.ExtendedDAOMethodNameCalculator;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
-import org.apache.ibatis.abator.internal.rules.AbatorRules;
+import org.apache.ibatis.abator.internal.util.JavaBeansUtil;
 import org.apache.ibatis.abator.internal.util.StringUtility;
 import org.apache.ibatis.abator.internal.util.messages.Messages;
 
@@ -87,7 +87,7 @@ import org.apache.ibatis.abator.internal.util.messages.Messages;
  */
 public class BaseDAOGenerator implements DAOGenerator {
 
-    private AbstractDAOTemplate daoTemplate;
+    protected AbstractDAOTemplate daoTemplate;
 
     protected Map properties;
 
@@ -105,9 +105,9 @@ public class BaseDAOGenerator implements DAOGenerator {
 
     private boolean useJava5Features;
 
-    private JavaVisibility exampleMethodVisibility = JavaVisibility.PUBLIC;
+    protected JavaVisibility exampleMethodVisibility = JavaVisibility.PUBLIC;
     
-    private DAOMethodNameCalculator methodNameCalculator = new DefaultDAOMethodNameCalculator();
+    protected DAOMethodNameCalculator methodNameCalculator = new DefaultDAOMethodNameCalculator();
     
     /**
      * 
@@ -267,73 +267,112 @@ public class BaseDAOGenerator implements DAOGenerator {
             answer.addMethod((Method) iter.next());
         }
 
-        List methods = getInsertMethods(introspectedTable, false, answer);
+        List methods;
+        
+        if (introspectedTable.getRules().generateInsert()) {
+            methods = getInsertMethods(introspectedTable, false, answer);
+            if (methods != null) {
+                iter = methods.iterator();
+                while (iter.hasNext()) {
+                    answer.addMethod((Method) iter.next());
+                }
+            }
+        }
+
+        if (introspectedTable.getRules().generateUpdateByPrimaryKeyWithoutBLOBs()) {
+            methods = getUpdateByPrimaryKeyWithoutBLOBsMethods(introspectedTable, false, answer);
+            if (methods != null) {
+                iter = methods.iterator();
+                while (iter.hasNext()) {
+                    answer.addMethod((Method) iter.next());
+                }
+            }
+        }
+
+        if (introspectedTable.getRules().generateUpdateByPrimaryKeyWithBLOBs()) {
+            methods = getUpdateByPrimaryKeyWithBLOBsMethods(introspectedTable,
+                    false, answer);
+            if (methods != null) {
+                iter = methods.iterator();
+                while (iter.hasNext()) {
+                    answer.addMethod((Method) iter.next());
+                }
+            }
+        }
+
+        if (introspectedTable.getRules().generateSelectByExampleWithoutBLOBs()) {
+            methods = getSelectByExampleWithoutBLOBsMethods(introspectedTable, false, answer);
+            if (methods != null) {
+                iter = methods.iterator();
+                while (iter.hasNext()) {
+                    answer.addMethod((Method) iter.next());
+                }
+            }
+        }
+
+        if (introspectedTable.getRules().generateSelectByExampleWithBLOBs()) {
+            methods = getSelectByExampleWithBLOBsMethods(introspectedTable, false,
+                    answer);
+            if (methods != null) {
+                iter = methods.iterator();
+                while (iter.hasNext()) {
+                    answer.addMethod((Method) iter.next());
+                }
+            }
+        }
+
+        if (introspectedTable.getRules().generateSelectByPrimaryKey()) {
+            methods = getSelectByPrimaryKeyMethods(introspectedTable, false, answer);
+            if (methods != null) {
+                iter = methods.iterator();
+                while (iter.hasNext()) {
+                    answer.addMethod((Method) iter.next());
+                }
+            }
+        }
+
+        if (introspectedTable.getRules().generateDeleteByExample()) {
+            methods = getDeleteByExampleMethods(introspectedTable, false, answer);
+            if (methods != null) {
+                iter = methods.iterator();
+                while (iter.hasNext()) {
+                    answer.addMethod((Method) iter.next());
+                }
+            }
+        }
+
+        if (introspectedTable.getRules().generateDeleteByPrimaryKey()) {
+            methods = getDeleteByPrimaryKeyMethods(introspectedTable, false, answer);
+            if (methods != null) {
+                iter = methods.iterator();
+                while (iter.hasNext()) {
+                    answer.addMethod((Method) iter.next());
+                }
+            }
+        }
+
+        methods = getExtraImplementationMethods(introspectedTable, answer);
         if (methods != null) {
             iter = methods.iterator();
             while (iter.hasNext()) {
                 answer.addMethod((Method) iter.next());
             }
         }
-
-        methods = getUpdateByPrimaryKeyMethods(introspectedTable, false, answer);
-        if (methods != null) {
-            iter = methods.iterator();
-            while (iter.hasNext()) {
-                answer.addMethod((Method) iter.next());
-            }
-        }
-
-        methods = getUpdateByPrimaryKeyWithBLOBsMethods(introspectedTable,
-                false, answer);
-        if (methods != null) {
-            iter = methods.iterator();
-            while (iter.hasNext()) {
-                answer.addMethod((Method) iter.next());
-            }
-        }
-
-        methods = getSelectByExampleMethods(introspectedTable, false, answer);
-        if (methods != null) {
-            iter = methods.iterator();
-            while (iter.hasNext()) {
-                answer.addMethod((Method) iter.next());
-            }
-        }
-
-        methods = getSelectByExampleWithBLOBsMethods(introspectedTable, false,
-                answer);
-        if (methods != null) {
-            iter = methods.iterator();
-            while (iter.hasNext()) {
-                answer.addMethod((Method) iter.next());
-            }
-        }
-
-        methods = getSelectByPrimaryKeyMethods(introspectedTable, false, answer);
-        if (methods != null) {
-            iter = methods.iterator();
-            while (iter.hasNext()) {
-                answer.addMethod((Method) iter.next());
-            }
-        }
-
-        methods = getDeleteByExampleMethods(introspectedTable, false, answer);
-        if (methods != null) {
-            iter = methods.iterator();
-            while (iter.hasNext()) {
-                answer.addMethod((Method) iter.next());
-            }
-        }
-
-        methods = getDeleteByPrimaryKeyMethods(introspectedTable, false, answer);
-        if (methods != null) {
-            iter = methods.iterator();
-            while (iter.hasNext()) {
-                answer.addMethod((Method) iter.next());
-            }
-        }
-
+        
         return answer;
+    }
+
+    /**
+     * Override this method to provide any extra methods needed in the 
+     * implementation class.
+     * 
+     * @param introspectedTable
+     * @param compilationUnit
+     * @return
+     */
+    protected List getExtraImplementationMethods(IntrospectedTable introspectedTable,
+            CompilationUnit compilationUnit) {
+        return null;
     }
 
     protected Interface getDAOInterface(IntrospectedTable introspectedTable) {
@@ -353,69 +392,87 @@ public class BaseDAOGenerator implements DAOGenerator {
             answer.addImportedType((FullyQualifiedJavaType) iter.next());
         }
 
-        List methods = getInsertMethods(introspectedTable, true, answer);
-        if (methods != null) {
-            iter = methods.iterator();
-            while (iter.hasNext()) {
-                answer.addMethod((Method) iter.next());
+        List methods;
+        
+        if (introspectedTable.getRules().generateInsert()) {
+            methods = getInsertMethods(introspectedTable, true, answer);
+            if (methods != null) {
+                iter = methods.iterator();
+                while (iter.hasNext()) {
+                    answer.addMethod((Method) iter.next());
+                }
             }
         }
 
-        methods = getUpdateByPrimaryKeyMethods(introspectedTable, true, answer);
-        if (methods != null) {
-            iter = methods.iterator();
-            while (iter.hasNext()) {
-                answer.addMethod((Method) iter.next());
+        if (introspectedTable.getRules().generateUpdateByPrimaryKeyWithoutBLOBs()) {
+            methods = getUpdateByPrimaryKeyWithoutBLOBsMethods(introspectedTable, true, answer);
+            if (methods != null) {
+                iter = methods.iterator();
+                while (iter.hasNext()) {
+                    answer.addMethod((Method) iter.next());
+                }
             }
         }
 
-        methods = getUpdateByPrimaryKeyWithBLOBsMethods(introspectedTable,
-                true, answer);
-        if (methods != null) {
-            iter = methods.iterator();
-            while (iter.hasNext()) {
-                answer.addMethod((Method) iter.next());
+        if (introspectedTable.getRules().generateUpdateByPrimaryKeyWithBLOBs()) {
+            methods = getUpdateByPrimaryKeyWithBLOBsMethods(introspectedTable,
+                    true, answer);
+            if (methods != null) {
+                iter = methods.iterator();
+                while (iter.hasNext()) {
+                    answer.addMethod((Method) iter.next());
+                }
             }
         }
 
-        methods = getSelectByExampleMethods(introspectedTable, true, answer);
-        if (methods != null) {
-            iter = methods.iterator();
-            while (iter.hasNext()) {
-                answer.addMethod((Method) iter.next());
+        if (introspectedTable.getRules().generateSelectByExampleWithoutBLOBs()) {
+            methods = getSelectByExampleWithoutBLOBsMethods(introspectedTable, true, answer);
+            if (methods != null) {
+                iter = methods.iterator();
+                while (iter.hasNext()) {
+                    answer.addMethod((Method) iter.next());
+                }
             }
         }
 
-        methods = getSelectByExampleWithBLOBsMethods(introspectedTable, true,
-                answer);
-        if (methods != null) {
-            iter = methods.iterator();
-            while (iter.hasNext()) {
-                answer.addMethod((Method) iter.next());
+        if (introspectedTable.getRules().generateSelectByExampleWithBLOBs()) {
+            methods = getSelectByExampleWithBLOBsMethods(introspectedTable, true,
+                    answer);
+            if (methods != null) {
+                iter = methods.iterator();
+                while (iter.hasNext()) {
+                    answer.addMethod((Method) iter.next());
+                }
             }
         }
 
-        methods = getSelectByPrimaryKeyMethods(introspectedTable, true, answer);
-        if (methods != null) {
-            iter = methods.iterator();
-            while (iter.hasNext()) {
-                answer.addMethod((Method) iter.next());
+        if (introspectedTable.getRules().generateSelectByPrimaryKey()) {
+            methods = getSelectByPrimaryKeyMethods(introspectedTable, true, answer);
+            if (methods != null) {
+                iter = methods.iterator();
+                while (iter.hasNext()) {
+                    answer.addMethod((Method) iter.next());
+                }
             }
         }
 
-        methods = getDeleteByExampleMethods(introspectedTable, true, answer);
-        if (methods != null) {
-            iter = methods.iterator();
-            while (iter.hasNext()) {
-                answer.addMethod((Method) iter.next());
+        if (introspectedTable.getRules().generateDeleteByExample()) {
+            methods = getDeleteByExampleMethods(introspectedTable, true, answer);
+            if (methods != null) {
+                iter = methods.iterator();
+                while (iter.hasNext()) {
+                    answer.addMethod((Method) iter.next());
+                }
             }
         }
 
-        methods = getDeleteByPrimaryKeyMethods(introspectedTable, true, answer);
-        if (methods != null) {
-            iter = methods.iterator();
-            while (iter.hasNext()) {
-                answer.addMethod((Method) iter.next());
+        if (introspectedTable.getRules().generateDeleteByPrimaryKey()) {
+            methods = getDeleteByPrimaryKeyMethods(introspectedTable, true, answer);
+            if (methods != null) {
+                iter = methods.iterator();
+                while (iter.hasNext()) {
+                    answer.addMethod((Method) iter.next());
+                }
             }
         }
 
@@ -445,10 +502,6 @@ public class BaseDAOGenerator implements DAOGenerator {
     protected List getInsertMethods(IntrospectedTable introspectedTable,
             boolean interfaceMethod, CompilationUnit compilationUnit) {
 
-        if (!AbatorRules.generateInsert(introspectedTable)) {
-            return null;
-        }
-
         FullyQualifiedTable table = introspectedTable.getTable();
         Method method = new Method();
         method.addComment(table);
@@ -474,20 +527,9 @@ public class BaseDAOGenerator implements DAOGenerator {
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setName(methodNameCalculator.getInsertMethodName(introspectedTable));
 
-        FullyQualifiedJavaType parameterType;
-        if (AbatorRules
-                .generateRecordWithBLOBsExtendingPrimaryKey(introspectedTable)
-                || AbatorRules
-                        .generateRecordWithBLOBsExtendingBaseRecord(introspectedTable)) {
-            parameterType = javaModelGenerator.getRecordWithBLOBsType(table);
-        } else if (AbatorRules
-                .generateBaseRecordWithNoSuperclass(introspectedTable)
-                || AbatorRules
-                        .generateBaseRecordExtendingPrimaryKey(introspectedTable)) {
-            parameterType = javaModelGenerator.getRecordType(table);
-        } else {
-            parameterType = javaModelGenerator.getPrimaryKeyType(table);
-        }
+        FullyQualifiedJavaType parameterType =
+            introspectedTable.getRules().calculateAllFieldsClass(javaModelGenerator, table);
+        
         compilationUnit.addImportedType(parameterType);
         method.addParameter(new Parameter(parameterType, "record")); //$NON-NLS-1$
 
@@ -544,25 +586,21 @@ public class BaseDAOGenerator implements DAOGenerator {
         return answer;
     }
 
-    protected List getUpdateByPrimaryKeyMethods(
+    protected List getUpdateByPrimaryKeyWithoutBLOBsMethods(
             IntrospectedTable introspectedTable, boolean interfaceMethod,
             CompilationUnit compilationUnit) {
 
-        if (!AbatorRules
-                .generateUpdateByPrimaryKeyWithoutBLOBs(introspectedTable)) {
-            return null;
-        }
-
         FullyQualifiedTable table = introspectedTable.getTable();
-        FullyQualifiedJavaType type = javaModelGenerator.getRecordType(table);
-        compilationUnit.addImportedType(type);
+        FullyQualifiedJavaType parameterType = 
+            javaModelGenerator.getBaseRecordType(table);
+        compilationUnit.addImportedType(parameterType);
 
         Method method = new Method();
         method.addComment(table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
-        method.setName(methodNameCalculator.getUpdateByPrimaryKeyMethodName(introspectedTable));
-        method.addParameter(new Parameter(type, "record")); //$NON-NLS-1$
+        method.setName(methodNameCalculator.getUpdateByPrimaryKeyWithoutBLOBsMethodName(introspectedTable));
+        method.addParameter(new Parameter(parameterType, "record")); //$NON-NLS-1$
 
         Iterator iter = daoTemplate.getCheckedExceptions().iterator();
         while (iter.hasNext()) {
@@ -594,21 +632,23 @@ public class BaseDAOGenerator implements DAOGenerator {
             IntrospectedTable introspectedTable, boolean interfaceMethod,
             CompilationUnit compilationUnit) {
 
-        if (!AbatorRules.generateUpdateByPrimaryKeyWithBLOBs(introspectedTable)) {
-            return null;
-        }
-
         FullyQualifiedTable table = introspectedTable.getTable();
-        FullyQualifiedJavaType type = javaModelGenerator
-                .getRecordWithBLOBsType(table);
-        compilationUnit.addImportedType(type);
+        FullyQualifiedJavaType parameterType;
+        
+        if (introspectedTable.getRules().generateRecordWithBLOBsClass()) {
+            parameterType = javaModelGenerator.getRecordWithBLOBsType(table);
+        } else {
+            parameterType = javaModelGenerator.getBaseRecordType(table);
+        }
+        
+        compilationUnit.addImportedType(parameterType);
 
         Method method = new Method();
         method.addComment(table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
-        method.setName(methodNameCalculator.getUpdateByPrimaryKeyMethodName(introspectedTable));
-        method.addParameter(new Parameter(type, "record")); //$NON-NLS-1$
+        method.setName(methodNameCalculator.getUpdateByPrimaryKeyWithBLOBsMethodName(introspectedTable));
+        method.addParameter(new Parameter(parameterType, "record")); //$NON-NLS-1$
 
         Iterator iter = daoTemplate.getCheckedExceptions().iterator();
         while (iter.hasNext()) {
@@ -636,13 +676,9 @@ public class BaseDAOGenerator implements DAOGenerator {
         return answer;
     }
 
-    protected List getSelectByExampleMethods(
+    protected List getSelectByExampleWithoutBLOBsMethods(
             IntrospectedTable introspectedTable, boolean interfaceMethod,
             CompilationUnit compilationUnit) {
-
-        if (!AbatorRules.generateSelectByExampleWithoutBLOBs(introspectedTable)) {
-            return null;
-        }
 
         if (interfaceMethod && exampleMethodVisibility != JavaVisibility.PUBLIC) {
             return null;
@@ -661,12 +697,9 @@ public class BaseDAOGenerator implements DAOGenerator {
         FullyQualifiedJavaType returnType;
         if (useJava5Features) {
             FullyQualifiedJavaType fqjt;
-            if (AbatorRules
-                    .generateBaseRecordExtendingPrimaryKey(introspectedTable)
-                    || AbatorRules
-                            .generateBaseRecordWithNoSuperclass(introspectedTable)) {
-                fqjt = javaModelGenerator.getRecordType(table);
-            } else if (AbatorRules.generatePrimaryKey(introspectedTable)) {
+            if (introspectedTable.getRules().generateBaseRecordClass()) {
+                fqjt = javaModelGenerator.getBaseRecordType(table);
+            } else if (introspectedTable.getRules().generatePrimaryKeyClass()) {
                 fqjt = javaModelGenerator.getPrimaryKeyType(table);
             } else {
                 throw new RuntimeException(Messages
@@ -681,7 +714,7 @@ public class BaseDAOGenerator implements DAOGenerator {
         }
         method.setReturnType(returnType);
 
-        method.setName(methodNameCalculator.getSelectByExampleMethodName(introspectedTable));
+        method.setName(methodNameCalculator.getSelectByExampleWithoutBLOBsMethodName(introspectedTable));
         method.addParameter(new Parameter(type, "example")); //$NON-NLS-1$
 
         Iterator iter = daoTemplate.getCheckedExceptions().iterator();
@@ -722,10 +755,6 @@ public class BaseDAOGenerator implements DAOGenerator {
             IntrospectedTable introspectedTable, boolean interfaceMethod,
             CompilationUnit compilationUnit) {
 
-        if (!AbatorRules.generateSelectByExampleWithBLOBs(introspectedTable)) {
-            return null;
-        }
-
         if (interfaceMethod && exampleMethodVisibility != JavaVisibility.PUBLIC) {
             return null;
         }
@@ -742,8 +771,14 @@ public class BaseDAOGenerator implements DAOGenerator {
 
         FullyQualifiedJavaType returnType;
         if (useJava5Features) {
-            FullyQualifiedJavaType fqjt = javaModelGenerator
-                    .getRecordWithBLOBsType(table);
+            FullyQualifiedJavaType fqjt;
+            if (introspectedTable.getRules().generateRecordWithBLOBsClass()) {
+                fqjt = javaModelGenerator.getRecordWithBLOBsType(table);
+            } else {
+                // the blob fileds must be rolled up into the base class
+                fqjt = javaModelGenerator.getBaseRecordType(table);
+            }
+            
             compilationUnit.addImportedType(fqjt);
             returnType = FullyQualifiedJavaType.getNewListInstance();
             returnType.addTypeArgument(fqjt);
@@ -794,34 +829,32 @@ public class BaseDAOGenerator implements DAOGenerator {
             IntrospectedTable introspectedTable, boolean interfaceMethod,
             CompilationUnit compilationUnit) {
 
-        if (!AbatorRules.generateSelectByPrimaryKey(introspectedTable)) {
-            return null;
-        }
-
         FullyQualifiedTable table = introspectedTable.getTable();
-        FullyQualifiedJavaType type = javaModelGenerator
-                .getPrimaryKeyType(table);
-        compilationUnit.addImportedType(type);
 
         Method method = new Method();
         method.addComment(table);
         method.setVisibility(JavaVisibility.PUBLIC);
 
-        FullyQualifiedJavaType returnType;
-        if (AbatorRules
-                .generateRecordWithBLOBsExtendingPrimaryKey(introspectedTable)
-                || AbatorRules
-                        .generateRecordWithBLOBsExtendingBaseRecord(introspectedTable)) {
-            returnType = javaModelGenerator.getRecordWithBLOBsType(table);
-
-        } else {
-            returnType = javaModelGenerator.getRecordType(table);
-        }
+        FullyQualifiedJavaType returnType =
+            introspectedTable.getRules().calculateAllFieldsClass(javaModelGenerator, table);
         method.setReturnType(returnType);
         compilationUnit.addImportedType(returnType);
 
         method.setName(methodNameCalculator.getSelectByPrimaryKeyMethodName(introspectedTable));
-        method.addParameter(new Parameter(type, "key")); //$NON-NLS-1$
+        
+        if (introspectedTable.getRules().generatePrimaryKeyClass()) {
+            FullyQualifiedJavaType type = javaModelGenerator.getPrimaryKeyType(table);
+            compilationUnit.addImportedType(type);
+            method.addParameter(new Parameter(type, "key")); //$NON-NLS-1$
+        } else {
+            Iterator iter = introspectedTable.getPrimaryKeyColumns();
+            while (iter.hasNext()) {
+                ColumnDefinition cd = (ColumnDefinition) iter.next();
+                FullyQualifiedJavaType type = cd.getResolvedJavaType().getFullyQualifiedJavaType();
+                compilationUnit.addImportedType(type);
+                method.addParameter(new Parameter(type, cd.getJavaProperty()));
+            }
+        }
 
         Iterator iter = daoTemplate.getCheckedExceptions().iterator();
         while (iter.hasNext()) {
@@ -834,6 +867,33 @@ public class BaseDAOGenerator implements DAOGenerator {
             // generate the implementation method
             StringBuffer sb = new StringBuffer();
 
+            if (!introspectedTable.getRules().generatePrimaryKeyClass()) {
+                // no primary key class, but primary key is enabled.  Primary
+                // key columns must be in the base class.
+                FullyQualifiedJavaType keyType = javaModelGenerator.getBaseRecordType(table);
+                compilationUnit.addImportedType(keyType);
+                
+                sb.setLength(0);
+                sb.append(keyType.getShortName());
+                sb.append(" key = new ");
+                sb.append(keyType.getShortName());
+                sb.append("();");
+                method.addBodyLine(sb.toString());
+                
+                iter = introspectedTable.getPrimaryKeyColumns();
+                while (iter.hasNext()) {
+                    ColumnDefinition cd = (ColumnDefinition) iter.next();
+                    sb.setLength(0);
+                    sb.append("key.");
+                    sb.append(JavaBeansUtil.getSetterMethodName(cd.getJavaProperty()));
+                    sb.append('(');
+                    sb.append(cd.getJavaProperty());
+                    sb.append(");");
+                    method.addBodyLine(sb.toString());
+                }
+            }
+
+            sb.setLength(0);
             sb.append(returnType.getShortName());
             sb.append(" record = ("); //$NON-NLS-1$
             sb.append(returnType.getShortName());
@@ -854,10 +914,6 @@ public class BaseDAOGenerator implements DAOGenerator {
     protected List getDeleteByExampleMethods(
             IntrospectedTable introspectedTable, boolean interfaceMethod,
             CompilationUnit compilationUnit) {
-
-        if (!AbatorRules.generateDeleteByExample(introspectedTable)) {
-            return null;
-        }
 
         if (interfaceMethod && exampleMethodVisibility != JavaVisibility.PUBLIC) {
             return null;
@@ -903,21 +959,27 @@ public class BaseDAOGenerator implements DAOGenerator {
             IntrospectedTable introspectedTable, boolean interfaceMethod,
             CompilationUnit compilationUnit) {
 
-        if (!AbatorRules.generateDeleteByPrimaryKey(introspectedTable)) {
-            return null;
-        }
-
         FullyQualifiedTable table = introspectedTable.getTable();
-        FullyQualifiedJavaType type = javaModelGenerator
-                .getPrimaryKeyType(table);
-        compilationUnit.addImportedType(type);
 
         Method method = new Method();
         method.addComment(table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         method.setName(methodNameCalculator.getDeleteByPrimaryKeyMethodName(introspectedTable));
-        method.addParameter(new Parameter(type, "key")); //$NON-NLS-1$
+
+        if (introspectedTable.getRules().generatePrimaryKeyClass()) {
+            FullyQualifiedJavaType type = javaModelGenerator.getPrimaryKeyType(table);
+            compilationUnit.addImportedType(type);
+            method.addParameter(new Parameter(type, "key")); //$NON-NLS-1$
+        } else {
+            Iterator iter = introspectedTable.getPrimaryKeyColumns();
+            while (iter.hasNext()) {
+                ColumnDefinition cd = (ColumnDefinition) iter.next();
+                FullyQualifiedJavaType type = cd.getResolvedJavaType().getFullyQualifiedJavaType();
+                compilationUnit.addImportedType(type);
+                method.addParameter(new Parameter(type, cd.getJavaProperty()));
+            }
+        }
 
         Iterator iter = daoTemplate.getCheckedExceptions().iterator();
         while (iter.hasNext()) {
@@ -930,6 +992,33 @@ public class BaseDAOGenerator implements DAOGenerator {
             // generate the implementation method
             StringBuffer sb = new StringBuffer();
 
+            if (!introspectedTable.getRules().generatePrimaryKeyClass()) {
+                // no primary key class, but primary key is enabled.  Primary
+                // key columns must be in the base class.
+                FullyQualifiedJavaType keyType = javaModelGenerator.getBaseRecordType(table);
+                compilationUnit.addImportedType(keyType);
+                
+                sb.setLength(0);
+                sb.append(keyType.getShortName());
+                sb.append(" key = new ");
+                sb.append(keyType.getShortName());
+                sb.append("();");
+                method.addBodyLine(sb.toString());
+                
+                iter = introspectedTable.getPrimaryKeyColumns();
+                while (iter.hasNext()) {
+                    ColumnDefinition cd = (ColumnDefinition) iter.next();
+                    sb.setLength(0);
+                    sb.append("key.");
+                    sb.append(JavaBeansUtil.getSetterMethodName(cd.getJavaProperty()));
+                    sb.append('(');
+                    sb.append(cd.getJavaProperty());
+                    sb.append(");");
+                    method.addBodyLine(sb.toString());
+                }
+            }
+            
+            sb.setLength(0);
             sb.append("int rows = "); //$NON-NLS-1$
             sb.append(daoTemplate.getDeleteMethod(sqlMapGenerator
                     .getSqlMapNamespace(table), sqlMapGenerator
