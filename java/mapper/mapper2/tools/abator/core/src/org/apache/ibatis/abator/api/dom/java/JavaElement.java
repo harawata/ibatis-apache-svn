@@ -104,4 +104,8 @@ public abstract class JavaElement {
     public void setVisibility(JavaVisibility visibility) {
         this.visibility = visibility;
     }
+    
+    public void addSuppressTypeWarningsAnnotation() {
+        addAnnotation("@SuppressWarnings(\"unchecked\")"); //$NON-NLS-1$
+    }
 }

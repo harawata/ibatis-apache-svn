@@ -18,6 +18,7 @@ package org.apache.ibatis.abator.internal.types;
 import java.math.BigDecimal;
 import java.sql.Types;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,16 +39,16 @@ public class JavaTypeResolverDefaultImpl implements JavaTypeResolver {
 
 	public JavaTypeResolverDefaultImpl() {
 		super();
+        properties = new HashMap();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.apache.ibatis.generator.api.types.JavaTypeResolver#setProperties(java.util.Map)
-	 */
-	public void setProperties(Map properties) {
-		this.properties = properties;
-	}
+    public void addConfigurationProperties(Map properties) {
+        this.properties.putAll(properties);
+    }
+
+    public void addContextProperties(Map properties) {
+        this.properties.putAll(properties);
+    }
 
 	/*
 	 *  (non-Javadoc)

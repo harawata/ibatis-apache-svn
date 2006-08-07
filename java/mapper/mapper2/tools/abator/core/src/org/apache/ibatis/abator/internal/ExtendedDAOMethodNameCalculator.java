@@ -18,6 +18,7 @@ package org.apache.ibatis.abator.internal;
 
 import org.apache.ibatis.abator.api.DAOMethodNameCalculator;
 import org.apache.ibatis.abator.api.IntrospectedTable;
+import org.apache.ibatis.abator.internal.rules.AbatorRules;
 
 /**
  * @author Jeff Butler
@@ -40,29 +41,51 @@ public class ExtendedDAOMethodNameCalculator implements DAOMethodNameCalculator 
         return sb.toString();
     }
 
+    /**
+     * 1. if this will be the only updateByPrimaryKey, then the
+     *    result should be updateByPrimaryKey.
+     * 2. If the other method is enabled, but there are seperate
+     *    base and blob classes, then the method name should be
+     *    updateByPrimaryKey
+     * 3. Else the method name should be updateByPrimaryKeyWithoutBLOBs
+     */
     public String getUpdateByPrimaryKeyWithoutBLOBsMethodName(IntrospectedTable introspectedTable) {
         StringBuffer sb = new StringBuffer();
 
         sb.append("update"); //$NON-NLS-1$
         sb.append(introspectedTable.getTable().getDomainObjectName());
         
-        if (introspectedTable.getRules().generateUpdateByPrimaryKeyWithBLOBs()
-                && !introspectedTable.getRules().generateRecordWithBLOBsClass()) {
-            // can't use the same method name for both methods...
-            sb.append("ByPrimaryKeyWithoutBLOBs"); //$NON-NLS-1$
-        } else {
+        AbatorRules rules = introspectedTable.getRules();
+        
+        if (!rules.generateUpdateByPrimaryKeyWithBLOBs()) {
             sb.append("ByPrimaryKey"); //$NON-NLS-1$
+        } else if (rules.generateRecordWithBLOBsClass()) {
+            sb.append("ByPrimaryKey"); //$NON-NLS-1$
+        } else {
+            sb.append("ByPrimaryKeyWithoutBLOBs"); //$NON-NLS-1$
         }
         
         return sb.toString();
     }
 
+    /**
+     * 1. if this will be the only updateByPrimaryKey, then the
+     *    result should be updateByPrimaryKey.
+     * 2. If the other method is enabled, but there are seperate
+     *    base and blob classes, then the method name should be
+     *    updateByPrimaryKey
+     * 3. Else the method name should be updateByPrimaryKeyWithBLOBs
+     */
     public String getUpdateByPrimaryKeyWithBLOBsMethodName(IntrospectedTable introspectedTable) {
         StringBuffer sb = new StringBuffer();
         sb.append("update"); //$NON-NLS-1$
         sb.append(introspectedTable.getTable().getDomainObjectName());
         
-        if (introspectedTable.getRules().generateRecordWithBLOBsClass()) {
+        AbatorRules rules = introspectedTable.getRules();
+        
+        if (!rules.generateUpdateByPrimaryKeyWithoutBLOBs()) {
+            sb.append("ByPrimaryKey"); //$NON-NLS-1$
+        } else if (rules.generateRecordWithBLOBsClass()) {
             sb.append("ByPrimaryKey"); //$NON-NLS-1$
         } else {
             sb.append("ByPrimaryKeyWithBLOBs"); //$NON-NLS-1$
@@ -89,20 +112,42 @@ public class ExtendedDAOMethodNameCalculator implements DAOMethodNameCalculator 
         return sb.toString();
     }
 
+    /**
+     * 1. if this will be the only selectByExample, then the
+     *    result should be selectByExample.
+     * 2. Else the method name should be selectByExampleWithoutBLOBs
+     */
     public String getSelectByExampleWithoutBLOBsMethodName(IntrospectedTable introspectedTable) {
         StringBuffer sb = new StringBuffer();
         sb.append("select"); //$NON-NLS-1$
         sb.append(introspectedTable.getTable().getDomainObjectName());
         sb.append("ByExample"); //$NON-NLS-1$
         
+        AbatorRules rules = introspectedTable.getRules();
+        
+        if (rules.generateSelectByExampleWithBLOBs()) {
+            sb.append("WithoutBLOBs"); //$NON-NLS-1$
+        }
+        
         return sb.toString();
     }
 
+    /**
+     * 1. if this will be the only selectByExample, then the
+     *    result should be selectByExample.
+     * 2. Else the method name should be selectByExampleWithBLOBs
+     */
     public String getSelectByExampleWithBLOBsMethodName(IntrospectedTable introspectedTable) {
         StringBuffer sb = new StringBuffer();
         sb.append("select"); //$NON-NLS-1$
         sb.append(introspectedTable.getTable().getDomainObjectName());
-        sb.append("ByExampleWithBLOBs"); //$NON-NLS-1$
+        sb.append("ByExample"); //$NON-NLS-1$
+        
+        AbatorRules rules = introspectedTable.getRules();
+        
+        if (rules.generateSelectByExampleWithoutBLOBs()) {
+            sb.append("WithBLOBs"); //$NON-NLS-1$
+        }
         
         return sb.toString();
     }

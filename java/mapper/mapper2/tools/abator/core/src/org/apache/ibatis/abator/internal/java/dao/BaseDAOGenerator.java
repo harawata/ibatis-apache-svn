@@ -55,7 +55,7 @@ import org.apache.ibatis.abator.internal.util.messages.Messages;
  * <dl>
  * <dt>enableSubPackages</dt>
  * <dd>If true, the classes will be generated in sub-packaged based on the
- * database catalg and schema - else the will be generated in the specified
+ * database catalog and schema - else the will be generated in the specified
  * package (the targetPackage attribute). Default is false.</dd>
  * 
  * <dt>rootInterface</dt>
@@ -104,7 +104,7 @@ public class BaseDAOGenerator implements DAOGenerator {
     private Map tableValueMaps;
 
     private boolean useJava5Features;
-
+    
     protected JavaVisibility exampleMethodVisibility = JavaVisibility.PUBLIC;
     
     protected DAOMethodNameCalculator methodNameCalculator = new DefaultDAOMethodNameCalculator();
@@ -118,15 +118,12 @@ public class BaseDAOGenerator implements DAOGenerator {
         this.daoTemplate = daoTemplate;
         this.useJava5Features = useJava5Features;
         tableValueMaps = new HashMap();
+        properties = new HashMap();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.ibatis.abator.api.DAOGenerator#setProperties(java.util.Map)
-     */
-    public void setProperties(Map properties) {
-        this.properties = properties;
+    public void addConfigurationProperties(Map properties) {
+        this.properties.putAll(properties);
+        
         if (properties.containsKey("exampleMethodVisibility")) { //$NON-NLS-1$
             String value = (String) properties.get("exampleMethodVisibility"); //$NON-NLS-1$
             
@@ -729,7 +726,7 @@ public class BaseDAOGenerator implements DAOGenerator {
             StringBuffer sb = new StringBuffer();
 
             if (useJava5Features) {
-                method.addAnnotation("@SuppressWarnings(\"unchecked\")"); //$NON-NLS-1$
+                method.addSuppressTypeWarningsAnnotation();
                 sb.append(returnType.getShortName());
                 sb.append(" list = ("); //$NON-NLS-1$
                 sb.append(returnType.getShortName());
@@ -803,7 +800,7 @@ public class BaseDAOGenerator implements DAOGenerator {
             StringBuffer sb = new StringBuffer();
 
             if (useJava5Features) {
-                method.addAnnotation("@SuppressWarnings(\"unchecked\")"); //$NON-NLS-1$
+                method.addSuppressTypeWarningsAnnotation();
                 sb.append(returnType.getShortName());
                 sb.append(" list = ("); //$NON-NLS-1$
                 sb.append(returnType.getShortName());
@@ -875,20 +872,20 @@ public class BaseDAOGenerator implements DAOGenerator {
                 
                 sb.setLength(0);
                 sb.append(keyType.getShortName());
-                sb.append(" key = new ");
+                sb.append(" key = new "); //$NON-NLS-1$
                 sb.append(keyType.getShortName());
-                sb.append("();");
+                sb.append("();"); //$NON-NLS-1$
                 method.addBodyLine(sb.toString());
                 
                 iter = introspectedTable.getPrimaryKeyColumns();
                 while (iter.hasNext()) {
                     ColumnDefinition cd = (ColumnDefinition) iter.next();
                     sb.setLength(0);
-                    sb.append("key.");
+                    sb.append("key."); //$NON-NLS-1$
                     sb.append(JavaBeansUtil.getSetterMethodName(cd.getJavaProperty()));
                     sb.append('(');
                     sb.append(cd.getJavaProperty());
-                    sb.append(");");
+                    sb.append(");"); //$NON-NLS-1$
                     method.addBodyLine(sb.toString());
                 }
             }
@@ -1000,20 +997,20 @@ public class BaseDAOGenerator implements DAOGenerator {
                 
                 sb.setLength(0);
                 sb.append(keyType.getShortName());
-                sb.append(" key = new ");
+                sb.append(" key = new "); //$NON-NLS-1$
                 sb.append(keyType.getShortName());
-                sb.append("();");
+                sb.append("();"); //$NON-NLS-1$
                 method.addBodyLine(sb.toString());
                 
                 iter = introspectedTable.getPrimaryKeyColumns();
                 while (iter.hasNext()) {
                     ColumnDefinition cd = (ColumnDefinition) iter.next();
                     sb.setLength(0);
-                    sb.append("key.");
+                    sb.append("key."); //$NON-NLS-1$
                     sb.append(JavaBeansUtil.getSetterMethodName(cd.getJavaProperty()));
                     sb.append('(');
                     sb.append(cd.getJavaProperty());
-                    sb.append(");");
+                    sb.append(");"); //$NON-NLS-1$
                     method.addBodyLine(sb.toString());
                 }
             }
@@ -1088,5 +1085,9 @@ public class BaseDAOGenerator implements DAOGenerator {
         }
 
         return map;
+    }
+
+    public void addContextProperties(Map properties) {
+        this.properties.putAll(properties);
     }
 }

@@ -16,6 +16,8 @@
 
 package org.apache.ibatis.abator.config;
 
+import org.apache.ibatis.abator.internal.util.messages.Messages;
+
 /**
  * Typesafe enum of different model types
  * 
@@ -48,7 +50,7 @@ public class ModelType {
         } else if (CONDITIONAL.getModelType().equalsIgnoreCase(type)) {
             return CONDITIONAL;
         } else {
-            throw new RuntimeException("Invalid model type: " + type);
+            throw new RuntimeException(Messages.getString("RuntimeError.13", type)); //$NON-NLS-1$
         }
     }
 }

@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.abator.internal;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.abator.api.DAOGenerator;
@@ -84,11 +83,11 @@ public class AbatorObjectFactory {
 	    JavaTypeResolver answer = (JavaTypeResolver) createObject(type);
 	    answer.setWarnings(warnings);
 
-        if (config == null) {
-            answer.setProperties(new HashMap());
-        } else {
-            answer.setProperties(config.getProperties());
+        if (config != null) {
+            answer.addConfigurationProperties(config.getProperties());
         }
+        
+        answer.addContextProperties(context.getProperties());
 	    
 	    return answer;
 	}
@@ -109,7 +108,8 @@ public class AbatorObjectFactory {
 	    answer.setWarnings(warnings);
 
 	    answer.setJavaModelGenerator(javaModelGenerator);
-	    answer.setProperties(config.getProperties());
+	    answer.addConfigurationProperties(config.getProperties());
+        answer.addContextProperties(context.getProperties());
 	    answer.setTargetPackage(config.getTargetPackage());
 	    answer.setTargetProject(config.getTargetProject());
 	    
@@ -131,7 +131,8 @@ public class AbatorObjectFactory {
 	    JavaModelGenerator answer = (JavaModelGenerator) createObject(type);
 	    answer.setWarnings(warnings);
 	    
-	    answer.setProperties(config.getProperties());
+	    answer.addConfigurationProperties(config.getProperties());
+        answer.addContextProperties(context.getProperties());
 	    answer.setTargetPackage(config.getTargetPackage());
 	    answer.setTargetProject(config.getTargetProject());
 	    
@@ -153,7 +154,8 @@ public class AbatorObjectFactory {
 	    answer.setWarnings(warnings);
 
 	    answer.setJavaModelGenerator(javaModelGenerator);
-	    answer.setProperties(config.getProperties());
+	    answer.addConfigurationProperties(config.getProperties());
+        answer.addContextProperties(context.getProperties());
 	    answer.setSqlMapGenerator(sqlMapGenerator);
 	    answer.setTargetPackage(config.getTargetPackage());
 	    answer.setTargetProject(config.getTargetProject());

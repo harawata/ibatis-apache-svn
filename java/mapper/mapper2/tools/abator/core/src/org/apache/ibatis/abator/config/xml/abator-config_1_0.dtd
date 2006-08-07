@@ -18,8 +18,17 @@
 
 <!--
   This DTD defines the structure of the Abator for iBATIS configuration file.
+  Abator configuration files should declare the DOCTYPE as follows:
+  
+  <!DOCTYPE abatorConfiguration PUBLIC
+    "-//Apache Software Foundation//DTD Abator for iBATIS Configuration 1.0//EN"
+    "http://ibatis.apache.org/dtd/abator-config_1_0.dtd">
+  
   Please see the documentation included with Abator for details on each option
-  in the DTD.
+  in the DTD.  You may also view documentation on-line here:
+  
+  http://ibatis.apache.org/docs/tools/abator
+  
 -->
 
 <!ENTITY % Boolean "(true|false)">
@@ -34,7 +43,7 @@
   The abatorContext element is used to describe a context for generating files, and the source
   tables.
 -->
-<!ELEMENT abatorContext (jdbcConnection, javaTypeResolver?, javaModelGenerator,
+<!ELEMENT abatorContext (property*, jdbcConnection, javaTypeResolver?, javaModelGenerator,
                         sqlMapGenerator, daoGenerator?, table+)>
 <!ATTLIST abatorContext id CDATA #IMPLIED
   defaultModelType %ModelType; #IMPLIED

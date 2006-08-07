@@ -23,14 +23,17 @@ percentage of database operations that are simple CRUD (Create, Retrieve, Update
 </p>
 <p>Abator will generate:</p>
 <ul>
-  <li>Java POJOs that match the table structure including:
+  <li>Java POJOs that match the table structure.  This may include:
     <ul>
       <li>a class to match the primary key of the table (if there is a primary key)</li>
       <li>a class to match the non-primary key fields of the table (except BLOB fields)</li>
       <li>a class to include the BLOB fields of a table (if the table has BLOB fields)</li>
       <li>a class to enable "Query By Example" functionality</li>
     </ul>
-    <p>There is an inheritance relationship between these classes as appropriate.</p>
+    <p>There is an inheritance relationship between these classes as appropriate.
+       Note that the types of POJOs generated is configurable - you may choose to tell
+       Abator to only generate a single domain object for each table if you so
+       desire.</p>
   </li>
   <li>iBATIS Compatible SQL Map XML Files.  Abator generates SQL for simple
    CRUD functions on each table in a configuration.  The generated SQL

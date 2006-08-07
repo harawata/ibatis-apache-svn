@@ -19,6 +19,7 @@ package org.apache.ibatis.abator.internal.java.dao;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.abator.api.DAOGenerator;
 import org.apache.ibatis.abator.api.FullyQualifiedTable;
@@ -42,6 +43,8 @@ import org.apache.ibatis.abator.internal.util.JavaBeansUtil;
  *
  */
 public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGenerator {
+    
+    private boolean suppressTypeWarnings;
 
     /**
      * 
@@ -68,7 +71,7 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
         method1.addComment(table);
         method1.setVisibility(exampleMethodVisibility);
         method1.setReturnType(FullyQualifiedJavaType.getNewListInstance());
-        method1.setName("selectByExample"); //$NON-NLS-1$
+        method1.setName(methodNameCalculator.getSelectByExampleWithoutBLOBsMethodName(introspectedTable));
         method1.addParameter(new Parameter(type, "example")); //$NON-NLS-1$
         method1.addParameter(new Parameter(FullyQualifiedJavaType.getStringInstance(),
                 "orderByClause")); //$NON-NLS-1$
@@ -77,7 +80,7 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
         method2.addComment(table);
         method2.setVisibility(JavaVisibility.PUBLIC);
         method2.setReturnType(FullyQualifiedJavaType.getNewListInstance());
-        method2.setName("selectByExample"); //$NON-NLS-1$
+        method2.setName(methodNameCalculator.getSelectByExampleWithoutBLOBsMethodName(introspectedTable));
         method2.addParameter(new Parameter(type, "example")); //$NON-NLS-1$
         
         Iterator iter = daoTemplate.getCheckedExceptions().iterator();
@@ -94,6 +97,9 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
             
             StringBuffer sb = new StringBuffer();
 
+            if (suppressTypeWarnings) {
+                method1.addSuppressTypeWarningsAnnotation();
+            }
             method1.addBodyLine("Map parms = getExampleParms(example);"); //$NON-NLS-1$
             method1.addBodyLine("if (orderByClause != null) {"); //$NON-NLS-1$
             method1.addBodyLine("parms.put(\"ABATOR_ORDER_BY_CLAUSE\", orderByClause);"); //$NON-NLS-1$
@@ -106,7 +112,12 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
             method1.addBodyLine(sb.toString());
             method1.addBodyLine("return list;"); //$NON-NLS-1$
 
-            method2.addBodyLine("return selectByExample(example, null);"); //$NON-NLS-1$
+
+            sb.setLength(0);
+            sb.append("return "); //$NON-NLS-1$
+            sb.append(methodNameCalculator.getSelectByExampleWithoutBLOBsMethodName(introspectedTable));
+            sb.append("(example, null);"); //$NON-NLS-1$
+            method2.addBodyLine(sb.toString());
         }
 
         ArrayList answer = new ArrayList();
@@ -134,7 +145,7 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
         method1.addComment(table);
         method1.setVisibility(exampleMethodVisibility);
         method1.setReturnType(FullyQualifiedJavaType.getNewListInstance());
-        method1.setName("selectByExampleWithBLOBs"); //$NON-NLS-1$
+        method1.setName(methodNameCalculator.getSelectByExampleWithBLOBsMethodName(introspectedTable));
         method1.addParameter(new Parameter(type, "example")); //$NON-NLS-1$
         method1.addParameter(new Parameter(FullyQualifiedJavaType.getStringInstance(),
                 "orderByClause")); //$NON-NLS-1$
@@ -143,7 +154,7 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
         method2.addComment(table);
         method2.setVisibility(JavaVisibility.PUBLIC);
         method2.setReturnType(FullyQualifiedJavaType.getNewListInstance());
-        method2.setName("selectByExampleWithBLOBs"); //$NON-NLS-1$
+        method2.setName(methodNameCalculator.getSelectByExampleWithBLOBsMethodName(introspectedTable));
         method2.addParameter(new Parameter(type, "example")); //$NON-NLS-1$
 
         Iterator iter = daoTemplate.getCheckedExceptions().iterator();
@@ -160,6 +171,9 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
 
             StringBuffer sb = new StringBuffer();
 
+            if (suppressTypeWarnings) {
+                method1.addSuppressTypeWarningsAnnotation();
+            }
             method1.addBodyLine("Map parms = getExampleParms(example);"); //$NON-NLS-1$
             method1.addBodyLine("if (orderByClause != null) {"); //$NON-NLS-1$
             method1.addBodyLine("parms.put(\"ABATOR_ORDER_BY_CLAUSE\", orderByClause);"); //$NON-NLS-1$
@@ -172,7 +186,11 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
             method1.addBodyLine(sb.toString());
             method1.addBodyLine("return list;"); //$NON-NLS-1$
 
-            method2.addBodyLine("return selectByExampleWithBLOBs(example, null);"); //$NON-NLS-1$
+            sb.setLength(0);
+            sb.append("return "); //$NON-NLS-1$
+            sb.append(methodNameCalculator.getSelectByExampleWithBLOBsMethodName(introspectedTable));
+            sb.append("(example, null);"); //$NON-NLS-1$
+            method2.addBodyLine(sb.toString());
         }
 
         ArrayList answer = new ArrayList();
@@ -248,6 +266,9 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
         Method method = new Method();
         method.addComment(table);
         method.setVisibility(JavaVisibility.PRIVATE);
+        if (suppressTypeWarnings) {
+            method.addSuppressTypeWarningsAnnotation();
+        }
         method.setReturnType(FullyQualifiedJavaType.getNewMapInstance());
         method.setName("getExampleParms"); //$NON-NLS-1$
         method.addParameter(new Parameter(type, "example")); //$NON-NLS-1$
@@ -309,6 +330,9 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
         Method method = new Method();
         method.addComment(table);
         method.setVisibility(JavaVisibility.PRIVATE);
+        if (suppressTypeWarnings) {
+            method.addSuppressTypeWarningsAnnotation();
+        }
         method.setReturnType(FullyQualifiedJavaType.getNewMapInstance());
         sb.append("get"); //$NON-NLS-1$
         sb.append(cd.getColumnName());
@@ -396,5 +420,14 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
         method.addBodyLine("return parms;"); //$NON-NLS-1$
 
         return method;
+    }
+
+    public void addContextProperties(Map properties) {
+        super.addContextProperties(properties);
+
+        if ("true".equalsIgnoreCase //$NON-NLS-1$
+                ((String) properties.get("suppressTypeWarnings"))) { //$NON-NLS-1$
+            suppressTypeWarnings = true;
+        }
     }
 }

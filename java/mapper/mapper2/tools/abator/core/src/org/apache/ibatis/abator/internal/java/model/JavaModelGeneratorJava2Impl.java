@@ -87,18 +87,29 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
     private Map tableValueMaps;
 
+    /**
+     * if true, then the annotation to suppress type warnings will be
+     * added to the appropriate methods
+     */
+    private boolean suppressTypeWarnings;
+
     public JavaModelGeneratorJava2Impl() {
         super();
         tableValueMaps = new HashMap();
+        properties = new HashMap();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.ibatis.abator.api.JavaModelGenerator#setProperties(java.util.Map)
-     */
-    public void setProperties(Map properties) {
-        this.properties = properties;
+    public void addConfigurationProperties(Map properties) {
+        this.properties.putAll(properties);
+    }
+
+    public void addContextProperties(Map properties) {
+        this.properties.putAll(properties);
+        
+        if ("true".equalsIgnoreCase //$NON-NLS-1$
+                ((String) properties.get("suppressTypeWarnings"))) { //$NON-NLS-1$
+            suppressTypeWarnings = true;
+        }
     }
 
     /*
@@ -562,6 +573,11 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
     protected Method getNoValueMethod(ColumnDefinition cd, String nameFragment, String operator) {
         Method method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
+        if (!(this instanceof JavaModelGeneratorJava5Impl)) {
+            if (suppressTypeWarnings) {
+                method.addSuppressTypeWarningsAnnotation();
+            }
+        }
         StringBuffer sb = new StringBuffer();
         sb.append(cd.getJavaProperty());
         sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
@@ -695,6 +711,9 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         method = new Method();
         method.addComment(table);
         method.setVisibility(JavaVisibility.PUBLIC);
+        if (suppressTypeWarnings) {
+            method.addSuppressTypeWarningsAnnotation();
+        }
         method.setName("or"); //$NON-NLS-1$
         method.addParameter(new Parameter(FullyQualifiedJavaType.getCriteriaInstance(),
                 "criteria")); //$NON-NLS-1$
@@ -705,6 +724,9 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         method = new Method();
         method.addComment(table);
         method.setVisibility(JavaVisibility.PUBLIC);
+        if (suppressTypeWarnings) {
+            method.addSuppressTypeWarningsAnnotation();
+        }
         method.setName("createCriteria"); //$NON-NLS-1$
         method.setReturnType(FullyQualifiedJavaType.getCriteriaInstance());
         method.addBodyLine("Criteria criteria = new Criteria();"); //$NON-NLS-1$
@@ -826,6 +848,9 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         // now add the methods for simplifying the individual field set methods
         method = new Method();
         method.setVisibility(JavaVisibility.PRIVATE);
+        if (suppressTypeWarnings) {
+            method.addSuppressTypeWarningsAnnotation();
+        }
         method.setName("addCriterion"); //$NON-NLS-1$
         method.addParameter(new Parameter(FullyQualifiedJavaType
                 .getStringInstance(), "condition")); //$NON-NLS-1$
@@ -849,6 +874,9 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
         method = new Method();
         method.setVisibility(JavaVisibility.PRIVATE);
+        if (suppressTypeWarnings) {
+            method.addSuppressTypeWarningsAnnotation();
+        }
         method.setName("addCriterion"); //$NON-NLS-1$
         method.addParameter(new Parameter(FullyQualifiedJavaType
                 .getStringInstance(), "condition")); //$NON-NLS-1$
@@ -868,6 +896,9 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
         method = new Method();
         method.setVisibility(JavaVisibility.PRIVATE);
+        if (suppressTypeWarnings) {
+            method.addSuppressTypeWarningsAnnotation();
+        }
         method.setName("addCriterion"); //$NON-NLS-1$
         method.addParameter(new Parameter(FullyQualifiedJavaType
                 .getStringInstance(), "condition")); //$NON-NLS-1$
@@ -914,6 +945,9 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
             method = new Method();
             method.setVisibility(JavaVisibility.PRIVATE);
+            if (suppressTypeWarnings) {
+                method.addSuppressTypeWarningsAnnotation();
+            }
             method.setName("addCriterionForJDBCDate"); //$NON-NLS-1$
             method.addParameter(new Parameter(FullyQualifiedJavaType
                     .getStringInstance(), "condition")); //$NON-NLS-1$
@@ -975,6 +1009,9 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
             method = new Method();
             method.setVisibility(JavaVisibility.PRIVATE);
+            if (suppressTypeWarnings) {
+                method.addSuppressTypeWarningsAnnotation();
+            }
             method.setName("addCriterionForJDBCTime"); //$NON-NLS-1$
             method.addParameter(new Parameter(FullyQualifiedJavaType
                     .getStringInstance(), "condition")); //$NON-NLS-1$
@@ -1289,9 +1326,5 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         sb.append("CriteriaWithBetweenValue.add(map);"); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
         innerClass.addMethod(method);
-    }
-
-    public String getProperty(String property) {
-        return (String) properties.get(property);
     }
 }

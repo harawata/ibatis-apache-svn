@@ -80,6 +80,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
     public SqlMapGeneratorIterateImpl() {
         super();
         tableStringMaps = new HashMap();
+        properties = new HashMap();
     }
 
     private Map getTableStringMap(FullyQualifiedTable table) {
@@ -92,13 +93,12 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         return map;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.ibatis.abator.api.SqlMapGenerator#setProperties(java.util.Map)
-     */
-    public void setProperties(Map properties) {
-        this.properties = properties;
+    public void addConfigurationProperties(Map properties) {
+        this.properties.putAll(properties);
+    }
+
+    public void addContextProperties(Map properties) {
+        this.properties.putAll(properties);
     }
 
     /*

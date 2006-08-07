@@ -36,15 +36,28 @@ import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
  */
 public interface JavaModelGenerator {
     
-	/**
-	 * Sets the properties of the generator taken from the 
-	 * JavaModelGeneratorConfiguration element.  This method is
-	 * called before any getXXX method.
-	 * 
-	 * @param properties the configuration element's properties
-	 */
-	void setProperties(Map properties);
-	
+    /**
+     * Adds properties for this instance from any properties configured
+     * in the JavaModelGeneratorConfiguration.
+     * 
+     * This method will be called before any of the get methods.
+     * 
+     * @param properties
+     *            All properties from the configuration
+     */
+    void addConfigurationProperties(Map properties);
+    
+    /**
+     * Adds properties for this instance from any properties configured
+     * in the current context.
+     * 
+     * This method will be called before any of the get methods.
+     * 
+     * @param properties
+     *            All properties from the configuration
+     */
+    void addContextProperties(Map properties);
+
 	/**
 	 * Abator will supply a list to this method.  The implementation class may
 	 * add strings to the list that will be treated as warning messages and
@@ -115,13 +128,4 @@ public interface JavaModelGenerator {
 	 * @return a list of GeneratedJavaFile objects
 	 */
 	List getGeneratedJavaFiles(IntrospectedTable introspectedTable, ProgressCallback callback);
-
-    /**
-     * Returns the value of a set property, or null if the
-     * property is not set.
-     * 
-     * @param key
-     * @return the property value
-     */
-    String getProperty(String key);
 }

@@ -30,7 +30,27 @@ import org.apache.ibatis.abator.internal.db.ColumnDefinition;
  * @author Jeff Butler
  */
 public interface JavaTypeResolver {
-	void setProperties(Map properties);
+    /**
+     * Adds properties for this instance from any properties configured
+     * in the JavaTypeResolverConfiguration.
+     * 
+     * This method will be called before any of the get methods.
+     * 
+     * @param properties
+     *            All properties from the configuration
+     */
+    void addConfigurationProperties(Map properties);
+    
+    /**
+     * Adds properties for this instance from any properties configured
+     * in the current context.
+     * 
+     * This method will be called before any of the get methods.
+     * 
+     * @param properties
+     *            All properties from the configuration
+     */
+    void addContextProperties(Map properties);
 	
 	/**
 	 * Abator will supply a list to this method.  The implementation class may

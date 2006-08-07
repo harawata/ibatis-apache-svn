@@ -191,7 +191,9 @@ public class AbatorConfigurationParser {
                 continue;
             }
 
-            if ("jdbcConnection".equals(childNode.getNodeName())) { //$NON-NLS-1$
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(abatorContext, childNode);
+            } else if ("jdbcConnection".equals(childNode.getNodeName())) { //$NON-NLS-1$
                 parseJdbcConnection(abatorContext, childNode);
             } else if ("javaModelGenerator".equals(childNode.getNodeName())) { //$NON-NLS-1$
                 parseJavaModelGenerator(abatorContext, childNode);

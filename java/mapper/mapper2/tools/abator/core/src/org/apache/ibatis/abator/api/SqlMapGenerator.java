@@ -38,7 +38,27 @@ public interface SqlMapGenerator {
 	 */
 	void setWarnings(List warnings);
 
-	void setProperties(Map properties);
+    /**
+     * Adds properties for this instance from any properties configured
+     * in the SqlMapGeneratorConfiguration.
+     * 
+     * This method will be called before any of the get methods.
+     * 
+     * @param properties
+     *            All properties from the configuration
+     */
+    void addConfigurationProperties(Map properties);
+    
+    /**
+     * Adds properties for this instance from any properties configured
+     * in the current context.
+     * 
+     * This method will be called before any of the get methods.
+     * 
+     * @param properties
+     *            All properties from the configuration
+     */
+    void addContextProperties(Map properties);
 
     void setTargetPackage(String targetPackage);
 

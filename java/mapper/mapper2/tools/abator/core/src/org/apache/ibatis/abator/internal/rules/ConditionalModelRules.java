@@ -60,17 +60,23 @@ public class ConditionalModelRules extends AbatorRules {
     public boolean generateBaseRecordClass() {
         return columnDefinitions.getBaseColumns().size() > 0
             || columnDefinitions.getPrimaryKeyColumns().size() == 1
-            || columnDefinitions.getBaseColumns().size() == 1;
+            || (columnDefinitions.getBLOBColumns().size() > 0
+                    && !generateRecordWithBLOBsClass());
         
     }
 
     /**
      * We generate a record with BLOBs class if there is more than one
-     * BLOB column. 
+     * BLOB column.  Do not generate a BLOBs class if any other
+     * super class would only contain one field
      * 
      * @return true if the record with BLOBs class should be generated
      */
     public boolean generateRecordWithBLOBsClass() {
-        return columnDefinitions.getBLOBColumns().size() > 1;
+        int otherColumnCount = columnDefinitions.getPrimaryKeyColumns().size()
+            + columnDefinitions.getBaseColumns().size();
+        
+        return otherColumnCount > 1 
+            && columnDefinitions.getBLOBColumns().size() > 1;
     }
 }

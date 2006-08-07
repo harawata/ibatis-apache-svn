@@ -26,16 +26,26 @@ import java.util.Map;
  */
 public interface DAOGenerator {
     /**
-     * Sets unique properties for this instance. The properties consist of the
-     * default properties for the DAOGenerator, overridden and added to by any
-     * DAOGenerator properties that are unique to the current table.
+     * Adds properties for this instance from any properties configured
+     * in the DAOGeneratorConfiguration.
      * 
      * This method will be called before any of the get methods.
      * 
      * @param properties
      *            All properties from the configuration
      */
-    void setProperties(Map properties);
+    void addConfigurationProperties(Map properties);
+    
+    /**
+     * Adds properties for this instance from any properties configured
+     * in the current context.
+     * 
+     * This method will be called before any of the get methods.
+     * 
+     * @param properties
+     *            All properties from the configuration
+     */
+    void addContextProperties(Map properties);
 
 	/**
 	 * Abator will supply a list to this method.  The implementation class may

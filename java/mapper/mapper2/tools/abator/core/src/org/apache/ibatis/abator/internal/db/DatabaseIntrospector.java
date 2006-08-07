@@ -94,9 +94,17 @@ public class DatabaseIntrospector {
             String tableName = rs.getString("TABLE_NAME"); //$NON-NLS-1$
             String catalog = rs.getString("TABLE_CAT"); //$NON-NLS-1$
             String schema = rs.getString("TABLE_SCHEM"); //$NON-NLS-1$
-            
-            String fullyQualifiedTableName = StringUtility.composeFullyQualifiedTableName(catalog, schema, tableName);
 
+            // we only use the returned catalog and schema if something was actually
+            // specified on the table configuration.  If something was returned
+            // from the DB for these fields, but nothing was specified on the table
+            // configuration, then some sort of DB default is being returned
+            // and we don't want that in our SQL
+            FullyQualifiedTable table = new FullyQualifiedTable(
+                    StringUtility.stringHasValue(tc.getCatalog()) ? catalog : null,
+                    StringUtility.stringHasValue(tc.getSchema()) ? schema : null,
+                    tableName, tc.getDomainObjectName(), tc.getAlias());
+            
             ColumnOverride columnOverride = tc.getColumnOverride(cd
                     .getColumnName());
 
@@ -120,8 +128,8 @@ public class DatabaseIntrospector {
                 // if the type is not supported, then we'll report a warning and
                 // ignore the column
                 warnings.add(Messages.getString("Warning.14", //$NON-NLS-1$
-                        fullyQualifiedTableName, cd
-                                .getColumnName()));
+                        table.getFullyQualifiedTableName(),
+                        cd.getColumnName()));
                 continue;
             }
 
@@ -158,12 +166,10 @@ public class DatabaseIntrospector {
 
             if (!tc.isColumnIgnored(cd.getColumnName())) {
                 IntrospectedTableImpl introspectedTable =
-                    (IntrospectedTableImpl) introspectedTables.get(fullyQualifiedTableName);
+                    (IntrospectedTableImpl) introspectedTables.get(table.getFullyQualifiedTableName());
                 if (introspectedTable == null) {
-                    FullyQualifiedTable table = new FullyQualifiedTable(catalog,
-                            schema, tableName, tc.getDomainObjectName(), tc.getAlias());
                     introspectedTable = new IntrospectedTableImpl(tc, new ColumnDefinitions(), table);
-                    introspectedTables.put(fullyQualifiedTableName, introspectedTable);
+                    introspectedTables.put(table.getFullyQualifiedTableName(), introspectedTable);
                 }
                 
                 introspectedTable.getColumnDefinitions().addColumn(cd);

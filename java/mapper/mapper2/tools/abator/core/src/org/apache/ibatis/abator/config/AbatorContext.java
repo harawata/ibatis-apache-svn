@@ -39,7 +39,7 @@ import org.apache.ibatis.abator.internal.util.messages.Messages;
 /**
  * @author Jeff Butler
  */
-public class AbatorContext {
+public class AbatorContext extends PropertyHolder {
     private String id;
     
 	private JDBCConnectionConfiguration jdbcConnectionConfiguration;

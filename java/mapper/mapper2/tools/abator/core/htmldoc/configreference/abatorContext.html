@@ -27,6 +27,39 @@ databases, or with different generation parameters, in the same run of Abator.</
     <th>Description</th>
   </tr>
   <tr>
+    <td valign="top">defaultModelType</td>
+    <td>
+      This property is used to set the default for generated model types.
+      The model type defines how Abator will generate domain classes.  With some
+      model types Abator will generate a single domain class for each table,
+      with others Abator may generate different classes depending on the structure
+      of the table.  The property supports these values:
+      <table>
+        <tr>
+          <th valign="top">conditional</th>
+          <td><i>This is the default value</i>
+              <br/>This model is similar to the hierarchical model except that a separate
+                   class will not be generated if that separate class would only contain
+                   one field.  So if a table has only one primary key field, that field
+                   will be merged into the base record class.</td>
+        </tr>
+        <tr>
+          <th valign="top">flat</th>
+          <td>This model generates only one domain class for any table.  The class
+              will hold all fields in the table.</td>
+        </tr>
+        <tr>
+          <th valign="top">hierarchical</th>
+          <td>This model is the same as the model shipped with the initial versions
+              of Abator.  This model will generate a primary key class if the table has
+              a primary key, another class that holds any BLOB columns in the table, and
+              another class that holds the remaining fields.  There is an appropriate
+              inheritance relationship between the classes.</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
     <td>id</td>
     <td>A unique identifier for this context.  This value will be used in some
       error messages.</td>
@@ -79,6 +112,7 @@ databases, or with different generation parameters, in the same run of Abator.</
 
 <h2>Child Elements</h2>
 <ul>
+  <li><a href="property.html">&lt;property&gt;</a> (0..N)</li>
   <li><a href="jdbcConnection.html">&lt;jdbcConnection&gt;</a> (1 Required)</li>
   <li><a href="javaTypeResolver.html">&lt;javaTypeResolver&gt;</a> (0 or 1)</li>
   <li><a href="javaModelGenerator.html">&lt;javaModelGenerator&gt;</a> (1 Required)</li>
@@ -86,6 +120,27 @@ databases, or with different generation parameters, in the same run of Abator.</
   <li><a href="daoGenerator.html">&lt;daoGenerator&gt;</a> (0 or 1)</li>
   <li><a href="table.html">&lt;table&gt;</a> (1..N)</li>
 </ul>
+
+<h2>Supported Properties</h2>
+<p>This table lists the properties that can be
+specified with the <a href="property.html">&lt;property&gt;</a> child element:</p>
+<table border="1" cellspacing="0" cellpadding="5">
+  <tr>
+    <th>Property Name</th>
+    <th>Property Values</th>
+  </tr>
+  <tr>
+    <td valign="top">suppressTypeWarnings</td>
+    <td>If true, then Abator will add an annotation to any method
+      that uses a non-parameterized type to suppress compiler type warnings.
+      This is useful if you are using the Legacy or Java2 generator sets, but are
+      compiling the generated objects with a JSE 5.0 compiler.  In that situation,
+      the Abator generated code would generate many compiler warnings if the
+      annotation is not allowed.  This property is not needed and will have
+      no effect when using the Java5 generator set.</p>
+      <p><i>The default value is false.</i></p></td>
+  </tr>
+</table>
 
 </body>
 </html>
