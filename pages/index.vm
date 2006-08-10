@@ -49,6 +49,13 @@
 
 <h2>News</h2>
 
+<h3>iBATIS.NET DataMapper 1.5.1 and DataAccess 1.8.1 General Availability!</h3>
+<p>(August 10, 2006) The votes are in and both distributions are now tagged as GA!</p>
+<p>This release is primarily an enhancement release to support .NET 2.0 and also bug fix, documentation have been updated. 
+iBATIS now supports all essential features of .NET 2.0 (generics, nullable types), see change log for more information. 
+ </p>
+<p><b><a href="dotnetdownloads.cgi">Download iBATIS.NET DataMapper 1.5.1 and DataAccess 1.8.1!</a></b></p>
+
 
 <h3>Fall is a great time for a conference!</h3>
  <p>(Jul 30, 2006) We've just added two new events to the calendar.  <b>Calgary in September:</b> Clinton will be
@@ -84,13 +91,6 @@
 </pre>
 
   <p><b>Notice the change to <a href="http://ibatis.apache.org/dtd/">http://ibatis.apache.org/dtd/</a></b></p>
-
-<h3>iBATIS.NET DataMapper 1.5.1 and DataAccess 1.8.1 Beta!</h3>
- <p>(Jul 27, 2006) This release is primarily a bug fix for new constructor tag.</p>
-
- <p>Thanks again for your comments and suggestions. Enjoy!</p>
-
- <p>See the change log for more details.  Downloads will be available from <a href="http://ibatis.apache.org/dotnetdownloads.cgi">the iBATIS.NET downloads page.</a></p>
 
 </body>
 </html>
