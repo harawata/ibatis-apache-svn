@@ -24,6 +24,7 @@
 #endregion
 
 using System.Runtime.Remoting.Messaging;
+using IBatisNet.Common;
 
 namespace IBatisNet.DataMapper.SessionStore
 {
@@ -44,16 +45,16 @@ namespace IBatisNet.DataMapper.SessionStore
 		/// <summary>
 		/// Get the local session
 		/// </summary>
-        public override SqlMapSession LocalSession
+        public override IDalSession LocalSession
 		{
-            get { return CallContext.GetData(sessionName) as SqlMapSession; }
+            get { return CallContext.GetData(sessionName) as IDalSession; }
 		}
 
 		/// <summary>
 		/// Store the specified session.
 		/// </summary>
 		/// <param name="session">The session to store</param>
-        public override void Store(SqlMapSession session)
+        public override void Store(IDalSession session)
 		{
 			CallContext.SetData(sessionName, session);
 		}

@@ -24,6 +24,7 @@
 #endregion
 
 using System.Web;
+using IBatisNet.Common;
 using IBatisNet.Common.Exceptions;
 
 namespace IBatisNet.DataMapper.SessionStore
@@ -46,12 +47,12 @@ namespace IBatisNet.DataMapper.SessionStore
 		/// <summary>
 		/// Get the local session
 		/// </summary>
-        public override SqlMapSession LocalSession
+        public override IDalSession LocalSession
 		{
 			get
 			{
 				HttpContext currentContext = ObtainSessionContext();
-                return currentContext.Items[sessionName] as SqlMapSession;
+                return currentContext.Items[sessionName] as IDalSession;
 			}
 		}
 
@@ -59,7 +60,7 @@ namespace IBatisNet.DataMapper.SessionStore
 		/// Store the specified session.
 		/// </summary>
 		/// <param name="session">The session to store</param>
-        public override void Store(SqlMapSession session)
+        public override void Store(IDalSession session)
 		{
 			HttpContext currentContext = ObtainSessionContext();
 			currentContext.Items[sessionName] = session;

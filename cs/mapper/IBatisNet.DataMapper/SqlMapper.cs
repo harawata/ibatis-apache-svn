@@ -323,7 +323,7 @@ namespace IBatisNet.DataMapper
 			{
 				throw new DataMapperException("SqlMap could not invoke OpenConnection(). A connection is already started. Call CloseConnection first.");
 			}
-			SqlMapSession session = new SqlMapSession(this);
+			IDalSession session = CreateSession();
 			_sessionHolder.Store(session);
 			session.OpenConnection();
 			return session;
@@ -339,7 +339,7 @@ namespace IBatisNet.DataMapper
 			{
 				throw new DataMapperException("SqlMap could not invoke OpenConnection(). A connection is already started. Call CloseConnection first.");
 			}
-			SqlMapSession session = new SqlMapSession(this);
+			IDalSession session = CreateSession();
 			_sessionHolder.Store(session);
 			session.OpenConnection(connectionString);
 			return session;
@@ -379,7 +379,7 @@ namespace IBatisNet.DataMapper
 			{
 				throw new DataMapperException("SqlMap could not invoke BeginTransaction(). A Transaction is already started. Call CommitTransaction() or RollbackTransaction first.");
 			}
-			SqlMapSession session = new SqlMapSession(this);
+			IDalSession session = CreateSession();
 			_sessionHolder.Store(session);
 			session.BeginTransaction();
 			return session ;
@@ -395,7 +395,7 @@ namespace IBatisNet.DataMapper
 			{
 				throw new DataMapperException("SqlMap could not invoke BeginTransaction(). A Transaction is already started. Call CommitTransaction() or RollbackTransaction first.");
 			}
-			SqlMapSession session = new SqlMapSession(this);
+			IDalSession session = CreateSession();
 			_sessionHolder.Store(session);
 			session.BeginTransaction( connectionString );
 			return session ;
@@ -438,7 +438,7 @@ namespace IBatisNet.DataMapper
 			{
 				throw new DataMapperException("SqlMap could not invoke BeginTransaction(). A Transaction is already started. Call CommitTransaction() or RollbackTransaction first.");
 			}
-			SqlMapSession session = new SqlMapSession(this);
+			IDalSession session = CreateSession();
 			_sessionHolder.Store(session);
 			session.BeginTransaction(isolationLevel);
 			return session;
@@ -455,7 +455,7 @@ namespace IBatisNet.DataMapper
 			{
 				throw new DataMapperException("SqlMap could not invoke BeginTransaction(). A Transaction is already started. Call CommitTransaction() or RollbackTransaction first.");
 			}
-			SqlMapSession session = new SqlMapSession(this);
+			IDalSession session = CreateSession();
 			_sessionHolder.Store(session);
 			session.BeginTransaction( connectionString, isolationLevel);
 			return session;
@@ -632,7 +632,7 @@ namespace IBatisNet.DataMapper
  
 			if (session == null) 
 			{
-				session = new SqlMapSession(this);
+				session = CreateSession();
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -673,7 +673,7 @@ namespace IBatisNet.DataMapper
  
 			if (session == null) 
 			{
-				session = new SqlMapSession(this);
+				session = CreateSession();
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -720,7 +720,7 @@ namespace IBatisNet.DataMapper
 
             if (session == null)
             {
-                session = new SqlMapSession(this);
+                session = CreateSqlMapSession();
                 session.OpenConnection();
                 isSessionLocal = true;
             }
@@ -761,7 +761,7 @@ namespace IBatisNet.DataMapper
 
             if (session == null)
             {
-                session = new SqlMapSession(this);
+                session = CreateSqlMapSession();
                 session.OpenConnection();
                 isSessionLocal = true;
             }
@@ -850,7 +850,7 @@ namespace IBatisNet.DataMapper
  
 			if (session == null) 
 			{
-				session = new SqlMapSession(this);
+				session = CreateSession();
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -897,7 +897,7 @@ namespace IBatisNet.DataMapper
  
 			if (session == null) 
 			{
-				session = new SqlMapSession(this);
+				session = CreateSession();
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -941,7 +941,7 @@ namespace IBatisNet.DataMapper
  
 			if (session == null) 
 			{
-				session = new SqlMapSession(this);
+				session = CreateSession();
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -990,7 +990,7 @@ namespace IBatisNet.DataMapper
 
 			if (session == null) 
 			{
-				session = new SqlMapSession(this);
+				session = CreateSession();
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -1035,7 +1035,7 @@ namespace IBatisNet.DataMapper
 
             if (session == null)
             {
-                session = new SqlMapSession(this);
+                session = CreateSqlMapSession();
                 session.OpenConnection();
                 isSessionLocal = true;
             }
@@ -1079,7 +1079,7 @@ namespace IBatisNet.DataMapper
 
             if (session == null)
             {
-                session = new SqlMapSession(this);
+                session = CreateSqlMapSession();
                 session.OpenConnection();
                 isSessionLocal = true;
             }
@@ -1127,7 +1127,7 @@ namespace IBatisNet.DataMapper
 
             if (session == null)
             {
-                session = new SqlMapSession(this);
+                session = CreateSqlMapSession();
                 session.OpenConnection();
                 isSessionLocal = true;
             }
@@ -1189,7 +1189,7 @@ namespace IBatisNet.DataMapper
  
 			if (session == null) 
 			{
-				session = new SqlMapSession(this);
+				session = CreateSession();
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -1234,7 +1234,7 @@ namespace IBatisNet.DataMapper
 
             if (session == null)
             {
-                session = new SqlMapSession(this);
+                session = CreateSqlMapSession();
                 session.OpenConnection();
                 isSessionLocal = true;
             }
@@ -1282,7 +1282,7 @@ namespace IBatisNet.DataMapper
  
 			if (session == null) 
 			{
-				session = new SqlMapSession(this);
+				session = CreateSession();
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -1335,7 +1335,7 @@ namespace IBatisNet.DataMapper
  
 			if (session == null) 
 			{
-				session = new SqlMapSession(this);
+				session = CreateSession();
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -1380,7 +1380,7 @@ namespace IBatisNet.DataMapper
 
 			if (session == null) 
 			{
-				session = new SqlMapSession(this);
+				session = CreateSession();
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -1420,7 +1420,7 @@ namespace IBatisNet.DataMapper
 
 			if (session == null) 
 			{
-				session = new SqlMapSession(this);
+				session = CreateSession();
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -1651,6 +1651,15 @@ namespace IBatisNet.DataMapper
 		}
 
 		#endregion
+
+		/// <summary>
+		/// Creates a new IDalSession that will be used to query the data source.
+		/// </summary>
+		/// <returns></returns>
+		protected IDalSession CreateSession()
+		{
+			return new SqlMapSession(this);
+		}
 
 		#endregion
 	}
