@@ -7,12 +7,12 @@
 
      <h2>News Archive</h2>
 
-     <h3>iBATIS.NET DataMapper 1.5.1 and DataAccess 1.8.1 Beta!</h3>
-<p>(Jul 27, 2006) This release is primarily a bug fix for new constructor tag.</p>
+<h3>iBATIS.NET DataMapper 1.5.1 and DataAccess 1.8.1 Beta!</h3>
+ <p>(Jul 27, 2006) This release is primarily a bug fix for new constructor tag.</p>
 
-<p>Thanks again for your comments and suggestions. Enjoy!</p>
+ <p>Thanks again for your comments and suggestions. Enjoy!</p>
 
-<p>See the change log for more details.  Downloads will be available from <a href="http://ibatis.apache.org/dotnetdownloads.cgi">http://ibatis.apache.org/dotnetdownloads.cgi</a>..</p>
+ <p>See the change log for more details.  Downloads will be available from <a href="http://ibatis.apache.org/dotnetdownloads.cgi">the iBATIS.NET downloads page.</a></p>
 
 
 <h3>iBATIS.NET DataMapper 1.5 and DataAccess 1.8 Beta!</h3>
