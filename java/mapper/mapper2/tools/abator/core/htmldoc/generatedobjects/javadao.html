@@ -41,9 +41,10 @@ will generate these methods:</p>
   <li>deleteByExample</li>
   <li>insert</li>
   <li>selectByPrimaryKey</li>
-  <li>selectByExample (with an override to specify an order by columns)</li>
-  <li>selectByExampleWithBLOBs (with an override to specify an order by columns)</li>
+  <li>selectByExample</li>
+  <li>selectByExampleWithBLOBs</li>
   <li>updateByPrimaryKey (with an override to specify whether or not to update BLOB columns)</li>
+  <li>updateByPrimaryKeySelective (will only update non-null fields in the parameter class)</li>
 </ul>
 <p>Abator attempts to make it easier to deal with tables that contain BLOBs by generating
 different objects and methods so that you can use the BLOB fields, or ignore them, depending

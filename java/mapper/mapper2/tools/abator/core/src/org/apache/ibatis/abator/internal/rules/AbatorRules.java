@@ -115,6 +115,23 @@ public abstract class AbatorRules {
     }
 
     /**
+     * Implements the rule for generating the update by primary key selective
+     * SQL Map element and DAO method. If the table has a primary key as well as
+     * other fields, and the updateByPrimaryKey statement is allowed, then
+     * generate the element and method.
+     * 
+     * @return true if the element and method should be generated
+     */
+    public boolean generateUpdateByPrimaryKeySelective() {
+        boolean rc = tableConfiguration.isUpdateByPrimaryKeyStatementEnabled()
+            && columnDefinitions.hasPrimaryKeyColumns()
+            && (columnDefinitions.hasBLOBColumns()
+                    || columnDefinitions.hasBaseColumns());
+    
+        return rc;
+    }
+
+    /**
      * Implements the rule for generating the delete by primary key SQL Map
      * element and DAO method. If the table has a primary key, and the
      * deleteByPrimaryKey statement is allowed, then generate the element and

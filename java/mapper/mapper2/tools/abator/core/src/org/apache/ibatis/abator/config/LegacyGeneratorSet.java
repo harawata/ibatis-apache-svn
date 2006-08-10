@@ -21,7 +21,7 @@ import org.apache.ibatis.abator.internal.java.dao.GenericSILegacyDAOGenerator;
 import org.apache.ibatis.abator.internal.java.dao.IbatisLegacyDAOGenerator;
 import org.apache.ibatis.abator.internal.java.dao.SpringLegacyDAOGenerator;
 import org.apache.ibatis.abator.internal.java.model.JavaModelGeneratorLegacyImpl;
-import org.apache.ibatis.abator.internal.sqlmap.SqlMapGeneratorDefaultImpl;
+import org.apache.ibatis.abator.internal.sqlmap.SqlMapGeneratorLegacyImpl;
 import org.apache.ibatis.abator.internal.types.JavaTypeResolverDefaultImpl;
 
 /**
@@ -37,7 +37,7 @@ public class LegacyGeneratorSet extends GeneratorSet {
         super();
         super.javaModelGeneratorType = JavaModelGeneratorLegacyImpl.class.getName();
         super.javaTypeResolverType = JavaTypeResolverDefaultImpl.class.getName();
-        super.sqlMapGeneratorType = SqlMapGeneratorDefaultImpl.class.getName();
+        super.sqlMapGeneratorType = SqlMapGeneratorLegacyImpl.class.getName();
     }
 
     public String translateDAOGeneratorType(String configurationType) {

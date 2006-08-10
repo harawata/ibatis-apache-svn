@@ -247,6 +247,13 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
             }
         }
 
+        if (introspectedTable.getRules().generateUpdateByPrimaryKeySelective()) {
+            element = getUpdateByPrimaryKeySelective(introspectedTable);
+            if (element != null) {
+                answer.addElement(element);
+            }
+        }
+
         return answer;
     }
 
@@ -946,6 +953,10 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         return "abatorgenerated_updateByPrimaryKey"; //$NON-NLS-1$
     }
 
+    public String getUpdateByPrimaryKeySelectiveStatementId() {
+        return "abatorgenerated_updateByPrimaryKeySelective"; //$NON-NLS-1$
+    }
+    
     /**
      * Calculates the package for the current table.
      * 
@@ -1343,5 +1354,84 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      */
     public void setWarnings(List warnings) {
         this.warnings = warnings;
+    }
+
+    /**
+     * This method should return an XmlElement for the update by primary key
+     * statement that updates all fields in the table - but only if the field is
+     * not null in the parameter object.
+     * 
+     * @param introspectedTable
+     * @return the update element
+     */
+    protected XmlElement getUpdateByPrimaryKeySelective(IntrospectedTable introspectedTable) {
+
+        XmlElement answer = new XmlElement("update"); //$NON-NLS-1$
+        FullyQualifiedTable table = introspectedTable.getTable();
+
+        answer.addAttribute(new Attribute(
+                "id", getUpdateByPrimaryKeySelectiveStatementId())); //$NON-NLS-1$
+
+        FullyQualifiedJavaType parameterType;
+        
+        if (introspectedTable.getRules().generateRecordWithBLOBsClass()) {
+            parameterType = javaModelGenerator.getRecordWithBLOBsType(table);
+        } else {
+            parameterType = javaModelGenerator.getBaseRecordType(table);
+        }
+        
+        answer.addAttribute(new Attribute("parameterClass", //$NON-NLS-1$
+                parameterType.getFullyQualifiedName()));
+
+        answer.addComment();
+
+        StringBuffer sb = new StringBuffer();
+
+        sb.append("update "); //$NON-NLS-1$
+        sb.append(table.getFullyQualifiedTableName());
+        answer.addElement(new TextElement(sb.toString()));
+
+        XmlElement dynamicElement = new XmlElement("dynamic"); //$NON-NLS-1$
+        dynamicElement.addAttribute(new Attribute("prepend", "set")); //$NON-NLS-1$ //$NON-NLS-2$
+        answer.addElement(dynamicElement);
+
+        Iterator iter = introspectedTable.getNonPrimaryKeyColumns();
+        while (iter.hasNext()) {
+            ColumnDefinition cd = (ColumnDefinition) iter.next();
+            
+            XmlElement isNotNullElement = new XmlElement("isNotNull"); //$NON-NLS-1$
+            isNotNullElement.addAttribute(new Attribute("prepend", ",")); //$NON-NLS-1$ //$NON-NLS-2$
+            isNotNullElement.addAttribute(new Attribute("property", cd.getJavaProperty())); //$NON-NLS-1$
+            dynamicElement.addElement(isNotNullElement);
+
+            sb.setLength(0);
+            sb.append(cd.getColumnName());
+            sb.append(" = "); //$NON-NLS-1$
+            sb.append(cd.getIbatisFormattedParameterClause());
+            
+            isNotNullElement.addElement(new TextElement(sb.toString()));
+        }
+
+        boolean and = false;
+        iter = introspectedTable.getPrimaryKeyColumns();
+        while (iter.hasNext()) {
+            ColumnDefinition cd = (ColumnDefinition) iter.next();
+
+            sb.setLength(0);
+            if (and) {
+                sb.append("  and "); //$NON-NLS-1$
+            } else {
+                sb.append("where "); //$NON-NLS-1$
+                and = true;
+            }
+
+            sb.append(cd.getColumnName());
+            sb.append(" = #"); //$NON-NLS-1$
+            sb.append(cd.getJavaProperty());
+            sb.append('#');
+            answer.addElement(new TextElement(sb.toString()));
+        }
+
+        return answer;
     }
 }

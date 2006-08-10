@@ -455,7 +455,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
             answer.addMethod(getSetLessThanMethod(cd));
             answer.addMethod(getSetLessThanOrEqualMethod(cd));
 
-            if (cd.isCharacterColumn()) {
+            if (cd.isJdbcCharacterColumn()) {
                 answer.addMethod(getSetLikeMethod(cd));
                 answer.addMethod(getSetNotLikeMethod(cd));
             }

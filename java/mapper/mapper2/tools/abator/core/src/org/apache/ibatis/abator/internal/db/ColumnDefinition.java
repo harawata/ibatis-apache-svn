@@ -15,6 +15,9 @@
  */
 package org.apache.ibatis.abator.internal.db;
 
+import java.sql.Types;
+
+import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.abator.internal.types.ResolvedJavaType;
 import org.apache.ibatis.abator.internal.util.StringUtility;
 
@@ -200,9 +203,16 @@ public class ColumnDefinition {
                 || "LONGVARCHAR".equals(typeName) || "CLOB".equals(typeName); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
-    public boolean isCharacterColumn() {
-        return "java.lang.String".equals(resolvedJavaType //$NON-NLS-1$
-                .getFullyQualifiedJavaType().getFullyQualifiedName());
+    public boolean isStringColumn() {
+        return resolvedJavaType.getFullyQualifiedJavaType() == 
+            FullyQualifiedJavaType.getStringInstance();
+    }
+    
+    public boolean isJdbcCharacterColumn() {
+        return jdbcType == Types.CHAR
+            || jdbcType == Types.CLOB
+            || jdbcType == Types.LONGVARCHAR
+            || jdbcType == Types.VARCHAR;
     }
 
     public String getJavaProperty() {

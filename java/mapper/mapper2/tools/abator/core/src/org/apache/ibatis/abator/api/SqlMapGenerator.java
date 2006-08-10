@@ -72,6 +72,8 @@ public interface SqlMapGenerator {
 
     String getUpdateByPrimaryKeyWithBLOBsStatementId();
 
+    String getUpdateByPrimaryKeySelectiveStatementId();
+    
     String getUpdateByPrimaryKeyStatementId();
 
     String getDeleteByPrimaryKeyStatementId();

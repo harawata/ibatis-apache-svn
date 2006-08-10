@@ -160,4 +160,14 @@ public class ExtendedDAOMethodNameCalculator implements DAOMethodNameCalculator 
         
         return sb.toString();
     }
+
+
+    public String getUpdateByPrimaryKeySelectiveMethodName(IntrospectedTable introspectedTable) {
+        StringBuffer sb = new StringBuffer();
+        sb.append("update"); //$NON-NLS-1$
+        sb.append(introspectedTable.getTable().getDomainObjectName());
+        sb.append("ByPrimaryKeySelective"); //$NON-NLS-1$
+        
+        return sb.toString();
+    }
 }

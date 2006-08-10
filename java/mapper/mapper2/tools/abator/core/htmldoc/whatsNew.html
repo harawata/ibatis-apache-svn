@@ -86,6 +86,15 @@ reference page for more information about setting a model type for specific tabl
 <p><b>Important:</b> the default value is conditional - this is a non-backward compatible
 change from previous versions of Abator.</p>
 
+<h2>updateByPrimaryKeySelective (Version 0.7.0)</h2>
+<p>This is a new mapped SQL statement, and new DAO method, that will only
+update columns whose corresponding properties in the parameter class are non-null.
+This can be used to update certain
+columns in a record without needing to update the entire record.
+</p>
+<p><b>Important:</b> any column that is mapped to a primitive type
+will always be updated.</p>
+
 <h2>Version 0.7.0 Miscellaneous Changes</h2>
 <ul>
   <li>Added the ability to specify a table alias.  This aids in reuse of generated

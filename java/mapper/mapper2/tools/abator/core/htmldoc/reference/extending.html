@@ -11,8 +11,8 @@
 <h1>Extending Abator</h1>
 <p>Abator is designed for extensibility.  All code generation is performed using a
 simple DOM representation of Java and XML elements that is included with Abator.</p>
-<p>The Java DOM is included in the package <code>org.apache.ibatis.abator.api.dom.java</code>.</p>
-<p>The XML DOM is included in the package <code>org.apache.ibatis.abator.api.dom.xml</code>.</p>
+<p>The Java DOM is included in the package <code>org.apache.ibatis.abator.api.dom.java</code></p>
+<p>The XML DOM is included in the package <code>org.apache.ibatis.abator.api.dom.xml</code></p>
 <p>These classes are not sufficient for every conceivable code generation possibility, but they are quite
 useful for generating simple to moderately complex Java and XML code.</p>
 
@@ -39,15 +39,15 @@ support mailing list at
   </tr>
   <tr>
     <td>Legacy (the default value)</td>
-    <td><code>org.apache.ibatis.abator.internal.java.model.JavaModelGeneratorLegacyImpl</code>.</td>
+    <td><code>org.apache.ibatis.abator.internal.java.model.JavaModelGeneratorLegacyImpl</code></td>
   </tr>
   <tr>
     <td>Java2</td>
-    <td><code>org.apache.ibatis.abator.internal.java.model.JavaModelGeneratorJava2Impl</code>.</td>
+    <td><code>org.apache.ibatis.abator.internal.java.model.JavaModelGeneratorJava2Impl</code></td>
   </tr>
   <tr>
     <td>Java5</td>
-    <td><code>org.apache.ibatis.abator.internal.java.model.JavaModelGeneratorJava5Impl</code>.</td>
+    <td><code>org.apache.ibatis.abator.internal.java.model.JavaModelGeneratorJava5Impl</code></td>
   </tr>
 </table>
 
@@ -74,11 +74,11 @@ support mailing list at
   </tr>
   <tr>
     <td>Legacy (the default value)</td>
-    <td><code>org.apache.ibatis.abator.internal.sqlmap.SqlMapGeneratorDefaultImpl</code>.</td>
+    <td><code>org.apache.ibatis.abator.internal.sqlmap.SqlMapGeneratorLegacyImpl</code></td>
   </tr>
   <tr>
     <td>Java2 or Java5</td>
-    <td><code>org.apache.ibatis.abator.internal.sqlmap.SqlMapGeneratorIterateImpl</code>.</td>
+    <td><code>org.apache.ibatis.abator.internal.sqlmap.SqlMapGeneratorIterateImpl</code></td>
   </tr>
 </table>
 
@@ -107,51 +107,51 @@ The implementations are:</p>
   </tr>
   <tr>
     <td nowrap="nowrap">Legacy/IBATIS</td>
-    <td><code>org.apache.ibatis.abator.internal.java.dao.IbatisLegacyDAOGenerator</code>.</td>
+    <td><code>org.apache.ibatis.abator.internal.java.dao.IbatisLegacyDAOGenerator</code></td>
   </tr>
   <tr>
     <td>Legacy/GENERIC-CI</td>
-    <td><code>org.apache.ibatis.abator.internal.java.dao.GenericCILegacyDAOGenerator</code>.</td>
+    <td><code>org.apache.ibatis.abator.internal.java.dao.GenericCILegacyDAOGenerator</code></td>
   </tr>
   <tr>
     <td nowrap="nowrap">Legacy/GENERIC-SI</td>
-    <td><code>org.apache.ibatis.abator.internal.java.dao.GenericSILegacyDAOGenerator</code>.</td>
+    <td><code>org.apache.ibatis.abator.internal.java.dao.GenericSILegacyDAOGenerator</code></td>
   </tr>
   <tr>
     <td nowrap="nowrap">Legacy/SPRING</td>
-    <td><code>org.apache.ibatis.abator.internal.java.dao.SpringLegacyDAOGenerator</code>.</td>
+    <td><code>org.apache.ibatis.abator.internal.java.dao.SpringLegacyDAOGenerator</code></td>
   </tr>
   <tr>
     <td nowrap="nowrap">Java2/IBATIS</td>
-    <td><code>org.apache.ibatis.abator.internal.java.dao.IbatisJava2DAOGenerator</code>.</td>
+    <td><code>org.apache.ibatis.abator.internal.java.dao.IbatisJava2DAOGenerator</code></td>
   </tr>
   <tr>
     <td nowrap="nowrap">Java2/GENERIC-CI</td>
-    <td><code>org.apache.ibatis.abator.internal.java.dao.GenericCIJava2DAOGenerator</code>.</td>
+    <td><code>org.apache.ibatis.abator.internal.java.dao.GenericCIJava2DAOGenerator</code></td>
   </tr>
   <tr>
     <td nowrap="nowrap">Java2/GENERIC-SI</td>
-    <td><code>org.apache.ibatis.abator.internal.java.dao.GenericSIJava2DAOGenerator</code>.</td>
+    <td><code>org.apache.ibatis.abator.internal.java.dao.GenericSIJava2DAOGenerator</code></td>
   </tr>
   <tr>
     <td nowrap="nowrap">Java2/SPRING</td>
-    <td><code>org.apache.ibatis.abator.internal.java.dao.SpringJava2DAOGenerator</code>.</td>
+    <td><code>org.apache.ibatis.abator.internal.java.dao.SpringJava2DAOGenerator</code></td>
   </tr>
   <tr>
     <td nowrap="nowrap">Java5/IBATIS</td>
-    <td><code>org.apache.ibatis.abator.internal.java.dao.IbatisJava5DAOGenerator</code>.</td>
+    <td><code>org.apache.ibatis.abator.internal.java.dao.IbatisJava5DAOGenerator</code></td>
   </tr>
   <tr>
     <td nowrap="nowrap">Java5/GENERIC-CI</td>
-    <td><code>org.apache.ibatis.abator.internal.java.dao.GenericCIJava5DAOGenerator</code>.</td>
+    <td><code>org.apache.ibatis.abator.internal.java.dao.GenericCIJava5DAOGenerator</code></td>
   </tr>
   <tr>
     <td nowrap="nowrap">Java5/GENERIC-SI</td>
-    <td><code>org.apache.ibatis.abator.internal.java.dao.GenericSIJava5DAOGenerator</code>.</td>
+    <td><code>org.apache.ibatis.abator.internal.java.dao.GenericSIJava5DAOGenerator</code></td>
   </tr>
   <tr>
     <td nowrap="nowrap">Java5/SPRING</td>
-    <td><code>org.apache.ibatis.abator.internal.java.dao.SpringJava5DAOGenerator</code>.</td>
+    <td><code>org.apache.ibatis.abator.internal.java.dao.SpringJava5DAOGenerator</code></td>
   </tr>
 </table>
 

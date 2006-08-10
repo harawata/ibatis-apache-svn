@@ -189,7 +189,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
             method.setName(JavaBeansUtil.getSetterMethodName(property));
             method.addParameter(new Parameter(fqjt, property));
 
-            if (trimStrings && cd.isCharacterColumn()) {
+            if (trimStrings && cd.isStringColumn()) {
                 sb.setLength(0);
                 sb.append("if ("); //$NON-NLS-1$
                 sb.append(property);
@@ -1071,7 +1071,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
             answer.addMethod(getSetLessThanMethod(cd));
             answer.addMethod(getSetLessThanOrEqualMethod(cd));
 
-            if (cd.isCharacterColumn()) {
+            if (cd.isJdbcCharacterColumn()) {
                 answer.addMethod(getSetLikeMethod(cd));
                 answer.addMethod(getSetNotLikeMethod(cd));
             }

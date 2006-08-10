@@ -355,7 +355,7 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
         while (clauseIterator.hasNext()) {
             ExampleClause clause = (ExampleClause) clauseIterator.next();
 
-            if (clause.isCharacterOnly() && !cd.isCharacterColumn()) {
+            if (clause.isCharacterOnly() && !cd.isJdbcCharacterColumn()) {
                 continue;
             }
 

@@ -118,4 +118,8 @@ public class DefaultDAOMethodNameCalculator implements DAOMethodNameCalculator {
     public String getSelectByPrimaryKeyMethodName(IntrospectedTable introspectedTable) {
         return "selectByPrimaryKey"; //$NON-NLS-1$
     }
+
+    public String getUpdateByPrimaryKeySelectiveMethodName(IntrospectedTable introspectedTable) {
+        return "updateByPrimaryKeySelective"; //$NON-NLS-1$
+    }
 }

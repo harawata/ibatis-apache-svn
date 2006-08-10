@@ -34,12 +34,12 @@ import org.apache.ibatis.abator.internal.util.StringUtility;
  *
  * @author Jeff Butler
  */
-public class SqlMapGeneratorDefaultImpl extends SqlMapGeneratorIterateImpl implements SqlMapGenerator {
+public class SqlMapGeneratorLegacyImpl extends SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
     /**
      * Constructs an instance of SqlMapGeneratorDefaultImpl
      */
-    public SqlMapGeneratorDefaultImpl() {
+    public SqlMapGeneratorLegacyImpl() {
         super();
     }
 
@@ -104,7 +104,7 @@ public class SqlMapGeneratorDefaultImpl extends SqlMapGeneratorIterateImpl imple
             while (clauseIterator.hasNext()) {
                 ExampleClause ec = (ExampleClause) clauseIterator.next();
 
-                if (ec.isCharacterOnly() && !cd.isCharacterColumn()) {
+                if (ec.isCharacterOnly() && !cd.isJdbcCharacterColumn()) {
                     continue;
                 }
 

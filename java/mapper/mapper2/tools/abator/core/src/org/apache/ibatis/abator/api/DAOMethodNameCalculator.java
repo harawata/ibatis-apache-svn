@@ -52,6 +52,15 @@ public interface DAOMethodNameCalculator {
     String getUpdateByPrimaryKeyWithBLOBsMethodName(IntrospectedTable introspectedTable);
     
     /**
+     * Calculates and returns a name for the update by primary key selective
+     * method.
+     * 
+     * @param introspectedTable
+     * @return the calculated name
+     */
+    String getUpdateByPrimaryKeySelectiveMethodName(IntrospectedTable introspectedTable);
+    
+    /**
      * Calculates and returns a name for the select by primary key method.
      * 
      * @param introspectedTable

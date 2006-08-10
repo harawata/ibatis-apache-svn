@@ -115,6 +115,16 @@ key.  The update statement will update all fields in the table (including BLOB f
 <p>This element will be generated if the table has a primary key, the table has BLOB columns,
  and the update by primary key statement is enabled.</p>
 
+<h2>Update By Primary Key Selective</h2>
+<p>This element is an update statement that will update one row - designated by the primary
+key.  The update statement will update only the fields in the table whose corresponding
+property in the parameter object is non-null.  This statement can be used to update
+certain columns in a record without affecting all columns in the record.  <b>Important:</b>
+if the column has been mapped to a primitive type, then the column will always be
+updated.</p>
+<p>This element will be generated if the table has a primary key, and the update by primary
+key statement is enabled.</p>
+
 <h2>Delete By Primary Key</h2>
 <p>This element is a delete statement that will delete one row in the table - designated by the
 primary key.</p>
