@@ -27,7 +27,7 @@ public class MultiResultSetTest extends BaseSqlMapTest {
    * This test should return 2 lists of 2 accounts each
    * 
    */
-  public void test01() {
+  public void testShouldRetrieveTwoSetsOfTwoAccountsFromMultipleResultSets() {
     
     Map persons = new HashMap();
     persons.put("accountId1",new Integer(1));
@@ -38,8 +38,9 @@ public class MultiResultSetTest extends BaseSqlMapTest {
     try {
       List results = 
           sqlMap.queryForList("getMultiListsRm", persons);
-      assertFalse(results.isEmpty());
-      // need assertion to check for list in list with 2 accounts each
+
+      assertEquals(2,results.size());
+
     } catch (Exception e) {
       fail(e.getMessage());
     }
