@@ -32,4 +32,8 @@ public class DefaultRowHandler implements RowHandler {
     return list;
   }
 
+  public void setList(List list) {
+    this.list = list;
+  }
+
 }

@@ -1,17 +1,7 @@
 package com.ibatis.sqlmap.engine.builder.xml;
 
-import java.sql.ResultSet;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
-
-import org.w3c.dom.CharacterData;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 import com.ibatis.common.beans.Probe;
 import com.ibatis.common.beans.ProbeFactory;
-
 import com.ibatis.common.resources.Resources;
 import com.ibatis.common.xml.NodeletUtils;
 import com.ibatis.sqlmap.client.SqlMapException;
@@ -24,18 +14,16 @@ import com.ibatis.sqlmap.engine.mapping.result.BasicResultMap;
 import com.ibatis.sqlmap.engine.mapping.sql.Sql;
 import com.ibatis.sqlmap.engine.mapping.sql.SqlText;
 import com.ibatis.sqlmap.engine.mapping.sql.dynamic.DynamicSql;
-import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.DynamicParent;
-import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.IterateTagHandler;
-import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.SqlTag;
-import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.SqlTagHandler;
-import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.SqlTagHandlerFactory;
+import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.*;
 import com.ibatis.sqlmap.engine.mapping.sql.simple.SimpleDynamicSql;
 import com.ibatis.sqlmap.engine.mapping.sql.stat.StaticSql;
-import com.ibatis.sqlmap.engine.mapping.statement.CachingStatement;
-import com.ibatis.sqlmap.engine.mapping.statement.GeneralStatement;
-import com.ibatis.sqlmap.engine.mapping.statement.InsertStatement;
-import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
-import com.ibatis.sqlmap.engine.mapping.statement.SelectKeyStatement;
+import com.ibatis.sqlmap.engine.mapping.statement.*;
+import org.w3c.dom.CharacterData;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import java.sql.ResultSet;
+import java.util.*;
 
 public class SqlStatementParser extends BaseParser {
 
@@ -60,7 +48,7 @@ public class SqlStatementParser extends BaseParser {
 
     String parameterMapName = applyNamespace(attributes.getProperty("parameterMap"));
     String parameterClassName = attributes.getProperty("parameterClass");
-    String resultMapName = applyNamespace(attributes.getProperty("resultMap"));
+    String resultMapName = attributes.getProperty("resultMap");
     String resultClassName = attributes.getProperty("resultClass");
     String cacheModelName = applyNamespace(attributes.getProperty("cacheModel"));
     String xmlResultName = attributes.getProperty("xmlResultName");
@@ -69,31 +57,32 @@ public class SqlStatementParser extends BaseParser {
     String allowRemapping = attributes.getProperty("remapResults");
     String timeout = attributes.getProperty("timeout");
 
+    String[] additionalResultMapNames;
+    List additionalResultMaps = new ArrayList();
+
     vars.errorCtx.setObjectId(id + " statement");
 
-    parameterClassName = vars.typeHandlerFactory.resolveAlias(parameterClassName);
-    resultClassName = vars.typeHandlerFactory.resolveAlias(resultClassName);
-
-    Class parameterClass = null;
-    Class resultClass = null;
 
     // get parameter and result maps
 
     vars.errorCtx.setMoreInfo("Check the result map name.");
-    BasicResultMap resultMap = null;
+    //BasicResultMap resultMap = null;
     if (resultMapName != null) {
-      resultMap = (BasicResultMap) vars.client.getDelegate().getResultMap(resultMapName);
+      additionalResultMapNames = getAllButFirstToken(resultMapName);
+      resultMapName = getFirstToken (resultMapName);
+      statement.setResultMap((BasicResultMap) vars.client.getDelegate().getResultMap(applyNamespace(resultMapName)));
+      for (int i=0; i < additionalResultMapNames.length; i++) {
+        statement.addResultMap((BasicResultMap) vars.client.getDelegate().getResultMap(applyNamespace(additionalResultMapNames[i])));
+      }
     }
 
     vars.errorCtx.setMoreInfo("Check the parameter map name.");
-    BasicParameterMap parameterMap = null;
+
     if (parameterMapName != null) {
-      parameterMap = (BasicParameterMap) vars.client.getDelegate().getParameterMap(parameterMapName);
+      statement.setParameterMap((BasicParameterMap) vars.client.getDelegate().getParameterMap(parameterMapName));
     }
 
     statement.setId(id);
-    statement.setParameterMap(parameterMap);
-    statement.setResultMap(resultMap);
     statement.setResource(vars.errorCtx.getResource());
 
     if (resultSetType != null) {
@@ -111,11 +100,13 @@ public class SqlStatementParser extends BaseParser {
     }
 
     // set parameter class either from attribute or from map (make sure to match)
+    ParameterMap parameterMap = statement.getParameterMap();
     if (parameterMap == null) {
       try {
         if (parameterClassName != null) {
           vars.errorCtx.setMoreInfo("Check the parameter class.");
-          parameterClass = Resources.classForName(parameterClassName);
+          parameterClassName = vars.typeHandlerFactory.resolveAlias(parameterClassName);
+          Class parameterClass = Resources.classForName(parameterClassName);
           statement.setParameterClass(parameterClass);
         }
       } catch (ClassNotFoundException e) {
@@ -125,32 +116,25 @@ public class SqlStatementParser extends BaseParser {
       statement.setParameterClass(parameterMap.getParameterClass());
     }
 
-    try {
-      if (resultClassName != null) {
-        vars.errorCtx.setMoreInfo("Check the result class.");
-        resultClass = Resources.classForName(resultClassName);
-      }
-    } catch (ClassNotFoundException e) {
-      throw new SqlMapException("Error.  Could not set result class.  Cause: " + e, e);
-    }
-
     // process SQL statement, including inline parameter maps
     vars.errorCtx.setMoreInfo("Check the SQL statement.");
     processSqlStatement(node, statement);
 
     // set up either null result map or automatic result mapping
-    if (resultMap == null && resultClass == null) {
+    BasicResultMap resultMap = (BasicResultMap)statement.getResultMap();
+    if (resultMap == null && resultClassName == null) {
       statement.setResultMap(null);
     } else if (resultMap == null) {
-      resultMap = new AutoResultMap(vars.client.getDelegate(), "true".equals(allowRemapping));
-      resultMap.setId(statement.getId() + "-AutoResultMap");
-      resultMap.setResultClass(resultClass);
-      resultMap.setXmlName(xmlResultName);
-      resultMap.setResource(statement.getResource());
+      String firstResultClass = getFirstToken(resultClassName);
+      resultMap = buildAutoResultMap(allowRemapping, statement, firstResultClass, xmlResultName);
       statement.setResultMap(resultMap);
-
+      String[] additionalResultClasses = getAllButFirstToken(resultClassName);
+      for (int i=0; i<additionalResultClasses.length; i++) {
+        statement.addResultMap(buildAutoResultMap(allowRemapping, statement, additionalResultClasses[i],xmlResultName));
+      }
+      
     }
-    
+
     statement.setTimeout(vars.defaultStatementTimeout);
     if (timeout != null) {
       try {
@@ -172,6 +156,43 @@ public class SqlStatementParser extends BaseParser {
       return statement;
     }
 
+  }
+
+  private BasicResultMap buildAutoResultMap(String allowRemapping, GeneralStatement statement, String firstResultClass, String xmlResultName) {
+    BasicResultMap resultMap;
+    resultMap = new AutoResultMap(vars.client.getDelegate(), "true".equals(allowRemapping));
+    resultMap.setId(statement.getId() + "-AutoResultMap");
+    resultMap.setResultClass(resolveClass(firstResultClass));
+    resultMap.setXmlName(xmlResultName);
+    resultMap.setResource(statement.getResource());
+    return resultMap;
+  }
+
+  private Class resolveClass(String resultClassName) {
+    try {
+      if (resultClassName != null) {
+        vars.errorCtx.setMoreInfo("Check the result class.");
+        return Resources.classForName(vars.typeHandlerFactory.resolveAlias(resultClassName));
+      } else {
+        return null;
+      }
+    } catch (ClassNotFoundException e) {
+      throw new SqlMapException("Error.  Could not set result class.  Cause: " + e, e);
+    }
+  }
+
+  private String getFirstToken (String s) {
+    return new StringTokenizer(s, ", ", false).nextToken();
+  }
+
+  private String[] getAllButFirstToken (String s) {
+    List strings = new ArrayList();
+    StringTokenizer parser = new StringTokenizer(s, ", ", false);
+    parser.nextToken();
+    while (parser.hasMoreTokens()) {
+      strings.add(parser.nextToken());
+    }
+    return (String[]) strings.toArray(new String[strings.size()]);
   }
 
   private void processSqlStatement(Node n, GeneralStatement statement) {
@@ -252,14 +273,14 @@ public class SqlStatementParser extends BaseParser {
           tag.setPrependAttr(attributes.getProperty("prepend"));
           tag.setPropertyAttr(attributes.getProperty("property"));
           tag.setRemoveFirstPrepend(attributes.getProperty("removeFirstPrepend"));
-          
+
           tag.setOpenAttr(attributes.getProperty("open"));
           tag.setCloseAttr(attributes.getProperty("close"));
 
           tag.setComparePropertyAttr(attributes.getProperty("compareProperty"));
           tag.setCompareValueAttr(attributes.getProperty("compareValue"));
           tag.setConjunctionAttr(attributes.getProperty("conjunction"));
-          
+
           // an iterate ancestor requires a post parse
 
           if(dynamic instanceof SqlTag) {
@@ -275,7 +296,7 @@ public class SqlStatementParser extends BaseParser {
           }
 
           dynamic.addChild(tag);
-          
+
           if (child.hasChildNodes()) {
             isDynamic = parseDynamicTags(child, tag, sqlBuffer, isDynamic, tag.isPostParseRequired());
           }
@@ -342,7 +363,7 @@ public class SqlStatementParser extends BaseParser {
     selectKeyStatement.setId(insertStatement.getId() + "-SelectKey");
     selectKeyStatement.setResource(vars.errorCtx.getResource());
     selectKeyStatement.setKeyProperty(keyPropName);
-    
+
     // process the type (pre or post) attribute
     boolean hasType;
     String type = attributes.getProperty("type");

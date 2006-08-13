@@ -143,4 +143,12 @@ public class CachingStatement implements MappedStatement {
     return statement.getTimeout();
   }
 
+  public boolean hasMultipleResultMaps() {
+    return statement.hasMultipleResultMaps();
+  }
+
+  public ResultMap[] getAdditionalResultMaps() {
+    return statement.getAdditionalResultMaps();
+  }
+
 }

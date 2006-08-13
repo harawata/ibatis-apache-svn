@@ -26,6 +26,7 @@
   <target name="clean">
     <delete dir="${deploy.path}"/>
     <delete dir="${work.root}"/>
+    <delete dir="ibderby"/>
     <delete dir="${reports.root}"/>
     <delete>
       <fileset dir="./">

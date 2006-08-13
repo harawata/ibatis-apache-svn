@@ -16,7 +16,7 @@ public class DerbyProcs {
     PreparedStatement ps2 = conn.prepareStatement("select * from account where acc_id in (?,?)");
     ps2.setInt(1, p3);
     ps2.setInt(2, p4);
-    rs1[0] = ps2.executeQuery();
+    rs2[0] = ps2.executeQuery();
     conn.close();
   }
 

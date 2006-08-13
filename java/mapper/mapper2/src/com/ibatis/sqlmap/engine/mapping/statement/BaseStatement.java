@@ -26,6 +26,7 @@ import com.ibatis.sqlmap.engine.scope.RequestScope;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 
 public abstract class BaseStatement implements MappedStatement {
 
@@ -39,6 +40,7 @@ public abstract class BaseStatement implements MappedStatement {
   private int baseCacheKey;
   private ExtendedSqlMapClient sqlMapClient;
   private Integer timeout;
+  private ResultMap[] additionalResultMaps = new ResultMap[0];
 
   private List executeListeners = new ArrayList();
 
@@ -158,5 +160,21 @@ public abstract class BaseStatement implements MappedStatement {
   public void setTimeout(Integer timeout) {
     this.timeout = timeout;
   }
+
+  public void addResultMap(ResultMap resultMap) {
+    List resultMapList = Arrays.asList(additionalResultMaps);
+    resultMapList = new ArrayList(resultMapList);
+    resultMapList.add(resultMap);
+    additionalResultMaps = (ResultMap[])resultMapList.toArray(new ResultMap[resultMapList.size()]);
+  }
+
+  public boolean hasMultipleResultMaps() {
+    return additionalResultMaps.length > 0;
+  }
+
+  public ResultMap[] getAdditionalResultMaps() {
+    return additionalResultMaps;
+  }
+
 
 }

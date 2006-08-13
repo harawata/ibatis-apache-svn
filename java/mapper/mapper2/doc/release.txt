@@ -9,6 +9,7 @@ Build Number: @buildNum@
  o Removed deprectated JtaDaoTemplate
  o Removed custom nested transactions (JDBC 1.4 now required)
  o Added support for ResultSet OUT params from stored procs (e.g. Oracle Ref Cursor)
+ o Added support for Multiple ResultSets mapped to corresponding ResultMaps or ResultClasses.
 
  o Fixed IBATIS-224 - isNotNull node causes typehandler mappings in statement to fail
  o Fixed IBATIS-249 - Race conditions in Throttle lead to thread blockage popping items from ThrottledPools under stress

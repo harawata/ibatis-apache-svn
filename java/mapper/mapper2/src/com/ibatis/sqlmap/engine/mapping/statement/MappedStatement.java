@@ -68,4 +68,8 @@ public interface MappedStatement {
 
   public Integer getTimeout();
 
+  public boolean hasMultipleResultMaps();
+
+  public ResultMap[] getAdditionalResultMaps();
+
 }

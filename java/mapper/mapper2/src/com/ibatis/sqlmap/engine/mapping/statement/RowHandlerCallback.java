@@ -98,5 +98,8 @@ public class RowHandlerCallback {
     return s;
   }
 
+  public RowHandler getRowHandler() {
+    return rowHandler;
+  }
 
 }

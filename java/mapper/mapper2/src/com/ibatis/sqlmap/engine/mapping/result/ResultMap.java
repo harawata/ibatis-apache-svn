@@ -83,4 +83,5 @@ public interface ResultMap {
   public ResultMap resolveSubMap (RequestScope request, ResultSet rs) throws SQLException;
 
   public Discriminator getDiscriminator();
+
 }

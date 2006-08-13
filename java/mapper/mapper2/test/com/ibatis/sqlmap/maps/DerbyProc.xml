@@ -7,13 +7,6 @@
 <sqlMap namespace="DerbyProc">
 
   <typeAlias alias="account" type="testdomain.Account"/>
-
-  <parameterMap id="multiList" class="map" >
-    <parameter property="accountId1" jdbcType="INTEGER" javaType="java.lang.Integer" mode="IN"/>
-    <parameter property="accountId2" jdbcType="INTEGER" javaType="java.lang.Integer" mode="IN"/>
-    <parameter property="accountId3" jdbcType="INTEGER" javaType="java.lang.Integer" mode="IN"/>
-    <parameter property="accountId4" jdbcType="INTEGER" javaType="java.lang.Integer" mode="IN"/>
-  </parameterMap>
   
   <resultMap id="account-result" class="account">
     <result property="id" column="ACC_ID" columnIndex="1"/>
@@ -24,11 +17,11 @@
   <!-- <parameter property="accountList" javaType="list" mode="OUT"/> -->
   <!-- <parameter property="accountList" javaType="list" mode="OUT"/> -->
   
-  <procedure id="getMultiListsRm" parameterMap="multiList" resultMap="account-result">
-     {call MRESULTSET(?,?,?,?)}
+  <procedure id="getMultiListsRm" parameterClass="hashmap" resultMap="account-result, account-result">
+     {call MRESULTSET(#1#,#2#,#3#,#4#)}
   </procedure>
   
-  <procedure id="getMultiListsRc" parameterMap="multiList" resultClass="account">
-     {call MRESULTSET(?,?,?,?)}
+  <procedure id="getMultiListsRc" parameterClass="hashmap" resultClass="account, account">
+    {call MRESULTSET(#1#,#2#,#3#,#4#)}
   </procedure>
 </sqlMap>
