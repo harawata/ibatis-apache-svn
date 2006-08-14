@@ -838,7 +838,7 @@ public class SqlMapExecutorDelegate {
       session.setTransactionState(TransactionState.STATE_USER_PROVIDED);
     } else {
       session.setTransaction(null);
-      pushSession(session);
+      session.reset(); // used to be pushSession, which is probably incorrect.
     }
   }
   /**

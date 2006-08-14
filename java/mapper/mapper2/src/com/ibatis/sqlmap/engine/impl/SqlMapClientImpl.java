@@ -214,14 +214,14 @@ public class SqlMapClientImpl implements ExtendedSqlMapClient {
   }
 
   public SqlMapSession openSession() {
-    SqlMapSessionImpl sqlMapSession = getLocalSqlMapSession();
+    SqlMapSessionImpl sqlMapSession = new SqlMapSessionImpl(this);
     sqlMapSession.open();
     return sqlMapSession;
   }
 
   public SqlMapSession openSession(Connection conn) {
     try {
-      SqlMapSessionImpl sqlMapSession = getLocalSqlMapSession();
+      SqlMapSessionImpl sqlMapSession = new SqlMapSessionImpl(this);
       sqlMapSession.open();
       sqlMapSession.setUserConnection(conn);
       return sqlMapSession;
