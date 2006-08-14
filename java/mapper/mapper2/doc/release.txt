@@ -11,6 +11,7 @@ Build Number: @buildNum@
  o Added support for ResultSet OUT params from stored procs (e.g. Oracle Ref Cursor)
  o Added support for Multiple ResultSets mapped to corresponding ResultMaps or ResultClasses.
 
+ o Fixed IBATIS-320 - openSession() returns same object
  o Fixed IBATIS-325 - DateTypeHandler uses static SimpleDateFormat instance. Not thread-safe.
  o Fixed IBATIS-224 - isNotNull node causes typehandler mappings in statement to fail
  o Fixed IBATIS-249 - Race conditions in Throttle lead to thread blockage popping items from ThrottledPools under stress
