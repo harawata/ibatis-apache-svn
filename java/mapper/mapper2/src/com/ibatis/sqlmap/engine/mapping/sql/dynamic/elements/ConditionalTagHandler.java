@@ -17,13 +17,10 @@ package com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements;
 
 import com.ibatis.common.beans.Probe;
 import com.ibatis.common.beans.ProbeFactory;
-
+import com.ibatis.sqlmap.engine.type.SimpleDateFormatter;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public abstract class ConditionalTagHandler extends BaseTagHandler {
@@ -32,7 +29,6 @@ public abstract class ConditionalTagHandler extends BaseTagHandler {
 
   public static final long NOT_COMPARABLE = Long.MIN_VALUE;
   private static final String DATE_MASK = "yyyy/MM/dd hh:mm:ss";
-  private static final DateFormat DATE_FORMAT = new SimpleDateFormat(DATE_MASK);
 
   private static final String START_INDEX = "[";
 
@@ -137,11 +133,7 @@ public abstract class ConditionalTagHandler extends BaseTagHandler {
     } else if (type == Boolean.class || type == boolean.class) {
       return Boolean.valueOf(value);
     } else if (type == Date.class) {
-      try {
-        return DATE_FORMAT.parse(value);
-      } catch (ParseException e) {
-        throw new RuntimeException("Error parsing date.  Cause: " + e, e);
-      }
+      return SimpleDateFormatter.format(DATE_MASK, value);
     } else if (type == BigInteger.class) {
       return new BigInteger(value);
     } else if (type == BigDecimal.class) {
@@ -158,7 +150,6 @@ public abstract class ConditionalTagHandler extends BaseTagHandler {
    * 
    * @param ctx
    * @param tag
-   * @return
    */
   protected String getResolvedProperty(SqlTagContext ctx, SqlTag tag) {
     String prop = tag.getPropertyAttr();

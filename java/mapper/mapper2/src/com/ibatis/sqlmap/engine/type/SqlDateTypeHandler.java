@@ -15,12 +15,10 @@
  */
 package com.ibatis.sqlmap.engine.type;
 
-import com.ibatis.sqlmap.client.SqlMapException;
-
-import java.sql.*;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * SQL Date implementation of TypeHandler
@@ -28,7 +26,6 @@ import java.text.SimpleDateFormat;
 public class SqlDateTypeHandler extends BaseTypeHandler implements TypeHandler {
 
   private static final String DATE_FORMAT = "yyyy/MM/dd";
-  private static final DateFormat format = new SimpleDateFormat(DATE_FORMAT);
 
   public void setParameter(PreparedStatement ps, int i, Object parameter, String jdbcType)
       throws SQLException {
@@ -66,12 +63,7 @@ public class SqlDateTypeHandler extends BaseTypeHandler implements TypeHandler {
   }
 
   public Object valueOf(String s) {
-    try {
-      java.util.Date date = format.parse(s);
-      return new Date(date.getTime());
-    } catch (ParseException e) {
-      throw new SqlMapException("Error parsing default null value date.  Format must be '" + DATE_FORMAT + "'. Cause: " + e);
-    }
+    return SimpleDateFormatter.format(DATE_FORMAT, s);
   }
 
 }
