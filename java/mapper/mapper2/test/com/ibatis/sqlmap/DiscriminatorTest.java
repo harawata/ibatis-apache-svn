@@ -56,4 +56,30 @@ public class DiscriminatorTest extends BaseSqlMapTest {
     assertTrue(((PersonDocument)list.get(2)).getFavoriteDocument() instanceof Document);
     
   }
+  
+  public void testDiscriminatorWithNestedResultMap() throws Exception {
+    List list = sqlMap.queryForList("getDocumentsWithAttributes");
+    assertEquals(6, list.size());
+    
+    assertTrue(list.get(0) instanceof Book);
+    Book b = (Book) list.get(0);
+    assertEquals(2, b.getAttributes().size());
+    
+    assertTrue(list.get(1) instanceof Magazine);
+    Magazine m = (Magazine) list.get(1);
+    assertEquals(1, m.getAttributes().size());
+    
+    assertTrue(list.get(2) instanceof Book);
+    b = (Book) list.get(2);
+    assertEquals(2, b.getAttributes().size());
+    
+    Document d = (Document) list.get(3);
+    assertEquals(0, d.getAttributes().size());
+    
+    d = (Document) list.get(4);
+    assertEquals(0, d.getAttributes().size());
+    
+    d = (Document) list.get(5);
+    assertEquals(0, d.getAttributes().size());
+  }
 }

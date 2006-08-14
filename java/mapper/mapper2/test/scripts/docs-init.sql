@@ -1,5 +1,6 @@
 DROP TABLE DOCUMENTS;
 DROP TABLE PERSON_DOCUMENTS;
+DROP TABLE DOCUMENT_ATTRIBUTES;
 
 CREATE TABLE DOCUMENTS  (
    DOCUMENT_ID           INTEGER                          NOT NULL,
@@ -27,3 +28,14 @@ CREATE TABLE PERSON_DOCUMENTS (
 insert into person_documents values (1, 'Jeff', 2);
 insert into person_documents values (2, 'Matt', 3);
 insert into person_documents values (3, 'Amy', 6);
+
+create table Document_Attributes (
+  document_id int not null,
+  attribute varchar(50) not null
+);
+
+insert into Document_Attributes values (1, 'English');
+insert into Document_Attributes values (1, 'Sci-Fi');
+insert into Document_Attributes values (2, 'French');
+insert into Document_Attributes values (3, 'English');
+insert into Document_Attributes values (3, 'Fantasy');

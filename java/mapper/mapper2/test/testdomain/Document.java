@@ -1,10 +1,13 @@
 package testdomain;
 
+import java.util.List;
+
 public class Document {
 
   private int id;
   private String title;
   private String type;
+  private List attributes;
 
   public int getId() {
     return id;
@@ -28,6 +31,14 @@ public class Document {
 
   public void setType(String type) {
     this.type = type;
+  }
+
+  public List getAttributes() {
+    return attributes;
+  }
+
+  public void setAttributes(List attributes) {
+    this.attributes = attributes;
   }
 
 }

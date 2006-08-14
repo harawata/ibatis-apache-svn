@@ -20,6 +20,7 @@ import org.w3c.dom.Node;
 
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.Iterator;
@@ -377,6 +378,15 @@ public class SqlMapParser extends BaseParser {
           for (int i = 0; i < resultMappings.length; i++) {
             vars.resultMappingList.add(resultMappings[i]);
           }
+
+          List nestedResultMappings = extendedResultMap.getNestedResultMappings();
+          if (nestedResultMappings != null) {
+            Iterator iter = nestedResultMappings.iterator();
+            while (iter.hasNext()) {
+              vars.currentResultMap.addNestedResultMappings((ResultMapping) iter.next());
+            }
+          }
+          
           if (groupBy == null || groupBy.length() == 0) {
             if (extendedResultMap.hasGroupBy()) {
               Iterator i = extendedResultMap.groupByProps();

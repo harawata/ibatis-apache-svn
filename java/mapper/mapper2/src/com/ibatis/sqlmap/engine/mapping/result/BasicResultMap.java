@@ -227,6 +227,10 @@ public class BasicResultMap implements ResultMap {
     nestedResultMappings.add(mapping);
   }
 
+  public List getNestedResultMappings() {
+    return nestedResultMappings;
+  }
+  
   public ResultMapping[] getResultMappings() {
     if (allowRemapping) {
       return (ResultMapping[]) remappableResultMappings.get();
