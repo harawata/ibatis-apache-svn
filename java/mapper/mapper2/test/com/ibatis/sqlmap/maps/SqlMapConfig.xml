@@ -60,5 +60,6 @@
   <sqlMap resource="${SqlMapPath}/Documents.xml"/>
   <sqlMap resource="${SqlMapPath}/Jira.xml"/>
   <sqlMap resource="${SqlMapPath}/NestedIterateStatements.xml"/>
+  <sqlMap resource="${SqlMapPath}/PrivateBook.xml"/>
 
 </sqlMapConfig>

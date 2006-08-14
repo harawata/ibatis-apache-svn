@@ -15,15 +15,16 @@
  */
 package com.ibatis.common.beans;
 
+import com.ibatis.common.logging.Log;
+import com.ibatis.common.logging.LogFactory;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.UndeclaredThrowableException;
+import java.lang.reflect.ReflectPermission;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
-
-import com.ibatis.common.logging.Log;
-import com.ibatis.common.logging.LogFactory;
 
 /**
  * This class represents a cached set of class definition information that
@@ -84,7 +85,7 @@ public class ClassInfo {
   }
 
   private void addMethods(Class cls) {
-    Method[] methods = cls.getMethods();
+    Method[] methods = getAllMethodsForClass(cls);
     for (int i = 0; i < methods.length; i++) {
       String name = methods[i].getName();
       if (name.startsWith("set") && name.length() > 3) {
@@ -112,6 +113,51 @@ public class ClassInfo {
         }
       }
       name = null;
+    }
+  }
+
+  private Method[] getAllMethodsForClass(Class cls) {
+    Set uniqueMethodNames = new HashSet();
+    List allMethods = new ArrayList();
+    Class currentClass = cls;
+    while (currentClass != null) {
+      addMethods(currentClass, uniqueMethodNames, allMethods);
+      Class[] interfaces = currentClass.getInterfaces();
+      for (int i=0; i<interfaces.length; i++) {
+        addMethods(interfaces[i], uniqueMethodNames, allMethods);
+      }
+      currentClass = currentClass.getSuperclass();
+    }
+    return (Method[]) allMethods.toArray(new Method[allMethods.size()]);
+  }
+
+  private void addMethods(Class currentClass, Set uniqueMethodNames, List allMethods) {
+    Method[] methods = currentClass.getDeclaredMethods();
+    for (int i=0; i < methods.length; i++) {
+      Method currentMethod = methods[i];
+      String methodName = currentMethod.getName() + currentMethod.getParameterTypes().length;
+      if (!uniqueMethodNames.contains(methodName)) {
+        uniqueMethodNames.add(methodName);
+        if (canAccessPrivateMethods()) {
+          try {
+            currentMethod.setAccessible(true);
+          } catch (Exception e) {
+            // Ignored. This is only a final precaution, nothing we can do.
+          }
+        }
+        allMethods.add(currentMethod);
+      }
+    }
+  }
+
+  private boolean canAccessPrivateMethods() {
+    try {
+      System.getSecurityManager().checkPermission(new ReflectPermission("suppressAccessChecks"));
+      return true;
+    } catch (SecurityException e) {
+      return false;
+    } catch (NullPointerException e) {
+      return true;
     }
   }
 

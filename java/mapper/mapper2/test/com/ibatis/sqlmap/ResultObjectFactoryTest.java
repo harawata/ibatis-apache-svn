@@ -1,8 +1,8 @@
 package com.ibatis.sqlmap;
 
-import java.util.List;
-
 import testdomain.IItem;
+
+import java.util.List;
 
 public class ResultObjectFactoryTest extends BaseSqlMapTest {
 
@@ -17,7 +17,7 @@ public class ResultObjectFactoryTest extends BaseSqlMapTest {
    * everything in the sql map is declared as an interface.
    *
    */
-  public void test01() {
+  public void testShouldDemonstrateThatTheObjectFactoryIsWorking() {
     try {
       List results =
           sqlMap.queryForList("getAllItemsROF");

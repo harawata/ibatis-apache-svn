@@ -1,9 +1,9 @@
 package com.ibatis.sqlmap;
 
-import java.util.List;
-
 import testdomain.NestedIterateParameterObject;
 import testdomain.Person;
+
+import java.util.List;
 
 public class NestedIterateTest extends BaseSqlMapTest {
 
@@ -17,7 +17,7 @@ public class NestedIterateTest extends BaseSqlMapTest {
    * 
    * This method works as expected
    */
-  public void test01() {
+  public void testShouldReturn9Rows() {
     NestedIterateParameterObject po = new NestedIterateParameterObject();
     po.addId(new Integer(1));
     po.addId(new Integer(2));

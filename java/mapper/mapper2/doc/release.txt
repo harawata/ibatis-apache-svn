@@ -10,6 +10,7 @@ Build Number: @buildNum@
  o Removed custom nested transactions (JDBC 1.4 now required)
  o Added support for ResultSet OUT params from stored procs (e.g. Oracle Ref Cursor)
  o Added support for Multiple ResultSets mapped to corresponding ResultMaps or ResultClasses.
+ o Added support for private properties.
 
  o Fixed IBATIS-320 - openSession() returns same object
  o Fixed IBATIS-325 - DateTypeHandler uses static SimpleDateFormat instance. Not thread-safe.
