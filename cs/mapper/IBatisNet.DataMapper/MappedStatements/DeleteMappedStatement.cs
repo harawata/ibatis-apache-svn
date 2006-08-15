@@ -43,7 +43,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// </summary>
 		/// <param name="sqlMap">An SqlMap</param>
 		/// <param name="statement">An SQL statement</param>
-		internal DeleteMappedStatement( SqlMapper sqlMap, IStatement statement ): base(sqlMap, statement)
+        internal DeleteMappedStatement(ISqlMapper sqlMap, IStatement statement)
+            : base(sqlMap, statement)
 		{ }
 
 		#region ExecuteQueryForMap
@@ -124,7 +125,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="parameterObject"></param>
 		/// <param name="rowDelegate"></param>
 		/// <returns></returns>
-		public override IList ExecuteQueryForRowDelegate( IDalSession session, object parameterObject, SqlMapper.RowDelegate rowDelegate )
+		public override IList ExecuteQueryForRowDelegate( IDalSession session, object parameterObject, RowDelegate rowDelegate )
 		{
 			throw new DataMapperException("Delete statements cannot be executed as a query for row delegate.");
 		}

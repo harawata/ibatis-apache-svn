@@ -101,7 +101,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <summary>
 		/// The SqlMap used by this MappedStatement
 		/// </summary>
-		public SqlMapper SqlMap
+		public ISqlMapper SqlMap
 		{
 			get {return _mappedStatement.SqlMap; }
 		}
@@ -387,7 +387,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="session">The session used to execute the statement.</param>
 		/// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
 		/// <param name="rowDelegate"></param>
-		public IList ExecuteQueryForRowDelegate(IDalSession session, object parameterObject, SqlMapper.RowDelegate rowDelegate)
+		public IList ExecuteQueryForRowDelegate(IDalSession session, object parameterObject, RowDelegate rowDelegate)
 		{
 			return _mappedStatement.ExecuteQueryForRowDelegate(session, parameterObject, rowDelegate);
 		}
@@ -400,7 +400,7 @@ namespace IBatisNet.DataMapper.MappedStatements
         /// <param name="session">The session used to execute the statement.</param>
         /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
         /// <param name="rowDelegate"></param>
-        public IList<T> ExecuteQueryForRowDelegate<T>(IDalSession session, object parameterObject, SqlMapper.RowDelegate<T> rowDelegate)
+        public IList<T> ExecuteQueryForRowDelegate<T>(IDalSession session, object parameterObject, RowDelegate<T> rowDelegate)
         {
             return _mappedStatement.ExecuteQueryForRowDelegate<T>(session, parameterObject, rowDelegate);
         }
@@ -417,7 +417,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="rowDelegate"></param>
 		/// <returns>A hashtable of object containing the rows keyed by keyProperty.</returns>
 		/// <exception cref="IBatisNet.DataMapper.Exceptions.DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
-		public IDictionary ExecuteQueryForMapWithRowDelegate(IDalSession session, object parameterObject, string keyProperty, string valueProperty, SqlMapper.DictionaryRowDelegate rowDelegate)
+		public IDictionary ExecuteQueryForMapWithRowDelegate(IDalSession session, object parameterObject, string keyProperty, string valueProperty, DictionaryRowDelegate rowDelegate)
 		{
 			return _mappedStatement.ExecuteQueryForMapWithRowDelegate(session, parameterObject, keyProperty, valueProperty, rowDelegate);
 		}

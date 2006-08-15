@@ -64,7 +64,7 @@ namespace IBatisNet.DataMapper.Scope
 		private bool _validateSqlMap = false;
 		private bool _isCallFromDao = false;
 
-		private SqlMapper _sqlMapper = null;
+        private ISqlMapper _sqlMapper = null;
 		private string _sqlMapNamespace = null;
 		private DataSource _dataSource = null;
 		private bool _isXmlValid = true;
@@ -128,7 +128,7 @@ namespace IBatisNet.DataMapper.Scope
 		/// <summary>
 		/// The SqlMapper we are building.
 		/// </summary>
-		public SqlMapper SqlMapper
+		public ISqlMapper SqlMapper
 		{
 			set { _sqlMapper = value; }
 			get { return _sqlMapper; }

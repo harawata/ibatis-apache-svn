@@ -76,7 +76,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 		private static readonly ILog _logger = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
 		private IStatement _statement = null;
-		private SqlMapper _sqlMap = null;
+        private ISqlMapper _sqlMap = null;
 		private IPreparedCommand _preparedCommand = null;
 		private IResultStrategy _resultStrategy = null;
 		private ReaderAutoMapper _readerAutoMapper = null;
@@ -122,7 +122,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <summary>
 		/// The SqlMap used by this MappedStatement
 		/// </summary>
-		public SqlMapper SqlMap
+        public ISqlMapper SqlMap
 		{
 			get { return _sqlMap; }
 		}
@@ -134,7 +134,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// </summary>
 		/// <param name="sqlMap">An SqlMap</param>
 		/// <param name="statement">An SQL statement</param>
-		internal MappedStatement( SqlMapper sqlMap, IStatement statement )
+		internal MappedStatement( ISqlMapper sqlMap, IStatement statement )
 		{
 			_sqlMap = sqlMap;
 			_statement = statement;
@@ -379,7 +379,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="session">The session used to execute the statement.</param>
 		/// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
 		/// <param name="rowDelegate"></param>
-		public virtual IList ExecuteQueryForRowDelegate( IDalSession session, object parameterObject, SqlMapper.RowDelegate rowDelegate )
+		public virtual IList ExecuteQueryForRowDelegate( IDalSession session, object parameterObject, RowDelegate rowDelegate )
 		{
 			RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
 
@@ -404,7 +404,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="rowDelegate"></param>
 		/// <returns>A hashtable of object containing the rows keyed by keyProperty.</returns>
 		///<exception cref="DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
-		public virtual IDictionary ExecuteQueryForMapWithRowDelegate( IDalSession session, object parameterObject, string keyProperty, string valueProperty, SqlMapper.DictionaryRowDelegate rowDelegate )
+		public virtual IDictionary ExecuteQueryForMapWithRowDelegate( IDalSession session, object parameterObject, string keyProperty, string valueProperty, DictionaryRowDelegate rowDelegate )
 		{
 			RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
 
@@ -463,7 +463,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="maxResults">The maximum number of rows to return.</param>
 		/// <param name="rowDelegate"></param>
 		/// <returns>A List of result objects.</returns>
-		internal IList RunQueryForList(RequestScope request, IDalSession session, object parameterObject, int skipResults, int maxResults,  SqlMapper.RowDelegate rowDelegate)
+		internal IList RunQueryForList(RequestScope request, IDalSession session, object parameterObject, int skipResults, int maxResults,  RowDelegate rowDelegate)
 		{
 			IList list = null;
 
@@ -587,7 +587,7 @@ namespace IBatisNet.DataMapper.MappedStatements
         /// <param name="session">The session used to execute the statement.</param>
         /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
         /// <param name="rowDelegate"></param>
-        public virtual IList<T> ExecuteQueryForRowDelegate<T>(IDalSession session, object parameterObject, SqlMapper.RowDelegate<T> rowDelegate)
+        public virtual IList<T> ExecuteQueryForRowDelegate<T>(IDalSession session, object parameterObject, RowDelegate<T> rowDelegate)
         {
             RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
 
@@ -646,7 +646,7 @@ namespace IBatisNet.DataMapper.MappedStatements
         /// <param name="maxResults">The maximum number of rows to return.</param>
         /// <param name="rowDelegate"></param>
         /// <returns>A List of result objects.</returns>
-        internal IList<T> RunQueryForList<T>(RequestScope request, IDalSession session, object parameterObject, int skipResults, int maxResults, SqlMapper.RowDelegate<T> rowDelegate)
+        internal IList<T> RunQueryForList<T>(RequestScope request, IDalSession session, object parameterObject, int skipResults, int maxResults, RowDelegate<T> rowDelegate)
         {
             IList<T> list = null;
 
@@ -917,7 +917,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 			object parameterObject, 
 			string keyProperty, 
 			string valueProperty, 
-			SqlMapper.DictionaryRowDelegate rowDelegate  )
+			DictionaryRowDelegate rowDelegate  )
 		{
 			IDictionary map = new Hashtable();
 

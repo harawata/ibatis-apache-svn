@@ -114,6 +114,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Delegates.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Enumeration.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

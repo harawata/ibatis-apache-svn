@@ -58,32 +58,6 @@ namespace IBatisNet.DataMapper
 	/// </summary>
 	public class SqlMapper : ISqlMapper
 	{
-		/// <summary>
-		/// A delegate called once per row in the QueryWithRowDelegate method
-		/// </summary>
-		/// <param name="obj">The object currently being processed.</param>
-		/// <param name="parameterObject">The optional parameter object passed into the QueryWithRowDelegate method.</param>
-		/// <param name="list">The IList that will be returned to the caller.</param>
-		public delegate void RowDelegate(object obj, object parameterObject, IList list);
-
-#if dotnet2
-        /// <summary>
-        /// A delegate called once per row in the QueryWithRowDelegate method
-        /// </summary>
-        /// <param name="obj">The object currently being processed.</param>
-        /// <param name="parameterObject">The optional parameter object passed into the QueryWithRowDelegate method.</param>
-        /// <param name="list">The IList that will be returned to the caller.</param>
-        public delegate void RowDelegate<T>(object obj, object parameterObject, IList<T> list);
-#endif
-
-		/// <summary>
-		/// A delegate called once per row in the QueryForMapWithRowDelegate method
-		/// </summary>
-		/// <param name="key"></param>
-		/// <param name="value"></param>
-		/// <param name="parameterObject">The optional parameter object passed into the QueryForMapWithRowDelegate method.</param>
-		/// <param name="dictionary">The IDictionary that will be returned to the caller.</param>
-		public delegate void DictionaryRowDelegate(object key, object value, object parameterObject, IDictionary dictionary);
 
 		#region Fields
 		//(MappedStatement Name, MappedStatement)
@@ -134,18 +108,9 @@ namespace IBatisNet.DataMapper
 		}
 
 		/// <summary>
-		/// A flag that determines whether cache models were enabled 
-		/// when this SqlMap was built.
-		/// </summary>
-		public bool IsCacheModelsEnabled
-		{
-			get { return _cacheModelsEnabled; }
-		}
-
-		/// <summary>
 		/// Factory for DataExchange objects
 		/// </summary>
-		internal DataExchangeFactory DataExchangeFactory
+        public DataExchangeFactory DataExchangeFactory
 		{
 			get { return _dataExchangeFactory; }
 		}
@@ -153,7 +118,7 @@ namespace IBatisNet.DataMapper
 		/// <summary>
 		/// The TypeHandlerFactory
 		/// </summary>
-		internal TypeHandlerFactory TypeHandlerFactory
+        public TypeHandlerFactory TypeHandlerFactory
 		{
 			get { return _typeHandlerFactory; }
 		}
@@ -161,7 +126,7 @@ namespace IBatisNet.DataMapper
         /// <summary>
         /// The meta factory for object factory
         /// </summary>
-        internal IObjectFactory ObjectFactory
+        public IObjectFactory ObjectFactory
         {
             get { return _objectFactory; }
         }
@@ -169,19 +134,20 @@ namespace IBatisNet.DataMapper
         /// <summary>
         /// The factory which build <see cref="IAccessor"/>
         /// </summary>
-        internal AccessorFactory AccessorFactory
+        public AccessorFactory AccessorFactory
         {
             get { return _accessorFactory; }
         }
 
-		/// <summary>
-		/// Set the flag to tell us if cache models were enabled
-		/// or not.
-		/// </summary>
-		internal bool CacheModelsEnabled
-		{
+        /// <summary>
+        /// A flag that determines whether cache models were enabled 
+        /// when this SqlMap was built.
+        /// </summary>
+        public bool IsCacheModelsEnabled
+        {
 			set { _cacheModelsEnabled = value; }
-		}
+            get { return _cacheModelsEnabled; }
+        }
 
 		#endregion
 
@@ -193,7 +159,7 @@ namespace IBatisNet.DataMapper
         /// </summary>
         /// <param name="objectFactory">The object factory.</param>
         /// <param name="accessorFactory">The accessor factory.</param>
-        internal SqlMapper(IObjectFactory objectFactory,
+        public SqlMapper(IObjectFactory objectFactory,
             AccessorFactory accessorFactory) 
 		{
             _typeHandlerFactory = new TypeHandlerFactory();
@@ -323,7 +289,7 @@ namespace IBatisNet.DataMapper
 			{
 				throw new DataMapperException("SqlMap could not invoke OpenConnection(). A connection is already started. Call CloseConnection first.");
 			}
-			IDalSession session = CreateSession();
+            IDalSession session = CreateSqlMapSession();
 			_sessionHolder.Store(session);
 			session.OpenConnection();
 			return session;
@@ -339,7 +305,7 @@ namespace IBatisNet.DataMapper
 			{
 				throw new DataMapperException("SqlMap could not invoke OpenConnection(). A connection is already started. Call CloseConnection first.");
 			}
-			IDalSession session = CreateSession();
+            IDalSession session = CreateSqlMapSession();
 			_sessionHolder.Store(session);
 			session.OpenConnection(connectionString);
 			return session;
@@ -379,7 +345,7 @@ namespace IBatisNet.DataMapper
 			{
 				throw new DataMapperException("SqlMap could not invoke BeginTransaction(). A Transaction is already started. Call CommitTransaction() or RollbackTransaction first.");
 			}
-			IDalSession session = CreateSession();
+            IDalSession session = CreateSqlMapSession();
 			_sessionHolder.Store(session);
 			session.BeginTransaction();
 			return session ;
@@ -395,7 +361,7 @@ namespace IBatisNet.DataMapper
 			{
 				throw new DataMapperException("SqlMap could not invoke BeginTransaction(). A Transaction is already started. Call CommitTransaction() or RollbackTransaction first.");
 			}
-			IDalSession session = CreateSession();
+            IDalSession session = CreateSqlMapSession();
 			_sessionHolder.Store(session);
 			session.BeginTransaction( connectionString );
 			return session ;
@@ -438,7 +404,7 @@ namespace IBatisNet.DataMapper
 			{
 				throw new DataMapperException("SqlMap could not invoke BeginTransaction(). A Transaction is already started. Call CommitTransaction() or RollbackTransaction first.");
 			}
-			IDalSession session = CreateSession();
+            IDalSession session = CreateSqlMapSession();
 			_sessionHolder.Store(session);
 			session.BeginTransaction(isolationLevel);
 			return session;
@@ -455,7 +421,7 @@ namespace IBatisNet.DataMapper
 			{
 				throw new DataMapperException("SqlMap could not invoke BeginTransaction(). A Transaction is already started. Call CommitTransaction() or RollbackTransaction first.");
 			}
-			IDalSession session = CreateSession();
+            IDalSession session = CreateSqlMapSession();
 			_sessionHolder.Store(session);
 			session.BeginTransaction( connectionString, isolationLevel);
 			return session;
@@ -632,7 +598,7 @@ namespace IBatisNet.DataMapper
  
 			if (session == null) 
 			{
-				session = CreateSession();
+                session = CreateSqlMapSession();
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -673,7 +639,7 @@ namespace IBatisNet.DataMapper
  
 			if (session == null) 
 			{
-				session = CreateSession();
+                session = CreateSqlMapSession();
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -850,7 +816,7 @@ namespace IBatisNet.DataMapper
  
 			if (session == null) 
 			{
-				session = CreateSession();
+                session = CreateSqlMapSession();
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -897,7 +863,7 @@ namespace IBatisNet.DataMapper
  
 			if (session == null) 
 			{
-				session = CreateSession();
+                session = CreateSqlMapSession();
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -941,7 +907,7 @@ namespace IBatisNet.DataMapper
  
 			if (session == null) 
 			{
-				session = CreateSession();
+                session = CreateSqlMapSession();
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -990,7 +956,7 @@ namespace IBatisNet.DataMapper
 
 			if (session == null) 
 			{
-				session = CreateSession();
+                session = CreateSqlMapSession();
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -1189,7 +1155,7 @@ namespace IBatisNet.DataMapper
  
 			if (session == null) 
 			{
-				session = CreateSession();
+                session = CreateSqlMapSession();
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -1282,7 +1248,7 @@ namespace IBatisNet.DataMapper
  
 			if (session == null) 
 			{
-				session = CreateSession();
+                session = CreateSqlMapSession();
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -1335,7 +1301,7 @@ namespace IBatisNet.DataMapper
  
 			if (session == null) 
 			{
-				session = CreateSession();
+                session = CreateSqlMapSession();
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -1380,7 +1346,7 @@ namespace IBatisNet.DataMapper
 
 			if (session == null) 
 			{
-				session = CreateSession();
+                session = CreateSqlMapSession();
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -1420,7 +1386,7 @@ namespace IBatisNet.DataMapper
 
 			if (session == null) 
 			{
-				session = CreateSession();
+                session = CreateSqlMapSession();
 				session.OpenConnection();
 				isSessionLocal = true;
 			}
@@ -1468,7 +1434,7 @@ namespace IBatisNet.DataMapper
 		/// </summary>
 		/// <param name="key"> The key name</param>
 		/// <param name="mappedStatement">The statement to add</param>
-		internal void AddMappedStatement(string key, IMappedStatement mappedStatement) 
+		public void AddMappedStatement(string key, IMappedStatement mappedStatement) 
 		{
 			if (_mappedStatements.Contains(key) == true) 
 			{
@@ -1480,7 +1446,7 @@ namespace IBatisNet.DataMapper
 		/// <summary>
 		/// The MappedStatements collection
 		/// </summary>
-		internal HybridDictionary MappedStatements
+        public HybridDictionary MappedStatements
 		{
 			get { return _mappedStatements; }
 		}
@@ -1490,7 +1456,7 @@ namespace IBatisNet.DataMapper
 		/// </summary>
 		/// <param name="name">The name of the ParameterMap</param>
 		/// <returns>The ParameterMap</returns>
-		internal ParameterMap GetParameterMap(string name) 
+		public ParameterMap GetParameterMap(string name) 
 		{
 			if (!_parameterMaps.Contains(name)) 
 			{
@@ -1503,7 +1469,7 @@ namespace IBatisNet.DataMapper
 		/// Adds a (named) ParameterMap.
 		/// </summary>
 		/// <param name="parameterMap">the ParameterMap to add</param>
-		internal void AddParameterMap(ParameterMap parameterMap) 
+        public void AddParameterMap(ParameterMap parameterMap) 
 		{
 			if (_parameterMaps.Contains(parameterMap.Id) == true) 
 			{
@@ -1517,7 +1483,7 @@ namespace IBatisNet.DataMapper
 		/// </summary>
 		/// <param name="name">The name of the result map</param>
 		/// <returns>The ResultMap</returns>
-		internal ResultMap GetResultMap(string name) 
+        public ResultMap GetResultMap(string name) 
 		{
 			if (_resultMaps.Contains(name) == false) 
 			{
@@ -1530,7 +1496,7 @@ namespace IBatisNet.DataMapper
 		/// Adds a (named) ResultMap
 		/// </summary>
 		/// <param name="resultMap">The ResultMap to add</param>
-		internal void AddResultMap(ResultMap resultMap) 
+        public void AddResultMap(ResultMap resultMap) 
 		{
 			if (_resultMaps.Contains(resultMap.Id) == true) 
 			{
@@ -1542,7 +1508,7 @@ namespace IBatisNet.DataMapper
 		/// <summary>
 		/// The ParameterMap collection
 		/// </summary>
-		internal HybridDictionary ParameterMaps
+		public HybridDictionary ParameterMaps
 		{
 			get { return _parameterMaps; }
 		}
@@ -1550,7 +1516,7 @@ namespace IBatisNet.DataMapper
 		/// <summary>
 		/// The ResultMap collection
 		/// </summary>
-		internal HybridDictionary ResultMaps
+        public HybridDictionary ResultMaps
 		{
 			get { return _resultMaps; }
 		}
@@ -1580,7 +1546,7 @@ namespace IBatisNet.DataMapper
 		/// Adds a (named) cache.
 		/// </summary>
 		/// <param name="cache">The cache to add</param>
-		internal void AddCache(CacheModel cache) 
+		public void AddCache(CacheModel cache) 
 		{
 			if (_cacheMaps.Contains(cache.Id)) 
 			{
@@ -1594,7 +1560,7 @@ namespace IBatisNet.DataMapper
 		/// </summary>
 		/// <param name="name">The name of the cache to get</param>
 		/// <returns>The cache object</returns>
-		internal CacheModel GetCache(string name) 
+        public CacheModel GetCache(string name) 
 		{
 			if (!_cacheMaps.Contains(name)) 
 			{
@@ -1655,8 +1621,8 @@ namespace IBatisNet.DataMapper
 		/// <summary>
 		/// Creates a new IDalSession that will be used to query the data source.
 		/// </summary>
-		/// <returns></returns>
-		protected IDalSession CreateSession()
+		/// <returns>A new session</returns>
+        public IDalSession CreateSqlMapSession()
 		{
 			return new SqlMapSession(this);
 		}

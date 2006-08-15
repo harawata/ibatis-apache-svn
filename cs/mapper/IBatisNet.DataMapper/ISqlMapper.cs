@@ -23,16 +23,23 @@
  ********************************************************************************/
 #endregion
 
-using System;
 using System.Collections;
 #if dotnet2
 using System.Collections.Generic;
 #endif
+using System.Collections.Specialized;
 using System.Data;
 
 using IBatisNet.Common;
+using IBatisNet.Common.Utilities.Objects;
+using IBatisNet.Common.Utilities.Objects.Members;
+using IBatisNet.DataMapper.Configuration.Cache;
+using IBatisNet.DataMapper.Configuration.ParameterMapping;
+using IBatisNet.DataMapper.Configuration.ResultMapping;
+using IBatisNet.DataMapper.DataExchange;
 using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.MappedStatements;
+using IBatisNet.DataMapper.TypeHandlers;
 
 namespace IBatisNet.DataMapper
 {
@@ -49,6 +56,106 @@ namespace IBatisNet.DataMapper
         /// 	<c>true</c> if this instance is session started; otherwise, <c>false</c>.
         /// </value>
         bool IsSessionStarted { get; }
+        
+        /// <summary>
+        ///  Returns the DalSession instance 
+        ///  currently being used by the SqlMap.
+        /// </summary>
+        IDalSession LocalSession { get; }
+
+        /// <summary>
+        /// Creates a new IDalSession that will be used to query the data source.
+        /// </summary>
+        /// <returns>A new session</returns>
+        IDalSession CreateSqlMapSession();
+        
+        /// <summary>
+        /// A flag that determines whether cache models were enabled 
+        /// when this SqlMap was built.
+        /// </summary>
+        bool IsCacheModelsEnabled { get;set; }
+        
+        /// <summary>
+		/// Factory for DataExchange objects
+		/// </summary>
+        DataExchangeFactory DataExchangeFactory { get; }
+        
+        /// <summary>
+		/// The TypeHandlerFactory
+		/// </summary>
+        TypeHandlerFactory TypeHandlerFactory { get; }
+		
+        /// <summary>
+        /// The meta factory for object factory
+        /// </summary>
+        IObjectFactory ObjectFactory { get; }
+        
+        /// <summary>
+        /// The factory which build <see cref="IAccessor"/>
+        /// </summary>
+        AccessorFactory AccessorFactory { get; }
+        
+        /// <summary>
+		/// Get a ParameterMap by name
+		/// </summary>
+		/// <param name="name">The name of the ParameterMap</param>
+		/// <returns>The ParameterMap</returns>
+        ParameterMap GetParameterMap(string name); 
+        
+        /// <summary>
+		/// Adds a (named) ParameterMap.
+		/// </summary>
+		/// <param name="parameterMap">the ParameterMap to add</param>
+        void AddParameterMap(ParameterMap parameterMap);
+        
+        /// <summary>
+		/// Gets a ResultMap by name
+		/// </summary>
+		/// <param name="name">The name of the result map</param>
+		/// <returns>The ResultMap</returns>
+        ResultMap GetResultMap(string name);
+        
+        /// <summary>
+		/// Adds a (named) ResultMap
+		/// </summary>
+		/// <param name="resultMap">The ResultMap to add</param>
+        void AddResultMap(ResultMap resultMap);
+        
+        /// <summary>
+		/// The ParameterMap collection
+		/// </summary>
+        HybridDictionary ParameterMaps { get; }
+        
+        /// <summary>
+		/// The ResultMap collection
+		/// </summary>
+        HybridDictionary ResultMaps { get; }
+        
+        /// <summary>
+		/// The MappedStatements collection
+		/// </summary>
+        HybridDictionary MappedStatements { get; }
+        
+        /// <summary>
+		/// Gets a cache by name
+		/// </summary>
+		/// <param name="name">The name of the cache to get</param>
+		/// <returns>The cache object</returns>
+        CacheModel GetCache(string name);
+        
+        /// <summary>
+		/// Adds a (named) cache.
+		/// </summary>
+		/// <param name="cache">The cache to add</param>
+        void AddCache(CacheModel cache);
+        
+        /// <summary>
+		/// Adds a (named) MappedStatement.
+		/// </summary>
+		/// <param name="key"> The key name</param>
+		/// <param name="mappedStatement">The statement to add</param>
+        void AddMappedStatement(string key, IMappedStatement mappedStatement);
+        
         /// <summary>
         /// Begins the transaction.
         /// </summary>
@@ -169,12 +276,6 @@ namespace IBatisNet.DataMapper
         object Insert(string statementName, object parameterObject);
 
         /// <summary>
-        ///  Returns the DalSession instance 
-        ///  currently being used by the SqlMap.
-        /// </summary>
-        IDalSession LocalSession { get; }
-
-        /// <summary>
         /// Opens the connection.
         /// </summary>
         /// <returns></returns>
@@ -284,7 +385,7 @@ namespace IBatisNet.DataMapper
         /// <param name="rowDelegate"></param>
         /// <returns>A IDictionary (Hashtable) of object containing the rows keyed by keyProperty.</returns>
         ///<exception cref="DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
-        IDictionary QueryForMapWithRowDelegate(string statementName, object parameterObject, string keyProperty, string valueProperty, SqlMapper.DictionaryRowDelegate rowDelegate);
+        IDictionary QueryForMapWithRowDelegate(string statementName, object parameterObject, string keyProperty, string valueProperty, DictionaryRowDelegate rowDelegate);
 
         /// <summary>
         /// Executes a Sql SELECT statement that returns a single object of the type of the
@@ -329,7 +430,7 @@ namespace IBatisNet.DataMapper
         /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
         /// <param name="rowDelegate"></param>
         /// <returns>A List of result objects.</returns>
-        IList QueryWithRowDelegate(string statementName, object parameterObject, SqlMapper.RowDelegate rowDelegate);
+        IList QueryWithRowDelegate(string statementName, object parameterObject, RowDelegate rowDelegate);
         
         /// <summary>
         /// Rolls the back transaction.
@@ -428,7 +529,7 @@ namespace IBatisNet.DataMapper
         /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
         /// <param name="rowDelegate"></param>
         /// <returns>A List of result objects.</returns>
-        IList<T> QueryWithRowDelegate<T>(string statementName, object parameterObject, SqlMapper.RowDelegate<T> rowDelegate);
+        IList<T> QueryWithRowDelegate<T>(string statementName, object parameterObject, RowDelegate<T> rowDelegate);
 
 #endif
     }

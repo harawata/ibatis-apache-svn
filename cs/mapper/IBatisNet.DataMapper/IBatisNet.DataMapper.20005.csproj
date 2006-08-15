@@ -453,6 +453,7 @@
     <Compile Include="DataExchange\IDataExchange.cs" />
     <Compile Include="DataExchange\ListDataExchange.cs" />
     <Compile Include="DataExchange\PrimitiveDataExchange.cs" />
+    <Compile Include="Delegates.cs" />
     <Compile Include="Enumeration.cs">
       <SubType>Code</SubType>
     </Compile>

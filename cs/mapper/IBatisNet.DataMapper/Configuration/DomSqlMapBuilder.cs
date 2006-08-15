@@ -293,6 +293,7 @@ namespace IBatisNet.DataMapper.Configuration
         private IObjectFactory _objectFactory = null;
         private ISetAccessorFactory _setAccessorFactory = null;
         private IGetAccessorFactory _getAccessorFactory = null;
+	    private ISqlMapper _sqlMapper = null;
         private bool _validateSqlMapConfig = true;
         private NameValueCollection _properties = new NameValueCollection();
 
@@ -335,6 +336,15 @@ namespace IBatisNet.DataMapper.Configuration
             set { _objectFactory = value; }
         }
 
+        /// <summary>
+        /// Allow to set a custom object ISqlMapper, see <see cref="ISqlMapper"/> 
+        /// before configuration
+        /// </summary>
+        public ISqlMapper SqlMapper
+        {
+            set { _sqlMapper = value; }
+        }
+	    
         /// <summary>
         /// Enable whether or not the validation of configuration document
         /// before configuration
@@ -762,10 +772,17 @@ namespace IBatisNet.DataMapper.Configuration
             {
                 _getAccessorFactory = new GetAccessorFactory(_configScope.UseReflectionOptimizer);
             }
-            AccessorFactory accessorFactory = new AccessorFactory(_setAccessorFactory, _getAccessorFactory);
-
-            _configScope.SqlMapper = new SqlMapper(_objectFactory, accessorFactory);
-			_configScope.SqlMapper.CacheModelsEnabled =_configScope.IsCacheModelsEnabled;
+		    if (_sqlMapper == null)
+		    {
+                AccessorFactory accessorFactory = new AccessorFactory(_setAccessorFactory, _getAccessorFactory);
+                _configScope.SqlMapper = new SqlMapper(_objectFactory, accessorFactory);
+		    }
+		    else
+		    {
+                _configScope.SqlMapper = _sqlMapper;
+		    }
+		    
+            _configScope.SqlMapper.IsCacheModelsEnabled = _configScope.IsCacheModelsEnabled;
 
 			#region Cache Alias
 

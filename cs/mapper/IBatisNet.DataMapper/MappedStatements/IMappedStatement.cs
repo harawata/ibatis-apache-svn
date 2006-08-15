@@ -97,7 +97,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <summary>
 		/// The SqlMap used by this MappedStatement
 		/// </summary>
-		SqlMapper SqlMap
+        ISqlMapper SqlMap
 		{
 			get;
 		}
@@ -263,7 +263,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
 		/// <param name="rowDelegate"></param>param>
 		/// <returns></returns>
-		IList ExecuteQueryForRowDelegate( IDalSession session, object parameterObject, SqlMapper.RowDelegate rowDelegate );
+		IList ExecuteQueryForRowDelegate( IDalSession session, object parameterObject, RowDelegate rowDelegate );
 
  
 		/// <summary>
@@ -277,7 +277,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="rowDelegate"></param>
 		/// <returns>A hashtable of object containing the rows keyed by keyProperty.</returns>
 		/// <exception cref="IBatisNet.DataMapper.Exceptions.DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
-		IDictionary ExecuteQueryForMapWithRowDelegate( IDalSession session, object parameterObject, string keyProperty, string valueProperty, SqlMapper.DictionaryRowDelegate rowDelegate );
+		IDictionary ExecuteQueryForMapWithRowDelegate( IDalSession session, object parameterObject, string keyProperty, string valueProperty, DictionaryRowDelegate rowDelegate );
 
 		#endregion 
 		
@@ -291,7 +291,7 @@ namespace IBatisNet.DataMapper.MappedStatements
         /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
         /// <param name="rowDelegate"></param>param>
         /// <returns></returns>
-        IList<T> ExecuteQueryForRowDelegate<T>(IDalSession session, object parameterObject, SqlMapper.RowDelegate<T> rowDelegate);
+        IList<T> ExecuteQueryForRowDelegate<T>(IDalSession session, object parameterObject, RowDelegate<T> rowDelegate);
 #endif
         #endregion
     }

@@ -43,7 +43,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// </summary>
 		/// <param name="sqlMap">An SqlMap</param>
 		/// <param name="statement">An SQL statement</param>
-		internal UpdateMappedStatement( SqlMapper sqlMap, IStatement statement ): base(sqlMap, statement)
+        internal UpdateMappedStatement(ISqlMapper sqlMap, IStatement statement)
+            : base(sqlMap, statement)
 		{ }
 
 		#region ExecuteQueryForMap
@@ -126,7 +127,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="parameterObject"></param>
 		/// <param name="rowDelegate"></param>
 		/// <returns></returns>
-		public override IList ExecuteQueryForRowDelegate( IDalSession session, object parameterObject, SqlMapper.RowDelegate rowDelegate )
+		public override IList ExecuteQueryForRowDelegate( IDalSession session, object parameterObject, RowDelegate rowDelegate )
 		{
 			throw new DataMapperException("Update statement cannot be executed as a query for row delegate.");
 		}
@@ -142,7 +143,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="rowDelegate"></param>
 		/// <returns>A hashtable of object containing the rows keyed by keyProperty.</returns>
 		///<exception cref="DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
-		public override IDictionary ExecuteQueryForMapWithRowDelegate( IDalSession session, object parameterObject, string keyProperty, string valueProperty, SqlMapper.DictionaryRowDelegate rowDelegate )
+		public override IDictionary ExecuteQueryForMapWithRowDelegate( IDalSession session, object parameterObject, string keyProperty, string valueProperty, DictionaryRowDelegate rowDelegate )
 		{
 			throw new DataMapperException("Update statement cannot be executed as a query for row delegate.");
 		}

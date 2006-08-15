@@ -1,7 +1,16 @@
 IBatisNet Change Log
 
 ------------------------------
-1.5.1 - 27/07/2006 BETA
+1.6.0 - BETA
+------------------------------
+Issues
+ 
+
+Improvements/Changes
+- IBATISNET-180 : Extends use of ISqlMapper in DataMapper + allow use of a custom ISqlMapper
+
+------------------------------
+1.5.1 - 10/08/2006 GA
 ------------------------------
 Issues
 - IBATISNET-176 : Issue with resultMapping & constructor injection  

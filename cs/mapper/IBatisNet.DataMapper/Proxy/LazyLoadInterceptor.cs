@@ -31,9 +31,7 @@ using System.Collections;
 using System.Reflection;
 using Castle.DynamicProxy;
 using IBatisNet.Common.Logging;
-using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.Common.Utilities.Objects.Members;
-using IBatisNet.Common.Utilities.Proxy;
 using IBatisNet.DataMapper.MappedStatements;
 #if dotnet2
 using System.Collections.Generic;
@@ -53,7 +51,7 @@ namespace IBatisNet.DataMapper.Proxy
 		private object _param = null;
 		private object _target = null;
 		private ISetAccessor _setAccessor= null;
-		private SqlMapper _sqlMap = null;
+        private ISqlMapper _sqlMap = null;
 		private string _statementName = string.Empty;
 		private bool _loaded = false;
 		private IList _innerList = null;

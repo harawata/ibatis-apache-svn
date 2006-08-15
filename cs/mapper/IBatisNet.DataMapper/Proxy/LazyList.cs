@@ -43,7 +43,7 @@ namespace IBatisNet.DataMapper.Proxy
         private object _param = null;
         private object _target = null;
         private ISetAccessor _setAccessor = null;
-        private SqlMapper _sqlMap = null;
+        private ISqlMapper _sqlMap = null;
         private string _statementId = string.Empty;
         private bool _loaded = false;
         private object _loadLock = new object();
