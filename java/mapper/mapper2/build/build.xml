@@ -72,6 +72,7 @@
     <copy todir="${deploy.path}">
       <fileset dir="${res.txt}">
         <include name="**/*.txt"/>
+        <include name="simple_example/**/*"/>
       </fileset>
     </copy>
     <propertyfile file="version.properties" comment="Build version info">
