@@ -149,7 +149,7 @@ public class Abator {
             abatorContext.generateFiles(callback, generatedJavaFiles,
                     generatedXmlFiles, warnings);
         }
-
+        
         iter = generatedXmlFiles.iterator();
         while (iter.hasNext()) {
             GeneratedXmlFile gxf = (GeneratedXmlFile) iter.next();

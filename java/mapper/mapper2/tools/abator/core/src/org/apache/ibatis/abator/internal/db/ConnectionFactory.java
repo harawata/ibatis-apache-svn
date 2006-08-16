@@ -124,7 +124,7 @@ public class ConnectionFactory {
 			}
 		}
 
-		ClassLoader parent = this.getClass().getClassLoader();
+        ClassLoader parent = Thread.currentThread().getContextClassLoader();
 		URLClassLoader ucl = new URLClassLoader((URL[]) urls
 				.toArray(new URL[urls.size()]), parent);
 

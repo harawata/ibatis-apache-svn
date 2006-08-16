@@ -80,7 +80,10 @@ public class DatabaseIntrospector {
         ResultSet rs = dbmd.getColumns(localCatalog, localSchema,
                 localTableName, null);
 
+        int returnedColumns = 0;
         while (rs.next()) {
+            returnedColumns++;
+            
             ColumnDefinition cd = new ColumnDefinition(tc.getAlias());
 
             cd.setJdbcType(rs.getInt("DATA_TYPE")); //$NON-NLS-1$
@@ -177,6 +180,11 @@ public class DatabaseIntrospector {
         }
 
         rs.close();
+        
+        if (returnedColumns == 0) {
+            warnings.add(Messages.getString("Warning.19", tc.getCatalog(), //$NON-NLS-1$
+                    tc.getSchema(), tc.getTableName()));
+        }
         
         Iterator iter = introspectedTables.values().iterator();
         while (iter.hasNext()) {

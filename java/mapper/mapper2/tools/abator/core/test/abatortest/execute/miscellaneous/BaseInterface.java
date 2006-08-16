@@ -1,5 +1,5 @@
 /*
- *  Copyright 2005 The Apache Software Foundation
+ *  Copyright 2006 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,35 +13,11 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.apache.ibatis.abator.exception;
-
-import java.util.ArrayList;
-import java.util.List;
+package abatortest.execute.miscellaneous;
 
 /**
  * @author Jeff Butler
  */
-public class XMLParserException extends Exception {
+public interface BaseInterface {
 
-    private static final long serialVersionUID = 5172525430401340573L;
-    
-	private List errors;
-
-	/**
-	 *  
-	 */
-	public XMLParserException(List errors) {
-		super();
-		this.errors = errors;
-	}
-
-    public XMLParserException(String error) {
-        super(error);
-        this.errors = new ArrayList();
-        errors.add(error);
-    }
-    
-	public List getErrors() {
-		return errors;
-	}
 }

@@ -21,6 +21,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.ibatis.abator.api.Abator;
 import org.apache.ibatis.abator.config.AbatorConfiguration;
@@ -31,7 +32,9 @@ import org.apache.ibatis.abator.internal.DefaultShellCallback;
 import org.apache.ibatis.abator.internal.util.StringUtility;
 import org.apache.ibatis.abator.internal.util.messages.Messages;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.PropertySet;
 
 /**
  * This is an Ant task that will run Abator.  The following is a sample Ant
@@ -54,6 +57,7 @@ public class AbatorAntTask extends Task {
     
     private String configfile;
     private boolean overwrite;
+    private PropertySet propertyset;
 
     /**
      * 
@@ -76,9 +80,11 @@ public class AbatorAntTask extends Task {
         if (!configurationFile.exists()) {
             throw new BuildException(Messages.getString("RuntimeError.1", configfile)); //$NON-NLS-1$
         }
-
+        
         try {
-            AbatorConfigurationParser cp = new AbatorConfigurationParser(
+            Properties p = propertyset == null ? null : propertyset.getProperties();
+            
+            AbatorConfigurationParser cp = new AbatorConfigurationParser(p,
                 warnings);
             AbatorConfiguration config = cp.parseAbatorConfiguration(configurationFile);
             
@@ -86,7 +92,7 @@ public class AbatorAntTask extends Task {
             
             Abator abator = new Abator(config, callback, warnings);
             
-            abator.generate(null);
+            abator.generate(new AntProgressCallback(this));
             
         } catch (XMLParserException e) {
             List errors = e.getErrors();
@@ -109,7 +115,7 @@ public class AbatorAntTask extends Task {
         
         Iterator iter = warnings.iterator();
         while (iter.hasNext()) {
-            log((String) iter.next());
+            log((String) iter.next(), Project.MSG_WARN);
         }
     }
     
@@ -139,5 +145,13 @@ public class AbatorAntTask extends Task {
      */
     public void setOverwrite(boolean overwrite) {
         this.overwrite = overwrite;
+    }
+
+    public PropertySet createPropertyset() {
+        if (propertyset == null) {
+            propertyset = new PropertySet();
+        }
+        
+        return propertyset;
     }
 }

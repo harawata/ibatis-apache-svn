@@ -54,4 +54,12 @@ public class Messages {
             return '!' + key + '!';
         }
     }
+
+    public static String getString(String key, String parm1, String parm2, String parm3) {
+        try {
+            return MessageFormat.format(RESOURCE_BUNDLE.getString(key), new String[] {parm1, parm2, parm3});
+        } catch (MissingResourceException e) {
+            return '!' + key + '!';
+        }
+    }
 }

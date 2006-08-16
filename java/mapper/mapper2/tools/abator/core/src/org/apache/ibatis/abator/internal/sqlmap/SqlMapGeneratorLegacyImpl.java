@@ -176,16 +176,20 @@ public class SqlMapGeneratorLegacyImpl extends SqlMapGeneratorIterateImpl implem
         sb.append(table.getAliasedFullyQualifiedTableName());
         answer.addElement((new TextElement(sb.toString())));
 
+        XmlElement isParameterPresenteElement =
+            new XmlElement("isParameterPresent"); //$NON-NLS-1$
+        answer.addElement(isParameterPresenteElement);
+        
         XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
         includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
                 getSqlMapNamespace(table)
                         + "." + getExampleWhereClauseId())); //$NON-NLS-1$
-        answer.addElement(includeElement);
+        isParameterPresenteElement.addElement(includeElement);
 
         XmlElement isPropAvail = new XmlElement("isPropertyAvailable"); //$NON-NLS-1$
         isPropAvail.addAttribute(new Attribute("property", "ABATOR_ORDER_BY_CLAUSE")); //$NON-NLS-1$ //$NON-NLS-2$
         isPropAvail.addElement(new TextElement("order by $ABATOR_ORDER_BY_CLAUSE$")); //$NON-NLS-1$
-        answer.addElement(isPropAvail);
+        isParameterPresenteElement.addElement(isPropAvail);
 
         return answer;
     }
@@ -239,16 +243,20 @@ public class SqlMapGeneratorLegacyImpl extends SqlMapGeneratorIterateImpl implem
         sb.append(table.getAliasedFullyQualifiedTableName());
         answer.addElement((new TextElement(sb.toString())));
 
+        XmlElement isParameterPresenteElement =
+            new XmlElement("isParameterPresent"); //$NON-NLS-1$
+        answer.addElement(isParameterPresenteElement);
+        
         XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
         includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
                 getSqlMapNamespace(table)
                         + "." + getExampleWhereClauseId())); //$NON-NLS-1$
-        answer.addElement(includeElement);
+        isParameterPresenteElement.addElement(includeElement);
 
         XmlElement isPropAvail = new XmlElement("isPropertyAvailable"); //$NON-NLS-1$
         isPropAvail.addAttribute(new Attribute("property", "ABATOR_ORDER_BY_CLAUSE")); //$NON-NLS-1$ //$NON-NLS-2$
         isPropAvail.addElement(new TextElement("order by $ABATOR_ORDER_BY_CLAUSE$")); //$NON-NLS-1$
-        answer.addElement(isPropAvail);
+        isParameterPresenteElement.addElement(isPropAvail);
         
         return answer;
     }

@@ -20,8 +20,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -40,6 +42,8 @@ import org.apache.ibatis.abator.config.PropertyHolder;
 import org.apache.ibatis.abator.config.SqlMapGeneratorConfiguration;
 import org.apache.ibatis.abator.config.TableConfiguration;
 import org.apache.ibatis.abator.exception.XMLParserException;
+import org.apache.ibatis.abator.internal.util.StringUtility;
+import org.apache.ibatis.abator.internal.util.messages.Messages;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -56,20 +60,37 @@ public class AbatorConfigurationParser {
 
     private List parseErrors;
 
+    private Properties properties;
+
     /**
      * 
      */
     public AbatorConfigurationParser(List warnings) {
-        super();
-        this.warnings = warnings;
-        parseErrors = new ArrayList();
+        this(null, warnings);
     }
 
+    public AbatorConfigurationParser(Properties properties, List warnings) {
+        super();
+        if (properties == null) {
+            this.properties = new Properties();
+        } else {
+            this.properties = properties;
+        }
+        
+        if (warnings == null) {
+            this.warnings = new ArrayList();
+        } else {
+            this.warnings = warnings;
+        }
+        
+        parseErrors = new ArrayList();
+    }
+    
     public AbatorConfiguration parseAbatorConfiguration(File inputFile)
             throws IOException, XMLParserException {
 
         FileReader fr = new FileReader(inputFile);
-        
+
         return parseAbatorConfiguration(fr);
     }
 
@@ -85,7 +106,7 @@ public class AbatorConfigurationParser {
             throws IOException, XMLParserException {
 
         InputSource is = new InputSource(inputStream);
-        
+
         return parseAbatorConfiguration(is);
     }
 
@@ -143,7 +164,7 @@ public class AbatorConfigurationParser {
         }
     }
 
-    private AbatorConfiguration parseAbatorConfiguration(Node node) {
+    private AbatorConfiguration parseAbatorConfiguration(Node node) throws XMLParserException {
 
         AbatorConfiguration abatorConfiguration = new AbatorConfiguration();
 
@@ -155,7 +176,9 @@ public class AbatorConfigurationParser {
                 continue;
             }
 
-            if ("abatorContext".equals(childNode.getNodeName())) { //$NON-NLS-1$
+            if ("properties".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperties(abatorConfiguration, childNode);
+            } else if ("abatorContext".equals(childNode.getNodeName())) { //$NON-NLS-1$
                 parseAbatorContext(abatorConfiguration, childNode);
             }
         }
@@ -163,25 +186,64 @@ public class AbatorConfigurationParser {
         return abatorConfiguration;
     }
 
+    private void parseProperties(AbatorConfiguration abatorConfiguration,
+            Node node) throws XMLParserException {
+        Properties attributes = parseAttributes(node);
+        String resource = attributes.getProperty("resource"); //$NON-NLS-1$
+        String url = attributes.getProperty("url"); //$NON-NLS-1$
+
+        if (!StringUtility.stringHasValue(resource)
+                && !StringUtility.stringHasValue(url)) {
+            throw new XMLParserException(Messages.getString("RuntimeError.14")); //$NON-NLS-1$
+        }
+
+        if (StringUtility.stringHasValue(resource)
+                && StringUtility.stringHasValue(url)) {
+            throw new XMLParserException(Messages.getString("RuntimeError.14")); //$NON-NLS-1$
+        }
+
+        URL resourceUrl;
+
+        try {
+            if (StringUtility.stringHasValue(resource)) {
+                resourceUrl = Thread.currentThread().getContextClassLoader()
+                        .getResource(resource);
+                if (resourceUrl == null) {
+                    throw new XMLParserException(Messages.getString("RuntimeError.15", resource)); //$NON-NLS-1$
+                }
+            } else {
+                resourceUrl = new URL(url);
+            }
+
+            InputStream inputStream = resourceUrl.openConnection()
+                    .getInputStream();
+
+            properties.load(inputStream);
+            inputStream.close();
+        } catch (IOException e) {
+            if (StringUtility.stringHasValue(resource)) {
+                throw new XMLParserException(Messages.getString("RuntimeError.16", resource)); //$NON-NLS-1$
+            } else {
+                throw new XMLParserException(Messages.getString("RuntimeError.17", url)); //$NON-NLS-1$
+            }
+        }
+    }
+
     private void parseAbatorContext(AbatorConfiguration abatorConfiguration,
             Node node) {
 
-        NamedNodeMap nnm = node.getAttributes();
-        Node attribute = nnm.getNamedItem("generatorSet"); //$NON-NLS-1$
-        String generatorSet = attribute == null ? null : attribute.getNodeValue();
+        Properties attributes = parseAttributes(node);
+        String generatorSet = attributes.getProperty("generatorSet"); //$NON-NLS-1$
+        String defaultModelType = attributes.getProperty("defaultModelType"); //$NON-NLS-1$
+        String id = attributes.getProperty("id"); //$NON-NLS-1$
 
-        attribute = nnm.getNamedItem("defaultModelType"); //$NON-NLS-1$
-        String defaultModelType = attribute == null ? null : attribute.getNodeValue();
-        ModelType mt = defaultModelType == null ? null : ModelType.getModelType(defaultModelType);
-        
+        ModelType mt = defaultModelType == null ? null : ModelType
+                .getModelType(defaultModelType);
+
         AbatorContext abatorContext = new AbatorContext(generatorSet, mt);
+        abatorContext.setId(id);
 
         abatorConfiguration.addAbatorContext(abatorContext);
-
-        attribute = nnm.getNamedItem("id"); //$NON-NLS-1$
-        if (attribute != null) {
-            abatorContext.setId(attribute.getNodeValue());
-        }
 
         NodeList nodeList = node.getChildNodes();
         for (int i = 0; i < nodeList.getLength(); i++) {
@@ -215,19 +277,17 @@ public class AbatorConfigurationParser {
         abatorContext
                 .setSqlMapGeneratorConfiguration(sqlMapGeneratorConfiguration);
 
-        NamedNodeMap nnm = node.getAttributes();
+        Properties attributes = parseAttributes(node);
+        String type = attributes.getProperty("type"); //$NON-NLS-1$
+        String targetPackage = attributes.getProperty("targetPackage"); //$NON-NLS-1$
+        String targetProject = attributes.getProperty("targetProject"); //$NON-NLS-1$
 
-        Node attribute = nnm.getNamedItem("type"); //$NON-NLS-1$
-        if (attribute != null) {
-            sqlMapGeneratorConfiguration.setConfigurationType(attribute
-                    .getNodeValue());
+        if (StringUtility.stringHasValue(type)) {
+            sqlMapGeneratorConfiguration.setConfigurationType(type);
         }
 
-        attribute = nnm.getNamedItem("targetPackage"); //$NON-NLS-1$
-        sqlMapGeneratorConfiguration.setTargetPackage(attribute.getNodeValue());
-
-        attribute = nnm.getNamedItem("targetProject"); //$NON-NLS-1$
-        sqlMapGeneratorConfiguration.setTargetProject(attribute.getNodeValue());
+        sqlMapGeneratorConfiguration.setTargetPackage(targetPackage);
+        sqlMapGeneratorConfiguration.setTargetProject(targetProject);
 
         NodeList nodeList = node.getChildNodes();
         for (int i = 0; i < nodeList.getLength(); i++) {
@@ -247,74 +307,91 @@ public class AbatorConfigurationParser {
         TableConfiguration tc = new TableConfiguration(abatorContext);
         abatorContext.addTableConfiguration(tc);
 
-        NamedNodeMap nnm = node.getAttributes();
+        Properties attributes = parseAttributes(node);
+        String catalog = attributes.getProperty("catalog"); //$NON-NLS-1$
+        String schema = attributes.getProperty("schema"); //$NON-NLS-1$
+        String tableName = attributes.getProperty("tableName"); //$NON-NLS-1$
+        String domainObjectName = attributes.getProperty("domainObjectName"); //$NON-NLS-1$
+        String alias = attributes.getProperty("alias"); //$NON-NLS-1$
+        String enableInsert = attributes.getProperty("enableInsert"); //$NON-NLS-1$
+        String enableSelectByPrimaryKey = attributes
+                .getProperty("enableSelectByPrimaryKey"); //$NON-NLS-1$
+        String enableSelectByExample = attributes
+                .getProperty("enableSelectByExample"); //$NON-NLS-1$
+        String enableUpdateByPrimaryKey = attributes
+                .getProperty("enableUpdateByPrimaryKey"); //$NON-NLS-1$
+        String enableDeleteByPrimaryKey = attributes
+                .getProperty("enableDeleteByPrimaryKey"); //$NON-NLS-1$
+        String enableDeleteByExample = attributes
+                .getProperty("enableDeleteByExample"); //$NON-NLS-1$
+        String selectByPrimaryKeyQueryId = attributes
+                .getProperty("selectByPrimaryKeyQueryId"); //$NON-NLS-1$
+        String selectByExampleQueryId = attributes
+                .getProperty("selectByExampleQueryId"); //$NON-NLS-1$
+        String modelType = attributes.getProperty("modelType"); //$NON-NLS-1$
 
-        Node attribute = nnm.getNamedItem("catalog"); //$NON-NLS-1$
-        tc.setCatalog(attribute == null ? null : attribute.getNodeValue());
+        if (StringUtility.stringHasValue(catalog)) {
+            tc.setCatalog(catalog);
+        }
 
-        attribute = nnm.getNamedItem("schema"); //$NON-NLS-1$
-        tc.setSchema(attribute == null ? null : attribute.getNodeValue());
+        if (StringUtility.stringHasValue(schema)) {
+            tc.setSchema(schema);
+        }
 
-        attribute = nnm.getNamedItem("domainObjectName"); //$NON-NLS-1$
-        tc.setDomainObjectName(attribute == null ? null : attribute.getNodeValue());
+        if (StringUtility.stringHasValue(tableName)) {
+            tc.setTableName(tableName);
+        }
 
-        attribute = nnm.getNamedItem("tableName"); //$NON-NLS-1$
-        tc.setTableName(attribute.getNodeValue());
+        if (StringUtility.stringHasValue(domainObjectName)) {
+            tc.setDomainObjectName(domainObjectName);
+        }
 
-        attribute = nnm.getNamedItem("alias"); //$NON-NLS-1$
-        tc.setAlias(attribute == null ? null : attribute.getNodeValue());
+        if (StringUtility.stringHasValue(alias)) {
+            tc.setAlias(alias);
+        }
 
-        attribute = nnm.getNamedItem("enableInsert"); //$NON-NLS-1$
-        if (attribute != null) {
+        if (StringUtility.stringHasValue(enableInsert)) {
             tc.setInsertStatementEnabled("true" //$NON-NLS-1$
-                    .equals(attribute.getNodeValue()));
+                    .equals(enableInsert));
         }
 
-        attribute = nnm.getNamedItem("enableSelectByPrimaryKey"); //$NON-NLS-1$
-        if (attribute != null) {
-            tc.setSelectByPrimaryKeyStatementEnabled("true".equals(attribute //$NON-NLS-1$
-                    .getNodeValue()));
+        if (StringUtility.stringHasValue(enableSelectByPrimaryKey)) {
+            tc.setSelectByPrimaryKeyStatementEnabled("true" //$NON-NLS-1$
+                    .equals(enableSelectByPrimaryKey));
         }
 
-        attribute = nnm.getNamedItem("enableSelectByExample"); //$NON-NLS-1$
-        if (attribute != null) {
-            tc.setSelectByExampleStatementEnabled("true".equals(attribute //$NON-NLS-1$
-                    .getNodeValue()));
+        if (StringUtility.stringHasValue(enableSelectByExample)) {
+            tc.setSelectByExampleStatementEnabled("true" //$NON-NLS-1$
+                    .equals(enableSelectByExample));
         }
 
-        attribute = nnm.getNamedItem("enableUpdateByPrimaryKey"); //$NON-NLS-1$
-        if (attribute != null) {
-            tc.setUpdateByPrimaryKeyStatementEnabled("true".equals(attribute //$NON-NLS-1$
-                    .getNodeValue()));
+        if (StringUtility.stringHasValue(enableUpdateByPrimaryKey)) {
+            tc.setUpdateByPrimaryKeyStatementEnabled("true" //$NON-NLS-1$
+                    .equals(enableUpdateByPrimaryKey));
         }
 
-        attribute = nnm.getNamedItem("enableDeleteByPrimaryKey"); //$NON-NLS-1$
-        if (attribute != null) {
-            tc.setDeleteByPrimaryKeyStatementEnabled("true".equals(attribute //$NON-NLS-1$
-                    .getNodeValue()));
+        if (StringUtility.stringHasValue(enableDeleteByPrimaryKey)) {
+            tc.setDeleteByPrimaryKeyStatementEnabled("true" //$NON-NLS-1$
+                    .equals(enableDeleteByPrimaryKey));
         }
 
-        attribute = nnm.getNamedItem("enableDeleteByExample"); //$NON-NLS-1$
-        if (attribute != null) {
-            tc.setDeleteByExampleStatementEnabled("true".equals(attribute //$NON-NLS-1$
-                    .getNodeValue()));
+        if (StringUtility.stringHasValue(enableDeleteByExample)) {
+            tc.setDeleteByExampleStatementEnabled("true" //$NON-NLS-1$
+                    .equals(enableDeleteByExample));
         }
 
-        attribute = nnm.getNamedItem("selectByPrimaryKeyQueryId"); //$NON-NLS-1$
-        if (attribute != null) {
-            tc.setSelectByPrimaryKeyQueryId(attribute.getNodeValue());
+        if (StringUtility.stringHasValue(selectByPrimaryKeyQueryId)) {
+            tc.setSelectByPrimaryKeyQueryId(selectByPrimaryKeyQueryId);
         }
 
-        attribute = nnm.getNamedItem("selectByExampleQueryId"); //$NON-NLS-1$
-        if (attribute != null) {
-            tc.setSelectByExampleQueryId(attribute.getNodeValue());
+        if (StringUtility.stringHasValue(selectByExampleQueryId)) {
+            tc.setSelectByExampleQueryId(selectByExampleQueryId);
         }
 
-        attribute = nnm.getNamedItem("modelType"); //$NON-NLS-1$
-        if (attribute != null) {
-            tc.setModelType(ModelType.getModelType(attribute.getNodeValue()));
+        if (StringUtility.stringHasValue(modelType)) {
+            tc.setModelType(ModelType.getModelType(modelType));
         }
-        
+
         NodeList nodeList = node.getChildNodes();
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node childNode = nodeList.item(i);
@@ -336,52 +413,52 @@ public class AbatorConfigurationParser {
     }
 
     private void parseColumnOverride(TableConfiguration tc, Node node) {
-        NamedNodeMap nnm = node.getAttributes();
+        Properties attributes = parseAttributes(node);
+        String column = attributes.getProperty("column"); //$NON-NLS-1$
+        String property = attributes.getProperty("property"); //$NON-NLS-1$
+        String javaType = attributes.getProperty("javaType"); //$NON-NLS-1$
+        String jdbcType = attributes.getProperty("jdbcType"); //$NON-NLS-1$
+        String typeHandler = attributes.getProperty("typeHandler"); //$NON-NLS-1$
 
         ColumnOverride co = new ColumnOverride();
 
-        Node attribute = nnm.getNamedItem("column"); //$NON-NLS-1$
-        co.setColumnName(attribute.getNodeValue());
+        co.setColumnName(column);
+
+        if (StringUtility.stringHasValue(property)) {
+            co.setJavaProperty(property);
+        }
+
+        if (StringUtility.stringHasValue(javaType)) {
+            co.setJavaType(javaType);
+        }
+
+        if (StringUtility.stringHasValue(jdbcType)) {
+            co.setJdbcType(jdbcType);
+        }
+
+        if (StringUtility.stringHasValue(typeHandler)) {
+            co.setTypeHandler(typeHandler);
+        }
 
         tc.addColumnOverride(co);
-
-        attribute = nnm.getNamedItem("property"); //$NON-NLS-1$
-        if (attribute != null) {
-            co.setJavaProperty(attribute.getNodeValue());
-        }
-
-        attribute = nnm.getNamedItem("javaType"); //$NON-NLS-1$
-        if (attribute != null) {
-            co.setJavaType(attribute.getNodeValue());
-        }
-
-        attribute = nnm.getNamedItem("jdbcType"); //$NON-NLS-1$
-        if (attribute != null) {
-            co.setJdbcType(attribute.getNodeValue());
-        }
-
-        attribute = nnm.getNamedItem("typeHandler"); //$NON-NLS-1$
-        if (attribute != null) {
-            co.setTypeHandler(attribute.getNodeValue());
-        }
     }
 
     private void parseGeneratedKey(TableConfiguration tc, Node node) {
-        NamedNodeMap nnm = node.getAttributes();
+        Properties attributes = parseAttributes(node);
 
-        String column = nnm.getNamedItem("column").getNodeValue(); //$NON-NLS-1$
-        boolean identity = "true".equals(nnm.getNamedItem("identity").getNodeValue()); //$NON-NLS-1$ //$NON-NLS-2$
-        String sqlStatement = nnm.getNamedItem("sqlStatement").getNodeValue(); //$NON-NLS-1$
+        String column = attributes.getProperty("column"); //$NON-NLS-1$
+        boolean identity = "true".equals(attributes.getProperty("identity")); //$NON-NLS-1$ //$NON-NLS-2$
+        String sqlStatement = attributes.getProperty("sqlStatement"); //$NON-NLS-1$
 
         GeneratedKey gk = new GeneratedKey(column, sqlStatement, identity);
         tc.setGeneratedKey(gk);
     }
 
     private void parseIgnoreColumn(TableConfiguration tc, Node node) {
-        NamedNodeMap nnm = node.getAttributes();
+        Properties attributes = parseAttributes(node);
+        String column = attributes.getProperty("column"); //$NON-NLS-1$
 
-        Node attribute = nnm.getNamedItem("column"); //$NON-NLS-1$
-        tc.addIgnoredColumn(attribute.getNodeValue());
+        tc.addIgnoredColumn(column);
     }
 
     private void parseJavaTypeResolver(AbatorContext abatorContext, Node node) {
@@ -390,12 +467,11 @@ public class AbatorConfigurationParser {
         abatorContext
                 .setJavaTypeResolverConfiguration(javaTypeResolverConfiguration);
 
-        NamedNodeMap nnm = node.getAttributes();
+        Properties attributes = parseAttributes(node);
+        String type = attributes.getProperty("type"); //$NON-NLS-1$
 
-        Node attribute = nnm.getNamedItem("type"); //$NON-NLS-1$
-        if (attribute != null) {
-            javaTypeResolverConfiguration.setConfigurationType(attribute
-                    .getNodeValue());
+        if (StringUtility.stringHasValue(type)) {
+            javaTypeResolverConfiguration.setConfigurationType(type);
         }
 
         NodeList nodeList = node.getChildNodes();
@@ -418,21 +494,17 @@ public class AbatorConfigurationParser {
         abatorContext
                 .setJavaModelGeneratorConfiguration(javaModelGeneratorConfiguration);
 
-        NamedNodeMap nnm = node.getAttributes();
+        Properties attributes = parseAttributes(node);
+        String type = attributes.getProperty("type"); //$NON-NLS-1$
+        String targetPackage = attributes.getProperty("targetPackage"); //$NON-NLS-1$
+        String targetProject = attributes.getProperty("targetProject"); //$NON-NLS-1$
 
-        Node attribute = nnm.getNamedItem("type"); //$NON-NLS-1$
-        if (attribute != null) {
-            javaModelGeneratorConfiguration.setConfigurationType(attribute
-                    .getNodeValue());
+        if (StringUtility.stringHasValue(type)) {
+            javaModelGeneratorConfiguration.setConfigurationType(type);
         }
 
-        attribute = nnm.getNamedItem("targetPackage"); //$NON-NLS-1$
-        javaModelGeneratorConfiguration.setTargetPackage(attribute
-                .getNodeValue());
-
-        attribute = nnm.getNamedItem("targetProject"); //$NON-NLS-1$
-        javaModelGeneratorConfiguration.setTargetProject(attribute
-                .getNodeValue());
+        javaModelGeneratorConfiguration.setTargetPackage(targetPackage);
+        javaModelGeneratorConfiguration.setTargetProject(targetProject);
 
         NodeList nodeList = node.getChildNodes();
         for (int i = 0; i < nodeList.getLength(); i++) {
@@ -453,17 +525,14 @@ public class AbatorConfigurationParser {
 
         abatorContext.setDaoGeneratorConfiguration(daoGeneratorConfiguration);
 
-        NamedNodeMap nnm = node.getAttributes();
+        Properties attributes = parseAttributes(node);
+        String type = attributes.getProperty("type"); //$NON-NLS-1$
+        String targetPackage = attributes.getProperty("targetPackage"); //$NON-NLS-1$
+        String targetProject = attributes.getProperty("targetProject"); //$NON-NLS-1$
 
-        Node attribute = nnm.getNamedItem("type"); //$NON-NLS-1$
-        daoGeneratorConfiguration
-                .setConfigurationType(attribute.getNodeValue());
-
-        attribute = nnm.getNamedItem("targetPackage"); //$NON-NLS-1$
-        daoGeneratorConfiguration.setTargetPackage(attribute.getNodeValue());
-
-        attribute = nnm.getNamedItem("targetProject"); //$NON-NLS-1$
-        daoGeneratorConfiguration.setTargetProject(attribute.getNodeValue());
+        daoGeneratorConfiguration.setConfigurationType(type);
+        daoGeneratorConfiguration.setTargetPackage(targetPackage);
+        daoGeneratorConfiguration.setTargetProject(targetProject);
 
         NodeList nodeList = node.getChildNodes();
         for (int i = 0; i < nodeList.getLength(); i++) {
@@ -485,22 +554,21 @@ public class AbatorConfigurationParser {
         abatorContext
                 .setJdbcConnectionConfiguration(jdbcConnectionConfiguration);
 
-        NamedNodeMap nnm = node.getAttributes();
+        Properties attributes = parseAttributes(node);
+        String driverClass = attributes.getProperty("driverClass"); //$NON-NLS-1$
+        String connectionURL = attributes.getProperty("connectionURL"); //$NON-NLS-1$
+        String userId = attributes.getProperty("userId"); //$NON-NLS-1$
+        String password = attributes.getProperty("password"); //$NON-NLS-1$
 
-        Node attribute = nnm.getNamedItem("driverClass"); //$NON-NLS-1$
-        jdbcConnectionConfiguration.setDriverClass(attribute.getNodeValue());
+        jdbcConnectionConfiguration.setDriverClass(driverClass);
+        jdbcConnectionConfiguration.setConnectionURL(connectionURL);
 
-        attribute = nnm.getNamedItem("connectionURL"); //$NON-NLS-1$
-        jdbcConnectionConfiguration.setConnectionURL(attribute.getNodeValue());
-
-        attribute = nnm.getNamedItem("userId"); //$NON-NLS-1$
-        if (attribute != null) {
-            jdbcConnectionConfiguration.setUserId(attribute.getNodeValue());
+        if (StringUtility.stringHasValue(userId)) {
+            jdbcConnectionConfiguration.setUserId(userId);
         }
 
-        attribute = nnm.getNamedItem("password"); //$NON-NLS-1$
-        if (attribute != null) {
-            jdbcConnectionConfiguration.setPassword(attribute.getNodeValue());
+        if (StringUtility.stringHasValue(password)) {
+            jdbcConnectionConfiguration.setPassword(password);
         }
 
         NodeList nodeList = node.getChildNodes();
@@ -521,18 +589,59 @@ public class AbatorConfigurationParser {
 
     private void parseClassPathEntry(
             JDBCConnectionConfiguration jdbcConnectionConfiguration, Node node) {
-        NamedNodeMap nnm = node.getAttributes();
+        Properties attributes = parseAttributes(node);
 
-        jdbcConnectionConfiguration.addClasspathEntry(nnm.getNamedItem(
-                "location").getNodeValue()); //$NON-NLS-1$
+        jdbcConnectionConfiguration.addClasspathEntry(attributes
+                .getProperty("location")); //$NON-NLS-1$
     }
 
     private void parseProperty(PropertyHolder propertyHolder, Node node) {
-        NamedNodeMap nnm = node.getAttributes();
+        Properties attributes = parseAttributes(node);
 
-        String name = nnm.getNamedItem("name").getNodeValue(); //$NON-NLS-1$
-        String value = nnm.getNamedItem("value").getNodeValue(); //$NON-NLS-1$
+        String name = attributes.getProperty("name"); //$NON-NLS-1$
+        String value = attributes.getProperty("value"); //$NON-NLS-1$
 
         propertyHolder.addProperty(name, value);
+    }
+
+    private Properties parseAttributes(Node node) {
+        Properties attributes = new Properties();
+        NamedNodeMap nnm = node.getAttributes();
+        for (int i = 0; i < nnm.getLength(); i++) {
+            Node attribute = nnm.item(i);
+            String value = parsePropertyTokens(attribute.getNodeValue());
+            attributes.put(attribute.getNodeName(), value);
+        }
+
+        return attributes;
+    }
+
+    private String parsePropertyTokens(String string) {
+        final String OPEN = "${"; //$NON-NLS-1$
+        final String CLOSE = "}"; //$NON-NLS-1$
+
+        String newString = string;
+        if (newString != null) {
+            int start = newString.indexOf(OPEN);
+            int end = newString.indexOf(CLOSE);
+
+            while (start > -1 && end > start) {
+                String prepend = newString.substring(0, start);
+                String append = newString.substring(end + CLOSE.length());
+                String propName = newString.substring(start + OPEN.length(),
+                        end);
+                String propValue = properties.getProperty(propName);
+                if (propValue == null) {
+                    newString = prepend + propName + append;
+                } else {
+                    newString = prepend + propValue + append;
+                }
+
+                start = newString.indexOf(OPEN);
+                end = newString.indexOf(CLOSE);
+            }
+        }
+
+        return newString;
     }
 }
