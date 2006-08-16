@@ -296,7 +296,7 @@
 
   <target name="deploy.zipfile" depends="deploy.assemble">
     <property file="version.properties"/>
-    <jar jarfile="${deploy.files}/${deploy.prefix}${buildNum}${deploy.ext}">
+    <jar jarfile="${deploy.files}/${deploy.prefix}${version}.${buildNum}${deploy.ext}">
       <fileset dir="${deploy.path}"/>
     </jar>
   </target>
