@@ -49,10 +49,18 @@
 
 <h2>News</h2>
 
+<h3>iBATIS for Java 2.2.0 Released [Status: Beta - Voting for GA]</h3>
+<p>(August 16, 2006) This is probably the most significant iBATIS 2.x release in at least a year.  If you
+  haven't upgraded in a while, this would be the one to go for. This update includes 25 new minor features
+  15 bug fixes and 3 new major features including support for Oracle cursors, multiple result sets and
+  private bean properties.  This is also the first release that requires JDK 1.4 (as voted nearly a year ago).
+</p>
+<p><b><a href="javadownloads.html">Download iBATIS 2.2.0!</a></b></p>
+
 <h3>iBATIS.NET DataMapper 1.5.1 and DataAccess 1.8.1 General Availability!</h3>
 <p>(August 10, 2006) The votes are in and both distributions are now tagged as GA!</p>
-<p>This release is primarily an enhancement release to support .NET 2.0 and also bug fix, documentation have been updated. 
-iBATIS now supports all essential features of .NET 2.0 (generics, nullable types), see change log for more information. 
+<p>This release is primarily an enhancement release to support .NET 2.0 and also bug fix, documentation have been updated.
+iBATIS now supports all essential features of .NET 2.0 (generics, nullable types), see change log for more information.
  </p>
 <p><b><a href="dotnetdownloads.cgi">Download iBATIS.NET DataMapper 1.5.1 and DataAccess 1.8.1!</a></b></p>
 
