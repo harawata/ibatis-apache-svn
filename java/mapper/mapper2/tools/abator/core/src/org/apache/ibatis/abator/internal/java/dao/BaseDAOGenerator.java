@@ -376,7 +376,8 @@ public class BaseDAOGenerator implements DAOGenerator {
      * 
      * @param introspectedTable
      * @param compilationUnit
-     * @return
+     * @return a list of Method objects that will be added to the implementation
+     *  class.  May be <code>null</code>.
      */
     protected List getExtraImplementationMethods(IntrospectedTable introspectedTable,
             CompilationUnit compilationUnit) {

@@ -278,14 +278,12 @@ public class DatabaseIntrospector {
 
         // make sure that every column listed in ignored columns
         // actually exists in the table
-        iter = tableConfiguration.getIgnoredColumns();
+        iter = tableConfiguration.getIgnoredColumnsInError();
         while (iter.hasNext()) {
             String ignoredColumn = (String) iter.next();
 
-            if (columnDefinitions.getColumn(ignoredColumn) == null) {
-                warnings.add(Messages.getString("Warning.4", //$NON-NLS-1$
-                        ignoredColumn, table.toString()));
-            }
+            warnings.add(Messages.getString("Warning.4", //$NON-NLS-1$
+                    ignoredColumn, table.toString()));
         }
 
         GeneratedKey generatedKey = tableConfiguration.getGeneratedKey();

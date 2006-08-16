@@ -34,11 +34,10 @@ public abstract class TypedPropertyHolder extends PropertyHolder {
 	}
 
 	/**
-	 * This method is protected because subclasses should override it and allow
-	 * using special values (like "DEFAULT", or the alias names for the different
-	 * DAO generator types).
+	 * Sets the value of the type specified in the configuration.  If the 
+     * special value DEFAULT is specified, then the value will be ignored.
 	 * 
-	 * @param type
+	 * @param configurationType the type specified in the configuration
 	 */
 	public void setConfigurationType(String configurationType) {
         if (!"DEFAULT".equalsIgnoreCase(configurationType)) { //$NON-NLS-1$

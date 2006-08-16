@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-   Copyright 2005, 2006 The Apache Software Foundation
+   Copyright 2006 The Apache Software Foundation
  
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -31,9 +31,6 @@
   
 -->
 
-<!ENTITY % Boolean "(true|false)">
-<!ENTITY % ModelType "(hierarchical|flat|conditional)">
-
 <!--
   The abatorConfiguration element is the root element for Abator configurations.
 -->
@@ -56,7 +53,7 @@
 <!ELEMENT abatorContext (property*, jdbcConnection, javaTypeResolver?, javaModelGenerator,
                         sqlMapGenerator, daoGenerator?, table+)>
 <!ATTLIST abatorContext id CDATA #IMPLIED
-  defaultModelType %ModelType; #IMPLIED
+  defaultModelType CDATA #IMPLIED
   generatorSet CDATA #IMPLIED>
 
 <!--
@@ -143,15 +140,15 @@
   tableName CDATA #REQUIRED
   alias CDATA #IMPLIED
   domainObjectName CDATA #IMPLIED
-  enableInsert %Boolean; #IMPLIED
-  enableSelectByPrimaryKey %Boolean; #IMPLIED
-  enableSelectByExample %Boolean; #IMPLIED
-  enableUpdateByPrimaryKey %Boolean; #IMPLIED
-  enableDeleteByPrimaryKey %Boolean; #IMPLIED
-  enableDeleteByExample %Boolean; #IMPLIED
+  enableInsert CDATA #IMPLIED
+  enableSelectByPrimaryKey CDATA #IMPLIED
+  enableSelectByExample CDATA #IMPLIED
+  enableUpdateByPrimaryKey CDATA #IMPLIED
+  enableDeleteByPrimaryKey CDATA #IMPLIED
+  enableDeleteByExample CDATA #IMPLIED
   selectByPrimaryKeyQueryId CDATA #IMPLIED
   selectByExampleQueryId CDATA #IMPLIED
-  modelType %ModelType; #IMPLIED>
+  modelType CDATA #IMPLIED>
 
 <!--
   The columnOverride element is used to change certain attributes of the column
@@ -182,5 +179,5 @@
 <!ATTLIST generatedKey
   column CDATA #REQUIRED
   sqlStatement CDATA #REQUIRED
-  identity %Boolean; #REQUIRED>
+  identity CDATA #REQUIRED>
   

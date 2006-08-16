@@ -23,9 +23,6 @@ public class Parameter {
     private String name;
     private FullyQualifiedJavaType type;
 
-    /**
-     * @param fullyQualifiedName
-     */
     public Parameter(FullyQualifiedJavaType type, String name) {
         super();
         this.name = name;

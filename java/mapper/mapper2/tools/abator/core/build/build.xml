@@ -131,6 +131,9 @@
   </target>
 	  
   <target name="test.generate.test.code" depends="test.prepare">
+  	<!-- note that the class does not exist until the build runs.
+  	 Validating Ant editors will complain that the task cannot be
+  	 found, but it's not really an error. -->
   	<taskdef name="abator"
   	         classname="org.apache.ibatis.abator.ant.AbatorAntTask">
   		<classpath>

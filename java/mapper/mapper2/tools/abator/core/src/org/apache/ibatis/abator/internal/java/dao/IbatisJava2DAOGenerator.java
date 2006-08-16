@@ -20,9 +20,6 @@ package org.apache.ibatis.abator.internal.java.dao;
  */
 public class IbatisJava2DAOGenerator extends BaseDAOGenerator {
 
-    /**
-     * @param daoTemplate
-     */
     public IbatisJava2DAOGenerator() {
         super(new IbatisDAOTemplate(), false);
     }

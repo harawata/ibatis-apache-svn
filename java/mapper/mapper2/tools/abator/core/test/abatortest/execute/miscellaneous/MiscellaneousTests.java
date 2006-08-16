@@ -667,4 +667,13 @@ public class MiscellaneousTests extends BaseTest {
         assertEquals(record.getTimefield(), returnedRecord.getTimefield());
         assertEquals(record.getTimestampfield(), returnedRecord.getTimestampfield());
     }
+
+    public void testFieldIgnored() {
+        try {
+            MyObject.class.getDeclaredField("decimal30field");
+            fail("decimal30field should be ignored");
+        } catch (NoSuchFieldException e) {
+            // ignore (normal case)
+        }
+    }
 }

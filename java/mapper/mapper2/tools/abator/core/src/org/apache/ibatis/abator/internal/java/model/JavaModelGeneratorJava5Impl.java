@@ -475,7 +475,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
      * @param inMethod
      *            if true generates an "in" method, else generates a "not in"
      *            method
-     * @return
+     * @return a generated method for the in or not in method
      */
     protected Method getSetInOrNotInMethod(ColumnDefinition cd, boolean inMethod) {
         Method method = new Method();

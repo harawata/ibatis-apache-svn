@@ -41,14 +41,19 @@ import org.apache.tools.ant.types.PropertySet;
  * script that shows how to run Abator from Ant:
  * 
  * <pre>
- * &lt;project default="genfiles" basedir="."&gt;
- *   &lt;target name="genfiles" description="Generate the files"&gt;
- *     &lt;taskdef name="abator.genfiles" 
- *              classname="org.apache.ibatis.abator.ant.AbatorAntTask" 
- *              classpath="abatorxxx.jar" /&gt;
- *     &lt;abator.genfiles overwrite="true" configfile="abatorConfig.xml" /&gt;
- *   &lt;/target&gt;
- * &lt;/project&gt;
+ *  &lt;project default="genfiles" basedir="."&gt;
+ *    &lt;property name="generated.source.dir" value="${basedir}" /&gt;
+ *    &lt;target name="genfiles" description="Generate the files"&gt;
+ *      &lt;taskdef name="abator"
+ *               classname="org.apache.ibatis.abator.ant.AbatorAntTask"
+ *               classpath="abator.jar" /&gt;
+ *      &lt;abator overwrite="true" configfile="abatorConfig.xml" verbose="false" &gt;
+ *        &lt;propertyset&gt;
+ *          &lt;propertyref name="generated.source.dir"/&gt;
+ *        &lt;/propertyset&gt;
+ *      &lt;/abator&gt;
+ *    &lt;/target&gt;
+ *  &lt;/project&gt;
  * </pre>
  * 
  * @author Jeff Butler
@@ -58,6 +63,7 @@ public class AbatorAntTask extends Task {
     private String configfile;
     private boolean overwrite;
     private PropertySet propertyset;
+    private boolean verbose;
 
     /**
      * 
@@ -92,7 +98,7 @@ public class AbatorAntTask extends Task {
             
             Abator abator = new Abator(config, callback, warnings);
             
-            abator.generate(new AntProgressCallback(this));
+            abator.generate(new AntProgressCallback(this, verbose));
             
         } catch (XMLParserException e) {
             List errors = e.getErrors();
@@ -153,5 +159,13 @@ public class AbatorAntTask extends Task {
         }
         
         return propertyset;
+    }
+
+    public boolean isVerbose() {
+        return verbose;
+    }
+
+    public void setVerbose(boolean verbose) {
+        this.verbose = verbose;
     }
 }

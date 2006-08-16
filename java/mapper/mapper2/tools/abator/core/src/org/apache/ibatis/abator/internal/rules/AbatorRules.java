@@ -64,7 +64,7 @@ public abstract class AbatorRules {
      * 
      * @param javaModelGenerator
      * @param table
-     * @return
+     * @return the type of the class that holds all fields
      */
     public FullyQualifiedJavaType calculateAllFieldsClass(JavaModelGenerator javaModelGenerator,
             FullyQualifiedTable table) {

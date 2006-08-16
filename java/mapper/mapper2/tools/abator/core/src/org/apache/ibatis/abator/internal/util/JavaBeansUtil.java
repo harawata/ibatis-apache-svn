@@ -97,7 +97,7 @@ public class JavaBeansUtil {
 	 *    then the first character should be made lower case
 	 * 
 	 * @param inputString
-	 * @return
+	 * @return the valid poperty name
 	 */
 	public static String getValidPropertyName(String inputString) {
 	    if (inputString.length() < 2) {

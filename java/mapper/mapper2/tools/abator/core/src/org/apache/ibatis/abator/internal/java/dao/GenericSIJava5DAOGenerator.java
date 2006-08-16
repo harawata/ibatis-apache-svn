@@ -20,9 +20,6 @@ package org.apache.ibatis.abator.internal.java.dao;
  */
 public class GenericSIJava5DAOGenerator extends BaseDAOGenerator {
 
-    /**
-     * @param daoTemplate
-     */
     public GenericSIJava5DAOGenerator() {
         super(new GenericSIDAOTemplate(), true);
     }

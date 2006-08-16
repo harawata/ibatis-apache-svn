@@ -40,7 +40,7 @@ public interface IntrospectedTable {
      * Returns true if any of the columns in the table are JDBC Dates
      * (as opposed to timestamps).
      * 
-     * @return
+     * @return true if the table contains DATE columns
      */
     boolean hasJDBCDateColumns();
 
@@ -48,7 +48,7 @@ public interface IntrospectedTable {
      * Returns true if any of the columns in the table are JDBC Times
      * (as opposed to timestamps).
      * 
-     * @return
+     * @return true if the table contains TIME columns
      */
     boolean hasJDBCTimeColumns();
     
@@ -58,7 +58,8 @@ public interface IntrospectedTable {
      * columns will be iterated as the parameters of the 
      * selectByPrimaryKay and deleteByPrimaryKey methods
      * 
-     * @return
+     * @return an Iterator of ColumnDefinition objects for
+     *   columns in the primary key
      */
     Iterator getPrimaryKeyColumns();
     
@@ -70,7 +71,8 @@ public interface IntrospectedTable {
      * Returns all columns in the table (for use by the select by
      * primary key and select by example with BLOBs methods)
      * 
-     * @return
+     * @return an Iterator of ColumnDefinition objects for
+     *   all columns in the table
      */
     Iterator getAllColumns();
     
@@ -78,7 +80,8 @@ public interface IntrospectedTable {
      * Returns all columns axcept BLOBs (for use by the select by
      * example without BLOBs method)
      * 
-     * @return
+     * @return an Iterator of ColumnDefinition objects for
+     *   columns in the table that are non BLOBs
      */
     Iterator getNonBLOBColumns();
     

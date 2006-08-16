@@ -28,13 +28,15 @@ import org.apache.tools.ant.Task;
 public class AntProgressCallback implements ProgressCallback {
 
     private Task task;
+    private boolean verbose;
     
     /**
      * 
      */
-    public AntProgressCallback(Task task) {
+    public AntProgressCallback(Task task, boolean verbose) {
         super();
         this.task = task;
+        this.verbose = verbose;
     }
 
     /* (non-Javadoc)
@@ -47,7 +49,9 @@ public class AntProgressCallback implements ProgressCallback {
      * @see org.apache.ibatis.abator.api.ProgressCallback#startSubTask(java.lang.String)
      */
     public void startSubTask(String subTaskName) {
-        task.log(subTaskName);
+        if (verbose) {
+            task.log(subTaskName);
+        }
     }
 
     /* (non-Javadoc)

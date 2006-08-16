@@ -41,7 +41,7 @@ public abstract class GeneratorSet {
      * of the special values IBATIS, SPRING, GENERIC-SI and GENERIC-CI.
      * 
      * @param configurationType
-     * @return
+     * @return the fully qualified class name of the correct implementation class
      */
     public abstract String translateDAOGeneratorType(String configurationType);
 

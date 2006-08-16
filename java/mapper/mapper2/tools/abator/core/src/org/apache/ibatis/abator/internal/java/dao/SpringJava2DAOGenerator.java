@@ -20,9 +20,6 @@ package org.apache.ibatis.abator.internal.java.dao;
  */
 public class SpringJava2DAOGenerator extends BaseDAOGenerator {
 
-    /**
-     * @param daoTemplate
-     */
     public SpringJava2DAOGenerator() {
         super(new SpringDAOTemplate(), false);
     }

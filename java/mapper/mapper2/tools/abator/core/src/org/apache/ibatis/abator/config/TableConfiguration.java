@@ -15,11 +15,11 @@
  */
 package org.apache.ibatis.abator.config;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.ibatis.abator.internal.util.EqualsUtil;
 import org.apache.ibatis.abator.internal.util.HashCodeUtil;
@@ -43,7 +43,7 @@ public class TableConfiguration extends PropertyHolder {
 
 	private Map columnOverrides;
 
-	private Set ignoredColumns;
+	private Map ignoredColumns;
 
 	private GeneratedKey generatedKey;
 
@@ -64,7 +64,7 @@ public class TableConfiguration extends PropertyHolder {
         this.modelType = abatorContext.getDefaultModelType();
 		
 		columnOverrides = new HashMap();
-		ignoredColumns = new HashSet();
+		ignoredColumns = new HashMap();
 
 		insertStatementEnabled = true;
 		selectByPrimaryKeyStatementEnabled = true;
@@ -111,12 +111,18 @@ public class TableConfiguration extends PropertyHolder {
 
 	public boolean isColumnIgnored(String column) {
 	    String key = column.toUpperCase();
+        
+        boolean rc = ignoredColumns.containsKey(key);
+        
+        if (rc) {
+            ignoredColumns.put(key, Boolean.TRUE);
+        }
 	    
-	    return ignoredColumns.contains(key);
+	    return rc;
 	}
 
 	public void addIgnoredColumn(String column) {
-		ignoredColumns.add(column.toUpperCase());
+		ignoredColumns.put(column.toUpperCase(), Boolean.FALSE);
 	}
 
 	public void addColumnOverride(ColumnOverride columnOverride) {
@@ -254,8 +260,27 @@ public class TableConfiguration extends PropertyHolder {
         return columnOverrides.values().iterator();
     }
 
-    public Iterator getIgnoredColumns() {
-        return ignoredColumns.iterator();
+    /**
+     * This method returns an iterator of Strings.  The values
+     * are the columns that were specified to be ignored in the
+     * table, but do not exist in the table. 
+     * 
+     * @return an Iterator of Strings - the columns that were improperly
+     *  configured as ignored columns 
+     */
+    public Iterator getIgnoredColumnsInError() {
+        List answer = new ArrayList();
+        
+        Iterator iter = ignoredColumns.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry entry = (Map.Entry) iter.next();
+            
+            if (Boolean.FALSE.equals(entry.getValue())) {
+                answer.add(entry.getKey());
+            }
+        }
+        
+        return answer.iterator();
     }
 
     public ModelType getModelType() {

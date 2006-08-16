@@ -47,7 +47,6 @@ public class FullyQualifiedJavaType implements Comparable {
      * type parameters
      * 
      * @param fullyQualifiedName
-     * @param typeParameters
      */
     public FullyQualifiedJavaType(String fullyQualifiedName) {
         super();
@@ -174,11 +173,6 @@ public class FullyQualifiedJavaType implements Comparable {
         return primitiveTypeWrapper;
     }
     
-    /**
-     * Utility method - returns the single instance of the int type
-     * 
-     * @return
-     */
     public static final FullyQualifiedJavaType getIntInstance() {
         if (intInstance == null) {
             intInstance = new FullyQualifiedJavaType("int"); //$NON-NLS-1$

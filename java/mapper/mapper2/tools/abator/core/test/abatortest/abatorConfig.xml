@@ -272,7 +272,8 @@
     </daoGenerator>
 
     <table tableName="BlobsOnly" /> <!-- should generate a warning -->
-    <table tableName="PKFields" domainObjectName="MyObject">
+    <table tableName="NonExistantTable" /> <!-- should generate a warning -->
+    <table tableName="PKFields" domainObjectName="MyObject" alias="A" >
       <ignoreColumn column="fred" /> <!-- should generate a warning -->
       <ignoreColumn column="decimal30Field" />
       <columnOverride column="datefield" property="startDate"/>

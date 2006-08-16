@@ -142,7 +142,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
      * @param columnDefinitions
      *            the collection of ColumnDefinitions used to generate fields
      *            and getter/setter methods.
-     * @param answer
+     * @param topLevelClass
      *            the generated fields and methods will be added to this object
      */
     protected void generateClassParts(FullyQualifiedTable table,
@@ -602,7 +602,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
      * 
      * @param cd
      * @param betweenMethod
-     * @return
+     * @return a generated method for the between or not between method
      */
     protected Method getSetBetweenOrNotBetweenMethod(ColumnDefinition cd, boolean betweenMethod) {
         Method method = new Method();
@@ -1091,7 +1091,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
      * @param inMethod
      *            if true generates an "in" method, else generates a "not in"
      *            method
-     * @return
+     * @return a generated method for the in or not in method 
      */
     protected Method getSetInOrNotInMethod(ColumnDefinition cd, boolean inMethod) {
         Method method = new Method();

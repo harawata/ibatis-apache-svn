@@ -59,11 +59,17 @@ Eclipse plugin.</p>
   build.xml file:</p>
 <pre>
    &lt;project default="genfiles" basedir="."&gt;
+     &lt;property name="generated.source.dir" value="${basedir}" /&gt;
+
      &lt;target name="genfiles" description="Generate the files"&gt;
-       &lt;taskdef name="abator.genfiles"
+       &lt;taskdef name="abator"
                 classname="org.apache.ibatis.abator.ant.AbatorAntTask"
                 classpath="abator.jar" /&gt;
-       &lt;abator.genfiles overwrite="true" configfile="abatorConfig.xml" /&gt;
+       &lt;abator overwrite="true" configfile="abatorConfig.xml" verbose="false" &gt;
+         &lt;propertyset&gt;
+           &lt;propertyref name="generated.source.dir"/&gt;
+         &lt;/propertyset&gt;
+       &lt;/abator&gt;
      &lt;/target&gt;
    &lt;/project&gt;
 </pre>
@@ -80,6 +86,15 @@ Eclipse plugin.</p>
      will be saved with a unique filename instead.  The default is "false".</li>
    <li>The "configfile" attribute is required - it must specify a valid Abator
      configuration XML file.</li>
+   <li>The "verbose" attribute is optional.  If "true", "yes", etc then the task will
+       log Abator progress messages to the Ant console.  The default is "false".</li>
+   <li>The task supports an optional nested <code>&lt;propertyset&gt;</code> element which
+       is the standard Ant property set type.  This can be used to pass parameters into
+       a configuration file.  For example, the above property
+       <code>generated.source.dir</code> can be
+       accessed in the Abator configuration file with the escape sequence
+       <code>${generated.source.dir}</code>
+   </li>
 </ul>
 
 <h2>Running Abator from Java with an XML Configuration File</h2>
