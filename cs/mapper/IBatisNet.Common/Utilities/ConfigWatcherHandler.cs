@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -24,7 +24,6 @@
  ********************************************************************************/
 #endregion
 
-using System;
 using System.Collections;
 using System.IO;
 using System.Threading;
@@ -65,11 +64,11 @@ namespace IBatisNet.Common.Utilities
 	/// changes to a specified file. Because multiple change notifications
 	/// may be raised when the file is modified, a timer is used to
 	/// compress the notifications into a single event. The timer
-	/// waits for <see cref="TimoutMillis"/> time before delivering
+	/// waits for the specified time before delivering
 	/// the event notification. If any further <see cref="FileSystemWatcher"/>
 	/// change notifications arrive while the timer is waiting it
-	/// is reset and waits again for <see cref="TimoutMillis"/> to
-	/// elaps.
+	/// is reset and waits again for the specified time to
+	/// elapse.
 	/// </remarks>
 	public sealed class ConfigWatcherHandler
 	{
@@ -95,7 +94,7 @@ namespace IBatisNet.Common.Utilities
 		/// The default amount of time to wait after receiving notification
 		/// before reloading the config file.
 		/// </summary>
-		private const int TimoutMillis = 500;
+		private const int TIMEOUT_MILLISECONDS = 500;
 		#endregion
 
 		#region Constructor (s) / Destructor
@@ -145,9 +144,14 @@ namespace IBatisNet.Common.Utilities
 		/// <param name="configFile"></param>
 		public static void AddFileToWatch(FileInfo configFile)
 		{
+			if (_logger.IsDebugEnabled)
+			{
+				// TODO: remove Path.GetFileName?
+				_logger.Debug("Adding file [" + Path.GetFileName(configFile.FullName) + "] to list of watched files.");
+			}
+
 			_filesToWatch.Add( configFile );
 		}
-
 
 		/// <summary>
 		/// Reset the list of files being monitored.
@@ -181,9 +185,8 @@ namespace IBatisNet.Common.Utilities
 				_logger.Debug("ConfigWatcherHandler : "+e.ChangeType+" [" + e.Name + "]");
 			}
 
-			// Deliver the event in TimoutMillis time
 			// timer will fire only once
-			_timer.Change(TimoutMillis, Timeout.Infinite);
+			_timer.Change(TIMEOUT_MILLISECONDS, Timeout.Infinite);
 		}
 
 		/// <summary>
@@ -201,9 +204,8 @@ namespace IBatisNet.Common.Utilities
 				_logger.Debug("ConfigWatcherHandler : " + e.ChangeType + " [" + e.OldName + "/" +e.Name +"]");
 			}
 
-			// Deliver the event in TimoutMillis time
 			// timer will fire only once
-			_timer.Change(TimoutMillis, Timeout.Infinite);
+			_timer.Change(TIMEOUT_MILLISECONDS, Timeout.Infinite);
 		}
 		#endregion
 

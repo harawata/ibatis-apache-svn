@@ -60,23 +60,22 @@ using IBatisNet.DataMapper.MappedStatements;
 using IBatisNet.DataMapper.MappedStatements.ArgumentStrategy;
 using IBatisNet.DataMapper.MappedStatements.PropertyStrategy;
 using IBatisNet.DataMapper.Scope;
-using IBatisNet.DataMapper.TypeHandlers;
 
 #endregion
 
 namespace IBatisNet.DataMapper.Configuration
 {
 	/// <summary>
-	/// Builds SqlMapper instances from a supplied resource (e.g. XML configuration file)
+	/// Builds an ISqlMapper instance from the supplied resources (e.g. XML configuration files).
 	/// </summary>
 	public class DomSqlMapBuilder
 	{
 		#region Embedded resource
 
 		// Which files must we allow to be used as Embedded Resources ?
-		// - slqMap.config [No]
-		// - providers.config [No]
-		// - sqlMap files [yes]
+		// - slqMap.config [Yes]
+		// - providers.config [Yes]
+		// - sqlMap files [Yes]
 		// - properties file (like Database.config) [Yes]
 		// see contribution, NHibernate usage,
 		// see http://www.codeproject.com/csharp/EmbeddedResourceStrings.asp
@@ -99,9 +98,9 @@ namespace IBatisNet.DataMapper.Configuration
 		private const string MAPPING_XML_NAMESPACE = "http://ibatis.apache.org/mapping";
 
 		/// <summary>
-		/// Default congig name
+		/// Default filename of main configuration file.
 		/// </summary>
-		public const string DEFAULT_FILE_CONFIG_NAME = "sqlmap.config";
+		public const string DEFAULT_FILE_CONFIG_NAME = "SqlMap.config";
 
 		/// <summary>
 		/// Default provider name
@@ -109,12 +108,12 @@ namespace IBatisNet.DataMapper.Configuration
 		private const string DEFAULT_PROVIDER_NAME = "_DEFAULT_PROVIDER_NAME";
 
 		/// <summary>
-		/// Dot representation
+		/// Dot representation.
 		/// </summary>
 		public const string DOT = ".";
 
 		/// <summary>
-		/// Token for SqlMapConfig xml root.
+		/// Token for SqlMapConfig xml root element.
 		/// </summary>
 		private const string XML_DATAMAPPER_CONFIG_ROOT = "sqlMapConfig";
 
@@ -124,7 +123,7 @@ namespace IBatisNet.DataMapper.Configuration
 		private const string XML_CONFIG_SETTINGS = "sqlMapConfig/settings/setting";
 
 		/// <summary>
-		/// Token for providers config file name.
+		/// Token for default providers config file name.
 		/// </summary>
 		private const string PROVIDERS_FILE_NAME = "providers.config";
 
@@ -295,14 +294,13 @@ namespace IBatisNet.DataMapper.Configuration
         private IGetAccessorFactory _getAccessorFactory = null;
 	    private ISqlMapper _sqlMapper = null;
         private bool _validateSqlMapConfig = true;
-        private NameValueCollection _properties = new NameValueCollection();
 
 		#endregion 		
 		
 		#region Properties
         
         /// <summary>
-        /// Allow to set properties before configuration
+        /// Allow properties to be set before configuration.
         /// </summary>
         public NameValueCollection Properties
         {
@@ -310,8 +308,7 @@ namespace IBatisNet.DataMapper.Configuration
         }
 
         /// <summary>
-        /// Allow to set a custom set accessor factory, see <see cref="ISetAccessorFactory"/>
-        /// before configuration
+        /// Allow a custom <see cref="ISetAccessorFactory"/> to be set before configuration.
         /// </summary>
         public ISetAccessorFactory SetAccessorFactory
         {
@@ -319,8 +316,7 @@ namespace IBatisNet.DataMapper.Configuration
         }
 
         /// <summary>
-        /// Allow to set a custom get accessor factory, see <see cref="IGetAccessorFactory"/>
-        /// before configuration
+        /// Allow a custom <see cref="IGetAccessorFactory"/> to be set before configuration.
         /// </summary>
         public IGetAccessorFactory GetAccessorFactory
         {
@@ -328,8 +324,7 @@ namespace IBatisNet.DataMapper.Configuration
         }
 
         /// <summary>
-        /// Allow to set a custom object factory, see <see cref="IObjectFactory"/> 
-        /// before configuration
+        /// Allow a custom <see cref="IObjectFactory"/> to be set before configuration.
         /// </summary>
         public IObjectFactory ObjectFactory
         {
@@ -337,8 +332,7 @@ namespace IBatisNet.DataMapper.Configuration
         }
 
         /// <summary>
-        /// Allow to set a custom object ISqlMapper, see <see cref="ISqlMapper"/> 
-        /// before configuration
+        /// Allow a custom <see cref="ISqlMapper"/> to be set before configuration.
         /// </summary>
         public ISqlMapper SqlMapper
         {
@@ -346,8 +340,7 @@ namespace IBatisNet.DataMapper.Configuration
         }
 	    
         /// <summary>
-        /// Enable whether or not the validation of configuration document
-        /// before configuration
+        /// Enable validation of SqlMap document. This property must be set before configuration.
         /// </summary>
         public bool ValidateSqlMapConfig
         {
@@ -376,7 +369,7 @@ namespace IBatisNet.DataMapper.Configuration
 		/// Specify whether the configuration Xml document should be 
 		/// validated with the SqlMapConfig schema.
 		/// </param>
-        [Obsolete("Use property ValidateSqlMapConfig before call Configure method.")]
+        [Obsolete("Set the ValidateSqlMapConfig property before calling the Configure method.")]
 		public DomSqlMapBuilder(bool validateSqlMapConfig)
 		{
 			_configScope = new ConfigurationScope();
@@ -389,21 +382,25 @@ namespace IBatisNet.DataMapper.Configuration
 		#region Configure
 
 		/// <summary>
-		/// Configure a SqlMapper from default resource file named SqlMap.config.
+		/// Configure a SqlMapper from default resource file named 'SqlMap.config'.
 		/// </summary>
-		/// <returns>An SqlMap</returns>
-		/// <remarks>The file path is relative to the application root.</remarks>
+		/// <returns>An ISqlMapper instance.</returns>
+		/// <remarks>
+		/// The file path is relative to the application root. For ASP.Net applications
+		/// this would be the same directory as the Web.config file. For other .Net
+		/// applications the SqlMap.config file should be placed in the same folder
+		/// as the executable. 
+		/// </remarks>
         public ISqlMapper Configure()
 		{
-			return Configure( Resources.GetConfigAsXmlDocument(DomSqlMapBuilder.DEFAULT_FILE_CONFIG_NAME) );
+			return Configure( Resources.GetConfigAsXmlDocument(DEFAULT_FILE_CONFIG_NAME) );
 		}
 
-
 		/// <summary>
-		/// Configure an SqlMap.
+		/// Configure and returns an ISqlMapper instance.
 		/// </summary>
 		/// <param name="document">An xml sql map configuration document.</param>
-		/// <returns>the SqlMap</returns>
+		/// <returns>An ISqlMapper instance.</returns>
         public ISqlMapper Configure(XmlDocument document)
 		{
 			return Build( document, false );
@@ -411,16 +408,16 @@ namespace IBatisNet.DataMapper.Configuration
 
 
 		/// <summary>
-		/// Configure a SqlMapper from a file path.
+		/// Configure an ISqlMapper object from a file path.
 		/// </summary>
 		/// <param name="resource">
 		/// A relative ressource path from your Application root 
 		/// or a absolue file path file:\\c:\dir\a.config
 		/// </param>
-		/// <returns>An SqlMap</returns>
+		/// <returns>An ISqlMapper instance.</returns>
         public ISqlMapper Configure(string resource)
 		{
-			XmlDocument document = null;
+			XmlDocument document;
 			if (resource.StartsWith("file://"))
 			{
 				document = Resources.GetUrlAsXmlDocument( resource.Remove(0, 7) );	
@@ -432,11 +429,10 @@ namespace IBatisNet.DataMapper.Configuration
 			return Build( document, false);
 		}
 
-
 		/// <summary>
-		///  Configure a SqlMapper from a stream.
+		///  Configure an ISqlMapper object from a stream.
 		/// </summary>
-		/// <param name="resource">A stream resource</param>
+		/// <param name="resource">A Stream resource.</param>
 		/// <returns>An SqlMap</returns>
 		public ISqlMapper Configure(Stream resource)
 		{
@@ -444,57 +440,53 @@ namespace IBatisNet.DataMapper.Configuration
 			return Build( document, false);
 		}
 
-
 		/// <summary>
-		///  Configure a SqlMapper from a FileInfo.
+		///  Configure an ISqlMapper object from a FileInfo.
 		/// </summary>
-		/// <param name="resource">A FileInfo resource</param>
-		/// <returns>An SqlMap</returns>
+		/// <param name="resource">A FileInfo resource.</param>
+		/// <returns>An ISqlMapper instance.</returns>
 		public ISqlMapper Configure(FileInfo resource)
 		{
 			XmlDocument document = Resources.GetFileInfoAsXmlDocument( resource );
 			return Build( document, false);
 		}
 
-
 		/// <summary>
-		///  Configure a SqlMapper from an Uri.
+		///  Configure an ISqlMapper object from an Uri.
 		/// </summary>
-		/// <param name="resource">A Uri resource</param>
-		/// <returns></returns>
+		/// <param name="resource">A Uri resource.</param>
+		/// <returns>An ISqlMapper instance.</returns>
 		public ISqlMapper Configure(Uri resource)
 		{
 			XmlDocument document = Resources.GetUriAsXmlDocument( resource );
 			return Build( document, false);
 		}
 
-
 		/// <summary>
-		/// Configure and monitor the default configuration file for modifications 
+		/// Configure and monitor the default configuration file (SqlMap.config) for modifications 
 		/// and automatically reconfigure SqlMap. 
 		/// </summary>
-		/// <returns>An SqlMap</returns>
+		/// <returns>An ISqlMapper instance.</returns>
 		public ISqlMapper ConfigureAndWatch(ConfigureHandler configureDelegate)
 		{
 			return ConfigureAndWatch( DEFAULT_FILE_CONFIG_NAME, configureDelegate ) ;
 		}
 
-
 		/// <summary>
 		/// Configure and monitor the configuration file for modifications 
-		/// and automatically reconfigure SqlMap. 
+		/// and automatically reconfigure the ISqlMapper instance.
 		/// </summary>
 		/// <param name="resource">
 		/// A relative ressource path from your Application root 
 		/// or an absolue file path file:\\c:\dir\a.config
 		/// </param>
 		///<param name="configureDelegate">
-		/// Delegate called when the file has changed, to rebuild the dal.
+		/// Delegate called when the file has changed.
 		/// </param>
-		/// <returns>An SqlMap</returns>
+		/// <returns>An ISqlMapper instance.</returns>
 		public ISqlMapper ConfigureAndWatch( string resource, ConfigureHandler configureDelegate )
 		{
-			XmlDocument document = null;
+			XmlDocument document;
 			if (resource.StartsWith("file://"))
 			{
 				document = Resources.GetUrlAsXmlDocument( resource.Remove(0, 7) );	
@@ -507,7 +499,7 @@ namespace IBatisNet.DataMapper.Configuration
 			ConfigWatcherHandler.ClearFilesMonitored();
 			ConfigWatcherHandler.AddFileToWatch( Resources.GetFileInfo( resource ) );
 
-			TimerCallback callBakDelegate = new TimerCallback( DomSqlMapBuilder.OnConfigFileChange );
+			TimerCallback callBakDelegate = new TimerCallback( OnConfigFileChange );
 
 			StateConfig state = new StateConfig();
 			state.FileName = resource;
@@ -518,18 +510,17 @@ namespace IBatisNet.DataMapper.Configuration
 			return Build( document, true );
 		}
 
-
 		/// <summary>
 		/// Configure and monitor the configuration file for modifications 
-		/// and automatically reconfigure SqlMap. 
+		/// and automatically reconfigure the ISqlMapper instance.
 		/// </summary>
 		/// <param name="resource">
-		/// A FileInfo to your config file.
+		/// A FileInfo to a SqlMap.config file.
 		/// </param>
 		///<param name="configureDelegate">
-		/// Delegate called when the file has changed, to rebuild the dal.
+		/// Delegate called when the file has changed.
 		/// </param>
-		/// <returns>An SqlMap</returns>
+		/// <returns>An ISqlMapper instance.</returns>
 		public ISqlMapper ConfigureAndWatch( FileInfo resource, ConfigureHandler configureDelegate )
 		{
 			XmlDocument document = Resources.GetFileInfoAsXmlDocument(resource);
@@ -537,7 +528,7 @@ namespace IBatisNet.DataMapper.Configuration
 			ConfigWatcherHandler.ClearFilesMonitored();
 			ConfigWatcherHandler.AddFileToWatch( resource );
 
-			TimerCallback callBakDelegate = new TimerCallback( DomSqlMapBuilder.OnConfigFileChange );
+			TimerCallback callBakDelegate = new TimerCallback( OnConfigFileChange );
 
 			StateConfig state = new StateConfig();
 			state.FileName = resource.FullName;
@@ -548,11 +539,10 @@ namespace IBatisNet.DataMapper.Configuration
 			return Build( document, true );
 		}
 
-
 		/// <summary>
-		/// Callback called when the SqlMap.config changed.
+		/// Callback called when the SqlMap.config file has changed.
 		/// </summary>
-		/// <param name="obj">The state config.</param>
+		/// <param name="obj">The <see cref="StateConfig"/> object.</param>
 		public static void OnConfigFileChange(object obj)
 		{
 			StateConfig state = (StateConfig)obj;
@@ -564,13 +554,13 @@ namespace IBatisNet.DataMapper.Configuration
 		#region Methods
 
 		/// <summary>
-		/// Build a SqlMapper instance
+		/// Build an ISqlMapper instance.
 		/// </summary>
-		/// <param name="document">An xml configuration document</param>
-		/// <param name="dataSource">A data source</param>
+		/// <param name="document">An xml configuration document.</param>
+		/// <param name="dataSource">A data source.</param>
 		/// <param name="useConfigFileWatcher"></param>
 		/// <param name="isCallFromDao"></param>
-		/// <returns>return an a SqlMapper instance</returns>
+		/// <returns>Returns an ISqlMapper instance.</returns>
 		private ISqlMapper Build(XmlDocument document,DataSource dataSource, 
 			bool useConfigFileWatcher, bool isCallFromDao)
 		{
@@ -600,10 +590,10 @@ namespace IBatisNet.DataMapper.Configuration
 		}
 
 		/// <summary>
-		/// validate againts schema
+		/// Validates an XmlNode against a schema file.
 		/// </summary>
-		/// <param name="section">The doc to validate</param>
-		/// <param name="schemaFileName">schema File Name</param>
+		/// <param name="section">The doc to validate.</param>
+		/// <param name="schemaFileName">Schema file name.</param>
 		private void ValidateSchema( XmlNode section, string schemaFileName )
 		{
 #if dotnet2
@@ -657,7 +647,6 @@ namespace IBatisNet.DataMapper.Configuration
 				if(! _configScope.IsXmlValid )
 				{
 					throw new ConfigurationException( "Invalid SqlMap.config document. cause :"+_configScope.ErrorContext.Resource);
-						//( Resource.ResourceManager.FormatMessage( Resource.MessageKeys.DocumentNotValidated, _schemaErrors )) );
 				}
 			}
 			finally
@@ -667,7 +656,6 @@ namespace IBatisNet.DataMapper.Configuration
 			}
 		}
 
-
 		private void ValidationCallBack( object sender, ValidationEventArgs args )
 		{
 			_configScope.IsXmlValid = false;
@@ -675,7 +663,7 @@ namespace IBatisNet.DataMapper.Configuration
 		}
 
 		/// <summary>
-		/// Load statement, parameters, resultmap.
+		/// Load statements (select, insert, update, delete), parameters, and resultMaps.
 		/// </summary>
 		/// <param name="document"></param>
 		/// <param name="dataSource"></param>
@@ -689,7 +677,6 @@ namespace IBatisNet.DataMapper.Configuration
 			return Build(document, dataSource, useConfigFileWatcher, true);
 		}
 
-
 		/// <summary>
 		/// Load SqlMap configuration from
 		/// from the XmlDocument passed in parameter.
@@ -701,7 +688,6 @@ namespace IBatisNet.DataMapper.Configuration
 			return Build(document, null, useConfigFileWatcher, false);
 		}
 
-
 		/// <summary>
 		/// Reset PreparedStatements cache
 		/// </summary>
@@ -710,7 +696,7 @@ namespace IBatisNet.DataMapper.Configuration
 		}
 
 		/// <summary>
-		/// Intialize an SqlMap.
+		/// Intialize the internal ISqlMapper instance.
 		/// </summary>
 		private void Initialize()
 		{
@@ -994,12 +980,12 @@ namespace IBatisNet.DataMapper.Configuration
 		/// </summary>
 		private void GetProviders()
 		{
-			IDbProvider provider = null;
-			XmlDocument xmlProviders = null;
+			IDbProvider provider;
+			XmlDocument xmlProviders;
 
 			_configScope.ErrorContext.Activity = "loading Providers";
 
-			XmlNode providersNode = null;
+			XmlNode providersNode;
 			providersNode = _configScope.SqlMapConfigDocument.SelectSingleNode( ApplyDataMapperNamespacePrefix(XML_CONFIG_PROVIDERS), _configScope.XmlNamespaceManager);
 
 			if (providersNode != null )
@@ -1016,7 +1002,7 @@ namespace IBatisNet.DataMapper.Configuration
 				_configScope.ErrorContext.Resource = node.InnerXml.ToString();
 				provider = ProviderDeSerializer.Deserialize(node);
 
-				if (provider.IsEnabled == true)
+				if (provider.IsEnabled)
 				{
 					_configScope.ErrorContext.ObjectId = provider.Name;
 					_configScope.ErrorContext.MoreInfo = "initialize provider";
@@ -1024,7 +1010,7 @@ namespace IBatisNet.DataMapper.Configuration
 					provider.Initialize();
 					_configScope.Providers.Add(provider.Name, provider);
 
-					if (provider.IsDefault == true)
+					if (provider.IsDefault)
 					{
 						if (_configScope.Providers[DEFAULT_PROVIDER_NAME] == null) 
 						{
@@ -1058,7 +1044,7 @@ namespace IBatisNet.DataMapper.Configuration
 
 				_configScope.ErrorContext.ObjectId = providerName;
 
-				if (_configScope.Providers.Contains(providerName) == true)
+				if (_configScope.Providers.Contains(providerName))
 				{
 					return (IDbProvider) _configScope.Providers[providerName];
 				}
@@ -1071,7 +1057,7 @@ namespace IBatisNet.DataMapper.Configuration
 			}
 			else
 			{
-				if (_configScope.Providers.Contains(DEFAULT_PROVIDER_NAME) == true)
+				if (_configScope.Providers.Contains(DEFAULT_PROVIDER_NAME))
 				{
 					return (IDbProvider) _configScope.Providers[DEFAULT_PROVIDER_NAME];
 				}
@@ -1094,7 +1080,7 @@ namespace IBatisNet.DataMapper.Configuration
 			_configScope.ErrorContext.Activity = "loading SqlMap";
 			_configScope.ErrorContext.Resource = sqlMapNode.OuterXml.ToString();
 
-			if (_configScope.UseConfigFileWatcher == true)
+			if (_configScope.UseConfigFileWatcher)
 			{
 				if (sqlMapNode.Attributes["resource"] != null || sqlMapNode.Attributes["url"] != null) 
 				{ 
@@ -1150,20 +1136,20 @@ namespace IBatisNet.DataMapper.Configuration
 			#region Load statements
 
 			#region Statement tag
-			Statement statement = null;
+			Statement statement;
 			foreach (XmlNode xmlNode in _configScope.SqlMapDocument.SelectNodes( ApplyMappingNamespacePrefix(XML_STATEMENT), _configScope.XmlNamespaceManager))
 			{
 				_configScope.ErrorContext.MoreInfo = "loading statement tag";
 				_configScope.NodeContext = xmlNode; // A statement tag
 
-				MappedStatement mappedStatement = null;
+				MappedStatement mappedStatement;
 
 				statement = StatementDeSerializer.Deserialize(xmlNode, _configScope);
 				statement.CacheModelName = ApplyNamespace( statement.CacheModelName );
 				statement.ParameterMapName = ApplyNamespace( statement.ParameterMapName );
 				statement.ResultMapName = ApplyNamespace( statement.ResultMapName );
 
-				if (_configScope.UseStatementNamespaces == true)
+				if (_configScope.UseStatementNamespaces)
 				{
 					statement.Id = ApplyNamespace(statement.Id);
 				}
@@ -1181,7 +1167,7 @@ namespace IBatisNet.DataMapper.Configuration
 			#endregion
 
 			#region Select tag
-			Select select = null;
+			Select select;
 			foreach (XmlNode xmlNode in _configScope.SqlMapDocument.SelectNodes( ApplyMappingNamespacePrefix(XML_SELECT), _configScope.XmlNamespaceManager))
 			{
 				_configScope.ErrorContext.MoreInfo = "loading select tag";
@@ -1192,7 +1178,7 @@ namespace IBatisNet.DataMapper.Configuration
 				select.ParameterMapName = ApplyNamespace( select.ParameterMapName );
 				select.ResultMapName = ApplyNamespace( select.ResultMapName );
 
-				if (_configScope.UseStatementNamespaces == true)
+				if (_configScope.UseStatementNamespaces)
 				{
 					select.Id = ApplyNamespace(select.Id);
 				}
@@ -1223,20 +1209,20 @@ namespace IBatisNet.DataMapper.Configuration
 			#endregion
 
 			#region Insert tag
-			Insert insert = null;
+			Insert insert;
 			foreach (XmlNode xmlNode in _configScope.SqlMapDocument.SelectNodes( ApplyMappingNamespacePrefix(XML_INSERT), _configScope.XmlNamespaceManager))
 			{
 				_configScope.ErrorContext.MoreInfo = "loading insert tag";
 				_configScope.NodeContext = xmlNode; // A insert tag
 
-				MappedStatement mappedStatement = null;
+				MappedStatement mappedStatement;
 
 				insert = InsertDeSerializer.Deserialize(xmlNode, _configScope);
 				insert.CacheModelName = ApplyNamespace( insert.CacheModelName );
 				insert.ParameterMapName = ApplyNamespace( insert.ParameterMapName );
 				insert.ResultMapName = ApplyNamespace( insert.ResultMapName );
 
-				if (_configScope.UseStatementNamespaces == true)
+				if (_configScope.UseStatementNamespaces)
 				{
 					insert.Id = ApplyNamespace(insert.Id);
 				}
@@ -1286,20 +1272,20 @@ namespace IBatisNet.DataMapper.Configuration
 			#endregion
 
 			#region Update tag
-			Update update = null;
+			Update update;
 			foreach (XmlNode xmlNode in _configScope.SqlMapDocument.SelectNodes( ApplyMappingNamespacePrefix(XML_UPDATE), _configScope.XmlNamespaceManager))
 			{
 				_configScope.ErrorContext.MoreInfo = "loading update tag";
 				_configScope.NodeContext = xmlNode; // A update tag
 
-				MappedStatement mappedStatement = null;
+				MappedStatement mappedStatement;
 
 				update = UpdateDeSerializer.Deserialize(xmlNode, _configScope);
 				update.CacheModelName = ApplyNamespace( update.CacheModelName );
 				update.ParameterMapName = ApplyNamespace( update.ParameterMapName );
 				update.ResultMapName = ApplyNamespace( update.ResultMapName );
 
-				if (_configScope.UseStatementNamespaces == true)
+				if (_configScope.UseStatementNamespaces)
 				{
 					update.Id = ApplyNamespace(update.Id);
 				}
@@ -1325,19 +1311,19 @@ namespace IBatisNet.DataMapper.Configuration
 			#endregion
 
 			#region Delete tag
-			Delete delete = null;
+			Delete delete;
 			foreach (XmlNode xmlNode in _configScope.SqlMapDocument.SelectNodes( ApplyMappingNamespacePrefix(XML_DELETE), _configScope.XmlNamespaceManager))
 			{
 				_configScope.ErrorContext.MoreInfo = "loading delete tag";
 				_configScope.NodeContext = xmlNode; // A delete tag
-				MappedStatement mappedStatement = null;
+				MappedStatement mappedStatement;
 
 				delete = DeleteDeSerializer.Deserialize(xmlNode, _configScope);
 				delete.CacheModelName = ApplyNamespace( delete.CacheModelName );
 				delete.ParameterMapName = ApplyNamespace( delete.ParameterMapName );
 				delete.ResultMapName = ApplyNamespace( delete.ResultMapName );
 
-				if (_configScope.UseStatementNamespaces == true)
+				if (_configScope.UseStatementNamespaces)
 				{
 					delete.Id = ApplyNamespace(delete.Id);
 				}
@@ -1363,20 +1349,20 @@ namespace IBatisNet.DataMapper.Configuration
 			#endregion
 
 			#region Procedure tag
-			Procedure procedure = null;
+			Procedure procedure;
 			foreach (XmlNode xmlNode in _configScope.SqlMapDocument.SelectNodes( ApplyMappingNamespacePrefix(XML_PROCEDURE), _configScope.XmlNamespaceManager))
 			{
 				_configScope.ErrorContext.MoreInfo = "loading procedure tag";
 				_configScope.NodeContext = xmlNode; // A procedure tag
 
-				MappedStatement mappedStatement = null;
+				MappedStatement mappedStatement;
 
 				procedure = ProcedureDeSerializer.Deserialize(xmlNode, _configScope);
 				procedure.CacheModelName = ApplyNamespace( procedure.CacheModelName );
 				procedure.ParameterMapName = ApplyNamespace( procedure.ParameterMapName );
 				procedure.ResultMapName = ApplyNamespace( procedure.ResultMapName );
 
-				if (_configScope.UseStatementNamespaces == true)
+				if (_configScope.UseStatementNamespaces)
 				{
 					procedure.Id = ApplyNamespace(procedure.Id);
 				}
@@ -1397,9 +1383,9 @@ namespace IBatisNet.DataMapper.Configuration
 
 			#region Load CacheModels
 
-			if (_configScope.IsCacheModelsEnabled == true)
+			if (_configScope.IsCacheModelsEnabled)
 			{
-				CacheModel cacheModel = null;
+				CacheModel cacheModel;
 				foreach (XmlNode xmlNode in _configScope.SqlMapDocument.SelectNodes( ApplyMappingNamespacePrefix(XML_CACHE_MODEL), _configScope.XmlNamespaceManager))
 				{
 					cacheModel = CacheModelDeSerializer.Deserialize(xmlNode, _configScope);
@@ -1409,7 +1395,7 @@ namespace IBatisNet.DataMapper.Configuration
 					foreach(XmlNode flushOn in xmlNode.SelectNodes( ApplyMappingNamespacePrefix(XML_FLUSH_ON_EXECUTE), _configScope.XmlNamespaceManager  ))
 					{
 						string statementName = flushOn.Attributes["statement"].Value;
-						if (_configScope.UseStatementNamespaces == true)
+						if (_configScope.UseStatementNamespaces)
 						{
 							statementName = ApplyNamespace( statementName ); 
 						}
@@ -1518,8 +1504,8 @@ namespace IBatisNet.DataMapper.Configuration
 
 					data = NodeUtils.ParsePropertyTokens(data, _configScope.Properties);
 
-					SqlText sqlText = null;
-					if ( postParseRequired == true ) 
+					SqlText sqlText;
+					if ( postParseRequired) 
 					{
 						sqlText = new SqlText();
 						sqlText.Text = data.ToString();
@@ -1540,13 +1526,13 @@ namespace IBatisNet.DataMapper.Configuration
 					if (serializer != null) 
 					{
 						isDynamic = true;
-						SqlTag tag = null;
+						SqlTag tag;
 
 						tag = serializer.Deserialize(child);
 
 						dynamic.AddChild(tag);
 
-						if (child.HasChildNodes == true) 
+						if (child.HasChildNodes) 
 						{
 							isDynamic = ParseDynamicTags( child, tag, sqlBuffer, isDynamic, tag.Handler.IsPostParseRequired, statement );
 						}
@@ -1656,7 +1642,11 @@ namespace IBatisNet.DataMapper.Configuration
 						if ( keyAttrib != null && valueAttrib!=null)
 						{
 							_configScope.Properties.Add( keyAttrib.Value,  valueAttrib.Value);
-							_logger.Info( string.Format("Add property \"{0}\" value \"{1}\"",keyAttrib.Value,valueAttrib.Value) );
+
+							if (_logger.IsDebugEnabled)
+							{
+								_logger.Debug( string.Format("Add property \"{0}\" value \"{1}\"",keyAttrib.Value,valueAttrib.Value) );
+							}
 						}
 						else
 						{
@@ -1666,7 +1656,11 @@ namespace IBatisNet.DataMapper.Configuration
 							foreach (XmlNode node in propertiesConfig.SelectNodes( XML_GLOBAL_PROPERTIES, _configScope.XmlNamespaceManager))
 							{
 								_configScope.Properties[node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value] = node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value;
-								_logger.Info( string.Format("Add property \"{0}\" value \"{1}\"",node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value,node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value) );
+
+								if (_logger.IsDebugEnabled)
+								{
+									_logger.Debug( string.Format("Add property \"{0}\" value \"{1}\"",node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value,node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value) );
+								}
 							}
 						}
 					}
@@ -1685,7 +1679,11 @@ namespace IBatisNet.DataMapper.Configuration
 					foreach (XmlNode node in propertiesConfig.SelectNodes( XML_SETTINGS_ADD ) )
 					{
 						_configScope.Properties[node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value] = node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value;
-						_logger.Info( string.Format("Add property \"{0}\" value \"{1}\"",node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value,node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value) );
+
+						if (_logger.IsDebugEnabled)
+						{
+							_logger.Debug( string.Format("Add property \"{0}\" value \"{1}\"",node.Attributes[PROPERTY_ELEMENT_KEY_ATTRIB].Value,node.Attributes[PROPERTY_ELEMENT_VALUE_ATTRIB].Value) );
+						}
 					}					
 				}
 			}
@@ -1701,7 +1699,7 @@ namespace IBatisNet.DataMapper.Configuration
 		/// <param name="statement"></param>
 		private void GenerateCommandText(ConfigurationScope configScope, IStatement statement)
 		{
-			string generatedSQL = string.Empty;
+			string generatedSQL;
 
 			//------ Build SQL CommandText
 			generatedSQL = SqlGenerator.BuildQuery(statement);
@@ -1719,13 +1717,13 @@ namespace IBatisNet.DataMapper.Configuration
 		/// </summary>
 		private void BuildParameterMap()
 		 {
-			ParameterMap parameterMap = null;
+			ParameterMap parameterMap;
 			XmlNode parameterMapNode = _configScope.NodeContext;
 
 			_configScope.ErrorContext.MoreInfo = "build ParameterMap";
 
 			// Get the parameterMap id
-			string id = ApplyNamespace( ((XmlAttribute)parameterMapNode.Attributes.GetNamedItem("id")).Value );
+			string id = ApplyNamespace( (parameterMapNode.Attributes.GetNamedItem("id")).Value );
 			_configScope.ErrorContext.ObjectId = id;
 
 			// Did we already process it ?
@@ -1739,7 +1737,7 @@ namespace IBatisNet.DataMapper.Configuration
 
 				if (parameterMap.ExtendMap.Length >0)
 				{
-					ParameterMap superMap = null;
+					ParameterMap superMap;
 					// Did we already build Extend ParameterMap ?
 					if (_configScope.SqlMapper.ParameterMaps.Contains( parameterMap.ExtendMap ) == false)
 					{
@@ -1782,12 +1780,12 @@ namespace IBatisNet.DataMapper.Configuration
 		/// </summary>
 		private void BuildResultMap()
 		 {
-			ResultMap resultMap = null;
+			ResultMap resultMap;
 			XmlNode resultMapNode = _configScope.NodeContext;
 
 			_configScope.ErrorContext.MoreInfo = "build ResultMap";
 
-			string id = ApplyNamespace(  ((XmlAttribute)resultMapNode.Attributes.GetNamedItem("id")).Value );
+			string id = ApplyNamespace(  (resultMapNode.Attributes.GetNamedItem("id")).Value );
 			_configScope.ErrorContext.ObjectId = id;
 
 			// Did we alredy process it
@@ -1801,7 +1799,7 @@ namespace IBatisNet.DataMapper.Configuration
 
 				if (resultMap.ExtendMap!=null && resultMap.ExtendMap.Length >0)
 				{
-					ResultMap superMap = null;
+					ResultMap superMap;
 					// Did we already build Extend ResultMap?
 					if (_configScope.SqlMapper.ResultMaps.Contains( resultMap.ExtendMap ) == false)
 					{
