@@ -30,7 +30,6 @@
   <property name="work.dir" value="${basedir}/work" />
   <property name="work.classes" value="${work.dir}/bin" />
   <property name="work.javadoc" value="${work.dir}/javadoc" />
-  <property name="test.src.dir" value="${work.dir}/test/src" />
   <property name="generated.source.dir.java5" value="${work.dir}/src/java5" />
   <property name="generated.source.dir.java2" value="${work.dir}/src/java2" />
   <property name="reports.dir" value="${basedir}/reports" />
@@ -128,7 +127,7 @@
     <mkdir dir="${reports.junit}"/>
 	  	
   	<copy todir="${generated.source.dir.java5}">
-  		<fileset dir="${basedir}/../test" />
+  		<fileset dir="${basedir}/../testJava5" />
   	</copy>
   	
   	<copy todir="${generated.source.dir.java2}">
