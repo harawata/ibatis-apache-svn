@@ -11,8 +11,8 @@
 <ul>
   <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/builds/iBATIS_DBL-2.1.7.597.zip"><b>iBATIS Java 2.1.7
     w/Binaries and Source</b></a> (Jan 21, 2006) [Status: General Availability]</li>
-  <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/builds/iBATIS_DBL-2.2.0.636.zip"><b>iBATIS Java 2.2.0
-    w/Binaries, Source and Documentation</b></a> (Aug 15, 2006) [Status: Beta - Voting for GA]</li>
+  <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/builds/iBATIS_DBL-2.2.0.638.zip"><b>iBATIS Java 2.2.0
+    w/Binaries, Source and Documentation</b></a> (Aug 16, 2006) [Status: Beta - Voting for GA]</li>
 </ul>
 
 <h4>Release Archive</h4>
@@ -48,47 +48,47 @@
     <ul>
       <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2_en.pdf">SQL Maps for Java,
         Developer Guide</a>
-        (Updated January 25, 2005)</li>
+        (Aug 9, 2006)</li>
       <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2-Tutorial_en.pdf">SQL Maps for
         Java, Tutorial</a>
-        (Updated June 17, 2004)</li>
+        (Feb 18, 2006)</li>
       <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-DAO-2_en.pdf">DAO for Java, Developer
         Guide</a>
-        (Updated June 17, 2004)</li>
+        (June 17, 2006)</li>
     </ul>
   </li>
   <li>Chinese PDF
     <ul>
       <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2_cn.pdf">SQL Maps for Java,
         Developer Guide</a>
-        (Updated June 17, 2004)</li>
+        (June 17, 2004)</li>
       <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2-Tutorial_cn.pdf">SQL Maps for
         Java, Tutorial</a>
-        (Updated June 17, 2004)</li>
+        (June 17, 2004)</li>
     </ul>
   </li>
   <li>Korean PDF
     <ul>
       <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2_ko.pdf">SQL Maps for Java,
         Developer Guide</a>
-        (Updated June 17, 2004)</li>
+        (June 17, 2004)</li>
       <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2-Tutorial_ko.pdf">SQL Maps for
         Java, Tutorial</a>
-        (Updated June 17, 2004)</li>
+        (June 17, 2004)</li>
     </ul>
   </li>
   <li>French PDF
     <ul>
       <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2-Tutorial_fr.pdf">SQL Maps for
         Java, Tutorial</a>
-        (Updated May 1, 2005)</li>
+        (May 15, 2006)</li>
     </ul>
   </li>
   <li>Italian PDF
     <ul>
       <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2-Tutorial-it.pdf">SQL Maps for
         Java, Tutorial</a>
-        (Updated May 1, 2005)</li>
+        (May 1, 2005)</li>
     </ul>
   </li>
 </ul>
