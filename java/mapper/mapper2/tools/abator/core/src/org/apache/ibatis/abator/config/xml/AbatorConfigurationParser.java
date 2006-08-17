@@ -329,6 +329,7 @@ public class AbatorConfigurationParser {
         String selectByExampleQueryId = attributes
                 .getProperty("selectByExampleQueryId"); //$NON-NLS-1$
         String modelType = attributes.getProperty("modelType"); //$NON-NLS-1$
+        String escapeWildcards = attributes.getProperty("escapeWildcards"); //$NON-NLS-1$
 
         if (StringUtility.stringHasValue(catalog)) {
             tc.setCatalog(catalog);
@@ -390,6 +391,11 @@ public class AbatorConfigurationParser {
 
         if (StringUtility.stringHasValue(modelType)) {
             tc.setModelType(ModelType.getModelType(modelType));
+        }
+
+        if (StringUtility.stringHasValue(escapeWildcards)) {
+            tc.setWildcardEscapingEnabled("true" //$NON-NLS-1$
+                    .equals(escapeWildcards));
         }
 
         NodeList nodeList = node.getChildNodes();

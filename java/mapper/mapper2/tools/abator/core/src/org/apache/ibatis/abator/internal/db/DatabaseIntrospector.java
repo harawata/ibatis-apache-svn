@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.apache.ibatis.abator.api.FullyQualifiedTable;
 import org.apache.ibatis.abator.api.JavaTypeResolver;
@@ -52,7 +53,7 @@ public class DatabaseIntrospector {
 
         Map introspectedTables = new HashMap();
         DatabaseMetaData dbmd = connection.getMetaData();
-
+        
         String localCatalog;
         String localSchema;
         String localTableName;
@@ -75,6 +76,37 @@ public class DatabaseIntrospector {
             localCatalog = tc.getCatalog();
             localSchema = tc.getSchema();
             localTableName = tc.getTableName();
+        }
+
+        if (tc.isWildcardEscapingEnabled()) {
+            String escapeString = dbmd.getSearchStringEscape();
+            
+            StringBuffer sb = new StringBuffer();
+            StringTokenizer st;
+            if (localSchema != null) {
+                st = new StringTokenizer(localSchema, "_%", true); //$NON-NLS-1$
+                while (st.hasMoreTokens()) {
+                    String token = st.nextToken();
+                    if (token.equals("_") //$NON-NLS-1$
+                            || token.equals("%")) { //$NON-NLS-1$
+                        sb.append(escapeString);
+                    }
+                    sb.append(token);
+                }
+                localSchema = sb.toString();
+            }
+            
+            sb.setLength(0);
+            st = new StringTokenizer(localTableName, "_%", true); //$NON-NLS-1$
+            while (st.hasMoreTokens()) {
+                String token = st.nextToken();
+                if (token.equals("_") //$NON-NLS-1$
+                        || token.equals("%")) { //$NON-NLS-1$
+                    sb.append(escapeString);
+                }
+                sb.append(token);
+            }
+            localTableName = sb.toString();
         }
 
         ResultSet rs = dbmd.getColumns(localCatalog, localSchema,

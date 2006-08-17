@@ -148,7 +148,8 @@
   enableDeleteByExample CDATA #IMPLIED
   selectByPrimaryKeyQueryId CDATA #IMPLIED
   selectByExampleQueryId CDATA #IMPLIED
-  modelType CDATA #IMPLIED>
+  modelType CDATA #IMPLIED
+  escapeWildcards CDATA #IMPLIED>
 
 <!--
   The columnOverride element is used to change certain attributes of the column

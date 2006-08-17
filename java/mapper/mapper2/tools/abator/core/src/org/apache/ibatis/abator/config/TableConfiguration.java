@@ -57,6 +57,7 @@ public class TableConfiguration extends PropertyHolder {
     private String domainObjectName;
     private String alias;
     private ModelType modelType;
+    private boolean wildcardEscapingEnabled;
     
 	public TableConfiguration(AbatorContext abatorContext) {
 		super();
@@ -289,5 +290,13 @@ public class TableConfiguration extends PropertyHolder {
 
     public void setModelType(ModelType modelType) {
         this.modelType = modelType;
+    }
+
+    public boolean isWildcardEscapingEnabled() {
+        return wildcardEscapingEnabled;
+    }
+
+    public void setWildcardEscapingEnabled(boolean wildcardEscapingEnabled) {
+        this.wildcardEscapingEnabled = wildcardEscapingEnabled;
     }
 }
