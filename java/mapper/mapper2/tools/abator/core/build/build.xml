@@ -31,7 +31,8 @@
   <property name="work.classes" value="${work.dir}/bin" />
   <property name="work.javadoc" value="${work.dir}/javadoc" />
   <property name="test.src.dir" value="${work.dir}/test/src" />
-  <property name="generated.source.dir" value="${work.dir}/src" />
+  <property name="generated.source.dir.java5" value="${work.dir}/src/java5" />
+  <property name="generated.source.dir.java2" value="${work.dir}/src/java2" />
   <property name="reports.dir" value="${basedir}/reports" />
   <property name="reports.junit" value="${reports.dir}/junit" />
   
@@ -121,12 +122,17 @@
   </target>
   
   <target name="test.prepare" depends="build.compile">
-    <mkdir dir="${generated.source.dir}"/>
+    <mkdir dir="${generated.source.dir.java5}"/>
+    <mkdir dir="${generated.source.dir.java2}"/>
     <mkdir dir="${reports.dir}"/>
     <mkdir dir="${reports.junit}"/>
 	  	
-  	<copy todir="${generated.source.dir}">
+  	<copy todir="${generated.source.dir.java5}">
   		<fileset dir="${basedir}/../test" />
+  	</copy>
+  	
+  	<copy todir="${generated.source.dir.java2}">
+  		<fileset dir="${basedir}/../testJava2" />
   	</copy>
   </target>
 	  
@@ -146,21 +152,34 @@
   		url="jdbc:hsqldb:mem:aname"
   		userid="sa"
   		password=""
-  		src="${generated.source.dir}/abatortest/CreateDB.sql"/>
+  		src="${generated.source.dir.java5}/abatortest/CreateDB.sql"/>
 	  	
-  	<abator configfile="${generated.source.dir}/abatortest/abatorConfig.xml" >
+  	<abator configfile="${generated.source.dir.java5}/abatortest/abatorConfig.xml" >
   		<propertyset>
-  			<propertyref name="generated.source.dir"/>
+  			<propertyref name="generated.source.dir.java5"/>
+  		</propertyset>
+  	</abator>
+	  	
+  	<abator configfile="${generated.source.dir.java2}/abatortest/java2/abatorConfig.xml" >
+  		<propertyset>
+  			<propertyref name="generated.source.dir.java2"/>
   		</propertyset>
   	</abator>
   </target>
 	  	
   <target name="test.compile.test.code" depends="test.generate.test.code">
-    <javac srcdir="${generated.source.dir}"
+    <javac srcdir="${generated.source.dir.java5}"
     	deprecation="true" 
     	debug="true"
     	source="1.5"
     	target="1.5">
+    </javac>
+
+    <javac srcdir="${generated.source.dir.java2}"
+    	deprecation="true" 
+    	debug="true"
+    	source="1.4"
+    	target="1.4">
     </javac>
   </target>
 		
@@ -168,13 +187,28 @@
     <junit printsummary="true" showoutput="true">
       <formatter type="xml"/>
       <batchtest todir="${reports.junit}" fork="yes" haltonerror="no" failureproperty="testsFailed">
-        <fileset dir="${generated.source.dir}">
-          <exclude name="**/AllExecuteTests.class"/>
+        <fileset dir="${generated.source.dir.java5}">
           <include name="**/*Tests.class"/>
         </fileset>
       </batchtest>
       <classpath>
-      	<pathelement location="${generated.source.dir}"/>
+      	<pathelement location="${generated.source.dir.java5}"/>
+		<pathelement location="${basedir}/../devlib/ibatis-common-2.jar" />
+		<pathelement location="${basedir}/../devlib/ibatis-dao-2.jar" />
+		<pathelement location="${basedir}/../devlib/ibatis-sqlmap-2.jar" />
+		<pathelement location="${basedir}/../devlib/hsqldb.jar" />
+      </classpath>
+    </junit>
+
+    <junit printsummary="true" showoutput="true">
+      <formatter type="xml"/>
+      <batchtest todir="${reports.junit}" fork="yes" haltonerror="no" failureproperty="testsFailed">
+        <fileset dir="${generated.source.dir.java2}">
+          <include name="**/*Tests.class"/>
+        </fileset>
+      </batchtest>
+      <classpath>
+      	<pathelement location="${generated.source.dir.java2}"/>
 		<pathelement location="${basedir}/../devlib/ibatis-common-2.jar" />
 		<pathelement location="${basedir}/../devlib/ibatis-dao-2.jar" />
 		<pathelement location="${basedir}/../devlib/ibatis-sqlmap-2.jar" />
@@ -183,6 +217,40 @@
     </junit>
   </target>
 	  
+  <target name="test.run.no.compile" >
+    <junit printsummary="true" showoutput="true">
+      <formatter type="xml"/>
+      <batchtest todir="${reports.junit}" fork="yes" haltonerror="no" failureproperty="testsFailed">
+        <fileset dir="${generated.source.dir.java5}">
+          <include name="**/*Tests.class"/>
+        </fileset>
+      </batchtest>
+      <classpath>
+      	<pathelement location="${generated.source.dir.java5}"/>
+		<pathelement location="${basedir}/../devlib/ibatis-common-2.jar" />
+		<pathelement location="${basedir}/../devlib/ibatis-dao-2.jar" />
+		<pathelement location="${basedir}/../devlib/ibatis-sqlmap-2.jar" />
+		<pathelement location="${basedir}/../devlib/hsqldb.jar" />
+      </classpath>
+    </junit>
+
+    <junit printsummary="true" showoutput="true">
+      <formatter type="xml"/>
+      <batchtest todir="${reports.junit}" fork="yes" haltonerror="no" failureproperty="testsFailed">
+        <fileset dir="${generated.source.dir.java2}">
+          <include name="**/*Tests.class"/>
+        </fileset>
+      </batchtest>
+      <classpath>
+      	<pathelement location="${generated.source.dir.java2}"/>
+		<pathelement location="${basedir}/../devlib/ibatis-common-2.jar" />
+		<pathelement location="${basedir}/../devlib/ibatis-dao-2.jar" />
+		<pathelement location="${basedir}/../devlib/ibatis-sqlmap-2.jar" />
+		<pathelement location="${basedir}/../devlib/hsqldb.jar" />
+      </classpath>
+    </junit>
+  </target>
+	
   <target name="test.report" depends="test.run" >
     <junitreport todir="${reports.junit}">
       <fileset dir="${reports.junit}">

@@ -561,7 +561,18 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         sb.append(cd.getAliasedColumnName());
         sb.append(' ');
         sb.append(operator);
-        sb.append("\", value, \""); //$NON-NLS-1$
+        sb.append("\", "); //$NON-NLS-1$
+        
+        if (cd.getResolvedJavaType().getFullyQualifiedJavaType().isPrimitive()) {
+            sb.append("new "); //$NON-NLS-1$
+            sb.append(cd.getResolvedJavaType().getFullyQualifiedJavaType()
+                    .getPrimitiveTypeWrapper().getShortName());
+            sb.append("(value)"); //$NON-NLS-1$
+        } else {
+            sb.append("value"); //$NON-NLS-1$
+        }
+        
+        sb.append(", \""); //$NON-NLS-1$
         sb.append(cd.getJavaProperty());
         sb.append("\");"); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
@@ -643,7 +654,21 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         } else {
             sb.append(" not between"); //$NON-NLS-1$
         }
-        sb.append("\", value1, value2, \""); //$NON-NLS-1$
+        sb.append("\", ");
+        if (cd.getResolvedJavaType().getFullyQualifiedJavaType().isPrimitive()) {
+            sb.append("new "); //$NON-NLS-1$
+            sb.append(cd.getResolvedJavaType().getFullyQualifiedJavaType()
+                    .getPrimitiveTypeWrapper().getShortName());
+            sb.append("(value1), "); //$NON-NLS-1$
+            sb.append("new "); //$NON-NLS-1$
+            sb.append(cd.getResolvedJavaType().getFullyQualifiedJavaType()
+                    .getPrimitiveTypeWrapper().getShortName());
+            sb.append("(value2)"); //$NON-NLS-1$
+        } else {
+            sb.append("value1, value2"); //$NON-NLS-1$
+        }
+        
+        sb.append(", \""); //$NON-NLS-1$
         sb.append(cd.getJavaProperty());
         sb.append("\");"); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
