@@ -2,6 +2,11 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
+ 2.2.1 - ???
+------------------------------
+ o Fixed IBATIS-335 - Don't call setQueryTimeout if no value specified
+
+------------------------------
  2.2.0 - Aug 15, 2006
 ------------------------------
 

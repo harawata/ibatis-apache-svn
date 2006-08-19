@@ -487,8 +487,6 @@ public class SqlExecutor {
   private static void setStatementTimeout(MappedStatement mappedStatement, Statement statement) throws SQLException {
     if (mappedStatement.getTimeout() != null) {
       statement.setQueryTimeout(mappedStatement.getTimeout().intValue());
-    } else {
-      statement.setQueryTimeout(0); // no timeout
     }
   }
 
