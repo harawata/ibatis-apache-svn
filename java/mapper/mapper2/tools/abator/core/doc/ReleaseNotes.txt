@@ -21,6 +21,9 @@ Version 1.0.0:
 14. Allowed the Ant task to accept a property set
 15. Added a <properties> element to the XML configuration
 
+For full details, see the user's guid at doc\index.html in this
+distribution - then look at the "What's New" page.
+
 -------------------------------------------------------------------------------
 Version 0.6.5:
 1. Added support for specifying rootClass for the model objects and

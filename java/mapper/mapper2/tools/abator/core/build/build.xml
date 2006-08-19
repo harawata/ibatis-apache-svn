@@ -15,8 +15,10 @@
     
        ant clean
     
-    Important: the build requires a JSE 5.0 or greater compiler!!!
-       Abator itself is compiled for JSE 1.4, but the tests require 5.0.
+    Important: the build will run with either JDK 1.4, or JDK 5.0.
+      If you use JDK 5.0, more tests will run - this is the only way to
+      effectively test that the Java5 generator set is functioning properly.
+      But we should still run with JDK 1.4 for a release build.
     
     Note: to update the version of Abator, change the 
        version.properties file (the "version" property).
@@ -37,12 +39,21 @@
   
   <target name="clean" unless="${TSTAMP}">
   	<tstamp/>
+  	<available classname="java.lang.annotation.Annotation" property="usingJava5"/>
     <delete dir="${work.dir}" />
     <delete dir="${deploy.dir}" />
     <delete dir="${reports.dir}" />
   </target>
+	
+  <target name="sayJava5" depends="clean" if="usingJava5">
+  	<echo message="Using Java 5 for compilation! This is not suitable for a release build." />
+  </target>
   
-  <target name="build.prepare" depends="clean">
+  <target name="sayJava2" depends="clean" unless="usingJava5">
+  	<echo message="Not Using Java 5 for compilation!  This is suitable for a release build, but fewer test will be run." />
+  </target>
+	  
+  <target name="build.prepare" depends="clean, sayJava5, sayJava2">
     <mkdir dir="${deploy.dir}"/>
     <mkdir dir="${work.dir}"/>
     <mkdir dir="${work.classes}"/>
@@ -121,31 +132,19 @@
   </target>
   
   <target name="test.prepare" depends="build.compile">
-    <mkdir dir="${generated.source.dir.java5}"/>
     <mkdir dir="${generated.source.dir.java2}"/>
+    <mkdir dir="${generated.source.dir.java5}"/>
     <mkdir dir="${reports.dir}"/>
     <mkdir dir="${reports.junit}"/>
 	  	
-  	<copy todir="${generated.source.dir.java5}">
-  		<fileset dir="${basedir}/../testJava5" />
-  	</copy>
-  	
   	<copy todir="${generated.source.dir.java2}">
   		<fileset dir="${basedir}/../testJava2" />
   	</copy>
-  </target>
-	  
-  <target name="test.generate.test.code" depends="test.prepare">
-  	<!-- note that the class does not exist until the build runs.
-  	 Validating Ant editors will complain that the task cannot be
-  	 found, but it's not really an error. -->
-  	<taskdef name="abator"
-  	         classname="org.apache.ibatis.abator.ant.AbatorAntTask">
-  		<classpath>
-  			<pathelement location="${work.classes}"/>
-  		</classpath>
-  	</taskdef>
-	  	
+  	
+	<copy todir="${generated.source.dir.java5}">
+		<fileset dir="${basedir}/../testJava5" />
+	</copy>
+
   	<!-- create the test database -->
   	<sql driver="org.hsqldb.jdbcDriver"
   		url="jdbc:hsqldb:mem:aname"
@@ -153,12 +152,20 @@
   		password=""
   		src="${generated.source.dir.java5}/abatortest/CreateDB.sql"/>
 	  	
-  	<abator configfile="${generated.source.dir.java5}/abatortest/abatorConfig.xml" >
-  		<propertyset>
-  			<propertyref name="generated.source.dir.java5"/>
-  		</propertyset>
-  	</abator>
+  </target>
+	  
+  <target name="test.generate.test.code.java2" depends="test.prepare">
 	  	
+    <!-- note that the class does not exist until the build runs.
+    	 Validating Ant editors will complain that the task cannot be
+    	 found, but it's not really an error. -->
+    <taskdef name="abator"
+             classname="org.apache.ibatis.abator.ant.AbatorAntTask">
+      <classpath>
+    	  <pathelement location="${work.classes}"/>
+      </classpath>
+    </taskdef>
+  	
   	<abator configfile="${generated.source.dir.java2}/abatortest/java2/abatorConfig.xml" >
   		<propertyset>
   			<propertyref name="generated.source.dir.java2"/>
@@ -166,14 +173,25 @@
   	</abator>
   </target>
 	  	
-  <target name="test.compile.test.code" depends="test.generate.test.code">
-    <javac srcdir="${generated.source.dir.java5}"
-    	deprecation="true" 
-    	debug="true"
-    	source="1.5"
-    	target="1.5">
-    </javac>
-
+  <target name="test.generate.test.code.java5" depends="test.prepare" if="usingJava5">
+    <!-- note that the class does not exist until the build runs.
+    	 Validating Ant editors will complain that the task cannot be
+    	 found, but it's not really an error. -->
+    <taskdef name="abator"
+             classname="org.apache.ibatis.abator.ant.AbatorAntTask">
+      <classpath>
+    	  <pathelement location="${work.classes}"/>
+      </classpath>
+    </taskdef>
+  	
+  	<abator configfile="${generated.source.dir.java5}/abatortest/abatorConfig.xml" >
+  		<propertyset>
+  			<propertyref name="generated.source.dir.java5"/>
+  		</propertyset>
+  	</abator>
+  </target>
+	
+  <target name="test.compile.test.code.java2" depends="test.generate.test.code.java2">
     <javac srcdir="${generated.source.dir.java2}"
     	deprecation="true" 
     	debug="true"
@@ -182,23 +200,16 @@
     </javac>
   </target>
 		
-  <target name="test.run" depends="test.compile.test.code">
-    <junit printsummary="true" showoutput="true">
-      <formatter type="xml"/>
-      <batchtest todir="${reports.junit}" fork="yes" haltonerror="no" failureproperty="testsFailed">
-        <fileset dir="${generated.source.dir.java5}">
-          <include name="**/*Tests.class"/>
-        </fileset>
-      </batchtest>
-      <classpath>
-      	<pathelement location="${generated.source.dir.java5}"/>
-		<pathelement location="${basedir}/../devlib/ibatis-common-2.jar" />
-		<pathelement location="${basedir}/../devlib/ibatis-dao-2.jar" />
-		<pathelement location="${basedir}/../devlib/ibatis-sqlmap-2.jar" />
-		<pathelement location="${basedir}/../devlib/hsqldb.jar" />
-      </classpath>
-    </junit>
-
+  <target name="test.compile.test.code.java5" depends="test.generate.test.code.java5" if="usingJava5">
+    <javac srcdir="${generated.source.dir.java5}"
+    	deprecation="true" 
+    	debug="true"
+    	source="1.5"
+    	target="1.5">
+    </javac>
+  </target>
+			
+  <target name="test.run.java2" depends="test.compile.test.code.java2">
     <junit printsummary="true" showoutput="true">
       <formatter type="xml"/>
       <batchtest todir="${reports.junit}" fork="yes" haltonerror="no" failureproperty="testsFailed">
@@ -216,6 +227,24 @@
     </junit>
   </target>
 	  
+  <target name="test.run.java5" depends="test.compile.test.code.java5" if="usingJava5">
+    <junit printsummary="true" showoutput="true">
+      <formatter type="xml"/>
+      <batchtest todir="${reports.junit}" fork="yes" haltonerror="no" failureproperty="testsFailed">
+        <fileset dir="${generated.source.dir.java5}">
+          <include name="**/*Tests.class"/>
+        </fileset>
+      </batchtest>
+      <classpath>
+      	<pathelement location="${generated.source.dir.java5}"/>
+		<pathelement location="${basedir}/../devlib/ibatis-common-2.jar" />
+		<pathelement location="${basedir}/../devlib/ibatis-dao-2.jar" />
+		<pathelement location="${basedir}/../devlib/ibatis-sqlmap-2.jar" />
+		<pathelement location="${basedir}/../devlib/hsqldb.jar" />
+      </classpath>
+    </junit>
+  </target>
+	
   <target name="test.run.no.compile" >
     <junit printsummary="true" showoutput="true">
       <formatter type="xml"/>
@@ -250,7 +279,7 @@
     </junit>
   </target>
 	
-  <target name="test.report" depends="test.run" >
+  <target name="test.report" depends="test.run.java2, test.run.java5" >
     <junitreport todir="${reports.junit}">
       <fileset dir="${reports.junit}">
         <include name="TEST-*.xml"/>

@@ -1,7 +1,7 @@
 ===============================================================================
 Overview
 --------
-Abator is a code generator for the iBATIS data mapping framefork.
+Abator is a code generator for the iBATIS SQL mapping framefork.
 Abator will introspect database tables (through JDBC DatabaseMetaData) and
 generate SQL Map XML files, Java model object (POJOs) tha match the table,
 and (optionally) DAO classes that use the other generated objects.
