@@ -45,15 +45,9 @@
     <delete dir="${reports.dir}" />
   </target>
 	
-  <target name="sayJava5" depends="clean" if="usingJava5">
-  	<echo message="Using Java 5 for compilation! This is not suitable for a release build." />
-  </target>
-  
-  <target name="sayJava2" depends="clean" unless="usingJava5">
-  	<echo message="Not Using Java 5 for compilation!  This is suitable for a release build, but fewer test will be run." />
-  </target>
-	  
-  <target name="build.prepare" depends="clean, sayJava5, sayJava2">
+  <target name="build.prepare" depends="clean">
+  	<echo message="Using JDK version ${ant.java.version} for compilation." />
+  	
     <mkdir dir="${deploy.dir}"/>
     <mkdir dir="${work.dir}"/>
     <mkdir dir="${work.classes}"/>

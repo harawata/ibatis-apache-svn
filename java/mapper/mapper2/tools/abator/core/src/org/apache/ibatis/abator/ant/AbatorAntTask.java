@@ -104,7 +104,7 @@ public class AbatorAntTask extends Task {
             List errors = e.getErrors();
             Iterator iter = errors.iterator();
             while (iter.hasNext()) {
-                log((String) iter.next());
+                log((String) iter.next(), Project.MSG_ERR);
             }
             
             throw new BuildException(e.getMessage());

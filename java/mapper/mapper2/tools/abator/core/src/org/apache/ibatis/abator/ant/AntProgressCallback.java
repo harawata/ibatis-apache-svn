@@ -17,6 +17,7 @@
 package org.apache.ibatis.abator.ant;
 
 import org.apache.ibatis.abator.api.ProgressCallback;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
 /**
@@ -50,7 +51,7 @@ public class AntProgressCallback implements ProgressCallback {
      */
     public void startSubTask(String subTaskName) {
         if (verbose) {
-            task.log(subTaskName);
+            task.log(subTaskName, Project.MSG_VERBOSE);
         }
     }
 
