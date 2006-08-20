@@ -3,7 +3,7 @@
 <plugin
    id="org.apache.ibatis.abator.core"
    name="Abator for iBATIS"
-   version="0.7.0"
+   version="1.0.0"
    provider-name="ibatis.apache.org">
    <runtime>
       <library name="abator.jar">

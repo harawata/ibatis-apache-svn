@@ -2,9 +2,8 @@
 <feature
       id="org.apache.ibatis.abator"
       label="Abator Code Generator for iBATIS"
-      version="0.7.0"
+      version="1.0.0"
       provider-name="ibatis.apache.org">
-
    <install-handler/>
 
    <description>
@@ -219,7 +218,7 @@ END OF TERMS AND CONDITIONS
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.core.resources"/>
-      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.jdt.core" version="3.1.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.text"/>
       <import plugin="org.eclipse.jdt.launching"/>
       <import plugin="org.eclipse.ui.editors"/>
@@ -232,18 +231,18 @@ END OF TERMS AND CONDITIONS
          id="org.apache.ibatis.abator.doc"
          download-size="0"
          install-size="0"
-         version="0.7.0"/>
+         version="1.0.0"/>
 
    <plugin
          id="org.apache.ibatis.abator.ui"
          download-size="0"
          install-size="0"
-         version="0.7.0"/>
+         version="1.0.0"/>
 
    <plugin
          id="org.apache.ibatis.abator.core"
          download-size="0"
          install-size="0"
-         version="0.7.0"/>
+         version="1.0.0"/>
 
 </feature>

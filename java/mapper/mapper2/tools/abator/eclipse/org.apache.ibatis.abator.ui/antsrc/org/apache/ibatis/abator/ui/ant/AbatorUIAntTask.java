@@ -21,6 +21,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.ibatis.abator.api.Abator;
 import org.apache.ibatis.abator.config.AbatorConfiguration;
@@ -31,7 +32,9 @@ import org.apache.ibatis.abator.internal.util.StringUtility;
 import org.apache.ibatis.abator.ui.plugin.EclipseProgressCallback;
 import org.apache.ibatis.abator.ui.plugin.EclipseShellCallback;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.PropertySet;
 import org.eclipse.ant.core.AntCorePlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -40,6 +43,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public class AbatorUIAntTask extends Task {
 
+    private PropertySet propertyset;
     private String configfile;
 
     /**
@@ -68,7 +72,9 @@ public class AbatorUIAntTask extends Task {
         }
 
         try {
-            AbatorConfigurationParser cp = new AbatorConfigurationParser(
+            Properties p = propertyset == null ? null : propertyset.getProperties();
+            
+            AbatorConfigurationParser cp = new AbatorConfigurationParser(p,
                     warnings);
             AbatorConfiguration config = cp
                     .parseAbatorConfiguration(configurationFile);
@@ -90,7 +96,7 @@ public class AbatorUIAntTask extends Task {
             List errors = e.getErrors();
             Iterator iter = errors.iterator();
             while (iter.hasNext()) {
-                log((String) iter.next());
+                log((String) iter.next(), Project.MSG_ERR);
             }
 
             throw new BuildException(e.getMessage());
@@ -106,7 +112,7 @@ public class AbatorUIAntTask extends Task {
 
         Iterator iter = warnings.iterator();
         while (iter.hasNext()) {
-            log((String) iter.next());
+            log((String) iter.next(), Project.MSG_WARN);
         }
     }
 
@@ -123,5 +129,13 @@ public class AbatorUIAntTask extends Task {
      */
     public void setConfigfile(String configfile) {
         this.configfile = configfile;
+    }
+
+    public PropertySet createPropertyset() {
+        if (propertyset == null) {
+            propertyset = new PropertySet();
+        }
+        
+        return propertyset;
     }
 }

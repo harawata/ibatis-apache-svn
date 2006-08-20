@@ -28,6 +28,7 @@
       <topic href="core/htmldoc/configreference/javaTypeResolver.html" label="&lt;javaTypeResolver&gt;"/>
       <topic href="core/htmldoc/configreference/javaModelGenerator.html" label="&lt;javaModelGenerator&gt;"/>
       <topic href="core/htmldoc/configreference/jdbcConnection.html" label="&lt;jdbcConnection&gt;"/>
+      <topic href="core/htmldoc/configreference/properties.html" label="&lt;properties&gt;"/>
       <topic href="core/htmldoc/configreference/property.html" label="&lt;property&gt;"/>
       <topic href="core/htmldoc/configreference/sqlMapGenerator.html" label="&lt;sqlMapGenerator&gt;"/>
       <topic href="core/htmldoc/configreference/table.html" label="&lt;table&gt;"/>
@@ -66,7 +67,6 @@
     <topic label="org.apache.ibatis.abator.exception" href="html/javadoc/org/apache/ibatis/abator/exception/package-summary.html" />
     <topic label="org.apache.ibatis.abator.internal" href="html/javadoc/org/apache/ibatis/abator/internal/package-summary.html" />
     <topic label="org.apache.ibatis.abator.internal.db" href="html/javadoc/org/apache/ibatis/abator/internal/db/package-summary.html" />
-    <topic label="org.apache.ibatis.abator.internal.java" href="html/javadoc/org/apache/ibatis/abator/internal/java/package-summary.html" />
     <topic label="org.apache.ibatis.abator.internal.java.dao" href="html/javadoc/org/apache/ibatis/abator/internal/java/dao/package-summary.html" />
     <topic label="org.apache.ibatis.abator.internal.java.model" href="html/javadoc/org/apache/ibatis/abator/internal/java/model/package-summary.html" />
     <topic label="org.apache.ibatis.abator.internal.rules" href="html/javadoc/org/apache/ibatis/abator/internal/rules/package-summary.html" />

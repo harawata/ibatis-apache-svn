@@ -27,7 +27,7 @@ follows:</p>
     <td><code>org.apache.ibatis.abator.core</code></td>
     <td>This plug-in is an Eclipse library plug-in for the standard Abator JAR file.
       The purpose of this plug-in is to package the standard JAR and make it available to the
-      other plug-ins.  There is a build filed in this plug-in (buildAbator.xml) that
+      other plug-ins.  There is a build file in this plug-in (buildAbator.xml) that
       will compile the core Abator JAR file and update the wrapped JAR files.  This makes
       it easy to keep the plug-in up to date as the core functionality is developed.</td>
   </tr>
@@ -139,8 +139,9 @@ Java project for the core JAR by following these steps:</p>
   </li>
   <li>Select the "Java Project from Existing Ant Buildfile" wizard, press "Next"</li>
   <li>Browse to the "build.xml" file in the checked out project (for example
-    /Abator/source/core/build/build.xml).  Accept the default for the
-    other fields and press "Finish".</li>
+    /Abator/source/core/build/build.xml).  Select the javac target that compiles
+    Abator, not the target for compiling generated code in the test targets.
+    Accept the default for the other fields and press "Finish".</li>
   <li>Wait for the workspace to build.</li>
 </ol>
 
@@ -151,10 +152,7 @@ new project to 1.4.</p>
 
 <p>If you make a change in the Abator core files, you can use the <code>buildAbator.xml</code>
 Ant build file in the <code>org.apache.ibatis.abator.core</code> project to update the
-JAR in the plug-in.  If you have both a JDK 1.4 and JDK 5.0 installed on your machine,
-there could be errors when running this build file.  To fix the errors, make sure
-that the JRE for the "Abator for iBATIS" project is set to the 1.4.2 JRE.  You might need
-to configure a new JRE in Eclipse to make this happen.</p>
+JAR in the plug-in.</p>
 
 </body>
 </html>
