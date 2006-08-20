@@ -52,7 +52,6 @@ public class AdapterFactory implements IAdapterFactory {
     }
 
     private boolean isAbatorConfigurationFile(IFile file) {
-        // TODO - a SAX parse might be more efficient here???
         String fileName = file.getName();
         if (fileName.length() > 4) {
             String extension = fileName.substring(fileName.length() - 4);
@@ -69,35 +68,18 @@ public class AdapterFactory implements IAdapterFactory {
         } catch (CoreException e) {
             return false;
         }
-
-        byte[] contents = new byte[1024];
-        StringBuffer sb = new StringBuffer();
-
-        try {
-            int bytesRead;
-            do {
-                bytesRead = is.read(contents);
-                if (bytesRead > 0) {
-                    sb.append(new String(contents, 0, bytesRead));
-                }
-            } while (bytesRead == contents.length);
-        } catch (IOException e) {
-            return false;
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                // ignore
-                ;
-            }
-        }
-
-        String s = sb.toString();
         
-        if (s.indexOf("<abatorConfiguration") == -1) { //$NON-NLS-1$
-            return false;
-        } else {
-            return true;
+        AbatorConfigVerifyer verifyer = new AbatorConfigVerifyer(is);
+        
+        boolean rc = verifyer.isAbatorConfigFile();
+        
+        try {
+            is.close();
+        } catch (IOException e) {
+            // ignore
+            ;
         }
+        
+        return rc;
     }
 }

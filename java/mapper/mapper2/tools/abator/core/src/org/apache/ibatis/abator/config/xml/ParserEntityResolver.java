@@ -18,6 +18,7 @@ package org.apache.ibatis.abator.config.xml;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.apache.ibatis.abator.internal.sqlmap.XmlConstants;
 import org.apache.ibatis.abator.internal.util.messages.Messages;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -43,7 +44,7 @@ public class ParserEntityResolver implements EntityResolver {
 	 */
 	public InputSource resolveEntity(String publicId, String systemId)
 			throws SAXException, IOException {
-		if ("-//Apache Software Foundation//DTD Abator for iBATIS Configuration 1.0//EN".equals(publicId)) { //$NON-NLS-1$
+		if (XmlConstants.ABATOR_CONFIG_PUBLIC_ID.equals(publicId)) {
 			InputStream is = getClass()
 					.getClassLoader()
 					.getResourceAsStream(
