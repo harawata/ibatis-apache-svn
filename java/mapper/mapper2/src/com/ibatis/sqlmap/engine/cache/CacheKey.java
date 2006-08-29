@@ -42,7 +42,7 @@ public class CacheKey {
   }
 
   /**
-   * Costructor that supplies an initial hashcode
+   * Constructor that supplies an initial hashcode
    *
    * @param initialNonZeroOddNumber - the hashcode to use
    */
@@ -123,7 +123,12 @@ public class CacheKey {
   }
 
   public String toString() {
-    return new StringBuffer().append(hashcode).append('|').append(checksum).toString();
+    StringBuffer returnValue = new StringBuffer().append(hashcode).append('|').append(checksum);
+    for (int i=0; i < paramList.size(); i++) {
+      returnValue.append('|').append(paramList.get(i));
+    }
+
+    return returnValue.toString();
   }
 
 }
