@@ -4,6 +4,7 @@ Build Number: @buildNum@
 ------------------------------
  2.2.1 - ???
 ------------------------------
+ o Implemented transaction level PreparedStatement caching.
  o Fixed IBATIS-335 - Don't call setQueryTimeout if no value specified
 
 ------------------------------
