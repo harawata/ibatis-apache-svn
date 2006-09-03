@@ -15,15 +15,14 @@
  */
 package com.ibatis.sqlmap;
 
+import com.ibatis.sqlmap.engine.execution.BatchException;
+import com.ibatis.sqlmap.engine.execution.BatchResult;
+import testdomain.Account;
+
 import java.sql.BatchUpdateException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.ibatis.sqlmap.engine.execution.BatchException;
-import com.ibatis.sqlmap.engine.execution.BatchResult;
-
-import testdomain.Account;
 
 /**
  * @author Jeff Butler
@@ -129,12 +128,16 @@ public class BatchTest extends BaseSqlMapTest {
       sqlMap.commitTransaction();
       
       assertEquals(3, results.size());
+
       BatchResult br = (BatchResult) results.get(0);
       assertEquals(5, br.getUpdateCounts().length);
+
       br = (BatchResult) results.get(1);
       assertEquals(1, br.getUpdateCounts().length);
+
       br = (BatchResult) results.get(2);
       assertEquals(4, br.getUpdateCounts().length);
+
     } catch (BatchException e) {
       fail(e.getMessage());
     } catch (SQLException e) {

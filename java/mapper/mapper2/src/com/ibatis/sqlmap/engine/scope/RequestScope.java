@@ -28,8 +28,6 @@ import java.util.HashMap;
  * Request based implementation of Scope interface
  */
 public class RequestScope extends BaseScope {
-
-
   // Used by Any
   private SessionScope session;
   private ErrorContext errorContext;
@@ -37,30 +35,14 @@ public class RequestScope extends BaseScope {
   private ParameterMap parameterMap;
   private ResultMap resultMap;
   private Sql sql;
-
   // Used by DynamicSql
   private ParameterMap dynamicParameterMap;
   private String dynamicSql;
-
   // Used by N+1 Select solution
   private ResultSet resultSet;
   private Map uniqueKeys;
   private boolean rowDataFound;
-  private String  currentNestedKey;
-  
-  /**
-   * @return Returns the currentNestedKey.
-   */
-  public String getCurrentNestedKey() {
-	return currentNestedKey;
-  }
-
-  /**
-   * @param currentNestedKey The currentNestedKey to set.
-   */
-  public void setCurrentNestedKey(String currentNestedKey) {
-	this.currentNestedKey = currentNestedKey;
-  }
+  private String currentNestedKey;
 
   /**
    * Default constructor
@@ -71,8 +53,22 @@ public class RequestScope extends BaseScope {
   }
 
   /**
+   * @return Returns the currentNestedKey.
+   */
+  public String getCurrentNestedKey() {
+    return currentNestedKey;
+  }
+
+  /**
+   * @param currentNestedKey The currentNestedKey to set.
+   */
+  public void setCurrentNestedKey(String currentNestedKey) {
+    this.currentNestedKey = currentNestedKey;
+  }
+
+  /**
    * Get the request's error context
-   * 
+   *
    * @return - the request's error context
    */
   public ErrorContext getErrorContext() {
@@ -81,7 +77,7 @@ public class RequestScope extends BaseScope {
 
   /**
    * Get the session of the request
-   * 
+   *
    * @return - the session
    */
   public SessionScope getSession() {
@@ -90,7 +86,7 @@ public class RequestScope extends BaseScope {
 
   /**
    * Set the session for the request
-   * 
+   *
    * @param session - the new session
    */
   public void setSession(SessionScope session) {
@@ -99,7 +95,7 @@ public class RequestScope extends BaseScope {
 
   /**
    * Get the statement for the request
-   * 
+   *
    * @return - the statement
    */
   public MappedStatement getStatement() {
@@ -108,7 +104,7 @@ public class RequestScope extends BaseScope {
 
   /**
    * Set the statement for the request
-   * 
+   *
    * @param statement - the statement
    */
   public void setStatement(MappedStatement statement) {
@@ -117,7 +113,7 @@ public class RequestScope extends BaseScope {
 
   /**
    * Get the parameter map for the request
-   * 
+   *
    * @return - the parameter map
    */
   public ParameterMap getParameterMap() {
@@ -126,6 +122,7 @@ public class RequestScope extends BaseScope {
 
   /**
    * Set the parameter map for the request
+   *
    * @param parameterMap - the new parameter map
    */
   public void setParameterMap(ParameterMap parameterMap) {
@@ -134,7 +131,7 @@ public class RequestScope extends BaseScope {
 
   /**
    * Get the result map for the request
-   * 
+   *
    * @return - the result map
    */
   public ResultMap getResultMap() {
@@ -143,7 +140,7 @@ public class RequestScope extends BaseScope {
 
   /**
    * Set the result map for the request
-   * 
+   *
    * @param resultMap - the result map
    */
   public void setResultMap(ResultMap resultMap) {
@@ -152,7 +149,7 @@ public class RequestScope extends BaseScope {
 
   /**
    * Get the SQL for the request
-   * 
+   *
    * @return - the sql
    */
   public Sql getSql() {
@@ -161,7 +158,7 @@ public class RequestScope extends BaseScope {
 
   /**
    * Set the SQL for the request
-   * 
+   *
    * @param sql - the sql
    */
   public void setSql(Sql sql) {
@@ -169,8 +166,8 @@ public class RequestScope extends BaseScope {
   }
 
   /**
-   * Get the dynamic parameter for the request 
-   * 
+   * Get the dynamic parameter for the request
+   *
    * @return - the dynamic parameter
    */
   public ParameterMap getDynamicParameterMap() {
@@ -179,7 +176,7 @@ public class RequestScope extends BaseScope {
 
   /**
    * Set the dynamic parameter for the request
-   * 
+   *
    * @param dynamicParameterMap - the dynamic parameter
    */
   public void setDynamicParameterMap(ParameterMap dynamicParameterMap) {
@@ -188,7 +185,7 @@ public class RequestScope extends BaseScope {
 
   /**
    * Get the dynamic SQL for the request
-   * 
+   *
    * @return - the dynamic SQL
    */
   public String getDynamicSql() {
@@ -197,6 +194,7 @@ public class RequestScope extends BaseScope {
 
   /**
    * Set the dynamic SQL for the request
+   *
    * @param dynamicSql - the dynamic SQL
    */
   public void setDynamicSql(String dynamicSql) {
@@ -215,9 +213,9 @@ public class RequestScope extends BaseScope {
     if (uniqueKeys == null) {
       return null;
     }
-    return (Map)uniqueKeys.get(map);
+    return (Map) uniqueKeys.get(map);
   }
-  
+
   public void setUniqueKeys(ResultMap map, Map keys) {
     if (uniqueKeys == null) {
       uniqueKeys = new HashMap();

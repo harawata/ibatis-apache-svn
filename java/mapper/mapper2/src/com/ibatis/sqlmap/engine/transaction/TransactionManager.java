@@ -107,6 +107,7 @@ public class TransactionManager {
             }
           }
         } finally {
+          session.closePreparedStatements();
           trans.close();
         }
       }

@@ -70,7 +70,7 @@ public class SqlExecutor {
     int rows = 0;
     try {
       errorContext.setMoreInfo("Check the SQL Statement (preparation failed).");
-      ps = conn.prepareStatement(sql);
+      ps = prepareStatement(request.getSession(), conn, sql);
       setStatementTimeout(request.getStatement(), ps);
       errorContext.setMoreInfo("Check the parameters (set parameters failed).");
       request.getParameterMap().setParameters(request, ps, parameters);
@@ -78,7 +78,7 @@ public class SqlExecutor {
       ps.execute();
       rows = ps.getUpdateCount();
     } finally {
-      closeStatement(ps);
+      closeStatement(request.getSession(), ps);
     }
     return rows;
   }
@@ -115,7 +115,7 @@ public class SqlExecutor {
       try {
         rows = batch.executeBatch();
       } finally {
-        batch.cleanupBatch();
+        batch.cleanupBatch(session);
       }
     }
     return rows;
@@ -139,7 +139,7 @@ public class SqlExecutor {
       try {
         answer = batch.executeBatchDetailed();
       } finally {
-        batch.cleanupBatch();
+        batch.cleanupBatch(session);
       }
     }
     return answer;
@@ -167,9 +167,9 @@ public class SqlExecutor {
       errorContext.setMoreInfo("Check the SQL Statement (preparation failed).");
       Integer rsType = request.getStatement().getResultSetType();
       if (rsType != null) {
-        ps = conn.prepareStatement(sql, rsType.intValue(), ResultSet.CONCUR_READ_ONLY);
+        ps = prepareStatement(request.getSession(), conn, sql, rsType);
       } else {
-        ps = conn.prepareStatement(sql);
+        ps = prepareStatement(request.getSession(), conn, sql);
       }
       setStatementTimeout(request.getStatement(), ps);
       Integer fetchSize = request.getStatement().getFetchSize();
@@ -189,7 +189,7 @@ public class SqlExecutor {
       try {
         closeResultSet(rs);
       } finally {
-        closeStatement(ps);
+        closeStatement(request.getSession(), ps);
       }
     }
 
@@ -213,7 +213,7 @@ public class SqlExecutor {
     int rows = 0;
     try {
       errorContext.setMoreInfo("Check the SQL Statement (preparation failed).");
-      cs = conn.prepareCall(sql);
+      cs = prepareCall(request.getSession(), conn, sql);
       setStatementTimeout(request.getStatement(), cs);
       ParameterMap parameterMap = request.getParameterMap();
       ParameterMapping[] mappings = parameterMap.getParameterMappings();
@@ -227,7 +227,7 @@ public class SqlExecutor {
       errorContext.setMoreInfo("Check the output parameters (retrieval of output parameters failed).");
       retrieveOutputParameters(request, cs, mappings, parameters, null);
     } finally {
-      closeStatement(cs);
+      closeStatement(request.getSession(), cs);
     }
     return rows;
   }
@@ -254,9 +254,9 @@ public class SqlExecutor {
       errorContext.setMoreInfo("Check the SQL Statement (preparation failed).");
       Integer rsType = request.getStatement().getResultSetType();
       if (rsType != null) {
-        cs = conn.prepareCall(sql, rsType.intValue(), ResultSet.CONCUR_READ_ONLY);
+        cs = prepareCall(request.getSession(), conn, sql, rsType);
       } else {
-        cs = conn.prepareCall(sql);
+        cs = prepareCall(request.getSession(), conn, sql);
       }
       setStatementTimeout(request.getStatement(), cs);
       Integer fetchSize = request.getStatement().getFetchSize();
@@ -283,7 +283,7 @@ public class SqlExecutor {
       try {
         closeResultSet(rs);
       } finally {
-        closeStatement(cs);
+        closeStatement(request.getSession(), cs);
       }
     }
   }
@@ -453,20 +453,59 @@ public class SqlExecutor {
   public void cleanup(SessionScope session) {
     Batch batch = (Batch) session.getBatch();
     if (batch != null) {
-      batch.cleanupBatch();
+      batch.cleanupBatch(session);
       session.setBatch(null);
     }
   }
 
-  /**
-   * @param ps
-   */
-  private static void closeStatement(PreparedStatement ps) {
-    if (ps != null) {
-      try {
-        ps.close();
-      } catch (SQLException e) {
-        // ignore
+  private PreparedStatement prepareStatement(SessionScope session, Connection conn, String sql, Integer rsType) throws SQLException {
+    if (session.hasPreparedStatementFor(sql)) {
+      return session.getPreparedStatement((sql));
+    } else {
+      PreparedStatement ps = conn.prepareStatement(sql, rsType.intValue(), ResultSet.CONCUR_READ_ONLY);
+      session.putPreparedStatement(sql, ps);
+      return ps;
+    }
+  }
+
+  private CallableStatement prepareCall(SessionScope session, Connection conn, String sql, Integer rsType) throws SQLException {
+    if (session.hasPreparedStatementFor(sql)) {
+      return (CallableStatement) session.getPreparedStatement((sql));
+    } else {
+      CallableStatement cs = conn.prepareCall(sql, rsType.intValue(), ResultSet.CONCUR_READ_ONLY);
+      session.putPreparedStatement(sql, cs);
+      return cs;
+    }
+  }
+
+  private static PreparedStatement prepareStatement(SessionScope session, Connection conn, String sql) throws SQLException {
+    if (session.hasPreparedStatementFor(sql)) {
+      return session.getPreparedStatement((sql));
+    } else {
+      PreparedStatement ps = conn.prepareStatement(sql);
+      session.putPreparedStatement(sql, ps);
+      return ps;
+    }
+  }
+
+  private CallableStatement prepareCall(SessionScope session, Connection conn, String sql) throws SQLException {
+    if (session.hasPreparedStatementFor(sql)) {
+      return (CallableStatement) session.getPreparedStatement((sql));
+    } else {
+      CallableStatement cs = conn.prepareCall(sql);
+      session.putPreparedStatement(sql, cs);
+      return cs;
+    }
+  }
+
+  private static void closeStatement(SessionScope session, PreparedStatement ps) {
+    if (!session.hasPreparedStatement(ps)) {
+      if (ps != null) {
+        try {
+          ps.close();
+        } catch (SQLException e) {
+          // ignore
+        }
       }
     }
   }
@@ -531,7 +570,7 @@ public class SqlExecutor {
         int last = statementList.size() - 1;
         ps = (PreparedStatement) statementList.get(last);
       } else {
-        ps = conn.prepareStatement(sql);
+        ps = prepareStatement(request.getSession(), conn, sql);
         setStatementTimeout(request.getStatement(), ps);
         currentSql = sql;
         statementList.add(ps);
@@ -607,11 +646,13 @@ public class SqlExecutor {
 
     /**
      * Close all the statements in the batch and clear all the statements
+     *
+     * @param session
      */
-    public void cleanupBatch() {
+    public void cleanupBatch(SessionScope session) {
       for (int i = 0, n = statementList.size(); i < n; i++) {
         PreparedStatement ps = (PreparedStatement) statementList.get(i);
-        closeStatement(ps);
+        closeStatement(session, ps);
       }
       currentSql = null;
       statementList.clear();

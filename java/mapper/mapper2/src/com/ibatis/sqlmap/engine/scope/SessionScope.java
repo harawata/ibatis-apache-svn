@@ -16,51 +16,52 @@
 package com.ibatis.sqlmap.engine.scope;
 
 import com.ibatis.sqlmap.client.SqlMapClient;
+import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.client.SqlMapExecutor;
 import com.ibatis.sqlmap.client.SqlMapTransactionManager;
 import com.ibatis.sqlmap.engine.transaction.Transaction;
 import com.ibatis.sqlmap.engine.transaction.TransactionState;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Iterator;
+
 /**
  * A Session based implementation of the Scope interface
  */
 public class SessionScope extends BaseScope {
-
   private static long nextId;
-
   private long id;
-
   // Used by Any
   private SqlMapClient sqlMapClient;
   private SqlMapExecutor sqlMapExecutor;
   private SqlMapTransactionManager sqlMapTxMgr;
   private int requestStackDepth;
-
   // Used by TransactionManager
   private Transaction transaction;
   private TransactionState transactionState;
-
   // Used by SqlMapExecutorDelegate.setUserProvidedTransaction()
   private TransactionState savedTransactionState;
-
   // Used by StandardSqlMapClient and GeneralStatement
   private boolean inBatch;
-
   // Used by SqlExecutor
   private Object batch;
-
   private boolean commitRequired;
+  private Map preparedStatements;
 
   /**
    * Default constructor
    */
   public SessionScope() {
+    preparedStatements = new HashMap();
     reset();
   }
 
   /**
    * Get the SqlMapClient for the session
-   * 
+   *
    * @return - the SqlMapClient
    */
   public SqlMapClient getSqlMapClient() {
@@ -69,7 +70,7 @@ public class SessionScope extends BaseScope {
 
   /**
    * Set the SqlMapClient for the session
-   * 
+   *
    * @param sqlMapClient - the SqlMapClient
    */
   public void setSqlMapClient(SqlMapClient sqlMapClient) {
@@ -78,7 +79,7 @@ public class SessionScope extends BaseScope {
 
   /**
    * Get the SQL executor for the session
-   * 
+   *
    * @return - the SQL executor
    */
   public SqlMapExecutor getSqlMapExecutor() {
@@ -87,7 +88,7 @@ public class SessionScope extends BaseScope {
 
   /**
    * Get the SQL executor for the session
-   * 
+   *
    * @param sqlMapExecutor - the SQL executor
    */
   public void setSqlMapExecutor(SqlMapExecutor sqlMapExecutor) {
@@ -96,7 +97,7 @@ public class SessionScope extends BaseScope {
 
   /**
    * Get the transaction manager
-   * 
+   *
    * @return - the transaction manager
    */
   public SqlMapTransactionManager getSqlMapTxMgr() {
@@ -105,7 +106,7 @@ public class SessionScope extends BaseScope {
 
   /**
    * Set the transaction manager
-   * 
+   *
    * @param sqlMapTxMgr - the transaction manager
    */
   public void setSqlMapTxMgr(SqlMapTransactionManager sqlMapTxMgr) {
@@ -114,7 +115,7 @@ public class SessionScope extends BaseScope {
 
   /**
    * Tells us if we are in batch mode or not
-   * 
+   *
    * @return - true if we are working with a batch
    */
   public boolean isInBatch() {
@@ -123,7 +124,7 @@ public class SessionScope extends BaseScope {
 
   /**
    * Turn batch mode on or off
-   * 
+   *
    * @param inBatch - the switch
    */
   public void setInBatch(boolean inBatch) {
@@ -132,7 +133,7 @@ public class SessionScope extends BaseScope {
 
   /**
    * Getter for the session transaction
-   * 
+   *
    * @return - the transaction
    */
   public Transaction getTransaction() {
@@ -141,7 +142,7 @@ public class SessionScope extends BaseScope {
 
   /**
    * Setter for the session transaction
-   * 
+   *
    * @param transaction - the transaction
    */
   public void setTransaction(Transaction transaction) {
@@ -150,7 +151,7 @@ public class SessionScope extends BaseScope {
 
   /**
    * Getter for the transaction state of the session
-   * 
+   *
    * @return - the state
    */
   public TransactionState getTransactionState() {
@@ -159,7 +160,7 @@ public class SessionScope extends BaseScope {
 
   /**
    * Setter for the transaction state of the session
-   * 
+   *
    * @param transactionState - the new transaction state
    */
   public void setTransactionState(TransactionState transactionState) {
@@ -168,7 +169,7 @@ public class SessionScope extends BaseScope {
 
   /**
    * Getter for the batch of the session
-   * 
+   *
    * @return - the batch
    */
   public Object getBatch() {
@@ -177,7 +178,7 @@ public class SessionScope extends BaseScope {
 
   /**
    * Stter for the batch of the session
-   * 
+   *
    * @param batch the new batch
    */
   public void setBatch(Object batch) {
@@ -186,7 +187,7 @@ public class SessionScope extends BaseScope {
 
   /**
    * Get the request stack depth
-   * 
+   *
    * @return - the stack depth
    */
   public int getRequestStackDepth() {
@@ -209,7 +210,7 @@ public class SessionScope extends BaseScope {
 
   /**
    * Getter to tell if a commit is required for the session
-   * 
+   *
    * @return - true if a commit is required
    */
   public boolean isCommitRequired() {
@@ -218,11 +219,47 @@ public class SessionScope extends BaseScope {
 
   /**
    * Setter to tell the session that a commit is required for the session
-   * 
+   *
    * @param commitRequired - the flag
    */
   public void setCommitRequired(boolean commitRequired) {
     this.commitRequired = commitRequired;
+  }
+
+  public boolean hasPreparedStatementFor(String sql) {
+    return preparedStatements.containsKey(sql);
+  }
+
+  public boolean hasPreparedStatement(PreparedStatement ps) {
+    return preparedStatements.containsValue(ps);
+  }
+
+  public PreparedStatement getPreparedStatement(String sql) throws SQLException {
+    if (!hasPreparedStatementFor(sql))
+      throw new SqlMapException("Could not get prepared statement.  This is likely a bug.");
+    PreparedStatement ps = (PreparedStatement) preparedStatements.get(sql);
+    return ps;
+  }
+
+  public void putPreparedStatement(String sql, PreparedStatement ps) {
+    if (!isInBatch()) {
+      if (hasPreparedStatementFor(sql))
+        throw new SqlMapException("Duplicate prepared statement found.  This is likely a bug.");
+      preparedStatements.put(sql, ps);
+    }
+  }
+
+  public void closePreparedStatements() {
+    Iterator keys = preparedStatements.keySet().iterator();
+    while (keys.hasNext()) {
+      PreparedStatement ps = (PreparedStatement) preparedStatements.get(keys.next());
+      try {
+        ps.close();
+      } catch (Exception e) {
+        // ignore -- we don't care if this fails at this point.
+      }
+    }
+    preparedStatements.clear();
   }
 
   public void reset() {
@@ -236,16 +273,15 @@ public class SessionScope extends BaseScope {
     batch = null;
     requestStackDepth = 0;
     id = getNextId();
+    closePreparedStatements();
+    preparedStatements.clear();
   }
 
   public boolean equals(Object parameterObject) {
     if (this == parameterObject) return true;
     if (!(parameterObject instanceof SessionScope)) return false;
-
     final SessionScope sessionScope = (SessionScope) parameterObject;
-
     if (id != sessionScope.id) return false;
-
     return true;
   }
 
@@ -255,7 +291,7 @@ public class SessionScope extends BaseScope {
 
   /**
    * Method to get a unique ID
-   * 
+   *
    * @return - the new ID
    */
   public synchronized static long getNextId() {
