@@ -34,15 +34,15 @@
 
     <h4>Releases</h4>
     <ul>
-      <li><a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataMapper-bin-1.5.1.zip">DataMapper 1.5.1</a> [<a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataMapper-bin-1.5.1.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataMapper-bin-1.5.1.zip.asc">PGP</a>] (Apache General Availability)</li>
-      <li><a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataAccess-bin-1.8.1.zip">DataAccess 1.8.1</a> [<a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataAccess-bin-1.8.1.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataAccess-bin-1.8.1.zip.asc">PGP</a>] (Apache General Availability)</li>
-      <li><a href="[preferred]/ibatis/source/ibatis.net/Source-revision-426164.zip">Source Revision 426164</a> [<a href="[preferred]/ibatis/source/ibatis.net/Source-revision-426164.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/source/ibatis.net/Source-revision-426164.zip.asc">PGP</a>]</li>
+      <li><a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataMapper-bin-1.5.1.zip" onClick="javascript:urchinTracker('/downloads/DataMapper151');">DataMapper 1.5.1</a> [<a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataMapper-bin-1.5.1.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataMapper-bin-1.5.1.zip.asc">PGP</a>] (Apache General Availability)</li>
+      <li><a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataAccess-bin-1.8.1.zip" onClick="javascript:urchinTracker('/downloads/DataAccess181');">DataAccess 1.8.1</a> [<a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataAccess-bin-1.8.1.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataAccess-bin-1.8.1.zip.asc">PGP</a>] (Apache General Availability)</li>
+      <li><a href="[preferred]/ibatis/source/ibatis.net/Source-revision-426164.zip" onClick="javascript:urchinTracker('/downloads/DotNetSource426164');">Source Revision 426164</a> [<a href="[preferred]/ibatis/source/ibatis.net/Source-revision-426164.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/source/ibatis.net/Source-revision-426164.zip.asc">PGP</a>]</li>
     </ul>
     
     <ul>
-      <li><a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataMapper-bin-1.3.0.zip">DataMapper 1.3</a> [<a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataMapper-bin-1.3.0.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataMapper-bin-1.3.0.zip.asc">PGP</a>] (Apache General Availability)</li>
-      <li><a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataAccess-bin-1.7.0.zip">DataAccess 1.7</a> [<a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataAccess-bin-1.7.0.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataAccess-bin-1.7.0.zip.asc">PGP</a>] (Apache General Availability)</li>
-      <li><a href="[preferred]/ibatis/source/ibatis.net/Source.356824.zip">Source Revision 356824</a> [<a href="[preferred]/ibatis/source/ibatis.net/Source.356824.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/source/ibatis.net/Source.356824.zip.asc">PGP</a>]</li>
+      <li><a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataMapper-bin-1.3.0.zip" onClick="javascript:urchinTracker('/downloads/DataMapper130');">DataMapper 1.3</a> [<a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataMapper-bin-1.3.0.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataMapper-bin-1.3.0.zip.asc">PGP</a>] (Apache General Availability)</li>
+      <li><a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataAccess-bin-1.7.0.zip" onClick="javascript:urchinTracker('/downloads/DataAccess170');">DataAccess 1.7</a> [<a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataAccess-bin-1.7.0.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataAccess-bin-1.7.0.zip.asc">PGP</a>] (Apache General Availability)</li>
+      <li><a href="[preferred]/ibatis/source/ibatis.net/Source.356824.zip" onClick="javascript:urchinTracker('/downloads/DotNetSource356824');">Source Revision 356824</a> [<a href="[preferred]/ibatis/source/ibatis.net/Source.356824.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/source/ibatis.net/Source.356824.zip.asc">PGP</a>]</li>
     </ul>
 
     <ul>
@@ -55,7 +55,7 @@
       <li><a href="http://prdownloads.sourceforge.net/ibatisnet/NPetshop-1.0.0.RC1.zip?download">NPetShop Example Application</a></li>
     </ul>
     <ul>
-      <li><a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/tutorial2.zip">DataMapper Tutorial .NET 2.0 Beta</a> [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/tutorial2.zip.md5">MD5</a>] [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/tutorial2.zip.asc">PGP</a>]</li>
+      <li><a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/tutorial2.zip" onClick="javascript:urchinTracker('/downloads/DataMapperTutorial20');">DataMapper Tutorial .NET 2.0 Beta</a> [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/tutorial2.zip.md5">MD5</a>] [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/tutorial2.zip.asc">PGP</a>]</li>
     </ul>
 
     <h4>Documentation </h4>
@@ -64,13 +64,13 @@
       <li>
         English
         <ul>
-          <li><a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataMapper-1.5.1.zip">DataMapper 1.5.1 GA Docs</a> [<a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataMapper-1.5.1.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataMapper-1.5.1.zip.asc">PGP</a>] (CHM, PDF)</li>
-          <li><a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataAccess-1.8.1.zip">DataAccess 1.8.1 GA Docs</a> [<a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataAccess-1.8.1.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataAccess-1.8.1.zip.asc">PGP</a>] (CHM, PDF)</li>
+          <li><a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataMapper-1.5.1.zip" onClick="javascript:urchinTracker('/downloads/DataMapperDoc151');">DataMapper 1.5.1 GA Docs</a> [<a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataMapper-1.5.1.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataMapper-1.5.1.zip.asc">PGP</a>] (CHM, PDF)</li>
+          <li><a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataAccess-1.8.1.zip" onClick="javascript:urchinTracker('/downloads/DataAccessDoc181');">DataAccess 1.8.1 GA Docs</a> [<a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataAccess-1.8.1.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataAccess-1.8.1.zip.asc">PGP</a>] (CHM, PDF)</li>
         </ul>
 	<br/>
         <ul>
-          <li><a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataMapper-1.3.0.zip">DataMapper 1.3 GA Docs</a> [<a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataMapper-1.3.0.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataMapper-1.3.0.zip.asc">PGP</a>] (CHM, PDF, and SDK Help)</li>
-          <li><a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataAccess-1.7.0.zip">DataAccess 1.7 GA Docs</a> [<a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataAccess-1.7.0.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataAccess-1.7.0.zip.asc">PGP</a>] (CHM, PDF, and SDK Help)</li>
+          <li><a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataMapper-1.3.0.zip" onClick="javascript:urchinTracker('/downloads/DataMapperDoc13');">DataMapper 1.3 GA Docs</a> [<a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataMapper-1.3.0.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataMapper-1.3.0.zip.asc">PGP</a>] (CHM, PDF, and SDK Help)</li>
+          <li><a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataAccess-1.7.0.zip" onClick="javascript:urchinTracker('/downloads/DataAccessDoc17');">DataAccess 1.7 GA Docs</a> [<a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataAccess-1.7.0.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataAccess-1.7.0.zip.asc">PGP</a>] (CHM, PDF, and SDK Help)</li>
         </ul>
       </li>
     </ul>
