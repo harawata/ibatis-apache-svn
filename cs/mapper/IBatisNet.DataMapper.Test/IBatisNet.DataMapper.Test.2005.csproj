@@ -426,6 +426,7 @@
     <Content Include="Scripts\MSSQL\order-init.sql" />
     <Content Include="Scripts\MSSQL\other-init.sql" />
     <Content Include="Scripts\MSSQL\ps_SelectAccount.sql" />
+    <Content Include="Scripts\MSSQL\ps_SelectAllAccount.sql" />
     <Content Include="Scripts\MSSQL\ps_SelectLineItem.sql" />
     <Content Include="Scripts\MSSQL\README-embed-param.txt" />
     <Content Include="Scripts\MSSQL\simple-init.sql" />

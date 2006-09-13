@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -30,6 +30,7 @@ using System.Data;
 using System.Xml.Serialization;
 
 using IBatisNet.Common.Exceptions;
+using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.Scope;
 #endregion
@@ -84,7 +85,8 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 			base.Initialize( configurationScope );
 			if (this.ParameterMap == null)
 			{
-				throw new ConfigurationException("The parameterMap attribute is required in the procedure tag named '"+ this.Id +"'.");
+				//throw new ConfigurationException("The parameterMap attribute is required in the procedure tag named '"+ this.Id +"'.");
+                this.ParameterMap = configurationScope.SqlMapper.GetParameterMap(ConfigurationScope.EMPTY_PARAMETER_MAP);
 			}
 		}
 		#endregion

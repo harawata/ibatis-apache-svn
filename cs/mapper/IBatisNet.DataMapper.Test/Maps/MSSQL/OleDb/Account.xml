@@ -551,7 +551,11 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 		<procedure id="GetAccountViaSP" parameterMap="select-params" resultClass="Account">
 			ps_SelectAccount
 		</procedure>
-		
+
+    <procedure id="SelectAllAccountViaSP" resultClass="Account">
+      ps_SelectAllAccount
+    </procedure>
+    
 	</statements>
 
 	<!-- =============================================

@@ -767,7 +767,11 @@ namespace IBatisNet.DataMapper.Configuration
 		    {
                 _configScope.SqlMapper = _sqlMapper;
 		    }
-		    
+
+            ParameterMap emptyParameterMap = new ParameterMap(_configScope.DataExchangeFactory);
+            emptyParameterMap.Id = ConfigurationScope.EMPTY_PARAMETER_MAP;
+            _configScope.SqlMapper.AddParameterMap( emptyParameterMap );
+
             _configScope.SqlMapper.IsCacheModelsEnabled = _configScope.IsCacheModelsEnabled;
 
 			#region Cache Alias
@@ -1898,34 +1902,6 @@ namespace IBatisNet.DataMapper.Configuration
 			return MAPPING_NAMESPACE_PREFIX+ ":" + elementName.
 				Replace("/","/"+MAPPING_NAMESPACE_PREFIX+":");
 		}
-
-//		private String ParsePropertyTokens(string str) 
-//		{
-//		const string  OPEN = "${";
-//		const string CLOSE = "}";
-//
-//
-//		string newString = str;
-//		if (str != null && props != null) {
-//      int start = newString.indexOf(OPEN);
-//      int end = newString.indexOf(CLOSE);
-//
-//      while (start > -1 && end > start) {
-//        String prepend = newString.substring(0, start);
-//        String append = newString.substring(end + CLOSE.length());
-//        String propName = newString.substring(start + OPEN.length(), end);
-//        String propValue = props.getProperty(propName);
-//        if (propValue == null) {
-//          newString = prepend + propName + append;
-//        } else {
-//          newString = prepend + propValue + append;
-//        }
-//        start = newString.indexOf(OPEN);
-//        end = newString.indexOf(CLOSE);
-//      }
-//    }
-//    return newString;
-//  }
 
 		#endregion
 	}

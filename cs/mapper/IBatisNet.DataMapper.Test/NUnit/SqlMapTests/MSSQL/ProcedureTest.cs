@@ -26,7 +26,8 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL
 			InitScript( sqlMap.DataSource, ScriptDirectory + "account-init.sql" );	
 			InitScript( sqlMap.DataSource, ScriptDirectory + "account-procedure.sql", false );
             InitScript( sqlMap.DataSource, ScriptDirectory + "category-procedureWithReturn.sql", false);
-			InitScript( sqlMap.DataSource, ScriptDirectory + "ps_SelectAccount.sql", false );		
+			InitScript( sqlMap.DataSource, ScriptDirectory + "ps_SelectAccount.sql", false );
+            InitScript( sqlMap.DataSource, ScriptDirectory + "ps_SelectAllAccount.sql", false);			    
 			InitScript( sqlMap.DataSource, ScriptDirectory + "swap-procedure.sql" );	
 		}
 
@@ -71,6 +72,16 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL
         }
 #endif
 
+        /// <summary>
+        /// Test get an account via a store procedure.
+        /// </summary>
+        [Test]
+        public void GetAllAccountViaProcedure()
+        {
+            IList accounts = sqlMap.QueryForList("SelectAllAccountViaSP", null);
+            Assert.IsTrue( accounts.Count==5);
+        }
+	    
 		/// <summary>
 		/// Test get an account via a store procedure.
 		/// </summary>

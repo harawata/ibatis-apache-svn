@@ -19,7 +19,7 @@ using System.Reflection;
 #else
 [assembly: AssemblyConfiguration("net-2.0.win32; Release")]
 [assembly: AssemblyDelaySign(false)]
-[assembly: AssemblyKeyFileAttribute("..\\..\\..\\AssemblyKey.snk")]
+[assembly: AssemblyKeyFile("..\\..\\..\\AssemblyKey.snk")]
 #endif
 
 #endif

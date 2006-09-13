@@ -47,6 +47,8 @@ namespace IBatisNet.DataMapper.Scope
 	/// </summary>
 	public class ConfigurationScope : IScope
 	{
+        public const string EMPTY_PARAMETER_MAP = "iBATIS.Empty.ParameterMap";
+	    
 		#region Fields
 		
 		private ErrorContext _errorContext = null;

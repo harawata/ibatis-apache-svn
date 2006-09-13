@@ -41,6 +41,9 @@ drop procedure [dbo].[ps_InsertAccount]
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[ps_SelectAccount]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
 drop procedure [dbo].[ps_SelectAccount]
 
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[ps_SelectAllAccount]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[ps_SelectAllAccount]
+
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[ps_swap_email_address]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
 drop procedure [dbo].[ps_swap_email_address]
 
