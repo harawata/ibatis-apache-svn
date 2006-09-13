@@ -4,7 +4,8 @@ IBatisNet Change Log
 1.6.0 - BETA
 ------------------------------
 Issues
- 
+ - IBATISNET-179 : Allow procedure statement without parameterMap  
+
 
 Improvements/Changes
 - IBATISNET-180 : Extends use of ISqlMapper in DataMapper + allow use of a custom ISqlMapper
