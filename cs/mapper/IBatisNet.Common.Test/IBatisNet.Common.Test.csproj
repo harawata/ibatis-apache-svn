@@ -340,6 +340,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "NUnit\CommonTests\Utilities\ProtectedFieldAccessorTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NUnit\CommonTests\Utilities\PublicFieldAccessorTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "NUnit\CommonTests\Utilities\ReflectionInfoTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

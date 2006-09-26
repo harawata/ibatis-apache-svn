@@ -1,5 +1,5 @@
+
 using System;
-using System.Reflection;
 using IBatisNet.Common.Test.Domain;
 using IBatisNet.Common.Utilities;
 using IBatisNet.Common.Utilities.Objects.Members;
@@ -7,11 +7,8 @@ using NUnit.Framework;
 
 namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 {
-    	/// <summary>
-	/// Summary description for FieldAccessorTest.
-	/// </summary>
-	[TestFixture] 
-	public abstract class BaseMemberTest
+    [TestFixture] 
+    public class PublicFieldAccessorTest
     {
         protected ISetAccessorFactory factorySet = null;
         protected IGetAccessorFactory factoryGet = null;
@@ -76,11 +73,93 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         protected ISetAccessor nullableSetAccessor = null;
         protected IGetAccessor nullableGetAccessor = null;
 #endif
+        
+        #region SetUp & TearDown
+
+        /// <summary>
+        /// SetUp
+        /// </summary>
+        [SetUp]
+        public void SetUp()
+        {
+            intSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "publicInt");
+            intGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "publicInt");
+
+            longSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "publicLong");
+            longGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "publicLong");
+
+            sbyteSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "publicSbyte");
+            sbyteGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "publicSbyte");
+
+            stringSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "publicString");
+            stringGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "publicString");
+
+            datetimeSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "publicDateTime");
+            datetimeGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "publicDateTime");
+
+            decimalSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "publicDecimal");
+            decimalGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "publicDecimal");
+
+            byteSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "publicByte");
+            byteGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "publicByte");
+
+            charSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "publicChar");
+            charGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "publicChar");
+
+            shortSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "publicShort");
+            shortGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "publicShort");
+
+            ushortSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "publicUshort");
+            ushortGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "publicUshort");
+
+            uintSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "publicUint");
+            uintGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "publicUint");
+
+            ulongSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "publicUlong");
+            ulongGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "publicUlong");
+
+            boolSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "publicBool");
+            boolGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "publicBool");
+
+            doubleSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "publicDouble");
+            doubleGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "publicDouble");
+
+            floatSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "publicFloat");
+            floatGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "publicFloat");
+
+            guidSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "publicGuid");
+            guidGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "publicGuid");
+
+            timespanSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "publicTimeSpan");
+            timespanGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "publicTimeSpan");
+
+            accountSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "publicAccount");
+            accountGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "publicAccount");
+
+            enumSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "publicDay");
+            enumGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "publicDay");
+
+#if dotnet2
+            nullableSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "publicintNullable");
+            nullableGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "publicintNullable");
+#endif
+        }
 
 
         /// <summary>
-		/// Initialize an sqlMap
-		/// </summary>
+        /// TearDown
+        /// </summary>
+        [TearDown]
+        public void Dispose()
+        {
+        }
+
+        #endregion
+
+
+        /// <summary>
+        /// Initialize an sqlMap
+        /// </summary>
         [TestFixtureSetUp]
         protected virtual void SetUpFixture()
         {
@@ -102,40 +181,40 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         /// Test setting null on integer property.
         /// </summary>
         [Test]
-        public void TestSetNullOnIntegerProperty()
+        public void TestSetNullOnIntegerField()
         {
             Property prop = new Property();
-            prop.Int = -99;
+            prop.publicInt = -99;
 
             // Property accessor
             intSetAccessor.Set(prop, null);
-            Assert.AreEqual(0, prop.Int);
+            Assert.AreEqual(0, prop.publicInt);
         }
 
         /// <summary>
         /// Test setting an integer property.
         /// </summary>
         [Test]
-        public void TestSetInteger()
+        public void TestSetIntegerField()
         {
             Property prop = new Property();
-            prop.Int = -99;
+            prop.publicInt = -99;
 
             // Property accessor
             int test = 57;
             intSetAccessor.Set(prop, test);
-            Assert.AreEqual(test, prop.Int);
+            Assert.AreEqual(test, prop.publicInt);
         }
 
         /// <summary>
         /// Test getting an integer property.
         /// </summary>
         [Test]
-        public void TestGetInteger()
+        public void TestGetIntegerField()
         {
             int test = -99;
             Property prop = new Property();
-            prop.Int = test;
+            prop.publicInt = test;
 
             // Property accessor
             Assert.AreEqual(test, intGetAccessor.Get(prop));
@@ -145,40 +224,40 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         /// Test setting null on Long property.
         /// </summary>
         [Test]
-        public void TestSetNullOnLongProperty()
+        public void TestSetNullOnLongField()
         {
             Property prop = new Property();
-            prop.Long = 78945566664213223;
+            prop.publicLong = 78945566664213223;
 
             // Property accessor
             longSetAccessor.Set(prop, null);
-            Assert.AreEqual((long)0, prop.Long);
+            Assert.AreEqual((long)0, prop.publicLong);
         }
 
         /// <summary>
         /// Test setting an Long property.
         /// </summary>
         [Test]
-        public void TestSetLong()
+        public void TestSetLongField()
         {
             Property prop = new Property();
-            prop.Long = 78945566664213223;
+            prop.publicLong = 78945566664213223;
 
             // Property accessor
             long test = 123456789987456;
             longSetAccessor.Set(prop, test);
-            Assert.AreEqual(test, prop.Long);
+            Assert.AreEqual(test, prop.publicLong);
         }
 
         /// <summary>
         /// Test getting an long property.
         /// </summary>
         [Test]
-        public void TestGetLong()
+        public void TestGetLongField()
         {
             long test = 78945566664213223;
             Property prop = new Property();
-            prop.Long = test;
+            prop.publicLong = test;
 
             // Property accessor
             Assert.AreEqual(test, longGetAccessor.Get(prop));
@@ -188,126 +267,126 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         /// Test setting null on sbyte property.
         /// </summary>
         [Test]
-        public void TestSetNullOnSbyteProperty()
+        public void TestSetNullOnSbyteField()
         {
             Property prop = new Property();
-            prop.SByte = 78;
+            prop.publicSbyte = 78;
 
             // Property accessor
             sbyteSetAccessor.Set(prop, null);
-            Assert.AreEqual((sbyte)0, prop.SByte);
+            Assert.AreEqual((sbyte)0, prop.publicSbyte);
         }
 
         /// <summary>
         /// Test setting an sbyte property.
         /// </summary>
         [Test]
-        public void TestSetSbyte()
+        public void TestSetSbyteField()
         {
             Property prop = new Property();
-            prop.SByte = 78;
+            prop.publicSbyte = 78;
 
             // Property accessor
             sbyte test = 19;
             sbyteSetAccessor.Set(prop, test);
-            Assert.AreEqual(test, prop.SByte);
+            Assert.AreEqual(test, prop.publicSbyte);
         }
 
         /// <summary>
         /// Test getting an sbyte property.
         /// </summary>
         [Test]
-        public void TestGetSbyte()
+        public void TestGetSbyteField()
         {
             sbyte test = 78;
             Property prop = new Property();
-            prop.SByte = test;
+            prop.publicSbyte = test;
 
             // Property accessor
             Assert.AreEqual(test, sbyteGetAccessor.Get(prop));
         }
 
         /// <summary>
-		/// Test setting null on String property.
-		/// </summary>
-		[Test]
-		public void TestSetNullOnStringProperty()
-		{
-			Property prop = new Property();
-			prop.String = "abc";
-
-			// Property accessor
-            stringSetAccessor.Set(prop, null);
-			Assert.IsNull(prop.String);
-		}
-
-		/// <summary>
-		/// Test setting an String property.
-		/// </summary>
-		[Test]
-		public void TestSetString()
-		{
-			Property prop = new Property();
-			prop.String = "abc";
-
-			// Property accessor
-			string test = "wxc";
-            stringSetAccessor.Set(prop, test);
-			Assert.AreEqual(test, prop.String);
-		}
-
-		/// <summary>
-		/// Test getting an String property.
-		/// </summary>
+        /// Test setting null on String property.
+        /// </summary>
         [Test]
-        public void TestGetString()
+        public void TestSetNullOnStringField()
+        {
+            Property prop = new Property();
+            prop.publicString = "abc";
+
+            // Property accessor
+            stringSetAccessor.Set(prop, null);
+            Assert.IsNull(prop.publicString);
+        }
+
+        /// <summary>
+        /// Test setting an String property.
+        /// </summary>
+        [Test]
+        public void TestSetStringField()
+        {
+            Property prop = new Property();
+            prop.publicString = "abc";
+
+            // Property accessor
+            string test = "wxc";
+            stringSetAccessor.Set(prop, test);
+            Assert.AreEqual(test, prop.publicString);
+        }
+
+        /// <summary>
+        /// Test getting an String property.
+        /// </summary>
+        [Test]
+        public void TestGetStringField()
         {
             string test = "abc";
             Property prop = new Property();
-            prop.String = test;
+            prop.publicString = test;
 
             // Property accessor
             Assert.AreEqual(test, stringGetAccessor.Get(prop));
         }
 
-        		/// <summary>
-		/// Test setting null on DateTime property.
-		/// </summary>
-		[Test]
-		public void TestSetNullOnDateTimeProperty()
-		{
-			Property prop = new Property();
-			prop.DateTime = DateTime.Now;
-			
-			// Property accessor
-            datetimeSetAccessor.Set(prop, null);
-			Assert.AreEqual(DateTime.MinValue, prop.DateTime);
-		}
-
-		/// <summary>
-		/// Test setting an DateTime property.
-		/// </summary>
-		[Test]
-		public void TestSetDateTime()
-		{
-			Property prop = new Property();
-			prop.DateTime = DateTime.Now;
-
-			// Property accessor
-			DateTime test = new DateTime(1987,11,25);
-            datetimeSetAccessor.Set(prop, test);
-			Assert.AreEqual(test, prop.DateTime);
-		}
-
-		/// <summary>
-		/// Test getting an DateTime property.
-		/// </summary>
+        /// <summary>
+        /// Test setting null on DateTime property.
+        /// </summary>
         [Test]
-        public void TestGetDateTime()
+        public void TestSetNullOnDateTimeField()
+        {
+            Property prop = new Property();
+            prop.publicDateTime = DateTime.Now;
+
+            // Property accessor
+            datetimeSetAccessor.Set(prop, null);
+            Assert.AreEqual(DateTime.MinValue, prop.publicDateTime);
+        }
+
+        /// <summary>
+        /// Test setting an DateTime property.
+        /// </summary>
+        [Test]
+        public void TestSetDateTimeField()
+        {
+            Property prop = new Property();
+            prop.publicDateTime = DateTime.Now;
+
+            // Property accessor
+            DateTime test = new DateTime(1987, 11, 25);
+            datetimeSetAccessor.Set(prop, test);
+            Assert.AreEqual(test, prop.publicDateTime);
+        }
+
+        /// <summary>
+        /// Test getting an DateTime property.
+        /// </summary>
+        [Test]
+        public void TestGetDateTimeField()
         {
             DateTime test = new DateTime(1987, 11, 25);
             Property prop = new Property();
-            prop.DateTime = test;
+            prop.publicDateTime = test;
 
             // Property accessor
             Assert.AreEqual(test, datetimeGetAccessor.Get(prop));
@@ -317,40 +396,40 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         /// Test setting null on decimal property.
         /// </summary>
         [Test]
-        public void TestSetNullOnDecimalProperty()
+        public void TestSetNullOnDecimalField()
         {
             Property prop = new Property();
-            prop.Decimal = 45.187M;
+            prop.publicDecimal = 45.187M;
 
             // Property accessor
             decimalSetAccessor.Set(prop, null);
-            Assert.AreEqual(0.0M, prop.Decimal);
+            Assert.AreEqual(0.0M, prop.publicDecimal);
         }
 
         /// <summary>
         /// Test setting an decimal property.
         /// </summary>
         [Test]
-        public void TestSetDecimal()
+        public void TestSetDecimalField()
         {
             Property prop = new Property();
-            prop.Decimal = 45.187M;
+            prop.publicDecimal = 45.187M;
 
             // Property accessor
             Decimal test = 789456.141516M;
             decimalSetAccessor.Set(prop, test);
-            Assert.AreEqual(test, prop.Decimal);
+            Assert.AreEqual(test, prop.publicDecimal);
         }
 
         /// <summary>
         /// Test getting an decimal property.
         /// </summary>
         [Test]
-        public void TestGetDecimal()
+        public void TestGetDecimalField()
         {
             Decimal test = 789456.141516M;
             Property prop = new Property();
-            prop.Decimal = test;
+            prop.publicDecimal = test;
 
             // Property accessor
             Assert.AreEqual(test, decimalGetAccessor.Get(prop));
@@ -360,40 +439,40 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         /// Test setting null on byte property.
         /// </summary>
         [Test]
-        public void TestSetNullOnByteProperty()
+        public void TestSetNullOnByteField()
         {
             Property prop = new Property();
-            prop.Byte = 78;
+            prop.publicByte = 78;
 
             // Property accessor
             byteSetAccessor.Set(prop, null);
-            Assert.AreEqual((byte)0, prop.Byte);
+            Assert.AreEqual((byte)0, prop.publicByte);
         }
 
         /// <summary>
         /// Test setting an byte property.
         /// </summary>
         [Test]
-        public void TestSetByte()
+        public void TestSetByteField()
         {
             Property prop = new Property();
-            prop.Byte = 15;
+            prop.publicByte = 15;
 
             // Property accessor
             byte test = 94;
             byteSetAccessor.Set(prop, test);
-            Assert.AreEqual(test, prop.Byte);
+            Assert.AreEqual(test, prop.publicByte);
         }
 
         /// <summary>
         /// Test getting an byte property.
         /// </summary>
         [Test]
-        public void TestGetByte()
+        public void TestGetByteField()
         {
             byte test = 78;
             Property prop = new Property();
-            prop.Byte = test;
+            prop.publicByte = test;
 
             // Property accessor
             Assert.AreEqual(test, byteGetAccessor.Get(prop));
@@ -403,40 +482,40 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         /// Test setting null on char property.
         /// </summary>
         [Test]
-        public void TestSetNullOnCharProperty()
+        public void TestSetNullOnCharField()
         {
             Property prop = new Property();
-            prop.Char = 'r';
+            prop.publicChar = 'r';
 
             // Property accessor
             charSetAccessor.Set(prop, null);
-            Assert.AreEqual('\0', prop.Char);
+            Assert.AreEqual('\0', prop.publicChar);
         }
 
         /// <summary>
         /// Test setting an char property.
         /// </summary>
         [Test]
-        public void TestSetChar()
+        public void TestSetCharField()
         {
             Property prop = new Property();
-            prop.Char = 'b';
+            prop.publicChar = 'b';
 
             // Property accessor
             char test = 'j';
             charSetAccessor.Set(prop, test);
-            Assert.AreEqual(test, prop.Char);
+            Assert.AreEqual(test, prop.publicChar);
         }
 
         /// <summary>
         /// Test getting an char property.
         /// </summary>
         [Test]
-        public void TestGetChar()
+        public void TestGetCharField()
         {
             char test = 'z';
             Property prop = new Property();
-            prop.Char = test;
+            prop.publicChar = test;
 
             // Property accessor
             Assert.AreEqual(test, charGetAccessor.Get(prop));
@@ -446,40 +525,40 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         /// Test setting null on short property.
         /// </summary>
         [Test]
-        public void TestSetNullOnShortProperty()
+        public void TestSetNullOnShortField()
         {
             Property prop = new Property();
-            prop.Short = 5;
+            prop.publicShort = 5;
 
             // Property accessor
             shortSetAccessor.Set(prop, null);
-            Assert.AreEqual((short)0, prop.Short);
+            Assert.AreEqual((short)0, prop.publicShort);
         }
 
         /// <summary>
         /// Test setting an short property.
         /// </summary>
         [Test]
-        public void TestSetShort()
+        public void TestSetShortField()
         {
             Property prop = new Property();
-            prop.Short = 9;
+            prop.publicShort = 9;
 
             // Property accessor
             short test = 45;
             shortSetAccessor.Set(prop, test);
-            Assert.AreEqual(test, prop.Short);
+            Assert.AreEqual(test, prop.publicShort);
         }
 
         /// <summary>
         /// Test getting an short property.
         /// </summary>
         [Test]
-        public void TestGetShort()
+        public void TestGetShortField()
         {
             short test = 99;
             Property prop = new Property();
-            prop.Short = test;
+            prop.publicShort = test;
 
             // Property accessor
             Assert.AreEqual(test, shortGetAccessor.Get(prop));
@@ -489,40 +568,40 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         /// Test setting null on ushort property.
         /// </summary>
         [Test]
-        public void TestSetNullOnUShortProperty()
+        public void TestSetNullOnUShortField()
         {
             Property prop = new Property();
-            prop.UShort = 5;
+            prop.publicUshort = 5;
 
             // Property accessor
             ushortSetAccessor.Set(prop, null);
-            Assert.AreEqual((ushort)0, prop.UShort);
+            Assert.AreEqual((ushort)0, prop.publicUshort);
         }
 
         /// <summary>
         /// Test setting an ushort property.
         /// </summary>
         [Test]
-        public void TestSetUShort()
+        public void TestSetUShortField()
         {
             Property prop = new Property();
-            prop.UShort = 9;
+            prop.publicUshort = 9;
 
             // Property accessor
             ushort test = 45;
             ushortSetAccessor.Set(prop, test);
-            Assert.AreEqual(test, prop.UShort);
+            Assert.AreEqual(test, prop.publicUshort);
         }
 
         /// <summary>
         /// Test getting an ushort property.
         /// </summary>
         [Test]
-        public void TestGetUShort()
+        public void TestGetUShortField()
         {
             ushort test = 99;
             Property prop = new Property();
-            prop.UShort = test;
+            prop.publicUshort = test;
 
             // Property accessor
             Assert.AreEqual(test, ushortGetAccessor.Get(prop));
@@ -532,40 +611,40 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         /// Test setting null on uint property.
         /// </summary>
         [Test]
-        public void TestSetNullOnUIntProperty()
+        public void TestSetNullOnUIntField()
         {
             Property prop = new Property();
-            prop.UInt = 5;
+            prop.publicUint = 5;
 
             // Property accessor
             uintSetAccessor.Set(prop, null);
-            Assert.AreEqual((uint)0, prop.UInt);
+            Assert.AreEqual((uint)0, prop.publicUint);
         }
 
         /// <summary>
         /// Test setting an uint property.
         /// </summary>
         [Test]
-        public void TestSetUInt()
+        public void TestSetUIntField()
         {
             Property prop = new Property();
-            prop.UInt = 9;
+            prop.publicUint = 9;
 
             // Property accessor
             uint test = 45;
             uintSetAccessor.Set(prop, test);
-            Assert.AreEqual(test, prop.UInt);
+            Assert.AreEqual(test, prop.publicUint);
         }
 
         /// <summary>
         /// Test getting an uint property.
         /// </summary>
         [Test]
-        public void TestGetUInt()
+        public void TestGetUIntField()
         {
             uint test = 99;
             Property prop = new Property();
-            prop.UInt = test;
+            prop.publicUint = test;
 
             // Property accessor
             Assert.AreEqual(test, uintGetAccessor.Get(prop));
@@ -575,40 +654,40 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         /// Test setting null on ulong property.
         /// </summary>
         [Test]
-        public void TestSetNullOnULongProperty()
+        public void TestSetNullOnULongField()
         {
             Property prop = new Property();
-            prop.ULong = 5L;
+            prop.publicUlong = 5L;
 
             // Property accessor
             ulongSetAccessor.Set(prop, null);
-            Assert.AreEqual((ulong)0, prop.ULong);
+            Assert.AreEqual((ulong)0, prop.publicUlong);
         }
 
         /// <summary>
         /// Test setting an ulong property.
         /// </summary>
         [Test]
-        public void TestSetULong()
+        public void TestSetULongField()
         {
             Property prop = new Property();
-            prop.ULong = 45464646578;
+            prop.publicUlong = 45464646578;
 
             // Property accessor
             ulong test = 45;
             ulongSetAccessor.Set(prop, test);
-            Assert.AreEqual(test, prop.ULong);
+            Assert.AreEqual(test, prop.publicUlong);
         }
 
         /// <summary>
         /// Test getting an ulong property.
         /// </summary>
         [Test]
-        public void TestGetULong()
+        public void TestGetULongField()
         {
             ulong test = 99;
             Property prop = new Property();
-            prop.ULong = test;
+            prop.publicUlong = test;
 
             // Property accessor
             Assert.AreEqual(test, ulongGetAccessor.Get(prop));
@@ -618,83 +697,83 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         /// Test setting null on bool property.
         /// </summary>
         [Test]
-        public void TestSetNullOnBoolProperty()
+        public void TestSetNullOnBoolField()
         {
             Property prop = new Property();
-            prop.Bool = true;
+            prop.publicBool = true;
 
             // Property accessor
             boolSetAccessor.Set(prop, null);
-            Assert.AreEqual(false, prop.Bool);
+            Assert.AreEqual(false, prop.publicBool);
         }
 
         /// <summary>
         /// Test setting an bool property.
         /// </summary>
         [Test]
-        public void TestSetBool()
+        public void TestSetBoolField()
         {
             Property prop = new Property();
-            prop.Bool = false;
+            prop.publicBool = false;
 
             // Property accessor
             bool test = true;
             boolSetAccessor.Set(prop, test);
-            Assert.AreEqual(test, prop.Bool);
+            Assert.AreEqual(test, prop.publicBool);
         }
 
         /// <summary>
         /// Test getting an bool property.
         /// </summary>
         [Test]
-        public void TestGetBool()
+        public void TestGetBoolField()
         {
             bool test = false;
             Property prop = new Property();
-            prop.Bool = test;
+            prop.publicBool = test;
 
             // Property accessor
             Assert.AreEqual(test, boolGetAccessor.Get(prop));
         }
 
-        		/// <summary>
-		/// Test setting null on double property.
-		/// </summary>
-		[Test]
-		public void TestSetNullOnDoubleProperty()
-		{
-			Property prop = new Property();
-			prop.Double = 788956.56D;
-			
-			// Property accessor
-            doubleSetAccessor.Set(prop, null);
-			Assert.AreEqual(0.0D, prop.Double);
-		}
-
-		/// <summary>
-		/// Test setting an double property.
-		/// </summary>
-		[Test]
-		public void TestSetDouble()
-		{
-			Property prop = new Property();
-			prop.Double = 56789123.45888D;
-
-			// Property accessor
-			double test = 788956.56D;
-            doubleSetAccessor.Set(prop, test);
-			Assert.AreEqual(test, prop.Double);
-		}
-
-		/// <summary>
-		/// Test getting an double property.
-		/// </summary>
+        /// <summary>
+        /// Test setting null on double property.
+        /// </summary>
         [Test]
-        public void TestGetDouble()
+        public void TestSetNullOnDoubleField()
+        {
+            Property prop = new Property();
+            prop.publicDouble = 788956.56D;
+
+            // Property accessor
+            doubleSetAccessor.Set(prop, null);
+            Assert.AreEqual(0.0D, prop.publicDouble);
+        }
+
+        /// <summary>
+        /// Test setting an double property.
+        /// </summary>
+        [Test]
+        public void TestSetDoubleField()
+        {
+            Property prop = new Property();
+            prop.publicDouble = 56789123.45888D;
+
+            // Property accessor
+            double test = 788956.56D;
+            doubleSetAccessor.Set(prop, test);
+            Assert.AreEqual(test, prop.publicDouble);
+        }
+
+        /// <summary>
+        /// Test getting an double property.
+        /// </summary>
+        [Test]
+        public void TestGetDoubleField()
         {
             double test = 788956.56D;
             Property prop = new Property();
-            prop.Double = test;
+            prop.publicDouble = test;
 
             // Property accessor
             Assert.AreEqual(test, doubleGetAccessor.Get(prop));
@@ -704,40 +783,40 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         /// Test setting null on float property.
         /// </summary>
         [Test]
-        public void TestSetNullOnFloatProperty()
+        public void TestSetNullOnFloatField()
         {
             Property prop = new Property();
-            prop.Float = 565.45F;
+            prop.publicFloat = 565.45F;
 
             // Property accessor
             floatSetAccessor.Set(prop, null);
-            Assert.AreEqual(0.0D, prop.Float);
+            Assert.AreEqual(0.0D, prop.publicFloat);
         }
 
         /// <summary>
         /// Test setting an float property.
         /// </summary>
         [Test]
-        public void TestSetFloat()
+        public void TestSetFloatField()
         {
             Property prop = new Property();
-            prop.Float = 565.45F;
+            prop.publicFloat = 565.45F;
 
             // Property accessor
             float test = 4567.45F;
             floatSetAccessor.Set(prop, test);
-            Assert.AreEqual(test, prop.Float);
+            Assert.AreEqual(test, prop.publicFloat);
         }
 
         /// <summary>
         /// Test getting an float property.
         /// </summary>
         [Test]
-        public void TestGetFloat()
+        public void TestGetFloatField()
         {
             float test = 565.45F;
             Property prop = new Property();
-            prop.Float = test;
+            prop.publicFloat = test;
 
             // Property accessor
             Assert.AreEqual(test, floatGetAccessor.Get(prop));
@@ -748,40 +827,40 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         /// Test setting null on Guid property.
         /// </summary>
         [Test]
-        public void TestSetNullOnGuidProperty()
+        public void TestSetNullOnGuidField()
         {
             Property prop = new Property();
-            prop.Guid = Guid.NewGuid();
+            prop.publicGuid = Guid.NewGuid();
 
             // Property accessor
             guidSetAccessor.Set(prop, null);
-            Assert.AreEqual(Guid.Empty, prop.Guid);
+            Assert.AreEqual(Guid.Empty, prop.publicGuid);
         }
 
         /// <summary>
         /// Test setting an Guid property.
         /// </summary>
         [Test]
-        public void TestSetGuid()
+        public void TestSetGuidField()
         {
             Property prop = new Property();
-            prop.Guid = Guid.NewGuid();
+            prop.publicGuid = Guid.NewGuid();
 
             // Property accessor
             Guid test = Guid.NewGuid();
             guidSetAccessor.Set(prop, test);
-            Assert.AreEqual(test, prop.Guid);
+            Assert.AreEqual(test, prop.publicGuid);
         }
 
         /// <summary>
         /// Test getting an Guid property.
         /// </summary>
         [Test]
-        public void TestGetGuid()
+        public void TestGetGuidField()
         {
             Guid test = Guid.NewGuid();
             Property prop = new Property();
-            prop.Guid = test;
+            prop.publicGuid = test;
 
             // Property accessor
             Assert.AreEqual(test, guidGetAccessor.Get(prop));
@@ -792,137 +871,133 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         /// Test the setting null on a TimeSpan property.
         /// </summary>
         [Test]
-        public void TestSetNullOnTimeSpanProperty()
+        public void TestSetNullOnTimeSpanField()
         {
             Property prop = new Property();
-            prop.TimeSpan = new TimeSpan(5, 12, 57, 21, 13);
+            prop.publicTimeSpan = new TimeSpan(5, 12, 57, 21, 13);
 
             // Property accessor
             timespanSetAccessor.Set(prop, null);
-            Assert.AreEqual(new TimeSpan(0,0,0), prop.TimeSpan);
+            Assert.AreEqual(new TimeSpan(0, 0, 0), prop.publicTimeSpan);
         }
 
         /// <summary>
         /// Test setting an TimeSpan property.
         /// </summary>
         [Test]
-        public void TestSetTimeSpan()
+        public void TestSetTimeSpanField()
         {
             Property prop = new Property();
-            prop.TimeSpan = new TimeSpan(5, 12, 57, 21, 13);
+            prop.publicTimeSpan = new TimeSpan(5, 12, 57, 21, 13);
 
             // Property accessor
             TimeSpan test = new TimeSpan(15, 5, 21, 45, 35);
             timespanSetAccessor.Set(prop, test);
-            Assert.AreEqual(test, prop.TimeSpan);
+            Assert.AreEqual(test, prop.publicTimeSpan);
         }
 
         /// <summary>
         /// Test getting an TimeSpan property.
         /// </summary>
         [Test]
-        public void TestGetTimeSpan()
+        public void TestGetTimeSpanField()
         {
             TimeSpan test = new TimeSpan(5, 12, 57, 21, 13);
             Property prop = new Property();
-            prop.TimeSpan = test;
+            prop.publicTimeSpan = test;
 
             // Property accessor
             Assert.AreEqual(test, timespanGetAccessor.Get(prop));
         }
 
-        		/// <summary>
-		/// Test the setting null on a object property.
-		/// </summary>
-		[Test]
-		public void TestSetNullOnAccountProperty()
-		{
-			Property prop = new Property();
-			prop.Account = new Account() ;
-			prop.Account.FirstName = "test";
-			
-			// Property accessor
+        /// <summary>
+        /// Test the setting null on a object property.
+        /// </summary>
+        [Test]
+        public void TestSetNullOnAccountField()
+        {
+            Property prop = new Property();
+            prop.publicAccount = new Account();
+            prop.publicAccount.FirstName = "test";
+
+            // Property accessor
             accountSetAccessor.Set(prop, null);
-			Assert.AreEqual(null, prop.Account);
-		}
+            Assert.AreEqual(null, prop.publicAccount);
+        }
 
-		/// <summary>
-		/// Test getting an object property.
-		/// </summary>
-		[Test]
-		public void TestGetAccount()
-		{
-			Account test = new Account();
-			test.FirstName = "Gilles";
+        /// <summary>
+        /// Test getting an object property.
+        /// </summary>
+        [Test]
+        public void TestGetAccountField()
+        {
+            Account test = new Account();
+            test.FirstName = "Gilles";
 
-			Property prop = new Property();
-			prop.Account = test;
+            Property prop = new Property();
+            prop.publicAccount = test;
 
-			// Property accessor
-			Assert.AreEqual(HashCodeProvider.GetIdentityHashCode(test), HashCodeProvider.GetIdentityHashCode(prop.Account));
+            // Property accessor
+            Assert.AreEqual(HashCodeProvider.GetIdentityHashCode(test), HashCodeProvider.GetIdentityHashCode(prop.publicAccount));
             Assert.AreEqual(test.FirstName, ((Account)accountGetAccessor.Get(prop)).FirstName);
-		}
-		
-		/// <summary>
-		/// Test setting an object property.
-		/// </summary>
-		[Test]
-		public void TestSetAccount()
-		{
-			Property prop = new Property();
-			prop.Account = new Account() ;
-			prop.Account.FirstName = "test";
+        }
 
-			// Property accessor
+        /// <summary>
+        /// Test setting an object property.
+        /// </summary>
+        [Test]
+        public void TestSetAccountField()
+        {
+            Property prop = new Property();
+            prop.publicAccount = new Account();
+            prop.publicAccount.FirstName = "test";
+
+            // Property accessor
             string firstName = "Gilles";
-			Account test = new Account();
+            Account test = new Account();
             test.FirstName = firstName;
             accountSetAccessor.Set(prop, test);
 
-            Assert.AreEqual(firstName, prop.Account.FirstName);
+            Assert.AreEqual(firstName, prop.publicAccount.FirstName);
         }
 
         /// <summary>
-        /// Test the setting null on a Enum property.
+        /// Test the setting null on a Enum Field.
         /// </summary>
         [Test]
-        public void TestSetNullOnEnumProperty()
+        public void TestSetNullOnEnumField()
         {
             Property prop = new Property();
-            prop.Day = Days.Thu;
-
-            PropertyInfo propertyInfo = typeof(Property).GetProperty("Day", BindingFlags.Public | BindingFlags.SetProperty | BindingFlags.Instance);
-            propertyInfo.SetValue(prop, null, null);
 
             // Property accessor
             enumSetAccessor.Set(prop, null);
-            Assert.AreEqual(0, (int)prop.Day);
+            Assert.AreEqual(0, (int)prop.publicDay);
         }
 
         /// <summary>
-        /// Test setting an Enum property.
+        /// Test setting an Enum Field.
         /// </summary>
         [Test]
-        public void TestSetEnum()
+        public void TestSetEnumField()
         {
             Property prop = new Property();
-            prop.Day = Days.Thu;
+            prop.publicDay = Days.Thu;
 
             // Property accessor
             Days test = Days.Wed;
             enumSetAccessor.Set(prop, test);
-            Assert.AreEqual(test, prop.Day);
+            Assert.AreEqual(test, prop.publicDay);
         }
 
         /// <summary>
-        /// Test getting an Enum property.
+        /// Test getting an Enum Field.
         /// </summary>
         [Test]
-        public void TestGetEnum()
+        public void TestGetEnumField()
         {
             Days test = Days.Wed;
             Property prop = new Property();
-            prop.Day = test;
+            prop.publicDay = test;
 
             // Property accessor
             Assert.AreEqual(test, enumGetAccessor.Get(prop));
@@ -930,13 +1005,13 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 
 #if dotnet2
         /// <summary>
-        /// Test the setting null on a nullable int property.
+        /// Test the setting null on a nullable int Field.
         /// </summary>
         [Test]
-        public void TestSetNullOnNullableIntProperty()
+        public void TestSetNullOnNullableIntField()
         {
             Property prop = new Property();
-            prop.IntNullable = 85;
+            prop.publicintNullable = 85;
 
             // Property accessor
             nullableSetAccessor.Set(prop, null);
@@ -944,34 +1019,39 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         }
 
         /// <summary>
-        /// Test getting an nullable int property.
+        /// Test getting an nullable int Field.
         /// </summary>
         [Test]
-        public void TestGetNullableInt()
+        public void TestGetNullableIntField()
         {
             Int32? test = 55;
             Property prop = new Property();
-            prop.IntNullable = test;
+            prop.publicintNullable = test;
 
             // Property accessor
             Assert.AreEqual(test, nullableGetAccessor.Get(prop));
         }
 
         /// <summary>
-        /// Test setting an nullable int property.
+        /// Test setting an nullable int Field.
         /// </summary>
         [Test]
-        public void TestSetNullableInt()
+        public void TestSetNullableIntField()
         {
             Property prop = new Property();
-            prop.IntNullable = 99;
+            prop.publicintNullable = 99;
 
             // Property accessor
             Int32? test = 55;
             nullableSetAccessor.Set(prop, test);
-            Assert.AreEqual(test, prop.IntNullable);
+            Assert.AreEqual(test, prop.publicintNullable);
 
         }
 #endif
+    	
+    	public void SetPublicAccount(Property p, Account ac)
+    	{
+    		p.publicAccount = ac;
+    	}
     }
 }

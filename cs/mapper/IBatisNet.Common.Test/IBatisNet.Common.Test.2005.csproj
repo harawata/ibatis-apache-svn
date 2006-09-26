@@ -138,6 +138,8 @@
     <Compile Include="NUnit\CommonTests\Utilities\ObjectFactoryTest.cs" />
     <Compile Include="NUnit\CommonTests\Utilities\PropertyAccessorPerformance.cs" />
     <Compile Include="NUnit\CommonTests\Utilities\PropertyAccessorTest.cs" />
+    <Compile Include="NUnit\CommonTests\Utilities\ProtectedFieldAccessorTest.cs" />
+    <Compile Include="NUnit\CommonTests\Utilities\PublicFieldAccessorTest.cs" />
     <Compile Include="NUnit\CommonTests\Utilities\ReflectionInfoTest.cs" />
     <Compile Include="NUnit\CommonTests\Utilities\ResourcesTest.cs">
       <SubType>Code</SubType>

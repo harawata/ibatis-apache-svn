@@ -11,7 +11,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 	/// Summary description for FieldAccessorTest.
 	/// </summary>
 	[TestFixture] 
-	public class FieldAccessorTest : BaseMemberTest
+	public class PrivateFieldAccessorTest : BaseMemberTest
 	{
 
         #region SetUp & TearDown
@@ -76,8 +76,8 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             accountSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "_account");
             accountGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "_account");
 
-            enumSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "day");
-            enumGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "day");
+            enumSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "_day");
+            enumGetAccessor = factoryGet.CreateGetAccessor(typeof(Property), "_day");
 
 #if dotnet2
             nullableSetAccessor = factorySet.CreateSetAccessor(typeof(Property), "_intNullable");
@@ -116,51 +116,96 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             Console.WriteLine("Decimal : " + GetDefault<Decimal>());
         }
 #endif
-        /// <summary>
-        /// Test setting null on integer public field.
-        /// </summary>
-        [Test]
-        public void TestSetNullOnIntegerField()
-        {
-            Property prop = new Property();
-            prop.publicInt = -99;
+        ///// <summary>
+        ///// Test setting null on integer public field.
+        ///// </summary>
+        //[Test]
+        //public void TestSetNullOnIntegerField()
+        //{
+        //    Property prop = new Property();
+        //    prop.publicInt = -99;
 
-            // Property accessor
-            ISetAccessor setAccessor = factorySet.CreateSetAccessor(typeof(Property), "publicInt");
-            setAccessor.Set(prop, null);
-            Assert.AreEqual(0, prop.publicInt);
-        }
+        //    // Property accessor
+        //    ISetAccessor setAccessor = factorySet.CreateSetAccessor(typeof(Property), "publicInt");
+        //    setAccessor.Set(prop, null);
+        //    Assert.AreEqual(0, prop.publicInt);
+        //}
 
-        /// <summary>
-        /// Test setting an integer public field.
-        /// </summary>
-        [Test]
-        public void TestSetPublicFieldInteger()
-        {
-            Property prop = new Property();
-            prop.publicInt = -99;
+        ///// <summary>
+        ///// Test setting an integer public field.
+        ///// </summary>
+        //[Test]
+        //public void TestSetPublicFieldInteger()
+        //{
+        //    Property prop = new Property();
+        //    prop.publicInt = -99;
 
-            // Property accessor
-            int test = 57;
-            ISetAccessor setAccessor = factorySet.CreateSetAccessor(typeof(Property), "publicInt");
-            setAccessor.Set(prop, test);
-            Assert.AreEqual(test, prop.publicInt);
-        }
+        //    // Property accessor
+        //    int test = 57;
+        //    ISetAccessor setAccessor = factorySet.CreateSetAccessor(typeof(Property), "publicInt");
+        //    setAccessor.Set(prop, test);
+        //    Assert.AreEqual(test, prop.publicInt);
+        //}
 
-        /// <summary>
-        /// Test getting an integer public field.
-        /// </summary>
-        [Test]
-        public void TestGetPublicFieldInteger()
-        {
-            int test = -99;
-            Property prop = new Property();
-            prop.publicInt = test;
+        ///// <summary>
+        ///// Test getting an integer public field.
+        ///// </summary>
+        //[Test]
+        //public void TestGetPublicFieldInteger()
+        //{
+        //    int test = -99;
+        //    Property prop = new Property();
+        //    prop.publicInt = test;
 
-            // Property accessor
-            IGetAccessor getAccessor = factoryGet.CreateGetAccessor(typeof(Property), "publicInt");
-            Assert.AreEqual(test, getAccessor.Get(prop));
-        }
+        //    // Property accessor
+        //    IGetAccessor getAccessor = factoryGet.CreateGetAccessor(typeof(Property), "publicInt");
+        //    Assert.AreEqual(test, getAccessor.Get(prop));
+        //}
 
+        ///// <summary>
+        ///// Test setting null on String public field.
+        ///// </summary>
+        //[Test]
+        //public void TestSetNullOnStringField()
+        //{
+        //    Property prop = new Property();
+        //    prop.publicString = "hello";
+
+        //    // Property accessor
+        //    ISetAccessor setAccessor = factorySet.CreateSetAccessor(typeof(Property), "publicString");
+        //    setAccessor.Set(prop, null);
+        //    Assert.AreEqual(null, prop.publicString);
+        //}
+
+        ///// <summary>
+        ///// Test setting an String public field.
+        ///// </summary>
+        //[Test]
+        //public void TestSetPublicFieldString()
+        //{
+        //    Property prop = new Property();
+        //    prop.publicString = "hello";
+
+        //    // Property accessor
+        //    string test = "gilles";
+        //    ISetAccessor setAccessor = factorySet.CreateSetAccessor(typeof(Property), "publicString");
+        //    setAccessor.Set(prop, test);
+        //    Assert.AreEqual(test, prop.publicString);
+        //}
+
+        ///// <summary>
+        ///// Test getting an String public field.
+        ///// </summary>
+        //[Test]
+        //public void TestGetPublicFieldString()
+        //{
+        //    string test = "gilles";
+        //    Property prop = new Property();
+        //    prop.publicString = test;
+
+        //    // Property accessor
+        //    IGetAccessor getAccessor = factoryGet.CreateGetAccessor(typeof(Property), "publicString");
+        //    Assert.AreEqual(test, getAccessor.Get(prop));
+        //}
 	}
 }

@@ -80,29 +80,12 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 
                 ilgen = dynamicMethodSet.GetILGenerator();
 
-                ilgen.Emit(OpCodes.Ldarg_0);//Load the first argument (target object)
-                ilgen.Emit(OpCodes.Castclass, targetObjectType); //Cast to the source type
-                ilgen.Emit(OpCodes.Ldarg_1);//Load the second argument (value object)
-                if (_fieldType.IsValueType)
-                {
-                    ilgen.Emit(OpCodes.Unbox, _fieldType); //Unbox it 	
-                    if (typeToOpcode[_fieldType] != null)
-                    {
-                        OpCode load = (OpCode)typeToOpcode[_fieldType];
-                        ilgen.Emit(load); //and load
-                    }
-                    else
-                    {
-                        ilgen.Emit(OpCodes.Ldobj, _fieldType);
-                    }
-                    ilgen.Emit(OpCodes.Stfld, fieldInfo); //Set the field value
-                }
-                else
-                {
-                    ilgen.Emit(OpCodes.Castclass, _fieldType); //Cast class
-                }
-
+                ilgen.Emit(OpCodes.Ldarg_0);
+                ilgen.Emit(OpCodes.Ldarg_1);
+                UnboxIfNeeded(fieldInfo.FieldType, ilgen);
+                ilgen.Emit(OpCodes.Stfld, fieldInfo);
                 ilgen.Emit(OpCodes.Ret);
+
                 _set = (SetValue)dynamicMethodSet.CreateDelegate(typeof(SetValue));
             }
 		}
@@ -148,5 +131,14 @@ namespace IBatisNet.Common.Utilities.Objects.Members
         }
 
         #endregion
+
+        private static void UnboxIfNeeded(Type type, ILGenerator generator)
+        {
+            if (type.IsValueType)
+            {
+                generator.Emit(OpCodes.Unbox_Any, type);
+            }
+        }
+
     }
 }

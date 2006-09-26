@@ -157,7 +157,8 @@ namespace IBatisNet.Common.Utilities.Objects.Members
                 }
                 else
                 {
-                    setIL.Emit(OpCodes.Castclass, _fieldType); //Cast class
+                   // setIL.Emit(OpCodes.Castclass, _fieldType); //Cast class
+                	setIL.Emit(OpCodes.Stfld, targetField);
                 }
             }
             else

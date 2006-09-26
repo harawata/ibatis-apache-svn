@@ -47,6 +47,9 @@ namespace IBatisNet.DataMapper.Scope
 	/// </summary>
 	public class ConfigurationScope : IScope
 	{
+		/// <summary>
+		/// Empty parameter map
+		/// </summary>
         public const string EMPTY_PARAMETER_MAP = "iBATIS.Empty.ParameterMap";
 	    
 		#region Fields

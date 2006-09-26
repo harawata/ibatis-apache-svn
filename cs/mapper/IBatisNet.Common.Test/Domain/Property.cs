@@ -18,8 +18,26 @@ namespace IBatisNet.Common.Test.Domain
 	/// </summary>
 	public class Property
 	{
+        public string publicString = string.Empty;
         public int publicInt = int.MinValue;
-
+        public DateTime publicDateTime = DateTime.MinValue;
+        public decimal publicDecimal = decimal.MinValue;
+        public sbyte publicSbyte = sbyte.MinValue;
+        public byte publicByte = byte.MinValue;
+        public char publicChar = char.MinValue;
+        public short publicShort = short.MinValue;
+        public ushort publicUshort = ushort.MinValue;
+        public uint publicUint = uint.MinValue;
+        public long publicLong = long.MinValue;
+        public ulong publicUlong = ulong.MinValue;
+        public bool publicBool = false;
+        public double publicDouble = double.MinValue;
+        public float publicFloat = float.MinValue;
+        public Guid publicGuid = Guid.Empty;
+        public TimeSpan publicTimeSpan = TimeSpan.MinValue;
+        public Account publicAccount = null;
+        public Days publicDay;
+	    
 		private string _string = string.Empty;
         private int _int = int.MinValue;
 		private DateTime _dateTime = DateTime.MinValue;
@@ -38,10 +56,32 @@ namespace IBatisNet.Common.Test.Domain
 		private Guid _guid = Guid.Empty;
 		private TimeSpan _timeSpan = TimeSpan.MinValue;
 		private Account _account = null;
-        private Days day;
+        private Days _day;
+
+        protected string protectedString = string.Empty;
+        protected int protectedInt = int.MinValue;
+        protected DateTime protectedDateTime = DateTime.MinValue;
+        protected decimal protectedDecimal = decimal.MinValue;
+        protected sbyte protectedSbyte = sbyte.MinValue;
+        protected byte protectedByte = byte.MinValue;
+        protected char protectedChar = char.MinValue;
+        protected short protectedShort = short.MinValue;
+        protected ushort protectedUshort = ushort.MinValue;
+        protected uint protectedUint = uint.MinValue;
+        protected long protectedLong = long.MinValue;
+        protected ulong protectedUlong = ulong.MinValue;
+        protected bool protectedBool = false;
+        protected double protectedDouble = double.MinValue;
+        protected float protectedFloat = float.MinValue;
+        protected Guid protectedGuid = Guid.Empty;
+        protected TimeSpan protectedTimeSpan = TimeSpan.MinValue;
+        protected Account protectedAccount = null;
+        protected Days protectedDay;
 
 #if dotnet2
         private Int32? _intNullable = null;
+        public Int32? publicintNullable = null;
+        protected Int32? protectedintNullable = null;
 
         public Int32? IntNullable
         {
@@ -56,8 +96,8 @@ namespace IBatisNet.Common.Test.Domain
 
         public Days Day
         {
-            get { return day; }
-            set { day = value; }
+            get { return _day; }
+            set { _day = value; }
         }
 
 		public string String

@@ -5,7 +5,7 @@ IBatisNet Change Log
 ------------------------------
 Issues
  - IBATISNET-179 : Allow procedure statement without parameterMap  
-
+ - IBATISNET-184 : Invalid support for public/protected field in result property
 
 Improvements/Changes
 - IBATISNET-180 : Extends use of ISqlMapper in DataMapper + allow use of a custom ISqlMapper

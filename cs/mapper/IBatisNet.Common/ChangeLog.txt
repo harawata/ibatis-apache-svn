@@ -1,7 +1,17 @@
 IBatisNet Common Change Log
 
 ------------------------------
-1.4 - xx/xx/xxxx
+1.5 - XX/XX/XX
+------------------------------
+Issues
+ - IBATISNET-184 : Invalid support for public/protected field in result property
+
+------------------------------
+1.4.1 - 10/08/2006 GA
+------------------------------
+
+------------------------------
+1.4 - 05/07/2006 BETA
 ------------------------------
 
 - Fixed IBATISNET-145 
