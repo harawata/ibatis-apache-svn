@@ -15,10 +15,13 @@
  */
 package org.apache.ibatis.abator.internal.java.model;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.ibatis.abator.api.FullyQualifiedTable;
 import org.apache.ibatis.abator.api.IntrospectedTable;
+import org.apache.ibatis.abator.api.dom.OutputUtilities;
 import org.apache.ibatis.abator.api.dom.java.Field;
 import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.abator.api.dom.java.InnerClass;
@@ -153,16 +156,47 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         method
                 .addBodyLine("criteriaWithBetweenValue = new ArrayList<Map<String, Object>>();"); //$NON-NLS-1$
         answer.addMethod(method);
+        
+        List criteriaLists = new ArrayList();
+        criteriaLists.add("criteriaWithoutValue"); //$NON-NLS-1$
+        criteriaLists.add("criteriaWithSingleValue"); //$NON-NLS-1$
+        criteriaLists.add("criteriaWithListValue"); //$NON-NLS-1$
+        criteriaLists.add("criteriaWithBetweenValue"); //$NON-NLS-1$
 
         Iterator iter = introspectedTable.getNonBLOBColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
             
             if (StringUtility.stringHasValue(cd.getTypeHandler())) {
-                addtypeHandledObjectsAndMethods(cd, method, answer);
+                criteriaLists.addAll(
+                    addtypeHandledObjectsAndMethods(cd, method, answer));
             }
         }
-
+        
+        // now generate the isValid method
+        method = new Method();
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setName("isValid"); //$NON-NLS-1$
+        method.setReturnType(FullyQualifiedJavaType.getBooleanPrimitiveInstance());
+        iter = criteriaLists.iterator();
+        StringBuffer sb = new StringBuffer();
+        sb.append("return "); //$NON-NLS-1$
+        sb.append(iter.next());
+        sb.append(".size() > 0"); //$NON-NLS-1$
+        method.addBodyLine(sb.toString());
+        while (iter.hasNext()) {
+            sb.setLength(0);
+            OutputUtilities.javaIndent(sb, 1);
+            sb.append("|| "); //$NON-NLS-1$
+            sb.append(iter.next());
+            sb.append(".size() > 0"); //$NON-NLS-1$
+            if (!iter.hasNext()) {
+                sb.append(';'); //$NON-NLS-1$
+            }
+            method.addBodyLine(sb.toString());
+        }
+        answer.addMethod(method);
+        
         // now we need to generate the methods that will be used in the SqlMap
         // to generate the dynamic where clause
         topLevelClass.addImportedType(FullyQualifiedJavaType
@@ -538,9 +572,11 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
      * @param cd
      * @param constructor
      * @param innerClass
+     * @return a list of the names of all Lists added to the class by this method
      */
-    private void addtypeHandledObjectsAndMethods(ColumnDefinition cd,
+    private List addtypeHandledObjectsAndMethods(ColumnDefinition cd,
             Method constructor, InnerClass innerClass) {
+        List answer = new ArrayList();
         StringBuffer sb = new StringBuffer();
 
         // add new private fields and public accessors in the class
@@ -558,6 +594,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         sb.setLength(0);
         sb.append(cd.getJavaProperty());
         sb.append("CriteriaWithSingleValue"); //$NON-NLS-1$
+        answer.add(sb.toString());
 
         Field field = new Field();
         field.setVisibility(JavaVisibility.PRIVATE);
@@ -577,6 +614,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         sb.setLength(0);
         sb.append(cd.getJavaProperty());
         sb.append("CriteriaWithListValue"); //$NON-NLS-1$
+        answer.add(sb.toString());
 
         field = new Field();
         field.setVisibility(JavaVisibility.PRIVATE);
@@ -596,6 +634,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         sb.setLength(0);
         sb.append(cd.getJavaProperty());
         sb.append("CriteriaWithBetweenValue"); //$NON-NLS-1$
+        answer.add(sb.toString());
         
         field = new Field();
         field.setVisibility(JavaVisibility.PRIVATE);
@@ -727,5 +766,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         sb.append("CriteriaWithBetweenValue.add(map);"); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
         innerClass.addMethod(method);
+        
+        return answer;
     }
 }

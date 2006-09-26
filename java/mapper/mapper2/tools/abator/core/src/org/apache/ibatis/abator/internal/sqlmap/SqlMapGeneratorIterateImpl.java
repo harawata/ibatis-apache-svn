@@ -1026,8 +1026,13 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         outerIterateElement.addAttribute(new Attribute("prepend", "where")); //$NON-NLS-1$ //$NON-NLS-2$
         outerIterateElement.addAttribute(new Attribute("removeFirstPrepend", "iterate")); //$NON-NLS-1$ //$NON-NLS-2$
         answer.addElement(outerIterateElement);
+        
+        XmlElement isEqualElement = new XmlElement("isEqual"); //$NON-NLS-1$
+        isEqualElement.addAttribute(new Attribute("property", "oredCriteria[].valid")); //$NON-NLS-1$ //$NON-NLS-2$
+        isEqualElement.addAttribute(new Attribute("compareValue", "true")); //$NON-NLS-1$ //$NON-NLS-2$
+        outerIterateElement.addElement(isEqualElement);
 
-        outerIterateElement.addElement(new TextElement("(")); //$NON-NLS-1$
+        isEqualElement.addElement(new TextElement("(")); //$NON-NLS-1$
 
         XmlElement innerIterateElement = new XmlElement("iterate"); //$NON-NLS-1$
         innerIterateElement.addAttribute(new Attribute("prepend", "and")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -1036,7 +1041,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         innerIterateElement.addAttribute(new Attribute("conjunction", "and")); //$NON-NLS-1$ //$NON-NLS-2$
         innerIterateElement.addElement(new TextElement(
                 "$oredCriteria[].criteriaWithoutValue[]$")); //$NON-NLS-1$
-        outerIterateElement.addElement(innerIterateElement);
+        isEqualElement.addElement(innerIterateElement);
 
         innerIterateElement = new XmlElement("iterate"); //$NON-NLS-1$
         innerIterateElement.addAttribute(new Attribute("prepend", "and")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -1046,7 +1051,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         innerIterateElement
                 .addElement(new TextElement(
                         "$oredCriteria[].criteriaWithSingleValue[].condition$ #oredCriteria[].criteriaWithSingleValue[].value#")); //$NON-NLS-1$
-        outerIterateElement.addElement(innerIterateElement);
+        isEqualElement.addElement(innerIterateElement);
 
         innerIterateElement = new XmlElement("iterate"); //$NON-NLS-1$
         innerIterateElement.addAttribute(new Attribute("prepend", "and")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -1065,7 +1070,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         innerInnerIterateElement.addElement(new TextElement(
                 "#oredCriteria[].criteriaWithListValue[].values[]#")); //$NON-NLS-1$
         innerIterateElement.addElement(innerInnerIterateElement);
-        outerIterateElement.addElement(innerIterateElement);
+        isEqualElement.addElement(innerIterateElement);
 
         innerIterateElement = new XmlElement("iterate"); //$NON-NLS-1$
         innerIterateElement.addAttribute(new Attribute("prepend", "and")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -1079,7 +1084,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
                         "#oredCriteria[].criteriaWithBetweenValue[].values[0]# and")); //$NON-NLS-1$
         innerIterateElement.addElement(new TextElement(
                 "#oredCriteria[].criteriaWithBetweenValue[].values[1]#")); //$NON-NLS-1$
-        outerIterateElement.addElement(innerIterateElement);
+        isEqualElement.addElement(innerIterateElement);
         
         // if any of the columns have a user defined type handler, then we need
         // to add additional inner iterate elements that specify the type handler
@@ -1116,7 +1121,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
                 sb1.append(sb2);
                 
                 innerIterateElement.addElement(new TextElement(sb1.toString()));
-                outerIterateElement.addElement(innerIterateElement);
+                isEqualElement.addElement(innerIterateElement);
                 
                 sb1.setLength(0);
                 sb2.setLength(0);
@@ -1157,7 +1162,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
                 
                 innerInnerIterateElement.addElement(new TextElement(sb2.toString()));
                 innerIterateElement.addElement(innerInnerIterateElement);
-                outerIterateElement.addElement(innerIterateElement);
+                isEqualElement.addElement(innerIterateElement);
 
                 sb1.setLength(0);
                 sb2.setLength(0);
@@ -1192,11 +1197,11 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
                 
                 innerIterateElement.addElement(new TextElement(sb1.toString()));
                 innerIterateElement.addElement(new TextElement(sb2.toString()));
-                outerIterateElement.addElement(innerIterateElement);
+                isEqualElement.addElement(innerIterateElement);
             }
         }
 
-        outerIterateElement.addElement(new TextElement(")")); //$NON-NLS-1$
+        isEqualElement.addElement(new TextElement(")")); //$NON-NLS-1$
 
         return answer;
     }

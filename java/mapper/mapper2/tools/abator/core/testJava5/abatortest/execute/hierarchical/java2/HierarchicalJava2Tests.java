@@ -110,6 +110,34 @@ public class HierarchicalJava2Tests extends BaseTest {
         assertEquals(3, answer.size());
     }
     
+    public void testFieldsOnlySelectByExampleNoCriteria() {
+        FieldsonlyDAO dao = (FieldsonlyDAO) daoManager.getDao(FieldsonlyDAO.class);
+
+        Fieldsonly record = new Fieldsonly();
+        record.setDoublefield(new Double(11.22));
+        record.setFloatfield(new Float(33.44));
+        record.setIntegerfield(new Integer(5));
+        dao.insert(record);
+
+        record = new Fieldsonly();
+        record.setDoublefield(new Double(44.55));
+        record.setFloatfield(new Float(66.77));
+        record.setIntegerfield(new Integer(8));
+        dao.insert(record);
+
+        record = new Fieldsonly();
+        record.setDoublefield(new Double(88.99));
+        record.setFloatfield(new Float(100.111));
+        record.setIntegerfield(new Integer(9));
+        dao.insert(record);
+
+        FieldsonlyExample example = new FieldsonlyExample();
+        example.createCriteria();
+
+        List answer = dao.selectByExample(example);
+        assertEquals(3, answer.size());
+    }
+
     public void testFieldsOnlyDeleteByExample() {
         FieldsonlyDAO dao = (FieldsonlyDAO) daoManager.getDao(FieldsonlyDAO.class);
         
@@ -236,6 +264,30 @@ public class HierarchicalJava2Tests extends BaseTest {
         example.createCriteria().andIdGreaterThan(4);
         List answer = dao.selectByExample(example);
         assertEquals(2, answer.size());
+    }
+    
+    public void testPKOnlySelectByExampleNoCriteria() {
+        PkonlyDAO dao = (PkonlyDAO) daoManager.getDao(PkonlyDAO.class);
+        
+        PkonlyKey key = new PkonlyKey();
+        key.setId(new Integer(1));
+        key.setSeqNum(new Integer(3));
+        dao.insert(key);
+        
+        key = new PkonlyKey();
+        key.setId(new Integer(5));
+        key.setSeqNum(new Integer(6));
+        dao.insert(key);
+        
+        key = new PkonlyKey();
+        key.setId(new Integer(7));
+        key.setSeqNum(new Integer(8));
+        dao.insert(key);
+        
+        PkonlyExample example = new PkonlyExample();
+        example.createCriteria();
+        List answer = dao.selectByExample(example);
+        assertEquals(3, answer.size());
     }
     
     public void testPKFieldsInsert() {
@@ -735,6 +787,59 @@ public class HierarchicalJava2Tests extends BaseTest {
         assertEquals(6, answer.size());
     }
     
+    public void testPKFieldsSelectByExampleNoCriteria() {
+        PkfieldsDAO dao = (PkfieldsDAO) daoManager.getDao(PkfieldsDAO.class);
+
+        Pkfields record = new Pkfields();
+        record.setFirstname("Fred");
+        record.setLastname("Flintstone");
+        record.setId1(new Integer(1));
+        record.setId2(new Integer(1));
+        dao.insert(record);
+
+        record = new Pkfields();
+        record.setFirstname("Wilma");
+        record.setLastname("Flintstone");
+        record.setId1(new Integer(1));
+        record.setId2(new Integer(2));
+        dao.insert(record);
+
+        record = new Pkfields();
+        record.setFirstname("Pebbles");
+        record.setLastname("Flintstone");
+        record.setId1(new Integer(1));
+        record.setId2(new Integer(3));
+        dao.insert(record);
+
+        record = new Pkfields();
+        record.setFirstname("Barney");
+        record.setLastname("Rubble");
+        record.setId1(new Integer(2));
+        record.setId2(new Integer(1));
+        dao.insert(record);
+
+        record = new Pkfields();
+        record.setFirstname("Betty");
+        record.setLastname("Rubble");
+        record.setId1(new Integer(2));
+        record.setId2(new Integer(2));
+        dao.insert(record);
+
+        record = new Pkfields();
+        record.setFirstname("Bamm Bamm");
+        record.setLastname("Rubble");
+        record.setId1(new Integer(2));
+        record.setId2(new Integer(3));
+        dao.insert(record);
+
+        PkfieldsExample example = new PkfieldsExample();
+        example.createCriteria();
+
+        example.setOrderByClause("ID1, ID2");
+        List answer = dao.selectByExample(example);
+        assertEquals(6, answer.size());
+    }
+    
     public void testPKBlobsInsert() {
         PkblobsDAO dao = (PkblobsDAO) daoManager.getDao(PkblobsDAO.class);
         
@@ -909,6 +1014,28 @@ public class HierarchicalJava2Tests extends BaseTest {
         assertEquals(6, key.getId().intValue());
     }
     
+    public void testPKBlobsSelectByExampleWithoutBlobsNoCriteria() {
+        PkblobsDAO dao = (PkblobsDAO) daoManager.getDao(PkblobsDAO.class);
+
+        PkblobsWithBLOBs record = new PkblobsWithBLOBs();
+        record.setId(new Integer(3));
+        record.setBlob1(generateRandomBlob());
+        record.setBlob2(generateRandomBlob());
+        dao.insert(record);
+
+        record = new PkblobsWithBLOBs();
+        record.setId(new Integer(6));
+        record.setBlob1(generateRandomBlob());
+        record.setBlob2(generateRandomBlob());
+        dao.insert(record);
+
+        PkblobsExample example = new PkblobsExample();
+        example.createCriteria();
+        List answer = dao.selectByExampleWithoutBLOBs(example);
+
+        assertEquals(2, answer.size());
+    }
+
     public void testPKBlobsSelectByExampleWithBlobs() {
         PkblobsDAO dao = (PkblobsDAO) daoManager.getDao(PkblobsDAO.class);
         
@@ -1217,6 +1344,31 @@ public class HierarchicalJava2Tests extends BaseTest {
         assertTrue(blobsAreEqual(record.getBlob1(), newRecord.getBlob1()));
     }
 
+    public void testPKFieldsBlobsSelectByExampleWithBlobsNoCriteria() {
+        PkfieldsblobsDAO dao = (PkfieldsblobsDAO) daoManager.getDao(PkfieldsblobsDAO.class);
+
+        PkfieldsblobsWithBLOBs record = new PkfieldsblobsWithBLOBs();
+        record.setId1(new Integer(3));
+        record.setId2(new Integer(4));
+        record.setFirstname("Jeff");
+        record.setLastname("Smith");
+        record.setBlob1(generateRandomBlob());
+        dao.insert(record);
+
+        record = new PkfieldsblobsWithBLOBs();
+        record.setId1(new Integer(5));
+        record.setId2(new Integer(6));
+        record.setFirstname("Scott");
+        record.setLastname("Jones");
+        record.setBlob1(generateRandomBlob());
+        dao.insert(record);
+
+        PkfieldsblobsExample example = new PkfieldsblobsExample();
+        example.createCriteria();
+        List answer = dao.selectByExampleWithBLOBs(example);
+        assertEquals(2, answer.size());
+    }
+
     public void testFieldsBlobsInsert() {
         FieldsblobsDAO dao = (FieldsblobsDAO) daoManager.getDao(FieldsblobsDAO.class);
         
@@ -1324,5 +1476,28 @@ public class HierarchicalJava2Tests extends BaseTest {
         assertEquals(record.getLastname(), newRecord.getLastname());
         assertTrue(blobsAreEqual(record.getBlob1(), newRecord.getBlob1()));
         assertTrue(blobsAreEqual(record.getBlob2(), newRecord.getBlob2()));
+    }
+
+    public void testFieldsBlobsSelectByExampleWithBlobsNoCriteria() {
+        FieldsblobsDAO dao = (FieldsblobsDAO) daoManager.getDao(FieldsblobsDAO.class);
+
+        FieldsblobsWithBLOBs record = new FieldsblobsWithBLOBs();
+        record.setFirstname("Jeff");
+        record.setLastname("Smith");
+        record.setBlob1(generateRandomBlob());
+        record.setBlob2(generateRandomBlob());
+        dao.insert(record);
+
+        record = new FieldsblobsWithBLOBs();
+        record.setFirstname("Scott");
+        record.setLastname("Jones");
+        record.setBlob1(generateRandomBlob());
+        record.setBlob2(generateRandomBlob());
+        dao.insert(record);
+
+        FieldsblobsExample example = new FieldsblobsExample();
+        example.createCriteria();
+        List answer = dao.selectByExampleWithBLOBs(example);
+        assertEquals(2, answer.size());
     }
 }

@@ -1,4 +1,10 @@
 -------------------------------------------------------------------------------
+Version 1.0.1:
+1. Fix corner case where the new "by example" methods fail if a criteria class
+   has been added to the list, but there are no criteria set
+
+
+-------------------------------------------------------------------------------
 Version 1.0.0:
 1. Major refactoring of code generators to use new DOM classes.  This makes
    adding and extending code generators much easier.
@@ -21,7 +27,7 @@ Version 1.0.0:
 14. Allowed the Ant task to accept a property set
 15. Added a <properties> element to the XML configuration
 
-For full details, see the user's guid at doc\index.html in this
+For full details, see the user's guide at doc\index.html in this
 distribution - then look at the "What's New" page.
 
 -------------------------------------------------------------------------------
