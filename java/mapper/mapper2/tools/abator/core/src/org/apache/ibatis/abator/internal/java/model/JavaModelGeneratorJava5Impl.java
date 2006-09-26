@@ -124,6 +124,13 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         method.addBodyLine("}"); //$NON-NLS-1$
         method.addBodyLine("return criteria;"); //$NON-NLS-1$
         topLevelClass.addMethod(method);
+        
+        method = new Method();
+        method.addComment(table);
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setName("clear"); //$NON-NLS-1$
+        method.addBodyLine("oredCriteria.clear();"); //$NON-NLS-1$
+        topLevelClass.addMethod(method);
 
         // now generate the inner class that holds the AND conditions
         topLevelClass.addInnerClass(getCriteriaInnerClass(topLevelClass,

@@ -2,7 +2,8 @@
 Version 1.0.1:
 1. Fix corner case where the new "by example" methods fail if a criteria class
    has been added to the list, but there are no criteria set
-
+2. Add "clear" method to generated example classes in the Java2/Java5
+   generator sets
 
 -------------------------------------------------------------------------------
 Version 1.0.0:
