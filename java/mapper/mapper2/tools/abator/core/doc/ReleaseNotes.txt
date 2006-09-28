@@ -4,6 +4,7 @@ Version 1.0.1:
    has been added to the list, but there are no criteria set
 2. Add "clear" method to generated example classes in the Java2/Java5
    generator sets
+3. Fix bug - trimStrings on JavaModelGenerator not working
 
 -------------------------------------------------------------------------------
 Version 1.0.0:

@@ -855,7 +855,7 @@ public class BaseDAOGenerator implements DAOGenerator {
         }
         method.setReturnType(returnType);
 
-        method.setName(methodNameCalculator.getSelectByExampleWithBLOBsMethodName(introspectedTable)); //$NON-NLS-1$
+        method.setName(methodNameCalculator.getSelectByExampleWithBLOBsMethodName(introspectedTable));
         method.addParameter(new Parameter(type, "example")); //$NON-NLS-1$
 
         Iterator iter = daoTemplate.getCheckedExceptions().iterator();

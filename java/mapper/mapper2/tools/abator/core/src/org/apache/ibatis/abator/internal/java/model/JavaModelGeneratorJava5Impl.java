@@ -198,7 +198,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
             sb.append(iter.next());
             sb.append(".size() > 0"); //$NON-NLS-1$
             if (!iter.hasNext()) {
-                sb.append(';'); //$NON-NLS-1$
+                sb.append(';');
             }
             method.addBodyLine(sb.toString());
         }

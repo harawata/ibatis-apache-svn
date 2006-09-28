@@ -204,8 +204,8 @@ public class ColumnDefinition {
     }
 
     public boolean isStringColumn() {
-        return resolvedJavaType.getFullyQualifiedJavaType() == 
-            FullyQualifiedJavaType.getStringInstance();
+        return resolvedJavaType.getFullyQualifiedJavaType().equals( 
+            FullyQualifiedJavaType.getStringInstance());
     }
     
     public boolean isJdbcCharacterColumn() {
