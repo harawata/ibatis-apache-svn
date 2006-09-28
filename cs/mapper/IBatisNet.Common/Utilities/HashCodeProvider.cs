@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -30,11 +30,21 @@ using System;
 
 namespace IBatisNet.Common.Utilities
 {
+	using System.Reflection;
+
 	/// <summary>
 	/// Summary description for HashCodeProvider.
 	/// </summary>
 	public class HashCodeProvider
 	{
+		private static MethodInfo getHashCodeMethodInfo = null;
+
+		static HashCodeProvider()
+		{
+			Type type = typeof(object);
+			getHashCodeMethodInfo = type.GetMethod("GetHashCode");
+		}
+
 		/// <summary>
 		/// Supplies a hash code for an object.
 		/// </summary>
@@ -48,11 +58,8 @@ namespace IBatisNet.Common.Utilities
 		/// </remarks>
 		public static int GetIdentityHashCode(object obj)
 		{
-			System.Reflection.MethodInfo methodInfo = null;
-			Type type = typeof(object);
-
-			methodInfo = type.GetMethod("GetHashCode");
-			return (int) methodInfo.Invoke(obj, null);
+			// call the underlying System.Object.GetHashCode()
+			return (int)getHashCodeMethodInfo.Invoke(obj, null);
 		}
 	}
 }
