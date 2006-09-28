@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -29,6 +29,8 @@ using System.Text;
 
 namespace IBatisNet.DataMapper.Configuration.Cache
 {
+	using IBatisNet.Common.Utilities;
+
 	/// <summary>
 	///  Hash value generator for cache keys
 	/// </summary>
@@ -83,7 +85,7 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 		/// <returns>the cachekey</returns>
 		public CacheKey Update(object obj) 
 		{
-			int baseHashCode = obj.GetHashCode();
+			int baseHashCode = HashCodeProvider.GetIdentityHashCode(obj);
 
 			_count++;
 			_checksum += baseHashCode;
