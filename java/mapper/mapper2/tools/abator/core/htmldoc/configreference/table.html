@@ -213,6 +213,26 @@ specified with the <a href="property.html">&lt;property&gt;</a> child element:</
         <code>setStartDate()</code>.</p>
         <p><i>The default value is false.</i></p></td>
   </tr>
+  <tr>
+    <td valign="top">ignoreQualifiersAtRuntime</td>
+    <td>If true, then
+        Abator will not add the schema or catalog to the table name in the generated SQL.
+        This is useful if you have tables with the same name in several schemas -
+        you can use Abator to generate objects based on the table in one schema,
+        but not include the schema for runtime.</p>
+        <p><i>The default value is false.</i></p></td>
+  </tr>
+  <tr>
+    <td valign="top">runtimeTableName</td>
+    <td>If you specify a value for this property, than Abator will use that
+        value as the table name in the generated SQL rather than the <code>tableName</code>
+        as configured above.
+        This is especially useful on Oracle if you want to generate objects to use
+        a public synonym.  In that case, you will need to generate the objects against the
+        actual table that the synonym points to, then specify the synonym name in
+        this property.  You should also specify the <code>ignoreQualifiersAtRuntime</code>
+        property in most cases with public synonyms.</td>
+  </tr>
 </table>
 
 <h2>Example</h2>

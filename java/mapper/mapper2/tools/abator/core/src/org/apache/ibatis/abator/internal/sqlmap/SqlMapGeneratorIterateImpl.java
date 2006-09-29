@@ -130,7 +130,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         FullyQualifiedTable table = introspectedTable.getTable();
         callback.startSubTask(Messages.getString(
                 "Progress.12", //$NON-NLS-1$
-                table.getFullyQualifiedTableName()));
+                table.getFullyQualifiedTableNameAsConfigured()));
         list.add(getSqlMap(introspectedTable));
 
         return list;
@@ -406,7 +406,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         StringBuffer valuesClause = new StringBuffer();
 
         insertClause.append("insert into "); //$NON-NLS-1$
-        insertClause.append(table.getFullyQualifiedTableName());
+        insertClause.append(table.getFullyQualifiedTableNameAtRuntime());
         insertClause.append(" ("); //$NON-NLS-1$
 
         valuesClause.append("values ("); //$NON-NLS-1$
@@ -477,7 +477,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         StringBuffer sb = new StringBuffer();
 
         sb.append("update "); //$NON-NLS-1$
-        sb.append(table.getFullyQualifiedTableName());
+        sb.append(table.getFullyQualifiedTableNameAtRuntime());
         answer.addElement(new TextElement(sb.toString()));
 
         // set up for first column
@@ -549,7 +549,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         StringBuffer sb = new StringBuffer();
         sb.append("update "); //$NON-NLS-1$
-        sb.append(table.getFullyQualifiedTableName());
+        sb.append(table.getFullyQualifiedTableNameAtRuntime());
         answer.addElement(new TextElement(sb.toString()));
 
         // set up for first column
@@ -626,7 +626,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         StringBuffer sb = new StringBuffer();
         sb.append("delete from "); //$NON-NLS-1$
-        sb.append(table.getFullyQualifiedTableName());
+        sb.append(table.getFullyQualifiedTableNameAtRuntime());
         answer.addElement(new TextElement(sb.toString()));
 
         boolean and = false;
@@ -675,7 +675,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         StringBuffer sb = new StringBuffer();
         sb.append("delete from "); //$NON-NLS-1$
-        sb.append(table.getAliasedFullyQualifiedTableName());
+        sb.append(table.getAliasedFullyQualifiedTableNameAtRuntime());
         answer.addElement(new TextElement(sb.toString()));
 
         XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
@@ -755,7 +755,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         sb.setLength(0);
         sb.append("from "); //$NON-NLS-1$
-        sb.append(table.getAliasedFullyQualifiedTableName());
+        sb.append(table.getAliasedFullyQualifiedTableNameAtRuntime());
         answer.addElement(new TextElement(sb.toString()));
 
         boolean and = false;
@@ -816,7 +816,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         Map map = getTableStringMap(table);
         s = (String) map.get(key);
         if (s == null) {
-            s = table.getFullyQualifiedTableNameWithUnderscores();
+            s = table.getFullyQualifiedTableNameWithUnderscoresAtRuntime();
             map.put(key, s);
         }
 
@@ -870,7 +870,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         s = (String) map.get(key);
         if (s == null) {
             StringBuffer sb = new StringBuffer();
-            sb.append(table.getFullyQualifiedTableNameWithUnderscores());
+            sb.append(table.getFullyQualifiedTableNameWithUnderscoresAtRuntime());
 
             sb.append("_SqlMap.xml"); //$NON-NLS-1$
 
@@ -971,24 +971,12 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         Map map = getTableStringMap(table);
         s = (String) map.get(key);
         if (s == null) {
-            if ("true".equals(properties.get("enableSubPackages"))) { //$NON-NLS-1$ //$NON-NLS-2$
-                StringBuffer sb = new StringBuffer(targetPackage);
-
-                if (StringUtility.stringHasValue(table.getCatalog())) {
-                    sb.append('.');
-                    sb.append(table.getCatalog().toLowerCase());
-                }
-
-                if (StringUtility.stringHasValue(table.getSchema())) {
-                    sb.append('.');
-                    sb.append(table.getSchema().toLowerCase());
-                }
-
-                s = sb.toString();
-            } else {
-                s = targetPackage;
+            StringBuffer sb = new StringBuffer(targetPackage);
+            if ("true".equals(properties.get("enableSubPackages"))) { //$NON-NLS-1$  //$NON-NLS-2$
+                sb.append(table.getSubPackage());
             }
-
+            
+            s = sb.toString();
             map.put(key, s);
         }
 
@@ -1257,7 +1245,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         sb.setLength(0);
         sb.append("from "); //$NON-NLS-1$
-        sb.append(table.getAliasedFullyQualifiedTableName());
+        sb.append(table.getAliasedFullyQualifiedTableNameAtRuntime());
         answer.addElement((new TextElement(sb.toString())));
 
         XmlElement isParameterPresenteElement =
@@ -1329,7 +1317,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         sb.setLength(0);
         sb.append("from "); //$NON-NLS-1$
-        sb.append(table.getAliasedFullyQualifiedTableName());
+        sb.append(table.getAliasedFullyQualifiedTableNameAtRuntime());
         answer.addElement(new TextElement(sb.toString()));
 
         XmlElement isParameterPresenteElement =
@@ -1401,7 +1389,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         StringBuffer sb = new StringBuffer();
 
         sb.append("update "); //$NON-NLS-1$
-        sb.append(table.getFullyQualifiedTableName());
+        sb.append(table.getFullyQualifiedTableNameAtRuntime());
         answer.addElement(new TextElement(sb.toString()));
 
         XmlElement dynamicElement = new XmlElement("dynamic"); //$NON-NLS-1$

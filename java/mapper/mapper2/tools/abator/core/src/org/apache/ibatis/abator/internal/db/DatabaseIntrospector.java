@@ -138,7 +138,9 @@ public class DatabaseIntrospector {
             FullyQualifiedTable table = new FullyQualifiedTable(
                     StringUtility.stringHasValue(tc.getCatalog()) ? catalog : null,
                     StringUtility.stringHasValue(tc.getSchema()) ? schema : null,
-                    tableName, tc.getDomainObjectName(), tc.getAlias());
+                    tableName, tc.getDomainObjectName(), tc.getAlias(),
+                    "true".equalsIgnoreCase((String) tc.getProperties().get("ignoreQualifiersAtRuntime")), //$NON-NLS-1$ //$NON-NLS-2$
+                    (String) tc.getProperties().get("runtimeTableName"));//$NON-NLS-1$
             
             ColumnOverride columnOverride = tc.getColumnOverride(cd
                     .getColumnName());
@@ -146,7 +148,7 @@ public class DatabaseIntrospector {
             if (columnOverride == null
                     || !StringUtility.stringHasValue(columnOverride
                             .getJavaProperty())) {
-                if ("true".equals(tc.getProperties().get("useActualColumnNames"))) { //$NON-NLS-1$ //$NON-NLS-2$
+                if ("true".equalsIgnoreCase((String) tc.getProperties().get("useActualColumnNames"))) { //$NON-NLS-1$ //$NON-NLS-2$
                     cd.setJavaProperty(JavaBeansUtil.getValidPropertyName(cd
                             .getColumnName()));
                 } else {
@@ -163,7 +165,7 @@ public class DatabaseIntrospector {
                 // if the type is not supported, then we'll report a warning and
                 // ignore the column
                 warnings.add(Messages.getString("Warning.14", //$NON-NLS-1$
-                        table.getFullyQualifiedTableName(),
+                        table.getFullyQualifiedTableNameAsConfigured(),
                         cd.getColumnName()));
                 continue;
             }
@@ -201,10 +203,10 @@ public class DatabaseIntrospector {
 
             if (!tc.isColumnIgnored(cd.getColumnName())) {
                 IntrospectedTableImpl introspectedTable =
-                    (IntrospectedTableImpl) introspectedTables.get(table.getFullyQualifiedTableName());
+                    (IntrospectedTableImpl) introspectedTables.get(table.getFullyQualifiedTableNameAsConfigured());
                 if (introspectedTable == null) {
                     introspectedTable = new IntrospectedTableImpl(tc, new ColumnDefinitions(), table);
-                    introspectedTables.put(table.getFullyQualifiedTableName(), introspectedTable);
+                    introspectedTables.put(table.getFullyQualifiedTableNameAsConfigured(), introspectedTable);
                 }
                 
                 introspectedTable.getColumnDefinitions().addColumn(cd);
@@ -238,12 +240,12 @@ public class DatabaseIntrospector {
             
             if (!cds.hasAnyColumns()) {
                 // add warning that the table has no columns, remove from the list
-                warnings.add(Messages.getString("Warning.1", introspectedTable.getTable().getFullyQualifiedTableName())); //$NON-NLS-1$
+                warnings.add(Messages.getString("Warning.1", introspectedTable.getTable().getFullyQualifiedTableNameAsConfigured())); //$NON-NLS-1$
                 iter.remove();
             } else if (!cds.hasPrimaryKeyColumns()
                     && !cds.hasBaseColumns()) {
                 // add warning that the table has only BLOB columns, remove from the list
-                warnings.add(Messages.getString("Warning.18", introspectedTable.getTable().getFullyQualifiedTableName())); //$NON-NLS-1$
+                warnings.add(Messages.getString("Warning.18", introspectedTable.getTable().getFullyQualifiedTableNameAsConfigured())); //$NON-NLS-1$
                 iter.remove();
             } else {
                 // now make sure that all columns called out in the configuration

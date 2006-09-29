@@ -230,24 +230,12 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         Map map = getTableValueMap(table);
         s = (String) map.get(key);
         if (s == null) {
+            StringBuffer sb = new StringBuffer(targetPackage);
             if ("true".equals(properties.get("enableSubPackages"))) { //$NON-NLS-1$  //$NON-NLS-2$
-                StringBuffer sb = new StringBuffer(targetPackage);
-
-                if (StringUtility.stringHasValue(table.getCatalog())) {
-                    sb.append('.');
-                    sb.append(table.getCatalog().toLowerCase());
-                }
-
-                if (StringUtility.stringHasValue(table.getSchema())) {
-                    sb.append('.');
-                    sb.append(table.getSchema().toLowerCase());
-                }
-
-                s = sb.toString();
-            } else {
-                s = targetPackage;
+                sb.append(table.getSubPackage());
             }
-
+            
+            s = sb.toString();
             map.put(key, s);
         }
 
@@ -370,7 +358,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         List list = new ArrayList();
 
         String tableName = introspectedTable.getTable()
-                .getFullyQualifiedTableName();
+                .getFullyQualifiedTableNameAsConfigured();
 
         callback.startSubTask(Messages.getString(
                 "Progress.6", //$NON-NLS-1$

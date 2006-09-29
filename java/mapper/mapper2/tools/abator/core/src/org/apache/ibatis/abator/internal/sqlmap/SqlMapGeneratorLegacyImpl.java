@@ -62,7 +62,7 @@ public class SqlMapGeneratorLegacyImpl extends SqlMapGeneratorIterateImpl implem
 
         StringBuffer sb = new StringBuffer();
         sb.append("delete from "); //$NON-NLS-1$
-        sb.append(table.getAliasedFullyQualifiedTableName());
+        sb.append(table.getAliasedFullyQualifiedTableNameAtRuntime());
         answer.addElement(new TextElement(sb.toString()));
 
         XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
@@ -173,7 +173,7 @@ public class SqlMapGeneratorLegacyImpl extends SqlMapGeneratorIterateImpl implem
 
         sb.setLength(0);
         sb.append("from "); //$NON-NLS-1$
-        sb.append(table.getAliasedFullyQualifiedTableName());
+        sb.append(table.getAliasedFullyQualifiedTableNameAtRuntime());
         answer.addElement((new TextElement(sb.toString())));
 
         XmlElement isParameterPresenteElement =
@@ -240,7 +240,7 @@ public class SqlMapGeneratorLegacyImpl extends SqlMapGeneratorIterateImpl implem
 
         sb.setLength(0);
         sb.append("from "); //$NON-NLS-1$
-        sb.append(table.getAliasedFullyQualifiedTableName());
+        sb.append(table.getAliasedFullyQualifiedTableNameAtRuntime());
         answer.addElement((new TextElement(sb.toString())));
 
         XmlElement isParameterPresenteElement =

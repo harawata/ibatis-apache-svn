@@ -34,17 +34,56 @@ public class FullyQualifiedTable {
 	private String domainObjectName;
     
     private String alias;
+    
+    private boolean ignoreQualifiersAtRuntime;
+    
+    private String runtimeTableName;
 
-	/**
-	 *  
-	 */
+    /**
+     * This object is used to hold information related to the table itself,
+     * not the columns in the table.
+     * 
+     * @param catalog the actual catalog of the table as returned from
+     *  DatabaseMetaData.  This value should only be set if the user
+     *  configured a catalog.  Otherwise the DatabaseMetaData is reporting
+     *  some database default that we don't want in the generated code.
+     *  
+     * @param schema the actual schema of the table as returned from
+     *  DatabaseMetaData.  This value should only be set if the user
+     *  configured a schema.  Otherwise the DatabaseMetaData is reporting
+     *  some database default that we don't want in the generated code.
+     *  
+     * @param tableName the actual table name as returned from DatabaseMetaData
+     * 
+     * @param domainObjectName the configred domain object name for this table.
+     *  If nothing is configured, we'll build the domain object named based
+     *  on the tableName or runtimeTableName.
+     *  
+     * @param alias a configured alias for the table. This alias will be
+     *  added to the table name in the SQL
+     * 
+     * @param ignoreQualifiersAtRuntime if true, then the catalog and schema
+     *  qualifiers will be ignored when composing fully qualified names in 
+     *  the generated SQL.  This is used, for example, when the user needs
+     *  to specify a specific schema for generating code but does not want
+     *  the schema in the generated SQL 
+     * 
+     * @param runtimeTableName this is used to "rename" the table in the 
+     *  generated SQL.  This is usefule, for example, when generating code
+     *  to run with an Oracle synonym.  The user would have to specify
+     *  the actual table name and schema for generation, but would want to 
+     *  use the synonym name in the generated SQL
+     */
 	public FullyQualifiedTable(String catalog, String schema, String tableName,
-            String domainObjectName, String alias) {
+            String domainObjectName, String alias, boolean ignoreQualifiersAtRuntime,
+            String runtimeTableName) {
 		super();
         this.catalog = catalog;
         this.schema = schema;
         this.tableName = tableName;
         this.domainObjectName = domainObjectName;
+        this.ignoreQualifiersAtRuntime = ignoreQualifiersAtRuntime;
+        this.runtimeTableName = runtimeTableName;
         
         if (alias == null) {
             this.alias = null;
@@ -65,14 +104,23 @@ public class FullyQualifiedTable {
 		return tableName;
 	}
 
-	public String getFullyQualifiedTableName() {
-        return StringUtility.composeFullyQualifiedTableName(catalog, schema, tableName);
+	public String getFullyQualifiedTableNameAsConfigured() {
+        return StringUtility.composeFullyQualifiedTableName(
+                catalog, schema, tableName, '.');
 	}
 
-    public String getAliasedFullyQualifiedTableName() {
+    public String getFullyQualifiedTableNameAtRuntime() {
+        return StringUtility.composeFullyQualifiedTableName(
+                ignoreQualifiersAtRuntime ? null : catalog,
+                ignoreQualifiersAtRuntime ? null : schema,
+                StringUtility.stringHasValue(runtimeTableName) ? runtimeTableName : tableName,
+                '.');
+    }
+
+    public String getAliasedFullyQualifiedTableNameAtRuntime() {
         StringBuffer sb = new StringBuffer();
 
-        sb.append(getFullyQualifiedTableName());
+        sb.append(getFullyQualifiedTableNameAtRuntime());
         
         if(StringUtility.stringHasValue(alias)) {
             sb.append(' ');
@@ -82,31 +130,19 @@ public class FullyQualifiedTable {
         return sb.toString();
     }
 
-    public String getFullyQualifiedTableNameWithUnderscores() {
-		StringBuffer sb = new StringBuffer();
-
-		if (StringUtility.stringHasValue(catalog)) {
-			sb.append(catalog);
-			sb.append('_');
-		}
-
-		if (StringUtility.stringHasValue(schema)) {
-			sb.append(schema);
-			sb.append('_');
-		} else {
-		    if (sb.length() > 0) {
-				sb.append('_');
-		    }
-		}
-
-		sb.append(tableName);
-
-		return sb.toString();
+    public String getFullyQualifiedTableNameWithUnderscoresAtRuntime() {
+        return StringUtility.composeFullyQualifiedTableName(
+                ignoreQualifiersAtRuntime ? null : catalog,
+                ignoreQualifiersAtRuntime ? null : schema,
+                StringUtility.stringHasValue(runtimeTableName) ? runtimeTableName : tableName,
+                '_');
 	}
 	
 	public String getDomainObjectName() {
 		if (StringUtility.stringHasValue(domainObjectName)) {
 			return domainObjectName;
+        } else if (StringUtility.stringHasValue(runtimeTableName)) {
+            return JavaBeansUtil.getCamelCaseString(runtimeTableName, true);
 		} else {
 			return JavaBeansUtil.getCamelCaseString(tableName, true);
 		}
@@ -138,10 +174,34 @@ public class FullyQualifiedTable {
     }
     
     public String toString() {
-        return getFullyQualifiedTableName();
+        return getFullyQualifiedTableNameAsConfigured();
     }
 
     public String getAlias() {
         return alias;
+    }
+
+    /**
+     * Calculates a Java package fragment based on the 
+     * table catalog and schema.  If qualifiers are ignored,
+     * then this method will return an empty string 
+     * 
+     * @return
+     */
+    public String getSubPackage() {
+        StringBuffer sb = new StringBuffer();
+        if (!ignoreQualifiersAtRuntime) {
+            if (StringUtility.stringHasValue(catalog)) {
+                sb.append('.');
+                sb.append(catalog.toLowerCase());
+            }
+
+            if (StringUtility.stringHasValue(schema)) {
+                sb.append('.');
+                sb.append(schema.toLowerCase());
+            }
+        }
+
+        return sb.toString();
     }
 }

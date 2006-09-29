@@ -9,8 +9,19 @@
 </head>
 <body>
 <h1>What's New in Abator</h1>
-<p>Version 1.0.0 is a significant update to Abator from the prior version 0.6.5.
-Many new features have been added as detailed below.</p>
+<h2>Version 1.0.1 Miscellaneous Changes</h2>
+<ul>
+  <li>Added the ability to specify properties to ignore qualifiers and change runtime
+      table names in the generated SQL for a table.  Primary use cases for this
+      support include:
+      <ul>
+        <li>Generating objects for a table that has a public synonym in Oracle</li>
+        <li>Generating objects for a table that exists in many schemas, and the
+            schema will be selected at runtime</li>
+      </ul>
+    See the <a href="configreference/table.html">&lt;table&gt;</a>
+    reference page for more information.</li>
+</ul>
 
 <h2>Generator Sets (Version 1.0.0)</h2>
 <p>A generator set is a set of

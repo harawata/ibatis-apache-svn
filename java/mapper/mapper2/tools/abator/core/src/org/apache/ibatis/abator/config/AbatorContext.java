@@ -198,7 +198,7 @@ public class AbatorContext extends PropertyHolder {
 				&& !StringUtility.stringHasValue(tc.getGeneratedKey()
 						.getSqlStatement())) {
             String tableName = StringUtility.composeFullyQualifiedTableName(
-                    tc.getCatalog(), tc.getSchema(), tc.getTableName());
+                    tc.getCatalog(), tc.getSchema(), tc.getTableName(), '.');
 	        errors
 				.add(Messages.getString("ValidationError.7",  //$NON-NLS-1$
 						tableName));
@@ -246,7 +246,7 @@ public class AbatorContext extends PropertyHolder {
 			while (iter.hasNext()) {
 				TableConfiguration tc = (TableConfiguration) iter.next();
 				String tableName = StringUtility.composeFullyQualifiedTableName(
-                        tc.getCatalog(), tc.getSchema(), tc.getTableName());
+                        tc.getCatalog(), tc.getSchema(), tc.getTableName(), '.');
 				
 				if (!tc.areAnyStatementsEnabled()) {
 				    warnings.add(Messages.getString("Warning.0", tableName)); //$NON-NLS-1$

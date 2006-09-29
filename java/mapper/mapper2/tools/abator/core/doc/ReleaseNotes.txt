@@ -5,6 +5,8 @@ Version 1.0.1:
 2. Add "clear" method to generated example classes in the Java2/Java5
    generator sets
 3. Fix bug - trimStrings on JavaModelGenerator not working
+4. Add support for "ignoreQualifiersAtRuntime" and "runtimeTableName" on
+   the <table> configuration
 
 -------------------------------------------------------------------------------
 Version 1.0.0:

@@ -149,6 +149,7 @@
   </target>
 	  
   <target name="test.generate.test.code.java2" depends="test.prepare">
+  	<echo message="Expect three warnings from Abator (BLOBSONLY, NonExistantTable, FRED)" />
 	  	
     <!-- note that the class does not exist until the build runs.
     	 Validating Ant editors will complain that the task cannot be
@@ -168,6 +169,8 @@
   </target>
 	  	
   <target name="test.generate.test.code.java5" depends="test.prepare" if="usingJava5">
+  	<echo message="Expect three warnings from Abator (BLOBSONLY, NonExistantTable, FRED)" />
+	  	
     <!-- note that the class does not exist until the build runs.
     	 Validating Ant editors will complain that the task cannot be
     	 found, but it's not really an error. -->

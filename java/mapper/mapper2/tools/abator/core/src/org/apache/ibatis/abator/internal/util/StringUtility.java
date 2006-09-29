@@ -33,20 +33,20 @@ public class StringUtility {
 	}
 
     public static String composeFullyQualifiedTableName(String catalog, String schema,
-            String tableName) {
+            String tableName, char separator) {
         StringBuffer sb = new StringBuffer();
 
         if (stringHasValue(catalog)) {
             sb.append(catalog);
-            sb.append('.');
+            sb.append(separator);
         }
 
         if (stringHasValue(schema)) {
             sb.append(schema);
-            sb.append('.');
+            sb.append(separator);
         } else {
             if (sb.length() > 0) {
-                sb.append('.');
+                sb.append(separator);
             }
         }
 

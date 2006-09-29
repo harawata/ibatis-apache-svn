@@ -213,7 +213,7 @@ public class BaseDAOGenerator implements DAOGenerator {
         List list = new ArrayList();
 
         String tableName = introspectedTable.getTable()
-                .getFullyQualifiedTableName();
+                .getFullyQualifiedTableNameAsConfigured();
 
         callback.startSubTask(Messages.getString("Progress.10", //$NON-NLS-1$
                 tableName));
@@ -1110,15 +1110,7 @@ public class BaseDAOGenerator implements DAOGenerator {
         if (s == null) {
             StringBuffer sb = new StringBuffer(targetPackage);
             if ("true".equals(properties.get("enableSubPackages"))) { //$NON-NLS-1$  //$NON-NLS-2$
-                if (StringUtility.stringHasValue(table.getCatalog())) {
-                    sb.append('.');
-                    sb.append(table.getCatalog().toLowerCase());
-                }
-
-                if (StringUtility.stringHasValue(table.getSchema())) {
-                    sb.append('.');
-                    sb.append(table.getSchema().toLowerCase());
-                }
+                sb.append(table.getSubPackage());
             }
 
             s = sb.toString();
