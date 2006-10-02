@@ -557,7 +557,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
             sb.append("addCriterion(\""); //$NON-NLS-1$
         }
 
-        sb.append(cd.getAliasedColumnName());
+        sb.append(cd.getAliasedActualColumnName());
         if (inMethod) {
             sb.append(" in"); //$NON-NLS-1$
         } else {

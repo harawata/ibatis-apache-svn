@@ -17,6 +17,7 @@
 package abatortest.execute.flat.legacy;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -442,6 +443,65 @@ public class FlatLegacyTests extends BaseTest {
         assertEquals(record.getLastname(), newRecord.getLastname());
         assertEquals(record.getId1(), newRecord.getId1());
         assertEquals(record.getId2(), newRecord.getId2());
+    }
+    
+    public void testPKFieldsSelectByExampleEscapedFields() {
+        PkfieldsDAO dao = (PkfieldsDAO) daoManager.getDao(PkfieldsDAO.class);
+        
+        Pkfields record = new Pkfields();
+        record.setFirstname("Fred");
+        record.setLastname("Flintstone");
+        record.setId1(1);
+        record.setId2(1);
+        record.setWierdField(11);
+        dao.insert(record);
+        
+        record = new Pkfields();
+        record.setFirstname("Wilma");
+        record.setLastname("Flintstone");
+        record.setId1(1);
+        record.setId2(2);
+        record.setWierdField(22);
+        dao.insert(record);
+        
+        record = new Pkfields();
+        record.setFirstname("Pebbles");
+        record.setLastname("Flintstone");
+        record.setId1(1);
+        record.setId2(3);
+        record.setWierdField(33);
+        dao.insert(record);
+        
+        record = new Pkfields();
+        record.setFirstname("Barney");
+        record.setLastname("Rubble");
+        record.setId1(2);
+        record.setId2(1);
+        record.setWierdField(44);
+        dao.insert(record);
+        
+        record = new Pkfields();
+        record.setFirstname("Betty");
+        record.setLastname("Rubble");
+        record.setId1(2);
+        record.setId2(2);
+        record.setWierdField(55);
+        dao.insert(record);
+        
+        record = new Pkfields();
+        record.setFirstname("Bamm Bamm");
+        record.setLastname("Rubble");
+        record.setId1(2);
+        record.setId2(3);
+        record.setWierdField(66);
+        dao.insert(record);
+        
+        PkfieldsExample example = new PkfieldsExample();
+        example.setWierdField(40);
+        example.setWierdField_Indicator(PkfieldsExample.EXAMPLE_LESS_THAN);
+        
+        List answer = dao.selectByExample(example);
+        assertEquals(3, answer.size());
     }
     
     public void testPKBlobsInsert() {

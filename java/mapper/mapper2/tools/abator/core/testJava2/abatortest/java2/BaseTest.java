@@ -53,8 +53,7 @@ public abstract class BaseTest extends TestCase {
 
         try {
             Class.forName("org.hsqldb.jdbcDriver");
-            conn = DriverManager.getConnection("jdbc:hsqldb:mem:aname", "sa",
-                    "");
+            conn = DriverManager.getConnection("jdbc:hsqldb:mem:aname", "sa", "");
 
             Reader reader = Resources.getResourceAsReader("abatortest/java2/CreateDB.sql");
 

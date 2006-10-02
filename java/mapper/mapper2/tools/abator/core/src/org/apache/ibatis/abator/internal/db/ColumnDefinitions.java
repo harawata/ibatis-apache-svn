@@ -52,9 +52,9 @@ public class ColumnDefinitions {
 
 	public void addColumn(ColumnDefinition cd) {
         if (cd.isBLOBColumn()) {
-            blobColumns.put(cd.getColumnName().toUpperCase(), cd);
+            blobColumns.put(cd.getActualColumnName().toUpperCase(), cd);
         } else {
-            baseColumns.put(cd.getColumnName().toUpperCase(), cd);
+            baseColumns.put(cd.getActualColumnName().toUpperCase(), cd);
         }
         
         if (cd.isJDBCDateColumn()) {

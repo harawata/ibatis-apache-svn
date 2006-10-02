@@ -16,17 +16,22 @@
 package org.apache.ibatis.abator.internal.db;
 
 import java.sql.Types;
+import java.util.StringTokenizer;
 
 import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.abator.internal.types.ResolvedJavaType;
 import org.apache.ibatis.abator.internal.util.StringUtility;
 
 /**
+ * This class holds information about an introspected column.  The
+ * class has utility methods useful for generating iBATIS objects.
  * 
  * @author Jeff Butler
  */
 public class ColumnDefinition {
-    private String columnName;
+    private String actualColumnName;
+    
+    private String escapedColumnName;
 
     private int jdbcType;
 
@@ -41,7 +46,7 @@ public class ColumnDefinition {
     private boolean identity;
 
     private String javaProperty;
-
+    
     private ResolvedJavaType resolvedJavaType;
     
     private String tableAlias;
@@ -52,13 +57,15 @@ public class ColumnDefinition {
      * The aliased column name for a select statement.  If there
      * is a table alias, the value will be alias.columnName
      */
-    private String aliasedColumnName;
+    private String aliasedActualColumnName;
 
+    private String aliasedEscapedColumnName;
+    
     /**
      * The renamed column name for a select statement.  If there
      * is a table alias, the value will be alias_columnName
      */
-    private String renamedColumnName;
+    private String renamedColumnNameForResultMap;
     
     /**
      * The phrase to use in a select list.  If there
@@ -126,8 +133,8 @@ public class ColumnDefinition {
     public String toString() {
         StringBuffer sb = new StringBuffer();
 
-        sb.append("Column Name: "); //$NON-NLS-1$
-        sb.append(columnName);
+        sb.append("Actual Column Name: "); //$NON-NLS-1$
+        sb.append(actualColumnName);
         sb.append(", JDBC Type: "); //$NON-NLS-1$
         sb.append(jdbcType);
         sb.append(", Type Name: "); //$NON-NLS-1$
@@ -144,40 +151,42 @@ public class ColumnDefinition {
         return sb.toString();
     }
 
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public void setColumnName(String columnName) {
-        this.columnName = columnName;
+    public void setActualColumnName(String actualColumnName) {
+        this.actualColumnName = actualColumnName;
+        this.escapedColumnName = escapeStringForIbatis(actualColumnName);
         
         if (StringUtility.stringHasValue(tableAlias)) {
             StringBuffer sb = new StringBuffer();
             
             sb.append(tableAlias);
             sb.append('.');
-            sb.append(columnName);
-            aliasedColumnName = sb.toString();
-            
-            sb.setLength(0);
-            sb.append(tableAlias);
-            sb.append('_');
-            sb.append(columnName);
-            renamedColumnName = sb.toString();
+            sb.append(escapedColumnName);
+            aliasedEscapedColumnName = sb.toString();
             
             sb.setLength(0);
             sb.append(tableAlias);
             sb.append('.');
-            sb.append(columnName);
+            sb.append(actualColumnName);
+            aliasedActualColumnName = sb.toString();
+            
+            sb.setLength(0);
+            sb.append(tableAlias);
+            sb.append('_');
+            sb.append(actualColumnName);
+            renamedColumnNameForResultMap = sb.toString();
+            
+            sb.setLength(0);
+            sb.append(aliasedEscapedColumnName);
             sb.append(" as "); //$NON-NLS-1$
             sb.append(tableAlias);
             sb.append('_');
-            sb.append(columnName);
+            sb.append(escapedColumnName);
             selectListPhrase = sb.toString();
         } else {
-            aliasedColumnName = columnName;
-            renamedColumnName = columnName;
-            selectListPhrase = columnName;
+            aliasedActualColumnName = actualColumnName;
+            aliasedEscapedColumnName = escapedColumnName;
+            renamedColumnNameForResultMap = actualColumnName;
+            selectListPhrase = escapedColumnName;
         }
     }
 
@@ -235,14 +244,10 @@ public class ColumnDefinition {
         return javaProperty + "_Indicator"; //$NON-NLS-1$
     }
     
-    public String getRenamedColumnName() {
-        return renamedColumnName;
+    public String getRenamedColumnNameForResultMap() {
+        return renamedColumnNameForResultMap;
     }
 
-    public String getAliasedColumnName() {
-        return aliasedColumnName;
-    }
-    
     public String getSelectListPhrase() {
         return selectListPhrase;
     }
@@ -284,5 +289,38 @@ public class ColumnDefinition {
 
     public void setTypeHandler(String typeHandler) {
         this.typeHandler = typeHandler;
+    }
+    
+    private String escapeStringForIbatis(String actualColumnName) {
+        StringTokenizer st = new StringTokenizer(actualColumnName, "$#", true);
+        StringBuffer sb = new StringBuffer();
+        while (st.hasMoreTokens()) {
+            String token = st.nextToken();
+            if ("$".equals(token)) {
+                sb.append("$$");
+            } else if ("#".equals(token)) {
+                sb.append("##");
+            } else {
+                sb.append(token);
+            }
+        }
+        
+        return sb.toString();
+    }
+
+    public String getActualColumnName() {
+        return actualColumnName;
+    }
+
+    public String getEscapedColumnName() {
+        return escapedColumnName;
+    }
+
+    public String getAliasedActualColumnName() {
+        return aliasedActualColumnName;
+    }
+
+    public String getAliasedEscapedColumnName() {
+        return aliasedEscapedColumnName;
     }
 }

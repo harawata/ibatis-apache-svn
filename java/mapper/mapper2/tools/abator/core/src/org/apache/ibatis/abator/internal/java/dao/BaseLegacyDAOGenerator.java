@@ -334,8 +334,7 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
             method.addSuppressTypeWarningsAnnotation();
         }
         method.setReturnType(FullyQualifiedJavaType.getNewMapInstance());
-        sb.append("get"); //$NON-NLS-1$
-        sb.append(cd.getColumnName());
+        sb.append(JavaBeansUtil.getGetterMethodName(cd.getJavaProperty()));
         sb.append("ExampleParms"); //$NON-NLS-1$
         method.setName(sb.toString());
 

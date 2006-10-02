@@ -1,11 +1,16 @@
 -------------------------------------------------------------------------------
 Version 1.0.1:
-1. Fix corner case where the new "by example" methods fail if a criteria class
-   has been added to the list, but there are no criteria set
+Bugs - 
+1. corner case where the new "by example" methods fail if a criteria
+   class has been added to the list, but there are no criteria set
+2. trimStrings on JavaModelGenerator not working
+
+Enhancements - 
+1. IBATIS-348 - escape column names with $ or #, and ignore special characters
+   for generated Java properties by default
 2. Add "clear" method to generated example classes in the Java2/Java5
    generator sets
-3. Fix bug - trimStrings on JavaModelGenerator not working
-4. Add support for "ignoreQualifiersAtRuntime" and "runtimeTableName" on
+3. Add support for "ignoreQualifiersAtRuntime" and "runtimeTableName" on
    the <table> configuration
 
 -------------------------------------------------------------------------------

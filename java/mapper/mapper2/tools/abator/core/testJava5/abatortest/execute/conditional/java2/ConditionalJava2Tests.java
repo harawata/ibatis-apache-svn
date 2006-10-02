@@ -838,6 +838,71 @@ public class ConditionalJava2Tests extends BaseTest {
         assertEquals(6, answer.size());
     }
     
+    public void testPKFieldsSelectByExampleEscapedFields() {
+        PkfieldsDAO dao = (PkfieldsDAO) daoManager.getDao(PkfieldsDAO.class);
+        
+        Pkfields record = new Pkfields();
+        record.setFirstname("Fred");
+        record.setLastname("Flintstone");
+        record.setId1(1);
+        record.setId2(1);
+        record.setWierdField(11);
+        dao.insert(record);
+        
+        record = new Pkfields();
+        record.setFirstname("Wilma");
+        record.setLastname("Flintstone");
+        record.setId1(1);
+        record.setId2(2);
+        record.setWierdField(22);
+        dao.insert(record);
+        
+        record = new Pkfields();
+        record.setFirstname("Pebbles");
+        record.setLastname("Flintstone");
+        record.setId1(1);
+        record.setId2(3);
+        record.setWierdField(33);
+        dao.insert(record);
+        
+        record = new Pkfields();
+        record.setFirstname("Barney");
+        record.setLastname("Rubble");
+        record.setId1(2);
+        record.setId2(1);
+        record.setWierdField(44);
+        dao.insert(record);
+        
+        record = new Pkfields();
+        record.setFirstname("Betty");
+        record.setLastname("Rubble");
+        record.setId1(2);
+        record.setId2(2);
+        record.setWierdField(55);
+        dao.insert(record);
+        
+        record = new Pkfields();
+        record.setFirstname("Bamm Bamm");
+        record.setLastname("Rubble");
+        record.setId1(2);
+        record.setId2(3);
+        record.setWierdField(66);
+        dao.insert(record);
+        
+        List<Integer> values = new ArrayList<Integer>();
+        values.add(11);
+        values.add(22);
+        
+        PkfieldsExample example = new PkfieldsExample();
+        example.createCriteria()
+            .andWierdFieldLessThan(40)
+            .andWierdFieldIn(values);
+        
+        example.setOrderByClause("ID1, ID2");
+        List answer = dao.selectByExample(example);
+        assertEquals(2, answer.size());
+    }
+    
     public void testPKBlobsInsert() {
         PkblobsDAO dao = (PkblobsDAO) daoManager.getDao(PkblobsDAO.class);
         

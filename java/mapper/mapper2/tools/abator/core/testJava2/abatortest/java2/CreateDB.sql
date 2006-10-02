@@ -30,6 +30,7 @@ create table PKFields (
   decimal60Field decimal(6, 0),
   decimal100Field decimal(10, 0),
   decimal155Field decimal(15, 5),
+  wierd$Field int,
   primary key (id1, id2)
 );
 

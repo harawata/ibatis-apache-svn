@@ -289,7 +289,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
             XmlElement resultElement = new XmlElement("result"); //$NON-NLS-1$
 
             resultElement.addAttribute(new Attribute(
-                    "column", cd.getRenamedColumnName())); //$NON-NLS-1$
+                    "column", cd.getRenamedColumnNameForResultMap())); //$NON-NLS-1$
             resultElement.addAttribute(new Attribute(
                     "property", cd.getJavaProperty())); //$NON-NLS-1$
             resultElement.addAttribute(new Attribute("jdbcType", //$NON-NLS-1$
@@ -352,7 +352,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
             XmlElement resultElement = new XmlElement("result"); //$NON-NLS-1$
             
             resultElement.addAttribute(new Attribute(
-                    "column", cd.getRenamedColumnName())); //$NON-NLS-1$
+                    "column", cd.getRenamedColumnNameForResultMap())); //$NON-NLS-1$
             resultElement.addAttribute(new Attribute(
                     "property", cd.getJavaProperty())); //$NON-NLS-1$
             resultElement.addAttribute(new Attribute(
@@ -430,7 +430,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
                 comma = true; // turn on comma for next time
             }
 
-            insertClause.append(cd.getColumnName());
+            insertClause.append(cd.getEscapedColumnName());
             valuesClause.append(cd.getIbatisFormattedParameterClause());
         }
         insertClause.append(')');
@@ -488,7 +488,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
 
-            sb.append(cd.getColumnName());
+            sb.append(cd.getEscapedColumnName());
             sb.append(" = "); //$NON-NLS-1$
             sb.append(cd.getIbatisFormattedParameterClause());
 
@@ -518,10 +518,9 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
                 and = true;
             }
 
-            sb.append(cd.getColumnName());
-            sb.append(" = #"); //$NON-NLS-1$
-            sb.append(cd.getJavaProperty());
-            sb.append('#');
+            sb.append(cd.getEscapedColumnName());
+            sb.append(" = "); //$NON-NLS-1$
+            sb.append(cd.getIbatisFormattedParameterClause());
             answer.addElement(new TextElement(sb.toString()));
         }
 
@@ -560,7 +559,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
 
-            sb.append(cd.getColumnName());
+            sb.append(cd.getEscapedColumnName());
             sb.append(" = "); //$NON-NLS-1$
             sb.append(cd.getIbatisFormattedParameterClause());
 
@@ -590,7 +589,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
                 and = true;
             }
 
-            sb.append(cd.getColumnName());
+            sb.append(cd.getEscapedColumnName());
             sb.append(" = "); //$NON-NLS-1$
             sb.append(cd.getIbatisFormattedParameterClause());
             answer.addElement(new TextElement(sb.toString()));
@@ -642,7 +641,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
                 and = true;
             }
 
-            sb.append(cd.getColumnName());
+            sb.append(cd.getEscapedColumnName());
             sb.append(" = "); //$NON-NLS-1$
             sb.append(cd.getIbatisFormattedParameterClause());
             answer.addElement(new TextElement(sb.toString()));
@@ -771,7 +770,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
                 and = true;
             }
 
-            sb.append(cd.getAliasedColumnName());
+            sb.append(cd.getAliasedEscapedColumnName());
             sb.append(" = "); //$NON-NLS-1$
             sb.append(cd.getIbatisFormattedParameterClause());
             answer.addElement(new TextElement(sb.toString()));
@@ -1406,7 +1405,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
             dynamicElement.addElement(isNotNullElement);
 
             sb.setLength(0);
-            sb.append(cd.getColumnName());
+            sb.append(cd.getEscapedColumnName());
             sb.append(" = "); //$NON-NLS-1$
             sb.append(cd.getIbatisFormattedParameterClause());
             
@@ -1426,10 +1425,9 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
                 and = true;
             }
 
-            sb.append(cd.getColumnName());
-            sb.append(" = #"); //$NON-NLS-1$
-            sb.append(cd.getJavaProperty());
-            sb.append('#');
+            sb.append(cd.getEscapedColumnName());
+            sb.append(" = "); //$NON-NLS-1$
+            sb.append(cd.getIbatisFormattedParameterClause());
             answer.addElement(new TextElement(sb.toString()));
         }
 

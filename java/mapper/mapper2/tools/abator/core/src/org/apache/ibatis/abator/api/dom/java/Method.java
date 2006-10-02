@@ -270,7 +270,7 @@ public class Method extends JavaElement {
     	sb.append(" * This method returns the value of the database column "); //$NON-NLS-1$
     	sb.append(table.getFullyQualifiedTableNameAsConfigured());
     	sb.append('.');
-    	sb.append(columnDefinition.getColumnName());
+    	sb.append(columnDefinition.getActualColumnName());
         addJavaDocLine(sb.toString());
     	
         addJavaDocLine(" *"); //$NON-NLS-1$
@@ -279,7 +279,7 @@ public class Method extends JavaElement {
     	sb.append(" * @return the value of "); //$NON-NLS-1$
     	sb.append(table.getFullyQualifiedTableNameAsConfigured());
     	sb.append('.');
-    	sb.append(columnDefinition.getColumnName());
+    	sb.append(columnDefinition.getActualColumnName());
         addJavaDocLine(sb.toString());
     	
         addJavaDocLine(" *"); //$NON-NLS-1$
@@ -301,7 +301,7 @@ public class Method extends JavaElement {
     	sb.append(" * This method sets the value of the database column "); //$NON-NLS-1$
     	sb.append(table.getFullyQualifiedTableNameAsConfigured());
     	sb.append('.');
-    	sb.append(columnDefinition.getColumnName());
+    	sb.append(columnDefinition.getActualColumnName());
         addJavaDocLine(sb.toString());
     	
         addJavaDocLine(" *"); //$NON-NLS-1$
@@ -312,7 +312,7 @@ public class Method extends JavaElement {
     	sb.append(" the value for "); //$NON-NLS-1$
     	sb.append(table.getFullyQualifiedTableNameAsConfigured());
     	sb.append('.');
-    	sb.append(columnDefinition.getColumnName());
+    	sb.append(columnDefinition.getActualColumnName());
         addJavaDocLine(sb.toString());
     	
         addJavaDocLine(" *"); //$NON-NLS-1$

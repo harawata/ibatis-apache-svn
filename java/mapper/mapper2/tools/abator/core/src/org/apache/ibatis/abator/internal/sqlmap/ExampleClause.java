@@ -117,19 +117,19 @@ public class ExampleClause {
 	}
 
 	public String getSelectorAndProperty(ColumnDefinition cd) {
-		Object[] arguments = { "AND", cd.getColumnName() }; //$NON-NLS-1$
+		Object[] arguments = { "AND", cd.getEscapedColumnName() }; //$NON-NLS-1$
 
 		return MessageFormat.format(selectorProperty, arguments);
 	}
 
 	public String getSelectorOrProperty(ColumnDefinition cd) {
-		Object[] arguments = { "OR", cd.getColumnName() }; //$NON-NLS-1$
+		Object[] arguments = { "OR", cd.getEscapedColumnName() }; //$NON-NLS-1$
 
 		return MessageFormat.format(selectorProperty, arguments);
 	}
 
 	public String getClause(ColumnDefinition cd) {
-		Object[] arguments = { cd.getAliasedColumnName(), cd.getIbatisFormattedParameterClause() };
+		Object[] arguments = { cd.getAliasedEscapedColumnName(), cd.getIbatisFormattedParameterClause() };
 
 		return MessageFormat.format(clause, arguments);
 	}

@@ -64,6 +64,9 @@ public class JavaBeansUtil {
 			switch (c) {
 			case '_':
 			case '-':
+            case '@':
+            case '$':
+            case '#':
 				if (sb.length() > 0) {
 					nextUpperCase = true;
 				}

@@ -17,6 +17,7 @@
 package abatortest.java2.execute.conditional.legacy;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -469,6 +470,65 @@ public class ConditionalLegacyTests extends BaseTest {
         assertEquals(record.getId2(), newRecord.getId2());
     }
 
+    public void testPKFieldsSelectByExampleEscapedFields() {
+        PkfieldsDAO dao = (PkfieldsDAO) daoManager.getDao(PkfieldsDAO.class);
+        
+        Pkfields record = new Pkfields();
+        record.setFirstname("Fred");
+        record.setLastname("Flintstone");
+        record.setId1(new Integer(1));
+        record.setId2(new Integer(1));
+        record.setWierdField(new Integer(11));
+        dao.insert(record);
+        
+        record = new Pkfields();
+        record.setFirstname("Wilma");
+        record.setLastname("Flintstone");
+        record.setId1(new Integer(1));
+        record.setId2(new Integer(2));
+        record.setWierdField(new Integer(22));
+        dao.insert(record);
+        
+        record = new Pkfields();
+        record.setFirstname("Pebbles");
+        record.setLastname("Flintstone");
+        record.setId1(new Integer(1));
+        record.setId2(new Integer(3));
+        record.setWierdField(new Integer(33));
+        dao.insert(record);
+        
+        record = new Pkfields();
+        record.setFirstname("Barney");
+        record.setLastname("Rubble");
+        record.setId1(new Integer(2));
+        record.setId2(new Integer(1));
+        record.setWierdField(new Integer(44));
+        dao.insert(record);
+        
+        record = new Pkfields();
+        record.setFirstname("Betty");
+        record.setLastname("Rubble");
+        record.setId1(new Integer(2));
+        record.setId2(new Integer(2));
+        record.setWierdField(new Integer(55));
+        dao.insert(record);
+        
+        record = new Pkfields();
+        record.setFirstname("Bamm Bamm");
+        record.setLastname("Rubble");
+        record.setId1(new Integer(2));
+        record.setId2(new Integer(3));
+        record.setWierdField(new Integer(66));
+        dao.insert(record);
+        
+        PkfieldsExample example = new PkfieldsExample();
+        example.setWierdField(new Integer(40));
+        example.setWierdField_Indicator(PkfieldsExample.EXAMPLE_LESS_THAN);
+        
+        List answer = dao.selectByExample(example);
+        assertEquals(3, answer.size());
+    }
+    
     public void testPKBlobsInsert() {
         PkblobsDAO dao = (PkblobsDAO) daoManager.getDao(PkblobsDAO.class);
 

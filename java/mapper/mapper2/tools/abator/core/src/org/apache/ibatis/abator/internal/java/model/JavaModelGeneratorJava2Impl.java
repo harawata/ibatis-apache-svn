@@ -166,7 +166,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
             String property = cd.getJavaProperty();
 
             field = new Field();
-            field.addComment(table, cd.getColumnName());
+            field.addComment(table, cd.getActualColumnName());
             field.setVisibility(JavaVisibility.PRIVATE);
             field.setType(fqjt);
             field.setName(property);
@@ -192,26 +192,24 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
             if (trimStrings && cd.isStringColumn()) {
                 sb.setLength(0);
-                sb.append("if ("); //$NON-NLS-1$
-                sb.append(property);
-                sb.append(" != null) {"); //$NON-NLS-1$
-                method.addBodyLine(sb.toString());
-                sb.setLength(0);
+                sb.append("this."); //$NON-NLS-1$
                 sb.append(property);
                 sb.append(" = "); //$NON-NLS-1$
                 sb.append(property);
+                sb.append(" == null ? null : "); //$NON-NLS-1$
+                sb.append(property);
                 sb.append(".trim();"); //$NON-NLS-1$
                 method.addBodyLine(sb.toString());
-                method.addBodyLine("}"); //$NON-NLS-1$
+            } else {
+                sb.setLength(0);
+                sb.append("this."); //$NON-NLS-1$
+                sb.append(property);
+                sb.append(" = "); //$NON-NLS-1$
+                sb.append(property);
+                sb.append(';');
+                method.addBodyLine(sb.toString());
             }
-
-            sb.setLength(0);
-            sb.append("this."); //$NON-NLS-1$
-            sb.append(property);
-            sb.append(" = "); //$NON-NLS-1$
-            sb.append(property);
-            sb.append(';');
-            method.addBodyLine(sb.toString());
+            
             topLevelClass.addMethod(method);
         }
     }
@@ -547,7 +545,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
             sb.append("addCriterion(\""); //$NON-NLS-1$
         }
     
-        sb.append(cd.getAliasedColumnName());
+        sb.append(cd.getAliasedActualColumnName());
         sb.append(' ');
         sb.append(operator);
         sb.append("\", "); //$NON-NLS-1$
@@ -587,7 +585,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         method.setReturnType(FullyQualifiedJavaType.getCriteriaInstance());
         sb.setLength(0);
         sb.append("criteriaWithoutValue.add(\""); //$NON-NLS-1$
-        sb.append(cd.getAliasedColumnName());
+        sb.append(cd.getAliasedActualColumnName());
         sb.append(' ');
         sb.append(operator);
         sb.append("\");"); //$NON-NLS-1$
@@ -637,7 +635,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
             sb.append("addCriterion(\""); //$NON-NLS-1$
         }
     
-        sb.append(cd.getAliasedColumnName());
+        sb.append(cd.getAliasedActualColumnName());
         if (betweenMethod) {
             sb.append(" between"); //$NON-NLS-1$
         } else {
@@ -1177,7 +1175,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
             sb.append("addCriterion(\""); //$NON-NLS-1$
         }
 
-        sb.append(cd.getAliasedColumnName());
+        sb.append(cd.getAliasedActualColumnName());
         if (inMethod) {
             sb.append(" in"); //$NON-NLS-1$
         } else {

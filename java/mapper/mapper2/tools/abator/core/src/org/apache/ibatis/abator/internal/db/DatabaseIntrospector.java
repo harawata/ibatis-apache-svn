@@ -120,7 +120,7 @@ public class DatabaseIntrospector {
 
             cd.setJdbcType(rs.getInt("DATA_TYPE")); //$NON-NLS-1$
             cd.setLength(rs.getInt("COLUMN_SIZE")); //$NON-NLS-1$
-            cd.setColumnName(rs.getString("COLUMN_NAME")); //$NON-NLS-1$
+            cd.setActualColumnName(rs.getString("COLUMN_NAME")); //$NON-NLS-1$
             cd
                     .setNullable(rs.getInt("NULLABLE") == DatabaseMetaData.columnNullable); //$NON-NLS-1$
             cd.setScale(rs.getInt("DECIMAL_DIGITS")); //$NON-NLS-1$
@@ -143,17 +143,17 @@ public class DatabaseIntrospector {
                     (String) tc.getProperties().get("runtimeTableName"));//$NON-NLS-1$
             
             ColumnOverride columnOverride = tc.getColumnOverride(cd
-                    .getColumnName());
+                    .getActualColumnName());
 
             if (columnOverride == null
                     || !StringUtility.stringHasValue(columnOverride
                             .getJavaProperty())) {
                 if ("true".equalsIgnoreCase((String) tc.getProperties().get("useActualColumnNames"))) { //$NON-NLS-1$ //$NON-NLS-2$
                     cd.setJavaProperty(JavaBeansUtil.getValidPropertyName(cd
-                            .getColumnName()));
+                            .getActualColumnName()));
                 } else {
                     cd.setJavaProperty(JavaBeansUtil.getCamelCaseString(cd
-                            .getColumnName(), false));
+                            .getActualColumnName(), false));
                 }
             } else {
                 cd.setJavaProperty(columnOverride.getJavaProperty());
@@ -166,7 +166,7 @@ public class DatabaseIntrospector {
                 // ignore the column
                 warnings.add(Messages.getString("Warning.14", //$NON-NLS-1$
                         table.getFullyQualifiedTableNameAsConfigured(),
-                        cd.getColumnName()));
+                        cd.getActualColumnName()));
                 continue;
             }
 
@@ -194,14 +194,14 @@ public class DatabaseIntrospector {
 
             if (tc.getGeneratedKey() != null
                     && tc.getGeneratedKey().isIdentity()
-                    && cd.getColumnName().equalsIgnoreCase(
+                    && cd.getActualColumnName().equalsIgnoreCase(
                             tc.getGeneratedKey().getColumn())) {
                 cd.setIdentity(true);
             } else {
                 cd.setIdentity(false);
             }
 
-            if (!tc.isColumnIgnored(cd.getColumnName())) {
+            if (!tc.isColumnIgnored(cd.getActualColumnName())) {
                 IntrospectedTableImpl introspectedTable =
                     (IntrospectedTableImpl) introspectedTables.get(table.getFullyQualifiedTableNameAsConfigured());
                 if (introspectedTable == null) {
