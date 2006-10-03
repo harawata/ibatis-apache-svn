@@ -25,6 +25,7 @@
 #endregion
 
 using System.Collections;
+using System.Collections.Specialized;
 using System.IO;
 using System.Threading;
 using IBatisNet.Common.Logging;
@@ -111,33 +112,43 @@ namespace IBatisNet.Common.Utilities
 			{
 				FileInfo configFile = (FileInfo)_filesToWatch[index];
 
-				// Create a new FileSystemWatcher and set its properties.
-				FileSystemWatcher watcher = new FileSystemWatcher();
-
-				watcher.Path = configFile.DirectoryName;
-				watcher.Filter = configFile.Name;
-
-				// Set the notification filters
-				watcher.NotifyFilter = NotifyFilters.CreationTime | NotifyFilters.LastWrite | NotifyFilters.FileName;
-
-				// Add event handlers. OnChanged will do for all event handlers that fire a FileSystemEventArgs
-				watcher.Changed += new FileSystemEventHandler(ConfigWatcherHandler_OnChanged);
-				watcher.Created += new FileSystemEventHandler(ConfigWatcherHandler_OnChanged);
-				watcher.Deleted += new FileSystemEventHandler(ConfigWatcherHandler_OnChanged);
-				watcher.Renamed += new RenamedEventHandler(ConfigWatcherHandler_OnRenamed);
-
-				// Begin watching.
-				watcher.EnableRaisingEvents = true;
-
-				_filesWatcher.Add( watcher );
-
+                AttachWatcher(configFile);
+                
 				// Create the timer that will be used to deliver events. Set as disabled
-				_timer = new Timer(onWhatchedFileChange, state, Timeout.Infinite, Timeout.Infinite);
+                // callback  : A TimerCallback delegate representing a method to be executed. 
+                // state : An object containing information to be used by the callback method, or a null reference 
+                // dueTime : The amount of time to delay before callback is invoked, in milliseconds. Specify Timeout.Infinite to prevent the timer from starting. Specify zero (0) to start the timer immediately
+                // period : The time interval between invocations of callback, in milliseconds. Specify Timeout.Infinite to disable periodic signaling
+			    _timer = new Timer(onWhatchedFileChange, state, Timeout.Infinite, Timeout.Infinite);
 			}
 		}
 		#endregion
 
 		#region Methods
+
+        private void AttachWatcher(FileInfo configFile)
+	    {				
+            // Create a new FileSystemWatcher and set its properties.
+            FileSystemWatcher watcher = new FileSystemWatcher();
+
+            watcher.Path = configFile.DirectoryName;
+            watcher.Filter = configFile.Name;
+
+            // Set the notification filters
+            watcher.NotifyFilter = NotifyFilters.CreationTime | NotifyFilters.LastWrite | NotifyFilters.FileName;
+
+            // Add event handlers. OnChanged will do for all event handlers that fire a FileSystemEventArgs
+            watcher.Changed += new FileSystemEventHandler(ConfigWatcherHandler_OnChanged);
+            watcher.Created += new FileSystemEventHandler(ConfigWatcherHandler_OnChanged);
+            watcher.Deleted += new FileSystemEventHandler(ConfigWatcherHandler_OnChanged);
+            watcher.Renamed += new RenamedEventHandler(ConfigWatcherHandler_OnRenamed);
+
+            // Begin watching.
+            watcher.EnableRaisingEvents = true;
+
+            _filesWatcher.Add(watcher);
+	    }
+	    
 		/// <summary>
 		/// Add a file to be monitored.
 		/// </summary>

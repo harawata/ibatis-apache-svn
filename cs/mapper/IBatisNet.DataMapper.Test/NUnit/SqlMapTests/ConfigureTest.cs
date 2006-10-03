@@ -2,6 +2,7 @@ using System;
 using System.Configuration;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using IBatisNet.Common.Utilities;
 using IBatisNet.DataMapper; // SqlMap API
 using IBatisNet.DataMapper.Configuration;
@@ -391,6 +392,93 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		}
 		#endregion 
 
+
+        private bool _hasChanged = false;
+
+        /// <summary>
+        /// ConfigurationWatcher Test
+        /// </summary>
+        [Test]
+        public void ConfigurationWatcherTestOnSqlMapConfig()
+        {
+            string fileName = @"..\..\Maps\MSSQL\SqlClient\Account.xml";
+
+   			ConfigureHandler handler = new ConfigureHandler(MyHandler);
+
+            DomSqlMapBuilder builder = new DomSqlMapBuilder();
+
+            NameValueCollection properties = new NameValueCollection();
+            properties.Add("collection2Namespace", "IBatisNet.DataMapper.Test.Domain.LineItemCollection, IBatisNet.DataMapper.Test");
+            properties.Add("nullableInt", "int");
+
+            builder.Properties = properties;
+
+            ISqlMapper mapper = builder.ConfigureAndWatch(_fileName, handler);
+
+            // test that the mapper was correct build
+            Assert.IsNotNull(mapper);
+
+            FileInfo fi = Resources.GetFileInfo(_fileName);
+            fi.LastWriteTime = DateTime.Now;
+
+            fi.Refresh();
+
+            // Let's give a small bit of time for the change to propagate.
+            // The ConfigWatcherHandler class has a timer which 
+            // waits for 500 Millis before delivering
+            // the event notification.
+            System.Threading.Thread.Sleep(600);
+
+            Assert.IsTrue(_hasChanged);
+            
+            _hasChanged = false;
+            
+        }
+
+        /// <summary>
+        /// ConfigurationWatcher Test
+        /// </summary>
+        [Test]
+        public void ConfigurationWatcherTestOnMappingFile()
+        {
+            string fileName = @"..\..\Maps\MSSQL\SqlClient\Account.xml";
+
+            ConfigureHandler handler = new ConfigureHandler(MyHandler);
+
+            DomSqlMapBuilder builder = new DomSqlMapBuilder();
+
+            NameValueCollection properties = new NameValueCollection();
+            properties.Add("collection2Namespace", "IBatisNet.DataMapper.Test.Domain.LineItemCollection, IBatisNet.DataMapper.Test");
+            properties.Add("nullableInt", "int");
+
+            builder.Properties = properties;
+
+            ISqlMapper mapper = builder.ConfigureAndWatch(_fileName, handler);
+
+            // test that the mapper was correct build
+            Assert.IsNotNull(mapper);
+
+            FileInfo fi = Resources.GetFileInfo(fileName);
+            fi.LastWriteTime = DateTime.Now;
+
+            fi.Refresh();
+
+            // Let's give a small bit of time for the change to propagate.
+            // The ConfigWatcherHandler class has a timer which 
+            // waits for 500 Millis before delivering
+            // the event notification.
+            System.Threading.Thread.Sleep(600);
+
+            Assert.IsTrue(_hasChanged);
+
+            _hasChanged = false;
+
+        }
+
+        protected void MyHandler(object obj)
+        {
+            _hasChanged = true;
+        }
 
 	}
 }

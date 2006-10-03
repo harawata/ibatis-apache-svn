@@ -504,10 +504,12 @@ namespace IBatisNet.DataMapper.Configuration
 			StateConfig state = new StateConfig();
 			state.FileName = resource;
 			state.ConfigureHandler = configureDelegate;
-
+            
+			ISqlMapper sqlMapper = Build( document, true );
+		    
 			new ConfigWatcherHandler( callBakDelegate, state );
 
-			return Build( document, true );
+            return sqlMapper;
 		}
 
 		/// <summary>
@@ -534,9 +536,11 @@ namespace IBatisNet.DataMapper.Configuration
 			state.FileName = resource.FullName;
 			state.ConfigureHandler = configureDelegate;
 
-			new ConfigWatcherHandler( callBakDelegate, state );
+			ISqlMapper sqlMapper = Build( document, true );
+    
+		    new ConfigWatcherHandler(callBakDelegate, state);
 
-			return Build( document, true );
+            return sqlMapper;
 		}
 
 		/// <summary>
