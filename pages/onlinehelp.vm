@@ -1,0 +1,21 @@
+<html>
+<head>    
+    <title>iBATIS Online Developper Guide</title>
+</head>
+
+<body>
+
+      <h2>Online Developper Guide</h2>
+
+
+      <h2>iBATIS for .NET</h2>
+
+            <p><a target="_blank" href="/docs/dotnet/dataaccess/index.html">DataAccess Developper Guide</a></p>
+            <p><a target="_blank" href="/docs/dotnet/datamapper/index.html">DataMapper Developper Guide</a></p>
+
+      <h2>iBATIS for Java</h2>
+
+      
+</body>
+
+</html>
