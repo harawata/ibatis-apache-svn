@@ -6,6 +6,7 @@ Build Number: @buildNum@
 ------------------------------
  o Implemented transaction level PreparedStatement caching.
  o Fixed IBATIS-335 - Don't call setQueryTimeout if no value specified
+ o Fixed IBATIS-353 - Probe exception when using inheritance hierarchies
 
 ------------------------------
  2.2.0 - Aug 15, 2006

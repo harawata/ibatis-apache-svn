@@ -117,27 +117,56 @@ public class ClassInfo {
   }
 
   private Method[] getAllMethodsForClass(Class cls) {
-    Set uniqueMethodNames = new HashSet();
-    List allMethods = new ArrayList();
+    if (cls.isInterface()) {
+      // interfaces only have public methods - so the
+      // simple call is all we need (this will also get superinterface methods)
+      return cls.getMethods();
+    } else {
+      // need to get all the declared methods in this class
+      // and any super-class - then need to set access appropriatly
+      // for private methods
+      return getClassMethods(cls);
+    }
+  }
+  
+  /**
+   * This method returns an array containing all methods
+   * declared in this class and any superclass.
+   * We use this method, instead of the simpler Class.getMethods(),
+   * because we want to look for private methods as well. 
+   * 
+   * @param cls
+   * @return
+   */
+  private Method[] getClassMethods(Class cls) {
+    HashMap uniqueMethods = new HashMap();
     Class currentClass = cls;
     while (currentClass != null) {
-      addMethods(currentClass, uniqueMethodNames, allMethods);
+      addUniqueMethods(uniqueMethods, currentClass.getDeclaredMethods());
+      
+      // we also need to look for interface methods - 
+      // because the class may be abstract
       Class[] interfaces = currentClass.getInterfaces();
-      for (int i=0; i<interfaces.length; i++) {
-        addMethods(interfaces[i], uniqueMethodNames, allMethods);
+      for (int i = 0; i < interfaces.length; i++) {
+        addUniqueMethods(uniqueMethods, interfaces[i].getMethods());
       }
+      
       currentClass = currentClass.getSuperclass();
     }
-    return (Method[]) allMethods.toArray(new Method[allMethods.size()]);
+    
+    Collection methods = uniqueMethods.values();
+    
+    return (Method[]) methods.toArray(new Method[methods.size()]);
   }
 
-  private void addMethods(Class currentClass, Set uniqueMethodNames, List allMethods) {
-    Method[] methods = currentClass.getDeclaredMethods();
-    for (int i=0; i < methods.length; i++) {
+  private void addUniqueMethods(HashMap uniqueMethods, Method[] methods) {
+    for (int i = 0; i < methods.length; i++) {
       Method currentMethod = methods[i];
-      String methodName = currentMethod.getName() + currentMethod.getParameterTypes().length;
-      if (!uniqueMethodNames.contains(methodName)) {
-        uniqueMethodNames.add(methodName);
+      String signature = getSignature(currentMethod);
+      // check to see if the method is already known
+      // if it is known, then an extended class must have
+      // overridden a method
+      if (!uniqueMethods.containsKey(signature)) {
         if (canAccessPrivateMethods()) {
           try {
             currentMethod.setAccessible(true);
@@ -145,9 +174,27 @@ public class ClassInfo {
             // Ignored. This is only a final precaution, nothing we can do.
           }
         }
-        allMethods.add(currentMethod);
+        
+        uniqueMethods.put(signature, currentMethod);
       }
     }
+  }
+  
+  private String getSignature(Method method) {
+    StringBuffer sb = new StringBuffer();
+    sb.append(method.getName());
+    Class[] parameters = method.getParameterTypes();
+    
+    for (int i = 0; i < parameters.length; i++) {
+      if (i == 0) {
+        sb.append(':');
+      } else {
+        sb.append(',');
+      }
+      sb.append(parameters[i].getName());
+    }
+    
+    return sb.toString();
   }
 
   private boolean canAccessPrivateMethods() {
