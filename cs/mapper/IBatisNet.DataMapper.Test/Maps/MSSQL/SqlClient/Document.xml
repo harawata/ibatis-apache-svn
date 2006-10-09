@@ -48,7 +48,14 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			from Documents 
 			order by Document_Type, Document_Id
 		</select>
-		
+
+    <select id="SelectDocument" resultMap="document">
+      select
+      *
+      from Documents
+      Where Account_ID = #Id#
+    </select>
+    
 		<select id="GetTypedCollection"
 			listClass="DocumentCollection"
 			resultMap="document">

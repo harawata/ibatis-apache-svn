@@ -84,6 +84,18 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			<result property="BannerOption" column="Account_Banner_Option" dbType="Varchar" type="bool"/>
 			<result property="CartOption"	  column="Account_Cart_Option" typeHandler="HundredsBool"/>
 		</resultMap>
+
+    <resultMap id="account-result-constructor2"  class="Account" >
+      <constructor>
+        <argument argumentName="identifiant"	column="Account_ID"/>
+        <argument argumentName="firstName"    column="Account_FirstName"/>
+        <argument argumentName="lastName"     column="Account_LastName"/>
+        <argument argumentName="document" column="Id=Account_ID" select="SelectDocument" />
+    </constructor>
+      <result property="EmailAddress" column="Account_Email" nullValue="no_email@provided.com"/>
+      <result property="BannerOption" column="Account_Banner_Option" dbType="Varchar" type="bool"/>
+      <result property="CartOption"	  column="Account_Cart_Option" typeHandler="HundredsBool"/>
+    </resultMap>
    
     <resultMap id="account-result"  class="Account" >
 			<result property="id"           column="Account_ID"/>

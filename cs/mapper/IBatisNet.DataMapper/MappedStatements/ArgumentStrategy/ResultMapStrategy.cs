@@ -60,7 +60,7 @@ namespace IBatisNet.DataMapper.MappedStatements.ArgumentStrategy
                 for (int index = 0; index < resultMapping.Parameters.Count; index++)
 				{
                     ResultProperty property = resultMapping.Parameters[index];
-					parameters[index] = property.GetDataBaseValue( reader );
+                    parameters[index] = property.ArgumentStrategy.GetValue(request, property, ref reader, null);
 					request.IsRowDataFound = request.IsRowDataFound || (parameters[index] != null);
 					isParameterFound = isParameterFound || (parameters[index] != null);
 				}

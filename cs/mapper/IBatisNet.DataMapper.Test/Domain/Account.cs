@@ -27,6 +27,14 @@ namespace IBatisNet.DataMapper.Test.Domain
 			_lastName = lastName;
 		}
 
+        public Account(int identifiant, string firstName, string lastName, Document document)
+        {
+            id = identifiant;
+            _firstName = firstName;
+            _lastName = lastName;
+            _document = document;
+        }
+
 		public int Id
 		{
 			get { return id; }

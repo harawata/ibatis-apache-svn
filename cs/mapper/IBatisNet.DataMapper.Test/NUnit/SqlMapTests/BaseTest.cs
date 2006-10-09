@@ -83,8 +83,14 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
             }
             catch(Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.StackTrace.ToString());
+                Exception e = ex;
+                while (e != null)
+                {
+                    Console.WriteLine(e.Message);
+                    Console.WriteLine(e.StackTrace.ToString());
+                    e = e.InnerException;
+                    
+                }
 				throw;
             }
 
