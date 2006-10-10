@@ -42,10 +42,10 @@ namespace IBatisNet.DataAccess.SessionStore
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		/// <param name="daoManagerName">The DaoManager name.</param>
-		public AbstractSessionStore(string daoManagerName)
+        /// <param name="daoManagerId">The DaoManager name.</param>
+        public AbstractSessionStore(string daoManagerId)
 		{
-            sessionName = KEY + daoManagerName;
+            sessionName = KEY + daoManagerId;
 		}
 
 		/// <summary>

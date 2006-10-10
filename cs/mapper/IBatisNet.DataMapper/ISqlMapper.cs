@@ -39,6 +39,7 @@ using IBatisNet.DataMapper.Configuration.ResultMapping;
 using IBatisNet.DataMapper.DataExchange;
 using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.MappedStatements;
+using IBatisNet.DataMapper.SessionStore;
 using IBatisNet.DataMapper.TypeHandlers;
 
 namespace IBatisNet.DataMapper
@@ -49,6 +50,20 @@ namespace IBatisNet.DataMapper
     public interface ISqlMapper
     {
 
+        /// <summary>
+        /// Name used to identify the the <see cref="SqlMapper"/>
+        /// </summary>
+        string Id { get; }
+        
+         /// <summary>
+        /// Allow to set a custom session store like the <see cref="HybridWebThreadSessionStore"/>
+        /// </summary>
+        /// <remarks>Set it after the configuration and before use of the <see cref="SqlMapper"/></remarks>
+        /// <example>
+        /// sqlMapper.SessionStore = new HybridWebThreadSessionStore( sqlMapper.Id );
+        /// </example>
+        ISessionStore SessionStore { set; }
+        
         /// <summary>
         /// Gets a value indicating whether this instance is session started.
         /// </summary>

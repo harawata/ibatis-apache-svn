@@ -8,6 +8,7 @@ Issues
  - IBATISNET-184 : Invalid support for public/protected field in result property
 
 Improvements/Changes
+- IBATISNET-185  : Allow custom ISessionStore
 - IBATISNET-180 : Extends use of ISqlMapper in DataMapper + allow use of a custom ISqlMapper
 
 ------------------------------

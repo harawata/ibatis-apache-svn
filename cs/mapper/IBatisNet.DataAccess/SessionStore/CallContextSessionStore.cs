@@ -31,14 +31,16 @@ namespace IBatisNet.DataAccess.SessionStore
 	/// <summary>
 	/// Provides an implementation of <see cref="ISessionStore"/>
 	/// which relies on <c>CallContext</c>
+    /// This implementation will first get the current session from the current 
+    /// thread. Do NOT use on web scenario (web applications or web services).
 	/// </summary>
 	public class CallContextSessionStore : AbstractSessionStore
 	{
         /// <summary>
         /// Initializes a new instance of the <see cref="CallContextSessionStore"/> class.
         /// </summary>
-        /// <param name="daoManagerName">The DaoManager name.</param>
-		public CallContextSessionStore(string daoManagerName) : base(daoManagerName)
+        /// <param name="daoManagerId">The DaoManager name.</param>
+        public CallContextSessionStore(string daoManagerId) : base(daoManagerId)
 		{}
 
 		/// <summary>

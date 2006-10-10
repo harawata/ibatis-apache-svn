@@ -164,12 +164,10 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		}
 
         /// <summary>
-        /// Test resultMap with a result property using another resultMap and where
-        /// - the result property resultMap use a constructor
-        /// - all the constructor arguments are null.
+        /// Test a constructor argument with select tag.
         /// </remarks>
         [Test]
-        public void TestJIRAXXX()
+        public void TestJIRA186()
         {
             Order order = sqlMap.QueryForObject("GetOrderConstructor10", 5) as Order;
 

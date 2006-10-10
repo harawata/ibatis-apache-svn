@@ -28,6 +28,7 @@ using System.Data;
 
 using IBatisNet.Common;
 using IBatisNet.DataAccess.Interfaces;
+using IBatisNet.DataAccess.SessionStore;
 
 namespace IBatisNet.DataAccess
 {
@@ -36,6 +37,20 @@ namespace IBatisNet.DataAccess
     /// </summary>
     public interface IDaoManager
     {
+        /// <summary>
+        /// Name used to identify the the <see cref="IDaoManager"/>
+        /// </summary>
+        string Id { get;set; }
+
+        /// <summary>
+        /// Allow to set a custom session store like the <see cref="HybridWebThreadSessionStore"/>
+        /// </summary>
+        /// <remarks>Set it after the configuration and before use of the <see cref="IDaoManager"/></remarks>
+        /// <example>
+        /// daoManager.SessionStore = new HybridWebThreadSessionStore( daoManager.Id );
+        /// </example>
+        ISessionStore SessionStore { set; }
+        
         /// <summary>
         /// Begins a database transaction with the specified isolation level.
         /// </summary>

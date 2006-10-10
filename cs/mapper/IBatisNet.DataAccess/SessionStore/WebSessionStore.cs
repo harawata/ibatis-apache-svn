@@ -39,8 +39,8 @@ namespace IBatisNet.DataAccess.SessionStore
         /// <summary>
         /// Initializes a new instance of the <see cref="WebSessionStore"/> class.
         /// </summary>
-        /// <param name="daoManagerName">The DaoManager name.</param>
-		public WebSessionStore(string daoManagerName):base(daoManagerName)
+        /// <param name="daoManagerId">The DaoManager name.</param>
+        public WebSessionStore(string daoManagerId) : base(daoManagerId)
 		{}
 
 		/// <summary>

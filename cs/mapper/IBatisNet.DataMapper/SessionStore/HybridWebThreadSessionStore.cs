@@ -1,3 +1,4 @@
+using System;
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
@@ -23,27 +24,29 @@
  ********************************************************************************/
 #endregion
 
+using System.Runtime.Remoting.Messaging;
 using System.Web;
 using IBatisNet.Common;
 using IBatisNet.Common.Exceptions;
 
 namespace IBatisNet.DataMapper.SessionStore
 {
-
-	/// <summary>
-	/// Provides an implementation of <see cref="ISessionStore"/>
-	/// which relies on <c>HttpContext</c>. Suitable for web projects.
-    /// This implementation will get the current session from the current 
-    /// request.
-	/// </summary>
-	public class WebSessionStore : AbstractSessionStore
+    /// <summary>
+    /// This implementation of <see cref="ISessionStore"/>will first try 
+    /// to get the currentrequest, and if not found, will use a thread local.
+    /// </summary>
+    /// <remarks>
+    /// This is used for scenarios where most of the you need per request session, but you also does some work outside a 
+    /// request (in a thread pool thread, for instance).
+    /// </remarks>
+    public class HybridWebThreadSessionStore : AbstractSessionStore
 	{
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WebSessionStore"/> class.
         /// </summary>
         /// <param name="sqlMapperId">The SQL mapper id.</param>
-        public WebSessionStore(string sqlMapperId) : base(sqlMapperId)
+        public HybridWebThreadSessionStore(string sqlMapperId): base(sqlMapperId)
 		{}
 
 		/// <summary>
@@ -53,7 +56,11 @@ namespace IBatisNet.DataMapper.SessionStore
 		{
 			get
 			{
-				HttpContext currentContext = ObtainSessionContext();
+                HttpContext currentContext = HttpContext.Current;
+                if (currentContext == null)
+                {
+                    return CallContext.GetData(sessionName) as IDalSession; 
+                }
                 return currentContext.Items[sessionName] as IDalSession;
 			}
 		}
@@ -64,8 +71,15 @@ namespace IBatisNet.DataMapper.SessionStore
 		/// <param name="session">The session to store</param>
         public override void Store(IDalSession session)
 		{
-			HttpContext currentContext = ObtainSessionContext();
-			currentContext.Items[sessionName] = session;
+            HttpContext currentContext = HttpContext.Current;
+            if (currentContext == null)
+            {
+                CallContext.SetData(sessionName, session);
+            }
+		    else
+            {
+                currentContext.Items[sessionName] = session;
+            }
 		}
 
 		/// <summary>
@@ -73,20 +87,17 @@ namespace IBatisNet.DataMapper.SessionStore
 		/// </summary>
 		public override void Dispose()
 		{
-			HttpContext currentContext = ObtainSessionContext();
-			currentContext.Items[sessionName] = null;
+            HttpContext currentContext = HttpContext.Current;
+            if (currentContext == null)
+            {
+                CallContext.SetData(sessionName, null);
+            }
+		    else
+            {
+ 			    currentContext.Items[sessionName] = null;
+            }
 		}
 
-		
-		private static HttpContext ObtainSessionContext()
-		{
-			HttpContext currentContext = HttpContext.Current;
-	
-			if (currentContext == null)
-			{
-				throw new IBatisNetException("WebSessionStore: Could not obtain reference to HttpContext");
-			}
-			return currentContext;
-		}
+
 	}
 }

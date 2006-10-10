@@ -1103,6 +1103,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "SessionStore\HybridWebThreadSessionStore.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "SessionStore\ISessionStore.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

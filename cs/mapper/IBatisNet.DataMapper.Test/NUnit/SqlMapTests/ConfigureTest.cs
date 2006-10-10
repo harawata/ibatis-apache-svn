@@ -6,6 +6,8 @@ using System.Threading;
 using IBatisNet.Common.Utilities;
 using IBatisNet.DataMapper; // SqlMap API
 using IBatisNet.DataMapper.Configuration;
+using IBatisNet.DataMapper.SessionStore;
+using IBatisNet.DataMapper.Test.Domain;
 using NUnit.Framework;
 using System.Collections.Specialized;
 
@@ -35,6 +37,19 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
         }
 		#endregion 
+	    
+	    /// <summary>
+        /// Test HybridWebThreadSessionStore
+        /// </summary>
+        [Test]
+        public void HybridWebThreadSessionStoreTest()
+	    {
+            sqlMap.SessionStore = new HybridWebThreadSessionStore(sqlMap.Id);
+	        
+            Account account = sqlMap.QueryForObject("SelectWithProperty", null) as Account;
+            AssertAccount1(account);
+	    }
+	    
 
 		#region Relatives Path tests
 

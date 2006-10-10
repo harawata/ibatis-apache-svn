@@ -482,9 +482,9 @@ namespace IBatisNet.DataAccess.Configuration
 
 				// name
 				attribute = contextNode.Attributes["id"];
-				daoManager.Name = attribute.Value;
+                daoManager.Id = attribute.Value;
 
-				configurationScope.ErrorContext.Activity += daoManager.Name;
+                configurationScope.ErrorContext.Activity += daoManager.Id;
 
 				// default
 				attribute = contextNode.Attributes["default"];
@@ -586,9 +586,9 @@ namespace IBatisNet.DataAccess.Configuration
 				#region Register DaoManager
 
 				configurationScope.ErrorContext.MoreInfo = "register DaoManager";
-				configurationScope.ErrorContext.ObjectId = daoManager.Name;
+                configurationScope.ErrorContext.ObjectId = daoManager.Id;
 
-				DaoManager.RegisterDaoManager(daoManager.Name, daoManager);
+                DaoManager.RegisterDaoManager(daoManager.Id, daoManager);
 
 				configurationScope.ErrorContext.Resource = string.Empty;
 				configurationScope.ErrorContext.MoreInfo = string.Empty;

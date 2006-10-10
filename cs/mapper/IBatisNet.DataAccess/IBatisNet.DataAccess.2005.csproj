@@ -150,6 +150,7 @@
     </Compile>
     <Compile Include="SessionStore\AbstractSessionStore.cs" />
     <Compile Include="SessionStore\CallContextSessionStore.cs" />
+    <Compile Include="SessionStore\HybridWebThreadSessionStore.cs" />
     <Compile Include="SessionStore\ISessionStore.cs" />
     <Compile Include="SessionStore\SessionStoreFactory .cs" />
     <Compile Include="SessionStore\WebSessionStore.cs" />

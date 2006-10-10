@@ -550,13 +550,17 @@ namespace IBatisNet.DataMapper.MappedStatements
 			{
 				IDataReader reader = command.ExecuteReader();
                 try 
-                {			
-					while ( reader.Read() )
-					{
-                        object obj = _resultStrategy.Process(request, ref reader, null);
-				
-						resultObject.Add( obj );
-					}
+                {
+                    do
+                    {
+                        while (reader.Read())
+                        {
+                            object obj = _resultStrategy.Process(request, ref reader, null);
+
+                            resultObject.Add(obj);
+                        }
+                    }
+                    while (reader.NextResult());
 			    }
                 catch
                 {

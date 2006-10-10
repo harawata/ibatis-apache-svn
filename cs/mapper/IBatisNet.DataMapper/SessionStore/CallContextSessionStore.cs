@@ -30,7 +30,9 @@ namespace IBatisNet.DataMapper.SessionStore
 {
 	/// <summary>
 	/// Provides an implementation of <see cref="ISessionStore"/>
-	/// which relies on <c>CallContext</c>
+	/// which relies on <c>CallContext</c>.
+    /// This implementation will first get the current session from the current 
+    /// thread. Do NOT use on web scenario (web applications or web services).
 	/// </summary>
 	public class CallContextSessionStore : AbstractSessionStore
 	{
