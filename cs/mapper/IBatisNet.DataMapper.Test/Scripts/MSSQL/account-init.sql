@@ -31,7 +31,7 @@ INSERT INTO [dbo].[Accounts] VALUES(1,'Joe', 'Dalton', 'Joe.Dalton@somewhere.com
 INSERT INTO [dbo].[Accounts] VALUES(2,'Averel', 'Dalton', 'Averel.Dalton@somewhere.com', 'Oui', 200);
 INSERT INTO [dbo].[Accounts] VALUES(3,'William', 'Dalton', null, 'Non', 100);
 INSERT INTO [dbo].[Accounts] VALUES(4,'Jack', 'Dalton', 'Jack.Dalton@somewhere.com', 'Non', 100);
-INSERT INTO [dbo].[Accounts] VALUES(5,'Gilles', 'Bayon', null, 'Oui', 100);
+INSERT INTO [dbo].[Accounts] VALUES(5,'Gilles', 'Bayon', 'gilles.bayon@nospam.org', 'Oui', 100);
 
 -- Store procedure
 
