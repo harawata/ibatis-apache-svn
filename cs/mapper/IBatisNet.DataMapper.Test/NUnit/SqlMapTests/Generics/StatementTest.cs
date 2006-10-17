@@ -223,16 +223,14 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Generics
         [Test]
         public void TestExecuteQueryForListWithResultMapWithDynamicElement()
         {
-            //IList list = sqlMap.QueryForList("GetAllAccountsViaResultMapWithDynamicElement", "LIKE");
             IList<Account> list = sqlMap.QueryForList<Account>("GetAllAccountsViaResultMapWithDynamicElement", "LIKE");
 
             AssertAccount1(list[0]);
-            Assert.AreEqual(3, list.Count);
+            Assert.AreEqual(4, list.Count);
             Assert.AreEqual(1, list[0].Id);
             Assert.AreEqual(2, list[1].Id);
             Assert.AreEqual(4, list[2].Id);
 
-            //list = sqlMap.QueryForList("GetAllAccountsViaResultMapWithDynamicElement", "=");
             list = sqlMap.QueryForList<Account>("GetAllAccountsViaResultMapWithDynamicElement", "=");
 
             Assert.AreEqual(0, list.Count);
@@ -455,7 +453,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Generics
             Assert.AreEqual("Averel.Dalton@somewhere.com", list[1]);
             Assert.IsNull(list[2]);
             Assert.AreEqual("Jack.Dalton@somewhere.com", list[3]);
-            Assert.IsNull(list[4]);
+            Assert.AreEqual("gilles.bayon@nospam.org", list[4]);
         }
 
         /// <summary>
@@ -470,7 +468,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Generics
             Assert.AreEqual("Averel.Dalton@somewhere.com", list[1]);
             Assert.IsNull(list[2]);
             Assert.AreEqual("Jack.Dalton@somewhere.com", list[3]);
-            Assert.IsNull(list[4]);
+            Assert.AreEqual("gilles.bayon@nospam.org", list[4]);
         }
 
         /// <summary>
@@ -497,12 +495,12 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Generics
 
             Assert.AreEqual(5, _index);
             Assert.AreEqual(5, list.Count);
-            AssertAccount1( list[0]);
-            Assert.AreEqual(1,  list[0].Id);
-            Assert.AreEqual(2,  list[1].Id);
-            Assert.AreEqual(3,  list[2].Id);
-            Assert.AreEqual(4,  list[3].Id);
-            Assert.AreEqual(5,  list[4].Id);
+            AssertAccount1(list[0]);
+            Assert.AreEqual(1, list[0].Id);
+            Assert.AreEqual(2, list[1].Id);
+            Assert.AreEqual(3, list[2].Id);
+            Assert.AreEqual(4, list[3].Id);
+            Assert.AreEqual(5, list[4].Id);
 
         }
 
@@ -514,7 +512,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Generics
         {
             IList<Order> list = sqlMap.QueryForList<Order>("GetManyOrderWithConstructor", null);
 
-            Assert.IsTrue(list.Count>0);
+            Assert.IsTrue(list.Count > 0);
         }
 
         #endregion
