@@ -359,29 +359,33 @@ public class BaseDAOGenerator implements DAOGenerator {
             }
         }
 
-        methods = getExtraImplementationMethods(introspectedTable, answer);
-        if (methods != null) {
-            iter = methods.iterator();
-            while (iter.hasNext()) {
-                answer.addMethod((Method) iter.next());
-            }
-        }
+        afterImplementationGenerationHook(introspectedTable, answer);
         
         return answer;
     }
 
     /**
-     * Override this method to provide any extra methods needed in the 
-     * implementation class.
+     * Override this method to provide any extra customization of 
+     * the generated interface.
      * 
      * @param introspectedTable
-     * @param compilationUnit
-     * @return a list of Method objects that will be added to the implementation
-     *  class.  May be <code>null</code>.
+     * @param generatedInterface the generated interface
      */
-    protected List getExtraImplementationMethods(IntrospectedTable introspectedTable,
-            CompilationUnit compilationUnit) {
-        return null;
+    protected void afterInterfaceGenerationHook(IntrospectedTable introspectedTable,
+            Interface generatedInterface) {
+        return;
+    }
+    
+    /**
+     * Override this method to provide any extra customization of 
+     * the generated implementation class.
+     * 
+     * @param introspectedTable
+     * @param generatedClass the generated class
+     */
+    protected void afterImplementationGenerationHook(IntrospectedTable introspectedTable,
+            TopLevelClass generatedClass) {
+        return;
     }
 
     protected Interface getDAOInterface(IntrospectedTable introspectedTable) {
@@ -496,6 +500,8 @@ public class BaseDAOGenerator implements DAOGenerator {
             }
         }
 
+        afterInterfaceGenerationHook(introspectedTable, answer);
+        
         return answer;
     }
 

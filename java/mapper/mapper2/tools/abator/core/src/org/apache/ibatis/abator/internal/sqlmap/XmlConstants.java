@@ -31,5 +31,7 @@ public class XmlConstants {
 
     public static final String SQL_MAP_PUBLIC_ID = "-//ibatis.apache.org//DTD SQL Map 2.0//EN"; //$NON-NLS-1$
     
+    public static final String ABATOR_CONFIG_SYSTEM_ID = "http://ibatis.apache.org/dtd/abator-config_1_0.dtd"; //$NON-NLS-1$
+    
     public static final String ABATOR_CONFIG_PUBLIC_ID = "-//Apache Software Foundation//DTD Abator for iBATIS Configuration 1.0//EN"; //$NON-NLS-1$
 }

@@ -28,6 +28,8 @@ import org.apache.ibatis.abator.api.JavaModelGenerator;
 import org.apache.ibatis.abator.api.JavaTypeResolver;
 import org.apache.ibatis.abator.api.ProgressCallback;
 import org.apache.ibatis.abator.api.SqlMapGenerator;
+import org.apache.ibatis.abator.api.dom.xml.Attribute;
+import org.apache.ibatis.abator.api.dom.xml.XmlElement;
 import org.apache.ibatis.abator.exception.InvalidConfigurationException;
 import org.apache.ibatis.abator.internal.AbatorObjectFactory;
 import org.apache.ibatis.abator.internal.NullProgressCallback;
@@ -57,6 +59,8 @@ public class AbatorContext extends PropertyHolder {
     private GeneratorSet generatorSet;
     
     private ModelType defaultModelType;
+    
+    private String configuredGeneratorSet;
 	
     /**
      * Constructs an AbatorContext object.
@@ -66,6 +70,9 @@ public class AbatorContext extends PropertyHolder {
      */
     public AbatorContext(String generatorSetType, ModelType defaultModelType) {
         super();
+        
+        this.configuredGeneratorSet = generatorSetType;
+        
         if (defaultModelType == null) {
             this.defaultModelType = ModelType.CONDITIONAL;
         } else {
@@ -196,7 +203,7 @@ public class AbatorContext extends PropertyHolder {
 
 		if (tc.getGeneratedKey() != null
 				&& !StringUtility.stringHasValue(tc.getGeneratedKey()
-						.getSqlStatement())) {
+						.getRuntimeSqlStatement())) {
             String tableName = StringUtility.composeFullyQualifiedTableName(
                     tc.getCatalog(), tc.getSchema(), tc.getTableName(), '.');
 	        errors
@@ -343,5 +350,51 @@ public class AbatorContext extends PropertyHolder {
 
     public ModelType getDefaultModelType() {
         return defaultModelType;
+    }
+
+    /**
+     * Builds an XmlElement representation of this context.  Note that the
+     * XML may not necessarity validate if the context is invalid.  Call the
+     * <code>validate</code> method to check validity of this context.
+     * 
+     * @return the XML representation of this context
+     */
+    public XmlElement toXmlElement() {
+        XmlElement xmlElement = new XmlElement("abatorContext"); //$NON-NLS-1$
+        xmlElement.addAttribute(new Attribute("defaultModelType", defaultModelType.getModelType())); //$NON-NLS-1$
+        
+        if (StringUtility.stringHasValue(configuredGeneratorSet)) {
+            xmlElement.addAttribute(new Attribute("generatorSet", configuredGeneratorSet)); //$NON-NLS-1$
+        }
+        
+        addPropertyXmlElements(xmlElement);
+        
+        if (jdbcConnectionConfiguration != null) {
+            xmlElement.addElement(jdbcConnectionConfiguration.toXmlElement());
+        }
+        
+        if (javaTypeResolverConfiguration != null) {
+            xmlElement.addElement(javaTypeResolverConfiguration.toXmlElement());
+        }
+        
+        if (javaModelGeneratorConfiguration != null) {
+            xmlElement.addElement(javaModelGeneratorConfiguration.toXmlElement());
+        }
+        
+        if (sqlMapGeneratorConfiguration != null) {
+            xmlElement.addElement(sqlMapGeneratorConfiguration.toXmlElement());
+        }
+        
+        if (daoGeneratorConfiguration != null) {
+            xmlElement.addElement(daoGeneratorConfiguration.toXmlElement());
+        }
+        
+        Iterator iter = tableConfigurations.iterator();
+        while (iter.hasNext()) {
+            TableConfiguration tableConfiguration = (TableConfiguration) iter.next();
+            xmlElement.addElement(tableConfiguration.toXmlElement());
+        }
+        
+        return xmlElement;
     }
 }

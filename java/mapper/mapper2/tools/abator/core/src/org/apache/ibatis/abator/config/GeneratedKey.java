@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.abator.config;
 
+import org.apache.ibatis.abator.api.dom.xml.Attribute;
+import org.apache.ibatis.abator.api.dom.xml.XmlElement;
 import org.apache.ibatis.abator.internal.db.DatabaseDialects;
 
 /**
@@ -26,38 +28,41 @@ import org.apache.ibatis.abator.internal.db.DatabaseDialects;
 public class GeneratedKey {
     private String column;
 
-    private String sqlStatement;
+    private String configuredSqlStatement;
 
+    private String runtimeSqlStatement;
+    
     private boolean isIdentity;
 
     /**
      * 
      */
-    public GeneratedKey(String column, String sqlStatement, boolean isIdentity) {
+    public GeneratedKey(String column, String configuredSqlStatement, boolean isIdentity) {
         super();
         this.column = column;
         this.isIdentity = isIdentity;
+        this.configuredSqlStatement = configuredSqlStatement;
 
-        if ("DB2".equalsIgnoreCase(sqlStatement)) { //$NON-NLS-1$
-            this.sqlStatement = DatabaseDialects
+        if ("DB2".equalsIgnoreCase(configuredSqlStatement)) { //$NON-NLS-1$
+            this.runtimeSqlStatement = DatabaseDialects
                     .getIdentityClause(DatabaseDialects.DB2);
-        } else if ("MySQL".equalsIgnoreCase(sqlStatement)) { //$NON-NLS-1$
-            this.sqlStatement = DatabaseDialects
+        } else if ("MySQL".equalsIgnoreCase(configuredSqlStatement)) { //$NON-NLS-1$
+            this.runtimeSqlStatement = DatabaseDialects
                     .getIdentityClause(DatabaseDialects.MYSQL);
-        } else if ("SqlServer".equalsIgnoreCase(sqlStatement)) { //$NON-NLS-1$
-            this.sqlStatement = DatabaseDialects
+        } else if ("SqlServer".equalsIgnoreCase(configuredSqlStatement)) { //$NON-NLS-1$
+            this.runtimeSqlStatement = DatabaseDialects
                     .getIdentityClause(DatabaseDialects.SQLSERVER);
-        } else if ("Cloudscape".equalsIgnoreCase(sqlStatement)) { //$NON-NLS-1$
-            this.sqlStatement = DatabaseDialects
+        } else if ("Cloudscape".equalsIgnoreCase(configuredSqlStatement)) { //$NON-NLS-1$
+            this.runtimeSqlStatement = DatabaseDialects
                     .getIdentityClause(DatabaseDialects.CLOUDSCAPE);
-        } else if ("Derby".equalsIgnoreCase(sqlStatement)) { //$NON-NLS-1$
-            this.sqlStatement = DatabaseDialects
+        } else if ("Derby".equalsIgnoreCase(configuredSqlStatement)) { //$NON-NLS-1$
+            this.runtimeSqlStatement = DatabaseDialects
                     .getIdentityClause(DatabaseDialects.DERBY);
-        } else if ("HSQLDB".equalsIgnoreCase(sqlStatement)) { //$NON-NLS-1$
-            this.sqlStatement = DatabaseDialects
+        } else if ("HSQLDB".equalsIgnoreCase(configuredSqlStatement)) { //$NON-NLS-1$
+            this.runtimeSqlStatement = DatabaseDialects
                     .getIdentityClause(DatabaseDialects.HSQLDB);
         } else {
-            this.sqlStatement = sqlStatement;
+            this.runtimeSqlStatement = configuredSqlStatement;
         }
     }
 
@@ -69,7 +74,17 @@ public class GeneratedKey {
         return isIdentity;
     }
 
-    public String getSqlStatement() {
-        return sqlStatement;
+    public String getRuntimeSqlStatement() {
+        return runtimeSqlStatement;
+    }
+    
+    public XmlElement toXmlElement() {
+        XmlElement xmlElement = new XmlElement("generatedKey"); //$NON-NLS-1$
+        xmlElement.addAttribute(new Attribute("column", column)); //$NON-NLS-1$
+        xmlElement.addAttribute(new Attribute("sqlStatement", configuredSqlStatement)); //$NON-NLS-1$
+        xmlElement.addAttribute(new Attribute("identity",//$NON-NLS-1$
+                isIdentity ? "true" : "false")); //$NON-NLS-1$ //$NON-NLS-2$
+        
+        return xmlElement;
     }
 }

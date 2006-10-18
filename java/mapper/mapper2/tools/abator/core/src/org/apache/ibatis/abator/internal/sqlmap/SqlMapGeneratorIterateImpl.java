@@ -147,6 +147,8 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         Document document = new Document(XmlConstants.SQL_MAP_PUBLIC_ID,
                 XmlConstants.SQL_MAP_SYSTEM_ID);
         document.setRootElement(getSqlMapElement(introspectedTable));
+        
+        afterGenerationHook(introspectedTable, document);
 
         FullyQualifiedTable table = introspectedTable.getTable();
         GeneratedXmlFile answer = new GeneratedXmlFile(document,
@@ -253,8 +255,18 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
                 answer.addElement(element);
             }
         }
-
+        
         return answer;
+    }
+
+    /**
+     * Override this method to provide any extra Elements needed in the 
+     * generated XML.
+     * 
+     * @param generatedDocument the generated document
+     */
+    protected void afterGenerationHook(IntrospectedTable introspectedTable, Document generatedDocument) {
+        return;
     }
 
     /**
@@ -798,7 +810,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         answer.addAttribute(new Attribute("resultClass", identityColumnType)); //$NON-NLS-1$
         answer.addAttribute(new Attribute(
                 "keyProperty", columnDefinition.getJavaProperty())); //$NON-NLS-1$
-        answer.addElement(new TextElement(generatedKey.getSqlStatement()));
+        answer.addElement(new TextElement(generatedKey.getRuntimeSqlStatement()));
 
         return answer;
     }

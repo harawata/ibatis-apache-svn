@@ -21,8 +21,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.abator.api.dom.xml.Attribute;
+import org.apache.ibatis.abator.api.dom.xml.XmlElement;
 import org.apache.ibatis.abator.internal.util.EqualsUtil;
 import org.apache.ibatis.abator.internal.util.HashCodeUtil;
+import org.apache.ibatis.abator.internal.util.StringUtility;
 
 /**
  * 
@@ -298,5 +301,92 @@ public class TableConfiguration extends PropertyHolder {
 
     public void setWildcardEscapingEnabled(boolean wildcardEscapingEnabled) {
         this.wildcardEscapingEnabled = wildcardEscapingEnabled;
+    }
+    
+    public XmlElement toXmlElement() {
+        XmlElement xmlElement = new XmlElement("table"); //$NON-NLS-1$
+        xmlElement.addAttribute(new Attribute("tableName", tableName)); //$NON-NLS-1$
+        
+        if (StringUtility.stringHasValue(catalog)) {
+            xmlElement.addAttribute(new Attribute("catalog", catalog)); //$NON-NLS-1$
+        }
+        
+        if (StringUtility.stringHasValue(schema)) {
+            xmlElement.addAttribute(new Attribute("schema", schema)); //$NON-NLS-1$
+        }
+        
+        if (StringUtility.stringHasValue(alias)) {
+            xmlElement.addAttribute(new Attribute("alias", alias)); //$NON-NLS-1$
+        }
+        
+        if (StringUtility.stringHasValue(domainObjectName)) {
+            xmlElement.addAttribute(new Attribute("domainObjectName", domainObjectName)); //$NON-NLS-1$
+        }
+        
+        if (!insertStatementEnabled) {
+            xmlElement.addAttribute(new Attribute("enableInsert", "false")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        
+        if (!selectByPrimaryKeyStatementEnabled) {
+            xmlElement.addAttribute(new Attribute("enableSelectByPrimaryKey", "false")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        
+        if (!selectByExampleStatementEnabled) {
+            xmlElement.addAttribute(new Attribute("enableSelectByExample", "false")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        
+        if (!updateByPrimaryKeyStatementEnabled) {
+            xmlElement.addAttribute(new Attribute("enableUpdateByPrimaryKey", "false")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        
+        if (!deleteByPrimaryKeyStatementEnabled) {
+            xmlElement.addAttribute(new Attribute("enableDeleteByPrimaryKey", "false")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        
+        if (!deleteByExampleStatementEnabled) {
+            xmlElement.addAttribute(new Attribute("enableDeleteByExample", "false")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+
+        if (StringUtility.stringHasValue(selectByPrimaryKeyQueryId)) {
+            xmlElement.addAttribute(new Attribute("selectByPrimaryKeyQueryId", selectByPrimaryKeyQueryId)); //$NON-NLS-1$
+        }
+        
+        if (StringUtility.stringHasValue(selectByExampleQueryId)) {
+            xmlElement.addAttribute(new Attribute("selectByExampleQueryId", selectByExampleQueryId)); //$NON-NLS-1$
+        }
+        
+        if (modelType != null) {
+            xmlElement.addAttribute(new Attribute("modelType", modelType.getModelType())); //$NON-NLS-1$
+        }
+        
+        if (wildcardEscapingEnabled) {
+            xmlElement.addAttribute(new Attribute("escapeWildcards", "true")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        
+        addPropertyXmlElements(xmlElement);
+        
+        if (generatedKey != null) {
+            xmlElement.addElement(generatedKey.toXmlElement());
+        }
+        
+        if (ignoredColumns.size() > 0) {
+            Iterator iter = ignoredColumns.keySet().iterator();
+            while (iter.hasNext()) {
+                String column = (String) iter.next();
+                XmlElement ignoreColumn = new XmlElement("ignoreColumn"); //$NON-NLS-1$
+                ignoreColumn.addAttribute(new Attribute("column", column)); //$NON-NLS-1$
+                xmlElement.addElement(ignoreColumn);
+            }
+        }
+        
+        if (columnOverrides.size() > 0) {
+            Iterator iter = columnOverrides.values().iterator();
+            while (iter.hasNext()) {
+                ColumnOverride columnOverride = (ColumnOverride) iter.next();
+                xmlElement.addElement(columnOverride.toXmlElement());
+            }
+        }
+        
+        return xmlElement;
     }
 }

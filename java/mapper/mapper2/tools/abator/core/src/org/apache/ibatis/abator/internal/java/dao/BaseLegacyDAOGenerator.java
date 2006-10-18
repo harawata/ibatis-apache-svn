@@ -29,6 +29,7 @@ import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.abator.api.dom.java.JavaVisibility;
 import org.apache.ibatis.abator.api.dom.java.Method;
 import org.apache.ibatis.abator.api.dom.java.Parameter;
+import org.apache.ibatis.abator.api.dom.java.TopLevelClass;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
 import org.apache.ibatis.abator.internal.sqlmap.ExampleClause;
 import org.apache.ibatis.abator.internal.util.JavaBeansUtil;
@@ -246,22 +247,20 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
         return answer;
     }
 
-    protected List getExtraImplementationMethods(
+    protected void afterImplementationGenerationHook(
             IntrospectedTable introspectedTable,
-            CompilationUnit compilationUnit) {
+            TopLevelClass generatedClass) {
 
         if (!introspectedTable.getRules().generateExampleClass()) {
-            return null;
+            return;
         }
-
-        ArrayList answer = new ArrayList();
 
         FullyQualifiedTable table = introspectedTable.getTable();
         FullyQualifiedJavaType type = javaModelGenerator.getExampleType(table);
         
-        compilationUnit.addImportedType(FullyQualifiedJavaType.getNewMapInstance());
-        compilationUnit.addImportedType(FullyQualifiedJavaType.getNewHashMapInstance());
-        compilationUnit.addImportedType(type);
+        generatedClass.addImportedType(FullyQualifiedJavaType.getNewMapInstance());
+        generatedClass.addImportedType(FullyQualifiedJavaType.getNewHashMapInstance());
+        generatedClass.addImportedType(type);
 
         Method method = new Method();
         method.addComment(table);
@@ -282,7 +281,7 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
 
             Method method1 = getExampleParmsMethod(cd, table);
             if (method1 != null) {
-                answer.add(method1);
+                generatedClass.addMethod(method1);
 
                 sb.setLength(0);
                 sb.append("parms.putAll("); //$NON-NLS-1$
@@ -294,9 +293,7 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
 
         method.addBodyLine("return parms;"); //$NON-NLS-1$
 
-        answer.add(method);
-
-        return answer;
+        generatedClass.addMethod(method);
     }
 
     /**

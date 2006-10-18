@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.abator.config;
 
+
 /**
  * @author Jeff Butler
  */

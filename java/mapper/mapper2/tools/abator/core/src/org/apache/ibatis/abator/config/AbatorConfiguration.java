@@ -19,7 +19,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.ibatis.abator.api.dom.xml.Document;
+import org.apache.ibatis.abator.api.dom.xml.XmlElement;
 import org.apache.ibatis.abator.exception.InvalidConfigurationException;
+import org.apache.ibatis.abator.internal.sqlmap.XmlConstants;
 import org.apache.ibatis.abator.internal.util.messages.Messages;
 
 /**
@@ -66,5 +69,30 @@ public class AbatorConfiguration {
     
     public void addAbatorContext(AbatorContext abatorContext) {
         abatorContexts.add(abatorContext);
+    }
+    
+    /**
+     * Builds an XML representation of this configuration.  This
+     * can be used to persist a programtically generated
+     * configuration.
+     *  
+     * @return the XML representation of this configuration
+     */
+    public Document toDocument() {
+        // note that this method will not reconstruct a properties
+        // element - that element is only used in XML parsing
+        
+        Document document = new Document(XmlConstants.ABATOR_CONFIG_PUBLIC_ID,
+                XmlConstants.ABATOR_CONFIG_SYSTEM_ID);
+        XmlElement rootElement = new XmlElement("abatorConfiguration"); //$NON-NLS-1$
+        document.setRootElement(rootElement);
+        
+        Iterator iter = abatorContexts.iterator();
+        while (iter.hasNext()) {
+            AbatorContext abatorContext = (AbatorContext) iter.next();
+            rootElement.addElement(abatorContext.toXmlElement());
+        }
+        
+        return document;
     }
 }

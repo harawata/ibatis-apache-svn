@@ -16,7 +16,12 @@
 package org.apache.ibatis.abator.config;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
+import org.apache.ibatis.abator.api.dom.xml.Attribute;
+import org.apache.ibatis.abator.api.dom.xml.XmlElement;
+import org.apache.ibatis.abator.internal.util.StringUtility;
 
 /**
  * 
@@ -81,4 +86,30 @@ public class JDBCConnectionConfiguration extends PropertyHolder {
 	public void setDriverClass(String driverClass) {
 		this.driverClass = driverClass;
 	}
+    
+    public XmlElement toXmlElement() {
+        XmlElement xmlElement = new XmlElement("jdbcConnection"); //$NON-NLS-1$
+        xmlElement.addAttribute(new Attribute("driverClass", driverClass)); //$NON-NLS-1$
+        xmlElement.addAttribute(new Attribute("connectionURL", connectionURL)); //$NON-NLS-1$
+        
+        if (StringUtility.stringHasValue(userId)) {
+            xmlElement.addAttribute(new Attribute("userId", userId)); //$NON-NLS-1$
+        }
+        
+        if (StringUtility.stringHasValue(password)) {
+            xmlElement.addAttribute(new Attribute("password", password)); //$NON-NLS-1$
+        }
+        
+        Iterator iter = classPathEntries.iterator();
+        while (iter.hasNext()) {
+            String classPathEntry = (String) iter.next();
+            XmlElement cpeElement = new XmlElement("classPathEntry"); //$NON-NLS-1$
+            cpeElement.addAttribute(new Attribute("location", classPathEntry)); //$NON-NLS-1$
+            xmlElement.addElement(cpeElement);
+        }
+        
+        addPropertyXmlElements(xmlElement);
+        
+        return xmlElement;
+    }
 }

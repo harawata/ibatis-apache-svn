@@ -15,6 +15,9 @@
  */
 package org.apache.ibatis.abator.config;
 
+import org.apache.ibatis.abator.api.dom.xml.Attribute;
+import org.apache.ibatis.abator.api.dom.xml.XmlElement;
+
 
 /**
  * @author Jeff Butler
@@ -46,5 +49,24 @@ public class JavaModelGeneratorConfiguration extends TypedPropertyHolder {
 
     public void setTargetPackage(String targetPackage) {
         this.targetPackage = targetPackage;
+    }
+
+    public XmlElement toXmlElement() {
+        XmlElement answer = new XmlElement("javaModelGenerator"); //$NON-NLS-1$
+        if (getConfigurationType() != null) {
+            answer.addAttribute(new Attribute("type", getConfigurationType())); //$NON-NLS-1$
+        }
+        
+        if (targetPackage != null) {
+            answer.addAttribute(new Attribute("targetPackage", targetPackage)); //$NON-NLS-1$
+        }
+        
+        if (targetProject != null) {
+            answer.addAttribute(new Attribute("targetProject", targetProject)); //$NON-NLS-1$
+        }
+        
+        addPropertyXmlElements(answer);
+        
+        return answer;
     }
 }

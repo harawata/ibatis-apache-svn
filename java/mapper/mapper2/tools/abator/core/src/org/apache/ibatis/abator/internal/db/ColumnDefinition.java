@@ -292,14 +292,14 @@ public class ColumnDefinition {
     }
     
     private String escapeStringForIbatis(String actualColumnName) {
-        StringTokenizer st = new StringTokenizer(actualColumnName, "$#", true);
+        StringTokenizer st = new StringTokenizer(actualColumnName, "$#", true); //$NON-NLS-1$
         StringBuffer sb = new StringBuffer();
         while (st.hasMoreTokens()) {
             String token = st.nextToken();
-            if ("$".equals(token)) {
-                sb.append("$$");
-            } else if ("#".equals(token)) {
-                sb.append("##");
+            if ("$".equals(token)) { //$NON-NLS-1$
+                sb.append("$$"); //$NON-NLS-1$
+            } else if ("#".equals(token)) { //$NON-NLS-1$
+                sb.append("##"); //$NON-NLS-1$
             } else {
                 sb.append(token);
             }

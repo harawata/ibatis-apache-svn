@@ -27,7 +27,6 @@ import org.apache.ibatis.abator.api.IntrospectedTable;
 import org.apache.ibatis.abator.api.JavaModelGenerator;
 import org.apache.ibatis.abator.api.ProgressCallback;
 import org.apache.ibatis.abator.api.dom.OutputUtilities;
-import org.apache.ibatis.abator.api.dom.java.CompilationUnit;
 import org.apache.ibatis.abator.api.dom.java.Field;
 import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.abator.api.dom.java.InnerClass;
@@ -240,7 +239,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         return s;
     }
 
-    protected CompilationUnit getPrimaryKey(IntrospectedTable introspectedTable) {
+    protected TopLevelClass getPrimaryKey(IntrospectedTable introspectedTable) {
 
         if (!introspectedTable.getRules().generatePrimaryKeyClass()) {
             return null;
@@ -262,7 +261,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         return answer;
     }
 
-    protected CompilationUnit getBaseRecord(IntrospectedTable introspectedTable) {
+    protected TopLevelClass getBaseRecord(IntrospectedTable introspectedTable) {
 
         if (!introspectedTable.getRules().generateBaseRecordClass()) {
             return null;
@@ -298,7 +297,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         return answer;
     }
 
-    protected CompilationUnit getRecordWithBLOBs(IntrospectedTable introspectedTable) {
+    protected TopLevelClass getRecordWithBLOBs(IntrospectedTable introspectedTable) {
 
         if (!introspectedTable.getRules().generateRecordWithBLOBsClass()) {
             return null;
@@ -361,42 +360,94 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         callback.startSubTask(Messages.getString(
                 "Progress.6", //$NON-NLS-1$
                 tableName));
-        CompilationUnit cu = getExample(introspectedTable);
-        if (cu != null) {
-            GeneratedJavaFile gjf = new GeneratedJavaFile(cu, targetProject);
+        TopLevelClass tlc = getExample(introspectedTable);
+        if (tlc != null) {
+            afterExampleGenerationHook(introspectedTable, tlc);
+            GeneratedJavaFile gjf = new GeneratedJavaFile(tlc, targetProject);
             list.add(gjf);
         }
 
         callback.startSubTask(Messages.getString(
                 "Progress.7", //$NON-NLS-1$
                 tableName));
-        cu = getPrimaryKey(introspectedTable);
-        if (cu != null) {
-            GeneratedJavaFile gjf = new GeneratedJavaFile(cu, targetProject);
+        tlc = getPrimaryKey(introspectedTable);
+        if (tlc != null) {
+            afterPrimaryKeyGenerationHook(introspectedTable, tlc);
+            GeneratedJavaFile gjf = new GeneratedJavaFile(tlc, targetProject);
             list.add(gjf);
         }
 
         callback.startSubTask(Messages.getString(
                 "Progress.8", //$NON-NLS-1$
                 tableName));
-        cu = getBaseRecord(introspectedTable);
-        if (cu != null) {
-            GeneratedJavaFile gjf = new GeneratedJavaFile(cu, targetProject);
+        tlc = getBaseRecord(introspectedTable);
+        if (tlc != null) {
+            afterBaseRecordGenerationHook(introspectedTable, tlc);
+            GeneratedJavaFile gjf = new GeneratedJavaFile(tlc, targetProject);
             list.add(gjf);
         }
 
         callback.startSubTask(Messages.getString(
                 "Progress.9", //$NON-NLS-1$
                 tableName));
-        cu = getRecordWithBLOBs(introspectedTable);
-        if (cu != null) {
-            GeneratedJavaFile gjf = new GeneratedJavaFile(cu, targetProject);
+        tlc = getRecordWithBLOBs(introspectedTable);
+        if (tlc != null) {
+            afterRecordWithBLOBsGenerationHook(introspectedTable, tlc);
+            GeneratedJavaFile gjf = new GeneratedJavaFile(tlc, targetProject);
             list.add(gjf);
         }
 
         return list;
     }
 
+    /**
+     * Override this method to provide any extra customization needed
+     * in the generated example class
+     * 
+     * @param introspectedTable
+     * @param topLevelClass
+     */
+    protected void afterExampleGenerationHook(IntrospectedTable introspectedTable,
+            TopLevelClass topLevelClass) {
+        return;
+    }
+
+    /**
+     * Override this method to provide any extra customization needed
+     * in the generated primary key class
+     * 
+     * @param introspectedTable
+     * @param topLevelClass
+     */
+    protected void afterPrimaryKeyGenerationHook(IntrospectedTable introspectedTable,
+            TopLevelClass topLevelClass) {
+        return;
+    }
+
+    /**
+     * Override this method to provide any extra customization needed
+     * in the generated base record class
+     * 
+     * @param introspectedTable
+     * @param topLevelClass
+     */
+    protected void afterBaseRecordGenerationHook(IntrospectedTable introspectedTable,
+            TopLevelClass topLevelClass) {
+        return;
+    }
+    
+    /**
+     * Override this method to provide any extra customization needed
+     * in the generated base record class
+     * 
+     * @param introspectedTable
+     * @param topLevelClass
+     */
+    protected void afterRecordWithBLOBsGenerationHook(IntrospectedTable introspectedTable,
+            TopLevelClass topLevelClass) {
+        return;
+    }
+    
     /*
      * (non-Javadoc)
      * 

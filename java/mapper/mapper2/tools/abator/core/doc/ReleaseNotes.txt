@@ -12,6 +12,11 @@ Enhancements -
    generator sets
 3. Add support for "ignoreQualifiersAtRuntime" and "runtimeTableName" on
    the <table> configuration
+4. Added support for persisting a configuration to XML - this to enable
+   a graphical editor in the future
+5. Add afterXXXGenerationHook() methods in all generators to enable adding
+   extra Java code or XML elements to any generated object.  Will make it
+   easier to create customized generators
 
 -------------------------------------------------------------------------------
 Version 1.0.0:
