@@ -4,9 +4,9 @@
 <!-- StaticMesh Ant build file for iBATIS website                   -->
 <!-- ============================================================== -->
 
-<project default="pagegen" name="staticmeshtutorial" basedir=".">
+<project default="pagegen" name="StaticMesh Ant build file for iBATIS website" basedir=".">
 
-    <target name="pagegen" description="o Generate the demo web pages">
+    <target name="pagegen" description="Generate the site">
 
         <!-- ====================================================== -->
         <!-- Inform Ant about the StaticMesh custom tasks           -->
