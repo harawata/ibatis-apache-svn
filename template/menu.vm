@@ -26,6 +26,11 @@
      target="_new">Wiki</a><br/>
   <a href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Frequently+Asked+Questions" title="iBATIS FAQ"
      target="_new">FAQ</a><br/>
+  <a href="docs/java/user/">Javadoc (users)</a><br/>
+  <a href="docs/java/dev/">Javadoc (developers)</a><br/>
+  <a href="docs/dotnet/dataaccess/">C# Data Access docs</a><br/>
+  <a href="docs/dotnet/datamapper">C# Data Mapper docs</a><br/>
+  <a href="docs/ruby/">Ruby docs</a><br/>
   <a href="mailinglists.html" title="iBATIS Mailing Lists">Mailing Lists</a><br/>
   <a href="issuetracker.html" title="iBATIS Issue Tracker">Issue Tracker</a><br/>
   <a href="onlinehelp.html" title="iBATIS Online Developper Guide">Online Dev Guide</a><br/>
