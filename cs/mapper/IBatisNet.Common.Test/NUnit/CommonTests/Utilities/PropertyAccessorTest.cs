@@ -234,6 +234,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             Assert.AreEqual(-99 * 2, accessorGet.Get(son));
         }
 
+#if dotnet2
         /// <summary>
         /// Test getter access to Public Generic Property
         /// </summary>
@@ -305,6 +306,7 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
             Assert.AreEqual(son.ReferenceAccount, referenceAccount);
             Assert.AreEqual(son.ReferenceAccount.Value.Id, referenceAccount.Value.Id);
         }
+#endif
     }
 
 }
