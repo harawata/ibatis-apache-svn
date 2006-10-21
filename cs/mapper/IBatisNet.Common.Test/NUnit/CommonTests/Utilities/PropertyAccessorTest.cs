@@ -233,6 +233,78 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 
             Assert.AreEqual(-99 * 2, accessorGet.Get(son));
         }
+
+        /// <summary>
+        /// Test getter access to Public Generic Property
+        /// </summary>
+        [Test]
+        public void TestPublicGetterOnGenericProperty()
+        {
+            IGetAccessor accessorGet = factoryGet.CreateGetAccessor(typeof(PropertySon), "ReferenceAccount");
+
+            PropertySon son = new PropertySon();
+            son.ReferenceAccount = new SpecialReference<Account>();
+            Account account = new Account(5);
+            son.ReferenceAccount.Value = account;
+
+            SpecialReference<Account> acc = accessorGet.Get(son) as SpecialReference<Account>;
+            Assert.AreEqual(account, acc.Value);
+            Assert.AreEqual(account.Id, acc.Value.Id);
+        }
+
+        /// <summary>
+        /// Test setter access to Public Generic Property
+        /// </summary>
+        [Test]
+        public void TestPublicSetterOnGenericVariable()
+        {
+            ISetAccessor accessorSet = factorySet.CreateSetAccessor(typeof(PropertySon), "ReferenceAccount");
+
+            PropertySon son = new PropertySon();
+            SpecialReference<Account> referenceAccount = new SpecialReference<Account>();
+            Account account = new Account(5);
+            referenceAccount.Value = account;
+            accessorSet.Set(son, referenceAccount);
+
+            Assert.AreEqual(son.ReferenceAccount, referenceAccount);
+            Assert.AreEqual(son.ReferenceAccount.Value.Id, referenceAccount.Value.Id);
+        }
+
+        /// <summary>
+        /// Test getter access to private Generic Property
+        /// </summary>
+        [Test]
+        public void TestPrivateGetterOnGenericProperty()
+        {
+            IGetAccessor accessorGet = factoryGet.CreateGetAccessor(typeof(PropertySon), "_referenceAccount");
+
+            PropertySon son = new PropertySon();
+            son.ReferenceAccount = new SpecialReference<Account>();
+            Account account = new Account(5);
+            son.ReferenceAccount.Value = account;
+
+            SpecialReference<Account> acc = accessorGet.Get(son) as SpecialReference<Account>;
+            Assert.AreEqual(account, acc.Value);
+            Assert.AreEqual(account.Id, acc.Value.Id);
+        }
+
+        /// <summary>
+        /// Test setter access to Public Generic Property
+        /// </summary>
+        [Test]
+        public void TestPrivateSetterOnGenericVariable()
+        {
+            ISetAccessor accessorSet = factorySet.CreateSetAccessor(typeof(PropertySon), "_referenceAccount");
+
+            PropertySon son = new PropertySon();
+            SpecialReference<Account> referenceAccount = new SpecialReference<Account>();
+            Account account = new Account(5);
+            referenceAccount.Value = account;
+            accessorSet.Set(son, referenceAccount);
+
+            Assert.AreEqual(son.ReferenceAccount, referenceAccount);
+            Assert.AreEqual(son.ReferenceAccount.Value.Id, referenceAccount.Value.Id);
+        }
     }
 
 }

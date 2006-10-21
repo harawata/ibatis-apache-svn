@@ -253,5 +253,29 @@ namespace IBatisNet.Common.Test.Domain
             get { return _float; }
             set { _float = value*2; }
         }
+
+#if dotnet2
+        private SpecialReference<Account> _referenceAccount = null;
+        public SpecialReference<Account> ReferenceAccount
+        {
+            get { return _referenceAccount; }
+            set { _referenceAccount = value; }
+        }
+#endif
+        
     }
+    
+#if dotnet2
+    public class SpecialReference<T> where T : class
+    {
+        private T _value =null;
+        
+        public T Value
+        {
+            get { return _value; }
+            set { _value = value; }
+        }
+    }
+#endif
+    
 }
