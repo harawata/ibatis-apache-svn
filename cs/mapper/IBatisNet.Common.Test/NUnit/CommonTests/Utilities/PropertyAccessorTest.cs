@@ -235,6 +235,24 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         }
 
 #if dotnet2
+
+        /// <summary>
+        /// Test getter access to Public Generic Property
+        /// </summary>
+        [Test]
+        public void TestPublicGetterOnGenericProperty2()
+        {
+            IGetAccessor accessorGet = factoryGet.CreateGetAccessor(typeof(SpecialReference<Account>), "Value");
+
+            SpecialReference<Account> referenceAccount = new SpecialReference<Account>();
+            Account account = new Account(5);
+            referenceAccount.Value = account;
+
+            Account acc = accessorGet.Get(referenceAccount) as Account;
+            Assert.AreEqual(referenceAccount.Value, acc);
+            Assert.AreEqual(referenceAccount.Value.Id, acc.Id);
+        }
+        
         /// <summary>
         /// Test getter access to Public Generic Property
         /// </summary>
@@ -272,6 +290,22 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         }
 
         /// <summary>
+        /// Test setter access to Public Generic Property
+        /// </summary>
+        [Test]
+        public void TestPublicSetterOnGenericVariable2()
+        {
+            ISetAccessor accessorSet = factorySet.CreateSetAccessor(typeof(SpecialReference<Account>), "Value");
+
+            SpecialReference<Account> referenceAccount = new SpecialReference<Account>();
+            Account account = new Account(5);
+            accessorSet.Set(referenceAccount, account);
+
+            Assert.AreEqual(account, referenceAccount.Value);
+            Assert.AreEqual(account.Id, referenceAccount.Value.Id);
+        }
+
+        /// <summary>
         /// Test getter access to private Generic Property
         /// </summary>
         [Test]
@@ -290,6 +324,23 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         }
 
         /// <summary>
+        /// Test getter access to private Generic Property
+        /// </summary>
+        [Test]
+        public void TestPrivateGetterOnGenericProperty2()
+        {
+            IGetAccessor accessorGet = factoryGet.CreateGetAccessor(typeof(SpecialReference<Account>), "_value");
+
+            SpecialReference<Account> referenceAccount = new SpecialReference<Account>();
+            Account account = new Account(5);
+            referenceAccount.Value = account;
+
+            Account acc = accessorGet.Get(referenceAccount) as Account;
+            Assert.AreEqual(referenceAccount.Value, acc);
+            Assert.AreEqual(referenceAccount.Value.Id, acc.Id);
+        }
+        
+        /// <summary>
         /// Test setter access to Public Generic Property
         /// </summary>
         [Test]
@@ -305,6 +356,22 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 
             Assert.AreEqual(son.ReferenceAccount, referenceAccount);
             Assert.AreEqual(son.ReferenceAccount.Value.Id, referenceAccount.Value.Id);
+        }
+
+        /// <summary>
+        /// Test setter access to Public Generic Property
+        /// </summary>
+        [Test]
+        public void TestPrivateSetterOnGenericVariable2()
+        {
+            ISetAccessor accessorSet = factorySet.CreateSetAccessor(typeof(SpecialReference<Account>), "_value");
+
+            SpecialReference<Account> referenceAccount = new SpecialReference<Account>();
+            Account account = new Account(5);
+            accessorSet.Set(referenceAccount, account);
+
+            Assert.AreEqual(account, referenceAccount.Value);
+            Assert.AreEqual(account.Id, referenceAccount.Value.Id);
         }
 #endif
     }

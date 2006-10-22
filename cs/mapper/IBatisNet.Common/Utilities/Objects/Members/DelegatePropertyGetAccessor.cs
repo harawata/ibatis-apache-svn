@@ -85,7 +85,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 
     			if (propertyInfo.CanRead)
 				{
-					DynamicMethod dynamicMethod = new DynamicMethod("GetImplementation", typeof(object), new Type[] { typeof(object) }, this.GetType().Module, false);
+					DynamicMethod dynamicMethod = new DynamicMethod("GetImplementation", typeof(object), new Type[] { typeof(object) }, this.GetType().Module, true);
 					ILGenerator ilgen = dynamicMethod.GetILGenerator();
 
                     // Emit the IL for get access. 

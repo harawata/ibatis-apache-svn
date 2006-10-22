@@ -52,7 +52,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
         private Type _targetType = null;
 
                 /// <summary>
-        /// Initializes a new instance of the <see cref="T:DelegatePropertySetAccessor"/> class
+        /// Initializes a new instance of the <see cref="DelegatePropertySetAccessor"/> class
         /// for set property access via DynamicMethod.
         /// </summary>
         /// <param name="targetObjectType">Type of the target object.</param>
@@ -86,7 +86,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 
 				if (propertyInfo.CanWrite)
 				{
-					DynamicMethod dynamicMethod = new DynamicMethod("SetImplementation", null, new Type[] { typeof(object), typeof(object) }, this.GetType().Module, false);
+					DynamicMethod dynamicMethod = new DynamicMethod("SetImplementation", null, new Type[] { typeof(object), typeof(object) }, this.GetType().Module, true);
 					ILGenerator ilgen = dynamicMethod.GetILGenerator();
                     
                     // Emit the IL for set access. 
