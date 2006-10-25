@@ -43,26 +43,11 @@ public class GeneratedKey {
         this.isIdentity = isIdentity;
         this.configuredSqlStatement = configuredSqlStatement;
 
-        if ("DB2".equalsIgnoreCase(configuredSqlStatement)) { //$NON-NLS-1$
-            this.runtimeSqlStatement = DatabaseDialects
-                    .getIdentityClause(DatabaseDialects.DB2);
-        } else if ("MySQL".equalsIgnoreCase(configuredSqlStatement)) { //$NON-NLS-1$
-            this.runtimeSqlStatement = DatabaseDialects
-                    .getIdentityClause(DatabaseDialects.MYSQL);
-        } else if ("SqlServer".equalsIgnoreCase(configuredSqlStatement)) { //$NON-NLS-1$
-            this.runtimeSqlStatement = DatabaseDialects
-                    .getIdentityClause(DatabaseDialects.SQLSERVER);
-        } else if ("Cloudscape".equalsIgnoreCase(configuredSqlStatement)) { //$NON-NLS-1$
-            this.runtimeSqlStatement = DatabaseDialects
-                    .getIdentityClause(DatabaseDialects.CLOUDSCAPE);
-        } else if ("Derby".equalsIgnoreCase(configuredSqlStatement)) { //$NON-NLS-1$
-            this.runtimeSqlStatement = DatabaseDialects
-                    .getIdentityClause(DatabaseDialects.DERBY);
-        } else if ("HSQLDB".equalsIgnoreCase(configuredSqlStatement)) { //$NON-NLS-1$
-            this.runtimeSqlStatement = DatabaseDialects
-                    .getIdentityClause(DatabaseDialects.HSQLDB);
-        } else {
+        DatabaseDialects dialect = DatabaseDialects.getDatabaseDialect(configuredSqlStatement);
+        if (dialect == null) {
             this.runtimeSqlStatement = configuredSqlStatement;
+        } else {
+            this.runtimeSqlStatement = dialect.getIdentityRetrievalStatement();
         }
     }
 

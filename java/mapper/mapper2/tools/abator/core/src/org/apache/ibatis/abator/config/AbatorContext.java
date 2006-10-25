@@ -397,4 +397,8 @@ public class AbatorContext extends PropertyHolder {
         
         return xmlElement;
     }
+
+    public List getTableConfigurations() {
+        return tableConfigurations;
+    }
 }

@@ -15,46 +15,63 @@
  */
 package org.apache.ibatis.abator.internal.db;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
+ * Typesafe enum of known database dialects
+ * 
  * @author Jeff Butler
  */
 public class DatabaseDialects {
-    public static final Integer DB2 = new Integer(1);
-
-    public static final Integer MYSQL = new Integer(2);
-
-    public static final Integer SQLSERVER = new Integer(3);
-
-    public static final Integer CLOUDSCAPE = new Integer(4);
-
-    public static final Integer DERBY = new Integer(5);
     
-    public static final Integer HSQLDB = new Integer(6);
+    public static final DatabaseDialects DB2 = new DatabaseDialects("VALUES IDENTITY_VAL_LOCAL()"); //$NON-NLS-1$
+
+    public static final DatabaseDialects MYSQL = new DatabaseDialects("SELECT LAST_INSERT_ID()"); //$NON-NLS-1$
+
+    public static final DatabaseDialects SQLSERVER = new DatabaseDialects("SELECT SCOPE_IDENTITY()"); //$NON-NLS-1$
+
+    public static final DatabaseDialects CLOUDSCAPE = new DatabaseDialects("VALUES IDENTITY_VAL_LOCAL()"); //$NON-NLS-1$
+
+    public static final DatabaseDialects DERBY = new DatabaseDialects("VALUES IDENTITY_VAL_LOCAL()"); //$NON-NLS-1$
     
-    private static final Map identityClauses;
-
-    static {
-        identityClauses = new HashMap();
-
-        identityClauses.put(DB2, "VALUES IDENTITY_VAL_LOCAL()"); //$NON-NLS-1$
-        identityClauses.put(MYSQL, "SELECT LAST_INSERT_ID()"); //$NON-NLS-1$
-        identityClauses.put(SQLSERVER, "SELECT SCOPE_IDENTITY()"); //$NON-NLS-1$
-        identityClauses.put(CLOUDSCAPE, "VALUES IDENTITY_VAL_LOCAL()"); //$NON-NLS-1$
-        identityClauses.put(DERBY, "VALUES IDENTITY_VAL_LOCAL()"); //$NON-NLS-1$
-        identityClauses.put(HSQLDB, "CALL IDENTITY()"); //$NON-NLS-1$
-    }
-
-    public static String getIdentityClause(Integer dialect) {
-        return (String) identityClauses.get(dialect);
-    }
+    public static final DatabaseDialects HSQLDB = new DatabaseDialects("CALL IDENTITY()"); //$NON-NLS-1$
+    
+    private String identityRetrievalStatement;
 
     /**
      *  
      */
-    private DatabaseDialects() {
+    private DatabaseDialects(String identityRetrievalStatement) {
         super();
+        this.identityRetrievalStatement = identityRetrievalStatement;
     }
+
+    public String getIdentityRetrievalStatement() {
+        return identityRetrievalStatement;
+    }
+
+    /**
+     * 
+     * @param database
+     * @return the database dialect for the selected database.  May return null
+     * if there is no known dialect for the selected db
+     */
+    public static DatabaseDialects getDatabaseDialect(String database) {
+        DatabaseDialects returnValue = null;
+        
+        if ("DB2".equalsIgnoreCase(database)) { //$NON-NLS-1$
+            returnValue = DB2;
+        } else if ("MySQL".equalsIgnoreCase(database)) { //$NON-NLS-1$
+            returnValue = MYSQL;
+        } else if ("SqlServer".equalsIgnoreCase(database)) { //$NON-NLS-1$
+            returnValue = SQLSERVER;
+        } else if ("Cloudscape".equalsIgnoreCase(database)) { //$NON-NLS-1$
+            returnValue = CLOUDSCAPE;
+        } else if ("Derby".equalsIgnoreCase(database)) { //$NON-NLS-1$
+            returnValue = DERBY;
+        } else if ("HSQLDB".equalsIgnoreCase(database)) { //$NON-NLS-1$
+            returnValue = HSQLDB;
+        }
+        
+        return returnValue;
+    }
+
 }
