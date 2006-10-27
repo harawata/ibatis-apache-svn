@@ -130,10 +130,16 @@ public class SqlMapSessionImpl implements SqlMapSession {
     return queryForList(id, null, skip, max);
   }
 
+  /**
+   * @deprecated All paginated list features have been deprecated
+   */
   public PaginatedList queryForPaginatedList(String id, Object paramObject, int pageSize) throws SQLException {
     return delegate.queryForPaginatedList(session, id, paramObject, pageSize);
   }
 
+  /**
+   * @deprecated All paginated list features have been deprecated
+   */
   public PaginatedList queryForPaginatedList(String id, int pageSize) throws SQLException {
     return queryForPaginatedList(id, null, pageSize);
   }

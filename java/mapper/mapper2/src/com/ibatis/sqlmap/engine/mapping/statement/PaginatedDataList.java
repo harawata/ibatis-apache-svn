@@ -22,7 +22,9 @@ import com.ibatis.sqlmap.client.SqlMapExecutor;
 import java.sql.SQLException;
 import java.util.*;
 
-
+/**
+ * @deprecated All paginated list features have been deprecated
+ */
 public class PaginatedDataList implements PaginatedList {
 
   private SqlMapExecutor sqlMapExecutor;

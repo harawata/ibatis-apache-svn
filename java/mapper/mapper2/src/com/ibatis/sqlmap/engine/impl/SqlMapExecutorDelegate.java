@@ -666,6 +666,7 @@ public class SqlMapExecutorDelegate {
    * @param pageSize    - the page size
    * @return - the data list
    * @throws SQLException - if the query fails
+   * @deprecated All paginated list features have been deprecated
    */
   public PaginatedList queryForPaginatedList(SessionScope session, String id, Object paramObject, int pageSize) throws SQLException {
     return new PaginatedDataList(session.getSqlMapExecutor(), id, paramObject, pageSize);

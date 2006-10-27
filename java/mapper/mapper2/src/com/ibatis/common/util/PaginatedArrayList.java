@@ -19,6 +19,7 @@ import java.util.*;
 
 /**
  * Implementation of PaginatedList backed by an ArrayList
+ * @deprecated All paginated list features have been deprecated
  */
 public class PaginatedArrayList implements PaginatedList {
 

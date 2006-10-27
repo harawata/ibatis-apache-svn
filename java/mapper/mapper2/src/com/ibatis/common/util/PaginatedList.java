@@ -19,6 +19,7 @@ import java.util.List;
 
 /**
  * Interface for lists that support paging
+ * @deprecated All paginated list features have been deprecated
  */
 public interface PaginatedList extends List {
 

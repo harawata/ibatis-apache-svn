@@ -4,6 +4,7 @@ Build Number: @buildNum@
 ------------------------------
  2.2.1 - ???
 ------------------------------
+ o DEPRECATED All PaginatedList related features due to misuse, minimal applicability and inflexibility
  o DEPRECATED DAO Framework -- Removed from primary distribution, available as a separate download
  o Removed DAO framework from Subversion source tree (tagged before removal)
  o Changed deployment file naming convention, dropped "DBL" and lowercased all

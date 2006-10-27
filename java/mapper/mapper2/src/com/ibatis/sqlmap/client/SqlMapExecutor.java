@@ -270,6 +270,7 @@ public interface SqlMapExecutor {
    * @param pageSize        The maximum number of result objects each page can hold.
    * @return A PaginatedList of result objects.
    * @throws java.sql.SQLException If an error occurs.
+   * @deprecated All paginated list features have been deprecated
    */
   PaginatedList queryForPaginatedList(String id, Object parameterObject, int pageSize) throws SQLException;
 
@@ -283,6 +284,7 @@ public interface SqlMapExecutor {
    * @param pageSize        The maximum number of result objects each page can hold.
    * @return A PaginatedList of result objects.
    * @throws java.sql.SQLException If an error occurs.
+   * @deprecated All paginated list features have been deprecated
    */
   PaginatedList queryForPaginatedList(String id, int pageSize) throws SQLException;
 

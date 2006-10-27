@@ -25,7 +25,6 @@ import com.ibatis.sqlmap.engine.execution.BatchException;
 import com.ibatis.sqlmap.engine.execution.SqlExecutor;
 import com.ibatis.sqlmap.engine.mapping.result.ResultObjectFactory;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
-import com.ibatis.sqlmap.engine.binding.MapperProxy;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -108,10 +107,16 @@ public class SqlMapClientImpl implements ExtendedSqlMapClient {
     return getLocalSqlMapSession().queryForList(id, skip, max);
   }
 
+  /**
+   * @deprecated All paginated list features have been deprecated
+   */
   public PaginatedList queryForPaginatedList(String id, Object paramObject, int pageSize) throws SQLException {
     return getLocalSqlMapSession().queryForPaginatedList(id, paramObject, pageSize);
   }
 
+  /**
+   * @deprecated All paginated list features have been deprecated
+   */
   public PaginatedList queryForPaginatedList(String id, int pageSize) throws SQLException {
     return getLocalSqlMapSession().queryForPaginatedList(id, pageSize);
   }
@@ -246,10 +251,6 @@ public class SqlMapClientImpl implements ExtendedSqlMapClient {
 
   public void flushDataCache(String cacheId) {
     delegate.flushDataCache(cacheId);
-  }
-
-  public Object getMapper(Class c) {
-    return MapperProxy.newMapperProxy(this, c);
   }
 
   protected SqlMapSessionImpl getLocalSqlMapSession() {
