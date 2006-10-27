@@ -57,7 +57,7 @@ public class JndiDataSourceFactory implements DataSourceFactory {
       }
 
     } catch (NamingException e) {
-      throw new SqlMapException("There was an error configuring JndiDataSourceDaoTransactionPool. Cause: " + e, e);
+      throw new SqlMapException("There was an error configuring JndiDataSourceTransactionPool. Cause: " + e, e);
     }
   }
 
