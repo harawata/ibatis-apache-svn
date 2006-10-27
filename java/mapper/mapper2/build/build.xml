@@ -208,10 +208,10 @@
   </target>
 
   <target name="jar.sqlmaps" depends="src.compile">
-    <jar jarfile="${deploy.path}/lib/ibatis-${version}-${buildNum}.jar">
+    <jar jarfile="${deploy.path}/lib/ibatis-${version}.${buildNum}.jar">
       <manifest>
         <attribute name="Built-On" value="${buildDate}"/>
-	      <section name="com/ibatis/sqlmap/">
+	      <section name="com/ibatis/">
           <attribute name="Implementation-Title" value="iBATIS Data Mapper"/>
           <attribute name="Implementation-Version" value="${version} build# ${buildNum}"/>
           <attribute name="Implementation-Vendor" value="Apache Software Foundation"/>

@@ -4,7 +4,11 @@ Build Number: @buildNum@
 ------------------------------
  2.2.1 - ???
 ------------------------------
- o Implemented transaction level PreparedStatement caching.
+ o DEPRECATED DAO Framework -- Removed from primary distribution, available as a separate download
+ o Removed DAO framework from Subversion source tree (tagged before removal)
+ o Changed deployment file naming convention, dropped "DBL" and lowercased all
+ o Merged common and sqlmap jar files (no more DAO means there's no point in keeping commons separate)
+ o Implemented transaction level PreparedStatement caching
  o Fixed IBATIS-335 - Don't call setQueryTimeout if no value specified
  o Fixed IBATIS-353 - Probe exception when using inheritance hierarchies
 
