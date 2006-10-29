@@ -499,8 +499,8 @@ public class SqlExecutor {
   }
 
   private static void closeStatement(SessionScope session, PreparedStatement ps) {
-    if (!session.hasPreparedStatement(ps)) {
-      if (ps != null) {
+    if (ps != null) {
+      if (!session.hasPreparedStatement(ps)) {
         try {
           ps.close();
         } catch (SQLException e) {

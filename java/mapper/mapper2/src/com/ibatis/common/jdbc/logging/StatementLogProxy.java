@@ -64,6 +64,14 @@ public class StatementLogProxy extends BaseLogProxy implements InvocationHandler
         else {
           return null;
         }
+      } else if ("equals".equals(method.getName())) {
+        Object ps = params[0];
+        if (ps instanceof Proxy) {
+          return proxy == ps;
+        }
+        return false;
+      } else if ("hashCode".equals(method.getName())) {
+        return proxy.hashCode();
       } else {
         return method.invoke(statement, params);
       }

@@ -17,15 +17,11 @@ public class ResultObjectFactoryTest extends BaseSqlMapTest {
    * everything in the sql map is declared as an interface.
    *
    */
-  public void testShouldDemonstrateThatTheObjectFactoryIsWorking() {
-    try {
-      List results =
-          sqlMap.queryForList("getAllItemsROF");
-      assertEquals(28, results.size());
-      assertEquals(new Integer(1), ((IItem)results.get(2)).getSupplier().getSupplierId());
-    } catch (Exception e) {
-      fail(e.getMessage());
-    }
+  public void testShouldDemonstrateThatTheObjectFactoryIsWorking() throws Exception {
+    List results =
+        sqlMap.queryForList("getAllItemsROF");
+    assertEquals(28, results.size());
+    assertEquals(new Integer(1), ((IItem)results.get(2)).getSupplier().getSupplierId());
   }
 
 }
