@@ -94,6 +94,7 @@ public class SqlMapExecutorDelegate {
   private DataExchangeFactory dataExchangeFactory;
   
   private ResultObjectFactory resultObjectFactory;
+  private boolean statementCacheEnabled;
 
   /**
    * Default constructor
@@ -945,5 +946,12 @@ public class SqlMapExecutorDelegate {
     this.resultObjectFactory = resultObjectFactory;
   }
 
+  public boolean isStatementCacheEnabled() {
+    return statementCacheEnabled;
+  }
+
+  public void setStatementCacheEnabled(boolean statementCacheEnabled) {
+    this.statementCacheEnabled = statementCacheEnabled;
+  }
 }
 

@@ -18,6 +18,7 @@
     cacheModelsEnabled="true"
     enhancementEnabled="false"
     lazyLoadingEnabled="true"
+    statementCachingEnabled="false"
     maxRequests="32"
     maxSessions="10"
     maxTransactions="5"

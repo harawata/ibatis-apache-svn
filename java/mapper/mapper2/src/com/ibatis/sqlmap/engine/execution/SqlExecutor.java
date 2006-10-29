@@ -25,6 +25,7 @@ import com.ibatis.sqlmap.engine.scope.ErrorContext;
 import com.ibatis.sqlmap.engine.scope.RequestScope;
 import com.ibatis.sqlmap.engine.scope.SessionScope;
 import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
+import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
 import com.ibatis.sqlmap.engine.mapping.statement.DefaultRowHandler;
 
 import java.sql.*;
@@ -479,7 +480,8 @@ public class SqlExecutor {
   }
 
   private static PreparedStatement prepareStatement(SessionScope session, Connection conn, String sql) throws SQLException {
-    if (session.hasPreparedStatementFor(sql)) {
+    SqlMapExecutorDelegate delegate = ((ExtendedSqlMapClient)session.getSqlMapExecutor()).getDelegate();
+    if (delegate.isStatementCacheEnabled() && session.hasPreparedStatementFor(sql)) {
       return session.getPreparedStatement((sql));
     } else {
       PreparedStatement ps = conn.prepareStatement(sql);
@@ -489,7 +491,8 @@ public class SqlExecutor {
   }
 
   private CallableStatement prepareCall(SessionScope session, Connection conn, String sql) throws SQLException {
-    if (session.hasPreparedStatementFor(sql)) {
+    SqlMapExecutorDelegate delegate = ((ExtendedSqlMapClient)session.getSqlMapExecutor()).getDelegate();
+    if (delegate.isStatementCacheEnabled() && session.hasPreparedStatementFor(sql)) {
       return (CallableStatement) session.getPreparedStatement((sql));
     } else {
       CallableStatement cs = conn.prepareCall(sql);

@@ -311,4 +311,5 @@ public class SessionScope extends BaseScope {
   public void recallTransactionState() {
     transactionState = savedTransactionState;
   }
+
 }

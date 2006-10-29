@@ -157,6 +157,10 @@ public class SqlMapConfigParser extends BaseParser {
         boolean lazyLoadingEnabled = (lazyLoadingEnabledAttr == null || "true".equals(lazyLoadingEnabledAttr));
         vars.client.getDelegate().setLazyLoadingEnabled(lazyLoadingEnabled);
 
+        String statementCachingEnabledAttr = attributes.getProperty("statementCachingEnabled");
+        boolean statementCachingEnabled = (statementCachingEnabledAttr == null || "true".equals(statementCachingEnabledAttr));
+        vars.client.getDelegate().setStatementCacheEnabled(statementCachingEnabled);
+
         String cacheModelsEnabledAttr = attributes.getProperty("cacheModelsEnabled");
         boolean cacheModelsEnabled = (cacheModelsEnabledAttr == null || "true".equals(cacheModelsEnabledAttr));
         vars.client.getDelegate().setCacheModelsEnabled(cacheModelsEnabled);
