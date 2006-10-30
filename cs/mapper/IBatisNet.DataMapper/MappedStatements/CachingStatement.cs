@@ -57,7 +57,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// Constructor
 		/// </summary>
 		/// <param name="statement"></param>
-		public CachingStatement(MappedStatement statement) 
+        public CachingStatement(MappedStatement statement) 
 		{
 			_mappedStatement = statement;
 		}

@@ -4,9 +4,10 @@ IBatisNet Change Log
 1.6.0 - BETA
 ------------------------------
 Issues
- - IBATISNET-179 : Allow procedure statement without parameterMap  
- - IBATISNET-184 : Invalid support for public/protected field in result property
-
+- IBATISNET-191 : Allows Cache for Procedure / Statement tag
+- IBATISNET-179 : Allow procedure statement without parameterMap  
+- IBATISNET-184 : Invalid support for public/protected field in result property
+ 
 Improvements/Changes
 - IBATISNET-185 : Allow custom ISessionStore
 - IBATISNET-181 : Allow mapping of multiple result sets

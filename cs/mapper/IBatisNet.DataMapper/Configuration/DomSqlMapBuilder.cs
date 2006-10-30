@@ -1150,8 +1150,6 @@ namespace IBatisNet.DataMapper.Configuration
 				_configScope.ErrorContext.MoreInfo = "loading statement tag";
 				_configScope.NodeContext = xmlNode; // A statement tag
 
-				MappedStatement mappedStatement;
-
 				statement = StatementDeSerializer.Deserialize(xmlNode, _configScope);
                 statement.CacheModelName = _configScope.ApplyNamespace(statement.CacheModelName);
                 statement.ParameterMapName = _configScope.ApplyNamespace(statement.ParameterMapName);
@@ -1168,9 +1166,14 @@ namespace IBatisNet.DataMapper.Configuration
 				ProcessSqlStatement( statement  );
 
 				// Build MappedStatement
-				mappedStatement = new MappedStatement( _configScope.SqlMapper, statement);
+                MappedStatement mappedStatement = new MappedStatement(_configScope.SqlMapper, statement);
+                IMappedStatement mapStatement = mappedStatement;
+                if (statement.CacheModelName != null && statement.CacheModelName.Length > 0 && _configScope.IsCacheModelsEnabled)
+                {
+                    mapStatement = new CachingStatement(mappedStatement);
+                }
 
-				_configScope.SqlMapper.AddMappedStatement(mappedStatement.Id, mappedStatement);
+                _configScope.SqlMapper.AddMappedStatement(mapStatement.Id, mapStatement);
 			}
 			#endregion
 
@@ -1205,14 +1208,14 @@ namespace IBatisNet.DataMapper.Configuration
 				}
 
 				// Build MappedStatement
-				MappedStatement mappedStatement = new SelectMappedStatement( _configScope.SqlMapper, select);
-				IMappedStatement mapStatement = mappedStatement;
+                MappedStatement mappedStatement = new SelectMappedStatement(_configScope.SqlMapper, select);
+                IMappedStatement mapStatement = mappedStatement;
 				if (select.CacheModelName != null && select.CacheModelName.Length> 0 && _configScope.IsCacheModelsEnabled)
 				{
-					mapStatement = new CachingStatement( mappedStatement);
+                    mapStatement = new CachingStatement(mappedStatement);
 				}
 
-				_configScope.SqlMapper.AddMappedStatement(mappedStatement.Id, mapStatement);
+                _configScope.SqlMapper.AddMappedStatement(mapStatement.Id, mapStatement);
 			}
 			#endregion
 
@@ -1363,8 +1366,6 @@ namespace IBatisNet.DataMapper.Configuration
 				_configScope.ErrorContext.MoreInfo = "loading procedure tag";
 				_configScope.NodeContext = xmlNode; // A procedure tag
 
-				MappedStatement mappedStatement;
-
 				procedure = ProcedureDeSerializer.Deserialize(xmlNode, _configScope);
                 procedure.CacheModelName = _configScope.ApplyNamespace(procedure.CacheModelName);
                 procedure.ParameterMapName = _configScope.ApplyNamespace(procedure.ParameterMapName);
@@ -1381,9 +1382,14 @@ namespace IBatisNet.DataMapper.Configuration
 				ProcessSqlStatement( procedure );
 
 				// Build MappedStatement
-				mappedStatement = new MappedStatement( _configScope.SqlMapper, procedure);
+                MappedStatement mappedStatement = new MappedStatement(_configScope.SqlMapper, procedure);
+                IMappedStatement mapStatement = mappedStatement;		    
+                if (procedure.CacheModelName != null && procedure.CacheModelName.Length > 0 && _configScope.IsCacheModelsEnabled)
+                {
+                    mapStatement = new CachingStatement(mappedStatement);
+                }
 
-				_configScope.SqlMapper.AddMappedStatement(mappedStatement.Id, mappedStatement);
+                _configScope.SqlMapper.AddMappedStatement(mapStatement.Id, mapStatement);
 			}
 			#endregion
 
