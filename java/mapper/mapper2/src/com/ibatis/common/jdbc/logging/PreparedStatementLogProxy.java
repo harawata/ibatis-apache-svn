@@ -79,11 +79,11 @@ public class PreparedStatementLogProxy extends BaseLogProxy implements Invocatio
       } else if ("equals".equals(method.getName())) {
         Object ps = params[0];
         if (ps instanceof Proxy) {
-          return proxy == ps;
+          return new Boolean(proxy == ps);
         }
-        return false;
+        return new Boolean(false);
       } else if ("hashCode".equals(method.getName())) {
-        return proxy.hashCode();
+        return new Integer(proxy.hashCode());
       } else {
         return method.invoke(statement, params);
       }

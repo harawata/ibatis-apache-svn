@@ -1,19 +1,12 @@
 package com.ibatis.sqlmap;
 
 import testdomain.Book;
-import testdomain.Magazine;
 import testdomain.Document;
+import testdomain.Magazine;
 import testdomain.PersonDocument;
 
 import java.util.List;
 
-/**
- * Created by IntelliJ IDEA.
- * User: cbegin
- * Date: May 14, 2005
- * Time: 1:19:54 AM
- * To change this template use File | Settings | File Templates.
- */
 public class DiscriminatorTest extends BaseSqlMapTest {
 
    protected void setUp() throws Exception {
