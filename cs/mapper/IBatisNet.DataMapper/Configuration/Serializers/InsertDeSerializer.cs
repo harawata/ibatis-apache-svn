@@ -58,7 +58,7 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 			insert.ParameterMapName = NodeUtils.GetStringAttribute(prop, "parameterMap");
 			insert.ResultClassName = NodeUtils.GetStringAttribute(prop, "resultClass");
 			insert.ResultMapName = NodeUtils.GetStringAttribute(prop, "resultMap");
-			insert.RemapResults = NodeUtils.GetBooleanAttribute(prop, "remapResults", false); 
+			insert.AllowRemapping = NodeUtils.GetBooleanAttribute(prop, "remapResults", false); 
 
 			int count = node.ChildNodes.Count;
 			for(int i=0;i<count;i++)

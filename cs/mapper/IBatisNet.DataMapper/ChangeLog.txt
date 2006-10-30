@@ -8,8 +8,12 @@ Issues
  - IBATISNET-184 : Invalid support for public/protected field in result property
 
 Improvements/Changes
-- IBATISNET-185  : Allow custom ISessionStore
+- IBATISNET-185 : Allow custom ISessionStore
+- IBATISNET-181 : Allow mapping of multiple result sets
 - IBATISNET-180 : Extends use of ISqlMapper in DataMapper + allow use of a custom ISqlMapper
+- Remove obsoletes methods on SqlMapper : Configure(XmlDocument document), Configure(), Configure(string resource), 
+		ConfigureAndWatch(ConfigureHandler configureDelegate), ConfigureAndWatch(string resource, ConfigureHandler configureDelegate)
+- Mark QueryForPaginatedList as Obsolete on SqlMapper
 
 ------------------------------
 1.5.1 - 10/08/2006 GA

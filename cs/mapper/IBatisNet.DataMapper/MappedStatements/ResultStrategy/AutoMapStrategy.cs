@@ -26,6 +26,7 @@
 using System.Data;
 using System.Reflection;
 using IBatisNet.Common.Logging;
+using IBatisNet.DataMapper.Configuration.ResultMapping;
 using IBatisNet.DataMapper.Scope;
 
 namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
@@ -43,35 +44,52 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
 		/// <param name="request">The request.</param>
 		/// <param name="reader">The reader.</param>
 		/// <param name="resultObject">The result object.</param>
-		private void AutoMapReader(RequestScope request, ref IDataReader reader,ref object resultObject) 
+        /// <returns>The AutoResultMap use to map the resultset.</returns>
+        private AutoResultMap InitializeAutoResultMap(RequestScope request, ref IDataReader reader, ref object resultObject) 
 		{
-			if (request.Statement.RemapResults)
+		    AutoResultMap resultMap  = request.CurrentResultMap as AutoResultMap;
+		    
+			if (request.Statement.AllowRemapping)
 			{
-				ReaderAutoMapper readerAutoMapper = new ReaderAutoMapper(request.DataExchangeFactory,
-					reader, 
-					ref resultObject);
-				readerAutoMapper.AutoMapReader( reader, ref resultObject );
-				_logger.Debug("The RemapResults");
+                resultMap = resultMap.Clone();
+			    
+                ResultPropertyCollection properties = ReaderAutoMapper.Build(
+                    request.DataExchangeFactory,
+                    reader,
+                    ref resultObject);
+
+                resultMap.Properties.AddRange(properties);
+
+                if (_logger.IsDebugEnabled)
+                {
+                    _logger.Debug("The Remap Result");
+                }
 			}
 			else
 			{
-				if (request.MappedStatement.ReaderAutoMapper == null)
+                if (!resultMap.IsInitalized)
 				{
-					lock (request.MappedStatement) 
+                    lock (resultMap) 
 					{
-						if (request.MappedStatement.ReaderAutoMapper == null) 
+                        if (!resultMap.IsInitalized)
 						{
-							request.MappedStatement.ReaderAutoMapper = new ReaderAutoMapper(
-								request.DataExchangeFactory,
-								reader, 
-								ref resultObject);
+                            ResultPropertyCollection properties = ReaderAutoMapper.Build(
+                               request.DataExchangeFactory,
+                               reader,
+                               ref resultObject);
+
+                            resultMap.Properties.AddRange(properties);
+                            resultMap.IsInitalized = true;
 						}
 					}
 				}
-				_logger.Debug("The AutoMapReader");
-				request.MappedStatement.ReaderAutoMapper.AutoMapReader( reader, ref resultObject );				
+                if (_logger.IsDebugEnabled)
+                {
+                    _logger.Debug("The AutoMap Reader");
+                }
 			}
-
+		    
+		    return resultMap;
 		}
 
 
@@ -90,11 +108,24 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
 
 			if (outObject == null) 
 			{
-				outObject = request.Statement.CreateInstanceOfResultClass();
+                outObject = (request.CurrentResultMap as AutoResultMap).CreateInstanceOfResultClass();
 			}
 
-            AutoMapReader(request, ref reader, ref outObject);
+            AutoResultMap resultMap = InitializeAutoResultMap(request, ref reader, ref outObject);
 
+            // En configuration initialiser des AutoResultMap (IResultMap) avec uniquement leur class name et class et les mettres
+			// ds Statement.ResultsMap puis ds AutoMapStrategy faire comme AutoResultMap ds Java
+			// tester si la request.CurrentResultMap [AutoResultMap (IResultMap)] est initialisée 
+			// [if (allowRemapping || getResultMappings() == null) {initialize(rs);] java
+			// si ( request.Statement.AllowRemapping || (request.CurrentResultMap as AutoResultMap).IsInitalized) ....
+
+            for (int index = 0; index < resultMap.Properties.Count; index++)
+            {
+                ResultProperty property = resultMap.Properties[index];
+                resultMap.SetValueOfProperty(ref outObject, property,
+                                             property.GetDataBaseValue(reader));
+            }
+            
 			return outObject;
         }
 

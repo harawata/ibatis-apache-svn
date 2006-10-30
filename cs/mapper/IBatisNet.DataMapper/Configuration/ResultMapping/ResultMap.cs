@@ -33,7 +33,6 @@ using System.Xml;
 using System.Xml.Serialization;
 using IBatisNet.Common.Exceptions;
 using IBatisNet.Common.Utilities.Objects;
-using IBatisNet.Common.Utilities.TypesResolver;
 using IBatisNet.DataMapper.Configuration.Serializers;
 using IBatisNet.DataMapper.DataExchange;
 using IBatisNet.DataMapper.Exceptions;
@@ -45,11 +44,11 @@ using IBatisNet.Common.Utilities;
 namespace IBatisNet.DataMapper.Configuration.ResultMapping
 {
 	/// <summary>
-	/// Summary description for ResultMap.
+    /// Main implementation of ResultMap interface
 	/// </summary>
 	[Serializable]
 	[XmlRoot("resultMap", Namespace="http://ibatis.apache.org/mapping")]
-	public class ResultMap
+	public class ResultMap : IResultMap
 	{
 		/// <summary>
 		/// Token for xml path to argument constructor elements.
@@ -75,9 +74,10 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// Token for xml path to subMap elements.
 		/// </summary>
 		private const string XML_SUBMAP = "subMap";
-
-
+        
 		#region Fields
+        [NonSerialized]
+        private bool _isInitalized = true;
 		[NonSerialized]
 		private string _id = string.Empty;
 		[NonSerialized]
@@ -106,16 +106,18 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 
 		#region Properties
 
-		/// <summary>
-		/// The sqlMap namespace
-		/// </summary>
-		[XmlIgnore]
-		public string SqlMapNameSpace
-		{
-			get { return _sqlMapNameSpace; }	
-			set { _sqlMapNameSpace = value; }	
-		}
-
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is initalized.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance is initalized; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsInitalized
+        {
+            get { return true; }
+            set { _isInitalized = value; }
+        }
+	    
 		/// <summary>
 		/// The discriminator used to choose the good SubMap
 		/// </summary>
@@ -152,13 +154,6 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		public string Id
 		{
 			get { return _id; }
-			set 
-			{ 
-				if ((value == null) || (value.Length < 1))
-					throw new ArgumentNullException("The id attribute is mandatory in a ResultMap tag.");
-
-				_id = value; 
-			}
 		}
 
 		/// <summary>
@@ -168,7 +163,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		public string ExtendMap
 		{
 			get { return _extendMap; }
-			set { _extendMap = value; }
+            set { _extendMap = value; }
 		}
 
 		/// <summary>
@@ -182,25 +177,6 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 
 
 		/// <summary>
-		/// The output class name of the resultMap.
-		/// </summary>
-		/// <example>Com.Site.Domain.Product</example>
-		[XmlAttribute("class")]
-		public string ClassName
-		{
-			get { return _className; }
-			set 
-			{ 
-				if ((value == null) || (value.Length < 1))
-				{
-					throw new ArgumentNullException("The class attribute is mandatory in a ResultMap tag.");				
-				}
-
-				_className = value; 
-			}
-		}
-
-		/// <summary>
 		/// Sets the IDataExchange
 		/// </summary>
 		[XmlIgnore]
@@ -211,18 +187,36 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		#endregion
 
 		#region Constructor (s) / Destructor
-		/// <summary>
-		/// Do not use direclty, only for serialization.
-		/// </summary>
-		public ResultMap(DataExchangeFactory dataExchangeFactory)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ResultMap"/> class.
+        /// </summary>
+        /// <param name="configScope">The config scope.</param>
+        /// <param name="className">The output class name of the resultMap.</param>
+        /// <param name="extendMap">The extend result map bame.</param>
+        /// <param name="id">Identifier used to identify the resultMap amongst the others.</param>
+        public ResultMap(ConfigurationScope configScope, string id, string className, string extendMap)
 		{
-			_dataExchangeFactory = dataExchangeFactory;
+            _dataExchangeFactory = configScope.DataExchangeFactory;
+            _sqlMapNameSpace = configScope.SqlMapNamespace;
+            if ((id == null) || (id.Length < 1))
+            {
+                 throw new ArgumentNullException("The id attribute is mandatory in a ResultMap tag.");
+            }
+            _id = configScope.ApplyNamespace(id);
+            if ((className == null) || (className.Length < 1))
+            {
+                throw new ArgumentNullException("The class attribute is mandatory in the ResultMap tag id:"+_id);
+            }
+            _className = className;
+            _extendMap = extendMap;
 		}
 		#endregion
 
 		#region Methods
 
 		#region Configuration
+	    
 		/// <summary>
 		/// Initialize the resultMap from an xmlNode..
 		/// </summary>
@@ -299,7 +293,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 
 				mapping.Initialize( configScope, _class );
 
-				this.AddResultPropery( mapping  );
+			    _properties.Add( mapping  );
 			}
 			#endregion 
 
@@ -326,7 +320,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 				configScope.ErrorContext.MoreInfo = "initialize subMap";
 				subMap = SubMapDeSerializer.Deserialize(resultNode, configScope);
 
-				subMap.ResultMapName = this.SqlMapNameSpace + DomSqlMapBuilder.DOT + subMap.ResultMapName;
+                subMap.ResultMapName = _sqlMapNameSpace + DomSqlMapBuilder.DOT + subMap.ResultMapName;
 				this.Discriminator.Add( subMap );
 			}
 			#endregion 
@@ -344,7 +338,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// <exception cref="DataMapperException">
 		/// Thrown when no constructor with the correct signature can be found.
 		/// </exception> 
-		public ConstructorInfo GetConstructor( System.Type type, string[] parametersName )
+		private ConstructorInfo GetConstructor(Type type, string[] parametersName )
 		{
 			ConstructorInfo[] candidates = type.GetConstructors(ANY_VISIBILITY_INSTANCE);
 			foreach( ConstructorInfo constructor in candidates )
@@ -399,15 +393,6 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		}
 
 		/// <summary>
-		/// Add a ResultProperty to the list of ResultProperty.
-		/// </summary>
-		/// <param name="property">The property to add.</param>
-		public void AddResultPropery(ResultProperty property)
-		{
-			_properties.Add( property  );
-		}
-
-		/// <summary>
 		/// Set the value of an object property.
 		/// </summary>
 		/// <param name="target">The object to set the property.</param>
@@ -423,9 +408,9 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// </summary>
 		/// <param name="dataReader"></param>
 		/// <returns></returns>
-		public ResultMap ResolveSubMap(IDataReader dataReader)
+		public IResultMap ResolveSubMap(IDataReader dataReader)
 		{
-			ResultMap subMap = this;
+			IResultMap subMap = this;
 			if (_discriminator != null)
 			{	
 				ResultProperty mapping = _discriminator.ResultProperty;

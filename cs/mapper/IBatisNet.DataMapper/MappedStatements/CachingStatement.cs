@@ -33,6 +33,7 @@ using System.Data;
 using IBatisNet.Common;
 using IBatisNet.DataMapper.Commands;
 using IBatisNet.DataMapper.Configuration.Cache;
+using IBatisNet.DataMapper.Configuration.ResultMapping;
 using IBatisNet.DataMapper.Configuration.Statements;
 using IBatisNet.DataMapper.Scope;
 
@@ -63,15 +64,6 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 		#region IMappedStatement Members
 
-		/// <summary>
-		/// Gets or sets the <see cref="ReaderAutoMapper"/>.
-		/// </summary>
-		/// <value>The <see cref="ReaderAutoMapper"/>.</value>
-		public ReaderAutoMapper ReaderAutoMapper
-		{
-			set {  _mappedStatement.ReaderAutoMapper = value; }
-			get { return _mappedStatement.ReaderAutoMapper; }
-		}
 
 		/// <summary>
 		/// The IPreparedCommand to use
@@ -207,7 +199,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 			list = this.Statement.CacheModel[cacheKey] as IList;
 			if (list == null) 
 			{
-				list = _mappedStatement.RunQueryForList(request, session, parameterObject, skipResults, maxResults, null);
+				list = _mappedStatement.RunQueryForList(request, session, parameterObject, skipResults, maxResults);
 				this.Statement.CacheModel[cacheKey] = list;
 			}
 
@@ -263,7 +255,7 @@ namespace IBatisNet.DataMapper.MappedStatements
             list = this.Statement.CacheModel[cacheKey] as IList<T>;
             if (list == null)
             {
-                list = _mappedStatement.RunQueryForList<T>(request, session, parameterObject, skipResults, maxResults, null);
+                list = _mappedStatement.RunQueryForList<T>(request, session, parameterObject, skipResults, maxResults);
                 this.Statement.CacheModel[cacheKey] = list;
             }
 

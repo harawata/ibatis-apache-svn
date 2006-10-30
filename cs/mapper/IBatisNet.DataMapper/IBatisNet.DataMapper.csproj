@@ -155,11 +155,6 @@
                     BuildAction = "Content"
                 />
                 <File
-                    RelPath = "SessionHolder.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "SqlMap.xsd"
                     BuildAction = "EmbeddedResource"
                 />
@@ -178,7 +173,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Commands\DataReaderDecorator.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Commands\DataReaderTransformer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Commands\DbCommandDecorator.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -288,12 +293,27 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Configuration\ResultMapping\AutoResultMap.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Configuration\ResultMapping\Discriminator.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Configuration\ResultMapping\IResultMap.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Configuration\ResultMapping\ResultMap.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Configuration\ResultMapping\ResultMapCollection.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -140,7 +140,7 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 		/// <param name="value"></param>
 		public void AddRange(ParameterPropertyCollection value) 
 		{
-			for (int i = 0;   i < value.Length; i++) 
+			for (int i = 0;   i < value.Count; i++) 
 			{
 				Add(value[i]);
 			}

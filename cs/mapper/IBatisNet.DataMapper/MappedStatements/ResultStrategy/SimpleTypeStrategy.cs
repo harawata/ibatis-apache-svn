@@ -49,27 +49,35 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
         /// <param name="resultObject">The result object.</param>
         public object Process(RequestScope request, ref IDataReader reader, object resultObject)
         {
-			object outObject = resultObject; 
+            object outObject = resultObject;
+            AutoResultMap resultMap = request.CurrentResultMap as AutoResultMap;
+            
+            if (outObject == null) 
+            {
+                outObject = resultMap.CreateInstanceOfResultClass();
+            }
 
-			if (outObject == null) 
-			{
-				outObject = request.Statement.CreateInstanceOfResultClass();
-			}
+            if (!resultMap.IsInitalized)
+            { 
+                lock(resultMap)
+                {
+                    if (!resultMap.IsInitalized)
+                    {
+                        // Create a ResultProperty
+                        ResultProperty property = new ResultProperty();
+                        property.PropertyName = "value";
+                        property.ColumnIndex = 0;
+                        property.TypeHandler = request.DataExchangeFactory.TypeHandlerFactory.GetTypeHandler(outObject.GetType());
+                        property.PropertyStrategy = PropertyStrategyFactory.Get(property);
 
-			// Create a ResultMap
-			ResultMap resultMap = new ResultMap(request.DataExchangeFactory);
+                        resultMap.Properties.Add(property);
+                        resultMap.DataExchange = request.DataExchangeFactory.GetDataExchangeForClass(typeof(int));// set the PrimitiveDataExchange
+                        resultMap.IsInitalized = true;
+                    }
+                }
+            }
 
-			// Create a ResultProperty
-			ResultProperty property = new ResultProperty();
-			property.PropertyName = "value";
-			property.ColumnIndex = 0;
-			property.TypeHandler = request.DataExchangeFactory.TypeHandlerFactory.GetTypeHandler(outObject.GetType());
-			property.PropertyStrategy = PropertyStrategyFactory.Get(property);
-			
-			resultMap.AddResultPropery(property);
-			resultMap.DataExchange = request.DataExchangeFactory.GetDataExchangeForClass( typeof(int) );// set the PrimitiveDataExchange
-
-			property.PropertyStrategy.Set(request, resultMap, property, ref outObject, reader, null); 
+            resultMap.Properties[0].PropertyStrategy.Set(request, resultMap, resultMap.Properties[0], ref outObject, reader, null); 
       
 			return outObject;
 		}

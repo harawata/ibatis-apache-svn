@@ -32,231 +32,215 @@ using System.Collections;
 using System.Collections.Generic;
 #endif
 using System.Data;
-using System.Reflection;
 using System.Text;
 
 using IBatisNet.Common;
-using IBatisNet.Common.Logging;
 using IBatisNet.Common.Utilities.Objects;
 
 
 using IBatisNet.DataMapper.Commands;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
-using IBatisNet.DataMapper.Configuration.ResultMapping;
 using IBatisNet.DataMapper.Configuration.Statements;
 using IBatisNet.DataMapper.MappedStatements.ResultStrategy;
 using IBatisNet.DataMapper.Scope;
 using IBatisNet.DataMapper.MappedStatements.PostSelectStrategy;
 using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.TypeHandlers;
-using IBatisNet.DataMapper.DataExchange;
-
 
 #endregion
 
 namespace IBatisNet.DataMapper.MappedStatements
 {
 
-	/// <summary>
-	/// Summary description for MappedStatement.
-	/// </summary>
-	public class MappedStatement : IMappedStatement
-	{
-		/// <summary>
-		/// Event launch on exceute query
-		/// </summary>
-		public event ExecuteEventHandler Execute;
+    /// <summary>
+    /// Summary description for MappedStatement.
+    /// </summary>
+    public class MappedStatement : IMappedStatement
+    {
+        /// <summary>
+        /// Event launch on exceute query
+        /// </summary>
+        public event ExecuteEventHandler Execute;
 
-		#region Fields 
+        #region Fields
 
-		// Magic number used to set the the maximum number of rows returned to 'all'. 
-		internal const int NO_MAXIMUM_RESULTS = -1;
-		// Magic number used to set the the number of rows skipped to 'none'. 
-		internal const int NO_SKIPPED_RESULTS = -1;
+        // Magic number used to set the the maximum number of rows returned to 'all'. 
+        internal const int NO_MAXIMUM_RESULTS = -1;
+        // Magic number used to set the the number of rows skipped to 'none'. 
+        internal const int NO_SKIPPED_RESULTS = -1;
 
-		private static readonly ILog _logger = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
-		private IStatement _statement = null;
+        private IStatement _statement = null;
         private ISqlMapper _sqlMap = null;
-		private IPreparedCommand _preparedCommand = null;
-		private IResultStrategy _resultStrategy = null;
-		private ReaderAutoMapper _readerAutoMapper = null;
-		#endregion
+        private IPreparedCommand _preparedCommand = null;
+        private IResultStrategy _resultStrategy = null;
+        #endregion
 
-		#region Properties
+        #region Properties
 
-		/// <summary>
-		/// Gets or sets the <see cref="ReaderAutoMapper"/>.
-		/// </summary>
-		/// <value>The <see cref="ReaderAutoMapper"/>.</value>
-		public ReaderAutoMapper ReaderAutoMapper
-		{
-			set {  _readerAutoMapper = value; }
-			get { return _readerAutoMapper; }
-		}
 
-		/// <summary>
-		/// The IPreparedCommand to use
-		/// </summary>
-		public IPreparedCommand PreparedCommand
-		{
-			get { return _preparedCommand; }
-		}
+        /// <summary>
+        /// The IPreparedCommand to use
+        /// </summary>
+        public IPreparedCommand PreparedCommand
+        {
+            get { return _preparedCommand; }
+        }
 
-		/// <summary>
-		/// Name used to identify the MappedStatement amongst the others.
-		/// This the name of the SQL statement by default.
-		/// </summary>
-		public string Id
-		{
-			get { return _statement.Id; }
-		}
+        /// <summary>
+        /// Name used to identify the MappedStatement amongst the others.
+        /// This the name of the SQL statement by default.
+        /// </summary>
+        public string Id
+        {
+            get { return _statement.Id; }
+        }
 
-		/// <summary>
-		/// The SQL statment used by this MappedStatement
-		/// </summary>
-		public IStatement Statement
-		{
-			get { return _statement; }
-		}
+        /// <summary>
+        /// The SQL statment used by this MappedStatement
+        /// </summary>
+        public IStatement Statement
+        {
+            get { return _statement; }
+        }
 
-		/// <summary>
-		/// The SqlMap used by this MappedStatement
-		/// </summary>
+        /// <summary>
+        /// The SqlMap used by this MappedStatement
+        /// </summary>
         public ISqlMapper SqlMap
-		{
-			get { return _sqlMap; }
-		}
-		#endregion
+        {
+            get { return _sqlMap; }
+        }
+        #endregion
 
-		#region Constructor (s) / Destructor
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		/// <param name="sqlMap">An SqlMap</param>
-		/// <param name="statement">An SQL statement</param>
-		internal MappedStatement( ISqlMapper sqlMap, IStatement statement )
-		{
-			_sqlMap = sqlMap;
-			_statement = statement;
-			_preparedCommand = PreparedCommandFactory.GetPreparedCommand( false );
-			_resultStrategy = ResultStrategyFactory.Get(_statement);
-		}
-		#endregion
+        #region Constructor (s) / Destructor
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="sqlMap">An SqlMap</param>
+        /// <param name="statement">An SQL statement</param>
+        internal MappedStatement(ISqlMapper sqlMap, IStatement statement)
+        {
+            _sqlMap = sqlMap;
+            _statement = statement;
+            _preparedCommand = PreparedCommandFactory.GetPreparedCommand(false);
+            _resultStrategy = ResultStrategyFactory.Get(_statement);
+        }
+        #endregion
 
-		#region Methods
-	
-		/// <summary>
-		/// Retrieve the output parameter and map them on the result object.
-		/// This routine is only use is you specified a ParameterMap and some output attribute
-		/// or if you use a store procedure with output parameter...
-		/// </summary>
-		/// <param name="request"></param>
-		/// <param name="session">The current session.</param>
-		/// <param name="result">The result object.</param>
-		/// <param name="command">The command sql.</param>
-		private void RetrieveOutputParameters(RequestScope request, IDalSession session, IDbCommand command, object result)
-		{
-			if (request.ParameterMap != null)
-			{
-				int count = request.ParameterMap.PropertiesList.Count;
-				for(int i=0; i<count; i++)
-				{
-					ParameterProperty  mapping = request.ParameterMap.GetProperty(i);
-					if (mapping.Direction == ParameterDirection.Output || 
-						mapping.Direction == ParameterDirection.InputOutput) 
-					{
-						string parameterName = string.Empty;
-						if (session.DataSource.DbProvider.UseParameterPrefixInParameter == false)
-						{
-							parameterName =  mapping.ColumnName;
-						}
-						else
-						{
-							parameterName = session.DataSource.DbProvider.ParameterPrefix + 
-								mapping.ColumnName;
-						}
-						
-						if (mapping.TypeHandler == null) // Find the TypeHandler
-						{
-							lock(mapping) 
-							{
-								if (mapping.TypeHandler == null)
-								{
-									Type propertyType =ObjectProbe.GetMemberTypeForGetter(result,mapping.PropertyName);
+        #region Methods
 
-									mapping.TypeHandler = request.DataExchangeFactory.TypeHandlerFactory.GetTypeHandler(propertyType);
-								}
-							}					
-						}
-						
-						object dataBaseValue = mapping.TypeHandler.GetDataBaseValue( ((IDataParameter)command.Parameters[parameterName]).Value, result.GetType() );
-						request.IsRowDataFound = request.IsRowDataFound || (dataBaseValue != null);
+        /// <summary>
+        /// Retrieve the output parameter and map them on the result object.
+        /// This routine is only use is you specified a ParameterMap and some output attribute
+        /// or if you use a store procedure with output parameter...
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="session">The current session.</param>
+        /// <param name="result">The result object.</param>
+        /// <param name="command">The command sql.</param>
+        private void RetrieveOutputParameters(RequestScope request, IDalSession session, IDbCommand command, object result)
+        {
+            if (request.ParameterMap != null)
+            {
+                int count = request.ParameterMap.PropertiesList.Count;
+                for (int i = 0; i < count; i++)
+                {
+                    ParameterProperty mapping = request.ParameterMap.GetProperty(i);
+                    if (mapping.Direction == ParameterDirection.Output ||
+                        mapping.Direction == ParameterDirection.InputOutput)
+                    {
+                        string parameterName = string.Empty;
+                        if (session.DataSource.DbProvider.UseParameterPrefixInParameter == false)
+                        {
+                            parameterName = mapping.ColumnName;
+                        }
+                        else
+                        {
+                            parameterName = session.DataSource.DbProvider.ParameterPrefix +
+                                mapping.ColumnName;
+                        }
 
-						request.ParameterMap.SetOutputParameter(ref result, mapping, dataBaseValue);
-					}
-				}
-			}
-		}
+                        if (mapping.TypeHandler == null) // Find the TypeHandler
+                        {
+                            lock (mapping)
+                            {
+                                if (mapping.TypeHandler == null)
+                                {
+                                    Type propertyType = ObjectProbe.GetMemberTypeForGetter(result, mapping.PropertyName);
 
-		
-		#region ExecuteForObject
+                                    mapping.TypeHandler = request.DataExchangeFactory.TypeHandlerFactory.GetTypeHandler(propertyType);
+                                }
+                            }
+                        }
 
-		/// <summary>
-		/// Executes an SQL statement that returns a single row as an Object.
-		/// </summary>
-		/// <param name="session">The session used to execute the statement.</param>
-		/// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-		/// <returns>The object</returns>
-		public virtual object ExecuteQueryForObject( IDalSession session, object parameterObject )
-		{
-			return ExecuteQueryForObject(session, parameterObject, null);
-		}
+                        object dataBaseValue = mapping.TypeHandler.GetDataBaseValue(((IDataParameter)command.Parameters[parameterName]).Value, result.GetType());
+                        request.IsRowDataFound = request.IsRowDataFound || (dataBaseValue != null);
+
+                        request.ParameterMap.SetOutputParameter(ref result, mapping, dataBaseValue);
+                    }
+                }
+            }
+        }
 
 
-		/// <summary>
-		/// Executes an SQL statement that returns a single row as an Object of the type of
-		/// the resultObject passed in as a parameter.
-		/// </summary>
-		/// <param name="session">The session used to execute the statement.</param>
-		/// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-		/// <param name="resultObject">The result object.</param>
-		/// <returns>The object</returns>
-		public virtual object ExecuteQueryForObject(IDalSession session, object parameterObject, object resultObject )
-		{
-			object obj = null;
-			RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
+        #region ExecuteForObject
 
-			_preparedCommand.Create( request, session, this.Statement, parameterObject );
+        /// <summary>
+        /// Executes an SQL statement that returns a single row as an Object.
+        /// </summary>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <returns>The object</returns>
+        public virtual object ExecuteQueryForObject(IDalSession session, object parameterObject)
+        {
+            return ExecuteQueryForObject(session, parameterObject, null);
+        }
 
-			obj = RunQueryForObject(request, session, parameterObject, resultObject);
-			
-			return obj;
-		}
 
-		
-		/// <summary>
-		/// Executes an SQL statement that returns a single row as an Object of the type of
-		/// the resultObject passed in as a parameter.
-		/// </summary>
-		/// <param name="request">The request scope.</param>
-		/// <param name="session">The session used to execute the statement.</param>
-		/// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-		/// <param name="resultObject">The result object.</param>
-		/// <returns>The object</returns>
-		internal object RunQueryForObject(RequestScope request, IDalSession session, object parameterObject, object resultObject )
-		{
-			object result = resultObject;
-			
-			using ( IDbCommand command = request.IDbCommand )
-			{
+        /// <summary>
+        /// Executes an SQL statement that returns a single row as an Object of the type of
+        /// the resultObject passed in as a parameter.
+        /// </summary>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="resultObject">The result object.</param>
+        /// <returns>The object</returns>
+        public virtual object ExecuteQueryForObject(IDalSession session, object parameterObject, object resultObject)
+        {
+            object obj = null;
+            RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
+
+            _preparedCommand.Create(request, session, this.Statement, parameterObject);
+
+            obj = RunQueryForObject(request, session, parameterObject, resultObject);
+
+            return obj;
+        }
+
+
+        /// <summary>
+        /// Executes an SQL statement that returns a single row as an Object of the type of
+        /// the resultObject passed in as a parameter.
+        /// </summary>
+        /// <param name="request">The request scope.</param>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="resultObject">The result object.</param>
+        /// <returns>The object</returns>
+        internal object RunQueryForObject(RequestScope request, IDalSession session, object parameterObject, object resultObject)
+        {
+            object result = resultObject;
+
+            using (IDbCommand command = request.IDbCommand)
+            {
                 IDataReader reader = command.ExecuteReader();
-			    try
-			    {
-					if ( reader.Read() )
-					{
-                        result = _resultStrategy.Process(request, ref reader, resultObject);		
-					}			        
-			    }
+                try
+                {
+                    while (reader.Read())
+                    {
+                        result = _resultStrategy.Process(request, ref reader, resultObject);
+                    }
+                }
                 catch
                 {
                     throw;
@@ -265,26 +249,26 @@ namespace IBatisNet.DataMapper.MappedStatements
                 {
                     reader.Close();
                     reader.Dispose();
-                }	    
+                }
 
-				ExecutePostSelect(request);
+                ExecutePostSelect(request);
 
-				#region remark
-				// If you are using the OleDb data provider (as you are), you need to close the
-				// DataReader before output parameters are visible.
-				#endregion
+                #region remark
+                // If you are using the OleDb data provider (as you are), you need to close the
+                // DataReader before output parameters are visible.
+                #endregion
 
-				RetrieveOutputParameters(request, session, command, parameterObject);
-			}
+                RetrieveOutputParameters(request, session, command, parameterObject);
+            }
 
-			RaiseExecuteEvent();
+            RaiseExecuteEvent();
 
-			return result;
-		}
+            return result;
+        }
 
-		#endregion
+        #endregion
 
-		#region ExecuteForObject .NET 2.0
+        #region ExecuteForObject .NET 2.0
 #if dotnet2
 
         /// <summary>
@@ -314,7 +298,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 
             _preparedCommand.Create(request, session, this.Statement, parameterObject);
 
-            obj = (T)RunQueryForObject(request, session, parameterObject, resultObject);
+            obj = RunQueryForObject<T>(request, session, parameterObject, resultObject);
 
             return obj;
         }
@@ -336,13 +320,13 @@ namespace IBatisNet.DataMapper.MappedStatements
             using (IDbCommand command = request.IDbCommand)
             {
                 IDataReader reader = command.ExecuteReader();
-                try 
+                try
                 {
-                    if (reader.Read())
+                    while (reader.Read())
                     {
                         result = (T)_resultStrategy.Process(request, ref reader, resultObject);
                     }
-			    }
+                }
                 catch
                 {
                     throw;
@@ -353,12 +337,12 @@ namespace IBatisNet.DataMapper.MappedStatements
                     reader.Dispose();
                 }
 
-                ExecutePostSelect( request );
+                ExecutePostSelect(request);
 
-		#region remark
-                // If you are using the OleDb data provider (as you are), you need to close the
+                #region remark
+                // If you are using the OleDb data provider, you need to close the
                 // DataReader before output parameters are visible.
-		#endregion
+                #endregion
 
                 RetrieveOutputParameters(request, session, command, parameterObject);
             }
@@ -368,200 +352,139 @@ namespace IBatisNet.DataMapper.MappedStatements
             return result;
         }
 #endif
-		#endregion
+        #endregion
 
-		#region ExecuteQueryForList
+        #region ExecuteQueryForList
 
-		/// <summary>
-		/// Runs a query with a custom object that gets a chance 
-		/// to deal with each row as it is processed.
-		/// </summary>
-		/// <param name="session">The session used to execute the statement.</param>
-		/// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-		/// <param name="rowDelegate"></param>
-		public virtual IList ExecuteQueryForRowDelegate( IDalSession session, object parameterObject, RowDelegate rowDelegate )
-		{
-			RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
+        /// <summary>
+        /// Runs a query with a custom object that gets a chance 
+        /// to deal with each row as it is processed.
+        /// </summary>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="rowDelegate"></param>
+        public virtual IList ExecuteQueryForRowDelegate(IDalSession session, object parameterObject, RowDelegate rowDelegate)
+        {
+            RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
 
-			_preparedCommand.Create( request, session, this.Statement, parameterObject );
+            _preparedCommand.Create(request, session, this.Statement, parameterObject);
 
-			if (rowDelegate == null) 
-			{
-				throw new DataMapperException("A null RowDelegate was passed to QueryForRowDelegate.");
-			}
-			
-			return RunQueryForList(request, session, parameterObject, NO_SKIPPED_RESULTS, NO_MAXIMUM_RESULTS, rowDelegate);
-		}
+            if (rowDelegate == null)
+            {
+                throw new DataMapperException("A null RowDelegate was passed to QueryForRowDelegate.");
+            }
 
-		/// <summary>
-		/// Runs a query with a custom object that gets a chance 
-		/// to deal with each row as it is processed.
-		/// </summary>
-		/// <param name="session">The session used to execute the statement</param>
-		/// <param name="parameterObject">The object used to set the parameters in the SQL. </param>
-		/// <param name="keyProperty">The property of the result object to be used as the key. </param>
-		/// <param name="valueProperty">The property of the result object to be used as the value (or null)</param>
-		/// <param name="rowDelegate"></param>
-		/// <returns>A hashtable of object containing the rows keyed by keyProperty.</returns>
-		///<exception cref="DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
-		public virtual IDictionary ExecuteQueryForMapWithRowDelegate( IDalSession session, object parameterObject, string keyProperty, string valueProperty, DictionaryRowDelegate rowDelegate )
-		{
-			RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
+            return RunQueryForList(request, session, parameterObject, null, rowDelegate);
+        }
 
-			if (rowDelegate == null) 
-			{
-				throw new DataMapperException("A null DictionaryRowDelegate was passed to QueryForMapWithRowDelegate.");
-			}
-			
-			_preparedCommand.Create(request, session, this.Statement, parameterObject);
+        /// <summary>
+        /// Runs a query with a custom object that gets a chance 
+        /// to deal with each row as it is processed.
+        /// </summary>
+        /// <param name="session">The session used to execute the statement</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL. </param>
+        /// <param name="keyProperty">The property of the result object to be used as the key. </param>
+        /// <param name="valueProperty">The property of the result object to be used as the value (or null)</param>
+        /// <param name="rowDelegate"></param>
+        /// <returns>A hashtable of object containing the rows keyed by keyProperty.</returns>
+        ///<exception cref="DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
+        public virtual IDictionary ExecuteQueryForMapWithRowDelegate(IDalSession session, object parameterObject, string keyProperty, string valueProperty, DictionaryRowDelegate rowDelegate)
+        {
+            RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
 
-			return RunQueryForMap(request, session, parameterObject, keyProperty, valueProperty, rowDelegate);
-		}
+            if (rowDelegate == null)
+            {
+                throw new DataMapperException("A null DictionaryRowDelegate was passed to QueryForMapWithRowDelegate.");
+            }
 
-		
-		/// <summary>
-		/// Executes the SQL and retuns all rows selected. This is exactly the same as
-		/// calling ExecuteQueryForList(session, parameterObject, NO_SKIPPED_RESULTS, NO_MAXIMUM_RESULTS).
-		/// </summary>
-		/// <param name="session">The session used to execute the statement.</param>
-		/// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-		/// <returns>A List of result objects.</returns>
-		public virtual IList ExecuteQueryForList( IDalSession session, object parameterObject )
-		{
-			return ExecuteQueryForList( session, parameterObject, NO_SKIPPED_RESULTS, NO_MAXIMUM_RESULTS);
-		}
+            _preparedCommand.Create(request, session, this.Statement, parameterObject);
+
+            return RunQueryForMap(request, session, parameterObject, keyProperty, valueProperty, rowDelegate);
+        }
 
 
-		/// <summary>
-		/// Executes the SQL and retuns a subset of the rows selected.
-		/// </summary>
-		/// <param name="session">The session used to execute the statement.</param>
-		/// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-		/// <param name="skipResults">The number of rows to skip over.</param>
-		/// <param name="maxResults">The maximum number of rows to return.</param>
-		/// <returns>A List of result objects.</returns>
-		public virtual IList ExecuteQueryForList( IDalSession session, object parameterObject, int skipResults, int maxResults )
-		{
-			IList list = null;
-			RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
+        /// <summary>
+        /// Executes the SQL and retuns all rows selected. This is exactly the same as
+        /// calling ExecuteQueryForList(session, parameterObject, NO_SKIPPED_RESULTS, NO_MAXIMUM_RESULTS).
+        /// </summary>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <returns>A List of result objects.</returns>
+        public virtual IList ExecuteQueryForList(IDalSession session, object parameterObject)
+        {
+            RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
 
-			_preparedCommand.Create( request, session, this.Statement, parameterObject );
+            _preparedCommand.Create(request, session, this.Statement, parameterObject);
 
-			list = RunQueryForList(request, session, parameterObject, skipResults, maxResults, null);
-			
-			return list;
-		}
+            return RunQueryForList(request, session, parameterObject, null, null);
+        }
 
-		
-		/// <summary>
-		/// Executes the SQL and retuns a List of result objects.
-		/// </summary>
-		/// <param name="request">The request scope.</param>
-		/// <param name="session">The session used to execute the statement.</param>
-		/// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-		/// <param name="skipResults">The number of rows to skip over.</param>
-		/// <param name="maxResults">The maximum number of rows to return.</param>
-		/// <param name="rowDelegate"></param>
-		/// <returns>A List of result objects.</returns>
-		internal IList RunQueryForList(RequestScope request, IDalSession session, object parameterObject, int skipResults, int maxResults,  RowDelegate rowDelegate)
-		{
-			IList list = null;
 
-			using ( IDbCommand command = request.IDbCommand )
-			{
-				if (_statement.ListClass == null)
-				{
-					list = new ArrayList();
-				}
-				else
-				{
-					list = _statement.CreateInstanceOfListClass();
-				}
-                
-			    IDataReader reader = command.ExecuteReader();
-                try		
+        /// <summary>
+        /// Executes the SQL and retuns a subset of the rows selected.
+        /// </summary>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="skipResults">The number of rows to skip over.</param>
+        /// <param name="maxResults">The maximum number of rows to return.</param>
+        /// <returns>A List of result objects.</returns>
+        public virtual IList ExecuteQueryForList(IDalSession session, object parameterObject, int skipResults, int maxResults)
+        {
+            RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
+
+            _preparedCommand.Create(request, session, this.Statement, parameterObject);
+
+            return RunQueryForList(request, session, parameterObject, skipResults, maxResults);
+        }
+
+        /// <summary>
+        /// Runs the query for list.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="skipResults">The number of rows to skip over.</param>
+        /// <param name="maxResults">The maximum number of rows to return.</param>
+        /// <returns>A List of result objects.</returns>
+        internal IList RunQueryForList(RequestScope request, IDalSession session, object parameterObject, int skipResults, int maxResults)
+        {
+            IList list = null;
+            
+            using (IDbCommand command = request.IDbCommand)
+            {
+                if (_statement.ListClass == null)
                 {
-					// skip results
-					for (int i = 0; i < skipResults; i++) 
-					{
-						if (!reader.Read()) 
-						{
-							break;
-						}
-					}
-
-					int n = 0;
-
-					if (rowDelegate == null) 
-					{
-						while ( (maxResults == NO_MAXIMUM_RESULTS || n < maxResults) 
-							&& reader.Read() )
-						{
-                            object obj = _resultStrategy.Process(request, ref reader, null);
-						
-							list.Add( obj );
-							n++;
-						}
-					}
-					else
-					{
-						while ( (maxResults == NO_MAXIMUM_RESULTS || n < maxResults) 
-							&& reader.Read() )
-						{
-                            object obj = _resultStrategy.Process(request, ref reader, null);
-
-							rowDelegate(obj, parameterObject, list);
-							n++;
-						}
-					}
-			    }
-			    catch
-			    {
-			        throw;
-			    }
-			    finally
+                    list = new ArrayList();
+                }
+                else
                 {
-			        reader.Close();
-			        reader.Dispose();                    
+                    list = _statement.CreateInstanceOfListClass();
                 }
 
-				ExecutePostSelect(request);
+                IDataReader reader = command.ExecuteReader();
 
-				RetrieveOutputParameters(request, session, command, parameterObject);
-			}
-
-			return list;
-		}
-		
-		
-		/// <summary>
-		/// Executes the SQL and and fill a strongly typed collection.
-		/// </summary>
-		/// <param name="session">The session used to execute the statement.</param>
-		/// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-		/// <param name="resultObject">A strongly typed collection of result objects.</param>
-		public virtual void ExecuteQueryForList(IDalSession session, object parameterObject, IList resultObject )
-		{
-			RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
-
-			_preparedCommand.Create( request, session, this.Statement, parameterObject );
-
-			using ( IDbCommand command = request.IDbCommand )
-			{
-				IDataReader reader = command.ExecuteReader();
-                try 
+                try
                 {
-                    do
+                    // skip results
+                    for (int i = 0; i < skipResults; i++)
                     {
-                        while (reader.Read())
+                        if (!reader.Read())
                         {
-                            object obj = _resultStrategy.Process(request, ref reader, null);
-
-                            resultObject.Add(obj);
+                            break;
                         }
                     }
-                    while (reader.NextResult());
-			    }
+
+                    // Get Results
+                    int resultsFetched = 0;
+                    while ((maxResults == NO_MAXIMUM_RESULTS || resultsFetched < maxResults)
+                        && reader.Read())
+                    {
+                        object obj = _resultStrategy.Process(request, ref reader, null);
+
+                        list.Add(obj);
+                        resultsFetched++;
+                    }
+                }
                 catch
                 {
                     throw;
@@ -572,16 +495,103 @@ namespace IBatisNet.DataMapper.MappedStatements
                     reader.Dispose();
                 }
 
-				ExecutePostSelect(request);
+                ExecutePostSelect(request);
 
-				RetrieveOutputParameters(request, session, command, parameterObject);
-			}
-		}
+                RetrieveOutputParameters(request, session, command, parameterObject);
+            }
 
-		
-		#endregion
+            return list;
+        }
 
-		#region ExecuteQueryForList .NET 2.0
+        /// <summary>
+        /// Executes the SQL and retuns a List of result objects.
+        /// </summary>
+        /// <param name="request">The request scope.</param>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="resultObject">A strongly typed collection of result objects.</param>
+        /// <param name="rowDelegate"></param>
+        /// <returns>A List of result objects.</returns>
+        internal IList RunQueryForList(RequestScope request, IDalSession session, object parameterObject, IList resultObject, RowDelegate rowDelegate)
+        {
+            IList list = resultObject;
+
+            using (IDbCommand command = request.IDbCommand)
+            {
+                if (resultObject==null)
+                {
+                    if (_statement.ListClass == null)
+                    {
+                        list = new ArrayList();
+                    }
+                    else
+                    {
+                        list = _statement.CreateInstanceOfListClass();
+                    }
+                }
+
+                IDataReader reader = command.ExecuteReader();
+
+                try
+                { 
+                    do
+                    {
+                        if (rowDelegate == null)
+                        {
+                            while (reader.Read())
+                            {
+                                object obj = _resultStrategy.Process(request, ref reader, null);
+                                list.Add(obj);
+                            }
+                        }
+                        else
+                        {
+                            while (reader.Read())
+                            {
+                                object obj = _resultStrategy.Process(request, ref reader, null);
+                                rowDelegate(obj, parameterObject, list);
+                            }
+                        }
+                    }
+                    while (reader.NextResult());
+                }
+                catch
+                {
+                    throw;
+                }
+                finally
+                {
+                    reader.Close();
+                    reader.Dispose();
+                }
+
+                ExecutePostSelect(request);
+                RetrieveOutputParameters(request, session, command, parameterObject);
+            }
+
+            return list;
+        }
+
+
+        /// <summary>
+        /// Executes the SQL and and fill a strongly typed collection.
+        /// </summary>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="resultObject">A strongly typed collection of result objects.</param>
+        public virtual void ExecuteQueryForList(IDalSession session, object parameterObject, IList resultObject)
+        {
+            RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
+
+            _preparedCommand.Create(request, session, this.Statement, parameterObject);
+
+            RunQueryForList(request, session, parameterObject, resultObject, null);
+        }
+
+
+        #endregion
+
+        #region ExecuteQueryForList .NET 2.0
 #if dotnet2
 
         /// <summary>
@@ -601,8 +611,7 @@ namespace IBatisNet.DataMapper.MappedStatements
             {
                 throw new DataMapperException("A null RowDelegate was passed to QueryForRowDelegate.");
             }
-
-            return RunQueryForList<T>(request, session, parameterObject, NO_SKIPPED_RESULTS, NO_MAXIMUM_RESULTS, rowDelegate);
+            return RunQueryForList<T>(request, session, parameterObject, null, rowDelegate);
         }
 
 
@@ -615,7 +624,11 @@ namespace IBatisNet.DataMapper.MappedStatements
         /// <returns>A List of result objects.</returns>
         public virtual IList<T> ExecuteQueryForList<T>(IDalSession session, object parameterObject)
         {
-            return ExecuteQueryForList<T>(session, parameterObject, NO_SKIPPED_RESULTS, NO_MAXIMUM_RESULTS);
+            RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
+
+            _preparedCommand.Create(request, session, this.Statement, parameterObject);
+
+            return RunQueryForList<T>(request, session, parameterObject, null, null);
         }
 
 
@@ -629,14 +642,11 @@ namespace IBatisNet.DataMapper.MappedStatements
         /// <returns>A List of result objects.</returns>
         public virtual IList<T> ExecuteQueryForList<T>(IDalSession session, object parameterObject, int skipResults, int maxResults)
         {
-            IList<T> list = null;
             RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
 
             _preparedCommand.Create(request, session, this.Statement, parameterObject);
 
-            list = RunQueryForList<T>(request, session, parameterObject, skipResults, maxResults, null);
-
-            return list;
+            return RunQueryForList<T>(request, session, parameterObject, skipResults, maxResults);
         }
 
 
@@ -648,9 +658,8 @@ namespace IBatisNet.DataMapper.MappedStatements
         /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
         /// <param name="skipResults">The number of rows to skip over.</param>
         /// <param name="maxResults">The maximum number of rows to return.</param>
-        /// <param name="rowDelegate"></param>
         /// <returns>A List of result objects.</returns>
-        internal IList<T> RunQueryForList<T>(RequestScope request, IDalSession session, object parameterObject, int skipResults, int maxResults, RowDelegate<T> rowDelegate)
+        internal IList<T> RunQueryForList<T>(RequestScope request, IDalSession session, object parameterObject, int skipResults, int maxResults)
         {
             IList<T> list = null;
 
@@ -664,9 +673,9 @@ namespace IBatisNet.DataMapper.MappedStatements
                 {
                     list = _statement.CreateInstanceOfGenericListClass<T>();
                 }
-                
+
                 IDataReader reader = command.ExecuteReader();
-                try 
+                try
                 {
                     // skip results
                     for (int i = 0; i < skipResults; i++)
@@ -677,31 +686,16 @@ namespace IBatisNet.DataMapper.MappedStatements
                         }
                     }
 
-                    int n = 0;
-
-                    if (rowDelegate == null)
+                    int resultsFetched = 0;
+                    while ((maxResults == NO_MAXIMUM_RESULTS || resultsFetched < maxResults)
+                        && reader.Read())
                     {
-                        while ((maxResults == NO_MAXIMUM_RESULTS || n < maxResults)
-                            && reader.Read())
-                        {
-                            T obj = (T)_resultStrategy.Process(request, ref reader, null);
+                        T obj = (T)_resultStrategy.Process(request, ref reader, null);
 
-                            list.Add(obj);
-                            n++;
-                        }
+                        list.Add(obj);
+                        resultsFetched++;
                     }
-                    else
-                    {
-                        while ((maxResults == NO_MAXIMUM_RESULTS || n < maxResults)
-                            && reader.Read())
-                        {
-                            T obj = (T)_resultStrategy.Process(request, ref reader, null);
-
-                            rowDelegate(obj, parameterObject, list);
-                            n++;
-                        }
-                    }
-			    }
+                }
                 catch
                 {
                     throw;
@@ -712,7 +706,7 @@ namespace IBatisNet.DataMapper.MappedStatements
                     reader.Dispose();
                 }
 
-                ExecutePostSelect( request );
+                ExecutePostSelect(request);
 
                 RetrieveOutputParameters(request, session, command, parameterObject);
             }
@@ -720,6 +714,74 @@ namespace IBatisNet.DataMapper.MappedStatements
             return list;
         }
 
+        /// <summary>
+        /// Executes the SQL and retuns a List of result objects.
+        /// </summary>
+        /// <param name="request">The request scope.</param>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="resultObject">The result object</param>
+        /// <param name="rowDelegate"></param>
+        /// <returns>A List of result objects.</returns>
+        internal IList<T> RunQueryForList<T>(RequestScope request, IDalSession session, 
+                                             object parameterObject, IList<T> resultObject, RowDelegate<T> rowDelegate)
+        {
+            IList<T> list = resultObject;
+
+            using (IDbCommand command = request.IDbCommand)
+            {
+                if (resultObject == null)
+                {
+                    if (_statement.ListClass == null)
+                    {
+                        list = new List<T>();
+                    }
+                    else
+                    {
+                        list = _statement.CreateInstanceOfGenericListClass<T>();
+                    }
+                }
+
+                IDataReader reader = command.ExecuteReader();
+                try
+                {
+                    do
+                    {
+                        if (rowDelegate == null)
+                        {
+                            while (reader.Read())
+                            {
+                                T obj = (T)_resultStrategy.Process(request, ref reader, null);
+                                list.Add(obj);
+                            }
+                        }
+                        else
+                        {
+                            while (reader.Read())
+                            {
+                                T obj = (T)_resultStrategy.Process(request, ref reader, null);
+                                rowDelegate(obj, parameterObject, list);
+                            }
+                        }
+                    }
+                    while (reader.NextResult());
+                }
+                catch
+                {
+                    throw;
+                }
+                finally
+                {
+                    reader.Close();
+                    reader.Dispose();
+                }
+
+                ExecutePostSelect(request);
+                RetrieveOutputParameters(request, session, command, parameterObject);
+            }
+
+            return list;
+        }
 
         /// <summary>
         /// Executes the SQL and and fill a strongly typed collection.
@@ -733,232 +795,208 @@ namespace IBatisNet.DataMapper.MappedStatements
 
             _preparedCommand.Create(request, session, this.Statement, parameterObject);
 
-            using (IDbCommand command = request.IDbCommand)
-            {
-                IDataReader reader = command.ExecuteReader();
-                try 
-                {
-                    while (reader.Read())
-                    {
-                        T obj = (T)_resultStrategy.Process(request, ref reader, null);
-
-                        resultObject.Add(obj);
-                    }
- 			    }
-                catch
-                {
-                    throw;
-                }
-                finally
-                {
-                    reader.Close();
-                    reader.Dispose();
-                }
-
-                ExecutePostSelect( request );
-
-                RetrieveOutputParameters(request, session, command, parameterObject);
-            }
+            RunQueryForList<T>(request, session, parameterObject, resultObject, null);
         }
 
 #endif
-		#endregion
+        #endregion
 
-		#region ExecuteUpdate, ExecuteInsert
+        #region ExecuteUpdate, ExecuteInsert
 
-		/// <summary>
-		/// Execute an update statement. Also used for delete statement.
-		/// Return the number of row effected.
-		/// </summary>
-		/// <param name="session">The session used to execute the statement.</param>
-		/// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-		/// <returns>The number of row effected.</returns>
-		public virtual int ExecuteUpdate(IDalSession session, object parameterObject )
-		{
-			int rows = 0; // the number of rows affected
-			RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
+        /// <summary>
+        /// Execute an update statement. Also used for delete statement.
+        /// Return the number of row effected.
+        /// </summary>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <returns>The number of row effected.</returns>
+        public virtual int ExecuteUpdate(IDalSession session, object parameterObject)
+        {
+            int rows = 0; // the number of rows affected
+            RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
 
-			_preparedCommand.Create( request, session, this.Statement, parameterObject );
-	
-			using ( IDbCommand command = request.IDbCommand )
-			{
-				rows = command.ExecuteNonQuery();
+            _preparedCommand.Create(request, session, this.Statement, parameterObject);
 
-				ExecutePostSelect(request);
+            using (IDbCommand command = request.IDbCommand)
+            {
+                rows = command.ExecuteNonQuery();
 
-				RetrieveOutputParameters(request, session, command, parameterObject);
-			}
+                ExecutePostSelect(request);
 
-			RaiseExecuteEvent();
+                RetrieveOutputParameters(request, session, command, parameterObject);
+            }
 
-			return rows;
-		}
+            RaiseExecuteEvent();
 
-		
-		/// <summary>
-		/// Execute an insert statement. Fill the parameter object with 
-		/// the ouput parameters if any, also could return the insert generated key
-		/// </summary>
-		/// <param name="session">The session</param>
-		/// <param name="parameterObject">The parameter object used to fill the statement.</param>
-		/// <returns>Can return the insert generated key.</returns>
-		public virtual object ExecuteInsert(IDalSession session, object parameterObject )
-		{
-			object generatedKey = null;
-			SelectKey selectKeyStatement = null;
-			RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
+            return rows;
+        }
 
-			if (_statement is Insert)
-			{
-				selectKeyStatement = ((Insert)_statement).SelectKey;
-			}
 
-			if (selectKeyStatement != null && !selectKeyStatement.isAfter)
-			{
-				IMappedStatement mappedStatement = _sqlMap.GetMappedStatement( selectKeyStatement.Id );
-				generatedKey = mappedStatement.ExecuteQueryForObject(session, parameterObject);
+        /// <summary>
+        /// Execute an insert statement. Fill the parameter object with 
+        /// the ouput parameters if any, also could return the insert generated key
+        /// </summary>
+        /// <param name="session">The session</param>
+        /// <param name="parameterObject">The parameter object used to fill the statement.</param>
+        /// <returns>Can return the insert generated key.</returns>
+        public virtual object ExecuteInsert(IDalSession session, object parameterObject)
+        {
+            object generatedKey = null;
+            SelectKey selectKeyStatement = null;
+            RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
 
-				ObjectProbe.SetMemberValue(parameterObject, selectKeyStatement.PropertyName, generatedKey, 
-					request.DataExchangeFactory.ObjectFactory,
+            if (_statement is Insert)
+            {
+                selectKeyStatement = ((Insert)_statement).SelectKey;
+            }
+
+            if (selectKeyStatement != null && !selectKeyStatement.isAfter)
+            {
+                IMappedStatement mappedStatement = _sqlMap.GetMappedStatement(selectKeyStatement.Id);
+                generatedKey = mappedStatement.ExecuteQueryForObject(session, parameterObject);
+
+                ObjectProbe.SetMemberValue(parameterObject, selectKeyStatement.PropertyName, generatedKey,
+                    request.DataExchangeFactory.ObjectFactory,
                     request.DataExchangeFactory.AccessorFactory);
-			}
+            }
 
-			_preparedCommand.Create( request, session, this.Statement, parameterObject );
-			using ( IDbCommand command = request.IDbCommand)
-			{
-				if (_statement is Insert)
-				{
-					command.ExecuteNonQuery();
-				}
+            _preparedCommand.Create(request, session, this.Statement, parameterObject);
+            using (IDbCommand command = request.IDbCommand)
+            {
+                if (_statement is Insert)
+                {
+                    command.ExecuteNonQuery();
+                }
+                // Retrieve output parameter if the result class is specified
                 else if (_statement is Procedure && (_statement.ResultClass != null) &&
-                        _sqlMap.TypeHandlerFactory.IsSimpleType(_statement.ResultClass) )
+                        _sqlMap.TypeHandlerFactory.IsSimpleType(_statement.ResultClass))
                 {
                     IDataParameter returnValueParameter = command.CreateParameter();
                     returnValueParameter.Direction = ParameterDirection.ReturnValue;
                     command.Parameters.Add(returnValueParameter);
-                    
-                    command.ExecuteNonQuery ( );
+
+                    command.ExecuteNonQuery();
                     generatedKey = returnValueParameter.Value;
 
-                    ITypeHandler typeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler ( _statement.ResultClass );
-                    generatedKey = typeHandler.GetDataBaseValue ( generatedKey, _statement.ResultClass );
-				}
-			    else
+                    ITypeHandler typeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(_statement.ResultClass);
+                    generatedKey = typeHandler.GetDataBaseValue(generatedKey, _statement.ResultClass);
+                }
+                else
+                {
+                    generatedKey = command.ExecuteScalar();
+                    if ((_statement.ResultClass != null) &&
+                        _sqlMap.TypeHandlerFactory.IsSimpleType(_statement.ResultClass))
+                    {
+                        ITypeHandler typeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(_statement.ResultClass);
+                        generatedKey = typeHandler.GetDataBaseValue(generatedKey, _statement.ResultClass);
+                    }
+                }
 
-				{
-					generatedKey = command.ExecuteScalar();
-					if ( (_statement.ResultClass!=null) && 
-						_sqlMap.TypeHandlerFactory.IsSimpleType(_statement.ResultClass) )
-					{
-						ITypeHandler typeHandler = _sqlMap.TypeHandlerFactory.GetTypeHandler(_statement.ResultClass);
-						generatedKey = typeHandler.GetDataBaseValue(generatedKey, _statement.ResultClass);
-					}
-				}
-			
-				if (selectKeyStatement != null && selectKeyStatement.isAfter)
-				{
-					IMappedStatement mappedStatement = _sqlMap.GetMappedStatement( selectKeyStatement.Id );
-					generatedKey = mappedStatement.ExecuteQueryForObject(session, parameterObject);
+                if (selectKeyStatement != null && selectKeyStatement.isAfter)
+                {
+                    IMappedStatement mappedStatement = _sqlMap.GetMappedStatement(selectKeyStatement.Id);
+                    generatedKey = mappedStatement.ExecuteQueryForObject(session, parameterObject);
 
-					ObjectProbe.SetMemberValue(parameterObject, selectKeyStatement.PropertyName, generatedKey,
+                    ObjectProbe.SetMemberValue(parameterObject, selectKeyStatement.PropertyName, generatedKey,
                         request.DataExchangeFactory.ObjectFactory,
                         request.DataExchangeFactory.AccessorFactory);
-				}
+                }
 
-				ExecutePostSelect(request);
+                ExecutePostSelect(request);
 
-				RetrieveOutputParameters(request, session, command, parameterObject);
-			}
+                RetrieveOutputParameters(request, session, command, parameterObject);
+            }
 
-			RaiseExecuteEvent();
+            RaiseExecuteEvent();
 
-			return generatedKey;
-		}
+            return generatedKey;
+        }
 
-		#endregion
+        #endregion
 
-		#region ExecuteQueryForMap
-	
-		/// <summary>
-		/// Executes the SQL and retuns all rows selected in a map that is keyed on the property named
-		/// in the keyProperty parameter.  The value at each key will be the value of the property specified
-		/// in the valueProperty parameter.  If valueProperty is null, the entire result object will be entered.
-		/// </summary>
-		/// <param name="session">The session used to execute the statement</param>
-		/// <param name="parameterObject">The object used to set the parameters in the SQL. </param>
-		/// <param name="keyProperty">The property of the result object to be used as the key. </param>
-		/// <param name="valueProperty">The property of the result object to be used as the value (or null)</param>
-		/// <returns>A hashtable of object containing the rows keyed by keyProperty.</returns>
-		///<exception cref="DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
-		public virtual IDictionary ExecuteQueryForMap( IDalSession session, object parameterObject, string keyProperty, string valueProperty )
-		{
-			IDictionary map = new Hashtable();
-			RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
+        #region ExecuteQueryForMap
 
-			_preparedCommand.Create(request, session, this.Statement, parameterObject);
+        /// <summary>
+        /// Executes the SQL and retuns all rows selected in a map that is keyed on the property named
+        /// in the keyProperty parameter.  The value at each key will be the value of the property specified
+        /// in the valueProperty parameter.  If valueProperty is null, the entire result object will be entered.
+        /// </summary>
+        /// <param name="session">The session used to execute the statement</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL. </param>
+        /// <param name="keyProperty">The property of the result object to be used as the key. </param>
+        /// <param name="valueProperty">The property of the result object to be used as the value (or null)</param>
+        /// <returns>A hashtable of object containing the rows keyed by keyProperty.</returns>
+        ///<exception cref="DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
+        public virtual IDictionary ExecuteQueryForMap(IDalSession session, object parameterObject, string keyProperty, string valueProperty)
+        {
+            IDictionary map = new Hashtable();
+            RequestScope request = _statement.Sql.GetRequestScope(this, parameterObject, session);
 
-			map = RunQueryForMap(request, session, parameterObject, keyProperty, valueProperty, null );
-			
-			return map;
-		}
+            _preparedCommand.Create(request, session, this.Statement, parameterObject);
 
-		
-		/// <summary>
-		/// Executes the SQL and retuns all rows selected in a map that is keyed on the property named
-		/// in the keyProperty parameter.  The value at each key will be the value of the property specified
-		/// in the valueProperty parameter.  If valueProperty is null, the entire result object will be entered.
-		/// </summary>
-		/// <param name="request">The request scope.</param>
-		/// <param name="session">The session used to execute the statement</param>
-		/// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-		/// <param name="keyProperty">The property of the result object to be used as the key.</param>
-		/// <param name="valueProperty">The property of the result object to be used as the value (or null)</param>
-		/// <param name="rowDelegate"></param>
-		/// <returns>A hashtable of object containing the rows keyed by keyProperty.</returns>
-		///<exception cref="DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
-		internal IDictionary RunQueryForMap( RequestScope request, 
-			IDalSession session, 
-			object parameterObject, 
-			string keyProperty, 
-			string valueProperty, 
-			DictionaryRowDelegate rowDelegate  )
-		{
-			IDictionary map = new Hashtable();
+            map = RunQueryForMap(request, session, parameterObject, keyProperty, valueProperty, null);
 
-			using (IDbCommand command = request.IDbCommand)
-			{
-			    IDataReader reader = command.ExecuteReader();
-                try 
+            return map;
+        }
+
+
+        /// <summary>
+        /// Executes the SQL and retuns all rows selected in a map that is keyed on the property named
+        /// in the keyProperty parameter.  The value at each key will be the value of the property specified
+        /// in the valueProperty parameter.  If valueProperty is null, the entire result object will be entered.
+        /// </summary>
+        /// <param name="request">The request scope.</param>
+        /// <param name="session">The session used to execute the statement</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="keyProperty">The property of the result object to be used as the key.</param>
+        /// <param name="valueProperty">The property of the result object to be used as the value (or null)</param>
+        /// <param name="rowDelegate"></param>
+        /// <returns>A hashtable of object containing the rows keyed by keyProperty.</returns>
+        ///<exception cref="DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
+        internal IDictionary RunQueryForMap(RequestScope request,
+            IDalSession session,
+            object parameterObject,
+            string keyProperty,
+            string valueProperty,
+            DictionaryRowDelegate rowDelegate)
+        {
+            IDictionary map = new Hashtable();
+
+            using (IDbCommand command = request.IDbCommand)
+            {
+               IDataReader reader = command.ExecuteReader();
+               try
                 {
-					if (rowDelegate == null)
-					{
-						while (reader.Read() )
-						{
+                    
+                   if (rowDelegate == null)
+                    {
+                        while (reader.Read())
+                        {
                             object obj = _resultStrategy.Process(request, ref reader, null);
-							object key = ObjectProbe.GetMemberValue(obj, keyProperty, request.DataExchangeFactory.AccessorFactory);
-							object value = obj;
-							if (valueProperty != null)
-							{
-								value = ObjectProbe.GetMemberValue(obj, valueProperty, request.DataExchangeFactory.AccessorFactory);
-							}
-							map.Add(key, value);
-						}
-					}
-					else
-					{
-						while (reader.Read())
-						{
+                            object key = ObjectProbe.GetMemberValue(obj, keyProperty, request.DataExchangeFactory.AccessorFactory);
+                            object value = obj;
+                            if (valueProperty != null)
+                            {
+                                value = ObjectProbe.GetMemberValue(obj, valueProperty, request.DataExchangeFactory.AccessorFactory);
+                            }
+                            map.Add(key, value);
+                        }
+                    }
+                    else
+                    {
+                        while (reader.Read())
+                        {
                             object obj = _resultStrategy.Process(request, ref reader, null);
-							object key = ObjectProbe.GetMemberValue(obj, keyProperty,request.DataExchangeFactory.AccessorFactory);
-							object value = obj;
-							if (valueProperty != null)
-							{
-								value = ObjectProbe.GetMemberValue(obj, valueProperty, request.DataExchangeFactory.AccessorFactory);
-							}
-							rowDelegate(key, value, parameterObject, map);
+                            object key = ObjectProbe.GetMemberValue(obj, keyProperty, request.DataExchangeFactory.AccessorFactory);
+                            object value = obj;
+                            if (valueProperty != null)
+                            {
+                                value = ObjectProbe.GetMemberValue(obj, valueProperty, request.DataExchangeFactory.AccessorFactory);
+                            }
+                            rowDelegate(key, value, parameterObject, map);
 
-						}
-					}
+                        }
+                    }
                 }
                 catch
                 {
@@ -969,61 +1007,60 @@ namespace IBatisNet.DataMapper.MappedStatements
                     reader.Close();
                     reader.Dispose();
                 }
-			}
-			return map;
+            }
+            return map;
 
-		}
-
-		
-		#endregion
+        }
 
 
-		/// <summary>
-		/// Executes the <see cref="PostBindind"/>.
-		/// </summary>
-		/// <param name="request">The current <see cref="RequestScope"/>.</param>
-		private void ExecutePostSelect(RequestScope request)
-		{
-			while (request.QueueSelect.Count>0)
-			{
-				PostBindind postSelect = request.QueueSelect.Dequeue() as PostBindind;
+        #endregion
 
-				PostSelectStrategyFactory.Get(postSelect.Method).Execute(postSelect, request);
-			}
-		}
-	
 
-		/// <summary>
-		/// Raise an event ExecuteEventArgs
-		/// (Used when a query is executed)
-		/// </summary>
-		private void RaiseExecuteEvent()
-		{
-			ExecuteEventArgs e = new ExecuteEventArgs();
-			e.StatementName = _statement.Id;
-			if (Execute != null)
-			{
-				Execute(this, e);
-			}
-		}
+        /// <summary>
+        /// Executes the <see cref="PostBindind"/>.
+        /// </summary>
+        /// <param name="request">The current <see cref="RequestScope"/>.</param>
+        private void ExecutePostSelect(RequestScope request)
+        {
+            while (request.QueueSelect.Count > 0)
+            {
+                PostBindind postSelect = request.QueueSelect.Dequeue() as PostBindind;
 
-		/// <summary>
-		/// ToString implementation.
-		/// </summary>
-		/// <returns>A string that describes the MappedStatement</returns>
-		public override string ToString() 
-		{
-			StringBuilder buffer = new StringBuilder();
-			buffer.Append("\tMappedStatement: " + this.Id);
-			buffer.Append(Environment.NewLine);
-			if (_statement.ParameterMap != null) buffer.Append(_statement.ParameterMap.Id);
-			if (_statement.ResultMap != null) buffer.Append(_statement.ResultMap.Id);
+                PostSelectStrategyFactory.Get(postSelect.Method).Execute(postSelect, request);
+            }
+        }
 
-			return buffer.ToString();
-		}
-	
 
-		#endregion
+        /// <summary>
+        /// Raise an event ExecuteEventArgs
+        /// (Used when a query is executed)
+        /// </summary>
+        private void RaiseExecuteEvent()
+        {
+            ExecuteEventArgs e = new ExecuteEventArgs();
+            e.StatementName = _statement.Id;
+            if (Execute != null)
+            {
+                Execute(this, e);
+            }
+        }
 
-	}
+        /// <summary>
+        /// ToString implementation.
+        /// </summary>
+        /// <returns>A string that describes the MappedStatement</returns>
+        public override string ToString()
+        {
+            StringBuilder buffer = new StringBuilder();
+            buffer.Append("\tMappedStatement: " + this.Id);
+            buffer.Append(Environment.NewLine);
+            if (_statement.ParameterMap != null) buffer.Append(_statement.ParameterMap.Id);
+
+            return buffer.ToString();
+        }
+
+
+        #endregion
+
+    }
 }

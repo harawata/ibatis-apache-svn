@@ -94,7 +94,9 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Commands\DataReaderDecorator.cs" />
     <Compile Include="Commands\DataReaderTransformer.cs" />
+    <Compile Include="Commands\DbCommandDecorator.cs" />
     <Compile Include="Commands\DefaultPreparedCommand.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -152,12 +154,15 @@
     </Compile>
     <Compile Include="Configuration\ParameterMapping\ParameterPropertyCollection.cs" />
     <Compile Include="Configuration\ResultMapping\ArgumentProperty.cs" />
+    <Compile Include="Configuration\ResultMapping\AutoResultMap.cs" />
     <Compile Include="Configuration\ResultMapping\Discriminator.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Configuration\ResultMapping\IResultMap.cs" />
     <Compile Include="Configuration\ResultMapping\ResultMap.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Configuration\ResultMapping\ResultMapCollection.cs" />
     <Compile Include="Configuration\ResultMapping\ResultProperty.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -77,7 +77,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		[NonSerialized]
 		private string _nestedResultMapName = string.Empty; 
 		[NonSerialized]
-		private ResultMap _nestedResultMap = null;
+		private IResultMap _nestedResultMap = null;
 		[NonSerialized]
 		private string _dbType = null;
 		[NonSerialized]
@@ -281,7 +281,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// A nested ResultMap use to set a property
 		/// </summary>
 		[XmlIgnore]
-		public ResultMap NestedResultMap
+		public IResultMap NestedResultMap
 		{
 			get { return _nestedResultMap; }
 			set { _nestedResultMap = value; }

@@ -39,7 +39,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 
 
 		/// <summary>
-		/// ead-only property describing how many elements are in the Collection.
+		/// Read-only property describing how many elements are in the Collection.
 		/// </summary>
 		public int Count 
 		{
@@ -54,10 +54,18 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// </summary>
 		public ResultPropertyCollection() 
 		{
-			_innerList = new ResultProperty[DEFAULT_CAPACITY];
-			_count = 0;
+            this.Clear();
 		}
 
+        /// <summary>
+        /// Removes all items from the collection.
+        /// </summary>
+        public void Clear()
+        {
+            _innerList = new ResultProperty[DEFAULT_CAPACITY];
+            _count = 0;
+        }
+	    
 		/// <summary>
 		///  Constructs a ResultPropertyCollection with a given initial capacity. 
 		///  The list is initially empty, but will have room for the given number of elements
@@ -140,7 +148,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// <param name="value"></param>
 		public void AddRange(ResultPropertyCollection value) 
 		{
-			for (int i = 0;   i < value.Length; i++) 
+			for (int i = 0;   i < value.Count; i++) 
 			{
 				Add(value[i]);
 			}

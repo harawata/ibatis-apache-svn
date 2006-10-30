@@ -51,7 +51,7 @@ namespace IBatisNet.DataMapper.MappedStatements.ArgumentStrategy
 			object[] parameters = null;
 			bool isParameterFound = false;
 
-		    ResultMap resultMapping = mapping.NestedResultMap.ResolveSubMap(reader);
+		    IResultMap resultMapping = mapping.NestedResultMap.ResolveSubMap(reader);
 
             if (resultMapping.Parameters.Count > 0)
 			{

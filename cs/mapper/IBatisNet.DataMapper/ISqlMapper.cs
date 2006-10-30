@@ -23,6 +23,7 @@
  ********************************************************************************/
 #endregion
 
+using System;
 using System.Collections;
 #if dotnet2
 using System.Collections.Generic;
@@ -128,13 +129,13 @@ namespace IBatisNet.DataMapper
 		/// </summary>
 		/// <param name="name">The name of the result map</param>
 		/// <returns>The ResultMap</returns>
-        ResultMap GetResultMap(string name);
+        IResultMap GetResultMap(string name);
         
         /// <summary>
 		/// Adds a (named) ResultMap
 		/// </summary>
 		/// <param name="resultMap">The ResultMap to add</param>
-        void AddResultMap(ResultMap resultMap);
+        void AddResultMap(IResultMap resultMap);
         
         /// <summary>
 		/// The ParameterMap collection
@@ -432,6 +433,7 @@ namespace IBatisNet.DataMapper
         /// <param name="parameterObject">The object used to set the parameters in the SQL</param>
         /// <param name="pageSize">The maximum number of objects to store in each page</param>
         /// <returns>A PaginatedList of beans containing the rows</returns>
+        [Obsolete("This method will be remove in future version.", false)]
         PaginatedList QueryForPaginatedList(string statementName, object parameterObject, int pageSize);
 
         /// <summary>

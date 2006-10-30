@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * Author : Gilles Bayon
  * iBATIS.NET Data Mapper
@@ -63,7 +63,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		[NonSerialized]
 		private string _resultMapName = string.Empty;
 		[NonSerialized]
-		private ResultMap _resultMap = null;
+		private IResultMap _resultMap = null;
 		#endregion 
 
 		#region Properties
@@ -92,7 +92,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// The resultMap used if the column value is = to the Discriminator Value
 		/// </summary>
 		[XmlIgnore]
-		public ResultMap ResultMap
+		public IResultMap ResultMap
 		{
 			get { return _resultMap; }
 			set { _resultMap = value; }

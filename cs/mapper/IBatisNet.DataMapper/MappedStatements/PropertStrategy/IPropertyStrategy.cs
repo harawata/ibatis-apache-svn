@@ -43,7 +43,7 @@ namespace IBatisNet.DataMapper.MappedStatements.PropertyStrategy
 		/// <param name="target">The target.</param>
 		/// <param name="reader">The reader.</param>
 		/// <param name="keys">The keys</param>
-		void Set(RequestScope request, ResultMap resultMap, 
+		void Set(RequestScope request, IResultMap resultMap, 
 		         ResultProperty mapping, ref object target, 
 		         IDataReader reader, object keys);
 	}

@@ -51,7 +51,11 @@ namespace IBatisNet.DataMapper.Scope
 		/// Empty parameter map
 		/// </summary>
         public const string EMPTY_PARAMETER_MAP = "iBATIS.Empty.ParameterMap";
-	    
+        /// <summary>
+        /// Dot representation.
+        /// </summary>
+        public const string DOT = ".";
+
 		#region Fields
 		
 		private ErrorContext _errorContext = null;
@@ -127,7 +131,7 @@ namespace IBatisNet.DataMapper.Scope
 		public string SqlMapNamespace
 		{
 			set { _sqlMapNamespace = value; }
-			get { return _sqlMapNamespace; }
+            get { return _sqlMapNamespace; }
 		}
 
 		/// <summary>
@@ -264,6 +268,22 @@ namespace IBatisNet.DataMapper.Scope
 
 		#endregion 
 
+        /// <summary>
+        /// Register under Statement Name or Fully Qualified Statement Name
+        /// </summary>
+        /// <param name="id">An Identity</param>
+        /// <returns>The new Identity</returns>
+        public string ApplyNamespace(string id)
+        {
+            string newId = id;
+
+            if (_sqlMapNamespace != null && _sqlMapNamespace.Length > 0
+                && id != null && id.Length > 0 && id.IndexOf(".") < 0)
+            {
+                newId = _sqlMapNamespace + DOT + id;
+            }
+            return newId;
+        }
 
         /// <summary>
         /// Resolves the type handler.

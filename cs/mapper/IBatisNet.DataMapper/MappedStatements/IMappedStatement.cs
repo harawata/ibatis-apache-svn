@@ -32,6 +32,7 @@ using System.Collections.Generic;
 #endif
 using IBatisNet.Common;
 using IBatisNet.DataMapper.Commands;
+using IBatisNet.DataMapper.Configuration.ResultMapping;
 using IBatisNet.DataMapper.Configuration.Statements;
 #endregion
 
@@ -59,15 +60,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 		#region Properties
 
-		/// <summary>
-		/// Gets or sets the <see cref="ReaderAutoMapper"/>.
-		/// </summary>
-		/// <value>The <see cref="ReaderAutoMapper"/>.</value>
-		ReaderAutoMapper ReaderAutoMapper
-		{
-			set;
-			get;
-		}
+
 		/// <summary>
 		/// The IPreparedCommand to use
 		/// </summary>

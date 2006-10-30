@@ -49,11 +49,12 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
         /// <param name="resultObject">The result object.</param>
         public object Process(RequestScope request, ref IDataReader reader, object resultObject)
         {
-			object outObject = resultObject; 
+			object outObject = resultObject;
+            AutoResultMap resultMap = request.CurrentResultMap as AutoResultMap;
 
 			if (outObject == null) 
 			{
-				outObject = request.Statement.CreateInstanceOfResultClass();
+                outObject = resultMap.CreateInstanceOfResultClass();
 			}
 
 			int count = reader.FieldCount;

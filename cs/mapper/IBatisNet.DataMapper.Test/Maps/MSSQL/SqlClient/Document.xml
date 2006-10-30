@@ -72,7 +72,20 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			from Documents 
 			order by Document_Type, Document_Id
 		</select>
-		
+
+    <select id="GetMultipleDocument"
+      resultMap="book, newspaper">
+      select
+      Document_ID, Document_Title, Document_PageNumber
+      from Documents
+      where Document_Type = 'Book';
+
+      select
+      Document_ID, Document_Title, Document_City
+      from Documents
+      where Document_Type = 'Newspaper';
+    </select>
+    
   </statements>
 	
 

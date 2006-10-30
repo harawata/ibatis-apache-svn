@@ -25,7 +25,6 @@
 
 #region Using
 
-using System;
 using System.Collections.Specialized;
 using System.Xml;
 using IBatisNet.Common.Xml;
@@ -48,14 +47,8 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 		/// <returns></returns>
 		public static ResultMap Deserialize(XmlNode node, ConfigurationScope configScope)
 		{
-			ResultMap resultMap = new ResultMap( configScope.DataExchangeFactory );
-
 			NameValueCollection prop = NodeUtils.ParseAttributes(node, configScope.Properties);
-			resultMap.ClassName = prop["class"];
-			resultMap.ExtendMap = prop["extends"];
-			resultMap.Id = prop["id"];
-
-			resultMap.SqlMapNameSpace = configScope.SqlMapNamespace;
+            ResultMap resultMap = new ResultMap(configScope, prop["id"], prop["class"], prop["extends"]);
 
 			configScope.ErrorContext.MoreInfo = "initialize ResultMap";
 

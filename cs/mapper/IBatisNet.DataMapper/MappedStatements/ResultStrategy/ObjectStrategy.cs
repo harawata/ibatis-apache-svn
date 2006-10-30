@@ -39,7 +39,7 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
 
         /// <summary>
         /// Processes the specified <see cref="IDataReader"/> 
-        /// when YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
+        /// when no resultClass or resultMap attribute are specified.
         /// </summary>
         /// <param name="request">The request.</param>
         /// <param name="reader">The reader.</param>

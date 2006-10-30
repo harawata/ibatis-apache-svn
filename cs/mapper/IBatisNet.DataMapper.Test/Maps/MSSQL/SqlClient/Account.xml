@@ -48,8 +48,10 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
        
 	<alias>
 		<typeAlias alias="HundredsBool" type="IBatisNet.DataMapper.Test.Domain.HundredsTypeHandlerCallback, IBatisNet.DataMapper.Test"/>
-	</alias>       
-    <cacheModels>
+    <typeAlias alias="Category2" type="IBatisNet.DataMapper.Test.Domain.Category, IBatisNet.DataMapper.Test"/>
+  </alias>       
+  
+  <cacheModels>
 		<cacheModel id="account-cache" implementation="MEMORY" >
 			<flushInterval hours="24"/>
 			<flushOnExecute  statement="UpdateAccountViaInlineParameters"/>
@@ -72,8 +74,14 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
     </cacheModels>
 
 	
-	<resultMaps>        
-	
+	<resultMaps>
+    
+    <resultMap id="Category-result" class="Category2">
+      <result property="Id" column="Category_ID"/>
+      <result property="Name" column="Category_Name"/>
+      <result property="Guid" column="Category_Guid" nullValue="00000000-0000-0000-0000-000000000000"/>
+    </resultMap>
+    
 		<resultMap id="account-result-constructor"  class="Account" >
 			<constructor>
 				<argument argumentName="identifiant"	column="Account_ID"/>
@@ -148,6 +156,88 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
     ============================================= 
     -->
 	<statements>
+
+    <select id="GetMultipleResultMapAccount"
+				resultMap="account-result, account-result">
+      select
+      Account_ID,
+      Account_FirstName,
+      Account_LastName,
+      Account_Email,
+      Account_Banner_Option,
+      Account_Cart_Option
+      from Accounts
+      where Account_ID = 1;
+      
+      select
+      Account_ID,
+      Account_FirstName,
+      Account_LastName,
+      Account_Email,
+      Account_Banner_Option,
+      Account_Cart_Option
+      from Accounts
+      where Account_ID = 5
+    </select>
+
+    <select id="GetMultipleResultClassAccount" resultClass="Account, Account" >
+      select
+      Account_ID as Id,
+      Account_FirstName as FirstName,
+      Account_LastName as LastName,
+      Account_Email as EmailAddress,
+      Account_Cart_Option as CartOption
+      from Accounts
+      where Account_ID = 1;
+
+      select
+      Account_ID as Id,
+      Account_FirstName as FirstName,
+      Account_LastName as LastName,
+      Account_Email as EmailAddress,
+      Account_Cart_Option as CartOption
+      from Accounts
+      where Account_ID = 5
+    </select >
+
+    <select id="GetMultipleResultMap"
+      resultMap="account-result, Category-result">
+      select
+      Account_ID,
+      Account_FirstName,
+      Account_LastName,
+      Account_Email,
+      Account_Banner_Option,
+      Account_Cart_Option
+      from Accounts
+      where Account_ID = 1;
+
+      select
+      Category_ID,
+      Category_Name,
+      Category_Guid
+      from Categories
+      where Category_ID = 1
+    </select>
+
+
+    <select id="GetMultipleResultClass" resultClass="Account, Category2" >
+      select
+      Account_ID as Id,
+      Account_FirstName as FirstName,
+      Account_LastName as LastName,
+      Account_Email as EmailAddress,
+      Account_Cart_Option as CartOption
+      from Accounts
+      where Account_ID = 1;
+
+      select
+      Category_ID,
+      Category_Name as Name,
+      Category_Guid as Guid
+      from Categories
+      where Category_ID = 1
+    </select >
 
     <select id="JIRA175" parameterClass="Integer"
          resultMap="account-result-joined-document">

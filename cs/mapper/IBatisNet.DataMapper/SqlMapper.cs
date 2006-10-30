@@ -194,109 +194,6 @@ namespace IBatisNet.DataMapper
 
 		#region Methods
 
-		#region Configure
-
-		/// <summary>
-		/// Configure an SqlMap.
-		/// </summary>
-		/// <param name="document">An xml sql map configuration document.</param>
-		/// <returns>the SqlMap</returns>
-		[Obsolete("This method will be remove in next version, use DomSqlMapBuilder.Configure.", false)]
-        static public ISqlMapper Configure(XmlDocument document)
-		{
-			return new DomSqlMapBuilder().Build( document, false );
-		}
-
-		/// <summary>
-		/// Configure an SqlMap from default resource file named SqlMap.config.
-		/// </summary>
-		/// <returns>An SqlMap</returns>
-		/// <remarks>The file path is relative to the application root.</remarks>
-		[Obsolete("This method will be remove in future version, use DomSqlMapBuilder.Configure.", false)]
-        static public ISqlMapper Configure()
-		{
-			return Configure( Resources.GetConfigAsXmlDocument(DomSqlMapBuilder.DEFAULT_FILE_CONFIG_NAME) );
-		}
-
-
-		/// <summary>
-		/// Configure an SqlMap from via a relative ressource path.
-		/// </summary>
-		/// <param name="resource">
-		/// A relative ressource path from your Application root 
-		/// or an absolue file path file:\\c:\dir\a.config
-		/// </param>
-		/// <returns>An SqlMap</returns>
-		[Obsolete("This method will be remove in future version, use DomSqlMapBuilder.Configure.", false)]
-        public static ISqlMapper Configure(string resource)
-		{
-			XmlDocument document = null;
-			if (resource.StartsWith("file://"))
-			{
-				document = Resources.GetUrlAsXmlDocument( resource.Remove(0, 7) );	
-			}
-			else
-			{
-				document = Resources.GetResourceAsXmlDocument( resource );	
-			}
-			return new DomSqlMapBuilder().Build( document, false);
-		}
-
-
-		/// <summary>
-		/// Configure and monitor the default configuration file for modifications 
-		/// and automatically reconfigure SqlMap. 
-		/// </summary>
-		/// <returns>An SqlMap</returns>
-		[Obsolete("This method will be remove in future version, use DomSqlMapBuilder.Configure.", false)]
-        public static ISqlMapper ConfigureAndWatch(ConfigureHandler configureDelegate)
-		{
-			return ConfigureAndWatch( DomSqlMapBuilder.DEFAULT_FILE_CONFIG_NAME, configureDelegate ) ;
-		}
-
-
-		/// <summary>
-		/// Configure and monitor the configuration file for modifications 
-		/// and automatically reconfigure SqlMap. 
-		/// </summary>
-		/// <param name="resource">
-		/// A relative ressource path from your Application root 
-		/// or a absolue file path file:\\c:\dir\a.config
-		/// </param>
-		///<param name="configureDelegate">
-		/// Delegate called when the file has changed, to rebuild the dal.
-		/// </param>
-		/// <returns>An SqlMap</returns>
-		[Obsolete("This method will be remove in future version, use DomSqlMapBuilder.Configure.", false)]
-        public static ISqlMapper ConfigureAndWatch(string resource, ConfigureHandler configureDelegate)
-		{
-			XmlDocument document = null;
-			if (resource.StartsWith("file://"))
-			{
-				document = Resources.GetUrlAsXmlDocument( resource.Remove(0, 7) );	
-			}
-			else
-			{
-				document = Resources.GetResourceAsXmlDocument( resource );	
-			}
-
-			ConfigWatcherHandler.ClearFilesMonitored();
-			ConfigWatcherHandler.AddFileToWatch( Resources.GetFileInfo( resource ) );
-
-			TimerCallback callBakDelegate = new TimerCallback( DomSqlMapBuilder.OnConfigFileChange );
-
-			StateConfig state = new StateConfig();
-			state.FileName = resource;
-			state.ConfigureHandler = configureDelegate;
-
-			new ConfigWatcherHandler( callBakDelegate, state );
-
-			return new DomSqlMapBuilder().Build( document, true );
-		}
-
-
-		#endregion
-
 		#region Manage Connection, Transaction
 		
 		/// <summary>
@@ -1147,6 +1044,7 @@ namespace IBatisNet.DataMapper
 		/// <param name="parameterObject">The object used to set the parameters in the SQL</param>
 		/// <param name="pageSize">The maximum number of objects to store in each page</param>
 		/// <returns>A PaginatedList of beans containing the rows</returns>
+        [Obsolete("This method will be remove in future version.", false)]
 		public PaginatedList QueryForPaginatedList(String statementName, object parameterObject, int pageSize)
 		{
 			IMappedStatement statement = GetMappedStatement(statementName);
@@ -1503,7 +1401,7 @@ namespace IBatisNet.DataMapper
 		/// </summary>
 		/// <param name="name">The name of the result map</param>
 		/// <returns>The ResultMap</returns>
-        public ResultMap GetResultMap(string name) 
+        public IResultMap GetResultMap(string name) 
 		{
 			if (_resultMaps.Contains(name) == false) 
 			{
@@ -1516,7 +1414,7 @@ namespace IBatisNet.DataMapper
 		/// Adds a (named) ResultMap
 		/// </summary>
 		/// <param name="resultMap">The ResultMap to add</param>
-        public void AddResultMap(ResultMap resultMap) 
+        public void AddResultMap(IResultMap resultMap) 
 		{
 			if (_resultMaps.Contains(resultMap.Id) == true) 
 			{

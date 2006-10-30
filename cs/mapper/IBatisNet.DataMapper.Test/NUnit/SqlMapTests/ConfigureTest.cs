@@ -416,7 +416,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
         [Test]
         public void ConfigurationWatcherTestOnSqlMapConfig()
         {
-            string fileName = @"..\..\Maps\MSSQL\SqlClient\Account.xml";
+            //string fileName = @"..\..\Maps\MSSQL\SqlClient\Account.xml";
 
    			ConfigureHandler handler = new ConfigureHandler(MyHandler);
 

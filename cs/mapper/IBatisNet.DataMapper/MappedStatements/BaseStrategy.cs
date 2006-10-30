@@ -51,7 +51,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="resultObject">The result object.</param>
 		/// <returns>Indicates if we have found a row.</returns>
 		protected bool FillObjectWithReaderAndResultMap(RequestScope request,IDataReader reader, 
-		                                                ResultMap resultMap, object resultObject)
+		                                                IResultMap resultMap, object resultObject)
 		{
 			bool dataFound = false;
 

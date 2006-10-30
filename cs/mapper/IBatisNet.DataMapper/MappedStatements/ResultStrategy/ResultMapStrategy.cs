@@ -29,11 +29,11 @@ using IBatisNet.DataMapper.Scope;
 
 namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
 {
-	/// <summary>
-	/// <see cref="IResultStrategy"/> implementation when 
-	/// a 'resultMap' attribute is specified.
-	/// </summary>
-    public sealed class ResultMapStrategy : BaseStrategy, IResultStrategy  
+    /// <summary>
+    /// <see cref="IResultStrategy"/> implementation when 
+    /// a 'resultMap' attribute is specified.
+    /// </summary>
+    public sealed class ResultMapStrategy : BaseStrategy, IResultStrategy
     {
         #region IResultStrategy Members
 
@@ -48,7 +48,7 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
         {
             object outObject = resultObject;
 
-            ResultMap resultMap = request.Statement.ResultMap.ResolveSubMap(reader);
+            IResultMap resultMap = request.CurrentResultMap.ResolveSubMap(reader);
 
             if (outObject == null)
             {
@@ -74,7 +74,7 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
                 property.PropertyStrategy.Set(request, resultMap, property, ref outObject, reader, null);
             }
 
-			return outObject;
+            return outObject;
         }
 
         #endregion

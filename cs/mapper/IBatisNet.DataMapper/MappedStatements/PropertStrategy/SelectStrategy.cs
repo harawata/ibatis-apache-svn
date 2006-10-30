@@ -97,7 +97,7 @@ namespace IBatisNet.DataMapper.MappedStatements.PropertyStrategy
 		/// <param name="target">The target.</param>
 		/// <param name="reader">The reader.</param>
 		/// <param name="selectKeys">The keys</param>
-		public void Set(RequestScope request, ResultMap resultMap, 
+		public void Set(RequestScope request, IResultMap resultMap, 
 			ResultProperty mapping, ref object target, IDataReader reader, object selectKeys)
 		{
 			string paramString = mapping.ColumnName;

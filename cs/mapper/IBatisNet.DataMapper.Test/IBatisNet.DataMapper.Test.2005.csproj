@@ -236,6 +236,7 @@
     <Compile Include="NUnit\SqlMapTests\MSSQL\StatementTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="NUnit\SqlMapTests\MultipleResultTest.cs" />
     <Compile Include="NUnit\SqlMapTests\MySql\StatementGenerate.cs">
       <SubType>Code</SubType>
     </Compile>

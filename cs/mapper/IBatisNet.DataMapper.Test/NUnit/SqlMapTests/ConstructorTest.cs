@@ -104,7 +104,6 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
         [Test]
         public void TestJIRA176()
         {
-
             Category category = new Category();
             category.Name = "toto";
             category.Guid = Guid.Empty;

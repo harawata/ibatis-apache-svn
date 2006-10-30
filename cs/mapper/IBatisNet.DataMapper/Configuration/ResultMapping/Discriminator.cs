@@ -219,7 +219,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// </summary>
 		/// <param name="discriminatorValue">the discriminator value</param>
 		/// <returns>The find ResultMap</returns>
-		public ResultMap GetSubMap(string discriminatorValue)
+		public IResultMap GetSubMap(string discriminatorValue)
 		{
 			return _resultMaps[discriminatorValue] as ResultMap;
 		}

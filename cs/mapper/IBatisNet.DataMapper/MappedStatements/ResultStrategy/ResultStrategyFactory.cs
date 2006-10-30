@@ -23,52 +23,53 @@
  ********************************************************************************/
 #endregion
 
+using IBatisNet.DataMapper.Configuration.ResultMapping;
 using IBatisNet.DataMapper.Configuration.Statements;
 
 namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
 {
-	/// <summary>
-	/// Factory to get <see cref="IResultStrategy"/> implementation.
-	/// </summary>
+    /// <summary>
+    /// Factory to get <see cref="IResultStrategy"/> implementation.
+    /// </summary>
     public sealed class ResultStrategyFactory
     {
-		private static IResultStrategy _resultClassStrategy = null;
-		private static IResultStrategy _resultMapStrategy = null;
-		private static IResultStrategy _objectStrategy = null;
+        private static IResultStrategy _resultClassStrategy = null;
+        private static IResultStrategy _resultMapStrategy = null;
+        private static IResultStrategy _objectStrategy = null;
 
-		/// <summary>
-		/// Initializes the <see cref="ResultStrategyFactory"/> class.
-		/// </summary>
-		static ResultStrategyFactory()
-		{
-			_resultMapStrategy = new ResultMapStrategy();
-			_resultClassStrategy = new ResultClassStrategy();
-			_objectStrategy = new ObjectStrategy();
-		}
+        /// <summary>
+        /// Initializes the <see cref="ResultStrategyFactory"/> class.
+        /// </summary>
+        static ResultStrategyFactory()
+        {
+            _resultMapStrategy = new ResultMapStrategy();
+            _resultClassStrategy = new ResultClassStrategy();
+            _objectStrategy = new ObjectStrategy();
+        }
 
-		/// <summary>
-		/// Finds the <see cref="IResultStrategy"/>.
-		/// </summary>
-		/// <param name="statement">The statement.</param>
-		/// <returns>The <see cref="IResultStrategy"/></returns>
-		public static IResultStrategy Get(IStatement statement)
-		{
-			// If there's an ResultMap, use it
-			if (statement.ResultMap != null) 
-			{
-				return _resultMapStrategy;
-			} 
-			else // else try to use a ResultClass
-			{
-				if (statement.ResultClass != null) 
-				{
-					return _resultClassStrategy;
-				}
-				else
-				{
-					return _objectStrategy;
-				}
-			}
-		}
+        /// <summary>
+        /// Finds the <see cref="IResultStrategy"/>.
+        /// </summary>
+        /// <param name="statement">The statement.</param>
+        /// <returns>The <see cref="IResultStrategy"/></returns>
+        public static IResultStrategy Get(IStatement statement)
+        {
+            // If there's an ResultMap, use it
+            if (statement.ResultsMap.Count > 0)
+            {
+                if (statement.ResultsMap[0] is ResultMap)
+                {
+                    return _resultMapStrategy; 
+                }
+                else // it is an AutoResultMap
+                {
+                    return _resultClassStrategy;
+                }                    
+            }
+            else
+            {
+                return _objectStrategy;
+            }
+        }
     }
 }

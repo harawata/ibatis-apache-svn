@@ -48,14 +48,14 @@ namespace IBatisNet.DataMapper.MappedStatements.PropertyStrategy
 		/// <param name="target">The target.</param>
 		/// <param name="reader">The reader.</param>
 		/// <param name="keys">The keys</param>
-		public void Set(RequestScope request, ResultMap resultMap, 
+		public void Set(RequestScope request, IResultMap resultMap, 
 			ResultProperty mapping, ref object target, IDataReader reader, object keys)
 		{
 			// Creates object
 			object[] parameters = null;
 			bool isParameterFound = false;
 
-            ResultMap resultMapping = mapping.NestedResultMap.ResolveSubMap(reader);
+            IResultMap resultMapping = mapping.NestedResultMap.ResolveSubMap(reader);
 
             if (resultMapping.Parameters.Count > 0)
 			{

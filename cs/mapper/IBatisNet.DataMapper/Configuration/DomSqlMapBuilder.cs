@@ -1153,13 +1153,13 @@ namespace IBatisNet.DataMapper.Configuration
 				MappedStatement mappedStatement;
 
 				statement = StatementDeSerializer.Deserialize(xmlNode, _configScope);
-				statement.CacheModelName = ApplyNamespace( statement.CacheModelName );
-				statement.ParameterMapName = ApplyNamespace( statement.ParameterMapName );
-				statement.ResultMapName = ApplyNamespace( statement.ResultMapName );
+                statement.CacheModelName = _configScope.ApplyNamespace(statement.CacheModelName);
+                statement.ParameterMapName = _configScope.ApplyNamespace(statement.ParameterMapName);
+                //statement.ResultMapName = ApplyNamespace( statement.ResultMapName );
 
 				if (_configScope.UseStatementNamespaces)
 				{
-					statement.Id = ApplyNamespace(statement.Id);
+                    statement.Id = _configScope.ApplyNamespace(statement.Id);
 				}
 				_configScope.ErrorContext.ObjectId = statement.Id;
 				statement.Initialize( _configScope );
@@ -1182,13 +1182,13 @@ namespace IBatisNet.DataMapper.Configuration
 				_configScope.NodeContext = xmlNode; // A select node
 
 				select = SelectDeSerializer.Deserialize(xmlNode, _configScope);
-				select.CacheModelName = ApplyNamespace( select.CacheModelName );
-				select.ParameterMapName = ApplyNamespace( select.ParameterMapName );
-				select.ResultMapName = ApplyNamespace( select.ResultMapName );
+                select.CacheModelName = _configScope.ApplyNamespace(select.CacheModelName);
+                select.ParameterMapName = _configScope.ApplyNamespace(select.ParameterMapName);
+                //select.ResultMapName = ApplyNamespace( select.ResultMapName );
 
 				if (_configScope.UseStatementNamespaces)
 				{
-					select.Id = ApplyNamespace(select.Id);
+                    select.Id = _configScope.ApplyNamespace(select.Id);
 				}
 				_configScope.ErrorContext.ObjectId = select.Id;
 				
@@ -1226,13 +1226,13 @@ namespace IBatisNet.DataMapper.Configuration
 				MappedStatement mappedStatement;
 
 				insert = InsertDeSerializer.Deserialize(xmlNode, _configScope);
-				insert.CacheModelName = ApplyNamespace( insert.CacheModelName );
-				insert.ParameterMapName = ApplyNamespace( insert.ParameterMapName );
-				insert.ResultMapName = ApplyNamespace( insert.ResultMapName );
+                insert.CacheModelName = _configScope.ApplyNamespace(insert.CacheModelName);
+                insert.ParameterMapName = _configScope.ApplyNamespace(insert.ParameterMapName);
+                //insert.ResultMapName = ApplyNamespace( insert.ResultMapName );
 
 				if (_configScope.UseStatementNamespaces)
 				{
-					insert.Id = ApplyNamespace(insert.Id);
+                    insert.Id = _configScope.ApplyNamespace(insert.Id);
 				}
 				_configScope.ErrorContext.ObjectId = insert.Id;
 				insert.Initialize( _configScope );
@@ -1289,13 +1289,13 @@ namespace IBatisNet.DataMapper.Configuration
 				MappedStatement mappedStatement;
 
 				update = UpdateDeSerializer.Deserialize(xmlNode, _configScope);
-				update.CacheModelName = ApplyNamespace( update.CacheModelName );
-				update.ParameterMapName = ApplyNamespace( update.ParameterMapName );
-				update.ResultMapName = ApplyNamespace( update.ResultMapName );
+                update.CacheModelName = _configScope.ApplyNamespace(update.CacheModelName);
+                update.ParameterMapName = _configScope.ApplyNamespace(update.ParameterMapName);
+                //update.ResultMapName = ApplyNamespace( update.ResultMapName );
 
 				if (_configScope.UseStatementNamespaces)
 				{
-					update.Id = ApplyNamespace(update.Id);
+                    update.Id = _configScope.ApplyNamespace(update.Id);
 				}
 				_configScope.ErrorContext.ObjectId = update.Id;
 				update.Initialize( _configScope );
@@ -1327,13 +1327,13 @@ namespace IBatisNet.DataMapper.Configuration
 				MappedStatement mappedStatement;
 
 				delete = DeleteDeSerializer.Deserialize(xmlNode, _configScope);
-				delete.CacheModelName = ApplyNamespace( delete.CacheModelName );
-				delete.ParameterMapName = ApplyNamespace( delete.ParameterMapName );
-				delete.ResultMapName = ApplyNamespace( delete.ResultMapName );
+                delete.CacheModelName = _configScope.ApplyNamespace(delete.CacheModelName);
+                delete.ParameterMapName = _configScope.ApplyNamespace(delete.ParameterMapName);
+                //delete.ResultMapName = ApplyNamespace( delete.ResultMapName );
 
 				if (_configScope.UseStatementNamespaces)
 				{
-					delete.Id = ApplyNamespace(delete.Id);
+                    delete.Id = _configScope.ApplyNamespace(delete.Id);
 				}
 				_configScope.ErrorContext.ObjectId = delete.Id;
 				delete.Initialize( _configScope );
@@ -1366,13 +1366,13 @@ namespace IBatisNet.DataMapper.Configuration
 				MappedStatement mappedStatement;
 
 				procedure = ProcedureDeSerializer.Deserialize(xmlNode, _configScope);
-				procedure.CacheModelName = ApplyNamespace( procedure.CacheModelName );
-				procedure.ParameterMapName = ApplyNamespace( procedure.ParameterMapName );
-				procedure.ResultMapName = ApplyNamespace( procedure.ResultMapName );
+                procedure.CacheModelName = _configScope.ApplyNamespace(procedure.CacheModelName);
+                procedure.ParameterMapName = _configScope.ApplyNamespace(procedure.ParameterMapName);
+                //procedure.ResultMapName = ApplyNamespace( procedure.ResultMapName );
 
 				if (_configScope.UseStatementNamespaces)
 				{
-					procedure.Id = ApplyNamespace(procedure.Id);
+                    procedure.Id = _configScope.ApplyNamespace(procedure.Id);
 				}
 				_configScope.ErrorContext.ObjectId = procedure.Id;
 				procedure.Initialize( _configScope );
@@ -1397,7 +1397,7 @@ namespace IBatisNet.DataMapper.Configuration
 				foreach (XmlNode xmlNode in _configScope.SqlMapDocument.SelectNodes( ApplyMappingNamespacePrefix(XML_CACHE_MODEL), _configScope.XmlNamespaceManager))
 				{
 					cacheModel = CacheModelDeSerializer.Deserialize(xmlNode, _configScope);
-					cacheModel.Id = ApplyNamespace( cacheModel.Id );
+                    cacheModel.Id = _configScope.ApplyNamespace(cacheModel.Id);
 
 					// Attach ExecuteEventHandler
 					foreach(XmlNode flushOn in xmlNode.SelectNodes( ApplyMappingNamespacePrefix(XML_FLUSH_ON_EXECUTE), _configScope.XmlNamespaceManager  ))
@@ -1405,7 +1405,7 @@ namespace IBatisNet.DataMapper.Configuration
 						string statementName = flushOn.Attributes["statement"].Value;
 						if (_configScope.UseStatementNamespaces)
 						{
-							statementName = ApplyNamespace( statementName ); 
+                            statementName = _configScope.ApplyNamespace(statementName); 
 						}
 
 						// delay registering statements to cache model until all sqlMap files have been processed
@@ -1731,7 +1731,7 @@ namespace IBatisNet.DataMapper.Configuration
 			_configScope.ErrorContext.MoreInfo = "build ParameterMap";
 
 			// Get the parameterMap id
-			string id = ApplyNamespace( (parameterMapNode.Attributes.GetNamedItem("id")).Value );
+            string id = _configScope.ApplyNamespace((parameterMapNode.Attributes.GetNamedItem("id")).Value);
 			_configScope.ErrorContext.ObjectId = id;
 
 			// Did we already process it ?
@@ -1739,9 +1739,9 @@ namespace IBatisNet.DataMapper.Configuration
 			{
 				parameterMap = ParameterMapDeSerializer.Deserialize(parameterMapNode, _configScope);
 
-				parameterMap.Id = ApplyNamespace( parameterMap.Id );
+                parameterMap.Id = _configScope.ApplyNamespace(parameterMap.Id);
 				string attributeExtendMap = parameterMap.ExtendMap;
-				parameterMap.ExtendMap = ApplyNamespace( parameterMap.ExtendMap );
+                parameterMap.ExtendMap = _configScope.ApplyNamespace(parameterMap.ExtendMap);
 
 				if (parameterMap.ExtendMap.Length >0)
 				{
@@ -1793,21 +1793,20 @@ namespace IBatisNet.DataMapper.Configuration
 
 			_configScope.ErrorContext.MoreInfo = "build ResultMap";
 
-			string id = ApplyNamespace(  (resultMapNode.Attributes.GetNamedItem("id")).Value );
+            string id = _configScope.ApplyNamespace((resultMapNode.Attributes.GetNamedItem("id")).Value);
 			_configScope.ErrorContext.ObjectId = id;
 
 			// Did we alredy process it
 			if (_configScope.SqlMapper.ResultMaps.Contains( id ) == false)
 			{
 				resultMap =  ResultMapDeSerializer.Deserialize( resultMapNode, _configScope );
-				
-				resultMap.Id = ApplyNamespace( resultMap.Id );
+
 				string attributeExtendMap = resultMap.ExtendMap;
-				resultMap.ExtendMap = ApplyNamespace( resultMap.ExtendMap );
+                resultMap.ExtendMap = _configScope.ApplyNamespace(resultMap.ExtendMap);
 
 				if (resultMap.ExtendMap!=null && resultMap.ExtendMap.Length >0)
 				{
-					ResultMap superMap;
+					IResultMap superMap;
 					// Did we already build Extend ResultMap?
 					if (_configScope.SqlMapper.ResultMaps.Contains( resultMap.ExtendMap ) == false)
 					{
@@ -1835,32 +1834,12 @@ namespace IBatisNet.DataMapper.Configuration
 					{
 						ResultProperty property = superMap.Properties[index].Clone();
                         property.Initialize(_configScope, resultMap.Class);
-						resultMap.AddResultPropery(property);
+						resultMap.Properties.Add(property);
 					}
 				}
 				_configScope.SqlMapper.AddResultMap( resultMap );
 			}
 		 }
-
-
-		/// <summary>
-		/// Register under Statement Name or Fully Qualified Statement Name
-		/// </summary>
-		/// <param name="id">An Identity</param>
-		/// <returns>The new Identity</returns>
-		private string ApplyNamespace(string id) 
-		{
-			string newId = id;
-			string currentNamespace = _configScope.SqlMapNamespace;
-
-			if (currentNamespace != null && currentNamespace.Length > 0 
-				&& id != null && id.Length>0 && id.IndexOf(".") < 0) 
-			{
-				newId = currentNamespace + DOT + id;
-			}
-			return newId;
-		}
-
 
 
 		/// <summary>

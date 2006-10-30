@@ -24,12 +24,14 @@
  ********************************************************************************/
 #endregion
 
-#region Imports
+#region Using
+
 using System;
 using System.Collections;
 #if dotnet2
 using System.Collections.Generic;
 #endif
+
 using System.Data;
 
 using IBatisNet.DataMapper.Configuration.ResultMapping;
@@ -40,131 +42,126 @@ using IBatisNet.DataMapper.Configuration.Sql;
 
 namespace IBatisNet.DataMapper.Configuration.Statements
 {
-	/// <summary>
-	/// Summary description for ISql.
-	/// </summary>
-	public interface IStatement
-	{
-		
-		#region Properties
+    /// <summary>
+    /// Summary description for ISql.
+    /// </summary>
+    public interface IStatement
+    {
 
-		/// <summary>
-		/// Allow remapping of dynamic SQL
-		/// </summary>
-		bool RemapResults
-		{
-			get;
-			set;
-		}
+        #region Properties
 
-		/// <summary>
-		/// Identifier used to identify the statement amongst the others.
-		/// </summary>
-		string Id 
-		{
-			get;
-			set;
-		}
+        /// <summary>
+        /// Allow remapping of dynamic SQL
+        /// </summary>
+        bool AllowRemapping
+        {
+            get;
+            set;
+        }
 
-		/// <summary>
-		/// The type of the statement (text or procedure).
-		/// </summary>
-		CommandType CommandType 
-		{
-			get;
-		}
+        /// <summary>
+        /// Identifier used to identify the statement amongst the others.
+        /// </summary>
+        string Id
+        {
+            get;
+            set;
+        }
 
-		/// <summary>
-		/// Extend statement attribute
-		/// </summary>
-		string ExtendStatement
-		{
-			get;
-			set;
-		}
+        /// <summary>
+        /// The type of the statement (text or procedure).
+        /// </summary>
+        CommandType CommandType
+        {
+            get;
+        }
 
-		/// <summary>
-		/// The sql statement to execute.
-		/// </summary>
-		ISql Sql 
-		{
-			get;
-			set;
-		}
+        /// <summary>
+        /// Extend statement attribute
+        /// </summary>
+        string ExtendStatement
+        {
+            get;
+            set;
+        }
 
-		/// <summary>
-		/// The ResultMap used by the statement.
-		/// </summary>
-		ResultMap ResultMap
-		{
-			get;
-		}
+        /// <summary>
+        /// The sql statement to execute.
+        /// </summary>
+        ISql Sql
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The ResultMaps used by the statement.
+        /// </summary>
+        ResultMapCollection ResultsMap
+        {
+            get;
+        }
 
 
-		/// <summary>
-		/// The parameterMap used by the statement.
-		/// </summary>
-		ParameterMap ParameterMap
-		{
-			get;
-			set;
-		}
+        /// <summary>
+        /// The parameterMap used by the statement.
+        /// </summary>
+        ParameterMap ParameterMap
+        {
+            get;
+            set;
+        }
 
-		/// <summary>
-		/// The CacheModel used by this statement.
-		/// </summary>
-		CacheModel CacheModel
-		{
-			get;
-			set;
-		}
+        /// <summary>
+        /// The CacheModel used by this statement.
+        /// </summary>
+        CacheModel CacheModel
+        {
+            get;
+            set;
+        }
 
-		/// <summary>
-		/// The CacheModel name to use.
-		/// </summary>
-		string CacheModelName
-		{
-			get;
-			set;
-		}
+        /// <summary>
+        /// The CacheModel name to use.
+        /// </summary>
+        string CacheModelName
+        {
+            get;
+            set;
+        }
 
-		/// <summary>
-		/// The list class type to use for strongly typed collection.
-		/// </summary>
-		Type ListClass
-		{
-			get;
-		}
+        /// <summary>
+        /// The list class type to use for strongly typed collection.
+        /// </summary>
+        Type ListClass
+        {
+            get;
+        }
 
-		/// <summary>
-		/// The result class type to used.
-		/// </summary>
-		Type ResultClass
-		{
-			get;
-		}
+        /// <summary>
+        /// The result class type to used.
+        /// </summary>
+        Type ResultClass
+        {
+            get;
+        }
 
-		/// <summary>
-		/// The parameter class type to used.
-		/// </summary>
-		Type ParameterClass
-		{
-			get;
-		}
-		#endregion
+        /// <summary>
+        /// The parameter class type to used.
+        /// </summary>
+        Type ParameterClass
+        {
+            get;
+        }
+        #endregion
 
-		#region Methods
-		/// <summary>
-		/// Create an instance of result class.
-		/// </summary>
-		/// <returns>An object.</returns>
-		object CreateInstanceOfResultClass();
+        #region Methods
 
-		/// <summary>
-		/// Create an instance of 'IList' class.
-		/// </summary>
-		/// <returns>An object which implement IList.</returns>
-		IList CreateInstanceOfListClass();
+        /// <summary>
+        /// Create an instance of 'IList' class.
+        /// </summary>
+        /// <returns>An object which implement IList.</returns>
+        IList CreateInstanceOfListClass();
 #if dotnet2
         /// <summary>
         /// Create an instance of a generic 'IList' class.
@@ -172,7 +169,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
         /// <returns>An object which implement IList.</returns>
         IList<T> CreateInstanceOfGenericListClass<T>();
 #endif
-		#endregion
+        #endregion
 
-	}
+    }
 }

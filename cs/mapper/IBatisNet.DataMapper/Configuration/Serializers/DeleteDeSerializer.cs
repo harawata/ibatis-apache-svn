@@ -59,7 +59,7 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 			delete.ParameterMapName = NodeUtils.GetStringAttribute(prop, "parameterMap");
 			delete.ResultClassName = NodeUtils.GetStringAttribute(prop, "resultClass");
 			delete.ResultMapName = NodeUtils.GetStringAttribute(prop, "resultMap");
-			delete.RemapResults = NodeUtils.GetBooleanAttribute(prop, "remapResults", false); 
+			delete.AllowRemapping = NodeUtils.GetBooleanAttribute(prop, "remapResults", false); 
 
 			int count = node.ChildNodes.Count;
 			for(int i=0;i<count;i++)
