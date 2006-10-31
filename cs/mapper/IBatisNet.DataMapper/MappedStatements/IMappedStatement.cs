@@ -113,6 +113,38 @@ namespace IBatisNet.DataMapper.MappedStatements
 
 		#endregion
 
+        #region ExecuteQueryForMap .NET 2.0
+#if dotnet2
+        /// <summary>
+        /// Executes the SQL and retuns all rows selected in a map that is keyed on the property named
+        /// in the keyProperty parameter.  The value at each key will be the value of the property specified
+        /// in the valueProperty parameter.  If valueProperty is null, the entire result object will be entered.
+        /// </summary>
+        /// <param name="session">The session used to execute the statement</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL. </param>
+        /// <param name="keyProperty">The property of the result object to be used as the key. </param>
+        /// <param name="valueProperty">The property of the result object to be used as the value (or null)</param>
+        /// <returns>A IDictionary of object containing the rows keyed by keyProperty.</returns>
+        ///<exception cref="IBatisNet.DataMapper.Exceptions.DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
+        IDictionary<K, V> ExecuteQueryForDictionary<K, V>(IDalSession session, object parameterObject, string keyProperty, string valueProperty);
+
+        /// <summary>
+        /// Runs a query with a custom object that gets a chance 
+        /// to deal with each row as it is processed.
+        /// </summary>
+        /// <param name="session">The session used to execute the statement</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL. </param>
+        /// <param name="keyProperty">The property of the result object to be used as the key. </param>
+        /// <param name="valueProperty">The property of the result object to be used as the value (or null)</param>
+        /// <param name="rowDelegate">A delegate called once per row in the QueryForDictionary method</param>
+        /// <returns>A hashtable of object containing the rows keyed by keyProperty.</returns>
+        /// <exception cref="IBatisNet.DataMapper.Exceptions.DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
+        IDictionary<K, V> ExecuteQueryForDictionary<K, V>(IDalSession session, object parameterObject, string keyProperty, string valueProperty, DictionaryRowDelegate<K, V> rowDelegate);
+
+
+#endif
+        #endregion
+
 		#region ExecuteUpdate
 
 		/// <summary>
@@ -287,5 +319,7 @@ namespace IBatisNet.DataMapper.MappedStatements
         IList<T> ExecuteQueryForRowDelegate<T>(IDalSession session, object parameterObject, RowDelegate<T> rowDelegate);
 #endif
         #endregion
+	    
+	    
     }
 }

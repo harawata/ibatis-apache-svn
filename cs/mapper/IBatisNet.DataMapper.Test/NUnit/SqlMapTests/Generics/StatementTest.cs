@@ -530,6 +530,89 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Generics
         }
 
         #endregion
+
+        #region QueryForDictionary
+        /// <summary>
+        /// Test ExecuteQueryForDictionary 
+        /// </summary>
+        [Test]
+        public void TestExecuteQueryForDictionary()
+        {
+            IDictionary<string, Account> map = sqlMap.QueryForDictionary<string, Account>("GetAllAccountsViaResultClass", null, "FirstName");
+
+            Assert.AreEqual(5, map.Count);
+            AssertAccount1(map["Joe"]);
+
+            Assert.AreEqual(1, map["Joe"].Id);
+            Assert.AreEqual(2, map["Averel"].Id);
+            Assert.AreEqual(3, map["William"].Id);
+            Assert.AreEqual(4, map["Jack"].Id);
+            Assert.AreEqual(5, map["Gilles"].Id);
+        }
+
+        /// <summary>
+        /// Test ExecuteQueryForDictionary With Cache.
+        /// </summary>
+        [Test]
+        public void TestExecuteQueryQueryForDictionaryWithCache()
+        {
+            IDictionary<string, Account> map = sqlMap.QueryForDictionary<string, Account>("GetAllAccountsCache", null, "FirstName");
+
+            int firstId = HashCodeProvider.GetIdentityHashCode(map);
+
+            Assert.AreEqual(5, map.Count);
+            AssertAccount1(map["Joe"]);
+
+            Assert.AreEqual(1, map["Joe"].Id);
+            Assert.AreEqual(2, map["Averel"].Id);
+            Assert.AreEqual(3, map["William"].Id);
+            Assert.AreEqual(4, map["Jack"].Id);
+            Assert.AreEqual(5, map["Gilles"].Id);
+
+            map = sqlMap.QueryForDictionary<string, Account>("GetAllAccountsCache", null, "FirstName");
+
+            int secondId = HashCodeProvider.GetIdentityHashCode(map);
+
+            Assert.AreEqual(firstId, secondId);
+        }
+
+        /// <summary>
+        /// Test ExecuteQueryForMap : Hashtable.
+        /// </summary>
+        /// <remarks>
+        /// If the keyProperty is an integer, you must acces the map
+        /// by map[integer] and not by map["integer"]
+        /// </remarks>
+        [Test]
+        public void TestExecuteQueryForDictionary2()
+        {
+            IDictionary<string, Order> map = sqlMap.QueryForDictionary<string, Order>("GetAllOrderWithLineItems", null, "PostalCode");
+
+            Assert.AreEqual(11, map.Count);
+            Order order = map["T4H 9G4"];
+
+            Assert.AreEqual(2, order.LineItemsIList.Count);
+        }
+
+        /// <summary>
+        /// Test ExecuteQueryForMap with value property :
+        /// "FirstName" as key, "EmailAddress" as value
+        /// </summary>
+        [Test]
+        public void TestExecuteQueryForDictionaryWithValueProperty()
+        {
+            IDictionary<string, string> map = sqlMap.QueryForDictionary<string, string>("GetAllAccountsViaResultClass", null, "FirstName", "EmailAddress");
+
+            Assert.AreEqual(5, map.Count);
+
+            Assert.AreEqual("Joe.Dalton@somewhere.com", map["Joe"]);
+            Assert.AreEqual("Averel.Dalton@somewhere.com", map["Averel"]);
+            Assert.IsNull(map["William"]);
+            Assert.AreEqual("Jack.Dalton@somewhere.com", map["Jack"]);
+            Assert.AreEqual("gilles.bayon@nospam.org", map["Gilles"]);
+        }
+
+        #endregion
     }
 }
 

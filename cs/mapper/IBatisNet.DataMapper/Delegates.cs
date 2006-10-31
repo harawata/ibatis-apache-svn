@@ -32,9 +32,6 @@ using System.Collections.Generic;
 
 namespace IBatisNet.DataMapper
 {
-    //public class Delegates
-    //{
-    //}
     
     /// <summary>
     /// A delegate called once per row in the QueryWithRowDelegate method
@@ -52,6 +49,15 @@ namespace IBatisNet.DataMapper
     /// <param name="parameterObject">The optional parameter object passed into the QueryWithRowDelegate method.</param>
     /// <param name="list">The IList that will be returned to the caller.</param>
     public delegate void RowDelegate<T>(object obj, object parameterObject, IList<T> list);
+
+    /// <summary>
+    /// A delegate called once per row in the QueryForMapWithRowDelegate method
+    /// </summary>
+    /// <param name="key"></param>
+    /// <param name="value"></param>
+    /// <param name="parameterObject">The optional parameter object passed into the QueryForMapWithRowDelegate method.</param>
+    /// <param name="dictionary">The IDictionary that will be returned to the caller.</param>
+    public delegate void DictionaryRowDelegate<K, V>(K key, V value, object parameterObject, IDictionary<K, V> dictionary);
 #endif
 
     /// <summary>

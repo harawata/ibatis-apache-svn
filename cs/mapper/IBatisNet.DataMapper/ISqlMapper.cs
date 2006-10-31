@@ -364,6 +364,7 @@ namespace IBatisNet.DataMapper
         /// <returns>A List of result objects.</returns>
         IList QueryForList(string statementName, object parameterObject, int skipResults, int maxResults);
 
+
         /// <summary>
         ///  Executes the SQL and retuns all rows selected in a map that is keyed on the property named
         ///  in the keyProperty parameter.  The value at each key will be the entire result object.
@@ -373,7 +374,7 @@ namespace IBatisNet.DataMapper
         /// <param name="keyProperty">The property of the result object to be used as the key.</param>
         /// <returns>A IDictionary (Hashtable) of object containing the rows keyed by keyProperty.</returns>
         IDictionary QueryForMap(string statementName, object parameterObject, string keyProperty);
-
+        
         /// <summary>
         /// Executes the SQL and retuns all rows selected in a map that is keyed on the property named
         /// in the keyProperty parameter.  The value at each key will be the value of the property specified
@@ -386,7 +387,7 @@ namespace IBatisNet.DataMapper
         /// <returns>A IDictionary (Hashtable) of object containing the rows keyed by keyProperty.</returns>
         ///<exception cref="DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
         IDictionary QueryForMap(string statementName, object parameterObject, string keyProperty, string valueProperty);
-
+       
         /// <summary>
         /// Runs a query with a custom object that gets a chance to deal 
         /// with each row as it is processed.
@@ -476,6 +477,46 @@ namespace IBatisNet.DataMapper
 
 #if dotnet2
 
+        /// <summary>
+        /// Executes the SQL and retuns all rows selected in a map that is keyed on the property named
+        /// in the keyProperty parameter.  The value at each key will be the value of the property specified
+        /// in the valueProperty parameter.  If valueProperty is null, the entire result object will be entered.
+        /// </summary>
+        /// <param name="statementName">The name of the sql statement to execute.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="keyProperty">The property of the result object to be used as the key.</param>
+        /// <param name="valueProperty">The property of the result object to be used as the value (or null)</param>
+        /// <returns>A IDictionary of object containing the rows keyed by keyProperty.</returns>
+        ///<exception cref="DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
+        IDictionary<K, V> QueryForDictionary<K, V>(string statementName, object parameterObject, string keyProperty, string valueProperty);
+
+        
+        /// <summary>
+        ///  Executes the SQL and retuns all rows selected in a map that is keyed on the property named
+        ///  in the keyProperty parameter.  The value at each key will be the entire result object.
+        /// </summary>
+        /// <param name="statementName">The name of the sql statement to execute.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="keyProperty">The property of the result object to be used as the key.</param>
+        /// <returns>A IDictionary of object containing the rows keyed by keyProperty.</returns>
+        IDictionary<K, V> QueryForDictionary<K, V>(string statementName, object parameterObject, string keyProperty);
+
+        /// <summary>
+        /// Runs a query with a custom object that gets a chance to deal 
+        /// with each row as it is processed.
+        /// <p/>
+        ///  The parameter object is generally used to supply the input
+        /// data for the WHERE clause parameter(s) of the SELECT statement.
+        /// </summary>
+        /// <param name="statementName">The name of the sql statement to execute.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="keyProperty">The property of the result object to be used as the key.</param>
+        /// <param name="valueProperty">The property of the result object to be used as the value (or null)</param>
+        /// <param name="rowDelegate"A delegate called once per row in the QueryForDictionary method></param>
+        /// <returns>A IDictionary (Hashtable) of object containing the rows keyed by keyProperty.</returns>
+        ///<exception cref="DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
+        IDictionary<K, V> QueryForDictionary<K, V>(string statementName, object parameterObject, string keyProperty, string valueProperty, DictionaryRowDelegate<K, V> rowDelegate);
+                
         /// <summary>
         /// Executes a Sql SELECT statement that returns a single object of the type of the
         /// resultObject parameter.
