@@ -46,5 +46,15 @@ namespace IBatisNet.DataMapper.MappedStatements.PropertyStrategy
 		void Set(RequestScope request, IResultMap resultMap, 
 		         ResultProperty mapping, ref object target, 
 		         IDataReader reader, object keys);
+
+
+        /// <summary>
+        /// Gets the value of the specified <see cref="ResultProperty"/> that must be set on the target object.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="resultMap">The result map.</param>
+        /// <param name="mapping">The mapping.</param>
+        /// <param name="reader">The reader.</param>
+        object Get(RequestScope request, IResultMap resultMap, ResultProperty mapping, IDataReader reader);
 	}
 }

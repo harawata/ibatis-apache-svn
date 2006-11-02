@@ -166,7 +166,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
         public void TestExecuteQueryForObjectViaHashtable()
         {
             Hashtable param = new Hashtable();
-            param.Add("LineItem_ID", 2);
+            param.Add("LineItem_ID", 4);
             param.Add("Order_ID", 9);
 
             LineItem testItem = sqlMap.QueryForObject("GetSpecificLineItem", param) as LineItem;
@@ -531,12 +531,12 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
         [Test]
         public void TestQueryForListWithListClass()
         {
-            LineItemCollection linesItem = sqlMap.QueryForList("GetLineItemsForOrderWithListClass", 10) as LineItemCollection;
+            LineItemCollection linesItem = sqlMap.QueryForList("GetLineItemsForOrderWithListClass", 6) as LineItemCollection;
 
             Assert.IsNotNull(linesItem);
             Assert.AreEqual(2, linesItem.Count);
-            Assert.AreEqual("ESM-34", linesItem[0].Code);
-            Assert.AreEqual("QSM-98", linesItem[1].Code);
+            Assert.AreEqual("ASM-45", linesItem[0].Code);
+            Assert.AreEqual("QSM-39", linesItem[1].Code);
         }
 
         /// <summary>
@@ -828,7 +828,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
         {
             LineItem item = new LineItem();
 
-            item.Id = 10;
+            item.Id = 350;
             item.Code = "blah";
             item.Order = new Order();
             item.Order.Id = 9;
@@ -842,10 +842,10 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             Hashtable param = new Hashtable();
             param.Add("Order_ID", 9);
-            param.Add("LineItem_ID", 10);
+            param.Add("LineItem_ID", 350);
             LineItem testItem = (LineItem)sqlMap.QueryForObject("GetSpecificLineItem", param);
             Assert.IsNotNull(testItem);
-            Assert.AreEqual(10, testItem.Id);
+            Assert.AreEqual(350, testItem.Id);
         }
 
         /// <summary>
@@ -1151,7 +1151,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
         {
             int rowNumber = sqlMap.Delete("DeleteWithComments", null);
 
-            Assert.IsTrue(rowNumber == 4);
+            Assert.IsTrue(rowNumber == 3);
         }
 
         /// <summary>

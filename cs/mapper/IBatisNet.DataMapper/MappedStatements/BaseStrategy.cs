@@ -23,17 +23,9 @@
  ********************************************************************************/
 #endregion
 
-using System;
-using System.Collections;
 using System.Data;
-using System.Reflection;
-using IBatisNet.Common;
-using IBatisNet.Common.Utilities.Objects;
-using IBatisNet.DataMapper.Commands;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
-using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.Scope;
-using IBatisNet.DataMapper.TypeHandlers;
 
 namespace IBatisNet.DataMapper.MappedStatements
 {

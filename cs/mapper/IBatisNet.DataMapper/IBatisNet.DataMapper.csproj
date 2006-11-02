@@ -1028,12 +1028,22 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "MappedStatements\ResultStrategy\GroupByStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "MappedStatements\ResultStrategy\IResultStrategy.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "MappedStatements\ResultStrategy\ListStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MappedStatements\ResultStrategy\MapStrategy.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

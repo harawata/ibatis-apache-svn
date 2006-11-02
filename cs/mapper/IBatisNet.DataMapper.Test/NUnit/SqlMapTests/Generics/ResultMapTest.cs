@@ -63,7 +63,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Generics
 
             // Check generic IList collection
             Assert.IsNotNull(order.LineItemsGenericList);
-            Assert.AreEqual(2, order.LineItemsGenericList.Count);
+            Assert.AreEqual(3, order.LineItemsGenericList.Count);
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Generics
 
             // Check generic IList collection
             Assert.IsNotNull(order.LineItemsGenericList);
-            Assert.AreEqual(2, order.LineItemsGenericList.Count);
+            Assert.AreEqual(3, order.LineItemsGenericList.Count);
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Generics
 
             // Check generic collection
             Assert.IsNotNull(order.LineItemsGenericList);
-            Assert.AreEqual(2, order.LineItemsGenericList.Count);
+            Assert.AreEqual(3, order.LineItemsGenericList.Count);
             LineItemCollection2 lines = (LineItemCollection2)order.LineItemsGenericList;
         }
 
@@ -111,7 +111,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Generics
             AssertOrder1(order);
 
             Assert.IsNotNull(order.LineItemsGenericList);
-            Assert.AreEqual(2, order.LineItemsGenericList.Count);
+            Assert.AreEqual(3, order.LineItemsGenericList.Count);
             LineItemCollection2 lines = (LineItemCollection2)order.LineItemsGenericList;
         }
 
@@ -127,7 +127,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Generics
             AssertOrder1(order);
 
             Assert.IsNotNull(order.LineItemsCollection2);
-            Assert.AreEqual(2, order.LineItemsCollection2.Count);
+            Assert.AreEqual(3, order.LineItemsCollection2.Count);
 
             IEnumerator<LineItem> e = ((IEnumerable<LineItem>)order.LineItemsCollection2).GetEnumerator();
             while (e.MoveNext())
@@ -149,7 +149,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Generics
             AssertOrder1(order);
 
             Assert.IsNotNull(order.LineItemsCollection2);
-            Assert.AreEqual(2, order.LineItemsCollection2.Count);
+            Assert.AreEqual(3, order.LineItemsCollection2.Count);
 
             IEnumerator<LineItem> e = ((IEnumerable<LineItem>)order.LineItemsCollection2).GetEnumerator();
             while (e.MoveNext())

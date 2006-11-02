@@ -48,7 +48,7 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 		public static ResultMap Deserialize(XmlNode node, ConfigurationScope configScope)
 		{
 			NameValueCollection prop = NodeUtils.ParseAttributes(node, configScope.Properties);
-            ResultMap resultMap = new ResultMap(configScope, prop["id"], prop["class"], prop["extends"]);
+            ResultMap resultMap = new ResultMap(configScope, prop["id"], prop["class"], prop["extends"], prop["groupBy"]);
 
 			configScope.ErrorContext.MoreInfo = "initialize ResultMap";
 

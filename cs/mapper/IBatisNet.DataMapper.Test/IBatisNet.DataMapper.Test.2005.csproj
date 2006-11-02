@@ -153,6 +153,7 @@
     </Compile>
     <Compile Include="Domain\ImmutableCategory.cs" />
     <Compile Include="Domain\ImmutableCategoryPropertyContainer.cs" />
+    <Compile Include="Domain\Item.cs" />
     <Compile Include="Domain\LineItem.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -176,6 +177,7 @@
     <Compile Include="Domain\OuiNonBoolTypeHandlerCallback.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Domain\Product.cs" />
     <Compile Include="Domain\Query.cs" />
     <Compile Include="Domain\Sample.cs">
       <SubType>Code</SubType>
@@ -223,6 +225,7 @@
     <Compile Include="NUnit\SqlMapTests\Generics\ResultMapTest.cs" />
     <Compile Include="NUnit\SqlMapTests\Generics\ResultClassTest.cs" />
     <Compile Include="NUnit\SqlMapTests\Generics\StatementTest.cs" />
+    <Compile Include="NUnit\SqlMapTests\GroupByTest.cs" />
     <Compile Include="NUnit\SqlMapTests\InheritanceTest.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -326,6 +329,7 @@
     <Content Include="Maps\MSSQL\SqlClient\DynamicAccount.xml" />
     <Content Include="Maps\MSSQL\SqlClient\EmbedParameter.xml" />
     <Content Include="Maps\MSSQL\SqlClient\Enumeration.xml" />
+    <Content Include="Maps\MSSQL\SqlClient\GroupByMapping.xml" />
     <Content Include="Maps\MSSQL\SqlClient\LineItem.xml" />
     <Content Include="Maps\MSSQL\SqlClient\Nullable.xml" />
     <Content Include="Maps\MSSQL\SqlClient\Order.xml" />
@@ -421,11 +425,13 @@
     <Content Include="Scripts\MSSQL\embed-param-setup-init.sql" />
     <Content Include="Scripts\MSSQL\embed-param-test-init.sql" />
     <Content Include="Scripts\MSSQL\enumeration-init.sql" />
+    <Content Include="Scripts\MSSQL\Items-init.sql" />
     <Content Include="Scripts\MSSQL\line-item-init.sql" />
     <Content Include="Scripts\MSSQL\more-account-records.sql" />
     <Content Include="Scripts\MSSQL\Nullable-init.sql" />
     <Content Include="Scripts\MSSQL\order-init.sql" />
     <Content Include="Scripts\MSSQL\other-init.sql" />
+    <Content Include="Scripts\MSSQL\Products-init.sql" />
     <Content Include="Scripts\MSSQL\ps_SelectAccount.sql" />
     <Content Include="Scripts\MSSQL\ps_SelectAllAccount.sql" />
     <Content Include="Scripts\MSSQL\ps_SelectLineItem.sql" />

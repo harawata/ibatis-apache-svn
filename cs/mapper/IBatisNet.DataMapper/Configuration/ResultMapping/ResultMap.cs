@@ -27,6 +27,7 @@
 #region Using
 
 using System;
+using System.Collections.Specialized;
 using System.Data;
 using System.Reflection;
 using System.Xml;
@@ -74,7 +75,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// Token for xml path to subMap elements.
 		/// </summary>
 		private const string XML_SUBMAP = "subMap";
-        
+
 		#region Fields
         [NonSerialized]
         private bool _isInitalized = true;
@@ -86,7 +87,9 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		private string _extendMap = string.Empty;
 		[NonSerialized]
 		private Type _class = null;
-		
+        [NonSerialized]
+        private StringCollection _groupByProperties = new StringCollection();
+	    
 		[NonSerialized]
 		private ResultPropertyCollection _properties = new ResultPropertyCollection();
 		[NonSerialized]
@@ -106,6 +109,15 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 
 		#region Properties
 
+        /// <summary>
+        /// The GroupBy Properties.
+        /// </summary>
+        [XmlIgnore]
+        public StringCollection GroupByProperties
+        {
+            get { return _groupByProperties; }
+        }
+	    
         /// <summary>
         /// Gets or sets a value indicating whether this instance is initalized.
         /// </summary>
@@ -195,7 +207,8 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
         /// <param name="className">The output class name of the resultMap.</param>
         /// <param name="extendMap">The extend result map bame.</param>
         /// <param name="id">Identifier used to identify the resultMap amongst the others.</param>
-        public ResultMap(ConfigurationScope configScope, string id, string className, string extendMap)
+        /// <param name="groupBy">The groupBy properties</param>
+        public ResultMap(ConfigurationScope configScope, string id, string className, string extendMap, string groupBy)
 		{
             _dataExchangeFactory = configScope.DataExchangeFactory;
             _sqlMapNameSpace = configScope.SqlMapNamespace;
@@ -210,6 +223,15 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
             }
             _className = className;
             _extendMap = extendMap;
+             if (groupBy != null && groupBy.Length>0)
+             {
+                 string[] groupByProperties = groupBy.Split(',');
+                 for (int i = 0; i < groupByProperties.Length; i++)
+                 {
+                     _groupByProperties.Add(groupByProperties[i].Trim());
+                 }
+             }
+            
 		}
 		#endregion
 

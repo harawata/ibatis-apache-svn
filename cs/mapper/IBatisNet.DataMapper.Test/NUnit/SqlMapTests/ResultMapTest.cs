@@ -71,7 +71,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             AssertOrder1(order);
             Assert.IsNotNull(order.LineItemsIList);
-            Assert.AreEqual(2, order.LineItemsIList.Count);
+            Assert.AreEqual(3, order.LineItemsIList.Count);
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
             Assert.IsNotNull(order.LineItemsIList);
             Assert.IsTrue(typeof(IList).IsAssignableFrom(order.LineItemsIList.GetType()));
 
-            Assert.AreEqual(2, order.LineItemsIList.Count);
+            Assert.AreEqual(3, order.LineItemsIList.Count);
             // After a call to a method from a proxy object,
             // the proxy object is replaced by his real object.
             Assert.IsTrue(order.LineItemsIList is ArrayList);
@@ -108,7 +108,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
             Assert.IsNotNull(order.LineItemsIList);
             Assert.IsTrue(typeof(IList).IsAssignableFrom(order.LineItemsIList.GetType()));
 
-            Assert.AreEqual(2, order.LineItemsIList.Count);
+            Assert.AreEqual(3, order.LineItemsIList.Count);
             // After a call to a method from a proxy object,
             // the proxy object is replaced by his real object.
             Assert.IsTrue(order.LineItemsIList is ArrayList);
@@ -128,7 +128,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
             AssertOrder1(order);
 
             Assert.IsNotNull(order.LineItemsCollection);
-            Assert.AreEqual(2, order.LineItemsCollection.Count);
+            Assert.AreEqual(3, order.LineItemsCollection.Count);
 
             IEnumerator e = ((IEnumerable)order.LineItemsCollection).GetEnumerator();
             while (e.MoveNext())
@@ -207,7 +207,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             // Check strongly typed collection
             Assert.IsNotNull(order.LineItemsCollection);
-            Assert.AreEqual(2, order.LineItemsCollection.Count);
+            Assert.AreEqual(3, order.LineItemsCollection.Count);
         }
 
         /// <summary>
@@ -223,7 +223,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             // Check IList collection
             Assert.IsNotNull(order.LineItemsIList);
-            Assert.AreEqual(2, order.LineItemsIList.Count);
+            Assert.AreEqual(3, order.LineItemsIList.Count);
         }
 
         /// <summary>
@@ -236,7 +236,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             AssertOrder1(order);
             Assert.IsNotNull(order.LineItemsArray);
-            Assert.AreEqual(2, order.LineItemsArray.Length);
+            Assert.AreEqual(3, order.LineItemsArray.Length);
         }
 
         /// <summary>
@@ -251,7 +251,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
             AssertOrder1(order);
 
             Assert.IsNotNull(order.LineItemsCollection);
-            Assert.AreEqual(2, order.LineItemsCollection.Count);
+            Assert.AreEqual(3, order.LineItemsCollection.Count);
 
             IEnumerator e = ((IEnumerable)order.LineItemsCollection).GetEnumerator();
             while (e.MoveNext())
@@ -284,8 +284,8 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
             AssertOrder1(order);
 
             Assert.IsNotNull(order.FavouriteLineItem);
-            Assert.AreEqual(2, order.FavouriteLineItem.Id, "order.FavouriteLineItem.Id");
-            Assert.AreEqual("ESM-23", order.FavouriteLineItem.Code);
+            Assert.AreEqual(1, order.FavouriteLineItem.Id, "order.FavouriteLineItem.Id");
+            Assert.AreEqual("ESM-34", order.FavouriteLineItem.Code);
 
         }
 
@@ -301,8 +301,8 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
             AssertOrder1(order);
 
             Assert.IsNotNull(order.FavouriteLineItem);
-            Assert.AreEqual(2, order.FavouriteLineItem.Id, "order.FavouriteLineItem.Id");
-            Assert.AreEqual("ESM-23", order.FavouriteLineItem.Code);
+            Assert.AreEqual(1, order.FavouriteLineItem.Id, "order.FavouriteLineItem.Id");
+            Assert.AreEqual("ESM-34", order.FavouriteLineItem.Code);
         }
 
         /// <summary>
@@ -316,8 +316,8 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
             AssertOrder1(order);
 
             Assert.IsNotNull(order.FavouriteLineItem);
-            Assert.AreEqual(2, order.FavouriteLineItem.Id, "order.FavouriteLineItem.Id");
-            Assert.AreEqual("ESM-23", order.FavouriteLineItem.Code);
+            Assert.AreEqual(1, order.FavouriteLineItem.Id, "order.FavouriteLineItem.Id");
+            Assert.AreEqual("ESM-34", order.FavouriteLineItem.Code);
 
         }
 
@@ -333,11 +333,11 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             Assert.IsNotNull(order1);
             Assert.IsNotNull(order1.FavouriteLineItem);
-            Assert.AreEqual(2, order1.FavouriteLineItem.Id);
+            Assert.AreEqual(1, order1.FavouriteLineItem.Id);
 
             Assert.IsNotNull(order2);
             Assert.IsNotNull(order2.FavouriteLineItem);
-            Assert.AreEqual(1, order2.FavouriteLineItem.Id);
+            Assert.AreEqual(17, order2.FavouriteLineItem.Id);
 
         }
 
@@ -352,7 +352,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
             Assert.IsNotNull(order1);
             Assert.IsNotNull(order1.FavouriteLineItem);
-            Assert.AreEqual(2, order1.FavouriteLineItem.Id);
+            Assert.AreEqual(1, order1.FavouriteLineItem.Id);
         }
 
         /// <summary>
@@ -375,7 +375,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
         {
             Hashtable param = new Hashtable();
             param.Add("LineItem_ID", 1);
-            param.Add("Order_ID", 10);
+            param.Add("Order_ID", 1);
             decimal price = (decimal)sqlMap.QueryForObject("GetLineItemPrice", param);
             Assert.AreEqual(45.43m, price);
         }

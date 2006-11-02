@@ -25,7 +25,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Collections;
 using System.Reflection;
 
@@ -57,7 +56,7 @@ namespace IBatisNet.DataMapper.Proxy
         #endregion
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:LazyListGeneric&lt;T&gt;"/> class.
+        /// Initializes a new instance of the <see cref="LazyListGeneric<T>"/> class.
         /// </summary>
         /// <param name="mappedSatement">The mapped satement.</param>
         /// <param name="param">The param.</param>
@@ -147,7 +146,7 @@ namespace IBatisNet.DataMapper.Proxy
         }
 
         /// <summary>
-        /// Gets or sets the <see cref="T:T"/> at the specified index.
+        /// Gets or sets the <see cref="T"/> at the specified index.
         /// </summary>
         /// <value></value>
         public T this[int index]
@@ -159,7 +158,7 @@ namespace IBatisNet.DataMapper.Proxy
             }
             set
             {
-                Load("IndexOf");
+                Load("this");
                 _list[index] = value;
             }
         }
@@ -262,7 +261,7 @@ namespace IBatisNet.DataMapper.Proxy
         /// Returns an enumerator that iterates through the collection.
         /// </summary>
         /// <returns>
-        /// A <see cref="T:System.Collections.Generic.IEnumerator`1"></see> that can be used to iterate through the collection.
+        /// A <see cref="System.Collections.Generic.IEnumerator`1"></see> that can be used to iterate through the collection.
         /// </returns>
         public IEnumerator<T> GetEnumerator()
         {
@@ -278,7 +277,7 @@ namespace IBatisNet.DataMapper.Proxy
         /// Returns an enumerator that iterates through a collection.
         /// </summary>
         /// <returns>
-        /// An <see cref="T:System.Collections.IEnumerator"></see> object that can be used to iterate through the collection.
+        /// An <see cref="System.Collections.IEnumerator"></see> object that can be used to iterate through the collection.
         /// </returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
@@ -397,13 +396,14 @@ namespace IBatisNet.DataMapper.Proxy
         }
 
         /// <summary>
-        /// Gets or sets the <see cref="T:Object"/> at the specified index.
+        /// Gets or sets the <see cref="Object"/> at the specified index.
         /// </summary>
         /// <value></value>
         object IList.this[int index]
         {
             get
             {
+                Load("this");
                 return this[index];
             }
             set
@@ -418,14 +418,14 @@ namespace IBatisNet.DataMapper.Proxy
         #region ICollection Members
 
         /// <summary>
-        /// Copies the elements of the <see cref="T:System.Collections.ICollection"></see> to an <see cref="T:System.Array"></see>, starting at a particular <see cref="T:System.Array"></see> index.
+        /// Copies the elements of the <see cref="System.Collections.ICollection"></see> to an <see cref="System.Array"></see>, starting at a particular <see cref="T:System.Array"></see> index.
         /// </summary>
         /// <param name="array">The one-dimensional <see cref="T:System.Array"></see> that is the destination of the elements copied from <see cref="T:System.Collections.ICollection"></see>. The <see cref="T:System.Array"></see> must have zero-based indexing.</param>
         /// <param name="index">The zero-based index in array at which copying begins.</param>
         /// <exception cref="T:System.ArgumentNullException">array is null. </exception>
         /// <exception cref="T:System.ArgumentOutOfRangeException">index is less than zero. </exception>
         /// <exception cref="T:System.ArgumentException">array is multidimensional.-or- index is equal to or greater than the length of array.-or- The number of elements in the source <see cref="T:System.Collections.ICollection"></see> is greater than the available space from index to the end of the destination array. </exception>
-        /// <exception cref="T:System.InvalidCastException">The type of the source <see cref="T:System.Collections.ICollection"></see> cannot be cast automatically to the type of the destination array. </exception>
+        /// <exception cref="T:System.InvalidCastException">The type of the source <see cref="System.Collections.ICollection"></see> cannot be cast automatically to the type of the destination array. </exception>
         void ICollection.CopyTo(Array array, int index)
         {
             Load("CopyTo");
@@ -433,17 +433,17 @@ namespace IBatisNet.DataMapper.Proxy
         }
 
         /// <summary>
-        /// Gets the number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"></see>.
+        /// Gets the number of elements contained in the <see cref="System.Collections.Generic.ICollection`1"></see>.
         /// </summary>
         /// <value></value>
-        /// <returns>The number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"></see>.</returns>
+        /// <returns>The number of elements contained in the <see cref="System.Collections.Generic.ICollection`1"></see>.</returns>
         int ICollection.Count
         {
             get { return this.Count; }
         }
 
         /// <summary>
-        /// Gets a value indicating whether access to the <see cref="T:System.Collections.ICollection"></see> is synchronized (thread safe).
+        /// Gets a value indicating whether access to the <see cref="System.Collections.ICollection"></see> is synchronized (thread safe).
         /// </summary>
         /// <value></value>
         /// <returns>true if access to the <see cref="T:System.Collections.ICollection"></see> is synchronized (thread safe); otherwise, false.</returns>
@@ -453,10 +453,10 @@ namespace IBatisNet.DataMapper.Proxy
         }
 
         /// <summary>
-        /// Gets an object that can be used to synchronize access to the <see cref="T:System.Collections.ICollection"></see>.
+        /// Gets an object that can be used to synchronize access to the <see cref="System.Collections.ICollection"></see>.
         /// </summary>
         /// <value></value>
-        /// <returns>An object that can be used to synchronize access to the <see cref="T:System.Collections.ICollection"></see>.</returns>
+        /// <returns>An object that can be used to synchronize access to the <see cref="System.Collections.ICollection"></see>.</returns>
         object ICollection.SyncRoot
         {
             get { return this; }

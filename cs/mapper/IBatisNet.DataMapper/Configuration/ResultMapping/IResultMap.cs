@@ -27,6 +27,7 @@
 #region Using
 
 using System;
+using System.Collections.Specialized;
 using System.Data;
 using System.Reflection;
 using System.Xml.Serialization;
@@ -63,7 +64,12 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
         [XmlAttribute("id")]
         string Id { get; }
 
-
+        /// <summary>
+        /// The GroupBy Properties.
+        /// </summary>
+        [XmlIgnore]
+        StringCollection GroupByProperties { get; }
+        
         /// <summary>
         /// The output type class of the resultMap.
         /// </summary>

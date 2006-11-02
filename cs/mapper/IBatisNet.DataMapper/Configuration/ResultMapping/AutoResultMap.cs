@@ -27,13 +27,11 @@
 #region Using
 
 using System;
+using System.Collections.Specialized;
 using System.Data;
-using System.Reflection;
 using System.Xml.Serialization;
 using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.DataMapper.DataExchange;
-using IBatisNet.DataMapper.Exceptions;
-using IBatisNet.DataMapper.Scope;
 using IBatisNet.Common.Utilities;
 
 #endregion
@@ -71,7 +69,15 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
         
         #region IResultMap Members
 
-
+        /// <summary>
+        /// The GroupBy Properties.
+        /// </summary>
+        [XmlIgnore]
+        public StringCollection GroupByProperties
+        {
+            get { throw new NotImplementedException("The property 'GroupByProperties' is not implemented."); }
+        }
+        
         /// <summary>
         /// The collection of ResultProperty.
         /// </summary>

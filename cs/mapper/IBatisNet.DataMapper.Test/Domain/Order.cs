@@ -22,7 +22,7 @@ namespace IBatisNet.DataMapper.Test.Domain
 		private string _city;
 		private string _province;
 		private string _postalCode;
-		private IList _lineItemsIList;
+		private IList _lineItemsIList ;//= new ArrayList();
         private LineItemCollection _collection;
 		private LineItem[] _lineItemsArray;
 		private LineItem _favouriteLineItem;

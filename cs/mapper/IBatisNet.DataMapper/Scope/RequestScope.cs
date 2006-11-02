@@ -45,6 +45,9 @@ namespace IBatisNet.DataMapper.Scope
     /// </summary>
     public class RequestScope : IScope
     {
+        // Used by N+1 Select solution
+        public static object SKIP = new object();
+
         #region Fields
 
         private IStatement _statement = null;
@@ -60,11 +63,45 @@ namespace IBatisNet.DataMapper.Scope
         private IDalSession _session = null;
         private IMappedStatement _mappedStatement = null;
         private int _currentResultMapIndex = -1;
+        // Used by N+1 Select solution
+        // Holds [IResultMap, IDictionary] couple where the IDictionary holds [key, result object]
+        private IDictionary  _uniqueKeys = null;
 
         #endregion
 
         #region Properties
 
+        /// <summary>
+        /// Gets the unique keys.
+        /// </summary>
+        /// <param name="map">The ResultMap.</param>
+        /// <returns>
+        /// Returns [key, result object] which holds the result objects that have  
+        /// already been build during this request with this <see cref="IResultMap"/>
+        /// </returns>
+        public IDictionary GetUniqueKeys(IResultMap map)
+        {
+            if (_uniqueKeys == null)
+            {
+                return null;
+            }
+            return (IDictionary)_uniqueKeys[map];
+        }
+
+        /// <summary>
+        /// Sets the unique keys.
+        /// </summary>
+        /// <param name="map">The map.</param>
+        /// <param name="keys">The keys.</param>
+        public void SetUniqueKeys(IResultMap map, IDictionary keys)
+        {
+            if (_uniqueKeys == null)
+            {
+                _uniqueKeys = new Hashtable();
+            }
+            _uniqueKeys.Add(map, keys);
+        }
+        
         /// <summary>
         ///  The current <see cref="IMappedStatement"/>.
         /// </summary>

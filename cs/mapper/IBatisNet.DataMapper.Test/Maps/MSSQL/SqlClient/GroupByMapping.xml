@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="GroupByMapping"
+  xmlns="http://ibatis.apache.org/mapping"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <alias>
+    <typeAlias alias="Product" type="IBatisNet.DataMapper.Test.Domain.Product, IBatisNet.DataMapper.Test"/>
+    <typeAlias alias="Item" type="IBatisNet.DataMapper.Test.Domain.Item, IBatisNet.DataMapper.Test"/>
+  </alias>
+  
+  <resultMaps>
+
+    <resultMap id="Category-Result" class="Category" groupBy="Id">
+      <result property="Id" column="Category_Id"/>
+      <result property="Name" column="Category_Name"/>
+      <result property="Products" resultMapping="GroupByMapping.Product-Result"/>
+    </resultMap>
+       
+    <resultMap id="Product-Result" class="Product" groupBy="Id">
+      <result property="Id" column="Product_Id"/>
+      <result property="Name" column="Product_Name"/>
+      <result property="Items" resultMapping="GroupByMapping.Item-Result"/>
+    </resultMap>
+
+    <resultMap id="Item-Result" class="Item">
+      <result property="Id" column="Item_Id"/>
+      <result property="UnitCost" column="Item_UnitCost"/>
+      <result property="Status" column="Item_Status"/>
+      <result property="Quantity" column="Item_Quantity"/>
+    </resultMap>
+
+    <resultMap id="Order-GroupBy-Result" class="Order" groupBy="Id">
+      <result property="Id"         column="Order_ID"/>
+      <result property="City"       column="Order_City"/>
+      <result property="LineItemsIList" resultMapping="GroupByMapping.LineItem-GroupBy" />
+      <result property="Account" resultMapping="Account.account-result-nullable-email" />
+    </resultMap>
+
+    <resultMap id="LineItem-GroupBy" class="LineItem">
+      <result property="Id"			column="LineItem_ID"/>
+      <result property="Code"			column="LineItem_Code"/>
+      <result property="Quantity"		column="LineItem_Quantity"/>
+      <result property="Price"		column="LineItem_Price" />
+    </resultMap>
+    
+  </resultMaps>
+
+  <statements>
+
+    <select id="GetAllCategories" resultMap="Category-Result" >
+      select
+      Category_Id, Category_Name,
+      p.Id as Product_Id, p.Name as Product_Name,
+      i.Id as Item_Id, i.UnitCost as Item_UnitCost, i.Status as Item_Status, i.Quantity as Item_Quantity
+      from Categories c, Products p, Items i
+      where c.Id = p.Category_Id
+      and p.Id = i.Product_Id
+    </select>
+
+    <statement id="GetOrderLineItem"
+                resultMap="Order-GroupBy-Result" >
+      select
+      Orders.Order_ID,
+      Order_City,
+      LineItem_ID,
+      LineItem_Code,
+      LineItem_Quantity,
+      LineItem_Price,
+      Accounts.Account_Id,
+      Accounts.Account_FirstName,
+      Accounts.Account_LastName,
+      Accounts.Account_Email
+      FROM         Orders INNER JOIN
+      LineItems ON Orders.Order_ID = LineItems.Order_ID LEFT OUTER JOIN
+      Accounts ON Orders.Account_ID = Accounts.Account_ID
+      Order by Orders.Order_ID
+    </statement>
+    
+  </statements>
+  
+</sqlMap>

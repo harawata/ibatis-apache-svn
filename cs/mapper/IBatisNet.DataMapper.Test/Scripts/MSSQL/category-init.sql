@@ -8,7 +8,11 @@ drop table [dbo].[Categories]
 CREATE TABLE [dbo].[Categories] (
 	[Category_Id] [int] IDENTITY (1, 1) NOT NULL ,
 	[Category_Name] [varchar] (32)  NULL,
-	[Category_Guid] [uniqueidentifier] NULL  
+	[Category_Guid] [uniqueidentifier] NULL ,
+	CONSTRAINT [PK_Categories] PRIMARY KEY  CLUSTERED 
+	(
+		[Category_Id]
+	)  ON [PRIMARY] 
 ) ON [PRIMARY]
 
 -- Store procedure

@@ -34,7 +34,7 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
     public sealed class ResultStrategyFactory
     {
         private static IResultStrategy _resultClassStrategy = null;
-        private static IResultStrategy _resultMapStrategy = null;
+        private static IResultStrategy _mapStrategy = null;
         private static IResultStrategy _objectStrategy = null;
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
         /// </summary>
         static ResultStrategyFactory()
         {
-            _resultMapStrategy = new ResultMapStrategy();
+            _mapStrategy = new MapStrategy();
             _resultClassStrategy = new ResultClassStrategy();
             _objectStrategy = new ObjectStrategy();
         }
@@ -54,12 +54,12 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
         /// <returns>The <see cref="IResultStrategy"/></returns>
         public static IResultStrategy Get(IStatement statement)
         {
-            // If there's an ResultMap, use it
+            // If there's an IResultMap, use it
             if (statement.ResultsMap.Count > 0)
             {
                 if (statement.ResultsMap[0] is ResultMap)
                 {
-                    return _resultMapStrategy; 
+                    return _mapStrategy; 
                 }
                 else // it is an AutoResultMap
                 {

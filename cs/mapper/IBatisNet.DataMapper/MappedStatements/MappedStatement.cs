@@ -541,7 +541,10 @@ namespace IBatisNet.DataMapper.MappedStatements
                             while (reader.Read())
                             {
                                 object obj = _resultStrategy.Process(request, ref reader, null);
-                                list.Add(obj);
+                                if (obj!=RequestScope.SKIP)
+                                {
+                                    list.Add(obj);
+                                }
                             }
                         }
                         else

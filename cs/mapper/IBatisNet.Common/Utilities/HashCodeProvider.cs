@@ -26,6 +26,8 @@
 
 #region Imports
 using System;
+using System.Runtime.CompilerServices;
+
 #endregion
 
 namespace IBatisNet.Common.Utilities
@@ -58,8 +60,12 @@ namespace IBatisNet.Common.Utilities
 		/// </remarks>
 		public static int GetIdentityHashCode(object obj)
 		{
+            //#if dotnet2
+            //return RuntimeHelpers.GetHashCode(obj);
+            //#else
 			// call the underlying System.Object.GetHashCode()
 			return (int)getHashCodeMethodInfo.Invoke(obj, null);
+            //#endif
 		}
 	}
 }

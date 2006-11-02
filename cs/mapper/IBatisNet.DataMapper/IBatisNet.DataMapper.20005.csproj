@@ -517,8 +517,10 @@
     <Compile Include="MappedStatements\ReaderAutoMapper.cs" />
     <Compile Include="MappedStatements\ResultStrategy\AutoMapStrategy.cs" />
     <Compile Include="MappedStatements\ResultStrategy\DictionaryStrategy.cs" />
+    <Compile Include="MappedStatements\ResultStrategy\GroupByStrategy.cs" />
     <Compile Include="MappedStatements\ResultStrategy\IResultStrategy.cs" />
     <Compile Include="MappedStatements\ResultStrategy\ListStrategy.cs" />
+    <Compile Include="MappedStatements\ResultStrategy\MapStrategy.cs" />
     <Compile Include="MappedStatements\ResultStrategy\ObjectStrategy.cs" />
     <Compile Include="MappedStatements\ResultStrategy\ResultClassStrategy.cs" />
     <Compile Include="MappedStatements\ResultStrategy\ResultMapStrategy.cs" />
@@ -666,6 +668,7 @@
     <Content Include="notice.txt" />
     <Content Include="ReadMe.txt" />
     <None Include="IBatisNet.DataMapper.build" />
+    <None Include="MappedStatements\ResultStrategy\ClassDiagram.cd" />
     <EmbeddedResource Include="SqlMap.xsd" />
     <EmbeddedResource Include="SqlMapConfig.xsd" />
   </ItemGroup>

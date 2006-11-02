@@ -190,7 +190,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Generics
         public void TestExecuteQueryForObjectViaHashtable()
         {
             Hashtable param = new Hashtable();
-            param.Add("LineItem_ID", 2);
+            param.Add("LineItem_ID", 4);
             param.Add("Order_ID", 9);
 
             LineItem testItem = sqlMap.QueryForObject<LineItem>("GetSpecificLineItem", param);

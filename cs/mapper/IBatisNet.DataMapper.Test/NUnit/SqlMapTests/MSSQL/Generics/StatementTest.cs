@@ -183,7 +183,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL.Generics
 
             // Check generic collection
             Assert.IsNotNull(order.LineItemsCollection);
-            Assert.AreEqual(2, order.LineItemsCollection.Count);
+            Assert.AreEqual(3, order.LineItemsCollection.Count);
         }
 		#endregion
 

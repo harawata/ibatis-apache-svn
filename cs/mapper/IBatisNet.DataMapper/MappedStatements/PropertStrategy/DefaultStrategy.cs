@@ -82,6 +82,42 @@ namespace IBatisNet.DataMapper.MappedStatements.PropertyStrategy
 			resultMap.SetValueOfProperty( ref target, mapping, dataBaseValue );
 		}
 
+        /// <summary>
+        /// Gets the value of the specified <see cref="ResultProperty"/> that must be set on the target object.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="resultMap">The result map.</param>
+        /// <param name="mapping">The mapping.</param>
+        /// <param name="reader">The reader.</param>
+        public object Get(RequestScope request, IResultMap resultMap, ResultProperty mapping, IDataReader reader)
+        {
+            if (mapping.TypeHandler == null ||mapping.TypeHandler is UnknownTypeHandler) // Find the TypeHandler
+            {
+                lock (mapping)
+                {
+                    if (mapping.TypeHandler == null || mapping.TypeHandler is UnknownTypeHandler)
+                    {
+                        int columnIndex = 0;
+                        if (mapping.ColumnIndex == ResultProperty.UNKNOWN_COLUMN_INDEX)
+                        {
+                            columnIndex = reader.GetOrdinal(mapping.ColumnName);
+                        }
+                        else
+                        {
+                            columnIndex = mapping.ColumnIndex;
+                        }
+                        Type systemType = ((IDataRecord)reader).GetFieldType(columnIndex);
+
+                        mapping.TypeHandler = request.DataExchangeFactory.TypeHandlerFactory.GetTypeHandler(systemType);
+                    }
+                }
+            }
+
+            object dataBaseValue = mapping.GetDataBaseValue(reader);
+            request.IsRowDataFound = request.IsRowDataFound || (dataBaseValue != null);
+            return dataBaseValue;
+        }
+
 		#endregion
 	}
 }

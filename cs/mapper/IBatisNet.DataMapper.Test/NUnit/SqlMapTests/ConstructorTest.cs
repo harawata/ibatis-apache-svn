@@ -197,7 +197,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			AssertAccount1(order.Account);
 			
 			Assert.IsNotNull(order.LineItemsIList);
-			Assert.AreEqual(2, order.LineItemsIList.Count);
+			Assert.AreEqual(3, order.LineItemsIList.Count);
 		}
 
 		/// <summary>
@@ -211,7 +211,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			AssertAccount1(order.Account);
 			
 			Assert.IsNotNull( order.LineItemsArray );
-			Assert.AreEqual(2, order.LineItemsArray.Length);
+			Assert.AreEqual(3, order.LineItemsArray.Length);
 		}
 
 		/// <summary>
@@ -225,7 +225,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			AssertAccount1(order.Account);
 			
 			Assert.IsNotNull( order.LineItemsCollection );
-            Assert.AreEqual(2, order.LineItemsCollection.Count);
+            Assert.AreEqual(3, order.LineItemsCollection.Count);
 		}
 
 #if dotnet2
@@ -239,7 +239,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
             AssertOrder1(order);
 
             Assert.IsNotNull(order.LineItemsGenericList);
-            Assert.AreEqual(2, order.LineItemsGenericList.Count);
+            Assert.AreEqual(3, order.LineItemsGenericList.Count);
         }
 
         /// <summary>
@@ -252,7 +252,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
             AssertOrder1(order);
 
             Assert.IsNotNull(order.LineItemsCollection2);
-            Assert.AreEqual(2, order.LineItemsCollection2.Count);
+            Assert.AreEqual(3, order.LineItemsCollection2.Count);
         }
 #endif
 		#endregion

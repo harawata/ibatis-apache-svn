@@ -23,6 +23,7 @@
  ********************************************************************************/
 #endregion
 
+using System;
 using System.Data;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
 using IBatisNet.DataMapper.Scope;
@@ -51,46 +52,57 @@ namespace IBatisNet.DataMapper.MappedStatements.PropertyStrategy
 		public void Set(RequestScope request, IResultMap resultMap, 
 			ResultProperty mapping, ref object target, IDataReader reader, object keys)
 		{
-			// Creates object
-			object[] parameters = null;
-			bool isParameterFound = false;
-
-            IResultMap resultMapping = mapping.NestedResultMap.ResolveSubMap(reader);
-
-            if (resultMapping.Parameters.Count > 0)
-			{
-                parameters = new object[resultMapping.Parameters.Count];
-				// Fill parameters array
-                for (int index = 0; index < resultMapping.Parameters.Count; index++)
-				{
-                    ResultProperty resultProperty = resultMapping.Parameters[index];
-                    parameters[index] = resultProperty.ArgumentStrategy.GetValue(request, resultProperty, ref reader, null);
-					request.IsRowDataFound = request.IsRowDataFound || (parameters[index] != null);
-					isParameterFound = isParameterFound || (parameters[index] != null);
-				}
-			}
-
-			object obj = null;
-			// If I have a constructor tag and all argumments values are null, the obj is null
-            if (resultMapping.Parameters.Count > 0 && isParameterFound == false)
-			{
-				obj = null;
-			}
-			else
-			{
-                obj = resultMapping.CreateInstanceOfResult(parameters);
-				
-				// Fills properties on the new object
-                if (this.FillObjectWithReaderAndResultMap(request, reader, resultMapping, obj) == false)
-				{
-					obj = null;
-				}				
-			}
-
+            object obj = Get(request, resultMap, mapping, reader);
 			// Sets created object on the property
 			resultMap.SetValueOfProperty( ref target, mapping, obj );		
 		}
 
+	    /// <summary>
+        /// Gets the value of the specified <see cref="ResultProperty"/> that must be set on the target object.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="resultMap">The result map.</param>
+        /// <param name="mapping">The mapping.</param>
+        /// <param name="reader">The reader.</param>
+        public object Get(RequestScope request, IResultMap resultMap, ResultProperty mapping, IDataReader reader)
+        {
+            object[] parameters = null;
+            bool isParameterFound = false;
+
+            IResultMap resultMapping = mapping.NestedResultMap.ResolveSubMap(reader);
+
+            if (resultMapping.Parameters.Count > 0)
+            {
+                parameters = new object[resultMapping.Parameters.Count];
+                // Fill parameters array
+                for (int index = 0; index < resultMapping.Parameters.Count; index++)
+                {
+                    ResultProperty resultProperty = resultMapping.Parameters[index];
+                    parameters[index] = resultProperty.ArgumentStrategy.GetValue(request, resultProperty, ref reader, null);
+                    request.IsRowDataFound = request.IsRowDataFound || (parameters[index] != null);
+                    isParameterFound = isParameterFound || (parameters[index] != null);
+                }
+            }
+
+            object obj = null;
+            // If I have a constructor tag and all argumments values are null, the obj is null
+            if (resultMapping.Parameters.Count > 0 && isParameterFound == false)
+            {
+                obj = null;
+            }
+            else
+            {
+                obj = resultMapping.CreateInstanceOfResult(parameters);
+
+                // Fills properties on the new object
+                if (this.FillObjectWithReaderAndResultMap(request, reader, resultMapping, obj) == false)
+                {
+                    obj = null;
+                }
+            }
+	        
+	        return obj;
+        }
 		#endregion
 	}
 }
