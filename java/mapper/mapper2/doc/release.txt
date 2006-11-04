@@ -2,7 +2,7 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
- 2.2.1 - ???
+ 2.3.0 -
 ------------------------------
  o DEPRECATED All PaginatedList related features due to misuse, minimal applicability and inflexibility
  o DEPRECATED DAO Framework -- Removed from primary distribution, available as a separate download
