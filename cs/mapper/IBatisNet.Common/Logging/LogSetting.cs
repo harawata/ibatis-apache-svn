@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -30,7 +30,7 @@ using System.Collections.Specialized;
 namespace IBatisNet.Common.Logging
 {
 	/// <summary>
-	/// Setting for a logger.
+	/// Container used to hold configuration information from config file.
 	/// </summary>
 	internal class LogSetting
 	{
@@ -45,8 +45,14 @@ namespace IBatisNet.Common.Logging
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="factoryAdapterType"></param>
-		/// <param name="properties"></param>
+		/// <param name="factoryAdapterType">
+		/// The <see cref="ILoggerFactoryAdapter" /> type 
+		/// that will be used for creating <see cref="ILog" />
+		/// </param>
+		/// <param name="properties">
+		/// Additional user supplied properties that are passed to the 
+		/// <paramref name="factoryAdapterType" />'s constructor.
+		/// </param>
 		public LogSetting ( Type factoryAdapterType , NameValueCollection properties )
 		{
 			_factoryAdapterType = factoryAdapterType;
@@ -54,7 +60,8 @@ namespace IBatisNet.Common.Logging
 		}
 		
 		/// <summary>
-		/// 
+		/// The <see cref="ILoggerFactoryAdapter" /> type that will be used for creating <see cref="ILog" />
+		/// instances.
 		/// </summary>
 		public Type FactoryAdapterType
 		{
@@ -62,7 +69,7 @@ namespace IBatisNet.Common.Logging
 		}
 
 		/// <summary>
-		/// 
+		/// Additional user supplied properties that are passed to the <see cref="FactoryAdapterType" />'s constructor.
 		/// </summary>
 		public NameValueCollection Properties
 		{
