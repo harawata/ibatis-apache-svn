@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -29,7 +29,7 @@ using System;
 namespace IBatisNet.Common.Logging
 {
 	/// <summary>
-	/// The 8 logging levels used by Log are (in order): 
+	/// The 7 logging levels used by Log are (in order): 
 	/// </summary>
 	public enum LogLevel
 	{
@@ -54,11 +54,11 @@ namespace IBatisNet.Common.Logging
 		/// </summary>
 		Error = 4,
 		/// <summary>
-		/// 
+		
 		/// </summary>
 		Fatal = 5,
 		/// <summary>
-		/// 
+		/// Do not log anything.
 		/// </summary>
 		Off  = 6,
 	}

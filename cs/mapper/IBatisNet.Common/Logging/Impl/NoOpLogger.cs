@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -29,129 +29,110 @@ using System;
 namespace IBatisNet.Common.Logging.Impl
 {
 	/// <summary>
-	/// Summary description for NoOpLogger.
+	/// Silently ignores all log messages.
 	/// </summary>
 	public sealed class NoOpLogger: ILog
 	{
-		/// <summary>
-		/// A NOP implementation.
-		/// </summary>
-		public NoOpLogger()
-		{ }
-
 		#region Members of ILog
 
 		/// <summary>
-		/// 
+		/// Ignores message.
 		/// </summary>
 		/// <param name="message"></param>
 		public void Debug(object message)
 		{
-			// NOP
+			// NOP - no operation
 		}
+
 		/// <summary>
-		/// 
+		/// Ignores message.
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="e"></param>
 		public void Debug(object message, Exception e)
 		{
-			// NOP
+			// NOP - no operation
 		}
+
 		/// <summary>
-		/// 
+		/// Ignores message.
 		/// </summary>
 		/// <param name="message"></param>
 		public void Error(object message)
 		{
-			// NOP
+			// NOP - no operation
 		}
+
 		/// <summary>
-		/// 
+		/// Ignores message.
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="e"></param>
 		public void Error(object message, Exception e)
 		{
-			// NOP
+			// NOP - no operation
 		}
+
 		/// <summary>
-		/// 
+		/// Ignores message.
 		/// </summary>
 		/// <param name="message"></param>
 		public void Fatal(object message)
 		{
-			// NOP
+			// NOP - no operation
 		}
+
 		/// <summary>
-		/// 
+		/// Ignores message.
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="e"></param>
 		public void Fatal(object message, Exception e)
 		{
-			// NOP
+			// NOP - no operation
 		}
+
 		/// <summary>
-		/// 
+		/// Ignores message.
 		/// </summary>
 		/// <param name="message"></param>
 		public void Info(object message)
 		{
-			// NOP
+			// NOP - no operation
 		}
+
 		/// <summary>
-		/// 
+		/// Ignores message.
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="e"></param>
 		public void Info(object message, Exception e)
 		{
-			// NOP
+			// NOP - no operation
 		}
 
 		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="message"></param>
-		public void Trace(object message)
-		{
-			// NOP
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="message"></param>
-		/// <param name="e"></param>
-		public void Trace(object message, Exception e)
-		{
-			// NOP
-		}
-
-		/// <summary>
-		/// 
+		/// Ignores message.
 		/// </summary>
 		/// <param name="message"></param>
 		public void Warn(object message)
 		{
-			// NOP
+			// NOP - no operation
 		}
 
 
 		/// <summary>
-		/// 
+		/// Ignores message.
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="e"></param>
 		public void Warn(object message, Exception e)
 		{
-			// NOP
+			// NOP - no operation
 		}
 
-
 		/// <summary>
-		/// 
+		/// Always returns <see langword="false" />.
 		/// </summary>
 		public bool IsDebugEnabled
 		{
@@ -159,7 +140,7 @@ namespace IBatisNet.Common.Logging.Impl
 		}
 
 		/// <summary>
-		/// 
+		/// Always returns <see langword="false" />.
 		/// </summary>
 		public bool IsErrorEnabled
 		{
@@ -168,7 +149,7 @@ namespace IBatisNet.Common.Logging.Impl
 		}
 
 		/// <summary>
-		/// 
+		/// Always returns <see langword="false" />.
 		/// </summary>
 		public bool IsFatalEnabled
 		{
@@ -176,7 +157,7 @@ namespace IBatisNet.Common.Logging.Impl
 		}
 
 		/// <summary>
-		/// 
+		/// Always returns <see langword="false" />.
 		/// </summary>
 		public bool IsInfoEnabled
 		{
@@ -184,15 +165,7 @@ namespace IBatisNet.Common.Logging.Impl
 		}
 
 		/// <summary>
-		/// 
-		/// </summary>
-		public bool IsTraceEnabled
-		{
-			get { return false; }
-		}
-
-		/// <summary>
-		/// 
+		/// Always returns <see langword="false" />.
 		/// </summary>
 		public bool IsWarnEnabled
 		{
@@ -202,4 +175,3 @@ namespace IBatisNet.Common.Logging.Impl
 		#endregion
 	}
 }
-

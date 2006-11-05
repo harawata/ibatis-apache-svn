@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -34,8 +34,32 @@ using ConfigurationException = IBatisNet.Common.Exceptions.ConfigurationExceptio
 namespace IBatisNet.Common.Logging
 {
 	/// <summary>
-	/// Summary description for ConfigurationSectionHandler.
+	/// Used in an application's configuration file (App.Config or Web.Config) to configure the logging subsystem.
 	/// </summary>
+	/// <remarks>
+	/// <example>
+	/// An example configuration section that writes IBatisNet messages to the Console using the built-in Console Logger.
+	/// <code lang="XML" escaped="true">
+	/// <configuration>
+	///		<configSections>
+	///			<sectionGroup name="iBATIS">
+	///				<section name="logging" type="IBatisNet.Common.Logging.ConfigurationSectionHandler, IBatisNet.Common" />
+	///			</sectionGroup>	
+	///		</configSections>
+	///		<iBATIS>
+	///			<logging>
+	///				<logFactoryAdapter type="IBatisNet.Common.Logging.Impl.ConsoleOutLoggerFA, IBatisNet.Common">
+	///					<arg key="showLogName" value="true" />
+	///					<arg key="showDataTime" value="true" />
+	///					<arg key="level" value="ALL" />
+	///					<arg key="dateTimeFormat" value="yyyy/MM/dd HH:mm:ss:SSS" />
+	///				</logFactoryAdapter>
+	///			</logging>
+	///		</iBATIS>
+	/// </configuration>
+	/// </code> 
+	/// </example>
+	/// </remarks>
 	public class ConfigurationSectionHandler: IConfigurationSectionHandler
 	{
 
@@ -57,10 +81,15 @@ namespace IBatisNet.Common.Logging
 		}
 
 		/// <summary>
-		/// 
+		/// Retrieves the <see cref="Type" /> of the logger the use by looking at the logFactoryAdapter element
+		/// of the logging configuration element.
 		/// </summary>
 		/// <param name="section"></param>
-		/// <returns></returns>
+		/// <returns>
+		/// A <see cref="LogSetting" /> object containing the specified type that implements 
+		/// <see cref="ILoggerFactoryAdapter" /> along with zero or more properties that will be 
+		/// passed to the logger factory adapter's constructor as an <see cref="IDictionary" />.
+		/// </returns>
 		private LogSetting ReadConfiguration( XmlNode section )
 		{
 			XmlNode logFactoryElement = section.SelectSingleNode( LOGFACTORYADAPTER_ELEMENT );
@@ -72,10 +101,10 @@ namespace IBatisNet.Common.Logging
 			if ( factoryTypeString == string.Empty )
 				throw new ConfigurationException
 					( "Required Attribute '" 
-					+ LOGFACTORYADAPTER_ELEMENT_TYPE_ATTRIB 
-					+ "' not found in element '"
-					+ LOGFACTORYADAPTER_ELEMENT
-					+ "'"
+					  + LOGFACTORYADAPTER_ELEMENT_TYPE_ATTRIB 
+					  + "' not found in element '"
+					  + LOGFACTORYADAPTER_ELEMENT
+					  + "'"
 					);
 
 
@@ -88,7 +117,7 @@ namespace IBatisNet.Common.Logging
 			{
 				throw new ConfigurationException
 					( "Unable to create type '" + factoryTypeString + "'"
-					, e
+					  , e
 					);
 			}
 			
@@ -98,7 +127,7 @@ namespace IBatisNet.Common.Logging
 #if dotnet2
             properties = new NameValueCollection(StringComparer.InvariantCultureIgnoreCase);
 #else
-			properties = properties = new NameValueCollection( null, new CaseInsensitiveComparer() );
+			properties = new NameValueCollection( null, new CaseInsensitiveComparer() );
 #endif
 			foreach ( XmlNode propertyNode in propertyNodes )
 			{
@@ -112,10 +141,10 @@ namespace IBatisNet.Common.Logging
 				{
 					throw new ConfigurationException
 						( "Required Attribute '" 
-						+ ARGUMENT_ELEMENT_KEY_ATTRIB 
-						+ "' not found in element '"
-						+ ARGUMENT_ELEMENT
-						+ "'"
+						  + ARGUMENT_ELEMENT_KEY_ATTRIB 
+						  + "' not found in element '"
+						  + ARGUMENT_ELEMENT
+						  + "'"
 						);
 				}
 				else
@@ -137,13 +166,16 @@ namespace IBatisNet.Common.Logging
 		#region IConfigurationSectionHandler Members
 
 		/// <summary>
-		/// 
+		/// Verifies that the logFactoryAdapter element appears once in the configuration section.
 		/// </summary>
-		/// <param name="parent"></param>
-		/// <param name="configContext"></param>
-		/// <param name="section"></param>
-		/// <returns></returns>
-		public object Create(object parent, object configContext, System.Xml.XmlNode section)
+		/// <param name="parent">The parent of the current item.</param>
+		/// <param name="configContext">Additional information about the configuration process.</param>
+		/// <param name="section">The configuration section to apply an XPath query too.</param>
+		/// <returns>
+		/// A <see cref="LogSetting" /> object containing the specified logFactoryAdapter type
+		/// along with user supplied configuration properties.
+		/// </returns>
+		public object Create(object parent, object configContext, XmlNode section)
 		{
 			int logFactoryElementsCount = section.SelectNodes( LOGFACTORYADAPTER_ELEMENT ).Count;
 			

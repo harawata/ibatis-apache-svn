@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -31,7 +31,7 @@ using System.Collections.Specialized;
 namespace IBatisNet.Common.Logging.Impl
 {
 	/// <summary>
-	/// Description résumée de ConsoleOutLoggerFA.
+	/// Factory for creating <see cref="ILog" /> instances that write data to <see cref="Console.Out" />.
 	/// </summary>
 	public class ConsoleOutLoggerFA: ILoggerFactoryAdapter 
 	{
@@ -42,9 +42,10 @@ namespace IBatisNet.Common.Logging.Impl
 		private string _dateTimeFormat = string.Empty;
 
 		/// <summary>
-		/// Constructor
+		/// Looks for level, showDateTime, showLogName, dateTimeFormat items from 
+		/// <paramref name="properties" /> for use when the GetLogger methods are called.
 		/// </summary>
-		/// <param name="properties"></param>
+		/// <param name="properties">Contains user supplied configuration information.</param>
 		public ConsoleOutLoggerFA(NameValueCollection properties)
 		{
 			try
@@ -77,20 +78,20 @@ namespace IBatisNet.Common.Logging.Impl
 		#region ILoggerFactoryAdapter Members
 
 		/// <summary>
-		/// Get a ILog instance by type 
+		/// Get a ILog instance by <see cref="Type" />.
 		/// </summary>
-		/// <param name="type"></param>
-		/// <returns></returns>
+		/// <param name="type">Usually the <see cref="Type" /> of the current class.</param>
+		/// <returns>An ILog instance that will write data to <see cref="Console.Out" />.</returns>
 		public ILog GetLogger(Type type)
 		{
 			return GetLogger( type.FullName );
 		}
 
 		/// <summary>
-		/// Get a ILog instance by type name 
+		/// Get a ILog instance by name.
 		/// </summary>
-		/// <param name="name"></param>
-		/// <returns></returns>
+		/// <param name="name">Usually a <see cref="Type" />'s Name or FullName property.</param>
+		/// <returns>An ILog instance that will write data to <see cref="Console.Out" />.</returns>
 		public ILog GetLogger(string name)
 		{
 			ILog log = _logs[name] as ILog;

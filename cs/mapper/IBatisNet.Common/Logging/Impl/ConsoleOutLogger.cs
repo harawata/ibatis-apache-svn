@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -31,9 +31,9 @@ using System.Text;
 namespace IBatisNet.Common.Logging.Impl
 {
 	/// <summary>
-	/// Logger sending everything to the standard output error stream.
+	/// Sends log messages to <see cref="Console.Out" />.
 	/// </summary>
-	public class ConsoleOutLogger: ILog
+	public class ConsoleOutLogger : ILog
 	{
 		private bool _showDateTime = false;
 		private bool _showLogName = false;
@@ -43,15 +43,15 @@ namespace IBatisNet.Common.Logging.Impl
 		private bool _hasDateTimeFormat = false;
 
 		/// <summary>
-		/// 
+		/// Creates and initializes a logger that writes messages to <see cref="Console.Out" />.
 		/// </summary>
-		/// <param name="logName"></param>
-		/// <param name="logLevel"></param>
-		/// <param name="showDateTime">Include the current time in the log message </param>
-		/// <param name="showLogName">Include the instance name in the log message</param>
-		/// <param name="dateTimeFormat">The date and time format to use in the log message </param>
+		/// <param name="logName">The name, usually type name of the calling class, of the logger.</param>
+		/// <param name="logLevel">The current logging threshold. Messages recieved that are beneath this threshold will not be logged.</param>
+		/// <param name="showDateTime">Include the current time in the log message.</param>
+		/// <param name="showLogName">Include the instance name in the log message.</param>
+		/// <param name="dateTimeFormat">The date and time format to use in the log message.</param>
 		public ConsoleOutLogger( string logName, LogLevel logLevel
-			, bool showDateTime, bool showLogName, string dateTimeFormat)
+		                         , bool showDateTime, bool showLogName, string dateTimeFormat)
 		{
 			_logName = logName;
 			_currentLogLevel = logLevel;
@@ -66,15 +66,12 @@ namespace IBatisNet.Common.Logging.Impl
 		}
 
 		/// <summary>
-		/// Do the actual logging.
-		/// This method assembles the message and write
-		/// the content of the message accumulated in the specified
-		/// StringBuffer to the appropriate output destination. The
-		/// default implementation writes to System.Console.Error.<p/>
+		/// Do the actual logging by constructing the log message using a <see cref="StringBuilder" /> then
+		/// sending the output to <see cref="Console.Out" />.
 		/// </summary>
-		/// <param name="level"></param>
-		/// <param name="message"></param>
-		/// <param name="e"></param>
+		/// <param name="level">The <see cref="LogLevel" /> of the message.</param>
+		/// <param name="message">The log message.</param>
+		/// <param name="e">An optional <see cref="Exception" /> associated with the message.</param>
 		private void Write( LogLevel level, object message, Exception e )
 		{
 			// Use a StringBuilder for better performance
@@ -108,15 +105,15 @@ namespace IBatisNet.Common.Logging.Impl
 			// Append stack trace if not null
 			if ( e != null )
 			{
-				sb.AppendFormat( "\n{0}", e.ToString() );
+				sb.Append(Environment.NewLine).Append( e.ToString() );
 			}
 
 			// Print to the appropriate destination
-			System.Console.Out.WriteLine( sb.ToString() );			
+			Console.Out.WriteLine( sb.ToString() );
 		}
 
 		/// <summary>
-		/// Is the given log level currently enabled ?
+		/// Determines if the given log level is currently enabled.
 		/// </summary>
 		/// <param name="level"></param>
 		/// <returns></returns>
@@ -124,26 +121,30 @@ namespace IBatisNet.Common.Logging.Impl
 		{
 			int iLevel = (int)level;
 			int iCurrentLogLevel = (int)_currentLogLevel;
-
+		
+			// return iLevel.CompareTo(iCurrentLogLevel); better ???
 			return ( iLevel >= iCurrentLogLevel );
 		}
 
 		#region ILog Members
 
 		/// <summary>
-		/// Log a debug message.
+		/// Log a <see cref="LogLevel.Debug" /> message.
 		/// </summary>
-		/// <param name="message"></param>
+		/// <param name="message">The message to log.</param>
 		public void Debug(object message)
 		{
 			Debug( message, null );
 		}
 
 		/// <summary>
-		/// 
+		/// Log a <see cref="LogLevel.Debug" /> message with an optional <see cref="Exception" />.
 		/// </summary>
-		/// <param name="message"></param>
-		/// <param name="e"></param>
+		/// <param name="message">The message to log.</param>
+		/// <param name="e">
+		/// The	<see cref="Exception" /> associated with the message. If there isn't any
+		/// <see cref="Exception" /> associated with the message, pass <see langword="null" />.
+		/// </param>
 		public void Debug(object message, Exception e)
 		{
 			if ( IsLevelEnabled( LogLevel.Debug ) )
@@ -153,19 +154,22 @@ namespace IBatisNet.Common.Logging.Impl
 		}
 
 		/// <summary>
-		/// 
+		/// Log a <see cref="LogLevel.Error" /> message.
 		/// </summary>
-		/// <param name="message"></param>
+		/// <param name="message">The message to log.</param>
 		public void Error(object message)
 		{
 			Error( message, null );
 		}
 
 		/// <summary>
-		/// 
+		/// Log a <see cref="LogLevel.Error" /> message with an optional <see cref="Exception" />.
 		/// </summary>
-		/// <param name="message"></param>
-		/// <param name="e"></param>
+		/// <param name="message">The message to log.</param>
+		/// <param name="e">
+		/// The	<see cref="Exception" /> associated with the message. If there isn't any
+		/// <see cref="Exception" /> associated with the message, pass <see langword="null" />.
+		/// </param>
 		public void Error(object message, Exception e)
 		{
 			if ( IsLevelEnabled( LogLevel.Error ) )
@@ -175,19 +179,22 @@ namespace IBatisNet.Common.Logging.Impl
 		}
 
 		/// <summary>
-		/// 
+		/// Log a <see cref="LogLevel.Fatal" /> message.
 		/// </summary>
-		/// <param name="message"></param>
+		/// <param name="message">The message to log.</param>
 		public void Fatal(object message)
 		{
 			Fatal( message, null );
 		}
 
 		/// <summary>
-		/// 
+		/// Log a <see cref="LogLevel.Fatal" /> message with an optional <see cref="Exception" />.
 		/// </summary>
-		/// <param name="message"></param>
-		/// <param name="e"></param>
+		/// <param name="message">The message to log.</param>
+		/// <param name="e">
+		/// The	<see cref="Exception" /> associated with the message. If there isn't any
+		/// <see cref="Exception" /> associated with the message, pass <see langword="null" />.
+		/// </param>
 		public void Fatal(object message, Exception e)
 		{
 			if ( IsLevelEnabled( LogLevel.Fatal ) )
@@ -197,19 +204,22 @@ namespace IBatisNet.Common.Logging.Impl
 		}
 
 		/// <summary>
-		/// 
+		/// Log a <see cref="LogLevel.Info" /> message.
 		/// </summary>
-		/// <param name="message"></param>
+		/// <param name="message">The message to log.</param>
 		public void Info(object message)
 		{
 			Info( message, null );
 		}
 
 		/// <summary>
-		/// 
+		/// Log a <see cref="LogLevel.Info" /> message with an optional <see cref="Exception" />.
 		/// </summary>
-		/// <param name="message"></param>
-		/// <param name="e"></param>
+		/// <param name="message">The message to log.</param>
+		/// <param name="e">
+		/// The	<see cref="Exception" /> associated with the message. If there isn't any
+		/// <see cref="Exception" /> associated with the message, pass <see langword="null" />.
+		/// </param>
 		public void Info(object message, Exception e)
 		{
 			if ( IsLevelEnabled( LogLevel.Info ) )
@@ -219,19 +229,22 @@ namespace IBatisNet.Common.Logging.Impl
 		}
 
 		/// <summary>
-		/// 
+		/// Log a <see cref="LogLevel.Warn" /> message.
 		/// </summary>
-		/// <param name="message"></param>
+		/// <param name="message">The message to log.</param>
 		public void Warn(object message)
 		{
 			Warn( message, null );
 		}
 
 		/// <summary>
-		/// 
+		/// Log a <see cref="LogLevel.Warn" /> message with an optional <see cref="Exception" />.
 		/// </summary>
-		/// <param name="message"></param>
-		/// <param name="e"></param>
+		/// <param name="message">The message to log.</param>
+		/// <param name="e">
+		/// The	<see cref="Exception" /> associated with the message. If there isn't any
+		/// <see cref="Exception" /> associated with the message, pass <see langword="null" />.
+		/// </param>
 		public void Warn(object message, Exception e)
 		{
 			if ( IsLevelEnabled( LogLevel.Warn ) )
@@ -241,7 +254,8 @@ namespace IBatisNet.Common.Logging.Impl
 		}
 
 		/// <summary>
-		/// 
+		/// Returns <see langword="true" /> if the current <see cref="LogLevel" /> is greater than or
+		/// equal to <see cref="LogLevel.Debug" />. If it is, all messages will be sent to <see cref="Console.Out" />.
 		/// </summary>
 		public bool IsDebugEnabled
 		{
@@ -249,7 +263,9 @@ namespace IBatisNet.Common.Logging.Impl
 		}
 
 		/// <summary>
-		/// 
+		/// Returns <see langword="true" /> if the current <see cref="LogLevel" /> is greater than or
+		/// equal to <see cref="LogLevel.Error" />. If it is, only messages with a <see cref="LogLevel" /> of
+		/// <see cref="LogLevel.Error" /> and <see cref="LogLevel.Fatal" /> will be sent to <see cref="Console.Out" />.
 		/// </summary>
 		public bool IsErrorEnabled
 		{
@@ -257,7 +273,9 @@ namespace IBatisNet.Common.Logging.Impl
 		}
 
 		/// <summary>
-		/// 
+		/// Returns <see langword="true" /> if the current <see cref="LogLevel" /> is greater than or
+		/// equal to <see cref="LogLevel.Fatal" />. If it is, only messages with a <see cref="LogLevel" /> of
+		/// <see cref="LogLevel.Fatal" /> will be sent to <see cref="Console.Out" />.
 		/// </summary>
 		public bool IsFatalEnabled
 		{
@@ -265,7 +283,10 @@ namespace IBatisNet.Common.Logging.Impl
 		}
 
 		/// <summary>
-		/// 
+		/// Returns <see langword="true" /> if the current <see cref="LogLevel" /> is greater than or
+		/// equal to <see cref="LogLevel.Info" />. If it is, only messages with a <see cref="LogLevel" /> of
+		/// <see cref="LogLevel.Info" />, <see cref="LogLevel.Warn" />, <see cref="LogLevel.Error" />, and 
+		/// <see cref="LogLevel.Fatal" /> will be sent to <see cref="Console.Out" />.
 		/// </summary>
 		public bool IsInfoEnabled
 		{
@@ -274,7 +295,10 @@ namespace IBatisNet.Common.Logging.Impl
 
 
 		/// <summary>
-		/// 
+		/// Returns <see langword="true" /> if the current <see cref="LogLevel" /> is greater than or
+		/// equal to <see cref="LogLevel.Warn" />. If it is, only messages with a <see cref="LogLevel" /> of
+		/// <see cref="LogLevel.Warn" />, <see cref="LogLevel.Error" />, and <see cref="LogLevel.Fatal" /> 
+		/// will be sent to <see cref="Console.Out" />.
 		/// </summary>
 		public bool IsWarnEnabled
 		{
