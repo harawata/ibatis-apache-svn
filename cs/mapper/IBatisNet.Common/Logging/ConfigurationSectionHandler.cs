@@ -29,6 +29,7 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.Xml;
+using IBatisNet.Common.Logging.Impl;
 using ConfigurationException = IBatisNet.Common.Exceptions.ConfigurationException;
 
 namespace IBatisNet.Common.Logging
@@ -99,19 +100,35 @@ namespace IBatisNet.Common.Logging
 				factoryTypeString = logFactoryElement.Attributes[LOGFACTORYADAPTER_ELEMENT_TYPE_ATTRIB].Value;
             
 			if ( factoryTypeString == string.Empty )
+			{
 				throw new ConfigurationException
 					( "Required Attribute '" 
-					  + LOGFACTORYADAPTER_ELEMENT_TYPE_ATTRIB 
-					  + "' not found in element '"
-					  + LOGFACTORYADAPTER_ELEMENT
-					  + "'"
+					+ LOGFACTORYADAPTER_ELEMENT_TYPE_ATTRIB 
+					+ "' not found in element '"
+					+ LOGFACTORYADAPTER_ELEMENT
+					+ "'"
 					);
-
+			}
 
 			Type factoryType = null;
 			try
 			{
-				factoryType = Type.GetType( factoryTypeString, true, false );
+				if (String.Compare(factoryTypeString, "CONSOLE", true) == 0)
+				{
+					factoryType = typeof(ConsoleOutLoggerFA);
+				}
+				else if (String.Compare(factoryTypeString, "TRACE", true) == 0)
+				{
+					factoryType = typeof(TraceLoggerFA);
+				}
+				else if (String.Compare(factoryTypeString, "NOOP", true) == 0)
+				{
+					factoryType = typeof(NoOpLoggerFA);
+				}
+				else
+				{
+					factoryType = Type.GetType( factoryTypeString, true, false );
+				}
 			}
 			catch ( Exception e )
 			{
