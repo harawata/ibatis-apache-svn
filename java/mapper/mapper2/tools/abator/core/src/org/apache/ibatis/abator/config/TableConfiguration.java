@@ -61,6 +61,7 @@ public class TableConfiguration extends PropertyHolder {
     private String alias;
     private ModelType modelType;
     private boolean wildcardEscapingEnabled;
+    private String configuredModelType;
     
 	public TableConfiguration(AbatorContext abatorContext) {
 		super();
@@ -291,8 +292,9 @@ public class TableConfiguration extends PropertyHolder {
         return modelType;
     }
 
-    public void setModelType(ModelType modelType) {
-        this.modelType = modelType;
+    public void setConfiguredModelType(String configuredModelType) {
+        this.configuredModelType = configuredModelType;
+        this.modelType = ModelType.getModelType(configuredModelType);
     }
 
     public boolean isWildcardEscapingEnabled() {
@@ -355,8 +357,8 @@ public class TableConfiguration extends PropertyHolder {
             xmlElement.addAttribute(new Attribute("selectByExampleQueryId", selectByExampleQueryId)); //$NON-NLS-1$
         }
         
-        if (modelType != null) {
-            xmlElement.addAttribute(new Attribute("modelType", modelType.getModelType())); //$NON-NLS-1$
+        if (configuredModelType != null) {
+            xmlElement.addAttribute(new Attribute("modelType", configuredModelType)); //$NON-NLS-1$
         }
         
         if (wildcardEscapingEnabled) {

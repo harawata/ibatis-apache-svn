@@ -390,7 +390,7 @@ public class AbatorConfigurationParser {
         }
 
         if (StringUtility.stringHasValue(modelType)) {
-            tc.setModelType(ModelType.getModelType(modelType));
+            tc.setConfiguredModelType(modelType);
         }
 
         if (StringUtility.stringHasValue(escapeWildcards)) {

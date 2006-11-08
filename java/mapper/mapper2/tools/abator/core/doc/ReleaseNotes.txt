@@ -17,6 +17,7 @@ Enhancements -
 5. Add afterXXXGenerationHook() methods in all generators to enable adding
    extra Java code or XML elements to any generated object.  Will make it
    easier to create customized generators
+6. Added SYBASE database dialect for generated keys
 
 -------------------------------------------------------------------------------
 Version 1.0.0:

@@ -361,7 +361,10 @@ public class AbatorContext extends PropertyHolder {
      */
     public XmlElement toXmlElement() {
         XmlElement xmlElement = new XmlElement("abatorContext"); //$NON-NLS-1$
-        xmlElement.addAttribute(new Attribute("defaultModelType", defaultModelType.getModelType())); //$NON-NLS-1$
+        
+        if (defaultModelType != ModelType.CONDITIONAL) {
+            xmlElement.addAttribute(new Attribute("defaultModelType", defaultModelType.getModelType())); //$NON-NLS-1$
+        }
         
         if (StringUtility.stringHasValue(configuredGeneratorSet)) {
             xmlElement.addAttribute(new Attribute("generatorSet", configuredGeneratorSet)); //$NON-NLS-1$

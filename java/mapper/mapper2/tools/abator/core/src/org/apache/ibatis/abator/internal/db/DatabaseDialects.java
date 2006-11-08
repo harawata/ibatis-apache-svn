@@ -34,6 +34,8 @@ public class DatabaseDialects {
     
     public static final DatabaseDialects HSQLDB = new DatabaseDialects("CALL IDENTITY()"); //$NON-NLS-1$
     
+    public static final DatabaseDialects SYBASE = new DatabaseDialects("SELECT @@IDENTITY"); //$NON-NLS-1$
+    
     private String identityRetrievalStatement;
 
     /**
@@ -69,6 +71,8 @@ public class DatabaseDialects {
             returnValue = DERBY;
         } else if ("HSQLDB".equalsIgnoreCase(database)) { //$NON-NLS-1$
             returnValue = HSQLDB;
+        } else if ("SYBASE".equalsIgnoreCase(database)) { //$NON-NLS-1$
+            returnValue = SYBASE;
         }
         
         return returnValue;
