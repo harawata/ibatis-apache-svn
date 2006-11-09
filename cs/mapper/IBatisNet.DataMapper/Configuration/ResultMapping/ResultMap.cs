@@ -247,6 +247,10 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		{
 			try
 			{
+				if (_className == "NCategory")
+				{
+					Console.Write("");
+				}
 				_class = configScope.SqlMapper.TypeHandlerFactory.GetType(_className);
 				_dataExchange = _dataExchangeFactory.GetDataExchangeForClass(_class);
 

@@ -24,6 +24,7 @@
 #endregion
 
 using System.Data;
+using System.Text;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
 using IBatisNet.DataMapper.Scope;
 
@@ -34,6 +35,56 @@ namespace IBatisNet.DataMapper.MappedStatements
 	/// </summary>
 	public abstract class BaseStrategy
 	{
+ 	    /// <summary>
+	    /// Used by N+1 Select solution
+	    /// </summary>
+        public static object SKIP = new object();
+	    
+        private const string KEY_SEPARATOR = "\002";
+
+    
+	    /// <summary>
+        /// Calculte a unique key which identify the resukt object build by this <see cref="IResultMap"/>
+	    /// </summary>
+	    /// <param name="resultMap"></param>
+	    /// <param name="request"></param>
+	    /// <param name="reader"></param>
+	    /// <returns></returns>
+        protected string GetUniqueKey(IResultMap resultMap, RequestScope request, IDataReader reader)
+        {
+            if (resultMap.GroupByProperties.Count > 0)
+            {
+                StringBuilder keyBuffer = new StringBuilder();
+
+                for (int i = 0; i < resultMap.Properties.Count; i++)
+                {
+                    ResultProperty resultProperty = resultMap.Properties[i];
+                    if (resultMap.GroupByProperties.Contains(resultProperty.PropertyName))
+                    {
+                        // on peut surement utiliser resultProperty.GetDataBaseValue
+                        keyBuffer.Append(resultProperty.GetDataBaseValue(reader));
+                                             //PropertyStrategy.Get(request, resultMap, resultProperty, reader));
+                        keyBuffer.Append('-');
+                    }
+                }
+
+                if (keyBuffer.Length < 1)
+                {
+                    return null;
+                }
+                else
+                {
+                    // separator value not likely to appear in a database
+                    keyBuffer.Append(KEY_SEPARATOR);
+                    return keyBuffer.ToString();
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+	    
 		/// <summary>
 		/// Fills the object with reader and result map.
 		/// </summary>

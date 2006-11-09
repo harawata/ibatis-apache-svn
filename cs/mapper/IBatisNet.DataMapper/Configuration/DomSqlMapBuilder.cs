@@ -1812,7 +1812,7 @@ namespace IBatisNet.DataMapper.Configuration
 
 				if (resultMap.ExtendMap!=null && resultMap.ExtendMap.Length >0)
 				{
-					IResultMap superMap;
+					IResultMap superMap = null;			    
 					// Did we already build Extend ResultMap?
 					if (_configScope.SqlMapper.ResultMaps.Contains( resultMap.ExtendMap ) == false)
 					{
@@ -1842,6 +1842,14 @@ namespace IBatisNet.DataMapper.Configuration
                         property.Initialize(_configScope, resultMap.Class);
 						resultMap.Properties.Add(property);
 					}
+                    // Add groupBy properties
+                    if (resultMap.GroupByProperties.Count == 0)
+                    {
+                        for(int i=0; i<superMap.GroupByProperties.Count; i++)
+                        {
+                            resultMap.GroupByProperties.Add(superMap.GroupByProperties[i]);
+                        }
+                    }
 				}
 				_configScope.SqlMapper.AddResultMap( resultMap );
 			}

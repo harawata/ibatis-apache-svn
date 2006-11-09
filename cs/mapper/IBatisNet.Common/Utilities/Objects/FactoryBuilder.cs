@@ -94,7 +94,7 @@ namespace IBatisNet.Common.Utilities.Objects
 			{
 				typesName += types[i].Name.Replace("[]",string.Empty)+i.ToString();
 			}
-			TypeBuilder typeBuilder = _moduleBuilder.DefineType("EmitFactoryFor" + typeToCreate.Name + typesName, TypeAttributes.Public);
+			TypeBuilder typeBuilder = _moduleBuilder.DefineType("EmitFactoryFor" + typeToCreate.FullName + typesName, TypeAttributes.Public);
 			typeBuilder.AddInterfaceImplementation(typeof (IFactory));
 			ImplementCreateInstance(typeBuilder, typeToCreate, types);
 			return typeBuilder.CreateType();

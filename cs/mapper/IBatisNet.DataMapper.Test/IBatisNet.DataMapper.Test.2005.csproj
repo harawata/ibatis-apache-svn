@@ -177,6 +177,9 @@
     <Compile Include="Domain\OuiNonBoolTypeHandlerCallback.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Domain\Petshop\Category.cs" />
+    <Compile Include="Domain\Petshop\Item.cs" />
+    <Compile Include="Domain\Petshop\Product.cs" />
     <Compile Include="Domain\Product.cs" />
     <Compile Include="Domain\Query.cs" />
     <Compile Include="Domain\Sample.cs">
@@ -416,6 +419,7 @@
     <Content Include="Scripts\Access\user-init.sql" />
     <Content Include="Scripts\MSSQL\account-init.sql" />
     <Content Include="Scripts\MSSQL\account-procedure.sql" />
+    <Content Include="Scripts\MSSQL\categories-init.sql" />
     <Content Include="Scripts\MSSQL\category-init.sql" />
     <Content Include="Scripts\MSSQL\category-procedure.sql" />
     <Content Include="Scripts\MSSQL\category-procedureWithReturn.sql" />
@@ -425,12 +429,14 @@
     <Content Include="Scripts\MSSQL\embed-param-setup-init.sql" />
     <Content Include="Scripts\MSSQL\embed-param-test-init.sql" />
     <Content Include="Scripts\MSSQL\enumeration-init.sql" />
-    <Content Include="Scripts\MSSQL\Items-init.sql" />
     <Content Include="Scripts\MSSQL\line-item-init.sql" />
     <Content Include="Scripts\MSSQL\more-account-records.sql" />
     <Content Include="Scripts\MSSQL\Nullable-init.sql" />
     <Content Include="Scripts\MSSQL\order-init.sql" />
     <Content Include="Scripts\MSSQL\other-init.sql" />
+    <Content Include="Scripts\MSSQL\petstore-drop.sql" />
+    <Content Include="Scripts\MSSQL\petstore-init.sql" />
+    <Content Include="Scripts\MSSQL\petstore-schema.sql" />
     <Content Include="Scripts\MSSQL\Products-init.sql" />
     <Content Include="Scripts\MSSQL\ps_SelectAccount.sql" />
     <Content Include="Scripts\MSSQL\ps_SelectAllAccount.sql" />

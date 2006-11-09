@@ -4,29 +4,45 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
   <alias>
-    <typeAlias alias="Product" type="IBatisNet.DataMapper.Test.Domain.Product, IBatisNet.DataMapper.Test"/>
-    <typeAlias alias="Item" type="IBatisNet.DataMapper.Test.Domain.Item, IBatisNet.DataMapper.Test"/>
+    <typeAlias alias="NCategory" type="IBatisNet.DataMapper.Test.Domain.Petshop.Category, IBatisNet.DataMapper.Test"/>
+    <typeAlias alias="NProduct" type="IBatisNet.DataMapper.Test.Domain.Petshop.Product, IBatisNet.DataMapper.Test"/>
+    <typeAlias alias="NItem" type="IBatisNet.DataMapper.Test.Domain.Petshop.Item, IBatisNet.DataMapper.Test"/>
   </alias>
-  
+
   <resultMaps>
 
-    <resultMap id="Category-Result" class="Category" groupBy="Id">
+    <resultMap id="Category-Result" class="NCategory" groupBy="Id">
       <result property="Id" column="Category_Id"/>
       <result property="Name" column="Category_Name"/>
       <result property="Products" resultMapping="GroupByMapping.Product-Result"/>
     </resultMap>
-       
-    <resultMap id="Product-Result" class="Product" groupBy="Id">
+
+    <resultMap id="CategoryGeneric-Result" class="NCategory" groupBy="Id">
+      <result property="Id" column="Category_Id"/>
+      <result property="Name" column="Category_Name"/>
+      <result property="GenericProducts" resultMapping="GroupByMapping.ProductGeneric-Result"/>
+    </resultMap>
+    
+    <resultMap id="Category-Result-Extended" class="NCategory" extends="Category-Result" >
+      <result property="Description" column="Category_Description"/>
+    </resultMap>
+    
+    <resultMap id="Product-Result" class="NProduct" groupBy="Id">
       <result property="Id" column="Product_Id"/>
       <result property="Name" column="Product_Name"/>
       <result property="Items" resultMapping="GroupByMapping.Item-Result"/>
     </resultMap>
 
-    <resultMap id="Item-Result" class="Item">
+    <resultMap id="ProductGeneric-Result" class="NProduct" groupBy="Id">
+      <result property="Id" column="Product_Id"/>
+      <result property="Name" column="Product_Name"/>
+      <result property="GenericItems" resultMapping="GroupByMapping.Item-Result"/>
+    </resultMap>
+    
+    <resultMap id="Item-Result" class="NItem">
       <result property="Id" column="Item_Id"/>
       <result property="UnitCost" column="Item_UnitCost"/>
       <result property="Status" column="Item_Status"/>
-      <result property="Quantity" column="Item_Quantity"/>
     </resultMap>
 
     <resultMap id="Order-GroupBy-Result" class="Order" groupBy="Id">
@@ -42,6 +58,17 @@
       <result property="Quantity"		column="LineItem_Quantity"/>
       <result property="Price"		column="LineItem_Price" />
     </resultMap>
+
+    <resultMap id="categoryResultJIRA250" class="NCategory" groupBy="Id">
+      <result property="Id" column="Category_Id"/>
+      <result property="Name" column="Category_Name"/>
+      <result property="Products" resultMapping="GroupByMapping.productResultJIRA250"/>
+    </resultMap>
+
+    <resultMap id="productResultJIRA250" class="NProduct" groupBy="Id">
+      <result property="Id" column="Product_Id"/>
+      <result property="Name" column="Product_Name" />
+    </resultMap>
     
   </resultMaps>
 
@@ -49,14 +76,61 @@
 
     <select id="GetAllCategories" resultMap="Category-Result" >
       select
-      Category_Id, Category_Name,
-      p.Id as Product_Id, p.Name as Product_Name,
-      i.Id as Item_Id, i.UnitCost as Item_UnitCost, i.Status as Item_Status, i.Quantity as Item_Quantity
+      c.Category_Id, c.Category_Name,
+      p.Product_Id, p.Product_Name,
+      i.Item_Id, i.Item_UnitCost, i.Item_Status
       from Categories c, Products p, Items i
-      where c.Id = p.Category_Id
-      and p.Id = i.Product_Id
+      where c.Category_Id = p.Category_Id
+      and p.Product_Id = i.Product_Id
+      order by c.Category_Id, p.Product_Id, i.Item_Id
     </select>
 
+    <select id="GetAllCategoriesExtended" resultMap="Category-Result-Extended" >
+      select
+      c.Category_Id, c.Category_Name, c.Category_Description,
+      p.Product_Id, p.Product_Name,
+      i.Item_Id, i.Item_UnitCost, i.Item_Status,
+      v.Inventory_Quantity
+      from Categories c, Products p, Items i, Inventories v
+      where c.Category_Id = p.Category_Id
+      and p.Product_Id = i.Product_Id
+      and i.Item_Id = v.Item_Id
+    </select>
+
+    <select id="GetFish" resultMap="Category-Result" >
+      select
+      c.Category_Id, c.Category_Name,
+      p.Product_Id, p.Product_Name,
+      i.Item_Id, i.Item_UnitCost, i.Item_Status,
+      v.Inventory_Quantity
+      from Categories c, Products p, Items i, Inventories v
+      where c.Category_Id = p.Category_Id
+      and p.Product_Id = i.Product_Id
+      and i.Item_Id = v.Item_Id
+      and c.Category_Id = 'FISH'
+    </select>
+
+    <select id="GetFishGeneric" resultMap="CategoryGeneric-Result" >
+      select
+      c.Category_Id, c.Category_Name,
+      p.Product_Id, p.Product_Name,
+      i.Item_Id, i.Item_UnitCost, i.Item_Status,
+      v.Inventory_Quantity
+      from Categories c, Products p, Items i, Inventories v
+      where c.Category_Id = p.Category_Id
+      and p.Product_Id = i.Product_Id
+      and i.Item_Id = v.Item_Id
+      and c.Category_Id = 'FISH'
+    </select>
+    
+    <select id="GetAllProductCategoriesJIRA250" resultMap="categoryResultJIRA250" >
+      select
+      c.Category_Id, c.Category_Name,
+      null as Product_Id, null as Product_Name
+      from Categories c
+    </select>
+    
+    <!-- Ignore -->
     <statement id="GetOrderLineItem"
                 resultMap="Order-GroupBy-Result" >
       select

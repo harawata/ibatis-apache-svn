@@ -52,7 +52,7 @@ namespace IBatisNet.DataMapper.MappedStatements.PropertyStrategy
 		public void Set(RequestScope request, IResultMap resultMap, 
 			ResultProperty mapping, ref object target, IDataReader reader, object keys)
 		{
-            object obj = Get(request, resultMap, mapping, reader);
+            object obj = Get(request, resultMap, mapping, ref target, reader);
 			// Sets created object on the property
 			resultMap.SetValueOfProperty( ref target, mapping, obj );		
 		}
@@ -64,7 +64,8 @@ namespace IBatisNet.DataMapper.MappedStatements.PropertyStrategy
         /// <param name="resultMap">The result map.</param>
         /// <param name="mapping">The mapping.</param>
         /// <param name="reader">The reader.</param>
-        public object Get(RequestScope request, IResultMap resultMap, ResultProperty mapping, IDataReader reader)
+		/// <param name="target">The target object</param>
+		public object Get(RequestScope request, IResultMap resultMap, ResultProperty mapping, ref object target, IDataReader reader)
         {
             object[] parameters = null;
             bool isParameterFound = false;

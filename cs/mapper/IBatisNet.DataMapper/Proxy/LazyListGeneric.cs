@@ -56,7 +56,7 @@ namespace IBatisNet.DataMapper.Proxy
         #endregion
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LazyListGeneric<T>"/> class.
+        /// Initializes a new instance of the LazyListGeneric class.
         /// </summary>
         /// <param name="mappedSatement">The mapped satement.</param>
         /// <param name="param">The param.</param>
@@ -146,7 +146,7 @@ namespace IBatisNet.DataMapper.Proxy
         }
 
         /// <summary>
-        /// Gets or sets the <see cref="T"/> at the specified index.
+        /// Gets or sets the object at the specified index.
         /// </summary>
         /// <value></value>
         public T this[int index]
@@ -261,7 +261,7 @@ namespace IBatisNet.DataMapper.Proxy
         /// Returns an enumerator that iterates through the collection.
         /// </summary>
         /// <returns>
-        /// A <see cref="System.Collections.Generic.IEnumerator`1"></see> that can be used to iterate through the collection.
+        /// A <see cref="System.Collections.Generic.IEnumerator"></see> that can be used to iterate through the collection.
         /// </returns>
         public IEnumerator<T> GetEnumerator()
         {
@@ -433,10 +433,10 @@ namespace IBatisNet.DataMapper.Proxy
         }
 
         /// <summary>
-        /// Gets the number of elements contained in the <see cref="System.Collections.Generic.ICollection`1"></see>.
+        /// Gets the number of elements contained in the <see cref="System.Collections.Generic.ICollection"></see>.
         /// </summary>
         /// <value></value>
-        /// <returns>The number of elements contained in the <see cref="System.Collections.Generic.ICollection`1"></see>.</returns>
+        /// <returns>The number of elements contained in the <see cref="System.Collections.Generic.ICollection"></see>.</returns>
         int ICollection.Count
         {
             get { return this.Count; }

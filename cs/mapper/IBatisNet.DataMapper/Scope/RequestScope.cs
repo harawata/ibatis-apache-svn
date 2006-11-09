@@ -45,9 +45,6 @@ namespace IBatisNet.DataMapper.Scope
     /// </summary>
     public class RequestScope : IScope
     {
-        // Used by N+1 Select solution
-        public static object SKIP = new object();
-
         #region Fields
 
         private IStatement _statement = null;

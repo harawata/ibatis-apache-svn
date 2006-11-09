@@ -31,7 +31,6 @@ using System.Collections.Generic;
 using System.Data;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
 using IBatisNet.DataMapper.Exceptions;
-using IBatisNet.DataMapper.Proxy;
 using IBatisNet.DataMapper.Scope;
 
 namespace IBatisNet.DataMapper.MappedStatements.PropertyStrategy
@@ -153,7 +152,8 @@ namespace IBatisNet.DataMapper.MappedStatements.PropertyStrategy
         /// <param name="resultMap">The result map.</param>
         /// <param name="mapping">The mapping.</param>
         /// <param name="reader">The reader.</param>
-        public object Get(RequestScope request, IResultMap resultMap, ResultProperty mapping, IDataReader reader)
+		/// <param name="target">The target object</param>
+		public object Get(RequestScope request, IResultMap resultMap, ResultProperty mapping, ref object target, IDataReader reader)
         {
             throw new NotSupportedException("Get method on ResultMapStrategy is not supported");
         }	    

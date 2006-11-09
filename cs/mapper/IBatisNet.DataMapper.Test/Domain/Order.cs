@@ -14,7 +14,7 @@ namespace IBatisNet.DataMapper.Test.Domain
 	{
 		private int _id;
 		private Account _account;
-		private System.DateTime _date;
+		private DateTime _date;
 		private string _cardType;
 		private string _cardNumber;
 		private string _cardExpiry;

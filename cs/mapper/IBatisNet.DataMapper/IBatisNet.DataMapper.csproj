@@ -978,6 +978,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "MappedStatements\PropertStrategy\GroupByStrategy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "MappedStatements\PropertStrategy\IPropertyStrategy.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

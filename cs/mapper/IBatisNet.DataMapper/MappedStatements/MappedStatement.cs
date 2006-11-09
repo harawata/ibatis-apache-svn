@@ -480,8 +480,10 @@ namespace IBatisNet.DataMapper.MappedStatements
                         && reader.Read())
                     {
                         object obj = _resultStrategy.Process(request, ref reader, null);
-
-                        list.Add(obj);
+                        if (obj != BaseStrategy.SKIP)
+                        {
+                            list.Add(obj);
+                        }
                         resultsFetched++;
                     }
                 }
@@ -541,7 +543,7 @@ namespace IBatisNet.DataMapper.MappedStatements
                             while (reader.Read())
                             {
                                 object obj = _resultStrategy.Process(request, ref reader, null);
-                                if (obj!=RequestScope.SKIP)
+                                if (obj != BaseStrategy.SKIP)
                                 {
                                     list.Add(obj);
                                 }
@@ -693,9 +695,11 @@ namespace IBatisNet.DataMapper.MappedStatements
                     while ((maxResults == NO_MAXIMUM_RESULTS || resultsFetched < maxResults)
                         && reader.Read())
                     {
-                        T obj = (T)_resultStrategy.Process(request, ref reader, null);
-
-                        list.Add(obj);
+                        object obj = _resultStrategy.Process(request, ref reader, null);
+                        if (obj != BaseStrategy.SKIP)
+                        {
+                            list.Add((T)obj);
+                        }
                         resultsFetched++;
                     }
                 }
@@ -754,8 +758,11 @@ namespace IBatisNet.DataMapper.MappedStatements
                         {
                             while (reader.Read())
                             {
-                                T obj = (T)_resultStrategy.Process(request, ref reader, null);
-                                list.Add(obj);
+                                object obj = _resultStrategy.Process(request, ref reader, null);
+                                if (obj != BaseStrategy.SKIP)
+                                {
+                                    list.Add((T)obj);
+                                }
                             }
                         }
                         else

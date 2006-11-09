@@ -353,6 +353,21 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Domain\Petshop\Category.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Domain\Petshop\Item.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Domain\Petshop\Product.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Maps\Access\OleDb\Account.xml"
                     BuildAction = "Content"
                 />
@@ -530,6 +545,10 @@
                 />
                 <File
                     RelPath = "Maps\MSSQL\SqlClient\Enumeration.xml"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Maps\MSSQL\SqlClient\GroupByMapping.xml"
                     BuildAction = "Content"
                 />
                 <File
@@ -837,6 +856,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "NUnit\SqlMapTests\GroupByTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "NUnit\SqlMapTests\InheritanceTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -1071,6 +1095,18 @@
                 />
                 <File
                     RelPath = "Scripts\MSSQL\other-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MSSQL\petstore-drop.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MSSQL\petstore-init.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Scripts\MSSQL\petstore-schema.sql"
                     BuildAction = "Content"
                 />
                 <File

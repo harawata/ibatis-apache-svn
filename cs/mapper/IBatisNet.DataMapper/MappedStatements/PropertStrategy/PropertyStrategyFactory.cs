@@ -23,7 +23,12 @@
  ********************************************************************************/
 #endregion
 
+using System.Collections;
+#if dotnet2
+using System.Collections.Generic;
+#endif
 using IBatisNet.DataMapper.Configuration.ResultMapping;
+using IBatisNet.DataMapper.MappedStatements.PropertStrategy;
 
 namespace IBatisNet.DataMapper.MappedStatements.PropertyStrategy
 {
@@ -33,7 +38,8 @@ namespace IBatisNet.DataMapper.MappedStatements.PropertyStrategy
 	public class PropertyStrategyFactory
 	{
 		private static IPropertyStrategy _defaultStrategy = null;
-		private static IPropertyStrategy _resultMapStrategy = null;
+        private static IPropertyStrategy _resultMapStrategy = null;
+        private static IPropertyStrategy _groupByStrategy = null;
 
         private static IPropertyStrategy _selectArrayStrategy = null;
         private static IPropertyStrategy _selectGenericListStrategy = null;
@@ -46,7 +52,8 @@ namespace IBatisNet.DataMapper.MappedStatements.PropertyStrategy
 		static PropertyStrategyFactory()
 		{
 			_defaultStrategy = new DefaultStrategy();
-			_resultMapStrategy = new ResultMapStrategy();
+            _resultMapStrategy = new ResultMapStrategy();
+            _groupByStrategy = new GroupByStrategy();
 
             _selectArrayStrategy = new SelectArrayStrategy();
             _selectListStrategy = new SelectListStrategy();
@@ -69,9 +76,31 @@ namespace IBatisNet.DataMapper.MappedStatements.PropertyStrategy
 				// We have a 'normal' ResultMap
 				return _defaultStrategy;
 			}
-			else if (mapping.NestedResultMap != null) // 'resultMap' attribut
+			else if (mapping.NestedResultMap != null) // 'resultMap' attribute
 			{
-				return _resultMapStrategy;
+                if (mapping.NestedResultMap.GroupByProperties.Count>0)
+                {
+                    return _groupByStrategy; 
+                }
+			    else
+                {
+#if dotnet2
+                    if (mapping.MemberType.IsGenericType &&
+                        typeof(IList<>).IsAssignableFrom(mapping.MemberType.GetGenericTypeDefinition()))
+                    {
+                        return _groupByStrategy; 
+                    }
+                    else
+#endif
+                        if (typeof(IList).IsAssignableFrom(mapping.MemberType))
+                        {
+                            return _groupByStrategy; 
+                        }
+                        else
+                        {
+                            return _resultMapStrategy; 
+                        }
+                }
 			}
 			else //'select' ResultProperty 
 			{

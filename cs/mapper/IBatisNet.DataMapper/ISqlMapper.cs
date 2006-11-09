@@ -512,7 +512,7 @@ namespace IBatisNet.DataMapper
         /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
         /// <param name="keyProperty">The property of the result object to be used as the key.</param>
         /// <param name="valueProperty">The property of the result object to be used as the value (or null)</param>
-        /// <param name="rowDelegate"A delegate called once per row in the QueryForDictionary method></param>
+        /// <param name="rowDelegate">A delegate called once per row in the QueryForDictionary method></param>
         /// <returns>A IDictionary (Hashtable) of object containing the rows keyed by keyProperty.</returns>
         ///<exception cref="DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
         IDictionary<K, V> QueryForDictionary<K, V>(string statementName, object parameterObject, string keyProperty, string valueProperty, DictionaryRowDelegate<K, V> rowDelegate);

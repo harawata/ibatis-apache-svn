@@ -120,16 +120,6 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
             sqlMap = null;
         }
 
-        //		[SetUp]
-        //		public virtual void SetUp()
-        //		{
-        //		}
-        //
-        //		[TearDown]
-        //		public virtual void TearDown()
-        //		{
-        //		}
-
         protected static string Normal(string key)
         {
             return key;

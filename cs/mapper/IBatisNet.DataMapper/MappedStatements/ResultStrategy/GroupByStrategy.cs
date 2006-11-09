@@ -23,15 +23,11 @@
  ********************************************************************************/
 #endregion
 
-using System;
 using System.Collections;
 #if dotnet2
 using System.Collections.Generic;
 #endif
 using System.Data;
-using System.Text;
-using IBatisNet.Common.Utilities.Objects;
-using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
 using IBatisNet.DataMapper.Scope;
 
@@ -41,46 +37,9 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
     /// <see cref="IResultStrategy"/> implementation when 
     /// a 'groupBy' attribute is specified on the resultMap tag.
     /// </summary>
+    /// <remarks>N+1 Select solution</remarks>
     public sealed class GroupByStrategy : BaseStrategy, IResultStrategy
     {
-        private const string KEY_SEPARATOR = "\002";
-
-        // il fait des pushRequest, popRequest à voir quoi cela sert
-        // il faudrait faire un push de l currentKey au début de process ? 
-        // un pop à la fin de process  ?
-        private string GetUniqueKey(IResultMap resultMap, RequestScope request, IDataReader reader)
-        {
-            if (resultMap.GroupByProperties.Count > 0)
-            {
-                StringBuilder keyBuffer = new StringBuilder();
-
-                for (int i = 0; i < resultMap.Properties.Count; i++)
-                {
-                    ResultProperty resultProperty = resultMap.Properties[i];
-                    if (resultMap.GroupByProperties.Contains(resultProperty.PropertyName))
-                    {
-                        // on peut surement utiliser resultProperty.GetDataBaseValue
-                        keyBuffer.Append(resultProperty.PropertyStrategy.Get(request, resultMap, resultProperty, reader));
-                        keyBuffer.Append('-');
-                    }
-                }
-
-                if (keyBuffer.Length < 1)
-                {
-                    return null;
-                }
-                else
-                {
-                    // separator value not likely to appear in a database
-                    keyBuffer.Append(KEY_SEPARATOR);
-                    return keyBuffer.ToString();
-                }
-            }
-            else
-            {
-                return null;
-            }
-        }
 
         #region IResultStrategy Members
 
@@ -105,28 +64,16 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
             {
                 // Unique key is already known, so get the existing result object and process additional results.
                 outObject = buildObjects[uniqueKey];
-                // process additional property with resulMapping attribute
+                // process resulMapping attribute wich point to a groupBy attribute
                 for (int index = 0; index < resultMap.Properties.Count; index++)
                 {
                     ResultProperty resultProperty = resultMap.Properties[index];
-                    if (resultProperty.PropertyStrategy is PropertyStrategy.ResultMapStrategy)
+                    if (resultProperty.PropertyStrategy is PropertStrategy.GroupByStrategy)
                     {
-                        // the ResultProperty is an IList implementation 
-                        if (typeof(IList).IsAssignableFrom(resultProperty.SetAccessor.MemberType))
-                        {
-                            // appel PropertyStrategy.ResultMapStrategy.Get
-                            object result = resultProperty.PropertyStrategy.Get(request, resultMap, resultProperty, reader);
-                            IList list = (IList)ObjectProbe.GetMemberValue(outObject, resultProperty.PropertyName,
-                                                       request.DataExchangeFactory.AccessorFactory);
-                            list.Add(result);
-                        }
-                        else
-                        {
-                            resultProperty.PropertyStrategy.Set(request, resultMap, resultProperty, ref outObject, reader, null);
-                        }
+                        resultProperty.PropertyStrategy.Set(request, resultMap, resultProperty, ref outObject, reader, null);
                     }
                 }
-                outObject = RequestScope.SKIP;
+                outObject = SKIP;
             }
             else if (uniqueKey == null || buildObjects == null || !buildObjects.Contains(uniqueKey))
             {
@@ -142,44 +89,13 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
                     if (resultProperty.MemberType.IsGenericType &&
                         typeof(IList<>).IsAssignableFrom(resultProperty.MemberType.GetGenericTypeDefinition()))
                     {
-                        object result = resultProperty.PropertyStrategy.Get(request, resultMap, resultProperty, reader);
-                        object property = ObjectProbe.GetMemberValue(outObject, resultProperty.PropertyName,
-                                                   request.DataExchangeFactory.AccessorFactory);
-                        if (property == null)// Create the list
-                        {
-                            IFactory factory = request.DataExchangeFactory.ObjectFactory.CreateFactory(resultProperty.MemberType,
-                                                                                                       Type.EmptyTypes);
-                            property = factory.CreateInstance(Type.EmptyTypes);
-                            resultProperty.SetAccessor.Set(outObject, property);
-                        }
-
-                        IList list = (IList)property;
-                        list.Add(result);
+                        resultProperty.PropertyStrategy.Set(request, resultMap, resultProperty, ref outObject, reader, null);
                     }
                     else
 #endif
                         if (typeof(IList).IsAssignableFrom(resultProperty.MemberType))
                         {
-                            object result = resultProperty.PropertyStrategy.Get(request, resultMap, resultProperty, reader);
-                            object property = ObjectProbe.GetMemberValue(outObject, resultProperty.PropertyName,
-                                                       request.DataExchangeFactory.AccessorFactory);
-                            if (property == null)// Create the list
-                            {
-                                if (resultProperty.MemberType == typeof(IList))
-                                {
-                                    property = new ArrayList(); 
-                                }
-                                else // custom collection
-                                {
-                                    IFactory factory = request.DataExchangeFactory.ObjectFactory.CreateFactory(resultProperty.MemberType,
-                                                                             Type.EmptyTypes);
-                                    property = factory.CreateInstance(Type.EmptyTypes);
-                                }
-                                resultProperty.SetAccessor.Set(outObject, property);
-                            }
-
-                            IList list = (IList)property;
-                            list.Add(result);
+                            resultProperty.PropertyStrategy.Set(request, resultMap, resultProperty, ref outObject, reader, null);
                         }
                         else
                         {
