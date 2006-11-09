@@ -419,7 +419,6 @@
     <Content Include="Scripts\Access\user-init.sql" />
     <Content Include="Scripts\MSSQL\account-init.sql" />
     <Content Include="Scripts\MSSQL\account-procedure.sql" />
-    <Content Include="Scripts\MSSQL\categories-init.sql" />
     <Content Include="Scripts\MSSQL\category-init.sql" />
     <Content Include="Scripts\MSSQL\category-procedure.sql" />
     <Content Include="Scripts\MSSQL\category-procedureWithReturn.sql" />
@@ -437,7 +436,6 @@
     <Content Include="Scripts\MSSQL\petstore-drop.sql" />
     <Content Include="Scripts\MSSQL\petstore-init.sql" />
     <Content Include="Scripts\MSSQL\petstore-schema.sql" />
-    <Content Include="Scripts\MSSQL\Products-init.sql" />
     <Content Include="Scripts\MSSQL\ps_SelectAccount.sql" />
     <Content Include="Scripts\MSSQL\ps_SelectAllAccount.sql" />
     <Content Include="Scripts\MSSQL\ps_SelectLineItem.sql" />

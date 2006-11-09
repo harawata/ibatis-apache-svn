@@ -508,7 +508,6 @@
     <Compile Include="MappedStatements\PropertStrategy\DefaultStrategy.cs" />
     <Compile Include="MappedStatements\PropertStrategy\GroupByStrategy.cs" />
     <Compile Include="MappedStatements\PropertStrategy\IPropertyStrategy.cs" />
-    <Compile Include="MappedStatements\PropertStrategy\MapStrategy.cs" />
     <Compile Include="MappedStatements\PropertStrategy\PropertyStrategyFactory.cs" />
     <Compile Include="MappedStatements\PropertStrategy\ResultMapStrategy.cs" />
     <Compile Include="MappedStatements\PropertStrategy\SelectArrayStrategy.cs" />
