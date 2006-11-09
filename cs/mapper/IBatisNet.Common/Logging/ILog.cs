@@ -54,7 +54,7 @@ namespace IBatisNet.Common.Logging
 		/// </summary>
 		Error = 4,
 		/// <summary>
-		
+		///
 		/// </summary>
 		Fatal = 5,
 		/// <summary>
