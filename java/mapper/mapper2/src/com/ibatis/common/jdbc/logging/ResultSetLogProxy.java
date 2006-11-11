@@ -85,5 +85,12 @@ public class ResultSetLogProxy extends BaseLogProxy implements InvocationHandler
     return (ResultSet) Proxy.newProxyInstance(cl, new Class[]{ResultSet.class}, handler);
   }
 
+  /**
+   * Get the wrapped result set
+   * @return the resultSet
+   */
+  public ResultSet getRs() {
+    return rs;
+  }
 
 }
