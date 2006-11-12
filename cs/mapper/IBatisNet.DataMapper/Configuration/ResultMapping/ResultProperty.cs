@@ -28,10 +28,14 @@
 
 using System;
 using System.Collections;
+#if dotnet2
+using System.Collections.Generic;
+#endif
 using System.Data;
 using System.Reflection;
 using System.Xml.Serialization;
 using IBatisNet.Common.Exceptions;
+using IBatisNet.Common.Utilities;
 using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.Exceptions;
@@ -94,10 +98,46 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		private IPropertyStrategy _propertyStrategy = null;
         [NonSerialized]
         private ILazyFactory _lazyFactory = null;
+        [NonSerialized]
+        private bool _isIList = false;
+        [NonSerialized]    
+	    private bool _isGenericIList = false;
+        [NonSerialized]
+        private IFactory _listFactory = null;
+	    [NonSerialized]
+        private static IFactory _arrayListFactory = new ArrayListFactory();
+	    
 		#endregion
 
 		#region Properties
 
+        /// <summary>
+        /// Tell us if the member type implement generic Ilist interface.
+        /// </summary>
+        [XmlIgnore]
+        public bool IsGenericIList
+        {
+            get { return _isGenericIList; }
+        }
+
+        /// <summary>
+        /// Tell us if the member type implement Ilist interface.
+        /// </summary>
+        [XmlIgnore]
+        public bool IsIList
+        {
+            get { return _isIList; }
+        }
+        /// <summary>
+        /// List factory for <see cref="IList"/> property
+        /// </summary>
+        /// <remarks>Used by N+1 Select solution</remarks>
+        [XmlIgnore]
+        public IFactory ListFactory
+        {
+            get { return _listFactory; }
+        }
+	    
         /// <summary>
         /// The lazy loader factory
         /// </summary>
@@ -349,6 +389,70 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 					string memberName = _propertyName.Substring( _propertyName.LastIndexOf('.')+1);
                     _setAccessor = configScope.DataExchangeFactory.AccessorFactory.SetAccessorFactory.CreateSetAccessor(propertyInfo.ReflectedType, memberName);
 				}
+
+#if dotnet2
+                _isGenericIList = TypeUtils.IsImplementGenericIListInterface(this.MemberType);
+#endif			    
+                _isIList = typeof (IList).IsAssignableFrom(this.MemberType);
+			    
+			    // set the list factory
+#if dotnet2			   
+			    if (_isGenericIList)
+			    {
+			        if (this.MemberType.IsArray)
+			        {
+                        _listFactory = _arrayListFactory;
+			        }
+			        else
+			        {
+                        Type[] typeArgs = this.MemberType.GetGenericArguments();
+
+                        if (typeArgs.Length == 0)// Custom collection which derive from List<T>
+			            {
+                            _listFactory = configScope.DataExchangeFactory.ObjectFactory.CreateFactory(this.MemberType, Type.EmptyTypes);
+			            }
+			            else
+			            {
+                            Type genericIList = typeof(IList<>);
+                            Type interfaceListType = genericIList.MakeGenericType(typeArgs);
+
+                            Type genericList = typeof(List<>);
+                            Type listType = genericList.MakeGenericType(typeArgs);
+
+                            if ((interfaceListType == this.MemberType) || (listType == this.MemberType))
+                            {
+                                Type constructedType = genericList.MakeGenericType(typeArgs);
+                                _listFactory = configScope.DataExchangeFactory.ObjectFactory.CreateFactory(
+                                    constructedType,
+                                    Type.EmptyTypes);
+                            }
+                            else // Custom collection which derive from List<T>
+                            {
+                                _listFactory = configScope.DataExchangeFactory.ObjectFactory.CreateFactory(this.MemberType, Type.EmptyTypes);
+                            }  
+			            }			            
+			        }
+			    }
+			    else 
+#endif			        
+			    if (typeof(IList).IsAssignableFrom(this.MemberType))
+			    {
+                    if (this.MemberType.IsArray)
+                    {
+                        _listFactory = _arrayListFactory;
+                    }
+			        else
+                    {
+                        if (this.MemberType == typeof(IList))
+                        {
+                            _listFactory = _arrayListFactory;
+                        }
+                        else // custom collection
+                        {
+                            _listFactory = configScope.DataExchangeFactory.ObjectFactory.CreateFactory(this.MemberType,                                                                                                   Type.EmptyTypes);
+                        }                        
+                    }
+			    }
 			}
 
 			if (this.CallBackName!=null && this.CallBackName.Length >0)
@@ -474,6 +578,32 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
         }
 
         #endregion
+	    
+	    /// <summary>
+        /// <see cref="IFactory"/> that constracut <see cref="ArrayList"/> instance
+	    /// </summary>
+	    private class ArrayListFactory : IFactory
+	    {
+
+            #region IFactory Members
+
+            /// <summary>
+            /// Create a new instance with the specified parameters
+            /// </summary>
+            /// <param name="parameters">An array of values that matches the number, order and type
+            /// of the parameters for this constructor.</param>
+            /// <returns>A new instance</returns>
+            /// <remarks>
+            /// If you call a constructor with no parameters, pass null.
+            /// Anyway, what you pass will be ignore.
+            /// </remarks>
+            public object CreateInstance(object[] parameters)
+            {
+              return new ArrayList();
+            }
+
+            #endregion
+        }
     }
 
 }

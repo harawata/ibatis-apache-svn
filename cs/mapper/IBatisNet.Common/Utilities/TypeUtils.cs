@@ -24,7 +24,9 @@
 #endregion
 
 using System;
-
+#if dotnet2
+using System.Collections.Generic;
+#endif
 using IBatisNet.Common.Utilities.TypesResolver;
 
 namespace IBatisNet.Common.Utilities
@@ -214,6 +216,49 @@ namespace IBatisNet.Common.Utilities
 
             return resultObject;
         }
+
+        /// <summary>
+        /// Determines whether the specified type is implement generic Ilist interface.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>
+        /// 	<c>true</c> if the specified type is implement generic Ilist interface; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsImplementGenericIListInterface(Type type)
+        {
+            bool ret = false;
+            
+            if (!type.IsGenericType)
+            {
+                ret = false;  
+            }
+
+            Type genericTypeDef = null;
+            try
+            {
+                genericTypeDef = type.GetGenericTypeDefinition();
+            }
+            catch {}
+
+            // Check if it is IList<T>
+            if (genericTypeDef!=null && typeof(IList<>).IsAssignableFrom(genericTypeDef))
+            {
+                ret = true;
+            }
+            else // check if one of the derived interfaces is IList<>
+            {
+                Type[] interfaceTypes = type.GetInterfaces();
+                foreach (Type interfaceType in interfaceTypes)
+                {
+                    if (interfaceType.IsGenericType &&
+                      interfaceType.GetGenericTypeDefinition() == typeof(IList<>))
+                    {
+                        ret = true;
+                    }
+                }
+            }                
+            return ret;
+        } 
 #endif
     }
 }

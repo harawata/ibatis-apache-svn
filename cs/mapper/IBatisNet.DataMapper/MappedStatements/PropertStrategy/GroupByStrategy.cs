@@ -90,35 +90,8 @@ namespace IBatisNet.DataMapper.MappedStatements.PropertStrategy
             
             if (property == null)// Create the list if need
             {
-#if dotnet2
-                if (mapping.MemberType.IsGenericType &&
-                    typeof(IList<>).IsAssignableFrom(mapping.MemberType.GetGenericTypeDefinition()))
-                {
-                    Type genericList = typeof(List<>);
-                    Type[] typeArgs = mapping.MemberType.GetGenericArguments();
-                    Type constructedType = genericList.MakeGenericType(typeArgs);
-
-                    IFactory factory = request.DataExchangeFactory.ObjectFactory.CreateFactory(constructedType,
-                                                                                               Type.EmptyTypes);
-                    property = factory.CreateInstance(null);
-                    mapping.SetAccessor.Set(target, property);
-                }
-                else
-#endif
-                    if (typeof(IList).IsAssignableFrom(mapping.MemberType))
-                    {
-                        if (mapping.MemberType == typeof(IList))
-                        {
-                            property = new ArrayList();
-                        }
-                        else // custom collection
-                        {
-                            IFactory factory = request.DataExchangeFactory.ObjectFactory.CreateFactory(mapping.MemberType,
-                                                                                                       Type.EmptyTypes);
-                            property = factory.CreateInstance(null);
-                        }
-                        mapping.SetAccessor.Set(target, property);
-                    }
+                property = mapping.ListFactory.CreateInstance(null);
+                mapping.SetAccessor.Set(target, property);
             }
             list = (IList)property;
 

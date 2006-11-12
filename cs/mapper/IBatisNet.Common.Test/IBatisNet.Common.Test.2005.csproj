@@ -102,6 +102,8 @@
     </Compile>
     <Compile Include="Domain\Book.cs" />
     <Compile Include="Domain\Document.cs" />
+    <Compile Include="Domain\DocumentCollection.cs" />
+    <Compile Include="Domain\GenericDocumentCollection.cs" />
     <Compile Include="Domain\Item.cs" />
     <Compile Include="Domain\Order.cs" />
     <Compile Include="Domain\Property.cs" />
@@ -146,6 +148,7 @@
     </Compile>
     <Compile Include="NUnit\CommonTests\Utilities\Timer.cs" />
     <Compile Include="NUnit\CommonTests\Utilities\TypeResolverTest.cs" />
+    <Compile Include="NUnit\CommonTests\Utilities\TypeUtilsTest.cs" />
     <None Include="bin\Debug\dao_Access_OleDb.config" />
     <None Include="bin\Debug\dao_MSSQL_Odbc.config" />
     <None Include="bin\Debug\dao_MSSQL_OleDb.config" />

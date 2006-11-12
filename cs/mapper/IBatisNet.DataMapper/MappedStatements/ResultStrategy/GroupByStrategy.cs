@@ -85,22 +85,7 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
                 for (int index = 0; index < resultMap.Properties.Count; index++)
                 {
                     ResultProperty resultProperty = resultMap.Properties[index];
-#if dotnet2
-                    if (resultProperty.MemberType.IsGenericType &&
-                        typeof(IList<>).IsAssignableFrom(resultProperty.MemberType.GetGenericTypeDefinition()))
-                    {
-                        resultProperty.PropertyStrategy.Set(request, resultMap, resultProperty, ref outObject, reader, null);
-                    }
-                    else
-#endif
-                        if (typeof(IList).IsAssignableFrom(resultProperty.MemberType))
-                        {
-                            resultProperty.PropertyStrategy.Set(request, resultMap, resultProperty, ref outObject, reader, null);
-                        }
-                        else
-                        {
-                            resultProperty.PropertyStrategy.Set(request, resultMap, resultProperty, ref outObject, reader, null);
-                        }
+                    resultProperty.PropertyStrategy.Set(request, resultMap, resultProperty, ref outObject, reader, null);                   
                 }
 
                 if (buildObjects == null)
