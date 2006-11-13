@@ -19,21 +19,15 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
         /// <summary>
         /// SetUp
         /// </summary>
-        [SetUp]
-        public void SetUp()
+        [TestFixtureSetUp]
+        protected override void SetUpFixture()
         {
+            base.SetUpFixture();
             InitScript(sqlMap.DataSource, ScriptDirectory + "petstore-drop.sql");
             InitScript(sqlMap.DataSource, ScriptDirectory + "petstore-schema.sql");
             InitScript(sqlMap.DataSource, ScriptDirectory + "petstore-init.sql");
         }
 
-        /// <summary>
-        /// TearDown
-        /// </summary>
-        [TearDown]
-        public void TearDown()
-        {
-        }
 
         /// <summary>
         /// Dispose the SqlMap

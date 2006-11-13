@@ -255,6 +255,7 @@
     <Compile Include="Configuration\Serializers\SelectDeSerializer.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Configuration\Serializers\SqlDeSerializer.cs" />
     <Compile Include="Configuration\Serializers\StatementDeSerializer.cs">
       <SubType>Code</SubType>
     </Compile>

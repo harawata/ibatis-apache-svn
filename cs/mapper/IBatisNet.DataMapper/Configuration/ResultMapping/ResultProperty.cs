@@ -393,7 +393,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 #if dotnet2
                 _isGenericIList = TypeUtils.IsImplementGenericIListInterface(this.MemberType);
 #endif			    
-                _isIList = typeof (IList).IsAssignableFrom(this.MemberType);
+                _isIList = typeof(IList).IsAssignableFrom(this.MemberType);
 			    
 			    // set the list factory
 #if dotnet2			   
@@ -435,7 +435,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			    }
 			    else 
 #endif			        
-			    if (typeof(IList).IsAssignableFrom(this.MemberType))
+                    if (_isIList)
 			    {
                     if (this.MemberType.IsArray)
                     {

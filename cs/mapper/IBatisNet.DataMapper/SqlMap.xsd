@@ -83,6 +83,7 @@ vs:defaultnsprefix="" >
 	<xs:element name="delete">
 		<xs:complexType mixed="true">
 			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="include"/>
 				<xs:element ref="generate"/>
 				<xs:element ref="isEmpty"/>
 				<xs:element ref="isEqual"/>
@@ -112,6 +113,11 @@ vs:defaultnsprefix="" >
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:attribute>			
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="include">
+		<xs:complexType mixed="true">
+			<xs:attribute name="refid" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="dynamic">
@@ -158,6 +164,7 @@ vs:defaultnsprefix="" >
 	<xs:element name="insert">
 		<xs:complexType mixed="true">
 			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="include"/>
 				<xs:element ref="selectKey"/>
 				<xs:element ref="generate"/>
 				<xs:element ref="dynamic"/>
@@ -659,6 +666,7 @@ vs:defaultnsprefix="" >
 	<xs:element name="select">
 		<xs:complexType mixed="true">
 			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="include"/>
 				<xs:element ref="dynamic"/>
 				<xs:element ref="isEmpty"/>
 				<xs:element ref="isEqual"/>
@@ -725,9 +733,33 @@ vs:defaultnsprefix="" >
 			<xs:attribute name="namespace" type="xs:string" use="required"/>
 		</xs:complexType>
 	</xs:element>
+	<xs:element name="sql">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="dynamic"/>
+				<xs:element ref="isEmpty"/>
+				<xs:element ref="isEqual"/>
+				<xs:element ref="isGreaterEqual"/>
+				<xs:element ref="isGreaterThan"/>
+				<xs:element ref="isLessThan"/>
+				<xs:element ref="isLessEqual"/>
+				<xs:element ref="isNotEmpty"/>
+				<xs:element ref="isNotEqual"/>
+				<xs:element ref="isNotNull"/>
+				<xs:element ref="isNotParameterPresent"/>
+				<xs:element ref="isNotPropertyAvailable"/>
+				<xs:element ref="isNull"/>
+				<xs:element ref="isParameterPresent"/>
+				<xs:element ref="isPropertyAvailable"/>
+				<xs:element ref="iterate"/>
+			</xs:choice>
+			<xs:attribute name="id" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
 	<xs:element name="statement">
 		<xs:complexType mixed="true">
 			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="include"/>
 				<xs:element ref="dynamic"/>
 				<xs:element ref="isEmpty"/>
 				<xs:element ref="isEqual"/>
@@ -765,6 +797,7 @@ vs:defaultnsprefix="" >
 	<xs:element name="statements">
 		<xs:complexType>
 			<xs:choice maxOccurs="unbounded">
+				<xs:element ref="sql"/>
 				<xs:element ref="statement"/>
 				<xs:element ref="insert"/>
 				<xs:element ref="update"/>
@@ -783,6 +816,7 @@ vs:defaultnsprefix="" >
 	<xs:element name="update">
 		<xs:complexType mixed="true">
 			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="include"/>
 				<xs:element ref="generate"/>
 				<xs:element ref="dynamic"/>
 				<xs:element ref="isEmpty"/>

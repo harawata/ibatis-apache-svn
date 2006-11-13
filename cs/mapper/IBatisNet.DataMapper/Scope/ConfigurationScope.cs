@@ -60,6 +60,8 @@ namespace IBatisNet.DataMapper.Scope
 		
 		private ErrorContext _errorContext = null;
 		private HybridDictionary _providers = new HybridDictionary();
+        private HybridDictionary _sqlIncludes = new HybridDictionary();
+
 		private NameValueCollection _properties = new NameValueCollection();
 
 		private XmlDocument _sqlMapConfigDocument = null;
@@ -97,6 +99,14 @@ namespace IBatisNet.DataMapper.Scope
 
 		#region Properties
 
+        /// <summary>
+        /// The list of sql fragment
+        /// </summary>
+        public HybridDictionary SqlIncludes
+        {
+            get { return _sqlIncludes; }
+        }
+	    
 		/// <summary>
 		/// XmlNamespaceManager
 		/// </summary>

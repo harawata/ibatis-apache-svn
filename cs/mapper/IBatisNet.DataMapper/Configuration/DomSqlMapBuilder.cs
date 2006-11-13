@@ -202,6 +202,11 @@ namespace IBatisNet.DataMapper.Configuration
 		/// </summary>
 		private const string XML_PARAMETERMAP = "sqlMap/parameterMaps/parameterMap";
 
+        /// <summary>
+        /// Token for xml path to sql elements.
+        /// </summary>
+        private const string SQL_STATEMENT = "sqlMap/statements/sql";
+     	    
 		/// <summary>
 		/// Token for xml path to statement elements.
 		/// </summary>
@@ -1143,6 +1148,16 @@ namespace IBatisNet.DataMapper.Configuration
 		
 			#region Load statements
 
+            #region Sql tag
+            foreach (XmlNode xmlNode in _configScope.SqlMapDocument.SelectNodes(ApplyMappingNamespacePrefix(SQL_STATEMENT), _configScope.XmlNamespaceManager))
+            {
+                _configScope.ErrorContext.MoreInfo = "loading sql tag";
+                _configScope.NodeContext = xmlNode; // A sql tag
+
+                SqlDeSerializer.Deserialize(xmlNode, _configScope);
+            }
+            #endregion
+		    
 			#region Statement tag
 			Statement statement;
 			foreach (XmlNode xmlNode in _configScope.SqlMapDocument.SelectNodes( ApplyMappingNamespacePrefix(XML_STATEMENT), _configScope.XmlNamespaceManager))
@@ -1519,7 +1534,7 @@ namespace IBatisNet.DataMapper.Configuration
 					data = NodeUtils.ParsePropertyTokens(data, _configScope.Properties);
 
 					SqlText sqlText;
-					if ( postParseRequired) 
+					if (postParseRequired) 
 					{
 						sqlText = new SqlText();
 						sqlText.Text = data.ToString();
@@ -1531,8 +1546,25 @@ namespace IBatisNet.DataMapper.Configuration
 
 					dynamic.AddChild(sqlText);
 					sqlBuffer.Append(data);
-				} 
-				else 
+				}
+                else if (child.Name == "include")
+				{
+                    NameValueCollection prop = NodeUtils.ParseAttributes(child, _configScope.Properties);
+                    string refid = NodeUtils.GetStringAttribute(prop, "refid");
+                    XmlNode includeNode = (XmlNode)_configScope.SqlIncludes[refid];
+
+                    if (includeNode == null)
+                    {
+                        String nsrefid = _configScope.ApplyNamespace(refid);
+                        includeNode = (XmlNode)_configScope.SqlIncludes[nsrefid];
+                        if (includeNode == null)
+                        {
+                            throw new ConfigurationException("Could not find SQL tag to include with refid '" + refid + "'");
+                        }
+                    }
+                    isDynamic = ParseDynamicTags(includeNode, dynamic, sqlBuffer, isDynamic, false, statement);
+				}
+				else
 				{
 					string nodeName = child.Name;
 					IDeSerializer serializer = _deSerializerFactory.GetDeSerializer(nodeName);

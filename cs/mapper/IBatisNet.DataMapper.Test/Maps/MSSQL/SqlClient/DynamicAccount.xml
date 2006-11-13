@@ -10,6 +10,34 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
   <statements>
 
+    <sql id="includeComplex">
+      <dynamic prepend="where">
+        <isParameterPresent>
+          <isNotEmpty prepend="and" property="Id">
+            Account_ID = #Id#
+          </isNotEmpty>
+          <isNotEmpty prepend="and" property="FirstName">
+            Account_FirstName = #FirstName#
+          </isNotEmpty>
+          <isNotEmpty prepend="and" property="LastName">
+            Account_LastName = #LastName#
+          </isNotEmpty>
+        </isParameterPresent>
+      </dynamic>
+    </sql>
+
+    <select id="DynamicWithPrepend"
+      parameterClass="Account"
+      resultClass="Account">
+      select
+      Account_ID			as Id,
+      Account_FirstName	as FirstName,
+      Account_LastName	as LastName,
+      Account_Email		as EmailAddress
+      from Accounts
+      <include refid="includeComplex"/>
+    </select>
+    
     <statement id="DynamicJIRA168"
 					parameterClass="Query"
 					resultClass="Account">
@@ -400,30 +428,6 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
           <iterate open="(" close=")" conjunction="OR">
             Account_ID = #[]#
           </iterate>
-        </isParameterPresent>
-      </dynamic>
-    </statement>
-
-    <statement id="DynamicWithPrepend"
-					parameterClass="Account"
-					resultClass="Account">
-      select
-      Account_ID			as Id,
-      Account_FirstName	as FirstName,
-      Account_LastName	as LastName,
-      Account_Email		as EmailAddress
-      from Accounts
-      <dynamic prepend="where">
-        <isParameterPresent>
-          <isNotEmpty prepend="and" property="Id" >
-            Account_ID = #Id#
-          </isNotEmpty>
-          <isNotEmpty prepend="and" property="FirstName" >
-            Account_FirstName = #FirstName#
-          </isNotEmpty>
-          <isNotEmpty prepend="and" property="LastName"  >
-            Account_LastName = #LastName#
-          </isNotEmpty>
         </isParameterPresent>
       </dynamic>
     </statement>
