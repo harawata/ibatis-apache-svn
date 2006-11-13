@@ -33,7 +33,7 @@ namespace IBatisNet.Common.Logging.Impl
 	/// <summary>
 	/// Sends log messages to <see cref="Console.Out" />.
 	/// </summary>
-	public class ConsoleOutLogger : ILog
+	public class ConsoleOutLogger : AbstractLogger
 	{
 		private bool _showDateTime = false;
 		private bool _showLogName = false;
@@ -72,7 +72,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// <param name="level">The <see cref="LogLevel" /> of the message.</param>
 		/// <param name="message">The log message.</param>
 		/// <param name="e">An optional <see cref="Exception" /> associated with the message.</param>
-		private void Write( LogLevel level, object message, Exception e )
+		protected override void Write( LogLevel level, object message, Exception e )
 		{
 			// Use a StringBuilder for better performance
 			StringBuilder sb = new StringBuilder();
@@ -117,7 +117,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// </summary>
 		/// <param name="level"></param>
 		/// <returns></returns>
-		private bool IsLevelEnabled( LogLevel level )
+		protected override bool IsLevelEnabled( LogLevel level )
 		{
 			int iLevel = (int)level;
 			int iCurrentLogLevel = (int)_currentLogLevel;
@@ -125,186 +125,5 @@ namespace IBatisNet.Common.Logging.Impl
 			// return iLevel.CompareTo(iCurrentLogLevel); better ???
 			return ( iLevel >= iCurrentLogLevel );
 		}
-
-		#region ILog Members
-
-		/// <summary>
-		/// Log a <see cref="LogLevel.Debug" /> message.
-		/// </summary>
-		/// <param name="message">The message to log.</param>
-		public void Debug(object message)
-		{
-			Debug( message, null );
-		}
-
-		/// <summary>
-		/// Log a <see cref="LogLevel.Debug" /> message with an optional <see cref="Exception" />.
-		/// </summary>
-		/// <param name="message">The message to log.</param>
-		/// <param name="e">
-		/// The	<see cref="Exception" /> associated with the message. If there isn't any
-		/// <see cref="Exception" /> associated with the message, pass <see langword="null" />.
-		/// </param>
-		public void Debug(object message, Exception e)
-		{
-			if ( IsLevelEnabled( LogLevel.Debug ) )
-			{
-				Write( LogLevel.Debug, message, e );	
-			}
-		}
-
-		/// <summary>
-		/// Log a <see cref="LogLevel.Error" /> message.
-		/// </summary>
-		/// <param name="message">The message to log.</param>
-		public void Error(object message)
-		{
-			Error( message, null );
-		}
-
-		/// <summary>
-		/// Log a <see cref="LogLevel.Error" /> message with an optional <see cref="Exception" />.
-		/// </summary>
-		/// <param name="message">The message to log.</param>
-		/// <param name="e">
-		/// The	<see cref="Exception" /> associated with the message. If there isn't any
-		/// <see cref="Exception" /> associated with the message, pass <see langword="null" />.
-		/// </param>
-		public void Error(object message, Exception e)
-		{
-			if ( IsLevelEnabled( LogLevel.Error ) )
-			{
-				Write( LogLevel.Error, message, e );	
-			}
-		}
-
-		/// <summary>
-		/// Log a <see cref="LogLevel.Fatal" /> message.
-		/// </summary>
-		/// <param name="message">The message to log.</param>
-		public void Fatal(object message)
-		{
-			Fatal( message, null );
-		}
-
-		/// <summary>
-		/// Log a <see cref="LogLevel.Fatal" /> message with an optional <see cref="Exception" />.
-		/// </summary>
-		/// <param name="message">The message to log.</param>
-		/// <param name="e">
-		/// The	<see cref="Exception" /> associated with the message. If there isn't any
-		/// <see cref="Exception" /> associated with the message, pass <see langword="null" />.
-		/// </param>
-		public void Fatal(object message, Exception e)
-		{
-			if ( IsLevelEnabled( LogLevel.Fatal ) )
-			{
-				Write( LogLevel.Fatal, message, e );
-			}
-		}
-
-		/// <summary>
-		/// Log a <see cref="LogLevel.Info" /> message.
-		/// </summary>
-		/// <param name="message">The message to log.</param>
-		public void Info(object message)
-		{
-			Info( message, null );
-		}
-
-		/// <summary>
-		/// Log a <see cref="LogLevel.Info" /> message with an optional <see cref="Exception" />.
-		/// </summary>
-		/// <param name="message">The message to log.</param>
-		/// <param name="e">
-		/// The	<see cref="Exception" /> associated with the message. If there isn't any
-		/// <see cref="Exception" /> associated with the message, pass <see langword="null" />.
-		/// </param>
-		public void Info(object message, Exception e)
-		{
-			if ( IsLevelEnabled( LogLevel.Info ) )
-			{
-				Write( LogLevel.Info, message, e );
-			}
-		}
-
-		/// <summary>
-		/// Log a <see cref="LogLevel.Warn" /> message.
-		/// </summary>
-		/// <param name="message">The message to log.</param>
-		public void Warn(object message)
-		{
-			Warn( message, null );
-		}
-
-		/// <summary>
-		/// Log a <see cref="LogLevel.Warn" /> message with an optional <see cref="Exception" />.
-		/// </summary>
-		/// <param name="message">The message to log.</param>
-		/// <param name="e">
-		/// The	<see cref="Exception" /> associated with the message. If there isn't any
-		/// <see cref="Exception" /> associated with the message, pass <see langword="null" />.
-		/// </param>
-		public void Warn(object message, Exception e)
-		{
-			if ( IsLevelEnabled( LogLevel.Warn ) )
-			{
-				Write( LogLevel.Warn, message, e );
-			}
-		}
-
-		/// <summary>
-		/// Returns <see langword="true" /> if the current <see cref="LogLevel" /> is greater than or
-		/// equal to <see cref="LogLevel.Debug" />. If it is, all messages will be sent to <see cref="Console.Out" />.
-		/// </summary>
-		public bool IsDebugEnabled
-		{
-			get { return IsLevelEnabled( LogLevel.Debug ); }
-		}
-
-		/// <summary>
-		/// Returns <see langword="true" /> if the current <see cref="LogLevel" /> is greater than or
-		/// equal to <see cref="LogLevel.Error" />. If it is, only messages with a <see cref="LogLevel" /> of
-		/// <see cref="LogLevel.Error" /> and <see cref="LogLevel.Fatal" /> will be sent to <see cref="Console.Out" />.
-		/// </summary>
-		public bool IsErrorEnabled
-		{
-			get { return IsLevelEnabled( LogLevel.Error ); }
-		}
-
-		/// <summary>
-		/// Returns <see langword="true" /> if the current <see cref="LogLevel" /> is greater than or
-		/// equal to <see cref="LogLevel.Fatal" />. If it is, only messages with a <see cref="LogLevel" /> of
-		/// <see cref="LogLevel.Fatal" /> will be sent to <see cref="Console.Out" />.
-		/// </summary>
-		public bool IsFatalEnabled
-		{
-			get { return IsLevelEnabled( LogLevel.Fatal ); }
-		}
-
-		/// <summary>
-		/// Returns <see langword="true" /> if the current <see cref="LogLevel" /> is greater than or
-		/// equal to <see cref="LogLevel.Info" />. If it is, only messages with a <see cref="LogLevel" /> of
-		/// <see cref="LogLevel.Info" />, <see cref="LogLevel.Warn" />, <see cref="LogLevel.Error" />, and 
-		/// <see cref="LogLevel.Fatal" /> will be sent to <see cref="Console.Out" />.
-		/// </summary>
-		public bool IsInfoEnabled
-		{
-			get { return IsLevelEnabled( LogLevel.Info ); }
-		}
-
-
-		/// <summary>
-		/// Returns <see langword="true" /> if the current <see cref="LogLevel" /> is greater than or
-		/// equal to <see cref="LogLevel.Warn" />. If it is, only messages with a <see cref="LogLevel" /> of
-		/// <see cref="LogLevel.Warn" />, <see cref="LogLevel.Error" />, and <see cref="LogLevel.Fatal" /> 
-		/// will be sent to <see cref="Console.Out" />.
-		/// </summary>
-		public bool IsWarnEnabled
-		{
-			get { return IsLevelEnabled( LogLevel.Warn ); }
-		}
-
-		#endregion
 	}
 }

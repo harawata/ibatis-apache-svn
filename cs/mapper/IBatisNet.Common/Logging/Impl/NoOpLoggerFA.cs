@@ -25,32 +25,36 @@
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Specialized;
 
 namespace IBatisNet.Common.Logging.Impl
 {
 	/// <summary>
-	/// Summary description for NoOpLoggerFA.
+	/// Factory for creating "no operation" loggers that do nothing and whose Is*Enabled properties always 
+	/// return false.
 	/// </summary>
+	/// <remarks>
+	/// This factory creates a single instance of <see cref="NoOpLogger" /> and always returns that 
+	/// instance whenever an <see cref="ILog" /> instance is requested.
+	/// </remarks>
 	public sealed class NoOpLoggerFA : ILoggerFactoryAdapter
 	{
-		private ILog _nopLogger = null;
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public NoOpLoggerFA()
-        {
-            _nopLogger = new NoOpLogger();
-        }
+		private ILog _nopLogger = new NoOpLogger();
 
 		/// <summary>
 		/// Constructor
 		/// </summary>
-        public NoOpLoggerFA(NameValueCollection properties)
+		public NoOpLoggerFA()
 		{
-			_nopLogger = new NoOpLogger();
+			// empty
+		}
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		public NoOpLoggerFA(NameValueCollection properties)
+		{
+			// empty
 		}
 
 		#region ILoggerFactoryAdapter Members
@@ -70,7 +74,7 @@ namespace IBatisNet.Common.Logging.Impl
 		/// </summary>
 		/// <param name="name"></param>
 		/// <returns></returns>
-		ILog Logging.ILoggerFactoryAdapter.GetLogger(string name)
+		ILog ILoggerFactoryAdapter.GetLogger(string name)
 		{
 			return _nopLogger;
 

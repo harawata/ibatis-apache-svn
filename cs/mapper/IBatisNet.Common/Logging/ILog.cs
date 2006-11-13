@@ -64,7 +64,7 @@ namespace IBatisNet.Common.Logging
 	}
 
 	/// <summary>
-	/// A simple logging interface abstracting logging APIs. 
+	/// A simple logging interface abstracting logging APIs. Inspired by log4net.
 	/// </summary>
 	public interface ILog
 	{

@@ -31,11 +31,8 @@ using IBatisNet.Common.Logging.Impl;
 namespace IBatisNet.Common.Logging
 {
 	/// <summary>
-	/// The LogManager can produce ILogFactory for various logging APIs,
-	/// most notably for log4net. 
-	/// Other implemenations such as
-	/// * SimpleLogger
-	/// * NoOpLogger are also supported.
+	/// Uses the specified <see cref="ILoggerFactoryAdapter" /> to create <see cref="ILog" /> instances
+	/// that are used to log messages. Inspired by log4net.
 	/// </summary>
 	public sealed class LogManager
 	{
@@ -53,11 +50,21 @@ namespace IBatisNet.Common.Logging
 		{ }
 
 
-        /// <summary>
-        /// Gets or sets the adapter.
-        /// </summary>
-        /// <value>The adapter.</value>
-        public static ILoggerFactoryAdapter Adapter
+		/// <summary>
+		/// Gets or sets the adapter.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The IBatisNet.Common assembly ships with the following built-in <see cref="ILoggerFactoryAdapter" /> implementations:
+		/// </para>
+		///	<list type="table">
+		///	<item><term><see cref="ConsoleOutLoggerFA" /></term><description>Writes output to Console.Out</description></item>
+		///	<item><term><see cref="TraceLoggerFA" /></term><description>Writes output to the System.Diagnostics.Trace sub-system</description></item>
+		///	<item><term><see cref="NoOpLoggerFA" /></term><description>Ignores all messages</description></item>
+		///	</list>
+		/// </remarks>
+		/// <value>The adapter.</value>
+		public static ILoggerFactoryAdapter Adapter
 		{
 			get
 			{
@@ -73,7 +80,7 @@ namespace IBatisNet.Common.Logging
 				}
 				return _adapter;				
 			}
-		    set
+			set
 			{
 				lock (_loadLock)
 				{
@@ -84,32 +91,32 @@ namespace IBatisNet.Common.Logging
 		}
 
 
-        /// <summary>
-        /// Gets the logger.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <returns></returns>
+		/// <summary>
+		/// Gets the logger.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <returns></returns>
 		public static ILog GetLogger( Type type )
 		{
 			return Adapter.GetLogger( type );
 		}
 
 
-        /// <summary>
-        /// Gets the logger.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <returns></returns>
+		/// <summary>
+		/// Gets the logger.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <returns></returns>
 		public static ILog GetLogger( string name )
 		{
 			return Adapter.GetLogger(name);
 		}
 
 
-        /// <summary>
-        /// Builds the logger factory adapter.
-        /// </summary>
-        /// <returns></returns>
+		/// <summary>
+		/// Builds the logger factory adapter.
+		/// </summary>
+		/// <returns></returns>
 		private static ILoggerFactoryAdapter BuildLoggerFactoryAdapter()
 		{
 			LogSetting setting = null;
@@ -118,7 +125,7 @@ namespace IBatisNet.Common.Logging
 #if dotnet2
                 setting = (LogSetting)ConfigurationManager.GetSection(IBATIS_SECTION_LOGGING );
 #else
- 				setting = (LogSetting)ConfigurationSettings.GetConfig( IBATIS_SECTION_LOGGING );
+				setting = (LogSetting)ConfigurationSettings.GetConfig( IBATIS_SECTION_LOGGING );
 #endif
 			}
 			catch ( Exception ex )
@@ -133,7 +140,7 @@ namespace IBatisNet.Common.Logging
 			{
 				ILoggerFactoryAdapter defaultFactory = BuildDefaultLoggerFactoryAdapter();
 				ILog log = defaultFactory.GetLogger( typeof(LogManager) );
-				log.Warn( "Type " + setting.FactoryAdapterType.FullName + " does not implement ILogFactory. Using default logger" );
+				log.Warn( "Type " + setting.FactoryAdapterType.FullName + " does not implement ILoggerFactoryAdapter. Using default logger" );
 				return defaultFactory;
 			}
 
@@ -176,7 +183,7 @@ namespace IBatisNet.Common.Logging
 			{
 				ILoggerFactoryAdapter defaultFactory = BuildDefaultLoggerFactoryAdapter();
 				ILog log = defaultFactory.GetLogger( typeof(LogManager) );
-				log.Warn( "Unable to read configuration IBatisNet/logging. Using default logger (ConsoleLogger)." );
+				log.Warn( "Unable to read configuration IBatisNet/logging. Using default logger." );
 				return defaultFactory;
 			}
 
@@ -184,13 +191,13 @@ namespace IBatisNet.Common.Logging
 		}
 
 
-        /// <summary>
-        /// Builds the default logger factory adapter.
-        /// </summary>
-        /// <returns></returns>
+		/// <summary>
+		/// Builds the default logger factory adapter.
+		/// </summary>
+		/// <returns></returns>
 		private static ILoggerFactoryAdapter BuildDefaultLoggerFactoryAdapter()
 		{
-            return new NoOpLoggerFA();
+			return new NoOpLoggerFA();
 		}
 	}
 }

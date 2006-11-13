@@ -60,6 +60,14 @@ namespace IBatisNet.Common.Logging
 	/// </configuration>
 	/// </code> 
 	/// </example>
+	/// <para>
+	/// The following aliases are recognized for the type attribute of logFactoryAdapter: 
+	/// </para>
+	/// <list type="table">
+	/// <item><term>CONSOLE</term><description>Alias for IBatisNet.Common.Logging.Impl.ConsoleOutLoggerFA, IBatisNet.Common</description></item>
+	/// <item><term>TRACE</term><description>Alias for IBatisNet.Common.Logging.Impl.TraceLoggerFA, IBatisNet.Common</description></item>
+	/// <item><term>NOOP</term><description>Alias IBatisNet.Common.Logging.Impl.NoOpLoggerFA, IBatisNet.Common</description></item>
+	/// </list>
 	/// </remarks>
 	public class ConfigurationSectionHandler: IConfigurationSectionHandler
 	{

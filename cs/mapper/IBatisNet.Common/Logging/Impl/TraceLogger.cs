@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -25,15 +25,16 @@
 #endregion
 
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 
 namespace IBatisNet.Common.Logging.Impl
 {
 	/// <summary>
-	/// Logger sending everything to the trace output stream.
+	/// Logger that sends output to the <see cref="System.Diagnostics.Trace" /> sub-system.
 	/// </summary>
-	public class TraceLogger: ILog
+	public class TraceLogger: AbstractLogger
 	{
 		private bool _showDateTime = false;
 		private bool _showLogName = false;
@@ -43,15 +44,18 @@ namespace IBatisNet.Common.Logging.Impl
 		private bool _hasDateTimeFormat = false;
 
 		/// <summary>
-		/// 
+		/// Creates a new instance of the TraceLogger.
 		/// </summary>
-		/// <param name="logName"></param>
-		/// <param name="logLevel"></param>
+		/// <param name="logName">The name for this instance (usually the fully qualified class name).</param>
+		/// <param name="logLevel">
+		///	The logging threshold. Log messages created with a <see cref="LogLevel" />
+		/// beneath this threshold will not be logged.
+		/// </param>
 		/// <param name="showDateTime">Include the current time in the log message </param>
 		/// <param name="showLogName">Include the instance name in the log message</param>
 		/// <param name="dateTimeFormat">The date and time format to use in the log message </param>
 		public TraceLogger( string logName, LogLevel logLevel
-			, bool showDateTime, bool showLogName, string dateTimeFormat)
+		                    , bool showDateTime, bool showLogName, string dateTimeFormat)
 		{
 			_logName = logName;
 			_currentLogLevel = logLevel;
@@ -66,19 +70,16 @@ namespace IBatisNet.Common.Logging.Impl
 		}
 
 		/// <summary>
-		/// Do the actual logging.
-		/// This method assembles the message and write
-		/// the content of the message accumulated in the specified
-		/// StringBuffer to the appropriate output destination. The
-		/// default implementation writes to System.Console.Error.<p/>
+		/// Responsible for assembling and writing the log message to the tracing sub-system.
 		/// </summary>
 		/// <param name="level"></param>
 		/// <param name="message"></param>
 		/// <param name="e"></param>
-		private void Write( LogLevel level, object message, Exception e )
+		protected override void Write( LogLevel level, object message, Exception e )
 		{
 			// Use a StringBuilder for better performance
 			StringBuilder sb = new StringBuilder();
+
 			// Append date-time if so configured
 			if ( _showDateTime )
 			{
@@ -92,7 +93,8 @@ namespace IBatisNet.Common.Logging.Impl
 				}
 				
 				sb.Append( " " );
-			}	
+			}
+	
 			// Append a readable representation of the log level
 			sb.Append( string.Format( "[{0}]", level.ToString().ToUpper() ).PadRight( 8 ) );
 
@@ -108,11 +110,11 @@ namespace IBatisNet.Common.Logging.Impl
 			// Append stack trace if not null
 			if ( e != null )
 			{
-				sb.AppendFormat( "\n{0}", e.ToString() );
+				sb.Append(Environment.NewLine).Append(e.ToString());
 			}
 
 			// Print to the appropriate destination
-			System.Diagnostics.Trace.WriteLine( sb.ToString() );			
+			Trace.WriteLine( sb.ToString() );			
 		}
 
 		/// <summary>
@@ -120,168 +122,13 @@ namespace IBatisNet.Common.Logging.Impl
 		/// </summary>
 		/// <param name="level"></param>
 		/// <returns></returns>
-		private bool IsLevelEnabled( LogLevel level )
+		protected override bool IsLevelEnabled( LogLevel level )
 		{
 			int iLevel = (int)level;
 			int iCurrentLogLevel = (int)_currentLogLevel;
 
 			return ( iLevel >= iCurrentLogLevel );
 		}
-
-		#region ILog Members
-
-		/// <summary>
-		/// Log a debug message.
-		/// </summary>
-		/// <param name="message"></param>
-		public void Debug(object message)
-		{
-			Debug( message, null );
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="message"></param>
-		/// <param name="e"></param>
-		public void Debug(object message, Exception e)
-		{
-			if ( IsLevelEnabled( LogLevel.Debug ) )
-			{
-				Write( LogLevel.Debug, message, e );	
-			}
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="message"></param>
-		public void Error(object message)
-		{
-			Error( message, null );
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="message"></param>
-		/// <param name="e"></param>
-		public void Error(object message, Exception e)
-		{
-			if ( IsLevelEnabled( LogLevel.Error ) )
-			{
-				Write( LogLevel.Error, message, e );	
-			}
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="message"></param>
-		public void Fatal(object message)
-		{
-			Fatal( message, null );
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="message"></param>
-		/// <param name="e"></param>
-		public void Fatal(object message, Exception e)
-		{
-			if ( IsLevelEnabled( LogLevel.Fatal ) )
-			{
-				Write( LogLevel.Fatal, message, e );
-			}
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="message"></param>
-		public void Info(object message)
-		{
-			Info( message, null );
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="message"></param>
-		/// <param name="e"></param>
-		public void Info(object message, Exception e)
-		{
-			if ( IsLevelEnabled( LogLevel.Info ) )
-			{
-				Write( LogLevel.Info, message, e );
-			}
-		}
-
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="message"></param>
-		public void Warn(object message)
-		{
-			Warn( message, null );
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="message"></param>
-		/// <param name="e"></param>
-		public void Warn(object message, Exception e)
-		{
-			if ( IsLevelEnabled( LogLevel.Warn ) )
-			{
-				Write( LogLevel.Warn, message, e );
-			}
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public bool IsDebugEnabled
-		{
-			get { return IsLevelEnabled( LogLevel.Debug ); }
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public bool IsErrorEnabled
-		{
-			get { return IsLevelEnabled( LogLevel.Error ); }
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public bool IsFatalEnabled
-		{
-			get { return IsLevelEnabled( LogLevel.Fatal ); }
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public bool IsInfoEnabled
-		{
-			get { return IsLevelEnabled( LogLevel.Info ); }
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public bool IsWarnEnabled
-		{
-			get { return IsLevelEnabled( LogLevel.Warn ); }
-		}
-
-		#endregion
 	}
 }
 
