@@ -140,6 +140,9 @@
     <Compile Include="Logging\Impl\ConsoleOutLoggerFA.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Logging\Impl\AbstractLogger.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Logging\Impl\NoOpLogger.cs">
       <SubType>Code</SubType>
     </Compile>

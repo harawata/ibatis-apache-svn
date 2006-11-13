@@ -1,7 +1,7 @@
 <VisualStudioProject>
     <CSHARP
         ProjectType = "Local"
-        ProductVersion = "7.10.3077"
+        ProductVersion = "7.10.6030"
         SchemaVersion = "2.0"
         ProjectGuid = "{BBC8DA4A-EA88-41D9-8B93-929B8F3ADADE}"
     >
@@ -206,6 +206,11 @@
                 />
                 <File
                     RelPath = "Logging\LogSetting.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Logging\Impl\AbstractLogger.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
