@@ -511,6 +511,42 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Generics
             Assert.AreEqual(4578.46445454112f, clazz.TestSingle);
         }
         #endregion
+
+        #region timespan
+        
+        [Test]
+        public void TestNullableTimeSpan()
+        {
+            NullableClass clazz = new NullableClass();
+            sqlMap.Insert("InsertNullable", clazz);
+            clazz = null;
+            clazz = sqlMap.QueryForObject<NullableClass>("GetNullable", 1);
+
+            Assert.IsNotNull(clazz);
+            Assert.AreEqual(1, clazz.Id);
+            Assert.IsNull(clazz.TestTimeSpan);
+        }
+
+        /// <summary>
+        /// Test not nullable timespan
+        /// </summary>
+        [Test]
+        public void TestNotNullableTimeSpan()
+        {
+            NullableClass clazz = new NullableClass();
+            TimeSpan? span = new TimeSpan?(new TimeSpan(1, 2, 3, 4, 5));
+            clazz.TestTimeSpan = span;
+
+            sqlMap.Insert("InsertNullable", clazz);
+            clazz = null;
+            clazz = sqlMap.QueryForObject<NullableClass>("GetNullable", 1);
+
+            Assert.IsNotNull(clazz);
+            Assert.AreEqual(1, clazz.Id);
+            Assert.AreEqual(span.Value.ToString(), clazz.TestTimeSpan.Value.ToString());
+        }
+
+        #endregion
     }
 }
 #endif

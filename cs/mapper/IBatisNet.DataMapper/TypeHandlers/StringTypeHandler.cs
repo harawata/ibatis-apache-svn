@@ -38,7 +38,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 	/// <summary>
 	/// Description résumée de SByteTypeHandler.
 	/// </summary>
-    internal sealed class StringTypeHandler : BaseTypeHandler
+    public sealed class StringTypeHandler : BaseTypeHandler
 	{
 
 		/// <summary>

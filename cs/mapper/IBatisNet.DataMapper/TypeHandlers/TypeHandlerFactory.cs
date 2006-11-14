@@ -174,6 +174,10 @@ namespace IBatisNet.DataMapper.TypeHandlers
 
             handler = new NullableSByteTypeHandler();
             this.Register(typeof(SByte?), handler);
+
+            handler = new NullableTimeSpanTypeHandler();
+            this.Register(typeof(TimeSpan?), handler);
+
 #endif
 
             _unknownTypeHandler = new UnknownTypeHandler(this);

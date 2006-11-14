@@ -35,7 +35,7 @@ using IBatisNet.DataMapper.Configuration.ResultMapping;
 
 namespace IBatisNet.DataMapper.TypeHandlers.Nullables
 {
-    internal class NullableUInt64TypeHandler : BaseTypeHandler
+    public sealed class NullableUInt64TypeHandler : BaseTypeHandler
     {
 
         /// <summary>

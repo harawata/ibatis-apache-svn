@@ -37,7 +37,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
     /// <summary>
     /// UInt32TypeHandler
     /// </summary>
-    internal sealed class UInt32TypeHandler : BaseTypeHandler
+    public sealed class UInt32TypeHandler : BaseTypeHandler
     {
 
 

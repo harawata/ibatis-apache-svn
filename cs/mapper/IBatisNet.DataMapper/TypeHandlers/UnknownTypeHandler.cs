@@ -37,7 +37,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 	/// <summary>
 	///  Implementation of TypeHandler for dealing with unknown types
 	/// </summary>
-    internal sealed class UnknownTypeHandler : BaseTypeHandler
+    public sealed class UnknownTypeHandler : BaseTypeHandler
 	{
 
 		private TypeHandlerFactory _factory = null;

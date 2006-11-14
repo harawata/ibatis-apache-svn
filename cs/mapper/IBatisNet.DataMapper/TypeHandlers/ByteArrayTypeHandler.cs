@@ -39,7 +39,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 	/// <summary>
 	/// Description résumée de ByteArrayTypeHandler.
 	/// </summary>
-    internal sealed class ByteArrayTypeHandler : BaseTypeHandler
+    public sealed class ByteArrayTypeHandler : BaseTypeHandler
 	{
 		/// <summary>
 		/// 

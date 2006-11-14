@@ -39,7 +39,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
     /// <summary>
     /// SByteTypeHandler.
     /// </summary>
-    internal sealed class SByteTypeHandler : BaseTypeHandler
+    public sealed class SByteTypeHandler : BaseTypeHandler
     {
         /// <summary>
         /// Gets a column value by the name

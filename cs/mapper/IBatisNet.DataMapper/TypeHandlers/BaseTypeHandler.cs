@@ -37,7 +37,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 	/// <summary>
 	/// Summary description for BaseTypeHandler.
 	/// </summary>
-	internal abstract class BaseTypeHandler : ITypeHandler
+	public abstract class BaseTypeHandler : ITypeHandler
 	{
 		/// <summary>
 		/// Gets a column value by the name

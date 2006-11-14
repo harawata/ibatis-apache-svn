@@ -27,17 +27,24 @@
 #region Using
 using System;
 using System.Data;
-
-using System.Collections.Generic;
-using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
 #endregion
 
 namespace IBatisNet.DataMapper.TypeHandlers.Nullables
 {
-    internal class NullableDateTimeTypeHandler : BaseTypeHandler
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>System.TimeSpan is map to DbType.Int64 </remarks>
+    public sealed class NullableDateTimeTypeHandler : BaseTypeHandler
     {
 
+        /// <summary>
+        /// Sets a parameter on a IDbCommand
+        /// </summary>
+        /// <param name="dataParameter">the parameter</param>
+        /// <param name="parameterValue">the parameter value</param>
+        /// <param name="dbType">the dbType of the parameter</param>
         public override void SetParameter(IDataParameter dataParameter, object parameterValue, string dbType)
         {
             DateTime? nullableValue = (DateTime?)parameterValue;

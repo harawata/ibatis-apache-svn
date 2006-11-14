@@ -634,6 +634,7 @@
     <Compile Include="TypeHandlers\Nullables\NullableInt64TypeHandler.cs" />
     <Compile Include="TypeHandlers\Nullables\NullableSByteTypeHandler.cs" />
     <Compile Include="TypeHandlers\Nullables\NullableSingleTypeHandler.cs" />
+    <Compile Include="TypeHandlers\Nullables\NullableTimeSpanTypeHandler.cs" />
     <Compile Include="TypeHandlers\Nullables\NullableUInt16TypeHandler.cs" />
     <Compile Include="TypeHandlers\Nullables\NullableUInt32TypeHandler.cs" />
     <Compile Include="TypeHandlers\Nullables\NullableUInt64TypeHandler.cs" />

@@ -38,7 +38,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 	/// <summary>
 	/// Description résumée de TimespanTypeHandler.
 	/// </summary>
-    internal sealed class TimeSpanTypeHandler : BaseTypeHandler
+    public sealed class TimeSpanTypeHandler : BaseTypeHandler
 	{
 
         /// <summary>
@@ -52,12 +52,13 @@ namespace IBatisNet.DataMapper.TypeHandlers
             dataParameter.Value = ((TimeSpan)parameterValue).Ticks;
         }
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="mapping"></param>
-		/// <param name="dataReader"></param>
-		/// <returns></returns>
+
+        /// <summary>
+        /// Gets a column value by the name
+        /// </summary>
+        /// <param name="mapping"></param>
+        /// <param name="dataReader"></param>
+        /// <returns></returns>
 		public override object GetValueByName(ResultProperty mapping, IDataReader dataReader)
 		{
             int index = dataReader.GetOrdinal(mapping.ColumnName);
@@ -72,12 +73,13 @@ namespace IBatisNet.DataMapper.TypeHandlers
             }
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="mapping"></param>
-		/// <param name="dataReader"></param>
-		/// <returns></returns>
+
+        /// <summary>
+        /// Gets a column value by the index
+        /// </summary>
+        /// <param name="mapping"></param>
+        /// <param name="dataReader"></param>
+        /// <returns></returns>
 		public override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader) 
 		{
             if (dataReader.IsDBNull(mapping.ColumnIndex) == true)
@@ -90,14 +92,26 @@ namespace IBatisNet.DataMapper.TypeHandlers
             }
 		}
 
+        /// <summary>
+        /// Retrieve ouput database value of an output parameter
+        /// </summary>
+        /// <param name="outputValue">ouput database value</param>
+        /// <param name="parameterType">type used in EnumTypeHandler</param>
+        /// <returns></returns>
 		public override object GetDataBaseValue(object outputValue, Type parameterType )
 		{
 			return  new TimeSpan(Convert.ToInt64(outputValue));
 		}
 
+        /// <summary>
+        /// Converts the String to the type that this handler deals with
+        /// </summary>
+        /// <param name="type">the tyepe of the property (used only for enum conversion)</param>
+        /// <param name="s">the String value</param>
+        /// <returns>the converted value</returns>
 		public override object ValueOf(Type type, string s)
 		{
-			return new TimeSpan(Convert.ToInt64(s));
+            return TimeSpan.Parse(s);
 		}
 
 		/// <summary>

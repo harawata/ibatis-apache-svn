@@ -38,18 +38,36 @@ namespace IBatisNet.DataMapper.TypeHandlers
 	/// <summary>
 	/// DBNull TypeHandler.
 	/// </summary>
-    internal sealed class DBNullTypeHandler : BaseTypeHandler
+    public sealed class DBNullTypeHandler : BaseTypeHandler
 	{
+        /// <summary>
+        /// Gets a column value by the name
+        /// </summary>
+        /// <param name="mapping"></param>
+        /// <param name="dataReader"></param>
+        /// <returns></returns>
 		public override object GetValueByName(ResultProperty mapping, IDataReader dataReader)
 		{
 			return DBNull.Value;
 		}
 
+        /// <summary>
+        /// Gets a column value by the index
+        /// </summary>
+        /// <param name="mapping"></param>
+        /// <param name="dataReader"></param>
+        /// <returns></returns>
 		public override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader) 
 		{
 			return DBNull.Value;
 		}
 
+        /// <summary>
+        /// Retrieve ouput database value of an output parameter
+        /// </summary>
+        /// <param name="outputValue">ouput database value</param>
+        /// <param name="parameterType">type used in EnumTypeHandler</param>
+        /// <returns></returns>
 		public override object GetDataBaseValue(object outputValue, Type parameterType )
 		{
 			return DBNull.Value;

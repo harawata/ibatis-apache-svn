@@ -18,6 +18,7 @@ CREATE TABLE [dbo].[Nullable] (
 	[TestInt32] [int] NULL ,
 	[TestInt64] [bigint] NULL ,
 	[TestSingle] [real] NULL ,
+	[TestTimeSpan] [bigint] NULL,
 	CONSTRAINT [PK_Nullable] PRIMARY KEY  CLUSTERED 
 	(
 		[Id]

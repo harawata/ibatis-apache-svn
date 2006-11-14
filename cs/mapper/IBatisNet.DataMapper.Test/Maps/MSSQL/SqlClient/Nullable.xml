@@ -39,6 +39,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <result property="TestInt32" column="TestInt32"/>
       <result property="TestInt64" column="TestInt64"/>
       <result property="TestSingle" column="TestSingle" />
+      <result property="TestTimeSpan" column="TestTimeSpan" />
     </resultMap>
   </resultMaps >
 
@@ -71,9 +72,9 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         select SCOPE_IDENTITY() as value
       </selectKey>
       insert into Nullable
-      (TestBool, TestByte, TestChar, TestDateTime, TestDecimal, TestDouble, TestGuid, TestInt16, TestInt32, TestInt64, TestSingle)
+      (TestBool, TestByte, TestChar, TestDateTime, TestDecimal, TestDouble, TestGuid, TestInt16, TestInt32, TestInt64, TestSingle, TestTimeSpan)
       values
-      (#TestBool#, #TestByte#, #TestChar#, #TestDateTime#, #TestDecimal#, #TestDouble#, #TestGuid#, #TestInt16#, #TestInt32#, #TestInt64#, #TestSingle#)
+      (#TestBool#, #TestByte#, #TestChar#, #TestDateTime#, #TestDecimal#, #TestDouble#, #TestGuid#, #TestInt16#, #TestInt32#, #TestInt64#, #TestSingle#, #TestTimeSpan#)
     </insert>
     
   </statements>

@@ -38,7 +38,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 	/// <summary>
 	/// Description résumée de SingleTypeHandler.
 	/// </summary>
-    internal sealed class SingleTypeHandler : BaseTypeHandler
+    public sealed class SingleTypeHandler : BaseTypeHandler
 	{
 
 		/// <summary>

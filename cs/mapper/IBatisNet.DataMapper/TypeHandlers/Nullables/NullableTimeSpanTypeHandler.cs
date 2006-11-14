@@ -27,26 +27,23 @@
 #region Using
 using System;
 using System.Data;
-
-using System.Collections.Generic;
-using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
 #endregion
 
 namespace IBatisNet.DataMapper.TypeHandlers.Nullables
 {
-    public sealed class NullableDoubleTypeHandler : BaseTypeHandler
+    public sealed class NullableTimeSpanTypeHandler : BaseTypeHandler
     {
 
         /// <summary>
-        /// Sets a parameter on a IDbCommand
+        ///  Sets a parameter on a IDbCommand
         /// </summary>
         /// <param name="dataParameter">the parameter</param>
         /// <param name="parameterValue">the parameter value</param>
         /// <param name="dbType">the dbType of the parameter</param>
         public override void SetParameter(IDataParameter dataParameter, object parameterValue, string dbType)
         {
-            double? nullableValue = (double?)parameterValue;
+            TimeSpan? nullableValue = (TimeSpan?)parameterValue;
 
             if (nullableValue.HasValue)
             {
@@ -75,9 +72,10 @@ namespace IBatisNet.DataMapper.TypeHandlers.Nullables
             }
             else
             {
-                return new double?(dataReader.GetDouble(index));
+                return new TimeSpan?(new TimeSpan(Convert.ToInt64(dataReader.GetValue(index))));
             }
         }
+
 
         /// <summary>
         /// Gets a column value by the index
@@ -93,7 +91,7 @@ namespace IBatisNet.DataMapper.TypeHandlers.Nullables
             }
             else
             {
-                return new double?(dataReader.GetDouble(mapping.ColumnIndex) );
+                return new TimeSpan?(new TimeSpan(Convert.ToInt64(dataReader.GetValue(mapping.ColumnIndex))));
             }
         }
 
@@ -105,7 +103,8 @@ namespace IBatisNet.DataMapper.TypeHandlers.Nullables
         /// <returns></returns>
         public override object GetDataBaseValue(object outputValue, Type parameterType)
         {
-            return new double?(Convert.ToDouble(outputValue));
+            
+            return new TimeSpan?(new TimeSpan(Convert.ToInt64(outputValue)));
         }
 
         /// <summary>
@@ -116,7 +115,7 @@ namespace IBatisNet.DataMapper.TypeHandlers.Nullables
         /// <returns>the converted value</returns>
         public override object ValueOf(Type type, string s)
         {
-            return new double?(Convert.ToDouble(s));
+            return new TimeSpan?(TimeSpan.Parse(s));
         }
 
 
@@ -131,14 +130,13 @@ namespace IBatisNet.DataMapper.TypeHandlers.Nullables
             get { return true; }
         }
 
-
         /// <summary>
         /// The null value for this type
         /// </summary>
         /// <value></value>
         public override object NullValue
         {
-            get { return new double?(); }
+            get { return new TimeSpan?(); }
         }
     }
 }

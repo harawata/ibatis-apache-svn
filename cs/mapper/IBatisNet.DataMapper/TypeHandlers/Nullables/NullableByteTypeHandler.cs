@@ -35,7 +35,7 @@ using IBatisNet.DataMapper.Configuration.ResultMapping;
 
 namespace IBatisNet.DataMapper.TypeHandlers.Nullables
 {
-    class NullableByteTypeHandler : BaseTypeHandler
+    public sealed class NullableByteTypeHandler : BaseTypeHandler
     {
 
         public override void SetParameter(IDataParameter dataParameter, object parameterValue, string dbType)

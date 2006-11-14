@@ -38,7 +38,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 	/// <summary>
 	/// Description résumée de GuidTypeHandler.
 	/// </summary>
-    internal sealed class GuidTypeHandler : BaseTypeHandler
+    public sealed class GuidTypeHandler : BaseTypeHandler
 	{
 		/// <summary>
 		/// 

@@ -38,7 +38,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 	/// <summary>
 	/// Description résumée de Double.
 	/// </summary>
-    internal sealed class DoubleTypeHandler : BaseTypeHandler
+    public sealed class DoubleTypeHandler : BaseTypeHandler
 	{
 
 		/// <summary>

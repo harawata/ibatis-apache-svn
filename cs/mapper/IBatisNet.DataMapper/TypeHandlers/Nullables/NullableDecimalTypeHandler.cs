@@ -36,10 +36,16 @@ using IBatisNet.DataMapper.Configuration.ResultMapping;
 
 namespace IBatisNet.DataMapper.TypeHandlers.Nullables
 {
-    internal class NullableDecimalTypeHandler : BaseTypeHandler
+    public class NullableDecimalTypeHandler : BaseTypeHandler
     {
 
-        public override void SetParameter(IDataParameter dataParameter, object parameterValue, string dbType)
+        /// <summary>
+        /// Sets a parameter on a IDbCommand
+        /// </summary>
+        /// <param name="dataParameter">the parameter</param>
+        /// <param name="parameterValue">the parameter value</param>
+        /// <param name="dbType">the dbType of the parameter</param>
+        public sealed override void SetParameter(IDataParameter dataParameter, object parameterValue, string dbType)
         {
             decimal? nullableValue = (decimal?)parameterValue;
 

@@ -39,7 +39,7 @@ namespace IBatisNet.DataMapper.TypeHandlers.Nullables
 	/// <summary>
 	/// Summary description for Int32TypeHandler.
 	/// </summary>
-    internal class NullableUInt32TypeHandler : BaseTypeHandler
+    public sealed class NullableUInt32TypeHandler : BaseTypeHandler
     {
 
         public override void SetParameter(IDataParameter dataParameter, object parameterValue, string dbType)

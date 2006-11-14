@@ -39,7 +39,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 	/// <summary>
 	/// Boolean TypeHandler.
 	/// </summary>
-	internal sealed class BooleanTypeHandler : BaseTypeHandler
+    public sealed class BooleanTypeHandler : BaseTypeHandler
 	{
 
 		/// <summary>
