@@ -48,7 +48,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		/// <param name="dbType">the dbType of the parameter</param>
 		public override void SetParameter(IDataParameter dataParameter, object parameterValue, string dbType)
 		{
-			dataParameter.Value =  Convert.ChangeType( parameterValue, Enum.GetUnderlyingType( parameterValue.GetType() ) );;
+			dataParameter.Value =  Convert.ChangeType( parameterValue, Enum.GetUnderlyingType( parameterValue.GetType() ) );
 		}
 
 		/// <summary>

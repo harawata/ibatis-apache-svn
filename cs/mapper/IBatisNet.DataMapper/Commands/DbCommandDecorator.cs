@@ -121,6 +121,7 @@ namespace IBatisNet.DataMapper.Commands
         /// <exception cref="T:System.InvalidOperationException">The connection does not exist.-or- The connection is not open. </exception>
         int IDbCommand.ExecuteNonQuery()
         {
+            _request.Session.OpenConnection();
             return _innerDbCommand.ExecuteNonQuery();
         }
 
@@ -133,6 +134,7 @@ namespace IBatisNet.DataMapper.Commands
         /// </returns>
         IDataReader IDbCommand.ExecuteReader(CommandBehavior behavior)
         {
+            _request.Session.OpenConnection();
             return _innerDbCommand.ExecuteReader(behavior);
         }
 
@@ -144,6 +146,7 @@ namespace IBatisNet.DataMapper.Commands
         /// </returns>
         IDataReader IDbCommand.ExecuteReader()
         {
+            _request.Session.OpenConnection();
             _request.MoveNextResultMap();
             return new DataReaderDecorator(_innerDbCommand.ExecuteReader(), _request);
             
@@ -157,6 +160,7 @@ namespace IBatisNet.DataMapper.Commands
         /// </returns>
         object IDbCommand.ExecuteScalar()
         {
+            _request.Session.OpenConnection();
             return _innerDbCommand.ExecuteScalar();
         }
 

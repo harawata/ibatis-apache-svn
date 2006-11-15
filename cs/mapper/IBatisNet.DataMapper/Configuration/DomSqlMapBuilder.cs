@@ -60,6 +60,7 @@ using IBatisNet.DataMapper.MappedStatements;
 using IBatisNet.DataMapper.MappedStatements.ArgumentStrategy;
 using IBatisNet.DataMapper.MappedStatements.PropertyStrategy;
 using IBatisNet.DataMapper.Scope;
+using IBatisNet.DataMapper.TypeHandlers;
 
 #endregion
 
@@ -794,6 +795,9 @@ namespace IBatisNet.DataMapper.Configuration
 			cacheAlias = new TypeAlias(typeof(FifoCacheController));
 			cacheAlias.Name = "FIFO";
 			_configScope.SqlMapper.TypeHandlerFactory.AddTypeAlias(cacheAlias.Name, cacheAlias);
+            cacheAlias = new TypeAlias(typeof(AnsiStringTypeHandler));
+            cacheAlias.Name = "AnsiStringTypeHandler";
+            _configScope.SqlMapper.TypeHandlerFactory.AddTypeAlias(cacheAlias.Name, cacheAlias);
 
 			#endregion 
 

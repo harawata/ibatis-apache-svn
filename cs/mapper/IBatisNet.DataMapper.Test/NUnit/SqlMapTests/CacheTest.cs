@@ -51,6 +51,26 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Assert.IsNull(account);
 		}
 
+	    /// <summary>
+		/// Test Cache query
+		/// </summary>
+		/// <remarks>
+		/// Used trace to see that the second query don't open an new connection
+		/// </remarks>
+        [Test]
+        public void TestJIRA104()
+		{
+		    IList list = sqlMap.QueryForList("GetCachedAccountsViaResultMap", null);
+
+		    int firstId = HashCodeProvider.GetIdentityHashCode(list);
+
+		    list = sqlMap.QueryForList("GetCachedAccountsViaResultMap", null);
+
+		    int secondId = HashCodeProvider.GetIdentityHashCode(list);
+
+		    Assert.AreEqual(firstId, secondId);
+		}
+	    
 		/// <summary>
 		/// Test Cache query
 		/// </summary>
@@ -105,7 +125,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
 			int thirdId = HashCodeProvider.GetIdentityHashCode(list);
 
-			Assert.IsTrue(firstId != thirdId);
+            Assert.AreNotEqual(firstId, thirdId);
 		}
 
 		[Test]
@@ -113,13 +133,15 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 		{
 			IList list = sqlMap.QueryForList("GetCachedAccountsViaResultMap", null);
 			int firstId = HashCodeProvider.GetIdentityHashCode(list);
-			list = sqlMap.QueryForList("GetCachedAccountsViaResultMap", null);
+			
+		    list = sqlMap.QueryForList("GetCachedAccountsViaResultMap", null);
 			int secondId = HashCodeProvider.GetIdentityHashCode(list);
 			Assert.AreEqual(firstId, secondId);
+		    
 			sqlMap.Update("UpdateAccountViaInlineParameters", list[0]);
 			list = sqlMap.QueryForList("GetCachedAccountsViaResultMap", null);
 			int thirdId = HashCodeProvider.GetIdentityHashCode(list);
-			Assert.IsTrue(firstId != thirdId);
+            Assert.AreNotEqual(firstId ,thirdId);
 		}
 
 		/// <summary>
@@ -148,7 +170,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
 			int thirdId = HashCodeProvider.GetIdentityHashCode(list);
 
-			Assert.IsTrue(firstId != thirdId);
+            Assert.AreNotEqual(firstId , thirdId);
 		}
 
 		/// <summary>

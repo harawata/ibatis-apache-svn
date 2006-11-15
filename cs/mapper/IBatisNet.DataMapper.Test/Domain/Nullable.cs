@@ -124,12 +124,20 @@ namespace IBatisNet.DataMapper.Test.Domain
         private Int32 _testInt32 = 0;
         private Int64 _testInt64 = 0;
         private Single _testSingle = 0;
+		private TimeSpan _testTimeSpan;
 
 		public NullableClass(int id)
 		{
 			_id = id;
 		}
 
+		public TimeSpan TestTimeSpan
+		{
+			get { return _testTimeSpan; }
+			set { _testTimeSpan = value; }
+		}
+		
+    	
         public int Id
         {
             get { return _id; }

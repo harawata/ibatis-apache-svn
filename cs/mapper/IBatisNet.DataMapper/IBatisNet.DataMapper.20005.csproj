@@ -567,6 +567,7 @@
     <Compile Include="SqlMapSession.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="TypeHandlers\AnsiStringTypeHandler.cs" />
     <Compile Include="TypeHandlers\BaseTypeHandler.cs">
       <SubType>Code</SubType>
     </Compile>

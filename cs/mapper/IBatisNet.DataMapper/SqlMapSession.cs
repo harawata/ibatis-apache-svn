@@ -148,6 +148,23 @@ namespace IBatisNet.DataMapper
 			this.OpenConnection(_dataSource.ConnectionString);
 		}
 
+        /// <summary>
+        /// Create the connection
+        /// </summary>
+        public void CreateConnection()
+        {
+            CreateConnection(_dataSource.ConnectionString);
+        }
+	    
+        /// <summary>
+        /// Create the connection
+        /// </summary>
+        public void CreateConnection(string connectionString)
+        {
+            _connection = _dataSource.DbProvider.CreateConnection();
+            _connection.ConnectionString = connectionString;
+        }
+
 		/// <summary>
 		/// Open a connection, on the specified connection string.
 		/// </summary>
@@ -156,8 +173,7 @@ namespace IBatisNet.DataMapper
 		{
 			if (_connection == null)
 			{
-				_connection =  _dataSource.DbProvider.CreateConnection();
-				_connection.ConnectionString = connectionString;
+                CreateConnection(connectionString);
 				try
 				{
 					_connection.Open();

@@ -1163,6 +1163,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "TypeHandlers\AnsiStringTypeHandler.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "TypeHandlers\BaseTypeHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

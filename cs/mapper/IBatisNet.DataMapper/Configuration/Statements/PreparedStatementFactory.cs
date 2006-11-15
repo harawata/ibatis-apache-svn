@@ -225,7 +225,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 					sqlParamName = "param" + i;
 				}
 
-				IDataParameter dataParameter = _session.CreateCommand(_statement.CommandType).CreateParameter();
+                IDataParameter dataParameter = _session.CreateDataParameter();
 
 				// Manage dbType attribute if any
 				if (property.DbType != null && property.DbType.Length >0) 
