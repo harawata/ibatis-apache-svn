@@ -54,7 +54,6 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 			procedure.CacheModelName = NodeUtils.GetStringAttribute(prop, "cacheModel");
 			procedure.Id = NodeUtils.GetStringAttribute(prop, "id");
 			procedure.ListClassName = NodeUtils.GetStringAttribute(prop, "listClass");
-			procedure.ParameterClassName = NodeUtils.GetStringAttribute(prop, "parameterClass");
 			procedure.ParameterMapName = NodeUtils.GetStringAttribute(prop, "parameterMap");
 			procedure.ResultClassName = NodeUtils.GetStringAttribute(prop, "resultClass");
 			procedure.ResultMapName = NodeUtils.GetStringAttribute(prop, "resultMap");
