@@ -88,6 +88,7 @@ namespace IBatisNet.DataMapper.MappedStatements.PropertyStrategy
         /// <param name="resultMap">The result map.</param>
         /// <param name="mapping">The mapping.</param>
         /// <param name="reader">The reader.</param>
+        /// <param name="target">The target object</param>
         public object Get(RequestScope request, IResultMap resultMap, ResultProperty mapping, ref object target, IDataReader reader)
         {
             throw new NotSupportedException("Get method on ResultMapStrategy is not supported");

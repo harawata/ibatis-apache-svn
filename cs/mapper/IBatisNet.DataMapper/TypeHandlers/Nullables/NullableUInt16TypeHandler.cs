@@ -36,6 +36,9 @@ using IBatisNet.DataMapper.Configuration.ResultMapping;
 
 namespace IBatisNet.DataMapper.TypeHandlers.Nullables
 {
+    /// <summary>
+    /// TypeHandler for Nullable Int16 type
+    /// </summary>
     public sealed class NullableUInt16TypeHandler : BaseTypeHandler
     {
 
@@ -58,6 +61,7 @@ namespace IBatisNet.DataMapper.TypeHandlers.Nullables
                 dataParameter.Value = DBNull.Value;
             }
         }
+
 
 
         /// <summary>
@@ -109,6 +113,12 @@ namespace IBatisNet.DataMapper.TypeHandlers.Nullables
             return new UInt16?(Convert.ToUInt16(outputValue));
         }
 
+        /// <summary>
+        /// Converts the String to the type that this handler deals with
+        /// </summary>
+        /// <param name="type">the tyepe of the property (used only for enum conversion)</param>
+        /// <param name="s">the String value</param>
+        /// <returns>the converted value</returns>
         public override object ValueOf(Type type, string s)
         {
             return new UInt16?(UInt16.Parse(s));

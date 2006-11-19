@@ -29,7 +29,7 @@
 using System.Collections;
 using System.Data;
 using System.Runtime.CompilerServices;
-using IBatisNet.Common;
+using IBatisNet.DataMapper;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
 using IBatisNet.DataMapper.Configuration.Statements;
@@ -57,7 +57,7 @@ namespace IBatisNet.DataMapper.Scope
         private static long _nextId = 0;
         private long _id = 0;
         private DataExchangeFactory _dataExchangeFactory = null;
-        private IDalSession _session = null;
+        private ISqlMapSession _session = null;
         private IMappedStatement _mappedStatement = null;
         private int _currentResultMapIndex = -1;
         // Used by N+1 Select solution
@@ -118,9 +118,9 @@ namespace IBatisNet.DataMapper.Scope
         }
 
         /// <summary>
-        ///  The current <see cref="IDalSession"/>.
+        ///  The current <see cref="ISqlMapSession"/>.
         /// </summary>
-        public IDalSession Session
+        public ISqlMapSession Session
         {
             get { return _session; }
         }
@@ -206,7 +206,7 @@ namespace IBatisNet.DataMapper.Scope
         /// <param name="statement">The statement</param>
         public RequestScope(
             DataExchangeFactory dataExchangeFactory,
-            IDalSession session,
+            ISqlMapSession session,
             IStatement statement
             )
         {

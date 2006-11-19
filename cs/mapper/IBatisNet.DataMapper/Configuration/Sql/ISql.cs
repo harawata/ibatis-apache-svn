@@ -25,7 +25,6 @@
 #endregion
 
 using System.Data;
-using IBatisNet.Common;
 using IBatisNet.DataMapper.MappedStatements;
 using IBatisNet.DataMapper.Scope;
 
@@ -48,7 +47,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql
 		/// <param name="session">The current session</param>
 		/// <param name="mappedStatement">The <see cref="IMappedStatement"/>.</param>
 		/// <returns>A new <see cref="RequestScope"/>.</returns>
-		RequestScope GetRequestScope(IMappedStatement mappedStatement, object parameterObject, IDalSession session);
+		RequestScope GetRequestScope(IMappedStatement mappedStatement, object parameterObject, ISqlMapSession session);
 		#endregion
 
 	}

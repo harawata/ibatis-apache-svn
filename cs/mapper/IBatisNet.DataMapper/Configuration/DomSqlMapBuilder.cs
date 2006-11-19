@@ -1660,7 +1660,7 @@ namespace IBatisNet.DataMapper.Configuration
 				else if (statement is Statement)
 				{
 					sql = new StaticSql(_configScope, statement);
-					IDalSession session = new SqlMapSession(_configScope.SqlMapper);
+					ISqlMapSession session = new SqlMapSession(_configScope.SqlMapper);
 
 					((StaticSql)sql).BuildPreparedStatement( session, newSql );
 				}					
@@ -1755,7 +1755,7 @@ namespace IBatisNet.DataMapper.Configuration
 			generatedSQL = SqlGenerator.BuildQuery(statement);
 
 			ISql sql = new StaticSql(configScope, statement);
-			IDalSession session = new SqlMapSession(configScope.SqlMapper);
+			ISqlMapSession session = new SqlMapSession(configScope.SqlMapper);
 
 			((StaticSql)sql).BuildPreparedStatement( session, generatedSQL );
 			statement.Sql = sql;

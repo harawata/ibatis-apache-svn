@@ -59,17 +59,17 @@ namespace IBatisNet.DataMapper.Commands
 		#region IPreparedCommand Members
 
 		/// <summary>
-		/// Create an IDbCommand for the IDalSession and the current SQL Statement
+		/// Create an IDbCommand for the SqlMapSession and the current SQL Statement
 		/// and fill IDbCommand IDataParameter's with the parameterObject.
 		/// </summary>
 		/// <param name="request"></param>
-		/// <param name="session">The IDalSession</param>
+		/// <param name="session">The SqlMapSession</param>
 		/// <param name="statement">The IStatement</param>
 		/// <param name="parameterObject">
 		/// The parameter object that will fill the sql parameter
 		/// </param>
 		/// <returns>An IDbCommand with all the IDataParameter filled.</returns>
-		public void Create(RequestScope request, IDalSession session, IStatement statement, object parameterObject )
+		public void Create(RequestScope request, ISqlMapSession session, IStatement statement, object parameterObject )
 		{
 			// the IDbConnection & the IDbTransaction are assign in the CreateCommand 
             request.IDbCommand = new DbCommandDecorator(session.CreateCommand(statement.CommandType), request);
@@ -94,7 +94,7 @@ namespace IBatisNet.DataMapper.Commands
         /// <param name="statement">The statement.</param>
         /// <param name="parameterObject">The parameter object.</param>
 		protected virtual void ApplyParameterMap
-			( IDalSession session, IDbCommand command,
+			( ISqlMapSession session, IDbCommand command,
 			RequestScope request, IStatement statement, object parameterObject )
 		{
 			StringCollection properties = request.PreparedStatement.DbParametersName;

@@ -34,6 +34,9 @@ using IBatisNet.DataMapper.Configuration.ResultMapping;
 
 namespace IBatisNet.DataMapper.TypeHandlers
 {
+    /// <summary>
+    /// TypeHandler for UInt16 Type
+    /// </summary>
     public sealed class UInt16TypeHandler : BaseTypeHandler
     {
 

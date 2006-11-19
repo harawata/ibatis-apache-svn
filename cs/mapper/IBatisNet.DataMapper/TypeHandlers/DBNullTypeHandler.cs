@@ -73,16 +73,34 @@ namespace IBatisNet.DataMapper.TypeHandlers
 			return DBNull.Value;
 		}
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is simple type.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance is simple type; otherwise, <c>false</c>.
+        /// </value>
 		public override bool IsSimpleType
 		{
 			get { return false; }
 		}
 
+        /// <summary>
+        /// Converts the String to the type that this handler deals with
+        /// </summary>
+        /// <param name="type">the tyepe of the property (used only for enum conversion)</param>
+        /// <param name="s">the String value</param>
+        /// <returns>the converted value</returns>
 		public override object ValueOf(Type type, string s)
 		{
 			return DBNull.Value;
 		}
 
+        /// <summary>
+        /// Sets a parameter on a IDbCommand
+        /// </summary>
+        /// <param name="dataParameter">the parameter</param>
+        /// <param name="parameterValue">the parameter value</param>
+        /// <param name="dbType">the dbType of the parameter</param>
 		public override void SetParameter(IDataParameter dataParameter, object parameterValue, string dbType)
 		{
 			dataParameter.Value = DBNull.Value;

@@ -2,7 +2,6 @@
 using System;
 using System.Collections;
 using System.Threading;
-using IBatisNet.Common;
 using IBatisNet.Common.Utilities;
 using IBatisNet.DataMapper.Configuration.Cache;
 using IBatisNet.DataMapper.MappedStatements;
@@ -347,7 +346,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 				try 
 				{
 					IMappedStatement statement = _sqlMap.GetMappedStatement( _statementName );
-					IDalSession session = new SqlMapSession(sqlMap);
+                    ISqlMapSession session = new SqlMapSession(sqlMap);
 					session.OpenConnection();
 					IList list = statement.ExecuteQueryForList(session, null);
 

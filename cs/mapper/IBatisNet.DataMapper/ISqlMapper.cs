@@ -23,6 +23,7 @@
  ********************************************************************************/
 #endregion
 
+#region using
 using System;
 using System.Collections;
 #if dotnet2
@@ -42,6 +43,7 @@ using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.MappedStatements;
 using IBatisNet.DataMapper.SessionStore;
 using IBatisNet.DataMapper.TypeHandlers;
+#endregion
 
 namespace IBatisNet.DataMapper
 {
@@ -77,13 +79,13 @@ namespace IBatisNet.DataMapper
         ///  Returns the DalSession instance 
         ///  currently being used by the SqlMap.
         /// </summary>
-        IDalSession LocalSession { get; }
+        ISqlMapSession LocalSession { get; }
 
         /// <summary>
-        /// Creates a new IDalSession that will be used to query the data source.
+        /// Creates a new SqlMapSession that will be used to query the data source.
         /// </summary>
         /// <returns>A new session</returns>
-        IDalSession CreateSqlMapSession();
+        ISqlMapSession CreateSqlMapSession();
         
         /// <summary>
         /// A flag that determines whether cache models were enabled 
@@ -176,21 +178,21 @@ namespace IBatisNet.DataMapper
         /// Begins the transaction.
         /// </summary>
         /// <returns></returns>
-        IDalSession BeginTransaction();
+        ISqlMapSession BeginTransaction();
 
         /// <summary>
         /// Begins the transaction.
         /// </summary>
         /// <param name="openConnection">if set to <c>true</c> [open connection].</param>
         /// <returns></returns>
-        IDalSession BeginTransaction(bool openConnection);
+        ISqlMapSession BeginTransaction(bool openConnection);
 
         /// <summary>
         /// Begins the transaction.
         /// </summary>
         /// <param name="connectionString">The connection string.</param>
         /// <returns></returns>
-        IDalSession BeginTransaction(string connectionString);
+        ISqlMapSession BeginTransaction(string connectionString);
 
         /// <summary>
         /// Begins the transaction.
@@ -198,7 +200,7 @@ namespace IBatisNet.DataMapper
         /// <param name="openNewConnection">if set to <c>true</c> [open new connection].</param>
         /// <param name="isolationLevel">The isolation level.</param>
         /// <returns></returns>
-        IDalSession BeginTransaction(bool openNewConnection, IsolationLevel isolationLevel);
+        ISqlMapSession BeginTransaction(bool openNewConnection, IsolationLevel isolationLevel);
 
         /// <summary>
         /// Begins the transaction.
@@ -207,14 +209,14 @@ namespace IBatisNet.DataMapper
         /// <param name="openNewConnection">if set to <c>true</c> [open new connection].</param>
         /// <param name="isolationLevel">The isolation level.</param>
         /// <returns></returns>
-        IDalSession BeginTransaction(string connectionString, bool openNewConnection, IsolationLevel isolationLevel);
+        ISqlMapSession BeginTransaction(string connectionString, bool openNewConnection, IsolationLevel isolationLevel);
 
         /// <summary>
         /// Begins the transaction.
         /// </summary>
         /// <param name="isolationLevel">The isolation level.</param>
         /// <returns></returns>
-        IDalSession BeginTransaction(IsolationLevel isolationLevel);
+        ISqlMapSession BeginTransaction(IsolationLevel isolationLevel);
 
         /// <summary>
         /// Begins the transaction.
@@ -222,7 +224,7 @@ namespace IBatisNet.DataMapper
         /// <param name="connectionString">The connection string.</param>
         /// <param name="isolationLevel">The isolation level.</param>
         /// <returns></returns>
-        IDalSession BeginTransaction(string connectionString, IsolationLevel isolationLevel);
+        ISqlMapSession BeginTransaction(string connectionString, IsolationLevel isolationLevel);
        
         /// <summary>
         /// Closes the connection.
@@ -295,14 +297,14 @@ namespace IBatisNet.DataMapper
         /// Opens the connection.
         /// </summary>
         /// <returns></returns>
-        IDalSession OpenConnection();
+        ISqlMapSession OpenConnection();
 
         /// <summary>
         /// Opens the connection.
         /// </summary>
         /// <param name="connectionString">The connection string.</param>
         /// <returns></returns>
-        IDalSession OpenConnection(string connectionString);
+        ISqlMapSession OpenConnection(string connectionString);
 
         /// <summary>
         /// Alias to QueryForMap, .NET spirit.

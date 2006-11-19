@@ -121,6 +121,12 @@ namespace IBatisNet.DataMapper.TypeHandlers
 			return s;
 		}
 
+        /// <summary>
+        /// Retrieve ouput database value of an output parameter
+        /// </summary>
+        /// <param name="outputValue">ouput database value</param>
+        /// <param name="parameterType">type used in EnumTypeHandler</param>
+        /// <returns></returns>
 		public override object GetDataBaseValue(object outputValue, Type parameterType)
 		{
 			return outputValue;

@@ -27,7 +27,6 @@
 using System;
 using System.Collections;
 
-using IBatisNet.Common;
 using IBatisNet.Common.Pagination;
 using IBatisNet.DataMapper.Exceptions;
 
@@ -202,7 +201,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		{
 			bool isSessionLocal = false;
 
-			IDalSession session = _mappedStatement.SqlMap.LocalSession;
+			ISqlMapSession session = _mappedStatement.SqlMap.LocalSession;
 
 			if (session == null) 
 			{

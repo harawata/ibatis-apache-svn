@@ -26,14 +26,10 @@
 
 #region Imports
 
-using IBatisNet.Common;
-using IBatisNet.Common.Utilities.Objects;
-using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.Configuration.Statements;
 using IBatisNet.DataMapper.DataExchange;
 using IBatisNet.DataMapper.MappedStatements;
 using IBatisNet.DataMapper.Scope;
-using IBatisNet.DataMapper.TypeHandlers;
 
 #endregion
 
@@ -77,7 +73,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Static
 		/// <param name="mappedStatement">The <see cref="IMappedStatement"/>.</param>
 		/// <returns>A new <see cref="RequestScope"/>.</returns>
 		public RequestScope GetRequestScope(IMappedStatement mappedStatement,
-			object parameterObject, IDalSession session)
+			object parameterObject, ISqlMapSession session)
 		{
 			RequestScope request = new RequestScope(_dataExchangeFactory, session, _statement);
 
@@ -92,7 +88,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Static
 		/// </summary>
 		/// <param name="session"></param>
 		/// <param name="sqlStatement"></param>
-		public void BuildPreparedStatement(IDalSession session, string sqlStatement)
+		public void BuildPreparedStatement(ISqlMapSession session, string sqlStatement)
 		{
 			RequestScope request = new RequestScope( _dataExchangeFactory, session, _statement);
 

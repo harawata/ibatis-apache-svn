@@ -56,7 +56,7 @@ namespace IBatisNet.DataMapper.MappedStatements.PostSelectStrategy
 
             Type mappedStatementType = postSelect.Statement.GetType();
 
-            Type[] typeArguments = { typeof(IDalSession), typeof(object) };
+            Type[] typeArguments = { typeof(SqlMapSession), typeof(object) };
 
             MethodInfo[] mis = mappedStatementType.GetMethods(BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.Instance);
             MethodInfo mi = null;

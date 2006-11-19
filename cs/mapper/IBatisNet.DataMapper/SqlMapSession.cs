@@ -41,7 +41,7 @@ namespace IBatisNet.DataMapper
 	/// Summary description for SqlMapSession.
 	/// </summary>
 	[Serializable]
-	public class SqlMapSession : IDalSession
+    public class SqlMapSession : ISqlMapSession
 	{
 		#region Fields
 		private static readonly ILog _logger = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
@@ -62,10 +62,10 @@ namespace IBatisNet.DataMapper
 		}
 		#endregion
 
-		#region IDalSession Members
+        #region IDalSession Members
 
-		#region Fields
-		private bool _isOpenTransaction = false;
+        #region Fields
+        private bool _isOpenTransaction = false;
 		/// <summary>
 		/// Changes the vote to commit (true) or to abort (false) in transsaction
 		/// </summary>

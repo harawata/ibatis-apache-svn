@@ -470,6 +470,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ISqlMapper.cs" />
+    <Compile Include="ISqlMapSession.cs" />
     <Compile Include="MappedStatements\ArgumentStrategy\ArgumentStrategyFactory.cs" />
     <Compile Include="MappedStatements\ArgumentStrategy\DefaultStrategy.cs" />
     <Compile Include="MappedStatements\ArgumentStrategy\IArgumentStrategy.cs" />

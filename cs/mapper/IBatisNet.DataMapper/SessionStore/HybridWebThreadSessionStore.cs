@@ -1,4 +1,3 @@
-using System;
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
@@ -26,8 +25,6 @@ using System;
 
 using System.Runtime.Remoting.Messaging;
 using System.Web;
-using IBatisNet.Common;
-using IBatisNet.Common.Exceptions;
 
 namespace IBatisNet.DataMapper.SessionStore
 {
@@ -52,16 +49,16 @@ namespace IBatisNet.DataMapper.SessionStore
 		/// <summary>
 		/// Get the local session
 		/// </summary>
-        public override IDalSession LocalSession
+        public override ISqlMapSession LocalSession
 		{
 			get
 			{
                 HttpContext currentContext = HttpContext.Current;
                 if (currentContext == null)
                 {
-                    return CallContext.GetData(sessionName) as IDalSession; 
+                    return CallContext.GetData(sessionName) as SqlMapSession; 
                 }
-                return currentContext.Items[sessionName] as IDalSession;
+                return currentContext.Items[sessionName] as SqlMapSession;
 			}
 		}
 
@@ -69,7 +66,7 @@ namespace IBatisNet.DataMapper.SessionStore
 		/// Store the specified session.
 		/// </summary>
 		/// <param name="session">The session to store</param>
-        public override void Store(IDalSession session)
+        public override void Store(ISqlMapSession session)
 		{
             HttpContext currentContext = HttpContext.Current;
             if (currentContext == null)
@@ -94,7 +91,7 @@ namespace IBatisNet.DataMapper.SessionStore
             }
 		    else
             {
- 			    currentContext.Items[sessionName] = null;
+ 			    currentContext.Items.Remove(sessionName);
             }
 		}
 

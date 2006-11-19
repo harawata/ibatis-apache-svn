@@ -1,4 +1,3 @@
-
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
@@ -24,11 +23,10 @@
  ********************************************************************************/
 #endregion
 
-using System;
+
 using System.Collections;
 
 using IBatisNet.DataMapper.Exceptions;
-using IBatisNet.Common;
 using IBatisNet.DataMapper.Configuration.Statements;
 
 namespace IBatisNet.DataMapper.MappedStatements
@@ -57,7 +55,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="keyProperty"></param>
 		/// <param name="valueProperty"></param>
 		/// <returns></returns>
-		public override IDictionary ExecuteQueryForMap( IDalSession session, object parameterObject, string keyProperty, string valueProperty )
+        public override IDictionary ExecuteQueryForMap(ISqlMapSession session, object parameterObject, string keyProperty, string valueProperty)
 		{
 			throw new DataMapperException("Update statements cannot be executed as a query for map.");
 		}
@@ -72,7 +70,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="session"></param>
 		/// <param name="parameterObject"></param>
 		/// <returns></returns>
-		public override object ExecuteInsert(IDalSession session, object parameterObject )
+        public override object ExecuteInsert(ISqlMapSession session, object parameterObject)
 		{
 			throw new DataMapperException("Update statements cannot be executed as a query insert.");
 		}
@@ -87,7 +85,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="session"></param>
 		/// <param name="parameterObject"></param>
 		/// <param name="resultObject"></param>
-		public override void ExecuteQueryForList(IDalSession session, object parameterObject, IList resultObject )
+        public override void ExecuteQueryForList(ISqlMapSession session, object parameterObject, IList resultObject)
 		{
 			throw new DataMapperException("Update statements cannot be executed as a query for list.");
 		}
@@ -100,7 +98,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="skipResults"></param>
 		/// <param name="maxResults"></param>
 		/// <returns></returns>
-		public override IList ExecuteQueryForList( IDalSession session, object parameterObject, int skipResults, int maxResults )
+        public override IList ExecuteQueryForList(ISqlMapSession session, object parameterObject, int skipResults, int maxResults)
 		{
 			throw new DataMapperException("Update statements cannot be executed as a query for list.");
 		}
@@ -111,7 +109,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="session"></param>
 		/// <param name="parameterObject"></param>
 		/// <returns></returns>
-		public override IList ExecuteQueryForList( IDalSession session, object parameterObject )
+        public override IList ExecuteQueryForList(ISqlMapSession session, object parameterObject)
 		{
 			throw new DataMapperException("Update statements cannot be executed as a query for list.");
 		}
@@ -127,7 +125,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="parameterObject"></param>
 		/// <param name="rowDelegate"></param>
 		/// <returns></returns>
-		public override IList ExecuteQueryForRowDelegate( IDalSession session, object parameterObject, RowDelegate rowDelegate )
+        public override IList ExecuteQueryForRowDelegate(ISqlMapSession session, object parameterObject, RowDelegate rowDelegate)
 		{
 			throw new DataMapperException("Update statement cannot be executed as a query for row delegate.");
 		}
@@ -143,7 +141,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="rowDelegate"></param>
 		/// <returns>A hashtable of object containing the rows keyed by keyProperty.</returns>
 		///<exception cref="DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
-		public override IDictionary ExecuteQueryForMapWithRowDelegate( IDalSession session, object parameterObject, string keyProperty, string valueProperty, DictionaryRowDelegate rowDelegate )
+        public override IDictionary ExecuteQueryForMapWithRowDelegate(ISqlMapSession session, object parameterObject, string keyProperty, string valueProperty, DictionaryRowDelegate rowDelegate)
 		{
 			throw new DataMapperException("Update statement cannot be executed as a query for row delegate.");
 		}
@@ -157,7 +155,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="session"></param>
 		/// <param name="parameterObject"></param>
 		/// <returns></returns>
-		public override object ExecuteQueryForObject( IDalSession session, object parameterObject )
+        public override object ExecuteQueryForObject(ISqlMapSession session, object parameterObject)
 		{
 			throw new DataMapperException("Update statements cannot be executed as a query for object.");
 		}
@@ -169,7 +167,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="parameterObject"></param>
 		/// <param name="resultObject"></param>
 		/// <returns></returns>
-		public override object ExecuteQueryForObject( IDalSession session, object parameterObject, object resultObject )
+        public override object ExecuteQueryForObject(ISqlMapSession session, object parameterObject, object resultObject)
 		{
 			throw new DataMapperException("Update statements cannot be executed as a query for object.");
 		}

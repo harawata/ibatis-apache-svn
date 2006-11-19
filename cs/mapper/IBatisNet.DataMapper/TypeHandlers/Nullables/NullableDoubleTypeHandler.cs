@@ -35,6 +35,9 @@ using IBatisNet.DataMapper.Configuration.ResultMapping;
 
 namespace IBatisNet.DataMapper.TypeHandlers.Nullables
 {
+    /// <summary>
+    /// TypeHandler for Nullable double Type
+    /// </summary>
     public sealed class NullableDoubleTypeHandler : BaseTypeHandler
     {
 

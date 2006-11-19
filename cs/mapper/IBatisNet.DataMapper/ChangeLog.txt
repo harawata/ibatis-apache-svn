@@ -207,20 +207,20 @@ or
 - Added Xml Comment
 - Fixed possible issue in ApplyParameterMap (https://sourceforge.net/forum/message.php?msg_id=2841897)
 - Added support for C# using syntax in DataAccess/DataMapper
-       * using ( IDalSession session = daoManager.OpenConnection() )
+       * using ( SqlMapSession session = daoManager.OpenConnection() )
 			{
 			   ...db operations...
 			}
-       * using ( IDalSession session = daoManager.BeginTransaction() )
+       * using ( SqlMapSession session = daoManager.BeginTransaction() )
 			{
 			   ...db operations...
 			   session.Complete(); // Commit
 			}
-	   * using ( IDalSession session = sqlMap.OpenConnection() )
+	   * using ( SqlMapSession session = sqlMap.OpenConnection() )
 			{
 			   ...db operations...
 			}
-       * using ( IDalSession session = sqlMap.BeginTransaction() )
+       * using ( SqlMapSession session = sqlMap.BeginTransaction() )
 			{
 			   ...db operations...
 			   session.Complete(); // Commit

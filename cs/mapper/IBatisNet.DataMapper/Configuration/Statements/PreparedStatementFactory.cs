@@ -32,7 +32,6 @@ using System.Collections.Specialized;
 using System.Data;
 using System.Reflection;
 using System.Text;
-using IBatisNet.Common;
 using IBatisNet.Common.Logging;
 using IBatisNet.Common.Utilities;
 using IBatisNet.Common.Utilities.Objects;
@@ -56,7 +55,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 
 		private string _parameterPrefix = string.Empty;
 		private IStatement _statement = null;
-		private SqlMapSession _session = null;
+		private ISqlMapSession _session = null;
 		private string _commandText = string.Empty;
 		private RequestScope _request = null;
 		// (property, DbParameter)
@@ -73,9 +72,9 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		/// <param name="statement"></param>
 		/// <param name="commandText"></param>
 		/// <param name="request"></param>
-		public PreparedStatementFactory(IDalSession session, RequestScope request, IStatement statement, string commandText)
+		public PreparedStatementFactory(ISqlMapSession session, RequestScope request, IStatement statement, string commandText)
 		{
-			_session = (SqlMapSession)session;
+			_session = session;
 			_request = request;
 			_statement = statement;
 			_commandText = commandText;
@@ -165,7 +164,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		/// For store procedure, auto discover IDataParameters for stored procedures at run-time.
 		/// </summary>
 		/// <param name="session">The current session.</param>
-		private void DiscoverParameter(SqlMapSession session)
+		private void DiscoverParameter(ISqlMapSession session)
 		{
 			// pull the parameters for this stored procedure from the parameter cache 
 			// (or discover them & populate the cache)

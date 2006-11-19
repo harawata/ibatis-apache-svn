@@ -23,8 +23,6 @@
  ********************************************************************************/
 #endregion
 
-using IBatisNet.Common;
-
 namespace IBatisNet.DataMapper.SessionStore
 {
 
@@ -36,7 +34,7 @@ namespace IBatisNet.DataMapper.SessionStore
 		/// <summary>
 		/// Get the local session
 		/// </summary>
-        IDalSession LocalSession
+        ISqlMapSession LocalSession
 		{
 			get; 
 		}
@@ -45,7 +43,7 @@ namespace IBatisNet.DataMapper.SessionStore
 		/// Store the specified session.
 		/// </summary>
 		/// <param name="session">The session to store</param>
-        void Store(IDalSession session);
+        void Store(ISqlMapSession session);
 
 		/// <summary>
 		/// Remove the local session from the storage.

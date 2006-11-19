@@ -63,6 +63,12 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		/// <returns></returns>
 		public abstract object GetDataBaseValue(object outputValue, Type parameterType );
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is simple type.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance is simple type; otherwise, <c>false</c>.
+        /// </value>
 		public abstract bool IsSimpleType{ get; }
 
 		/// <summary>

@@ -1,4 +1,3 @@
-
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
@@ -24,11 +23,8 @@
  ********************************************************************************/
 #endregion
 
-using System;
-using System.Collections;
 
 using IBatisNet.DataMapper.Exceptions;
-using IBatisNet.Common;
 using IBatisNet.DataMapper.Configuration.Statements;
 
 namespace IBatisNet.DataMapper.MappedStatements
@@ -56,7 +52,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="session"></param>
 		/// <param name="parameterObject"></param>
 		/// <returns></returns>
-		public override object ExecuteInsert(IDalSession session, object parameterObject )
+		public override object ExecuteInsert(ISqlMapSession session, object parameterObject )
 		{
 			throw new DataMapperException("Update statements cannot be executed as a query insert.");
 		}
@@ -71,7 +67,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="session"></param>
 		/// <param name="parameterObject"></param>
 		/// <returns></returns>
-		public override int ExecuteUpdate(IDalSession session, object parameterObject )
+        public override int ExecuteUpdate(ISqlMapSession session, object parameterObject)
 		{
 			throw new DataMapperException("Insert statements cannot be executed as a update query.");
 		}

@@ -32,6 +32,9 @@ using IBatisNet.DataMapper.Configuration.ResultMapping;
 
 namespace IBatisNet.DataMapper.TypeHandlers.Nullables
 {
+    /// <summary>
+    /// TypeHandler for Nullable TimeSpan Type
+    /// </summary>
     public sealed class NullableTimeSpanTypeHandler : BaseTypeHandler
     {
 

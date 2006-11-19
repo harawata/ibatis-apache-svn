@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -25,9 +25,7 @@
 #endregion
 
 #region Imports
-using System.Data;
 
-using IBatisNet.Common;
 using IBatisNet.DataMapper.Configuration.Statements;
 using IBatisNet.DataMapper.Scope;
 
@@ -41,16 +39,16 @@ namespace IBatisNet.DataMapper.Commands
 	public interface IPreparedCommand
 	{
 		/// <summary>
-		/// Create an IDbCommand for the IDalSession and the current SQL Statement
+		/// Create an IDbCommand for the SqlMapSession and the current SQL Statement
 		/// and fill IDbCommand IDataParameter's with the parameterObject.
 		/// </summary>
 		/// <param name="request"></param>
-		/// <param name="session">The IDalSession</param>
+		/// <param name="session">The SqlMapSession</param>
 		/// <param name="statement">The IStatement</param>
 		/// <param name="parameterObject">
 		/// The parameter object that will fill the sql parameter
 		/// </param>
 		/// <returns>An IDbCommand with all the IDataParameter filled.</returns>
-		void Create (RequestScope request, IDalSession session, IStatement statement, object parameterObject );
+		void Create (RequestScope request, ISqlMapSession session, IStatement statement, object parameterObject );
 	}
 }

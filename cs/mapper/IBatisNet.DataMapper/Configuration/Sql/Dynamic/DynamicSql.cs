@@ -29,9 +29,6 @@
 using System.Collections;
 using System.Data;
 using System.Text;
-using IBatisNet.Common;
-using IBatisNet.Common.Utilities.Objects;
-using IBatisNet.Common.Utilities.Objects.Members;
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
 using IBatisNet.DataMapper.Configuration.Sql.Dynamic.Elements;
 using IBatisNet.DataMapper.Configuration.Sql.Dynamic.Handlers;
@@ -40,7 +37,6 @@ using IBatisNet.DataMapper.Configuration.Statements;
 using IBatisNet.DataMapper.DataExchange;
 using IBatisNet.DataMapper.MappedStatements;
 using IBatisNet.DataMapper.Scope;
-using IBatisNet.DataMapper.TypeHandlers;
 
 #endregion
 
@@ -108,7 +104,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 		/// <param name="mappedStatement">The <see cref="IMappedStatement"/>.</param>
 		/// <returns>A new <see cref="RequestScope"/>.</returns>
 		public RequestScope GetRequestScope(IMappedStatement mappedStatement, 
-			object parameterObject, IDalSession session)
+			object parameterObject, ISqlMapSession session)
 		{ 
 			RequestScope request = new RequestScope( _dataExchangeFactory, session, _statement);
 
@@ -303,7 +299,7 @@ namespace IBatisNet.DataMapper.Configuration.Sql.Dynamic
 		/// <param name="request"></param>
 		/// <param name="sqlStatement"></param>
 		/// <returns></returns>
-		private PreparedStatement BuildPreparedStatement(IDalSession session, RequestScope request, string sqlStatement)
+		private PreparedStatement BuildPreparedStatement(ISqlMapSession session, RequestScope request, string sqlStatement)
 		{
 			PreparedStatementFactory factory = new PreparedStatementFactory( session, request, _statement, sqlStatement);
 			return factory.Prepare();
