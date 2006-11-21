@@ -170,23 +170,61 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 			// (or discover them & populate the cache)
 			IDataParameter[] commandParameters = DBHelperParameterCache.GetSpParameterSet(session, _commandText);
 
-			_preparedStatement.DbParameters = new IDataParameter[commandParameters.Length];
+            _preparedStatement.DbParameters = new IDbDataParameter[commandParameters.Length];
 
 			int start = session.DataSource.DbProvider.ParameterPrefix.Length;
 			for(int i=0; i< commandParameters.Length;i++)
 			{
-				IDataParameter dataParameter = commandParameters[i];
+				IDbDataParameter dataParameter = (IDbDataParameter)commandParameters[i];
 
 				if (session.DataSource.DbProvider.UseParameterPrefixInParameter == false)
 				{
-					if (dataParameter.ParameterName.StartsWith(session.DataSource.DbProvider.ParameterPrefix)) {
+					if (dataParameter.ParameterName.StartsWith(session.DataSource.DbProvider.ParameterPrefix)) 
+					{
 						dataParameter.ParameterName = dataParameter.ParameterName.Substring(start);
 					}
 				}
 				_preparedStatement.DbParametersName.Add( dataParameter.ParameterName );
 				_preparedStatement.DbParameters[i] = dataParameter;
 			}
+		    
+            // Re-sort DbParameters to match order used in the parameterMap
+            IDbDataParameter[] sortedDbParameters = new IDbDataParameter[commandParameters.Length];
+            for (int i = 0; i < _statement.ParameterMap.Properties.Count; i++)
+            {
+                sortedDbParameters[i] = Search(session, _preparedStatement.DbParameters, _statement.ParameterMap.Properties[i], i);
+            }
+            _preparedStatement.DbParameters = sortedDbParameters;
 		}
+
+        private IDbDataParameter Search(ISqlMapSession session,IDbDataParameter[] parameters, ParameterProperty property, int index)
+	    {
+            if (property.ColumnName.Length>0)
+            {
+                for (int i = 0; i < parameters.Length; i++)
+                {
+                    string parameterName = parameters[i].ParameterName;
+                    if (session.DataSource.DbProvider.UseParameterPrefixInParameter)
+                    {
+                        if (parameterName.StartsWith(session.DataSource.DbProvider.ParameterPrefix))
+                        {
+                           int prefixLength = session.DataSource.DbProvider.ParameterPrefix.Length;
+                           parameterName = parameterName.Substring(prefixLength);
+                        }
+                    }
+                    if (property.ColumnName.Equals(parameterName))
+                    {
+                        return parameters[i];
+                    }
+                }
+                throw new IndexOutOfRangeException("The specified IDbDataParameter '" + property.ColumnName + "' does not exist: ");                
+            }
+            else
+            {
+                return parameters[index];
+            }
+
+	    }
 
 
 		/// <summary>
@@ -208,7 +246,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 				list = _request.ParameterMap.PropertiesList;
 			}
 
-			_preparedStatement.DbParameters = new IDataParameter[list.Count];
+            _preparedStatement.DbParameters = new IDbDataParameter[list.Count];
  
 			for(int i =0; i<list.Count; i++)
 			{
@@ -224,7 +262,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 					sqlParamName = "param" + i;
 				}
 
-                IDataParameter dataParameter = _session.CreateDataParameter();
+                IDbDataParameter dataParameter = _session.CreateDataParameter();
 
 				// Manage dbType attribute if any
 				if (property.DbType != null && property.DbType.Length >0) 
@@ -244,18 +282,18 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 				{
 					if (property.Size != -1)
 					{
-						((IDbDataParameter)dataParameter).Size = property.Size;
+						dataParameter.Size = property.Size;
 					}
 				}
 
 				if (_session.DataSource.DbProvider.SetDbParameterPrecision) 
 				{
-					((IDbDataParameter)dataParameter).Precision = property.Precision;
+					dataParameter.Precision = property.Precision;
 				}
 				
 				if (_session.DataSource.DbProvider.SetDbParameterScale) 
 				{
-					((IDbDataParameter)dataParameter).Scale = property.Scale;
+					dataParameter.Scale = property.Scale;
 				}
 				
 				// Set as direction parameter
@@ -293,7 +331,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 				list = _request.ParameterMap.PropertiesList;
 			}
 
-			_preparedStatement.DbParameters = new IDataParameter[list.Count];
+            _preparedStatement.DbParameters = new IDbDataParameter[list.Count];
 
 			// ParemeterMap are required for procedure and we tested existance in Prepare() method
 			// so we don't have to test existence here.
@@ -313,7 +351,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 					sqlParamName =  property.ColumnName;
 				}
 
-				IDataParameter dataParameter = _session.CreateCommand(_statement.CommandType).CreateParameter();
+                IDbDataParameter dataParameter = _session.CreateCommand(_statement.CommandType).CreateParameter();
 
 				// Manage dbType attribute if any
 				if (property.DbType!=null && property.DbType.Length >0) 
@@ -333,18 +371,18 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 				{
 					if (property.Size != -1)
 					{
-						((IDbDataParameter)dataParameter).Size = property.Size;
+						dataParameter.Size = property.Size;
 					}
 				}
 
 				if (_session.DataSource.DbProvider.SetDbParameterPrecision) 
 				{
-					((IDbDataParameter)dataParameter).Precision = property.Precision;
+					dataParameter.Precision = property.Precision;
 				}
 				
 				if (_session.DataSource.DbProvider.SetDbParameterScale) 
 				{
-					((IDbDataParameter)dataParameter).Scale = property.Scale;
+					dataParameter.Scale = property.Scale;
 				}
 				
 				// Set as direction parameter
@@ -360,6 +398,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 					_propertyDbParameterMap.Add(property, dataParameter);
 				}
 			}
+		    
 		}
 
 

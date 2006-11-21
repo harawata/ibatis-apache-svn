@@ -43,7 +43,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 
 		private string _preparedSsql = string.Empty;
 		private StringCollection  _dbParametersName = new StringCollection ();
-		private IDataParameter[] _dbParameters = null;
+		private IDbDataParameter[] _dbParameters = null;
 
 		#endregion
 
@@ -61,7 +61,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		/// <summary>
 		/// The list of IDataParameter to use for the PreparedSql.
 		/// </summary>
-		public IDataParameter[] DbParameters
+        public IDbDataParameter[] DbParameters
 		{
 			get { return _dbParameters;}
 			set { _dbParameters =value;}

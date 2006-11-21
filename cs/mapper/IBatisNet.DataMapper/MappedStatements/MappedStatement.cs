@@ -830,7 +830,7 @@ namespace IBatisNet.DataMapper.MappedStatements
             {
                 rows = command.ExecuteNonQuery();
 
-                ExecutePostSelect(request);
+                //ExecutePostSelect(request);
 
                 RetrieveOutputParameters(request, session, command, parameterObject);
             }
@@ -911,7 +911,7 @@ namespace IBatisNet.DataMapper.MappedStatements
                         request.DataExchangeFactory.AccessorFactory);
                 }
 
-                ExecutePostSelect(request);
+                //ExecutePostSelect(request);
 
                 RetrieveOutputParameters(request, session, command, parameterObject);
             }

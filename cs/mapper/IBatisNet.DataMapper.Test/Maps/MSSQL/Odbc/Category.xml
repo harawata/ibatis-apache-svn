@@ -157,13 +157,13 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 	<parameterMaps>
 		<parameterMap id="insertMap-params" class="Hashtable">
 			<parameter property="Id" column="Category_Id" dbType="Int" /><!-- Int for SqlClient, Obdc; Integer for Oledb -->
-			<parameter property="Name" column="Category_Name"/>
 			<parameter property="Guid" column="Category_Guid" dbType="UniqueIdentifier"/><!--Guid for Oledb, UniqueIdentifier for SqlClient,Odbc -->
+			<parameter property="Name" column="Category_Name"/>
 		</parameterMap>
 			
 		<parameterMap id="insert-params" class="Category">
-			<parameter property="Id" column="Category_Id" dbType="Int" /><!-- Int for SqlClient, Obdc; Integer for Oledb -->
 			<parameter property="Name" column="Category_Name"/>
+			<parameter property="Id" column="Category_Id" dbType="Int" /><!-- Int for SqlClient, Obdc; Integer for Oledb -->
 			<parameter property="Guid" column="Category_Guid" dbType="UniqueIdentifier"/><!--Guid for Oledb, UniqueIdentifier for SqlClient,Odbc -->
 		</parameterMap>
 

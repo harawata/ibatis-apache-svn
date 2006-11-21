@@ -260,10 +260,10 @@ namespace IBatisNet.DataMapper
 			}
 			else
 			{
-				if (_connection == null || _connection.State != ConnectionState.Open)
+                if (_connection == null || _connection.State != ConnectionState.Open)
 				{
-					throw new DataMapperException("SqlMapSession could not invoke BeginTransaction(). A Connection must be started. Call OpenConnection() first.");
-				}
+                    this.OpenConnection();
+                }
 				_transaction = _connection.BeginTransaction();
 				if (_logger.IsDebugEnabled)
 				{

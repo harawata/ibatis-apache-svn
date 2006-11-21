@@ -100,11 +100,9 @@
     <Compile Include="Commands\DefaultPreparedCommand.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Commands\IDbDataParameterCollection.cs" />
     <Compile Include="Commands\InMemoryDataReader.cs" />
     <Compile Include="Commands\IPreparedCommand.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Commands\PreparedCommandProxy.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Commands\PreparedCommandFactory.cs">

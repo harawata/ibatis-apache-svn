@@ -58,13 +58,14 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
 			}
 
 			int count = reader.FieldCount;
+            IDictionary dictionary = (IDictionary) outObject;
 			for (int i = 0; i < count; i++) 
 			{
 				ResultProperty property = new ResultProperty();
 				property.PropertyName = "value";
 				property.ColumnIndex = i;
 				property.TypeHandler = request.DataExchangeFactory.TypeHandlerFactory.GetTypeHandler(reader.GetFieldType(i));
-				((IDictionary) outObject).Add(
+                dictionary.Add(
 					reader.GetName(i), 
 					property.GetDataBaseValue(reader));
 			}   

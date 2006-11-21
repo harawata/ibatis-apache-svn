@@ -98,7 +98,7 @@ namespace IBatisNet.DataMapper.Commands
 			RequestScope request, IStatement statement, object parameterObject )
 		{
 			StringCollection properties = request.PreparedStatement.DbParametersName;
-			IDataParameter[] parameters = request.PreparedStatement.DbParameters;
+            IDbDataParameter[] parameters = request.PreparedStatement.DbParameters;
 
             #region Logging
             if (_logger.IsDebugEnabled)
@@ -112,8 +112,8 @@ namespace IBatisNet.DataMapper.Commands
 
             for ( int i = 0; i < count; ++i )
 			{
-				IDataParameter sqlParameter = parameters[i];
-				IDataParameter parameterCopy = command.CreateParameter();
+                IDbDataParameter sqlParameter = parameters[i];
+                IDbDataParameter parameterCopy = command.CreateParameter();
 				ParameterProperty property = request.ParameterMap.GetProperty(i);
 
 				#region Logging
@@ -143,11 +143,6 @@ namespace IBatisNet.DataMapper.Commands
 							property.Direction = sqlParameter.Direction;
 						}
 
-						// DbDataParameter dataParameter = (IDbDataParameter)parameters[i];
-						// property.Precision = dataParameter.Precision;
-						// property.Scale = dataParameter.Scale;
-						// property.Size = dataParameter.Size;
-
 						sqlParameter.Direction = property.Direction;					
 					}
 					#endregion 
@@ -168,8 +163,7 @@ namespace IBatisNet.DataMapper.Commands
 				// With a ParameterMap, we could specify the ParameterDbTypeProperty
 				if (request.ParameterMap != null)
 				{
-					if (request.ParameterMap.GetProperty(i).DbType != null && 
-						request.ParameterMap.GetProperty(i).DbType.Length >0)
+                    if (property.DbType != null && property.DbType.Length > 0)
 					{
 						string dbTypePropertyName = session.DataSource.DbProvider.ParameterDbTypeProperty;
 						object propertyValue = ObjectProbe.GetMemberValue(sqlParameter, dbTypePropertyName, request.DataExchangeFactory.AccessorFactory);
@@ -220,20 +214,20 @@ namespace IBatisNet.DataMapper.Commands
 				// JIRA-49 Fixes (size, precision, and scale)
 				if (session.DataSource.DbProvider.SetDbParameterSize) 
 				{
-					if (((IDbDataParameter)sqlParameter).Size > 0) 
+					if (sqlParameter.Size > 0) 
 					{
-						((IDbDataParameter)parameterCopy).Size = ((IDbDataParameter)sqlParameter).Size;
+						parameterCopy.Size = sqlParameter.Size;
 					}
 				}
 
 				if (session.DataSource.DbProvider.SetDbParameterPrecision) 
 				{
-					((IDbDataParameter)parameterCopy).Precision = ((IDbDataParameter)sqlParameter).Precision;
+					parameterCopy.Precision = sqlParameter.Precision;
 				}
 				
 				if (session.DataSource.DbProvider.SetDbParameterScale) 
 				{
-					((IDbDataParameter)parameterCopy).Scale = ((IDbDataParameter)sqlParameter).Scale;
+					parameterCopy.Scale = sqlParameter.Scale;
 				}				
 
 				parameterCopy.ParameterName = sqlParameter.ParameterName;
