@@ -21,6 +21,7 @@ import com.ibatis.sqlmap.client.SqlMapExecutor;
 import com.ibatis.sqlmap.client.SqlMapTransactionManager;
 import com.ibatis.sqlmap.engine.transaction.Transaction;
 import com.ibatis.sqlmap.engine.transaction.TransactionState;
+import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -241,11 +242,13 @@ public class SessionScope extends BaseScope {
     return ps;
   }
 
-  public void putPreparedStatement(String sql, PreparedStatement ps) {
-    if (!isInBatch()) {
-      if (hasPreparedStatementFor(sql))
-        throw new SqlMapException("Duplicate prepared statement found.  This is likely a bug.");
-      preparedStatements.put(sql, ps);
+  public void putPreparedStatement(SqlMapExecutorDelegate delegate, String sql, PreparedStatement ps) {
+    if (delegate.isStatementCacheEnabled()) {
+      if (!isInBatch()) {
+        if (hasPreparedStatementFor(sql))
+          throw new SqlMapException("Duplicate prepared statement found.  This is likely a bug.");
+        preparedStatements.put(sql, ps);
+      }
     }
   }
 

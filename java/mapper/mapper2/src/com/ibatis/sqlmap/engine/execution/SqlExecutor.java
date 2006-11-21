@@ -460,43 +460,45 @@ public class SqlExecutor {
   }
 
   private PreparedStatement prepareStatement(SessionScope session, Connection conn, String sql, Integer rsType) throws SQLException {
+    SqlMapExecutorDelegate delegate = ((ExtendedSqlMapClient)session.getSqlMapExecutor()).getDelegate();
     if (session.hasPreparedStatementFor(sql)) {
       return session.getPreparedStatement((sql));
     } else {
       PreparedStatement ps = conn.prepareStatement(sql, rsType.intValue(), ResultSet.CONCUR_READ_ONLY);
-      session.putPreparedStatement(sql, ps);
+      session.putPreparedStatement(delegate, sql, ps);
       return ps;
     }
   }
 
   private CallableStatement prepareCall(SessionScope session, Connection conn, String sql, Integer rsType) throws SQLException {
+    SqlMapExecutorDelegate delegate = ((ExtendedSqlMapClient)session.getSqlMapExecutor()).getDelegate();
     if (session.hasPreparedStatementFor(sql)) {
       return (CallableStatement) session.getPreparedStatement((sql));
     } else {
       CallableStatement cs = conn.prepareCall(sql, rsType.intValue(), ResultSet.CONCUR_READ_ONLY);
-      session.putPreparedStatement(sql, cs);
+      session.putPreparedStatement(delegate, sql, cs);
       return cs;
     }
   }
 
   private static PreparedStatement prepareStatement(SessionScope session, Connection conn, String sql) throws SQLException {
     SqlMapExecutorDelegate delegate = ((ExtendedSqlMapClient)session.getSqlMapExecutor()).getDelegate();
-    if (delegate.isStatementCacheEnabled() && session.hasPreparedStatementFor(sql)) {
+    if (session.hasPreparedStatementFor(sql)) {
       return session.getPreparedStatement((sql));
     } else {
       PreparedStatement ps = conn.prepareStatement(sql);
-      session.putPreparedStatement(sql, ps);
+      session.putPreparedStatement(delegate, sql, ps);
       return ps;
     }
   }
 
   private CallableStatement prepareCall(SessionScope session, Connection conn, String sql) throws SQLException {
     SqlMapExecutorDelegate delegate = ((ExtendedSqlMapClient)session.getSqlMapExecutor()).getDelegate();
-    if (delegate.isStatementCacheEnabled() && session.hasPreparedStatementFor(sql)) {
+    if (session.hasPreparedStatementFor(sql)) {
       return (CallableStatement) session.getPreparedStatement((sql));
     } else {
       CallableStatement cs = conn.prepareCall(sql);
-      session.putPreparedStatement(sql, cs);
+      session.putPreparedStatement(delegate, sql, cs);
       return cs;
     }
   }
