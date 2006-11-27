@@ -21,6 +21,9 @@ package com.ibatis.sqlmap.engine.mapping.result;
  * your implementation class as the type for the "resultObjectFactory"
  * element in the SqlMapConfig.  Any implementation of this interface
  * must have a public no argument constructor.
+ * 
+ * Note that iBATIS makes use of this interface through the
+ * ResultObjectFactoryUtil class.
  *   
  * @author Jeff Butler
  *
@@ -42,7 +45,7 @@ public interface ResultObjectFactory {
    *   <li>When processing result maps with nested result maps.  iBATIS will
    *     ask the factory to create an instance of the nested object.  If the nested
    *     object is some implementation of <code>java.util.Collection</code>
-   *     then iBATIS will suppliy default implementations of the common interfaces
+   *     then iBATIS will supply default implementations of the common interfaces
    *     if the factory chooses not to create the object.  If the
    *     embedded object is a <code>java.util.List</code> or 
    *     <code>java.util.Collection</code> the default behavior is to

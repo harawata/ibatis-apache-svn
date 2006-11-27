@@ -19,6 +19,8 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import com.ibatis.sqlmap.engine.mapping.result.ResultObjectFactoryUtil;
+
 /**
  * StaticBeanProbe provides methods that allow simple, reflective access to
  * JavaBeans style properties.  Methods are provided for all simple types as
@@ -219,7 +221,7 @@ public class ComplexBeanProbe extends BaseProbe {
             return; // don't instantiate child path if value is null
           } else {
             try {
-              child = type.newInstance();
+              child = ResultObjectFactoryUtil.createObjectThroughFactory(type);
               setObject(parent, property, child);
             } catch (Exception e) {
               throw new ProbeException("Cannot set value of property '" + name + "' because '" + property + "' is null and cannot be instantiated on instance of " + type.getName() + ". Cause:" + e.toString(), e);

@@ -436,9 +436,7 @@ public class BasicResultMap implements ResultMap {
           // then we will just set the property to the object created
           // in processing the nested result map
           if (Collection.class.isAssignableFrom(type)) {
-            ExtendedSqlMapClient client = (ExtendedSqlMapClient) request.getSession().getSqlMapClient();
-            obj = ResultObjectFactoryUtil.createObjectThroughFactory(client.getResultObjectFactory(),
-                request.getStatement().getId(), type);
+            obj = ResultObjectFactoryUtil.createObjectThroughFactory(type);
             PROBE.setObject(resultObject, propertyName, obj);
           }
         } catch (Exception e) {
@@ -574,9 +572,7 @@ public class BasicResultMap implements ResultMap {
     if (parameterType == null) {
       parameterObject = new HashMap();
     } else {
-      ExtendedSqlMapClient client = (ExtendedSqlMapClient) request.getSession().getSqlMapClient();
-      parameterObject = ResultObjectFactoryUtil.createObjectThroughFactory(client.getResultObjectFactory(),
-          request.getStatement().getId(), parameterType);
+      parameterObject = ResultObjectFactoryUtil.createObjectThroughFactory(parameterType);
     }
     String complexName = mapping.getColumnName();
 

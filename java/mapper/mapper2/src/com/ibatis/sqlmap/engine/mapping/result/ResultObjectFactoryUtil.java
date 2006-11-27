@@ -24,11 +24,32 @@ import java.util.Set;
 import com.ibatis.common.resources.Resources;
 
 /**
- * @author Jeff Butler
+ * This class is used to create instances of result objects.  It will
+ * use the configured ResultObjectFactory if there is one, otherwise
+ * it will use iBATIS' normal methods.
  * 
+ * Note that this class is somewhat tightly coupled with
+ * SqlExecuter - SqlExecute must call the setStatementId() and
+ * setResultObjectFactory() methods before executing a statement.
+ * This is a result of using a ThreadLocal to hold the current
+ * configuration for the statement under execution.  Using a
+ * ThreadLocal is a solution for IBATIS-366.  Without a ThreadLocal,
+ * the current factory and statement id would have to be added to 
+ * many method signatures - often in inappropriate places.
+ * 
+ * @author Jeff Butler
  */
 public class ResultObjectFactoryUtil {
-
+  
+  /**
+   * Use a ThreadLocal to hold the current statementId and
+   * factory.  This is much easier than passing these
+   * items all over the place, and it has no measurable impact on
+   * performance (I did a test with 100000 result rows and found
+   * no impact - Jeff Butler).
+   */
+  private static ThreadLocal factorySettings = new ThreadLocal();
+  
   /**
    * Utility class - no instances
    */
@@ -64,15 +85,16 @@ public class ResultObjectFactoryUtil {
    *           Exception, iBATIS will throw a runtime exception in response and
    *           will end.
    */
-  public static Object createObjectThroughFactory(ResultObjectFactory factory,
-      String statementId, Class clazz) throws InstantiationException,
+  public static Object createObjectThroughFactory(Class clazz) throws InstantiationException,
       IllegalAccessException {
     
+    FactorySettings fs = getFactorySettings();
+    
     Object obj;
-    if (factory == null) {
+    if (fs.getResultObjectFactory() == null) {
       obj = createObjectInternally(clazz);
     } else {
-      obj = factory.createInstance(statementId, clazz);
+      obj = fs.getResultObjectFactory().createInstance(fs.getStatementId(), clazz);
       if (obj == null) {
         obj = createObjectInternally(clazz);
       }
@@ -104,5 +126,44 @@ public class ResultObjectFactoryUtil {
     
     Object obj = Resources.instantiate(classToCreate);
     return obj;
+  }
+  
+  public static void setResultObjectFactory(ResultObjectFactory resultObjectFactory) {
+    getFactorySettings().setResultObjectFactory(resultObjectFactory);
+  }
+  
+  public static void setStatementId(String statementId) {
+    getFactorySettings().setStatementId(statementId);
+  }
+  
+  private static FactorySettings getFactorySettings() {
+    FactorySettings fs = (FactorySettings) factorySettings.get();
+    if (fs == null) {
+      fs = new FactorySettings();
+      factorySettings.set(fs);
+    }
+    
+    return fs;
+  }
+  
+  private static class FactorySettings {
+    private ResultObjectFactory resultObjectFactory;
+    private String statementId;
+    
+    public ResultObjectFactory getResultObjectFactory() {
+      return resultObjectFactory;
+    }
+    
+    public void setResultObjectFactory(ResultObjectFactory resultObjectFactory) {
+      this.resultObjectFactory = resultObjectFactory;
+    }
+    
+    public String getStatementId() {
+      return statementId;
+    }
+    
+    public void setStatementId(String statementId) {
+      this.statementId = statementId;
+    }
   }
 }

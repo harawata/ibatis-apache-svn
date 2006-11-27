@@ -19,6 +19,7 @@ import com.ibatis.sqlmap.engine.mapping.parameter.BasicParameterMapping;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMapping;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
+import com.ibatis.sqlmap.engine.mapping.result.ResultObjectFactoryUtil;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
 import com.ibatis.sqlmap.engine.mapping.statement.RowHandlerCallback;
 import com.ibatis.sqlmap.engine.scope.ErrorContext;
@@ -68,6 +69,7 @@ public class SqlExecutor {
     errorContext.setActivity("executing update");
     errorContext.setObjectId(sql);
     PreparedStatement ps = null;
+    setupResultObjectFactory(request);
     int rows = 0;
     try {
       errorContext.setMoreInfo("Check the SQL Statement (preparation failed).");
@@ -164,6 +166,7 @@ public class SqlExecutor {
     errorContext.setObjectId(sql);
     PreparedStatement ps = null;
     ResultSet rs = null;
+    setupResultObjectFactory(request);
     try {
       errorContext.setMoreInfo("Check the SQL Statement (preparation failed).");
       Integer rsType = request.getStatement().getResultSetType();
@@ -211,6 +214,7 @@ public class SqlExecutor {
     errorContext.setActivity("executing update procedure");
     errorContext.setObjectId(sql);
     CallableStatement cs = null;
+    setupResultObjectFactory(request);
     int rows = 0;
     try {
       errorContext.setMoreInfo("Check the SQL Statement (preparation failed).");
@@ -251,6 +255,7 @@ public class SqlExecutor {
     errorContext.setObjectId(sql);
     CallableStatement cs = null;
     ResultSet rs = null;
+    setupResultObjectFactory(request);
     try {
       errorContext.setMoreInfo("Check the SQL Statement (preparation failed).");
       Integer rsType = request.getStatement().getResultSetType();
@@ -666,4 +671,9 @@ public class SqlExecutor {
     }
   }
 
+  private void setupResultObjectFactory(RequestScope request) {
+    ExtendedSqlMapClient client = (ExtendedSqlMapClient) request.getSession().getSqlMapClient();
+    ResultObjectFactoryUtil.setResultObjectFactory(client.getResultObjectFactory());
+    ResultObjectFactoryUtil.setStatementId(request.getStatement().getId());
+  }
 }

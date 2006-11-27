@@ -18,7 +18,6 @@ package com.ibatis.sqlmap.engine.exchange;
 
 import com.ibatis.sqlmap.engine.accessplan.AccessPlan;
 import com.ibatis.sqlmap.engine.accessplan.AccessPlanFactory;
-import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMapping;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
@@ -104,9 +103,7 @@ public class JavaBeanDataExchange extends BaseDataExchange implements DataExchan
       if (object == null) {
         errorContext.setMoreInfo("The error occured while instantiating the result object");
         try {
-          ExtendedSqlMapClient client = (ExtendedSqlMapClient) request.getSession().getSqlMapClient();
-          object = ResultObjectFactoryUtil.createObjectThroughFactory(client.getResultObjectFactory(),
-              request.getStatement().getId(), resultMap.getResultClass());
+          object = ResultObjectFactoryUtil.createObjectThroughFactory(resultMap.getResultClass());
         } catch (Exception e) {
           throw new RuntimeException("JavaBeansDataExchange could not instantiate result class.  Cause: " + e, e);
         }
@@ -125,9 +122,7 @@ public class JavaBeanDataExchange extends BaseDataExchange implements DataExchan
       Object object = parameterObject;
       if (object == null) {
         try {
-          ExtendedSqlMapClient client = (ExtendedSqlMapClient) request.getSession().getSqlMapClient();
-          object = ResultObjectFactoryUtil.createObjectThroughFactory(client.getResultObjectFactory(),
-              request.getStatement().getId(), parameterMap.getParameterClass());
+          object = ResultObjectFactoryUtil.createObjectThroughFactory(parameterMap.getParameterClass());
         } catch (Exception e) {
           throw new RuntimeException("JavaBeansDataExchange could not instantiate parameter class. Cause: " + e, e);
         }
