@@ -32,15 +32,14 @@ public class UnknownTypeHandler extends BaseTypeHandler implements TypeHandler {
   static private boolean usingJavaPre5 = false;
   
   static {
-	  try  {
-		  // try getBaseClass, if it throws no exception
-		  // were in Java 5+
-		  getBaseClass(Class.class);
-		  usingJavaPre5 = true;
-	  }
-	  catch ( NoSuchMethodException ex )  {
-		  usingJavaPre5 = false;
-	  }
+    try  {
+      // try getBaseClass, if it throws no exception
+      // were in Java <5
+      getBaseClass(Class.class);
+      usingJavaPre5 = false;
+    } catch ( NoSuchMethodException ex )  {
+      usingJavaPre5 = true;
+    }
   };
 
   /**
