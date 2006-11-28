@@ -18,6 +18,7 @@ package com.ibatis.common.resources;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.util.Properties;
 
 /**
@@ -26,6 +27,12 @@ import java.util.Properties;
 public class Resources extends Object {
 
   private static ClassLoader defaultClassLoader;
+  
+  /**
+   * Charset to use when calling getResourceAsReader.
+   * null means use the system default.
+   */
+  private static Charset charset;
 
   private Resources() {
   }
@@ -147,7 +154,14 @@ public class Resources extends Object {
    * @throws IOException If the resource cannot be found or read
    */
   public static Reader getResourceAsReader(String resource) throws IOException {
-    return new InputStreamReader(getResourceAsStream(resource));
+    Reader reader;
+    if (charset == null) {
+      reader = new InputStreamReader(getResourceAsStream(resource));
+    } else {
+      reader = new InputStreamReader(getResourceAsStream(resource), charset);
+    }
+    
+    return reader;
   }
 
   /**
@@ -159,7 +173,14 @@ public class Resources extends Object {
    * @throws IOException If the resource cannot be found or read
    */
   public static Reader getResourceAsReader(ClassLoader loader, String resource) throws IOException {
-    return new InputStreamReader(getResourceAsStream(loader, resource));
+    Reader reader;
+    if (charset == null) {
+      reader = new InputStreamReader(getResourceAsStream(loader, resource));
+    } else {
+      reader = new InputStreamReader(getResourceAsStream(loader, resource), charset);
+    }
+    
+    return reader;
   }
 
   /**
@@ -279,6 +300,22 @@ public class Resources extends Object {
     } else {
       return Thread.currentThread().getContextClassLoader();
     }
+  }
+
+  public static Charset getCharset() {
+    return charset;
+  }
+
+  /**
+   * Use this method to set the Charset to be used when
+   * calling the getResourceAsReader methods.  This will
+   * allow iBATIS to function properly when the system default
+   * encoding doesn't deal well with unicode (IBATIS-340, IBATIS-349)
+   * 
+   * @param charset
+   */
+  public static void setCharset(Charset charset) {
+    Resources.charset = charset;
   }
 
 }

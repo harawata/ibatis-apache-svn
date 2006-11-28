@@ -11,6 +11,7 @@ Build Number: @buildNum@
  o Merged common and sqlmap jar files (no more DAO means there's no point in keeping commons separate)
  o Implemented transaction level PreparedStatement caching
  o Fixed IBATIS-335 - Don't call setQueryTimeout if no value specified
+ o Fixed IBATIS-340 - Provide ability to override the default encoding in the Resources class
  o Fixed IBATIS-353 - Probe exception when using inheritance hierarchies
  o Fixed IBATIS-366 - Use ResultObjectFactory to create nested classes
 
