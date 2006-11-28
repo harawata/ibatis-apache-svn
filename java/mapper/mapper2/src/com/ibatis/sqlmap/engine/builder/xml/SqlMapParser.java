@@ -18,6 +18,7 @@ import com.ibatis.sqlmap.engine.type.CustomTypeHandler;
 import com.ibatis.sqlmap.engine.type.TypeHandler;
 import org.w3c.dom.Node;
 
+import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +49,10 @@ public class SqlMapParser extends BaseParser {
 
   public void parse(Reader reader) throws NodeletException {
     parser.parse(reader);
+  }
+
+  public void parse(InputStream inputStream) throws NodeletException {
+    parser.parse(inputStream);
   }
 
   private void addSqlMapNodelets() {

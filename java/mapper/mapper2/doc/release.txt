@@ -14,6 +14,8 @@ Build Number: @buildNum@
  o Fixed IBATIS-340 - Provide ability to override the default encoding in the Resources class
  o Fixed IBATIS-353 - Probe exception when using inheritance hierarchies
  o Fixed IBATIS-366 - Use ResultObjectFactory to create nested classes
+ o Fixed IBATIS-373 - Allow iBATIS to build SqlMapClient from InputStream
+ 
 
 ------------------------------
  2.2.0 - Aug 15, 2006

@@ -28,8 +28,10 @@ import com.ibatis.sqlmap.engine.transaction.external.ExternalTransactionConfig;
 import com.ibatis.sqlmap.engine.transaction.jdbc.JdbcTransactionConfig;
 import com.ibatis.sqlmap.engine.transaction.jta.JtaTransactionConfig;
 import com.ibatis.sqlmap.engine.type.*;
+
 import org.w3c.dom.Node;
 
+import java.io.InputStream;
 import java.io.Reader;
 import java.util.Iterator;
 import java.util.Properties;
@@ -37,6 +39,7 @@ import java.util.Properties;
 public class SqlMapConfigParser extends BaseParser {
 
   protected final NodeletParser parser = new NodeletParser();
+  private boolean usingStreams;
 
   public SqlMapConfigParser() {
     this(null, null);
@@ -78,7 +81,29 @@ public class SqlMapConfigParser extends BaseParser {
         reader = vars.sqlMapConfigConv.convertXml(reader);
       }
 
+      usingStreams = false;
+      
       parser.parse(reader);
+      return vars.client;
+    } catch (Exception e) {
+      throw new RuntimeException("Error occurred.  Cause: " + e, e);
+    }
+  }
+
+  public SqlMapClient parse(InputStream inputStream, Properties props) {
+    vars.properties = props;
+    return parse(inputStream);
+  }
+
+  public SqlMapClient parse(InputStream inputStream) {
+    try {
+      if (vars.sqlMapConfigConv != null) {
+        inputStream = vars.sqlMapConfigConv.convertXml(inputStream);
+      }
+      
+      usingStreams = true;
+
+      parser.parse(inputStream);
       return vars.client;
     } catch (Exception e) {
       throw new RuntimeException("Error occurred.  Cause: " + e, e);
@@ -351,21 +376,39 @@ public class SqlMapConfigParser extends BaseParser {
         String resource = attributes.getProperty("resource");
         String url = attributes.getProperty("url");
 
-        Reader reader = null;
-        if (resource != null) {
-          vars.errorCtx.setResource(resource);
-          reader = Resources.getResourceAsReader(resource);
-        } else if (url != null) {
-          vars.errorCtx.setResource(url);
-          reader = Resources.getUrlAsReader(url);
-        } else {
-          throw new SqlMapException("The <sqlMap> element requires either a resource or a url attribute.");
-        }
+        if (usingStreams) {
+          InputStream inputStream = null;
+          if (resource != null) {
+            vars.errorCtx.setResource(resource);
+            inputStream = Resources.getResourceAsStream(resource);
+          } else if (url != null) {
+            vars.errorCtx.setResource(url);
+            inputStream = Resources.getUrlAsStream(url);
+          } else {
+            throw new SqlMapException("The <sqlMap> element requires either a resource or a url attribute.");
+          }
 
-        if (vars.sqlMapConv != null) {
-          reader = vars.sqlMapConv.convertXml(reader);
+          if (vars.sqlMapConv != null) {
+            inputStream = vars.sqlMapConv.convertXml(inputStream);
+          }
+          new SqlMapParser(vars).parse(inputStream);
+        } else {
+          Reader reader = null;
+          if (resource != null) {
+            vars.errorCtx.setResource(resource);
+            reader = Resources.getResourceAsReader(resource);
+          } else if (url != null) {
+            vars.errorCtx.setResource(url);
+            reader = Resources.getUrlAsReader(url);
+          } else {
+            throw new SqlMapException("The <sqlMap> element requires either a resource or a url attribute.");
+          }
+
+          if (vars.sqlMapConv != null) {
+            reader = vars.sqlMapConv.convertXml(reader);
+          }
+          new SqlMapParser(vars).parse(reader);
         }
-        new SqlMapParser(vars).parse(reader);
       }
     });
   }

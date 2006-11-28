@@ -58,7 +58,6 @@ public class SqlStatementParser extends BaseParser {
     String timeout = attributes.getProperty("timeout");
 
     String[] additionalResultMapNames;
-    List additionalResultMaps = new ArrayList();
 
     vars.errorCtx.setObjectId(id + " statement");
 

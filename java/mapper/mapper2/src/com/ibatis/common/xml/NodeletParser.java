@@ -8,6 +8,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.util.*;
 
@@ -53,6 +54,15 @@ public class NodeletParser {
     }
   }
 
+  public void parse(InputStream inputStream) throws NodeletException {
+    try {
+      Document doc = createDocument(inputStream);
+      parse(doc.getLastChild());
+    } catch (Exception e) {
+      throw new NodeletException("Error parsing XML.  Cause: " + e, e);
+    }
+  }
+  
   /**
    * Begins parsing from the provided Node.
    */
@@ -147,6 +157,38 @@ public class NodeletParser {
     return builder.parse(new InputSource(reader));
   }
 
+  /**
+   * Creates a JAXP Document from an InoutStream.
+   */
+  private Document createDocument(InputStream inputStream) throws ParserConfigurationException, FactoryConfigurationError,
+      SAXException, IOException {
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    factory.setValidating(validation);
+
+    factory.setNamespaceAware(false);
+    factory.setIgnoringComments(true);
+    factory.setIgnoringElementContentWhitespace(false);
+    factory.setCoalescing(false);
+    factory.setExpandEntityReferences(true);
+
+    DocumentBuilder builder = factory.newDocumentBuilder();
+    builder.setEntityResolver(entityResolver);
+    builder.setErrorHandler(new ErrorHandler() {
+      public void error(SAXParseException exception) throws SAXException {
+        throw exception;
+      }
+
+      public void fatalError(SAXParseException exception) throws SAXException {
+        throw exception;
+      }
+
+      public void warning(SAXParseException exception) throws SAXException {
+      }
+    });
+
+    return builder.parse(new InputSource(inputStream));
+  }
+  
   public void setValidation(boolean validation) {
     this.validation = validation;
   }

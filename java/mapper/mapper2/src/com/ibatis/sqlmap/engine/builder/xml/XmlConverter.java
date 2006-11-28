@@ -15,6 +15,7 @@
  */
 package com.ibatis.sqlmap.engine.builder.xml;
 
+import java.io.InputStream;
 import java.io.Reader;
 import java.io.Writer;
 
@@ -37,4 +38,10 @@ public interface XmlConverter {
    */
   public void convertXml(Reader reader, Writer writer);
 
+  /**
+   * Get an InputStream based on another InputStream
+   * @param inputStream - an InputStream for the file to convert
+   * @return - the converted file
+   */
+  public InputStream convertXml(InputStream inputStream);
 }
