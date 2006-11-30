@@ -17,6 +17,7 @@ Build Number: @buildNum@
  o Fixed IBATIS-366 - Use ResultObjectFactory to create nested classes
  o Fixed IBATIS-367 - Inner class type handler is not handled correctly within maps
  o Fixed IBATIS-373 - Allow iBATIS to build SqlMapClient from InputStream
+ o Fixed IBATIS-374 - Allow <resultMap> with no <result> - must extend another <resultMap>
  
 
 ------------------------------

@@ -324,11 +324,16 @@ public class SqlMapParser extends BaseParser {
   private void addResultMapNodelets() {
     parser.addNodelet("/sqlMap/resultMap/end()", new Nodelet() {
       public void process(Node node) throws Exception {
+        
+        if (vars.resultMappingList.size() == 0) {
+          throw new RuntimeException("resultMap " + vars.currentResultMap.getId() + " must have at least one result mapping");
+        }
+        
         vars.currentResultMap.setResultMappingList(vars.resultMappingList);
 
         vars.currentResultMap.setDiscriminator(vars.discriminator);
         vars.discriminator = null;
-
+        
         vars.client.getDelegate().addResultMap(vars.currentResultMap);
 
         vars.errorCtx.setMoreInfo(null);
