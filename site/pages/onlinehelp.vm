@@ -26,7 +26,7 @@
   <p>Online Javadoc can be found here:</p>
   <ul>
     <li><a target="_blank" href="/docs/java/user">User Javadoc</a></li>
-    <li><a target="_blank" href="/docs/java/user">Developer Javadoc</a></li>
+    <li><a target="_blank" href="/docs/java/dev">Developer Javadoc</a></li>
   </ul>
 
 <h2>iBATIS for Ruby</h2>
