@@ -29,12 +29,23 @@
 </form>
 
 <h4>Releases</h4>
+<p>Note: iBATIS 2.2.0 is the last release that includes the iBATIS DAO framework.  After 2.2.0,
+   the DAO iBATIS framework is deprecated and removed from the downloads.
+   We suggest converting iBATIS framework DAOs to the
+   <a href="http://www.springframework.org" target="_blank">Spring Framework</a>.
+</p>
 <ul>
   <li><a href="[preferred]/ibatis/binaries/ibatis.java/iBATIS_DBL-2.1.7.597.zip"><b>iBATIS Java 2.1.7
     Binaries and Source</b></a> (Jan 21, 2006)
     [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/iBATIS_DBL-2.1.7.597.zip.md5">MD5</a>]
     [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/iBATIS_DBL-2.1.7.597.zip.asc">PGP</a>]
     [Status: General Availability]
+  </li>
+  <li><a href="[preferred]/ibatis/binaries/ibatis.java/iBATIS_DBL-2.2.0.638.zip"><b>iBATIS Java 2.2.0
+    Binaries, Source and Documentation</b></a> (Aug 16, 2006)
+    [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/iBATIS_DBL-2.2.0.638.zip.md5">MD5</a>]
+    [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/iBATIS_DBL-2.2.0.638.zip.asc">PGP</a>]
+    [Status: Beta]
   </li>
   <li><a href="[preferred]/ibatis/binaries/ibatis.java/ibatis-2.3.0.677.zip"><b>iBATIS Java 2.3.0
     Binaries, Source, and Documentation</b></a> (Dec 1, 2006)
@@ -126,7 +137,7 @@
 <h4>Verify the Downloads</h4>
 <p>It is good practice to verify the integrity of the downloaded files using the PGP or MD5
    signatures.  The Apache HTTP Server project has a good page on
-   why should verify releases <a href="http://httpd.apache.org/dev/verification.html">here</a>.
+   why you should verify releases <a href="http://httpd.apache.org/dev/verification.html">here</a>.
 <p>
 
 <p>The PGP signatures can be verified using PGP or GPG. First download the
