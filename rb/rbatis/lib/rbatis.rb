@@ -22,6 +22,8 @@ def Time.from_database(record, column)
 end
 
 module RBatis
+  VERBOSE = false
+  
   class BooleanMapper
     def from_database(record, column)
       return null if record[column].nil?
@@ -40,7 +42,11 @@ module RBatis
     include Sanitizer
     
     def initialize(params, &proc)
-      params.each{|k,v| send("#{k}=", v)}
+      params.each do |k,v|
+        setter = "#{k}="
+        raise "property #{k} is not support by statement #{self.class.name}" unless self.respond_to?(setter)
+        self.send(setter, v)
+      end
       @proc = proc
       reset_statistics
     end
@@ -52,7 +58,10 @@ module RBatis
     def execute(*args)
       @execution_count += 1
       sql = sanitize_sql(proc.call(*args))
-      do_execute(sql)
+      puts sql if VERBOSE
+      result = do_execute(sql)
+      p result if VERBOSE
+      result
     end
         
     def reset_statistics
@@ -65,10 +74,12 @@ module RBatis
   
   class SelectValue < Statement
     attr_accessor :result_type
+    alias type= result_type=
     
     def do_execute(sql)
       raise "result_type must be specified" unless result_type
       record = connection.select_one(sql)
+      return nil unless record
       result_type.from_database(record, record.keys.first)
     end
   end
@@ -99,7 +110,7 @@ module RBatis
     end
 
     def validate
-      raise 'resultmap has not been specified' unless resultmap
+      raise 'resultmap has not been specified, you need at least a :default resultmap declared before the statements' unless resultmap
     end
   end
 
@@ -133,6 +144,7 @@ module RBatis
       @fields = {}
       fields.each do |name, field_spec|
         if field_spec.is_a?(Array)
+          raise 'column name and type must be specified' unless field_spec.size >= 2
           @fields[name] = Column.new(*field_spec)
         else
           @fields[name] = field_spec
@@ -208,14 +220,17 @@ module RBatis
       @container = container
     end
     
-    def method_missing(name, *args, &proc)
+    def target
       maybe_load
-      @target.send(name, *args, &proc)
+      @target
+    end
+    
+    def method_missing(name, *args, &proc)
+      self.target.send(name, *args, &proc)
     end
     
     def to_s
-      maybe_load
-      @target.to_s
+      self.target.to_s
     end
     
     private
@@ -315,6 +330,15 @@ module RBatis
         BooleanMapper.new
       end
       
+      def association(type, *args)
+        type = case type
+          when Class then type
+          when :lazy then LazyAssociation
+          when :eager then raise 'eager associations not yet implemented'
+        end
+        type.new(*args)
+      end
+      
       def get_or_allocate(recordmap, record) # :nodoc:
         mapped_class.allocate
       end
@@ -384,6 +408,7 @@ module RBatis
         statements[name] = statement
         eval <<-EVAL
           def #{name}(*args)
+            raise "no such statement: '#{name}'" unless statements[:#{name}]
             statements[:#{name}].execute(*args)
           end
         EVAL

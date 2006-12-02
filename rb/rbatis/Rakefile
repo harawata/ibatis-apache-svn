@@ -1,6 +1,35 @@
+PKG_VERSION='1.0-dev'
+PKG_FILES = Rake::FileList.new
+RDOC_FILES = Rake::FileList.new
+RDOC_FILES.include("README", "lib/**/*.rb")
+PKG_FILES.include(RDOC_FILES)
+TEST_FILES = Rake::FileList.new
+PKG_FILES.include()
+
+require 'rubygems'
 require 'rake/rdoctask'
+require 'rake/gempackagetask'
 
 Rake::RDocTask.new do |rd|
   rd.main = "README"
-  rd.rdoc_files.include("README", "lib/**/*.rb")
+  rd.rdoc_files = RDOC_FILES
+end
+
+spec = Gem::Specification.new do |s|
+  s.platform = Gem::Platform::RUBY
+  s.summary = "An O/R-mapper for Ruby and Ruby on Rails."
+  s.name = 'rbatis'
+  s.version = PKG_VERSION
+  s.requirements << 'none'
+  s.require_path = 'lib'
+  s.autorequire = 'rake'
+  s.files = PKG_FILES
+  s.description = <<EOF
+RBatis is an O/R-mapper for Ruby and Ruby on Rails.
+EOF
+end
+
+Rake::GemPackageTask.new(spec) do |pkg|
+  pkg.need_zip = true
+  pkg.need_tar = true
 end
