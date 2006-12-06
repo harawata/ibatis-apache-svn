@@ -7,6 +7,19 @@
 
      <h2>News Archive</h2>
 
+<h3>iBATIS for Java 2.2.0 Released [Status: Beta]</h3>
+<p>(August 16, 2006) This is probably the most significant iBATIS 2.x release in at least a year.  If you
+  haven't upgraded in a while, this would be the one to go for. This update includes 25 new minor features
+  15 bug fixes and 3 new major features including support for Oracle cursors, multiple result sets and
+  private bean properties.  This is also the first release that requires JDK 1.4 (as voted nearly a year ago).
+</p>
+
+<h3>Fall is a great time for a conference!</h3>
+ <p>(Jul 30, 2006) We've just added a new event to the calendar.  <b>Calgary in September:</b> Clinton will be
+   presenting on all things iBATIS, Ajax, Agile and ...erm, Ruby.  Not that he's a buzzword chaser or
+   anything.  </p>
+<p><a href="events.html">See the Events Calendar for more.</a></p>
+
 <h3>iBATIS.NET DataMapper 1.5.1 and DataAccess 1.8.1 Beta!</h3>
  <p>(Jul 27, 2006) This release is primarily a bug fix for new constructor tag.</p>
 

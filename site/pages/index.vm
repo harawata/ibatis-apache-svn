@@ -51,8 +51,9 @@
 
 <h3>iBATIS for Java 2.2.0 General Availability</h3>
 <p>(December 5, 2006) The votes are in and iBATIS for Java 2.2.0 is promoted
-  to general availabilty status.  This release has many significant changes (see below) and
-  is the most significant release of iBATIS in at least a year.
+  to general availabilty status.  This release is the most significant release
+  of iBATIS in at least a year.  See the
+  release notes on the download page for full details.
   This is the last release of iBATIS that will include the DAO framework.</p>
 <p><b><a href="javadownloads.cgi">Download iBATIS 2.2.0!</a></b></p>
 
@@ -61,23 +62,15 @@
    Additionally, this release offers new support for local caching of prepared statements.
    Caching prepared statements can lead to significant performance improvements
    in many environments.</p>
-<p>The Java DAO framework has been deprecated and removed from iBATIS as of release
+<p>The Java DAO framework has been removed from iBATIS as of release
    2.3.0.  We heartily recommend that you consider using the
    <a href="http://www.springframework.org" target="_blank">Spring Framework</a>
    for all your DAO needs!  Spring offers great support for iBATIS.</p>
 <p>The paginated list methods have been deprecated with this release.  The methods were confusing
    to many users and often misused.  We suggest using native database support for paging, 
    or that you use the query methods with skip and max settings.</p>
-<p>Release 2.3.0 supercedes the 2.2.0 release which will remain at beta status due to minor
-   bugs.  We recommend that all 2.2.0 users upgrade to version 2.3.0.</p>
 <p><b><a href="javadownloads.cgi">Download iBATIS 2.3.0!</a></b></p>
 
-<h3>iBATIS for Java 2.2.0 Released [Status: Beta]</h3>
-<p>(August 16, 2006) This is probably the most significant iBATIS 2.x release in at least a year.  If you
-  haven't upgraded in a while, this would be the one to go for. This update includes 25 new minor features
-  15 bug fixes and 3 new major features including support for Oracle cursors, multiple result sets and
-  private bean properties.  This is also the first release that requires JDK 1.4 (as voted nearly a year ago).
-</p>
 
 <h3>iBATIS.NET DataMapper 1.5.1 and DataAccess 1.8.1 General Availability!</h3>
 <p>(August 10, 2006) The votes are in and both distributions are now tagged as GA!</p>
@@ -86,12 +79,6 @@
  </p>
 <p><b><a href="dotnetdownloads.cgi">Download iBATIS.NET DataMapper 1.5.1 and DataAccess 1.8.1!</a></b></p>
 
-
-<h3>Fall is a great time for a conference!</h3>
- <p>(Jul 30, 2006) We've just added a new event to the calendar.  <b>Calgary in September:</b> Clinton will be
-   presenting on all things iBATIS, Ajax, Agile and ...erm, Ruby.  Not that he's a buzzword chaser or
-   anything.  </p>
-<p><a href="events.html">See the Events Calendar for more.</a></p>
 
 <h3>RBatis - iBATIS for Ruby has been released!</h3>
  <p>(Jul 30, 2006) As promised almost exactly one year ago...iBATIS for Ruby is now here. Jon Tirsen
