@@ -30,22 +30,16 @@
 
 <h4>Releases</h4>
 <p>Note: iBATIS 2.2.0 is the last release that includes the iBATIS DAO framework.  After 2.2.0,
-   the DAO iBATIS framework is deprecated and removed from the downloads.
+   the DAO iBATIS framework is removed from the downloads.
    We suggest converting iBATIS framework DAOs to the
    <a href="http://www.springframework.org" target="_blank">Spring Framework</a>.
 </p>
 <ul>
-  <li><a href="[preferred]/ibatis/binaries/ibatis.java/iBATIS_DBL-2.1.7.597.zip"><b>iBATIS Java 2.1.7
-    Binaries and Source</b></a> (Jan 21, 2006)
-    [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/iBATIS_DBL-2.1.7.597.zip.md5">MD5</a>]
-    [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/iBATIS_DBL-2.1.7.597.zip.asc">PGP</a>]
-    [Status: General Availability]
-  </li>
   <li><a href="[preferred]/ibatis/binaries/ibatis.java/iBATIS_DBL-2.2.0.638.zip"><b>iBATIS Java 2.2.0
     Binaries, Source and Documentation</b></a> (Aug 16, 2006)
     [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/iBATIS_DBL-2.2.0.638.zip.md5">MD5</a>]
     [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/iBATIS_DBL-2.2.0.638.zip.asc">PGP</a>]
-    [Status: Beta]
+    [Status: General Availability]
   </li>
   <li><a href="[preferred]/ibatis/binaries/ibatis.java/ibatis-2.3.0.677.zip"><b>iBATIS Java 2.3.0
     Binaries, Source, and Documentation</b></a> (Dec 1, 2006)
@@ -57,14 +51,17 @@
 
 <h4>Release Archive</h4>
 <ul>
-  <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/builds/"><b>Past Releases at Apache (2.1.5+)</b></a></li>
+  <li><a href="http://archive.apache.org/dist/ibatis/binaries/ibatis.java/"><b>Past Releases at Apache (2.1.5+)</b></a></li>
   <li><a href="http://sourceforge.net/project/showfiles.php?group_id=61326">Past Releases at SourceForge (1.0 - 2.1.5)</a></li>
 </ul>
 
 <h4>Examples</h4>
 <ul>
-  <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/builds/JPetStore-5.0.zip">JPetStore 5.0 Example
-    Application</a></li>
+  <li><a href="[preferred]/ibatis/binaries/ibatis.java/JPetStore-5.0.zip">JPetStore 5.0 Example
+    Application</a>
+    [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/JPetStore-5.0.zip.md5">MD5</a>]
+    [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/JPetStore-5.0.zip.asc">PGP</a>]
+  </li>
 </ul>
 
 <h4>Documentation </h4>
