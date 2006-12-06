@@ -49,6 +49,13 @@
 
 <h2>News</h2>
 
+<h3>iBATIS for Java 2.2.0 General Availability</h3>
+<p>(December 5, 2006) The votes are in and iBATIS for Java 2.2.0 is promoted
+  to general availabilty status.  This release has many significant changes (see below) and
+  is the most significant release of iBATIS in at least a year.
+  This is the last release of iBATIS that will include the DAO framework.</p>
+<p><b><a href="javadownloads.cgi">Download iBATIS 2.2.0!</a></b></p>
+
 <h3>iBATIS for Java 2.3.0 Released [Status: Beta]</h3>
 <p>(December 1, 2006) This release includes several bug fixes and enhancements.
    Additionally, this release offers new support for local caching of prepared statements.
