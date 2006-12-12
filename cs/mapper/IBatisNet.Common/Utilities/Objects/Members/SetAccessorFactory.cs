@@ -240,7 +240,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
         [MethodImpl(MethodImplOptions.Synchronized)]
         public ISetAccessor CreateSetAccessor(Type targetType, string name)
         {
-            string key = targetType.FullName + name;
+            string key = targetType.FullName + "." + name;
 
             if (_cachedISetAccessor.Contains(key))
             {

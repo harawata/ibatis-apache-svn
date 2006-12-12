@@ -241,7 +241,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
         [MethodImpl(MethodImplOptions.Synchronized)]
         public IGetAccessor CreateGetAccessor(Type targetType, string name)
         {
-            string key = targetType.FullName + name;
+            string key = targetType.FullName + "." + name;
 
             if (_cachedIGetAccessor.Contains(key))
             {
