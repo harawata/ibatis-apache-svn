@@ -7,159 +7,164 @@
 
 <h2>iBATIS for Java Downloads</h2>
 
-<h4>Downloading</h4>
-<p>Use the links below to download a binary distribution of iBATIS for Java from one
-   of our mirrors.  It is good practice to <a href="#verify">verify</a> the integrity of the
-   distributions files, especially if you are using one of our mirror sites.
-</p>
+<table cellpadding="0" cellspacing="0" border="0">
+  <tr>
+    <td rowspan="2" width="70%">
+      <h4>Releases</h4>
+      <p>Note: iBATIS 2.2.0 is the last release that includes the iBATIS DAO framework.  After 2.2.0,
+         the DAO iBATIS framework is removed from the downloads.
+         We suggest converting iBATIS framework DAOs to the
+         <a href="http://www.springframework.org" target="_blank">Spring Framework</a>.
+      </p>
+      <ul>
+        <li><a href="[preferred]/ibatis/binaries/ibatis.java/iBATIS_DBL-2.2.0.638.zip"><b>iBATIS Java 2.2.0
+          Binaries, Source and Documentation</b></a> (Aug 16, 2006)
+          [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/iBATIS_DBL-2.2.0.638.zip.md5">MD5</a>]
+          [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/iBATIS_DBL-2.2.0.638.zip.asc">PGP</a>]
+          [Status: General Availability]
+          <a href="http://issues.apache.org/jira/secure/ReleaseNote.jspa?version=12310720&styleName=Text&projectId=10601&Create=Create">Release Notes</a>
+        </li>
+        <li><a href="[preferred]/ibatis/binaries/ibatis.java/ibatis-2.3.0.677.zip"><b>iBATIS Java 2.3.0
+          Binaries, Source, and Documentation</b></a> (Dec 1, 2006)
+          [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/ibatis-2.3.0.677.zip.md5">MD5</a>]
+          [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/ibatis-2.3.0.677.zip.asc">PGP</a>]
+          [Status: Beta]
+          <a href="http://issues.apache.org/jira/secure/ReleaseNote.jspa?version=12312035&styleName=Text&projectId=10601&Create=Create">Release Notes</a>
+        </li>
+      </ul>
 
-<h4>Mirrors</h4>
-<p>The currently selected mirror is <b>[preferred]</b>.  If you encounter a problem with this
-   mirror, please select another mirror.  If all mirrors are failing, there are
-   <i>backup</i> mirrors (at the end of the mirrors list) that should be available.
-   Note that with new releases it can up to 24 hours for the new files to be
-   available on the mirrors.
-</p>
+      <h4>Examples</h4>
+      <ul>
+        <li><a href="[preferred]/ibatis/binaries/ibatis.java/JPetStore-5.0.zip">JPetStore 5.0 Example
+          Application</a>
+          [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/JPetStore-5.0.zip.md5">MD5</a>]
+          [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/JPetStore-5.0.zip.asc">PGP</a>]
+        </li>
+      </ul>
 
-<form action="[location]" method="get" id="SelectMirror">
-  <p>Other mirrors:
-     <select name="Preferred"> [if-any http] [for http]<option value="[http]">[http]</option>[end][end][if-any ftp]  [for ftp]<option value="[ftp]">[ftp]</option>[end][end][if-any backup]  [for backup]<option value="[backup]">[backup] (backup)</option>[end][end]</select>
-     <input type="submit" value="Change" />
-  </p>
-</form>
+      <h4>Documentation </h4>
 
-<h4>Releases</h4>
-<p>Note: iBATIS 2.2.0 is the last release that includes the iBATIS DAO framework.  After 2.2.0,
-   the DAO iBATIS framework is removed from the downloads.
-   We suggest converting iBATIS framework DAOs to the
-   <a href="http://www.springframework.org" target="_blank">Spring Framework</a>.
-</p>
-<ul>
-  <li><a href="[preferred]/ibatis/binaries/ibatis.java/iBATIS_DBL-2.2.0.638.zip"><b>iBATIS Java 2.2.0
-    Binaries, Source and Documentation</b></a> (Aug 16, 2006)
-    [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/iBATIS_DBL-2.2.0.638.zip.md5">MD5</a>]
-    [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/iBATIS_DBL-2.2.0.638.zip.asc">PGP</a>]
-    [Status: General Availability]
-    <a href="http://issues.apache.org/jira/secure/ReleaseNote.jspa?version=12310720&styleName=Text&projectId=10601&Create=Create">Release Notes</a>
-  </li>
-  <li><a href="[preferred]/ibatis/binaries/ibatis.java/ibatis-2.3.0.677.zip"><b>iBATIS Java 2.3.0
-    Binaries, Source, and Documentation</b></a> (Dec 1, 2006)
-    [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/ibatis-2.3.0.677.zip.md5">MD5</a>]
-    [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/ibatis-2.3.0.677.zip.asc">PGP</a>]
-    [Status: Beta]
-    <a href="http://issues.apache.org/jira/secure/ReleaseNote.jspa?version=12312035&styleName=Text&projectId=10601&Create=Create">Release Notes</a>
-  </li>
-</ul>
+      <p><b>Latest Documentation:</b> Note that the documentation for iBATIS is updated very frequently, so it is possible (likely)
+        that there is newer documentation available in the Subversion repository than what is listed
+        here. If in doubt, check Subversion. The documentation in Subversion is in Open Office format.
+        This link will show the very latest version of all iBATIS for Java documentation:
+        <a href="http://svn.apache.org/repos/asf/ibatis/trunk/java/docs/" target="_new">Latest OpenOffice Documents in Subversion</a>
 
-<h4>Release Archive</h4>
-<ul>
-  <li><a href="http://archive.apache.org/dist/ibatis/binaries/ibatis.java/"><b>Past Releases at Apache (2.1.5+)</b></a></li>
-  <li><a href="http://sourceforge.net/project/showfiles.php?group_id=61326">Past Releases at SourceForge (1.0 - 2.1.5)</a></li>
-</ul>
+      </p>
 
-<h4>Examples</h4>
-<ul>
-  <li><a href="[preferred]/ibatis/binaries/ibatis.java/JPetStore-5.0.zip">JPetStore 5.0 Example
-    Application</a>
-    [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/JPetStore-5.0.zip.md5">MD5</a>]
-    [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/JPetStore-5.0.zip.asc">PGP</a>]
-  </li>
-</ul>
+      <p><b>Undocumented Stuff:</b>Although we try to keep the documentation as up-to-date as possible, sometimes the
+        software simply evolves faster than the docs.  In these cases, we make a habit of listing the undocumented features
+        on the wiki, here:
+        <a href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Not+Yet+Documented" target="_new">Undocumented features.</a>
+      </p>
 
-<h4>Documentation </h4>
+      <ul>
+        <li>English PDF (Included with distribution as of 2.2.0)
+          <ul>
+            <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2_en.pdf">SQL Maps for Java,
+              Developer Guide</a>
+              (Aug 9, 2006)</li>
+            <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2-Tutorial_en.pdf">SQL Maps for
+              Java, Tutorial</a>
+              (Feb 18, 2006)</li>
+            <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-DAO-2_en.pdf">DAO for Java, Developer
+              Guide</a>
+              (June 17, 2006)</li>
+          </ul>
+        </li>
+        <li>Chinese PDF
+          <ul>
+            <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2_cn.pdf">SQL Maps for Java,
+              Developer Guide</a>
+              (June 17, 2004)</li>
+            <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2-Tutorial_cn.pdf">SQL Maps for
+              Java, Tutorial</a>
+              (June 17, 2004)</li>
+          </ul>
+        </li>
+        <li>Korean PDF
+          <ul>
+            <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2_ko.pdf">SQL Maps for Java,
+              Developer Guide</a>
+              (June 17, 2004)</li>
+            <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2-Tutorial_ko.pdf">SQL Maps for
+              Java, Tutorial</a>
+              (June 17, 2004)</li>
+          </ul>
+        </li>
+        <li>French PDF
+          <ul>
+            <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2-Tutorial_fr.pdf">SQL Maps for
+              Java, Tutorial</a>
+              (May 15, 2006)</li>
+          </ul>
+        </li>
+        <li>Italian PDF
+          <ul>
+            <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2-Tutorial-it.pdf">SQL Maps for
+              Java, Tutorial</a>
+              (May 1, 2005)</li>
+          </ul>
+        </li>
+      </ul>
+    </td>
+    <td bgcolor="#ccc">
+      <h4>Mirrors</h4>
+      <p>The currently selected mirror is <b>[preferred]</b>.  If you encounter a problem with this
+         mirror, please select another mirror.  If all mirrors are failing, there are
+         <i>backup</i> mirrors (at the end of the mirrors list) that should be available.
+         Note that with new releases it can up to 24 hours for the new files to be
+         available on the mirrors.
+      </p>
 
-<p><b>Latest Documentation:</b> Note that the documentation for iBATIS is updated very frequently, so it is possible (likely)
-  that there is newer documentation available in the Subversion repository than what is listed
-  here. If in doubt, check Subversion. The documentation in Subversion is in Open Office format.
-  This link will show the very latest version of all iBATIS for Java documentation:
-  <a href="http://svn.apache.org/repos/asf/ibatis/trunk/java/docs/" target="_new">Latest OpenOffice Documents in Subversion</a>
+      <form action="[location]" method="get" id="SelectMirror">
+        <p>Other mirrors:
+           <select name="Preferred"> [if-any http] [for http]<option value="[http]">[http]</option>[end][end][if-any ftp]  [for ftp]<option value="[ftp]">[ftp]</option>[end][end][if-any backup]  [for backup]<option value="[backup]">[backup] (backup)</option>[end][end]</select>
+           <input type="submit" value="Change" />
+        </p>
+      </form>
+    </td>
+  </tr>
+  <tr bgcolor="#ccc">
+    <td>
+      <h4>Tips</h4>
+      <p>Use the links below to download a binary distribution of iBATIS for Java from one
+         of our mirrors.  It is good practice to <a href="#verify">verify</a> the integrity of the
+         distributions files, especially if you are using one of our mirror sites.
+      </p>
+      If you do not see the file you need in the links below, or you're looking for an
+      older version, please see the release archives.
+      <ul>
+        <li><a href="http://archive.apache.org/dist/ibatis/binaries/ibatis.java/"><b>Past Releases at Apache (2.1.5+)</b></a></li>
+        <li><a href="http://sourceforge.net/project/showfiles.php?group_id=61326">Past Releases at SourceForge (1.0 - 2.1.5)</a></li>
+      </ul>
+      <p>It is good practice to verify the integrity of the downloaded files using the PGP or MD5
+         signatures.  The Apache HTTP Server project has a good page on
+         why you should verify releases <a href="http://httpd.apache.org/dev/verification.html">here</a>.
+      </p>
+      <p>The PGP signatures can be verified using PGP or GPG. First download the
+         <a href="http://www.apache.org/dist/ibatis/KEYS">KEYS</a>
+         as well as the asc signature file for the relevant distribution.
+         Make sure you get these files from the
+         <a href="http://www.apache.org/dist/ibatis/">main distribution directory</a>, rather than
+         from a mirror (the links above are correct in this manner). Then verify the signatures using
+         pgp or gpg.</p>
 
-</p>
+      <p>Alternatively, you can verify the MD5 signature on the files. A unix program called
+         <code>md5</code>
+         or <code>md5sum</code> is included in many unix distributions. It is also available as
+         part of
+         <a href="http://www.gnu.org/software/textutils/textutils.html">GNU Textutils</a>.
+         Windows users can get binary md5 programs from
+         <a href="http://www.md5summer.org/">here</a>,
+         <a href="http://www.fourmilab.ch/md5/">here</a>,
+         <a href="http://www.pc-tools.net/win32/md5sums/">here</a>, or
+         <a href="http://www.slavasoft.com/fsum/">here</a>.
+      </p>
 
-<p><b>Undocumented Stuff:</b>Although we try to keep the documentation as up-to-date as possible, sometimes the
-  software simply evolves faster than the docs.  In these cases, we make a habit of listing the undocumented features
-  on the wiki, here:
-  <a href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Not+Yet+Documented" target="_new">Undocumented features.</a>
-</p>
-
-<ul>
-  <li>English PDF (Included with distribution as of 2.2.0)
-    <ul>
-      <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2_en.pdf">SQL Maps for Java,
-        Developer Guide</a>
-        (Aug 9, 2006)</li>
-      <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2-Tutorial_en.pdf">SQL Maps for
-        Java, Tutorial</a>
-        (Feb 18, 2006)</li>
-      <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-DAO-2_en.pdf">DAO for Java, Developer
-        Guide</a>
-        (June 17, 2006)</li>
-    </ul>
-  </li>
-  <li>Chinese PDF
-    <ul>
-      <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2_cn.pdf">SQL Maps for Java,
-        Developer Guide</a>
-        (June 17, 2004)</li>
-      <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2-Tutorial_cn.pdf">SQL Maps for
-        Java, Tutorial</a>
-        (June 17, 2004)</li>
-    </ul>
-  </li>
-  <li>Korean PDF
-    <ul>
-      <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2_ko.pdf">SQL Maps for Java,
-        Developer Guide</a>
-        (June 17, 2004)</li>
-      <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2-Tutorial_ko.pdf">SQL Maps for
-        Java, Tutorial</a>
-        (June 17, 2004)</li>
-    </ul>
-  </li>
-  <li>French PDF
-    <ul>
-      <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2-Tutorial_fr.pdf">SQL Maps for
-        Java, Tutorial</a>
-        (May 15, 2006)</li>
-    </ul>
-  </li>
-  <li>Italian PDF
-    <ul>
-      <li><a href="http://cvs.apache.org/dist/ibatis/ibatis.java/docs/iBATIS-SqlMaps-2-Tutorial-it.pdf">SQL Maps for
-        Java, Tutorial</a>
-        (May 1, 2005)</li>
-    </ul>
-  </li>
-</ul>
-
-<a name="verify"></a>
-<h4>Verify the Downloads</h4>
-<p>It is good practice to verify the integrity of the downloaded files using the PGP or MD5
-   signatures.  The Apache HTTP Server project has a good page on
-   why you should verify releases <a href="http://httpd.apache.org/dev/verification.html">here</a>.
-<p>
-
-<p>The PGP signatures can be verified using PGP or GPG. First download the
-   <a href="http://www.apache.org/dist/ibatis/KEYS">KEYS</a>
-   as well as the asc signature file for the relevant distribution.
-   Make sure you get these files from the 
-   <a href="http://www.apache.org/dist/ibatis/">main distribution directory</a>, rather than
-   from a mirror (the links above are correct in this manner). Then verify the signatures using
-   pgp or gpg.</p>
-   
-<p>Alternatively, you can verify the MD5 signature on the files. A unix program called
-   <code>md5</code>
-   or <code>md5sum</code> is included in many unix distributions. It is also available as
-   part of
-   <a href="http://www.gnu.org/software/textutils/textutils.html">GNU Textutils</a>.
-   Windows users can get binary md5 programs from
-   <a href="http://www.md5summer.org/">here</a>, 
-   <a href="http://www.fourmilab.ch/md5/">here</a>, 
-   <a href="http://www.pc-tools.net/win32/md5sums/">here</a>, or 
-   <a href="http://www.slavasoft.com/fsum/">here</a>.
-</p>
-
-
+    </td>
+  </tr>
+</table>
 
 </body>
 
