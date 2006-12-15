@@ -5,55 +5,60 @@
 
 <body>
 
-<h2>iBATIS for .NET</h2>
-  <p>iBATIS for .Net offers both downloadable and online documentation.</p>
-  <p><strong>Downloadable (PDF and CHM) documentation for iBATIS for .Net is available
-     <a href="dotnetdownloads.cgi">here</a>.</strong>
-  </p>
-  
-  <p>Online documentation can be found here:</p>
-  <ul>
-    <li><a target="_blank" href="/docs/dotnet/dataaccess/index.html">C# DataAccess Developer Guide</a></li>
-    <li><a target="_blank" href="/docs/dotnet/datamapper/index.html">C# DataMapper Developer Guide</a></li>
-  </ul>
+<table>
+  <tr>
+    <td width="33%">
+      <h2>iBATIS for Java</h2>
+        <p>iBATIS for Java offers both downloadable and online documentation.</p>
+        <p><strong>Downloadable (PDF) documentation for iBATIS for Java is available
+           <a href="javadownloads.cgi">HERE</a>.</strong>
+        </p>
 
-<h2>iBATIS for Java</h2>
-  <p>iBATIS for Java offers both downloadable and online documentation.</p>
-  <p><strong>Downloadable (PDF) documentation for iBATIS for Java is available
-     <a href="javadownloads.cgi">here</a>.</strong>
-  </p>
-  
-  <p>Online Javadoc can be found here:</p>
-  <ul>
-    <li><a target="_blank" href="/docs/java/user">User Javadoc</a></li>
-    <li><a target="_blank" href="/docs/java/dev">Developer Javadoc</a></li>
-  </ul>
+        <p>Online Javadoc can be found here:</p>
+        <ul>
+          <li><a target="_blank" href="/docs/java/user">User Javadoc</a></li>
+          <li><a target="_blank" href="/docs/java/dev">Developer Javadoc</a></li>
+        </ul>
+      <h2>Abator</h2>
+        <p>Abator documentation is included with all Abator downloads, and is also
+           integrated into the Eclipse help system when you install the Abator plugin for Eclipse.
+        </p>
 
-<h2>iBATIS for Ruby</h2>
-  <p>Online documentation for iBATIS for Ruby can be found here:</p>
-  <ul>
-    <li><a href="docs/ruby/">iBATIS for Ruby Documentation</a></li>
-  </ul>
+        <p>Online documentation for Abator can be found here:</p>
+        <ul>
+          <li><a target="_blank" href="/docs/tools/abator">Abator Documentation</a></li>
+        </ul>
+    </td>
+    <td width="33%">
+      <h2>iBATIS for .NET</h2>
+      <p>iBATIS for .Net offers both downloadable and online documentation.</p>
+      <p><strong>Downloadable (PDF and CHM) documentation for iBATIS for .Net is available
+         <a href="dotnetdownloads.cgi">HERE</a>.</strong>
+      </p>
+      <p>Online documentation can be found here:</p>
+      <ul>
+        <li><a target="_blank" href="/docs/dotnet/dataaccess/index.html">C# DataAccess Developer Guide</a></li>
+        <li><a target="_blank" href="/docs/dotnet/datamapper/index.html">C# DataMapper Developer Guide</a></li>
+      </ul>
+    </td>
+    <td width="33%">
+      <h2>iBATIS for Ruby</h2>
+        <p>Online documentation for iBATIS for Ruby can be found here:</p>
+        <ul>
+          <li><a href="docs/ruby/">iBATIS for Ruby Documentation</a></li>
+        </ul>
+    </td>
+  </tr>
+</table>
 
-<h2>Abator</h2>
-  <p>Abator documentation is included with all Abator downloads, and is also
-     integrated into the Eclipse help system when you install the Abator plugin for Eclipse.
-  </p>
-  
-  <p>Online documentation for Abator can be found here:</p>
-  <ul>
-    <li><a target="_blank" href="/docs/tools/abator">Abator Documentation</a></li>
-  </ul>
-  
-<h2>WIKI</h2>
-  <p>The iBATIS WIKI is a great source of additional information and FAQs.
-     Everyone is welcome to add documentation to the WIKI.  Superior WIKI
+<h2>Wiki</h2>
+  <p>The iBATIS wiki is a great source of additional information and FAQs.
+     Everyone is welcome to add documentation to the wiki.  Superior wiki
      articles may be promoted to the official documentation.</p>
-     
-  <p>Access the WIKI <a href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Home"
-                      target="_blank">
-     here</a>.</p>
-      
+  <p>Access the wiki
+    <a href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Home" target="_blank">here</a>.
+  </p>
+
 </body>
 
 </html>
