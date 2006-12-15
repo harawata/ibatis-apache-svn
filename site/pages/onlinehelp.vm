@@ -7,8 +7,8 @@
 
 <h2>iBATIS for .NET</h2>
   <p>iBATIS for .Net offers both downloadable and online documentation.</p>
-  <p>Downloadable (PDF and CHM) documentation for iBATIS for .Net is available
-     <a href="dotnetdownloads.cgi">here</a>.
+  <p><strong>Downloadable (PDF and CHM) documentation for iBATIS for .Net is available
+     <a href="dotnetdownloads.cgi">here</a>.</strong>
   </p>
   
   <p>Online documentation can be found here:</p>
@@ -19,8 +19,8 @@
 
 <h2>iBATIS for Java</h2>
   <p>iBATIS for Java offers both downloadable and online documentation.</p>
-  <p>Downloadable (PDF) documentation for iBATIS for Java is available
-     <a href="javadownloads.cgi">here</a>.
+  <p><strong>Downloadable (PDF) documentation for iBATIS for Java is available
+     <a href="javadownloads.cgi">here</a>.</strong>
   </p>
   
   <p>Online Javadoc can be found here:</p>
