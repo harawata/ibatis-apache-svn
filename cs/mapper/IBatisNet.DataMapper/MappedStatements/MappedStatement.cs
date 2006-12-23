@@ -237,7 +237,11 @@ namespace IBatisNet.DataMapper.MappedStatements
                 {
                     while (reader.Read())
                     {
-                        result = _resultStrategy.Process(request, ref reader, resultObject);
+                        object obj = _resultStrategy.Process(request, ref reader, resultObject);
+                        if (obj != BaseStrategy.SKIP)
+                        {
+                            result = obj;
+                        }
                     }
                 }
                 catch
@@ -323,7 +327,11 @@ namespace IBatisNet.DataMapper.MappedStatements
                 {
                     while (reader.Read())
                     {
-                        result = (T)_resultStrategy.Process(request, ref reader, resultObject);
+                        object obj = _resultStrategy.Process(request, ref reader, resultObject);
+                        if (obj != BaseStrategy.SKIP)
+                        {
+                            result = (T)obj;
+                        }
                     }
                 }
                 catch

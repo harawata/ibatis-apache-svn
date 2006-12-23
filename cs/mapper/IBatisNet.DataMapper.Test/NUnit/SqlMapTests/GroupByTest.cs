@@ -70,6 +70,21 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
             Assert.AreEqual(2, product.Items.Count);
         }
 
+        [Test]
+        public void TestForQueryForObject()
+        {
+            Domain.Petshop.Category cat = (Domain.Petshop.Category)sqlMap.QueryForObject("GetFish", null);
+            Assert.IsNotNull(cat);
+
+            Assert.AreEqual("FISH", cat.Id);
+            Assert.AreEqual("Fish", cat.Name);
+            Assert.IsNotNull(cat.Products, "Expected product list.");
+            Assert.AreEqual(4, cat.Products.Count);
+
+            Domain.Petshop.Product product = (Domain.Petshop.Product)cat.Products[0];
+            Assert.AreEqual(2, product.Items.Count);
+        }
+
 #if dotnet2
 
         [Test]
@@ -79,6 +94,21 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
             Assert.AreEqual(1, list.Count);
 
             Domain.Petshop.Category cat = (Domain.Petshop.Category)list[0];
+            Assert.AreEqual("FISH", cat.Id);
+            Assert.AreEqual("Fish", cat.Name);
+            Assert.IsNotNull(cat.GenericProducts, "Expected product list.");
+            Assert.AreEqual(4, cat.GenericProducts.Count);
+
+            Domain.Petshop.Product product = cat.GenericProducts[0];
+            Assert.AreEqual(2, product.GenericItems.Count);
+        }
+
+        [Test]
+        public void TestForQueryForObjectGeneric()
+        {
+            Domain.Petshop.Category cat = sqlMap.QueryForObject<Domain.Petshop.Category>("GetFishGeneric", null);
+            Assert.IsNotNull(cat);
+
             Assert.AreEqual("FISH", cat.Id);
             Assert.AreEqual("Fish", cat.Name);
             Assert.IsNotNull(cat.GenericProducts, "Expected product list.");

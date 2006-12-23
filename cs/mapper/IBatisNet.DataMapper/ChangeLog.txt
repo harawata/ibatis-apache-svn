@@ -4,15 +4,26 @@ IBatisNet Change Log
 1.6.0 - BETA
 ------------------------------
 Issues
+- IBATISNET-198 : Cache key for accessors can be ambiguous and can cause cast exceptions  
+- IBATISNET-193 : Implement N+1 Select resolution with groupBy attribute 
 - IBATISNET-191 : Allows Cache for Procedure / Statement tag
-- IBATISNET-179 : Allow procedure statement without parameterMap  
+- IBATISNET-189 : Missing Typehandler for nullable timespan  
+- IBATISNET-188 : MethodAccessException in emitted code  
+- IBATISNET-186 : Fix select on argument property on constructor tag  
 - IBATISNET-184 : Invalid support for public/protected field in result property
- 
+- IBATISNET-179 : Allow procedure statement without parameterMap  
+- IBATISNET-178 : ConfigWatcherHandler does not wok with the changes of DataMaps files   
+- IBATISNET-116 : Add support for iBATIS for Java's <include> tag in sql map files.  
+- IBATISNET-104 : QueryForXXX do not check cache before opening/closing connection  
+
 Improvements/Changes
+- IBATISNET-199 : Add support for QueryForObject and GroupBy  
+- IBATISNET-196 : Improved stored procedure parameters analysis
 - IBATISNET-192 : Add support for IDictionary<K, V> QueryForDictionary<K, V>(...)
 - IBATISNET-185 : Allow custom ISessionStore
-- IBATISNET-181 : Allow mapping of multiple result sets
+- IBATISNET-181 : Allow mapping of multiple resulSet
 - IBATISNET-180 : Extends use of ISqlMapper in DataMapper + allow use of a custom ISqlMapper
+
 - Remove obsoletes methods on SqlMapper : Configure(XmlDocument document), Configure(), Configure(string resource), 
 		ConfigureAndWatch(ConfigureHandler configureDelegate), ConfigureAndWatch(string resource, ConfigureHandler configureDelegate)
 - Mark QueryForPaginatedList as Obsolete on SqlMapper
