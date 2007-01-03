@@ -1225,6 +1225,20 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
         #region JIRA Tests
 
         /// <summary>
+        /// QueryForDictionary does not process select property
+        /// </summary>
+        [Test]
+        public void TestJIRA220()
+        {
+            IDictionary map = sqlMap.QueryForMap("JIAR220", null, "PostalCode");
+
+            Assert.AreEqual(11, map.Count);
+            Order order = ((Order)map["T4H 9G4"]);
+
+            Assert.AreEqual(2, order.LineItemsIList.Count);
+        }
+
+        /// <summary>
         /// Test JIRA 30 (repeating property)
         /// </summary>
         [Test]

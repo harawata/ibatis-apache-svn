@@ -203,6 +203,11 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			<result property="LineItemsIList" lazyLoad="true" column="Order_ID" select="GetLineItemsForOrder" />
 		</resultMap>
 
+    <resultMap id="order-JIAR220" class="Order"
+            extends="lite-order-result-by-name" >
+      <result property="LineItemsIList" column="Order_ID" select="GetLineItemsForOrder" />
+    </resultMap>
+
     <resultMap id="order-with-generic-lines-result" class="Order" 
             extends="lite-order-result-by-name" >
       <result property="LineItemsGenericList" column="Order_ID" select="GetLineItemsForOrderWithListClass2" />
@@ -517,6 +522,11 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			select * from Orders
 		</statement>
 
+    <statement id="JIAR220"
+      resultMap="order-JIAR220" >
+      select * from Orders
+    </statement>
+    
 		<statement id="GetOrderCardExpiryViaResultClass"
 					parameterClass="int"
 					resultClass="date">

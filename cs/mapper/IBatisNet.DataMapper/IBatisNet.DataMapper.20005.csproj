@@ -672,8 +672,12 @@
     <Content Include="ReadMe.txt" />
     <None Include="IBatisNet.DataMapper.build" />
     <None Include="MappedStatements\ResultStrategy\ClassDiagram.cd" />
-    <EmbeddedResource Include="SqlMap.xsd" />
-    <EmbeddedResource Include="SqlMapConfig.xsd" />
+    <EmbeddedResource Include="SqlMap.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SqlMapConfig.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IBatisNet.Common\IBatisNet.Common.2005.csproj">

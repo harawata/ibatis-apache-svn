@@ -1021,6 +1021,7 @@ namespace IBatisNet.DataMapper.MappedStatements
                     reader.Close();
                     reader.Dispose();
                 }
+                ExecutePostSelect(request);
             }
             return map;
 
@@ -1147,6 +1148,7 @@ namespace IBatisNet.DataMapper.MappedStatements
                     reader.Close();
                     reader.Dispose();
                 }
+                ExecutePostSelect(request);
             }
             return map;
 

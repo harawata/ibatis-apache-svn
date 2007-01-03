@@ -267,7 +267,9 @@
     <Content Include="ChangeLog.txt" />
     <Content Include="licence.txt" />
     <Content Include="notice.txt" />
-    <Content Include="provider.xsd" />
+    <Content Include="provider.xsd">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="IBatisNet.Common.build" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
