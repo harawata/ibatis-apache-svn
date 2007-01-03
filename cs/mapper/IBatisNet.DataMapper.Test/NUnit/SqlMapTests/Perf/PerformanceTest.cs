@@ -134,6 +134,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Perf
 
                 timer.Start();
                 DirectAdoNet(_connection, simples, n, "j1");
+                timer.Stop(); 
                 double adonet = 1000000 * (timer.Duration / (double)n);
                 _connection.Close();
 
