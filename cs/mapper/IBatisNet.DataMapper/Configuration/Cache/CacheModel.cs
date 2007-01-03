@@ -322,6 +322,18 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 						_hits++;
 					}
 				}
+
+                if (_logger.IsDebugEnabled)
+                {
+                    if (value != null)
+                    {
+                        _logger.Debug(String.Format("Retrieved cached object '{0}' using key '{1}' ", value, key));
+                    }
+                    else
+                    {
+                        _logger.Debug(String.Format("Cache miss using key '{0}' ", key));
+                    }
+                }
 				return value;
 			}
 			set
@@ -342,6 +354,10 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 					}
 				}
 				_controller[key] = value;
+                if (_logger.IsDebugEnabled)
+                {
+                    _logger.Debug(String.Format("Cache object '{0}' using key '{1}' ", value, key));
+                }
 			}
 		}
 

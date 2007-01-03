@@ -155,7 +155,9 @@
     <Compile Include="SessionStore\SessionStoreFactory .cs" />
     <Compile Include="SessionStore\WebSessionStore.cs" />
     <Content Include="ChangeLog.txt" />
-    <EmbeddedResource Include="DaoConfig.xsd" />
+    <EmbeddedResource Include="DaoConfig.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <Content Include="licence.txt" />
     <Content Include="notice.txt" />
     <None Include="IBatisNet.DataAccess.build" />
