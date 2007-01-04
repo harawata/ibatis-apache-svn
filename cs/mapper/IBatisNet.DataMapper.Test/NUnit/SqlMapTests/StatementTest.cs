@@ -1225,6 +1225,19 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
         #region JIRA Tests
 
         /// <summary>
+        /// Test a constructor argument with select tag.
+        /// </remarks>
+        [Test]
+        public void TestJIRA182()
+        {
+            Order order = sqlMap.QueryForObject("JIRA182", 5) as Order;
+
+            Assert.IsTrue(order.Id == 5);
+            Assert.IsNotNull(order.Account);
+            Assert.AreEqual(5, order.Account.Id);
+        }
+
+        /// <summary>
         /// QueryForDictionary does not process select property
         /// </summary>
         [Test]

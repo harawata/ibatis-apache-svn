@@ -27,7 +27,6 @@ using System;
 using System.Collections;
 using System.Data;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
-using IBatisNet.DataMapper.Proxy;
 using IBatisNet.DataMapper.Scope;
 
 namespace IBatisNet.DataMapper.MappedStatements.PropertyStrategy

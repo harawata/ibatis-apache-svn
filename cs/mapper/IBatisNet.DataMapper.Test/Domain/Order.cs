@@ -146,26 +146,14 @@ namespace IBatisNet.DataMapper.Test.Domain
 
 		public string City
 		{
-			get
-			{
-				return _city; 
-			}
-			set
-			{ 
-				_city = value; 
-			}
+			get { return _city; }
+			set { _city = value; }
 		}
 
 		public string Street
 		{
-			get
-			{
-				return _street; 
-			}
-			set
-			{ 
-				_street = value; 
-			}
+			get { return _street; }
+			set { _street = value; }
 		}
 
 		public string CardExpiry
@@ -204,16 +192,10 @@ namespace IBatisNet.DataMapper.Test.Domain
 			}
 		}
 
-		public Account Account
+		public virtual Account Account
 		{
-			get
-			{
-				return _account; 
-			}
-			set
-			{ 
-				_account = value; 
-			}
+			get { return _account; }
+			set { _account = value; }
 		}
 
 		public int Id

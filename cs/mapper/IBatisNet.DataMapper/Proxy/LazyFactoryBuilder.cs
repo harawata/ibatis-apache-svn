@@ -38,7 +38,7 @@ namespace IBatisNet.DataMapper.Proxy
     /// </summary>
     public class LazyFactoryBuilder
     {
-        IDictionary _factory = new HybridDictionary();
+        private IDictionary _factory = new HybridDictionary();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LazyFactoryBuilder"/> class.

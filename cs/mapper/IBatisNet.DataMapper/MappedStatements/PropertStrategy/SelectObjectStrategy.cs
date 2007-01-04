@@ -64,8 +64,16 @@ namespace IBatisNet.DataMapper.MappedStatements.PropertyStrategy
 			postSelect.Target = target;
 			postSelect.ResultProperty = mapping;
 
-			postSelect.Method = PostBindind.ExecuteMethod.ExecuteQueryForObject;
-			request.QueueSelect.Enqueue(postSelect);
+			if (mapping.IsLazyLoad)
+			{
+				object values = mapping.LazyFactory.CreateProxy(selectStatement, keys, target, mapping.SetAccessor);
+				mapping.SetAccessor.Set(target, values);
+			}
+			else
+			{
+				postSelect.Method = PostBindind.ExecuteMethod.ExecuteQueryForObject;
+				request.QueueSelect.Enqueue(postSelect);
+			}
 		}
 
         /// <summary>

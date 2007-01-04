@@ -35,7 +35,7 @@ namespace IBatisNet.DataMapper.Test.Domain
             _document = document;
         }
 
-		public int Id
+		public virtual int Id
 		{
 			get { return id; }
 			set { id = value; }

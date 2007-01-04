@@ -31,7 +31,9 @@ using System.Collections;
 using System.Reflection;
 using Castle.DynamicProxy;
 using IBatisNet.Common.Logging;
+using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.Common.Utilities.Objects.Members;
+using IBatisNet.Common.Utilities.Proxy;
 using IBatisNet.DataMapper.MappedStatements;
 #if dotnet2
 using System.Collections.Generic;
@@ -51,10 +53,11 @@ namespace IBatisNet.DataMapper.Proxy
 		private object _param = null;
 		private object _target = null;
 		private ISetAccessor _setAccessor= null;
-        private ISqlMapper _sqlMap = null;
+		private ISqlMapper _sqlMap = null;
 		private string _statementName = string.Empty;
 		private bool _loaded = false;
-		private IList _innerList = null;
+		private object _lazyLoadedItem = null;
+		//private IList _innerList = null;
 		private object _loadLock = new object();
 		private static ArrayList _passthroughMethods = new ArrayList();
 
@@ -69,7 +72,6 @@ namespace IBatisNet.DataMapper.Proxy
 		static LazyLoadInterceptor()
 		{
 			_passthroughMethods.Add("GetType");
-			_passthroughMethods.Add("ToString");
 		}
 
 		/// <summary>
@@ -80,13 +82,13 @@ namespace IBatisNet.DataMapper.Proxy
 		/// <param name="setAccessor">The proxified member accessor.</param>
 		/// <param name="target">The target object which contains the property proxydied.</param>
 		internal LazyLoadInterceptor(IMappedStatement mappedSatement, object param,
-            object target, ISetAccessor setAccessor)
+			object target, ISetAccessor setAccessor)
 		{
 			_param = param;
 			_statementName = mappedSatement.Id;
 			_sqlMap = mappedSatement.SqlMap;
 			_target = target;
-            _setAccessor = setAccessor;
+			_setAccessor = setAccessor;
 		}		
 		#endregion
 
@@ -113,13 +115,23 @@ namespace IBatisNet.DataMapper.Proxy
 					{
 						_logger.Debug("Proxyfying call, query statement " + _statementName);
 					}
-					_innerList = _sqlMap.QueryForList(_statementName, _param);
+		
+					//Perform load
+                    if (typeof(IList).IsAssignableFrom(_setAccessor.MemberType))
+					{
+						_lazyLoadedItem = _sqlMap.QueryForList(_statementName, _param);
+					}
+					else
+					{
+						_lazyLoadedItem = _sqlMap.QueryForObject(_statementName, _param);
+					}
+
 					_loaded = true;
-                    _setAccessor.Set(_target, _innerList);
+					_setAccessor.Set(_target, _lazyLoadedItem);
 				}
 			}
 
-			object returnValue = invocation.Method.Invoke( _innerList, arguments);		
+			object returnValue = invocation.Method.Invoke( _lazyLoadedItem, arguments);		
 
 			if (_logger.IsDebugEnabled) 
 			{
