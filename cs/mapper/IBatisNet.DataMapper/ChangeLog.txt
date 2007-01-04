@@ -12,10 +12,12 @@ Issues
 - IBATISNET-188 : MethodAccessException in emitted code  
 - IBATISNET-186 : Fix select on argument property on constructor tag  
 - IBATISNET-184 : Invalid support for public/protected field in result property
+- IBATISNET-182 : Allow lazy load on simple class
 - IBATISNET-179 : Allow procedure statement without parameterMap  
 - IBATISNET-178 : ConfigWatcherHandler does not wok with the changes of DataMaps files   
 - IBATISNET-116 : Add support for iBATIS for Java's <include> tag in sql map files.  
 - IBATISNET-104 : QueryForXXX do not check cache before opening/closing connection  
+
 
 Improvements/Changes
 - IBATISNET-199 : Add support for QueryForObject and GroupBy  
