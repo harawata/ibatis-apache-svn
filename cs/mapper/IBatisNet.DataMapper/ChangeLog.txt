@@ -4,6 +4,7 @@ IBatisNet Change Log
 1.6.0 - BETA
 ------------------------------
 Issues
+- IBATISNET-204 : DataMapper SqlMap.xsd SqlMap elements order 
 - IBATISNET-202 : QueryForDictionary does not process select property
 - IBATISNET-198 : Cache key for accessors can be ambiguous and can cause cast exceptions  
 - IBATISNET-193 : Implement N+1 Select resolution with groupBy attribute 

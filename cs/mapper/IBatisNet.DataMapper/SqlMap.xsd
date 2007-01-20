@@ -659,7 +659,7 @@ vs:defaultnsprefix="" >
 	<xs:element name="resultMaps">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="resultMap" maxOccurs="unbounded"/>
+				<xs:element ref="resultMap" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -723,13 +723,13 @@ vs:defaultnsprefix="" >
 	</xs:element>
 	<xs:element name="sqlMap">
 		<xs:complexType>
-			<xs:sequence>
+			<xs:all>
 				<xs:element ref="alias" minOccurs="0"/>
 				<xs:element ref="cacheModels" minOccurs="0"/>
 				<xs:element ref="resultMaps" minOccurs="0"/>
 				<xs:element ref="statements" minOccurs="0" />
 				<xs:element ref="parameterMaps" minOccurs="0"/>
-			</xs:sequence>
+			</xs:all>
 			<xs:attribute name="namespace" type="xs:string" use="required"/>
 		</xs:complexType>
 	</xs:element>
