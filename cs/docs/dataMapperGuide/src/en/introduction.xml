@@ -42,6 +42,19 @@
   </sect1>
 
   <sect1>
+    <title>Release change log</title>
+
+	    <sidebar>
+        <para><emphasis>Version 1.6.0</emphasis></para>
+		<itemizedlist>
+			<listitem>
+             Resolution of N+1 select problem using groupBy attribute
+          </listitem>
+		</itemizedlist>
+      </sidebar>
+  </sect1>
+
+  <sect1>
     <title>License Information</title>
 
     <para>iBATIS.NET is licensed according to the terms of the Apache License,

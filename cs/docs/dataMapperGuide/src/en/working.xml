@@ -1504,6 +1504,12 @@ from Accounts
         result map to inherit all of the properties of the "super" resultMap
         that it extends.</para>
       </sect3>
+
+	  <sect3>
+        <title>groupBy</title>
+
+        <para>The optional <parameter>groupBy</parameter> attribute specifies a list of .NET properties names of the result object build by the resultMap. Thera are used to identify unique rows in the returned result set. Rows with equal values for the specified properties will only generate one result object. Use groupBy in combination with nested resultMaps to solve the N+1 query problem. Exemple : "Id" or "Desciption, Date".(see  paragraph 3.5.13).</para>
+      </sect3>
     </sect2>
 
 	<sect2>
@@ -2639,7 +2645,7 @@ public class Newspaper : Document
       large lists of data.</para>
 
       <example>
-        <title>N+1 Select Lists (1:M and M:N)</title>
+        <title>N+1 Select Lists (1:M and M:N), example of problem</title>
 
         <programlisting>
 &lt;resultMaps&gt;
@@ -2647,10 +2653,10 @@ public class Newspaper : Document
   &lt;resultMap id="select-category-result" class="Category"&gt;
     &lt;result property="Id" column="CAT_ID"/&gt;
     &lt;result property="Description" column="CAT_DESCRIPTION"/&gt;
-    <emphasis role="blue">&lt;result property="ProductList" column="CAT_ID" select="selectProductsByCatId"/&gt;</emphasis>
+   <emphasis role="blue">&lt;result property="ProductList" column="CAT_ID" select="selectProductsByCatId"/&gt;</emphasis>
   &lt;/resultMap&gt;
 
-  &lt;resultMap id="select-product-result" class="Product"&gt;
+  &lt;resultMap id="Product-result" class="Product"&gt;
     &lt;result property="Id" column="PRD_ID"/&gt;
     &lt;result property="Description" column="PRD_DESCRIPTION"/&gt;
   &lt;/resultMap&gt;
@@ -2671,9 +2677,54 @@ public class Newspaper : Document
 &lt;/statements&gt;</programlisting>
       </example>
 
-      <para>1:N &amp; M:N Solution? Currently the feature that resolves this
-      issue not implemented, but the development discussions are active, and
-      we expect it to be included in a future release.</para>
+	  <para>iBATIS fully solves the N+1 selects problem. Here is the same example solved :</para>
+
+      <example>
+        <title>N+1 Select Lists (1:M and M:N) resolution</title>
+
+        <programlisting>
+&lt;sqlMap namespace="ProductCategory"&gt;
+&lt;resultMaps&gt;
+
+  &lt;resultMap id="Category-result" class="Category" <emphasis role="blue">groupBy="Id"</emphasis>&gt;
+    &lt;result property="Id" column="CAT_ID"/&gt;
+    &lt;result property="Description" column="CAT_DESCRIPTION"/&gt;
+    <emphasis role="blue">&lt;result property="ProductList" resultMapping="ProductCategory.Product-result"/&gt;</emphasis>
+  &lt;/resultMap&gt;
+
+  &lt;resultMap id="Product-result" class="Product"&gt;
+    &lt;result property="Id" column="PRD_ID"/&gt;
+    &lt;result property="Description" column="PRD_DESCRIPTION"/&gt;
+  &lt;/resultMap&gt;
+&lt;resultMaps&gt;
+
+&lt;statements&gt;
+
+  <emphasis role="comment">&lt;!-- This statement executes 1 time --&gt;</emphasis>
+  &lt;statement id="SelectCategory" parameterClass="int" resultMap="Category-result"&gt;
+    select C.CAT_ID, C.CAT_DESCRIPTION, P.PRD_ID, P.PRD_DESCRIPTION
+    from CATEGORY C
+    left outer join PRODUCT P
+    on C.CAT_ID = P.PRD_CAT_ID
+    where CAT_ID = #value#
+  &lt;/statement&gt;
+
+</programlisting>
+      </example>
+
+<para>When you call...</para>
+<programlisting>IList myList = sqlMap.QueryForList("SelectCategory", 1002);</programlisting>
+<para>...the main query is executed, and the results are stored in the myList variable containing .NET type
+"Category" element . Each object in that List will have a "ProductList" property that is also a List
+populated from the same query, but using the "Product-result" result map to populate the element in the child
+list. So, you end up with a list containing sub-lists, and only one database query is executed.</para>
+<para>The important items here are the...</para>
+<para><emphasis role="term"><emphasis role="blue">groupBy="Id"</emphasis></emphasis></para>
+<para>...attribute and the...</para>
+<para><emphasis role="term">&lt;result property="ProductList" <emphasis role="blue">resultMapping="ProductCategory.Product-result"</emphasis>/&gt;</emphasis></para>
+<para>...property mapping in the "Category-result" result map. One other important detail is that the result mapping
+for the ProductList property is namespace aware - had it been simply "Product-result" it would not work.
+Using this approach, you can solve any N+1 problem of any depth or breadth.</para>
 
       <sidebar>
         <para><emphasis>Lazy Loading vs. Joins (1:M and M:N)</emphasis></para>
