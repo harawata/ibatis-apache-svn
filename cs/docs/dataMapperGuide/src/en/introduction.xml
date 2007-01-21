@@ -50,6 +50,12 @@
 			<listitem>
              Resolution of N+1 select problem using groupBy attribute
           </listitem>
+		  <listitem>
+            Added support ot reuse SQL fragement via &lt;include/&gt; tag
+          </listitem>
+		   <listitem>
+            Added lazy load support for single class 
+          </listitem>
 		</itemizedlist>
       </sidebar>
   </sect1>

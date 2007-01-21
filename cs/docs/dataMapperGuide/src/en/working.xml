@@ -1848,13 +1848,14 @@ resultMapping="LineItem.LineItem"
         <para>Use the lazyLoad attribute with the select attribute to indicate
         whether or not the select statement's results should be lazy loaded.
         This can provide a performance boost by delaying the loading of the
-        select statement's results until they are needed/accessed.
+        select statement's results until they are needed/accessed.</para>
 		
-		Lazy loading is supported transparently for IList and IList&lt;T&gt;  implementation.
-		Lazy loading is supported on strongly typed collection via Castle.DynamicProxy component. In this case you must set the listClass attribute and declare all methods/properties of the typed collection that you want to proxy as virtual.
-		</para>
+		<para>Lazy loading is supported transparently for IList and IList&lt;T&gt; implementation.</para>
+		<para>Lazy loading is supported on strongly typed collection via Castle.DynamicProxy component. In this case you must set the listClass attribute and declare all methods/properties of the typed collection that you want to proxy as virtual.</para>
+		<para>Lazy loading is supported on concrete class via Castle.DynamicProxy component. In this case, you must declare all methods/properties of the class that you want to proxy as virtual.</para>
 
-		<para><example>
+<para>
+		<example>
           <title>Sample of strongly typed collection used with proxy call</title>
 
 		<programlisting>
@@ -1923,7 +1924,25 @@ public class LineItemCollection : CollectionBase
 	}
 }
 </programlisting>
-		 </example></para>
+</example> 
+		<example>
+          <title>Concrete class</title>
+
+		<programlisting>
+[C#]
+
+[Serializable]
+public class Person
+{
+...
+	public virtual string Name
+	{
+		get {return _name;}
+	}
+...
+}
+</programlisting>
+</example></para>
       </sect3>
 
       <sect3>
