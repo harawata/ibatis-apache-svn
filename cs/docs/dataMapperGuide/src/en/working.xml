@@ -418,6 +418,75 @@ All query methods</programlisting></entry>
       SQL.</para>
 
       <sect3>
+        <title>Reusing SQL Fragments</title>
+
+		<para>When writing SqlMaps, you often encounter duplicate fragments of SQL, for example a FROM-clause or
+		constraint-statement. iBATIS offers a simple yet powerful tag to reuse them. For the sake of simplicity, let's
+		assume we want to get some items and we want to do a count on them. Normally, you would write
+		something like this :
+		
+		<example>
+            <title>Reusing SQL Fragments (Before)</title>
+
+            <programlisting>&lt;select id="SelectItemCount" resultClass="int"&gt;
+SELECT COUNT(*) AS total
+FROM items
+WHERE parentid = 6
+&lt;/select&gt;
+
+&lt;select id="SelectItems" resultClass="Item"&gt;
+SELECT id, name
+FROM items
+WHERE parentid = 6
+&lt;/select&gt;</programlisting>
+          </example>
+
+		  To eliminate this duplication, we use the tags &lt;sql&gt; and &lt;include&gt;. The &lt;sql&gt; tag contains the fragment to reuse, the &lt;include&gt; tag includes such a fragment in a statement. For example:
+		
+			<example>
+            <title>Reusing SQL Fragments (After)</title>
+
+            <programlisting>&lt;sql id="selectItem_fragment"&gt;
+FROM items
+WHERE parentid = 6
+&lt;/sql&gt;
+
+&lt;select id="selectItemCount" resultClass="int"&gt;
+SELECT COUNT(*) AS total
+&lt;include refid="selectItem_fragment"/&gt;
+&lt;/select&gt;
+
+&lt;select id="selectItems" resultClass="Item"&gt;
+SELECT id, name
+&lt;include refid="selectItem_fragment"/&gt;
+&lt;/select&gt;</programlisting>
+          </example>
+
+		  The &lt;include&gt; tag is namespace aware so you can refer to fragments even when they are located in another map (however, due to the way iBATIS loads the SqlMaps, the included fragment should be loaded before the including statement).
+		  The fragments are included and processed on query-execution so parameters can be used too :
+		</para>
+
+<programlisting>&lt;sql id="selectItem_fragment"&gt;
+FROM items
+WHERE parentid = #value#
+&lt;/sql&gt;
+
+&lt;select id="selectItemCount" parameterClass="int" resultClass="int"&gt;
+SELECT COUNT(*) AS total
+&lt;include refid="selectItem_fragment"/&gt;
+&lt;/select&gt;
+
+&lt;select id="selectItems" parameterClass="int" resultClass="Item"&gt;
+SELECT id, name
+&lt;include refid="selectItem_fragment"/&gt;
+&lt;/select&gt;</programlisting>
+
+		<note>
+          <para>In many case, you can also use the <emphasis role="comment">extends</emphasis> attribute on statement tag to achieve the same goal.</para>
+        </note>
+      </sect3>
+
+      <sect3>
         <title>Escaping XML symbols</title>
 
         <para>Because you are combining SQL and XML in a single document,
