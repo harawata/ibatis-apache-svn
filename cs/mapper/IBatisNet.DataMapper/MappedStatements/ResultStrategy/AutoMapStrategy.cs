@@ -24,8 +24,6 @@
 #endregion
 
 using System.Data;
-using System.Reflection;
-using IBatisNet.Common.Logging;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
 using IBatisNet.DataMapper.Scope;
 
@@ -36,8 +34,6 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
 	/// </summary>
     public sealed class AutoMapStrategy : IResultStrategy
     {
-		private static readonly ILog _logger = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
-
 		/// <summary>
 		/// Auto-map the reader to the result object.
 		/// </summary>
@@ -59,13 +55,6 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
                     ref resultObject);
 
                 resultMap.Properties.AddRange(properties);
-
-				/*
-                if (_logger.IsDebugEnabled)
-                {
-                    _logger.Debug("The Remap Result");
-                }
-				*/
 			}
 			else
 			{
@@ -86,12 +75,6 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
 					}
 				}
 
-				/*
-                if (_logger.IsDebugEnabled)
-                {
-                    _logger.Debug("The AutoMap Reader");
-                }
-				*/
 			}
 		    
 		    return resultMap;
