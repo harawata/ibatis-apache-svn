@@ -1642,13 +1642,18 @@ public IList QueryWithRowDelegate(string statementName, object parameterObject,
 public IList&lt;T&gt; QueryWithRowDelegate&lt;T&gt;(string statementName, object parameterObject, 
                                 SqlMapper.RowDelegate&lt;T&gt; rowDelegate);
 
+<emphasis role="comment">[Obsolete]</emphasis>
 public PaginatedList QueryForPaginatedList(String statementName, object parameterObject, 
                                            int pageSize);
 
 public IDictionary QueryForDictionary(string statementName, object parameterObject, 
                                       string keyProperty)
+IDictionary&lt;K, V&gt; QueryForDictionary&lt;K, V&gt;(string statementName, object parameterObject, 
+                                      string keyProperty);
 public IDictionary QueryForDictionary(string statementName, object parameterObject, 
                                       string keyProperty, string valueProperty)
+public IDictionary&lt;K, V&gt; QueryForDictionary&lt;K, V&gt;(string statementName, object parameterObject, 
+                                      string keyProperty, string valueProperty);
 public IDictionary QueryForMap(string statementName, object parameterObject, string keyProperty)
 public IDictionary QueryForMap(string statementName, object parameterObject, 
                                string keyProperty, string valueProperty)
@@ -1759,9 +1764,13 @@ public IList&lt;T&gt; QueryForList&lt;T&gt;(string statementName,
         to return, as the <parameter>skipResults</parameter> and
         <parameter>maxResults</parameter> parameters. The
         <methodname>PaginatedList</methodname> method provides the same
-        functionality but in a more convenient wrapper. The
+        functionality but in a more convenient wrapper. 
+		</para>
+		
+		<para>The
         <methodname>QueryWithRowDelegate</methodname> method also works with
         multiple rows, but provides a post-processing feature.</para>
+
       </sect3>
 
       <sect3>
@@ -1831,6 +1840,10 @@ public IDictionary QueryForMapWithRowDelegate(string statementName,
 
       <sect3>
         <title>QueryForPaginatedList</title>
+<para></para>
+		<note>
+		The method <emphasis role="comment">PaginatedList</emphasis> has been made as obsolete and will not be supported in future version.
+		</note>
 
         <para><programlisting>public PaginatedList QueryForPaginatedList(string statementName,
                                            object parameterObject,
@@ -1881,10 +1894,18 @@ public IDictionary QueryForMapWithRowDelegate(string statementName,
         <para><programlisting>public IDictionary QueryForDictionary(string statementName,
                                       object parameterObject,
                                       string keyProperty)
+public IDictionary&lt;K, V&gt; QueryForDictionary&lt;K, V&gt;(string statementName, 
+                                      object parameterObject, 
+                                      string keyProperty);
 public IDictionary QueryForDictionary(string statementName,
                                       object parameterObject,
                                       string keyProperty,
                                       string valueProperty)
+public IDictionary&lt;K, V&gt; QueryForDictionary&lt;K, V&gt;(string statementName, 
+                                     object parameterObject, 
+                                      string keyProperty, 
+									  string valueProperty);
+
 public IDictionary QueryForMap(string statementName,
                                object parameterObject, 
                                string keyProperty)

@@ -399,6 +399,7 @@ All query methods</programlisting></entry>
           parameter direction, size, precision, and scale are usually
           auto-discovered by the framework (via the CommandBuilder) depending
           on your provider.</para>
+		  <para>If your stored procedure have no parmeters, the parameterMap attribute on the procedure tag is optionnal.</para>
         </note></para>
     </sect2>
 

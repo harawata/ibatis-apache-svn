@@ -56,6 +56,15 @@
 		   <listitem>
             Added lazy load support for single class 
           </listitem>
+		   <listitem>
+		  Added support for IDictionary&lt;K, V&gt; QueryForDictionary&lt;K, V&gt;(...)
+		   </listitem>
+		  <listitem>
+		  Marked QueryForPaginatedList as obsolete
+		   </listitem>
+		    <listitem>
+		  Allowed procedure statement without parameterMap
+		   </listitem>
 		</itemizedlist>
       </sidebar>
   </sect1>
