@@ -60,10 +60,12 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
 
                 resultMap.Properties.AddRange(properties);
 
+				/*
                 if (_logger.IsDebugEnabled)
                 {
                     _logger.Debug("The Remap Result");
                 }
+				*/
 			}
 			else
 			{
@@ -83,10 +85,13 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
 						}
 					}
 				}
+
+				/*
                 if (_logger.IsDebugEnabled)
                 {
                     _logger.Debug("The AutoMap Reader");
                 }
+				*/
 			}
 		    
 		    return resultMap;
