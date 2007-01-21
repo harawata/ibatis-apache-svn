@@ -1580,18 +1580,23 @@ ISqlMapper mapper = builder.Configure("sqlMap.config");</programlisting>
 			  <row>
                 <entry>GetAccessorFactory</entry>
 
-                <entry>Allow to set a custom get accessor factory before configuration, see IGetAccessorFactory interface which defines the contract for the factory responsible to build set accessor for a member object in iBATIS.
+                <entry>Allows to set a custom get accessor factory before configuration, see IGetAccessorFactory interface which defines the contract for the factory responsible to build set accessor for a member object in iBATIS.
 				</entry>
               </row>
 			  <row>
                 <entry>SetAccessorFactory</entry>
 
-                <entry>Allow to set a custom set accessor factory before configuration, see ISetAccessorFactory interface which defines the contract for the factory responsible to build get accessor for a member object in iBATIS.
+                <entry>Allows to set a custom set accessor factory before configuration, see ISetAccessorFactory interface which defines the contract for the factory responsible to build get accessor for a member object in iBATIS.
 				</entry>
               </row>
 			  <row>
                 <entry>ObjectFactory</entry>
-                <entry>Allow to set a custom object factory before configuration, see IObjectFactory interface which defines the contract for the factory responsible for object creation in iBATIS.
+                <entry>Allows to set a custom object factory before configuration, see IObjectFactory interface which defines the contract for the factory responsible for object creation in iBATIS.
+				</entry>
+              </row>
+			   <row>
+                <entry>SqlMapper</entry>
+                <entry>Allows to set a custom SqlMapper before configuration, see ISqlMapper interface.
 				</entry>
               </row>
 			  <row>
@@ -1609,7 +1614,7 @@ ISqlMapper mapper = builder.Configure("sqlMap.config");</programlisting>
     <sect2>
       <title>Exploring the DataMapper API through the SqlMapper</title>
 
-      <para>The <classname>SqlMapper</classname> instance acts as a facade to
+      <para>The <classname>ISqlMapper</classname> instance acts as a facade to
       provide access the rest of the DataMapper framework. The DataMapper API
       methods are shown in Example 4.11.</para>
 
@@ -1686,6 +1691,26 @@ public void RollBackTransaction(bool closeConnection)
         <parameter>parameterObject</parameter> is required. The following
         sections describe how the API methods work.</para>
       </example>
+
+	  <note> <para>The DatatMapper component store his working ISqlMapSession on different session store. 
+	   <para>On Web environnement, the session is stored Http.Request.Items.</para>
+	   <para>On windows environnement on the current thread. </para>
+	   <para>You can configure the session storage by specifing the property ISessionStore on ISqlMapper.</para>
+	  This will allow to set a custom session store like the <emphasis role="blue">HybridWebThreadSessionStore</emphasis>
+	  This is used for scenarios where most of the you need per request session, but you also does some work outside a 
+	  request (in a thread pool thread, for instance).</para>
+
+	   <para>Set it after the configuration and before use of the ISqlMapper.</para>
+	  <example>
+        <title>Custom ISessionStore</title>
+
+        <programlisting>
+sqlMapper.SessionStore = new HybridWebThreadSessionStore( sqlMapper.Id );
+...
+sqlMapper.QueryOject(...)
+		</programlisting>
+		</example>
+</note>
 
       <sect3>
         <title>Insert, Update, Delete</title>
@@ -1958,7 +1983,6 @@ public IDictionary QueryForMap(string statementName,
 
       <para>In the iBATIS DataMapper framework, a session is a container for
       an ADO connection and transaction.</para>
-
       <para>The DataMapper's <classname>IDalSession</classname> implements the
       <classname>IDisposable</classname> interface. So you can use it with the
       <methodname>using</methodname> syntax.</para>
@@ -2030,11 +2054,11 @@ using ( IDalSession session = <emphasis role="blue">sqlMap.OpenConnection()</emp
 
         <para><programlisting>[C#]
 Item item = (Item) sqlMap.executeQueryForObject ("GetItem", itemId);
-item.Description = “TX1”;
+item.Description = "test";
 <emphasis role="comment">// No session demarcated, so open/close connection will be automatic (implied)</emphasis>
 sqlMap.Update("UpdateItem", item);
 item.Description = newDescription;
-item.Description = “TX2”;
+item.Description = "test2";
 <emphasis role="comment">// No transaction demarcated, so open/close connection will be automatic (implied)</emphasis>
 sqlMap.Update("UpdateItem", item);</programlisting></para>
       </example>

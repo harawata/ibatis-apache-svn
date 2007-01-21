@@ -51,7 +51,7 @@
              Resolution of N+1 select problem using groupBy attribute
           </listitem>
 		  <listitem>
-            Added support ot reuse SQL fragement via &lt;include/&gt; tag
+            Added support of reuse SQL fragement via &lt;include/&gt; tag
           </listitem>
 		   <listitem>
             Added lazy load support for single class 
@@ -65,6 +65,19 @@
 		    <listitem>
 		  Allowed procedure statement without parameterMap
 		   </listitem>
+		   <listitem>
+		   Removed obsoletes methods on SqlMapper : 
+		   <para>Configure(XmlDocument document), Configure(),</para> 
+		   <para>Configure(string resource),</para> 
+		   <para>ConfigureAndWatch(ConfigureHandler configureDelegate),</para>  
+		   <para>ConfigureAndWatch(string resource, ConfigureHandler configureDelegate)</para> 
+		</listitem>
+		<listitem>
+		   Extended use of ISqlMapper in DataMapper + allowed use of a custom ISqlMapper.
+		</listitem>
+		<listitem>
+		   Allowed custom ISessionStore.
+		</listitem>
 		</itemizedlist>
       </sidebar>
   </sect1>
