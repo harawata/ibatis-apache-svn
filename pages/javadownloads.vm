@@ -132,8 +132,14 @@
          of our mirrors.  It is good practice to <a href="#verify">verify</a> the integrity of the
          distributions files, especially if you are using one of our mirror sites.
       </p>
-      If you do not see the file you need in the links below, or you're looking for an
-      older version, please see the release archives.
+      <h4>DAO</h4>
+      <p>The DAO Framework was deprecated in 2.3, but will remain permanently available
+      as it was in 2.2.</p>
+      <ul>
+        <li><a href="[preferred]/ibatis/binaries/ibatis.java/iBATIS_DAO-2.2.0.638.zip"><b>Standalone DAO Framework 2.2.0</b></a></li>
+      </ul>
+      <p>If you do not see the file you need, or you're looking for an
+      older version, please see the release archives.</p>
       <ul>
         <li><a href="http://archive.apache.org/dist/ibatis/binaries/ibatis.java/"><b>Past Releases at Apache (2.1.5+)</b></a></li>
         <li><a href="http://sourceforge.net/project/showfiles.php?group_id=61326">Past Releases at SourceForge (1.0 - 2.1.5)</a></li>
