@@ -47,101 +47,101 @@
 
 </div>
 
-<h2>News</h2>
+  <h2>News</h2>
 
-<h3>iBATIS in Action Released</h3>
-<p>(January 26, 2007) A book for iBATIS?  No way!  Yes way.  The book is here.
-This is the first edition, targeting primarily the Java platform.  But it's
-definitely useful for .NET and even Ruby users, even if only to understand
-the concepts and and ideas behind iBATIS.  Everything else is just syntax.  Some people
-may wonder if we're just trying to make money by selling documentation (sounds
-familiar to some no doubt).  But trust us, writing technical books is NO way
-to make money!  We did this for you, so you'd have a definitive guide to read
-from instead of wading through various internet resources. I think we're more
-worried about the Amazon.com comments than the sales... ;-)  I (Clinton) really
-want to say what a fantastic experience it was to work with Brandon and Larry
-on this project.  You guys did a fantastic job.</p>
-<p><b><a href="http://www.manning.com/begin/">Buy the book in print or PDF here.</a></b></p>
+  <h3>iBATIS in Action Released</h3>
+  <p>(January 26, 2007) A book for iBATIS?  No way!  Yes way.  The book is here.
+  This is the first edition, targeting primarily the Java platform.  But it's
+  definitely useful for .NET and even Ruby users, even if only to understand
+  the concepts and and ideas behind iBATIS.  Everything else is just syntax.  Some people
+  may wonder if we're just trying to make money by selling documentation (sounds
+  familiar to some no doubt).  But trust us, writing technical books is NO way
+  to make money!  We did this for you, so you'd have a definitive guide to read
+  from instead of wading through various internet resources. I think we're more
+  worried about the Amazon.com comments than the sales... ;-)  I (Clinton) really
+  want to say what a fantastic experience it was to work with Brandon and Larry
+  on this project.  You guys did a fantastic job.</p>
+  <p><b><a href="http://www.manning.com/begin/">Buy the book in print or PDF here.</a></b></p>
 
-<h3>DAO Deprecated and Made Available Separately</h3>
-<p>(January 26, 2007) This is a little late notice, but iBATIS for Java 2.3 has enough
-votes to go GA now, so I figured it would be good to note here.  The DAO
-framework has indeed been deprecated.  Deprecated doesn't mean dead.  Many people
-can and will continue to use it.  In fact, it will be a bit cleaner because
-it's made available separately so you can feel more comfortable changing it if you
-need to.  Feel free to take the code and make it your own.  Or just use it as
-is until it gets too old (it's pretty easy to switch iBATIS DAOs to Spring DAOs
-if and when the time is right).  We've made the Java DAO framework permanently available 
-on the Java downloads page.  Deprecated basically means we just won't be
-adding any features to it in the future, which is pretty much the same way it's been
-for a couple of years -- I guess it's perfect. ;-)  Kidding.</p>
-<p><b><a href="javadownloads.cgi">The DAO framework will always be available here.</a></b></p>
-
-
-<h3>iBATIS for Java 2.2.0 General Availability</h3>
-<p>(December 5, 2006) The votes are in and iBATIS for Java 2.2.0 is promoted
-  to general availabilty status.  This release is the most significant release
-  of iBATIS in at least a year.  See the
-  release notes on the download page for full details.
-  This is the last release of iBATIS that will include the DAO framework.</p>
-<p><b><a href="javadownloads.cgi">Download iBATIS 2.2.0!</a></b></p>
-
-<h3>iBATIS for Java 2.3.0 Released [Status: Beta]</h3>
-<p>(December 1, 2006) This release includes several bug fixes and enhancements.
-   Additionally, this release offers new support for local caching of prepared statements.
-   Caching prepared statements can lead to significant performance improvements
-   in many environments.</p>
-<p>The Java DAO framework has been removed from iBATIS as of release
-   2.3.0.  We heartily recommend that you consider using the
-   <a href="http://www.springframework.org" target="_blank">Spring Framework</a>
-   for all your DAO needs!  Spring offers great support for iBATIS.</p>
-<p>The paginated list methods have been deprecated with this release.  The methods were confusing
-   to many users and often misused.  We suggest using native database support for paging, 
-   or that you use the query methods with skip and max settings.</p>
-<p><b><a href="javadownloads.cgi">Download iBATIS 2.3.0!</a></b></p>
-
-<h3>ARTICLE: InfoQ has posted an article on iBATIS.NET</h3>
-<p>
-<a href="http://www.infoq.com/news/2006/11/iBATIS-MySpace" target="_blank">Read it !</a>
-<p/>
-Thanks to the InfoQ team!
-</p>
-
-<h3>iBATIS.NET DataMapper 1.5.1 and DataAccess 1.8.1 General Availability!</h3>
-<p>(August 10, 2006) The votes are in and both distributions are now tagged as GA!</p>
-<p>This release is primarily an enhancement release to support .NET 2.0 and also bug fix, documentation have been updated.
- iBATIS now supports all essential features of .NET 2.0 (generics, nullable types), see change log for more information.
- </p>
-<p><b><a href="dotnetdownloads.cgi">Download iBATIS.NET DataMapper 1.5.1 and DataAccess 1.8.1!</a></b></p>
+  <h3>DAO Deprecated and Made Available Separately</h3>
+  <p>(January 26, 2007) This is a little late notice, but iBATIS for Java 2.3 has enough
+  votes to go GA now, so I figured it would be good to note here.  The DAO
+  framework has indeed been deprecated.  Deprecated doesn't mean dead.  Many people
+  can and will continue to use it.  In fact, it will be a bit cleaner because
+  it's made available separately so you can feel more comfortable changing it if you
+  need to.  Feel free to take the code and make it your own.  Or just use it as
+  is until it gets too old (it's pretty easy to switch iBATIS DAOs to Spring DAOs
+  if and when the time is right).  We've made the Java DAO framework permanently available
+  on the Java downloads page.  Deprecated basically means we just won't be
+  adding any features to it in the future, which is pretty much the same way it's been
+  for a couple of years -- I guess it's perfect. ;-)  Kidding.</p>
+  <p><b><a href="javadownloads.cgi">The DAO framework will always be available here.</a></b></p>
 
 
-<h3>RBatis - iBATIS for Ruby has been released!</h3>
- <p>(Jul 30, 2006) As promised almost exactly one year ago...iBATIS for Ruby is now here. Jon Tirsen
-   has joined the team and RBatis is ready to roll with a plug-in for Rails of course. You can see
-   the permanent link in the Path to iBATIS on the left, but don't waste time moving your mouse....</p>
-<p><a href="docs/ruby">Check it out!</a></p>
+  <h3>iBATIS for Java 2.2.0 General Availability</h3>
+  <p>(December 5, 2006) The votes are in and iBATIS for Java 2.2.0 is promoted
+    to general availabilty status.  This release is the most significant release
+    of iBATIS in at least a year.  See the
+    release notes on the download page for full details.
+    This is the last release of iBATIS that will include the DAO framework.</p>
+  <p><b><a href="javadownloads.cgi">Download iBATIS 2.2.0!</a></b></p>
 
-<h3>DTDs @ iBATIS.com - The Deed has been done</h3>
- <p>(Jul 30, 2006) The DTDs hosted at iBATIS.com have been permanently removed. The multiple warnings
- went starting with a broadcast announcement to the mailing lists and a permanent space on the homepage.
- With over 1.5 million hits to the DTD per month, it was time to move the burden over to the Apache servers.  ;-)
- If you're a year behind on your email and using an old version of iBATIS, and you're wondering why
- your application won't start anymore...try changing the DOCTYPE of your XML files to the following.</p>
+  <h3>iBATIS for Java 2.3.0 Released [Status: Beta]</h3>
+  <p>(December 1, 2006) This release includes several bug fixes and enhancements.
+     Additionally, this release offers new support for local caching of prepared statements.
+     Caching prepared statements can lead to significant performance improvements
+     in many environments.</p>
+  <p>The Java DAO framework has been removed from iBATIS as of release
+     2.3.0.  We heartily recommend that you consider using the
+     <a href="http://www.springframework.org" target="_blank">Spring Framework</a>
+     for all your DAO needs!  Spring offers great support for iBATIS.</p>
+  <p>The paginated list methods have been deprecated with this release.  The methods were confusing
+     to many users and often misused.  We suggest using native database support for paging,
+     or that you use the query methods with skip and max settings.</p>
+  <p><b><a href="javadownloads.cgi">Download iBATIS 2.3.0!</a></b></p>
 
-<pre>&lt;!DOCTYPE sqlMapConfig <br/>
-          PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN" <br/>
-          "http://ibatis.apache.org/dtd/sql-map-config-2.dtd"&gt;
-</pre>
-<pre>&lt;!DOCTYPE sqlMap <br/>
-          PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" <br/>
-          "http://ibatis.apache.org/dtd/sql-map-2.dtd"&gt;
-</pre>
-<pre>&lt;!DOCTYPE daoConfig <br/>
-          PUBLIC "-//ibatis.apache.org//DTD DAO Configuration 2.0//EN" <br/>
-          "http://ibatis.apache.org/dtd/dao-2.dtd"&gt;
-</pre>
+  <h3>ARTICLE: InfoQ has posted an article on iBATIS.NET</h3>
+  <p>
+  <a href="http://www.infoq.com/news/2006/11/iBATIS-MySpace" target="_blank">Read it !</a>
+  <p/>
+  Thanks to the InfoQ team!
+  </p>
 
-  <p><b>Notice the change to <a href="http://ibatis.apache.org/dtd/">http://ibatis.apache.org/dtd/</a></b></p>
+  <h3>iBATIS.NET DataMapper 1.5.1 and DataAccess 1.8.1 General Availability!</h3>
+  <p>(August 10, 2006) The votes are in and both distributions are now tagged as GA!</p>
+  <p>This release is primarily an enhancement release to support .NET 2.0 and also bug fix, documentation have been updated.
+   iBATIS now supports all essential features of .NET 2.0 (generics, nullable types), see change log for more information.
+   </p>
+  <p><b><a href="dotnetdownloads.cgi">Download iBATIS.NET DataMapper 1.5.1 and DataAccess 1.8.1!</a></b></p>
+
+
+  <h3>RBatis - iBATIS for Ruby has been released!</h3>
+   <p>(Jul 30, 2006) As promised almost exactly one year ago...iBATIS for Ruby is now here. Jon Tirsen
+     has joined the team and RBatis is ready to roll with a plug-in for Rails of course. You can see
+     the permanent link in the Path to iBATIS on the left, but don't waste time moving your mouse....</p>
+  <p><a href="docs/ruby">Check it out!</a></p>
+
+  <h3>DTDs @ iBATIS.com - The Deed has been done</h3>
+   <p>(Jul 30, 2006) The DTDs hosted at iBATIS.com have been permanently removed. The multiple warnings
+   went starting with a broadcast announcement to the mailing lists and a permanent space on the homepage.
+   With over 1.5 million hits to the DTD per month, it was time to move the burden over to the Apache servers.  ;-)
+   If you're a year behind on your email and using an old version of iBATIS, and you're wondering why
+   your application won't start anymore...try changing the DOCTYPE of your XML files to the following.</p>
+
+  <pre>&lt;!DOCTYPE sqlMapConfig <br/>
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN" <br/>
+            "http://ibatis.apache.org/dtd/sql-map-config-2.dtd"&gt;
+  </pre>
+  <pre>&lt;!DOCTYPE sqlMap <br/>
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" <br/>
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd"&gt;
+  </pre>
+  <pre>&lt;!DOCTYPE daoConfig <br/>
+            PUBLIC "-//ibatis.apache.org//DTD DAO Configuration 2.0//EN" <br/>
+            "http://ibatis.apache.org/dtd/dao-2.dtd"&gt;
+  </pre>
+
+    <p><b>Notice the change to <a href="http://ibatis.apache.org/dtd/">http://ibatis.apache.org/dtd/</a></b></p>
 
 </body>
 </html>
