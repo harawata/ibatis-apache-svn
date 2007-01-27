@@ -49,6 +49,35 @@
 
 <h2>News</h2>
 
+<h3>iBATIS in Action Released</h3>
+<p>(January 26, 2007) A book for iBATIS?  No way!  Yes way.  The book is here.
+This is the first edition, targeting primarily the Java platform.  But it's
+definitely useful for .NET and even Ruby users, even if only to understand
+the concepts and and ideas behind iBATIS.  Everything else is just syntax.  Some people
+may wonder if we're just trying to make money by selling documentation (sounds
+familiar to some no doubt).  But trust us, writing technical books is NO way
+to make money!  We did this for you, so you'd have a definitive guide to read
+from instead of wading through various internet resources. I think we're more
+worried about the Amazon.com comments than the sales... ;-)  I (Clinton) really
+want to say what a fantastic experience it was to work with Brandon and Larry
+on this project.  You guys did a fantastic job.</p>
+<p><b><a href="http://www.manning.com/begin/">Buy the book in print or PDF here.</a></b></p>
+
+<h3>DAO Deprecated and Made Available Separately</h3>
+<p>(January 26, 2007) This is a little late notice, but iBATIS for Java 2.3 has enough
+votes to go GA now, so I figured it would be good to note here.  The DAO
+framework has indeed been deprecated.  Deprecated doesn't mean dead.  Many people
+can and will continue to use it.  In fact, it will be a bit cleaner because
+it's made available separately so you can feel more comfortable changing it if you
+need to.  Feel free to take the code and make it your own.  Or just use it as
+is until it gets too old (it's pretty easy to switch iBATIS DAOs to Spring DAOs
+if and when the time is right).  We've made the Java DAO framework permanently available 
+on the Java downloads page.  Deprecated basically means we just won't be
+adding any features to it in the future, which is pretty much the same way it's been
+for a couple of years -- I guess it's perfect. ;-)  Kidding.</p>
+<p><b><a href="javadownloads.cgi">The DAO framework will always be available here.</a></b></p>
+
+
 <h3>iBATIS for Java 2.2.0 General Availability</h3>
 <p>(December 5, 2006) The votes are in and iBATIS for Java 2.2.0 is promoted
   to general availabilty status.  This release is the most significant release
