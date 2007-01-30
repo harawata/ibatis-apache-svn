@@ -213,11 +213,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Commands\PreparedCommandProxy.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Configuration\DomSqlMapBuilder.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
