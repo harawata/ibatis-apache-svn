@@ -17,7 +17,11 @@ using System.Reflection;
 
 #if DEBUG
 #else
+#if dotnet2
 [assembly: AssemblyConfiguration("net-2.0.win32; Release")]
+#else
+[assembly: AssemblyConfiguration("net-1.1.win32; Release")]
+#endif
 [assembly: AssemblyDelaySign(false)]
 [assembly: AssemblyKeyFile("..\\..\\..\\AssemblyKey.snk")]
 #endif
