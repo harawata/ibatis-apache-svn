@@ -29,6 +29,7 @@ using System.Collections.Specialized;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
+using System.Text;
 using IBatisNet.Common.Exceptions;
 
 namespace IBatisNet.Common.Utilities.Objects.Members
@@ -240,7 +241,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
         [MethodImpl(MethodImplOptions.Synchronized)]
         public ISetAccessor CreateSetAccessor(Type targetType, string name)
         {
-            string key = targetType.FullName + "." + name;
+            string key = new StringBuilder(targetType.FullName).Append(".").Append(name).ToString();
 
             if (_cachedISetAccessor.Contains(key))
             {

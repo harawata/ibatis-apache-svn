@@ -224,7 +224,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		/// <returns>the handler</returns>
 		private ITypeHandler GetPrivateTypeHandler(Type type, string dbType) 
 		{
-			IDictionary dbTypeHandlerMap = (HybridDictionary) _typeHandlerMap[ type ];
+            IDictionary dbTypeHandlerMap = (IDictionary)_typeHandlerMap[type];
 			ITypeHandler handler = null;
 
 			if (dbTypeHandlerMap != null) 
