@@ -7,6 +7,11 @@ body {
   background-image: url( logobg.jpg )
 }
 
+.release {
+padding: 5px;
+background-color: #FBEDBB;
+}
+
 pre {
   font-family: "Courier New", Courier, mono;
   font-size: 12px;
