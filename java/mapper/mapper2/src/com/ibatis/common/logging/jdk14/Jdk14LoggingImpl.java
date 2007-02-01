@@ -8,7 +8,7 @@ public class Jdk14LoggingImpl implements com.ibatis.common.logging.Log {
     private Logger log;
 
     public Jdk14LoggingImpl(Class clazz) {
-       log = Logger.getLogger(clazz.toString());
+       log = Logger.getLogger(clazz.getName());
     }
 
     public boolean isDebugEnabled() {
