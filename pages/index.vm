@@ -53,7 +53,7 @@
 <p>(February 1, 2007) The iBATIS.NET team is proud to announce that the BETA release of DataAccess V1.9.0 and DataMapper V1.6.0 are now available.</p>
  
 <p>This release includes several bug fixes and enhancements.<br/> 
-Additionally, the main new addition is the support to <b>groupBy</b> attribute on resultMap to <b>resolve N+1 select</b> issue.</p>
+The main new addition is the support to <b>groupBy</b> attribute on resultMap to <b>resolve N+1 select</b> issue.</p>
  
 <p>We expect that there will be a vote to promote to General Availability status in two weeks.
 Thanks once again for your comments and suggestions. Enjoy!</p>
