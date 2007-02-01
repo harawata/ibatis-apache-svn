@@ -30,6 +30,7 @@
             <include name="**/*.css"/>
             <include name="**/*.gif"/>
             <include name="**/*.jpg"/>
+			<include name="**/*.js"/>
           </fileset>
         </copy>
 

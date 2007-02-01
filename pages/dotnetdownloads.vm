@@ -12,6 +12,13 @@
   <tr>
     <td rowspan="2" width="70%">
       <h4>Releases</h4>
+
+      <ul>
+        <li><a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/IBatisNet.DataMapper-bin-1.6.0.zip" onClick="javascript:urchinTracker('/downloads/DataMapper16.0');">DataMapper 1.6.0</a> [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/IBatisNet.DataMapper-bin-1.6.0.zip.md5">MD5</a>] [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/IBatisNet.DataMapper-bin-1.6.0.zip.asc">PGP</a>] (BETA)</li>
+        <li><a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/IBatisNet.DataAccess-bin-1.9.0.zip" onClick="javascript:urchinTracker('/downloads/DataAccess181');">DataAccess 1.9.0</a> [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/IBatisNet.DataAccess-bin-1.9.0.zip.md5">MD5</a>] [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/IBatisNet.DataAccess-bin-1.9.0.zip.asc">PGP</a>] (BETA)</li>
+        <li><a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/source-revision-502312.zip" onClick="javascript:urchinTracker('/downloads/DotNetSource502312');">Source Revision 502312</a> [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/source-revision-502312.zip.zip.md5">MD5</a>] [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/source-revision-502312.zip.zip.asc">PGP</a>]</li>
+      </ul>
+
       <ul>
         <li><a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataMapper-bin-1.5.1.zip" onClick="javascript:urchinTracker('/downloads/DataMapper151');">DataMapper 1.5.1</a> [<a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataMapper-bin-1.5.1.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataMapper-bin-1.5.1.zip.asc">PGP</a>] (Apache General Availability)</li>
         <li><a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataAccess-bin-1.8.1.zip" onClick="javascript:urchinTracker('/downloads/DataAccess181');">DataAccess 1.8.1</a> [<a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataAccess-bin-1.8.1.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataAccess-bin-1.8.1.zip.asc">PGP</a>] (Apache General Availability)</li>
@@ -42,6 +49,11 @@
       <ul>
         <li>
           English
+	  <ul>
+            <li><a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/Doc-DataMapper-1.6.0.zip" onClick="javascript:urchinTracker('/downloads/DataMapperDoc160');">DataMapper 1.6.0 BETA Docs</a> [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta//Doc-DataMapper-1.6.0.zip.md5">MD5</a>] [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/Doc-DataMapper-1.6.0.zip.asc">PGP</a>] (CHM, PDF)</li>
+            <li><a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/Doc-DataAccess-1.9.0.zip" onClick="javascript:urchinTracker('/downloads/DataAccessDoc190');">DataAccess 1.9.0 BETA Docs</a> [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta//Doc-DataAccess-1.9.0.zip.md5">MD5</a>] [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/Doc-DataAccess-1.9.0.zip.asc">PGP</a>] (CHM, PDF)</li>
+          </ul>
+    <br/>
           <ul>
             <li><a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataMapper-1.5.1.zip" onClick="javascript:urchinTracker('/downloads/DataMapperDoc151');">DataMapper 1.5.1 GA Docs</a> [<a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataMapper-1.5.1.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataMapper-1.5.1.zip.asc">PGP</a>] (CHM, PDF)</li>
             <li><a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataAccess-1.8.1.zip" onClick="javascript:urchinTracker('/downloads/DataAccessDoc181');">DataAccess 1.8.1 GA Docs</a> [<a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataAccess-1.8.1.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataAccess-1.8.1.zip.asc">PGP</a>] (CHM, PDF)</li>
@@ -54,7 +66,7 @@
         </li>
       </ul>
     </td>
-    <td bgcolor="#ccc">
+    <td style="background-color:#E8E8E8">
       <h4>Mirrors</h4>
         <a name="Mirror"></a>
         <p>You are currently using <b>[preferred]</b>.  If you encounter a problem with this
