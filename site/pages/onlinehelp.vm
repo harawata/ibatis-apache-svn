@@ -36,12 +36,13 @@
         online reference documentation.</strong>
       </p>
       <p>Online documentation can be found here:</p>
-      <ul>
-        <li><a target="_blank" href="/SDK/dotnet/index.html">SDK</a></li>
+       <ul>
+        <li><a target="_blank" href="/docs/dotnet/dataaccess/index.html">C# DataAccess Developer Guide</a></li>
+        <li><a target="_blank" href="/docs/dotnet/datamapper/index.html">C# DataMapper Developer Guide</a></li>
       </ul>
       <p>SDK documentation can be found here:</p>
       <ul>
-        <li><a target="_blank" href="/docs/dotnet/dataaccess/index.html">C# DataAccess Developer Guide</a></li>
+        <li><a target="_blank" href="/SDK/dotnet/index.html">SDK</a></li>
       </ul>
     </td>
     <td width="33%">

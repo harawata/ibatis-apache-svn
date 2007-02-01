@@ -82,7 +82,7 @@
     </td>
   </tr>
   <tr>
-    <td bgcolor="#ccc">
+    <td style="background-color:#E8E8E8">
         <h4>Tips</h4>
         <a name="Downloads"></a>
         <p>Use the links below to download a binary distribution of the iBATIS.NET Data Mapper or
