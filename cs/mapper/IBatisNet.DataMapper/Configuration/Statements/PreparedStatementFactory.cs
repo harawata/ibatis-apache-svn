@@ -217,7 +217,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
                         return parameters[i];
                     }
                 }
-                throw new IndexOutOfRangeException("The specified IDbDataParameter '" + property.ColumnName + "' does not exist: ");                
+                throw new IndexOutOfRangeException("The parameter '" + property.ColumnName + "' does not exist in the stored procedure '" +_statement.Id+"'. Check your parameterMap.");                
             }
             else
             {
