@@ -2,7 +2,12 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
- 2.3.0 -
+ 2.3.1 -
+------------------------------
+ o Fixed IBATIS-388 - Add methods to unwrap all proxied objects
+
+------------------------------
+ 2.3.0 - Dec 01, 2006
 ------------------------------
  o DEPRECATED All PaginatedList related features due to misuse, minimal applicability and inflexibility
  o DEPRECATED DAO Framework -- Removed from primary distribution, available as a separate download

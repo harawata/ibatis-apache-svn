@@ -86,4 +86,13 @@ public class ConnectionLogProxy extends BaseLogProxy implements InvocationHandle
     return (Connection) Proxy.newProxyInstance(cl, new Class[]{Connection.class}, handler);
   }
 
+  /**
+   * return the wrapped connection
+   * 
+   * @return the connection
+   */
+  public Connection getConnection() {
+    return connection;
+  }
+
 }

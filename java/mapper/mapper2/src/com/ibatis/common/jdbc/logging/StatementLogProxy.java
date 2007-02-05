@@ -91,4 +91,13 @@ public class StatementLogProxy extends BaseLogProxy implements InvocationHandler
     return (Statement) Proxy.newProxyInstance(cl, new Class[]{Statement.class}, handler);
   }
 
+  /**
+   * return the wrapped statement
+   * 
+   * @return the statement
+   */
+  public Statement getStatement() {
+    return statement;
+  }
+
 }

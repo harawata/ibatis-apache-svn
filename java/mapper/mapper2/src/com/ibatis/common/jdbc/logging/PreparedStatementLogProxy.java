@@ -103,5 +103,13 @@ public class PreparedStatementLogProxy extends BaseLogProxy implements Invocatio
     ClassLoader cl = PreparedStatement.class.getClassLoader();
     return (PreparedStatement) Proxy.newProxyInstance(cl, new Class[]{PreparedStatement.class, CallableStatement.class}, handler);
   }
+  
+  /**
+   * Return the wrapped prepared statement
+   * @return the PreparedStatement
+   */
+  public PreparedStatement getPreparedStatement() {
+    return statement;
+  }
 
 }
