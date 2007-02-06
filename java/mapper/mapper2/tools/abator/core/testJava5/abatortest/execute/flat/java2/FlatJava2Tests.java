@@ -97,15 +97,15 @@ public class FlatJava2Tests extends BaseTest {
             dao.insert(record);
 
             record = new Fieldsonly();
-            record.setDoublefield(new Double(44.55));
-            record.setFloatfield(new Float(66.77));
-            record.setIntegerfield(new Integer(8));
+            record.setDoublefield(44.55);
+            record.setFloatfield(66.77f);
+            record.setIntegerfield(8);
             dao.insert(record);
 
             record = new Fieldsonly();
-            record.setDoublefield(new Double(88.99));
-            record.setFloatfield(new Float(100.111));
-            record.setIntegerfield(new Integer(9));
+            record.setDoublefield(88.99);
+            record.setFloatfield(100.111f);
+            record.setIntegerfield(9);
             dao.insert(record);
 
             FieldsonlyExample example = new FieldsonlyExample();
@@ -127,21 +127,21 @@ public class FlatJava2Tests extends BaseTest {
 
         try {
             Fieldsonly record = new Fieldsonly();
-            record.setDoublefield(new Double(11.22));
-            record.setFloatfield(new Float(33.44));
-            record.setIntegerfield(new Integer(5));
+            record.setDoublefield(11.22);
+            record.setFloatfield(33.44f);
+            record.setIntegerfield(5);
             dao.insert(record);
 
             record = new Fieldsonly();
-            record.setDoublefield(new Double(44.55));
-            record.setFloatfield(new Float(66.77));
-            record.setIntegerfield(new Integer(8));
+            record.setDoublefield(44.55);
+            record.setFloatfield(66.77f);
+            record.setIntegerfield(8);
             dao.insert(record);
 
             record = new Fieldsonly();
-            record.setDoublefield(new Double(88.99));
-            record.setFloatfield(new Float(100.111));
-            record.setIntegerfield(new Integer(9));
+            record.setDoublefield(88.99);
+            record.setFloatfield(100.111f);
+            record.setIntegerfield(9);
             dao.insert(record);
 
             FieldsonlyExample example = new FieldsonlyExample();
@@ -159,21 +159,21 @@ public class FlatJava2Tests extends BaseTest {
 
         try {
             Fieldsonly record = new Fieldsonly();
-            record.setDoublefield(new Double(11.22));
-            record.setFloatfield(new Float(33.44));
-            record.setIntegerfield(new Integer(5));
+            record.setDoublefield(11.22);
+            record.setFloatfield(33.44f);
+            record.setIntegerfield(5);
             dao.insert(record);
 
             record = new Fieldsonly();
-            record.setDoublefield(new Double(44.55));
-            record.setFloatfield(new Float(66.77));
-            record.setIntegerfield(new Integer(8));
+            record.setDoublefield(44.55);
+            record.setFloatfield(66.77f);
+            record.setIntegerfield(8);
             dao.insert(record);
 
             record = new Fieldsonly();
-            record.setDoublefield(new Double(88.99));
-            record.setFloatfield(new Float(100.111));
-            record.setIntegerfield(new Integer(9));
+            record.setDoublefield(88.99);
+            record.setFloatfield(100.111f);
+            record.setIntegerfield(9);
             dao.insert(record);
 
             FieldsonlyExample example = new FieldsonlyExample();
@@ -195,8 +195,8 @@ public class FlatJava2Tests extends BaseTest {
 
         try {
             Pkonly key = new Pkonly();
-            key.setId(new Integer(1));
-            key.setSeqNum(new Integer(3));
+            key.setId(1);
+            key.setSeqNum(3);
             dao.insert(key);
 
             PkonlyExample example = new PkonlyExample();
@@ -216,20 +216,20 @@ public class FlatJava2Tests extends BaseTest {
 
         try {
             Pkonly key = new Pkonly();
-            key.setId(new Integer(1));
-            key.setSeqNum(new Integer(3));
+            key.setId(1);
+            key.setSeqNum(3);
             dao.insert(key);
 
             key = new Pkonly();
-            key.setId(new Integer(5));
-            key.setSeqNum(new Integer(6));
+            key.setId(5);
+            key.setSeqNum(6);
             dao.insert(key);
 
             PkonlyExample example = new PkonlyExample();
             List answer = dao.selectByExample(example);
             assertEquals(2, answer.size());
 
-            int rows = dao.deleteByPrimaryKey(new Integer(5), new Integer(6));
+            int rows = dao.deleteByPrimaryKey(5, 6);
             assertEquals(1, rows);
 
             answer = dao.selectByExample(example);
@@ -244,18 +244,18 @@ public class FlatJava2Tests extends BaseTest {
 
         try {
             Pkonly key = new Pkonly();
-            key.setId(new Integer(1));
-            key.setSeqNum(new Integer(3));
+            key.setId(1);
+            key.setSeqNum(3);
             dao.insert(key);
 
             key = new Pkonly();
-            key.setId(new Integer(5));
-            key.setSeqNum(new Integer(6));
+            key.setId(5);
+            key.setSeqNum(6);
             dao.insert(key);
 
             key = new Pkonly();
-            key.setId(new Integer(7));
-            key.setSeqNum(new Integer(8));
+            key.setId(7);
+            key.setSeqNum(8);
             dao.insert(key);
 
             PkonlyExample example = new PkonlyExample();
@@ -276,18 +276,18 @@ public class FlatJava2Tests extends BaseTest {
 
         try {
             Pkonly key = new Pkonly();
-            key.setId(new Integer(1));
-            key.setSeqNum(new Integer(3));
+            key.setId(1);
+            key.setSeqNum(3);
             dao.insert(key);
 
             key = new Pkonly();
-            key.setId(new Integer(5));
-            key.setSeqNum(new Integer(6));
+            key.setId(5);
+            key.setSeqNum(6);
             dao.insert(key);
 
             key = new Pkonly();
-            key.setId(new Integer(7));
-            key.setSeqNum(new Integer(8));
+            key.setId(7);
+            key.setSeqNum(8);
             dao.insert(key);
 
             PkonlyExample example = new PkonlyExample();
@@ -304,18 +304,18 @@ public class FlatJava2Tests extends BaseTest {
 
         try {
             Pkonly key = new Pkonly();
-            key.setId(new Integer(1));
-            key.setSeqNum(new Integer(3));
+            key.setId(1);
+            key.setSeqNum(3);
             dao.insert(key);
 
             key = new Pkonly();
-            key.setId(new Integer(5));
-            key.setSeqNum(new Integer(6));
+            key.setId(5);
+            key.setSeqNum(6);
             dao.insert(key);
 
             key = new Pkonly();
-            key.setId(new Integer(7));
-            key.setSeqNum(new Integer(8));
+            key.setId(7);
+            key.setSeqNum(8);
             dao.insert(key);
 
             PkonlyExample example = new PkonlyExample();
@@ -333,21 +333,20 @@ public class FlatJava2Tests extends BaseTest {
         try {
             Pkfields record = new Pkfields();
             record.setDatefield(new Date());
-            record.setDecimal100field(new Long(10L));
+            record.setDecimal100field(10L);
             record.setDecimal155field(new BigDecimal("15.12345"));
-            record.setDecimal30field(new Short((short) 3));
-            record.setDecimal60field(new Integer(6));
+            record.setDecimal30field((short) 3);
+            record.setDecimal60field(6);
             record.setFirstname("Jeff");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(2));
+            record.setId1(1);
+            record.setId2(2);
             record.setLastname("Butler");
             record.setTimefield(new Date());
             record.setTimestampfield(new Date());
 
             dao.insert(record);
 
-            Pkfields returnedRecord = dao.selectByPrimaryKey(new Integer(1),
-                    new Integer(2));
+            Pkfields returnedRecord = dao.selectByPrimaryKey(1, 2);
             assertNotNull(returnedRecord);
 
             assertTrue(datesAreEqual(record.getDatefield(), returnedRecord
@@ -380,8 +379,8 @@ public class FlatJava2Tests extends BaseTest {
             Pkfields record = new Pkfields();
             record.setFirstname("Jeff");
             record.setLastname("Smith");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(2));
+            record.setId1(1);
+            record.setId2(2);
 
             dao.insert(record);
 
@@ -391,8 +390,7 @@ public class FlatJava2Tests extends BaseTest {
             int rows = dao.updateByPrimaryKey(record);
             assertEquals(1, rows);
 
-            Pkfields record2 = dao.selectByPrimaryKey(new Integer(1),
-                    new Integer(2));
+            Pkfields record2 = dao.selectByPrimaryKey(1, 2);
 
             assertEquals(record.getFirstname(), record2.getFirstname());
             assertEquals(record.getLastname(), record2.getLastname());
@@ -410,23 +408,22 @@ public class FlatJava2Tests extends BaseTest {
             Pkfields record = new Pkfields();
             record.setFirstname("Jeff");
             record.setLastname("Smith");
-            record.setDecimal60field(new Integer(5));
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(2));
+            record.setDecimal60field(5);
+            record.setId1(1);
+            record.setId2(2);
 
             dao.insert(record);
 
             Pkfields newRecord = new Pkfields();
-            newRecord.setId1(new Integer(1));
-            newRecord.setId2(new Integer(2));
+            newRecord.setId1(1);
+            newRecord.setId2(2);
             newRecord.setFirstname("Scott");
-            newRecord.setDecimal60field(new Integer(4));
+            newRecord.setDecimal60field(4);
 
             int rows = dao.updateByPrimaryKeySelective(newRecord);
             assertEquals(1, rows);
 
-            Pkfields returnedRecord = dao.selectByPrimaryKey(new Integer(1),
-                    new Integer(2));
+            Pkfields returnedRecord = dao.selectByPrimaryKey(1, 2);
 
             assertTrue(datesAreEqual(record.getDatefield(), returnedRecord
                     .getDatefield()));
@@ -459,12 +456,12 @@ public class FlatJava2Tests extends BaseTest {
             Pkfields record = new Pkfields();
             record.setFirstname("Jeff");
             record.setLastname("Smith");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(2));
+            record.setId1(1);
+            record.setId2(2);
 
             dao.insert(record);
 
-            int rows = dao.deleteByPrimaryKey(new Integer(1), new Integer(2));
+            int rows = dao.deleteByPrimaryKey(1, 2);
             assertEquals(1, rows);
 
             PkfieldsExample example = new PkfieldsExample();
@@ -482,15 +479,15 @@ public class FlatJava2Tests extends BaseTest {
             Pkfields record = new Pkfields();
             record.setFirstname("Jeff");
             record.setLastname("Smith");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(2));
+            record.setId1(1);
+            record.setId2(2);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Bob");
             record.setLastname("Jones");
-            record.setId1(new Integer(3));
-            record.setId2(new Integer(4));
+            record.setId1(3);
+            record.setId2(4);
 
             dao.insert(record);
 
@@ -518,19 +515,18 @@ public class FlatJava2Tests extends BaseTest {
             Pkfields record = new Pkfields();
             record.setFirstname("Jeff");
             record.setLastname("Smith");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(2));
+            record.setId1(1);
+            record.setId2(2);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Bob");
             record.setLastname("Jones");
-            record.setId1(new Integer(3));
-            record.setId2(new Integer(4));
+            record.setId1(3);
+            record.setId2(4);
             dao.insert(record);
 
-            Pkfields newRecord = dao.selectByPrimaryKey(new Integer(3),
-                    new Integer(4));
+            Pkfields newRecord = dao.selectByPrimaryKey(3, 4);
 
             assertNotNull(newRecord);
             assertEquals(record.getFirstname(), newRecord.getFirstname());
@@ -549,43 +545,43 @@ public class FlatJava2Tests extends BaseTest {
             Pkfields record = new Pkfields();
             record.setFirstname("Fred");
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(1));
+            record.setId1(1);
+            record.setId2(1);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Wilma");
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(2));
+            record.setId1(1);
+            record.setId2(2);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Pebbles");
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(3));
+            record.setId1(1);
+            record.setId2(3);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Barney");
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(1));
+            record.setId1(2);
+            record.setId2(1);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Betty");
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(2));
+            record.setId1(2);
+            record.setId2(2);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Bamm Bamm");
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(3));
+            record.setId1(2);
+            record.setId2(3);
             dao.insert(record);
 
             PkfieldsExample example = new PkfieldsExample();
@@ -614,43 +610,43 @@ public class FlatJava2Tests extends BaseTest {
             Pkfields record = new Pkfields();
             record.setFirstname("Fred");
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(1));
+            record.setId1(1);
+            record.setId2(1);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Wilma");
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(2));
+            record.setId1(1);
+            record.setId2(2);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Pebbles");
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(3));
+            record.setId1(1);
+            record.setId2(3);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Barney");
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(1));
+            record.setId1(2);
+            record.setId2(1);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Betty");
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(2));
+            record.setId1(2);
+            record.setId2(2);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Bamm Bamm");
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(3));
+            record.setId1(2);
+            record.setId2(3);
             dao.insert(record);
 
             PkfieldsExample example = new PkfieldsExample();
@@ -679,48 +675,47 @@ public class FlatJava2Tests extends BaseTest {
             Pkfields record = new Pkfields();
             record.setFirstname("Fred");
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(1));
+            record.setId1(1);
+            record.setId2(1);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Wilma");
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(2));
+            record.setId1(1);
+            record.setId2(2);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Pebbles");
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(3));
+            record.setId1(1);
+            record.setId2(3);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Barney");
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(1));
+            record.setId1(2);
+            record.setId2(1);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Betty");
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(2));
+            record.setId1(2);
+            record.setId2(2);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Bamm Bamm");
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(3));
+            record.setId1(2);
+            record.setId2(3);
             dao.insert(record);
 
             PkfieldsExample example = new PkfieldsExample();
-            example.createCriteria().andFirstnameLike("B%").andId2EqualTo(
-                    new Integer(3));
+            example.createCriteria().andFirstnameLike("B%").andId2EqualTo(3);
             example.or(example.createCriteria().andFirstnameLike("Wi%"));
 
             example.setOrderByClause("ID1, ID2");
@@ -745,48 +740,48 @@ public class FlatJava2Tests extends BaseTest {
             Pkfields record = new Pkfields();
             record.setFirstname("Fred");
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(1));
+            record.setId1(1);
+            record.setId2(1);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Wilma");
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(2));
+            record.setId1(1);
+            record.setId2(2);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Pebbles");
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(3));
+            record.setId1(1);
+            record.setId2(3);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Barney");
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(1));
+            record.setId1(2);
+            record.setId2(1);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Betty");
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(2));
+            record.setId1(2);
+            record.setId2(2);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Bamm Bamm");
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(3));
+            record.setId1(2);
+            record.setId2(3);
             dao.insert(record);
 
             List ids = new ArrayList();
-            ids.add(new Integer(1));
-            ids.add(new Integer(3));
+            ids.add(1);
+            ids.add(3);
 
             PkfieldsExample example = new PkfieldsExample();
             example.createCriteria().andId2In(ids);
@@ -818,48 +813,47 @@ public class FlatJava2Tests extends BaseTest {
             Pkfields record = new Pkfields();
             record.setFirstname("Fred");
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(1));
+            record.setId1(1);
+            record.setId2(1);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Wilma");
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(2));
+            record.setId1(1);
+            record.setId2(2);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Pebbles");
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(3));
+            record.setId1(1);
+            record.setId2(3);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Barney");
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(1));
+            record.setId1(2);
+            record.setId2(1);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Betty");
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(2));
+            record.setId1(2);
+            record.setId2(2);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Bamm Bamm");
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(3));
+            record.setId1(2);
+            record.setId2(3);
             dao.insert(record);
 
             PkfieldsExample example = new PkfieldsExample();
-            example.createCriteria().andId2Between(new Integer(1),
-                    new Integer(3));
+            example.createCriteria().andId2Between(1, 3);
 
             example.setOrderByClause("ID1, ID2");
             List answer = dao.selectByExample(example);
@@ -876,43 +870,43 @@ public class FlatJava2Tests extends BaseTest {
             Pkfields record = new Pkfields();
             record.setFirstname("Fred");
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(1));
+            record.setId1(1);
+            record.setId2(1);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Wilma");
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(2));
+            record.setId1(1);
+            record.setId2(2);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Pebbles");
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(3));
+            record.setId1(1);
+            record.setId2(3);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Barney");
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(1));
+            record.setId1(2);
+            record.setId2(1);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Betty");
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(2));
+            record.setId1(2);
+            record.setId2(2);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Bamm Bamm");
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(3));
+            record.setId1(2);
+            record.setId2(3);
             dao.insert(record);
 
             PkfieldsExample example = new PkfieldsExample();
@@ -999,7 +993,7 @@ public class FlatJava2Tests extends BaseTest {
 
         try {
             Pkblobs record = new Pkblobs();
-            record.setId(new Integer(3));
+            record.setId(3);
             record.setBlob1(generateRandomBlob());
             record.setBlob2(generateRandomBlob());
             dao.insert(record);
@@ -1024,19 +1018,19 @@ public class FlatJava2Tests extends BaseTest {
 
         try {
             Pkblobs record = new Pkblobs();
-            record.setId(new Integer(3));
+            record.setId(3);
             record.setBlob1(generateRandomBlob());
             record.setBlob2(generateRandomBlob());
             dao.insert(record);
 
             record = new Pkblobs();
-            record.setId(new Integer(3));
+            record.setId(3);
             record.setBlob1(generateRandomBlob());
             record.setBlob2(generateRandomBlob());
             int rows = dao.updateByPrimaryKey(record);
             assertEquals(1, rows);
 
-            Pkblobs newRecord = dao.selectByPrimaryKey(new Integer(3));
+            Pkblobs newRecord = dao.selectByPrimaryKey(3);
 
             assertNotNull(newRecord);
             assertEquals(record.getId(), newRecord.getId());
@@ -1052,17 +1046,17 @@ public class FlatJava2Tests extends BaseTest {
 
         try {
             Pkblobs record = new Pkblobs();
-            record.setId(new Integer(3));
+            record.setId(3);
             record.setBlob1(generateRandomBlob());
             record.setBlob2(generateRandomBlob());
             dao.insert(record);
 
             Pkblobs newRecord = new Pkblobs();
-            newRecord.setId(new Integer(3));
+            newRecord.setId(3);
             newRecord.setBlob2(generateRandomBlob());
             dao.updateByPrimaryKeySelective(newRecord);
 
-            Pkblobs returnedRecord = dao.selectByPrimaryKey(new Integer(3));
+            Pkblobs returnedRecord = dao.selectByPrimaryKey(3);
             assertNotNull(returnedRecord);
             assertEquals(record.getId(), returnedRecord.getId());
             assertTrue(blobsAreEqual(record.getBlob1(), returnedRecord
@@ -1088,7 +1082,7 @@ public class FlatJava2Tests extends BaseTest {
             List answer = dao.selectByExampleWithoutBLOBs(example);
             assertEquals(1, answer.size());
 
-            int rows = dao.deleteByPrimaryKey(new Integer(3));
+            int rows = dao.deleteByPrimaryKey(3);
             assertEquals(1, rows);
 
             example = new PkblobsExample();
@@ -1104,13 +1098,13 @@ public class FlatJava2Tests extends BaseTest {
 
         try {
             Pkblobs record = new Pkblobs();
-            record.setId(new Integer(3));
+            record.setId(3);
             record.setBlob1(generateRandomBlob());
             record.setBlob2(generateRandomBlob());
             dao.insert(record);
 
             record = new Pkblobs();
-            record.setId(new Integer(6));
+            record.setId(6);
             record.setBlob1(generateRandomBlob());
             record.setBlob2(generateRandomBlob());
             dao.insert(record);
@@ -1137,18 +1131,18 @@ public class FlatJava2Tests extends BaseTest {
 
         try {
             Pkblobs record = new Pkblobs();
-            record.setId(new Integer(3));
+            record.setId(3);
             record.setBlob1(generateRandomBlob());
             record.setBlob2(generateRandomBlob());
             dao.insert(record);
 
             record = new Pkblobs();
-            record.setId(new Integer(6));
+            record.setId(6);
             record.setBlob1(generateRandomBlob());
             record.setBlob2(generateRandomBlob());
             dao.insert(record);
 
-            Pkblobs newRecord = dao.selectByPrimaryKey(new Integer(6));
+            Pkblobs newRecord = dao.selectByPrimaryKey(6);
             assertNotNull(newRecord);
             assertEquals(record.getId(), newRecord.getId());
             assertTrue(blobsAreEqual(record.getBlob1(), newRecord.getBlob1()));
@@ -1163,13 +1157,13 @@ public class FlatJava2Tests extends BaseTest {
 
         try {
             Pkblobs record = new Pkblobs();
-            record.setId(new Integer(3));
+            record.setId(3);
             record.setBlob1(generateRandomBlob());
             record.setBlob2(generateRandomBlob());
             dao.insert(record);
 
             record = new Pkblobs();
-            record.setId(new Integer(6));
+            record.setId(6);
             record.setBlob1(generateRandomBlob());
             record.setBlob2(generateRandomBlob());
             dao.insert(record);
@@ -1194,13 +1188,13 @@ public class FlatJava2Tests extends BaseTest {
 
         try {
             Pkblobs record = new Pkblobs();
-            record.setId(new Integer(3));
+            record.setId(3);
             record.setBlob1(generateRandomBlob());
             record.setBlob2(generateRandomBlob());
             dao.insert(record);
 
             record = new Pkblobs();
-            record.setId(new Integer(6));
+            record.setId(6);
             record.setBlob1(generateRandomBlob());
             record.setBlob2(generateRandomBlob());
             dao.insert(record);
@@ -1220,13 +1214,13 @@ public class FlatJava2Tests extends BaseTest {
 
         try {
             Pkblobs record = new Pkblobs();
-            record.setId(new Integer(3));
+            record.setId(3);
             record.setBlob1(generateRandomBlob());
             record.setBlob2(generateRandomBlob());
             dao.insert(record);
 
             record = new Pkblobs();
-            record.setId(new Integer(6));
+            record.setId(6);
             record.setBlob1(generateRandomBlob());
             record.setBlob2(generateRandomBlob());
             dao.insert(record);
@@ -1251,8 +1245,8 @@ public class FlatJava2Tests extends BaseTest {
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
-            record.setId1(new Integer(3));
-            record.setId2(new Integer(4));
+            record.setId1(3);
+            record.setId2(4);
             record.setFirstname("Jeff");
             record.setLastname("Smith");
             record.setBlob1(generateRandomBlob());
@@ -1279,16 +1273,16 @@ public class FlatJava2Tests extends BaseTest {
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
-            record.setId1(new Integer(3));
-            record.setId2(new Integer(4));
+            record.setId1(3);
+            record.setId2(4);
             record.setFirstname("Jeff");
             record.setLastname("Smith");
             record.setBlob1(generateRandomBlob());
             dao.insert(record);
 
             Pkfieldsblobs updateRecord = new Pkfieldsblobs();
-            updateRecord.setId1(new Integer(3));
-            updateRecord.setId2(new Integer(4));
+            updateRecord.setId1(3);
+            updateRecord.setId2(4);
             updateRecord.setFirstname("Scott");
             updateRecord.setLastname("Jones");
             updateRecord.setBlob1(generateRandomBlob());
@@ -1296,8 +1290,7 @@ public class FlatJava2Tests extends BaseTest {
             int rows = dao.updateByPrimaryKeyWithBLOBs(updateRecord);
             assertEquals(1, rows);
 
-            Pkfieldsblobs newRecord = dao.selectByPrimaryKey(new Integer(3),
-                    new Integer(4));
+            Pkfieldsblobs newRecord = dao.selectByPrimaryKey(3, 4);
             assertEquals(updateRecord.getFirstname(), newRecord.getFirstname());
             assertEquals(updateRecord.getLastname(), newRecord.getLastname());
             assertEquals(record.getId1(), newRecord.getId1());
@@ -1314,24 +1307,23 @@ public class FlatJava2Tests extends BaseTest {
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
-            record.setId1(new Integer(3));
-            record.setId2(new Integer(4));
+            record.setId1(3);
+            record.setId2(4);
             record.setFirstname("Jeff");
             record.setLastname("Smith");
             record.setBlob1(generateRandomBlob());
             dao.insert(record);
 
             Pkfieldsblobs updateRecord = new Pkfieldsblobs();
-            updateRecord.setId1(new Integer(3));
-            updateRecord.setId2(new Integer(4));
+            updateRecord.setId1(3);
+            updateRecord.setId2(4);
             updateRecord.setFirstname("Scott");
             updateRecord.setLastname("Jones");
 
             int rows = dao.updateByPrimaryKeyWithoutBLOBs(updateRecord);
             assertEquals(1, rows);
 
-            Pkfieldsblobs newRecord = dao.selectByPrimaryKey(new Integer(3),
-                    new Integer(4));
+            Pkfieldsblobs newRecord = dao.selectByPrimaryKey(3, 4);
             assertEquals(updateRecord.getFirstname(), newRecord.getFirstname());
             assertEquals(updateRecord.getLastname(), newRecord.getLastname());
             assertEquals(record.getId1(), newRecord.getId1());
@@ -1347,23 +1339,22 @@ public class FlatJava2Tests extends BaseTest {
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
-            record.setId1(new Integer(3));
-            record.setId2(new Integer(4));
+            record.setId1(3);
+            record.setId2(4);
             record.setFirstname("Jeff");
             record.setLastname("Smith");
             record.setBlob1(generateRandomBlob());
             dao.insert(record);
 
             Pkfieldsblobs updateRecord = new Pkfieldsblobs();
-            updateRecord.setId1(new Integer(3));
-            updateRecord.setId2(new Integer(4));
+            updateRecord.setId1(3);
+            updateRecord.setId2(4);
             updateRecord.setLastname("Jones");
 
             int rows = dao.updateByPrimaryKeySelective(updateRecord);
             assertEquals(1, rows);
 
-            Pkfieldsblobs returnedRecord = dao.selectByPrimaryKey(
-                    new Integer(3), new Integer(4));
+            Pkfieldsblobs returnedRecord = dao.selectByPrimaryKey(3, 4);
             assertEquals(record.getFirstname(), returnedRecord.getFirstname());
             assertEquals(updateRecord.getLastname(), returnedRecord
                     .getLastname());
@@ -1381,16 +1372,16 @@ public class FlatJava2Tests extends BaseTest {
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
-            record.setId1(new Integer(3));
-            record.setId2(new Integer(4));
+            record.setId1(3);
+            record.setId2(4);
             record.setFirstname("Jeff");
             record.setLastname("Smith");
             record.setBlob1(generateRandomBlob());
             dao.insert(record);
 
             record = new Pkfieldsblobs();
-            record.setId1(new Integer(5));
-            record.setId2(new Integer(6));
+            record.setId1(5);
+            record.setId2(6);
             record.setFirstname("Scott");
             record.setLastname("Jones");
             record.setBlob1(generateRandomBlob());
@@ -1400,7 +1391,7 @@ public class FlatJava2Tests extends BaseTest {
             List answer = dao.selectByExampleWithoutBLOBs(example);
             assertEquals(2, answer.size());
 
-            int rows = dao.deleteByPrimaryKey(new Integer(5), new Integer(6));
+            int rows = dao.deleteByPrimaryKey(5, 6);
             assertEquals(1, rows);
 
             example = new PkfieldsblobsExample();
@@ -1416,16 +1407,16 @@ public class FlatJava2Tests extends BaseTest {
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
-            record.setId1(new Integer(3));
-            record.setId2(new Integer(4));
+            record.setId1(3);
+            record.setId2(4);
             record.setFirstname("Jeff");
             record.setLastname("Smith");
             record.setBlob1(generateRandomBlob());
             dao.insert(record);
 
             record = new Pkfieldsblobs();
-            record.setId1(new Integer(5));
-            record.setId2(new Integer(6));
+            record.setId1(5);
+            record.setId2(6);
             record.setFirstname("Scott");
             record.setLastname("Jones");
             record.setBlob1(generateRandomBlob());
@@ -1453,16 +1444,16 @@ public class FlatJava2Tests extends BaseTest {
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
-            record.setId1(new Integer(3));
-            record.setId2(new Integer(4));
+            record.setId1(3);
+            record.setId2(4);
             record.setFirstname("Jeff");
             record.setLastname("Smith");
             record.setBlob1(generateRandomBlob());
             dao.insert(record);
 
             record = new Pkfieldsblobs();
-            record.setId1(new Integer(5));
-            record.setId2(new Integer(6));
+            record.setId1(5);
+            record.setId2(6);
             record.setFirstname("Scott");
             record.setLastname("Jones");
             record.setBlob1(generateRandomBlob());
@@ -1472,8 +1463,7 @@ public class FlatJava2Tests extends BaseTest {
             List answer = dao.selectByExampleWithoutBLOBs(example);
             assertEquals(2, answer.size());
 
-            Pkfieldsblobs newRecord = dao.selectByPrimaryKey(new Integer(5),
-                    new Integer(6));
+            Pkfieldsblobs newRecord = dao.selectByPrimaryKey(5, 6);
             assertEquals(record.getId1(), newRecord.getId1());
             assertEquals(record.getId2(), newRecord.getId2());
             assertEquals(record.getFirstname(), newRecord.getFirstname());
@@ -1489,16 +1479,16 @@ public class FlatJava2Tests extends BaseTest {
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
-            record.setId1(new Integer(3));
-            record.setId2(new Integer(4));
+            record.setId1(3);
+            record.setId2(4);
             record.setFirstname("Jeff");
             record.setLastname("Smith");
             record.setBlob1(generateRandomBlob());
             dao.insert(record);
 
             record = new Pkfieldsblobs();
-            record.setId1(new Integer(5));
-            record.setId2(new Integer(6));
+            record.setId1(5);
+            record.setId2(6);
             record.setFirstname("Scott");
             record.setLastname("Jones");
             record.setBlob1(generateRandomBlob());
@@ -1525,16 +1515,16 @@ public class FlatJava2Tests extends BaseTest {
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
-            record.setId1(new Integer(3));
-            record.setId2(new Integer(4));
+            record.setId1(3);
+            record.setId2(4);
             record.setFirstname("Jeff");
             record.setLastname("Smith");
             record.setBlob1(generateRandomBlob());
             dao.insert(record);
 
             record = new Pkfieldsblobs();
-            record.setId1(new Integer(5));
-            record.setId2(new Integer(6));
+            record.setId1(5);
+            record.setId2(6);
             record.setFirstname("Scott");
             record.setLastname("Jones");
             record.setBlob1(generateRandomBlob());
@@ -1561,16 +1551,16 @@ public class FlatJava2Tests extends BaseTest {
 
         try {
             Pkfieldsblobs record = new Pkfieldsblobs();
-            record.setId1(new Integer(3));
-            record.setId2(new Integer(4));
+            record.setId1(3);
+            record.setId2(4);
             record.setFirstname("Jeff");
             record.setLastname("Smith");
             record.setBlob1(generateRandomBlob());
             dao.insert(record);
 
             record = new Pkfieldsblobs();
-            record.setId1(new Integer(5));
-            record.setId2(new Integer(6));
+            record.setId1(5);
+            record.setId2(6);
             record.setFirstname("Scott");
             record.setLastname("Jones");
             record.setBlob1(generateRandomBlob());

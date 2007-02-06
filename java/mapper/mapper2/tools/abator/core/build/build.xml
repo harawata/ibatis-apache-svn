@@ -36,6 +36,7 @@
   <property name="generated.source.dir.java5" value="${work.dir}/test/java5/src" />
   <property name="generated.bin.dir.java2" value="${work.dir}/test/java2/bin" />
   <property name="generated.bin.dir.java5" value="${work.dir}/test/java5/bin" />
+  <property name="abator.test.bin.dir" value="${work.dir}/test/abator/bin" />
   <property name="reports.dir" value="${basedir}/reports" />
   <property name="reports.junit" value="${reports.dir}/junit" />
   
@@ -71,7 +72,7 @@
     </propertyfile>
   </target>
   
-  <target name="build.compile" depends="build.prepare" unless="eclipse.running">
+  <target name="build.compile" depends="build.prepare">
     <javac srcdir="${src.dir}"
     	destdir="${work.classes}"
     	deprecation="true" 
@@ -127,13 +128,41 @@
     <fail if="testsFailed" message="The tests did not pass"/>
   </target>
   
-  <target name="test.prepare" depends="build.compile">
+  <target name="build.test" depends="build.compile">
+    <mkdir dir="${abator.test.bin.dir}"/>
+    <mkdir dir="${reports.dir}"/>
+    <mkdir dir="${reports.junit}"/>
+
+    <javac destdir="${abator.test.bin.dir}"
+    	deprecation="true" 
+    	debug="true"
+    	source="1.4"
+    	target="1.4">
+      <src path="${basedir}/../test"/>
+      <classpath>
+        <pathelement location="${deploy.files}/abator.jar"/>
+      </classpath>
+    </javac>
+
+    <junit printsummary="true" showoutput="true">
+      <formatter type="xml"/>
+      <batchtest todir="${reports.junit}" fork="yes" haltonerror="no" failureproperty="testsFailed">
+        <fileset dir="${abator.test.bin.dir}">
+          <include name="**/*Tests.class"/>
+        </fileset>
+      </batchtest>
+      <classpath>
+      	<pathelement location="${abator.test.bin.dir}"/>
+        <pathelement location="${deploy.files}/abator.jar"/>
+      </classpath>
+    </junit>
+  </target>
+  	
+  <target name="test.prepare" depends="build.test">
     <mkdir dir="${generated.source.dir.java2}"/>
     <mkdir dir="${generated.source.dir.java5}"/>
     <mkdir dir="${generated.bin.dir.java2}"/>
     <mkdir dir="${generated.bin.dir.java5}"/>
-    <mkdir dir="${reports.dir}"/>
-    <mkdir dir="${reports.junit}"/>
 	  	
   	<!-- create the test database -->
   	<sql driver="org.hsqldb.jdbcDriver"
@@ -153,7 +182,7 @@
     <taskdef name="abator"
              classname="org.apache.ibatis.abator.ant.AbatorAntTask">
       <classpath>
-    	  <pathelement location="${work.classes}"/>
+    	  <pathelement location="${deploy.files}/abator.jar"/>
       </classpath>
     </taskdef>
   	
@@ -173,7 +202,7 @@
     <taskdef name="abator"
              classname="org.apache.ibatis.abator.ant.AbatorAntTask">
       <classpath>
-    	  <pathelement location="${work.classes}"/>
+    	  <pathelement location="${deploy.files}/abator.jar"/>
       </classpath>
     </taskdef>
   	

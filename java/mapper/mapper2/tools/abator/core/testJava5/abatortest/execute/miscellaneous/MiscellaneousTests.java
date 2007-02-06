@@ -61,14 +61,14 @@ public class MiscellaneousTests extends BaseTest {
         try {
             MyObject record = new MyObject();
             record.setStartDate(new Date());
-            record.setDecimal100field(new Long(10L));
-            record.setDecimal155field(new Double(15.12345));
-            record.setDecimal60field(new Integer(6));
+            record.setDecimal100field(10L);
+            record.setDecimal155field(15.12345);
+            record.setDecimal60field(6);
             FirstName fn = new FirstName();
             fn.setValue("Jeff");
             record.setFirstname(fn);
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(2));
+            record.setId1(1);
+            record.setId2(2);
             record.setLastname("Butler");
 
             MyTime myTime = new MyTime();
@@ -81,8 +81,8 @@ public class MiscellaneousTests extends BaseTest {
             dao.insertMyObject(record);
 
             MyObjectKey key = new MyObjectKey();
-            key.setId1(new Integer(1));
-            key.setId2(new Integer(2));
+            key.setId1(1);
+            key.setId2(2);
 
             MyObject returnedRecord = dao.selectMyObjectByPrimaryKey(key);
             assertNotNull(returnedRecord);
@@ -116,8 +116,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Jeff");
             record.setFirstname(fn);
             record.setLastname("Smith");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(2));
+            record.setId1(1);
+            record.setId2(2);
 
             dao.insertMyObject(record);
 
@@ -130,8 +130,8 @@ public class MiscellaneousTests extends BaseTest {
             assertEquals(1, rows);
 
             MyObjectKey key = new MyObjectKey();
-            key.setId1(new Integer(1));
-            key.setId2(new Integer(2));
+            key.setId1(1);
+            key.setId2(2);
 
             MyObject record2 = dao.selectMyObjectByPrimaryKey(key);
 
@@ -153,15 +153,15 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Jeff");
             record.setFirstname(fn);
             record.setLastname("Smith");
-            record.setDecimal60field(new Integer(5));
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(2));
+            record.setDecimal60field(5);
+            record.setId1(1);
+            record.setId2(2);
 
             dao.insertMyObject(record);
 
             MyObject newRecord = new MyObject();
-            newRecord.setId1(new Integer(1));
-            newRecord.setId2(new Integer(2));
+            newRecord.setId1(1);
+            newRecord.setId2(2);
             fn = new FirstName();
             fn.setValue("Scott");
             newRecord.setFirstname(fn);
@@ -171,8 +171,8 @@ public class MiscellaneousTests extends BaseTest {
             assertEquals(1, rows);
 
             MyObjectKey key = new MyObjectKey();
-            key.setId1(new Integer(1));
-            key.setId2(new Integer(2));
+            key.setId1(1);
+            key.setId2(2);
 
             MyObject returnedRecord = dao.selectMyObjectByPrimaryKey(key);
 
@@ -210,14 +210,14 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Jeff");
             record.setFirstname(fn);
             record.setLastname("Smith");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(2));
+            record.setId1(1);
+            record.setId2(2);
 
             dao.insertMyObject(record);
 
             MyObjectKey key = new MyObjectKey();
-            key.setId1(new Integer(1));
-            key.setId2(new Integer(2));
+            key.setId1(1);
+            key.setId2(2);
 
             int rows = dao.deleteMyObjectByPrimaryKey(key);
             assertEquals(1, rows);
@@ -239,8 +239,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Jeff");
             record.setFirstname(fn);
             record.setLastname("Smith");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(2));
+            record.setId1(1);
+            record.setId2(2);
             dao.insertMyObject(record);
 
             record = new MyObject();
@@ -248,8 +248,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Bob");
             record.setFirstname(fn);
             record.setLastname("Jones");
-            record.setId1(new Integer(3));
-            record.setId2(new Integer(4));
+            record.setId1(3);
+            record.setId2(4);
 
             dao.insertMyObject(record);
 
@@ -279,8 +279,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Jeff");
             record.setFirstname(fn);
             record.setLastname("Smith");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(2));
+            record.setId1(1);
+            record.setId2(2);
             dao.insertMyObject(record);
 
             record = new MyObject();
@@ -288,13 +288,13 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Bob");
             record.setFirstname(fn);
             record.setLastname("Jones");
-            record.setId1(new Integer(3));
-            record.setId2(new Integer(4));
+            record.setId1(3);
+            record.setId2(4);
             dao.insertMyObject(record);
 
             MyObjectKey key = new MyObjectKey();
-            key.setId1(new Integer(3));
-            key.setId2(new Integer(4));
+            key.setId1(3);
+            key.setId2(4);
             MyObject newRecord = dao.selectMyObjectByPrimaryKey(key);
 
             assertNotNull(newRecord);
@@ -316,8 +316,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Fred");
             record.setFirstname(fn);
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(1));
+            record.setId1(1);
+            record.setId2(1);
             dao.insertMyObject(record);
 
             record = new MyObject();
@@ -325,8 +325,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Wilma");
             record.setFirstname(fn);
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(2));
+            record.setId1(1);
+            record.setId2(2);
             dao.insertMyObject(record);
 
             record = new MyObject();
@@ -334,8 +334,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Pebbles");
             record.setFirstname(fn);
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(3));
+            record.setId1(1);
+            record.setId2(3);
             dao.insertMyObject(record);
 
             record = new MyObject();
@@ -343,8 +343,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Barney");
             record.setFirstname(fn);
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(1));
+            record.setId1(2);
+            record.setId2(1);
             dao.insertMyObject(record);
 
             record = new MyObject();
@@ -352,8 +352,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Betty");
             record.setFirstname(fn);
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(2));
+            record.setId1(2);
+            record.setId2(2);
             dao.insertMyObject(record);
 
             record = new MyObject();
@@ -361,8 +361,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Bamm Bamm");
             record.setFirstname(fn);
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(3));
+            record.setId1(2);
+            record.setId2(3);
             dao.insertMyObject(record);
 
             MyObjectExample example = new MyObjectExample();
@@ -395,8 +395,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Fred");
             record.setFirstname(fn);
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(1));
+            record.setId1(1);
+            record.setId2(1);
             dao.insertMyObject(record);
 
             record = new MyObject();
@@ -404,8 +404,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Wilma");
             record.setFirstname(fn);
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(2));
+            record.setId1(1);
+            record.setId2(2);
             dao.insertMyObject(record);
 
             record = new MyObject();
@@ -413,8 +413,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Pebbles");
             record.setFirstname(fn);
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(3));
+            record.setId1(1);
+            record.setId2(3);
             dao.insertMyObject(record);
 
             record = new MyObject();
@@ -422,8 +422,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Barney");
             record.setFirstname(fn);
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(1));
+            record.setId1(2);
+            record.setId2(1);
             dao.insertMyObject(record);
 
             record = new MyObject();
@@ -431,8 +431,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Betty");
             record.setFirstname(fn);
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(2));
+            record.setId1(2);
+            record.setId2(2);
             dao.insertMyObject(record);
 
             record = new MyObject();
@@ -440,8 +440,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Bamm Bamm");
             record.setFirstname(fn);
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(3));
+            record.setId1(2);
+            record.setId2(3);
             dao.insertMyObject(record);
 
             MyObjectExample example = new MyObjectExample();
@@ -474,8 +474,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Fred");
             record.setFirstname(fn);
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(1));
+            record.setId1(1);
+            record.setId2(1);
             dao.insertMyObject(record);
 
             record = new MyObject();
@@ -483,8 +483,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Wilma");
             record.setFirstname(fn);
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(2));
+            record.setId1(1);
+            record.setId2(2);
             dao.insertMyObject(record);
 
             record = new MyObject();
@@ -492,8 +492,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Pebbles");
             record.setFirstname(fn);
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(3));
+            record.setId1(1);
+            record.setId2(3);
             dao.insertMyObject(record);
 
             record = new MyObject();
@@ -501,8 +501,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Barney");
             record.setFirstname(fn);
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(1));
+            record.setId1(2);
+            record.setId2(1);
             dao.insertMyObject(record);
 
             record = new MyObject();
@@ -510,8 +510,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Betty");
             record.setFirstname(fn);
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(2));
+            record.setId1(2);
+            record.setId2(2);
             dao.insertMyObject(record);
 
             record = new MyObject();
@@ -519,8 +519,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Bamm Bamm");
             record.setFirstname(fn);
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(3));
+            record.setId1(2);
+            record.setId2(3);
             dao.insertMyObject(record);
 
             MyObjectExample example = new MyObjectExample();
@@ -563,8 +563,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Wilma");
             record.setFirstname(fn);
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(2));
+            record.setId1(1);
+            record.setId2(2);
             dao.insertMyObject(record);
 
             record = new MyObject();
@@ -572,8 +572,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Pebbles");
             record.setFirstname(fn);
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(3));
+            record.setId1(1);
+            record.setId2(3);
             dao.insertMyObject(record);
 
             record = new MyObject();
@@ -581,8 +581,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Barney");
             record.setFirstname(fn);
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(1));
+            record.setId1(2);
+            record.setId2(1);
             dao.insertMyObject(record);
 
             record = new MyObject();
@@ -590,8 +590,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Betty");
             record.setFirstname(fn);
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(2));
+            record.setId1(2);
+            record.setId2(2);
             dao.insertMyObject(record);
 
             record = new MyObject();
@@ -599,8 +599,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Bamm Bamm");
             record.setFirstname(fn);
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(3));
+            record.setId1(2);
+            record.setId2(3);
             dao.insertMyObject(record);
 
             List<Integer> ids = new ArrayList<Integer>();
@@ -639,8 +639,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Fred");
             record.setFirstname(fn);
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(1));
+            record.setId1(1);
+            record.setId2(1);
             dao.insertMyObject(record);
 
             record = new MyObject();
@@ -648,8 +648,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Wilma");
             record.setFirstname(fn);
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(2));
+            record.setId1(1);
+            record.setId2(2);
             dao.insertMyObject(record);
 
             record = new MyObject();
@@ -657,8 +657,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Pebbles");
             record.setFirstname(fn);
             record.setLastname("Flintstone");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(3));
+            record.setId1(1);
+            record.setId2(3);
             dao.insertMyObject(record);
 
             record = new MyObject();
@@ -666,8 +666,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Barney");
             record.setFirstname(fn);
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(1));
+            record.setId1(2);
+            record.setId2(1);
             dao.insertMyObject(record);
 
             record = new MyObject();
@@ -675,8 +675,8 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Betty");
             record.setFirstname(fn);
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(2));
+            record.setId1(2);
+            record.setId2(2);
             dao.insertMyObject(record);
 
             record = new MyObject();
@@ -684,13 +684,12 @@ public class MiscellaneousTests extends BaseTest {
             fn.setValue("Bamm Bamm");
             record.setFirstname(fn);
             record.setLastname("Rubble");
-            record.setId1(new Integer(2));
-            record.setId2(new Integer(3));
+            record.setId1(2);
+            record.setId2(3);
             dao.insertMyObject(record);
 
             MyObjectExample example = new MyObjectExample();
-            example.createCriteria().andId2Between(new Integer(1),
-                    new Integer(3));
+            example.createCriteria().andId2Between(1, 3);
 
             example.setOrderByClause("ID1, ID2");
             List answer = dao.selectMyObjectByExample(example);
@@ -706,14 +705,14 @@ public class MiscellaneousTests extends BaseTest {
         try {
             MyObject record = new MyObject();
             record.setStartDate(new Date());
-            record.setDecimal100field(new Long(10L));
-            record.setDecimal155field(new Double(15.12345));
-            record.setDecimal60field(new Integer(6));
+            record.setDecimal100field(10L);
+            record.setDecimal155field(15.12345);
+            record.setDecimal60field(6);
             FirstName fn = new FirstName();
             fn.setValue("Jeff");
             record.setFirstname(fn);
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(2));
+            record.setId1(1);
+            record.setId2(2);
             record.setLastname("Butler");
 
             MyTime myTime = new MyTime();

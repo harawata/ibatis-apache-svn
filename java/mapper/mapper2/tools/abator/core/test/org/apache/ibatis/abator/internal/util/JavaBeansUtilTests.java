@@ -24,19 +24,19 @@ import junit.framework.TestCase;
  * @author Jeff Butler
  *
  */
-public class JavaBeansUtilTest extends TestCase {
+public class JavaBeansUtilTests extends TestCase {
     
     /**
      * 
      */
-    public JavaBeansUtilTest() {
+    public JavaBeansUtilTests() {
         super();
     }
 
     /**
      * @param arg0
      */
-    public JavaBeansUtilTest(String arg0) {
+    public JavaBeansUtilTests(String arg0) {
         super(arg0);
     }
     

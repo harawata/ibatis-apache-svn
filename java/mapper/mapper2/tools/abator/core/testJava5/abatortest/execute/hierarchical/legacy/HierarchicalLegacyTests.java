@@ -69,13 +69,13 @@ public class HierarchicalLegacyTests extends BaseTest {
 
         try {
             Fieldsonly record = new Fieldsonly();
-            record.setDoublefield(new Double(11.22));
-            record.setFloatfield(new Float(33.44));
-            record.setIntegerfield(new Integer(5));
+            record.setDoublefield(11.22);
+            record.setFloatfield(33.44f);
+            record.setIntegerfield(5);
             dao.insert(record);
 
             FieldsonlyExample example = new FieldsonlyExample();
-            example.setIntegerfield(new Integer(5));
+            example.setIntegerfield(5);
             example.setIntegerfield_Indicator(FieldsonlyExample.EXAMPLE_EQUALS);
 
             List answer = dao.selectByExample(example);
@@ -97,25 +97,25 @@ public class HierarchicalLegacyTests extends BaseTest {
 
         try {
             Fieldsonly record = new Fieldsonly();
-            record.setDoublefield(new Double(11.22));
-            record.setFloatfield(new Float(33.44));
-            record.setIntegerfield(new Integer(5));
+            record.setDoublefield(11.22);
+            record.setFloatfield(33.44f);
+            record.setIntegerfield(5);
             dao.insert(record);
 
             record = new Fieldsonly();
-            record.setDoublefield(new Double(44.55));
-            record.setFloatfield(new Float(66.77));
-            record.setIntegerfield(new Integer(8));
+            record.setDoublefield(44.55);
+            record.setFloatfield(66.77f);
+            record.setIntegerfield(8);
             dao.insert(record);
 
             record = new Fieldsonly();
-            record.setDoublefield(new Double(88.99));
-            record.setFloatfield(new Float(100.111));
-            record.setIntegerfield(new Integer(9));
+            record.setDoublefield(88.99);
+            record.setFloatfield(100.111f);
+            record.setIntegerfield(9);
             dao.insert(record);
 
             FieldsonlyExample example = new FieldsonlyExample();
-            example.setIntegerfield(new Integer(5));
+            example.setIntegerfield(5);
             example
                     .setIntegerfield_Indicator(FieldsonlyExample.EXAMPLE_GREATER_THAN);
 
@@ -135,25 +135,25 @@ public class HierarchicalLegacyTests extends BaseTest {
 
         try {
             Fieldsonly record = new Fieldsonly();
-            record.setDoublefield(new Double(11.22));
-            record.setFloatfield(new Float(33.44));
-            record.setIntegerfield(new Integer(5));
+            record.setDoublefield(11.22);
+            record.setFloatfield(33.44f);
+            record.setIntegerfield(5);
             dao.insert(record);
 
             record = new Fieldsonly();
-            record.setDoublefield(new Double(44.55));
-            record.setFloatfield(new Float(66.77));
-            record.setIntegerfield(new Integer(8));
+            record.setDoublefield(44.55);
+            record.setFloatfield(66.77f);
+            record.setIntegerfield(8);
             dao.insert(record);
 
             record = new Fieldsonly();
-            record.setDoublefield(new Double(88.99));
-            record.setFloatfield(new Float(100.111));
-            record.setIntegerfield(new Integer(9));
+            record.setDoublefield(88.99);
+            record.setFloatfield(100.111f);
+            record.setIntegerfield(9);
             dao.insert(record);
 
             FieldsonlyExample example = new FieldsonlyExample();
-            example.setIntegerfield(new Integer(5));
+            example.setIntegerfield(5);
             example
                     .setIntegerfield_Indicator(FieldsonlyExample.EXAMPLE_GREATER_THAN);
 
@@ -173,8 +173,8 @@ public class HierarchicalLegacyTests extends BaseTest {
 
         try {
             PkonlyKey key = new PkonlyKey();
-            key.setId(new Integer(1));
-            key.setSeqNum(new Integer(3));
+            key.setId(1);
+            key.setSeqNum(3);
             dao.insert(key);
 
             PkonlyExample example = new PkonlyExample();
@@ -194,13 +194,13 @@ public class HierarchicalLegacyTests extends BaseTest {
 
         try {
             PkonlyKey key = new PkonlyKey();
-            key.setId(new Integer(1));
-            key.setSeqNum(new Integer(3));
+            key.setId(1);
+            key.setSeqNum(3);
             dao.insert(key);
 
             key = new PkonlyKey();
-            key.setId(new Integer(5));
-            key.setSeqNum(new Integer(6));
+            key.setId(5);
+            key.setSeqNum(6);
             dao.insert(key);
 
             PkonlyExample example = new PkonlyExample();
@@ -208,8 +208,8 @@ public class HierarchicalLegacyTests extends BaseTest {
             assertEquals(2, answer.size());
 
             key = new PkonlyKey();
-            key.setId(new Integer(5));
-            key.setSeqNum(new Integer(6));
+            key.setId(5);
+            key.setSeqNum(6);
             int rows = dao.deleteByPrimaryKey(key);
             assertEquals(1, rows);
 
@@ -225,18 +225,18 @@ public class HierarchicalLegacyTests extends BaseTest {
 
         try {
             PkonlyKey key = new PkonlyKey();
-            key.setId(new Integer(1));
-            key.setSeqNum(new Integer(3));
+            key.setId(1);
+            key.setSeqNum(3);
             dao.insert(key);
 
             key = new PkonlyKey();
-            key.setId(new Integer(5));
-            key.setSeqNum(new Integer(6));
+            key.setId(5);
+            key.setSeqNum(6);
             dao.insert(key);
 
             key = new PkonlyKey();
-            key.setId(new Integer(7));
-            key.setSeqNum(new Integer(8));
+            key.setId(7);
+            key.setSeqNum(8);
             dao.insert(key);
 
             PkonlyExample example = new PkonlyExample();
@@ -258,18 +258,18 @@ public class HierarchicalLegacyTests extends BaseTest {
 
         try {
             PkonlyKey key = new PkonlyKey();
-            key.setId(new Integer(1));
-            key.setSeqNum(new Integer(3));
+            key.setId(1);
+            key.setSeqNum(3);
             dao.insert(key);
 
             key = new PkonlyKey();
-            key.setId(new Integer(5));
-            key.setSeqNum(new Integer(6));
+            key.setId(5);
+            key.setSeqNum(6);
             dao.insert(key);
 
             key = new PkonlyKey();
-            key.setId(new Integer(7));
-            key.setSeqNum(new Integer(8));
+            key.setId(7);
+            key.setSeqNum(8);
             dao.insert(key);
 
             PkonlyExample example = new PkonlyExample();
@@ -288,13 +288,13 @@ public class HierarchicalLegacyTests extends BaseTest {
         try {
             Pkfields record = new Pkfields();
             record.setDatefield(new Date());
-            record.setDecimal100field(new Long(10L));
+            record.setDecimal100field(10L);
             record.setDecimal155field(new BigDecimal("15.12345"));
-            record.setDecimal30field(new Short((short) 3));
-            record.setDecimal60field(new Integer(6));
+            record.setDecimal30field((short) 3);
+            record.setDecimal60field(6);
             record.setFirstname("Jeff");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(2));
+            record.setId1(1);
+            record.setId2(2);
             record.setLastname("Butler");
             record.setTimefield(new Date());
             record.setTimestampfield(new Date());
@@ -302,8 +302,8 @@ public class HierarchicalLegacyTests extends BaseTest {
             dao.insert(record);
 
             PkfieldsKey key = new PkfieldsKey();
-            key.setId1(new Integer(1));
-            key.setId2(new Integer(2));
+            key.setId1(1);
+            key.setId2(2);
 
             Pkfields returnedRecord = dao.selectByPrimaryKey(key);
             assertNotNull(returnedRecord);
@@ -338,8 +338,8 @@ public class HierarchicalLegacyTests extends BaseTest {
             Pkfields record = new Pkfields();
             record.setFirstname("Jeff");
             record.setLastname("Smith");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(2));
+            record.setId1(1);
+            record.setId2(2);
 
             dao.insert(record);
 
@@ -350,8 +350,8 @@ public class HierarchicalLegacyTests extends BaseTest {
             assertEquals(1, rows);
 
             PkfieldsKey key = new PkfieldsKey();
-            key.setId1(new Integer(1));
-            key.setId2(new Integer(2));
+            key.setId1(1);
+            key.setId2(2);
 
             Pkfields record2 = dao.selectByPrimaryKey(key);
 
@@ -371,24 +371,24 @@ public class HierarchicalLegacyTests extends BaseTest {
             Pkfields record = new Pkfields();
             record.setFirstname("Jeff");
             record.setLastname("Smith");
-            record.setDecimal60field(new Integer(5));
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(2));
+            record.setDecimal60field(5);
+            record.setId1(1);
+            record.setId2(2);
 
             dao.insert(record);
 
             Pkfields newRecord = new Pkfields();
-            newRecord.setId1(new Integer(1));
-            newRecord.setId2(new Integer(2));
+            newRecord.setId1(1);
+            newRecord.setId2(2);
             newRecord.setFirstname("Scott");
-            newRecord.setDecimal60field(new Integer(4));
+            newRecord.setDecimal60field(4);
 
             int rows = dao.updateByPrimaryKeySelective(newRecord);
             assertEquals(1, rows);
 
             PkfieldsKey key = new PkfieldsKey();
-            key.setId1(new Integer(1));
-            key.setId2(new Integer(2));
+            key.setId1(1);
+            key.setId2(2);
 
             Pkfields returnedRecord = dao.selectByPrimaryKey(key);
 
@@ -423,14 +423,14 @@ public class HierarchicalLegacyTests extends BaseTest {
             Pkfields record = new Pkfields();
             record.setFirstname("Jeff");
             record.setLastname("Smith");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(2));
+            record.setId1(1);
+            record.setId2(2);
 
             dao.insert(record);
 
             PkfieldsKey key = new PkfieldsKey();
-            key.setId1(new Integer(1));
-            key.setId2(new Integer(2));
+            key.setId1(1);
+            key.setId2(2);
 
             int rows = dao.deleteByPrimaryKey(key);
             assertEquals(1, rows);
@@ -450,15 +450,15 @@ public class HierarchicalLegacyTests extends BaseTest {
             Pkfields record = new Pkfields();
             record.setFirstname("Jeff");
             record.setLastname("Smith");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(2));
+            record.setId1(1);
+            record.setId2(2);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Bob");
             record.setLastname("Jones");
-            record.setId1(new Integer(3));
-            record.setId2(new Integer(4));
+            record.setId1(3);
+            record.setId2(4);
 
             dao.insert(record);
 
@@ -487,20 +487,20 @@ public class HierarchicalLegacyTests extends BaseTest {
             Pkfields record = new Pkfields();
             record.setFirstname("Jeff");
             record.setLastname("Smith");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(2));
+            record.setId1(1);
+            record.setId2(2);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Bob");
             record.setLastname("Jones");
-            record.setId1(new Integer(3));
-            record.setId2(new Integer(4));
+            record.setId1(3);
+            record.setId2(4);
             dao.insert(record);
 
             PkfieldsKey key = new PkfieldsKey();
-            key.setId1(new Integer(3));
-            key.setId2(new Integer(4));
+            key.setId1(3);
+            key.setId2(4);
             Pkfields newRecord = dao.selectByPrimaryKey(key);
 
             assertNotNull(newRecord);
@@ -520,21 +520,21 @@ public class HierarchicalLegacyTests extends BaseTest {
             Pkfields record = new Pkfields();
             record.setFirstname("Jeff");
             record.setLastname("Smith");
-            record.setId1(new Integer(1));
-            record.setId2(new Integer(2));
+            record.setId1(1);
+            record.setId2(2);
             dao.insert(record);
 
             record = new Pkfields();
             record.setFirstname("Bob");
             record.setLastname("Jones");
-            record.setId1(new Integer(3));
-            record.setId2(new Integer(4));
+            record.setId1(3);
+            record.setId2(4);
             dao.insert(record);
 
             PkfieldsExample example = new PkfieldsExample();
-            example.setId1(new Integer(3));
+            example.setId1(3);
             example.setId1_Indicator(PkfieldsExample.EXAMPLE_EQUALS);
-            example.setId2(new Integer(4));
+            example.setId2(4);
             example.setId2_Indicator(PkfieldsExample.EXAMPLE_EQUALS);
 
             List answer = dao.selectByExample(example);
@@ -621,7 +621,7 @@ public class HierarchicalLegacyTests extends BaseTest {
 
         try {
             PkblobsWithBLOBs record = new PkblobsWithBLOBs();
-            record.setId(new Integer(3));
+            record.setId(3);
             record.setBlob1(generateRandomBlob());
             record.setBlob2(generateRandomBlob());
             dao.insert(record);
@@ -646,20 +646,20 @@ public class HierarchicalLegacyTests extends BaseTest {
 
         try {
             PkblobsWithBLOBs record = new PkblobsWithBLOBs();
-            record.setId(new Integer(3));
+            record.setId(3);
             record.setBlob1(generateRandomBlob());
             record.setBlob2(generateRandomBlob());
             dao.insert(record);
 
             record = new PkblobsWithBLOBs();
-            record.setId(new Integer(3));
+            record.setId(3);
             record.setBlob1(generateRandomBlob());
             record.setBlob2(generateRandomBlob());
             int rows = dao.updateByPrimaryKey(record);
             assertEquals(1, rows);
 
             PkblobsKey key = new PkblobsKey();
-            key.setId(new Integer(3));
+            key.setId(3);
 
             PkblobsWithBLOBs newRecord = dao.selectByPrimaryKey(key);
 
@@ -677,18 +677,18 @@ public class HierarchicalLegacyTests extends BaseTest {
 
         try {
             PkblobsWithBLOBs record = new PkblobsWithBLOBs();
-            record.setId(new Integer(3));
+            record.setId(3);
             record.setBlob1(generateRandomBlob());
             record.setBlob2(generateRandomBlob());
             dao.insert(record);
 
             PkblobsWithBLOBs newRecord = new PkblobsWithBLOBs();
-            newRecord.setId(new Integer(3));
+            newRecord.setId(3);
             newRecord.setBlob2(generateRandomBlob());
             dao.updateByPrimaryKeySelective(newRecord);
 
             PkblobsKey key = new PkblobsKey();
-            key.setId(new Integer(3));
+            key.setId(3);
 
             PkblobsWithBLOBs returnedRecord = dao.selectByPrimaryKey(key);
             assertNotNull(returnedRecord);
@@ -707,7 +707,7 @@ public class HierarchicalLegacyTests extends BaseTest {
 
         try {
             PkblobsWithBLOBs record = new PkblobsWithBLOBs();
-            record.setId(new Integer(3));
+            record.setId(3);
             record.setBlob1(generateRandomBlob());
             record.setBlob2(generateRandomBlob());
             dao.insert(record);
@@ -717,7 +717,7 @@ public class HierarchicalLegacyTests extends BaseTest {
             assertEquals(1, answer.size());
 
             PkblobsKey key = new PkblobsKey();
-            key.setId(new Integer(3));
+            key.setId(3);
             int rows = dao.deleteByPrimaryKey(key);
             assertEquals(1, rows);
 
@@ -734,13 +734,13 @@ public class HierarchicalLegacyTests extends BaseTest {
 
         try {
             PkblobsWithBLOBs record = new PkblobsWithBLOBs();
-            record.setId(new Integer(3));
+            record.setId(3);
             record.setBlob1(generateRandomBlob());
             record.setBlob2(generateRandomBlob());
             dao.insert(record);
 
             record = new PkblobsWithBLOBs();
-            record.setId(new Integer(6));
+            record.setId(6);
             record.setBlob1(generateRandomBlob());
             record.setBlob2(generateRandomBlob());
             dao.insert(record);
@@ -750,7 +750,7 @@ public class HierarchicalLegacyTests extends BaseTest {
             assertEquals(2, answer.size());
 
             example = new PkblobsExample();
-            example.setId(new Integer(4));
+            example.setId(4);
             example.setId_Indicator(PkblobsExample.EXAMPLE_LESS_THAN);
             int rows = dao.deleteByExample(example);
             assertEquals(1, rows);
@@ -768,19 +768,19 @@ public class HierarchicalLegacyTests extends BaseTest {
 
         try {
             PkblobsWithBLOBs record = new PkblobsWithBLOBs();
-            record.setId(new Integer(3));
+            record.setId(3);
             record.setBlob1(generateRandomBlob());
             record.setBlob2(generateRandomBlob());
             dao.insert(record);
 
             record = new PkblobsWithBLOBs();
-            record.setId(new Integer(6));
+            record.setId(6);
             record.setBlob1(generateRandomBlob());
             record.setBlob2(generateRandomBlob());
             dao.insert(record);
 
             PkblobsKey key = new PkblobsKey();
-            key.setId(new Integer(6));
+            key.setId(6);
             PkblobsWithBLOBs newRecord = dao.selectByPrimaryKey(key);
             assertNotNull(newRecord);
             assertEquals(record.getId(), newRecord.getId());
@@ -796,19 +796,19 @@ public class HierarchicalLegacyTests extends BaseTest {
 
         try {
             PkblobsWithBLOBs record = new PkblobsWithBLOBs();
-            record.setId(new Integer(3));
+            record.setId(3);
             record.setBlob1(generateRandomBlob());
             record.setBlob2(generateRandomBlob());
             dao.insert(record);
 
             record = new PkblobsWithBLOBs();
-            record.setId(new Integer(6));
+            record.setId(6);
             record.setBlob1(generateRandomBlob());
             record.setBlob2(generateRandomBlob());
             dao.insert(record);
 
             PkblobsExample example = new PkblobsExample();
-            example.setId(new Integer(4));
+            example.setId(4);
             example.setId_Indicator(PkblobsExample.EXAMPLE_GREATER_THAN);
             List answer = dao.selectByExampleWithoutBLOBs(example);
 
@@ -827,19 +827,19 @@ public class HierarchicalLegacyTests extends BaseTest {
 
         try {
             PkblobsWithBLOBs record = new PkblobsWithBLOBs();
-            record.setId(new Integer(3));
+            record.setId(3);
             record.setBlob1(generateRandomBlob());
             record.setBlob2(generateRandomBlob());
             dao.insert(record);
 
             record = new PkblobsWithBLOBs();
-            record.setId(new Integer(6));
+            record.setId(6);
             record.setBlob1(generateRandomBlob());
             record.setBlob2(generateRandomBlob());
             dao.insert(record);
 
             PkblobsExample example = new PkblobsExample();
-            example.setId(new Integer(4));
+            example.setId(4);
             example.setId_Indicator(PkblobsExample.EXAMPLE_GREATER_THAN);
             List answer = dao.selectByExampleWithBLOBs(example);
 
@@ -859,8 +859,8 @@ public class HierarchicalLegacyTests extends BaseTest {
 
         try {
             PkfieldsblobsWithBLOBs record = new PkfieldsblobsWithBLOBs();
-            record.setId1(new Integer(3));
-            record.setId2(new Integer(4));
+            record.setId1(3);
+            record.setId2(4);
             record.setFirstname("Jeff");
             record.setLastname("Smith");
             record.setBlob1(generateRandomBlob());
@@ -888,16 +888,16 @@ public class HierarchicalLegacyTests extends BaseTest {
 
         try {
             PkfieldsblobsWithBLOBs record = new PkfieldsblobsWithBLOBs();
-            record.setId1(new Integer(3));
-            record.setId2(new Integer(4));
+            record.setId1(3);
+            record.setId2(4);
             record.setFirstname("Jeff");
             record.setLastname("Smith");
             record.setBlob1(generateRandomBlob());
             dao.insert(record);
 
             PkfieldsblobsWithBLOBs updateRecord = new PkfieldsblobsWithBLOBs();
-            updateRecord.setId1(new Integer(3));
-            updateRecord.setId2(new Integer(4));
+            updateRecord.setId1(3);
+            updateRecord.setId2(4);
             updateRecord.setFirstname("Scott");
             updateRecord.setLastname("Jones");
             updateRecord.setBlob1(generateRandomBlob());
@@ -906,8 +906,8 @@ public class HierarchicalLegacyTests extends BaseTest {
             assertEquals(1, rows);
 
             PkfieldsblobsKey key = new PkfieldsblobsKey();
-            key.setId1(new Integer(3));
-            key.setId2(new Integer(4));
+            key.setId1(3);
+            key.setId2(4);
             PkfieldsblobsWithBLOBs newRecord = dao.selectByPrimaryKey(key);
             assertEquals(updateRecord.getFirstname(), newRecord.getFirstname());
             assertEquals(updateRecord.getLastname(), newRecord.getLastname());
@@ -925,16 +925,16 @@ public class HierarchicalLegacyTests extends BaseTest {
 
         try {
             PkfieldsblobsWithBLOBs record = new PkfieldsblobsWithBLOBs();
-            record.setId1(new Integer(3));
-            record.setId2(new Integer(4));
+            record.setId1(3);
+            record.setId2(4);
             record.setFirstname("Jeff");
             record.setLastname("Smith");
             record.setBlob1(generateRandomBlob());
             dao.insert(record);
 
             Pkfieldsblobs updateRecord = new Pkfieldsblobs();
-            updateRecord.setId1(new Integer(3));
-            updateRecord.setId2(new Integer(4));
+            updateRecord.setId1(3);
+            updateRecord.setId2(4);
             updateRecord.setFirstname("Scott");
             updateRecord.setLastname("Jones");
 
@@ -942,8 +942,8 @@ public class HierarchicalLegacyTests extends BaseTest {
             assertEquals(1, rows);
 
             PkfieldsblobsKey key = new PkfieldsblobsKey();
-            key.setId1(new Integer(3));
-            key.setId2(new Integer(4));
+            key.setId1(3);
+            key.setId2(4);
             PkfieldsblobsWithBLOBs newRecord = dao.selectByPrimaryKey(key);
             assertEquals(updateRecord.getFirstname(), newRecord.getFirstname());
             assertEquals(updateRecord.getLastname(), newRecord.getLastname());
@@ -960,24 +960,24 @@ public class HierarchicalLegacyTests extends BaseTest {
 
         try {
             PkfieldsblobsWithBLOBs record = new PkfieldsblobsWithBLOBs();
-            record.setId1(new Integer(3));
-            record.setId2(new Integer(4));
+            record.setId1(3);
+            record.setId2(4);
             record.setFirstname("Jeff");
             record.setLastname("Smith");
             record.setBlob1(generateRandomBlob());
             dao.insert(record);
 
             PkfieldsblobsWithBLOBs updateRecord = new PkfieldsblobsWithBLOBs();
-            updateRecord.setId1(new Integer(3));
-            updateRecord.setId2(new Integer(4));
+            updateRecord.setId1(3);
+            updateRecord.setId2(4);
             updateRecord.setLastname("Jones");
 
             int rows = dao.updateByPrimaryKeySelective(updateRecord);
             assertEquals(1, rows);
 
             PkfieldsblobsKey key = new PkfieldsblobsKey();
-            key.setId1(new Integer(3));
-            key.setId2(new Integer(4));
+            key.setId1(3);
+            key.setId2(4);
             PkfieldsblobsWithBLOBs returnedRecord = dao.selectByPrimaryKey(key);
             assertEquals(record.getFirstname(), returnedRecord.getFirstname());
             assertEquals(updateRecord.getLastname(), returnedRecord
@@ -996,16 +996,16 @@ public class HierarchicalLegacyTests extends BaseTest {
 
         try {
             PkfieldsblobsWithBLOBs record = new PkfieldsblobsWithBLOBs();
-            record.setId1(new Integer(3));
-            record.setId2(new Integer(4));
+            record.setId1(3);
+            record.setId2(4);
             record.setFirstname("Jeff");
             record.setLastname("Smith");
             record.setBlob1(generateRandomBlob());
             dao.insert(record);
 
             record = new PkfieldsblobsWithBLOBs();
-            record.setId1(new Integer(5));
-            record.setId2(new Integer(6));
+            record.setId1(5);
+            record.setId2(6);
             record.setFirstname("Scott");
             record.setLastname("Jones");
             record.setBlob1(generateRandomBlob());
@@ -1016,8 +1016,8 @@ public class HierarchicalLegacyTests extends BaseTest {
             assertEquals(2, answer.size());
 
             PkfieldsblobsKey key = new PkfieldsblobsKey();
-            key.setId1(new Integer(5));
-            key.setId2(new Integer(6));
+            key.setId1(5);
+            key.setId2(6);
             int rows = dao.deleteByPrimaryKey(key);
             assertEquals(1, rows);
 
@@ -1034,16 +1034,16 @@ public class HierarchicalLegacyTests extends BaseTest {
 
         try {
             PkfieldsblobsWithBLOBs record = new PkfieldsblobsWithBLOBs();
-            record.setId1(new Integer(3));
-            record.setId2(new Integer(4));
+            record.setId1(3);
+            record.setId2(4);
             record.setFirstname("Jeff");
             record.setLastname("Smith");
             record.setBlob1(generateRandomBlob());
             dao.insert(record);
 
             record = new PkfieldsblobsWithBLOBs();
-            record.setId1(new Integer(5));
-            record.setId2(new Integer(6));
+            record.setId1(5);
+            record.setId2(6);
             record.setFirstname("Scott");
             record.setLastname("Jones");
             record.setBlob1(generateRandomBlob());
@@ -1054,7 +1054,7 @@ public class HierarchicalLegacyTests extends BaseTest {
             assertEquals(2, answer.size());
 
             example = new PkfieldsblobsExample();
-            example.setId1(new Integer(3));
+            example.setId1(3);
             example.setId1_Indicator(PkfieldsblobsExample.EXAMPLE_NOT_EQUALS);
             int rows = dao.deleteByExample(example);
             assertEquals(1, rows);
@@ -1072,16 +1072,16 @@ public class HierarchicalLegacyTests extends BaseTest {
 
         try {
             PkfieldsblobsWithBLOBs record = new PkfieldsblobsWithBLOBs();
-            record.setId1(new Integer(3));
-            record.setId2(new Integer(4));
+            record.setId1(3);
+            record.setId2(4);
             record.setFirstname("Jeff");
             record.setLastname("Smith");
             record.setBlob1(generateRandomBlob());
             dao.insert(record);
 
             record = new PkfieldsblobsWithBLOBs();
-            record.setId1(new Integer(5));
-            record.setId2(new Integer(6));
+            record.setId1(5);
+            record.setId2(6);
             record.setFirstname("Scott");
             record.setLastname("Jones");
             record.setBlob1(generateRandomBlob());
@@ -1092,8 +1092,8 @@ public class HierarchicalLegacyTests extends BaseTest {
             assertEquals(2, answer.size());
 
             PkfieldsblobsKey key = new PkfieldsblobsKey();
-            key.setId1(new Integer(5));
-            key.setId2(new Integer(6));
+            key.setId1(5);
+            key.setId2(6);
             PkfieldsblobsWithBLOBs newRecord = dao.selectByPrimaryKey(key);
             assertEquals(record.getId1(), newRecord.getId1());
             assertEquals(record.getId2(), newRecord.getId2());
@@ -1110,23 +1110,23 @@ public class HierarchicalLegacyTests extends BaseTest {
 
         try {
             PkfieldsblobsWithBLOBs record = new PkfieldsblobsWithBLOBs();
-            record.setId1(new Integer(3));
-            record.setId2(new Integer(4));
+            record.setId1(3);
+            record.setId2(4);
             record.setFirstname("Jeff");
             record.setLastname("Smith");
             record.setBlob1(generateRandomBlob());
             dao.insert(record);
 
             record = new PkfieldsblobsWithBLOBs();
-            record.setId1(new Integer(5));
-            record.setId2(new Integer(6));
+            record.setId1(5);
+            record.setId2(6);
             record.setFirstname("Scott");
             record.setLastname("Jones");
             record.setBlob1(generateRandomBlob());
             dao.insert(record);
 
             PkfieldsblobsExample example = new PkfieldsblobsExample();
-            example.setId2(new Integer(6));
+            example.setId2(6);
             example.setId2_Indicator(PkfieldsblobsExample.EXAMPLE_EQUALS);
             List answer = dao.selectByExampleWithoutBLOBs(example);
             assertEquals(1, answer.size());
@@ -1147,23 +1147,23 @@ public class HierarchicalLegacyTests extends BaseTest {
 
         try {
             PkfieldsblobsWithBLOBs record = new PkfieldsblobsWithBLOBs();
-            record.setId1(new Integer(3));
-            record.setId2(new Integer(4));
+            record.setId1(3);
+            record.setId2(4);
             record.setFirstname("Jeff");
             record.setLastname("Smith");
             record.setBlob1(generateRandomBlob());
             dao.insert(record);
 
             record = new PkfieldsblobsWithBLOBs();
-            record.setId1(new Integer(5));
-            record.setId2(new Integer(6));
+            record.setId1(5);
+            record.setId2(6);
             record.setFirstname("Scott");
             record.setLastname("Jones");
             record.setBlob1(generateRandomBlob());
             dao.insert(record);
 
             PkfieldsblobsExample example = new PkfieldsblobsExample();
-            example.setId2(new Integer(6));
+            example.setId2(6);
             example.setId2_Indicator(PkfieldsblobsExample.EXAMPLE_EQUALS);
             List answer = dao.selectByExampleWithBLOBs(example);
             assertEquals(1, answer.size());
