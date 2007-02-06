@@ -22,21 +22,21 @@ import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
  * @author Jeff Butler
  */
 public class ResolvedJavaType {
-	private FullyQualifiedJavaType fullyQualifiedJavaType;
+    private FullyQualifiedJavaType fullyQualifiedJavaType;
 
-	private String jdbcTypeName;
+    private String jdbcTypeName;
 
-	public ResolvedJavaType() {
-		super();
-	}
+    public ResolvedJavaType() {
+        super();
+    }
 
-	public String getJdbcTypeName() {
-		return jdbcTypeName;
-	}
+    public String getJdbcTypeName() {
+        return jdbcTypeName;
+    }
 
-	public void setJdbcTypeName(String jdbcTypeName) {
-		this.jdbcTypeName = jdbcTypeName;
-	}
+    public void setJdbcTypeName(String jdbcTypeName) {
+        this.jdbcTypeName = jdbcTypeName;
+    }
     /**
      * @return Returns the fullyQualifiedJavaType.
      */

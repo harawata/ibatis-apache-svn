@@ -175,7 +175,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
             method.addGetterComment(table, cd);
             method.setVisibility(JavaVisibility.PUBLIC);
             method.setReturnType(fqjt);
-            method.setName(JavaBeansUtil.getGetterMethodName(property));
+            method.setName(JavaBeansUtil.getGetterMethodName(field.getName(), field.getType()));
             sb.setLength(0);
             sb.append("return "); //$NON-NLS-1$
             sb.append(property);
@@ -900,7 +900,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(field.getType());
-        method.setName(JavaBeansUtil.getGetterMethodName(field.getName()));
+        method.setName(JavaBeansUtil.getGetterMethodName(field.getName(), field.getType()));
         method.addBodyLine("return criteriaWithoutValue;"); //$NON-NLS-1$
         answer.addMethod(method);
 
@@ -916,7 +916,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(field.getType());
-        method.setName(JavaBeansUtil.getGetterMethodName(field.getName()));
+        method.setName(JavaBeansUtil.getGetterMethodName(field.getName(), field.getType()));
         method.addBodyLine("return criteriaWithSingleValue;"); //$NON-NLS-1$
         answer.addMethod(method);
 
@@ -929,7 +929,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(field.getType());
-        method.setName(JavaBeansUtil.getGetterMethodName(field.getName()));
+        method.setName(JavaBeansUtil.getGetterMethodName(field.getName(), field.getType()));
         method.addBodyLine("return criteriaWithListValue;"); //$NON-NLS-1$
         answer.addMethod(method);
 
@@ -942,7 +942,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(field.getType());
-        method.setName(JavaBeansUtil.getGetterMethodName(field.getName()));
+        method.setName(JavaBeansUtil.getGetterMethodName(field.getName(), field.getType()));
         method.addBodyLine("return criteriaWithBetweenValue;"); //$NON-NLS-1$
         answer.addMethod(method);
 
@@ -1273,7 +1273,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         Method method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(field.getType());
-        method.setName(JavaBeansUtil.getGetterMethodName(field.getName()));
+        method.setName(JavaBeansUtil.getGetterMethodName(field.getName(), field.getType()));
         sb.insert(0, "return "); //$NON-NLS-1$
         sb.append(';');
         method.addBodyLine(sb.toString());
@@ -1293,7 +1293,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(field.getType());
-        method.setName(JavaBeansUtil.getGetterMethodName(field.getName()));
+        method.setName(JavaBeansUtil.getGetterMethodName(field.getName(), field.getType()));
         sb.insert(0, "return "); //$NON-NLS-1$
         sb.append(';');
         method.addBodyLine(sb.toString());
@@ -1313,7 +1313,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(field.getType());
-        method.setName(JavaBeansUtil.getGetterMethodName(field.getName()));
+        method.setName(JavaBeansUtil.getGetterMethodName(field.getName(), field.getType()));
         sb.insert(0, "return "); //$NON-NLS-1$
         sb.append(';');
         method.addBodyLine(sb.toString());

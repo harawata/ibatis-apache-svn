@@ -15,6 +15,10 @@
  */
 package org.apache.ibatis.abator.internal.util;
 
+import java.util.Locale;
+
+import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
+
 /**
  * @author Jeff Butler
  */
@@ -27,25 +31,65 @@ public class JavaBeansUtil {
 		super();
 	}
 
-	public static String getGetterMethodName(String property) {
+    /**
+     * JavaBeans rules:
+     * 
+     * eMail     > geteMail()
+     * firstName > getFirstName()
+     * URL       > getURL()
+     * XAxis     > getXAxis()
+     * a         > getA()
+     * B         > invalid - this method assumes that this is not the case.  Call
+     *             getValidPropertyName first.
+     * Yaxis     > invalid - this method assumes that this is not the case.  Call
+     *             getValidPropertyName first.
+     * 
+     * @param property
+     * @return
+     */
+	public static String getGetterMethodName(String property, FullyQualifiedJavaType fullyQualifiedJavaType) {
 		StringBuffer sb = new StringBuffer();
 
 		sb.append(property);
 		if (Character.isLowerCase(sb.charAt(0))) {
-			sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
+            if (sb.length() == 1 || !Character.isUpperCase(sb.charAt(1))) {
+                sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
+            }
 		}
 
-		sb.insert(0, "get"); //$NON-NLS-1$
+        if (fullyQualifiedJavaType.equals(FullyQualifiedJavaType.getBooleanPrimitiveInstance())) {
+            sb.insert(0, "is"); //$NON-NLS-1$
+        } else {
+            sb.insert(0, "get"); //$NON-NLS-1$
+        }
 
 		return sb.toString();
 	}
 
+    /**
+     * JavaBeans rules:
+     * 
+     * eMail     > seteMail()
+     * firstName > setFirstName()
+     * URL       > setURL()
+     * XAxis     > setXAxis()
+     * a         > setA()
+     * B         > invalid - this method assumes that this is not the case.  Call
+     *             getValidPropertyName first.
+     * Yaxis     > invalid - this method assumes that this is not the case.  Call
+     *             getValidPropertyName first.
+     * 
+     * @param property
+     * @return
+     */
 	public static String getSetterMethodName(String property) {
 		StringBuffer sb = new StringBuffer();
 
 		sb.append(property);
 		if (Character.isLowerCase(sb.charAt(0))) {
-			sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
+            if (sb.length() == 1 || !Character.isUpperCase(sb.charAt(1))) {
+                sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
+            }
 		}
 
 		sb.insert(0, "set"); //$NON-NLS-1$
@@ -93,28 +137,41 @@ public class JavaBeansUtil {
 	
 	/**
 	 * This method ensures that the specified input string is a valid
-	 * Java property name as iBATIS sees it.  The rules are as follows:
+	 * Java property name.  The rules are as follows:
 	 * 
 	 * 1. If the first character is lower case, then OK
 	 * 2. If the first two characters are upper case, then OK
 	 * 3. If the first character is upper case, and the second character is lower case,
 	 *    then the first character should be made lower case
 	 * 
+     * eMail     > eMail
+     * firstName > firstName
+     * URL       > URL
+     * XAxis     > XAxis
+     * a         > a
+     * B         > b
+     * Yaxis     > yaxis
+     *             
 	 * @param inputString
 	 * @return the valid poperty name
 	 */
 	public static String getValidPropertyName(String inputString) {
-	    if (inputString.length() < 2) {
-	        return inputString.toLowerCase();
-	    }
-	    
-	    if (Character.isUpperCase(inputString.charAt(0))
-	            && Character.isLowerCase(inputString.charAt(1))) {
-	        StringBuffer sb = new StringBuffer(inputString);
-			sb.setCharAt(0, Character.toLowerCase(sb.charAt(0)));
-	        return sb.toString();
+        String answer;
+        
+        if (inputString == null) {
+            answer = null;
+        } else if (inputString.length() < 2) {
+	        answer = inputString.toLowerCase(Locale.US);
 	    } else {
-	        return inputString;
-	    }
+	        if (Character.isUpperCase(inputString.charAt(0))
+	            && !Character.isUpperCase(inputString.charAt(1))) {
+                    answer = inputString.substring(0, 1).toLowerCase(Locale.US) +
+                        inputString.substring(1);
+	        } else {
+                answer = inputString;
+            }
+        }
+        
+        return answer;
 	}
 }

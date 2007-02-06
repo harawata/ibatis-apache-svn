@@ -61,7 +61,11 @@ public class AbatorContext extends PropertyHolder {
     private ModelType defaultModelType;
     
     private String configuredGeneratorSet;
+    
+    private char beginingDelimiter = '\"';
 	
+    private char endingDelimiter = '\"';
+    
     /**
      * Constructs an AbatorContext object.
      * 
@@ -248,6 +252,9 @@ public class AbatorContext extends PropertyHolder {
 		try {
 			callback.startSubTask(Messages.getString("Progress.0")); //$NON-NLS-1$
 			connection = getConnection();
+            
+            DatabaseIntrospector databaseIntrospector =
+                new DatabaseIntrospector(this, connection.getMetaData(), javaTypeResolver, warnings);
 			
 			Iterator iter = tableConfigurations.iterator();
 			while (iter.hasNext()) {
@@ -263,7 +270,7 @@ public class AbatorContext extends PropertyHolder {
 
 				Collection introspectedTables;
 				callback.startSubTask(Messages.getString("Progress.1", tableName)); //$NON-NLS-1$
-                introspectedTables  = DatabaseIntrospector.introspectTables(connection, tc, javaTypeResolver, warnings);
+                introspectedTables  = databaseIntrospector.introspectTables(tc);
 				callback.checkCancel();
                 
                 Iterator iter2 = introspectedTables.iterator();

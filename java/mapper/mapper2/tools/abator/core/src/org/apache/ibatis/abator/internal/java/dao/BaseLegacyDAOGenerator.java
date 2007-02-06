@@ -331,7 +331,7 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
             method.addSuppressTypeWarningsAnnotation();
         }
         method.setReturnType(FullyQualifiedJavaType.getNewMapInstance());
-        sb.append(JavaBeansUtil.getGetterMethodName(cd.getJavaProperty()));
+        sb.append(JavaBeansUtil.getGetterMethodName(cd.getJavaProperty(), method.getReturnType()));
         sb.append("ExampleParms"); //$NON-NLS-1$
         method.setName(sb.toString());
 
@@ -343,7 +343,7 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
         sb.setLength(0);
         sb.append("switch (example."); //$NON-NLS-1$
         String property = cd.getJavaProperty() + "_Indicator"; //$NON-NLS-1$
-        sb.append(JavaBeansUtil.getGetterMethodName(property));
+        sb.append(JavaBeansUtil.getGetterMethodName(property, FullyQualifiedJavaType.getIntInstance()));
         sb.append("()) {"); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
 
@@ -397,12 +397,12 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
                     sb.append('(');
                     sb.append("example."); //$NON-NLS-1$
                     sb.append(JavaBeansUtil
-                            .getGetterMethodName(exampleProperty));
+                            .getGetterMethodName(exampleProperty, cd.getResolvedJavaType().getFullyQualifiedJavaType()));
                     sb.append("()));"); //$NON-NLS-1$
                 } else {
                     sb.append("example."); //$NON-NLS-1$
                     sb.append(JavaBeansUtil
-                            .getGetterMethodName(exampleProperty));
+                            .getGetterMethodName(exampleProperty, cd.getResolvedJavaType().getFullyQualifiedJavaType()));
                     sb.append("());"); //$NON-NLS-1$
                 }
                 method.addBodyLine(sb.toString());

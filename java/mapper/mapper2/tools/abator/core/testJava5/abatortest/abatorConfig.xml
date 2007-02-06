@@ -21,7 +21,7 @@
       <property name="enableSubPackages" value="true" />
     </sqlMapGenerator>
 
-    <daoGenerator type="IBATIS" targetPackage="abatortest.generated.flat.java5.dao"  targetProject="${generated.source.dir.java5}">
+    <daoGenerator type="GENERIC-CI" targetPackage="abatortest.generated.flat.java5.dao"  targetProject="${generated.source.dir.java5}">
       <property name="enableSubPackages" value="true" />
     </daoGenerator>
 
@@ -49,7 +49,7 @@
       <property name="enableSubPackages" value="true" />
     </sqlMapGenerator>
 
-    <daoGenerator type="IBATIS" targetPackage="abatortest.generated.flat.java2.dao"  targetProject="${generated.source.dir.java5}">
+    <daoGenerator type="GENERIC-CI" targetPackage="abatortest.generated.flat.java2.dao"  targetProject="${generated.source.dir.java5}">
       <property name="enableSubPackages" value="true" />
     </daoGenerator>
 
@@ -77,7 +77,7 @@
       <property name="enableSubPackages" value="true" />
     </sqlMapGenerator>
 
-    <daoGenerator type="IBATIS" targetPackage="abatortest.generated.flat.legacy.dao"  targetProject="${generated.source.dir.java5}">
+    <daoGenerator type="GENERIC-CI" targetPackage="abatortest.generated.flat.legacy.dao"  targetProject="${generated.source.dir.java5}">
       <property name="enableSubPackages" value="true" />
     </daoGenerator>
 
@@ -103,7 +103,7 @@
       <property name="enableSubPackages" value="true" />
     </sqlMapGenerator>
 
-    <daoGenerator type="IBATIS" targetPackage="abatortest.generated.hierarchical.java5.dao"  targetProject="${generated.source.dir.java5}">
+    <daoGenerator type="GENERIC-CI" targetPackage="abatortest.generated.hierarchical.java5.dao"  targetProject="${generated.source.dir.java5}">
       <property name="enableSubPackages" value="true" />
     </daoGenerator>
 
@@ -131,7 +131,7 @@
       <property name="enableSubPackages" value="true" />
     </sqlMapGenerator>
 
-    <daoGenerator type="IBATIS" targetPackage="abatortest.generated.hierarchical.java2.dao"  targetProject="${generated.source.dir.java5}">
+    <daoGenerator type="GENERIC-CI" targetPackage="abatortest.generated.hierarchical.java2.dao"  targetProject="${generated.source.dir.java5}">
       <property name="enableSubPackages" value="true" />
     </daoGenerator>
 
@@ -159,7 +159,7 @@
       <property name="enableSubPackages" value="true" />
     </sqlMapGenerator>
 
-    <daoGenerator type="IBATIS" targetPackage="abatortest.generated.hierarchical.legacy.dao"  targetProject="${generated.source.dir.java5}">
+    <daoGenerator type="GENERIC-CI" targetPackage="abatortest.generated.hierarchical.legacy.dao"  targetProject="${generated.source.dir.java5}">
       <property name="enableSubPackages" value="true" />
     </daoGenerator>
 
@@ -185,7 +185,7 @@
       <property name="enableSubPackages" value="true" />
     </sqlMapGenerator>
 
-    <daoGenerator type="IBATIS" targetPackage="abatortest.generated.conditional.java5.dao"  targetProject="${generated.source.dir.java5}">
+    <daoGenerator type="GENERIC-CI" targetPackage="abatortest.generated.conditional.java5.dao"  targetProject="${generated.source.dir.java5}">
       <property name="enableSubPackages" value="true" />
     </daoGenerator>
 
@@ -213,7 +213,7 @@
       <property name="enableSubPackages" value="true" />
     </sqlMapGenerator>
 
-    <daoGenerator type="IBATIS" targetPackage="abatortest.generated.conditional.java2.dao"  targetProject="${generated.source.dir.java5}">
+    <daoGenerator type="GENERIC-CI" targetPackage="abatortest.generated.conditional.java2.dao"  targetProject="${generated.source.dir.java5}">
       <property name="enableSubPackages" value="true" />
     </daoGenerator>
 
@@ -241,7 +241,7 @@
       <property name="enableSubPackages" value="true" />
     </sqlMapGenerator>
 
-    <daoGenerator type="IBATIS" targetPackage="abatortest.generated.conditional.legacy.dao"  targetProject="${generated.source.dir.java5}">
+    <daoGenerator type="GENERIC-CI" targetPackage="abatortest.generated.conditional.legacy.dao"  targetProject="${generated.source.dir.java5}">
       <property name="enableSubPackages" value="true" />
     </daoGenerator>
 
@@ -266,7 +266,7 @@
     <sqlMapGenerator targetPackage="abatortest.generated.miscellaneous.xml"  targetProject="${generated.source.dir.java5}">
     </sqlMapGenerator>
 
-    <daoGenerator type="IBATIS" targetPackage="abatortest.generated.miscellaneous.dao"  targetProject="${generated.source.dir.java5}">
+    <daoGenerator type="GENERIC-CI" targetPackage="abatortest.generated.miscellaneous.dao"  targetProject="${generated.source.dir.java5}">
       <property name="rootInterface" value="abatortest.execute.miscellaneous.BaseInterface" />
       <property name="methodNameCalculator" value="EXTENDED"/>
     </daoGenerator>

@@ -27,8 +27,8 @@ import java.util.Random;
 
 import com.ibatis.common.jdbc.ScriptRunner;
 import com.ibatis.common.resources.Resources;
-import com.ibatis.dao.client.DaoManager;
-import com.ibatis.dao.client.DaoManagerBuilder;
+import com.ibatis.sqlmap.client.SqlMapClient;
+import com.ibatis.sqlmap.client.SqlMapClientBuilder;
 
 import junit.framework.TestCase;
 
@@ -38,13 +38,13 @@ import junit.framework.TestCase;
  */
 public abstract class BaseTest extends TestCase {
 
-    protected static DaoManager daoManager;
+    protected static SqlMapClient sqlMapClient;
     private static DateFormat dateOnlyFormat = SimpleDateFormat.getDateInstance();
     private static DateFormat timeOnlyFormat = SimpleDateFormat.getTimeInstance();
 
-    protected static void initDaoManager(String configFile, Properties props) throws Exception {
+    protected static void initSqlMapClient(String configFile, Properties props) throws Exception {
         Reader reader = Resources.getResourceAsReader(configFile);
-        daoManager = DaoManagerBuilder.buildDaoManager(reader, props);
+        sqlMapClient = SqlMapClientBuilder.buildSqlMapClient(reader, props);
         reader.close();
     }
 

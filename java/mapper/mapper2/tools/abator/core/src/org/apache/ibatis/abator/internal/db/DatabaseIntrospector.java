@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.abator.internal.db;
 
-import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,6 +28,7 @@ import java.util.StringTokenizer;
 import org.apache.ibatis.abator.api.FullyQualifiedTable;
 import org.apache.ibatis.abator.api.JavaTypeResolver;
 import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
+import org.apache.ibatis.abator.config.AbatorContext;
 import org.apache.ibatis.abator.config.ColumnOverride;
 import org.apache.ibatis.abator.config.GeneratedKey;
 import org.apache.ibatis.abator.config.TableConfiguration;
@@ -42,30 +42,37 @@ import org.apache.ibatis.abator.internal.util.messages.Messages;
  * @author Jeff Butler
  */
 public class DatabaseIntrospector {
+    
+    private DatabaseMetaData databaseMetaData;
+    private JavaTypeResolver javaTypeResolver;
+    private List warnings;
+    private AbatorContext abatorContext;
 
-    private DatabaseIntrospector() {
+    public DatabaseIntrospector(AbatorContext abatorContext, DatabaseMetaData databaseMetaData,
+            JavaTypeResolver javaTypeResolver, List warnings) {
         super();
+        this.abatorContext = abatorContext;
+        this.databaseMetaData = databaseMetaData;
+        this.javaTypeResolver = javaTypeResolver;
+        this.warnings = warnings;
     }
 
-    public static Collection introspectTables(Connection connection,
-            TableConfiguration tc, JavaTypeResolver javaTypeResolver,
-            List warnings) throws SQLException {
+    public Collection introspectTables(TableConfiguration tc) throws SQLException {
 
         Map introspectedTables = new HashMap();
-        DatabaseMetaData dbmd = connection.getMetaData();
         
         String localCatalog;
         String localSchema;
         String localTableName;
 
-        if (dbmd.storesLowerCaseIdentifiers()) {
+        if (databaseMetaData.storesLowerCaseIdentifiers()) {
             localCatalog = tc.getCatalog() == null ? null : tc.getCatalog()
                     .toLowerCase();
             localSchema = tc.getSchema() == null ? null : tc.getSchema()
                     .toLowerCase();
             localTableName = tc.getTableName() == null ? null : tc
                     .getTableName().toLowerCase();
-        } else if (dbmd.storesUpperCaseIdentifiers()) {
+        } else if (databaseMetaData.storesUpperCaseIdentifiers()) {
             localCatalog = tc.getCatalog() == null ? null : tc.getCatalog()
                     .toUpperCase();
             localSchema = tc.getSchema() == null ? null : tc.getSchema()
@@ -79,7 +86,7 @@ public class DatabaseIntrospector {
         }
 
         if (tc.isWildcardEscapingEnabled()) {
-            String escapeString = dbmd.getSearchStringEscape();
+            String escapeString = databaseMetaData.getSearchStringEscape();
             
             StringBuffer sb = new StringBuffer();
             StringTokenizer st;
@@ -109,7 +116,7 @@ public class DatabaseIntrospector {
             localTableName = sb.toString();
         }
 
-        ResultSet rs = dbmd.getColumns(localCatalog, localSchema,
+        ResultSet rs = databaseMetaData.getColumns(localCatalog, localSchema,
                 localTableName, null);
 
         int returnedColumns = 0;
@@ -121,8 +128,7 @@ public class DatabaseIntrospector {
             cd.setJdbcType(rs.getInt("DATA_TYPE")); //$NON-NLS-1$
             cd.setLength(rs.getInt("COLUMN_SIZE")); //$NON-NLS-1$
             cd.setActualColumnName(rs.getString("COLUMN_NAME")); //$NON-NLS-1$
-            cd
-                    .setNullable(rs.getInt("NULLABLE") == DatabaseMetaData.columnNullable); //$NON-NLS-1$
+            cd.setNullable(rs.getInt("NULLABLE") == DatabaseMetaData.columnNullable); //$NON-NLS-1$
             cd.setScale(rs.getInt("DECIMAL_DIGITS")); //$NON-NLS-1$
             cd.setTypeName(rs.getString("TYPE_NAME")); //$NON-NLS-1$
             
@@ -138,7 +144,9 @@ public class DatabaseIntrospector {
             FullyQualifiedTable table = new FullyQualifiedTable(
                     StringUtility.stringHasValue(tc.getCatalog()) ? catalog : null,
                     StringUtility.stringHasValue(tc.getSchema()) ? schema : null,
-                    tableName, tc.getDomainObjectName(), tc.getAlias(),
+                    tableName,
+                    tc.getDomainObjectName(),
+                    tc.getAlias(),
                     "true".equalsIgnoreCase((String) tc.getProperties().get("ignoreQualifiersAtRuntime")), //$NON-NLS-1$ //$NON-NLS-2$
                     (String) tc.getProperties().get("runtimeTableName"));//$NON-NLS-1$
             
@@ -223,7 +231,7 @@ public class DatabaseIntrospector {
         Iterator iter = introspectedTables.values().iterator();
         while (iter.hasNext()) {
             IntrospectedTableImpl it = (IntrospectedTableImpl) iter.next();
-            calculatePrimaryKey(dbmd, it, warnings);
+            calculatePrimaryKey(it);
         }
         
         // now introspectedTables has all the columns from all the 
@@ -250,19 +258,18 @@ public class DatabaseIntrospector {
             } else {
                 // now make sure that all columns called out in the configuration
                 // actually exist
-                reportIntrospectionWarnings(cds, tc, introspectedTable.getTable(), warnings);
+                reportIntrospectionWarnings(cds, tc, introspectedTable.getTable());
             }
         }
 
         return introspectedTables.values();
     }
 
-    private static void calculatePrimaryKey(DatabaseMetaData dbmd,
-            IntrospectedTableImpl introspectedTable, List warnings) {
+    private void calculatePrimaryKey(IntrospectedTableImpl introspectedTable) {
         ResultSet rs = null;
 
         try {
-            rs = dbmd.getPrimaryKeys(introspectedTable.getTable().getCatalog(),
+            rs = databaseMetaData.getPrimaryKeys(introspectedTable.getTable().getCatalog(),
                     introspectedTable.getTable().getSchema(),
                     introspectedTable.getTable().getTableName());
         } catch (SQLException e) {
@@ -284,7 +291,7 @@ public class DatabaseIntrospector {
         }
     }
 
-    private static void closeResultSet(ResultSet rs) {
+    private void closeResultSet(ResultSet rs) {
         if (rs != null) {
             try {
                 rs.close();
@@ -295,10 +302,10 @@ public class DatabaseIntrospector {
         }
     }
 
-    private static void reportIntrospectionWarnings(
+    private void reportIntrospectionWarnings(
             ColumnDefinitions columnDefinitions,
             TableConfiguration tableConfiguration, 
-            FullyQualifiedTable table, List warnings) {
+            FullyQualifiedTable table) {
         // make sure that every column listed in column overrides
         // actually exists in the table
         Iterator iter = tableConfiguration.getColumnOverrides();

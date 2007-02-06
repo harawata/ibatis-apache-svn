@@ -133,7 +133,7 @@ public class JavaModelGeneratorLegacyImpl extends JavaModelGeneratorJava2Impl im
             method.addComment(table);
             method.setVisibility(JavaVisibility.PUBLIC);
             method.setReturnType(FullyQualifiedJavaType.getIntInstance());
-            method.setName(JavaBeansUtil.getGetterMethodName(fieldName));
+            method.setName(JavaBeansUtil.getGetterMethodName(field.getName(), field.getType()));
             sb.setLength(0);
             sb.append("return "); //$NON-NLS-1$
             sb.append(fieldName);
