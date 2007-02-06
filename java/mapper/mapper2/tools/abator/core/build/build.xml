@@ -32,8 +32,10 @@
   <property name="work.dir" value="${basedir}/work" />
   <property name="work.classes" value="${work.dir}/bin" />
   <property name="work.javadoc" value="${work.dir}/javadoc" />
-  <property name="generated.source.dir.java5" value="${work.dir}/src/java5" />
-  <property name="generated.source.dir.java2" value="${work.dir}/src/java2" />
+  <property name="generated.source.dir.java2" value="${work.dir}/test/java2/src" />
+  <property name="generated.source.dir.java5" value="${work.dir}/test/java5/src" />
+  <property name="generated.bin.dir.java2" value="${work.dir}/test/java2/bin" />
+  <property name="generated.bin.dir.java5" value="${work.dir}/test/java5/bin" />
   <property name="reports.dir" value="${basedir}/reports" />
   <property name="reports.junit" value="${reports.dir}/junit" />
   
@@ -69,7 +71,7 @@
     </propertyfile>
   </target>
   
-  <target name="build.compile" depends="build.prepare">
+  <target name="build.compile" depends="build.prepare" unless="eclipse.running">
     <javac srcdir="${src.dir}"
     	destdir="${work.classes}"
     	deprecation="true" 
@@ -128,23 +130,17 @@
   <target name="test.prepare" depends="build.compile">
     <mkdir dir="${generated.source.dir.java2}"/>
     <mkdir dir="${generated.source.dir.java5}"/>
+    <mkdir dir="${generated.bin.dir.java2}"/>
+    <mkdir dir="${generated.bin.dir.java5}"/>
     <mkdir dir="${reports.dir}"/>
     <mkdir dir="${reports.junit}"/>
 	  	
-  	<copy todir="${generated.source.dir.java2}">
-  		<fileset dir="${basedir}/../testJava2" />
-  	</copy>
-  	
-	<copy todir="${generated.source.dir.java5}">
-		<fileset dir="${basedir}/../testJava5" />
-	</copy>
-
   	<!-- create the test database -->
   	<sql driver="org.hsqldb.jdbcDriver"
   		url="jdbc:hsqldb:mem:aname"
   		userid="sa"
   		password=""
-  		src="${generated.source.dir.java5}/abatortest/CreateDB.sql"/>
+  		src="${basedir}/../testJava5/abatortest/CreateDB.sql"/>
 	  	
   </target>
 	  
@@ -161,7 +157,7 @@
       </classpath>
     </taskdef>
   	
-  	<abator configfile="${generated.source.dir.java2}/abatortest/java2/abatorConfig.xml" >
+  	<abator configfile="${basedir}/../testJava2/abatortest/java2/abatorConfig.xml" >
   		<propertyset>
   			<propertyref name="generated.source.dir.java2"/>
   		</propertyset>
@@ -181,7 +177,7 @@
       </classpath>
     </taskdef>
   	
-  	<abator configfile="${generated.source.dir.java5}/abatortest/abatorConfig.xml" >
+  	<abator configfile="${basedir}/../testJava5/abatortest/abatorConfig.xml" >
   		<propertyset>
   			<propertyref name="generated.source.dir.java5"/>
   		</propertyset>
@@ -189,36 +185,66 @@
   </target>
 	
   <target name="test.compile.test.code.java2" depends="test.generate.test.code.java2">
-    <javac srcdir="${generated.source.dir.java2}"
+    <javac destdir="${generated.bin.dir.java2}"
     	deprecation="true" 
     	debug="true"
     	source="1.4"
     	target="1.4">
+      <src path="${generated.source.dir.java2}"/>
+      <src path="${basedir}/../testJava2"/>
     </javac>
+
+    <!-- copy non-compilable resources -->    
+    <copy todir="${generated.bin.dir.java2}">
+      <fileset dir="${basedir}/../testJava2" >
+        <exclude name="**/*.java"/>
+        <exclude name="**/.*/**"/>  <!-- exclude any . files (SVN) -->
+      </fileset>
+    </copy>
+    <copy todir="${generated.bin.dir.java2}">
+      <fileset dir="${generated.source.dir.java2}" >
+        <exclude name="**/*.java"/>
+        <exclude name="**/.*/**"/>  <!-- exclude any . files (SVN) -->
+      </fileset>
+    </copy>
   </target>
 		
   <target name="test.compile.test.code.java5" depends="test.generate.test.code.java5" if="usingJava5">
-    <javac srcdir="${generated.source.dir.java5}"
+    <javac destdir="${generated.bin.dir.java5}"
     	deprecation="true" 
     	debug="true"
     	source="1.5"
     	target="1.5">
+      <src path="${generated.source.dir.java5}"/>
+      <src path="${basedir}/../testJava5"/>
     </javac>
+
+    <!-- copy non-compilable resources -->    
+    <copy todir="${generated.bin.dir.java5}">
+      <fileset dir="${basedir}/../testJava5" >
+        <exclude name="**/*.java"/>
+        <exclude name="**/.*/**"/>  <!-- exclude any . files (SVN) -->
+      </fileset>
+    </copy>
+    <copy todir="${generated.bin.dir.java5}">
+      <fileset dir="${generated.source.dir.java5}" >
+        <exclude name="**/*.java"/>
+        <exclude name="**/.*/**"/>  <!-- exclude any . files (SVN) -->
+      </fileset>
+    </copy>
   </target>
 			
   <target name="test.run.java2" depends="test.compile.test.code.java2">
     <junit printsummary="true" showoutput="true">
       <formatter type="xml"/>
       <batchtest todir="${reports.junit}" fork="yes" haltonerror="no" failureproperty="testsFailed">
-        <fileset dir="${generated.source.dir.java2}">
+        <fileset dir="${generated.bin.dir.java2}">
           <include name="**/*Tests.class"/>
         </fileset>
       </batchtest>
       <classpath>
-      	<pathelement location="${generated.source.dir.java2}"/>
-		<pathelement location="${basedir}/../devlib/ibatis-common-2.jar" />
-		<pathelement location="${basedir}/../devlib/ibatis-dao-2.jar" />
-		<pathelement location="${basedir}/../devlib/ibatis-sqlmap-2.jar" />
+      	<pathelement location="${generated.bin.dir.java2}"/>
+		<pathelement location="${basedir}/../devlib/ibatis-2.3.0.677.jar" />
 		<pathelement location="${basedir}/../devlib/hsqldb.jar" />
       </classpath>
     </junit>
@@ -228,15 +254,13 @@
     <junit printsummary="true" showoutput="true">
       <formatter type="xml"/>
       <batchtest todir="${reports.junit}" fork="yes" haltonerror="no" failureproperty="testsFailed">
-        <fileset dir="${generated.source.dir.java5}">
+        <fileset dir="${generated.bin.dir.java5}">
           <include name="**/*Tests.class"/>
         </fileset>
       </batchtest>
       <classpath>
-      	<pathelement location="${generated.source.dir.java5}"/>
-		<pathelement location="${basedir}/../devlib/ibatis-common-2.jar" />
-		<pathelement location="${basedir}/../devlib/ibatis-dao-2.jar" />
-		<pathelement location="${basedir}/../devlib/ibatis-sqlmap-2.jar" />
+      	<pathelement location="${generated.bin.dir.java5}"/>
+		<pathelement location="${basedir}/../devlib/ibatis-2.3.0.677.jar" />
 		<pathelement location="${basedir}/../devlib/hsqldb.jar" />
       </classpath>
     </junit>
@@ -252,9 +276,7 @@
       </batchtest>
       <classpath>
       	<pathelement location="${generated.source.dir.java5}"/>
-		<pathelement location="${basedir}/../devlib/ibatis-common-2.jar" />
-		<pathelement location="${basedir}/../devlib/ibatis-dao-2.jar" />
-		<pathelement location="${basedir}/../devlib/ibatis-sqlmap-2.jar" />
+		<pathelement location="${basedir}/../devlib/ibatis-2.3.0.677.jar" />
 		<pathelement location="${basedir}/../devlib/hsqldb.jar" />
       </classpath>
     </junit>
@@ -268,9 +290,7 @@
       </batchtest>
       <classpath>
       	<pathelement location="${generated.source.dir.java2}"/>
-		<pathelement location="${basedir}/../devlib/ibatis-common-2.jar" />
-		<pathelement location="${basedir}/../devlib/ibatis-dao-2.jar" />
-		<pathelement location="${basedir}/../devlib/ibatis-sqlmap-2.jar" />
+		<pathelement location="${basedir}/../devlib/ibatis-2.3.0.677.jar" />
 		<pathelement location="${basedir}/../devlib/hsqldb.jar" />
       </classpath>
     </junit>
