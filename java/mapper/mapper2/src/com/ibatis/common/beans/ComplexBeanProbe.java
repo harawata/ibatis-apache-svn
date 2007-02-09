@@ -15,11 +15,11 @@
  */
 package com.ibatis.common.beans;
 
+import com.ibatis.sqlmap.engine.mapping.result.ResultObjectFactoryUtil;
+
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.StringTokenizer;
-
-import com.ibatis.sqlmap.engine.mapping.result.ResultObjectFactoryUtil;
 
 /**
  * StaticBeanProbe provides methods that allow simple, reflective access to
@@ -301,7 +301,7 @@ public class ComplexBeanProbe extends BaseProbe {
         if (object instanceof Map) {
           value = ((Map) object).get(name);
         } else {
-          Method method = classCache.getGetter(name);
+          Invoker method = classCache.getGetInvoker(name);
           if (method == null) {
             throw new NoSuchMethodException("No GET method for property " + name + " on instance of " + object.getClass().getName());
           }
@@ -333,7 +333,7 @@ public class ComplexBeanProbe extends BaseProbe {
         if (object instanceof Map) {
           ((Map) object).put(name, value);
         } else {
-          Method method = classCache.getSetter(name);
+          Invoker method = classCache.getSetInvoker(name);
           if (method == null) {
             throw new NoSuchMethodException("No SET method for property " + name + " on instance of " + object.getClass().getName());
           }

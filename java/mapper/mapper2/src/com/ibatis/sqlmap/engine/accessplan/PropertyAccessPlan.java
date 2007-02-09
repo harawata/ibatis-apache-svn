@@ -16,7 +16,7 @@
 package com.ibatis.sqlmap.engine.accessplan;
 
 import com.ibatis.common.beans.ClassInfo;
-
+import com.ibatis.common.beans.Invoker;
 
 import java.lang.reflect.Method;
 
@@ -27,8 +27,8 @@ public class PropertyAccessPlan extends BaseAccessPlan {
 
   protected static final Object[] NO_ARGUMENTS = new Object[0];
 
-  protected Method[] setters;
-  protected Method[] getters;
+  protected Invoker[] setters;
+  protected Invoker[] getters;
 
   PropertyAccessPlan(Class clazz, String[] propertyNames) {
     super(clazz, propertyNames);

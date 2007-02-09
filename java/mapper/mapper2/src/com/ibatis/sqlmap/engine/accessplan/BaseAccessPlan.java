@@ -16,8 +16,7 @@
 package com.ibatis.sqlmap.engine.accessplan;
 
 import com.ibatis.common.beans.ClassInfo;
-
-import java.lang.reflect.Method;
+import com.ibatis.common.beans.Invoker;
 
 /**
  * Base implementation of the AccessPlan interface
@@ -42,18 +41,18 @@ public abstract class BaseAccessPlan implements AccessPlan {
     return types;
   }
 
-  protected Method[] getGetters(String[] propertyNames) {
-    Method[] methods = new Method[propertyNames.length];
+  protected Invoker[] getGetters(String[] propertyNames) {
+    Invoker[] methods = new Invoker[propertyNames.length];
     for (int i = 0; i < propertyNames.length; i++) {
-      methods[i] = info.getGetter(propertyNames[i]);
+      methods[i] = info.getGetInvoker(propertyNames[i]);
     }
     return methods;
   }
 
-  protected Method[] getSetters(String[] propertyNames) {
-    Method[] methods = new Method[propertyNames.length];
+  protected Invoker[] getSetters(String[] propertyNames) {
+    Invoker[] methods = new Invoker[propertyNames.length];
     for (int i = 0; i < propertyNames.length; i++) {
-      methods[i] = info.getSetter(propertyNames[i]);
+      methods[i] = info.getSetInvoker(propertyNames[i]);
     }
     return methods;
   }

@@ -18,10 +18,7 @@ package com.ibatis.common.beans;
 import com.ibatis.common.logging.Log;
 import com.ibatis.common.logging.LogFactory;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.UndeclaredThrowableException;
-import java.lang.reflect.ReflectPermission;
+import java.lang.reflect.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
@@ -80,8 +77,23 @@ public class ClassInfo {
   private ClassInfo(Class clazz) {
     className = clazz.getName();
     addMethods(clazz);
+    addFields (clazz);
     readablePropertyNames = (String[]) getMethods.keySet().toArray(new String[getMethods.keySet().size()]);
     writeablePropertyNames = (String[]) setMethods.keySet().toArray(new String[setMethods.keySet().size()]);
+  }
+
+  private void addFields(Class clazz) {
+    Field[] fields = clazz.getDeclaredFields();
+    for (int i=0; i < fields.length; i++) {
+      fields[i].setAccessible(true);
+      setMethods.put("(" + fields[i].getName() + ")", new SetFieldInvoker(fields[i]));
+      setTypes.put("(" + fields[i].getName() + ")", fields[i].getType());
+      getMethods.put("(" + fields[i].getName() + ")", new GetFieldInvoker(fields[i]));
+      getTypes.put("(" + fields[i].getName() + ")", fields[i].getType());
+    }
+    if (clazz.getSuperclass() != null) {
+      addFields(clazz.getSuperclass());
+    }
   }
 
   private void addMethods(Class cls) {
@@ -96,19 +108,19 @@ public class ClassInfo {
             log.error("Illegal overloaded setter method for property " + name + " in class " + cls.getName() +
                 ".  This breaks the JavaBeans specification and can cause unpredicatble results.");
           }
-          setMethods.put(name, methods[i]);
+          setMethods.put(name, new MethodInvoker(methods[i]));
           setTypes.put(name, methods[i].getParameterTypes()[0]);
         }
       } else if (name.startsWith("get") && name.length() > 3) {
         if (methods[i].getParameterTypes().length == 0) {
           name = dropCase(name);
-          getMethods.put(name, methods[i]);
+          getMethods.put(name, new MethodInvoker(methods[i]));
           getTypes.put(name, methods[i].getReturnType());
         }
       } else if (name.startsWith("is") && name.length() > 2) {
         if (methods[i].getParameterTypes().length == 0) {
           name = dropCase(name);
-          getMethods.put(name, methods[i]);
+          getMethods.put(name, new MethodInvoker(methods[i]));
           getTypes.put(name, methods[i].getReturnType());
         }
       }
@@ -240,11 +252,14 @@ public class ClassInfo {
    * @return The Method
    */
   public Method getSetter(String propertyName) {
-    Method method = (Method) setMethods.get(propertyName);
+    Invoker method = (Invoker) setMethods.get(propertyName);
     if (method == null) {
       throw new ProbeException("There is no WRITEABLE property named '" + propertyName + "' in class '" + className + "'");
     }
-    return method;
+    if (!(method instanceof MethodInvoker)) {
+      throw new ProbeException("Can't get setter method because '" + propertyName + "' is a field in class '" + className + "'");    
+    }
+    return ((MethodInvoker)method).getMethod();
   }
 
   /**
@@ -254,7 +269,26 @@ public class ClassInfo {
    * @return The Method
    */
   public Method getGetter(String propertyName) {
-    Method method = (Method) getMethods.get(propertyName);
+    Invoker method = (Invoker) getMethods.get(propertyName);
+    if (method == null) {
+      throw new ProbeException("There is no READABLE property named '" + propertyName + "' in class '" + className + "'");
+    }
+    if (!(method instanceof MethodInvoker)) {
+      throw new ProbeException("Can't get getter method because '" + propertyName + "' is a field in class '" + className + "'");
+    }
+    return ((MethodInvoker)method).getMethod();
+  }
+
+  public Invoker getSetInvoker(String propertyName) {
+    Invoker method = (Invoker) setMethods.get(propertyName);
+    if (method == null) {
+      throw new ProbeException("There is no WRITEABLE property named '" + propertyName + "' in class '" + className + "'");
+    }
+    return method;
+  }
+
+  public Invoker getGetInvoker(String propertyName) {
+    Invoker method = (Invoker) getMethods.get(propertyName);
     if (method == null) {
       throw new ProbeException("There is no READABLE property named '" + propertyName + "' in class '" + className + "'");
     }
@@ -394,8 +428,7 @@ public class ClassInfo {
       }
     }
   }
-
-
+  
 }
 
 
