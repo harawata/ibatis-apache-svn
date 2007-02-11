@@ -8,6 +8,7 @@ import junit.framework.TestCase;
 import testdomain.Account;
 import testdomain.Order;
 import testdomain.PrivateAccount;
+import testdomain.FieldAccount;
 
 import javax.sql.DataSource;
 import java.io.Reader;
@@ -52,6 +53,15 @@ public class BaseSqlMapTest extends TestCase {
     return account;
   }
 
+  protected FieldAccount newFieldAccount6() {
+    FieldAccount account = new FieldAccount();
+    account.id(6);
+    account.firstName("Jennifer");
+    account.lastName("Begin");
+    account.emailAddress("no_email@provided.com");
+    return account;
+  }
+
   protected void assertAccount1(Account account) {
     assertEquals(1, account.getId());
     assertEquals("Clinton", account.getFirstName());
@@ -82,6 +92,13 @@ public class BaseSqlMapTest extends TestCase {
     assertEquals("Jennifer", account.getFirstName());
     assertEquals("Begin", account.getLastName());
     assertNull(account.getEmailAddress());
+  }
+
+  protected void assertFieldAccount6(FieldAccount account) {
+    assertEquals(6, account.id());
+    assertEquals("Jennifer", account.firstName());
+    assertEquals("Begin", account.lastName());
+    assertNull(account.emailAddress());
   }
 
   protected void assertAccount1(Map account) {

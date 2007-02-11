@@ -1,6 +1,6 @@
 package com.ibatis.sqlmap;
 
-import testdomain.Account;
+import testdomain.FieldAccount;
 import testdomain.PrivateAccount;
 
 import java.sql.SQLException;
@@ -13,18 +13,18 @@ public class DirectFieldMappingTest extends BaseSqlMapTest {
   }
 
   public void testInsertAndSelectDirectToFields() throws SQLException {
-    Account account = newAccount6();
+    FieldAccount account = newFieldAccount6();
 
     sqlMap.insert("insertAccountFromFields", account);
 
-    account = (Account) sqlMap.queryForObject("getAccountToFields", new Integer(6));
+    account = (FieldAccount) sqlMap.queryForObject("getAccountToFields", new Integer(6));
 
-    assertAccount6(account);
-    assertAccount6(account.getAccount());
+    assertFieldAccount6(account);
+    assertFieldAccount6(account.account());
   }
   
   public void testGetAccountWithPrivateConstructor() throws SQLException {
-    Account account = newAccount6();
+    FieldAccount account = newFieldAccount6();
 
     sqlMap.insert("insertAccountFromFields", account);
 

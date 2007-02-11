@@ -462,7 +462,7 @@
 
 
   <insert id="insertAccountFromFields"
-    parameterClass="account"
+    parameterClass="testdomain.FieldAccount"
     >
     insert into ACCOUNT (
       ACC_ID,
@@ -470,25 +470,25 @@
       ACC_LAST_NAME,
       ACC_EMAIL)
     values (
-      #(id)#,
-      #(firstName)#,
-      #(lastName)#,
-      #(emailAddress):VARCHAR:no_email@provided.com#
+      #id#,
+      #firstName#,
+      #lastName#,
+      #emailAddress:VARCHAR:no_email@provided.com#
     )
   </insert>
 
   <select id="getAccountToFields"
     parameterClass="int"
-    resultClass="account">
+    resultClass="testdomain.FieldAccount">
     select
-      ACC_ID as "(id)",
-      ACC_FIRST_NAME as "(firstName)",
-      ACC_LAST_NAME as "(lastName)",
-      ACC_EMAIL as "(emailAddress)",
-      ACC_ID as "(account).(id)",
-      ACC_FIRST_NAME as "(account).(firstName)",
-      ACC_LAST_NAME as "(account).(lastName)",
-      ACC_EMAIL as "(account).(emailAddress)"
+      ACC_ID as "id",
+      ACC_FIRST_NAME as "firstName",
+      ACC_LAST_NAME as "lastName",
+      ACC_EMAIL as "emailAddress",
+      ACC_ID as "account.id",
+      ACC_FIRST_NAME as "account.firstName",
+      ACC_LAST_NAME as "account.lastName",
+      ACC_EMAIL as "account.emailAddress"
     from ACCOUNT
     where ACC_ID = #value#
   </select>
@@ -497,14 +497,14 @@
     parameterClass="int"
     resultClass="testdomain.PrivateAccount">
     select
-      ACC_ID as "(id)",
-      ACC_FIRST_NAME as "(firstName)",
-      ACC_LAST_NAME as "(lastName)",
-      ACC_EMAIL as "(emailAddress)",
-      ACC_ID as "(account).(id)",
-      ACC_FIRST_NAME as "(account).(firstName)",
-      ACC_LAST_NAME as "(account).(lastName)",
-      ACC_EMAIL as "(account).(emailAddress)"
+      ACC_ID as "id",
+      ACC_FIRST_NAME as "firstName",
+      ACC_LAST_NAME as "lastName",
+      ACC_EMAIL as "emailAddress",
+      ACC_ID as "account.id",
+      ACC_FIRST_NAME as "account.firstName",
+      ACC_LAST_NAME as "account.lastName",
+      ACC_EMAIL as "account.emailAddress"
     from ACCOUNT
     where ACC_ID = #value#
   </select>

@@ -115,10 +115,14 @@ public class ClassInfo {
         }
       }
       if (field.isAccessible()) {
-        setMethods.put("(" + field.getName() + ")", new SetFieldInvoker(field));
-        setTypes.put("(" + field.getName() + ")", field.getType());
-        getMethods.put("(" + field.getName() + ")", new GetFieldInvoker(field));
-        getTypes.put("(" + field.getName() + ")", field.getType());
+        if (!setMethods.containsKey(field.getName())) {
+          setMethods.put(field.getName(), new SetFieldInvoker(field));
+          setTypes.put(field.getName(), field.getType());
+        }
+        if (!getMethods.containsKey(field.getName())) {
+          getMethods.put(field.getName(), new GetFieldInvoker(field));
+          getTypes.put(field.getName(), field.getType());
+        }
       }
     }
     if (clazz.getSuperclass() != null) {
