@@ -7,6 +7,7 @@ import com.ibatis.sqlmap.client.SqlMapClientBuilder;
 import junit.framework.TestCase;
 import testdomain.Account;
 import testdomain.Order;
+import testdomain.PrivateAccount;
 
 import javax.sql.DataSource;
 import java.io.Reader;
@@ -75,7 +76,14 @@ public class BaseSqlMapTest extends TestCase {
     assertEquals("Begin", account.getLastName());
     assertNull(account.getEmailAddress());
   }
-  
+
+  protected void assertPrivateAccount6(PrivateAccount account) {
+    assertEquals(6, account.getId());
+    assertEquals("Jennifer", account.getFirstName());
+    assertEquals("Begin", account.getLastName());
+    assertNull(account.getEmailAddress());
+  }
+
   protected void assertAccount1(Map account) {
     Integer id = (Integer) account.get("id");
     String firstName = (String) account.get("firstName");

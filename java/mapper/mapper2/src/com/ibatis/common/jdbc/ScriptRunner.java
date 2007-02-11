@@ -88,7 +88,7 @@ public class ScriptRunner {
   public void runScript(Reader reader) throws IOException, SQLException{
     try {
       if (connection == null) {
-        DriverManager.registerDriver((Driver) Resources.classForName(driver).newInstance());
+        DriverManager.registerDriver((Driver) Resources.instantiate(driver));
         Connection conn = DriverManager.getConnection(url, username, password);
         try {
           if (conn.getAutoCommit() != autoCommit) {

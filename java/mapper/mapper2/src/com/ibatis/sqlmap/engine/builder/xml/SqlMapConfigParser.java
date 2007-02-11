@@ -261,7 +261,7 @@ public class SqlMapConfigParser extends BaseParser {
           vars.errorCtx.setMoreInfo("Check the callback attribute '" + callback + "' (must be a classname).");
 
           TypeHandler typeHandler;
-          Object impl = Resources.classForName(callback).newInstance();
+          Object impl = Resources.instantiate(callback);
           if (impl instanceof TypeHandlerCallback) {
             typeHandler = new CustomTypeHandler((TypeHandlerCallback) impl);
           } else if (impl instanceof TypeHandler) {

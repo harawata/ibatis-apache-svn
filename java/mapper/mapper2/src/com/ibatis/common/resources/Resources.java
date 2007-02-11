@@ -15,6 +15,8 @@
  */
 package com.ibatis.common.resources;
 
+import com.ibatis.common.beans.ClassInfo;
+
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
@@ -289,9 +291,16 @@ public class Resources extends Object {
    * @throws InstantiationException If the class cannot be instantiaed
    * @throws IllegalAccessException If the class is not public, or other access problems arise
    */
-  public static Object instantiate(Class clazz)
-      throws InstantiationException, IllegalAccessException {
-    return clazz.newInstance();
+  public static Object instantiate(Class clazz) throws InstantiationException, IllegalAccessException {
+    try {
+      return ClassInfo.getInstance(clazz).instantiateClass();
+    } catch (Exception e) {
+      // Try alternative...theoretically should fail for the exact same
+      // reason, but in case of a weird security manager, this will help
+      // some cases.
+      //return clazz.newInstance();
+      return clazz.newInstance();
+    }
   }
 
   private static ClassLoader getClassLoader() {

@@ -101,7 +101,7 @@ public class InlineParameterMapParser {
         } else if ("handler".equals(field)) {
           try {
             value = typeHandlerFactory.resolveAlias(value);
-            Object impl = Resources.classForName(value).newInstance();
+            Object impl = Resources.instantiate(value);
             if (impl instanceof TypeHandlerCallback) {
               mapping.setTypeHandler(new CustomTypeHandler((TypeHandlerCallback) impl));
             } else if (impl instanceof TypeHandler) {

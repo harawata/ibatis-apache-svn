@@ -268,7 +268,7 @@ public class SqlMapParser extends BaseParser {
         if (callback != null) {
           vars.errorCtx.setMoreInfo("Check the parameter mapping typeHandler attribute '" + callback + "' (must be a TypeHandler or TypeHandlerCallback implementation).");
           try {
-            Object impl = Resources.classForName(callback).newInstance();
+            Object impl = Resources.instantiate(callback);
             if (impl instanceof TypeHandlerCallback) {
               handler = new CustomTypeHandler((TypeHandlerCallback) impl);
             } else if (impl instanceof TypeHandler) {
@@ -434,7 +434,7 @@ public class SqlMapParser extends BaseParser {
         if (callback != null) {
           vars.errorCtx.setMoreInfo("Check the result mapping typeHandler attribute '" + callback + "' (must be a TypeHandler or TypeHandlerCallback implementation).");
           try {
-            Object impl = Resources.classForName(callback).newInstance();
+            Object impl = Resources.instantiate(callback);
             if (impl instanceof TypeHandlerCallback) {
               handler = new CustomTypeHandler((TypeHandlerCallback) impl);
             } else if (impl instanceof TypeHandler) {
@@ -512,7 +512,7 @@ public class SqlMapParser extends BaseParser {
         if (callback != null) {
           vars.errorCtx.setMoreInfo("Check the result mapping typeHandler attribute '" + callback + "' (must be a TypeHandlerCallback implementation).");
           try {
-            Object impl = Resources.classForName(callback).newInstance();
+            Object impl = Resources.instantiate(callback);
             if (impl instanceof TypeHandlerCallback) {
               handler = new CustomTypeHandler((TypeHandlerCallback) impl);
             } else if (impl instanceof TypeHandler) {

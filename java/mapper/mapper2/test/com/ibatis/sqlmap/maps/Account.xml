@@ -493,4 +493,20 @@
     where ACC_ID = #value#
   </select>
 
+  <select id="getAccountWithPrivateConstructor"
+    parameterClass="int"
+    resultClass="testdomain.PrivateAccount">
+    select
+      ACC_ID as "(id)",
+      ACC_FIRST_NAME as "(firstName)",
+      ACC_LAST_NAME as "(lastName)",
+      ACC_EMAIL as "(emailAddress)",
+      ACC_ID as "(account).(id)",
+      ACC_FIRST_NAME as "(account).(firstName)",
+      ACC_LAST_NAME as "(account).(lastName)",
+      ACC_EMAIL as "(account).(emailAddress)"
+    from ACCOUNT
+    where ACC_ID = #value#
+  </select>
+
 </sqlMap>

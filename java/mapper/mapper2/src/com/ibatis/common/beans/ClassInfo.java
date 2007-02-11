@@ -43,6 +43,7 @@ public class ClassInfo {
   private HashMap getMethods = new HashMap();
   private HashMap setTypes = new HashMap();
   private HashMap getTypes = new HashMap();
+  private Constructor defaultConstructor;
 
   static {
     SIMPLE_TYPE_SET.add(String.class);
@@ -76,20 +77,49 @@ public class ClassInfo {
 
   private ClassInfo(Class clazz) {
     className = clazz.getName();
+    addDefaultConstructor(clazz);
     addMethods(clazz);
     addFields (clazz);
     readablePropertyNames = (String[]) getMethods.keySet().toArray(new String[getMethods.keySet().size()]);
     writeablePropertyNames = (String[]) setMethods.keySet().toArray(new String[setMethods.keySet().size()]);
   }
 
+  private void addDefaultConstructor(Class clazz) {
+    Constructor[] consts = clazz.getDeclaredConstructors();
+    for (int i = 0; i < consts.length; i++) {
+      Constructor constructor = consts[i];
+      if (constructor.getParameterTypes().length == 0) {
+        if (canAccessPrivateMethods()) {
+          try {
+            constructor.setAccessible(true);
+          } catch (Exception e) {
+            // Ignored. This is only a final precaution, nothing we can do.
+          }
+        }
+        if (constructor.isAccessible()) {
+          this.defaultConstructor = constructor;
+        }
+      }
+    }
+  }
+
   private void addFields(Class clazz) {
     Field[] fields = clazz.getDeclaredFields();
     for (int i=0; i < fields.length; i++) {
-      fields[i].setAccessible(true);
-      setMethods.put("(" + fields[i].getName() + ")", new SetFieldInvoker(fields[i]));
-      setTypes.put("(" + fields[i].getName() + ")", fields[i].getType());
-      getMethods.put("(" + fields[i].getName() + ")", new GetFieldInvoker(fields[i]));
-      getTypes.put("(" + fields[i].getName() + ")", fields[i].getType());
+      Field field = fields[i];
+      if (canAccessPrivateMethods()) {
+        try {
+          field.setAccessible(true);
+        } catch (Exception e) {
+          // Ignored. This is only a final precaution, nothing we can do.
+        }
+      }
+      if (field.isAccessible()) {
+        setMethods.put("(" + field.getName() + ")", new SetFieldInvoker(field));
+        setTypes.put("(" + field.getName() + ")", field.getType());
+        getMethods.put("(" + field.getName() + ")", new GetFieldInvoker(field));
+        getTypes.put("(" + field.getName() + ")", field.getType());
+      }
     }
     if (clazz.getSuperclass() != null) {
       addFields(clazz.getSuperclass());
@@ -99,29 +129,30 @@ public class ClassInfo {
   private void addMethods(Class cls) {
     Method[] methods = getAllMethodsForClass(cls);
     for (int i = 0; i < methods.length; i++) {
-      String name = methods[i].getName();
+      Method method = methods[i];
+      String name = method.getName();
       if (name.startsWith("set") && name.length() > 3) {
-        if (methods[i].getParameterTypes().length == 1) {
+        if (method.getParameterTypes().length == 1) {
           name = dropCase(name);
           if (setMethods.containsKey(name)) {
             // TODO(JGB) - this should probably be a RuntimeException at some point???
             log.error("Illegal overloaded setter method for property " + name + " in class " + cls.getName() +
                 ".  This breaks the JavaBeans specification and can cause unpredicatble results.");
           }
-          setMethods.put(name, new MethodInvoker(methods[i]));
-          setTypes.put(name, methods[i].getParameterTypes()[0]);
+          setMethods.put(name, new MethodInvoker(method));
+          setTypes.put(name, method.getParameterTypes()[0]);
         }
       } else if (name.startsWith("get") && name.length() > 3) {
-        if (methods[i].getParameterTypes().length == 0) {
+        if (method.getParameterTypes().length == 0) {
           name = dropCase(name);
-          getMethods.put(name, new MethodInvoker(methods[i]));
-          getTypes.put(name, methods[i].getReturnType());
+          getMethods.put(name, new MethodInvoker(method));
+          getTypes.put(name, method.getReturnType());
         }
       } else if (name.startsWith("is") && name.length() > 2) {
-        if (methods[i].getParameterTypes().length == 0) {
+        if (method.getParameterTypes().length == 0) {
           name = dropCase(name);
-          getMethods.put(name, new MethodInvoker(methods[i]));
-          getTypes.put(name, methods[i].getReturnType());
+          getMethods.put(name, new MethodInvoker(method));
+          getTypes.put(name, method.getReturnType());
         }
       }
       name = null;
@@ -147,8 +178,8 @@ public class ClassInfo {
    * We use this method, instead of the simpler Class.getMethods(),
    * because we want to look for private methods as well. 
    * 
-   * @param cls
-   * @return
+   * @param cls The class
+   * @return An array containing all methods in this class
    */
   private Method[] getClassMethods(Class cls) {
     HashMap uniqueMethods = new HashMap();
@@ -209,17 +240,6 @@ public class ClassInfo {
     return sb.toString();
   }
 
-  private boolean canAccessPrivateMethods() {
-    try {
-      System.getSecurityManager().checkPermission(new ReflectPermission("suppressAccessChecks"));
-      return true;
-    } catch (SecurityException e) {
-      return false;
-    } catch (NullPointerException e) {
-      return true;
-    }
-  }
-
   private static String dropCase(String name) {
     if (name.startsWith("is")) {
       name = name.substring(2);
@@ -236,6 +256,19 @@ public class ClassInfo {
     return name;
   }
 
+  private static boolean canAccessPrivateMethods() {
+    try {
+      System.getSecurityManager().checkPermission(new ReflectPermission("suppressAccessChecks"));
+      return true;
+    } catch (SecurityException e) {
+      return false;
+    } catch (NullPointerException e) {
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
   /**
    * Gets the name of the class the instance provides information for
    *
@@ -243,6 +276,18 @@ public class ClassInfo {
    */
   public String getClassName() {
     return className;
+  }
+
+  public Object instantiateClass() {
+    if (defaultConstructor != null) {
+      try {
+        return defaultConstructor.newInstance(null);
+      } catch (Exception e) {
+        throw new RuntimeException("Error instantiating class. Cause: " + e, e);
+      }
+    } else {
+      throw new RuntimeException ("Error instantiating class.  There is no default constructor for class " + className);
+    }
   }
 
   /**
@@ -394,12 +439,12 @@ public class ClassInfo {
   public static ClassInfo getInstance(Class clazz) {
     if (cacheEnabled) {
       synchronized (clazz) {
-        ClassInfo cache = (ClassInfo) CLASS_INFO_MAP.get(clazz);
-        if (cache == null) {
-          cache = new ClassInfo(clazz);
-          CLASS_INFO_MAP.put(clazz, cache);
+        ClassInfo cached = (ClassInfo) CLASS_INFO_MAP.get(clazz);
+        if (cached == null) {
+          cached = new ClassInfo(clazz);
+          CLASS_INFO_MAP.put(clazz, cached);
         }
-        return cache;
+        return cached;
       }
     } else {
       return new ClassInfo(clazz);
