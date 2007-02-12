@@ -11,7 +11,20 @@
   <tr>
     <td rowspan="2" width="70%">
       <h4>Releases</h4>
-      <p>Note: iBATIS 2.2.0 is the last release that includes the iBATIS DAO framework.  After 2.2.0,
+      <p>iBATIS 2.3.0 is the current and best release.  It is also the first iBATIS release that
+         does not include the DAO framework.</p>
+      <ul>
+        <li><a href="[preferred]/ibatis/binaries/ibatis.java/ibatis-2.3.0.677.zip"><b>iBATIS Java 2.3.0
+          Binaries, Source, and Documentation</b></a> (Dec 1, 2006)
+          [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/ibatis-2.3.0.677.zip.md5">MD5</a>]
+          [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/ibatis-2.3.0.677.zip.asc">PGP</a>]
+          [Status: General Availability]
+          <a href="http://issues.apache.org/jira/secure/ReleaseNote.jspa?version=12312035&styleName=Text&projectId=10601&Create=Create">Release Notes</a>
+        </li>
+      </ul>
+
+      <p>iBATIS 2.2.0 is also available.  iBATIS 2.2.0 is the last release that includes 
+         the iBATIS DAO framework.  After 2.2.0,
          the DAO iBATIS framework is removed from the downloads.
          We suggest converting iBATIS framework DAOs to the
          <a href="http://www.springframework.org" target="_blank">Spring Framework</a>.
@@ -23,13 +36,6 @@
           [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/iBATIS_DBL-2.2.0.638.zip.asc">PGP</a>]
           [Status: General Availability]
           <a href="http://issues.apache.org/jira/secure/ReleaseNote.jspa?version=12310720&styleName=Text&projectId=10601&Create=Create">Release Notes</a>
-        </li>
-        <li><a href="[preferred]/ibatis/binaries/ibatis.java/ibatis-2.3.0.677.zip"><b>iBATIS Java 2.3.0
-          Binaries, Source, and Documentation</b></a> (Dec 1, 2006)
-          [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/ibatis-2.3.0.677.zip.md5">MD5</a>]
-          [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/ibatis-2.3.0.677.zip.asc">PGP</a>]
-          [Status: Beta]
-          <a href="http://issues.apache.org/jira/secure/ReleaseNote.jspa?version=12312035&styleName=Text&projectId=10601&Create=Create">Release Notes</a>
         </li>
       </ul>
 
@@ -108,7 +114,7 @@
         </li>
       </ul>
     </td>
-    <td bgcolor="#ccc">
+    <td style="background-color:#E8E8E8">
       <h4>Mirrors</h4>
       <p>The currently selected mirror is <b>[preferred]</b>.  If you encounter a problem with this
          mirror, please select another mirror.  If all mirrors are failing, there are
@@ -125,7 +131,7 @@
       </form>
     </td>
   </tr>
-  <tr bgcolor="#ccc">
+  <tr style="background-color:#E8E8E8">
     <td>
       <h4>Tips</h4>
       <p>Use the links below to download a binary distribution of iBATIS for Java from one

@@ -49,6 +49,22 @@
 
   <h2>News</h2>
 
+  <h3>iBATIS for Java 2.3.0 General Availability</h3>
+  <p>(February 11, 2007) The votes are in an iBATIS for Java 2.3.0 is promoted to
+     Apache general availability status.  This release includes several bug fixes
+     and enhancements.
+     Additionally, this release offers new support for local caching of prepared statements.
+     Caching prepared statements can lead to significant performance improvements
+     in many environments.</p>
+  <p>The Java DAO framework has been removed from iBATIS as of release
+     2.3.0.  We heartily recommend that you consider using the
+     <a href="http://www.springframework.org" target="_blank">Spring Framework</a>
+     for all your DAO needs!  Spring offers great support for iBATIS.</p>
+  <p>The paginated list methods have been deprecated with this release.  The methods were confusing
+     to many users and often misused.  We suggest using native database support for paging,
+     or that you use the query methods with skip and max settings.</p>
+  <p><b><a href="javadownloads.cgi">Download iBATIS 2.3.0!</a></b></p>
+  
   <h3>iBATIS.NET DataMapper 1.6.0 and DataAccess 1.9.0 Released [Status: Beta]</h3>
 <p>(February 1, 2007) The iBATIS.NET team is proud to announce that the BETA release of DataAccess V1.9.0 and DataMapper V1.6.0 are now available.</p>
  
@@ -135,20 +151,6 @@ Thanks once again for your comments and suggestions. Enjoy!</p>
     release notes on the download page for full details.
     This is the last release of iBATIS that will include the DAO framework.</p>
   <p><b><a href="javadownloads.cgi">Download iBATIS 2.2.0!</a></b></p>
-
-  <h3>iBATIS for Java 2.3.0 Released [Status: Beta]</h3>
-  <p>(December 1, 2006) This release includes several bug fixes and enhancements.
-     Additionally, this release offers new support for local caching of prepared statements.
-     Caching prepared statements can lead to significant performance improvements
-     in many environments.</p>
-  <p>The Java DAO framework has been removed from iBATIS as of release
-     2.3.0.  We heartily recommend that you consider using the
-     <a href="http://www.springframework.org" target="_blank">Spring Framework</a>
-     for all your DAO needs!  Spring offers great support for iBATIS.</p>
-  <p>The paginated list methods have been deprecated with this release.  The methods were confusing
-     to many users and often misused.  We suggest using native database support for paging,
-     or that you use the query methods with skip and max settings.</p>
-  <p><b><a href="javadownloads.cgi">Download iBATIS 2.3.0!</a></b></p>
 
   <h3>ARTICLE: InfoQ has posted an article on iBATIS.NET</h3>
   <p>
