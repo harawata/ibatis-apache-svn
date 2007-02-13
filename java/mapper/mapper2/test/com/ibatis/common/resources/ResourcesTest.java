@@ -40,7 +40,7 @@ public class ResourcesTest extends TestCase {
   }
 
   public void testSetDefaultClassLoader() {
-    ClassLoader classLoader = new TestCL();
+    ClassLoader classLoader = new TestCL(this.getClass().getClassLoader());
     ClassLoader tmp = Resources.getDefaultClassLoader();
     Resources.setDefaultClassLoader(classLoader);
     assertEquals(classLoader, Resources.getDefaultClassLoader());
@@ -84,7 +84,7 @@ public class ResourcesTest extends TestCase {
     URL url;
     ClassLoader classLoader;
 
-    classLoader = new TestCL();
+    classLoader = new TestCL(this.getClass().getClassLoader());
     resourceName = "java/lang/String.class";
     url = null;
     isUsingPrivateClassloader = false;
@@ -147,7 +147,7 @@ public class ResourcesTest extends TestCase {
     String resourceName;
     ClassLoader classLoader;
 
-    classLoader = new TestCL();
+    classLoader = new TestCL(this.getClass().getClassLoader());
     resourceName = "java/lang/String.class";
     inputStream = null;
     isUsingPrivateClassloader = false;
@@ -217,7 +217,7 @@ public class ResourcesTest extends TestCase {
     String testProp2 = "name2";
     String testPropValue2 = "value2";
     Properties properties;
-    ClassLoader classLoader = new TestCL();
+    ClassLoader classLoader = new TestCL(this.getClass().getClassLoader());
 
     resourceName = "com/ibatis/common/resources/resourcestest.properties";
     properties = null;
@@ -298,7 +298,13 @@ public class ResourcesTest extends TestCase {
   /* A stupid simple classloader for testing
    */
   private class TestCL extends ClassLoader {
-    public synchronized void clearAssertionStatus() {
+
+
+	  public TestCL(ClassLoader parent) {
+		  super(parent);
+	  }
+
+	  public synchronized void clearAssertionStatus() {
       isUsingPrivateClassloader = true;
       super.clearAssertionStatus();
     }
