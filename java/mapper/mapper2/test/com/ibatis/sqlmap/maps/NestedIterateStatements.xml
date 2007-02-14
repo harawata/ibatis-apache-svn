@@ -371,4 +371,57 @@
     </iterate>
     order by id
   </select>
+
+  <!-- test nested map -->
+  <select id="NestedIterateTest26" resultMap="personResult" parameterClass="map">
+    select id, first_name, last_name
+    from person
+    <iterate property="po.idList" conjunction="or" prepend="where" open="(" close=")">
+      <isLessThan property="po.idList[]" compareValue="4" >
+        id = #po.idList[]#
+      </isLessThan>
+    </iterate>
+    order by id
+  </select>
+
+  <!-- test deeper combo of list maps nesting -->
+  <select id="NestedIterateTest27" resultMap="personResult" parameterClass="map">
+    select id, first_name, last_name
+    from person
+    <iterate property="firstList">
+      <iterate property="firstList[].po.idList" conjunction="or" prepend="where" open="(" close=")">
+        <isLessThan property="firstList[].po.idList[]" compareValue="4">
+          id = #firstList[].po.idList[]#
+        </isLessThan>
+      </iterate>
+    </iterate>
+    order by id
+  </select>
+
+  <!-- test nested object -->
+  <select id="NestedIterateTest28" resultMap="personResult" parameterClass="testdomain.SimpleNestedParameterObject">
+    select id, first_name, last_name
+    from person
+    <iterate property="nestedIterateParameterObject.idList" conjunction="or" prepend="where" open="(" close=")">
+      <isLessThan property="nestedIterateParameterObject.idList[]" compareValue="4" >
+        id = #nestedIterateParameterObject.idList[]#
+      </isLessThan>
+    </iterate>
+    order by id
+  </select>
+
+  <!-- test deeper combo of list bean nesting -->
+  <select id="NestedIterateTest29" resultMap="personResult" parameterClass="testdomain.SimpleNestedParameterObject">
+    select id, first_name, last_name
+    from person
+    <iterate property="nestedList">
+      <iterate property="nestedList[].nestedIterateParameterObject.idList" conjunction="or" prepend="where" open="(" close=")">
+        <isLessThan property="nestedList[].nestedIterateParameterObject.idList[]" compareValue="4">
+          id = #nestedList[].nestedIterateParameterObject.idList[]#
+        </isLessThan>
+      </iterate>
+    </iterate>
+    order by id
+  </select>
+
 </sqlMap>

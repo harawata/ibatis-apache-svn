@@ -2,8 +2,12 @@ package com.ibatis.sqlmap;
 
 import testdomain.NestedIterateParameterObject;
 import testdomain.Person;
+import testdomain.SimpleNestedParameterObject;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class NestedIterateTest extends BaseSqlMapTest {
 
@@ -725,4 +729,153 @@ public class NestedIterateTest extends BaseSqlMapTest {
       fail(e.getMessage());
     }
   }
+
+  /**
+   * This tests nesting when objects are maps and not a list nested in a list
+   */
+  public void test26() {
+
+    NestedIterateParameterObject po = new NestedIterateParameterObject();
+    po.addId(new Integer(1));
+    po.addId(new Integer(2));
+    po.addId(new Integer(3));
+    po.addId(new Integer(4));
+    po.addId(new Integer(5));
+    po.addId(new Integer(6));
+    po.addId(new Integer(7));
+    po.addId(new Integer(8));
+    po.addId(new Integer(9));
+
+    Map params = new HashMap();
+    params.put("po",po);
+
+    try {
+      List results = sqlMap.queryForList("NestedIterateTest26", params);
+      assertEquals(3, results.size());
+      assertEquals(1, ((Person) results.get(0)).getId().intValue());
+      assertEquals(2, ((Person) results.get(1)).getId().intValue());
+      assertEquals(3, ((Person) results.get(2)).getId().intValue());
+    } catch (Exception e) {
+      fail(e.getMessage());
+    }
+
+  }
+
+  /**
+   * This tests nesting when objects are maps and not a list nested in a list
+   * same as test26 except deeper
+   */
+  public void test27() {
+
+    Map firstMap = new HashMap();
+
+    List firstList = new ArrayList();
+
+    Map params = new HashMap();
+
+    NestedIterateParameterObject po = new NestedIterateParameterObject();
+    po.addId(new Integer(1));
+    po.addId(new Integer(2));
+    po.addId(new Integer(3));
+    po.addId(new Integer(4));
+    po.addId(new Integer(5));
+    po.addId(new Integer(6));
+    po.addId(new Integer(7));
+    po.addId(new Integer(8));
+    po.addId(new Integer(9));
+
+    params.put("po",po);
+
+    firstList.add(params);
+
+    firstMap.put("firstList",firstList);
+
+    try {
+      List results = sqlMap.queryForList("NestedIterateTest27", firstMap);
+      assertEquals(3, results.size());
+      assertEquals(1, ((Person) results.get(0)).getId().intValue());
+      assertEquals(2, ((Person) results.get(1)).getId().intValue());
+      assertEquals(3, ((Person) results.get(2)).getId().intValue());
+    } catch (Exception e) {
+      fail(e.getMessage());
+    }
+
+  }
+
+
+  /**
+   * This tests nesting when objects are maps and not a list nested in a list
+   */
+  public void test28() {
+
+    NestedIterateParameterObject po = new NestedIterateParameterObject();
+    po.addId(new Integer(1));
+    po.addId(new Integer(2));
+    po.addId(new Integer(3));
+    po.addId(new Integer(4));
+    po.addId(new Integer(5));
+    po.addId(new Integer(6));
+    po.addId(new Integer(7));
+    po.addId(new Integer(8));
+    po.addId(new Integer(9));
+
+    SimpleNestedParameterObject simpleNestedParameterObject =
+        new SimpleNestedParameterObject();
+
+    simpleNestedParameterObject.setNestedIterateParameterObject(po);
+
+    try {
+      List results = sqlMap.queryForList("NestedIterateTest28", simpleNestedParameterObject);
+      assertEquals(3, results.size());
+      assertEquals(1, ((Person) results.get(0)).getId().intValue());
+      assertEquals(2, ((Person) results.get(1)).getId().intValue());
+      assertEquals(3, ((Person) results.get(2)).getId().intValue());
+    } catch (Exception e) {
+      fail(e.getMessage());
+    }
+
+  }
+
+  /**
+   * This tests nesting when objects are maps and not a list nested in a list
+   * same as test26 except deeper
+   */
+  public void test29() {
+
+    SimpleNestedParameterObject firstParameterObject =
+        new SimpleNestedParameterObject();
+
+    SimpleNestedParameterObject secondParameterObject =
+        new SimpleNestedParameterObject();
+
+    List parameterObjectList = new ArrayList();
+
+    NestedIterateParameterObject po = new NestedIterateParameterObject();
+    po.addId(new Integer(1));
+    po.addId(new Integer(2));
+    po.addId(new Integer(3));
+    po.addId(new Integer(4));
+    po.addId(new Integer(5));
+    po.addId(new Integer(6));
+    po.addId(new Integer(7));
+    po.addId(new Integer(8));
+    po.addId(new Integer(9));
+
+    secondParameterObject.setNestedIterateParameterObject(po);
+
+    parameterObjectList.add(secondParameterObject);
+
+    firstParameterObject.setNestedList(parameterObjectList);
+
+    try {
+      List results = sqlMap.queryForList("NestedIterateTest29", firstParameterObject);
+      assertEquals(3, results.size());
+      assertEquals(1, ((Person) results.get(0)).getId().intValue());
+      assertEquals(2, ((Person) results.get(1)).getId().intValue());
+      assertEquals(3, ((Person) results.get(2)).getId().intValue());
+    } catch (Exception e) {
+      fail(e.getMessage());
+    }
+  }
+
 }

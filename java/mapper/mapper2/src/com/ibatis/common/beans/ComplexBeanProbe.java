@@ -29,7 +29,7 @@ import java.util.StringTokenizer;
  * Examples:
  * <p/>
  * StaticBeanProbe.setObject(object, propertyName, value);
- * <P>
+ * <p/>
  * Object value = StaticBeanProbe.getObject(object, propertyName);
  */
 public class ComplexBeanProbe extends BaseProbe {
@@ -292,24 +292,38 @@ public class ComplexBeanProbe extends BaseProbe {
   }
 
   protected Object getProperty(Object object, String name) {
-    ClassInfo classCache = ClassInfo.getInstance(object.getClass());
     try {
       Object value = null;
       if (name.indexOf('[') > -1) {
         value = getIndexedProperty(object, name);
       } else {
         if (object instanceof Map) {
-          value = ((Map) object).get(name);
+          int index = name.indexOf('.');
+          if (index > -1) {
+            String mapId = name.substring(0, index);
+            value = getProperty(((Map) object).get(mapId), name.substring(index + 1));
+          } else {
+            value = ((Map) object).get(name);
+          }
+
         } else {
-          Invoker method = classCache.getGetInvoker(name);
-          if (method == null) {
-            throw new NoSuchMethodException("No GET method for property " + name + " on instance of " + object.getClass().getName());
+          int index = name.indexOf('.');
+          if (index > -1) {
+            String newName = name.substring(0, index);
+            value = getProperty(getObject(object, newName), name.substring(index + 1));
+          } else {
+            ClassInfo classCache = ClassInfo.getInstance(object.getClass());
+            Invoker method = classCache.getGetInvoker(name);
+            if (method == null) {
+              throw new NoSuchMethodException("No GET method for property " + name + " on instance of " + object.getClass().getName());
+            }
+            try {
+              value = method.invoke(object, NO_ARGUMENTS);
+            } catch (Throwable t) {
+              throw ClassInfo.unwrapThrowable(t);
+            }
           }
-          try {
-            value = method.invoke(object, NO_ARGUMENTS);
-          } catch (Throwable t) {
-            throw ClassInfo.unwrapThrowable(t);
-          }
+
         }
       }
       return value;
