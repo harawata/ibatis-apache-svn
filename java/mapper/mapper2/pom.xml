@@ -5,7 +5,7 @@
 	<groupId>org.apache.ibatis</groupId>
 	<artifactId>ibatis-sqlmap</artifactId>
 	<packaging>jar</packaging>
-	<version>2.2.3</version>
+	<version>2.3.1-SNAPSHOT</version>
 	<name>iBATIS SQL Map</name>
 	<url>http://ibatis.apache.org</url>
 	<dependencies>
@@ -109,6 +109,15 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <descriptorRefs>
+            <descriptorRef>bin</descriptorRef>
+            <descriptorRef>src</descriptorRef>
+          </descriptorRefs>
+        </configuration>
+      </plugin>
 		</plugins>
 	</build>
 	<reporting>
