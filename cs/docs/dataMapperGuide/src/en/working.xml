@@ -1578,7 +1578,7 @@ from Accounts
 	  <sect3>
         <title>groupBy</title>
 
-        <para>The optional <parameter>groupBy</parameter> attribute specifies a list of .NET properties names of the result object build by the resultMap. Thera are used to identify unique rows in the returned result set. Rows with equal values for the specified properties will only generate one result object. Use groupBy in combination with nested resultMaps to solve the N+1 query problem. Exemple : "Id" or "Desciption, Date".(see  paragraph 3.5.13).</para>
+        <para>The optional <parameter>groupBy</parameter> attribute specifies a list of .NET property names of the result object build by the resultMap. They are used to identify unique rows in the returned result set. Rows with equal values for the specified properties will only generate one result object. Use groupBy in combination with nested resultMaps to solve the N+1 query problem. Exemple : "Id" or "Desciption, Date".(see  paragraph 3.5.13).</para>
       </sect3>
     </sect2>
 
