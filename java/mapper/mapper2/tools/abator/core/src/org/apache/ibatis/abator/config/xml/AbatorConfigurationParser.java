@@ -34,6 +34,7 @@ import org.apache.ibatis.abator.config.AbatorContext;
 import org.apache.ibatis.abator.config.ColumnOverride;
 import org.apache.ibatis.abator.config.DAOGeneratorConfiguration;
 import org.apache.ibatis.abator.config.GeneratedKey;
+import org.apache.ibatis.abator.config.IgnoredColumn;
 import org.apache.ibatis.abator.config.JDBCConnectionConfiguration;
 import org.apache.ibatis.abator.config.JavaModelGeneratorConfiguration;
 import org.apache.ibatis.abator.config.JavaTypeResolverConfiguration;
@@ -330,6 +331,7 @@ public class AbatorConfigurationParser {
                 .getProperty("selectByExampleQueryId"); //$NON-NLS-1$
         String modelType = attributes.getProperty("modelType"); //$NON-NLS-1$
         String escapeWildcards = attributes.getProperty("escapeWildcards"); //$NON-NLS-1$
+        String delmitIdentifiers = attributes.getProperty("delimitIdentifiers"); //$NON-NLS-1$
 
         if (StringUtility.stringHasValue(catalog)) {
             tc.setCatalog(catalog);
@@ -398,6 +400,11 @@ public class AbatorConfigurationParser {
                     .equals(escapeWildcards));
         }
 
+        if (StringUtility.stringHasValue(delmitIdentifiers)) {
+            tc.setDelimitIdentifiers("true" //$NON-NLS-1$
+                    .equals(delmitIdentifiers));
+        }
+        
         NodeList nodeList = node.getChildNodes();
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node childNode = nodeList.item(i);
@@ -425,10 +432,9 @@ public class AbatorConfigurationParser {
         String javaType = attributes.getProperty("javaType"); //$NON-NLS-1$
         String jdbcType = attributes.getProperty("jdbcType"); //$NON-NLS-1$
         String typeHandler = attributes.getProperty("typeHandler"); //$NON-NLS-1$
+        String delimitedColumnName = attributes.getProperty("delimitedColumnName"); //$NON-NLS-1$
 
-        ColumnOverride co = new ColumnOverride();
-
-        co.setColumnName(column);
+        ColumnOverride co = new ColumnOverride(column);
 
         if (StringUtility.stringHasValue(property)) {
             co.setJavaProperty(property);
@@ -446,6 +452,10 @@ public class AbatorConfigurationParser {
             co.setTypeHandler(typeHandler);
         }
 
+        if (StringUtility.stringHasValue(delimitedColumnName)) {
+            co.setColumnNameDelimited("true".equalsIgnoreCase(delimitedColumnName));
+        }
+        
         tc.addColumnOverride(co);
     }
 
@@ -457,14 +467,22 @@ public class AbatorConfigurationParser {
         String sqlStatement = attributes.getProperty("sqlStatement"); //$NON-NLS-1$
 
         GeneratedKey gk = new GeneratedKey(column, sqlStatement, identity);
+
         tc.setGeneratedKey(gk);
     }
 
     private void parseIgnoreColumn(TableConfiguration tc, Node node) {
         Properties attributes = parseAttributes(node);
         String column = attributes.getProperty("column"); //$NON-NLS-1$
+        String delimitedColumnName = attributes.getProperty("delimitedColumnName"); //$NON-NLS-1$
+        
+        IgnoredColumn ic = new IgnoredColumn(column);
+        
+        if (StringUtility.stringHasValue(delimitedColumnName)) {
+            ic.setColumnNameDelimited("true".equalsIgnoreCase(delimitedColumnName));
+        }
 
-        tc.addIgnoredColumn(column);
+        tc.addIgnoredColumn(ic);
     }
 
     private void parseJavaTypeResolver(AbatorContext abatorContext, Node node) {

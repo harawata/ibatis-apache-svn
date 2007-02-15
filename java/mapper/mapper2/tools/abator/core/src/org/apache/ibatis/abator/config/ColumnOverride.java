@@ -33,20 +33,23 @@ public class ColumnOverride {
 	private String javaType;
     
     private String typeHandler;
+    
+    private boolean isColumnNameDelimited;
 
+    private String configuredDelimitedColumnName;
+    
 	/**
 	 *  
 	 */
-	public ColumnOverride() {
+	public ColumnOverride(String columnName) {
 		super();
-	}
+        
+        this.columnName = columnName;
+        isColumnNameDelimited = StringUtility.stringContainsSpace(columnName);
+}
 
 	public String getColumnName() {
 		return columnName;
-	}
-
-	public void setColumnName(String columnName) {
-		this.columnName = columnName;
 	}
 
 	public String getJavaProperty() {
@@ -101,6 +104,20 @@ public class ColumnOverride {
             xmlElement.addAttribute(new Attribute("typeHandler", typeHandler)); //$NON-NLS-1$
         }
         
+        if (StringUtility.stringHasValue(configuredDelimitedColumnName)) {
+            xmlElement.addAttribute(new Attribute("delimitedColumnName", configuredDelimitedColumnName));
+        }
+        
         return xmlElement;
+    }
+
+    public boolean isColumnNameDelimited() {
+        return isColumnNameDelimited;
+    }
+
+    public void setColumnNameDelimited(boolean isColumnNameDelimited) {
+        this.isColumnNameDelimited = isColumnNameDelimited;
+        
+        configuredDelimitedColumnName = isColumnNameDelimited ? "true" : "false";
     }
 }

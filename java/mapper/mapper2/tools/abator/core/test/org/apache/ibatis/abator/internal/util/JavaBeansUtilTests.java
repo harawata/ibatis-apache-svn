@@ -50,6 +50,7 @@ public class JavaBeansUtilTests extends TestCase {
         assertEquals("yaxis", JavaBeansUtil.getValidPropertyName("Yaxis"));
         assertEquals("i_PARAM_INT_1", JavaBeansUtil.getValidPropertyName("I_PARAM_INT_1"));
         assertEquals("_fred", JavaBeansUtil.getValidPropertyName("_fred"));
+        assertEquals("accountType", JavaBeansUtil.getValidPropertyName("AccountType"));
     }
 
     public void testGetGetterMethodName() {
@@ -61,6 +62,7 @@ public class JavaBeansUtilTests extends TestCase {
         assertEquals("isActive", JavaBeansUtil.getGetterMethodName("active", FullyQualifiedJavaType.getBooleanPrimitiveInstance()));
         assertEquals("getI_PARAM_INT_1", JavaBeansUtil.getGetterMethodName("i_PARAM_INT_1", FullyQualifiedJavaType.getStringInstance()));
         assertEquals("get_fred", JavaBeansUtil.getGetterMethodName("_fred", FullyQualifiedJavaType.getStringInstance()));
+        assertEquals("getAccountType", JavaBeansUtil.getGetterMethodName("AccountType", FullyQualifiedJavaType.getStringInstance()));
     }
 
     public void testGetSetterMethodName() {
@@ -71,5 +73,6 @@ public class JavaBeansUtilTests extends TestCase {
         assertEquals("setA", JavaBeansUtil.getSetterMethodName("a"));
         assertEquals("setI_PARAM_INT_1", JavaBeansUtil.getSetterMethodName("i_PARAM_INT_1"));
         assertEquals("set_fred", JavaBeansUtil.getSetterMethodName("_fred"));
+        assertEquals("setAccountType", JavaBeansUtil.getSetterMethodName("AccountType"));
     }
 }

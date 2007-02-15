@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.apache.ibatis.abator.api.JavaTypeResolver;
 import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
+import org.apache.ibatis.abator.config.AbatorContext;
 import org.apache.ibatis.abator.exception.UnsupportedDataTypeException;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
 
@@ -36,6 +37,8 @@ public class JavaTypeResolverDefaultImpl implements JavaTypeResolver {
 	protected List warnings;
 	
 	protected Map properties;
+    
+    protected AbatorContext abatorContext;
 
 	public JavaTypeResolverDefaultImpl() {
 		super();
@@ -43,10 +46,6 @@ public class JavaTypeResolverDefaultImpl implements JavaTypeResolver {
 	}
 
     public void addConfigurationProperties(Map properties) {
-        this.properties.putAll(properties);
-    }
-
-    public void addContextProperties(Map properties) {
         this.properties.putAll(properties);
     }
 
@@ -241,4 +240,8 @@ public class JavaTypeResolverDefaultImpl implements JavaTypeResolver {
 	public void setWarnings(List warnings) {
 		this.warnings = warnings;
 	}
+
+    public void setAbatorContext(AbatorContext abatorContext) {
+        this.abatorContext = abatorContext;
+    }
 }

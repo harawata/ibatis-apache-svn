@@ -54,4 +54,8 @@ public class StringUtility {
 
         return sb.toString();
     }
+    
+    public static boolean stringContainsSpace(String s) {
+        return s != null && s.indexOf(' ') != -1;
+    }
 }

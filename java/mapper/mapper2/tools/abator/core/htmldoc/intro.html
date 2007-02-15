@@ -31,7 +31,8 @@ percentage of database operations that are simple CRUD (Create, Retrieve, Update
       <li>a class to enable "Query By Example" functionality</li>
     </ul>
     <p>There is an inheritance relationship between these classes as appropriate.
-       Note that the types of POJOs generated is configurable - you may choose to tell
+       Abator may be configured to generate different types of POJO hierarchies -
+       you may choose to tell
        Abator to only generate a single domain object for each table if you so
        desire.</p>
   </li>
@@ -54,11 +55,14 @@ percentage of database operations that are simple CRUD (Create, Retrieve, Update
     above objects.  The generation of DAO classes is optional.  Abator will
     generate DAOs of the following types:
     <ul>
-      <li>DAOs that conform to the iBATIS DAO Framework (an optional part of iBATIS)</li>
-      <li>DAOs that conform to the SpringFramework</li>
+      <li>DAOs that conform to the
+          <a target="_blank" href="http://www.springframework.org">Spring</a> framework</li>
       <li>DAOs that only use the iBATIS SQL mapping API.  These DAOs can be
           generated in two varieties: supplying the <code>SqlMapClient</code> through
           either constructor or setter injection.</li>
+      <li>DAOs that conform to the iBATIS DAO Framework (an optional part of iBATIS, this
+          framework is now deprecated and we suggest that you use the Spring framework
+          instead)</li>
     </ul>
   </li>
 </ul>

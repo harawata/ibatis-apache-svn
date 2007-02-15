@@ -62,9 +62,11 @@ public class AbatorContext extends PropertyHolder {
     
     private String configuredGeneratorSet;
     
-    private char beginingDelimiter = '\"';
+    private String beginningDelimiter = "\""; //$NON-NLS-1$
 	
-    private char endingDelimiter = '\"';
+    private String endingDelimiter = "\""; //$NON-NLS-1$
+    
+    private boolean suppressTypeWarnings;
     
     /**
      * Constructs an AbatorContext object.
@@ -273,16 +275,18 @@ public class AbatorContext extends PropertyHolder {
                 introspectedTables  = databaseIntrospector.introspectTables(tc);
 				callback.checkCancel();
                 
-                Iterator iter2 = introspectedTables.iterator();
-                while (iter2.hasNext()) {
-                    callback.checkCancel();
-                    IntrospectedTable introspectedTable = (IntrospectedTable) iter2.next();
+                if (introspectedTables != null) {
+                    Iterator iter2 = introspectedTables.iterator();
+                    while (iter2.hasNext()) {
+                        callback.checkCancel();
+                        IntrospectedTable introspectedTable = (IntrospectedTable) iter2.next();
 
-                    if (daoGenerator != null) {
-                        generatedJavaFiles.addAll(daoGenerator.getGeneratedJavaFiles(introspectedTable, callback));
+                        if (daoGenerator != null) {
+                            generatedJavaFiles.addAll(daoGenerator.getGeneratedJavaFiles(introspectedTable, callback));
+                        }
+                        generatedJavaFiles.addAll(javaModelGenerator.getGeneratedJavaFiles(introspectedTable, callback));
+                        generatedXmlFiles.addAll(sqlMapGenerator.getGeneratedXMLFiles(introspectedTable, callback));
                     }
-                    generatedJavaFiles.addAll(javaModelGenerator.getGeneratedJavaFiles(introspectedTable, callback));
-                    generatedXmlFiles.addAll(sqlMapGenerator.getGeneratedXMLFiles(introspectedTable, callback));
                 }
 			}
 		} finally {
@@ -410,5 +414,29 @@ public class AbatorContext extends PropertyHolder {
 
     public List getTableConfigurations() {
         return tableConfigurations;
+    }
+
+    public String getBeginningDelimiter() {
+        return beginningDelimiter;
+    }
+
+    public String getEndingDelimiter() {
+        return endingDelimiter;
+    }
+
+    public void addProperty(String name, String value) {
+        super.addProperty(name, value);
+        
+        if ("suppressTypeWarnings".equals(name)) { //$NON-NLS-1$
+            suppressTypeWarnings = "true".equalsIgnoreCase(value); //$NON-NLS-1$
+        } else if ("beginningDelimiter".equals(name)) { //$NON-NLS-1$
+            beginningDelimiter = value;
+        } else if ("endingDelimiter".equals(name)) { //$NON-NLS-1$
+            endingDelimiter = value;
+        }
+    }
+
+    public boolean getSuppressTypeWarnings() {
+        return suppressTypeWarnings;
     }
 }

@@ -31,6 +31,7 @@
     <table tableName="PKBlobs" />
     <table tableName="PKFieldsBlobs" />
     <table tableName="FieldsBlobs" />
+    <table tableName="awful table" />
   </abatorContext>
 
   <abatorContext generatorSet="Java2" defaultModelType="flat">

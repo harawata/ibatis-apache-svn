@@ -117,6 +117,9 @@ public class AbatorAntTask extends Task {
         } catch (InterruptedException e) {
             // ignore (will never happen with the DefaultShellCallback)
             ;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BuildException(e.getMessage());
         }
         
         Iterator iter = warnings.iterator();

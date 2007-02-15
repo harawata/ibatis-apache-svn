@@ -140,6 +140,22 @@ specified with the <a href="property.html">&lt;property&gt;</a> child element:</
       no effect when using the Java5 generator set.</p>
       <p><i>The default value is false.</i></p></td>
   </tr>
+  <tr>
+    <td valign="top">beginningDelimiter</td>
+    <td>The value to use as the beginning identifier delimiter for SQL identifiers that
+        require delimiters.  Abator will automatically delimit SQL identifiers if the
+        identifier contains a space.  Abator will also delimit SQL identifiers if
+        specifically requested in a &lt;table&gt; or  &lt;columnOverride&gt; configuration.</p>
+      <p><i>The default value is double quotes (&quot;).</i></p></td>
+  </tr>
+  <tr>
+    <td valign="top">endingDelimiter</td>
+    <td>The value to use as the ending identifier delimiter for SQL identifiers that
+        require delimiters.  Abator will automatically delimit SQL identifiers if the
+        identifier contains a space.  Abator will also delimit SQL identifiers if
+        specifically requested in a &lt;table&gt; or  &lt;columnOverride&gt; configuration.</p>
+      <p><i>The default value is double quotes (&quot;).</i></p></td>
+  </tr>
 </table>
 
 </body>

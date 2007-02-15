@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.abator.api;
 
+import org.apache.ibatis.abator.config.AbatorContext;
 import org.apache.ibatis.abator.internal.util.EqualsUtil;
 import org.apache.ibatis.abator.internal.util.HashCodeUtil;
 import org.apache.ibatis.abator.internal.util.JavaBeansUtil;
@@ -31,14 +32,19 @@ public class FullyQualifiedTable {
 
 	private String tableName;
 
+    private String runtimeTableName;
+    
 	private String domainObjectName;
     
     private String alias;
     
     private boolean ignoreQualifiersAtRuntime;
     
-    private String runtimeTableName;
-
+    private String beginningDelimiter;
+    
+    private String endingDelimiter;
+    
+    
     /**
      * This object is used to hold information related to the table itself,
      * not the columns in the table.
@@ -73,10 +79,14 @@ public class FullyQualifiedTable {
      *  to run with an Oracle synonym.  The user would have to specify
      *  the actual table name and schema for generation, but would want to 
      *  use the synonym name in the generated SQL
+     *  
+     *  @param delimitIdentifiers if true, then the table identifiers will be
+     *   delimited at runtime.  The delimiter characters are obtained
+     *   from the AbatorContext.
      */
 	public FullyQualifiedTable(String catalog, String schema, String tableName,
             String domainObjectName, String alias, boolean ignoreQualifiersAtRuntime,
-            String runtimeTableName) {
+            String runtimeTableName, boolean delimitIdentifiers, AbatorContext abatorContext) {
 		super();
         this.catalog = catalog;
         this.schema = schema;
@@ -90,7 +100,10 @@ public class FullyQualifiedTable {
         } else {
             this.alias = alias.trim();
         }
-	}
+
+        beginningDelimiter = delimitIdentifiers ? abatorContext.getBeginningDelimiter() : ""; //$NON-NLS-1$
+        endingDelimiter = delimitIdentifiers ? abatorContext.getEndingDelimiter() : ""; //$NON-NLS-1$
+    }
 
 	public String getCatalog() {
 		return catalog;
@@ -104,16 +117,33 @@ public class FullyQualifiedTable {
 		return tableName;
 	}
 
-	public String getFullyQualifiedTableNameAsConfigured() {
-        return StringUtility.composeFullyQualifiedTableName(
-                catalog, schema, tableName, '.');
-	}
-
     public String getFullyQualifiedTableNameAtRuntime() {
+        String localCatalog;
+        String localSchema;
+        String localTableName;
+        
+        if (StringUtility.stringHasValue(catalog)  && !ignoreQualifiersAtRuntime) {
+            localCatalog = beginningDelimiter + catalog + endingDelimiter;
+        } else {
+            localCatalog = null;
+        }
+        
+        if (StringUtility.stringHasValue(schema)  && !ignoreQualifiersAtRuntime) {
+            localSchema = beginningDelimiter + schema + endingDelimiter;
+        } else {
+            localSchema = null;
+        }
+        
+        if (StringUtility.stringHasValue(runtimeTableName)) {
+            localTableName = beginningDelimiter + runtimeTableName + endingDelimiter;
+        } else {
+            localTableName = beginningDelimiter + tableName + endingDelimiter;
+        }
+        
         return StringUtility.composeFullyQualifiedTableName(
-                ignoreQualifiersAtRuntime ? null : catalog,
-                ignoreQualifiersAtRuntime ? null : schema,
-                StringUtility.stringHasValue(runtimeTableName) ? runtimeTableName : tableName,
+                localCatalog,
+                localSchema,
+                localTableName,
                 '.');
     }
 
@@ -130,7 +160,12 @@ public class FullyQualifiedTable {
         return sb.toString();
     }
 
-    public String getFullyQualifiedTableNameWithUnderscoresAtRuntime() {
+    /**
+     * This method returns a string that is the fully qualified table name, with
+     * underscores as the seperator.  This String should be 
+     * @return
+     */
+    public String getSqlMapNamespace() {
         return StringUtility.composeFullyQualifiedTableName(
                 ignoreQualifiersAtRuntime ? null : catalog,
                 ignoreQualifiersAtRuntime ? null : schema,
@@ -174,7 +209,8 @@ public class FullyQualifiedTable {
     }
     
     public String toString() {
-        return getFullyQualifiedTableNameAsConfigured();
+        return StringUtility.composeFullyQualifiedTableName(
+                catalog, schema, tableName, '.');
     }
 
     public String getAlias() {

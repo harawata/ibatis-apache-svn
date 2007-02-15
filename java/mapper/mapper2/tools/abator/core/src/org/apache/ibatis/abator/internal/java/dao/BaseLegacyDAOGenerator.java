@@ -19,7 +19,6 @@ package org.apache.ibatis.abator.internal.java.dao;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.abator.api.DAOGenerator;
 import org.apache.ibatis.abator.api.FullyQualifiedTable;
@@ -45,8 +44,6 @@ import org.apache.ibatis.abator.internal.util.JavaBeansUtil;
  */
 public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGenerator {
     
-    private boolean suppressTypeWarnings;
-
     /**
      * 
      */
@@ -98,7 +95,7 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
             
             StringBuffer sb = new StringBuffer();
 
-            if (suppressTypeWarnings) {
+            if (abatorContext.getSuppressTypeWarnings()) {
                 method1.addSuppressTypeWarningsAnnotation();
             }
             method1.addBodyLine("Map parms = getExampleParms(example);"); //$NON-NLS-1$
@@ -172,7 +169,7 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
 
             StringBuffer sb = new StringBuffer();
 
-            if (suppressTypeWarnings) {
+            if (abatorContext.getSuppressTypeWarnings()) {
                 method1.addSuppressTypeWarningsAnnotation();
             }
             method1.addBodyLine("Map parms = getExampleParms(example);"); //$NON-NLS-1$
@@ -265,7 +262,7 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
         Method method = new Method();
         method.addComment(table);
         method.setVisibility(JavaVisibility.PRIVATE);
-        if (suppressTypeWarnings) {
+        if (abatorContext.getSuppressTypeWarnings()) {
             method.addSuppressTypeWarningsAnnotation();
         }
         method.setReturnType(FullyQualifiedJavaType.getNewMapInstance());
@@ -327,7 +324,7 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
         Method method = new Method();
         method.addComment(table);
         method.setVisibility(JavaVisibility.PRIVATE);
-        if (suppressTypeWarnings) {
+        if (abatorContext.getSuppressTypeWarnings()) {
             method.addSuppressTypeWarningsAnnotation();
         }
         method.setReturnType(FullyQualifiedJavaType.getNewMapInstance());
@@ -416,14 +413,5 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
         method.addBodyLine("return parms;"); //$NON-NLS-1$
 
         return method;
-    }
-
-    public void addContextProperties(Map properties) {
-        super.addContextProperties(properties);
-
-        if ("true".equalsIgnoreCase //$NON-NLS-1$
-                ((String) properties.get("suppressTypeWarnings"))) { //$NON-NLS-1$
-            suppressTypeWarnings = true;
-        }
     }
 }

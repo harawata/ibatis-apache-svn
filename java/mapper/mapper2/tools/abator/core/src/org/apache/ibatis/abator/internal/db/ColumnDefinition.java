@@ -19,6 +19,7 @@ import java.sql.Types;
 import java.util.StringTokenizer;
 
 import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
+import org.apache.ibatis.abator.config.AbatorContext;
 import org.apache.ibatis.abator.internal.types.ResolvedJavaType;
 import org.apache.ibatis.abator.internal.util.StringUtility;
 
@@ -52,6 +53,10 @@ public class ColumnDefinition {
     private String tableAlias;
     
     private String typeHandler;
+    
+    private AbatorContext abatorContext;
+    
+    private boolean isColumnNameDelimited;
 
     /**
      * The aliased column name for a select statement.  If there
@@ -82,9 +87,10 @@ public class ColumnDefinition {
      * @param tableAlias The specified table alias, or null.  This
      *   value is used to rename and alias column names for select statements
      */
-    public ColumnDefinition(String tableAlias) {
+    public ColumnDefinition(String tableAlias, AbatorContext abatorContext) {
         super();
         this.tableAlias = tableAlias;
+        this.abatorContext = abatorContext;
     }
 
     public int getJdbcType() {
@@ -154,6 +160,7 @@ public class ColumnDefinition {
     public void setActualColumnName(String actualColumnName) {
         this.actualColumnName = actualColumnName;
         this.escapedColumnName = escapeStringForIbatis(actualColumnName);
+        isColumnNameDelimited = StringUtility.stringContainsSpace(actualColumnName);
         
         if (StringUtility.stringHasValue(tableAlias)) {
             StringBuffer sb = new StringBuffer();
@@ -322,5 +329,13 @@ public class ColumnDefinition {
 
     public String getAliasedEscapedColumnName() {
         return aliasedEscapedColumnName;
+    }
+
+    public void setColumnNameDelimited(boolean isColumnNameDelimited) {
+        this.isColumnNameDelimited = isColumnNameDelimited;
+    }
+
+    public boolean isColumnNameDelimited() {
+        return isColumnNameDelimited;
     }
 }

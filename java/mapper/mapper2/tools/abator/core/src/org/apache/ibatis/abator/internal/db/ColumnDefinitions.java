@@ -15,8 +15,9 @@
  */
 package org.apache.ibatis.abator.internal.db;
 
-import java.util.Collection;
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * This class holds the results of introspecting the database table.
@@ -25,36 +26,36 @@ import java.util.LinkedHashMap;
  */
 public class ColumnDefinitions {
 	
-    private LinkedHashMap primaryKeyColumns;
-	private LinkedHashMap baseColumns;
-    private LinkedHashMap blobColumns;
+    private List primaryKeyColumns;
+	private List baseColumns;
+    private List blobColumns;
     private boolean hasJDBCDateColumns;
     private boolean hasJDBCTimeColumns;
 
 	public ColumnDefinitions() {
 		super();
-		primaryKeyColumns = new LinkedHashMap();
-        baseColumns = new LinkedHashMap();
-        blobColumns = new LinkedHashMap();
+		primaryKeyColumns = new ArrayList();
+        baseColumns = new ArrayList();
+        blobColumns = new ArrayList();
 	}
 
-	public Collection getBLOBColumns() {
-        return blobColumns.values();
+	public List getBLOBColumns() {
+        return blobColumns;
 	}
 
-	public Collection getBaseColumns() {
-        return baseColumns.values();
+	public List getBaseColumns() {
+        return baseColumns;
 	}
 	
-	public Collection getPrimaryKeyColumns() {
-		return primaryKeyColumns.values();
+	public List getPrimaryKeyColumns() {
+		return primaryKeyColumns;
 	}
 
 	public void addColumn(ColumnDefinition cd) {
         if (cd.isBLOBColumn()) {
-            blobColumns.put(cd.getActualColumnName().toUpperCase(), cd);
+            blobColumns.add(cd);
         } else {
-            baseColumns.put(cd.getActualColumnName().toUpperCase(), cd);
+            baseColumns.add(cd);
         }
         
         if (cd.isJDBCDateColumn()) {
@@ -67,12 +68,31 @@ public class ColumnDefinitions {
 	}
 
 	public void addPrimaryKeyColumn(String columnName) {
-		String key = columnName.toUpperCase();
-		if (baseColumns.containsKey(key)) {
-			primaryKeyColumns.put(key, baseColumns.remove(key));
-		} else if (blobColumns.containsKey(key)) {
-            // in the wierd event that a BLOB is a key column
-            primaryKeyColumns.put(key, blobColumns.remove(key));
+        boolean found = false;
+        // first search base columns
+        Iterator iter = baseColumns.iterator();
+        while (iter.hasNext()) {
+            ColumnDefinition cd = (ColumnDefinition) iter.next();
+            if (cd.getActualColumnName().equals(columnName)) {
+                primaryKeyColumns.add(cd);
+                iter.remove();
+                found = true;
+                break;
+            }
+        }
+        
+        // search blob columns in the wierd event that a blob is the primary key
+        if (!found) {
+            iter = blobColumns.iterator();
+            while (iter.hasNext()) {
+                ColumnDefinition cd = (ColumnDefinition) iter.next();
+                if (cd.getActualColumnName().equals(columnName)) {
+                    primaryKeyColumns.add(cd);
+                    iter.remove();
+                    found = true;
+                    break;
+                }
+            }
         }
     }
 
@@ -92,18 +112,52 @@ public class ColumnDefinitions {
         if (columnName == null) {
             return null;
         } else {
-            String key = columnName.toUpperCase();
-            ColumnDefinition cd = (ColumnDefinition) primaryKeyColumns.get(key);
-
-            if (cd == null) {
-                cd = (ColumnDefinition) baseColumns.get(key);
-            }
-
-            if (cd == null) {
-                cd = (ColumnDefinition) blobColumns.get(key);
+            // search primary key columns
+            Iterator iter = primaryKeyColumns.iterator();
+            while (iter.hasNext()) {
+                ColumnDefinition cd = (ColumnDefinition) iter.next();
+                if (cd.isColumnNameDelimited()) {
+                    if (cd.getActualColumnName().equals(columnName)) {
+                        return cd;
+                    }
+                } else {
+                    if (cd.getActualColumnName().equalsIgnoreCase(columnName)) {
+                        return cd;
+                    }
+                }
             }
             
-            return cd;
+            // search base columns
+            iter = baseColumns.iterator();
+            while (iter.hasNext()) {
+                ColumnDefinition cd = (ColumnDefinition) iter.next();
+                if (cd.isColumnNameDelimited()) {
+                    if (cd.getActualColumnName().equals(columnName)) {
+                        return cd;
+                    }
+                } else {
+                    if (cd.getActualColumnName().equalsIgnoreCase(columnName)) {
+                        return cd;
+                    }
+                }
+            }
+
+            // search bblob columns
+            iter = blobColumns.iterator();
+            while (iter.hasNext()) {
+                ColumnDefinition cd = (ColumnDefinition) iter.next();
+                if (cd.isColumnNameDelimited()) {
+                    if (cd.getActualColumnName().equals(columnName)) {
+                        return cd;
+                    }
+                } else {
+                    if (cd.getActualColumnName().equalsIgnoreCase(columnName)) {
+                        return cd;
+                    }
+                }
+            }
+            
+            return null;
         }
 	}
     

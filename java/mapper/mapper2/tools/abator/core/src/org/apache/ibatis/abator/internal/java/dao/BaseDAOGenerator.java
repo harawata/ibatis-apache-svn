@@ -38,6 +38,7 @@ import org.apache.ibatis.abator.api.dom.java.Method;
 import org.apache.ibatis.abator.api.dom.java.Parameter;
 import org.apache.ibatis.abator.api.dom.java.PrimitiveTypeWrapper;
 import org.apache.ibatis.abator.api.dom.java.TopLevelClass;
+import org.apache.ibatis.abator.config.AbatorContext;
 import org.apache.ibatis.abator.internal.AbatorObjectFactory;
 import org.apache.ibatis.abator.internal.DefaultDAOMethodNameCalculator;
 import org.apache.ibatis.abator.internal.ExtendedDAOMethodNameCalculator;
@@ -87,6 +88,7 @@ import org.apache.ibatis.abator.internal.util.messages.Messages;
  */
 public class BaseDAOGenerator implements DAOGenerator {
 
+    protected AbatorContext abatorContext;
     protected AbstractDAOTemplate daoTemplate;
 
     protected Map properties;
@@ -212,17 +214,14 @@ public class BaseDAOGenerator implements DAOGenerator {
             ProgressCallback callback) {
         List list = new ArrayList();
 
-        String tableName = introspectedTable.getTable()
-                .getFullyQualifiedTableNameAsConfigured();
-
         callback.startSubTask(Messages.getString("Progress.10", //$NON-NLS-1$
-                tableName));
+                introspectedTable.getTable().toString()));
         CompilationUnit cu = getDAOImplementation(introspectedTable);
         GeneratedJavaFile gjf = new GeneratedJavaFile(cu, targetProject);
         list.add(gjf);
 
         callback.startSubTask(Messages.getString("Progress.11", //$NON-NLS-1$
-                tableName));
+                introspectedTable.getTable().toString()));
         cu = getDAOInterface(introspectedTable);
         gjf = new GeneratedJavaFile(cu, targetProject);
         list.add(gjf);
@@ -1156,7 +1155,7 @@ public class BaseDAOGenerator implements DAOGenerator {
         return map;
     }
 
-    public void addContextProperties(Map properties) {
-        this.properties.putAll(properties);
+    public void setAbatorContext(AbatorContext abatorContext) {
+        this.abatorContext = abatorContext;
     }
 }

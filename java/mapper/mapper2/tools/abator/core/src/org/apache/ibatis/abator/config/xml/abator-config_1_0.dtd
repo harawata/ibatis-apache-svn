@@ -149,7 +149,8 @@
   selectByPrimaryKeyQueryId CDATA #IMPLIED
   selectByExampleQueryId CDATA #IMPLIED
   modelType CDATA #IMPLIED
-  escapeWildcards CDATA #IMPLIED>
+  escapeWildcards CDATA #IMPLIED
+  delimitIdentifiers CDATA #IMPLIED>
 
 <!--
   The columnOverride element is used to change certain attributes of the column
@@ -161,7 +162,8 @@
   property CDATA #IMPLIED
   javaType CDATA #IMPLIED
   jdbcType CDATA #IMPLIED
-  typeHandler CDATA #IMPLIED>
+  typeHandler CDATA #IMPLIED
+  delimitedColumnName CDATA #IMPLIED>
 
 <!--
   The ignoreColumn element is used to identify a column that should be ignored.
@@ -170,7 +172,8 @@
 -->
 <!ELEMENT ignoreColumn EMPTY>
 <!ATTLIST ignoreColumn
-  column CDATA #REQUIRED>
+  column CDATA #REQUIRED
+  delimitedColumnName CDATA #IMPLIED>
 
 <!--
   The generatedKey element is used to identify a column in the table whose value

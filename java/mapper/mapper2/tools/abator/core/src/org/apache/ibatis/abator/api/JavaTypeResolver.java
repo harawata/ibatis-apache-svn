@@ -18,6 +18,7 @@ package org.apache.ibatis.abator.api;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.abator.config.AbatorContext;
 import org.apache.ibatis.abator.exception.UnsupportedDataTypeException;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
 
@@ -42,15 +43,15 @@ public interface JavaTypeResolver {
     void addConfigurationProperties(Map properties);
     
     /**
-     * Adds properties for this instance from any properties configured
-     * in the current context.
+     * Sets the instance of the AbatorConfiguration object associated with 
+     * this instance.
      * 
      * This method will be called before any of the get methods.
      * 
-     * @param properties
-     *            All properties from the configuration
+     * @param abatorContext
+     *            The current AbatorContext
      */
-    void addContextProperties(Map properties);
+    void setAbatorContext(AbatorContext abatorContext);
 	
 	/**
 	 * Abator will supply a list to this method.  The implementation class may

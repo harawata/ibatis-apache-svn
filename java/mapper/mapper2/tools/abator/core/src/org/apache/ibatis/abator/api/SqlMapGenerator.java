@@ -18,6 +18,8 @@ package org.apache.ibatis.abator.api;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.abator.config.AbatorContext;
+
 /**
  * This interface describes the operations that are required of an 
  * Sql Map Generator.  An Sql Map Generator is a class that generates
@@ -50,15 +52,15 @@ public interface SqlMapGenerator {
     void addConfigurationProperties(Map properties);
     
     /**
-     * Adds properties for this instance from any properties configured
-     * in the current context.
+     * Sets the instance of the AbatorConfiguration object associated with 
+     * this instance.
      * 
      * This method will be called before any of the get methods.
      * 
-     * @param properties
-     *            All properties from the configuration
+     * @param abatorContext
+     *            The current AbatorContext
      */
-    void addContextProperties(Map properties);
+    void setAbatorContext(AbatorContext abatorContext);
 
     void setTargetPackage(String targetPackage);
 

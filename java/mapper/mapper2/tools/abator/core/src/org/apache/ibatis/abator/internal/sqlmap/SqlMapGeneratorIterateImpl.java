@@ -33,6 +33,7 @@ import org.apache.ibatis.abator.api.dom.xml.Attribute;
 import org.apache.ibatis.abator.api.dom.xml.Document;
 import org.apache.ibatis.abator.api.dom.xml.TextElement;
 import org.apache.ibatis.abator.api.dom.xml.XmlElement;
+import org.apache.ibatis.abator.config.AbatorContext;
 import org.apache.ibatis.abator.config.GeneratedKey;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
 import org.apache.ibatis.abator.internal.util.StringUtility;
@@ -44,6 +45,7 @@ import org.apache.ibatis.abator.internal.util.messages.Messages;
 public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
     protected List warnings;
+    protected AbatorContext abatorContext;
 
     /**
      * Contains any properties passed in from the SqlMap configuration element.
@@ -97,10 +99,6 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         this.properties.putAll(properties);
     }
 
-    public void addContextProperties(Map properties) {
-        this.properties.putAll(properties);
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -130,7 +128,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         FullyQualifiedTable table = introspectedTable.getTable();
         callback.startSubTask(Messages.getString(
                 "Progress.12", //$NON-NLS-1$
-                table.getFullyQualifiedTableNameAsConfigured()));
+                table.toString()));
         list.add(getSqlMap(introspectedTable));
 
         return list;
@@ -827,7 +825,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         Map map = getTableStringMap(table);
         s = (String) map.get(key);
         if (s == null) {
-            s = table.getFullyQualifiedTableNameWithUnderscoresAtRuntime();
+            s = table.getSqlMapNamespace();
             map.put(key, s);
         }
 
@@ -881,7 +879,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         s = (String) map.get(key);
         if (s == null) {
             StringBuffer sb = new StringBuffer();
-            sb.append(table.getFullyQualifiedTableNameWithUnderscoresAtRuntime());
+            sb.append(table.getSqlMapNamespace());
 
             sb.append("_SqlMap.xml"); //$NON-NLS-1$
 
@@ -1444,5 +1442,9 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         }
 
         return answer;
+    }
+
+    public void setAbatorContext(AbatorContext abatorContext) {
+        this.abatorContext = abatorContext;
     }
 }

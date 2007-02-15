@@ -333,5 +333,4 @@
 	      <report format="frames" todir="${reports.junit}"/>
     </junitreport>
   </target>
-
 </project>

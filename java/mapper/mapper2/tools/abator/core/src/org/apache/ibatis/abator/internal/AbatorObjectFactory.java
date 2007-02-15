@@ -87,7 +87,7 @@ public class AbatorObjectFactory {
             answer.addConfigurationProperties(config.getProperties());
         }
         
-        answer.addContextProperties(context.getProperties());
+        answer.setAbatorContext(context);
 	    
 	    return answer;
 	}
@@ -109,7 +109,7 @@ public class AbatorObjectFactory {
 
 	    answer.setJavaModelGenerator(javaModelGenerator);
 	    answer.addConfigurationProperties(config.getProperties());
-        answer.addContextProperties(context.getProperties());
+        answer.setAbatorContext(context);
 	    answer.setTargetPackage(config.getTargetPackage());
 	    answer.setTargetProject(config.getTargetProject());
 	    
@@ -132,7 +132,7 @@ public class AbatorObjectFactory {
 	    answer.setWarnings(warnings);
 	    
 	    answer.addConfigurationProperties(config.getProperties());
-        answer.addContextProperties(context.getProperties());
+        answer.setAbatorContext(context);
 	    answer.setTargetPackage(config.getTargetPackage());
 	    answer.setTargetProject(config.getTargetProject());
 	    
@@ -155,7 +155,7 @@ public class AbatorObjectFactory {
 
 	    answer.setJavaModelGenerator(javaModelGenerator);
 	    answer.addConfigurationProperties(config.getProperties());
-        answer.addContextProperties(context.getProperties());
+        answer.setAbatorContext(context);
 	    answer.setSqlMapGenerator(sqlMapGenerator);
 	    answer.setTargetPackage(config.getTargetPackage());
 	    answer.setTargetProject(config.getTargetProject());

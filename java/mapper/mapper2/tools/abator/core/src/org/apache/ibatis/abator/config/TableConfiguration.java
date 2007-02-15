@@ -44,7 +44,7 @@ public class TableConfiguration extends PropertyHolder {
 
 	private boolean deleteByExampleStatementEnabled;
 
-	private Map columnOverrides;
+	private List columnOverrides;
 
 	private Map ignoredColumns;
 
@@ -62,13 +62,14 @@ public class TableConfiguration extends PropertyHolder {
     private ModelType modelType;
     private boolean wildcardEscapingEnabled;
     private String configuredModelType;
+    private boolean delimitIdentifiers;
     
 	public TableConfiguration(AbatorContext abatorContext) {
 		super();
         
         this.modelType = abatorContext.getDefaultModelType();
 		
-		columnOverrides = new HashMap();
+		columnOverrides = new ArrayList();
 		ignoredColumns = new HashMap();
 
 		insertStatementEnabled = true;
@@ -114,25 +115,35 @@ public class TableConfiguration extends PropertyHolder {
 		this.updateByPrimaryKeyStatementEnabled = updateByPrimaryKeyStatementEnabled;
 	}
 
-	public boolean isColumnIgnored(String column) {
-	    String key = column.toUpperCase();
+	public boolean isColumnIgnored(String columnName) {
         
-        boolean rc = ignoredColumns.containsKey(key);
-        
-        if (rc) {
-            ignoredColumns.put(key, Boolean.TRUE);
+        Iterator iter = ignoredColumns.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry entry = (Map.Entry) iter.next();
+
+            IgnoredColumn ic = (IgnoredColumn) entry.getKey();
+            if (ic.isColumnNameDelimited()) {
+                if (columnName.equals(ic.getColumnName())) {
+                    entry.setValue(Boolean.TRUE);
+                    return true;
+                }
+            } else {
+                if (columnName.equalsIgnoreCase(ic.getColumnName())) {
+                    entry.setValue(Boolean.TRUE);
+                    return true;
+                }
+            }
         }
-	    
-	    return rc;
+        
+        return false;
 	}
 
-	public void addIgnoredColumn(String column) {
-		ignoredColumns.put(column.toUpperCase(), Boolean.FALSE);
+	public void addIgnoredColumn(IgnoredColumn ignoredColumn) {
+		ignoredColumns.put(ignoredColumn, Boolean.FALSE);
 	}
 
 	public void addColumnOverride(ColumnOverride columnOverride) {
-		columnOverrides.put(columnOverride.getColumnName().toUpperCase(),
-				columnOverride);
+		columnOverrides.add(columnOverride);
 	}
 
 	public boolean equals(Object obj) {
@@ -176,7 +187,21 @@ public class TableConfiguration extends PropertyHolder {
 	 * @return the column override (if any) related to this column
 	 */
 	public ColumnOverride getColumnOverride(String columnName) {
-		return (ColumnOverride) columnOverrides.get(columnName.toUpperCase());
+        Iterator iter = columnOverrides.iterator();
+        while (iter.hasNext()) {
+            ColumnOverride co = (ColumnOverride) iter.next();
+            if (co.isColumnNameDelimited()) {
+                if (columnName.equals(co.getColumnName())) {
+                    return co;
+                }
+            } else {
+                if (columnName.equalsIgnoreCase(co.getColumnName())) {
+                    return co;
+                }
+            }
+        }
+        
+        return null;
 	}
 
 	public GeneratedKey getGeneratedKey() {
@@ -262,7 +287,7 @@ public class TableConfiguration extends PropertyHolder {
     }
 
     public Iterator getColumnOverrides() {
-        return columnOverrides.values().iterator();
+        return columnOverrides.iterator();
     }
 
     /**
@@ -374,15 +399,13 @@ public class TableConfiguration extends PropertyHolder {
         if (ignoredColumns.size() > 0) {
             Iterator iter = ignoredColumns.keySet().iterator();
             while (iter.hasNext()) {
-                String column = (String) iter.next();
-                XmlElement ignoreColumn = new XmlElement("ignoreColumn"); //$NON-NLS-1$
-                ignoreColumn.addAttribute(new Attribute("column", column)); //$NON-NLS-1$
-                xmlElement.addElement(ignoreColumn);
+                IgnoredColumn ignoredColumn = (IgnoredColumn) iter.next();
+                xmlElement.addElement(ignoredColumn.toXmlElement());
             }
         }
         
         if (columnOverrides.size() > 0) {
-            Iterator iter = columnOverrides.values().iterator();
+            Iterator iter = columnOverrides.iterator();
             while (iter.hasNext()) {
                 ColumnOverride columnOverride = (ColumnOverride) iter.next();
                 xmlElement.addElement(columnOverride.toXmlElement());
@@ -390,5 +413,17 @@ public class TableConfiguration extends PropertyHolder {
         }
         
         return xmlElement;
+    }
+
+    public String toString() {
+        return StringUtility.composeFullyQualifiedTableName(catalog, schema, tableName, '.');
+    }
+
+    public boolean isDelimitIdentifiers() {
+        return delimitIdentifiers;
+    }
+
+    public void setDelimitIdentifiers(boolean delimitIdentifiers) {
+        this.delimitIdentifiers = delimitIdentifiers;
     }
 }

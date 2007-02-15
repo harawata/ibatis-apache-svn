@@ -17,7 +17,7 @@ table name at runtime.  Abator supports this automatically.</p>
 table "HR.EMPLOYEES".  The following table configuration will generate the objects
 based on HR.EMPLOYEES, but the runtime SQL will only refer to FRED:</p>
 <pre>
-  &lt;table schema="HR" tableName="EMPLOYEES" alias="A"&gt;
+  &lt;table schema="HR" tableName="EMPLOYEES"&gt;
     &lt;property name="ignoreQualifiersAtRuntime" value="true" /&gt;
     &lt;property name="runtimeTableName" value="FRED" /&gt;
   &lt;/table&gt;

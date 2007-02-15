@@ -34,6 +34,7 @@ import org.apache.ibatis.abator.api.dom.java.JavaVisibility;
 import org.apache.ibatis.abator.api.dom.java.Method;
 import org.apache.ibatis.abator.api.dom.java.Parameter;
 import org.apache.ibatis.abator.api.dom.java.TopLevelClass;
+import org.apache.ibatis.abator.config.AbatorContext;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
 import org.apache.ibatis.abator.internal.util.JavaBeansUtil;
 import org.apache.ibatis.abator.internal.util.StringUtility;
@@ -68,6 +69,7 @@ import org.apache.ibatis.abator.internal.util.messages.Messages;
  */
 public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
+    protected AbatorContext abatorContext;
     protected List warnings;
 
     /**
@@ -87,12 +89,6 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
     private Map tableValueMaps;
 
-    /**
-     * if true, then the annotation to suppress type warnings will be
-     * added to the appropriate methods
-     */
-    private boolean suppressTypeWarnings;
-
     public JavaModelGeneratorJava2Impl() {
         super();
         tableValueMaps = new HashMap();
@@ -101,15 +97,6 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
     public void addConfigurationProperties(Map properties) {
         this.properties.putAll(properties);
-    }
-
-    public void addContextProperties(Map properties) {
-        this.properties.putAll(properties);
-        
-        if ("true".equalsIgnoreCase //$NON-NLS-1$
-                ((String) properties.get("suppressTypeWarnings"))) { //$NON-NLS-1$
-            suppressTypeWarnings = true;
-        }
     }
 
     /*
@@ -354,12 +341,9 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
     public List getGeneratedJavaFiles(IntrospectedTable introspectedTable, ProgressCallback callback) {
         List list = new ArrayList();
 
-        String tableName = introspectedTable.getTable()
-                .getFullyQualifiedTableNameAsConfigured();
-
         callback.startSubTask(Messages.getString(
                 "Progress.6", //$NON-NLS-1$
-                tableName));
+                introspectedTable.getTable().toString()));
         TopLevelClass tlc = getExample(introspectedTable);
         if (tlc != null) {
             afterExampleGenerationHook(introspectedTable, tlc);
@@ -369,7 +353,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
         callback.startSubTask(Messages.getString(
                 "Progress.7", //$NON-NLS-1$
-                tableName));
+                introspectedTable.getTable().toString()));
         tlc = getPrimaryKey(introspectedTable);
         if (tlc != null) {
             afterPrimaryKeyGenerationHook(introspectedTable, tlc);
@@ -379,7 +363,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
         callback.startSubTask(Messages.getString(
                 "Progress.8", //$NON-NLS-1$
-                tableName));
+                introspectedTable.getTable().toString()));
         tlc = getBaseRecord(introspectedTable);
         if (tlc != null) {
             afterBaseRecordGenerationHook(introspectedTable, tlc);
@@ -389,7 +373,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
         callback.startSubTask(Messages.getString(
                 "Progress.9", //$NON-NLS-1$
-                tableName));
+                introspectedTable.getTable().toString()));
         tlc = getRecordWithBLOBs(introspectedTable);
         if (tlc != null) {
             afterRecordWithBLOBsGenerationHook(introspectedTable, tlc);
@@ -623,7 +607,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         Method method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
         if (!(this instanceof JavaModelGeneratorJava5Impl)) {
-            if (suppressTypeWarnings) {
+            if (abatorContext.getSuppressTypeWarnings()) {
                 method.addSuppressTypeWarningsAnnotation();
             }
         }
@@ -774,7 +758,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         method = new Method();
         method.addComment(table);
         method.setVisibility(JavaVisibility.PUBLIC);
-        if (suppressTypeWarnings) {
+        if (abatorContext.getSuppressTypeWarnings()) {
             method.addSuppressTypeWarningsAnnotation();
         }
         method.setName("or"); //$NON-NLS-1$
@@ -787,7 +771,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         method = new Method();
         method.addComment(table);
         method.setVisibility(JavaVisibility.PUBLIC);
-        if (suppressTypeWarnings) {
+        if (abatorContext.getSuppressTypeWarnings()) {
             method.addSuppressTypeWarningsAnnotation();
         }
         method.setName("createCriteria"); //$NON-NLS-1$
@@ -949,7 +933,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         // now add the methods for simplifying the individual field set methods
         method = new Method();
         method.setVisibility(JavaVisibility.PRIVATE);
-        if (suppressTypeWarnings) {
+        if (abatorContext.getSuppressTypeWarnings()) {
             method.addSuppressTypeWarningsAnnotation();
         }
         method.setName("addCriterion"); //$NON-NLS-1$
@@ -975,7 +959,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
         method = new Method();
         method.setVisibility(JavaVisibility.PRIVATE);
-        if (suppressTypeWarnings) {
+        if (abatorContext.getSuppressTypeWarnings()) {
             method.addSuppressTypeWarningsAnnotation();
         }
         method.setName("addCriterion"); //$NON-NLS-1$
@@ -997,7 +981,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
         method = new Method();
         method.setVisibility(JavaVisibility.PRIVATE);
-        if (suppressTypeWarnings) {
+        if (abatorContext.getSuppressTypeWarnings()) {
             method.addSuppressTypeWarningsAnnotation();
         }
         method.setName("addCriterion"); //$NON-NLS-1$
@@ -1046,7 +1030,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
             method = new Method();
             method.setVisibility(JavaVisibility.PRIVATE);
-            if (suppressTypeWarnings) {
+            if (abatorContext.getSuppressTypeWarnings()) {
                 method.addSuppressTypeWarningsAnnotation();
             }
             method.setName("addCriterionForJDBCDate"); //$NON-NLS-1$
@@ -1110,7 +1094,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
             method = new Method();
             method.setVisibility(JavaVisibility.PRIVATE);
-            if (suppressTypeWarnings) {
+            if (abatorContext.getSuppressTypeWarnings()) {
                 method.addSuppressTypeWarningsAnnotation();
             }
             method.setName("addCriterionForJDBCTime"); //$NON-NLS-1$
@@ -1434,5 +1418,9 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         innerClass.addMethod(method);
         
         return answer;
+    }
+
+    public void setAbatorContext(AbatorContext abatorContext) {
+        this.abatorContext = abatorContext;
     }
 }
