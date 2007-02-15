@@ -23,6 +23,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
         protected override void SetUpFixture()
         {
             base.SetUpFixture();
+
             InitScript(sqlMap.DataSource, ScriptDirectory + "petstore-drop.sql");
             InitScript(sqlMap.DataSource, ScriptDirectory + "petstore-schema.sql");
             InitScript(sqlMap.DataSource, ScriptDirectory + "petstore-init.sql");
@@ -179,5 +180,31 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
             Assert.AreEqual(1, order.LineItemsIList.Count);
             Assert.IsNull(order.Account);
         }
+
+#if dotnet2
+        /// <summary>
+        /// Test GroupBy With use of Inheritance
+        /// </summary>
+        [Test]
+        public void GroupByWithInheritance()
+        {
+            InitScript(sqlMap.DataSource, ScriptDirectory + "petstore-drop.sql");
+            InitScript(sqlMap.DataSource, ScriptDirectory + "account-init.sql");
+            InitScript(sqlMap.DataSource, ScriptDirectory + "documents-init.sql");
+
+            IList<Account> list = sqlMap.QueryForList<Account>("JIRA206", null);
+            
+            Assert.AreEqual(5, list.Count);
+            Assert.AreEqual(0, list[0].Documents.Count);
+            Assert.AreEqual(2, list[1].Documents.Count);
+            Assert.AreEqual(1, list[2].Documents.Count);
+            Assert.AreEqual(0, list[3].Documents.Count);
+            Assert.AreEqual(2, list[4].Documents.Count);
+
+            InitScript(sqlMap.DataSource, ScriptDirectory + "petstore-drop.sql");
+            InitScript(sqlMap.DataSource, ScriptDirectory + "petstore-schema.sql");
+            InitScript(sqlMap.DataSource, ScriptDirectory + "petstore-init.sql");
+        }
+#endif
     }
 }

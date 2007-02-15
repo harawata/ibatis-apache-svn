@@ -148,15 +148,36 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			<result property="LastName"     column="Account_LastName"/>
 			<result property="EmailAddress" column="Account_Email"/>
 		</resultMap>
-		
-	</resultMaps>
-	
-	<!-- =============================================
+
+    <resultMap id="account-groupby"  class="Account" groupBy="id">
+      <result property="id"           column="Account_ID"/>
+      <result property="FirstName"    column="Account_FirstName"/>
+      <result property="documents" resultMapping="Document.document"/>
+    </resultMap>
+
+  </resultMaps>
+
+  <!-- =============================================
         MAPPED STATEMENTS - w/Inline Parameters
     ============================================= 
     -->
-	<statements>
+  <statements>
 
+    <select id="JIRA206"
+       resultMap="account-groupby">
+      SELECT
+      Accounts.Account_ID,
+      Account_FirstName,
+      Document_ID,
+      Document_City,
+      Document_PageNumber,
+      Document_Type,
+      Document_Title
+      FROM         Accounts LEFT OUTER JOIN
+      Documents ON Accounts.Account_ID = Documents.Account_Id
+      Order by Accounts.Account_ID
+    </select>
+    
     <select id="GetMultipleResultMapAccount"
 				resultMap="account-result, account-result">
       select

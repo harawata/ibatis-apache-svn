@@ -247,10 +247,6 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		{
 			try
 			{
-				if (_className == "NCategory")
-				{
-					Console.Write("");
-				}
 				_class = configScope.SqlMapper.TypeHandlerFactory.GetType(_className);
 				_dataExchange = _dataExchangeFactory.GetDataExchangeForClass(_class);
 
@@ -441,16 +437,24 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			{	
 				ResultProperty mapping = _discriminator.ResultProperty;
 				object dataBaseValue = mapping.GetDataBaseValue( dataReader );
-				subMap = _discriminator.GetSubMap( dataBaseValue.ToString() );
 
-				if (subMap == null) 
-				{
-					subMap = this;
-				} 
-				else if (subMap != this) 
-				{
-					subMap = subMap.ResolveSubMap(dataReader);
-				}
+                if (dataBaseValue!=null)
+                {
+				    subMap = _discriminator.GetSubMap( dataBaseValue.ToString() );
+
+				    if (subMap == null) 
+				    {
+					    subMap = this;
+				    } 
+				    else if (subMap != this) 
+				    {
+					    subMap = subMap.ResolveSubMap(dataReader);
+				    }                    
+                }
+                else
+                {
+                    subMap = null;
+                }
 			}
 			return subMap;
 		}

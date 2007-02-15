@@ -28,8 +28,8 @@ ALTER TABLE [dbo].[Documents] WITH NOCHECK ADD
 -- Creating Test Data 
 
 INSERT INTO [dbo].[Documents] VALUES (1, 'The World of Null-A', 'Book', 55, null, 5);
-INSERT INTO [dbo].[Documents] VALUES (2, 'Le Progres de Lyon', 'Newspaper', null , 'Lyon', NULL);
-INSERT INTO [dbo].[Documents] VALUES (3, 'Lord of the Rings', 'Book', 3587, null, NULL);
-INSERT INTO [dbo].[Documents] VALUES (4, 'Le Canard enchaine', 'Tabloid', null , 'Paris', NULL);
-INSERT INTO [dbo].[Documents] VALUES (5, 'Le Monde', 'Broadsheet', null , 'Paris', NULL);
-INSERT INTO [dbo].[Documents] VALUES (6, 'Foundation', 'Monograph', 557, null, NULL);
+INSERT INTO [dbo].[Documents] VALUES (2, 'Le Progres de Lyon', 'Newspaper', null , 'Lyon', 2);
+INSERT INTO [dbo].[Documents] VALUES (3, 'Lord of the Rings', 'Book', 3587, null, 3);
+INSERT INTO [dbo].[Documents] VALUES (4, 'Le Canard enchaine', 'Tabloid', null , 'Paris', 2);
+INSERT INTO [dbo].[Documents] VALUES (5, 'Le Monde', 'Broadsheet', null , 'Paris', 5);
+INSERT INTO [dbo].[Documents] VALUES (6, 'Foundation', 'Monograph', 557, null, 6);

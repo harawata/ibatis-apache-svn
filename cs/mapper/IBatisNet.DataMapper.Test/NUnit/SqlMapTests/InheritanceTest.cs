@@ -137,13 +137,13 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
         [Test]
         public void TestJIRA175()
 	    {
-            Account account = sqlMap.QueryForObject("JIRA175", 5) as Account;
-            Assert.AreEqual(5, account.Id, "account.Id");
-            Assert.AreEqual("Gilles", account.FirstName, "account.FirstName");
+            Account account = sqlMap.QueryForObject("JIRA175", 3) as Account;
+            Assert.AreEqual(3, account.Id, "account.Id");
+            Assert.AreEqual("William", account.FirstName, "account.FirstName");
 	        
             Book book = account.Document as Book;
             Assert.IsNotNull(book);
-            AssertBook(book, 1, "The World of Null-A", 55);
+            AssertBook(book, 3, "Lord of the Rings", 3587);
 	    }
 	    
 		#endregion 

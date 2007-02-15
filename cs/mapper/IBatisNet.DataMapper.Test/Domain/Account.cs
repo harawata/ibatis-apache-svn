@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace IBatisNet.DataMapper.Test.Domain
 {
@@ -17,7 +18,23 @@ namespace IBatisNet.DataMapper.Test.Domain
 		private bool _cartOption = false;
 	    private Document _document = null;
 
-		public Account()
+        #if dotnet2
+        protected IList<Document> documents = new List<Document>();
+
+        public IList<Document> Documents
+        {
+            get { return documents; }
+        }
+        #else
+        protected IList documents = new List();
+
+        public IListDocuments
+        {
+            get { return documents; }
+        }
+        #endif
+
+        public Account()
 		{}
 
         public Account(int identifiant, string firstName, string lastName)
