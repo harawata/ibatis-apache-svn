@@ -100,14 +100,15 @@
                     HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Drawing.dll"
                 />
                 <Reference
-                    Name = "nunit.framework"
-                    AssemblyName = "nunit.framework"
-                    HintPath = "..\External-Bin\Net\1.1\nunit.framework.dll"
-                />
-                <Reference
                     Name = "IBatisNet.Common.Logging.Log4Net"
                     Project = "{023FE8D7-7E1A-4DDF-A0EA-8FB0E1B3122B}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "nunit.framework"
+                    AssemblyName = "nunit.framework"
+                    HintPath = "E:\Program Files\NUnit 2.2.9\bin\nunit.framework.dll"
+                    AssemblyFolderKey = "hkcu\dn\nunit 2.2.9"
                 />
             </References>
         </Build>

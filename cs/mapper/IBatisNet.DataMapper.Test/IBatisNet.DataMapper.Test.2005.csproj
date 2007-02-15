@@ -189,9 +189,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Domain\Simple.cs" />
-    <Compile Include="Domain\User.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Domain\VarcharCallBack.cs" />
     <Compile Include="NUnit\SqlMapTests\BaseTest.cs">
       <SubType>Code</SubType>

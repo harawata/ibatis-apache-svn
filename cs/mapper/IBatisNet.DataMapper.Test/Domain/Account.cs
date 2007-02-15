@@ -1,5 +1,8 @@
 using System;
+using System.Collections;
+#if dotnet2
 using System.Collections.Generic;
+#endif
 
 namespace IBatisNet.DataMapper.Test.Domain
 {
@@ -26,9 +29,9 @@ namespace IBatisNet.DataMapper.Test.Domain
             get { return documents; }
         }
         #else
-        protected IList documents = new List();
+        protected IList documents = new ArrayList();
 
-        public IListDocuments
+        public IList Documents
         {
             get { return documents; }
         }
