@@ -6,8 +6,21 @@
 	<artifactId>ibatis-sqlmap</artifactId>
 	<packaging>jar</packaging>
 	<version>2.3.1-SNAPSHOT</version>
-	<name>iBATIS SQL Map</name>
+	<name>iBATIS SQL Maps</name>
 	<url>http://ibatis.apache.org</url>
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/ibatis/</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/ibatis/</developerConnection>
+    <tag>HEAD</tag>
+    <url>http://svn.apache.org/repos/asf/ibatis/</url>
+  </scm>
+	<pluginRepositories>
+      <pluginRepository>
+          <id>tlc</id>
+          <name>TLC Repository</name>
+          <url>http://commons.ucalgary.ca/pub/m2</url>
+      </pluginRepository>
+  </pluginRepositories>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.geronimo.specs</groupId>
@@ -66,6 +79,7 @@
 		</dependency>
 	</dependencies>
 	<build>
+	  <finalName>${project.artifactId}-${project.version}-r${buildNumber}</finalName>
 		<sourceDirectory>${basedir}/src</sourceDirectory>
 		<testSourceDirectory>${basedir}/test</testSourceDirectory>
 		<resources>
@@ -123,6 +137,23 @@
         <artifactId>maven-source-plugin</artifactId>
         <configuration>
           <attach>true</attach>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>maven-buildnumber-plugin</artifactId>
+        <version>0.9.4</version>
+        <executions>
+          <execution>
+            <phase>validate</phase>        
+            <goals>
+              <goal>create</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <doCheck>false</doCheck>
+          <doUpdate>false</doUpdate>
         </configuration>
       </plugin>
 		</plugins>
