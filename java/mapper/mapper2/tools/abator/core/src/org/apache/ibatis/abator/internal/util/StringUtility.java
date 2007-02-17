@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.abator.internal.util;
 
+import java.util.StringTokenizer;
+
 /**
  * 
  * @author Jeff Butler
@@ -57,5 +59,35 @@ public class StringUtility {
     
     public static boolean stringContainsSpace(String s) {
         return s != null && s.indexOf(' ') != -1;
+    }
+
+    public static String escapeStringForJava(String s) {
+        StringTokenizer st = new StringTokenizer(s, "\"", true); //$NON-NLS-1$
+        StringBuffer sb = new StringBuffer();
+        while (st.hasMoreTokens()) {
+            String token = st.nextToken();
+            if ("\"".equals(token)) { //$NON-NLS-1$
+                sb.append("\\\""); //$NON-NLS-1$
+            } else {
+                sb.append(token);
+            }
+        }
+        
+        return sb.toString();
+    }
+
+    public static String escapeStringForXml(String s) {
+        StringTokenizer st = new StringTokenizer(s, "\"", true); //$NON-NLS-1$
+        StringBuffer sb = new StringBuffer();
+        while (st.hasMoreTokens()) {
+            String token = st.nextToken();
+            if ("\"".equals(token)) { //$NON-NLS-1$
+                sb.append("&quot;"); //$NON-NLS-1$
+            } else {
+                sb.append(token);
+            }
+        }
+        
+        return sb.toString();
     }
 }

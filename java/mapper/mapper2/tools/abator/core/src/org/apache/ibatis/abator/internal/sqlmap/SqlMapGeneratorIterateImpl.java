@@ -275,6 +275,8 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      * @return the resultMap element
      */
     protected XmlElement getBaseResultMapElement(IntrospectedTable introspectedTable) {
+        boolean useColumnIndex =
+            "true".equalsIgnoreCase(introspectedTable.getTableConfigurationProperty("useColumnIndexes")); //$NON-NLS-1$ //$NON-NLS-2$
         XmlElement answer = new XmlElement("resultMap"); //$NON-NLS-1$
         FullyQualifiedTable table = introspectedTable.getTable();
         answer.addAttribute(new Attribute("id", //$NON-NLS-1$
@@ -292,14 +294,25 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         answer.addComment();
 
+        int i = 1;
+        if (StringUtility.stringHasValue(introspectedTable.getSelectByPrimaryKeyQueryId())) {
+            i++;
+        }
+        
         Iterator iter = introspectedTable.getNonBLOBColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
 
             XmlElement resultElement = new XmlElement("result"); //$NON-NLS-1$
 
-            resultElement.addAttribute(new Attribute(
+            if (useColumnIndex) {
+                resultElement.addAttribute(new Attribute(
+                        "columnIndex", Integer.toString(i++))); //$NON-NLS-1$
+            } else {
+                resultElement.addAttribute(new Attribute(
                     "column", cd.getRenamedColumnNameForResultMap())); //$NON-NLS-1$
+            }
+            
             resultElement.addAttribute(new Attribute(
                     "property", cd.getJavaProperty())); //$NON-NLS-1$
             resultElement.addAttribute(new Attribute("jdbcType", //$NON-NLS-1$
@@ -325,6 +338,8 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      * @return the resultMap element
      */
     protected XmlElement getResultMapWithBLOBsElement(IntrospectedTable introspectedTable) {
+        boolean useColumnIndex =
+            "true".equalsIgnoreCase(introspectedTable.getTableConfigurationProperty("useColumnIndexes")); //$NON-NLS-1$ //$NON-NLS-2$
 
         XmlElement answer = new XmlElement("resultMap"); //$NON-NLS-1$
         FullyQualifiedTable table = introspectedTable.getTable();
@@ -355,14 +370,23 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         answer.addComment();
 
+        int i = introspectedTable.getNonBLOBColumnCount() + 1;
+        if (StringUtility.stringHasValue(introspectedTable.getSelectByPrimaryKeyQueryId())) {
+            i++;
+        }
         Iterator iter = introspectedTable.getBLOBColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
 
             XmlElement resultElement = new XmlElement("result"); //$NON-NLS-1$
             
-            resultElement.addAttribute(new Attribute(
+            if (useColumnIndex) {
+                resultElement.addAttribute(new Attribute(
+                        "columnIndex", Integer.toString(i++))); //$NON-NLS-1$
+            } else {
+                resultElement.addAttribute(new Attribute(
                     "column", cd.getRenamedColumnNameForResultMap())); //$NON-NLS-1$
+            }
             resultElement.addAttribute(new Attribute(
                     "property", cd.getJavaProperty())); //$NON-NLS-1$
             resultElement.addAttribute(new Attribute(
@@ -981,7 +1005,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         s = (String) map.get(key);
         if (s == null) {
             StringBuffer sb = new StringBuffer(targetPackage);
-            if ("true".equals(properties.get("enableSubPackages"))) { //$NON-NLS-1$  //$NON-NLS-2$
+            if ("true".equalsIgnoreCase((String)properties.get("enableSubPackages"))) { //$NON-NLS-1$  //$NON-NLS-2$
                 sb.append(table.getSubPackage());
             }
             

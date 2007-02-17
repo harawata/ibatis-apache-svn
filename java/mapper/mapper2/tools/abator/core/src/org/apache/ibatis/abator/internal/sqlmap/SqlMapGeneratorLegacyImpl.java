@@ -110,13 +110,13 @@ public class SqlMapGeneratorLegacyImpl extends SqlMapGeneratorIterateImpl implem
 
                 XmlElement isPropAvail = new XmlElement("isPropertyAvailable"); //$NON-NLS-1$
                 isPropAvail.addAttribute(new Attribute("prepend", "and")); //$NON-NLS-1$ //$NON-NLS-2$
-                isPropAvail.addAttribute(new Attribute("property", ec.getSelectorAndProperty(cd))); //$NON-NLS-1$
+                isPropAvail.addAttribute(new Attribute("property", ec.getSelectorAndProperty(cd, false))); //$NON-NLS-1$
                 isPropAvail.addElement(new TextElement(ec.getClause(cd)));
                 dynamicElement.addElement(isPropAvail);
 
                 isPropAvail = new XmlElement("isPropertyAvailable"); //$NON-NLS-1$
                 isPropAvail.addAttribute(new Attribute("prepend", "or")); //$NON-NLS-1$ //$NON-NLS-2$
-                isPropAvail.addAttribute(new Attribute("property", ec.getSelectorOrProperty(cd))); //$NON-NLS-1$
+                isPropAvail.addAttribute(new Attribute("property", ec.getSelectorOrProperty(cd, false))); //$NON-NLS-1$
                 isPropAvail.addElement(new TextElement(ec.getClause(cd)));
                 dynamicElement.addElement(isPropAvail);
             }

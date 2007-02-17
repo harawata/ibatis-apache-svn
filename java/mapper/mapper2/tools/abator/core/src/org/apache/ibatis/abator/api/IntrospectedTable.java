@@ -85,6 +85,8 @@ public interface IntrospectedTable {
      */
     Iterator getNonBLOBColumns();
     
+    int getNonBLOBColumnCount();
+    
     Iterator getNonPrimaryKeyColumns();
     
     Iterator getBLOBColumns();
@@ -92,4 +94,6 @@ public interface IntrospectedTable {
     boolean hasBLOBColumns();
     
     AbatorRules getRules();
+    
+    String getTableConfigurationProperty(String property);
 }

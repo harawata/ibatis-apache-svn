@@ -18,6 +18,9 @@ Enhancements -
    extra Java code or XML elements to any generated object.  Will make it
    easier to create customized generators
 6. Added SYBASE database dialect for generated keys
+7. Added the ability to specify that resultMaps should use column indexes
+   rather than column name.  This is necessary in poorly designed tables
+   where column names differ only in case.  This may also improve performance.
 
 -------------------------------------------------------------------------------
 Version 1.0.0:

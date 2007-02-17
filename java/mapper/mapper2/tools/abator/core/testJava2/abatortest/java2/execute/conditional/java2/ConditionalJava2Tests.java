@@ -23,6 +23,8 @@ import java.util.Date;
 import java.util.List;
 
 import abatortest.java2.BaseTest;
+import abatortest.java2.generated.conditional.java2.dao.AwfulTableDAO;
+import abatortest.java2.generated.conditional.java2.dao.AwfulTableDAOImpl;
 import abatortest.java2.generated.conditional.java2.dao.FieldsblobsDAO;
 import abatortest.java2.generated.conditional.java2.dao.FieldsblobsDAOImpl;
 import abatortest.java2.generated.conditional.java2.dao.FieldsonlyDAO;
@@ -35,6 +37,8 @@ import abatortest.java2.generated.conditional.java2.dao.PkfieldsblobsDAO;
 import abatortest.java2.generated.conditional.java2.dao.PkfieldsblobsDAOImpl;
 import abatortest.java2.generated.conditional.java2.dao.PkonlyDAO;
 import abatortest.java2.generated.conditional.java2.dao.PkonlyDAOImpl;
+import abatortest.java2.generated.conditional.java2.model.AwfulTable;
+import abatortest.java2.generated.conditional.java2.model.AwfulTableExample;
 import abatortest.java2.generated.conditional.java2.model.Fieldsblobs;
 import abatortest.java2.generated.conditional.java2.model.FieldsblobsExample;
 import abatortest.java2.generated.conditional.java2.model.FieldsblobsWithBLOBs;
@@ -1768,6 +1772,1028 @@ public class ConditionalJava2Tests extends BaseTest {
             example.createCriteria();
             List answer = dao.selectByExampleWithBLOBs(example);
             assertEquals(2, answer.size());
+        } catch (SQLException e) {
+            fail(e.getMessage());
+        }
+    }
+
+    public void testAwfulTableInsert() {
+        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+
+        try {
+            AwfulTable record = new AwfulTable();
+
+            record.seteMail("fred@fred.com");
+            record.setEmailaddress("alsofred@fred.com");
+            record.setFirstFirstName("fred1");
+            record.setFourthFirstName("fred4");
+            record.setFrom("from field");
+            record.setId1(new Integer(1));
+            record.setId2(new Integer(2));
+            record.setId5(new Integer(5));
+            record.setId6(new Integer(6));
+            record.setId7(new Integer(7));
+            record.setSecondCustomerId(new Integer(567));
+            record.setSecondFirstName("fred2");
+            record.setThirdFirstName("fred3");
+
+            Integer generatedCustomerId = dao.insert(record);
+            assertEquals(57, generatedCustomerId.intValue());
+
+            AwfulTable returnedRecord = dao
+                    .selectByPrimaryKey(generatedCustomerId);
+
+            assertEquals(generatedCustomerId, returnedRecord.getCustomerId());
+            assertEquals(record.geteMail(), returnedRecord.geteMail());
+            assertEquals(record.getEmailaddress(), returnedRecord
+                    .getEmailaddress());
+            assertEquals(record.getFirstFirstName(), returnedRecord
+                    .getFirstFirstName());
+            assertEquals(record.getFourthFirstName(), returnedRecord
+                    .getFourthFirstName());
+            assertEquals(record.getFrom(), returnedRecord.getFrom());
+            assertEquals(record.getId1(), returnedRecord.getId1());
+            assertEquals(record.getId2(), returnedRecord.getId2());
+            assertEquals(record.getId5(), returnedRecord.getId5());
+            assertEquals(record.getId6(), returnedRecord.getId6());
+            assertEquals(record.getId7(), returnedRecord.getId7());
+            assertEquals(record.getSecondCustomerId(), returnedRecord
+                    .getSecondCustomerId());
+            assertEquals(record.getSecondFirstName(), returnedRecord
+                    .getSecondFirstName());
+            assertEquals(record.getThirdFirstName(), returnedRecord
+                    .getThirdFirstName());
+        } catch (SQLException e) {
+            fail(e.getMessage());
+        }
+    }
+
+    public void testAwfulTableUpdateByPrimaryKey() {
+        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+
+        try {
+            AwfulTable record = new AwfulTable();
+            record.seteMail("fred@fred.com");
+            record.setEmailaddress("alsofred@fred.com");
+            record.setFirstFirstName("fred1");
+            record.setFourthFirstName("fred4");
+            record.setFrom("from field");
+            record.setId1(new Integer(1));
+            record.setId2(new Integer(2));
+            record.setId5(new Integer(5));
+            record.setId6(new Integer(6));
+            record.setId7(new Integer(7));
+            record.setSecondCustomerId(new Integer(567));
+            record.setSecondFirstName("fred2");
+            record.setThirdFirstName("fred3");
+
+            Integer generatedCustomerId = dao.insert(record);
+
+            record.setId1(new Integer(11));
+            record.setId2(new Integer(22));
+
+            int rows = dao.updateByPrimaryKey(record);
+            assertEquals(1, rows);
+
+            AwfulTable returnedRecord = dao.selectByPrimaryKey(generatedCustomerId);
+
+            assertEquals(generatedCustomerId, returnedRecord.getCustomerId());
+            assertEquals(record.geteMail(), returnedRecord.geteMail());
+            assertEquals(record.getEmailaddress(), returnedRecord
+                    .getEmailaddress());
+            assertEquals(record.getFirstFirstName(), returnedRecord
+                    .getFirstFirstName());
+            assertEquals(record.getFourthFirstName(), returnedRecord
+                    .getFourthFirstName());
+            assertEquals(record.getFrom(), returnedRecord.getFrom());
+            assertEquals(record.getId1(), returnedRecord.getId1());
+            assertEquals(record.getId2(), returnedRecord.getId2());
+            assertEquals(record.getId5(), returnedRecord.getId5());
+            assertEquals(record.getId6(), returnedRecord.getId6());
+            assertEquals(record.getId7(), returnedRecord.getId7());
+            assertEquals(record.getSecondCustomerId(), returnedRecord
+                    .getSecondCustomerId());
+            assertEquals(record.getSecondFirstName(), returnedRecord
+                    .getSecondFirstName());
+            assertEquals(record.getThirdFirstName(), returnedRecord
+                    .getThirdFirstName());
+        } catch (SQLException e) {
+            fail(e.getMessage());
+        }
+    }
+
+    public void testAwfulTableUpdateByPrimaryKeySelective() {
+        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+
+        try {
+            AwfulTable record = new AwfulTable();
+            record.seteMail("fred@fred.com");
+            record.setEmailaddress("alsofred@fred.com");
+            record.setFirstFirstName("fred1");
+            record.setFourthFirstName("fred4");
+            record.setFrom("from field");
+            record.setId1(new Integer(1));
+            record.setId2(new Integer(2));
+            record.setId5(new Integer(5));
+            record.setId6(new Integer(6));
+            record.setId7(new Integer(7));
+            record.setSecondCustomerId(new Integer(567));
+            record.setSecondFirstName("fred2");
+            record.setThirdFirstName("fred3");
+
+            Integer generatedCustomerId = dao.insert(record);
+
+            AwfulTable newRecord = new AwfulTable();
+            newRecord.setCustomerId(generatedCustomerId);
+            newRecord.setId1(new Integer(11));
+            newRecord.setId2(new Integer(22));
+
+            int rows = dao.updateByPrimaryKeySelective(newRecord);
+            assertEquals(1, rows);
+
+            AwfulTable returnedRecord = dao.selectByPrimaryKey(generatedCustomerId);
+
+            assertEquals(generatedCustomerId, returnedRecord.getCustomerId());
+            assertEquals(record.geteMail(), returnedRecord.geteMail());
+            assertEquals(record.getEmailaddress(), returnedRecord
+                    .getEmailaddress());
+            assertEquals(record.getFirstFirstName(), returnedRecord
+                    .getFirstFirstName());
+            assertEquals(record.getFourthFirstName(), returnedRecord
+                    .getFourthFirstName());
+            assertEquals(record.getFrom(), returnedRecord.getFrom());
+            assertEquals(newRecord.getId1(), returnedRecord.getId1());
+            assertEquals(newRecord.getId2(), returnedRecord.getId2());
+            assertEquals(record.getId5(), returnedRecord.getId5());
+            assertEquals(record.getId6(), returnedRecord.getId6());
+            assertEquals(record.getId7(), returnedRecord.getId7());
+            assertEquals(record.getSecondCustomerId(), returnedRecord
+                    .getSecondCustomerId());
+            assertEquals(record.getSecondFirstName(), returnedRecord
+                    .getSecondFirstName());
+            assertEquals(record.getThirdFirstName(), returnedRecord
+                    .getThirdFirstName());
+        } catch (SQLException e) {
+            fail(e.getMessage());
+        }
+    }
+
+    public void testAwfulTableDeleteByPrimaryKey() {
+        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+
+        try {
+            AwfulTable record = new AwfulTable();
+            record.seteMail("fred@fred.com");
+            record.setEmailaddress("alsofred@fred.com");
+            record.setFirstFirstName("fred1");
+            record.setFourthFirstName("fred4");
+            record.setFrom("from field");
+            record.setId1(new Integer(1));
+            record.setId2(new Integer(2));
+            record.setId5(new Integer(5));
+            record.setId6(new Integer(6));
+            record.setId7(new Integer(7));
+            record.setSecondCustomerId(new Integer(567));
+            record.setSecondFirstName("fred2");
+            record.setThirdFirstName("fred3");
+
+            Integer generatedCustomerId = dao.insert(record);
+
+            int rows = dao.deleteByPrimaryKey(generatedCustomerId);
+            assertEquals(1, rows);
+
+            AwfulTableExample example = new AwfulTableExample();
+            List answer = dao.selectByExample(example);
+            assertEquals(0, answer.size());
+        } catch (SQLException e) {
+            fail(e.getMessage());
+        }
+    }
+
+    public void testAwfulTableDeleteByExample() {
+        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+
+        try {
+            AwfulTable record = new AwfulTable();
+            record.seteMail("fred@fred.com");
+            record.setEmailaddress("alsofred@fred.com");
+            record.setFirstFirstName("fred1");
+            record.setFourthFirstName("fred4");
+            record.setFrom("from field");
+            record.setId1(new Integer(1));
+            record.setId2(new Integer(2));
+            record.setId5(new Integer(5));
+            record.setId6(new Integer(6));
+            record.setId7(new Integer(7));
+            record.setSecondCustomerId(new Integer(567));
+            record.setSecondFirstName("fred2");
+            record.setThirdFirstName("fred3");
+
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("fred2@fred.com");
+            record.setEmailaddress("alsofred2@fred.com");
+            record.setFirstFirstName("fred11");
+            record.setFourthFirstName("fred44");
+            record.setFrom("from from field");
+            record.setId1(new Integer(11));
+            record.setId2(new Integer(22));
+            record.setId5(new Integer(55));
+            record.setId6(new Integer(66));
+            record.setId7(new Integer(77));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("fred22");
+            record.setThirdFirstName("fred33");
+
+            dao.insert(record);
+
+            AwfulTableExample example = new AwfulTableExample();
+            List answer = dao.selectByExample(example);
+            assertEquals(2, answer.size());
+
+            example = new AwfulTableExample();
+            example.createCriteria().andEMailLike("fred@%");
+            int rows = dao.deleteByExample(example);
+            assertEquals(1, rows);
+
+            example.clear();
+            answer = dao.selectByExample(example);
+            assertEquals(1, answer.size());
+        } catch (SQLException e) {
+            fail(e.getMessage());
+        }
+    }
+
+    public void testAwfulTableSelectByPrimaryKey() {
+        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+
+        try {
+            AwfulTable record = new AwfulTable();
+            record.seteMail("fred@fred.com");
+            record.setEmailaddress("alsofred@fred.com");
+            record.setFirstFirstName("fred1");
+            record.setFourthFirstName("fred4");
+            record.setFrom("from field");
+            record.setId1(new Integer(1));
+            record.setId2(new Integer(2));
+            record.setId5(new Integer(5));
+            record.setId6(new Integer(6));
+            record.setId7(new Integer(7));
+            record.setSecondCustomerId(new Integer(567));
+            record.setSecondFirstName("fred2");
+            record.setThirdFirstName("fred3");
+
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("fred2@fred.com");
+            record.setEmailaddress("alsofred2@fred.com");
+            record.setFirstFirstName("fred11");
+            record.setFourthFirstName("fred44");
+            record.setFrom("from from field");
+            record.setId1(new Integer(11));
+            record.setId2(new Integer(22));
+            record.setId5(new Integer(55));
+            record.setId6(new Integer(66));
+            record.setId7(new Integer(77));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("fred22");
+            record.setThirdFirstName("fred33");
+
+            Integer generatedKey = dao.insert(record);
+
+            AwfulTable returnedRecord = dao.selectByPrimaryKey(generatedKey);
+
+            assertNotNull(returnedRecord);
+            assertEquals(record.getCustomerId(), returnedRecord.getCustomerId());
+            assertEquals(record.geteMail(), returnedRecord.geteMail());
+            assertEquals(record.getEmailaddress(), returnedRecord
+                    .getEmailaddress());
+            assertEquals(record.getFirstFirstName(), returnedRecord
+                    .getFirstFirstName());
+            assertEquals(record.getFourthFirstName(), returnedRecord
+                    .getFourthFirstName());
+            assertEquals(record.getFrom(), returnedRecord.getFrom());
+            assertEquals(record.getId1(), returnedRecord.getId1());
+            assertEquals(record.getId2(), returnedRecord.getId2());
+            assertEquals(record.getId5(), returnedRecord.getId5());
+            assertEquals(record.getId6(), returnedRecord.getId6());
+            assertEquals(record.getId7(), returnedRecord.getId7());
+            assertEquals(record.getSecondCustomerId(), returnedRecord
+                    .getSecondCustomerId());
+            assertEquals(record.getSecondFirstName(), returnedRecord
+                    .getSecondFirstName());
+            assertEquals(record.getThirdFirstName(), returnedRecord
+                    .getThirdFirstName());
+        } catch (SQLException e) {
+            fail(e.getMessage());
+        }
+    }
+
+    public void testAwfulTableSelectByExampleLike() {
+        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+
+        try {
+            AwfulTable record = new AwfulTable();
+            record.seteMail("fred@fred.com");
+            record.setEmailaddress("alsofred@fred.com");
+            record.setFirstFirstName("fred1");
+            record.setFourthFirstName("fred4");
+            record.setFrom("from field");
+            record.setId1(new Integer(1));
+            record.setId2(new Integer(2));
+            record.setId5(new Integer(5));
+            record.setId6(new Integer(6));
+            record.setId7(new Integer(7));
+            record.setSecondCustomerId(new Integer(567));
+            record.setSecondFirstName("fred2");
+            record.setThirdFirstName("fred3");
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("wilma@wilma.com");
+            record.setEmailaddress("alsoWilma@wilma.com");
+            record.setFirstFirstName("wilma1");
+            record.setFourthFirstName("wilma4");
+            record.setFrom("from field");
+            record.setId1(new Integer(11));
+            record.setId2(new Integer(22));
+            record.setId5(new Integer(55));
+            record.setId6(new Integer(66));
+            record.setId7(new Integer(77));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("wilma2");
+            record.setThirdFirstName("wilma3");
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("pebbles@pebbles.com");
+            record.setEmailaddress("alsoPebbles@pebbles.com");
+            record.setFirstFirstName("pebbles1");
+            record.setFourthFirstName("pebbles4");
+            record.setFrom("from field");
+            record.setId1(new Integer(111));
+            record.setId2(new Integer(222));
+            record.setId5(new Integer(555));
+            record.setId6(new Integer(666));
+            record.setId7(new Integer(777));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("pebbles2");
+            record.setThirdFirstName("pebbles3");
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("barney@barney.com");
+            record.setEmailaddress("alsoBarney@barney.com");
+            record.setFirstFirstName("barney1");
+            record.setFourthFirstName("barney4");
+            record.setFrom("from field");
+            record.setId1(new Integer(1111));
+            record.setId2(new Integer(2222));
+            record.setId5(new Integer(5555));
+            record.setId6(new Integer(6666));
+            record.setId7(new Integer(7777));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("barney2");
+            record.setThirdFirstName("barney3");
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("betty@betty.com");
+            record.setEmailaddress("alsoBetty@betty.com");
+            record.setFirstFirstName("betty1");
+            record.setFourthFirstName("betty4");
+            record.setFrom("from field");
+            record.setId1(new Integer(11111));
+            record.setId2(new Integer(22222));
+            record.setId5(new Integer(55555));
+            record.setId6(new Integer(66666));
+            record.setId7(new Integer(77777));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("betty2");
+            record.setThirdFirstName("betty3");
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("bammbamm@bammbamm.com");
+            record.setEmailaddress("alsoBammbamm@bammbamm.com");
+            record.setFirstFirstName("bammbamm1");
+            record.setFourthFirstName("bammbamm4");
+            record.setFrom("from field");
+            record.setId1(new Integer(111111));
+            record.setId2(new Integer(222222));
+            record.setId5(new Integer(555555));
+            record.setId6(new Integer(666666));
+            record.setId7(new Integer(777777));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("bammbamm2");
+            record.setThirdFirstName("bammbamm3");
+            dao.insert(record);
+
+            AwfulTableExample example = new AwfulTableExample();
+            example.createCriteria().andFirstFirstNameLike("b%");
+            example.setOrderByClause("\"A_CuStOmEr iD\"");
+            List answer = dao.selectByExample(example);
+            assertEquals(3, answer.size());
+            AwfulTable returnedRecord = (AwfulTable) answer.get(0);
+            assertEquals(1111, returnedRecord.getId1().intValue());
+            assertEquals(2222, returnedRecord.getId2().intValue());
+            returnedRecord = (AwfulTable) answer.get(1);
+            assertEquals(11111, returnedRecord.getId1().intValue());
+            assertEquals(22222, returnedRecord.getId2().intValue());
+            returnedRecord = (AwfulTable) answer.get(2);
+            assertEquals(111111, returnedRecord.getId1().intValue());
+            assertEquals(222222, returnedRecord.getId2().intValue());
+        } catch (SQLException e) {
+            fail(e.getMessage());
+        }
+    }
+
+    public void testAwfulTableSelectByExampleNotLike() {
+        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+
+        try {
+            AwfulTable record = new AwfulTable();
+            record.seteMail("fred@fred.com");
+            record.setEmailaddress("alsofred@fred.com");
+            record.setFirstFirstName("fred1");
+            record.setFourthFirstName("fred4");
+            record.setFrom("from field");
+            record.setId1(new Integer(1));
+            record.setId2(new Integer(2));
+            record.setId5(new Integer(5));
+            record.setId6(new Integer(6));
+            record.setId7(new Integer(7));
+            record.setSecondCustomerId(new Integer(567));
+            record.setSecondFirstName("fred2");
+            record.setThirdFirstName("fred3");
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("wilma@wilma.com");
+            record.setEmailaddress("alsoWilma@wilma.com");
+            record.setFirstFirstName("wilma1");
+            record.setFourthFirstName("wilma4");
+            record.setFrom("from field");
+            record.setId1(new Integer(11));
+            record.setId2(new Integer(22));
+            record.setId5(new Integer(55));
+            record.setId6(new Integer(66));
+            record.setId7(new Integer(77));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("wilma2");
+            record.setThirdFirstName("wilma3");
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("pebbles@pebbles.com");
+            record.setEmailaddress("alsoPebbles@pebbles.com");
+            record.setFirstFirstName("pebbles1");
+            record.setFourthFirstName("pebbles4");
+            record.setFrom("from field");
+            record.setId1(new Integer(111));
+            record.setId2(new Integer(222));
+            record.setId5(new Integer(555));
+            record.setId6(new Integer(666));
+            record.setId7(new Integer(777));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("pebbles2");
+            record.setThirdFirstName("pebbles3");
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("barney@barney.com");
+            record.setEmailaddress("alsoBarney@barney.com");
+            record.setFirstFirstName("barney1");
+            record.setFourthFirstName("barney4");
+            record.setFrom("from field");
+            record.setId1(new Integer(1111));
+            record.setId2(new Integer(2222));
+            record.setId5(new Integer(5555));
+            record.setId6(new Integer(6666));
+            record.setId7(new Integer(7777));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("barney2");
+            record.setThirdFirstName("barney3");
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("betty@betty.com");
+            record.setEmailaddress("alsoBetty@betty.com");
+            record.setFirstFirstName("betty1");
+            record.setFourthFirstName("betty4");
+            record.setFrom("from field");
+            record.setId1(new Integer(11111));
+            record.setId2(new Integer(22222));
+            record.setId5(new Integer(55555));
+            record.setId6(new Integer(66666));
+            record.setId7(new Integer(77777));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("betty2");
+            record.setThirdFirstName("betty3");
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("bammbamm@bammbamm.com");
+            record.setEmailaddress("alsoBammbamm@bammbamm.com");
+            record.setFirstFirstName("bammbamm1");
+            record.setFourthFirstName("bammbamm4");
+            record.setFrom("from field");
+            record.setId1(new Integer(111111));
+            record.setId2(new Integer(222222));
+            record.setId5(new Integer(555555));
+            record.setId6(new Integer(666666));
+            record.setId7(new Integer(777777));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("bammbamm2");
+            record.setThirdFirstName("bammbamm3");
+            dao.insert(record);
+
+            AwfulTableExample example = new AwfulTableExample();
+            example.createCriteria().andFirstFirstNameNotLike("b%");
+            example.setOrderByClause("\"A_CuStOmEr iD\"");
+            List answer = dao.selectByExample(example);
+            assertEquals(3, answer.size());
+            AwfulTable returnedRecord = (AwfulTable) answer.get(0);
+            assertEquals(1, returnedRecord.getId1().intValue());
+            assertEquals(2, returnedRecord.getId2().intValue());
+            returnedRecord = (AwfulTable) answer.get(1);
+            assertEquals(11, returnedRecord.getId1().intValue());
+            assertEquals(22, returnedRecord.getId2().intValue());
+            returnedRecord = (AwfulTable) answer.get(2);
+            assertEquals(111, returnedRecord.getId1().intValue());
+            assertEquals(222, returnedRecord.getId2().intValue());
+        } catch (SQLException e) {
+            fail(e.getMessage());
+        }
+    }
+    
+    public void testAwfulTableSelectByExampleComplexLike() {
+        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+
+        try {
+            AwfulTable record = new AwfulTable();
+            record.seteMail("fred@fred.com");
+            record.setEmailaddress("alsofred@fred.com");
+            record.setFirstFirstName("fred1");
+            record.setFourthFirstName("fred4");
+            record.setFrom("from field");
+            record.setId1(new Integer(1));
+            record.setId2(new Integer(2));
+            record.setId5(new Integer(5));
+            record.setId6(new Integer(6));
+            record.setId7(new Integer(7));
+            record.setSecondCustomerId(new Integer(567));
+            record.setSecondFirstName("fred2");
+            record.setThirdFirstName("fred3");
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("wilma@wilma.com");
+            record.setEmailaddress("alsoWilma@wilma.com");
+            record.setFirstFirstName("wilma1");
+            record.setFourthFirstName("wilma4");
+            record.setFrom("from field");
+            record.setId1(new Integer(11));
+            record.setId2(new Integer(22));
+            record.setId5(new Integer(55));
+            record.setId6(new Integer(66));
+            record.setId7(new Integer(77));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("wilma2");
+            record.setThirdFirstName("wilma3");
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("pebbles@pebbles.com");
+            record.setEmailaddress("alsoPebbles@pebbles.com");
+            record.setFirstFirstName("pebbles1");
+            record.setFourthFirstName("pebbles4");
+            record.setFrom("from field");
+            record.setId1(new Integer(111));
+            record.setId2(new Integer(222));
+            record.setId5(new Integer(555));
+            record.setId6(new Integer(666));
+            record.setId7(new Integer(777));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("pebbles2");
+            record.setThirdFirstName("pebbles3");
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("barney@barney.com");
+            record.setEmailaddress("alsoBarney@barney.com");
+            record.setFirstFirstName("barney1");
+            record.setFourthFirstName("barney4");
+            record.setFrom("from field");
+            record.setId1(new Integer(1111));
+            record.setId2(new Integer(2222));
+            record.setId5(new Integer(5555));
+            record.setId6(new Integer(6666));
+            record.setId7(new Integer(7777));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("barney2");
+            record.setThirdFirstName("barney3");
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("betty@betty.com");
+            record.setEmailaddress("alsoBetty@betty.com");
+            record.setFirstFirstName("betty1");
+            record.setFourthFirstName("betty4");
+            record.setFrom("from field");
+            record.setId1(new Integer(11111));
+            record.setId2(new Integer(22222));
+            record.setId5(new Integer(55555));
+            record.setId6(new Integer(66666));
+            record.setId7(new Integer(77777));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("betty2");
+            record.setThirdFirstName("betty3");
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("bammbamm@bammbamm.com");
+            record.setEmailaddress("alsoBammbamm@bammbamm.com");
+            record.setFirstFirstName("bammbamm1");
+            record.setFourthFirstName("bammbamm4");
+            record.setFrom("from field");
+            record.setId1(new Integer(111111));
+            record.setId2(new Integer(222222));
+            record.setId5(new Integer(555555));
+            record.setId6(new Integer(666666));
+            record.setId7(new Integer(777777));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("bammbamm2");
+            record.setThirdFirstName("bammbamm3");
+            dao.insert(record);
+
+            AwfulTableExample example = new AwfulTableExample();
+            example.createCriteria().andFirstFirstNameLike("b%").andId2EqualTo(new Integer(222222));
+            example.or(example.createCriteria().andFirstFirstNameLike("wi%"));
+            example.setOrderByClause("\"A_CuStOmEr iD\"");
+            List answer = dao.selectByExample(example);
+            assertEquals(2, answer.size());
+            AwfulTable returnedRecord = (AwfulTable) answer.get(0);
+            assertEquals(11, returnedRecord.getId1().intValue());
+            assertEquals(22, returnedRecord.getId2().intValue());
+            returnedRecord = (AwfulTable) answer.get(1);
+            assertEquals(111111, returnedRecord.getId1().intValue());
+            assertEquals(222222, returnedRecord.getId2().intValue());
+        } catch (SQLException e) {
+            fail(e.getMessage());
+        }
+    }
+
+    public void testAwfulTableSelectByExampleIn() {
+        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+
+        try {
+            AwfulTable record = new AwfulTable();
+            record.seteMail("fred@fred.com");
+            record.setEmailaddress("alsofred@fred.com");
+            record.setFirstFirstName("fred1");
+            record.setFourthFirstName("fred4");
+            record.setFrom("from field");
+            record.setId1(new Integer(1));
+            record.setId2(new Integer(2));
+            record.setId5(new Integer(5));
+            record.setId6(new Integer(6));
+            record.setId7(new Integer(7));
+            record.setSecondCustomerId(new Integer(567));
+            record.setSecondFirstName("fred2");
+            record.setThirdFirstName("fred3");
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("wilma@wilma.com");
+            record.setEmailaddress("alsoWilma@wilma.com");
+            record.setFirstFirstName("wilma1");
+            record.setFourthFirstName("wilma4");
+            record.setFrom("from field");
+            record.setId1(new Integer(11));
+            record.setId2(new Integer(22));
+            record.setId5(new Integer(55));
+            record.setId6(new Integer(66));
+            record.setId7(new Integer(77));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("wilma2");
+            record.setThirdFirstName("wilma3");
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("pebbles@pebbles.com");
+            record.setEmailaddress("alsoPebbles@pebbles.com");
+            record.setFirstFirstName("pebbles1");
+            record.setFourthFirstName("pebbles4");
+            record.setFrom("from field");
+            record.setId1(new Integer(111));
+            record.setId2(new Integer(222));
+            record.setId5(new Integer(555));
+            record.setId6(new Integer(666));
+            record.setId7(new Integer(777));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("pebbles2");
+            record.setThirdFirstName("pebbles3");
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("barney@barney.com");
+            record.setEmailaddress("alsoBarney@barney.com");
+            record.setFirstFirstName("barney1");
+            record.setFourthFirstName("barney4");
+            record.setFrom("from field");
+            record.setId1(new Integer(1111));
+            record.setId2(new Integer(2222));
+            record.setId5(new Integer(5555));
+            record.setId6(new Integer(6666));
+            record.setId7(new Integer(7777));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("barney2");
+            record.setThirdFirstName("barney3");
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("betty@betty.com");
+            record.setEmailaddress("alsoBetty@betty.com");
+            record.setFirstFirstName("betty1");
+            record.setFourthFirstName("betty4");
+            record.setFrom("from field");
+            record.setId1(new Integer(11111));
+            record.setId2(new Integer(22222));
+            record.setId5(new Integer(55555));
+            record.setId6(new Integer(66666));
+            record.setId7(new Integer(77777));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("betty2");
+            record.setThirdFirstName("betty3");
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("bammbamm@bammbamm.com");
+            record.setEmailaddress("alsoBammbamm@bammbamm.com");
+            record.setFirstFirstName("bammbamm1");
+            record.setFourthFirstName("bammbamm4");
+            record.setFrom("from field");
+            record.setId1(new Integer(111111));
+            record.setId2(new Integer(222222));
+            record.setId5(new Integer(555555));
+            record.setId6(new Integer(666666));
+            record.setId7(new Integer(777777));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("bammbamm2");
+            record.setThirdFirstName("bammbamm3");
+            dao.insert(record);
+
+            List ids = new ArrayList();
+            ids.add(new Integer(1));
+            ids.add(new Integer(11));
+
+            AwfulTableExample example = new AwfulTableExample();
+            example.createCriteria().andId1In(ids);
+            example.setOrderByClause("\"A_CuStOmEr iD\"");
+            List answer = dao.selectByExample(example);
+            
+            assertEquals(2, answer.size());
+            AwfulTable returnedRecord = (AwfulTable) answer.get(0);
+            assertEquals(1, returnedRecord.getId1().intValue());
+            assertEquals(2, returnedRecord.getId2().intValue());
+            returnedRecord = (AwfulTable) answer.get(1);
+            assertEquals(11, returnedRecord.getId1().intValue());
+            assertEquals(22, returnedRecord.getId2().intValue());
+        } catch (SQLException e) {
+            fail(e.getMessage());
+        }
+    }
+
+    public void testAwfulTableSelectByExampleBetween() {
+        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+
+        try {
+            AwfulTable record = new AwfulTable();
+            record.seteMail("fred@fred.com");
+            record.setEmailaddress("alsofred@fred.com");
+            record.setFirstFirstName("fred1");
+            record.setFourthFirstName("fred4");
+            record.setFrom("from field");
+            record.setId1(new Integer(1));
+            record.setId2(new Integer(2));
+            record.setId5(new Integer(5));
+            record.setId6(new Integer(6));
+            record.setId7(new Integer(7));
+            record.setSecondCustomerId(new Integer(567));
+            record.setSecondFirstName("fred2");
+            record.setThirdFirstName("fred3");
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("wilma@wilma.com");
+            record.setEmailaddress("alsoWilma@wilma.com");
+            record.setFirstFirstName("wilma1");
+            record.setFourthFirstName("wilma4");
+            record.setFrom("from field");
+            record.setId1(new Integer(11));
+            record.setId2(new Integer(22));
+            record.setId5(new Integer(55));
+            record.setId6(new Integer(66));
+            record.setId7(new Integer(77));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("wilma2");
+            record.setThirdFirstName("wilma3");
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("pebbles@pebbles.com");
+            record.setEmailaddress("alsoPebbles@pebbles.com");
+            record.setFirstFirstName("pebbles1");
+            record.setFourthFirstName("pebbles4");
+            record.setFrom("from field");
+            record.setId1(new Integer(111));
+            record.setId2(new Integer(222));
+            record.setId5(new Integer(555));
+            record.setId6(new Integer(666));
+            record.setId7(new Integer(777));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("pebbles2");
+            record.setThirdFirstName("pebbles3");
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("barney@barney.com");
+            record.setEmailaddress("alsoBarney@barney.com");
+            record.setFirstFirstName("barney1");
+            record.setFourthFirstName("barney4");
+            record.setFrom("from field");
+            record.setId1(new Integer(1111));
+            record.setId2(new Integer(2222));
+            record.setId5(new Integer(5555));
+            record.setId6(new Integer(6666));
+            record.setId7(new Integer(7777));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("barney2");
+            record.setThirdFirstName("barney3");
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("betty@betty.com");
+            record.setEmailaddress("alsoBetty@betty.com");
+            record.setFirstFirstName("betty1");
+            record.setFourthFirstName("betty4");
+            record.setFrom("from field");
+            record.setId1(new Integer(11111));
+            record.setId2(new Integer(22222));
+            record.setId5(new Integer(55555));
+            record.setId6(new Integer(66666));
+            record.setId7(new Integer(77777));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("betty2");
+            record.setThirdFirstName("betty3");
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("bammbamm@bammbamm.com");
+            record.setEmailaddress("alsoBammbamm@bammbamm.com");
+            record.setFirstFirstName("bammbamm1");
+            record.setFourthFirstName("bammbamm4");
+            record.setFrom("from field");
+            record.setId1(new Integer(111111));
+            record.setId2(new Integer(222222));
+            record.setId5(new Integer(555555));
+            record.setId6(new Integer(666666));
+            record.setId7(new Integer(777777));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("bammbamm2");
+            record.setThirdFirstName("bammbamm3");
+            dao.insert(record);
+
+            AwfulTableExample example = new AwfulTableExample();
+            example.createCriteria().andId1Between(new Integer(1), new Integer(1000));
+            List answer = dao.selectByExample(example);
+            assertEquals(3, answer.size());
+        } catch (SQLException e) {
+            fail(e.getMessage());
+        }
+    }
+
+    public void testAwfulTableSelectByExampleNoCriteria() {
+        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+
+        try {
+            AwfulTable record = new AwfulTable();
+            record.seteMail("fred@fred.com");
+            record.setEmailaddress("alsofred@fred.com");
+            record.setFirstFirstName("fred1");
+            record.setFourthFirstName("fred4");
+            record.setFrom("from field");
+            record.setId1(new Integer(1));
+            record.setId2(new Integer(2));
+            record.setId5(new Integer(5));
+            record.setId6(new Integer(6));
+            record.setId7(new Integer(7));
+            record.setSecondCustomerId(new Integer(567));
+            record.setSecondFirstName("fred2");
+            record.setThirdFirstName("fred3");
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("wilma@wilma.com");
+            record.setEmailaddress("alsoWilma@wilma.com");
+            record.setFirstFirstName("wilma1");
+            record.setFourthFirstName("wilma4");
+            record.setFrom("from field");
+            record.setId1(new Integer(11));
+            record.setId2(new Integer(22));
+            record.setId5(new Integer(55));
+            record.setId6(new Integer(66));
+            record.setId7(new Integer(77));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("wilma2");
+            record.setThirdFirstName("wilma3");
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("pebbles@pebbles.com");
+            record.setEmailaddress("alsoPebbles@pebbles.com");
+            record.setFirstFirstName("pebbles1");
+            record.setFourthFirstName("pebbles4");
+            record.setFrom("from field");
+            record.setId1(new Integer(111));
+            record.setId2(new Integer(222));
+            record.setId5(new Integer(555));
+            record.setId6(new Integer(666));
+            record.setId7(new Integer(777));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("pebbles2");
+            record.setThirdFirstName("pebbles3");
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("barney@barney.com");
+            record.setEmailaddress("alsoBarney@barney.com");
+            record.setFirstFirstName("barney1");
+            record.setFourthFirstName("barney4");
+            record.setFrom("from field");
+            record.setId1(new Integer(1111));
+            record.setId2(new Integer(2222));
+            record.setId5(new Integer(5555));
+            record.setId6(new Integer(6666));
+            record.setId7(new Integer(7777));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("barney2");
+            record.setThirdFirstName("barney3");
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("betty@betty.com");
+            record.setEmailaddress("alsoBetty@betty.com");
+            record.setFirstFirstName("betty1");
+            record.setFourthFirstName("betty4");
+            record.setFrom("from field");
+            record.setId1(new Integer(11111));
+            record.setId2(new Integer(22222));
+            record.setId5(new Integer(55555));
+            record.setId6(new Integer(66666));
+            record.setId7(new Integer(77777));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("betty2");
+            record.setThirdFirstName("betty3");
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("bammbamm@bammbamm.com");
+            record.setEmailaddress("alsoBammbamm@bammbamm.com");
+            record.setFirstFirstName("bammbamm1");
+            record.setFourthFirstName("bammbamm4");
+            record.setFrom("from field");
+            record.setId1(new Integer(111111));
+            record.setId2(new Integer(222222));
+            record.setId5(new Integer(555555));
+            record.setId6(new Integer(666666));
+            record.setId7(new Integer(777777));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("bammbamm2");
+            record.setThirdFirstName("bammbamm3");
+            dao.insert(record);
+
+            AwfulTableExample example = new AwfulTableExample();
+            example.createCriteria();
+            example.setOrderByClause("\"A_CuStOmEr iD\" desc");
+            
+            List answer = dao.selectByExample(example);
+            assertEquals(6, answer.size());
+            AwfulTable returnedRecord = (AwfulTable) answer.get(0);
+            assertEquals(111111, returnedRecord.getId1().intValue());
+            returnedRecord = (AwfulTable) answer.get(1);
+            assertEquals(11111, returnedRecord.getId1().intValue());
+            returnedRecord = (AwfulTable) answer.get(2);
+            assertEquals(1111, returnedRecord.getId1().intValue());
+            returnedRecord = (AwfulTable) answer.get(3);
+            assertEquals(111, returnedRecord.getId1().intValue());
+            returnedRecord = (AwfulTable) answer.get(4);
+            assertEquals(11, returnedRecord.getId1().intValue());
+            returnedRecord = (AwfulTable) answer.get(5);
+            assertEquals(1, returnedRecord.getId1().intValue());
         } catch (SQLException e) {
             fail(e.getMessage());
         }

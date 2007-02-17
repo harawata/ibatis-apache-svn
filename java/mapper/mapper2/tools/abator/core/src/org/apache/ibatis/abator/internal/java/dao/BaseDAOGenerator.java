@@ -1114,7 +1114,7 @@ public class BaseDAOGenerator implements DAOGenerator {
         s = (String) map.get(key);
         if (s == null) {
             StringBuffer sb = new StringBuffer(targetPackage);
-            if ("true".equals(properties.get("enableSubPackages"))) { //$NON-NLS-1$  //$NON-NLS-2$
+            if ("true".equalsIgnoreCase((String)properties.get("enableSubPackages"))) { //$NON-NLS-1$  //$NON-NLS-2$
                 sb.append(table.getSubPackage());
             }
 

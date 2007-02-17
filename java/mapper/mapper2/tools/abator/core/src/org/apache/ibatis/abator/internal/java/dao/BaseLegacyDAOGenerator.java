@@ -365,7 +365,7 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
 
             sb.setLength(0);
             sb.append("parms.put(\""); //$NON-NLS-1$
-            sb.append(clause.getSelectorOrProperty(cd));
+            sb.append(clause.getSelectorOrProperty(cd, true));
             sb.append("\", \"Y\");"); //$NON-NLS-1$
             method.addBodyLine(sb.toString());
 
@@ -373,7 +373,7 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
 
             sb.setLength(0);
             sb.append("parms.put(\""); //$NON-NLS-1$
-            sb.append(clause.getSelectorAndProperty(cd));
+            sb.append(clause.getSelectorAndProperty(cd, true));
             sb.append("\", \"Y\");"); //$NON-NLS-1$
             method.addBodyLine(sb.toString());
 

@@ -118,6 +118,12 @@ public class IntrospectedTableImpl implements IntrospectedTable {
                 columnDefinitions.getBaseColumns().iterator());
     }
 
+
+    public int getNonBLOBColumnCount() {
+        return columnDefinitions.getPrimaryKeyColumns().size()
+            + columnDefinitions.getBaseColumns().size();
+    }
+    
     public Iterator getPrimaryKeyColumns() {
         return columnDefinitions.getPrimaryKeyColumns().iterator();
     }
@@ -141,5 +147,9 @@ public class IntrospectedTableImpl implements IntrospectedTable {
     public Iterator getNonPrimaryKeyColumns() {
         return new AggregatingIterator(columnDefinitions.getBaseColumns().iterator(),
                 columnDefinitions.getBLOBColumns().iterator());
+    }
+
+    public String getTableConfigurationProperty(String property) {
+        return (String) tableConfiguration.getProperties().get(property);
     }
 }

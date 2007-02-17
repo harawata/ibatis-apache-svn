@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
+import org.apache.ibatis.abator.internal.util.StringUtility;
 
 /**
  * @author Jeff Butler
@@ -116,16 +117,32 @@ public class ExampleClause {
 		this.examplePropertyValue = examplePropertyValue;
 	}
 
-	public String getSelectorAndProperty(ColumnDefinition cd) {
+	public String getSelectorAndProperty(ColumnDefinition cd, boolean forJava) {
 		Object[] arguments = { "AND", cd.getEscapedColumnName() }; //$NON-NLS-1$
+        
+        String s = MessageFormat.format(selectorProperty, arguments);
 
-		return MessageFormat.format(selectorProperty, arguments);
+        if (forJava) {
+            s = StringUtility.escapeStringForJava(s);
+        } else {
+            s = StringUtility.escapeStringForXml(s);
+        }
+        
+		return s;
 	}
 
-	public String getSelectorOrProperty(ColumnDefinition cd) {
+	public String getSelectorOrProperty(ColumnDefinition cd, boolean forJava) {
 		Object[] arguments = { "OR", cd.getEscapedColumnName() }; //$NON-NLS-1$
 
-		return MessageFormat.format(selectorProperty, arguments);
+        String s = MessageFormat.format(selectorProperty, arguments);
+
+        if (forJava) {
+            s = StringUtility.escapeStringForJava(s);
+        } else {
+            s = StringUtility.escapeStringForXml(s);
+        }
+        
+        return s;
 	}
 
 	public String getClause(ColumnDefinition cd) {

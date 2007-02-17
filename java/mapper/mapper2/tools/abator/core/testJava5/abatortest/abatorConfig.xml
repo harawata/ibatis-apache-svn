@@ -31,7 +31,17 @@
     <table tableName="PKBlobs" />
     <table tableName="PKFieldsBlobs" />
     <table tableName="FieldsBlobs" />
-    <table tableName="awful table" />
+    <table tableName="awful table" alias="A">
+      <property name="useColumnIndexes" value="true"/>
+      <generatedKey column="CuStOmEr iD" sqlStatement="HSQLDB" identity="true" />
+      <columnOverride column="customer id" property="secondCustomerId" />
+      <columnOverride column="first name" property="firstFirstName" />
+      <columnOverride column="First Name" property="secondFirstName" />
+      <ignoreColumn column="first Name" />
+      <columnOverride column="first_name" property="thirdFirstName" />
+      <columnOverride column="firstName" property="fourthFirstName" />
+      <columnOverride column="from" delimitedColumnName="true" />
+    </table>
   </abatorContext>
 
   <abatorContext generatorSet="Java2" defaultModelType="flat">
@@ -60,6 +70,17 @@
     <table tableName="PKBlobs" />
     <table tableName="PKFieldsBlobs" />
     <table tableName="FieldsBlobs" />
+    <table tableName="awful table" alias="A">
+      <property name="useColumnIndexes" value="true"/>
+      <generatedKey column="CuStOmEr iD" sqlStatement="HSQLDB" identity="true" />
+      <columnOverride column="customer id" property="secondCustomerId" />
+      <columnOverride column="first name" property="firstFirstName" />
+      <columnOverride column="First Name" property="secondFirstName" />
+      <ignoreColumn column="first Name" />
+      <columnOverride column="first_name" property="thirdFirstName" />
+      <columnOverride column="firstName" property="fourthFirstName" />
+      <columnOverride column="from" delimitedColumnName="true" />
+    </table>
   </abatorContext>
 
   <abatorContext generatorSet="Legacy" defaultModelType="flat">
@@ -88,6 +109,17 @@
     <table tableName="PKBlobs" />
     <table tableName="PKFieldsBlobs" />
     <table tableName="FieldsBlobs" />
+    <table tableName="awful table" alias="A">
+      <property name="useColumnIndexes" value="true"/>
+      <generatedKey column="CuStOmEr iD" sqlStatement="HSQLDB" identity="true" />
+      <columnOverride column="customer id" property="secondCustomerId" />
+      <columnOverride column="first name" property="firstFirstName" />
+      <columnOverride column="First Name" property="secondFirstName" />
+      <ignoreColumn column="first Name" />
+      <columnOverride column="first_name" property="thirdFirstName" />
+      <columnOverride column="firstName" property="fourthFirstName" />
+      <columnOverride column="from" delimitedColumnName="true" />
+    </table>
   </abatorContext>
 
   <abatorContext generatorSet="Java5" defaultModelType="hierarchical">
@@ -114,6 +146,17 @@
     <table tableName="PKBlobs" />
     <table tableName="PKFieldsBlobs" />
     <table tableName="FieldsBlobs" />
+    <table tableName="awful table" alias="A">
+      <property name="useColumnIndexes" value="true"/>
+      <generatedKey column="CuStOmEr iD" sqlStatement="HSQLDB" identity="true" />
+      <columnOverride column="customer id" property="secondCustomerId" />
+      <columnOverride column="first name" property="firstFirstName" />
+      <columnOverride column="First Name" property="secondFirstName" />
+      <ignoreColumn column="first Name" />
+      <columnOverride column="first_name" property="thirdFirstName" />
+      <columnOverride column="firstName" property="fourthFirstName" />
+      <columnOverride column="from" delimitedColumnName="true" />
+    </table>
   </abatorContext>
 
   <abatorContext generatorSet="Java2" defaultModelType="hierarchical">
@@ -142,6 +185,17 @@
     <table tableName="PKBlobs" />
     <table tableName="PKFieldsBlobs" />
     <table tableName="FieldsBlobs" />
+    <table tableName="awful table" alias="A">
+      <property name="useColumnIndexes" value="true"/>
+      <generatedKey column="CuStOmEr iD" sqlStatement="HSQLDB" identity="true" />
+      <columnOverride column="customer id" property="secondCustomerId" />
+      <columnOverride column="first name" property="firstFirstName" />
+      <columnOverride column="First Name" property="secondFirstName" />
+      <ignoreColumn column="first Name" />
+      <columnOverride column="first_name" property="thirdFirstName" />
+      <columnOverride column="firstName" property="fourthFirstName" />
+      <columnOverride column="from" delimitedColumnName="true" />
+    </table>
   </abatorContext>
 
   <abatorContext generatorSet="Legacy" defaultModelType="hierarchical">
@@ -170,6 +224,17 @@
     <table tableName="PKBlobs" />
     <table tableName="PKFieldsBlobs" />
     <table tableName="FieldsBlobs" />
+    <table tableName="awful table" alias="A">
+      <property name="useColumnIndexes" value="true"/>
+      <generatedKey column="CuStOmEr iD" sqlStatement="HSQLDB" identity="true" />
+      <columnOverride column="customer id" property="secondCustomerId" />
+      <columnOverride column="first name" property="firstFirstName" />
+      <columnOverride column="First Name" property="secondFirstName" />
+      <ignoreColumn column="first Name" />
+      <columnOverride column="first_name" property="thirdFirstName" />
+      <columnOverride column="firstName" property="fourthFirstName" />
+      <columnOverride column="from" delimitedColumnName="true" />
+    </table>
   </abatorContext>
 
   <abatorContext generatorSet="Java5" defaultModelType="conditional">
@@ -196,6 +261,17 @@
     <table tableName="PKBlobs" />
     <table tableName="PKFieldsBlobs" />
     <table tableName="FieldsBlobs" />
+    <table tableName="awful table" alias="A">
+      <property name="useColumnIndexes" value="true"/>
+      <generatedKey column="CuStOmEr iD" sqlStatement="HSQLDB" identity="true" />
+      <columnOverride column="customer id" property="secondCustomerId" />
+      <columnOverride column="first name" property="firstFirstName" />
+      <columnOverride column="First Name" property="secondFirstName" />
+      <ignoreColumn column="first Name" />
+      <columnOverride column="first_name" property="thirdFirstName" />
+      <columnOverride column="firstName" property="fourthFirstName" />
+      <columnOverride column="from" delimitedColumnName="true" />
+    </table>
   </abatorContext>
 
   <abatorContext generatorSet="Java2" defaultModelType="conditional">
@@ -224,6 +300,17 @@
     <table tableName="PKBlobs" />
     <table tableName="PKFieldsBlobs" />
     <table tableName="FieldsBlobs" />
+    <table tableName="awful table" alias="A">
+      <property name="useColumnIndexes" value="true"/>
+      <generatedKey column="CuStOmEr iD" sqlStatement="HSQLDB" identity="true" />
+      <columnOverride column="customer id" property="secondCustomerId" />
+      <columnOverride column="first name" property="firstFirstName" />
+      <columnOverride column="First Name" property="secondFirstName" />
+      <ignoreColumn column="first Name" />
+      <columnOverride column="first_name" property="thirdFirstName" />
+      <columnOverride column="firstName" property="fourthFirstName" />
+      <columnOverride column="from" delimitedColumnName="true" />
+    </table>
   </abatorContext>
 
   <abatorContext generatorSet="Legacy" defaultModelType="conditional">
@@ -252,6 +339,17 @@
     <table tableName="PKBlobs" />
     <table tableName="PKFieldsBlobs" />
     <table tableName="FieldsBlobs" />
+    <table tableName="awful table" alias="A">
+      <property name="useColumnIndexes" value="true"/>
+      <generatedKey column="CuStOmEr iD" sqlStatement="HSQLDB" identity="true" />
+      <columnOverride column="customer id" property="secondCustomerId" />
+      <columnOverride column="first name" property="firstFirstName" />
+      <columnOverride column="First Name" property="secondFirstName" />
+      <ignoreColumn column="first Name" />
+      <columnOverride column="first_name" property="thirdFirstName" />
+      <columnOverride column="firstName" property="fourthFirstName" />
+      <columnOverride column="from" delimitedColumnName="true" />
+    </table>
   </abatorContext>
 
   <abatorContext id="miscellaneousTests" generatorSet="Java5">

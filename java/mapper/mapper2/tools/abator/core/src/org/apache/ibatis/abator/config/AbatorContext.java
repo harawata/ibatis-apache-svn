@@ -207,15 +207,30 @@ public class AbatorContext extends PropertyHolder {
 			errors.add(Messages.getString("ValidationError.6", Integer.toString(listPosition))); //$NON-NLS-1$
 		}
 
+        String tableName = StringUtility.composeFullyQualifiedTableName(
+                tc.getCatalog(), tc.getSchema(), tc.getTableName(), '.');
+        
 		if (tc.getGeneratedKey() != null
 				&& !StringUtility.stringHasValue(tc.getGeneratedKey()
 						.getRuntimeSqlStatement())) {
-            String tableName = StringUtility.composeFullyQualifiedTableName(
-                    tc.getCatalog(), tc.getSchema(), tc.getTableName(), '.');
 	        errors
 				.add(Messages.getString("ValidationError.7",  //$NON-NLS-1$
 						tableName));
 		}
+        
+        if ("true".equalsIgnoreCase((String) tc.getProperties().get("useColumnIndexes"))) {  //$NON-NLS-1$  //$NON-NLS-2$
+            // when using column indexes, either both or neither query ids should be set
+            if (tc.isSelectByExampleStatementEnabled() && tc.isSelectByPrimaryKeyStatementEnabled()) {
+                boolean queryId1Set = StringUtility.stringHasValue(tc.getSelectByExampleQueryId());
+                boolean queryId2Set = StringUtility.stringHasValue(tc.getSelectByPrimaryKeyQueryId());
+            
+                if (queryId1Set != queryId2Set) {
+                    errors
+                    .add(Messages.getString("ValidationError.13",  //$NON-NLS-1$
+                        tableName));
+                }
+            }
+        }
 	}
 
 	/**

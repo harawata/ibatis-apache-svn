@@ -101,10 +101,9 @@ public class AbatorAntTask extends Task {
             abator.generate(new AntProgressCallback(this, verbose));
             
         } catch (XMLParserException e) {
-            List errors = e.getErrors();
-            Iterator iter = errors.iterator();
-            while (iter.hasNext()) {
-                log((String) iter.next(), Project.MSG_ERR);
+            Iterator errors = e.getErrors().iterator();
+            while (errors.hasNext()) {
+                log((String) errors.next(), Project.MSG_ERR);
             }
             
             throw new BuildException(e.getMessage());
@@ -113,6 +112,10 @@ public class AbatorAntTask extends Task {
         } catch (IOException e) {
             throw new BuildException(e.getMessage());
         } catch (InvalidConfigurationException e) {
+            Iterator errors = e.getErrors().iterator();
+            while (errors.hasNext()) {
+                log((String) errors.next(), Project.MSG_ERR);
+            }
             throw new BuildException(e.getMessage());
         } catch (InterruptedException e) {
             // ignore (will never happen with the DefaultShellCallback)

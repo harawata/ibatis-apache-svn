@@ -23,5 +23,6 @@
   <sqlMap resource="abatortest/generated/conditional/java5/xml/PKFIELDS_SqlMap.xml" />
   <sqlMap resource="abatortest/generated/conditional/java5/xml/PKFIELDSBLOBS_SqlMap.xml" />
   <sqlMap resource="abatortest/generated/conditional/java5/xml/PKONLY_SqlMap.xml" />
+  <sqlMap resource="abatortest/generated/conditional/java5/xml/awful table_SqlMap.xml" />
 
 </sqlMapConfig>

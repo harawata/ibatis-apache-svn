@@ -32,8 +32,6 @@ import org.apache.ibatis.abator.internal.util.StringUtility;
 public class ColumnDefinition {
     private String actualColumnName;
     
-    private String escapedColumnName;
-
     private int jdbcType;
 
     private boolean nullable;
@@ -58,27 +56,6 @@ public class ColumnDefinition {
     
     private boolean isColumnNameDelimited;
 
-    /**
-     * The aliased column name for a select statement.  If there
-     * is a table alias, the value will be alias.columnName
-     */
-    private String aliasedActualColumnName;
-
-    private String aliasedEscapedColumnName;
-    
-    /**
-     * The renamed column name for a select statement.  If there
-     * is a table alias, the value will be alias_columnName
-     */
-    private String renamedColumnNameForResultMap;
-    
-    /**
-     * The phrase to use in a select list.  If there
-     * is a table alias, the value will be 
-     * "alias.columnName as alias_columnName"
-     */
-    private String selectListPhrase;
-    
     /**
      * Constructs a Column definition.  This object holds all the 
      * information about a column that is required to generate
@@ -159,42 +136,7 @@ public class ColumnDefinition {
 
     public void setActualColumnName(String actualColumnName) {
         this.actualColumnName = actualColumnName;
-        this.escapedColumnName = escapeStringForIbatis(actualColumnName);
         isColumnNameDelimited = StringUtility.stringContainsSpace(actualColumnName);
-        
-        if (StringUtility.stringHasValue(tableAlias)) {
-            StringBuffer sb = new StringBuffer();
-            
-            sb.append(tableAlias);
-            sb.append('.');
-            sb.append(escapedColumnName);
-            aliasedEscapedColumnName = sb.toString();
-            
-            sb.setLength(0);
-            sb.append(tableAlias);
-            sb.append('.');
-            sb.append(actualColumnName);
-            aliasedActualColumnName = sb.toString();
-            
-            sb.setLength(0);
-            sb.append(tableAlias);
-            sb.append('_');
-            sb.append(actualColumnName);
-            renamedColumnNameForResultMap = sb.toString();
-            
-            sb.setLength(0);
-            sb.append(aliasedEscapedColumnName);
-            sb.append(" as "); //$NON-NLS-1$
-            sb.append(tableAlias);
-            sb.append('_');
-            sb.append(escapedColumnName);
-            selectListPhrase = sb.toString();
-        } else {
-            aliasedActualColumnName = actualColumnName;
-            aliasedEscapedColumnName = escapedColumnName;
-            renamedColumnNameForResultMap = actualColumnName;
-            selectListPhrase = escapedColumnName;
-        }
     }
 
     /**
@@ -251,12 +193,52 @@ public class ColumnDefinition {
         return javaProperty + "_Indicator"; //$NON-NLS-1$
     }
     
+    /**
+     * The renamed column name for a select statement.  If there
+     * is a table alias, the value will be alias_columnName.  This is
+     * appropriate for use in a result map.
+     * 
+     * @return
+     */
     public String getRenamedColumnNameForResultMap() {
-        return renamedColumnNameForResultMap;
+        if (StringUtility.stringHasValue(tableAlias)) {
+            StringBuffer sb = new StringBuffer();
+            
+            sb.append(tableAlias);
+            sb.append('_');
+            sb.append(actualColumnName);
+            return sb.toString();
+        } else {
+            return actualColumnName;
+        }
     }
 
+    /**
+     * The phrase to use in a select list.  If there
+     * is a table alias, the value will be 
+     * "alias.columnName as alias_columnName"
+     * 
+     * @return the proper phrase
+     */
     public String getSelectListPhrase() {
-        return selectListPhrase;
+        if (StringUtility.stringHasValue(tableAlias)) {
+            StringBuffer sb = new StringBuffer();
+            
+            sb.append(getAliasedEscapedColumnName());
+            sb.append(" as "); //$NON-NLS-1$
+            if (isColumnNameDelimited) {
+                sb.append(abatorContext.getBeginningDelimiter());
+            }
+            sb.append(tableAlias);
+            sb.append('_');
+            sb.append(escapeStringForIbatis(actualColumnName));
+            if (isColumnNameDelimited) {
+                sb.append(abatorContext.getEndingDelimiter());
+            }
+            return sb.toString();
+        } else {
+            return getEscapedColumnName();
+        }
     }
     
     public boolean isJDBCDateColumn() {
@@ -298,8 +280,8 @@ public class ColumnDefinition {
         this.typeHandler = typeHandler;
     }
     
-    private String escapeStringForIbatis(String actualColumnName) {
-        StringTokenizer st = new StringTokenizer(actualColumnName, "$#", true); //$NON-NLS-1$
+    private String escapeStringForIbatis(String s) {
+        StringTokenizer st = new StringTokenizer(s, "$#", true); //$NON-NLS-1$
         StringBuffer sb = new StringBuffer();
         while (st.hasMoreTokens()) {
             String token = st.nextToken();
@@ -320,15 +302,65 @@ public class ColumnDefinition {
     }
 
     public String getEscapedColumnName() {
-        return escapedColumnName;
+        StringBuffer sb = new StringBuffer();
+        sb.append(escapeStringForIbatis(actualColumnName));
+        
+        if (isColumnNameDelimited) {
+            sb.insert(0, abatorContext.getBeginningDelimiter());
+            sb.append(abatorContext.getEndingDelimiter());
+        }
+        
+        return sb.toString();
     }
 
+    /**
+     * The aliased column name for a select statement generated by the example clauses.
+     * This is not appropriate for selects in SqlMaps because the column is
+     * not escaped for iBATIS.  If there
+     * is a table alias, the value will be alias.columnName.
+     * 
+     * This method is used in the Example classes and the returned value will be
+     * in a Java string.  So we need to escape double quotes if they are
+     * the delimiters.
+     * 
+     * @return
+     */
     public String getAliasedActualColumnName() {
-        return aliasedActualColumnName;
+        StringBuffer sb = new StringBuffer();
+        if (StringUtility.stringHasValue(tableAlias)) {
+            sb.append(tableAlias);
+            sb.append('.');
+        }
+
+        if (isColumnNameDelimited) {
+            sb.append(StringUtility.escapeStringForJava(abatorContext.getBeginningDelimiter()));
+        }
+        
+        sb.append(actualColumnName);
+            
+        if (isColumnNameDelimited) {
+            sb.append(StringUtility.escapeStringForJava(abatorContext.getEndingDelimiter()));
+        }
+        
+        return sb.toString();
     }
 
+    /**
+     * Calculates the string to use in select phrases in SqlMaps.
+     * 
+     * @return
+     */
     public String getAliasedEscapedColumnName() {
-        return aliasedEscapedColumnName;
+        if (StringUtility.stringHasValue(tableAlias)) {
+            StringBuffer sb = new StringBuffer();
+            
+            sb.append(tableAlias);
+            sb.append('.');
+            sb.append(getEscapedColumnName());
+            return sb.toString();
+        } else {
+            return getEscapedColumnName();
+        }
     }
 
     public void setColumnNameDelimited(boolean isColumnNameDelimited) {
