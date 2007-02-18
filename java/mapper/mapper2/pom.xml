@@ -109,6 +109,12 @@
               <addClasspath>false</addClasspath>
             </manifest>
             <manifestEntries>
+            <!--
+            Need to find a way to specify a current date.
+            This appears to be a maven problem. Still looking for a
+            way to implement it. Apparently on it's way but not quite
+            here http://jira.codehaus.org/browse/MNG-1832
+            -->
               <Build-On>${still.working.on.this}</Build-On>
             </manifestEntries>
             <manifestSections>
@@ -210,9 +216,10 @@
           <dates>
             <date implementation="java.lang.String">2006-12-01</date>
             <!--
-            need to find a way to have a property for the current date
-            this appears to be a mavent problem. Still looking for a
-            way to implement it.
+            Need to find a way to specify a current date.
+            This appears to be a maven problem. Still looking for a
+            way to implement it. Apparently on it's way but not quite
+            here http://jira.codehaus.org/browse/MNG-1832
             -->
             <date implementation="java.lang.String">2007-02-18</date>
           </dates>
