@@ -232,7 +232,8 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
                  string[] groupByProperties = groupBy.Split(',');
                  for (int i = 0; i < groupByProperties.Length; i++)
                  {
-                     _groupByProperties.Add(groupByProperties[i].Trim());
+                     string memberName = groupByProperties[i].Trim();
+                     _groupByProperties.Add(memberName);
                  }
              }
             
@@ -256,11 +257,26 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 
 				// Load the child node
 				GetChildNode(configScope);
-			}
+
+                 // Verify that that each groupBy element correspond to a class member
+                 // of one of result property
+                for (int i = 0; i < _groupByProperties.Count; i++)
+                {
+                    string memberName = GroupByProperties[i];
+                    if (!_properties.Contains(GroupByProperties[i]))
+                    {
+                         throw new ConfigurationException(
+                             string.Format(
+                                 "Could not configure ResultMap named \"{0}\". Check the groupBy attribute. Cause: there's no result property named \"{1}\".",
+                                 _id, memberName));
+                    }
+                }
+		
+            }
 			catch(Exception e)
 			{
 				throw new ConfigurationException(
-					string.Format("Could not configure ResultMap. ResultMap named \"{0}\" not found, failed. {1} Cause: {2}", _id, Environment.NewLine, e.Message)
+					string.Format("Could not configure ResultMap named \"{0}\", Cause: {1}", _id, e.Message)
 					, e);
 			}
 		}

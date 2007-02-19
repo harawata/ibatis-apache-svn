@@ -101,8 +101,10 @@ namespace IBatisNet.DataMapper.MappedStatements.PropertStrategy
             if (propertyRresultMap.GroupByProperties.Count>0)
             {
                  string uniqueKey = GetUniqueKey(propertyRresultMap, request, reader);
+
                 // Gets the [key, result object] already build
                 IDictionary buildObjects = request.GetUniqueKeys(propertyRresultMap);
+
                 if (buildObjects != null && buildObjects.Contains(uniqueKey))
                 {
                     // Unique key is already known, so get the existing result object and process additional results.
@@ -120,6 +122,7 @@ namespace IBatisNet.DataMapper.MappedStatements.PropertStrategy
                 }
                 else if (uniqueKey == null || buildObjects == null || !buildObjects.Contains(uniqueKey))
                 {
+                    // Unique key is NOT known, so create a new result object and then process additional results.
                     result = _resultMapStrategy.Get(request, resultMap, mapping, ref target, reader);
 
                     if (buildObjects == null)

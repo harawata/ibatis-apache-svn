@@ -162,16 +162,25 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// <returns>True fi is in</returns>
 		public bool Contains(ResultProperty value) 
 		{
-			for (int i = 0;   i < _count; i++) 
-			{
-				if(_innerList[i].PropertyName==value.PropertyName)
-				{
-					return true;
-				}
-			}
-			return false;
+		    return Contains(value.PropertyName);
 		}
-      
+
+        /// <summary>
+        /// Indicate if a ResultProperty is in the collection
+        /// </summary>
+        /// <param name="propertyName">A property name</param>
+        /// <returns>True fi is in</returns>
+        public bool Contains(string propertyName)
+        {
+            for (int i = 0; i < _count; i++)
+            {
+                if (_innerList[i].PropertyName == propertyName)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
 		/// <summary>
 		/// Insert a ResultProperty in the collection.

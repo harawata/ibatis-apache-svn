@@ -70,6 +70,7 @@ namespace IBatisNet.DataMapper.MappedStatements
 
                 if (keyBuffer.Length < 1)
                 {
+                    // we should never go here
                     return null;
                 }
                 else
@@ -81,6 +82,7 @@ namespace IBatisNet.DataMapper.MappedStatements
             }
             else
             {
+                // we should never go here
                 return null;
             }
         }
