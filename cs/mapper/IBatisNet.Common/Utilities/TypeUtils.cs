@@ -227,36 +227,28 @@ namespace IBatisNet.Common.Utilities
         public static bool IsImplementGenericIListInterface(Type type)
         {
             bool ret = false;
-            
+
             if (!type.IsGenericType)
             {
-                ret = false;  
+                ret = false;
             }
 
-            Type genericTypeDef = null;
-            try
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IList<>))
             {
-                genericTypeDef = type.GetGenericTypeDefinition();
-            }
-            catch {}
-
-            // Check if it is IList<T>
-            if (genericTypeDef!=null && typeof(IList<>).IsAssignableFrom(genericTypeDef))
-            {
-                ret = true;
+                return true;
             }
             else // check if one of the derived interfaces is IList<>
             {
                 Type[] interfaceTypes = type.GetInterfaces();
                 foreach (Type interfaceType in interfaceTypes)
                 {
-                    if (interfaceType.IsGenericType &&
-                      interfaceType.GetGenericTypeDefinition() == typeof(IList<>))
+                    ret = IsImplementGenericIListInterface(interfaceType);
+                    if (ret)
                     {
-                        ret = true;
+                        break;
                     }
                 }
-            }                
+            }
             return ret;
         } 
 #endif
