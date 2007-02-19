@@ -98,45 +98,42 @@ namespace IBatisNet.DataMapper.MappedStatements.PropertStrategy
             object result = null;
             IResultMap propertyRresultMap = mapping.NestedResultMap.ResolveSubMap(reader);
 
-            if (propertyRresultMap!=null)
+            if (propertyRresultMap.GroupByProperties.Count>0)
             {
-                if (propertyRresultMap.GroupByProperties.Count>0)
+                 string uniqueKey = GetUniqueKey(propertyRresultMap, request, reader);
+                // Gets the [key, result object] already build
+                IDictionary buildObjects = request.GetUniqueKeys(propertyRresultMap);
+                if (buildObjects != null && buildObjects.Contains(uniqueKey))
                 {
-                     string uniqueKey = GetUniqueKey(propertyRresultMap, request, reader);
-                    // Gets the [key, result object] already build
-                    IDictionary buildObjects = request.GetUniqueKeys(propertyRresultMap);
-                    if (buildObjects != null && buildObjects.Contains(uniqueKey))
+                    // Unique key is already known, so get the existing result object and process additional results.
+                    result = buildObjects[uniqueKey];
+                    // process resulMapping attribute which point to a groupBy attribute
+                    for (int index = 0; index < propertyRresultMap.Properties.Count; index++)
                     {
-                        // Unique key is already known, so get the existing result object and process additional results.
-                        result = buildObjects[uniqueKey];
-                        // process resulMapping attribute which point to a groupBy attribute
-                        for (int index = 0; index < propertyRresultMap.Properties.Count; index++)
+                        ResultProperty resultProperty = propertyRresultMap.Properties[index];
+                        if (resultProperty.PropertyStrategy is PropertStrategy.GroupByStrategy)
                         {
-                            ResultProperty resultProperty = propertyRresultMap.Properties[index];
-                            if (resultProperty.PropertyStrategy is PropertStrategy.GroupByStrategy)
-                            {
-                                resultProperty.PropertyStrategy.Set(request, propertyRresultMap, resultProperty, ref result, reader, null);
-                            }
+                            resultProperty.PropertyStrategy.Set(request, propertyRresultMap, resultProperty, ref result, reader, null);
                         }
-                        result = SKIP;
                     }
-                    else if (uniqueKey == null || buildObjects == null || !buildObjects.Contains(uniqueKey))
-                    {
-                        result = _resultMapStrategy.Get(request, resultMap, mapping, ref target, reader);
-
-                        if (buildObjects == null)
-                        {
-                            buildObjects = new Hashtable();
-                            request.SetUniqueKeys(propertyRresultMap, buildObjects);
-                        }
-                        buildObjects[uniqueKey] = result;
-                    }               
+                    result = SKIP;
                 }
-                else // Last resultMap have no groupBy attribute
+                else if (uniqueKey == null || buildObjects == null || !buildObjects.Contains(uniqueKey))
                 {
                     result = _resultMapStrategy.Get(request, resultMap, mapping, ref target, reader);
-                }                
+
+                    if (buildObjects == null)
+                    {
+                        buildObjects = new Hashtable();
+                        request.SetUniqueKeys(propertyRresultMap, buildObjects);
+                    }
+                    buildObjects[uniqueKey] = result;
+                }               
             }
+            else // Last resultMap have no groupBy attribute
+            {
+                result = _resultMapStrategy.Get(request, resultMap, mapping, ref target, reader);
+            }                
 
             
             if ((result != null) && (result != SKIP))

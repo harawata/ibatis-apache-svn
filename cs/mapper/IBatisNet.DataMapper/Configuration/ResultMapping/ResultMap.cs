@@ -76,6 +76,8 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		/// </summary>
 		private const string XML_SUBMAP = "subMap";
 
+        private static IResultMap _nullResultMap = null;
+
 		#region Fields
         [NonSerialized]
         private bool _isInitalized = true;
@@ -210,6 +212,8 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
         /// <param name="groupBy">The groupBy properties</param>
         public ResultMap(ConfigurationScope configScope, string id, string className, string extendMap, string groupBy)
 		{
+            _nullResultMap = new NullResultMap();
+
             _dataExchangeFactory = configScope.DataExchangeFactory;
             _sqlMapNameSpace = configScope.SqlMapNamespace;
             if ((id == null) || (id.Length < 1))
@@ -453,7 +457,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
                 }
                 else
                 {
-                    subMap = null;
+                    subMap = _nullResultMap;
                 }
 			}
 			return subMap;

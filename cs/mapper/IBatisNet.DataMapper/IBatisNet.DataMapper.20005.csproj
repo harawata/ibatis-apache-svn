@@ -157,6 +157,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Configuration\ResultMapping\IResultMap.cs" />
+    <Compile Include="Configuration\ResultMapping\NullResultMap.cs" />
     <Compile Include="Configuration\ResultMapping\ResultMap.cs">
       <SubType>Code</SubType>
     </Compile>

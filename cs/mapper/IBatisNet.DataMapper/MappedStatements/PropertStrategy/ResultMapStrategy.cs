@@ -23,7 +23,6 @@
  ********************************************************************************/
 #endregion
 
-using System;
 using System.Data;
 using IBatisNet.DataMapper.Configuration.ResultMapping;
 using IBatisNet.DataMapper.Scope;
