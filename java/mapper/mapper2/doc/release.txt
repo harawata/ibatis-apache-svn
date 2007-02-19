@@ -4,7 +4,9 @@ Build Number: @buildNum@
 ------------------------------
  2.3.1 -
 ------------------------------
+ o Fixed BATIS-391  - Cannot access Lists within custom objects.
  o Fixed IBATIS-388 - Add methods to unwrap all proxied objects
+
 
 ------------------------------
  2.3.0 - Dec 01, 2006
