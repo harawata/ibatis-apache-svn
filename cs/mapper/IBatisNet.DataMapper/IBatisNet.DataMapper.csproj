@@ -308,6 +308,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Configuration\ResultMapping\NullResultMap.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Configuration\ResultMapping\ResultMap.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
