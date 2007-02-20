@@ -1886,6 +1886,20 @@ namespace IBatisNet.DataMapper.Configuration
                             resultMap.GroupByProperties.Add(superMap.GroupByProperties[i]);
                         }
                     }
+
+                    // Verify that that each groupBy element correspond to a class member
+                    // of one of result property
+                    for (int i = 0; i < resultMap.GroupByProperties.Count; i++)
+                    {
+                        string memberName = resultMap.GroupByProperties[i];
+                        if (!resultMap.Properties.Contains(memberName))
+                        {
+                            throw new ConfigurationException(
+                                string.Format(
+                                    "Could not configure ResultMap named \"{0}\". Check the groupBy attribute. Cause: there's no result property named \"{1}\".",
+                                    resultMap.Id, memberName));
+                        }
+                    }
 				}
 				_configScope.SqlMapper.AddResultMap( resultMap );
 			}

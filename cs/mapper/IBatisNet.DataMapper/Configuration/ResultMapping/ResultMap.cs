@@ -263,7 +263,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
                 for (int i = 0; i < _groupByProperties.Count; i++)
                 {
                     string memberName = GroupByProperties[i];
-                    if (!_properties.Contains(GroupByProperties[i]))
+                    if (!_properties.Contains(memberName))
                     {
                          throw new ConfigurationException(
                              string.Format(
@@ -271,7 +271,6 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
                                  _id, memberName));
                     }
                 }
-		
             }
 			catch(Exception e)
 			{
