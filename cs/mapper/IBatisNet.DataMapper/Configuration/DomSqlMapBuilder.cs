@@ -1879,19 +1879,19 @@ namespace IBatisNet.DataMapper.Configuration
 						resultMap.Properties.Add(property);
 					}
                     // Add groupBy properties
-                    if (resultMap.GroupByProperties.Count == 0)
+                    if (resultMap.GroupByPropertyNames.Count == 0)
                     {
-                        for(int i=0; i<superMap.GroupByProperties.Count; i++)
+                        for(int i=0; i<superMap.GroupByPropertyNames.Count; i++)
                         {
-                            resultMap.GroupByProperties.Add(superMap.GroupByProperties[i]);
+                            resultMap.GroupByPropertyNames.Add(superMap.GroupByPropertyNames[i]);
                         }
                     }
 
                     // Verify that that each groupBy element correspond to a class member
                     // of one of result property
-                    for (int i = 0; i < resultMap.GroupByProperties.Count; i++)
+                    for (int i = 0; i < resultMap.GroupByPropertyNames.Count; i++)
                     {
-                        string memberName = resultMap.GroupByProperties[i];
+                        string memberName = resultMap.GroupByPropertyNames[i];
                         if (!resultMap.Properties.Contains(memberName))
                         {
                             throw new ConfigurationException(
@@ -1901,6 +1901,7 @@ namespace IBatisNet.DataMapper.Configuration
                         }
                     }
 				}
+			    resultMap.InitializeGroupByProperties();
 				_configScope.SqlMapper.AddResultMap( resultMap );
 			}
 		 }

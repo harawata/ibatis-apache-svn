@@ -78,7 +78,7 @@ namespace IBatisNet.DataMapper.MappedStatements.PropertyStrategy
 			}
 			else if (mapping.NestedResultMap != null) // 'resultMap' attribute
 			{
-                if (mapping.NestedResultMap.GroupByProperties.Count>0)
+                if (mapping.NestedResultMap.GroupByPropertyNames.Count>0)
                 {
                     return _groupByStrategy; 
                 }

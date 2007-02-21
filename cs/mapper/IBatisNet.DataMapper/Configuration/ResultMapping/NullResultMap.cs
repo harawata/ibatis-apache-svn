@@ -37,11 +37,13 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
  
         #region Fields
         [NonSerialized]
-        private StringCollection _groupByProperties = new StringCollection();
+        private StringCollection _groupByPropertyNames = new StringCollection();
         [NonSerialized]
         private ResultPropertyCollection _properties = new ResultPropertyCollection();
         [NonSerialized]
         private ResultPropertyCollection _parameters = new ResultPropertyCollection();
+        [NonSerialized]
+        private ResultPropertyCollection _groupByProperties = new ResultPropertyCollection();
 
         #endregion
 
@@ -50,7 +52,15 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
         /// <summary>
         /// The GroupBy Properties.
         /// </summary>
-        public StringCollection GroupByProperties
+        public StringCollection GroupByPropertyNames
+        {
+            get { return _groupByPropertyNames; }
+        }
+
+        /// <summary>
+        /// The GroupBy Properties.
+        /// </summary>
+        public ResultPropertyCollection GroupByProperties
         {
             get { return _groupByProperties; }
         }

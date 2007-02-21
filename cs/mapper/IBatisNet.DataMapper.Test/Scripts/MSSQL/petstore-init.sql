@@ -8,6 +8,7 @@ INSERT INTO [Categories] VALUES ('DOGS', 'Dogs', NULL)
 INSERT INTO [Categories] VALUES ('REPTILES', 'Reptiles', NULL)
 INSERT INTO [Categories] VALUES ('CATS', 'Cats', NULL)
 INSERT INTO [Categories] VALUES ('BIRDS', 'Birds', NULL)
+INSERT INTO [Categories] VALUES ('DINO', 'Dinos', NULL)
 
 INSERT INTO [Products] VALUES ('FI-SW-01', 'FISH', 'Angelfish', 'Saltwater fish from Australia')
 INSERT INTO [Products] VALUES ('FI-SW-02', 'FISH', 'Tiger Shark', 'Saltwater fish from Australia')

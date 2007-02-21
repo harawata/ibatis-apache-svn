@@ -51,6 +51,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
         private IFactory _resultClassFactory = null;
         [NonSerialized]
         private ResultPropertyCollection _properties = new ResultPropertyCollection();
+
         [NonSerialized]
         private IDataExchange _dataExchange = null;
 
@@ -73,9 +74,9 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
         /// The GroupBy Properties.
         /// </summary>
         [XmlIgnore]
-        public StringCollection GroupByProperties
+        public StringCollection GroupByPropertyNames
         {
-            get { throw new NotImplementedException("The property 'GroupByProperties' is not implemented."); }
+            get { throw new NotImplementedException("The property 'GroupByPropertyNames' is not implemented."); }
         }
         
         /// <summary>
@@ -85,6 +86,15 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
         public ResultPropertyCollection Properties
         {
             get { return _properties; }
+        }
+
+        /// <summary>
+        /// The GroupBy Properties.
+        /// </summary>
+        /// <value></value>
+        public ResultPropertyCollection GroupByProperties
+        {
+            get { throw new NotImplementedException("The property 'GroupByProperties' is not implemented."); }
         }
 
         /// <summary>
@@ -230,5 +240,6 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
                 }
             }
         }
+
     }
 }

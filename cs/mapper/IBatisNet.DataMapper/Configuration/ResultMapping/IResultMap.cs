@@ -29,11 +29,8 @@
 using System;
 using System.Collections.Specialized;
 using System.Data;
-using System.Reflection;
 using System.Xml.Serialization;
 using IBatisNet.DataMapper.DataExchange;
-using IBatisNet.DataMapper.Exceptions;
-using IBatisNet.DataMapper.Scope;
 #endregion
 
 namespace IBatisNet.DataMapper.Configuration.ResultMapping
@@ -49,13 +46,17 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
         [XmlIgnore]
         ResultPropertyCollection Parameters { get; }
         
-        
         /// <summary>
         /// The collection of ResultProperty.
         /// </summary>
         [XmlIgnore]
         ResultPropertyCollection Properties { get; }
 
+        /// <summary>
+        /// The GroupBy Properties.
+        /// </summary>
+        [XmlIgnore]
+        ResultPropertyCollection GroupByProperties { get; }
 
         /// <summary>
         /// Identifier used to identify the resultMap amongst the others.
@@ -65,10 +66,10 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
         string Id { get; }
 
         /// <summary>
-        /// The GroupBy Properties.
+        /// The GroupBy Properties name.
         /// </summary>
         [XmlIgnore]
-        StringCollection GroupByProperties { get; }
+        StringCollection GroupByPropertyNames { get; }
         
         /// <summary>
         /// The output type class of the resultMap.

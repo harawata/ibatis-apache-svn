@@ -42,7 +42,14 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
         #endregion
 
         [Test]
-        public void TestGroupBy() 
+        public void TestGroupByWithNullSon() 
+        {
+            IList list = sqlMap.QueryForList("GetCategories", null);
+            Assert.AreEqual(6, list.Count);
+        }
+
+        [Test]
+        public void TestGroupBy()
         {
             IList list = sqlMap.QueryForList("GetAllCategories", null);
             Assert.AreEqual(5, list.Count);

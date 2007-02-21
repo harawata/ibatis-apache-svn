@@ -112,14 +112,33 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 				_innerList[index] = value;
 			}
 		}
- 
 
-		/// <summary>
-		/// Add an ResultProperty
-		/// </summary>
-		/// <param name="value"></param>
-		/// <returns>Index</returns>
-		public int Add(ResultProperty value) 
+        /// <summary>
+        /// Finds a property by his name.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <returns></returns>
+        public ResultProperty FindByPropertyName(string propertyName)
+        {
+            ResultProperty resultProperty = null;
+            for (int i = 0; i < _count; i++)
+            {
+                if (_innerList[i].PropertyName == propertyName)
+                {
+                    resultProperty = _innerList[i];
+                    break;
+                }
+            }
+            return resultProperty;
+        }
+
+
+        /// <summary>
+        /// Add an ResultProperty
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns>Index</returns>
+        public int Add(ResultProperty value) 
 		{
 			Resize(_count + 1);
 			int index = _count++;

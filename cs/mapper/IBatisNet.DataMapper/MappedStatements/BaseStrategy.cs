@@ -56,16 +56,11 @@ namespace IBatisNet.DataMapper.MappedStatements
             {
                 StringBuilder keyBuffer = new StringBuilder();
 
-                for (int i = 0; i < resultMap.Properties.Count; i++)
+                for (int i = 0; i < resultMap.GroupByProperties.Count; i++)
                 {
-                    ResultProperty resultProperty = resultMap.Properties[i];
-                    if (resultMap.GroupByProperties.Contains(resultProperty.PropertyName))
-                    {
-                        // on peut surement utiliser resultProperty.GetDataBaseValue
-                        keyBuffer.Append(resultProperty.GetDataBaseValue(reader));
-                                             //PropertyStrategy.Get(request, resultMap, resultProperty, reader));
-                        keyBuffer.Append('-');
-                    }
+                    ResultProperty resultProperty = resultMap.GroupByProperties[i];
+                    keyBuffer.Append(resultProperty.GetDataBaseValue(reader));
+                    keyBuffer.Append('-');
                 }
 
                 if (keyBuffer.Length < 1)

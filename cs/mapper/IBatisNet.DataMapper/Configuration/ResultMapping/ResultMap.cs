@@ -90,10 +90,13 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		[NonSerialized]
 		private Type _class = null;
         [NonSerialized]
-        private StringCollection _groupByProperties = new StringCollection();
+        private StringCollection _groupByPropertyNames = new StringCollection();
 	    
 		[NonSerialized]
 		private ResultPropertyCollection _properties = new ResultPropertyCollection();
+        [NonSerialized]
+        private ResultPropertyCollection _groupByProperties = new ResultPropertyCollection();
+
 		[NonSerialized]
 		private ResultPropertyCollection _parameters = new ResultPropertyCollection();
 
@@ -115,9 +118,9 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
         /// The GroupBy Properties.
         /// </summary>
         [XmlIgnore]
-        public StringCollection GroupByProperties
+        public StringCollection GroupByPropertyNames
         {
-            get { return _groupByProperties; }
+            get { return _groupByPropertyNames; }
         }
 	    
         /// <summary>
@@ -150,6 +153,15 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		{
 			get { return _properties; }
 		}
+
+        /// <summary>
+        /// The GroupBy Properties.
+        /// </summary>
+        [XmlIgnore]
+        public ResultPropertyCollection GroupByProperties
+        {
+            get { return _groupByProperties; }
+        }
 
 		/// <summary>
 		/// The collection of constructor parameters.
@@ -233,7 +245,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
                  for (int i = 0; i < groupByProperties.Length; i++)
                  {
                      string memberName = groupByProperties[i].Trim();
-                     _groupByProperties.Add(memberName);
+                     _groupByPropertyNames.Add(memberName);
                  }
              }
             
@@ -262,7 +274,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
                  // of one of result property
                 for (int i = 0; i < _groupByProperties.Count; i++)
                 {
-                    string memberName = GroupByProperties[i];
+                    string memberName = GroupByPropertyNames[i];
                     if (!_properties.Contains(memberName))
                     {
                          throw new ConfigurationException(
@@ -279,6 +291,18 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 					, e);
 			}
 		}
+
+        /// <summary>
+        /// Initializes the groupBy properties.
+        /// </summary>
+        public void InitializeGroupByProperties()
+        {
+            for (int i = 0; i < GroupByPropertyNames.Count; i++)
+            {
+                ResultProperty resultProperty = Properties.FindByPropertyName(this.GroupByPropertyNames[i]);
+                this.GroupByProperties.Add(resultProperty);
+            }
+        }
 
 
 		/// <summary>

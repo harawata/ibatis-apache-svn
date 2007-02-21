@@ -98,7 +98,7 @@ namespace IBatisNet.DataMapper.MappedStatements.PropertStrategy
             object result = null;
             IResultMap propertyRresultMap = mapping.NestedResultMap.ResolveSubMap(reader);
 
-            if (propertyRresultMap.GroupByProperties.Count>0)
+            if (propertyRresultMap.GroupByProperties.Count > 0)
             {
                  string uniqueKey = GetUniqueKey(propertyRresultMap, request, reader);
 
@@ -130,7 +130,7 @@ namespace IBatisNet.DataMapper.MappedStatements.PropertStrategy
                         buildObjects = new Hashtable();
                         request.SetUniqueKeys(propertyRresultMap, buildObjects);
                     }
-                    buildObjects[uniqueKey] = result;
+                    buildObjects[uniqueKey] = result;                       
                 }               
             }
             else // Last resultMap have no groupBy attribute

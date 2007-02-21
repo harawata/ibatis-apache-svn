@@ -74,7 +74,20 @@
 
   <statements>
 
-    <select id="GetAllCategories" resultMap="Category-Result" >
+    <select id="GetCategories" resultMap="Category-Result" >
+      SELECT     
+      c.Category_Id, c.Category_Name, 
+      p.Product_Id, p.Product_Name, 
+      i.Item_Id, i.Item_UnitCost, i.Item_Status, 
+      v.Inventory_Quantity
+      FROM         
+      Items i INNER JOIN
+      Products p ON i.Product_Id = p.Product_Id INNER JOIN
+      Inventories v ON i.Item_Id = v.Item_Id RIGHT OUTER JOIN
+      Categories c ON p.Category_Id = c.Category_Id
+    </select>
+    
+      <select id="GetAllCategories" resultMap="Category-Result" >
       select
       c.Category_Id, c.Category_Name,
       p.Product_Id, p.Product_Name,

@@ -59,7 +59,7 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
         {
             IResultMap resultMap = request.CurrentResultMap.ResolveSubMap(reader);
 
-            if (resultMap.GroupByProperties.Count>0)
+            if (resultMap.GroupByPropertyNames.Count>0)
             {
                 return _groupByStrategy.Process(request, ref reader, resultObject);
             }
