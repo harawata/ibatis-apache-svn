@@ -109,6 +109,8 @@
     <Compile Include="Domain\AccountCollection.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Domain\Address.cs" />
+    <Compile Include="Domain\Application.cs" />
     <Compile Include="Domain\B.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -182,6 +184,7 @@
     <Compile Include="Domain\Petshop\Product.cs" />
     <Compile Include="Domain\Product.cs" />
     <Compile Include="Domain\Query.cs" />
+    <Compile Include="Domain\Role.cs" />
     <Compile Include="Domain\Sample.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -189,6 +192,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Domain\Simple.cs" />
+    <Compile Include="Domain\User.cs" />
     <Compile Include="Domain\VarcharCallBack.cs" />
     <Compile Include="NUnit\SqlMapTests\BaseTest.cs">
       <SubType>Code</SubType>
@@ -426,6 +430,8 @@
     <Content Include="Scripts\MSSQL\embed-param-setup-init.sql" />
     <Content Include="Scripts\MSSQL\embed-param-test-init.sql" />
     <Content Include="Scripts\MSSQL\enumeration-init.sql" />
+    <Content Include="Scripts\MSSQL\groupby-init.sql" />
+    <Content Include="Scripts\MSSQL\groupby-schema.sql" />
     <Content Include="Scripts\MSSQL\line-item-init.sql" />
     <Content Include="Scripts\MSSQL\more-account-records.sql" />
     <Content Include="Scripts\MSSQL\Nullable-init.sql" />

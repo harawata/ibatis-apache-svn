@@ -7,6 +7,11 @@
     <typeAlias alias="NCategory" type="IBatisNet.DataMapper.Test.Domain.Petshop.Category, IBatisNet.DataMapper.Test"/>
     <typeAlias alias="NProduct" type="IBatisNet.DataMapper.Test.Domain.Petshop.Product, IBatisNet.DataMapper.Test"/>
     <typeAlias alias="NItem" type="IBatisNet.DataMapper.Test.Domain.Petshop.Item, IBatisNet.DataMapper.Test"/>
+    <typeAlias alias="Application" type="IBatisNet.DataMapper.Test.Domain.Application, IBatisNet.DataMapper.Test"/>
+    <typeAlias alias="ApplicationUser" type="IBatisNet.DataMapper.Test.Domain.ApplicationUser, IBatisNet.DataMapper.Test"/>
+    <typeAlias alias="Role" type="IBatisNet.DataMapper.Test.Domain.Role, IBatisNet.DataMapper.Test"/>
+    <typeAlias alias="Address" type="IBatisNet.DataMapper.Test.Domain.Address, IBatisNet.DataMapper.Test"/>
+
   </alias>
 
   <resultMaps>
@@ -69,10 +74,62 @@
       <result property="Id" column="Product_Id"/>
       <result property="Name" column="Product_Name" />
     </resultMap>
+
+    <resultMap id="ApplicationResultMap" class="Application" groupBy="Id">
+      <result property="Id" column="ApplicationId"/>
+      <result property="Name" column="ApplicationName"/>
+      <result property="DefaultRole" resultMapping="GroupByMapping.DefaultRoleResultMap"/>
+      <result property="Users" resultMapping="GroupByMapping.ApplicationUserResultMap"/>
+    </resultMap>
+
+    <resultMap id="ApplicationUserResultMap" class="ApplicationUser" groupBy="Id">
+      <result property="Id" column="UserId"/>
+      <result property="UserName" column="UserName"/>
+      <result property="Address" resultMapping="GroupByMapping.AddressResultMap"/>
+      <result property="IsActive" column="ActiveFlag"/>
+      <result property="Roles" resultMapping="GroupByMapping.RoleResultMap"/>
+    </resultMap>
+
+    <resultMap id="DefaultRoleResultMap" class="Role" >
+      <result property="Id" column="DefaultRoleId"/>
+      <result property="Name" column="DefaultRoleName"/>
+    </resultMap>
+
+    <resultMap id="RoleResultMap" class="Role" >
+      <result property="Id" column="RoleId"/>
+      <result property="Name" column="RoleName"/>
+    </resultMap>
+
+    <resultMap id="AddressResultMap" class="Address" >
+      <result property="Id" column="AddressId"/>
+    </resultMap>
     
   </resultMaps>
 
   <statements>
+
+    <select id="GroupByBobHanson" resultMap="ApplicationResultMap" >
+		SELECT 
+			Applications.ApplicationId, Applications.ApplicationName, 
+			DefaultRole.RoleId as DefaultRoleId, DefaultRole.RoleName as DefaultRoleName, 
+			Users.UserId, Users.UserName,
+			Addresses.AddressId, 
+			ApplicationUsers.ActiveFlag,
+			Roles.RoleId, Roles.RoleName
+		FROM   Applications 
+		INNER JOIN Roles DefaultRole 
+			ON DefaultRole.RoleId = Applications.DefaultRoleId
+		INNER JOIN ApplicationUserRoles 
+			ON ApplicationUserRoles.ApplicationId = Applications.ApplicationId
+		INNER JOIN ApplicationUsers 
+			ON ApplicationUsers.ApplicationId = ApplicationUserRoles.ApplicationId AND ApplicationUsers.UserId = ApplicationUserRoles.UserId
+		INNER JOIN Users ON Users.UserId = ApplicationUsers.UserId
+		LEFT JOIN Addresses 
+			ON Addresses.AddressId = Users.AddressId
+		INNER JOIN Roles Roles
+			ON Roles.RoleId = ApplicationUserRoles.RoleId
+		WHERE  Applications.ApplicationName = 'Application Manager'
+    </select>
 
     <select id="GetCategories" resultMap="Category-Result" >
       SELECT     

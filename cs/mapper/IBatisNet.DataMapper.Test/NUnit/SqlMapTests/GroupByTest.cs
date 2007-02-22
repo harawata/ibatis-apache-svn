@@ -41,6 +41,32 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
         }
         #endregion
 
+#if dotnet2
+        [Test]
+        public void TestBobHanson ()
+        {
+            InitScript(sqlMap.DataSource, ScriptDirectory + "groupby-schema.sql");
+            InitScript(sqlMap.DataSource, ScriptDirectory + "groupby-init.sql");
+
+            IList<Application> list = sqlMap.QueryForList<Application>("GroupByBobHanson", null);
+            Assert.AreEqual(1, list.Count);
+            Application application = list[0];
+
+            Assert.AreEqual("Admin", application.DefaultRole.Name);
+            Assert.AreEqual(2, application.Users.Count);
+            Assert.AreEqual("user1", application.Users[0].UserName);
+            Assert.IsNull(application.Users[0].Address);
+            
+            Assert.AreEqual(1, application.Users[0].Roles.Count);
+            Assert.AreEqual("User", application.Users[0].Roles[0].Name);
+
+            Assert.AreEqual(2, application.Users[1].Roles.Count);
+            Assert.AreEqual("User", application.Users[1].Roles[1].Name);
+            Assert.AreEqual("Admin", application.Users[1].Roles[0].Name);
+
+        }
+#endif
+
         [Test]
         public void TestGroupByWithNullSon() 
         {
