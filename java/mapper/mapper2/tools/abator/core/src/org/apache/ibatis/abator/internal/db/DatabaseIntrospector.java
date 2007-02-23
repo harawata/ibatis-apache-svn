@@ -19,7 +19,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -33,6 +32,7 @@ import org.apache.ibatis.abator.config.AbatorContext;
 import org.apache.ibatis.abator.config.ColumnOverride;
 import org.apache.ibatis.abator.config.GeneratedKey;
 import org.apache.ibatis.abator.config.IgnoredColumn;
+import org.apache.ibatis.abator.config.PropertyRegistry;
 import org.apache.ibatis.abator.config.TableConfiguration;
 import org.apache.ibatis.abator.exception.UnsupportedDataTypeException;
 import org.apache.ibatis.abator.internal.util.JavaBeansUtil;
@@ -59,225 +59,6 @@ public class DatabaseIntrospector {
         this.warnings = warnings;
     }
 
-    public Collection introspectTables_old(TableConfiguration tc) throws SQLException {
-
-        Map introspectedTables = new HashMap();
-        
-        boolean delimitIdentifiers = tc.isDelimitIdentifiers()
-            || StringUtility.stringContainsSpace(tc.getCatalog())
-            || StringUtility.stringContainsSpace(tc.getSchema())
-            || StringUtility.stringContainsSpace(tc.getTableName());
-
-        String localCatalog;
-        String localSchema;
-        String localTableName;
-        
-        if (delimitIdentifiers) {
-            localCatalog = tc.getCatalog();
-            localSchema = tc.getSchema();
-            localTableName = tc.getTableName();
-        } else if (databaseMetaData.storesLowerCaseIdentifiers()) {
-            localCatalog = tc.getCatalog() == null ? null : tc.getCatalog()
-                    .toLowerCase();
-            localSchema = tc.getSchema() == null ? null : tc.getSchema()
-                    .toLowerCase();
-            localTableName = tc.getTableName() == null ? null : tc
-                    .getTableName().toLowerCase();
-        } else if (databaseMetaData.storesUpperCaseIdentifiers()) {
-            localCatalog = tc.getCatalog() == null ? null : tc.getCatalog()
-                    .toUpperCase();
-            localSchema = tc.getSchema() == null ? null : tc.getSchema()
-                    .toUpperCase();
-            localTableName = tc.getTableName() == null ? null : tc
-                    .getTableName().toUpperCase();
-        } else {
-            localCatalog = tc.getCatalog();
-            localSchema = tc.getSchema();
-            localTableName = tc.getTableName();
-        }
-
-        if (tc.isWildcardEscapingEnabled()) {
-            String escapeString = databaseMetaData.getSearchStringEscape();
-            
-            StringBuffer sb = new StringBuffer();
-            StringTokenizer st;
-            if (localSchema != null) {
-                st = new StringTokenizer(localSchema, "_%", true); //$NON-NLS-1$
-                while (st.hasMoreTokens()) {
-                    String token = st.nextToken();
-                    if (token.equals("_") //$NON-NLS-1$
-                            || token.equals("%")) { //$NON-NLS-1$
-                        sb.append(escapeString);
-                    }
-                    sb.append(token);
-                }
-                localSchema = sb.toString();
-            }
-            
-            sb.setLength(0);
-            st = new StringTokenizer(localTableName, "_%", true); //$NON-NLS-1$
-            while (st.hasMoreTokens()) {
-                String token = st.nextToken();
-                if (token.equals("_") //$NON-NLS-1$
-                        || token.equals("%")) { //$NON-NLS-1$
-                    sb.append(escapeString);
-                }
-                sb.append(token);
-            }
-            localTableName = sb.toString();
-        }
-
-        ResultSet rs = databaseMetaData.getColumns(localCatalog, localSchema,
-                localTableName, null);
-
-        int returnedColumns = 0;
-        while (rs.next()) {
-            returnedColumns++;
-            
-            ColumnDefinition cd = new ColumnDefinition(tc.getAlias(), abatorContext);
-
-            cd.setJdbcType(rs.getInt("DATA_TYPE")); //$NON-NLS-1$
-            cd.setLength(rs.getInt("COLUMN_SIZE")); //$NON-NLS-1$
-            cd.setActualColumnName(rs.getString("COLUMN_NAME")); //$NON-NLS-1$
-            cd.setNullable(rs.getInt("NULLABLE") == DatabaseMetaData.columnNullable); //$NON-NLS-1$
-            cd.setScale(rs.getInt("DECIMAL_DIGITS")); //$NON-NLS-1$
-            cd.setTypeName(rs.getString("TYPE_NAME")); //$NON-NLS-1$
-            
-            String tableName = rs.getString("TABLE_NAME"); //$NON-NLS-1$
-            String catalog = rs.getString("TABLE_CAT"); //$NON-NLS-1$
-            String schema = rs.getString("TABLE_SCHEM"); //$NON-NLS-1$
-            
-            // we only use the returned catalog and schema if something was actually
-            // specified on the table configuration.  If something was returned
-            // from the DB for these fields, but nothing was specified on the table
-            // configuration, then some sort of DB default is being returned
-            // and we don't want that in our SQL
-            FullyQualifiedTable table = new FullyQualifiedTable(
-                    StringUtility.stringHasValue(tc.getCatalog()) ? catalog : null,
-                    StringUtility.stringHasValue(tc.getSchema()) ? schema : null,
-                    tableName,
-                    tc.getDomainObjectName(),
-                    tc.getAlias(),
-                    "true".equalsIgnoreCase((String) tc.getProperties().get("ignoreQualifiersAtRuntime")), //$NON-NLS-1$ //$NON-NLS-2$
-                    (String) tc.getProperties().get("runtimeTableName"), //$NON-NLS-1$
-                    delimitIdentifiers,
-                    abatorContext);
-            
-            ColumnOverride columnOverride = tc.getColumnOverride(cd
-                    .getActualColumnName());
-
-            if (columnOverride == null
-                    || !StringUtility.stringHasValue(columnOverride
-                            .getJavaProperty())) {
-                if ("true".equalsIgnoreCase((String) tc.getProperties().get("useActualColumnNames"))) { //$NON-NLS-1$ //$NON-NLS-2$
-                    cd.setJavaProperty(JavaBeansUtil.getValidPropertyName(cd
-                            .getActualColumnName()));
-                } else {
-                    cd.setJavaProperty(JavaBeansUtil.getCamelCaseString(cd
-                            .getActualColumnName(), false));
-                }
-            } else {
-                cd.setJavaProperty(columnOverride.getJavaProperty());
-            }
-
-            try {
-                javaTypeResolver.initializeResolvedJavaType(cd);
-            } catch (UnsupportedDataTypeException e) {
-                // if the type is not supported, then we'll report a warning and
-                // ignore the column
-                warnings.add(Messages.getString("Warning.14", //$NON-NLS-1$
-                        table.toString(),
-                        cd.getActualColumnName()));
-                continue;
-            }
-
-            if (columnOverride != null
-                    && StringUtility.stringHasValue(columnOverride
-                            .getJavaType())) {
-                cd.getResolvedJavaType()
-                        .setFullyQualifiedJavaType(
-                                new FullyQualifiedJavaType(columnOverride
-                                        .getJavaType()));
-            }
-
-            if (columnOverride != null
-                    && StringUtility.stringHasValue(columnOverride
-                            .getJdbcType())) {
-                cd.getResolvedJavaType().setJdbcTypeName(
-                        columnOverride.getJdbcType());
-            }
-
-            if (columnOverride != null
-                    && StringUtility.stringHasValue(columnOverride
-                            .getTypeHandler())) {
-                cd.setTypeHandler(columnOverride.getTypeHandler());
-            }
-
-            if (tc.getGeneratedKey() != null
-                    && tc.getGeneratedKey().isIdentity()
-                    && cd.getActualColumnName().equalsIgnoreCase(
-                            tc.getGeneratedKey().getColumn())) {
-                cd.setIdentity(true);
-            } else {
-                cd.setIdentity(false);
-            }
-
-            if (!tc.isColumnIgnored(cd.getActualColumnName())) {
-                IntrospectedTableImpl introspectedTable =
-                    (IntrospectedTableImpl) introspectedTables.get(table);
-                if (introspectedTable == null) {
-                    introspectedTable = new IntrospectedTableImpl(tc, new ColumnDefinitions(), table);
-                    introspectedTables.put(table, introspectedTable);
-                }
-                
-                introspectedTable.getColumnDefinitions().addColumn(cd);
-            }
-        }
-
-        rs.close();
-        
-        if (returnedColumns == 0) {
-            warnings.add(Messages.getString("Warning.19", tc.getCatalog(), //$NON-NLS-1$
-                    tc.getSchema(), tc.getTableName()));
-        }
-        
-        Iterator iter = introspectedTables.values().iterator();
-        while (iter.hasNext()) {
-            IntrospectedTableImpl it = (IntrospectedTableImpl) iter.next();
-            calculatePrimaryKey(it);
-        }
-        
-        // now introspectedTables has all the columns from all the 
-        // tables in the configuration.  Do some validation...
-
-        iter = introspectedTables.entrySet().iterator();
-        while (iter.hasNext()) {
-            Map.Entry entry = (Map.Entry) iter.next();
-            
-            IntrospectedTableImpl introspectedTable = 
-                (IntrospectedTableImpl) entry.getValue();
-            
-            ColumnDefinitions cds = introspectedTable.getColumnDefinitions();
-            
-            if (!cds.hasAnyColumns()) {
-                // add warning that the table has no columns, remove from the list
-                warnings.add(Messages.getString("Warning.1", introspectedTable.getTable().toString())); //$NON-NLS-1$
-                iter.remove();
-            } else if (!cds.hasPrimaryKeyColumns()
-                    && !cds.hasBaseColumns()) {
-                // add warning that the table has only BLOB columns, remove from the list
-                warnings.add(Messages.getString("Warning.18", introspectedTable.getTable().toString())); //$NON-NLS-1$
-                iter.remove();
-            } else {
-                // now make sure that all columns called out in the configuration
-                // actually exist
-                reportIntrospectionWarnings(cds, tc, introspectedTable.getTable());
-            }
-        }
-
-        return introspectedTables.values();
-    }
-    
     private void calculatePrimaryKey(IntrospectedTableImpl introspectedTable) {
         ResultSet rs = null;
 
@@ -440,7 +221,7 @@ public class DatabaseIntrospector {
             while (tableColumns.hasNext()) {
                 ColumnDefinition cd = (ColumnDefinition) tableColumns.next();
                 
-                if ("true".equalsIgnoreCase((String) tc.getProperties().get("useActualColumnNames"))) { //$NON-NLS-1$ //$NON-NLS-2$
+                if ("true".equalsIgnoreCase(tc.getProperty(PropertyRegistry.TABLE_USE_ACTUAL_COLUMN_NAMES))) { //$NON-NLS-1$
                     cd.setJavaProperty(JavaBeansUtil.getValidPropertyName(cd
                             .getActualColumnName()));
                 } else {
@@ -659,8 +440,8 @@ public class DatabaseIntrospector {
                     atn.getTableName(),
                     tc.getDomainObjectName(),
                     tc.getAlias(),
-                    "true".equalsIgnoreCase((String) tc.getProperties().get("ignoreQualifiersAtRuntime")), //$NON-NLS-1$ //$NON-NLS-2$
-                    (String) tc.getProperties().get("runtimeTableName"), //$NON-NLS-1$
+                    "true".equalsIgnoreCase(tc.getProperty(PropertyRegistry.TABLE_IGNORE_QUALIFIERS_AT_RUNTIME)), //$NON-NLS-1$
+                    tc.getProperty(PropertyRegistry.TABLE_RUNTIME_TABLE_NAME),
                     delimitIdentifiers,
                     abatorContext);
 

@@ -150,6 +150,6 @@ public class IntrospectedTableImpl implements IntrospectedTable {
     }
 
     public String getTableConfigurationProperty(String property) {
-        return (String) tableConfiguration.getProperties().get(property);
+        return tableConfiguration.getProperty(property);
     }
 }

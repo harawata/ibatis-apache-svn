@@ -12,11 +12,12 @@
 <h2>Version 1.0.1</h2>
 <h3>Miscellaneous Changes</h3>
 <ul>
+  <li>Fixed a bug that caused the "trimStrings" property to fail</li>
   <li>Added the ability to specify properties to ignore qualifiers and change runtime
       table names in the generated SQL for a table.  Primary use cases for this
       support include:
       <ul>
-        <li>Generating objects for a table that has a public synonym in Oracle</li>
+        <li>Generating objects for a table that has a public synonym or alias</li>
         <li>Generating objects for a table that exists in many schemas, and the
             schema will be selected at runtime</li>
       </ul>
@@ -36,6 +37,17 @@
       as these characters have special meaning in iBATIS configuration files.</li>
   <li>Added a <code>clear</code> method to the generated example classes.  This allows reuse
       classes.</li>
+  <li>Added the ability to specify that result maps should use column indexes rather
+      than column names in the result mappings.  Primary use cases for this
+      support include:
+      <ul>
+        <li>When tables have columns whose name is only differentiated by
+            case (e.g. "first name" and "First Name")</li>
+        <li>When you want to make the selects as fast as possible (there is a slight
+            performance benefit when using column indexes)</li>
+      </ul>
+    See the <a href="configreference/table.html">&lt;table&gt;</a>
+    reference page for more information.</li>
 </ul>
 
 <h2>Version 1.0.0</h2>

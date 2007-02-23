@@ -35,6 +35,36 @@ for each table:</p>
 <p>At least one &lt;table&gt; element must be specified as a required child element
 of the <a href="abatorContext.html">&lt;abatorContext&gt;</a> element.
 You can specify unlimited table elements.</p>
+
+<h2>Database Identifiers</h2>
+<p>Abator tries to deal with the case sensitivity of database identifiers automatically.
+In most cases, Abator is able to find tables regardless of what you
+specify for <code>catalog</code>, <code>schema</code>, and <code>tableName</code>
+attributes.  Abator's process follows these steps:</p>
+<ol>
+  <li>If either of the <code>catalog</code>, <code>schema</code>, or
+      <code>tableName</code> attributes contain a space, then Abator will
+      look for tables based on the exact case specified.  In this case, Abator
+      will automatically delimit the table identifiers in the generated SQL.</li>
+  <li>Else if the database reports that identifiers are stored in upper case,
+      Abator will automatically convert any table identifier to upper case.</li>
+  <li>Else if the database reports that identifiers are stored in lower case,
+      Abator will automatically convert any table identifier to lower case.</li>
+  <li>Else Abator will look for tables based on the exact case specified.</li>
+</ol>
+<p>In most cases, this process works perfectly.  However, there are cases where it will
+fail.  For example, suppose you create a table like this:</p>
+<pre>
+  create table "myTable" (
+     ...some columns
+  )
+</pre>
+
+<p>Because the table name is delimited, most databases will create the
+table with the exact case specified - even if the database normally stores
+identifiers in upper case.  In this instance, you should specify the attribute
+<code>delimitIdentifiers="true"</code> in the table configuration.</p>
+
 <h2>Required Attributes</h2>
 <table border="1" cellspacing="0" cellpadding="5">
   <tr>
@@ -177,6 +207,17 @@ You can specify unlimited table elements.</p>
         MY_TABLE, some drivers require that the underscore character be escaped).
         <p>The default is <i>false</i>.</p></td>
   </tr>
+  <tr>
+    <td valign="top">delimitIdentifiers</td>
+    <td>Signifies whether Abator should use the exact case specified when searching
+        for tables and then delimit the identifiers in the generated SQL.  See the
+        discussion above for more details.
+        <p>The delimiter characters are specified on the
+        <a href="abatorContext.html">&lt;abatorContext&gt;</a> element.</p>
+        <p>The default is <i>false</i> unless the <code>catalog</code>,
+        <code>schema</code>, or <code>tableName</code> attributes
+        contain a space, then <i>true</i>.</p></td>
+  </tr>
 </table>
 
 <h2>Child Elements</h2>
@@ -232,6 +273,14 @@ specified with the <a href="property.html">&lt;property&gt;</a> child element:</
         actual table that the synonym points to, then specify the synonym name in
         this property.  You should also specify the <code>ignoreQualifiersAtRuntime</code>
         property in most cases with public synonyms.</td>
+  </tr>
+  <tr>
+    <td valign="top">useColumnIndexes</td>
+    <td>If true, then Abator will generate resultMaps that use column index rather than
+        column name in the result mappings.  This is useful when a table has column names
+        differentiated only by the case of the name (e.g. "first name" and "First Name").
+        There is a slight performance benefit with this support also.</p>
+        <p><i>The default value is false.</i></p></td>
   </tr>
 </table>
 

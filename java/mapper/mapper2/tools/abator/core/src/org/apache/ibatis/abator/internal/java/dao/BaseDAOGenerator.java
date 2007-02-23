@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.ibatis.abator.api.DAOGenerator;
 import org.apache.ibatis.abator.api.DAOMethodNameCalculator;
@@ -39,6 +40,7 @@ import org.apache.ibatis.abator.api.dom.java.Parameter;
 import org.apache.ibatis.abator.api.dom.java.PrimitiveTypeWrapper;
 import org.apache.ibatis.abator.api.dom.java.TopLevelClass;
 import org.apache.ibatis.abator.config.AbatorContext;
+import org.apache.ibatis.abator.config.PropertyRegistry;
 import org.apache.ibatis.abator.internal.AbatorObjectFactory;
 import org.apache.ibatis.abator.internal.DefaultDAOMethodNameCalculator;
 import org.apache.ibatis.abator.internal.ExtendedDAOMethodNameCalculator;
@@ -91,7 +93,7 @@ public class BaseDAOGenerator implements DAOGenerator {
     protected AbatorContext abatorContext;
     protected AbstractDAOTemplate daoTemplate;
 
-    protected Map properties;
+    protected Properties properties;
 
     protected List warnings;
 
@@ -120,15 +122,14 @@ public class BaseDAOGenerator implements DAOGenerator {
         this.daoTemplate = daoTemplate;
         this.useJava5Features = useJava5Features;
         tableValueMaps = new HashMap();
-        properties = new HashMap();
+        properties = new Properties();
     }
 
-    public void addConfigurationProperties(Map properties) {
+    public void addConfigurationProperties(Properties properties) {
         this.properties.putAll(properties);
         
-        if (properties.containsKey("exampleMethodVisibility")) { //$NON-NLS-1$
-            String value = (String) properties.get("exampleMethodVisibility"); //$NON-NLS-1$
-            
+        String value = properties.getProperty(PropertyRegistry.DAO_EXAMPLE_METHOD_VISIBILITY);
+        if (StringUtility.stringHasValue(value)) {
             if ("public".equalsIgnoreCase(value)) { //$NON-NLS-1$
                 exampleMethodVisibility = JavaVisibility.PUBLIC;
             } else if ("private".equalsIgnoreCase(value)) { //$NON-NLS-1$
@@ -142,9 +143,8 @@ public class BaseDAOGenerator implements DAOGenerator {
             }
         }
         
-        if (properties.containsKey("methodNameCalculator")) { //$NON-NLS-1$
-            String value = (String) properties.get("methodNameCalculator"); //$NON-NLS-1$
-            
+        value = properties.getProperty(PropertyRegistry.DAO_METHOD_NAME_CALCULATOR);
+        if (StringUtility.stringHasValue(value)) {
             if ("extended".equalsIgnoreCase(value)) { //$NON-NLS-1$
                 methodNameCalculator = new ExtendedDAOMethodNameCalculator();
             } else if (!"default".equalsIgnoreCase(value) //$NON-NLS-1$
@@ -392,9 +392,9 @@ public class BaseDAOGenerator implements DAOGenerator {
         Interface answer = new Interface(getDAOInterfaceType(table));
         answer.setVisibility(JavaVisibility.PUBLIC);
 
-        if (properties.containsKey("rootInterface")) { //$NON-NLS-1$
-            FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(
-                    (String) properties.get("rootInterface")); //$NON-NLS-1$
+        String rootInterface = properties.getProperty(PropertyRegistry.DAO_ROOT_INTERFACE);
+        if (StringUtility.stringHasValue(rootInterface)) {
+            FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(rootInterface);
             answer.addSuperInterface(fqjt);
             answer.addImportedType(fqjt);
         }
@@ -1114,7 +1114,7 @@ public class BaseDAOGenerator implements DAOGenerator {
         s = (String) map.get(key);
         if (s == null) {
             StringBuffer sb = new StringBuffer(targetPackage);
-            if ("true".equalsIgnoreCase((String)properties.get("enableSubPackages"))) { //$NON-NLS-1$  //$NON-NLS-2$
+            if ("true".equalsIgnoreCase(properties.getProperty(PropertyRegistry.ANY_ENABLE_SUB_PACKAGES))) { //$NON-NLS-1$
                 sb.append(table.getSubPackage());
             }
 

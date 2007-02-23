@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.ibatis.abator.api.FullyQualifiedTable;
 import org.apache.ibatis.abator.api.GeneratedXmlFile;
@@ -35,6 +36,7 @@ import org.apache.ibatis.abator.api.dom.xml.TextElement;
 import org.apache.ibatis.abator.api.dom.xml.XmlElement;
 import org.apache.ibatis.abator.config.AbatorContext;
 import org.apache.ibatis.abator.config.GeneratedKey;
+import org.apache.ibatis.abator.config.PropertyRegistry;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
 import org.apache.ibatis.abator.internal.util.StringUtility;
 import org.apache.ibatis.abator.internal.util.messages.Messages;
@@ -50,7 +52,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
     /**
      * Contains any properties passed in from the SqlMap configuration element.
      */
-    protected Map properties;
+    protected Properties properties;
 
     /**
      * This is the target package from the SqlMap configuration element
@@ -82,7 +84,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
     public SqlMapGeneratorIterateImpl() {
         super();
         tableStringMaps = new HashMap();
-        properties = new HashMap();
+        properties = new Properties();
     }
 
     private Map getTableStringMap(FullyQualifiedTable table) {
@@ -95,7 +97,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         return map;
     }
 
-    public void addConfigurationProperties(Map properties) {
+    public void addConfigurationProperties(Properties properties) {
         this.properties.putAll(properties);
     }
 
@@ -276,7 +278,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      */
     protected XmlElement getBaseResultMapElement(IntrospectedTable introspectedTable) {
         boolean useColumnIndex =
-            "true".equalsIgnoreCase(introspectedTable.getTableConfigurationProperty("useColumnIndexes")); //$NON-NLS-1$ //$NON-NLS-2$
+            "true".equalsIgnoreCase(introspectedTable.getTableConfigurationProperty(PropertyRegistry.TABLE_USE_COLUMN_INDEXES)); //$NON-NLS-1$
         XmlElement answer = new XmlElement("resultMap"); //$NON-NLS-1$
         FullyQualifiedTable table = introspectedTable.getTable();
         answer.addAttribute(new Attribute("id", //$NON-NLS-1$
@@ -295,7 +297,8 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         answer.addComment();
 
         int i = 1;
-        if (StringUtility.stringHasValue(introspectedTable.getSelectByPrimaryKeyQueryId())) {
+        if (StringUtility.stringHasValue(introspectedTable.getSelectByPrimaryKeyQueryId())
+                || StringUtility.stringHasValue(introspectedTable.getSelectByExampleQueryId())) {
             i++;
         }
         
@@ -339,7 +342,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      */
     protected XmlElement getResultMapWithBLOBsElement(IntrospectedTable introspectedTable) {
         boolean useColumnIndex =
-            "true".equalsIgnoreCase(introspectedTable.getTableConfigurationProperty("useColumnIndexes")); //$NON-NLS-1$ //$NON-NLS-2$
+            "true".equalsIgnoreCase(introspectedTable.getTableConfigurationProperty(PropertyRegistry.TABLE_USE_COLUMN_INDEXES)); //$NON-NLS-1$
 
         XmlElement answer = new XmlElement("resultMap"); //$NON-NLS-1$
         FullyQualifiedTable table = introspectedTable.getTable();
@@ -371,7 +374,8 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         answer.addComment();
 
         int i = introspectedTable.getNonBLOBColumnCount() + 1;
-        if (StringUtility.stringHasValue(introspectedTable.getSelectByPrimaryKeyQueryId())) {
+        if (StringUtility.stringHasValue(introspectedTable.getSelectByPrimaryKeyQueryId())
+                || StringUtility.stringHasValue(introspectedTable.getSelectByExampleQueryId())) {
             i++;
         }
         Iterator iter = introspectedTable.getBLOBColumns();
@@ -1005,7 +1009,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         s = (String) map.get(key);
         if (s == null) {
             StringBuffer sb = new StringBuffer(targetPackage);
-            if ("true".equalsIgnoreCase((String)properties.get("enableSubPackages"))) { //$NON-NLS-1$  //$NON-NLS-2$
+            if ("true".equalsIgnoreCase(properties.getProperty(PropertyRegistry.ANY_ENABLE_SUB_PACKAGES))) { //$NON-NLS-1$
                 sb.append(table.getSubPackage());
             }
             

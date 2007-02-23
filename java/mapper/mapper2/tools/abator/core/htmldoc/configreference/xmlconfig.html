@@ -49,7 +49,7 @@ attributes.</p>
       &lt;property name="enableSubPackages" value="true" /&gt;
     &lt;/sqlMapGenerator&gt;
 
-    &lt;daoGenerator type="IBATIS" targetPackage="test.dao"  targetProject="\AbatorTestProject\src"&gt;
+    &lt;daoGenerator type="SPRING" targetPackage="test.dao"  targetProject="\AbatorTestProject\src"&gt;
       &lt;property name="enableSubPackages" value="true" /&gt;
     &lt;/daoGenerator&gt;
 
@@ -99,7 +99,7 @@ attributes.</p>
       to <code>false</code>,
       then the package would be <code>test.dao</code>.  The DAO generator should generate
       DAO classes
-      that conform to the iBATIS DAO framework.
+      that conform to the Spring framework.
   </li>
   <li>The file specifies only one table will be introspected, but many more could be specified.
       Important note about that table are as follows:

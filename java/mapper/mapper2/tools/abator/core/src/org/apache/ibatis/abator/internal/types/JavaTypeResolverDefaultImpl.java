@@ -18,13 +18,13 @@ package org.apache.ibatis.abator.internal.types;
 import java.math.BigDecimal;
 import java.sql.Types;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Properties;
 
 import org.apache.ibatis.abator.api.JavaTypeResolver;
 import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.abator.config.AbatorContext;
+import org.apache.ibatis.abator.config.PropertyRegistry;
 import org.apache.ibatis.abator.exception.UnsupportedDataTypeException;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
 
@@ -36,16 +36,16 @@ public class JavaTypeResolverDefaultImpl implements JavaTypeResolver {
 
 	protected List warnings;
 	
-	protected Map properties;
+	protected Properties properties;
     
     protected AbatorContext abatorContext;
 
 	public JavaTypeResolverDefaultImpl() {
 		super();
-        properties = new HashMap();
+        properties = new Properties();
 	}
 
-    public void addConfigurationProperties(Map properties) {
+    public void addConfigurationProperties(Properties properties) {
         this.properties.putAll(properties);
     }
 
@@ -55,8 +55,8 @@ public class JavaTypeResolverDefaultImpl implements JavaTypeResolver {
 	 */
 	public void initializeResolvedJavaType(ColumnDefinition cd)
 			throws UnsupportedDataTypeException {
-		boolean forceBigDecimals = "true".equalsIgnoreCase((String) properties //$NON-NLS-1$
-				.get("forceBigDecimals")); //$NON-NLS-1$
+		boolean forceBigDecimals = "true".equalsIgnoreCase(properties //$NON-NLS-1$
+				.getProperty(PropertyRegistry.TYPE_RESOLVER_FORCE_BIG_DECIMALS));
 
 		ResolvedJavaType type = new ResolvedJavaType();
 

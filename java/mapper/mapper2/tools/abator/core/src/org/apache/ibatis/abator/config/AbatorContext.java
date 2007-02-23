@@ -218,7 +218,7 @@ public class AbatorContext extends PropertyHolder {
 						tableName));
 		}
         
-        if ("true".equalsIgnoreCase((String) tc.getProperties().get("useColumnIndexes"))) {  //$NON-NLS-1$  //$NON-NLS-2$
+        if ("true".equalsIgnoreCase(tc.getProperty(PropertyRegistry.TABLE_USE_COLUMN_INDEXES))) {  //$NON-NLS-1$
             // when using column indexes, either both or neither query ids should be set
             if (tc.isSelectByExampleStatementEnabled() && tc.isSelectByPrimaryKeyStatementEnabled()) {
                 boolean queryId1Set = StringUtility.stringHasValue(tc.getSelectByExampleQueryId());
@@ -442,11 +442,11 @@ public class AbatorContext extends PropertyHolder {
     public void addProperty(String name, String value) {
         super.addProperty(name, value);
         
-        if ("suppressTypeWarnings".equals(name)) { //$NON-NLS-1$
+        if (PropertyRegistry.CONTEXT_SUPPRESS_TYPE_WARNINGS.equals(name)) {
             suppressTypeWarnings = "true".equalsIgnoreCase(value); //$NON-NLS-1$
-        } else if ("beginningDelimiter".equals(name)) { //$NON-NLS-1$
+        } else if (PropertyRegistry.CONTEXT_BEGINNING_DELIMITER.equals(name)) {
             beginningDelimiter = value;
-        } else if ("endingDelimiter".equals(name)) { //$NON-NLS-1$
+        } else if (PropertyRegistry.CONTEXT_ENDING_DELIMITER.equals(name)) {
             endingDelimiter = value;
         }
     }

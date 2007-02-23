@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.ibatis.abator.api.FullyQualifiedTable;
 import org.apache.ibatis.abator.api.GeneratedJavaFile;
@@ -35,6 +36,7 @@ import org.apache.ibatis.abator.api.dom.java.Method;
 import org.apache.ibatis.abator.api.dom.java.Parameter;
 import org.apache.ibatis.abator.api.dom.java.TopLevelClass;
 import org.apache.ibatis.abator.config.AbatorContext;
+import org.apache.ibatis.abator.config.PropertyRegistry;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
 import org.apache.ibatis.abator.internal.util.JavaBeansUtil;
 import org.apache.ibatis.abator.internal.util.StringUtility;
@@ -75,7 +77,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
     /**
      * The properties from the JavaModelGenerator congiguration element
      */
-    protected Map properties;
+    protected Properties properties;
 
     /**
      * The target package from the JavaModelGenerator congiguration element
@@ -92,10 +94,10 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
     public JavaModelGeneratorJava2Impl() {
         super();
         tableValueMaps = new HashMap();
-        properties = new HashMap();
+        properties = new Properties();
     }
 
-    public void addConfigurationProperties(Map properties) {
+    public void addConfigurationProperties(Properties properties) {
         this.properties.putAll(properties);
     }
 
@@ -135,8 +137,8 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
     protected void generateClassParts(FullyQualifiedTable table,
             Iterator columnDefinitions, TopLevelClass topLevelClass) {
 
-        boolean trimStrings = "true".equalsIgnoreCase((String) properties //$NON-NLS-1$
-                .get("trimStrings")); //$NON-NLS-1$
+        boolean trimStrings = "true".equalsIgnoreCase(properties //$NON-NLS-1$
+                .getProperty(PropertyRegistry.MODEL_GENERATOR_TRIM_STRINGS));
 
         StringBuffer sb = new StringBuffer();
         Field field;
@@ -215,7 +217,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         s = (String) map.get(key);
         if (s == null) {
             StringBuffer sb = new StringBuffer(targetPackage);
-            if ("true".equalsIgnoreCase((String)properties.get("enableSubPackages"))) { //$NON-NLS-1$  //$NON-NLS-2$
+            if ("true".equalsIgnoreCase(properties.getProperty(PropertyRegistry.ANY_ENABLE_SUB_PACKAGES))) { //$NON-NLS-1$
                 sb.append(table.getSubPackage());
             }
             
@@ -237,7 +239,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         TopLevelClass answer = new TopLevelClass(type);
         answer.setVisibility(JavaVisibility.PUBLIC);
 
-        String rootClass = (String) properties.get("rootClass"); //$NON-NLS-1$
+        String rootClass = properties.getProperty(PropertyRegistry.MODEL_GENERATOR_ROOT_CLASS);
         if (rootClass != null) {
             answer.setSuperClass(new FullyQualifiedJavaType(rootClass));
             answer.addImportedType(answer.getSuperClass());
@@ -262,7 +264,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         if (introspectedTable.getRules().generatePrimaryKeyClass()) {
             answer.setSuperClass(getPrimaryKeyType(table));
         } else {
-            String rootClass = (String) properties.get("rootClass"); //$NON-NLS-1$
+            String rootClass = properties.getProperty(PropertyRegistry.MODEL_GENERATOR_ROOT_CLASS);
             if (rootClass != null) {
                 answer.setSuperClass(new FullyQualifiedJavaType(rootClass));
                 answer.addImportedType(answer.getSuperClass());

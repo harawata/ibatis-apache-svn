@@ -16,7 +16,7 @@
 package org.apache.ibatis.abator.api;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Properties;
 
 import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.abator.config.AbatorContext;
@@ -46,7 +46,7 @@ public interface JavaModelGenerator {
      * @param properties
      *            All properties from the configuration
      */
-    void addConfigurationProperties(Map properties);
+    void addConfigurationProperties(Properties properties);
     
     /**
      * Sets the instance of the AbatorConfiguration object associated with 

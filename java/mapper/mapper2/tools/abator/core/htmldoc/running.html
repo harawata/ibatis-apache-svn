@@ -42,7 +42,8 @@ Eclipse plugin.</p>
    should be overwritten.  If the flag is <code>false</code>, and an Java file already exists
    with the same name as a newly generated file, then Abator will write the
    newly generated Java file to the proper directory with a unique name
-   (e.g. MyClass.java.1, MyClass.java.2, etc.).</p>
+   (e.g. MyClass.java.1, MyClass.java.2, etc.).
+   <b>Important: Abator will always merge and overwrite XML files.</b></p>
 <p>You must still create an Abator XML configuration file.  If the file is
    named "abatorConfig.xml", then any of the following command lines will run
    Abator:</p>
@@ -55,7 +56,7 @@ Eclipse plugin.</p>
 
 <h2>Running Abator from Ant</h2>
 <p>Abator includes a simple Ant task.  The task must be defined in your
-  build.xml file, and the task has two parameters.  Here is an example
+  build.xml file, and the task has three parameters.  Here is an example
   build.xml file:</p>
 <pre>
    &lt;project default="genfiles" basedir="."&gt;
@@ -78,12 +79,13 @@ Eclipse plugin.</p>
   <li>The classpath on the &lt;taskdef&gt; is used to tell Ant where the implementing
      code is.  This is optional if you add Abator to the Ant classpath in one
      of the other ways described in the Ant manual</li>
-   <li>The name of the task can be anything you desire, "abator.genfiles" is
+   <li>The name of the task can be anything you desire, "abator" is
      simply an example</li>
    <li>The "overwrite" attribute is optional.  If "true", "yes", etc. then Abator
      will overwrite any existing Java files.  If "false", "no", etc. then
      Abator will not touch existing Java files - the newly generated Java file
-     will be saved with a unique filename instead.  The default is "false".</li>
+     will be saved with a unique filename instead.  The default is "false".
+     <b>Important: Abator will always merge and overwrite XML files.</b></li>
    <li>The "configfile" attribute is required - it must specify a valid Abator
      configuration XML file.</li>
    <li>The "verbose" attribute is optional.  If "true", "yes", etc then the task will

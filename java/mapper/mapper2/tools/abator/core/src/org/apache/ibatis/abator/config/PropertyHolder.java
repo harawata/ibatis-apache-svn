@@ -15,9 +15,8 @@
  */
 package org.apache.ibatis.abator.config;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.Enumeration;
+import java.util.Properties;
 
 import org.apache.ibatis.abator.api.dom.xml.Attribute;
 import org.apache.ibatis.abator.api.dom.xml.XmlElement;
@@ -26,31 +25,36 @@ import org.apache.ibatis.abator.api.dom.xml.XmlElement;
  * @author Jeff Butler
  */
 public abstract class PropertyHolder {
-	private Map properties;
+	private Properties properties;
 
 	/**
 	 *  
 	 */
 	public PropertyHolder() {
 		super();
-		properties = new HashMap();
+		properties = new Properties();
 	}
 
 	public void addProperty(String name, String value) {
-		properties.put(name, value);
+		properties.setProperty(name, value);
 	}
 
-	public Map getProperties() {
+    public String getProperty(String name) {
+        return properties.getProperty(name);
+    }
+    
+	public Properties getProperties() {
 		return properties;
 	}
     
     protected void addPropertyXmlElements(XmlElement xmlElement) {
-        Iterator iter = properties.entrySet().iterator();
-        while (iter.hasNext()) {
-            Map.Entry entry = (Map.Entry) iter.next();
+        Enumeration enumeration = properties.propertyNames();
+        while (enumeration.hasMoreElements()) {
+            String propertyName = (String) enumeration.nextElement();
+            
             XmlElement propertyElement = new XmlElement("property"); //$NON-NLS-1$
-            propertyElement.addAttribute(new Attribute("name", (String) entry.getKey())); //$NON-NLS-1$
-            propertyElement.addAttribute(new Attribute("value", (String) entry.getValue())); //$NON-NLS-1$
+            propertyElement.addAttribute(new Attribute("name", propertyName)); //$NON-NLS-1$
+            propertyElement.addAttribute(new Attribute("value", properties.getProperty(propertyName))); //$NON-NLS-1$
             xmlElement.addElement(propertyElement);
         }
     }
