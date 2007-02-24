@@ -1,13 +1,11 @@
 package com.ibatis.sqlmap.engine.builder.xml;
 
-import com.ibatis.common.logging.Log;
-import com.ibatis.common.logging.LogFactory;
 import com.ibatis.common.resources.Resources;
 import com.ibatis.common.xml.Nodelet;
 import com.ibatis.common.xml.NodeletException;
 import com.ibatis.common.xml.NodeletParser;
 import com.ibatis.common.xml.NodeletUtils;
-
+import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.client.extensions.TypeHandlerCallback;
 import com.ibatis.sqlmap.engine.cache.CacheModel;
 import com.ibatis.sqlmap.engine.mapping.parameter.BasicParameterMap;
@@ -20,20 +18,15 @@ import org.w3c.dom.Node;
 
 import java.io.InputStream;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.StringTokenizer;
-import java.util.Iterator;
+import java.util.*;
 
-public class SqlMapParser extends BaseParser {
+public class SqlMapParser {
 
-  private static final Log log = LogFactory.getLog(SqlMapParser.class);
+  private final NodeletParser parser = new NodeletParser();
+  private ParserState state;
 
-  protected final NodeletParser parser = new NodeletParser();
-
-  public SqlMapParser(Variables vars) {
-    super(vars);
+  public SqlMapParser(ParserState state) {
+    this.state = state;
     parser.setValidation(true);
     parser.setEntityResolver(new SqlMapClasspathEntityResolver());
 
@@ -58,16 +51,16 @@ public class SqlMapParser extends BaseParser {
   private void addSqlMapNodelets() {
     parser.addNodelet("/sqlMap", new Nodelet() {
       public void process(Node node) throws Exception {
-        Properties attributes = NodeletUtils.parseAttributes(node, vars.properties);
-        vars.currentNamespace = attributes.getProperty("namespace");
+        Properties attributes = NodeletUtils.parseAttributes(node, state.globalProps);
+        state.namespace = attributes.getProperty("namespace");
       }
     });
     parser.addNodelet("/sqlMap/end()", new Nodelet() {
       public void process(Node node) throws Exception {
-        Iterator names = vars.delegate.getResultMapNames();
+        Iterator names = state.delegate.getResultMapNames();
         while (names.hasNext()) {
           String name = (String)names.next();
-          ResultMap rm = vars.delegate.getResultMap(name);
+          ResultMap rm = state.delegate.getResultMap(name);
           Discriminator disc = rm.getDiscriminator();
           if (disc != null) {
             disc.bindSubMaps();
@@ -80,17 +73,16 @@ public class SqlMapParser extends BaseParser {
   private void addSqlNodelets() {
     parser.addNodelet("/sqlMap/sql", new Nodelet() {
       public void process(Node node) throws Exception {
-        Properties attributes = NodeletUtils.parseAttributes(node, vars.properties);
+        Properties attributes = NodeletUtils.parseAttributes(node, state.globalProps);
         String id = attributes.getProperty("id");
-        if (vars.useStatementNamespaces) {
-          id = applyNamespace(id);
+        if (state.useStatementNamespaces) {
+          id = state.applyNamespace(id);
         }
-        if (vars.sqlIncludes.containsKey(id)) {
-          // To be upgraded to throwing of a RuntimeException later on
-          log.warn("Duplicate <sql>-include '" + id + "' found.");
+        if (state.sqlIncludes.containsKey(id)) {
+          throw new SqlMapException("Duplicate <sql>-include '" + id + "' found.");
         }
         else  {
-        	vars.sqlIncludes.put(id, node);
+        	state.sqlIncludes.put(id, node);
         }
       }
     });
@@ -99,10 +91,10 @@ public class SqlMapParser extends BaseParser {
   private void addTypeAliasNodelets() {
     parser.addNodelet("/sqlMap/typeAlias", new Nodelet() {
       public void process(Node node) throws Exception {
-        Properties prop = NodeletUtils.parseAttributes(node, vars.properties);
+        Properties prop = NodeletUtils.parseAttributes(node, state.globalProps);
         String alias = prop.getProperty("alias");
         String type = prop.getProperty("type");
-        vars.typeHandlerFactory.putTypeAlias(alias, type);
+        state.typeHandlerFactory.putTypeAlias(alias, type);
       }
     });
   }
@@ -110,80 +102,80 @@ public class SqlMapParser extends BaseParser {
   private void addCacheModelNodelets() {
     parser.addNodelet("/sqlMap/cacheModel", new Nodelet() {
       public void process(Node node) throws Exception {
-        vars.currentCacheModel = new CacheModel();
-        vars.currentProperties = new Properties();
+        state.cacheModel = new CacheModel();
+        state.cacheProps = new Properties();
       }
     });
     parser.addNodelet("/sqlMap/cacheModel/end()", new Nodelet() {
       public void process(Node node) throws Exception {
-        vars.errorCtx.setActivity("building a cache model");
+        state.errorContext.setActivity("building a cache model");
 
-        Properties attributes = NodeletUtils.parseAttributes(node, vars.properties);
-        String id = applyNamespace(attributes.getProperty("id"));
+        Properties attributes = NodeletUtils.parseAttributes(node, state.globalProps);
+        String id = state.applyNamespace(attributes.getProperty("id"));
         String type = attributes.getProperty("type");
-        type = vars.typeHandlerFactory.resolveAlias(type);
+        type = state.typeHandlerFactory.resolveAlias(type);
 
         String readOnly = attributes.getProperty("readOnly");
         if (readOnly != null && readOnly.length() > 0) {
-          vars.currentCacheModel.setReadOnly("true".equals(readOnly));
+          state.cacheModel.setReadOnly("true".equals(readOnly));
         } else {
-          vars.currentCacheModel.setReadOnly(true);
+          state.cacheModel.setReadOnly(true);
         }
 
         String serialize = attributes.getProperty("serialize");
         if (serialize != null && serialize.length() > 0) {
-          vars.currentCacheModel.setSerialize("true".equals(serialize));
+          state.cacheModel.setSerialize("true".equals(serialize));
         } else {
-          vars.currentCacheModel.setSerialize(false);
+          state.cacheModel.setSerialize(false);
         }
 
-        vars.errorCtx.setObjectId(id + " cache model");
+        state.errorContext.setObjectId(id + " cache model");
 
-        vars.errorCtx.setMoreInfo("Check the cache model type.");
-        vars.currentCacheModel.setId(id);
-        vars.currentCacheModel.setResource(vars.errorCtx.getResource());
+        state.errorContext.setMoreInfo("Check the cache model type.");
+        state.cacheModel.setId(id);
+        state.cacheModel.setResource(state.errorContext.getResource());
 
         try {
-          vars.currentCacheModel.setControllerClassName(type);
+          state.cacheModel.setControllerClassName(type);
         } catch (Exception e) {
           throw new RuntimeException("Error setting Cache Controller Class.  Cause: " + e, e);
         }
 
-        vars.errorCtx.setMoreInfo("Check the cache model configuration.");
-        vars.currentCacheModel.configure(vars.currentProperties);
+        state.errorContext.setMoreInfo("Check the cache model configuration.");
+        state.cacheModel.configure(state.cacheProps);
 
-        if (vars.client.getDelegate().isCacheModelsEnabled()) {
-          vars.client.getDelegate().addCacheModel(vars.currentCacheModel);
+        if (state.client.getDelegate().isCacheModelsEnabled()) {
+          state.client.getDelegate().addCacheModel(state.cacheModel);
         }
 
-        vars.errorCtx.setMoreInfo(null);
-        vars.errorCtx.setObjectId(null);
-        vars.currentProperties = null;
-        vars.currentCacheModel = null;
+        state.errorContext.setMoreInfo(null);
+        state.errorContext.setObjectId(null);
+        state.cacheProps = null;
+        state.cacheModel = null;
       }
     });
     parser.addNodelet("/sqlMap/cacheModel/property", new Nodelet() {
       public void process(Node node) throws Exception {
-        vars.errorCtx.setMoreInfo("Check the cache model properties.");
-        Properties attributes = NodeletUtils.parseAttributes(node, vars.properties);
+        state.errorContext.setMoreInfo("Check the cache model properties.");
+        Properties attributes = NodeletUtils.parseAttributes(node, state.globalProps);
         String name = attributes.getProperty("name");
-        String value = NodeletUtils.parsePropertyTokens(attributes.getProperty("value"), vars.properties);
-        vars.currentProperties.put(name, value);
+        String value = NodeletUtils.parsePropertyTokens(attributes.getProperty("value"), state.globalProps);
+        state.cacheProps.put(name, value);
       }
     });
     parser.addNodelet("/sqlMap/cacheModel/flushOnExecute", new Nodelet() {
       public void process(Node node) throws Exception {
-        vars.errorCtx.setMoreInfo("Check the cache model flush on statement elements.");
-        Properties childAttributes = NodeletUtils.parseAttributes(node, vars.properties);
-        vars.currentCacheModel.addFlushTriggerStatement(childAttributes.getProperty("statement"));
+        state.errorContext.setMoreInfo("Check the cache model flush on statement elements.");
+        Properties childAttributes = NodeletUtils.parseAttributes(node, state.globalProps);
+        state.cacheModel.addFlushTriggerStatement(childAttributes.getProperty("statement"));
       }
     });
     parser.addNodelet("/sqlMap/cacheModel/flushInterval", new Nodelet() {
       public void process(Node node) throws Exception {
-        Properties childAttributes = NodeletUtils.parseAttributes(node, vars.properties);
+        Properties childAttributes = NodeletUtils.parseAttributes(node, state.globalProps);
         long t = 0;
         try {
-          vars.errorCtx.setMoreInfo("Check the cache model flush interval.");
+          state.errorContext.setMoreInfo("Check the cache model flush interval.");
           String milliseconds = childAttributes.getProperty("milliseconds");
           String seconds = childAttributes.getProperty("seconds");
           String minutes = childAttributes.getProperty("minutes");
@@ -193,9 +185,9 @@ public class SqlMapParser extends BaseParser {
           if (minutes != null) t += Integer.parseInt(minutes) * 60 * 1000;
           if (hours != null) t += Integer.parseInt(hours) * 60 * 60 * 1000;
           if (t < 1) throw new RuntimeException("A flush interval must specify one or more of milliseconds, seconds, minutes or hours.");
-          vars.currentCacheModel.setFlushInterval(t);
+          state.cacheModel.setFlushInterval(t);
         } catch (NumberFormatException e) {
-          throw new RuntimeException("Error building cache '" + vars.currentCacheModel.getId() + "' in '" + "resourceNAME" + "'.  Flush interval milliseconds must be a valid long integer value.  Cause: " + e, e);
+          throw new RuntimeException("Error building cache '" + state.cacheModel.getId() + "' in '" + "resourceNAME" + "'.  Flush interval milliseconds must be a valid long integer value.  Cause: " + e, e);
         }
       }
     });
@@ -205,49 +197,49 @@ public class SqlMapParser extends BaseParser {
     parser.addNodelet("/sqlMap/parameterMap/end()", new Nodelet() {
       public void process(Node node) throws Exception {
 
-        vars.currentParameterMap.setParameterMappingList(vars.parameterMappingList);
+        state.parameterMap.setParameterMappingList(state.parameterMappingList);
 
-        vars.client.getDelegate().addParameterMap(vars.currentParameterMap);
+        state.client.getDelegate().addParameterMap(state.parameterMap);
 
-        vars.errorCtx.setMoreInfo(null);
-        vars.errorCtx.setObjectId(null);
+        state.errorContext.setMoreInfo(null);
+        state.errorContext.setObjectId(null);
       }
     });
     parser.addNodelet("/sqlMap/parameterMap", new Nodelet() {
       public void process(Node node) throws Exception {
-        vars.errorCtx.setActivity("building a parameter map");
+        state.errorContext.setActivity("building a parameter map");
 
-        vars.currentParameterMap = new BasicParameterMap(vars.client.getDelegate());
+        state.parameterMap = new BasicParameterMap(state.client.getDelegate());
 
-        Properties attributes = NodeletUtils.parseAttributes(node, vars.properties);
-        String id = applyNamespace(attributes.getProperty("id"));
+        Properties attributes = NodeletUtils.parseAttributes(node, state.globalProps);
+        String id = state.applyNamespace(attributes.getProperty("id"));
         String parameterClassName = attributes.getProperty("class");
-        parameterClassName = vars.typeHandlerFactory.resolveAlias(parameterClassName);
+        parameterClassName = state.typeHandlerFactory.resolveAlias(parameterClassName);
 
-        vars.currentParameterMap.setId(id);
-        vars.currentParameterMap.setResource(vars.errorCtx.getResource());
+        state.parameterMap.setId(id);
+        state.parameterMap.setResource(state.errorContext.getResource());
 
-        vars.errorCtx.setObjectId(id + " parameter map");
+        state.errorContext.setObjectId(id + " parameter map");
 
         Class parameterClass = null;
         try {
-          vars.errorCtx.setMoreInfo("Check the parameter class.");
+          state.errorContext.setMoreInfo("Check the parameter class.");
           parameterClass = Resources.classForName(parameterClassName);
         } catch (Exception e) {
           //TODO: Why is this commented out?
           //throw new SqlMapException("Error configuring ParameterMap.  Could not set ParameterClass.  Cause: " + e, e);
         }
 
-        vars.currentParameterMap.setParameterClass(parameterClass);
+        state.parameterMap.setParameterClass(parameterClass);
 
-        vars.parameterMappingList = new ArrayList();
+        state.parameterMappingList = new ArrayList();
 
-        vars.errorCtx.setMoreInfo("Check the parameter mappings.");
+        state.errorContext.setMoreInfo("Check the parameter mappings.");
       }
     });
     parser.addNodelet("/sqlMap/parameterMap/parameter", new Nodelet() {
       public void process(Node node) throws Exception {
-        Properties childAttributes = NodeletUtils.parseAttributes(node, vars.properties);
+        Properties childAttributes = NodeletUtils.parseAttributes(node, state.globalProps);
         String propertyName = childAttributes.getProperty("property");
         String jdbcType = childAttributes.getProperty("jdbcType");
         String type     = childAttributes.getProperty("typeName");
@@ -258,15 +250,15 @@ public class SqlMapParser extends BaseParser {
         String callback = childAttributes.getProperty("typeHandler");
         String numericScale = childAttributes.getProperty("numericScale");
 
-        callback = vars.typeHandlerFactory.resolveAlias(callback);
-        javaType = vars.typeHandlerFactory.resolveAlias(javaType);
-        resultMap = applyNamespace( resultMap );
+        callback = state.typeHandlerFactory.resolveAlias(callback);
+        javaType = state.typeHandlerFactory.resolveAlias(javaType);
+        resultMap = state.applyNamespace( resultMap );
 
-        vars.errorCtx.setObjectId(propertyName + " mapping of the " + vars.currentParameterMap.getId() + " parameter map");
+        state.errorContext.setObjectId(propertyName + " mapping of the " + state.parameterMap.getId() + " parameter map");
 
         TypeHandler handler = null;
         if (callback != null) {
-          vars.errorCtx.setMoreInfo("Check the parameter mapping typeHandler attribute '" + callback + "' (must be a TypeHandler or TypeHandlerCallback implementation).");
+          state.errorContext.setMoreInfo("Check the parameter mapping typeHandler attribute '" + callback + "' (must be a TypeHandler or TypeHandlerCallback implementation).");
           try {
             Object impl = Resources.instantiate(callback);
             if (impl instanceof TypeHandlerCallback) {
@@ -280,8 +272,8 @@ public class SqlMapParser extends BaseParser {
             throw new RuntimeException("Error occurred during custom type handler configuration.  Cause: " + e, e);
           }
         } else {
-          vars.errorCtx.setMoreInfo("Check the parameter mapping property type or name.");
-          handler = resolveTypeHandler(vars.client.getDelegate().getTypeHandlerFactory(), vars.currentParameterMap.getParameterClass(), propertyName, javaType, jdbcType);
+          state.errorContext.setMoreInfo("Check the parameter mapping property type or name.");
+          handler = state.resolveTypeHandler(state.client.getDelegate().getTypeHandlerFactory(), state.parameterMap.getParameterClass(), propertyName, javaType, jdbcType);
         }
 
         BasicParameterMapping mapping = new BasicParameterMapping();
@@ -315,7 +307,7 @@ public class SqlMapParser extends BaseParser {
           }
         }
 
-        vars.parameterMappingList.add(mapping);
+        state.parameterMappingList.add(mapping);
 
       }
     });
@@ -325,75 +317,75 @@ public class SqlMapParser extends BaseParser {
     parser.addNodelet("/sqlMap/resultMap/end()", new Nodelet() {
       public void process(Node node) throws Exception {
         
-        if (vars.resultMappingList.size() == 0) {
-          throw new RuntimeException("resultMap " + vars.currentResultMap.getId() + " must have at least one result mapping");
+        if (state.resultMappingList.size() == 0) {
+          throw new RuntimeException("resultMap " + state.resultMap.getId() + " must have at least one result mapping");
         }
         
-        vars.currentResultMap.setResultMappingList(vars.resultMappingList);
+        state.resultMap.setResultMappingList(state.resultMappingList);
 
-        vars.currentResultMap.setDiscriminator(vars.discriminator);
-        vars.discriminator = null;
+        state.resultMap.setDiscriminator(state.discriminator);
+        state.discriminator = null;
         
-        vars.client.getDelegate().addResultMap(vars.currentResultMap);
+        state.client.getDelegate().addResultMap(state.resultMap);
 
-        vars.errorCtx.setMoreInfo(null);
+        state.errorContext.setMoreInfo(null);
 
-        vars.errorCtx.setObjectId(null);
+        state.errorContext.setObjectId(null);
       }
     });
     parser.addNodelet("/sqlMap/resultMap", new Nodelet() {
       public void process(Node node) throws Exception {
-        vars.errorCtx.setActivity("building a result map");
+        state.errorContext.setActivity("building a result map");
 
-        vars.currentResultMap = new BasicResultMap(vars.client.getDelegate());
+        state.resultMap = new BasicResultMap(state.client.getDelegate());
 
-        Properties attributes = NodeletUtils.parseAttributes(node, vars.properties);
-        String id = applyNamespace(attributes.getProperty("id"));
+        Properties attributes = NodeletUtils.parseAttributes(node, state.globalProps);
+        String id = state.applyNamespace(attributes.getProperty("id"));
         String resultClassName = attributes.getProperty("class");
-        String extended = applyNamespace(attributes.getProperty("extends"));
+        String extended = state.applyNamespace(attributes.getProperty("extends"));
         String xmlName = attributes.getProperty("xmlName");
         String groupBy = attributes.getProperty("groupBy");
-        resultClassName = vars.typeHandlerFactory.resolveAlias(resultClassName);
+        resultClassName = state.typeHandlerFactory.resolveAlias(resultClassName);
 
-        vars.errorCtx.setObjectId(id + " result map");
+        state.errorContext.setObjectId(id + " result map");
 
-        vars.currentResultMap.setId(id);
-        vars.currentResultMap.setXmlName(xmlName);
-        vars.currentResultMap.setResource(vars.errorCtx.getResource());
+        state.resultMap.setId(id);
+        state.resultMap.setXmlName(xmlName);
+        state.resultMap.setResource(state.errorContext.getResource());
 
         if (groupBy != null && groupBy.length() > 0) {
           StringTokenizer parser = new StringTokenizer(groupBy, ", ", false);
           while (parser.hasMoreTokens()) {
-            vars.currentResultMap.addGroupByProperty(parser.nextToken());
+            state.resultMap.addGroupByProperty(parser.nextToken());
           }
         }
 
         Class resultClass = null;
         try {
-          vars.errorCtx.setMoreInfo("Check the result class.");
+          state.errorContext.setMoreInfo("Check the result class.");
           resultClass = Resources.classForName(resultClassName);
         } catch (Exception e) {
           throw new RuntimeException("Error configuring Result.  Could not set ResultClass.  Cause: " + e, e);
 
         }
 
-        vars.currentResultMap.setResultClass(resultClass);
+        state.resultMap.setResultClass(resultClass);
 
-        vars.resultMappingList = new ArrayList();
+        state.resultMappingList = new ArrayList();
 
-        vars.errorCtx.setMoreInfo("Check the extended result map.");
+        state.errorContext.setMoreInfo("Check the extended result map.");
         if (extended != null) {
-          BasicResultMap extendedResultMap = (BasicResultMap) vars.client.getDelegate().getResultMap(extended);
+          BasicResultMap extendedResultMap = (BasicResultMap) state.client.getDelegate().getResultMap(extended);
           ResultMapping[] resultMappings = extendedResultMap.getResultMappings();
           for (int i = 0; i < resultMappings.length; i++) {
-            vars.resultMappingList.add(resultMappings[i]);
+            state.resultMappingList.add(resultMappings[i]);
           }
 
           List nestedResultMappings = extendedResultMap.getNestedResultMappings();
           if (nestedResultMappings != null) {
             Iterator iter = nestedResultMappings.iterator();
             while (iter.hasNext()) {
-              vars.currentResultMap.addNestedResultMappings((ResultMapping) iter.next());
+              state.resultMap.addNestedResultMappings((ResultMapping) iter.next());
             }
           }
           
@@ -401,20 +393,20 @@ public class SqlMapParser extends BaseParser {
             if (extendedResultMap.hasGroupBy()) {
               Iterator i = extendedResultMap.groupByProps();
               while (i.hasNext()) {
-                vars.currentResultMap.addGroupByProperty((String) i.next());
+                state.resultMap.addGroupByProperty((String) i.next());
               }
             }
           }
         }
 
-        vars.errorCtx.setMoreInfo("Check the result mappings.");
-        vars.resultMappingIndex = vars.resultMappingList.size();
+        state.errorContext.setMoreInfo("Check the result mappings.");
+        state.resultMappingIndex = state.resultMappingList.size();
 
       }
     });
     parser.addNodelet("/sqlMap/resultMap/result", new Nodelet() {
       public void process(Node node) throws Exception {
-        Properties childAttributes = NodeletUtils.parseAttributes(node, vars.properties);
+        Properties childAttributes = NodeletUtils.parseAttributes(node, state.globalProps);
         String propertyName = childAttributes.getProperty("property");
         String nullValue = childAttributes.getProperty("nullValue");
         String jdbcType = childAttributes.getProperty("jdbcType");
@@ -425,14 +417,14 @@ public class SqlMapParser extends BaseParser {
         String resultMapName = childAttributes.getProperty("resultMap");
         String callback = childAttributes.getProperty("typeHandler");
 
-        callback = vars.typeHandlerFactory.resolveAlias(callback);
-        javaType = vars.typeHandlerFactory.resolveAlias(javaType);
+        callback = state.typeHandlerFactory.resolveAlias(callback);
+        javaType = state.typeHandlerFactory.resolveAlias(javaType);
 
-        vars.errorCtx.setObjectId(propertyName + " mapping of the " + vars.currentResultMap.getId() + " result map");
+        state.errorContext.setObjectId(propertyName + " mapping of the " + state.resultMap.getId() + " result map");
 
         TypeHandler handler = null;
         if (callback != null) {
-          vars.errorCtx.setMoreInfo("Check the result mapping typeHandler attribute '" + callback + "' (must be a TypeHandler or TypeHandlerCallback implementation).");
+          state.errorContext.setMoreInfo("Check the result mapping typeHandler attribute '" + callback + "' (must be a TypeHandler or TypeHandlerCallback implementation).");
           try {
             Object impl = Resources.instantiate(callback);
             if (impl instanceof TypeHandlerCallback) {
@@ -446,8 +438,8 @@ public class SqlMapParser extends BaseParser {
             throw new RuntimeException("Error occurred during custom type handler configuration.  Cause: " + e, e);
           }
         } else {
-          vars.errorCtx.setMoreInfo("Check the result mapping property type or name.");
-          handler = resolveTypeHandler(vars.client.getDelegate().getTypeHandlerFactory(), vars.currentResultMap.getResultClass(), propertyName, javaType, jdbcType, true);
+          state.errorContext.setMoreInfo("Check the result mapping property type or name.");
+          handler = state.resolveTypeHandler(state.client.getDelegate().getTypeHandlerFactory(), state.resultMap.getResultClass(), propertyName, javaType, jdbcType, true);
         }
 
 
@@ -461,7 +453,7 @@ public class SqlMapParser extends BaseParser {
         mapping.setNestedResultMapName(resultMapName);
 
         if (resultMapName != null && resultMapName.length() > 0) {
-          vars.currentResultMap.addNestedResultMappings(mapping);
+          state.resultMap.addNestedResultMappings(mapping);
         }
 
         try {
@@ -475,29 +467,29 @@ public class SqlMapParser extends BaseParser {
         if (columnIndex != null && columnIndex.length() > 0) {
           mapping.setColumnIndex(Integer.parseInt(columnIndex));
         } else {
-          vars.resultMappingIndex++;
-          mapping.setColumnIndex(vars.resultMappingIndex);
+          state.resultMappingIndex++;
+          mapping.setColumnIndex(state.resultMappingIndex);
         }
 
-        vars.resultMappingList.add(mapping);
+        state.resultMappingList.add(mapping);
       }
     });
 
     parser.addNodelet("/sqlMap/resultMap/discriminator/subMap", new Nodelet() {
       public void process(Node node) throws Exception {
-        if (vars.discriminator == null) {
+        if (state.discriminator == null) {
           throw new RuntimeException ("The discriminator is null, but somehow a subMap was reached.  This is a bug.");
         }
-        Properties childAttributes = NodeletUtils.parseAttributes(node, vars.properties);
+        Properties childAttributes = NodeletUtils.parseAttributes(node, state.globalProps);
         String value = childAttributes.getProperty("value");
         String resultMap = childAttributes.getProperty("resultMap");
-        vars.discriminator.addSubMap(value, applyNamespace(resultMap));
+        state.discriminator.addSubMap(value, state.applyNamespace(resultMap));
       }
     });
 
     parser.addNodelet("/sqlMap/resultMap/discriminator", new Nodelet() {
       public void process(Node node) throws Exception {
-        Properties childAttributes = NodeletUtils.parseAttributes(node, vars.properties);
+        Properties childAttributes = NodeletUtils.parseAttributes(node, state.globalProps);
         String nullValue = childAttributes.getProperty("nullValue");
         String jdbcType = childAttributes.getProperty("jdbcType");
         String javaType = childAttributes.getProperty("javaType");
@@ -505,12 +497,12 @@ public class SqlMapParser extends BaseParser {
         String columnIndex = childAttributes.getProperty("columnIndex");
         String callback = childAttributes.getProperty("typeHandler");
 
-        callback = vars.typeHandlerFactory.resolveAlias(callback);
-        javaType = vars.typeHandlerFactory.resolveAlias(javaType);
+        callback = state.typeHandlerFactory.resolveAlias(callback);
+        javaType = state.typeHandlerFactory.resolveAlias(javaType);
 
         TypeHandler handler = null;
         if (callback != null) {
-          vars.errorCtx.setMoreInfo("Check the result mapping typeHandler attribute '" + callback + "' (must be a TypeHandlerCallback implementation).");
+          state.errorContext.setMoreInfo("Check the result mapping typeHandler attribute '" + callback + "' (must be a TypeHandlerCallback implementation).");
           try {
             Object impl = Resources.instantiate(callback);
             if (impl instanceof TypeHandlerCallback) {
@@ -524,8 +516,8 @@ public class SqlMapParser extends BaseParser {
             throw new RuntimeException("Error occurred during custom type handler configuration.  Cause: " + e, e);
           }
         } else {
-          vars.errorCtx.setMoreInfo("Check the result mapping property type or name.");
-          handler = resolveTypeHandler(vars.client.getDelegate().getTypeHandlerFactory(), vars.currentResultMap.getResultClass(), "", javaType, jdbcType, true);
+          state.errorContext.setMoreInfo("Check the result mapping property type or name.");
+          handler = state.resolveTypeHandler(state.client.getDelegate().getTypeHandlerFactory(), state.resultMap.getResultClass(), "", javaType, jdbcType, true);
         }
 
         BasicResultMapping mapping = new BasicResultMapping();
@@ -546,7 +538,7 @@ public class SqlMapParser extends BaseParser {
           mapping.setColumnIndex(Integer.parseInt(columnIndex));
         }
 
-        vars.discriminator = new Discriminator (vars.delegate, mapping);
+        state.discriminator = new Discriminator (state.delegate, mapping);
       }
     });
   }
@@ -554,38 +546,38 @@ public class SqlMapParser extends BaseParser {
   protected void addStatementNodelets() {
     parser.addNodelet("/sqlMap/statement", new Nodelet() {
       public void process(Node node) throws Exception {
-        vars.currentStatement = new SqlStatementParser(vars).parseGeneralStatement(node, new GeneralStatement());
-        vars.delegate.addMappedStatement(vars.currentStatement);
+        state.currentStatement = new SqlStatementParser(state).parseGeneralStatement(node, new GeneralStatement());
+        state.delegate.addMappedStatement(state.currentStatement);
       }
     });
     parser.addNodelet("/sqlMap/insert", new Nodelet() {
       public void process(Node node) throws Exception {
-        vars.currentStatement = new SqlStatementParser(vars).parseGeneralStatement(node, new InsertStatement());
-        vars.delegate.addMappedStatement(vars.currentStatement);
+        state.currentStatement = new SqlStatementParser(state).parseGeneralStatement(node, new InsertStatement());
+        state.delegate.addMappedStatement(state.currentStatement);
       }
     });
     parser.addNodelet("/sqlMap/update", new Nodelet() {
       public void process(Node node) throws Exception {
-        vars.currentStatement = new SqlStatementParser(vars).parseGeneralStatement(node, new UpdateStatement());
-        vars.delegate.addMappedStatement(vars.currentStatement);
+        state.currentStatement = new SqlStatementParser(state).parseGeneralStatement(node, new UpdateStatement());
+        state.delegate.addMappedStatement(state.currentStatement);
       }
     });
     parser.addNodelet("/sqlMap/delete", new Nodelet() {
       public void process(Node node) throws Exception {
-        vars.currentStatement = new SqlStatementParser(vars).parseGeneralStatement(node, new DeleteStatement());
-        vars.delegate.addMappedStatement(vars.currentStatement);
+        state.currentStatement = new SqlStatementParser(state).parseGeneralStatement(node, new DeleteStatement());
+        state.delegate.addMappedStatement(state.currentStatement);
       }
     });
     parser.addNodelet("/sqlMap/select", new Nodelet() {
       public void process(Node node) throws Exception {
-        vars.currentStatement = new SqlStatementParser(vars).parseGeneralStatement(node, new SelectStatement());
-        vars.delegate.addMappedStatement(vars.currentStatement);
+        state.currentStatement = new SqlStatementParser(state).parseGeneralStatement(node, new SelectStatement());
+        state.delegate.addMappedStatement(state.currentStatement);
       }
     });
     parser.addNodelet("/sqlMap/procedure", new Nodelet() {
       public void process(Node node) throws Exception {
-        vars.currentStatement = new SqlStatementParser(vars).parseGeneralStatement(node, new ProcedureStatement());
-        vars.delegate.addMappedStatement(vars.currentStatement);
+        state.currentStatement = new SqlStatementParser(state).parseGeneralStatement(node, new ProcedureStatement());
+        state.delegate.addMappedStatement(state.currentStatement);
       }
     });
   }
