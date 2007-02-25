@@ -23,5 +23,29 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 			
 			Type type = info.GetGetterType("PageNumber");
 		}
+
+        /// <summary>
+        /// Test Finding properties on interfaces which "inherites" other interfaces
+        /// </summary>
+        [Test]
+        public void TestJIRA210OnGet()
+        {
+            ReflectionInfo info = ReflectionInfo.GetInstance(typeof(IAddress));
+
+            Type type = info.GetGetterType("Id");
+            Assert.IsNotNull(type);
+        }
+
+        /// <summary>
+        /// Test Finding properties on interfaces which "inherites" other interfaces
+        /// </summary>
+        [Test]
+        public void TestJIRA210OnSet()
+        {
+            ReflectionInfo info = ReflectionInfo.GetInstance(typeof(IAddress));
+
+            Type type = info.GetSetterType("Id");
+            Assert.IsNotNull(type);
+        }
 	}
 }

@@ -11,25 +11,24 @@ using System.Reflection;
 
 [assembly: AssemblyCompany("http://ibatis.apache.org/")]
 [assembly: AssemblyProduct("iBATIS.NET")]
-[assembly: AssemblyCopyright("Copyright 2006,2005 The Apache Software Foundation")]
+[assembly: AssemblyCopyright("Copyright 2007,2005 The Apache Software Foundation")]
 [assembly: AssemblyTrademark("Licensed under the Apache License, Version 2.0")]
 [assembly: AssemblyCulture("")]
 
 #if DEBUG
 #else
-#if dotnet2
-[assembly: AssemblyConfiguration("net-2.0.win32; Release")]
-#else
-[assembly: AssemblyConfiguration("net-1.1.win32; Release")]
-#endif
-[assembly: AssemblyDelaySign(false)]
-[assembly: AssemblyKeyFile("..\\..\\..\\AssemblyKey.snk")]
-#endif
-
+    #if dotnet2
+    [assembly: AssemblyConfiguration("net-2.0.win32; Release")]
+    #else
+    [assembly: AssemblyConfiguration("net-1.1.win32; Release")]
+    #endif
+    [assembly: AssemblyDelaySign(false)]
+    [assembly: AssemblyKeyFile("..\\..\\..\\AssemblyKey.snk")]
+    #endif
 #endif
 
 [assembly: AssemblyTitle("iBATIS.Common")]
 [assembly: AssemblyDescription("Common object used by DataAccess and DataMapper component in iBATIS.Net")]
 	
-[assembly: AssemblyVersion("1.5.0")]
+[assembly: AssemblyVersion("1.6.1")]
 

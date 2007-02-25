@@ -39,16 +39,11 @@ namespace IBatisNet.Common.Utilities.Objects.Members
         private delegate object GetValue(object instance);
 
         private GetValue _get = null;
-        /// <summary>
-        /// The property name
-        /// </summary>
-        private string _propertyName = string.Empty;
-        /// <summary>
+         /// <summary>
         /// The property type
         /// </summary>
         private Type _propertyType = null;
         private bool _canRead = false;
-        private Type _targetType = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DelegatePropertyGetAccessor"/> class
@@ -58,15 +53,14 @@ namespace IBatisNet.Common.Utilities.Objects.Members
         /// <param name="propertyName">Name of the property.</param>
         public DelegatePropertyGetAccessor(Type targetObjectType, string propertyName)
 		{
-            _targetType = targetObjectType;
-            _propertyName = propertyName;
+            targetType = targetObjectType;
+            this.propertyName = propertyName;
 
-            // deals with Overriding a property using new and reflection
-            // http://blogs.msdn.com/thottams/archive/2006/03/17/553376.aspx
-            PropertyInfo propertyInfo = _targetType.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            PropertyInfo propertyInfo = GetPropertyInfo(targetObjectType);
+
             if (propertyInfo == null)
             {
-                propertyInfo = _targetType.GetProperty(propertyName);
+                propertyInfo = targetType.GetProperty(propertyName);
             }
             
 			// Make sure the property exists
@@ -74,7 +68,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 			{
 				throw new NotSupportedException(
 					string.Format("Property \"{0}\" does not exist for type "
-                    + "{1}.", propertyName, _targetType));
+                    + "{1}.", propertyName, targetType));
 			}
 			else
 			{
@@ -107,7 +101,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 				}
 			}
 		}
-
+            
         #region IAccessor Members
 
         /// <summary>
@@ -116,7 +110,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
         /// <value></value>
         public string Name
         {
-            get { return _propertyName; }
+            get { return propertyName; }
         }
 
         /// <summary>
@@ -147,7 +141,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
             {
                 throw new NotSupportedException(
                     string.Format("Property \"{0}\" on type "
-                    + "{1} doesn't have a get method.", _propertyName, _targetType));
+                    + "{1} doesn't have a get method.", propertyName, targetType));
             }
         }
 

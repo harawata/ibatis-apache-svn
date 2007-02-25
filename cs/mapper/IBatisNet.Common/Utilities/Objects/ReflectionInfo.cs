@@ -45,7 +45,7 @@ namespace IBatisNet.Common.Utilities.Objects
 		public static BindingFlags BINDING_FLAGS_PROPERTY
 			= BindingFlags.Public
             | BindingFlags.NonPublic
-			| BindingFlags.Instance 
+			| BindingFlags.Instance
 			;
 
 
@@ -173,6 +173,17 @@ namespace IBatisNet.Common.Utilities.Objects
 				_getTypes[name] = fields[i].FieldType;
 			}
 			#endregion
+
+            // Fix for problem with interfaces inheriting other interfaces
+            if (type.IsInterface)
+            {
+                // Loop through interfaces for the type and add members from
+                // these types too
+                foreach (Type interf in type.GetInterfaces())
+                {
+                    AddMembers(interf);
+                }
+            }
 		}
 
 		/// <summary>

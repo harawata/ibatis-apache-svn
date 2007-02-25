@@ -93,6 +93,46 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         #endregion
 
         /// <summary>
+        /// Test Finding properties on interfaces which "inherites" other interfaces
+        /// </summary>
+        [Test]
+        public void TestJIRA210OnGet()
+        {
+            //----------------------------
+            IGetAccessor addressGet = factoryGet.CreateGetAccessor(typeof(User), "Address");
+
+            User user = new User();
+            user.Address = new Address();
+            Guid newGuid = Guid.NewGuid();
+            user.Address.Id = newGuid;
+
+            IAddress address = (IAddress)addressGet.Get(user);
+            Assert.IsNotNull(address);
+            Assert.AreEqual(newGuid, address.Id);
+
+            IGetAccessor domainGet = factoryGet.CreateGetAccessor(typeof(IAddress), "Id");
+
+            Guid guid = (Guid)domainGet.Get(address);
+            Assert.AreEqual(newGuid, guid);
+        }
+
+        /// <summary>
+        /// Test Finding properties on interfaces which "inherites" other interfaces
+        /// </summary>
+        [Test]
+        public void TestJIRA210OnSet()
+        {
+            Address adr = new Address();
+
+            Guid newGuid = Guid.NewGuid();
+
+            ISetAccessor domainSet = factorySet.CreateSetAccessor(typeof(IAddress), "Id");
+
+            domainSet.Set(adr, newGuid);
+            Assert.AreEqual(newGuid, adr.Id );
+        }
+        
+        /// <summary>
         /// Test multiple call to factory
         /// </summary>
         [Test]

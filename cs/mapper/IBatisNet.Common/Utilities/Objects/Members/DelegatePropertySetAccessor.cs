@@ -41,41 +41,30 @@ namespace IBatisNet.Common.Utilities.Objects.Members
         private SetValue _set = null;
 
         /// <summary>
-        /// The property name
-        /// </summary>
-        private string _propertyName = string.Empty;
-        /// <summary>
         /// The property type
         /// </summary>
         private Type _propertyType = null;
         private bool _canWrite = false;
-        private Type _targetType = null;
 
                 /// <summary>
         /// Initializes a new instance of the <see cref="DelegatePropertySetAccessor"/> class
         /// for set property access via DynamicMethod.
         /// </summary>
         /// <param name="targetObjectType">Type of the target object.</param>
-        /// <param name="propertyName">Name of the property.</param>
-        public DelegatePropertySetAccessor(Type targetObjectType, string propertyName)
+        /// <param name="propName">Name of the property.</param>
+        public DelegatePropertySetAccessor(Type targetObjectType, string propName)
 		{
-            _targetType = targetObjectType;
-            _propertyName = propertyName;
+            targetType = targetObjectType;
+            propertyName = propName;
 
-            // deals with Overriding a property using new and reflection
-            // http://blogs.msdn.com/thottams/archive/2006/03/17/553376.aspx
-            PropertyInfo propertyInfo = _targetType.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-            if (propertyInfo == null)
-            {
-                propertyInfo = _targetType.GetProperty(propertyName);
-            }
+            PropertyInfo propertyInfo = GetPropertyInfo(targetObjectType);
                     
 			// Make sure the property exists
 			if(propertyInfo == null)
 			{
 				throw new NotSupportedException(
 					string.Format("Property \"{0}\" does not exist for type "
-                    + "{1}.", propertyName, _targetType));
+                    + "{1}.", propertyName, targetType));
 			}
 			else
 			{
@@ -95,7 +84,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
                     Type paramType = targetSetMethod.GetParameters()[0].ParameterType;
                     ilgen.DeclareLocal(paramType);
                     ilgen.Emit(OpCodes.Ldarg_0); //Load the first argument (target object)
-                    ilgen.Emit(OpCodes.Castclass, _targetType); //Cast to the source type
+                    ilgen.Emit(OpCodes.Castclass, targetType); //Cast to the source type
                     ilgen.Emit(OpCodes.Ldarg_1); //Load the second argument (value object)
                     if (paramType.IsValueType)
                     {
@@ -130,7 +119,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
         /// <value></value>
         public string Name
         {
-            get { return _propertyName; }
+            get { return propertyName; }
         }
 
         /// <summary>
@@ -168,7 +157,7 @@ namespace IBatisNet.Common.Utilities.Objects.Members
             {
                 throw new NotSupportedException(
                     string.Format("Property \"{0}\" on type "
-                    + "{1} doesn't have a set method.", _propertyName, _targetType));
+                    + "{1} doesn't have a set method.", propertyName, targetType));
             }
         }
 

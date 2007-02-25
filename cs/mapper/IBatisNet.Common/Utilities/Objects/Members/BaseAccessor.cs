@@ -26,6 +26,7 @@
 using System;
 using System.Collections;
 using System.Collections.Specialized;
+using System.Reflection;
 using System.Reflection.Emit;
 
 namespace IBatisNet.Common.Utilities.Objects.Members
@@ -35,6 +36,16 @@ namespace IBatisNet.Common.Utilities.Objects.Members
     /// </summary>
     public abstract class BaseAccessor    
     {
+        /// <summary>
+        /// The property name
+        /// </summary>
+        protected string propertyName = string.Empty;
+    
+        /// <summary>
+        /// The target type
+        /// </summary>
+        protected Type targetType = null;
+
         /// <summary>
         /// The null internal value used by this member type 
         /// </summary>
@@ -65,6 +76,45 @@ namespace IBatisNet.Common.Utilities.Objects.Members
 			typeToOpcode[typeof(float)] = OpCodes.Ldind_R4;
 		}
 
+
+        /// <summary>
+        /// Gets the property info.
+        /// </summary>
+        /// <param name="target">The target type.</param>
+        /// <returns></returns>
+        protected PropertyInfo GetPropertyInfo(Type target)
+        {
+            PropertyInfo propertyInfo = null;
+
+            propertyInfo = target.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            if (propertyInfo == null)
+            {
+                if (target.IsInterface)
+                {
+                    // JIRA 210
+                    // Fix for interface inheriting
+                    // Loop through interfaces of the type
+                    foreach (Type interfaceType in target.GetInterfaces())
+                    {
+                        // Get propertyinfo and if found the break out of loop
+                        propertyInfo = GetPropertyInfo(interfaceType);
+                        if (propertyInfo != null)
+                        {
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    // deals with Overriding a property using new and reflection
+                    // http://blogs.msdn.com/thottams/archive/2006/03/17/553376.aspx
+                    propertyInfo = target.GetProperty(propertyName);
+                }
+            }
+
+            return propertyInfo;
+        }
+        
         /// <summary>
         /// Get the null value for a given type
         /// </summary>
