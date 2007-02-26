@@ -29,8 +29,7 @@ import java.sql.*;
  */
 public class ScriptRunner {
 
-  //private static final Log log = LogFactory.getLog(ScriptRunner.class);
-
+  private static final String DEFAULT_DELIMITER = ";";
 
   private Connection connection;
   private String driver;
@@ -44,6 +43,9 @@ public class ScriptRunner {
   private PrintWriter logWriter = new PrintWriter(System.out);
   private PrintWriter errorLogWriter = new PrintWriter(System.err);
 
+  private String delimiter = DEFAULT_DELIMITER;
+  private boolean fullLineDelimiter = false;
+
   /**
    * Default constructor
    */
@@ -51,6 +53,11 @@ public class ScriptRunner {
     this.connection = connection;
     this.autoCommit = autoCommit;
     this.stopOnError = stopOnError;
+  }
+
+  public void setDelimiter(String delimiter, boolean fullLineDelimiter) {
+    this.delimiter = delimiter;
+    this.fullLineDelimiter = fullLineDelimiter;
   }
 
   public ScriptRunner(String driver, String url, String username, String password, boolean autoCommit, boolean stopOnError) {
@@ -143,8 +150,9 @@ public class ScriptRunner {
           //Do nothing
         } else if (trimmedLine.length() < 1 || trimmedLine.startsWith("--")) {
           //Do nothing
-        } else if (trimmedLine.endsWith(";")) {
-          command.append(line.substring(0, line.lastIndexOf(";")));
+        } else if (!fullLineDelimiter && trimmedLine.endsWith(getDelimiter())
+            || fullLineDelimiter && trimmedLine.equals(getDelimiter())) {
+          command.append(line.substring(0, line.lastIndexOf(getDelimiter())));
           command.append(" ");
           Statement statement = conn.createStatement();
 
@@ -214,6 +222,10 @@ public class ScriptRunner {
       conn.rollback();
       flush();
     }
+  }
+
+  private String getDelimiter() {
+    return delimiter;
   }
 
   private void print(Object o) {
