@@ -44,35 +44,57 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		#endregion
 
 		#region Properties
-		/// <summary>
-		/// 
-		/// </summary>
+
+
+        /// <summary>
+        /// Gets the SQL map.
+        /// </summary>
+        /// <value>The SQL map.</value>
 		public ISqlMapper SqlMap
 		{
 			get { return _sqlMap; }
 		}
-		/// <summary>
-		/// 
-		/// </summary>
+
+
+        /// <summary>
+        /// The data source use by the session.
+        /// </summary>
+        /// <value></value>
 		public override IDataSource DataSource
 		{
 			get { return _sqlMap.LocalSession.DataSource; }
 		}
-		/// <summary>
-		/// 
-		/// </summary>
+
+
+        /// <summary>
+        /// The Connection use by the session.
+        /// </summary>
+        /// <value></value>
 		public override IDbConnection Connection
 		{
 			get { return _sqlMap.LocalSession.Connection; }
 		}
-		/// <summary>
-		/// 
-		/// </summary>
+
+
+        /// <summary>
+        /// The Transaction use by the session.
+        /// </summary>
+        /// <value></value>
 		public override IDbTransaction Transaction
 		{
 			get { return _sqlMap.LocalSession.Transaction; }
-		}	
-	
+		}
+
+        /// <summary>
+        /// Indicates if a transaction is open  on
+        /// the session.
+        /// </summary>
+        /// <value></value>
+        public override bool IsTransactionStart
+        {
+            get { return _sqlMap.LocalSession.IsTransactionStart; }
+        }
+
 		#endregion
 
 		#region Constructor (s) / Destructor

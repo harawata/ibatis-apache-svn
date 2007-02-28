@@ -40,6 +40,38 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
 		#region Transaction tests
 
+        /// <summary>
+        /// Test IsTransactionStart
+        /// </summary>
+        [Test]
+        public void TestIsTransactionStartProperty()
+        {
+            Account account = NewAccount6();
+
+            sqlMap.BeginTransaction();
+            sqlMap.Insert("InsertAccountViaParameterMap", account);
+            InsertNewAccount();
+            sqlMap.CommitTransaction();
+
+        }
+
+        public void InsertNewAccount()
+        {
+            Account account = NewAccount6();
+            account.Id = 7;
+            bool existingTransaction = (sqlMap.LocalSession != null && !sqlMap.LocalSession.IsTransactionStart);
+
+            if (existingTransaction)
+            {
+                 sqlMap.BeginTransaction();
+            }
+            sqlMap.Insert("InsertAccountViaParameterMap", account);
+            if (existingTransaction)
+            {
+                sqlMap.CommitTransaction();
+            }
+        }
+
 		/// <summary>
 		/// Test BeginTransaction, CommitTransaction
 		/// </summary>

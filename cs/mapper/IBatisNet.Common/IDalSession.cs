@@ -62,6 +62,15 @@ namespace IBatisNet.Common
 			get;
 		}
 
+        /// <summary>
+        /// Indicates if a transaction is open  on
+        /// the session.
+        /// </summary>
+        bool IsTransactionStart
+        {
+            get;
+        }
+
 		/// <summary>
 		/// Complete (commit) a transsaction
 		/// </summary>

@@ -48,7 +48,7 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		private static readonly ILog _logger = LogManager.GetLogger( MethodBase.GetCurrentMethod().DeclaringType );
 
 		private IDataSource _dataSource = null;
-		private bool _isOpenTransaction = false;
+		private bool _isTransactionOpen = false;
 		private bool _consistent = false;
 
 		/// <summary>
@@ -63,37 +63,54 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		#endregion
 
 		#region Properties
-		/// <summary>
-		/// 
-		/// </summary>
+
+
+        /// <summary>
+        /// The data source use by the session.
+        /// </summary>
+        /// <value></value>
 		public override IDataSource DataSource
 		{
 			get { return _dataSource; }
 		}
-		/// <summary>
-		/// 
-		/// </summary>
+
+
+        /// <summary>
+        /// The Connection use by the session.
+        /// </summary>
+        /// <value></value>
 		public override IDbConnection Connection
 		{
 			get { return _connection; }
 		}
-		/// <summary>
-		/// 
-		/// </summary>
+
+
+        /// <summary>
+        /// The Transaction use by the session.
+        /// </summary>
+        /// <value></value>
 		public override IDbTransaction Transaction
 		{
 			get { return _transaction; }
 		}
+
+
+        /// <summary>
+        /// Indicates if a transaction is open  on
+        /// the session.
+        /// </summary>
+        /// <value></value>
+        public override bool IsTransactionStart
+        {
+            get { return _isTransactionOpen; }
+        }
 
 		/// <summary>
 		/// Changes the vote for transaction to commit (true) or to abort (false).
 		/// </summary>
 		private bool Consistent
 		{
-			set
-			{
-				_consistent = value;
-			}
+			set { _consistent = value; }
 		}
 		#endregion
 
@@ -212,7 +229,7 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 			{
 				_logger.Debug("Begin Transaction.");
 			}			
-			_isOpenTransaction = true;
+			_isTransactionOpen = true;
 		}
 
 		/// <summary>
@@ -236,7 +253,7 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 				{
 					_logger.Debug("Begin Transaction.");
 				}	
-				_isOpenTransaction = true;
+				_isTransactionOpen = true;
 			}
 		}
 
@@ -265,7 +282,7 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 			{
 				_logger.Debug("Begin Transaction.");
 			}
-			_isOpenTransaction = true;			
+			_isTransactionOpen = true;			
 		}
 
 		/// <summary>
@@ -303,7 +320,7 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 				{
 					_logger.Debug("Begin Transaction.");
 				}	
-				_isOpenTransaction = true;
+				_isTransactionOpen = true;
 			}			
 		}
 
@@ -315,13 +332,16 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		/// </remarks>
 		public override void CommitTransaction()
 		{
-			_transaction.Commit();
 			if (_logger.IsDebugEnabled)
 			{
 				_logger.Debug("Commit Transaction");
-			}			
+			}		
+	
+			_transaction.Commit();
 			_transaction.Dispose();
 			_transaction= null;
+            _isTransactionOpen = false;
+
 			if (_connection.State != ConnectionState.Closed)
 			{
 				CloseConnection();
@@ -334,13 +354,15 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		/// <param name="closeConnection">Close the connection</param>
 		public override void CommitTransaction(bool closeConnection)
 		{
-			_transaction.Commit();
 			if (_logger.IsDebugEnabled)
 			{
 				_logger.Debug("Commit Transaction");
 			}
+
+			_transaction.Commit();
 			_transaction.Dispose();
 			_transaction= null;
+            _isTransactionOpen = false;
 
 			if (closeConnection)
 			{
@@ -358,13 +380,16 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		/// </remarks>
 		public override void RollBackTransaction()
 		{
-			_transaction.Rollback();
 			if (_logger.IsDebugEnabled)
 			{
 				_logger.Debug("RollBack Transaction");
 			}
+
+			_transaction.Rollback();
 			_transaction.Dispose();
 			_transaction = null;
+            _isTransactionOpen = false;
+
 			if (_connection.State != ConnectionState.Closed)
 			{
 				CloseConnection();
@@ -377,13 +402,15 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 		/// <param name="closeConnection">Close the connection</param>
 		public override void RollBackTransaction(bool closeConnection)
 		{
-			_transaction.Rollback();
 			if (_logger.IsDebugEnabled)
 			{
 				_logger.Debug("RollBack Transaction");
 			}
+
+			_transaction.Rollback();
 			_transaction.Dispose();
 			_transaction = null;
+            _isTransactionOpen = false;
 
 			if (closeConnection)
 			{
@@ -480,7 +507,7 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 				_logger.Debug("Dispose DaoSession");
 			}
 
-			if (_isOpenTransaction == false)
+			if (_isTransactionOpen == false)
 			{
 				if (_connection.State != ConnectionState.Closed)
 				{
@@ -492,12 +519,14 @@ namespace IBatisNet.DataAccess.DaoSessionHandlers
 				if (_consistent)
 				{
 					daoManager.CommitTransaction();
+				    _isTransactionOpen = false;
 				}
 				else
 				{
 					if (_connection.State != ConnectionState.Closed)
 					{
 						daoManager.RollBackTransaction();
+                        _isTransactionOpen = false;
 					}
 				}
 			}

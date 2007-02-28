@@ -62,34 +62,51 @@ namespace IBatisNet.DataAccess
 		#region IDalSession Members
 
 		#region Properties
-		/// <summary>
-		/// 
-		/// </summary>
+
+        /// <summary>
+        /// The data source use by the session.
+        /// </summary>
+        /// <value></value>
 		public abstract IDataSource DataSource
 		{
 			get;
 		}
-		/// <summary>
-		/// 
-		/// </summary>
+
+
+        /// <summary>
+        /// The Connection use by the session.
+        /// </summary>
+        /// <value></value>
 		public abstract IDbConnection Connection
 		{
 			get;
 		}
-		/// <summary>
-		/// 
-		/// </summary>
-		public abstract IDbTransaction Transaction
+
+
+        /// <summary>
+        /// Indicates if a transaction is open  on
+        /// the session.
+        /// </summary>
+        public abstract bool IsTransactionStart
 		{
 			get;
 		}
+
+        /// <summary>
+        /// The Transaction use by the session.
+        /// </summary>
+        /// <value></value>
+        public abstract IDbTransaction Transaction
+        {
+            get;
+        }
 
 		#endregion
 
 		#region Methods
 
 		/// <summary>
-		/// Complete (commit) a transsaction
+		/// Complete (commit) a transaction
 		/// </summary>
 		public abstract void Complete();
 

@@ -65,7 +65,7 @@ namespace IBatisNet.DataMapper
         #region IDalSession Members
 
         #region Fields
-        private bool _isOpenTransaction = false;
+        private bool _isTransactionOpen = false;
 		/// <summary>
 		/// Changes the vote to commit (true) or to abort (false) in transsaction
 		/// </summary>
@@ -84,48 +84,63 @@ namespace IBatisNet.DataMapper
 
 		#region Properties
 
-		/// <summary>
-		/// 
-		/// </summary>
+
+        /// <summary>
+        /// Gets the SQL mapper.
+        /// </summary>
+        /// <value>The SQL mapper.</value>
 		public ISqlMapper SqlMapper
 		{
 			get { return _sqlMapper; }
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
+
+        /// <summary>
+        /// The data source use by the session.
+        /// </summary>
+        /// <value></value>
 		public IDataSource DataSource
 		{
 			get { return _dataSource; }
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
+
+        /// <summary>
+        /// The Connection use by the session.
+        /// </summary>
+        /// <value></value>
 		public IDbConnection Connection
 		{
 			get { return _connection; }
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
+
+        /// <summary>
+        /// The Transaction use by the session.
+        /// </summary>
+        /// <value></value>
 		public IDbTransaction Transaction
 		{
 			get { return _transaction; }
 		}
+
+        /// <summary>
+        /// Indicates if a transaction is open  on
+        /// the session.
+        /// </summary>
+        public bool IsTransactionStart
+        {
+            get { return _isTransactionOpen; }
+        }
 
 		/// <summary>
 		/// Changes the vote for transaction to commit (true) or to abort (false).
 		/// </summary>
 		private bool Consistent
 		{
-			set
-			{
-				_consistent = value;
-			}
+			set { _consistent = value; }
 		}
+
 		#endregion
 
 		#region Methods
@@ -245,7 +260,7 @@ namespace IBatisNet.DataMapper
 			{
 				_logger.Debug("Begin Transaction.");
 			}
-			_isOpenTransaction = true;
+			_isTransactionOpen = true;
 		}
 
 		/// <summary>
@@ -269,7 +284,7 @@ namespace IBatisNet.DataMapper
 				{
 					_logger.Debug("Begin Transaction.");
 				}
-				_isOpenTransaction = true;
+				_isTransactionOpen = true;
 			}
 		}
 
@@ -300,7 +315,7 @@ namespace IBatisNet.DataMapper
 			{
 				_logger.Debug("Begin Transaction.");
 			}
-			_isOpenTransaction = true;			
+			_isTransactionOpen = true;			
 		}
 
 		/// <summary>
@@ -338,7 +353,7 @@ namespace IBatisNet.DataMapper
 				{
 					_logger.Debug("Begin Transaction.");
 				}
-				_isOpenTransaction = true;
+				_isTransactionOpen = true;
 			}			
 		}
 
@@ -356,6 +371,8 @@ namespace IBatisNet.DataMapper
 			}
 			_transaction.Commit();
 			_transaction.Dispose();
+            _isTransactionOpen = false;
+
 			if (_connection.State != ConnectionState.Closed)
 			{
 				this.CloseConnection();
@@ -374,12 +391,14 @@ namespace IBatisNet.DataMapper
 			}
 			else
 			{
-				_transaction.Commit();
 				if (_logger.IsDebugEnabled)
 				{
 					_logger.Debug("Commit Transaction.");
-				}
+				}				
+                _transaction.Commit();
 				_transaction.Dispose();
+                _transaction = null;
+                _isTransactionOpen = false;
 			}
 		}
 
@@ -391,13 +410,14 @@ namespace IBatisNet.DataMapper
 		/// </remarks>
 		public void RollBackTransaction()
 		{
-			_transaction.Rollback();
 			if (_logger.IsDebugEnabled)
 			{
 				_logger.Debug("RollBack Transaction.");
 			}
+			_transaction.Rollback();
 			_transaction.Dispose();
 			_transaction = null;
+            _isTransactionOpen = false;
 			if (_connection.State != ConnectionState.Closed)
 			{
 				this.CloseConnection();
@@ -423,6 +443,7 @@ namespace IBatisNet.DataMapper
 				_transaction.Rollback();
 				_transaction.Dispose();
 				_transaction = null;
+                _isTransactionOpen = false;
 			}
 		}
 
@@ -519,7 +540,7 @@ namespace IBatisNet.DataMapper
 			{
 				_logger.Debug("Dispose SqlMapSession");
 			}
-			if (_isOpenTransaction == false)
+			if (_isTransactionOpen == false)
 			{
 				if (_connection.State != ConnectionState.Closed)
 				{
@@ -531,12 +552,14 @@ namespace IBatisNet.DataMapper
 				if (_consistent)
 				{
 					_sqlMapper.CommitTransaction();
+                    _isTransactionOpen = false;
 				}
 				else
 				{
 					if (_connection.State != ConnectionState.Closed)
 					{
 						_sqlMapper.RollBackTransaction();
+                        _isTransactionOpen = false;
 					}
 				}
 			}
