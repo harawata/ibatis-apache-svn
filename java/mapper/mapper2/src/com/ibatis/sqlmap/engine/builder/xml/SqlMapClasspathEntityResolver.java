@@ -65,7 +65,7 @@ public class SqlMapClasspathEntityResolver implements EntityResolver {
     InputSource source = null;
     try {
       String path = (String) doctypeMap.get(publicId);
-      source = getInputSource(path, source);      
+      source = getInputSource(path, source);
       if (source == null) {
         path = (String) doctypeMap.get(systemId);
         source = getInputSource(path, source);

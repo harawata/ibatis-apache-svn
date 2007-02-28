@@ -25,7 +25,7 @@ import java.util.List;
 public class SelectKeyStatement extends SelectStatement {
 
   private String keyProperty;
-  private boolean after;
+  private boolean runAfterSQL;
 
   public String getKeyProperty() {
     return keyProperty;
@@ -35,12 +35,12 @@ public class SelectKeyStatement extends SelectStatement {
     this.keyProperty = keyProperty;
   }
 
-  public boolean isAfter() {
-    return after;
+  public boolean isRunAfterSQL() {
+    return runAfterSQL;
   }
 
-  public void setAfter(boolean after) {
-    this.after = after;
+  public void setRunAfterSQL(boolean runAfterSQL) {
+    this.runAfterSQL = runAfterSQL;
   }
 
   public List executeQueryForList(RequestScope request, Transaction trans, Object parameterObject, int skipResults, int maxResults)

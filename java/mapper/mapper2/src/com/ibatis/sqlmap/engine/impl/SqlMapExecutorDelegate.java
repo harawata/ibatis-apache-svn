@@ -438,7 +438,7 @@ public class SqlMapExecutorDelegate {
         selectKeyStatement = ((InsertStatement) ms).getSelectKeyStatement();
       }
 
-      if (selectKeyStatement != null && !selectKeyStatement.isAfter()) {
+      if (selectKeyStatement != null && !selectKeyStatement.isRunAfterSQL()) {
         generatedKey = executeSelectKey(session, trans, ms, param);
       }
 
@@ -449,7 +449,7 @@ public class SqlMapExecutorDelegate {
         pushRequest(request);
       }
 
-      if (selectKeyStatement != null && selectKeyStatement.isAfter()) {
+      if (selectKeyStatement != null && selectKeyStatement.isRunAfterSQL()) {
         generatedKey = executeSelectKey(session, trans, ms, param);
       }
 
