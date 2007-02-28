@@ -1,7 +1,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -35,7 +35,7 @@ namespace IBatisNet.Common
 	/// <summary>
 	/// Summary description for DataSourceDeSerializer.
 	/// </summary>
-	public class DataSourceDeSerializer
+	public sealed class DataSourceDeSerializer
 	{
 		/// <summary>
 		/// Deserialize a DataSource object

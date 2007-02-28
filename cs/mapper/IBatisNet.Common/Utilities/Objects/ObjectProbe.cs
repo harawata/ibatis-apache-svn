@@ -36,7 +36,7 @@ namespace IBatisNet.Common.Utilities.Objects
 	/// <summary>
 	/// Description résumée de ObjectProbe.
 	/// </summary>
-	public class ObjectProbe
+	public sealed class ObjectProbe
 	{
 		private static ArrayList _simpleTypeMap = new ArrayList();
 

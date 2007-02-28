@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -27,7 +27,6 @@
 
 using System;
 using System.Text;
-using System.Collections.Specialized;
 
 using IBatisNet.DataMapper.Configuration.ParameterMapping;
 
@@ -36,7 +35,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 	/// <summary>
 	/// Summary description for SqlGenerator.
 	/// </summary>
-	public class SqlGenerator
+	public sealed class SqlGenerator
 	{
 		/// <summary>
 		/// Creates SQL command text for a specified statement

@@ -31,7 +31,7 @@ namespace IBatisNet.DataMapper.MappedStatements.PostSelectStrategy
 	/// <summary>
 	/// Factory to get <see cref="IPostSelectStrategy"/> implementation.
 	/// </summary>
-	public class PostSelectStrategyFactory
+	public sealed class PostSelectStrategyFactory
 	{
 		private static IDictionary _strategies = new HybridDictionary();
 

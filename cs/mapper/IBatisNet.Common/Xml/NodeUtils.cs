@@ -7,7 +7,7 @@ namespace IBatisNet.Common.Xml
 	/// <summary>
 	/// Summary description for NodeUtils.
 	/// </summary>
-	public class NodeUtils
+	public sealed class NodeUtils
 	{
 
 		/// <summary>

@@ -30,7 +30,7 @@ namespace IBatisNet.DataMapper.MappedStatements.ArgumentStrategy
 	/// <summary>
 	/// Factory to get <see cref="IArgumentStrategy"/> implementation.
 	/// </summary>
-	public class ArgumentStrategyFactory
+	public sealed class ArgumentStrategyFactory
 	{
 		private static IArgumentStrategy _defaultStrategy = null;
 		private static IArgumentStrategy _resultMapStrategy = null;

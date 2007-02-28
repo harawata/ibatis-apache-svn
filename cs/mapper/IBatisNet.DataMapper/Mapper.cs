@@ -32,7 +32,7 @@ namespace IBatisNet.DataMapper
 	/// <summary>
 	/// A singleton class to access the default SqlMapper defined by the SqlMap.Config
 	/// </summary>
-	public class Mapper
+	public sealed class Mapper
 	{
 		#region Fields
         private static volatile ISqlMapper _mapper = null;

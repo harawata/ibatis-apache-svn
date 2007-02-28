@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -34,7 +34,7 @@ namespace IBatisNet.DataMapper.Commands
 	/// <summary>
 	/// Summary description for PreparedCommandFactory.
 	/// </summary>
-	internal class PreparedCommandFactory
+	internal sealed class PreparedCommandFactory
 	{
 		/// <summary>
 		/// Get an IPreparedCommand.

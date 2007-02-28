@@ -35,7 +35,7 @@ namespace IBatisNet.DataMapper.MappedStatements.PropertyStrategy
 	/// <summary>
 	/// Factory to get <see cref="IPropertyStrategy"/> implementation.
 	/// </summary>
-	public class PropertyStrategyFactory
+	public sealed class PropertyStrategyFactory
 	{
 		private static IPropertyStrategy _defaultStrategy = null;
         private static IPropertyStrategy _resultMapStrategy = null;

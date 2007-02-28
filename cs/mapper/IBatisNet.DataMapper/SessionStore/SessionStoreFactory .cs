@@ -32,7 +32,7 @@ namespace IBatisNet.DataMapper.SessionStore
 	/// When running in the context of a windows application the session object is 
 	/// stored via CallContext.
 	/// </summary>
-	public class SessionStoreFactory
+	public sealed class SessionStoreFactory
 	{
 
         /// <summary>

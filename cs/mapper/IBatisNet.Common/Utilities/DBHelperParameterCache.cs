@@ -37,7 +37,7 @@ namespace IBatisNet.Common.Utilities
 	/// static cache of procedure parameters, and the
 	/// ability to discover parameters for stored procedures at run-time.
 	/// </summary>
-	public class DBHelperParameterCache
+	public sealed class DBHelperParameterCache
 	{
 		//Since this class provides only static methods, make the default constructor private to prevent 
 		//instances from being created.

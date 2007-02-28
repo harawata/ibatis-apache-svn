@@ -37,7 +37,7 @@ namespace IBatisNet.Common.Utilities
 	/// <summary>
 	/// Summary description for HashCodeProvider.
 	/// </summary>
-	public class HashCodeProvider
+	public sealed class HashCodeProvider
 	{
 		private static MethodInfo getHashCodeMethodInfo = null;
 

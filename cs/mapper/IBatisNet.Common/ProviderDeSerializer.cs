@@ -35,7 +35,7 @@ namespace IBatisNet.Common
 	/// <summary>
 	/// Summary description for ProviderDeSerializer.
 	/// </summary>
-	public class ProviderDeSerializer
+	public sealed class ProviderDeSerializer
 	{
 
         /// <summary>

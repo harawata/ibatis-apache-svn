@@ -32,7 +32,7 @@ namespace IBatisNet.DataMapper.Commands
 	/// For <see cref="IDataReader"/> which don't support M.A.R.S, wraps the current <see cref="IDataReader"/>
 	/// in an <see cref="InMemoryDataReader"/>.
 	/// </summary>
-	public class DataReaderTransformer
+	public sealed class DataReaderTransformer
 	{
 
 		/// <summary>

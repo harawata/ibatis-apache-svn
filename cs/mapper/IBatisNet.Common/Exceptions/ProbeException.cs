@@ -2,7 +2,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Header: $
- * $Revision: $
+ * $Revision$
  * $Date$
  * 
  * iBATIS.NET Data Mapper
@@ -32,6 +32,7 @@ namespace IBatisNet.Common.Exceptions
 	/// <summary>
 	/// Summary description for ProbeException.
 	/// </summary>
+    [Serializable]
 	public class ProbeException  : IBatisNetException
 	{
 		/// <summary>
