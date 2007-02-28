@@ -1,54 +1,46 @@
 package com.ibatis.sqlmap.engine.builder.xml;
 
-import org.w3c.dom.*;
-import com.ibatis.sqlmap.engine.mapping.statement.*;
+import com.ibatis.common.xml.NodeletUtils;
+import com.ibatis.sqlmap.engine.mapping.parameter.InlineParameterMapParser;
+import com.ibatis.sqlmap.engine.mapping.sql.*;
 import com.ibatis.sqlmap.engine.mapping.sql.dynamic.DynamicSql;
 import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.*;
-import com.ibatis.sqlmap.engine.mapping.sql.SqlText;
-import com.ibatis.sqlmap.engine.mapping.parameter.InlineParameterMapParser;
-import com.ibatis.common.xml.NodeletUtils;
+import com.ibatis.sqlmap.engine.mapping.sql.raw.RawSql;
+import com.ibatis.sqlmap.engine.conifg.*;
+import org.w3c.dom.CharacterData;
+import org.w3c.dom.*;
 
 import java.util.Properties;
 
-public class XMLStatementProcessor implements StatementProcessor {
+public class XMLSqlSource implements SqlSource {
 
   private static final InlineParameterMapParser PARAM_PARSER = new InlineParameterMapParser();
 
-  private ParserState state;
+  private SqlMapConfiguration config;
   private Node parentNode;
 
-
-  public XMLStatementProcessor(ParserState state, Node parentNode) {
-    this.state = state;
+  public XMLSqlSource(SqlMapConfiguration config, Node parentNode) {
+    this.config = config;
     this.parentNode = parentNode;
   }
 
-  public void processStatement(GeneralStatement statement) {
-    state.errorContext.setActivity("processing an SQL statement");
+  public Sql getSql() {
+    config.getErrorContext().setActivity("processing an SQL statement");
 
     boolean isDynamic = false;
-    DynamicSql dynamic = new DynamicSql(state.client.getDelegate());
     StringBuffer sqlBuffer = new StringBuffer();
-
+    DynamicSql dynamic = new DynamicSql(config.getClient().getDelegate());
     isDynamic = parseDynamicTags(parentNode, dynamic, sqlBuffer, isDynamic, false);
-
-    if (statement instanceof InsertStatement) {
-      InsertStatement insertStatement = ((InsertStatement) statement);
-      SelectKeyStatement selectKeyStatement = findAndParseSelectKeyStatement(parentNode, statement.getId(), statement.getParameterClass());
-      insertStatement.setSelectKeyStatement(selectKeyStatement);
-    }
-
     String sqlStatement = sqlBuffer.toString();
     if (isDynamic) {
-      statement.setSql(dynamic);
+      return dynamic;
     } else {
-      state.applyInlineParameterMap(statement, sqlStatement);
+      return new RawSql(sqlStatement);
     }
-
   }
 
   private boolean parseDynamicTags(Node node, DynamicParent dynamic, StringBuffer sqlBuffer, boolean isDynamic, boolean postParseRequired) {
-    state.errorContext.setActivity("parsing dynamic SQL tags");
+    config.getErrorContext().setActivity("parsing dynamic SQL tags");
 
     NodeList children = node.getChildNodes();
     for (int i = 0; i < children.getLength(); i++) {
@@ -58,7 +50,7 @@ public class XMLStatementProcessor implements StatementProcessor {
           || child.getNodeType() == Node.TEXT_NODE) {
 
         String data = ((CharacterData) child).getData();
-        data = NodeletUtils.parsePropertyTokens(data, state.globalProps);
+        data = NodeletUtils.parsePropertyTokens(data, config.globalProps);
 
         SqlText sqlText;
 
@@ -67,7 +59,7 @@ public class XMLStatementProcessor implements StatementProcessor {
           sqlText.setPostParseRequired(postParseRequired);
           sqlText.setText(data);
         } else {
-          sqlText = PARAM_PARSER.parseInlineParameterMap(state.client.getDelegate().getTypeHandlerFactory(), data, null);
+          sqlText = PARAM_PARSER.parseInlineParameterMap(config.getClient().getDelegate().getTypeHandlerFactory(), data, null);
           sqlText.setPostParseRequired(postParseRequired);
         }
 
@@ -75,19 +67,19 @@ public class XMLStatementProcessor implements StatementProcessor {
 
         sqlBuffer.append(data);
       } else if ("include".equals(nodeName)) {
-        Properties attributes = NodeletUtils.parseAttributes(child, state.globalProps);
+        Properties attributes = NodeletUtils.parseAttributes(child, config.globalProps);
         String refid = (String) attributes.get("refid");
-        Node includeNode = (Node) state.sqlIncludes.get(refid);
+        Node includeNode = (Node) config.sqlIncludes.get(refid);
         if (includeNode == null) {
-          String nsrefid = state.applyNamespace(refid);
-          includeNode = (Node) state.sqlIncludes.get(nsrefid);
+          String nsrefid = config.applyNamespace(refid);
+          includeNode = (Node) config.sqlIncludes.get(nsrefid);
           if (includeNode == null) {
             throw new RuntimeException("Could not find SQL statement to include with refid '" + refid + "'");
           }
         }
         isDynamic = parseDynamicTags(includeNode, dynamic, sqlBuffer, isDynamic, false);
       } else {
-        state.errorContext.setMoreInfo("Check the dynamic tags.");
+        config.getErrorContext().setMoreInfo("Check the dynamic tags.");
 
         SqlTagHandler handler = SqlTagHandlerFactory.getSqlTagHandler(nodeName);
         if (handler != null) {
@@ -97,7 +89,7 @@ public class XMLStatementProcessor implements StatementProcessor {
           tag.setName(nodeName);
           tag.setHandler(handler);
 
-          Properties attributes = NodeletUtils.parseAttributes(child, state.globalProps);
+          Properties attributes = NodeletUtils.parseAttributes(child, config.globalProps);
 
           tag.setPrependAttr(attributes.getProperty("prepend"));
           tag.setPropertyAttr(attributes.getProperty("property"));
@@ -132,40 +124,8 @@ public class XMLStatementProcessor implements StatementProcessor {
         }
       }
     }
-    state.errorContext.setMoreInfo(null);
+    config.getErrorContext().setMoreInfo(null);
     return isDynamic;
   }
 
-  private SelectKeyStatement findAndParseSelectKeyStatement(Node n, String statementId, Class parameterClass) {
-    state.errorContext.setActivity("parsing select key tags");
-
-    SelectKeyStatement selectKeyStatement = null;
-
-    boolean foundSQLFirst = false;
-
-    NodeList children = n.getChildNodes();
-    for (int i = 0; i < children.getLength(); i++) {
-      Node child = children.item(i);
-      if (child.getNodeType() == Node.CDATA_SECTION_NODE
-          || child.getNodeType() == Node.TEXT_NODE) {
-        String data = ((CharacterData) child).getData();
-        if (data.trim().length() > 0) {
-          foundSQLFirst = true;
-        }
-      } else if (child.getNodeType() == Node.ELEMENT_NODE
-          && "selectKey".equals(child.getNodeName())) {
-
-        // get attributes
-        Properties attributes = NodeletUtils.parseAttributes(child, state.globalProps);
-        String keyPropName = attributes.getProperty("keyProperty");
-        String resultClassName = attributes.getProperty("resultClass");
-        String type = attributes.getProperty("type");
-
-        selectKeyStatement = state.prepareSelectKeyStatement(new XMLStatementProcessor(state, child), resultClassName, statementId, keyPropName, foundSQLFirst, type, parameterClass);
-        break;
-      }
-    }
-    state.errorContext.setMoreInfo(null);
-    return selectKeyStatement;
-  }
 }
