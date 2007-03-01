@@ -419,7 +419,7 @@ namespace IBatisNet.Common.Utilities.Objects
         /// <param name="memberName">Name of the member.</param>
         /// <param name="accessorFactory">The accessor factory.</param>
         /// <returns>The member's value</returns>
-		protected static object GetMember(object obj, string memberName,
+		public static object GetMember(object obj, string memberName,
             AccessorFactory accessorFactory)
 		{
 			try 
@@ -526,7 +526,7 @@ namespace IBatisNet.Common.Utilities.Objects
         /// <param name="memberName">Name of the member.</param>
         /// <param name="memberValue">The member value.</param>
         /// <param name="accessorFactory">The accessor factory.</param>
-		protected static void SetMember(object obj, string memberName, object memberValue,
+		public static void SetMember(object obj, string memberName, object memberValue,
             AccessorFactory accessorFactory)
 		{
 			try 

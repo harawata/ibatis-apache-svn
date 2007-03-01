@@ -42,7 +42,7 @@ namespace IBatisNet.DataMapper
 		/// 
 		/// </summary>
 		/// <param name="obj"></param>
-		protected static void Configure (object obj)
+		public static void Configure (object obj)
 		{
 			_mapper = null;
 		}
@@ -50,7 +50,7 @@ namespace IBatisNet.DataMapper
 		/// <summary>
 		/// Init the 'default' SqlMapper defined by the SqlMap.Config file.
 		/// </summary>
-		protected static void InitMapper()
+		public static void InitMapper()
 		{
 			ConfigureHandler handler = new ConfigureHandler (Configure);
 			DomSqlMapBuilder builder = new DomSqlMapBuilder();
