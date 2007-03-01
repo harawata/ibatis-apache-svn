@@ -32,4 +32,4 @@ using System.Reflection;
 [assembly: AssemblyDescription("Data Access Object (DAO) design pattern implementation.")]
 
 
-[assembly: AssemblyVersion("1.9.0")]
+[assembly: AssemblyVersion("1.9.1")]
