@@ -1,7 +1,17 @@
 IBatisNet Change Log
 
 ------------------------------
-1.6.0 - BETA
+1.6.1 - 01/March/2007 BETA 
+------------------------------
+Issues
+- IBATISNET-212 FIXED  Add the ability to track Open Transactions via IDalSession      
+- IBATISNET-210 FIXED  Finding properties on interfaces which "inherites" other interfaces      
+- IBATISNET-206 FIXED  groupBy incorrectly handles left outer join results where right part is empty      
+- IBATISNET-207 FIXED  Typos in documentation section 3.5.2.4      
+- IBATISNET-209 FIXED  Improved verification on groupBy process configuration  
+ 
+------------------------------
+1.6.0 - 01/Feb/2007 BETA 
 ------------------------------
 Issues
 - IBATISNET-204 : DataMapper SqlMap.xsd SqlMap elements order 
