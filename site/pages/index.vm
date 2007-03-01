@@ -49,6 +49,34 @@
 
   <h2>News</h2>
 
+ <h3>iBATIS.NET DataMapper 1.6.1 and DataAccess 1.9.1 Released [Status: Beta]</h3>
+<p>(March 1, 2007) The iBATIS.NET team is proud to announce that the BETA release of DataAccess V1.9.1 and DataMapper V1.6.1 are now available.</p>
+ 
+<p>This release includes bug fixes and enhancements.<br/> 
+ 
+<p>Vote to General Availability status is expecting in two weeks.
+Thanks once again for your feedback. Enjoy!</p>
+
+<a onclick="ShowHide('DataMapper161')" class="release">Show/Hide Release Notes - Version DataMapper 1.6.1</a>
+<div style="display:none" id="DataMapper161"  class="release">       
+    
+<h4>Bug</h4>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-206'>IBATISNET-206</a>] - groupBy incorrectly handles left outer join results where right part is empty</li>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-207'>IBATISNET-207</a>] - Typos in documentation section 3.5.2.4</li>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-210'>IBATISNET-210</a>] - Finding properties on interfaces which "inherites" other interfaces</li>
+</ul>
+    
+<h4>Improvement</h4>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-209'>IBATISNET-209</a>] - Improved verification on groupBy process configuration</li>
+<li>[<a href='https://issues.apache.org/jira/browse/IBATISNET-212'>IBATISNET-212</a>] - Add the ability to track Open Transactions via IDalSession</li>
+</ul>
+
+</div>
+<p/>
+<p><b><a href="dotnetdownloads.cgi">Download iBATIS.NET DataMapper 1.6.1 and DataAccess 1.9.1 (BETA)!</a></b></p>
+================================================================
   <h3>iBATIS for Java 2.3.0 General Availability</h3>
   <p>(February 11, 2007) The votes are in an iBATIS for Java 2.3.0 is promoted to
      Apache general availability status.  This release includes several bug fixes
