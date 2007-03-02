@@ -42,8 +42,7 @@ public class SqlMapConfiguration {
   private static final InlineParameterMapParser PARAM_PARSER = new InlineParameterMapParser();
 
   private ErrorContext errorContext = new ErrorContext();
-  private String resource = "SQL Map Config XML File";
-
+  
   private ExtendedSqlMapClient client;
   private SqlMapExecutorDelegate delegate;
   private TypeHandlerFactory typeHandlerFactory;
@@ -51,33 +50,24 @@ public class SqlMapConfiguration {
   private Integer defaultStatementTimeout;
   private DataSource dataSource;
 
+  // TODO: Move to ResultMapConfig
   private BasicResultMap resultMap;
   private List resultMappingList;
   private int resultMappingIndex;
   private Discriminator discriminator;
 
+  // TODO: Move to ParameterMapConfig
   private BasicParameterMap parameterMap;
   private List parameterMappingList;
 
-  public Properties globalProps = new Properties();
-  public Properties txProps = new Properties();
-  public Properties dsProps = new Properties();
-
-  public boolean useStatementNamespaces;
-
-  public String namespace;
-
+  // TODO: Move to CacheModelConfig
   public CacheModel cacheModel;
   public Properties cacheProps;
-
-  public Map sqlIncludes = new HashMap();
-  public MappedStatement currentStatement;
 
   public SqlMapConfiguration() {
     delegate = new SqlMapExecutorDelegate();
     typeHandlerFactory = delegate.getTypeHandlerFactory();
     client = new SqlMapClientImpl(delegate);
-    useStatementNamespaces = false;
     registerDefaultTypeAliases();
   }
 
@@ -92,6 +82,7 @@ public class SqlMapConfiguration {
   public SqlMapExecutorDelegate getDelegate() {
     return delegate;
   }
+
 
   //
   // Utility Methods
@@ -146,13 +137,6 @@ public class SqlMapConfiguration {
     return handler;
   }
 
-  public String applyNamespace(String id) {
-    String newId = id;
-    if (namespace != null && namespace.length() > 0 && id != null && id.indexOf('.') < 0) {
-      newId = namespace + "." + id;
-    }
-    return newId;
-  }
 
   private void registerDefaultTypeAliases() {
     // TRANSACTION ALIASES
@@ -183,32 +167,9 @@ public class SqlMapConfiguration {
   // SQL Map Config methods
   //
 
-  public void setGlobalProperties(String resource, String url) {
-    errorContext.setActivity("loading global properties");
-    try {
-      Properties props;
-      if (resource != null) {
-        errorContext.setResource(resource);
-        props = Resources.getResourceAsProperties(resource);
-      } else if (url != null) {
-        errorContext.setResource(url);
-        props = Resources.getUrlAsProperties(url);
-      } else {
-        throw new RuntimeException("The " + "properties" + " element requires either a resource or a url attribute.");
-      }
-
-      // Merge properties with those passed in programmatically
-      if (props != null) {
-        props.putAll(globalProps);
-        globalProps = props;
-      }
-    } catch (Exception e) {
-      throw new RuntimeException("Error loading properties.  Cause: " + e, e);
-    }
-  }
 
   // TODO: Split into separate methods
-  public void setSettings(boolean classInfoCacheEnabled, boolean lazyLoadingEnabled, boolean statementCachingEnabled, boolean cacheModelsEnabled, boolean enhancementEnabled, boolean useStatementNamespaces, Integer maxTransactions, Integer maxRequests, Integer maxSessions, Integer defaultTimeout) {
+  public void setSettings(boolean classInfoCacheEnabled, boolean lazyLoadingEnabled, boolean statementCachingEnabled, boolean cacheModelsEnabled, boolean enhancementEnabled, Integer maxTransactions, Integer maxRequests, Integer maxSessions, Integer defaultTimeout) {
     errorContext.setActivity("loading settings properties");
     ClassInfo.setCacheEnabled(classInfoCacheEnabled);
     client.getDelegate().setLazyLoadingEnabled(lazyLoadingEnabled);
@@ -220,7 +181,6 @@ public class SqlMapConfiguration {
       enhancementEnabled = false;
     }
     client.getDelegate().setEnhancementEnabled(enhancementEnabled);
-    this.useStatementNamespaces = useStatementNamespaces;
 
     if (maxTransactions != null && maxTransactions.intValue() > 0) {
       client.getDelegate().setMaxTransactions(maxTransactions.intValue());
@@ -446,7 +406,6 @@ public class SqlMapConfiguration {
   public void addParameterMapping(String callback, String javaType, String resultMap, String propertyName, String jdbcType, String type, String nullValue, String mode, String numericScale) {
     callback = typeHandlerFactory.resolveAlias(callback);
     javaType = typeHandlerFactory.resolveAlias(javaType);
-    resultMap = applyNamespace(resultMap);
 
     errorContext.setObjectId(propertyName + " mapping of the " + parameterMap.getId() + " parameter map");
 
@@ -581,7 +540,7 @@ public class SqlMapConfiguration {
     if (discriminator == null) {
       throw new RuntimeException("The discriminator is null, but somehow a subMap was reached.  This is a bug.");
     }
-    discriminator.addSubMap(value, applyNamespace(resultMap));
+    discriminator.addSubMap(value, resultMap);
   }
 
   // TODO: pass into addResultMap
@@ -728,33 +687,17 @@ public class SqlMapConfiguration {
   // SQL Statement methods
   //
 
-  public MappedStatement prepareGeneralStatement(final String sql, GeneralStatement statement, String id, String resultMapName, String parameterMapName, String resultSetType, String fetchSize, String parameterClassName, String resultClassName, String allowRemapping, String xmlResultName, String timeout, String cacheModelName) {
-    return prepareGeneralStatement(new SqlSource() {
-      public Sql getSql() {
-        return new RawSql(sql);
-      }
-    }, statement, id, resultMapName, parameterMapName, resultSetType,fetchSize, parameterClassName, resultClassName, allowRemapping, xmlResultName, timeout, cacheModelName);
-  }
-
   // TODO:  Clean up method signature
-  public MappedStatement prepareGeneralStatement(SqlSource processor, GeneralStatement statement, String id, String resultMapName, String parameterMapName, String resultSetType, String fetchSize, String parameterClassName, String resultClassName, String allowRemapping, String xmlResultName, String timeout, String cacheModelName) {
+  public MappedStatement prepareGeneralStatement(SqlSource processor, GeneralStatement statement, String id, String resultMapName, String[] additionalResultMapNames, String parameterMapName, String resultSetType, String fetchSize, String parameterClassName, String resultClassName, String[] additionalResultClasses, String allowRemapping, String xmlResultName, String timeout, String cacheModelName) {
     errorContext.setActivity("parsing a mapped statement");
-    if (useStatementNamespaces) {
-      id = applyNamespace(id);
-    }
-
-    String[] additionalResultMapNames;
-
     errorContext.setObjectId(id + " statement");
-
     errorContext.setMoreInfo("Check the result map name.");
-    //BasicResultMap resultMap = null;
     if (resultMapName != null) {
-      additionalResultMapNames = getAllButFirstToken(resultMapName);
-      resultMapName = getFirstToken(resultMapName);
-      statement.setResultMap((BasicResultMap) client.getDelegate().getResultMap(applyNamespace(resultMapName)));
-      for (int i = 0; i < additionalResultMapNames.length; i++) {
-        statement.addResultMap((BasicResultMap) client.getDelegate().getResultMap(applyNamespace(additionalResultMapNames[i])));
+      statement.setResultMap((BasicResultMap) client.getDelegate().getResultMap(resultMapName));
+      if (additionalResultMapNames != null) {
+        for (int i = 0; i < additionalResultMapNames.length; i++) {
+          statement.addResultMap((BasicResultMap) client.getDelegate().getResultMap(additionalResultMapNames[i]));
+        }
       }
     }
 
@@ -808,12 +751,12 @@ public class SqlMapConfiguration {
     if (resultMap == null && resultClassName == null) {
       statement.setResultMap(null);
     } else if (resultMap == null) {
-      String firstResultClass = getFirstToken(resultClassName);
-      resultMap = buildAutoResultMap(allowRemapping, statement, firstResultClass, xmlResultName);
+      resultMap = buildAutoResultMap(allowRemapping, statement, resultClassName, xmlResultName);
       statement.setResultMap(resultMap);
-      String[] additionalResultClasses = getAllButFirstToken(resultClassName);
-      for (int i = 0; i < additionalResultClasses.length; i++) {
-        statement.addResultMap(buildAutoResultMap(allowRemapping, statement, additionalResultClasses[i], xmlResultName));
+      if (additionalResultClasses != null) {
+        for (int i = 0; i < additionalResultClasses.length; i++) {
+          statement.addResultMap(buildAutoResultMap(allowRemapping, statement, additionalResultClasses[i], xmlResultName));
+        }
       }
 
     }
@@ -962,18 +905,5 @@ public class SqlMapConfiguration {
     }
   }
 
-  private String getFirstToken(String s) {
-    return new StringTokenizer(s, ", ", false).nextToken();
-  }
-
-  private String[] getAllButFirstToken(String s) {
-    List strings = new ArrayList();
-    StringTokenizer parser = new StringTokenizer(s, ", ", false);
-    parser.nextToken();
-    while (parser.hasMoreTokens()) {
-      strings.add(parser.nextToken());
-    }
-    return (String[]) strings.toArray(new String[strings.size()]);
-  }
 
 }

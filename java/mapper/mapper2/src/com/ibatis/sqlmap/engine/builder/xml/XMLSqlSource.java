@@ -16,20 +16,20 @@ public class XMLSqlSource implements SqlSource {
 
   private static final InlineParameterMapParser PARAM_PARSER = new InlineParameterMapParser();
 
-  private SqlMapConfiguration config;
+  private XmlParserState state;
   private Node parentNode;
 
-  public XMLSqlSource(SqlMapConfiguration config, Node parentNode) {
-    this.config = config;
+  public XMLSqlSource(XmlParserState config, Node parentNode) {
+    this.state = config;
     this.parentNode = parentNode;
   }
 
   public Sql getSql() {
-    config.getErrorContext().setActivity("processing an SQL statement");
+    state.getConfig().getErrorContext().setActivity("processing an SQL statement");
 
     boolean isDynamic = false;
     StringBuffer sqlBuffer = new StringBuffer();
-    DynamicSql dynamic = new DynamicSql(config.getClient().getDelegate());
+    DynamicSql dynamic = new DynamicSql(state.getConfig().getClient().getDelegate());
     isDynamic = parseDynamicTags(parentNode, dynamic, sqlBuffer, isDynamic, false);
     String sqlStatement = sqlBuffer.toString();
     if (isDynamic) {
@@ -40,7 +40,7 @@ public class XMLSqlSource implements SqlSource {
   }
 
   private boolean parseDynamicTags(Node node, DynamicParent dynamic, StringBuffer sqlBuffer, boolean isDynamic, boolean postParseRequired) {
-    config.getErrorContext().setActivity("parsing dynamic SQL tags");
+    state.getConfig().getErrorContext().setActivity("parsing dynamic SQL tags");
 
     NodeList children = node.getChildNodes();
     for (int i = 0; i < children.getLength(); i++) {
@@ -50,7 +50,7 @@ public class XMLSqlSource implements SqlSource {
           || child.getNodeType() == Node.TEXT_NODE) {
 
         String data = ((CharacterData) child).getData();
-        data = NodeletUtils.parsePropertyTokens(data, config.globalProps);
+        data = NodeletUtils.parsePropertyTokens(data, state.getGlobalProps());
 
         SqlText sqlText;
 
@@ -59,7 +59,7 @@ public class XMLSqlSource implements SqlSource {
           sqlText.setPostParseRequired(postParseRequired);
           sqlText.setText(data);
         } else {
-          sqlText = PARAM_PARSER.parseInlineParameterMap(config.getClient().getDelegate().getTypeHandlerFactory(), data, null);
+          sqlText = PARAM_PARSER.parseInlineParameterMap(state.getConfig().getClient().getDelegate().getTypeHandlerFactory(), data, null);
           sqlText.setPostParseRequired(postParseRequired);
         }
 
@@ -67,19 +67,19 @@ public class XMLSqlSource implements SqlSource {
 
         sqlBuffer.append(data);
       } else if ("include".equals(nodeName)) {
-        Properties attributes = NodeletUtils.parseAttributes(child, config.globalProps);
+        Properties attributes = NodeletUtils.parseAttributes(child, state.getGlobalProps());
         String refid = (String) attributes.get("refid");
-        Node includeNode = (Node) config.sqlIncludes.get(refid);
+        Node includeNode = (Node) state.getSqlIncludes().get(refid);
         if (includeNode == null) {
-          String nsrefid = config.applyNamespace(refid);
-          includeNode = (Node) config.sqlIncludes.get(nsrefid);
+          String nsrefid = state.applyNamespace(refid);
+          includeNode = (Node) state.getSqlIncludes().get(nsrefid);
           if (includeNode == null) {
             throw new RuntimeException("Could not find SQL statement to include with refid '" + refid + "'");
           }
         }
         isDynamic = parseDynamicTags(includeNode, dynamic, sqlBuffer, isDynamic, false);
       } else {
-        config.getErrorContext().setMoreInfo("Check the dynamic tags.");
+        state.getConfig().getErrorContext().setMoreInfo("Check the dynamic tags.");
 
         SqlTagHandler handler = SqlTagHandlerFactory.getSqlTagHandler(nodeName);
         if (handler != null) {
@@ -89,7 +89,7 @@ public class XMLSqlSource implements SqlSource {
           tag.setName(nodeName);
           tag.setHandler(handler);
 
-          Properties attributes = NodeletUtils.parseAttributes(child, config.globalProps);
+          Properties attributes = NodeletUtils.parseAttributes(child, state.getGlobalProps());
 
           tag.setPrependAttr(attributes.getProperty("prepend"));
           tag.setPropertyAttr(attributes.getProperty("property"));
@@ -124,7 +124,7 @@ public class XMLSqlSource implements SqlSource {
         }
       }
     }
-    config.getErrorContext().setMoreInfo(null);
+    state.getConfig().getErrorContext().setMoreInfo(null);
     return isDynamic;
   }
 
