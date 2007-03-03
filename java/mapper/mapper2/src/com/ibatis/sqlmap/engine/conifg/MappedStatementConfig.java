@@ -6,6 +6,7 @@ import com.ibatis.common.resources.Resources;
 import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.engine.cache.CacheModel;
 import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
+import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
 import com.ibatis.sqlmap.engine.mapping.parameter.BasicParameterMap;
 import com.ibatis.sqlmap.engine.mapping.parameter.InlineParameterMapParser;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
@@ -27,17 +28,17 @@ import java.util.List;
 public class MappedStatementConfig {
   private static final Probe PROBE = ProbeFactory.getProbe();
   private static final InlineParameterMapParser PARAM_PARSER = new InlineParameterMapParser();
-  private SqlMapConfiguration config;
   private ErrorContext errorContext;
   private ExtendedSqlMapClient client;
+  private SqlMapExecutorDelegate delegate;
   private TypeHandlerFactory typeHandlerFactory;
   private MappedStatement mappedStatement;
   private MappedStatement rootStatement;
 
   MappedStatementConfig(SqlMapConfiguration config, SqlSource processor, GeneralStatement statement, String id, String resultMapName, String[] additionalResultMapNames, String parameterMapName, String resultSetType, String fetchSize, String parameterClassName, String resultClassName, String[] additionalResultClasses, String allowRemapping, String xmlResultName, String timeout, String cacheModelName) {
-    this.config = config;
     this.errorContext = config.getErrorContext();
     this.client = config.getClient();
+    this.delegate = client.getDelegate();
     this.typeHandlerFactory = config.getTypeHandlerFactory();
     errorContext.setActivity("parsing a mapped statement");
     errorContext.setObjectId(id + " statement");
@@ -175,6 +176,10 @@ public class MappedStatementConfig {
     } else {
       throw new SqlMapException("You cant set a select key statement on statement named " + rootStatement.getId() + " because it is not an InsertStatement.");
     }
+  }
+
+  public void saveMappedStatement() {
+    delegate.addMappedStatement(mappedStatement);
   }
 
   private void setSqlForStatement(GeneralStatement statement, Sql sql) {
