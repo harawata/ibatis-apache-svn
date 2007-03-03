@@ -7,6 +7,9 @@ import com.ibatis.common.xml.NodeletUtils;
 import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.engine.cache.CacheModel;
 import com.ibatis.sqlmap.engine.mapping.statement.*;
+import com.ibatis.sqlmap.engine.conifg.ParameterMapConfig;
+import com.ibatis.sqlmap.engine.conifg.ResultMapConfig;
+import com.ibatis.sqlmap.engine.conifg.CacheModelConfig;
 import org.w3c.dom.Node;
 
 import java.io.InputStream;
@@ -87,12 +90,6 @@ public class SqlMapParser {
   private void addCacheModelNodelets() {
     parser.addNodelet("/sqlMap/cacheModel", new Nodelet() {
       public void process(Node node) throws Exception {
-        state.getConfig().cacheModel = new CacheModel();
-        state.getConfig().cacheProps = new Properties();
-      }
-    });
-    parser.addNodelet("/sqlMap/cacheModel/end()", new Nodelet() {
-      public void process(Node node) throws Exception {
         Properties attributes = NodeletUtils.parseAttributes(node, state.getGlobalProps());
         String id = state.applyNamespace(attributes.getProperty("id"));
         String type = attributes.getProperty("type");
@@ -100,7 +97,13 @@ public class SqlMapParser {
         Boolean readOnly = readOnlyAttr == null || readOnlyAttr.length() <= 0 ? null : new Boolean("true".equals(readOnlyAttr));
         String serializeAttr = attributes.getProperty("serialize");
         Boolean serialize = serializeAttr == null || serializeAttr.length() <= 0 ? null : new Boolean("true".equals(serializeAttr));
-        state.getConfig().addCacheModel(id, type, readOnly, serialize, state.getConfig().cacheProps);
+        CacheModelConfig cacheConfig = state.getConfig().newCacheModelConfig(id, type, readOnly, serialize);
+        state.setCacheConfig(cacheConfig);
+      }
+    });
+    parser.addNodelet("/sqlMap/cacheModel/end()", new Nodelet() {
+      public void process(Node node) throws Exception {
+        state.getCacheConfig().saveCacheModel();
       }
     });
     parser.addNodelet("/sqlMap/cacheModel/property", new Nodelet() {
@@ -109,14 +112,14 @@ public class SqlMapParser {
         Properties attributes = NodeletUtils.parseAttributes(node, state.getGlobalProps());
         String name = attributes.getProperty("name");
         String value = NodeletUtils.parsePropertyTokens(attributes.getProperty("value"), state.getGlobalProps());
-        state.getConfig().cacheProps.put(name, value);
+        state.getCacheConfig().setProperty(name, value);
       }
     });
     parser.addNodelet("/sqlMap/cacheModel/flushOnExecute", new Nodelet() {
       public void process(Node node) throws Exception {
         Properties childAttributes = NodeletUtils.parseAttributes(node, state.getGlobalProps());
         String statement = childAttributes.getProperty("statement");
-        state.getConfig().addFlushTriggerStatement(statement);
+        state.getCacheConfig().addFlushTriggerStatement(statement);
       }
     });
     parser.addNodelet("/sqlMap/cacheModel/flushInterval", new Nodelet() {
@@ -127,9 +130,9 @@ public class SqlMapParser {
           int seconds = childAttributes.getProperty("seconds") == null ? 0 : Integer.parseInt(childAttributes.getProperty("seconds"));
           int minutes = childAttributes.getProperty("minutes") == null ? 0 : Integer.parseInt(childAttributes.getProperty("minutes"));
           int hours = childAttributes.getProperty("hours") == null ? 0 : Integer.parseInt(childAttributes.getProperty("hours"));
-          state.getConfig().setFlushInterval(hours, minutes, seconds, milliseconds);
+          state.getCacheConfig().setFlushInterval(hours, minutes, seconds, milliseconds);
         } catch (NumberFormatException e) {
-          throw new RuntimeException("Error building cache '" + state.getConfig().cacheModel.getId() + "' in '" + "resourceNAME" + "'.  Flush interval milliseconds must be a valid long integer value.  Cause: " + e, e);
+          throw new RuntimeException("Error building cache in '" + "resourceNAME" + "'.  Flush interval milliseconds must be a valid long integer value.  Cause: " + e, e);
         }
       }
     });
@@ -138,8 +141,8 @@ public class SqlMapParser {
   private void addParameterMapNodelets() {
     parser.addNodelet("/sqlMap/parameterMap/end()", new Nodelet() {
       public void process(Node node) throws Exception {
-
-        state.getConfig().finalizeParameterMap();
+        state.getParamConfig().saveParameterMap();
+        state.setParamConfig(null);
       }
     });
     parser.addNodelet("/sqlMap/parameterMap", new Nodelet() {
@@ -147,8 +150,8 @@ public class SqlMapParser {
         Properties attributes = NodeletUtils.parseAttributes(node, state.getGlobalProps());
         String id = state.applyNamespace(attributes.getProperty("id"));
         String parameterClassName = attributes.getProperty("class");
-
-        state.getConfig().addParameterMap(id, parameterClassName);
+        ParameterMapConfig paramConf = state.getConfig().newParameterMapConfig(id, parameterClassName);
+        state.setParamConfig(paramConf);
       }
     });
     parser.addNodelet("/sqlMap/parameterMap/parameter", new Nodelet() {
@@ -164,7 +167,7 @@ public class SqlMapParser {
         String callback = childAttributes.getProperty("typeHandler");
         String numericScale = childAttributes.getProperty("numericScale");
 
-        state.getConfig().addParameterMapping(callback, javaType, resultMap, propertyName, jdbcType, type, nullValue, mode, numericScale);
+        state.getParamConfig().addParameterMapping(callback, javaType, resultMap, propertyName, jdbcType, type, nullValue, mode, numericScale);
 
       }
     });
@@ -174,7 +177,7 @@ public class SqlMapParser {
   private void addResultMapNodelets() {
     parser.addNodelet("/sqlMap/resultMap/end()", new Nodelet() {
       public void process(Node node) throws Exception {
-        state.getConfig().finalizeResultMap();
+        state.getResultConfig().saveResultMap();
       }
     });
     parser.addNodelet("/sqlMap/resultMap", new Nodelet() {
@@ -185,7 +188,8 @@ public class SqlMapParser {
         String extended = state.applyNamespace(attributes.getProperty("extends"));
         String xmlName = attributes.getProperty("xmlName");
         String groupBy = attributes.getProperty("groupBy");
-        state.getConfig().addResultMap(id, resultClassName, xmlName, groupBy, extended);
+        ResultMapConfig resultConf = state.getConfig().newResultMapConfig(id, resultClassName, xmlName, groupBy, extended);
+        state.setResultConfig(resultConf);
       }
     });
     parser.addNodelet("/sqlMap/resultMap/result", new Nodelet() {
@@ -201,7 +205,7 @@ public class SqlMapParser {
         String resultMapName = childAttributes.getProperty("resultMap");
         String callback = childAttributes.getProperty("typeHandler");
 
-        state.getConfig().addResultMapping(callback, javaType, propertyName, jdbcType, columnName, nullValue, statementName, resultMapName, columnIndex);
+        state.getResultConfig().addResultMapping(callback, javaType, propertyName, jdbcType, columnName, nullValue, statementName, resultMapName, columnIndex);
       }
     });
 
@@ -211,7 +215,7 @@ public class SqlMapParser {
         String value = childAttributes.getProperty("value");
         String resultMap = childAttributes.getProperty("resultMap");
         resultMap = state.applyNamespace(resultMap);
-        state.getConfig().addSubMap(value, resultMap);
+        state.getResultConfig().addSubMap(value, resultMap);
       }
     });
 
@@ -225,7 +229,7 @@ public class SqlMapParser {
         String columnIndex = childAttributes.getProperty("columnIndex");
         String callback = childAttributes.getProperty("typeHandler");
 
-        state.getConfig().addDiscriminator(callback, javaType, jdbcType, columnName, nullValue, columnIndex);
+        state.getResultConfig().setDiscriminator(callback, javaType, jdbcType, columnName, nullValue, columnIndex);
       }
     });
   }

@@ -2,6 +2,9 @@ package com.ibatis.sqlmap.engine.builder.xml;
 
 import com.ibatis.common.resources.Resources;
 import com.ibatis.sqlmap.engine.conifg.SqlMapConfiguration;
+import com.ibatis.sqlmap.engine.conifg.ParameterMapConfig;
+import com.ibatis.sqlmap.engine.conifg.ResultMapConfig;
+import com.ibatis.sqlmap.engine.conifg.CacheModelConfig;
 
 import java.util.*;
 
@@ -14,6 +17,10 @@ public class XmlParserState {
   private Properties dsProps = new Properties();
   private boolean useStatementNamespaces = false;
   private Map sqlIncludes = new HashMap();
+
+  private ParameterMapConfig paramConfig;
+  private ResultMapConfig resultConfig;
+  private CacheModelConfig cacheConfig;
 
   private String namespace;
 
@@ -36,7 +43,7 @@ public class XmlParserState {
   public Properties getDsProps() {
     return dsProps;
   }
-
+  
   public void setUseStatementNamespaces(boolean useStatementNamespaces) {
     this.useStatementNamespaces = useStatementNamespaces;
   }
@@ -59,6 +66,30 @@ public class XmlParserState {
       newId = namespace + "." + id;
     }
     return newId;
+  }
+
+  public CacheModelConfig getCacheConfig() {
+    return cacheConfig;
+  }
+
+  public void setCacheConfig(CacheModelConfig cacheConfig) {
+    this.cacheConfig = cacheConfig;
+  }
+
+  public ParameterMapConfig getParamConfig() {
+    return paramConfig;
+  }
+
+  public void setParamConfig(ParameterMapConfig paramConfig) {
+    this.paramConfig = paramConfig;
+  }
+
+  public ResultMapConfig getResultConfig() {
+    return resultConfig;
+  }
+
+  public void setResultConfig(ResultMapConfig resultConfig) {
+    this.resultConfig = resultConfig;
   }
 
   public String getFirstToken(String s) {

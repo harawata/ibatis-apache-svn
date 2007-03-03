@@ -2,6 +2,7 @@ package com.ibatis.sqlmap.engine.builder.xml;
 
 import com.ibatis.common.xml.NodeletUtils;
 import com.ibatis.sqlmap.engine.mapping.statement.*;
+import com.ibatis.sqlmap.engine.conifg.MappedStatementConfig;
 import org.w3c.dom.*;
 
 import java.util.Properties;
@@ -48,23 +49,16 @@ public class SqlStatementParser {
       additionalResultClasses = state.getAllButFirstToken(resultClassName);      
       resultClassName = state.getFirstToken(resultClassName);
     }
-    MappedStatement mappedStatement = state.getConfig().prepareGeneralStatement(new XMLSqlSource(state, node), statement, id, resultMapName, additionalResultMapNames, parameterMapName, resultSetType, fetchSize, parameterClassName, resultClassName, additionalResultClasses, allowRemapping, xmlResultName, timeout, cacheModelName);
+    MappedStatementConfig statementConf = state.getConfig().newMappedStatementConfig(new XMLSqlSource(state, node), statement, id, resultMapName, additionalResultMapNames, parameterMapName, resultSetType, fetchSize, parameterClassName, resultClassName, additionalResultClasses, allowRemapping, xmlResultName, timeout, cacheModelName);
 
-    findAndParseSelectKey(node, statement);
-    return mappedStatement;
+    findAndParseSelectKey(node, statementConf);
 
+    return statementConf.getMappedStatement();
   }
 
-  private void findAndParseSelectKey(Node node, GeneralStatement statement) {
-    if (statement instanceof InsertStatement) {
+  private void findAndParseSelectKey(Node node, MappedStatementConfig config) {
       state.getConfig().getErrorContext().setActivity("parsing select key tags");
-
-      InsertStatement insertStatement = ((InsertStatement) statement);
-
-      SelectKeyStatement selectKeyStatement = null;
-
       boolean foundSQLFirst = false;
-
       NodeList children = node.getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
         Node child = children.item(i);
@@ -80,13 +74,12 @@ public class SqlStatementParser {
           String keyPropName = attributes.getProperty("keyProperty");
           String resultClassName = attributes.getProperty("resultClass");
           String type = attributes.getProperty("type");
-          selectKeyStatement = state.getConfig().prepareSelectKeyStatement(new XMLSqlSource(state, child), resultClassName, statement.getId(), keyPropName, foundSQLFirst, type, statement.getParameterClass());
+          config.setSelectKeyStatement(new XMLSqlSource(state, child), resultClassName, keyPropName, foundSQLFirst, type);
           break;
         }
       }
       state.getConfig().getErrorContext().setMoreInfo(null);
-      insertStatement.setSelectKeyStatement(selectKeyStatement);
-    }
+    
   }
 
 
