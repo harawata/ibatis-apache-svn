@@ -15,7 +15,7 @@ public class SqlStatementParser {
     this.state = config;
   }
 
-  public MappedStatement parseGeneralStatement(Node node, GeneralStatement statement) {
+  public void parseGeneralStatement(Node node, GeneralStatement statement) {
 
     // get attributes
     Properties attributes = NodeletUtils.parseAttributes(node, state.getGlobalProps());
@@ -53,7 +53,7 @@ public class SqlStatementParser {
 
     findAndParseSelectKey(node, statementConf);
 
-    return statementConf.getMappedStatement();
+    statementConf.saveMappedStatement();
   }
 
   private void findAndParseSelectKey(Node node, MappedStatementConfig config) {

@@ -5,7 +5,6 @@ import com.ibatis.common.xml.NodeletException;
 import com.ibatis.common.xml.NodeletParser;
 import com.ibatis.common.xml.NodeletUtils;
 import com.ibatis.sqlmap.client.SqlMapException;
-import com.ibatis.sqlmap.engine.cache.CacheModel;
 import com.ibatis.sqlmap.engine.mapping.statement.*;
 import com.ibatis.sqlmap.engine.conifg.ParameterMapConfig;
 import com.ibatis.sqlmap.engine.conifg.ResultMapConfig;
@@ -18,13 +17,18 @@ import java.util.Properties;
 
 public class SqlMapParser {
 
-  private final NodeletParser parser = new NodeletParser();
-  private XmlParserState state = new XmlParserState();
+  private final NodeletParser parser;
+  private XmlParserState state;
+  private SqlStatementParser statementParser;
 
-  public SqlMapParser(XmlParserState config) {
-    this.state = config;
+  public SqlMapParser(XmlParserState state) {
+    this.parser = new NodeletParser();
+    this.state = state;
+
     parser.setValidation(true);
     parser.setEntityResolver(new SqlMapClasspathEntityResolver());
+
+    statementParser = new SqlStatementParser(this.state);
 
     addSqlMapNodelets();
     addSqlNodelets();
@@ -237,41 +241,34 @@ public class SqlMapParser {
   protected void addStatementNodelets() {
     parser.addNodelet("/sqlMap/statement", new Nodelet() {
       public void process(Node node) throws Exception {
-        MappedStatement statement = new SqlStatementParser(state).parseGeneralStatement(node, new GeneralStatement());
-        state.getConfig().getDelegate().addMappedStatement(statement);
+        statementParser.parseGeneralStatement(node, new GeneralStatement());
       }
     });
     parser.addNodelet("/sqlMap/insert", new Nodelet() {
       public void process(Node node) throws Exception {
-        MappedStatement statement = new SqlStatementParser(state).parseGeneralStatement(node, new InsertStatement());
-        state.getConfig().getDelegate().addMappedStatement(statement);
+        statementParser.parseGeneralStatement(node, new InsertStatement());
       }
     });
     parser.addNodelet("/sqlMap/update", new Nodelet() {
       public void process(Node node) throws Exception {
-        MappedStatement statement = new SqlStatementParser(state).parseGeneralStatement(node, new UpdateStatement());
-        state.getConfig().getDelegate().addMappedStatement(statement);
+        statementParser.parseGeneralStatement(node, new UpdateStatement());
       }
     });
     parser.addNodelet("/sqlMap/delete", new Nodelet() {
       public void process(Node node) throws Exception {
-        MappedStatement statement = new SqlStatementParser(state).parseGeneralStatement(node, new DeleteStatement());
-        state.getConfig().getDelegate().addMappedStatement(statement);
+        statementParser.parseGeneralStatement(node, new DeleteStatement());
       }
     });
     parser.addNodelet("/sqlMap/select", new Nodelet() {
       public void process(Node node) throws Exception {
-        MappedStatement statement = new SqlStatementParser(state).parseGeneralStatement(node, new SelectStatement());
-        state.getConfig().getDelegate().addMappedStatement(statement);
+        statementParser.parseGeneralStatement(node, new SelectStatement());
       }
     });
     parser.addNodelet("/sqlMap/procedure", new Nodelet() {
       public void process(Node node) throws Exception {
-        MappedStatement statement = new SqlStatementParser(state).parseGeneralStatement(node, new ProcedureStatement());
-        state.getConfig().getDelegate().addMappedStatement(statement);
+        statementParser.parseGeneralStatement(node, new ProcedureStatement());
       }
     });
   }
-
 
 }
