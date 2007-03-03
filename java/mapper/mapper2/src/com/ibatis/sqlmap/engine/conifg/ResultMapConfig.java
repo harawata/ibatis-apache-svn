@@ -29,7 +29,7 @@ public class ResultMapConfig {
   private int resultMappingIndex;
   private Discriminator discriminator;
 
-  ResultMapConfig(SqlMapConfiguration config, String id, String resultClassName, String xmlName, String groupBy, String extended) {
+  ResultMapConfig(SqlMapConfiguration config, String id, String resultClassName, String groupBy, String extended, String xmlName) {
     this.config = config;
     this.errorContext = config.getErrorContext();
     this.client = config.getClient();
@@ -84,7 +84,7 @@ public class ResultMapConfig {
     resultMappingIndex = resultMappingList.size();
   }
 
-  public void setDiscriminator(String callback, String javaType, String jdbcType, String columnName, String nullValue, String columnIndex) {
+  public void setDiscriminator(String columnName, String columnIndex, String javaType, String jdbcType, String nullValue, String callback) {
     callback = typeHandlerFactory.resolveAlias(callback);
     javaType = typeHandlerFactory.resolveAlias(javaType);
     TypeHandler handler;
@@ -124,14 +124,14 @@ public class ResultMapConfig {
     discriminator = new Discriminator(delegate, mapping);
   }
 
-  public void addSubMap(String value, String resultMap) {
+  public void addDiscriminatorSubMap(String value, String resultMap) {
     if (discriminator == null) {
       throw new RuntimeException("The discriminator is null, but somehow a subMap was reached.  This is a bug.");
     }
     discriminator.addSubMap(value, resultMap);
   }
 
-  public void addResultMapping(String callback, String javaType, String propertyName, String jdbcType, String columnName, String nullValue, String statementName, String resultMapName, String columnIndex) {
+  public void addResultMapping(String propertyName, String columnName, String columnIndex, String javaType, String jdbcType, String nullValue, String statementName, String resultMapName, String callback) {
     callback = typeHandlerFactory.resolveAlias(callback);
     javaType = typeHandlerFactory.resolveAlias(javaType);
     errorContext.setObjectId(propertyName + " mapping of the " + resultMap.getId() + " result map");

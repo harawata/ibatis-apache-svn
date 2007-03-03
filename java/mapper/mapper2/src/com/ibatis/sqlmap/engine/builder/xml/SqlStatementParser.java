@@ -49,7 +49,7 @@ public class SqlStatementParser {
       additionalResultClasses = state.getAllButFirstToken(resultClassName);      
       resultClassName = state.getFirstToken(resultClassName);
     }
-    MappedStatementConfig statementConf = state.getConfig().newMappedStatementConfig(new XMLSqlSource(state, node), statement, id, resultMapName, additionalResultMapNames, parameterMapName, resultSetType, fetchSize, parameterClassName, resultClassName, additionalResultClasses, allowRemapping, xmlResultName, timeout, cacheModelName);
+    MappedStatementConfig statementConf = state.getConfig().newMappedStatementConfig(id, statement, new XMLSqlSource(state, node), parameterMapName, parameterClassName, resultMapName, additionalResultMapNames, resultClassName, additionalResultClasses, resultSetType, fetchSize, allowRemapping, timeout, cacheModelName, xmlResultName);
 
     findAndParseSelectKey(node, statementConf);
 

@@ -170,9 +170,7 @@ public class SqlMapParser {
         String mode = childAttributes.getProperty("mode");
         String callback = childAttributes.getProperty("typeHandler");
         String numericScale = childAttributes.getProperty("numericScale");
-
-        state.getParamConfig().addParameterMapping(callback, javaType, resultMap, propertyName, jdbcType, type, nullValue, mode, numericScale);
-
+        state.getParamConfig().addParameterMapping(propertyName, javaType, jdbcType, nullValue, mode, type, numericScale, callback, resultMap);
       }
     });
   }
@@ -192,7 +190,7 @@ public class SqlMapParser {
         String extended = state.applyNamespace(attributes.getProperty("extends"));
         String xmlName = attributes.getProperty("xmlName");
         String groupBy = attributes.getProperty("groupBy");
-        ResultMapConfig resultConf = state.getConfig().newResultMapConfig(id, resultClassName, xmlName, groupBy, extended);
+        ResultMapConfig resultConf = state.getConfig().newResultMapConfig(id, resultClassName, groupBy, extended, xmlName);
         state.setResultConfig(resultConf);
       }
     });
@@ -209,7 +207,7 @@ public class SqlMapParser {
         String resultMapName = childAttributes.getProperty("resultMap");
         String callback = childAttributes.getProperty("typeHandler");
 
-        state.getResultConfig().addResultMapping(callback, javaType, propertyName, jdbcType, columnName, nullValue, statementName, resultMapName, columnIndex);
+        state.getResultConfig().addResultMapping(propertyName, columnName, columnIndex, javaType, jdbcType, nullValue, statementName, resultMapName, callback);
       }
     });
 
@@ -219,7 +217,7 @@ public class SqlMapParser {
         String value = childAttributes.getProperty("value");
         String resultMap = childAttributes.getProperty("resultMap");
         resultMap = state.applyNamespace(resultMap);
-        state.getResultConfig().addSubMap(value, resultMap);
+        state.getResultConfig().addDiscriminatorSubMap(value, resultMap);
       }
     });
 
@@ -233,7 +231,7 @@ public class SqlMapParser {
         String columnIndex = childAttributes.getProperty("columnIndex");
         String callback = childAttributes.getProperty("typeHandler");
 
-        state.getResultConfig().setDiscriminator(callback, javaType, jdbcType, columnName, nullValue, columnIndex);
+        state.getResultConfig().setDiscriminator(columnName, columnIndex, javaType, jdbcType, nullValue, callback);
       }
     });
   }

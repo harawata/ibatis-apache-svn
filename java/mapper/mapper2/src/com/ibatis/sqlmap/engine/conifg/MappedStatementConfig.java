@@ -35,7 +35,7 @@ public class MappedStatementConfig {
   private MappedStatement mappedStatement;
   private MappedStatement rootStatement;
 
-  MappedStatementConfig(SqlMapConfiguration config, SqlSource processor, GeneralStatement statement, String id, String resultMapName, String[] additionalResultMapNames, String parameterMapName, String resultSetType, String fetchSize, String parameterClassName, String resultClassName, String[] additionalResultClasses, String allowRemapping, String xmlResultName, String timeout, String cacheModelName) {
+  MappedStatementConfig(SqlMapConfiguration config, String id, GeneralStatement statement, SqlSource processor, String parameterMapName, String parameterClassName, String resultMapName, String[] additionalResultMapNames, String resultClassName, String[] additionalResultClasses, String cacheModelName, String resultSetType, String fetchSize, String allowRemapping, String timeout, String xmlResultName) {
     this.errorContext = config.getErrorContext();
     this.client = config.getClient();
     this.delegate = client.getDelegate();

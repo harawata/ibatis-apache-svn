@@ -45,21 +45,21 @@ public class ParameterMapConfig {
     this.parameterMappingList = new ArrayList();
   }
 
-  public void addParameterMapping(String callback, String javaType, String resultMap, String propertyName, String jdbcType, String type, String nullValue, String mode, String numericScale) {
-    callback = typeHandlerFactory.resolveAlias(callback);
+  public void addParameterMapping(String propertyName, String javaType, String jdbcType, String nullValue, String mode, String outParamType, String numericScale, String typeHandlerCallback, String resultMap) {
+    typeHandlerCallback = typeHandlerFactory.resolveAlias(typeHandlerCallback);
     javaType = typeHandlerFactory.resolveAlias(javaType);
     errorContext.setObjectId(propertyName + " mapping of the " + parameterMap.getId() + " parameter map");
     TypeHandler handler;
-    if (callback != null) {
-      errorContext.setMoreInfo("Check the parameter mapping typeHandler attribute '" + callback + "' (must be a TypeHandler or TypeHandlerCallback implementation).");
+    if (typeHandlerCallback != null) {
+      errorContext.setMoreInfo("Check the parameter mapping typeHandler attribute '" + typeHandlerCallback + "' (must be a TypeHandler or TypeHandlerCallback implementation).");
       try {
-        Object impl = Resources.instantiate(callback);
+        Object impl = Resources.instantiate(typeHandlerCallback);
         if (impl instanceof TypeHandlerCallback) {
           handler = new CustomTypeHandler((TypeHandlerCallback) impl);
         } else if (impl instanceof TypeHandler) {
           handler = (TypeHandler) impl;
         } else {
-          throw new RuntimeException("The class '" + callback + "' is not a valid implementation of TypeHandler or TypeHandlerCallback");
+          throw new RuntimeException("The class '" + typeHandlerCallback + "' is not a valid implementation of TypeHandler or TypeHandlerCallback");
         }
       } catch (Exception e) {
         throw new RuntimeException("Error occurred during custom type handler configuration.  Cause: " + e, e);
@@ -71,7 +71,7 @@ public class ParameterMapConfig {
     BasicParameterMapping mapping = new BasicParameterMapping();
     mapping.setPropertyName(propertyName);
     mapping.setJdbcTypeName(jdbcType);
-    mapping.setTypeName(type);
+    mapping.setTypeName(outParamType);
     mapping.setResultMapName(resultMap);
     mapping.setNullValue(nullValue);
     if (mode != null && mode.length() > 0) {

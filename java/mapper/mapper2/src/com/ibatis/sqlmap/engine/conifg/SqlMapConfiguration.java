@@ -280,16 +280,16 @@ public class SqlMapConfiguration {
     return new ParameterMapConfig(this, id, parameterClassName);
   }
 
-  public ResultMapConfig newResultMapConfig(String id, String resultClassName, String xmlName, String groupBy, String extended) {
-    return new ResultMapConfig(this, id, resultClassName, xmlName, groupBy, extended);
+  public ResultMapConfig newResultMapConfig(String id, String resultClassName, String groupBy, String extended, String xmlName) {
+    return new ResultMapConfig(this, id, resultClassName, groupBy, extended, xmlName);
   }
 
   public CacheModelConfig newCacheModelConfig(String id, String type, Boolean readOnly, Boolean serialize) {
     return new CacheModelConfig(this, id, type, readOnly, serialize);
   }
 
-  public MappedStatementConfig newMappedStatementConfig(SqlSource processor, GeneralStatement statement, String id, String resultMapName, String[] additionalResultMapNames, String parameterMapName, String resultSetType, String fetchSize, String parameterClassName, String resultClassName, String[] additionalResultClasses, String allowRemapping, String xmlResultName, String timeout, String cacheModelName) {
-    return new MappedStatementConfig(this, processor, statement, id, resultMapName, additionalResultMapNames, parameterMapName, resultSetType, fetchSize, parameterClassName, resultClassName, additionalResultClasses, allowRemapping, xmlResultName, timeout, cacheModelName);
+  public MappedStatementConfig newMappedStatementConfig(String id, GeneralStatement statement, SqlSource processor, String parameterMapName, String parameterClassName, String resultMapName, String[] additionalResultMapNames, String resultClassName, String[] additionalResultClasses, String resultSetType, String fetchSize, String allowRemapping, String timeout, String cacheModelName, String xmlResultName) {
+    return new MappedStatementConfig(this, id, statement, processor, parameterMapName, parameterClassName, resultMapName, additionalResultMapNames, resultClassName, additionalResultClasses, cacheModelName, resultSetType, fetchSize, allowRemapping, timeout, xmlResultName);
   }
 
   private void registerDefaultTypeAliases() {
