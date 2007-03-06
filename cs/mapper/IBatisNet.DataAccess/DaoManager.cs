@@ -227,9 +227,10 @@ namespace IBatisNet.DataAccess
 		/// Make the default constructor private to prevent
 		/// instances from being created.
 		/// </summary>
-		private DaoManager() 
+        private DaoManager(string id) 
 		{
-            _sessionStore = SessionStoreFactory.GetSessionStore(this.Id);
+		    Id = id;
+            _sessionStore = SessionStoreFactory.GetSessionStore(id);
 		}
 		#endregion
 
@@ -321,9 +322,9 @@ namespace IBatisNet.DataAccess
 		/// Create anew instance of a DaoManager
 		/// </summary>
 		/// <returns>A DaoManager.</returns>
-		internal static DaoManager NewInstance() 
+		internal static DaoManager NewInstance(string id) 
 		{
-			return new DaoManager();
+			return new DaoManager(id);
 		}
 
 		/// <summary>

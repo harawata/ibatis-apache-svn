@@ -24,9 +24,6 @@
 #endregion
 
 
-using System;
-using System.Web;
-
 namespace IBatisNet.DataAccess.SessionStore
 {
 	/// <summary>
@@ -36,7 +33,7 @@ namespace IBatisNet.DataAccess.SessionStore
 	/// When running in the context of a windows application the session object is 
 	/// stored via CallContext.
 	/// </summary>
-	public class SessionStoreFactory
+	public sealed class SessionStoreFactory
 	{
 
 		/// <summary>

@@ -478,11 +478,8 @@ namespace IBatisNet.DataAccess.Configuration
 
 				#region Configure a new DaoManager
 
-				daoManager = DaoManager.NewInstance();
-
-				// name
 				attribute = contextNode.Attributes["id"];
-                daoManager.Id = attribute.Value;
+                daoManager = DaoManager.NewInstance(attribute.Value);
 
                 configurationScope.ErrorContext.Activity += daoManager.Id;
 
