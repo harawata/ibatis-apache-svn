@@ -371,6 +371,7 @@ namespace IBatisNet.DataMapper
 			}
 			_transaction.Commit();
 			_transaction.Dispose();
+            _transaction = null;
             _isTransactionOpen = false;
 
 			if (_connection.State != ConnectionState.Closed)
