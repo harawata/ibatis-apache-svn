@@ -71,6 +71,18 @@ public class AbatorConfiguration {
         abatorContexts.add(abatorContext);
     }
     
+    public AbatorContext getAbatorContext(String id) {
+        Iterator iter = abatorContexts.iterator();
+        while (iter.hasNext()) {
+            AbatorContext abatorContext = (AbatorContext) iter.next();
+            if (id.equals(abatorContext.getId())) {
+                return abatorContext;
+            }
+        }
+        
+        return null;
+    }
+    
     /**
      * Builds an XML representation of this configuration.  This
      * can be used to persist a programtically generated

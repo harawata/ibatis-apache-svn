@@ -52,7 +52,7 @@
 -->
 <!ELEMENT abatorContext (property*, jdbcConnection, javaTypeResolver?, javaModelGenerator,
                         sqlMapGenerator, daoGenerator?, table+)>
-<!ATTLIST abatorContext id CDATA #IMPLIED
+<!ATTLIST abatorContext id ID #IMPLIED
   defaultModelType CDATA #IMPLIED
   generatorSet CDATA #IMPLIED>
 

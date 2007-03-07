@@ -51,7 +51,7 @@ public class IgnoredColumn {
 
     public void setColumnNameDelimited(boolean isColumnNameDelimited) {
         this.isColumnNameDelimited = isColumnNameDelimited;
-        configuredDelimitedColumnName = isColumnNameDelimited ? "true" : "false";
+        configuredDelimitedColumnName = isColumnNameDelimited ? "true" : "false"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     public boolean equals(Object obj) {
@@ -71,7 +71,7 @@ public class IgnoredColumn {
         xmlElement.addAttribute(new Attribute("column", columnName)); //$NON-NLS-1$
         
         if (StringUtility.stringHasValue(configuredDelimitedColumnName)) {
-            xmlElement.addAttribute(new Attribute("delimitedColumnName", configuredDelimitedColumnName));
+            xmlElement.addAttribute(new Attribute("delimitedColumnName", configuredDelimitedColumnName)); //$NON-NLS-1$
         }
         
         return xmlElement;

@@ -30,7 +30,6 @@ import org.apache.ibatis.abator.api.ProgressCallback;
 import org.apache.ibatis.abator.api.SqlMapGenerator;
 import org.apache.ibatis.abator.api.dom.xml.Attribute;
 import org.apache.ibatis.abator.api.dom.xml.XmlElement;
-import org.apache.ibatis.abator.exception.InvalidConfigurationException;
 import org.apache.ibatis.abator.internal.AbatorObjectFactory;
 import org.apache.ibatis.abator.internal.NullProgressCallback;
 import org.apache.ibatis.abator.internal.db.ConnectionFactory;
@@ -245,15 +244,13 @@ public class AbatorContext extends PropertyHolder {
 	 * @param warnings any warning generated from this method will be added to the List.  Warnings
 	 *                   are always Strings.
 	 * 
-	 * @throws InvalidConfigurationException if some configuration error prevents
-	 *                                       continuation
 	 * @throws SQLException if some error arrises while introspecting the specified
 	 *                      database tables.
 	 * 
 	 * @throws InterruptedException if the progress callback reports a cancel
 	 */
-	public void generateFiles(ProgressCallback callback, List generatedJavaFiles, List generatedXmlFiles, List warnings) throws InvalidConfigurationException,
-			SQLException, InterruptedException {
+	public void generateFiles(ProgressCallback callback, List generatedJavaFiles, List generatedXmlFiles, List warnings)
+            throws SQLException, InterruptedException {
 	    
 	    if (callback == null) {
 	        callback = new NullProgressCallback();
@@ -314,8 +311,20 @@ public class AbatorContext extends PropertyHolder {
 	    int steps = 0;
 	    
 	    steps++;  // connect to database
+        
+        // for each table:
+        //
+        // 1. Introspect
+        // 2. Generate Example
+        // 3. Generate Primary Key
+        // 4. Generate Record
+        // 5. Generate Record with BLOBs
+        // 6. Generate SQL Map
+        // 7. Generate DAO Interface
+        // 8. Generate DAO Implementation
+
 	    steps += tableConfigurations.size() * 8;
-	    
+        
 	    return steps;
 	}
 

@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.abator.internal;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
@@ -25,16 +24,9 @@ import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.apache.ibatis.abator.api.GeneratedXmlFile;
 import org.apache.ibatis.abator.exception.ShellException;
-import org.apache.ibatis.abator.internal.sqlmap.XmlConstants;
 import org.apache.ibatis.abator.internal.util.messages.Messages;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
@@ -68,7 +60,7 @@ public class XmlFileMergerJaxp {
     }
 
     /**
-     * Utility class - no instances allowed  
+     * Utility class - no instances allowed
      */
     private XmlFileMergerJaxp() {
         super();
@@ -79,11 +71,13 @@ public class XmlFileMergerJaxp {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory
                     .newInstance();
+            factory.setExpandEntityReferences(false);
             DocumentBuilder builder = factory.newDocumentBuilder();
             builder.setEntityResolver(new NullEntityResolver());
 
             Document existingDocument = builder.parse(existingFile);
-            StringReader sr = new StringReader(generatedXmlFile.getFormattedContent());
+            StringReader sr = new StringReader(generatedXmlFile
+                    .getFormattedContent());
             Document newDocument = builder.parse(new InputSource(sr));
 
             DocumentType newDocType = newDocument.getDoctype();
@@ -110,31 +104,11 @@ public class XmlFileMergerJaxp {
                 Node node = children.item(i);
                 if (isAnAbatorNode(node)) {
                     nodesToDelete.add(node);
-                }
-                
-                short nodeType = node.getNodeType();
-                if (nodeType == Element.TEXT_NODE) {
-                    // remove any nodes that are only white space
-                    // if the next node is an Abator node, or if this
-                    // is the last node.
-                    // this ensures that we don't end up with
-                    // lots of blank lines at the end of a merged file
-                    Text tn = (Text) node;
-                    String text = tn.getData();
-                    
-                    if (text.trim().length() == 0) {
-                        // node is just whitespace. if next node is an Abator
-                        //node, then remove the node.  Or if this is the last node
-                        // then delete the node
-                        if (i == length - 1) {
-                            nodesToDelete.add(tn);
-                        } else if (isAnAbatorNode(children.item(i + 1))) {
-                            nodesToDelete.add(tn);
-                        }
-                    }
+                } else if (isWhiteSpace(node) && isAnAbatorNode(children.item(i + 1))) {
+                    nodesToDelete.add(node);
                 }
             }
-            
+
             Iterator iter = nodesToDelete.iterator();
             while (iter.hasNext()) {
                 existingRootElement.removeChild((Node) iter.next());
@@ -148,15 +122,11 @@ public class XmlFileMergerJaxp {
                 Node node = children.item(i);
                 // don't add the last node if it is only white space
                 if (i == length - 1) {
-                    // last node - only add if it isn't whitespace
-                    if (node.getNodeType() == Node.TEXT_NODE) {
-                        Text tn = (Text) node;
-                        if (tn.getData().trim().length() == 0) {
-                            break;
-                        }
+                    if (isWhiteSpace(node)) {
+                        break;
                     }
                 }
-                
+
                 Node newNode = existingDocument.importNode(node, true);
                 if (firstChild == null) {
                     existingRootElement.appendChild(newNode);
@@ -169,39 +139,40 @@ public class XmlFileMergerJaxp {
             return prettyPrint(existingDocument);
         } catch (Exception e) {
             throw new ShellException(Messages.getString("Warning.13", //$NON-NLS-1$
-                existingFile.getName()), e);
+                    existingFile.getName()), e);
         }
     }
 
-    private static String prettyPrint(Document document) throws TransformerException {
-        TransformerFactory factory = TransformerFactory.newInstance();
-
-        Transformer transformer = factory.newTransformer();
-        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no"); //$NON-NLS-1$
-        transformer.setOutputProperty(OutputKeys.METHOD, "xml"); //$NON-NLS-1$
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
-        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8"); //$NON-NLS-1$
-        transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, XmlConstants.SQL_MAP_PUBLIC_ID);
-        transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, XmlConstants.SQL_MAP_SYSTEM_ID);
-
-        ByteArrayOutputStream bas = new ByteArrayOutputStream();
-
-        transformer.transform(new DOMSource(document), new StreamResult(bas));
-
-        return bas.toString();
+    private static String prettyPrint(Document document) throws ShellException {
+         DomWriter dw = new DomWriter();
+         String s = dw.toString(document);
+         return s;
     }
-    
+
     private static boolean isAnAbatorNode(Node node) {
         boolean rc = false;
-        
-        if (node.getNodeType() == Node.ELEMENT_NODE) {
+
+        if (node != null && node.getNodeType() == Node.ELEMENT_NODE) {
             Element element = (Element) node;
             String id = element.getAttribute("id"); //$NON-NLS-1$
             if (id != null && id.startsWith("abatorgenerated_")) { //$NON-NLS-1$
                 rc = true;
             }
         }
-        
+
+        return rc;
+    }
+
+    private static boolean isWhiteSpace(Node node) {
+        boolean rc = false;
+
+        if (node != null && node.getNodeType() == Node.TEXT_NODE) {
+            Text tn = (Text) node;
+            if (tn.getData().trim().length() == 0) {
+                rc = true;
+            }
+        }
+
         return rc;
     }
 }

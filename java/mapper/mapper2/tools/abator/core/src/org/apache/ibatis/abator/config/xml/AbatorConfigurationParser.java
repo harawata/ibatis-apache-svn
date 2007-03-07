@@ -453,7 +453,7 @@ public class AbatorConfigurationParser {
         }
 
         if (StringUtility.stringHasValue(delimitedColumnName)) {
-            co.setColumnNameDelimited("true".equalsIgnoreCase(delimitedColumnName));
+            co.setColumnNameDelimited("true".equalsIgnoreCase(delimitedColumnName)); //$NON-NLS-1$
         }
         
         tc.addColumnOverride(co);
@@ -479,7 +479,7 @@ public class AbatorConfigurationParser {
         IgnoredColumn ic = new IgnoredColumn(column);
         
         if (StringUtility.stringHasValue(delimitedColumnName)) {
-            ic.setColumnNameDelimited("true".equalsIgnoreCase(delimitedColumnName));
+            ic.setColumnNameDelimited("true".equalsIgnoreCase(delimitedColumnName)); //$NON-NLS-1$
         }
 
         tc.addIgnoredColumn(ic);

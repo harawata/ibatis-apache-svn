@@ -4,6 +4,7 @@ Bugs -
 1. corner case where the new "by example" methods fail if a criteria
    class has been added to the list, but there are no criteria set
 2. trimStrings on JavaModelGenerator not working
+3. Fix the XML file merger so that entities are preserved
 
 Enhancements - 
 1. IBATIS-348 - escape column names with $ or #, and ignore special characters
@@ -23,6 +24,8 @@ Enhancements -
    where column names differ only in case.  This may also improve performance.
 8. Added the ability to work with delimited names in database tables or
    columns.
+9. API change to allow generating with selected contexts rather than
+   the entire config file.
 
 -------------------------------------------------------------------------------
 Version 1.0.0:

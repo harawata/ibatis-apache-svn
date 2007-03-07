@@ -105,7 +105,7 @@ public class ColumnOverride {
         }
         
         if (StringUtility.stringHasValue(configuredDelimitedColumnName)) {
-            xmlElement.addAttribute(new Attribute("delimitedColumnName", configuredDelimitedColumnName));
+            xmlElement.addAttribute(new Attribute("delimitedColumnName", configuredDelimitedColumnName)); //$NON-NLS-1$
         }
         
         return xmlElement;
@@ -118,6 +118,6 @@ public class ColumnOverride {
     public void setColumnNameDelimited(boolean isColumnNameDelimited) {
         this.isColumnNameDelimited = isColumnNameDelimited;
         
-        configuredDelimitedColumnName = isColumnNameDelimited ? "true" : "false";
+        configuredDelimitedColumnName = isColumnNameDelimited ? "true" : "false"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 }

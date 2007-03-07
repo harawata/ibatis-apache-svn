@@ -78,9 +78,11 @@ public class Abator {
      *            generation will continue. Abator will only add Strings to the
      *            list.  You may specify <code>null</code> if you do not
      *            want warnings returned.
+     * @throws InvalidConfigurationException if the specified configuration
+     *   is invalid
      */
     public Abator(AbatorConfiguration abatorConfiguration,
-            ShellCallback shellCallback, List warnings) {
+            ShellCallback shellCallback, List warnings) throws InvalidConfigurationException {
         super();
         if (abatorConfiguration == null) {
             throw new IllegalArgumentException(Messages.getString("RuntimeError.2")); //$NON-NLS-1$
@@ -102,23 +104,43 @@ public class Abator {
         generatedJavaFiles = new ArrayList();
         generatedXmlFiles = new ArrayList();
         projects = new HashSet();
+        
+        this.abatorConfiguration.validate();
     }
 
     /**
      * This is the main method for generating code.  This method is long running, but
-     * progress can be provided and the method can be calncelled through the ProgressCallbac
-     * interface.
+     * progress can be provided and the method can be cancelled through the ProgressCallback
+     * interface.  This version of the method runs all configured contexts.
      * 
      * @param callback an instance of the ProgressCallback interface, or <code>null</code>
      *   if you do not require progress information
-     * @throws InvalidConfigurationException
      * @throws SQLException
      * @throws IOException
      * @throws InterruptedException if the method is cancelled through the ProgressCallback
      */
     public void generate(ProgressCallback callback)
-            throws InvalidConfigurationException, SQLException, IOException,
-            InterruptedException {
+            throws SQLException, IOException, InterruptedException {
+        generate(callback, null);
+    }
+    
+    /**
+     * This is the main method for generating code.  This method is long running, but
+     * progress can be provided and the method can be cancelled through the ProgressCallback
+     * interface.
+     * 
+     * @param callback an instance of the ProgressCallback interface, or <code>null</code>
+     *   if you do not require progress information
+     * @param contextIds a list of Strings containing context ids to run.  Only the
+     *   contexts with an id specified in this list will be run.  If the list is
+     *   null or empty, than all contexts are run.
+     * @throws InvalidConfigurationException
+     * @throws SQLException
+     * @throws IOException
+     * @throws InterruptedException if the method is cancelled through the ProgressCallback
+     */
+    public void generate(ProgressCallback callback, List contextIds)
+            throws SQLException, IOException, InterruptedException {
 
         if (callback == null) {
             callback = new NullProgressCallback();
@@ -126,11 +148,25 @@ public class Abator {
 
         generatedJavaFiles.clear();
         generatedXmlFiles.clear();
+        
+        // calculate the contexts to run
+        List contextsToRun;
+        if (contextIds == null || contextIds.size() == 0) {
+            contextsToRun = abatorConfiguration.getAbatorContexts();
+        } else {
+            contextsToRun = new ArrayList();
+            Iterator iter = contextIds.iterator();
+            while (iter.hasNext()) {
+                AbatorContext abatorContext = abatorConfiguration.getAbatorContext((String) iter.next());
+                if (abatorContext != null) {
+                    contextsToRun.add(abatorContext);
+                }
+            }
+        }
 
         int totalSteps = 0;
-        totalSteps++; // validation
 
-        Iterator iter = abatorConfiguration.getAbatorContexts().iterator();
+        Iterator iter = contextsToRun.iterator();
         while (iter.hasNext()) {
             AbatorContext abatorContext = (AbatorContext) iter.next();
 
@@ -139,10 +175,7 @@ public class Abator {
 
         callback.setNumberOfSubTasks(totalSteps);
 
-        callback.startSubTask(Messages.getString("Progress.2")); //$NON-NLS-1$
-        abatorConfiguration.validate();
-
-        iter = abatorConfiguration.getAbatorContexts().iterator();
+        iter = contextsToRun.iterator();
         while (iter.hasNext()) {
             AbatorContext abatorContext = (AbatorContext) iter.next();
 

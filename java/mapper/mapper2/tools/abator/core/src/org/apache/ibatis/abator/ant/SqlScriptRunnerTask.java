@@ -25,6 +25,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.apache.ibatis.abator.internal.util.StringUtility;
+import org.apache.ibatis.abator.internal.util.messages.Messages;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -143,7 +144,7 @@ public class SqlScriptRunnerTask extends Task {
         String line;
         
         while ((line = br.readLine()) != null) {
-            if (line.startsWith("--")) {
+            if (line.startsWith("--")) { //$NON-NLS-1$
                 continue;
             }
             
@@ -151,7 +152,7 @@ public class SqlScriptRunnerTask extends Task {
                 continue;
             }
             
-            if (line.endsWith(";")) {
+            if (line.endsWith(";")) { //$NON-NLS-1$
                 sb.append(line.substring(0, line.length() - 1));
                 break;
             } else {
@@ -162,7 +163,7 @@ public class SqlScriptRunnerTask extends Task {
         String s = sb.toString().trim();
 
         if (s.length() > 0) {
-            log("Found Statement: " + s, Project.MSG_DEBUG);
+            log(Messages.getString("Progress.13", s), Project.MSG_DEBUG); //$NON-NLS-1$
         }
         
         return s.length() > 0 ? s : null;
