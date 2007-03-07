@@ -85,14 +85,14 @@ namespace IBatisNet.Common.Utilities.TypesResolver
         public virtual Type Resolve(string typeName)
         {
 #if dotnet2
-            Type type = ResolveGenericType(typeName);
+            Type type = ResolveGenericType(typeName.Replace(" ", string.Empty));
             if (type == null)
             {
-                type = ResolveType(typeName);
+                type = ResolveType(typeName.Replace(" ", string.Empty));
             }
             return type;
 #else
-            return ResolveType(typeName);
+            return ResolveType(typeName.Replace(" ", string.Empty));
 #endif
         }
         #endregion
@@ -300,7 +300,7 @@ namespace IBatisNet.Common.Utilities.TypesResolver
         /// </remarks>
         internal class GenericArgumentsInfo
         {
-        #region Constants
+            #region Constants
 
             /// <summary>
             /// The generic arguments prefix.
@@ -310,27 +310,23 @@ namespace IBatisNet.Common.Utilities.TypesResolver
             /// <summary>
             /// The generic arguments suffix.
             /// </summary>
-            public const string GENERIC_ARGUMENTS_SUFFIX = "],";
+            public const string GENERIC_ARGUMENTS_SUFFIX = "]]";
 
             /// <summary>
             /// The character that separates a list of generic arguments.
             /// </summary>
             public const string GENERIC_ARGUMENTS_SEPARATOR = "],[";
             
-            private const char GENERIC_ARGUMENT_SUFFIX = '[';
-            private const char GENERIC_ARGUMENT_PREFIX = ']';
-
-        #endregion
-
-        #region Fields
-
-            private string _unresolvedGenericTypeName = string.Empty;
-            private string _unresolvedGenericMethodName = string.Empty;
-            private string[] _unresolvedGenericArguments = null;
-
             #endregion
 
-        #region Constructor (s) / Destructor
+            #region Fields
+
+                private string _unresolvedGenericTypeName = string.Empty;
+                private string[] _unresolvedGenericArguments = null;
+
+                #endregion
+
+            #region Constructor (s) / Destructor
 
             /// <summary>
             /// Creates a new instance of the GenericArgumentsInfo class.
@@ -346,7 +342,7 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 
             #endregion
 
-        #region Properties
+            #region Properties
 
             /// <summary>
             /// The (unresolved) generic type name portion 
@@ -357,14 +353,6 @@ namespace IBatisNet.Common.Utilities.TypesResolver
                 get { return _unresolvedGenericTypeName; }
             }
 
-            /// <summary>
-            /// The (unresolved) generic method name portion 
-            /// of the original value when parsing a generic method.
-            /// </summary>
-            public string GenericMethodName
-            {
-                get { return _unresolvedGenericMethodName; }
-            }
 
             /// <summary>
             /// Is the string value contains generic arguments ?
@@ -404,7 +392,7 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 
             #endregion
 
-        #region Methods
+            #region Methods
 
             /// <summary>
             /// Returns an array of unresolved generic arguments types.
@@ -439,27 +427,17 @@ namespace IBatisNet.Common.Utilities.TypesResolver
                 if (!isMatch)
                 {
                     _unresolvedGenericTypeName = originalString;
-                    _unresolvedGenericMethodName = originalString;
                 }
                 else
                 {
-                    //.*'\d*\[\[
-                    //http://developpeur.journaldunet.com/tutoriel/php/030303php_regexp1a.shtml
-                    //http://www.asp-php.net/tutorial/asp-php/regexp.php
-
                     int argsStartIndex = originalString.IndexOf(GENERIC_ARGUMENTS_PREFIX);
                     int argsEndIndex = originalString.LastIndexOf(GENERIC_ARGUMENTS_SUFFIX);
                     if (argsEndIndex != -1)
                     {
-                        _unresolvedGenericMethodName = originalString.Remove(
-                            argsStartIndex, argsEndIndex - argsStartIndex + 1);
-
                         SplitGenericArguments(originalString.Substring(
-                            argsStartIndex + 1, argsEndIndex - argsStartIndex - 1));
+                            argsStartIndex + 1, argsEndIndex - argsStartIndex));
 
-                        _unresolvedGenericTypeName = originalString.Replace(
-                            originalString.Substring(argsStartIndex-2, argsEndIndex - argsStartIndex + 3),
-                            "`" + _unresolvedGenericArguments.Length);
+                        _unresolvedGenericTypeName = originalString.Remove(argsStartIndex, argsEndIndex - argsStartIndex + 2);
                     }
                 }
             }

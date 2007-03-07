@@ -13,6 +13,20 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
     [TestFixture] 
     public class TypeResolverTest
     {
+
+        /// <summary>
+        /// Test space on generic type
+        /// </summary>
+        [Test]
+        public void TestTrimSpace()
+        {
+            Type genericType = TypeUtils.ResolveType("System.Collections.Generic.Dictionary`2[[System.String],[System.Int32]]");
+
+            Assert.IsNotNull(genericType);
+        }
+
+
+
         /// <summary>
         /// Test nullable resolver
         /// </summary>
@@ -59,6 +73,10 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
         public void TestGenericDictionaryType()
         {
             IDictionary<string, int> dico = new Dictionary<string, int>();
+
+            Console.WriteLine(typeof(IDictionary<,>).FullName);
+            Console.WriteLine(dico.GetType().FullName);
+
             string assemblyQualifiedName = dico.GetType().AssemblyQualifiedName;
             Type listType = TypeUtils.ResolveType(assemblyQualifiedName);
 
