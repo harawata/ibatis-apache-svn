@@ -20,6 +20,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 
+import org.apache.ibatis.abator.api.dom.xml.Attribute;
+import org.apache.ibatis.abator.api.dom.xml.Document;
+import org.apache.ibatis.abator.api.dom.xml.XmlElement;
+import org.apache.ibatis.abator.internal.sqlmap.XmlConstants;
 import org.apache.ibatis.abator.ui.plugin.AbatorUIPlugin;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -157,61 +161,52 @@ public class NewConfigFileWizard extends Wizard implements INewWizard {
 	 */
 
 	private InputStream openContentStream() {
-        String lineSeparator = System.getProperty("line.separator"); //$NON-NLS-1$
-        if (lineSeparator == null) {
-            lineSeparator = "\n"; //$NON-NLS-1$
-        }
         
-		StringBuffer sb = new StringBuffer();
-		sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"); //$NON-NLS-1$
-		sb.append(lineSeparator);
-		sb.append("<!DOCTYPE abatorConfiguration PUBLIC \"-//Apache Software Foundation//DTD Abator for iBATIS Configuration 1.0//EN\""); //$NON-NLS-1$
-		sb.append(lineSeparator);
-		sb.append("  \"http://ibatis.apache.org/dtd/abator-config_1_0.dtd\">"); //$NON-NLS-1$
-		sb.append(lineSeparator);
-		sb.append(lineSeparator);
-		sb.append("<abatorConfiguration>"); //$NON-NLS-1$
-		sb.append(lineSeparator);
-		sb.append("  <abatorContext>"); //$NON-NLS-1$
-
-		sb.append("    <!-- TODO: Add Database Connection Information -->"); //$NON-NLS-1$
-		sb.append(lineSeparator);
-		sb.append("    <jdbcConnection driverClass=\"???\""); //$NON-NLS-1$
-		sb.append(lineSeparator);
-		sb.append("        connectionURL=\"???\""); //$NON-NLS-1$
-		sb.append(lineSeparator);
-		sb.append("        userId=\"???\""); //$NON-NLS-1$
-		sb.append(lineSeparator);
-		sb.append("        password=\"???\">"); //$NON-NLS-1$
-		sb.append(lineSeparator);
-		sb.append("      <classPathEntry location=\"???\" />"); //$NON-NLS-1$
-		sb.append(lineSeparator);
-		sb.append("    </jdbcConnection>"); //$NON-NLS-1$
-		sb.append(lineSeparator);
-
-		sb.append(lineSeparator);
-		sb.append("    <javaModelGenerator targetPackage=\"???\" targetProject=\"???\" />"); //$NON-NLS-1$
-		sb.append(lineSeparator);
-		sb.append("    <sqlMapGenerator targetPackage=\"???\" targetProject=\"???\" />"); //$NON-NLS-1$
-		sb.append(lineSeparator);
-		sb.append("    <daoGenerator type=\"IBATIS\" targetPackage=\"???\" targetProject=\"???\" />"); //$NON-NLS-1$
-		sb.append(lineSeparator);
-
-		sb.append(lineSeparator);
-		sb.append("    <table schema=\"???\" tableName=\"???\">"); //$NON-NLS-1$
-		sb.append(lineSeparator);
-		sb.append("      <columnOverride column=\"???\" property=\"???\" />"); //$NON-NLS-1$
-		sb.append(lineSeparator);
-		sb.append("    </table>"); //$NON-NLS-1$
-		sb.append(lineSeparator);
-		
-		sb.append(lineSeparator);
-		sb.append("  </abatorContext>"); //$NON-NLS-1$
-		sb.append(lineSeparator);
-		sb.append("</abatorConfiguration>"); //$NON-NLS-1$
-		sb.append(lineSeparator);
-		
-		return new ByteArrayInputStream(sb.toString().getBytes());
+        Document document = new Document(XmlConstants.ABATOR_CONFIG_PUBLIC_ID,
+                XmlConstants.ABATOR_CONFIG_SYSTEM_ID);
+        
+        XmlElement abatorConfiguration = new XmlElement("abatorConfiguration"); //$NON-NLS-1$
+        document.setRootElement(abatorConfiguration);
+        
+        XmlElement abatorContext = new XmlElement("abatorContext"); //$NON-NLS-1$
+        abatorConfiguration.addElement(abatorContext);
+        
+        XmlElement jdbcConnection = new XmlElement("jdbcConnection"); //$NON-NLS-1$
+        jdbcConnection.addAttribute(new Attribute("driverClass", "???")); //$NON-NLS-1$ //$NON-NLS-2$
+        jdbcConnection.addAttribute(new Attribute("connectionURL", "???")); //$NON-NLS-1$ //$NON-NLS-2$
+        jdbcConnection.addAttribute(new Attribute("userId", "???")); //$NON-NLS-1$ //$NON-NLS-2$
+        jdbcConnection.addAttribute(new Attribute("password", "???")); //$NON-NLS-1$ //$NON-NLS-2$
+        XmlElement classPathEntry = new XmlElement("classPathEntry"); //$NON-NLS-1$
+        classPathEntry.addAttribute(new Attribute("location", "???")); //$NON-NLS-1$ //$NON-NLS-2$
+        jdbcConnection.addElement(classPathEntry);
+        abatorContext.addElement(jdbcConnection);
+        
+        XmlElement javaModelGenerator = new XmlElement("javaModelGenerator"); //$NON-NLS-1$
+        javaModelGenerator.addAttribute(new Attribute("targetPackage", "???")); //$NON-NLS-1$ //$NON-NLS-2$
+        javaModelGenerator.addAttribute(new Attribute("targetProject", "???")); //$NON-NLS-1$ //$NON-NLS-2$
+        abatorContext.addElement(javaModelGenerator);
+        
+        XmlElement sqlMapGenerator = new XmlElement("sqlMapGenerator"); //$NON-NLS-1$
+        sqlMapGenerator.addAttribute(new Attribute("targetPackage", "???")); //$NON-NLS-1$ //$NON-NLS-2$
+        sqlMapGenerator.addAttribute(new Attribute("targetProject", "???")); //$NON-NLS-1$ //$NON-NLS-2$
+        abatorContext.addElement(sqlMapGenerator);
+        
+        XmlElement daoGenerator = new XmlElement("daoGenerator"); //$NON-NLS-1$
+        daoGenerator.addAttribute(new Attribute("targetPackage", "???")); //$NON-NLS-1$ //$NON-NLS-2$
+        daoGenerator.addAttribute(new Attribute("targetProject", "???")); //$NON-NLS-1$ //$NON-NLS-2$
+        daoGenerator.addAttribute(new Attribute("type", "GENERIC-CI")); //$NON-NLS-1$ //$NON-NLS-2$
+        abatorContext.addElement(daoGenerator);
+        
+        XmlElement table = new XmlElement("table"); //$NON-NLS-1$
+        table.addAttribute(new Attribute("schema", "???")); //$NON-NLS-1$ //$NON-NLS-2$
+        table.addAttribute(new Attribute("tableName", "???")); //$NON-NLS-1$ //$NON-NLS-2$
+        XmlElement columnOverride = new XmlElement("columnOverride"); //$NON-NLS-1$
+        columnOverride.addAttribute(new Attribute("column", "???")); //$NON-NLS-1$ //$NON-NLS-2$
+        columnOverride.addAttribute(new Attribute("property", "???")); //$NON-NLS-1$ //$NON-NLS-2$
+        table.addElement(columnOverride);
+        abatorContext.addElement(table);
+        
+		return new ByteArrayInputStream(document.getFormattedContent().getBytes());
 	}
 
 	private void throwCoreException(String message) throws CoreException {

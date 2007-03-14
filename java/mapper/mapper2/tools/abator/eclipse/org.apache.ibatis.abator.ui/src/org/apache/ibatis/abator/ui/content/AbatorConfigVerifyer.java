@@ -16,7 +16,6 @@
 
 package org.apache.ibatis.abator.ui.content;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 
@@ -82,7 +81,7 @@ public class AbatorConfigVerifyer extends DefaultHandler {
         }
     }
 
-    public InputSource resolveEntity(String publicId, String systemId) throws IOException, SAXException {
+    public InputSource resolveEntity(String publicId, String systemId) throws SAXException {
         if (!XmlConstants.ABATOR_CONFIG_PUBLIC_ID.equals(publicId)) {
             throw new SAXException("Not an Abator configuration file");
         }

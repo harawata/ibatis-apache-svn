@@ -44,6 +44,7 @@
     <topic href="core/htmldoc/usage/intro.html" label="Database Specific Information">
       <topic href="core/htmldoc/usage/db2.html" label="DB2"/>
       <topic href="core/htmldoc/usage/mysql.html" label="MySql"/>
+      <topic href="core/htmldoc/usage/oracle.html" label="Oracle"/>
     </topic>
 
     <topic href="core/htmldoc/reference/intro.html" label="Other Reference Information">
