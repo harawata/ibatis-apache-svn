@@ -142,23 +142,27 @@ public class AbatorConfigurationParser {
                 throw new XMLParserException(parseErrors);
             }
 
-            NodeList nodeList = document.getChildNodes();
-            AbatorConfiguration gc = null;
-            for (int i = 0; i < nodeList.getLength(); i++) {
-                Node node = nodeList.item(i);
-
-                if (node.getNodeType() == 1
-                        && "abatorConfiguration".equals(node.getNodeName())) { //$NON-NLS-1$
-                    gc = parseAbatorConfiguration(node);
+            AbatorConfiguration ac = null;
+            Node rootNode = document.getFirstChild();
+            while (rootNode != null) {
+                if (rootNode.getNodeType() == 1
+                        && "abatorConfiguration".equals(rootNode.getNodeName())) { //$NON-NLS-1$
+                    ac = parseAbatorConfiguration(rootNode);
                     break;
+                } else {
+                    rootNode = rootNode.getNextSibling();
                 }
             }
-
+            
+            if (ac == null) {
+                throw new XMLParserException(Messages.getString("RuntimeError.5")); //$NON-NLS-1$
+            }
+            
             if (parseErrors.size() > 0) {
                 throw new XMLParserException(parseErrors);
             }
 
-            return gc;
+            return ac;
         } catch (ParserConfigurationException e) {
             parseErrors.add(e.getMessage());
             throw new XMLParserException(parseErrors);
