@@ -15,12 +15,8 @@
  */
 package com.ibatis.common.beans;
 
-import com.ibatis.common.logging.Log;
-import com.ibatis.common.logging.LogFactory;
-
 import java.lang.reflect.*;
-import java.math.BigDecimal;
-import java.math.BigInteger;
+import java.math.*;
 import java.util.*;
 
 /**
@@ -29,8 +25,6 @@ import java.util.*;
  */
 public class ClassInfo {
   
-  private static final Log log = LogFactory.getLog(ClassInfo.class);
-
   private static boolean cacheEnabled = true;
   private static final String[] EMPTY_STRING_ARRAY = new String[0];
   private static final Set SIMPLE_TYPE_SET = new HashSet();
@@ -78,7 +72,8 @@ public class ClassInfo {
   private ClassInfo(Class clazz) {
     className = clazz.getName();
     addDefaultConstructor(clazz);
-    addMethods(clazz);
+    addGetMethods(clazz);
+    addSetMethods(clazz);
     addFields (clazz);
     readablePropertyNames = (String[]) getMethods.keySet().toArray(new String[getMethods.keySet().size()]);
     writeablePropertyNames = (String[]) setMethods.keySet().toArray(new String[setMethods.keySet().size()]);
@@ -103,6 +98,98 @@ public class ClassInfo {
     }
   }
 
+  private void addGetMethods(Class cls) {
+    Method[] methods = getAllMethodsForClass(cls);
+    for (int i = 0; i < methods.length; i++) {
+      Method method = methods[i];
+      String name = method.getName();
+      if (name.startsWith("get") && name.length() > 3) {
+        if (method.getParameterTypes().length == 0) {
+          name = dropCase(name);
+          addGetMethod(name, method);
+        }
+      } else if (name.startsWith("is") && name.length() > 2) {
+        if (method.getParameterTypes().length == 0) {
+          name = dropCase(name);
+          addGetMethod(name, method);
+        }
+      }
+    }
+  }
+
+  private void addGetMethod(String name, Method method) {
+    getMethods.put(name, new MethodInvoker(method));
+    getTypes.put(name, method.getReturnType());
+  }
+
+  private void addSetMethods(Class cls) {
+    Map conflictingSetters = new HashMap();
+    Method[] methods = getAllMethodsForClass(cls);
+    for (int i = 0; i < methods.length; i++) {
+      Method method = methods[i];
+      String name = method.getName();
+      if (name.startsWith("set") && name.length() > 3) {
+        if (method.getParameterTypes().length == 1) {
+          name = dropCase(name);
+          ///------------
+          addSetterConflict(conflictingSetters, name, method);
+          // addSetMethod(name, method);
+          ///------------
+        }
+      }
+    }
+    resolveSetterConflicts(conflictingSetters);
+  }
+
+  private void addSetterConflict(Map conflictingSetters, String name, Method method) {
+    List list = (List)conflictingSetters.get(name);
+    if (list == null) {
+      list = new ArrayList();
+      conflictingSetters.put(name,list);
+    }
+    list.add(method);
+  }
+
+  private void resolveSetterConflicts(Map conflictingSetters) {
+    for (Iterator propNames = conflictingSetters.keySet().iterator(); propNames.hasNext();) {
+      String propName = (String) propNames.next();
+      List setters = (List) conflictingSetters.get(propName);
+      Method firstMethod = (Method) setters.get(0);
+      if (setters.size() == 1) {
+        addSetMethod(propName, firstMethod);
+      } else {
+        Class expectedType = (Class) getTypes.get(propName);
+        if (expectedType == null) {
+          throw new RuntimeException ("Illegal overloaded setter method with ambiguous type for property "
+              + propName + " in class " + firstMethod.getDeclaringClass() + ".  This breaks the JavaBeans " +
+              "specification and can cause unpredicatble results.");
+        } else {
+          Iterator methods = setters.iterator();
+          Method setter = null;
+          while (methods.hasNext()) {
+            Method method = (Method) methods.next();
+            if (method.getParameterTypes().length == 1
+                && expectedType.equals(method.getParameterTypes()[0])) {
+              setter = method;
+              break;
+            }
+          }
+          if (setter == null) {
+            throw new RuntimeException ("Illegal overloaded setter method with ambiguous type for property "
+                + propName + " in class " + firstMethod.getDeclaringClass() + ".  This breaks the JavaBeans " +
+                "specification and can cause unpredicatble results.");
+          }
+          addSetMethod(propName, setter);
+        }
+      }
+    }
+  }
+
+  private void addSetMethod(String name, Method method) {
+    setMethods.put(name, new MethodInvoker(method));
+    setTypes.put(name, method.getParameterTypes()[0]);
+  }
+
   private void addFields(Class clazz) {
     Field[] fields = clazz.getDeclaredFields();
     for (int i=0; i < fields.length; i++) {
@@ -116,12 +203,10 @@ public class ClassInfo {
       }
       if (field.isAccessible()) {
         if (!setMethods.containsKey(field.getName())) {
-          setMethods.put(field.getName(), new SetFieldInvoker(field));
-          setTypes.put(field.getName(), field.getType());
+          addSetField(field);
         }
         if (!getMethods.containsKey(field.getName())) {
-          getMethods.put(field.getName(), new GetFieldInvoker(field));
-          getTypes.put(field.getName(), field.getType());
+          addGetField(field);
         }
       }
     }
@@ -130,37 +215,14 @@ public class ClassInfo {
     }
   }
 
-  private void addMethods(Class cls) {
-    Method[] methods = getAllMethodsForClass(cls);
-    for (int i = 0; i < methods.length; i++) {
-      Method method = methods[i];
-      String name = method.getName();
-      if (name.startsWith("set") && name.length() > 3) {
-        if (method.getParameterTypes().length == 1) {
-          name = dropCase(name);
-          if (setMethods.containsKey(name)) {
-            // TODO(JGB) - this should probably be a RuntimeException at some point???
-            log.error("Illegal overloaded setter method for property " + name + " in class " + cls.getName() +
-                ".  This breaks the JavaBeans specification and can cause unpredicatble results.");
-          }
-          setMethods.put(name, new MethodInvoker(method));
-          setTypes.put(name, method.getParameterTypes()[0]);
-        }
-      } else if (name.startsWith("get") && name.length() > 3) {
-        if (method.getParameterTypes().length == 0) {
-          name = dropCase(name);
-          getMethods.put(name, new MethodInvoker(method));
-          getTypes.put(name, method.getReturnType());
-        }
-      } else if (name.startsWith("is") && name.length() > 2) {
-        if (method.getParameterTypes().length == 0) {
-          name = dropCase(name);
-          getMethods.put(name, new MethodInvoker(method));
-          getTypes.put(name, method.getReturnType());
-        }
-      }
-      name = null;
-    }
+  private void addSetField(Field field) {
+    setMethods.put(field.getName(), new SetFieldInvoker(field));
+    setTypes.put(field.getName(), field.getType());
+  }
+
+  private void addGetField(Field field) {
+    getMethods.put(field.getName(), new GetFieldInvoker(field));
+    getTypes.put(field.getName(), field.getType());
   }
 
   private Method[] getAllMethodsForClass(Class cls) {
