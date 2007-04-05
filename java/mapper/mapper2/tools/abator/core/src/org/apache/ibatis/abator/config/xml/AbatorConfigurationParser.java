@@ -46,6 +46,7 @@ import org.apache.ibatis.abator.exception.XMLParserException;
 import org.apache.ibatis.abator.internal.util.StringUtility;
 import org.apache.ibatis.abator.internal.util.messages.Messages;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -142,19 +143,12 @@ public class AbatorConfigurationParser {
                 throw new XMLParserException(parseErrors);
             }
 
-            AbatorConfiguration ac = null;
-            Node rootNode = document.getFirstChild();
-            while (rootNode != null) {
-                if (rootNode.getNodeType() == 1
-                        && "abatorConfiguration".equals(rootNode.getNodeName())) { //$NON-NLS-1$
-                    ac = parseAbatorConfiguration(rootNode);
-                    break;
-                } else {
-                    rootNode = rootNode.getNextSibling();
-                }
-            }
-            
-            if (ac == null) {
+            AbatorConfiguration ac;
+            Element rootNode = document.getDocumentElement();
+            if (rootNode.getNodeType() == 1
+                    && "abatorConfiguration".equals(rootNode.getNodeName())) { //$NON-NLS-1$
+                ac = parseAbatorConfiguration(rootNode);
+            } else {
                 throw new XMLParserException(Messages.getString("RuntimeError.5")); //$NON-NLS-1$
             }
             
@@ -169,7 +163,7 @@ public class AbatorConfigurationParser {
         }
     }
 
-    private AbatorConfiguration parseAbatorConfiguration(Node node) throws XMLParserException {
+    private AbatorConfiguration parseAbatorConfiguration(Element node) throws XMLParserException {
 
         AbatorConfiguration abatorConfiguration = new AbatorConfiguration();
 

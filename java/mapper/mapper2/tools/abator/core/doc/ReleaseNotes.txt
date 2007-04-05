@@ -1,10 +1,12 @@
 -------------------------------------------------------------------------------
-Version 1.0.1:
+Version 1.1.0:
 Bugs - 
 1. corner case where the new "by example" methods fail if a criteria
    class has been added to the list, but there are no criteria set
 2. trimStrings on JavaModelGenerator not working
 3. Fix the XML file merger so that entities are preserved
+4. Fixed the configuration parser so that it correctly deals with
+   external entities
 
 Enhancements - 
 1. IBATIS-348 - escape column names with $ or #, and ignore special characters
