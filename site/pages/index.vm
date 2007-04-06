@@ -49,6 +49,16 @@
 
   <h2>News</h2>
 
+ <h3>iBATIS.NET DataMapper 1.6.1 and DataAccess 1.9.1 General Availability!</h3>
+<p>(April 6, 2007) The votes are in and both distributions are now tagged as GA!</p>
+ 
+<p>This release includes primarily several bug fixes and enhancements, documentation have been updated. 
+<br/> 
+iBATIS now supports support to groupBy attribute on resultMap to resolve N+1 select issue. 
+
+<p/>
+<p><b><a href="dotnetdownloads.cgi">Download iBATIS.NET DataMapper 1.6.1 and DataAccess 1.9.1 (GA)!</a></b></p>
+
  <h3>iBATIS.NET DataMapper 1.6.1 and DataAccess 1.9.1 Released [Status: Beta]</h3>
 <p>(March 1, 2007) The iBATIS.NET team is proud to announce that the BETA release of DataAccess V1.9.1 and DataMapper V1.6.1 are now available.</p>
  
