@@ -14,9 +14,9 @@
       <h4>Releases</h4>
 
       <ul>
-        <li><a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/IBatisNet.DataMapper-bin-1.6.1.zip" onClick="javascript:urchinTracker('/downloads/DataMapper161');">DataMapper 1.6.1</a> [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/IBatisNet.DataMapper-bin-1.6.1.zip.md5">MD5</a>] [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/IBatisNet.DataMapper-bin-1.6.1.zip.asc">PGP</a>] (BETA)</li>
-        <li><a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/IBatisNet.DataAccess-bin-1.9.1.zip" onClick="javascript:urchinTracker('/downloads/DataAccess191');">DataAccess 1.9.1</a> [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/IBatisNet.DataAccess-bin-1.9.1.zip.md5">MD5</a>] [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/IBatisNet.DataAccess-bin-1.9.1.zip.asc">PGP</a>] (BETA)</li>
-        <li><a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/source-revision-513437.zip" onClick="javascript:urchinTracker('/downloads/DotNetSource513437');">Source Revision 513437</a> [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/source-revision-513437.zip.zip.md5">MD5</a>] [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/source-revision-513437.zip.zip.asc">PGP</a>]</li>
+        <li><a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataMapper-bin-1.6.1.zip" onClick="javascript:urchinTracker('/downloads/DataMapper161');">DataMapper 1.6.1</a> [<a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataMapper-bin-1.6.1.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataMapper-bin-1.6.1.zip.asc">PGP</a>] (Apache General Availability)</li>
+        <li><a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataAccess-bin-1.9.1.zip" onClick="javascript:urchinTracker('/downloads/DataAccess191');">DataAccess 1.9.1</a> [<a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataAccess-bin-1.9.1.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/binaries/ibatis.net/IBatisNet.DataAccess-bin-1.9.1.zip.asc">PGP</a>] (Apache General Availability)</li>
+        <li><a href="[preferred]/ibatis/source/ibatis.net/source-revision-513437.zip" onClick="javascript:urchinTracker('/downloads/DotNetSource513437');">Source Revision 513437</a> [<a href="[preferred]/ibatis/source/ibatis.net/source-revision-513437.zip.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/source/ibatis.net/source-revision-513437.zip.zip.asc">PGP</a>]</li>
       </ul>
 
       <ul>
@@ -50,8 +50,8 @@
         <li>
           English
 	  <ul>
-            <li><a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/Doc-DataMapper-1.6.1.zip" onClick="javascript:urchinTracker('/downloads/DataMapperDoc160');">DataMapper 1.6.1 BETA Docs</a> [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta//Doc-DataMapper-1.6.1.zip.md5">MD5</a>] [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/Doc-DataMapper-1.6.1.zip.asc">PGP</a>] (CHM, PDF)</li>
-            <li><a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/Doc-DataAccess-1.9.1.zip" onClick="javascript:urchinTracker('/downloads/DataAccessDoc190');">DataAccess 1.9.1 BETA Docs</a> [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta//Doc-DataAccess-1.9.1.zip.md5">MD5</a>] [<a href="http://people.apache.org/dist/ibatis/ibatis.net/beta/Doc-DataAccess-1.9.1.zip.asc">PGP</a>] (CHM, PDF)</li>
+            <li><a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataMapper-1.6.1.zip" onClick="javascript:urchinTracker('/downloads/DataMapperDoc160');">DataMapper 1.6.1 BETA Docs</a> [<a href="[preferred]/ibatis/binaries/ibatis.net//Doc-DataMapper-1.6.1.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataMapper-1.6.1.zip.asc">PGP</a>] (CHM, PDF)</li>
+            <li><a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataAccess-1.9.1.zip" onClick="javascript:urchinTracker('/downloads/DataAccessDoc190');">DataAccess 1.9.1 BETA Docs</a> [<a href="[preferred]/ibatis/binaries/ibatis.net//Doc-DataAccess-1.9.1.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataAccess-1.9.1.zip.asc">PGP</a>] (CHM, PDF)</li>
           </ul>
     <br/>
           <ul>
