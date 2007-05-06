@@ -24,7 +24,7 @@ import java.util.*;
  * allows for easy mapping between property names and getter/setter methods.
  */
 public class ClassInfo {
-  
+
   private static boolean cacheEnabled = true;
   private static final String[] EMPTY_STRING_ARRAY = new String[0];
   private static final Set SIMPLE_TYPE_SET = new HashSet();
@@ -74,7 +74,7 @@ public class ClassInfo {
     addDefaultConstructor(clazz);
     addGetMethods(clazz);
     addSetMethods(clazz);
-    addFields (clazz);
+    addFields(clazz);
     readablePropertyNames = (String[]) getMethods.keySet().toArray(new String[getMethods.keySet().size()]);
     writeablePropertyNames = (String[]) setMethods.keySet().toArray(new String[setMethods.keySet().size()]);
   }
@@ -142,10 +142,10 @@ public class ClassInfo {
   }
 
   private void addSetterConflict(Map conflictingSetters, String name, Method method) {
-    List list = (List)conflictingSetters.get(name);
+    List list = (List) conflictingSetters.get(name);
     if (list == null) {
       list = new ArrayList();
-      conflictingSetters.put(name,list);
+      conflictingSetters.put(name, list);
     }
     list.add(method);
   }
@@ -160,7 +160,7 @@ public class ClassInfo {
       } else {
         Class expectedType = (Class) getTypes.get(propName);
         if (expectedType == null) {
-          throw new RuntimeException ("Illegal overloaded setter method with ambiguous type for property "
+          throw new RuntimeException("Illegal overloaded setter method with ambiguous type for property "
               + propName + " in class " + firstMethod.getDeclaringClass() + ".  This breaks the JavaBeans " +
               "specification and can cause unpredicatble results.");
         } else {
@@ -175,7 +175,7 @@ public class ClassInfo {
             }
           }
           if (setter == null) {
-            throw new RuntimeException ("Illegal overloaded setter method with ambiguous type for property "
+            throw new RuntimeException("Illegal overloaded setter method with ambiguous type for property "
                 + propName + " in class " + firstMethod.getDeclaringClass() + ".  This breaks the JavaBeans " +
                 "specification and can cause unpredicatble results.");
           }
@@ -192,7 +192,7 @@ public class ClassInfo {
 
   private void addFields(Class clazz) {
     Field[] fields = clazz.getDeclaredFields();
-    for (int i=0; i < fields.length; i++) {
+    for (int i = 0; i < fields.length; i++) {
       Field field = fields[i];
       if (canAccessPrivateMethods()) {
         try {
@@ -237,13 +237,13 @@ public class ClassInfo {
       return getClassMethods(cls);
     }
   }
-  
+
   /**
    * This method returns an array containing all methods
    * declared in this class and any superclass.
    * We use this method, instead of the simpler Class.getMethods(),
-   * because we want to look for private methods as well. 
-   * 
+   * because we want to look for private methods as well.
+   *
    * @param cls The class
    * @return An array containing all methods in this class
    */
@@ -252,19 +252,19 @@ public class ClassInfo {
     Class currentClass = cls;
     while (currentClass != null) {
       addUniqueMethods(uniqueMethods, currentClass.getDeclaredMethods());
-      
+
       // we also need to look for interface methods - 
       // because the class may be abstract
       Class[] interfaces = currentClass.getInterfaces();
       for (int i = 0; i < interfaces.length; i++) {
         addUniqueMethods(uniqueMethods, interfaces[i].getMethods());
       }
-      
+
       currentClass = currentClass.getSuperclass();
     }
-    
+
     Collection methods = uniqueMethods.values();
-    
+
     return (Method[]) methods.toArray(new Method[methods.size()]);
   }
 
@@ -283,17 +283,17 @@ public class ClassInfo {
             // Ignored. This is only a final precaution, nothing we can do.
           }
         }
-        
+
         uniqueMethods.put(signature, currentMethod);
       }
     }
   }
-  
+
   private String getSignature(Method method) {
     StringBuffer sb = new StringBuffer();
     sb.append(method.getName());
     Class[] parameters = method.getParameterTypes();
-    
+
     for (int i = 0; i < parameters.length; i++) {
       if (i == 0) {
         sb.append(':');
@@ -302,7 +302,7 @@ public class ClassInfo {
       }
       sb.append(parameters[i].getName());
     }
-    
+
     return sb.toString();
   }
 
@@ -324,15 +324,14 @@ public class ClassInfo {
 
   private static boolean canAccessPrivateMethods() {
     try {
-      System.getSecurityManager().checkPermission(new ReflectPermission("suppressAccessChecks"));
-      return true;
+      SecurityManager securityManager = System.getSecurityManager();
+      if (null != securityManager) {
+        securityManager.checkPermission(new ReflectPermission("suppressAccessChecks"));
+      }
     } catch (SecurityException e) {
       return false;
-    } catch (NullPointerException e) {
-      return true;
-    } catch (Exception e) {
-      return false;
     }
+    return true;
   }
 
   /**
@@ -352,7 +351,7 @@ public class ClassInfo {
         throw new RuntimeException("Error instantiating class. Cause: " + e, e);
       }
     } else {
-      throw new RuntimeException ("Error instantiating class.  There is no default constructor for class " + className);
+      throw new RuntimeException("Error instantiating class.  There is no default constructor for class " + className);
     }
   }
 
@@ -368,9 +367,9 @@ public class ClassInfo {
       throw new ProbeException("There is no WRITEABLE property named '" + propertyName + "' in class '" + className + "'");
     }
     if (!(method instanceof MethodInvoker)) {
-      throw new ProbeException("Can't get setter method because '" + propertyName + "' is a field in class '" + className + "'");    
+      throw new ProbeException("Can't get setter method because '" + propertyName + "' is a field in class '" + className + "'");
     }
-    return ((MethodInvoker)method).getMethod();
+    return ((MethodInvoker) method).getMethod();
   }
 
   /**
@@ -387,7 +386,7 @@ public class ClassInfo {
     if (!(method instanceof MethodInvoker)) {
       throw new ProbeException("Can't get getter method because '" + propertyName + "' is a field in class '" + className + "'");
     }
-    return ((MethodInvoker)method).getMethod();
+    return ((MethodInvoker) method).getMethod();
   }
 
   public Invoker getSetInvoker(String propertyName) {
@@ -539,7 +538,7 @@ public class ClassInfo {
       }
     }
   }
-  
+
 }
 
 
