@@ -7,6 +7,7 @@ Bugs -
 3. Fix the XML file merger so that entities are preserved
 4. Fixed the configuration parser so that it correctly deals with
    external entities
+5. IBATIS-434 - Incorrect default mapping for BIT datatype
 
 Enhancements - 
 1. IBATIS-348 - escape column names with $ or #, and ignore special characters

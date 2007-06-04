@@ -73,12 +73,12 @@ public class JavaTypeResolverDefaultImpl implements JavaTypeResolver {
 
 		case Types.BINARY:
 			type.setJdbcTypeName("BINARY"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Object.class.getName()));
+			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType("byte[]")); //$NON-NLS-1$
 			break;
 
 		case Types.BIT:
 			type.setJdbcTypeName("BIT"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Object.class.getName()));
+			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Boolean.class.getName()));
 			break;
 
 		case Types.BLOB:
@@ -136,7 +136,7 @@ public class JavaTypeResolverDefaultImpl implements JavaTypeResolver {
 
 		case Types.FLOAT:
 			type.setJdbcTypeName("FLOAT"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Float.class.getName()));
+			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Double.class.getName()));
 			break;
 
 		case Types.INTEGER:
@@ -184,7 +184,7 @@ public class JavaTypeResolverDefaultImpl implements JavaTypeResolver {
 
 		case Types.REAL:
 			type.setJdbcTypeName("REAL"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Double.class.getName()));
+			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Float.class.getName()));
 			break;
 
 		case Types.REF:
@@ -219,7 +219,7 @@ public class JavaTypeResolverDefaultImpl implements JavaTypeResolver {
 
 		case Types.VARBINARY:
 			type.setJdbcTypeName("VARBINARY"); //$NON-NLS-1$
-			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Object.class.getName()));
+			type.setFullyQualifiedJavaType(new FullyQualifiedJavaType("byte[]")); //$NON-NLS-1$
 			break;
 
 		case Types.VARCHAR:
