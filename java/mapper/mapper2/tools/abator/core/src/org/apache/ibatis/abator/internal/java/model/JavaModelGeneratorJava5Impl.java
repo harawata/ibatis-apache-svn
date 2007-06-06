@@ -59,7 +59,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         // add field, getter, setter for orderby clause
         Field field = new Field();
         field.addComment(table);
-        field.setVisibility(JavaVisibility.PRIVATE);
+        field.setVisibility(JavaVisibility.PROTECTED);
         field.setType(FullyQualifiedJavaType.getStringInstance());
         field.setName("orderByClause"); //$NON-NLS-1$
         topLevelClass.addField(field);
@@ -84,7 +84,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         // add field and methods for the list of ored criteria
         field = new Field();
         field.addComment(table);
-        field.setVisibility(JavaVisibility.PRIVATE);
+        field.setVisibility(JavaVisibility.PROTECTED);
 
         FullyQualifiedJavaType fqjt = FullyQualifiedJavaType
                 .getNewListInstance();
@@ -151,7 +151,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         answer.addComment(introspectedTable.getTable());
 
         method = new Method();
-        method.setVisibility(JavaVisibility.PRIVATE);
+        method.setVisibility(JavaVisibility.PROTECTED);
         method.setName("Criteria"); //$NON-NLS-1$
         method.setConstructor(true);
         method.addBodyLine("super();"); //$NON-NLS-1$
@@ -216,7 +216,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
                 .getNewArrayListInstance());
 
         field = new Field();
-        field.setVisibility(JavaVisibility.PRIVATE);
+        field.setVisibility(JavaVisibility.PROTECTED);
         FullyQualifiedJavaType listOfStrings = FullyQualifiedJavaType
                 .getNewListInstance();
         listOfStrings.addTypeArgument(FullyQualifiedJavaType
@@ -244,7 +244,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         listOfMaps.addTypeArgument(innerMapType);
 
         field = new Field();
-        field.setVisibility(JavaVisibility.PRIVATE);
+        field.setVisibility(JavaVisibility.PROTECTED);
         field.setType(listOfMaps);
         field.setName("criteriaWithSingleValue"); //$NON-NLS-1$
         answer.addField(field);
@@ -257,7 +257,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         answer.addMethod(method);
 
         field = new Field();
-        field.setVisibility(JavaVisibility.PRIVATE);
+        field.setVisibility(JavaVisibility.PROTECTED);
         field.setType(listOfMaps);
         field.setName("criteriaWithListValue"); //$NON-NLS-1$
         answer.addField(field);
@@ -270,7 +270,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         answer.addMethod(method);
 
         field = new Field();
-        field.setVisibility(JavaVisibility.PRIVATE);
+        field.setVisibility(JavaVisibility.PROTECTED);
         field.setType(listOfMaps);
         field.setName("criteriaWithBetweenValue"); //$NON-NLS-1$
         answer.addField(field);
@@ -284,7 +284,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
 
         // now add the methods for simplifying the individual field set methods
         method = new Method();
-        method.setVisibility(JavaVisibility.PRIVATE);
+        method.setVisibility(JavaVisibility.PROTECTED);
         method.setName("addCriterion"); //$NON-NLS-1$
         method.addParameter(new Parameter(FullyQualifiedJavaType
                 .getStringInstance(), "condition")); //$NON-NLS-1$
@@ -309,7 +309,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
                 "java.lang.Object", true)); //$NON-NLS-1$
 
         method = new Method();
-        method.setVisibility(JavaVisibility.PRIVATE);
+        method.setVisibility(JavaVisibility.PROTECTED);
         method.setName("addCriterion"); //$NON-NLS-1$
         method.addParameter(new Parameter(FullyQualifiedJavaType
                 .getStringInstance(), "condition")); //$NON-NLS-1$
@@ -328,7 +328,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         answer.addMethod(method);
 
         method = new Method();
-        method.setVisibility(JavaVisibility.PRIVATE);
+        method.setVisibility(JavaVisibility.PROTECTED);
         method.setName("addCriterion"); //$NON-NLS-1$
         method.addParameter(new Parameter(FullyQualifiedJavaType
                 .getStringInstance(), "condition")); //$NON-NLS-1$
@@ -362,7 +362,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
             topLevelClass.addImportedType(FullyQualifiedJavaType
                     .getNewIteratorInstance());
             method = new Method();
-            method.setVisibility(JavaVisibility.PRIVATE);
+            method.setVisibility(JavaVisibility.PROTECTED);
             method.setName("addCriterionForJDBCDate"); //$NON-NLS-1$
             method.addParameter(new Parameter(FullyQualifiedJavaType
                     .getStringInstance(), "condition")); //$NON-NLS-1$
@@ -375,7 +375,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
             answer.addMethod(method);
 
             method = new Method();
-            method.setVisibility(JavaVisibility.PRIVATE);
+            method.setVisibility(JavaVisibility.PROTECTED);
             method.setName("addCriterionForJDBCDate"); //$NON-NLS-1$
             method.addParameter(new Parameter(FullyQualifiedJavaType
                     .getStringInstance(), "condition")); //$NON-NLS-1$
@@ -398,7 +398,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
             answer.addMethod(method);
 
             method = new Method();
-            method.setVisibility(JavaVisibility.PRIVATE);
+            method.setVisibility(JavaVisibility.PROTECTED);
             method.setName("addCriterionForJDBCDate"); //$NON-NLS-1$
             method.addParameter(new Parameter(FullyQualifiedJavaType
                     .getStringInstance(), "condition")); //$NON-NLS-1$
@@ -423,7 +423,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
             topLevelClass.addImportedType(FullyQualifiedJavaType
                     .getNewIteratorInstance());
             method = new Method();
-            method.setVisibility(JavaVisibility.PRIVATE);
+            method.setVisibility(JavaVisibility.PROTECTED);
             method.setName("addCriterionForJDBCTime"); //$NON-NLS-1$
             method.addParameter(new Parameter(FullyQualifiedJavaType
                     .getStringInstance(), "condition")); //$NON-NLS-1$
@@ -436,7 +436,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
             answer.addMethod(method);
 
             method = new Method();
-            method.setVisibility(JavaVisibility.PRIVATE);
+            method.setVisibility(JavaVisibility.PROTECTED);
             method.setName("addCriterionForJDBCTime"); //$NON-NLS-1$
             method.addParameter(new Parameter(FullyQualifiedJavaType
                     .getStringInstance(), "condition")); //$NON-NLS-1$
@@ -459,7 +459,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
             answer.addMethod(method);
 
             method = new Method();
-            method.setVisibility(JavaVisibility.PRIVATE);
+            method.setVisibility(JavaVisibility.PROTECTED);
             method.setName("addCriterionForJDBCTime"); //$NON-NLS-1$
             method.addParameter(new Parameter(FullyQualifiedJavaType
                     .getStringInstance(), "condition")); //$NON-NLS-1$
@@ -604,7 +604,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         answer.add(sb.toString());
 
         Field field = new Field();
-        field.setVisibility(JavaVisibility.PRIVATE);
+        field.setVisibility(JavaVisibility.PROTECTED);
         field.setType(listOfMaps);
         field.setName(sb.toString());
         innerClass.addField(field);
@@ -624,7 +624,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         answer.add(sb.toString());
 
         field = new Field();
-        field.setVisibility(JavaVisibility.PRIVATE);
+        field.setVisibility(JavaVisibility.PROTECTED);
         field.setType(listOfMaps);
         field.setName(sb.toString());
         innerClass.addField(field);
@@ -644,7 +644,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         answer.add(sb.toString());
         
         field = new Field();
-        field.setVisibility(JavaVisibility.PRIVATE);
+        field.setVisibility(JavaVisibility.PROTECTED);
         field.setType(listOfMaps);
         field.setName(sb.toString());
         innerClass.addField(field);
@@ -679,7 +679,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
 
         // now add the methods for simplifying the individual field set methods
         method = new Method();
-        method.setVisibility(JavaVisibility.PRIVATE);
+        method.setVisibility(JavaVisibility.PROTECTED);
         sb.setLength(0);
         sb.append("add"); //$NON-NLS-1$
         sb.append(cd.getJavaProperty());
@@ -719,7 +719,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         sb.append("Criterion"); //$NON-NLS-1$
         
         method = new Method();
-        method.setVisibility(JavaVisibility.PRIVATE);
+        method.setVisibility(JavaVisibility.PROTECTED);
         method.setName(sb.toString());
         method.addParameter(new Parameter(FullyQualifiedJavaType
                 .getStringInstance(), "condition")); //$NON-NLS-1$
@@ -748,7 +748,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         sb.append("Criterion"); //$NON-NLS-1$
 
         method = new Method();
-        method.setVisibility(JavaVisibility.PRIVATE);
+        method.setVisibility(JavaVisibility.PROTECTED);
         method.setName(sb.toString());
         method.addParameter(new Parameter(FullyQualifiedJavaType
                 .getStringInstance(), "condition")); //$NON-NLS-1$

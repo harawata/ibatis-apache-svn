@@ -69,7 +69,7 @@ public class FlatLegacyTests extends BaseTest {
         try {
             Fieldsonly record = new Fieldsonly();
             record.setDoublefield(11.22);
-            record.setFloatfield(33.44f);
+            record.setFloatfield(33.44);
             record.setIntegerfield(5);
             dao.insert(record);
 
@@ -97,19 +97,19 @@ public class FlatLegacyTests extends BaseTest {
         try {
             Fieldsonly record = new Fieldsonly();
             record.setDoublefield(11.22);
-            record.setFloatfield(33.44f);
+            record.setFloatfield(33.44);
             record.setIntegerfield(5);
             dao.insert(record);
 
             record = new Fieldsonly();
             record.setDoublefield(44.55);
-            record.setFloatfield(66.77f);
+            record.setFloatfield(66.77);
             record.setIntegerfield(8);
             dao.insert(record);
 
             record = new Fieldsonly();
             record.setDoublefield(88.99);
-            record.setFloatfield(100.111f);
+            record.setFloatfield(100.111);
             record.setIntegerfield(9);
             dao.insert(record);
 
@@ -135,19 +135,19 @@ public class FlatLegacyTests extends BaseTest {
         try {
             Fieldsonly record = new Fieldsonly();
             record.setDoublefield(11.22);
-            record.setFloatfield(33.44f);
+            record.setFloatfield(33.44);
             record.setIntegerfield(5);
             dao.insert(record);
 
             record = new Fieldsonly();
             record.setDoublefield(44.55);
-            record.setFloatfield(66.77f);
+            record.setFloatfield(66.77);
             record.setIntegerfield(8);
             dao.insert(record);
 
             record = new Fieldsonly();
             record.setDoublefield(88.99);
-            record.setFloatfield(100.111f);
+            record.setFloatfield(100.111);
             record.setIntegerfield(9);
             dao.insert(record);
 

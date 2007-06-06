@@ -74,7 +74,7 @@ public class ConditionalJava2Tests extends BaseTest {
         try {
             Fieldsonly record = new Fieldsonly();
             record.setDoublefield(new Double(11.22));
-            record.setFloatfield(new Float(33.44));
+            record.setFloatfield(new Double(33.44));
             record.setIntegerfield(new Integer(5));
             dao.insert(record);
 
@@ -101,19 +101,19 @@ public class ConditionalJava2Tests extends BaseTest {
         try {
             Fieldsonly record = new Fieldsonly();
             record.setDoublefield(new Double(11.22));
-            record.setFloatfield(new Float(33.44));
+            record.setFloatfield(new Double(33.44));
             record.setIntegerfield(new Integer(5));
             dao.insert(record);
 
             record = new Fieldsonly();
             record.setDoublefield(new Double(44.55));
-            record.setFloatfield(new Float(66.77));
+            record.setFloatfield(new Double(66.77));
             record.setIntegerfield(new Integer(8));
             dao.insert(record);
 
             record = new Fieldsonly();
             record.setDoublefield(new Double(88.99));
-            record.setFloatfield(new Float(100.111));
+            record.setFloatfield(new Double(100.111));
             record.setIntegerfield(new Integer(9));
             dao.insert(record);
 
@@ -137,19 +137,19 @@ public class ConditionalJava2Tests extends BaseTest {
         try {
             Fieldsonly record = new Fieldsonly();
             record.setDoublefield(new Double(11.22));
-            record.setFloatfield(new Float(33.44));
+            record.setFloatfield(new Double(33.44));
             record.setIntegerfield(new Integer(5));
             dao.insert(record);
 
             record = new Fieldsonly();
             record.setDoublefield(new Double(44.55));
-            record.setFloatfield(new Float(66.77));
+            record.setFloatfield(new Double(66.77));
             record.setIntegerfield(new Integer(8));
             dao.insert(record);
 
             record = new Fieldsonly();
             record.setDoublefield(new Double(88.99));
-            record.setFloatfield(new Float(100.111));
+            record.setFloatfield(new Double(100.111));
             record.setIntegerfield(new Integer(9));
             dao.insert(record);
 
@@ -169,19 +169,19 @@ public class ConditionalJava2Tests extends BaseTest {
         try {
             Fieldsonly record = new Fieldsonly();
             record.setDoublefield(new Double(11.22));
-            record.setFloatfield(new Float(33.44));
+            record.setFloatfield(new Double(33.44));
             record.setIntegerfield(new Integer(5));
             dao.insert(record);
 
             record = new Fieldsonly();
             record.setDoublefield(new Double(44.55));
-            record.setFloatfield(new Float(66.77));
+            record.setFloatfield(new Double(66.77));
             record.setIntegerfield(new Integer(8));
             dao.insert(record);
 
             record = new Fieldsonly();
             record.setDoublefield(new Double(88.99));
-            record.setFloatfield(new Float(100.111));
+            record.setFloatfield(new Double(100.111));
             record.setIntegerfield(new Integer(9));
             dao.insert(record);
 
