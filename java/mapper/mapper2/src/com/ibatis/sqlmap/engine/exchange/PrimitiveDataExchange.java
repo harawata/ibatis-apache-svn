@@ -18,7 +18,7 @@ package com.ibatis.sqlmap.engine.exchange;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMapping;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
-import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.scope.StatementScope;
 
 import java.util.Map;
 
@@ -34,7 +34,7 @@ public class PrimitiveDataExchange extends BaseDataExchange implements DataExcha
   public void initialize(Map properties) {
   }
 
-  public Object[] getData(RequestScope request, ParameterMap parameterMap, Object parameterObject) {
+  public Object[] getData(StatementScope statementScope, ParameterMap parameterMap, Object parameterObject) {
     ParameterMapping[] mappings = parameterMap.getParameterMappings();
     Object[] data = new Object[mappings.length];
     for (int i = 0; i < mappings.length; i++) {
@@ -43,11 +43,11 @@ public class PrimitiveDataExchange extends BaseDataExchange implements DataExcha
     return data;
   }
 
-  public Object setData(RequestScope request, ResultMap resultMap, Object resultObject, Object[] values) {
+  public Object setData(StatementScope statementScope, ResultMap resultMap, Object resultObject, Object[] values) {
     return values[0];
   }
 
-  public Object setData(RequestScope request, ParameterMap parameterMap, Object parameterObject, Object[] values) {
+  public Object setData(StatementScope statementScope, ParameterMap parameterMap, Object parameterObject, Object[] values) {
     return values[0];
   }
 

@@ -15,23 +15,23 @@
  */
 package com.ibatis.sqlmap.engine.mapping.statement;
 
-import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.scope.StatementScope;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public class ProcedureStatement extends GeneralStatement {
 
-  protected void postProcessParameterObject(RequestScope request, Object parameterObject, Object[] parameters) {
-    request.getParameterMap().refreshParameterObjectValues(request, parameterObject, parameters);
+  protected void postProcessParameterObject(StatementScope statementScope, Object parameterObject, Object[] parameters) {
+    statementScope.getParameterMap().refreshParameterObjectValues(statementScope, parameterObject, parameters);
   }
 
-  protected int sqlExecuteUpdate(RequestScope request, Connection conn, String sqlString, Object[] parameters) throws SQLException {
-    return getSqlExecutor().executeUpdateProcedure(request, conn, sqlString.trim(), parameters);
+  protected int sqlExecuteUpdate(StatementScope statementScope, Connection conn, String sqlString, Object[] parameters) throws SQLException {
+    return getSqlExecutor().executeUpdateProcedure(statementScope, conn, sqlString.trim(), parameters);
   }
 
-  protected void sqlExecuteQuery(RequestScope request, Connection conn, String sqlString, Object[] parameters, int skipResults, int maxResults, RowHandlerCallback callback) throws SQLException {
-    getSqlExecutor().executeQueryProcedure(request, conn, sqlString.trim(), parameters, skipResults, maxResults, callback);
+  protected void sqlExecuteQuery(StatementScope statementScope, Connection conn, String sqlString, Object[] parameters, int skipResults, int maxResults, RowHandlerCallback callback) throws SQLException {
+    getSqlExecutor().executeQueryProcedure(statementScope, conn, sqlString.trim(), parameters, skipResults, maxResults, callback);
   }
 
   public StatementType getStatementType() {

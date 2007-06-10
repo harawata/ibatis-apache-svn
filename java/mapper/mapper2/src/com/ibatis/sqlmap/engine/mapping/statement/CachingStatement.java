@@ -21,7 +21,7 @@ import com.ibatis.sqlmap.engine.cache.CacheModel;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
 import com.ibatis.sqlmap.engine.mapping.sql.Sql;
-import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.scope.StatementScope;
 import com.ibatis.sqlmap.engine.transaction.Transaction;
 
 import java.sql.SQLException;
@@ -61,30 +61,30 @@ public class CachingStatement implements MappedStatement {
     return statement.getResultMap();
   }
 
-  public int executeUpdate(RequestScope request, Transaction trans, Object parameterObject)
+  public int executeUpdate(StatementScope statementScope, Transaction trans, Object parameterObject)
       throws SQLException {
-    int n = statement.executeUpdate(request, trans, parameterObject);
+    int n = statement.executeUpdate(statementScope, trans, parameterObject);
     return n;
   }
 
-  public Object executeQueryForObject(RequestScope request, Transaction trans, Object parameterObject, Object resultObject)
+  public Object executeQueryForObject(StatementScope statementScope, Transaction trans, Object parameterObject, Object resultObject)
       throws SQLException {
-    CacheKey cacheKey = getCacheKey(request, parameterObject);
+    CacheKey cacheKey = getCacheKey(statementScope, parameterObject);
     cacheKey.update("executeQueryForObject");
     Object object = cacheModel.getObject(cacheKey);
     if (object == CacheModel.NULL_OBJECT){
     	//	This was cached, but null
     	object = null;
     }else if (object == null) {
-       object = statement.executeQueryForObject(request, trans, parameterObject, resultObject);
+       object = statement.executeQueryForObject(statementScope, trans, parameterObject, resultObject);
        cacheModel.putObject(cacheKey, object);
     }
     return object;
   }
 
-  public List executeQueryForList(RequestScope request, Transaction trans, Object parameterObject, int skipResults, int maxResults)
+  public List executeQueryForList(StatementScope statementScope, Transaction trans, Object parameterObject, int skipResults, int maxResults)
       throws SQLException {
-    CacheKey cacheKey = getCacheKey(request, parameterObject);
+    CacheKey cacheKey = getCacheKey(statementScope, parameterObject);
     cacheKey.update("executeQueryForList");
     cacheKey.update(skipResults);
     cacheKey.update(maxResults);
@@ -94,7 +94,7 @@ public class CachingStatement implements MappedStatement {
       // The cached object was null
       list = null;
     }else if (listAsObject == null) {
-      list = statement.executeQueryForList(request, trans, parameterObject, skipResults, maxResults);
+      list = statement.executeQueryForList(statementScope, trans, parameterObject, skipResults, maxResults);
       cacheModel.putObject(cacheKey, list);
     }else{
       list = (List) listAsObject;
@@ -102,15 +102,15 @@ public class CachingStatement implements MappedStatement {
     return list;
   }
 
-  public void executeQueryWithRowHandler(RequestScope request, Transaction trans, Object parameterObject, RowHandler rowHandler)
+  public void executeQueryWithRowHandler(StatementScope statementScope, Transaction trans, Object parameterObject, RowHandler rowHandler)
       throws SQLException {
-    statement.executeQueryWithRowHandler(request, trans, parameterObject, rowHandler);
+    statement.executeQueryWithRowHandler(statementScope, trans, parameterObject, rowHandler);
   }
 
-  public CacheKey getCacheKey(RequestScope request, Object parameterObject) {
-    CacheKey key = statement.getCacheKey(request, parameterObject);
+  public CacheKey getCacheKey(StatementScope statementScope, Object parameterObject) {
+    CacheKey key = statement.getCacheKey(statementScope, parameterObject);
     if (!cacheModel.isReadOnly() && !cacheModel.isSerialize()) {
-      key.update(request.getSession());
+      key.update(statementScope.getSession());
     }
     return key;
   }
@@ -127,8 +127,8 @@ public class CachingStatement implements MappedStatement {
     statement.notifyListeners();
   }
 
-  public void initRequest(RequestScope request) {
-    statement.initRequest(request);
+  public void initRequest(StatementScope statementScope) {
+    statement.initRequest(statementScope);
   }
 
   public Sql getSql() {

@@ -15,7 +15,6 @@
  */
 package com.ibatis.sqlmap.engine.transaction;
 
-import com.ibatis.common.util.Throttle;
 import com.ibatis.sqlmap.engine.scope.SessionScope;
 
 import java.sql.SQLException;
@@ -23,20 +22,18 @@ import java.sql.SQLException;
 public class TransactionManager {
 
   private TransactionConfig config;
-  private Throttle txThrottle;
 
   public TransactionManager(TransactionConfig transactionConfig) {
     this.config = transactionConfig;
-    this.txThrottle = new Throttle(transactionConfig.getMaximumConcurrentTransactions());
   }
 
-  public void begin(SessionScope session) throws SQLException, TransactionException {
-    begin(session, IsolationLevel.UNSET_ISOLATION_LEVEL);
+  public void begin(SessionScope sessionScope) throws SQLException, TransactionException {
+    begin(sessionScope, IsolationLevel.UNSET_ISOLATION_LEVEL);
   }
 
-  public void begin(SessionScope session, int transactionIsolation) throws SQLException, TransactionException {
-    Transaction trans = session.getTransaction();
-    TransactionState state = session.getTransactionState();
+  public void begin(SessionScope sessionScope, int transactionIsolation) throws SQLException, TransactionException {
+    Transaction trans = sessionScope.getTransaction();
+    TransactionState state = sessionScope.getTransactionState();
     if (state == TransactionState.STATE_STARTED) {
       throw new TransactionException("TransactionManager could not start a new transaction.  " +
           "A transaction is already started.");
@@ -46,29 +43,16 @@ public class TransactionManager {
           "The calling .setUserConnection (null) will clear the user provided transaction.");
     }
 
-    txThrottle.increment();
+    trans = config.newTransaction(transactionIsolation);
+    sessionScope.setCommitRequired(false);
 
-    try {
-      trans = config.newTransaction(transactionIsolation);
-      session.setCommitRequired(false);
-    } catch (SQLException e) {
-      txThrottle.decrement();
-      throw e;
-    } catch (TransactionException e) {
-      txThrottle.decrement();
-      throw e;
-    } catch (Exception e) {
-      txThrottle.decrement();
-      throw new RuntimeException ("Unexpected exception wile beginning transaction.", e);
-    }
-
-    session.setTransaction(trans);
-    session.setTransactionState(TransactionState.STATE_STARTED);
+    sessionScope.setTransaction(trans);
+    sessionScope.setTransactionState(TransactionState.STATE_STARTED);
   }
 
-  public void commit(SessionScope session) throws SQLException, TransactionException {
-    Transaction trans = session.getTransaction();
-    TransactionState state = session.getTransactionState();
+  public void commit(SessionScope sessionScope) throws SQLException, TransactionException {
+    Transaction trans = sessionScope.getTransaction();
+    TransactionState state = sessionScope.getTransactionState();
     if (state == TransactionState.STATE_USER_PROVIDED) {
       throw new TransactionException("TransactionManager could not commit.  " +
           "A user provided connection is currently being used by this session.  " +
@@ -77,16 +61,16 @@ public class TransactionManager {
     } else if (state != TransactionState.STATE_STARTED && state != TransactionState.STATE_COMMITTED ) {
       throw new TransactionException("TransactionManager could not commit.  No transaction is started.");
     }
-    if (session.isCommitRequired() || config.isForceCommit()) {
+    if (sessionScope.isCommitRequired() || config.isForceCommit()) {
       trans.commit();
-      session.setCommitRequired(false);
+      sessionScope.setCommitRequired(false);
     }
-    session.setTransactionState(TransactionState.STATE_COMMITTED);
+    sessionScope.setTransactionState(TransactionState.STATE_COMMITTED);
   }
 
-  public void end(SessionScope session) throws SQLException, TransactionException {
-    Transaction trans = session.getTransaction();
-    TransactionState state = session.getTransactionState();
+  public void end(SessionScope sessionScope) throws SQLException, TransactionException {
+    Transaction trans = sessionScope.getTransaction();
+    TransactionState state = sessionScope.getTransactionState();
 
     if (state == TransactionState.STATE_USER_PROVIDED) {
       throw new TransactionException("TransactionManager could not end this transaction.  " +
@@ -99,24 +83,19 @@ public class TransactionManager {
       if (trans != null) {
         try {
           if (state != TransactionState.STATE_COMMITTED) {
-            if (session.isCommitRequired() || config.isForceCommit()) {
+            if (sessionScope.isCommitRequired() || config.isForceCommit()) {
               trans.rollback();
-              session.setCommitRequired(false);
+              sessionScope.setCommitRequired(false);
             }
           }
         } finally {
-          session.closePreparedStatements();
+          sessionScope.closePreparedStatements();
           trans.close();
         }
       }
     } finally {
-
-      if (state != TransactionState.STATE_ENDED) {
-        txThrottle.decrement();
-      }
-
-      session.setTransaction(null);
-      session.setTransactionState(TransactionState.STATE_ENDED);
+      sessionScope.setTransaction(null);
+      sessionScope.setTransactionState(TransactionState.STATE_ENDED);
     }
   }
 

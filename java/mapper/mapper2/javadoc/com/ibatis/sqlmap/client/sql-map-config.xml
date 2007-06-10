@@ -25,9 +25,6 @@
     lazyLoadingEnabled="true"
     cacheModelsEnabled="true"
     enhancementEnabled="true"
-    maxRequests="512"
-    maxSessions="128"
-    maxTransactions="32" 
     />
 
   <!-- A type alias can be used to declare a shorter name for a long fully qualified

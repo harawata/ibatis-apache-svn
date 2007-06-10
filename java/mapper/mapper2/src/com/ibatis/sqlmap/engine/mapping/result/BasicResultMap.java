@@ -27,7 +27,7 @@ import com.ibatis.sqlmap.engine.mapping.result.loader.ResultLoader;
 import com.ibatis.sqlmap.engine.mapping.sql.Sql;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
 import com.ibatis.sqlmap.engine.scope.ErrorContext;
-import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.scope.StatementScope;
 import com.ibatis.sqlmap.engine.type.DomCollectionTypeMarker;
 import com.ibatis.sqlmap.engine.type.DomTypeMarker;
 import com.ibatis.sqlmap.engine.type.TypeHandler;
@@ -250,7 +250,7 @@ public class BasicResultMap implements ResultMap {
     return discriminator;
   }
 
-  public ResultMap resolveSubMap (RequestScope request, ResultSet rs) throws SQLException {
+  public ResultMap resolveSubMap (StatementScope statementScope, ResultSet rs) throws SQLException {
     ResultMap subMap = this;
     if (discriminator != null) {
       BasicResultMapping mapping = (BasicResultMapping)discriminator.getResultMapping();
@@ -262,7 +262,7 @@ public class BasicResultMap implements ResultMap {
       if (subMap == null) {
         subMap = this;
       } else if (subMap != this) {
-        subMap = subMap.resolveSubMap(request, rs);
+        subMap = subMap.resolveSubMap(statementScope, rs);
       }
     }
     return subMap;
@@ -299,16 +299,16 @@ public class BasicResultMap implements ResultMap {
   /**
    * Read a row from a resultset and map results to an array.
    *
-   * @param request scope of the request
+   * @param statementScope scope of the request
    * @param rs ResultSet to read from
    *
    * @return row read as an array of column values.
    *
    * @throws java.sql.SQLException
    */
-  public Object[] getResults(RequestScope request, ResultSet rs)
+  public Object[] getResults(StatementScope statementScope, ResultSet rs)
       throws SQLException {
-    ErrorContext errorContext = request.getErrorContext();
+    ErrorContext errorContext = statementScope.getErrorContext();
     errorContext.setActivity("applying a result map");
     errorContext.setObjectId(this.getId());
     errorContext.setResource(this.getResource());
@@ -327,17 +327,17 @@ public class BasicResultMap implements ResultMap {
           if (javaType == null) {
             javaType = Object.class;
           }
-          columnValues[i] = getNestedSelectMappingValue(request, rs, mapping, javaType);
+          columnValues[i] = getNestedSelectMappingValue(statementScope, rs, mapping, javaType);
         } else if (DomTypeMarker.class.isAssignableFrom(resultClass)) {
           Class javaType = mapping.getJavaType();
           if (javaType == null) {
             javaType = DomTypeMarker.class;
           }
-          columnValues[i] = getNestedSelectMappingValue(request, rs, mapping, javaType);
+          columnValues[i] = getNestedSelectMappingValue(statementScope, rs, mapping, javaType);
         } else {
           Probe p = ProbeFactory.getProbe(resultClass);
           Class type = p.getPropertyTypeForSetter(resultClass, mapping.getPropertyName());
-          columnValues[i] = getNestedSelectMappingValue(request, rs, mapping, type);
+          columnValues[i] = getNestedSelectMappingValue(statementScope, rs, mapping, type);
         }
         foundData = foundData || columnValues[i] != null;
       } else if (mapping.getNestedResultMapName() == null) {
@@ -351,35 +351,35 @@ public class BasicResultMap implements ResultMap {
       }
     }
 
-    request.setRowDataFound(foundData);
+    statementScope.setRowDataFound(foundData);
 
     return columnValues;
   }
 
-  public Object setResultObjectValues(RequestScope request, Object resultObject, Object[] values) {
+  public Object setResultObjectValues(StatementScope statementScope, Object resultObject, Object[] values) {
 
-    String ukey = (String)getUniqueKey(request.getCurrentNestedKey(), values);
+    String ukey = (String)getUniqueKey(statementScope.getCurrentNestedKey(), values);
 
-    Map uniqueKeys = request.getUniqueKeys(this);
+    Map uniqueKeys = statementScope.getUniqueKeys(this);
 
-    request.setCurrentNestedKey(ukey);
+    statementScope.setCurrentNestedKey(ukey);
     if (uniqueKeys != null && uniqueKeys.containsKey(ukey)) {
       // Unique key is already known, so get the existing result object and process additional results.
       resultObject = uniqueKeys.get(ukey);
-      applyNestedResultMap(request, resultObject, values);
+      applyNestedResultMap(statementScope, resultObject, values);
       resultObject = NO_VALUE;
     } else if (ukey == null || uniqueKeys == null || !uniqueKeys.containsKey(ukey)) {
       // Unique key is NOT known, so create a new result object and then process additional results.
-      resultObject = dataExchange.setData(request, this, resultObject, values);
+      resultObject = dataExchange.setData(statementScope, this, resultObject, values);
       // Lazy init key set, only if we're grouped by something (i.e. ukey != null)
       if (ukey != null) {
         if (uniqueKeys == null) {
           uniqueKeys = new HashMap();
-          request.setUniqueKeys(this, uniqueKeys);
+          statementScope.setUniqueKeys(this, uniqueKeys);
         }
         uniqueKeys.put(ukey, resultObject);
       }
-      applyNestedResultMap(request, resultObject, values);
+      applyNestedResultMap(statementScope, resultObject, values);
     } else {
       // Otherwise, we don't care about these results.
       resultObject = NO_VALUE;
@@ -388,12 +388,12 @@ public class BasicResultMap implements ResultMap {
     return resultObject;
   }
 
-  private void applyNestedResultMap(RequestScope request, Object resultObject, Object[] values) {
+  private void applyNestedResultMap(StatementScope statementScope, Object resultObject, Object[] values) {
     if (resultObject != null && resultObject != NO_VALUE) {
       if (nestedResultMappings != null) {
         for (int i = 0, n = nestedResultMappings.size(); i < n; i++) {
           BasicResultMapping resultMapping = (BasicResultMapping) nestedResultMappings.get(i);
-          setNestedResultMappingValue(resultMapping, request, resultObject, values);
+          setNestedResultMappingValue(resultMapping, statementScope, resultObject, values);
         }
       }
     }
@@ -409,17 +409,17 @@ public class BasicResultMap implements ResultMap {
    * </ul>
    * 
    * @param mapping
-   * @param request
+   * @param statementScope
    * @param resultObject
    * @param values
    */
-  protected void setNestedResultMappingValue(BasicResultMapping mapping, RequestScope request, Object resultObject, Object[] values) {
+  protected void setNestedResultMappingValue(BasicResultMapping mapping, StatementScope statementScope, Object resultObject, Object[] values) {
     try {
 
       String resultMapName = mapping.getNestedResultMapName();
       ResultMap resultMap = getDelegate().getResultMap(resultMapName);
       // get the discriminated submap if it exists
-      resultMap = resultMap.resolveSubMap(request, request.getResultSet());
+      resultMap = resultMap.resolveSubMap(statementScope, statementScope.getResultSet());
       
       Class type = mapping.getJavaType();
       String propertyName = mapping.getPropertyName();
@@ -444,9 +444,9 @@ public class BasicResultMap implements ResultMap {
         }
       }
 
-      values = resultMap.getResults(request, request.getResultSet());
-      if (request.isRowDataFound()) {
-        Object o = resultMap.setResultObjectValues(request, null, values);
+      values = resultMap.getResults(statementScope, statementScope.getResultSet());
+      if (statementScope.isRowDataFound()) {
+        Object o = resultMap.setResultObjectValues(statementScope, null, values);
         if (o != NO_VALUE) {
           if (obj != null && obj instanceof Collection) {
             ((Collection) obj).add(o);
@@ -460,27 +460,27 @@ public class BasicResultMap implements ResultMap {
     }
   }
 
-  protected Object getNestedSelectMappingValue(RequestScope request, ResultSet rs, BasicResultMapping mapping, Class targetType)
+  protected Object getNestedSelectMappingValue(StatementScope statementScope, ResultSet rs, BasicResultMapping mapping, Class targetType)
       throws SQLException {
     try {
       TypeHandlerFactory typeHandlerFactory = getDelegate().getTypeHandlerFactory();
 
       String statementName = mapping.getStatementName();
-      ExtendedSqlMapClient client = (ExtendedSqlMapClient) request.getSession().getSqlMapClient();
+      ExtendedSqlMapClient client = (ExtendedSqlMapClient) statementScope.getSession().getSqlMapClient();
 
       MappedStatement mappedStatement = client.getMappedStatement(statementName);
       Class parameterType = mappedStatement.getParameterClass();
       Object parameterObject = null;
 
       if (parameterType == null) {
-        parameterObject = prepareBeanParameterObject(request, rs, mapping, parameterType);
+        parameterObject = prepareBeanParameterObject(statementScope, rs, mapping, parameterType);
       } else {
         if (typeHandlerFactory.hasTypeHandler(parameterType)) {
           parameterObject = preparePrimitiveParameterObject(rs, mapping, parameterType);
         } else if (DomTypeMarker.class.isAssignableFrom(parameterType)) {
           parameterObject = prepareDomParameterObject(rs, mapping);
         } else {
-          parameterObject = prepareBeanParameterObject(request, rs, mapping, parameterType);
+          parameterObject = prepareBeanParameterObject(statementScope, rs, mapping, parameterType);
         }
       }
 
@@ -488,7 +488,7 @@ public class BasicResultMap implements ResultMap {
       if (parameterObject != null) {
 
         Sql sql = mappedStatement.getSql();
-        ResultMap resultMap = sql.getResultMap(request, parameterObject);
+        ResultMap resultMap = sql.getResultMap(statementScope, parameterObject);
         Class resultClass = resultMap.getResultClass();
 
         if (resultClass != null && !DomTypeMarker.class.isAssignableFrom(targetType)) {
@@ -564,7 +564,7 @@ public class BasicResultMap implements ResultMap {
   }
 
 
-  private Object prepareBeanParameterObject(RequestScope request, ResultSet rs, BasicResultMapping mapping, Class parameterType)
+  private Object prepareBeanParameterObject(StatementScope statementScope, ResultSet rs, BasicResultMapping mapping, Class parameterType)
       throws InstantiationException, IllegalAccessException, SQLException {
     TypeHandlerFactory typeHandlerFactory = getDelegate().getTypeHandlerFactory();
 

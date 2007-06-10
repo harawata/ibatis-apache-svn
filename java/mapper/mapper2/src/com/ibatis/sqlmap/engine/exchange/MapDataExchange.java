@@ -20,7 +20,7 @@ import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMapping;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMapping;
-import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.scope.StatementScope;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +37,7 @@ public class MapDataExchange extends BaseDataExchange implements DataExchange {
   public void initialize(Map properties) {
   }
 
-  public Object[] getData(RequestScope request, ParameterMap parameterMap, Object parameterObject) {
+  public Object[] getData(StatementScope statementScope, ParameterMap parameterMap, Object parameterObject) {
     if (!(parameterObject instanceof Map)) {
       throw new RuntimeException("Error.  Object passed into MapDataExchange was not an instance of Map.");
     }
@@ -51,7 +51,7 @@ public class MapDataExchange extends BaseDataExchange implements DataExchange {
     return data;
   }
 
-  public Object setData(RequestScope request, ResultMap resultMap, Object resultObject, Object[] values) {
+  public Object setData(StatementScope statementScope, ResultMap resultMap, Object resultObject, Object[] values) {
     if (!(resultObject == null || resultObject instanceof Map)) {
       throw new RuntimeException("Error.  Object passed into MapDataExchange was not an instance of Map.");
     }
@@ -69,7 +69,7 @@ public class MapDataExchange extends BaseDataExchange implements DataExchange {
     return map;
   }
 
-  public Object setData(RequestScope request, ParameterMap parameterMap, Object parameterObject, Object[] values) {
+  public Object setData(StatementScope statementScope, ParameterMap parameterMap, Object parameterObject, Object[] values) {
     if (!(parameterObject == null || parameterObject instanceof Map)) {
       throw new RuntimeException("Error.  Object passed into MapDataExchange was not an instance of Map.");
     }

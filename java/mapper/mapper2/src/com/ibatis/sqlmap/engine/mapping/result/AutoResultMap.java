@@ -21,7 +21,7 @@ import com.ibatis.common.beans.ProbeFactory;
 
 import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
-import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.scope.StatementScope;
 import com.ibatis.sqlmap.engine.type.DomTypeMarker;
 
 import java.sql.ResultSet;
@@ -47,12 +47,12 @@ public class AutoResultMap extends BasicResultMap {
     this.allowRemapping = allowRemapping;
   }
 
-  public synchronized Object[] getResults(RequestScope request, ResultSet rs)
+  public synchronized Object[] getResults(StatementScope statementScope, ResultSet rs)
       throws SQLException {
     if (allowRemapping || getResultMappings() == null) {
       initialize(rs);
     }
-    return super.getResults(request, rs);
+    return super.getResults(statementScope, rs);
   }
 
   private void initialize(ResultSet rs) {

@@ -111,18 +111,6 @@ public class SqlMapConfigParser {
         boolean enhancementEnabled = (enhancementEnabledAttr == null || "true".equals(enhancementEnabledAttr));
         config.setEnhancementEnabled(enhancementEnabled);
 
-        String maxTransactionsAttr = attributes.getProperty("maxTransactions");
-        Integer maxTransactions = maxTransactionsAttr == null ? null : new Integer((maxTransactionsAttr));
-        config.setMaxTransactions(maxTransactions);
-
-        String maxRequestsAttr = attributes.getProperty("maxRequests");
-        Integer maxRequests = maxRequestsAttr == null ? null : new Integer(maxRequestsAttr);
-        config.setMaxRequests(maxRequests);
-
-        String maxSessionsAttr = attributes.getProperty("maxSessions");
-        Integer maxSessions = maxSessionsAttr == null ? null : new Integer(maxSessionsAttr);
-        config.setMaxSessions(maxSessions);
-
         String defaultTimeoutAttr = attributes.getProperty("defaultStatementTimeout");
         Integer defaultTimeout = defaultTimeoutAttr == null ? null : Integer.valueOf(defaultTimeoutAttr);
         config.setDefaultStatementTimeout(defaultTimeout);
@@ -183,7 +171,6 @@ public class SqlMapConfigParser {
           state.getConfig().getErrorContext().setMoreInfo("Check the transaction manager type or class.");
           TransactionConfig config = (TransactionConfig) Resources.instantiate(type);
           config.setDataSource(state.getDataSource());
-          config.setMaximumConcurrentTransactions(state.getConfig().getDelegate().getMaxTransactions());
           state.getConfig().getErrorContext().setMoreInfo("Check the transactio nmanager properties or configuration.");
           config.setProperties(state.getTxProps());
           config.setForceCommit(commitRequired);

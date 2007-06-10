@@ -16,7 +16,7 @@
 package com.ibatis.sqlmap.engine.mapping.result;
 
 
-import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.scope.StatementScope;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -38,26 +38,26 @@ public interface ResultMap {
   /**
    * Perform the mapping, and return the results
    * 
-   * @param request - the request scope
+   * @param statementScope - the request scope
    * @param rs - the result set to map
    * 
    * @return - an object array with the data in it
    * 
    * @throws SQLException - if an exception is thrown processing the results
    */
-  public Object[] getResults(RequestScope request, ResultSet rs)
+  public Object[] getResults(StatementScope statementScope, ResultSet rs)
       throws SQLException;
 
   /**
    * Callback method for RowHandler
    * 
-   * @param request - the request scope
+   * @param statementScope - the request scope
    * @param resultObject - the object being populated
    * @param values - the values from the database
    * 
    * @return - the populated object
    */
-  public Object setResultObjectValues(RequestScope request, Object resultObject, Object[] values);
+  public Object setResultObjectValues(StatementScope statementScope, Object resultObject, Object[] values);
 
   /**
    * Getter for the ResultMapping objects
@@ -80,7 +80,7 @@ public interface ResultMap {
    */
   public Object getUniqueKey(Object[] values);
 
-  public ResultMap resolveSubMap (RequestScope request, ResultSet rs) throws SQLException;
+  public ResultMap resolveSubMap (StatementScope statementScope, ResultSet rs) throws SQLException;
 
   public Discriminator getDiscriminator();
 

@@ -15,7 +15,7 @@
  */
 package com.ibatis.sqlmap.engine.mapping.statement;
 
-import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.scope.StatementScope;
 import com.ibatis.sqlmap.engine.transaction.Transaction;
 
 import java.sql.SQLException;
@@ -26,7 +26,7 @@ public class SelectStatement extends GeneralStatement {
     return StatementType.SELECT;
   }
 
-  public int executeUpdate(RequestScope request, Transaction trans, Object parameterObject)
+  public int executeUpdate(StatementScope statementScope, Transaction trans, Object parameterObject)
       throws SQLException {
     throw new SQLException("Select statements cannot be executed as an update.");
   }

@@ -20,7 +20,7 @@ import com.ibatis.sqlmap.engine.cache.CacheKey;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
 import com.ibatis.sqlmap.engine.mapping.sql.Sql;
-import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.scope.StatementScope;
 import com.ibatis.sqlmap.engine.transaction.Transaction;
 
 import java.sql.SQLException;
@@ -34,19 +34,19 @@ public interface MappedStatement {
 
   public Integer getResultSetType();
 
-  public int executeUpdate(RequestScope request, Transaction trans, Object parameterObject)
+  public int executeUpdate(StatementScope statementScope, Transaction trans, Object parameterObject)
       throws SQLException;
 
-  public Object executeQueryForObject(RequestScope request, Transaction trans, Object parameterObject, Object resultObject)
+  public Object executeQueryForObject(StatementScope statementScope, Transaction trans, Object parameterObject, Object resultObject)
       throws SQLException;
 
-  public List executeQueryForList(RequestScope request, Transaction trans, Object parameterObject, int skipResults, int maxResults)
+  public List executeQueryForList(StatementScope statementScope, Transaction trans, Object parameterObject, int skipResults, int maxResults)
       throws SQLException;
 
-  public void executeQueryWithRowHandler(RequestScope request, Transaction trans, Object parameterObject, RowHandler rowHandler)
+  public void executeQueryWithRowHandler(StatementScope statementScope, Transaction trans, Object parameterObject, RowHandler rowHandler)
       throws SQLException;
 
-  public CacheKey getCacheKey(RequestScope request, Object parameterObject);
+  public CacheKey getCacheKey(StatementScope statementScope, Object parameterObject);
 
   public ParameterMap getParameterMap();
 
@@ -58,7 +58,7 @@ public interface MappedStatement {
 
   public void notifyListeners();
 
-  public void initRequest(RequestScope request);
+  public void initRequest(StatementScope statementScope);
 
   public Sql getSql();
 

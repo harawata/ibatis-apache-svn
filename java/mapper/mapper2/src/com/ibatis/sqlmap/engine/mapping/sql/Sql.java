@@ -17,16 +17,16 @@ package com.ibatis.sqlmap.engine.mapping.sql;
 
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
-import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.scope.StatementScope;
 
 public interface Sql {
 
-  public String getSql(RequestScope request, Object parameterObject);
+  public String getSql(StatementScope statementScope, Object parameterObject);
 
-  public ParameterMap getParameterMap(RequestScope request, Object parameterObject);
+  public ParameterMap getParameterMap(StatementScope statementScope, Object parameterObject);
 
-  public ResultMap getResultMap(RequestScope request, Object parameterObject);
+  public ResultMap getResultMap(StatementScope statementScope, Object parameterObject);
 
-  public void cleanup(RequestScope request);
+  public void cleanup(StatementScope statementScope);
 
 }

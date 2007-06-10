@@ -23,7 +23,7 @@ import com.ibatis.sqlmap.engine.mapping.result.ResultObjectFactoryUtil;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
 import com.ibatis.sqlmap.engine.mapping.statement.RowHandlerCallback;
 import com.ibatis.sqlmap.engine.scope.ErrorContext;
-import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.scope.StatementScope;
 import com.ibatis.sqlmap.engine.scope.SessionScope;
 import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
 import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
@@ -57,31 +57,31 @@ public class SqlExecutor {
   /**
    * Execute an update
    *
-   * @param request    - the request scope
+   * @param statementScope    - the request scope
    * @param conn       - the database connection
    * @param sql        - the sql statement to execute
    * @param parameters - the parameters for the sql statement
    * @return - the number of records changed
    * @throws SQLException - if the update fails
    */
-  public int executeUpdate(RequestScope request, Connection conn, String sql, Object[] parameters) throws SQLException {
-    ErrorContext errorContext = request.getErrorContext();
+  public int executeUpdate(StatementScope statementScope, Connection conn, String sql, Object[] parameters) throws SQLException {
+    ErrorContext errorContext = statementScope.getErrorContext();
     errorContext.setActivity("executing update");
     errorContext.setObjectId(sql);
     PreparedStatement ps = null;
-    setupResultObjectFactory(request);
+    setupResultObjectFactory(statementScope);
     int rows = 0;
     try {
       errorContext.setMoreInfo("Check the SQL Statement (preparation failed).");
-      ps = prepareStatement(request.getSession(), conn, sql);
-      setStatementTimeout(request.getStatement(), ps);
+      ps = prepareStatement(statementScope.getSession(), conn, sql);
+      setStatementTimeout(statementScope.getStatement(), ps);
       errorContext.setMoreInfo("Check the parameters (set parameters failed).");
-      request.getParameterMap().setParameters(request, ps, parameters);
+      statementScope.getParameterMap().setParameters(statementScope, ps, parameters);
       errorContext.setMoreInfo("Check the statement (update failed).");
       ps.execute();
       rows = ps.getUpdateCount();
     } finally {
-      closeStatement(request.getSession(), ps);
+      closeStatement(statementScope.getSession(), ps);
     }
     return rows;
   }
@@ -89,36 +89,36 @@ public class SqlExecutor {
   /**
    * Adds a statement to a batch
    *
-   * @param request    - the request scope
+   * @param statementScope    - the request scope
    * @param conn       - the database connection
    * @param sql        - the sql statement
    * @param parameters - the parameters for the statement
    * @throws SQLException - if the statement fails
    */
-  public void addBatch(RequestScope request, Connection conn, String sql, Object[] parameters) throws SQLException {
-    Batch batch = (Batch) request.getSession().getBatch();
+  public void addBatch(StatementScope statementScope, Connection conn, String sql, Object[] parameters) throws SQLException {
+    Batch batch = (Batch) statementScope.getSession().getBatch();
     if (batch == null) {
       batch = new Batch();
-      request.getSession().setBatch(batch);
+      statementScope.getSession().setBatch(batch);
     }
-    batch.addBatch(request, conn, sql, parameters);
+    batch.addBatch(statementScope, conn, sql, parameters);
   }
 
   /**
    * Execute a batch of statements
    *
-   * @param session - the session scope
+   * @param sessionScope - the session scope
    * @return - the number of rows impacted by the batch
    * @throws SQLException - if a statement fails
    */
-  public int executeBatch(SessionScope session) throws SQLException {
+  public int executeBatch(SessionScope sessionScope) throws SQLException {
     int rows = 0;
-    Batch batch = (Batch) session.getBatch();
+    Batch batch = (Batch) sessionScope.getBatch();
     if (batch != null) {
       try {
         rows = batch.executeBatch();
       } finally {
-        batch.cleanupBatch(session);
+        batch.cleanupBatch(sessionScope);
       }
     }
     return rows;
@@ -127,7 +127,7 @@ public class SqlExecutor {
   /**
    * Execute a batch of statements
    *
-   * @param session - the session scope
+   * @param sessionScope - the session scope
    * @return - a List of BatchResult objects (may be null if no batch
    *         has been initiated).  There will be one BatchResult object in the
    *         list for each sub-batch executed
@@ -135,14 +135,14 @@ public class SqlExecutor {
    *                        does not support batch statements
    * @throws BatchException if the driver throws BatchUpdateException
    */
-  public List executeBatchDetailed(SessionScope session) throws SQLException, BatchException {
+  public List executeBatchDetailed(SessionScope sessionScope) throws SQLException, BatchException {
     List answer = null;
-    Batch batch = (Batch) session.getBatch();
+    Batch batch = (Batch) sessionScope.getBatch();
     if (batch != null) {
       try {
         answer = batch.executeBatchDetailed();
       } finally {
-        batch.cleanupBatch(session);
+        batch.cleanupBatch(sessionScope);
       }
     }
     return answer;
@@ -151,7 +151,7 @@ public class SqlExecutor {
   /**
    * Long form of the method to execute a query
    *
-   * @param request     - the request scope
+   * @param statementScope     - the request scope
    * @param conn        - the database connection
    * @param sql         - the SQL statement to execute
    * @param parameters  - the parameters for the statement
@@ -160,40 +160,40 @@ public class SqlExecutor {
    * @param callback    - the row handler for the query
    * @throws SQLException - if the query fails
    */
-  public void executeQuery(RequestScope request, Connection conn, String sql, Object[] parameters, int skipResults, int maxResults, RowHandlerCallback callback) throws SQLException {
-    ErrorContext errorContext = request.getErrorContext();
+  public void executeQuery(StatementScope statementScope, Connection conn, String sql, Object[] parameters, int skipResults, int maxResults, RowHandlerCallback callback) throws SQLException {
+    ErrorContext errorContext = statementScope.getErrorContext();
     errorContext.setActivity("executing query");
     errorContext.setObjectId(sql);
     PreparedStatement ps = null;
     ResultSet rs = null;
-    setupResultObjectFactory(request);
+    setupResultObjectFactory(statementScope);
     try {
       errorContext.setMoreInfo("Check the SQL Statement (preparation failed).");
-      Integer rsType = request.getStatement().getResultSetType();
+      Integer rsType = statementScope.getStatement().getResultSetType();
       if (rsType != null) {
-        ps = prepareStatement(request.getSession(), conn, sql, rsType);
+        ps = prepareStatement(statementScope.getSession(), conn, sql, rsType);
       } else {
-        ps = prepareStatement(request.getSession(), conn, sql);
+        ps = prepareStatement(statementScope.getSession(), conn, sql);
       }
-      setStatementTimeout(request.getStatement(), ps);
-      Integer fetchSize = request.getStatement().getFetchSize();
+      setStatementTimeout(statementScope.getStatement(), ps);
+      Integer fetchSize = statementScope.getStatement().getFetchSize();
       if (fetchSize != null) {
         ps.setFetchSize(fetchSize.intValue());
       }
       errorContext.setMoreInfo("Check the parameters (set parameters failed).");
-      request.getParameterMap().setParameters(request, ps, parameters);
+      statementScope.getParameterMap().setParameters(statementScope, ps, parameters);
       errorContext.setMoreInfo("Check the statement (query failed).");
       ps.execute();
       errorContext.setMoreInfo("Check the results (failed to retrieve results).");
 
       // Begin ResultSet Handling
-      rs = handleMultipleResults(ps, request, skipResults, maxResults, callback);
+      rs = handleMultipleResults(ps, statementScope, skipResults, maxResults, callback);
       // End ResultSet Handling
     } finally {
       try {
         closeResultSet(rs);
       } finally {
-        closeStatement(request.getSession(), ps);
+        closeStatement(statementScope.getSession(), ps);
       }
     }
 
@@ -202,37 +202,37 @@ public class SqlExecutor {
   /**
    * Execute a stored procedure that updates data
    *
-   * @param request    - the request scope
+   * @param statementScope    - the request scope
    * @param conn       - the database connection
    * @param sql        - the SQL to call the procedure
    * @param parameters - the parameters for the procedure
    * @return - the rows impacted by the procedure
    * @throws SQLException - if the procedure fails
    */
-  public int executeUpdateProcedure(RequestScope request, Connection conn, String sql, Object[] parameters) throws SQLException {
-    ErrorContext errorContext = request.getErrorContext();
+  public int executeUpdateProcedure(StatementScope statementScope, Connection conn, String sql, Object[] parameters) throws SQLException {
+    ErrorContext errorContext = statementScope.getErrorContext();
     errorContext.setActivity("executing update procedure");
     errorContext.setObjectId(sql);
     CallableStatement cs = null;
-    setupResultObjectFactory(request);
+    setupResultObjectFactory(statementScope);
     int rows = 0;
     try {
       errorContext.setMoreInfo("Check the SQL Statement (preparation failed).");
-      cs = prepareCall(request.getSession(), conn, sql);
-      setStatementTimeout(request.getStatement(), cs);
-      ParameterMap parameterMap = request.getParameterMap();
+      cs = prepareCall(statementScope.getSession(), conn, sql);
+      setStatementTimeout(statementScope.getStatement(), cs);
+      ParameterMap parameterMap = statementScope.getParameterMap();
       ParameterMapping[] mappings = parameterMap.getParameterMappings();
       errorContext.setMoreInfo("Check the output parameters (register output parameters failed).");
       registerOutputParameters(cs, mappings);
       errorContext.setMoreInfo("Check the parameters (set parameters failed).");
-      parameterMap.setParameters(request, cs, parameters);
+      parameterMap.setParameters(statementScope, cs, parameters);
       errorContext.setMoreInfo("Check the statement (update procedure failed).");
       cs.execute();
       rows = cs.getUpdateCount();
       errorContext.setMoreInfo("Check the output parameters (retrieval of output parameters failed).");
-      retrieveOutputParameters(request, cs, mappings, parameters, null);
+      retrieveOutputParameters(statementScope, cs, mappings, parameters, null);
     } finally {
-      closeStatement(request.getSession(), cs);
+      closeStatement(statementScope.getSession(), cs);
     }
     return rows;
   }
@@ -240,7 +240,7 @@ public class SqlExecutor {
   /**
    * Execute a stored procedure
    *
-   * @param request     - the request scope
+   * @param statementScope     - the request scope
    * @param conn        - the database connection
    * @param sql         - the sql to call the procedure
    * @param parameters  - the parameters for the procedure
@@ -249,61 +249,61 @@ public class SqlExecutor {
    * @param callback    - a row handler for processing the results
    * @throws SQLException - if the procedure fails
    */
-  public void executeQueryProcedure(RequestScope request, Connection conn, String sql, Object[] parameters, int skipResults, int maxResults, RowHandlerCallback callback) throws SQLException {
-    ErrorContext errorContext = request.getErrorContext();
+  public void executeQueryProcedure(StatementScope statementScope, Connection conn, String sql, Object[] parameters, int skipResults, int maxResults, RowHandlerCallback callback) throws SQLException {
+    ErrorContext errorContext = statementScope.getErrorContext();
     errorContext.setActivity("executing query procedure");
     errorContext.setObjectId(sql);
     CallableStatement cs = null;
     ResultSet rs = null;
-    setupResultObjectFactory(request);
+    setupResultObjectFactory(statementScope);
     try {
       errorContext.setMoreInfo("Check the SQL Statement (preparation failed).");
-      Integer rsType = request.getStatement().getResultSetType();
+      Integer rsType = statementScope.getStatement().getResultSetType();
       if (rsType != null) {
-        cs = prepareCall(request.getSession(), conn, sql, rsType);
+        cs = prepareCall(statementScope.getSession(), conn, sql, rsType);
       } else {
-        cs = prepareCall(request.getSession(), conn, sql);
+        cs = prepareCall(statementScope.getSession(), conn, sql);
       }
-      setStatementTimeout(request.getStatement(), cs);
-      Integer fetchSize = request.getStatement().getFetchSize();
+      setStatementTimeout(statementScope.getStatement(), cs);
+      Integer fetchSize = statementScope.getStatement().getFetchSize();
       if (fetchSize != null) {
         cs.setFetchSize(fetchSize.intValue());
       }
-      ParameterMap parameterMap = request.getParameterMap();
+      ParameterMap parameterMap = statementScope.getParameterMap();
       ParameterMapping[] mappings = parameterMap.getParameterMappings();
       errorContext.setMoreInfo("Check the output parameters (register output parameters failed).");
       registerOutputParameters(cs, mappings);
       errorContext.setMoreInfo("Check the parameters (set parameters failed).");
-      parameterMap.setParameters(request, cs, parameters);
+      parameterMap.setParameters(statementScope, cs, parameters);
       errorContext.setMoreInfo("Check the statement (update procedure failed).");
       cs.execute();
       errorContext.setMoreInfo("Check the results (failed to retrieve results).");
 
       // Begin ResultSet Handling
-      rs = handleMultipleResults(cs, request, skipResults, maxResults, callback);
+      rs = handleMultipleResults(cs, statementScope, skipResults, maxResults, callback);
       // End ResultSet Handling
       errorContext.setMoreInfo("Check the output parameters (retrieval of output parameters failed).");
-      retrieveOutputParameters(request, cs, mappings, parameters, callback);
+      retrieveOutputParameters(statementScope, cs, mappings, parameters, callback);
 
     } finally {
       try {
         closeResultSet(rs);
       } finally {
-        closeStatement(request.getSession(), cs);
+        closeStatement(statementScope.getSession(), cs);
       }
     }
   }
 
-  private ResultSet handleMultipleResults(PreparedStatement ps, RequestScope request, int skipResults, int maxResults, RowHandlerCallback callback) throws SQLException {
+  private ResultSet handleMultipleResults(PreparedStatement ps, StatementScope statementScope, int skipResults, int maxResults, RowHandlerCallback callback) throws SQLException {
     ResultSet rs;
     rs = getFirstResultSet(ps);
     if (rs != null) {
-      handleResults(request, rs, skipResults, maxResults, callback);
+      handleResults(statementScope, rs, skipResults, maxResults, callback);
     }
 
     // Multiple ResultSet handling
     if (callback.getRowHandler() instanceof DefaultRowHandler) {
-      MappedStatement statement = request.getStatement();
+      MappedStatement statement = statementScope.getStatement();
       DefaultRowHandler defaultRowHandler = ((DefaultRowHandler) callback.getRowHandler());
       if (statement.hasMultipleResultMaps()) {
         List multipleResults = new ArrayList();
@@ -313,15 +313,15 @@ public class SqlExecutor {
         while (moveToNextResultsSafely(ps)) {
           if (i >= resultMaps.length) break;
           ResultMap rm = resultMaps[i];
-          request.setResultMap(rm);
+          statementScope.setResultMap(rm);
           rs = ps.getResultSet();
           DefaultRowHandler rh = new DefaultRowHandler();
-          handleResults(request, rs, skipResults, maxResults, new RowHandlerCallback(rm, null, rh));
+          handleResults(statementScope, rs, skipResults, maxResults, new RowHandlerCallback(rm, null, rh));
           multipleResults.add(rh.getList());
           i++;
         }
         defaultRowHandler.setList(multipleResults);
-        request.setResultMap(statement.getResultMap());
+        statementScope.setResultMap(statement.getResultMap());
       } else {
         while (moveToNextResultsSafely(ps)) ;
       }
@@ -357,10 +357,10 @@ public class SqlExecutor {
     return stmt.getMoreResults();
   }
 
-  private void handleResults(RequestScope request, ResultSet rs, int skipResults, int maxResults, RowHandlerCallback callback) throws SQLException {
+  private void handleResults(StatementScope statementScope, ResultSet rs, int skipResults, int maxResults, RowHandlerCallback callback) throws SQLException {
     try {
-      request.setResultSet(rs);
-      ResultMap resultMap = request.getResultMap();
+      statementScope.setResultSet(rs);
+      ResultMap resultMap = statementScope.getResultMap();
       if (resultMap != null) {
         // Skip Results
         if (rs.getType() != ResultSet.TYPE_FORWARD_ONLY) {
@@ -378,17 +378,17 @@ public class SqlExecutor {
         // Get Results
         int resultsFetched = 0;
         while ((maxResults == SqlExecutor.NO_MAXIMUM_RESULTS || resultsFetched < maxResults) && rs.next()) {
-          Object[] columnValues = resultMap.resolveSubMap(request, rs).getResults(request, rs);
-          callback.handleResultObject(request, columnValues, rs);
+          Object[] columnValues = resultMap.resolveSubMap(statementScope, rs).getResults(statementScope, rs);
+          callback.handleResultObject(statementScope, columnValues, rs);
           resultsFetched++;
         }
       }
     } finally {
-      request.setResultSet(null);
+      statementScope.setResultSet(null);
     }
   }
 
-  private void retrieveOutputParameters(RequestScope request, CallableStatement cs, ParameterMapping[] mappings, Object[] parameters, RowHandlerCallback callback) throws SQLException {
+  private void retrieveOutputParameters(StatementScope statementScope, CallableStatement cs, ParameterMapping[] mappings, Object[] parameters, RowHandlerCallback callback) throws SQLException {
     for (int i = 0; i < mappings.length; i++) {
       BasicParameterMapping mapping = ((BasicParameterMapping) mappings[i]);
       if (mapping.isOutputAllowed()) {
@@ -396,14 +396,14 @@ public class SqlExecutor {
           ResultSet rs = (ResultSet) cs.getObject(i + 1);
           ResultMap resultMap;
           if (mapping.getResultMapName() == null) {
-            resultMap = request.getResultMap();
-            handleOutputParameterResults(request, resultMap, rs, callback);
+            resultMap = statementScope.getResultMap();
+            handleOutputParameterResults(statementScope, resultMap, rs, callback);
           } else {
-            ExtendedSqlMapClient client = (ExtendedSqlMapClient) request.getSession().getSqlMapClient();
+            ExtendedSqlMapClient client = (ExtendedSqlMapClient) statementScope.getSession().getSqlMapClient();
             resultMap = client.getDelegate().getResultMap(mapping.getResultMapName());
             DefaultRowHandler rowHandler = new DefaultRowHandler();
             RowHandlerCallback handlerCallback = new RowHandlerCallback(resultMap, null, rowHandler);
-            handleOutputParameterResults(request, resultMap, rs, handlerCallback);
+            handleOutputParameterResults(statementScope, resultMap, rs, handlerCallback);
             parameters[i] = rowHandler.getList();
           }
           rs.close();
@@ -432,85 +432,85 @@ public class SqlExecutor {
     }
   }
 
-  private void handleOutputParameterResults(RequestScope request, ResultMap resultMap, ResultSet rs, RowHandlerCallback callback) throws SQLException {
-    ResultMap orig = request.getResultMap();
+  private void handleOutputParameterResults(StatementScope statementScope, ResultMap resultMap, ResultSet rs, RowHandlerCallback callback) throws SQLException {
+    ResultMap orig = statementScope.getResultMap();
     try {
-      request.setResultSet(rs);
+      statementScope.setResultSet(rs);
       if (resultMap != null) {
-        request.setResultMap(resultMap);
+        statementScope.setResultMap(resultMap);
 
         // Get Results
         while (rs.next()) {
-          Object[] columnValues = resultMap.resolveSubMap(request, rs).getResults(request, rs);
-          callback.handleResultObject(request, columnValues, rs);
+          Object[] columnValues = resultMap.resolveSubMap(statementScope, rs).getResults(statementScope, rs);
+          callback.handleResultObject(statementScope, columnValues, rs);
         }
       }
     } finally {
-      request.setResultSet(null);
-      request.setResultMap(orig);
+      statementScope.setResultSet(null);
+      statementScope.setResultMap(orig);
     }
   }
 
   /**
    * Clean up any batches on the session
    *
-   * @param session - the session to clean up
+   * @param sessionScope - the session to clean up
    */
-  public void cleanup(SessionScope session) {
-    Batch batch = (Batch) session.getBatch();
+  public void cleanup(SessionScope sessionScope) {
+    Batch batch = (Batch) sessionScope.getBatch();
     if (batch != null) {
-      batch.cleanupBatch(session);
-      session.setBatch(null);
+      batch.cleanupBatch(sessionScope);
+      sessionScope.setBatch(null);
     }
   }
 
-  private PreparedStatement prepareStatement(SessionScope session, Connection conn, String sql, Integer rsType) throws SQLException {
-    SqlMapExecutorDelegate delegate = ((ExtendedSqlMapClient)session.getSqlMapExecutor()).getDelegate();
-    if (session.hasPreparedStatementFor(sql)) {
-      return session.getPreparedStatement((sql));
+  private PreparedStatement prepareStatement(SessionScope sessionScope, Connection conn, String sql, Integer rsType) throws SQLException {
+    SqlMapExecutorDelegate delegate = ((ExtendedSqlMapClient) sessionScope.getSqlMapExecutor()).getDelegate();
+    if (sessionScope.hasPreparedStatementFor(sql)) {
+      return sessionScope.getPreparedStatement((sql));
     } else {
       PreparedStatement ps = conn.prepareStatement(sql, rsType.intValue(), ResultSet.CONCUR_READ_ONLY);
-      session.putPreparedStatement(delegate, sql, ps);
+      sessionScope.putPreparedStatement(delegate, sql, ps);
       return ps;
     }
   }
 
-  private CallableStatement prepareCall(SessionScope session, Connection conn, String sql, Integer rsType) throws SQLException {
-    SqlMapExecutorDelegate delegate = ((ExtendedSqlMapClient)session.getSqlMapExecutor()).getDelegate();
-    if (session.hasPreparedStatementFor(sql)) {
-      return (CallableStatement) session.getPreparedStatement((sql));
+  private CallableStatement prepareCall(SessionScope sessionScope, Connection conn, String sql, Integer rsType) throws SQLException {
+    SqlMapExecutorDelegate delegate = ((ExtendedSqlMapClient) sessionScope.getSqlMapExecutor()).getDelegate();
+    if (sessionScope.hasPreparedStatementFor(sql)) {
+      return (CallableStatement) sessionScope.getPreparedStatement((sql));
     } else {
       CallableStatement cs = conn.prepareCall(sql, rsType.intValue(), ResultSet.CONCUR_READ_ONLY);
-      session.putPreparedStatement(delegate, sql, cs);
+      sessionScope.putPreparedStatement(delegate, sql, cs);
       return cs;
     }
   }
 
-  private static PreparedStatement prepareStatement(SessionScope session, Connection conn, String sql) throws SQLException {
-    SqlMapExecutorDelegate delegate = ((ExtendedSqlMapClient)session.getSqlMapExecutor()).getDelegate();
-    if (session.hasPreparedStatementFor(sql)) {
-      return session.getPreparedStatement((sql));
+  private static PreparedStatement prepareStatement(SessionScope sessionScope, Connection conn, String sql) throws SQLException {
+    SqlMapExecutorDelegate delegate = ((ExtendedSqlMapClient) sessionScope.getSqlMapExecutor()).getDelegate();
+    if (sessionScope.hasPreparedStatementFor(sql)) {
+      return sessionScope.getPreparedStatement((sql));
     } else {
       PreparedStatement ps = conn.prepareStatement(sql);
-      session.putPreparedStatement(delegate, sql, ps);
+      sessionScope.putPreparedStatement(delegate, sql, ps);
       return ps;
     }
   }
 
-  private CallableStatement prepareCall(SessionScope session, Connection conn, String sql) throws SQLException {
-    SqlMapExecutorDelegate delegate = ((ExtendedSqlMapClient)session.getSqlMapExecutor()).getDelegate();
-    if (session.hasPreparedStatementFor(sql)) {
-      return (CallableStatement) session.getPreparedStatement((sql));
+  private CallableStatement prepareCall(SessionScope sessionScope, Connection conn, String sql) throws SQLException {
+    SqlMapExecutorDelegate delegate = ((ExtendedSqlMapClient) sessionScope.getSqlMapExecutor()).getDelegate();
+    if (sessionScope.hasPreparedStatementFor(sql)) {
+      return (CallableStatement) sessionScope.getPreparedStatement((sql));
     } else {
       CallableStatement cs = conn.prepareCall(sql);
-      session.putPreparedStatement(delegate, sql, cs);
+      sessionScope.putPreparedStatement(delegate, sql, cs);
       return cs;
     }
   }
 
-  private static void closeStatement(SessionScope session, PreparedStatement ps) {
+  private static void closeStatement(SessionScope sessionScope, PreparedStatement ps) {
     if (ps != null) {
-      if (!session.hasPreparedStatement(ps)) {
+      if (!sessionScope.hasPreparedStatement(ps)) {
         try {
           ps.close();
         } catch (SQLException e) {
@@ -568,25 +568,25 @@ public class SqlExecutor {
     /**
      * Add a prepared statement to the batch
      *
-     * @param request    - the request scope
+     * @param statementScope    - the request scope
      * @param conn       - the database connection
      * @param sql        - the SQL to add
      * @param parameters - the parameters for the SQL
      * @throws SQLException - if the prepare for the SQL fails
      */
-    public void addBatch(RequestScope request, Connection conn, String sql, Object[] parameters) throws SQLException {
+    public void addBatch(StatementScope statementScope, Connection conn, String sql, Object[] parameters) throws SQLException {
       PreparedStatement ps = null;
       if (currentSql != null && sql.hashCode() == currentSql.hashCode() && sql.length() == currentSql.length()) {
         int last = statementList.size() - 1;
         ps = (PreparedStatement) statementList.get(last);
       } else {
-        ps = prepareStatement(request.getSession(), conn, sql);
-        setStatementTimeout(request.getStatement(), ps);
+        ps = prepareStatement(statementScope.getSession(), conn, sql);
+        setStatementTimeout(statementScope.getStatement(), ps);
         currentSql = sql;
         statementList.add(ps);
-        batchResultList.add(new BatchResult(request.getStatement().getId(), sql));
+        batchResultList.add(new BatchResult(statementScope.getStatement().getId(), sql));
       }
-      request.getParameterMap().setParameters(request, ps, parameters);
+      statementScope.getParameterMap().setParameters(statementScope, ps, parameters);
       ps.addBatch();
       size++;
     }
@@ -657,12 +657,12 @@ public class SqlExecutor {
     /**
      * Close all the statements in the batch and clear all the statements
      *
-     * @param session
+     * @param sessionScope
      */
-    public void cleanupBatch(SessionScope session) {
+    public void cleanupBatch(SessionScope sessionScope) {
       for (int i = 0, n = statementList.size(); i < n; i++) {
         PreparedStatement ps = (PreparedStatement) statementList.get(i);
-        closeStatement(session, ps);
+        closeStatement(sessionScope, ps);
       }
       currentSql = null;
       statementList.clear();
@@ -671,9 +671,9 @@ public class SqlExecutor {
     }
   }
 
-  private void setupResultObjectFactory(RequestScope request) {
-    ExtendedSqlMapClient client = (ExtendedSqlMapClient) request.getSession().getSqlMapClient();
+  private void setupResultObjectFactory(StatementScope statementScope) {
+    ExtendedSqlMapClient client = (ExtendedSqlMapClient) statementScope.getSession().getSqlMapClient();
     ResultObjectFactoryUtil.setResultObjectFactory(client.getResultObjectFactory());
-    ResultObjectFactoryUtil.setStatementId(request.getStatement().getId());
+    ResultObjectFactoryUtil.setStatementId(statementScope.getStatement().getId());
   }
 }

@@ -18,7 +18,7 @@ package com.ibatis.sqlmap.engine.exchange;
 import com.ibatis.sqlmap.engine.cache.CacheKey;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
-import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.scope.StatementScope;
 
 import java.util.Map;
 
@@ -37,48 +37,48 @@ public interface DataExchange {
   /**
    * Gets a data array from a parameter object.
    * 
-   * @param request - the scope of the request
+   * @param statementScope - the scope of the request
    * @param parameterMap - the parameter map
    * @param parameterObject - the parameter object
    * 
    * @return - the objects
    */
-  public Object[] getData(RequestScope request, ParameterMap parameterMap, Object parameterObject);
+  public Object[] getData(StatementScope statementScope, ParameterMap parameterMap, Object parameterObject);
 
   /**
    * Sets values from a data array into a result object.
    * 
-   * @param request - the request scope
+   * @param statementScope - the request scope
    * @param resultMap - the result map
    * @param resultObject - the result object
    * @param values - the values to be mapped
    * 
    * @return the resultObject
    */
-  public Object setData(RequestScope request, ResultMap resultMap, Object resultObject, Object[] values);
+  public Object setData(StatementScope statementScope, ResultMap resultMap, Object resultObject, Object[] values);
 
 
   /**
    * Sets values from a data array into a parameter object
    * 
-   * @param request - the request scope
+   * @param statementScope - the request scope
    * @param parameterMap - the parameter map
    * @param parameterObject - the parameter object
    * @param values - the values to set
    * 
    * @return parameterObject
    */
-  public Object setData(RequestScope request, ParameterMap parameterMap, Object parameterObject, Object[] values);
+  public Object setData(StatementScope statementScope, ParameterMap parameterMap, Object parameterObject, Object[] values);
 
   /**
    * Returns an object capable of being a unique cache key for a parameter object.
    * 
-   * @param request - the request scope
+   * @param statementScope - the request scope
    * @param parameterMap - the parameter map
    * @param parameterObject - the parameter object
    * 
    * @return - a cache key
    */
-  public CacheKey getCacheKey(RequestScope request, ParameterMap parameterMap, Object parameterObject);
+  public CacheKey getCacheKey(StatementScope statementScope, ParameterMap parameterMap, Object parameterObject);
 
 }

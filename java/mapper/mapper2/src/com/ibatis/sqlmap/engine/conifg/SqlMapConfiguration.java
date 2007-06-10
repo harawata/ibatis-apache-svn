@@ -130,27 +130,6 @@ public class SqlMapConfiguration {
     AccessPlanFactory.setBytecodeEnhancementEnabled(enhancementEnabled);
   }
 
-  public void setMaxTransactions (Integer maxTransactions) {
-    errorContext.setActivity("setting maximum transactions");
-    if (maxTransactions != null && maxTransactions.intValue() > 0) {
-      client.getDelegate().setMaxTransactions(maxTransactions.intValue());
-    }
-  }
-
-  public void setMaxRequests (Integer maxRequests) {
-    errorContext.setActivity("setting maximum requests");
-    if (maxRequests != null && maxRequests.intValue() > 0) {
-      client.getDelegate().setMaxRequests(maxRequests.intValue());
-    }
-  }
-
-  public void setMaxSessions (Integer maxSessions) {
-    errorContext.setActivity("setting maximum sessions");
-    if (maxSessions != null && maxSessions.intValue() > 0) {
-      client.getDelegate().setMaxSessions(maxSessions.intValue());
-    }
-  }
-
   public void setDefaultStatementTimeout(Integer defaultTimeout) {
     errorContext.setActivity("setting default timeout");
     if (defaultTimeout != null) {

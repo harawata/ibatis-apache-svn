@@ -19,7 +19,7 @@ import com.ibatis.sqlmap.engine.cache.CacheKey;
 import com.ibatis.sqlmap.engine.exchange.DataExchange;
 import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
 import com.ibatis.sqlmap.engine.scope.ErrorContext;
-import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.scope.StatementScope;
 import com.ibatis.sqlmap.engine.type.CustomTypeHandler;
 import com.ibatis.sqlmap.engine.type.JdbcTypeRegistry;
 import com.ibatis.sqlmap.engine.type.TypeHandler;
@@ -108,10 +108,10 @@ public class BasicParameterMap implements ParameterMap {
    * @param parameters
    * @throws java.sql.SQLException
    */
-  public void setParameters(RequestScope request, PreparedStatement ps, Object[] parameters)
+  public void setParameters(StatementScope statementScope, PreparedStatement ps, Object[] parameters)
       throws SQLException {
 
-    ErrorContext errorContext = request.getErrorContext();
+    ErrorContext errorContext = statementScope.getErrorContext();
     errorContext.setActivity("applying a parameter map");
     errorContext.setObjectId(this.getId());
     errorContext.setResource(this.getResource());
@@ -128,16 +128,16 @@ public class BasicParameterMap implements ParameterMap {
     }
   }
 
-  public Object[] getParameterObjectValues(RequestScope request, Object parameterObject) {
-    return dataExchange.getData(request, this, parameterObject);
+  public Object[] getParameterObjectValues(StatementScope statementScope, Object parameterObject) {
+    return dataExchange.getData(statementScope, this, parameterObject);
   }
 
-  public CacheKey getCacheKey(RequestScope request, Object parameterObject) {
-    return dataExchange.getCacheKey(request, this, parameterObject);
+  public CacheKey getCacheKey(StatementScope statementScope, Object parameterObject) {
+    return dataExchange.getCacheKey(statementScope, this, parameterObject);
   }
 
-  public void refreshParameterObjectValues(RequestScope request, Object parameterObject, Object[] values) {
-    dataExchange.setData(request, this, parameterObject, values);
+  public void refreshParameterObjectValues(StatementScope statementScope, Object parameterObject, Object[] values) {
+    dataExchange.setData(statementScope, this, parameterObject, values);
   }
 
   public String getResource() {

@@ -17,7 +17,7 @@ package com.ibatis.sqlmap.engine.exchange;
 
 import com.ibatis.sqlmap.engine.cache.CacheKey;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
-import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.scope.StatementScope;
 
 /**
  * Base implementation for the DataExchange interface
@@ -30,9 +30,9 @@ public abstract class BaseDataExchange implements DataExchange {
     this.dataExchangeFactory = dataExchangeFactory;
   }
 
-  public CacheKey getCacheKey(RequestScope request, ParameterMap parameterMap, Object parameterObject) {
+  public CacheKey getCacheKey(StatementScope statementScope, ParameterMap parameterMap, Object parameterObject) {
     CacheKey key = new CacheKey();
-    Object[] data = getData(request, parameterMap, parameterObject);
+    Object[] data = getData(statementScope, parameterMap, parameterObject);
     for (int i = 0; i < data.length; i++) {
       if (data[i] != null) {
         key.update(data[i]);

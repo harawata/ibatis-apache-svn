@@ -32,7 +32,7 @@ import java.util.Iterator;
 /**
  * A Session based implementation of the Scope interface
  */
-public class SessionScope extends BaseScope {
+public class SessionScope {
   private static long nextId;
   private long id;
   // Used by Any
@@ -56,8 +56,10 @@ public class SessionScope extends BaseScope {
    * Default constructor
    */
   public SessionScope() {
-    preparedStatements = new HashMap();
-    reset();
+    this.preparedStatements = new HashMap();
+    this.inBatch = false;
+    this.requestStackDepth = 0;
+    this.id = getNextId();
   }
 
   /**
@@ -265,17 +267,7 @@ public class SessionScope extends BaseScope {
     preparedStatements.clear();
   }
 
-  public void reset() {
-    super.reset();
-    this.batch = null;
-    sqlMapExecutor = null;
-    sqlMapTxMgr = null;
-    inBatch = false;
-    transaction = null;
-    transactionState = null;
-    batch = null;
-    requestStackDepth = 0;
-    id = getNextId();
+  public void cleanup() {
     closePreparedStatements();
     preparedStatements.clear();
   }

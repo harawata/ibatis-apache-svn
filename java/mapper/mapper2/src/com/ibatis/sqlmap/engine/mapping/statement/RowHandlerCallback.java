@@ -17,7 +17,7 @@ package com.ibatis.sqlmap.engine.mapping.statement;
 
 import com.ibatis.sqlmap.client.event.RowHandler;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
-import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.scope.StatementScope;
 import com.ibatis.sqlmap.engine.type.XmlTypeMarker;
 
 import org.w3c.dom.Document;
@@ -54,20 +54,20 @@ public class RowHandlerCallback {
   /**
    * Prepares the row object, and passes it to the row handler
    *
-   * @param request - the request scope
+   * @param statementScope - the request scope
    * @param results - the result data
    */
-  public void handleResultObject(RequestScope request, Object[] results, ResultSet rs) throws SQLException {
+  public void handleResultObject(StatementScope statementScope, Object[] results, ResultSet rs) throws SQLException {
     Object object;
 
-    request.setCurrentNestedKey(null);
-    object = resultMap.resolveSubMap(request, rs).setResultObjectValues(request, resultObject, results);
+    statementScope.setCurrentNestedKey(null);
+    object = resultMap.resolveSubMap(statementScope, rs).setResultObjectValues(statementScope, resultObject, results);
 
     if (object != ResultMap.NO_VALUE) {
       //  XML Only special processing. (converts elements to string for easy insertion).
-      int stackDepth = request.getSession().getRequestStackDepth();
+      int stackDepth = statementScope.getSession().getRequestStackDepth();
       if (stackDepth == 1) {
-        Class targetType = request.getResultMap().getResultClass();
+        Class targetType = statementScope.getResultMap().getResultClass();
         if (XmlTypeMarker.class.isAssignableFrom(targetType)
             && object instanceof Document) {
           object = documentToString((Document) object);

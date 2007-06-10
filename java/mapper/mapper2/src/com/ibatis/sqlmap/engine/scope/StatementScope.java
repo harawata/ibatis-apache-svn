@@ -27,9 +27,9 @@ import java.util.HashMap;
 /**
  * Request based implementation of Scope interface
  */
-public class RequestScope extends BaseScope {
+public class StatementScope {
   // Used by Any
-  private SessionScope session;
+  private SessionScope sessionScope;
   private ErrorContext errorContext;
   private MappedStatement statement;
   private ParameterMap parameterMap;
@@ -44,12 +44,10 @@ public class RequestScope extends BaseScope {
   private boolean rowDataFound;
   private String currentNestedKey;
 
-  /**
-   * Default constructor
-   */
-  public RequestScope() {
-    errorContext = new ErrorContext();
-    reset();
+  public StatementScope(SessionScope sessionScope) {
+    this.errorContext = new ErrorContext();
+    this.rowDataFound = true;
+    this.sessionScope = sessionScope;
   }
 
   /**
@@ -81,16 +79,7 @@ public class RequestScope extends BaseScope {
    * @return - the session
    */
   public SessionScope getSession() {
-    return session;
-  }
-
-  /**
-   * Set the session for the request
-   *
-   * @param session - the new session
-   */
-  public void setSession(SessionScope session) {
-    this.session = session;
+    return sessionScope;
   }
 
   /**
@@ -231,19 +220,5 @@ public class RequestScope extends BaseScope {
     this.rowDataFound = rowDataFound;
   }
 
-  public void reset() {
-    super.reset();
-    errorContext.reset();
-    session = null;
-    statement = null;
-    parameterMap = null;
-    resultMap = null;
-    sql = null;
-    dynamicParameterMap = null;
-    dynamicSql = null;
-    resultSet = null;
-    uniqueKeys = null;
-    rowDataFound = true;
-  }
 
 }

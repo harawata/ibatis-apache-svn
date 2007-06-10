@@ -22,7 +22,7 @@ import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
 import com.ibatis.sqlmap.engine.mapping.sql.Sql;
-import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.scope.StatementScope;
 
 import java.util.StringTokenizer;
 
@@ -41,19 +41,19 @@ public class SimpleDynamicSql implements Sql {
     this.sqlStatement = sqlStatement;
   }
 
-  public String getSql(RequestScope request, Object parameterObject) {
+  public String getSql(StatementScope statementScope, Object parameterObject) {
     return processDynamicElements(sqlStatement, parameterObject);
   }
 
-  public ParameterMap getParameterMap(RequestScope request, Object parameterObject) {
-    return request.getParameterMap();
+  public ParameterMap getParameterMap(StatementScope statementScope, Object parameterObject) {
+    return statementScope.getParameterMap();
   }
 
-  public ResultMap getResultMap(RequestScope request, Object parameterObject) {
-    return request.getResultMap();
+  public ResultMap getResultMap(StatementScope statementScope, Object parameterObject) {
+    return statementScope.getResultMap();
   }
 
-  public void cleanup(RequestScope request) {
+  public void cleanup(StatementScope statementScope) {
   }
 
   public static boolean isSimpleDynamicSql(String sql) {

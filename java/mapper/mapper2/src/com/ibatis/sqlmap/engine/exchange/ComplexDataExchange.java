@@ -23,7 +23,7 @@ import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMapping;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMapping;
 import com.ibatis.sqlmap.engine.mapping.result.ResultObjectFactoryUtil;
-import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.scope.StatementScope;
 import com.ibatis.sqlmap.engine.type.TypeHandlerFactory;
 
 import java.util.Map;
@@ -46,7 +46,7 @@ public class ComplexDataExchange extends BaseDataExchange implements DataExchang
   public void initialize(Map properties) {
   }
 
-  public Object[] getData(RequestScope request, ParameterMap parameterMap, Object parameterObject) {
+  public Object[] getData(StatementScope statementScope, ParameterMap parameterMap, Object parameterObject) {
     TypeHandlerFactory typeHandlerFactory = getDataExchangeFactory().getTypeHandlerFactory();
     if (parameterObject == null) {
       return new Object[1];
@@ -69,7 +69,7 @@ public class ComplexDataExchange extends BaseDataExchange implements DataExchang
     }
   }
 
-  public Object setData(RequestScope request, ResultMap resultMap, Object resultObject, Object[] values) {
+  public Object setData(StatementScope statementScope, ResultMap resultMap, Object resultObject, Object[] values) {
     TypeHandlerFactory typeHandlerFactory = getDataExchangeFactory().getTypeHandlerFactory();
     if (typeHandlerFactory.hasTypeHandler(resultMap.getResultClass())) {
       return values[0];
@@ -90,7 +90,7 @@ public class ComplexDataExchange extends BaseDataExchange implements DataExchang
     }
   }
 
-  public Object setData(RequestScope request, ParameterMap parameterMap, Object parameterObject, Object[] values) {
+  public Object setData(StatementScope statementScope, ParameterMap parameterMap, Object parameterObject, Object[] values) {
     TypeHandlerFactory typeHandlerFactory = getDataExchangeFactory().getTypeHandlerFactory();
     if (typeHandlerFactory.hasTypeHandler(parameterMap.getParameterClass())) {
       return values[0];

@@ -22,7 +22,7 @@ import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
 import com.ibatis.sqlmap.engine.mapping.sql.Sql;
-import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.scope.StatementScope;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,13 +110,13 @@ public abstract class BaseStatement implements MappedStatement {
     this.resource = resource;
   }
 
-  public CacheKey getCacheKey(RequestScope request, Object parameterObject) {
-    Sql sql = request.getSql();
-    ParameterMap pmap = sql.getParameterMap(request, parameterObject);
-    CacheKey cacheKey = pmap.getCacheKey(request, parameterObject);
+  public CacheKey getCacheKey(StatementScope statementScope, Object parameterObject) {
+    Sql sql = statementScope.getSql();
+    ParameterMap pmap = sql.getParameterMap(statementScope, parameterObject);
+    CacheKey cacheKey = pmap.getCacheKey(statementScope, parameterObject);
     cacheKey.update(id);
     cacheKey.update(baseCacheKey);
-    cacheKey.update(sql.getSql(request, parameterObject)); //Fixes bug 953001
+    cacheKey.update(sql.getSql(statementScope, parameterObject)); //Fixes bug 953001
     return cacheKey;
   }
 
@@ -146,11 +146,11 @@ public abstract class BaseStatement implements MappedStatement {
     this.sqlMapClient = (ExtendedSqlMapClient) sqlMapClient;
   }
 
-  public void initRequest(RequestScope request) {
-    request.setStatement(this);
-    request.setParameterMap(parameterMap);
-    request.setResultMap(resultMap);
-    request.setSql(sql);
+  public void initRequest(StatementScope statementScope) {
+    statementScope.setStatement(this);
+    statementScope.setParameterMap(parameterMap);
+    statementScope.setResultMap(resultMap);
+    statementScope.setSql(sql);
   }
 
   public Integer getTimeout() {

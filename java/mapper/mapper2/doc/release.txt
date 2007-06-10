@@ -2,8 +2,9 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
- 2.3.1 -
+ 2.x
 ------------------------------
+ o Removed maxTransactions, maxRequests, maxSessions from configuration, all are now controlled by the resource providers
  o Fixed BATIS-391  - Cannot access Lists within custom objects.
  o Fixed IBATIS-388 - Add methods to unwrap all proxied objects
 

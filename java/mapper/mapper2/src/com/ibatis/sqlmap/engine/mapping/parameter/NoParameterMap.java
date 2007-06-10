@@ -17,7 +17,7 @@ package com.ibatis.sqlmap.engine.mapping.parameter;
 
 
 import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
-import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.scope.StatementScope;
 
 public class NoParameterMap extends BasicParameterMap {
 
@@ -32,7 +32,7 @@ public class NoParameterMap extends BasicParameterMap {
     return NO_PARAMETERS;
   }
 
-  public Object[] getParameterObjectValues(RequestScope request, Object parameterObject) {
+  public Object[] getParameterObjectValues(StatementScope statementScope, Object parameterObject) {
     return NO_DATA;
   }
 

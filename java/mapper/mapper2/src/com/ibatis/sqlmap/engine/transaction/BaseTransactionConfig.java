@@ -21,15 +21,6 @@ public abstract class BaseTransactionConfig implements TransactionConfig {
 
   protected DataSource dataSource;
   protected boolean forceCommit;
-  protected int maximumConcurrentTransactions;
-
-  public int getMaximumConcurrentTransactions() {
-    return maximumConcurrentTransactions;
-  }
-
-  public void setMaximumConcurrentTransactions(int maximumConcurrentTransactions) {
-    this.maximumConcurrentTransactions = maximumConcurrentTransactions;
-  }
 
   public boolean isForceCommit() {
     return forceCommit;

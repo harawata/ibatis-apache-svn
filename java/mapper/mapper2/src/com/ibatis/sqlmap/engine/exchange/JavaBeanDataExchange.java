@@ -24,7 +24,7 @@ import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMapping;
 import com.ibatis.sqlmap.engine.mapping.result.ResultObjectFactoryUtil;
 import com.ibatis.sqlmap.engine.scope.ErrorContext;
-import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.scope.StatementScope;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +86,7 @@ public class JavaBeanDataExchange extends BaseDataExchange implements DataExchan
     }
   }
 
-  public Object[] getData(RequestScope request, ParameterMap parameterMap, Object parameterObject) {
+  public Object[] getData(StatementScope statementScope, ParameterMap parameterMap, Object parameterObject) {
     if (parameterPlan != null) {
       return parameterPlan.getProperties(parameterObject);
     } else {
@@ -94,11 +94,11 @@ public class JavaBeanDataExchange extends BaseDataExchange implements DataExchan
     }
   }
 
-  public Object setData(RequestScope request, ResultMap resultMap, Object resultObject, Object[] values) {
+  public Object setData(StatementScope statementScope, ResultMap resultMap, Object resultObject, Object[] values) {
     if (resultPlan != null) {
       Object object = resultObject;
 
-      ErrorContext errorContext = request.getErrorContext();
+      ErrorContext errorContext = statementScope.getErrorContext();
 
       if (object == null) {
         errorContext.setMoreInfo("The error occured while instantiating the result object");
@@ -117,7 +117,7 @@ public class JavaBeanDataExchange extends BaseDataExchange implements DataExchan
   }
 
   // Bug ibatis-12
-  public Object setData(RequestScope request, ParameterMap parameterMap, Object parameterObject, Object[] values) {
+  public Object setData(StatementScope statementScope, ParameterMap parameterMap, Object parameterObject, Object[] values) {
     if (outParamPlan != null) {
       Object object = parameterObject;
       if (object == null) {

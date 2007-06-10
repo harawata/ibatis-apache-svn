@@ -23,7 +23,7 @@ import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMapping;
 import com.ibatis.sqlmap.engine.mapping.result.BasicResultMap;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMapping;
-import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.scope.StatementScope;
 import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -46,7 +46,7 @@ public class DomDataExchange extends BaseDataExchange implements DataExchange {
   public void initialize(Map properties) {
   }
 
-  public Object[] getData(RequestScope request, ParameterMap parameterMap, Object parameterObject) {
+  public Object[] getData(StatementScope statementScope, ParameterMap parameterMap, Object parameterObject) {
     Probe probe = ProbeFactory.getProbe(parameterObject);
 
     ParameterMapping[] mappings = parameterMap.getParameterMappings();
@@ -59,7 +59,7 @@ public class DomDataExchange extends BaseDataExchange implements DataExchange {
     return values;
   }
 
-  public Object setData(RequestScope request, ResultMap resultMap, Object resultObject, Object[] values) {
+  public Object setData(StatementScope statementScope, ResultMap resultMap, Object resultObject, Object[] values) {
 
     String name = ((BasicResultMap) resultMap).getXmlName();
     if (name == null) {
@@ -89,7 +89,7 @@ public class DomDataExchange extends BaseDataExchange implements DataExchange {
     return resultObject;
   }
 
-  public Object setData(RequestScope request, ParameterMap parameterMap, Object parameterObject, Object[] values) {
+  public Object setData(StatementScope statementScope, ParameterMap parameterMap, Object parameterObject, Object[] values) {
     Probe probe = ProbeFactory.getProbe(parameterObject);
 
     ParameterMapping[] mappings = parameterMap.getParameterMappings();

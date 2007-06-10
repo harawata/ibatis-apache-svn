@@ -38,7 +38,7 @@ import java.util.Map;
 public class SqlMapSessionImpl implements SqlMapSession {
 
   protected SqlMapExecutorDelegate delegate;
-  protected SessionScope session;
+  protected SessionScope sessionScope;
   protected boolean closed;
 
   /**
@@ -48,10 +48,10 @@ public class SqlMapSessionImpl implements SqlMapSession {
    */
   public SqlMapSessionImpl(ExtendedSqlMapClient client) {
     this.delegate = client.getDelegate();
-    this.session = this.delegate.popSession();
-    this.session.setSqlMapClient(client);
-    this.session.setSqlMapExecutor(client);
-    this.session.setSqlMapTxMgr(client);
+    this.sessionScope = this.delegate.beginSessionScope();
+    this.sessionScope.setSqlMapClient(client);
+    this.sessionScope.setSqlMapExecutor(client);
+    this.sessionScope.setSqlMapTxMgr(client);
     this.closed = false;
   }
 
@@ -59,7 +59,7 @@ public class SqlMapSessionImpl implements SqlMapSession {
    * Start the session
    */
   public void open() {
-    session.setSqlMapTxMgr(this);
+    sessionScope.setSqlMapTxMgr(this);
   }
 
   /**
@@ -72,14 +72,14 @@ public class SqlMapSessionImpl implements SqlMapSession {
   }
 
   public void close() {
-    if (delegate != null && session != null) delegate.pushSession(session);
-    if (session != null) session = null;
+    if (delegate != null && sessionScope != null) delegate.endSessionScope(sessionScope);
+    if (sessionScope != null) sessionScope = null;
     if (delegate != null) delegate = null;
     if (!closed) closed = true;
   }
 
   public Object insert(String id, Object param) throws SQLException {
-    return delegate.insert(session, id, param);
+    return delegate.insert(sessionScope, id, param);
   }
 
   public Object insert(String id) throws SQLException {
@@ -87,7 +87,7 @@ public class SqlMapSessionImpl implements SqlMapSession {
   }
 
   public int update(String id, Object param) throws SQLException {
-    return delegate.update(session, id, param);
+    return delegate.update(sessionScope, id, param);
   }
 
   public int update(String id) throws SQLException {
@@ -95,7 +95,7 @@ public class SqlMapSessionImpl implements SqlMapSession {
   }
 
   public int delete(String id, Object param) throws SQLException {
-    return delegate.delete(session, id, param);
+    return delegate.delete(sessionScope, id, param);
   }
 
   public int delete(String id) throws SQLException {
@@ -103,7 +103,7 @@ public class SqlMapSessionImpl implements SqlMapSession {
   }
 
   public Object queryForObject(String id, Object paramObject) throws SQLException {
-    return delegate.queryForObject(session, id, paramObject);
+    return delegate.queryForObject(sessionScope, id, paramObject);
   }
 
   public Object queryForObject(String id) throws SQLException {
@@ -111,11 +111,11 @@ public class SqlMapSessionImpl implements SqlMapSession {
   }
 
   public Object queryForObject(String id, Object paramObject, Object resultObject) throws SQLException {
-    return delegate.queryForObject(session, id, paramObject, resultObject);
+    return delegate.queryForObject(sessionScope, id, paramObject, resultObject);
   }
 
   public List queryForList(String id, Object paramObject) throws SQLException {
-    return delegate.queryForList(session, id, paramObject);
+    return delegate.queryForList(sessionScope, id, paramObject);
   }
 
   public List queryForList(String id) throws SQLException {
@@ -123,7 +123,7 @@ public class SqlMapSessionImpl implements SqlMapSession {
   }
 
   public List queryForList(String id, Object paramObject, int skip, int max) throws SQLException {
-    return delegate.queryForList(session, id, paramObject, skip, max);
+    return delegate.queryForList(sessionScope, id, paramObject, skip, max);
   }
 
   public List queryForList(String id, int skip, int max) throws SQLException {
@@ -134,7 +134,7 @@ public class SqlMapSessionImpl implements SqlMapSession {
    * @deprecated All paginated list features have been deprecated
    */
   public PaginatedList queryForPaginatedList(String id, Object paramObject, int pageSize) throws SQLException {
-    return delegate.queryForPaginatedList(session, id, paramObject, pageSize);
+    return delegate.queryForPaginatedList(sessionScope, id, paramObject, pageSize);
   }
 
   /**
@@ -145,15 +145,15 @@ public class SqlMapSessionImpl implements SqlMapSession {
   }
 
   public Map queryForMap(String id, Object paramObject, String keyProp) throws SQLException {
-    return delegate.queryForMap(session, id, paramObject, keyProp);
+    return delegate.queryForMap(sessionScope, id, paramObject, keyProp);
   }
 
   public Map queryForMap(String id, Object paramObject, String keyProp, String valueProp) throws SQLException {
-    return delegate.queryForMap(session, id, paramObject, keyProp, valueProp);
+    return delegate.queryForMap(sessionScope, id, paramObject, keyProp, valueProp);
   }
 
   public void queryWithRowHandler(String id, Object paramObject, RowHandler rowHandler) throws SQLException {
-    delegate.queryWithRowHandler(session, id, paramObject, rowHandler);
+    delegate.queryWithRowHandler(sessionScope, id, paramObject, rowHandler);
   }
 
   public void queryWithRowHandler(String id, RowHandler rowHandler) throws SQLException {
@@ -161,35 +161,35 @@ public class SqlMapSessionImpl implements SqlMapSession {
   }
 
   public void startTransaction() throws SQLException {
-    delegate.startTransaction(session);
+    delegate.startTransaction(sessionScope);
   }
 
   public void startTransaction(int transactionIsolation) throws SQLException {
-    delegate.startTransaction(session, transactionIsolation);
+    delegate.startTransaction(sessionScope, transactionIsolation);
   }
 
   public void commitTransaction() throws SQLException {
-    delegate.commitTransaction(session);
+    delegate.commitTransaction(sessionScope);
   }
 
   public void endTransaction() throws SQLException {
-    delegate.endTransaction(session);
+    delegate.endTransaction(sessionScope);
   }
 
   public void startBatch() throws SQLException {
-    delegate.startBatch(session);
+    delegate.startBatch(sessionScope);
   }
 
   public int executeBatch() throws SQLException {
-    return delegate.executeBatch(session);
+    return delegate.executeBatch(sessionScope);
   }
 
   public List executeBatchDetailed() throws SQLException, BatchException {
-    return delegate.executeBatchDetailed(session);
+    return delegate.executeBatchDetailed(sessionScope);
   }
   
   public void setUserConnection(Connection connection) throws SQLException {
-    delegate.setUserProvidedTransaction(session, connection);
+    delegate.setUserProvidedTransaction(sessionScope, connection);
   }
 
   /**
@@ -206,7 +206,7 @@ public class SqlMapSessionImpl implements SqlMapSession {
   public Connection getCurrentConnection() throws SQLException {
     try {
       Connection conn = null;
-      Transaction trans = delegate.getTransaction(session);
+      Transaction trans = delegate.getTransaction(sessionScope);
       if (trans != null) {
         conn = trans.getConnection();
       }

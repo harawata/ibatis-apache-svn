@@ -18,7 +18,7 @@ package com.ibatis.sqlmap.engine.mapping.sql.stat;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
 import com.ibatis.sqlmap.engine.mapping.sql.Sql;
-import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.scope.StatementScope;
 
 public class StaticSql implements Sql {
 
@@ -28,19 +28,19 @@ public class StaticSql implements Sql {
     this.sqlStatement = sqlStatement.replace('\r', ' ').replace('\n', ' ');
   }
 
-  public String getSql(RequestScope request, Object parameterObject) {
+  public String getSql(StatementScope statementScope, Object parameterObject) {
     return sqlStatement;
   }
 
-  public ParameterMap getParameterMap(RequestScope request, Object parameterObject) {
-    return request.getParameterMap();
+  public ParameterMap getParameterMap(StatementScope statementScope, Object parameterObject) {
+    return statementScope.getParameterMap();
   }
 
-  public ResultMap getResultMap(RequestScope request, Object parameterObject) {
-    return request.getResultMap();
+  public ResultMap getResultMap(StatementScope statementScope, Object parameterObject) {
+    return statementScope.getResultMap();
   }
 
-  public void cleanup(RequestScope request) {
+  public void cleanup(StatementScope statementScope) {
   }
 
 }

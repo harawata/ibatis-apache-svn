@@ -27,9 +27,6 @@ public interface TransactionConfig {
   DataSource getDataSource();
   void setDataSource(DataSource ds);
 
-  int getMaximumConcurrentTransactions();
-  void setMaximumConcurrentTransactions(int maximumConcurrentTransactions);
-
   boolean isForceCommit();
   void setForceCommit(boolean forceCommit);
 

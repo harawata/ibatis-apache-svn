@@ -27,7 +27,7 @@ import com.ibatis.sqlmap.engine.mapping.sql.SqlText;
 import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.*;
 import com.ibatis.sqlmap.engine.mapping.sql.simple.SimpleDynamicSql;
 import com.ibatis.sqlmap.engine.mapping.statement.GeneralStatement;
-import com.ibatis.sqlmap.engine.scope.RequestScope;
+import com.ibatis.sqlmap.engine.scope.StatementScope;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -46,60 +46,60 @@ public class DynamicSql implements Sql, DynamicParent {
     this.delegate = delegate;
   }
 
-  public String getSql(RequestScope request, Object parameterObject) {
-    String sql = request.getDynamicSql();
+  public String getSql(StatementScope statementScope, Object parameterObject) {
+    String sql = statementScope.getDynamicSql();
     if (sql == null) {
-      process(request, parameterObject);
-      sql = request.getDynamicSql();
+      process(statementScope, parameterObject);
+      sql = statementScope.getDynamicSql();
     }
     return sql;
   }
 
-  public ParameterMap getParameterMap(RequestScope request, Object parameterObject) {
-    ParameterMap map = request.getDynamicParameterMap();
+  public ParameterMap getParameterMap(StatementScope statementScope, Object parameterObject) {
+    ParameterMap map = statementScope.getDynamicParameterMap();
     if (map == null) {
-      process(request, parameterObject);
-      map = request.getDynamicParameterMap();
+      process(statementScope, parameterObject);
+      map = statementScope.getDynamicParameterMap();
     }
     return map;
   }
 
-  public ResultMap getResultMap(RequestScope request, Object parameterObject) {
-    return request.getResultMap();
+  public ResultMap getResultMap(StatementScope statementScope, Object parameterObject) {
+    return statementScope.getResultMap();
   }
 
-  public void cleanup(RequestScope request) {
-    request.setDynamicSql(null);
-    request.setDynamicParameterMap(null);
+  public void cleanup(StatementScope statementScope) {
+    statementScope.setDynamicSql(null);
+    statementScope.setDynamicParameterMap(null);
   }
 
-  private void process(RequestScope request, Object parameterObject) {
+  private void process(StatementScope statementScope, Object parameterObject) {
     SqlTagContext ctx = new SqlTagContext();
     List localChildren = children;
-    processBodyChildren(request, ctx, parameterObject, localChildren.iterator());
+    processBodyChildren(statementScope, ctx, parameterObject, localChildren.iterator());
 
     BasicParameterMap map = new BasicParameterMap(delegate);
-    map.setId(request.getStatement().getId() + "-InlineParameterMap");
-    map.setParameterClass(((GeneralStatement) request.getStatement()).getParameterClass());
+    map.setId(statementScope.getStatement().getId() + "-InlineParameterMap");
+    map.setParameterClass(((GeneralStatement) statementScope.getStatement()).getParameterClass());
     map.setParameterMappingList(ctx.getParameterMappings());
 
     String dynSql = ctx.getBodyText();
 
     // Processes $substitutions$ after DynamicSql
     if (SimpleDynamicSql.isSimpleDynamicSql(dynSql)) {
-      dynSql = new SimpleDynamicSql(delegate, dynSql).getSql(request, parameterObject);
+      dynSql = new SimpleDynamicSql(delegate, dynSql).getSql(statementScope, parameterObject);
     }
 
-    request.setDynamicSql(dynSql);
-    request.setDynamicParameterMap(map);
+    statementScope.setDynamicSql(dynSql);
+    statementScope.setDynamicParameterMap(map);
   }
 
-  private void processBodyChildren(RequestScope request, SqlTagContext ctx, Object parameterObject, Iterator localChildren) {
+  private void processBodyChildren(StatementScope statementScope, SqlTagContext ctx, Object parameterObject, Iterator localChildren) {
     PrintWriter out = ctx.getWriter();
-    processBodyChildren(request, ctx, parameterObject, localChildren, out);
+    processBodyChildren(statementScope, ctx, parameterObject, localChildren, out);
   }
 
-  private void processBodyChildren(RequestScope request, SqlTagContext ctx, Object parameterObject, Iterator localChildren, PrintWriter out) {
+  private void processBodyChildren(StatementScope statementScope, SqlTagContext ctx, Object parameterObject, Iterator localChildren, PrintWriter out) {
     while (localChildren.hasNext()) {
       SqlChild child = (SqlChild) localChildren.next();
       if (child instanceof SqlText) {
@@ -157,7 +157,7 @@ public class DynamicSql implements Sql, DynamicParent {
           response = handler.doStartFragment(ctx, tag, parameterObject);
           if (response != SqlTagHandler.SKIP_BODY) {
 
-            processBodyChildren(request, ctx, parameterObject, tag.getChildren(), pw);
+            processBodyChildren(statementScope, ctx, parameterObject, tag.getChildren(), pw);
             pw.flush();
             pw.close();
             StringBuffer body = sw.getBuffer();

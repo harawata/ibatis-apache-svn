@@ -36,9 +36,6 @@ cacheModelsEnabled (true | false) #IMPLIED
 enhancementEnabled (true | false) #IMPLIED
 errorTracingEnabled (true | false) #IMPLIED
 useStatementNamespaces (true | false) #IMPLIED
-maxSessions CDATA #IMPLIED
-maxTransactions CDATA #IMPLIED
-maxRequests CDATA #IMPLIED
 defaultStatementTimeout CDATA #IMPLIED
 >
 
