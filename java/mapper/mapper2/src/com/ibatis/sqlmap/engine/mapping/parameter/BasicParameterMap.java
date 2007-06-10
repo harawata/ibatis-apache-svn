@@ -83,6 +83,7 @@ public class BasicParameterMap implements ParameterMap {
 
   public void setParameterMappingList(List parameterMappingList) {
     this.parameterMappings = (BasicParameterMapping[]) parameterMappingList.toArray(new BasicParameterMapping[parameterMappingList.size()]);
+    parameterMappingIndex.clear();
     for (int i = 0; i < parameterMappings.length; i++) {
       parameterMappingIndex.put(parameterMappings[i].getPropertyName(), new Integer(i));
     }

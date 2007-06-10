@@ -143,7 +143,8 @@ public class SqlMapParser {
   private void addParameterMapNodelets() {
     parser.addNodelet("/sqlMap/parameterMap/end()", new Nodelet() {
       public void process(Node node) throws Exception {
-        state.getParamConfig().saveParameterMap();
+        state.getConfig().getErrorContext().setMoreInfo(null);
+        state.getConfig().getErrorContext().setObjectId(null);
         state.setParamConfig(null);
       }
     });
@@ -152,8 +153,14 @@ public class SqlMapParser {
         Properties attributes = NodeletUtils.parseAttributes(node, state.getGlobalProps());
         String id = state.applyNamespace(attributes.getProperty("id"));
         String parameterClassName = attributes.getProperty("class");
-        ParameterMapConfig paramConf = state.getConfig().newParameterMapConfig(id, parameterClassName);
-        state.setParamConfig(paramConf);
+        parameterClassName = state.getConfig().getTypeHandlerFactory().resolveAlias(parameterClassName);
+        try {
+          state.getConfig().getErrorContext().setMoreInfo("Check the parameter class.");
+          ParameterMapConfig paramConf = state.getConfig().newParameterMapConfig(id, Resources.classForName(parameterClassName));
+          state.setParamConfig(paramConf);
+        } catch (Exception e) {
+          throw new SqlMapException("Error configuring ParameterMap.  Could not set ParameterClass.  Cause: " + e, e);
+        }
       }
     });
     parser.addNodelet("/sqlMap/parameterMap/parameter", new Nodelet() {
@@ -167,8 +174,30 @@ public class SqlMapParser {
         String nullValue = childAttributes.getProperty("nullValue");
         String mode = childAttributes.getProperty("mode");
         String callback = childAttributes.getProperty("typeHandler");
-        String numericScale = childAttributes.getProperty("numericScale");
-        state.getParamConfig().addParameterMapping(propertyName, javaType, jdbcType, nullValue, mode, type, numericScale, callback, resultMap);
+        String numericScaleProp = childAttributes.getProperty("numericScale");
+
+        callback = state.getConfig().getTypeHandlerFactory().resolveAlias(callback);
+        Object typeHandlerImpl = null;
+        if (callback != null) {
+          typeHandlerImpl = Resources.instantiate(callback);
+        }
+
+        javaType = state.getConfig().getTypeHandlerFactory().resolveAlias(javaType);
+        Class javaClass = null;
+        try {
+          if (javaType != null && javaType.length() > 0) {
+            javaClass = Resources.classForName(javaType);
+          }
+        } catch (ClassNotFoundException e) {
+          throw new RuntimeException("Error setting javaType on parameter mapping.  Cause: " + e);
+        }
+
+        Integer numericScale = null;
+        if (numericScaleProp != null) {
+          numericScale = new Integer(numericScaleProp);
+        }
+
+        state.getParamConfig().addParameterMapping(propertyName, javaClass, jdbcType, nullValue, mode, type, numericScale, typeHandlerImpl, resultMap);
       }
     });
   }

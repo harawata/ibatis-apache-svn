@@ -165,6 +165,9 @@ public class BasicParameterMapping implements ParameterMapping {
   }
 
   public void setNumericScale(Integer numericScale) {
+    if (numericScale != null && numericScale.intValue() < 0) {
+      throw new RuntimeException("Error setting numericScale on parameter mapping.  Cause: scale must be greater than or equal to zero");
+    }
     this.numericScale = numericScale;
   }
 

@@ -133,8 +133,8 @@ public class SqlMapConfiguration {
     return new CacheModelConfig(this, id, controller, readOnly, serialize);
   }
 
-  public ParameterMapConfig newParameterMapConfig(String id, String parameterClassName) {
-    return new ParameterMapConfig(this, id, parameterClassName);
+  public ParameterMapConfig newParameterMapConfig(String id, Class parameterClass) {
+    return new ParameterMapConfig(this, id, parameterClass);
   }
 
   public ResultMapConfig newResultMapConfig(String id, String resultClassName, String groupBy, String extended, String xmlName) {
