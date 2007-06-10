@@ -218,7 +218,16 @@ public class SqlMapParser {
         String extended = state.applyNamespace(attributes.getProperty("extends"));
         String xmlName = attributes.getProperty("xmlName");
         String groupBy = attributes.getProperty("groupBy");
-        ResultMapConfig resultConf = state.getConfig().newResultMapConfig(id, resultClassName, groupBy, extended, xmlName);
+
+        resultClassName = state.getConfig().getTypeHandlerFactory().resolveAlias(resultClassName);
+        Class resultClass;
+        try {
+          state.getConfig().getErrorContext().setMoreInfo("Check the result class.");
+          resultClass = Resources.classForName(resultClassName);
+        } catch (Exception e) {
+          throw new RuntimeException("Error configuring Result.  Could not set ResultClass.  Cause: " + e, e);
+        }
+        ResultMapConfig resultConf = state.getConfig().newResultMapConfig(id, resultClass, groupBy, extended, xmlName);
         state.setResultConfig(resultConf);
       }
     });
@@ -230,12 +239,43 @@ public class SqlMapParser {
         String jdbcType = childAttributes.getProperty("jdbcType");
         String javaType = childAttributes.getProperty("javaType");
         String columnName = childAttributes.getProperty("column");
-        String columnIndex = childAttributes.getProperty("columnIndex");
+        String columnIndexProp = childAttributes.getProperty("columnIndex");
         String statementName = childAttributes.getProperty("select");
         String resultMapName = childAttributes.getProperty("resultMap");
         String callback = childAttributes.getProperty("typeHandler");
 
-        state.getResultConfig().addResultMapping(propertyName, columnName, columnIndex, javaType, jdbcType, nullValue, statementName, resultMapName, callback);
+        state.getConfig().getErrorContext().setMoreInfo("Check the result mapping property type or name.");
+        Class javaClass = null;
+        try {
+          javaType = state.getConfig().getTypeHandlerFactory().resolveAlias(javaType);
+          if (javaType != null && javaType.length() > 0) {
+            javaClass = Resources.classForName(javaType);
+          }
+        } catch (ClassNotFoundException e) {
+          throw new RuntimeException("Error setting java type on result discriminator mapping.  Cause: " + e);
+        }
+
+        state.getConfig().getErrorContext().setMoreInfo("Check the result mapping typeHandler attribute '" + callback + "' (must be a TypeHandler or TypeHandlerCallback implementation).");
+        Object typeHandlerImpl = null;
+        try {
+          if (callback != null && callback.length() > 0) {
+            callback = state.getConfig().getTypeHandlerFactory().resolveAlias(callback);
+            typeHandlerImpl = Resources.instantiate(callback);
+          }
+        } catch (Exception e) {
+          throw new RuntimeException("Error occurred during custom type handler configuration.  Cause: " + e, e);
+        }
+
+        Integer columnIndex = null;
+        if (columnIndexProp != null) {
+          try {
+            columnIndex = new Integer(columnIndexProp);
+          } catch (Exception e) {
+            throw new RuntimeException("Error parsing column index.  Cause: " + e, e);
+          }
+        }
+
+        state.getResultConfig().addResultMapping(propertyName, columnName, columnIndex, javaClass, jdbcType, nullValue, statementName, resultMapName, typeHandlerImpl);
       }
     });
 
@@ -256,10 +296,41 @@ public class SqlMapParser {
         String jdbcType = childAttributes.getProperty("jdbcType");
         String javaType = childAttributes.getProperty("javaType");
         String columnName = childAttributes.getProperty("column");
-        String columnIndex = childAttributes.getProperty("columnIndex");
+        String columnIndexProp = childAttributes.getProperty("columnIndex");
         String callback = childAttributes.getProperty("typeHandler");
 
-        state.getResultConfig().setDiscriminator(columnName, columnIndex, javaType, jdbcType, nullValue, callback);
+        state.getConfig().getErrorContext().setMoreInfo("Check the disriminator type or name.");
+        Class javaClass = null;
+        try {
+          javaType = state.getConfig().getTypeHandlerFactory().resolveAlias(javaType);
+          if (javaType != null && javaType.length() > 0) {
+            javaClass = Resources.classForName(javaType);
+          }
+        } catch (ClassNotFoundException e) {
+          throw new RuntimeException("Error setting java type on result discriminator mapping.  Cause: " + e);
+        }
+
+        state.getConfig().getErrorContext().setMoreInfo("Check the result mapping discriminator typeHandler attribute '" + callback + "' (must be a TypeHandlerCallback implementation).");
+        Object typeHandlerImpl = null;
+        try {
+          if (callback != null && callback.length() > 0) {
+            callback = state.getConfig().getTypeHandlerFactory().resolveAlias(callback);
+            typeHandlerImpl = Resources.instantiate(callback);
+          }
+        } catch (Exception e) {
+          throw new RuntimeException("Error occurred during custom type handler configuration.  Cause: " + e, e);
+        }
+
+        Integer columnIndex = null;
+        if (columnIndexProp != null) {
+          try {
+            columnIndex = new Integer(columnIndexProp);
+          } catch (Exception e) {
+            throw new RuntimeException("Error parsing column index.  Cause: " + e, e);
+          }
+        }
+
+        state.getResultConfig().setDiscriminator(columnName, columnIndex, javaClass, jdbcType, nullValue, typeHandlerImpl);
       }
     });
   }

@@ -137,8 +137,8 @@ public class SqlMapConfiguration {
     return new ParameterMapConfig(this, id, parameterClass);
   }
 
-  public ResultMapConfig newResultMapConfig(String id, String resultClassName, String groupBy, String extended, String xmlName) {
-    return new ResultMapConfig(this, id, resultClassName, groupBy, extended, xmlName);
+  public ResultMapConfig newResultMapConfig(String id, Class resultClass, String groupBy, String extended, String xmlName) {
+    return new ResultMapConfig(this, id, resultClass, groupBy, extended, xmlName);
   }
 
   public MappedStatementConfig newMappedStatementConfig(String id, GeneralStatement statement, SqlSource processor, String parameterMapName, String parameterClassName, String resultMapName, String[] additionalResultMapNames, String resultClassName, String[] additionalResultClasses, String resultSetType, String fetchSize, String allowRemapping, String timeout, String cacheModelName, String xmlResultName) {
