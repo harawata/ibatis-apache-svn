@@ -852,7 +852,7 @@ public class SqlMapExecutorDelegate {
   public DataSource getDataSource() {
     DataSource ds = null;
     if (txManager != null) {
-      ds = txManager.getDataSource();
+      ds = txManager.getConfig().getDataSource();
     }
     return ds;
   }
@@ -907,8 +907,8 @@ public class SqlMapExecutorDelegate {
     CacheKey key = new CacheKey();
     if (txManager != null) {
       key.update(txManager);
-      if (txManager.getDataSource() != null) {
-        key.update(txManager.getDataSource());
+      if (txManager.getConfig().getDataSource() != null) {
+        key.update(txManager.getConfig().getDataSource());
       }
     }
     key.update(System.identityHashCode(this));

@@ -1,12 +1,12 @@
 package com.ibatis.sqlmap.engine.builder.xml;
 
-import com.ibatis.common.xml.NodeletUtils;
-import com.ibatis.sqlmap.engine.mapping.parameter.InlineParameterMapParser;
-import com.ibatis.sqlmap.engine.mapping.sql.*;
-import com.ibatis.sqlmap.engine.mapping.sql.dynamic.DynamicSql;
-import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.*;
-import com.ibatis.sqlmap.engine.mapping.sql.raw.RawSql;
+import com.ibatis.common.xml.*;
 import com.ibatis.sqlmap.engine.conifg.*;
+import com.ibatis.sqlmap.engine.mapping.parameter.*;
+import com.ibatis.sqlmap.engine.mapping.sql.*;
+import com.ibatis.sqlmap.engine.mapping.sql.dynamic.*;
+import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.*;
+import com.ibatis.sqlmap.engine.mapping.sql.raw.*;
 import org.w3c.dom.CharacterData;
 import org.w3c.dom.*;
 

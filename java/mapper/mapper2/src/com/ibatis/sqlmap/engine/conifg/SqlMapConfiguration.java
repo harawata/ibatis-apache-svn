@@ -1,39 +1,27 @@
 package com.ibatis.sqlmap.engine.conifg;
 
-import com.ibatis.common.beans.ClassInfo;
-import com.ibatis.common.beans.Probe;
-import com.ibatis.common.beans.ProbeFactory;
-import com.ibatis.common.resources.Resources;
-import com.ibatis.sqlmap.client.SqlMapException;
-import com.ibatis.sqlmap.client.extensions.TypeHandlerCallback;
-import com.ibatis.sqlmap.engine.accessplan.AccessPlanFactory;
-import com.ibatis.sqlmap.engine.cache.CacheModel;
-import com.ibatis.sqlmap.engine.cache.fifo.FifoCacheController;
-import com.ibatis.sqlmap.engine.cache.lru.LruCacheController;
-import com.ibatis.sqlmap.engine.cache.memory.MemoryCacheController;
-import com.ibatis.sqlmap.engine.datasource.DataSourceFactory;
-import com.ibatis.sqlmap.engine.datasource.DbcpDataSourceFactory;
-import com.ibatis.sqlmap.engine.datasource.JndiDataSourceFactory;
-import com.ibatis.sqlmap.engine.datasource.SimpleDataSourceFactory;
-import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
-import com.ibatis.sqlmap.engine.impl.SqlMapClientImpl;
-import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
-import com.ibatis.sqlmap.engine.mapping.result.Discriminator;
-import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
-import com.ibatis.sqlmap.engine.mapping.result.ResultObjectFactory;
-import com.ibatis.sqlmap.engine.mapping.statement.GeneralStatement;
-import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
-import com.ibatis.sqlmap.engine.scope.ErrorContext;
-import com.ibatis.sqlmap.engine.transaction.TransactionConfig;
-import com.ibatis.sqlmap.engine.transaction.TransactionManager;
-import com.ibatis.sqlmap.engine.transaction.external.ExternalTransactionConfig;
-import com.ibatis.sqlmap.engine.transaction.jdbc.JdbcTransactionConfig;
-import com.ibatis.sqlmap.engine.transaction.jta.JtaTransactionConfig;
+import com.ibatis.common.beans.*;
+import com.ibatis.common.resources.*;
+import com.ibatis.sqlmap.client.*;
+import com.ibatis.sqlmap.client.extensions.*;
+import com.ibatis.sqlmap.engine.accessplan.*;
+import com.ibatis.sqlmap.engine.cache.*;
+import com.ibatis.sqlmap.engine.cache.fifo.*;
+import com.ibatis.sqlmap.engine.cache.lru.*;
+import com.ibatis.sqlmap.engine.cache.memory.*;
+import com.ibatis.sqlmap.engine.datasource.*;
+import com.ibatis.sqlmap.engine.impl.*;
+import com.ibatis.sqlmap.engine.mapping.result.*;
+import com.ibatis.sqlmap.engine.mapping.statement.*;
+import com.ibatis.sqlmap.engine.scope.*;
+import com.ibatis.sqlmap.engine.transaction.*;
+import com.ibatis.sqlmap.engine.transaction.external.*;
+import com.ibatis.sqlmap.engine.transaction.jdbc.*;
+import com.ibatis.sqlmap.engine.transaction.jta.*;
 import com.ibatis.sqlmap.engine.type.*;
 
 import javax.sql.DataSource;
-import java.util.Iterator;
-import java.util.Properties;
+import java.util.*;
 
 public class SqlMapConfiguration {
   private static final Probe PROBE = ProbeFactory.getProbe();
@@ -68,19 +56,15 @@ public class SqlMapConfiguration {
     return delegate;
   }
 
-  public Integer getDefaultStatementTimeout() {
-    return defaultStatementTimeout;
-  }
-
   //
   // Utility Methods
   //
 
-  public TypeHandler resolveTypeHandler(TypeHandlerFactory typeHandlerFactory, Class clazz, String propertyName, String javaType, String jdbcType) {
+  TypeHandler resolveTypeHandler(TypeHandlerFactory typeHandlerFactory, Class clazz, String propertyName, Class javaType, String jdbcType) {
     return resolveTypeHandler(typeHandlerFactory, clazz, propertyName, javaType, jdbcType, false);
   }
 
-  public TypeHandler resolveTypeHandler(TypeHandlerFactory typeHandlerFactory, Class clazz, String propertyName, String javaType, String jdbcType, boolean useSetterToResolve) {
+  TypeHandler resolveTypeHandler(TypeHandlerFactory typeHandlerFactory, Class clazz, String propertyName, Class javaType, String jdbcType, boolean useSetterToResolve) {
     TypeHandler handler;
     if (clazz == null) {
       // Unknown
@@ -93,12 +77,7 @@ public class SqlMapConfiguration {
       if (javaType == null) {
         handler = typeHandlerFactory.getUnkownTypeHandler(); //BUG 1012591 - typeHandlerFactory.getTypeHandler(java.lang.Object.class, jdbcType);
       } else {
-        try {
-          Class javaClass = Resources.classForName(javaType);
-          handler = typeHandlerFactory.getTypeHandler(javaClass, jdbcType);
-        } catch (Exception e) {
-          throw new RuntimeException("Error.  Could not set TypeHandler.  Cause: " + e, e);
-        }
+        handler = typeHandlerFactory.getTypeHandler(javaType, jdbcType);
       }
     } else if (typeHandlerFactory.getTypeHandler(clazz, jdbcType) != null) {
       // Primitive
@@ -114,40 +93,66 @@ public class SqlMapConfiguration {
           handler = typeHandlerFactory.getTypeHandler(type, jdbcType);
         }
       } else {
-        try {
-          Class javaClass = Resources.classForName(javaType);
-          handler = typeHandlerFactory.getTypeHandler(javaClass, jdbcType);
-        } catch (Exception e) {
-          throw new RuntimeException("Error.  Could not set TypeHandler.  Cause: " + e, e);
-        }
+        handler = typeHandlerFactory.getTypeHandler(javaType, jdbcType);
       }
     }
     return handler;
   }
 
-  // TODO: Split into separate methods
-  public void setSettings(boolean classInfoCacheEnabled, boolean lazyLoadingEnabled, boolean statementCachingEnabled, boolean cacheModelsEnabled, boolean enhancementEnabled, Integer maxTransactions, Integer maxRequests, Integer maxSessions, Integer defaultTimeout) {
-    errorContext.setActivity("loading settings properties");
+  public void setClassInfoCacheEnabled (boolean classInfoCacheEnabled) {
+    errorContext.setActivity("setting class info cache enabled/disabled");
     ClassInfo.setCacheEnabled(classInfoCacheEnabled);
+  }
+
+  public void setLazyLoadingEnabled (boolean lazyLoadingEnabled) {
+    errorContext.setActivity("setting lazy loading enabled/disabled");
     client.getDelegate().setLazyLoadingEnabled(lazyLoadingEnabled);
+  }
+
+  public void setStatementCachingEnabled (boolean statementCachingEnabled) {
+    errorContext.setActivity("setting statement caching enabled/disabled");
     client.getDelegate().setStatementCacheEnabled(statementCachingEnabled);
+  }
+
+  public void setCacheModelsEnabled (boolean cacheModelsEnabled) {
+    errorContext.setActivity("setting cache models enabled/disabled");
     client.getDelegate().setCacheModelsEnabled(cacheModelsEnabled);
+  }
+
+  public void setEnhancementEnabled (boolean enhancementEnabled) {
+    errorContext.setActivity("setting enhancement enabled/disabled");
     try {
       enhancementEnabled = enhancementEnabled && Resources.classForName("net.sf.cglib.proxy.InvocationHandler") != null;
     } catch (ClassNotFoundException e) {
       enhancementEnabled = false;
     }
     client.getDelegate().setEnhancementEnabled(enhancementEnabled);
+    AccessPlanFactory.setBytecodeEnhancementEnabled(enhancementEnabled);
+  }
+
+  public void setMaxTransactions (Integer maxTransactions) {
+    errorContext.setActivity("setting maximum transactions");
     if (maxTransactions != null && maxTransactions.intValue() > 0) {
       client.getDelegate().setMaxTransactions(maxTransactions.intValue());
     }
+  }
+
+  public void setMaxRequests (Integer maxRequests) {
+    errorContext.setActivity("setting maximum requests");
     if (maxRequests != null && maxRequests.intValue() > 0) {
       client.getDelegate().setMaxRequests(maxRequests.intValue());
     }
+  }
+
+  public void setMaxSessions (Integer maxSessions) {
+    errorContext.setActivity("setting maximum sessions");
     if (maxSessions != null && maxSessions.intValue() > 0) {
       client.getDelegate().setMaxSessions(maxSessions.intValue());
     }
-    AccessPlanFactory.setBytecodeEnhancementEnabled(client.getDelegate().isEnhancementEnabled());
+  }
+
+  public void setDefaultStatementTimeout(Integer defaultTimeout) {
+    errorContext.setActivity("setting default timeout");
     if (defaultTimeout != null) {
       try {
         defaultStatementTimeout = defaultTimeout;
@@ -157,31 +162,23 @@ public class SqlMapConfiguration {
     }
   }
 
-  public void addTypeAlias(String alias, String type) {
-    typeHandlerFactory.putTypeAlias(alias, type);
-  }
-
-  public void addGlobalTypeHandler(String javaType, String jdbcType, String callback) {
+  public void addTypeHandler(Class javaType, String jdbcType, Object callback) {
     try {
       errorContext.setActivity("building a building custom type handler");
       TypeHandlerFactory typeHandlerFactory = client.getDelegate().getTypeHandlerFactory();
-      callback = typeHandlerFactory.resolveAlias(callback);
-      javaType = typeHandlerFactory.resolveAlias(javaType);
-      errorContext.setMoreInfo("Check the callback attribute '" + callback + "' (must be a classname).");
       TypeHandler typeHandler;
-      Object impl = Resources.instantiate(callback);
-      if (impl instanceof TypeHandlerCallback) {
-        typeHandler = new CustomTypeHandler((TypeHandlerCallback) impl);
-      } else if (impl instanceof TypeHandler) {
-        typeHandler = (TypeHandler) impl;
+      if (callback instanceof TypeHandlerCallback) {
+        typeHandler = new CustomTypeHandler((TypeHandlerCallback) callback);
+      } else if (callback instanceof TypeHandler) {
+        typeHandler = (TypeHandler) callback;
       } else {
-        throw new RuntimeException("The class '' is not a valid implementation of TypeHandler or TypeHandlerCallback");
+        throw new RuntimeException("The object '" + callback + "' is not a valid implementation of TypeHandler or TypeHandlerCallback");
       }
       errorContext.setMoreInfo("Check the javaType attribute '" + javaType + "' (must be a classname) or the jdbcType '" + jdbcType + "' (must be a JDBC type name).");
       if (jdbcType != null && jdbcType.length() > 0) {
-        typeHandlerFactory.register(Resources.classForName(javaType), jdbcType, typeHandler);
+        typeHandlerFactory.register(javaType, jdbcType, typeHandler);
       } else {
-        typeHandlerFactory.register(Resources.classForName(javaType), typeHandler);
+        typeHandlerFactory.register(javaType, typeHandler);
       }
     } catch (Exception e) {
       throw new SqlMapException("Error registering occurred.  Cause: " + e, e);
@@ -190,90 +187,12 @@ public class SqlMapConfiguration {
     errorContext.setObjectId(null);
   }
 
-  //TODO: pass in datasource as a parameter to setTXMgr
-  public void setDataSource(String type, Properties props) {
-    type = typeHandlerFactory.resolveAlias(type);
-    try {
-      errorContext.setMoreInfo("Check the data source type or class.");
-      DataSourceFactory dsFactory = (DataSourceFactory) Resources.instantiate(type);
-      errorContext.setMoreInfo("Check the data source properties or configuration.");
-      dsFactory.initialize(props);
-      dataSource = dsFactory.getDataSource();
-      errorContext.setMoreInfo(null);
-    } catch (Exception e) {
-      if (e instanceof SqlMapException) {
-        throw (SqlMapException) e;
-      } else {
-        throw new SqlMapException("Error initializing DataSource.  Could not instantiate DataSourceFactory.  Cause: " + e, e);
-      }
-    }
+  public void setTransactionManager(TransactionManager txManager) {
+    delegate.setTxManager(txManager);
   }
 
-  public void setTransactionManager(String type, boolean commitRequired, Properties props) {
-    errorContext.setActivity("configuring the transaction manager");
-    type = typeHandlerFactory.resolveAlias(type);
-    TransactionManager txManager;
-    try {
-      errorContext.setMoreInfo("Check the transaction manager type or class.");
-      TransactionConfig config = (TransactionConfig) Resources.instantiate(type);
-      config.setDataSource(dataSource);
-      config.setMaximumConcurrentTransactions(client.getDelegate().getMaxTransactions());
-      errorContext.setMoreInfo("Check the transactio nmanager properties or configuration.");
-      config.initialize(props);
-      errorContext.setMoreInfo(null);
-      txManager = new TransactionManager(config);
-      txManager.setForceCommit(commitRequired);
-    } catch (Exception e) {
-      if (e instanceof SqlMapException) {
-        throw (SqlMapException) e;
-      } else {
-        throw new SqlMapException("Error initializing TransactionManager.  Could not instantiate TransactionConfig.  Cause: " + e, e);
-      }
-    }
-    client.getDelegate().setTxManager(txManager);
-  }
-
-  public void setResultObjectFactory(String type) {
-    errorContext.setActivity("configuring the Result Object Factory");
-    ResultObjectFactory rof;
-    try {
-      rof = (ResultObjectFactory) Resources.instantiate(type);
-      delegate.setResultObjectFactory(rof);
-    } catch (Exception e) {
-      throw new SqlMapException("Error instantiating resultObjectFactory: " + type, e);
-    }
-  }
-
-  // TODO - post processing sql map config
-  public void wireupCacheModels() {
-    Iterator cacheNames = client.getDelegate().getCacheModelNames();
-    while (cacheNames.hasNext()) {
-      String cacheName = (String) cacheNames.next();
-      CacheModel cacheModel = client.getDelegate().getCacheModel(cacheName);
-      Iterator statementNames = cacheModel.getFlushTriggerStatementNames();
-      while (statementNames.hasNext()) {
-        String statementName = (String) statementNames.next();
-        MappedStatement statement = client.getDelegate().getMappedStatement(statementName);
-        if (statement != null) {
-          statement.addExecuteListener(cacheModel);
-        } else {
-          throw new RuntimeException("Could not find statement named '" + statementName + "' for use as a flush trigger for the cache model named '" + cacheName + "'.");
-        }
-      }
-    }
-  }
-
-  // TODO: post processing sql map
-  public void bindDelegateSubMaps() {
-    Iterator names = delegate.getResultMapNames();
-    while (names.hasNext()) {
-      String name = (String) names.next();
-      ResultMap rm = delegate.getResultMap(name);
-      Discriminator disc = rm.getDiscriminator();
-      if (disc != null) {
-        disc.bindSubMaps();
-      }
-    }
+  public void setResultObjectFactory(ResultObjectFactory rof) {
+    delegate.setResultObjectFactory(rof);
   }
 
   public ParameterMapConfig newParameterMapConfig(String id, String parameterClassName) {
@@ -289,7 +208,7 @@ public class SqlMapConfiguration {
   }
 
   public MappedStatementConfig newMappedStatementConfig(String id, GeneralStatement statement, SqlSource processor, String parameterMapName, String parameterClassName, String resultMapName, String[] additionalResultMapNames, String resultClassName, String[] additionalResultClasses, String resultSetType, String fetchSize, String allowRemapping, String timeout, String cacheModelName, String xmlResultName) {
-    return new MappedStatementConfig(this, id, statement, processor, parameterMapName, parameterClassName, resultMapName, additionalResultMapNames, resultClassName, additionalResultClasses, cacheModelName, resultSetType, fetchSize, allowRemapping, timeout, xmlResultName);
+    return new MappedStatementConfig(this, id, statement, processor, parameterMapName, parameterClassName, resultMapName, additionalResultMapNames, resultClassName, additionalResultClasses, cacheModelName, resultSetType, fetchSize, allowRemapping, timeout, defaultStatementTimeout, xmlResultName);
   }
 
   private void registerDefaultTypeAliases() {
@@ -315,6 +234,43 @@ public class SqlMapConfiguration {
     typeHandlerFactory.putTypeAlias("domCollection", DomCollectionTypeMarker.class.getName());
     typeHandlerFactory.putTypeAlias("xml", XmlTypeMarker.class.getName());
     typeHandlerFactory.putTypeAlias("xmlCollection", XmlCollectionTypeMarker.class.getName());
+  }
+
+  public void finalizeSqlMapConfig() {
+    wireUpCacheModels();
+    bindResultMapDiscriminators();
+  }
+
+  private void wireUpCacheModels() {
+    // Wire Up Cache Models
+    Iterator cacheNames = client.getDelegate().getCacheModelNames();
+    while (cacheNames.hasNext()) {
+      String cacheName = (String) cacheNames.next();
+      CacheModel cacheModel = client.getDelegate().getCacheModel(cacheName);
+      Iterator statementNames = cacheModel.getFlushTriggerStatementNames();
+      while (statementNames.hasNext()) {
+        String statementName = (String) statementNames.next();
+        MappedStatement statement = client.getDelegate().getMappedStatement(statementName);
+        if (statement != null) {
+          statement.addExecuteListener(cacheModel);
+        } else {
+          throw new RuntimeException("Could not find statement named '" + statementName + "' for use as a flush trigger for the cache model named '" + cacheName + "'.");
+        }
+      }
+    }
+  }
+
+  private void bindResultMapDiscriminators() {
+    // Bind discriminators
+    Iterator names = delegate.getResultMapNames();
+    while (names.hasNext()) {
+      String name = (String) names.next();
+      ResultMap rm = delegate.getResultMap(name);
+      Discriminator disc = rm.getDiscriminator();
+      if (disc != null) {
+        disc.bindSubMaps();
+      }
+    }
   }
 
 }

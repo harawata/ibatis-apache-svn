@@ -18,22 +18,17 @@ package com.ibatis.sqlmap.engine.transaction;
 import com.ibatis.common.util.Throttle;
 import com.ibatis.sqlmap.engine.scope.SessionScope;
 
-import javax.sql.DataSource;
 import java.sql.SQLException;
 
 public class TransactionManager {
 
-  private TransactionConfig transactionConfig;
-
-  private boolean forceCommit;
-
+  private TransactionConfig config;
   private Throttle txThrottle;
 
   public TransactionManager(TransactionConfig transactionConfig) {
-    this.transactionConfig = transactionConfig;
+    this.config = transactionConfig;
     this.txThrottle = new Throttle(transactionConfig.getMaximumConcurrentTransactions());
   }
-
 
   public void begin(SessionScope session) throws SQLException, TransactionException {
     begin(session, IsolationLevel.UNSET_ISOLATION_LEVEL);
@@ -54,7 +49,7 @@ public class TransactionManager {
     txThrottle.increment();
 
     try {
-      trans = transactionConfig.newTransaction(transactionIsolation);
+      trans = config.newTransaction(transactionIsolation);
       session.setCommitRequired(false);
     } catch (SQLException e) {
       txThrottle.decrement();
@@ -62,6 +57,9 @@ public class TransactionManager {
     } catch (TransactionException e) {
       txThrottle.decrement();
       throw e;
+    } catch (Exception e) {
+      txThrottle.decrement();
+      throw new RuntimeException ("Unexpected exception wile beginning transaction.", e);
     }
 
     session.setTransaction(trans);
@@ -79,7 +77,7 @@ public class TransactionManager {
     } else if (state != TransactionState.STATE_STARTED && state != TransactionState.STATE_COMMITTED ) {
       throw new TransactionException("TransactionManager could not commit.  No transaction is started.");
     }
-    if (session.isCommitRequired() || forceCommit) {
+    if (session.isCommitRequired() || config.isForceCommit()) {
       trans.commit();
       session.setCommitRequired(false);
     }
@@ -101,7 +99,7 @@ public class TransactionManager {
       if (trans != null) {
         try {
           if (state != TransactionState.STATE_COMMITTED) {
-            if (session.isCommitRequired() || forceCommit) {
+            if (session.isCommitRequired() || config.isForceCommit()) {
               trans.rollback();
               session.setCommitRequired(false);
             }
@@ -122,20 +120,8 @@ public class TransactionManager {
     }
   }
 
-  public DataSource getDataSource() {
-    return transactionConfig.getDataSource();
-  }
-
-  public void setDataSource(DataSource ds) {
-    transactionConfig.setDataSource(ds);
-  }
-
-  public boolean isForceCommit() {
-    return forceCommit;
-  }
-
-  public void setForceCommit(boolean forceCommit) {
-    this.forceCommit = forceCommit;
+  public TransactionConfig getConfig() {
+    return config;
   }
 
 }

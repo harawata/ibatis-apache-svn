@@ -1,18 +1,12 @@
 package com.ibatis.sqlmap.engine.builder.xml;
 
-import com.ibatis.common.xml.Nodelet;
-import com.ibatis.common.xml.NodeletException;
-import com.ibatis.common.xml.NodeletParser;
-import com.ibatis.common.xml.NodeletUtils;
-import com.ibatis.sqlmap.client.SqlMapException;
+import com.ibatis.common.xml.*;
+import com.ibatis.sqlmap.client.*;
+import com.ibatis.sqlmap.engine.conifg.*;
 import com.ibatis.sqlmap.engine.mapping.statement.*;
-import com.ibatis.sqlmap.engine.conifg.ParameterMapConfig;
-import com.ibatis.sqlmap.engine.conifg.ResultMapConfig;
-import com.ibatis.sqlmap.engine.conifg.CacheModelConfig;
 import org.w3c.dom.Node;
 
-import java.io.InputStream;
-import java.io.Reader;
+import java.io.*;
 import java.util.Properties;
 
 public class SqlMapParser {
@@ -55,13 +49,7 @@ public class SqlMapParser {
         state.setNamespace(attributes.getProperty("namespace"));
       }
     });
-    parser.addNodelet("/sqlMap/end()", new Nodelet() {
-      public void process(Node node) throws Exception {
-        state.getConfig().bindDelegateSubMaps();
-      }
-    });
   }
-
 
   private void addSqlNodelets() {
     parser.addNodelet("/sqlMap/sql", new Nodelet() {
@@ -86,7 +74,7 @@ public class SqlMapParser {
         Properties prop = NodeletUtils.parseAttributes(node, state.getGlobalProps());
         String alias = prop.getProperty("alias");
         String type = prop.getProperty("type");
-        state.getConfig().addTypeAlias(alias, type);
+        state.getConfig().getTypeHandlerFactory().putTypeAlias(alias, type);
       }
     });
   }

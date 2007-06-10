@@ -1,29 +1,22 @@
 package com.ibatis.sqlmap.engine.conifg;
 
-import com.ibatis.common.beans.Probe;
-import com.ibatis.common.beans.ProbeFactory;
-import com.ibatis.common.resources.Resources;
-import com.ibatis.sqlmap.client.SqlMapException;
-import com.ibatis.sqlmap.engine.cache.CacheModel;
-import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
-import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
-import com.ibatis.sqlmap.engine.mapping.parameter.BasicParameterMap;
-import com.ibatis.sqlmap.engine.mapping.parameter.InlineParameterMapParser;
-import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
-import com.ibatis.sqlmap.engine.mapping.result.AutoResultMap;
-import com.ibatis.sqlmap.engine.mapping.result.BasicResultMap;
-import com.ibatis.sqlmap.engine.mapping.sql.Sql;
-import com.ibatis.sqlmap.engine.mapping.sql.SqlText;
-import com.ibatis.sqlmap.engine.mapping.sql.dynamic.DynamicSql;
-import com.ibatis.sqlmap.engine.mapping.sql.simple.SimpleDynamicSql;
-import com.ibatis.sqlmap.engine.mapping.sql.stat.StaticSql;
+import com.ibatis.common.beans.*;
+import com.ibatis.common.resources.*;
+import com.ibatis.sqlmap.client.*;
+import com.ibatis.sqlmap.engine.cache.*;
+import com.ibatis.sqlmap.engine.impl.*;
+import com.ibatis.sqlmap.engine.mapping.parameter.*;
+import com.ibatis.sqlmap.engine.mapping.result.*;
+import com.ibatis.sqlmap.engine.mapping.sql.*;
+import com.ibatis.sqlmap.engine.mapping.sql.dynamic.*;
+import com.ibatis.sqlmap.engine.mapping.sql.simple.*;
+import com.ibatis.sqlmap.engine.mapping.sql.stat.*;
 import com.ibatis.sqlmap.engine.mapping.statement.*;
-import com.ibatis.sqlmap.engine.scope.ErrorContext;
-import com.ibatis.sqlmap.engine.type.TypeHandlerFactory;
+import com.ibatis.sqlmap.engine.scope.*;
+import com.ibatis.sqlmap.engine.type.*;
 
 import java.sql.ResultSet;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class MappedStatementConfig {
   private static final Probe PROBE = ProbeFactory.getProbe();
@@ -35,7 +28,7 @@ public class MappedStatementConfig {
   private MappedStatement mappedStatement;
   private MappedStatement rootStatement;
 
-  MappedStatementConfig(SqlMapConfiguration config, String id, GeneralStatement statement, SqlSource processor, String parameterMapName, String parameterClassName, String resultMapName, String[] additionalResultMapNames, String resultClassName, String[] additionalResultClasses, String cacheModelName, String resultSetType, String fetchSize, String allowRemapping, String timeout, String xmlResultName) {
+  MappedStatementConfig(SqlMapConfiguration config, String id, GeneralStatement statement, SqlSource processor, String parameterMapName, String parameterClassName, String resultMapName, String[] additionalResultMapNames, String resultClassName, String[] additionalResultClasses, String cacheModelName, String resultSetType, String fetchSize, String allowRemapping, String timeout, Integer defaultStatementTimeout, String xmlResultName) {
     this.errorContext = config.getErrorContext();
     this.client = config.getClient();
     this.delegate = client.getDelegate();
@@ -106,7 +99,7 @@ public class MappedStatementConfig {
       }
 
     }
-    statement.setTimeout(config.getDefaultStatementTimeout());
+    statement.setTimeout(defaultStatementTimeout);
     if (timeout != null) {
       try {
         statement.setTimeout(Integer.valueOf(timeout));

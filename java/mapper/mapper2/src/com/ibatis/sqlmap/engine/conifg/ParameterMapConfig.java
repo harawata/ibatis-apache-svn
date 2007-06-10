@@ -1,18 +1,14 @@
 package com.ibatis.sqlmap.engine.conifg;
 
-import com.ibatis.common.resources.Resources;
-import com.ibatis.sqlmap.client.SqlMapException;
-import com.ibatis.sqlmap.client.extensions.TypeHandlerCallback;
-import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
-import com.ibatis.sqlmap.engine.mapping.parameter.BasicParameterMap;
-import com.ibatis.sqlmap.engine.mapping.parameter.BasicParameterMapping;
-import com.ibatis.sqlmap.engine.scope.ErrorContext;
-import com.ibatis.sqlmap.engine.type.CustomTypeHandler;
-import com.ibatis.sqlmap.engine.type.TypeHandler;
-import com.ibatis.sqlmap.engine.type.TypeHandlerFactory;
+import com.ibatis.common.resources.*;
+import com.ibatis.sqlmap.client.*;
+import com.ibatis.sqlmap.client.extensions.*;
+import com.ibatis.sqlmap.engine.impl.*;
+import com.ibatis.sqlmap.engine.mapping.parameter.*;
+import com.ibatis.sqlmap.engine.scope.*;
+import com.ibatis.sqlmap.engine.type.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ParameterMapConfig {
   private SqlMapConfiguration config;
@@ -66,7 +62,15 @@ public class ParameterMapConfig {
       }
     } else {
       errorContext.setMoreInfo("Check the parameter mapping property type or name.");
-      handler = config.resolveTypeHandler(client.getDelegate().getTypeHandlerFactory(), parameterMap.getParameterClass(), propertyName, javaType, jdbcType);
+      try {
+        Class javaClass = null;
+        if (javaType != null) {
+          javaClass = Resources.classForName(javaType);
+        }
+        handler = config.resolveTypeHandler(client.getDelegate().getTypeHandlerFactory(), parameterMap.getParameterClass(), propertyName, javaClass, jdbcType);
+      } catch (ClassNotFoundException e) {
+        throw new RuntimeException("Error setting type handler on parameter mapping.  Cause: " + e);
+      }
     }
     BasicParameterMapping mapping = new BasicParameterMapping();
     mapping.setPropertyName(propertyName);

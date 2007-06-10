@@ -15,31 +15,18 @@
  */
 package com.ibatis.sqlmap.engine.transaction.jdbc;
 
-import com.ibatis.sqlmap.engine.transaction.BaseTransactionConfig;
-import com.ibatis.sqlmap.engine.transaction.Transaction;
-import com.ibatis.sqlmap.engine.transaction.TransactionException;
+import com.ibatis.sqlmap.engine.transaction.*;
 
-import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.Properties;
 
 public class JdbcTransactionConfig extends BaseTransactionConfig {
 
-  private DataSource dataSource;
-
-  public DataSource getDataSource() {
-    return dataSource;
-  }
-
-  public void setDataSource(DataSource ds) {
-    this.dataSource = ds;
-  }
-
-  public void initialize(Properties props) throws SQLException, TransactionException {
-  }
-
   public Transaction newTransaction(int transactionIsolation) throws SQLException, TransactionException {
     return new JdbcTransaction(dataSource, transactionIsolation);
+  }
+
+  public void setProperties(Properties props) throws SQLException, TransactionException {
   }
 
 }

@@ -1,9 +1,9 @@
 package com.ibatis.sqlmap.engine.conifg;
 
-import com.ibatis.sqlmap.engine.cache.CacheModel;
-import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
-import com.ibatis.sqlmap.engine.scope.ErrorContext;
-import com.ibatis.sqlmap.engine.type.TypeHandlerFactory;
+import com.ibatis.sqlmap.engine.cache.*;
+import com.ibatis.sqlmap.engine.impl.*;
+import com.ibatis.sqlmap.engine.scope.*;
+import com.ibatis.sqlmap.engine.type.*;
 
 import java.util.Properties;
 

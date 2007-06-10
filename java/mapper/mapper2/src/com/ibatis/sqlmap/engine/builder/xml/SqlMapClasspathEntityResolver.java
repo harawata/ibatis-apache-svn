@@ -15,15 +15,11 @@
  */
 package com.ibatis.sqlmap.engine.builder.xml;
 
-import com.ibatis.common.resources.Resources;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
+import com.ibatis.common.resources.*;
+import org.xml.sax.*;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 
 /**
  * Offline entity resolver for the iBATIS DTDs

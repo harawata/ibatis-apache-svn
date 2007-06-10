@@ -42,30 +42,30 @@ public class StatementTest extends BaseSqlMapTest {
   public void testUserConnection() throws SQLException {
     DataSource ds = sqlMap.getDataSource();
     Connection conn = ds.getConnection();
-    ((SqlMapClientImpl) sqlMap).getDelegate().getTxManager().setDataSource(null);
+    ((SqlMapClientImpl) sqlMap).getDelegate().getTxManager().getConfig().setDataSource(null);
     sqlMap.setUserConnection(conn);
     Account account = (Account) sqlMap.queryForObject("getAccountViaColumnName", new Integer(1));
     conn.close();
     assertAccount1(account);
-    ((SqlMapClientImpl) sqlMap).getDelegate().getTxManager().setDataSource(ds);
+    ((SqlMapClientImpl) sqlMap).getDelegate().getTxManager().getConfig().setDataSource(ds);
   }
 
   public void testSessionUserConnection() throws SQLException {
     DataSource ds = sqlMap.getDataSource();
     Connection conn = ds.getConnection();
-    ((SqlMapClientImpl) sqlMap).getDelegate().getTxManager().setDataSource(null);
+    ((SqlMapClientImpl) sqlMap).getDelegate().getTxManager().getConfig().setDataSource(null);
     SqlMapSession session = sqlMap.openSession(conn);
     Account account = (Account) session.queryForObject("getAccountViaColumnName", new Integer(1));
     session.close();
     conn.close();
     assertAccount1(account);
-    ((SqlMapClientImpl) sqlMap).getDelegate().getTxManager().setDataSource(ds);
+    ((SqlMapClientImpl) sqlMap).getDelegate().getTxManager().getConfig().setDataSource(ds);
   }
 
   public void testSessionUserConnectionFailures() throws SQLException {
     DataSource ds = sqlMap.getDataSource();
     Connection conn = ds.getConnection();
-    ((SqlMapClientImpl) sqlMap).getDelegate().getTxManager().setDataSource(null);
+    ((SqlMapClientImpl) sqlMap).getDelegate().getTxManager().getConfig().setDataSource(null);
     SqlMapSession session = sqlMap.openSession(conn);
 
     Exception expected = null;
@@ -95,7 +95,7 @@ public class StatementTest extends BaseSqlMapTest {
     session.close();
     conn.close();
     assertAccount1(account);
-    ((SqlMapClientImpl) sqlMap).getDelegate().getTxManager().setDataSource(ds);
+    ((SqlMapClientImpl) sqlMap).getDelegate().getTxManager().getConfig().setDataSource(ds);
   }
 
   public void testExecuteQueryForObjectViaColumnIndex() throws SQLException {

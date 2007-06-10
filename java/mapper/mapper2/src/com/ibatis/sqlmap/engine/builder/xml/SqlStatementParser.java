@@ -1,8 +1,9 @@
 package com.ibatis.sqlmap.engine.builder.xml;
 
-import com.ibatis.common.xml.NodeletUtils;
+import com.ibatis.common.xml.*;
+import com.ibatis.sqlmap.engine.conifg.*;
 import com.ibatis.sqlmap.engine.mapping.statement.*;
-import com.ibatis.sqlmap.engine.conifg.MappedStatementConfig;
+import org.w3c.dom.CharacterData;
 import org.w3c.dom.*;
 
 import java.util.Properties;

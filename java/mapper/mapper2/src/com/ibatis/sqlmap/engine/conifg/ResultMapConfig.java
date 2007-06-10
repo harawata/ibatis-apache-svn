@@ -1,22 +1,13 @@
 package com.ibatis.sqlmap.engine.conifg;
 
-import com.ibatis.common.resources.Resources;
-import com.ibatis.sqlmap.client.extensions.TypeHandlerCallback;
-import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
-import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
-import com.ibatis.sqlmap.engine.mapping.result.BasicResultMap;
-import com.ibatis.sqlmap.engine.mapping.result.BasicResultMapping;
-import com.ibatis.sqlmap.engine.mapping.result.Discriminator;
-import com.ibatis.sqlmap.engine.mapping.result.ResultMapping;
-import com.ibatis.sqlmap.engine.scope.ErrorContext;
-import com.ibatis.sqlmap.engine.type.CustomTypeHandler;
-import com.ibatis.sqlmap.engine.type.TypeHandler;
-import com.ibatis.sqlmap.engine.type.TypeHandlerFactory;
+import com.ibatis.common.resources.*;
+import com.ibatis.sqlmap.client.extensions.*;
+import com.ibatis.sqlmap.engine.impl.*;
+import com.ibatis.sqlmap.engine.mapping.result.*;
+import com.ibatis.sqlmap.engine.scope.*;
+import com.ibatis.sqlmap.engine.type.*;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class ResultMapConfig {
   private SqlMapConfiguration config;
@@ -104,7 +95,15 @@ public class ResultMapConfig {
       }
     } else {
       errorContext.setMoreInfo("Check the result mapping property type or name.");
-      handler = config.resolveTypeHandler(client.getDelegate().getTypeHandlerFactory(), resultMap.getResultClass(), "", javaType, jdbcType, true);
+      try {
+        Class javaClass = null;
+        if (javaType != null) {
+          javaClass = Resources.classForName(javaType);
+        }
+        handler = config.resolveTypeHandler(client.getDelegate().getTypeHandlerFactory(), resultMap.getResultClass(), "", javaClass, jdbcType, true);
+      } catch (ClassNotFoundException e) {
+        throw new RuntimeException("Error setting type handler on parameter mapping.  Cause: " + e);
+      }
     }
     BasicResultMapping mapping = new BasicResultMapping();
     mapping.setColumnName(columnName);
@@ -152,7 +151,15 @@ public class ResultMapConfig {
       }
     } else {
       errorContext.setMoreInfo("Check the result mapping property type or name.");
-      handler = config.resolveTypeHandler(client.getDelegate().getTypeHandlerFactory(), resultMap.getResultClass(), propertyName, javaType, jdbcType, true);
+      try {
+        Class javaClass = null;
+        if (javaType != null) {
+          javaClass = Resources.classForName(javaType);
+        }
+        handler = config.resolveTypeHandler(client.getDelegate().getTypeHandlerFactory(), resultMap.getResultClass(), propertyName, javaClass, jdbcType, true);
+      } catch (ClassNotFoundException e) {
+        throw new RuntimeException("Error setting type handler on parameter mapping.  Cause: " + e);
+      }
     }
     BasicResultMapping mapping = new BasicResultMapping();
     mapping.setPropertyName(propertyName);

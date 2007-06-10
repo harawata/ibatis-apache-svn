@@ -15,37 +15,41 @@
  */
 package com.ibatis.sqlmap.engine.transaction.external;
 
-import com.ibatis.sqlmap.engine.transaction.BaseTransactionConfig;
-import com.ibatis.sqlmap.engine.transaction.Transaction;
-import com.ibatis.sqlmap.engine.transaction.TransactionException;
+import com.ibatis.sqlmap.engine.transaction.*;
 
-import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.Properties;
 
 public class ExternalTransactionConfig extends BaseTransactionConfig {
 
-  private DataSource dataSource;
   private boolean defaultAutoCommit = false;
   private boolean setAutoCommitAllowed = true;
 
-  public DataSource getDataSource() {
-    return dataSource;
+  public Transaction newTransaction(int transactionIsolation) throws SQLException, TransactionException {
+    return new ExternalTransaction(dataSource, defaultAutoCommit, setAutoCommitAllowed, transactionIsolation);
   }
 
-  public void setDataSource(DataSource ds) {
-    this.dataSource = ds;
+  public boolean isDefaultAutoCommit() {
+    return defaultAutoCommit;
   }
 
-  public void initialize(Properties props) throws SQLException, TransactionException {
+  public void setDefaultAutoCommit(boolean defaultAutoCommit) {
+    this.defaultAutoCommit = defaultAutoCommit;
+  }
+
+  public boolean isSetAutoCommitAllowed() {
+    return setAutoCommitAllowed;
+  }
+
+  public void setSetAutoCommitAllowed(boolean setAutoCommitAllowed) {
+    this.setAutoCommitAllowed = setAutoCommitAllowed;
+  }
+
+  public void setProperties(Properties props) throws SQLException, TransactionException {
     String dacProp = props.getProperty("DefaultAutoCommit");
     String sacaProp = props.getProperty("SetAutoCommitAllowed");
     defaultAutoCommit = "true".equals(dacProp);
     setAutoCommitAllowed = "true".equals(sacaProp) || sacaProp == null;
-  }
-
-  public Transaction newTransaction(int transactionIsolation) throws SQLException, TransactionException {
-    return new ExternalTransaction(dataSource, defaultAutoCommit, setAutoCommitAllowed, transactionIsolation);
   }
 
 }

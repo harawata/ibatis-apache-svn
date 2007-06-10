@@ -15,9 +15,13 @@
  */
 package com.ibatis.sqlmap.engine.transaction;
 
+import javax.sql.DataSource;
+
 public abstract class BaseTransactionConfig implements TransactionConfig {
 
-  private int maximumConcurrentTransactions;
+  protected DataSource dataSource;
+  protected boolean forceCommit;
+  protected int maximumConcurrentTransactions;
 
   public int getMaximumConcurrentTransactions() {
     return maximumConcurrentTransactions;
@@ -25,6 +29,22 @@ public abstract class BaseTransactionConfig implements TransactionConfig {
 
   public void setMaximumConcurrentTransactions(int maximumConcurrentTransactions) {
     this.maximumConcurrentTransactions = maximumConcurrentTransactions;
+  }
+
+  public boolean isForceCommit() {
+    return forceCommit;
+  }
+
+  public void setForceCommit(boolean forceCommit) {
+    this.forceCommit = forceCommit;
+  }
+
+  public DataSource getDataSource() {
+    return dataSource;
+  }
+
+  public void setDataSource(DataSource ds) {
+    this.dataSource = ds;
   }
 
 }

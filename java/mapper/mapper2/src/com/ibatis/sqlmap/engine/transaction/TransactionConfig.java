@@ -21,16 +21,19 @@ import java.util.Properties;
 
 public interface TransactionConfig {
 
-  public DataSource getDataSource();
+  Transaction newTransaction(int transactionIsolation)
+      throws SQLException, TransactionException;
 
-  public void setDataSource(DataSource ds);
+  DataSource getDataSource();
+  void setDataSource(DataSource ds);
 
-  public void initialize(Properties props) throws SQLException, TransactionException;
+  int getMaximumConcurrentTransactions();
+  void setMaximumConcurrentTransactions(int maximumConcurrentTransactions);
 
-  public Transaction newTransaction(int transactionIsolation) throws SQLException, TransactionException;
+  boolean isForceCommit();
+  void setForceCommit(boolean forceCommit);
 
-  public int getMaximumConcurrentTransactions();
-
-  public void setMaximumConcurrentTransactions(int maximumConcurrentTransactions);
+  void setProperties(Properties props)
+      throws SQLException, TransactionException;
 
 }

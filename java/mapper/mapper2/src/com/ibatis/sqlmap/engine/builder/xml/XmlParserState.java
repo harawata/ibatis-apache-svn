@@ -1,11 +1,9 @@
 package com.ibatis.sqlmap.engine.builder.xml;
 
-import com.ibatis.common.resources.Resources;
-import com.ibatis.sqlmap.engine.conifg.SqlMapConfiguration;
-import com.ibatis.sqlmap.engine.conifg.ParameterMapConfig;
-import com.ibatis.sqlmap.engine.conifg.ResultMapConfig;
-import com.ibatis.sqlmap.engine.conifg.CacheModelConfig;
+import com.ibatis.common.resources.*;
+import com.ibatis.sqlmap.engine.conifg.*;
 
+import javax.sql.DataSource;
 import java.util.*;
 
 public class XmlParserState {
@@ -23,6 +21,7 @@ public class XmlParserState {
   private CacheModelConfig cacheConfig;
 
   private String namespace;
+  private DataSource dataSource;
 
   public SqlMapConfiguration getConfig() {
     return config;
@@ -130,4 +129,11 @@ public class XmlParserState {
     }
   }
 
+  public DataSource getDataSource() {
+    return dataSource;
+  }
+
+  public void setDataSource(DataSource dataSource) {
+    this.dataSource = dataSource;
+  }
 }
