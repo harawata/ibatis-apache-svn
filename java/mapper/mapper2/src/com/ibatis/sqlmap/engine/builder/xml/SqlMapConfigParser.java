@@ -144,7 +144,7 @@ public class SqlMapConfigParser {
         javaType = state.getConfig().getTypeHandlerFactory().resolveAlias(javaType);
         callback = state.getConfig().getTypeHandlerFactory().resolveAlias(callback);
 
-        state.getConfig().addTypeHandler(Resources.classForName(javaType), jdbcType, Resources.instantiate(callback));
+        state.getConfig().newTypeHandler(Resources.classForName(javaType), jdbcType, Resources.instantiate(callback));
       }
     });
   }

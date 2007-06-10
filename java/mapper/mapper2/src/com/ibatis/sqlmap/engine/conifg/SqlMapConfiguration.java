@@ -56,49 +56,6 @@ public class SqlMapConfiguration {
     return delegate;
   }
 
-  //
-  // Utility Methods
-  //
-
-  TypeHandler resolveTypeHandler(TypeHandlerFactory typeHandlerFactory, Class clazz, String propertyName, Class javaType, String jdbcType) {
-    return resolveTypeHandler(typeHandlerFactory, clazz, propertyName, javaType, jdbcType, false);
-  }
-
-  TypeHandler resolveTypeHandler(TypeHandlerFactory typeHandlerFactory, Class clazz, String propertyName, Class javaType, String jdbcType, boolean useSetterToResolve) {
-    TypeHandler handler;
-    if (clazz == null) {
-      // Unknown
-      handler = typeHandlerFactory.getUnkownTypeHandler();
-    } else if (DomTypeMarker.class.isAssignableFrom(clazz)) {
-      // DOM
-      handler = typeHandlerFactory.getTypeHandler(String.class, jdbcType);
-    } else if (java.util.Map.class.isAssignableFrom(clazz)) {
-      // Map
-      if (javaType == null) {
-        handler = typeHandlerFactory.getUnkownTypeHandler(); //BUG 1012591 - typeHandlerFactory.getTypeHandler(java.lang.Object.class, jdbcType);
-      } else {
-        handler = typeHandlerFactory.getTypeHandler(javaType, jdbcType);
-      }
-    } else if (typeHandlerFactory.getTypeHandler(clazz, jdbcType) != null) {
-      // Primitive
-      handler = typeHandlerFactory.getTypeHandler(clazz, jdbcType);
-    } else {
-      // JavaBean
-      if (javaType == null) {
-        if (useSetterToResolve) {
-          Class type = PROBE.getPropertyTypeForSetter(clazz, propertyName);
-          handler = typeHandlerFactory.getTypeHandler(type, jdbcType);
-        } else {
-          Class type = PROBE.getPropertyTypeForGetter(clazz, propertyName);
-          handler = typeHandlerFactory.getTypeHandler(type, jdbcType);
-        }
-      } else {
-        handler = typeHandlerFactory.getTypeHandler(javaType, jdbcType);
-      }
-    }
-    return handler;
-  }
-
   public void setClassInfoCacheEnabled (boolean classInfoCacheEnabled) {
     errorContext.setActivity("setting class info cache enabled/disabled");
     ClassInfo.setCacheEnabled(classInfoCacheEnabled);
@@ -141,7 +98,15 @@ public class SqlMapConfiguration {
     }
   }
 
-  public void addTypeHandler(Class javaType, String jdbcType, Object callback) {
+  public void setTransactionManager(TransactionManager txManager) {
+    delegate.setTxManager(txManager);
+  }
+
+  public void setResultObjectFactory(ResultObjectFactory rof) {
+    delegate.setResultObjectFactory(rof);
+  }
+
+  public void newTypeHandler(Class javaType, String jdbcType, Object callback) {
     try {
       errorContext.setActivity("building a building custom type handler");
       TypeHandlerFactory typeHandlerFactory = client.getDelegate().getTypeHandlerFactory();
@@ -166,14 +131,6 @@ public class SqlMapConfiguration {
     errorContext.setObjectId(null);
   }
 
-  public void setTransactionManager(TransactionManager txManager) {
-    delegate.setTxManager(txManager);
-  }
-
-  public void setResultObjectFactory(ResultObjectFactory rof) {
-    delegate.setResultObjectFactory(rof);
-  }
-
   public ParameterMapConfig newParameterMapConfig(String id, String parameterClassName) {
     return new ParameterMapConfig(this, id, parameterClassName);
   }
@@ -188,6 +145,50 @@ public class SqlMapConfiguration {
 
   public MappedStatementConfig newMappedStatementConfig(String id, GeneralStatement statement, SqlSource processor, String parameterMapName, String parameterClassName, String resultMapName, String[] additionalResultMapNames, String resultClassName, String[] additionalResultClasses, String resultSetType, String fetchSize, String allowRemapping, String timeout, String cacheModelName, String xmlResultName) {
     return new MappedStatementConfig(this, id, statement, processor, parameterMapName, parameterClassName, resultMapName, additionalResultMapNames, resultClassName, additionalResultClasses, cacheModelName, resultSetType, fetchSize, allowRemapping, timeout, defaultStatementTimeout, xmlResultName);
+  }
+
+  public void finalizeSqlMapConfig() {
+    wireUpCacheModels();
+    bindResultMapDiscriminators();
+  }
+
+  TypeHandler resolveTypeHandler(TypeHandlerFactory typeHandlerFactory, Class clazz, String propertyName, Class javaType, String jdbcType) {
+    return resolveTypeHandler(typeHandlerFactory, clazz, propertyName, javaType, jdbcType, false);
+  }
+
+  TypeHandler resolveTypeHandler(TypeHandlerFactory typeHandlerFactory, Class clazz, String propertyName, Class javaType, String jdbcType, boolean useSetterToResolve) {
+    TypeHandler handler;
+    if (clazz == null) {
+      // Unknown
+      handler = typeHandlerFactory.getUnkownTypeHandler();
+    } else if (DomTypeMarker.class.isAssignableFrom(clazz)) {
+      // DOM
+      handler = typeHandlerFactory.getTypeHandler(String.class, jdbcType);
+    } else if (java.util.Map.class.isAssignableFrom(clazz)) {
+      // Map
+      if (javaType == null) {
+        handler = typeHandlerFactory.getUnkownTypeHandler(); //BUG 1012591 - typeHandlerFactory.getTypeHandler(java.lang.Object.class, jdbcType);
+      } else {
+        handler = typeHandlerFactory.getTypeHandler(javaType, jdbcType);
+      }
+    } else if (typeHandlerFactory.getTypeHandler(clazz, jdbcType) != null) {
+      // Primitive
+      handler = typeHandlerFactory.getTypeHandler(clazz, jdbcType);
+    } else {
+      // JavaBean
+      if (javaType == null) {
+        if (useSetterToResolve) {
+          Class type = PROBE.getPropertyTypeForSetter(clazz, propertyName);
+          handler = typeHandlerFactory.getTypeHandler(type, jdbcType);
+        } else {
+          Class type = PROBE.getPropertyTypeForGetter(clazz, propertyName);
+          handler = typeHandlerFactory.getTypeHandler(type, jdbcType);
+        }
+      } else {
+        handler = typeHandlerFactory.getTypeHandler(javaType, jdbcType);
+      }
+    }
+    return handler;
   }
 
   private void registerDefaultTypeAliases() {
@@ -213,11 +214,6 @@ public class SqlMapConfiguration {
     typeHandlerFactory.putTypeAlias("domCollection", DomCollectionTypeMarker.class.getName());
     typeHandlerFactory.putTypeAlias("xml", XmlTypeMarker.class.getName());
     typeHandlerFactory.putTypeAlias("xmlCollection", XmlCollectionTypeMarker.class.getName());
-  }
-
-  public void finalizeSqlMapConfig() {
-    wireUpCacheModels();
-    bindResultMapDiscriminators();
   }
 
   private void wireUpCacheModels() {
