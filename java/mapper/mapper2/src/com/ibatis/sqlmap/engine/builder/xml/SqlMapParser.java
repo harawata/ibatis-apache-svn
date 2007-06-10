@@ -1,9 +1,11 @@
 package com.ibatis.sqlmap.engine.builder.xml;
 
 import com.ibatis.common.xml.*;
+import com.ibatis.common.resources.*;
 import com.ibatis.sqlmap.client.*;
 import com.ibatis.sqlmap.engine.conifg.*;
 import com.ibatis.sqlmap.engine.mapping.statement.*;
+import com.ibatis.sqlmap.engine.cache.*;
 import org.w3c.dom.Node;
 
 import java.io.*;
@@ -89,13 +91,21 @@ public class SqlMapParser {
         Boolean readOnly = readOnlyAttr == null || readOnlyAttr.length() <= 0 ? null : new Boolean("true".equals(readOnlyAttr));
         String serializeAttr = attributes.getProperty("serialize");
         Boolean serialize = serializeAttr == null || serializeAttr.length() <= 0 ? null : new Boolean("true".equals(serializeAttr));
-        CacheModelConfig cacheConfig = state.getConfig().newCacheModelConfig(id, type, readOnly, serialize);
+        type = state.getConfig().getTypeHandlerFactory().resolveAlias(type);
+        Class clazz = Resources.classForName(type);
+        if (readOnly == null) {
+          readOnly = Boolean.TRUE;
+        }
+        if (serialize == null) {
+          serialize = Boolean.FALSE;
+        }
+        CacheModelConfig cacheConfig = state.getConfig().newCacheModelConfig(id, (CacheController) Resources.instantiate(clazz), readOnly.booleanValue(), serialize.booleanValue());
         state.setCacheConfig(cacheConfig);
       }
     });
     parser.addNodelet("/sqlMap/cacheModel/end()", new Nodelet() {
       public void process(Node node) throws Exception {
-        state.getCacheConfig().saveCacheModel();
+        state.getCacheConfig().setControllerProperties(state.getCacheProps());
       }
     });
     parser.addNodelet("/sqlMap/cacheModel/property", new Nodelet() {
@@ -104,7 +114,7 @@ public class SqlMapParser {
         Properties attributes = NodeletUtils.parseAttributes(node, state.getGlobalProps());
         String name = attributes.getProperty("name");
         String value = NodeletUtils.parsePropertyTokens(attributes.getProperty("value"), state.getGlobalProps());
-        state.getCacheConfig().setProperty(name, value);
+        state.getCacheProps().setProperty(name, value);
       }
     });
     parser.addNodelet("/sqlMap/cacheModel/flushOnExecute", new Nodelet() {

@@ -61,6 +61,6 @@ public interface CacheController {
    *
    * @param props - the properties object continaing configuration information
    */
-  public void configure(Properties props);
+  public void setProperties(Properties props);
 
 }

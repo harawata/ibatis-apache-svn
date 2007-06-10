@@ -43,12 +43,20 @@ public class FifoCacheController implements CacheController {
     this.keyList = Collections.synchronizedList(new LinkedList());
   }
 
+  public int getCacheSize() {
+    return cacheSize;
+  }
+
+  public void setCacheSize(int cacheSize) {
+    this.cacheSize = cacheSize;
+  }
+
   /**
    * Configures the cache
    *
    * @param props Optionally can contain properties [reference-type=WEAK|SOFT|STRONG]
    */
-  public void configure(Properties props) {
+  public void setProperties(Properties props) {
     String size = props.getProperty("cache-size");
     if (size == null) {
       size = props.getProperty("size");

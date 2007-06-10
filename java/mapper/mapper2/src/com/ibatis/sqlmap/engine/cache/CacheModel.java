@@ -17,7 +17,6 @@ package com.ibatis.sqlmap.engine.cache;
 
 import com.ibatis.common.logging.Log;
 import com.ibatis.common.logging.LogFactory;
-import com.ibatis.common.resources.Resources;
 import com.ibatis.sqlmap.engine.mapping.statement.ExecuteListener;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
 
@@ -145,15 +144,13 @@ public class CacheModel implements ExecuteListener {
   /**
    * Sets up the controller for the cache model
    *
-   * @param implementation - the class (FQCN) for the controller
    * @throws ClassNotFoundException - if the class cannot be found
    * @throws InstantiationException - if the class cannot be instantiated
    * @throws IllegalAccessException - if the classes constructor is not accessible
    */
-  public void setControllerClassName(String implementation)
+  public void setCacheController(CacheController controller)
       throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-    Class clazz = Resources.classForName(implementation);
-    controller = (CacheController) Resources.instantiate(clazz);
+    this.controller = controller;
   }
 
   /**
@@ -233,7 +230,7 @@ public class CacheModel implements ExecuteListener {
    * @param props
    */
   public void configure(Properties props) {
-    controller.configure(props);
+    controller.setProperties(props);
   }
 
   /**
@@ -360,5 +357,9 @@ public class CacheModel implements ExecuteListener {
       output.append("'");
     }
     log.debug(output.toString());
+  }
+
+  public void setControllerProperties(Properties cacheProps) {
+    controller.setProperties(cacheProps);
   }
 }

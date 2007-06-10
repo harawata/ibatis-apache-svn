@@ -3,39 +3,26 @@ package com.ibatis.sqlmap.engine.conifg;
 import com.ibatis.sqlmap.engine.cache.*;
 import com.ibatis.sqlmap.engine.impl.*;
 import com.ibatis.sqlmap.engine.scope.*;
-import com.ibatis.sqlmap.engine.type.*;
 
 import java.util.Properties;
 
 public class CacheModelConfig {
   private ErrorContext errorContext;
   private CacheModel cacheModel;
-  private Properties properties;
 
-  CacheModelConfig(SqlMapConfiguration config, String id, String type, Boolean readOnly, Boolean serialize) {
+  CacheModelConfig(SqlMapConfiguration config, String id, CacheController controller, boolean readOnly, boolean serialize) {
     this.errorContext = config.getErrorContext();
     this.cacheModel = new CacheModel();
-    this.properties = new Properties();
     ExtendedSqlMapClient client = config.getClient();
-    TypeHandlerFactory typeHandlerFactory = config.getTypeHandlerFactory();
     errorContext.setActivity("building a cache model");
-    type = typeHandlerFactory.resolveAlias(type);
-    if (readOnly != null) {
-      cacheModel.setReadOnly(readOnly.booleanValue());
-    } else {
-      cacheModel.setReadOnly(true);
-    }
-    if (serialize != null) {
-      cacheModel.setSerialize(serialize.booleanValue());
-    } else {
-      cacheModel.setSerialize(false);
-    }
+    cacheModel.setReadOnly(readOnly);
+    cacheModel.setSerialize(serialize);
     errorContext.setObjectId(id + " cache model");
     errorContext.setMoreInfo("Check the cache model type.");
     cacheModel.setId(id);
     cacheModel.setResource(errorContext.getResource());
     try {
-      cacheModel.setControllerClassName(type);
+      cacheModel.setCacheController(controller);
     } catch (Exception e) {
       throw new RuntimeException("Error setting Cache Controller Class.  Cause: " + e, e);
     }
@@ -45,10 +32,6 @@ public class CacheModelConfig {
     }
     errorContext.setMoreInfo(null);
     errorContext.setObjectId(null);
-  }
-
-  public void setProperty(String name, String value) {
-    properties.setProperty(name, value);
   }
 
   public void setFlushInterval(int hours, int minutes, int seconds, int milliseconds) {
@@ -68,8 +51,11 @@ public class CacheModelConfig {
     cacheModel.addFlushTriggerStatement(statement);
   }
 
-  public void saveCacheModel() {
-    cacheModel.configure(properties);
+  public CacheModel getCacheModel() {
+    return cacheModel;
   }
 
+  public void setControllerProperties(Properties cacheProps) {
+    cacheModel.setControllerProperties(cacheProps);
+  }
 }

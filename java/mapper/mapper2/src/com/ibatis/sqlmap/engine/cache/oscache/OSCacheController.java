@@ -70,7 +70,7 @@ public class OSCacheController implements CacheController {
     CACHE.putInCache(keyString, object, new String[]{cacheModel.getId()});
   }
 
-  public void configure(Properties props) {
+  public void setProperties(Properties props) {
   }
 
 }

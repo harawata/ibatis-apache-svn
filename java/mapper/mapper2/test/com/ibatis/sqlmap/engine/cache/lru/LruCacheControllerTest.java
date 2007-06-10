@@ -21,7 +21,7 @@ public class LruCacheControllerTest extends TestCase {
     String testVal = "testVal";
     Properties props = new Properties();
     props.setProperty("cache-size", "1");
-    cc.configure(props);
+    cc.setProperties(props);
     cc.putObject(null, testKey, testVal);
     assertEquals(testVal, cc.getObject(null, testKey));
     String testKey2 = "testKey2";

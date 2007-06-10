@@ -13,6 +13,7 @@ public class XmlParserState {
   private Properties globalProps = new Properties();
   private Properties txProps = new Properties();
   private Properties dsProps = new Properties();
+  private Properties cacheProps = new Properties();
   private boolean useStatementNamespaces = false;
   private Map sqlIncludes = new HashMap();
 
@@ -42,7 +43,11 @@ public class XmlParserState {
   public Properties getDsProps() {
     return dsProps;
   }
-  
+
+  public Properties getCacheProps() {
+    return cacheProps;
+  }
+
   public void setUseStatementNamespaces(boolean useStatementNamespaces) {
     this.useStatementNamespaces = useStatementNamespaces;
   }

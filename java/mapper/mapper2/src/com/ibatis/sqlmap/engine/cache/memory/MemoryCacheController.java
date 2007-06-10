@@ -30,7 +30,7 @@ import java.util.Properties;
  */
 public class MemoryCacheController implements CacheController {
 
-  private MemoryCacheLevel cacheLevel = MemoryCacheLevel.WEAK;
+  private MemoryCacheLevel referenceType = MemoryCacheLevel.WEAK;
   private Map cache = Collections.synchronizedMap(new HashMap());
 
   /**
@@ -38,14 +38,22 @@ public class MemoryCacheController implements CacheController {
    *
    * @param props Optionally can contain properties [reference-type=WEAK|SOFT|STRONG]
    */
-  public void configure(Properties props) {
+  public void setProperties(Properties props) {
     String refType = props.getProperty("reference-type");
     if (refType == null) {
       refType = props.getProperty("referenceType");
     }
     if (refType != null) {
-      cacheLevel = MemoryCacheLevel.getByReferenceType(refType);
+      referenceType = MemoryCacheLevel.getByReferenceType(refType);
     }
+  }
+
+  public MemoryCacheLevel getReferenceType() {
+    return referenceType;
+  }
+
+  public void setReferenceType(MemoryCacheLevel referenceType) {
+    this.referenceType = referenceType;
   }
 
   /**
@@ -57,11 +65,11 @@ public class MemoryCacheController implements CacheController {
    */
   public void putObject(CacheModel cacheModel, Object key, Object value) {
     Object reference = null;
-    if (cacheLevel.equals(MemoryCacheLevel.WEAK)) {
+    if (referenceType.equals(MemoryCacheLevel.WEAK)) {
       reference = new WeakReference(value);
-    } else if (cacheLevel.equals(MemoryCacheLevel.SOFT)) {
+    } else if (referenceType.equals(MemoryCacheLevel.SOFT)) {
       reference = new SoftReference(value);
-    } else if (cacheLevel.equals(MemoryCacheLevel.STRONG)) {
+    } else if (referenceType.equals(MemoryCacheLevel.STRONG)) {
       reference = new StrongReference(value);
     }
     cache.put(key, reference);

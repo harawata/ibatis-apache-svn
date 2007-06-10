@@ -20,7 +20,6 @@ import com.ibatis.sqlmap.engine.transaction.jdbc.*;
 import com.ibatis.sqlmap.engine.transaction.jta.*;
 import com.ibatis.sqlmap.engine.type.*;
 
-import javax.sql.DataSource;
 import java.util.*;
 
 public class SqlMapConfiguration {
@@ -30,7 +29,6 @@ public class SqlMapConfiguration {
   private TypeHandlerFactory typeHandlerFactory;
   private ExtendedSqlMapClient client;
   private Integer defaultStatementTimeout;
-  private DataSource dataSource;
 
   public SqlMapConfiguration() {
     errorContext = new ErrorContext();
@@ -131,16 +129,16 @@ public class SqlMapConfiguration {
     errorContext.setObjectId(null);
   }
 
+  public CacheModelConfig newCacheModelConfig(String id, CacheController controller, boolean readOnly, boolean serialize) {
+    return new CacheModelConfig(this, id, controller, readOnly, serialize);
+  }
+
   public ParameterMapConfig newParameterMapConfig(String id, String parameterClassName) {
     return new ParameterMapConfig(this, id, parameterClassName);
   }
 
   public ResultMapConfig newResultMapConfig(String id, String resultClassName, String groupBy, String extended, String xmlName) {
     return new ResultMapConfig(this, id, resultClassName, groupBy, extended, xmlName);
-  }
-
-  public CacheModelConfig newCacheModelConfig(String id, String type, Boolean readOnly, Boolean serialize) {
-    return new CacheModelConfig(this, id, type, readOnly, serialize);
   }
 
   public MappedStatementConfig newMappedStatementConfig(String id, GeneralStatement statement, SqlSource processor, String parameterMapName, String parameterClassName, String resultMapName, String[] additionalResultMapNames, String resultClassName, String[] additionalResultClasses, String resultSetType, String fetchSize, String allowRemapping, String timeout, String cacheModelName, String xmlResultName) {
