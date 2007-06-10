@@ -117,6 +117,7 @@ public class MappedStatementConfig {
       mappedStatement = statement;
     }
     rootStatement = statement;
+    delegate.addMappedStatement(mappedStatement);
   }
 
   public void setSelectKeyStatement(SqlSource processor, String resultClassName, String keyPropName, boolean runAfterSQL, String type) {
@@ -169,10 +170,6 @@ public class MappedStatementConfig {
     } else {
       throw new SqlMapException("You cant set a select key statement on statement named " + rootStatement.getId() + " because it is not an InsertStatement.");
     }
-  }
-
-  public void saveMappedStatement() {
-    delegate.addMappedStatement(mappedStatement);
   }
 
   private void setSqlForStatement(GeneralStatement statement, Sql sql) {

@@ -73,6 +73,8 @@ public class ResultMapConfig {
     }
     errorContext.setMoreInfo("Check the result mappings.");
     resultMappingIndex = resultMappingList.size();
+    resultMap.setResultMappingList(resultMappingList);
+    client.getDelegate().addResultMap(resultMap);
   }
 
   public void setDiscriminator(String columnName, String columnIndex, String javaType, String jdbcType, String nullValue, String callback) {
@@ -121,13 +123,14 @@ public class ResultMapConfig {
       mapping.setColumnIndex(Integer.parseInt(columnIndex));
     }
     discriminator = new Discriminator(delegate, mapping);
+    resultMap.setDiscriminator(discriminator);
   }
 
-  public void addDiscriminatorSubMap(String value, String resultMap) {
+  public void addDiscriminatorSubMap(Object value, String resultMap) {
     if (discriminator == null) {
       throw new RuntimeException("The discriminator is null, but somehow a subMap was reached.  This is a bug.");
     }
-    discriminator.addSubMap(value, resultMap);
+    discriminator.addSubMap(value.toString(), resultMap);
   }
 
   public void addResultMapping(String propertyName, String columnName, String columnIndex, String javaType, String jdbcType, String nullValue, String statementName, String resultMapName, String callback) {
@@ -186,18 +189,7 @@ public class ResultMapConfig {
       mapping.setColumnIndex(resultMappingIndex);
     }
     resultMappingList.add(mapping);
-  }
-
-  public void saveResultMap() {
-    if (resultMappingList.size() == 0) {
-      throw new RuntimeException("resultMap " + resultMap.getId() + " must have at least one result mapping");
-    }
     resultMap.setResultMappingList(resultMappingList);
-    resultMap.setDiscriminator(discriminator);
-    discriminator = null;
-    client.getDelegate().addResultMap(resultMap);
-    errorContext.setMoreInfo(null);
-    errorContext.setObjectId(null);
   }
 
 }

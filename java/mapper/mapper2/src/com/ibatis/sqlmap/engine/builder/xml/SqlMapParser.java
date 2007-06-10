@@ -206,7 +206,8 @@ public class SqlMapParser {
   private void addResultMapNodelets() {
     parser.addNodelet("/sqlMap/resultMap/end()", new Nodelet() {
       public void process(Node node) throws Exception {
-        state.getResultConfig().saveResultMap();
+        state.getConfig().getErrorContext().setMoreInfo(null);
+        state.getConfig().getErrorContext().setObjectId(null);
       }
     });
     parser.addNodelet("/sqlMap/resultMap", new Nodelet() {

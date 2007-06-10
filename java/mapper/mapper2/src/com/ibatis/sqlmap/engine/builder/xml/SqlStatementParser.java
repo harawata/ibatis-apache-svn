@@ -53,8 +53,6 @@ public class SqlStatementParser {
     MappedStatementConfig statementConf = state.getConfig().newMappedStatementConfig(id, statement, new XMLSqlSource(state, node), parameterMapName, parameterClassName, resultMapName, additionalResultMapNames, resultClassName, additionalResultClasses, resultSetType, fetchSize, allowRemapping, timeout, cacheModelName, xmlResultName);
 
     findAndParseSelectKey(node, statementConf);
-
-    statementConf.saveMappedStatement();
   }
 
   private void findAndParseSelectKey(Node node, MappedStatementConfig config) {
