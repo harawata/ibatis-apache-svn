@@ -69,47 +69,61 @@
           <ul>
             <li><a href="/docs/java/pdf/iBATIS-SqlMaps-2_en.pdf">SQL Maps for Java,
               Developer Guide</a>
-              (Aug 9, 2006)</li>
+            </li>
             <li><a href="/docs/java/pdf/iBATIS-SqlMaps-2-Tutorial_en.pdf">SQL Maps for
               Java, Tutorial</a>
-              (Feb 18, 2006)</li>
-            <li><a href="/docs/java/pdf/iBATIS-DAO-2_en.pdf">DAO for Java, Developer
-              Guide</a>
-              (June 17, 2006)</li>
+            </li>
           </ul>
         </li>
         <li>Chinese PDF
           <ul>
             <li><a href="/docs/java/pdf/iBATIS-SqlMaps-2_cn.pdf">SQL Maps for Java,
               Developer Guide</a>
-              (June 17, 2004)</li>
+            </li>
             <li><a href="/docs/java/pdf/iBATIS-SqlMaps-2-Tutorial_cn.pdf">SQL Maps for
               Java, Tutorial</a>
-              (June 17, 2004)</li>
+            </li>
           </ul>
         </li>
         <li>Korean PDF
           <ul>
             <li><a href="/docs/java/pdf/iBATIS-SqlMaps-2_ko.pdf">SQL Maps for Java,
               Developer Guide</a>
-              (June 17, 2004)</li>
+            </li>
             <li><a href="/docs/java/pdf/iBATIS-SqlMaps-2-Tutorial_ko.pdf">SQL Maps for
               Java, Tutorial</a>
-              (June 17, 2004)</li>
+            </li>
+          </ul>
+        </li>
+        <li>Japanese PDF
+          <ul>
+            <li><a href="/docs/java/pdf/iBATIS-SqlMaps-2_ja.pdf">SQL Maps for Java,
+              Developer Guide</a>
+            </li>
+            <li><a href="/docs/java/pdf/iBATIS-SqlMaps-2-Tutorial_ja.pdf">SQL Maps for
+              Java, Tutorial</a>
+            </li>
           </ul>
         </li>
         <li>French PDF
           <ul>
             <li><a href="/docs/java/pdf/iBATIS-SqlMaps-2-Tutorial_fr.pdf">SQL Maps for
               Java, Tutorial</a>
-              (May 15, 2006)</li>
+            </li>
           </ul>
         </li>
         <li>Italian PDF
           <ul>
-            <li><a href="/docs/java/pdf/iBATIS-SqlMaps-2-Tutorial-it.pdf">SQL Maps for
+            <li><a href="/docs/java/pdf/iBATIS-SqlMaps-2-Tutorial_it.pdf">SQL Maps for
               Java, Tutorial</a>
-              (May 1, 2005)</li>
+            </li>
+          </ul>
+        </li>
+        <li>Spanish PDF
+          <ul>
+            <li><a href="/docs/java/pdf/iBATIS-SqlMaps-2-Tutorial_es.pdf">SQL Maps for
+              Java, Tutorial</a>
+            </li>
           </ul>
         </li>
       </ul>
