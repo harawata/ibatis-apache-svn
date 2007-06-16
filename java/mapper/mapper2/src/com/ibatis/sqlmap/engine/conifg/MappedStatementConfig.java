@@ -23,30 +23,33 @@ public class MappedStatementConfig {
   private static final InlineParameterMapParser PARAM_PARSER = new InlineParameterMapParser();
   private ErrorContext errorContext;
   private ExtendedSqlMapClient client;
-  private SqlMapExecutorDelegate delegate;
   private TypeHandlerFactory typeHandlerFactory;
   private MappedStatement mappedStatement;
   private MappedStatement rootStatement;
 
-  MappedStatementConfig(SqlMapConfiguration config, String id, GeneralStatement statement, SqlSource processor, String parameterMapName, String parameterClassName, String resultMapName, String[] additionalResultMapNames, String resultClassName, String[] additionalResultClasses, String cacheModelName, String resultSetType, String fetchSize, String allowRemapping, String timeout, Integer defaultStatementTimeout, String xmlResultName) {
+  MappedStatementConfig(SqlMapConfiguration config, String id, GeneralStatement statement, SqlSource processor,
+                        String parameterMapName, Class parameterClass, String resultMapName,
+                        String[] additionalResultMapNames, Class resultClass, Class[] additionalResultClasses,
+                        String cacheModelName, String resultSetType, Integer fetchSize, boolean allowRemapping,
+                        Integer timeout, Integer defaultStatementTimeout, String xmlResultName) {
     this.errorContext = config.getErrorContext();
     this.client = config.getClient();
-    this.delegate = client.getDelegate();
+    SqlMapExecutorDelegate delegate = client.getDelegate();
     this.typeHandlerFactory = config.getTypeHandlerFactory();
     errorContext.setActivity("parsing a mapped statement");
     errorContext.setObjectId(id + " statement");
     errorContext.setMoreInfo("Check the result map name.");
     if (resultMapName != null) {
-      statement.setResultMap((BasicResultMap) client.getDelegate().getResultMap(resultMapName));
+      statement.setResultMap(client.getDelegate().getResultMap(resultMapName));
       if (additionalResultMapNames != null) {
         for (int i = 0; i < additionalResultMapNames.length; i++) {
-          statement.addResultMap((BasicResultMap) client.getDelegate().getResultMap(additionalResultMapNames[i]));
+          statement.addResultMap(client.getDelegate().getResultMap(additionalResultMapNames[i]));
         }
       }
     }
     errorContext.setMoreInfo("Check the parameter map name.");
     if (parameterMapName != null) {
-      statement.setParameterMap((BasicParameterMap) client.getDelegate().getParameterMap(parameterMapName));
+      statement.setParameterMap(client.getDelegate().getParameterMap(parameterMapName));
     }
     statement.setId(id);
     statement.setResource(errorContext.getResource());
@@ -60,22 +63,24 @@ public class MappedStatementConfig {
       }
     }
     if (fetchSize != null) {
-      statement.setFetchSize(new Integer(fetchSize));
+      // TODO statement.setFetchSize(new Integer(fetchSize));
+      statement.setFetchSize(fetchSize);
     }
 
     // set parameter class either from attribute or from map (make sure to match)
     ParameterMap parameterMap = statement.getParameterMap();
     if (parameterMap == null) {
-      try {
-        if (parameterClassName != null) {
-          errorContext.setMoreInfo("Check the parameter class.");
-          parameterClassName = typeHandlerFactory.resolveAlias(parameterClassName);
-          Class parameterClass = Resources.classForName(parameterClassName);
-          statement.setParameterClass(parameterClass);
-        }
-      } catch (ClassNotFoundException e) {
-        throw new SqlMapException("Error.  Could not set parameter class.  Cause: " + e, e);
-      }
+// TODO
+//      try {
+//        if (parameterClassName != null) {
+//          errorContext.setMoreInfo("Check the parameter class.");
+//          parameterClassName = typeHandlerFactory.resolveAlias(parameterClassName);
+//          Class parameterClass = Resources.classForName(parameterClassName);
+//        }
+//      } catch (ClassNotFoundException e) {
+//        throw new SqlMapException("Error.  Could not set parameter class.  Cause: " + e, e);
+//      }
+      statement.setParameterClass(parameterClass);
     } else {
       statement.setParameterClass(parameterMap.getParameterClass());
     }
@@ -87,10 +92,10 @@ public class MappedStatementConfig {
 
     // set up either null result map or automatic result mapping
     BasicResultMap resultMap = (BasicResultMap) statement.getResultMap();
-    if (resultMap == null && resultClassName == null) {
+    if (resultMap == null && resultClass == null) {
       statement.setResultMap(null);
     } else if (resultMap == null) {
-      resultMap = buildAutoResultMap(allowRemapping, statement, resultClassName, xmlResultName);
+      resultMap = buildAutoResultMap(allowRemapping, statement, resultClass, xmlResultName);
       statement.setResultMap(resultMap);
       if (additionalResultClasses != null) {
         for (int i = 0; i < additionalResultClasses.length; i++) {
@@ -102,7 +107,7 @@ public class MappedStatementConfig {
     statement.setTimeout(defaultStatementTimeout);
     if (timeout != null) {
       try {
-        statement.setTimeout(Integer.valueOf(timeout));
+        statement.setTimeout(timeout);
       } catch (NumberFormatException e) {
         throw new SqlMapException("Specified timeout value for statement " + statement.getId() + " is not a valid integer");
       }
@@ -207,28 +212,16 @@ public class MappedStatementConfig {
 
   }
 
-  private BasicResultMap buildAutoResultMap(String allowRemapping, GeneralStatement statement, String firstResultClass, String xmlResultName) {
+  private BasicResultMap buildAutoResultMap(boolean allowRemapping, GeneralStatement statement, Class firstResultClass, String xmlResultName) {
     BasicResultMap resultMap;
-    resultMap = new AutoResultMap(client.getDelegate(), "true".equals(allowRemapping));
+    resultMap = new AutoResultMap(client.getDelegate(), allowRemapping);
     resultMap.setId(statement.getId() + "-AutoResultMap");
-    resultMap.setResultClass(resolveClass(firstResultClass));
+    resultMap.setResultClass(firstResultClass);
     resultMap.setXmlName(xmlResultName);
     resultMap.setResource(statement.getResource());
     return resultMap;
   }
 
-  private Class resolveClass(String resultClassName) {
-    try {
-      if (resultClassName != null) {
-        errorContext.setMoreInfo("Check the result class.");
-        return Resources.classForName(typeHandlerFactory.resolveAlias(resultClassName));
-      } else {
-        return null;
-      }
-    } catch (ClassNotFoundException e) {
-      throw new SqlMapException("Error.  Could not set result class.  Cause: " + e, e);
-    }
-  }
 
   public MappedStatement getMappedStatement() {
     return mappedStatement;

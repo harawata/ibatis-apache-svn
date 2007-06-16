@@ -1,8 +1,10 @@
 package com.ibatis.sqlmap.engine.builder.xml;
 
 import com.ibatis.common.xml.*;
+import com.ibatis.common.resources.*;
 import com.ibatis.sqlmap.engine.conifg.*;
 import com.ibatis.sqlmap.engine.mapping.statement.*;
+import com.ibatis.sqlmap.client.*;
 import org.w3c.dom.CharacterData;
 import org.w3c.dom.*;
 
@@ -45,14 +47,47 @@ public class SqlStatementParser {
       }
     }
 
-    String[] additionalResultClasses = null;
+    String[] additionalResultClassNames = null;
     if (resultClassName != null) {
-      additionalResultClasses = state.getAllButFirstToken(resultClassName);      
+      additionalResultClassNames = state.getAllButFirstToken(resultClassName);
       resultClassName = state.getFirstToken(resultClassName);
     }
-    MappedStatementConfig statementConf = state.getConfig().newMappedStatementConfig(id, statement, new XMLSqlSource(state, node), parameterMapName, parameterClassName, resultMapName, additionalResultMapNames, resultClassName, additionalResultClasses, resultSetType, fetchSize, allowRemapping, timeout, cacheModelName, xmlResultName);
+    Class[] additionalResultClasses = null;
+    if (additionalResultClassNames != null) {
+      additionalResultClasses = new Class[additionalResultClassNames.length];
+      for (int i = 0; i < additionalResultClassNames.length; i++) {
+        additionalResultClasses[i] = resolveClass(additionalResultClassNames[i]);
+      }
+    }
+
+    state.getConfig().getErrorContext().setMoreInfo("Check the parameter class.");
+    Class parameterClass = resolveClass(parameterClassName);
+
+    state.getConfig().getErrorContext().setMoreInfo("Check the result class.");
+    Class resultClass = resolveClass(resultClassName);
+
+    Integer timeoutInt = timeout == null ? null : new Integer(timeout);
+    Integer fetchSizeInt = fetchSize == null ? null : new Integer(fetchSize);
+    boolean allowRemappingBool = "true".equals(allowRemapping);
+
+    MappedStatementConfig statementConf = state.getConfig().newMappedStatementConfig(id, statement,
+        new XMLSqlSource(state, node), parameterMapName, parameterClass, resultMapName, additionalResultMapNames,
+        resultClass, additionalResultClasses, resultSetType, fetchSizeInt, allowRemappingBool, timeoutInt, cacheModelName,
+        xmlResultName);
 
     findAndParseSelectKey(node, statementConf);
+  }
+
+  private Class resolveClass(String resultClassName) {
+    try {
+      if (resultClassName != null) {
+        return Resources.classForName(state.getConfig().getTypeHandlerFactory().resolveAlias(resultClassName));
+      } else {
+        return null;
+      }
+    } catch (ClassNotFoundException e) {
+      throw new SqlMapException("Error.  Could not initialize class.  Cause: " + e, e);
+    }
   }
 
   private void findAndParseSelectKey(Node node, MappedStatementConfig config) {

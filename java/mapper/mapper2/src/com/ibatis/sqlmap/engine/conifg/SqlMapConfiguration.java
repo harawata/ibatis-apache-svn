@@ -141,8 +141,16 @@ public class SqlMapConfiguration {
     return new ResultMapConfig(this, id, resultClass, groupBy, extended, xmlName);
   }
 
-  public MappedStatementConfig newMappedStatementConfig(String id, GeneralStatement statement, SqlSource processor, String parameterMapName, String parameterClassName, String resultMapName, String[] additionalResultMapNames, String resultClassName, String[] additionalResultClasses, String resultSetType, String fetchSize, String allowRemapping, String timeout, String cacheModelName, String xmlResultName) {
-    return new MappedStatementConfig(this, id, statement, processor, parameterMapName, parameterClassName, resultMapName, additionalResultMapNames, resultClassName, additionalResultClasses, cacheModelName, resultSetType, fetchSize, allowRemapping, timeout, defaultStatementTimeout, xmlResultName);
+  public MappedStatementConfig newMappedStatementConfig(String id, GeneralStatement statement, SqlSource processor,
+                                                        String parameterMapName, Class parameterClass,
+                                                        String resultMapName, String[] additionalResultMapNames,
+                                                        Class resultClass, Class[] additionalResultClasses, 
+                                                        String resultSetType, Integer fetchSize,
+                                                        boolean allowRemapping, Integer timeout, String cacheModelName,
+                                                        String xmlResultName) {
+    return new MappedStatementConfig(this, id, statement, processor, parameterMapName, parameterClass, resultMapName,
+        additionalResultMapNames, resultClass, additionalResultClasses, cacheModelName, resultSetType, fetchSize,
+        allowRemapping, timeout, defaultStatementTimeout, xmlResultName);
   }
 
   public void finalizeSqlMapConfig() {
