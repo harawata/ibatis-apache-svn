@@ -32,7 +32,6 @@ public class RuntimeSQLException extends RuntimeException {
 
   /**
    * Constructor to pass along a message
-   * @see com.ibatis.common.exception.RuntimeException
    * @param msg - the message
    */
   public RuntimeSQLException(String msg) {
@@ -41,7 +40,6 @@ public class RuntimeSQLException extends RuntimeException {
 
   /**
    * Constructor to pass along another exception
-   * @see com.ibatis.common.exception.RuntimeException
    * @param sqlException - the exception
    */
   public RuntimeSQLException(SQLException sqlException) {
@@ -50,7 +48,6 @@ public class RuntimeSQLException extends RuntimeException {
 
   /**
    * Constructor to pass along a message and an exception
-   * @see com.ibatis.common.exception.RuntimeException
    * @param msg - the message
    * @param sqlException - the exception
    */
