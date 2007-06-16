@@ -63,23 +63,12 @@ public class MappedStatementConfig {
       }
     }
     if (fetchSize != null) {
-      // TODO statement.setFetchSize(new Integer(fetchSize));
       statement.setFetchSize(fetchSize);
     }
 
     // set parameter class either from attribute or from map (make sure to match)
     ParameterMap parameterMap = statement.getParameterMap();
     if (parameterMap == null) {
-// TODO
-//      try {
-//        if (parameterClassName != null) {
-//          errorContext.setMoreInfo("Check the parameter class.");
-//          parameterClassName = typeHandlerFactory.resolveAlias(parameterClassName);
-//          Class parameterClass = Resources.classForName(parameterClassName);
-//        }
-//      } catch (ClassNotFoundException e) {
-//        throw new SqlMapException("Error.  Could not set parameter class.  Cause: " + e, e);
-//      }
       statement.setParameterClass(parameterClass);
     } else {
       statement.setParameterClass(parameterMap.getParameterClass());
