@@ -78,7 +78,7 @@ public class InlineParameterMapParser {
   }
 
   private ParameterMapping newParseMapping(String token, Class parameterClass, TypeHandlerFactory typeHandlerFactory) {
-    BasicParameterMapping mapping = new BasicParameterMapping();
+    ParameterMapping mapping = new ParameterMapping();
 
     // #propertyName,javaType=string,jdbcType=VARCHAR,mode=IN,nullValue=N/A,handler=string,numericScale=2#
 
@@ -144,7 +144,7 @@ public class InlineParameterMapParser {
   }
 
   private ParameterMapping oldParseMapping(String token, Class parameterClass, TypeHandlerFactory typeHandlerFactory) {
-    BasicParameterMapping mapping = new BasicParameterMapping();
+    ParameterMapping mapping = new ParameterMapping();
     if (token.indexOf(PARAM_DELIM) > -1) {
       StringTokenizer paramParser = new StringTokenizer(token, PARAM_DELIM, true);
       int n1 = paramParser.countTokens();

@@ -27,7 +27,7 @@ import com.ibatis.sqlmap.engine.transaction.Transaction;
 import java.sql.SQLException;
 import java.util.List;
 
-public class CachingStatement implements MappedStatement {
+public class CachingStatement extends MappedStatement {
 
   private MappedStatement statement;
   private CacheModel cacheModel;

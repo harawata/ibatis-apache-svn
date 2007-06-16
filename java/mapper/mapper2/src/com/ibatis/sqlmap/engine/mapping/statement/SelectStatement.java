@@ -20,7 +20,7 @@ import com.ibatis.sqlmap.engine.transaction.Transaction;
 
 import java.sql.SQLException;
 
-public class SelectStatement extends GeneralStatement {
+public class SelectStatement extends MappedStatement {
 
   public StatementType getStatementType() {
     return StatementType.SELECT;

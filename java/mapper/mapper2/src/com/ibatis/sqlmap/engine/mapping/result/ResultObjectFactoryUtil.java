@@ -15,13 +15,9 @@
  */
 package com.ibatis.sqlmap.engine.mapping.result;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import com.ibatis.common.resources.*;
 
-import com.ibatis.common.resources.Resources;
+import java.util.*;
 
 /**
  * This class is used to create instances of result objects.  It will

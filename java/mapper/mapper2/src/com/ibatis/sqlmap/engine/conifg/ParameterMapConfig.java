@@ -16,7 +16,7 @@ public class ParameterMapConfig {
   private SqlMapConfiguration config;
   private ErrorContext errorContext;
   private ExtendedSqlMapClient client;
-  private BasicParameterMap parameterMap;
+  private ParameterMap parameterMap;
   private List parameterMappingList;
 
   ParameterMapConfig(SqlMapConfiguration config, String id, Class parameterClass) {
@@ -24,7 +24,7 @@ public class ParameterMapConfig {
     this.errorContext = config.getErrorContext();
     this.client = config.getClient();
     errorContext.setActivity("building a parameter map");
-    parameterMap = new BasicParameterMap(client.getDelegate());
+    parameterMap = new ParameterMap(client.getDelegate());
     parameterMap.setId(id);
     parameterMap.setResource(errorContext.getResource());
     errorContext.setObjectId(id + " parameter map");
@@ -50,7 +50,7 @@ public class ParameterMapConfig {
       errorContext.setMoreInfo("Check the parameter mapping property type or name.");
       handler = config.resolveTypeHandler(client.getDelegate().getTypeHandlerFactory(), parameterMap.getParameterClass(), propertyName, javaClass, jdbcType);
     }
-    BasicParameterMapping mapping = new BasicParameterMapping();
+    ParameterMapping mapping = new ParameterMapping();
     mapping.setPropertyName(propertyName);
     mapping.setJdbcTypeName(jdbcType);
     mapping.setTypeName(outParamType);

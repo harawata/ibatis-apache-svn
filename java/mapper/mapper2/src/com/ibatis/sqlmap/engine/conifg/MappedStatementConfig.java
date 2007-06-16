@@ -27,7 +27,7 @@ public class MappedStatementConfig {
   private MappedStatement mappedStatement;
   private MappedStatement rootStatement;
 
-  MappedStatementConfig(SqlMapConfiguration config, String id, GeneralStatement statement, SqlSource processor,
+  MappedStatementConfig(SqlMapConfiguration config, String id, MappedStatement statement, SqlSource processor,
                         String parameterMapName, Class parameterClass, String resultMapName,
                         String[] additionalResultMapNames, Class resultClass, Class[] additionalResultClasses,
                         String cacheModelName, String resultSetType, Integer fetchSize, boolean allowRemapping,
@@ -80,7 +80,7 @@ public class MappedStatementConfig {
     setSqlForStatement(statement, sql);
 
     // set up either null result map or automatic result mapping
-    BasicResultMap resultMap = (BasicResultMap) statement.getResultMap();
+    ResultMap resultMap = (ResultMap) statement.getResultMap();
     if (resultMap == null && resultClass == null) {
       statement.setResultMap(null);
     } else if (resultMap == null) {
@@ -153,7 +153,7 @@ public class MappedStatementConfig {
       errorContext.setMoreInfo("Check the select key SQL statement.");
       Sql sql = processor.getSql();
       setSqlForStatement(selectKeyStatement, sql);
-      BasicResultMap resultMap;
+      ResultMap resultMap;
       resultMap = new AutoResultMap(client.getDelegate(), false);
       resultMap.setId(selectKeyStatement.getId() + "-AutoResultMap");
       resultMap.setResultClass(resultClass);
@@ -166,7 +166,7 @@ public class MappedStatementConfig {
     }
   }
 
-  private void setSqlForStatement(GeneralStatement statement, Sql sql) {
+  private void setSqlForStatement(MappedStatement statement, Sql sql) {
     if (sql instanceof DynamicSql) {
       statement.setSql(sql);
     } else {
@@ -174,14 +174,14 @@ public class MappedStatementConfig {
     }
   }
 
-  private void applyInlineParameterMap(GeneralStatement statement, String sqlStatement) {
+  private void applyInlineParameterMap(MappedStatement statement, String sqlStatement) {
     String newSql = sqlStatement;
     errorContext.setActivity("building an inline parameter map");
     ParameterMap parameterMap = statement.getParameterMap();
     errorContext.setMoreInfo("Check the inline parameters.");
     if (parameterMap == null) {
-      BasicParameterMap map;
-      map = new BasicParameterMap(client.getDelegate());
+      ParameterMap map;
+      map = new ParameterMap(client.getDelegate());
       map.setId(statement.getId() + "-InlineParameterMap");
       map.setParameterClass(statement.getParameterClass());
       map.setResource(statement.getResource());
@@ -201,8 +201,8 @@ public class MappedStatementConfig {
 
   }
 
-  private BasicResultMap buildAutoResultMap(boolean allowRemapping, GeneralStatement statement, Class firstResultClass, String xmlResultName) {
-    BasicResultMap resultMap;
+  private ResultMap buildAutoResultMap(boolean allowRemapping, MappedStatement statement, Class firstResultClass, String xmlResultName) {
+    ResultMap resultMap;
     resultMap = new AutoResultMap(client.getDelegate(), allowRemapping);
     resultMap.setId(statement.getId() + "-AutoResultMap");
     resultMap.setResultClass(firstResultClass);

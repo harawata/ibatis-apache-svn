@@ -141,7 +141,7 @@ public class SqlMapConfiguration {
     return new ResultMapConfig(this, id, resultClass, groupBy, extended, xmlName);
   }
 
-  public MappedStatementConfig newMappedStatementConfig(String id, GeneralStatement statement, SqlSource processor,
+  public MappedStatementConfig newMappedStatementConfig(String id, MappedStatement statement, SqlSource processor,
                                                         String parameterMapName, Class parameterClass,
                                                         String resultMapName, String[] additionalResultMapNames,
                                                         Class resultClass, Class[] additionalResultClasses, 

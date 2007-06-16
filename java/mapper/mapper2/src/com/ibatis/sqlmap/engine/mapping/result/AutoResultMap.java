@@ -35,7 +35,7 @@ import java.util.Map;
 /**
  * An automatic result map for simple stuff
  */
-public class AutoResultMap extends BasicResultMap {
+public class AutoResultMap extends ResultMap {
 
   /**
    * Constructor to pass in the SqlMapExecutorDelegate
@@ -97,7 +97,7 @@ public class AutoResultMap extends BasicResultMap {
           type = classInfo.getSetterType(matchedProp);
         }
         if (type != null || matchedProp != null) {
-          BasicResultMapping resultMapping = new BasicResultMapping();
+          ResultMapping resultMapping = new ResultMapping();
           resultMapping.setPropertyName((matchedProp != null ? matchedProp : columnName));
           resultMapping.setColumnName(columnName);
           resultMapping.setColumnIndex(i + 1);
@@ -119,7 +119,7 @@ public class AutoResultMap extends BasicResultMap {
       ResultSetMetaData rsmd = rs.getMetaData();
       for (int i = 0, n = rsmd.getColumnCount(); i < n; i++) {
         String columnName = rsmd.getColumnLabel(i + 1);
-        BasicResultMapping resultMapping = new BasicResultMapping();
+        ResultMapping resultMapping = new ResultMapping();
         resultMapping.setPropertyName(columnName);
         resultMapping.setColumnName(columnName);
         resultMapping.setColumnIndex(i + 1);
@@ -138,7 +138,7 @@ public class AutoResultMap extends BasicResultMap {
       ResultSetMetaData rsmd = rs.getMetaData();
       for (int i = 0, n = rsmd.getColumnCount(); i < n; i++) {
         String columnName = rsmd.getColumnLabel(i + 1);
-        BasicResultMapping resultMapping = new BasicResultMapping();
+        ResultMapping resultMapping = new ResultMapping();
         resultMapping.setPropertyName(columnName);
         resultMapping.setColumnName(columnName);
         resultMapping.setColumnIndex(i + 1);
@@ -157,7 +157,7 @@ public class AutoResultMap extends BasicResultMap {
     try {
       ResultSetMetaData rsmd = rs.getMetaData();
       String columnName = rsmd.getColumnLabel(1);
-      BasicResultMapping resultMapping = new BasicResultMapping();
+      ResultMapping resultMapping = new ResultMapping();
       resultMapping.setPropertyName(columnName);
       resultMapping.setColumnName(columnName);
       resultMapping.setColumnIndex(1);

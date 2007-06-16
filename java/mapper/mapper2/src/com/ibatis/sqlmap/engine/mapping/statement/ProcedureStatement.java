@@ -20,7 +20,7 @@ import com.ibatis.sqlmap.engine.scope.StatementScope;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class ProcedureStatement extends GeneralStatement {
+public class ProcedureStatement extends MappedStatement {
 
   protected void postProcessParameterObject(StatementScope statementScope, Object parameterObject, Object[] parameters) {
     statementScope.getParameterMap().refreshParameterObjectValues(statementScope, parameterObject, parameters);

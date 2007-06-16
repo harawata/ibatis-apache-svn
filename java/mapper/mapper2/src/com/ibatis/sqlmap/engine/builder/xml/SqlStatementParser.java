@@ -18,7 +18,7 @@ public class SqlStatementParser {
     this.state = config;
   }
 
-  public void parseGeneralStatement(Node node, GeneralStatement statement) {
+  public void parseGeneralStatement(Node node, MappedStatement statement) {
 
     // get attributes
     Properties attributes = NodeletUtils.parseAttributes(node, state.getGlobalProps());

@@ -19,7 +19,7 @@ package com.ibatis.sqlmap.engine.mapping.parameter;
 import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
 import com.ibatis.sqlmap.engine.scope.StatementScope;
 
-public class NoParameterMap extends BasicParameterMap {
+public class NoParameterMap extends ParameterMap {
 
   private static final ParameterMapping[] NO_PARAMETERS = new ParameterMapping[0];
   private static final Object[] NO_DATA = new Object[0];

@@ -338,7 +338,7 @@ public class SqlMapParser {
   protected void addStatementNodelets() {
     parser.addNodelet("/sqlMap/statement", new Nodelet() {
       public void process(Node node) throws Exception {
-        statementParser.parseGeneralStatement(node, new GeneralStatement());
+        statementParser.parseGeneralStatement(node, new MappedStatement());
       }
     });
     parser.addNodelet("/sqlMap/insert", new Nodelet() {

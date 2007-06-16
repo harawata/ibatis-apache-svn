@@ -22,7 +22,7 @@ import com.ibatis.sqlmap.engine.transaction.Transaction;
 import java.sql.SQLException;
 import java.util.List;
 
-public class DeleteStatement extends GeneralStatement {
+public class DeleteStatement extends MappedStatement {
 
   public StatementType getStatementType() {
     return StatementType.DELETE;

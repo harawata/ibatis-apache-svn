@@ -15,9 +15,8 @@
  */
 package com.ibatis.sqlmap.engine.execution;
 
-import com.ibatis.sqlmap.engine.mapping.parameter.BasicParameterMapping;
-import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMapping;
+import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
 import com.ibatis.sqlmap.engine.mapping.result.ResultObjectFactoryUtil;
 import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
@@ -390,7 +389,7 @@ public class SqlExecutor {
 
   private void retrieveOutputParameters(StatementScope statementScope, CallableStatement cs, ParameterMapping[] mappings, Object[] parameters, RowHandlerCallback callback) throws SQLException {
     for (int i = 0; i < mappings.length; i++) {
-      BasicParameterMapping mapping = ((BasicParameterMapping) mappings[i]);
+      ParameterMapping mapping = ((ParameterMapping) mappings[i]);
       if (mapping.isOutputAllowed()) {
         if ("java.sql.ResultSet".equalsIgnoreCase(mapping.getJavaTypeName())) {
           ResultSet rs = (ResultSet) cs.getObject(i + 1);
@@ -416,7 +415,7 @@ public class SqlExecutor {
 
   private void registerOutputParameters(CallableStatement cs, ParameterMapping[] mappings) throws SQLException {
     for (int i = 0; i < mappings.length; i++) {
-      BasicParameterMapping mapping = ((BasicParameterMapping) mappings[i]);
+      ParameterMapping mapping = ((ParameterMapping) mappings[i]);
       if (mapping.isOutputAllowed()) {
         if (null != mapping.getTypeName() && !mapping.getTypeName().equals("")) { //@added
           cs.registerOutParameter(i + 1, mapping.getJdbcType(), mapping.getTypeName());

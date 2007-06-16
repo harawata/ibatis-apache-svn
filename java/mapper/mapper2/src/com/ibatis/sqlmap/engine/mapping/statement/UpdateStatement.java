@@ -22,7 +22,7 @@ import com.ibatis.sqlmap.engine.transaction.Transaction;
 import java.sql.SQLException;
 import java.util.List;
 
-public class UpdateStatement extends GeneralStatement {
+public class UpdateStatement extends MappedStatement {
 
   public StatementType getStatementType() {
     return StatementType.UPDATE;

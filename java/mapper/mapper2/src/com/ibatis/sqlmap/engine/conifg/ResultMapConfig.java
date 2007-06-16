@@ -14,7 +14,7 @@ public class ResultMapConfig {
   private ExtendedSqlMapClient client;
   private SqlMapExecutorDelegate delegate;
   private TypeHandlerFactory typeHandlerFactory;
-  private BasicResultMap resultMap;
+  private ResultMap resultMap;
   private List resultMappingList;
   private int resultMappingIndex;
   private Discriminator discriminator;
@@ -25,7 +25,7 @@ public class ResultMapConfig {
     this.client = config.getClient();
     this.delegate = config.getDelegate();
     this.typeHandlerFactory = config.getTypeHandlerFactory();
-    this.resultMap = new BasicResultMap(client.getDelegate());
+    this.resultMap = new ResultMap(client.getDelegate());
     this.resultMappingList = new ArrayList();
     errorContext.setActivity("building a result map");
     errorContext.setObjectId(id + " result map");
@@ -41,7 +41,7 @@ public class ResultMapConfig {
     resultMap.setResultClass(resultClass);
     errorContext.setMoreInfo("Check the extended result map.");
     if (extendsResultMap != null) {
-      BasicResultMap extendedResultMap = (BasicResultMap) client.getDelegate().getResultMap(extendsResultMap);
+      ResultMap extendedResultMap = (ResultMap) client.getDelegate().getResultMap(extendsResultMap);
       ResultMapping[] resultMappings = extendedResultMap.getResultMappings();
       for (int i = 0; i < resultMappings.length; i++) {
         resultMappingList.add(resultMappings[i]);
@@ -81,7 +81,7 @@ public class ResultMapConfig {
     } else {
       handler = config.resolveTypeHandler(client.getDelegate().getTypeHandlerFactory(), resultMap.getResultClass(), "", javaClass, jdbcType, true);
     }
-    BasicResultMapping mapping = new BasicResultMapping();
+    ResultMapping mapping = new ResultMapping();
     mapping.setColumnName(columnName);
     mapping.setJdbcTypeName(jdbcType);
     mapping.setTypeHandler(handler);
@@ -115,7 +115,7 @@ public class ResultMapConfig {
     } else {
       handler = config.resolveTypeHandler(client.getDelegate().getTypeHandlerFactory(), resultMap.getResultClass(), propertyName, javaClass, jdbcType, true);
     }
-    BasicResultMapping mapping = new BasicResultMapping();
+    ResultMapping mapping = new ResultMapping();
     mapping.setPropertyName(propertyName);
     mapping.setColumnName(columnName);
     mapping.setJdbcTypeName(jdbcType);

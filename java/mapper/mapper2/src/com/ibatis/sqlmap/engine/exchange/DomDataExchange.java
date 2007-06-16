@@ -20,7 +20,7 @@ import com.ibatis.common.beans.ProbeFactory;
 import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMapping;
-import com.ibatis.sqlmap.engine.mapping.result.BasicResultMap;
+import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMapping;
 import com.ibatis.sqlmap.engine.scope.StatementScope;
@@ -61,7 +61,7 @@ public class DomDataExchange extends BaseDataExchange implements DataExchange {
 
   public Object setData(StatementScope statementScope, ResultMap resultMap, Object resultObject, Object[] values) {
 
-    String name = ((BasicResultMap) resultMap).getXmlName();
+    String name = ((ResultMap) resultMap).getXmlName();
     if (name == null) {
       name = "result";
     }

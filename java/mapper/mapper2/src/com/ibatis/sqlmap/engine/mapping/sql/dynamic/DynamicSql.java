@@ -16,9 +16,8 @@
 package com.ibatis.sqlmap.engine.mapping.sql.dynamic;
 
 import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
-import com.ibatis.sqlmap.engine.mapping.parameter.BasicParameterMap;
-import com.ibatis.sqlmap.engine.mapping.parameter.InlineParameterMapParser;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
+import com.ibatis.sqlmap.engine.mapping.parameter.InlineParameterMapParser;
 import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMapping;
 import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
 import com.ibatis.sqlmap.engine.mapping.sql.Sql;
@@ -26,7 +25,7 @@ import com.ibatis.sqlmap.engine.mapping.sql.SqlChild;
 import com.ibatis.sqlmap.engine.mapping.sql.SqlText;
 import com.ibatis.sqlmap.engine.mapping.sql.dynamic.elements.*;
 import com.ibatis.sqlmap.engine.mapping.sql.simple.SimpleDynamicSql;
-import com.ibatis.sqlmap.engine.mapping.statement.GeneralStatement;
+import com.ibatis.sqlmap.engine.mapping.statement.MappedStatement;
 import com.ibatis.sqlmap.engine.scope.StatementScope;
 
 import java.io.PrintWriter;
@@ -78,9 +77,9 @@ public class DynamicSql implements Sql, DynamicParent {
     List localChildren = children;
     processBodyChildren(statementScope, ctx, parameterObject, localChildren.iterator());
 
-    BasicParameterMap map = new BasicParameterMap(delegate);
+    ParameterMap map = new ParameterMap(delegate);
     map.setId(statementScope.getStatement().getId() + "-InlineParameterMap");
-    map.setParameterClass(((GeneralStatement) statementScope.getStatement()).getParameterClass());
+    map.setParameterClass(((MappedStatement) statementScope.getStatement()).getParameterClass());
     map.setParameterMappingList(ctx.getParameterMappings());
 
     String dynSql = ctx.getBodyText();

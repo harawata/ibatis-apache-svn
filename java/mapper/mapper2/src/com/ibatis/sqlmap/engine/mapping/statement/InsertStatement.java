@@ -22,7 +22,7 @@ import com.ibatis.sqlmap.engine.transaction.Transaction;
 import java.sql.SQLException;
 import java.util.List;
 
-public class InsertStatement extends GeneralStatement {
+public class InsertStatement extends MappedStatement {
 
   private SelectKeyStatement selectKeyStatement;
 
