@@ -17,7 +17,7 @@ package com.ibatis.sqlmap.engine.mapping.result.loader;
 
 import com.ibatis.common.beans.ClassInfo;
 
-import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
+import com.ibatis.sqlmap.engine.impl.SqlMapClientImpl;
 import com.ibatis.sqlmap.engine.type.DomTypeMarker;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.InvocationHandler;
@@ -44,7 +44,7 @@ public class EnhancedLazyResultLoader {
    * @param parameterObject - the parameter object to be used to build the list
    * @param targetType - the type we are putting data into
    */
-  public EnhancedLazyResultLoader(ExtendedSqlMapClient client, String statementName, Object parameterObject, Class targetType) {
+  public EnhancedLazyResultLoader(SqlMapClientImpl client, String statementName, Object parameterObject, Class targetType) {
     loader = new EnhancedLazyResultLoaderImpl(client, statementName, parameterObject, targetType);
   }
 
@@ -63,7 +63,7 @@ public class EnhancedLazyResultLoader {
   private static class EnhancedLazyResultLoaderImpl implements InvocationHandler {
 
 
-    protected ExtendedSqlMapClient client;
+    protected SqlMapClientImpl client;
     protected String statementName;
     protected Object parameterObject;
     protected Class targetType;
@@ -79,7 +79,7 @@ public class EnhancedLazyResultLoader {
      * @param parameterObject - the parameter object to be used to build the list
      * @param targetType - the type we are putting data into
      */
-    public EnhancedLazyResultLoaderImpl(ExtendedSqlMapClient client, String statementName, Object parameterObject, Class targetType) {
+    public EnhancedLazyResultLoaderImpl(SqlMapClientImpl client, String statementName, Object parameterObject, Class targetType) {
       this.client = client;
       this.statementName = statementName;
       this.parameterObject = parameterObject;

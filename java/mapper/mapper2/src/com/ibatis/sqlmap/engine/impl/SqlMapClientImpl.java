@@ -18,8 +18,7 @@ package com.ibatis.sqlmap.engine.impl;
 import com.ibatis.common.util.PaginatedList;
 import com.ibatis.common.logging.Log;
 import com.ibatis.common.logging.LogFactory;
-import com.ibatis.sqlmap.client.SqlMapException;
-import com.ibatis.sqlmap.client.SqlMapSession;
+import com.ibatis.sqlmap.client.*;
 import com.ibatis.sqlmap.client.event.RowHandler;
 import com.ibatis.sqlmap.engine.execution.BatchException;
 import com.ibatis.sqlmap.engine.execution.SqlExecutor;
@@ -35,7 +34,7 @@ import java.util.Map;
 /**
  * Implementation of ExtendedSqlMapClient
  */
-public class SqlMapClientImpl implements ExtendedSqlMapClient {
+public class SqlMapClientImpl implements SqlMapClient {
 
   private static final Log log = LogFactory.getLog(SqlMapClientImpl.class);
 

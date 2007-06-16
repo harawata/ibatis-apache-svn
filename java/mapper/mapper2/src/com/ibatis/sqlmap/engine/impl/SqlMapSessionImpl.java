@@ -46,7 +46,7 @@ public class SqlMapSessionImpl implements SqlMapSession {
    *
    * @param client - the client that will use the session
    */
-  public SqlMapSessionImpl(ExtendedSqlMapClient client) {
+  public SqlMapSessionImpl(SqlMapClientImpl client) {
     this.delegate = client.getDelegate();
     this.sessionScope = this.delegate.beginSessionScope();
     this.sessionScope.setSqlMapClient(client);

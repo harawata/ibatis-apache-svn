@@ -13,7 +13,7 @@ public class CacheModelConfig {
   CacheModelConfig(SqlMapConfiguration config, String id, CacheController controller, boolean readOnly, boolean serialize) {
     this.errorContext = config.getErrorContext();
     this.cacheModel = new CacheModel();
-    ExtendedSqlMapClient client = config.getClient();
+    SqlMapClientImpl client = config.getClient();
     errorContext.setActivity("building a cache model");
     cacheModel.setReadOnly(readOnly);
     cacheModel.setSerialize(serialize);

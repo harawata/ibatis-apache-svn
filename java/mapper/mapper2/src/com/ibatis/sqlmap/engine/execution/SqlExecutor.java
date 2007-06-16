@@ -24,7 +24,7 @@ import com.ibatis.sqlmap.engine.mapping.statement.RowHandlerCallback;
 import com.ibatis.sqlmap.engine.scope.ErrorContext;
 import com.ibatis.sqlmap.engine.scope.StatementScope;
 import com.ibatis.sqlmap.engine.scope.SessionScope;
-import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
+import com.ibatis.sqlmap.engine.impl.SqlMapClientImpl;
 import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
 import com.ibatis.sqlmap.engine.mapping.statement.DefaultRowHandler;
 
@@ -398,7 +398,7 @@ public class SqlExecutor {
             resultMap = statementScope.getResultMap();
             handleOutputParameterResults(statementScope, resultMap, rs, callback);
           } else {
-            ExtendedSqlMapClient client = (ExtendedSqlMapClient) statementScope.getSession().getSqlMapClient();
+            SqlMapClientImpl client = (SqlMapClientImpl) statementScope.getSession().getSqlMapClient();
             resultMap = client.getDelegate().getResultMap(mapping.getResultMapName());
             DefaultRowHandler rowHandler = new DefaultRowHandler();
             RowHandlerCallback handlerCallback = new RowHandlerCallback(resultMap, null, rowHandler);
@@ -464,7 +464,7 @@ public class SqlExecutor {
   }
 
   private PreparedStatement prepareStatement(SessionScope sessionScope, Connection conn, String sql, Integer rsType) throws SQLException {
-    SqlMapExecutorDelegate delegate = ((ExtendedSqlMapClient) sessionScope.getSqlMapExecutor()).getDelegate();
+    SqlMapExecutorDelegate delegate = ((SqlMapClientImpl) sessionScope.getSqlMapExecutor()).getDelegate();
     if (sessionScope.hasPreparedStatementFor(sql)) {
       return sessionScope.getPreparedStatement((sql));
     } else {
@@ -475,7 +475,7 @@ public class SqlExecutor {
   }
 
   private CallableStatement prepareCall(SessionScope sessionScope, Connection conn, String sql, Integer rsType) throws SQLException {
-    SqlMapExecutorDelegate delegate = ((ExtendedSqlMapClient) sessionScope.getSqlMapExecutor()).getDelegate();
+    SqlMapExecutorDelegate delegate = ((SqlMapClientImpl) sessionScope.getSqlMapExecutor()).getDelegate();
     if (sessionScope.hasPreparedStatementFor(sql)) {
       return (CallableStatement) sessionScope.getPreparedStatement((sql));
     } else {
@@ -486,7 +486,7 @@ public class SqlExecutor {
   }
 
   private static PreparedStatement prepareStatement(SessionScope sessionScope, Connection conn, String sql) throws SQLException {
-    SqlMapExecutorDelegate delegate = ((ExtendedSqlMapClient) sessionScope.getSqlMapExecutor()).getDelegate();
+    SqlMapExecutorDelegate delegate = ((SqlMapClientImpl) sessionScope.getSqlMapExecutor()).getDelegate();
     if (sessionScope.hasPreparedStatementFor(sql)) {
       return sessionScope.getPreparedStatement((sql));
     } else {
@@ -497,7 +497,7 @@ public class SqlExecutor {
   }
 
   private CallableStatement prepareCall(SessionScope sessionScope, Connection conn, String sql) throws SQLException {
-    SqlMapExecutorDelegate delegate = ((ExtendedSqlMapClient) sessionScope.getSqlMapExecutor()).getDelegate();
+    SqlMapExecutorDelegate delegate = ((SqlMapClientImpl) sessionScope.getSqlMapExecutor()).getDelegate();
     if (sessionScope.hasPreparedStatementFor(sql)) {
       return (CallableStatement) sessionScope.getPreparedStatement((sql));
     } else {
@@ -671,7 +671,7 @@ public class SqlExecutor {
   }
 
   private void setupResultObjectFactory(StatementScope statementScope) {
-    ExtendedSqlMapClient client = (ExtendedSqlMapClient) statementScope.getSession().getSqlMapClient();
+    SqlMapClientImpl client = (SqlMapClientImpl) statementScope.getSession().getSqlMapClient();
     ResultObjectFactoryUtil.setResultObjectFactory(client.getResultObjectFactory());
     ResultObjectFactoryUtil.setStatementId(statementScope.getStatement().getId());
   }

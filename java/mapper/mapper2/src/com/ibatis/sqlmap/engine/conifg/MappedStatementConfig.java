@@ -22,7 +22,7 @@ public class MappedStatementConfig {
   private static final Probe PROBE = ProbeFactory.getProbe();
   private static final InlineParameterMapParser PARAM_PARSER = new InlineParameterMapParser();
   private ErrorContext errorContext;
-  private ExtendedSqlMapClient client;
+  private SqlMapClientImpl client;
   private TypeHandlerFactory typeHandlerFactory;
   private MappedStatement mappedStatement;
   private MappedStatement rootStatement;

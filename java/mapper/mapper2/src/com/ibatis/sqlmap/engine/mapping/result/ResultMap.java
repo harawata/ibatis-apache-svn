@@ -21,7 +21,7 @@ import com.ibatis.common.jdbc.exception.NestedSQLException;
 
 import com.ibatis.sqlmap.client.SqlMapException;
 import com.ibatis.sqlmap.engine.exchange.DataExchange;
-import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
+import com.ibatis.sqlmap.engine.impl.SqlMapClientImpl;
 import com.ibatis.sqlmap.engine.impl.SqlMapExecutorDelegate;
 import com.ibatis.sqlmap.engine.mapping.result.loader.ResultLoader;
 import com.ibatis.sqlmap.engine.mapping.sql.Sql;
@@ -467,7 +467,7 @@ public class ResultMap {
       TypeHandlerFactory typeHandlerFactory = getDelegate().getTypeHandlerFactory();
 
       String statementName = mapping.getStatementName();
-      ExtendedSqlMapClient client = (ExtendedSqlMapClient) statementScope.getSession().getSqlMapClient();
+      SqlMapClientImpl client = (SqlMapClientImpl) statementScope.getSession().getSqlMapClient();
 
       MappedStatement mappedStatement = client.getMappedStatement(statementName);
       Class parameterType = mappedStatement.getParameterClass();

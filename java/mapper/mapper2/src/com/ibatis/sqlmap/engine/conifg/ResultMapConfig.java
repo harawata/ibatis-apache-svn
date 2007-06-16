@@ -11,7 +11,7 @@ import java.util.*;
 public class ResultMapConfig {
   private SqlMapConfiguration config;
   private ErrorContext errorContext;
-  private ExtendedSqlMapClient client;
+  private SqlMapClientImpl client;
   private SqlMapExecutorDelegate delegate;
   private TypeHandlerFactory typeHandlerFactory;
   private ResultMap resultMap;

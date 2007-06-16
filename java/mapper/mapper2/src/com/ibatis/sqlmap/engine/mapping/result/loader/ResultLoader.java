@@ -15,7 +15,7 @@
  */
 package com.ibatis.sqlmap.engine.mapping.result.loader;
 
-import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
+import com.ibatis.sqlmap.engine.impl.SqlMapClientImpl;
 import com.ibatis.sqlmap.engine.type.DomCollectionTypeMarker;
 
 import java.sql.SQLException;
@@ -42,7 +42,7 @@ public class ResultLoader {
    * @return the loaded result
    * @throws SQLException
    */
-  public static Object loadResult(ExtendedSqlMapClient client, String statementName, Object parameterObject, Class targetType)
+  public static Object loadResult(SqlMapClientImpl client, String statementName, Object parameterObject, Class targetType)
       throws SQLException {
     Object value = null;
 
@@ -62,7 +62,7 @@ public class ResultLoader {
     return value;
   }
 
-  protected static Object getResult(ExtendedSqlMapClient client, String statementName, Object parameterObject, Class targetType) throws SQLException {
+  protected static Object getResult(SqlMapClientImpl client, String statementName, Object parameterObject, Class targetType) throws SQLException {
     Object value = null;
     if (DomCollectionTypeMarker.class.isAssignableFrom(targetType)) {
       value = client.queryForList(statementName, parameterObject);

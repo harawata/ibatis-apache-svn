@@ -15,7 +15,7 @@ public class ParameterMapConfig {
 
   private SqlMapConfiguration config;
   private ErrorContext errorContext;
-  private ExtendedSqlMapClient client;
+  private SqlMapClientImpl client;
   private ParameterMap parameterMap;
   private List parameterMappingList;
 

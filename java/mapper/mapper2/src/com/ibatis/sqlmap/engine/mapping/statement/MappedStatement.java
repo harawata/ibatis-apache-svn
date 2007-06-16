@@ -48,7 +48,7 @@ public class MappedStatement {
   private Class parameterClass;
   private Sql sql;
   private int baseCacheKey;
-  private ExtendedSqlMapClient sqlMapClient;
+  private SqlMapClientImpl sqlMapClient;
   private Integer timeout;
   private ResultMap[] additionalResultMaps = new ResultMap[0];
   private List executeListeners = new ArrayList();
@@ -356,7 +356,7 @@ public class MappedStatement {
   }
 
   public void setSqlMapClient(SqlMapClient sqlMapClient) {
-    this.sqlMapClient = (ExtendedSqlMapClient) sqlMapClient;
+    this.sqlMapClient = (SqlMapClientImpl) sqlMapClient;
   }
 
   public void initRequest(StatementScope statementScope) {

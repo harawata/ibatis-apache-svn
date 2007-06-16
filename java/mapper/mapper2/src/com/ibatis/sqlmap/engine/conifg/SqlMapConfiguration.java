@@ -27,7 +27,7 @@ public class SqlMapConfiguration {
   private ErrorContext errorContext;
   private SqlMapExecutorDelegate delegate;
   private TypeHandlerFactory typeHandlerFactory;
-  private ExtendedSqlMapClient client;
+  private SqlMapClientImpl client;
   private Integer defaultStatementTimeout;
 
   public SqlMapConfiguration() {
@@ -46,7 +46,7 @@ public class SqlMapConfiguration {
     return errorContext;
   }
 
-  public ExtendedSqlMapClient getClient() {
+  public SqlMapClientImpl getClient() {
     return client;
   }
 

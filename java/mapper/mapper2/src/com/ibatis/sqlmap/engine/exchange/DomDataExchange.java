@@ -15,19 +15,14 @@
  */
 package com.ibatis.sqlmap.engine.exchange;
 
-import com.ibatis.common.beans.Probe;
-import com.ibatis.common.beans.ProbeFactory;
-import com.ibatis.sqlmap.client.SqlMapException;
-import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMap;
-import com.ibatis.sqlmap.engine.mapping.parameter.ParameterMapping;
-import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
-import com.ibatis.sqlmap.engine.mapping.result.ResultMap;
-import com.ibatis.sqlmap.engine.mapping.result.ResultMapping;
-import com.ibatis.sqlmap.engine.scope.StatementScope;
+import com.ibatis.common.beans.*;
+import com.ibatis.sqlmap.client.*;
+import com.ibatis.sqlmap.engine.mapping.parameter.*;
+import com.ibatis.sqlmap.engine.mapping.result.*;
+import com.ibatis.sqlmap.engine.scope.*;
 import org.w3c.dom.Document;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.*;
 import java.util.Map;
 
 /**

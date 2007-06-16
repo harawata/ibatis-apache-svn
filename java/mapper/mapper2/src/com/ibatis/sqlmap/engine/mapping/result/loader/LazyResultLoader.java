@@ -17,7 +17,7 @@ package com.ibatis.sqlmap.engine.mapping.result.loader;
 
 import com.ibatis.common.beans.ClassInfo;
 
-import com.ibatis.sqlmap.engine.impl.ExtendedSqlMapClient;
+import com.ibatis.sqlmap.engine.impl.SqlMapClientImpl;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -33,7 +33,7 @@ public class LazyResultLoader implements InvocationHandler {
 
   private static final Class[] LIST_INTERFACES = new Class[]{List.class};
 
-  protected ExtendedSqlMapClient client;
+  protected SqlMapClientImpl client;
   protected String statementName;
   protected Object parameterObject;
   protected Class targetType;
@@ -49,7 +49,7 @@ public class LazyResultLoader implements InvocationHandler {
    * @param parameterObject - the parameter object to be used to build the list
    * @param targetType - the type we are putting data into
    */
-  public LazyResultLoader(ExtendedSqlMapClient client, String statementName, Object parameterObject, Class targetType) {
+  public LazyResultLoader(SqlMapClientImpl client, String statementName, Object parameterObject, Class targetType) {
     this.client = client;
     this.statementName = statementName;
     this.parameterObject = parameterObject;
