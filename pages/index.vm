@@ -48,24 +48,34 @@
 </div>
 
   <h2>News</h2>
+<h3>iBATIS 3.0 Design Whiteboard</h3>
+ <p>(June 12, 2007) Next month, on July 1st iBATIS will officially be 5 years old, and 2.0 alone
+   will be 3 years long in the tooth.  It's time, or perhaps overdue that we start designing and
+   implementing the third version.  A lot has changed in 5 years, many best practices are now simply
+   "old practices".  It's time to start from scratch.  Clinton's thoughts are up. This is your chance to
+   influence the future direction of iBATIS.</p>
+ <p><b><a href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/iBATIS+3.0+Whiteboard">Check out the iBATIS 3.0 Whiteboard and have your say!</a></b></p>
 
- <h3>iBATIS.NET DataMapper 1.6.1 and DataAccess 1.9.1 General Availability!</h3>
-<p>(April 6, 2007) The votes are in and both distributions are now tagged as GA!</p>
- 
-<p>This release includes primarily several bug fixes and enhancements, documentation have been updated. 
-<br/> 
-iBATIS now supports support to groupBy attribute on resultMap to resolve N+1 select issue. 
+<h3>Java Documentation in 7 languages including Japanese</h3>
+ <p>(June 12, 2007) Thanks to the contributions from our iBATIS community, we now have
+ documentation in 7 languages!  The most recent addition is Japanese, which joins Chinese,
+ Korean, Italian, Spanish, French and English.</p>
+ <p><b><a href="javadownloads.cgi">Download documentation from the Java downloads page</a></b></p>
 
-<p/>
-<p><b><a href="dotnetdownloads.cgi">Download iBATIS.NET DataMapper 1.6.1 and DataAccess 1.9.1 (GA)!</a></b></p>
+<h3>iBATIS.NET DataMapper 1.6.1 and DataAccess 1.9.1 General Availability!</h3>
+  <p>(April 6, 2007) The votes are in and both distributions are now tagged as GA!</p>
+  <p>This release includes primarily several bug fixes and enhancements, documentation have been updated.</p>
+  iBATIS now supports support to groupBy attribute on resultMap to resolve N+1 select issue.
+  <p/>
+  <p><b><a href="dotnetdownloads.cgi">Download iBATIS.NET DataMapper 1.6.1 and DataAccess 1.9.1 (GA)!</a></b></p>
 
- <h3>iBATIS.NET DataMapper 1.6.1 and DataAccess 1.9.1 Released [Status: Beta]</h3>
-<p>(March 1, 2007) The iBATIS.NET team is proud to announce that the BETA release of DataAccess V1.9.1 and DataMapper V1.6.1 are now available.</p>
- 
-<p>This release includes bug fixes and enhancements.<br/> 
- 
-<p>Vote to General Availability status is expecting in two weeks.
-Thanks once again for your feedback. Enjoy!</p>
+<h3>iBATIS.NET DataMapper 1.6.1 and DataAccess 1.9.1 Released [Status: Beta]</h3>
+  <p>(March 1, 2007) The iBATIS.NET team is proud to announce that the BETA release of DataAccess V1.9.1 and DataMapper V1.6.1 are now available.</p>
+
+  <p>This release includes bug fixes and enhancements.</p>
+
+  <p>Vote to General Availability status is expecting in two weeks.
+  Thanks once again for your feedback. Enjoy!</p>
 
 <a onclick="ShowHide('DataMapper161')" class="release">Show/Hide Release Notes - Version DataMapper 1.6.1</a>
 <div style="display:none" id="DataMapper161"  class="release">       

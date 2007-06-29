@@ -16,7 +16,7 @@
   <a href="javadownloads.cgi" title="Everything you need to run iBATIS for Java">for Java</a><br/>
   <a href="dotnetdownloads.cgi" title="Everything you need to run iBATIS for .NET">for .NET</a><br/>
   <a href="docs/ruby" title="Everything you need to run iBATIS for Ruby (aka RBatis)">for Ruby/Rails</a><br/>
-  <a href="tools.html" title="Tools related to iBATISs">Other Tools</a><br/>
+  <a href="tools.html" title="Tools related to iBATISs">Abator</a><br/>
 
   <br/>
   <img alt="Arrow" src="arrow.gif" border="0"/>
@@ -36,15 +36,15 @@
   <a href="background.html" title="Where did iBATIS come from, what does 'iBATIS' mean?">Background</a><br/>
   <a href="license.html" title="The Apache Software Foundation License 2.0">License</a><br/>
   <a href="http://svn.apache.org/repos/asf/ibatis/trunk" title="Subversion Repository" target="_new">Subversion</a>
-    <a href="http://fisheye3.cenqua.com/viewrep/ibatis" title="FishEye Repository Browser" target="_new">(FishEye)</a><br/>
+    <!--<a href="http://fisheye3.cenqua.com/viewrep/ibatis" title="FishEye Repository Browser" target="_new">(FishEye)</a>-->
+  <br/>
   <a href="team.html" title="Who's responsible for iBATIS?">Team</a><br/>
   <a href="bylaws.html" title="How do we operate?">Bylaws</a><br/>
   <a href="status.html" title="Where are we at?">Status</a><br/>
+  <a href="thanks.html" title="Thanks to...">Thanks to...</a><br/>
   <br/>
   
   <br/>
   <a target="_new" href="http://www.amazon.com/gp/product/1932394826?ie=UTF8&tag=ai0e-20&link_code=as3&camp=211189&creative=373489&creativeASIN=1932394826"><img src="iia_cover.jpg" border="0" alt="iBATIS in Action"/></a>
   <br/>
-  <br/>
-  <a target="_new" href="http://www.cenqua.com/fisheye"><img src="http://www.cenqua.com/images/fisheyed2.gif" width="89" height="33" border="0" alt="Source Perspective by FishEye"/></a>
 </div>
