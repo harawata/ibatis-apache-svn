@@ -19,9 +19,12 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 import org.apache.ibatis.abator.api.Abator;
 import org.apache.ibatis.abator.config.AbatorConfiguration;
@@ -56,6 +59,15 @@ import org.apache.tools.ant.types.PropertySet;
  *  &lt;/project&gt;
  * </pre>
  * 
+ * The task also supports these optional attributes:
+ * <ul>
+ *   <li>"contextIds" - a comma delimited list of contaxtIds to use
+ *      for this run</li>
+ *   <li>"fullyQualifiedTableNames" - a comma delimited list of 
+ *     fully qualified table names to use for this run</li>
+ * </ul>
+ * 
+ * 
  * @author Jeff Butler
  */
 public class AbatorAntTask extends Task {
@@ -64,6 +76,8 @@ public class AbatorAntTask extends Task {
     private boolean overwrite;
     private PropertySet propertyset;
     private boolean verbose;
+    private String contextIds;
+    private String fullyQualifiedTableNames;
 
     /**
      * 
@@ -87,6 +101,28 @@ public class AbatorAntTask extends Task {
             throw new BuildException(Messages.getString("RuntimeError.1", configfile)); //$NON-NLS-1$
         }
         
+        Set fullyqualifiedTables = new HashSet();
+        if (StringUtility.stringHasValue(fullyQualifiedTableNames)) {
+            StringTokenizer st = new StringTokenizer(fullyQualifiedTableNames, ",");
+            while (st.hasMoreTokens()) {
+                String s = st.nextToken().trim();
+                if (s.length() > 0) {
+                    fullyqualifiedTables.add(s);
+                }
+            }
+        }
+        
+        List contexts = new ArrayList();
+        if (StringUtility.stringHasValue(contextIds)) {
+            StringTokenizer st = new StringTokenizer(contextIds, ",");
+            while (st.hasMoreTokens()) {
+                String s = st.nextToken().trim();
+                if (s.length() > 0) {
+                    contexts.add(s);
+                }
+            }
+        }
+        
         try {
             Properties p = propertyset == null ? null : propertyset.getProperties();
             
@@ -98,7 +134,7 @@ public class AbatorAntTask extends Task {
             
             Abator abator = new Abator(config, callback, warnings);
             
-            abator.generate(new AntProgressCallback(this, verbose));
+            abator.generate(new AntProgressCallback(this, verbose), contexts, fullyqualifiedTables);
             
         } catch (XMLParserException e) {
             Iterator errors = e.getErrors().iterator();
@@ -173,5 +209,21 @@ public class AbatorAntTask extends Task {
 
     public void setVerbose(boolean verbose) {
         this.verbose = verbose;
+    }
+
+    public String getContextIds() {
+        return contextIds;
+    }
+
+    public void setContextIds(String contextIds) {
+        this.contextIds = contextIds;
+    }
+
+    public String getFullyQualifiedTableNames() {
+        return fullyQualifiedTableNames;
+    }
+
+    public void setFullyQualifiedTableNames(String fullyQualifiedTableNames) {
+        this.fullyQualifiedTableNames = fullyQualifiedTableNames;
     }
 }

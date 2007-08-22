@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.ibatis.abator.api.DAOGenerator;
 import org.apache.ibatis.abator.api.IntrospectedTable;
@@ -243,13 +244,20 @@ public class AbatorContext extends PropertyHolder {
 	 *                            The objects will be of type GeneratedXMLFile.
 	 * @param warnings any warning generated from this method will be added to the List.  Warnings
 	 *                   are always Strings.
+     * @param fullyQualifiedTableNames a set of table names to generate.  The elements
+     *   of the set must be Strings that exactly match what's specified in the configuration.
+     *   For example, if table name = "foo" and schema = "bar", then the fully qualified
+     *   table name is "foo.bar".
+     *   If the Set is null or empty, then all tables in the configuration will be
+     *   used for code generation.
 	 * 
 	 * @throws SQLException if some error arrises while introspecting the specified
 	 *                      database tables.
 	 * 
 	 * @throws InterruptedException if the progress callback reports a cancel
 	 */
-	public void generateFiles(ProgressCallback callback, List generatedJavaFiles, List generatedXmlFiles, List warnings)
+	public void generateFiles(ProgressCallback callback, List generatedJavaFiles, List generatedXmlFiles, List warnings,
+            Set fullyQualifiedTableNames)
             throws SQLException, InterruptedException {
 	    
 	    if (callback == null) {
@@ -275,6 +283,13 @@ public class AbatorContext extends PropertyHolder {
 				TableConfiguration tc = (TableConfiguration) iter.next();
 				String tableName = StringUtility.composeFullyQualifiedTableName(
                         tc.getCatalog(), tc.getSchema(), tc.getTableName(), '.');
+                
+                if (fullyQualifiedTableNames != null
+                        && fullyQualifiedTableNames.size() > 0) {
+                    if (!fullyQualifiedTableNames.contains(tableName)) {
+                        continue;
+                    }
+                }
 				
 				if (!tc.areAnyStatementsEnabled()) {
 				    warnings.add(Messages.getString("Warning.0", tableName)); //$NON-NLS-1$

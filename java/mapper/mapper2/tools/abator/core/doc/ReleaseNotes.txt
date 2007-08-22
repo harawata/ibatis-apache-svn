@@ -29,7 +29,11 @@ Enhancements -
    columns.
 9. API change to allow generating with selected contexts rather than
    the entire config file.
-10. IBATIS-414 - make the Example and Criteria classes extendable
+10. API change to allow generating with selected tables rather than
+    the entire config file.
+11. Exposed new support for selecting tables and/or contexts to the
+    command line and the Ant task 
+12. IBATIS-414 - make the Example and Criteria classes extendable
 
 -------------------------------------------------------------------------------
 Version 1.0.0:

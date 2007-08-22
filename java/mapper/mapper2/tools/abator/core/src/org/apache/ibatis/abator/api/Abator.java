@@ -44,7 +44,7 @@ import org.apache.ibatis.abator.internal.util.messages.Messages;
  * be the result of a parsing the XML configuration file, or it can be created
  * solely in Java.</li>
  * <li>Create an Abator object</li>
- * <li>Call the generate() method</li>
+ * <li>Call one of the generate() methods</li>
  * </ol>
  * 
  * @see org.apache.ibatis.abator.config.xml.AbatorConfigurationParser
@@ -121,7 +121,7 @@ public class Abator {
      */
     public void generate(ProgressCallback callback)
             throws SQLException, IOException, InterruptedException {
-        generate(callback, null);
+        generate(callback, null, null);
     }
     
     /**
@@ -140,6 +140,32 @@ public class Abator {
      * @throws InterruptedException if the method is cancelled through the ProgressCallback
      */
     public void generate(ProgressCallback callback, List contextIds)
+            throws SQLException, IOException, InterruptedException {
+        generate(callback, contextIds, null);
+    }
+    
+    /**
+     * This is the main method for generating code.  This method is long running, but
+     * progress can be provided and the method can be cancelled through the ProgressCallback
+     * interface.
+     * 
+     * @param callback an instance of the ProgressCallback interface, or <code>null</code>
+     *   if you do not require progress information
+     * @param contextIds a list of Strings containing context ids to run.  Only the
+     *   contexts with an id specified in this list will be run.  If the list is
+     *   null or empty, than all contexts are run.
+     * @param fullyQualifiedTableNames a set of table names to generate.  The elements
+     *   of the set must be Strings that exactly match what's specified in the configuration.
+     *   For example, if table name = "foo" and schema = "bar", then the fully qualified
+     *   table name is "foo.bar".
+     *   If the Set is null or empty, then all tables in the configuration will be
+     *   used for code generation.
+     * @throws InvalidConfigurationException
+     * @throws SQLException
+     * @throws IOException
+     * @throws InterruptedException if the method is cancelled through the ProgressCallback
+     */
+    public void generate(ProgressCallback callback, List contextIds, Set fullyQualifiedTableNames)
             throws SQLException, IOException, InterruptedException {
 
         if (callback == null) {
@@ -180,7 +206,7 @@ public class Abator {
             AbatorContext abatorContext = (AbatorContext) iter.next();
 
             abatorContext.generateFiles(callback, generatedJavaFiles,
-                    generatedXmlFiles, warnings);
+                    generatedXmlFiles, warnings, fullyQualifiedTableNames);
         }
         
         iter = generatedXmlFiles.iterator();
