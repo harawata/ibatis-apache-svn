@@ -171,6 +171,44 @@ public class ConditionalLegacyTests extends BaseTest {
         }
     }
 
+    public void testFieldsOnlyCountByExample() {
+        FieldsonlyDAO dao = new FieldsonlyDAOImpl(sqlMapClient);
+
+        try {
+            Fieldsonly record = new Fieldsonly();
+            record.setDoublefield(new Double(11.22));
+            record.setFloatfield(new Double(33.44));
+            record.setIntegerfield(new Integer(5));
+            dao.insert(record);
+
+            record = new Fieldsonly();
+            record.setDoublefield(new Double(44.55));
+            record.setFloatfield(new Double(66.77));
+            record.setIntegerfield(new Integer(8));
+            dao.insert(record);
+
+            record = new Fieldsonly();
+            record.setDoublefield(new Double(88.99));
+            record.setFloatfield(new Double(100.111));
+            record.setIntegerfield(new Integer(9));
+            dao.insert(record);
+
+            FieldsonlyExample example = new FieldsonlyExample();
+            example.setIntegerfield(new Integer(5));
+            example
+                    .setIntegerfield_Indicator(FieldsonlyExample.EXAMPLE_GREATER_THAN);
+
+            Integer rows = dao.countByExample(example);
+            assertEquals(2, rows.intValue());
+
+            example = new FieldsonlyExample();
+            rows = dao.countByExample(example);
+            assertEquals(3, rows.intValue());
+        } catch (SQLException e) {
+            fail(e.getMessage());
+        }
+    }
+
     public void testPKOnlyInsert() {
         PkonlyDAO dao = new PkonlyDAOImpl(sqlMapClient);
 
@@ -280,6 +318,39 @@ public class ConditionalLegacyTests extends BaseTest {
             example.setId_Indicator(PkonlyExample.EXAMPLE_GREATER_THAN);
             List answer = dao.selectByExample(example);
             assertEquals(2, answer.size());
+        } catch (SQLException e) {
+            fail(e.getMessage());
+        }
+    }
+
+    public void testPKOnlyCountByExample() {
+        PkonlyDAO dao = new PkonlyDAOImpl(sqlMapClient);
+
+        try {
+            PkonlyKey key = new PkonlyKey();
+            key.setId(new Integer(1));
+            key.setSeqNum(new Integer(3));
+            dao.insert(key);
+
+            key = new PkonlyKey();
+            key.setId(new Integer(5));
+            key.setSeqNum(new Integer(6));
+            dao.insert(key);
+
+            key = new PkonlyKey();
+            key.setId(new Integer(7));
+            key.setSeqNum(new Integer(8));
+            dao.insert(key);
+
+            PkonlyExample example = new PkonlyExample();
+            example.setId(new Integer(4));
+            example.setId_Indicator(PkonlyExample.EXAMPLE_GREATER_THAN);
+            Integer rows = dao.countByExample(example);
+            assertEquals(2, rows.intValue());
+
+            example = new PkonlyExample();
+            rows = dao.countByExample(example);
+            assertEquals(3, rows.intValue());
         } catch (SQLException e) {
             fail(e.getMessage());
         }
@@ -619,6 +690,39 @@ public class ConditionalLegacyTests extends BaseTest {
         }
     }
 
+    public void testPKFieldsCountByExample() {
+        PkfieldsDAO dao = new PkfieldsDAOImpl(sqlMapClient);
+
+        try {
+            Pkfields record = new Pkfields();
+            record.setFirstname("Jeff");
+            record.setLastname("Smith");
+            record.setId1(new Integer(1));
+            record.setId2(new Integer(2));
+            dao.insert(record);
+
+            record = new Pkfields();
+            record.setFirstname("Bob");
+            record.setLastname("Jones");
+            record.setId1(new Integer(3));
+            record.setId2(new Integer(4));
+
+            dao.insert(record);
+
+            PkfieldsExample example = new PkfieldsExample();
+            example.setLastname("J%");
+            example.setLastname_Indicator(PkfieldsExample.EXAMPLE_LIKE);
+            Integer rows = dao.countByExample(example);
+            assertEquals(1, rows.intValue());
+
+            example = new PkfieldsExample();
+            rows = dao.countByExample(example);
+            assertEquals(2, rows.intValue());
+        } catch (SQLException e) {
+            fail(e.getMessage());
+        }
+    }
+
     public void testPKBlobsInsert() {
         PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
 
@@ -843,6 +947,36 @@ public class ConditionalLegacyTests extends BaseTest {
             assertEquals(record.getId(), newRecord.getId());
             assertTrue(blobsAreEqual(record.getBlob1(), newRecord.getBlob1()));
             assertTrue(blobsAreEqual(record.getBlob2(), newRecord.getBlob2()));
+        } catch (SQLException e) {
+            fail(e.getMessage());
+        }
+    }
+
+    public void testPKBlobsCountByExample() {
+        PkblobsDAO dao = new PkblobsDAOImpl(sqlMapClient);
+
+        try {
+            Pkblobs record = new Pkblobs();
+            record.setId(new Integer(3));
+            record.setBlob1(generateRandomBlob());
+            record.setBlob2(generateRandomBlob());
+            dao.insert(record);
+
+            record = new Pkblobs();
+            record.setId(new Integer(6));
+            record.setBlob1(generateRandomBlob());
+            record.setBlob2(generateRandomBlob());
+            dao.insert(record);
+
+            PkblobsExample example = new PkblobsExample();
+            example.setId(new Integer(4));
+            example.setId_Indicator(PkblobsExample.EXAMPLE_LESS_THAN);
+            Integer rows = dao.countByExample(example);
+            assertEquals(1, rows.intValue());
+
+            example = new PkblobsExample();
+            rows = dao.countByExample(example);
+            assertEquals(2, rows.intValue());
         } catch (SQLException e) {
             fail(e.getMessage());
         }
@@ -1172,6 +1306,40 @@ public class ConditionalLegacyTests extends BaseTest {
         }
     }
 
+    public void testPKFieldsBlobsCountByExample() {
+        PkfieldsblobsDAO dao = new PkfieldsblobsDAOImpl(sqlMapClient);
+
+        try {
+            Pkfieldsblobs record = new Pkfieldsblobs();
+            record.setId1(new Integer(3));
+            record.setId2(new Integer(4));
+            record.setFirstname("Jeff");
+            record.setLastname("Smith");
+            record.setBlob1(generateRandomBlob());
+            dao.insert(record);
+
+            record = new Pkfieldsblobs();
+            record.setId1(new Integer(5));
+            record.setId2(new Integer(6));
+            record.setFirstname("Scott");
+            record.setLastname("Jones");
+            record.setBlob1(generateRandomBlob());
+            dao.insert(record);
+
+            PkfieldsblobsExample example = new PkfieldsblobsExample();
+            example.setId1(new Integer(3));
+            example.setId1_Indicator(PkfieldsblobsExample.EXAMPLE_NOT_EQUALS);
+            Integer rows = dao.countByExample(example);
+            assertEquals(1, rows.intValue());
+
+            example = new PkfieldsblobsExample();
+            rows = dao.countByExample(example);
+            assertEquals(2, rows.intValue());
+        } catch (SQLException e) {
+            fail(e.getMessage());
+        }
+    }
+
     public void testFieldsBlobsInsert() {
         FieldsblobsDAO dao = new FieldsblobsDAOImpl(sqlMapClient);
 
@@ -1299,6 +1467,38 @@ public class ConditionalLegacyTests extends BaseTest {
             assertEquals(record.getLastname(), newRecord.getLastname());
             assertTrue(blobsAreEqual(record.getBlob1(), newRecord.getBlob1()));
             assertTrue(blobsAreEqual(record.getBlob2(), newRecord.getBlob2()));
+        } catch (SQLException e) {
+            fail(e.getMessage());
+        }
+    }
+
+    public void testFieldsBlobsCountByExample() {
+        FieldsblobsDAO dao = new FieldsblobsDAOImpl(sqlMapClient);
+
+        try {
+            FieldsblobsWithBLOBs record = new FieldsblobsWithBLOBs();
+            record.setFirstname("Jeff");
+            record.setLastname("Smith");
+            record.setBlob1(generateRandomBlob());
+            record.setBlob2(generateRandomBlob());
+            dao.insert(record);
+
+            record = new FieldsblobsWithBLOBs();
+            record.setFirstname("Scott");
+            record.setLastname("Jones");
+            record.setBlob1(generateRandomBlob());
+            record.setBlob2(generateRandomBlob());
+            dao.insert(record);
+
+            FieldsblobsExample example = new FieldsblobsExample();
+            example.setFirstname("S%");
+            example.setFirstname_Indicator(FieldsblobsExample.EXAMPLE_LIKE);
+            Integer rows = dao.countByExample(example);
+            assertEquals(1, rows.intValue());
+
+            example = new FieldsblobsExample();
+            rows = dao.countByExample(example);
+            assertEquals(2, rows.intValue());
         } catch (SQLException e) {
             fail(e.getMessage());
         }
@@ -1973,6 +2173,58 @@ public class ConditionalLegacyTests extends BaseTest {
             assertEquals(11, returnedRecord.getId1().intValue());
             returnedRecord = (AwfulTable) answer.get(5);
             assertEquals(1, returnedRecord.getId1().intValue());
+        } catch (SQLException e) {
+            fail(e.getMessage());
+        }
+    }
+
+    public void testAwfulTableCountByExample() {
+        AwfulTableDAO dao = new AwfulTableDAOImpl(sqlMapClient);
+
+        try {
+            AwfulTable record = new AwfulTable();
+            record.seteMail("fred@fred.com");
+            record.setEmailaddress("alsofred@fred.com");
+            record.setFirstFirstName("fred1");
+            record.setFourthFirstName("fred4");
+            record.setFrom("from field");
+            record.setId1(new Integer(1));
+            record.setId2(new Integer(2));
+            record.setId5(new Integer(5));
+            record.setId6(new Integer(6));
+            record.setId7(new Integer(7));
+            record.setSecondCustomerId(new Integer(567));
+            record.setSecondFirstName("fred2");
+            record.setThirdFirstName("fred3");
+
+            dao.insert(record);
+
+            record = new AwfulTable();
+            record.seteMail("fred2@fred.com");
+            record.setEmailaddress("alsofred2@fred.com");
+            record.setFirstFirstName("fred11");
+            record.setFourthFirstName("fred44");
+            record.setFrom("from from field");
+            record.setId1(new Integer(11));
+            record.setId2(new Integer(22));
+            record.setId5(new Integer(55));
+            record.setId6(new Integer(66));
+            record.setId7(new Integer(77));
+            record.setSecondCustomerId(new Integer(567567));
+            record.setSecondFirstName("fred22");
+            record.setThirdFirstName("fred33");
+
+            dao.insert(record);
+
+            AwfulTableExample example = new AwfulTableExample();
+            example.seteMail("fred@%");
+            example.seteMail_Indicator(AwfulTableExample.EXAMPLE_LIKE);
+            Integer rows = dao.countByExample(example);
+            assertEquals(1, rows.intValue());
+
+            example = new AwfulTableExample();
+            rows = dao.countByExample(example);
+            assertEquals(2, rows.intValue());
         } catch (SQLException e) {
             fail(e.getMessage());
         }

@@ -79,6 +79,42 @@ public class SqlMapGeneratorLegacyImpl extends SqlMapGeneratorIterateImpl implem
     }
 
     /**
+     * This method should return an XmlElement for the count by example
+     * statement. This statement uses the "by example" SQL fragment
+     * 
+     * @param introspectedTable
+     * @return the select element
+     */
+    protected XmlElement getCountByExample(IntrospectedTable introspectedTable) {
+
+        XmlElement answer = new XmlElement("select"); //$NON-NLS-1$
+
+        FullyQualifiedTable table = introspectedTable.getTable();
+        answer.addAttribute(new Attribute("id", getCountByExampleStatementId())); //$NON-NLS-1$
+        answer.addAttribute(new Attribute("parameterClass", "java.util.Map")); //$NON-NLS-1$ //$NON-NLS-2$
+        answer.addAttribute(new Attribute("resultClass", "java.lang.Integer")); //$NON-NLS-1$ //$NON-NLS-2$
+
+        answer.addComment();
+
+        StringBuffer sb = new StringBuffer();
+        sb.append("select count(*) from "); //$NON-NLS-1$
+        sb.append(table.getAliasedFullyQualifiedTableNameAtRuntime());
+        answer.addElement(new TextElement(sb.toString()));
+
+        XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
+        sb.setLength(0);
+        sb.append(getSqlMapNamespace(table));
+        sb.append('.');
+        sb.append(getExampleWhereClauseId());
+        includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
+                sb.toString()));
+        
+        answer.addElement(includeElement);
+
+        return answer;
+    }
+
+    /**
      * This method should return an XmlElement for the example where clause
      * SQL fragment (an sql fragment).
      * 

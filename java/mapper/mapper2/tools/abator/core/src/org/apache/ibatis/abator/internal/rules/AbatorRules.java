@@ -189,14 +189,15 @@ public abstract class AbatorRules {
     
     /**
      * Implements the rule for generating the SQL example where clause element.
-     * Generate the element if either the selectByExample or deleteByExample
-     * statement is allowed.
+     * Generate the element if the selectByExample or deleteByExample
+     * or countByExample statements are allowed.
      * 
      * @return true if the SQL where clause element should be generated
      */
     public boolean generateSQLExampleWhereClause() {
         boolean rc = tableConfiguration.isSelectByExampleStatementEnabled()
-            || tableConfiguration.isDeleteByExampleStatementEnabled();
+            || tableConfiguration.isDeleteByExampleStatementEnabled()
+            || tableConfiguration.isCountByExampleStatementEnabled();
         
         return rc;
     }
@@ -245,16 +246,23 @@ public abstract class AbatorRules {
     }
 
     /**
-     * Implements the rule for generating an example class with no super class.
-     * The class should only be generated if the selectByExample or
-     * deleteByExample methods are allowed.
+     * Implements the rule for generating an example class.
+     * The class should be generated if the selectByExample or
+     * deleteByExample or countByExample methods are allowed.
      * 
      * @return true if the example class should be generated
      */
     public boolean generateExampleClass() {
         boolean rc = tableConfiguration.isSelectByExampleStatementEnabled()
-                || tableConfiguration.isDeleteByExampleStatementEnabled();
+                || tableConfiguration.isDeleteByExampleStatementEnabled()
+                || tableConfiguration.isCountByExampleStatementEnabled();
     
+        return rc;
+    }
+    
+    public boolean generateCountByExample() {
+        boolean rc = tableConfiguration.isCountByExampleStatementEnabled();
+
         return rc;
     }
 

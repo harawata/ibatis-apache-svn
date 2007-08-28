@@ -170,4 +170,14 @@ public class ExtendedDAOMethodNameCalculator implements DAOMethodNameCalculator 
         
         return sb.toString();
     }
+
+    public String getCountByExampleMethodName(IntrospectedTable introspectedTable) {
+        StringBuffer sb = new StringBuffer();
+        sb.append("count"); //$NON-NLS-1$
+        sb.append(introspectedTable.getTable().getDomainObjectName());
+        sb.append("ByExample"); //$NON-NLS-1$
+        
+        return sb.toString();
+    }
+
 }

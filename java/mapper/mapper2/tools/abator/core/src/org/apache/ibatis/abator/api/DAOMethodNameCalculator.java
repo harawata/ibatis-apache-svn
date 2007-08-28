@@ -101,4 +101,12 @@ public interface DAOMethodNameCalculator {
      * @return the calculated name
      */
     String getDeleteByExampleMethodName(IntrospectedTable introspectedTable);
+
+    /**
+     * Calculates and returns a name for the count by example method.
+     * 
+     * @param introspectedTable
+     * @return the calculated name
+     */
+    String getCountByExampleMethodName(IntrospectedTable introspectedTable);
 }

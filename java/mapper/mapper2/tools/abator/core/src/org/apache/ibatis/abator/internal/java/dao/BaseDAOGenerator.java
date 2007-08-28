@@ -358,6 +358,16 @@ public class BaseDAOGenerator implements DAOGenerator {
             }
         }
 
+        if (introspectedTable.getRules().generateCountByExample()) {
+            methods = getCountByExampleMethods(introspectedTable, false, answer);
+            if (methods != null) {
+                iter = methods.iterator();
+                while (iter.hasNext()) {
+                    answer.addMethod((Method) iter.next());
+                }
+            }
+        }
+        
         afterImplementationGenerationHook(introspectedTable, answer);
         
         return answer;
@@ -499,6 +509,16 @@ public class BaseDAOGenerator implements DAOGenerator {
             }
         }
 
+        if (introspectedTable.getRules().generateCountByExample()) {
+            methods = getCountByExampleMethods(introspectedTable, true, answer);
+            if (methods != null) {
+                iter = methods.iterator();
+                while (iter.hasNext()) {
+                    answer.addMethod((Method) iter.next());
+                }
+            }
+        }
+        
         afterInterfaceGenerationHook(introspectedTable, answer);
         
         return answer;
@@ -1098,6 +1118,50 @@ public class BaseDAOGenerator implements DAOGenerator {
                     .getDeleteByPrimaryKeyStatementId(), "key")); //$NON-NLS-1$
             method.addBodyLine(sb.toString());
             method.addBodyLine("return rows;"); //$NON-NLS-1$
+        }
+
+        ArrayList answer = new ArrayList();
+        answer.add(method);
+
+        return answer;
+    }
+
+    protected List getCountByExampleMethods(
+            IntrospectedTable introspectedTable, boolean interfaceMethod,
+            CompilationUnit compilationUnit) {
+
+        if (interfaceMethod && exampleMethodVisibility != JavaVisibility.PUBLIC) {
+            return null;
+        }
+        
+        FullyQualifiedTable table = introspectedTable.getTable();
+        FullyQualifiedJavaType type = javaModelGenerator.getExampleType(table);
+        compilationUnit.addImportedType(type);
+
+        Method method = new Method();
+        method.addComment(table);
+        method.setVisibility(exampleMethodVisibility);
+        method.setReturnType(PrimitiveTypeWrapper.getIntegerInstance());
+        method.setName(methodNameCalculator.getCountByExampleMethodName(introspectedTable));
+        method.addParameter(new Parameter(type, "example")); //$NON-NLS-1$
+
+        Iterator iter = daoTemplate.getCheckedExceptions().iterator();
+        while (iter.hasNext()) {
+            FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter.next();
+            method.addException(fqjt);
+            compilationUnit.addImportedType(fqjt);
+        }
+
+        if (!interfaceMethod) {
+            // generate the implementation method
+            StringBuffer sb = new StringBuffer();
+
+            sb.append("Integer count = (Integer)  "); //$NON-NLS-1$
+            sb.append(daoTemplate.getQueryForObjectMethod(sqlMapGenerator
+                    .getSqlMapNamespace(table), sqlMapGenerator
+                    .getCountByExampleStatementId(), "example")); //$NON-NLS-1$
+            method.addBodyLine(sb.toString());
+            method.addBodyLine("return count;"); //$NON-NLS-1$
         }
 
         ArrayList answer = new ArrayList();

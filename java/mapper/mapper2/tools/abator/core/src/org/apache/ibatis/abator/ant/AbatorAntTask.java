@@ -103,7 +103,7 @@ public class AbatorAntTask extends Task {
         
         Set fullyqualifiedTables = new HashSet();
         if (StringUtility.stringHasValue(fullyQualifiedTableNames)) {
-            StringTokenizer st = new StringTokenizer(fullyQualifiedTableNames, ",");
+            StringTokenizer st = new StringTokenizer(fullyQualifiedTableNames, ","); //$NON-NLS-1$
             while (st.hasMoreTokens()) {
                 String s = st.nextToken().trim();
                 if (s.length() > 0) {
@@ -112,9 +112,9 @@ public class AbatorAntTask extends Task {
             }
         }
         
-        List contexts = new ArrayList();
+        Set contexts = new HashSet();
         if (StringUtility.stringHasValue(contextIds)) {
-            StringTokenizer st = new StringTokenizer(contextIds, ",");
+            StringTokenizer st = new StringTokenizer(contextIds, ","); //$NON-NLS-1$
             while (st.hasMoreTokens()) {
                 String s = st.nextToken().trim();
                 if (s.length() > 0) {

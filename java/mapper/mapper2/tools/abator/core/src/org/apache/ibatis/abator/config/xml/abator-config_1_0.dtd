@@ -146,6 +146,7 @@
   enableUpdateByPrimaryKey CDATA #IMPLIED
   enableDeleteByPrimaryKey CDATA #IMPLIED
   enableDeleteByExample CDATA #IMPLIED
+  enableCountByExample CDATA #IMPLIED
   selectByPrimaryKeyQueryId CDATA #IMPLIED
   selectByExampleQueryId CDATA #IMPLIED
   modelType CDATA #IMPLIED

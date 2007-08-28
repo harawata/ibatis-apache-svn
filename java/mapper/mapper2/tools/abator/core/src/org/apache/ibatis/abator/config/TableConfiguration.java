@@ -43,7 +43,9 @@ public class TableConfiguration extends PropertyHolder {
 	private boolean deleteByPrimaryKeyStatementEnabled;
 
 	private boolean deleteByExampleStatementEnabled;
-
+    
+    private boolean countByExampleStatementEnabled;
+    
 	private List columnOverrides;
 
 	private Map ignoredColumns;
@@ -78,6 +80,7 @@ public class TableConfiguration extends PropertyHolder {
 		updateByPrimaryKeyStatementEnabled = true;
 		deleteByPrimaryKeyStatementEnabled = true;
 		deleteByExampleStatementEnabled = true;
+        countByExampleStatementEnabled = true;
 	}
 
 	public boolean isDeleteByPrimaryKeyStatementEnabled() {
@@ -374,6 +377,10 @@ public class TableConfiguration extends PropertyHolder {
             xmlElement.addAttribute(new Attribute("enableDeleteByExample", "false")); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
+        if (!countByExampleStatementEnabled) {
+            xmlElement.addAttribute(new Attribute("enableCountByExample", "false")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+
         if (StringUtility.stringHasValue(selectByPrimaryKeyQueryId)) {
             xmlElement.addAttribute(new Attribute("selectByPrimaryKeyQueryId", selectByPrimaryKeyQueryId)); //$NON-NLS-1$
         }
@@ -425,5 +432,14 @@ public class TableConfiguration extends PropertyHolder {
 
     public void setDelimitIdentifiers(boolean delimitIdentifiers) {
         this.delimitIdentifiers = delimitIdentifiers;
+    }
+
+    public boolean isCountByExampleStatementEnabled() {
+        return countByExampleStatementEnabled;
+    }
+
+    public void setCountByExampleStatementEnabled(
+            boolean countByExampleStatementEnabled) {
+        this.countByExampleStatementEnabled = countByExampleStatementEnabled;
     }
 }

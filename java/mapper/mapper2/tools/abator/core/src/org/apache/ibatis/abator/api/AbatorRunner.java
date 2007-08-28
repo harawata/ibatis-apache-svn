@@ -49,6 +49,11 @@ public class AbatorRunner {
 	public static void main(String[] args) {
         Map arguments = parseCommandLine(args);
         
+        if (!arguments.containsKey(CONFIG_FILE)) {
+            writeLine(Messages.getString("RuntimeError.0")); //$NON-NLS-1$
+            return;
+        }
+        
         List warnings = new ArrayList();
 
         String configfile = (String) arguments.get(CONFIG_FILE);
@@ -60,7 +65,7 @@ public class AbatorRunner {
 
         Set fullyqualifiedTables = new HashSet();
         if (arguments.containsKey(TABLES)) {
-            StringTokenizer st = new StringTokenizer((String)arguments.get(TABLES), ",");
+            StringTokenizer st = new StringTokenizer((String)arguments.get(TABLES), ","); //$NON-NLS-1$
             while (st.hasMoreTokens()) {
                 String s = st.nextToken().trim();
                 if (s.length() > 0) {
@@ -69,9 +74,9 @@ public class AbatorRunner {
             }
         }
         
-        List contexts = new ArrayList();
+        Set contexts = new HashSet();
         if (arguments.containsKey(CONTEXT_IDS)) {
-            StringTokenizer st = new StringTokenizer((String)arguments.get(CONTEXT_IDS), ",");
+            StringTokenizer st = new StringTokenizer((String)arguments.get(CONTEXT_IDS), ","); //$NON-NLS-1$
             while (st.hasMoreTokens()) {
                 String s = st.nextToken().trim();
                 if (s.length() > 0) {

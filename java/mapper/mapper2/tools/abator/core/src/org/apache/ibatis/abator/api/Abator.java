@@ -131,7 +131,7 @@ public class Abator {
      * 
      * @param callback an instance of the ProgressCallback interface, or <code>null</code>
      *   if you do not require progress information
-     * @param contextIds a list of Strings containing context ids to run.  Only the
+     * @param contextIds a set of Strings containing context ids to run.  Only the
      *   contexts with an id specified in this list will be run.  If the list is
      *   null or empty, than all contexts are run.
      * @throws InvalidConfigurationException
@@ -139,7 +139,7 @@ public class Abator {
      * @throws IOException
      * @throws InterruptedException if the method is cancelled through the ProgressCallback
      */
-    public void generate(ProgressCallback callback, List contextIds)
+    public void generate(ProgressCallback callback, Set contextIds)
             throws SQLException, IOException, InterruptedException {
         generate(callback, contextIds, null);
     }
@@ -151,7 +151,7 @@ public class Abator {
      * 
      * @param callback an instance of the ProgressCallback interface, or <code>null</code>
      *   if you do not require progress information
-     * @param contextIds a list of Strings containing context ids to run.  Only the
+     * @param contextIds a set of Strings containing context ids to run.  Only the
      *   contexts with an id specified in this list will be run.  If the list is
      *   null or empty, than all contexts are run.
      * @param fullyQualifiedTableNames a set of table names to generate.  The elements
@@ -165,7 +165,7 @@ public class Abator {
      * @throws IOException
      * @throws InterruptedException if the method is cancelled through the ProgressCallback
      */
-    public void generate(ProgressCallback callback, List contextIds, Set fullyQualifiedTableNames)
+    public void generate(ProgressCallback callback, Set contextIds, Set fullyQualifiedTableNames)
             throws SQLException, IOException, InterruptedException {
 
         if (callback == null) {
@@ -181,10 +181,10 @@ public class Abator {
             contextsToRun = abatorConfiguration.getAbatorContexts();
         } else {
             contextsToRun = new ArrayList();
-            Iterator iter = contextIds.iterator();
+            Iterator iter = abatorConfiguration.getAbatorContexts().iterator();
             while (iter.hasNext()) {
-                AbatorContext abatorContext = abatorConfiguration.getAbatorContext((String) iter.next());
-                if (abatorContext != null) {
+                AbatorContext abatorContext = (AbatorContext) iter.next();
+                if (contextIds.contains(abatorContext.getId())) {
                     contextsToRun.add(abatorContext);
                 }
             }
