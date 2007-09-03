@@ -358,13 +358,27 @@ public class SqlMapExecutorDelegate {
         selectKeyStatement = ((InsertStatement) ms).getSelectKeyStatement();
       }
 
+      // Here we get the old value for the key property. We'll want it later if for some reason the
+      // insert fails.
+      Object oldKeyValue = null;
+      String keyProperty = null;
+      boolean resetKeyValueOnFailure = false;
       if (selectKeyStatement != null && !selectKeyStatement.isRunAfterSQL()) {
+        keyProperty = selectKeyStatement.getKeyProperty();
+        oldKeyValue = PROBE.getObject(param, keyProperty);
         generatedKey = executeSelectKey(sessionScope, trans, ms, param);
+        resetKeyValueOnFailure = true;
       }
 
       StatementScope statementScope = beginStatementScope(sessionScope, ms);
       try {
         ms.executeUpdate(statementScope, trans, param);
+      }catch (SQLException e){
+        // uh-oh, the insert failed, so if we set the reset flag earlier, we'll put the old value
+        // back...
+        if(resetKeyValueOnFailure) PROBE.setObject(param, keyProperty, oldKeyValue);
+        // ...and still throw the exception.
+        throw e;
       } finally {
         endStatementScope(statementScope);
       }

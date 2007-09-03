@@ -45,7 +45,7 @@ public class SelectKeyStatement extends SelectStatement {
 
   public List executeQueryForList(StatementScope statementScope, Transaction trans, Object parameterObject, int skipResults, int maxResults)
       throws SQLException {
-    throw new SQLException("Select statements cannot be executed for a list.");
+    throw new SQLException("Select Key statements cannot be executed for a list.");
   }
 
   public void executeQueryWithRowHandler(StatementScope statementScope, Transaction trans, Object parameterObject, RowHandler rowHandler)

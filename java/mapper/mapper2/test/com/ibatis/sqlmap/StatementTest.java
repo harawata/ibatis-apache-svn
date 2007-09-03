@@ -685,6 +685,28 @@ public class StatementTest extends BaseSqlMapTest {
     assertEquals(10, testItem.getId());
   }
 
+  public void testInsertGeneratedKeyFailure() throws SQLException {
+    LineItem item = new LineItem();
+
+    item.setId(0);
+    item.setItemCode("blah");
+    item.setOrderId(333);
+    item.setPrice(new BigDecimal("44.00"));
+    item.setQuantity(1);
+
+    Object key = new Integer(-1);
+
+    try{
+      key = sqlMap.insert("insertLineItemOrDie", item);
+    }catch(SQLException e){
+      // this is expected
+    }
+
+    assertEquals(key, new Integer(-1)); // this should not be changed from above
+    assertEquals(0, item.getId()); // this should not be changed from above
+
+  }
+
   public void testInsertPreKey() throws SQLException {
     LineItem item = new LineItem();
 
