@@ -28,7 +28,6 @@ import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.abator.api.dom.java.JavaVisibility;
 import org.apache.ibatis.abator.api.dom.java.Method;
 import org.apache.ibatis.abator.api.dom.java.Parameter;
-import org.apache.ibatis.abator.api.dom.java.PrimitiveTypeWrapper;
 import org.apache.ibatis.abator.api.dom.java.TopLevelClass;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
 import org.apache.ibatis.abator.internal.sqlmap.ExampleClause;
@@ -261,7 +260,7 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
         Method method = new Method();
         method.addComment(table);
         method.setVisibility(exampleMethodVisibility);
-        method.setReturnType(PrimitiveTypeWrapper.getIntegerInstance());
+        method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         method.setName(methodNameCalculator.getCountByExampleMethodName(introspectedTable));
         method.addParameter(new Parameter(type, "example")); //$NON-NLS-1$
         
@@ -282,7 +281,7 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
                     "getExampleParms(example)")); //$NON-NLS-1$
             method.addBodyLine(sb.toString());
             
-            method.addBodyLine("return count;"); //$NON-NLS-1$
+            method.addBodyLine("return count.intValue();"); //$NON-NLS-1$
         }
 
         ArrayList answer = new ArrayList();

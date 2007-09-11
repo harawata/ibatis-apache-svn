@@ -1141,7 +1141,7 @@ public class BaseDAOGenerator implements DAOGenerator {
         Method method = new Method();
         method.addComment(table);
         method.setVisibility(exampleMethodVisibility);
-        method.setReturnType(PrimitiveTypeWrapper.getIntegerInstance());
+        method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         method.setName(methodNameCalculator.getCountByExampleMethodName(introspectedTable));
         method.addParameter(new Parameter(type, "example")); //$NON-NLS-1$
 
@@ -1161,7 +1161,12 @@ public class BaseDAOGenerator implements DAOGenerator {
                     .getSqlMapNamespace(table), sqlMapGenerator
                     .getCountByExampleStatementId(), "example")); //$NON-NLS-1$
             method.addBodyLine(sb.toString());
-            method.addBodyLine("return count;"); //$NON-NLS-1$
+            
+            if (useJava5Features) {
+                method.addBodyLine("return count;"); //$NON-NLS-1$
+            } else {
+                method.addBodyLine("return count.intValue();"); //$NON-NLS-1$
+            }
         }
 
         ArrayList answer = new ArrayList();

@@ -224,12 +224,12 @@ public class ConditionalJava2Tests extends BaseTest {
             FieldsonlyExample example = new FieldsonlyExample();
             example.createCriteria().andIntegerfieldGreaterThan(new Integer(5));
 
-            Integer rows = dao.countByExample(example);
-            assertEquals(2, rows.intValue());
+            int rows = dao.countByExample(example);
+            assertEquals(2, rows);
 
             example.clear();
             rows = dao.countByExample(example);
-            assertEquals(3, rows.intValue());
+            assertEquals(3, rows);
         } catch (SQLException e) {
             fail(e.getMessage());
         }
@@ -396,12 +396,12 @@ public class ConditionalJava2Tests extends BaseTest {
 
             PkonlyExample example = new PkonlyExample();
             example.createCriteria().andIdGreaterThan(new Integer(4));
-            Integer rows = dao.countByExample(example);
-            assertEquals(2, rows.intValue());
+            int rows = dao.countByExample(example);
+            assertEquals(2, rows);
 
             example.clear();
             rows = dao.countByExample(example);
-            assertEquals(3, rows.intValue());
+            assertEquals(3, rows);
         } catch (SQLException e) {
             fail(e.getMessage());
         }
@@ -1109,12 +1109,12 @@ public class ConditionalJava2Tests extends BaseTest {
 
             PkfieldsExample example = new PkfieldsExample();
             example.createCriteria().andLastnameLike("J%");
-            Integer rows = dao.countByExample(example);
-            assertEquals(1, rows.intValue());
+            int rows = dao.countByExample(example);
+            assertEquals(1, rows);
 
             example.clear();
             rows = dao.countByExample(example);
-            assertEquals(2, rows.intValue());
+            assertEquals(2, rows);
         } catch (SQLException e) {
             fail(e.getMessage());
         }
@@ -1389,12 +1389,12 @@ public class ConditionalJava2Tests extends BaseTest {
 
             PkblobsExample example = new PkblobsExample();
             example.createCriteria().andIdLessThan(new Integer(4));
-            Integer rows = dao.countByExample(example);
-            assertEquals(1, rows.intValue());
+            int rows = dao.countByExample(example);
+            assertEquals(1, rows);
 
             example.clear();
             rows = dao.countByExample(example);
-            assertEquals(2, rows.intValue());
+            assertEquals(2, rows);
         } catch (SQLException e) {
             fail(e.getMessage());
         }
@@ -1772,12 +1772,12 @@ public class ConditionalJava2Tests extends BaseTest {
 
             PkfieldsblobsExample example = new PkfieldsblobsExample();
             example.createCriteria().andId1NotEqualTo(new Integer(3));
-            Integer rows = dao.countByExample(example);
-            assertEquals(1, rows.intValue());
+            int rows = dao.countByExample(example);
+            assertEquals(1, rows);
 
             example.clear();
             rows = dao.countByExample(example);
-            assertEquals(2, rows.intValue());
+            assertEquals(2, rows);
         } catch (SQLException e) {
             fail(e.getMessage());
         }
@@ -1959,12 +1959,12 @@ public class ConditionalJava2Tests extends BaseTest {
 
             FieldsblobsExample example = new FieldsblobsExample();
             example.createCriteria().andFirstnameLike("S%");
-            Integer rows = dao.countByExample(example);
-            assertEquals(1, rows.intValue());
+            int rows = dao.countByExample(example);
+            assertEquals(1, rows);
 
             example.clear();
             rows = dao.countByExample(example);
-            assertEquals(2, rows.intValue());
+            assertEquals(2, rows);
         } catch (SQLException e) {
             fail(e.getMessage());
         }
@@ -3032,12 +3032,12 @@ public class ConditionalJava2Tests extends BaseTest {
 
             AwfulTableExample example = new AwfulTableExample();
             example.createCriteria().andEMailLike("fred@%");
-            Integer rows = dao.countByExample(example);
-            assertEquals(1, rows.intValue());
+            int rows = dao.countByExample(example);
+            assertEquals(1, rows);
 
             example.clear();
             rows = dao.countByExample(example);
-            assertEquals(2, rows.intValue());
+            assertEquals(2, rows);
         } catch (SQLException e) {
             fail(e.getMessage());
         }

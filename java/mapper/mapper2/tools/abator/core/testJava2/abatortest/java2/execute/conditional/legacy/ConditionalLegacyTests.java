@@ -198,12 +198,12 @@ public class ConditionalLegacyTests extends BaseTest {
             example
                     .setIntegerfield_Indicator(FieldsonlyExample.EXAMPLE_GREATER_THAN);
 
-            Integer rows = dao.countByExample(example);
-            assertEquals(2, rows.intValue());
+            int rows = dao.countByExample(example);
+            assertEquals(2, rows);
 
             example = new FieldsonlyExample();
             rows = dao.countByExample(example);
-            assertEquals(3, rows.intValue());
+            assertEquals(3, rows);
         } catch (SQLException e) {
             fail(e.getMessage());
         }
@@ -345,12 +345,12 @@ public class ConditionalLegacyTests extends BaseTest {
             PkonlyExample example = new PkonlyExample();
             example.setId(new Integer(4));
             example.setId_Indicator(PkonlyExample.EXAMPLE_GREATER_THAN);
-            Integer rows = dao.countByExample(example);
-            assertEquals(2, rows.intValue());
+            int rows = dao.countByExample(example);
+            assertEquals(2, rows);
 
             example = new PkonlyExample();
             rows = dao.countByExample(example);
-            assertEquals(3, rows.intValue());
+            assertEquals(3, rows);
         } catch (SQLException e) {
             fail(e.getMessage());
         }
@@ -712,12 +712,12 @@ public class ConditionalLegacyTests extends BaseTest {
             PkfieldsExample example = new PkfieldsExample();
             example.setLastname("J%");
             example.setLastname_Indicator(PkfieldsExample.EXAMPLE_LIKE);
-            Integer rows = dao.countByExample(example);
-            assertEquals(1, rows.intValue());
+            int rows = dao.countByExample(example);
+            assertEquals(1, rows);
 
             example = new PkfieldsExample();
             rows = dao.countByExample(example);
-            assertEquals(2, rows.intValue());
+            assertEquals(2, rows);
         } catch (SQLException e) {
             fail(e.getMessage());
         }
@@ -971,12 +971,12 @@ public class ConditionalLegacyTests extends BaseTest {
             PkblobsExample example = new PkblobsExample();
             example.setId(new Integer(4));
             example.setId_Indicator(PkblobsExample.EXAMPLE_LESS_THAN);
-            Integer rows = dao.countByExample(example);
-            assertEquals(1, rows.intValue());
+            int rows = dao.countByExample(example);
+            assertEquals(1, rows);
 
             example = new PkblobsExample();
             rows = dao.countByExample(example);
-            assertEquals(2, rows.intValue());
+            assertEquals(2, rows);
         } catch (SQLException e) {
             fail(e.getMessage());
         }
@@ -1329,12 +1329,12 @@ public class ConditionalLegacyTests extends BaseTest {
             PkfieldsblobsExample example = new PkfieldsblobsExample();
             example.setId1(new Integer(3));
             example.setId1_Indicator(PkfieldsblobsExample.EXAMPLE_NOT_EQUALS);
-            Integer rows = dao.countByExample(example);
-            assertEquals(1, rows.intValue());
+            int rows = dao.countByExample(example);
+            assertEquals(1, rows);
 
             example = new PkfieldsblobsExample();
             rows = dao.countByExample(example);
-            assertEquals(2, rows.intValue());
+            assertEquals(2, rows);
         } catch (SQLException e) {
             fail(e.getMessage());
         }
@@ -1493,12 +1493,12 @@ public class ConditionalLegacyTests extends BaseTest {
             FieldsblobsExample example = new FieldsblobsExample();
             example.setFirstname("S%");
             example.setFirstname_Indicator(FieldsblobsExample.EXAMPLE_LIKE);
-            Integer rows = dao.countByExample(example);
-            assertEquals(1, rows.intValue());
+            int rows = dao.countByExample(example);
+            assertEquals(1, rows);
 
             example = new FieldsblobsExample();
             rows = dao.countByExample(example);
-            assertEquals(2, rows.intValue());
+            assertEquals(2, rows);
         } catch (SQLException e) {
             fail(e.getMessage());
         }
@@ -2219,12 +2219,12 @@ public class ConditionalLegacyTests extends BaseTest {
             AwfulTableExample example = new AwfulTableExample();
             example.seteMail("fred@%");
             example.seteMail_Indicator(AwfulTableExample.EXAMPLE_LIKE);
-            Integer rows = dao.countByExample(example);
-            assertEquals(1, rows.intValue());
+            int rows = dao.countByExample(example);
+            assertEquals(1, rows);
 
             example = new AwfulTableExample();
             rows = dao.countByExample(example);
-            assertEquals(2, rows.intValue());
+            assertEquals(2, rows);
         } catch (SQLException e) {
             fail(e.getMessage());
         }
