@@ -10,6 +10,14 @@
 <body>
 <h1>What's New in Abator</h1>
 <h2>Version 1.1.0</h2>
+<h3>New Generated Methods</h3>
+<p>Abator will generate these new methods:</p>
+<dl>
+  <dt>countByExample</dt>
+  <dd>This method will return an integer representing the number of rows in a table
+      that match the given example.</dd>
+</dl>
+
 <h3>Miscellaneous Changes</h3>
 <ul>
   <li>Fixed a bug that caused the "trimStrings" property to fail</li>
@@ -31,13 +39,13 @@
       <a href="configreference/abatorContext.html">&lt;abatorContext&gt;</a>,
       and <a href="configreference/columnOverride.html">&lt;columnOverride&gt;</a>
       reference pages for more information.</li>
-  <li>Added SYBASE dialect for generated keys..
+  <li>Added SYBASE dialect for generated keys.
       See the <a href="configreference/generatedKey.html">&lt;generatedKey&gt;</a>
       reference page for more information.</li>
   <li>Abator will now automatically escape identifiers that contain the $ or # characters
       as these characters have special meaning in iBATIS configuration files.</li>
-  <li>Added a <code>clear</code> method to the generated example classes.  This allows reuse
-      classes.</li>
+  <li>Added a <code>clear</code> method to the generated example classes (in the Java2 and Java5
+      generator sets only).  This allows reuse of these classes.</li>
   <li>Added the ability to specify that result maps should use column indexes rather
       than column names in the result mappings.  Primary use cases for this
       support include:
