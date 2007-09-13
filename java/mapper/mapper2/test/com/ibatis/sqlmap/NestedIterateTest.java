@@ -1,8 +1,6 @@
 package com.ibatis.sqlmap;
 
-import testdomain.NestedIterateParameterObject;
-import testdomain.Person;
-import testdomain.SimpleNestedParameterObject;
+import testdomain.*;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -14,6 +12,8 @@ public class NestedIterateTest extends BaseSqlMapTest {
   protected void setUp() throws Exception {
     initSqlMap("com/ibatis/sqlmap/maps/SqlMapConfig.xml", null);
     initScript("scripts/person-init.sql");
+    initScript("scripts/jpetstore-hsqldb-schema.sql");
+    initScript("scripts/jpetstore-hsqldb-dataload.sql");
   }
 
   /**
@@ -873,6 +873,51 @@ public class NestedIterateTest extends BaseSqlMapTest {
       assertEquals(1, ((Person) results.get(0)).getId().intValue());
       assertEquals(2, ((Person) results.get(1)).getId().intValue());
       assertEquals(3, ((Person) results.get(2)).getId().intValue());
+    } catch (Exception e) {
+      fail(e.getMessage());
+    }
+  }
+
+
+
+ /**
+  * This tests nesting when a list is initially nested in a bean. so it tests
+  * [bean]->[list]->[property_of_object_on_exposed_index]
+  *
+  */
+  public void test30() {
+
+    try {
+
+      // prepare item list
+      Item item1 = new Item();
+      item1.setItemId("EST-1");
+      item1.setProductId("FI-SW-01");
+
+      List itemList = new ArrayList();
+      itemList.add(item1);
+
+      // prepare product list
+      Product product1 = new Product();
+      product1.setProductId("FI-SW-01");
+      product1.setCategoryId("DOGS");
+      product1.setItemList(itemList);
+
+      List productList = new ArrayList();
+      productList.add(product1);
+
+      //prepare parent category
+      Category parentCategory = new Category();
+      parentCategory.setCategoryId("DOGS");
+      parentCategory.setProductList(productList);
+
+      // setup Category
+      Category category = new Category();
+      category.setCategoryId("FISH");
+      category.setParentCategory(parentCategory);
+
+      List results = sqlMap.queryForList("NestedIterateTest30", category);
+      assertEquals(1, results.size());
     } catch (Exception e) {
       fail(e.getMessage());
     }

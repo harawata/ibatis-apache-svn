@@ -6,6 +6,7 @@ import java.util.List;
 public class Category implements Serializable {
 
   private String categoryId;
+  private Category parentCategory;
   private String name;
   private String description;
   private List productList;
@@ -40,5 +41,13 @@ public class Category implements Serializable {
 
   public void setProductList(List productList) {
     this.productList = productList;
+  }
+
+  public Category getParentCategory() {
+    return parentCategory;
+  }
+
+  public void setParentCategory(Category parentCategory) {
+    this.parentCategory = parentCategory;
   }
 }
