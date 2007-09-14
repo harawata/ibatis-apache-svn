@@ -265,16 +265,6 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 
 		#endregion
 
-		#region Constructor (s) / Destructor
-
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		public ParameterProperty()
-		{
-		}
-		#endregion
-
 		#region Methods
 
         /// <summary>

@@ -580,7 +580,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
         #endregion
 	    
 	    /// <summary>
-        /// <see cref="IFactory"/> that constracut <see cref="ArrayList"/> instance
+        /// <see cref="IFactory"/> that constructs <see cref="ArrayList"/> instance
 	    /// </summary>
 	    private class ArrayListFactory : IFactory
 	    {

@@ -1220,6 +1220,27 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
             } // compiler will call Dispose on SqlMapSession
         }
 
+        /// <summary>
+        /// Test Using syntax on sqlMap.BeginTransaction
+        /// </summary>
+        [Test]
+        public void TestUsing()
+        {
+            sqlMap.OpenConnection();
+            sqlMap.BeginTransaction(false);
+            Account account = (Account)sqlMap.QueryForObject("GetAccountViaColumnName", 1);
+
+            account.EmailAddress = "new@somewhere.com";
+            sqlMap.Update("UpdateAccountViaParameterMap", account);
+
+            account = sqlMap.QueryForObject("GetAccountViaColumnName", 1) as Account;
+
+            Assert.AreEqual("new@somewhere.com", account.EmailAddress);
+
+            sqlMap.CommitTransaction(false);
+            sqlMap.CloseConnection();
+        }
+
         #endregion
 
         #region JIRA Tests
