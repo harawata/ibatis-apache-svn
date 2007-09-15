@@ -167,7 +167,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 		</parameterMap>
 			
 		<parameterMap id="insert-params" class="Category">
-			<parameter property="Name" column="Category_Name"/>
+			<parameter property="Name" column="Category_Name" />
 			<parameter property="Id" column="Category_Id" dbType="Int" /><!-- Int for SqlClient, Obdc; Integer for Oledb -->
 			<parameter property="Guid" column="Category_Guid" dbType="UniqueIdentifier"/><!--Guid for Oledb, UniqueIdentifier for SqlClient,Odbc -->
 		</parameterMap>

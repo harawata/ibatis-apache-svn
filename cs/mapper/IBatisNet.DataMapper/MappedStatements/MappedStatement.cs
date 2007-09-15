@@ -172,10 +172,33 @@ namespace IBatisNet.DataMapper.MappedStatements
                             }
                         }
 
-                        object dataBaseValue = mapping.TypeHandler.GetDataBaseValue(((IDataParameter)command.Parameters[parameterName]).Value, result.GetType());
-                        request.IsRowDataFound = request.IsRowDataFound || (dataBaseValue != null);
+                        // Fix IBATISNET-239
+                        //"Normalize" System.DBNull parameters
+                        IDataParameter dataParameter = (IDataParameter)command.Parameters[parameterName];
+                        object dbValue = dataParameter.Value;
 
-                        request.ParameterMap.SetOutputParameter(ref result, mapping, dataBaseValue);
+                        object value = null;
+
+                        bool wasNull = (dbValue == DBNull.Value);
+                        if (wasNull)
+                        {
+                            if (mapping.HasNullValue)
+                            {
+                               value = mapping.TypeHandler.ValueOf(mapping.GetAccessor.MemberType, mapping.NullValue);
+                            }
+                            else
+                            {
+                                value = mapping.TypeHandler.NullValue;
+                            }
+                        }
+                        else
+                        {
+                            value = mapping.TypeHandler.GetDataBaseValue(dataParameter.Value, result.GetType());
+                        }
+
+                        request.IsRowDataFound = request.IsRowDataFound || (value != null);
+
+                        request.ParameterMap.SetOutputParameter(ref result, mapping, value);
                     }
                 }
             }

@@ -48,7 +48,16 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		/// <param name="dbType">the dbType of the parameter</param>
 		public override void SetParameter(IDataParameter dataParameter, object parameterValue, string dbType)
 		{
-			dataParameter.Value =  Convert.ChangeType( parameterValue, Enum.GetUnderlyingType( parameterValue.GetType() ) );
+            if (parameterValue != null)
+            {
+			    dataParameter.Value =  Convert.ChangeType( parameterValue, Enum.GetUnderlyingType( parameterValue.GetType() ) );
+            }
+            else
+            {
+                // When sending a null parameter value to the server,
+                // the user must specify DBNull, not null. 
+                dataParameter.Value = DBNull.Value;
+            }
 		}
 
 		/// <summary>

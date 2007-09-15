@@ -339,31 +339,23 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 
 
 		/// <summary>
-		/// Build the properties
+        /// Get the parameter properties child for the xmlNode parameter.
 		/// </summary>
-		/// <param name="scope"></param>
-		public void BuildProperties(ConfigurationScope scope)
+        /// <param name="configScope"></param>
+        public void BuildProperties(ConfigurationScope configScope)
 		{
-			GetProperties( scope );
+            ParameterProperty property = null;
+
+            foreach (XmlNode parameterNode in configScope.NodeContext.SelectNodes(DomSqlMapBuilder.ApplyMappingNamespacePrefix(XML_PARAMATER), configScope.XmlNamespaceManager))
+            {
+                property = ParameterPropertyDeSerializer.Deserialize(parameterNode, configScope);
+
+                property.Initialize(configScope, _parameterClass);
+
+                AddParameterProperty(property);
+            }
 		}
 
-		/// <summary>
-		///  Get the parameter properties child for the xmlNode parameter.
-		/// </summary>
-		/// <param name="configScope"></param>
-		private void GetProperties(ConfigurationScope configScope)
-		{
-			ParameterProperty property = null;
-
-			foreach ( XmlNode parameterNode in configScope.NodeContext.SelectNodes(DomSqlMapBuilder.ApplyMappingNamespacePrefix(XML_PARAMATER), configScope.XmlNamespaceManager) )
-			{
-				property = ParameterPropertyDeSerializer.Deserialize(parameterNode, configScope);
-
-				property.Initialize(configScope, _parameterClass);
-
-				AddParameterProperty(property);
-			}
-		}
 		#endregion
 
 		#endregion

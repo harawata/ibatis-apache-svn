@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using IBatisNet.DataMapper.Test.Domain;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 
 namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL
 {
@@ -53,13 +54,15 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL
             category.Name = "Mapping object relational";
 
             int categoryID = ( int ) sqlMap.Insert ( "InsertCategoryViaStoreProcedureWithReturn", category );
-            Assert.AreEqual ( 1, categoryID );
+            Assert.That(categoryID, Is.EqualTo(1));
+            Assert.That(category.Id, Is.EqualTo(1));
 
             Category category2 = new Category ( );
             category2.Name = "Nausicaa";
 
             int categoryID2 = ( int ) sqlMap.Insert ( "InsertCategoryViaStoreProcedureWithReturn", category2 );
-            Assert.AreEqual ( 2, categoryID2 );
+            Assert.That(categoryID2, Is.EqualTo(2));
+            Assert.That(category2.Id, Is.EqualTo(2));
 
             Category category3 = sqlMap.QueryForObject<Category> ( "GetCategory", categoryID2 ) ;
             Category category4 = sqlMap.QueryForObject<Category> ( "GetCategory", categoryID );

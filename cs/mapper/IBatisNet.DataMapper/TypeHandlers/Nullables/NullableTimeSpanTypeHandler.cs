@@ -50,7 +50,7 @@ namespace IBatisNet.DataMapper.TypeHandlers.Nullables
 
             if (nullableValue.HasValue)
             {
-                dataParameter.Value = nullableValue.Value;
+                dataParameter.Value = nullableValue.Value.Ticks; //nullableValue.Value;
             }
             else
             {

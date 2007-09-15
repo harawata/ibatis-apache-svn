@@ -1313,10 +1313,6 @@ namespace IBatisNet.DataMapper
 				IMappedStatement statement = GetMappedStatement(statementName);
 				generatedKey = statement.ExecuteInsert(session, parameterObject);
 			} 
-			catch
-			{
-				throw;
-			}
 			finally
 			{
 				if ( isSessionLocal )

@@ -318,10 +318,11 @@ namespace IBatisNet.DataMapper.Configuration.ParameterMapping
 			{
 				if (this.CLRType.Length == 0 )  // Unknown
 				{
-					if (scope.DataExchangeFactory.TypeHandlerFactory.IsSimpleType(parameterClass)) 
+                    if (_getAccessor!= null &&
+                        scope.DataExchangeFactory.TypeHandlerFactory.IsSimpleType(_getAccessor.MemberType)) 
 					{
 						// Primitive
-						_typeHandler = scope.DataExchangeFactory.TypeHandlerFactory.GetTypeHandler(parameterClass, _dbType);
+                        _typeHandler = scope.DataExchangeFactory.TypeHandlerFactory.GetTypeHandler(_getAccessor.MemberType, _dbType);
 					}
 					else
 					{
