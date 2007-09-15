@@ -31,13 +31,12 @@
 #region Using
 
 using System;
-using System.Collections;
+
 #if dotnet2
 using System.Collections.Generic;
 #endif
 using System.Reflection;
 
-using IBatisNet.Common.Exceptions;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -59,13 +58,6 @@ namespace IBatisNet.Common.Utilities.TypesResolver
     public class TypeResolver : ITypeResolver
 	{
         private const string NULLABLE_TYPE = "System.Nullable";
-
-		#region Constructor (s) / Destructor
-		/// <summary>
-		/// Creates a new instance of the TypeResolver class.
-		/// </summary>
-		public TypeResolver () {}
-		#endregion
 
         #region ITypeResolver Members
         /// <summary>
@@ -461,32 +453,34 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 
             private IList<string> Parse(string args)
             {
-                StringBuilder argument = null;
+                StringBuilder argument = new StringBuilder();
                 IList<string> arguments = new List<string>();
 
                 TextReader input = new StringReader(args);
-                bool hasReadRightDelimiter = false;
+                int nbrOfRightDelimiter = 0;
+                bool findRight = false;
                 do
                 {
                     char ch = (char)input.Read();
                     if (ch == '[')
                     {
-                        argument = new StringBuilder();
-                        hasReadRightDelimiter = false;
+                        nbrOfRightDelimiter++;
+                        findRight = true;
                     }
                     else if (ch == ']')
                     {
-                        arguments.Add(argument.ToString());
-                        hasReadRightDelimiter = true;
+                        nbrOfRightDelimiter--;
                     }
-                    else if (ch == ',' && hasReadRightDelimiter)
+                    argument.Append(ch);
+                    
+                    //Find one argument
+                    if (findRight && nbrOfRightDelimiter == 0)
                     {
-                        hasReadRightDelimiter = false;
-                    }
-                    else
-                    {
-                        argument.Append(ch);
-                        hasReadRightDelimiter = false;
+                        string arg = argument.ToString();
+                        arg = arg.Substring(1, arg.Length - 2);
+                        arguments.Add(arg);
+                        input.Read();
+                        argument = new StringBuilder();
                     }
                 }
                 while (input.Peek() != -1);
@@ -590,9 +584,9 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 
             private void SplitTypeAndAssemblyNames(string originalTypeName)
             {
-                if (originalTypeName.StartsWith(TypeAssemblyInfo.NULLABLE_TYPE))
+                if (originalTypeName.StartsWith(NULLABLE_TYPE))
                 {
-                    int typeAssemblyIndex = originalTypeName.IndexOf(TypeAssemblyInfo.NULLABLE_TYPE_ASSEMBLY_SEPARATOR);
+                    int typeAssemblyIndex = originalTypeName.IndexOf(NULLABLE_TYPE_ASSEMBLY_SEPARATOR);
                     if (typeAssemblyIndex < 0)
                     {
                         _unresolvedTypeName = originalTypeName;

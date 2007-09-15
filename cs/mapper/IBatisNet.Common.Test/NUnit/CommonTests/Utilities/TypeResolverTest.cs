@@ -7,6 +7,7 @@ using IBatisNet.Common.Test.Domain;
 using IBatisNet.Common.Utilities.TypesResolver;
 using NUnit.Framework;
 using IBatisNet.Common.Utilities;
+using NUnit.Framework.SyntaxHelpers;
 
 namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 {
@@ -82,5 +83,37 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
 
             Assert.IsNotNull(listType);
         }
+
+        /// <summary>
+        /// Test generic dictionary resolver
+        /// </summary>
+        [Test]
+        public void TestGenericParameter()
+        {
+            IDictionary<List<int>, List<string>> dico = new Dictionary<List<int>, List<string>>();
+
+            Console.WriteLine(typeof(IDictionary<,>).FullName);
+            Console.WriteLine(dico.GetType().FullName);
+
+            string assemblyQualifiedName = dico.GetType().AssemblyQualifiedName;
+            Type type = TypeUtils.ResolveType(assemblyQualifiedName);
+
+            Assert.IsNotNull(type);
+
+            MyGeneric<Dictionary<List<int>, List<string>>, string, List<int>, decimal> gen = new MyGeneric<Dictionary<List<int>, List<string>>, string, List<int>, decimal>();
+
+            Console.WriteLine(gen.GetType().FullName);
+
+            assemblyQualifiedName = gen.GetType().AssemblyQualifiedName;
+            type = TypeUtils.ResolveType(assemblyQualifiedName);
+
+            Assert.IsNotNull(type);
+
+            Assert.That(gen, Is.InstanceOfType(type));
+        }
+
+        private class MyGeneric<X, Y, Z, W>
+        {}
+
     }
 }
