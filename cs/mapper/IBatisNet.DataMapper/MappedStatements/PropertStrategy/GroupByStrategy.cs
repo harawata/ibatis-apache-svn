@@ -109,13 +109,19 @@ namespace IBatisNet.DataMapper.MappedStatements.PropertStrategy
                 {
                     // Unique key is already known, so get the existing result object and process additional results.
                     result = buildObjects[uniqueKey];
-                    // process resulMapping attribute which point to a groupBy attribute
-                    for (int index = 0; index < propertyRresultMap.Properties.Count; index++)
+
+                    //In some cases (nested groupings) our object may be null, so there is
+                    //no point in going on
+                    if (result != null)
                     {
-                        ResultProperty resultProperty = propertyRresultMap.Properties[index];
-                        if (resultProperty.PropertyStrategy is PropertStrategy.GroupByStrategy)
+                        // process resulMapping attribute which point to a groupBy attribute
+                        for (int index = 0; index < propertyRresultMap.Properties.Count; index++)
                         {
-                            resultProperty.PropertyStrategy.Set(request, propertyRresultMap, resultProperty, ref result, reader, null);
+                            ResultProperty resultProperty = propertyRresultMap.Properties[index];
+                            if (resultProperty.PropertyStrategy is PropertStrategy.GroupByStrategy)
+                            {
+                                resultProperty.PropertyStrategy.Set(request, propertyRresultMap, resultProperty, ref result, reader, null);
+                            }
                         }
                     }
                     result = SKIP;
