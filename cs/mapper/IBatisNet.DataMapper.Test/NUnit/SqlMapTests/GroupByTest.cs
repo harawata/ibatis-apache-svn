@@ -5,6 +5,7 @@ using System.Collections.Generic;
 #endif
 using IBatisNet.DataMapper.Test.Domain;
 using NUnit.Framework;
+using Category=IBatisNet.DataMapper.Test.Domain.Petshop.Category;
 
 namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 {
@@ -149,6 +150,23 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
             Assert.AreEqual(4, cat.GenericProducts.Count);
 
             Domain.Petshop.Product product = cat.GenericProducts[0];
+            Assert.AreEqual(2, product.GenericItems.Count);
+        }
+
+        [Test]
+        public void TestJira241()
+        {
+            Category myCategory = new Category();
+
+            sqlMap.QueryForObject<Category>("GetFishGeneric", null, myCategory);
+            Assert.IsNotNull(myCategory);
+
+            Assert.AreEqual("FISH", myCategory.Id);
+            Assert.AreEqual("Fish", myCategory.Name);
+            Assert.IsNotNull(myCategory.GenericProducts, "Expected product list.");
+            Assert.AreEqual(4, myCategory.GenericProducts.Count);
+
+            Domain.Petshop.Product product = myCategory.GenericProducts[0];
             Assert.AreEqual(2, product.GenericItems.Count);
         }
 

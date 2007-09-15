@@ -79,8 +79,12 @@ namespace IBatisNet.DataMapper.MappedStatements.ResultStrategy
             {
                 // Unique key is NOT known, so create a new result object and process additional results.
 
-                // temp ?, we don't support constructor tag with groupBy attribute
-                outObject = resultMap.CreateInstanceOfResult(null);
+                // Fix IBATISNET-241
+                if (outObject == null)
+                {
+                    // temp ?, we don't support constructor tag with groupBy attribute
+                    outObject = resultMap.CreateInstanceOfResult(null);
+                }
 
                 for (int index = 0; index < resultMap.Properties.Count; index++)
                 {
