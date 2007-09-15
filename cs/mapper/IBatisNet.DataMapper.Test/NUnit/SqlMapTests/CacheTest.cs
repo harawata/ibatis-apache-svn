@@ -50,6 +50,18 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			Assert.IsNull(account);
 		}
 
+        /// <summary>
+        /// Cache error with QueryForObject<T>
+        /// </summary>
+        [Test]
+        public void TestJIRA242()
+        {
+            Account account = sqlMap.QueryForObject<Account>("GetNoAccountWithCache", -99);
+            account = sqlMap.QueryForObject<Account>("GetNoAccountWithCache", -99);
+
+            Assert.IsNull(account);
+        }
+
 	    /// <summary>
 		/// Test Cache query
 		/// </summary>

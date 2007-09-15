@@ -226,10 +226,6 @@ namespace IBatisNet.DataMapper.Configuration.Cache
 			{
 				throw new ConfigurationException ("Error configuring controller named '"+_id+"'. Cause: " + e.Message, e);
 			}
-			finally
-			{
-
-			}
 		}
 
 
