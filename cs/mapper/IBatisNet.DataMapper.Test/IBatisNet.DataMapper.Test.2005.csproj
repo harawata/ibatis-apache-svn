@@ -336,6 +336,7 @@
     <Content Include="Maps\MSSQL\SqlClient\Enumeration.xml" />
     <Content Include="Maps\MSSQL\SqlClient\GroupByMapping.xml" />
     <Content Include="Maps\MSSQL\SqlClient\LineItem.xml" />
+    <Content Include="Maps\MSSQL\SqlClient\NewsPaper.xml" />
     <Content Include="Maps\MSSQL\SqlClient\Nullable.xml" />
     <Content Include="Maps\MSSQL\SqlClient\Order.xml" />
     <Content Include="Maps\MSSQL\SqlClient\Other.xml" />

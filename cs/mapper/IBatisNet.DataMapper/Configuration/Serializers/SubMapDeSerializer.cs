@@ -48,13 +48,11 @@ namespace IBatisNet.DataMapper.Configuration.Serializers
 		/// <returns></returns>
 		public static SubMap Deserialize(XmlNode node, ConfigurationScope configScope)
 		{
-			SubMap subMap = new SubMap();
-
 			NameValueCollection prop = NodeUtils.ParseAttributes(node, configScope.Properties);
-			subMap.DiscriminatorValue = NodeUtils.GetStringAttribute(prop, "value");
-			subMap.ResultMapName = NodeUtils.GetStringAttribute(prop, "resultMapping");
+			string discriminatorValue = NodeUtils.GetStringAttribute(prop, "value");
+            string resultMapName = configScope.ApplyNamespace(NodeUtils.GetStringAttribute(prop, "resultMapping"));
 
-			return subMap;
+            return new SubMap(discriminatorValue, resultMapName);
 		}
 	}
 }

@@ -35,6 +35,7 @@ using IBatisNet.Common;
 using IBatisNet.Common.Utilities;
 using IBatisNet.Common.Utilities.Objects;
 using IBatisNet.Common.Utilities.Objects.Members;
+using IBatisNet.DataMapper.Configuration;
 using IBatisNet.DataMapper.DataExchange;
 using IBatisNet.DataMapper.TypeHandlers;
 
@@ -51,10 +52,7 @@ namespace IBatisNet.DataMapper.Scope
 		/// Empty parameter map
 		/// </summary>
         public const string EMPTY_PARAMETER_MAP = "iBATIS.Empty.ParameterMap";
-        /// <summary>
-        /// Dot representation.
-        /// </summary>
-        public const string DOT = ".";
+
 
 		#region Fields
 		
@@ -290,7 +288,7 @@ namespace IBatisNet.DataMapper.Scope
             if (_sqlMapNamespace != null && _sqlMapNamespace.Length > 0
                 && id != null && id.Length > 0 && id.IndexOf(".") < 0)
             {
-                newId = _sqlMapNamespace + DOT + id;
+                newId = _sqlMapNamespace + DomSqlMapBuilder.DOT + id;
             }
             return newId;
         }

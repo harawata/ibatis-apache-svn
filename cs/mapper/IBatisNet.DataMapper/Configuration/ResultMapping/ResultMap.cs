@@ -385,7 +385,6 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 				configScope.ErrorContext.MoreInfo = "initialize subMap";
 				subMap = SubMapDeSerializer.Deserialize(resultNode, configScope);
 
-                subMap.ResultMapName = _sqlMapNameSpace + DomSqlMapBuilder.DOT + subMap.ResultMapName;
 				this.Discriminator.Add( subMap );
 			}
 			#endregion 

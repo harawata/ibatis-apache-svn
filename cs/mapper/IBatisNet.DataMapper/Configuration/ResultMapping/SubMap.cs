@@ -75,7 +75,6 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		public string DiscriminatorValue
 		{
 			get { return _discriminatorValue; }
-			set { _discriminatorValue = value; }
 		}
 
 		/// <summary>
@@ -85,7 +84,6 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		public string ResultMapName
 		{
 			get { return _resultMapName; }
-			set { _resultMapName = value; }
 		}
 
 		/// <summary>
@@ -102,11 +100,15 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 
 		#region Constructor
 
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		public SubMap()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SubMap"/> class.
+        /// </summary>
+        /// <param name="discriminatorValue">The discriminator value.</param>
+        /// <param name="resultMapName">Name of the result map.</param>
+        public SubMap(string discriminatorValue, string resultMapName)
 		{
+            _discriminatorValue = discriminatorValue;
+            _resultMapName = resultMapName;
 		}
 		#endregion 
 
