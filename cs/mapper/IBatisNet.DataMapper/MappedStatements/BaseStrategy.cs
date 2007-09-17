@@ -90,8 +90,8 @@ namespace IBatisNet.DataMapper.MappedStatements
 		/// <param name="resultMap">The result map.</param>
 		/// <param name="resultObject">The result object.</param>
 		/// <returns>Indicates if we have found a row.</returns>
-		protected bool FillObjectWithReaderAndResultMap(RequestScope request,IDataReader reader, 
-		                                                IResultMap resultMap, object resultObject)
+		protected bool FillObjectWithReaderAndResultMap(RequestScope request,IDataReader reader,
+                                                        IResultMap resultMap, ref object resultObject)
 		{
 			bool dataFound = false;
 

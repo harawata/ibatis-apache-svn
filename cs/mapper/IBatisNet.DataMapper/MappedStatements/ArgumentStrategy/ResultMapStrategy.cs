@@ -75,7 +75,7 @@ namespace IBatisNet.DataMapper.MappedStatements.ArgumentStrategy
 			else
 			{
                 obj = resultMapping.CreateInstanceOfResult(parameters);
-                if (FillObjectWithReaderAndResultMap(request, reader, resultMapping, obj) == false)
+                if (FillObjectWithReaderAndResultMap(request, reader, resultMapping, ref obj) == false)
 				{
 					obj = null;
 				}

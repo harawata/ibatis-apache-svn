@@ -95,7 +95,7 @@ namespace IBatisNet.DataMapper.MappedStatements.PropertyStrategy
                 obj = resultMapping.CreateInstanceOfResult(parameters);
 
                 // Fills properties on the new object
-                if (this.FillObjectWithReaderAndResultMap(request, reader, resultMapping, obj) == false)
+                if (this.FillObjectWithReaderAndResultMap(request, reader, resultMapping, ref obj) == false)
                 {
                     obj = null;
                 }

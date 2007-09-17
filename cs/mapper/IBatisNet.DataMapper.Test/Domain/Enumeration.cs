@@ -2,6 +2,13 @@ using System;
 
 namespace IBatisNet.DataMapper.Test.Domain
 {
+
+    public enum ESearchProfile
+    {
+        Temp = 'T',
+        Permanent = 'P'
+    }
+
 	public enum Days 
 	{
 		Sat=1, 
