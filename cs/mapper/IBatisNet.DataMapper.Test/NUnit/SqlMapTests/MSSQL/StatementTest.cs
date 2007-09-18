@@ -5,6 +5,7 @@ using NUnit.Framework;
 
 using IBatisNet.DataMapper.Test.NUnit;
 using IBatisNet.DataMapper.Test.Domain;
+using NUnit.Framework.SyntaxHelpers;
 
 namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL
 {
@@ -76,6 +77,20 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL
 			int key = (int)sqlMap.Insert("InsertCategory", category);
 			Assert.AreEqual(1, key);
 		}
+
+        /// <summary>
+        /// Test an insert using SCOPE_IDENTITY.
+        /// </summary>
+        [Test]
+        public void TestInsertCategoryScope()
+        {
+            Category category = new Category();
+            category.Name = "toto";
+            category.Guid = Guid.NewGuid();
+
+            sqlMap.QueryForObject("InsertCategoryScope", category, category);
+            Assert.That(category.Id, Is.EqualTo(1));
+        }
 
 		/// <summary>
 		/// Test Insert Via Insert Statement.

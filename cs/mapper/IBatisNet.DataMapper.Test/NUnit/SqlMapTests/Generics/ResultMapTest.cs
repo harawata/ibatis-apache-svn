@@ -57,7 +57,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Generics
         /// Coupons
         /// </summary>
         [Test]
-        public void TestCoupons()
+        public void TestJIRA243WithGoupBy()
         {
             IList<Coupon> coupons = sqlMap.QueryForList<Coupon>("GetCouponBrand", null);
 
@@ -76,7 +76,7 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.Generics
         /// Coupons
         /// </summary>
         [Test]
-        public void TestCoupons2()
+        public void Test243WithoutGoupBy()
         {
             IList<Coupon> coupons = sqlMap.QueryForList<Coupon>("GetCoupons", null);
 

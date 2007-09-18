@@ -1,6 +1,9 @@
 
 
+using System.Collections;
+#if dotnet2
 using System.Collections.Generic;
+#endif
 
 namespace IBatisNet.DataMapper.Test.Domain
 {
@@ -8,7 +11,6 @@ namespace IBatisNet.DataMapper.Test.Domain
     {
         private int id;
         private string _code;
-        private IList<int> _brandIds = new List<int>(); 
 
         public virtual int Id
         {
@@ -22,10 +24,22 @@ namespace IBatisNet.DataMapper.Test.Domain
             set { _code = value; }
         }
 
+#if dotnet2
+        private IList<int> _brandIds = new List<int>();
+         
         public IList<int> BrandIds
         {
             get { return _brandIds; }
             set { _brandIds = value; }
         }
+#else
+        private IList _brandIds = new List();
+         
+        public IList BrandIds
+        {
+            get { return _brandIds; }
+            set { _brandIds = value; }
+        }
+#endif
     }
 }
