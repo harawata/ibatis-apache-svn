@@ -325,6 +325,8 @@ public class AbatorConfigurationParser {
                 .getProperty("enableDeleteByExample"); //$NON-NLS-1$
         String enableCountByExample = attributes
             .getProperty("enableCountByExample"); //$NON-NLS-1$
+        String enableUpdateByExample = attributes
+            .getProperty("enableUpdateByExample"); //$NON-NLS-1$
         String selectByPrimaryKeyQueryId = attributes
                 .getProperty("selectByPrimaryKeyQueryId"); //$NON-NLS-1$
         String selectByExampleQueryId = attributes
@@ -386,6 +388,11 @@ public class AbatorConfigurationParser {
         if (StringUtility.stringHasValue(enableCountByExample)) {
             tc.setCountByExampleStatementEnabled("true" //$NON-NLS-1$
                     .equals(enableCountByExample));
+        }
+
+        if (StringUtility.stringHasValue(enableUpdateByExample)) {
+            tc.setUpdateByExampleStatementEnabled("true" //$NON-NLS-1$
+                    .equals(enableUpdateByExample));
         }
 
         if (StringUtility.stringHasValue(selectByPrimaryKeyQueryId)) {

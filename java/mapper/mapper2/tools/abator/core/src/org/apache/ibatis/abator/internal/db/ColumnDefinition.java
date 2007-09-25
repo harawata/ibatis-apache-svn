@@ -174,7 +174,19 @@ public class ColumnDefinition {
     }
 
     public String getJavaProperty() {
-        return javaProperty;
+        return getJavaProperty(null);
+    }
+
+    public String getJavaProperty(String prefix) {
+        if (prefix == null) {
+            return javaProperty;
+        }
+        
+        StringBuffer sb = new StringBuffer();
+        sb.append(prefix);
+        sb.append(javaProperty);
+        
+        return sb.toString();
     }
 
     public void setJavaProperty(String javaProperty) {
@@ -252,10 +264,14 @@ public class ColumnDefinition {
     }
     
     public String getIbatisFormattedParameterClause() {
+        return getIbatisFormattedParameterClause(null);
+    }
+    
+    public String getIbatisFormattedParameterClause(String prefix) {
         StringBuffer sb = new StringBuffer();
         
         sb.append('#');
-        sb.append(getJavaProperty());
+        sb.append(getJavaProperty(prefix));
         
         if (StringUtility.stringHasValue(typeHandler)) {
             sb.append(",jdbcType="); //$NON-NLS-1$

@@ -296,4 +296,19 @@ public class SqlMapGeneratorLegacyImpl extends SqlMapGeneratorIterateImpl implem
         
         return answer;
     }
+
+    protected XmlElement getUpdateByExampleSelective(IntrospectedTable introspectedTable) {
+        // this method is not supported in the legacy generator set
+        return null;
+    }
+
+    protected XmlElement getUpdateByExampleWithBLOBs(IntrospectedTable introspectedTable) {
+        // this method is not supported in the legacy generator set
+        return null;
+    }
+
+    protected XmlElement getUpdateByExampleWithoutBLOBs(IntrospectedTable introspectedTable) {
+        // this method is not supported in the legacy generator set
+        return null;
+    }
 }

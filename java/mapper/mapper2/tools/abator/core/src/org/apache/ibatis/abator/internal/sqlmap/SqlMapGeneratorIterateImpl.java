@@ -38,6 +38,7 @@ import org.apache.ibatis.abator.config.AbatorContext;
 import org.apache.ibatis.abator.config.GeneratedKey;
 import org.apache.ibatis.abator.config.PropertyRegistry;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
+import org.apache.ibatis.abator.internal.rules.AbatorRules;
 import org.apache.ibatis.abator.internal.util.StringUtility;
 import org.apache.ibatis.abator.internal.util.messages.Messages;
 
@@ -171,98 +172,120 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         answer.addAttribute(new Attribute("namespace", //$NON-NLS-1$
                 getSqlMapNamespace(table)));
 
+        AbatorRules rules = introspectedTable.getRules();
         XmlElement element;
-        if (introspectedTable.getRules().generateBaseResultMap()) {
+        if (rules.generateBaseResultMap()) {
             element = getBaseResultMapElement(introspectedTable);
             if (element != null) {
                 answer.addElement(element);
             }
         }
 
-        if (introspectedTable.getRules().generateResultMapWithBLOBs()) {
+        if (rules.generateResultMapWithBLOBs()) {
             element = getResultMapWithBLOBsElement(introspectedTable);
             if (element != null) {
                 answer.addElement(element);
             }
         }
 
-        if (introspectedTable.getRules().generateSQLExampleWhereClause()) {
+        if (rules.generateSQLExampleWhereClause()) {
             element = getByExampleWhereClauseFragment(introspectedTable);
             if (element != null) {
                 answer.addElement(element);
             }
         }
 
-        if (introspectedTable.getRules().generateSelectByPrimaryKey()) {
+        if (rules.generateSelectByPrimaryKey()) {
             element = getSelectByPrimaryKey(introspectedTable);
             if (element != null) {
                 answer.addElement(element);
             }
         }
 
-        if (introspectedTable.getRules().generateSelectByExampleWithoutBLOBs()) {
+        if (rules.generateSelectByExampleWithoutBLOBs()) {
             element = getSelectByExample(introspectedTable);
             if (element != null) {
                 answer.addElement(element);
             }
         }
 
-        if (introspectedTable.getRules().generateSelectByExampleWithBLOBs()) {
+        if (rules.generateSelectByExampleWithBLOBs()) {
             element = getSelectByExampleWithBLOBs(introspectedTable);
             if (element != null) {
                 answer.addElement(element);
             }
         }
 
-        if (introspectedTable.getRules().generateDeleteByPrimaryKey()) {
+        if (rules.generateDeleteByPrimaryKey()) {
             element = getDeleteByPrimaryKey(introspectedTable);
             if (element != null) {
                 answer.addElement(element);
             }
         }
 
-        if (introspectedTable.getRules().generateDeleteByExample()) {
+        if (rules.generateDeleteByExample()) {
             element = getDeleteByExample(introspectedTable);
             if (element != null) {
                 answer.addElement(element);
             }
         }
 
-        if (introspectedTable.getRules().generateInsert()) {
+        if (rules.generateInsert()) {
             element = getInsertElement(introspectedTable);
             if (element != null) {
                 answer.addElement(element);
             }
         }
 
-        if (introspectedTable.getRules().generateUpdateByPrimaryKeyWithBLOBs()) {
+        if (rules.generateUpdateByPrimaryKeyWithBLOBs()) {
             element = getUpdateByPrimaryKeyWithBLOBs(introspectedTable);
             if (element != null) {
                 answer.addElement(element);
             }
         }
 
-        if (introspectedTable.getRules().generateUpdateByPrimaryKeyWithoutBLOBs()) {
+        if (rules.generateUpdateByPrimaryKeyWithoutBLOBs()) {
             element = getUpdateByPrimaryKeyWithoutBLOBs(introspectedTable);
             if (element != null) {
                 answer.addElement(element);
             }
         }
 
-        if (introspectedTable.getRules().generateUpdateByPrimaryKeySelective()) {
+        if (rules.generateUpdateByPrimaryKeySelective()) {
             element = getUpdateByPrimaryKeySelective(introspectedTable);
             if (element != null) {
                 answer.addElement(element);
             }
         }
         
-        if (introspectedTable.getRules().generateCountByExample()) {
+        if (rules.generateCountByExample()) {
             element = getCountByExample(introspectedTable);
             if (element != null) {
                 answer.addElement(element);
             }
         }
         
+        if (rules.generateUpdateByExampleSelective()) {
+            element = getUpdateByExampleSelective(introspectedTable);
+            if (element != null) {
+                answer.addElement(element);
+            }
+        }
+        
+        if (rules.generateUpdateByExampleWithBLOBs()) {
+            element = getUpdateByExampleWithBLOBs(introspectedTable);
+            if (element != null) {
+                answer.addElement(element);
+            }
+        }
+
+        if (rules.generateUpdateByExampleWithoutBLOBs()) {
+            element = getUpdateByExampleWithoutBLOBs(introspectedTable);
+            if (element != null) {
+                answer.addElement(element);
+            }
+        }
+
         return answer;
     }
 
@@ -1051,6 +1074,10 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         return "abatorgenerated_updateByPrimaryKeySelective"; //$NON-NLS-1$
     }
     
+    public String getUpdateByExampleSelectiveStatementId() {
+        return "abatorgenerated_updateByExampleSelective"; //$NON-NLS-1$
+    }
+    
     /**
      * Calculates the package for the current table.
      * 
@@ -1078,7 +1105,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
     }
 
     /**
-     * Calculates the name of the example where clause element
+     * Calculates the name of the example where clause element.
      * 
      * @return the name of the example where clause element
      */
@@ -1531,5 +1558,172 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
     public void setAbatorContext(AbatorContext abatorContext) {
         this.abatorContext = abatorContext;
+    }
+
+    /**
+     * This method should return an XmlElement for the update by example
+     * statement that updates all fields in the table - but only if the field is
+     * not null in the parameter object.
+     * 
+     * @param introspectedTable
+     * @return the update element
+     */
+    protected XmlElement getUpdateByExampleSelective(IntrospectedTable introspectedTable) {
+        
+        XmlElement answer = new XmlElement("update"); //$NON-NLS-1$
+        FullyQualifiedTable table = introspectedTable.getTable();
+
+        answer.addAttribute(new Attribute(
+                "id", getUpdateByExampleSelectiveStatementId())); //$NON-NLS-1$
+
+        answer.addComment();
+
+        StringBuffer sb = new StringBuffer();
+
+        sb.append("update "); //$NON-NLS-1$
+        sb.append(table.getAliasedFullyQualifiedTableNameAtRuntime());
+        answer.addElement(new TextElement(sb.toString()));
+
+        XmlElement dynamicElement = new XmlElement("dynamic"); //$NON-NLS-1$
+        dynamicElement.addAttribute(new Attribute("prepend", "set")); //$NON-NLS-1$ //$NON-NLS-2$
+        answer.addElement(dynamicElement);
+
+        Iterator iter = introspectedTable.getAllColumns();
+        while (iter.hasNext()) {
+            ColumnDefinition cd = (ColumnDefinition) iter.next();
+            
+            XmlElement isNotNullElement = new XmlElement("isNotNull"); //$NON-NLS-1$
+            isNotNullElement.addAttribute(new Attribute("prepend", ",")); //$NON-NLS-1$ //$NON-NLS-2$
+            isNotNullElement.addAttribute(new Attribute("property", cd.getJavaProperty("record."))); //$NON-NLS-1$ //$NON-NLS-2$
+            dynamicElement.addElement(isNotNullElement);
+
+            sb.setLength(0);
+            sb.append(cd.getAliasedEscapedColumnName());
+            sb.append(" = "); //$NON-NLS-1$
+            sb.append(cd.getIbatisFormattedParameterClause("record.")); //$NON-NLS-1$
+            
+            isNotNullElement.addElement(new TextElement(sb.toString()));
+        }
+
+        XmlElement isParameterPresentElement =
+            new XmlElement("isParameterPresent"); //$NON-NLS-1$
+        answer.addElement(isParameterPresentElement);
+        
+        XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
+        includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
+                getSqlMapNamespace(table) + "." + getExampleWhereClauseId())); //$NON-NLS-1$
+        isParameterPresentElement.addElement(includeElement);
+
+        return answer;
+    }
+
+    protected XmlElement getUpdateByExampleWithBLOBs(IntrospectedTable introspectedTable) {
+        XmlElement answer = new XmlElement("update"); //$NON-NLS-1$
+        FullyQualifiedTable table = introspectedTable.getTable();
+
+        answer.addAttribute(new Attribute(
+                "id", getUpdateByExampleWithBLOBsStatementId())); //$NON-NLS-1$
+
+        answer.addComment();
+
+        StringBuffer sb = new StringBuffer();
+        sb.append("update "); //$NON-NLS-1$
+        sb.append(table.getAliasedFullyQualifiedTableNameAtRuntime());
+        answer.addElement(new TextElement(sb.toString()));
+
+        // set up for first column
+        sb.setLength(0);
+        sb.append("set "); //$NON-NLS-1$
+
+        Iterator iter = introspectedTable.getAllColumns();
+        while (iter.hasNext()) {
+            ColumnDefinition cd = (ColumnDefinition) iter.next();
+
+            sb.append(cd.getAliasedEscapedColumnName());
+            sb.append(" = "); //$NON-NLS-1$
+            sb.append(cd.getIbatisFormattedParameterClause("record.")); //$NON-NLS-1$
+
+            if (iter.hasNext()) {
+                sb.append(',');
+            }
+
+            answer.addElement(new TextElement(sb.toString()));
+
+            // set up for the next column
+            if (iter.hasNext()) {
+                sb.setLength(0);
+                OutputUtilities.xmlIndent(sb, 1);
+            }
+        }
+
+        XmlElement isParameterPresentElement =
+            new XmlElement("isParameterPresent"); //$NON-NLS-1$
+        answer.addElement(isParameterPresentElement);
+        
+        XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
+        includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
+                getSqlMapNamespace(table) + "." + getExampleWhereClauseId())); //$NON-NLS-1$
+        isParameterPresentElement.addElement(includeElement);
+
+        return answer;
+    }
+
+    protected XmlElement getUpdateByExampleWithoutBLOBs(IntrospectedTable introspectedTable) {
+        XmlElement answer = new XmlElement("update"); //$NON-NLS-1$
+        FullyQualifiedTable table = introspectedTable.getTable();
+
+        answer.addAttribute(new Attribute(
+                "id", getUpdateByExampleStatementId())); //$NON-NLS-1$
+
+        answer.addComment();
+
+        StringBuffer sb = new StringBuffer();
+        sb.append("update "); //$NON-NLS-1$
+        sb.append(table.getAliasedFullyQualifiedTableNameAtRuntime());
+        answer.addElement(new TextElement(sb.toString()));
+
+        // set up for first column
+        sb.setLength(0);
+        sb.append("set "); //$NON-NLS-1$
+
+        Iterator iter = introspectedTable.getNonBLOBColumns();
+        while (iter.hasNext()) {
+            ColumnDefinition cd = (ColumnDefinition) iter.next();
+
+            sb.append(cd.getAliasedEscapedColumnName());
+            sb.append(" = "); //$NON-NLS-1$
+            sb.append(cd.getIbatisFormattedParameterClause("record.")); //$NON-NLS-1$
+
+            if (iter.hasNext()) {
+                sb.append(',');
+            }
+
+            answer.addElement(new TextElement(sb.toString()));
+
+            // set up for the next column
+            if (iter.hasNext()) {
+                sb.setLength(0);
+                OutputUtilities.xmlIndent(sb, 1);
+            }
+        }
+
+        XmlElement isParameterPresentElement =
+            new XmlElement("isParameterPresent"); //$NON-NLS-1$
+        answer.addElement(isParameterPresentElement);
+        
+        XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
+        includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
+                getSqlMapNamespace(table) + "." + getExampleWhereClauseId())); //$NON-NLS-1$
+        isParameterPresentElement.addElement(includeElement);
+
+        return answer;
+    }
+
+    public String getUpdateByExampleStatementId() {
+        return "abatorgenerated_updateByExample"; //$NON-NLS-1$
+    }
+
+    public String getUpdateByExampleWithBLOBsStatementId() {
+        return "abatorgenerated_updateByExampleWithBLOBs"; //$NON-NLS-1$
     }
 }

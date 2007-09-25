@@ -127,4 +127,31 @@ public class DefaultDAOMethodNameCalculator implements DAOMethodNameCalculator {
         return "countByExample"; //$NON-NLS-1$
     }
 
+    public String getUpdateByExampleSelectiveMethodName(IntrospectedTable introspectedTable) {
+        return "updateByExampleSelective"; //$NON-NLS-1$
+    }
+
+    public String getUpdateByExampleWithBLOBsMethodName(IntrospectedTable introspectedTable) {
+        AbatorRules rules = introspectedTable.getRules();
+        
+        if (!rules.generateUpdateByExampleWithoutBLOBs()) {
+            return "updateByExample"; //$NON-NLS-1$
+        } else if (rules.generateRecordWithBLOBsClass()) {
+            return "updateByExample"; //$NON-NLS-1$
+        } else {
+            return "updateByExampleWithBLOBs"; //$NON-NLS-1$
+        }
+    }
+
+    public String getUpdateByExampleWithoutBLOBsMethodName(IntrospectedTable introspectedTable) {
+        AbatorRules rules = introspectedTable.getRules();
+        
+        if (!rules.generateUpdateByExampleWithBLOBs()) {
+            return "updateByExample"; //$NON-NLS-1$
+        } else if (rules.generateRecordWithBLOBsClass()) {
+            return "updateByExample"; //$NON-NLS-1$
+        } else {
+            return "updateByExampleWithoutBLOBs"; //$NON-NLS-1$
+        }
+    }
 }

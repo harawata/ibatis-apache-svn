@@ -33,6 +33,7 @@ import org.apache.ibatis.abator.api.SqlMapGenerator;
 import org.apache.ibatis.abator.api.dom.java.CompilationUnit;
 import org.apache.ibatis.abator.api.dom.java.Field;
 import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
+import org.apache.ibatis.abator.api.dom.java.InnerClass;
 import org.apache.ibatis.abator.api.dom.java.Interface;
 import org.apache.ibatis.abator.api.dom.java.JavaVisibility;
 import org.apache.ibatis.abator.api.dom.java.Method;
@@ -45,6 +46,7 @@ import org.apache.ibatis.abator.internal.AbatorObjectFactory;
 import org.apache.ibatis.abator.internal.DefaultDAOMethodNameCalculator;
 import org.apache.ibatis.abator.internal.ExtendedDAOMethodNameCalculator;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
+import org.apache.ibatis.abator.internal.rules.AbatorRules;
 import org.apache.ibatis.abator.internal.util.JavaBeansUtil;
 import org.apache.ibatis.abator.internal.util.StringUtility;
 import org.apache.ibatis.abator.internal.util.messages.Messages;
@@ -263,9 +265,10 @@ public class BaseDAOGenerator implements DAOGenerator {
             answer.addMethod((Method) iter.next());
         }
 
+        AbatorRules rules = introspectedTable.getRules();
         List methods;
         
-        if (introspectedTable.getRules().generateInsert()) {
+        if (rules.generateInsert()) {
             methods = getInsertMethods(introspectedTable, false, answer);
             if (methods != null) {
                 iter = methods.iterator();
@@ -275,7 +278,7 @@ public class BaseDAOGenerator implements DAOGenerator {
             }
         }
 
-        if (introspectedTable.getRules().generateUpdateByPrimaryKeyWithoutBLOBs()) {
+        if (rules.generateUpdateByPrimaryKeyWithoutBLOBs()) {
             methods = getUpdateByPrimaryKeyWithoutBLOBsMethods(introspectedTable, false, answer);
             if (methods != null) {
                 iter = methods.iterator();
@@ -285,7 +288,7 @@ public class BaseDAOGenerator implements DAOGenerator {
             }
         }
 
-        if (introspectedTable.getRules().generateUpdateByPrimaryKeyWithBLOBs()) {
+        if (rules.generateUpdateByPrimaryKeyWithBLOBs()) {
             methods = getUpdateByPrimaryKeyWithBLOBsMethods(introspectedTable,
                     false, answer);
             if (methods != null) {
@@ -296,7 +299,7 @@ public class BaseDAOGenerator implements DAOGenerator {
             }
         }
 
-        if (introspectedTable.getRules().generateUpdateByPrimaryKeySelective()) {
+        if (rules.generateUpdateByPrimaryKeySelective()) {
             methods = getUpdateByPrimaryKeySelectiveMethods(introspectedTable,
                     false, answer);
             if (methods != null) {
@@ -307,7 +310,7 @@ public class BaseDAOGenerator implements DAOGenerator {
             }
         }
 
-        if (introspectedTable.getRules().generateSelectByExampleWithoutBLOBs()) {
+        if (rules.generateSelectByExampleWithoutBLOBs()) {
             methods = getSelectByExampleWithoutBLOBsMethods(introspectedTable, false, answer);
             if (methods != null) {
                 iter = methods.iterator();
@@ -317,7 +320,7 @@ public class BaseDAOGenerator implements DAOGenerator {
             }
         }
 
-        if (introspectedTable.getRules().generateSelectByExampleWithBLOBs()) {
+        if (rules.generateSelectByExampleWithBLOBs()) {
             methods = getSelectByExampleWithBLOBsMethods(introspectedTable, false,
                     answer);
             if (methods != null) {
@@ -328,7 +331,7 @@ public class BaseDAOGenerator implements DAOGenerator {
             }
         }
 
-        if (introspectedTable.getRules().generateSelectByPrimaryKey()) {
+        if (rules.generateSelectByPrimaryKey()) {
             methods = getSelectByPrimaryKeyMethods(introspectedTable, false, answer);
             if (methods != null) {
                 iter = methods.iterator();
@@ -338,7 +341,7 @@ public class BaseDAOGenerator implements DAOGenerator {
             }
         }
 
-        if (introspectedTable.getRules().generateDeleteByExample()) {
+        if (rules.generateDeleteByExample()) {
             methods = getDeleteByExampleMethods(introspectedTable, false, answer);
             if (methods != null) {
                 iter = methods.iterator();
@@ -348,7 +351,7 @@ public class BaseDAOGenerator implements DAOGenerator {
             }
         }
 
-        if (introspectedTable.getRules().generateDeleteByPrimaryKey()) {
+        if (rules.generateDeleteByPrimaryKey()) {
             methods = getDeleteByPrimaryKeyMethods(introspectedTable, false, answer);
             if (methods != null) {
                 iter = methods.iterator();
@@ -358,7 +361,7 @@ public class BaseDAOGenerator implements DAOGenerator {
             }
         }
 
-        if (introspectedTable.getRules().generateCountByExample()) {
+        if (rules.generateCountByExample()) {
             methods = getCountByExampleMethods(introspectedTable, false, answer);
             if (methods != null) {
                 iter = methods.iterator();
@@ -368,6 +371,45 @@ public class BaseDAOGenerator implements DAOGenerator {
             }
         }
         
+        if (rules.generateUpdateByExampleSelective()) {
+            methods = getUpdateByExampleSelectiveMethods(introspectedTable, false, answer);
+            if (methods != null) {
+                iter = methods.iterator();
+                while (iter.hasNext()) {
+                    answer.addMethod((Method) iter.next());
+                }
+            }
+        }
+        
+        if (rules.generateUpdateByExampleWithBLOBs()) {
+            methods = getUpdateByExampleWithBLOBsMethods(introspectedTable, false, answer);
+            if (methods != null) {
+                iter = methods.iterator();
+                while (iter.hasNext()) {
+                    answer.addMethod((Method) iter.next());
+                }
+            }
+        }
+
+        if (rules.generateUpdateByExampleWithoutBLOBs()) {
+            methods = getUpdateByExampleWithoutBLOBsMethods(introspectedTable, false, answer);
+            if (methods != null) {
+                iter = methods.iterator();
+                while (iter.hasNext()) {
+                    answer.addMethod((Method) iter.next());
+                }
+            }
+        }
+        
+        if (rules.generateUpdateByExampleSelective()
+                || rules.generateUpdateByExampleWithBLOBs()
+                || rules.generateUpdateByExampleWithoutBLOBs()) {
+            InnerClass innerClass = getUpdateByExampleParms(introspectedTable, answer);
+            if (innerClass != null) {
+                answer.addInnerClass(innerClass);
+            }
+        }
+
         afterImplementationGenerationHook(introspectedTable, answer);
         
         return answer;
@@ -414,9 +456,10 @@ public class BaseDAOGenerator implements DAOGenerator {
             answer.addImportedType((FullyQualifiedJavaType) iter.next());
         }
 
+        AbatorRules rules = introspectedTable.getRules();
         List methods;
         
-        if (introspectedTable.getRules().generateInsert()) {
+        if (rules.generateInsert()) {
             methods = getInsertMethods(introspectedTable, true, answer);
             if (methods != null) {
                 iter = methods.iterator();
@@ -426,7 +469,7 @@ public class BaseDAOGenerator implements DAOGenerator {
             }
         }
 
-        if (introspectedTable.getRules().generateUpdateByPrimaryKeyWithoutBLOBs()) {
+        if (rules.generateUpdateByPrimaryKeyWithoutBLOBs()) {
             methods = getUpdateByPrimaryKeyWithoutBLOBsMethods(introspectedTable, true, answer);
             if (methods != null) {
                 iter = methods.iterator();
@@ -436,7 +479,7 @@ public class BaseDAOGenerator implements DAOGenerator {
             }
         }
 
-        if (introspectedTable.getRules().generateUpdateByPrimaryKeyWithBLOBs()) {
+        if (rules.generateUpdateByPrimaryKeyWithBLOBs()) {
             methods = getUpdateByPrimaryKeyWithBLOBsMethods(introspectedTable,
                     true, answer);
             if (methods != null) {
@@ -447,7 +490,7 @@ public class BaseDAOGenerator implements DAOGenerator {
             }
         }
 
-        if (introspectedTable.getRules().generateUpdateByPrimaryKeySelective()) {
+        if (rules.generateUpdateByPrimaryKeySelective()) {
             methods = getUpdateByPrimaryKeySelectiveMethods(introspectedTable,
                     true, answer);
             if (methods != null) {
@@ -458,7 +501,7 @@ public class BaseDAOGenerator implements DAOGenerator {
             }
         }
 
-        if (introspectedTable.getRules().generateSelectByExampleWithoutBLOBs()) {
+        if (rules.generateSelectByExampleWithoutBLOBs()) {
             methods = getSelectByExampleWithoutBLOBsMethods(introspectedTable, true, answer);
             if (methods != null) {
                 iter = methods.iterator();
@@ -468,7 +511,7 @@ public class BaseDAOGenerator implements DAOGenerator {
             }
         }
 
-        if (introspectedTable.getRules().generateSelectByExampleWithBLOBs()) {
+        if (rules.generateSelectByExampleWithBLOBs()) {
             methods = getSelectByExampleWithBLOBsMethods(introspectedTable, true,
                     answer);
             if (methods != null) {
@@ -479,7 +522,7 @@ public class BaseDAOGenerator implements DAOGenerator {
             }
         }
 
-        if (introspectedTable.getRules().generateSelectByPrimaryKey()) {
+        if (rules.generateSelectByPrimaryKey()) {
             methods = getSelectByPrimaryKeyMethods(introspectedTable, true, answer);
             if (methods != null) {
                 iter = methods.iterator();
@@ -489,7 +532,7 @@ public class BaseDAOGenerator implements DAOGenerator {
             }
         }
 
-        if (introspectedTable.getRules().generateDeleteByExample()) {
+        if (rules.generateDeleteByExample()) {
             methods = getDeleteByExampleMethods(introspectedTable, true, answer);
             if (methods != null) {
                 iter = methods.iterator();
@@ -499,7 +542,7 @@ public class BaseDAOGenerator implements DAOGenerator {
             }
         }
 
-        if (introspectedTable.getRules().generateDeleteByPrimaryKey()) {
+        if (rules.generateDeleteByPrimaryKey()) {
             methods = getDeleteByPrimaryKeyMethods(introspectedTable, true, answer);
             if (methods != null) {
                 iter = methods.iterator();
@@ -509,8 +552,38 @@ public class BaseDAOGenerator implements DAOGenerator {
             }
         }
 
-        if (introspectedTable.getRules().generateCountByExample()) {
+        if (rules.generateCountByExample()) {
             methods = getCountByExampleMethods(introspectedTable, true, answer);
+            if (methods != null) {
+                iter = methods.iterator();
+                while (iter.hasNext()) {
+                    answer.addMethod((Method) iter.next());
+                }
+            }
+        }
+        
+        if (rules.generateUpdateByExampleSelective()) {
+            methods = getUpdateByExampleSelectiveMethods(introspectedTable, true, answer);
+            if (methods != null) {
+                iter = methods.iterator();
+                while (iter.hasNext()) {
+                    answer.addMethod((Method) iter.next());
+                }
+            }
+        }
+        
+        if (rules.generateUpdateByExampleWithBLOBs()) {
+            methods = getUpdateByExampleWithBLOBsMethods(introspectedTable, true, answer);
+            if (methods != null) {
+                iter = methods.iterator();
+                while (iter.hasNext()) {
+                    answer.addMethod((Method) iter.next());
+                }
+            }
+        }
+
+        if (rules.generateUpdateByExampleWithoutBLOBs()) {
+            methods = getUpdateByExampleWithoutBLOBsMethods(introspectedTable, true, answer);
             if (methods != null) {
                 iter = methods.iterator();
                 while (iter.hasNext()) {
@@ -1226,5 +1299,201 @@ public class BaseDAOGenerator implements DAOGenerator {
 
     public void setAbatorContext(AbatorContext abatorContext) {
         this.abatorContext = abatorContext;
+    }
+
+    protected List getUpdateByExampleSelectiveMethods(
+            IntrospectedTable introspectedTable, boolean interfaceMethod,
+            CompilationUnit compilationUnit) {
+
+        FullyQualifiedTable table = introspectedTable.getTable();
+        FullyQualifiedJavaType parameterType;
+        
+        if (introspectedTable.getRules().generateRecordWithBLOBsClass()) {
+            parameterType = javaModelGenerator.getRecordWithBLOBsType(table);
+        } else if (introspectedTable.getRules().generateBaseRecordClass()) {
+            parameterType = javaModelGenerator.getBaseRecordType(table);
+        } else {
+            parameterType = javaModelGenerator.getPrimaryKeyType(table);
+        }
+        
+        compilationUnit.addImportedType(parameterType);
+
+        Method method = new Method();
+        method.addComment(table);
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setReturnType(FullyQualifiedJavaType.getIntInstance());
+        method.setName(methodNameCalculator.getUpdateByExampleSelectiveMethodName(introspectedTable));
+        method.addParameter(new Parameter(parameterType, "record")); //$NON-NLS-1$
+        method.addParameter(new Parameter(javaModelGenerator.getExampleType(table), "example")); //$NON-NLS-1$
+        
+
+        Iterator iter = daoTemplate.getCheckedExceptions().iterator();
+        while (iter.hasNext()) {
+            FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter.next();
+            method.addException(fqjt);
+            compilationUnit.addImportedType(fqjt);
+        }
+
+        if (!interfaceMethod) {
+            // generate the implementation method
+            method.addBodyLine("UpdateByExampleParms parms = new UpdateByExampleParms(record, example);"); //$NON-NLS-1$
+            
+            StringBuffer sb = new StringBuffer();
+            
+            sb.append("int rows = "); //$NON-NLS-1$
+            
+            sb.append(daoTemplate.getUpdateMethod(sqlMapGenerator
+                    .getSqlMapNamespace(table), sqlMapGenerator
+                    .getUpdateByExampleSelectiveStatementId(), "parms")); //$NON-NLS-1$
+            method.addBodyLine(sb.toString());
+
+            method.addBodyLine("return rows;"); //$NON-NLS-1$
+        }
+
+        ArrayList answer = new ArrayList();
+        answer.add(method);
+
+        return answer;
+    }
+    
+    protected InnerClass getUpdateByExampleParms (IntrospectedTable introspectedTable,
+            CompilationUnit compilationUnit) {
+        FullyQualifiedTable table = introspectedTable.getTable();
+        compilationUnit.addImportedType(javaModelGenerator.getExampleType(table));
+        
+        InnerClass answer = new InnerClass(
+                new FullyQualifiedJavaType("UpdateByExampleParms")); //$NON-NLS-1$
+        answer.addComment(table);
+        answer.setVisibility(JavaVisibility.PRIVATE);
+        answer.setModifierStatic(true);
+        answer.setSuperClass(javaModelGenerator.getExampleType(table));
+        
+        Method method = new Method();
+        method.setConstructor(true);
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setName(answer.getType().getShortName());
+        method.addParameter(
+                new Parameter(FullyQualifiedJavaType.getObjectInstance(),
+                        "record")); //$NON-NLS-1$
+        method.addParameter(
+                new Parameter(javaModelGenerator.getExampleType(table),
+                        "example")); //$NON-NLS-1$
+        method.addBodyLine("super(example);"); //$NON-NLS-1$
+        method.addBodyLine("this.record = record;"); //$NON-NLS-1$
+        answer.addMethod(method);
+        
+        Field field = new Field();
+        field.setVisibility(JavaVisibility.PRIVATE);
+        field.setType(FullyQualifiedJavaType.getObjectInstance());
+        field.setName("record"); //$NON-NLS-1$
+        answer.addField(field);
+        
+        method = new Method();
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setReturnType(FullyQualifiedJavaType.getObjectInstance());
+        method.setName("getRecord"); //$NON-NLS-1$
+        method.addBodyLine("return record;"); //$NON-NLS-1$
+        answer.addMethod(method);
+        
+        return answer;
+    }
+
+    protected List getUpdateByExampleWithBLOBsMethods(
+            IntrospectedTable introspectedTable, boolean interfaceMethod,
+            CompilationUnit compilationUnit) {
+        FullyQualifiedTable table = introspectedTable.getTable();
+        FullyQualifiedJavaType parameterType; 
+        if (introspectedTable.getRules().generateRecordWithBLOBsClass()) {
+            parameterType = javaModelGenerator.getRecordWithBLOBsType(table);
+        } else {
+            parameterType = javaModelGenerator.getBaseRecordType(table);
+        }
+
+        compilationUnit.addImportedType(parameterType);
+
+        Method method = new Method();
+        method.addComment(table);
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setReturnType(FullyQualifiedJavaType.getIntInstance());
+        method.setName(methodNameCalculator.getUpdateByExampleWithBLOBsMethodName(introspectedTable));
+        method.addParameter(new Parameter(parameterType, "record")); //$NON-NLS-1$
+        method.addParameter(new Parameter(javaModelGenerator.getExampleType(table), "example")); //$NON-NLS-1$
+
+        Iterator iter = daoTemplate.getCheckedExceptions().iterator();
+        while (iter.hasNext()) {
+            FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter.next();
+            method.addException(fqjt);
+            compilationUnit.addImportedType(fqjt);
+        }
+
+        if (!interfaceMethod) {
+            // generate the implementation method
+            method.addBodyLine("UpdateByExampleParms parms = new UpdateByExampleParms(record, example);"); //$NON-NLS-1$
+            
+            StringBuffer sb = new StringBuffer();
+
+            sb.append("int rows = "); //$NON-NLS-1$
+            sb.append(daoTemplate.getUpdateMethod(sqlMapGenerator
+                    .getSqlMapNamespace(table), sqlMapGenerator
+                    .getUpdateByExampleWithBLOBsStatementId(), "parms")); //$NON-NLS-1$
+            method.addBodyLine(sb.toString());
+
+            method.addBodyLine("return rows;"); //$NON-NLS-1$
+        }
+
+        ArrayList answer = new ArrayList();
+        answer.add(method);
+
+        return answer;
+    }
+
+    protected List getUpdateByExampleWithoutBLOBsMethods(
+            IntrospectedTable introspectedTable, boolean interfaceMethod,
+            CompilationUnit compilationUnit) {
+
+        FullyQualifiedTable table = introspectedTable.getTable();
+        FullyQualifiedJavaType parameterType; 
+        if (introspectedTable.getRules().generateBaseRecordClass()) {
+            parameterType = javaModelGenerator.getBaseRecordType(table);
+        } else {
+            parameterType = javaModelGenerator.getPrimaryKeyType(table);
+        }
+
+        compilationUnit.addImportedType(parameterType);
+
+        Method method = new Method();
+        method.addComment(table);
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setReturnType(FullyQualifiedJavaType.getIntInstance());
+        method.setName(methodNameCalculator.getUpdateByExampleWithoutBLOBsMethodName(introspectedTable));
+        method.addParameter(new Parameter(parameterType, "record")); //$NON-NLS-1$
+        method.addParameter(new Parameter(javaModelGenerator.getExampleType(table), "example")); //$NON-NLS-1$
+
+        Iterator iter = daoTemplate.getCheckedExceptions().iterator();
+        while (iter.hasNext()) {
+            FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter.next();
+            method.addException(fqjt);
+            compilationUnit.addImportedType(fqjt);
+        }
+
+        if (!interfaceMethod) {
+            // generate the implementation method
+            method.addBodyLine("UpdateByExampleParms parms = new UpdateByExampleParms(record, example);"); //$NON-NLS-1$
+            
+            StringBuffer sb = new StringBuffer();
+
+            sb.append("int rows = "); //$NON-NLS-1$
+            sb.append(daoTemplate.getUpdateMethod(sqlMapGenerator
+                    .getSqlMapNamespace(table), sqlMapGenerator
+                    .getUpdateByExampleStatementId(), "parms")); //$NON-NLS-1$
+            method.addBodyLine(sb.toString());
+
+            method.addBodyLine("return rows;"); //$NON-NLS-1$
+        }
+
+        ArrayList answer = new ArrayList();
+        answer.add(method);
+
+        return answer;
     }
 }

@@ -180,4 +180,49 @@ public class ExtendedDAOMethodNameCalculator implements DAOMethodNameCalculator 
         return sb.toString();
     }
 
+    public String getUpdateByExampleSelectiveMethodName(IntrospectedTable introspectedTable) {
+        StringBuffer sb = new StringBuffer();
+        sb.append("update"); //$NON-NLS-1$
+        sb.append(introspectedTable.getTable().getDomainObjectName());
+        sb.append("ByExampleSelective"); //$NON-NLS-1$
+        
+        return sb.toString();
+    }
+
+    public String getUpdateByExampleWithBLOBsMethodName(IntrospectedTable introspectedTable) {
+        StringBuffer sb = new StringBuffer();
+        sb.append("update"); //$NON-NLS-1$
+        sb.append(introspectedTable.getTable().getDomainObjectName());
+        
+        AbatorRules rules = introspectedTable.getRules();
+        
+        if (!rules.generateUpdateByExampleWithoutBLOBs()) {
+            sb.append("ByExample"); //$NON-NLS-1$
+        } else if (rules.generateRecordWithBLOBsClass()) {
+            sb.append("ByExample"); //$NON-NLS-1$
+        } else {
+            sb.append("ByExampleWithBLOBs"); //$NON-NLS-1$
+        }
+        
+        return sb.toString();
+    }
+
+    public String getUpdateByExampleWithoutBLOBsMethodName(IntrospectedTable introspectedTable) {
+        StringBuffer sb = new StringBuffer();
+
+        sb.append("update"); //$NON-NLS-1$
+        sb.append(introspectedTable.getTable().getDomainObjectName());
+        
+        AbatorRules rules = introspectedTable.getRules();
+        
+        if (!rules.generateUpdateByExampleWithBLOBs()) {
+            sb.append("ByExample"); //$NON-NLS-1$
+        } else if (rules.generateRecordWithBLOBsClass()) {
+            sb.append("ByExample"); //$NON-NLS-1$
+        } else {
+            sb.append("ByExampleWithoutBLOBs"); //$NON-NLS-1$
+        }
+        
+        return sb.toString();
+    }
 }

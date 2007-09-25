@@ -109,4 +109,28 @@ public interface DAOMethodNameCalculator {
      * @return the calculated name
      */
     String getCountByExampleMethodName(IntrospectedTable introspectedTable);
+    
+    /**
+     * Calculates and returns a name for the update by example selective method.
+     * 
+     * @param introspectedTable
+     * @return the calculated name
+     */
+    String getUpdateByExampleSelectiveMethodName(IntrospectedTable introspectedTable);    
+
+    /**
+     * Calculates and returns a name for the update by example with BLOBs method.
+     * 
+     * @param introspectedTable
+     * @return the calculated name
+     */
+    String getUpdateByExampleWithBLOBsMethodName(IntrospectedTable introspectedTable);    
+
+    /**
+     * Calculates and returns a name for the update by example without BLOBs method.
+     * 
+     * @param introspectedTable
+     * @return the calculated name
+     */
+    String getUpdateByExampleWithoutBLOBsMethodName(IntrospectedTable introspectedTable);    
 }

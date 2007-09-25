@@ -90,5 +90,11 @@ public interface SqlMapGenerator {
     
     String getCountByExampleStatementId();
 
+    String getUpdateByExampleSelectiveStatementId();
+    
+    String getUpdateByExampleStatementId();
+    
+    String getUpdateByExampleWithBLOBsStatementId();
+    
     List getGeneratedXMLFiles(IntrospectedTable introspectedTable, ProgressCallback callback);
 }

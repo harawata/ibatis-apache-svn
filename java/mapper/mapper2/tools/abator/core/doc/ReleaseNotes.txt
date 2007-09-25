@@ -34,6 +34,7 @@ Enhancements -
 11. Exposed new support for selecting tables and/or contexts to the
     command line and the Ant task 
 12. IBATIS-414 - make the Example and Criteria classes extendable
+13. Added countByExample generated method
 
 -------------------------------------------------------------------------------
 Version 1.0.0:

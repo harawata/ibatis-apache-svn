@@ -46,6 +46,8 @@ public class TableConfiguration extends PropertyHolder {
     
     private boolean countByExampleStatementEnabled;
     
+    private boolean updateByExampleStatementEnabled;
+    
 	private List columnOverrides;
 
 	private Map ignoredColumns;
@@ -81,6 +83,7 @@ public class TableConfiguration extends PropertyHolder {
 		deleteByPrimaryKeyStatementEnabled = true;
 		deleteByExampleStatementEnabled = true;
         countByExampleStatementEnabled = true;
+        updateByExampleStatementEnabled = true;
 	}
 
 	public boolean isDeleteByPrimaryKeyStatementEnabled() {
@@ -441,5 +444,14 @@ public class TableConfiguration extends PropertyHolder {
     public void setCountByExampleStatementEnabled(
             boolean countByExampleStatementEnabled) {
         this.countByExampleStatementEnabled = countByExampleStatementEnabled;
+    }
+
+    public boolean isUpdateByExampleStatementEnabled() {
+        return updateByExampleStatementEnabled;
+    }
+
+    public void setUpdateByExampleStatementEnabled(
+            boolean updateByExampleStatementEnabled) {
+        this.updateByExampleStatementEnabled = updateByExampleStatementEnabled;
     }
 }

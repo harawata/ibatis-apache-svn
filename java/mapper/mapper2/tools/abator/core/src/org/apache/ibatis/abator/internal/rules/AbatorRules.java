@@ -255,7 +255,8 @@ public abstract class AbatorRules {
     public boolean generateExampleClass() {
         boolean rc = tableConfiguration.isSelectByExampleStatementEnabled()
                 || tableConfiguration.isDeleteByExampleStatementEnabled()
-                || tableConfiguration.isCountByExampleStatementEnabled();
+                || tableConfiguration.isCountByExampleStatementEnabled()
+                || tableConfiguration.isUpdateByExampleStatementEnabled();
     
         return rc;
     }
@@ -266,6 +267,27 @@ public abstract class AbatorRules {
         return rc;
     }
 
+    public boolean generateUpdateByExampleSelective() {
+        boolean rc = tableConfiguration.isUpdateByExampleStatementEnabled();
+
+        return rc;
+    }
+
+    public boolean generateUpdateByExampleWithoutBLOBs() {
+        boolean rc = tableConfiguration.isUpdateByExampleStatementEnabled()
+            && (columnDefinitions.hasPrimaryKeyColumns()
+            || columnDefinitions.hasBaseColumns());
+        
+        return rc;
+    }
+    
+    public boolean generateUpdateByExampleWithBLOBs() {
+        boolean rc = tableConfiguration.isUpdateByExampleStatementEnabled()
+            && columnDefinitions.hasBLOBColumns();
+    
+        return rc;
+    }
+    
     /**
      * Implements the rule for determining whether to generate a primary key
      * class.  If you return false from this method, and the table has

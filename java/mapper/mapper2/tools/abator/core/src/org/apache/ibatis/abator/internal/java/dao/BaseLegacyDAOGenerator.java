@@ -25,6 +25,7 @@ import org.apache.ibatis.abator.api.FullyQualifiedTable;
 import org.apache.ibatis.abator.api.IntrospectedTable;
 import org.apache.ibatis.abator.api.dom.java.CompilationUnit;
 import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
+import org.apache.ibatis.abator.api.dom.java.InnerClass;
 import org.apache.ibatis.abator.api.dom.java.JavaVisibility;
 import org.apache.ibatis.abator.api.dom.java.Method;
 import org.apache.ibatis.abator.api.dom.java.Parameter;
@@ -459,5 +460,25 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
         method.addBodyLine("return parms;"); //$NON-NLS-1$
 
         return method;
+    }
+
+    protected List getUpdateByExampleSelectiveMethods(IntrospectedTable introspectedTable, boolean interfaceMethod, CompilationUnit compilationUnit) {
+        // this method is not supported in the legacy generator set
+        return null;
+    }
+
+    protected List getUpdateByExampleWithBLOBsMethods(IntrospectedTable introspectedTable, boolean interfaceMethod, CompilationUnit compilationUnit) {
+        // this method is not supported in the legacy generator set
+        return null;
+    }
+
+    protected List getUpdateByExampleWithoutBLOBsMethods(IntrospectedTable introspectedTable, boolean interfaceMethod, CompilationUnit compilationUnit) {
+        // this method is not supported in the legacy generator set
+        return null;
+    }
+
+    protected InnerClass getUpdateByExampleParms(IntrospectedTable introspectedTable, CompilationUnit compilationUnit) {
+        // this method is not supported in the legacy generator set
+        return null;
     }
 }

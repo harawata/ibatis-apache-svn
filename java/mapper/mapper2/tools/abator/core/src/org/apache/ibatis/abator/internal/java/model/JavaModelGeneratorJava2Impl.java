@@ -38,6 +38,7 @@ import org.apache.ibatis.abator.api.dom.java.TopLevelClass;
 import org.apache.ibatis.abator.config.AbatorContext;
 import org.apache.ibatis.abator.config.PropertyRegistry;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
+import org.apache.ibatis.abator.internal.rules.AbatorRules;
 import org.apache.ibatis.abator.internal.util.JavaBeansUtil;
 import org.apache.ibatis.abator.internal.util.StringUtility;
 import org.apache.ibatis.abator.internal.util.messages.Messages;
@@ -711,6 +712,33 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         TopLevelClass topLevelClass = new TopLevelClass(type);
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
 
+        // add default constructor
+        Method method = new Method();
+        method.addComment(table);
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setConstructor(true);
+        method.setName(type.getShortName());
+        method.addBodyLine("oredCriteria = new ArrayList();"); //$NON-NLS-1$
+        topLevelClass.addMethod(method);
+        
+        // add shallow copy contructor if the update by
+        // example methods are enabled - because the parameter
+        // class for update by example methods will subclass this class
+        AbatorRules rules = introspectedTable.getRules();
+        if (rules.generateUpdateByExampleSelective()
+                || rules.generateUpdateByExampleWithBLOBs()
+                ||rules.generateUpdateByExampleWithoutBLOBs()) {
+            method = new Method();
+            method.addComment(table);
+            method.setVisibility(JavaVisibility.PROTECTED);
+            method.setConstructor(true);
+            method.setName(type.getShortName());
+            method.addParameter(new Parameter(type, "example")); //$NON-NLS-1$
+            method.addBodyLine("this.orderByClause = example.orderByClause;"); //$NON-NLS-1$
+            method.addBodyLine("this.oredCriteria = example.oredCriteria;"); //$NON-NLS-1$
+            topLevelClass.addMethod(method);
+        }
+        
         // add field, getter, setter for orderby clause
         Field field = new Field();
         field.addComment(table);
@@ -719,7 +747,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         field.setName("orderByClause"); //$NON-NLS-1$
         topLevelClass.addField(field);
 
-        Method method = new Method();
+        method = new Method();
         method.addComment(table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setName("setOrderByClause"); //$NON-NLS-1$
@@ -746,7 +774,6 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
         field.setType(fqjt);
         field.setName("oredCriteria"); //$NON-NLS-1$
-        field.setInitializationString("new ArrayList()"); //$NON-NLS-1$
         topLevelClass.addField(field);
 
         method = new Method();
