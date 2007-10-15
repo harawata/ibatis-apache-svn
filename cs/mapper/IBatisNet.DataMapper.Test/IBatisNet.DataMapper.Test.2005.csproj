@@ -78,7 +78,7 @@
       <Name>log4net</Name>
       <HintPath>..\External-Bin\Net\1.1\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework, Version=2.4.3.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
+    <Reference Include="nunit.framework, Version=2.4.1.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -508,6 +508,7 @@
     <None Include="bin\Debug\test.config" />
     <None Include="DataBase-Template.config" />
     <None Include="IBatisNet.Test.build" />
+    <None Include="Scripts\MSSQL\ps_SelectByIdList.sql" />
     <EmbeddedResource Include="bin\Debug\providers.config" />
     <EmbeddedResource Include="bin\Debug\SqlMap_MSSQL_SqlClient.config" />
     <EmbeddedResource Include="Maps\MSSQL\SqlClient\Account.xml" />

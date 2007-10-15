@@ -731,8 +731,6 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			)
            </insert>
 				
-		<!-- For procedure, the parameters of the parameterMap must in the same order 
-		as for the procedure paramaters-->
 		<procedure id="InsertAccountViaStoreProcedure" parameterMap="insert-params">
 			ps_InsertAccount
 		</procedure>
@@ -756,14 +754,22 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
     <procedure id="SelectAllAccountViaSP" resultClass="Account">
       ps_SelectAllAccount
     </procedure>
+
+    <procedure id="SelectAccountViaXML" parameterMap="XML-params" resultClass="Account">
+      ps_SelectByIdList
+    </procedure>
     
 	</statements>
 
 	<!-- =============================================
-            OPTIONAL EXPLICIT PARAMETER MAP
+            OPTIONAL EXPLICIT PARAMETER MAP 
     ============================================= -->
-	<parameterMaps>   
-		
+	<parameterMaps>
+
+    <parameterMap id="XML-params" class="string" >
+      <parameter property="AccountIds" /> <!-- we don't need dbType="NText" but you can specify it --> 
+    </parameterMap>
+    
 		<parameterMap id="swap-params" >
 			<parameter property="email1" column="First_Email" />
 			<parameter property="email2" column="Second_Email" />
