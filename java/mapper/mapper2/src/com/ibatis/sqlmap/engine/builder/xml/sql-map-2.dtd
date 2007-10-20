@@ -156,7 +156,7 @@ timeout CDATA #IMPLIED
 <!ATTLIST selectKey
 resultClass CDATA #IMPLIED
 keyProperty CDATA #IMPLIED
-type (pre|post) #IMPLIED
+type CDATA #IMPLIED
 >
 
 <!ELEMENT update (#PCDATA | include | dynamic | iterate | isParameterPresent | isNotParameterPresent | isEmpty | isNotEmpty | isNotNull | isNull | isNotEqual | isEqual | isGreaterThan | isGreaterEqual | isLessThan | isLessEqual | isPropertyAvailable | isNotPropertyAvailable)*>

@@ -34,7 +34,7 @@ import java.util.Map;
 /**
  * Implementation of ExtendedSqlMapClient
  */
-public class SqlMapClientImpl implements SqlMapClient {
+public class SqlMapClientImpl implements SqlMapClient, ExtendedSqlMapClient {
 
   private static final Log log = LogFactory.getLog(SqlMapClientImpl.class);
 

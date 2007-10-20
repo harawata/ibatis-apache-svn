@@ -90,6 +90,14 @@ public class SqlMapExecutorDelegate {
   }
 
   /**
+   * DO NOT DEPEND ON THIS. Here to avoid breaking spring integration.
+   * @deprecated
+   */
+  public int getMaxTransactions() {
+    return -1;
+  }
+
+  /**
    * Getter for the DataExchangeFactory
    *
    * @return - the DataExchangeFactory

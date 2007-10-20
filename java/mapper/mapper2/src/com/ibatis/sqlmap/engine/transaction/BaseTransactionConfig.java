@@ -16,6 +16,8 @@
 package com.ibatis.sqlmap.engine.transaction;
 
 import javax.sql.DataSource;
+import java.util.Properties;
+import java.sql.SQLException;
 
 public abstract class BaseTransactionConfig implements TransactionConfig {
 
@@ -38,4 +40,27 @@ public abstract class BaseTransactionConfig implements TransactionConfig {
     this.dataSource = ds;
   }
 
+  /**
+   * @deprecated
+   * @return -1
+   */
+  public int getMaximumConcurrentTransactions() {
+    return -1;
+  }
+
+  /**
+   * @deprecated
+   * @param maximumConcurrentTransactions - do not use here for Spring integration
+   */
+  public void setMaximumConcurrentTransactions(int maximumConcurrentTransactions) {
+  }
+
+  /**
+   * @deprecated
+   * @param props - propertes
+   */
+  public void initialize(Properties props)
+    throws SQLException, TransactionException {
+    setProperties(props);
+  }
 }
