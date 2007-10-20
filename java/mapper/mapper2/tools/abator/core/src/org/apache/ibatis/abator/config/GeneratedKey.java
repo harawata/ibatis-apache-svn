@@ -34,12 +34,15 @@ public class GeneratedKey {
     
     private boolean isIdentity;
 
+    private String type;
+
     /**
      * 
      */
-    public GeneratedKey(String column, String configuredSqlStatement, boolean isIdentity) {
+    public GeneratedKey(String column, String configuredSqlStatement, boolean isIdentity, String type) {
         super();
         this.column = column;
+        this.type = type;
         this.isIdentity = isIdentity;
         this.configuredSqlStatement = configuredSqlStatement;
         
@@ -62,11 +65,16 @@ public class GeneratedKey {
     public String getRuntimeSqlStatement() {
         return runtimeSqlStatement;
     }
+
+    public String getType() {
+        return type;
+    }
     
     public XmlElement toXmlElement() {
         XmlElement xmlElement = new XmlElement("generatedKey"); //$NON-NLS-1$
         xmlElement.addAttribute(new Attribute("column", column)); //$NON-NLS-1$
         xmlElement.addAttribute(new Attribute("sqlStatement", configuredSqlStatement)); //$NON-NLS-1$
+        xmlElement.addAttribute(new Attribute("type", type));
         xmlElement.addAttribute(new Attribute("identity",//$NON-NLS-1$
                 isIdentity ? "true" : "false")); //$NON-NLS-1$ //$NON-NLS-2$
         

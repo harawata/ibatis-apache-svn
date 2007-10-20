@@ -185,5 +185,6 @@
 <!ATTLIST generatedKey
   column CDATA #REQUIRED
   sqlStatement CDATA #REQUIRED
-  identity CDATA #REQUIRED>
+  identity CDATA #IMPLIED
+  type CDATA #IMPLIED>
   

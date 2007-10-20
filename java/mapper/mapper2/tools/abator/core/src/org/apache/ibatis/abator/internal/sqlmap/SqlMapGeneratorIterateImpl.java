@@ -908,6 +908,9 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         answer.addAttribute(new Attribute("resultClass", identityColumnType)); //$NON-NLS-1$
         answer.addAttribute(new Attribute(
                 "keyProperty", columnDefinition.getJavaProperty())); //$NON-NLS-1$
+        if(generatedKey.getType() != null && !generatedKey.getType().trim().equals("")) {
+          answer.addAttribute(new Attribute("type", generatedKey.getType())); //$NON-NLS-1$  
+        }
         answer.addElement(new TextElement(generatedKey.getRuntimeSqlStatement()));
 
         return answer;

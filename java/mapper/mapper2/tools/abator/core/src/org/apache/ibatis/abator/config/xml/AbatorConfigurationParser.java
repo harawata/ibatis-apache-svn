@@ -477,8 +477,13 @@ public class AbatorConfigurationParser {
         String column = attributes.getProperty("column"); //$NON-NLS-1$
         boolean identity = "true".equals(attributes.getProperty("identity")); //$NON-NLS-1$ //$NON-NLS-2$
         String sqlStatement = attributes.getProperty("sqlStatement"); //$NON-NLS-1$
+        String type = attributes.getProperty("type"); //$NON-NLS-1$
+        // if type is specified then set identity to false
+        if(type != null && !type.trim().equals("")) {
+          identity = false;
+        }
 
-        GeneratedKey gk = new GeneratedKey(column, sqlStatement, identity);
+        GeneratedKey gk = new GeneratedKey(column, sqlStatement, identity, type);
 
         tc.setGeneratedKey(gk);
     }
@@ -667,14 +672,12 @@ public class AbatorConfigurationParser {
                 String propName = newString.substring(start + OPEN.length(),
                         end);
                 String propValue = properties.getProperty(propName);
-                if (propValue == null) {
-                    newString = prepend + propName + append;
-                } else {
+                if (propValue != null) {
                     newString = prepend + propValue + append;
                 }
 
-                start = newString.indexOf(OPEN);
-                end = newString.indexOf(CLOSE);
+                start = newString.indexOf(OPEN,end);
+                end = newString.indexOf(CLOSE,end);
             }
         }
 
