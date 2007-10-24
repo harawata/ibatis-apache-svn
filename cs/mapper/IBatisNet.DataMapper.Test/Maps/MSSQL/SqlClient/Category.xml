@@ -10,6 +10,8 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <resultMaps>
     <resultMap id="Category-result" class="Category">
       <result property="Id" column="Category_ID"/>
+      <result property="Name" column="Category_Name"/>
+      <result property="Guid" column="Category_Guid" nullValue="00000000-0000-0000-0000-000000000000"/>
     </resultMap>
     
     <resultMap id="resultMapScope" class="Category">
