@@ -410,9 +410,13 @@ namespace IBatisNet.DataMapper.MappedStatements
             CacheKey cacheKey = this.GetCacheKey(request);
             cacheKey.Update("ExecuteQueryForObject");
 
-            //obj = (T)this.Statement.CacheModel[cacheKey];
+            object cacheObjet = this.Statement.CacheModel[cacheKey];
             // check if this query has alreay been run 
-            if (Statement.CacheModel[cacheKey] == CacheModel.NULL_OBJECT)
+            if (cacheObjet is T)
+            {
+                obj = (T)cacheObjet;
+            }
+            else if (cacheObjet == CacheModel.NULL_OBJECT)
             {
                 // convert the marker object back into a null value 
                 obj = default(T);

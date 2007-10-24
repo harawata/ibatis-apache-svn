@@ -308,7 +308,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
   
   		<select id="GetNoAccountWithCache"
 						parameterClass="Integer"
-						resultMap="account-hashtable-result"
+						resultMap="account-result-nullable-email"
 						cacheModel="account-cache">
 			select *
 			from Accounts
