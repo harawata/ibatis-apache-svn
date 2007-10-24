@@ -736,6 +736,7 @@ vs:defaultnsprefix="" >
 	<xs:element name="sql">
 		<xs:complexType mixed="true">
 			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="include"/>
 				<xs:element ref="dynamic"/>
 				<xs:element ref="isEmpty"/>
 				<xs:element ref="isEqual"/>
