@@ -16,10 +16,16 @@
   <dt>countByExample</dt>
   <dd>This method will return an integer representing the number of rows in a table
       that match the given example.</dd>
+  <dt>updateByExample</dt>
+  <dd>This method will update all rows in a table that match a given example.  This method is
+      available in the Java2 and Java5 generator sets only.  There is also a "selective" version
+      of the method that only updates certain columns of a table.</dd>
 </dl>
 
 <h3>Miscellaneous Changes</h3>
 <ul>
+  <li>Java2 is now the default generator set.  The Legacy generator set will be removed in
+      the next release of Abator.</li>
   <li>Fixed a bug that caused the "trimStrings" property to fail</li>
   <li>Fixed the XML file merger so that internal entities are preserved</li>
   <li>Added the ability to specify properties to ignore qualifiers and change runtime

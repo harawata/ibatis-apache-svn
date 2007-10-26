@@ -15,12 +15,13 @@ Enhancements -
 2. Add "clear" method to generated example classes in the Java2/Java5
    generator sets
 3. Add support for "ignoreQualifiersAtRuntime" and "runtimeTableName" on
-   the <table> configuration
+   the <table> configuration - this makes it easier to deal with tables
+   that are behind public aliases.
 4. Added support for persisting a configuration to XML - this to enable
    a graphical editor in the future
 5. Add afterXXXGenerationHook() methods in all generators to enable adding
-   extra Java code or XML elements to any generated object.  Will make it
-   easier to create customized generators
+   extra Java code or XML elements to any generated object.  This will make
+   it easier to create customized generators
 6. Added SYBASE database dialect for generated keys
 7. Added the ability to specify that resultMaps should use column indexes
    rather than column name.  This is necessary in poorly designed tables
@@ -35,6 +36,7 @@ Enhancements -
     command line and the Ant task 
 12. IBATIS-414 - make the Example and Criteria classes extendable
 13. Added countByExample generated method
+14. Java2 is now the default generator set
 
 -------------------------------------------------------------------------------
 Version 1.0.0:

@@ -40,7 +40,7 @@ public class MiscellaneousTests extends BaseTest {
                 "abatortest/java2/execute/miscellaneous/SqlMapConfig.xml", null);
     }
 
-    public void testMyObjectinsertMyObject() {
+    public void testMyObjectInsert() {
         MyObjectDAO dao = new MyObjectDAOImpl(sqlMapClient);
 
         try {
@@ -743,6 +743,102 @@ public class MiscellaneousTests extends BaseTest {
             fail("decimal30field should be ignored");
         } catch (NoSuchFieldException e) {
             // ignore (normal case)
+        }
+    }
+
+    public void testMyObjectUpdateByExampleSelective() {
+        MyObjectDAO dao = new MyObjectDAOImpl(sqlMapClient);
+
+        try {
+            MyObject record = new MyObject();
+            FirstName fn = new FirstName();
+            fn.setValue("Jeff");
+            record.setFirstname(fn);
+            record.setLastname("Smith");
+            record.setId1(new Integer(1));
+            record.setId2(new Integer(2));
+            dao.insertMyObject(record);
+
+            record = new MyObject();
+            fn = new FirstName();
+            fn.setValue("Bob");
+            record.setFirstname(fn);
+            record.setLastname("Jones");
+            record.setId1(new Integer(3));
+            record.setId2(new Integer(4));
+
+            dao.insertMyObject(record);
+
+            MyObject newRecord = new MyObject();
+            newRecord.setLastname("Barker");
+            
+            MyObjectExample example = new MyObjectExample();
+            fn = new FirstName();
+            fn.setValue("B%");
+            example.createCriteria().andFirstnameLike(fn);
+            int rows = dao.updateMyObjectByExampleSelective(newRecord, example);
+            assertEquals(1, rows);
+
+            List answer = dao.selectMyObjectByExample(example);
+            assertEquals(1, answer.size());
+            
+            MyObject returnedRecord = (MyObject) answer.get(0);
+            
+            assertEquals(newRecord.getLastname(), returnedRecord.getLastname());
+            assertEquals(record.getFirstname(), returnedRecord.getFirstname());
+            assertEquals(record.getId1(), returnedRecord.getId1());
+            assertEquals(record.getId2(), returnedRecord.getId2());
+        } catch (SQLException e) {
+            fail(e.getMessage());
+        }
+    }
+
+    public void testMyObjectUpdateByExample() {
+        MyObjectDAO dao = new MyObjectDAOImpl(sqlMapClient);
+
+        try {
+            MyObject record = new MyObject();
+            FirstName fn = new FirstName();
+            fn.setValue("Jeff");
+            record.setFirstname(fn);
+            record.setLastname("Smith");
+            record.setId1(new Integer(1));
+            record.setId2(new Integer(2));
+            dao.insertMyObject(record);
+
+            record = new MyObject();
+            fn = new FirstName();
+            fn.setValue("Bob");
+            record.setFirstname(fn);
+            record.setLastname("Jones");
+            record.setId1(new Integer(3));
+            record.setId2(new Integer(4));
+
+            dao.insertMyObject(record);
+
+            MyObject newRecord = new MyObject();
+            newRecord.setLastname("Barker");
+            newRecord.setId1(new Integer(3));
+            newRecord.setId2(new Integer(4));
+            
+            MyObjectExample example = new MyObjectExample();
+            example.createCriteria()
+                .andId1EqualTo(new Integer(3))
+                .andId2EqualTo(new Integer(4));
+            int rows = dao.updateMyObjectByExample(newRecord, example);
+            assertEquals(1, rows);
+
+            List answer = dao.selectMyObjectByExample(example);
+            assertEquals(1, answer.size());
+            
+            MyObject returnedRecord = (MyObject) answer.get(0);
+            
+            assertEquals(newRecord.getLastname(), returnedRecord.getLastname());
+            assertNull(returnedRecord.getFirstname());
+            assertEquals(newRecord.getId1(), returnedRecord.getId1());
+            assertEquals(newRecord.getId2(), returnedRecord.getId2());
+        } catch (SQLException e) {
+            fail(e.getMessage());
         }
     }
 }

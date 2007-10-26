@@ -86,8 +86,7 @@ public class AbatorContext extends PropertyHolder {
         }
         
         if (generatorSetType == null) {
-            // TODO - make Java2 the default in some future release
-            generatorSet = new LegacyGeneratorSet();
+            generatorSet = new Java2GeneratorSet();
         } else if ("Legacy".equalsIgnoreCase(generatorSetType)) { //$NON-NLS-1$
             generatorSet = new LegacyGeneratorSet();
         } else if ("Java2".equalsIgnoreCase(generatorSetType)) { //$NON-NLS-1$

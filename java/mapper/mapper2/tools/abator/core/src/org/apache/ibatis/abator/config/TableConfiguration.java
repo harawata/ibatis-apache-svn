@@ -245,7 +245,9 @@ public class TableConfiguration extends PropertyHolder {
 	    	|| insertStatementEnabled
 	    	|| updateByPrimaryKeyStatementEnabled
 	    	|| deleteByExampleStatementEnabled
-	    	|| deleteByPrimaryKeyStatementEnabled;
+	    	|| deleteByPrimaryKeyStatementEnabled
+            || countByExampleStatementEnabled
+            || updateByExampleStatementEnabled;
 	}
 
     public void setGeneratedKey(GeneratedKey generatedKey) {
@@ -384,6 +386,10 @@ public class TableConfiguration extends PropertyHolder {
             xmlElement.addAttribute(new Attribute("enableCountByExample", "false")); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
+        if (!updateByExampleStatementEnabled) {
+            xmlElement.addAttribute(new Attribute("enableUpdateByExample", "false")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        
         if (StringUtility.stringHasValue(selectByPrimaryKeyQueryId)) {
             xmlElement.addAttribute(new Attribute("selectByPrimaryKeyQueryId", selectByPrimaryKeyQueryId)); //$NON-NLS-1$
         }

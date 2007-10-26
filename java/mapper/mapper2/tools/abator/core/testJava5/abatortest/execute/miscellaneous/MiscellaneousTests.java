@@ -42,6 +42,7 @@ import abatortest.generated.miscellaneous.dao.MyObjectDAOImpl;
 import abatortest.generated.miscellaneous.model.MyObject;
 import abatortest.generated.miscellaneous.model.MyObjectExample;
 import abatortest.generated.miscellaneous.model.MyObjectKey;
+import abatortest.execute.miscellaneous.FirstName;
 
 /**
  * @author Jeff Butler
@@ -756,6 +757,102 @@ public class MiscellaneousTests extends BaseTest {
             fail("decimal30field should be ignored");
         } catch (NoSuchFieldException e) {
             // ignore (normal case)
+        }
+    }
+
+    public void testMyObjectUpdateByExampleSelective() {
+        MyObjectDAO dao = new MyObjectDAOImpl(sqlMapClient);
+
+        try {
+            MyObject record = new MyObject();
+            FirstName fn = new FirstName();
+            fn.setValue("Jeff");
+            record.setFirstname(fn);
+            record.setLastname("Smith");
+            record.setId1(1);
+            record.setId2(2);
+            dao.insertMyObject(record);
+
+            record = new MyObject();
+            fn = new FirstName();
+            fn.setValue("Bob");
+            record.setFirstname(fn);
+            record.setLastname("Jones");
+            record.setId1(3);
+            record.setId2(4);
+
+            dao.insertMyObject(record);
+
+            MyObject newRecord = new MyObject();
+            newRecord.setLastname("Barker");
+            
+            MyObjectExample example = new MyObjectExample();
+            fn = new FirstName();
+            fn.setValue("B%");
+            example.createCriteria().andFirstnameLike(fn);
+            int rows = dao.updateMyObjectByExampleSelective(newRecord, example);
+            assertEquals(1, rows);
+
+            List<MyObject> answer = dao.selectMyObjectByExample(example);
+            assertEquals(1, answer.size());
+            
+            MyObject returnedRecord = answer.get(0);
+            
+            assertEquals(newRecord.getLastname(), returnedRecord.getLastname());
+            assertEquals(record.getFirstname(), returnedRecord.getFirstname());
+            assertEquals(record.getId1(), returnedRecord.getId1());
+            assertEquals(record.getId2(), returnedRecord.getId2());
+        } catch (SQLException e) {
+            fail(e.getMessage());
+        }
+    }
+
+    public void testMyObjectUpdateByExample() {
+        MyObjectDAO dao = new MyObjectDAOImpl(sqlMapClient);
+
+        try {
+            MyObject record = new MyObject();
+            FirstName fn = new FirstName();
+            fn.setValue("Jeff");
+            record.setFirstname(fn);
+            record.setLastname("Smith");
+            record.setId1(1);
+            record.setId2(2);
+            dao.insertMyObject(record);
+
+            record = new MyObject();
+            fn = new FirstName();
+            fn.setValue("Bob");
+            record.setFirstname(fn);
+            record.setLastname("Jones");
+            record.setId1(3);
+            record.setId2(4);
+
+            dao.insertMyObject(record);
+
+            MyObject newRecord = new MyObject();
+            newRecord.setLastname("Barker");
+            newRecord.setId1(3);
+            newRecord.setId2(4);
+            
+            MyObjectExample example = new MyObjectExample();
+            example.createCriteria()
+                .andId1EqualTo(3)
+                .andId2EqualTo(4);
+            int rows = dao.updateMyObjectByExample(newRecord, example);
+            assertEquals(1, rows);
+
+            List<MyObject> answer = dao.selectMyObjectByExample(example);
+            assertEquals(1, answer.size());
+            
+            MyObject returnedRecord = answer.get(0);
+            
+            assertEquals(newRecord.getLastname(), returnedRecord.getLastname());
+            assertNull(returnedRecord.getFirstname());
+            assertEquals(newRecord.getId1(), returnedRecord.getId1());
+            assertEquals(newRecord.getId2(), returnedRecord.getId2());
+        } catch (SQLException e) {
+            fail(e.getMessage());
         }
     }
 }
