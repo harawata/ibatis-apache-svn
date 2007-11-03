@@ -56,6 +56,13 @@ namespace IBatisNet.DataMapper.Test.Domain
 		private Months _month;
 		private Colors _color;
 		private int _id;
+        private ESearchProfile search = ESearchProfile.Temp;
+
+        public ESearchProfile SearchProfile
+        {
+            get { return search; }
+            set { search = value; }
+        }
 
 		public Months Month
 		{
