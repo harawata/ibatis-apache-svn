@@ -39,13 +39,12 @@ namespace IBatisNet.Common.Utilities
 	/// </summary>
 	public sealed class DBHelperParameterCache
 	{
-		//Since this class provides only static methods, make the default constructor private to prevent 
-		//instances from being created.
-		private DBHelperParameterCache() {}
+		private Hashtable _paramCache = Hashtable.Synchronized(new Hashtable());
 
-		#region Private fields
-		private static Hashtable _paramCache = Hashtable.Synchronized(new Hashtable());
-		#endregion
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DBHelperParameterCache"/> class.
+        /// </summary>
+        public DBHelperParameterCache() { }
 
 		#region private methods
 
@@ -56,7 +55,7 @@ namespace IBatisNet.Common.Utilities
 		/// <param name="spName">the name of the stored procedure</param>
 		/// <param name="includeReturnValueParameter">whether or not to include their return value parameter</param>
 		/// <returns></returns>
-		private static IDataParameter[] DiscoverSpParameterSet(IDalSession session, string spName, bool includeReturnValueParameter)
+		private IDataParameter[] DiscoverSpParameterSet(IDalSession session, string spName, bool includeReturnValueParameter)
 		{
 			return InternalDiscoverSpParameterSet(
                 session,
@@ -72,7 +71,7 @@ namespace IBatisNet.Common.Utilities
 		/// <param name="spName">Name of the stored procedure.</param>
         /// <param name="includeReturnValueParameter">if set to <c>true</c> [include return value parameter].</param>
         /// <returns>The stored procedure parameters.</returns>
-		private static IDataParameter[] InternalDiscoverSpParameterSet(IDalSession session, string spName, 
+		private IDataParameter[] InternalDiscoverSpParameterSet(IDalSession session, string spName, 
             bool includeReturnValueParameter)
 		{
 #if !dotnet2
@@ -119,7 +118,7 @@ namespace IBatisNet.Common.Utilities
 #endif
 		}
 		
-		private static void DeriveParameters(IDbProvider provider, IDbCommand command)
+		private void DeriveParameters(IDbProvider provider, IDbCommand command)
 		{
 			Type commandBuilderType;
 
@@ -151,7 +150,7 @@ namespace IBatisNet.Common.Utilities
 		/// </summary>
 		/// <param name="originalParameters"></param>
 		/// <returns></returns>
-		private static IDataParameter[] CloneParameters(IDataParameter[] originalParameters)
+		private IDataParameter[] CloneParameters(IDataParameter[] originalParameters)
 		{
 			IDataParameter[] clonedParameters = new IDataParameter[originalParameters.Length];
 
@@ -174,7 +173,7 @@ namespace IBatisNet.Common.Utilities
 		/// <param name="connectionString">a valid connection string for an IDbConnection</param>
 		/// <param name="commandText">the stored procedure name or SQL command</param>
 		/// <param name="commandParameters">an array of IDataParameters to be cached</param>
-		public static void CacheParameterSet(string connectionString, string commandText, params IDataParameter[] commandParameters)
+		public void CacheParameterSet(string connectionString, string commandText, params IDataParameter[] commandParameters)
 		{
 			string hashKey = connectionString + ":" + commandText;
 
@@ -182,11 +181,10 @@ namespace IBatisNet.Common.Utilities
 		}
 
 
-		// FM Added
 		/// <summary>
 		/// Clear the parameter cache.
 		/// </summary>
-		public static void Clear()
+		public void Clear()
 		{
 			_paramCache.Clear();
 		}
@@ -197,7 +195,7 @@ namespace IBatisNet.Common.Utilities
 		/// <param name="connectionString">a valid connection string for an IDbConnection</param>
 		/// <param name="commandText">the stored procedure name or SQL command</param>
 		/// <returns>an array of IDataParameters</returns>
-		public static IDataParameter[] GetCachedParameterSet(string connectionString, string commandText)
+		public IDataParameter[] GetCachedParameterSet(string connectionString, string commandText)
 		{
 			string hashKey = connectionString + ":" + commandText;
 
@@ -226,7 +224,7 @@ namespace IBatisNet.Common.Utilities
 		/// <param name="session">a valid session</param>
 		/// <param name="spName">the name of the stored procedure</param>
 		/// <returns>an array of IDataParameters</returns>
-		public static IDataParameter[] GetSpParameterSet(IDalSession session, string spName)
+		public IDataParameter[] GetSpParameterSet(IDalSession session, string spName)
 		{
 			return GetSpParameterSet(session, spName, false);
 		}
@@ -241,7 +239,7 @@ namespace IBatisNet.Common.Utilities
 		/// <param name="spName">the name of the stored procedure</param>
 		/// <param name="includeReturnValueParameter">a bool value indicating whether the return value parameter should be included in the results</param>
 		/// <returns>an array of IDataParameters</returns>
-		public static IDataParameter[] GetSpParameterSet(IDalSession session, 
+		public IDataParameter[] GetSpParameterSet(IDalSession session, 
 			string spName, bool includeReturnValueParameter)
 		{
 			string hashKey = session.DataSource.ConnectionString + ":" + spName + (includeReturnValueParameter ? ":include ReturnValue Parameter":"");

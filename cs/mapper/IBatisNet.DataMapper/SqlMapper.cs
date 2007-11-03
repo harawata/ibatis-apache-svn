@@ -68,6 +68,7 @@ namespace IBatisNet.DataMapper
 		//(CacheModel name, cache))
 		private HybridDictionary _cacheMaps = new HybridDictionary();
 		private TypeHandlerFactory _typeHandlerFactory = null; 
+        private DBHelperParameterCache _dbHelperParameterCache = null;
 
 		private bool _cacheModelsEnabled = false;
 		// An identifiant 
@@ -123,6 +124,15 @@ namespace IBatisNet.DataMapper
 		{
 			get { return (_sessionStore.LocalSession != null); }
 		}
+
+        /// <summary>
+        /// Gets the DB helper parameter cache.
+        /// </summary>
+        /// <value>The DB helper parameter cache.</value>
+        public DBHelperParameterCache DBHelperParameterCache
+        {
+            get { return _dbHelperParameterCache; }
+        }
 
 		/// <summary>
 		/// Factory for DataExchange objects
@@ -180,6 +190,7 @@ namespace IBatisNet.DataMapper
             AccessorFactory accessorFactory) 
 		{
             _typeHandlerFactory = new TypeHandlerFactory();
+            _dbHelperParameterCache = new DBHelperParameterCache();
             _objectFactory = objectFactory;
             _accessorFactory = accessorFactory;
 

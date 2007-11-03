@@ -168,7 +168,7 @@ namespace IBatisNet.DataMapper.Configuration.Statements
 		{
 			// pull the parameters for this stored procedure from the parameter cache 
 			// (or discover them & populate the cache)
-			IDataParameter[] commandParameters = DBHelperParameterCache.GetSpParameterSet(session, _commandText);
+            IDataParameter[] commandParameters = session.SqlMapper.DBHelperParameterCache.GetSpParameterSet(session, _commandText);
 
             _preparedStatement.DbParameters = new IDbDataParameter[commandParameters.Length];
 

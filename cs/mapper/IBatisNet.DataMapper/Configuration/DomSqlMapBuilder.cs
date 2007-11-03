@@ -365,24 +365,7 @@ namespace IBatisNet.DataMapper.Configuration
             _paramParser = new InlineParameterMapParser();
             _deSerializerFactory = new DeSerializerFactory(_configScope);
 		}
-
-		/// <summary>
-		/// Constructs a DomSqlMapBuilder 
-		/// with or without configuration document validation using the 
-		/// SqlMapConfig schema.
-		/// </summary>
-		/// <param name="validateSqlMapConfig">
-		/// Specify whether the configuration Xml document should be 
-		/// validated with the SqlMapConfig schema.
-		/// </param>
-        [Obsolete("Set the ValidateSqlMapConfig property before calling the Configure method.")]
-		public DomSqlMapBuilder(bool validateSqlMapConfig)
-		{
-			_configScope = new ConfigurationScope();
-            _validateSqlMapConfig = validateSqlMapConfig;
-			_deSerializerFactory = new DeSerializerFactory(_configScope);
-			_paramParser = new InlineParameterMapParser();
-		}		
+	
 		#endregion 
 
 		#region Configure
@@ -492,7 +475,7 @@ namespace IBatisNet.DataMapper.Configuration
 		/// <returns>An ISqlMapper instance.</returns>
 		public ISqlMapper ConfigureAndWatch( string resource, ConfigureHandler configureDelegate )
 		{
-			XmlDocument document;
+			XmlDocument document = null;
 			if (resource.StartsWith("file://"))
 			{
 				document = Resources.GetUrlAsXmlDocument( resource.Remove(0, 7) );	

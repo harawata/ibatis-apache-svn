@@ -43,6 +43,7 @@ using IBatisNet.DataMapper.Exceptions;
 using IBatisNet.DataMapper.MappedStatements;
 using IBatisNet.DataMapper.SessionStore;
 using IBatisNet.DataMapper.TypeHandlers;
+using IBatisNet.Common.Utilities;
 #endregion
 
 namespace IBatisNet.DataMapper
@@ -80,6 +81,12 @@ namespace IBatisNet.DataMapper
         ///  currently being used by the SqlMap.
         /// </summary>
         ISqlMapSession LocalSession { get; }
+
+        /// <summary>
+        /// Gets the DB helper parameter cache.
+        /// </summary>
+        /// <value>The DB helper parameter cache.</value>
+        DBHelperParameterCache DBHelperParameterCache { get; }
 
         /// <summary>
         /// Creates a new SqlMapSession that will be used to query the data source.
