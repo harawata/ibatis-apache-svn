@@ -1791,7 +1791,7 @@ namespace IBatisNet.DataMapper.Configuration
 					// Did we already build Extend ParameterMap ?
 					if (_configScope.SqlMapper.ParameterMaps.Contains( parameterMap.ExtendMap ) == false)
 					{
-						XmlNode superNode = _configScope.SqlMapConfigDocument.SelectSingleNode(ApplyMappingNamespacePrefix(XML_SEARCH_PARAMETER)+ attributeExtendMap +"']", _configScope.XmlNamespaceManager );
+                        XmlNode superNode = _configScope.SqlMapDocument.SelectSingleNode(ApplyMappingNamespacePrefix(XML_SEARCH_PARAMETER) + attributeExtendMap + "']", _configScope.XmlNamespaceManager);
 
 						if (superNode != null)
 						{

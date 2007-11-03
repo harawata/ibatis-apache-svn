@@ -185,20 +185,23 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 			<parameter property="Id" column="Category_Id" dbType="Int" /><!-- Int for SqlClient, Obdc; Integer for Oledb -->
 			<parameter property="Guid" column="Category_Guid" dbType="UniqueIdentifier"/><!--Guid for Oledb, UniqueIdentifier for SqlClient,Odbc -->
 		</parameterMap>
-		
+    
+		<parameterMap id="UpdateParam" extends="InsertParam" class="Category">
+			<parameter property="Id" column="Category_Id" />
+		</parameterMap>	
+    
 		<parameterMap id="InsertParam" class="Category">
 			<parameter property="Name" column="Category_Name"/>
 			<parameter property="Guid" column="Category_Guid" dbType="UniqueIdentifier"/><!--Guid for Oledb, UniqueIdentifier for SqlClient,Odbc -->
 		</parameterMap>
-		
+
+    
 		<parameterMap id="insert-null-params" class="Category">
 			<parameter property="Name" column="Category_Name"/>
 			<parameter property="Guid" column="Category_Guid" nullValue="00000000-0000-0000-0000-000000000000" dbType="UniqueIdentifier"/><!--Guid for Oledb, UniqueIdentifier for SqlClient,Odbc -->
 		</parameterMap>
 		
-		<parameterMap id="UpdateParam" extends="InsertParam" class="Category">
-			<parameter property="Id" column="Category_Id" />
-		</parameterMap>
+
 		
 		<!-- Used by generated statement -->
 		
