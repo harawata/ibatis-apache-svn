@@ -48,6 +48,9 @@
 </div>
 
   <h2>News</h2>
+  
+    <a href="http://apachecon.com/"><img src="http://www.apache.org/ads/ApacheCon/2007-usa-125x125.png" alt="ApacheCon US 2007" hspace="16" align="right"/></a>  
+  
 <h3>iBATIS 3.0 Design Whiteboard</h3>
  <p>(June 12, 2007) Next month, on July 1st iBATIS will officially be 5 years old, and 2.0 alone
    will be 3 years long in the tooth.  It's time, or perhaps overdue that we start designing and
