@@ -788,11 +788,11 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 		</parameterMap>
 								
 		<parameterMap id="insert-params" >
-			<parameter property="Id" />
-			<parameter property="FirstName" />
-			<parameter property="LastName" />			
-			<parameter property="EmailAddress" nullValue="no_email@provided.com"/>
-			<parameter property="BannerOption"  dbType="Varchar" type="bool"/>
+			<parameter property="Id" column="Account_ID" />
+			<parameter property="FirstName" column="Account_FirstName" />
+			<parameter property="LastName" column="Account_LastName" />			
+			<parameter property="EmailAddress" column="Account_Email" nullValue="no_email@provided.com"/>
+			<parameter property="BannerOption" column="Account_Banner_Option"  dbType="Varchar" type="bool"/>
 			<parameter property="CartOption"	column="Account_Cart_Option" typeHandler="HundredsBool"/>
 		</parameterMap>
 		
