@@ -117,7 +117,7 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		{
 			if (obj == null || str == null) 
 			{
-				return obj == str;
+				return (string)obj == str;
 			} 
 			else 
 			{

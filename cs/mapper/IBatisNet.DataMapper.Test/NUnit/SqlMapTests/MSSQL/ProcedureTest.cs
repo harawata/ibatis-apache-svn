@@ -30,8 +30,6 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL
 			InitScript( sqlMap.DataSource, ScriptDirectory + "ps_SelectAccount.sql", false );
             InitScript( sqlMap.DataSource, ScriptDirectory + "ps_SelectAllAccount.sql", false);			    
 			InitScript( sqlMap.DataSource, ScriptDirectory + "swap-procedure.sql" );
-            InitScript(sqlMap.DataSource, ScriptDirectory + "ps_SelectByIdList.sql");	
-
 		}
 
 		/// <summary>
@@ -81,8 +79,11 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests.MSSQL
         /// Test XML parameter.
         /// </summary>
         [Test]
+        [Category("MSSQL.2005")]
         public void TestXMLParameter()
         {
+            InitScript(sqlMap.DataSource, ScriptDirectory + "ps_SelectByIdList.sql");	
+
             string accountIds = "<Accounts><id>3</id><id>4</id></Accounts>";
 
             IList accounts = sqlMap.QueryForList("SelectAccountViaXML", accountIds);
