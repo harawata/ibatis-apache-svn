@@ -308,7 +308,7 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
 
         Method method = new Method();
         method.addComment(table);
-        method.setVisibility(JavaVisibility.PRIVATE);
+        method.setVisibility(JavaVisibility.PROTECTED);
         if (abatorContext.getSuppressTypeWarnings()) {
             method.addSuppressTypeWarningsAnnotation();
         }
@@ -351,7 +351,7 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
      * 
      * <pre>
      * 
-     *     private Map getXXXXExampleParms(YYYY example)
+     *     protected Map getXXXXExampleParms(YYYY example)
      *  
      * </pre>
      * 
@@ -363,14 +363,14 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
      *            the table in which the column exists
      * @return the method
      */
-    private Method getExampleParmsMethod(ColumnDefinition cd,
+    protected Method getExampleParmsMethod(ColumnDefinition cd,
             FullyQualifiedTable table) {
         
         StringBuffer sb = new StringBuffer();
 
         Method method = new Method();
         method.addComment(table);
-        method.setVisibility(JavaVisibility.PRIVATE);
+        method.setVisibility(JavaVisibility.PROTECTED);
         if (abatorContext.getSuppressTypeWarnings()) {
             method.addSuppressTypeWarningsAnnotation();
         }

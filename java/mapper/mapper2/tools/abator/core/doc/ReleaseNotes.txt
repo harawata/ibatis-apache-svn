@@ -38,6 +38,7 @@ Enhancements -
 13. Added countByExample generated method
 14. Added updateByExample generated method
 15. Java2 is now the default generator set
+16. IBATIS-470 - make legacy DAOs extendable
 
 -------------------------------------------------------------------------------
 Version 1.0.0:
