@@ -102,6 +102,8 @@ for the following methods:</p>
   <li><code>selectByExample</code></li>
   <li><code>selectByExampleWithBLOBs</code></li>
   <li><code>deleteByExample</code></li>
+  <li><code>countByExample</code></li>
+  <li><code>updateByExample</code></li>
 </ul>
 
 <p>This class may or may not extend one of the other generated domain classes based on the
@@ -113,7 +115,7 @@ configuration element.</p>
 <code>&laquo;domainObjectName&raquo;Example</code> if the <code>domainObjectName</code>
 attribute is specified on the <code>&lt;table&gt;</code> configuration element.</p>
 
-<p>This class will be generated if the <code>selectByExample</code> or <code>deleteByExample</code>
+<p>This class will be generated if any of the <code>*ByExample</code>
 methods are enabled.  Note that the configuration elements produced by these options can grow quite large.
 With the "Legacy" generator set, the generated XML will have a very large SQL fragment
 related to this capability, and the generated DAO class will have many

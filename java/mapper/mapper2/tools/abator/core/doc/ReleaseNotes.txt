@@ -36,7 +36,8 @@ Enhancements -
     command line and the Ant task 
 12. IBATIS-414 - make the Example and Criteria classes extendable
 13. Added countByExample generated method
-14. Java2 is now the default generator set
+14. Added updateByExample generated method
+15. Java2 is now the default generator set
 
 -------------------------------------------------------------------------------
 Version 1.0.0:
