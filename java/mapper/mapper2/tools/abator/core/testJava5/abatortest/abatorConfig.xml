@@ -383,5 +383,8 @@
       <columnOverride column="timeField" javaType="abatortest.execute.miscellaneous.MyTime"
          typeHandler="abatortest.execute.miscellaneous.MyTimeTypeHandler"/>
     </table>
+    <table tableName="RegexRename">
+      <columnRenamingRule searchString="^CUST" />
+    </table>
   </abatorContext>
 </abatorConfiguration>

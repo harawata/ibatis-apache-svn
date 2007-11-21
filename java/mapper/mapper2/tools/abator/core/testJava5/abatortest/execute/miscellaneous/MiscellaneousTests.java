@@ -39,9 +39,12 @@ import java.util.List;
 import abatortest.BaseTest;
 import abatortest.generated.miscellaneous.dao.MyObjectDAO;
 import abatortest.generated.miscellaneous.dao.MyObjectDAOImpl;
+import abatortest.generated.miscellaneous.dao.RegexrenameDAO;
+import abatortest.generated.miscellaneous.dao.RegexrenameDAOImpl;
 import abatortest.generated.miscellaneous.model.MyObject;
 import abatortest.generated.miscellaneous.model.MyObjectExample;
 import abatortest.generated.miscellaneous.model.MyObjectKey;
+import abatortest.generated.miscellaneous.model.Regexrename;
 import abatortest.execute.miscellaneous.FirstName;
 
 /**
@@ -854,5 +857,29 @@ public class MiscellaneousTests extends BaseTest {
         } catch (SQLException e) {
             fail(e.getMessage());
         }
+    }
+    
+    public void testRegexRenameInsert() {
+        RegexrenameDAO dao = new RegexrenameDAOImpl(sqlMapClient);
+        
+        try {
+            Regexrename record = new Regexrename();
+            record.setAddress("123 Main Street");
+            record.setId(22);
+            record.setName("Fred");
+            record.setZipCode("99999");
+            
+            dao.insertRegexrename(record);
+            
+            Regexrename returnedRecord = dao.selectRegexrenameByPrimaryKey(22);
+            
+            assertEquals(record.getAddress(), returnedRecord.getAddress());
+            assertEquals(record.getId(), returnedRecord.getId());
+            assertEquals(record.getName(), returnedRecord.getName());
+            assertEquals(record.getZipCode(), returnedRecord.getZipCode());
+        } catch (SQLException e) {
+            fail(e.getMessage());
+        }
+        
     }
 }

@@ -132,7 +132,12 @@ public class AbatorContext extends PropertyHolder {
 	 * columns exist
 	 */
 	public void validate(List errors) {
-		validateJdbcConnectionConfiguration(errors);
+        if (jdbcConnectionConfiguration == null) {
+            errors.add(Messages.getString("ValidationError.10")); //$NON-NLS-1$
+            return;
+        } else {
+            jdbcConnectionConfiguration.validate(errors);
+        }
 
         if (javaModelGeneratorConfiguration == null) {
             errors.add(Messages.getString("ValidationError.8")); //$NON-NLS-1$
@@ -178,60 +183,11 @@ public class AbatorContext extends PropertyHolder {
 				TableConfiguration tc = (TableConfiguration) tableConfigurations
 						.get(i);
 
-				validateTableConfiguration(tc, errors, i);
+				tc.validate(errors, i);
 			}
 		}
 	}
 	
-	private void validateJdbcConnectionConfiguration(List errors) {
-        if (jdbcConnectionConfiguration == null) {
-            errors.add(Messages.getString("ValidationError.10")); //$NON-NLS-1$
-            return;
-        }
-        
-		if (!StringUtility.stringHasValue(jdbcConnectionConfiguration
-				.getDriverClass())) {
-			errors.add(Messages.getString("ValidationError.4")); //$NON-NLS-1$
-		}
-
-		if (!StringUtility.stringHasValue(jdbcConnectionConfiguration
-				.getConnectionURL())) {
-			errors.add(Messages.getString("ValidationError.5")); //$NON-NLS-1$
-		}
-	}
-
-	private void validateTableConfiguration(TableConfiguration tc, List errors,
-			int listPosition) {
-        if (!StringUtility.stringHasValue(tc.getTableName())) {
-			errors.add(Messages.getString("ValidationError.6", Integer.toString(listPosition))); //$NON-NLS-1$
-		}
-
-        String tableName = StringUtility.composeFullyQualifiedTableName(
-                tc.getCatalog(), tc.getSchema(), tc.getTableName(), '.');
-        
-		if (tc.getGeneratedKey() != null
-				&& !StringUtility.stringHasValue(tc.getGeneratedKey()
-						.getRuntimeSqlStatement())) {
-	        errors
-				.add(Messages.getString("ValidationError.7",  //$NON-NLS-1$
-						tableName));
-		}
-        
-        if ("true".equalsIgnoreCase(tc.getProperty(PropertyRegistry.TABLE_USE_COLUMN_INDEXES))) {  //$NON-NLS-1$
-            // when using column indexes, either both or neither query ids should be set
-            if (tc.isSelectByExampleStatementEnabled() && tc.isSelectByPrimaryKeyStatementEnabled()) {
-                boolean queryId1Set = StringUtility.stringHasValue(tc.getSelectByExampleQueryId());
-                boolean queryId2Set = StringUtility.stringHasValue(tc.getSelectByPrimaryKeyQueryId());
-            
-                if (queryId1Set != queryId2Set) {
-                    errors
-                    .add(Messages.getString("ValidationError.13",  //$NON-NLS-1$
-                        tableName));
-                }
-            }
-        }
-	}
-
 	/**
 	 * Generate iBATIS artifacts based on the configuration specified in the
 	 * constructor.  This method is long running.

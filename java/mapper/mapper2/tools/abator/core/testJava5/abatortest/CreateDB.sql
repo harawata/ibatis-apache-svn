@@ -82,3 +82,11 @@ create table BlobsOnly (
   blob1 longvarbinary,
   blob2 longvarbinary
 );
+
+create table RegexRename (
+  CUST_ID integer,
+  CUST_NAME varchar(30),
+  CUST_ADDRESS varchar(30),
+  ZIP_CODE char(5),
+  primary key(CUST_ID)
+);

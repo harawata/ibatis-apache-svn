@@ -32,6 +32,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.ibatis.abator.config.AbatorConfiguration;
 import org.apache.ibatis.abator.config.AbatorContext;
 import org.apache.ibatis.abator.config.ColumnOverride;
+import org.apache.ibatis.abator.config.ColumnRenamingRule;
 import org.apache.ibatis.abator.config.DAOGeneratorConfiguration;
 import org.apache.ibatis.abator.config.GeneratedKey;
 import org.apache.ibatis.abator.config.IgnoredColumn;
@@ -433,6 +434,8 @@ public class AbatorConfigurationParser {
                 parseIgnoreColumn(tc, childNode);
             } else if ("generatedKey".equals(childNode.getNodeName())) { //$NON-NLS-1$
                 parseGeneratedKey(tc, childNode);
+            } else if ("columnRenamingRule".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseColumnRenamingRule(tc, childNode);
             }
         }
     }
@@ -502,6 +505,22 @@ public class AbatorConfigurationParser {
         tc.addIgnoredColumn(ic);
     }
 
+    private void parseColumnRenamingRule(TableConfiguration tc, Node node) {
+        Properties attributes = parseAttributes(node);
+        String searchString = attributes.getProperty("searchString"); //$NON-NLS-1$
+        String replaceString = attributes.getProperty("replaceString"); //$NON-NLS-1$
+        
+        ColumnRenamingRule crr = new ColumnRenamingRule();
+        
+        crr.setSearchString(searchString);
+        
+        if (StringUtility.stringHasValue(replaceString)) {
+            crr.setReplaceString(replaceString);
+        }
+
+        tc.setColumnRenamingRule(crr);
+    }
+    
     private void parseJavaTypeResolver(AbatorContext abatorContext, Node node) {
         JavaTypeResolverConfiguration javaTypeResolverConfiguration = new JavaTypeResolverConfiguration();
 

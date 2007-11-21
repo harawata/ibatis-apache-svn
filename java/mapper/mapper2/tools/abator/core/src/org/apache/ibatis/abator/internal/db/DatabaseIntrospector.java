@@ -24,6 +24,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.ibatis.abator.api.FullyQualifiedTable;
 import org.apache.ibatis.abator.api.JavaTypeResolver;
@@ -220,13 +222,29 @@ public class DatabaseIntrospector {
             Iterator tableColumns = ((List) entry.getValue()).iterator();
             while (tableColumns.hasNext()) {
                 ColumnDefinition cd = (ColumnDefinition) tableColumns.next();
+
+                Pattern pattern = null;
+                String replaceString = null;
+                if (tc.getColumnRenamingRule() != null) {
+                    pattern = Pattern.compile(tc.getColumnRenamingRule().getSearchString());
+                    
+                    replaceString = tc.getColumnRenamingRule().getReplaceString();
+                    replaceString = replaceString == null ? "" : replaceString;//$NON-NLS-1$
+                }
                 
                 if ("true".equalsIgnoreCase(tc.getProperty(PropertyRegistry.TABLE_USE_ACTUAL_COLUMN_NAMES))) { //$NON-NLS-1$
                     cd.setJavaProperty(JavaBeansUtil.getValidPropertyName(cd
                             .getActualColumnName()));
                 } else {
-                    cd.setJavaProperty(JavaBeansUtil.getCamelCaseString(cd
+                    if (pattern != null) {
+                        Matcher matcher = pattern.matcher(cd.getActualColumnName());
+                        String renamedColumn = matcher.replaceAll(replaceString);
+                        cd.setJavaProperty(JavaBeansUtil.getCamelCaseString(renamedColumn,
+                                false));
+                    } else {
+                        cd.setJavaProperty(JavaBeansUtil.getCamelCaseString(cd
                             .getActualColumnName(), false));
+                    }
                 }
                 
                 try {

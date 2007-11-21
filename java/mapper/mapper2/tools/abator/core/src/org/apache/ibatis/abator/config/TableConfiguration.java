@@ -26,6 +26,7 @@ import org.apache.ibatis.abator.api.dom.xml.XmlElement;
 import org.apache.ibatis.abator.internal.util.EqualsUtil;
 import org.apache.ibatis.abator.internal.util.HashCodeUtil;
 import org.apache.ibatis.abator.internal.util.StringUtility;
+import org.apache.ibatis.abator.internal.util.messages.Messages;
 
 /**
  * 
@@ -67,6 +68,8 @@ public class TableConfiguration extends PropertyHolder {
     private boolean wildcardEscapingEnabled;
     private String configuredModelType;
     private boolean delimitIdentifiers;
+    
+    private ColumnRenamingRule columnRenamingRule;
     
 	public TableConfiguration(AbatorContext abatorContext) {
 		super();
@@ -412,6 +415,10 @@ public class TableConfiguration extends PropertyHolder {
             xmlElement.addElement(generatedKey.toXmlElement());
         }
         
+        if (columnRenamingRule != null) {
+            xmlElement.addElement(columnRenamingRule.toXmlElement());
+        }
+        
         if (ignoredColumns.size() > 0) {
             Iterator iter = ignoredColumns.keySet().iterator();
             while (iter.hasNext()) {
@@ -459,5 +466,47 @@ public class TableConfiguration extends PropertyHolder {
     public void setUpdateByExampleStatementEnabled(
             boolean updateByExampleStatementEnabled) {
         this.updateByExampleStatementEnabled = updateByExampleStatementEnabled;
+    }
+
+    public void validate(List errors, int listPosition) {
+        if (!StringUtility.stringHasValue(tableName)) {
+            errors.add(Messages.getString("ValidationError.6", Integer.toString(listPosition))); //$NON-NLS-1$
+        }
+
+        String fqTableName = StringUtility.composeFullyQualifiedTableName(
+                catalog, schema, tableName, '.');
+        
+        if (generatedKey != null
+                && !StringUtility.stringHasValue(generatedKey.getRuntimeSqlStatement())) {
+            errors
+                .add(Messages.getString("ValidationError.7",  //$NON-NLS-1$
+                        fqTableName));
+        }
+        
+        if ("true".equalsIgnoreCase(getProperty(PropertyRegistry.TABLE_USE_COLUMN_INDEXES))) {  //$NON-NLS-1$
+            // when using column indexes, either both or neither query ids should be set
+            if (selectByExampleStatementEnabled && selectByPrimaryKeyStatementEnabled) {
+                boolean queryId1Set = StringUtility.stringHasValue(selectByExampleQueryId);
+                boolean queryId2Set = StringUtility.stringHasValue(selectByPrimaryKeyQueryId);
+            
+                if (queryId1Set != queryId2Set) {
+                    errors
+                    .add(Messages.getString("ValidationError.13",  //$NON-NLS-1$
+                        fqTableName));
+                }
+            }
+        }
+        
+        if (columnRenamingRule != null) {
+            columnRenamingRule.validate(errors);
+        }
+    }
+
+    public ColumnRenamingRule getColumnRenamingRule() {
+        return columnRenamingRule;
+    }
+
+    public void setColumnRenamingRule(ColumnRenamingRule columnRenamingRule) {
+        this.columnRenamingRule = columnRenamingRule;
     }
 }

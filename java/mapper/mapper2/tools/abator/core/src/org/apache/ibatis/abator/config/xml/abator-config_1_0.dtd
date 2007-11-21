@@ -133,7 +133,7 @@
   The table element is used to specify a database table that will be the source information
   for a set of generated objects.
 -->
-<!ELEMENT table (property*, generatedKey?, (columnOverride | ignoreColumn)*) >
+<!ELEMENT table (property*, generatedKey?, columnRenamingRule?, (columnOverride | ignoreColumn)*) >
 <!ATTLIST table
   catalog CDATA #IMPLIED
   schema CDATA #IMPLIED
@@ -187,4 +187,13 @@
   sqlStatement CDATA #REQUIRED
   identity CDATA #IMPLIED
   type CDATA #IMPLIED>
+
+<!--
+  The columnRenamingRule element is used to specify a rule for renaming
+  columns before the corresponding property name is calculated
+-->
+<!ELEMENT columnRenamingRule EMPTY>
+<!ATTLIST columnRenamingRule
+  searchString CDATA #REQUIRED
+  replaceString CDATA #IMPLIED>
   

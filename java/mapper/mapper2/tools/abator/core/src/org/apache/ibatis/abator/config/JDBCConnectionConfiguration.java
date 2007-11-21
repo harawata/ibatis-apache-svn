@@ -22,6 +22,7 @@ import java.util.List;
 import org.apache.ibatis.abator.api.dom.xml.Attribute;
 import org.apache.ibatis.abator.api.dom.xml.XmlElement;
 import org.apache.ibatis.abator.internal.util.StringUtility;
+import org.apache.ibatis.abator.internal.util.messages.Messages;
 
 /**
  * 
@@ -111,5 +112,15 @@ public class JDBCConnectionConfiguration extends PropertyHolder {
         addPropertyXmlElements(xmlElement);
         
         return xmlElement;
+    }
+
+    public void validate(List errors) {
+        if (!StringUtility.stringHasValue(driverClass)) {
+            errors.add(Messages.getString("ValidationError.4")); //$NON-NLS-1$
+        }
+
+        if (!StringUtility.stringHasValue(connectionURL)) {
+            errors.add(Messages.getString("ValidationError.5")); //$NON-NLS-1$
+        }
     }
 }
