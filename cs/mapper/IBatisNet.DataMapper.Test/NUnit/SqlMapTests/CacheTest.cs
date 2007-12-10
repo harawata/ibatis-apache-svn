@@ -80,6 +80,24 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
             Assert.AreEqual(firstId, secondId);
         }
 
+        /// <summary>
+        /// Cache error with QueryForObjectwith object in cache
+        /// </summary>
+        [Test]
+        public void TestJIRA242_WithoutGeneric_WithCache()
+        {
+            Account account1 = sqlMap.QueryForObject("GetNoAccountWithCache", 1) as Account;
+            AssertAccount1(account1);
+            int firstId = HashCodeProvider.GetIdentityHashCode(account1);
+
+            Account account2 = sqlMap.QueryForObject("GetNoAccountWithCache", 1) as Account;
+            AssertAccount1(account2);
+
+            int secondId = HashCodeProvider.GetIdentityHashCode(account2);
+
+            Assert.AreEqual(firstId, secondId);
+        }
+
 	    /// <summary>
 		/// Test Cache query
 		/// </summary>
