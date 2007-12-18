@@ -344,6 +344,19 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			<result property="PostalCode"			column="Order_PostalCode"/>
 			<result property="FavouriteLineItem"	column="Order_ID=Order_ID,LineItem_ID=Order_FavouriteLineItem" select="GetSpecificLineItem" />
 		</resultMap>
+
+    <resultMap id="order-with-favourite-line-item-JIRA-251" class="Order">
+      <result property="Id"					column="Order_ID"/>
+      <result property="Date"					column="Order_Date"/>
+      <result property="CardExpiry"			column="Order_CardExpiry"/>
+      <result property="CardType"				column="Order_CardType"/>
+      <result property="CardNumber"			column="Order_CardNumber"/>
+      <result property="Street"				column="Order_Street"/>
+      <result property="City"					column="Order_City"/>
+      <result property="Province"				column="Order_Province"/>
+      <result property="PostalCode"			column="Order_PostalCode"/>
+      <result property="FavouriteLineItem"	column="Order_ID,Order_FavouriteLineItem" select="GetSpecificLineItem-JIRA-251" />
+    </resultMap>
 		
 		<resultMap id="order-joined-favourite2" class="Order">
 			<result property="Id"					column="Order_ID"/>
@@ -612,6 +625,12 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 					resultMap="order-with-favourite-line-item" >
 			select * from Orders where Order_ID = #value#
 		</statement>
+
+    <statement id="GetOrderWithFavouriteLineItem-JIRA-251"
+      parameterClass="int"
+      resultMap="order-with-favourite-line-item-JIRA-251" >
+      select * from Orders where Order_ID = #value#
+    </statement>
 		
 		<statement id="GetOrderWithLineItemCollection"
 					parameterClass="int"

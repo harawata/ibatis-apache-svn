@@ -119,8 +119,11 @@ namespace IBatisNet.DataMapper.MappedStatements.ArgumentStrategy
 				while (!wasNull && enumerator.MoveNext()) 
 				{
 					string hashKey = ((string)enumerator.Current).Trim();
-					enumerator.MoveNext();
-					object hashValue = reader.GetValue( reader.GetOrdinal(((string)enumerator.Current).Trim()) );
+                    if (paramString.Contains("="))// old 1.x style multiple params
+                    {
+                        enumerator.MoveNext();
+                    }
+				    object hashValue = reader.GetValue( reader.GetOrdinal(((string)enumerator.Current).Trim()) );
 
 					keyMap.Add(hashKey, hashValue );
 					wasNull = (hashValue == DBNull.Value);

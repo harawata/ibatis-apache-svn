@@ -338,6 +338,25 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
             Assert.IsNotNull(order2);
             Assert.IsNotNull(order2.FavouriteLineItem);
             Assert.AreEqual(17, order2.FavouriteLineItem.Id);
+        }
+
+        /// <summary>
+        /// Test a composite Key Mapping.
+        /// It must be: key1,key2,... (old syntax)
+        /// </summary>
+        [Test]
+        public void TestCompositeKeyMapping_JIRA_251()
+        {
+            Order order1 = (Order)sqlMap.QueryForObject("GetOrderWithFavouriteLineItem-JIRA-251", 1);
+            Order order2 = (Order)sqlMap.QueryForObject("GetOrderWithFavouriteLineItem-JIRA-251", 2);
+
+            Assert.IsNotNull(order1);
+            Assert.IsNotNull(order1.FavouriteLineItem);
+            Assert.AreEqual(1, order1.FavouriteLineItem.Id);
+
+            Assert.IsNotNull(order2);
+            Assert.IsNotNull(order2.FavouriteLineItem);
+            Assert.AreEqual(17, order2.FavouriteLineItem.Id);
 
         }
 
