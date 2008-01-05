@@ -4,7 +4,10 @@ using System.Collections;
 using System.Collections.Generic;
 #endif
 using IBatisNet.DataMapper.Test.Domain;
+
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
+
 using Category=IBatisNet.DataMapper.Test.Domain.Petshop.Category;
 
 namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
@@ -65,6 +68,16 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
             Assert.AreEqual("User", application.Users[1].Roles[1].Name);
             Assert.AreEqual("Admin", application.Users[1].Roles[0].Name);
 
+        }
+
+        [Test]
+        [Category("JIRA-253")]
+        public void Issue_When_Using_Sql_Timestamp_Data_Type()
+        {
+            IList<Parent> parents = sqlMap.QueryForList<Parent>("GetAllParentsNPlus1", null);
+
+            Assert.That(parents[0].Children.Count, Is.EqualTo(2));
+            Assert.That(parents[1].Children.Count, Is.EqualTo(0));
         }
 #endif
 

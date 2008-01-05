@@ -123,6 +123,7 @@
     <Compile Include="Domain\Category.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Domain\Child.cs" />
     <Compile Include="Domain\Complex.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -180,6 +181,7 @@
     <Compile Include="Domain\OuiNonBoolTypeHandlerCallback.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Domain\Parent.cs" />
     <Compile Include="Domain\Petshop\Category.cs" />
     <Compile Include="Domain\Petshop\Item.cs" />
     <Compile Include="Domain\Petshop\Product.cs" />
@@ -343,6 +345,8 @@
     <Content Include="Maps\MSSQL\SqlClient\Order.xml" />
     <Content Include="Maps\MSSQL\SqlClient\Other.xml" />
     <Content Include="Maps\MSSQL\SqlClient\ParameterClass.xml" />
+    <Content Include="Maps\MSSQL\SqlClient\ParentChild1.xml" />
+    <Content Include="Maps\MSSQL\SqlClient\ParentChild2.xml" />
     <Content Include="Maps\MSSQL\SqlClient\ResultClass.xml" />
     <Content Include="Maps\MSSQL\SqlClient\Simple.xml" />
     <Content Include="Maps\MySql\ByteFx\Account.xml" />
