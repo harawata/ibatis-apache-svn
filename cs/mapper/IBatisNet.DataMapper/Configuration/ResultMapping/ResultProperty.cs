@@ -32,6 +32,7 @@ using System.Collections;
 using System.Collections.Generic;
 #endif
 using System.Data;
+using System.Globalization;
 using System.Reflection;
 using System.Xml.Serialization;
 using IBatisNet.Common.Exceptions;
@@ -105,7 +106,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
         [NonSerialized]
         private IFactory _listFactory = null;
 	    [NonSerialized]
-        private static IFactory _arrayListFactory = new ArrayListFactory();
+        private static readonly IFactory _arrayListFactory = new ArrayListFactory();
 	    
 		#endregion
 
@@ -199,7 +200,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
                 if (_typeHandler == null)
                 {
                     throw new DataMapperException(
-                        String.Format("Error on Result property {0}, type handler for {1} is not registered.", this.PropertyName , this.MemberType.Name));
+                        String.Format("Error on Result property {0}, type handler for {1} is not registered.", PropertyName , MemberType.Name));
                 }
 			    return _typeHandler;
 			}
@@ -294,7 +295,24 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		[XmlIgnore]
 		public virtual Type MemberType
 		{
-            get { return _setAccessor.MemberType; }
+            get
+            {
+                if (_setAccessor != null)
+                {
+                    return _setAccessor.MemberType;
+                }
+                else if (_nestedResultMap != null)
+                {
+                    return _nestedResultMap.Class;
+                }
+                else
+                {
+                    throw new IBatisNetException(
+                        String.Format(CultureInfo.InvariantCulture,
+                                      "Could not resolve member type for result property '{0}'. Neither nested result map nor typed setter was provided.",
+                                      _propertyName));
+                }
+            }
 		}
 
 		/// <summary>
@@ -357,15 +375,6 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 
 		#endregion
 
-		#region Constructor (s) / Destructor
-		/// <summary>
-		/// Do not use direclty, only for serialization.
-		/// </summary>
-		public ResultProperty()
-		{
-		}
-		#endregion
-
 		#region Methods
 
 		/// <summary>
@@ -391,25 +400,25 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 				}
 
 #if dotnet2
-                _isGenericIList = TypeUtils.IsImplementGenericIListInterface(this.MemberType);
+                _isGenericIList = TypeUtils.IsImplementGenericIListInterface(MemberType);
 #endif			    
-                _isIList = typeof(IList).IsAssignableFrom(this.MemberType);
+                _isIList = typeof(IList).IsAssignableFrom(MemberType);
 			    
 			    // set the list factory
 #if dotnet2			   
 			    if (_isGenericIList)
 			    {
-			        if (this.MemberType.IsArray)
+			        if (MemberType.IsArray)
 			        {
                         _listFactory = _arrayListFactory;
 			        }
 			        else
 			        {
-                        Type[] typeArgs = this.MemberType.GetGenericArguments();
+                        Type[] typeArgs = MemberType.GetGenericArguments();
 
                         if (typeArgs.Length == 0)// Custom collection which derive from List<T>
 			            {
-                            _listFactory = configScope.DataExchangeFactory.ObjectFactory.CreateFactory(this.MemberType, Type.EmptyTypes);
+                            _listFactory = configScope.DataExchangeFactory.ObjectFactory.CreateFactory(MemberType, Type.EmptyTypes);
 			            }
 			            else
 			            {
@@ -419,7 +428,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
                             Type genericList = typeof(List<>);
                             Type listType = genericList.MakeGenericType(typeArgs);
 
-                            if ((interfaceListType == this.MemberType) || (listType == this.MemberType))
+                            if ((interfaceListType == MemberType) || (listType == MemberType))
                             {
                                 Type constructedType = genericList.MakeGenericType(typeArgs);
                                 _listFactory = configScope.DataExchangeFactory.ObjectFactory.CreateFactory(
@@ -428,7 +437,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
                             }
                             else // Custom collection which derive from List<T>
                             {
-                                _listFactory = configScope.DataExchangeFactory.ObjectFactory.CreateFactory(this.MemberType, Type.EmptyTypes);
+                                _listFactory = configScope.DataExchangeFactory.ObjectFactory.CreateFactory(MemberType, Type.EmptyTypes);
                             }  
 			            }			            
 			        }
@@ -437,30 +446,30 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 #endif			        
                     if (_isIList)
 			    {
-                    if (this.MemberType.IsArray)
+                    if (MemberType.IsArray)
                     {
                         _listFactory = _arrayListFactory;
                     }
 			        else
                     {
-                        if (this.MemberType == typeof(IList))
+                        if (MemberType == typeof(IList))
                         {
                             _listFactory = _arrayListFactory;
                         }
                         else // custom collection
                         {
-                            _listFactory = configScope.DataExchangeFactory.ObjectFactory.CreateFactory(this.MemberType,                                                                                                   Type.EmptyTypes);
+                            _listFactory = configScope.DataExchangeFactory.ObjectFactory.CreateFactory(MemberType,                                                                                                   Type.EmptyTypes);
                         }                        
                     }
 			    }
 			}
 
-			if (this.CallBackName!=null && this.CallBackName.Length >0)
+			if (CallBackName!=null && CallBackName.Length >0)
 			{
-				configScope.ErrorContext.MoreInfo = "Result property '"+_propertyName+"' check the typeHandler attribute '" + this.CallBackName + "' (must be a ITypeHandlerCallback implementation).";
+				configScope.ErrorContext.MoreInfo = "Result property '"+_propertyName+"' check the typeHandler attribute '" + CallBackName + "' (must be a ITypeHandlerCallback implementation).";
 				try 
 				{
-					Type type = configScope.SqlMapper.TypeHandlerFactory.GetType(this.CallBackName);
+					Type type = configScope.SqlMapper.TypeHandlerFactory.GetType(CallBackName);
 					ITypeHandlerCallback typeHandlerCallback = (ITypeHandlerCallback) Activator.CreateInstance( type );
 					_typeHandler = new CustomTypeHandler(typeHandlerCallback);
 				}
@@ -475,7 +484,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 				_typeHandler = configScope.ResolveTypeHandler( resultClass, _propertyName, _clrType, _dbType, true);
 			}
 
-            if (this.IsLazyLoad)
+            if (IsLazyLoad)
             {
                 _lazyFactory = new LazyFactoryBuilder().GetLazyFactory(_setAccessor.MemberType);
             }
@@ -504,30 +513,30 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 
 			if (_columnIndex == UNKNOWN_COLUMN_INDEX)  
 			{
-                value = this.TypeHandler.GetValueByName(this, dataReader);
+                value = TypeHandler.GetValueByName(this, dataReader);
 			} 
 			else 
 			{
-                value = this.TypeHandler.GetValueByIndex(this, dataReader);
+                value = TypeHandler.GetValueByIndex(this, dataReader);
 			}
 
 			bool wasNull = (value == DBNull.Value);
 			if (wasNull)
 			{
-				if (this.HasNullValue) 
+				if (HasNullValue) 
 				{
                     if (_setAccessor != null)
 					{
-                        value = this.TypeHandler.ValueOf(_setAccessor.MemberType, _nullValue);
+                        value = TypeHandler.ValueOf(_setAccessor.MemberType, _nullValue);
 					}
 					else
 					{
-                        value = this.TypeHandler.ValueOf(null, _nullValue);
+                        value = TypeHandler.ValueOf(null, _nullValue);
 					}
 				}
 				else
 				{
-                    value = this.TypeHandler.NullValue;
+                    value = TypeHandler.NullValue;
 				}			
 			}
 
@@ -543,7 +552,7 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 		{
 			if (value == null)
 			{
-                return this.TypeHandler.NullValue;
+                return TypeHandler.NullValue;
 			}
 			else
 			{
@@ -563,16 +572,16 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
         {
             ResultProperty resultProperty = new ResultProperty();
 
-            resultProperty.CLRType = this.CLRType;
-            resultProperty.CallBackName = this.CallBackName;
-            resultProperty.ColumnIndex = this.ColumnIndex;
-            resultProperty.ColumnName = this.ColumnName;
-            resultProperty.DbType = this.DbType;
-            resultProperty.IsLazyLoad = this.IsLazyLoad;
-            resultProperty.NestedResultMapName = this.NestedResultMapName;
-            resultProperty.NullValue = this.NullValue;
-            resultProperty.PropertyName = this.PropertyName;
-            resultProperty.Select = this.Select;
+            resultProperty.CLRType = CLRType;
+            resultProperty.CallBackName = CallBackName;
+            resultProperty.ColumnIndex = ColumnIndex;
+            resultProperty.ColumnName = ColumnName;
+            resultProperty.DbType = DbType;
+            resultProperty.IsLazyLoad = IsLazyLoad;
+            resultProperty.NestedResultMapName = NestedResultMapName;
+            resultProperty.NullValue = NullValue;
+            resultProperty.PropertyName = PropertyName;
+            resultProperty.Select = Select;
 
             return resultProperty;
         }

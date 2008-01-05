@@ -729,6 +729,22 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
         }
 
         /// <summary>
+        ///  Better support for nested result maps when using dictionary
+        /// </remarks>
+        [Test]
+        [Category("JIRA-254")]
+        public void Better_Support_For_Nested_Result_Maps_When_Using_Dictionary()
+        {
+            IDictionary order = (IDictionary)sqlMap.QueryForObject("JIRA-254", 10);
+
+            Assert.IsNotNull(order["Account"]);
+
+            order = (IDictionary)sqlMap.QueryForObject("JIRA-254", 11);
+
+            Assert.IsNull(order["Account"]);
+        }
+
+        /// <summary>
         /// Test ExecuteQueryFor With Complex Joined
         /// </summary>
         /// <remarks>
