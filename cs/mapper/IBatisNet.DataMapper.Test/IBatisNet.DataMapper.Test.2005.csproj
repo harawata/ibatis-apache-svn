@@ -431,6 +431,7 @@
     <Content Include="Scripts\MSSQL\category-init.sql" />
     <Content Include="Scripts\MSSQL\category-procedure.sql" />
     <Content Include="Scripts\MSSQL\category-procedureWithReturn.sql" />
+    <Content Include="Scripts\MSSQL\child-parent-init.sql" />
     <Content Include="Scripts\MSSQL\coupons-init.sql" />
     <Content Include="Scripts\MSSQL\DataBase.sql" />
     <Content Include="Scripts\MSSQL\DBCreation.sql" />

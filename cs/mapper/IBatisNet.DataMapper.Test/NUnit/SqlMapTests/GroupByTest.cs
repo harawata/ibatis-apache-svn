@@ -31,6 +31,8 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
             InitScript(sqlMap.DataSource, ScriptDirectory + "petstore-drop.sql");
             InitScript(sqlMap.DataSource, ScriptDirectory + "petstore-schema.sql");
             InitScript(sqlMap.DataSource, ScriptDirectory + "petstore-init.sql");
+            InitScript(sqlMap.DataSource, ScriptDirectory + "child-parent-init.sql");
+
         }
 
 
