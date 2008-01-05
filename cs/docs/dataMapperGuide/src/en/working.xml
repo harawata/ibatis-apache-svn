@@ -2855,7 +2855,7 @@ Using this approach, you can solve any N+1 problem of any depth or breadth.</par
       statement. This comes in handy for situations where a composite key
       relationship exists, or even if you simply want to use a parameter of
       some name other than #value#. The alternate syntax for the column
-      attribute is simply {param1=column1, param2=column2, …, paramN=columnN}.
+      attribute is simply param1=column1, param2=column2, …, paramN=columnN.
       Consider the example below where the PAYMENT table is keyed by both
       Customer ID and Order ID:</para>
 
