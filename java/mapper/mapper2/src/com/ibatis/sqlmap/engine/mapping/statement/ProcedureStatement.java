@@ -27,7 +27,12 @@ public class ProcedureStatement extends MappedStatement {
   }
 
   protected int sqlExecuteUpdate(StatementScope statementScope, Connection conn, String sqlString, Object[] parameters) throws SQLException {
-    return getSqlExecutor().executeUpdateProcedure(statementScope, conn, sqlString.trim(), parameters);
+ 	  if (statementScope.getSession().isInBatch()) {
+ 	    getSqlExecutor().addBatch(statementScope, conn, sqlString, parameters);
+ 	    return 0;
+ 	  } else {
+      return getSqlExecutor().executeUpdateProcedure(statementScope, conn, sqlString.trim(), parameters);
+    }
   }
 
   protected void sqlExecuteQuery(StatementScope statementScope, Connection conn, String sqlString, Object[] parameters, int skipResults, int maxResults, RowHandlerCallback callback) throws SQLException {
