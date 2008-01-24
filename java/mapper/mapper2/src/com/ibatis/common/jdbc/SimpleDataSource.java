@@ -743,7 +743,7 @@ public class SimpleDataSource implements DataSource {
    * SimplePooledConnection
    * ---------------------------------------------------------------------------------------
    */
-  private static class SimplePooledConnection implements InvocationHandler {
+  public static class SimplePooledConnection implements InvocationHandler {
 
     private static final String CLOSE = "close";
     private static final Class[] IFACES = new Class[]{Connection.class};
