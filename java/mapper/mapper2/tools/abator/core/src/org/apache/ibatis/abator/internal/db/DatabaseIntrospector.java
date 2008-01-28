@@ -216,6 +216,14 @@ public class DatabaseIntrospector {
     }
     
     private void calculateExtraColumnInformation(TableConfiguration tc, Map columns) {
+        Pattern pattern = null;
+        String replaceString = null;
+        if (tc.getColumnRenamingRule() != null) {
+            pattern = Pattern.compile(tc.getColumnRenamingRule().getSearchString());
+            replaceString = tc.getColumnRenamingRule().getReplaceString();
+            replaceString = replaceString == null ? "" : replaceString;//$NON-NLS-1$
+        }
+        
         Iterator entries = columns.entrySet().iterator();
         while (entries.hasNext()) {
             Map.Entry entry = (Map.Entry) entries.next();
@@ -223,28 +231,18 @@ public class DatabaseIntrospector {
             while (tableColumns.hasNext()) {
                 ColumnDefinition cd = (ColumnDefinition) tableColumns.next();
 
-                Pattern pattern = null;
-                String replaceString = null;
-                if (tc.getColumnRenamingRule() != null) {
-                    pattern = Pattern.compile(tc.getColumnRenamingRule().getSearchString());
-                    
-                    replaceString = tc.getColumnRenamingRule().getReplaceString();
-                    replaceString = replaceString == null ? "" : replaceString;//$NON-NLS-1$
+                String calculatedColumnName;
+                if (pattern == null) {
+                    calculatedColumnName = cd.getActualColumnName();
+                } else {
+                    Matcher matcher = pattern.matcher(cd.getActualColumnName());
+                    calculatedColumnName = matcher.replaceAll(replaceString);
                 }
                 
                 if ("true".equalsIgnoreCase(tc.getProperty(PropertyRegistry.TABLE_USE_ACTUAL_COLUMN_NAMES))) { //$NON-NLS-1$
-                    cd.setJavaProperty(JavaBeansUtil.getValidPropertyName(cd
-                            .getActualColumnName()));
+                    cd.setJavaProperty(JavaBeansUtil.getValidPropertyName(calculatedColumnName));
                 } else {
-                    if (pattern != null) {
-                        Matcher matcher = pattern.matcher(cd.getActualColumnName());
-                        String renamedColumn = matcher.replaceAll(replaceString);
-                        cd.setJavaProperty(JavaBeansUtil.getCamelCaseString(renamedColumn,
-                                false));
-                    } else {
-                        cd.setJavaProperty(JavaBeansUtil.getCamelCaseString(cd
-                            .getActualColumnName(), false));
-                    }
+                    cd.setJavaProperty(JavaBeansUtil.getCamelCaseString(calculatedColumnName, false));
                 }
                 
                 try {
