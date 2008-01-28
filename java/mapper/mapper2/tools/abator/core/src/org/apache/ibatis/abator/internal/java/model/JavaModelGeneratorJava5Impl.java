@@ -145,13 +145,22 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setName("createCriteria"); //$NON-NLS-1$
         method.setReturnType(FullyQualifiedJavaType.getCriteriaInstance());
-        method.addBodyLine("Criteria criteria = new Criteria();"); //$NON-NLS-1$
+        method.addBodyLine("Criteria criteria = createCriteriaInternal();"); //$NON-NLS-1$
         method.addBodyLine("if (oredCriteria.size() == 0) {"); //$NON-NLS-1$
         method.addBodyLine("oredCriteria.add(criteria);"); //$NON-NLS-1$
         method.addBodyLine("}"); //$NON-NLS-1$
         method.addBodyLine("return criteria;"); //$NON-NLS-1$
         topLevelClass.addMethod(method);
         
+        method = new Method();
+        method.addComment(table);
+        method.setVisibility(JavaVisibility.PROTECTED);
+        method.setName("createCriteriaInternal"); //$NON-NLS-1$
+        method.setReturnType(FullyQualifiedJavaType.getCriteriaInstance());
+        method.addBodyLine("Criteria criteria = new Criteria();"); //$NON-NLS-1$
+        method.addBodyLine("return criteria;"); //$NON-NLS-1$
+        topLevelClass.addMethod(method);
+
         method = new Method();
         method.addComment(table);
         method.setVisibility(JavaVisibility.PUBLIC);

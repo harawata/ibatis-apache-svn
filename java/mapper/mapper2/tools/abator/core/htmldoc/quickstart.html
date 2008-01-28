@@ -21,7 +21,7 @@
       <li>A <code>&lt;sqlMapGenerator&gt;</code> element to specify target package
           and target project for generated SQL map files</li>
       <li>(Optionally) A <code>&lt;daoGenerator&gt;</code> element to specify target package
-           and target project for generated DAO interfaces and classes (you can
+           and target project for generated DAO interfaces and classes (you may
           omit the <code>&lt;daoGenerator&gt;</code> element if you don't wish to generate DAOs)</li>
       <li>At least one database <code>&lt;table&gt;</code> element</li>
     </ol>
@@ -32,11 +32,11 @@
   <li>Run Abator from the command line with a command like this:
     <pre>
 
-      java -jar abator.jar \temp\abatorConfig.xml true
+      java -jar abator.jar -configfile \temp\abatorConfig.xml -overwrite
     </pre>
     <p>This will tell Abator to run using your configuration file.  It will also tell Abator
     to overwrite any existing Java files with the same name.  If you want to save any existing
-    Java files, specify "false" for the second parameter.  If there is a conflict, Abator
+    Java files, then omit the <code>-overwrite</code> parameter.  If there is a conflict, Abator
     will save the newly generated file with a unique name (e.g. MyClass.java.1).</p>
   </li>
   <li>After running Abator, you will need to create or modify the standard iBATIS

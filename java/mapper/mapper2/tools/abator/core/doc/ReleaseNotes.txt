@@ -8,6 +8,8 @@ Bugs -
 4. Fixed the configuration parser so that it correctly deals with
    external entities
 5. IBATIS-434 - Incorrect default mapping for BIT datatype
+6. Fixed bug where Abator generated incorrect properties for certain
+   database columns (for example, if the column name is I_NAME)
 
 Enhancements - 
 1. IBATIS-348 - escape column names with $ or #, and ignore special characters
@@ -40,6 +42,7 @@ Enhancements -
 15. Java2 is now the default generator set
 16. IBATIS-470 - make legacy DAOs extendable
 17. IBATIS-468 - add <columnRenamingRule>
+18. Added DB2 Main Frame database dialect for generated keys
 
 -------------------------------------------------------------------------------
 Version 1.0.0:

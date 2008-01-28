@@ -15,19 +15,30 @@
 <dl>
   <dt><b>countByExample</b></dt>
   <dd>This method will return an integer representing the number of rows in a table
-      that match the given example.</dd>
+      that match the given criteria.</dd>
   <dt><b>updateByExample</b></dt>
-  <dd>This method will update all rows in a table that match a given example.  This method is
+  <dd>This method will update all rows in a table that match a given criteria.  This method is
       available in the Java2 and Java5 generator sets only.  There is also a "selective" version
-      of the method that only updates certain columns of a table.</dd>
+      of the method that only updates certain columns of a table (the selective version of this
+      method is probably the more useful version to use in most situations).</dd>
 </dl>
+
+<h3>Bugs Fixed</h3>
+<ul>
+  <li>Fixed bug for corner case where a criteria class is created, but no criteria
+      are set.</li>
+  <li>Fixed a bug that caused the JavaModelGenerator's "trimStrings" property to fail</li>
+  <li>Fixed the XML file merger so that internal entities are preserved</li>
+  <li>Fixed the XML configuration parser so that external entities are handled properly</li>
+  <li>Fixed bug - incorrect datatype mapping for JDBC BIT datatype</li>
+  <li>Fixed bug where Abator generated incorrect properties for certain database columns
+      (for example, if the column name is I_NAME)</li>
+</ul>
 
 <h3>Miscellaneous Changes</h3>
 <ul>
   <li>Java2 is now the default generator set.  <b>The Legacy generator set will be removed in
       the next release of Abator.</b></li>
-  <li>Fixed a bug that caused the JavaModelGenerator's "trimStrings" property to fail</li>
-  <li>Fixed the XML file merger so that internal entities are preserved</li>
   <li>Added the ability to specify properties to ignore qualifiers and change runtime
       table names in the generated SQL for a table.  Primary use cases for this
       support include:
@@ -48,6 +59,9 @@
   <li>Added SYBASE dialect for generated keys.
       See the <a href="configreference/generatedKey.html">&lt;generatedKey&gt;</a>
       reference page for more information.</li>
+  <li>Added DB2_MF (DB2 on Main Frames) dialect for generated keys.
+      See the <a href="configreference/generatedKey.html">&lt;generatedKey&gt;</a>
+      reference page for more information.</li>
   <li>Abator will now automatically escape identifiers that contain the $ or # characters
       as these characters have special meaning in iBATIS configuration files.</li>
   <li>Added a <code>clear</code> method to the generated example classes (in the Java2 and Java5
@@ -63,14 +77,25 @@
       </ul>
     See the <a href="configreference/table.html">&lt;table&gt;</a>
     reference page for more information.</li>
-  <li>Fixed bug - incorrect datatype mapping for JDBC BIT datatype</li>
   <li>Made the generated Example and Criteria classes extendable</li>
   <li>Made the legacy DAOs extendable</li>
-  <li>Added the ability to provide a renaming rule for columns.  This is for the 
+  <li>Added the ability to provide a renaming rule for columns.  This is for the
       use case where columns have a common prefix that should be removed before
       calculating the property name.  See the
       <a href="configreference/columnRenamingRule.html">&lt;columnRenamingRule&gt;</a>
       reference page for more information</li>
+  <li>Added support for persisting a configuration to XML - this to enable
+      a graphical editor in the future</li>
+  <li>Add afterXXXGenerationHook() methods in all generators to enable adding
+      extra Java code or XML elements to any generated object.  This will make
+      it easier to create customized generators.</li>
+  <li>API change to allow generating with selected contexts rather than
+      the entire config file.</li>
+  <li>API change to allow generating with selected tables rather than
+    the entire config file.</li>
+  <li>Exposed new support for selecting tables and/or contexts to the
+      command line and the Ant task - this has added an advanced syntax to the command
+      line for Abator.</li>
 </ul>
 
 <h2>Version 1.0.0</h2>

@@ -77,12 +77,16 @@ is enabled.</p>
 This implements a simple "query by example" functionality that can be used to generate many
 different database queries.  The returned rows will not include any BLOB fields that exist in the table
 (see the select by example with BLOBs statement below).</p>
+<p><b>Important:</b> If the example class is null, or no criteria have been set,
+then <b>all</b> rows in the table will be selected.</p>
 <p>This element will be generated if the select by example statement is enabled.</p>
 
 <h2>Select by Example With BLOBs</h2>
 <p>This element contains a select statement with rows that match the example object.
 This implements a simple "query by example" functionality that can be used to generate many
 different database queries.  The returned rows will include any BLOB fields that exist in the table.</p>
+<p><b>Important:</b> If the example class is null, or no criteria have been set,
+then <b>all</b> rows in the table will be selected.</p>
 <p>This element will be generated if the table contains BLOB fields, and the select by example
  statement is enabled.</p>
 
@@ -134,6 +138,49 @@ primary key.</p>
 <h2>Delete By Example</h2>
 <p>This element is a delete statement that will delete one or more rows in the table - designated by
 the example object.</p>
+<p><b>Important:</b> If the example class is null, or no criteria have been set,
+then <b>all</b> rows in the table will be deleted.</p>
 <p>This element will be generated if the delete by example statement is enabled.</p>
+
+<h2>Count By Example</h2>
+<p>This element is a select count(*) statement that will return the number of rows in the table
+that match the specified example object.</p>
+<p><b>Important:</b> If the example class is null, or no criteria have been set,
+then the select will return the number of rows in the entire table.</p>
+<p>This element will be generated if the count by example statement is enabled.</p>
+
+<h2>Update By Example</h2>
+<p>This element is an update statement that will update all rows in a table that match
+the specified example.  The update statement will update all fields in the table unless:</p>
+<ul>
+  <li>The field has been ignored by the <code>&lt;ignoreColumn&gt;</code> configuration element</li>
+  <li>The field is a BLOB field (see the update by example with BLOBs element)</li>
+</ul>
+<p><b>Important:</b> If the example class is null, or no criteria have been set,
+then <b>all</b> rows in the table will be updated.</p>
+<p>This element will be generated if the update by example statement is enabled.</p>
+
+<h2>Update By Example With BLOBs</h2>
+<p>This element is an update statement that will update all rows in a table that match
+the specified example.  The update statement will update all fields in the table (including BLOB fields)
+unless:</p>
+<ul>
+  <li>The field has been ignored by the <code>&lt;ignoreColumn&gt;</code> configuration element</li>
+</ul>
+<p><b>Important:</b> If the example class is null, or no criteria have been set,
+then <b>all</b> rows in the table will be updated.</p>
+<p>This element will be generated if the table contains BLOB columns, and the update by
+example statement is enabled.</p>
+
+<h2>Update By Example Selective</h2>
+<p>This element is an update statement that will update all rows in a table that match the
+specified example.  The update statement will update only the fields in the table whose corresponding
+property in the parameter object is non-null.  This statement can be used to update
+certain columns in certain records without affecting all columns in the records.  <b>Important:</b>
+if the column has been mapped to a primitive type, then the column will always be
+updated.</p>
+<p><b>Important:</b> If the example class is null, or no criteria have been set,
+then <b>all</b> rows in the table will be updated.</p>
+<p>This element will be generated if the update by example statement is enabled.</p>
 </body>
 </html>

@@ -36,6 +36,8 @@ public class DatabaseDialects {
     
     public static final DatabaseDialects SYBASE = new DatabaseDialects("SELECT @@IDENTITY"); //$NON-NLS-1$
     
+    public static final DatabaseDialects DB2_MF = new DatabaseDialects("SELECT IDENTITY_VAL_LOCAL() FROM SYSIBM.SYSDUMMY1"); //$NON-NLS-1$
+    
     private String identityRetrievalStatement;
 
     /**
@@ -73,6 +75,8 @@ public class DatabaseDialects {
             returnValue = HSQLDB;
         } else if ("SYBASE".equalsIgnoreCase(database)) { //$NON-NLS-1$
             returnValue = SYBASE;
+        } else if ("DB2_MF".equalsIgnoreCase(database)) { //$NON-NLS-1$
+            returnValue = DB2_MF;
         }
         
         return returnValue;

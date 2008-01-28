@@ -28,12 +28,12 @@ percentage of database operations that are simple CRUD (Create, Retrieve, Update
       <li>a class to match the primary key of the table (if there is a primary key)</li>
       <li>a class to match the non-primary key fields of the table (except BLOB fields)</li>
       <li>a class to include the BLOB fields of a table (if the table has BLOB fields)</li>
-      <li>a class to enable "Query By Example" functionality</li>
+      <li>a class to enable dynamic selects, updates, and deletes</li>
     </ul>
     <p>There is an inheritance relationship between these classes as appropriate.
-       Abator may be configured to generate different types of POJO hierarchies -
-       you may choose to tell
-       Abator to only generate a single domain object for each table if you so
+       Note that Abator may be configured to generate different types of POJO hierarchies -
+       for example, you may choose to tell
+       Abator to generate a single domain object for each table if you so
        desire.</p>
   </li>
   <li>iBATIS Compatible SQL Map XML Files.  Abator generates SQL for simple
@@ -42,6 +42,7 @@ percentage of database operations that are simple CRUD (Create, Retrieve, Update
     <ul>
       <li>insert</li>
       <li>update by primary key</li>
+      <li>update by example (using a dynamic where clause)</li>
       <li>delete by primary key</li>
       <li>delete by example (using a dynamic where clause)</li>
       <li>select by primary key</li>
@@ -49,7 +50,7 @@ percentage of database operations that are simple CRUD (Create, Retrieve, Update
     </ul>
    <p>There are different variations of these statements depending on the
    structure of the table (for example, if the table doesn't have a primary key,
-   then Abator will not generate an update by primary key function, etc.)</p>
+   then Abator will not generate an update by primary key function).</p>
   </li>
   <li>DAO interface and implementation classes that make appropriate use of the
     above objects.  The generation of DAO classes is optional.  Abator will
@@ -78,7 +79,7 @@ percentage of database operations that are simple CRUD (Create, Retrieve, Update
       You can run it over and over again without fear of losing custom changes to you XML.
       Abator will replace any XML elements that were generated in a previous run.
       </li>
-  <li>Abator will not merge Java files, it can either overwrite existing files
+  <li>Abator will <b>not</b> merge Java files, it can either overwrite existing files
       or save newly generated files with a different unique name.  If you make changes
       to the generated Java files and run Abator iteratively you will have to
       merge the changes by hand.  When run as an
@@ -94,7 +95,7 @@ DatabaseMetaData interface, especially the <code>getColumns</code> and
 
 <h2>Support</h2>
 <p>Support for Abator is provided through the iBATIS user mailing list.
-You can subscribe to the mailing list by sending a note to:</p>
+You may subscribe to the mailing list by sending a note to:</p>
 
 <blockquote>
   <p>
@@ -118,7 +119,7 @@ You can subscribe to the mailing list by sending a note to:</p>
 
 <p>If you think you have found a bug, please ask a question about it on the user list first,
 before creating a JIRA issue.  If you find a bug, or have a new feature request,
-you can open a JIRA issue for Abator at</p>
+you may open a JIRA issue for Abator at</p>
 
 <blockquote>
   <p>
@@ -128,7 +129,7 @@ you can open a JIRA issue for Abator at</p>
   </p>
 </blockquote>
 
-<p>Please select the "Tools" component when creating any issues for Abator.</p>
+<p>Please select the "Tools" component when creating any JIRA issues for Abator.</p>
 
 </body>
 </html>

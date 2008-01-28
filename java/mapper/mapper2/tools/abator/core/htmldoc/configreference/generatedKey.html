@@ -34,31 +34,37 @@ element of the <a href="table.html">&lt;table&gt;</a> element.</p>
           <table>
             <tr>
               <th>Cloudscape</th>
-              <td>This will translate to <code>VALUES IDENTITY_VAL_LOCAL()</code></td>
+              <td>This will translate to: <code>VALUES IDENTITY_VAL_LOCAL()</code></td>
             </tr>
             <tr>
               <th>DB2</th>
-              <td>This will translate to <code>VALUES IDENTITY_VAL_LOCAL()</code></td>
+              <td>This will translate to: <code>VALUES IDENTITY_VAL_LOCAL()</code></td>
+            </tr>
+            <tr>
+              <th valign="top">DB2_MF</th>
+              <td>This will translate to: <br/> <code>SELECT IDENTITY_VAL_LOCAL() FROM SYSIBM.SYSDUMMY1</code>
+                <p>Use this value for DB2 on zOS (Main Frames) and, in some cases, iSeries (AS/400)</p>
+              </td>
             </tr>
             <tr>
               <th>Derby</th>
-              <td>This will translate to <code>VALUES IDENTITY_VAL_LOCAL()</code></td>
+              <td>This will translate to: <code>VALUES IDENTITY_VAL_LOCAL()</code></td>
             </tr>
             <tr>
               <th>HSQLDB</th>
-              <td>This will translate to <code>CALL IDENTITY()</code></td>
+              <td>This will translate to: <code>CALL IDENTITY()</code></td>
             </tr>
             <tr>
               <th>MySql</th>
-              <td>This will translate to <code>SELECT LAST_INSERT_ID()</code></td>
+              <td>This will translate to: <code>SELECT LAST_INSERT_ID()</code></td>
             </tr>
             <tr>
               <th>SqlServer</th>
-              <td>This will translate to <code>SELECT SCOPE_IDENTITY()</code></td>
+              <td>This will translate to: <code>SELECT SCOPE_IDENTITY()</code></td>
             </tr>
             <tr>
               <th>SYBASE</th>
-              <td>This will translate to <code>SELECT @@IDENTITY</code></td>
+              <td>This will translate to: <code>SELECT @@IDENTITY</code></td>
             </tr>
           </table>
         </td>
