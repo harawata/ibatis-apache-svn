@@ -48,7 +48,7 @@ public class JdbcTypeRegistry {
   private JdbcTypeRegistry() {
   }
 
-  private static void setType(String name, int value) {
+  public static void setType(String name, int value) {
     TYPE_MAP.put(name, new Integer(value));
   }
 
