@@ -28,6 +28,16 @@ package org.apache.ibatis.abator.config;
 public class PropertyRegistry {
     public static final String ANY_ENABLE_SUB_PACKAGES = "enableSubPackages"; //$NON-NLS-1$
     
+    /**
+     * recognized by table and java model generator
+     */
+    public static final String ANY_ROOT_CLASS = "rootClass"; //$NON-NLS-1$
+
+    /**
+     * recognized by table and dao generator
+     */
+    public static final String ANY_ROOT_INTERFACE = "rootInterface"; //$NON-NLS-1$
+
     public static final String TABLE_USE_COLUMN_INDEXES = "useColumnIndexes"; //$NON-NLS-1$
     public static final String TABLE_USE_ACTUAL_COLUMN_NAMES = "useActualColumnNames"; //$NON-NLS-1$
     public static final String TABLE_IGNORE_QUALIFIERS_AT_RUNTIME = "ignoreQualifiersAtRuntime"; //$NON-NLS-1$
@@ -39,10 +49,8 @@ public class PropertyRegistry {
 
     public static final String DAO_EXAMPLE_METHOD_VISIBILITY = "exampleMethodVisibility"; //$NON-NLS-1$
     public static final String DAO_METHOD_NAME_CALCULATOR = "methodNameCalculator"; //$NON-NLS-1$
-    public static final String DAO_ROOT_INTERFACE = "rootInterface"; //$NON-NLS-1$
 
     public static final String TYPE_RESOLVER_FORCE_BIG_DECIMALS = "forceBigDecimals"; //$NON-NLS-1$
 
-    public static final String MODEL_GENERATOR_ROOT_CLASS = "rootClass"; //$NON-NLS-1$
     public static final String MODEL_GENERATOR_TRIM_STRINGS = "trimStrings"; //$NON-NLS-1$
 }

@@ -75,7 +75,7 @@ public class AbatorConfigurationParser {
     public AbatorConfigurationParser(Properties properties, List warnings) {
         super();
         if (properties == null) {
-            this.properties = new Properties();
+            this.properties = System.getProperties();
         } else {
             this.properties = properties;
         }
@@ -481,10 +481,6 @@ public class AbatorConfigurationParser {
         boolean identity = "true".equals(attributes.getProperty("identity")); //$NON-NLS-1$ //$NON-NLS-2$
         String sqlStatement = attributes.getProperty("sqlStatement"); //$NON-NLS-1$
         String type = attributes.getProperty("type"); //$NON-NLS-1$
-        // if type is specified then set identity to false
-        if(type != null && !type.trim().equals("")) {
-          identity = false;
-        }
 
         GeneratedKey gk = new GeneratedKey(column, sqlStatement, identity, type);
 

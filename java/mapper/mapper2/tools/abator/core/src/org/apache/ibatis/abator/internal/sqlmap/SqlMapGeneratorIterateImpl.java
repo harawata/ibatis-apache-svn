@@ -460,7 +460,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         GeneratedKey gk = introspectedTable.getGeneratedKey();
 
-        if (gk != null && !gk.isIdentity()) {
+        if (gk != null && gk.isBeforeInsert()) {
             ColumnDefinition cd = introspectedTable.getColumn(gk.getColumn());
             // if the column is null, then it's a configuration error. The
             // warning has already been reported
@@ -479,14 +479,12 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         valuesClause.append("values ("); //$NON-NLS-1$
 
-        ColumnDefinition identityColumn = null;
         boolean comma = false;
         Iterator iter = introspectedTable.getAllColumns();
         while (iter.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) iter.next();
 
             if (cd.isIdentity()) {
-                identityColumn = cd;
                 // cannot set values on identity fields
                 continue;
             }
@@ -507,8 +505,14 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         answer.addElement(new TextElement(insertClause.toString()));
         answer.addElement(new TextElement(valuesClause.toString()));
 
-        if (gk != null && identityColumn != null) {
-            answer.addElement(getSelectKey(identityColumn, gk));
+        if (gk != null && !gk.isBeforeInsert()) {
+            ColumnDefinition cd = introspectedTable.getColumn(gk.getColumn());
+            // if the column is null, then it's a configuration error. The
+            // warning has already been reported
+            if (cd != null) {
+                // pre-generated key
+                answer.addElement(getSelectKey(cd, gk));
+            }
         }
 
         return answer;
@@ -908,7 +912,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         answer.addAttribute(new Attribute("resultClass", identityColumnType)); //$NON-NLS-1$
         answer.addAttribute(new Attribute(
                 "keyProperty", columnDefinition.getJavaProperty())); //$NON-NLS-1$
-        if(generatedKey.getType() != null && !generatedKey.getType().trim().equals("")) {
+        if(StringUtility.stringHasValue(generatedKey.getType())) {
           answer.addAttribute(new Attribute("type", generatedKey.getType())); //$NON-NLS-1$  
         }
         answer.addElement(new TextElement(generatedKey.getRuntimeSqlStatement()));

@@ -444,7 +444,11 @@ public class BaseDAOGenerator implements DAOGenerator {
         Interface answer = new Interface(getDAOInterfaceType(table));
         answer.setVisibility(JavaVisibility.PUBLIC);
 
-        String rootInterface = properties.getProperty(PropertyRegistry.DAO_ROOT_INTERFACE);
+        String rootInterface = introspectedTable.getTableConfigurationProperty(PropertyRegistry.ANY_ROOT_INTERFACE);
+        if (rootInterface == null) {
+            rootInterface = properties.getProperty(PropertyRegistry.ANY_ROOT_INTERFACE);
+        }
+        
         if (StringUtility.stringHasValue(rootInterface)) {
             FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(rootInterface);
             answer.addSuperInterface(fqjt);

@@ -43,6 +43,9 @@ Enhancements -
 16. IBATIS-470 - make legacy DAOs extendable
 17. IBATIS-468 - add <columnRenamingRule>
 18. Added DB2 Main Frame database dialect for generated keys
+19. Allow rootClass and rootInterface to be specified at the table level
+20. Allowed specifying a type (pre or post) for the generatedKey
+    element.
 
 -------------------------------------------------------------------------------
 Version 1.0.0:

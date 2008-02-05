@@ -176,7 +176,8 @@ specified with the <a href="property.html">&lt;property&gt;</a> child element:</
   <tr>
     <td valign="top">rootInterface</td>
     <td>This property can be used to specify a super interface for all generated
-      DAO interface objects.
+      DAO interface objects.  This value may be overridden by specifying
+      the <code>rootInterface</code> property on a Table configuration.
       <p><b>Important:</b> Abator does not verify that the interface exists, or is a
        valid Java interface.</p>
       <p>If specified, the value of this property should be a fully qualified

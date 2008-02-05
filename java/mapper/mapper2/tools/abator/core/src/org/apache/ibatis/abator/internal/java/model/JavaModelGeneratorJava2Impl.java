@@ -240,7 +240,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         TopLevelClass answer = new TopLevelClass(type);
         answer.setVisibility(JavaVisibility.PUBLIC);
 
-        String rootClass = properties.getProperty(PropertyRegistry.MODEL_GENERATOR_ROOT_CLASS);
+        String rootClass = getRootClass(introspectedTable);
         if (rootClass != null) {
             answer.setSuperClass(new FullyQualifiedJavaType(rootClass));
             answer.addImportedType(answer.getSuperClass());
@@ -265,7 +265,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         if (introspectedTable.getRules().generatePrimaryKeyClass()) {
             answer.setSuperClass(getPrimaryKeyType(table));
         } else {
-            String rootClass = properties.getProperty(PropertyRegistry.MODEL_GENERATOR_ROOT_CLASS);
+            String rootClass = getRootClass(introspectedTable);
             if (rootClass != null) {
                 answer.setSuperClass(new FullyQualifiedJavaType(rootClass));
                 answer.addImportedType(answer.getSuperClass());
@@ -1460,5 +1460,14 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
     public void setAbatorContext(AbatorContext abatorContext) {
         this.abatorContext = abatorContext;
+    }
+    
+    protected String getRootClass (IntrospectedTable introspectedTable) {
+        String rootClass = introspectedTable.getTableConfigurationProperty(PropertyRegistry.ANY_ROOT_CLASS);
+        if (rootClass == null) {
+            rootClass = properties.getProperty(PropertyRegistry.ANY_ROOT_CLASS);
+        }
+        
+        return rootClass;
     }
 }

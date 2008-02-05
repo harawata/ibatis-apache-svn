@@ -96,7 +96,8 @@ specified with the <a href="property.html">&lt;property&gt;</a> child element:</
     <td>This property can be used to specify a root class for all generated
       Java model objects.  Abator will specify this value as the super class
       of the primary key object, if the table has a primary key, or the
-      record object otherwise.
+      record object otherwise.  This value may be overridden by specifying
+      the <code>rootClass</code> property on a Table configuration.
       <p><b>Important:</b> Abator does not verify that the class exists, or is a
        valid Java class.  The generated classes may override elements in this
        class without warning.</p>

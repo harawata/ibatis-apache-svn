@@ -18,6 +18,7 @@ package org.apache.ibatis.abator.config;
 import org.apache.ibatis.abator.api.dom.xml.Attribute;
 import org.apache.ibatis.abator.api.dom.xml.XmlElement;
 import org.apache.ibatis.abator.internal.db.DatabaseDialects;
+import org.apache.ibatis.abator.internal.util.StringUtility;
 
 /**
  * This class specifies that a key is auto-generated, either as an identity
@@ -70,12 +71,27 @@ public class GeneratedKey {
         return type;
     }
     
+    public boolean isBeforeInsert() {
+        boolean rc;
+        if (StringUtility.stringHasValue(type)) {
+            rc = true;
+        } else {
+            if (isIdentity) {
+                rc = false;
+            } else {
+                rc = true;
+            }
+        }
+        
+        return rc;
+    }
+    
     public XmlElement toXmlElement() {
         XmlElement xmlElement = new XmlElement("generatedKey"); //$NON-NLS-1$
         xmlElement.addAttribute(new Attribute("column", column)); //$NON-NLS-1$
         xmlElement.addAttribute(new Attribute("sqlStatement", configuredSqlStatement)); //$NON-NLS-1$
-        xmlElement.addAttribute(new Attribute("type", type));
-        xmlElement.addAttribute(new Attribute("identity",//$NON-NLS-1$
+        xmlElement.addAttribute(new Attribute("type", type)); //$NON-NLS-1$
+        xmlElement.addAttribute(new Attribute("identity", //$NON-NLS-1$
                 isIdentity ? "true" : "false")); //$NON-NLS-1$ //$NON-NLS-2$
         
         return xmlElement;

@@ -481,6 +481,15 @@ public class TableConfiguration extends PropertyHolder {
             errors
                 .add(Messages.getString("ValidationError.7",  //$NON-NLS-1$
                         fqTableName));
+            
+            String type = generatedKey.getType();
+            if (StringUtility.stringHasValue(type)) {
+                if (!"pre".equals(type) && !"post".equals(type)) { //$NON-NLS-1$ //$NON-NLS-2$
+                    errors
+                    .add(Messages.getString("ValidationError.15",  //$NON-NLS-1$
+                            fqTableName));
+                }
+            }
         }
         
         if ("true".equalsIgnoreCase(getProperty(PropertyRegistry.TABLE_USE_COLUMN_INDEXES))) {  //$NON-NLS-1$

@@ -178,6 +178,9 @@ home page for information on installing the Eclipse plugin.</p>
        accessed in the Abator configuration file with the escape sequence
        <code>${generated.source.dir}</code>
    </li>
+   <li>If a property is specified in the configuration file and is not resolved,
+       then the escaped property string will be passed "as is" into the generated code.
+   </li>
 </ul>
 
 <h2>Running Abator from Java with an XML Configuration File</h2>
@@ -194,6 +197,21 @@ home page for information on installing the Eclipse plugin.</p>
    Abator abator = new Abator(config, callback, warnings);
    abator.generate(null);
 </pre>
+
+<p>Notes:</p>
+<ul>
+   <li>Configuration file properties may be passed to the parser as a parameter on
+       the AbatorConfigurationParser constructor.  If not passed explicitly, the JVM
+       system properties will be searched for the value of configuration file
+       properties.  For example, the property
+       <code>generated.source.dir</code> can be
+       accessed in the Abator configuration file with the escape sequence
+       <code>${generated.source.dir}</code>
+   </li>
+   <li>If a property is specified in the configuration file and is not resolved,
+       then the escaped property string will be passed "as is" into the generated code.
+   </li>
+</ul>
 
 <h2>Running Abator from Java with a Java Based Configuration</h2>
 <p>The following code sample shows how to call Abator from Java only.  It does
