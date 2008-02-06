@@ -324,6 +324,18 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         method.setName("addCriterion"); //$NON-NLS-1$
         method.addParameter(new Parameter(FullyQualifiedJavaType
                 .getStringInstance(), "condition")); //$NON-NLS-1$
+        method.addBodyLine("if (condition == null) {"); //$NON-NLS-1$
+        method
+                .addBodyLine("throw new RuntimeException(\"Value for condition cannot be null\");"); //$NON-NLS-1$
+        method.addBodyLine("}"); //$NON-NLS-1$
+        method.addBodyLine("criteriaWithoutValue.add(condition);"); //$NON-NLS-1$
+        answer.addMethod(method);
+
+        method = new Method();
+        method.setVisibility(JavaVisibility.PROTECTED);
+        method.setName("addCriterion"); //$NON-NLS-1$
+        method.addParameter(new Parameter(FullyQualifiedJavaType
+                .getStringInstance(), "condition")); //$NON-NLS-1$
         method.addParameter(new Parameter(FullyQualifiedJavaType
                 .getObjectInstance(), "value")); //$NON-NLS-1$
         method.addParameter(new Parameter(FullyQualifiedJavaType

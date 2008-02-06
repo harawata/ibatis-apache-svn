@@ -37,8 +37,7 @@
 
 <h3>Miscellaneous Changes</h3>
 <ul>
-  <li>Java2 is now the default generator set.  <b>The Legacy generator set will be removed in
-      the next release of Abator.</b></li>
+  <li>Java2 is now the default generator set.</li>
   <li>Added the ability to specify properties to ignore qualifiers and change runtime
       table names in the generated SQL for a table.  Primary use cases for this
       support include:
@@ -77,7 +76,10 @@
       </ul>
     See the <a href="configreference/table.html">&lt;table&gt;</a>
     reference page for more information.</li>
-  <li>Made the generated Example and Criteria classes extendable</li>
+  <li>Made the generated Example and Criteria classes extendable.  Added some documentation
+      about how to extend these classes.  See the
+      <a href="generatedobjects/extendingExampleClass.html">Extending the Example Classes</a>
+      reference page for more information.</li>
   <li>Made the legacy DAOs extendable</li>
   <li>Added the ability to provide a renaming rule for columns.  This is for the
       use case where columns have a common prefix that should be removed before

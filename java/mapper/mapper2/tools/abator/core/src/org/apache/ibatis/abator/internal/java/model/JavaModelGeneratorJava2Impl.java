@@ -622,7 +622,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         method.setName(sb.toString());
         method.setReturnType(FullyQualifiedJavaType.getCriteriaInstance());
         sb.setLength(0);
-        sb.append("criteriaWithoutValue.add(\""); //$NON-NLS-1$
+        sb.append("addCriterion(\""); //$NON-NLS-1$
         sb.append(cd.getAliasedActualColumnName());
         sb.append(' ');
         sb.append(operator);
@@ -969,6 +969,21 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         answer.addMethod(method);
 
         // now add the methods for simplifying the individual field set methods
+        method = new Method();
+        method.setVisibility(JavaVisibility.PROTECTED);
+        if (abatorContext.getSuppressTypeWarnings()) {
+            method.addSuppressTypeWarningsAnnotation();
+        }
+        method.setName("addCriterion"); //$NON-NLS-1$
+        method.addParameter(new Parameter(FullyQualifiedJavaType
+                .getStringInstance(), "condition")); //$NON-NLS-1$
+        method.addBodyLine("if (condition == null) {"); //$NON-NLS-1$
+        method
+                .addBodyLine("throw new RuntimeException(\"Value for condition cannot be null\");"); //$NON-NLS-1$
+        method.addBodyLine("}"); //$NON-NLS-1$
+        method.addBodyLine("criteriaWithoutValue.add(condition);"); //$NON-NLS-1$
+        answer.addMethod(method);
+
         method = new Method();
         method.setVisibility(JavaVisibility.PROTECTED);
         if (abatorContext.getSuppressTypeWarnings()) {
