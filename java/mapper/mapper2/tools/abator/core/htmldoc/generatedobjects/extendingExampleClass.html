@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
  "http://www.w3c.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -143,19 +142,16 @@ If at all possible, we suggest using one of the other methods listed below.</p>
 
 This method can be used to add simple tests related to a single parameter to the generated where clause.</p>
 
-<p>For example, suppose you wanted to select customers who are at least 16 years old.
+<p>For example, suppose you wanted to perform a case insensitve search on certain columns.
 In MySQL, the predicate could look like this:</p>
-<code>DATEDIFF(CURDATE(), BIRTH_DATE) >= 5844</code>
-<p><i>Note: This assumes 365.25 days per year - a crude approximation</i></p>
+<code>upper(FIRST_NAME) like ?</code>
 <p>This predicate fits the capabilities of a single parameter predicate - where the predicate
 is a string value followed by a single parameter.  Add the following
 method to the <code>ExtendedCriteria</code> for this functionality:</p>
 <pre>
-public ExtendedCriteria andAgeGreaterThanOrEqual(int value) {
-  int days = (int) (365.25 * value);
-
-  addCriterion("DATEDIFF(CURDATE(), BIRTH_DATE) >=",
-    new Integer(days), "age");
+public ExtendedCriteria andFirstNameLikeInsensitive(String value) {
+  addCriterion("upper(FIRST_NAME) like",
+    value.toUpperCase(), "firstName");
 
   return this;
 }
@@ -165,7 +161,7 @@ public ExtendedCriteria andAgeGreaterThanOrEqual(int value) {
 <pre>
 ExtendedExample example = new ExtendedExample();
 ExtendedCriteria criteria = (ExtendedCriteria) example.createCriteria();
-criteria.andAgeGreaterThanOrEqual(16);
+criteria.andFirstNameLikeInsensitive("fred%");
 List results = selectByExample(example);
 </pre>
 
