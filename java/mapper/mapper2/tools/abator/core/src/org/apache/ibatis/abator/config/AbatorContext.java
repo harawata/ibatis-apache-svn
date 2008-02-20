@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.ibatis.abator.api.CommentGenerator;
 import org.apache.ibatis.abator.api.DAOGenerator;
 import org.apache.ibatis.abator.api.IntrospectedTable;
 import org.apache.ibatis.abator.api.JavaModelGenerator;
@@ -32,6 +33,7 @@ import org.apache.ibatis.abator.api.SqlMapGenerator;
 import org.apache.ibatis.abator.api.dom.xml.Attribute;
 import org.apache.ibatis.abator.api.dom.xml.XmlElement;
 import org.apache.ibatis.abator.internal.AbatorObjectFactory;
+import org.apache.ibatis.abator.internal.DefaultCommentGenerator;
 import org.apache.ibatis.abator.internal.NullProgressCallback;
 import org.apache.ibatis.abator.internal.db.ConnectionFactory;
 import org.apache.ibatis.abator.internal.db.DatabaseIntrospector;
@@ -68,6 +70,8 @@ public class AbatorContext extends PropertyHolder {
     
     private boolean suppressTypeWarnings;
     
+    private CommentGenerator commentGenerator;
+    
     /**
      * Constructs an AbatorContext object.
      * 
@@ -98,6 +102,9 @@ public class AbatorContext extends PropertyHolder {
         }
         
 		tableConfigurations = new ArrayList();
+        
+        // TODO - expose this as a configurable property
+        this.commentGenerator = new DefaultCommentGenerator();
     }
 
 	public void addTableConfiguration(TableConfiguration tc) {
@@ -432,5 +439,13 @@ public class AbatorContext extends PropertyHolder {
 
     public boolean getSuppressTypeWarnings() {
         return suppressTypeWarnings;
+    }
+
+    public CommentGenerator getCommentGenerator() {
+        return commentGenerator;
+    }
+
+    public void setCommentGenerator(CommentGenerator commentGenerator) {
+        this.commentGenerator = commentGenerator;
     }
 }

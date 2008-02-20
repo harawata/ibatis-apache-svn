@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.ibatis.abator.api.CommentGenerator;
 import org.apache.ibatis.abator.api.FullyQualifiedTable;
 import org.apache.ibatis.abator.api.IntrospectedTable;
 import org.apache.ibatis.abator.api.dom.OutputUtilities;
@@ -51,15 +52,18 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         if (!introspectedTable.getRules().generateExampleClass()) {
             return null;
         }
+        
+        CommentGenerator commentGenerator = abatorContext.getCommentGenerator();
 
         FullyQualifiedTable table = introspectedTable.getTable();
         FullyQualifiedJavaType type = getExampleType(table);
         TopLevelClass topLevelClass = new TopLevelClass(type);
+        commentGenerator.addJavaFileComment(topLevelClass);
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
         
         // add default constructor
         Method method = new Method();
-        method.addComment(table);
+        commentGenerator.addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setConstructor(true);
         method.setName(type.getShortName());
@@ -74,7 +78,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
                 || rules.generateUpdateByExampleWithBLOBs()
                 ||rules.generateUpdateByExampleWithoutBLOBs()) {
             method = new Method();
-            method.addComment(table);
+            commentGenerator.addGeneralMethodComment(method, table);
             method.setVisibility(JavaVisibility.PROTECTED);
             method.setConstructor(true);
             method.setName(type.getShortName());
@@ -86,14 +90,14 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         
         // add field, getter, setter for orderby clause
         Field field = new Field();
-        field.addComment(table);
+        commentGenerator.addFieldComment(field, table);
         field.setVisibility(JavaVisibility.PROTECTED);
         field.setType(FullyQualifiedJavaType.getStringInstance());
         field.setName("orderByClause"); //$NON-NLS-1$
         topLevelClass.addField(field);
 
         method = new Method();
-        method.addComment(table);
+        commentGenerator.addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setName("setOrderByClause"); //$NON-NLS-1$
         method.addParameter(new Parameter(FullyQualifiedJavaType
@@ -102,7 +106,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         topLevelClass.addMethod(method);
 
         method = new Method();
-        method.addComment(table);
+        commentGenerator.addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType.getStringInstance());
         method.setName("getOrderByClause"); //$NON-NLS-1$
@@ -111,7 +115,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
 
         // add field and methods for the list of ored criteria
         field = new Field();
-        field.addComment(table);
+        commentGenerator.addFieldComment(field, table);
         field.setVisibility(JavaVisibility.PROTECTED);
 
         FullyQualifiedJavaType fqjt = FullyQualifiedJavaType
@@ -123,7 +127,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         topLevelClass.addField(field);
 
         method = new Method();
-        method.addComment(table);
+        commentGenerator.addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(fqjt);
         method.setName("getOredCriteria"); //$NON-NLS-1$
@@ -131,7 +135,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         topLevelClass.addMethod(method);
 
         method = new Method();
-        method.addComment(table);
+        commentGenerator.addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setName("or"); //$NON-NLS-1$
         method.addParameter(new Parameter(FullyQualifiedJavaType.getCriteriaInstance(),
@@ -141,7 +145,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         topLevelClass.addMethod(method);
         
         method = new Method();
-        method.addComment(table);
+        commentGenerator.addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setName("createCriteria"); //$NON-NLS-1$
         method.setReturnType(FullyQualifiedJavaType.getCriteriaInstance());
@@ -153,7 +157,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         topLevelClass.addMethod(method);
         
         method = new Method();
-        method.addComment(table);
+        commentGenerator.addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PROTECTED);
         method.setName("createCriteriaInternal"); //$NON-NLS-1$
         method.setReturnType(FullyQualifiedJavaType.getCriteriaInstance());
@@ -162,7 +166,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         topLevelClass.addMethod(method);
 
         method = new Method();
-        method.addComment(table);
+        commentGenerator.addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setName("clear"); //$NON-NLS-1$
         method.addBodyLine("oredCriteria.clear();"); //$NON-NLS-1$
@@ -184,7 +188,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
 
         answer.setVisibility(JavaVisibility.PUBLIC);
         answer.setModifierStatic(true);
-        answer.addComment(introspectedTable.getTable());
+        abatorContext.getCommentGenerator().addClassComment(answer, introspectedTable.getTable());
 
         method = new Method();
         method.setVisibility(JavaVisibility.PROTECTED);

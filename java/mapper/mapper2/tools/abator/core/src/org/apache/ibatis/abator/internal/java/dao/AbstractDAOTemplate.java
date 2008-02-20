@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.ibatis.abator.api.CommentGenerator;
 import org.apache.ibatis.abator.api.FullyQualifiedTable;
 import org.apache.ibatis.abator.api.dom.java.Field;
 import org.apache.ibatis.abator.api.dom.java.FullyQualifiedJavaType;
@@ -66,9 +67,9 @@ public abstract class AbstractDAOTemplate {
         checkedExceptions = new ArrayList();
     }
 
-    public Method getConstructorClone(FullyQualifiedJavaType type, FullyQualifiedTable table) {
+    public Method getConstructorClone(CommentGenerator commentGenerator, FullyQualifiedJavaType type, FullyQualifiedTable table) {
         Method answer = new Method();
-        answer.addComment(table);
+        commentGenerator.addGeneralMethodComment(answer, table);
         answer.setConstructor(true);
         answer.setName(type.getShortName());
         answer.setVisibility(constructorTemplate.getVisibility());
@@ -144,14 +145,14 @@ public abstract class AbstractDAOTemplate {
         return checkedExceptions;
     }
 
-    public Iterator getFieldClones(FullyQualifiedTable table) {
+    public Iterator getFieldClones(CommentGenerator commentGenerator, FullyQualifiedTable table) {
         ArrayList answer = new ArrayList();
         Iterator iter = fields.iterator();
         while (iter.hasNext()) {
             Field field = new Field();
             Field oldField = (Field) iter.next();
             
-            field.addComment(table);
+            commentGenerator.addFieldComment(field, table);
             field.setInitializationString(oldField.getInitializationString());
             field.setModifierFinal(oldField.isModifierFinal());
             field.setModifierStatic(oldField.isModifierStatic());
@@ -164,7 +165,7 @@ public abstract class AbstractDAOTemplate {
         return answer.iterator();
     }
 
-    public Iterator getMethodClones(FullyQualifiedTable table) {
+    public Iterator getMethodClones(CommentGenerator commentGenerator, FullyQualifiedTable table) {
         ArrayList answer = new ArrayList();
         Iterator iter = methods.iterator();
         while (iter.hasNext()) {
@@ -181,7 +182,7 @@ public abstract class AbstractDAOTemplate {
                 method.addException((FullyQualifiedJavaType) iter2.next());
             }
             
-            method.addComment(table);
+            commentGenerator.addGeneralMethodComment(method, table);
             
             iter2 = oldMethod.getParameters().iterator();
             while (iter2.hasNext()) {

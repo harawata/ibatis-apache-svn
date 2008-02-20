@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.ibatis.abator.api.CommentGenerator;
 import org.apache.ibatis.abator.api.FullyQualifiedTable;
 import org.apache.ibatis.abator.api.GeneratedJavaFile;
 import org.apache.ibatis.abator.api.IntrospectedTable;
@@ -145,6 +146,8 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         Field field;
         Method method;
 
+        CommentGenerator commentGenerator = abatorContext.getCommentGenerator();
+        
         while (columnDefinitions.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) columnDefinitions.next();
             FullyQualifiedJavaType fqjt = cd.getResolvedJavaType()
@@ -155,14 +158,14 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
             String property = cd.getJavaProperty();
 
             field = new Field();
-            field.addComment(table, cd.getActualColumnName());
+            commentGenerator.addFieldComment(field, table, cd.getActualColumnName());
             field.setVisibility(JavaVisibility.PRIVATE);
             field.setType(fqjt);
             field.setName(property);
             topLevelClass.addField(field);
 
             method = new Method();
-            method.addGetterComment(table, cd);
+            commentGenerator.addGetterComment(method, table, cd);
             method.setVisibility(JavaVisibility.PUBLIC);
             method.setReturnType(fqjt);
             method.setName(JavaBeansUtil.getGetterMethodName(field.getName(), field.getType()));
@@ -174,7 +177,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
             topLevelClass.addMethod(method);
 
             method = new Method();
-            method.addSetterComment(table, cd);
+            commentGenerator.addSetterComment(method, table, cd);
             method.setVisibility(JavaVisibility.PUBLIC);
             method.setName(JavaBeansUtil.getSetterMethodName(property));
             method.addParameter(new Parameter(fqjt, property));
@@ -238,6 +241,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         FullyQualifiedTable table = introspectedTable.getTable();
         FullyQualifiedJavaType type = getPrimaryKeyType(table);
         TopLevelClass answer = new TopLevelClass(type);
+        abatorContext.getCommentGenerator().addJavaFileComment(answer);
         answer.setVisibility(JavaVisibility.PUBLIC);
 
         String rootClass = getRootClass(introspectedTable);
@@ -260,6 +264,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         FullyQualifiedTable table = introspectedTable.getTable();
         FullyQualifiedJavaType type = getBaseRecordType(table);
         TopLevelClass answer = new TopLevelClass(type);
+        abatorContext.getCommentGenerator().addJavaFileComment(answer);
         answer.setVisibility(JavaVisibility.PUBLIC);
         
         if (introspectedTable.getRules().generatePrimaryKeyClass()) {
@@ -296,6 +301,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         FullyQualifiedTable table = introspectedTable.getTable();
         FullyQualifiedJavaType type = getRecordWithBLOBsType(table);
         TopLevelClass answer = new TopLevelClass(type);
+        abatorContext.getCommentGenerator().addJavaFileComment(answer);
         answer.setVisibility(JavaVisibility.PUBLIC);
         
         if (introspectedTable.getRules().generateBaseRecordClass()) {
@@ -706,15 +712,18 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         if (!introspectedTable.getRules().generateExampleClass()) {
             return null;
         }
+        
+        CommentGenerator commentGenerator = abatorContext.getCommentGenerator();
 
         FullyQualifiedTable table = introspectedTable.getTable();
         FullyQualifiedJavaType type = getExampleType(table);
         TopLevelClass topLevelClass = new TopLevelClass(type);
+        commentGenerator.addJavaFileComment(topLevelClass);
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
 
         // add default constructor
         Method method = new Method();
-        method.addComment(table);
+        commentGenerator.addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setConstructor(true);
         method.setName(type.getShortName());
@@ -729,7 +738,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
                 || rules.generateUpdateByExampleWithBLOBs()
                 ||rules.generateUpdateByExampleWithoutBLOBs()) {
             method = new Method();
-            method.addComment(table);
+            commentGenerator.addGeneralMethodComment(method, table);
             method.setVisibility(JavaVisibility.PROTECTED);
             method.setConstructor(true);
             method.setName(type.getShortName());
@@ -741,14 +750,14 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         
         // add field, getter, setter for orderby clause
         Field field = new Field();
-        field.addComment(table);
+        commentGenerator.addFieldComment(field, table);
         field.setVisibility(JavaVisibility.PROTECTED);
         field.setType(FullyQualifiedJavaType.getStringInstance());
         field.setName("orderByClause"); //$NON-NLS-1$
         topLevelClass.addField(field);
 
         method = new Method();
-        method.addComment(table);
+        commentGenerator.addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setName("setOrderByClause"); //$NON-NLS-1$
         method.addParameter(new Parameter(FullyQualifiedJavaType
@@ -757,7 +766,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         topLevelClass.addMethod(method);
 
         method = new Method();
-        method.addComment(table);
+        commentGenerator.addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType.getStringInstance());
         method.setName("getOrderByClause"); //$NON-NLS-1$
@@ -766,7 +775,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
         // add field and methods for the list of ored criteria
         field = new Field();
-        field.addComment(table);
+        commentGenerator.addFieldComment(field, table);
         field.setVisibility(JavaVisibility.PROTECTED);
 
         FullyQualifiedJavaType fqjt = FullyQualifiedJavaType
@@ -777,7 +786,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         topLevelClass.addField(field);
 
         method = new Method();
-        method.addComment(table);
+        commentGenerator.addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(fqjt);
         method.setName("getOredCriteria"); //$NON-NLS-1$
@@ -785,7 +794,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         topLevelClass.addMethod(method);
 
         method = new Method();
-        method.addComment(table);
+        commentGenerator.addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PUBLIC);
         if (abatorContext.getSuppressTypeWarnings()) {
             method.addSuppressTypeWarningsAnnotation();
@@ -798,7 +807,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         topLevelClass.addMethod(method);
         
         method = new Method();
-        method.addComment(table);
+        commentGenerator.addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PUBLIC);
         if (abatorContext.getSuppressTypeWarnings()) {
             method.addSuppressTypeWarningsAnnotation();
@@ -813,7 +822,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         topLevelClass.addMethod(method);
         
         method = new Method();
-        method.addComment(table);
+        commentGenerator.addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PROTECTED);
         method.setName("createCriteriaInternal"); //$NON-NLS-1$
         method.setReturnType(FullyQualifiedJavaType.getCriteriaInstance());
@@ -822,7 +831,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         topLevelClass.addMethod(method);
 
         method = new Method();
-        method.addComment(table);
+        commentGenerator.addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setName("clear"); //$NON-NLS-1$
         method.addBodyLine("oredCriteria.clear();"); //$NON-NLS-1$
@@ -844,7 +853,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
         answer.setVisibility(JavaVisibility.PUBLIC);
         answer.setModifierStatic(true);
-        answer.addComment(introspectedTable.getTable());
+        abatorContext.getCommentGenerator().addClassComment(answer, introspectedTable.getTable());
 
         method = new Method();
         method.setVisibility(JavaVisibility.PROTECTED);

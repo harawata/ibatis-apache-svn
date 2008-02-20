@@ -18,6 +18,7 @@ package org.apache.ibatis.abator.internal.java.model;
 
 import java.util.Iterator;
 
+import org.apache.ibatis.abator.api.CommentGenerator;
 import org.apache.ibatis.abator.api.FullyQualifiedTable;
 import org.apache.ibatis.abator.api.IntrospectedTable;
 import org.apache.ibatis.abator.api.JavaModelGenerator;
@@ -53,10 +54,13 @@ public class JavaModelGeneratorLegacyImpl extends JavaModelGeneratorJava2Impl im
         if (!introspectedTable.getRules().generateExampleClass()) {
             return null;
         }
+        
+        CommentGenerator commentGenerator = abatorContext.getCommentGenerator();
 
         FullyQualifiedTable table = introspectedTable.getTable();
         FullyQualifiedJavaType type = getExampleType(table);
         TopLevelClass topLevelClass = new TopLevelClass(type);
+        commentGenerator.addJavaFileComment(topLevelClass);
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
         
         if (introspectedTable.getRules().generateBaseRecordClass()) {
@@ -67,7 +71,7 @@ public class JavaModelGeneratorLegacyImpl extends JavaModelGeneratorJava2Impl im
 
         StringBuffer sb = new StringBuffer();
         Field field = new Field();
-        field.addComment(table);
+        commentGenerator.addFieldComment(field, table);
         field.setVisibility(JavaVisibility.PUBLIC);
         field.setModifierStatic(true);
         field.setModifierFinal(true);
@@ -80,7 +84,7 @@ public class JavaModelGeneratorLegacyImpl extends JavaModelGeneratorJava2Impl im
         while (iter.hasNext()) {
             ExampleClause clause = (ExampleClause) iter.next();
             field = new Field();
-            field.addComment(table);
+            commentGenerator.addFieldComment(field, table);
             field.setVisibility(JavaVisibility.PUBLIC);
             field.setModifierStatic(true);
             field.setModifierFinal(true);
@@ -92,14 +96,14 @@ public class JavaModelGeneratorLegacyImpl extends JavaModelGeneratorJava2Impl im
         }
 
         field = new Field();
-        field.addComment(table);
+        commentGenerator.addFieldComment(field, table);
         field.setVisibility(JavaVisibility.PRIVATE);
         field.setType(FullyQualifiedJavaType.getBooleanPrimitiveInstance());
         field.setName("combineTypeOr"); //$NON-NLS-1$
         topLevelClass.addField(field);
 
         Method method = new Method();
-        method.addComment(table);
+        commentGenerator.addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setName("setCombineTypeOr"); //$NON-NLS-1$
         method.addParameter(new Parameter(FullyQualifiedJavaType
@@ -108,7 +112,7 @@ public class JavaModelGeneratorLegacyImpl extends JavaModelGeneratorJava2Impl im
         topLevelClass.addMethod(method);
 
         method = new Method();
-        method.addComment(table);
+        commentGenerator.addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType
                 .getBooleanPrimitiveInstance());
@@ -123,14 +127,14 @@ public class JavaModelGeneratorLegacyImpl extends JavaModelGeneratorJava2Impl im
             String fieldName = cd.getJavaProperty() + "_Indicator"; //$NON-NLS-1$
 
             field = new Field();
-            field.addComment(table);
+            commentGenerator.addFieldComment(field, table);
             field.setVisibility(JavaVisibility.PRIVATE);
             field.setType(FullyQualifiedJavaType.getIntInstance());
             field.setName(fieldName);
             topLevelClass.addField(field);
 
             method = new Method();
-            method.addComment(table);
+            commentGenerator.addGeneralMethodComment(method, table);
             method.setVisibility(JavaVisibility.PUBLIC);
             method.setReturnType(FullyQualifiedJavaType.getIntInstance());
             method.setName(JavaBeansUtil.getGetterMethodName(field.getName(), field.getType()));
@@ -142,7 +146,7 @@ public class JavaModelGeneratorLegacyImpl extends JavaModelGeneratorJava2Impl im
             topLevelClass.addMethod(method);
 
             method = new Method();
-            method.addComment(table);
+            commentGenerator.addGeneralMethodComment(method, table);
             method.setVisibility(JavaVisibility.PUBLIC);
             method.setName(JavaBeansUtil.getSetterMethodName(fieldName));
             method.addParameter(new Parameter(FullyQualifiedJavaType

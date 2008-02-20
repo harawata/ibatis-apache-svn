@@ -67,7 +67,7 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
         compilationUnit.addImportedType(FullyQualifiedJavaType.getNewListInstance());
 
         Method method1 = new Method();
-        method1.addComment(table);
+        abatorContext.getCommentGenerator().addGeneralMethodComment(method1, table);
         method1.setVisibility(exampleMethodVisibility);
         method1.setReturnType(FullyQualifiedJavaType.getNewListInstance());
         method1.setName(methodNameCalculator.getSelectByExampleWithoutBLOBsMethodName(introspectedTable));
@@ -76,7 +76,7 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
                 "orderByClause")); //$NON-NLS-1$
         
         Method method2 = new Method();
-        method2.addComment(table);
+        abatorContext.getCommentGenerator().addGeneralMethodComment(method2, table);
         method2.setVisibility(JavaVisibility.PUBLIC);
         method2.setReturnType(FullyQualifiedJavaType.getNewListInstance());
         method2.setName(methodNameCalculator.getSelectByExampleWithoutBLOBsMethodName(introspectedTable));
@@ -141,7 +141,7 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
         compilationUnit.addImportedType(FullyQualifiedJavaType.getNewListInstance());
 
         Method method1 = new Method();
-        method1.addComment(table);
+        abatorContext.getCommentGenerator().addGeneralMethodComment(method1, table);
         method1.setVisibility(exampleMethodVisibility);
         method1.setReturnType(FullyQualifiedJavaType.getNewListInstance());
         method1.setName(methodNameCalculator.getSelectByExampleWithBLOBsMethodName(introspectedTable));
@@ -150,7 +150,7 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
                 "orderByClause")); //$NON-NLS-1$
         
         Method method2 = new Method();
-        method2.addComment(table);
+        abatorContext.getCommentGenerator().addGeneralMethodComment(method2, table);
         method2.setVisibility(JavaVisibility.PUBLIC);
         method2.setReturnType(FullyQualifiedJavaType.getNewListInstance());
         method2.setName(methodNameCalculator.getSelectByExampleWithBLOBsMethodName(introspectedTable));
@@ -213,7 +213,7 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
         compilationUnit.addImportedType(type);
 
         Method method = new Method();
-        method.addComment(table);
+        abatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
         method.setVisibility(exampleMethodVisibility);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         method.setName(methodNameCalculator.getDeleteByExampleMethodName(introspectedTable));
@@ -259,7 +259,7 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
         compilationUnit.addImportedType(type);
 
         Method method = new Method();
-        method.addComment(table);
+        abatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
         method.setVisibility(exampleMethodVisibility);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         method.setName(methodNameCalculator.getCountByExampleMethodName(introspectedTable));
@@ -307,7 +307,7 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
         generatedClass.addImportedType(type);
 
         Method method = new Method();
-        method.addComment(table);
+        abatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PROTECTED);
         if (abatorContext.getSuppressTypeWarnings()) {
             method.addSuppressTypeWarningsAnnotation();
@@ -369,7 +369,7 @@ public class BaseLegacyDAOGenerator extends BaseDAOGenerator implements DAOGener
         StringBuffer sb = new StringBuffer();
 
         Method method = new Method();
-        method.addComment(table);
+        abatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PROTECTED);
         if (abatorContext.getSuppressTypeWarnings()) {
             method.addSuppressTypeWarningsAnnotation();

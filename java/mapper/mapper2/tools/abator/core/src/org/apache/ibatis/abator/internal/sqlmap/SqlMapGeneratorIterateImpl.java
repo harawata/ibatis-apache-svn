@@ -147,6 +147,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         Document document = new Document(XmlConstants.SQL_MAP_PUBLIC_ID,
                 XmlConstants.SQL_MAP_SYSTEM_ID);
+        abatorContext.getCommentGenerator().addComment(document);
         document.setRootElement(getSqlMapElement(introspectedTable));
         
         afterGenerationHook(introspectedTable, document);
@@ -324,7 +325,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         answer.addAttribute(new Attribute("class", //$NON-NLS-1$
                 returnType.getFullyQualifiedName()));
 
-        answer.addComment();
+        abatorContext.getCommentGenerator().addComment(answer);
 
         int i = 1;
         if (StringUtility.stringHasValue(introspectedTable.getSelectByPrimaryKeyQueryId())
@@ -401,7 +402,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         sb.append(getResultMapName(table));
         answer.addAttribute(new Attribute("extends", sb.toString())); //$NON-NLS-1$
 
-        answer.addComment();
+        abatorContext.getCommentGenerator().addComment(answer);
 
         int i = introspectedTable.getNonBLOBColumnCount() + 1;
         if (StringUtility.stringHasValue(introspectedTable.getSelectByPrimaryKeyQueryId())
@@ -456,7 +457,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         answer.addAttribute(new Attribute("parameterClass", //$NON-NLS-1$
                 parameterType.getFullyQualifiedName()));
 
-        answer.addComment();
+        abatorContext.getCommentGenerator().addComment(answer);
 
         GeneratedKey gk = introspectedTable.getGeneratedKey();
 
@@ -544,7 +545,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         answer.addAttribute(new Attribute("parameterClass", //$NON-NLS-1$
                 parameterType.getFullyQualifiedName()));
 
-        answer.addComment();
+        abatorContext.getCommentGenerator().addComment(answer);
 
         StringBuffer sb = new StringBuffer();
 
@@ -616,7 +617,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         answer.addAttribute(new Attribute("parameterClass", //$NON-NLS-1$
                 javaModelGenerator.getBaseRecordType(table).getFullyQualifiedName()));
 
-        answer.addComment();
+        abatorContext.getCommentGenerator().addComment(answer);
 
         StringBuffer sb = new StringBuffer();
         sb.append("update "); //$NON-NLS-1$
@@ -693,7 +694,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         answer.addAttribute(new Attribute("parameterClass", //$NON-NLS-1$
                 parameterClass.getFullyQualifiedName()));
 
-        answer.addComment();
+        abatorContext.getCommentGenerator().addComment(answer);
 
         StringBuffer sb = new StringBuffer();
         sb.append("delete from "); //$NON-NLS-1$
@@ -742,7 +743,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         answer.addAttribute(new Attribute(
                 "parameterClass", fqjt.getFullyQualifiedName())); //$NON-NLS-1$
 
-        answer.addComment();
+        abatorContext.getCommentGenerator().addComment(answer);
 
         StringBuffer sb = new StringBuffer();
         sb.append("delete from "); //$NON-NLS-1$
@@ -784,7 +785,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         answer.addAttribute(new Attribute(
                 "resultClass", "java.lang.Integer")); //$NON-NLS-1$ //$NON-NLS-2$
 
-        answer.addComment();
+        abatorContext.getCommentGenerator().addComment(answer);
 
         StringBuffer sb = new StringBuffer();
         sb.append("select count(*) from "); //$NON-NLS-1$
@@ -839,7 +840,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         answer.addAttribute(new Attribute("parameterClass", //$NON-NLS-1$
                 parameterType.getFullyQualifiedName()));
 
-        answer.addComment();
+        abatorContext.getCommentGenerator().addComment(answer);
 
         StringBuffer sb = new StringBuffer();
         sb.append("select "); //$NON-NLS-1$
@@ -1133,7 +1134,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         answer.addAttribute(new Attribute("id", getExampleWhereClauseId())); //$NON-NLS-1$
 
-        answer.addComment();
+        abatorContext.getCommentGenerator().addComment(answer);
 
         XmlElement outerIterateElement = new XmlElement("iterate"); //$NON-NLS-1$
         outerIterateElement.addAttribute(new Attribute(
@@ -1344,7 +1345,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         answer.addAttribute(new Attribute(
                 "parameterClass", fqjt.getFullyQualifiedName())); //$NON-NLS-1$
 
-        answer.addComment();
+        abatorContext.getCommentGenerator().addComment(answer);
 
         StringBuffer sb = new StringBuffer();
         sb.append("select "); //$NON-NLS-1$
@@ -1415,7 +1416,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         answer.addAttribute(new Attribute(
                 "parameterClass", fqjt.getFullyQualifiedName())); //$NON-NLS-1$
 
-        answer.addComment();
+        abatorContext.getCommentGenerator().addComment(answer);
 
         StringBuffer sb = new StringBuffer();
         sb.append("select "); //$NON-NLS-1$
@@ -1512,7 +1513,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         answer.addAttribute(new Attribute("parameterClass", //$NON-NLS-1$
                 parameterType.getFullyQualifiedName()));
 
-        answer.addComment();
+        abatorContext.getCommentGenerator().addComment(answer);
 
         StringBuffer sb = new StringBuffer();
 
@@ -1583,7 +1584,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         answer.addAttribute(new Attribute(
                 "id", getUpdateByExampleSelectiveStatementId())); //$NON-NLS-1$
 
-        answer.addComment();
+        abatorContext.getCommentGenerator().addComment(answer);
 
         StringBuffer sb = new StringBuffer();
 
@@ -1631,7 +1632,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         answer.addAttribute(new Attribute(
                 "id", getUpdateByExampleWithBLOBsStatementId())); //$NON-NLS-1$
 
-        answer.addComment();
+        abatorContext.getCommentGenerator().addComment(answer);
 
         StringBuffer sb = new StringBuffer();
         sb.append("update "); //$NON-NLS-1$
@@ -1682,7 +1683,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         answer.addAttribute(new Attribute(
                 "id", getUpdateByExampleStatementId())); //$NON-NLS-1$
 
-        answer.addComment();
+        abatorContext.getCommentGenerator().addComment(answer);
 
         StringBuffer sb = new StringBuffer();
         sb.append("update "); //$NON-NLS-1$

@@ -58,7 +58,7 @@ public class SqlMapGeneratorLegacyImpl extends SqlMapGeneratorIterateImpl implem
         answer.addAttribute(new Attribute("id", getDeleteByExampleStatementId())); //$NON-NLS-1$
         answer.addAttribute(new Attribute("parameterClass", "java.util.Map")); //$NON-NLS-1$ //$NON-NLS-2$
 
-        answer.addComment();
+        abatorContext.getCommentGenerator().addComment(answer);
 
         StringBuffer sb = new StringBuffer();
         sb.append("delete from "); //$NON-NLS-1$
@@ -94,7 +94,7 @@ public class SqlMapGeneratorLegacyImpl extends SqlMapGeneratorIterateImpl implem
         answer.addAttribute(new Attribute("parameterClass", "java.util.Map")); //$NON-NLS-1$ //$NON-NLS-2$
         answer.addAttribute(new Attribute("resultClass", "java.lang.Integer")); //$NON-NLS-1$ //$NON-NLS-2$
 
-        answer.addComment();
+        abatorContext.getCommentGenerator().addComment(answer);
 
         StringBuffer sb = new StringBuffer();
         sb.append("select count(*) from "); //$NON-NLS-1$
@@ -127,7 +127,7 @@ public class SqlMapGeneratorLegacyImpl extends SqlMapGeneratorIterateImpl implem
         
         answer.addAttribute(new Attribute("id", getExampleWhereClauseId())); //$NON-NLS-1$
         
-        answer.addComment();
+        abatorContext.getCommentGenerator().addComment(answer);
 
         XmlElement dynamicElement = new XmlElement("dynamic"); //$NON-NLS-1$
         dynamicElement.addAttribute(new Attribute("prepend", "where")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -180,7 +180,7 @@ public class SqlMapGeneratorLegacyImpl extends SqlMapGeneratorIterateImpl implem
                 getResultMapName(table)));
         answer.addAttribute(new Attribute("parameterClass", "java.util.Map")); //$NON-NLS-1$ //$NON-NLS-2$
 
-        answer.addComment();
+        abatorContext.getCommentGenerator().addComment(answer);
 
         StringBuffer sb = new StringBuffer();
         sb.append("select "); //$NON-NLS-1$
@@ -247,7 +247,7 @@ public class SqlMapGeneratorLegacyImpl extends SqlMapGeneratorIterateImpl implem
                 getResultMapName(table) + "WithBLOBs")); //$NON-NLS-1$
         answer.addAttribute(new Attribute("parameterClass", "java.util.Map")); //$NON-NLS-1$ //$NON-NLS-2$
 
-        answer.addComment();
+        abatorContext.getCommentGenerator().addComment(answer);
 
         StringBuffer sb = new StringBuffer();
         sb.append("select "); //$NON-NLS-1$
