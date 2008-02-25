@@ -9,6 +9,11 @@
 <body>
 <h1>What's New in Abator</h1>
 <h2>Version 1.1.0</h2>
+<h3>Announcements</h3>
+<ul>
+  <li>The next release of Abator will require JRE 5.0 or higher.</li>
+</ul>
+
 <h3>New Generated Methods</h3>
 <p>Abator will generate these new methods:</p>
 <dl>
@@ -96,13 +101,17 @@
     the entire config file.</li>
   <li>Exposed new support for selecting tables and/or contexts to the
       command line and the Ant task - this has added an advanced syntax to the command
-      line for Abator.</li>
+      line for Abator.  See the
+      <a href="running.html">Running Abator</a> reference page for more information.</li>
   <li><code>rootClass</code> and <code>rootInterface</code> may now be specified for each table.
       See the <a href="configreference/table.html">&lt;table&gt;</a>
       reference page for more information.</li>
   <li>Allowed specifying a type (pre or post) for the generated key element.  See the
       <a href="configreference/generatedKey.html">&lt;generatedKey&gt;</a>
       reference page for more information</li>
+  <li>Added a comment generator interface to enable generation of custom comments.
+      See the <a href="configreference/commentGenerator.html">&lt;commentGenerator&gt;</a>
+      reference page for more information.</li>
 </ul>
 
 <h2>Version 1.0.0</h2>

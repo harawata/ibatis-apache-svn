@@ -46,6 +46,7 @@ Enhancements -
 19. Allow rootClass and rootInterface to be specified at the table level
 20. Allowed specifying a type (pre or post) for the generatedKey
     element.
+21. Added a comment generator interface
 
 -------------------------------------------------------------------------------
 Version 1.0.0:

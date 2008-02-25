@@ -33,6 +33,7 @@ import org.apache.ibatis.abator.config.AbatorConfiguration;
 import org.apache.ibatis.abator.config.AbatorContext;
 import org.apache.ibatis.abator.config.ColumnOverride;
 import org.apache.ibatis.abator.config.ColumnRenamingRule;
+import org.apache.ibatis.abator.config.CommentGeneratorConfiguration;
 import org.apache.ibatis.abator.config.DAOGeneratorConfiguration;
 import org.apache.ibatis.abator.config.GeneratedKey;
 import org.apache.ibatis.abator.config.IgnoredColumn;
@@ -255,6 +256,8 @@ public class AbatorConfigurationParser {
 
             if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
                 parseProperty(abatorContext, childNode);
+            } else if ("commentGenerator".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseCommentGenerator(abatorContext, childNode);
             } else if ("jdbcConnection".equals(childNode.getNodeName())) { //$NON-NLS-1$
                 parseJdbcConnection(abatorContext, childNode);
             } else if ("javaModelGenerator".equals(childNode.getNodeName())) { //$NON-NLS-1$
@@ -697,5 +700,31 @@ public class AbatorConfigurationParser {
         }
 
         return newString;
+    }
+
+    private void parseCommentGenerator(AbatorContext abatorContext, Node node) {
+        CommentGeneratorConfiguration commentGeneratorConfiguration = new CommentGeneratorConfiguration();
+
+        abatorContext.setCommentGeneratorConfiguration(commentGeneratorConfiguration);
+
+        Properties attributes = parseAttributes(node);
+        String type = attributes.getProperty("type"); //$NON-NLS-1$
+
+        if (StringUtility.stringHasValue(type)) {
+            commentGeneratorConfiguration.setConfigurationType(type);
+        }
+
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
+
+            if (childNode.getNodeType() != 1) {
+                continue;
+            }
+
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(commentGeneratorConfiguration, childNode);
+            }
+        }
     }
 }

@@ -69,7 +69,6 @@ public abstract class AbstractDAOTemplate {
 
     public Method getConstructorClone(CommentGenerator commentGenerator, FullyQualifiedJavaType type, FullyQualifiedTable table) {
         Method answer = new Method();
-        commentGenerator.addGeneralMethodComment(answer, table);
         answer.setConstructor(true);
         answer.setName(type.getShortName());
         answer.setVisibility(constructorTemplate.getVisibility());
@@ -85,6 +84,8 @@ public abstract class AbstractDAOTemplate {
         while (iter.hasNext()) {
             answer.addException((FullyQualifiedJavaType) iter.next());
         }
+        
+        commentGenerator.addGeneralMethodComment(answer, table);
         
         return answer;
     }
@@ -152,13 +153,13 @@ public abstract class AbstractDAOTemplate {
             Field field = new Field();
             Field oldField = (Field) iter.next();
             
-            commentGenerator.addFieldComment(field, table);
             field.setInitializationString(oldField.getInitializationString());
             field.setModifierFinal(oldField.isModifierFinal());
             field.setModifierStatic(oldField.isModifierStatic());
             field.setName(oldField.getName());
             field.setType(oldField.getType());
             field.setVisibility(oldField.getVisibility());
+            commentGenerator.addFieldComment(field, table);
             answer.add(field);
         }
         
@@ -182,8 +183,6 @@ public abstract class AbstractDAOTemplate {
                 method.addException((FullyQualifiedJavaType) iter2.next());
             }
             
-            commentGenerator.addGeneralMethodComment(method, table);
-            
             iter2 = oldMethod.getParameters().iterator();
             while (iter2.hasNext()) {
                 method.addParameter((Parameter) iter2.next());
@@ -195,6 +194,8 @@ public abstract class AbstractDAOTemplate {
             method.setName(oldMethod.getName());
             method.setReturnType(oldMethod.getReturnType());
             method.setVisibility(oldMethod.getVisibility());
+            
+            commentGenerator.addGeneralMethodComment(method, table);
             
             answer.add(method);
         }

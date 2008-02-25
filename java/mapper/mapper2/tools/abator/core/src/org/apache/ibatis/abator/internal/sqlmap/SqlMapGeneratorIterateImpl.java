@@ -147,7 +147,6 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         Document document = new Document(XmlConstants.SQL_MAP_PUBLIC_ID,
                 XmlConstants.SQL_MAP_SYSTEM_ID);
-        abatorContext.getCommentGenerator().addComment(document);
         document.setRootElement(getSqlMapElement(introspectedTable));
         
         afterGenerationHook(introspectedTable, document);
@@ -173,6 +172,8 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         answer.addAttribute(new Attribute("namespace", //$NON-NLS-1$
                 getSqlMapNamespace(table)));
 
+        abatorContext.getCommentGenerator().addRootComment(answer);
+        
         AbatorRules rules = introspectedTable.getRules();
         XmlElement element;
         if (rules.generateBaseResultMap()) {

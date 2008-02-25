@@ -50,7 +50,7 @@
   The abatorContext element is used to describe a context for generating files, and the source
   tables.
 -->
-<!ELEMENT abatorContext (property*, jdbcConnection, javaTypeResolver?, javaModelGenerator,
+<!ELEMENT abatorContext (property*, commentGenerator?, jdbcConnection, javaTypeResolver?, javaModelGenerator,
                         sqlMapGenerator, daoGenerator?, table+)>
 <!ATTLIST abatorContext id ID #IMPLIED
   defaultModelType CDATA #IMPLIED
@@ -196,4 +196,12 @@
 <!ATTLIST columnRenamingRule
   searchString CDATA #REQUIRED
   replaceString CDATA #IMPLIED>
+
+<!--
+  The commentGenerator element is used to define properties of the Comment Generator.
+  The Comment Generator adds comments to generated elements.
+-->
+<!ELEMENT commentGenerator (property*)>
+<!ATTLIST commentGenerator
+  type CDATA #IMPLIED>
   

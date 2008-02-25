@@ -58,16 +58,16 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         FullyQualifiedTable table = introspectedTable.getTable();
         FullyQualifiedJavaType type = getExampleType(table);
         TopLevelClass topLevelClass = new TopLevelClass(type);
-        commentGenerator.addJavaFileComment(topLevelClass);
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
+        commentGenerator.addJavaFileComment(topLevelClass);
         
         // add default constructor
         Method method = new Method();
-        commentGenerator.addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setConstructor(true);
         method.setName(type.getShortName());
         method.addBodyLine("oredCriteria = new ArrayList<Criteria>();"); //$NON-NLS-1$
+        commentGenerator.addGeneralMethodComment(method, table);
         topLevelClass.addMethod(method);
         
         // add shallow copy contructor if the update by
@@ -78,44 +78,43 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
                 || rules.generateUpdateByExampleWithBLOBs()
                 ||rules.generateUpdateByExampleWithoutBLOBs()) {
             method = new Method();
-            commentGenerator.addGeneralMethodComment(method, table);
             method.setVisibility(JavaVisibility.PROTECTED);
             method.setConstructor(true);
             method.setName(type.getShortName());
             method.addParameter(new Parameter(type, "example")); //$NON-NLS-1$
             method.addBodyLine("this.orderByClause = example.orderByClause;"); //$NON-NLS-1$
             method.addBodyLine("this.oredCriteria = example.oredCriteria;"); //$NON-NLS-1$
+            commentGenerator.addGeneralMethodComment(method, table);
             topLevelClass.addMethod(method);
         }
         
         // add field, getter, setter for orderby clause
         Field field = new Field();
-        commentGenerator.addFieldComment(field, table);
         field.setVisibility(JavaVisibility.PROTECTED);
         field.setType(FullyQualifiedJavaType.getStringInstance());
         field.setName("orderByClause"); //$NON-NLS-1$
+        commentGenerator.addFieldComment(field, table);
         topLevelClass.addField(field);
 
         method = new Method();
-        commentGenerator.addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setName("setOrderByClause"); //$NON-NLS-1$
         method.addParameter(new Parameter(FullyQualifiedJavaType
                 .getStringInstance(), "orderByClause")); //$NON-NLS-1$
         method.addBodyLine("this.orderByClause = orderByClause;"); //$NON-NLS-1$
+        commentGenerator.addGeneralMethodComment(method, table);
         topLevelClass.addMethod(method);
 
         method = new Method();
-        commentGenerator.addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType.getStringInstance());
         method.setName("getOrderByClause"); //$NON-NLS-1$
         method.addBodyLine("return orderByClause;"); //$NON-NLS-1$
+        commentGenerator.addGeneralMethodComment(method, table);
         topLevelClass.addMethod(method);
 
         // add field and methods for the list of ored criteria
         field = new Field();
-        commentGenerator.addFieldComment(field, table);
         field.setVisibility(JavaVisibility.PROTECTED);
 
         FullyQualifiedJavaType fqjt = FullyQualifiedJavaType
@@ -124,28 +123,27 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
 
         field.setType(fqjt);
         field.setName("oredCriteria"); //$NON-NLS-1$
+        commentGenerator.addFieldComment(field, table);
         topLevelClass.addField(field);
 
         method = new Method();
-        commentGenerator.addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(fqjt);
         method.setName("getOredCriteria"); //$NON-NLS-1$
         method.addBodyLine("return oredCriteria;"); //$NON-NLS-1$
+        commentGenerator.addGeneralMethodComment(method, table);
         topLevelClass.addMethod(method);
 
         method = new Method();
-        commentGenerator.addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setName("or"); //$NON-NLS-1$
         method.addParameter(new Parameter(FullyQualifiedJavaType.getCriteriaInstance(),
                 "criteria")); //$NON-NLS-1$
         method.addBodyLine("oredCriteria.add(criteria);"); //$NON-NLS-1$
-
+        commentGenerator.addGeneralMethodComment(method, table);
         topLevelClass.addMethod(method);
         
         method = new Method();
-        commentGenerator.addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setName("createCriteria"); //$NON-NLS-1$
         method.setReturnType(FullyQualifiedJavaType.getCriteriaInstance());
@@ -154,22 +152,23 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         method.addBodyLine("oredCriteria.add(criteria);"); //$NON-NLS-1$
         method.addBodyLine("}"); //$NON-NLS-1$
         method.addBodyLine("return criteria;"); //$NON-NLS-1$
+        commentGenerator.addGeneralMethodComment(method, table);
         topLevelClass.addMethod(method);
         
         method = new Method();
-        commentGenerator.addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PROTECTED);
         method.setName("createCriteriaInternal"); //$NON-NLS-1$
         method.setReturnType(FullyQualifiedJavaType.getCriteriaInstance());
         method.addBodyLine("Criteria criteria = new Criteria();"); //$NON-NLS-1$
         method.addBodyLine("return criteria;"); //$NON-NLS-1$
+        commentGenerator.addGeneralMethodComment(method, table);
         topLevelClass.addMethod(method);
 
         method = new Method();
-        commentGenerator.addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setName("clear"); //$NON-NLS-1$
         method.addBodyLine("oredCriteria.clear();"); //$NON-NLS-1$
+        commentGenerator.addGeneralMethodComment(method, table);
         topLevelClass.addMethod(method);
 
         // now generate the inner class that holds the AND conditions

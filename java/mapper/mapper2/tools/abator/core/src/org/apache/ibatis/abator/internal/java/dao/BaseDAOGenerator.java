@@ -240,7 +240,6 @@ public class BaseDAOGenerator implements DAOGenerator {
         FullyQualifiedTable table = introspectedTable.getTable();
         FullyQualifiedJavaType type = getDAOImplementationType(table);
         TopLevelClass answer = new TopLevelClass(type);
-        commentGenerator.addJavaFileComment(answer);
         answer.setVisibility(JavaVisibility.PUBLIC);
         answer.setSuperClass(daoTemplate.getSuperClass());
         answer.addImportedType(daoTemplate.getSuperClass());
@@ -251,6 +250,8 @@ public class BaseDAOGenerator implements DAOGenerator {
         while (iter.hasNext()) {
             answer.addImportedType((FullyQualifiedJavaType) iter.next());
         }
+        
+        commentGenerator.addJavaFileComment(answer);
 
         // add constructor
         Method method = daoTemplate.getConstructorClone(commentGenerator,
@@ -446,7 +447,6 @@ public class BaseDAOGenerator implements DAOGenerator {
     protected Interface getDAOInterface(IntrospectedTable introspectedTable) {
         FullyQualifiedTable table = introspectedTable.getTable();
         Interface answer = new Interface(getDAOInterfaceType(table));
-        abatorContext.getCommentGenerator().addJavaFileComment(answer);
         answer.setVisibility(JavaVisibility.PUBLIC);
 
         String rootInterface = introspectedTable.getTableConfigurationProperty(PropertyRegistry.ANY_ROOT_INTERFACE);
@@ -465,6 +465,8 @@ public class BaseDAOGenerator implements DAOGenerator {
             answer.addImportedType((FullyQualifiedJavaType) iter.next());
         }
 
+        abatorContext.getCommentGenerator().addJavaFileComment(answer);
+        
         AbatorRules rules = introspectedTable.getRules();
         List methods;
         
@@ -631,7 +633,6 @@ public class BaseDAOGenerator implements DAOGenerator {
 
         FullyQualifiedTable table = introspectedTable.getTable();
         Method method = new Method();
-        abatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
 
         FullyQualifiedJavaType returnType;
         if (introspectedTable.getGeneratedKey() != null) {
@@ -667,6 +668,8 @@ public class BaseDAOGenerator implements DAOGenerator {
             compilationUnit.addImportedType(fqjt);
         }
 
+        abatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
+        
         if (!interfaceMethod) {
             // generate the implementation method
             StringBuffer sb = new StringBuffer();
@@ -723,7 +726,6 @@ public class BaseDAOGenerator implements DAOGenerator {
         compilationUnit.addImportedType(parameterType);
 
         Method method = new Method();
-        abatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         method.setName(methodNameCalculator.getUpdateByPrimaryKeyWithoutBLOBsMethodName(introspectedTable));
@@ -735,6 +737,8 @@ public class BaseDAOGenerator implements DAOGenerator {
             method.addException(fqjt);
             compilationUnit.addImportedType(fqjt);
         }
+
+        abatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
 
         if (!interfaceMethod) {
             // generate the implementation method
@@ -771,7 +775,6 @@ public class BaseDAOGenerator implements DAOGenerator {
         compilationUnit.addImportedType(parameterType);
 
         Method method = new Method();
-        abatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         method.setName(methodNameCalculator.getUpdateByPrimaryKeyWithBLOBsMethodName(introspectedTable));
@@ -784,6 +787,8 @@ public class BaseDAOGenerator implements DAOGenerator {
             compilationUnit.addImportedType(fqjt);
         }
 
+        abatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
+        
         if (!interfaceMethod) {
             // generate the implementation method
             StringBuffer sb = new StringBuffer();
@@ -819,7 +824,6 @@ public class BaseDAOGenerator implements DAOGenerator {
         compilationUnit.addImportedType(parameterType);
 
         Method method = new Method();
-        abatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         method.setName(methodNameCalculator.getUpdateByPrimaryKeySelectiveMethodName(introspectedTable));
@@ -831,6 +835,8 @@ public class BaseDAOGenerator implements DAOGenerator {
             method.addException(fqjt);
             compilationUnit.addImportedType(fqjt);
         }
+
+        abatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
 
         if (!interfaceMethod) {
             // generate the implementation method
@@ -866,7 +872,6 @@ public class BaseDAOGenerator implements DAOGenerator {
                 .getNewListInstance());
 
         Method method = new Method();
-        abatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
         method.setVisibility(exampleMethodVisibility);
 
         FullyQualifiedJavaType returnType;
@@ -898,6 +903,8 @@ public class BaseDAOGenerator implements DAOGenerator {
             method.addException(fqjt);
             compilationUnit.addImportedType(fqjt);
         }
+
+        abatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
 
         if (!interfaceMethod) {
             // generate the implementation method
@@ -941,7 +948,6 @@ public class BaseDAOGenerator implements DAOGenerator {
                 .getNewListInstance());
 
         Method method = new Method();
-        abatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
         method.setVisibility(exampleMethodVisibility);
 
         FullyQualifiedJavaType returnType;
@@ -971,6 +977,8 @@ public class BaseDAOGenerator implements DAOGenerator {
             method.addException(fqjt);
             compilationUnit.addImportedType(fqjt);
         }
+
+        abatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
 
         if (!interfaceMethod) {
             // generate the implementation method
@@ -1007,7 +1015,6 @@ public class BaseDAOGenerator implements DAOGenerator {
         FullyQualifiedTable table = introspectedTable.getTable();
 
         Method method = new Method();
-        abatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PUBLIC);
 
         FullyQualifiedJavaType returnType =
@@ -1037,6 +1044,8 @@ public class BaseDAOGenerator implements DAOGenerator {
             method.addException(fqjt);
             compilationUnit.addImportedType(fqjt);
         }
+
+        abatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
 
         if (!interfaceMethod) {
             // generate the implementation method
@@ -1099,7 +1108,6 @@ public class BaseDAOGenerator implements DAOGenerator {
         compilationUnit.addImportedType(type);
 
         Method method = new Method();
-        abatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
         method.setVisibility(exampleMethodVisibility);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         method.setName(methodNameCalculator.getDeleteByExampleMethodName(introspectedTable));
@@ -1111,6 +1119,8 @@ public class BaseDAOGenerator implements DAOGenerator {
             method.addException(fqjt);
             compilationUnit.addImportedType(fqjt);
         }
+
+        abatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
 
         if (!interfaceMethod) {
             // generate the implementation method
@@ -1137,7 +1147,6 @@ public class BaseDAOGenerator implements DAOGenerator {
         FullyQualifiedTable table = introspectedTable.getTable();
 
         Method method = new Method();
-        abatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         method.setName(methodNameCalculator.getDeleteByPrimaryKeyMethodName(introspectedTable));
@@ -1162,6 +1171,8 @@ public class BaseDAOGenerator implements DAOGenerator {
             method.addException(fqjt);
             compilationUnit.addImportedType(fqjt);
         }
+
+        abatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
 
         if (!interfaceMethod) {
             // generate the implementation method
@@ -1221,7 +1232,6 @@ public class BaseDAOGenerator implements DAOGenerator {
         compilationUnit.addImportedType(type);
 
         Method method = new Method();
-        abatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
         method.setVisibility(exampleMethodVisibility);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         method.setName(methodNameCalculator.getCountByExampleMethodName(introspectedTable));
@@ -1233,6 +1243,8 @@ public class BaseDAOGenerator implements DAOGenerator {
             method.addException(fqjt);
             compilationUnit.addImportedType(fqjt);
         }
+
+        abatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
 
         if (!interfaceMethod) {
             // generate the implementation method
@@ -1328,20 +1340,20 @@ public class BaseDAOGenerator implements DAOGenerator {
         compilationUnit.addImportedType(parameterType);
 
         Method method = new Method();
-        abatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         method.setName(methodNameCalculator.getUpdateByExampleSelectiveMethodName(introspectedTable));
         method.addParameter(new Parameter(parameterType, "record")); //$NON-NLS-1$
         method.addParameter(new Parameter(javaModelGenerator.getExampleType(table), "example")); //$NON-NLS-1$
         
-
         Iterator iter = daoTemplate.getCheckedExceptions().iterator();
         while (iter.hasNext()) {
             FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) iter.next();
             method.addException(fqjt);
             compilationUnit.addImportedType(fqjt);
         }
+
+        abatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
 
         if (!interfaceMethod) {
             // generate the implementation method
@@ -1372,10 +1384,10 @@ public class BaseDAOGenerator implements DAOGenerator {
         
         InnerClass answer = new InnerClass(
                 new FullyQualifiedJavaType("UpdateByExampleParms")); //$NON-NLS-1$
-        abatorContext.getCommentGenerator().addClassComment(answer, table);
         answer.setVisibility(JavaVisibility.PRIVATE);
         answer.setModifierStatic(true);
         answer.setSuperClass(javaModelGenerator.getExampleType(table));
+        abatorContext.getCommentGenerator().addClassComment(answer, table);
         
         Method method = new Method();
         method.setConstructor(true);
@@ -1421,7 +1433,6 @@ public class BaseDAOGenerator implements DAOGenerator {
         compilationUnit.addImportedType(parameterType);
 
         Method method = new Method();
-        abatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         method.setName(methodNameCalculator.getUpdateByExampleWithBLOBsMethodName(introspectedTable));
@@ -1434,6 +1445,8 @@ public class BaseDAOGenerator implements DAOGenerator {
             method.addException(fqjt);
             compilationUnit.addImportedType(fqjt);
         }
+
+        abatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
 
         if (!interfaceMethod) {
             // generate the implementation method
@@ -1471,7 +1484,6 @@ public class BaseDAOGenerator implements DAOGenerator {
         compilationUnit.addImportedType(parameterType);
 
         Method method = new Method();
-        abatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         method.setName(methodNameCalculator.getUpdateByExampleWithoutBLOBsMethodName(introspectedTable));
@@ -1484,6 +1496,8 @@ public class BaseDAOGenerator implements DAOGenerator {
             method.addException(fqjt);
             compilationUnit.addImportedType(fqjt);
         }
+
+        abatorContext.getCommentGenerator().addGeneralMethodComment(method, table);
 
         if (!interfaceMethod) {
             // generate the implementation method

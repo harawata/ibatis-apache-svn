@@ -33,7 +33,6 @@ import org.apache.ibatis.abator.api.SqlMapGenerator;
 import org.apache.ibatis.abator.api.dom.xml.Attribute;
 import org.apache.ibatis.abator.api.dom.xml.XmlElement;
 import org.apache.ibatis.abator.internal.AbatorObjectFactory;
-import org.apache.ibatis.abator.internal.DefaultCommentGenerator;
 import org.apache.ibatis.abator.internal.NullProgressCallback;
 import org.apache.ibatis.abator.internal.db.ConnectionFactory;
 import org.apache.ibatis.abator.internal.db.DatabaseIntrospector;
@@ -70,6 +69,8 @@ public class AbatorContext extends PropertyHolder {
     
     private boolean suppressTypeWarnings;
     
+    private CommentGeneratorConfiguration commentGeneratorConfiguration;
+    
     private CommentGenerator commentGenerator;
     
     /**
@@ -102,9 +103,6 @@ public class AbatorContext extends PropertyHolder {
         }
         
 		tableConfigurations = new ArrayList();
-        
-        // TODO - expose this as a configurable property
-        this.commentGenerator = new DefaultCommentGenerator();
     }
 
 	public void addTableConfiguration(TableConfiguration tc) {
@@ -384,6 +382,10 @@ public class AbatorContext extends PropertyHolder {
         
         addPropertyXmlElements(xmlElement);
         
+        if (commentGeneratorConfiguration != null) {
+            xmlElement.addElement(commentGeneratorConfiguration.toXmlElement());
+        }
+        
         if (jdbcConnectionConfiguration != null) {
             xmlElement.addElement(jdbcConnectionConfiguration.toXmlElement());
         }
@@ -442,10 +444,19 @@ public class AbatorContext extends PropertyHolder {
     }
 
     public CommentGenerator getCommentGenerator() {
+        if (commentGenerator == null) {
+            commentGenerator = AbatorObjectFactory.createCommentGenerator(this);
+        }
+        
         return commentGenerator;
     }
 
-    public void setCommentGenerator(CommentGenerator commentGenerator) {
-        this.commentGenerator = commentGenerator;
+    public CommentGeneratorConfiguration getCommentGeneratorConfiguration() {
+        return commentGeneratorConfiguration;
+    }
+
+    public void setCommentGeneratorConfiguration(
+            CommentGeneratorConfiguration commentGeneratorConfiguration) {
+        this.commentGeneratorConfiguration = commentGeneratorConfiguration;
     }
 }

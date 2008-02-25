@@ -17,11 +17,13 @@ package org.apache.ibatis.abator.internal;
 
 import java.util.List;
 
+import org.apache.ibatis.abator.api.CommentGenerator;
 import org.apache.ibatis.abator.api.DAOGenerator;
 import org.apache.ibatis.abator.api.JavaModelGenerator;
 import org.apache.ibatis.abator.api.JavaTypeResolver;
 import org.apache.ibatis.abator.api.SqlMapGenerator;
 import org.apache.ibatis.abator.config.AbatorContext;
+import org.apache.ibatis.abator.config.CommentGeneratorConfiguration;
 import org.apache.ibatis.abator.config.DAOGeneratorConfiguration;
 import org.apache.ibatis.abator.config.JavaModelGeneratorConfiguration;
 import org.apache.ibatis.abator.config.JavaTypeResolverConfiguration;
@@ -162,4 +164,25 @@ public class AbatorObjectFactory {
 	    
 	    return answer;
 	}
+
+    public static CommentGenerator createCommentGenerator(AbatorContext context) {
+        
+        CommentGeneratorConfiguration config = context.getCommentGeneratorConfiguration();
+        CommentGenerator answer;
+        
+        String type;
+        if (config == null || config.getConfigurationType() == null) {
+            type = DefaultCommentGenerator.class.getName();
+        } else {
+            type = config.getConfigurationType();
+        }
+        
+        answer = (CommentGenerator) createObject(type);
+        
+        if (config != null) {
+            answer.addConfigurationProperties(config.getProperties());
+        }
+        
+        return answer;
+    }
 }

@@ -17,6 +17,7 @@
 package org.apache.ibatis.abator.internal;
 
 import java.util.Date;
+import java.util.Properties;
 
 import org.apache.ibatis.abator.api.CommentGenerator;
 import org.apache.ibatis.abator.api.FullyQualifiedTable;
@@ -24,17 +25,27 @@ import org.apache.ibatis.abator.api.dom.java.CompilationUnit;
 import org.apache.ibatis.abator.api.dom.java.Field;
 import org.apache.ibatis.abator.api.dom.java.InnerClass;
 import org.apache.ibatis.abator.api.dom.java.InnerEnum;
+import org.apache.ibatis.abator.api.dom.java.JavaElement;
 import org.apache.ibatis.abator.api.dom.java.Method;
-import org.apache.ibatis.abator.api.dom.xml.Document;
+import org.apache.ibatis.abator.api.dom.java.Parameter;
 import org.apache.ibatis.abator.api.dom.xml.TextElement;
 import org.apache.ibatis.abator.api.dom.xml.XmlElement;
-import org.apache.ibatis.abator.internal.db.ColumnDefinition;
+import org.apache.ibatis.abator.config.PropertyRegistry;
 
 /**
  * @author Jeff Butler
  *
  */
 public class DefaultCommentGenerator implements CommentGenerator {
+    
+    private Properties properties;
+    private boolean suppressDate;
+
+    public DefaultCommentGenerator() {
+        super();
+        properties = new Properties();
+        suppressDate = false;
+    }
 
     public void addFieldComment(Field field, FullyQualifiedTable table, String columnName) {
         StringBuffer sb = new StringBuffer();
@@ -48,12 +59,7 @@ public class DefaultCommentGenerator implements CommentGenerator {
         sb.append(columnName);
         field.addJavaDocLine(sb.toString());
         
-        field.addJavaDocLine(" *"); //$NON-NLS-1$
-        
-        sb.setLength(0);
-        sb.append(" * @abatorgenerated "); //$NON-NLS-1$
-        sb.append(new Date());
-        field.addJavaDocLine(sb.toString());
+        addAbatorJavadocTag(field);
         
         field.addJavaDocLine(" */"); //$NON-NLS-1$
     }
@@ -68,12 +74,7 @@ public class DefaultCommentGenerator implements CommentGenerator {
         sb.append(table);
         field.addJavaDocLine(sb.toString());
         
-        field.addJavaDocLine(" *"); //$NON-NLS-1$
-        
-        sb.setLength(0);
-        sb.append(" * @abatorgenerated "); //$NON-NLS-1$
-        sb.append(new Date());
-        field.addJavaDocLine(sb.toString());
+        addAbatorJavadocTag(field);
 
         field.addJavaDocLine(" */"); //$NON-NLS-1$
     }
@@ -88,12 +89,7 @@ public class DefaultCommentGenerator implements CommentGenerator {
         sb.append(table);
         innerClass.addJavaDocLine(sb.toString());
         
-        innerClass.addJavaDocLine(" *"); //$NON-NLS-1$
-    
-        sb.setLength(0);
-        sb.append(" * @abatorgenerated "); //$NON-NLS-1$
-        sb.append(new Date());
-        innerClass.addJavaDocLine(sb.toString());
+        addAbatorJavadocTag(innerClass);
         
         innerClass.addJavaDocLine(" */"); //$NON-NLS-1$
     }
@@ -108,17 +104,12 @@ public class DefaultCommentGenerator implements CommentGenerator {
         sb.append(table);
         innerEnum.addJavaDocLine(sb.toString());
         
-        innerEnum.addJavaDocLine(" *"); //$NON-NLS-1$
-    
-        sb.setLength(0);
-        sb.append(" * @abatorgenerated "); //$NON-NLS-1$
-        sb.append(new Date());
-        innerEnum.addJavaDocLine(sb.toString());
+        addAbatorJavadocTag(innerEnum);
         
         innerEnum.addJavaDocLine(" */"); //$NON-NLS-1$
     }
 
-    public void addGetterComment(Method method, FullyQualifiedTable table, ColumnDefinition columnDefinition) {
+    public void addGetterComment(Method method, FullyQualifiedTable table, String columnName) {
         StringBuffer sb = new StringBuffer();
         
         method.addJavaDocLine("/**"); //$NON-NLS-1$
@@ -127,7 +118,7 @@ public class DefaultCommentGenerator implements CommentGenerator {
         sb.append(" * This method returns the value of the database column "); //$NON-NLS-1$
         sb.append(table);
         sb.append('.');
-        sb.append(columnDefinition.getActualColumnName());
+        sb.append(columnName);
         method.addJavaDocLine(sb.toString());
         
         method.addJavaDocLine(" *"); //$NON-NLS-1$
@@ -136,20 +127,15 @@ public class DefaultCommentGenerator implements CommentGenerator {
         sb.append(" * @return the value of "); //$NON-NLS-1$
         sb.append(table);
         sb.append('.');
-        sb.append(columnDefinition.getActualColumnName());
+        sb.append(columnName);
         method.addJavaDocLine(sb.toString());
         
-        method.addJavaDocLine(" *"); //$NON-NLS-1$
-        
-        sb.setLength(0);
-        sb.append(" * @abatorgenerated "); //$NON-NLS-1$
-        sb.append(new Date());
-        method.addJavaDocLine(sb.toString());
+        addAbatorJavadocTag(method);
         
         method.addJavaDocLine(" */"); //$NON-NLS-1$
     }
 
-    public void addSetterComment(Method method, FullyQualifiedTable table, ColumnDefinition columnDefinition) {
+    public void addSetterComment(Method method, FullyQualifiedTable table, String columnName) {
         StringBuffer sb = new StringBuffer();
         
         method.addJavaDocLine("/**"); //$NON-NLS-1$
@@ -158,26 +144,22 @@ public class DefaultCommentGenerator implements CommentGenerator {
         sb.append(" * This method sets the value of the database column "); //$NON-NLS-1$
         sb.append(table);
         sb.append('.');
-        sb.append(columnDefinition.getActualColumnName());
+        sb.append(columnName);
         method.addJavaDocLine(sb.toString());
         
         method.addJavaDocLine(" *"); //$NON-NLS-1$
     
+        Parameter parm = (Parameter) method.getParameters().get(0);
         sb.setLength(0);
         sb.append(" * @param "); //$NON-NLS-1$
-        sb.append(columnDefinition.getJavaProperty());
+        sb.append(parm.getName());
         sb.append(" the value for "); //$NON-NLS-1$
         sb.append(table);
         sb.append('.');
-        sb.append(columnDefinition.getActualColumnName());
+        sb.append(columnName);
         method.addJavaDocLine(sb.toString());
         
-        method.addJavaDocLine(" *"); //$NON-NLS-1$
-        
-        sb.setLength(0);
-        sb.append(" * @abatorgenerated "); //$NON-NLS-1$
-        sb.append(new Date());
-        method.addJavaDocLine(sb.toString());
+        addAbatorJavadocTag(method);
         
         method.addJavaDocLine(" */"); //$NON-NLS-1$
     }
@@ -192,12 +174,7 @@ public class DefaultCommentGenerator implements CommentGenerator {
         sb.append(table);
         method.addJavaDocLine(sb.toString());
         
-        method.addJavaDocLine(" *"); //$NON-NLS-1$
-    
-        sb.setLength(0);
-        sb.append(" * @abatorgenerated "); //$NON-NLS-1$
-        sb.append(new Date());
-        method.addJavaDocLine(sb.toString());
+        addAbatorJavadocTag(method);
         
         method.addJavaDocLine(" */"); //$NON-NLS-1$
     }
@@ -216,17 +193,64 @@ public class DefaultCommentGenerator implements CommentGenerator {
         xmlElement.addElement(new TextElement(
                 "  WARNING - This element is automatically generated by Abator for iBATIS, do not modify.")); //$NON-NLS-1$
 
-        StringBuffer sb = new StringBuffer();
-        sb.append("  This element was generated on "); //$NON-NLS-1$
-        sb.append(new Date());
-        sb.append('.');
-        xmlElement.addElement(new TextElement(sb.toString()));
+        String s = getDateString();
+        if (s != null) {
+            StringBuffer sb = new StringBuffer();
+            sb.append("  This element was generated on "); //$NON-NLS-1$
+            sb.append(s);
+            sb.append('.');
+            xmlElement.addElement(new TextElement(sb.toString()));
+        }
 
         xmlElement.addElement(new TextElement("-->")); //$NON-NLS-1$
     }
 
-    public void addComment(Document document) {
+    public void addRootComment(XmlElement rootElement) {
         // add no document level comments by default
         ;
+    }
+
+    public void addConfigurationProperties(Properties properties) {
+        this.properties.putAll(properties);
+
+        if ("true".equalsIgnoreCase(properties.getProperty(PropertyRegistry.COMMENT_GENERATOR_SUPPRESS_DATE))) { //$NON-NLS-1$
+            suppressDate = true;
+        }
+    }
+
+    /**
+     * This method adds the custom javadoc tag for
+     * Abator.  You may do nothing if you do not wish to include
+     * the Javadoc tag - however, if you do not include the Javadoc
+     * tag then the Java merge capability of the eclipse plugin will
+     * break.
+     * 
+     * @param javaElement
+     */
+    protected void addAbatorJavadocTag(JavaElement javaElement) {
+        javaElement.addJavaDocLine(" *"); //$NON-NLS-1$
+        StringBuffer sb = new StringBuffer();
+        sb.append(" * @abatorgenerated"); //$NON-NLS-1$
+        String s = getDateString();
+        if (s != null) {
+            sb.append(' ');
+            sb.append(s);
+        }
+        javaElement.addJavaDocLine(sb.toString());
+    }
+    
+    /**
+     * This method returns a formated date string to include in the 
+     * Javadoc tag and XML comments.  You may return null if you do not want
+     * the date in these documentation elements.
+     * 
+     * @return
+     */
+    protected String getDateString() {
+        if (suppressDate) {
+            return null;
+        } else {
+            return new Date().toString();
+        }
     }
 }
