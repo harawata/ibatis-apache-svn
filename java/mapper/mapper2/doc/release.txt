@@ -8,6 +8,7 @@ Build Number: @buildNum@
  o Fixed BATIS-391  - Cannot access Lists within custom objects.
  o Fixed IBATIS-388 - Add methods to unwrap all proxied objects
  o Fixed IBATIS-484 - Make setType method in JdbcTypeRegistry public
+ o Fixed IBATIS-490 - Improper use of getColumnLabel()
 
 
 ------------------------------

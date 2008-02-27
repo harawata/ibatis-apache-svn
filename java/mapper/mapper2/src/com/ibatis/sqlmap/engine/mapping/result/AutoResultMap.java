@@ -82,7 +82,7 @@ public class AutoResultMap extends ResultMap {
       List resultMappingList = new ArrayList();
       ResultSetMetaData rsmd = rs.getMetaData();
       for (int i = 0, n = rsmd.getColumnCount(); i < n; i++) {
-        String columnName = rsmd.getColumnLabel(i + 1);
+        String columnName = rsmd.getColumnName(i + 1);
         String upperColumnName = columnName.toUpperCase(java.util.Locale.ENGLISH);
         String matchedProp = (String) propertyMap.get(upperColumnName);
         Class type = null;
@@ -118,7 +118,7 @@ public class AutoResultMap extends ResultMap {
       List resultMappingList = new ArrayList();
       ResultSetMetaData rsmd = rs.getMetaData();
       for (int i = 0, n = rsmd.getColumnCount(); i < n; i++) {
-        String columnName = rsmd.getColumnLabel(i + 1);
+        String columnName = rsmd.getColumnName(i + 1);
         ResultMapping resultMapping = new ResultMapping();
         resultMapping.setPropertyName(columnName);
         resultMapping.setColumnName(columnName);
@@ -137,7 +137,7 @@ public class AutoResultMap extends ResultMap {
       List resultMappingList = new ArrayList();
       ResultSetMetaData rsmd = rs.getMetaData();
       for (int i = 0, n = rsmd.getColumnCount(); i < n; i++) {
-        String columnName = rsmd.getColumnLabel(i + 1);
+        String columnName = rsmd.getColumnName(i + 1);
         ResultMapping resultMapping = new ResultMapping();
         resultMapping.setPropertyName(columnName);
         resultMapping.setColumnName(columnName);
@@ -156,7 +156,7 @@ public class AutoResultMap extends ResultMap {
   private void initializePrimitiveResults(ResultSet rs) {
     try {
       ResultSetMetaData rsmd = rs.getMetaData();
-      String columnName = rsmd.getColumnLabel(1);
+      String columnName = rsmd.getColumnName(1);
       ResultMapping resultMapping = new ResultMapping();
       resultMapping.setPropertyName(columnName);
       resultMapping.setColumnName(columnName);
