@@ -15,20 +15,15 @@
  */
 package org.apache.ibatis.abator.internal.db;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
 import org.apache.ibatis.abator.config.JDBCConnectionConfiguration;
+import org.apache.ibatis.abator.internal.util.ClassloaderUtility;
 import org.apache.ibatis.abator.internal.util.StringUtility;
 import org.apache.ibatis.abator.internal.util.messages.Messages;
 
@@ -85,11 +80,13 @@ public class ConnectionFactory {
 			JDBCConnectionConfiguration connectionInformation) {
 		String driverClass = connectionInformation.getDriverClass();
 		Driver driver = (Driver) drivers.get(driverClass);
-
+        
 		if (driver == null) {
+            ClassLoader classLoader =
+                ClassloaderUtility.getCustomClassloader(connectionInformation);
+            
 			try {
-				Class clazz = getCustomClassloader(connectionInformation)
-						.loadClass(driverClass);
+				Class clazz = classLoader.loadClass(driverClass);
 				driver = (Driver) clazz.newInstance();
 				drivers.put(driverClass, driver);
 			} catch (Exception e) {
@@ -99,35 +96,5 @@ public class ConnectionFactory {
 		}
 
 		return driver;
-	}
-
-	private ClassLoader getCustomClassloader(
-			JDBCConnectionConfiguration connectionInformation) {
-		ArrayList urls = new ArrayList();
-		File file;
-
-		Iterator iter = connectionInformation.getClassPathEntries().iterator();
-		while (iter.hasNext()) {
-			String classPathEntry = (String) iter.next();
-			file = new File(classPathEntry);
-			if (!file.exists()) {
-				throw new RuntimeException(
-				        Messages.getString("RuntimeError.9", classPathEntry)); //$NON-NLS-1$
-			}
-
-			try {
-				urls.add(file.toURL());
-			} catch (MalformedURLException e) {
-				// this shouldn't happen, but just in case...
-				throw new RuntimeException(
-				        Messages.getString("RuntimeError.9", classPathEntry)); //$NON-NLS-1$
-			}
-		}
-
-        ClassLoader parent = Thread.currentThread().getContextClassLoader();
-		URLClassLoader ucl = new URLClassLoader((URL[]) urls
-				.toArray(new URL[urls.size()]), parent);
-
-		return ucl;
 	}
 }

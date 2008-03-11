@@ -41,8 +41,8 @@
   <property name="reports.junit" value="${reports.dir}/junit" />
   
   <target name="clean" unless="${TSTAMP}">
-  	<tstamp/>
-  	<available classname="java.lang.annotation.Annotation" property="usingJava5"/>
+    <tstamp/>
+    <available classname="java.lang.annotation.Annotation" property="usingJava5"/>
     <delete dir="${work.dir}" />
     <delete dir="${deploy.dir}" />
     <delete dir="${reports.dir}" />
@@ -204,8 +204,6 @@
   </target>
 	  	
   <target name="test.generate.test.code.java5" depends="test.prepare" if="usingJava5">
-  	<echo message="Expect three warnings from Abator (BLOBSONLY, NonExistantTable, FRED)" />
-	  	
     <!-- note that the class does not exist until the build runs.
     	 Validating Ant editors will complain that the task cannot be
     	 found, but it's not really an error. -->
@@ -215,20 +213,33 @@
     	  <pathelement location="${deploy.files}/abator.jar"/>
       </classpath>
     </taskdef>
+    
+    <!-- compile the base class so Abator can load it -->
+    <javac destdir="${generated.bin.dir.java5}"
+    	deprecation="true" 
+    	debug="true"
+    	source="1.5"
+    	target="1.5">
+      <src path="${basedir}/../testJava5"/>
+      <include name="abatortest/execute/miscellaneous/BaseClass.java" />
+    </javac>
   	
-  	<abator configfile="${basedir}/../testJava5/abatortest/abatorConfig.xml" >
-  		<propertyset>
-  			<propertyref name="generated.source.dir.java5"/>
-  		</propertyset>
-  	</abator>
+    <echo message="Expect three warnings from Abator (BLOBSONLY, NonExistantTable, FRED)" />
+    
+    <abator configfile="${basedir}/../testJava5/abatortest/abatorConfig.xml" >
+      <propertyset>
+        <propertyref name="generated.source.dir.java5"/>
+        <propertyref name="generated.bin.dir.java5"/>
+      </propertyset>
+    </abator>
   </target>
 	
   <target name="test.compile.test.code.java2" depends="test.generate.test.code.java2">
     <javac destdir="${generated.bin.dir.java2}"
-    	deprecation="true" 
-    	debug="true"
-    	source="1.4"
-    	target="1.4">
+           deprecation="true" 
+           debug="true"
+           source="1.4"
+           target="1.4">
       <src path="${generated.source.dir.java2}"/>
       <src path="${basedir}/../testJava2"/>
     </javac>

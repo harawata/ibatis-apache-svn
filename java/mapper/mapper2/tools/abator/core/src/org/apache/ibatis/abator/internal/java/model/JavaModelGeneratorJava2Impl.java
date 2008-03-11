@@ -15,6 +15,10 @@
  */
 package org.apache.ibatis.abator.internal.java.model;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -40,6 +44,7 @@ import org.apache.ibatis.abator.config.AbatorContext;
 import org.apache.ibatis.abator.config.PropertyRegistry;
 import org.apache.ibatis.abator.internal.db.ColumnDefinition;
 import org.apache.ibatis.abator.internal.rules.AbatorRules;
+import org.apache.ibatis.abator.internal.util.ClassloaderUtility;
 import org.apache.ibatis.abator.internal.util.JavaBeansUtil;
 import org.apache.ibatis.abator.internal.util.StringUtility;
 import org.apache.ibatis.abator.internal.util.messages.Messages;
@@ -93,10 +98,15 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
     private Map tableValueMaps;
 
+    private Map propertyDescriptorMap;
+    
+    private ClassLoader rootClassLoader;
+    
     public JavaModelGeneratorJava2Impl() {
         super();
         tableValueMaps = new HashMap();
         properties = new Properties();
+        propertyDescriptorMap = new HashMap();
     }
 
     public void addConfigurationProperties(Properties properties) {
@@ -137,7 +147,8 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
      *            the generated fields and methods will be added to this object
      */
     protected void generateClassParts(FullyQualifiedTable table,
-            Iterator columnDefinitions, TopLevelClass topLevelClass) {
+            Iterator columnDefinitions, TopLevelClass topLevelClass,
+            String rootClass) {
 
         boolean trimStrings = "true".equalsIgnoreCase(properties //$NON-NLS-1$
                 .getProperty(PropertyRegistry.MODEL_GENERATOR_TRIM_STRINGS));
@@ -150,6 +161,10 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         
         while (columnDefinitions.hasNext()) {
             ColumnDefinition cd = (ColumnDefinition) columnDefinitions.next();
+            if (propertyExistsInRootClass(cd, rootClass)) {
+                continue;
+            }
+            
             FullyQualifiedJavaType fqjt = cd.getResolvedJavaType()
                     .getFullyQualifiedJavaType();
 
@@ -250,7 +265,8 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
             answer.addImportedType(answer.getSuperClass());
         }
         
-        generateClassParts(table, introspectedTable.getPrimaryKeyColumns(), answer);
+        generateClassParts(table, introspectedTable.getPrimaryKeyColumns(), answer,
+                getRootClass(introspectedTable));
 
         return answer;
     }
@@ -279,14 +295,17 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         
         if (!introspectedTable.getRules().generatePrimaryKeyClass()
                 && introspectedTable.hasPrimaryKeyColumns()) {
-            generateClassParts(table, introspectedTable.getPrimaryKeyColumns(), answer);
+            generateClassParts(table, introspectedTable.getPrimaryKeyColumns(), answer,
+                    getRootClass(introspectedTable));
         }
 
-        generateClassParts(table, introspectedTable.getBaseColumns(), answer);
+        generateClassParts(table, introspectedTable.getBaseColumns(), answer,
+                getRootClass(introspectedTable));
 
         if (!introspectedTable.getRules().generateRecordWithBLOBsClass()
                 && introspectedTable.hasBLOBColumns()) {
-            generateClassParts(table, introspectedTable.getBLOBColumns(), answer);
+            generateClassParts(table, introspectedTable.getBLOBColumns(), answer,
+                    getRootClass(introspectedTable));
         }
         
         return answer;
@@ -310,7 +329,8 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
             answer.setSuperClass(getPrimaryKeyType(table));
         }
         
-        generateClassParts(table, introspectedTable.getBLOBColumns(), answer);
+        generateClassParts(table, introspectedTable.getBLOBColumns(), answer,
+                getRootClass(introspectedTable));
 
         return answer;
     }
@@ -1493,5 +1513,110 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         }
         
         return rootClass;
+    }
+    
+    // Ashok's enhancement for checking parent classes...
+    protected Class loadRootClass(IntrospectedTable introspectedTable) {
+        Class clazz = null;
+        
+        String rootClass = getRootClass(introspectedTable);
+
+        if (rootClass != null) {
+            try {
+                clazz = Class.forName(rootClass);
+            } catch (Exception e) {
+                warnings.add(Messages.getString("Warning.20", rootClass)); //$NON-NLS-1$
+            }
+        }
+        
+        return clazz;
+    }
+
+    protected PropertyDescriptor[] getRootClassPropertyDescriptors(String rootClass) {
+        if (rootClass == null) {
+            return null;
+        }
+        
+        if (propertyDescriptorMap.containsKey(rootClass)) {
+            return (PropertyDescriptor[]) propertyDescriptorMap.get(rootClass);
+        }
+        
+        // new class not in map already
+        
+        Class clazz = null;
+        try {
+            clazz = getRootclassloader().loadClass(rootClass);
+        } catch (Exception e) {
+            propertyDescriptorMap.put(rootClass, null);
+            warnings.add(Messages.getString("Warning.20", rootClass)); //$NON-NLS-1$
+            return null;
+        }
+        
+        BeanInfo bi;
+        try {
+            bi = Introspector.getBeanInfo(clazz);
+        } catch (IntrospectionException e) {
+            propertyDescriptorMap.put(rootClass, null);
+            warnings.add(Messages.getString("Warning.20", rootClass)); //$NON-NLS-1$
+            return null;
+        }
+        
+        PropertyDescriptor[] pd = bi.getPropertyDescriptors();
+        propertyDescriptorMap.put(rootClass, pd);
+        return pd;
+    }
+    
+    protected boolean propertyExistsInRootClass(ColumnDefinition columnDefinition, String rootClass) {
+        PropertyDescriptor[] rootClassProperties = getRootClassPropertyDescriptors(rootClass);
+        if (rootClassProperties == null) {
+            return false;
+        }
+        
+        boolean found = false;
+        String propertyName = columnDefinition.getJavaProperty();
+        String propertyType = columnDefinition.getResolvedJavaType().getFullyQualifiedJavaType().getFullyQualifiedName();
+        
+        // get method names from class and check against this column definition.
+        // better yet, have a map of method Names. check against it.
+        for (int i = 0; i < rootClassProperties.length; i++) {
+            if (rootClassProperties[i].getName().equals(propertyName)) {
+                // property is in the rootClass...
+
+                // Is it the proper type?
+                if (!rootClassProperties[i].getPropertyType().getName().equals(propertyType)) {
+                    warnings.add(Messages.getString("Warning.21",
+                            propertyName, rootClass, propertyType));
+                    break;
+                }
+                
+                // Does it have a getter?
+                if (rootClassProperties[i].getReadMethod() == null) {
+                    warnings.add(Messages.getString("Warning.22",
+                            propertyName, rootClass));
+                    break;
+                }
+                
+                // Does it have a setter?
+                if (rootClassProperties[i].getWriteMethod() == null) {
+                    warnings.add(Messages.getString("Warning.23",
+                            propertyName, rootClass));
+                    break;
+                }
+                
+                found = true;
+                break;
+            }
+        }
+
+        return found;
+    }
+    
+    private ClassLoader getRootclassloader() {
+        if (rootClassLoader == null) {
+            rootClassLoader = ClassloaderUtility.getCustomClassloader(
+                    properties.getProperty(PropertyRegistry.MODEL_GENERATOR_ROOT_CLASSPATH));
+        }
+        
+        return rootClassLoader;
     }
 }

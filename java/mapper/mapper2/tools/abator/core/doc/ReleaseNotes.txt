@@ -47,6 +47,8 @@ Enhancements -
 20. Allowed specifying a type (pre or post) for the generatedKey
     element.
 21. Added a comment generator interface
+22. Abator will not generate model properties that would override 
+    properties in a rootClass.
 
 -------------------------------------------------------------------------------
 Version 1.0.0:

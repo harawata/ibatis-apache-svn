@@ -364,6 +364,7 @@
     <javaModelGenerator targetPackage="abatortest.generated.miscellaneous.model" targetProject="${generated.source.dir.java5}">
       <property name="trimStrings" value="true" />
       <property name="rootClass" value="abatortest.execute.miscellaneous.BaseClass" />
+      <property name="rootClasspath" value="${generated.bin.dir.java5}"/>
     </javaModelGenerator>
 
     <sqlMapGenerator targetPackage="abatortest.generated.miscellaneous.xml"  targetProject="${generated.source.dir.java5}">

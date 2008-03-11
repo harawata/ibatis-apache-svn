@@ -294,9 +294,19 @@ specified with the <a href="property.html">&lt;property&gt;</a> child element:</
       record object otherwise.  The value specified in this property will override
       the <code>rootClass</code> property set on the Java Model Generator
       configuration if any is set.
-      <p><b>Important:</b> Abator does not verify that the class exists, or is a
-       valid Java class.  The generated classes may override elements in this
-       class without warning.</p>
+      <p><b>Important:</b> If Abator is able to load the root class, Abator
+       will not override a property in the root class that exactly matches a
+       property that Abator would normally generate.
+       An exact match of a property is defined as follows</p>
+       <ul>
+         <li>Property name matches exactly</li>
+         <li>Property is of the same type</li>
+         <li>Property has a "getter" method</li>
+         <li>Property has a "setter" method</li>
+       </ul>
+      <p>You may use the "rootClasspath" property of the
+        <a href="javaModelGenerator.html">&lt;javaModelGenerator&gt;</a>
+        element to add entries to the rootClass lookup classpath if necessary.</p>
       <p>If specified, the value of this property should be a fully qualified
        class name (like com.mycompany.MyRootClass).</p></td>
   </tr>
