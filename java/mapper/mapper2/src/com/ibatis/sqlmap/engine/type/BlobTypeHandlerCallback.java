@@ -21,14 +21,15 @@ import com.ibatis.sqlmap.client.extensions.TypeHandlerCallback;
 
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.io.ByteArrayInputStream;
 
 public class BlobTypeHandlerCallback implements TypeHandlerCallback {
 
  public Object getResult(ResultGetter getter) throws SQLException {
    Blob blob = getter.getBlob();
-   byte[] returnValue = null;
-   if (null != blob) {
+   byte[] returnValue;
+   if (!getter.wasNull()) {
      returnValue = blob.getBytes(1, (int) blob.length());
    } else {
      returnValue = null;
@@ -42,6 +43,8 @@ throws SQLException {
      byte[] bytes = (byte[]) parameter;
      ByteArrayInputStream bis=new ByteArrayInputStream(bytes);
      setter.setBinaryStream(bis,(int)(bytes.length));
+   } else {
+	   setter.setNull(Types.BLOB);
    }
  }
 

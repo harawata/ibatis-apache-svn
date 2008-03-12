@@ -24,12 +24,15 @@ public class ClobTypeHandlerCallback implements TypeHandlerCallback {
 
   public Object getResult(ResultGetter getter)
       throws SQLException {
-    String value = "";
+    String value;
     Clob clob = getter.getClob();
-    if (clob != null) {
+    if (!getter.wasNull()) {
       int size = (int) clob.length();
       value = clob.getSubString(1, size);      
+    } else {
+    	value = null;
     }
+    
     return value;
   }
 
@@ -40,7 +43,7 @@ public class ClobTypeHandlerCallback implements TypeHandlerCallback {
       StringReader reader = new StringReader(s);
       setter.setCharacterStream(reader, s.length());
     } else {
-      setter.setString(null);
+      setter.setNull(Types.CLOB);
     }
   }
 

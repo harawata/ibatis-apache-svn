@@ -9,6 +9,7 @@ Build Number: @buildNum@
  o Fixed IBATIS-388 - Add methods to unwrap all proxied objects
  o Fixed IBATIS-484 - Make setType method in JdbcTypeRegistry public
  o Fixed IBATIS-490 - Improper use of getColumnLabel()
+ o Fixed IBATIS-494 - Improper NULL handling in Blob and Clob Type Handlers
 
 
 ------------------------------
