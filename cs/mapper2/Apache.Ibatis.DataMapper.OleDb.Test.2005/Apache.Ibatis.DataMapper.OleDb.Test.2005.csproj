@@ -1,0 +1,86 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{11867E8F-6E81-4A8A-8CD7-9B0FA146F7EB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Apache.Ibatis.DataMapper.OleDb.Test._005</RootNamespace>
+    <AssemblyName>Apache.Ibatis.DataMapper.OleDb.Test.2005</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework, Version=2.4.4.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Domain\Account.cs" />
+    <Compile Include="Domain\Category.cs" />
+    <Compile Include="Domain\HundredsTypeHandlerCallback.cs" />
+    <Compile Include="Domain\LineItem.cs" />
+    <Compile Include="Domain\LineItemCollection.cs" />
+    <Compile Include="Domain\LineItemCollection2.cs" />
+    <Compile Include="Domain\ListeEntiteMetier.cs" />
+    <Compile Include="Domain\Order.cs" />
+    <Compile Include="Domain\OuiNonBoolTypeHandlerCallback.cs" />
+    <Compile Include="Fixtures\BaseTest.cs" />
+    <Compile Include="Fixtures\Mapping\StatementTest.cs" />
+    <Compile Include="Fixtures\Modules\AliasModule.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Maps\Account.xml" />
+    <Content Include="Maps\Category.xml" />
+    <Content Include="Maps\LineItem.xml" />
+    <Content Include="Maps\Order.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <EmbeddedResource Include="bin\Debug\providers.config" />
+    <EmbeddedResource Include="bin\Debug\SqlMap.config" />
+    <None Include="DataBase.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Apache.Ibatis.Common\Apache.Ibatis.Common.2005.csproj">
+      <Project>{BBC8DA4A-EA88-41D9-8B93-929B8F3ADADE}</Project>
+      <Name>Apache.Ibatis.Common.2005</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Apache.Ibatis.DataMapper\Apache.Ibatis.DataMapper.20005.csproj">
+      <Project>{F3E45F39-3224-4EAD-B138-EB5CC0E32824}</Project>
+      <Name>Apache.Ibatis.DataMapper.20005</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Scripts\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
