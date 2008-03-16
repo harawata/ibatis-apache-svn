@@ -50,8 +50,8 @@
         <li>
           English
 	  <ul>
-            <li><a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataMapper-1.6.1.zip" onClick="javascript:urchinTracker('/downloads/DataMapperDoc160');">DataMapper 1.6.1 Docs</a> [<a href="[preferred]/ibatis/binaries/ibatis.net//Doc-DataMapper-1.6.1.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataMapper-1.6.1.zip.asc">PGP</a>] (CHM, PDF)</li>
-            <li><a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataAccess-1.9.1.zip" onClick="javascript:urchinTracker('/downloads/DataAccessDoc190');">DataAccess 1.9.1 Docs</a> [<a href="[preferred]/ibatis/binaries/ibatis.net//Doc-DataAccess-1.9.1.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataAccess-1.9.1.zip.asc">PGP</a>] (CHM, PDF)</li>
+            <li><a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataMapper-1.6.1.zip" onClick="javascript:urchinTracker('/downloads/DataMapperDoc160');">DataMapper 1.6.1 BETA Docs</a> [<a href="[preferred]/ibatis/binaries/ibatis.net//Doc-DataMapper-1.6.1.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataMapper-1.6.1.zip.asc">PGP</a>] (CHM, PDF)</li>
+            <li><a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataAccess-1.9.1.zip" onClick="javascript:urchinTracker('/downloads/DataAccessDoc190');">DataAccess 1.9.1 BETA Docs</a> [<a href="[preferred]/ibatis/binaries/ibatis.net//Doc-DataAccess-1.9.1.zip.md5">MD5</a>] [<a href="[preferred]/ibatis/binaries/ibatis.net/Doc-DataAccess-1.9.1.zip.asc">PGP</a>] (CHM, PDF)</li>
           </ul>
     <br/>
           <ul>
