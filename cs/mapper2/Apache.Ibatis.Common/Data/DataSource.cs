@@ -53,12 +53,15 @@ namespace Apache.Ibatis.Common.Data
 		#endregion
 
 		#region Properties
-		/// <summary>
-		/// The connection string.
-		/// </summary>
+
+        /// <summary>
+        /// Gets or sets the connection string.
+        /// </summary>
+        /// <value>The connection string.</value>
 		public virtual string ConnectionString
 		{
 			get { return connectionString; }
+            set { connectionString = value; }
 		}
 
 		/// <summary>
@@ -69,13 +72,16 @@ namespace Apache.Ibatis.Common.Data
             get { return id; }
 		}
 
-		/// <summary>
-		/// The provider to use for this data source.
-		/// </summary>
-		[XmlIgnore]
+
+        /// <summary>
+        /// Gets or sets the db provider.
+        /// </summary>
+        /// <value>The db provider.</value>
 		public virtual IDbProvider DbProvider
 		{
 			get { return provider; }
+            set { provider = value; }
+
 		}
 		#endregion
 
@@ -105,5 +111,5 @@ namespace Apache.Ibatis.Common.Data
 			return "Source: ConnectionString : "+ connectionString;
 		}
 
-	}
+    }
 }

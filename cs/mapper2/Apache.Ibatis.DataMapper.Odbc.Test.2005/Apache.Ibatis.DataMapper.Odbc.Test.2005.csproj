@@ -7,8 +7,8 @@
     <ProjectGuid>{63B29CDE-E446-44F7-89FF-48C7D20A13D0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Apache.Ibatis.DataMapper.Odbc.Test._005</RootNamespace>
-    <AssemblyName>Apache.Ibatis.DataMapper.Odbc.Test.2005</AssemblyName>
+    <RootNamespace>Apache.Ibatis.DataMapper.Odbc.Test</RootNamespace>
+    <AssemblyName>Apache.Ibatis.DataMapper.Odbc.Test</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,9 +33,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="App.config" />
     <None Include="DataBase.config" />
   </ItemGroup>
@@ -52,6 +49,9 @@
     <Content Include="Maps\Other.xml" />
     <Content Include="Maps\ParameterClass.xml" />
     <Content Include="Maps\ResultClass.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Domain\" />

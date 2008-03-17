@@ -57,11 +57,13 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Modules
             public string ConnectionString
             {
                 get { throw new Exception("The method or operation is not implemented."); }
+                set { throw new Exception("The method or operation is not implemented."); }
             }
 
             public IDbProvider DbProvider
             {
                 get { throw new Exception("The method or operation is not implemented."); }
+                set { throw new Exception("The method or operation is not implemented."); }
             }
 
             #endregion

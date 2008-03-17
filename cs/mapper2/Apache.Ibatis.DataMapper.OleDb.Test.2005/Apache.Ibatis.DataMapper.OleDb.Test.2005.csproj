@@ -7,8 +7,8 @@
     <ProjectGuid>{11867E8F-6E81-4A8A-8CD7-9B0FA146F7EB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Apache.Ibatis.DataMapper.OleDb.Test._005</RootNamespace>
-    <AssemblyName>Apache.Ibatis.DataMapper.OleDb.Test.2005</AssemblyName>
+    <RootNamespace>Apache.Ibatis.DataMapper.OleDb.Test</RootNamespace>
+    <AssemblyName>Apache.Ibatis.DataMapper.OleDb.Test</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

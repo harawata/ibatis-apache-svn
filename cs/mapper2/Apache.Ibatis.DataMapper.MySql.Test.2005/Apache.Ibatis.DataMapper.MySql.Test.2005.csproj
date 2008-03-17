@@ -7,8 +7,8 @@
     <ProjectGuid>{2F90BECE-AB2A-45A4-95DB-83025E8C1BD5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Apache.Ibatis.DataMapper.MySql.Test._005</RootNamespace>
-    <AssemblyName>Apache.Ibatis.DataMapper.MySql.Test.2005</AssemblyName>
+    <RootNamespace>Apache.Ibatis.DataMapper.MySql.Test</RootNamespace>
+    <AssemblyName>Apache.Ibatis.DataMapper.MySql.Test</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,9 +31,6 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -67,6 +64,9 @@
     <Content Include="Scripts\simple-init.sql" />
     <Content Include="Scripts\swap-procedure.sql" />
     <Content Include="Scripts\user-init.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Domain\" />

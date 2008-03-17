@@ -35,15 +35,18 @@ namespace Apache.Ibatis.Common.Data
 		/// </summary>
 		string Id { get; }
 
-		/// <summary>
-		/// Connection string used to create connections.
-		/// </summary>
-        string ConnectionString { get; }
 
-		/// <summary>
-		/// The data provider.
-		/// </summary>
-        IDbProvider DbProvider { get; }
+        /// <summary>
+        /// Gets or sets the connection string.
+        /// </summary>
+        /// <value>The connection string.</value>
+        string ConnectionString { set; get; }
+
+        /// <summary>
+        /// Gets or sets the db provider.
+        /// </summary>
+        /// <value>The db provider.</value>
+        IDbProvider DbProvider { set; get; }
 
 	}
 }

@@ -7,8 +7,8 @@
     <ProjectGuid>{DA5A59F0-DF1E-4653-BC64-5AEE32F5308E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Apache.Ibatis.DataMapper.PostgreSQL.Test._005</RootNamespace>
-    <AssemblyName>Apache.Ibatis.DataMapper.PostgreSQL.Test.2005</AssemblyName>
+    <RootNamespace>Apache.Ibatis.DataMapper.PostgreSQL.Test</RootNamespace>
+    <AssemblyName>Apache.Ibatis.DataMapper.PostgreSQL.Test</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,9 +31,6 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -67,6 +64,9 @@
     <Content Include="Scripts\simple-init.sql" />
     <Content Include="Scripts\swap-procedure.sql" />
     <Content Include="Scripts\user-init.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Domain\" />
