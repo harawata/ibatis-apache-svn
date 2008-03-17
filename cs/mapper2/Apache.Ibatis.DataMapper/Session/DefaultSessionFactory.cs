@@ -39,7 +39,7 @@ namespace Apache.Ibatis.DataMapper.Session
     public class DefaultSessionFactory : ISessionFactory
     {
         [NonSerialized]
-        private readonly IDataSource dataSource = null;
+        private IDataSource dataSource = null;
         [NonSerialized]
         private readonly ISessionStore sessionStore = null;
         private readonly ITransactionManager transactionManager = null;
@@ -67,9 +67,10 @@ namespace Apache.Ibatis.DataMapper.Session
         /// Gets the data source.
         /// </summary>
         /// <value>The data source.</value>
-        public IDataSource DataSource
+        public virtual IDataSource DataSource
         {
             get { return dataSource; }
+            set { dataSource = value; }
         }
 
 

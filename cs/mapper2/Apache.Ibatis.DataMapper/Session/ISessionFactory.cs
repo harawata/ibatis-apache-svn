@@ -34,11 +34,12 @@ namespace Apache.Ibatis.DataMapper.Session
     /// </summary>
     public interface ISessionFactory 
     {
+
         /// <summary>
-        /// Gets the data source.
+        /// Gets or sets the data source.
         /// </summary>
         /// <value>The data source.</value>
-        IDataSource DataSource { get; }
+        IDataSource DataSource { set; get; }
 
         /// <summary>
         /// Open a <c>ISession</c> on the given connection
