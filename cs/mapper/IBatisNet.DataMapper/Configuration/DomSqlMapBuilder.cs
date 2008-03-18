@@ -1869,8 +1869,21 @@ namespace IBatisNet.DataMapper.Configuration
                             resultMap.GroupByPropertyNames.Add(superMap.GroupByPropertyNames[i]);
                         }
                     }
+                    // Add constructor arguments 
+                    if (resultMap.Parameters.Count == 0)
+                    {
+                       for (int i = 0; i < superMap.Parameters.Count; i++)
+                       {
+                           resultMap.Parameters.Add(superMap.Parameters[i]);
+                       }
+                       if (resultMap.Parameters.Count>0)
+                       {
+                           resultMap.SetObjectFactory(_configScope);
+                       }
+                    }
 
-                    // Verify that that each groupBy element correspond to a class member
+
+				    // Verify that that each groupBy element correspond to a class member
                     // of one of result property
                     for (int i = 0; i < resultMap.GroupByPropertyNames.Count; i++)
                     {

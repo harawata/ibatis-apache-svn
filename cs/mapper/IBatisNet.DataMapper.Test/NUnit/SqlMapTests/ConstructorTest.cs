@@ -54,6 +54,17 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 			AssertAccount1(account);
 		}
 
+        [Test]
+        [Category("JIRA")]
+        [Category("JIRA-260")]
+        public void TestExtendsConstructor()
+        {
+            Account account = sqlMap.QueryForObject("JIRA260", 1) as Account;
+            AssertAccount1(account);
+            Assert.IsTrue(account.BannerOption );
+            Assert.IsFalse(account.CartOption);
+        }
+
 #if dotnet2
         /// <summary>
         /// Test argument nullable constructor mapping

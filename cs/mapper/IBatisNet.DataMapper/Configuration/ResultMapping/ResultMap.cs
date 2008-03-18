@@ -390,7 +390,22 @@ namespace IBatisNet.DataMapper.Configuration.ResultMapping
 			#endregion 
 		}
 
-		/// <summary>
+        /// <summary>
+        /// Sets the object factory.
+        /// </summary>
+        public void SetObjectFactory(ConfigurationScope configScope)
+        {
+            Type[] parametersType = new Type[_parameters.Count];
+            for (int i = 0; i < _parameters.Count; i++)
+            {
+                ArgumentProperty argumentMapping = (ArgumentProperty)_parameters[i];
+                parametersType[i] = argumentMapping.MemberType;
+            }
+            // Init the object factory
+            _objectFactory = configScope.SqlMapper.ObjectFactory.CreateFactory(_class, parametersType);
+        }
+
+	    /// <summary>
 		/// Finds the constructor that takes the parameters.
 		/// </summary>
 		/// <param name="type">The <see cref="System.Type"/> to find the constructor in.</param> 
