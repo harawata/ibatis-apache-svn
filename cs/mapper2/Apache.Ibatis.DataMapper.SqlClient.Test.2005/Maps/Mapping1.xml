@@ -26,6 +26,19 @@
 	
 	<resultMaps>
 
+    <resultMap id="account-constructor"  class="Account" >
+      <constructor>
+        <argument argumentName="identifiant"	column="Account_ID"/>
+        <argument argumentName="firstName"    column="Account_FirstName"/>
+        <argument argumentName="lastName"     column="Account_LastName"/>
+      </constructor>
+    </resultMap>
+    <resultMap id="account-extends-constructor" class="Account" extends="account-constructor" >
+      <result property="EmailAddress" column="Account_Email" nullValue="no_email@provided.com"/>
+      <result property="BannerOption" column="Account_Banner_Option" dbType="Varchar" type="bool"/>
+      <result property="CartOption"	  column="Account_Cart_Option" typeHandler="HundredsBool"/>
+    </resultMap>
+    
     <resultMap id="email-result" class="string">
       <result property="value" column="Account_Email"/>
     </resultMap>
@@ -52,7 +65,6 @@
 			<result property="FirstName"    column="Account_FirstName"/>
 			<result property="documents" resultMapping="Document.document"/>
 		</resultMap>
-
 
 		<resultMap id="account-result"  class="Account" >
 			<result property="id"           column="Account_ID"/>

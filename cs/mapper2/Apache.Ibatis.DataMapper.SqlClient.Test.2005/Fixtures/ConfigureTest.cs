@@ -1,3 +1,4 @@
+using System;
 using System.Xml;
 using Apache.Ibatis.Common.Configuration;
 using Apache.Ibatis.Common.Data;
@@ -152,7 +153,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures
 
         private void CheckResource(IConfigurationStore store)
         {
-            //Console.WriteLine(store.ToString());
+            Console.WriteLine(store.ToString());
 
             Assert.That(store.Properties.Length, Is.EqualTo(14));
             Assert.That(store.GetPropertyConfiguration("useStatementNamespaces").Value, Is.EqualTo("false"));
@@ -194,7 +195,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures
             Assert.That(cacheModel.Attributes.ContainsKey(ConfigConstants.ATTRIBUTE_NAMESPACE), Is.True);
 
             // Result map
-            Assert.That(store.ResultMaps.Length, Is.EqualTo(14));
+            Assert.That(store.ResultMaps.Length, Is.EqualTo(16));
             IConfiguration resultMap = store.GetResultMapConfiguration("Account.account-result-constructor");
             Assert.IsNotNull(resultMap);
             Assert.That(resultMap.Children.Count, Is.EqualTo(4));
