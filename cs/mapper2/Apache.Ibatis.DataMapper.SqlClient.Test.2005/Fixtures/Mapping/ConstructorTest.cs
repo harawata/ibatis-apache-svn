@@ -39,6 +39,17 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
 
         #region Tests
 
+        [Test]
+        [Category("JIRA")]
+        [Category("JIRA-260")]
+        public void Extend_ResultMap_with_Constructor_should_be_used()
+        {
+            Account account = dataMapper.QueryForObject<Account>("JIRA260", 1);
+            AssertAccount1(account);
+            Assert.IsTrue(account.BannerOption);
+            Assert.IsFalse(account.CartOption);
+        }
+
         /// <summary>
         /// Test account constructor mapping
         /// </summary>
