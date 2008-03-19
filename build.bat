@@ -2,4 +2,3 @@
 
 call ant.bat
 
-pause
