@@ -575,7 +575,7 @@ public class SqlExecutor {
      */
     public void addBatch(StatementScope statementScope, Connection conn, String sql, Object[] parameters) throws SQLException {
       PreparedStatement ps = null;
-      if (currentSql != null && sql.hashCode() == currentSql.hashCode() && sql.length() == currentSql.length()) {
+      if (currentSql != null && currentSql.equals(sql)) {
         int last = statementList.size() - 1;
         ps = (PreparedStatement) statementList.get(last);
       } else {
