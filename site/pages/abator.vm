@@ -31,24 +31,25 @@
  to the Java user list.</p>
 
 <h3>Abator News</h3>
+<p>(March 20, 2008) Updated Abator and the Eclipse plugin to version 1.1.0.  This is an
+ extensive update that includes quite a few minor enhancements,
+ two major enhancements (two new methods can be generated), and a few bug fixes. 
+ See the
+ <a href="http://ibatis.apache.org/docs/tools/abator/whatsNew.html">What's New?</a>
+ section of the online documentation for full details.</p>
 <p>(August 20, 2006) Updated Abator and the Eclipse plugin to version 1.0.0.  This is an
  extensive update that includes many new features including the ability to generate
  code for Java 5, generate different types of domain models, and hugely improved
  "by example" methods.  See the "What's New?" section of the online documentation
  for full details.</p>
-<p>(August 20, 2006) Abator documentation is now available online!</p>
-<p>(April 30, 2006) <b>Version 0.6.5 is that last version of the Eclipse plugin that will be
-   compatible with Eclipse 3.0 or the Rational 6.0 Tools.</b></p>
-<p>(April 30, 2006) Updated Abator and the Eclipse plugin to 0.6.5  Several minor features and
-   bug fixes are included.  See the release notes for more information.</p>
 
 <h2>Software Downloads and Documentation</h2>
 <p>Download the standalone JAR if you are using an IDE other than Eclipse.  The
  standalone JAR includes an Ant task to run Abator, or you can run Abator from the command
  line of from Java code.</p>
 <ul>
-  <li><a href="http://people.apache.org/builds/ibatis/alpha/abator-1.0.0-238.zip">
-      Abator 1.0.0 w/Binaries and Source</a>
+  <li><a href="http://people.apache.org/builds/ibatis/alpha/abator-1.1.0-426.zip">
+      Abator 1.1.0 w/Binaries and Source</a>
   </li>
 </ul>
 
@@ -72,7 +73,7 @@
  
 <h3>Requirements</h3>
 <ul>
-  <li>Eclipse 3.1 or higher (Note: if you are stuck on Eclipse 3.0, or version 6.0
+  <li>Eclipse 3.2 or higher (Note: if you are stuck on Eclipse 3.0, or version 6.0
       of the Rational development tools, the prior version of the plugin is still
       available on the update site)</li>
   <li>JDK 1.4 or Higher</li>
@@ -102,10 +103,9 @@
 <h3>Manual Eclipse Install</h3>
 <p>The automatic install is much preferred, but you can also install Abator manually if you
  desire. To install manually, download the file
- <a href="http://people.apache.org/builds/ibatis/alpha/AbatorForEclipse1.0.0.zip">AbatorForEclipse1.0.0.zip</a>
+ <a href="http://people.apache.org/builds/ibatis/alpha/AbatorForEclipse1.1.0.zip">AbatorForEclipse1.1.0.zip</a>
  and unzip
- the file to some convenient location.  This file is a zipped version of the update site
- and includes both version 1.0.0, and the prior version 0.6.5.  After unzipping the
+ the file to some convenient location.  After unzipping the
  update site archive, follow these steps in Eclipse:</p>
 <ol>
   <li>Take the "Help&gt;Software Updates&gt;Find and Install" Menu Option</li>
