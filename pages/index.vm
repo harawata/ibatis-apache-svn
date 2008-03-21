@@ -49,6 +49,11 @@
 
   <h2>News</h2>
   
+<h3>Abator 1.1 Available</h3>
+<p>(March 20, 2008) Abator version 1.1 is available.  This version has quite a few minor enhancements,
+ two major enhancements (two new methods can be generated), and a few bug fixes.  Check it out
+ <a href="abator.html">here</a>.
+
 <h3>It's quiet, too quiet!</h3>
  <p>(March 10, 2008) Yes, we're alive.  I felt the need to update the homepage since it's been a while(!).  All of the activity is on the mailing list these days,
  and we haven't had a major release in a while.  That's all about to change.  The iBATIS 3.0 whiteboard has been up for a while and I think the ideas are sound.  We've had a lot
