@@ -121,10 +121,11 @@ specified with the <a href="property.html">&lt;property&gt;</a> child element:</
   <tr>
     <td valign="top">rootClasspath</td>
     <td>This property can be used to specify a class path for the "rootClass"
-      specified here for or on the &lt;table&gt; element.  Abator will check
+      specified here or on the &lt;table&gt; element.  Abator will check
       in the rootClass and will not generate a property if the property exists
       in the rootClass.  If not specified, Abator will attempt to load the rootClass
-      through the current thread context classloader.
+      through the current thread context classloader.  If Abator cannot find and load
+      the rootClass, then Abator will generate all properties.
       <p>This property is a semi-colon (;) delimited string
       of classpath entries.</p>
     </td>

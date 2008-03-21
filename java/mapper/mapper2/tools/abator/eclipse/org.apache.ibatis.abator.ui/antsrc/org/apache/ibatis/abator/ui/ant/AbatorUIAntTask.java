@@ -19,9 +19,12 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 import org.apache.ibatis.abator.api.Abator;
 import org.apache.ibatis.abator.config.AbatorConfiguration;
@@ -45,6 +48,8 @@ public class AbatorUIAntTask extends Task {
 
     private PropertySet propertyset;
     private String configfile;
+    private String contextIds;
+    private String fullyQualifiedTableNames;
 
     /**
      *  
@@ -71,6 +76,28 @@ public class AbatorUIAntTask extends Task {
                     + " does not exist");
         }
 
+        Set fullyqualifiedTables = new HashSet();
+        if (StringUtility.stringHasValue(fullyQualifiedTableNames)) {
+            StringTokenizer st = new StringTokenizer(fullyQualifiedTableNames, ","); //$NON-NLS-1$
+            while (st.hasMoreTokens()) {
+                String s = st.nextToken().trim();
+                if (s.length() > 0) {
+                    fullyqualifiedTables.add(s);
+                }
+            }
+        }
+        
+        Set contexts = new HashSet();
+        if (StringUtility.stringHasValue(contextIds)) {
+            StringTokenizer st = new StringTokenizer(contextIds, ","); //$NON-NLS-1$
+            while (st.hasMoreTokens()) {
+                String s = st.nextToken().trim();
+                if (s.length() > 0) {
+                    contexts.add(s);
+                }
+            }
+        }
+        
         try {
             Properties p = propertyset == null ? null : propertyset.getProperties();
             
@@ -90,7 +117,7 @@ public class AbatorUIAntTask extends Task {
                 progressCallback = new EclipseProgressCallback(monitor);
             }
 
-            abator.generate(progressCallback);
+            abator.generate(progressCallback, contexts, fullyqualifiedTables);
 
         } catch (XMLParserException e) {
             List errors = e.getErrors();
@@ -137,5 +164,21 @@ public class AbatorUIAntTask extends Task {
         }
         
         return propertyset;
+    }
+
+    public String getContextIds() {
+        return contextIds;
+    }
+
+    public void setContextIds(String contextIds) {
+        this.contextIds = contextIds;
+    }
+
+    public String getFullyQualifiedTableNames() {
+        return fullyQualifiedTableNames;
+    }
+
+    public void setFullyQualifiedTableNames(String fullyQualifiedTableNames) {
+        this.fullyQualifiedTableNames = fullyQualifiedTableNames;
     }
 }

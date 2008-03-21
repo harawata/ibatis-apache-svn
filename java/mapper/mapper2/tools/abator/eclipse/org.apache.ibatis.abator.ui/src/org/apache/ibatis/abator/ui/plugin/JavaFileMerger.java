@@ -18,7 +18,6 @@ package org.apache.ibatis.abator.ui.plugin;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.apache.ibatis.abator.api.GeneratedJavaFile;
@@ -45,7 +44,6 @@ import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
-import org.eclipse.jdt.core.formatter.DefaultCodeFormatterConstants;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
@@ -296,9 +294,7 @@ public class JavaFileMerger {
             listRewrite.insertAt((ASTNode) iter.next(), i++, null);
         }
 
-        Map options = DefaultCodeFormatterConstants.getJavaConventionsSettings();
-        
-        textEdit = rewrite.rewriteAST(document, options);
+        textEdit = rewrite.rewriteAST(document, JavaCore.getOptions());
         try {
             textEdit.apply(document);
         } catch (BadLocationException e) {

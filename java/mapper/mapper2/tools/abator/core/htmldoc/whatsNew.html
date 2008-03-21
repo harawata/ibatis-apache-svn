@@ -18,6 +18,9 @@
 <h3>Announcements</h3>
 <ul>
   <li>The next release of Abator will require JRE 5.0 or higher.</li>
+  <li>Java2 is now the default generator set.  This will cause different code to be
+      generated if you have not specified a generator set previously.  To remedy this,
+      set the generator set to "Legacy".</li>
 </ul>
 
 <h3>New Generated Methods</h3>
@@ -47,7 +50,6 @@
 
 <h3>Miscellaneous Changes</h3>
 <ul>
-  <li>Java2 is now the default generator set.</li>
   <li>Added the ability to specify properties to ignore qualifiers and change runtime
       table names in the generated SQL for a table.  Primary use cases for this
       support include:
@@ -117,7 +119,8 @@
       Abator will not generate the property.  The &lt;javaModelGenerator&gt; element now
       accepts a property to specify the classpath of the <code>rootClass</code>.  See the
       <a href="configreference/javaModelGenerator.html">&lt;javaModelGenerator&gt;</a>
-      reference page for more information.</li>
+      reference page for more information.  Thanks to Ashok Madhavan for the beginnings
+      of this code.</li>
   <li>Allowed specifying a type (pre or post) for the generated key element.  See the
       <a href="configreference/generatedKey.html">&lt;generatedKey&gt;</a>
       reference page for more information.</li>

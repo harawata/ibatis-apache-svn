@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.ClasspathVariableInitializer;
@@ -51,7 +52,7 @@ public class AbatorHomeInitializer extends ClasspathVariableInitializer {
 		URL installLocation= bundle.getEntry("/"); //$NON-NLS-1$
 		URL local= null;
 		try {
-			local= Platform.asLocalURL(installLocation);
+			local= FileLocator.toFileURL(installLocation);
 		} catch (IOException e) {
 			JavaCore.removeClasspathVariable(ABATOR_HOME, null);
 			return;

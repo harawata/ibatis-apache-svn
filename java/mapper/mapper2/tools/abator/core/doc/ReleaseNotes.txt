@@ -48,7 +48,8 @@ Enhancements -
     element.
 21. Added a comment generator interface
 22. Abator will not generate model properties that would override 
-    properties in a rootClass.
+    properties in a rootClass.  Thanks to Ashok Madhavan for the beginnings
+    of this code.
 
 -------------------------------------------------------------------------------
 Version 1.0.0:

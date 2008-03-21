@@ -25,6 +25,7 @@
       classpathref="org.abache.ibatis.abator.doc.javadocclasspath">
     	<packageset dir="../../core/src" />
     	<packageset dir="../org.apache.ibatis.abator.ui/src" />
+    	<packageset dir="../org.apache.ibatis.abator.ui/antsrc" />
     </javadoc>
   	
   	<zip destfile="doc.zip" >

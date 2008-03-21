@@ -3,10 +3,10 @@
 
 <toc label="Abator for iBATIS User Guide">
   <topic label="Eclipse Plugin Documentation">
+	<topic label="Plugin Release Notes"  href="html/releasenotes.html"/> 
 	<topic label="Eclipse Plugin Quick Start Guide"  href="html/quickstart.html"/>
 	<topic label="Using the Eclipse User Interface"  href="html/eclipseui.html"/> 
-	<topic label="Plugin Future Roadmap"  href="html/roadmap.html"/> 
-	<topic label="Plugin Release Notes"  href="html/releasenotes.html"/> 
+	<topic label="Using the Integrated Ant Task"  href="html/usingAnt.html"/> 
 	<topic label="Abator Feature Debug Reference"  href="html/buildingFromSVN.html"/> 
   </topic>
   
@@ -22,11 +22,13 @@
       <topic href="core/htmldoc/configreference/abatorContext.html" label="&lt;abatorContext&gt;"/>
       <topic href="core/htmldoc/configreference/classPathEntry.html" label="&lt;classPathEntry&gt;"/>
       <topic href="core/htmldoc/configreference/columnOverride.html" label="&lt;columnOverride&gt;"/>
+      <topic href="core/htmldoc/configreference/columnRenamingRule.html" label="&lt;columnRenamingRule&gt;"/>
+      <topic href="core/htmldoc/configreference/commentGenerator.html" label="&lt;commentGenerator&gt;"/>
       <topic href="core/htmldoc/configreference/daoGenerator.html" label="&lt;daoGenerator&gt;"/>
       <topic href="core/htmldoc/configreference/generatedKey.html" label="&lt;generatedKey&gt;"/>
       <topic href="core/htmldoc/configreference/ignoreColumn.html" label="&lt;ignoreColumn&gt;"/>
-      <topic href="core/htmldoc/configreference/javaTypeResolver.html" label="&lt;javaTypeResolver&gt;"/>
       <topic href="core/htmldoc/configreference/javaModelGenerator.html" label="&lt;javaModelGenerator&gt;"/>
+      <topic href="core/htmldoc/configreference/javaTypeResolver.html" label="&lt;javaTypeResolver&gt;"/>
       <topic href="core/htmldoc/configreference/jdbcConnection.html" label="&lt;jdbcConnection&gt;"/>
       <topic href="core/htmldoc/configreference/properties.html" label="&lt;properties&gt;"/>
       <topic href="core/htmldoc/configreference/property.html" label="&lt;property&gt;"/>
@@ -39,6 +41,7 @@
       <topic href="core/htmldoc/generatedobjects/sqlmap.html" label="SQL Map Files"/>
       <topic href="core/htmldoc/generatedobjects/javadao.html" label="DAO Interfaces and Classes"/>
       <topic href="core/htmldoc/generatedobjects/exampleClassUsage.html" label="Example Class Usage Notes"/>
+      <topic href="core/htmldoc/generatedobjects/extendingExampleClass.html" label="Extending the Example Classes"/>
     </topic>
 
     <topic href="core/htmldoc/usage/intro.html" label="Database Specific Information">
@@ -53,7 +56,6 @@
     </topic>
     
     <topic href="core/htmldoc/philosophy.html" label="Design Philosophy"/>
-    <topic href="core/htmldoc/roadmap.html" label="Future Roadmap"/>
     <topic href="core/htmldoc/license.html" label="Licensing Information"/>
   </topic>
   
@@ -77,6 +79,7 @@
     <topic label="org.apache.ibatis.abator.internal.util.messages" href="html/javadoc/org/apache/ibatis/abator/internal/util/messages/package-summary.html" />
     <topic label="org.apache.ibatis.abator.ui" href="html/javadoc/org/apache/ibatis/abator/ui/package-summary.html" />
     <topic label="org.apache.ibatis.abator.ui.actions" href="html/javadoc/org/apache/ibatis/abator/ui/actions/package-summary.html" />
+    <topic label="org.apache.ibatis.abator.ui.ant" href="html/javadoc/org/apache/ibatis/abator/ui/ant/package-summary.html" />
     <topic label="org.apache.ibatis.abator.ui.content" href="html/javadoc/org/apache/ibatis/abator/ui/content/package-summary.html" />
     <topic label="org.apache.ibatis.abator.ui.editors" href="html/javadoc/org/apache/ibatis/abator/ui/editors/package-summary.html" />
     <topic label="org.apache.ibatis.abator.ui.plugin" href="html/javadoc/org/apache/ibatis/abator/ui/plugin/package-summary.html" />
