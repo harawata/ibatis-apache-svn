@@ -1,4 +1,4 @@
-package com.ibatis.sqlmap.engine.conifg;
+package com.ibatis.sqlmap.engine.config;
 
 import com.ibatis.common.beans.*;
 import com.ibatis.common.resources.*;

@@ -3,7 +3,7 @@ package com.ibatis.sqlmap.engine.builder.xml;
 import com.ibatis.common.resources.*;
 import com.ibatis.common.xml.*;
 import com.ibatis.sqlmap.client.*;
-import com.ibatis.sqlmap.engine.conifg.*;
+import com.ibatis.sqlmap.engine.config.*;
 import com.ibatis.sqlmap.engine.transaction.*;
 import com.ibatis.sqlmap.engine.datasource.*;
 import com.ibatis.sqlmap.engine.mapping.result.*;

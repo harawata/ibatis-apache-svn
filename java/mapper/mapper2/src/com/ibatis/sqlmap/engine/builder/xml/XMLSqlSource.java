@@ -1,7 +1,7 @@
 package com.ibatis.sqlmap.engine.builder.xml;
 
 import com.ibatis.common.xml.*;
-import com.ibatis.sqlmap.engine.conifg.*;
+import com.ibatis.sqlmap.engine.config.*;
 import com.ibatis.sqlmap.engine.mapping.parameter.*;
 import com.ibatis.sqlmap.engine.mapping.sql.*;
 import com.ibatis.sqlmap.engine.mapping.sql.dynamic.*;

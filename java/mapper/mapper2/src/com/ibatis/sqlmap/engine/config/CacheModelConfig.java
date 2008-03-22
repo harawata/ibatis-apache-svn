@@ -1,4 +1,4 @@
-package com.ibatis.sqlmap.engine.conifg;
+package com.ibatis.sqlmap.engine.config;
 
 import com.ibatis.sqlmap.engine.cache.*;
 import com.ibatis.sqlmap.engine.impl.*;
@@ -34,14 +34,14 @@ public class CacheModelConfig {
     errorContext.setObjectId(null);
   }
 
-  public void setFlushInterval(int hours, int minutes, int seconds, int milliseconds) {
+  public void setFlushInterval(long hours, long minutes, long seconds, long milliseconds) {
     errorContext.setMoreInfo("Check the cache model flush interval.");
-    long t = 0;
+    long t = 0L;
     t += milliseconds;
-    t += seconds * 1000;
-    t += minutes * 60 * 1000;
-    t += hours * 60 * 60 * 1000;
-    if (t < 1)
+    t += seconds * 1000L;
+    t += minutes * 60L * 1000L;
+    t += hours * 60L * 60L * 1000L;
+    if (t < 1L)
       throw new RuntimeException("A flush interval must specify one or more of milliseconds, seconds, minutes or hours.");
     cacheModel.setFlushInterval(t);
   }

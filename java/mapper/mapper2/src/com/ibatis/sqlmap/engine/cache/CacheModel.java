@@ -36,7 +36,7 @@ public class CacheModel implements ExecuteListener {
    * This is used to represent null objects that are returned from the cache so
    * that they can be cached, too.
    */
-  public static final Object NULL_OBJECT = new Object();
+  public static final Object NULL_OBJECT = new String("SERIALIZABLE_NULL_OBJECT");
   private int requests = 0;
   private int hits = 0;
 

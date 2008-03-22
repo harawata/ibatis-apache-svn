@@ -19,10 +19,8 @@ import com.ibatis.sqlmap.engine.impl.SqlMapClientImpl;
 import com.ibatis.sqlmap.engine.type.DomCollectionTypeMarker;
 
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.lang.reflect.Array;
 
 /**
  * Class to load results into objects
@@ -79,11 +77,19 @@ public class ResultLoader {
     return value;
   }
 
-
-  private static Object[] listToArray(List list, Class type) {
+  private static Object listToArray(List list, Class type) {
     Object array = java.lang.reflect.Array.newInstance(type, list.size());
-    array = list.toArray((Object[]) array);
-    return (Object[]) array;
+    if (type.isPrimitive()) {
+      Iterator iter = list.iterator();
+      int index = 0;
+      while (iter.hasNext()) {
+        Array.set(array, index++, iter.next());
+      }
+    } else {
+      array = list.toArray((Object[]) array);
+    }
+    return array;
+
   }
 
 }

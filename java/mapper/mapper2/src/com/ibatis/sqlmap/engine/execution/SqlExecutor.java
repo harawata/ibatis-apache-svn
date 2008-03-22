@@ -350,10 +350,10 @@ public class SqlExecutor {
   }
 
   private boolean moveToNextResultsSafely(Statement stmt) throws SQLException {
-    if (!stmt.getConnection().getMetaData().supportsMultipleResultSets()) {
-      return false;
+    if (stmt.getConnection().getMetaData().supportsMultipleResultSets()) {
+      return stmt.getMoreResults();
     }
-    return stmt.getMoreResults();
+    return false;
   }
 
   private void handleResults(StatementScope statementScope, ResultSet rs, int skipResults, int maxResults, RowHandlerCallback callback) throws SQLException {
