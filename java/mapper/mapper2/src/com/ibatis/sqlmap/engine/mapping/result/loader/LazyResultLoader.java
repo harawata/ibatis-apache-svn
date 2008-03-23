@@ -16,7 +16,6 @@
 package com.ibatis.sqlmap.engine.mapping.result.loader;
 
 import com.ibatis.common.beans.ClassInfo;
-
 import com.ibatis.sqlmap.engine.impl.SqlMapClientImpl;
 
 import java.lang.reflect.InvocationHandler;
@@ -25,12 +24,14 @@ import java.lang.reflect.Proxy;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Class to lazily load results into objects
  */
 public class LazyResultLoader implements InvocationHandler {
 
+  private static final Class[] SET_INTERFACES = new Class[]{Set.class};
   private static final Class[] LIST_INTERFACES = new Class[]{List.class};
 
   protected SqlMapClientImpl client;
@@ -67,7 +68,11 @@ public class LazyResultLoader implements InvocationHandler {
     if (Collection.class.isAssignableFrom(targetType)) {
       InvocationHandler handler = new LazyResultLoader(client, statementName, parameterObject, targetType);
       ClassLoader cl = targetType.getClassLoader();
-      return Proxy.newProxyInstance(cl, LIST_INTERFACES, handler);
+      if (Set.class.isAssignableFrom(targetType)) {
+        return Proxy.newProxyInstance(cl, SET_INTERFACES, handler);
+      } else {
+        return Proxy.newProxyInstance(cl, LIST_INTERFACES, handler);
+      }
     } else {
       return ResultLoader.getResult(client, statementName, parameterObject, targetType);
     }
