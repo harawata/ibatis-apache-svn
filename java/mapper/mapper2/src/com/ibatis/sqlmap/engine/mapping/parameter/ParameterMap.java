@@ -120,7 +120,7 @@ public class ParameterMap {
 
     if (parameterMappings != null) {
       for (int i = 0; i < parameterMappings.length; i++) {
-        ParameterMapping mapping = (ParameterMapping) parameterMappings[i];
+        ParameterMapping mapping = parameterMappings[i];
         errorContext.setMoreInfo(mapping.getErrorString());
         if (mapping.isInputAllowed()) {
           setParameter(ps, mapping, parameters, i);

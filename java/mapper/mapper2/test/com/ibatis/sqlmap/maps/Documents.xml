@@ -19,8 +19,8 @@
     <result property="title" column="DOCUMENT_TITLE"/>
     <result property="type" column="DOCUMENT_TYPE"/>
     <discriminator column="DOCUMENT_TYPE" javaType="string" >
-      <subMap value="Book" resultMap="book"/>
-      <subMap value="Newspaper" resultMap="news"/>
+      <subMap value="BOOK" resultMap="book"/>
+      <subMap value="NEWSPAPER" resultMap="news"/>
     </discriminator>
   </resultMap>
 
@@ -30,8 +30,8 @@
     <result property="type" column="DOCUMENT_TYPE"/>
     <result property="attributes" resultMap="Documents.documentAttributes" />
     <discriminator column="DOCUMENT_TYPE" javaType="string" >
-      <subMap value="Book" resultMap="bookWithAttributes"/>
-      <subMap value="Newspaper" resultMap="newsWithAttributes"/>
+      <subMap value="BOOK" resultMap="bookWithAttributes"/>
+      <subMap value="NEWSPAPER" resultMap="newsWithAttributes"/>
     </discriminator>
   </resultMap>
   

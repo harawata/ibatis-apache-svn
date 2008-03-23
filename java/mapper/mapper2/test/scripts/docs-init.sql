@@ -11,12 +11,12 @@ CREATE TABLE DOCUMENTS  (
    PRIMARY KEY (DOCUMENT_ID)
 );
 
-INSERT INTO DOCUMENTS VALUES (1, 'The World of Null-A', 'Book', 55, null);
-INSERT INTO DOCUMENTS VALUES (2, 'Le Progres de Lyon', 'Newspaper', null , 'Lyon');
-INSERT INTO DOCUMENTS VALUES (3, 'Lord of the Rings', 'Book', 3587, null);
-INSERT INTO DOCUMENTS VALUES (4, 'Le Canard enchaine', 'Newspaper', null , 'Paris');
-INSERT INTO DOCUMENTS VALUES (5, 'Le Monde', 'Broadsheet', null , 'Paris');
-INSERT INTO DOCUMENTS VALUES (6, 'Foundation', 'Monograph', 557, null);
+INSERT INTO DOCUMENTS VALUES (1, 'The World of Null-A', 'BOOK', 55, null);
+INSERT INTO DOCUMENTS VALUES (2, 'Le Progres de Lyon', 'NEWSPAPER', null , 'Lyon');
+INSERT INTO DOCUMENTS VALUES (3, 'Lord of the Rings', 'BOOK', 3587, null);
+INSERT INTO DOCUMENTS VALUES (4, 'Le Canard enchaine', 'NEWSPAPER', null , 'Paris');
+INSERT INTO DOCUMENTS VALUES (5, 'Le Monde', 'BROADSHEET', null , 'Paris');
+INSERT INTO DOCUMENTS VALUES (6, 'Foundation', 'MONOGRAPH', 557, null);
 
 CREATE TABLE PERSON_DOCUMENTS (
   PERSON_ID INTEGER NOT NULL,

@@ -6,7 +6,7 @@ public class Document {
 
   private int id;
   private String title;
-  private String type;
+  private DocType type;
   private List attributes;
 
   public int getId() {
@@ -25,11 +25,11 @@ public class Document {
     this.title = title;
   }
 
-  public String getType() {
+  public DocType getType() {
     return type;
   }
 
-  public void setType(String type) {
+  public void setType(DocType type) {
     this.type = type;
   }
 

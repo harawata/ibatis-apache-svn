@@ -13,7 +13,7 @@
       DOCUMENT_TYPE as type,
       DOCUMENT_PAGENUMBER as pages
     from DOCUMENTS
-    where DOCUMENT_TYPE = 'Book'
+    where DOCUMENT_TYPE = 'BOOK'
   </select>
 
 </sqlMap>

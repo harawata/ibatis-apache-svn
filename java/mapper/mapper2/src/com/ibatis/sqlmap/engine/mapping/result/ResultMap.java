@@ -345,8 +345,7 @@ public class ResultMap {
         columnValues[i] = getPrimitiveResultMappingValue(rs, mapping);
         if (columnValues[i] == null) {
           columnValues[i] = doNullMapping(columnValues[i], mapping);
-        }
-        else  {
+        } else {
           foundData = true;
         }
       }
