@@ -180,7 +180,7 @@ public class ScriptRunner {
             ResultSetMetaData md = rs.getMetaData();
             int cols = md.getColumnCount();
             for (int i = 0; i < cols; i++) {
-              String name = md.getColumnName(i);
+              String name = md.getColumnLabel(i);
               print(name + "\t");
             }
             println("");

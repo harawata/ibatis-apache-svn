@@ -85,6 +85,10 @@ public class SqlMapConfiguration {
     AccessPlanFactory.setBytecodeEnhancementEnabled(enhancementEnabled);
   }
 
+  public void setUseColumnLabel(boolean useColumnLabel) {
+    client.getDelegate().setUseColumnLabel(useColumnLabel);
+  }
+
   public void setDefaultStatementTimeout(Integer defaultTimeout) {
     errorContext.setActivity("setting default timeout");
     if (defaultTimeout != null) {

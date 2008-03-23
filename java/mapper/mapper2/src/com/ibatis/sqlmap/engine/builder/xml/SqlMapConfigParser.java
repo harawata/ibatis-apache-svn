@@ -111,6 +111,10 @@ public class SqlMapConfigParser {
         boolean enhancementEnabled = (enhancementEnabledAttr == null || "true".equals(enhancementEnabledAttr));
         config.setEnhancementEnabled(enhancementEnabled);
 
+        String useColumnLabelAttr = attributes.getProperty("useColumnLabel");
+        boolean useColumnLabel = (useColumnLabelAttr == null || "true".equals(useColumnLabelAttr));
+        config.setUseColumnLabel(useColumnLabel);
+
         String defaultTimeoutAttr = attributes.getProperty("defaultStatementTimeout");
         Integer defaultTimeout = defaultTimeoutAttr == null ? null : Integer.valueOf(defaultTimeoutAttr);
         config.setDefaultStatementTimeout(defaultTimeout);

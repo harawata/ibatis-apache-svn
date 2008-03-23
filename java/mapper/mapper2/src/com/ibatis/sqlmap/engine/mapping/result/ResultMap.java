@@ -75,7 +75,7 @@ public class ResultMap {
 
   private String resource;
 
-  private SqlMapExecutorDelegate delegate;
+  protected SqlMapExecutorDelegate delegate;
 
   protected boolean allowRemapping = false;
   public static final Object NO_VALUE = new Object();

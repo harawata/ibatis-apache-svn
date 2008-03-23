@@ -60,6 +60,7 @@ public class SqlMapExecutorDelegate {
   private boolean lazyLoadingEnabled;
   private boolean cacheModelsEnabled;
   private boolean enhancementEnabled;
+  private boolean useColumnLabel = true;
 
   private TransactionManager txManager;
 
@@ -167,6 +168,14 @@ public class SqlMapExecutorDelegate {
    */
   public void setEnhancementEnabled(boolean enhancementEnabled) {
     this.enhancementEnabled = enhancementEnabled;
+  }
+
+  public boolean isUseColumnLabel() {
+    return useColumnLabel;
+  }
+
+  public void setUseColumnLabel(boolean useColumnLabel) {
+    this.useColumnLabel = useColumnLabel;
   }
 
   /**
