@@ -61,6 +61,7 @@ public class SqlMapExecutorDelegate {
   private boolean cacheModelsEnabled;
   private boolean enhancementEnabled;
   private boolean useColumnLabel = true;
+  private boolean forceMultipleResultSetSupport;
 
   private TransactionManager txManager;
 
@@ -899,6 +900,14 @@ public class SqlMapExecutorDelegate {
 
   public void setStatementCacheEnabled(boolean statementCacheEnabled) {
     this.statementCacheEnabled = statementCacheEnabled;
+  }
+
+  public boolean isForceMultipleResultSetSupport() {
+    return forceMultipleResultSetSupport;
+  }
+
+  public void setForceMultipleResultSetSupport(boolean forceMultipleResultSetSupport) {
+    this.forceMultipleResultSetSupport = forceMultipleResultSetSupport;
   }
 }
 

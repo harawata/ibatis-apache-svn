@@ -295,7 +295,7 @@ public class SqlExecutor {
 
   private ResultSet handleMultipleResults(PreparedStatement ps, StatementScope statementScope, int skipResults, int maxResults, RowHandlerCallback callback) throws SQLException {
     ResultSet rs;
-    rs = getFirstResultSet(ps);
+    rs = getFirstResultSet(statementScope, ps);
     if (rs != null) {
       handleResults(statementScope, rs, skipResults, maxResults, callback);
     }
@@ -309,7 +309,7 @@ public class SqlExecutor {
         multipleResults.add(defaultRowHandler.getList());
         ResultMap[] resultMaps = statement.getAdditionalResultMaps();
         int i = 0;
-        while (moveToNextResultsSafely(ps)) {
+        while (moveToNextResultsSafely(statementScope, ps)) {
           if (i >= resultMaps.length) break;
           ResultMap rm = resultMaps[i];
           statementScope.setResultMap(rm);
@@ -322,14 +322,14 @@ public class SqlExecutor {
         defaultRowHandler.setList(multipleResults);
         statementScope.setResultMap(statement.getResultMap());
       } else {
-        while (moveToNextResultsSafely(ps)) ;
+        while (moveToNextResultsSafely(statementScope, ps)) ;
       }
     }
     // End additional ResultSet handling
     return rs;
   }
 
-  private ResultSet getFirstResultSet(Statement stmt) throws SQLException {
+  private ResultSet getFirstResultSet(StatementScope scope, Statement stmt) throws SQLException {
     ResultSet rs = null;
     boolean hasMoreResults = true;
     while (hasMoreResults) {
@@ -337,23 +337,27 @@ public class SqlExecutor {
       if (rs != null) {
         break;
       }
-      hasMoreResults = moveToNextResultsIfPresent(stmt);
+      hasMoreResults = moveToNextResultsIfPresent(scope, stmt);
     }
     return rs;
   }
 
-  private boolean moveToNextResultsIfPresent(Statement stmt) throws SQLException {
+  private boolean moveToNextResultsIfPresent(StatementScope scope, Statement stmt) throws SQLException {
     boolean moreResults;
     // This is the messed up JDBC approach for determining if there are more results
-    moreResults = !(((moveToNextResultsSafely(stmt) == false) && (stmt.getUpdateCount() == -1)));
+    moreResults = !(((moveToNextResultsSafely(scope, stmt) == false) && (stmt.getUpdateCount() == -1)));
     return moreResults;
   }
 
-  private boolean moveToNextResultsSafely(Statement stmt) throws SQLException {
-    if (stmt.getConnection().getMetaData().supportsMultipleResultSets()) {
+  private boolean moveToNextResultsSafely(StatementScope scope, Statement stmt) throws SQLException {
+    if (forceMultipleResultSetSupport(scope) || stmt.getConnection().getMetaData().supportsMultipleResultSets()) {
       return stmt.getMoreResults();
     }
     return false;
+  }
+
+  private boolean forceMultipleResultSetSupport(StatementScope scope) {
+    return ((SqlMapClientImpl)scope.getSession().getSqlMapClient()).getDelegate().isForceMultipleResultSetSupport();
   }
 
   private void handleResults(StatementScope statementScope, ResultSet rs, int skipResults, int maxResults, RowHandlerCallback callback) throws SQLException {

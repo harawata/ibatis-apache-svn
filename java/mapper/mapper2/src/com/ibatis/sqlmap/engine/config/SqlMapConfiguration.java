@@ -89,6 +89,10 @@ public class SqlMapConfiguration {
     client.getDelegate().setUseColumnLabel(useColumnLabel);
   }
 
+  public void setForceMultipleResultSetSupport(boolean forceMultipleResultSetSupport) {
+    client.getDelegate().setForceMultipleResultSetSupport(forceMultipleResultSetSupport);
+  }
+
   public void setDefaultStatementTimeout(Integer defaultTimeout) {
     errorContext.setActivity("setting default timeout");
     if (defaultTimeout != null) {

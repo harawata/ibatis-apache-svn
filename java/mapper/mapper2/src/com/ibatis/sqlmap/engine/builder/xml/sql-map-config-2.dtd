@@ -37,6 +37,7 @@ enhancementEnabled (true | false) #IMPLIED
 errorTracingEnabled (true | false) #IMPLIED
 useStatementNamespaces (true | false) #IMPLIED
 useColumnLabel (true | false) #IMPLIED
+forceMultipleResultSetSupport (true | false) #IMPLIED
 defaultStatementTimeout CDATA #IMPLIED
 >
 

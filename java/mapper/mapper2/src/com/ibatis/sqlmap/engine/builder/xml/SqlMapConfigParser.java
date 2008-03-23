@@ -115,6 +115,10 @@ public class SqlMapConfigParser {
         boolean useColumnLabel = (useColumnLabelAttr == null || "true".equals(useColumnLabelAttr));
         config.setUseColumnLabel(useColumnLabel);
 
+        String forceMultipleResultSetSupportAttr = attributes.getProperty("forceMultipleResultSetSupport");
+        boolean forceMultipleResultSetSupport = "true".equals(forceMultipleResultSetSupportAttr);
+        config.setForceMultipleResultSetSupport(forceMultipleResultSetSupport);
+
         String defaultTimeoutAttr = attributes.getProperty("defaultStatementTimeout");
         Integer defaultTimeout = defaultTimeoutAttr == null ? null : Integer.valueOf(defaultTimeoutAttr);
         config.setDefaultStatementTimeout(defaultTimeout);
