@@ -169,9 +169,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Exceptions\ResourceException.cs" />
-    <Compile Include="IDalSession.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Logging\ConfigurationSectionHandler.cs">
       <SubType>Code</SubType>
     </Compile>
