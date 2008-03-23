@@ -358,11 +358,9 @@ public class ResultMap {
   }
 
   public Object setResultObjectValues(StatementScope statementScope, Object resultObject, Object[] values) {
-
+    final String previousNestedKey = statementScope.getCurrentNestedKey();
     String ukey = (String)getUniqueKey(statementScope.getCurrentNestedKey(), values);
-
     Map uniqueKeys = statementScope.getUniqueKeys(this);
-
     statementScope.setCurrentNestedKey(ukey);
     if (uniqueKeys != null && uniqueKeys.containsKey(ukey)) {
       // Unique key is already known, so get the existing result object and process additional results.
@@ -386,6 +384,7 @@ public class ResultMap {
       resultObject = NO_VALUE;
     }
 
+    statementScope.setCurrentNestedKey(previousNestedKey);
     return resultObject;
   }
 
