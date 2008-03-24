@@ -14,6 +14,15 @@ namespace IBatisNet.Common.Test.NUnit.CommonTests.Utilities
     [TestFixture] 
     public class TypeResolverTest
     {
+        /// <summary>
+        /// Test space on generic type
+        /// </summary>
+        [Test]
+        public void Generic_list_of_nullable_guid_should_be_resolved()
+        {
+            Type genericType = TypeUtils.ResolveType(typeof(List<Guid?>).FullName);
+            Assert.IsNotNull(genericType);
+        }
 
         /// <summary>
         /// Test space on generic type

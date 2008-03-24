@@ -114,7 +114,7 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 			}
 			#endregion
 
-            if (typeName.Contains(NULLABLE_TYPE))
+            if (typeName.StartsWith(NULLABLE_TYPE))
             {
                 return null;
             }
