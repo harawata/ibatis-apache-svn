@@ -104,7 +104,7 @@ namespace Apache.Ibatis.Common.Utilities.TypesResolver
         {
             Contract.Require.That(typeName, Is.Not.Null & Is.Not.Empty).When("retrieving argument typeName for ResolveType method");
 
-            if (typeName.Contains(NULLABLE_TYPE))
+            if (typeName.StartsWith(NULLABLE_TYPE))
             {
                 return null;
             }
