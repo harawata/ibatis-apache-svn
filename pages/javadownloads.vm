@@ -10,16 +10,30 @@
 <table cellpadding="0" cellspacing="0" border="0">
   <tr>
     <td rowspan="2" width="70%">
-      <h4>Current Release</h4>
-      <p>iBATIS 2.3.0 is the current and best release.  It is also the first iBATIS release that
-         does not include the DAO framework (see sidebar for more).</p>
+      <h4>Current Release 2.3.0</h4>
       <ul>
-        <li><a href="[preferred]/ibatis/binaries/ibatis.java/ibatis-2.3.0.677.zip"><b>iBATIS Java 2.3.0
-          Binaries, Source, and Documentation</b></a> (Dec 1, 2006)
-          [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/ibatis-2.3.0.677.zip.md5">MD5</a>]
-          [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/ibatis-2.3.0.677.zip.asc">PGP</a>]
-          [Status: General Availability]
-          <a href="http://issues.apache.org/jira/secure/ReleaseNote.jspa?version=12312035&styleName=Text&projectId=10601&Create=Create">Release Notes</a>
+        <li>
+		<a href="[preferred]/ibatis/binaries/ibatis.java/ibatis-2.3.0.677.zip"><b>Download iBATIS Java 2.3.0</b></a>
+        <br/> Includes binaries, source, and documentation
+        <br/>[Status: General Availability | Dec 1, 2006]
+        <br/>
+		[<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/ibatis-2.3.0.677.zip.md5">MD5</a>]
+         [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/ibatis-2.3.0.677.zip.asc">PGP</a>]         
+         <a href="https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=10601&styleName=Html&version=12312035">Release Notes</a>
+         </li>
+      </ul>
+
+      <h4>Beta Release  2.3.1</h4>
+      <ul>
+        <li>
+		  <a href="[preferred]/ibatis/binaries/ibatis.java/ibatis-2.3.1.710.zip"><b>Download iBATIS Java 2.3.1</b></a> 
+          <br/> Includes binaries, source, and documentation
+		  <br/> [Status: Beta | Mar 25, 2008]
+		  <br/>
+           [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/ibatis-2.3.1.710.zip.md5">MD5</a>]
+           [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/ibatis-2.3.1.710.zip.asc">PGP</a>]
+           
+          <a href="https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=10601&styleName=Html&version=12312222">Release Notes</a>
         </li>
       </ul>
 
