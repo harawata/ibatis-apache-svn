@@ -248,12 +248,25 @@ public class DatabaseIntrospector {
                 try {
                     javaTypeResolver.initializeResolvedJavaType(cd);
                 } catch (UnsupportedDataTypeException e) {
-                    // if the type is not supported, then we'll report a warning and
-                    // ignore the column
-                    warnings.add(Messages.getString("Warning.14", //$NON-NLS-1$
+                    boolean warn = true;
+                    if (tc.isColumnIgnored(cd.getActualColumnName())) {
+                        warn = false;
+                    }
+
+                    ColumnOverride co = tc.getColumnOverride(cd.getActualColumnName());
+                    if (co != null) {
+                        if (StringUtility.stringHasValue(co.getJavaType())
+                                && StringUtility.stringHasValue(co.getJavaType())) {
+                            warn = false;
+                        }
+                    }
+                    
+                    // if the type is not supported, then we'll report a warning
+                    if (warn) {
+                        warnings.add(Messages.getString("Warning.24", //$NON-NLS-1$
                             entry.getKey().toString(),
                             cd.getActualColumnName()));
-                    tableColumns.remove();
+                    }
                 }
             }
         }

@@ -1516,22 +1516,6 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
     }
     
     // Ashok's enhancement for checking parent classes...
-    protected Class loadRootClass(IntrospectedTable introspectedTable) {
-        Class clazz = null;
-        
-        String rootClass = getRootClass(introspectedTable);
-
-        if (rootClass != null) {
-            try {
-                clazz = Class.forName(rootClass);
-            } catch (Exception e) {
-                warnings.add(Messages.getString("Warning.20", rootClass)); //$NON-NLS-1$
-            }
-        }
-        
-        return clazz;
-    }
-
     protected PropertyDescriptor[] getRootClassPropertyDescriptors(String rootClass) {
         if (rootClass == null) {
             return null;

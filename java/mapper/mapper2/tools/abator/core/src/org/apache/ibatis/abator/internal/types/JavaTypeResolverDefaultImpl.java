@@ -228,7 +228,10 @@ public class JavaTypeResolverDefaultImpl implements JavaTypeResolver {
 			break;
 
 		default:
-			throw new UnsupportedDataTypeException();
+            type.setJdbcTypeName("OTHER"); //$NON-NLS-1$
+            type.setFullyQualifiedJavaType(new FullyQualifiedJavaType(Object.class.getName()));
+            cd.setResolvedJavaType(type);
+            throw new UnsupportedDataTypeException();
 		}
 
 		cd.setResolvedJavaType(type);

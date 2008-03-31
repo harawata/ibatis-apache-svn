@@ -1,4 +1,10 @@
 -------------------------------------------------------------------------------
+Version 1.1.1:
+Bugs - 
+1. When unsupported data type, allow chance to override.  Otherwise, default
+   to Object Java type and OTHER JDBC type
+
+-------------------------------------------------------------------------------
 Version 1.1.0:
 Bugs - 
 1. corner case where the new "by example" methods fail if a criteria
