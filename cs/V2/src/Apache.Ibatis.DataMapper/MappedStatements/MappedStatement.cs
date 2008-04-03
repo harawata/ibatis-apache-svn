@@ -59,7 +59,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// <summary>
         /// Event launch on exceute query
         /// </summary>
-        public event ExecuteEventHandler Execute;
+        public event ExecuteEventHandler Execute = delegate {};
 
         #region Fields
 
@@ -1202,10 +1202,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         {
             ExecuteEventArgs e = new ExecuteEventArgs();
             e.StatementName = statement.Id;
-            if (Execute != null)
-            {
-                Execute(this, e);
-            }
+            Execute(this, e);
         }
 
         /// <summary>

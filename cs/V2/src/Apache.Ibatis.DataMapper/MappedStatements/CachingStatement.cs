@@ -49,7 +49,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 		/// <summary>
 		/// Event launch on exceute query
 		/// </summary>
-		public event ExecuteEventHandler Execute;
+        public event ExecuteEventHandler Execute = delegate { };
 
 		/// <summary>
 		/// Constructor

@@ -40,14 +40,8 @@ namespace Apache.Ibatis.DataMapper
 		/// </summary>
 		public string StatementName
 		{
-			get 
-			{
-				return _statementName;
-			}
-			set 
-			{
-				_statementName = value;
-			}
+			get { return _statementName; }
+			set { _statementName = value; }
 		}
 	}
 }
