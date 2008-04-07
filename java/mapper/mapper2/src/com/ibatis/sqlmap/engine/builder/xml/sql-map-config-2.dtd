@@ -38,6 +38,9 @@ errorTracingEnabled (true | false) #IMPLIED
 useStatementNamespaces (true | false) #IMPLIED
 useColumnLabel (true | false) #IMPLIED
 forceMultipleResultSetSupport (true | false) #IMPLIED
+maxSessions CDATA #IMPLIED
+maxTransactions CDATA #IMPLIED
+maxRequests CDATA #IMPLIED
 defaultStatementTimeout CDATA #IMPLIED
 >
 
