@@ -16,7 +16,6 @@
 package org.apache.ibatis.ibator.api.dom.java;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -264,9 +263,7 @@ public class FullyQualifiedJavaType implements Comparable<FullyQualifiedJavaType
         sb.append('<');
         
         boolean comma = false;
-        Iterator<FullyQualifiedJavaType> iter = typeArguments.iterator();
-        while (iter.hasNext()) {
-            FullyQualifiedJavaType fqjt = iter.next();
+        for (FullyQualifiedJavaType fqjt : typeArguments) {
             if (comma) {
                 sb.append(", "); //$NON-NLS-1$
             } else {

@@ -16,7 +16,8 @@
 
 package org.apache.ibatis.ibator.internal.db;
 
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.IntrospectedTable;
@@ -27,7 +28,6 @@ import org.apache.ibatis.ibator.internal.rules.IbatorRules;
 import org.apache.ibatis.ibator.internal.rules.ConditionalModelRules;
 import org.apache.ibatis.ibator.internal.rules.FlatModelRules;
 import org.apache.ibatis.ibator.internal.rules.HierarchicalModelRules;
-import org.apache.ibatis.ibator.internal.util.AggregatingIterator;
 
 /**
  * @author Jeff Butler
@@ -107,15 +107,21 @@ public class IntrospectedTableImpl implements IntrospectedTable {
         return rules;
     }
 
-    public Iterator<ColumnDefinition> getAllColumns() {
-        return new AggregatingIterator<ColumnDefinition>(columnDefinitions.getPrimaryKeyColumns().iterator(),
-                columnDefinitions.getBaseColumns().iterator(),
-                columnDefinitions.getBLOBColumns().iterator());
+    public List<ColumnDefinition> getAllColumns() {
+        List<ColumnDefinition> answer = new ArrayList<ColumnDefinition>();
+        answer.addAll(columnDefinitions.getPrimaryKeyColumns());
+        answer.addAll(columnDefinitions.getBaseColumns());
+        answer.addAll(columnDefinitions.getBLOBColumns());
+        
+        return answer;
     }
 
-    public Iterator<ColumnDefinition> getNonBLOBColumns() {
-        return new AggregatingIterator<ColumnDefinition>(columnDefinitions.getPrimaryKeyColumns().iterator(),
-                columnDefinitions.getBaseColumns().iterator());
+    public List<ColumnDefinition> getNonBLOBColumns() {
+        List<ColumnDefinition> answer = new ArrayList<ColumnDefinition>();
+        answer.addAll(columnDefinitions.getPrimaryKeyColumns());
+        answer.addAll(columnDefinitions.getBaseColumns());
+        
+        return answer;
     }
 
 
@@ -124,29 +130,32 @@ public class IntrospectedTableImpl implements IntrospectedTable {
             + columnDefinitions.getBaseColumns().size();
     }
     
-    public Iterator<ColumnDefinition> getPrimaryKeyColumns() {
-        return columnDefinitions.getPrimaryKeyColumns().iterator();
+    public List<ColumnDefinition> getPrimaryKeyColumns() {
+        return columnDefinitions.getPrimaryKeyColumns();
     }
 
-    public Iterator<ColumnDefinition> getBaseColumns() {
-        return columnDefinitions.getBaseColumns().iterator();
+    public List<ColumnDefinition> getBaseColumns() {
+        return columnDefinitions.getBaseColumns();
     }
 
     public boolean hasPrimaryKeyColumns() {
         return columnDefinitions.hasPrimaryKeyColumns();
     }
 
-    public Iterator<ColumnDefinition> getBLOBColumns() {
-        return columnDefinitions.getBLOBColumns().iterator();
+    public List<ColumnDefinition> getBLOBColumns() {
+        return columnDefinitions.getBLOBColumns();
     }
 
     public boolean hasBLOBColumns() {
         return columnDefinitions.hasBLOBColumns();
     }
 
-    public Iterator<ColumnDefinition> getNonPrimaryKeyColumns() {
-        return new AggregatingIterator<ColumnDefinition>(columnDefinitions.getBaseColumns().iterator(),
-                columnDefinitions.getBLOBColumns().iterator());
+    public List<ColumnDefinition> getNonPrimaryKeyColumns() {
+        List<ColumnDefinition> answer = new ArrayList<ColumnDefinition>();
+        answer.addAll(columnDefinitions.getBaseColumns());
+        answer.addAll(columnDefinitions.getBLOBColumns());
+        
+        return answer;
     }
 
     public String getTableConfigurationProperty(String property) {

@@ -36,6 +36,7 @@ import org.apache.ibatis.ibator.api.dom.xml.TextElement;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.config.IbatorContext;
 import org.apache.ibatis.ibator.config.GeneratedKey;
+import org.apache.ibatis.ibator.config.MergeConstants;
 import org.apache.ibatis.ibator.config.PropertyRegistry;
 import org.apache.ibatis.ibator.internal.db.ColumnDefinition;
 import org.apache.ibatis.ibator.internal.rules.IbatorRules;
@@ -334,10 +335,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
             i++;
         }
         
-        Iterator<ColumnDefinition> iter = introspectedTable.getNonBLOBColumns();
-        while (iter.hasNext()) {
-            ColumnDefinition cd = iter.next();
-
+        for (ColumnDefinition cd : introspectedTable.getNonBLOBColumns()) {
             XmlElement resultElement = new XmlElement("result"); //$NON-NLS-1$
 
             if (useColumnIndex) {
@@ -410,10 +408,8 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
                 || StringUtility.stringHasValue(introspectedTable.getSelectByExampleQueryId())) {
             i++;
         }
-        Iterator<ColumnDefinition> iter = introspectedTable.getBLOBColumns();
-        while (iter.hasNext()) {
-            ColumnDefinition cd = iter.next();
 
+        for (ColumnDefinition cd : introspectedTable.getBLOBColumns()) {
             XmlElement resultElement = new XmlElement("result"); //$NON-NLS-1$
             
             if (useColumnIndex) {
@@ -482,10 +478,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         valuesClause.append("values ("); //$NON-NLS-1$
 
         boolean comma = false;
-        Iterator<ColumnDefinition> iter = introspectedTable.getAllColumns();
-        while (iter.hasNext()) {
-            ColumnDefinition cd = iter.next();
-
+        for (ColumnDefinition cd : introspectedTable.getAllColumns()) {
             if (cd.isIdentity()) {
                 // cannot set values on identity fields
                 continue;
@@ -558,7 +551,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         sb.setLength(0);
         sb.append("set "); //$NON-NLS-1$
 
-        Iterator<ColumnDefinition> iter = introspectedTable.getNonPrimaryKeyColumns();
+        Iterator<ColumnDefinition> iter = introspectedTable.getNonPrimaryKeyColumns().iterator();
         while (iter.hasNext()) {
             ColumnDefinition cd = iter.next();
 
@@ -580,10 +573,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         }
 
         boolean and = false;
-        iter = introspectedTable.getPrimaryKeyColumns();
-        while (iter.hasNext()) {
-            ColumnDefinition cd = iter.next();
-
+        for (ColumnDefinition cd : introspectedTable.getPrimaryKeyColumns()) {
             sb.setLength(0);
             if (and) {
                 sb.append("  and "); //$NON-NLS-1$
@@ -629,7 +619,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         sb.setLength(0);
         sb.append("set "); //$NON-NLS-1$
 
-        Iterator<ColumnDefinition> iter = introspectedTable.getBaseColumns();
+        Iterator<ColumnDefinition> iter = introspectedTable.getBaseColumns().iterator();
         while (iter.hasNext()) {
             ColumnDefinition cd = iter.next();
 
@@ -651,10 +641,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         }
 
         boolean and = false;
-        iter = introspectedTable.getPrimaryKeyColumns();
-        while (iter.hasNext()) {
-            ColumnDefinition cd = iter.next();
-
+        for (ColumnDefinition cd : introspectedTable.getPrimaryKeyColumns()) {
             sb.setLength(0);
             if (and) {
                 sb.append("  and "); //$NON-NLS-1$
@@ -703,10 +690,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         answer.addElement(new TextElement(sb.toString()));
 
         boolean and = false;
-        Iterator<ColumnDefinition> iter = introspectedTable.getPrimaryKeyColumns();
-        while (iter.hasNext()) {
-            ColumnDefinition cd = iter.next();
-
+        for (ColumnDefinition cd : introspectedTable.getPrimaryKeyColumns()) {
             sb.setLength(0);
             if (and) {
                 sb.append("  and "); //$NON-NLS-1$
@@ -854,9 +838,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
             comma = true;
         }
 
-        Iterator<ColumnDefinition> iter = introspectedTable.getAllColumns();
-        while (iter.hasNext()) {
-            ColumnDefinition cd = iter.next();
+        for (ColumnDefinition cd : introspectedTable.getAllColumns()) {
             if (comma) {
                 sb.append(", "); //$NON-NLS-1$
             } else {
@@ -874,10 +856,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         answer.addElement(new TextElement(sb.toString()));
 
         boolean and = false;
-        iter = introspectedTable.getPrimaryKeyColumns();
-        while (iter.hasNext()) {
-            ColumnDefinition cd = iter.next();
-
+        for (ColumnDefinition cd : introspectedTable.getPrimaryKeyColumns()) {
             sb.setLength(0);
             if (and) {
                 sb.append("  and "); //$NON-NLS-1$
@@ -943,8 +922,8 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
     /**
      * Calculates the name of the result map. Typically this is the String
-     * "ibatorgenerated_XXXXResult" where XXXX is the name of the domain object
-     * related to this table. The prefix "ibatorgenerated_" is important because
+     * "prefix_XXXXResult" where XXXX is the name of the domain object
+     * related to this table. The prefix is important because
      * it allows iBATOR to regenerate this element on subsequent runs.
      * 
      * @param table
@@ -960,7 +939,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         if (s == null) {
             StringBuffer sb = new StringBuffer();
 
-            sb.append("ibatorgenerated_"); //$NON-NLS-1$
+            sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
             sb.append(table.getDomainObjectName());
             sb.append("Result"); //$NON-NLS-1$
 
@@ -1005,7 +984,10 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      * @see org.apache.ibatis.ibator.api.SqlMapGenerator#getDeleteByPrimaryKeyStatementId()
      */
     public String getDeleteByPrimaryKeyStatementId() {
-        return "ibatorgenerated_deleteByPrimaryKey"; //$NON-NLS-1$
+        StringBuffer sb = new StringBuffer(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("deleteByPrimaryKey"); //$NON-NLS-1$
+
+        return sb.toString();
     }
 
     /*
@@ -1014,7 +996,10 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      * @see org.apache.ibatis.ibator.api.SqlMapGenerator#getDeleteByExampleStatementId()
      */
     public String getDeleteByExampleStatementId() {
-        return "ibatorgenerated_deleteByExample"; //$NON-NLS-1$
+        StringBuffer sb = new StringBuffer(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("deleteByExample"); //$NON-NLS-1$
+
+        return sb.toString();
     }
 
     /*
@@ -1022,7 +1007,10 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      * @see org.apache.ibatis.ibator.api.SqlMapGenerator#getCountByExampleStatementId()
      */
     public String getCountByExampleStatementId() {
-        return "ibatorgenerated_countByExample"; //$NON-NLS-1$
+        StringBuffer sb = new StringBuffer(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("countByExample"); //$NON-NLS-1$
+
+        return sb.toString();
     }
     
     /*
@@ -1031,7 +1019,10 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      * @see org.apache.ibatis.ibator.api.SqlMapGenerator#getInsertStatementId()
      */
     public String getInsertStatementId() {
-        return "ibatorgenerated_insert"; //$NON-NLS-1$
+        StringBuffer sb = new StringBuffer(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("insert"); //$NON-NLS-1$
+
+        return sb.toString();
     }
 
     /*
@@ -1040,7 +1031,10 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      * @see org.apache.ibatis.ibator.api.SqlMapGenerator#getSelectByPrimaryKeyStatementId()
      */
     public String getSelectByPrimaryKeyStatementId() {
-        return "ibatorgenerated_selectByPrimaryKey"; //$NON-NLS-1$
+        StringBuffer sb = new StringBuffer(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("selectByPrimaryKey"); //$NON-NLS-1$
+
+        return sb.toString();
     }
 
     /*
@@ -1049,7 +1043,10 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      * @see org.apache.ibatis.ibator.api.SqlMapGenerator#getSelectByExampleStatementId()
      */
     public String getSelectByExampleStatementId() {
-        return "ibatorgenerated_selectByExample"; //$NON-NLS-1$
+        StringBuffer sb = new StringBuffer(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("selectByExample"); //$NON-NLS-1$
+
+        return sb.toString();
     }
 
     /*
@@ -1058,7 +1055,10 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      * @see org.apache.ibatis.ibator.api.SqlMapGenerator#getSelectByExampleWithBLOBsStatementId()
      */
     public String getSelectByExampleWithBLOBsStatementId() {
-        return "ibatorgenerated_selectByExampleWithBLOBs"; //$NON-NLS-1$
+        StringBuffer sb = new StringBuffer(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("selectByExampleWithBLOBs"); //$NON-NLS-1$
+
+        return sb.toString();
     }
 
     /*
@@ -1067,7 +1067,10 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      * @see org.apache.ibatis.ibator.api.SqlMapGenerator#getUpdateByPrimaryKeyWithBLOBsStatementId()
      */
     public String getUpdateByPrimaryKeyWithBLOBsStatementId() {
-        return "ibatorgenerated_updateByPrimaryKeyWithBLOBs"; //$NON-NLS-1$
+        StringBuffer sb = new StringBuffer(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("updateByPrimaryKeyWithBLOBs"); //$NON-NLS-1$
+
+        return sb.toString();
     }
 
     /*
@@ -1076,15 +1079,24 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      * @see org.apache.ibatis.ibator.api.SqlMapGenerator#getUpdateByPrimaryKeyStatementId()
      */
     public String getUpdateByPrimaryKeyStatementId() {
-        return "ibatorgenerated_updateByPrimaryKey"; //$NON-NLS-1$
+        StringBuffer sb = new StringBuffer(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("updateByPrimaryKey"); //$NON-NLS-1$
+
+        return sb.toString();
     }
 
     public String getUpdateByPrimaryKeySelectiveStatementId() {
-        return "ibatorgenerated_updateByPrimaryKeySelective"; //$NON-NLS-1$
+        StringBuffer sb = new StringBuffer(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("updateByPrimaryKeySelective"); //$NON-NLS-1$
+
+        return sb.toString();
     }
     
     public String getUpdateByExampleSelectiveStatementId() {
-        return "ibatorgenerated_updateByExampleSelective"; //$NON-NLS-1$
+        StringBuffer sb = new StringBuffer(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("updateByExampleSelective"); //$NON-NLS-1$
+
+        return sb.toString();
     }
     
     /**
@@ -1119,7 +1131,10 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      * @return the name of the example where clause element
      */
     protected String getExampleWhereClauseId() {
-        return "ibatorgenerated_Example_Where_Clause"; //$NON-NLS-1$
+        StringBuffer sb = new StringBuffer(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("Example_Where_Clause"); //$NON-NLS-1$
+
+        return sb.toString();
     }
 
     /**
@@ -1206,10 +1221,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         
         // if any of the columns have a user defined type handler, then we need
         // to add additional inner iterate elements that specify the type handler
-        Iterator<ColumnDefinition> iter = introspectedTable.getNonBLOBColumns();
-        while (iter.hasNext()) {
-            ColumnDefinition cd = iter.next();
-            
+        for (ColumnDefinition cd : introspectedTable.getNonBLOBColumns()) {
             if (StringUtility.stringHasValue(cd.getTypeHandler())) {
                 // name the property based on the column name, then
                 // add the type handler to the parameter declaration
@@ -1359,10 +1371,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
             comma = true;
         }
 
-        Iterator<ColumnDefinition> iter = introspectedTable.getNonBLOBColumns();
-        while (iter.hasNext()) {
-            ColumnDefinition cd = iter.next();
-
+        for (ColumnDefinition cd : introspectedTable.getNonBLOBColumns()) {
             if (comma) {
                 sb.append(", "); //$NON-NLS-1$
             } else {
@@ -1431,10 +1440,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
             comma = true;
         }
 
-        Iterator<ColumnDefinition> iter = introspectedTable.getAllColumns();
-        while (iter.hasNext()) {
-            ColumnDefinition cd = iter.next();
-
+        for (ColumnDefinition cd : introspectedTable.getAllColumns()) {
             if (comma) {
                 sb.append(", "); //$NON-NLS-1$
             } else {
@@ -1526,10 +1532,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         dynamicElement.addAttribute(new Attribute("prepend", "set")); //$NON-NLS-1$ //$NON-NLS-2$
         answer.addElement(dynamicElement);
 
-        Iterator<ColumnDefinition> iter = introspectedTable.getNonPrimaryKeyColumns();
-        while (iter.hasNext()) {
-            ColumnDefinition cd = iter.next();
-            
+        for (ColumnDefinition cd : introspectedTable.getNonPrimaryKeyColumns()) {
             XmlElement isNotNullElement = new XmlElement("isNotNull"); //$NON-NLS-1$
             isNotNullElement.addAttribute(new Attribute("prepend", ",")); //$NON-NLS-1$ //$NON-NLS-2$
             isNotNullElement.addAttribute(new Attribute("property", cd.getJavaProperty())); //$NON-NLS-1$
@@ -1544,10 +1547,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         }
 
         boolean and = false;
-        iter = introspectedTable.getPrimaryKeyColumns();
-        while (iter.hasNext()) {
-            ColumnDefinition cd = iter.next();
-
+        for (ColumnDefinition cd : introspectedTable.getPrimaryKeyColumns()) {
             sb.setLength(0);
             if (and) {
                 sb.append("  and "); //$NON-NLS-1$
@@ -1597,10 +1597,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         dynamicElement.addAttribute(new Attribute("prepend", "set")); //$NON-NLS-1$ //$NON-NLS-2$
         answer.addElement(dynamicElement);
 
-        Iterator<ColumnDefinition> iter = introspectedTable.getAllColumns();
-        while (iter.hasNext()) {
-            ColumnDefinition cd = iter.next();
-            
+        for (ColumnDefinition cd : introspectedTable.getAllColumns()) {
             XmlElement isNotNullElement = new XmlElement("isNotNull"); //$NON-NLS-1$
             isNotNullElement.addAttribute(new Attribute("prepend", ",")); //$NON-NLS-1$ //$NON-NLS-2$
             isNotNullElement.addAttribute(new Attribute("property", cd.getJavaProperty("record."))); //$NON-NLS-1$ //$NON-NLS-2$
@@ -1644,7 +1641,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         sb.setLength(0);
         sb.append("set "); //$NON-NLS-1$
 
-        Iterator<ColumnDefinition> iter = introspectedTable.getAllColumns();
+        Iterator<ColumnDefinition> iter = introspectedTable.getAllColumns().iterator();
         while (iter.hasNext()) {
             ColumnDefinition cd = iter.next();
 
@@ -1695,7 +1692,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         sb.setLength(0);
         sb.append("set "); //$NON-NLS-1$
 
-        Iterator<ColumnDefinition> iter = introspectedTable.getNonBLOBColumns();
+        Iterator<ColumnDefinition> iter = introspectedTable.getNonBLOBColumns().iterator();
         while (iter.hasNext()) {
             ColumnDefinition cd = iter.next();
 
@@ -1729,10 +1726,16 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
     }
 
     public String getUpdateByExampleStatementId() {
-        return "ibatorgenerated_updateByExample"; //$NON-NLS-1$
+        StringBuffer sb = new StringBuffer(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("updateByExample"); //$NON-NLS-1$
+
+        return sb.toString();
     }
 
     public String getUpdateByExampleWithBLOBsStatementId() {
-        return "ibatorgenerated_updateByExampleWithBLOBs"; //$NON-NLS-1$
+        StringBuffer sb = new StringBuffer(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("updateByExampleWithBLOBs"); //$NON-NLS-1$
+
+        return sb.toString();
     }
 }

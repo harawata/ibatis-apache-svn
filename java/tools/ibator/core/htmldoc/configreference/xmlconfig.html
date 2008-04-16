@@ -33,12 +33,13 @@ attributes.</p>
   "http://ibatis.apache.org/dtd/ibator-config_1_0.dtd"&gt;
 
 &lt;ibatorConfiguration&gt;
+  &lt;classPathEntry location="/Program Files/IBM/SQLLIB/java/db2java.zip" /&gt;
+
   &lt;ibatorContext id="DB2Tables" generatorSet="Java2"&gt;
     &lt;jdbcConnection driverClass="COM.ibm.db2.jdbc.app.DB2Driver"
         connectionURL="jdbc:db2:TEST"
         userId="db2admin"
         password="db2admin"&gt;
-      &lt;classPathEntry location="/Program Files/IBM/SQLLIB/java/db2java.zip" /&gt;
     &lt;/jdbcConnection&gt;
 
     &lt;javaTypeResolver &gt;

@@ -19,13 +19,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.ibatis.ibator.api.GeneratedXmlFile;
+import org.apache.ibatis.ibator.config.MergeConstants;
 import org.apache.ibatis.ibator.exception.ShellException;
 import org.apache.ibatis.ibator.internal.util.messages.Messages;
 import org.w3c.dom.Document;
@@ -109,9 +109,8 @@ public class XmlFileMergerJaxp {
                 }
             }
 
-            Iterator<Node> iter = nodesToDelete.iterator();
-            while (iter.hasNext()) {
-                existingRootElement.removeChild(iter.next());
+            for (Node node : nodesToDelete) {
+                existingRootElement.removeChild(node);
             }
 
             // add the new iBATOR generated elements
@@ -155,10 +154,13 @@ public class XmlFileMergerJaxp {
         if (node != null && node.getNodeType() == Node.ELEMENT_NODE) {
             Element element = (Element) node;
             String id = element.getAttribute("id"); //$NON-NLS-1$
-            if (id != null && 
-                (id.startsWith("ibatorgenerated_")
-                    || id.startsWith("abatorgenerated_"))) { //$NON-NLS-1$
-                rc = true;
+            if (id != null) {
+                for (String prefix : MergeConstants.OLD_XML_ELEMENT_PREFIXES) {
+                    if (id.startsWith(prefix)) {
+                        rc = true;
+                        break;
+                    }
+                }
             }
         }
 

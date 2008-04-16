@@ -145,7 +145,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
      *            the generated fields and methods will be added to this object
      */
     protected void generateClassParts(FullyQualifiedTable table,
-            Iterator<ColumnDefinition> columnDefinitions, TopLevelClass topLevelClass,
+            List<ColumnDefinition> columnDefinitions, TopLevelClass topLevelClass,
             String rootClass) {
 
         boolean trimStrings = "true".equalsIgnoreCase(properties //$NON-NLS-1$
@@ -156,9 +156,8 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         Method method;
 
         CommentGenerator commentGenerator = ibatorContext.getCommentGenerator();
-        
-        while (columnDefinitions.hasNext()) {
-            ColumnDefinition cd = columnDefinitions.next();
+
+        for (ColumnDefinition cd : columnDefinitions) {
             if (propertyExistsInRootClass(cd, rootClass)) {
                 continue;
             }
@@ -870,7 +869,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         InnerClass answer = new InnerClass(FullyQualifiedJavaType.getCriteriaInstance());
 
         answer.setVisibility(JavaVisibility.PUBLIC);
-        answer.setModifierStatic(true);
+        answer.setStatic(true);
         ibatorContext.getCommentGenerator().addClassComment(answer, introspectedTable.getTable());
 
         method = new Method();
@@ -893,10 +892,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         criteriaLists.add("criteriaWithListValue"); //$NON-NLS-1$
         criteriaLists.add("criteriaWithBetweenValue"); //$NON-NLS-1$
 
-        Iterator<ColumnDefinition> cdIter = introspectedTable.getNonBLOBColumns();
-        while (cdIter.hasNext()) {
-            ColumnDefinition cd = cdIter.next();
-            
+        for (ColumnDefinition cd : introspectedTable.getNonBLOBColumns()) {
             if (StringUtility.stringHasValue(cd.getTypeHandler())) {
                 criteriaLists.addAll(
                     addtypeHandledObjectsAndMethods(cd, method, answer));
@@ -908,8 +904,8 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setName("isValid"); //$NON-NLS-1$
         method.setReturnType(FullyQualifiedJavaType.getBooleanPrimitiveInstance());
-        Iterator<String> strIter = criteriaLists.iterator();
         StringBuffer sb = new StringBuffer();
+        Iterator<String> strIter = criteriaLists.iterator();
         sb.append("return "); //$NON-NLS-1$
         sb.append(strIter.next());
         sb.append(".size() > 0"); //$NON-NLS-1$
@@ -1218,10 +1214,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
             answer.addMethod(method);
         }
 
-        cdIter = introspectedTable.getNonBLOBColumns();
-        while (cdIter.hasNext()) {
-            ColumnDefinition cd = cdIter.next();
-
+        for (ColumnDefinition cd : introspectedTable.getNonBLOBColumns()) {
             topLevelClass.addImportedType(cd.getResolvedJavaType()
                     .getFullyQualifiedJavaType());
 

@@ -113,9 +113,7 @@ public class ColumnDefinitions {
             return null;
         } else {
             // search primary key columns
-            Iterator<ColumnDefinition> iter = primaryKeyColumns.iterator();
-            while (iter.hasNext()) {
-                ColumnDefinition cd = iter.next();
+            for (ColumnDefinition cd : primaryKeyColumns) {
                 if (cd.isColumnNameDelimited()) {
                     if (cd.getActualColumnName().equals(columnName)) {
                         return cd;
@@ -128,9 +126,7 @@ public class ColumnDefinitions {
             }
             
             // search base columns
-            iter = baseColumns.iterator();
-            while (iter.hasNext()) {
-                ColumnDefinition cd = iter.next();
+            for (ColumnDefinition cd : baseColumns) {
                 if (cd.isColumnNameDelimited()) {
                     if (cd.getActualColumnName().equals(columnName)) {
                         return cd;
@@ -143,9 +139,7 @@ public class ColumnDefinitions {
             }
 
             // search bblob columns
-            iter = blobColumns.iterator();
-            while (iter.hasNext()) {
-                ColumnDefinition cd = iter.next();
+            for (ColumnDefinition cd : blobColumns) {
                 if (cd.isColumnNameDelimited()) {
                     if (cd.getActualColumnName().equals(columnName)) {
                         return cd;

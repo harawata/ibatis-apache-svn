@@ -104,9 +104,7 @@ public class DatabaseIntrospector {
             FullyQualifiedTable table) {
         // make sure that every column listed in column overrides
         // actually exists in the table
-        Iterator<ColumnOverride> coIter = tableConfiguration.getColumnOverrides();
-        while (coIter.hasNext()) {
-            ColumnOverride columnOverride = coIter.next();
+        for (ColumnOverride columnOverride : tableConfiguration.getColumnOverrides()) {
             if (columnDefinitions.getColumn(columnOverride.getColumnName()) == null) {
                 warnings.add(Messages.getString("Warning.3", //$NON-NLS-1$
                         columnOverride.getColumnName(), table.toString()));
@@ -115,10 +113,9 @@ public class DatabaseIntrospector {
 
         // make sure that every column listed in ignored columns
         // actually exists in the table
-        Iterator<String> strIter = tableConfiguration.getIgnoredColumnsInError();
-        while (strIter.hasNext()) {
+        for (String string : tableConfiguration.getIgnoredColumnsInError()) {
             warnings.add(Messages.getString("Warning.4", //$NON-NLS-1$
-                    strIter.next(), table.toString()));
+                    string, table.toString()));
         }
 
         GeneratedKey generatedKey = tableConfiguration.getGeneratedKey();
@@ -161,16 +158,14 @@ public class DatabaseIntrospector {
         
         List<IntrospectedTableImpl> introspectedTables = calculateIntrospectedTables(tc, columns);
         
-        Iterator<IntrospectedTableImpl> iter = introspectedTables.iterator();
-        while (iter.hasNext()) {
-            IntrospectedTableImpl it = iter.next();
+        for (IntrospectedTableImpl it : introspectedTables) {
             calculatePrimaryKey(it);
         }
         
         // now introspectedTables has all the columns from all the 
         // tables in the configuration.  Do some validation...
 
-        iter = introspectedTables.iterator();
+        Iterator<IntrospectedTableImpl> iter = introspectedTables.iterator();
         while (iter.hasNext()) {
             IntrospectedTableImpl introspectedTable = iter.next();
             
@@ -200,9 +195,7 @@ public class DatabaseIntrospector {
      * @param columns
      */
     private void removeIgnoredColumns(TableConfiguration tc, Map<ActualTableName, List<ColumnDefinition>> columns) {
-        Iterator<Map.Entry<ActualTableName, List<ColumnDefinition>>> entries = columns.entrySet().iterator();
-        while (entries.hasNext()) {
-            Map.Entry<ActualTableName, List<ColumnDefinition>> entry = entries.next();
+        for (Map.Entry<ActualTableName, List<ColumnDefinition>> entry : columns.entrySet()) {
             Iterator<ColumnDefinition> tableColumns = (entry.getValue()).iterator();
             while (tableColumns.hasNext()) {
                 ColumnDefinition cd = tableColumns.next();
@@ -222,14 +215,9 @@ public class DatabaseIntrospector {
             replaceString = tc.getColumnRenamingRule().getReplaceString();
             replaceString = replaceString == null ? "" : replaceString;//$NON-NLS-1$
         }
-        
-        Iterator<Map.Entry<ActualTableName, List<ColumnDefinition>>> entries = columns.entrySet().iterator();
-        while (entries.hasNext()) {
-            Map.Entry<ActualTableName, List<ColumnDefinition>> entry = entries.next();
-            Iterator<ColumnDefinition> tableColumns = (entry.getValue()).iterator();
-            while (tableColumns.hasNext()) {
-                ColumnDefinition cd = tableColumns.next();
 
+        for (Map.Entry<ActualTableName, List<ColumnDefinition>> entry : columns.entrySet()) {
+            for (ColumnDefinition cd : entry.getValue()) {
                 String calculatedColumnName;
                 if (pattern == null) {
                     calculatedColumnName = cd.getActualColumnName();
@@ -278,13 +266,8 @@ public class DatabaseIntrospector {
     
     private void calculateIdentityColumns(TableConfiguration tc,
     		Map<ActualTableName, List<ColumnDefinition>> columns) {
-        Iterator<Map.Entry<ActualTableName, List<ColumnDefinition>>> entries = columns.entrySet().iterator();
-        while (entries.hasNext()) {
-            Map.Entry<ActualTableName, List<ColumnDefinition>> entry = entries.next();
-            Iterator<ColumnDefinition> tableColumns = (entry.getValue()).iterator();
-            while (tableColumns.hasNext()) {
-                ColumnDefinition cd = tableColumns.next();
-                
+        for (Map.Entry<ActualTableName, List<ColumnDefinition>> entry : columns.entrySet()) {
+            for (ColumnDefinition cd : entry.getValue()) {
                 if (tc.getGeneratedKey() != null
                         && tc.getGeneratedKey().isIdentity()) {
                     if (cd.isColumnNameDelimited()) {
@@ -305,13 +288,8 @@ public class DatabaseIntrospector {
     
     private void applyColumnOverrides(TableConfiguration tc,
     		Map<ActualTableName, List<ColumnDefinition>> columns) {
-        Iterator<Map.Entry<ActualTableName, List<ColumnDefinition>>> entries = columns.entrySet().iterator();
-        while (entries.hasNext()) {
-            Map.Entry<ActualTableName, List<ColumnDefinition>> entry = entries.next();
-            Iterator<ColumnDefinition> tableColumns = (entry.getValue()).iterator();
-            while (tableColumns.hasNext()) {
-                ColumnDefinition cd = tableColumns.next();
-                
+        for (Map.Entry<ActualTableName, List<ColumnDefinition>> entry : columns.entrySet()) {
+            for (ColumnDefinition cd : entry.getValue()) {
                 ColumnOverride columnOverride = tc.getColumnOverride(cd
                         .getActualColumnName());
 
@@ -458,11 +436,8 @@ public class DatabaseIntrospector {
             || StringUtility.stringContainsSpace(tc.getTableName());
         
         List<IntrospectedTableImpl> answer = new ArrayList<IntrospectedTableImpl>();
-        
-        Iterator<Map.Entry<ActualTableName, List<ColumnDefinition>>> entries = columns.entrySet().iterator();
-        while (entries.hasNext()) {
-            Map.Entry<ActualTableName, List<ColumnDefinition>> entry = entries.next();
-            
+
+        for (Map.Entry<ActualTableName, List<ColumnDefinition>> entry : columns.entrySet()) {
             ActualTableName atn = entry.getKey();
             
             // we only use the returned catalog and schema if something was actually
@@ -484,10 +459,9 @@ public class DatabaseIntrospector {
             ColumnDefinitions cds = new ColumnDefinitions();
             IntrospectedTableImpl introspectedTable = new IntrospectedTableImpl(tc, cds, table);
             answer.add(introspectedTable);
-            
-            Iterator<ColumnDefinition> tableColumns = (entry.getValue()).iterator();
-            while (tableColumns.hasNext()) {
-                cds.addColumn(tableColumns.next());
+
+            for (ColumnDefinition cd : entry.getValue()) {
+                cds.addColumn(cd);
             }
         }
         

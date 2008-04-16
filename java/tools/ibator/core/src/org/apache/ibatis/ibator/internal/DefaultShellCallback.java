@@ -79,7 +79,7 @@ public class DefaultShellCallback implements ShellCallback {
      *  (non-Javadoc)
      * @see org.apache.ibatis.ibator.api.ShellCallback#mergeJavaFile(org.apache.ibatis.ibator.api.GeneratedJavaFile, java.lang.String, java.util.List)
      */
-    public String mergeJavaFile(GeneratedJavaFile newFile, String javadocTag,
+    public String mergeJavaFile(GeneratedJavaFile newFile, String[] javadocTags,
             List<String> warnings) throws ShellException {
         if (overwrite) {
             File directory = getDirectory(newFile.getTargetProject(), newFile.getTargetPackage(), warnings);

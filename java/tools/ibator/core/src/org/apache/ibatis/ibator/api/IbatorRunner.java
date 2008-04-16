@@ -21,7 +21,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -104,9 +103,8 @@ public class IbatorRunner {
         } catch (XMLParserException e) {
         	writeLine(Messages.getString("Progress.3")); //$NON-NLS-1$
         	writeLine();
-            Iterator<String> iter = e.getErrors().iterator();
-            while (iter.hasNext()) {
-                writeLine(iter.next());
+            for (String error : e.getErrors()) {
+                writeLine(error);
             }
             
             return;
@@ -123,10 +121,9 @@ public class IbatorRunner {
             // ignore (will never happen with the DefaultShellCallback)
             ;
         }
-        
-        Iterator<String> iter = warnings.iterator();
-        while (iter.hasNext()) {
-            writeLine(iter.next());
+
+        for (String warning : warnings) {
+            writeLine(warning);
         }
         
         if (warnings.size() == 0) {
@@ -188,8 +185,8 @@ public class IbatorRunner {
         }
         
         if (!errors.isEmpty()) {
-            for (int i = 0; i < errors.size(); i++) {
-                writeLine(errors.get(i));
+            for (String error : errors) {
+                writeLine(error);
             }
             
             System.exit(-1);

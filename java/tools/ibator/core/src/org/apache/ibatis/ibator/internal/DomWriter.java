@@ -267,8 +267,7 @@ public class DomWriter {
         printWriter.print('<');
         printWriter.print(node.getNodeName());
         Attr attrs[] = sortAttributes(node.getAttributes());
-        for (int i = 0; i < attrs.length; i++) {
-            Attr attr = attrs[i];
+        for (Attr attr : attrs) {
             printWriter.print(' ');
             printWriter.print(attr.getNodeName());
             printWriter.print("=\""); //$NON-NLS-1$

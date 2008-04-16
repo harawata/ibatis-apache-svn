@@ -21,8 +21,18 @@ package org.apache.ibatis.ibator.api.dom.java;
  * @author Jeff Butler
  */
 public enum JavaVisibility {
-    PUBLIC,
-    PRIVATE,
-    PROTECTED,
-    DEFAULT;
+    PUBLIC("public "), //$NON-NLS-1$
+    PRIVATE("private "), //$NON-NLS-1$
+    PROTECTED("protected "), //$NON-NLS-1$
+    DEFAULT(""); //$NON-NLS-1$
+    
+    private String value;
+    
+    private JavaVisibility(String value) {
+        this.value = value;
+    }
+    
+    public String getValue() {
+        return value;
+    }
 }

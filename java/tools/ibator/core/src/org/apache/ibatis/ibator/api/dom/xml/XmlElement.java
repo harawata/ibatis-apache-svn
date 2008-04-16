@@ -16,7 +16,6 @@
 package org.apache.ibatis.ibator.api.dom.xml;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.ibatis.ibator.api.dom.OutputUtilities;
@@ -83,18 +82,14 @@ public class XmlElement extends Element {
         sb.append('<');
         sb.append(name);
 
-        Iterator<Attribute> atrIter = attributes.iterator();
-        while (atrIter.hasNext()) {
-            Attribute att = atrIter.next();
+        for (Attribute att : attributes) {
             sb.append(' ');
             sb.append(att.getFormattedContent());
         }
 
         if (elements.size() > 0) {
             sb.append(" >"); //$NON-NLS-1$
-            Iterator<Element> elemIter = elements.iterator();
-            while (elemIter.hasNext()) {
-                Element element = elemIter.next();
+            for (Element element : elements) {
                 OutputUtilities.newLine(sb);
                 sb.append(element.getFormattedContent(indentLevel + 1));
             }

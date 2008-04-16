@@ -18,7 +18,6 @@ package org.apache.ibatis.ibator.api.dom.java;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -50,9 +49,8 @@ public class TopLevelEnumeration extends InnerEnum implements CompilationUnit {
     public String getFormattedContent() {
         StringBuffer sb = new StringBuffer();
 
-        Iterator<String> strIter = fileCommentLines.iterator();
-        while (strIter.hasNext()) {
-            sb.append(strIter.next());
+        for (String fileCommentLine : fileCommentLines) {
+            sb.append(fileCommentLine);
             OutputUtilities.newLine(sb);
         }
         
@@ -65,9 +63,7 @@ public class TopLevelEnumeration extends InnerEnum implements CompilationUnit {
             OutputUtilities.newLine(sb);
         }
 
-        Iterator<FullyQualifiedJavaType> fqjtIter = importedTypes.iterator();
-        while (fqjtIter.hasNext()) {
-            FullyQualifiedJavaType fqjt = fqjtIter.next();
+        for (FullyQualifiedJavaType fqjt : importedTypes) {
             if (fqjt.isExplicitlyImported()) {
                 sb.append("import "); //$NON-NLS-1$
                 sb.append(fqjt.getFullyQualifiedName());

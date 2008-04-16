@@ -16,7 +16,7 @@
 
 package org.apache.ibatis.ibator.api;
 
-import java.util.Iterator;
+import java.util.List;
 
 import org.apache.ibatis.ibator.config.GeneratedKey;
 import org.apache.ibatis.ibator.internal.db.ColumnDefinition;
@@ -58,38 +58,38 @@ public interface IntrospectedTable {
      * columns will be iterated as the parameters of the 
      * selectByPrimaryKay and deleteByPrimaryKey methods
      * 
-     * @return an Iterator of ColumnDefinition objects for
+     * @return a List of ColumnDefinition objects for
      *   columns in the primary key
      */
-    Iterator<ColumnDefinition> getPrimaryKeyColumns();
+    List<ColumnDefinition> getPrimaryKeyColumns();
     
     boolean hasPrimaryKeyColumns();
     
-    Iterator<ColumnDefinition> getBaseColumns();
+    List<ColumnDefinition> getBaseColumns();
     
     /**
      * Returns all columns in the table (for use by the select by
      * primary key and select by example with BLOBs methods)
      * 
-     * @return an Iterator of ColumnDefinition objects for
+     * @return a List of ColumnDefinition objects for
      *   all columns in the table
      */
-    Iterator<ColumnDefinition> getAllColumns();
+    List<ColumnDefinition> getAllColumns();
     
     /**
      * Returns all columns axcept BLOBs (for use by the select by
      * example without BLOBs method)
      * 
-     * @return an Iterator of ColumnDefinition objects for
+     * @return a List of ColumnDefinition objects for
      *   columns in the table that are non BLOBs
      */
-    Iterator<ColumnDefinition> getNonBLOBColumns();
+    List<ColumnDefinition> getNonBLOBColumns();
     
     int getNonBLOBColumnCount();
     
-    Iterator<ColumnDefinition> getNonPrimaryKeyColumns();
+    List<ColumnDefinition> getNonPrimaryKeyColumns();
     
-    Iterator<ColumnDefinition> getBLOBColumns();
+    List<ColumnDefinition> getBLOBColumns();
     
     boolean hasBLOBColumns();
     

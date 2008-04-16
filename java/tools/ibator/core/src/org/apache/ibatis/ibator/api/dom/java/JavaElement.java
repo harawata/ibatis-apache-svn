@@ -18,6 +18,8 @@ package org.apache.ibatis.ibator.api.dom.java;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.ibatis.ibator.api.dom.OutputUtilities;
+
 /**
  * @author Jeff Butler
  */
@@ -26,9 +28,9 @@ public abstract class JavaElement {
 
     private JavaVisibility visibility;
 
-    private boolean modifierStatic;
+    private boolean isStatic;
 
-    private boolean modifierFinal;
+    private boolean isFinal;
     
     private List<String> annotations;
 
@@ -61,36 +63,6 @@ public abstract class JavaElement {
     }
 
     /**
-     * @return Returns the modifierFinal.
-     */
-    public boolean isModifierFinal() {
-        return modifierFinal;
-    }
-
-    /**
-     * @param modifierFinal
-     *            The modifierFinal to set.
-     */
-    public void setModifierFinal(boolean modifierFinal) {
-        this.modifierFinal = modifierFinal;
-    }
-
-    /**
-     * @return Returns the modifierStatic.
-     */
-    public boolean isModifierStatic() {
-        return modifierStatic;
-    }
-
-    /**
-     * @param modifierStatic
-     *            The modifierStatic to set.
-     */
-    public void setModifierStatic(boolean modifierStatic) {
-        this.modifierStatic = modifierStatic;
-    }
-
-    /**
      * @return Returns the visibility.
      */
     public JavaVisibility getVisibility() {
@@ -107,5 +79,37 @@ public abstract class JavaElement {
     
     public void addSuppressTypeWarningsAnnotation() {
         addAnnotation("@SuppressWarnings(\"unchecked\")"); //$NON-NLS-1$
+    }
+    
+    public void addFormattedJavadoc(StringBuffer sb, int indentLevel) {
+        for (String javaDocLine : javaDocLines) {
+            OutputUtilities.javaIndent(sb, indentLevel);
+            sb.append(javaDocLine);
+            OutputUtilities.newLine(sb);
+        }
+    }
+
+    public void addFormattedAnnotations(StringBuffer sb, int indentLevel) {
+        for (String annotation : annotations) {
+            OutputUtilities.javaIndent(sb, indentLevel);
+            sb.append(annotation);
+            OutputUtilities.newLine(sb);
+        }
+    }
+
+    public boolean isFinal() {
+        return isFinal;
+    }
+
+    public void setFinal(boolean isFinal) {
+        this.isFinal = isFinal;
+    }
+
+    public boolean isStatic() {
+        return isStatic;
+    }
+
+    public void setStatic(boolean isStatic) {
+        this.isStatic = isStatic;
     }
 }

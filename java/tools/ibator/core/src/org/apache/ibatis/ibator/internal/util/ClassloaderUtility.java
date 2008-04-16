@@ -21,7 +21,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.ibatis.ibator.internal.util.messages.Messages;
@@ -46,9 +45,7 @@ public class ClassloaderUtility {
         File file;
 
         if (entries != null) {
-            Iterator<String> iter = entries.iterator();
-            while (iter.hasNext()) {
-                String classPathEntry = iter.next();
+            for (String classPathEntry : entries) {
                 file = new File(classPathEntry);
                 if (!file.exists()) {
                     throw new RuntimeException(

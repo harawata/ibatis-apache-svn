@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
@@ -138,9 +137,8 @@ public class IbatorAntTask extends Task {
             ibator.generate(new AntProgressCallback(this, verbose), contexts, fullyqualifiedTables);
             
         } catch (XMLParserException e) {
-            Iterator<String> errors = e.getErrors().iterator();
-            while (errors.hasNext()) {
-                log(errors.next(), Project.MSG_ERR);
+            for (String error : e.getErrors()) {
+                log(error, Project.MSG_ERR);
             }
             
             throw new BuildException(e.getMessage());
@@ -149,10 +147,10 @@ public class IbatorAntTask extends Task {
         } catch (IOException e) {
             throw new BuildException(e.getMessage());
         } catch (InvalidConfigurationException e) {
-            Iterator<String> errors = e.getErrors().iterator();
-            while (errors.hasNext()) {
-                log(errors.next(), Project.MSG_ERR);
+            for (String error : e.getErrors()) {
+                log(error, Project.MSG_ERR);
             }
+            
             throw new BuildException(e.getMessage());
         } catch (InterruptedException e) {
             // ignore (will never happen with the DefaultShellCallback)
@@ -162,9 +160,8 @@ public class IbatorAntTask extends Task {
             throw new BuildException(e.getMessage());
         }
         
-        Iterator<String> iter = warnings.iterator();
-        while (iter.hasNext()) {
-            log(iter.next(), Project.MSG_WARN);
+        for (String error : warnings) {
+            log(error, Project.MSG_WARN);
         }
     }
     

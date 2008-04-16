@@ -188,7 +188,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         InnerClass answer = new InnerClass(FullyQualifiedJavaType.getCriteriaInstance());
 
         answer.setVisibility(JavaVisibility.PUBLIC);
-        answer.setModifierStatic(true);
+        answer.setStatic(true);
         ibatorContext.getCommentGenerator().addClassComment(answer, introspectedTable.getTable());
 
         method = new Method();
@@ -211,10 +211,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         criteriaLists.add("criteriaWithListValue"); //$NON-NLS-1$
         criteriaLists.add("criteriaWithBetweenValue"); //$NON-NLS-1$
 
-        Iterator<ColumnDefinition> cdIter = introspectedTable.getNonBLOBColumns();
-        while (cdIter.hasNext()) {
-            ColumnDefinition cd = cdIter.next();
-            
+        for (ColumnDefinition cd : introspectedTable.getNonBLOBColumns()) {
             if (StringUtility.stringHasValue(cd.getTypeHandler())) {
                 criteriaLists.addAll(
                     addtypeHandledObjectsAndMethods(cd, method, answer));
@@ -531,10 +528,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
             answer.addMethod(method);
         }
 
-        cdIter = introspectedTable.getNonBLOBColumns();
-        while (cdIter.hasNext()) {
-            ColumnDefinition cd = cdIter.next();
-
+        for (ColumnDefinition cd : introspectedTable.getNonBLOBColumns()) {
             topLevelClass.addImportedType(cd.getResolvedJavaType()
                     .getFullyQualifiedJavaType());
 

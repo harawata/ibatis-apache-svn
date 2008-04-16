@@ -16,7 +16,6 @@
 package org.apache.ibatis.ibator.api.dom.java;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -63,36 +62,19 @@ public class Method extends JavaElement {
     public String getFormattedContent(int indentLevel, boolean interfaceMethod) {
         StringBuffer sb = new StringBuffer();
 
-        Iterator<String> strIter = getJavaDocLines().iterator();
-        while (strIter.hasNext()) {
-            OutputUtilities.javaIndent(sb, indentLevel);
-            sb.append(strIter.next());
-            OutputUtilities.newLine(sb);
-        }
+        addFormattedJavadoc(sb, indentLevel);
+        addFormattedAnnotations(sb, indentLevel);
 
-        strIter = getAnnotations().iterator();
-        while (strIter.hasNext()) {
-            OutputUtilities.javaIndent(sb, indentLevel);
-            sb.append(strIter.next());
-            OutputUtilities.newLine(sb);
-        }
-        
         OutputUtilities.javaIndent(sb, indentLevel);
 
         if (!interfaceMethod) {
-            if (getVisibility() == JavaVisibility.PRIVATE) {
-                sb.append("private "); //$NON-NLS-1$
-            } else if (getVisibility() == JavaVisibility.PROTECTED) {
-                sb.append("protected "); //$NON-NLS-1$
-            } else if (getVisibility() == JavaVisibility.PUBLIC) {
-                sb.append("public "); //$NON-NLS-1$
-            }
+            sb.append(getVisibility().getValue());
 
-            if (isModifierStatic()) {
+            if (isStatic()) {
                 sb.append("static "); //$NON-NLS-1$
             }
 
-            if (isModifierFinal()) {
+            if (isFinal()) {
                 sb.append("final "); //$NON-NLS-1$
             }
             
@@ -113,16 +95,14 @@ public class Method extends JavaElement {
         sb.append(getName());
         sb.append('(');
 
-        Iterator<Parameter> parmIter = getParameters().iterator();
         boolean comma = false;
-        while (parmIter.hasNext()) {
+        for (Parameter parameter : getParameters()) {
             if (comma) {
                 sb.append(", "); //$NON-NLS-1$
             } else {
                 comma = true;
             }
 
-            Parameter parameter = parmIter.next();
             sb.append(parameter.getType().getShortName());
             sb.append(' ');
             sb.append(parameter.getName());
@@ -132,16 +112,14 @@ public class Method extends JavaElement {
 
         if (getExceptions().size() > 0) {
             sb.append(" throws "); //$NON-NLS-1$
-            Iterator<FullyQualifiedJavaType> fqjtIter = getExceptions().iterator();
             comma = false;
-            while (fqjtIter.hasNext()) {
+            for (FullyQualifiedJavaType fqjt : getExceptions()) {
                 if (comma) {
                     sb.append(", "); //$NON-NLS-1$
                 } else {
                     comma = true;
                 }
 
-                FullyQualifiedJavaType fqjt = fqjtIter.next();
                 sb.append(fqjt.getShortName());
             }
         }

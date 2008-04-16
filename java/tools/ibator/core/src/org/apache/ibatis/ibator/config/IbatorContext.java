@@ -19,7 +19,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -237,10 +236,8 @@ public class IbatorContext extends PropertyHolder {
             
             DatabaseIntrospector databaseIntrospector =
                 new DatabaseIntrospector(this, connection.getMetaData(), javaTypeResolver, warnings);
-			
-			Iterator<TableConfiguration> tcIter = tableConfigurations.iterator();
-			while (tcIter.hasNext()) {
-				TableConfiguration tc = tcIter.next();
+
+            for (TableConfiguration tc : tableConfigurations) {
 				String tableName = StringUtility.composeFullyQualifiedTableName(
                         tc.getCatalog(), tc.getSchema(), tc.getTableName(), '.');
                 
@@ -263,10 +260,8 @@ public class IbatorContext extends PropertyHolder {
 				callback.checkCancel();
                 
                 if (introspectedTables != null) {
-                    Iterator<? extends IntrospectedTable> iter2 = introspectedTables.iterator();
-                    while (iter2.hasNext()) {
+                    for (IntrospectedTable introspectedTable : introspectedTables) {
                         callback.checkCancel();
-                        IntrospectedTable introspectedTable = iter2.next();
 
                         if (daoGenerator != null) {
                             generatedJavaFiles.addAll(daoGenerator.getGeneratedJavaFiles(introspectedTable, callback));
@@ -405,10 +400,8 @@ public class IbatorContext extends PropertyHolder {
         if (daoGeneratorConfiguration != null) {
             xmlElement.addElement(daoGeneratorConfiguration.toXmlElement());
         }
-        
-        Iterator<TableConfiguration> iter = tableConfigurations.iterator();
-        while (iter.hasNext()) {
-            TableConfiguration tableConfiguration = iter.next();
+
+        for (TableConfiguration tableConfiguration : tableConfigurations) {
             xmlElement.addElement(tableConfiguration.toXmlElement());
         }
         

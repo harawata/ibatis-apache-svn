@@ -15,8 +15,6 @@
  */
 package org.apache.ibatis.ibator.api.dom.java;
 
-import java.util.Iterator;
-
 import org.apache.ibatis.ibator.api.dom.OutputUtilities;
 
 /**
@@ -80,34 +78,17 @@ public class Field extends JavaElement {
     public String getFormattedContent(int indentLevel) {
         StringBuffer sb = new StringBuffer();
 
-        Iterator<String> iter = getJavaDocLines().iterator();
-        while (iter.hasNext()) {
-            OutputUtilities.javaIndent(sb, indentLevel);
-            sb.append(iter.next());
-            OutputUtilities.newLine(sb);
-        }
-        
-        iter = getAnnotations().iterator();
-        while (iter.hasNext()) {
-            OutputUtilities.javaIndent(sb, indentLevel);
-            sb.append(iter.next());
-            OutputUtilities.newLine(sb);
-        }
+        addFormattedJavadoc(sb, indentLevel);
+        addFormattedAnnotations(sb, indentLevel);
         
         OutputUtilities.javaIndent(sb, indentLevel);
-        if (getVisibility() == JavaVisibility.PRIVATE) {
-            sb.append("private "); //$NON-NLS-1$
-        } else if (getVisibility() == JavaVisibility.PROTECTED) {
-            sb.append("protected "); //$NON-NLS-1$
-        } else if (getVisibility() == JavaVisibility.PUBLIC) {
-            sb.append("public "); //$NON-NLS-1$
-        }
+        sb.append(getVisibility().getValue());
         
-        if (isModifierStatic()) {
+        if (isStatic()) {
             sb.append("static "); //$NON-NLS-1$
         }
         
-        if (isModifierFinal()) {
+        if (isFinal()) {
             sb.append("final "); //$NON-NLS-1$
         }
         

@@ -104,34 +104,17 @@ public class InnerClass extends JavaElement {
     public String getFormattedContent(int indentLevel) {
         StringBuffer sb = new StringBuffer();
 
-        Iterator<String> strIter = getJavaDocLines().iterator();
-        while (strIter.hasNext()) {
-            OutputUtilities.javaIndent(sb, indentLevel);
-            sb.append(strIter.next());
-            OutputUtilities.newLine(sb);
-        }
-        
-        strIter = getAnnotations().iterator();
-        while (strIter.hasNext()) {
-            OutputUtilities.javaIndent(sb, indentLevel);
-            sb.append(strIter.next());
-            OutputUtilities.newLine(sb);
-        }
+        addFormattedJavadoc(sb, indentLevel);
+        addFormattedAnnotations(sb, indentLevel);
         
         OutputUtilities.javaIndent(sb, indentLevel);
-        if (getVisibility() == JavaVisibility.PRIVATE) {
-            sb.append("private "); //$NON-NLS-1$
-        } else if (getVisibility() == JavaVisibility.PROTECTED) {
-            sb.append("protected "); //$NON-NLS-1$
-        } else if (getVisibility() == JavaVisibility.PUBLIC) {
-            sb.append("public "); //$NON-NLS-1$
-        }
+        sb.append(getVisibility().getValue());
         
-        if (isModifierStatic()) {
+        if (isStatic()) {
             sb.append("static "); //$NON-NLS-1$
         }
         
-        if (isModifierFinal()) {
+        if (isFinal()) {
             sb.append("final "); //$NON-NLS-1$
         }
         
@@ -145,17 +128,15 @@ public class InnerClass extends JavaElement {
         
         if (superInterfaceTypes.size() > 0) {
             sb.append(" implements "); //$NON-NLS-1$
-            
-            Iterator<FullyQualifiedJavaType> fqjtIter = superInterfaceTypes.iterator();
+
             boolean comma = false;
-            while (fqjtIter.hasNext()) {
+            for (FullyQualifiedJavaType fqjt : superInterfaceTypes) { 
                 if (comma) {
                     sb.append(", "); //$NON-NLS-1$
                 } else {
                     comma = true;
                 }
                 
-                FullyQualifiedJavaType fqjt = fqjtIter.next();
                 sb.append(fqjt.getShortName());
             }
         }
@@ -176,6 +157,7 @@ public class InnerClass extends JavaElement {
         if (methods.size() > 0) {
             OutputUtilities.newLine(sb);
         }
+        
         Iterator<Method> mtdIter = methods.iterator();
         while (mtdIter.hasNext()) {
             OutputUtilities.newLine(sb);

@@ -17,7 +17,6 @@ package org.apache.ibatis.ibator.config;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -125,11 +124,7 @@ public class TableConfiguration extends PropertyHolder {
 	}
 
 	public boolean isColumnIgnored(String columnName) {
-        
-        Iterator<Map.Entry<IgnoredColumn, Boolean>> iter = ignoredColumns.entrySet().iterator();
-        while (iter.hasNext()) {
-            Map.Entry<IgnoredColumn, Boolean> entry = iter.next();
-
+        for (Map.Entry<IgnoredColumn, Boolean> entry : ignoredColumns.entrySet()) {
             IgnoredColumn ic = entry.getKey();
             if (ic.isColumnNameDelimited()) {
                 if (columnName.equals(ic.getColumnName())) {
@@ -198,9 +193,7 @@ public class TableConfiguration extends PropertyHolder {
 	 * @return the column override (if any) related to this column
 	 */
 	public ColumnOverride getColumnOverride(String columnName) {
-        Iterator<ColumnOverride> iter = columnOverrides.iterator();
-        while (iter.hasNext()) {
-            ColumnOverride co = iter.next();
+        for (ColumnOverride co : columnOverrides) {
             if (co.isColumnNameDelimited()) {
                 if (columnName.equals(co.getColumnName())) {
                     return co;
@@ -299,8 +292,8 @@ public class TableConfiguration extends PropertyHolder {
         this.tableName = tableName;
     }
 
-    public Iterator<ColumnOverride> getColumnOverrides() {
-        return columnOverrides.iterator();
+    public List<ColumnOverride> getColumnOverrides() {
+        return columnOverrides;
     }
 
     /**
@@ -308,22 +301,19 @@ public class TableConfiguration extends PropertyHolder {
      * are the columns that were specified to be ignored in the
      * table, but do not exist in the table. 
      * 
-     * @return an Iterator of Strings - the columns that were improperly
+     * @return an List of Strings - the columns that were improperly
      *  configured as ignored columns 
      */
-    public Iterator<String> getIgnoredColumnsInError() {
+    public List<String> getIgnoredColumnsInError() {
         List<String> answer = new ArrayList<String>();
-        
-        Iterator<Map.Entry<IgnoredColumn, Boolean>> iter = ignoredColumns.entrySet().iterator();
-        while (iter.hasNext()) {
-            Map.Entry<IgnoredColumn, Boolean> entry = iter.next();
-            
+
+        for (Map.Entry<IgnoredColumn, Boolean> entry : ignoredColumns.entrySet()) {
             if (Boolean.FALSE.equals(entry.getValue())) {
                 answer.add(entry.getKey().getColumnName());
             }
         }
         
-        return answer.iterator();
+        return answer;
     }
 
     public ModelType getModelType() {
@@ -422,17 +412,13 @@ public class TableConfiguration extends PropertyHolder {
         }
         
         if (ignoredColumns.size() > 0) {
-            Iterator<IgnoredColumn> iter = ignoredColumns.keySet().iterator();
-            while (iter.hasNext()) {
-                IgnoredColumn ignoredColumn = iter.next();
+            for (IgnoredColumn ignoredColumn : ignoredColumns.keySet()) {
                 xmlElement.addElement(ignoredColumn.toXmlElement());
             }
         }
         
         if (columnOverrides.size() > 0) {
-            Iterator<ColumnOverride> iter = columnOverrides.iterator();
-            while (iter.hasNext()) {
-                ColumnOverride columnOverride = iter.next();
+            for (ColumnOverride columnOverride : columnOverrides) {
                 xmlElement.addElement(columnOverride.toXmlElement());
             }
         }

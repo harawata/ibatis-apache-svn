@@ -17,7 +17,6 @@ package org.apache.ibatis.ibator.internal.java.dao;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.ibatis.ibator.api.CommentGenerator;
@@ -73,19 +72,16 @@ public abstract class AbstractDAOTemplate {
         answer.setConstructor(true);
         answer.setName(type.getShortName());
         answer.setVisibility(constructorTemplate.getVisibility());
-        Iterator<Parameter> parmIter = constructorTemplate.getParameters().iterator();
-        while (parmIter.hasNext()) {
-            answer.addParameter(parmIter.next());
+        for (Parameter parm : constructorTemplate.getParameters()) {
+            answer.addParameter(parm);
         }
-        
-        Iterator<String> strIter = constructorTemplate.getBodyLines().iterator();
-        while (strIter.hasNext()) {
-            answer.addBodyLine(strIter.next());
+
+        for (String bodyLine: constructorTemplate.getBodyLines()) {
+            answer.addBodyLine(bodyLine);
         }
-        
-        Iterator<FullyQualifiedJavaType> fqjtIter = constructorTemplate.getExceptions().iterator();
-        while (fqjtIter.hasNext()) {
-            answer.addException(fqjtIter.next());
+
+        for (FullyQualifiedJavaType fqjt : constructorTemplate.getExceptions()) {
+            answer.addException(fqjt);
         }
         
         commentGenerator.addGeneralMethodComment(answer, table);
@@ -149,16 +145,14 @@ public abstract class AbstractDAOTemplate {
         return checkedExceptions;
     }
 
-    public Iterator<Field> getFieldClones(CommentGenerator commentGenerator, FullyQualifiedTable table) {
+    public List<Field> getFieldClones(CommentGenerator commentGenerator, FullyQualifiedTable table) {
         List<Field> answer = new ArrayList<Field>();
-        Iterator<Field> iter = fields.iterator();
-        while (iter.hasNext()) {
+        for (Field oldField : fields) {
             Field field = new Field();
-            Field oldField = iter.next();
             
             field.setInitializationString(oldField.getInitializationString());
-            field.setModifierFinal(oldField.isModifierFinal());
-            field.setModifierStatic(oldField.isModifierStatic());
+            field.setFinal(oldField.isFinal());
+            field.setStatic(oldField.isStatic());
             field.setName(oldField.getName());
             field.setType(oldField.getType());
             field.setVisibility(oldField.getVisibility());
@@ -166,34 +160,29 @@ public abstract class AbstractDAOTemplate {
             answer.add(field);
         }
         
-        return answer.iterator();
+        return answer;
     }
 
-    public Iterator<Method> getMethodClones(CommentGenerator commentGenerator, FullyQualifiedTable table) {
+    public List<Method> getMethodClones(CommentGenerator commentGenerator, FullyQualifiedTable table) {
         List<Method> answer = new ArrayList<Method>();
-        Iterator<Method> iter = methods.iterator();
-        while (iter.hasNext()) {
+        for (Method oldMethod : methods) {
             Method method = new Method();
-            Method oldMethod = iter.next();
 
-            Iterator<String> strIter = oldMethod.getBodyLines().iterator();
-            while (strIter.hasNext()) {
-                method.addBodyLine(strIter.next());
+            for (String bodyLine : oldMethod.getBodyLines()) {
+                method.addBodyLine(bodyLine);
             }
             
-            Iterator<FullyQualifiedJavaType> fqjtIter = oldMethod.getExceptions().iterator();
-            while (fqjtIter.hasNext()) {
-                method.addException(fqjtIter.next());
+            for (FullyQualifiedJavaType fqjt : oldMethod.getExceptions()) {
+                method.addException(fqjt);
             }
-            
-            Iterator<Parameter> parmIter = oldMethod.getParameters().iterator();
-            while (parmIter.hasNext()) {
-                method.addParameter(parmIter.next());
+
+            for (Parameter parm : oldMethod.getParameters()) {
+                method.addParameter(parm);
             }
             
             method.setConstructor(oldMethod.isConstructor());
-            method.setModifierFinal(oldMethod.isModifierFinal());
-            method.setModifierStatic(oldMethod.isModifierStatic());
+            method.setFinal(oldMethod.isFinal());
+            method.setStatic(oldMethod.isStatic());
             method.setName(oldMethod.getName());
             method.setReturnType(oldMethod.getReturnType());
             method.setVisibility(oldMethod.getVisibility());
@@ -203,7 +192,7 @@ public abstract class AbstractDAOTemplate {
             answer.add(method);
         }
         
-        return answer.iterator();
+        return answer;
     }
 
     protected void setConstructorTemplate(Method constructorTemplate) {

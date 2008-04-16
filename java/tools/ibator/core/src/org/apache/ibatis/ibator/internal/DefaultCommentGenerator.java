@@ -30,6 +30,7 @@ import org.apache.ibatis.ibator.api.dom.java.Method;
 import org.apache.ibatis.ibator.api.dom.java.Parameter;
 import org.apache.ibatis.ibator.api.dom.xml.TextElement;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
+import org.apache.ibatis.ibator.config.MergeConstants;
 import org.apache.ibatis.ibator.config.PropertyRegistry;
 
 /**
@@ -230,7 +231,8 @@ public class DefaultCommentGenerator implements CommentGenerator {
     protected void addIbatorJavadocTag(JavaElement javaElement) {
         javaElement.addJavaDocLine(" *"); //$NON-NLS-1$
         StringBuffer sb = new StringBuffer();
-        sb.append(" * @ibatorgenerated"); //$NON-NLS-1$
+        sb.append(" * "); //$NON-NLS-1$
+        sb.append(MergeConstants.NEW_JAVA_ELEMENT_TAG);
         String s = getDateString();
         if (s != null) {
             sb.append(' ');

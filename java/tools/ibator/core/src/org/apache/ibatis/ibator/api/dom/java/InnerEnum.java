@@ -101,23 +101,12 @@ public class InnerEnum extends JavaElement {
     public String getFormattedContent(int indentLevel) {
         StringBuffer sb = new StringBuffer();
 
-        Iterator<String> strIter = getJavaDocLines().iterator();
-        while (strIter.hasNext()) {
-            OutputUtilities.javaIndent(sb, indentLevel);
-            sb.append(strIter.next());
-            OutputUtilities.newLine(sb);
-        }
-        
-        strIter = getAnnotations().iterator();
-        while (strIter.hasNext()) {
-            OutputUtilities.javaIndent(sb, indentLevel);
-            sb.append(strIter.next());
-            OutputUtilities.newLine(sb);
-        }
+        addFormattedJavadoc(sb, indentLevel);
+        addFormattedAnnotations(sb, indentLevel);
         
         OutputUtilities.javaIndent(sb, indentLevel);
         if (getVisibility() == JavaVisibility.PUBLIC) {
-            sb.append("public "); //$NON-NLS-1$
+            sb.append(getVisibility().getValue());
         }
         
         sb.append("enum "); //$NON-NLS-1$
@@ -125,17 +114,15 @@ public class InnerEnum extends JavaElement {
         
         if (superInterfaceTypes.size() > 0) {
             sb.append(" implements "); //$NON-NLS-1$
-            
-            Iterator<FullyQualifiedJavaType> fqjtIter = superInterfaceTypes.iterator();
+
             boolean comma = false;
-            while (fqjtIter.hasNext()) {
+            for (FullyQualifiedJavaType fqjt : superInterfaceTypes) {
                 if (comma) {
                     sb.append(", "); //$NON-NLS-1$
                 } else {
                     comma = true;
                 }
                 
-                FullyQualifiedJavaType fqjt = fqjtIter.next();
                 sb.append(fqjt.getShortName());
             }
         }
@@ -143,7 +130,7 @@ public class InnerEnum extends JavaElement {
         sb.append(" {"); //$NON-NLS-1$
         indentLevel++;
 
-        strIter = enumConstants.iterator();
+        Iterator<String> strIter = enumConstants.iterator();
         while (strIter.hasNext()) {
             OutputUtilities.newLine(sb);
             OutputUtilities.javaIndent(sb, indentLevel);

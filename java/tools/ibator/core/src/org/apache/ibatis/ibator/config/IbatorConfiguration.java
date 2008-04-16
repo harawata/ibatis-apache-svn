@@ -16,7 +16,6 @@
 package org.apache.ibatis.ibator.config;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
@@ -66,9 +65,7 @@ public class IbatorConfiguration {
         if (ibatorContexts.size() == 0) {
             errors.add(Messages.getString("ValidationError.11")); //$NON-NLS-1$
         } else {
-            Iterator<IbatorContext> iter = ibatorContexts.iterator();
-            while (iter.hasNext()) {
-                IbatorContext ibatorContext = iter.next();
+            for (IbatorContext ibatorContext : ibatorContexts) {
                 ibatorContext.validate(errors);
             }
         }
@@ -87,9 +84,7 @@ public class IbatorConfiguration {
     }
     
     public IbatorContext getIbatorContext(String id) {
-        Iterator<IbatorContext> iter = ibatorContexts.iterator();
-        while (iter.hasNext()) {
-            IbatorContext ibatorContext = iter.next();
+        for (IbatorContext ibatorContext : ibatorContexts) {
             if (id.equals(ibatorContext.getId())) {
                 return ibatorContext;
             }
@@ -113,18 +108,14 @@ public class IbatorConfiguration {
                 XmlConstants.IBATOR_CONFIG_SYSTEM_ID);
         XmlElement rootElement = new XmlElement("ibatorConfiguration"); //$NON-NLS-1$
         document.setRootElement(rootElement);
-        
-        Iterator<String> strIter = classPathEntries.iterator();
-        while (strIter.hasNext()) {
-            String classPathEntry = strIter.next();
+
+        for (String classPathEntry : classPathEntries) {
             XmlElement cpeElement = new XmlElement("classPathEntry"); //$NON-NLS-1$
             cpeElement.addAttribute(new Attribute("location", classPathEntry)); //$NON-NLS-1$
             rootElement.addElement(cpeElement);
         }
-        
-        Iterator<IbatorContext> ctxIter = ibatorContexts.iterator();
-        while (ctxIter.hasNext()) {
-            IbatorContext ibatorContext = ctxIter.next();
+
+        for (IbatorContext ibatorContext : ibatorContexts) {
             rootElement.addElement(ibatorContext.toXmlElement());
         }
         

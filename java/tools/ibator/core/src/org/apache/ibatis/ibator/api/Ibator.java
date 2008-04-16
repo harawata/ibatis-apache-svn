@@ -22,12 +22,12 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.ibatis.ibator.config.IbatorConfiguration;
 import org.apache.ibatis.ibator.config.IbatorContext;
+import org.apache.ibatis.ibator.config.MergeConstants;
 import org.apache.ibatis.ibator.exception.InvalidConfigurationException;
 import org.apache.ibatis.ibator.exception.ShellException;
 import org.apache.ibatis.ibator.internal.DefaultShellCallback;
@@ -183,9 +183,7 @@ public class Ibator {
             contextsToRun = ibatorConfiguration.getIbatorContexts();
         } else {
             contextsToRun = new ArrayList<IbatorContext>();
-            Iterator<IbatorContext> iter = ibatorConfiguration.getIbatorContexts().iterator();
-            while (iter.hasNext()) {
-                IbatorContext ibatorContext = iter.next();
+            for (IbatorContext ibatorContext : ibatorConfiguration.getIbatorContexts()) {
                 if (contextIds.contains(ibatorContext.getId())) {
                     contextsToRun.add(ibatorContext);
                 }
@@ -194,13 +192,10 @@ public class Ibator {
 
         int totalSteps = 0;
 
-        Iterator<IbatorContext> iterContext = contextsToRun.iterator();
-        while (iterContext.hasNext()) {
-            IbatorContext ibatorContext = iterContext.next();
-
+        for (IbatorContext ibatorContext : contextsToRun) {
             totalSteps += ibatorContext.getTotalSteps();
         }
-
+        
         callback.setNumberOfSubTasks(totalSteps);
         
         // setup custom classloader
@@ -209,17 +204,12 @@ public class Ibator {
         IbatorObjectFactory.setClassLoader(classLoader);
 
         // now run the generates...
-        iterContext = contextsToRun.iterator();
-        while (iterContext.hasNext()) {
-            IbatorContext ibatorContext = iterContext.next();
-
+        for (IbatorContext ibatorContext : contextsToRun) {
             ibatorContext.generateFiles(callback, generatedJavaFiles,
                     generatedXmlFiles, warnings, fullyQualifiedTableNames);
         }
-        
-        Iterator<GeneratedXmlFile> iterXML = generatedXmlFiles.iterator();
-        while (iterXML.hasNext()) {
-            GeneratedXmlFile gxf = iterXML.next();
+
+        for (GeneratedXmlFile gxf : generatedXmlFiles) {
             projects.add(gxf.getTargetProject());
 
             File targetFile;
@@ -241,9 +231,7 @@ public class Ibator {
             writeFile(targetFile, source);
         }
 
-        Iterator<GeneratedJavaFile> iterJava = generatedJavaFiles.iterator();
-        while (iterJava.hasNext()) {
-            GeneratedJavaFile gjf = iterJava.next();
+        for (GeneratedJavaFile gjf : generatedJavaFiles) {
             projects.add(gjf.getTargetProject());
 
             File targetFile;
@@ -255,7 +243,8 @@ public class Ibator {
                 if (targetFile.exists()) {
                     if (shellCallback.mergeSupported()) {
                         source = shellCallback.mergeJavaFile(gjf,
-                            "@ibatorgenerated", warnings); //$NON-NLS-1$
+                                MergeConstants.OLD_JAVA_ELEMENT_TAGS,
+                                warnings);
                     } else {
                         source = gjf.getFormattedContent();
                         targetFile = getUniqueFileName(directory, gjf);
@@ -271,9 +260,8 @@ public class Ibator {
             }
         }
 
-        Iterator<String> iterString = projects.iterator();
-        while (iterString.hasNext()) {
-            shellCallback.refreshProject(iterString.next());
+        for (String project : projects) {
+            shellCallback.refreshProject(project);
         }
     }
 
@@ -292,9 +280,9 @@ public class Ibator {
     private File getUniqueFileName(File directory, GeneratedJavaFile gjf) {
         File answer = null;
         
-        // try up to 10000 times to generate a unique file name
+        // try up to 1000 times to generate a unique file name
         StringBuffer sb = new StringBuffer();
-        for (int i = 1; i < 10000; i++) {
+        for (int i = 1; i < 1000; i++) {
             sb.setLength(0);
             sb.append(gjf.getFileName());
             sb.append('.');

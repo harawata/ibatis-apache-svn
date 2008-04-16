@@ -81,9 +81,9 @@ public interface ShellCallback {
      * However, this will overwrite any modifications to the generated files.
      * 
      * @param newFile the newly generated Java file
-     * @param javadocTag the JavaDoc tag that denotes which methods and fields in the
-     *                   old file to delete (all new methods and fields will also include
-     *                   this tag)
+     * @param javadocTags the JavaDoc tags that denotes which methods and fields in the
+     *                   old file to delete (if the Java element has any of these tags, the
+     *                   element is eligible for merge)
      * @param warninigs Any warning strings during the merge can be added to this list.
      *                  Adding a warning will not stop iBATOR from saving the resulting
      *                  source. 
@@ -94,7 +94,7 @@ public interface ShellCallback {
      *                        the existing file will remain undisturbed.  iBATOR
      *                        will add the exception message to the list of warnings automatically.
      */
-    String mergeJavaFile(GeneratedJavaFile newFile, String javadocTag, List<String> warninigs)
+    String mergeJavaFile(GeneratedJavaFile newFile, String[] javadocTags, List<String> warninigs)
     	throws ShellException;
     
     /**

@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.ibatis.ibator.api.dom.OutputUtilities;
+import org.apache.ibatis.ibator.internal.util.StringUtility;
 
 /**
  * @author Jeff Butler
@@ -65,14 +66,12 @@ public class Interface extends JavaElement implements CompilationUnit {
     public String getFormattedContent() {
         StringBuffer sb = new StringBuffer();
 
-        Iterator<String> strIter = fileCommentLines.iterator();
-        while (strIter.hasNext()) {
-            sb.append(strIter.next());
+        for (String commentLine : fileCommentLines) {
+            sb.append(commentLine);
             OutputUtilities.newLine(sb);
         }
 
-        if (getType().getPackageName() != null
-                && getType().getPackageName().length() > 0) {
+        if (StringUtility.stringHasValue(getType().getPackageName())) {
             sb.append("package "); //$NON-NLS-1$
             sb.append(getType().getPackageName());
             sb.append(';');
@@ -80,9 +79,7 @@ public class Interface extends JavaElement implements CompilationUnit {
             OutputUtilities.newLine(sb);
         }
 
-        Iterator<FullyQualifiedJavaType> fqjtIter = importedTypes.iterator();
-        while (fqjtIter.hasNext()) {
-            FullyQualifiedJavaType fqjt = fqjtIter.next();
+        for (FullyQualifiedJavaType fqjt : importedTypes) {
             if (fqjt.isExplicitlyImported()) {
                 sb.append("import "); //$NON-NLS-1$
                 sb.append(fqjt.getFullyQualifiedName());
@@ -97,34 +94,16 @@ public class Interface extends JavaElement implements CompilationUnit {
 
         int indentLevel = 0;
 
-        strIter = getJavaDocLines().iterator();
-        while (strIter.hasNext()) {
-            OutputUtilities.javaIndent(sb, indentLevel);
-            sb.append(strIter.next());
-            OutputUtilities.newLine(sb);
-        }
+        addFormattedJavadoc(sb, indentLevel);
+        addFormattedAnnotations(sb, indentLevel);
 
-        strIter = getAnnotations().iterator();
-        while (strIter.hasNext()) {
-            OutputUtilities.javaIndent(sb, indentLevel);
-            sb.append(strIter.next());
-            OutputUtilities.newLine(sb);
-        }
+        sb.append(getVisibility().getValue());
         
-        OutputUtilities.javaIndent(sb, indentLevel);
-        if (getVisibility() == JavaVisibility.PRIVATE) {
-            sb.append("private "); //$NON-NLS-1$
-        } else if (getVisibility() == JavaVisibility.PROTECTED) {
-            sb.append("protected "); //$NON-NLS-1$
-        } else if (getVisibility() == JavaVisibility.PUBLIC) {
-            sb.append("public "); //$NON-NLS-1$
-        }
-
-        if (isModifierStatic()) {
+        if (isStatic()) {
             sb.append("static "); //$NON-NLS-1$
         }
 
-        if (isModifierFinal()) {
+        if (isFinal()) {
             sb.append("final "); //$NON-NLS-1$
         }
 
@@ -134,16 +113,14 @@ public class Interface extends JavaElement implements CompilationUnit {
         if (getSuperInterfaceTypes().size() > 0) {
             sb.append(" extends "); //$NON-NLS-1$
 
-            fqjtIter = getSuperInterfaceTypes().iterator();
             boolean comma = false;
-            while (fqjtIter.hasNext()) {
+            for (FullyQualifiedJavaType fqjt : getSuperInterfaceTypes()) {
                 if (comma) {
                     sb.append(", "); //$NON-NLS-1$
                 } else {
                     comma = true;
                 }
 
-                FullyQualifiedJavaType fqjt = fqjtIter.next();
                 sb.append(fqjt.getShortName());
             }
         }
