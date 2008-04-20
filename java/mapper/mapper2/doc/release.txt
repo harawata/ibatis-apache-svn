@@ -2,7 +2,15 @@ Build Date: @buildDate@
 Build Number: @buildNum@
 
 ------------------------------
- 2.x
+ 2.3.2
+------------------------------
+ o Updated this release.txt file for 2.3.1
+ o Made DTD backward compatible again.
+ o Applied consistent lazy loading Set fix to all lazy loader implementations
+ o Note that version 2.3.1 and beyond will throws exception for java bean specification violations
+   
+------------------------------
+ 2.3.1
 ------------------------------
  o Removed maxTransactions, maxRequests, maxSessions from configuration, all are now controlled by the resource providers
  o Fixed BATIS-391  - Cannot access Lists within custom objects.
@@ -11,7 +19,28 @@ Build Number: @buildNum@
  o Fixed IBATIS-490 - Improper use of getColumnLabel()
  o Fixed IBATIS-494 - Improper NULL handling in Blob and Clob Type Handlers
  o Fixed IBATIS-497 - Improper use of hashCode in SqlExecuter
-
+ o Fixed IBATIS-406 Bug in Ibatis sqlMap when one resultMap has multiple results that are resultMaps... then the groupby attribute only seems to work for the first embedded resultMap.
+ o Fixed IBATIS-456 ClassCastException when mapping primitive arrays due to attempts to cast to object arrays made by iBatis
+ o Fixed IBATIS-441 Multiple result sets support broken
+ o Fixed IBATIS-497 Bug when add two same length and hashCode SQLs to a batch executor
+ o Fixed IBATIS-484 oracle's user-defined objects not fully supported
+ o Fixed IBATIS-391 Can not access Lists within custom objects.
+ o Fixed IBATIS-359 Performance Improvement when No SecurityManager installed
+ o Fixed IBATIS-439 Batching of statements does not work for stored procedures
+ o Fixed IBATIS-435 Bug Using iBATIS 2.3.0 And Spring Framework
+ o Fixed IBATIS-489 CacheModel.NULL_OBJECT should be Serializable to be used with non-in-memory caches
+ o Fixed IBATIS-494 ClobTypeHandlerCallback handles NULLs incorrectly
+ o Fixed IBATIS-419 LazyLoad object is not serializable.
+ o Fixed IBATIS-490 When using implicit resultmap, the code fails throwing exception "Undefined Column Name"
+ o Fixed IBATIS-487 lazy loading support java.util.Set interface
+ o Fixed IBATIS-491 resultMap support java 5 enum to jdbcType VARCHAR
+ o Fixed IBATIS-388 Add methods to unwrap all Proxied Objects
+ o Fixed IBATIS-433 ResultSetLogProxy doesn't log null value incorrectly
+ o Fixed IBATIS-445 SqlText setText function and tab (\t) character in text definition
+ o Fixed IBATIS-479 Typo on com.ibatis.sqlmap.engine.conifg package
+ o Fixed IBATIS-387 bug in Jdk14LoggingImpl
+ o Fixed IBATIS-458 maxWait in Throttle can fail.
+ o Fixed IBATIS-467 flushInterval is limited to hours
 
 ------------------------------
  2.3.0 - Dec 01, 2006

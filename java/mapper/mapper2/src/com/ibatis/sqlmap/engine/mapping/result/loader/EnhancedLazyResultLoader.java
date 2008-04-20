@@ -23,16 +23,19 @@ import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.InvocationHandler;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Class to lazily load results into objects (uses CGLib to improve performance)
  */
 public class EnhancedLazyResultLoader {
 
-  private static final Class[] INTERFACES = new Class[]{List.class};
+  private static final Class[] SET_INTERFACES = new Class[]{Set.class};
+  private static final Class[] LIST_INTERFACES = new Class[]{List.class};
   private Object loader;
 
 
@@ -52,7 +55,7 @@ public class EnhancedLazyResultLoader {
    * Loads the result
    *
    * @return the results - a list or object
-   * 
+   *
    * @throws SQLException if there is a problem
    */
   public Object loadResult() throws SQLException {
@@ -90,14 +93,18 @@ public class EnhancedLazyResultLoader {
      * Loads the result
      *
      * @return the results - a list or object
-     * 
+     *
      * @throws SQLException if there is a problem
      */
     public Object loadResult() throws SQLException {
       if (DomTypeMarker.class.isAssignableFrom(targetType)) {
         return ResultLoader.getResult(client, statementName, parameterObject, targetType);
       } else if (Collection.class.isAssignableFrom(targetType)) {
-        return Enhancer.create(Object.class, INTERFACES, this);
+        if (Set.class.isAssignableFrom(targetType)) {
+          return Enhancer.create(Object.class, SET_INTERFACES, this);
+        } else {
+          return Enhancer.create(Object.class, LIST_INTERFACES, this);
+        }
       } else if (targetType.isArray() || ClassInfo.isKnownType(targetType)) {
         return ResultLoader.getResult(client, statementName, parameterObject, targetType);
       } else {
