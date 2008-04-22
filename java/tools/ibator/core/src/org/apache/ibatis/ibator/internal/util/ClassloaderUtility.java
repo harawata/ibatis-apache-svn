@@ -27,7 +27,7 @@ import org.apache.ibatis.ibator.internal.util.messages.Messages;
 
 /**
  * This class holds methods useful for constructing custom 
- * classloaders in iBATOR.
+ * classloaders in ibator.
  * 
  * @author Jeff Butler
  *

@@ -33,7 +33,7 @@ import org.apache.ibatis.ibator.config.SqlMapGeneratorConfiguration;
 import org.apache.ibatis.ibator.internal.util.messages.Messages;
 
 /**
- * This class creates the different configurable iBATOR generators
+ * This class creates the different configurable ibator generators
  * 
  * @author Jeff Butler
  */

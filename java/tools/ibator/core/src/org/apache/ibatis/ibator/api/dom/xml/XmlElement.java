@@ -105,4 +105,8 @@ public class XmlElement extends Element {
 
         return sb.toString();
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

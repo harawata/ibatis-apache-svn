@@ -34,7 +34,7 @@ import org.apache.ibatis.ibator.internal.DefaultShellCallback;
 import org.apache.ibatis.ibator.internal.util.messages.Messages;
 
 /**
- * This class allows iBATOR to be run from the command line.
+ * This class allows ibator to be run from the command line.
  * 
  * @author Jeff Butler
  */

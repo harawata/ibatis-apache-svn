@@ -19,8 +19,8 @@ generator.  The DAO Generator builds DAOs in a variety of different formats - on
 DAO interface and implementation class for each
 introspected table. This element is a optional child element
 of the <a href="ibatorContext.html">&lt;ibatorContext&gt;</a> element.  If you do not
-specify this element, then iBATOR will not generate DAO interfaces and classes.</p>
-<p>If you don't specify a user defined type, iBATOR will select a default
+specify this element, then ibator will not generate DAO interfaces and classes.</p>
+<p>If you don't specify a user defined type, ibator will select a default
 generator based on the value of the type attribute of this element and the
 <code>generatorSet</code> property of the
 <a href="ibatorContext.html">&lt;ibatorContext&gt;</a> element.  See the notes on that
@@ -73,7 +73,7 @@ page for features of the different types of generators.</p>
         sub packages for the table's catalog and schema if they exist.
         If false (the default) then the calculated package will be
         exactly what is specified in the targetPackage attribute.
-        iBATOR will create folders as required for the generated
+        ibator will create folders as required for the generated
         packages.</td>
   </tr>
   <tr>
@@ -83,7 +83,7 @@ page for features of the different types of generators.</p>
         environment, this specifies the project and source folder where
         the objects will be saved.
         In other environments, this value should be an existing directory
-        on the local file system.  iBATOR will not create this directory if
+        on the local file system.  ibator will not create this directory if
         it does not exist.</td>
   </tr>
 </table>
@@ -106,7 +106,7 @@ specified with the <a href="property.html">&lt;property&gt;</a> child element:</
   </tr>
   <tr>
     <td valign="top">enableSubPackages</td>
-    <td>This property is used to select whether iBATOR will generate different
+    <td>This property is used to select whether ibator will generate different
         Java packages for the objects based on the catalog and schema of the
         introspected table.
         <p>For example, suppose a table MYTABLE in schema MYSCHMA.
@@ -167,7 +167,7 @@ specified with the <a href="property.html">&lt;property&gt;</a> child element:</
             <td><i>This is the default value</i><br/>
               The generated methods names will be very simple ("insert",
               "updateByPrimaryKey", etc.)  This is the same behavior as earlier versions
-              of iBATOR.</td>
+              of ibator.</td>
           </tr>
           <tr>
             <th nowrap="nowrap" valign="top">extended</th>
@@ -183,7 +183,7 @@ specified with the <a href="property.html">&lt;property&gt;</a> child element:</
     <td>This property can be used to specify a super interface for all generated
       DAO interface objects.  This value may be overridden by specifying
       the <code>rootInterface</code> property on a Table configuration.
-      <p><b>Important:</b> iBATOR does not verify that the interface exists, or is a
+      <p><b>Important:</b> ibator does not verify that the interface exists, or is a
        valid Java interface.</p>
       <p>If specified, the value of this property should be a fully qualified
        interface name (like com.mycompany.MyRootInterface).</p></td>

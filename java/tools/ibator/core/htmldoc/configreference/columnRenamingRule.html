@@ -14,7 +14,7 @@
   </font>
 </p>
 <h1>The &lt;columnRenamingRule&gt; Element</h1>
-<p>The &lt;columnRenamingRule&gt; element is used to tell iBATOR to rename
+<p>The &lt;columnRenamingRule&gt; element is used to tell ibator to rename
 database columns before calulating the corresponding property
 name in an introspected table.  This is useful when all columns
 in a table have a common prefix that should be removed before
@@ -32,7 +32,7 @@ contains the following columns:</p>
 
 <p><code>&lt;columnRenamingRule searchString="^CUST_" replaceString="" /&gt;</code></p>
 
-<p>Note that, internally, iBATOR uses the
+<p>Note that, internally, ibator uses the
  <code>java.util.regex.Matcher.replaceAll</code> method
  for this function.  See the documentation for that method
  and class for examples of the regular expression language used in

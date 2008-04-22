@@ -3,15 +3,9 @@ Core:
   1.2
 
     1. Write page explaining how to use the GENERIC DAOs
-    2. Rename to iBATOR
-    3. Deal with UnsupportedDataTypeException better
-    4. Make a more general method of dealing with the classpath
-    5. Switch to Java 5.0
-    6. Take a look at the Java API - looks a little cumbersome to run
-    7. The mergers should delete the old abator stuff also
-    8. Remove the "legacy" generators
-    9. Remove all custom classloading.  Delegate soley to the JRE or
-       the eclipse launch configuration
+    2. Make a more general method of dealing with the classpath
+    3. Take a look at the Java API - looks a little cumbersome to run
+    4. The mergers should delete the old abator stuff also
        
   Future
 

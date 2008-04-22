@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-Version 1.2.0:  Renamed to iBATOR
+Version 1.2.0:  Renamed to ibator
 
 Changes:
 1. JSE 5.0 or greater is required
@@ -8,6 +8,8 @@ Changes:
    rootClasspath property from <javaModelGenerator>
 3. Changed API on the JavaTypeResolver interface
 4. Removed Legacy generator set
+5. Removed after generation hook methods in favor of the new ibator
+   plugin mechanism.
 
 -------------------------------------------------------------------------------
 Version 1.1.0:

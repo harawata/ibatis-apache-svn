@@ -21,11 +21,11 @@ import java.util.List;
 import org.apache.ibatis.ibator.exception.ShellException;
 
 /**
- * This interface defines methods that a shell should support to enable iBATOR
- * to work.  A "shell" is defined as the iBATOR execution environment (i.e. an Eclipse
+ * This interface defines methods that a shell should support to enable ibator
+ * to work.  A "shell" is defined as the ibator execution environment (i.e. an Eclipse
  * plugin, and Ant task, a NetBeans plugin, etc.)
  * 
- * iBATOR provides a default ShellCallback that is very low function and does
+ * ibator provides a default ShellCallback that is very low function and does
  * not support the merging of Java files.  The default shell callback is only
  * appropriate for use in well controlled environments where no changes are ever made
  * to generated Java files. 
@@ -34,8 +34,8 @@ import org.apache.ibatis.ibator.exception.ShellException;
  */
 public interface ShellCallback {
     /**
-     * iBATOR will call this method to ask the shell to resolve a project/package
-     * combination into a directory on the file system.  iBATOR will call this method
+     * ibator will call this method to ask the shell to resolve a project/package
+     * combination into a directory on the file system.  ibator will call this method
      * repeatedly (once for each generated file), so it would be wise for an implementing
      * class to cache results.  
      * 
@@ -45,7 +45,7 @@ public interface ShellCallback {
      *   <li>Must exist</li>
      * </ul>
      * 
-     * iBATOR default shell callback interprets both values as directories
+     * ibator default shell callback interprets both values as directories
      * and simply concatenates the two values to generate the default directory.  
      * 
      * @param targetProject
@@ -53,15 +53,15 @@ public interface ShellCallback {
      * @param warnings
      * @return the directory (must exist)
      * @throws ShellException if the project/package cannot be resolved into 
-     *  a directory on the file system.  In this case, iBATOR will not save the
-     *  file it is currently working on. iBATOR
+     *  a directory on the file system.  In this case, ibator will not save the
+     *  file it is currently working on. ibator
      *  will add the exception message to the list of warnings automatically. 
      */
     File getDirectory(String targetProject, String targetPackage, List<String> warnings) throws ShellException;
     
     /**
-     * iBATOR will call this method if a newly generated Java file would overwrite an existing
-     * file.  This method should return the merged source (formatted).  iBATOR will write the
+     * ibator will call this method if a newly generated Java file would overwrite an existing
+     * file.  This method should return the merged source (formatted).  ibator will write the
      * merged source as-is to the file system.
      * 
      * A merge typically follows these steps:
@@ -85,23 +85,23 @@ public interface ShellCallback {
      *                   old file to delete (if the Java element has any of these tags, the
      *                   element is eligible for merge)
      * @param warninigs Any warning strings during the merge can be added to this list.
-     *                  Adding a warning will not stop iBATOR from saving the resulting
+     *                  Adding a warning will not stop ibator from saving the resulting
      *                  source. 
-     * @return the merged source, properly formatted.  iBATOR will save the source
+     * @return the merged source, properly formatted.  ibator will save the source
      *  exactly as returned from this method.
      * @throws ShellException if the file cannot be merged for some reason.  If this
-     *                        exception is thrown, iBATOR will not save anything and
-     *                        the existing file will remain undisturbed.  iBATOR
+     *                        exception is thrown, ibator will not save anything and
+     *                        the existing file will remain undisturbed.  ibator
      *                        will add the exception message to the list of warnings automatically.
      */
     String mergeJavaFile(GeneratedJavaFile newFile, String[] javadocTags, List<String> warninigs)
     	throws ShellException;
     
     /**
-     * After all files are saved to the file system, iBATOR will call this method
+     * After all files are saved to the file system, ibator will call this method
      * once for each unique project that was affected by the generation run.
      * This method is usefull if your IDE needs to be informed that file system objects
-     * have been created or updated.  If you are using iBATOR outside of an IDE,
+     * have been created or updated.  If you are using ibator outside of an IDE,
      * your implementation need not do anything in this method.
      * 
      * @param project the project to be refreshed
@@ -110,7 +110,7 @@ public interface ShellCallback {
 
     /**
      * Return true if the callback supports Java merging, otherwise false.
-     * iBATOR will only call the <code>mergeJavaFile</code> method if this method
+     * ibator will only call the <code>mergeJavaFile</code> method if this method
      * returns true;
      * 
      * @return a boolean specifying whether Java merge is supported or not

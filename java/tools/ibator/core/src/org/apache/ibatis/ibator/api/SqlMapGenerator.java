@@ -31,7 +31,7 @@ import org.apache.ibatis.ibator.config.IbatorContext;
  */
 public interface SqlMapGenerator {
 	/**
-	 * iBATOR will supply a list to this method.  The implementation class may
+	 * ibator will supply a list to this method.  The implementation class may
 	 * add strings to the list that will be treated as warning messages and
 	 * displayed to the user.  The concept of a warning is that code generation
 	 * can continue, but that the results may not be what is expected.
@@ -68,33 +68,5 @@ public interface SqlMapGenerator {
 
     void setJavaModelGenerator(JavaModelGenerator javaModelGenerator);
 
-    String getSqlMapNamespace(FullyQualifiedTable table);
-
-    String getInsertStatementId();
-
-    String getUpdateByPrimaryKeyWithBLOBsStatementId();
-
-    String getUpdateByPrimaryKeySelectiveStatementId();
-    
-    String getUpdateByPrimaryKeyStatementId();
-
-    String getDeleteByPrimaryKeyStatementId();
-
-    String getDeleteByExampleStatementId();
-
-    String getSelectByPrimaryKeyStatementId();
-
-    String getSelectByExampleStatementId();
-
-    String getSelectByExampleWithBLOBsStatementId();
-    
-    String getCountByExampleStatementId();
-
-    String getUpdateByExampleSelectiveStatementId();
-    
-    String getUpdateByExampleStatementId();
-    
-    String getUpdateByExampleWithBLOBsStatementId();
-    
     List<GeneratedXmlFile> getGeneratedXMLFiles(IntrospectedTable introspectedTable, ProgressCallback callback);
 }

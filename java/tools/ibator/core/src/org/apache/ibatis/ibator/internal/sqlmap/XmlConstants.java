@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.ibator.internal.sqlmap;
 
+import org.apache.ibatis.ibator.config.MergeConstants;
+
 /**
  * @author Jeff Butler
  */
@@ -26,6 +28,74 @@ public class XmlConstants {
     private XmlConstants() {
         super();
     }
+    
+    static {
+        StringBuffer sb = new StringBuffer();
+
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("countByExample"); //$NON-NLS-1$
+        COUNT_BY_EXAMPLE_STATEMENT_ID = sb.toString();
+
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("deleteByExample"); //$NON-NLS-1$
+        DELETE_BY_EXAMPLE_STATEMENT_ID = sb.toString();
+        
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("deleteByPrimaryKey"); //$NON-NLS-1$
+        DELETE_BY_PRIMARY_KEY_STATEMENT_ID = sb.toString();
+        
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("insert"); //$NON-NLS-1$
+        INSERT_STATEMENT_ID = sb.toString();
+        
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("selectByExample"); //$NON-NLS-1$
+        SELECT_BY_EXAMPLE_STATEMENT_ID = sb.toString();
+
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("selectByExampleWithBLOBs"); //$NON-NLS-1$
+        SELECT_BY_EXAMPLE_WITH_BLOBS_STATEMENT_ID = sb.toString();
+
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("selectByPrimaryKey"); //$NON-NLS-1$
+        SELECT_BY_PRIMARY_KEY_STATEMENT_ID = sb.toString();
+
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("updateByExample"); //$NON-NLS-1$
+        UPDATE_BY_EXAMPLE_STATEMENT_ID = sb.toString();
+
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("updateByExampleSelective"); //$NON-NLS-1$
+        UPDATE_BY_EXAMPLE_SELECTIVE_STATEMENT_ID = sb.toString();
+
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("updateByExampleWithBLOBs"); //$NON-NLS-1$
+        UPDATE_BY_EXAMPLE_WITH_BLOBS_STATEMENT_ID = sb.toString();
+
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("updateByPrimaryKey"); //$NON-NLS-1$
+        UPDATE_BY_PRIMARY_KEY_STATEMENT_ID = sb.toString();
+
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("updateByPrimaryKeySelective"); //$NON-NLS-1$
+        UPDATE_BY_PRIMARY_KEY_SELECTIVE_STATEMENT_ID = sb.toString();
+
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("updateByPrimaryKeyWithBLOBs"); //$NON-NLS-1$
+        UPDATE_BY_PRIMARY_KEY_WITH_BLOBS_STATEMENT_ID = sb.toString();
+    }
 
     public static final String SQL_MAP_SYSTEM_ID = "http://ibatis.apache.org/dtd/sql-map-2.dtd"; //$NON-NLS-1$
 
@@ -33,5 +103,31 @@ public class XmlConstants {
     
     public static final String IBATOR_CONFIG_SYSTEM_ID = "http://ibatis.apache.org/dtd/ibator-config_1_0.dtd"; //$NON-NLS-1$
     
-    public static final String IBATOR_CONFIG_PUBLIC_ID = "-//Apache Software Foundation//DTD iBATOR for iBATIS Configuration 1.0//EN"; //$NON-NLS-1$
+    public static final String IBATOR_CONFIG_PUBLIC_ID = "-//Apache Software Foundation//DTD Apache iBATIS ibator Configuration 1.0//EN"; //$NON-NLS-1$
+    
+    public static final String COUNT_BY_EXAMPLE_STATEMENT_ID;
+    
+    public static final String DELETE_BY_EXAMPLE_STATEMENT_ID;
+    
+    public static final String DELETE_BY_PRIMARY_KEY_STATEMENT_ID;
+    
+    public static final String INSERT_STATEMENT_ID;
+    
+    public static final String SELECT_BY_EXAMPLE_STATEMENT_ID;
+    
+    public static final String SELECT_BY_EXAMPLE_WITH_BLOBS_STATEMENT_ID;
+    
+    public static final String SELECT_BY_PRIMARY_KEY_STATEMENT_ID;
+    
+    public static final String UPDATE_BY_EXAMPLE_STATEMENT_ID;
+
+    public static final String UPDATE_BY_EXAMPLE_SELECTIVE_STATEMENT_ID;
+
+    public static final String UPDATE_BY_EXAMPLE_WITH_BLOBS_STATEMENT_ID;
+
+    public static final String UPDATE_BY_PRIMARY_KEY_STATEMENT_ID;
+    
+    public static final String UPDATE_BY_PRIMARY_KEY_SELECTIVE_STATEMENT_ID;
+
+    public static final String UPDATE_BY_PRIMARY_KEY_WITH_BLOBS_STATEMENT_ID;
 }

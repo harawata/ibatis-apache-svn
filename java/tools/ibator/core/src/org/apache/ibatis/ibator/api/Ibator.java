@@ -38,7 +38,7 @@ import org.apache.ibatis.ibator.internal.util.ClassloaderUtility;
 import org.apache.ibatis.ibator.internal.util.messages.Messages;
 
 /**
- * This class is the main interface to the iBATOR for iBATIS code generator. A
+ * This class is the main interface to the ibator for iBATIS code generator. A
  * typical execution of the tool involves these steps:
  * 
  * <ol>
@@ -70,14 +70,14 @@ public class Ibator {
     /**
      * Constructs an Ibator object.
      * 
-     * @param ibatorConfiguration The configuration for this run of iBATOR
+     * @param ibatorConfiguration The configuration for this run of ibator
      * @param shellCallback an instance of a ShellCallback interface.  You may specify
-     *    <code>null</code> in which case iBATOR will use the DefaultShellCallback.
+     *    <code>null</code> in which case ibator will use the DefaultShellCallback.
      * @param warnings Any warnings generated during execution will be added to this
      *            list. Warnings do not affect the running of the tool, but they
      *            may affect the results. A typical warning is an unsupported
      *            data type. In that case, the column will be ignored and
-     *            generation will continue. iBATOR will only add Strings to the
+     *            generation will continue. ibator will only add Strings to the
      *            list.  You may specify <code>null</code> if you do not
      *            want warnings returned.
      * @throws InvalidConfigurationException if the specified configuration

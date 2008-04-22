@@ -26,6 +26,7 @@ import org.apache.ibatis.ibator.api.CommentGenerator;
 import org.apache.ibatis.ibator.api.DAOGenerator;
 import org.apache.ibatis.ibator.api.GeneratedJavaFile;
 import org.apache.ibatis.ibator.api.GeneratedXmlFile;
+import org.apache.ibatis.ibator.api.IbatorPlugin;
 import org.apache.ibatis.ibator.api.IntrospectedTable;
 import org.apache.ibatis.ibator.api.JavaModelGenerator;
 import org.apache.ibatis.ibator.api.JavaTypeResolver;
@@ -34,6 +35,7 @@ import org.apache.ibatis.ibator.api.SqlMapGenerator;
 import org.apache.ibatis.ibator.api.dom.xml.Attribute;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.internal.IbatorObjectFactory;
+import org.apache.ibatis.ibator.internal.IbatorPluginAggregator;
 import org.apache.ibatis.ibator.internal.NullProgressCallback;
 import org.apache.ibatis.ibator.internal.db.ConnectionFactory;
 import org.apache.ibatis.ibator.internal.db.DatabaseIntrospector;
@@ -74,6 +76,8 @@ public class IbatorContext extends PropertyHolder {
     
     private CommentGenerator commentGenerator;
     
+    private IbatorPluginAggregator pluginAggregator;
+    
     /**
      * Constructs an IbatorContext object.
      * 
@@ -102,6 +106,7 @@ public class IbatorContext extends PropertyHolder {
         }
         
 		tableConfigurations = new ArrayList<TableConfiguration>();
+        pluginAggregator = new IbatorPluginAggregator();
     }
 
 	public void addTableConfiguration(TableConfiguration tc) {
@@ -265,9 +270,14 @@ public class IbatorContext extends PropertyHolder {
 
                         if (daoGenerator != null) {
                             generatedJavaFiles.addAll(daoGenerator.getGeneratedJavaFiles(introspectedTable, callback));
+                            generatedJavaFiles.addAll(pluginAggregator.generateAdditionalDAOClasses(introspectedTable));
                         }
+                        
                         generatedJavaFiles.addAll(javaModelGenerator.getGeneratedJavaFiles(introspectedTable, callback));
+                        generatedJavaFiles.addAll(pluginAggregator.generateAdditionalModelClasses(introspectedTable));
+                        
                         generatedXmlFiles.addAll(sqlMapGenerator.getGeneratedXMLFiles(introspectedTable, callback));
+                        generatedXmlFiles.addAll(pluginAggregator.generateAdditionalXMLFiles(introspectedTable));
                     }
                 }
 			}
@@ -452,5 +462,9 @@ public class IbatorContext extends PropertyHolder {
     public void setCommentGeneratorConfiguration(
             CommentGeneratorConfiguration commentGeneratorConfiguration) {
         this.commentGeneratorConfiguration = commentGeneratorConfiguration;
+    }
+
+    public IbatorPlugin getPluginAggregator() {
+        return pluginAggregator;
     }
 }

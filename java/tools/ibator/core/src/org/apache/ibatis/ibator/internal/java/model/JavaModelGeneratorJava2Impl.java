@@ -29,6 +29,7 @@ import java.util.Properties;
 import org.apache.ibatis.ibator.api.CommentGenerator;
 import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.GeneratedJavaFile;
+import org.apache.ibatis.ibator.api.IbatorPlugin;
 import org.apache.ibatis.ibator.api.IntrospectedTable;
 import org.apache.ibatis.ibator.api.JavaModelGenerator;
 import org.apache.ibatis.ibator.api.ProgressCallback;
@@ -366,13 +367,14 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
      */
     public List<GeneratedJavaFile> getGeneratedJavaFiles(IntrospectedTable introspectedTable, ProgressCallback callback) {
         List<GeneratedJavaFile> list = new ArrayList<GeneratedJavaFile>();
+        IbatorPlugin plugin = ibatorContext.getPluginAggregator();
 
         callback.startSubTask(Messages.getString(
                 "Progress.6", //$NON-NLS-1$
                 introspectedTable.getTable().toString()));
         TopLevelClass tlc = getExample(introspectedTable);
         if (tlc != null) {
-            afterExampleGenerationHook(introspectedTable, tlc);
+            plugin.modelExampleClassGenerated(tlc, introspectedTable);
             GeneratedJavaFile gjf = new GeneratedJavaFile(tlc, targetProject);
             list.add(gjf);
         }
@@ -382,7 +384,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
                 introspectedTable.getTable().toString()));
         tlc = getPrimaryKey(introspectedTable);
         if (tlc != null) {
-            afterPrimaryKeyGenerationHook(introspectedTable, tlc);
+            plugin.modelPrimaryKeyClassGenerated(tlc, introspectedTable);
             GeneratedJavaFile gjf = new GeneratedJavaFile(tlc, targetProject);
             list.add(gjf);
         }
@@ -392,7 +394,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
                 introspectedTable.getTable().toString()));
         tlc = getBaseRecord(introspectedTable);
         if (tlc != null) {
-            afterBaseRecordGenerationHook(introspectedTable, tlc);
+            plugin.modelBaseRecordClassGenerated(tlc, introspectedTable);
             GeneratedJavaFile gjf = new GeneratedJavaFile(tlc, targetProject);
             list.add(gjf);
         }
@@ -402,7 +404,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
                 introspectedTable.getTable().toString()));
         tlc = getRecordWithBLOBs(introspectedTable);
         if (tlc != null) {
-            afterRecordWithBLOBsGenerationHook(introspectedTable, tlc);
+            plugin.modelRecordWithBLOBsClassGenerated(tlc, introspectedTable);
             GeneratedJavaFile gjf = new GeneratedJavaFile(tlc, targetProject);
             list.add(gjf);
         }
@@ -410,54 +412,6 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         return list;
     }
 
-    /**
-     * Override this method to provide any extra customization needed
-     * in the generated example class
-     * 
-     * @param introspectedTable
-     * @param topLevelClass
-     */
-    protected void afterExampleGenerationHook(IntrospectedTable introspectedTable,
-            TopLevelClass topLevelClass) {
-        return;
-    }
-
-    /**
-     * Override this method to provide any extra customization needed
-     * in the generated primary key class
-     * 
-     * @param introspectedTable
-     * @param topLevelClass
-     */
-    protected void afterPrimaryKeyGenerationHook(IntrospectedTable introspectedTable,
-            TopLevelClass topLevelClass) {
-        return;
-    }
-
-    /**
-     * Override this method to provide any extra customization needed
-     * in the generated base record class
-     * 
-     * @param introspectedTable
-     * @param topLevelClass
-     */
-    protected void afterBaseRecordGenerationHook(IntrospectedTable introspectedTable,
-            TopLevelClass topLevelClass) {
-        return;
-    }
-    
-    /**
-     * Override this method to provide any extra customization needed
-     * in the generated base record class
-     * 
-     * @param introspectedTable
-     * @param topLevelClass
-     */
-    protected void afterRecordWithBLOBsGenerationHook(IntrospectedTable introspectedTable,
-            TopLevelClass topLevelClass) {
-        return;
-    }
-    
     /*
      * (non-Javadoc)
      * 

@@ -26,6 +26,7 @@ import org.apache.ibatis.ibator.api.DAOGenerator;
 import org.apache.ibatis.ibator.api.DAOMethodNameCalculator;
 import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.GeneratedJavaFile;
+import org.apache.ibatis.ibator.api.IbatorPlugin;
 import org.apache.ibatis.ibator.api.IntrospectedTable;
 import org.apache.ibatis.ibator.api.JavaModelGenerator;
 import org.apache.ibatis.ibator.api.ProgressCallback;
@@ -47,6 +48,7 @@ import org.apache.ibatis.ibator.internal.DefaultDAOMethodNameCalculator;
 import org.apache.ibatis.ibator.internal.ExtendedDAOMethodNameCalculator;
 import org.apache.ibatis.ibator.internal.db.ColumnDefinition;
 import org.apache.ibatis.ibator.internal.rules.IbatorRules;
+import org.apache.ibatis.ibator.internal.sqlmap.XmlConstants;
 import org.apache.ibatis.ibator.internal.util.JavaBeansUtil;
 import org.apache.ibatis.ibator.internal.util.StringUtility;
 import org.apache.ibatis.ibator.internal.util.messages.Messages;
@@ -80,7 +82,7 @@ import org.apache.ibatis.ibator.internal.util.messages.Messages;
  * <dt>methodNameCalculator</dt>
  * <dd>This property can be used to specify different method name
  * calculators.  A method name calculator is used to create the DAO method
- * names.  iBATOR offers two choices - default, and extended.  If you wish to
+ * names.  ibator offers two choices - default, and extended.  If you wish to
  * supply a different version, you can specify the fully qualified name of a
  * class that implements the
  * <code>org.apache.ibatis.ibator.api.DAOMethodNameCalculator</code>
@@ -215,17 +217,20 @@ public class BaseDAOGenerator implements DAOGenerator {
     public List<GeneratedJavaFile> getGeneratedJavaFiles(IntrospectedTable introspectedTable,
             ProgressCallback callback) {
         List<GeneratedJavaFile> list = new ArrayList<GeneratedJavaFile>();
+        IbatorPlugin plugin = ibatorContext.getPluginAggregator();
 
         callback.startSubTask(Messages.getString("Progress.10", //$NON-NLS-1$
                 introspectedTable.getTable().toString()));
-        CompilationUnit cu = getDAOImplementation(introspectedTable);
-        GeneratedJavaFile gjf = new GeneratedJavaFile(cu, targetProject);
+        TopLevelClass tlc = getDAOImplementation(introspectedTable);
+        plugin.daoImplementationGenerated(tlc, introspectedTable);
+        GeneratedJavaFile gjf = new GeneratedJavaFile(tlc, targetProject);
         list.add(gjf);
 
         callback.startSubTask(Messages.getString("Progress.11", //$NON-NLS-1$
                 introspectedTable.getTable().toString()));
-        cu = getDAOInterface(introspectedTable);
-        gjf = new GeneratedJavaFile(cu, targetProject);
+        Interface interfaze = getDAOInterface(introspectedTable);
+        plugin.daoInterfaceGenerated(interfaze, introspectedTable);
+        gjf = new GeneratedJavaFile(interfaze, targetProject);
         list.add(gjf);
 
         return list;
@@ -266,125 +271,113 @@ public class BaseDAOGenerator implements DAOGenerator {
         }
 
         IbatorRules rules = introspectedTable.getRules();
-        List<Method> methods;
+        Method method;
+        IbatorPlugin plugin = ibatorContext.getPluginAggregator();
         
         if (rules.generateInsert()) {
-            methods = getInsertMethods(introspectedTable, false, answer);
-            if (methods != null) {
-                for (Method method : methods) {
-                    answer.addMethod(method);
-                }
+            method = getInsertMethod(introspectedTable, false, answer);
+            if (method != null) {
+                plugin.daoInsertMethodGenerated(method, answer, introspectedTable);
+                answer.addMethod(method);
             }
         }
 
         if (rules.generateUpdateByPrimaryKeyWithoutBLOBs()) {
-            methods = getUpdateByPrimaryKeyWithoutBLOBsMethods(introspectedTable, false, answer);
-            if (methods != null) {
-                for (Method method : methods) {
-                    answer.addMethod(method);
-                }
+            method = getUpdateByPrimaryKeyWithoutBLOBsMethod(introspectedTable, false, answer);
+            if (method != null) {
+                plugin.daoUpdateByPrimaryKeyWithoutBLOBsMethodGenerated(method, answer, introspectedTable);
+                answer.addMethod(method);
             }
         }
 
         if (rules.generateUpdateByPrimaryKeyWithBLOBs()) {
-            methods = getUpdateByPrimaryKeyWithBLOBsMethods(introspectedTable,
+            method = getUpdateByPrimaryKeyWithBLOBsMethod(introspectedTable,
                     false, answer);
-            if (methods != null) {
-                for (Method method : methods) {
-                    answer.addMethod(method);
-                }
+            if (method != null) {
+                plugin.daoUpdateByPrimaryKeyWithBLOBsMethodGenerated(method, answer, introspectedTable);
+                answer.addMethod(method);
             }
         }
 
         if (rules.generateUpdateByPrimaryKeySelective()) {
-            methods = getUpdateByPrimaryKeySelectiveMethods(introspectedTable,
+            method = getUpdateByPrimaryKeySelectiveMethod(introspectedTable,
                     false, answer);
-            if (methods != null) {
-                for (Method method : methods) {
-                    answer.addMethod(method);
-                }
+            if (method != null) {
+                plugin.daoUpdateByPrimaryKeySelectiveMethodGenerated(method, answer, introspectedTable);
+                answer.addMethod(method);
             }
         }
 
         if (rules.generateSelectByExampleWithoutBLOBs()) {
-            methods = getSelectByExampleWithoutBLOBsMethods(introspectedTable, false, answer);
-            if (methods != null) {
-                for (Method method : methods) {
-                    answer.addMethod(method);
-                }
+            method = getSelectByExampleWithoutBLOBsMethod(introspectedTable, false, answer);
+            if (method != null) {
+                plugin.daoSelectByExampleWithoutBLOBsMethodGenerated(method, answer, introspectedTable);
+                answer.addMethod(method);
             }
         }
 
         if (rules.generateSelectByExampleWithBLOBs()) {
-            methods = getSelectByExampleWithBLOBsMethods(introspectedTable, false,
+            method = getSelectByExampleWithBLOBsMethod(introspectedTable, false,
                     answer);
-            if (methods != null) {
-                for (Method method : methods) {
-                    answer.addMethod(method);
-                }
+            if (method != null) {
+                plugin.daoSelectByExampleWithBLOBsMethodGenerated(method, answer, introspectedTable);
+                answer.addMethod(method);
             }
         }
 
         if (rules.generateSelectByPrimaryKey()) {
-            methods = getSelectByPrimaryKeyMethods(introspectedTable, false, answer);
-            if (methods != null) {
-                for (Method method : methods) {
-                    answer.addMethod(method);
-                }
+            method = getSelectByPrimaryKeyMethod(introspectedTable, false, answer);
+            if (method != null) {
+                plugin.daoSelectByPrimaryKeyMethodGenerated(method, answer, introspectedTable);
+                answer.addMethod(method);
             }
         }
 
         if (rules.generateDeleteByExample()) {
-            methods = getDeleteByExampleMethods(introspectedTable, false, answer);
-            if (methods != null) {
-                for (Method method : methods) {
-                    answer.addMethod(method);
-                }
+            method = getDeleteByExampleMethod(introspectedTable, false, answer);
+            if (method != null) {
+                plugin.daoDeleteByExampleMethodGenerated(method, answer, introspectedTable);
+                answer.addMethod(method);
             }
         }
 
         if (rules.generateDeleteByPrimaryKey()) {
-            methods = getDeleteByPrimaryKeyMethods(introspectedTable, false, answer);
-            if (methods != null) {
-                for (Method method : methods) {
-                    answer.addMethod(method);
-                }
+            method = getDeleteByPrimaryKeyMethod(introspectedTable, false, answer);
+            if (method != null) {
+                plugin.daoDeleteByPrimaryKeyMethodGenerated(method, answer, introspectedTable);
+                answer.addMethod(method);
             }
         }
 
         if (rules.generateCountByExample()) {
-            methods = getCountByExampleMethods(introspectedTable, false, answer);
-            if (methods != null) {
-                for (Method method : methods) {
-                    answer.addMethod(method);
-                }
+            method = getCountByExampleMethod(introspectedTable, false, answer);
+            if (method != null) {
+                plugin.daoCountByExampleMethodGenerated(method, answer, introspectedTable);
+                answer.addMethod(method);
             }
         }
         
         if (rules.generateUpdateByExampleSelective()) {
-            methods = getUpdateByExampleSelectiveMethods(introspectedTable, false, answer);
-            if (methods != null) {
-                for (Method method : methods) {
-                    answer.addMethod(method);
-                }
+            method = getUpdateByExampleSelectiveMethod(introspectedTable, false, answer);
+            if (method != null) {
+                plugin.daoUpdateByExampleSelectiveMethodGenerated(method, answer, introspectedTable);
+                answer.addMethod(method);
             }
         }
         
         if (rules.generateUpdateByExampleWithBLOBs()) {
-            methods = getUpdateByExampleWithBLOBsMethods(introspectedTable, false, answer);
-            if (methods != null) {
-                for (Method method : methods) {
-                    answer.addMethod(method);
-                }
+            method = getUpdateByExampleWithBLOBsMethod(introspectedTable, false, answer);
+            if (method != null) {
+                plugin.daoUpdateByExampleWithBLOBsMethodGenerated(method, answer, introspectedTable);
+                answer.addMethod(method);
             }
         }
 
         if (rules.generateUpdateByExampleWithoutBLOBs()) {
-            methods = getUpdateByExampleWithoutBLOBsMethods(introspectedTable, false, answer);
-            if (methods != null) {
-                for (Method method : methods) {
-                    answer.addMethod(method);
-                }
+            method = getUpdateByExampleWithoutBLOBsMethod(introspectedTable, false, answer);
+            if (method != null) {
+                plugin.daoUpdateByExampleWithoutBLOBsMethodGenerated(method, answer, introspectedTable);
+                answer.addMethod(method);
             }
         }
         
@@ -397,33 +390,7 @@ public class BaseDAOGenerator implements DAOGenerator {
             }
         }
 
-        afterImplementationGenerationHook(introspectedTable, answer);
-        
         return answer;
-    }
-
-    /**
-     * Override this method to provide any extra customization of 
-     * the generated interface.
-     * 
-     * @param introspectedTable
-     * @param generatedInterface the generated interface
-     */
-    protected void afterInterfaceGenerationHook(IntrospectedTable introspectedTable,
-            Interface generatedInterface) {
-        return;
-    }
-    
-    /**
-     * Override this method to provide any extra customization of 
-     * the generated implementation class.
-     * 
-     * @param introspectedTable
-     * @param generatedClass the generated class
-     */
-    protected void afterImplementationGenerationHook(IntrospectedTable introspectedTable,
-            TopLevelClass generatedClass) {
-        return;
     }
 
     protected Interface getDAOInterface(IntrospectedTable introspectedTable) {
@@ -449,129 +416,115 @@ public class BaseDAOGenerator implements DAOGenerator {
         ibatorContext.getCommentGenerator().addJavaFileComment(answer);
         
         IbatorRules rules = introspectedTable.getRules();
-        List<Method> methods;
+        Method method;
+        IbatorPlugin plugin = ibatorContext.getPluginAggregator();
         
         if (rules.generateInsert()) {
-            methods = getInsertMethods(introspectedTable, true, answer);
-            if (methods != null) {
-                for (Method method : methods) {
-                    answer.addMethod(method);
-                }
+            method = getInsertMethod(introspectedTable, true, answer);
+            if (method != null) {
+                plugin.daoInsertMethodGenerated(method, answer, introspectedTable);
+                answer.addMethod(method);
             }
         }
 
         if (rules.generateUpdateByPrimaryKeyWithoutBLOBs()) {
-            methods = getUpdateByPrimaryKeyWithoutBLOBsMethods(introspectedTable, true, answer);
-            if (methods != null) {
-                for (Method method : methods) {
-                    answer.addMethod(method);
-                }
+            method = getUpdateByPrimaryKeyWithoutBLOBsMethod(introspectedTable, true, answer);
+            if (method != null) {
+                plugin.daoUpdateByPrimaryKeyWithoutBLOBsMethodGenerated(method, answer, introspectedTable);
+                answer.addMethod(method);
             }
         }
 
         if (rules.generateUpdateByPrimaryKeyWithBLOBs()) {
-            methods = getUpdateByPrimaryKeyWithBLOBsMethods(introspectedTable,
+            method = getUpdateByPrimaryKeyWithBLOBsMethod(introspectedTable,
                     true, answer);
-            if (methods != null) {
-                for (Method method : methods) {
-                    answer.addMethod(method);
-                }
+            if (method != null) {
+                plugin.daoUpdateByPrimaryKeyWithBLOBsMethodGenerated(method, answer, introspectedTable);
+                answer.addMethod(method);
             }
         }
 
         if (rules.generateUpdateByPrimaryKeySelective()) {
-            methods = getUpdateByPrimaryKeySelectiveMethods(introspectedTable,
+            method = getUpdateByPrimaryKeySelectiveMethod(introspectedTable,
                     true, answer);
-            if (methods != null) {
-                for (Method method : methods) {
-                    answer.addMethod(method);
-                }
+            if (method != null) {
+                plugin.daoUpdateByPrimaryKeySelectiveMethodGenerated(method, answer, introspectedTable);
+                answer.addMethod(method);
             }
         }
 
         if (rules.generateSelectByExampleWithoutBLOBs()) {
-            methods = getSelectByExampleWithoutBLOBsMethods(introspectedTable, true, answer);
-            if (methods != null) {
-                for (Method method : methods) {
-                    answer.addMethod(method);
-                }
+            method = getSelectByExampleWithoutBLOBsMethod(introspectedTable, true, answer);
+            if (method != null) {
+                plugin.daoSelectByExampleWithoutBLOBsMethodGenerated(method, answer, introspectedTable);
+                answer.addMethod(method);
             }
         }
 
         if (rules.generateSelectByExampleWithBLOBs()) {
-            methods = getSelectByExampleWithBLOBsMethods(introspectedTable, true,
+            method = getSelectByExampleWithBLOBsMethod(introspectedTable, true,
                     answer);
-            if (methods != null) {
-                for (Method method : methods) {
-                    answer.addMethod(method);
-                }
+            if (method != null) {
+                plugin.daoSelectByExampleWithBLOBsMethodGenerated(method, answer, introspectedTable);
+                answer.addMethod(method);
             }
         }
 
         if (rules.generateSelectByPrimaryKey()) {
-            methods = getSelectByPrimaryKeyMethods(introspectedTable, true, answer);
-            if (methods != null) {
-                for (Method method : methods) {
-                    answer.addMethod(method);
-                }
+            method = getSelectByPrimaryKeyMethod(introspectedTable, true, answer);
+            if (method != null) {
+                plugin.daoSelectByPrimaryKeyMethodGenerated(method, answer, introspectedTable);
+                answer.addMethod(method);
             }
         }
 
         if (rules.generateDeleteByExample()) {
-            methods = getDeleteByExampleMethods(introspectedTable, true, answer);
-            if (methods != null) {
-                for (Method method : methods) {
-                    answer.addMethod(method);
-                }
+            method = getDeleteByExampleMethod(introspectedTable, true, answer);
+            if (method != null) {
+                plugin.daoDeleteByExampleMethodGenerated(method, answer, introspectedTable);
+                answer.addMethod(method);
             }
         }
 
         if (rules.generateDeleteByPrimaryKey()) {
-            methods = getDeleteByPrimaryKeyMethods(introspectedTable, true, answer);
-            if (methods != null) {
-                for (Method method : methods) {
-                    answer.addMethod(method);
-                }
+            method = getDeleteByPrimaryKeyMethod(introspectedTable, true, answer);
+            if (method != null) {
+                plugin.daoDeleteByPrimaryKeyMethodGenerated(method, answer, introspectedTable);
+                answer.addMethod(method);
             }
         }
 
         if (rules.generateCountByExample()) {
-            methods = getCountByExampleMethods(introspectedTable, true, answer);
-            if (methods != null) {
-                for (Method method : methods) {
-                    answer.addMethod(method);
-                }
+            method = getCountByExampleMethod(introspectedTable, true, answer);
+            if (method != null) {
+                plugin.daoCountByExampleMethodGenerated(method, answer, introspectedTable);
+                answer.addMethod(method);
             }
         }
         
         if (rules.generateUpdateByExampleSelective()) {
-            methods = getUpdateByExampleSelectiveMethods(introspectedTable, true, answer);
-            if (methods != null) {
-                for (Method method : methods) {
-                    answer.addMethod(method);
-                }
+            method = getUpdateByExampleSelectiveMethod(introspectedTable, true, answer);
+            if (method != null) {
+                plugin.daoUpdateByExampleSelectiveMethodGenerated(method, answer, introspectedTable);
+                answer.addMethod(method);
             }
         }
         
         if (rules.generateUpdateByExampleWithBLOBs()) {
-            methods = getUpdateByExampleWithBLOBsMethods(introspectedTable, true, answer);
-            if (methods != null) {
-                for (Method method : methods) {
-                    answer.addMethod(method);
-                }
+            method = getUpdateByExampleWithBLOBsMethod(introspectedTable, true, answer);
+            if (method != null) {
+                plugin.daoUpdateByExampleWithBLOBsMethodGenerated(method, answer, introspectedTable);
+                answer.addMethod(method);
             }
         }
 
         if (rules.generateUpdateByExampleWithoutBLOBs()) {
-            methods = getUpdateByExampleWithoutBLOBsMethods(introspectedTable, true, answer);
-            if (methods != null) {
-                for (Method method : methods) {
-                    answer.addMethod(method);
-                }
+            method = getUpdateByExampleWithoutBLOBsMethod(introspectedTable, true, answer);
+            if (method != null) {
+                plugin.daoUpdateByExampleWithoutBLOBsMethodGenerated(method, answer, introspectedTable);
+                answer.addMethod(method);
             }
         }
-        
-        afterInterfaceGenerationHook(introspectedTable, answer);
         
         return answer;
     }
@@ -596,7 +549,7 @@ public class BaseDAOGenerator implements DAOGenerator {
         return fqjt;
     }
 
-    protected List<Method> getInsertMethods(IntrospectedTable introspectedTable,
+    protected Method getInsertMethod(IntrospectedTable introspectedTable,
             boolean interfaceMethod, CompilationUnit compilationUnit) {
 
         FullyQualifiedTable table = introspectedTable.getTable();
@@ -644,9 +597,9 @@ public class BaseDAOGenerator implements DAOGenerator {
                 sb.append("Object newKey = "); //$NON-NLS-1$
             }
 
-            sb.append(daoTemplate.getInsertMethod(sqlMapGenerator
-                    .getSqlMapNamespace(table), sqlMapGenerator
-                    .getInsertStatementId(), "record")); //$NON-NLS-1$
+            sb.append(daoTemplate.getInsertMethod(table.getSqlMapNamespace(), 
+                    XmlConstants.INSERT_STATEMENT_ID,
+                    "record")); //$NON-NLS-1$
             method.addBodyLine(sb.toString());
 
             if (returnType != null) {
@@ -676,13 +629,10 @@ public class BaseDAOGenerator implements DAOGenerator {
             }
         }
 
-        List<Method> answer = new ArrayList<Method>();
-        answer.add(method);
-
-        return answer;
+        return method;
     }
 
-    protected List<Method> getUpdateByPrimaryKeyWithoutBLOBsMethods(
+    protected Method getUpdateByPrimaryKeyWithoutBLOBsMethod(
             IntrospectedTable introspectedTable, boolean interfaceMethod,
             CompilationUnit compilationUnit) {
 
@@ -709,21 +659,18 @@ public class BaseDAOGenerator implements DAOGenerator {
             StringBuffer sb = new StringBuffer();
 
             sb.append("int rows = "); //$NON-NLS-1$
-            sb.append(daoTemplate.getUpdateMethod(sqlMapGenerator
-                    .getSqlMapNamespace(table), sqlMapGenerator
-                    .getUpdateByPrimaryKeyStatementId(), "record")); //$NON-NLS-1$
+            sb.append(daoTemplate.getUpdateMethod(table.getSqlMapNamespace(),
+                    XmlConstants.UPDATE_BY_PRIMARY_KEY_STATEMENT_ID,
+                    "record")); //$NON-NLS-1$
             method.addBodyLine(sb.toString());
 
             method.addBodyLine("return rows;"); //$NON-NLS-1$
         }
 
-        List<Method> answer = new ArrayList<Method>();
-        answer.add(method);
-
-        return answer;
+        return method;
     }
 
-    protected List<Method> getUpdateByPrimaryKeyWithBLOBsMethods(
+    protected Method getUpdateByPrimaryKeyWithBLOBsMethod(
             IntrospectedTable introspectedTable, boolean interfaceMethod,
             CompilationUnit compilationUnit) {
 
@@ -756,21 +703,18 @@ public class BaseDAOGenerator implements DAOGenerator {
             StringBuffer sb = new StringBuffer();
 
             sb.append("int rows = "); //$NON-NLS-1$
-            sb.append(daoTemplate.getUpdateMethod(sqlMapGenerator
-                    .getSqlMapNamespace(table), sqlMapGenerator
-                    .getUpdateByPrimaryKeyWithBLOBsStatementId(), "record")); //$NON-NLS-1$
+            sb.append(daoTemplate.getUpdateMethod(table.getSqlMapNamespace(),
+                    XmlConstants.UPDATE_BY_PRIMARY_KEY_WITH_BLOBS_STATEMENT_ID,
+                    "record")); //$NON-NLS-1$
             method.addBodyLine(sb.toString());
 
             method.addBodyLine("return rows;"); //$NON-NLS-1$
         }
 
-        List<Method> answer = new ArrayList<Method>();
-        answer.add(method);
-
-        return answer;
+        return method;
     }
 
-    protected List<Method> getUpdateByPrimaryKeySelectiveMethods(
+    protected Method getUpdateByPrimaryKeySelectiveMethod(
             IntrospectedTable introspectedTable, boolean interfaceMethod,
             CompilationUnit compilationUnit) {
 
@@ -803,21 +747,18 @@ public class BaseDAOGenerator implements DAOGenerator {
             StringBuffer sb = new StringBuffer();
 
             sb.append("int rows = "); //$NON-NLS-1$
-            sb.append(daoTemplate.getUpdateMethod(sqlMapGenerator
-                    .getSqlMapNamespace(table), sqlMapGenerator
-                    .getUpdateByPrimaryKeySelectiveStatementId(), "record")); //$NON-NLS-1$
+            sb.append(daoTemplate.getUpdateMethod(table.getSqlMapNamespace(),
+                    XmlConstants.UPDATE_BY_PRIMARY_KEY_SELECTIVE_STATEMENT_ID,
+                    "record")); //$NON-NLS-1$
             method.addBodyLine(sb.toString());
 
             method.addBodyLine("return rows;"); //$NON-NLS-1$
         }
 
-        List<Method> answer = new ArrayList<Method>();
-        answer.add(method);
-
-        return answer;
+        return method;
     }
 
-    protected List<Method> getSelectByExampleWithoutBLOBsMethods(
+    protected Method getSelectByExampleWithoutBLOBsMethod(
             IntrospectedTable introspectedTable, boolean interfaceMethod,
             CompilationUnit compilationUnit) {
 
@@ -878,20 +819,17 @@ public class BaseDAOGenerator implements DAOGenerator {
                 sb.append("List list = "); //$NON-NLS-1$
             }
 
-            sb.append(daoTemplate.getQueryForListMethod(sqlMapGenerator
-                    .getSqlMapNamespace(table), sqlMapGenerator
-                    .getSelectByExampleStatementId(), "example")); //$NON-NLS-1$
+            sb.append(daoTemplate.getQueryForListMethod(table.getSqlMapNamespace(),
+                    XmlConstants.SELECT_BY_EXAMPLE_STATEMENT_ID,
+                    "example")); //$NON-NLS-1$
             method.addBodyLine(sb.toString());
             method.addBodyLine("return list;"); //$NON-NLS-1$
         }
 
-        List<Method> answer = new ArrayList<Method>();
-        answer.add(method);
-
-        return answer;
+        return method;
     }
 
-    protected List<Method> getSelectByExampleWithBLOBsMethods(
+    protected Method getSelectByExampleWithBLOBsMethod(
             IntrospectedTable introspectedTable, boolean interfaceMethod,
             CompilationUnit compilationUnit) {
 
@@ -951,20 +889,17 @@ public class BaseDAOGenerator implements DAOGenerator {
                 sb.append("List list = "); //$NON-NLS-1$
             }
 
-            sb.append(daoTemplate.getQueryForListMethod(sqlMapGenerator
-                    .getSqlMapNamespace(table), sqlMapGenerator
-                    .getSelectByExampleWithBLOBsStatementId(), "example")); //$NON-NLS-1$
+            sb.append(daoTemplate.getQueryForListMethod(table.getSqlMapNamespace(),
+                    XmlConstants.SELECT_BY_EXAMPLE_WITH_BLOBS_STATEMENT_ID,
+                    "example")); //$NON-NLS-1$
             method.addBodyLine(sb.toString());
             method.addBodyLine("return list;"); //$NON-NLS-1$
         }
 
-        List<Method> answer = new ArrayList<Method>();
-        answer.add(method);
-
-        return answer;
+        return method;
     }
 
-    protected List<Method> getSelectByPrimaryKeyMethods(
+    protected Method getSelectByPrimaryKeyMethod(
             IntrospectedTable introspectedTable, boolean interfaceMethod,
             CompilationUnit compilationUnit) {
 
@@ -1032,20 +967,17 @@ public class BaseDAOGenerator implements DAOGenerator {
             sb.append(" record = ("); //$NON-NLS-1$
             sb.append(returnType.getShortName());
             sb.append(") "); //$NON-NLS-1$
-            sb.append(daoTemplate.getQueryForObjectMethod(sqlMapGenerator
-                    .getSqlMapNamespace(table), sqlMapGenerator
-                    .getSelectByPrimaryKeyStatementId(), "key")); //$NON-NLS-1$
+            sb.append(daoTemplate.getQueryForObjectMethod(table.getSqlMapNamespace(),
+                    XmlConstants.SELECT_BY_PRIMARY_KEY_STATEMENT_ID,
+                    "key")); //$NON-NLS-1$
             method.addBodyLine(sb.toString());
             method.addBodyLine("return record;"); //$NON-NLS-1$
         }
 
-        List<Method> answer = new ArrayList<Method>();
-        answer.add(method);
-
-        return answer;
+        return method;
     }
 
-    protected List<Method> getDeleteByExampleMethods(
+    protected Method getDeleteByExampleMethod(
             IntrospectedTable introspectedTable, boolean interfaceMethod,
             CompilationUnit compilationUnit) {
 
@@ -1075,20 +1007,17 @@ public class BaseDAOGenerator implements DAOGenerator {
             StringBuffer sb = new StringBuffer();
 
             sb.append("int rows = "); //$NON-NLS-1$
-            sb.append(daoTemplate.getDeleteMethod(sqlMapGenerator
-                    .getSqlMapNamespace(table), sqlMapGenerator
-                    .getDeleteByExampleStatementId(), "example")); //$NON-NLS-1$
+            sb.append(daoTemplate.getDeleteMethod(table.getSqlMapNamespace(),
+                    XmlConstants.DELETE_BY_EXAMPLE_STATEMENT_ID,
+                    "example")); //$NON-NLS-1$
             method.addBodyLine(sb.toString());
             method.addBodyLine("return rows;"); //$NON-NLS-1$
         }
 
-        List<Method> answer = new ArrayList<Method>();
-        answer.add(method);
-
-        return answer;
+        return method;
     }
 
-    protected List<Method> getDeleteByPrimaryKeyMethods(
+    protected Method getDeleteByPrimaryKeyMethod(
             IntrospectedTable introspectedTable, boolean interfaceMethod,
             CompilationUnit compilationUnit) {
 
@@ -1148,20 +1077,17 @@ public class BaseDAOGenerator implements DAOGenerator {
             
             sb.setLength(0);
             sb.append("int rows = "); //$NON-NLS-1$
-            sb.append(daoTemplate.getDeleteMethod(sqlMapGenerator
-                    .getSqlMapNamespace(table), sqlMapGenerator
-                    .getDeleteByPrimaryKeyStatementId(), "key")); //$NON-NLS-1$
+            sb.append(daoTemplate.getDeleteMethod(table.getSqlMapNamespace(),
+                    XmlConstants.DELETE_BY_PRIMARY_KEY_STATEMENT_ID,
+                    "key")); //$NON-NLS-1$
             method.addBodyLine(sb.toString());
             method.addBodyLine("return rows;"); //$NON-NLS-1$
         }
 
-        List<Method> answer = new ArrayList<Method>();
-        answer.add(method);
-
-        return answer;
+        return method;
     }
 
-    protected List<Method> getCountByExampleMethods(
+    protected Method getCountByExampleMethod(
             IntrospectedTable introspectedTable, boolean interfaceMethod,
             CompilationUnit compilationUnit) {
 
@@ -1191,9 +1117,9 @@ public class BaseDAOGenerator implements DAOGenerator {
             StringBuffer sb = new StringBuffer();
 
             sb.append("Integer count = (Integer)  "); //$NON-NLS-1$
-            sb.append(daoTemplate.getQueryForObjectMethod(sqlMapGenerator
-                    .getSqlMapNamespace(table), sqlMapGenerator
-                    .getCountByExampleStatementId(), "example")); //$NON-NLS-1$
+            sb.append(daoTemplate.getQueryForObjectMethod(table.getSqlMapNamespace(),
+                    XmlConstants.COUNT_BY_EXAMPLE_STATEMENT_ID,
+                    "example")); //$NON-NLS-1$
             method.addBodyLine(sb.toString());
             
             if (useJava5Features) {
@@ -1203,10 +1129,7 @@ public class BaseDAOGenerator implements DAOGenerator {
             }
         }
 
-        List<Method> answer = new ArrayList<Method>();
-        answer.add(method);
-
-        return answer;
+        return method;
     }
 
     protected String getDAOPackage(FullyQualifiedTable table) {
@@ -1262,7 +1185,7 @@ public class BaseDAOGenerator implements DAOGenerator {
         this.ibatorContext = ibatorContext;
     }
 
-    protected List<Method> getUpdateByExampleSelectiveMethods(
+    protected Method getUpdateByExampleSelectiveMethod(
             IntrospectedTable introspectedTable, boolean interfaceMethod,
             CompilationUnit compilationUnit) {
 
@@ -1301,18 +1224,15 @@ public class BaseDAOGenerator implements DAOGenerator {
             
             sb.append("int rows = "); //$NON-NLS-1$
             
-            sb.append(daoTemplate.getUpdateMethod(sqlMapGenerator
-                    .getSqlMapNamespace(table), sqlMapGenerator
-                    .getUpdateByExampleSelectiveStatementId(), "parms")); //$NON-NLS-1$
+            sb.append(daoTemplate.getUpdateMethod(table.getSqlMapNamespace(),
+                    XmlConstants.UPDATE_BY_EXAMPLE_SELECTIVE_STATEMENT_ID,
+                    "parms")); //$NON-NLS-1$
             method.addBodyLine(sb.toString());
 
             method.addBodyLine("return rows;"); //$NON-NLS-1$
         }
 
-        List<Method> answer = new ArrayList<Method>();
-        answer.add(method);
-
-        return answer;
+        return method;
     }
     
     protected InnerClass getUpdateByExampleParms (IntrospectedTable introspectedTable,
@@ -1357,7 +1277,7 @@ public class BaseDAOGenerator implements DAOGenerator {
         return answer;
     }
 
-    protected List<Method> getUpdateByExampleWithBLOBsMethods(
+    protected Method getUpdateByExampleWithBLOBsMethod(
             IntrospectedTable introspectedTable, boolean interfaceMethod,
             CompilationUnit compilationUnit) {
         FullyQualifiedTable table = introspectedTable.getTable();
@@ -1391,21 +1311,18 @@ public class BaseDAOGenerator implements DAOGenerator {
             StringBuffer sb = new StringBuffer();
 
             sb.append("int rows = "); //$NON-NLS-1$
-            sb.append(daoTemplate.getUpdateMethod(sqlMapGenerator
-                    .getSqlMapNamespace(table), sqlMapGenerator
-                    .getUpdateByExampleWithBLOBsStatementId(), "parms")); //$NON-NLS-1$
+            sb.append(daoTemplate.getUpdateMethod(table.getSqlMapNamespace(),
+                    XmlConstants.UPDATE_BY_EXAMPLE_WITH_BLOBS_STATEMENT_ID,
+                    "parms")); //$NON-NLS-1$
             method.addBodyLine(sb.toString());
 
             method.addBodyLine("return rows;"); //$NON-NLS-1$
         }
 
-        List<Method> answer = new ArrayList<Method>();
-        answer.add(method);
-
-        return answer;
+        return method;
     }
 
-    protected List<Method> getUpdateByExampleWithoutBLOBsMethods(
+    protected Method getUpdateByExampleWithoutBLOBsMethod(
             IntrospectedTable introspectedTable, boolean interfaceMethod,
             CompilationUnit compilationUnit) {
 
@@ -1440,17 +1357,14 @@ public class BaseDAOGenerator implements DAOGenerator {
             StringBuffer sb = new StringBuffer();
 
             sb.append("int rows = "); //$NON-NLS-1$
-            sb.append(daoTemplate.getUpdateMethod(sqlMapGenerator
-                    .getSqlMapNamespace(table), sqlMapGenerator
-                    .getUpdateByExampleStatementId(), "parms")); //$NON-NLS-1$
+            sb.append(daoTemplate.getUpdateMethod(table.getSqlMapNamespace(),
+                    XmlConstants.UPDATE_BY_EXAMPLE_STATEMENT_ID,
+                    "parms")); //$NON-NLS-1$
             method.addBodyLine(sb.toString());
 
             method.addBodyLine("return rows;"); //$NON-NLS-1$
         }
 
-        List<Method> answer = new ArrayList<Method>();
-        answer.add(method);
-
-        return answer;
+        return method;
     }
 }

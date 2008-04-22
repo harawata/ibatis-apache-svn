@@ -20,7 +20,7 @@ to connect to, the type of objects to generate, and the tables to introspect.
 Multiple &lt;ibatorContext&gt; elements can be listed inside an
 <a href="ibatorConfiguration.html">&lt;ibatorConfiguration&gt;</a>
 element to allow generating objects from different
-databases, or with different generation parameters, in the same run of iBATOR.</p>
+databases, or with different generation parameters, in the same run of ibator.</p>
 
 <h2>Required Attributes</h2>
 <p>None</p>
@@ -35,9 +35,9 @@ databases, or with different generation parameters, in the same run of iBATOR.</
     <td valign="top">defaultModelType</td>
     <td>
       This property is used to set the default for generated model types.
-      The model type defines how iBATOR will generate domain classes.  With some
-      model types iBATOR will generate a single domain class for each table,
-      with others iBATOR may generate different classes depending on the structure
+      The model type defines how ibator will generate domain classes.  With some
+      model types ibator will generate a single domain class for each table,
+      with others ibator may generate different classes depending on the structure
       of the table.  The property supports these values:
       <table>
         <tr>
@@ -56,7 +56,7 @@ databases, or with different generation parameters, in the same run of iBATOR.</
         <tr>
           <th valign="top">hierarchical</th>
           <td>This model is the same as the model shipped with the initial versions
-              of iBATOR.  This model will generate a primary key class if the table has
+              of ibator.  This model will generate a primary key class if the table has
               a primary key, another class that holds any BLOB columns in the table, and
               another class that holds the remaining fields.  There is an appropriate
               inheritance relationship between the classes.</td>
@@ -126,11 +126,11 @@ specified with the <a href="property.html">&lt;property&gt;</a> child element:</
   </tr>
   <tr>
     <td valign="top">suppressTypeWarnings</td>
-    <td>If true, then iBATOR will add an annotation to any method
+    <td>If true, then ibator will add an annotation to any method
       that uses a non-parameterized type to suppress compiler type warnings.
       This is useful if you are using the Java2 generator set, but are
       compiling the generated objects with a JSE 5.0 compiler.  In that situation,
-      the iBATOR generated code would generate many compiler warnings if the
+      the ibator generated code would generate many compiler warnings if the
       annotation is not allowed.  This property is not needed and will have
       no effect when using the Java5 generator set.</p>
       <p><i>The default value is false.</i></p></td>
@@ -138,16 +138,16 @@ specified with the <a href="property.html">&lt;property&gt;</a> child element:</
   <tr>
     <td valign="top">beginningDelimiter</td>
     <td>The value to use as the beginning identifier delimiter for SQL identifiers that
-        require delimiters.  iBATOR will automatically delimit SQL identifiers if the
-        identifier contains a space.  iBATOR will also delimit SQL identifiers if
+        require delimiters.  ibator will automatically delimit SQL identifiers if the
+        identifier contains a space.  ibator will also delimit SQL identifiers if
         specifically requested in a &lt;table&gt; or  &lt;columnOverride&gt; configuration.</p>
       <p><i>The default value is double quotes (&quot;).</i></p></td>
   </tr>
   <tr>
     <td valign="top">endingDelimiter</td>
     <td>The value to use as the ending identifier delimiter for SQL identifiers that
-        require delimiters.  iBATOR will automatically delimit SQL identifiers if the
-        identifier contains a space.  iBATOR will also delimit SQL identifiers if
+        require delimiters.  ibator will automatically delimit SQL identifiers if the
+        identifier contains a space.  ibator will also delimit SQL identifiers if
         specifically requested in a &lt;table&gt; or  &lt;columnOverride&gt; configuration.</p>
       <p><i>The default value is double quotes (&quot;).</i></p></td>
   </tr>

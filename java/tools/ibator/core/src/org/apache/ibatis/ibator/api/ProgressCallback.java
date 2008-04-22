@@ -20,10 +20,10 @@ package org.apache.ibatis.ibator.api;
  * process.  This interface is loosely based on the standard Eclipse IProgressMonitor interface,
  * but does not implement all its methods.
  * 
- * During the execution of a long running method, iBATOR will call the 
+ * During the execution of a long running method, ibator will call the 
  * <code>setNumberOfSubTasks</code> method first, and then repeatedly call <code>startSubTask</code.
- * When the long running method is complete, iBATOR will call <code>finished</code>.
- * Periodically, iBATOR will call <code>checkCancel</code> to see if the method should
+ * When the long running method is complete, ibator will call <code>finished</code>.
+ * Periodically, ibator will call <code>checkCancel</code> to see if the method should
  * be cancelled.
  * 
  * @author Jeff Butler
@@ -47,12 +47,12 @@ public interface ProgressCallback {
     void startSubTask(String subTaskName);
     
     /**
-     * iBATOR calls this method when all subtasks are finished
+     * ibator calls this method when all subtasks are finished
      */
     void finished();
 
     /**
-     * iBATOR will call this method periodically during a long running method.
+     * ibator will call this method periodically during a long running method.
      * If the the implementation throws InterruptedException, then the method
      * will be cancelled.  Any files that have already been saved will remain on
      * the file system.

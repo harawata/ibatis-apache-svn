@@ -3,7 +3,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-  <title>iBATOR XML Configuration File Reference</title>
+  <title>ibator XML Configuration File Reference</title>
   <link type="text/css" rel="stylesheet" href="../ibator.css"/>
 </head>
 <body>
@@ -14,8 +14,8 @@
   </font>
 </p>
 <h1>XML Configuration File Reference</h1>
-<p>In the most common use case, iBATOR is driven by an XML configuration file.
-  The configuration file tells iBATOR:</p>
+<p>In the most common use case, ibator is driven by an XML configuration file.
+  The configuration file tells ibator:</p>
 
 <ul>
   <li>How to connect to the database</li>
@@ -23,13 +23,13 @@
   <li>What tables should be used for object generation</li>
 </ul>
 
-<p>The following is an example iBATOR configuration file.  See the individual pages
+<p>The following is an example ibator configuration file.  See the individual pages
 for each element for more information about the elements and the values of the
 attributes.</p>
 <pre>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;!DOCTYPE ibatorConfiguration
-  PUBLIC "-//Apache Software Foundation//DTD iBATOR for iBATIS Configuration 1.0//EN"
+  PUBLIC "-//Apache Software Foundation//DTD Apache iBATIS ibator Configuration 1.0//EN"
   "http://ibatis.apache.org/dtd/ibator-config_1_0.dtd"&gt;
 
 &lt;ibatorConfiguration&gt;
@@ -73,7 +73,7 @@ attributes.</p>
 </pre>
 <p>Important notes about this file follow:</p>
 <ul>
-  <li>iBATOR will use the <code>Java2</code> generator set to generate code.  This generator set
+  <li>ibator will use the <code>Java2</code> generator set to generate code.  This generator set
       is more powerful then the original generator set shipped with early versions of
       Abator.</li>
   <li>The file specifies that the legacy DB2 CLI driver will be used to connect to the database,
@@ -114,14 +114,14 @@ attributes.</p>
           <code>Customer</code>,
           <code>CustomerDAO</code>, etc.) - rather than on the table name.</li>
       <li>Actual column names will be used as properties.  If this property were set to
-          <code>false</code> (or not specified), then iBATOR would attempt to camel case
+          <code>false</code> (or not specified), then ibator would attempt to camel case
           the column
           names.  In either case, the name can be overridden by the
           <code>&lt;columnOverride&gt;</code>
           element</li>
       <li>The column has a generated key, it is an identity column, and the database type is DB2.
           This will cause
-          iBATOR to generate the proper
+          ibator to generate the proper
           <code>&lt;selectKey&gt;</code> element in the generated
           <code>&lt;insert&gt;</code>
           statement so that the newly generated key can be returned (using DB2 specific SQL).</li>

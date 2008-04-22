@@ -17,14 +17,14 @@
 -->
 
 <!--
-  This DTD defines the structure of the iBATOR for iBATIS configuration file.
+  This DTD defines the structure of the ibator configuration file.
   iBATOR configuration files should declare the DOCTYPE as follows:
   
   <!DOCTYPE ibatorConfiguration PUBLIC
-    "-//Apache Software Foundation//DTD iBATOR for iBATIS Configuration 1.0//EN"
+    "-//Apache Software Foundation//DTD Apache iBATIS ibator Configuration 1.0//EN"
     "http://ibatis.apache.org/dtd/ibator-config_1_0.dtd">
   
-  Please see the documentation included with iBATOR for details on each option
+  Please see the documentation included with ibator for details on each option
   in the DTD.  You may also view documentation on-line here:
   
   http://ibatis.apache.org/docs/tools/ibator
@@ -32,7 +32,7 @@
 -->
 
 <!--
-  The ibatorConfiguration element is the root element for iBATOR configurations.
+  The ibatorConfiguration element is the root element for ibator configurations.
 -->
 <!ELEMENT ibatorConfiguration (properties?, classPathEntry*, ibatorContext+)>
                         
@@ -57,7 +57,7 @@
   generatorSet CDATA #IMPLIED>
 
 <!--
-  The jdbcConnection element is used to describe the JDBC connection that iBATOR
+  The jdbcConnection element is used to describe the JDBC connection that ibator
   will use to introspect the database.
 -->
 <!ELEMENT jdbcConnection (property*)>
@@ -76,7 +76,7 @@
   location CDATA #REQUIRED>
 
 <!--
-  The property element is used to add custom properties to many of iBATOR's
+  The property element is used to add custom properties to many of ibator's
   configuration elements.  See each element for example properties.
   Repeat this element as often as needed to add as many properties as necessary
   to the configuration element.
@@ -121,7 +121,7 @@
 <!--
   The daoGenerator element is used to define properties of the DAO Generator.
   The DAO Generator builds DAO an interface and implementation class for each table.
-  If this element is missing, then iBATOR will not build DAO classes.
+  If this element is missing, then ibator will not build DAO classes.
 -->
 <!ELEMENT daoGenerator (property*)>
 <!ATTLIST daoGenerator

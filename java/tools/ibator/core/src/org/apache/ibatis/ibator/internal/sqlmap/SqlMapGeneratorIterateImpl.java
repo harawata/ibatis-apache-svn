@@ -24,6 +24,7 @@ import java.util.Properties;
 
 import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.GeneratedXmlFile;
+import org.apache.ibatis.ibator.api.IbatorPlugin;
 import org.apache.ibatis.ibator.api.IntrospectedTable;
 import org.apache.ibatis.ibator.api.JavaModelGenerator;
 import org.apache.ibatis.ibator.api.ProgressCallback;
@@ -150,8 +151,8 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
                 XmlConstants.SQL_MAP_SYSTEM_ID);
         document.setRootElement(getSqlMapElement(introspectedTable));
         
-        afterGenerationHook(introspectedTable, document);
-
+        ibatorContext.getPluginAggregator().sqlMapGenerated(document, introspectedTable);
+        
         FullyQualifiedTable table = introspectedTable.getTable();
         GeneratedXmlFile answer = new GeneratedXmlFile(document,
                 getSqlMapFileName(table), getSqlMapPackage(table),
@@ -171,15 +172,17 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         FullyQualifiedTable table = introspectedTable.getTable();
         XmlElement answer = new XmlElement("sqlMap"); //$NON-NLS-1$
         answer.addAttribute(new Attribute("namespace", //$NON-NLS-1$
-                getSqlMapNamespace(table)));
+                table.getSqlMapNamespace()));
 
         ibatorContext.getCommentGenerator().addRootComment(answer);
+        IbatorPlugin plugin = ibatorContext.getPluginAggregator();
         
         IbatorRules rules = introspectedTable.getRules();
         XmlElement element;
         if (rules.generateBaseResultMap()) {
             element = getBaseResultMapElement(introspectedTable);
             if (element != null) {
+                plugin.sqlMapBaseResultMapGenerated(element, introspectedTable);
                 answer.addElement(element);
             }
         }
@@ -187,6 +190,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         if (rules.generateResultMapWithBLOBs()) {
             element = getResultMapWithBLOBsElement(introspectedTable);
             if (element != null) {
+                plugin.sqlMapResultMapWithBLOBsGenerated(element, introspectedTable);
                 answer.addElement(element);
             }
         }
@@ -194,6 +198,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         if (rules.generateSQLExampleWhereClause()) {
             element = getByExampleWhereClauseFragment(introspectedTable);
             if (element != null) {
+                plugin.sqlMapExampleWhereClauseGenerated(element, introspectedTable);
                 answer.addElement(element);
             }
         }
@@ -201,6 +206,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         if (rules.generateSelectByPrimaryKey()) {
             element = getSelectByPrimaryKey(introspectedTable);
             if (element != null) {
+                plugin.sqlMapSelectByPrimaryKeyElementGenerated(element, introspectedTable);
                 answer.addElement(element);
             }
         }
@@ -208,6 +214,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         if (rules.generateSelectByExampleWithoutBLOBs()) {
             element = getSelectByExample(introspectedTable);
             if (element != null) {
+                plugin.sqlMapSelectByExampleElementGenerated(element, introspectedTable);
                 answer.addElement(element);
             }
         }
@@ -215,6 +222,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         if (rules.generateSelectByExampleWithBLOBs()) {
             element = getSelectByExampleWithBLOBs(introspectedTable);
             if (element != null) {
+                plugin.sqlMapSelectByExampleWithBLOBsElementGenerated(element, introspectedTable);
                 answer.addElement(element);
             }
         }
@@ -222,6 +230,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         if (rules.generateDeleteByPrimaryKey()) {
             element = getDeleteByPrimaryKey(introspectedTable);
             if (element != null) {
+                plugin.sqlMapDeleteByPrimaryKeyElementGenerated(element, introspectedTable);
                 answer.addElement(element);
             }
         }
@@ -229,6 +238,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         if (rules.generateDeleteByExample()) {
             element = getDeleteByExample(introspectedTable);
             if (element != null) {
+                plugin.sqlMapDeleteByExampleElementGenerated(element, introspectedTable);
                 answer.addElement(element);
             }
         }
@@ -236,6 +246,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         if (rules.generateInsert()) {
             element = getInsertElement(introspectedTable);
             if (element != null) {
+                plugin.sqlMapInsertElementGenerated(element, introspectedTable);
                 answer.addElement(element);
             }
         }
@@ -243,6 +254,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         if (rules.generateUpdateByPrimaryKeyWithBLOBs()) {
             element = getUpdateByPrimaryKeyWithBLOBs(introspectedTable);
             if (element != null) {
+                plugin.sqlMapUpdateByPrimaryKeyWithBLOBsElementGenerated(element, introspectedTable);
                 answer.addElement(element);
             }
         }
@@ -250,6 +262,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         if (rules.generateUpdateByPrimaryKeyWithoutBLOBs()) {
             element = getUpdateByPrimaryKeyWithoutBLOBs(introspectedTable);
             if (element != null) {
+                plugin.sqlMapUpdateByPrimaryKeyWithoutBLOBsElementGenerated(element, introspectedTable);
                 answer.addElement(element);
             }
         }
@@ -257,6 +270,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         if (rules.generateUpdateByPrimaryKeySelective()) {
             element = getUpdateByPrimaryKeySelective(introspectedTable);
             if (element != null) {
+                plugin.sqlMapUpdateByPrimaryKeySelectiveElementGenerated(element, introspectedTable);
                 answer.addElement(element);
             }
         }
@@ -264,6 +278,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         if (rules.generateCountByExample()) {
             element = getCountByExample(introspectedTable);
             if (element != null) {
+                plugin.sqlMapCountByExampleElementGenerated(element, introspectedTable);
                 answer.addElement(element);
             }
         }
@@ -271,6 +286,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         if (rules.generateUpdateByExampleSelective()) {
             element = getUpdateByExampleSelective(introspectedTable);
             if (element != null) {
+                plugin.sqlMapUpdateByExampleSelectiveElementGenerated(element, introspectedTable);
                 answer.addElement(element);
             }
         }
@@ -278,6 +294,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         if (rules.generateUpdateByExampleWithBLOBs()) {
             element = getUpdateByExampleWithBLOBs(introspectedTable);
             if (element != null) {
+                plugin.sqlMapUpdateByExampleWithBLOBsElementGenerated(element, introspectedTable);
                 answer.addElement(element);
             }
         }
@@ -285,21 +302,12 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         if (rules.generateUpdateByExampleWithoutBLOBs()) {
             element = getUpdateByExampleWithoutBLOBs(introspectedTable);
             if (element != null) {
+                plugin.sqlMapUpdateByExampleWithoutBLOBsElementGenerated(element, introspectedTable);
                 answer.addElement(element);
             }
         }
 
         return answer;
-    }
-
-    /**
-     * Override this method to provide any extra Elements needed in the 
-     * generated XML.
-     * 
-     * @param generatedDocument the generated document
-     */
-    protected void afterGenerationHook(IntrospectedTable introspectedTable, Document generatedDocument) {
-        return;
     }
 
     /**
@@ -396,7 +404,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
                 returnType.getFullyQualifiedName()));
 
         sb.setLength(0);
-        sb.append(getSqlMapNamespace(table));
+        sb.append(table.getSqlMapNamespace());
         sb.append('.');
         sb.append(getResultMapName(table));
         answer.addAttribute(new Attribute("extends", sb.toString())); //$NON-NLS-1$
@@ -446,7 +454,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         XmlElement answer = new XmlElement("insert"); //$NON-NLS-1$
 
         FullyQualifiedTable table = introspectedTable.getTable();
-        answer.addAttribute(new Attribute("id", getInsertStatementId())); //$NON-NLS-1$
+        answer.addAttribute(new Attribute("id", XmlConstants.INSERT_STATEMENT_ID)); //$NON-NLS-1$
         
         FullyQualifiedJavaType parameterType =
             introspectedTable.getRules().calculateAllFieldsClass(javaModelGenerator, table);
@@ -526,7 +534,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         FullyQualifiedTable table = introspectedTable.getTable();
 
         answer.addAttribute(new Attribute(
-                "id", getUpdateByPrimaryKeyWithBLOBsStatementId())); //$NON-NLS-1$
+                "id", XmlConstants.UPDATE_BY_PRIMARY_KEY_WITH_BLOBS_STATEMENT_ID)); //$NON-NLS-1$
 
         FullyQualifiedJavaType parameterType;
         
@@ -604,7 +612,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         FullyQualifiedTable table = introspectedTable.getTable();
 
         answer.addAttribute(new Attribute(
-                "id", getUpdateByPrimaryKeyStatementId())); //$NON-NLS-1$
+                "id", XmlConstants.UPDATE_BY_PRIMARY_KEY_STATEMENT_ID)); //$NON-NLS-1$
         answer.addAttribute(new Attribute("parameterClass", //$NON-NLS-1$
                 javaModelGenerator.getBaseRecordType(table).getFullyQualifiedName()));
 
@@ -672,7 +680,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         FullyQualifiedTable table = introspectedTable.getTable();
 
         answer.addAttribute(new Attribute(
-                "id", getDeleteByPrimaryKeyStatementId())); //$NON-NLS-1$
+                "id", XmlConstants.DELETE_BY_PRIMARY_KEY_STATEMENT_ID)); //$NON-NLS-1$
         FullyQualifiedJavaType parameterClass;
         if (introspectedTable.getRules().generatePrimaryKeyClass()) {
             parameterClass = javaModelGenerator.getPrimaryKeyType(table);
@@ -724,7 +732,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         answer
                 .addAttribute(new Attribute(
-                        "id", getDeleteByExampleStatementId())); //$NON-NLS-1$
+                        "id", XmlConstants.DELETE_BY_EXAMPLE_STATEMENT_ID)); //$NON-NLS-1$
         answer.addAttribute(new Attribute(
                 "parameterClass", fqjt.getFullyQualifiedName())); //$NON-NLS-1$
 
@@ -737,7 +745,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
         sb.setLength(0);
-        sb.append(getSqlMapNamespace(table));
+        sb.append(table.getSqlMapNamespace());
         sb.append('.');
         sb.append(getExampleWhereClauseId());
         includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
@@ -764,7 +772,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         answer
                 .addAttribute(new Attribute(
-                        "id", getCountByExampleStatementId())); //$NON-NLS-1$
+                        "id", XmlConstants.COUNT_BY_EXAMPLE_STATEMENT_ID)); //$NON-NLS-1$
         answer.addAttribute(new Attribute(
                 "parameterClass", fqjt.getFullyQualifiedName())); //$NON-NLS-1$
         answer.addAttribute(new Attribute(
@@ -779,7 +787,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
         sb.setLength(0);
-        sb.append(getSqlMapNamespace(table));
+        sb.append(table.getSqlMapNamespace());
         sb.append('.');
         sb.append(getExampleWhereClauseId());
         includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
@@ -804,7 +812,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         FullyQualifiedTable table = introspectedTable.getTable();
 
         answer.addAttribute(new Attribute(
-                "id", getSelectByPrimaryKeyStatementId())); //$NON-NLS-1$
+                "id", XmlConstants.SELECT_BY_PRIMARY_KEY_STATEMENT_ID)); //$NON-NLS-1$
         if (introspectedTable.getRules().generateResultMapWithBLOBs()) {
             answer.addAttribute(new Attribute("resultMap", //$NON-NLS-1$
                     getResultMapName(table) + "WithBLOBs")); //$NON-NLS-1$
@@ -901,30 +909,11 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         return answer;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.ibatis.ibator.api.SqlMapGenerator#getSqlMapNamespace(org.apache.ibatis.ibator.config.FullyQualifiedTable)
-     */
-    public String getSqlMapNamespace(FullyQualifiedTable table) {
-        String key = "getSqlMapNamespace"; //$NON-NLS-1$
-        String s;
-
-        Map<String, String> map = getTableStringMap(table);
-        s = map.get(key);
-        if (s == null) {
-            s = table.getSqlMapNamespace();
-            map.put(key, s);
-        }
-
-        return s;
-    }
-
     /**
      * Calculates the name of the result map. Typically this is the String
      * "prefix_XXXXResult" where XXXX is the name of the domain object
      * related to this table. The prefix is important because
-     * it allows iBATOR to regenerate this element on subsequent runs.
+     * it allows ibator to regenerate this element on subsequent runs.
      * 
      * @param table
      *            the current table
@@ -978,127 +967,6 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         return s;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.ibatis.ibator.api.SqlMapGenerator#getDeleteByPrimaryKeyStatementId()
-     */
-    public String getDeleteByPrimaryKeyStatementId() {
-        StringBuffer sb = new StringBuffer(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("deleteByPrimaryKey"); //$NON-NLS-1$
-
-        return sb.toString();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.ibatis.ibator.api.SqlMapGenerator#getDeleteByExampleStatementId()
-     */
-    public String getDeleteByExampleStatementId() {
-        StringBuffer sb = new StringBuffer(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("deleteByExample"); //$NON-NLS-1$
-
-        return sb.toString();
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.apache.ibatis.ibator.api.SqlMapGenerator#getCountByExampleStatementId()
-     */
-    public String getCountByExampleStatementId() {
-        StringBuffer sb = new StringBuffer(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("countByExample"); //$NON-NLS-1$
-
-        return sb.toString();
-    }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.ibatis.ibator.api.SqlMapGenerator#getInsertStatementId()
-     */
-    public String getInsertStatementId() {
-        StringBuffer sb = new StringBuffer(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("insert"); //$NON-NLS-1$
-
-        return sb.toString();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.ibatis.ibator.api.SqlMapGenerator#getSelectByPrimaryKeyStatementId()
-     */
-    public String getSelectByPrimaryKeyStatementId() {
-        StringBuffer sb = new StringBuffer(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("selectByPrimaryKey"); //$NON-NLS-1$
-
-        return sb.toString();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.ibatis.ibator.api.SqlMapGenerator#getSelectByExampleStatementId()
-     */
-    public String getSelectByExampleStatementId() {
-        StringBuffer sb = new StringBuffer(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("selectByExample"); //$NON-NLS-1$
-
-        return sb.toString();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.ibatis.ibator.api.SqlMapGenerator#getSelectByExampleWithBLOBsStatementId()
-     */
-    public String getSelectByExampleWithBLOBsStatementId() {
-        StringBuffer sb = new StringBuffer(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("selectByExampleWithBLOBs"); //$NON-NLS-1$
-
-        return sb.toString();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.ibatis.ibator.api.SqlMapGenerator#getUpdateByPrimaryKeyWithBLOBsStatementId()
-     */
-    public String getUpdateByPrimaryKeyWithBLOBsStatementId() {
-        StringBuffer sb = new StringBuffer(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("updateByPrimaryKeyWithBLOBs"); //$NON-NLS-1$
-
-        return sb.toString();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.ibatis.ibator.api.SqlMapGenerator#getUpdateByPrimaryKeyStatementId()
-     */
-    public String getUpdateByPrimaryKeyStatementId() {
-        StringBuffer sb = new StringBuffer(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("updateByPrimaryKey"); //$NON-NLS-1$
-
-        return sb.toString();
-    }
-
-    public String getUpdateByPrimaryKeySelectiveStatementId() {
-        StringBuffer sb = new StringBuffer(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("updateByPrimaryKeySelective"); //$NON-NLS-1$
-
-        return sb.toString();
-    }
-    
-    public String getUpdateByExampleSelectiveStatementId() {
-        StringBuffer sb = new StringBuffer(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("updateByExampleSelective"); //$NON-NLS-1$
-
-        return sb.toString();
-    }
-    
     /**
      * Calculates the package for the current table.
      * 
@@ -1349,9 +1217,8 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         XmlElement answer = new XmlElement("select"); //$NON-NLS-1$
 
-        answer
-                .addAttribute(new Attribute(
-                        "id", getSelectByExampleStatementId())); //$NON-NLS-1$
+        answer.addAttribute(new Attribute("id",
+                XmlConstants.SELECT_BY_EXAMPLE_STATEMENT_ID)); //$NON-NLS-1$
         answer
                 .addAttribute(new Attribute(
                         "resultMap", getResultMapName(table))); //$NON-NLS-1$
@@ -1393,7 +1260,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         
         XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
         includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
-                getSqlMapNamespace(table) + "." + getExampleWhereClauseId())); //$NON-NLS-1$
+                table.getSqlMapNamespace() + "." + getExampleWhereClauseId())); //$NON-NLS-1$
         isParameterPresenteElement.addElement(includeElement);
 
         XmlElement isNotNullElement = new XmlElement("isNotNull"); //$NON-NLS-1$
@@ -1420,7 +1287,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         XmlElement answer = new XmlElement("select"); //$NON-NLS-1$
         answer.addAttribute(new Attribute(
-                "id", getSelectByExampleWithBLOBsStatementId())); //$NON-NLS-1$
+                "id", XmlConstants.SELECT_BY_EXAMPLE_WITH_BLOBS_STATEMENT_ID)); //$NON-NLS-1$
         answer.addAttribute(new Attribute(
                 "resultMap", getResultMapName(table) + "WithBLOBs")); //$NON-NLS-1$ //$NON-NLS-2$
         answer.addAttribute(new Attribute(
@@ -1462,7 +1329,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         
         XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
         includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
-                getSqlMapNamespace(table) + "." + getExampleWhereClauseId())); //$NON-NLS-1$
+                table.getSqlMapNamespace() + "." + getExampleWhereClauseId())); //$NON-NLS-1$
         isParameterPresenteElement.addElement(includeElement);
 
         XmlElement isNotNullElement = new XmlElement("isNotNull"); //$NON-NLS-1$
@@ -1507,7 +1374,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         FullyQualifiedTable table = introspectedTable.getTable();
 
         answer.addAttribute(new Attribute(
-                "id", getUpdateByPrimaryKeySelectiveStatementId())); //$NON-NLS-1$
+                "id", XmlConstants.UPDATE_BY_PRIMARY_KEY_SELECTIVE_STATEMENT_ID)); //$NON-NLS-1$
 
         FullyQualifiedJavaType parameterType;
         
@@ -1583,7 +1450,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         FullyQualifiedTable table = introspectedTable.getTable();
 
         answer.addAttribute(new Attribute(
-                "id", getUpdateByExampleSelectiveStatementId())); //$NON-NLS-1$
+                "id", XmlConstants.UPDATE_BY_EXAMPLE_SELECTIVE_STATEMENT_ID)); //$NON-NLS-1$
 
         ibatorContext.getCommentGenerator().addComment(answer);
 
@@ -1617,7 +1484,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         
         XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
         includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
-                getSqlMapNamespace(table) + "." + getExampleWhereClauseId())); //$NON-NLS-1$
+                table.getSqlMapNamespace() + "." + getExampleWhereClauseId())); //$NON-NLS-1$
         isParameterPresentElement.addElement(includeElement);
 
         return answer;
@@ -1628,7 +1495,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         FullyQualifiedTable table = introspectedTable.getTable();
 
         answer.addAttribute(new Attribute(
-                "id", getUpdateByExampleWithBLOBsStatementId())); //$NON-NLS-1$
+                "id", XmlConstants.UPDATE_BY_EXAMPLE_WITH_BLOBS_STATEMENT_ID)); //$NON-NLS-1$
 
         ibatorContext.getCommentGenerator().addComment(answer);
 
@@ -1668,7 +1535,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         
         XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
         includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
-                getSqlMapNamespace(table) + "." + getExampleWhereClauseId())); //$NON-NLS-1$
+                table.getSqlMapNamespace() + "." + getExampleWhereClauseId())); //$NON-NLS-1$
         isParameterPresentElement.addElement(includeElement);
 
         return answer;
@@ -1679,7 +1546,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         FullyQualifiedTable table = introspectedTable.getTable();
 
         answer.addAttribute(new Attribute(
-                "id", getUpdateByExampleStatementId())); //$NON-NLS-1$
+                "id", XmlConstants.UPDATE_BY_EXAMPLE_STATEMENT_ID)); //$NON-NLS-1$
 
         ibatorContext.getCommentGenerator().addComment(answer);
 
@@ -1719,23 +1586,9 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         
         XmlElement includeElement = new XmlElement("include"); //$NON-NLS-1$
         includeElement.addAttribute(new Attribute("refid", //$NON-NLS-1$
-                getSqlMapNamespace(table) + "." + getExampleWhereClauseId())); //$NON-NLS-1$
+                table.getSqlMapNamespace() + "." + getExampleWhereClauseId())); //$NON-NLS-1$
         isParameterPresentElement.addElement(includeElement);
 
         return answer;
-    }
-
-    public String getUpdateByExampleStatementId() {
-        StringBuffer sb = new StringBuffer(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("updateByExample"); //$NON-NLS-1$
-
-        return sb.toString();
-    }
-
-    public String getUpdateByExampleWithBLOBsStatementId() {
-        StringBuffer sb = new StringBuffer(MergeConstants.NEW_XML_ELEMENT_PREFIX);
-        sb.append("updateByExampleWithBLOBs"); //$NON-NLS-1$
-
-        return sb.toString();
     }
 }

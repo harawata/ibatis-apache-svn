@@ -78,7 +78,7 @@ public interface DAOMethodNameCalculator {
     
     /**
      * Calculates and returns a name for the select by example with BLOBs method.
-     * If the table contains BLOBs, then iBATOR will generate different select by
+     * If the table contains BLOBs, then ibator will generate different select by
      * example methods - one including BLOBs, one not including BLOBs.
      * 
      * @param introspectedTable

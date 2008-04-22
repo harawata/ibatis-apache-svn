@@ -3,7 +3,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-  <title>iBATOR Oracle Usage Notes</title>
+  <title>ibator Oracle Usage Notes</title>
   <link type="text/css" rel="stylesheet" href="../ibator.css"/>
 </head>
 <body>
@@ -13,11 +13,11 @@
     <a href="oracle.html" target="_top">No Frames</a>
   </font>
 </p>
-<h1>iBATOR Oracle Usage Notes</h1>
+<h1>ibator Oracle Usage Notes</h1>
 <h2>Public Synonyms</h2>
 <p>If you want to generate objects for a table that has a public synonym, you
 should actually generate the objects against the real table - and then change the
-table name at runtime.  iBATOR supports this automatically.</p>
+table name at runtime.  ibator supports this automatically.</p>
 <p>For example, assume there is a public alias "FRED" that points the the
 table "HR.EMPLOYEES".  The following table configuration will generate the objects
 based on HR.EMPLOYEES, but the runtime SQL will only refer to FRED:</p>

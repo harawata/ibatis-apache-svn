@@ -95,8 +95,8 @@ public class XmlFileMergerJaxp {
             String namespace = newRootElement.getAttribute("namespace"); //$NON-NLS-1$
             existingRootElement.setAttribute("namespace", namespace); //$NON-NLS-1$
 
-            // remove the old iBATOR generated elements and any
-            // white space before the old iBATOR nodes
+            // remove the old ibator generated elements and any
+            // white space before the old ibator nodes
             List<Node> nodesToDelete = new ArrayList<Node>();
             NodeList children = existingRootElement.getChildNodes();
             int length = children.getLength();
@@ -113,7 +113,7 @@ public class XmlFileMergerJaxp {
                 existingRootElement.removeChild(node);
             }
 
-            // add the new iBATOR generated elements
+            // add the new ibator generated elements
             children = newRootElement.getChildNodes();
             length = children.getLength();
             Node firstChild = existingRootElement.getFirstChild();

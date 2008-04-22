@@ -3,7 +3,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-  <title>Extending iBATOR</title>
+  <title>Extending ibator</title>
   <link type="text/css" rel="stylesheet" href="../ibator.css"/>
 </head>
 <body>
@@ -13,24 +13,24 @@
     <a href="extending.html" target="_top">No Frames</a>
   </font>
 </p>
-<h1>Extending iBATOR</h1>
-<p>iBATOR is designed for extensibility.  All code generation is performed using a
-simple DOM representation of Java and XML elements that is included with iBATOR.</p>
+<h1>Extending ibator</h1>
+<p>ibator is designed for extensibility.  All code generation is performed using a
+simple DOM representation of Java and XML elements that is included with ibator.</p>
 <p>The Java DOM is included in the package <code>org.apache.ibatis.ibator.api.dom.java</code></p>
 <p>The XML DOM is included in the package <code>org.apache.ibatis.ibator.api.dom.xml</code></p>
 <p>These classes are not sufficient for every conceivable code generation possibility, but they are quite
 useful for generating simple to moderately complex Java and XML code.</p>
 
-<p>Using options in the iBATOR configuration file, you can provide your own implementations
-of any of iBATOR's key interfaces.  You can also subclass any of the provided implementations
+<p>Using options in the ibator configuration file, you can provide your own implementations
+of any of ibator's key interfaces.  You can also subclass any of the provided implementations
 to provide customized behaviors.  This page will describe the public APIs available in
-iBATOR and provide pointers to the source code for further investigation.  If you have
-any difficulty understanding how to extend iBATOR, feel free to send a note to the
+ibator and provide pointers to the source code for further investigation.  If you have
+any difficulty understanding how to extend ibator, feel free to send a note to the
 support mailing list at
 <a href="mailto:user-java@ibatis.apache.org">user-java@ibatis.apache.org</a>.</p>
 
 <h2>org.apache.ibatis.ibator.api.JavaModelGenerator</h2>
-<p>iBATOR calls methods in this interface to generate the Java model POJOs.
+<p>ibator calls methods in this interface to generate the Java model POJOs.
    You can provide your own implementation, and the default implementations have
    been designed for extensibility.  The default implementation of the interface
    is dependant on the value of the <code>generatorSet</code>
@@ -61,7 +61,7 @@ support mailing list at
 </pre>
 
 <h2>org.apache.ibatis.ibator.api.SqlMapGenerator</h2>
-<p>iBATOR calls methods in this interface to generate the SQL Maps.
+<p>ibator calls methods in this interface to generate the SQL Maps.
    You can provide your own implementation, and the default implementations have
    been designed for extensibility.  The default implementation of the interface
    is dependant on the value of the <code>generatorSet</code>
@@ -88,8 +88,8 @@ support mailing list at
 </pre>
 
 <h2>org.apache.ibatis.ibator.api.DAOGenerator</h2>
-<p>iBATOR calls methods in this interface to generate the DAOs for each introspected
-table.  iBATOR supplies twelve implementations of this
+<p>ibator calls methods in this interface to generate the DAOs for each introspected
+table.  ibator supplies twelve implementations of this
 interface to match the four different types of DAOs, and the three different sets
 of code generators.  The implementation is selected based on the value of the
 <a href="../configreference/ibatorContext.html">&lt;ibatorContext&gt;</a>
@@ -151,7 +151,7 @@ The implementations are:</p>
 </pre>
 
 <h2>org.apache.ibatis.ibator.api.JavaTypeResolver</h2>
-<p>iBATOR calls methods in this interface to map JDBC types to Java types
+<p>ibator calls methods in this interface to map JDBC types to Java types
    during database introspection.  The default implementation of this
    interface is <code>org.apache.ibatis.ibator.internal.types.JavaTypeResolverDefaultImpl</code>.
    You can provide your own implementation, and the default implementation has
@@ -166,7 +166,7 @@ The implementations are:</p>
 </pre>
 
 <h2>org.apache.ibatis.ibator.api.ShellCallback</h2>
-<p> iBATOR calls methods in this interface to perform functions that it cannot
+<p> ibator calls methods in this interface to perform functions that it cannot
    do on its own.  The most important of these functions are:</p>
 <ul>
   <li>Translating project/package into a directory structure</li>
@@ -181,7 +181,7 @@ The implementations are:</p>
    support merging of Java files, and will either overwrite or ignore files.</p>
 
 <p>You can provide your own implementation.  This would be the most important
-   class to write if you want to integrate iBATOR into some other environment.
+   class to write if you want to integrate ibator into some other environment.
    The Eclipse plugin provides an implementation of this interface that
    supports Java file merging when running in the Eclipse environment.</p>
 
@@ -193,7 +193,7 @@ The implementations are:</p>
    your implementation.</p>
 
 <h2>org.apache.ibatis.ibator.api.ProgressCallback</h2>
-<p>iBATOR calls methods in this interface to report progress during the
+<p>ibator calls methods in this interface to report progress during the
    generation of files (a long running process).  The default implementation
    of this interface is
    <code>org.apache.ibatis.ibator.internal.NullProgressCallback</code>
@@ -201,7 +201,7 @@ The implementations are:</p>
    implementation of this interface to support progress notifications and
    cancellation of file generation.</p>
 
-<p>Implementing this interface would be important when integrating iBATOR
+<p>Implementing this interface would be important when integrating ibator
    into other IDE environments.  The Eclipse plugin provides an implementation
    of this interface that hooks into Eclipse's progress notification system.</p>
 

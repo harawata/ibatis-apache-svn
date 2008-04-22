@@ -50,7 +50,7 @@ public interface DAOGenerator {
     void setIbatorContext(IbatorContext ibatorContext);
 
 	/**
-	 * iBATOR will supply a list to this method.  The implementation class may
+	 * ibator will supply a list to this method.  The implementation class may
 	 * add strings to the list that will be treated as warning messages and
 	 * displayed to the user.  The concept of a warning is that code generation
 	 * can continue, but that the results may not be what is expected.

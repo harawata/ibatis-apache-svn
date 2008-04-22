@@ -47,7 +47,7 @@ import org.apache.ibatis.ibator.internal.util.messages.Messages;
  *   <li>replaceString=""</li>
  * </ul>
  * 
- * Note that internally, iBATOR uses the 
+ * Note that internally, ibator uses the 
  * <code>java.util.regex.Matcher.replaceAll</code> method
  * for this function.  See the documentation of that method
  * for example of the regular expression language used in
