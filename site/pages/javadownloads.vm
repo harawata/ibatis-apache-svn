@@ -23,17 +23,17 @@
          </li>
       </ul>
 
-      <h4>Beta Release  2.3.1</h4>
+      <h4>Beta Release  2.3.2</h4>
       <ul>
         <li>
-		  <a href="[preferred]/ibatis/binaries/ibatis.java/ibatis-2.3.1.710.zip"><b>Download iBATIS Java 2.3.1</b></a> 
+		  <a href="[preferred]/ibatis/binaries/ibatis.java/ibatis-2.3.2.715.zip"><b>Download iBATIS Java 2.3.2</b></a> 
           <br/> Includes binaries, source, and documentation
-		  <br/> [Status: Beta | Mar 25, 2008]
+		  <br/> [Status: Beta | Apr 22, 2008]
 		  <br/>
-           [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/ibatis-2.3.1.710.zip.md5">MD5</a>]
-           [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/ibatis-2.3.1.710.zip.asc">PGP</a>]
+           [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/ibatis-2.3.2.715.zip.md5">MD5</a>]
+           [<a href="http://www.apache.org/dist/ibatis/binaries/ibatis.java/ibatis-2.3.2.715.zip.asc">PGP</a>]
            
-          <a href="https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=10601&styleName=Html&version=12312222">Release Notes</a>
+          <a href="https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=10601&styleName=Html&version=12312222">Release Notes </a><i>(2.3.1 because they're more relevant)</i>
         </li>
       </ul>
 
@@ -52,79 +52,41 @@
         that there is newer documentation available in the Subversion repository than what is listed
         here. If in doubt, check Subversion. The documentation in Subversion is in Open Office format.
         This link will show the very latest version of all iBATIS for Java documentation:
-        <a href="http://svn.apache.org/repos/asf/ibatis/trunk/java/docs/" target="_new">Latest OpenOffice Documents in Subversion</a>
-
       </p>
 
+	  <ul>
+		  <li>        
+		    <a href="http://svn.apache.org/repos/asf/ibatis/trunk/java/docs/en/" target="_new">English</a>
+		  </li>        
+		  <li>        
+		    <a href="http://svn.apache.org/repos/asf/ibatis/trunk/java/docs/de/" target="_new">German</a>
+		  </li>
+		  <li>        
+		    <a href="http://svn.apache.org/repos/asf/ibatis/trunk/java/docs/cn/" target="_new">Chinese</a>
+		  </li>        
+		  <li>        
+		    <a href="http://svn.apache.org/repos/asf/ibatis/trunk/java/docs/ko/" target="_new">Korean</a>
+		  </li>        
+		  <li>        
+		    <a href="http://svn.apache.org/repos/asf/ibatis/trunk/java/docs/ja/" target="_new">Japanese</a>
+		  </li>        
+		  <li>        
+		    <a href="http://svn.apache.org/repos/asf/ibatis/trunk/java/docs/fr/" target="_new">French (tutorial)</a>
+		  </li>        
+		  <li>        
+		    <a href="http://svn.apache.org/repos/asf/ibatis/trunk/java/docs/it/" target="_new">Italian (tutorial)</a>
+		  </li>        
+		  <li>        
+		    <a href="http://svn.apache.org/repos/asf/ibatis/trunk/java/docs/es/" target="_new">Spanish (tutorial)</a>
+		  </li>        
+	  </ul>
+	  
       <p><b>Undocumented Stuff:</b>Although we try to keep the documentation as up-to-date as possible, sometimes the
         software simply evolves faster than the docs.  In these cases, we make a habit of listing the undocumented features
         on the wiki, here:
         <a href="http://opensource.atlassian.com/confluence/oss/display/IBATIS/Not+Yet+Documented" target="_new">Undocumented features.</a>
       </p>
 
-      <ul>
-        <li>English PDF (Included with distribution as of 2.2.0)
-          <ul>
-            <li><a href="/docs/java/pdf/iBATIS-SqlMaps-2_en.pdf">SQL Maps for Java,
-              Developer Guide</a>
-            </li>
-            <li><a href="/docs/java/pdf/iBATIS-SqlMaps-2-Tutorial_en.pdf">SQL Maps for
-              Java, Tutorial</a>
-            </li>
-          </ul>
-        </li>
-        <li>Chinese PDF
-          <ul>
-            <li><a href="/docs/java/pdf/iBATIS-SqlMaps-2_cn.pdf">SQL Maps for Java,
-              Developer Guide</a>
-            </li>
-            <li><a href="/docs/java/pdf/iBATIS-SqlMaps-2-Tutorial_cn.pdf">SQL Maps for
-              Java, Tutorial</a>
-            </li>
-          </ul>
-        </li>
-        <li>Korean PDF
-          <ul>
-            <li><a href="/docs/java/pdf/iBATIS-SqlMaps-2_ko.pdf">SQL Maps for Java,
-              Developer Guide</a>
-            </li>
-            <li><a href="/docs/java/pdf/iBATIS-SqlMaps-2-Tutorial_ko.pdf">SQL Maps for
-              Java, Tutorial</a>
-            </li>
-          </ul>
-        </li>
-        <li>Japanese PDF
-          <ul>
-            <li><a href="/docs/java/pdf/iBATIS-SqlMaps-2_ja.pdf">SQL Maps for Java,
-              Developer Guide</a>
-            </li>
-            <li><a href="/docs/java/pdf/iBATIS-SqlMaps-2-Tutorial_ja.pdf">SQL Maps for
-              Java, Tutorial</a>
-            </li>
-          </ul>
-        </li>
-        <li>French PDF
-          <ul>
-            <li><a href="/docs/java/pdf/iBATIS-SqlMaps-2-Tutorial_fr.pdf">SQL Maps for
-              Java, Tutorial</a>
-            </li>
-          </ul>
-        </li>
-        <li>Italian PDF
-          <ul>
-            <li><a href="/docs/java/pdf/iBATIS-SqlMaps-2-Tutorial_it.pdf">SQL Maps for
-              Java, Tutorial</a>
-            </li>
-          </ul>
-        </li>
-        <li>Spanish PDF
-          <ul>
-            <li><a href="/docs/java/pdf/iBATIS-SqlMaps-2-Tutorial_es.pdf">SQL Maps for
-              Java, Tutorial</a>
-            </li>
-          </ul>
-        </li>
-      </ul>
     </td>
     <td style="background-color:#E8E8E8">
       <h4>Mirrors</h4>

@@ -49,6 +49,10 @@
 
   <h2>News</h2>
   
+<h3>iBATIS 2.3.2 Beta and German Docs</h3>
+<p>(Apr 22, 2008) I've released a small update which corrects a few logistical issues with the 2.3.1 deploy.  It's a very minor release, but this will be the next GA version if all goes well.  Thus 2.3.1 will never be GA, so get this one.  In addition to that, <b>Axel Leucht</b> has contributed documentation in German.  So now all of my co-workers at Arvato can read about iBATIS too!  ;-)   Thanks Axel.  
+<p><b><a href="javadownloads.cgi">So go get the 2.3.2 Beta from the Java downloads page now!</a></b></p>
+
 <h3>Abator Renamed to iBATOR</h3>
 <p>(April 14, 2008) Due to a trade registration dispute, Abator is renamed to iBATOR.  iBATOR is
   currently a work in progress, but an initial code drop has been added to SVN.  See the 

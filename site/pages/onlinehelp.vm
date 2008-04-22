@@ -11,21 +11,21 @@
       <h2>iBATIS for Java</h2>
         <p>iBATIS for Java offers both downloadable and online documentation.</p>
         <p><strong><a href="javadownloads.cgi">Downloadable (PDF) documentation</a> for iBATIS for
-          Java is available. We recommend you start with this before moving onto the JavaDocs.</strong>
+          Java is available in 8 languages. We recommend you start with this before moving onto the JavaDocs.</strong>
         </p>
         <p>Online Javadoc can be found here and is also included with the distribution:</p>
         <ul>
           <li><a target="_blank" href="/docs/java/user">User Javadoc</a></li>
           <li><a target="_blank" href="/docs/java/dev">Developer Javadoc</a></li>
         </ul>
-      <h2>Abator</h2>
-        <p>Abator documentation is included with all Abator downloads, and is also
-           integrated into the Eclipse help system when you install the Abator plugin for Eclipse.
+      <h2>ibator</h2>
+        <p>ibator documentation is included with all ibator downloads, and is also
+           integrated into the Eclipse help system when you install the ibator plugin for Eclipse.
         </p>
 
-        <p>Online documentation for Abator can be found here:</p>
+        <p>Online documentation for ibator can be found here:</p>
         <ul>
-          <li><a target="_blank" href="/docs/tools/abator">Abator Documentation</a></li>
+          <li><a target="_blank" href="/docs/tools/abator">ibator Documentation</a></li>
         </ul>
     </td>
     <td width="33%">
