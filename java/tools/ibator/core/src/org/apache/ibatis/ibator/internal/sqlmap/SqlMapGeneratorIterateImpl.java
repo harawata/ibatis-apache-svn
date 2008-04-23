@@ -151,13 +151,13 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
                 XmlConstants.SQL_MAP_SYSTEM_ID);
         document.setRootElement(getSqlMapElement(introspectedTable));
         
-        ibatorContext.getPluginAggregator().sqlMapGenerated(document, introspectedTable);
-        
         FullyQualifiedTable table = introspectedTable.getTable();
         GeneratedXmlFile answer = new GeneratedXmlFile(document,
                 getSqlMapFileName(table), getSqlMapPackage(table),
-                targetProject);
+                targetProject, true);
 
+        ibatorContext.getPluginAggregator().sqlMapGenerated(answer, introspectedTable);
+        
         return answer;
     }
 
@@ -174,8 +174,8 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         answer.addAttribute(new Attribute("namespace", //$NON-NLS-1$
                 table.getSqlMapNamespace()));
 
-        ibatorContext.getCommentGenerator().addRootComment(answer);
         IbatorPlugin plugin = ibatorContext.getPluginAggregator();
+        ibatorContext.getCommentGenerator().addRootComment(answer);
         
         IbatorRules rules = introspectedTable.getRules();
         XmlElement element;
@@ -1217,8 +1217,8 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
 
         XmlElement answer = new XmlElement("select"); //$NON-NLS-1$
 
-        answer.addAttribute(new Attribute("id",
-                XmlConstants.SELECT_BY_EXAMPLE_STATEMENT_ID)); //$NON-NLS-1$
+        answer.addAttribute(new Attribute("id", //$NON-NLS-1$
+                XmlConstants.SELECT_BY_EXAMPLE_STATEMENT_ID));
         answer
                 .addAttribute(new Attribute(
                         "resultMap", getResultMapName(table))); //$NON-NLS-1$

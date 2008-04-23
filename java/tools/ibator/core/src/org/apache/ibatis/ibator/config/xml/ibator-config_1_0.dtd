@@ -50,9 +50,9 @@
   The ibatorContext element is used to describe a context for generating files, and the source
   tables.
 -->
-<!ELEMENT ibatorContext (property*, commentGenerator?, jdbcConnection, javaTypeResolver?, javaModelGenerator,
-                        sqlMapGenerator, daoGenerator?, table+)>
-<!ATTLIST ibatorContext id ID #IMPLIED
+<!ELEMENT ibatorContext (property*, ibatorPlugin*, commentGenerator?, jdbcConnection, javaTypeResolver?,
+                         javaModelGenerator, sqlMapGenerator, daoGenerator?, table+)>
+<!ATTLIST ibatorContext id ID #REQUIRED
   defaultModelType CDATA #IMPLIED
   generatorSet CDATA #IMPLIED>
 
@@ -85,6 +85,13 @@
 <!ATTLIST property
   name CDATA #REQUIRED
   value CDATA #REQUIRED>
+
+<!--
+  The ibatorPlugin element is used to define an ibator plugin.
+-->
+<!ELEMENT ibatorPlugin (property*)>
+<!ATTLIST ibatorPlugin
+  type CDATA #REQUIRED>
 
 <!--
   The javaModelGenerator element is used to define properties of the Java Model Generator.

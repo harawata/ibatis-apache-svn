@@ -5,7 +5,13 @@
 
 <ibatorConfiguration>
   
-  <ibatorContext generatorSet="Java2" defaultModelType="flat">
+  <ibatorContext id="FlatJava2" generatorSet="Java2" defaultModelType="flat">
+    <ibatorPlugin type="org.apache.ibatis.ibator.plugins.EqualsHashCodePlugin" />
+    <ibatorPlugin type="org.apache.ibatis.ibator.plugins.SqlMapConfigPlugin" >
+      <property name="targetPackage" value="ibatortest.java2.generated.flat" />
+      <property name="targetProject" value="${generated.source.dir.java2}" />
+    </ibatorPlugin>
+    
     <jdbcConnection driverClass="org.hsqldb.jdbcDriver"
         connectionURL="jdbc:hsqldb:mem:aname"
         userId="sa" />
@@ -42,7 +48,9 @@
     </table>
   </ibatorContext>
 
-  <ibatorContext generatorSet="Java2" defaultModelType="hierarchical">
+  <ibatorContext id="HierarchicalJava2" generatorSet="Java2" defaultModelType="hierarchical">
+    <ibatorPlugin type="org.apache.ibatis.ibator.plugins.EqualsHashCodePlugin" />
+
     <jdbcConnection driverClass="org.hsqldb.jdbcDriver"
         connectionURL="jdbc:hsqldb:mem:aname"
         userId="sa" />
@@ -79,7 +87,9 @@
     </table>
   </ibatorContext>
 
-  <ibatorContext generatorSet="Java2" defaultModelType="conditional">
+  <ibatorContext id="ConditionalJava2" generatorSet="Java2" defaultModelType="conditional">
+    <ibatorPlugin type="org.apache.ibatis.ibator.plugins.EqualsHashCodePlugin" />
+
     <jdbcConnection driverClass="org.hsqldb.jdbcDriver"
         connectionURL="jdbc:hsqldb:mem:aname"
         userId="sa" />
@@ -117,6 +127,8 @@
   </ibatorContext>
 
   <ibatorContext id="miscellaneousTests" generatorSet="Java2">
+    <ibatorPlugin type="org.apache.ibatis.ibator.plugins.EqualsHashCodePlugin" />
+
     <jdbcConnection driverClass="org.hsqldb.jdbcDriver"
         connectionURL="jdbc:hsqldb:mem:aname"
         userId="sa" />

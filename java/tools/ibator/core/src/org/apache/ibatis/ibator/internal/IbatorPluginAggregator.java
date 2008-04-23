@@ -26,11 +26,20 @@ import org.apache.ibatis.ibator.api.IntrospectedTable;
 import org.apache.ibatis.ibator.api.dom.java.Interface;
 import org.apache.ibatis.ibator.api.dom.java.Method;
 import org.apache.ibatis.ibator.api.dom.java.TopLevelClass;
-import org.apache.ibatis.ibator.api.dom.xml.Document;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.config.IbatorContext;
 
-public class IbatorPluginAggregator implements IbatorPlugin {
+/**
+ * THis class is for internal use only.  It contains a list of plugins
+ * for the current context and is used to aggregate plugins together.
+ * <p>
+ * This class does not follow the normal plugin lifecycle and should not be
+ * subclassed by clients.
+ * 
+ * @author Jeff
+ *
+ */
+public final class IbatorPluginAggregator implements IbatorPlugin {
     private List<IbatorPlugin> plugins;
 
     public IbatorPluginAggregator() {
@@ -41,6 +50,18 @@ public class IbatorPluginAggregator implements IbatorPlugin {
         plugins.add(plugin);
     }
 
+    public void setIbatorContext(IbatorContext ibatorContext) {
+        throw new UnsupportedOperationException();
+    }
+
+    public void setProperties(Properties properties) {
+        throw new UnsupportedOperationException();
+    }
+
+    public boolean validate(List<String> warnings) {
+        throw new UnsupportedOperationException();
+    }
+    
     public void modelBaseRecordClassGenerated(TopLevelClass tlc,
             IntrospectedTable introspectedTable) {
         for (IbatorPlugin plugin : plugins) {
@@ -95,11 +116,11 @@ public class IbatorPluginAggregator implements IbatorPlugin {
         return answer;
     }
 
-    public List<GeneratedXmlFile> generateAdditionalXMLFiles(
+    public List<GeneratedXmlFile> generateAdditionalXmlFiles(
             IntrospectedTable introspectedTable) {
         List<GeneratedXmlFile> answer = new ArrayList<GeneratedXmlFile>();
         for (IbatorPlugin plugin : plugins) {
-            List<GeneratedXmlFile> temp = plugin.generateAdditionalXMLFiles(introspectedTable);
+            List<GeneratedXmlFile> temp = plugin.generateAdditionalXmlFiles(introspectedTable);
             if (temp != null) {
                 answer.addAll(temp);
             }
@@ -112,11 +133,6 @@ public class IbatorPluginAggregator implements IbatorPlugin {
         for (IbatorPlugin plugin : plugins) {
             plugin.modelPrimaryKeyClassGenerated(tlc, introspectedTable);
         }
-    }
-
-    public void setIbatorContext(IbatorContext ibatorContext) {
-        // ignore - not needed here
-        ;
     }
 
     public void sqlMapBaseResultMapGenerated(XmlElement element, IntrospectedTable introspectedTable) {
@@ -161,9 +177,9 @@ public class IbatorPluginAggregator implements IbatorPlugin {
         }
     }
 
-    public void sqlMapGenerated(Document document, IntrospectedTable introspectedTable) {
+    public void sqlMapGenerated(GeneratedXmlFile sqlMap, IntrospectedTable introspectedTable) {
         for (IbatorPlugin plugin : plugins) {
-            plugin.sqlMapGenerated(document, introspectedTable);
+            plugin.sqlMapGenerated(sqlMap, introspectedTable);
         }
     }
 
@@ -201,11 +217,6 @@ public class IbatorPluginAggregator implements IbatorPlugin {
         for (IbatorPlugin plugin : plugins) {
             plugin.sqlMapUpdateByPrimaryKeyWithoutBLOBsElementGenerated(element, introspectedTable);
         }
-    }
-
-    public void setProperties(Properties properties) {
-        // ignore - not needed here
-        ;
     }
 
     public void daoCountByExampleMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable) {
@@ -380,6 +391,28 @@ public class IbatorPluginAggregator implements IbatorPlugin {
         List<GeneratedJavaFile> answer = new ArrayList<GeneratedJavaFile>();
         for (IbatorPlugin plugin : plugins) {
             List<GeneratedJavaFile> temp = plugin.generateAdditionalDAOClasses(introspectedTable);
+            if (temp != null) {
+                answer.addAll(temp);
+            }
+        }
+        return answer;
+    }
+
+    public List<GeneratedJavaFile> generateAdditionalJavaFiles() {
+        List<GeneratedJavaFile> answer = new ArrayList<GeneratedJavaFile>();
+        for (IbatorPlugin plugin : plugins) {
+            List<GeneratedJavaFile> temp = plugin.generateAdditionalJavaFiles();
+            if (temp != null) {
+                answer.addAll(temp);
+            }
+        }
+        return answer;
+    }
+
+    public List<GeneratedXmlFile> generateAdditionalXmlFiles() {
+        List<GeneratedXmlFile> answer = new ArrayList<GeneratedXmlFile>();
+        for (IbatorPlugin plugin : plugins) {
+            List<GeneratedXmlFile> temp = plugin.generateAdditionalXmlFiles();
             if (temp != null) {
                 answer.addAll(temp);
             }

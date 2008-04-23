@@ -21,21 +21,27 @@ import java.util.Properties;
 import org.apache.ibatis.ibator.api.dom.java.Interface;
 import org.apache.ibatis.ibator.api.dom.java.Method;
 import org.apache.ibatis.ibator.api.dom.java.TopLevelClass;
-import org.apache.ibatis.ibator.api.dom.xml.Document;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.config.IbatorContext;
 
 /**
- * This class includes no-operation methods for every method in the
+ * This class includes no-operation methods for almost every method in the
  * IbatorPlugin interface.  Clients may extend this class to implement
- * some or all of the methods in a plugin. 
+ * some or all of the methods in a plugin.
+ * <p>
+ * This adapter does not implement the <tt>validate</tt> method -
+ * all plugins must perform validation.
  * 
  * @author Jeff Butler
  *
  */
-public class IbatorPluginAdapter implements IbatorPlugin {
+public abstract class IbatorPluginAdapter implements IbatorPlugin {
     protected IbatorContext ibatorContext;
     protected Properties properties;
+    
+    public IbatorPluginAdapter () {
+        properties = new Properties();
+    }
 
     public IbatorContext getIbatorContext() {
         return ibatorContext;
@@ -50,13 +56,13 @@ public class IbatorPluginAdapter implements IbatorPlugin {
     }
 
     public void setProperties(Properties properties) {
-        this.properties = properties;
+        this.properties.putAll(properties);
     }
 
-    public void modelBaseRecordClassGenerated(TopLevelClass baseClass, IntrospectedTable introspectedTable) {
+    public void modelBaseRecordClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
     }
 
-    public void modelRecordWithBLOBsClassGenerated(TopLevelClass blobsClass, IntrospectedTable introspectedTable) {
+    public void modelRecordWithBLOBsClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
     }
 
     public void sqlMapCountByExampleElementGenerated(XmlElement element, IntrospectedTable table) {
@@ -68,21 +74,21 @@ public class IbatorPluginAdapter implements IbatorPlugin {
     public void sqlMapDeleteByPrimaryKeyElementGenerated(XmlElement element, IntrospectedTable table) {
     }
 
-    public void modelExampleClassGenerated(TopLevelClass example, IntrospectedTable introspectedTable) {
+    public void modelExampleClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
     }
 
     public List<GeneratedJavaFile> generateAdditionalModelClasses(IntrospectedTable introspectedTable) {
         return null;
     }
 
-    public List<GeneratedXmlFile> generateAdditionalXMLFiles(IntrospectedTable introspectedTable) {
+    public List<GeneratedXmlFile> generateAdditionalXmlFiles(IntrospectedTable introspectedTable) {
         return null;
     }
 
-    public void modelPrimaryKeyClassGenerated(TopLevelClass primaryKey, IntrospectedTable introspectedTable) {
+    public void modelPrimaryKeyClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
     }
 
-    public void sqlMapGenerated(Document document, IntrospectedTable introspectedTable) {
+    public void sqlMapGenerated(GeneratedXmlFile sqlMap, IntrospectedTable introspectedTable) {
     }
 
     public void sqlMapBaseResultMapGenerated(XmlElement element, IntrospectedTable introspectedTable) {
@@ -209,6 +215,14 @@ public class IbatorPluginAdapter implements IbatorPlugin {
     }
 
     public List<GeneratedJavaFile> generateAdditionalDAOClasses(IntrospectedTable introspectedTable) {
+        return null;
+    }
+
+    public List<GeneratedJavaFile> generateAdditionalJavaFiles() {
+        return null;
+    }
+
+    public List<GeneratedXmlFile> generateAdditionalXmlFiles() {
         return null;
     }
 }

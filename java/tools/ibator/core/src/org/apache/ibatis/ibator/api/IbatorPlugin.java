@@ -21,7 +21,6 @@ import java.util.Properties;
 import org.apache.ibatis.ibator.api.dom.java.Interface;
 import org.apache.ibatis.ibator.api.dom.java.Method;
 import org.apache.ibatis.ibator.api.dom.java.TopLevelClass;
-import org.apache.ibatis.ibator.api.dom.xml.Document;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.config.IbatorContext;
 
@@ -48,6 +47,23 @@ public interface IbatorPlugin {
      * @param properties
      */
     void setProperties(Properties properties);
+    
+    /**
+     * This method is called after all the setXXX methods are called, but before any
+     * other method is called.  This allows the plugin to determine whether
+     * it can run or not.  For example, if the plugin requires certain properties
+     * to be set, and the properties are not set, then the plugin is invalid
+     * and will not run.
+     * 
+     * @param warnings add strings to this list to specify warnings.  For example,
+     *   if the plugin is invalid, you should specify why.
+     * @return true if the plugin is valid.  Invalid plugins will not be
+     *   called
+     */
+    boolean validate(List<String> warnings);
+    
+    List<GeneratedJavaFile> generateAdditionalJavaFiles();
+    List<GeneratedXmlFile> generateAdditionalXmlFiles();
 
     /**
      * This method can be used by plugins to generate additional Java classes.
@@ -83,11 +99,11 @@ public interface IbatorPlugin {
     void modelExampleClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
     
     // methods related to generated XML elements
-    List<GeneratedXmlFile> generateAdditionalXMLFiles(IntrospectedTable introspectedTable);
+    List<GeneratedXmlFile> generateAdditionalXmlFiles(IntrospectedTable introspectedTable);
     
     // the following methods are only guaranteed to be called with the built in 
     // ibator SqlMap generators.
-    void sqlMapGenerated(Document document, IntrospectedTable introspectedTable);
+    void sqlMapGenerated(GeneratedXmlFile sqlMap, IntrospectedTable introspectedTable);
     void sqlMapBaseResultMapGenerated(XmlElement element, IntrospectedTable introspectedTable);
     void sqlMapCountByExampleElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
     void sqlMapDeleteByExampleElementGenerated(XmlElement element, IntrospectedTable introspectedTable);

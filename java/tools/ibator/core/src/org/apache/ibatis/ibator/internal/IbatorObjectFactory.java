@@ -21,12 +21,14 @@ import java.util.Map;
 
 import org.apache.ibatis.ibator.api.CommentGenerator;
 import org.apache.ibatis.ibator.api.DAOGenerator;
+import org.apache.ibatis.ibator.api.IbatorPlugin;
 import org.apache.ibatis.ibator.api.JavaModelGenerator;
 import org.apache.ibatis.ibator.api.JavaTypeResolver;
 import org.apache.ibatis.ibator.api.SqlMapGenerator;
 import org.apache.ibatis.ibator.config.IbatorContext;
 import org.apache.ibatis.ibator.config.CommentGeneratorConfiguration;
 import org.apache.ibatis.ibator.config.DAOGeneratorConfiguration;
+import org.apache.ibatis.ibator.config.IbatorPluginConfiguration;
 import org.apache.ibatis.ibator.config.JavaModelGeneratorConfiguration;
 import org.apache.ibatis.ibator.config.JavaTypeResolverConfiguration;
 import org.apache.ibatis.ibator.config.SqlMapGeneratorConfiguration;
@@ -117,6 +119,13 @@ public class IbatorObjectFactory {
 	    
 	    return answer;
 	}
+    
+    public static IbatorPlugin createIbatorPlugin(IbatorContext ibatorContext, IbatorPluginConfiguration ibatorPluginConfiguration) {
+        IbatorPlugin ibatorPlugin = (IbatorPlugin) createObject(ibatorPluginConfiguration.getConfigurationType());
+        ibatorPlugin.setIbatorContext(ibatorContext);
+        ibatorPlugin.setProperties(ibatorPluginConfiguration.getProperties());
+        return ibatorPlugin;
+    }
 	
 	public static SqlMapGenerator createSqlMapGenerator(IbatorContext context,
 	        JavaModelGenerator javaModelGenerator, List<String> warnings) {

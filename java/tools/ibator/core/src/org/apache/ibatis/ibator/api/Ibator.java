@@ -219,7 +219,13 @@ public class Ibator {
                         .getTargetProject(), gxf.getTargetPackage(), warnings);
                 targetFile = new File(directory, gxf.getFileName());
                 if (targetFile.exists()) {
-                    source = XmlFileMergerJaxp.getMergedSource(gxf, targetFile);
+                    if (gxf.isMergeable()) {
+                        source = XmlFileMergerJaxp.getMergedSource(gxf, targetFile);
+                    } else {
+                        source = gxf.getFormattedContent();
+                        targetFile = getUniqueFileName(directory, gxf.getFileName());
+                        warnings.add(Messages.getString("Warning.2", targetFile.getAbsolutePath())); //$NON-NLS-1$
+                    }
                 } else {
                     source = gxf.getFormattedContent();
                 }
@@ -247,7 +253,7 @@ public class Ibator {
                                 warnings);
                     } else {
                         source = gjf.getFormattedContent();
-                        targetFile = getUniqueFileName(directory, gjf);
+                        targetFile = getUniqueFileName(directory, gjf.getFileName());
                         warnings.add(Messages.getString("Warning.2", targetFile.getAbsolutePath())); //$NON-NLS-1$
                     }
                 } else {
@@ -277,14 +283,14 @@ public class Ibator {
         bw.close();
     }
     
-    private File getUniqueFileName(File directory, GeneratedJavaFile gjf) {
+    private File getUniqueFileName(File directory, String fileName) {
         File answer = null;
         
         // try up to 1000 times to generate a unique file name
         StringBuffer sb = new StringBuffer();
         for (int i = 1; i < 1000; i++) {
             sb.setLength(0);
-            sb.append(gjf.getFileName());
+            sb.append(fileName);
             sb.append('.');
             sb.append(i);
             

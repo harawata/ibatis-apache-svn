@@ -78,6 +78,8 @@ public class IbatorContext extends PropertyHolder {
     
     private IbatorPluginAggregator pluginAggregator;
     
+    private List<IbatorPluginConfiguration> pluginConfigurations;
+    
     /**
      * Constructs an IbatorContext object.
      * 
@@ -106,7 +108,7 @@ public class IbatorContext extends PropertyHolder {
         }
         
 		tableConfigurations = new ArrayList<TableConfiguration>();
-        pluginAggregator = new IbatorPluginAggregator();
+        pluginConfigurations = new ArrayList<IbatorPluginConfiguration>();
     }
 
 	public void addTableConfiguration(TableConfiguration tc) {
@@ -132,18 +134,24 @@ public class IbatorContext extends PropertyHolder {
 	public SqlMapGeneratorConfiguration getSqlMapGeneratorConfiguration() {
 		return sqlMapGeneratorConfiguration;
 	}
+    
+    public void addPluginConfiguration(IbatorPluginConfiguration ibatorPluginConfiguration) {
+        pluginConfigurations.add(ibatorPluginConfiguration);
+    }
 
 	/**
 	 * This method does a simple validate, it makes sure that all required
-	 * fields have been filled in and that all implementation classes exist and
-	 * are of the proper type. It does not do any more complex operations such
-	 * as: Validating that database tables exist or Validating that named
+	 * fields have been filled in. It does not do any more complex operations such
+	 * as validating that database tables exist or validating that named
 	 * columns exist
 	 */
 	public void validate(List<String> errors) {
+        if (!StringUtility.stringHasValue(id)) {
+            errors.add(Messages.getString("ValidationError.16")); //$NON-NLS-1$
+        }
+        
         if (jdbcConnectionConfiguration == null) {
             errors.add(Messages.getString("ValidationError.10")); //$NON-NLS-1$
-            return;
         } else {
             jdbcConnectionConfiguration.validate(errors);
         }
@@ -194,6 +202,10 @@ public class IbatorContext extends PropertyHolder {
 				tc.validate(errors, i);
 			}
 		}
+        
+        for (IbatorPluginConfiguration ibatorPluginConfiguration : pluginConfigurations) {
+            ibatorPluginConfiguration.validate(errors, id);
+        }
 	}
 	
 	/**
@@ -228,22 +240,33 @@ public class IbatorContext extends PropertyHolder {
 	        callback = new NullProgressCallback();
 	    }
 	    
-	    JavaTypeResolver javaTypeResolver = IbatorObjectFactory.createJavaTypeResolver(this, warnings);
-	    JavaModelGenerator javaModelGenerator = IbatorObjectFactory.createJavaModelGenerator(this, warnings);
-	    SqlMapGenerator sqlMapGenerator = IbatorObjectFactory.createSqlMapGenerator(this, javaModelGenerator, warnings);
-	    DAOGenerator daoGenerator = IbatorObjectFactory.createDAOGenerator(this, javaModelGenerator, sqlMapGenerator, warnings);
+        JavaTypeResolver javaTypeResolver = IbatorObjectFactory.createJavaTypeResolver(this, warnings);
+        JavaModelGenerator javaModelGenerator = IbatorObjectFactory.createJavaModelGenerator(this, warnings);
+        SqlMapGenerator sqlMapGenerator = IbatorObjectFactory.createSqlMapGenerator(this, javaModelGenerator, warnings);
+        DAOGenerator daoGenerator = IbatorObjectFactory.createDAOGenerator(this, javaModelGenerator, sqlMapGenerator, warnings);
+        pluginAggregator = new IbatorPluginAggregator();
+        for (IbatorPluginConfiguration ibatorPluginConfiguration : pluginConfigurations) {
+            IbatorPlugin plugin = IbatorObjectFactory.createIbatorPlugin(this, ibatorPluginConfiguration);
+            if (plugin.validate(warnings)) {
+                pluginAggregator.addPlugin(plugin);
+            } else {
+                warnings.add(Messages.getString("Warning.24", //$NON-NLS-1$
+                        ibatorPluginConfiguration.getConfigurationType(),
+                        id));
+            }
+        }
 
-		Connection connection = null;
+        Connection connection = null;
 		
-		try {
-			callback.startSubTask(Messages.getString("Progress.0")); //$NON-NLS-1$
-			connection = getConnection();
-            
+        try {
+            callback.startSubTask(Messages.getString("Progress.0")); //$NON-NLS-1$
+            connection = getConnection();
+
             DatabaseIntrospector databaseIntrospector =
                 new DatabaseIntrospector(this, connection.getMetaData(), javaTypeResolver, warnings);
 
             for (TableConfiguration tc : tableConfigurations) {
-				String tableName = StringUtility.composeFullyQualifiedTableName(
+                String tableName = StringUtility.composeFullyQualifiedTableName(
                         tc.getCatalog(), tc.getSchema(), tc.getTableName(), '.');
                 
                 if (fullyQualifiedTableNames != null
@@ -253,16 +276,15 @@ public class IbatorContext extends PropertyHolder {
                     }
                 }
 				
-				if (!tc.areAnyStatementsEnabled()) {
-				    warnings.add(Messages.getString("Warning.0", tableName)); //$NON-NLS-1$
-				    continue;
-				}
-				
+                if (!tc.areAnyStatementsEnabled()) {
+                    warnings.add(Messages.getString("Warning.0", tableName)); //$NON-NLS-1$
+                    continue;
+                }
 
-				Collection<? extends IntrospectedTable> introspectedTables;
-				callback.startSubTask(Messages.getString("Progress.1", tableName)); //$NON-NLS-1$
+                Collection<? extends IntrospectedTable> introspectedTables;
+                callback.startSubTask(Messages.getString("Progress.1", tableName)); //$NON-NLS-1$
                 introspectedTables  = databaseIntrospector.introspectTables(tc);
-				callback.checkCancel();
+                callback.checkCancel();
                 
                 if (introspectedTables != null) {
                     for (IntrospectedTable introspectedTable : introspectedTables) {
@@ -277,14 +299,17 @@ public class IbatorContext extends PropertyHolder {
                         generatedJavaFiles.addAll(pluginAggregator.generateAdditionalModelClasses(introspectedTable));
                         
                         generatedXmlFiles.addAll(sqlMapGenerator.getGeneratedXMLFiles(introspectedTable, callback));
-                        generatedXmlFiles.addAll(pluginAggregator.generateAdditionalXMLFiles(introspectedTable));
+                        generatedXmlFiles.addAll(pluginAggregator.generateAdditionalXmlFiles(introspectedTable));
                     }
                 }
-			}
-		} finally {
-			closeConnection(connection);
-			callback.finished();
-		}
+            }
+            
+            generatedJavaFiles.addAll(pluginAggregator.generateAdditionalJavaFiles());
+            generatedXmlFiles.addAll(pluginAggregator.generateAdditionalXmlFiles());
+        } finally {
+            closeConnection(connection);
+            callback.finished();
+        }
 	}
 	
 	public int getTotalSteps() {
@@ -466,5 +491,9 @@ public class IbatorContext extends PropertyHolder {
 
     public IbatorPlugin getPluginAggregator() {
         return pluginAggregator;
+    }
+
+    public String getConfiguredGeneratorSet() {
+        return configuredGeneratorSet;
     }
 }

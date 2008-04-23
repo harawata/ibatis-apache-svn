@@ -36,6 +36,7 @@ import org.apache.ibatis.ibator.config.ColumnRenamingRule;
 import org.apache.ibatis.ibator.config.CommentGeneratorConfiguration;
 import org.apache.ibatis.ibator.config.DAOGeneratorConfiguration;
 import org.apache.ibatis.ibator.config.GeneratedKey;
+import org.apache.ibatis.ibator.config.IbatorPluginConfiguration;
 import org.apache.ibatis.ibator.config.IgnoredColumn;
 import org.apache.ibatis.ibator.config.JDBCConnectionConfiguration;
 import org.apache.ibatis.ibator.config.JavaModelGeneratorConfiguration;
@@ -258,6 +259,8 @@ public class IbatorConfigurationParser {
 
             if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
                 parseProperty(ibatorContext, childNode);
+            } else if ("ibatorPlugin".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseIbatorPlugin(ibatorContext, childNode);
             } else if ("commentGenerator".equals(childNode.getNodeName())) { //$NON-NLS-1$
                 parseCommentGenerator(ibatorContext, childNode);
             } else if ("jdbcConnection".equals(childNode.getNodeName())) { //$NON-NLS-1$
@@ -549,6 +552,30 @@ public class IbatorConfigurationParser {
         }
     }
 
+    private void parseIbatorPlugin(IbatorContext ibatorContext, Node node) {
+        IbatorPluginConfiguration ibatorPluginConfiguration = new IbatorPluginConfiguration();
+
+        ibatorContext.addPluginConfiguration(ibatorPluginConfiguration);
+
+        Properties attributes = parseAttributes(node);
+        String type = attributes.getProperty("type"); //$NON-NLS-1$
+
+        ibatorPluginConfiguration.setConfigurationType(type);
+
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
+
+            if (childNode.getNodeType() != 1) {
+                continue;
+            }
+
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(ibatorPluginConfiguration, childNode);
+            }
+        }
+    }
+    
     private void parseJavaModelGenerator(IbatorContext ibatorContext, Node node) {
         JavaModelGeneratorConfiguration javaModelGeneratorConfiguration = new JavaModelGeneratorConfiguration();
 

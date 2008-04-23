@@ -31,6 +31,7 @@ import org.apache.ibatis.ibator.internal.util.messages.Messages;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
@@ -91,10 +92,25 @@ public class XmlFileMergerJaxp {
             Element existingRootElement = existingDocument.getDocumentElement();
             Element newRootElement = newDocument.getDocumentElement();
 
-            // reconcile the namespace
-            String namespace = newRootElement.getAttribute("namespace"); //$NON-NLS-1$
-            existingRootElement.setAttribute("namespace", namespace); //$NON-NLS-1$
+            // reconcile the root element attributes -
+            // take all attributes from the new element and add to the existing element
+            
+            // remove all attributes from the existing root element
+            NamedNodeMap attributes = existingRootElement.getAttributes();
+            int attributeCount = attributes.getLength();
+            for (int i = attributeCount - 1; i >= 0; i--) {
+                Node node = attributes.item(i);
+                existingRootElement.removeAttribute(node.getNodeName());
+            }
 
+            // add attributes from the new root node to the old root node
+            attributes = newRootElement.getAttributes();
+            attributeCount = attributes.getLength();
+            for (int i = 0; i < attributeCount; i++) {
+                Node node = attributes.item(i);
+                existingRootElement.setAttribute(node.getNodeName(), node.getNodeValue());
+            }
+            
             // remove the old ibator generated elements and any
             // white space before the old ibator nodes
             List<Node> nodesToDelete = new ArrayList<Node>();

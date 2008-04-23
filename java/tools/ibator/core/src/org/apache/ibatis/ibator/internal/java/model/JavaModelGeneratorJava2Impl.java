@@ -1513,21 +1513,21 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
                 // Is it the proper type?
                 if (!rootClassProperties[i].getPropertyType().getName().equals(propertyType)) {
-                    warnings.add(Messages.getString("Warning.21",
+                    warnings.add(Messages.getString("Warning.21", //$NON-NLS-1$
                             propertyName, rootClass, propertyType));
                     break;
                 }
                 
                 // Does it have a getter?
                 if (rootClassProperties[i].getReadMethod() == null) {
-                    warnings.add(Messages.getString("Warning.22",
+                    warnings.add(Messages.getString("Warning.22", //$NON-NLS-1$
                             propertyName, rootClass));
                     break;
                 }
                 
                 // Does it have a setter?
                 if (rootClassProperties[i].getWriteMethod() == null) {
-                    warnings.add(Messages.getString("Warning.23",
+                    warnings.add(Messages.getString("Warning.23", //$NON-NLS-1$
                             propertyName, rootClass));
                     break;
                 }
