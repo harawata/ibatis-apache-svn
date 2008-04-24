@@ -292,14 +292,14 @@ public class IbatorContext extends PropertyHolder {
 
                         if (daoGenerator != null) {
                             generatedJavaFiles.addAll(daoGenerator.getGeneratedJavaFiles(introspectedTable, callback));
-                            generatedJavaFiles.addAll(pluginAggregator.generateAdditionalDAOClasses(introspectedTable));
+                            generatedJavaFiles.addAll(pluginAggregator.daoGenerateAdditionalJavaFiles(introspectedTable));
                         }
                         
                         generatedJavaFiles.addAll(javaModelGenerator.getGeneratedJavaFiles(introspectedTable, callback));
-                        generatedJavaFiles.addAll(pluginAggregator.generateAdditionalModelClasses(introspectedTable));
+                        generatedJavaFiles.addAll(pluginAggregator.modelGenerateAdditionalJavaFiles(introspectedTable));
                         
                         generatedXmlFiles.addAll(sqlMapGenerator.getGeneratedXMLFiles(introspectedTable, callback));
-                        generatedXmlFiles.addAll(pluginAggregator.generateAdditionalXmlFiles(introspectedTable));
+                        generatedXmlFiles.addAll(pluginAggregator.sqlMapGenerateAdditionalXmlFiles(introspectedTable));
                     }
                 }
             }

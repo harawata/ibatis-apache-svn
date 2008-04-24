@@ -77,11 +77,11 @@ public abstract class IbatorPluginAdapter implements IbatorPlugin {
     public void modelExampleClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
     }
 
-    public List<GeneratedJavaFile> generateAdditionalModelClasses(IntrospectedTable introspectedTable) {
+    public List<GeneratedJavaFile> modelGenerateAdditionalJavaFiles(IntrospectedTable introspectedTable) {
         return null;
     }
 
-    public List<GeneratedXmlFile> generateAdditionalXmlFiles(IntrospectedTable introspectedTable) {
+    public List<GeneratedXmlFile> sqlMapGenerateAdditionalXmlFiles(IntrospectedTable introspectedTable) {
         return null;
     }
 
@@ -214,7 +214,7 @@ public abstract class IbatorPluginAdapter implements IbatorPlugin {
     public void daoUpdateByPrimaryKeyWithoutBLOBsMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
     }
 
-    public List<GeneratedJavaFile> generateAdditionalDAOClasses(IntrospectedTable introspectedTable) {
+    public List<GeneratedJavaFile> daoGenerateAdditionalJavaFiles(IntrospectedTable introspectedTable) {
         return null;
     }
 

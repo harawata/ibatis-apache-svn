@@ -30,13 +30,13 @@ import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.config.IbatorContext;
 
 /**
- * THis class is for internal use only.  It contains a list of plugins
+ * This class is for internal use only.  It contains a list of plugins
  * for the current context and is used to aggregate plugins together.
  * <p>
  * This class does not follow the normal plugin lifecycle and should not be
  * subclassed by clients.
  * 
- * @author Jeff
+ * @author Jeff Butler
  *
  */
 public final class IbatorPluginAggregator implements IbatorPlugin {
@@ -104,11 +104,11 @@ public final class IbatorPluginAggregator implements IbatorPlugin {
         }
     }
 
-    public List<GeneratedJavaFile> generateAdditionalModelClasses(
+    public List<GeneratedJavaFile> modelGenerateAdditionalJavaFiles(
             IntrospectedTable introspectedTable) {
         List<GeneratedJavaFile> answer = new ArrayList<GeneratedJavaFile>();
         for (IbatorPlugin plugin : plugins) {
-            List<GeneratedJavaFile> temp = plugin.generateAdditionalModelClasses(introspectedTable);
+            List<GeneratedJavaFile> temp = plugin.modelGenerateAdditionalJavaFiles(introspectedTable);
             if (temp != null) {
                 answer.addAll(temp);
             }
@@ -116,11 +116,11 @@ public final class IbatorPluginAggregator implements IbatorPlugin {
         return answer;
     }
 
-    public List<GeneratedXmlFile> generateAdditionalXmlFiles(
+    public List<GeneratedXmlFile> sqlMapGenerateAdditionalXmlFiles(
             IntrospectedTable introspectedTable) {
         List<GeneratedXmlFile> answer = new ArrayList<GeneratedXmlFile>();
         for (IbatorPlugin plugin : plugins) {
-            List<GeneratedXmlFile> temp = plugin.generateAdditionalXmlFiles(introspectedTable);
+            List<GeneratedXmlFile> temp = plugin.sqlMapGenerateAdditionalXmlFiles(introspectedTable);
             if (temp != null) {
                 answer.addAll(temp);
             }
@@ -387,10 +387,10 @@ public final class IbatorPluginAggregator implements IbatorPlugin {
         }
     }
 
-    public List<GeneratedJavaFile> generateAdditionalDAOClasses(IntrospectedTable introspectedTable) {
+    public List<GeneratedJavaFile> daoGenerateAdditionalJavaFiles(IntrospectedTable introspectedTable) {
         List<GeneratedJavaFile> answer = new ArrayList<GeneratedJavaFile>();
         for (IbatorPlugin plugin : plugins) {
-            List<GeneratedJavaFile> temp = plugin.generateAdditionalDAOClasses(introspectedTable);
+            List<GeneratedJavaFile> temp = plugin.daoGenerateAdditionalJavaFiles(introspectedTable);
             if (temp != null) {
                 answer.addAll(temp);
             }
