@@ -47,7 +47,7 @@ import org.apache.tools.ant.types.PropertySet;
  *    &lt;property name="generated.source.dir" value="${basedir}" /&gt;
  *    &lt;target name="genfiles" description="Generate the files"&gt;
  *      &lt;taskdef name="ibator"
- *               classname="org.apache.ibatis.ibator.ant.ibatorAntTask"
+ *               classname="org.apache.ibatis.ibator.ant.IbatorAntTask"
  *               classpath="ibator.jar" /&gt;
  *      &lt;ibator overwrite="true" configfile="ibatorConfig.xml" verbose="false" &gt;
  *        &lt;propertyset&gt;

@@ -5,8 +5,6 @@ Core:
     1. Write page explaining how to use the GENERIC DAOs
     2. Finish JavaDoc on the IbatorPlugin interface
     3. Document plugins - plugin lifecycle
-    4. Document example plugins - equals/hashCode generator, sqlMapConfig generator
-    5. Write example plugins - SpringValidator
        
   Future
 
@@ -16,7 +14,7 @@ Core:
 
     2. Refactoring: Make a class for each type of method to be generated
     
-    4. Relationships?
+    3. Relationships?
 
 Eclipse:
 

@@ -15,10 +15,7 @@
  */
 package org.apache.ibatis.ibator.api;
 
-import java.util.Set;
-
 import org.apache.ibatis.ibator.api.dom.java.CompilationUnit;
-import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 
 
 /**
@@ -36,10 +33,6 @@ public class GeneratedJavaFile extends GeneratedFile {
         this.compilationUnit = compilationUnit;
 	}
 
-	public Set<FullyQualifiedJavaType> getImportedTypes() {
-		return compilationUnit.getImportedTypes();
-	}
-
 	/*
 	 *  (non-Javadoc)
 	 * @see org.apache.ibatis.ibator.api.GeneratedFile#getFormattedContent()
@@ -48,17 +41,6 @@ public class GeneratedJavaFile extends GeneratedFile {
 	public String getFormattedContent() {
 	    return compilationUnit.getFormattedContent();
 	}
-
-	public Set<FullyQualifiedJavaType> getSuperInterfaceTypes() {
-		return compilationUnit.getSuperInterfaceTypes();
-	}
-
-    /**
-     * @return Returns the superClass.
-     */
-    public FullyQualifiedJavaType getSuperClass() {
-        return compilationUnit.getSuperClass();
-    }
 
     /*
      *  (non-Javadoc)
@@ -76,9 +58,5 @@ public class GeneratedJavaFile extends GeneratedFile {
 	@Override
     public String getTargetPackage() {
         return compilationUnit.getType().getPackageName();
-    }
-    
-    public boolean isJavaInterface() {
-        return compilationUnit.isJavaInterface();
     }
 }

@@ -72,10 +72,6 @@ public class GeneratedXmlFile extends GeneratedFile {
         return targetPackage;
     }
 
-    public Document getDocument() {
-        return document;
-    }
-
     public boolean isMergeable() {
         return isMergeable;
     }

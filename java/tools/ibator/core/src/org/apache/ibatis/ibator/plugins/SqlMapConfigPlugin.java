@@ -77,7 +77,7 @@ public class SqlMapConfigPlugin extends IbatorPluginAdapter {
     }
     
     @Override
-    public List<GeneratedXmlFile> generateAdditionalXmlFiles() {
+    public List<GeneratedXmlFile> contextGenerateAdditionalXmlFiles() {
         Document document = new Document(XmlConstants.SQL_MAP_CONFIG_PUBLIC_ID,
                 XmlConstants.SQL_MAP_CONFIG_SYSTEM_ID);
         

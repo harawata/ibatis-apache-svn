@@ -26,6 +26,7 @@ import org.apache.ibatis.ibator.api.IntrospectedTable;
 import org.apache.ibatis.ibator.api.dom.java.Interface;
 import org.apache.ibatis.ibator.api.dom.java.Method;
 import org.apache.ibatis.ibator.api.dom.java.TopLevelClass;
+import org.apache.ibatis.ibator.api.dom.xml.Document;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.config.IbatorContext;
 
@@ -104,11 +105,11 @@ public final class IbatorPluginAggregator implements IbatorPlugin {
         }
     }
 
-    public List<GeneratedJavaFile> modelGenerateAdditionalJavaFiles(
+    public List<GeneratedJavaFile> contextGenerateAdditionalJavaFiles(
             IntrospectedTable introspectedTable) {
         List<GeneratedJavaFile> answer = new ArrayList<GeneratedJavaFile>();
         for (IbatorPlugin plugin : plugins) {
-            List<GeneratedJavaFile> temp = plugin.modelGenerateAdditionalJavaFiles(introspectedTable);
+            List<GeneratedJavaFile> temp = plugin.contextGenerateAdditionalJavaFiles(introspectedTable);
             if (temp != null) {
                 answer.addAll(temp);
             }
@@ -116,11 +117,11 @@ public final class IbatorPluginAggregator implements IbatorPlugin {
         return answer;
     }
 
-    public List<GeneratedXmlFile> sqlMapGenerateAdditionalXmlFiles(
+    public List<GeneratedXmlFile> contextGenerateAdditionalXmlFiles(
             IntrospectedTable introspectedTable) {
         List<GeneratedXmlFile> answer = new ArrayList<GeneratedXmlFile>();
         for (IbatorPlugin plugin : plugins) {
-            List<GeneratedXmlFile> temp = plugin.sqlMapGenerateAdditionalXmlFiles(introspectedTable);
+            List<GeneratedXmlFile> temp = plugin.contextGenerateAdditionalXmlFiles(introspectedTable);
             if (temp != null) {
                 answer.addAll(temp);
             }
@@ -387,10 +388,10 @@ public final class IbatorPluginAggregator implements IbatorPlugin {
         }
     }
 
-    public List<GeneratedJavaFile> daoGenerateAdditionalJavaFiles(IntrospectedTable introspectedTable) {
+    public List<GeneratedJavaFile> contextGenerateAdditionalJavaFiles() {
         List<GeneratedJavaFile> answer = new ArrayList<GeneratedJavaFile>();
         for (IbatorPlugin plugin : plugins) {
-            List<GeneratedJavaFile> temp = plugin.daoGenerateAdditionalJavaFiles(introspectedTable);
+            List<GeneratedJavaFile> temp = plugin.contextGenerateAdditionalJavaFiles();
             if (temp != null) {
                 answer.addAll(temp);
             }
@@ -398,25 +399,20 @@ public final class IbatorPluginAggregator implements IbatorPlugin {
         return answer;
     }
 
-    public List<GeneratedJavaFile> generateAdditionalJavaFiles() {
-        List<GeneratedJavaFile> answer = new ArrayList<GeneratedJavaFile>();
-        for (IbatorPlugin plugin : plugins) {
-            List<GeneratedJavaFile> temp = plugin.generateAdditionalJavaFiles();
-            if (temp != null) {
-                answer.addAll(temp);
-            }
-        }
-        return answer;
-    }
-
-    public List<GeneratedXmlFile> generateAdditionalXmlFiles() {
+    public List<GeneratedXmlFile> contextGenerateAdditionalXmlFiles() {
         List<GeneratedXmlFile> answer = new ArrayList<GeneratedXmlFile>();
         for (IbatorPlugin plugin : plugins) {
-            List<GeneratedXmlFile> temp = plugin.generateAdditionalXmlFiles();
+            List<GeneratedXmlFile> temp = plugin.contextGenerateAdditionalXmlFiles();
             if (temp != null) {
                 answer.addAll(temp);
             }
         }
         return answer;
+    }
+
+    public void sqlMapDocumentGenerated(Document document, IntrospectedTable introspectedTable) {
+        for (IbatorPlugin plugin : plugins) {
+            plugin.sqlMapDocumentGenerated(document, introspectedTable);
+        }
     }
 }

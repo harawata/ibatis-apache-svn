@@ -15,9 +15,7 @@
  */
 package org.apache.ibatis.ibator.internal;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.ibator.api.CommentGenerator;
 import org.apache.ibatis.ibator.api.DAOGenerator;
@@ -25,9 +23,9 @@ import org.apache.ibatis.ibator.api.IbatorPlugin;
 import org.apache.ibatis.ibator.api.JavaModelGenerator;
 import org.apache.ibatis.ibator.api.JavaTypeResolver;
 import org.apache.ibatis.ibator.api.SqlMapGenerator;
-import org.apache.ibatis.ibator.config.IbatorContext;
 import org.apache.ibatis.ibator.config.CommentGeneratorConfiguration;
 import org.apache.ibatis.ibator.config.DAOGeneratorConfiguration;
+import org.apache.ibatis.ibator.config.IbatorContext;
 import org.apache.ibatis.ibator.config.IbatorPluginConfiguration;
 import org.apache.ibatis.ibator.config.JavaModelGeneratorConfiguration;
 import org.apache.ibatis.ibator.config.JavaTypeResolverConfiguration;
@@ -40,14 +38,8 @@ import org.apache.ibatis.ibator.internal.util.messages.Messages;
  * @author Jeff Butler
  */
 public class IbatorObjectFactory {
-    private static ClassLoader classLoader;
-    private static Map<String, Class<?>> loadedClasses;
+    private static ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     
-    static {
-        classLoader = Thread.currentThread().getContextClassLoader();
-        loadedClasses =  new HashMap<String, Class<?>>();
-    }
-
     /**
      * Utility class.  No instances allowed 
      */
@@ -57,13 +49,9 @@ public class IbatorObjectFactory {
     
     public static synchronized void setClassLoader(ClassLoader classLoader) {
         IbatorObjectFactory.classLoader = classLoader;
-        loadedClasses.clear();
     }
 
     public static Class<?> loadClass(String type) throws ClassNotFoundException {
-        if (loadedClasses.containsKey(type)) {
-            return loadedClasses.get(type);
-        }
         
         Class<?> clazz;
 
@@ -91,7 +79,6 @@ public class IbatorObjectFactory {
         } catch (Exception e) {
             throw new RuntimeException(
               Messages.getString("RuntimeError.6", type), e); //$NON-NLS-1$
-            
         }
         
         return answer;

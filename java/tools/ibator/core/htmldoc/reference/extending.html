@@ -3,7 +3,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-  <title>Extending ibator</title>
+  <title>Extending Ibator</title>
   <link type="text/css" rel="stylesheet" href="../ibator.css"/>
 </head>
 <body>
@@ -13,8 +13,8 @@
     <a href="extending.html" target="_top">No Frames</a>
   </font>
 </p>
-<h1>Extending ibator</h1>
-<p>ibator is designed for extensibility.  All code generation is performed using a
+<h1>Extending Ibator</h1>
+<p>Ibator is designed for extensibility.  All code generation is performed using a
 simple DOM representation of Java and XML elements that is included with ibator.</p>
 <p>The Java DOM is included in the package <code>org.apache.ibatis.ibator.api.dom.java</code></p>
 <p>The XML DOM is included in the package <code>org.apache.ibatis.ibator.api.dom.xml</code></p>
@@ -29,9 +29,21 @@ any difficulty understanding how to extend ibator, feel free to send a note to t
 support mailing list at
 <a href="mailto:user-java@ibatis.apache.org">user-java@ibatis.apache.org</a>.</p>
 
+<h2>Extending Versus Plugging In</h2>
+<p>Although it is possible to implement ibator's key interfaces as shown on this
+page, in most cases it will be far easier to extend ibator through the use of a plugin.  See the
+<a href="pluggingIn.html">Implementing Ibator Plugins</a> reference page for more information.</p>
+<p>The DAO, Java Model, and SQL Map generator interfaces are interrelated and the code
+behind the interfaces is quite complex.  In the years since the original release of Abator,
+very few enhancement requests have appeared that could not be handled by a plugin.  If you
+intend to supply your own implementation of these interfaces, you should plan to supply an
+implementation for <i>all three</i> interfaces.  A good example of such an implementation
+would be a FreeMarker or Velocity template based implementation of ibator.  In almost every
+other instance, a plugin is the better way to go.</p>
+
 <h2>org.apache.ibatis.ibator.api.JavaModelGenerator</h2>
-<p>ibator calls methods in this interface to generate the Java model POJOs.
-   You can provide your own implementation, and the default implementations have
+<p>Ibator calls methods in this interface to generate the Java model POJOs.
+   You can provide your own implementation, and the supplied implementations have
    been designed for extensibility.  The default implementation of the interface
    is dependant on the value of the <code>generatorSet</code>
    property of the <a href="../configreference/ibatorContext.html">&lt;ibatorContext&gt;</a>
@@ -61,23 +73,11 @@ support mailing list at
 </pre>
 
 <h2>org.apache.ibatis.ibator.api.SqlMapGenerator</h2>
-<p>ibator calls methods in this interface to generate the SQL Maps.
-   You can provide your own implementation, and the default implementations have
-   been designed for extensibility.  The default implementation of the interface
-   is dependant on the value of the <code>generatorSet</code>
-   property of the <a href="../configreference/ibatorContext.html">&lt;ibatorContext&gt;</a>
-   configuration element.  The following table shows the different possibilities:</p>
-
-<table border="1" cellspacing="0" cellpadding="5">
-  <tr>
-    <th>generatorSet</th>
-    <th>Implementation Class</th>
-  </tr>
-  <tr>
-    <td>Java2 (the default set) or Java5</td>
-    <td><code>org.apache.ibatis.ibator.internal.sqlmap.SqlMapGeneratorIterateImpl</code></td>
-  </tr>
-</table>
+<p>Ibator calls methods in this interface to generate the SQL Maps.
+   The default implementation of this interface is
+   <code>org.apache.ibatis.ibator.internal.sqlmap.SqlMapGeneratorIterateImpl</code>
+   You can provide your own implementation, and the supplied implementation has
+   been designed for extensibility.</p>
 
 <p>To provide your own implementation, specify the fully qualified class name
    in the XML configuration like this:</p>
@@ -88,9 +88,9 @@ support mailing list at
 </pre>
 
 <h2>org.apache.ibatis.ibator.api.DAOGenerator</h2>
-<p>ibator calls methods in this interface to generate the DAOs for each introspected
-table.  ibator supplies twelve implementations of this
-interface to match the four different types of DAOs, and the three different sets
+<p>Ibator calls methods in this interface to generate the DAOs for each introspected
+table.  Ibator supplies eight implementations of this
+interface to match the four different types of DAOs, and the two different sets
 of code generators.  The implementation is selected based on the value of the
 <a href="../configreference/ibatorContext.html">&lt;ibatorContext&gt;</a>
 configuration element and the value of the <code>type</code> attribute
@@ -151,7 +151,7 @@ The implementations are:</p>
 </pre>
 
 <h2>org.apache.ibatis.ibator.api.JavaTypeResolver</h2>
-<p>ibator calls methods in this interface to map JDBC types to Java types
+<p>Ibator calls methods in this interface to map JDBC types to Java types
    during database introspection.  The default implementation of this
    interface is <code>org.apache.ibatis.ibator.internal.types.JavaTypeResolverDefaultImpl</code>.
    You can provide your own implementation, and the default implementation has
@@ -166,7 +166,7 @@ The implementations are:</p>
 </pre>
 
 <h2>org.apache.ibatis.ibator.api.ShellCallback</h2>
-<p> ibator calls methods in this interface to perform functions that it cannot
+<p>Ibator calls methods in this interface to perform functions that it cannot
    do on its own.  The most important of these functions are:</p>
 <ul>
   <li>Translating project/package into a directory structure</li>
@@ -182,7 +182,7 @@ The implementations are:</p>
 
 <p>You can provide your own implementation.  This would be the most important
    class to write if you want to integrate ibator into some other environment.
-   The Eclipse plugin provides an implementation of this interface that
+   For example, the Eclipse plugin provides an implementation of this interface that
    supports Java file merging when running in the Eclipse environment.</p>
 
 <p>To provide your own implementation, supply an instance of the interface
@@ -193,7 +193,7 @@ The implementations are:</p>
    your implementation.</p>
 
 <h2>org.apache.ibatis.ibator.api.ProgressCallback</h2>
-<p>ibator calls methods in this interface to report progress during the
+<p>Ibator calls methods in this interface to report progress during the
    generation of files (a long running process).  The default implementation
    of this interface is
    <code>org.apache.ibatis.ibator.internal.NullProgressCallback</code>

@@ -21,6 +21,7 @@ import java.util.Properties;
 import org.apache.ibatis.ibator.api.dom.java.Interface;
 import org.apache.ibatis.ibator.api.dom.java.Method;
 import org.apache.ibatis.ibator.api.dom.java.TopLevelClass;
+import org.apache.ibatis.ibator.api.dom.xml.Document;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.config.IbatorContext;
 
@@ -77,11 +78,11 @@ public abstract class IbatorPluginAdapter implements IbatorPlugin {
     public void modelExampleClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
     }
 
-    public List<GeneratedJavaFile> modelGenerateAdditionalJavaFiles(IntrospectedTable introspectedTable) {
+    public List<GeneratedJavaFile> contextGenerateAdditionalJavaFiles(IntrospectedTable introspectedTable) {
         return null;
     }
 
-    public List<GeneratedXmlFile> sqlMapGenerateAdditionalXmlFiles(IntrospectedTable introspectedTable) {
+    public List<GeneratedXmlFile> contextGenerateAdditionalXmlFiles(IntrospectedTable introspectedTable) {
         return null;
     }
 
@@ -214,15 +215,14 @@ public abstract class IbatorPluginAdapter implements IbatorPlugin {
     public void daoUpdateByPrimaryKeyWithoutBLOBsMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
     }
 
-    public List<GeneratedJavaFile> daoGenerateAdditionalJavaFiles(IntrospectedTable introspectedTable) {
+    public List<GeneratedJavaFile> contextGenerateAdditionalJavaFiles() {
         return null;
     }
 
-    public List<GeneratedJavaFile> generateAdditionalJavaFiles() {
+    public List<GeneratedXmlFile> contextGenerateAdditionalXmlFiles() {
         return null;
     }
 
-    public List<GeneratedXmlFile> generateAdditionalXmlFiles() {
-        return null;
+    public void sqlMapDocumentGenerated(Document document, IntrospectedTable introspectedTable) {
     }
 }

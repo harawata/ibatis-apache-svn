@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.ibatis.ibator.api.dom.OutputUtilities;
+import org.apache.ibatis.ibator.internal.util.StringUtility;
 
 /**
  * @author Jeff Butler
@@ -62,8 +63,7 @@ public class TopLevelClass extends InnerClass implements CompilationUnit {
             OutputUtilities.newLine(sb);
         }
 
-        if (getType().getPackageName() != null
-                && getType().getPackageName().length() > 0) {
+        if (StringUtility.stringHasValue(getType().getPackageName())) {
             sb.append("package "); //$NON-NLS-1$
             sb.append(getType().getPackageName());
             sb.append(';');

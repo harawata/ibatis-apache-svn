@@ -151,6 +151,8 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
                 XmlConstants.SQL_MAP_SYSTEM_ID);
         document.setRootElement(getSqlMapElement(introspectedTable));
         
+        ibatorContext.getPluginAggregator().sqlMapDocumentGenerated(document, introspectedTable);
+        
         FullyQualifiedTable table = introspectedTable.getTable();
         GeneratedXmlFile answer = new GeneratedXmlFile(document,
                 getSqlMapFileName(table), getSqlMapPackage(table),
