@@ -1,20 +1,16 @@
 Core:
 
-  1.2
-
-    1. Write page explaining how to use the GENERIC DAOs
-    2. Finish JavaDoc on the IbatorPlugin interface
-    3. Document plugins - plugin lifecycle
-       
   Future
 
-    1. Change the base API to allow specifying a connection at
+    1. Write page explaining how to use the GENERIC DAOs
+    
+    2. Change the base API to allow specifying a connection at
        runtime, rather than requiring a connection in the 
        XML config.
 
-    2. Refactoring: Make a class for each type of method to be generated
+    3. Refactoring: Make a class for each type of method to be generated
     
-    3. Relationships?
+    4. Relationships?
 
 Eclipse:
 

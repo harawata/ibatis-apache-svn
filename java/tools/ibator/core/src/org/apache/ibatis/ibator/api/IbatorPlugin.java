@@ -55,7 +55,8 @@ import org.apache.ibatis.ibator.config.IbatorContext;
  * <p>
  * Plugins are called, and initialized, in the same order they are specified
  * in the configuration.
- * <p>The daoXXX, modelXXX, and sqlMapXXX methods are called by the code
+ * <p>
+ * The daoXXX, modelXXX, and sqlMapXXX methods are called by the code
  * generators supplied with ibator.  If you replace ibator's default code
  * generators with other implementations, these methods may not be called.
  * 
@@ -139,33 +140,364 @@ public interface IbatorPlugin {
      */
     List<GeneratedXmlFile> contextGenerateAdditionalXmlFiles(IntrospectedTable introspectedTable);
 
+    /**
+     * This method is called when the entire DAO interface has been generated.
+     * Implement this method to add additional methods or fields to a generated
+     * DAO interface.
+     * 
+     * @param interfaze the generated interface
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void daoInterfaceGenerated(Interface interfaze, IntrospectedTable introspectedTable);
+    
+    /**
+     * This method is called when the entire DAO implementation has been generated.
+     * Implement this method to add additional methods or fields to a generated
+     * DAO implementation.
+     * 
+     * @param topLevelClass the generated implementation class
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void daoImplementationGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
+    
+    /**
+     * This method is called when the countByExample method has been
+     * generated in the DAO implementation class.
+     * 
+     * @param method the generated countByExample method
+     * @param topLevelClass the partially implemented DAO implementation
+     *   class.  You can add additional imported classes to the 
+     *   implementation class if necessary.
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void daoCountByExampleMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
-    void daoCountByExampleMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
-    void daoDeleteByExampleMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    
+    /**
+     * This method is called when the deleteByExample method has been
+     * generated in the DAO implementation class.
+     * 
+     * @param method the generated deleteByExample method
+     * @param topLevelClass the partially implemented DAO implementation
+     *   class.  You can add additional imported classes to the 
+     *   implementation class if necessary.
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void daoDeleteByExampleMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
-    void daoDeleteByPrimaryKeyMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    
+    /**
+     * This method is called when the deleteByPrimaryKey method has been
+     * generated in the DAO implementation class.
+     * 
+     * @param method the generated deleteByPrimaryKey method
+     * @param topLevelClass the partially implemented DAO implementation
+     *   class.  You can add additional imported classes to the 
+     *   implementation class if necessary.
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void daoDeleteByPrimaryKeyMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
+    
+    /**
+     * This method is called when the insert method has been
+     * generated in the DAO implementation class.
+     * 
+     * @param method the generated insert method
+     * @param topLevelClass the partially implemented DAO implementation
+     *   class.  You can add additional imported classes to the 
+     *   implementation class if necessary.
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void daoInsertMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
-    void daoInsertMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    
+    /**
+     * This method is called when the selectByExampleWithBLOBs method has been
+     * generated in the DAO implementation class.
+     * 
+     * @param method the generated selectByExampleWithBLOBs method
+     * @param topLevelClass the partially implemented DAO implementation
+     *   class.  You can add additional imported classes to the 
+     *   implementation class if necessary.
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void daoSelectByExampleWithBLOBsMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
-    void daoSelectByExampleWithBLOBsMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    
+    /**
+     * This method is called when the selectByExampleWithoutBLOBs method has been
+     * generated in the DAO implementation class.
+     * 
+     * @param method the generated selectByExampleWithoutBLOBs method
+     * @param topLevelClass the partially implemented DAO implementation
+     *   class.  You can add additional imported classes to the 
+     *   implementation class if necessary.
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void daoSelectByExampleWithoutBLOBsMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
-    void daoSelectByExampleWithoutBLOBsMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    
+    /**
+     * This method is called when the selectByPrimaryKey method has been
+     * generated in the DAO implementation class.
+     * 
+     * @param method the generated selectByPrimaryKey method
+     * @param topLevelClass the partially implemented DAO implementation
+     *   class.  You can add additional imported classes to the 
+     *   implementation class if necessary.
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void daoSelectByPrimaryKeyMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
-    void daoSelectByPrimaryKeyMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    
+    /**
+     * This method is called when the updateByExampleSelective method has been
+     * generated in the DAO implementation class.
+     * 
+     * @param method the generated updateByExampleSelective method
+     * @param topLevelClass the partially implemented DAO implementation
+     *   class.  You can add additional imported classes to the 
+     *   implementation class if necessary.
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void daoUpdateByExampleSelectiveMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
-    void daoUpdateByExampleSelectiveMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    
+    /**
+     * This method is called when the updateByExampleWithBLOBs method has been
+     * generated in the DAO implementation class.
+     * 
+     * @param method the generated updateByExampleWithBLOBs method
+     * @param topLevelClass the partially implemented DAO implementation
+     *   class.  You can add additional imported classes to the 
+     *   implementation class if necessary.
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void daoUpdateByExampleWithBLOBsMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
-    void daoUpdateByExampleWithBLOBsMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    
+    /**
+     * This method is called when the updateByExampleWithoutBLOBs method has been
+     * generated in the DAO implementation class.
+     * 
+     * @param method the generated updateByExampleWithoutBLOBs method
+     * @param topLevelClass the partially implemented DAO implementation
+     *   class.  You can add additional imported classes to the 
+     *   implementation class if necessary.
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void daoUpdateByExampleWithoutBLOBsMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
-    void daoUpdateByExampleWithoutBLOBsMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    
+    /**
+     * This method is called when the updateByPrimaryKeySelective method has been
+     * generated in the DAO implementation class.
+     * 
+     * @param method the generated updateByPrimaryKeySelective method
+     * @param topLevelClass the partially implemented DAO implementation
+     *   class.  You can add additional imported classes to the 
+     *   implementation class if necessary.
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void daoUpdateByPrimaryKeySelectiveMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
-    void daoUpdateByPrimaryKeySelectiveMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    
+    /**
+     * This method is called when the updateByPrimaryKeyWithBLOBs method has been
+     * generated in the DAO implementation class.
+     * 
+     * @param method the generated updateByPrimaryKeyWithBLOBs method
+     * @param topLevelClass the partially implemented DAO implementation
+     *   class.  You can add additional imported classes to the 
+     *   implementation class if necessary.
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void daoUpdateByPrimaryKeyWithBLOBsMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
-    void daoUpdateByPrimaryKeyWithBLOBsMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    
+    /**
+     * This method is called when the updateByPrimaryKeyWithoutBLOBs method has been
+     * generated in the DAO implementation class.
+     * 
+     * @param method the generated updateByPrimaryKeyWithBLOBs method
+     * @param topLevelClass the partially implemented DAO implementation
+     *   class.  You can add additional imported classes to the 
+     *   implementation class if necessary.
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void daoUpdateByPrimaryKeyWithoutBLOBsMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
+    
+    /**
+     * This method is called when the countByExample method has been
+     * generated in the DAO interface class.
+     * 
+     * @param method the generated countByExample method
+     * @param interfaze the partially implemented DAO interface
+     *   class.  You can add additional imported classes to the 
+     *   interface class if necessary.
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
+    void daoCountByExampleMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    
+    /**
+     * This method is called when the deleteByExample method has been
+     * generated in the DAO interface class.
+     * 
+     * @param method the generated deleteByExample method
+     * @param interfaze the partially implemented DAO interface
+     *   class.  You can add additional imported classes to the 
+     *   interface class if necessary.
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
+    void daoDeleteByExampleMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    
+    /**
+     * This method is called when the deleteByPrimaryKey method has been
+     * generated in the DAO interface class.
+     * 
+     * @param method the generated deleteByPrimaryKey method
+     * @param interfaze the partially implemented DAO interface
+     *   class.  You can add additional imported classes to the 
+     *   interface class if necessary.
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
+    void daoDeleteByPrimaryKeyMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    
+    /**
+     * This method is called when the insert method has been
+     * generated in the DAO interface class.
+     * 
+     * @param method the generated insert method
+     * @param interfaze the partially implemented DAO interface
+     *   class.  You can add additional imported classes to the 
+     *   interface class if necessary.
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
+    void daoInsertMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    
+    /**
+     * This method is called when the selectByExampleWithBLOBs method has been
+     * generated in the DAO interface class.
+     * 
+     * @param method the generated selectByExampleWithBLOBs method
+     * @param interfaze the partially implemented DAO interface
+     *   class.  You can add additional imported classes to the 
+     *   interface class if necessary.
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
+    void daoSelectByExampleWithBLOBsMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    
+    /**
+     * This method is called when the selectByExampleWithoutBLOBs method has been
+     * generated in the DAO interface class.
+     * 
+     * @param method the generated selectByExampleWithoutBLOBs method
+     * @param interfaze the partially implemented DAO interface
+     *   class.  You can add additional imported classes to the 
+     *   interface class if necessary.
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
+    void daoSelectByExampleWithoutBLOBsMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    
+    /**
+     * This method is called when the selectByPrimaryKey method has been
+     * generated in the DAO interface class.
+     * 
+     * @param method the generated selectByPrimaryKey method
+     * @param interfaze the partially implemented DAO interface
+     *   class.  You can add additional imported classes to the 
+     *   interface class if necessary.
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
+    void daoSelectByPrimaryKeyMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    
+    /**
+     * This method is called when the updateByExampleSelective method has been
+     * generated in the DAO interface class.
+     * 
+     * @param method the generated updateByExampleSelective method
+     * @param interfaze the partially implemented DAO interface
+     *   class.  You can add additional imported classes to the 
+     *   interface class if necessary.
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
+    void daoUpdateByExampleSelectiveMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    
+    /**
+     * This method is called when the updateByExampleWithBLOBs method has been
+     * generated in the DAO interface class.
+     * 
+     * @param method the generated updateByExampleWithBLOBs method
+     * @param interfaze the partially implemented DAO interface
+     *   class.  You can add additional imported classes to the 
+     *   interface class if necessary.
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
+    void daoUpdateByExampleWithBLOBsMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    
+    /**
+     * This method is called when the updateByExampleWithoutBLOBs method has been
+     * generated in the DAO interface class.
+     * 
+     * @param method the generated updateByExampleWithoutBLOBs method
+     * @param interfaze the partially implemented DAO interface
+     *   class.  You can add additional imported classes to the 
+     *   interface class if necessary.
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
+    void daoUpdateByExampleWithoutBLOBsMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    
+    /**
+     * This method is called when the updateByPrimaryKeySelective method has been
+     * generated in the DAO interface class.
+     * 
+     * @param method the generated updateByPrimaryKeySelective method
+     * @param interfaze the partially implemented DAO interface
+     *   class.  You can add additional imported classes to the 
+     *   interface class if necessary.
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
+    void daoUpdateByPrimaryKeySelectiveMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    
+    /**
+     * This method is called when the updateByPrimaryKeyWithBLOBs method has been
+     * generated in the DAO interface class.
+     * 
+     * @param method the generated updateByPrimaryKeyWithBLOBs method
+     * @param interfaze the partially implemented DAO interface
+     *   class.  You can add additional imported classes to the 
+     *   interface class if necessary.
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
+    void daoUpdateByPrimaryKeyWithBLOBsMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    
+    /**
+     * This method is called when the updateByPrimaryKeyWithoutBLOBs method has been
+     * generated in the DAO interface class.
+     * 
+     * @param method the generated updateByPrimaryKeyWithoutBLOBs method
+     * @param interfaze the partially implemented DAO interface
+     *   class.  You can add additional imported classes to the 
+     *   interface class if necessary.
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void daoUpdateByPrimaryKeyWithoutBLOBsMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
 
     /**
@@ -227,24 +559,171 @@ public interface IbatorPlugin {
      *   about the table as introspected from the database
      */
     void modelExampleClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
-    
-    
+
+    /**
+     * This method is called when the SqlMap file has been generated.
+     * 
+     * @param sqlMap the generated file (containing the file name,
+     *   package name, and project name)
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void sqlMapGenerated(GeneratedXmlFile sqlMap, IntrospectedTable introspectedTable);
+
+    /**
+     * This method is called when the SqlMap document has been generated.
+     * This method can be used to add additional XML elements the the
+     * generated document.
+     * 
+     * @param document the generated document (note that this is ibator's
+     *   internal Document class - not the w3c XML Document class)
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void sqlMapDocumentGenerated(Document document, IntrospectedTable introspectedTable);
+
+    /**
+     * This method is called when the base resultMap is generated.
+     * 
+     * @param element the generated &lt;resultMap&gt; element
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void sqlMapBaseResultMapGenerated(XmlElement element, IntrospectedTable introspectedTable);
+
+    /**
+     * This method is called when the countByExample element is generated.
+     * 
+     * @param element the generated &lt;select&gt; element
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void sqlMapCountByExampleElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
+
+    /**
+     * This method is called when the deleteByExample element is generated.
+     * 
+     * @param element the generated &lt;delete&gt; element
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void sqlMapDeleteByExampleElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
+
+    /**
+     * This method is called when the deleteByPrimaryKey element is generated.
+     * 
+     * @param element the generated &lt;delete&gt; element
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void sqlMapDeleteByPrimaryKeyElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
+
+    /**
+     * This method is called when the exampleWhereClause element is generated.
+     * 
+     * @param element the generated &lt;sql&gt; element
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void sqlMapExampleWhereClauseGenerated(XmlElement element, IntrospectedTable introspectedTable);
+
+    /**
+     * This method is called when the insert element is generated.
+     * 
+     * @param element the generated &lt;insert&gt; element
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void sqlMapInsertElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
+
+    /**
+     * This method is called when the resultMap with BLOBs element is
+     * generated - this resultMap will extend the base resultMap.
+     * 
+     * @param element the generated &lt;resultMap&gt; element
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void sqlMapResultMapWithBLOBsGenerated(XmlElement element, IntrospectedTable introspectedTable);
+
+    /**
+     * This method is called when the selectByPrimaryKey element is generated.
+     * 
+     * @param element the generated &lt;select&gt; element
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void sqlMapSelectByPrimaryKeyElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
+
+    /**
+     * This method is called when the selectByExample element is generated.
+     * 
+     * @param element the generated &lt;select&gt; element
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void sqlMapSelectByExampleElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
+
+    /**
+     * This method is called when the selectByExampleWithBLOBs element is generated.
+     * 
+     * @param element the generated &lt;select&gt; element
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void sqlMapSelectByExampleWithBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
+
+    /**
+     * This method is called when the updateByExampleSelective element is generated.
+     * 
+     * @param element the generated &lt;update&gt; element
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void sqlMapUpdateByExampleSelectiveElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
+
+    /**
+     * This method is called when the updateByExampleWithBLOBs element is generated.
+     * 
+     * @param element the generated &lt;update&gt; element
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void sqlMapUpdateByExampleWithBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
+
+    /**
+     * This method is called when the updateByExampleWithourBLOBs element is generated.
+     * 
+     * @param element the generated &lt;update&gt; element
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void sqlMapUpdateByExampleWithoutBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
+
+    /**
+     * This method is called when the updateByPrimaryKeySelective element is generated.
+     * 
+     * @param element the generated &lt;update&gt; element
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void sqlMapUpdateByPrimaryKeySelectiveElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
+
+    /**
+     * This method is called when the updateByPrimaryKeyWithBLOBs element is generated.
+     * 
+     * @param element the generated &lt;update&gt; element
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void sqlMapUpdateByPrimaryKeyWithBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
+
+    /**
+     * This method is called when the updateByPrimaryKeyWithoutBLOBs element is generated.
+     * 
+     * @param element the generated &lt;update&gt; element
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     */
     void sqlMapUpdateByPrimaryKeyWithoutBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
 }
