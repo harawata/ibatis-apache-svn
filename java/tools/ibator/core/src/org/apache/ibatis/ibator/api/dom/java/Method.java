@@ -59,6 +59,10 @@ public class Method extends JavaElement {
         bodyLines.add(line);
     }
 
+    public void addBodyLine(int index, String line) {
+        bodyLines.add(index, line);
+    }
+
     public String getFormattedContent(int indentLevel, boolean interfaceMethod) {
         StringBuffer sb = new StringBuffer();
 
@@ -207,6 +211,10 @@ public class Method extends JavaElement {
 
     public void addParameter(Parameter parameter) {
         parameters.add(parameter);
+    }
+
+    public void addParameter(int index, Parameter parameter) {
+        parameters.add(index, parameter);
     }
 
     /**

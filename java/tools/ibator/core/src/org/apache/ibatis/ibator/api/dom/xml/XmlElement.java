@@ -62,6 +62,10 @@ public class XmlElement extends Element {
         elements.add(element);
     }
 
+    public void addElement(int index, Element element) {
+        elements.add(index, element);
+    }
+
     /**
      * @return Returns the name.
      */

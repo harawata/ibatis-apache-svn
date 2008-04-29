@@ -28,6 +28,7 @@
   <property name="deploy.files" value="${deploy.dir}/files" />
   <property name="work.dir" value="${basedir}/work" />
   <property name="work.classes" value="${work.dir}/bin" />
+  <property name="work.instrumented" value="${work.dir}/instrumented" />
   <property name="work.javadoc" value="${work.dir}/javadoc" />
   <property name="generated.source.dir.java2" value="${work.dir}/test/java2/src" />
   <property name="generated.source.dir.java5" value="${work.dir}/test/java5/src" />
@@ -36,12 +37,31 @@
   <property name="ibator.test.bin.dir" value="${work.dir}/test/ibator/bin" />
   <property name="reports.dir" value="${basedir}/reports" />
   <property name="reports.junit" value="${reports.dir}/junit" />
-  
+  <property name="reports.emma" value="${reports.dir}/emma" />
+
+  <path id="emma.lib" >
+    <pathelement location="../devlib/emma.jar" />
+    <pathelement location="../devlib/emma_ant.jar" />
+  </path>
+
+  <path id="emma.runtime.path">
+    <pathelement location="${work.instrumented}"/>
+    <pathelement location="${work.classes}"/>
+    <path refid="emma.lib"/>
+  </path>
+	
+  <taskdef resource="emma_ant.properties" classpathref="emma.lib" />
+
   <target name="clean" unless="${TSTAMP}">
     <tstamp/>
     <delete dir="${work.dir}" />
     <delete dir="${deploy.dir}" />
     <delete dir="${reports.dir}" />
+    <delete>
+      <fileset dir="${basedir}">
+        <include name="*.ec"/>
+      </fileset>
+    </delete>
   </target>
 	
   <target name="build.prepare" depends="clean">
@@ -90,13 +110,17 @@
     
     <property file="version.properties"/>
     
-    <jar destfile="${deploy.files}/ibator.jar" basedir="${work.classes}" >
+    <jar destfile="${deploy.files}/ibator.jar" >
       <manifest>
         <attribute name="Main-Class" value="org.apache.ibatis.ibator.api.IbatorRunner"/>
         <attribute name="Specification-Title" value="Apache iBATIS ibator"/>
         <attribute name="Specification-Version" value="${version}"/>
         <attribute name="Specification-Vendor" value="The Apache Software Foundation"/>
       </manifest>
+      <fileset dir="${work.classes}">
+      	<exclude name="org/apache/ibatis/ibator/ant/EmmaDumperTask.class"/>
+      	<exclude name="org/apache/ibatis/ibator/ant/SqlScriptRunnerTask.class"/>
+      </fileset>
     </jar>
   </target>
   
@@ -120,14 +144,12 @@
     <zip destfile="${deploy.dir}/ibator-${version}-${buildNum}.zip" basedir="${deploy.files}" />
   </target>
   
-  <target name="buildIbator" depends="assemble.zipfile, test.report" >
+  <target name="buildIbator" depends="assemble.zipfile, emma.report" >
     <fail if="testsFailed" message="The tests did not pass"/>
   </target>
   
-  <target name="build.test" depends="build.compile">
+  <target name="test.compile.ibator" depends="test.prepare">
     <mkdir dir="${ibator.test.bin.dir}"/>
-    <mkdir dir="${reports.dir}"/>
-    <mkdir dir="${reports.junit}"/>
 
     <javac destdir="${ibator.test.bin.dir}"
     	deprecation="true" 
@@ -139,7 +161,9 @@
         <pathelement location="${deploy.files}/ibator.jar"/>
       </classpath>
     </javac>
-
+  </target>
+  	
+  <target name="test.run.ibator" depends="test.compile.ibator">
     <junit printsummary="true" showoutput="true">
       <formatter type="xml"/>
       <batchtest todir="${reports.junit}" fork="yes" haltonerror="no" failureproperty="testsFailed">
@@ -149,26 +173,25 @@
       </batchtest>
       <classpath>
       	<pathelement location="${ibator.test.bin.dir}"/>
-        <pathelement location="${deploy.files}/ibator.jar"/>
+        <path refid="emma.runtime.path"/>
       </classpath>
     </junit>
   </target>
-  	
-  <target name="test.prepare" depends="build.test">
+	
+  <target name="test.prepare" depends="emma.instrument">
     <mkdir dir="${generated.source.dir.java2}"/>
     <mkdir dir="${generated.source.dir.java5}"/>
     <mkdir dir="${generated.bin.dir.java2}"/>
     <mkdir dir="${generated.bin.dir.java5}"/>
+    <mkdir dir="${reports.dir}"/>
+    <mkdir dir="${reports.junit}"/>
 	  	
     <!-- note that the class does not exist until the build runs.
     	 Validating Ant editors will complain that the task cannot be
     	 found, but it's not really an error. -->
     <taskdef name="runscript"
-             classname="org.apache.ibatis.ibator.ant.SqlScriptRunnerTask">
-      <classpath>
-    	  <pathelement location="${deploy.files}/ibator.jar"/>
-      </classpath>
-    </taskdef>
+             classname="org.apache.ibatis.ibator.ant.SqlScriptRunnerTask"
+    	     classpathref="emma.runtime.path"/>
   	
   	<!-- create the test database -->
   	<runscript driver="org.hsqldb.jdbcDriver"
@@ -176,6 +199,12 @@
   		userid="sa"
   		password=""
   		src="${basedir}/../testJava5/ibatortest/CreateDB.sql"/>
+  	
+    <taskdef name="emmadumper"
+             classname="org.apache.ibatis.ibator.ant.EmmaDumperTask"
+             classpathref="emma.runtime.path"/>
+  	
+  	<emmadumper fileName="${basedir}/coverage.ec" />
 	  	
   </target>
 	  
@@ -186,29 +215,25 @@
     	 Validating Ant editors will complain that the task cannot be
     	 found, but it's not really an error. -->
     <taskdef name="ibator"
-             classname="org.apache.ibatis.ibator.ant.IbatorAntTask">
-      <classpath>
-    	  <pathelement location="${deploy.files}/ibator.jar"/>
-      </classpath>
-    </taskdef>
+             classname="org.apache.ibatis.ibator.ant.IbatorAntTask"
+             classpathref="emma.runtime.path"/>
   	
   	<ibator configfile="${basedir}/../testJava2/ibatortest/java2/ibatorConfig.xml" >
   		<propertyset>
   			<propertyref name="generated.source.dir.java2"/>
   		</propertyset>
   	</ibator>
-  </target>
+
+  	<emmadumper fileName="${basedir}/coverage.ec" />
+</target>
 	  	
   <target name="test.generate.test.code.java5" depends="test.prepare">
     <!-- note that the class does not exist until the build runs.
     	 Validating Ant editors will complain that the task cannot be
     	 found, but it's not really an error. -->
     <taskdef name="ibator"
-             classname="org.apache.ibatis.ibator.ant.IbatorAntTask">
-      <classpath>
-    	  <pathelement location="${deploy.files}/ibator.jar"/>
-      </classpath>
-    </taskdef>
+             classname="org.apache.ibatis.ibator.ant.IbatorAntTask"
+             classpathref="emma.runtime.path"/>
     
     <!-- compile the base class so ibator can load it -->
     <javac destdir="${generated.bin.dir.java5}"
@@ -228,6 +253,8 @@
         <propertyref name="generated.bin.dir.java5"/>
       </propertyset>
     </ibator>
+
+  	<emmadumper fileName="${basedir}/coverage.ec" />
   </target>
 	
   <target name="test.compile.test.code.java2" depends="test.generate.test.code.java2">
@@ -342,12 +369,39 @@
     </junit>
   </target>
 	
-  <target name="test.report" depends="test.run.java2, test.run.java5" >
+  <target name="test.report" depends="test.run.java2, test.run.java5, test.run.ibator" >
     <junitreport todir="${reports.junit}">
       <fileset dir="${reports.junit}">
         <include name="TEST-*.xml"/>
       </fileset>
 	      <report format="frames" todir="${reports.junit}"/>
     </junitreport>
+  </target>
+	
+  <target name="emma.instrument" depends="build.ibator.jar" >
+    <mkdir dir="${work.instrumented}"/>
+  	
+    <path id="emma.classpath">
+      <pathelement location="${deploy.files}/ibator.jar" />
+    </path>
+  	
+    <emma verbosity="verbose" >
+      <instr instrpathref="emma.classpath"
+    	destdir="${work.instrumented}"
+    	metadatafile="${basedir}/coverage.ec"
+    	merge="true"/>
+  	</emma>
+  </target>
+
+  <target name="emma.report" depends="test.report" >
+    <mkdir dir="${reports.emma}" />
+  	<emma >
+      <report sourcepath="${src.dir}" >
+        <fileset dir="${basedir}" >
+          <include name="*.ec" />
+        </fileset>
+        <html outfile="${reports.emma}/coverage.html" />
+      </report>
+    </emma>
   </target>
 </project>
