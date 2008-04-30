@@ -86,7 +86,14 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Domain
 		{
 			set
 			{
-				_pictureData = LineItem.ConvertToByteArray( value ); 
+                if (value!=null)
+                {
+				    _pictureData = LineItem.ConvertToByteArray( value ); 
+                }
+                else
+                {
+                    _pictureData = null;
+                }
 			}
 			get
 			{ 

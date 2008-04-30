@@ -52,12 +52,9 @@ namespace IBatisNet.DataMapper.TypeHandlers
 		{
 			int index = dataReader.GetOrdinal(mapping.ColumnName);
 
-            // determine the buffer size
-			int bufferLength = (int) dataReader.GetBytes(index, 0, null, 0, 0);
-
-            if (bufferLength == 0)
+            if (dataReader.IsDBNull(index) || dataReader.GetBytes(index, 0, null, 0, 0) == 0)
 			{
-				return System.DBNull.Value;
+				return DBNull.Value;
 			}
 			else
 			{
@@ -73,12 +70,9 @@ namespace IBatisNet.DataMapper.TypeHandlers
         /// <returns></returns>
 		public override object GetValueByIndex(ResultProperty mapping, IDataReader dataReader) 
 		{
-            // determine the buffer size
-            int bufferLength = (int)dataReader.GetBytes(mapping.ColumnIndex, 0, null, 0, 0);
-
-            if (bufferLength == 0)
+            if (dataReader.IsDBNull(mapping.ColumnIndex) || dataReader.GetBytes(mapping.ColumnIndex, 0, null, 0, 0) == 0)
             {
-				return System.DBNull.Value;
+				return DBNull.Value;
 			}
 			else
 			{

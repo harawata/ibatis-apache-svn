@@ -832,6 +832,22 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
             Assert.AreEqual(4, ((Account)list[2]).Id);
         }
 
+        [Test]
+        public void TestDummy()
+        {
+            Hashtable param = new Hashtable();
+            param.Add("?lowID", 2);
+            param.Add("?hightID", 4);
+
+            IList list = sqlMap.QueryForList("GetDummy", param);
+
+            Assert.AreEqual(3, list.Count);
+
+            Assert.AreEqual(2, ((Account)list[0]).Id);
+            Assert.AreEqual(3, ((Account)list[1]).Id);
+            Assert.AreEqual(4, ((Account)list[2]).Id);
+        }
+
         #endregion
 
         #region Update tests

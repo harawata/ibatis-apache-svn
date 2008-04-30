@@ -668,7 +668,14 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			resultMap="indexed-account-result">
 			where Account_ID between #lowID# and #hightID#
 		</select>
-		
+
+    <select id="GetDummy"
+      extends="GetAllAccounts"
+      parameterClass="Hashtable"
+      resultMap="indexed-account-result">
+      where Account_ID between #?lowID# and #?hightID#
+    </select>
+    
 		<select id="SelectAccountJIRA29" parameterClass="map" resultClass="Account">
 			select
 				Account_ID as Id,
