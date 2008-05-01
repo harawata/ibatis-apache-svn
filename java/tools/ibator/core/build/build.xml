@@ -29,6 +29,7 @@
   <property name="work.dir" value="${basedir}/work" />
   <property name="work.classes" value="${work.dir}/bin" />
   <property name="work.instrumented" value="${work.dir}/instrumented" />
+  <property name="work.buildsupport" value="${work.dir}/buildsupport" />
   <property name="work.javadoc" value="${work.dir}/javadoc" />
   <property name="generated.source.dir.java2" value="${work.dir}/test/java2/src" />
   <property name="generated.source.dir.java5" value="${work.dir}/test/java5/src" />
@@ -110,17 +111,13 @@
     
     <property file="version.properties"/>
     
-    <jar destfile="${deploy.files}/ibator.jar" >
+    <jar destfile="${deploy.files}/ibator.jar" basedir="${work.classes}">
       <manifest>
         <attribute name="Main-Class" value="org.apache.ibatis.ibator.api.IbatorRunner"/>
         <attribute name="Specification-Title" value="Apache iBATIS ibator"/>
         <attribute name="Specification-Version" value="${version}"/>
         <attribute name="Specification-Vendor" value="The Apache Software Foundation"/>
       </manifest>
-      <fileset dir="${work.classes}">
-      	<exclude name="org/apache/ibatis/ibator/ant/EmmaDumperTask.class"/>
-      	<exclude name="org/apache/ibatis/ibator/ant/SqlScriptRunnerTask.class"/>
-      </fileset>
     </jar>
   </target>
   
@@ -144,7 +141,7 @@
     <zip destfile="${deploy.dir}/ibator-${version}-${buildNum}.zip" basedir="${deploy.files}" />
   </target>
   
-  <target name="buildIbator" depends="assemble.zipfile, emma.report" >
+  <target name="buildIbator" depends="assemble.zipfile, test.report, emma.report" >
     <fail if="testsFailed" message="The tests did not pass"/>
   </target>
   
@@ -185,13 +182,37 @@
     <mkdir dir="${generated.bin.dir.java5}"/>
     <mkdir dir="${reports.dir}"/>
     <mkdir dir="${reports.junit}"/>
+  	<mkdir dir="${work.buildsupport}"/>
+  	
+  	<!-- compile our build support classes -->
+    <javac destdir="${work.buildsupport}"
+    	deprecation="true" 
+    	debug="true"
+    	source="1.5"
+    	target="1.5">
+      <src path="${basedir}/../buildsupport"/>
+      <classpath>
+      	<pathelement location="${work.classes}"/>
+      </classpath>
+    </javac>
 	  	
     <!-- note that the class does not exist until the build runs.
     	 Validating Ant editors will complain that the task cannot be
     	 found, but it's not really an error. -->
     <taskdef name="runscript"
-             classname="org.apache.ibatis.ibator.ant.SqlScriptRunnerTask"
-    	     classpathref="emma.runtime.path"/>
+             classname="org.apache.ibatis.ibator.build.SqlScriptRunnerTask">
+      <classpath>
+        <pathelement location="${work.buildsupport}"/>
+      	<pathelement location="${work.classes}"/>
+      </classpath>
+    </taskdef>
+  	
+    <taskdef name="emmadumper"
+             classname="org.apache.ibatis.ibator.build.EmmaDumperTask">
+      <classpath>
+        <pathelement location="${work.buildsupport}"/>
+      </classpath>
+    </taskdef>
   	
   	<!-- create the test database -->
   	<runscript driver="org.hsqldb.jdbcDriver"
@@ -200,12 +221,6 @@
   		password=""
   		src="${basedir}/../testJava5/ibatortest/CreateDB.sql"/>
   	
-    <taskdef name="emmadumper"
-             classname="org.apache.ibatis.ibator.ant.EmmaDumperTask"
-             classpathref="emma.runtime.path"/>
-  	
-  	<emmadumper fileName="${basedir}/coverage.ec" />
-	  	
   </target>
 	  
   <target name="test.generate.test.code.java2" depends="test.prepare">
@@ -385,7 +400,7 @@
       <pathelement location="${deploy.files}/ibator.jar" />
     </path>
   	
-    <emma verbosity="verbose" >
+    <emma>
       <instr instrpathref="emma.classpath"
     	destdir="${work.instrumented}"
     	metadatafile="${basedir}/coverage.ec"
@@ -393,7 +408,7 @@
   	</emma>
   </target>
 
-  <target name="emma.report" depends="test.report" >
+  <target name="emma.report" depends="test.run.ibator, test.generate.test.code.java2, test.generate.test.code.java5" >
     <mkdir dir="${reports.emma}" />
   	<emma >
       <report sourcepath="${src.dir}" >

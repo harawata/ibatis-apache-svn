@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.apache.ibatis.ibator.ant;
+package org.apache.ibatis.ibator.build;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

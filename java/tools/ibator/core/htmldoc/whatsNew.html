@@ -7,18 +7,26 @@
   <link type="text/css" rel="stylesheet" href="ibator.css"/>
 </head>
 <body>
-<p align="right">
-  <font size="-2">
-    <a href="index.html" target="_top">Frames</a>
-    <a href="whatsNew.html" target="_top">No Frames</a>
-  </font>
-</p>
+
+<div class="menuNav">
+  <p>
+    <a href="index.html" target="_top">Show Menu</a>
+    <a href="whatsNew.html" target="_top">Hide Menu</a>
+  </p>
+</div>
+
 <h1>What's New in ibator</h1>
 <h2>Version 1.2.0</h2>
 <h3>Announcements</h3>
 <ul>
   <li>With version 1.2, Abator is renamed to Apache iBATIS ibator.  Several changes
       have been made to the XML configuration as well as the Java API.</li>
+</ul>
+
+<h3>Bugs Fixed</h3>
+<ul>
+  <li>Fixed the JavaTypeResolver so that columns with unsupported data types
+      may be overridden by configuration.</li>
 </ul>
 
 <h3>Enhacements</h3>
@@ -29,6 +37,49 @@
       strongly suggest that you move to a plugin.  See the
       <a href="configreference/ibatorPlugin.html">&lt;ibatorPlugin&gt;</a> page
       for detailed information.</li>
+</ul>
+
+<h3>Changes from Abator</h3>
+<p>There are several breaking changes between ibator and Abator.  This list
+details the changes, and has methods of resolving the differences.</p>
+<ul>
+  <li>JSE 5.0 or higher is required for ibator</li>
+  <li>Ibator does not contain the "legacy" code generators from Abator.  You must
+      choose either the "Java2" or "Java5" generator set - and code generated from
+      ibator is compatible with iBATIS version 2.2.0 or higher only.  If you are
+      using an earlier version of iBATIS - upgrade!  If you are not able to upgrade,
+      then you must continue to use Abator.</li>
+  <li>The DOCTYPE entry for configuration files has changed.  The the
+     <a href="configreference/ibatorConfiguration.html">&lt;ibatorConfiguration&gt;</a>
+     reference page for the correct DOCTYPE.</li>
+  <li>The classloading strategy in ibator is changed and simplified from Abator.  All
+      classes are now loaded through the same classloader - including JDBC drivers,
+      Java model root classes, plugins, and ibator implementation classes.  The
+      configuration for classloading has changed in these ways:
+      <ul>
+        <li>Class path entries are specified at the configuration file level
+            with the <a href="configreference/classPathEntry.html">&lt;classPathEntry&gt;</a>
+            element - now a child element of <code>&lt;ibatorConfiguration&gt;</code> only.</li>
+        <li>A <code>&lt;classPathEntry&gt;</code> element is not longer allowed as a child
+            of <code>&lt;jdbcConnection&gt;</code></li>
+        <li>The "rootClasspath" property is no longer valid for the <code>&lt;javaModelGenerator&gt;</code>
+            element.</li>
+      </ul>
+    </li>
+  <li>Renamed &lt;abatorConfiguration&gt; to &lt;ibatorConfiguration&gt;</li>
+  <li>Renamed &lt;abatorContext&gt; to &lt;ibatorContext&gt;</li>
+  <li>&lt;ibatorContext&gt; elements now require an ID</li>
+  <li>The API on the <code>DAOGenerator</code>, <code>JavaTypeResolver</code>,
+      <code>JavaModelGenerator</code>, and <code>SqlMapGenerator</code> interfaces
+      has changed.  In most cases, implementations of these interfaces should
+      be converted to ibator plugins.</li>
+  <li>The <code>afterXXXGenerationHook</code> methods have been removed from
+      all ibator supplied implementations of the core interfaces.  If you
+      were extending an ibator supplied implementation to make use of these methods,
+      then you <em>must</em> migrate your code to an ibator plugin.</li>
+  <li>The build has been significantly modified and now includes an Emma based
+      code coverage report (ibator is 78% covered in automated testing - with the core
+      code generators all over 95% covered - pretty good!) .</li>
 </ul>
 
 <h2>Version 1.1.0</h2>

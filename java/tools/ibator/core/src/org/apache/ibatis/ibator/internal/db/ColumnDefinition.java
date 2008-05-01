@@ -202,10 +202,6 @@ public class ColumnDefinition {
         this.resolvedJavaType = resolvedJavaType;
     }
     
-    public String getByExampleIndicatorProperty() {
-        return javaProperty + "_Indicator"; //$NON-NLS-1$
-    }
-    
     /**
      * The renamed column name for a select statement.  If there
      * is a table alias, the value will be alias_columnName.  This is

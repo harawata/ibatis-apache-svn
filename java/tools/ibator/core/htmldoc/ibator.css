@@ -119,3 +119,12 @@ pre {
 {
     margin: 10px;
 }
+
+.menuNav p
+{
+    /* this should be uncommented for the eclipse stylesheet
+    display: none;
+    */
+    font-size: x-small;
+    text-align: right;
+}
