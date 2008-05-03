@@ -26,12 +26,16 @@ import org.apache.ibatis.ibator.internal.util.StringUtility;
  */
 public class FullyQualifiedTable {
 
-	private String catalog;
+	private String introspectedCatalog;
 
-	private String schema;
+	private String introspectedSchema;
 
-	private String tableName;
+	private String introspectedTableName;
 
+    private String runtimeCatalog;
+    
+    private String runtimeSchema;
+    
     private String runtimeTableName;
     
 	private String domainObjectName;
@@ -49,17 +53,17 @@ public class FullyQualifiedTable {
      * This object is used to hold information related to the table itself,
      * not the columns in the table.
      * 
-     * @param catalog the actual catalog of the table as returned from
+     * @param introspectedCatalog the actual catalog of the table as returned from
      *  DatabaseMetaData.  This value should only be set if the user
      *  configured a catalog.  Otherwise the DatabaseMetaData is reporting
      *  some database default that we don't want in the generated code.
      *  
-     * @param schema the actual schema of the table as returned from
+     * @param introspectedSchema the actual schema of the table as returned from
      *  DatabaseMetaData.  This value should only be set if the user
      *  configured a schema.  Otherwise the DatabaseMetaData is reporting
      *  some database default that we don't want in the generated code.
      *  
-     * @param tableName the actual table name as returned from DatabaseMetaData
+     * @param introspectedTableName the actual table name as returned from DatabaseMetaData
      * 
      * @param domainObjectName the configred domain object name for this table.
      *  If nothing is configured, we'll build the domain object named based
@@ -74,8 +78,16 @@ public class FullyQualifiedTable {
      *  to specify a specific schema for generating code but does not want
      *  the schema in the generated SQL 
      * 
+     * @param runtimeCatalog this is used to "rename" the catalog in the 
+     *  generated SQL.  This is useful, for example, when generating code
+     *  against one catalog that should run with a different catalog.
+     *  
+     * @param runtimeSchema this is used to "rename" the schema in the 
+     *  generated SQL.  This is useful, for example, when generating code
+     *  against one schema that should run with a different schema.
+     *  
      * @param runtimeTableName this is used to "rename" the table in the 
-     *  generated SQL.  This is usefule, for example, when generating code
+     *  generated SQL.  This is useful, for example, when generating code
      *  to run with an Oracle synonym.  The user would have to specify
      *  the actual table name and schema for generation, but would want to 
      *  use the synonym name in the generated SQL
@@ -84,15 +96,25 @@ public class FullyQualifiedTable {
      *   delimited at runtime.  The delimiter characters are obtained
      *   from the IbatorContext.
      */
-	public FullyQualifiedTable(String catalog, String schema, String tableName,
-            String domainObjectName, String alias, boolean ignoreQualifiersAtRuntime,
-            String runtimeTableName, boolean delimitIdentifiers, IbatorContext ibatorContext) {
+	public FullyQualifiedTable(String introspectedCatalog,
+            String introspectedSchema,
+            String introspectedTableName,
+            String domainObjectName,
+            String alias,
+            boolean ignoreQualifiersAtRuntime,
+            String runtimeCatalog,
+            String runtimeSchema,
+            String runtimeTableName,
+            boolean delimitIdentifiers,
+            IbatorContext ibatorContext) {
 		super();
-        this.catalog = catalog;
-        this.schema = schema;
-        this.tableName = tableName;
+        this.introspectedCatalog = introspectedCatalog;
+        this.introspectedSchema = introspectedSchema;
+        this.introspectedTableName = introspectedTableName;
         this.domainObjectName = domainObjectName;
         this.ignoreQualifiersAtRuntime = ignoreQualifiersAtRuntime;
+        this.runtimeCatalog = runtimeCatalog;
+        this.runtimeSchema = runtimeSchema;
         this.runtimeTableName = runtimeTableName;
         
         if (alias == null) {
@@ -105,45 +127,55 @@ public class FullyQualifiedTable {
         endingDelimiter = delimitIdentifiers ? ibatorContext.getEndingDelimiter() : ""; //$NON-NLS-1$
     }
 
-	public String getCatalog() {
-		return catalog;
+	public String getIntrospectedCatalog() {
+		return introspectedCatalog;
 	}
 
-	public String getSchema() {
-		return schema;
+	public String getIntrospectedSchema() {
+		return introspectedSchema;
 	}
 
-	public String getTableName() {
-		return tableName;
+	public String getIntrospectedTableName() {
+		return introspectedTableName;
 	}
 
     public String getFullyQualifiedTableNameAtRuntime() {
-        String localCatalog;
-        String localSchema;
-        String localTableName;
-        
-        if (StringUtility.stringHasValue(catalog)  && !ignoreQualifiersAtRuntime) {
-            localCatalog = beginningDelimiter + catalog + endingDelimiter;
-        } else {
-            localCatalog = null;
+        StringBuffer localCatalog = new StringBuffer();
+        if (!ignoreQualifiersAtRuntime) {
+            if (StringUtility.stringHasValue(runtimeCatalog)) {
+                localCatalog.append(runtimeCatalog);
+            } else if (StringUtility.stringHasValue(introspectedCatalog)) {
+                localCatalog.append(introspectedCatalog);
+            }
+        }
+        if (localCatalog.length() > 0) {
+            addDelimiters(localCatalog);
         }
         
-        if (StringUtility.stringHasValue(schema)  && !ignoreQualifiersAtRuntime) {
-            localSchema = beginningDelimiter + schema + endingDelimiter;
-        } else {
-            localSchema = null;
+        StringBuffer localSchema = new StringBuffer();
+        if (!ignoreQualifiersAtRuntime) {
+            if (StringUtility.stringHasValue(runtimeSchema)) {
+                localSchema.append(runtimeSchema);
+            } else if (StringUtility.stringHasValue(introspectedSchema)) {
+                localSchema.append(introspectedSchema);
+            }
+        }
+        if (localSchema.length() > 0) {
+            addDelimiters(localSchema);
         }
         
+        StringBuffer localTableName = new StringBuffer();
         if (StringUtility.stringHasValue(runtimeTableName)) {
-            localTableName = beginningDelimiter + runtimeTableName + endingDelimiter;
+            localTableName.append(runtimeTableName);
         } else {
-            localTableName = beginningDelimiter + tableName + endingDelimiter;
+            localTableName.append(introspectedTableName);
         }
+        addDelimiters(localTableName);
         
         return StringUtility.composeFullyQualifiedTableName(
-                localCatalog,
-                localSchema,
-                localTableName,
+                localCatalog.toString(),
+                localSchema.toString(),
+                localTableName.toString(),
                 '.');
     }
 
@@ -162,14 +194,21 @@ public class FullyQualifiedTable {
 
     /**
      * This method returns a string that is the fully qualified table name, with
-     * underscores as the seperator.  This String should be 
+     * underscores as the seperator.
      * @return
      */
     public String getSqlMapNamespace() {
+        String localCatalog = 
+            StringUtility.stringHasValue(runtimeCatalog) ? runtimeCatalog : introspectedCatalog;
+        String localSchema =
+            StringUtility.stringHasValue(runtimeSchema) ? runtimeSchema : introspectedSchema;
+        String localTable =
+            StringUtility.stringHasValue(runtimeTableName) ? runtimeTableName : introspectedTableName; 
+        
         return StringUtility.composeFullyQualifiedTableName(
-                ignoreQualifiersAtRuntime ? null : catalog,
-                ignoreQualifiersAtRuntime ? null : schema,
-                StringUtility.stringHasValue(runtimeTableName) ? runtimeTableName : tableName,
+                ignoreQualifiersAtRuntime ? null : localCatalog,
+                ignoreQualifiersAtRuntime ? null : localSchema,
+                localTable,
                 '_');
 	}
 	
@@ -179,7 +218,7 @@ public class FullyQualifiedTable {
         } else if (StringUtility.stringHasValue(runtimeTableName)) {
             return JavaBeansUtil.getCamelCaseString(runtimeTableName, true);
 		} else {
-			return JavaBeansUtil.getCamelCaseString(tableName, true);
+			return JavaBeansUtil.getCamelCaseString(introspectedTableName, true);
 		}
 	}
 
@@ -195,17 +234,17 @@ public class FullyQualifiedTable {
 
 		FullyQualifiedTable other = (FullyQualifiedTable) obj;
 		
-		return EqualsUtil.areEqual(this.tableName, other.tableName)
-		        && EqualsUtil.areEqual(this.catalog, other.catalog)
-				&& EqualsUtil.areEqual(this.schema, other.schema);
+		return EqualsUtil.areEqual(this.introspectedTableName, other.introspectedTableName)
+		        && EqualsUtil.areEqual(this.introspectedCatalog, other.introspectedCatalog)
+				&& EqualsUtil.areEqual(this.introspectedSchema, other.introspectedSchema);
     }
     
 	@Override
     public int hashCode() {
 		int result = HashCodeUtil.SEED;
-		result = HashCodeUtil.hash(result, tableName);
-		result = HashCodeUtil.hash(result, catalog);
-		result = HashCodeUtil.hash(result, schema);
+		result = HashCodeUtil.hash(result, introspectedTableName);
+		result = HashCodeUtil.hash(result, introspectedCatalog);
+		result = HashCodeUtil.hash(result, introspectedSchema);
 
 		return result;
     }
@@ -213,7 +252,7 @@ public class FullyQualifiedTable {
 	@Override
     public String toString() {
         return StringUtility.composeFullyQualifiedTableName(
-                catalog, schema, tableName, '.');
+                introspectedCatalog, introspectedSchema, introspectedTableName, '.');
     }
 
     public String getAlias() {
@@ -230,17 +269,35 @@ public class FullyQualifiedTable {
     public String getSubPackage() {
         StringBuffer sb = new StringBuffer();
         if (!ignoreQualifiersAtRuntime) {
-            if (StringUtility.stringHasValue(catalog)) {
+            if (StringUtility.stringHasValue(runtimeCatalog)) {
                 sb.append('.');
-                sb.append(catalog.toLowerCase());
+                sb.append(runtimeCatalog.toLowerCase());
+            } else if (StringUtility.stringHasValue(introspectedCatalog)) {
+                sb.append('.');
+                sb.append(introspectedCatalog.toLowerCase());
             }
 
-            if (StringUtility.stringHasValue(schema)) {
+            if (StringUtility.stringHasValue(runtimeSchema)) {
                 sb.append('.');
-                sb.append(schema.toLowerCase());
+                sb.append(runtimeSchema.toLowerCase());
+            } else if (StringUtility.stringHasValue(introspectedSchema)) {
+                sb.append('.');
+                sb.append(introspectedSchema.toLowerCase());
             }
         }
+        
+        // TODO - strip characters that are not valid in pacckage names
 
         return sb.toString();
+    }
+    
+    private void addDelimiters(StringBuffer sb) {
+        if (StringUtility.stringHasValue(beginningDelimiter)) {
+            sb.insert(0, beginningDelimiter);
+        }
+        
+        if (StringUtility.stringHasValue(endingDelimiter)) {
+            sb.append(endingDelimiter);
+        }
     }
 }

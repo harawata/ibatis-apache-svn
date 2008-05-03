@@ -65,9 +65,9 @@ public class DatabaseIntrospector {
         ResultSet rs = null;
 
         try {
-            rs = databaseMetaData.getPrimaryKeys(introspectedTable.getTable().getCatalog(),
-                    introspectedTable.getTable().getSchema(),
-                    introspectedTable.getTable().getTableName());
+            rs = databaseMetaData.getPrimaryKeys(introspectedTable.getTable().getIntrospectedCatalog(),
+                    introspectedTable.getTable().getIntrospectedSchema(),
+                    introspectedTable.getTable().getIntrospectedTableName());
         } catch (SQLException e) {
             closeResultSet(rs);
             warnings.add(Messages.getString("Warning.15")); //$NON-NLS-1$
@@ -452,6 +452,8 @@ public class DatabaseIntrospector {
                     tc.getDomainObjectName(),
                     tc.getAlias(),
                     "true".equalsIgnoreCase(tc.getProperty(PropertyRegistry.TABLE_IGNORE_QUALIFIERS_AT_RUNTIME)), //$NON-NLS-1$
+                    tc.getProperty(PropertyRegistry.TABLE_RUNTIME_CATALOG),
+                    tc.getProperty(PropertyRegistry.TABLE_RUNTIME_SCHEMA),
                     tc.getProperty(PropertyRegistry.TABLE_RUNTIME_TABLE_NAME),
                     delimitIdentifiers,
                     ibatorContext);

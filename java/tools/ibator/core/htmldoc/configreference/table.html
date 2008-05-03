@@ -44,10 +44,10 @@ of the <a href="ibatorContext.html">&lt;ibatorContext&gt;</a> element.
 You can specify unlimited table elements.</p>
 
 <h2>Database Identifiers</h2>
-<p>ibator tries to deal with the case sensitivity of database identifiers automatically.
+<p>Ibator tries to deal with the case sensitivity of database identifiers automatically.
 In most cases, ibator is able to find tables regardless of what you
 specify for <code>catalog</code>, <code>schema</code>, and <code>tableName</code>
-attributes.  ibator's process follows these steps:</p>
+attributes.  Ibator's process follows these steps:</p>
 <ol>
   <li>If either of the <code>catalog</code>, <code>schema</code>, or
       <code>tableName</code> attributes contain a space, then ibator will
@@ -319,6 +319,22 @@ specified with the <a href="property.html">&lt;property&gt;</a> child element:</
        valid Java interface.</p>
       <p>If specified, the value of this property should be a fully qualified
        interface name (like com.mycompany.MyRootInterface).</p></td>
+  </tr>
+  <tr>
+    <td valign="top">runtimeCatalog</td>
+    <td>If you specify a value for this property, than ibator will use that
+        value as the catalog in the generated SQL rather than the <code>catalog</code>
+        as configured above.
+        This is useful if you want to generate code against one catalog, but
+        want to use a different catalog at runtime.</td>
+  </tr>
+  <tr>
+    <td valign="top">runtimeSchema</td>
+    <td>If you specify a value for this property, than ibator will use that
+        value as the schema in the generated SQL rather than the <code>schema</code>
+        as configured above.
+        This is useful if you want to generate code against one schema, but
+        want to use a different schema at runtime.</td>
   </tr>
   <tr>
     <td valign="top">runtimeTableName</td>
