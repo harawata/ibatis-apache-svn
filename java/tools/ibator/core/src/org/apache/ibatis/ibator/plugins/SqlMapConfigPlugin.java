@@ -128,7 +128,7 @@ public class SqlMapConfigPlugin extends IbatorPluginAdapter {
      * by ibator in this context.
      */
     @Override
-    public void sqlMapGenerated(GeneratedXmlFile sqlMap, IntrospectedTable introspectedTable) {
+    public boolean sqlMapGenerated(GeneratedXmlFile sqlMap, IntrospectedTable introspectedTable) {
         StringBuffer sb = new StringBuffer();
         sb.append(sqlMap.getTargetPackage());
         sb.append('.');
@@ -137,5 +137,7 @@ public class SqlMapConfigPlugin extends IbatorPluginAdapter {
         sb.append(temp.replace('.', '/'));
         sb.append(sqlMap.getFileName());
         sqlMapFiles.add(sb.toString());
+
+        return true;
     }
 }

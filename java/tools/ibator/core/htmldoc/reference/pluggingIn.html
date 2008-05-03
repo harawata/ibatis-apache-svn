@@ -49,6 +49,8 @@ list shows the basic lifecycle of a plugin:</p>
       </li>
       <li>Model Methods:<sup>1</sup>
         <ol type="i">
+          <li><code>modelFieldGenerated</code>, <code>modelGetterMethodGenerated</code>,
+              <code>modelSetterMethodGenerated</code> for each field in the class</li>
           <li><code>modelExampleClassGenerated(TopLevelClass, IntrospectedTable)</code></li>
           <li><code>modelPrimaryKeyClassGenerated(TopLevelClass, IntrospectedTable)</code></li>
           <li><code>modelBaseRecordClassGenerated(TopLevelClass, IntrospectedTable)</code></li>
@@ -98,6 +100,12 @@ by the ibator supplied code generators - and only if the rules for a table would
 cause the generation of a particular element.  For example, the
 <code>modelPrimaryKeyClassGenerated(TopLevelClass, IntrospectedTable)</code>
 method will not be called if the table does not have a primary key.</p>
+
+<p>Methods that return a <code>boolean</code> can be used to bypass code generation.
+If any of these methods return <code>false</code>, then the related item will
+not be added to the generated code.  If there is more than one plugin configured,
+then the first plugin to return false from a method will cause ibator to stop calling
+that method in all other plugins.</p>
 
 <p>If you have an idea for a plugin, feel free to ask a question about it on
 the iBATIS Java user list.  We're here to help!</p>

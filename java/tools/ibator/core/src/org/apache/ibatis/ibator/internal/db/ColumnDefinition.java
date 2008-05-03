@@ -207,7 +207,7 @@ public class ColumnDefinition {
      * is a table alias, the value will be alias_columnName.  This is
      * appropriate for use in a result map.
      * 
-     * @return
+     * @return the renamed column name
      */
     public String getRenamedColumnNameForResultMap() {
         if (StringUtility.stringHasValue(tableAlias)) {
@@ -336,7 +336,7 @@ public class ColumnDefinition {
      * in a Java string.  So we need to escape double quotes if they are
      * the delimiters.
      * 
-     * @return
+     * @return the aliased column name
      */
     public String getAliasedActualColumnName() {
         StringBuffer sb = new StringBuffer();
@@ -361,7 +361,7 @@ public class ColumnDefinition {
     /**
      * Calculates the string to use in select phrases in SqlMaps.
      * 
-     * @return
+     * @return the aliased escaped column name
      */
     public String getAliasedEscapedColumnName() {
         if (StringUtility.stringHasValue(tableAlias)) {

@@ -68,7 +68,7 @@ public class EqualsHashCodePlugin extends IbatorPluginAdapter {
     }
 
     @Override
-    public void modelBaseRecordClassGenerated(TopLevelClass topLevelClass,
+    public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass,
             IntrospectedTable introspectedTable) {
         List<ColumnDefinition> columns;
         if (introspectedTable.getRules().generateRecordWithBLOBsClass()) {
@@ -79,24 +79,30 @@ public class EqualsHashCodePlugin extends IbatorPluginAdapter {
 
         generateEquals(topLevelClass, columns, introspectedTable);
         generateHashCode(topLevelClass, columns, introspectedTable);
+        
+        return true;
     }
 
     @Override
-    public void modelPrimaryKeyClassGenerated(TopLevelClass topLevelClass,
+    public boolean modelPrimaryKeyClassGenerated(TopLevelClass topLevelClass,
             IntrospectedTable introspectedTable) {
         generateEquals(topLevelClass, introspectedTable.getPrimaryKeyColumns(),
                 introspectedTable);
         generateHashCode(topLevelClass, introspectedTable.getPrimaryKeyColumns(),
                 introspectedTable);
+        
+        return true;
     }
 
     @Override
-    public void modelRecordWithBLOBsClassGenerated(TopLevelClass topLevelClass,
+    public boolean modelRecordWithBLOBsClassGenerated(TopLevelClass topLevelClass,
             IntrospectedTable introspectedTable) {
         generateEquals(topLevelClass, introspectedTable.getAllColumns(),
                 introspectedTable);
         generateHashCode(topLevelClass, introspectedTable.getAllColumns(),
                 introspectedTable);
+        
+        return true;
     }
 
     /**

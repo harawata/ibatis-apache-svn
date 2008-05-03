@@ -134,7 +134,15 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         callback.startSubTask(Messages.getString(
                 "Progress.12", //$NON-NLS-1$
                 table.toString()));
-        list.add(getSqlMap(introspectedTable));
+        Document document = getSqlMap(introspectedTable);
+        if (document != null) {
+            GeneratedXmlFile gxf = new GeneratedXmlFile(document,
+                    getSqlMapFileName(table), getSqlMapPackage(table),
+                    targetProject, true);
+            if (ibatorContext.getPlugins().sqlMapGenerated(gxf, introspectedTable)) {
+                list.add(gxf);
+            }
+        }
 
         return list;
     }
@@ -145,22 +153,19 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      * @param introspectedTable
      * @return A GeneratedXMLFile for the current table
      */
-    protected GeneratedXmlFile getSqlMap(IntrospectedTable introspectedTable) {
+    protected Document getSqlMap(IntrospectedTable introspectedTable) {
 
+        IbatorPlugin plugins = ibatorContext.getPlugins();
+        
         Document document = new Document(XmlConstants.SQL_MAP_PUBLIC_ID,
                 XmlConstants.SQL_MAP_SYSTEM_ID);
         document.setRootElement(getSqlMapElement(introspectedTable));
-        
-        ibatorContext.getPluginAggregator().sqlMapDocumentGenerated(document, introspectedTable);
-        
-        FullyQualifiedTable table = introspectedTable.getTable();
-        GeneratedXmlFile answer = new GeneratedXmlFile(document,
-                getSqlMapFileName(table), getSqlMapPackage(table),
-                targetProject, true);
 
-        ibatorContext.getPluginAggregator().sqlMapGenerated(answer, introspectedTable);
-        
-        return answer;
+        if (plugins.sqlMapDocumentGenerated(document, introspectedTable)) {
+            return document;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -176,7 +181,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         answer.addAttribute(new Attribute("namespace", //$NON-NLS-1$
                 table.getSqlMapNamespace()));
 
-        IbatorPlugin plugin = ibatorContext.getPluginAggregator();
+        IbatorPlugin plugins = ibatorContext.getPlugins();
         ibatorContext.getCommentGenerator().addRootComment(answer);
         
         IbatorRules rules = introspectedTable.getRules();
@@ -184,128 +189,144 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
         if (rules.generateBaseResultMap()) {
             element = getBaseResultMapElement(introspectedTable);
             if (element != null) {
-                plugin.sqlMapBaseResultMapGenerated(element, introspectedTable);
-                answer.addElement(element);
+                if (plugins.sqlMapBaseResultMapGenerated(element, introspectedTable)) {
+                    answer.addElement(element);
+                }
             }
         }
 
         if (rules.generateResultMapWithBLOBs()) {
             element = getResultMapWithBLOBsElement(introspectedTable);
             if (element != null) {
-                plugin.sqlMapResultMapWithBLOBsGenerated(element, introspectedTable);
-                answer.addElement(element);
+                if (plugins.sqlMapResultMapWithBLOBsGenerated(element, introspectedTable)) {
+                    answer.addElement(element);
+                }
             }
         }
 
         if (rules.generateSQLExampleWhereClause()) {
             element = getByExampleWhereClauseFragment(introspectedTable);
             if (element != null) {
-                plugin.sqlMapExampleWhereClauseGenerated(element, introspectedTable);
-                answer.addElement(element);
+                if (plugins.sqlMapExampleWhereClauseGenerated(element, introspectedTable)) {
+                    answer.addElement(element);
+                }
             }
         }
 
         if (rules.generateSelectByPrimaryKey()) {
             element = getSelectByPrimaryKey(introspectedTable);
             if (element != null) {
-                plugin.sqlMapSelectByPrimaryKeyElementGenerated(element, introspectedTable);
-                answer.addElement(element);
+                if (plugins.sqlMapSelectByPrimaryKeyElementGenerated(element, introspectedTable)) {
+                    answer.addElement(element);
+                }
             }
         }
 
         if (rules.generateSelectByExampleWithoutBLOBs()) {
             element = getSelectByExample(introspectedTable);
             if (element != null) {
-                plugin.sqlMapSelectByExampleElementGenerated(element, introspectedTable);
-                answer.addElement(element);
+                if (plugins.sqlMapSelectByExampleElementGenerated(element, introspectedTable)) {
+                    answer.addElement(element);
+                }
             }
         }
 
         if (rules.generateSelectByExampleWithBLOBs()) {
             element = getSelectByExampleWithBLOBs(introspectedTable);
             if (element != null) {
-                plugin.sqlMapSelectByExampleWithBLOBsElementGenerated(element, introspectedTable);
-                answer.addElement(element);
+                if (plugins.sqlMapSelectByExampleWithBLOBsElementGenerated(element, introspectedTable)) {
+                    answer.addElement(element);
+                }
             }
         }
 
         if (rules.generateDeleteByPrimaryKey()) {
             element = getDeleteByPrimaryKey(introspectedTable);
             if (element != null) {
-                plugin.sqlMapDeleteByPrimaryKeyElementGenerated(element, introspectedTable);
-                answer.addElement(element);
+                if (plugins.sqlMapDeleteByPrimaryKeyElementGenerated(element, introspectedTable)) {
+                    answer.addElement(element);
+                }
             }
         }
 
         if (rules.generateDeleteByExample()) {
             element = getDeleteByExample(introspectedTable);
             if (element != null) {
-                plugin.sqlMapDeleteByExampleElementGenerated(element, introspectedTable);
-                answer.addElement(element);
+                if (plugins.sqlMapDeleteByExampleElementGenerated(element, introspectedTable)) {
+                    answer.addElement(element);
+                }
             }
         }
 
         if (rules.generateInsert()) {
             element = getInsertElement(introspectedTable);
             if (element != null) {
-                plugin.sqlMapInsertElementGenerated(element, introspectedTable);
-                answer.addElement(element);
+                if (plugins.sqlMapInsertElementGenerated(element, introspectedTable)) {
+                    answer.addElement(element);
+                }
             }
         }
 
         if (rules.generateUpdateByPrimaryKeyWithBLOBs()) {
             element = getUpdateByPrimaryKeyWithBLOBs(introspectedTable);
             if (element != null) {
-                plugin.sqlMapUpdateByPrimaryKeyWithBLOBsElementGenerated(element, introspectedTable);
-                answer.addElement(element);
+                if (plugins.sqlMapUpdateByPrimaryKeyWithBLOBsElementGenerated(element, introspectedTable)) {
+                    answer.addElement(element);
+                }
             }
         }
 
         if (rules.generateUpdateByPrimaryKeyWithoutBLOBs()) {
             element = getUpdateByPrimaryKeyWithoutBLOBs(introspectedTable);
             if (element != null) {
-                plugin.sqlMapUpdateByPrimaryKeyWithoutBLOBsElementGenerated(element, introspectedTable);
-                answer.addElement(element);
+                if (plugins.sqlMapUpdateByPrimaryKeyWithoutBLOBsElementGenerated(element, introspectedTable)) {
+                    answer.addElement(element);
+                }
             }
         }
 
         if (rules.generateUpdateByPrimaryKeySelective()) {
             element = getUpdateByPrimaryKeySelective(introspectedTable);
             if (element != null) {
-                plugin.sqlMapUpdateByPrimaryKeySelectiveElementGenerated(element, introspectedTable);
-                answer.addElement(element);
+                if (plugins.sqlMapUpdateByPrimaryKeySelectiveElementGenerated(element, introspectedTable)) {
+                    answer.addElement(element);
+                }
             }
         }
         
         if (rules.generateCountByExample()) {
             element = getCountByExample(introspectedTable);
             if (element != null) {
-                plugin.sqlMapCountByExampleElementGenerated(element, introspectedTable);
-                answer.addElement(element);
+                if (plugins.sqlMapCountByExampleElementGenerated(element, introspectedTable)) {
+                    answer.addElement(element);
+                }
             }
         }
         
         if (rules.generateUpdateByExampleSelective()) {
             element = getUpdateByExampleSelective(introspectedTable);
             if (element != null) {
-                plugin.sqlMapUpdateByExampleSelectiveElementGenerated(element, introspectedTable);
-                answer.addElement(element);
+                if (plugins.sqlMapUpdateByExampleSelectiveElementGenerated(element, introspectedTable)) {
+                    answer.addElement(element);
+                }
             }
         }
         
         if (rules.generateUpdateByExampleWithBLOBs()) {
             element = getUpdateByExampleWithBLOBs(introspectedTable);
             if (element != null) {
-                plugin.sqlMapUpdateByExampleWithBLOBsElementGenerated(element, introspectedTable);
-                answer.addElement(element);
+                if (plugins.sqlMapUpdateByExampleWithBLOBsElementGenerated(element, introspectedTable)) {
+                    answer.addElement(element);
+                }
             }
         }
 
         if (rules.generateUpdateByExampleWithoutBLOBs()) {
             element = getUpdateByExampleWithoutBLOBs(introspectedTable);
             if (element != null) {
-                plugin.sqlMapUpdateByExampleWithoutBLOBsElementGenerated(element, introspectedTable);
-                answer.addElement(element);
+                if (plugins.sqlMapUpdateByExampleWithoutBLOBsElementGenerated(element, introspectedTable)) {
+                    answer.addElement(element);
+                }
             }
         }
 

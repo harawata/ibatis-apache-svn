@@ -195,7 +195,8 @@ public class FullyQualifiedTable {
     /**
      * This method returns a string that is the fully qualified table name, with
      * underscores as the seperator.
-     * @return
+     * 
+     * @return the namespace
      */
     public String getSqlMapNamespace() {
         String localCatalog = 
@@ -264,7 +265,7 @@ public class FullyQualifiedTable {
      * table catalog and schema.  If qualifiers are ignored,
      * then this method will return an empty string 
      * 
-     * @return
+     * @return the subpackage for this table
      */
     public String getSubPackage() {
         StringBuffer sb = new StringBuffer();

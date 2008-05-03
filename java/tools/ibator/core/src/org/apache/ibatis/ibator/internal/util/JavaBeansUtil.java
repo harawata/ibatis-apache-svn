@@ -45,7 +45,7 @@ public class JavaBeansUtil {
      *             getValidPropertyName first.
      * 
      * @param property
-     * @return
+     * @return the getter method name
      */
 	public static String getGetterMethodName(String property, FullyQualifiedJavaType fullyQualifiedJavaType) {
 		StringBuffer sb = new StringBuffer();
@@ -80,7 +80,7 @@ public class JavaBeansUtil {
      *             getValidPropertyName first.
      * 
      * @param property
-     * @return
+     * @return the setter method name
      */
 	public static String getSetterMethodName(String property) {
 		StringBuffer sb = new StringBuffer();
@@ -153,7 +153,7 @@ public class JavaBeansUtil {
      * Yaxis     > yaxis
      *             
 	 * @param inputString
-	 * @return the valid poperty name
+	 * @return the valid property name
 	 */
 	public static String getValidPropertyName(String inputString) {
         String answer;

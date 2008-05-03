@@ -144,11 +144,15 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
      *            and getter/setter methods.
      * @param topLevelClass
      *            the generated fields and methods will be added to this object
+     * @param introspectedTable the current table
      */
     protected void generateClassParts(FullyQualifiedTable table,
             List<ColumnDefinition> columnDefinitions, TopLevelClass topLevelClass,
-            String rootClass) {
+            IntrospectedTable introspectedTable) {
 
+        IbatorPlugin plugins = ibatorContext.getPlugins();
+        String rootClass = getRootClass(introspectedTable);
+        
         boolean trimStrings = "true".equalsIgnoreCase(properties //$NON-NLS-1$
                 .getProperty(PropertyRegistry.MODEL_GENERATOR_TRIM_STRINGS));
 
@@ -158,44 +162,50 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
         CommentGenerator commentGenerator = ibatorContext.getCommentGenerator();
 
-        for (ColumnDefinition cd : columnDefinitions) {
-            if (propertyExistsInRootClass(cd, rootClass)) {
+        for (ColumnDefinition columnDefinition : columnDefinitions) {
+            if (propertyExistsInRootClass(columnDefinition, rootClass)) {
                 continue;
             }
             
-            FullyQualifiedJavaType fqjt = cd.getResolvedJavaType()
+            FullyQualifiedJavaType fqjt = columnDefinition.getResolvedJavaType()
                     .getFullyQualifiedJavaType();
 
             topLevelClass.addImportedType(fqjt);
 
-            String property = cd.getJavaProperty();
+            String property = columnDefinition.getJavaProperty();
 
             field = new Field();
             field.setVisibility(JavaVisibility.PRIVATE);
             field.setType(fqjt);
             field.setName(property);
-            commentGenerator.addFieldComment(field, table, cd.getActualColumnName());
-            topLevelClass.addField(field);
+            commentGenerator.addFieldComment(field, table, columnDefinition.getActualColumnName());
+        
+            if (plugins.modelFieldGenerated(field, topLevelClass, columnDefinition, introspectedTable)) {
+                topLevelClass.addField(field);
+            }
 
             method = new Method();
             method.setVisibility(JavaVisibility.PUBLIC);
             method.setReturnType(fqjt);
             method.setName(JavaBeansUtil.getGetterMethodName(field.getName(), field.getType()));
-            commentGenerator.addGetterComment(method, table, cd.getActualColumnName());
+            commentGenerator.addGetterComment(method, table, columnDefinition.getActualColumnName());
             sb.setLength(0);
             sb.append("return "); //$NON-NLS-1$
             sb.append(property);
             sb.append(';');
             method.addBodyLine(sb.toString());
-            topLevelClass.addMethod(method);
+
+            if (plugins.modelGetterMethodGenerated(method, topLevelClass, columnDefinition, introspectedTable)) {
+                topLevelClass.addMethod(method);
+            }
 
             method = new Method();
             method.setVisibility(JavaVisibility.PUBLIC);
             method.setName(JavaBeansUtil.getSetterMethodName(property));
             method.addParameter(new Parameter(fqjt, property));
-            commentGenerator.addSetterComment(method, table, cd.getActualColumnName());
+            commentGenerator.addSetterComment(method, table, columnDefinition.getActualColumnName());
 
-            if (trimStrings && cd.isStringColumn()) {
+            if (trimStrings && columnDefinition.isStringColumn()) {
                 sb.setLength(0);
                 sb.append("this."); //$NON-NLS-1$
                 sb.append(property);
@@ -215,7 +225,9 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
                 method.addBodyLine(sb.toString());
             }
             
-            topLevelClass.addMethod(method);
+            if (plugins.modelSetterMethodGenerated(method, topLevelClass, columnDefinition, introspectedTable)) {
+                topLevelClass.addMethod(method);
+            }
         }
     }
 
@@ -264,7 +276,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         }
         
         generateClassParts(table, introspectedTable.getPrimaryKeyColumns(), answer,
-                getRootClass(introspectedTable));
+                introspectedTable);
 
         return answer;
     }
@@ -294,16 +306,16 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         if (!introspectedTable.getRules().generatePrimaryKeyClass()
                 && introspectedTable.hasPrimaryKeyColumns()) {
             generateClassParts(table, introspectedTable.getPrimaryKeyColumns(), answer,
-                    getRootClass(introspectedTable));
+                    introspectedTable);
         }
 
         generateClassParts(table, introspectedTable.getBaseColumns(), answer,
-                getRootClass(introspectedTable));
+                introspectedTable);
 
         if (!introspectedTable.getRules().generateRecordWithBLOBsClass()
                 && introspectedTable.hasBLOBColumns()) {
             generateClassParts(table, introspectedTable.getBLOBColumns(), answer,
-                    getRootClass(introspectedTable));
+                    introspectedTable);
         }
         
         return answer;
@@ -328,7 +340,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         }
         
         generateClassParts(table, introspectedTable.getBLOBColumns(), answer,
-                getRootClass(introspectedTable));
+                introspectedTable);
 
         return answer;
     }
@@ -367,16 +379,17 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
      */
     public List<GeneratedJavaFile> getGeneratedJavaFiles(IntrospectedTable introspectedTable, ProgressCallback callback) {
         List<GeneratedJavaFile> list = new ArrayList<GeneratedJavaFile>();
-        IbatorPlugin plugin = ibatorContext.getPluginAggregator();
+        IbatorPlugin plugins = ibatorContext.getPlugins();
 
         callback.startSubTask(Messages.getString(
                 "Progress.6", //$NON-NLS-1$
                 introspectedTable.getTable().toString()));
         TopLevelClass tlc = getExample(introspectedTable);
         if (tlc != null) {
-            plugin.modelExampleClassGenerated(tlc, introspectedTable);
-            GeneratedJavaFile gjf = new GeneratedJavaFile(tlc, targetProject);
-            list.add(gjf);
+            if (plugins.modelExampleClassGenerated(tlc, introspectedTable)) {
+                GeneratedJavaFile gjf = new GeneratedJavaFile(tlc, targetProject);
+                list.add(gjf);
+            }
         }
 
         callback.startSubTask(Messages.getString(
@@ -384,9 +397,10 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
                 introspectedTable.getTable().toString()));
         tlc = getPrimaryKey(introspectedTable);
         if (tlc != null) {
-            plugin.modelPrimaryKeyClassGenerated(tlc, introspectedTable);
-            GeneratedJavaFile gjf = new GeneratedJavaFile(tlc, targetProject);
-            list.add(gjf);
+            if (plugins.modelPrimaryKeyClassGenerated(tlc, introspectedTable)) {
+                GeneratedJavaFile gjf = new GeneratedJavaFile(tlc, targetProject);
+                list.add(gjf);
+            }
         }
 
         callback.startSubTask(Messages.getString(
@@ -394,9 +408,10 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
                 introspectedTable.getTable().toString()));
         tlc = getBaseRecord(introspectedTable);
         if (tlc != null) {
-            plugin.modelBaseRecordClassGenerated(tlc, introspectedTable);
-            GeneratedJavaFile gjf = new GeneratedJavaFile(tlc, targetProject);
-            list.add(gjf);
+            if (plugins.modelBaseRecordClassGenerated(tlc, introspectedTable)) {
+                GeneratedJavaFile gjf = new GeneratedJavaFile(tlc, targetProject);
+                list.add(gjf);
+            }
         }
 
         callback.startSubTask(Messages.getString(
@@ -404,9 +419,10 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
                 introspectedTable.getTable().toString()));
         tlc = getRecordWithBLOBs(introspectedTable);
         if (tlc != null) {
-            plugin.modelRecordWithBLOBsClassGenerated(tlc, introspectedTable);
-            GeneratedJavaFile gjf = new GeneratedJavaFile(tlc, targetProject);
-            list.add(gjf);
+            if (plugins.modelRecordWithBLOBsClassGenerated(tlc, introspectedTable)) {
+                GeneratedJavaFile gjf = new GeneratedJavaFile(tlc, targetProject);
+                list.add(gjf);
+            }
         }
 
         return list;

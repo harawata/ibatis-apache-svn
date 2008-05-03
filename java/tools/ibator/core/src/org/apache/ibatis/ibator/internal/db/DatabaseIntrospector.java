@@ -137,7 +137,7 @@ public class DatabaseIntrospector {
      * configuration. 
      * 
      * @param tc
-     * @return
+     * @return a list of introspected tables
      * @throws SQLException
      */
     public List<? extends IntrospectedTable> introspectTables(TableConfiguration tc) throws SQLException {

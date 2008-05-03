@@ -488,7 +488,7 @@ public class IbatorContext extends PropertyHolder {
         this.commentGeneratorConfiguration = commentGeneratorConfiguration;
     }
 
-    public IbatorPlugin getPluginAggregator() {
+    public IbatorPlugin getPlugins() {
         return pluginAggregator;
     }
 

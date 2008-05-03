@@ -217,21 +217,23 @@ public class BaseDAOGenerator implements DAOGenerator {
     public List<GeneratedJavaFile> getGeneratedJavaFiles(IntrospectedTable introspectedTable,
             ProgressCallback callback) {
         List<GeneratedJavaFile> list = new ArrayList<GeneratedJavaFile>();
-        IbatorPlugin plugin = ibatorContext.getPluginAggregator();
+        IbatorPlugin plugins = ibatorContext.getPlugins();
 
         callback.startSubTask(Messages.getString("Progress.10", //$NON-NLS-1$
                 introspectedTable.getTable().toString()));
         TopLevelClass tlc = getDAOImplementation(introspectedTable);
-        plugin.daoImplementationGenerated(tlc, introspectedTable);
-        GeneratedJavaFile gjf = new GeneratedJavaFile(tlc, targetProject);
-        list.add(gjf);
+        if (plugins.daoImplementationGenerated(tlc, introspectedTable)) {
+            GeneratedJavaFile gjf = new GeneratedJavaFile(tlc, targetProject);
+            list.add(gjf);
+        }
 
         callback.startSubTask(Messages.getString("Progress.11", //$NON-NLS-1$
                 introspectedTable.getTable().toString()));
         Interface interfaze = getDAOInterface(introspectedTable);
-        plugin.daoInterfaceGenerated(interfaze, introspectedTable);
-        gjf = new GeneratedJavaFile(interfaze, targetProject);
-        list.add(gjf);
+        if (plugins.daoInterfaceGenerated(interfaze, introspectedTable)) {
+            GeneratedJavaFile gjf = new GeneratedJavaFile(interfaze, targetProject);
+            list.add(gjf);
+        }
 
         return list;
     }
@@ -272,21 +274,23 @@ public class BaseDAOGenerator implements DAOGenerator {
 
         IbatorRules rules = introspectedTable.getRules();
         Method method;
-        IbatorPlugin plugin = ibatorContext.getPluginAggregator();
+        IbatorPlugin plugins = ibatorContext.getPlugins();
         
         if (rules.generateInsert()) {
             method = getInsertMethod(introspectedTable, false, answer);
             if (method != null) {
-                plugin.daoInsertMethodGenerated(method, answer, introspectedTable);
-                answer.addMethod(method);
+                if (plugins.daoInsertMethodGenerated(method, answer, introspectedTable)) {
+                    answer.addMethod(method);
+                }
             }
         }
 
         if (rules.generateUpdateByPrimaryKeyWithoutBLOBs()) {
             method = getUpdateByPrimaryKeyWithoutBLOBsMethod(introspectedTable, false, answer);
             if (method != null) {
-                plugin.daoUpdateByPrimaryKeyWithoutBLOBsMethodGenerated(method, answer, introspectedTable);
-                answer.addMethod(method);
+                if (plugins.daoUpdateByPrimaryKeyWithoutBLOBsMethodGenerated(method, answer, introspectedTable)) {
+                    answer.addMethod(method);
+                }
             }
         }
 
@@ -294,8 +298,9 @@ public class BaseDAOGenerator implements DAOGenerator {
             method = getUpdateByPrimaryKeyWithBLOBsMethod(introspectedTable,
                     false, answer);
             if (method != null) {
-                plugin.daoUpdateByPrimaryKeyWithBLOBsMethodGenerated(method, answer, introspectedTable);
-                answer.addMethod(method);
+                if (plugins.daoUpdateByPrimaryKeyWithBLOBsMethodGenerated(method, answer, introspectedTable)) {
+                    answer.addMethod(method);
+                }
             }
         }
 
@@ -303,16 +308,18 @@ public class BaseDAOGenerator implements DAOGenerator {
             method = getUpdateByPrimaryKeySelectiveMethod(introspectedTable,
                     false, answer);
             if (method != null) {
-                plugin.daoUpdateByPrimaryKeySelectiveMethodGenerated(method, answer, introspectedTable);
-                answer.addMethod(method);
+                if (plugins.daoUpdateByPrimaryKeySelectiveMethodGenerated(method, answer, introspectedTable)) {
+                    answer.addMethod(method);
+                }
             }
         }
 
         if (rules.generateSelectByExampleWithoutBLOBs()) {
             method = getSelectByExampleWithoutBLOBsMethod(introspectedTable, false, answer);
             if (method != null) {
-                plugin.daoSelectByExampleWithoutBLOBsMethodGenerated(method, answer, introspectedTable);
-                answer.addMethod(method);
+                if (plugins.daoSelectByExampleWithoutBLOBsMethodGenerated(method, answer, introspectedTable)) {
+                    answer.addMethod(method);
+                }
             }
         }
 
@@ -320,64 +327,72 @@ public class BaseDAOGenerator implements DAOGenerator {
             method = getSelectByExampleWithBLOBsMethod(introspectedTable, false,
                     answer);
             if (method != null) {
-                plugin.daoSelectByExampleWithBLOBsMethodGenerated(method, answer, introspectedTable);
-                answer.addMethod(method);
+                if (plugins.daoSelectByExampleWithBLOBsMethodGenerated(method, answer, introspectedTable)) {
+                    answer.addMethod(method);
+                }
             }
         }
 
         if (rules.generateSelectByPrimaryKey()) {
             method = getSelectByPrimaryKeyMethod(introspectedTable, false, answer);
             if (method != null) {
-                plugin.daoSelectByPrimaryKeyMethodGenerated(method, answer, introspectedTable);
-                answer.addMethod(method);
+                if (plugins.daoSelectByPrimaryKeyMethodGenerated(method, answer, introspectedTable)) {
+                    answer.addMethod(method);
+                }
             }
         }
 
         if (rules.generateDeleteByExample()) {
             method = getDeleteByExampleMethod(introspectedTable, false, answer);
             if (method != null) {
-                plugin.daoDeleteByExampleMethodGenerated(method, answer, introspectedTable);
-                answer.addMethod(method);
+                if (plugins.daoDeleteByExampleMethodGenerated(method, answer, introspectedTable)) {
+                    answer.addMethod(method);
+                }
             }
         }
 
         if (rules.generateDeleteByPrimaryKey()) {
             method = getDeleteByPrimaryKeyMethod(introspectedTable, false, answer);
             if (method != null) {
-                plugin.daoDeleteByPrimaryKeyMethodGenerated(method, answer, introspectedTable);
-                answer.addMethod(method);
+                if (plugins.daoDeleteByPrimaryKeyMethodGenerated(method, answer, introspectedTable)) {
+                    answer.addMethod(method);
+                }
             }
         }
 
         if (rules.generateCountByExample()) {
             method = getCountByExampleMethod(introspectedTable, false, answer);
             if (method != null) {
-                plugin.daoCountByExampleMethodGenerated(method, answer, introspectedTable);
-                answer.addMethod(method);
+                if (plugins.daoCountByExampleMethodGenerated(method, answer, introspectedTable)) {
+                    answer.addMethod(method);
+                }
             }
         }
         
         if (rules.generateUpdateByExampleSelective()) {
             method = getUpdateByExampleSelectiveMethod(introspectedTable, false, answer);
             if (method != null) {
-                plugin.daoUpdateByExampleSelectiveMethodGenerated(method, answer, introspectedTable);
-                answer.addMethod(method);
+                if (plugins.daoUpdateByExampleSelectiveMethodGenerated(method, answer, introspectedTable)) {
+                    answer.addMethod(method);
+                }
             }
         }
         
         if (rules.generateUpdateByExampleWithBLOBs()) {
             method = getUpdateByExampleWithBLOBsMethod(introspectedTable, false, answer);
             if (method != null) {
-                plugin.daoUpdateByExampleWithBLOBsMethodGenerated(method, answer, introspectedTable);
-                answer.addMethod(method);
+                if (plugins.daoUpdateByExampleWithBLOBsMethodGenerated(method, answer, introspectedTable)) {
+                    answer.addMethod(method);
+                }
             }
         }
 
         if (rules.generateUpdateByExampleWithoutBLOBs()) {
             method = getUpdateByExampleWithoutBLOBsMethod(introspectedTable, false, answer);
             if (method != null) {
-                plugin.daoUpdateByExampleWithoutBLOBsMethodGenerated(method, answer, introspectedTable);
-                answer.addMethod(method);
+                if (plugins.daoUpdateByExampleWithoutBLOBsMethodGenerated(method, answer, introspectedTable)) {
+                    answer.addMethod(method);
+                }
             }
         }
         
@@ -417,21 +432,23 @@ public class BaseDAOGenerator implements DAOGenerator {
         
         IbatorRules rules = introspectedTable.getRules();
         Method method;
-        IbatorPlugin plugin = ibatorContext.getPluginAggregator();
+        IbatorPlugin plugins = ibatorContext.getPlugins();
         
         if (rules.generateInsert()) {
             method = getInsertMethod(introspectedTable, true, answer);
             if (method != null) {
-                plugin.daoInsertMethodGenerated(method, answer, introspectedTable);
-                answer.addMethod(method);
+                if (plugins.daoInsertMethodGenerated(method, answer, introspectedTable)) {
+                    answer.addMethod(method);
+                }
             }
         }
 
         if (rules.generateUpdateByPrimaryKeyWithoutBLOBs()) {
             method = getUpdateByPrimaryKeyWithoutBLOBsMethod(introspectedTable, true, answer);
             if (method != null) {
-                plugin.daoUpdateByPrimaryKeyWithoutBLOBsMethodGenerated(method, answer, introspectedTable);
-                answer.addMethod(method);
+                if (plugins.daoUpdateByPrimaryKeyWithoutBLOBsMethodGenerated(method, answer, introspectedTable)) {
+                    answer.addMethod(method);
+                }
             }
         }
 
@@ -439,8 +456,9 @@ public class BaseDAOGenerator implements DAOGenerator {
             method = getUpdateByPrimaryKeyWithBLOBsMethod(introspectedTable,
                     true, answer);
             if (method != null) {
-                plugin.daoUpdateByPrimaryKeyWithBLOBsMethodGenerated(method, answer, introspectedTable);
-                answer.addMethod(method);
+                if (plugins.daoUpdateByPrimaryKeyWithBLOBsMethodGenerated(method, answer, introspectedTable)) {
+                    answer.addMethod(method);
+                }
             }
         }
 
@@ -448,16 +466,18 @@ public class BaseDAOGenerator implements DAOGenerator {
             method = getUpdateByPrimaryKeySelectiveMethod(introspectedTable,
                     true, answer);
             if (method != null) {
-                plugin.daoUpdateByPrimaryKeySelectiveMethodGenerated(method, answer, introspectedTable);
-                answer.addMethod(method);
+                if (plugins.daoUpdateByPrimaryKeySelectiveMethodGenerated(method, answer, introspectedTable)) {
+                    answer.addMethod(method);
+                }
             }
         }
 
         if (rules.generateSelectByExampleWithoutBLOBs()) {
             method = getSelectByExampleWithoutBLOBsMethod(introspectedTable, true, answer);
             if (method != null) {
-                plugin.daoSelectByExampleWithoutBLOBsMethodGenerated(method, answer, introspectedTable);
-                answer.addMethod(method);
+                if (plugins.daoSelectByExampleWithoutBLOBsMethodGenerated(method, answer, introspectedTable)) {
+                    answer.addMethod(method);
+                }
             }
         }
 
@@ -465,64 +485,72 @@ public class BaseDAOGenerator implements DAOGenerator {
             method = getSelectByExampleWithBLOBsMethod(introspectedTable, true,
                     answer);
             if (method != null) {
-                plugin.daoSelectByExampleWithBLOBsMethodGenerated(method, answer, introspectedTable);
-                answer.addMethod(method);
+                if (plugins.daoSelectByExampleWithBLOBsMethodGenerated(method, answer, introspectedTable)) {
+                    answer.addMethod(method);
+                }
             }
         }
 
         if (rules.generateSelectByPrimaryKey()) {
             method = getSelectByPrimaryKeyMethod(introspectedTable, true, answer);
             if (method != null) {
-                plugin.daoSelectByPrimaryKeyMethodGenerated(method, answer, introspectedTable);
-                answer.addMethod(method);
+                if (plugins.daoSelectByPrimaryKeyMethodGenerated(method, answer, introspectedTable)) {
+                    answer.addMethod(method);
+                }
             }
         }
 
         if (rules.generateDeleteByExample()) {
             method = getDeleteByExampleMethod(introspectedTable, true, answer);
             if (method != null) {
-                plugin.daoDeleteByExampleMethodGenerated(method, answer, introspectedTable);
-                answer.addMethod(method);
+                if (plugins.daoDeleteByExampleMethodGenerated(method, answer, introspectedTable)) {
+                    answer.addMethod(method);
+                }
             }
         }
 
         if (rules.generateDeleteByPrimaryKey()) {
             method = getDeleteByPrimaryKeyMethod(introspectedTable, true, answer);
             if (method != null) {
-                plugin.daoDeleteByPrimaryKeyMethodGenerated(method, answer, introspectedTable);
-                answer.addMethod(method);
+                if (plugins.daoDeleteByPrimaryKeyMethodGenerated(method, answer, introspectedTable)) {
+                    answer.addMethod(method);
+                }
             }
         }
 
         if (rules.generateCountByExample()) {
             method = getCountByExampleMethod(introspectedTable, true, answer);
             if (method != null) {
-                plugin.daoCountByExampleMethodGenerated(method, answer, introspectedTable);
-                answer.addMethod(method);
+                if (plugins.daoCountByExampleMethodGenerated(method, answer, introspectedTable)) {
+                    answer.addMethod(method);
+                }
             }
         }
         
         if (rules.generateUpdateByExampleSelective()) {
             method = getUpdateByExampleSelectiveMethod(introspectedTable, true, answer);
             if (method != null) {
-                plugin.daoUpdateByExampleSelectiveMethodGenerated(method, answer, introspectedTable);
-                answer.addMethod(method);
+                if (plugins.daoUpdateByExampleSelectiveMethodGenerated(method, answer, introspectedTable)) {
+                    answer.addMethod(method);
+                }
             }
         }
         
         if (rules.generateUpdateByExampleWithBLOBs()) {
             method = getUpdateByExampleWithBLOBsMethod(introspectedTable, true, answer);
             if (method != null) {
-                plugin.daoUpdateByExampleWithBLOBsMethodGenerated(method, answer, introspectedTable);
-                answer.addMethod(method);
+                if (plugins.daoUpdateByExampleWithBLOBsMethodGenerated(method, answer, introspectedTable)) {
+                    answer.addMethod(method);
+                }
             }
         }
 
         if (rules.generateUpdateByExampleWithoutBLOBs()) {
             method = getUpdateByExampleWithoutBLOBsMethod(introspectedTable, true, answer);
             if (method != null) {
-                plugin.daoUpdateByExampleWithoutBLOBsMethodGenerated(method, answer, introspectedTable);
-                answer.addMethod(method);
+                if (plugins.daoUpdateByExampleWithoutBLOBsMethodGenerated(method, answer, introspectedTable)) {
+                    answer.addMethod(method);
+                }
             }
         }
         

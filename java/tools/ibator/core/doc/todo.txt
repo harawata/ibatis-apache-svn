@@ -10,7 +10,11 @@ Core:
 
     3. Refactoring: Make a class for each type of method to be generated
     
-    4. Relationships?
+    4. Comments generated through a plugin
+    
+    5. Checking in rootClass implemented through a plugin
+    
+    6. Relationships?
 
 Eclipse:
 

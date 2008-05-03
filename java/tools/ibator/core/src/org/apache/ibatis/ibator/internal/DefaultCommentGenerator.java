@@ -226,7 +226,7 @@ public class DefaultCommentGenerator implements CommentGenerator {
      * tag then the Java merge capability of the eclipse plugin will
      * break.
      * 
-     * @param javaElement
+     * @param javaElement the java element
      */
     protected void addIbatorJavadocTag(JavaElement javaElement) {
         javaElement.addJavaDocLine(" *"); //$NON-NLS-1$
@@ -246,7 +246,7 @@ public class DefaultCommentGenerator implements CommentGenerator {
      * Javadoc tag and XML comments.  You may return null if you do not want
      * the date in these documentation elements.
      * 
-     * @return
+     * @return a string representing the current timestamp, or null
      */
     protected String getDateString() {
         if (suppressDate) {

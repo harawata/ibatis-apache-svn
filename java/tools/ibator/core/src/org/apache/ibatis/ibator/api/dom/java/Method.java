@@ -16,6 +16,7 @@
 package org.apache.ibatis.ibator.api.dom.java;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -63,6 +64,14 @@ public class Method extends JavaElement {
         bodyLines.add(index, line);
     }
 
+    public void addBodyLines(Collection<String> lines) {
+        bodyLines.addAll(lines);
+    }
+    
+    public void addBodyLines(int index, Collection<String> lines) {
+        bodyLines.addAll(index, lines);
+    }
+    
     public String getFormattedContent(int indentLevel, boolean interfaceMethod) {
         StringBuffer sb = new StringBuffer();
 

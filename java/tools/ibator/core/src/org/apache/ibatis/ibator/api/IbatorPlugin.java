@@ -18,12 +18,14 @@ package org.apache.ibatis.ibator.api;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.ibatis.ibator.api.dom.java.Field;
 import org.apache.ibatis.ibator.api.dom.java.Interface;
 import org.apache.ibatis.ibator.api.dom.java.Method;
 import org.apache.ibatis.ibator.api.dom.java.TopLevelClass;
 import org.apache.ibatis.ibator.api.dom.xml.Document;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.config.IbatorContext;
+import org.apache.ibatis.ibator.internal.db.ColumnDefinition;
 
 /**
  * This interface defines methods that will be called by ibator at different
@@ -148,8 +150,12 @@ public interface IbatorPlugin {
      * @param interfaze the generated interface
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the interface should be generated, false
+     *   if the generated interface should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void daoInterfaceGenerated(Interface interfaze, IntrospectedTable introspectedTable);
+    boolean daoInterfaceGenerated(Interface interfaze, IntrospectedTable introspectedTable);
     
     /**
      * This method is called when the entire DAO implementation has been generated.
@@ -159,8 +165,12 @@ public interface IbatorPlugin {
      * @param topLevelClass the generated implementation class
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the implementation class should be generated, false
+     *   if the generated implementation class should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void daoImplementationGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
+    boolean daoImplementationGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
     
     /**
      * This method is called when the countByExample method has been
@@ -172,8 +182,12 @@ public interface IbatorPlugin {
      *   implementation class if necessary.
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the method should be generated, false
+     *   if the generated method should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void daoCountByExampleMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
+    boolean daoCountByExampleMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
     
     /**
      * This method is called when the deleteByExample method has been
@@ -185,8 +199,12 @@ public interface IbatorPlugin {
      *   implementation class if necessary.
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the method should be generated, false
+     *   if the generated method should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void daoDeleteByExampleMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
+    boolean daoDeleteByExampleMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
     
     /**
      * This method is called when the deleteByPrimaryKey method has been
@@ -198,8 +216,12 @@ public interface IbatorPlugin {
      *   implementation class if necessary.
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the method should be generated, false
+     *   if the generated method should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void daoDeleteByPrimaryKeyMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
+    boolean daoDeleteByPrimaryKeyMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
     
     /**
      * This method is called when the insert method has been
@@ -211,8 +233,12 @@ public interface IbatorPlugin {
      *   implementation class if necessary.
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the method should be generated, false
+     *   if the generated method should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void daoInsertMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
+    boolean daoInsertMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
     
     /**
      * This method is called when the selectByExampleWithBLOBs method has been
@@ -224,8 +250,12 @@ public interface IbatorPlugin {
      *   implementation class if necessary.
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the method should be generated, false
+     *   if the generated method should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void daoSelectByExampleWithBLOBsMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
+    boolean daoSelectByExampleWithBLOBsMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
     
     /**
      * This method is called when the selectByExampleWithoutBLOBs method has been
@@ -237,8 +267,12 @@ public interface IbatorPlugin {
      *   implementation class if necessary.
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the method should be generated, false
+     *   if the generated method should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void daoSelectByExampleWithoutBLOBsMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
+    boolean daoSelectByExampleWithoutBLOBsMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
     
     /**
      * This method is called when the selectByPrimaryKey method has been
@@ -250,8 +284,12 @@ public interface IbatorPlugin {
      *   implementation class if necessary.
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the method should be generated, false
+     *   if the generated method should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void daoSelectByPrimaryKeyMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
+    boolean daoSelectByPrimaryKeyMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
     
     /**
      * This method is called when the updateByExampleSelective method has been
@@ -263,8 +301,12 @@ public interface IbatorPlugin {
      *   implementation class if necessary.
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the method should be generated, false
+     *   if the generated method should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void daoUpdateByExampleSelectiveMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
+    boolean daoUpdateByExampleSelectiveMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
     
     /**
      * This method is called when the updateByExampleWithBLOBs method has been
@@ -276,8 +318,12 @@ public interface IbatorPlugin {
      *   implementation class if necessary.
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the method should be generated, false
+     *   if the generated method should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void daoUpdateByExampleWithBLOBsMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
+    boolean daoUpdateByExampleWithBLOBsMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
     
     /**
      * This method is called when the updateByExampleWithoutBLOBs method has been
@@ -289,8 +335,12 @@ public interface IbatorPlugin {
      *   implementation class if necessary.
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the method should be generated, false
+     *   if the generated method should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void daoUpdateByExampleWithoutBLOBsMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
+    boolean daoUpdateByExampleWithoutBLOBsMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
     
     /**
      * This method is called when the updateByPrimaryKeySelective method has been
@@ -302,8 +352,12 @@ public interface IbatorPlugin {
      *   implementation class if necessary.
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the method should be generated, false
+     *   if the generated method should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void daoUpdateByPrimaryKeySelectiveMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
+    boolean daoUpdateByPrimaryKeySelectiveMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
     
     /**
      * This method is called when the updateByPrimaryKeyWithBLOBs method has been
@@ -315,8 +369,12 @@ public interface IbatorPlugin {
      *   implementation class if necessary.
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the method should be generated, false
+     *   if the generated method should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void daoUpdateByPrimaryKeyWithBLOBsMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
+    boolean daoUpdateByPrimaryKeyWithBLOBsMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
     
     /**
      * This method is called when the updateByPrimaryKeyWithoutBLOBs method has been
@@ -328,8 +386,12 @@ public interface IbatorPlugin {
      *   implementation class if necessary.
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the method should be generated, false
+     *   if the generated method should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void daoUpdateByPrimaryKeyWithoutBLOBsMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
+    boolean daoUpdateByPrimaryKeyWithoutBLOBsMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
     
     /**
      * This method is called when the countByExample method has been
@@ -341,8 +403,12 @@ public interface IbatorPlugin {
      *   interface class if necessary.
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the method should be generated, false
+     *   if the generated method should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void daoCountByExampleMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    boolean daoCountByExampleMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
     
     /**
      * This method is called when the deleteByExample method has been
@@ -354,8 +420,12 @@ public interface IbatorPlugin {
      *   interface class if necessary.
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the method should be generated, false
+     *   if the generated method should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void daoDeleteByExampleMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    boolean daoDeleteByExampleMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
     
     /**
      * This method is called when the deleteByPrimaryKey method has been
@@ -367,8 +437,12 @@ public interface IbatorPlugin {
      *   interface class if necessary.
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the method should be generated, false
+     *   if the generated method should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void daoDeleteByPrimaryKeyMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    boolean daoDeleteByPrimaryKeyMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
     
     /**
      * This method is called when the insert method has been
@@ -380,8 +454,12 @@ public interface IbatorPlugin {
      *   interface class if necessary.
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the method should be generated, false
+     *   if the generated method should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void daoInsertMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    boolean daoInsertMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
     
     /**
      * This method is called when the selectByExampleWithBLOBs method has been
@@ -393,8 +471,12 @@ public interface IbatorPlugin {
      *   interface class if necessary.
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the method should be generated, false
+     *   if the generated method should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void daoSelectByExampleWithBLOBsMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    boolean daoSelectByExampleWithBLOBsMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
     
     /**
      * This method is called when the selectByExampleWithoutBLOBs method has been
@@ -406,8 +488,12 @@ public interface IbatorPlugin {
      *   interface class if necessary.
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the method should be generated, false
+     *   if the generated method should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void daoSelectByExampleWithoutBLOBsMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    boolean daoSelectByExampleWithoutBLOBsMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
     
     /**
      * This method is called when the selectByPrimaryKey method has been
@@ -419,8 +505,12 @@ public interface IbatorPlugin {
      *   interface class if necessary.
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the method should be generated, false
+     *   if the generated method should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void daoSelectByPrimaryKeyMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    boolean daoSelectByPrimaryKeyMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
     
     /**
      * This method is called when the updateByExampleSelective method has been
@@ -432,8 +522,12 @@ public interface IbatorPlugin {
      *   interface class if necessary.
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the method should be generated, false
+     *   if the generated method should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void daoUpdateByExampleSelectiveMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    boolean daoUpdateByExampleSelectiveMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
     
     /**
      * This method is called when the updateByExampleWithBLOBs method has been
@@ -445,8 +539,12 @@ public interface IbatorPlugin {
      *   interface class if necessary.
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the method should be generated, false
+     *   if the generated method should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void daoUpdateByExampleWithBLOBsMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    boolean daoUpdateByExampleWithBLOBsMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
     
     /**
      * This method is called when the updateByExampleWithoutBLOBs method has been
@@ -458,8 +556,12 @@ public interface IbatorPlugin {
      *   interface class if necessary.
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the method should be generated, false
+     *   if the generated method should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void daoUpdateByExampleWithoutBLOBsMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    boolean daoUpdateByExampleWithoutBLOBsMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
     
     /**
      * This method is called when the updateByPrimaryKeySelective method has been
@@ -471,8 +573,12 @@ public interface IbatorPlugin {
      *   interface class if necessary.
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the method should be generated, false
+     *   if the generated method should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void daoUpdateByPrimaryKeySelectiveMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    boolean daoUpdateByPrimaryKeySelectiveMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
     
     /**
      * This method is called when the updateByPrimaryKeyWithBLOBs method has been
@@ -484,8 +590,12 @@ public interface IbatorPlugin {
      *   interface class if necessary.
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the method should be generated, false
+     *   if the generated method should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void daoUpdateByPrimaryKeyWithBLOBsMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    boolean daoUpdateByPrimaryKeyWithBLOBsMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
     
     /**
      * This method is called when the updateByPrimaryKeyWithoutBLOBs method has been
@@ -497,8 +607,74 @@ public interface IbatorPlugin {
      *   interface class if necessary.
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the method should be generated, false
+     *   if the generated method should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void daoUpdateByPrimaryKeyWithoutBLOBsMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+    boolean daoUpdateByPrimaryKeyWithoutBLOBsMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable);
+
+    /**
+     * This method is called after the field is generated for a
+     * specific column in a table.
+     * 
+     * @param field the field generated for the specified column
+     * @param topLevelClass the partially implemented model
+     *   class.  You can add additional imported classes to the 
+     *   implementation class if necessary.
+     * @param columnDefinition ibator's class containing information
+     *   about the column related to this field as introspected from
+     *   the database
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     * @return true if the field should be generated, false
+     *   if the generated field should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
+     */
+    boolean modelFieldGenerated(Field field, TopLevelClass topLevelClass, ColumnDefinition columnDefinition, IntrospectedTable introspectedTable);
+
+    /**
+     * This method is called after the getter, or accessor, method
+     * is generated for a specific column in a table.
+     * 
+     * @param method the getter, or accessor, method generated for
+     *   the specified column
+     * @param topLevelClass the partially implemented model
+     *   class.  You can add additional imported classes to the 
+     *   implementation class if necessary.
+     * @param columnDefinition ibator's class containing information
+     *   about the column related to this field as introspected from
+     *   the database
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     * @return true if the method should be generated, false
+     *   if the generated method should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
+     */
+    boolean modelGetterMethodGenerated(Method method, TopLevelClass topLevelClass, ColumnDefinition columnDefinition, IntrospectedTable introspectedTable);
+
+    /**
+     * This method is called after the setter, or mutator, method
+     * is generated for a specific column in a table.
+     * 
+     * @param method the setter, or mutator, method generated for
+     *   the specified column
+     * @param topLevelClass the partially implemented model
+     *   class.  You can add additional imported classes to the 
+     *   implementation class if necessary.
+     * @param columnDefinition ibator's class containing information
+     *   about the column related to this field as introspected from
+     *   the database
+     * @param introspectedTable ibator's class containing information
+     *   about the table as introspected from the database
+     * @return true if the method should be generated, false
+     *   if the generated method should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
+     */
+    boolean modelSetterMethodGenerated(Method method, TopLevelClass topLevelClass, ColumnDefinition columnDefinition, IntrospectedTable introspectedTable);
 
     /**
      * This method is called after the primary key class is generated by
@@ -512,8 +688,12 @@ public interface IbatorPlugin {
      * @param topLevelClass the generated primary key class
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the class should be generated, false
+     *   if the generated class should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void modelPrimaryKeyClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
+    boolean modelPrimaryKeyClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
 
     /**
      * This method is called after the base record class is generated by
@@ -527,8 +707,12 @@ public interface IbatorPlugin {
      * @param topLevelClass the generated base record class
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the class should be generated, false
+     *   if the generated class should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void modelBaseRecordClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
+    boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
     
     /**
      * This method is called after the record with BLOBs class is generated by
@@ -542,8 +726,12 @@ public interface IbatorPlugin {
      * @param topLevelClass the generated record with BLOBs class
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the class should be generated, false
+     *   if the generated class should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void modelRecordWithBLOBsClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
+    boolean modelRecordWithBLOBsClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
     
     /**
      * This method is called after the example class is generated by
@@ -557,8 +745,12 @@ public interface IbatorPlugin {
      * @param topLevelClass the generated example class
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the class should be generated, false
+     *   if the generated class should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void modelExampleClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
+    boolean modelExampleClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable);
 
     /**
      * This method is called when the SqlMap file has been generated.
@@ -567,8 +759,12 @@ public interface IbatorPlugin {
      *   package name, and project name)
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the sqlMap should be generated, false
+     *   if the generated sqlMap should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void sqlMapGenerated(GeneratedXmlFile sqlMap, IntrospectedTable introspectedTable);
+    boolean sqlMapGenerated(GeneratedXmlFile sqlMap, IntrospectedTable introspectedTable);
 
     /**
      * This method is called when the SqlMap document has been generated.
@@ -579,8 +775,14 @@ public interface IbatorPlugin {
      *   internal Document class - not the w3c XML Document class)
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the document should be generated, false
+     *   if the generated document should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.  Also, if any
+     *   plugin returns false, then the <tt>sqlMapGenerated</tt> method
+     *   will not be called.
      */
-    void sqlMapDocumentGenerated(Document document, IntrospectedTable introspectedTable);
+    boolean sqlMapDocumentGenerated(Document document, IntrospectedTable introspectedTable);
 
     /**
      * This method is called when the base resultMap is generated.
@@ -588,8 +790,12 @@ public interface IbatorPlugin {
      * @param element the generated &lt;resultMap&gt; element
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the element should be generated, false
+     *   if the generated element should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void sqlMapBaseResultMapGenerated(XmlElement element, IntrospectedTable introspectedTable);
+    boolean sqlMapBaseResultMapGenerated(XmlElement element, IntrospectedTable introspectedTable);
 
     /**
      * This method is called when the countByExample element is generated.
@@ -597,8 +803,12 @@ public interface IbatorPlugin {
      * @param element the generated &lt;select&gt; element
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the element should be generated, false
+     *   if the generated element should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void sqlMapCountByExampleElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
+    boolean sqlMapCountByExampleElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
 
     /**
      * This method is called when the deleteByExample element is generated.
@@ -606,8 +816,12 @@ public interface IbatorPlugin {
      * @param element the generated &lt;delete&gt; element
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the element should be generated, false
+     *   if the generated element should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void sqlMapDeleteByExampleElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
+    boolean sqlMapDeleteByExampleElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
 
     /**
      * This method is called when the deleteByPrimaryKey element is generated.
@@ -615,8 +829,12 @@ public interface IbatorPlugin {
      * @param element the generated &lt;delete&gt; element
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the element should be generated, false
+     *   if the generated element should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void sqlMapDeleteByPrimaryKeyElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
+    boolean sqlMapDeleteByPrimaryKeyElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
 
     /**
      * This method is called when the exampleWhereClause element is generated.
@@ -624,8 +842,12 @@ public interface IbatorPlugin {
      * @param element the generated &lt;sql&gt; element
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the element should be generated, false
+     *   if the generated element should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void sqlMapExampleWhereClauseGenerated(XmlElement element, IntrospectedTable introspectedTable);
+    boolean sqlMapExampleWhereClauseGenerated(XmlElement element, IntrospectedTable introspectedTable);
 
     /**
      * This method is called when the insert element is generated.
@@ -633,8 +855,12 @@ public interface IbatorPlugin {
      * @param element the generated &lt;insert&gt; element
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the element should be generated, false
+     *   if the generated element should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void sqlMapInsertElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
+    boolean sqlMapInsertElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
 
     /**
      * This method is called when the resultMap with BLOBs element is
@@ -643,8 +869,12 @@ public interface IbatorPlugin {
      * @param element the generated &lt;resultMap&gt; element
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the element should be generated, false
+     *   if the generated element should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void sqlMapResultMapWithBLOBsGenerated(XmlElement element, IntrospectedTable introspectedTable);
+    boolean sqlMapResultMapWithBLOBsGenerated(XmlElement element, IntrospectedTable introspectedTable);
 
     /**
      * This method is called when the selectByPrimaryKey element is generated.
@@ -652,8 +882,12 @@ public interface IbatorPlugin {
      * @param element the generated &lt;select&gt; element
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the element should be generated, false
+     *   if the generated element should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void sqlMapSelectByPrimaryKeyElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
+    boolean sqlMapSelectByPrimaryKeyElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
 
     /**
      * This method is called when the selectByExample element is generated.
@@ -661,8 +895,12 @@ public interface IbatorPlugin {
      * @param element the generated &lt;select&gt; element
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the element should be generated, false
+     *   if the generated element should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void sqlMapSelectByExampleElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
+    boolean sqlMapSelectByExampleElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
 
     /**
      * This method is called when the selectByExampleWithBLOBs element is generated.
@@ -670,8 +908,12 @@ public interface IbatorPlugin {
      * @param element the generated &lt;select&gt; element
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the element should be generated, false
+     *   if the generated element should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void sqlMapSelectByExampleWithBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
+    boolean sqlMapSelectByExampleWithBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
 
     /**
      * This method is called when the updateByExampleSelective element is generated.
@@ -679,8 +921,12 @@ public interface IbatorPlugin {
      * @param element the generated &lt;update&gt; element
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the element should be generated, false
+     *   if the generated element should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void sqlMapUpdateByExampleSelectiveElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
+    boolean sqlMapUpdateByExampleSelectiveElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
 
     /**
      * This method is called when the updateByExampleWithBLOBs element is generated.
@@ -688,8 +934,12 @@ public interface IbatorPlugin {
      * @param element the generated &lt;update&gt; element
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the element should be generated, false
+     *   if the generated element should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void sqlMapUpdateByExampleWithBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
+    boolean sqlMapUpdateByExampleWithBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
 
     /**
      * This method is called when the updateByExampleWithourBLOBs element is generated.
@@ -697,8 +947,12 @@ public interface IbatorPlugin {
      * @param element the generated &lt;update&gt; element
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the element should be generated, false
+     *   if the generated element should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void sqlMapUpdateByExampleWithoutBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
+    boolean sqlMapUpdateByExampleWithoutBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
 
     /**
      * This method is called when the updateByPrimaryKeySelective element is generated.
@@ -706,8 +960,12 @@ public interface IbatorPlugin {
      * @param element the generated &lt;update&gt; element
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the element should be generated, false
+     *   if the generated element should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void sqlMapUpdateByPrimaryKeySelectiveElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
+    boolean sqlMapUpdateByPrimaryKeySelectiveElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
 
     /**
      * This method is called when the updateByPrimaryKeyWithBLOBs element is generated.
@@ -715,8 +973,12 @@ public interface IbatorPlugin {
      * @param element the generated &lt;update&gt; element
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the element should be generated, false
+     *   if the generated element should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void sqlMapUpdateByPrimaryKeyWithBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
+    boolean sqlMapUpdateByPrimaryKeyWithBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
 
     /**
      * This method is called when the updateByPrimaryKeyWithoutBLOBs element is generated.
@@ -724,6 +986,10 @@ public interface IbatorPlugin {
      * @param element the generated &lt;update&gt; element
      * @param introspectedTable ibator's class containing information
      *   about the table as introspected from the database
+     * @return true if the element should be generated, false
+     *   if the generated element should be ignored.  In the case
+     *   of multiple plugins, the first plugin returning false
+     *   will disable the calling of further plugins.
      */
-    void sqlMapUpdateByPrimaryKeyWithoutBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
+    boolean sqlMapUpdateByPrimaryKeyWithoutBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable);
 }
