@@ -102,6 +102,26 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
             Assert.AreEqual(firstId, secondId);
         }
 
+        [Test]
+        public void LRU_cache_should_work()
+        {
+            IList list = dataMapper.QueryForList("GetLruCachedAccountsViaResultMap", null);
+
+            int firstId = HashCodeProvider.GetIdentityHashCode(list);
+
+            list = dataMapper.QueryForList("GetLruCachedAccountsViaResultMap", null);
+
+            int secondId = HashCodeProvider.GetIdentityHashCode(list);
+
+            Assert.AreEqual(firstId, secondId);
+
+            list = dataMapper.QueryForList("GetLruCachedAccountsViaResultMap", null);
+
+            int thirdId = HashCodeProvider.GetIdentityHashCode(list);
+
+            Assert.AreEqual(firstId, thirdId);
+        }
+
         /// <summary>
         /// Test Cache query
         /// </summary>

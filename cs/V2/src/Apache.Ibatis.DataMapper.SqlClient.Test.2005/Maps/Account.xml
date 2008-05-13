@@ -22,12 +22,10 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			<flushOnExecute statement="UpdateAccountViaInlineParameters"/>
 		</cacheModel>
   
-		<!-- <cacheModel name="account-cache" implementation="LRU" >
-			<flushInterval hours="24"/>
-			<flushOnExecute statement="UpdateAccountViaInlineParameters"/>
-			<flushOnExecute statement="UpdateAccountViaParameterMap"/>
-			<property name="CacheSize" value="50"/>
-		</cacheModel> -->
+		<cacheModel id="lru-account-cache" implementation="LRU" >
+      <flushInterval minutes="5"/>
+			<property name="CacheSize" value="2"/>
+		</cacheModel>
 		
     </cacheModels>
 
@@ -282,6 +280,14 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			from Accounts
 			order by Account_ID
 		</select>
+
+    <select id="GetLruCachedAccountsViaResultMap"
+      resultMap="account-result"
+      cacheModel="lru-account-cache" >
+      select *
+      from Accounts
+      order by Account_ID
+    </select>
   
 		<select id="GetRWCachedAccountsViaResultMap"
 				resultMap="account-result"
