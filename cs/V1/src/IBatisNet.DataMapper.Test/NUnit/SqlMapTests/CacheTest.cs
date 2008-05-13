@@ -39,6 +39,26 @@ namespace IBatisNet.DataMapper.Test.NUnit.SqlMapTests
 
 		#region Test cache
 
+        [Test]
+        public void LRU_cache_should_work()
+        {
+            IList list = sqlMap.QueryForList("GetLruCachedAccountsViaResultMap", null);
+
+            int firstId = HashCodeProvider.GetIdentityHashCode(list);
+
+            list = sqlMap.QueryForList("GetLruCachedAccountsViaResultMap", null);
+
+            int secondId = HashCodeProvider.GetIdentityHashCode(list);
+
+            Assert.AreEqual(firstId, secondId);
+
+            list = sqlMap.QueryForList("GetLruCachedAccountsViaResultMap", null);
+
+            int thirdId = HashCodeProvider.GetIdentityHashCode(list);
+
+            Assert.AreEqual(firstId, thirdId);
+        }
+
 		/// <summary>
 		/// Test for JIRA 29
 		/// </summary>
