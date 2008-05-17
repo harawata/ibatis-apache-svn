@@ -63,8 +63,8 @@ namespace Apache.Ibatis.DataMapper.Scope
         private IMappedStatement _mappedStatement = null;
         private int _currentResultMapIndex = -1;
         // Used by N+1 Select solution
-        // Holds [IResultMap, IDictionary] couple where the IDictionary holds [key, result object]
-        private IDictionary<IResultMap, IDictionary> _uniqueKeys = null;
+        // Holds [IResultMap, IDictionary] couple where the IDictionary holds [string key,object result]
+        private IDictionary<IResultMap, IDictionary<string,object>> _uniqueKeys = null;
 
         #endregion
 
@@ -75,16 +75,16 @@ namespace Apache.Ibatis.DataMapper.Scope
         /// </summary>
         /// <param name="map">The ResultMap.</param>
         /// <returns>
-        /// Returns [key, result object] which holds the result objects that have  
+        /// Returns [string key, object result] which holds the result objects that have  
         /// already been build during this request with this <see cref="IResultMap"/>
         /// </returns>
-        public IDictionary GetUniqueKeys(IResultMap map)
+        public IDictionary<string, object> GetUniqueKeys(IResultMap map)
         {
             if (_uniqueKeys == null)
             {
                 return null;
             }
-            IDictionary keys = null;
+            IDictionary<string, object> keys = null;
             _uniqueKeys.TryGetValue(map, out keys);
             return keys;
         }
@@ -94,11 +94,11 @@ namespace Apache.Ibatis.DataMapper.Scope
         /// </summary>
         /// <param name="map">The map.</param>
         /// <param name="keys">The keys.</param>
-        public void SetUniqueKeys(IResultMap map, IDictionary keys)
+        public void SetUniqueKeys(IResultMap map, IDictionary<string, object> keys)
         {
             if (_uniqueKeys == null)
             {
-                _uniqueKeys = new Dictionary<IResultMap,IDictionary>();
+                _uniqueKeys = new Dictionary<IResultMap, IDictionary<string, object>>();
             }
             _uniqueKeys.Add(map, keys);
         }

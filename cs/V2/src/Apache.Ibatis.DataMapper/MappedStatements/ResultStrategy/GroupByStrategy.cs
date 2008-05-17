@@ -56,9 +56,9 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
 
             string uniqueKey = GetUniqueKey(resultMap, request, reader);
             // Gets the [key, result object] already build
-            IDictionary buildObjects = request.GetUniqueKeys(resultMap);
+            IDictionary<string, object> buildObjects = request.GetUniqueKeys(resultMap);
 
-            if (buildObjects != null && buildObjects.Contains(uniqueKey))
+            if (buildObjects != null && buildObjects.ContainsKey(uniqueKey))
             {
                 // Unique key is already known, so get the existing result object and process additional results.
                 outObject = buildObjects[uniqueKey];
@@ -73,7 +73,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
                 }
                 outObject = SKIP;
             }
-            else if (uniqueKey == null || buildObjects == null || !buildObjects.Contains(uniqueKey))
+            else if (uniqueKey == null || buildObjects == null || !buildObjects.ContainsKey(uniqueKey))
             {
                 // Unique key is NOT known, so create a new result object and process additional results.
 
@@ -92,7 +92,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
 
                 if (buildObjects == null)
                 {
-                    buildObjects = new Hashtable();
+                    buildObjects = new Dictionary<string, object>();
                     request.SetUniqueKeys(resultMap, buildObjects);
                 }
                 buildObjects[uniqueKey] = outObject;
