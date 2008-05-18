@@ -24,5 +24,5 @@ using System.Reflection;
 [assembly: AssemblyTitle("Apache.Ibatis.Common")]
 [assembly: AssemblyDescription("Common object used by DataMapper component in iBATIS")]
 	
-[assembly: AssemblyVersion("2.0.0")]
+[assembly: AssemblyVersion("3.0.0")]
 

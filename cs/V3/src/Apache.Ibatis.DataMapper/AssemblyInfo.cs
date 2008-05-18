@@ -33,4 +33,4 @@ using System.Reflection;
 [assembly: AssemblyTitle("Apache.Ibatis.DataMapper")]
 [assembly: AssemblyDescription("Map objects to your SQL statements or stored procedures.")]
 
-[assembly: AssemblyVersion("2.0.0")]
+[assembly: AssemblyVersion("3.0.0")]
