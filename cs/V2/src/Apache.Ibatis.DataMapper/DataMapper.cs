@@ -61,7 +61,6 @@ namespace Apache.Ibatis.DataMapper
 
         #region IDataMapper Members
 
-
         /// <summary>
         /// Executes a Sql INSERT statement.
         /// Insert is a bit different from other update methods, as it
@@ -81,30 +80,11 @@ namespace Apache.Ibatis.DataMapper
         /// </returns>
         public object Insert(string statementId, object parameterObject)
         {
-            bool isSessionLocal = false;
-            ISession session = sessionStore.CurrentSession;
-            object generatedKey = null;
-
-            if (session == null)
-            {
-                session = sessionFactory.OpenSession();
-                isSessionLocal = true;
-            }
-
-            try
+            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
                 IMappedStatement statement = modelStore.GetMappedStatement(statementId);
-                generatedKey = statement.ExecuteInsert(session, parameterObject);
+                return statement.ExecuteInsert(sessionScope.Session, parameterObject);
             }
-            finally
-            {
-                if (isSessionLocal)
-                {
-                    session.Close();
-                }
-            }
-
-            return generatedKey;
         }
 
         /// <summary>
@@ -151,35 +131,15 @@ namespace Apache.Ibatis.DataMapper
         /// <param name="resultObject">An Ilist object used to hold the objects.</param>
         public void QueryForList(string statementId, object parameterObject, IList resultObject)
         {
-            bool isSessionLocal = false;
-            ISession session = sessionStore.CurrentSession;
-
             if (resultObject == null)
             {
                 throw new DataMapperException("resultObject parameter must be instantiated before being passed to SqlMapper.QueryForList");
             }
 
-            if (session == null)
-            {
-                session = sessionFactory.OpenSession();
-                isSessionLocal = true;
-            }
-
-            try
+            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
                 IMappedStatement statement = modelStore.GetMappedStatement(statementId);
-                statement.ExecuteQueryForList(session, parameterObject, resultObject);
-            }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                if (isSessionLocal)
-                {
-                    session.Close();
-                }
+                statement.ExecuteQueryForList(sessionScope.Session, parameterObject, resultObject);
             }
         }
 
@@ -195,30 +155,11 @@ namespace Apache.Ibatis.DataMapper
         /// <returns>A List of result objects.</returns>
         public IList QueryForList(string statementId, object parameterObject)
         {
-            bool isSessionLocal = false;
-            ISession session = sessionStore.CurrentSession;
-            IList list;
-
-            if (session == null)
-            {
-                session = sessionFactory.OpenSession();
-                isSessionLocal = true;
-            }
-
-            try
+            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
                 IMappedStatement statement = modelStore.GetMappedStatement(statementId);
-                list = statement.ExecuteQueryForList(session, parameterObject);
+                return statement.ExecuteQueryForList(sessionScope.Session, parameterObject);
             }
-            finally
-            {
-                if (isSessionLocal)
-                {
-                    session.Close();
-                }
-            }
-
-            return list;
         }
 
         /// <summary>
@@ -234,34 +175,11 @@ namespace Apache.Ibatis.DataMapper
         /// <returns>A List of result objects.</returns>
         public IList QueryForList(string statementId, object parameterObject, int skipResults, int maxResults)
         {
-            bool isSessionLocal = false;
-            ISession session = sessionStore.CurrentSession;
-            IList list;
-
-            if (session == null)
-            {
-                session = sessionFactory.OpenSession();
-                isSessionLocal = true;
-            }
-
-            try
+            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
                 IMappedStatement statement = modelStore.GetMappedStatement(statementId);
-                list = statement.ExecuteQueryForList(session, parameterObject, skipResults, maxResults);
+                return statement.ExecuteQueryForList(sessionScope.Session, parameterObject, skipResults, maxResults);
             }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                if (isSessionLocal)
-                {
-                    session.Close();
-                }
-            }
-
-            return list;
         }
 
         /// <summary>
@@ -294,34 +212,11 @@ namespace Apache.Ibatis.DataMapper
         /// <exception cref="DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
         public IDictionary QueryForMap(string statementId, object parameterObject, string keyProperty, string valueProperty)
         {
-            bool isSessionLocal = false;
-            ISession session = sessionStore.CurrentSession;
-            IDictionary map = null;
-
-            if (session == null)
-            {
-                session = sessionFactory.OpenSession();
-                isSessionLocal = true;
-            }
-
-            try
+            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
                 IMappedStatement statement = modelStore.GetMappedStatement(statementId);
-                map = statement.ExecuteQueryForMap(session, parameterObject, keyProperty, valueProperty);
+                return statement.ExecuteQueryForMap(sessionScope.Session, parameterObject, keyProperty, valueProperty);
             }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                if (isSessionLocal)
-                {
-                    session.Close();
-                }
-            }
-
-            return map;
         }
 
         /// <summary>
@@ -342,34 +237,11 @@ namespace Apache.Ibatis.DataMapper
         /// <exception cref="DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
         public IDictionary QueryForMapWithRowDelegate(string statementId, object parameterObject, string keyProperty, string valueProperty, DictionaryRowDelegate rowDelegate)
         {
-            bool isSessionLocal = false;
-            ISession session = sessionStore.CurrentSession;
-            IDictionary map = null;
-
-            if (session == null)
-            {
-                session = sessionFactory.OpenSession();
-                isSessionLocal = true;
-            }
-
-            try
+            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
                 IMappedStatement statement = modelStore.GetMappedStatement(statementId);
-                map = statement.ExecuteQueryForMapWithRowDelegate(session, parameterObject, keyProperty, valueProperty, rowDelegate);
+                return statement.ExecuteQueryForMapWithRowDelegate(sessionScope.Session, parameterObject, keyProperty, valueProperty, rowDelegate);
             }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                if (isSessionLocal)
-                {
-                    session.Close();
-                }
-            }
-
-            return map;
         }
 
         /// <summary>
@@ -384,34 +256,11 @@ namespace Apache.Ibatis.DataMapper
         /// </returns>
         public object QueryForObject(string statementId, object parameterObject, object resultObject)
         {
-            bool isSessionLocal = false;
-            ISession session = sessionStore.CurrentSession;
-            object result = null;
-
-            if (session == null)
-            {
-                session = sessionFactory.OpenSession();
-                isSessionLocal = true;
-            }
-
-            try
+            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
                 IMappedStatement statement = modelStore.GetMappedStatement(statementId);
-                result = statement.ExecuteQueryForObject(session, parameterObject, resultObject);
+                return statement.ExecuteQueryForObject(sessionScope.Session, parameterObject, resultObject);
             }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                if (isSessionLocal)
-                {
-                    session.Close();
-                }
-            }
-
-            return result;
         }
 
         /// <summary>
@@ -428,34 +277,11 @@ namespace Apache.Ibatis.DataMapper
         /// </returns>
         public object QueryForObject(string statementId, object parameterObject)
         {
-            bool isSessionLocal = false;
-            ISession session = sessionStore.CurrentSession;
-            object result;
-
-            if (session == null)
-            {
-                session = sessionFactory.OpenSession();
-                isSessionLocal = true;
-            }
-
-            try
+            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
                 IMappedStatement statement = modelStore.GetMappedStatement(statementId);
-                result = statement.ExecuteQueryForObject(session, parameterObject);
+                return statement.ExecuteQueryForObject(sessionScope.Session, parameterObject);
             }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                if (isSessionLocal)
-                {
-                    session.Close();
-                }
-            }
-
-            return result;
         }
 
         /// <summary>
@@ -471,34 +297,11 @@ namespace Apache.Ibatis.DataMapper
         /// <returns>A List of result objects.</returns>
         public IList QueryWithRowDelegate(string statementId, object parameterObject, RowDelegate rowDelegate)
         {
-            bool isSessionLocal = false;
-            ISession session = sessionStore.CurrentSession;
-            IList list = null;
-
-            if (session == null)
-            {
-                session = sessionFactory.OpenSession();
-                isSessionLocal = true;
-            }
-
-            try
+            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
                 IMappedStatement statement = modelStore.GetMappedStatement(statementId);
-                list = statement.ExecuteQueryForRowDelegate(session, parameterObject, rowDelegate);
+                return statement.ExecuteQueryForRowDelegate(sessionScope.Session, parameterObject, rowDelegate);
             }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                if (isSessionLocal)
-                {
-                    session.Close();
-                }
-            }
-
-            return list;
         }
 
         /// <summary>
@@ -515,34 +318,11 @@ namespace Apache.Ibatis.DataMapper
         /// <returns>The number of rows effected.</returns>
         public int Update(string statementId, object parameterObject)
         {
-            bool isSessionLocal = false;
-            ISession session = sessionStore.CurrentSession;
-            int rows = 0; // the number of rows affected
-
-            if (session == null)
-            {
-                session = sessionFactory.OpenSession();
-                isSessionLocal = true;
-            }
-
-            try
+            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
                 IMappedStatement statement = modelStore.GetMappedStatement(statementId);
-                rows = statement.ExecuteUpdate(session, parameterObject);
+                return statement.ExecuteUpdate(sessionScope.Session, parameterObject);
             }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                if (isSessionLocal)
-                {
-                    session.Close();
-                }
-            }
-
-            return rows;
         }
 
         /// <summary>
@@ -562,34 +342,11 @@ namespace Apache.Ibatis.DataMapper
         /// <exception cref="DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
         public IDictionary<K, V> QueryForDictionary<K, V>(string statementId, object parameterObject, string keyProperty, string valueProperty)
         {
-            bool isSessionLocal = false;
-            ISession session = sessionStore.CurrentSession;
-            IDictionary<K, V> map = null;
-
-            if (session == null)
-            {
-                session = sessionFactory.OpenSession();
-                isSessionLocal = true;
-            }
-
-            try
+            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
                 IMappedStatement statement = modelStore.GetMappedStatement(statementId);
-                map = statement.ExecuteQueryForDictionary<K, V>(session, parameterObject, keyProperty, valueProperty);
+                return statement.ExecuteQueryForDictionary<K, V>(sessionScope.Session, parameterObject, keyProperty, valueProperty);
             }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                if (isSessionLocal)
-                {
-                    session.Close();
-                }
-            }
-
-            return map;
         }
 
         /// <summary>
@@ -629,34 +386,11 @@ namespace Apache.Ibatis.DataMapper
         /// <exception cref="DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
         public IDictionary<K, V> QueryForDictionary<K, V>(string statementId, object parameterObject, string keyProperty, string valueProperty, DictionaryRowDelegate<K, V> rowDelegate)
         {
-            bool isSessionLocal = false;
-            ISession session = sessionStore.CurrentSession;
-            IDictionary<K, V> map = null;
-
-            if (session == null)
-            {
-                session = sessionFactory.OpenSession();
-                isSessionLocal = true;
-            }
-
-            try
+            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
                 IMappedStatement statement = modelStore.GetMappedStatement(statementId);
-                map = statement.ExecuteQueryForDictionary<K, V>(session, parameterObject, keyProperty, valueProperty, rowDelegate);
+                return statement.ExecuteQueryForDictionary(sessionScope.Session, parameterObject, keyProperty, valueProperty, rowDelegate);
             }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                if (isSessionLocal)
-                {
-                    session.Close();
-                }
-            }
-
-            return map;
         }
 
         /// <summary>
@@ -672,34 +406,11 @@ namespace Apache.Ibatis.DataMapper
         /// </returns>
         public T QueryForObject<T>(string statementId, object parameterObject, T instanceObject)
         {
-            bool isSessionLocal = false;
-            ISession session = sessionStore.CurrentSession;
-            T result = default(T);
-
-            if (session == null)
-            {
-                session = sessionFactory.OpenSession();
-                isSessionLocal = true;
-            }
-
-            try
+            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
                 IMappedStatement statement = modelStore.GetMappedStatement(statementId);
-                result = statement.ExecuteQueryForObject<T>(session, parameterObject, instanceObject);
+                return statement.ExecuteQueryForObject(sessionScope.Session, parameterObject, instanceObject);
             }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                if (isSessionLocal)
-                {
-                    session.Close();
-                }
-            }
-
-            return result;
         }
 
         /// <summary>
@@ -717,34 +428,11 @@ namespace Apache.Ibatis.DataMapper
         /// </returns>
         public T QueryForObject<T>(string statementId, object parameterObject)
         {
-            bool isSessionLocal = false;
-            ISession session = sessionStore.CurrentSession;
-            T result;
-
-            if (session == null)
-            {
-                session = sessionFactory.OpenSession();
-                isSessionLocal = true;
-            }
-
-            try
+            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
                 IMappedStatement statement = modelStore.GetMappedStatement(statementId);
-                result = statement.ExecuteQueryForObject<T>(session, parameterObject);
+                return statement.ExecuteQueryForObject<T>(sessionScope.Session, parameterObject);
             }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                if (isSessionLocal)
-                {
-                    session.Close();
-                }
-            }
-
-            return result;
         }
 
         /// <summary>
@@ -760,34 +448,11 @@ namespace Apache.Ibatis.DataMapper
         /// <returns>A List of result objects.</returns>
         public IList<T> QueryForList<T>(string statementId, object parameterObject)
         {
-            bool isSessionLocal = false;
-            ISession session = sessionStore.CurrentSession;
-            IList<T> list;
-
-            if (session == null)
-            {
-                session = sessionFactory.OpenSession();
-                isSessionLocal = true;
-            }
-
-            try
+            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
                 IMappedStatement statement = modelStore.GetMappedStatement(statementId);
-                list = statement.ExecuteQueryForList<T>(session, parameterObject);
+                return statement.ExecuteQueryForList<T>(sessionScope.Session, parameterObject);
             }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                if (isSessionLocal)
-                {
-                    session.Close();
-                }
-            }
-
-            return list;
         }
 
         /// <summary>
@@ -803,35 +468,15 @@ namespace Apache.Ibatis.DataMapper
         /// <param name="resultObject">An Ilist object used to hold the objects.</param>
         public void QueryForList<T>(string statementId, object parameterObject, IList<T> resultObject)
         {
-            bool isSessionLocal = false;
-            ISession session = sessionStore.CurrentSession;
-
             if (resultObject == null)
             {
                 throw new DataMapperException("resultObject parameter must be instantiated before being passed to SqlMapper.QueryForList");
             }
 
-            if (session == null)
-            {
-                session = sessionFactory.OpenSession();
-                isSessionLocal = true;
-            }
-
-            try
+            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
                 IMappedStatement statement = modelStore.GetMappedStatement(statementId);
-                statement.ExecuteQueryForList(session, parameterObject, resultObject);
-            }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                if (isSessionLocal)
-                {
-                    session.Close();
-                }
+                statement.ExecuteQueryForList(sessionScope.Session, parameterObject, resultObject);
             }
         }
 
@@ -849,34 +494,11 @@ namespace Apache.Ibatis.DataMapper
         /// <returns>A List of result objects.</returns>
         public IList<T> QueryForList<T>(string statementId, object parameterObject, int skipResults, int maxResults)
         {
-            bool isSessionLocal = false;
-            ISession session = sessionStore.CurrentSession;
-            IList<T> list;
-
-            if (session == null)
-            {
-                session = sessionFactory.OpenSession();
-                isSessionLocal = true;
-            }
-
-            try
+            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
                 IMappedStatement statement = modelStore.GetMappedStatement(statementId);
-                list = statement.ExecuteQueryForList<T>(session, parameterObject, skipResults, maxResults);
+                return statement.ExecuteQueryForList<T>(sessionScope.Session, parameterObject, skipResults, maxResults);
             }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                if (isSessionLocal)
-                {
-                    session.Close();
-                }
-            }
-
-            return list;
         }
 
         /// <summary>
@@ -893,30 +515,11 @@ namespace Apache.Ibatis.DataMapper
         /// <returns>A List of result objects.</returns>
         public IList<T> QueryWithRowDelegate<T>(string statementId, object parameterObject, RowDelegate<T> rowDelegate)
         {
-            bool isSessionLocal = false;
-            ISession session = sessionStore.CurrentSession;
-            IList<T> list = null;
-
-            if (session == null)
-            {
-                session = sessionFactory.OpenSession();
-                isSessionLocal = true;
-            }
-
-            try
+            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
                 IMappedStatement statement = modelStore.GetMappedStatement(statementId);
-                list = statement.ExecuteQueryForRowDelegate<T>(session, parameterObject, rowDelegate);
+                return statement.ExecuteQueryForRowDelegate(sessionScope.Session, parameterObject, rowDelegate);
             }
-            finally
-            {
-                if (isSessionLocal)
-                {
-                    session.Close();
-                }
-            }
-
-            return list;
         }
 
         /// <summary>
@@ -928,34 +531,11 @@ namespace Apache.Ibatis.DataMapper
         /// <returns>The number of rows effected.</returns>
         public int Delete(string statementId, object parameterObject)
         {
-            bool isSessionLocal = false;
-            ISession session = sessionStore.CurrentSession;
-            int rows = 0; // the number of rows affected
-
-            if (session == null)
-            {
-                session = sessionFactory.OpenSession();
-                isSessionLocal = true;
-            }
-
-            try
+            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
             {
                 IMappedStatement statement = modelStore.GetMappedStatement(statementId);
-                rows = statement.ExecuteUpdate(session, parameterObject);
+                return statement.ExecuteUpdate(sessionScope.Session, parameterObject);
             }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                if (isSessionLocal)
-                {
-                    session.Close();
-                }
-            }
-
-            return rows;
         }
 
         #endregion
@@ -972,5 +552,52 @@ namespace Apache.Ibatis.DataMapper
         }
 
         #endregion
+
+        /// <summary>
+        /// Local SessionScope management
+        /// </summary>
+        private class DataMapperLocalSessionScope : IDisposable
+        {
+            private readonly bool isSessionLocal = false;
+            private readonly ISessionStore sessionStore =null;
+            private readonly ISession session = null;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="DataMapperLocalSessionScope"/> class.
+            /// </summary>
+            /// <param name="sessionStore">The session store.</param>
+            /// <param name="sessionFactory">The session factory.</param>
+            public DataMapperLocalSessionScope(ISessionStore sessionStore, ISessionFactory sessionFactory)
+            {
+                isSessionLocal = false;
+                session = sessionStore.CurrentSession;
+
+                if (session == null)
+                {
+                    session = sessionFactory.OpenSession();
+                    isSessionLocal = true;
+                }
+            }
+
+            /// <summary>
+            /// Gets the session.
+            /// </summary>
+            /// <value>The session.</value>
+            public ISession Session
+            {
+                get { return session; }
+            }
+
+            /// <summary>
+            /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            /// </summary>
+            public void Dispose()
+            {
+                if (isSessionLocal)
+                {
+                    session.Close();
+                }
+            }
+        }
     }
 }
