@@ -270,7 +270,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
 
         [Test]
         [Category("JIRA")]
-        [Category("JIRA-253")]
+        [Description("JIRA-253")]
         public void Null_byte_array_should_return_null()
         {
             Account account = NewAccount6();

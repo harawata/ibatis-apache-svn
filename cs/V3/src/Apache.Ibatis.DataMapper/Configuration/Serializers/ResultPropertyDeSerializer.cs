@@ -42,15 +42,19 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
         /// </summary>
         /// <param name="config">The config.</param>
         /// <param name="resultClass">The result class.</param>
+        /// <param name="prefix">The prefix.</param>
+        /// <param name="suffix">The suffix.</param>
         /// <param name="dataExchangeFactory">The data exchange factory.</param>
         /// <returns></returns>
         public static ResultProperty Deserialize(
             IConfiguration config, 
-            Type resultClass, 
+            Type resultClass,
+            string prefix,
+            string suffix,
             DataExchangeFactory dataExchangeFactory)
 		{
             string propertyName = ConfigurationUtils.GetMandatoryStringAttribute(config, ConfigConstants.ATTRIBUTE_PROPERTY);
-            string columnName = ConfigurationUtils.GetStringAttribute(config.Attributes, ConfigConstants.ATTRIBUTE_COLUMN);
+            string columnName = prefix+ConfigurationUtils.GetStringAttribute(config.Attributes, ConfigConstants.ATTRIBUTE_COLUMN)+suffix;
             int columnIndex = ConfigurationUtils.GetIntAttribute(config.Attributes, ConfigConstants.ATTRIBUTE_COLUMNINDEX, ResultProperty.UNKNOWN_COLUMN_INDEX);
             string clrType = ConfigurationUtils.GetStringAttribute(config.Attributes, ConfigConstants.ATTRIBUTE_TYPE);
             string callBackName = ConfigurationUtils.GetStringAttribute(config.Attributes, ConfigConstants.ATTRIBUTE_TYPEHANDLER);

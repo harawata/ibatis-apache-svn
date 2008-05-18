@@ -54,6 +54,14 @@ namespace Apache.Ibatis.DataMapper.Configuration.Interpreters.Config
         /// <summary>
         /// Token for attribute keyColumns.
         /// </summary>
+        public const string ATTRIBUTE_SUFFIX = "suffix";
+        /// <summary>
+        /// Token for attribute keyColumns.
+        /// </summary>
+        public const string ATTRIBUTE_PREFIX = "prefix";
+        /// <summary>
+        /// Token for attribute keyColumns.
+        /// </summary>
         public const string ATTRIBUTE_KEYS_PROPERTIES = "keys";
         /// <summary>
         /// Token for attribute scale.

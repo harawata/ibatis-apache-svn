@@ -41,7 +41,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
 
         [Test]
         [Category("JIRA")]
-        [Category("JIRA-260")]
+        [Description("JIRA-260")]
         public void Extend_ResultMap_with_Constructor_should_be_used()
         {
             Account account = dataMapper.QueryForObject<Account>("JIRA260", 1);

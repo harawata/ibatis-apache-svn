@@ -29,6 +29,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Apache.Ibatis.Common.Configuration;
+using Apache.Ibatis.Common.Exceptions;
 using Apache.Ibatis.Common.Utilities.Objects;
 using Apache.Ibatis.DataMapper.Configuration.Interpreters.Config;
 using Apache.Ibatis.DataMapper.DataExchange;
@@ -66,6 +67,8 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
             string extends = config.GetAttributeValue(ConfigConstants.ATTRIBUTE_EXTENDS);
             string groupBy = config.GetAttributeValue(ConfigConstants.ATTRIBUTE_GROUPBY);
             string keyColumns = config.GetAttributeValue(ConfigConstants.ATTRIBUTE_KEYS_PROPERTIES);
+            string suffix = ConfigurationUtils.GetStringAttribute(config.Attributes, ConfigConstants.ATTRIBUTE_SUFFIX, string.Empty);
+            string prefix = ConfigurationUtils.GetStringAttribute(config.Attributes, ConfigConstants.ATTRIBUTE_PREFIX, string.Empty);
 
             Type type = dataExchangeFactory.TypeHandlerFactory.GetType(className);
             IDataExchange dataExchange = dataExchangeFactory.GetDataExchangeForClass(type);
@@ -123,7 +126,14 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
 
             #endregion
 
-            ResultPropertyCollection properties = BuildResultProperties(id, config, type, dataExchangeFactory, waitResultPropertyResolution);
+            ResultPropertyCollection properties = BuildResultProperties(
+                id, 
+                config, 
+                type, 
+                prefix,
+                suffix,
+                dataExchangeFactory, 
+                waitResultPropertyResolution);
             Discriminator discriminator = BuildDiscriminator(config, type, dataExchangeFactory, waitDiscriminatorResolution);
 
             ResultMap resultMap = new ResultMap(
@@ -193,6 +203,8 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
         /// <param name="resultMapId">The result map id.</param>
         /// <param name="resultMapConfig">The result map config.</param>
         /// <param name="resultClass">The result class.</param>
+        /// <param name="prefix">The prefix.</param>
+        /// <param name="suffix">The suffix.</param>
         /// <param name="dataExchangeFactory">The data exchange factory.</param>
         /// <param name="waitResultPropertyResolution">The wait result property resolution.</param>
         /// <returns></returns>
@@ -200,6 +212,8 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
             string resultMapId,
             IConfiguration resultMapConfig, 
             Type resultClass,
+            string prefix,
+            string suffix,
             DataExchangeFactory dataExchangeFactory,
             WaitResultPropertyResolution waitResultPropertyResolution)
         {
@@ -211,11 +225,11 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
                 ResultProperty mapping = null;
                 try
                 {
-                    mapping = ResultPropertyDeSerializer.Deserialize(result, resultClass, dataExchangeFactory);
+                    mapping = ResultPropertyDeSerializer.Deserialize(result, resultClass, prefix, suffix, dataExchangeFactory);
                 }
                 catch(Exception e)
                 {
-                    throw new DataMapperException("In ResultMap (" + resultMapId + ") can't build the result property: " + ConfigurationUtils.GetStringAttribute(result.Attributes, ConfigConstants.ATTRIBUTE_PROPERTY) + ". Cause " + e.Message, e);
+                    throw new ConfigurationException("In ResultMap (" + resultMapId + ") can't build the result property: " + ConfigurationUtils.GetStringAttribute(result.Attributes, ConfigConstants.ATTRIBUTE_PROPERTY) + ". Cause " + e.Message, e);
                 }
                 if (mapping.NestedResultMapName.Length > 0)
                 {

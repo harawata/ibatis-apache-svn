@@ -1,9 +1,11 @@
 using System.Collections;
+using System.Collections.Generic;
 using Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures;
 using NUnit.Framework;
 
 using Apache.Ibatis.DataMapper.SqlClient.Test.Domain;
 using Apache.Ibatis.DataMapper.Session;
+using NUnit.Framework.SyntaxHelpers;
 
 namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
 {
@@ -38,6 +40,20 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
         #endregion
 
         #region Result Map test
+
+        [Test]
+        public void ResultMap_with_suffix_should_work()
+        {
+            List<Order> list = (List<Order>)dataMapper.QueryForList<Order>("GetOrderWithPrefix", null);
+            Assert.That(list.Count, Is.EqualTo(11));
+        }
+
+        [Test]
+        public void ResultMap_with_prefix_should_work()
+        {
+            List<Order> list = (List<Order>)dataMapper.QueryForList<Order>("GetOrderWithSuffix", null);
+            Assert.That(list.Count, Is.EqualTo(11));
+        }
 
         /// <summary>
         /// Test a composite Key Mapping.

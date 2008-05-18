@@ -26,6 +26,9 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
       <result property="PostalCode" column="Order_PostalCode"/>
     </resultMap>
 
+    <resultMap id="order-result-suffix" class="Order" extends="base-order-result" suffix="_suffix" />
+    <resultMap id="order-result-prefix" class="Order" extends="base-order-result" prefix="prefix_" />
+
     <resultMap id="order-result-circular" extends="base-order-result" class="Order">
       <result property="Account" resultMapping="Account.account-constructor-circular"/>
     </resultMap>
@@ -362,6 +365,36 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 	
 	<statements>
 
+    <select id="GetOrderWithPrefix" resultMap="order-result-prefix" >
+      SELECT
+        Order_ID As prefix_Order_ID,
+        Order_Date As prefix_Order_Date,
+        Order_CardExpiry As prefix_Order_CardExpiry,
+        Order_CardType As prefix_Order_CardType,
+        Order_CardNumber As prefix_Order_CardNumber,
+        Order_Street As prefix_Order_Street,
+        Order_City As prefix_Order_City,
+        Order_Province As prefix_Order_Province,
+        Order_PostalCode As prefix_Order_PostalCode
+      FROM
+      Orders
+    </select>
+
+    <select id="GetOrderWithSuffix" resultMap="order-result-suffix" >
+      SELECT
+      Order_ID As Order_ID_suffix,
+      Order_Date As Order_Date_suffix,
+      Order_CardExpiry As Order_CardExpiry_suffix,
+      Order_CardType As Order_CardType_suffix,
+      Order_CardNumber As Order_CardNumber_suffix,
+      Order_Street As Order_Street_suffix,
+      Order_City As Order_City_suffix,
+      Order_Province As Order_Province_suffix,
+      Order_PostalCode As Order_PostalCode_suffix
+      FROM
+      Orders
+    </select>
+    
     <select id="GetOrderWithAcccount"
         resultMap="order-result-circular" >
           SELECT
