@@ -56,6 +56,8 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         private IDataExchange dataExchange = null;
         [NonSerialized]
         private readonly bool isSimpleType = false;
+        [NonSerialized]
+        private readonly List<string> keyProperties= new List<string>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AutoResultMap"/> class.
@@ -106,7 +108,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         /// <summary>
         /// The collection of constructor parameters.
         /// </summary>
-        public ResultPropertyCollection Parameters
+        public ArgumentPropertyCollection Parameters
         {
             get { throw new NotImplementedException("The property 'Parameters' is not implemented."); }
         }
@@ -184,17 +186,6 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         {
            return this;
         }
-
-        #endregion
-
-        /// <summary>
-        /// Clones this instance.
-        /// </summary>
-        /// <returns></returns>
-        public AutoResultMap Clone()
-        {
-            return new AutoResultMap(resultClass, resultClassFactory, dataExchange, isSimpleType);
-        }
         
         /// <summary>
         /// Create an instance of result class.
@@ -212,5 +203,32 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
             }
         }
 
+        /// <summary>
+        /// The Key (used for resolved circular reference).
+        /// </summary>
+        /// <value></value>
+        public List<string> KeyPropertyNames
+        {
+            get { return keyProperties; }
+        }
+
+        /// <summary>
+        /// The Keys Properties.
+        /// </summary>
+        /// <value></value>
+        public ResultPropertyCollection KeysProperties
+        {
+            get { throw new NotImplementedException("The method or operation is not implemented."); }
+        }
+        #endregion
+
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns></returns>
+        public AutoResultMap Clone()
+        {
+            return new AutoResultMap(resultClass, resultClassFactory, dataExchange, isSimpleType);
+        }
     }
 }

@@ -27,8 +27,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			<property name="CacheSize" value="2"/>
 		</cacheModel>
 		
-    </cacheModels>
-
+  </cacheModels>
 	
 	<resultMaps>
     
@@ -38,6 +37,14 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
       <result property="Guid" column="Category_Guid" nullValue="00000000-0000-0000-0000-000000000000"/>
     </resultMap>
 
+    <resultMap id="account-constructor-circular" keys="identifiant"  class="Account" >
+      <constructor>
+        <argument argumentName="identifiant"	column="Account_ID"/>
+        <argument argumentName="firstName"    column="Account_FirstName"/>
+        <argument argumentName="lastName"     column="Account_LastName"/>
+      </constructor>
+    </resultMap>
+    
     <resultMap id="account-constructor"  class="Account" >
       <constructor>
         <argument argumentName="identifiant"	column="Account_ID"/>

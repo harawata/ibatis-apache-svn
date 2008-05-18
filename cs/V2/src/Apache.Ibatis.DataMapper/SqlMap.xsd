@@ -656,6 +656,7 @@ vs:defaultnsprefix="" >
 			<xs:attribute name="class" type="xs:string" use="required"/>
 			<xs:attribute name="extends" type="xs:string"/>
 			<xs:attribute name="groupBy" type="xs:string"/>
+			<xs:attribute name="keys" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="resultMaps">

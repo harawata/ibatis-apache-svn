@@ -29,7 +29,6 @@
 using System.Collections;
 using System.Data;
 using System.Runtime.CompilerServices;
-using Apache.Ibatis.DataMapper;
 using Apache.Ibatis.DataMapper.Model.ParameterMapping;
 using Apache.Ibatis.DataMapper.Model.ResultMapping;
 using Apache.Ibatis.DataMapper.Model.Statements;
@@ -49,29 +48,65 @@ namespace Apache.Ibatis.DataMapper.Scope
     {
         #region Fields
 
-        private IStatement _statement = null;
-        private ErrorContext _errorContext = null;
-        private ParameterMap _parameterMap = null;
-        private PreparedStatement _preparedStatement = null;
-        private IDbCommand _command = null;
-        private Queue _selects = new Queue();
-        private bool _rowDataFound = false;
-        private static long _nextId = 0;
-        private long _id = 0;
-        private DataExchangeFactory _dataExchangeFactory = null;
-        private ISession _session = null;
-        private IMappedStatement _mappedStatement = null;
-        private int _currentResultMapIndex = -1;
+        private readonly IStatement statement = null;
+        private readonly ErrorContext errorContext = null;
+        private ParameterMap parameterMap = null;
+        private PreparedStatement preparedStatement = null;
+        private IDbCommand command = null;
+        private Queue selects = new Queue();
+        private bool rowDataFound = false;
+        private static long nextId = 0;
+        private readonly long id = 0;
+        private readonly DataExchangeFactory dataExchangeFactory = null;
+        private readonly ISession session = null;
+        private IMappedStatement mappedStatement = null;
+        private int currentResultMapIndex = -1;
         // Used by N+1 Select solution
         // Holds [IResultMap, IDictionary] couple where the IDictionary holds [string key,object result]
-        private IDictionary<IResultMap, IDictionary<string,object>> _uniqueKeys = null;
+        private IDictionary<IResultMap, IDictionary<string,object>> uniqueKeys = null;
+        // Holds [IResultMap, IDictionary] couple where the IDictionary holds [string key,object result] 
+        // to resolve circular reference
+        private IDictionary<IResultMap, IDictionary<string, object>> cirularKeys = null;
 
         #endregion
 
         #region Properties
 
         /// <summary>
-        /// Gets the unique keys.
+        /// Gets the circular keys.
+        /// </summary>
+        /// <param name="map">The ResultMap.</param>
+        /// <returns>
+        /// Returns [string key, object result] which holds the result objects that have
+        /// already been build during this request with this <see cref="IResultMap"/>
+        /// </returns>
+        public IDictionary<string, object> GetCirularKeys(IResultMap map)
+        {
+            if (cirularKeys == null)
+            {
+                return null;
+            }
+            IDictionary<string, object> keys = null;
+            cirularKeys.TryGetValue(map, out keys);
+            return keys;
+        }
+
+        /// <summary>
+        /// Sets the cirular keys.
+        /// </summary>
+        /// <param name="map">The map.</param>
+        /// <param name="keys">The keys.</param>
+        public void SetCirularKeys(IResultMap map, IDictionary<string, object> keys)
+        {
+            if (cirularKeys == null)
+            {
+                cirularKeys = new Dictionary<IResultMap, IDictionary<string, object>>();
+            }
+            cirularKeys.Add(map, keys);
+        }
+
+        /// <summary>
+        /// Gets the unique keys, used to resolve groupBy
         /// </summary>
         /// <param name="map">The ResultMap.</param>
         /// <returns>
@@ -80,12 +115,12 @@ namespace Apache.Ibatis.DataMapper.Scope
         /// </returns>
         public IDictionary<string, object> GetUniqueKeys(IResultMap map)
         {
-            if (_uniqueKeys == null)
+            if (uniqueKeys == null)
             {
                 return null;
             }
             IDictionary<string, object> keys = null;
-            _uniqueKeys.TryGetValue(map, out keys);
+            uniqueKeys.TryGetValue(map, out keys);
             return keys;
         }
 
@@ -96,11 +131,11 @@ namespace Apache.Ibatis.DataMapper.Scope
         /// <param name="keys">The keys.</param>
         public void SetUniqueKeys(IResultMap map, IDictionary<string, object> keys)
         {
-            if (_uniqueKeys == null)
+            if (uniqueKeys == null)
             {
-                _uniqueKeys = new Dictionary<IResultMap, IDictionary<string, object>>();
+                uniqueKeys = new Dictionary<IResultMap, IDictionary<string, object>>();
             }
-            _uniqueKeys.Add(map, keys);
+            uniqueKeys.Add(map, keys);
         }
         
         /// <summary>
@@ -108,8 +143,8 @@ namespace Apache.Ibatis.DataMapper.Scope
         /// </summary>
         public IMappedStatement MappedStatement
         {
-            set { _mappedStatement = value; }
-            get { return _mappedStatement; }
+            set { mappedStatement = value; }
+            get { return mappedStatement; }
         }
 
         /// <summary>
@@ -118,7 +153,7 @@ namespace Apache.Ibatis.DataMapper.Scope
         /// <value>The statement.</value>
         public IStatement Statement
         {
-            get { return _statement; }
+            get { return statement; }
         }
 
         /// <summary>
@@ -126,7 +161,7 @@ namespace Apache.Ibatis.DataMapper.Scope
         /// </summary>
         public ISession Session
         {
-            get { return _session; }
+            get { return session; }
         }
 
         /// <summary>
@@ -134,8 +169,8 @@ namespace Apache.Ibatis.DataMapper.Scope
         /// </summary>
         public IDbCommand IDbCommand
         {
-            set { _command = value; }
-            get { return _command; }
+            set { command = value; }
+            get { return command; }
         }
 
         /// <summary>
@@ -143,8 +178,8 @@ namespace Apache.Ibatis.DataMapper.Scope
         /// </summary>
         public bool IsRowDataFound
         {
-            set { _rowDataFound = value; }
-            get { return _rowDataFound; }
+            set { rowDataFound = value; }
+            get { return rowDataFound; }
         }
 
         /// <summary>
@@ -152,8 +187,8 @@ namespace Apache.Ibatis.DataMapper.Scope
         /// </summary>
         public Queue QueueSelect
         {
-            get { return _selects; }
-            set { _selects = value; }
+            get { return selects; }
+            set { selects = value; }
         }
 
         /// <summary>
@@ -161,7 +196,7 @@ namespace Apache.Ibatis.DataMapper.Scope
         /// </summary>
         public IResultMap CurrentResultMap
         {
-            get { return _statement.ResultsMap[_currentResultMapIndex]; }
+            get { return statement.ResultsMap[currentResultMapIndex]; }
         }
 
         /// <summary>
@@ -170,9 +205,9 @@ namespace Apache.Ibatis.DataMapper.Scope
         /// <returns></returns>
         public bool MoveNextResultMap()
         {
-            if (_currentResultMapIndex < _statement.ResultsMap.Count - 1)
+            if (currentResultMapIndex < statement.ResultsMap.Count - 1)
             {
-                _currentResultMapIndex++;
+                currentResultMapIndex++;
                 return true;
             }
             return false;
@@ -183,8 +218,8 @@ namespace Apache.Ibatis.DataMapper.Scope
         /// </summary>
         public ParameterMap ParameterMap
         {
-            set { _parameterMap = value; }
-            get { return _parameterMap; }
+            set { parameterMap = value; }
+            get { return parameterMap; }
         }
 
         /// <summary>
@@ -192,8 +227,8 @@ namespace Apache.Ibatis.DataMapper.Scope
         /// </summary>
         public PreparedStatement PreparedStatement
         {
-            get { return _preparedStatement; }
-            set { _preparedStatement = value; }
+            get { return preparedStatement; }
+            set { preparedStatement = value; }
         }
 
 
@@ -205,7 +240,6 @@ namespace Apache.Ibatis.DataMapper.Scope
         /// <summary>
         /// Initializes a new instance of the <see cref="RequestScope"/> class.
         /// </summary>
-        /// <param name="dataMapper">The data mapper.</param>
         /// <param name="dataExchangeFactory">The data exchange factory.</param>
         /// <param name="session">The session.</param>
         /// <param name="statement">The statement</param>
@@ -215,13 +249,13 @@ namespace Apache.Ibatis.DataMapper.Scope
             IStatement statement
             )
         {
-            _errorContext = new ErrorContext();
+            errorContext = new ErrorContext();
 
-            _statement = statement;
-            _parameterMap = statement.ParameterMap;
-            _session = session;
-            _dataExchangeFactory = dataExchangeFactory;
-            _id = GetNextId();
+            this.statement = statement;
+            parameterMap = statement.ParameterMap;
+            this.session = session;
+            this.dataExchangeFactory = dataExchangeFactory;
+            id = GetNextId();
         }
         #endregion
 
@@ -239,7 +273,7 @@ namespace Apache.Ibatis.DataMapper.Scope
 
             RequestScope scope = (RequestScope)obj;
 
-            if (_id != scope._id) return false;
+            if (id != scope.id) return false;
 
             return true;
         }
@@ -250,7 +284,7 @@ namespace Apache.Ibatis.DataMapper.Scope
         /// <returns></returns>
         public override int GetHashCode()
         {
-            return (int)(_id ^ (_id >> 32));
+            return (int)(id ^ (id >> 32));
         }
 
         /// <summary>
@@ -260,7 +294,7 @@ namespace Apache.Ibatis.DataMapper.Scope
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static long GetNextId()
         {
-            return _nextId++;
+            return nextId++;
         }
         #endregion
 
@@ -271,7 +305,7 @@ namespace Apache.Ibatis.DataMapper.Scope
         /// </summary>
         public DataExchangeFactory DataExchangeFactory
         {
-            get { return _dataExchangeFactory; }
+            get { return dataExchangeFactory; }
         }
 
         /// <summary>
@@ -279,7 +313,7 @@ namespace Apache.Ibatis.DataMapper.Scope
         /// </summary>
         public ErrorContext ErrorContext
         {
-            get { return _errorContext; }
+            get { return errorContext; }
         }
         #endregion
     }

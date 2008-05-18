@@ -33,9 +33,9 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
     /// </summary>
     public sealed class ResultStrategyFactory
     {
-        private static IResultStrategy _resultClassStrategy = null;
-        private static IResultStrategy _mapStrategy = null;
-        private static IResultStrategy _objectStrategy = null;
+        private static readonly IResultStrategy _resultClassStrategy = null;
+        private static readonly IResultStrategy _mapStrategy = null;
+        private static readonly IResultStrategy _objectStrategy = null;
 
         /// <summary>
         /// Initializes the <see cref="ResultStrategyFactory"/> class.

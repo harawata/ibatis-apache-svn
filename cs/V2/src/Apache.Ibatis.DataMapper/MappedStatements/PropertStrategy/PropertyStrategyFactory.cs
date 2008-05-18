@@ -35,28 +35,30 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.PropertyStrategy
 	/// </summary>
 	public sealed class PropertyStrategyFactory
 	{
-		private static IPropertyStrategy _defaultStrategy = null;
-        private static IPropertyStrategy _resultMapStrategy = null;
-        private static IPropertyStrategy _groupByStrategy = null;
+		private static readonly IPropertyStrategy defaultStrategy = null;
+        private static readonly IPropertyStrategy resultMapStrategy = null;
+        private static readonly IPropertyStrategy groupByStrategy = null;
 
-        private static IPropertyStrategy _selectArrayStrategy = null;
-        private static IPropertyStrategy _selectGenericListStrategy = null;
-        private static IPropertyStrategy _selectListStrategy = null;
-        private static IPropertyStrategy _selectObjectStrategy = null;
+        private static readonly IPropertyStrategy selectArrayStrategy = null;
+        private static readonly IPropertyStrategy selectGenericListStrategy = null;
+        private static readonly IPropertyStrategy selectListStrategy = null;
+        private static readonly IPropertyStrategy selectObjectStrategy = null;
+        private static readonly IPropertyStrategy circularStrategy = null;
 
 		/// <summary>
 		/// Initializes the <see cref="PropertyStrategyFactory"/> class.
 		/// </summary>
 		static PropertyStrategyFactory()
 		{
-			_defaultStrategy = new DefaultStrategy();
-            _resultMapStrategy = new ResultMapStrategy();
-            _groupByStrategy = new GroupByStrategy();
+			defaultStrategy = new DefaultStrategy();
+            resultMapStrategy = new ResultMapStrategy();
 
-            _selectArrayStrategy = new SelectArrayStrategy();
-            _selectListStrategy = new SelectListStrategy();
-            _selectObjectStrategy = new SelectObjectStrategy();
-            _selectGenericListStrategy = new SelectGenericListStrategy();
+            selectArrayStrategy = new SelectArrayStrategy();
+            selectListStrategy = new SelectListStrategy();
+            selectObjectStrategy = new SelectObjectStrategy();
+            selectGenericListStrategy = new SelectGenericListStrategy();
+            circularStrategy = new CircularStrategy(resultMapStrategy);
+            groupByStrategy = new GroupByStrategy(resultMapStrategy, circularStrategy);
 		}
 
 		/// <summary>
@@ -70,38 +72,42 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.PropertyStrategy
 			if (mapping.Select.Length == 0 && mapping.NestedResultMap == null)
 			{
 				// We have a 'normal' ResultMap
-				return _defaultStrategy;
+				return defaultStrategy;
 			}
 			else if (mapping.NestedResultMap != null) // 'resultMap' attribute
 			{
                 if (mapping.NestedResultMap.GroupByPropertyNames.Count>0)
                 {
-                    return _groupByStrategy; 
+                    return groupByStrategy; 
                 }
 			    else
                 {
                     if (mapping.MemberType.IsGenericType &&
                         typeof(IList<>).IsAssignableFrom(mapping.MemberType.GetGenericTypeDefinition()))
                     {
-                        return _groupByStrategy; 
+                        return groupByStrategy; 
                     }
                     else if (typeof(IList).IsAssignableFrom(mapping.MemberType))
                     {
-                        return _groupByStrategy; 
+                        return groupByStrategy; 
+                    }
+                    else if (mapping.NestedResultMap.KeyPropertyNames.Count > 0)
+                    {
+                        return circularStrategy;
                     }
                     else
                     {
-                        return _resultMapStrategy; 
+                        return resultMapStrategy; 
                     }
                 }
 			}
 			else //'select' ResultProperty 
 			{
 				return new SelectStrategy(mapping,
-                    _selectArrayStrategy,
-                    _selectGenericListStrategy,
-                    _selectListStrategy,
-                    _selectObjectStrategy);
+                    selectArrayStrategy,
+                    selectGenericListStrategy,
+                    selectListStrategy,
+                    selectObjectStrategy);
 			}
 		}
 	}

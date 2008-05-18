@@ -12,9 +12,25 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			  data provider Type of the Parameter from the Value property 
 			  of the Parameter object. -->
 
-	<resultMaps>  
-	
-		<resultMap id="order-result-constructor1"  class="Order" >
+	<resultMaps>
+
+    <resultMap id="base-order-result" class="Order">
+      <result property="Id"         column="Order_ID"/>
+      <result property="Date"       column="Order_Date"/>
+      <result property="CardExpiry" column="Order_CardExpiry"/>
+      <result property="CardType"   column="Order_CardType"/>
+      <result property="CardNumber" column="Order_CardNumber"/>
+      <result property="Street"     column="Order_Street"/>
+      <result property="City"       column="Order_City"/>
+      <result property="Province"   column="Order_Province"/>
+      <result property="PostalCode" column="Order_PostalCode"/>
+    </resultMap>
+
+    <resultMap id="order-result-circular" extends="base-order-result" class="Order">
+      <result property="Account" resultMapping="Account.account-constructor-circular"/>
+    </resultMap>
+    
+		<resultMap id="order-result-constructor1" class="Order" >
 			<constructor>
 				<argument argumentName="id"		 column="Order_ID"/>
 				<argument argumentName="account" resultMapping="Account.account-result-nullable-email" />
@@ -92,52 +108,26 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			<result property="PostalCode" column="Order_PostalCode"/>
 		</resultMap>
     
-		<resultMap id="order-result-constructor6"  class="Order" >
+		<resultMap id="order-result-constructor6" extends="base-order-result" class="Order" >
 			<constructor>
 				<argument argumentName="lineItems" column="Order_ID"  select="GetLineItemsForOrderWithListClass2" />
 			</constructor>
-      <result property="Id"         column="Order_ID"/>
-      <result property="Date"       column="Order_Date"/>
-			<result property="CardExpiry" column="Order_CardExpiry"/>
-			<result property="CardType"   column="Order_CardType"/>
-			<result property="CardNumber" column="Order_CardNumber"/>
-			<result property="Street"     column="Order_Street"/>
-			<result property="City"       column="Order_City"/>
-			<result property="Province"   column="Order_Province"/>
-			<result property="PostalCode" column="Order_PostalCode"/>
 		</resultMap>
 
-    <resultMap id="order-result-constructor7"  class="Order" >
+    <resultMap id="order-result-constructor7" extends="base-order-result" class="Order" >
       <constructor>
         <argument argumentName="collection" column="Order_ID"  select="GetLineItemsForOrderWithListClass2" />
       </constructor>
-      <result property="Id"         column="Order_ID"/>
-      <result property="Date"       column="Order_Date"/>
-      <result property="CardExpiry" column="Order_CardExpiry"/>
-      <result property="CardType"   column="Order_CardType"/>
-      <result property="CardNumber" column="Order_CardNumber"/>
-      <result property="Street"     column="Order_Street"/>
-      <result property="City"       column="Order_City"/>
-      <result property="Province"   column="Order_Province"/>
-      <result property="PostalCode" column="Order_PostalCode"/>
     </resultMap>
     
-    <resultMap id="order-result-constructor8"  class="Order" >
+    <resultMap id="order-result-constructor8" extends="base-order-result" class="Order" >
 		<constructor>
 			<argument argumentName="id"		 column="Order_ID"/>
 			<argument argumentName="account" resultMapping="Account.account-result-constructor" />
 		</constructor>
-		<result property="Date"       column="Order_Date"/>
-		<result property="CardExpiry" column="Order_CardExpiry"/>
-		<result property="CardType"   column="Order_CardType"/>
-		<result property="CardNumber" column="Order_CardNumber"/>
-		<result property="Street"     column="Order_Street"/>
-		<result property="City"       column="Order_City"/>
-		<result property="Province"   column="Order_Province"/>
-		<result property="PostalCode" column="Order_PostalCode"/>
 	</resultMap>
 
-    <resultMap id="order-result-constructor9"  class="Order" >
+    <resultMap id="order-result-constructor9" class="Order" >
       <constructor>
         <argument argumentName="id"		 column="Order_ID"/>
         <argument argumentName="account" resultMapping="Account.account-result-constructor2" />
@@ -277,7 +267,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
   
 	
 		<resultMap id="order-hash" class="Hashtable">
-			<result property="Date"       column="Order_Date" nullValue="01/01/0001 00:00:00"/>
+			<result property="Date" column="Order_Date" nullValue="01/01/0001 00:00:00"/>
 		</resultMap>
 		
 		<resultMap id="order-with-types-result" class="Order">
@@ -303,101 +293,38 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			<result property="Province"   column="Order_Province"	columnIndex="7"/>
 			<result property="PostalCode" column="Order_PostalCode" columnIndex="8" />
 		</resultMap>
-		
-		<resultMap id="order-with-account-result" class="Order">
-			<result property="Id"         column="Order_ID"/>
-			<result property="Date"       column="Order_Date"/>
-			<result property="CardExpiry" column="Order_CardExpiry"/>
-			<result property="CardType"   column="Order_CardType"/>
-			<result property="CardNumber" column="Order_CardNumber"/>
-			<result property="Street"     column="Order_Street"/>
-			<result property="City"       column="Order_City"/>
-			<result property="Province"   column="Order_Province"/>
-			<result property="PostalCode" column="Order_PostalCode"/>
+    
+		<resultMap id="order-with-account-result" extends="base-order-result" class="Order">
 			<result property="Account"    column="Account_ID" select="GetAccountViaColumnName" />
 		</resultMap>
 		
-		<resultMap id="order-with-sp-account-result" class="Order">
-			<result property="Id"         column="Order_ID"/>
-			<result property="Date"       column="Order_Date"/>
-			<result property="CardExpiry" column="Order_CardExpiry"/>
-			<result property="CardType"   column="Order_CardType"/>
-			<result property="CardNumber" column="Order_CardNumber"/>
-			<result property="Street"     column="Order_Street"/>
-			<result property="City"       column="Order_City"/>
-			<result property="Province"   column="Order_Province"/>
-			<result property="PostalCode" column="Order_PostalCode"/>
+		<resultMap id="order-with-sp-account-result" extends="base-order-result" class="Order">
 			<result property="Account"    column="Account_ID=Account_ID" select="GetAccountViaSP0" />
 		</resultMap>
 		
-		<resultMap id="order-with-collection-result" class="Order">
-			<result property="Id"				column="Order_ID"/>
-			<result property="Date"				column="Order_Date"/>
-			<result property="CardExpiry"		column="Order_CardExpiry"/>
-			<result property="CardType"			column="Order_CardType"/>
-			<result property="CardNumber"		column="Order_CardNumber"/>
-			<result property="Street"			column="Order_Street"/>
-			<result property="City"				column="Order_City"/>
-			<result property="Province"			column="Order_Province"/>
-			<result property="PostalCode"		column="Order_PostalCode"/>
+		<resultMap id="order-with-collection-result" extends="base-order-result" class="Order">
 			<result property="LineItemsIList"	column="Order_ID" select="GetLineItemsForOrder" />	
 			<result property="LineItemsCollection"		column="Order_ID" select="GetLineItemsForOrder" lazyLoad="false" />
 		</resultMap>
 		
-		<resultMap id="order-with-favourite-line-item" class="Order">
-			<result property="Id"					column="Order_ID"/>
-			<result property="Date"					column="Order_Date"/>
-			<result property="CardExpiry"			column="Order_CardExpiry"/>
-			<result property="CardType"				column="Order_CardType"/>
-			<result property="CardNumber"			column="Order_CardNumber"/>
-			<result property="Street"				column="Order_Street"/>
-			<result property="City"					column="Order_City"/>
-			<result property="Province"				column="Order_Province"/>
-			<result property="PostalCode"			column="Order_PostalCode"/>
+		<resultMap id="order-with-favourite-line-item" extends="base-order-result" class="Order">
 			<result property="FavouriteLineItem"	column="Order_ID=Order_ID,LineItem_ID=Order_FavouriteLineItem" select="GetSpecificLineItem" />
 		</resultMap>
 		
-		<resultMap id="order-joined-favourite2" class="Order">
-			<result property="Id"					column="Order_ID"/>
-			<result property="Date"					column="Order_Date"/>
-			<result property="CardExpiry"			column="Order_CardExpiry"/>
-			<result property="CardType"				column="Order_CardType"/>
-			<result property="CardNumber"			column="Order_CardNumber"/>
-			<result property="Street"				column="Order_Street"/>
-			<result property="City"					column="Order_City"/>
-			<result property="Province"				column="Order_Province"/>
-			<result property="PostalCode"			column="Order_PostalCode"/>
-			<result property="FavouriteLineItem.Id" column="LineItem_ID"/>
-			<result property="FavouriteLineItem.Code" column="LineItem_Code"/>
-			<result property="FavouriteLineItem.Quantity" column="LineItem_Quantity"/>
-			<result property="FavouriteLineItem.Price" column="LineItem_Price"/>			
-		</resultMap>
-				
-		<resultMap id="order-with-dyn-favourite-line-item" class="Order">
-			<result property="Id"					column="Order_ID"/>
-			<result property="Date"					column="Order_Date"/>
-			<result property="CardExpiry"			column="Order_CardExpiry"/>
-			<result property="CardType"				column="Order_CardType"/>
-			<result property="CardNumber"			column="Order_CardNumber"/>
-			<result property="Street"				column="Order_Street"/>
-			<result property="City"					column="Order_City"/>
-			<result property="Province"				column="Order_Province"/>
-			<result property="PostalCode"			column="Order_PostalCode"/>
+		<resultMap id="order-joined-favourite2" extends="base-order-result" class="Order">
+      <result property="FavouriteLineItem.Id" column="LineItem_ID"/>
+      <result property="FavouriteLineItem.Code" column="LineItem_Code"/>
+      <result property="FavouriteLineItem.Quantity" column="LineItem_Quantity"/>
+      <result property="FavouriteLineItem.Price" column="LineItem_Price"/>
+    </resultMap>
+
+    <resultMap id="order-with-dyn-favourite-line-item" extends="base-order-result" class="Order">
 			<result property="FavouriteLineItem"	
 						column="Order_ID=Order_ID,LineItem_ID=Order_FavouriteLineItem" 
 						select="GetDynSpecificLineItem" />
 		</resultMap>
 		
-		<resultMap id="order-joined-favourite" class="Order">
-			<result property="Id"					column="Order_ID"/>
-			<result property="Date"					column="Order_Date"/>
-			<result property="CardExpiry"			column="Order_CardExpiry"/>
-			<result property="CardType"				column="Order_CardType"/>
-			<result property="CardNumber"			column="Order_CardNumber"/>
-			<result property="Street"				column="Order_Street"/>
-			<result property="City"					column="Order_City"/>
-			<result property="Province"				column="Order_Province"/>
-			<result property="PostalCode"			column="Order_PostalCode"/>
+		<resultMap id="order-joined-favourite" extends="base-order-result" class="Order">
 			<result property="FavouriteLineItem"	resultMapping="LineItem.LineItem" />
 		</resultMap>
 		
@@ -427,24 +354,27 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 			<result property="Account"	resultMapping="Account.account-result-constructor" />
 		</resultMap>
 
-    <resultMap id="order-with-favourite-line-item-JIRA-251" class="Order">
-      <result property="Id"					column="Order_ID"/>
-      <result property="Date"					column="Order_Date"/>
-      <result property="CardExpiry"			column="Order_CardExpiry"/>
-      <result property="CardType"				column="Order_CardType"/>
-      <result property="CardNumber"			column="Order_CardNumber"/>
-      <result property="Street"				column="Order_Street"/>
-      <result property="City"					column="Order_City"/>
-      <result property="Province"				column="Order_Province"/>
-      <result property="PostalCode"			column="Order_PostalCode"/>
+    <resultMap id="order-with-favourite-line-item-JIRA-251" extends="base-order-result" class="Order">
       <result property="FavouriteLineItem"	column="Order_ID,Order_FavouriteLineItem" select="GetSpecificLineItem-JIRA-251" />
     </resultMap>
     
   </resultMaps>  
 	
 	<statements>
-	
-		<!-- <select id="GetOrderJoinWithNoLineItem"
+
+    <select id="GetOrderWithAcccount"
+        resultMap="order-result-circular" >
+          SELECT
+          *
+          FROM
+          Orders o
+          JOIN
+          Accounts a
+          ON
+          o.Account_Id = A.Account_Id
+    </select>
+
+    <!-- <select id="GetOrderJoinWithNoLineItem"
 			parameterClass="Int"
 			resultMap="order-joined-nolineitem">
 			select * 

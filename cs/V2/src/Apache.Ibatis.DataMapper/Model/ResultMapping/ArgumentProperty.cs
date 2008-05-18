@@ -111,15 +111,15 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
 		public ArgumentProperty(
             string    argumentName,
             string    columnName,
-            int    columnIndex,
-            string     clrType,
+            int       columnIndex,
+            string    clrType,
             string    callBackName,
             string    dbType,
             string    nestedResultMapName,
             string    nullValue,
             string    select,
-            Type type,
-            Type resultClass,
+            Type      type,
+            Type      resultClass,
             DataExchangeFactory dataExchangeFactory,
             ITypeHandler typeHandler
             )

@@ -65,11 +65,12 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
             string className = ConfigurationUtils.GetMandatoryStringAttribute(config, ConfigConstants.ATTRIBUTE_CLASS);
             string extends = config.GetAttributeValue(ConfigConstants.ATTRIBUTE_EXTENDS);
             string groupBy = config.GetAttributeValue(ConfigConstants.ATTRIBUTE_GROUPBY);
+            string keyColumns = config.GetAttributeValue(ConfigConstants.ATTRIBUTE_KEYS_PROPERTIES);
 
             Type type = dataExchangeFactory.TypeHandlerFactory.GetType(className);
             IDataExchange dataExchange = dataExchangeFactory.GetDataExchangeForClass(type);
             IFactory factory = null;
-            ResultPropertyCollection arguments = new ResultPropertyCollection();
+            ArgumentPropertyCollection arguments = new ArgumentPropertyCollection();
 
             #region Get the constructor & associated parameters 
 
@@ -126,18 +127,19 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
             Discriminator discriminator = BuildDiscriminator(config, type, dataExchangeFactory, waitDiscriminatorResolution);
 
             ResultMap resultMap = new ResultMap(
-                id,
-                className,
-                extends,
-                groupBy,
-                type,
-                dataExchange,
-                factory,
-                dataExchangeFactory.TypeHandlerFactory,
-                properties,
-                arguments,
-                discriminator
-                );
+                    id,
+                    className,
+                    extends,
+                    groupBy,
+                    keyColumns,
+                    type,
+                    dataExchange,
+                    factory,
+                    dataExchangeFactory.TypeHandlerFactory,
+                    properties,
+                    arguments,
+                    discriminator
+                    );                
 
             return resultMap;
         }

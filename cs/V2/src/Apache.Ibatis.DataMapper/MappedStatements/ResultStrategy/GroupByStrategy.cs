@@ -54,7 +54,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
 
             IResultMap resultMap = request.CurrentResultMap.ResolveSubMap(reader);
 
-            string uniqueKey = GetUniqueKey(resultMap, request, reader);
+            string uniqueKey = GetUniqueKey(resultMap, reader);
             // Gets the [key, result object] already build
             IDictionary<string, object> buildObjects = request.GetUniqueKeys(resultMap);
 
@@ -62,7 +62,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
             {
                 // Unique key is already known, so get the existing result object and process additional results.
                 outObject = buildObjects[uniqueKey];
-                // process resulMapping attribute wich point to a groupBy attribute
+                // process resulMapping attribute which point to a groupBy attribute
                 for (int index = 0; index < resultMap.Properties.Count; index++)
                 {
                     ResultProperty resultProperty = resultMap.Properties[index];

@@ -47,10 +47,9 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// Calculte a unique key which identify the resukt object build by this <see cref="IResultMap"/>
 	    /// </summary>
 	    /// <param name="resultMap"></param>
-	    /// <param name="request"></param>
 	    /// <param name="reader"></param>
 	    /// <returns></returns>
-        protected string GetUniqueKey(IResultMap resultMap, RequestScope request, IDataReader reader)
+        protected string GetUniqueKey(IResultMap resultMap, IDataReader reader)
         {
             if (resultMap.GroupByProperties.Count > 0)
             {

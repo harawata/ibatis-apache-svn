@@ -32,7 +32,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
     /// <summary>
     /// Represents a Null ResultMap
     /// </summary>
-    public class NullResultMap : IResultMap
+    public sealed class NullResultMap : IResultMap
     {
  
         #region Fields
@@ -41,9 +41,13 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         [NonSerialized]
         private readonly ResultPropertyCollection properties = new ResultPropertyCollection();
         [NonSerialized]
-        private readonly ResultPropertyCollection parameters = new ResultPropertyCollection();
+        private readonly ArgumentPropertyCollection parameters = new ArgumentPropertyCollection();
         [NonSerialized]
         private readonly ResultPropertyCollection groupByProperties = new ResultPropertyCollection();
+        [NonSerialized]
+        private readonly List<string> keyPropertyNames = new List<string>();
+        [NonSerialized]
+        private readonly ResultPropertyCollection keysProperties = new ResultPropertyCollection();
 
         #endregion
 
@@ -97,7 +101,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         /// <summary>
         /// The collection of constructor parameters.
         /// </summary>
-        public ResultPropertyCollection Parameters
+        public ArgumentPropertyCollection Parameters
         {
             get { return parameters; }
         }
@@ -157,7 +161,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         /// <param name="dataBaseValue">The database value to set.</param>
         public void SetValueOfProperty(ref object target, ResultProperty property, object dataBaseValue)
         {
-            throw new Exception("The method or operation is not implemented.");
+            throw new NotImplementedException("The method or operation is not implemented.");
         }
 
         /// <summary>
@@ -169,5 +173,23 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
             throw new Exception("The method or operation is not implemented.");
         }
 
+
+        /// <summary>
+        /// The Key Properties name (used for resolved circular reference).
+        /// </summary>
+        /// <value></value>
+        public List<string> KeyPropertyNames
+        {
+            get { return keyPropertyNames; }
+        }
+
+        /// <summary>
+        /// The Keys Properties.
+        /// </summary>
+        /// <value></value>
+        public ResultPropertyCollection KeysProperties
+        {
+            get { return keysProperties; }
+        }
     }
 }

@@ -35,16 +35,18 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
     /// </summary>
     public sealed class MapStrategy : IResultStrategy
     {
-        private static IResultStrategy _resultMapStrategy = null;
-        private static IResultStrategy _groupByStrategy = null;
+        private static readonly IResultStrategy resultMapStrategy = null;
+        private static readonly IResultStrategy groupByStrategy = null;
+        private static readonly IResultStrategy cirularStrategy = null;
 
         /// <summary>
         /// Initializes the <see cref="MapStrategy"/> class.
         /// </summary>
         static MapStrategy()
         {
-            _resultMapStrategy = new ResultMapStrategy();
-            _groupByStrategy = new GroupByStrategy();
+            resultMapStrategy = new ResultMapStrategy();
+            groupByStrategy = new GroupByStrategy();
+            cirularStrategy = new CirularStrategy();
         }
         
         #region IResultStrategy Members
@@ -61,11 +63,15 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
 
             if (resultMap.GroupByPropertyNames.Count>0)
             {
-                return _groupByStrategy.Process(request, ref reader, resultObject);
+                return groupByStrategy.Process(request, ref reader, resultObject);
+            }
+            else if (resultMap.KeyPropertyNames.Count > 0)
+            {
+                return cirularStrategy.Process(request, ref reader, resultObject);
             }
             else
             {
-                return _resultMapStrategy.Process(request, ref reader, resultObject);
+                return resultMapStrategy.Process(request, ref reader, resultObject);
             }
         }
 

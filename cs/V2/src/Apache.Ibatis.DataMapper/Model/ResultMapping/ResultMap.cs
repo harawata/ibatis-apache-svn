@@ -46,7 +46,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
     /// </summary>
     [Serializable]
     [DebuggerDisplay("ResultMap: {Id}-{ClassName}")]
-    public class ResultMap : IResultMap
+    public sealed class ResultMap : IResultMap
     {
         private static IResultMap nullResultMap = null;
 
@@ -68,7 +68,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         [NonSerialized]
         private readonly ResultPropertyCollection groupByProperties = new ResultPropertyCollection();
         [NonSerialized]
-        private readonly ResultPropertyCollection parameters = new ResultPropertyCollection();
+        private readonly ArgumentPropertyCollection parameters = new ArgumentPropertyCollection();
         [NonSerialized]
         private readonly Discriminator discriminator = null;
         [NonSerialized]
@@ -77,6 +77,11 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         private IDataExchange dataExchange = null;
         [NonSerialized]
         private readonly bool isSimpleType = false;
+        [NonSerialized]
+        private readonly List<string> keyPropertyNames = new List<string>();
+        [NonSerialized]
+        private readonly ResultPropertyCollection keysProperties = new ResultPropertyCollection();
+
         #endregion
 
         #region Properties
@@ -128,7 +133,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         /// <summary>
         /// The collection of constructor parameters.
         /// </summary>
-        public ResultPropertyCollection Parameters
+        public ArgumentPropertyCollection Parameters
         {
             get { return parameters; }
         }
@@ -185,6 +190,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         /// <param name="className">The output class name of the resultMap.</param>
         /// <param name="extendMap">The extend result map bame.</param>
         /// <param name="groupBy">The groupBy properties</param>
+        /// <param name="keyColumns">The key columns.</param>
         /// <param name="type">The result type.</param>
         /// <param name="dataExchange">The data exchange.</param>
         /// <param name="objectFactory">The object factory.</param>
@@ -197,12 +203,13 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
             string className, 
             string extendMap, 
             string groupBy,
+            string keyColumns,
             Type type,
             IDataExchange dataExchange,
             IFactory objectFactory,
             TypeHandlerFactory typeHandlerFactory,
             ResultPropertyCollection properties,
-            ResultPropertyCollection parameters,
+            ArgumentPropertyCollection parameters,
             Discriminator discriminator)
         {
             Contract.Require.That(id, Is.Not.Null & Is.Not.Empty).When("retrieving argument id in ResultMap constructor");
@@ -223,7 +230,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
             this.objectFactory = objectFactory;
             isSimpleType = typeHandlerFactory.IsSimpleType(type);
 
-            if (groupBy != null && groupBy.Length > 0)
+            if (!string.IsNullOrEmpty(groupBy))
             {
                 string[] props = groupBy.Split(',');
                 for (int i = 0; i < props.Length; i++)
@@ -231,13 +238,78 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
                     string memberName = props[i].Trim();
                     groupByPropertyNames.Add(memberName);
                 }
+
+                InitializeGroupByProperties();
+                CheckGroupBy();
             }
-           InitializeGroupByProperties();
-           CheckGroupBy();
+
+            if (!string.IsNullOrEmpty(keyColumns))
+            {
+                string[] columns = keyColumns.Split(',');
+                for (int i = 0; i < columns.Length; i++)
+                {
+                    string column = columns[i].Trim();
+                    this.keyPropertyNames.Add(column);
+                }
+
+                InitializeKeysProperties();
+                CheckKeysProperties();
+            }
+
        }
         #endregion
 
         #region Methods
+
+       /// <summary>
+       /// Checks the key Column.
+       /// </summary>
+        private void CheckKeysProperties()
+       {
+           try
+           {
+               // Verify that that each key column element correspond to a class member
+               // of one of result property
+               for (int i = 0; i < keyPropertyNames.Count; i++)
+               {
+                   string memberName = keyPropertyNames[i];
+                   if (!properties.Contains(memberName))
+                   {
+                       if (!parameters.Contains(memberName))
+                       {
+                           throw new ConfigurationException(
+                               string.Format(
+                                   "Could not configure ResultMap named \"{0}\". Check the keyPropertyNames attribute. Cause: there's no result property or parameter constructor named \"{1}\".",
+                                   id, memberName));
+                           
+                       }
+                   }
+               }
+           }
+           catch (Exception e)
+           {
+               throw new ConfigurationException(
+                   string.Format("Could not configure ResultMap named \"{0}\", Cause: {1}", id, e.Message)
+                   , e);
+           }
+       }
+
+       /// <summary>
+       /// Initializes the key Column properties.
+       /// </summary>
+        private void InitializeKeysProperties()
+       {
+           for (int i = 0; i < keyPropertyNames.Count; i++)
+           {
+               ResultProperty resultProperty = properties.FindByPropertyName(keyPropertyNames[i]);
+               if (resultProperty == null)
+               {
+                   resultProperty = parameters.FindByPropertyName(keyPropertyNames[i]);
+               }
+
+               KeysProperties.Add(resultProperty);
+           }
+       }
 
         /// <summary>
         /// Checks the group by.
@@ -345,6 +417,24 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
             return subMap;
         }
 
+
+        /// <summary>
+        /// The Key properties names (used for resolved circular reference).
+        /// </summary>
+        /// <value></value>
+        public List<string> KeyPropertyNames
+        {
+            get { return keyPropertyNames; }
+        }
+
+        /// <summary>
+        /// The Keys Properties.
+        /// </summary>
+        /// <value></value>
+        public ResultPropertyCollection KeysProperties
+        {
+            get { return keysProperties; }
+        }
 
         #endregion
     }

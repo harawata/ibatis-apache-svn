@@ -175,6 +175,9 @@
     <Compile Include="IDataMapper.cs" />
     <Compile Include="IDataMapperAccessor.cs" />
     <Compile Include="IModelStoreAccessor.cs" />
+    <Compile Include="MappedStatements\PropertStrategy\CircularStrategy.cs" />
+    <Compile Include="MappedStatements\ResultStrategy\CirularStrategy.cs" />
+    <Compile Include="Model\ResultMapping\ArgumentPropertyCollection.cs" />
     <Compile Include="Session\DataMapperSession.cs" />
     <Compile Include="Session\DefaultSessionFactory.cs" />
     <Compile Include="Session\ISession.cs" />

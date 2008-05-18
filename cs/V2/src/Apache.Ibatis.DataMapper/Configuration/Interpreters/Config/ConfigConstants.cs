@@ -52,6 +52,10 @@ namespace Apache.Ibatis.DataMapper.Configuration.Interpreters.Config
         #region Token attribute
 
         /// <summary>
+        /// Token for attribute keyColumns.
+        /// </summary>
+        public const string ATTRIBUTE_KEYS_PROPERTIES = "keys";
+        /// <summary>
         /// Token for attribute scale.
         /// </summary>
         public const string ATTRIBUTE_SCALE = "scale";

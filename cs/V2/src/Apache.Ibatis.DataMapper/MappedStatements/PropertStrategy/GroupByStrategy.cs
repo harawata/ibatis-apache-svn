@@ -40,14 +40,18 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.PropertStrategy
     /// </summary>
     public sealed class GroupByStrategy : BaseStrategy, IPropertyStrategy
     {
-        private static IPropertyStrategy _resultMapStrategy = null;
-		
+        private readonly IPropertyStrategy resultMapStrategy = null;
+        private readonly IPropertyStrategy circularResultMapStrategy = null;
+
         /// <summary>
-		/// Initializes the <see cref="PropertyStrategyFactory"/> class.
-		/// </summary>
-        static GroupByStrategy()
+        /// Initializes the <see cref="GroupByStrategy"/> class.
+        /// </summary>
+        /// <param name="resultMapStrategy">The result map strategy.</param>
+        /// <param name="circularResultMapStrategy">The circular result map strategy.</param>
+        public GroupByStrategy(IPropertyStrategy resultMapStrategy, IPropertyStrategy circularResultMapStrategy)
 		{
-		    _resultMapStrategy = new ResultMapStrategy();
+            this.resultMapStrategy = resultMapStrategy;
+            this.circularResultMapStrategy = circularResultMapStrategy;
 		}
         
         #region IPropertyStrategy Members
@@ -98,7 +102,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.PropertStrategy
 
             if (propertyRresultMap.GroupByProperties.Count > 0)
             {
-                 string uniqueKey = GetUniqueKey(propertyRresultMap, request, reader);
+                 string uniqueKey = GetUniqueKey(propertyRresultMap, reader);
 
                 // Gets the [key, result object] already build
                 IDictionary<string, object> buildObjects = request.GetUniqueKeys(propertyRresultMap);
@@ -127,7 +131,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.PropertStrategy
                 else if (uniqueKey == null || buildObjects == null || !buildObjects.ContainsKey(uniqueKey))
                 {
                     // Unique key is NOT known, so create a new result object and then process additional results.
-                    result = _resultMapStrategy.Get(request, resultMap, mapping, ref target, reader);
+                    result = resultMapStrategy.Get(request, resultMap, mapping, ref target, reader);
 
                     if (buildObjects == null)
                     {
@@ -139,7 +143,14 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.PropertStrategy
             }
             else // Last resultMap have no groupBy attribute
             {
-                result = _resultMapStrategy.Get(request, resultMap, mapping, ref target, reader);
+                if (propertyRresultMap.KeyPropertyNames.Count > 0)
+                {
+                    result = circularResultMapStrategy.Get(request, resultMap, mapping, ref target, reader);
+                }
+                else
+                {
+                    result = resultMapStrategy.Get(request, resultMap, mapping, ref target, reader);
+                }
             }                
 
             

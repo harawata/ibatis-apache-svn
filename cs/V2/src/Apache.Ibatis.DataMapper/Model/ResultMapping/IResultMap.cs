@@ -26,19 +26,9 @@
 #region Using
 
 using System;
-using System.Collections.Specialized;
-using System.Data;
-using System.Reflection;
-using System.Xml;
-using System.Xml.Serialization;
-using Apache.Ibatis.Common.Exceptions;
-using Apache.Ibatis.Common.Utilities.Objects;
-using Apache.Ibatis.DataMapper.Configuration.Serializers;
-using Apache.Ibatis.DataMapper.DataExchange;
-using Apache.Ibatis.DataMapper.Exceptions;
-using Apache.Ibatis.DataMapper.Scope;
-using Apache.Ibatis.Common.Utilities;
 using System.Collections.Generic;
+using System.Data;
+using Apache.Ibatis.DataMapper.DataExchange;
 
 #endregion
 
@@ -52,7 +42,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         /// <summary>
         /// The collection of constructor parameters.
         /// </summary>
-        ResultPropertyCollection Parameters { get; }
+        ArgumentPropertyCollection Parameters { get; }
         
         /// <summary>
         /// The collection of ResultProperty.
@@ -74,7 +64,17 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         /// The GroupBy Properties name.
         /// </summary>
         List<string> GroupByPropertyNames { get; }
-        
+
+        /// <summary>
+        /// The Key Properties name (used for resolved circular reference).
+        /// </summary>
+        List<string> KeyPropertyNames { get; }
+
+        /// <summary>
+        /// The Keys Properties.
+        /// </summary>
+        ResultPropertyCollection KeysProperties { get; }
+
         /// <summary>
         /// The output type class of the resultMap.
         /// </summary>
