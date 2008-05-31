@@ -18,6 +18,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Domain
 		private bool _bannerOption = false;
 		private bool _cartOption = false;
 	    private Document _document = null;
+        private bool? nullBannerOption = false;
 
         protected IList<Document> documents = new List<Document>();
 
@@ -79,7 +80,13 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Domain
 		{
 			get { return _bannerOption; }
 			set { _bannerOption = value; }
-		}
+        }//nullBannerOption
+
+        public bool? NullBannerOption
+        {
+            get { return nullBannerOption; }
+            set { nullBannerOption = value; }
+        }
 
 		public bool CartOption
 		{

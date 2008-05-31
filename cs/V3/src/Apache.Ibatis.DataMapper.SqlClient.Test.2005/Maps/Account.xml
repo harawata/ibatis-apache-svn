@@ -786,15 +786,54 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 		</procedure>
 
     <procedure id="SelectAllAccountViaSP" resultClass="Account">
-      ps_SelectAllAccount
+      ps_SelectAllAccount 
     </procedure>
 
+    
     <procedure id="SelectAccountViaXML" parameterMap="XML-params" resultClass="Account">
       ps_SelectByIdList
     </procedure>
 
     <procedure id="SelectAccountWithOutPutParam" parameterMap="select-params3" resultClass="Account">
       ps_SelectAccountWithOutPutParam
+    </procedure>
+    
+    <procedure id="SPWithInlineParameter" parameterClass="int" resultClass="Account">
+      ps_SelectAccount @{Account_ID,column=Account_ID}
+    </procedure>
+
+    <procedure id="SPWithInlineParameterAndOutPutParam" parameterClass="map" resultClass="Account">
+      ps_SelectAccountWithOutPutParam @{Account_ID,column=Account_ID}, @{OutPut,column=OutPut}
+    </procedure>
+
+    <procedure id="InsertAccountViaSPAndInlineParameter" parameterClass="map" >
+      ps_InsertAccount
+      @{Id,column=Account_ID},
+      @{FirstName,column=Account_FirstName},
+      @{LastName,column=Account_LastName},
+      @{EmailAddress,column=Account_Email,nullValue=no_email@provided.com},
+      @{BannerOption,column=Account_Banner_Option,dbType=Varchar,type=bool},
+      @{CartOption,column=Account_Cart_Option,handler=HundredsBool}
+    </procedure>
+
+    <procedure id="InsertAccountViaSPWithDefaultParameter" parameterClass="map" >
+      ps_InsertAccountWithDefault
+      @{Id,column=Account_ID},
+      @{FirstName,column=Account_FirstName},
+      @{LastName,column=Account_LastName},
+      @{EmailAddress,column=Account_Email,nullValue=no_email@provided.com}
+    </procedure>
+
+    <procedure id="InsertAccountViaSPWithDynamicParameter" parameterClass="map" >
+      ps_InsertAccountWithDefault
+      @{Id,column=Account_ID}
+      ,@{FirstName,column=Account_FirstName}
+      ,@{LastName,column=Account_LastName}
+      ,@{EmailAddress,column=Account_Email,nullValue=no_email@provided.com}
+      <isNotNull property="NullBannerOption">
+      ,@{NullBannerOption,column=Account_Banner_Option,dbType=Varchar,type=bool}
+      </isNotNull>
+      @{CartOption,column=Account_Cart_Option,handler=HundredsBool}
     </procedure>
     
 	</statements>

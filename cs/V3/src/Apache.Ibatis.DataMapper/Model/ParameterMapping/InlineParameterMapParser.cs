@@ -72,6 +72,9 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
 
             if (sqlStatement.Contains(NEW_BEGIN_TOKEN))
             {
+                // V3 parameter syntax
+                //@{propertyName,column=string,type=string,dbype=string,direction=[Input/Output/InputOutput],nullValue=string,handler=string}
+
                 if (newSql != null)
                 {
                     string toAnalyse = newSql;
@@ -84,9 +87,9 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
                         string prepend = toAnalyse.Substring(0, start);
                         string append = toAnalyse.Substring(end + NEW_END_TOKEN.Length);
                        
-                        //EmailAddress,type=string,dbType=Varchar,nullValue=no_email@provided.com
+                        //EmailAddress,column=string,type=string,dbType=Varchar,nullValue=no_email@provided.com
                         string parameter = toAnalyse.Substring(start + NEW_BEGIN_TOKEN.Length, end - start - NEW_BEGIN_TOKEN.Length);
-                        ParameterProperty mapping = NewParseMapping(parameter, parameterClassType, dataExchangeFactory);
+                        ParameterProperty mapping = NewParseMapping(parameter, parameterClassType, dataExchangeFactory, statement);
                         mappingList.Add(mapping);
                         newSqlBuffer.Append(prepend);
                         newSqlBuffer.Append(MARK_TOKEN);
@@ -130,7 +133,7 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
 						    } 
 						    else 
 						    {
-                                mapping = NewParseMapping(token, parameterClassType, dataExchangeFactory);
+                                mapping = NewParseMapping(token, parameterClassType, dataExchangeFactory, statement);
 						    }															 
 
 						    mappingList.Add(mapping);
@@ -177,11 +180,12 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
         /// <param name="token">The token.</param>
         /// <param name="parameterClassType">Type of the parameter class.</param>
         /// <param name="dataExchangeFactory">The data exchange factory.</param>
+        /// <param name="statement">The statement.</param>
         /// <returns></returns>
         /// <example>
         /// #propertyName,type=string,dbype=Varchar,direction=Input,nullValue=N/A,handler=string#
         /// </example>
-        private ParameterProperty NewParseMapping(string token, Type parameterClassType, DataExchangeFactory dataExchangeFactory) 
+        private ParameterProperty NewParseMapping(string token, Type parameterClassType, DataExchangeFactory dataExchangeFactory,IStatement statement) 
 		{
             string propertyName = string.Empty;
             string type = string.Empty;
@@ -189,6 +193,7 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
             string direction = string.Empty;
             string callBack = string.Empty;
             string nullValue = null;
+            string columnName = string.Empty;
 
 			StringTokenizer paramParser = new StringTokenizer(token, "=,", false);
 			IEnumerator enumeratorParam = paramParser.GetEnumerator();
@@ -221,10 +226,14 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
 					else if ("handler".Equals(field)) 
 					{
                         callBack = value;
-					} 
+					}
+                    else if ("column".Equals(field))
+                    {
+                        columnName = value;
+                    } 
 					else 
 					{
-						throw new DataMapperException("Unrecognized parameter mapping field: '" + field + "' in " + token);
+						throw new DataMapperException("When parsing inline parameter for statement '"+statement.Id+"', can't recognize parameter mapping field: '" + field + "' in " + token+", check your inline parameter syntax.");
 					}
 				} 
 				else 
@@ -235,7 +244,7 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
 
             return new ParameterProperty(
                 propertyName,
-                string.Empty,
+                columnName,
                 callBack,
                 type,
                 dbType,

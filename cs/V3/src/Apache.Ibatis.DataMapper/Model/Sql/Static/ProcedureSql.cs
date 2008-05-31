@@ -111,7 +111,7 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Static
 					if (preparedStatement==null)
 					{
                         PreparedStatementFactory factory = new PreparedStatementFactory(session, dbHelperParameterCache, request, statement, commandText);
-						preparedStatement = factory.Prepare();
+						preparedStatement = factory.Prepare(false);
 					}
 				}
 			}

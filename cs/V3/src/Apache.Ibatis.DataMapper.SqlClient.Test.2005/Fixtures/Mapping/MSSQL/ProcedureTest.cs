@@ -5,8 +5,7 @@ using Apache.Ibatis.DataMapper.SqlClient.Test.Domain;
 using Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
-using Apache.Ibatis.DataMapper.Session;
-using Apache.Ibatis.DataMapper.Session.Transaction;
+using System.Collections.Generic;
 
 namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping.MSSQL
 {
@@ -35,6 +34,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping.MSSQL
             InitScript( sessionFactory.DataSource, ScriptDirectory + "ps_SelectAllAccount.sql", false);			    
             InitScript( sessionFactory.DataSource, ScriptDirectory + "swap-procedure.sql" );
             InitScript(sessionFactory.DataSource, ScriptDirectory + "ps_SelectAccountWithOutPutParam.sql");
+            InitScript(sessionFactory.DataSource, ScriptDirectory + "ps_InsertAccountWithDefault.sql");
         }
 
         /// <summary>
@@ -47,6 +47,99 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping.MSSQL
         #endregion
 
         #region Specific statement store procedure tests for sql server
+
+        [Test]
+        public void Procedure_with_inline_parameter_should_work()
+        {
+            // parameter syntax
+            //@{propertyName,column=string,type=string,dbype=Varchar,direction=Input,nullValue=N/A,handler=string}
+
+            Account account = dataMapper.QueryForObject<Account>("SPWithInlineParameter", 1);
+            Assert.AreEqual(1, account.Id);
+        }
+
+        [Test]
+        public void Procedure_with_inline_output_parameter_should_work()
+        {
+            Hashtable map = new Hashtable();
+            map.Add("Account_ID", 1);
+            map.Add("OutPut", 0);
+            Account account = dataMapper.QueryForObject<Account>("SPWithInlineParameterAndOutPutParam", map);
+
+            Assert.That(map["OutPut"], Is.EqualTo(987));
+
+            AssertAccount1(account);
+        }
+
+        [Test]
+        public void Procedure_with_complex_inline_parameter_should_work()
+        {
+            Account account = new Account();
+
+            account.Id = 99;
+            account.FirstName = "Achille";
+            account.LastName = "Talon";
+            account.EmailAddress = "no_email@provided.com";
+            account.CartOption = false;
+
+            dataMapper.Insert("InsertAccountViaStoreProcedure", account);
+
+            Account testAccount = dataMapper.QueryForObject<Account>("GetAccountViaColumnName", 99);
+
+            Assert.IsNotNull(testAccount);
+            Assert.That(testAccount.Id, Is.EqualTo(99));
+            Assert.That(testAccount.EmailAddress, Is.EqualTo("no_email@provided.com"));
+            Assert.That(testAccount.CartOption, Is.False);
+        }
+
+        [Test]
+        public void Procedure_with_default_parameter_should_work()
+        {
+            Account account = new Account();
+
+            account.Id = 99;
+            account.FirstName = "Achille";
+            account.LastName = "Talon";
+
+            dataMapper.Insert("InsertAccountViaSPWithDefaultParameter", account);
+
+            Account testAccount = dataMapper.QueryForObject<Account>("GetAccountViaColumnName", 99);
+
+            Assert.IsNotNull(testAccount);
+            Assert.That(testAccount.Id, Is.EqualTo(99));
+            Assert.That(testAccount.EmailAddress, Is.EqualTo("no_email@provided.com"));
+            Assert.That(testAccount.BannerOption, Is.False);
+            Assert.That(testAccount.CartOption, Is.False);
+        }
+
+        [Test]
+        public void Procedure_with_dynamic_parameter_should_work()
+        {
+            Account account = new Account();
+
+            account.Id = 99;
+            account.FirstName = "Achille";
+            account.LastName = "Talon";
+            account.NullBannerOption = false;
+
+            dataMapper.Insert("InsertAccountViaSPWithDynamicParameter", account);
+
+            Account testAccount = dataMapper.QueryForObject<Account>("GetAccountViaColumnName", 99);
+
+            Assert.IsNotNull(testAccount);
+            Assert.That(testAccount.Id, Is.EqualTo(99));
+            Assert.That(testAccount.EmailAddress, Is.EqualTo("no_email@provided.com"));
+            Assert.That(testAccount.BannerOption, Is.False);
+            Assert.That(testAccount.CartOption, Is.False);
+
+            account.Id = 100;
+            account.FirstName = "Achille";
+            account.LastName = "Talon";
+            account.NullBannerOption = null;
+
+            dataMapper.Insert("InsertAccountViaSPWithDynamicParameter", account);
+
+        }
 
         /// <summary>
         /// Test XML parameter.

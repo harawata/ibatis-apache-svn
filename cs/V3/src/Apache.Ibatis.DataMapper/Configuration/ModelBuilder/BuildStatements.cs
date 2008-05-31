@@ -50,6 +50,8 @@ namespace Apache.Ibatis.DataMapper.Configuration
     public partial class DefaultModelBuilder
     {
         private readonly InlineParameterMapParser paramParser = new InlineParameterMapParser();
+        private const string MARK_TOKEN = "?";
+        private const string COMMA_TOKEN = ",";
 
         /// <summary>
         /// Builds the mapped statements.
@@ -383,7 +385,7 @@ namespace Apache.Ibatis.DataMapper.Configuration
                     sql = new ProcedureSql(
                         modelStore.DataExchangeFactory,
                         modelStore.DBHelperParameterCache,
-                        newSql, 
+                        newSql.Replace(MARK_TOKEN, string.Empty).Replace(COMMA_TOKEN, string.Empty).Trim(), 
                         statement);
                     // Could not call BuildPreparedStatement for procedure because when NUnit Test
                     // the database is not here (but in theory procedure must be prepared like statement)

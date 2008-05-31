@@ -103,7 +103,7 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Static
 			RequestScope request = new RequestScope( dataExchangeFactory, session, statement);
 
             PreparedStatementFactory factory = new PreparedStatementFactory(session, dbHelperParameterCache, request, statement, sqlStatement);
-			preparedStatement = factory.Prepare();
+			preparedStatement = factory.Prepare(false);
 		}
 
 		#endregion

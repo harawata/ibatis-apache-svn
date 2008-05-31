@@ -213,7 +213,7 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.SimpleDynamic
         private PreparedStatement BuildPreparedStatement(ISession session, RequestScope request, string sqlStatement)
 		{
 			PreparedStatementFactory factory = new PreparedStatementFactory( session, dbHelperParameterCache, request, statement, sqlStatement);
-			return factory.Prepare();
+			return factory.Prepare(false);
 		}
 		#endregion
 

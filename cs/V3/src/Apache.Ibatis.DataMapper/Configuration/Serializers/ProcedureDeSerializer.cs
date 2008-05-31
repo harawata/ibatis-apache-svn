@@ -50,14 +50,21 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
         {
             BaseDeserialize(modelStore, config);
 
-            if (parameterMap == null)
+            if (parameterClass!=null)
             {
-                parameterMap = modelStore.GetParameterMap(ConfigConstants.EMPTY_PARAMETER_MAP);
             }
+            else
+            {
+                if (parameterMap == null)
+                {
+                    parameterMap = modelStore.GetParameterMap(ConfigConstants.EMPTY_PARAMETER_MAP);
+                }                
+            }
+
 
             return new Procedure(
                 id,
-                null,
+                parameterClass,
                 parameterMap,
                 resultClass,
                 resultsMap,

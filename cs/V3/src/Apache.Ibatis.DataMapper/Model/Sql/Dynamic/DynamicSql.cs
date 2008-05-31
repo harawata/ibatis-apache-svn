@@ -54,6 +54,8 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic
 	/// </example>
 	public sealed class DynamicSql : ISql, IDynamicParent  
 	{
+        private const string MARK_TOKEN = "?";
+        private const string COMMA_TOKEN = ",";
 
 		#region Fields
 
@@ -165,7 +167,12 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic
 
 			string dynSql = ctx.BodyText;
 
-			// Processes $substitutions$ after DynamicSql
+            if (statement is Procedure)
+            {
+                dynSql = dynSql.Replace(MARK_TOKEN, string.Empty).Replace(COMMA_TOKEN, string.Empty).Trim();
+            }
+
+		    // Processes $substitutions$ after DynamicSql
 			if ( SimpleDynamicSql.IsSimpleDynamicSql(dynSql) ) 
 			{
                 dynSql = new SimpleDynamicSql(
@@ -325,7 +332,7 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic
 		private PreparedStatement BuildPreparedStatement(ISession session, RequestScope request, string sqlStatement)
 		{
             PreparedStatementFactory factory = new PreparedStatementFactory(session, dbHelperParameterCache, request, statement, sqlStatement);
-			return factory.Prepare();
+			return factory.Prepare(true);
 		}
 		#endregion
 

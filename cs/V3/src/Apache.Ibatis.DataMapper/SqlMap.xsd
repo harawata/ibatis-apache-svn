@@ -75,8 +75,30 @@ vs:defaultnsprefix="" >
 	</xs:element>
 	<xs:element name="procedure">
 		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="include"/>
+				<xs:element ref="selectKey"/>
+				<xs:element ref="generate"/>
+				<xs:element ref="dynamic"/>
+				<xs:element ref="isEmpty"/>
+				<xs:element ref="isEqual"/>
+				<xs:element ref="isGreaterEqual"/>
+				<xs:element ref="isGreaterThan"/>
+				<xs:element ref="isLessThan"/>
+				<xs:element ref="isLessEqual"/>
+				<xs:element ref="isNotEmpty"/>
+				<xs:element ref="isNotEqual"/>
+				<xs:element ref="isNotNull"/>
+				<xs:element ref="isNotParameterPresent"/>
+				<xs:element ref="isNotPropertyAvailable"/>
+				<xs:element ref="isNull"/>
+				<xs:element ref="isParameterPresent"/>
+				<xs:element ref="isPropertyAvailable"/>
+				<xs:element ref="iterate"/>
+			</xs:choice>
 			<xs:attribute name="id" type="xs:string" use="required"/>
 			<xs:attribute name="parameterMap" type="xs:string" />
+			<xs:attribute name="parameterClass" type="xs:string" />
 			<xs:attribute name="resultMap" type="xs:string"/>
 			<xs:attribute name="resultClass" type="xs:string"/>
 			<xs:attribute name="cacheModel" type="xs:string"/>

@@ -105,10 +105,12 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
 		}
 
 
-		/// <summary>
-		/// Create a list of IDataParameter for the statement and build the sql string.
-		/// </summary>
-		public PreparedStatement Prepare()
+        /// <summary>
+        /// Create a list of IDataParameter for the statement and build the sql string.
+        /// </summary>
+        /// <param name="isDynamic">if set to <c>true</c> this statement is dynamic.</param>
+        /// <returns></returns>
+		public PreparedStatement Prepare(bool isDynamic)
 		{
 			preparedStatement = new PreparedStatement();
 
@@ -132,7 +134,14 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
 				{
                     if (dbProvider.UseDeriveParameters)
 					{
-                        DiscoverParameter();
+                        if (isDynamic)
+                        {
+                            DiscoverParameter(request.ParameterMap);                         
+                        }
+                        else
+                        {
+                            DiscoverParameter(statement.ParameterMap); 
+                        }
 					}
 					else
 					{
@@ -186,7 +195,7 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
         /// <summary>
         /// For store procedure, auto discover IDataParameters for stored procedures at run-time.
         /// </summary>
-        private void DiscoverParameter()
+        private void DiscoverParameter(ParameterMap parameterMap)
 		{
 			// pull the parameters for this stored procedure from the parameter cache 
 			// (or discover them & populate the cache)
@@ -206,15 +215,15 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
 						dataParameter.ParameterName = dataParameter.ParameterName.Substring(start);
 					}
 				}
-				preparedStatement.DbParametersName.Add( dataParameter.ParameterName );
 				preparedStatement.DbParameters[i] = dataParameter;
 			}
 		    
             // Re-sort DbParameters to match order used in the parameterMap
-            IDbDataParameter[] sortedDbParameters = new IDbDataParameter[commandParameters.Length];
-            for (int i = 0; i < statement.ParameterMap.Properties.Count; i++)
+            IDbDataParameter[] sortedDbParameters = new IDbDataParameter[parameterMap.Properties.Count];
+            for (int i = 0; i < parameterMap.Properties.Count; i++)
             {
-                sortedDbParameters[i] = Search(preparedStatement.DbParameters, statement.ParameterMap.Properties[i], i);
+                sortedDbParameters[i] = Search(preparedStatement.DbParameters, parameterMap.Properties[i], i);
+                preparedStatement.DbParametersName.Add(sortedDbParameters[i].ParameterName);
             }
             preparedStatement.DbParameters = sortedDbParameters;
 		}
@@ -230,7 +239,7 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
                     {
                         if (parameterName.StartsWith(dbProvider.ParameterPrefix))
                         {
-                            int prefixLength = dbProvider.ParameterPrefix.Length;
+                           int prefixLength = dbProvider.ParameterPrefix.Length;
                            parameterName = parameterName.Substring(prefixLength);
                         }
                     }
