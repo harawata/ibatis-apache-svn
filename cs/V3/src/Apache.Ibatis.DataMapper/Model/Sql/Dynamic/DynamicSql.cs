@@ -41,7 +41,6 @@ using System.Collections.Generic;
 using Apache.Ibatis.DataMapper.Session;
 using Apache.Ibatis.DataMapper.Data;
 using Apache.Ibatis.Common.Contracts;
-using System;
 
 #endregion
 

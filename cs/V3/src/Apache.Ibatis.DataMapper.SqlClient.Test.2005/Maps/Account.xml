@@ -140,6 +140,36 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
     -->
   <statements>
 
+    <!-- New parmeter syntax-->
+    <update id="NewUpdateAccountViaInlineParameters" parameterClass="Account">
+      update Accounts set
+      Account_FirstName = @{FirstName},
+      Account_LastName = @{LastName},
+      Account_Email = @{EmailAddress,type=string,dbType=Varchar,nullValue=no_email@provided.com}
+      where
+      Account_ID = @{Id}
+    </update>
+
+    <insert id="NewInsertAccountViaInlineParameters"
+			parameterClass="Account" >
+      insert into Accounts
+      (Account_ID, Account_FirstName, Account_LastName, Account_Email)
+      values
+      (
+      @{Id}, @{FirstName}, @{LastName}, @{EmailAddress,dbType=VarChar,nullValue=no_email@provided.com}
+      )
+    </insert>
+
+    <insert id="NewInsertAccountNullableEmail"
+			parameterClass="Account" >
+      insert into Accounts
+      (Account_ID, Account_FirstName, Account_LastName, Account_Email)
+      values
+      ( @{Id}, @{FirstName}, @{LastName}, @{EmailAddress,dbType=VarChar} )
+    </insert>
+    
+    <!--  -->
+    
     <select id="JIRA260" parameterClass="Integer" resultMap="account-extends-constructor">
       select *
       from Accounts

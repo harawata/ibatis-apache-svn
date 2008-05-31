@@ -27,16 +27,14 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using Apache.Ibatis.Common.Exceptions;
 using Apache.Ibatis.Common.Utilities;
-using Apache.Ibatis.Common.Utilities.Objects;
+using Apache.Ibatis.DataMapper.DataExchange;
+using Apache.Ibatis.DataMapper.Exceptions;
 using Apache.Ibatis.DataMapper.Model.Sql.Dynamic;
 using Apache.Ibatis.DataMapper.Model.Statements;
-using Apache.Ibatis.DataMapper.Exceptions;
-using Apache.Ibatis.DataMapper.Scope;
-using Apache.Ibatis.DataMapper.TypeHandlers;
-using Apache.Ibatis.DataMapper.DataExchange;
 
 #endregion 
 
@@ -49,6 +47,10 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
 	{
 		private const string PARAMETER_TOKEN = "#";
 		private const string PARAM_DELIM = ":";
+        private const string MARK_TOKEN = "?";
+
+        private const string NEW_BEGIN_TOKEN = "@{";
+        private const string NEW_END_TOKEN = "}";
 
         /// <summary>
         /// Parse Inline ParameterMap
@@ -60,7 +62,7 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
         public SqlText ParseInlineParameterMap(DataExchangeFactory dataExchangeFactory, IStatement statement, string sqlStatement)
 		{
 			string newSql = sqlStatement;
-			ArrayList mappingList = new ArrayList();
+            List<ParameterProperty> mappingList = new List<ParameterProperty>();
 			Type parameterClassType = null;
 
 			if (statement != null)
@@ -68,63 +70,98 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
 				parameterClassType = statement.ParameterClass;
 			}
 
-			StringTokenizer parser = new StringTokenizer(sqlStatement, PARAMETER_TOKEN, true);
-			StringBuilder newSqlBuffer = new StringBuilder();
+            if (sqlStatement.Contains(NEW_BEGIN_TOKEN))
+            {
+                if (newSql != null)
+                {
+                    string toAnalyse = newSql;
+                    int start = toAnalyse.IndexOf(NEW_BEGIN_TOKEN);
+                    int end = toAnalyse.IndexOf(NEW_END_TOKEN);
+                    StringBuilder newSqlBuffer = new StringBuilder();
 
-			string token = null;
-			string lastToken = null;
+                    while (start > -1 && end > start)
+                    {
+                        string prepend = toAnalyse.Substring(0, start);
+                        string append = toAnalyse.Substring(end + NEW_END_TOKEN.Length);
+                       
+                        //EmailAddress,type=string,dbType=Varchar,nullValue=no_email@provided.com
+                        string parameter = toAnalyse.Substring(start + NEW_BEGIN_TOKEN.Length, end - start - NEW_BEGIN_TOKEN.Length);
+                        ParameterProperty mapping = NewParseMapping(parameter, parameterClassType, dataExchangeFactory);
+                        mappingList.Add(mapping);
+                        newSqlBuffer.Append(prepend);
+                        newSqlBuffer.Append(MARK_TOKEN);
+                        toAnalyse = append;
+                        start = toAnalyse.IndexOf(NEW_BEGIN_TOKEN);
+                        end = toAnalyse.IndexOf(NEW_END_TOKEN);
+                    }
+                    newSqlBuffer.Append(toAnalyse);
+                    newSql = newSqlBuffer.ToString();
+                }
+            }
+            else
+            {
+                #region old syntax
+				StringTokenizer parser = new StringTokenizer(sqlStatement, PARAMETER_TOKEN, true);
+			    StringBuilder newSqlBuffer = new StringBuilder();
 
-			IEnumerator enumerator = parser.GetEnumerator();
+			    string token = null;
+			    string lastToken = null;
 
-			while (enumerator.MoveNext()) 
-			{
-				token = (string)enumerator.Current;
+			    IEnumerator enumerator = parser.GetEnumerator();
 
-				if (PARAMETER_TOKEN.Equals(lastToken)) 
-				{
-					if (PARAMETER_TOKEN.Equals(token)) 
-					{
-						newSqlBuffer.Append(PARAMETER_TOKEN);
-						token = null;
-					} 
-					else 
-					{
-						ParameterProperty mapping = null; 
-						if (token.IndexOf(PARAM_DELIM) > -1) 
-						{
-                            mapping = OldParseMapping(token, parameterClassType, dataExchangeFactory);
-						} 
-						else 
-						{
-                            mapping = NewParseMapping(token, parameterClassType, dataExchangeFactory);
-						}															 
+			    while (enumerator.MoveNext()) 
+			    {
+				    token = (string)enumerator.Current;
 
-						mappingList.Add(mapping);
-						newSqlBuffer.Append("? ");
+				    if (PARAMETER_TOKEN.Equals(lastToken)) 
+				    {
+                        // Double token ## = # 
+					    if (PARAMETER_TOKEN.Equals(token)) 
+					    {
+						    newSqlBuffer.Append(PARAMETER_TOKEN);
+						    token = null;
+					    } 
+					    else 
+					    {
+						    ParameterProperty mapping = null; 
+						    if (token.IndexOf(PARAM_DELIM) > -1) 
+						    {
+                                mapping = OldParseMapping(token, parameterClassType, dataExchangeFactory);
+						    } 
+						    else 
+						    {
+                                mapping = NewParseMapping(token, parameterClassType, dataExchangeFactory);
+						    }															 
 
-						enumerator.MoveNext();
-						token = (string)enumerator.Current;
-						if (!PARAMETER_TOKEN.Equals(token)) 
-						{
-							throw new DataMapperException("Unterminated inline parameter in mapped statement (" + statement.Id + ").");
-						}
-						token = null;
-					}
-				} 
-				else 
-				{
-					if (!PARAMETER_TOKEN.Equals(token)) 
-					{
-						newSqlBuffer.Append(token);
-					}
-				}
+						    mappingList.Add(mapping);
+						    newSqlBuffer.Append(MARK_TOKEN+" ");
 
-				lastToken = token;
-			}
+						    enumerator.MoveNext();
+						    token = (string)enumerator.Current;
+						    if (!PARAMETER_TOKEN.Equals(token)) 
+						    {
+							    throw new DataMapperException("Unterminated inline parameter in mapped statement (" + statement.Id + ").");
+						    }
+						    token = null;
+					    }
+				    } 
+				    else 
+				    {
+					    if (!PARAMETER_TOKEN.Equals(token)) 
+					    {
+						    newSqlBuffer.Append(token);
+					    }
+				    }
 
-			newSql = newSqlBuffer.ToString();
+				    lastToken = token;
+			    }
 
-			ParameterProperty[] mappingArray = (ParameterProperty[]) mappingList.ToArray(typeof(ParameterProperty));
+			    newSql = newSqlBuffer.ToString();
+ 
+	            #endregion            
+            }
+
+			ParameterProperty[] mappingArray =  mappingList.ToArray();                
 
 			SqlText sqlText = new SqlText();
 			sqlText.Text = newSql;
@@ -133,15 +170,17 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
 			return sqlText;
 		}
 
-
-		/// <summary>
-		/// Parse inline parameter with syntax as
-		/// #propertyName,type=string,dbype=Varchar,direction=Input,nullValue=N/A,handler=string#
-		/// </summary>
-		/// <param name="token"></param>
-		/// <param name="parameterClassType"></param>
-		/// <param name="scope"></param>
-		/// <returns></returns>
+        /// <summary>
+        /// Parse inline parameter with syntax as
+        /// #propertyName,type=string,dbype=Varchar,direction=Input,nullValue=N/A,handler=string#
+        /// </summary>
+        /// <param name="token">The token.</param>
+        /// <param name="parameterClassType">Type of the parameter class.</param>
+        /// <param name="dataExchangeFactory">The data exchange factory.</param>
+        /// <returns></returns>
+        /// <example>
+        /// #propertyName,type=string,dbype=Varchar,direction=Input,nullValue=N/A,handler=string#
+        /// </example>
         private ParameterProperty NewParseMapping(string token, Type parameterClassType, DataExchangeFactory dataExchangeFactory) 
 		{
             string propertyName = string.Empty;
@@ -194,27 +233,6 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
 				}
 			}
 
-            //if (mapping.CallBackName.Length >0)
-            //{
-            //    mapping.Initialize( scope, parameterClassType );
-            //}
-            //else
-            //{
-            //    ITypeHandler handler = null;
-            //    if (parameterClassType == null) 
-            //    {
-            //        handler = scope.DataExchangeFactory.TypeHandlerFactory.GetUnkownTypeHandler();
-            //    } 
-            //    else 
-            //    {
-            //        handler = ResolveTypeHandler( scope.DataExchangeFactory.TypeHandlerFactory, 
-            //            parameterClassType, mapping.PropertyName,  
-            //            mapping.CLRType, mapping.DbType );
-            //    }
-            //    mapping.TypeHandler = handler;
-            //    mapping.Initialize(  scope, parameterClassType );				
-            //}
-
             return new ParameterProperty(
                 propertyName,
                 string.Empty,
@@ -230,14 +248,15 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
                 dataExchangeFactory);
 		}
 
-
         /// <summary>
         /// Parse inline parameter with syntax as
-        /// #propertyName:dbType:nullValue#
         /// </summary>
         /// <param name="token">The token.</param>
         /// <param name="parameterClassType">Type of the parameter class.</param>
         /// <param name="dataExchangeFactory">The data exchange factory.</param>
+        /// <example>
+        /// #propertyName:dbType:nullValue#
+        /// </example>
         /// <returns></returns>
         private ParameterProperty OldParseMapping(string token, Type parameterClassType, DataExchangeFactory dataExchangeFactory) 
 		{
@@ -259,18 +278,6 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
 					enumeratorParam.MoveNext();
 					enumeratorParam.MoveNext(); //ignore ":"
                     dbType = ((string)enumeratorParam.Current).Trim();
-
-                    //ITypeHandler handler = null;
-                    //if (parameterClassType == null) 
-                    //{
-                    //    handler = scope.DataExchangeFactory.TypeHandlerFactory.GetUnkownTypeHandler();
-                    //} 
-                    //else 
-                    //{
-                    //    handler = ResolveTypeHandler(scope.DataExchangeFactory.TypeHandlerFactory, parameterClassType, propertyName, null, dBType);
-                    //}
-                    //mapping.TypeHandler = handler;
-                    //mapping.Initialize( scope, parameterClassType );
 				} 
 				else if (n1 >= 5) 
 				{
@@ -289,18 +296,6 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
 					{
 						nullValue = nullValue + ((string)enumeratorParam.Current).Trim();
 					}
-
-                    //ITypeHandler handler = null;
-                    //if (parameterClassType == null) 
-                    //{
-                    //    handler = scope.DataExchangeFactory.TypeHandlerFactory.GetUnkownTypeHandler();
-                    //} 
-                    //else 
-                    //{
-                    //    handler = ResolveTypeHandler(scope.DataExchangeFactory.TypeHandlerFactory, parameterClassType, propertyName, null, dBType);
-                    //}
-                    //mapping.TypeHandler = handler;
-                    //mapping.Initialize( scope, parameterClassType );
 				} 
 				else 
 				{
@@ -310,19 +305,6 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
 			else 
 			{
 				propertyName = token;
-                //ITypeHandler handler = null;
-                //if (parameterClassType == null) 
-                //{
-                //    handler = scope.DataExchangeFactory.TypeHandlerFactory.GetUnkownTypeHandler();
-                //} 
-                //else 
-                //{
-                //    handler = ResolveTypeHandler(scope.DataExchangeFactory.TypeHandlerFactory, parameterClassType, token, null, null);
-                //}
-                //mapping.TypeHandler = handler;
-                //mapping.Initialize( scope, parameterClassType );
-
-
 			}
 
             return new ParameterProperty(
@@ -339,61 +321,6 @@ namespace Apache.Ibatis.DataMapper.Model.ParameterMapping
                 parameterClassType,
                 dataExchangeFactory);
 		}
-
-
-        ///// <summary>
-        ///// Resolve TypeHandler
-        ///// </summary>
-        ///// <param name="parameterClassType"></param>
-        ///// <param name="propertyName"></param>
-        ///// <param name="propertyType"></param>
-        ///// <param name="dbType"></param>
-        ///// <param name="typeHandlerFactory"></param>
-        ///// <returns></returns>
-        //private ITypeHandler ResolveTypeHandler(
-        //    TypeHandlerFactory typeHandlerFactory, 
-        //    Type classType, 
-        //    string memberName, 
-        //    string memberType, 
-        //    string dbType) 
-        //{
-        //    ITypeHandler handler = null;
-
-        //    if (classType == null) 
-        //    {
-        //        handler = typeHandlerFactory.GetUnkownTypeHandler();
-        //    } 
-        //    else if (typeof(IDictionary).IsAssignableFrom(classType))
-        //    {
-        //        if (memberType == null || memberType.Length==0) 
-        //        {
-        //            handler = typeHandlerFactory.GetUnkownTypeHandler();
-        //        } 
-        //        else 
-        //        {
-        //            try 
-        //            {
-        //                Type typeClass = TypeUtils.ResolveType(memberType);
-        //                handler = typeHandlerFactory.GetTypeHandler(typeClass, dbType);
-        //            } 
-        //            catch (Exception e) 
-        //            {
-        //                throw new ConfigurationException("Error. Could not set TypeHandler.  Cause: " + e.Message, e);
-        //            }
-        //        }
-        //    } 
-        //    else if (typeHandlerFactory.GetTypeHandler(classType, dbType) != null) 
-        //    {
-        //        handler = typeHandlerFactory.GetTypeHandler(classType, dbType);
-        //    } 
-        //    else 
-        //    {
-        //        Type typeClass = ObjectProbe.GetMemberTypeForGetter(classType, memberName);
-        //        handler = typeHandlerFactory.GetTypeHandler(typeClass, dbType);
-        //    }
-
-        //    return handler;
-        //}
 
 	}
 }

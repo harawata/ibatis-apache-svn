@@ -24,23 +24,21 @@
  ********************************************************************************/
 #endregion
 
-using System;
 using System.Collections;
-using System.Text;
 
 namespace Apache.Ibatis.Common.Utilities
 {
 		
 	/// <summary>
 	/// A StringTokenizer java like object 
+    /// Allows to break a string into tokens
 	/// </summary>
-	public class StringTokenizer : IEnumerable 
+	public sealed class StringTokenizer : IEnumerable 
 	{
-
-		private static readonly string _defaultDelim=" \t\n\r\f";
-		string _origin = string.Empty;
-		string _delimiters = string.Empty;
-		bool _returnDelimiters = false;
+		private static readonly string defaultDelim=" \t\n\r\f";
+        private readonly string  origin = string.Empty;
+        private readonly string delimiters = string.Empty;
+        private readonly bool returnDelimiters = false;
 
 		/// <summary>
 		/// Constructs a StringTokenizer on the specified String, using the
@@ -49,9 +47,9 @@ namespace Apache.Ibatis.Common.Utilities
 		/// <param name="str">The input String</param>
 		public StringTokenizer(string str) 
 		{
-			_origin = str;
-			_delimiters = _defaultDelim;
-			_returnDelimiters = false;
+			origin = str;
+			delimiters = defaultDelim;
+			returnDelimiters = false;
 		}
 
 
@@ -63,9 +61,9 @@ namespace Apache.Ibatis.Common.Utilities
 		/// <param name="delimiters">The delimiter String</param>
 		public StringTokenizer(string str, string delimiters) 
 		{
-			_origin = str;
-			_delimiters = delimiters;
-			_returnDelimiters = false;
+			origin = str;
+			this.delimiters = delimiters;
+			returnDelimiters = false;
 		}
 
 
@@ -78,16 +76,18 @@ namespace Apache.Ibatis.Common.Utilities
 		/// <param name="returnDelimiters">Returns delimiters as tokens or skip them</param>
 		public StringTokenizer(string str, string delimiters, bool returnDelimiters) 
 		{
-			_origin = str;
-			_delimiters = delimiters;
-			_returnDelimiters = returnDelimiters;
+			origin = str;
+			this.delimiters = delimiters;
+			this.returnDelimiters = returnDelimiters;
 		}
 
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <returns></returns>
+        /// <summary>
+        /// Returns an enumerator that iterates through a collection.
+        /// </summary>
+        /// <returns>
+        /// An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
+        /// </returns>
 		public IEnumerator GetEnumerator() 
 		{
 			return new StringTokenizerEnumerator(this);
@@ -108,13 +108,13 @@ namespace Apache.Ibatis.Common.Utilities
 			{
 				int count = 0;
 				int currpos = 0;
-				int maxPosition = _origin.Length;
+				int maxPosition = origin.Length;
 
 				while (currpos < maxPosition) 
 				{
-					while (!_returnDelimiters &&
+					while (!returnDelimiters &&
 						(currpos < maxPosition) &&
-						(_delimiters.IndexOf(_origin[currpos]) >= 0))
+						(delimiters.IndexOf(origin[currpos]) >= 0))
 					{
 						currpos++;
 					}
@@ -126,12 +126,12 @@ namespace Apache.Ibatis.Common.Utilities
 
 					int start = currpos;
 					while ((currpos < maxPosition) && 
-						(_delimiters.IndexOf(_origin[currpos]) < 0))
+						(delimiters.IndexOf(origin[currpos]) < 0))
 					{
 						currpos++;
 					}
-					if (_returnDelimiters && (start == currpos) &&
-						(_delimiters.IndexOf(_origin[currpos]) >= 0))
+					if (returnDelimiters && (start == currpos) &&
+						(delimiters.IndexOf(origin[currpos]) >= 0))
 					{
 						currpos++;
 					}
@@ -144,33 +144,33 @@ namespace Apache.Ibatis.Common.Utilities
 		}
 
 
-		private class StringTokenizerEnumerator : IEnumerator 
+		private sealed class StringTokenizerEnumerator : IEnumerator 
 		{
-			private StringTokenizer _stokenizer;
-			private int _cursor = 0;
-			private string _next = null;
+			private readonly StringTokenizer stokenizer;
+			private int cursor = 0;
+			private string next = null;
 		
 			public StringTokenizerEnumerator(StringTokenizer stok) 
 			{
-				_stokenizer = stok;
+				stokenizer = stok;
 			}
 
 			public bool MoveNext() 
 			{
-				_next = GetNext();
-				return _next != null;
+				next = GetNext();
+				return next != null;
 			}
 
 			public void Reset() 
 			{
-				_cursor = 0;
+				cursor = 0;
 			}
 
 			public object Current 
 			{
 				get 
 				{
-					return _next;
+					return next;
 				}
 			}
 
@@ -179,30 +179,30 @@ namespace Apache.Ibatis.Common.Utilities
 				char c;
 				bool isDelim;
 			
-				if( _cursor >= _stokenizer._origin.Length )
+				if( cursor >= stokenizer.origin.Length )
 					return null;
 
-				c = _stokenizer._origin[_cursor];
-				isDelim = (_stokenizer._delimiters.IndexOf(c) != -1);
+				c = stokenizer.origin[cursor];
+				isDelim = (stokenizer.delimiters.IndexOf(c) != -1);
 			
 				if ( isDelim ) 
 				{
-					_cursor++;
-					if ( _stokenizer._returnDelimiters ) 
+					cursor++;
+					if ( stokenizer.returnDelimiters ) 
 					{
 						return c.ToString();
 					}
 					return GetNext();
 				}
 
-				int nextDelimPos = _stokenizer._origin.IndexOfAny(_stokenizer._delimiters.ToCharArray(), _cursor);
+				int nextDelimPos = stokenizer.origin.IndexOfAny(stokenizer.delimiters.ToCharArray(), cursor);
 				if (nextDelimPos == -1) 
 				{
-					nextDelimPos = _stokenizer._origin.Length;
+					nextDelimPos = stokenizer.origin.Length;
 				}
 
-				string nextToken = _stokenizer._origin.Substring(_cursor, nextDelimPos - _cursor);
-				_cursor = nextDelimPos;
+				string nextToken = stokenizer.origin.Substring(cursor, nextDelimPos - cursor);
+				cursor = nextDelimPos;
 				return nextToken;
 			}
 

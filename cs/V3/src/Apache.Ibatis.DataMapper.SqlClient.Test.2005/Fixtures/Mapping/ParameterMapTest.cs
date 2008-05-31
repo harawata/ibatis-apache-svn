@@ -6,6 +6,7 @@ using System.IO;
 
 using Apache.Ibatis.Common.Resources;
 using Apache.Ibatis.Common.Utilities;
+using Apache.Ibatis.DataMapper.Model.ParameterMapping;
 using Apache.Ibatis.DataMapper.SqlClient.Test.Domain;
 using Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures;
 using NUnit.Framework;
@@ -44,6 +45,37 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
         #endregion
 
         #region Parameter map tests
+
+        [Test]
+        public void New_parameter_syntax_should_work_on_update()
+        {
+            Account account = dataMapper.QueryForObject<Account>("GetAccountViaColumnName", 1);
+
+            account.EmailAddress = "new@somewhere.com";
+            dataMapper.Update("NewUpdateAccountViaInlineParameters", account);
+
+            account = dataMapper.QueryForObject<Account>("GetAccountViaColumnName", 1);
+
+            Assert.AreEqual("new@somewhere.com", account.EmailAddress);
+
+            account.EmailAddress = null;
+            dataMapper.Update("NewUpdateAccountViaInlineParameters", account);
+
+            account = dataMapper.QueryForObject<Account>("GetAccountViaColumnName", 1);
+
+            Assert.AreEqual("no_email@provided.com", account.EmailAddress);
+        }
+        [Test]
+        public void New_parameter_syntax_should_work_on_insert()
+        {
+            Account account = NewAccount6();
+
+            dataMapper.Insert("NewInsertAccountViaInlineParameters", account);
+
+            account = dataMapper.QueryForObject<Account>("GetAccountNullableEmail", 6);
+
+            AssertAccount6(account);
+        }
 
         /// <summary>
         /// Test null replacement in ParameterMap property
