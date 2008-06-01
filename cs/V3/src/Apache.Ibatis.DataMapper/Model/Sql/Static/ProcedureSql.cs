@@ -38,7 +38,7 @@ using Apache.Ibatis.Common.Contracts;
 namespace Apache.Ibatis.DataMapper.Model.Sql.Static
 {
 	/// <summary>
-	/// Summary description for ProcedureSql.
+    /// Represents a procedure mapped statement without dynamic element.
 	/// </summary>
 	public sealed class ProcedureSql : ISql
 	{
@@ -89,7 +89,7 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Static
 		{
 			RequestScope request = new RequestScope(dataExchangeFactory, session, statement);
 
-			request.PreparedStatement = BuildPreparedStatement(session, request, sqlStatement);
+            request.PreparedStatement = BuildPreparedStatement(session, request, sqlStatement);
 			request.MappedStatement = mappedStatement;
 
 			return request;

@@ -24,6 +24,7 @@
 #endregion
 
 using Apache.Ibatis.Common.Configuration;
+using Apache.Ibatis.DataMapper.Model.Sql.External;
 using Apache.Ibatis.DataMapper.Model.Statements;
 using Apache.Ibatis.DataMapper.Configuration.Interpreters.Config;
 using Apache.Ibatis.DataMapper.Configuration.Serializers;
@@ -50,8 +51,6 @@ namespace Apache.Ibatis.DataMapper.Configuration
     public partial class DefaultModelBuilder
     {
         private readonly InlineParameterMapParser paramParser = new InlineParameterMapParser();
-        private const string MARK_TOKEN = "?";
-        private const string COMMA_TOKEN = ",";
 
         /// <summary>
         /// Builds the mapped statements.
@@ -216,26 +215,77 @@ namespace Apache.Ibatis.DataMapper.Configuration
         /// <param name="statement">The statement.</param>
         private void ProcessSqlStatement(IConfiguration statementConfiguration, IStatement statement)
         {
-            bool isDynamic = false;
-
-            DynamicSql dynamic = new DynamicSql(
-                modelStore.SessionFactory.DataSource.DbProvider.UsePositionalParameters,
-                modelStore.DBHelperParameterCache,
-                modelStore.DataExchangeFactory,
-                statement);
-            StringBuilder sqlBuffer = new StringBuilder();
-
-            isDynamic = ParseDynamicTags(statementConfiguration, dynamic, sqlBuffer, isDynamic, false, statement);
-
-            if (isDynamic)
+            if (statement.SqlSource!=null)
             {
-                statement.Sql = dynamic;
+                ExternalSql externalSql = new ExternalSql(modelStore, statement);
+                statement.Sql = externalSql;
             }
             else
             {
-                string sqlText = sqlBuffer.ToString();
-                ApplyInlineParemeterMap(statement, sqlText);
+                bool isDynamic = false;
+
+                DynamicSql dynamic = new DynamicSql(
+                    modelStore.SessionFactory.DataSource.DbProvider.UsePositionalParameters,
+                    modelStore.DBHelperParameterCache,
+                    modelStore.DataExchangeFactory,
+                    statement);
+                StringBuilder sqlBuffer = new StringBuilder();
+
+                isDynamic = ParseDynamicTags(statementConfiguration, dynamic, sqlBuffer, isDynamic, false, statement);
+
+                if (isDynamic)
+                {
+                    statement.Sql = dynamic;
+                }
+                else
+                {
+                    string sqlText = sqlBuffer.ToString();
+                    string newSqlCommandText = string.Empty;
+
+                    ParameterMap map = inlineParemeterMapBuilder.BuildInlineParemeterMap(statement, sqlText, out newSqlCommandText);
+                    if (map!=null)
+                    {
+                        statement.ParameterMap = map;
+                    }
+
+                    if (SimpleDynamicSql.IsSimpleDynamicSql(newSqlCommandText))
+                    {
+                        statement.Sql = new SimpleDynamicSql(
+                            modelStore.DataExchangeFactory,
+                            modelStore.DBHelperParameterCache,
+                            newSqlCommandText,
+                            statement);
+                    }
+                    else
+                    {
+                        if (statement is Procedure)
+                        {
+                            statement.Sql = new ProcedureSql(
+                                modelStore.DataExchangeFactory,
+                                modelStore.DBHelperParameterCache,
+                                newSqlCommandText,
+                                statement);
+                            // Could not call BuildPreparedStatement for procedure because when NUnit Test
+                            // the database is not here (but in theory procedure must be prepared like statement)
+                            // It's even better as we can then switch DataSource.
+                        }
+                        else if (statement is Statement)
+                        {
+                            statement.Sql = new StaticSql(
+                                modelStore.DataExchangeFactory,
+                                modelStore.DBHelperParameterCache,
+                                statement);
+                            ISession session = modelStore.SessionFactory.OpenSession();
+
+                            ((StaticSql)statement.Sql).BuildPreparedStatement(session, newSqlCommandText);
+
+                            session.Close();
+                        }
+                    }
+
+                }                
             }
+
             Contract.Ensure.That(statement.Sql, Is.Not.Null).When("process Sql statement.");
         }
 
@@ -306,106 +356,7 @@ namespace Apache.Ibatis.DataMapper.Configuration
         }
 
 
-        /// <summary>
-        /// Apply inline paremeterMap
-        /// </summary>
-        /// <param name="statement"></param>
-        /// <param name="sqlStatement"></param>
-        private void ApplyInlineParemeterMap(IStatement statement, string sqlStatement)
-        {
-            string newSql = sqlStatement;
 
-            // Check the inline parameter
-            if (statement.ParameterMap == null)
-            {
-                // Build a Parametermap with the inline parameters.
-                // if they exist. Then delete inline infos from sqltext.
-
-                SqlText sqlText = paramParser.ParseInlineParameterMap(modelStore.DataExchangeFactory, statement, newSql);
-
-                if (sqlText.Parameters.Length > 0)
-                {
-                    string id = statement.Id + "-InLineParameterMap";
-                    string className = string.Empty;
-                    Type classType = null;
-                    IDataExchange dataExchange = null;
-
-                    if (statement.ParameterClass != null)
-                    {
-                        className = statement.ParameterClass.Name;
-                        classType = statement.ParameterClass;
-                        dataExchange = modelStore.DataExchangeFactory.GetDataExchangeForClass(classType);
-                    }
-
-                    if (statement.ParameterClass == null &&
-                        sqlText.Parameters.Length == 1 && sqlText.Parameters[0].PropertyName == "value")//#value# parameter with no parameterClass attribut
-                    {
-                        dataExchange = modelStore.DataExchangeFactory.GetDataExchangeForClass(typeof(int));//Get the primitiveDataExchange
-                    }
-                    else
-                    {
-                        dataExchange = modelStore.DataExchangeFactory.GetDataExchangeForClass(null);
-                    }
-
-                    ParameterMap map = new ParameterMap(
-                        id,
-                        className,
-                        string.Empty,
-                        classType,
-                        dataExchange,
-                        modelStore.SessionFactory.DataSource.DbProvider.UsePositionalParameters
-                        )
-                        ;
-                    statement.ParameterMap = map;
-                    int lenght = sqlText.Parameters.Length;
-                    for (int index = 0; index < lenght; index++)
-                    {
-                        map.AddParameterProperty(sqlText.Parameters[index]);
-                    }
-                }
-                newSql = sqlText.Text;
-            }
-
-            ISql sql = null;
-
-            newSql = newSql.Trim();
-
-            if (SimpleDynamicSql.IsSimpleDynamicSql(newSql))
-            {
-                sql = new SimpleDynamicSql(
-                    modelStore.DataExchangeFactory, 
-                    modelStore.DBHelperParameterCache,
-                    newSql, 
-                    statement);
-            }
-            else
-            {
-                if (statement is Procedure)
-                {
-                    sql = new ProcedureSql(
-                        modelStore.DataExchangeFactory,
-                        modelStore.DBHelperParameterCache,
-                        newSql.Replace(MARK_TOKEN, string.Empty).Replace(COMMA_TOKEN, string.Empty).Trim(), 
-                        statement);
-                    // Could not call BuildPreparedStatement for procedure because when NUnit Test
-                    // the database is not here (but in theory procedure must be prepared like statement)
-                    // It's even better as we can then switch DataSource.
-                }
-                else if (statement is Statement)
-                {
-                    sql = new StaticSql(
-                        modelStore.DataExchangeFactory,
-                        modelStore.DBHelperParameterCache,
-                        statement);
-                    ISession session = modelStore.SessionFactory.OpenSession();
-
-                    ((StaticSql)sql).BuildPreparedStatement(session, newSql);
-
-                    session.Close();
-                }
-            }
-            statement.Sql = sql;
-        }
 
     }
 }

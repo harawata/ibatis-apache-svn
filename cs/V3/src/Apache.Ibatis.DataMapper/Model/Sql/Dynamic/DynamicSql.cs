@@ -124,8 +124,8 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic
 		{ 
 			RequestScope request = new RequestScope( dataExchangeFactory, session, statement);
 
-			string sqlStatement = Process(request, parameterObject);
-			request.PreparedStatement = BuildPreparedStatement(session, request, sqlStatement);
+			string sql = Process(request, parameterObject);
+			request.PreparedStatement = BuildPreparedStatement(session, request, sql);
 			request.MappedStatement = mappedStatement;
 
 			return request;
@@ -322,13 +322,13 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Dynamic
 		}
 
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="session"></param>
-		/// <param name="request"></param>
-		/// <param name="sqlStatement"></param>
-		/// <returns></returns>
+        /// <summary>
+        /// Builds the prepared statement.
+        /// </summary>
+        /// <param name="session">The session.</param>
+        /// <param name="request">The request.</param>
+        /// <param name="sqlStatement">The SQL statement.</param>
+        /// <returns></returns>
 		private PreparedStatement BuildPreparedStatement(ISession session, RequestScope request, string sqlStatement)
 		{
             PreparedStatementFactory factory = new PreparedStatementFactory(session, dbHelperParameterCache, request, statement, sqlStatement);

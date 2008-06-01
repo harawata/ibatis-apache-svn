@@ -59,7 +59,8 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
                 propertyName,
                 resultClass,
                 resultsMap,
-                selectKeyType);
+                selectKeyType,
+                sqlSource );
 
 
 

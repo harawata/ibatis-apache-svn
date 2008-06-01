@@ -42,17 +42,19 @@ using Apache.Ibatis.DataMapper.Data;
 using Apache.Ibatis.Common.Contracts;
 #endregion
 
-
 namespace Apache.Ibatis.DataMapper.Model.Sql.SimpleDynamic
 {
 	/// <summary>
-	/// Summary description for SimpleDynamicSql.
+    /// Represents a sql commqnd text which contains $property$ (old syntax) or ${property}
+    /// to be replace 
 	/// </summary>
 	public sealed class SimpleDynamicSql : ISql
 	{
 		private const string ELEMENT_TOKEN = "$";
+        private const string NEW_BEGIN_ELEMENT_TOKEN = "${";
+        private const string NEW_END_ELEMENT_TOKEN = "}";
 
-        private readonly string simpleSqlStatement = string.Empty;
+        private readonly string sqlStatement = string.Empty;
         private readonly IStatement statement = null;
 		private readonly DataExchangeFactory dataExchangeFactory = null;
         private readonly DBHelperParameterCache dbHelperParameterCache = null;
@@ -70,7 +72,7 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.SimpleDynamic
         public SimpleDynamicSql(
             DataExchangeFactory dataExchangeFactory,
             DBHelperParameterCache dbHelperParameterCache,
-			string sqlStatement, 
+            string sqlStatement, 
 			IStatement statement)
 		{
             Contract.Require.That(dataExchangeFactory, Is.Not.Null).When("retrieving argument dataExchangeFactory in SimpleDynamicSql constructor");
@@ -78,7 +80,7 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.SimpleDynamic
             Contract.Require.That(statement, Is.Not.Null).When("retrieving argument statement in SimpleDynamicSql constructor");
             Contract.Require.That(sqlStatement, Is.Not.Null & Is.Not.Empty).When("retrieving argument sqlStatement in SimpleDynamicSql constructor");
 
-            this.simpleSqlStatement = sqlStatement;
+            this.sqlStatement = sqlStatement;
             this.statement = statement;
             this.dataExchangeFactory = dataExchangeFactory;
             this.dbHelperParameterCache = dbHelperParameterCache;
@@ -86,100 +88,131 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.SimpleDynamic
 		#endregion
 		
 		#region Methods
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="parameterObject"></param>
-		/// <returns></returns>
+
+        /// <summary>
+        /// Gets the SQL.
+        /// </summary>
+        /// <param name="parameterObject">The parameter object.</param>
+        /// <returns></returns>
 		public string GetSql(object parameterObject)
 		{
 			return ProcessDynamicElements(parameterObject);
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="sqlStatement"></param>
-		/// <returns></returns>
+
+        /// <summary>
+        /// Determines whether the specified SQL statement is dynamic SQL.
+        /// </summary>
+        /// <param name="sqlStatement">The SQL statement.</param>
+        /// <returns>
+        /// 	<c>true</c> if is dynamic SQL otherwise, <c>false</c>.
+        /// </returns>
 		public static bool IsSimpleDynamicSql(string sqlStatement) 
 		{
-			return ( (sqlStatement != null) && (sqlStatement.IndexOf(ELEMENT_TOKEN) > -1) );
+            return ((sqlStatement != null) && sqlStatement.Contains(ELEMENT_TOKEN));
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="parameterObject"></param>
-		/// <returns></returns>
+
+        /// <summary>
+        /// Processes the dynamic elements, 
+        /// replace $property$ (old syntax) or ${property} (V3 syntax) element by her value
+        /// </summary>
+        /// <param name="parameterObject">The parameter object.</param>
+        /// <returns></returns>
 		private string ProcessDynamicElements(object parameterObject) 
 		{
-			// define which character is seperating fields
-
-			StringTokenizer parser = new StringTokenizer(simpleSqlStatement, ELEMENT_TOKEN, true);
-
-			StringBuilder newSql = new StringBuilder();
-
-			string token = null;
-			string lastToken = null;
-			
-			IEnumerator enumerator = parser.GetEnumerator();
-
-			while (enumerator.MoveNext()) 
-			{
-				token = ((string)enumerator.Current);
-
-				if (ELEMENT_TOKEN.Equals(lastToken)) 
-				{
-					if (ELEMENT_TOKEN.Equals(token)) 
-					{
-						newSql.Append(ELEMENT_TOKEN);
-						token = null;
-					} 
-					else 
-					{
-						object value = null;
-						if (parameterObject != null) 
-						{
-							if ( dataExchangeFactory.TypeHandlerFactory.IsSimpleType( parameterObject.GetType() ) == true) 
-							{
-								value = parameterObject;
-							} 
-							else 
-							{
-                                value = ObjectProbe.GetMemberValue(parameterObject, token, dataExchangeFactory.AccessorFactory);
-							}
-						}
-						if (value != null) 
-						{
-							newSql.Append(value.ToString());
-						}
-
-						enumerator.MoveNext();
-						token = ((string)enumerator.Current);
-
-						if (!ELEMENT_TOKEN.Equals(token)) 
-						{
-							throw new DataMapperException("Unterminated dynamic element in sql (" + simpleSqlStatement + ").");
-						}
-						token = null;
-					}
-				} 
-				else 
-				{
-					if (!ELEMENT_TOKEN.Equals(token)) 
-					{
-						newSql.Append(token);
-					}
-				}
-
-				lastToken = token;
-			}
-
-			return newSql.ToString();
+            return ProcessDynamicElementsOldSyntax(parameterObject);
 		}
 
+        /// <summary>
+        /// Processes the dynamic elements with old syntax $property$
+        /// </summary>
+        /// <param name="parameterObject">The parameter object.</param>
+        /// <returns></returns>
+        private string ProcessDynamicElementsOldSyntax(object parameterObject)
+        {
+            // define which character is seperating fields
 
-		#region ISql Members
+            StringTokenizer parser = new StringTokenizer(sqlStatement, ELEMENT_TOKEN, true);
+
+            StringBuilder newSql = new StringBuilder();
+
+            string lastToken = null;
+
+            IEnumerator enumerator = parser.GetEnumerator();
+
+            while (enumerator.MoveNext())
+            {
+                string token = ((string)enumerator.Current);
+
+                if (ELEMENT_TOKEN.Equals(lastToken))
+                {
+                    if (ELEMENT_TOKEN.Equals(token))
+                    {
+                        newSql.Append(ELEMENT_TOKEN);
+                        token = null;
+                    }
+                    else
+                    {
+                        object value = null;
+                        if (parameterObject != null)
+                        {
+                            if (dataExchangeFactory.TypeHandlerFactory.IsSimpleType(parameterObject.GetType()))
+                            {
+                                value = parameterObject;
+                            }
+                            else
+                            {
+                                value = ObjectProbe.GetMemberValue(parameterObject, token, dataExchangeFactory.AccessorFactory);
+                            }
+                        }
+                        if (value != null)
+                        {
+                            newSql.Append(value.ToString());
+                        }
+
+                        enumerator.MoveNext();
+                        token = ((string)enumerator.Current);
+
+                        if (!ELEMENT_TOKEN.Equals(token))
+                        {
+                            throw new DataMapperException("Unterminated dynamic element in sql (" + sqlStatement + ").");
+                        }
+                        token = null;
+                    }
+                }
+                else
+                {
+                    if (!ELEMENT_TOKEN.Equals(token))
+                    {
+                        newSql.Append(token);
+                    }
+                }
+
+                lastToken = token;
+            }
+
+            return newSql.ToString();
+        }
+
+        /// <summary>
+        /// Processes the dynamic elements with new syntax ${property}
+        /// </summary>
+        /// <param name="parameterObject">The parameter object.</param>
+        /// <returns></returns>
+        private string ProcessDynamicElementsWithNewSyntax(object parameterObject)
+        {
+            //    *****************
+            //    TO DO : ${property} (V3 syntax) support 
+            //    *********************
+            //    renommer cette classe en SubstitutionSql
+            //puis creer une classe ExternalSql.cs qui utilise un ISqlSource
+
+            // Remarks, on utilise deja ${property} pour remplacer les properties non ??? voir test avec {schema}
+            return null;
+        }
+
+	    #region ISql Members
 
         /// <summary>
         /// Builds a new <see cref="RequestScope"/> and the sql command text to execute.
@@ -193,11 +226,11 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.SimpleDynamic
 			object parameterObject, 
             ISession session)
 		{
-			string sqlStatement = ProcessDynamicElements(parameterObject);
+			string sql = ProcessDynamicElements(parameterObject);
 			
 			RequestScope request = new RequestScope( dataExchangeFactory, session, statement);
 
-			request.PreparedStatement = BuildPreparedStatement(session, request, sqlStatement);
+            request.PreparedStatement = BuildPreparedStatement(session, request, sql);
 			request.MappedStatement = mappedStatement;
 
 			return request;
@@ -208,11 +241,11 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.SimpleDynamic
         /// </summary>
         /// <param name="session">The session.</param>
         /// <param name="request">The request.</param>
-        /// <param name="sqlStatement">The SQL statement.</param>
+        /// <param name="sql">The SQL.</param>
         /// <returns></returns>
-        private PreparedStatement BuildPreparedStatement(ISession session, RequestScope request, string sqlStatement)
+        private PreparedStatement BuildPreparedStatement(ISession session, RequestScope request, string sql)
 		{
-			PreparedStatementFactory factory = new PreparedStatementFactory( session, dbHelperParameterCache, request, statement, sqlStatement);
+			PreparedStatementFactory factory = new PreparedStatementFactory( session, dbHelperParameterCache, request, statement, sql);
 			return factory.Prepare(false);
 		}
 		#endregion

@@ -34,6 +34,7 @@ using Apache.Ibatis.DataMapper.Model;
 using Apache.Ibatis.DataMapper.Model.Cache;
 using Apache.Ibatis.DataMapper.Model.ParameterMapping;
 using Apache.Ibatis.DataMapper.Model.ResultMapping;
+using Apache.Ibatis.DataMapper.Model.Sql.External;
 using Apache.Ibatis.DataMapper.Model.Statements;
 
 #endregion 
@@ -55,6 +56,7 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
         protected string resultMapName = string.Empty;
         protected bool remapResults = false;
         protected string nameSpace = string.Empty;
+        protected string sqlSourceClassName = string.Empty;
 
         protected ResultMapCollection resultsMap = new ResultMapCollection();
         protected Type resultClass = null;
@@ -63,6 +65,7 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
         protected Type listClass = null;
         protected IFactory listClassFactory = null;
         protected CacheModel cacheModel = null;
+        protected ISqlSource sqlSource = null;
 
         /// <summary>
         /// Deserializes the specified configuration in a Statement object.
@@ -82,6 +85,7 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
             resultMapName = ConfigurationUtils.GetStringAttribute(config.Attributes, ConfigConstants.ATTRIBUTE_RESULTMAP);
             remapResults = ConfigurationUtils.GetBooleanAttribute(config.Attributes, ConfigConstants.ATTRIBUTE_REMAPRESULTS, false);
             nameSpace = ConfigurationUtils.GetStringAttribute(config.Attributes, ConfigConstants.ATTRIBUTE_NAMESPACE);
+            sqlSourceClassName = ConfigurationUtils.GetStringAttribute(config.Attributes, ConfigConstants.ATTRIBUTE_SQLSOURCE);
 
             // Gets the results Map
             if (resultMapName.Length > 0)
@@ -136,7 +140,13 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
             {
                 cacheModel = modelStore.GetCacheModel(cacheModelName);
             }
-
+            // Gets the SqlSource
+            if (sqlSourceClassName.Length > 0)
+            {
+                Type sqlSourceType = modelStore.DataExchangeFactory.TypeHandlerFactory.GetType(sqlSourceClassName);
+                IFactory factory = modelStore.DataExchangeFactory.ObjectFactory.CreateFactory(sqlSourceType, Type.EmptyTypes);
+                sqlSource = (ISqlSource)factory.CreateInstance(null);
+            }
         }
 
         /// <summary>

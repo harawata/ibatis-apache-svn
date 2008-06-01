@@ -69,7 +69,8 @@ namespace Apache.Ibatis.DataMapper.Configuration
         private readonly IModelStore modelStore = null;
         private DbProviderFactory dbProviderFactory = null;
         private IDataSource dataSource = null;
-        private DeSerializerFactory deSerializerFactory = null; 
+        private DeSerializerFactory deSerializerFactory = null;
+        private readonly InlineParemeterMapBuilder inlineParemeterMapBuilder = null;
 
         private bool useStatementNamespaces = false;
         private bool isCacheModelsEnabled = false;
@@ -86,6 +87,8 @@ namespace Apache.Ibatis.DataMapper.Configuration
             Contract.Require.That(modelStore, Is.Not.Null).When("retrieving argument modelStore in DefaultModelBuilder constructor");
 
             this.modelStore = modelStore;
+            inlineParemeterMapBuilder = new InlineParemeterMapBuilder(modelStore);
+
             waitResultPropertyResolution = WaitResultPropertyResolution;
             waitDiscriminatorResolution = WaitDiscriminatorResolution;
         }

@@ -11,6 +11,7 @@ using Apache.Ibatis.DataMapper.Configuration;
 using Apache.Ibatis.DataMapper.Configuration.Interpreters.Config.Xml;
 using Apache.Ibatis.DataMapper.Session;
 using Apache.Ibatis.DataMapper.SqlClient.Test.Domain;
+using Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Modules;
 using NUnit.Framework;
 // DataSource definition
     // ScriptRunner definition
@@ -64,6 +65,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures
             {
                 IConfigurationEngine engine = new DefaultConfigurationEngine(configurationSetting);
                 engine.RegisterInterpreter(new XmlConfigurationInterpreter(resource));
+                engine.RegisterModule(new AliasModule());
 
                 IMapperFactory mapperFactory = engine.BuildMapperFactory();
                 sessionFactory = engine.ModelStore.SessionFactory;

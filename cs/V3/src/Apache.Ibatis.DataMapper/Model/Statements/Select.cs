@@ -25,13 +25,12 @@
 #endregion
 
 using System;
-using System.Data;
-using System.Xml.Serialization;
 using Apache.Ibatis.DataMapper.Model.ParameterMapping;
 using Apache.Ibatis.DataMapper.Model.ResultMapping;
 using Apache.Ibatis.Common.Utilities.Objects;
 using Apache.Ibatis.DataMapper.Model.Cache;
 using System.Diagnostics;
+using Apache.Ibatis.DataMapper.Model.Sql.External;
 
 namespace Apache.Ibatis.DataMapper.Model.Statements
 {
@@ -55,6 +54,7 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
         /// <param name="cacheModel">The cache model.</param>
         /// <param name="remapResults">if set to <c>true</c> [remap results].</param>
         /// <param name="extends">The extends.</param>
+        /// <param name="sqlSource">The SQL source.</param>
         public Select(
             string id, 
             Type parameterClass,
@@ -65,9 +65,10 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
             IFactory listClassFactory,
             CacheModel cacheModel,
             bool remapResults,
-            string extends
+            string extends,
+            ISqlSource sqlSource
             )
-            : base(id, parameterClass, parameterMap, resultClass, resultMaps, listClass, listClassFactory, cacheModel, remapResults, extends)
+            : base(id, parameterClass, parameterMap, resultClass, resultMaps, listClass, listClassFactory, cacheModel, remapResults, extends, sqlSource)
 		{}
 	}
 }

@@ -39,7 +39,7 @@ using Apache.Ibatis.Common.Contracts;
 namespace Apache.Ibatis.DataMapper.Model.Sql.Static
 {
 	/// <summary>
-	/// Summary description for StaticSql.
+	/// Represents a simple (not a procedure) mapped statement without any dynamic element.
 	/// </summary>
 	public sealed class StaticSql : ISql
 	{
@@ -97,12 +97,12 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.Static
         /// Build the PreparedStatement
         /// </summary>
         /// <param name="session">The session.</param>
-        /// <param name="sqlStatement">The SQL statement.</param>
-		public void BuildPreparedStatement(ISession session, string sqlStatement)
+        /// <param name="sql">The SQL.</param>
+		public void BuildPreparedStatement(ISession session, string sql)
 		{
 			RequestScope request = new RequestScope( dataExchangeFactory, session, statement);
 
-            PreparedStatementFactory factory = new PreparedStatementFactory(session, dbHelperParameterCache, request, statement, sqlStatement);
+            PreparedStatementFactory factory = new PreparedStatementFactory(session, dbHelperParameterCache, request, statement, sql);
 			preparedStatement = factory.Prepare(false);
 		}
 

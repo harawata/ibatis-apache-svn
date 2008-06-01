@@ -52,6 +52,10 @@ namespace Apache.Ibatis.DataMapper.Configuration.Interpreters.Config
         #region Token attribute
 
         /// <summary>
+        /// Token for attribute sqlSource
+        /// </summary>
+        public const string ATTRIBUTE_SQLSOURCE = "sqlSource";
+        /// <summary>
         /// Token for attribute keyColumns.
         /// </summary>
         public const string ATTRIBUTE_SUFFIX = "suffix";

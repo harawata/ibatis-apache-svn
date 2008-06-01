@@ -58,7 +58,8 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
                 parameterClass,
                 parameterMap,
                 remapResults,
-                extendsName);
+                extendsName,
+                sqlSource);
         }
 	}
 }

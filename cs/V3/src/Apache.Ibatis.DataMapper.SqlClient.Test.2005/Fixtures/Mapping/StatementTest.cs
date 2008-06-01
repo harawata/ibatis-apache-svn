@@ -43,6 +43,33 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
 
         #region Object Query tests
 
+        [Test]
+        public void Statement_with_SqlSource_should_work()
+        {
+            Account account = dataMapper.QueryForObject<Account>("SimpleSqlSource", null);
+
+            AssertAccount1(account);
+        }
+
+        [Test]
+        public void Statement_with_SqlSource_and_parameter_should_work()
+        {
+            Account account = dataMapper.QueryForObject<Account>("SqlSourceWithParameter", 1);
+
+            AssertAccount1(account);
+        }
+
+        [Test]
+        public void Statement_with_SqlSource_and_inline_parameter_should_work()
+        {
+            IDictionary param = new Hashtable();
+            param.Add("Id", 1);
+
+            Account account = dataMapper.QueryForObject<Account>("SqlSourceWithInlineParameter", param);
+
+            AssertAccount1(account);
+        }
+
         /// <summary>
         /// Test Open connection with a connection string
         /// </summary>

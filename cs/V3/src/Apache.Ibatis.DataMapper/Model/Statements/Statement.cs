@@ -38,6 +38,7 @@ using Apache.Ibatis.DataMapper.Exceptions;
 using Apache.Ibatis.DataMapper.Model.Cache;
 using Apache.Ibatis.DataMapper.Model.ParameterMapping;
 using Apache.Ibatis.DataMapper.Model.ResultMapping;
+using Apache.Ibatis.DataMapper.Model.Sql.External;
 
 #endregion
 
@@ -74,6 +75,7 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
         [NonSerialized]
         private readonly string extends = string.Empty;
         private ISql sql = null;
+        private readonly ISqlSource sqlSource = null;
 
         #endregion
 
@@ -209,6 +211,7 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
         /// <param name="cacheModel">The cache model.</param>
         /// <param name="remapResults">if set to <c>true</c> [remap results].</param>
         /// <param name="extends">The extends.</param>
+        /// <param name="sqlSource">The SQL source.</param>
         public Statement(
             string id, 
             Type parameterClass,
@@ -219,7 +222,8 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
             IFactory listClassFactory,
             CacheModel cacheModel,
             bool remapResults,
-            string extends
+            string extends,
+            ISqlSource sqlSource
             )
         {
             Contract.Require.That(id, Is.Not.Null & Is.Not.Empty).When("retrieving argument id");
@@ -234,6 +238,7 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
             this.cacheModel = cacheModel;
             allowRemapping = remapResults;
             this.extends = extends;
+            this.sqlSource = sqlSource;
         }
 
         #region Methods
@@ -257,5 +262,19 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
         }
         #endregion
 
+
+        #region IStatement Members
+
+
+        /// <summary>
+        /// Gets the SQL source.
+        /// </summary>
+        /// <value>The SQL source.</value>
+        public ISqlSource SqlSource
+        {
+            get { return sqlSource; }
+        }
+
+        #endregion
     }
 }

@@ -34,6 +34,8 @@ using Apache.Ibatis.DataMapper.Model.ResultMapping;
 using Apache.Ibatis.Common.Utilities.Objects;
 using Apache.Ibatis.DataMapper.Model.Cache;
 using System.Diagnostics;
+using Apache.Ibatis.DataMapper.Model.Sql.External;
+
 #endregion
 
 namespace Apache.Ibatis.DataMapper.Model.Statements
@@ -78,6 +80,7 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
         /// <param name="remapResults">if set to <c>true</c> [remap results].</param>
         /// <param name="extends">The extends.</param>
         /// <param name="selectKey">The select key.</param>
+        /// <param name="sqlSource">The SQL source.</param>
         public Insert(
             string id, 
             Type parameterClass,
@@ -89,9 +92,10 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
             CacheModel cacheModel,
             bool remapResults,
             string extends,
-            SelectKey selectKey
+            SelectKey selectKey,
+            ISqlSource sqlSource
             )
-            : base(id, parameterClass, parameterMap, resultClass, resultMaps, listClass, listClassFactory, cacheModel, remapResults, extends)
+            : base(id, parameterClass, parameterMap, resultClass, resultMaps, listClass, listClassFactory, cacheModel, remapResults, extends, sqlSource)
 		{
             this.selectKey = selectKey;
         }

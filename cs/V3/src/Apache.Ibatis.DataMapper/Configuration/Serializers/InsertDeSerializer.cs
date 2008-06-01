@@ -68,7 +68,9 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
                 cacheModel,
                 remapResults,
                 extendsName,
-                selectKey);
+                selectKey,
+                sqlSource
+                );
         }
 
         private SelectKey BuildSelectKey(IModelStore modelStore, IConfiguration config)

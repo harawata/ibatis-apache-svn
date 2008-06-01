@@ -23,7 +23,7 @@
  ********************************************************************************/
 #endregion
 
-namespace Apache.Ibatis.DataMapper.Configuration
+namespace Apache.Ibatis.DataMapper
 {
     /// <summary>
     /// Responsible to build mapper interface instance

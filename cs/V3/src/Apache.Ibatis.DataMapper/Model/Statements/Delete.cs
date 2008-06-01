@@ -33,6 +33,8 @@ using Apache.Ibatis.DataMapper.Model.ResultMapping;
 using Apache.Ibatis.Common.Utilities.Objects;
 using Apache.Ibatis.DataMapper.Model.Cache;
 using System.Diagnostics;
+using Apache.Ibatis.DataMapper.Model.Sql.External;
+
 #endregion
 
 
@@ -44,7 +46,7 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
 	[Serializable]
     [DebuggerDisplay("Delete: {Id}")]
 	public class Delete : Statement
-	{		
+	{
         /// <summary>
         /// Initializes a new instance of the <see cref="Delete"/> class.
         /// </summary>
@@ -58,6 +60,7 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
         /// <param name="cacheModel">The cache model.</param>
         /// <param name="remapResults">if set to <c>true</c> [remap results].</param>
         /// <param name="extends">The extends.</param>
+        /// <param name="sqlSource">The SQL source.</param>
         public Delete(
             string id, 
             Type parameterClass,
@@ -68,9 +71,10 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
             IFactory listClassFactory,
             CacheModel cacheModel,
             bool remapResults,
-            string extends
+            string extends,
+            ISqlSource sqlSource
             )
-            : base(id, parameterClass, parameterMap, resultClass, resultMaps, listClass, listClassFactory, cacheModel, remapResults, extends)
+            : base(id, parameterClass, parameterMap, resultClass, resultMaps, listClass, listClassFactory, cacheModel, remapResults, extends, sqlSource)
 		{}
 
 	}

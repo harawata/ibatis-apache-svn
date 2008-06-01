@@ -140,6 +140,11 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
     -->
   <statements>
 
+    <!-- external sql source -->
+    <select id="SimpleSqlSource" sqlSource="SimpleSqlSource" resultMap="account-result"/>
+    <select id="SqlSourceWithParameter" parameterClass="Integer" sqlSource="SqlSourceWithParameter" resultMap="account-result"/>
+    <select id="SqlSourceWithInlineParameter" parameterClass="Integer" sqlSource="SqlSourceWithInlineParameter" resultMap="account-result"/>
+
     <!-- New parmeter syntax-->
     <update id="NewUpdateAccountViaInlineParameters" parameterClass="Account">
       update Accounts set

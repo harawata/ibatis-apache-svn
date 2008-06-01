@@ -62,7 +62,8 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
                 listClassFactory,
                 cacheModel,
                 remapResults,
-                extendsName);
+                extendsName,
+                sqlSource);
 
         }
 

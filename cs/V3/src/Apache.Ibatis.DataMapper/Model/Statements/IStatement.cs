@@ -35,6 +35,8 @@ using Apache.Ibatis.DataMapper.Model.ResultMapping;
 using Apache.Ibatis.DataMapper.Model.ParameterMapping;
 using Apache.Ibatis.DataMapper.Model.Cache;
 using Apache.Ibatis.DataMapper.Model.Sql;
+using Apache.Ibatis.DataMapper.Model.Sql.External;
+
 #endregion
 
 namespace Apache.Ibatis.DataMapper.Model.Statements
@@ -108,6 +110,12 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
         /// </summary>
         /// <value>The list class.</value>
         Type ListClass { get; }
+
+        /// <summary>
+        /// Gets the SQL source.
+        /// </summary>
+        /// <value>The SQL source.</value>
+        ISqlSource SqlSource { get; }
 
         #endregion
 

@@ -29,6 +29,7 @@
 using System;
 using System.Diagnostics;
 using Apache.Ibatis.DataMapper.Model.ResultMapping;
+using Apache.Ibatis.DataMapper.Model.Sql.External;
 
 #endregion
 
@@ -89,14 +90,16 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
         /// <param name="type">The type.</param>
         /// <param name="resultMaps">The result maps.</param>
         /// <param name="selectKeyType">Type of the select key.</param>
+        /// <param name="sqlSource">The SQL source.</param>
         public SelectKey(
             string id, 
             string propertyName,
             Type type,
             ResultMapCollection resultMaps,
-            SelectKeyType selectKeyType
+            SelectKeyType selectKeyType,
+            ISqlSource sqlSource
             )
-            : base(id, null, null, type, resultMaps, null, null, null, false, string.Empty)
+            : base(id, null, null, type, resultMaps, null, null, null, false, string.Empty, sqlSource)
 		{
             this.propertyName = propertyName;
             this.selectKeyType = selectKeyType;
