@@ -7,6 +7,7 @@ using Apache.Ibatis.DataMapper.Configuration;
 using Apache.Ibatis.DataMapper.Configuration.Interpreters.Config;
 using Apache.Ibatis.DataMapper.Configuration.Interpreters.Config.Xml;
 using Apache.Ibatis.DataMapper.Configuration.Interpreters.Config.Xml.Processor;
+using Apache.Ibatis.DataMapper.SqlClient.Test.Domain;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 
@@ -30,6 +31,19 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures
         }
         #endregion 
 	    
+        [Test]
+        public void JsonInterpreter_test()
+        {
+            IConfigurationStore store = new DefaultConfigurationStore();
+            string uri = "SqlMap.config.Json";
+            IResource resource = ResourceLoaderRegistry.GetResource(uri);
+
+            IConfigurationInterpreter interpreter = new JsonInterpreter(resource);
+
+            interpreter.ProcessResource(store);
+        }
+
+
         /// <summary>
         /// Test XmlProcessorTest
         /// </summary>
