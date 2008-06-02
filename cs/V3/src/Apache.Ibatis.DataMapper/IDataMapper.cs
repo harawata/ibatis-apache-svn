@@ -110,20 +110,6 @@ namespace Apache.Ibatis.DataMapper
         IList QueryForList(string statementName, object parameterObject);
 
         /// <summary>
-        /// Executes the SQL and retuns all rows selected.
-        /// <p/>
-        ///  The parameter object is generally used to supply the input
-        /// data for the WHERE clause parameter(s) of the SELECT statement.
-        /// </summary>
-        /// <param name="statementName">The name of the sql statement to execute.</param>
-        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-        /// <param name="skipResults">The number of rows to skip over.</param>
-        /// <param name="maxResults">The maximum number of rows to return.</param>
-        /// <returns>A List of result objects.</returns>
-        IList QueryForList(string statementName, object parameterObject, int skipResults, int maxResults);
-
-
-        /// <summary>
         ///  Executes the SQL and retuns all rows selected in a map that is keyed on the property named
         ///  in the keyProperty parameter.  The value at each key will be the entire result object.
         /// </summary>
@@ -296,19 +282,6 @@ namespace Apache.Ibatis.DataMapper
         /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
         /// <param name="resultObject">An Ilist object used to hold the objects.</param>
         void QueryForList<T>(string statementName, object parameterObject, IList<T> resultObject);
-
-        /// <summary>
-        /// Executes the SQL and retuns all rows selected.
-        /// <p/>
-        ///  The parameter object is generally used to supply the input
-        /// data for the WHERE clause parameter(s) of the SELECT statement.
-        /// </summary>
-        /// <param name="statementName">The name of the sql statement to execute.</param>
-        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-        /// <param name="skipResults">The number of rows to skip over.</param>
-        /// <param name="maxResults">The maximum number of rows to return.</param>
-        /// <returns>A List of result objects.</returns>
-        IList<T> QueryForList<T>(string statementName, object parameterObject, int skipResults, int maxResults);
 
         /// <summary>
         /// Runs a query for list with a custom object that gets a chance to deal 

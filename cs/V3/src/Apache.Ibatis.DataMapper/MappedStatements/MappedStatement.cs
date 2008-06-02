@@ -57,17 +57,11 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
     public class MappedStatement : IMappedStatement
     {
         /// <summary>
-        /// Event launch on exceute query
+        /// Event launch on execute query
         /// </summary>
         public event ExecuteEventHandler Execute = delegate {};
 
         #region Fields
-
-        // Magic number used to set the the maximum number of rows returned to 'all'. 
-        public const int NO_MAXIMUM_RESULTS = -1;
-        // Magic number used to set the the number of rows skipped to 'none'. 
-        public const int NO_SKIPPED_RESULTS = -1;
-
         private readonly IStatement statement = null;
         private readonly IModelStore modelStore = null;
         private readonly IPreparedCommand preparedCommand = null;
@@ -279,7 +273,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
                     reader.Dispose();
                 }
 
-                ExecutePostSelect(request);
+                ExecuteDeferredLoad(request);
 
                 #region remark
                 // If you are using the OleDb data provider (as you are), you need to close the
@@ -368,7 +362,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
                     reader.Dispose();
                 }
 
-                ExecutePostSelect(request);
+                ExecuteDeferredLoad(request);
 
                 #region remark
                 // If you are using the OleDb data provider, you need to close the
@@ -435,8 +429,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 
 
         /// <summary>
-        /// Executes the SQL and retuns all rows selected. This is exactly the same as
-        /// calling ExecuteQueryForList(session, parameterObject, NO_SKIPPED_RESULTS, NO_MAXIMUM_RESULTS).
+        /// Executes the SQL and retuns all rows selected. 
         /// </summary>
         /// <param name="session">The session used to execute the statement.</param>
         /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
@@ -447,26 +440,9 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 
             preparedCommand.Create(request, session, this.Statement, parameterObject);
 
-            return RunQueryForList(request, session, parameterObject, null, null);
+            return RunQueryForList(request, session, parameterObject);
         }
 
-
-        /// <summary>
-        /// Executes the SQL and retuns a subset of the rows selected.
-        /// </summary>
-        /// <param name="session">The session used to execute the statement.</param>
-        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-        /// <param name="skipResults">The number of rows to skip over.</param>
-        /// <param name="maxResults">The maximum number of rows to return.</param>
-        /// <returns>A List of result objects.</returns>
-        public virtual IList ExecuteQueryForList(ISession session, object parameterObject, int skipResults, int maxResults)
-        {
-            RequestScope request = statement.Sql.GetRequestScope(this, parameterObject, session);
-
-            preparedCommand.Create(request, session, this.Statement, parameterObject);
-
-            return RunQueryForList(request, session, parameterObject, skipResults, maxResults);
-        }
 
         /// <summary>
         /// Runs the query for list.
@@ -474,10 +450,8 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// <param name="request">The request.</param>
         /// <param name="session">The session used to execute the statement.</param>
         /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-        /// <param name="skipResults">The number of rows to skip over.</param>
-        /// <param name="maxResults">The maximum number of rows to return.</param>
         /// <returns>A List of result objects.</returns>
-        internal IList RunQueryForList(RequestScope request, ISession session, object parameterObject, int skipResults, int maxResults)
+        internal IList RunQueryForList(RequestScope request, ISession session, object parameterObject)
         {
             IList list = null;
             
@@ -496,27 +470,19 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 
                 try
                 {
-                    // skip results
-                    for (int i = 0; i < skipResults; i++)
-                    {
-                        if (!reader.Read())
-                        {
-                            break;
-                        }
-                    }
-
-                    // Get Results
-                    int resultsFetched = 0;
-                    while ((maxResults == NO_MAXIMUM_RESULTS || resultsFetched < maxResults)
-                        && reader.Read())
-                    {
-                        object obj = resultStrategy.Process(request, ref reader, null);
-                        if (obj != BaseStrategy.SKIP)
-                        {
-                            list.Add(obj);
-                        }
-                        resultsFetched++;
-                    }
+                     do
+                     {
+                         // Get Results
+                         while (reader.Read())
+                         {
+                             object obj = resultStrategy.Process(request, ref reader, null);
+                             if (obj != BaseStrategy.SKIP)
+                             {
+                                 list.Add(obj);
+                             }
+                         }
+                     }
+                     while (reader.NextResult());
                 }
                 catch
                 {
@@ -528,7 +494,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
                     reader.Dispose();
                 }
 
-                ExecutePostSelect(request);
+                ExecuteDeferredLoad(request);
 
                 RetrieveOutputParameters(request, session, command, parameterObject);
             }
@@ -601,7 +567,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
                     reader.Dispose();
                 }
 
-                ExecutePostSelect(request);
+                ExecuteDeferredLoad(request);
                 RetrieveOutputParameters(request, session, command, parameterObject);
             }
 
@@ -651,8 +617,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 
 
         /// <summary>
-        /// Executes the SQL and retuns all rows selected. This is exactly the same as
-        /// calling ExecuteQueryForList(session, parameterObject, NO_SKIPPED_RESULTS, NO_MAXIMUM_RESULTS).
+        /// Executes the SQL and retuns all rows selected. 
         /// </summary>
         /// <param name="session">The session used to execute the statement.</param>
         /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
@@ -666,35 +631,14 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
             return RunQueryForList<T>(request, session, parameterObject, null, null);
         }
 
-
-        /// <summary>
-        /// Executes the SQL and retuns a subset of the rows selected.
-        /// </summary>
-        /// <param name="session">The session used to execute the statement.</param>
-        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-        /// <param name="skipResults">The number of rows to skip over.</param>
-        /// <param name="maxResults">The maximum number of rows to return.</param>
-        /// <returns>A List of result objects.</returns>
-        public virtual IList<T> ExecuteQueryForList<T>(ISession session, object parameterObject, int skipResults, int maxResults)
-        {
-            RequestScope request = statement.Sql.GetRequestScope(this, parameterObject, session);
-
-            preparedCommand.Create(request, session, this.Statement, parameterObject);
-
-            return RunQueryForList<T>(request, session, parameterObject, skipResults, maxResults);
-        }
-
-
         /// <summary>
         /// Executes the SQL and retuns a List of result objects.
         /// </summary>
         /// <param name="request">The request scope.</param>
         /// <param name="session">The session used to execute the statement.</param>
         /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-        /// <param name="skipResults">The number of rows to skip over.</param>
-        /// <param name="maxResults">The maximum number of rows to return.</param>
         /// <returns>A List of result objects.</returns>
-        internal IList<T> RunQueryForList<T>(RequestScope request, ISession session, object parameterObject, int skipResults, int maxResults)
+        internal IList<T> RunQueryForList<T>(RequestScope request, ISession session, object parameterObject)
         {
             IList<T> list = null;
 
@@ -712,26 +656,18 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
                 IDataReader reader = command.ExecuteReader();
                 try
                 {
-                    // skip results
-                    for (int i = 0; i < skipResults; i++)
+                    do
                     {
-                        if (!reader.Read())
+                        while (reader.Read())
                         {
-                            break;
+                            object obj = resultStrategy.Process(request, ref reader, null);
+                            if (obj != BaseStrategy.SKIP)
+                            {
+                                list.Add((T) obj);
+                            }
                         }
                     }
-
-                    int resultsFetched = 0;
-                    while ((maxResults == NO_MAXIMUM_RESULTS || resultsFetched < maxResults)
-                        && reader.Read())
-                    {
-                        object obj = resultStrategy.Process(request, ref reader, null);
-                        if (obj != BaseStrategy.SKIP)
-                        {
-                            list.Add((T)obj);
-                        }
-                        resultsFetched++;
-                    }
+                    while (reader.NextResult());
                 }
                 catch
                 {
@@ -743,7 +679,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
                     reader.Dispose();
                 }
 
-                ExecutePostSelect(request);
+                ExecuteDeferredLoad(request);
 
                 RetrieveOutputParameters(request, session, command, parameterObject);
             }
@@ -816,7 +752,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
                     reader.Dispose();
                 }
 
-                ExecutePostSelect(request);
+                ExecuteDeferredLoad(request);
                 RetrieveOutputParameters(request, session, command, parameterObject);
             }
 
@@ -860,8 +796,6 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
             using (IDbCommand command = request.IDbCommand)
             {
                 rows = command.ExecuteNonQuery();
-
-                //ExecutePostSelect(request);
 
                 RetrieveOutputParameters(request, session, command, parameterObject);
             }
@@ -941,8 +875,6 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
                         request.DataExchangeFactory.ObjectFactory,
                         request.DataExchangeFactory.AccessorFactory);
                 }
-
-                //ExecutePostSelect(request);
 
                 RetrieveOutputParameters(request, session, command, parameterObject);
             }
@@ -1044,7 +976,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
                     reader.Close();
                     reader.Dispose();
                 }
-                ExecutePostSelect(request);
+                ExecuteDeferredLoad(request);
             }
             return map;
 
@@ -1170,7 +1102,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
                     reader.Close();
                     reader.Dispose();
                 }
-                ExecutePostSelect(request);
+                ExecuteDeferredLoad(request);
             }
             return map;
 
@@ -1183,11 +1115,11 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// Executes the <see cref="PostBindind"/>.
         /// </summary>
         /// <param name="request">The current <see cref="RequestScope"/>.</param>
-        private void ExecutePostSelect(RequestScope request)
+        private void ExecuteDeferredLoad(RequestScope request)
         {
-            while (request.QueueSelect.Count > 0)
+            while (request.DeferredLoad.Count > 0)
             {
-                PostBindind postSelect = request.QueueSelect.Dequeue() as PostBindind;
+                PostBindind postSelect = request.DeferredLoad.Dequeue();
 
                 PostSelectStrategyFactory.Get(postSelect.Method).Execute(postSelect, request);
             }

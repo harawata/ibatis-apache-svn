@@ -448,19 +448,6 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
             Assert.AreEqual("gilles.bayon@nospam.org", (string)list[4]);
         }
 
-        /// <summary>
-        /// Test QueryForListWithSkipAndMax
-        /// </summary>
-        [Test]
-        public void TestQueryForListWithSkipAndMax()
-        {
-            IList list = dataMapper.QueryForList("GetAllAccountsViaResultMap", null, 2, 2);
-
-            Assert.AreEqual(2, list.Count);
-            Assert.AreEqual(3, ((Account)list[0]).Id);
-            Assert.AreEqual(4, ((Account)list[1]).Id);
-        }
-
 
         [Test]
         public void TestQueryWithRowDelegate()

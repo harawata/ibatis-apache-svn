@@ -231,45 +231,30 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 			_mappedStatement.ExecuteQueryForList(session, parameterObject, resultObject);
 		}
 
-		/// <summary>
-		/// Executes the SQL and retuns a subset of the rows selected.
-		/// </summary>
-		/// <param name="session">The session used to execute the statement.</param>
-		/// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-		/// <param name="skipResults">The number of rows to skip over.</param>
-		/// <param name="maxResults">The maximum number of rows to return.</param>
-		/// <returns>A List of result objects.</returns>
-		public IList ExecuteQueryForList(ISession session, object parameterObject, int skipResults, int maxResults)
-		{
-			IList list = null;
-			RequestScope request = this.Statement.Sql.GetRequestScope(this, parameterObject, session);
-
-			_mappedStatement.PreparedCommand.Create( request, session, this.Statement, parameterObject );
-
-			CacheKey cacheKey = this.GetCacheKey(request);
-			cacheKey.Update("ExecuteQueryForList");
-			cacheKey.Update(skipResults);
-			cacheKey.Update(maxResults);
-
-			list = this.Statement.CacheModel[cacheKey] as IList;
-			if (list == null) 
-			{
-				list = _mappedStatement.RunQueryForList(request, session, parameterObject, skipResults, maxResults);
-				this.Statement.CacheModel[cacheKey] = list;
-			}
-
-			return list;
-        }
         /// <summary>
-        /// Executes the SQL and retuns all rows selected. This is exactly the same as
-        /// calling ExecuteQueryForList(session, parameterObject, NO_SKIPPED_RESULTS, NO_MAXIMUM_RESULTS).
+        /// Executes the SQL and retuns all rows selected. 
         /// </summary>
         /// <param name="session">The session used to execute the statement.</param>
         /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
         /// <returns>A List of result objects.</returns>
         public IList ExecuteQueryForList(ISession session, object parameterObject)
         {
-            return this.ExecuteQueryForList(session, parameterObject, MappedStatement.NO_SKIPPED_RESULTS, MappedStatement.NO_MAXIMUM_RESULTS);
+            IList list = null;
+            RequestScope request = this.Statement.Sql.GetRequestScope(this, parameterObject, session);
+
+            _mappedStatement.PreparedCommand.Create(request, session, this.Statement, parameterObject);
+
+            CacheKey cacheKey = this.GetCacheKey(request);
+            cacheKey.Update("ExecuteQueryForList");
+
+            list = this.Statement.CacheModel[cacheKey] as IList;
+            if (list == null)
+            {
+                list = _mappedStatement.RunQueryForList(request, session, parameterObject);
+                this.Statement.CacheModel[cacheKey] = list;
+            }
+
+            return list;
         }
         #endregion
 
@@ -287,14 +272,12 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         }
 
         /// <summary>
-        /// Executes the SQL and retuns a subset of the rows selected.
+        /// Executes the SQL and retuns all rows selected. 
         /// </summary>
         /// <param name="session">The session used to execute the statement.</param>
         /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-        /// <param name="skipResults">The number of rows to skip over.</param>
-        /// <param name="maxResults">The maximum number of rows to return.</param>
         /// <returns>A List of result objects.</returns>
-        public IList<T> ExecuteQueryForList<T>(ISession session, object parameterObject, int skipResults, int maxResults)
+        public IList<T> ExecuteQueryForList<T>(ISession session, object parameterObject)
         {
             IList<T> list = null;
             RequestScope request = this.Statement.Sql.GetRequestScope(this, parameterObject, session);
@@ -303,28 +286,15 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 
             CacheKey cacheKey = this.GetCacheKey(request);
             cacheKey.Update("ExecuteQueryForList");
-            cacheKey.Update(skipResults);
-            cacheKey.Update(maxResults);
 
             list = this.Statement.CacheModel[cacheKey] as IList<T>;
             if (list == null)
             {
-                list = _mappedStatement.RunQueryForList<T>(request, session, parameterObject, skipResults, maxResults);
+                list = _mappedStatement.RunQueryForList<T>(request, session, parameterObject);
                 this.Statement.CacheModel[cacheKey] = list;
             }
 
             return list;
-        }
-        /// <summary>
-        /// Executes the SQL and retuns all rows selected. This is exactly the same as
-        /// calling ExecuteQueryForList(session, parameterObject, NO_SKIPPED_RESULTS, NO_MAXIMUM_RESULTS).
-        /// </summary>
-        /// <param name="session">The session used to execute the statement.</param>
-        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-        /// <returns>A List of result objects.</returns>
-        public IList<T> ExecuteQueryForList<T>(ISession session, object parameterObject)
-        {
-            return this.ExecuteQueryForList<T>(session, parameterObject, MappedStatement.NO_SKIPPED_RESULTS, MappedStatement.NO_MAXIMUM_RESULTS);
         }
         #endregion
 

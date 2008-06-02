@@ -74,7 +74,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.PropertyStrategy
 			else
 			{
 				postSelect.Method = PostBindind.ExecuteMethod.ExecuteQueryForObject;
-				request.QueueSelect.Enqueue(postSelect);
+				request.DeferredLoad.Enqueue(postSelect);
 			}
 		}
 

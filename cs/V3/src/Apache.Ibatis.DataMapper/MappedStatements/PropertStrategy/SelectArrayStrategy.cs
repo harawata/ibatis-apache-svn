@@ -66,7 +66,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.PropertyStrategy
 				throw new NotImplementedException("Lazy load no supported for System.Array property:" + mapping.SetAccessor.Name);
 			}
 			postSelect.Method = PostBindind.ExecuteMethod.ExecuteQueryForArrayList;
-			request.QueueSelect.Enqueue(postSelect);
+			request.DeferredLoad.Enqueue(postSelect);
 		}
 
         /// <summary>

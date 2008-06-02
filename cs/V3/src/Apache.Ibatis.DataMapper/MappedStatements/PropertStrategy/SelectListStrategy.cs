@@ -79,7 +79,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.PropertyStrategy
 				{
 					postSelect.Method = PostBindind.ExecuteMethod.ExecuteQueryForStrongTypedIList;
 				}
-				request.QueueSelect.Enqueue(postSelect);
+				request.DeferredLoad.Enqueue(postSelect);
 			}
 
 		}

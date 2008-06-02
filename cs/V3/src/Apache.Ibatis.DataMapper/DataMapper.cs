@@ -162,25 +162,6 @@ namespace Apache.Ibatis.DataMapper
             }
         }
 
-        /// <summary>
-        /// Executes the SQL and retuns all rows selected.
-        /// <p/>
-        /// The parameter object is generally used to supply the input
-        /// data for the WHERE clause parameter(s) of the SELECT statement.
-        /// </summary>
-        /// <param name="statementId">The statement id.</param>
-        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-        /// <param name="skipResults">The number of rows to skip over.</param>
-        /// <param name="maxResults">The maximum number of rows to return.</param>
-        /// <returns>A List of result objects.</returns>
-        public IList QueryForList(string statementId, object parameterObject, int skipResults, int maxResults)
-        {
-            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
-            {
-                IMappedStatement statement = modelStore.GetMappedStatement(statementId);
-                return statement.ExecuteQueryForList(sessionScope.Session, parameterObject, skipResults, maxResults);
-            }
-        }
 
         /// <summary>
         /// Executes the SQL and retuns all rows selected in a map that is keyed on the property named
@@ -480,26 +461,6 @@ namespace Apache.Ibatis.DataMapper
             }
         }
 
-        /// <summary>
-        /// Executes the SQL and retuns all rows selected.
-        /// <p/>
-        /// The parameter object is generally used to supply the input
-        /// data for the WHERE clause parameter(s) of the SELECT statement.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="statementId">The statement id.</param>
-        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-        /// <param name="skipResults">The number of rows to skip over.</param>
-        /// <param name="maxResults">The maximum number of rows to return.</param>
-        /// <returns>A List of result objects.</returns>
-        public IList<T> QueryForList<T>(string statementId, object parameterObject, int skipResults, int maxResults)
-        {
-            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
-            {
-                IMappedStatement statement = modelStore.GetMappedStatement(statementId);
-                return statement.ExecuteQueryForList<T>(sessionScope.Session, parameterObject, skipResults, maxResults);
-            }
-        }
 
         /// <summary>
         /// Runs a query for list with a custom object that gets a chance to deal
@@ -559,7 +520,6 @@ namespace Apache.Ibatis.DataMapper
         private class DataMapperLocalSessionScope : IDisposable
         {
             private readonly bool isSessionLocal = false;
-            private readonly ISessionStore sessionStore =null;
             private readonly ISession session = null;
 
             /// <summary>

@@ -97,19 +97,6 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 		/// </summary>
 		/// <param name="session"></param>
 		/// <param name="parameterObject"></param>
-		/// <param name="skipResults"></param>
-		/// <param name="maxResults"></param>
-		/// <returns></returns>
-		public override IList ExecuteQueryForList(ISession session, object parameterObject, int skipResults, int maxResults )
-		{
-			throw new DataMapperException("Insert statements cannot be executed as a query for list.");
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="session"></param>
-		/// <param name="parameterObject"></param>
 		/// <returns></returns>
 		public override IList ExecuteQueryForList(ISession session, object parameterObject )
 		{

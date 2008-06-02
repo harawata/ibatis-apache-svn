@@ -53,7 +53,7 @@ namespace Apache.Ibatis.DataMapper.Scope
         private ParameterMap parameterMap = null;
         private PreparedStatement preparedStatement = null;
         private IDbCommand command = null;
-        private Queue selects = new Queue();
+        private Queue<PostBindind> selects = new Queue<PostBindind>();
         private bool rowDataFound = false;
         private static long nextId = 0;
         private readonly long id = 0;
@@ -185,7 +185,7 @@ namespace Apache.Ibatis.DataMapper.Scope
         /// <summary>
         /// The 'select' result property to process after having process the main properties.
         /// </summary>
-        public Queue QueueSelect
+        public Queue<PostBindind> DeferredLoad
         {
             get { return selects; }
             set { selects = value; }

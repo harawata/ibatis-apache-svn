@@ -166,18 +166,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 		void ExecuteQueryForList(ISession session, object parameterObject, IList resultObject );
 
 		/// <summary>
-		/// Executes the SQL and retuns a subset of the rows selected.
-		/// </summary>
-		/// <param name="session">The session used to execute the statement.</param>
-		/// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-		/// <param name="skipResults">The number of rows to skip over.</param>
-		/// <param name="maxResults">The maximum number of rows to return.</param>
-		/// <returns>A List of result objects.</returns>
-		IList ExecuteQueryForList( ISession session, object parameterObject, int skipResults, int maxResults );
-
-		/// <summary>
-		/// Executes the SQL and retuns all rows selected. This is exactly the same as
-		/// calling ExecuteQueryForList(session, parameterObject, NO_SKIPPED_RESULTS, NO_MAXIMUM_RESULTS).
+		/// Executes the SQL and retuns all rows selected. 
 		/// </summary>
 		/// <param name="session">The session used to execute the statement.</param>
 		/// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
@@ -196,18 +185,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         void ExecuteQueryForList<T>(ISession session, object parameterObject, IList<T> resultObject);
 
         /// <summary>
-        /// Executes the SQL and retuns a subset of the rows selected.
-        /// </summary>
-        /// <param name="session">The session used to execute the statement.</param>
-        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-        /// <param name="skipResults">The number of rows to skip over.</param>
-        /// <param name="maxResults">The maximum number of rows to return.</param>
-        /// <returns>A List of result objects.</returns>
-        IList<T> ExecuteQueryForList<T>(ISession session, object parameterObject, int skipResults, int maxResults);
-
-        /// <summary>
-        /// Executes the SQL and retuns all rows selected. This is exactly the same as
-        /// calling ExecuteQueryForList(session, parameterObject, NO_SKIPPED_RESULTS, NO_MAXIMUM_RESULTS).
+        /// Executes the SQL and retuns all rows selected. 
         /// </summary>
         /// <param name="session">The session used to execute the statement.</param>
         /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
