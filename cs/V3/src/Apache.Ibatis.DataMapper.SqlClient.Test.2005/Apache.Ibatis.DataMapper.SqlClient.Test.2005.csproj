@@ -28,8 +28,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="Newtonsoft.Json, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External-Bin\Net\2.0\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework, Version=2.4.4.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
+    <Reference Include="NVelocity, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External-Bin\Net\2.0\NVelocity.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
@@ -38,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\JsonInterpreter.cs" />
+    <Compile Include="Domain\NVelocitySqlSource.cs" />
     <Compile Include="Domain\SimpleSqlSource.cs" />
     <Compile Include="Domain\SqlSourceWithInlineParameter.cs" />
     <Compile Include="Domain\SqlSourceWithParameter.cs" />
@@ -150,8 +158,6 @@
     <EmbeddedResource Include="Maps\Account.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="bin\Debug\Newtonsoft.Json.dll" />
-    <Content Include="bin\Debug\Newtonsoft.Json.licence.txt" />
     <Content Include="cool.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

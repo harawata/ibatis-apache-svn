@@ -23,15 +23,11 @@
  ********************************************************************************/
 #endregion
 
-using System.Collections;
-using System.Collections.Specialized;
-using Apache.Ibatis.DataMapper.Scope;
 using System.Collections.Generic;
-using Apache.Ibatis.DataMapper.Model;
-using Apache.Ibatis.DataMapper.Configuration.Interpreters.Config;
 using Apache.Ibatis.Common.Contracts;
-using Apache.Ibatis.DataMapper.Exceptions;
 using Apache.Ibatis.Common.Exceptions;
+using Apache.Ibatis.DataMapper.Configuration.Interpreters.Config;
+using Apache.Ibatis.DataMapper.Model;
 
 namespace Apache.Ibatis.DataMapper.Configuration.Serializers
 {
@@ -78,7 +74,7 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
 
            if (serializerMap.ContainsKey(id))
            {
-               return (IDeSerializer)serializerMap[id];
+               return serializerMap[id];
            }
            else
            {

@@ -46,25 +46,39 @@ namespace Apache.Ibatis.DataMapper.Model.Sql.External
         private readonly InlineParemeterMapBuilder inlineParemeterMapBuilder = null;
         private readonly DataExchangeFactory dataExchangeFactory = null;
         private readonly DBHelperParameterCache dbHelperParameterCache = null;
+        private readonly string commandText = string.Empty;
+
+        /// <summary>
+        /// Gets the command text.
+        /// </summary>
+        /// <value>The command text.</value>
+        public string CommandText
+        {
+            get { return commandText; }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExternalSql"/> class.
         /// </summary>
         /// <param name="modelStore">The model store.</param>
         /// <param name="statement">The statement.</param>
+        /// <param name="commandText">The command text.</param>
         public ExternalSql(
             IModelStore modelStore,
-            IStatement statement)
+            IStatement statement,
+            string commandText)
         {
             Contract.Require.That(modelStore, Is.Not.Null).When("retrieving argument modelStore in ExternalSql constructor");
             Contract.Require.That(statement, Is.Not.Null).When("retrieving argument statement in ExternalSql constructor");
 
             this.statement = statement;
+            this.commandText = commandText;
             dataExchangeFactory = modelStore.DataExchangeFactory;
             dbHelperParameterCache = modelStore.DBHelperParameterCache;
 
             inlineParemeterMapBuilder = new InlineParemeterMapBuilder(modelStore);
         }
+
 
         #region ISql Members
 

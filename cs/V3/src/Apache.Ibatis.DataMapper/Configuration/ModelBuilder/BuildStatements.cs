@@ -217,7 +217,18 @@ namespace Apache.Ibatis.DataMapper.Configuration
         {
             if (statement.SqlSource!=null)
             {
-                ExternalSql externalSql = new ExternalSql(modelStore, statement);
+                string commandText = string.Empty;
+
+                if (statementConfiguration.Children.Count>0)
+                {
+                    IConfiguration child = statementConfiguration.Children[0];
+                    if (child.Type == ConfigConstants.ELEMENT_TEXT || child.Type == ConfigConstants.ELEMENT_CDATA)
+                    {
+                        commandText = child.Value;
+                    }                    
+                }
+
+                ExternalSql externalSql = new ExternalSql(modelStore, statement, commandText);
                 statement.Sql = externalSql;
             }
             else

@@ -10,6 +10,27 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
   <statements>
 
+    <!-- Nvelocity dynamic source -->
+    <select id="NVelocity.Simple" sqlSource="NVelocitySqlSource" resultMap="account-result" parameterClass="map">
+      select * from Accounts where Account_Id= $account.id
+    </select>
+
+    <select id="NVelocity.If" sqlSource="NVelocitySqlSource" resultClass="Account" remapResults="true" parameterClass="map">
+      SELECT
+      Account_ID as Id,
+
+      #if($account.FirstName == "Joe")
+      Account_FirstName as FirstName,
+      #elseif($account.LastName == "Dalton")
+      Account_LastName as LastName,
+      #end
+
+      Account_Email as EmailAddress
+      FROM
+      Accounts
+      where Account_Id= $account.id
+    </select>
+    
     <sql id="includeComplex">
       <dynamic prepend="where">
         <isParameterPresent>
@@ -72,7 +93,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       SELECT
       Account_ID as Id,
       <dynamic>
-        <isEqual property="LastName" compareValue="Dalton" >
+        <isEqual property="FirstName" compareValue="Dalton" >
           Account_FirstName as FirstName,
         </isEqual>
         <isEqual property="LastName" compareValue="Dalton" >
