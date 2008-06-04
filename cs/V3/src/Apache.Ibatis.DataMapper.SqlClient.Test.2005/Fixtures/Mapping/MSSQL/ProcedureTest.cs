@@ -138,7 +138,6 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping.MSSQL
             account.NullBannerOption = null;
 
             dataMapper.Insert("InsertAccountViaSPWithDynamicParameter", account);
-
         }
 
         /// <summary>

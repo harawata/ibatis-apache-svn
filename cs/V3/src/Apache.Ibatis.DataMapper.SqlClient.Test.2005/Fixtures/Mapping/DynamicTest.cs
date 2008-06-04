@@ -41,47 +41,6 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
 
         #region Dynamic tests
 
-        [Test]
-        public void Nvelocity_simple_sql_template_should_work()
-        {
-            Account paramAccount = new Account();
-            paramAccount.Id = 1;
-
-            IDictionary<string, object> parameters = new Dictionary<string, object>();
-            parameters.Add("account", paramAccount);
-
-            Account account = dataMapper.QueryForObject<Account>("NVelocity.Simple", parameters);
-            Assert.That(account, Is.Not.Null);
-            AssertAccount1(account);
-        }
-
-        [Test]
-        public void Nvelocity_template_with_if_should_work()
-        {
-            Account paramAccount = new Account();
-            paramAccount.FirstName = "Joe";
-            paramAccount.Id = 1;
-
-            IDictionary<string, object> parameters = new Dictionary<string, object>();
-            parameters.Add("account", paramAccount);
-
-            Account account = dataMapper.QueryForObject<Account>("NVelocity.If", parameters);
-            Assert.That(account.FirstName, Is.EqualTo("Joe"));
-            Assert.That(account.LastName, Is.Null);
-
-            paramAccount = new Account();
-            paramAccount.LastName = "Dalton";
-            paramAccount.Id = 1;
-
-            parameters = new Dictionary<string, object>();
-            parameters.Add("account", paramAccount);
-
-            account = dataMapper.QueryForObject<Account>("NVelocity.If", parameters);
-            Assert.That(account.LastName, Is.EqualTo("Dalton"));
-            Assert.That(account.FirstName, Is.Null);
-
-        }
-
         /// <summary>
         /// Test Dynamic Sql On Column Selection
         /// JIRA IBATISNET-114

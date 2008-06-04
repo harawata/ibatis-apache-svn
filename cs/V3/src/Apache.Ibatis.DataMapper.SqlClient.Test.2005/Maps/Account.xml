@@ -811,7 +811,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
       ps_SelectAccountWithOutPutParam @{Account_ID,column=Account_ID}, @{OutPut,column=OutPut}
     </procedure>
 
-    <procedure id="InsertAccountViaSPAndInlineParameter" parameterClass="map" >
+    <procedure id="InsertAccountViaSPAndInlineParameter" parameterClass="Account" >
       ps_InsertAccount
       @{Id,column=Account_ID},
       @{FirstName,column=Account_FirstName},
@@ -821,7 +821,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
       @{CartOption,column=Account_Cart_Option,handler=HundredsBool}
     </procedure>
 
-    <procedure id="InsertAccountViaSPWithDefaultParameter" parameterClass="map" >
+    <procedure id="InsertAccountViaSPWithDefaultParameter" parameterClass="Account" >
       ps_InsertAccountWithDefault
       @{Id,column=Account_ID},
       @{FirstName,column=Account_FirstName},
@@ -829,7 +829,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
       @{EmailAddress,column=Account_Email,nullValue=no_email@provided.com}
     </procedure>
 
-    <procedure id="InsertAccountViaSPWithDynamicParameter" parameterClass="map" >
+    <procedure id="InsertAccountViaSPWithDynamicParameter" parameterClass="Account" >
       ps_InsertAccountWithDefault
       @{Id,column=Account_ID}
       ,@{FirstName,column=Account_FirstName}

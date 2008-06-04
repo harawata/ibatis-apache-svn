@@ -50,6 +50,7 @@
     <Compile Include="Domain\SqlSourceWithInlineParameter.cs" />
     <Compile Include="Domain\SqlSourceWithParameter.cs" />
     <Compile Include="Fixtures\Mapping\CircularReferenceTest.cs" />
+    <Compile Include="Fixtures\Mapping\VelocityTest.cs" />
     <Compile Include="Fixtures\Modules\AliasModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Domain\A.cs" />
@@ -169,6 +170,7 @@
     <Content Include="Maps\Coupons.xml" />
     <Content Include="Maps\Document.xml" />
     <Content Include="Maps\DocumentModule.xml" />
+    <Content Include="Maps\Dynamic.Velocity.xml" />
     <Content Include="Maps\DynamicAccount.xml" />
     <Content Include="Maps\EmbedParameter.xml" />
     <Content Include="Maps\Enumeration.xml" />
@@ -218,6 +220,7 @@
     <Content Include="Scripts\ps_SelectAllAccount.sql" />
     <None Include="App.config" />
     <None Include="bin\Debug\SqlMap.config.json" />
+    <None Include="bin\Debug\SqlMap.velocity.config" />
     <None Include="DataBase.config" />
     <None Include="Scripts\ps_SelectByIdList.sql" />
     <Content Include="Scripts\ps_SelectLineItem.sql" />

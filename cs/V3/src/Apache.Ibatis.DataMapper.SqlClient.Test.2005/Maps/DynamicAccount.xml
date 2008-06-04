@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<sqlMap namespace="Account" 
-xmlns="http://ibatis.apache.org/mapping" 
+<sqlMap namespace="Account"
+xmlns="http://ibatis.apache.org/mapping"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
   <alias>
@@ -10,27 +10,6 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
   <statements>
 
-    <!-- Nvelocity dynamic source -->
-    <select id="NVelocity.Simple" sqlSource="NVelocitySqlSource" resultMap="account-result" parameterClass="map">
-      select * from Accounts where Account_Id= $account.id
-    </select>
-
-    <select id="NVelocity.If" sqlSource="NVelocitySqlSource" resultClass="Account" remapResults="true" parameterClass="map">
-      SELECT
-      Account_ID as Id,
-
-      #if($account.FirstName == "Joe")
-      Account_FirstName as FirstName,
-      #elseif($account.LastName == "Dalton")
-      Account_LastName as LastName,
-      #end
-
-      Account_Email as EmailAddress
-      FROM
-      Accounts
-      where Account_Id= $account.id
-    </select>
-    
     <sql id="includeComplex">
       <dynamic prepend="where">
         <isParameterPresent>
@@ -59,7 +38,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <include refid="includeComplex"/>
       order by Account_ID
     </select>
-    
+
     <statement id="DynamicJIRA168"
 					parameterClass="Query"
 					resultClass="Account">
@@ -86,14 +65,14 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     </statement>
 
     <!-- Apache.Ibatis-114: remapResults -->
-    <statement  id="DynamicSqlOnColumnSelection" 
-					parameterClass="Account" 
+    <statement  id="DynamicSqlOnColumnSelection"
+					parameterClass="Account"
 					resultClass="Account"
 					remapResults="true">
       SELECT
       Account_ID as Id,
       <dynamic>
-        <isEqual property="FirstName" compareValue="Dalton" >
+        <isEqual property="LastName" compareValue="Dalton" >
           Account_FirstName as FirstName,
         </isEqual>
         <isEqual property="LastName" compareValue="Dalton" >
@@ -479,9 +458,9 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       </dynamic>
     </statement>
 
-    <statement id="ComplexDynamicStatement" 
-			cacheModel="account-cache" 
-			resultClass="Account" 
+    <statement id="ComplexDynamicStatement"
+			cacheModel="account-cache"
+			resultClass="Account"
 			parameterClass="Account">
       select
       Account_ID			as Id,
@@ -507,8 +486,8 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       order by Account_LastName
     </statement>
 
-    <statement id="Jira-IBATISNET-11" 
-			resultClass="Account" 
+    <statement id="Jira-IBATISNET-11"
+			resultClass="Account"
 			parameterClass="Search">
       select
       Account_ID			as Id,

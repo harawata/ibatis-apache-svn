@@ -1,6 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using Apache.Ibatis.Common.Contracts;
+using Apache.Ibatis.Common.Logging;
+using Apache.Ibatis.DataMapper.Exceptions;
 using Apache.Ibatis.DataMapper.MappedStatements;
 using Apache.Ibatis.DataMapper.Model.Sql.External;
 using NVelocity;
@@ -18,6 +22,8 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Domain
     public class NVelocitySqlSource : ISqlSource
     {
         private readonly VelocityEngine velocityEngine = null;
+        private const string VELOCITY_DIRECTIVE = "$";
+        private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NVelocitySqlSource"/> class.
@@ -46,19 +52,42 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Domain
 
             StringWriter sw = new StringWriter();
             ExternalSql externalSql = (ExternalSql)mappedStatement.Statement.Sql;
+            
+            string commandText = externalSql.CommandText;
 
-            VelocityContext velocityContext = new VelocityContext();
-
-            IDictionary<string, object> dico = (IDictionary<string, object>)parameterObject;
-
-            foreach(string key in dico.Keys)
+            if (logger.IsDebugEnabled)
             {
-                velocityContext.Put(key, dico[key]);
+                logger.Debug("Parse velocity string '" + commandText);
             }
 
-            bool success = velocityEngine.Evaluate(velocityContext, sw, "error", externalSql.CommandText);
+            if (commandText.Contains(VELOCITY_DIRECTIVE))
+            {
+                VelocityContext velocityContext = new VelocityContext();
 
-            return sw.GetStringBuilder().ToString();
+                IDictionary<string, object> dico = (IDictionary<string, object>)parameterObject;
+
+                foreach(string key in dico.Keys)
+                {
+                    velocityContext.Put(key, dico[key]);
+                }
+
+                try
+                {
+                    velocityEngine.Evaluate(velocityContext, sw, "error", commandText);
+                }
+                catch (Exception ex)
+                {
+                    if (logger.IsDebugEnabled)
+                    {
+                        logger.Debug("Could not parse velocity string '" + commandText + "' for " + mappedStatement.Id);
+                    }
+
+                    throw new DataMapperException("Could not parse velocity string '" + commandText + "' for " + mappedStatement.Id);
+                }
+                commandText = sw.GetStringBuilder().ToString();
+            }
+
+            return commandText;
         }
 
         #endregion
