@@ -80,6 +80,8 @@ public class IbatorContext extends PropertyHolder {
     
     private List<IbatorPluginConfiguration> pluginConfigurations;
     
+    private String introspectedTableImplementation;
+    
     /**
      * Constructs an IbatorContext object.
      * 
@@ -242,8 +244,8 @@ public class IbatorContext extends PropertyHolder {
 	    
         JavaTypeResolver javaTypeResolver = IbatorObjectFactory.createJavaTypeResolver(this, warnings);
         JavaModelGenerator javaModelGenerator = IbatorObjectFactory.createJavaModelGenerator(this, warnings);
-        SqlMapGenerator sqlMapGenerator = IbatorObjectFactory.createSqlMapGenerator(this, javaModelGenerator, warnings);
-        DAOGenerator daoGenerator = IbatorObjectFactory.createDAOGenerator(this, javaModelGenerator, sqlMapGenerator, warnings);
+        SqlMapGenerator sqlMapGenerator = IbatorObjectFactory.createSqlMapGenerator(this, warnings);
+        DAOGenerator daoGenerator = IbatorObjectFactory.createDAOGenerator(this, warnings);
         pluginAggregator = new IbatorPluginAggregator();
         for (IbatorPluginConfiguration ibatorPluginConfiguration : pluginConfigurations) {
             IbatorPlugin plugin = IbatorObjectFactory.createIbatorPlugin(this, ibatorPluginConfiguration);
@@ -409,6 +411,10 @@ public class IbatorContext extends PropertyHolder {
             xmlElement.addAttribute(new Attribute("generatorSet", configuredGeneratorSet)); //$NON-NLS-1$
         }
         
+        if (StringUtility.stringHasValue(introspectedTableImplementation)) {
+            xmlElement.addAttribute(new Attribute("introspectedTableImplementation", introspectedTableImplementation)); //$NON-NLS-1$
+        }
+        
         addPropertyXmlElements(xmlElement);
         
         if (commentGeneratorConfiguration != null) {
@@ -494,5 +500,14 @@ public class IbatorContext extends PropertyHolder {
 
     public String getConfiguredGeneratorSet() {
         return configuredGeneratorSet;
+    }
+
+    public String getIntrospectedTableImplementation() {
+        return introspectedTableImplementation;
+    }
+
+    public void setIntrospectedTableImplementation(
+            String introspectedTableImplementation) {
+        this.introspectedTableImplementation = introspectedTableImplementation;
     }
 }

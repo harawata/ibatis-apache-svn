@@ -59,4 +59,26 @@ public class GeneratedJavaFile extends GeneratedFile {
     public String getTargetPackage() {
         return compilationUnit.getType().getPackageName();
     }
+    
+    /**
+     * This method is required by the Eclipse Java merger.  If you are
+     * not running in Eclipse, or some other system that implements the
+     * Java merge function, you may return null from this method. 
+     * 
+     * @return the CompilationUnit associated with this file, or
+     *   null if the file is not mergable.
+     */
+    public CompilationUnit getCompilationUnit() {
+        return compilationUnit;
+    }
+
+    /**
+     * A Java file is mergable if the getCompilationUnit() method
+     * returns a valid compilation unit.
+     * 
+     */
+    @Override
+    public boolean isMergeable() {
+        return true;
+    }
 }

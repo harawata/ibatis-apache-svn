@@ -15,11 +15,9 @@
  */
 package org.apache.ibatis.ibator.internal.rules;
 
-import org.apache.ibatis.ibator.api.FullyQualifiedTable;
-import org.apache.ibatis.ibator.api.JavaModelGenerator;
+import org.apache.ibatis.ibator.api.IntrospectedTable;
 import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.config.TableConfiguration;
-import org.apache.ibatis.ibator.internal.db.ColumnDefinitions;
 
 /**
  * This class centralizes all the rules related to code generation - including
@@ -33,16 +31,16 @@ import org.apache.ibatis.ibator.internal.db.ColumnDefinitions;
 public abstract class IbatorRules {
 
     protected TableConfiguration tableConfiguration;
-    protected ColumnDefinitions columnDefinitions;
+    protected IntrospectedTable introspectedTable;
 
     /**
      * 
      */
     public IbatorRules(TableConfiguration tableConfiguration,
-            ColumnDefinitions columnDefinitions) {
+            IntrospectedTable introspectedTable) {
         super();
         this.tableConfiguration = tableConfiguration;
-        this.columnDefinitions = columnDefinitions;
+        this.introspectedTable = introspectedTable;
     }
 
     /**
@@ -62,21 +60,18 @@ public abstract class IbatorRules {
      * from the select by primary key method.  The actual class depends
      * on how the domain model is generated.
      * 
-     * @param javaModelGenerator
-     * @param table
      * @return the type of the class that holds all fields
      */
-    public FullyQualifiedJavaType calculateAllFieldsClass(JavaModelGenerator javaModelGenerator,
-            FullyQualifiedTable table) {
+    public FullyQualifiedJavaType calculateAllFieldsClass() {
         
         FullyQualifiedJavaType answer;
         
         if (generateRecordWithBLOBsClass()) {
-            answer = javaModelGenerator.getRecordWithBLOBsType(table);
+            answer = introspectedTable.getRecordWithBLOBsType();
         } else if (generateBaseRecordClass()) {
-            answer = javaModelGenerator.getBaseRecordType(table);
+            answer = introspectedTable.getBaseRecordType();
         } else {
-            answer = javaModelGenerator.getPrimaryKeyType(table);
+            answer = introspectedTable.getPrimaryKeyType();
         }
         
         return answer;
@@ -92,8 +87,8 @@ public abstract class IbatorRules {
      */
     public boolean generateUpdateByPrimaryKeyWithoutBLOBs() {
         boolean rc = tableConfiguration.isUpdateByPrimaryKeyStatementEnabled()
-            && columnDefinitions.hasPrimaryKeyColumns()
-            && columnDefinitions.hasBaseColumns();
+            && introspectedTable.hasPrimaryKeyColumns()
+            && introspectedTable.hasBaseColumns();
         
         return rc;
     }
@@ -108,8 +103,8 @@ public abstract class IbatorRules {
      */
     public boolean generateUpdateByPrimaryKeyWithBLOBs() {
         boolean rc = tableConfiguration.isUpdateByPrimaryKeyStatementEnabled()
-            && columnDefinitions.hasPrimaryKeyColumns()
-            && columnDefinitions.hasBLOBColumns();
+            && introspectedTable.hasPrimaryKeyColumns()
+            && introspectedTable.hasBLOBColumns();
     
         return rc;
     }
@@ -124,9 +119,9 @@ public abstract class IbatorRules {
      */
     public boolean generateUpdateByPrimaryKeySelective() {
         boolean rc = tableConfiguration.isUpdateByPrimaryKeyStatementEnabled()
-            && columnDefinitions.hasPrimaryKeyColumns()
-            && (columnDefinitions.hasBLOBColumns()
-                    || columnDefinitions.hasBaseColumns());
+            && introspectedTable.hasPrimaryKeyColumns()
+            && (introspectedTable.hasBLOBColumns()
+                    || introspectedTable.hasBaseColumns());
     
         return rc;
     }
@@ -141,7 +136,7 @@ public abstract class IbatorRules {
      */
     public boolean generateDeleteByPrimaryKey() {
         boolean rc = tableConfiguration.isDeleteByPrimaryKeyStatementEnabled()
-            && columnDefinitions.hasPrimaryKeyColumns();
+            && introspectedTable.hasPrimaryKeyColumns();
 
         return rc;
     }
@@ -182,7 +177,7 @@ public abstract class IbatorRules {
     public boolean generateResultMapWithBLOBs() {
         boolean rc = (tableConfiguration.isSelectByExampleStatementEnabled()
             || tableConfiguration.isSelectByPrimaryKeyStatementEnabled())
-            && columnDefinitions.hasBLOBColumns();
+            && introspectedTable.hasBLOBColumns();
     
         return rc;
     }
@@ -212,9 +207,9 @@ public abstract class IbatorRules {
      */
     public boolean generateSelectByPrimaryKey() {
         boolean rc = tableConfiguration.isSelectByPrimaryKeyStatementEnabled()
-            && columnDefinitions.hasPrimaryKeyColumns()
-            && (columnDefinitions.hasBaseColumns()
-                    || columnDefinitions.hasBLOBColumns());
+            && introspectedTable.hasPrimaryKeyColumns()
+            && (introspectedTable.hasBaseColumns()
+                    || introspectedTable.hasBLOBColumns());
         
         return rc;
     }
@@ -240,7 +235,7 @@ public abstract class IbatorRules {
      */
     public boolean generateSelectByExampleWithBLOBs() {
         boolean rc = tableConfiguration.isSelectByExampleStatementEnabled()
-            && columnDefinitions.hasBLOBColumns();
+            && introspectedTable.hasBLOBColumns();
         
         return rc;
     }
@@ -275,15 +270,15 @@ public abstract class IbatorRules {
 
     public boolean generateUpdateByExampleWithoutBLOBs() {
         boolean rc = tableConfiguration.isUpdateByExampleStatementEnabled()
-            && (columnDefinitions.hasPrimaryKeyColumns()
-            || columnDefinitions.hasBaseColumns());
+            && (introspectedTable.hasPrimaryKeyColumns()
+            || introspectedTable.hasBaseColumns());
         
         return rc;
     }
     
     public boolean generateUpdateByExampleWithBLOBs() {
         boolean rc = tableConfiguration.isUpdateByExampleStatementEnabled()
-            && columnDefinitions.hasBLOBColumns();
+            && introspectedTable.hasBLOBColumns();
     
         return rc;
     }

@@ -72,4 +72,6 @@ public abstract class GeneratedFile {
     public String toString() {
         return getFormattedContent();
     }
+
+    public abstract boolean isMergeable();
 }

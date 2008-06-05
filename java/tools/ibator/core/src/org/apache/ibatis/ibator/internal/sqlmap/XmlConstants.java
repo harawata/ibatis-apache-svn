@@ -95,6 +95,16 @@ public class XmlConstants {
         sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
         sb.append("updateByPrimaryKeyWithBLOBs"); //$NON-NLS-1$
         UPDATE_BY_PRIMARY_KEY_WITH_BLOBS_STATEMENT_ID = sb.toString();
+
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("BaseResultMap"); //$NON-NLS-1$
+        BASE_RESULT_MAP_ID = sb.toString();
+
+        sb.setLength(0);
+        sb.append(MergeConstants.NEW_XML_ELEMENT_PREFIX);
+        sb.append("ResultMapWithBLOBs"); //$NON-NLS-1$
+        RESULT_MAP_WITH_BLOBS_ID = sb.toString();
     }
 
     public static final String SQL_MAP_SYSTEM_ID = "http://ibatis.apache.org/dtd/sql-map-2.dtd"; //$NON-NLS-1$
@@ -134,4 +144,8 @@ public class XmlConstants {
     public static final String UPDATE_BY_PRIMARY_KEY_SELECTIVE_STATEMENT_ID;
 
     public static final String UPDATE_BY_PRIMARY_KEY_WITH_BLOBS_STATEMENT_ID;
+
+    public static final String BASE_RESULT_MAP_ID;
+
+    public static final String RESULT_MAP_WITH_BLOBS_ID;
 }

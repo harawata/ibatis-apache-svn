@@ -55,19 +55,19 @@ public class SerializablePlugin extends IbatorPluginAdapter {
 
     @Override
     public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
-        makeSerializable(topLevelClass, introspectedTable.getTable());
+        makeSerializable(topLevelClass, introspectedTable.getFullyQualifiedTable());
         return true;
     }
 
     @Override
     public boolean modelPrimaryKeyClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
-        makeSerializable(topLevelClass, introspectedTable.getTable());
+        makeSerializable(topLevelClass, introspectedTable.getFullyQualifiedTable());
         return true;
     }
 
     @Override
     public boolean modelRecordWithBLOBsClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
-        makeSerializable(topLevelClass, introspectedTable.getTable());
+        makeSerializable(topLevelClass, introspectedTable.getFullyQualifiedTable());
         return true;
     }
     

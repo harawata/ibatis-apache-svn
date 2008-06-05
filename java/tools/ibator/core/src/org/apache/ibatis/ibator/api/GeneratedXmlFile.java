@@ -72,6 +72,7 @@ public class GeneratedXmlFile extends GeneratedFile {
         return targetPackage;
     }
 
+    @Override
     public boolean isMergeable() {
         return isMergeable;
     }

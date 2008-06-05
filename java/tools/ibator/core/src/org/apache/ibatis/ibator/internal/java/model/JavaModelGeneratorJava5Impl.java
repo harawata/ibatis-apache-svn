@@ -56,8 +56,8 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
         
         CommentGenerator commentGenerator = ibatorContext.getCommentGenerator();
 
-        FullyQualifiedTable table = introspectedTable.getTable();
-        FullyQualifiedJavaType type = getExampleType(table);
+        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
+        FullyQualifiedJavaType type = introspectedTable.getExampleType();
         TopLevelClass topLevelClass = new TopLevelClass(type);
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
         commentGenerator.addJavaFileComment(topLevelClass);
@@ -189,7 +189,7 @@ public class JavaModelGeneratorJava5Impl extends JavaModelGeneratorJava2Impl {
 
         answer.setVisibility(JavaVisibility.PUBLIC);
         answer.setStatic(true);
-        ibatorContext.getCommentGenerator().addClassComment(answer, introspectedTable.getTable());
+        ibatorContext.getCommentGenerator().addClassComment(answer, introspectedTable.getFullyQualifiedTable());
 
         method = new Method();
         method.setVisibility(JavaVisibility.PROTECTED);

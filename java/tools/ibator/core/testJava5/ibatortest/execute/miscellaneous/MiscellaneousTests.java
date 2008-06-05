@@ -615,20 +615,27 @@ public class MiscellaneousTests extends BaseTest {
             example.createCriteria().andId2In(ids);
 
             example.setOrderByClause("ID1, ID2");
-            List answer = dao.selectMyObjectByExample(example);
+            List<MyObject> answer = dao.selectMyObjectByExample(example);
             assertEquals(4, answer.size());
-            MyObject returnedRecord = (MyObject) answer.get(0);
+            MyObject returnedRecord = answer.get(0);
             assertEquals(1, returnedRecord.getId1().intValue());
             assertEquals(1, returnedRecord.getId2().intValue());
-            returnedRecord = (MyObject) answer.get(1);
+            assertEquals("Flintstone", returnedRecord.getLastname());
+            
+            returnedRecord = answer.get(1);
             assertEquals(1, returnedRecord.getId1().intValue());
             assertEquals(3, returnedRecord.getId2().intValue());
-            returnedRecord = (MyObject) answer.get(2);
+            assertEquals("Flintstone", returnedRecord.getLastname());
+            
+            returnedRecord = answer.get(2);
             assertEquals(2, returnedRecord.getId1().intValue());
             assertEquals(1, returnedRecord.getId2().intValue());
-            returnedRecord = (MyObject) answer.get(3);
+            assertEquals("Rubble", returnedRecord.getLastname());
+            
+            returnedRecord = answer.get(3);
             assertEquals(2, returnedRecord.getId1().intValue());
             assertEquals(3, returnedRecord.getId2().intValue());
+            assertEquals("Rubble", returnedRecord.getLastname());
         } catch (SQLException e) {
             fail(e.getMessage());
         }

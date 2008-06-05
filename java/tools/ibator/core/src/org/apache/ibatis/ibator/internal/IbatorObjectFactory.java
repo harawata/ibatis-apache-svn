@@ -19,7 +19,9 @@ import java.util.List;
 
 import org.apache.ibatis.ibator.api.CommentGenerator;
 import org.apache.ibatis.ibator.api.DAOGenerator;
+import org.apache.ibatis.ibator.api.FullyQualifiedTable;
 import org.apache.ibatis.ibator.api.IbatorPlugin;
+import org.apache.ibatis.ibator.api.IntrospectedTable;
 import org.apache.ibatis.ibator.api.JavaModelGenerator;
 import org.apache.ibatis.ibator.api.JavaTypeResolver;
 import org.apache.ibatis.ibator.api.SqlMapGenerator;
@@ -30,6 +32,10 @@ import org.apache.ibatis.ibator.config.IbatorPluginConfiguration;
 import org.apache.ibatis.ibator.config.JavaModelGeneratorConfiguration;
 import org.apache.ibatis.ibator.config.JavaTypeResolverConfiguration;
 import org.apache.ibatis.ibator.config.SqlMapGeneratorConfiguration;
+import org.apache.ibatis.ibator.config.TableConfiguration;
+import org.apache.ibatis.ibator.internal.db.ColumnDefinitions;
+import org.apache.ibatis.ibator.internal.db.IntrospectedTableDefaultImpl;
+import org.apache.ibatis.ibator.internal.util.StringUtility;
 import org.apache.ibatis.ibator.internal.util.messages.Messages;
 
 /**
@@ -115,7 +121,7 @@ public class IbatorObjectFactory {
     }
 	
 	public static SqlMapGenerator createSqlMapGenerator(IbatorContext context,
-	        JavaModelGenerator javaModelGenerator, List<String> warnings) {
+	        List<String> warnings) {
         
         SqlMapGeneratorConfiguration config = context.getSqlMapGeneratorConfiguration();
         String type;
@@ -129,11 +135,8 @@ public class IbatorObjectFactory {
 	    SqlMapGenerator answer = (SqlMapGenerator) createObject(type);
 	    answer.setWarnings(warnings);
 
-	    answer.setJavaModelGenerator(javaModelGenerator);
 	    answer.addConfigurationProperties(config.getProperties());
         answer.setIbatorContext(context);
-	    answer.setTargetPackage(config.getTargetPackage());
-	    answer.setTargetProject(config.getTargetProject());
 	    
 	    return answer;
 	}
@@ -155,14 +158,12 @@ public class IbatorObjectFactory {
 	    
 	    answer.addConfigurationProperties(config.getProperties());
         answer.setIbatorContext(context);
-	    answer.setTargetPackage(config.getTargetPackage());
-	    answer.setTargetProject(config.getTargetProject());
 	    
 	    return answer;
 	}
 	
 	public static DAOGenerator createDAOGenerator(IbatorContext context,
-	        JavaModelGenerator javaModelGenerator, SqlMapGenerator sqlMapGenerator, List<String> warnings) {
+            List<String> warnings) {
         
         DAOGeneratorConfiguration config = context.getDaoGeneratorConfiguration();
         
@@ -175,12 +176,8 @@ public class IbatorObjectFactory {
 	    DAOGenerator answer = (DAOGenerator) createObject(type);
 	    answer.setWarnings(warnings);
 
-	    answer.setJavaModelGenerator(javaModelGenerator);
 	    answer.addConfigurationProperties(config.getProperties());
         answer.setIbatorContext(context);
-	    answer.setSqlMapGenerator(sqlMapGenerator);
-	    answer.setTargetPackage(config.getTargetPackage());
-	    answer.setTargetProject(config.getTargetProject());
 	    
 	    return answer;
 	}
@@ -202,6 +199,23 @@ public class IbatorObjectFactory {
         if (config != null) {
             answer.addConfigurationProperties(config.getProperties());
         }
+        
+        return answer;
+    }
+    
+    public static IntrospectedTable createIntrospectedTable(TableConfiguration tableConfiguration, ColumnDefinitions columnDefinitions,
+            FullyQualifiedTable table, IbatorContext ibatorContext) {
+
+        String type = ibatorContext.getIntrospectedTableImplementation();
+        if (!StringUtility.stringHasValue(type)) {
+            type = IntrospectedTableDefaultImpl.class.getName();
+        }
+        
+        IntrospectedTable answer = (IntrospectedTable) createObject(type);
+        answer.setColumnDefinitions(columnDefinitions);
+        answer.setFullyQualifiedTable(table);
+        answer.setIbatorContext(ibatorContext);
+        answer.setTableConfiguration(tableConfiguration);
         
         return answer;
     }

@@ -25,7 +25,6 @@ import java.util.List;
  * @author Jeff Butler
  */
 public class ColumnDefinitions {
-	
     private List<ColumnDefinition> primaryKeyColumns;
 	private List<ColumnDefinition> baseColumns;
     private List<ColumnDefinition> blobColumns;

@@ -35,7 +35,7 @@ public class BaseClass {
     public final String getLastname() {
         return lastname;
     }
-
+    
     public final void setLastname(String lastname) {
         this.lastname = lastname;
     }

@@ -158,8 +158,9 @@ public class ColumnDefinition {
     public boolean isBLOBColumn() {
         String typeName = resolvedJavaType.getJdbcTypeName();
 
-        return "BLOB".equals(typeName) || "LONGVARBINARY".equals(typeName) //$NON-NLS-1$ //$NON-NLS-2$
-                || "LONGVARCHAR".equals(typeName) || "CLOB".equals(typeName); //$NON-NLS-1$ //$NON-NLS-2$
+        return "BINARY".equals(typeName) || "BLOB".equals(typeName) //$NON-NLS-1$ //$NON-NLS-2$
+            || "CLOB".equals(typeName) || "LONGVARBINARY".equals(typeName) //$NON-NLS-1$ //$NON-NLS-2$
+            || "LONGVARCHAR".equals(typeName) || "VARBINARY".equals(typeName); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     public boolean isStringColumn() {

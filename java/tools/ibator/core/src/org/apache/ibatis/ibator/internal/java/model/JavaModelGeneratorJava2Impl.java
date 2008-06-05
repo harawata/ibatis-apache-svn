@@ -87,48 +87,16 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
      */
     protected Properties properties;
 
-    /**
-     * The target package from the JavaModelGenerator congiguration element
-     */
-    protected String targetPackage;
-
-    /**
-     * The target project from the JavaModelGenerator congiguration element
-     */
-    protected String targetProject;
-
-    private Map<FullyQualifiedTable, Map<String, Object>> tableValueMaps;
-
     private Map<String, PropertyDescriptor[]> propertyDescriptorMap;
     
     public JavaModelGeneratorJava2Impl() {
         super();
-        tableValueMaps = new HashMap<FullyQualifiedTable, Map<String, Object>>();
         properties = new Properties();
         propertyDescriptorMap = new HashMap<String, PropertyDescriptor[]>();
     }
 
     public void addConfigurationProperties(Properties properties) {
         this.properties.putAll(properties);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.ibatis.ibator.api.JavaModelGenerator#setTargetPackage(java.lang.String)
-     */
-    public void setTargetPackage(String targetPackage) {
-        this.targetPackage = targetPackage;
-    }
-
-    private Map<String, Object> getTableValueMap(FullyQualifiedTable table) {
-        Map<String, Object> map = tableValueMaps.get(table);
-        if (map == null) {
-            map = new HashMap<String, Object>();
-            tableValueMaps.put(table, map);
-        }
-
-        return map;
     }
 
     /**
@@ -231,40 +199,14 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         }
     }
 
-    /**
-     * Calculates the package for generated domain objects.
-     * 
-     * @param table
-     *            the current table
-     * @return the calculated package
-     */
-    protected String getJavaModelPackage(FullyQualifiedTable table) {
-        String key = "getJavaModelPackage"; //$NON-NLS-1$
-        String s;
-
-        Map<String, Object> map = getTableValueMap(table);
-        s = (String) map.get(key);
-        if (s == null) {
-            StringBuffer sb = new StringBuffer(targetPackage);
-            if ("true".equalsIgnoreCase(properties.getProperty(PropertyRegistry.ANY_ENABLE_SUB_PACKAGES))) { //$NON-NLS-1$
-                sb.append(table.getSubPackage());
-            }
-            
-            s = sb.toString();
-            map.put(key, s);
-        }
-
-        return s;
-    }
-
     protected TopLevelClass getPrimaryKey(IntrospectedTable introspectedTable) {
 
         if (!introspectedTable.getRules().generatePrimaryKeyClass()) {
             return null;
         }
 
-        FullyQualifiedTable table = introspectedTable.getTable();
-        FullyQualifiedJavaType type = getPrimaryKeyType(table);
+        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
+        FullyQualifiedJavaType type = introspectedTable.getPrimaryKeyType();
         TopLevelClass answer = new TopLevelClass(type);
         answer.setVisibility(JavaVisibility.PUBLIC);
         ibatorContext.getCommentGenerator().addJavaFileComment(answer);
@@ -287,14 +229,14 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
             return null;
         }
 
-        FullyQualifiedTable table = introspectedTable.getTable();
-        FullyQualifiedJavaType type = getBaseRecordType(table);
+        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
+        FullyQualifiedJavaType type = introspectedTable.getBaseRecordType();
         TopLevelClass answer = new TopLevelClass(type);
         answer.setVisibility(JavaVisibility.PUBLIC);
         ibatorContext.getCommentGenerator().addJavaFileComment(answer);
         
         if (introspectedTable.getRules().generatePrimaryKeyClass()) {
-            answer.setSuperClass(getPrimaryKeyType(table));
+            answer.setSuperClass(introspectedTable.getPrimaryKeyType());
         } else {
             String rootClass = getRootClass(introspectedTable);
             if (rootClass != null) {
@@ -327,50 +269,22 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
             return null;
         }
 
-        FullyQualifiedTable table = introspectedTable.getTable();
-        FullyQualifiedJavaType type = getRecordWithBLOBsType(table);
+        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
+        FullyQualifiedJavaType type = introspectedTable.getRecordWithBLOBsType();
         TopLevelClass answer = new TopLevelClass(type);
         answer.setVisibility(JavaVisibility.PUBLIC);
         ibatorContext.getCommentGenerator().addJavaFileComment(answer);
         
         if (introspectedTable.getRules().generateBaseRecordClass()) {
-            answer.setSuperClass(getBaseRecordType(table));
+            answer.setSuperClass(introspectedTable.getBaseRecordType());
         } else {
-            answer.setSuperClass(getPrimaryKeyType(table));
+            answer.setSuperClass(introspectedTable.getPrimaryKeyType());
         }
         
         generateClassParts(table, introspectedTable.getBLOBColumns(), answer,
                 introspectedTable);
 
         return answer;
-    }
-
-    public void setTargetProject(String targetProject) {
-        this.targetProject = targetProject;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.ibatis.ibator.api.JavaModelGenerator#getExampleType(org.apache.ibatis.ibator.config.FullyQualifiedTable)
-     */
-    public FullyQualifiedJavaType getExampleType(FullyQualifiedTable table) {
-        String key = "getExampleType"; //$NON-NLS-1$
-
-        Map<String, Object> map = getTableValueMap(table);
-        FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) map.get(key);
-        if (fqjt == null) {
-            StringBuffer sb = new StringBuffer();
-            sb.append(getJavaModelPackage(table));
-            sb.append('.');
-            sb.append(table.getDomainObjectName());
-            sb.append("Example"); //$NON-NLS-1$
-
-            fqjt = new FullyQualifiedJavaType(sb.toString());
-            map.put(key, fqjt);
-        }
-
-        return fqjt;
     }
 
     /*
@@ -380,10 +294,11 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
     public List<GeneratedJavaFile> getGeneratedJavaFiles(IntrospectedTable introspectedTable, ProgressCallback callback) {
         List<GeneratedJavaFile> list = new ArrayList<GeneratedJavaFile>();
         IbatorPlugin plugins = ibatorContext.getPlugins();
+        String targetProject = ibatorContext.getJavaModelGeneratorConfiguration().getTargetProject();
 
         callback.startSubTask(Messages.getString(
                 "Progress.6", //$NON-NLS-1$
-                introspectedTable.getTable().toString()));
+                introspectedTable.getFullyQualifiedTable().toString()));
         TopLevelClass tlc = getExample(introspectedTable);
         if (tlc != null) {
             if (plugins.modelExampleClassGenerated(tlc, introspectedTable)) {
@@ -394,7 +309,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
         callback.startSubTask(Messages.getString(
                 "Progress.7", //$NON-NLS-1$
-                introspectedTable.getTable().toString()));
+                introspectedTable.getFullyQualifiedTable().toString()));
         tlc = getPrimaryKey(introspectedTable);
         if (tlc != null) {
             if (plugins.modelPrimaryKeyClassGenerated(tlc, introspectedTable)) {
@@ -405,7 +320,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
         callback.startSubTask(Messages.getString(
                 "Progress.8", //$NON-NLS-1$
-                introspectedTable.getTable().toString()));
+                introspectedTable.getFullyQualifiedTable().toString()));
         tlc = getBaseRecord(introspectedTable);
         if (tlc != null) {
             if (plugins.modelBaseRecordClassGenerated(tlc, introspectedTable)) {
@@ -416,7 +331,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
         callback.startSubTask(Messages.getString(
                 "Progress.9", //$NON-NLS-1$
-                introspectedTable.getTable().toString()));
+                introspectedTable.getFullyQualifiedTable().toString()));
         tlc = getRecordWithBLOBs(introspectedTable);
         if (tlc != null) {
             if (plugins.modelRecordWithBLOBsClassGenerated(tlc, introspectedTable)) {
@@ -426,78 +341,6 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         }
 
         return list;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.ibatis.ibator.api.JavaModelGenerator#getPrimaryKeyType(org.apache.ibatis.ibator.config.FullyQualifiedTable)
-     */
-    public FullyQualifiedJavaType getPrimaryKeyType(FullyQualifiedTable table) {
-        String key = "getPrimaryKeyType"; //$NON-NLS-1$
-
-        Map<String, Object> map = getTableValueMap(table);
-        FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) map.get(key);
-        if (fqjt == null) {
-            StringBuffer sb = new StringBuffer();
-            sb.append(getJavaModelPackage(table));
-            sb.append('.');
-            sb.append(table.getDomainObjectName());
-            sb.append("Key"); //$NON-NLS-1$
-
-            fqjt = new FullyQualifiedJavaType(sb.toString());
-            map.put(key, fqjt);
-        }
-
-        return fqjt;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.ibatis.ibator.api.JavaModelGenerator#getRecordType(org.apache.ibatis.ibator.config.FullyQualifiedTable)
-     */
-    public FullyQualifiedJavaType getBaseRecordType(FullyQualifiedTable table) {
-        String key = "getRecordType"; //$NON-NLS-1$
-
-        Map<String, Object> map = getTableValueMap(table);
-        FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) map.get(key);
-        if (fqjt == null) {
-            StringBuffer sb = new StringBuffer();
-            sb.append(getJavaModelPackage(table));
-            sb.append('.');
-            sb.append(table.getDomainObjectName());
-
-            fqjt = new FullyQualifiedJavaType(sb.toString());
-            map.put(key, fqjt);
-        }
-
-        return fqjt;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.ibatis.ibator.api.JavaModelGenerator#getRecordWithBLOBsType(org.apache.ibatis.ibator.config.FullyQualifiedTable)
-     */
-    public FullyQualifiedJavaType getRecordWithBLOBsType(
-            FullyQualifiedTable table) {
-        String key = "getRecordWithBLOBsType"; //$NON-NLS-1$
-
-        Map<String, Object> map = getTableValueMap(table);
-        FullyQualifiedJavaType fqjt = (FullyQualifiedJavaType) map.get(key);
-        if (fqjt == null) {
-            StringBuffer sb = new StringBuffer();
-            sb.append(getJavaModelPackage(table));
-            sb.append('.');
-            sb.append(table.getDomainObjectName());
-            sb.append("WithBLOBs"); //$NON-NLS-1$
-
-            fqjt = new FullyQualifiedJavaType(sb.toString());
-            map.put(key, fqjt);
-        }
-
-        return fqjt;
     }
 
     /*
@@ -702,8 +545,8 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         
         CommentGenerator commentGenerator = ibatorContext.getCommentGenerator();
 
-        FullyQualifiedTable table = introspectedTable.getTable();
-        FullyQualifiedJavaType type = getExampleType(table);
+        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
+        FullyQualifiedJavaType type = introspectedTable.getExampleType();
         TopLevelClass topLevelClass = new TopLevelClass(type);
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
         commentGenerator.addJavaFileComment(topLevelClass);
@@ -840,7 +683,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
 
         answer.setVisibility(JavaVisibility.PUBLIC);
         answer.setStatic(true);
-        ibatorContext.getCommentGenerator().addClassComment(answer, introspectedTable.getTable());
+        ibatorContext.getCommentGenerator().addClassComment(answer, introspectedTable.getFullyQualifiedTable());
 
         method = new Method();
         method.setVisibility(JavaVisibility.PROTECTED);

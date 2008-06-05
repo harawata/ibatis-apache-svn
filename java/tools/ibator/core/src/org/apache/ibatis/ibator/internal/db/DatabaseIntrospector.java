@@ -36,6 +36,7 @@ import org.apache.ibatis.ibator.config.ColumnOverride;
 import org.apache.ibatis.ibator.config.GeneratedKey;
 import org.apache.ibatis.ibator.config.PropertyRegistry;
 import org.apache.ibatis.ibator.config.TableConfiguration;
+import org.apache.ibatis.ibator.internal.IbatorObjectFactory;
 import org.apache.ibatis.ibator.internal.types.ResolvedJavaType;
 import org.apache.ibatis.ibator.internal.util.JavaBeansUtil;
 import org.apache.ibatis.ibator.internal.util.StringUtility;
@@ -61,13 +62,13 @@ public class DatabaseIntrospector {
         this.warnings = warnings;
     }
 
-    private void calculatePrimaryKey(IntrospectedTableImpl introspectedTable) {
+    private void calculatePrimaryKey(FullyQualifiedTable table, ColumnDefinitions columnDefinitions) {
         ResultSet rs = null;
-
+        
         try {
-            rs = databaseMetaData.getPrimaryKeys(introspectedTable.getTable().getIntrospectedCatalog(),
-                    introspectedTable.getTable().getIntrospectedSchema(),
-                    introspectedTable.getTable().getIntrospectedTableName());
+            rs = databaseMetaData.getPrimaryKeys(table.getIntrospectedCatalog(),
+                    table.getIntrospectedSchema(),
+                    table.getIntrospectedTableName());
         } catch (SQLException e) {
             closeResultSet(rs);
             warnings.add(Messages.getString("Warning.15")); //$NON-NLS-1$
@@ -78,7 +79,7 @@ public class DatabaseIntrospector {
             while (rs.next()) {
                 String columnName = rs.getString("COLUMN_NAME"); //$NON-NLS-1$
                 
-                introspectedTable.getColumnDefinitions().addPrimaryKeyColumn(columnName);
+                columnDefinitions.addPrimaryKeyColumn(columnName);
             }
         } catch (SQLException e) {
             // ignore the primary key if there's any error
@@ -99,13 +100,13 @@ public class DatabaseIntrospector {
     }
 
     private void reportIntrospectionWarnings(
-            ColumnDefinitions columnDefinitions,
+            IntrospectedTable introspectedTable,
             TableConfiguration tableConfiguration, 
             FullyQualifiedTable table) {
         // make sure that every column listed in column overrides
         // actually exists in the table
         for (ColumnOverride columnOverride : tableConfiguration.getColumnOverrides()) {
-            if (columnDefinitions.getColumn(columnOverride.getColumnName()) == null) {
+            if (introspectedTable.getColumn(columnOverride.getColumnName()) == null) {
                 warnings.add(Messages.getString("Warning.3", //$NON-NLS-1$
                         columnOverride.getColumnName(), table.toString()));
             }
@@ -120,7 +121,7 @@ public class DatabaseIntrospector {
 
         GeneratedKey generatedKey = tableConfiguration.getGeneratedKey();
         if (generatedKey != null
-                && columnDefinitions.getColumn(generatedKey.getColumn()) == null) {
+                && introspectedTable.getColumn(generatedKey.getColumn()) == null) {
             if (generatedKey.isIdentity()) {
                 warnings.add(Messages.getString("Warning.5", //$NON-NLS-1$
                         generatedKey.getColumn(), table.toString()));
@@ -140,7 +141,7 @@ public class DatabaseIntrospector {
      * @return a list of introspected tables
      * @throws SQLException
      */
-    public List<? extends IntrospectedTable> introspectTables(TableConfiguration tc) throws SQLException {
+    public List<IntrospectedTable> introspectTables(TableConfiguration tc) throws SQLException {
 
         // get the raw columns from the DB
         Map<ActualTableName, List<ColumnDefinition>> columns = getColumns(tc);
@@ -156,34 +157,28 @@ public class DatabaseIntrospector {
         applyColumnOverrides(tc, columns);
         calculateIdentityColumns(tc, columns);
         
-        List<IntrospectedTableImpl> introspectedTables = calculateIntrospectedTables(tc, columns);
-        
-        for (IntrospectedTableImpl it : introspectedTables) {
-            calculatePrimaryKey(it);
-        }
+        List<IntrospectedTable> introspectedTables = calculateIntrospectedTables(tc, columns);
         
         // now introspectedTables has all the columns from all the 
         // tables in the configuration.  Do some validation...
 
-        Iterator<IntrospectedTableImpl> iter = introspectedTables.iterator();
+        Iterator<IntrospectedTable> iter = introspectedTables.iterator();
         while (iter.hasNext()) {
-            IntrospectedTableImpl introspectedTable = iter.next();
+            IntrospectedTable introspectedTable = iter.next();
             
-            ColumnDefinitions cds = introspectedTable.getColumnDefinitions();
-            
-            if (!cds.hasAnyColumns()) {
+            if (!introspectedTable.hasAnyColumns()) {
                 // add warning that the table has no columns, remove from the list
-                warnings.add(Messages.getString("Warning.1", introspectedTable.getTable().toString())); //$NON-NLS-1$
+                warnings.add(Messages.getString("Warning.1", introspectedTable.getFullyQualifiedTable().toString())); //$NON-NLS-1$
                 iter.remove();
-            } else if (!cds.hasPrimaryKeyColumns()
-                    && !cds.hasBaseColumns()) {
+            } else if (!introspectedTable.hasPrimaryKeyColumns()
+                    && !introspectedTable.hasBaseColumns()) {
                 // add warning that the table has only BLOB columns, remove from the list
-                warnings.add(Messages.getString("Warning.18", introspectedTable.getTable().toString())); //$NON-NLS-1$
+                warnings.add(Messages.getString("Warning.18", introspectedTable.getFullyQualifiedTable().toString())); //$NON-NLS-1$
                 iter.remove();
             } else {
                 // now make sure that all columns called out in the configuration
                 // actually exist
-                reportIntrospectionWarnings(cds, tc, introspectedTable.getTable());
+                reportIntrospectionWarnings(introspectedTable, tc, introspectedTable.getFullyQualifiedTable());
             }
         }
 
@@ -428,14 +423,14 @@ public class DatabaseIntrospector {
         return answer;
     }
     
-    private List<IntrospectedTableImpl> calculateIntrospectedTables(TableConfiguration tc,
+    private List<IntrospectedTable> calculateIntrospectedTables(TableConfiguration tc,
     		Map<ActualTableName, List<ColumnDefinition>> columns) {
         boolean delimitIdentifiers = tc.isDelimitIdentifiers()
             || StringUtility.stringContainsSpace(tc.getCatalog())
             || StringUtility.stringContainsSpace(tc.getSchema())
             || StringUtility.stringContainsSpace(tc.getTableName());
         
-        List<IntrospectedTableImpl> answer = new ArrayList<IntrospectedTableImpl>();
+        List<IntrospectedTable> answer = new ArrayList<IntrospectedTable>();
 
         for (Map.Entry<ActualTableName, List<ColumnDefinition>> entry : columns.entrySet()) {
             ActualTableName atn = entry.getKey();
@@ -459,12 +454,16 @@ public class DatabaseIntrospector {
                     ibatorContext);
 
             ColumnDefinitions cds = new ColumnDefinitions();
-            IntrospectedTableImpl introspectedTable = new IntrospectedTableImpl(tc, cds, table);
-            answer.add(introspectedTable);
 
             for (ColumnDefinition cd : entry.getValue()) {
                 cds.addColumn(cd);
             }
+
+            calculatePrimaryKey(table, cds);
+
+            IntrospectedTable introspectedTable =
+                IbatorObjectFactory.createIntrospectedTable(tc, cds, table, ibatorContext);
+            answer.add(introspectedTable);
         }
         
         return answer;

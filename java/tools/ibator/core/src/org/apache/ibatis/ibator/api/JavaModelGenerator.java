@@ -18,7 +18,6 @@ package org.apache.ibatis.ibator.api;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.config.IbatorContext;
 
 /**
@@ -69,50 +68,6 @@ public interface JavaModelGenerator {
 	 */
 	void setWarnings(List<String> warnings);
 	
-	/**
-	 * Sets the target package of the generator taken from the 
-	 * JavaModelGeneratorConfiguration element.  This method is
-	 * called before any getXXX method.
-	 * 
-	 * @param targetPackage the configuration element's target package
-	 */
-	void setTargetPackage(String targetPackage);
-
-	/**
-	 * Sets the target project of the generator taken from the 
-	 * JavaModelGeneratorConfiguration element.  This method is
-	 * called before any getXXX method.
-	 * 
-	 * @param targetProject the configuration element's target project
-	 */
-	void setTargetProject(String targetProject);
-	
-	FullyQualifiedJavaType getPrimaryKeyType(FullyQualifiedTable table);
-
-	/**
-	 * 
-	 * @param table the table for which the name should be generated
-	 * @return the type for the record (the class that holds non-primary
-	 *  key and non-BLOB fields).  Note that
-	 *  the value will be calculated regardless of whether the table has these columns or not.
-	 */
-	FullyQualifiedJavaType getBaseRecordType(FullyQualifiedTable table);
-
-	/**
-	 * 
-	 * @param table the table for which the name should be generated
-	 * @return the type for the example class.
-	 */
-	FullyQualifiedJavaType getExampleType(FullyQualifiedTable table);
-
-	/**
-	 * 
-	 * @param table the table for which the name should be generated
-	 * @return the type for the record with BLOBs class.  Note that
-	 *  the value will be calculated regardless of whether the table has BLOB columns or not.
-	 */
-	FullyQualifiedJavaType getRecordWithBLOBsType(FullyQualifiedTable table);
-
 	/**
 	 * This method returns a list of GenerateJavaFile objects.  The list may
 	 * include any, or all, of the following types of generated java classes:

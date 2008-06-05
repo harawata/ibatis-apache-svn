@@ -62,11 +62,5 @@ public interface SqlMapGenerator {
      */
     void setIbatorContext(IbatorContext ibatorContext);
 
-    void setTargetPackage(String targetPackage);
-
-    void setTargetProject(String targetProject);
-
-    void setJavaModelGenerator(JavaModelGenerator javaModelGenerator);
-
     List<GeneratedXmlFile> getGeneratedXMLFiles(IntrospectedTable introspectedTable, ProgressCallback callback);
 }

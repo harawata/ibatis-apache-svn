@@ -15,6 +15,8 @@ Enhancements:
 2. Added support for runtimeCatalog and runtimeSchema properties to the
    table configuration.  Thanks to Dan Turkenkopf for the idea and the
    patch!
+3. Added abiliy to configure an implementation of IntrospectedTable interface.
+   This to allow overriding of many default behaviors of ibator.
    
    
 Changes:

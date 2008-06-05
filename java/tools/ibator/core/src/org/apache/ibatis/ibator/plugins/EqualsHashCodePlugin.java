@@ -135,7 +135,7 @@ public class EqualsHashCodePlugin extends IbatorPluginAdapter {
         }
 
         ibatorContext.getCommentGenerator().addGeneralMethodComment(method,
-                introspectedTable.getTable());
+                introspectedTable.getFullyQualifiedTable());
 
         method.addBodyLine("if (this == that) {"); //$NON-NLS-1$
         method.addBodyLine("return true;"); //$NON-NLS-1$
@@ -226,7 +226,7 @@ public class EqualsHashCodePlugin extends IbatorPluginAdapter {
         }
 
         ibatorContext.getCommentGenerator().addGeneralMethodComment(method,
-                introspectedTable.getTable());
+                introspectedTable.getFullyQualifiedTable());
 
         method.addBodyLine("int hash = 23;"); //$NON-NLS-1$
 

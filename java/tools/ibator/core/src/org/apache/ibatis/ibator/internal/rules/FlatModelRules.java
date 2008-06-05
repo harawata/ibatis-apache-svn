@@ -16,8 +16,8 @@
 
 package org.apache.ibatis.ibator.internal.rules;
 
+import org.apache.ibatis.ibator.api.IntrospectedTable;
 import org.apache.ibatis.ibator.config.TableConfiguration;
-import org.apache.ibatis.ibator.internal.db.ColumnDefinitions;
 
 /**
  * This class encapsulates all the code generation rules for 
@@ -32,8 +32,8 @@ public class FlatModelRules extends IbatorRules {
      * 
      */
     public FlatModelRules(TableConfiguration tableConfiguration,
-            ColumnDefinitions columnDefinitions) {
-        super(tableConfiguration, columnDefinitions);
+            IntrospectedTable introspectedTable) {
+        super(tableConfiguration, introspectedTable);
     }
 
     /**

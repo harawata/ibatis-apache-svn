@@ -18,8 +18,12 @@ package org.apache.ibatis.ibator.api;
 
 import java.util.List;
 
+import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.config.GeneratedKey;
+import org.apache.ibatis.ibator.config.IbatorContext;
+import org.apache.ibatis.ibator.config.TableConfiguration;
 import org.apache.ibatis.ibator.internal.db.ColumnDefinition;
+import org.apache.ibatis.ibator.internal.db.ColumnDefinitions;
 import org.apache.ibatis.ibator.internal.rules.IbatorRules;
 
 /**
@@ -29,7 +33,7 @@ import org.apache.ibatis.ibator.internal.rules.IbatorRules;
  *
  */
 public interface IntrospectedTable {
-    FullyQualifiedTable getTable();
+    FullyQualifiedTable getFullyQualifiedTable();
     String getSelectByExampleQueryId();
     String getSelectByPrimaryKeyQueryId();
     GeneratedKey getGeneratedKey();
@@ -93,7 +97,52 @@ public interface IntrospectedTable {
     
     boolean hasBLOBColumns();
     
+    boolean hasBaseColumns();
+    
     IbatorRules getRules();
     
     String getTableConfigurationProperty(String property);
+
+    FullyQualifiedJavaType getPrimaryKeyType();
+
+    /**
+     * 
+     * @return the type for the record (the class that holds non-primary
+     *  key and non-BLOB fields).  Note that
+     *  the value will be calculated regardless of whether the table has these columns or not.
+     */
+    FullyQualifiedJavaType getBaseRecordType();
+
+    /**
+     * 
+     * @return the type for the example class.
+     */
+    FullyQualifiedJavaType getExampleType();
+
+    /**
+     * 
+     * @return the type for the record with BLOBs class.  Note that
+     *  the value will be calculated regardless of whether the table has BLOB columns or not.
+     */
+    FullyQualifiedJavaType getRecordWithBLOBsType();
+
+    String getSqlMapFileName();
+
+    /**
+     * Calculates the package for the current table.
+     * 
+     * @return the package for the SqlMap for the current table
+     */
+    String getSqlMapPackage();
+    
+    FullyQualifiedJavaType getDAOImplementationType();
+
+    FullyQualifiedJavaType getDAOInterfaceType();
+
+    boolean hasAnyColumns();
+    
+    void setTableConfiguration(TableConfiguration tableConfiguration);
+    void setColumnDefinitions(ColumnDefinitions columnDefinitions);
+    void setFullyQualifiedTable(FullyQualifiedTable fullyQualifiedTable);
+    void setIbatorContext(IbatorContext ibatorContext);
 }

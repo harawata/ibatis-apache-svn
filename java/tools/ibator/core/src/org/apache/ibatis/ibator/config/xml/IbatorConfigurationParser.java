@@ -240,12 +240,14 @@ public class IbatorConfigurationParser {
         String generatorSet = attributes.getProperty("generatorSet"); //$NON-NLS-1$
         String defaultModelType = attributes.getProperty("defaultModelType"); //$NON-NLS-1$
         String id = attributes.getProperty("id"); //$NON-NLS-1$
+        String introspectedTableImplementation = attributes.getProperty("introspectedTableImplementation"); //$NON-NLS-1$
 
         ModelType mt = defaultModelType == null ? null : ModelType
                 .getModelType(defaultModelType);
 
         IbatorContext ibatorContext = new IbatorContext(generatorSet, mt);
         ibatorContext.setId(id);
+        ibatorContext.setIntrospectedTableImplementation(introspectedTableImplementation);
 
         ibatorConfiguration.addIbatorContext(ibatorContext);
 

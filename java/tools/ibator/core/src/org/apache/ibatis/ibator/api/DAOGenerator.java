@@ -60,43 +60,6 @@ public interface DAOGenerator {
 	void setWarnings(List<String> warnings);
 	
     /**
-     * Sets the target package for this instance. This value should be used to
-     * calculate the package for the DAO interface and implementation classes.
-     * 
-     * This method will be called before any of the get methods.
-     * 
-     * @param targetPackage
-     *            The target package from the configuration
-     */
-    void setTargetPackage(String targetPackage);
-
-    /**
-     * 
-     * @param targetProject
-     */
-    void setTargetProject(String targetProject);
-
-    /**
-     * Sets the instance of JavaModelGenerator associated with this instance.
-     * 
-     * This method will be called before any of the get methods.
-     * 
-     * @param javaModelGenerator
-     *            The JavaModelGenerator associated with this instance
-     */
-    void setJavaModelGenerator(JavaModelGenerator javaModelGenerator);
-
-    /**
-     * Sets the instance of SqlMapGenerator associated with this instance.
-     * 
-     * This method will be called before any of the get methods.
-     * 
-     * @param sqlMapGenerator
-     *            The SqlMapGenerator associated with this instance
-     */
-    void setSqlMapGenerator(SqlMapGenerator sqlMapGenerator);
-
-    /**
      * This method returns a list of GenerateJavaFile objects. The list may
      * include any, or all, of the following types of generated java classes:
      * 

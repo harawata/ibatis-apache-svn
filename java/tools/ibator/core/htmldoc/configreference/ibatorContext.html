@@ -109,6 +109,17 @@ databases, or with different generation parameters, in the same run of ibator.</
       </table>
     </td>
   </tr>
+  <tr>
+    <td valign="top">introspectedTableImplementation</td>
+    <td>This atribute can be used to configure a custom implementation of the
+        <code>org.apache.ibatis.ibator.api.IntrospectedTable</code> interface
+        for this context.  Implementations of this interface can provide
+        custom behavior for many of the core ibator functions.  The default
+        implementation of the interface is
+        <code>org.apache.ibatis.ibator.internal.db.IntrospectedTableDefaultImpl</code>
+        and that class is designed for extensibility.
+    </td>
+  </tr>
 </table>
 
 <h2>Child Elements</h2>

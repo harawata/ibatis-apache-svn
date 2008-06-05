@@ -16,8 +16,8 @@
 
 package org.apache.ibatis.ibator.internal.rules;
 
+import org.apache.ibatis.ibator.api.IntrospectedTable;
 import org.apache.ibatis.ibator.config.TableConfiguration;
-import org.apache.ibatis.ibator.internal.db.ColumnDefinitions;
 
 /**
  * This class encapsulates all the code generation rules for 
@@ -34,8 +34,8 @@ public class ConditionalModelRules extends IbatorRules {
      * 
      */
     public ConditionalModelRules(TableConfiguration tableConfiguration,
-            ColumnDefinitions columnDefinitions) {
-        super(tableConfiguration, columnDefinitions);
+            IntrospectedTable introspectedTable) {
+        super(tableConfiguration, introspectedTable);
     }
 
     /**
@@ -46,7 +46,7 @@ public class ConditionalModelRules extends IbatorRules {
      */
     @Override
     public boolean generatePrimaryKeyClass() {
-        return columnDefinitions.getPrimaryKeyColumns().size() > 1;
+        return introspectedTable.getPrimaryKeyColumns().size() > 1;
     }
 
     /**
@@ -60,9 +60,9 @@ public class ConditionalModelRules extends IbatorRules {
      */
     @Override
     public boolean generateBaseRecordClass() {
-        return columnDefinitions.getBaseColumns().size() > 0
-            || columnDefinitions.getPrimaryKeyColumns().size() == 1
-            || (columnDefinitions.getBLOBColumns().size() > 0
+        return introspectedTable.getBaseColumns().size() > 0
+            || introspectedTable.getPrimaryKeyColumns().size() == 1
+            || (introspectedTable.getBLOBColumns().size() > 0
                     && !generateRecordWithBLOBsClass());
         
     }
@@ -76,10 +76,10 @@ public class ConditionalModelRules extends IbatorRules {
      */
     @Override
     public boolean generateRecordWithBLOBsClass() {
-        int otherColumnCount = columnDefinitions.getPrimaryKeyColumns().size()
-            + columnDefinitions.getBaseColumns().size();
+        int otherColumnCount = introspectedTable.getPrimaryKeyColumns().size()
+            + introspectedTable.getBaseColumns().size();
         
         return otherColumnCount > 1 
-            && columnDefinitions.getBLOBColumns().size() > 1;
+            && introspectedTable.getBLOBColumns().size() > 1;
     }
 }
