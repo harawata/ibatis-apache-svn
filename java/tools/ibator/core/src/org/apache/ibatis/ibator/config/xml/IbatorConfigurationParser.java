@@ -367,43 +367,35 @@ public class IbatorConfigurationParser {
         }
 
         if (StringUtility.stringHasValue(enableInsert)) {
-            tc.setInsertStatementEnabled("true" //$NON-NLS-1$
-                    .equals(enableInsert));
+            tc.setInsertStatementEnabled(StringUtility.isTrue(enableInsert));
         }
 
         if (StringUtility.stringHasValue(enableSelectByPrimaryKey)) {
-            tc.setSelectByPrimaryKeyStatementEnabled("true" //$NON-NLS-1$
-                    .equals(enableSelectByPrimaryKey));
+            tc.setSelectByPrimaryKeyStatementEnabled(StringUtility.isTrue(enableSelectByPrimaryKey));
         }
 
         if (StringUtility.stringHasValue(enableSelectByExample)) {
-            tc.setSelectByExampleStatementEnabled("true" //$NON-NLS-1$
-                    .equals(enableSelectByExample));
+            tc.setSelectByExampleStatementEnabled(StringUtility.isTrue(enableSelectByExample));
         }
 
         if (StringUtility.stringHasValue(enableUpdateByPrimaryKey)) {
-            tc.setUpdateByPrimaryKeyStatementEnabled("true" //$NON-NLS-1$
-                    .equals(enableUpdateByPrimaryKey));
+            tc.setUpdateByPrimaryKeyStatementEnabled(StringUtility.isTrue(enableUpdateByPrimaryKey));
         }
 
         if (StringUtility.stringHasValue(enableDeleteByPrimaryKey)) {
-            tc.setDeleteByPrimaryKeyStatementEnabled("true" //$NON-NLS-1$
-                    .equals(enableDeleteByPrimaryKey));
+            tc.setDeleteByPrimaryKeyStatementEnabled(StringUtility.isTrue(enableDeleteByPrimaryKey));
         }
 
         if (StringUtility.stringHasValue(enableDeleteByExample)) {
-            tc.setDeleteByExampleStatementEnabled("true" //$NON-NLS-1$
-                    .equals(enableDeleteByExample));
+            tc.setDeleteByExampleStatementEnabled(StringUtility.isTrue(enableDeleteByExample));
         }
 
         if (StringUtility.stringHasValue(enableCountByExample)) {
-            tc.setCountByExampleStatementEnabled("true" //$NON-NLS-1$
-                    .equals(enableCountByExample));
+            tc.setCountByExampleStatementEnabled(StringUtility.isTrue(enableCountByExample));
         }
 
         if (StringUtility.stringHasValue(enableUpdateByExample)) {
-            tc.setUpdateByExampleStatementEnabled("true" //$NON-NLS-1$
-                    .equals(enableUpdateByExample));
+            tc.setUpdateByExampleStatementEnabled(StringUtility.isTrue(enableUpdateByExample));
         }
 
         if (StringUtility.stringHasValue(selectByPrimaryKeyQueryId)) {
@@ -419,13 +411,11 @@ public class IbatorConfigurationParser {
         }
 
         if (StringUtility.stringHasValue(escapeWildcards)) {
-            tc.setWildcardEscapingEnabled("true" //$NON-NLS-1$
-                    .equals(escapeWildcards));
+            tc.setWildcardEscapingEnabled(StringUtility.isTrue(escapeWildcards));
         }
 
         if (StringUtility.stringHasValue(delmitIdentifiers)) {
-            tc.setDelimitIdentifiers("true" //$NON-NLS-1$
-                    .equals(delmitIdentifiers));
+            tc.setDelimitIdentifiers(StringUtility.isTrue(delmitIdentifiers));
         }
         
         NodeList nodeList = node.getChildNodes();
@@ -478,7 +468,7 @@ public class IbatorConfigurationParser {
         }
 
         if (StringUtility.stringHasValue(delimitedColumnName)) {
-            co.setColumnNameDelimited("true".equalsIgnoreCase(delimitedColumnName)); //$NON-NLS-1$
+            co.setColumnNameDelimited(StringUtility.isTrue(delimitedColumnName));
         }
         
         tc.addColumnOverride(co);
@@ -488,7 +478,7 @@ public class IbatorConfigurationParser {
         Properties attributes = parseAttributes(node);
 
         String column = attributes.getProperty("column"); //$NON-NLS-1$
-        boolean identity = "true".equals(attributes.getProperty("identity")); //$NON-NLS-1$ //$NON-NLS-2$
+        boolean identity = StringUtility.isTrue(attributes.getProperty("identity")); //$NON-NLS-1$
         String sqlStatement = attributes.getProperty("sqlStatement"); //$NON-NLS-1$
         String type = attributes.getProperty("type"); //$NON-NLS-1$
 
@@ -505,7 +495,7 @@ public class IbatorConfigurationParser {
         IgnoredColumn ic = new IgnoredColumn(column);
         
         if (StringUtility.stringHasValue(delimitedColumnName)) {
-            ic.setColumnNameDelimited("true".equalsIgnoreCase(delimitedColumnName)); //$NON-NLS-1$
+            ic.setColumnNameDelimited(StringUtility.isTrue(delimitedColumnName));
         }
 
         tc.addIgnoredColumn(ic);

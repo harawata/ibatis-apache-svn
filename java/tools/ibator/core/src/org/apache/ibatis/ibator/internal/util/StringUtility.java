@@ -90,4 +90,8 @@ public class StringUtility {
         
         return sb.toString();
     }
+    
+    public static boolean isTrue(String s) {
+        return "true".equalsIgnoreCase(s); //$NON-NLS-1$
+    }
 }

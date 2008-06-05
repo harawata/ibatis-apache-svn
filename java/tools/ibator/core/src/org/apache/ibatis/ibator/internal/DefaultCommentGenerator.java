@@ -32,6 +32,7 @@ import org.apache.ibatis.ibator.api.dom.xml.TextElement;
 import org.apache.ibatis.ibator.api.dom.xml.XmlElement;
 import org.apache.ibatis.ibator.config.MergeConstants;
 import org.apache.ibatis.ibator.config.PropertyRegistry;
+import org.apache.ibatis.ibator.internal.util.StringUtility;
 
 /**
  * @author Jeff Butler
@@ -214,9 +215,8 @@ public class DefaultCommentGenerator implements CommentGenerator {
     public void addConfigurationProperties(Properties properties) {
         this.properties.putAll(properties);
 
-        if ("true".equalsIgnoreCase(properties.getProperty(PropertyRegistry.COMMENT_GENERATOR_SUPPRESS_DATE))) { //$NON-NLS-1$
-            suppressDate = true;
-        }
+        suppressDate = 
+            StringUtility.isTrue(properties.getProperty(PropertyRegistry.COMMENT_GENERATOR_SUPPRESS_DATE));
     }
 
     /**

@@ -121,7 +121,7 @@ public class JavaModelGeneratorJava2Impl implements JavaModelGenerator {
         IbatorPlugin plugins = ibatorContext.getPlugins();
         String rootClass = getRootClass(introspectedTable);
         
-        boolean trimStrings = "true".equalsIgnoreCase(properties //$NON-NLS-1$
+        boolean trimStrings = StringUtility.isTrue(properties
                 .getProperty(PropertyRegistry.MODEL_GENERATOR_TRIM_STRINGS));
 
         StringBuffer sb = new StringBuffer();

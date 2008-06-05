@@ -465,7 +465,7 @@ public class IbatorContext extends PropertyHolder {
         super.addProperty(name, value);
         
         if (PropertyRegistry.CONTEXT_SUPPRESS_TYPE_WARNINGS.equals(name)) {
-            suppressTypeWarnings = "true".equalsIgnoreCase(value); //$NON-NLS-1$
+            suppressTypeWarnings = StringUtility.isTrue(value);
         } else if (PropertyRegistry.CONTEXT_BEGINNING_DELIMITER.equals(name)) {
             beginningDelimiter = value;
         } else if (PropertyRegistry.CONTEXT_ENDING_DELIMITER.equals(name)) {

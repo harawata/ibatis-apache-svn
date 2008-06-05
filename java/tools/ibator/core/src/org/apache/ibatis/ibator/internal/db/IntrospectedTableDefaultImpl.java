@@ -34,6 +34,7 @@ import org.apache.ibatis.ibator.internal.rules.ConditionalModelRules;
 import org.apache.ibatis.ibator.internal.rules.FlatModelRules;
 import org.apache.ibatis.ibator.internal.rules.HierarchicalModelRules;
 import org.apache.ibatis.ibator.internal.rules.IbatorRules;
+import org.apache.ibatis.ibator.internal.util.StringUtility;
 
 /**
  * @author Jeff Butler
@@ -238,7 +239,7 @@ public class IntrospectedTableDefaultImpl implements IntrospectedTable {
         SqlMapGeneratorConfiguration config = ibatorContext.getSqlMapGeneratorConfiguration();
         
         StringBuffer sb = new StringBuffer(config.getTargetPackage());
-        if ("true".equalsIgnoreCase(config.getProperty(PropertyRegistry.ANY_ENABLE_SUB_PACKAGES))) { //$NON-NLS-1$
+        if (StringUtility.isTrue(config.getProperty(PropertyRegistry.ANY_ENABLE_SUB_PACKAGES))) {
             sb.append(fullyQualifiedTable.getSubPackage());
         }
             
@@ -278,7 +279,7 @@ public class IntrospectedTableDefaultImpl implements IntrospectedTable {
         
         StringBuffer sb = new StringBuffer();
         sb.append(config.getTargetPackage());
-        if ("true".equalsIgnoreCase(config.getProperty(PropertyRegistry.ANY_ENABLE_SUB_PACKAGES))) { //$NON-NLS-1$
+        if (StringUtility.isTrue(config.getProperty(PropertyRegistry.ANY_ENABLE_SUB_PACKAGES))) {
             sb.append(fullyQualifiedTable.getSubPackage());
         }
         
@@ -290,7 +291,7 @@ public class IntrospectedTableDefaultImpl implements IntrospectedTable {
 
         StringBuffer sb = new StringBuffer();
         sb.append(config.getTargetPackage());
-        if ("true".equalsIgnoreCase(config.getProperty(PropertyRegistry.ANY_ENABLE_SUB_PACKAGES))) { //$NON-NLS-1$
+        if (StringUtility.isTrue(config.getProperty(PropertyRegistry.ANY_ENABLE_SUB_PACKAGES))) {
             sb.append(fullyQualifiedTable.getSubPackage());
         }
         

@@ -288,7 +288,7 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      */
     protected XmlElement getBaseResultMapElement(IntrospectedTable introspectedTable) {
         boolean useColumnIndex =
-            "true".equalsIgnoreCase(introspectedTable.getTableConfigurationProperty(PropertyRegistry.TABLE_USE_COLUMN_INDEXES)); //$NON-NLS-1$
+            StringUtility.isTrue(introspectedTable.getTableConfigurationProperty(PropertyRegistry.TABLE_USE_COLUMN_INDEXES));
         XmlElement answer = new XmlElement("resultMap"); //$NON-NLS-1$
         answer.addAttribute(new Attribute("id", //$NON-NLS-1$
                 XmlConstants.BASE_RESULT_MAP_ID));
@@ -348,13 +348,13 @@ public class SqlMapGeneratorIterateImpl implements SqlMapGenerator {
      */
     protected XmlElement getResultMapWithBLOBsElement(IntrospectedTable introspectedTable) {
         boolean useColumnIndex =
-            "true".equalsIgnoreCase(introspectedTable.getTableConfigurationProperty(PropertyRegistry.TABLE_USE_COLUMN_INDEXES)); //$NON-NLS-1$
+            StringUtility.isTrue(introspectedTable.getTableConfigurationProperty(PropertyRegistry.TABLE_USE_COLUMN_INDEXES));
 
         XmlElement answer = new XmlElement("resultMap"); //$NON-NLS-1$
         FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
 
-        answer.addAttribute(new Attribute("id", 
-                XmlConstants.RESULT_MAP_WITH_BLOBS_ID)); //$NON-NLS-1$
+        answer.addAttribute(new Attribute("id",  //$NON-NLS-1$
+                XmlConstants.RESULT_MAP_WITH_BLOBS_ID));
         
         FullyQualifiedJavaType returnType;
         if (introspectedTable.getRules().generateRecordWithBLOBsClass()) {

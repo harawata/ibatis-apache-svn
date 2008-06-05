@@ -221,7 +221,7 @@ public class DatabaseIntrospector {
                     calculatedColumnName = matcher.replaceAll(replaceString);
                 }
                 
-                if ("true".equalsIgnoreCase(tc.getProperty(PropertyRegistry.TABLE_USE_ACTUAL_COLUMN_NAMES))) { //$NON-NLS-1$
+                if (StringUtility.isTrue(tc.getProperty(PropertyRegistry.TABLE_USE_ACTUAL_COLUMN_NAMES))) {
                     cd.setJavaProperty(JavaBeansUtil.getValidPropertyName(calculatedColumnName));
                 } else {
                     cd.setJavaProperty(JavaBeansUtil.getCamelCaseString(calculatedColumnName, false));
@@ -446,7 +446,7 @@ public class DatabaseIntrospector {
                     atn.getTableName(),
                     tc.getDomainObjectName(),
                     tc.getAlias(),
-                    "true".equalsIgnoreCase(tc.getProperty(PropertyRegistry.TABLE_IGNORE_QUALIFIERS_AT_RUNTIME)), //$NON-NLS-1$
+                    StringUtility.isTrue(tc.getProperty(PropertyRegistry.TABLE_IGNORE_QUALIFIERS_AT_RUNTIME)),
                     tc.getProperty(PropertyRegistry.TABLE_RUNTIME_CATALOG),
                     tc.getProperty(PropertyRegistry.TABLE_RUNTIME_SCHEMA),
                     tc.getProperty(PropertyRegistry.TABLE_RUNTIME_TABLE_NAME),

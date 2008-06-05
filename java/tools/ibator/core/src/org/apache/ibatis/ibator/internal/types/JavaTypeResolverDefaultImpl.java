@@ -26,6 +26,7 @@ import org.apache.ibatis.ibator.api.dom.java.FullyQualifiedJavaType;
 import org.apache.ibatis.ibator.config.IbatorContext;
 import org.apache.ibatis.ibator.config.PropertyRegistry;
 import org.apache.ibatis.ibator.internal.db.ColumnDefinition;
+import org.apache.ibatis.ibator.internal.util.StringUtility;
 
 /**
  * 
@@ -53,7 +54,7 @@ public class JavaTypeResolverDefaultImpl implements JavaTypeResolver {
 	 * @see org.apache.ibatis.ibator.api.JavaTypeResolver#initializeResolvedJavaType(org.apache.ibatis.ibator.internal.db.ColumnDefinition)
 	 */
 	public boolean initializeResolvedJavaType(ColumnDefinition cd) {
-		boolean forceBigDecimals = "true".equalsIgnoreCase(properties //$NON-NLS-1$
+		boolean forceBigDecimals = StringUtility.isTrue(properties
 				.getProperty(PropertyRegistry.TYPE_RESOLVER_FORCE_BIG_DECIMALS));
         boolean rc = true;
 

@@ -481,7 +481,7 @@ public class TableConfiguration extends PropertyHolder {
             }
         }
         
-        if ("true".equalsIgnoreCase(getProperty(PropertyRegistry.TABLE_USE_COLUMN_INDEXES))) {  //$NON-NLS-1$
+        if (StringUtility.isTrue(getProperty(PropertyRegistry.TABLE_USE_COLUMN_INDEXES))) {
             // when using column indexes, either both or neither query ids should be set
             if (selectByExampleStatementEnabled && selectByPrimaryKeyStatementEnabled) {
                 boolean queryId1Set = StringUtility.stringHasValue(selectByExampleQueryId);
