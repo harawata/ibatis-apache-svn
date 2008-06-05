@@ -23,25 +23,21 @@
  ********************************************************************************/
 #endregion
 
+using System.Text;
 using Apache.Ibatis.Common.Configuration;
-using Apache.Ibatis.DataMapper.Model.Sql.External;
-using Apache.Ibatis.DataMapper.Model.Statements;
+using Apache.Ibatis.Common.Contracts;
+using Apache.Ibatis.Common.Exceptions;
 using Apache.Ibatis.DataMapper.Configuration.Interpreters.Config;
 using Apache.Ibatis.DataMapper.Configuration.Serializers;
-using Apache.Ibatis.Common.Exceptions;
 using Apache.Ibatis.DataMapper.MappedStatements;
-using System.Text;
+using Apache.Ibatis.DataMapper.Model.ParameterMapping;
 using Apache.Ibatis.DataMapper.Model.Sql.Dynamic;
 using Apache.Ibatis.DataMapper.Model.Sql.Dynamic.Elements;
-using Apache.Ibatis.DataMapper.Model.ParameterMapping;
-using System;
-using Apache.Ibatis.DataMapper.DataExchange;
-using Apache.Ibatis.DataMapper.Model.Sql;
+using Apache.Ibatis.DataMapper.Model.Sql.External;
 using Apache.Ibatis.DataMapper.Model.Sql.SimpleDynamic;
 using Apache.Ibatis.DataMapper.Model.Sql.Static;
+using Apache.Ibatis.DataMapper.Model.Statements;
 using Apache.Ibatis.DataMapper.Session;
-using Apache.Ibatis.Common.Contracts;
-
 
 namespace Apache.Ibatis.DataMapper.Configuration
 {
@@ -215,24 +211,32 @@ namespace Apache.Ibatis.DataMapper.Configuration
         /// <param name="statement">The statement.</param>
         private void ProcessSqlStatement(IConfiguration statementConfiguration, IStatement statement)
         {
+            if(dynamicSqlEngine!=null)
+            {
+                statement.SqlSource = dynamicSqlEngine;
+            }
+
             if (statement.SqlSource!=null)
             {
+                #region SqlSource
                 string commandText = string.Empty;
 
-                if (statementConfiguration.Children.Count>0)
+                if (statementConfiguration.Children.Count > 0)
                 {
                     IConfiguration child = statementConfiguration.Children[0];
                     if (child.Type == ConfigConstants.ELEMENT_TEXT || child.Type == ConfigConstants.ELEMENT_CDATA)
                     {
                         commandText = child.Value;
-                    }                    
+                    }
                 }
 
                 ExternalSql externalSql = new ExternalSql(modelStore, statement, commandText);
-                statement.Sql = externalSql;
+                statement.Sql = externalSql; 
+                #endregion
             }
             else
             {
+                #region other case
                 bool isDynamic = false;
 
                 DynamicSql dynamic = new DynamicSql(
@@ -254,7 +258,7 @@ namespace Apache.Ibatis.DataMapper.Configuration
                     string newSqlCommandText = string.Empty;
 
                     ParameterMap map = inlineParemeterMapBuilder.BuildInlineParemeterMap(statement, sqlText, out newSqlCommandText);
-                    if (map!=null)
+                    if (map != null)
                     {
                         statement.ParameterMap = map;
                     }
@@ -292,10 +296,10 @@ namespace Apache.Ibatis.DataMapper.Configuration
 
                             session.Close();
                         }
-                    }
-
+                    } 
                 }                
-            }
+                #endregion
+            }                
 
             Contract.Ensure.That(statement.Sql, Is.Not.Null).When("process Sql statement.");
         }

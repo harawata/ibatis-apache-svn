@@ -36,7 +36,7 @@ namespace Apache.Ibatis.DataMapper.Configuration
     /// The <see cref="ConfigurationSetting"/> class allows the user to set by code some
     /// setting that will drive the iBATIS engine and his configuration.
     /// </summary>
-    public class ConfigurationSetting
+    public sealed class ConfigurationSetting
     {
         private IObjectFactory objectFactory = null;
         private IGetAccessorFactory getAccessorFactory = null;
@@ -46,7 +46,17 @@ namespace Apache.Ibatis.DataMapper.Configuration
         private ISessionStore sessionStore = null;
         private readonly IDictionary<string, string> properties = new Dictionary<string, string>();
         private bool validateMapperConfigFile = false;
+        private ISqlSource dynamicSqlEngine = null;
 
+        /// <summary>
+        /// Gets or sets the dynamic SQL engine.
+        /// </summary>
+        /// <value>The dynamic SQL engine.</value>
+        public ISqlSource DynamicSqlEngine
+        {
+            get { return dynamicSqlEngine; }
+            set { dynamicSqlEngine = value; }
+        }
 
         /// <summary>
         /// Indicates whether we enable or not the validation of Mapper config files.

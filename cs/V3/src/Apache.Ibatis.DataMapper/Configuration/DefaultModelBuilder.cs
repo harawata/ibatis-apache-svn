@@ -77,6 +77,7 @@ namespace Apache.Ibatis.DataMapper.Configuration
         private bool useReflectionOptimizer = true;
         private readonly WaitResultPropertyResolution waitResultPropertyResolution = null;
         private readonly WaitDiscriminatorResolution waitDiscriminatorResolution = null;
+        private ISqlSource dynamicSqlEngine = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultModelBuilder"/> class.
@@ -120,6 +121,7 @@ namespace Apache.Ibatis.DataMapper.Configuration
                 dataSource = configurationSetting.DataSource;
                 sessionFactory = configurationSetting.SessionFactory;
                 sessionStore = configurationSetting.SessionStore;
+                dynamicSqlEngine = configurationSetting.DynamicSqlEngine;
             }
 
             if (objectFactory == null)

@@ -32,7 +32,6 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Domain
         {
             velocityEngine = new VelocityEngine();
             velocityEngine.Init();
-
         }
 
         #region ISqlSource Members
@@ -54,11 +53,6 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Domain
             ExternalSql externalSql = (ExternalSql)mappedStatement.Statement.Sql;
             
             string commandText = externalSql.CommandText;
-
-            if (logger.IsDebugEnabled)
-            {
-                logger.Debug("Parse velocity string '" + commandText);
-            }
 
             if (commandText.Contains(VELOCITY_DIRECTIVE))
             {
@@ -85,6 +79,11 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Domain
                     throw new DataMapperException("Could not parse velocity string '" + commandText + "' for " + mappedStatement.Id);
                 }
                 commandText = sw.GetStringBuilder().ToString();
+            }
+
+            if (logger.IsDebugEnabled)
+            {
+                logger.Debug("SQL command text parse by velocity: " + commandText);
             }
 
             return commandText;

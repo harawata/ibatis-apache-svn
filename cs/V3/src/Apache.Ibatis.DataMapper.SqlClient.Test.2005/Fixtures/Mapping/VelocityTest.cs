@@ -28,6 +28,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
             IResource resource = ResourceLoaderRegistry.GetResource(uri);
 
             ConfigurationSetting setting = new ConfigurationSetting();
+            setting.DynamicSqlEngine = new NVelocitySqlSource();
 
             IConfigurationEngine engine = new DefaultConfigurationEngine(setting);
             engine.RegisterInterpreter(new XmlConfigurationInterpreter(resource));

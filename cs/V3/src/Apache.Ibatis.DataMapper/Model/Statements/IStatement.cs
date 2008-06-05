@@ -46,10 +46,8 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
     /// </summary>
     public interface IStatement
     {
-
         #region Properties
-
-
+        
         /// <summary>
         /// Gets a value indicating whether [allow remapping].
         /// </summary>
@@ -111,11 +109,12 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
         /// <value>The list class.</value>
         Type ListClass { get; }
 
+
         /// <summary>
-        /// Gets the SQL source.
+        /// Gets or sets the SQL source.
         /// </summary>
         /// <value>The SQL source.</value>
-        ISqlSource SqlSource { get; }
+        ISqlSource SqlSource { get; set; }
 
         #endregion
 

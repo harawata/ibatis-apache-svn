@@ -22,11 +22,11 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
   
   <statements>
 
-    <select id="NVelocity.Simple" sqlSource="NVelocitySqlSource" resultMap="account-result" parameterClass="map">
+    <select id="NVelocity.Simple" resultMap="account-result" parameterClass="map">
       select * from Accounts where Account_Id= $account.id
     </select>
 
-    <select id="NVelocity.If" sqlSource="NVelocitySqlSource" resultClass="Account" remapResults="true" parameterClass="map">
+    <select id="NVelocity.If" resultClass="Account" remapResults="true" parameterClass="map">
       SELECT
       Account_ID as Id,
 
@@ -42,7 +42,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
       where Account_Id= $account.id
     </select>
 
-    <select id="NVelocity.InlineParameter" sqlSource="NVelocitySqlSource" resultClass="Account">
+    <select id="NVelocity.InlineParameter" resultClass="Account">
       select
       Account_ID			as Id,
       Account_FirstName	as FirstName,
@@ -54,7 +54,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
       #end
     </select>
 
-    <select id="NVelocity.For" sqlSource="NVelocitySqlSource" parameterClass="list" resultClass="Account">
+    <select id="NVelocity.For" parameterClass="list" resultClass="Account">
       <![CDATA[ 
       select
       Account_ID			as Id,
@@ -72,8 +72,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
       ]]>
     </select>
 
-
-    <procedure id="NVelocity.Procedure" sqlSource="NVelocitySqlSource" parameterClass="map">
+    <procedure id="NVelocity.Procedure" parameterClass="map">
       ps_InsertAccountWithDefault
       @{account.Id,column=Account_ID}
       ,@{account.FirstName,column=Account_FirstName}

@@ -75,7 +75,7 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
         [NonSerialized]
         private readonly string extends = string.Empty;
         private ISql sql = null;
-        private readonly ISqlSource sqlSource = null;
+        private ISqlSource sqlSource = null;
 
         #endregion
 
@@ -273,6 +273,7 @@ namespace Apache.Ibatis.DataMapper.Model.Statements
         public ISqlSource SqlSource
         {
             get { return sqlSource; }
+            set { sqlSource = value;}
         }
 
         #endregion
