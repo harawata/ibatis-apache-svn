@@ -41,11 +41,11 @@ import org.apache.ibatis.ibator.internal.rules.IbatorRules;
  */
 public class IntrospectedTableDefaultImpl implements IntrospectedTable {
 
-    private TableConfiguration tableConfiguration;
-    private ColumnDefinitions columnDefinitions;
-    private FullyQualifiedTable fullyQualifiedTable;
+    protected TableConfiguration tableConfiguration;
+    protected ColumnDefinitions columnDefinitions;
+    protected FullyQualifiedTable fullyQualifiedTable;
+    protected IbatorContext ibatorContext;
     private IbatorRules rules;
-    private IbatorContext ibatorContext;
     
     /**
      * 
@@ -97,11 +97,11 @@ public class IntrospectedTableDefaultImpl implements IntrospectedTable {
     public IbatorRules getRules() {
         if (rules == null) {
             if (tableConfiguration.getModelType() == ModelType.HIERARCHICAL) {
-                this.rules = new HierarchicalModelRules(tableConfiguration, this);
+                rules = new HierarchicalModelRules(tableConfiguration, this);
             } else if (tableConfiguration.getModelType() == ModelType.FLAT) {
-                this.rules = new FlatModelRules(tableConfiguration, this);
+                rules = new FlatModelRules(tableConfiguration, this);
             } else {
-                this.rules = new ConditionalModelRules(tableConfiguration, this);
+                rules = new ConditionalModelRules(tableConfiguration, this);
             }
         }
         
