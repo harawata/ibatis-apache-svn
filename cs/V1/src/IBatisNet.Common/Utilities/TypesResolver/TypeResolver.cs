@@ -313,10 +313,10 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 
             #region Fields
 
-                private string _unresolvedGenericTypeName = string.Empty;
-                private string[] _unresolvedGenericArguments = null;
-
-                #endregion
+            private string _unresolvedGenericTypeName = string.Empty;
+            private string[] _unresolvedGenericArguments = null;
+            private readonly static Regex generic = new Regex(@"`\d*\[\[", RegexOptions.Compiled); 
+            #endregion
 
             #region Constructor (s) / Destructor
 
@@ -411,11 +411,8 @@ namespace IBatisNet.Common.Utilities.TypesResolver
 
             private void ParseGenericArguments(string originalString)
             {
-                RegexOptions options = RegexOptions.None;
-                Regex regex = new Regex(@".*`\d*\[\[", options);
                 // Check for match
-                bool isMatch = regex.IsMatch(originalString);
-
+                bool isMatch = generic.IsMatch(originalString); 
                 if (!isMatch)
                 {
                     _unresolvedGenericTypeName = originalString;
