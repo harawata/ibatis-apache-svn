@@ -110,9 +110,7 @@ namespace Apache.Ibatis.DataMapper.Configuration
             ISetAccessorFactory setAccessorFactory = null;
             ISessionFactory sessionFactory = null;
             ISessionStore sessionStore = null;
-
-            LoadSetting(store);
-
+            
             if (configurationSetting != null)
             {
                 objectFactory = configurationSetting.ObjectFactory;
@@ -122,7 +120,13 @@ namespace Apache.Ibatis.DataMapper.Configuration
                 sessionFactory = configurationSetting.SessionFactory;
                 sessionStore = configurationSetting.SessionStore;
                 dynamicSqlEngine = configurationSetting.DynamicSqlEngine;
+                isCacheModelsEnabled = configurationSetting.IsCacheModelsEnabled;
+                useStatementNamespaces = configurationSetting.UseStatementNamespaces;
+                useReflectionOptimizer = configurationSetting.UseReflectionOptimizer;
             }
+            
+            // Xml setting override code setting
+            LoadSetting(store);
 
             if (objectFactory == null)
             {

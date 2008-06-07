@@ -45,7 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\JsonInterpreter.cs" />
-    <Compile Include="Domain\NVelocitySqlSource.cs" />
+    <Compile Include="Domain\NVelocityDynamicEngine.cs" />
     <Compile Include="Domain\SimpleSqlSource.cs" />
     <Compile Include="Domain\SqlSourceWithInlineParameter.cs" />
     <Compile Include="Domain\SqlSourceWithParameter.cs" />

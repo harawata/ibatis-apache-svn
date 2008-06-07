@@ -48,6 +48,10 @@ namespace Apache.Ibatis.DataMapper.Configuration
         private bool validateMapperConfigFile = false;
         private ISqlSource dynamicSqlEngine = null;
 
+        private bool useStatementNamespaces = false;
+        private bool isCacheModelsEnabled = false;
+        private bool useReflectionOptimizer = true;
+
         /// <summary>
         /// Gets or sets the dynamic SQL engine.
         /// </summary>
@@ -137,6 +141,42 @@ namespace Apache.Ibatis.DataMapper.Configuration
         public IDictionary<string, string> Properties
         {
             get { return properties; }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the DataMapper use statement namespaces.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [use statement namespaces]; otherwise, <c>false</c>.
+        /// </value>
+        public bool UseStatementNamespaces
+        {
+            get { return useStatementNamespaces; }
+            set { useStatementNamespaces = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether cache model use is enabled.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if cache model use is enabled; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsCacheModelsEnabled
+        {
+            get { return isCacheModelsEnabled; }
+            set { isCacheModelsEnabled = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the DataMapper use reflection optimizer.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if the DataMapper use reflection optimizer; otherwise, <c>false</c>.
+        /// </value>
+        public bool UseReflectionOptimizer
+        {
+            get { return useReflectionOptimizer; }
+            set { useReflectionOptimizer = value; }
         }
     }
 }

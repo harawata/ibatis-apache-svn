@@ -14,21 +14,21 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Domain
 {
     /// <summary>
     /// NVelocity implemantation of <see cref="ISqlSource"/>
-    /// which parse sql string
+    /// which parse sql string using Velocity language
     /// </summary>
     /// <remarks>
     /// See http://www.castleproject.org/others/nvelocity/index.html
     /// </remarks>
-    public class NVelocitySqlSource : ISqlSource
+    public class NVelocityDynamicEngine : ISqlSource
     {
         private readonly VelocityEngine velocityEngine = null;
         private const string VELOCITY_DIRECTIVE = "$";
         private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NVelocitySqlSource"/> class.
+        /// Initializes a new instance of the <see cref="NVelocityDynamicEngine"/> class.
         /// </summary>
-        public NVelocitySqlSource()
+        public NVelocityDynamicEngine()
         {
             velocityEngine = new VelocityEngine();
             velocityEngine.Init();

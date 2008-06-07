@@ -94,8 +94,8 @@ namespace Apache.Ibatis.DataMapper.Model.Cache.Memory
 					if (reference is StrongReference) 
 					{
 						value = ((StrongReference) reference).Target;
-					} 
-					else if (reference is WeakReference) 
+					}
+                    else if (reference is WeakReference && ((WeakReference)reference).IsAlive) 
 					{
 						value = ((WeakReference) reference).Target;
 					}

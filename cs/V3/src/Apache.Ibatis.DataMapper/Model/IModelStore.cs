@@ -24,17 +24,12 @@
  ********************************************************************************/
 #endregion
 
-using System.Collections.Generic;
-using Apache.Ibatis.Common.Data;
-using Apache.Ibatis.DataMapper.Configuration;
-using Apache.Ibatis.DataMapper.Model.ResultMapping;
-using Apache.Ibatis.DataMapper.TypeHandlers;
-using Apache.Ibatis.DataMapper.Model.ParameterMapping;
-using Apache.Ibatis.DataMapper.Model.Cache;
+using Apache.Ibatis.DataMapper.Data;
 using Apache.Ibatis.DataMapper.DataExchange;
 using Apache.Ibatis.DataMapper.MappedStatements;
-using Apache.Ibatis.Common.Utilities;
-using Apache.Ibatis.DataMapper.Data;
+using Apache.Ibatis.DataMapper.Model.Cache;
+using Apache.Ibatis.DataMapper.Model.ParameterMapping;
+using Apache.Ibatis.DataMapper.Model.ResultMapping;
 using Apache.Ibatis.DataMapper.Session;
 
 namespace Apache.Ibatis.DataMapper.Model

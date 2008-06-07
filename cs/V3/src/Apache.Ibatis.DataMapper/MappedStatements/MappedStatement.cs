@@ -117,7 +117,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         {
             this.modelStore = modelStore;
             this.statement = statement;
-            preparedCommand = PreparedCommandFactory.GetPreparedCommand(false);
+            preparedCommand = new DefaultPreparedCommand();
             resultStrategy = ResultStrategyFactory.Get(this.statement);
         }
         #endregion
