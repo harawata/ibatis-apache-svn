@@ -67,7 +67,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.PropertyStrategy
                 object values = mapping.LazyFactory.CreateProxy(
                     request.MappedStatement.ModelStore.DataMapper,
                     selectStatement, keys, target, mapping.SetAccessor);
-				mapping.SetAccessor.Set(target, values);
+				mapping.Set(target, values);
 			}
 			else
 			{
@@ -79,7 +79,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.PropertyStrategy
 				{
 					postSelect.Method = PostBindind.ExecuteMethod.ExecuteQueryForStrongTypedIList;
 				}
-				request.DeferredLoad.Enqueue(postSelect);
+				request.DelayedLoad.Enqueue(postSelect);
 			}
 
 		}

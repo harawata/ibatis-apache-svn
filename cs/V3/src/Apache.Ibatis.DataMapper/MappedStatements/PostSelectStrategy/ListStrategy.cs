@@ -42,7 +42,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.PostSelectStrategy
 		public void Execute(PostBindind postSelect, RequestScope request)
 		{
 			object values = postSelect.Statement.ExecuteQueryForList(request.Session, postSelect.Keys); 
-			postSelect.ResultProperty.SetAccessor.Set(postSelect.Target, values);
+			postSelect.ResultProperty.Set(postSelect.Target, values);
 		}
 
 		#endregion

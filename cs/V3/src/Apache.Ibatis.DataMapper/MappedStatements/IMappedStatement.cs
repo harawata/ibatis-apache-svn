@@ -29,6 +29,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Apache.Ibatis.DataMapper.Data;
 using Apache.Ibatis.DataMapper.Model;
+using Apache.Ibatis.DataMapper.Model.Events;
+using Apache.Ibatis.DataMapper.Model.Events.Listeners;
 using Apache.Ibatis.DataMapper.Model.Statements;
 using Apache.Ibatis.DataMapper.Session;
 #endregion
@@ -79,6 +81,40 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// </summary>
         /// <value>The model store.</value>
         IModelStore ModelStore { get; }
+
+        /// <summary>
+        /// Gets or sets the pre insert listener.
+        /// </summary>
+        /// <value>The pre insert listener.</value>
+        IStatementEventListener<PreInsertEvent>[] PreInsertListeners { get; set;}
+        /// <summary>
+        /// Gets or sets the post insert listener.
+        /// </summary>
+        /// <value>The post insert listener.</value>
+        IStatementEventListener<PostInsertEvent>[] PostInsertListeners { get; set;}
+
+        /// <summary>
+        /// Gets or sets the pre update listener.
+        /// </summary>
+        /// <value>The pre update listener.</value>
+        IStatementEventListener<PreUpdateOrDeleteEvent>[] PreUpdateOrDeleteListeners { get; set;}
+        /// <summary>
+        /// Gets or sets the post update listener.
+        /// </summary>
+        /// <value>The post update listener.</value>
+        IStatementEventListener<PostUpdateOrDeleteEvent>[] PostUpdateOrDeleteListeners { get; set;}
+
+        /// <summary>
+        /// Gets or sets the pre select listener.
+        /// </summary>
+        /// <value>The pre select listener.</value>
+        IStatementEventListener<PreSelectEvent>[] PreSelectListeners { get; set;}
+
+        /// <summary>
+        /// Gets or sets the post select listener.
+        /// </summary>
+        /// <value>The post select listener.</value>
+        IStatementEventListener<PostSelectEvent>[] PostSelectListeners { get; set;}
 
 		#endregion
 
@@ -195,13 +231,6 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 
 		#region ExecuteForObject
 
-		/// <summary>
-		/// Executes an SQL statement that returns a single row as an Object.
-		/// </summary>
-		/// <param name="session">The session used to execute the statement.</param>
-		/// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-		/// <returns>The object</returns>
-		object ExecuteQueryForObject( ISession session, object parameterObject );
 
 		/// <summary>
 		/// Executes an SQL statement that returns a single row as an Object of the type of
@@ -218,14 +247,6 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         #region ExecuteForObject .NET 2.0
 
         /// <summary>
-        /// Executes an SQL statement that returns a single row as an Object.
-        /// </summary>
-        /// <param name="session">The session used to execute the statement.</param>
-        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-        /// <returns>The object</returns>
-        T ExecuteQueryForObject<T>(ISession session, object parameterObject);
-
-        /// <summary>
         /// Executes an SQL statement that returns a single row as an Object of the type of
         /// the resultObject passed in as a parameter.
         /// </summary>
@@ -234,6 +255,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// <param name="resultObject">The result object.</param>
         /// <returns>The object</returns>
         T ExecuteQueryForObject<T>(ISession session, object parameterObject, T resultObject);
+
         #endregion
 
 		#region Delegate

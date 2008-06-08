@@ -143,17 +143,6 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 		/// </summary>
 		/// <param name="session"></param>
 		/// <param name="parameterObject"></param>
-		/// <returns></returns>
-		public override object ExecuteQueryForObject(ISession session, object parameterObject )
-		{
-			throw new DataMapperException("Insert statements cannot be executed as a query for object.");
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="session"></param>
-		/// <param name="parameterObject"></param>
 		/// <param name="resultObject"></param>
 		/// <returns></returns>
         public override object ExecuteQueryForObject(ISession session, object parameterObject, object resultObject)

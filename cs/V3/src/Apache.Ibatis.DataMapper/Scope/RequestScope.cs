@@ -185,7 +185,7 @@ namespace Apache.Ibatis.DataMapper.Scope
         /// <summary>
         /// The 'select' result property to process after having process the main properties.
         /// </summary>
-        public Queue<PostBindind> DeferredLoad
+        public Queue<PostBindind> DelayedLoad
         {
             get { return selects; }
             set { selects = value; }

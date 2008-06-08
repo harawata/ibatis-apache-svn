@@ -24,7 +24,6 @@
  ********************************************************************************/
 #endregion
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -133,7 +132,7 @@ namespace Apache.Ibatis.DataMapper
         {
             if (resultObject == null)
             {
-                throw new DataMapperException("resultObject parameter must be instantiated before being passed to SqlMapper.QueryForList");
+                throw new DataMapperException("resultObject parameter must be instantiated before being passed to QueryForList");
             }
 
             using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
@@ -258,11 +257,7 @@ namespace Apache.Ibatis.DataMapper
         /// </returns>
         public object QueryForObject(string statementId, object parameterObject)
         {
-            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
-            {
-                IMappedStatement statement = modelStore.GetMappedStatement(statementId);
-                return statement.ExecuteQueryForObject(sessionScope.Session, parameterObject);
-            }
+            return QueryForObject(statementId, parameterObject, null);
         }
 
         /// <summary>
@@ -409,11 +404,7 @@ namespace Apache.Ibatis.DataMapper
         /// </returns>
         public T QueryForObject<T>(string statementId, object parameterObject)
         {
-            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
-            {
-                IMappedStatement statement = modelStore.GetMappedStatement(statementId);
-                return statement.ExecuteQueryForObject<T>(sessionScope.Session, parameterObject);
-            }
+            return QueryForObject<T>(statementId, parameterObject, default(T));
         }
 
         /// <summary>
@@ -492,11 +483,7 @@ namespace Apache.Ibatis.DataMapper
         /// <returns>The number of rows effected.</returns>
         public int Delete(string statementId, object parameterObject)
         {
-            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
-            {
-                IMappedStatement statement = modelStore.GetMappedStatement(statementId);
-                return statement.ExecuteUpdate(sessionScope.Session, parameterObject);
-            }
+            return Update(statementId, parameterObject);
         }
 
         #endregion
@@ -514,50 +501,5 @@ namespace Apache.Ibatis.DataMapper
 
         #endregion
 
-        /// <summary>
-        /// Local SessionScope management
-        /// </summary>
-        private class DataMapperLocalSessionScope : IDisposable
-        {
-            private readonly bool isSessionLocal = false;
-            private readonly ISession session = null;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="DataMapperLocalSessionScope"/> class.
-            /// </summary>
-            /// <param name="sessionStore">The session store.</param>
-            /// <param name="sessionFactory">The session factory.</param>
-            public DataMapperLocalSessionScope(ISessionStore sessionStore, ISessionFactory sessionFactory)
-            {
-                isSessionLocal = false;
-                session = sessionStore.CurrentSession;
-
-                if (session == null)
-                {
-                    session = sessionFactory.OpenSession();
-                    isSessionLocal = true;
-                }
-            }
-
-            /// <summary>
-            /// Gets the session.
-            /// </summary>
-            /// <value>The session.</value>
-            public ISession Session
-            {
-                get { return session; }
-            }
-
-            /// <summary>
-            /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-            /// </summary>
-            public void Dispose()
-            {
-                if (isSessionLocal)
-                {
-                    session.Close();
-                }
-            }
-        }
     }
 }

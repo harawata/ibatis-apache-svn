@@ -25,10 +25,10 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
         {
             base.SetUpFixture();
 
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "petstore-drop.sql");
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "petstore-schema.sql");
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "petstore-init.sql");
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "child-parent-init.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "petstore-drop.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "petstore-schema.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "petstore-init.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "child-parent-init.sql");
         }
 
 
@@ -38,7 +38,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
         [TestFixtureTearDown]
         protected override void TearDownFixture()
         {
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "petstore-drop.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "petstore-drop.sql");
             base.TearDownFixture();
         }
         #endregion
@@ -64,8 +64,8 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
         [Test]
         public void TestBobHanson ()
         {
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "groupby-schema.sql");
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "groupby-init.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "groupby-schema.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "groupby-init.sql");
 
             IList<Application> list = dataMapper.QueryForList<Application>("GroupByBobHanson", null);
             Assert.AreEqual(1, list.Count);
@@ -216,10 +216,10 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
         [Test]
         public void TestOrderLineItemGroupBy()
         {
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "petstore-drop.sql");
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "account-init.sql");
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "order-init.sql");
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "line-item-init.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "petstore-drop.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "account-init.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "order-init.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "line-item-init.sql");
 
             Order order = new Order();
             order.Id = 11;
@@ -253,9 +253,9 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
         [Test]
         public void GroupByWithInheritance()
         {
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "petstore-drop.sql");
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "account-init.sql");
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "documents-init.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "petstore-drop.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "account-init.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "documents-init.sql");
 
             IList<Account> list = dataMapper.QueryForList<Account>("JIRA206", null);
             
@@ -266,9 +266,9 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
             Assert.AreEqual(0, list[3].Documents.Count);
             Assert.AreEqual(2, list[4].Documents.Count);
 
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "petstore-drop.sql");
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "petstore-schema.sql");
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "petstore-init.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "petstore-drop.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "petstore-schema.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "petstore-init.sql");
         }
     }
 }

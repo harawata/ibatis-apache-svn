@@ -51,11 +51,11 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
         public object Process(RequestScope request, ref IDataReader reader, object resultObject)
         {
 			object outObject = resultObject;
-            AutoResultMap resultMap = request.CurrentResultMap as AutoResultMap;
+            //AutoResultMap resultMap = request.CurrentResultMap as AutoResultMap;
 
 			if (outObject == null) 
 			{
-                outObject = resultMap.CreateInstanceOfResultClass();
+                outObject = request.CurrentResultMap.CreateInstanceOfResult(null);
 			}
 
 			int count = reader.FieldCount;

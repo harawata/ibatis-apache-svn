@@ -29,6 +29,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using Apache.Ibatis.DataMapper.DataExchange;
+using Apache.Ibatis.DataMapper.Model.Events;
+using Apache.Ibatis.DataMapper.Model.Events.Listeners;
 
 #endregion
 
@@ -113,10 +115,22 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         void SetValueOfProperty(ref object target, ResultProperty property, object dataBaseValue);
 
         /// <summary>
-        /// 
+        /// Resolves the sub map.
         /// </summary>
-        /// <param name="dataReader"></param>
+        /// <param name="dataReader">The data reader.</param>
         /// <returns></returns>
         IResultMap ResolveSubMap(IDataReader dataReader);
+
+        /// <summary>
+        /// Handles event generated before creating an instance of the <see cref="IResultMap"/> object.
+        /// </summary>
+        /// <value>The pre create events.</value>
+        IResultMapEventListener<PreCreateEvent>[] PreCreateEventListeners { get; set;}
+
+        /// <summary>
+        /// Handles event generated after creating an instance of the <see cref="IResultMap"/> object.
+        /// </summary>
+        /// <value>The post create events.</value>
+        IResultMapEventListener<PostCreateEvent>[] PostCreateEventListeners { get; set;}
     }
 }

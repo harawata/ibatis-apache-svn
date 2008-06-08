@@ -93,7 +93,7 @@ namespace Apache.Ibatis.DataMapper.DataExchange
 			}
 			else
 			{
-                mapping.SetAccessor.Set(target, dataBaseValue);
+                mapping.Set(target, dataBaseValue);
 			}
 		}
 

@@ -21,7 +21,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping.Perf
         [SetUp] 
         public void Init() 
         {
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "simple-init.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "simple-init.sql");
         }
 
         /// <summary>

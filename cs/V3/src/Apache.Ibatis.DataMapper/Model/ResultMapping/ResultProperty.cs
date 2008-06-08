@@ -42,7 +42,10 @@ using Apache.Ibatis.DataMapper.DataExchange;
 using Apache.Ibatis.DataMapper.Exceptions;
 using Apache.Ibatis.DataMapper.MappedStatements.ArgumentStrategy;
 using Apache.Ibatis.DataMapper.MappedStatements.PropertyStrategy;
+using Apache.Ibatis.DataMapper.Model.Events;
+using Apache.Ibatis.DataMapper.Model.Events.Listeners;
 using Apache.Ibatis.DataMapper.Proxy;
+using Apache.Ibatis.DataMapper.Scope;
 using Apache.Ibatis.DataMapper.TypeHandlers;
 
 #endregion
@@ -102,10 +105,35 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         private readonly IFactory listFactory = null;
 	    [NonSerialized]
         private static readonly IFactory arrayListFactory = new ArrayListFactory();
-	    
+
+        [NonSerialized]
+        private IResultPropertyEventListener<PrePropertyEvent>[] prePropertyEventListeners = new IResultPropertyEventListener<PrePropertyEvent>[] { };
+        [NonSerialized]
+        private IResultPropertyEventListener<PostPropertyEvent>[] postPropertyEventListeners = new IResultPropertyEventListener<PostPropertyEvent>[] { };
+
 		#endregion
 
 		#region Properties
+
+        /// <summary>
+        /// Handles event generated before setting the property value of a <see cref="ResultProperty"/>.
+        /// </summary>
+        /// <value>The post create events.</value>
+        public IResultPropertyEventListener<PrePropertyEvent>[] PrePropertyEventListeners
+        {
+            get { return prePropertyEventListeners; }
+            set { prePropertyEventListeners = value; }
+        }
+
+        /// <summary>
+        /// Handles event generated after setting the property value of a <see cref="ResultProperty"/>.
+        /// </summary>
+        /// <value>The pre create events.</value>
+        public IResultPropertyEventListener<PostPropertyEvent>[] PostPropertyEventListeners
+        {
+            get { return postPropertyEventListeners; }
+            set { postPropertyEventListeners = value; }
+        }
 
         /// <summary>
         /// Tell us if the member type implement generic Ilist interface.
@@ -242,13 +270,13 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
 			get { return propertyName; }
 		}
 
-		/// <summary>
+        /// <summary>
         /// Defines a field/property <see cref="ISetAccessor"/>
-		/// </summary>
-		public ISetAccessor SetAccessor
-		{
-			get { return setAccessor; }
-		}
+        /// </summary>
+        public ISetAccessor SetAccessor
+        {
+            get {return setAccessor;}
+        }
 
 		/// <summary>
 		/// Get the field/property type
@@ -511,11 +539,57 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
 
 		#region Methods
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="dataReader"></param>
-		/// <returns></returns>
+        /// <summary>
+        /// Sets the value for the field/property .
+        /// </summary>
+        /// <param name="target">Object to set the field/property on.</param>
+        /// <param name="value">Value.</param>
+        public void Set(object target, object value)
+       {
+           if (prePropertyEventListeners.Length > 0)
+           {
+               PrePropertyEvent evnt = new PrePropertyEvent();
+               evnt.ResultProperty = this;
+               evnt.DataBaseValue = value;
+               evnt.Target = target;
+               foreach (IResultPropertyEventListener<PrePropertyEvent> listener in prePropertyEventListeners)
+               {
+                   evnt.DataBaseValue = listener.OnEvent(evnt);
+               }
+               value = evnt.DataBaseValue;
+           }
+
+           setAccessor.Set(target, value);
+           
+           if (postPropertyEventListeners.Length > 0)
+           {
+               PostPropertyEvent evnt = new PostPropertyEvent();
+               evnt.ResultProperty = this;
+               evnt.Target = target;
+               foreach (IResultPropertyEventListener<PostPropertyEvent> listener in postPropertyEventListeners)
+               {
+                   listener.OnEvent(evnt);
+               }
+           }
+       }
+
+       /// <summary>
+       /// Gets a result argument value.
+       /// </summary>
+       /// <param name="request">The request.</param>
+       /// <param name="reader">The reader.</param>
+       /// <param name="keys">The keys.</param>
+       /// <returns></returns>
+       public object GetValue(RequestScope request, ref IDataReader reader, object keys)
+       {
+           return ArgumentStrategy.GetValue(request, this, ref reader, keys);
+       }
+
+	    /// <summary>
+        /// Gets the data base value.
+        /// </summary>
+        /// <param name="dataReader">The data reader.</param>
+        /// <returns></returns>
 		public object GetDataBaseValue(IDataReader dataReader)
 		{
 			object value = null;
@@ -552,11 +626,11 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
 			return value;
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="value"></param>
-		/// <returns></returns>
+        /// <summary>
+        /// Translates the value tu null value if need
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
 		public object TranslateValue(object value)
 		{
 			if (value == null)

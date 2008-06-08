@@ -41,8 +41,8 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.PostSelectStrategy
 		/// <param name="request">The <see cref="RequestScope"/></param>
 		public void Execute(PostBindind postSelect, RequestScope request)
 		{
-			object value = postSelect.Statement.ExecuteQueryForObject(request.Session, postSelect.Keys);
-			postSelect.ResultProperty.SetAccessor.Set(postSelect.Target, value);
+			object value = postSelect.Statement.ExecuteQueryForObject(request.Session, postSelect.Keys, null);
+			postSelect.ResultProperty.Set(postSelect.Target, value);
 		}
 
 		#endregion

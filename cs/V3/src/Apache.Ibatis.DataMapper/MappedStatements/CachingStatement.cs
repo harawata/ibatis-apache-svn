@@ -28,9 +28,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using Apache.Ibatis.DataMapper.Data;
 using Apache.Ibatis.DataMapper.Model;
 using Apache.Ibatis.DataMapper.Model.Cache;
+using Apache.Ibatis.DataMapper.Model.Events;
+using Apache.Ibatis.DataMapper.Model.Events.Listeners;
 using Apache.Ibatis.DataMapper.Model.Statements;
 using Apache.Ibatis.DataMapper.Scope;
 using Apache.Ibatis.DataMapper.Session;
@@ -40,11 +43,12 @@ using Apache.Ibatis.DataMapper.Session;
 namespace Apache.Ibatis.DataMapper.MappedStatements
 {
 	/// <summary>
-	/// Summary description for CachingStatement.
+    /// Acts as a decorator arounf an <see cref="IMappedStatement"/> to add cache functionality
 	/// </summary>
+    [DebuggerDisplay("MappedStatement: {mappedStatement.Id}")]
     public sealed class CachingStatement : IMappedStatement
 	{
-		private MappedStatement _mappedStatement =null;
+		private MappedStatement mappedStatement =null;
 
 		/// <summary>
 		/// Event launch on exceute query
@@ -57,10 +61,70 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 		/// <param name="statement"></param>
         public CachingStatement(MappedStatement statement) 
 		{
-			_mappedStatement = statement;
+			mappedStatement = statement;
 		}
 
 		#region IMappedStatement Members
+
+        /// <summary>
+        /// Gets or sets the pre insert listener.
+        /// </summary>
+        /// <value>The pre insert listener.</value>
+        public IStatementEventListener<PreInsertEvent>[] PreInsertListeners
+        {
+            get { return mappedStatement.PreInsertListeners; }
+            set { mappedStatement.PreInsertListeners = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the post insert listener.
+        /// </summary>
+        /// <value>The post insert listener.</value>
+        public IStatementEventListener<PostInsertEvent>[] PostInsertListeners
+        {
+            get { return mappedStatement.PostInsertListeners; }
+            set { mappedStatement.PostInsertListeners = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the pre update listener.
+        /// </summary>
+        /// <value>The pre update listener.</value>
+        public IStatementEventListener<PreUpdateOrDeleteEvent>[] PreUpdateOrDeleteListeners
+        {
+            get { return mappedStatement.PreUpdateOrDeleteListeners; }
+            set { mappedStatement.PreUpdateOrDeleteListeners = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the post update listener.
+        /// </summary>
+        /// <value>The post update listener.</value>
+        public IStatementEventListener<PostUpdateOrDeleteEvent>[] PostUpdateOrDeleteListeners
+        {
+            get { return mappedStatement.PostUpdateOrDeleteListeners; }
+            set { mappedStatement.PostUpdateOrDeleteListeners = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the pre select listener.
+        /// </summary>
+        /// <value>The pre select listener.</value>
+        public IStatementEventListener<PreSelectEvent>[] PreSelectListeners
+        {
+            get { return mappedStatement.PreSelectListeners; }
+            set { mappedStatement.PreSelectListeners = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the post select listener.
+        /// </summary>
+        /// <value>The post select listener.</value>
+        public IStatementEventListener<PostSelectEvent>[] PostSelectListeners
+        {
+            get { return mappedStatement.PostSelectListeners; }
+            set { mappedStatement.PostSelectListeners = value; }
+        }
 
 
 		/// <summary>
@@ -68,7 +132,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 		/// </summary>
 		public IPreparedCommand PreparedCommand
 		{
-			get { return _mappedStatement.PreparedCommand; }
+			get { return mappedStatement.PreparedCommand; }
 		}
 
 		/// <summary>
@@ -77,7 +141,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 		/// </summary>
 		public string Id
 		{
-			get { return _mappedStatement.Id; }
+			get { return mappedStatement.Id; }
 		}
 
 		/// <summary>
@@ -85,7 +149,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 		/// </summary>
 		public IStatement Statement
 		{
-			get { return _mappedStatement.Statement; }
+			get { return mappedStatement.Statement; }
 		}
 
         /// <summary>
@@ -94,7 +158,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// <value>The model store.</value>
         public IModelStore ModelStore
 		{
-            get { return _mappedStatement.ModelStore; }
+            get { return mappedStatement.ModelStore; }
 		}
 
 		/// <summary>
@@ -111,11 +175,12 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 		public IDictionary ExecuteQueryForMap(ISession session, object parameterObject, string keyProperty, string valueProperty)
 		{
 			IDictionary map = new Hashtable();
-			RequestScope request = this.Statement.Sql.GetRequestScope(this, parameterObject, session);
 
-			_mappedStatement.PreparedCommand.Create( request, session, this.Statement, parameterObject );
+			RequestScope request = Statement.Sql.GetRequestScope(this, parameterObject, session);
 
-			CacheKey cacheKey = this.GetCacheKey(request);
+			mappedStatement.PreparedCommand.Create( request, session, Statement, parameterObject );
+
+			CacheKey cacheKey = GetCacheKey(request);
 			cacheKey.Update("ExecuteQueryForMap");
 			if (keyProperty!=null)
 			{
@@ -126,11 +191,11 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 				cacheKey.Update(valueProperty);
 			}
 
-			map = this.Statement.CacheModel[cacheKey] as IDictionary;
+			map = Statement.CacheModel[cacheKey] as IDictionary;
 			if (map == null) 
 			{
-				map = _mappedStatement.RunQueryForMap( request, session, parameterObject, keyProperty, valueProperty, null );
-				this.Statement.CacheModel[cacheKey] = map;
+				map = mappedStatement.RunQueryForMap( request, session, parameterObject, keyProperty, valueProperty, null );
+				Statement.CacheModel[cacheKey] = map;
 			}
 
 			return map;
@@ -152,11 +217,11 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         public IDictionary<K, V> ExecuteQueryForDictionary<K, V>(ISession session, object parameterObject, string keyProperty, string valueProperty)
         {
             IDictionary<K, V> map = new Dictionary<K, V>();
-            RequestScope request = this.Statement.Sql.GetRequestScope(this, parameterObject, session);
+            RequestScope request = Statement.Sql.GetRequestScope(this, parameterObject, session);
 
-            _mappedStatement.PreparedCommand.Create(request, session, this.Statement, parameterObject);
+            mappedStatement.PreparedCommand.Create(request, session, Statement, parameterObject);
 
-            CacheKey cacheKey = this.GetCacheKey(request);
+            CacheKey cacheKey = GetCacheKey(request);
             cacheKey.Update("ExecuteQueryForMap");
             if (keyProperty != null)
             {
@@ -167,11 +232,11 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
                 cacheKey.Update(valueProperty);
             }
 
-            map = this.Statement.CacheModel[cacheKey] as IDictionary<K, V>;
+            map = Statement.CacheModel[cacheKey] as IDictionary<K, V>;
             if (map == null)
             {
-                map = _mappedStatement.RunQueryForDictionary<K, V>(request, session, parameterObject, keyProperty, valueProperty, null);
-                this.Statement.CacheModel[cacheKey] = map;
+                map = mappedStatement.RunQueryForDictionary<K, V>(request, session, parameterObject, keyProperty, valueProperty, null);
+                Statement.CacheModel[cacheKey] = map;
             }
 
             return map;
@@ -190,7 +255,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// <exception cref="Apache.Ibatis.DataMapper.Exceptions.DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
         public IDictionary<K, V> ExecuteQueryForDictionary<K, V>(ISession session, object parameterObject, string keyProperty, string valueProperty, DictionaryRowDelegate<K, V> rowDelegate)
         {
-            return _mappedStatement.ExecuteQueryForDictionary<K, V>(session, parameterObject, keyProperty, valueProperty, rowDelegate);
+            return mappedStatement.ExecuteQueryForDictionary<K, V>(session, parameterObject, keyProperty, valueProperty, rowDelegate);
         }
         #endregion
         
@@ -203,7 +268,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 		/// <returns>The number of row effected.</returns>
 		public int ExecuteUpdate(ISession session, object parameterObject)
 		{
-			return _mappedStatement.ExecuteUpdate(session, parameterObject);
+			return mappedStatement.ExecuteUpdate(session, parameterObject);
 		}
 
 		/// <summary>
@@ -215,7 +280,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 		/// <returns>Can return the insert generated key.</returns>
 		public object ExecuteInsert(ISession session, object parameterObject)
 		{
-			return _mappedStatement.ExecuteInsert(session, parameterObject);
+			return mappedStatement.ExecuteInsert(session, parameterObject);
         }
 
         #region ExecuteQueryForList
@@ -228,7 +293,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 		/// <param name="resultObject">A strongly typed collection of result objects.</param>
 		public void ExecuteQueryForList(ISession session, object parameterObject, IList resultObject)
 		{
-			_mappedStatement.ExecuteQueryForList(session, parameterObject, resultObject);
+			mappedStatement.ExecuteQueryForList(session, parameterObject, resultObject);
 		}
 
         /// <summary>
@@ -240,21 +305,24 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         public IList ExecuteQueryForList(ISession session, object parameterObject)
         {
             IList list = null;
-            RequestScope request = this.Statement.Sql.GetRequestScope(this, parameterObject, session);
 
-            _mappedStatement.PreparedCommand.Create(request, session, this.Statement, parameterObject);
+            object param = mappedStatement.LaunchPreEvent(mappedStatement.PreSelectListeners, parameterObject);
 
-            CacheKey cacheKey = this.GetCacheKey(request);
+            RequestScope request = Statement.Sql.GetRequestScope(this, param, session);
+
+            mappedStatement.PreparedCommand.Create(request, session, Statement, param);
+
+            CacheKey cacheKey = GetCacheKey(request);
             cacheKey.Update("ExecuteQueryForList");
 
-            list = this.Statement.CacheModel[cacheKey] as IList;
+            list = Statement.CacheModel[cacheKey] as IList;
             if (list == null)
             {
-                list = _mappedStatement.RunQueryForList(request, session, parameterObject);
-                this.Statement.CacheModel[cacheKey] = list;
+                list = mappedStatement.RunQueryForList(request, session, param);
+                Statement.CacheModel[cacheKey] = list;
             }
 
-            return list;
+            return mappedStatement.LaunchPostEvent(mappedStatement.PostSelectListeners, param, list);
         }
         #endregion
 
@@ -268,7 +336,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// <param name="resultObject">A strongly typed collection of result objects.</param>
         public void ExecuteQueryForList<T>(ISession session, object parameterObject, IList<T> resultObject)
         {
-            _mappedStatement.ExecuteQueryForList(session, parameterObject, resultObject);
+            mappedStatement.ExecuteQueryForList(session, parameterObject, resultObject);
         }
 
         /// <summary>
@@ -280,36 +348,28 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         public IList<T> ExecuteQueryForList<T>(ISession session, object parameterObject)
         {
             IList<T> list = null;
-            RequestScope request = this.Statement.Sql.GetRequestScope(this, parameterObject, session);
 
-            _mappedStatement.PreparedCommand.Create(request, session, this.Statement, parameterObject);
+            object param = mappedStatement.LaunchPreEvent(mappedStatement.PreSelectListeners, parameterObject);
 
-            CacheKey cacheKey = this.GetCacheKey(request);
+            RequestScope request = Statement.Sql.GetRequestScope(this, param, session);
+
+            mappedStatement.PreparedCommand.Create(request, session, Statement, param);
+
+            CacheKey cacheKey = GetCacheKey(request);
             cacheKey.Update("ExecuteQueryForList");
 
-            list = this.Statement.CacheModel[cacheKey] as IList<T>;
+            list = Statement.CacheModel[cacheKey] as IList<T>;
             if (list == null)
             {
-                list = _mappedStatement.RunQueryForList<T>(request, session, parameterObject);
-                this.Statement.CacheModel[cacheKey] = list;
+                list = mappedStatement.RunQueryForList<T>(request, session, param);
+                Statement.CacheModel[cacheKey] = list;
             }
 
-            return list;
+            return mappedStatement.LaunchPostEvent(mappedStatement.PostSelectListeners, param, list);
         }
         #endregion
 
         #region ExecuteQueryForObject
-
-        /// <summary>
-		/// Executes an SQL statement that returns a single row as an Object.
-		/// </summary>
-		/// <param name="session">The session used to execute the statement.</param>
-		/// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-		/// <returns>The object</returns>
-		public object ExecuteQueryForObject(ISession session, object parameterObject)
-		{
-			return this.ExecuteQueryForObject(session, parameterObject, null);
-		}
 
 		/// <summary>
 		/// Executes an SQL statement that returns a single row as an Object of the type of
@@ -322,14 +382,17 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 		public object ExecuteQueryForObject(ISession session, object parameterObject, object resultObject)
 		{
 			object obj = null;
-			RequestScope request = this.Statement.Sql.GetRequestScope(this, parameterObject, session);
 
-			_mappedStatement.PreparedCommand.Create( request, session, this.Statement, parameterObject );
+            object param = mappedStatement.LaunchPreEvent(mappedStatement.PreSelectListeners, parameterObject);
 
-			CacheKey cacheKey = this.GetCacheKey(request);
+            RequestScope request = Statement.Sql.GetRequestScope(this, param, session);
+
+            mappedStatement.PreparedCommand.Create(request, session, Statement, param);
+
+			CacheKey cacheKey = GetCacheKey(request);
 			cacheKey.Update("ExecuteQueryForObject");
 
-			obj = this.Statement.CacheModel[cacheKey];
+			obj = Statement.CacheModel[cacheKey];
 			// check if this query has alreay been run 
 			if (obj == CacheModel.NULL_OBJECT) 
 			{ 
@@ -338,25 +401,16 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 			} 
 			else if (obj ==null)
 			{
-				obj = _mappedStatement.RunQueryForObject(request, session, parameterObject, resultObject);
-				this.Statement.CacheModel[cacheKey] = obj;
+                obj = mappedStatement.RunQueryForObject(request, session, param, resultObject);
+				Statement.CacheModel[cacheKey] = obj;
 			}
 
-			return obj;
+            return mappedStatement.LaunchPostEvent(mappedStatement.PostSelectListeners, param, obj);
         }
+        
         #endregion
 
         #region ExecuteQueryForObject .NET 2.0
-        /// <summary>
-        /// Executes an SQL statement that returns a single row as an Object.
-        /// </summary>
-        /// <param name="session">The session used to execute the statement.</param>
-        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-        /// <returns>The object</returns>
-        public T ExecuteQueryForObject<T>(ISession session, object parameterObject)
-        {
-            return this.ExecuteQueryForObject<T>(session, parameterObject, default(T));
-        }
 
         /// <summary>
         /// Executes an SQL statement that returns a single row as an Object of the type of
@@ -369,14 +423,17 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         public T ExecuteQueryForObject<T>(ISession session, object parameterObject, T resultObject)
         {
             T obj = default(T);
-            RequestScope request = this.Statement.Sql.GetRequestScope(this, parameterObject, session);
 
-            _mappedStatement.PreparedCommand.Create(request, session, this.Statement, parameterObject);
+            object param = mappedStatement.LaunchPreEvent(mappedStatement.PreSelectListeners, parameterObject);
 
-            CacheKey cacheKey = this.GetCacheKey(request);
+            RequestScope request = Statement.Sql.GetRequestScope(this, param, session);
+
+            mappedStatement.PreparedCommand.Create(request, session, Statement, param);
+
+            CacheKey cacheKey = GetCacheKey(request);
             cacheKey.Update("ExecuteQueryForObject");
 
-            object cacheObjet = this.Statement.CacheModel[cacheKey];
+            object cacheObjet = Statement.CacheModel[cacheKey];
             // check if this query has alreay been run 
             if (cacheObjet is T)
             {
@@ -389,12 +446,13 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
             }
             else //if ((object)obj == null)
             {
-                obj = (T)_mappedStatement.RunQueryForObject(request, session, parameterObject, resultObject);
-                this.Statement.CacheModel[cacheKey] = obj;
+                obj = (T)mappedStatement.RunQueryForObject(request, session, param, resultObject);
+                Statement.CacheModel[cacheKey] = obj;
             }
 
-            return obj;
+            return mappedStatement.LaunchPostEvent(mappedStatement.PostSelectListeners, param, obj);
         }
+        
         #endregion
 
         /// <summary>
@@ -406,7 +464,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 		/// <param name="rowDelegate"></param>
 		public IList ExecuteQueryForRowDelegate(ISession session, object parameterObject, RowDelegate rowDelegate)
 		{
-			return _mappedStatement.ExecuteQueryForRowDelegate(session, parameterObject, rowDelegate);
+			return mappedStatement.ExecuteQueryForRowDelegate(session, parameterObject, rowDelegate);
 		}
 
         /// <summary>
@@ -418,7 +476,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// <param name="rowDelegate"></param>
         public IList<T> ExecuteQueryForRowDelegate<T>(ISession session, object parameterObject, RowDelegate<T> rowDelegate)
         {
-            return _mappedStatement.ExecuteQueryForRowDelegate<T>(session, parameterObject, rowDelegate);
+            return mappedStatement.ExecuteQueryForRowDelegate<T>(session, parameterObject, rowDelegate);
         }
 
 		/// <summary>
@@ -434,7 +492,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 		/// <exception cref="Apache.Ibatis.DataMapper.Exceptions.DataMapperException">If a transaction is not in progress, or the database throws an exception.</exception>
 		public IDictionary ExecuteQueryForMapWithRowDelegate(ISession session, object parameterObject, string keyProperty, string valueProperty, DictionaryRowDelegate rowDelegate)
 		{
-			return _mappedStatement.ExecuteQueryForMapWithRowDelegate(session, parameterObject, keyProperty, valueProperty, rowDelegate);
+			return mappedStatement.ExecuteQueryForMapWithRowDelegate(session, parameterObject, keyProperty, valueProperty, rowDelegate);
 		}
 
 		#endregion
@@ -445,9 +503,9 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 		/// <returns>The percentage of hits (0-1), or -1 if cache is disabled.</returns>
 		public double GetDataCacheHitRatio() 
 		{
-			if (_mappedStatement.Statement.CacheModel != null) 
+			if (mappedStatement.Statement.CacheModel != null) 
 			{
-				return _mappedStatement.Statement.CacheModel.HitRatio;
+				return mappedStatement.Statement.CacheModel.HitRatio;
 			} 
 			else 
 			{
@@ -473,16 +531,16 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 				}
 			}
 			
-			cacheKey.Update(_mappedStatement.Id);
-            cacheKey.Update(_mappedStatement.ModelStore.SessionFactory.DataSource.ConnectionString);
+			cacheKey.Update(mappedStatement.Id);
+            cacheKey.Update(mappedStatement.ModelStore.SessionFactory.DataSource.ConnectionString);
 			cacheKey.Update(request.IDbCommand.CommandText);
 
-			CacheModel cacheModel = _mappedStatement.Statement.CacheModel;
+			CacheModel cacheModel = mappedStatement.Statement.CacheModel;
 			if (!cacheModel.IsReadOnly && !cacheModel.IsSerializable) 
 			{
 				cacheKey.Update(request);
 			}
 			return cacheKey;
 		}
-	}
+    }
 }

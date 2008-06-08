@@ -35,6 +35,8 @@ using Apache.Ibatis.Common.Exceptions;
 using Apache.Ibatis.Common.Utilities;
 using Apache.Ibatis.Common.Utilities.Objects;
 using Apache.Ibatis.DataMapper.DataExchange;
+using Apache.Ibatis.DataMapper.Model.Events;
+using Apache.Ibatis.DataMapper.Model.Events.Listeners;
 using Apache.Ibatis.DataMapper.TypeHandlers;
 
 #endregion
@@ -81,6 +83,11 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         private readonly List<string> keyPropertyNames = new List<string>();
         [NonSerialized]
         private readonly ResultPropertyCollection keysProperties = new ResultPropertyCollection();
+
+        [NonSerialized]
+        private IResultMapEventListener<PostCreateEvent>[] postCreateEventListeners = new IResultMapEventListener<PostCreateEvent>[] { };
+        [NonSerialized]
+        private IResultMapEventListener<PreCreateEvent>[] preCreateEventListeners = new IResultMapEventListener<PreCreateEvent>[] { };
 
         #endregion
 
@@ -181,8 +188,6 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         }
         #endregion
 
-        #region Constructor (s) / Destructor
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ResultMap"/> class.
         /// </summary>
@@ -249,7 +254,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
                 for (int i = 0; i < columns.Length; i++)
                 {
                     string column = columns[i].Trim();
-                    this.keyPropertyNames.Add(column);
+                    keyPropertyNames.Add(column);
                 }
 
                 InitializeKeysProperties();
@@ -257,101 +262,8 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
             }
 
        }
-        #endregion
 
-        #region Methods
-
-       /// <summary>
-       /// Checks the key Column.
-       /// </summary>
-        private void CheckKeysProperties()
-       {
-           try
-           {
-               // Verify that that each key column element correspond to a class member
-               // of one of result property
-               for (int i = 0; i < keyPropertyNames.Count; i++)
-               {
-                   string memberName = keyPropertyNames[i];
-                   if (!properties.Contains(memberName))
-                   {
-                       if (!parameters.Contains(memberName))
-                       {
-                           throw new ConfigurationException(
-                               string.Format(
-                                   "Could not configure ResultMap named \"{0}\". Check the keyPropertyNames attribute. Cause: there's no result property or parameter constructor named \"{1}\".",
-                                   id, memberName));
-                           
-                       }
-                   }
-               }
-           }
-           catch (Exception e)
-           {
-               throw new ConfigurationException(
-                   string.Format("Could not configure ResultMap named \"{0}\", Cause: {1}", id, e.Message)
-                   , e);
-           }
-       }
-
-       /// <summary>
-       /// Initializes the key Column properties.
-       /// </summary>
-        private void InitializeKeysProperties()
-       {
-           for (int i = 0; i < keyPropertyNames.Count; i++)
-           {
-               ResultProperty resultProperty = properties.FindByPropertyName(keyPropertyNames[i]);
-               if (resultProperty == null)
-               {
-                   resultProperty = parameters.FindByPropertyName(keyPropertyNames[i]);
-               }
-
-               KeysProperties.Add(resultProperty);
-           }
-       }
-
-        /// <summary>
-        /// Checks the group by.
-        /// </summary>
-        private void CheckGroupBy()
-        {
-            try
-            {
-                // Verify that that each groupBy element correspond to a class member
-                // of one of result property
-                for (int i = 0; i < groupByProperties.Count; i++)
-                {
-                    string memberName = GroupByPropertyNames[i];
-                    if (!properties.Contains(memberName))
-                    {
-                        throw new ConfigurationException(
-                            string.Format(
-                                "Could not configure ResultMap named \"{0}\". Check the groupBy attribute. Cause: there's no result property named \"{1}\".",
-                                id, memberName));
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                throw new ConfigurationException(
-                    string.Format("Could not configure ResultMap named \"{0}\", Cause: {1}", id, e.Message)
-                    , e);
-            }
-        }
-
-        /// <summary>
-        /// Initializes the groupBy properties.
-        /// </summary>
-        private void InitializeGroupByProperties()
-        {
-            for (int i = 0; i < GroupByPropertyNames.Count; i++)
-            {
-                ResultProperty resultProperty = Properties.FindByPropertyName(this.GroupByPropertyNames[i]);
-                this.GroupByProperties.Add(resultProperty);
-            }
-        }
-
+        #region IResultMap Members
 
         /// <summary>
         /// Create an instance Of result.
@@ -363,7 +275,32 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         {
             if (!isSimpleType)
             {
-                return objectFactory.CreateInstance(parameters);
+                if (preCreateEventListeners.Length > 0)
+                {
+                    PreCreateEvent evnt = new PreCreateEvent();
+                    evnt.ResultMap = this;
+                    evnt.Parameters = parameters;
+                    foreach (IResultMapEventListener<PreCreateEvent> listener in preCreateEventListeners)
+                    {
+                        evnt.Parameters = (object[])listener.OnEvent(evnt);
+                    }
+                    parameters = evnt.Parameters;
+                }
+
+                object instance = objectFactory.CreateInstance(parameters);
+
+                if (postCreateEventListeners.Length > 0)
+                {
+                    PostCreateEvent evnt = new PostCreateEvent();
+                    evnt.ResultMap = this;
+                    evnt.Instance = instance;
+                    foreach (IResultMapEventListener<PostCreateEvent> listener in postCreateEventListeners)
+                    {
+                        evnt.Instance = listener.OnEvent(evnt);
+                    }
+                    instance = evnt.Instance;
+                }
+                return instance;
             }
             else
             {
@@ -434,8 +371,120 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         public ResultPropertyCollection KeysProperties
         {
             get { return keysProperties; }
+        }     
+
+        /// <summary>
+        /// Handles event generated after creating an instance of the <see cref="IResultMap"/> object.
+        /// </summary>
+        /// <value>The post create events.</value>
+        public IResultMapEventListener<PostCreateEvent>[] PostCreateEventListeners
+        {
+            get { return postCreateEventListeners; }
+            set { postCreateEventListeners = value; }
+        }
+
+        /// <summary>
+        /// Handles event generated before creating an instance of the <see cref="IResultMap"/> object.
+        /// </summary>
+        /// <value>The pre create events.</value>
+        public IResultMapEventListener<PreCreateEvent>[] PreCreateEventListeners
+        {
+            get { return preCreateEventListeners; }
+            set { preCreateEventListeners = value; }
         }
 
         #endregion
+
+
+        /// <summary>
+        /// Initializes the key Column properties.
+        /// </summary>
+        private void InitializeKeysProperties()
+        {
+            for (int i = 0; i < keyPropertyNames.Count; i++)
+            {
+                ResultProperty resultProperty = properties.FindByPropertyName(keyPropertyNames[i]);
+                if (resultProperty == null)
+                {
+                    resultProperty = parameters.FindByPropertyName(keyPropertyNames[i]);
+                }
+
+                KeysProperties.Add(resultProperty);
+            }
+        }
+
+        /// <summary>
+        /// Checks the group by.
+        /// </summary>
+        private void CheckGroupBy()
+        {
+            try
+            {
+                // Verify that that each groupBy element correspond to a class member
+                // of one of result property
+                for (int i = 0; i < groupByProperties.Count; i++)
+                {
+                    string memberName = GroupByPropertyNames[i];
+                    if (!properties.Contains(memberName))
+                    {
+                        throw new ConfigurationException(
+                            string.Format(
+                                "Could not configure ResultMap named \"{0}\". Check the groupBy attribute. Cause: there's no result property named \"{1}\".",
+                                id, memberName));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw new ConfigurationException(
+                    string.Format("Could not configure ResultMap named \"{0}\", Cause: {1}", id, e.Message)
+                    , e);
+            }
+        }
+
+        /// <summary>
+        /// Initializes the groupBy properties.
+        /// </summary>
+        private void InitializeGroupByProperties()
+        {
+            for (int i = 0; i < GroupByPropertyNames.Count; i++)
+            {
+                ResultProperty resultProperty = Properties.FindByPropertyName(GroupByPropertyNames[i]);
+                GroupByProperties.Add(resultProperty);
+            }
+        }
+
+        /// <summary>
+        /// Checks the key Column.
+        /// </summary>
+        private void CheckKeysProperties()
+        {
+            try
+            {
+                // Verify that that each key column element correspond to a class member
+                // of one of result property
+                for (int i = 0; i < keyPropertyNames.Count; i++)
+                {
+                    string memberName = keyPropertyNames[i];
+                    if (!properties.Contains(memberName))
+                    {
+                        if (!parameters.Contains(memberName))
+                        {
+                            throw new ConfigurationException(
+                                string.Format(
+                                    "Could not configure ResultMap named \"{0}\". Check the keyPropertyNames attribute. Cause: there's no result property or parameter constructor named \"{1}\".",
+                                    id, memberName));
+
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw new ConfigurationException(
+                    string.Format("Could not configure ResultMap named \"{0}\", Cause: {1}", id, e.Message)
+                    , e);
+            }
+        }
     }
 }

@@ -93,7 +93,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.PropertStrategy
             if (property == null)// Create the list if need
             {
                 property = mapping.ListFactory.CreateInstance(null);
-                mapping.SetAccessor.Set(target, property);
+                mapping.Set(target, property);
             }
             list = (IList)property;
 

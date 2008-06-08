@@ -142,7 +142,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.PropertyStrategy
 			if (wasNull) 
 			{
 				// set the value of an object property to null
-                mapping.SetAccessor.Set(target, null);
+                mapping.Set(target, null);
 			} 
 			else // Collection object or .Net object
 			{

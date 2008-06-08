@@ -53,7 +53,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.PostSelectStrategy
 				array.SetValue(values[i],i);
 			}
 
-            postSelect.ResultProperty.SetAccessor.Set(postSelect.Target, array);
+            postSelect.ResultProperty.Set(postSelect.Target, array);
 		}
 
 		#endregion

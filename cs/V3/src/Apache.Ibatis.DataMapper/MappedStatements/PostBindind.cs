@@ -29,7 +29,7 @@ using Apache.Ibatis.DataMapper.Model.ResultMapping;
 namespace Apache.Ibatis.DataMapper.MappedStatements
 {
 	/// <summary>
-	/// All dataq tor retrieve 'select' <see cref="ResultProperty"/>
+	/// All data to retrieve 'select' <see cref="ResultProperty"/>
 	/// </summary>
 	/// <remarks>
 	/// As ADO.NET allows one open <see cref="IDataReader"/> per connection at once, we keep

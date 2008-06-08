@@ -78,7 +78,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.PropertyStrategy
                 for (int index = 0; index < resultMapping.Parameters.Count; index++)
                 {
                     ResultProperty resultProperty = resultMapping.Parameters[index];
-                    parameters[index] = resultProperty.ArgumentStrategy.GetValue(request, resultProperty, ref reader, null);
+                    parameters[index] = resultProperty.GetValue(request, ref reader, null);
                     request.IsRowDataFound = request.IsRowDataFound || (parameters[index] != null);
                     isParameterFound = isParameterFound || (parameters[index] != null);
                 }

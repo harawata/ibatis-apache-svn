@@ -29,11 +29,11 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping.Generics
         [SetUp]
         public void Init()
         {
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "account-init.sql");
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "order-init.sql");
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "line-item-init.sql");
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "enumeration-init.sql");
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "coupons-init.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "account-init.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "order-init.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "line-item-init.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "enumeration-init.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "coupons-init.sql");
 
         }
 

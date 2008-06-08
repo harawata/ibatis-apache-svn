@@ -24,7 +24,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures
     /// Summary description for BaseTest.
     /// </summary>
     [TestFixture]
-    public abstract class BaseTest
+    public abstract class BaseTest : ScriptBase
     {
         /// <summary>
         /// The sqlMap
@@ -32,20 +32,9 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures
         protected static IDataMapper dataMapper = null;
         private static readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected static string ScriptDirectory = null;
-
         protected static KeyConvert ConvertKey = null;
         protected static ISessionFactory sessionFactory = null;
         protected ISessionStore sessionStore = null;
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        static BaseTest()
-        {
-            ScriptDirectory = Path.Combine(Path.Combine(Path.Combine(Resources.ApplicationBase, ".."), ".."), "Scripts") + Path.DirectorySeparatorChar;
-
-        }
 
         /// <summary>
         /// Initialize an sqlMap
@@ -80,7 +69,6 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures
                     Console.WriteLine(e.Message);
                     Console.WriteLine(e.StackTrace);
                     e = e.InnerException;
-
                 }
                 throw;
             }

@@ -48,7 +48,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.PostSelectStrategy
 			IFactory factory =  request.DataExchangeFactory.ObjectFactory.CreateFactory(postSelect.ResultProperty.SetAccessor.MemberType, Type.EmptyTypes);
 			object values = factory.CreateInstance(null);
 			postSelect.Statement.ExecuteQueryForList(request.Session, postSelect.Keys, (IList)values);	
-			postSelect.ResultProperty.SetAccessor.Set(postSelect.Target, values);
+			postSelect.ResultProperty.Set(postSelect.Target, values);
 		}
 
 		#endregion

@@ -20,7 +20,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping.Generics
         [SetUp]
         public void Init()
         {
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "Nullable-init.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "Nullable-init.sql");
         }
 
         /// <summary>

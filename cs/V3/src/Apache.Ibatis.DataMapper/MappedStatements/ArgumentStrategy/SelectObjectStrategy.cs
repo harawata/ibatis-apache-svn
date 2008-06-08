@@ -56,7 +56,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ArgumentStrategy
             IMappedStatement selectStatement = request.MappedStatement.ModelStore.GetMappedStatement(mapping.Select);
 
             reader = DataReaderTransformer.Transform(reader, request.Session.SessionFactory.DataSource.DbProvider);
-			return selectStatement.ExecuteQueryForObject(request.Session, keys);
+			return selectStatement.ExecuteQueryForObject(request.Session, keys, null);
 		}
 
 		#endregion

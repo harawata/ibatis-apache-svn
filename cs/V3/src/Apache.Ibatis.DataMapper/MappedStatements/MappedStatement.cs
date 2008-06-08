@@ -37,6 +37,8 @@ using Apache.Ibatis.Common.Utilities.Objects;
 
 using Apache.Ibatis.DataMapper.Data;
 using Apache.Ibatis.DataMapper.Model;
+using Apache.Ibatis.DataMapper.Model.Events;
+using Apache.Ibatis.DataMapper.Model.Events.Listeners;
 using Apache.Ibatis.DataMapper.Model.ParameterMapping;
 using Apache.Ibatis.DataMapper.Model.Statements;
 using Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy;
@@ -45,6 +47,7 @@ using Apache.Ibatis.DataMapper.MappedStatements.PostSelectStrategy;
 using Apache.Ibatis.DataMapper.Exceptions;
 using Apache.Ibatis.DataMapper.TypeHandlers;
 using Apache.Ibatis.DataMapper.Session;
+using System.Diagnostics;
 
 #endregion
 
@@ -52,8 +55,9 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 {
 
     /// <summary>
-    /// Summary description for MappedStatement.
+    /// Base implementation of <see cref="IMappedStatement"/>.
     /// </summary>
+    [DebuggerDisplay("MappedStatement: {Id}")]
     public class MappedStatement : IMappedStatement
     {
         /// <summary>
@@ -66,10 +70,93 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         private readonly IModelStore modelStore = null;
         private readonly IPreparedCommand preparedCommand = null;
         private readonly IResultStrategy resultStrategy = null;
+
+        protected IStatementEventListener<PreInsertEvent>[] preInsertListeners = new IStatementEventListener<PreInsertEvent>[] { };
+        protected IStatementEventListener<PostInsertEvent>[] postInsertListeners = new IStatementEventListener<PostInsertEvent>[] { };
+
+        protected IStatementEventListener<PreUpdateOrDeleteEvent>[] preUpdateOrDeleteListeners = new IStatementEventListener<PreUpdateOrDeleteEvent>[] { };
+        protected IStatementEventListener<PostUpdateOrDeleteEvent>[] postUpdateOrDeleteListeners = new IStatementEventListener<PostUpdateOrDeleteEvent>[] { };
+
+        protected IStatementEventListener<PreSelectEvent>[] preSelectListeners = new IStatementEventListener<PreSelectEvent>[] { };
+        protected IStatementEventListener<PostSelectEvent>[] postSelectListeners = new IStatementEventListener<PostSelectEvent>[] { };
+
         #endregion
 
-        #region Properties
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MappedStatement"/> class.
+        /// </summary>
+        /// <param name="modelStore">The model store.</param>
+        /// <param name="statement">The statement.</param>
+        public MappedStatement(IModelStore modelStore, IStatement statement)
+        {
+            this.modelStore = modelStore;
+            this.statement = statement;
+            preparedCommand = new DefaultPreparedCommand();
+            resultStrategy = ResultStrategyFactory.Get(this.statement);
+        }
 
+        #region IDataMapper Members
+
+        #region properties
+        /// <summary>
+        /// Gets or sets the pre insert listener.
+        /// </summary>
+        /// <value>The pre insert listener.</value>
+        public IStatementEventListener<PreInsertEvent>[] PreInsertListeners
+        {
+            get { return preInsertListeners; }
+            set { preInsertListeners = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the post insert listener.
+        /// </summary>
+        /// <value>The post insert listener.</value>
+        public IStatementEventListener<PostInsertEvent>[] PostInsertListeners
+        {
+            get { return postInsertListeners; }
+            set { postInsertListeners = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the pre update listener.
+        /// </summary>
+        /// <value>The pre update listener.</value>
+        public IStatementEventListener<PreUpdateOrDeleteEvent>[] PreUpdateOrDeleteListeners
+        {
+            get { return preUpdateOrDeleteListeners; }
+            set { preUpdateOrDeleteListeners = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the post update listener.
+        /// </summary>
+        /// <value>The post update listener.</value>
+        public IStatementEventListener<PostUpdateOrDeleteEvent>[] PostUpdateOrDeleteListeners
+        {
+            get { return postUpdateOrDeleteListeners; }
+            set { postUpdateOrDeleteListeners = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the pre select listener.
+        /// </summary>
+        /// <value>The pre select listener.</value>
+        public IStatementEventListener<PreSelectEvent>[] PreSelectListeners
+        {
+            get { return preSelectListeners; }
+            set { preSelectListeners = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the post select listener.
+        /// </summary>
+        /// <value>The post select listener.</value>
+        public IStatementEventListener<PostSelectEvent>[] PostSelectListeners
+        {
+            get { return postSelectListeners; }
+            set { postSelectListeners = value; }
+        }
 
         /// <summary>
         /// The IPreparedCommand to use
@@ -103,116 +190,10 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         public IModelStore ModelStore
         {
             get { return modelStore; }
-        }
+        } 
         #endregion
-
-        #region Constructor (s) / Destructor
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MappedStatement"/> class.
-        /// </summary>
-        /// <param name="modelStore">The model store.</param>
-        /// <param name="statement">The statement.</param>
-        public MappedStatement(IModelStore modelStore, IStatement statement)
-        {
-            this.modelStore = modelStore;
-            this.statement = statement;
-            preparedCommand = new DefaultPreparedCommand();
-            resultStrategy = ResultStrategyFactory.Get(this.statement);
-        }
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Retrieve the output parameter and map them on the result object.
-        /// This routine is only use is you specified a ParameterMap and some output attribute
-        /// or if you use a store procedure with output parameter...
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="session">The current session.</param>
-        /// <param name="result">The result object.</param>
-        /// <param name="command">The command sql.</param>
-        private void RetrieveOutputParameters(RequestScope request, ISession session, IDbCommand command, object result)
-        {
-            if (request.ParameterMap != null)
-            {
-                int count = request.ParameterMap.PropertiesList.Count;
-                for (int i = 0; i < count; i++)
-                {
-                    ParameterProperty mapping = request.ParameterMap.GetProperty(i);
-                    if (mapping.Direction == ParameterDirection.Output ||
-                        mapping.Direction == ParameterDirection.InputOutput)
-                    {
-                        string parameterName = string.Empty;
-                        if (session.SessionFactory.DataSource.DbProvider.UseParameterPrefixInParameter == false)
-                        {
-                            parameterName = mapping.ColumnName;
-                        }
-                        else
-                        {
-                            parameterName = session.SessionFactory.DataSource.DbProvider.ParameterPrefix +
-                                mapping.ColumnName;
-                        }
-
-                        if (mapping.TypeHandler == null) // Find the TypeHandler
-                        {
-                            lock (mapping)
-                            {
-                                if (mapping.TypeHandler == null)
-                                {
-                                    Type propertyType = ObjectProbe.GetMemberTypeForGetter(result, mapping.PropertyName);
-
-                                    mapping.TypeHandler = request.DataExchangeFactory.TypeHandlerFactory.GetTypeHandler(propertyType);
-                                }
-                            }
-                        }
-
-                        // Fix IBATISNET-239
-                        //"Normalize" System.DBNull parameters
-                        IDataParameter dataParameter = (IDataParameter)command.Parameters[parameterName];
-                        object dbValue = dataParameter.Value;
-
-                        object value = null;
-
-                        bool wasNull = (dbValue == DBNull.Value);
-                        if (wasNull)
-                        {
-                            if (mapping.HasNullValue)
-                            {
-                               value = mapping.TypeHandler.ValueOf(mapping.GetAccessor.MemberType, mapping.NullValue);
-                            }
-                            else
-                            {
-                                value = mapping.TypeHandler.NullValue;
-                            }
-                        }
-                        else
-                        {
-                            value = mapping.TypeHandler.GetDataBaseValue(dataParameter.Value, result.GetType());
-                        }
-
-                        request.IsRowDataFound = request.IsRowDataFound || (value != null);
-
-                        request.ParameterMap.SetOutputParameter(ref result, mapping, value);
-                    }
-                }
-            }
-        }
-
 
         #region ExecuteForObject
-
-        /// <summary>
-        /// Executes an SQL statement that returns a single row as an Object.
-        /// </summary>
-        /// <param name="session">The session used to execute the statement.</param>
-        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-        /// <returns>The object</returns>
-        public virtual object ExecuteQueryForObject(ISession session, object parameterObject)
-        {
-            return ExecuteQueryForObject(session, parameterObject, null);
-        }
 
 
         /// <summary>
@@ -226,15 +207,16 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         public virtual object ExecuteQueryForObject(ISession session, object parameterObject, object resultObject)
         {
             object obj = null;
-            RequestScope request = statement.Sql.GetRequestScope(this, parameterObject, session);
 
-            preparedCommand.Create(request, session, this.Statement, parameterObject);
+            object param = LaunchPreEvent(preSelectListeners, parameterObject);
 
-            obj = RunQueryForObject(request, session, parameterObject, resultObject);
+            RequestScope request = statement.Sql.GetRequestScope(this, param, session);
+            preparedCommand.Create(request, session, Statement, param);
 
-            return obj;
+            obj = RunQueryForObject(request, session, param, resultObject);
+
+            return LaunchPostEvent(postSelectListeners, param, obj);
         }
-
 
         /// <summary>
         /// Executes an SQL statement that returns a single row as an Object of the type of
@@ -263,17 +245,13 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
                         }
                     }
                 }
-                catch
-                {
-                    throw;
-                }
                 finally
                 {
                     reader.Close();
                     reader.Dispose();
                 }
 
-                ExecuteDeferredLoad(request);
+                ExecuteDelayedLoad(request);
 
                 #region remark
                 // If you are using the OleDb data provider (as you are), you need to close the
@@ -293,18 +271,6 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         #region ExecuteForObject .NET 2.0
 
         /// <summary>
-        /// Executes an SQL statement that returns a single row as an Object.
-        /// </summary>
-        /// <param name="session">The session used to execute the statement.</param>
-        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-        /// <returns>The object</returns>
-        public virtual T ExecuteQueryForObject<T>(ISession session, object parameterObject)
-        {
-            return ExecuteQueryForObject<T>(session, parameterObject, default(T));
-        }
-
-
-        /// <summary>
         /// Executes an SQL statement that returns a single row as an Object of the type of
         /// the resultObject passed in as a parameter.
         /// </summary>
@@ -315,13 +281,16 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         public virtual T ExecuteQueryForObject<T>(ISession session, object parameterObject, T resultObject)
         {
             T obj = default(T);
-            RequestScope request = statement.Sql.GetRequestScope(this, parameterObject, session);
 
-            preparedCommand.Create(request, session, this.Statement, parameterObject);
+            object param = LaunchPreEvent(preSelectListeners, parameterObject);
 
-            obj = RunQueryForObject<T>(request, session, parameterObject, resultObject);
+            RequestScope request = statement.Sql.GetRequestScope(this, param, session);
 
-            return obj;
+            preparedCommand.Create(request, session, Statement, param);
+
+            obj = RunQueryForObject<T>(request, session, param, resultObject);
+
+            return LaunchPostEvent(postSelectListeners, param, obj);
         }
 
 
@@ -352,17 +321,13 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
                         }
                     }
                 }
-                catch
-                {
-                    throw;
-                }
                 finally
                 {
                     reader.Close();
                     reader.Dispose();
                 }
 
-                ExecuteDeferredLoad(request);
+                ExecuteDelayedLoad(request);
 
                 #region remark
                 // If you are using the OleDb data provider, you need to close the
@@ -381,6 +346,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 
         #region ExecuteQueryForList
 
+        
         /// <summary>
         /// Runs a query with a custom object that gets a chance 
         /// to deal with each row as it is processed.
@@ -390,16 +356,20 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// <param name="rowDelegate"></param>
         public virtual IList ExecuteQueryForRowDelegate(ISession session, object parameterObject, RowDelegate rowDelegate)
         {
-            RequestScope request = statement.Sql.GetRequestScope(this, parameterObject, session);
+            object param = LaunchPreEvent(preSelectListeners, parameterObject);
 
-            preparedCommand.Create(request, session, this.Statement, parameterObject);
+            RequestScope request = statement.Sql.GetRequestScope(this, param, session);
+
+            preparedCommand.Create(request, session, Statement, param);
 
             if (rowDelegate == null)
             {
                 throw new DataMapperException("A null RowDelegate was passed to QueryForRowDelegate.");
             }
 
-            return RunQueryForList(request, session, parameterObject, null, rowDelegate);
+            IList list = RunQueryForList(request, session, param, null, rowDelegate);
+
+            return LaunchPostEvent(postSelectListeners, param, list);
         }
 
         /// <summary>
@@ -422,7 +392,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
                 throw new DataMapperException("A null DictionaryRowDelegate was passed to QueryForMapWithRowDelegate.");
             }
 
-            preparedCommand.Create(request, session, this.Statement, parameterObject);
+            preparedCommand.Create(request, session, Statement, parameterObject);
 
             return RunQueryForMap(request, session, parameterObject, keyProperty, valueProperty, rowDelegate);
         }
@@ -436,13 +406,35 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// <returns>A List of result objects.</returns>
         public virtual IList ExecuteQueryForList(ISession session, object parameterObject)
         {
-            RequestScope request = statement.Sql.GetRequestScope(this, parameterObject, session);
+            object param = LaunchPreEvent(preSelectListeners, parameterObject);
 
-            preparedCommand.Create(request, session, this.Statement, parameterObject);
+            RequestScope request = statement.Sql.GetRequestScope(this, param, session);
 
-            return RunQueryForList(request, session, parameterObject);
+            preparedCommand.Create(request, session, Statement, param);
+
+            IList list = RunQueryForList(request, session, param);
+
+            return LaunchPostEvent(postSelectListeners, param, list);
         }
 
+        /// <summary>
+        /// Executes the SQL and and fill a strongly typed collection.
+        /// </summary>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="resultObject">A strongly typed collection of result objects.</param>
+        public virtual void ExecuteQueryForList(ISession session, object parameterObject, IList resultObject)
+        {
+            object param = LaunchPreEvent(preSelectListeners, parameterObject);
+
+            RequestScope request = statement.Sql.GetRequestScope(this, param, session);
+
+            preparedCommand.Create(request, session, Statement, param);
+
+            RunQueryForList(request, session, param, resultObject, null);
+
+            LaunchPostEvent(postSelectListeners, param, resultObject);
+        }
 
         /// <summary>
         /// Runs the query for list.
@@ -484,17 +476,13 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
                      }
                      while (reader.NextResult());
                 }
-                catch
-                {
-                    throw;
-                }
                 finally
                 {
                     reader.Close();
                     reader.Dispose();
                 }
 
-                ExecuteDeferredLoad(request);
+                ExecuteDelayedLoad(request);
 
                 RetrieveOutputParameters(request, session, command, parameterObject);
             }
@@ -557,37 +545,17 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
                     }
                     while (reader.NextResult());
                 }
-                catch
-                {
-                    throw;
-                }
                 finally
                 {
                     reader.Close();
                     reader.Dispose();
                 }
 
-                ExecuteDeferredLoad(request);
+                ExecuteDelayedLoad(request);
                 RetrieveOutputParameters(request, session, command, parameterObject);
             }
 
             return list;
-        }
-
-
-        /// <summary>
-        /// Executes the SQL and and fill a strongly typed collection.
-        /// </summary>
-        /// <param name="session">The session used to execute the statement.</param>
-        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-        /// <param name="resultObject">A strongly typed collection of result objects.</param>
-        public virtual void ExecuteQueryForList(ISession session, object parameterObject, IList resultObject)
-        {
-            RequestScope request = statement.Sql.GetRequestScope(this, parameterObject, session);
-
-            preparedCommand.Create(request, session, this.Statement, parameterObject);
-
-            RunQueryForList(request, session, parameterObject, resultObject, null);
         }
 
 
@@ -604,15 +572,19 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// <param name="rowDelegate"></param>
         public virtual IList<T> ExecuteQueryForRowDelegate<T>(ISession session, object parameterObject, RowDelegate<T> rowDelegate)
         {
-            RequestScope request = statement.Sql.GetRequestScope(this, parameterObject, session);
+            object param = LaunchPreEvent(preSelectListeners, parameterObject);
 
-            preparedCommand.Create(request, session, this.Statement, parameterObject);
+            RequestScope request = statement.Sql.GetRequestScope(this, param, session);
+
+            preparedCommand.Create(request, session, Statement, param);
 
             if (rowDelegate == null)
             {
                 throw new DataMapperException("A null RowDelegate was passed to QueryForRowDelegate.");
             }
-            return RunQueryForList<T>(request, session, parameterObject, null, rowDelegate);
+            IList<T> list = RunQueryForList<T>(request, session, param, null, rowDelegate);
+
+            return LaunchPostEvent(postSelectListeners, param, list);
         }
 
 
@@ -624,11 +596,34 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// <returns>A List of result objects.</returns>
         public virtual IList<T> ExecuteQueryForList<T>(ISession session, object parameterObject)
         {
-            RequestScope request = statement.Sql.GetRequestScope(this, parameterObject, session);
+            object param = LaunchPreEvent(preSelectListeners, parameterObject);
 
-            preparedCommand.Create(request, session, this.Statement, parameterObject);
+            RequestScope request = statement.Sql.GetRequestScope(this, param, session);
 
-            return RunQueryForList<T>(request, session, parameterObject, null, null);
+            preparedCommand.Create(request, session, Statement, param);
+
+            IList<T> list = RunQueryForList<T>(request, session, param, null, null);
+
+            return LaunchPostEvent(postSelectListeners, param, list);
+        }
+
+        /// <summary>
+        /// Executes the SQL and and fill a strongly typed collection.
+        /// </summary>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <param name="resultObject">A strongly typed collection of result objects.</param>
+        public virtual void ExecuteQueryForList<T>(ISession session, object parameterObject, IList<T> resultObject)
+        {
+            object param = LaunchPreEvent(preSelectListeners, parameterObject);
+
+            RequestScope request = statement.Sql.GetRequestScope(this, param, session);
+
+            preparedCommand.Create(request, session, Statement, param);
+
+            RunQueryForList<T>(request, session, param, resultObject, null);
+
+            LaunchPostEvent(postSelectListeners, param, resultObject);
         }
 
         /// <summary>
@@ -669,17 +664,13 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
                     }
                     while (reader.NextResult());
                 }
-                catch
-                {
-                    throw;
-                }
                 finally
                 {
                     reader.Close();
                     reader.Dispose();
                 }
 
-                ExecuteDeferredLoad(request);
+                ExecuteDelayedLoad(request);
 
                 RetrieveOutputParameters(request, session, command, parameterObject);
             }
@@ -742,37 +733,19 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
                     }
                     while (reader.NextResult());
                 }
-                catch
-                {
-                    throw;
-                }
                 finally
                 {
                     reader.Close();
                     reader.Dispose();
                 }
 
-                ExecuteDeferredLoad(request);
+                ExecuteDelayedLoad(request);
                 RetrieveOutputParameters(request, session, command, parameterObject);
             }
 
             return list;
         }
 
-        /// <summary>
-        /// Executes the SQL and and fill a strongly typed collection.
-        /// </summary>
-        /// <param name="session">The session used to execute the statement.</param>
-        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
-        /// <param name="resultObject">A strongly typed collection of result objects.</param>
-        public virtual void ExecuteQueryForList<T>(ISession session, object parameterObject, IList<T> resultObject)
-        {
-            RequestScope request = statement.Sql.GetRequestScope(this, parameterObject, session);
-
-            preparedCommand.Create(request, session, this.Statement, parameterObject);
-
-            RunQueryForList<T>(request, session, parameterObject, resultObject, null);
-        }
 
 
         #endregion
@@ -789,20 +762,23 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         public virtual int ExecuteUpdate(ISession session, object parameterObject)
         {
             int rows = 0; // the number of rows affected
-            RequestScope request = statement.Sql.GetRequestScope(this, parameterObject, session);
 
-            preparedCommand.Create(request, session, this.Statement, parameterObject);
+            object param = LaunchPreEvent(preUpdateOrDeleteListeners, parameterObject);
+
+            RequestScope request = statement.Sql.GetRequestScope(this, param, session);
+
+            preparedCommand.Create(request, session, Statement, param);
 
             using (IDbCommand command = request.IDbCommand)
             {
                 rows = command.ExecuteNonQuery();
 
-                RetrieveOutputParameters(request, session, command, parameterObject);
+                RetrieveOutputParameters(request, session, command, param);
             }
 
             RaiseExecuteEvent();
 
-            return rows;
+            return LaunchPostEvent(postUpdateOrDeleteListeners, param, rows);
         }
 
 
@@ -817,7 +793,10 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         {
             object generatedKey = null;
             SelectKey selectKeyStatement = null;
-            RequestScope request = statement.Sql.GetRequestScope(this, parameterObject, session);
+
+            object param = LaunchPreEvent(preInsertListeners, parameterObject);
+
+            RequestScope request = statement.Sql.GetRequestScope(this, param, session);
 
             if (statement is Insert)
             {
@@ -827,14 +806,15 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
             if (selectKeyStatement != null && !selectKeyStatement.isAfter)
             {
                 IMappedStatement mappedStatement = modelStore.GetMappedStatement(selectKeyStatement.Id);
-                generatedKey = mappedStatement.ExecuteQueryForObject(session, parameterObject);
+                generatedKey = mappedStatement.ExecuteQueryForObject(session, param, null);
 
-                ObjectProbe.SetMemberValue(parameterObject, selectKeyStatement.PropertyName, generatedKey,
+                ObjectProbe.SetMemberValue(param, selectKeyStatement.PropertyName, generatedKey,
                     request.DataExchangeFactory.ObjectFactory,
                     request.DataExchangeFactory.AccessorFactory);
             }
 
-            preparedCommand.Create(request, session, this.Statement, parameterObject);
+            preparedCommand.Create(request, session, Statement, param);
+
             using (IDbCommand command = request.IDbCommand)
             {
                 if (statement is Insert)
@@ -869,19 +849,19 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
                 if (selectKeyStatement != null && selectKeyStatement.isAfter)
                 {
                     IMappedStatement mappedStatement = modelStore.GetMappedStatement(selectKeyStatement.Id);
-                    generatedKey = mappedStatement.ExecuteQueryForObject(session, parameterObject);
+                    generatedKey = mappedStatement.ExecuteQueryForObject(session, param, null);
 
-                    ObjectProbe.SetMemberValue(parameterObject, selectKeyStatement.PropertyName, generatedKey,
+                    ObjectProbe.SetMemberValue(param, selectKeyStatement.PropertyName, generatedKey,
                         request.DataExchangeFactory.ObjectFactory,
                         request.DataExchangeFactory.AccessorFactory);
                 }
 
-                RetrieveOutputParameters(request, session, command, parameterObject);
+                RetrieveOutputParameters(request, session, command, param);
             }
 
             RaiseExecuteEvent();
 
-            return generatedKey;
+            return LaunchPostEvent(postInsertListeners, param, generatedKey);
         }
 
         #endregion
@@ -903,7 +883,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         {
             RequestScope request = statement.Sql.GetRequestScope(this, parameterObject, session);
 
-            preparedCommand.Create(request, session, this.Statement, parameterObject);
+            preparedCommand.Create(request, session, Statement, parameterObject);
 
             return RunQueryForMap(request, session, parameterObject, keyProperty, valueProperty, null);
         }
@@ -967,16 +947,12 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
                         }
                     }
                 }
-                catch
-                {
-                    throw;
-                }
                 finally
                 {
                     reader.Close();
                     reader.Dispose();
                 }
-                ExecuteDeferredLoad(request);
+                ExecuteDelayedLoad(request);
             }
             return map;
 
@@ -997,7 +973,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         {
             RequestScope request = statement.Sql.GetRequestScope(this, parameterObject, session);
 
-            preparedCommand.Create(request, session, this.Statement, parameterObject);
+            preparedCommand.Create(request, session, Statement, parameterObject);
 
             return RunQueryForDictionary<K, V>(request, session, parameterObject, keyProperty, valueProperty, null);
 
@@ -1023,7 +999,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
                 throw new DataMapperException("A null DictionaryRowDelegate was passed to QueryForDictionary.");
             }
 
-            preparedCommand.Create(request, session, this.Statement, parameterObject);
+            preparedCommand.Create(request, session, Statement, parameterObject);
 
             return RunQueryForDictionary<K, V>(request, session, parameterObject, keyProperty, valueProperty, rowDelegate);
         }
@@ -1093,16 +1069,12 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
                         }
                     }
                 }
-                catch
-                {
-                    throw;
-                }
                 finally
                 {
                     reader.Close();
                     reader.Dispose();
                 }
-                ExecuteDeferredLoad(request);
+                ExecuteDelayedLoad(request);
             }
             return map;
 
@@ -1110,21 +1082,97 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         
         #endregion
 
+        #endregion
+
+       /// <summary>
+        /// Retrieve the output parameter and map them on the result object.
+        /// This routine is only use is you specified a ParameterMap and some output attribute
+        /// or if you use a store procedure with output parameter...
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="session">The current session.</param>
+        /// <param name="result">The result object.</param>
+        /// <param name="command">The command sql.</param>
+        private static void RetrieveOutputParameters(RequestScope request, ISession session, IDbCommand command, object result)
+        {
+            if (request.ParameterMap != null)
+            {
+                int count = request.ParameterMap.PropertiesList.Count;
+                for (int i = 0; i < count; i++)
+                {
+                    ParameterProperty mapping = request.ParameterMap.GetProperty(i);
+                    if (mapping.Direction == ParameterDirection.Output ||
+                        mapping.Direction == ParameterDirection.InputOutput)
+                    {
+                        string parameterName = string.Empty;
+                        if (session.SessionFactory.DataSource.DbProvider.UseParameterPrefixInParameter == false)
+                        {
+                            parameterName = mapping.ColumnName;
+                        }
+                        else
+                        {
+                            parameterName = session.SessionFactory.DataSource.DbProvider.ParameterPrefix +
+                                mapping.ColumnName;
+                        }
+
+                        if (mapping.TypeHandler == null) // Find the TypeHandler
+                        {
+                            lock (mapping)
+                            {
+                                if (mapping.TypeHandler == null)
+                                {
+                                    Type propertyType = ObjectProbe.GetMemberTypeForGetter(result, mapping.PropertyName);
+
+                                    mapping.TypeHandler = request.DataExchangeFactory.TypeHandlerFactory.GetTypeHandler(propertyType);
+                                }
+                            }
+                        }
+
+                        // Fix IBATISNET-239
+                        //"Normalize" System.DBNull parameters
+                        IDataParameter dataParameter = (IDataParameter)command.Parameters[parameterName];
+                        object dbValue = dataParameter.Value;
+
+                        object value = null;
+
+                        bool wasNull = (dbValue == DBNull.Value);
+                        if (wasNull)
+                        {
+                            if (mapping.HasNullValue)
+                            {
+                               value = mapping.TypeHandler.ValueOf(mapping.GetAccessor.MemberType, mapping.NullValue);
+                            }
+                            else
+                            {
+                                value = mapping.TypeHandler.NullValue;
+                            }
+                        }
+                        else
+                        {
+                            value = mapping.TypeHandler.GetDataBaseValue(dataParameter.Value, result.GetType());
+                        }
+
+                        request.IsRowDataFound = request.IsRowDataFound || (value != null);
+
+                        request.ParameterMap.SetOutputParameter(ref result, mapping, value);
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Executes the <see cref="PostBindind"/>.
         /// </summary>
         /// <param name="request">The current <see cref="RequestScope"/>.</param>
-        private void ExecuteDeferredLoad(RequestScope request)
+        private static void ExecuteDelayedLoad(RequestScope request)
         {
-            while (request.DeferredLoad.Count > 0)
+            while (request.DelayedLoad.Count > 0)
             {
-                PostBindind postSelect = request.DeferredLoad.Dequeue();
+                PostBindind postSelect = request.DelayedLoad.Dequeue();
 
                 PostSelectStrategyFactory.Get(postSelect.Method).Execute(postSelect, request);
             }
         }
-
 
         /// <summary>
         /// Raise an event ExecuteEventArgs
@@ -1138,21 +1186,53 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         }
 
         /// <summary>
-        /// ToString implementation.
+        /// Launches the pre event.
         /// </summary>
-        /// <returns>A string that describes the MappedStatement</returns>
-        public override string ToString()
+        /// <param name="listeners">The listeners.</param>
+        /// <param name="parameterObject">The parameter object.</param>
+        internal object LaunchPreEvent<TEvent>(IStatementEventListener<TEvent>[] listeners, 
+            object parameterObject) where TEvent : PreStatementEvent, new()
         {
-            StringBuilder buffer = new StringBuilder();
-            buffer.Append("\tMappedStatement: " + this.Id);
-            buffer.Append(Environment.NewLine);
-            if (statement.ParameterMap != null) buffer.Append(statement.ParameterMap.Id);
-
-            return buffer.ToString();
+            object param = parameterObject;
+            if (listeners.Length > 0)
+            {
+                TEvent evnt = new TEvent();
+                evnt.MappedStatement = this;
+                evnt.ParameterObject = param;
+                foreach (IStatementEventListener<TEvent> listener in listeners)
+                {
+                    evnt.ParameterObject = listener.OnEvent(evnt);
+                }
+                param = evnt.ParameterObject;
+            }
+            return param;
         }
 
-
-        #endregion
-
+        /// <summary>
+        /// Launches the pre event.
+        /// </summary>
+        /// <param name="listeners">The listeners.</param>
+        /// <param name="parameterObject">The parameter object.</param>
+        /// <param name="resultObject">The result object.</param>
+        /// <returns></returns>
+        internal TType LaunchPostEvent<TType, TEvent>(IStatementEventListener<TEvent>[] listeners, 
+            object parameterObject,
+            TType resultObject) where TEvent : PostStatementEvent, new()
+        {
+            TType result = resultObject;
+            if (listeners.Length > 0)
+            {
+                TEvent evnt = new TEvent();
+                evnt.MappedStatement = this;
+                evnt.ResultObject = result;
+                evnt.ParameterObject = parameterObject;
+                foreach (IStatementEventListener<TEvent> listener in listeners)
+                {
+                    evnt.ResultObject = listener.OnEvent(evnt);
+                }
+                result = (TType)evnt.ResultObject;
+            }
+            return result;
+        }
     }
 }

@@ -22,9 +22,9 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
         [SetUp]
         public void Init()
         {
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "account-init.sql");
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "category-init.sql");
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "documents-init.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "account-init.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "category-init.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "documents-init.sql");
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
             Assert.AreEqual(2, list.Count);
             
             Account account = list[0] as Account;
-            Category saveCategory = list[01] as Category;
+            Category saveCategory = list[1] as Category;
             AssertAccount1(account);
             Assert.AreEqual(key, saveCategory.Id);
             Assert.AreEqual(category.Name, saveCategory.Name);

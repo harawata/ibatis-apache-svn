@@ -25,7 +25,6 @@
 
 using System.Data;
 using Apache.Ibatis.DataMapper.Model.ResultMapping;
-using Apache.Ibatis.DataMapper.MappedStatements.PropertyStrategy;
 using Apache.Ibatis.DataMapper.Scope;
 using Apache.Ibatis.DataMapper.TypeHandlers;
 
@@ -51,11 +50,11 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
         public object Process(RequestScope request, ref IDataReader reader, object resultObject)
         {
             object outObject = resultObject;
-            AutoResultMap resultMap = request.CurrentResultMap as AutoResultMap;
+            AutoResultMap resultMap = (AutoResultMap)request.CurrentResultMap;
             
             if (outObject == null) 
             {
-                outObject = resultMap.CreateInstanceOfResultClass();
+                outObject = resultMap.CreateInstanceOfResult(null);
             }
 
             if (!resultMap.IsInitalized)

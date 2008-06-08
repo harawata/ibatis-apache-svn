@@ -78,7 +78,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.PostSelectStrategy
             object[] args = { request.Session, postSelect.Keys };
             object values = miConstructed.Invoke(postSelect.Statement, args);
 
-            postSelect.ResultProperty.SetAccessor.Set(postSelect.Target, values);
+            postSelect.ResultProperty.Set(postSelect.Target, values);
         }
 
         #endregion

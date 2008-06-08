@@ -33,7 +33,8 @@ using Apache.Ibatis.Common.Contracts;
 using Apache.Ibatis.Common.Utilities;
 using Apache.Ibatis.Common.Utilities.Objects;
 using Apache.Ibatis.DataMapper.DataExchange;
-using Apache.Ibatis.DataMapper.TypeHandlers;
+using Apache.Ibatis.DataMapper.Model.Events;
+using Apache.Ibatis.DataMapper.Model.Events.Listeners;
 
 #endregion
 
@@ -65,6 +66,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         /// <param name="resultClass">The result class.</param>
         /// <param name="resultClassFactory">The result class factory.</param>
         /// <param name="dataExchange">The data exchange.</param>
+        /// <param name="isSimpleType">if set to <c>true</c> [is simple type].</param>
         public AutoResultMap(Type resultClass, IFactory resultClassFactory, IDataExchange dataExchange, bool isSimpleType)
         {
             Contract.Require.That(resultClass, Is.Not.Null).When("retrieving argument resultClass in AutoResultMap constructor");
@@ -164,7 +166,14 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         /// <returns>An object.</returns>
         public object CreateInstanceOfResult(object[] parameters)
         {
-            return CreateInstanceOfResultClass();
+            if (!isSimpleType)
+            {
+                return resultClassFactory.CreateInstance(null);
+            }
+            else
+            {
+                return TypeUtils.InstantiatePrimitiveType(resultClass);
+            }
         }
 
         /// <summary>
@@ -188,22 +197,6 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         }
         
         /// <summary>
-        /// Create an instance of result class.
-        /// </summary>
-        /// <returns>An object.</returns>
-        public object CreateInstanceOfResultClass()
-        {
-            if (!isSimpleType)
-            {
-                return resultClassFactory.CreateInstance(null);
-            }
-            else
-            {
-                return TypeUtils.InstantiatePrimitiveType(resultClass);
-            }
-        }
-
-        /// <summary>
         /// The Key (used for resolved circular reference).
         /// </summary>
         /// <value></value>
@@ -220,6 +213,46 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         {
             get { throw new NotImplementedException("The method or operation is not implemented."); }
         }
+        
+        /// <summary>
+        /// Handles event generated after creating an instance of the <see cref="IResultMap"/> object.
+        /// </summary>
+        /// <value>The post create events.</value>
+        public IResultMapEventListener<PostCreateEvent>[] PostCreateEventListeners
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+            set { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        /// <summary>
+        /// Handles event generated before creating an instance of the <see cref="IResultMap"/> object.
+        /// </summary>
+        /// <value>The pre create events.</value>
+        public IResultMapEventListener<PreCreateEvent>[] PreCreateEventListeners
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+            set { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        /// <summary>
+        /// Handles event generated before setting the property value in an instance of a <see cref="IResultMap"/> object.
+        /// </summary>
+        /// <value>The post create events.</value>
+        public IResultMapEventListener<PrePropertyEvent>[] PrePropertyEventListeners
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+            set { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        /// <summary>
+        /// Handles event generated after setting the property value in an instance of a <see cref="IResultMap"/> object.
+        /// </summary>
+        /// <value>The pre create events.</value>
+        public IResultMapEventListener<PostPropertyEvent>[] PostPropertyEventListeners
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+            set { throw new Exception("The method or operation is not implemented."); }
+        }
         #endregion
 
         /// <summary>
@@ -230,5 +263,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         {
             return new AutoResultMap(resultClass, resultClassFactory, dataExchange, isSimpleType);
         }
+
+
     }
 }

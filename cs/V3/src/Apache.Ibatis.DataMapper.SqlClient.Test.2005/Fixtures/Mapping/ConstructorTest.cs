@@ -18,13 +18,13 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
         [SetUp]
         public void Init()
         {
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "account-init.sql");
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "order-init.sql");
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "line-item-init.sql");
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "enumeration-init.sql");
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "other-init.sql");
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "Nullable-init.sql");
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "category-init.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "account-init.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "order-init.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "line-item-init.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "enumeration-init.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "other-init.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "Nullable-init.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "category-init.sql");
         }
 
         /// <summary>

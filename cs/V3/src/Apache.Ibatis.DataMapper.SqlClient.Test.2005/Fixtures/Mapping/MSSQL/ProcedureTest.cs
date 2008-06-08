@@ -25,16 +25,16 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping.MSSQL
         [SetUp] 
         public void Init() 
         {
-            InitScript( sessionFactory.DataSource, ScriptDirectory + "category-init.sql" );
-            InitScript( sessionFactory.DataSource, ScriptDirectory + "category-procedure.sql" );		
-            InitScript( sessionFactory.DataSource, ScriptDirectory + "account-init.sql" );	
-            InitScript( sessionFactory.DataSource, ScriptDirectory + "account-procedure.sql", false );
-            InitScript( sessionFactory.DataSource, ScriptDirectory + "category-procedureWithReturn.sql", false);
-            InitScript( sessionFactory.DataSource, ScriptDirectory + "ps_SelectAccount.sql", false );
-            InitScript( sessionFactory.DataSource, ScriptDirectory + "ps_SelectAllAccount.sql", false);			    
-            InitScript( sessionFactory.DataSource, ScriptDirectory + "swap-procedure.sql" );
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "ps_SelectAccountWithOutPutParam.sql");
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "ps_InsertAccountWithDefault.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "category-init.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "category-procedure.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "account-init.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "account-procedure.sql", false);
+            InitScript(sessionFactory.DataSource, scriptDirectory + "category-procedureWithReturn.sql", false);
+            InitScript(sessionFactory.DataSource, scriptDirectory + "ps_SelectAccount.sql", false);
+            InitScript(sessionFactory.DataSource, scriptDirectory + "ps_SelectAllAccount.sql", false);
+            InitScript(sessionFactory.DataSource, scriptDirectory + "swap-procedure.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "ps_SelectAccountWithOutPutParam.sql");
+            InitScript(sessionFactory.DataSource, scriptDirectory + "ps_InsertAccountWithDefault.sql");
         }
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping.MSSQL
         [Category("MSSQL.2005")]
         public void TestXMLParameter()
         {
-            InitScript(sessionFactory.DataSource, ScriptDirectory + "ps_SelectByIdList.sql");	
+            InitScript(sessionFactory.DataSource, scriptDirectory + "ps_SelectByIdList.sql");	
 
             string accountIds = "<Accounts><id>3</id><id>4</id></Accounts>";
 
