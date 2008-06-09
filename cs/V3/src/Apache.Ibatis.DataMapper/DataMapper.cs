@@ -40,9 +40,9 @@ namespace Apache.Ibatis.DataMapper
     /// </summary>
     public class DataMapper : IDataMapper, IModelStoreAccessor
     {
-        private readonly IModelStore modelStore = null;
-        private readonly ISessionStore sessionStore = null;
-        private readonly ISessionFactory sessionFactory = null;
+        protected readonly IModelStore modelStore = null;
+        protected readonly ISessionStore sessionStore = null;
+        protected readonly ISessionFactory sessionFactory = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataMapper"/> class.
