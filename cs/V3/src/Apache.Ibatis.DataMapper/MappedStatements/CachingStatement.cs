@@ -46,9 +46,9 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
     /// Acts as a decorator arounf an <see cref="IMappedStatement"/> to add cache functionality
 	/// </summary>
     [DebuggerDisplay("MappedStatement: {mappedStatement.Id}")]
-    public sealed class CachingStatement : IMappedStatement
+    public sealed class CachingStatement : MappedStatementEventSupport, IMappedStatement
 	{
-		private MappedStatement mappedStatement =null;
+		private readonly MappedStatement mappedStatement =null;
 
 		/// <summary>
 		/// Event launch on exceute query
@@ -65,67 +65,6 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 		}
 
 		#region IMappedStatement Members
-
-        /// <summary>
-        /// Gets or sets the pre insert listener.
-        /// </summary>
-        /// <value>The pre insert listener.</value>
-        public IStatementEventListener<PreInsertEvent>[] PreInsertListeners
-        {
-            get { return mappedStatement.PreInsertListeners; }
-            set { mappedStatement.PreInsertListeners = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the post insert listener.
-        /// </summary>
-        /// <value>The post insert listener.</value>
-        public IStatementEventListener<PostInsertEvent>[] PostInsertListeners
-        {
-            get { return mappedStatement.PostInsertListeners; }
-            set { mappedStatement.PostInsertListeners = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the pre update listener.
-        /// </summary>
-        /// <value>The pre update listener.</value>
-        public IStatementEventListener<PreUpdateOrDeleteEvent>[] PreUpdateOrDeleteListeners
-        {
-            get { return mappedStatement.PreUpdateOrDeleteListeners; }
-            set { mappedStatement.PreUpdateOrDeleteListeners = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the post update listener.
-        /// </summary>
-        /// <value>The post update listener.</value>
-        public IStatementEventListener<PostUpdateOrDeleteEvent>[] PostUpdateOrDeleteListeners
-        {
-            get { return mappedStatement.PostUpdateOrDeleteListeners; }
-            set { mappedStatement.PostUpdateOrDeleteListeners = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the pre select listener.
-        /// </summary>
-        /// <value>The pre select listener.</value>
-        public IStatementEventListener<PreSelectEvent>[] PreSelectListeners
-        {
-            get { return mappedStatement.PreSelectListeners; }
-            set { mappedStatement.PreSelectListeners = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the post select listener.
-        /// </summary>
-        /// <value>The post select listener.</value>
-        public IStatementEventListener<PostSelectEvent>[] PostSelectListeners
-        {
-            get { return mappedStatement.PostSelectListeners; }
-            set { mappedStatement.PostSelectListeners = value; }
-        }
-
 
 		/// <summary>
 		/// The IPreparedCommand to use
@@ -306,7 +245,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         {
             IList list = null;
 
-            object param = mappedStatement.LaunchPreEvent(mappedStatement.PreSelectListeners, parameterObject);
+            object param = RaisePreEvent<PreSelectEventArgs>(PreSelectEvent, parameterObject);
 
             RequestScope request = Statement.Sql.GetRequestScope(this, param, session);
 
@@ -322,7 +261,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
                 Statement.CacheModel[cacheKey] = list;
             }
 
-            return mappedStatement.LaunchPostEvent(mappedStatement.PostSelectListeners, param, list);
+            return RaisePostEvent<IList, PostSelectEventArgs>(PostSelectEvent, param, list);
         }
         #endregion
 
@@ -349,7 +288,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         {
             IList<T> list = null;
 
-            object param = mappedStatement.LaunchPreEvent(mappedStatement.PreSelectListeners, parameterObject);
+            object param = RaisePreEvent<PreSelectEventArgs>(PreSelectEvent, parameterObject);
 
             RequestScope request = Statement.Sql.GetRequestScope(this, param, session);
 
@@ -364,8 +303,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
                 list = mappedStatement.RunQueryForList<T>(request, session, param);
                 Statement.CacheModel[cacheKey] = list;
             }
-
-            return mappedStatement.LaunchPostEvent(mappedStatement.PostSelectListeners, param, list);
+            return RaisePostEvent<IList<T>, PostSelectEventArgs>(PostSelectEvent, param, list);
         }
         #endregion
 
@@ -383,7 +321,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 		{
 			object obj = null;
 
-            object param = mappedStatement.LaunchPreEvent(mappedStatement.PreSelectListeners, parameterObject);
+            object param = RaisePreEvent<PreSelectEventArgs>(PreSelectEvent, parameterObject);
 
             RequestScope request = Statement.Sql.GetRequestScope(this, param, session);
 
@@ -405,7 +343,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 				Statement.CacheModel[cacheKey] = obj;
 			}
 
-            return mappedStatement.LaunchPostEvent(mappedStatement.PostSelectListeners, param, obj);
+            return RaisePostEvent<object, PostSelectEventArgs>(PostSelectEvent, param, obj);
         }
         
         #endregion
@@ -424,7 +362,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         {
             T obj = default(T);
 
-            object param = mappedStatement.LaunchPreEvent(mappedStatement.PreSelectListeners, parameterObject);
+            object param = RaisePreEvent<PreSelectEventArgs>(PreSelectEvent, parameterObject);
 
             RequestScope request = Statement.Sql.GetRequestScope(this, param, session);
 
@@ -450,7 +388,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
                 Statement.CacheModel[cacheKey] = obj;
             }
 
-            return mappedStatement.LaunchPostEvent(mappedStatement.PostSelectListeners, param, obj);
+            return RaisePostEvent<T, PostSelectEventArgs>(PostSelectEvent, param, obj);
         }
         
         #endregion

@@ -1,7 +1,7 @@
 #region Apache Notice
 /*****************************************************************************
  * $Revision: 476843 $
- * $LastChangedDate: 2008-05-31 15:52:05 +0200 (sam., 31 mai 2008) $
+ * $LastChangedDate: 2008-06-08 20:20:44 +0200 (dim., 08 juin 2008) $
  * $LastChangedBy: gbayon $
  * 
  * iBATIS.NET Data Mapper
@@ -23,23 +23,22 @@
  ********************************************************************************/
 #endregion
 
-namespace Apache.Ibatis.DataMapper.Model.Events.Listeners
+using System;
+using System.ComponentModel;
+using Apache.Ibatis.DataMapper.Model.Events;
+
+namespace Apache.Ibatis.DataMapper.MappedStatements
 {
     /// <summary>
-    /// Handles event of type <see cref="PreInsertEvent"/>.
+    /// Defines the contract for events generated during statement execution.
     /// </summary>
-    public abstract class PreInsertEventListener : IStatementEventListener<PreInsertEvent>
+    public interface IMappedStatementEvents
     {
-        #region IStatementEventListener<PreInsertEvent> Members
-
-        /// <summary>
-        /// Calls on the specified event.
-        /// </summary>
-        /// <param name="evnt">The event.</param>
-        /// <returns>Returns is used as the parameter object</returns>
-        public abstract object OnEvent(PreInsertEvent evnt);
-
-
-        #endregion
+        event EventHandler<PreInsertEventArgs> PreInsert;
+        event EventHandler<PreSelectEventArgs> PreSelect;
+        event EventHandler<PreUpdateOrDeleteEventArgs> PreUpdateOrDelete;
+        event EventHandler<PostInsertEventArgs> PostInsert;
+        event EventHandler<PostSelectEventArgs> PostSelect;
+        event EventHandler<PostUpdateOrDeleteEventArgs> PostUpdateOrDelete;
     }
 }

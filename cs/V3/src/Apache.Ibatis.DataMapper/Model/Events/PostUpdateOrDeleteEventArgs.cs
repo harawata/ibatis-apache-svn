@@ -1,12 +1,11 @@
-
 #region Apache Notice
 /*****************************************************************************
- * $Revision: 408099 $
- * $LastChangedDate: 2008-06-07 10:14:33 +0200 (sam., 07 juin 2008) $
+ * $Revision: 476843 $
+ * $LastChangedDate: 2008-05-31 15:52:05 +0200 (sam., 31 mai 2008) $
  * $LastChangedBy: gbayon $
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2006/2005 - The Apache Software Foundation
+ * Copyright (C) 2008/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,21 +23,21 @@
  ********************************************************************************/
 #endregion
 
-namespace Apache.Ibatis.DataMapper.Model.Events.Listeners
+namespace Apache.Ibatis.DataMapper.Model.Events
 {
     /// <summary>
-    /// Handles event of type <see cref="ISatementEvent"/>.
+    /// Lauchs after excuting an update/delete statement
     /// </summary>
-    /// <example>
-    ///     mappedSatement.PreInsertEventListeners =  new PreInsertEventListener[] {new MyPreInsertEventListener() };
-    /// </example>
-    public interface IStatementEventListener<ISatementEvent>
+    public sealed class PostUpdateOrDeleteEventArgs : PostStatementEventArgs
     {
         /// <summary>
-        /// Calls on the specified event.
+        /// Gets the event type.
         /// </summary>
-        /// <param name="evnt">The event.</param>
-        /// <returns>Returns is used as the parameter object</returns>
-        object OnEvent(ISatementEvent evnt);
+        /// <value>The type.</value>
+        public override StatementEventType Type
+        {
+            get { return StatementEventType.PostUpdateOrDelete; }
+        }
+
     }
 }

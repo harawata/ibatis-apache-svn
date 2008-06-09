@@ -26,9 +26,9 @@
 namespace Apache.Ibatis.DataMapper.Model.Events
 {
     /// <summary>
-    /// Lauchs before excuting a select statement
+    /// Event launchs before excuting a select statement
     /// </summary>
-    public sealed class PostSelectEvent : PostStatementEvent
+    public sealed class PreSelectEventArgs : PreStatementEventArgs
     {
         /// <summary>
         /// Gets the event type.
@@ -36,9 +36,8 @@ namespace Apache.Ibatis.DataMapper.Model.Events
         /// <value>The type.</value>
         public override StatementEventType Type
         {
-            get { return StatementEventType.PostSelect; }
+            get { return StatementEventType.PreSelect; }
         }
 
     }
 }
-

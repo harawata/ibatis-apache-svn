@@ -26,10 +26,19 @@
 namespace Apache.Ibatis.DataMapper.Model.Events
 {
     /// <summary>
-    /// Base class for pre <see cref="ISatementEvent"/>
+    /// Event lauchs after excuting a select statement
     /// </summary>
-    public abstract class PreStatementEvent : BaseSatementEvent
+    public sealed class PostSelectEventArgs : PostStatementEventArgs
     {
+        /// <summary>
+        /// Gets the event type.
+        /// </summary>
+        /// <value>The type.</value>
+        public override StatementEventType Type
+        {
+            get { return StatementEventType.PostSelect; }
+        }
 
     }
 }
+

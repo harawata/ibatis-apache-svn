@@ -45,7 +45,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 	/// <summary>
 	/// Summary description for IMappedStatement.
 	/// </summary>
-	public interface IMappedStatement
+	public interface IMappedStatement : IMappedStatementEvents
 	{
 
 		#region Event
@@ -81,40 +81,6 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// </summary>
         /// <value>The model store.</value>
         IModelStore ModelStore { get; }
-
-        /// <summary>
-        /// Gets or sets the pre insert listener.
-        /// </summary>
-        /// <value>The pre insert listener.</value>
-        IStatementEventListener<PreInsertEvent>[] PreInsertListeners { get; set;}
-        /// <summary>
-        /// Gets or sets the post insert listener.
-        /// </summary>
-        /// <value>The post insert listener.</value>
-        IStatementEventListener<PostInsertEvent>[] PostInsertListeners { get; set;}
-
-        /// <summary>
-        /// Gets or sets the pre update listener.
-        /// </summary>
-        /// <value>The pre update listener.</value>
-        IStatementEventListener<PreUpdateOrDeleteEvent>[] PreUpdateOrDeleteListeners { get; set;}
-        /// <summary>
-        /// Gets or sets the post update listener.
-        /// </summary>
-        /// <value>The post update listener.</value>
-        IStatementEventListener<PostUpdateOrDeleteEvent>[] PostUpdateOrDeleteListeners { get; set;}
-
-        /// <summary>
-        /// Gets or sets the pre select listener.
-        /// </summary>
-        /// <value>The pre select listener.</value>
-        IStatementEventListener<PreSelectEvent>[] PreSelectListeners { get; set;}
-
-        /// <summary>
-        /// Gets or sets the post select listener.
-        /// </summary>
-        /// <value>The post select listener.</value>
-        IStatementEventListener<PostSelectEvent>[] PostSelectListeners { get; set;}
 
 		#endregion
 

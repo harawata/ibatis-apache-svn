@@ -1,3 +1,4 @@
+using System;
 using Apache.Ibatis.Common.Resources;
 using Apache.Ibatis.DataMapper.Configuration;
 using Apache.Ibatis.DataMapper.Configuration.Interpreters.Config.Xml;
@@ -45,16 +46,6 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
             InitScript(sessionFactory.DataSource, scriptDirectory + "documents-init.sql");
         }
 
-        private static void ReInitListeners(IMappedStatement statement)
-        {
-            statement.PreInsertListeners = new PreInsertEventListener[] {};
-            statement.PreSelectListeners = new PreSelectEventListener[] { };
-            statement.PreUpdateOrDeleteListeners = new PreUpdateOrDeleteEventListener[] { };
-
-            statement.PostInsertListeners = new PostInsertEventListener[] { };
-            statement.PostSelectListeners = new PostSelectEventListener[] { };
-            statement.PostUpdateOrDeleteListeners = new PostUpdateOrDeleteEventListener[] { };
-        }
 
         private static void ReInitListeners(IResultMap resultMap)
         {
@@ -70,40 +61,54 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
 
 
         [Test]
-        public void PreSelectEventListener_must_be_fired()
+        public void PreSelectEvent_must_be_fired()
         {
             IMappedStatement statement = ((IModelStoreAccessor)dataMapper).ModelStore.GetMappedStatement("SelectAccount");
-            ReInitListeners(statement);
             Assert.That(statement, Is.Not.Null);
-            statement.PreSelectListeners = new PreSelectEventListener[] { new MyPreSelectEventListener() };
+            statement.PreSelect+= PreSelectEventHandler;
 
             Account account = dataMapper.QueryForObject<Account>("SelectAccount", 1);
             Assert.That(account, Is.Not.Null);
             Assert.That(account.Id, Is.EqualTo(2));
+
+            statement.PreSelect -= PreSelectEventHandler;
         }
+
+        private static void PreSelectEventHandler(object src, PreSelectEventArgs evnt)
+        {
+            Assert.That(((IMappedStatement)src).Id, Is.EqualTo("SelectAccount"));
+            evnt.ParameterObject = ((int)evnt.ParameterObject) +1;
+        }
+
 
         [Test]
         public void PostSelectEventListener_must_be_fired()
         {
             IMappedStatement statement = ((IModelStoreAccessor)dataMapper).ModelStore.GetMappedStatement("SelectAccount");
-            ReInitListeners(statement);
             Assert.That(statement, Is.Not.Null);
-            statement.PostSelectListeners = new PostSelectEventListener[] { new MyPostSelectEventListener() };
+            statement.PostSelect += PostSelectEventHandler;
 
             Account account = dataMapper.QueryForObject<Account>("SelectAccount", 1);
             Assert.That(account, Is.Not.Null);
             Assert.That(account.Id, Is.EqualTo(99));
+
+            statement.PostSelect -= PostSelectEventHandler;
         }
 
+        private static void PostSelectEventHandler(object src, PostSelectEventArgs evnt)
+        {
+            Assert.That(((IMappedStatement)src).Id, Is.EqualTo("SelectAccount"));
+            Account account = (Account)evnt.ResultObject;
+            account.Id = 99;
+        }
+
+        
         [Test]
         public void PreInsertEventListener_must_be_fired()
         {
-            IMappedStatement statement = ((IModelStoreAccessor)dataMapper).ModelStore.GetMappedStatement("SelectAccount");
-            ReInitListeners(statement);
-            statement = ((IModelStoreAccessor)dataMapper).ModelStore.GetMappedStatement("InsertAccount");
-            ReInitListeners(statement);
+            IMappedStatement statement = statement = ((IModelStoreAccessor)dataMapper).ModelStore.GetMappedStatement("InsertAccount");
             Assert.That(statement, Is.Not.Null);
-            statement.PreInsertListeners = new PreInsertEventListener[] { new MyPreInsertEventListener() };
+            statement.PreInsert += PreInsertEventHandler;
             
             Account account = new Account();
             account.Id = 6;
@@ -120,17 +125,24 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
             Assert.That(account.FirstName, Is.EqualTo("Calamity"));
             Assert.That(account.LastName, Is.EqualTo("Jane"));
             Assert.That(account.EmailAddress, Is.EqualTo("pre.insert.email@noname.org"));
+
+            statement.PreInsert -= PreInsertEventHandler;
         }
 
+        private static void PreInsertEventHandler(object src, PreInsertEventArgs evnt)
+        {
+            Assert.That(((IMappedStatement)src).Id, Is.EqualTo("InsertAccount"));
+            Account account = (Account)evnt.ParameterObject;
+            account.EmailAddress = "pre.insert.email@noname.org";
+        }
+
+        
         [Test]
         public void PostInsertEventListener_must_be_fired()
         {
-            IMappedStatement statement = ((IModelStoreAccessor)dataMapper).ModelStore.GetMappedStatement("SelectAccount");
-            ReInitListeners(statement);
-            statement = ((IModelStoreAccessor)dataMapper).ModelStore.GetMappedStatement("InsertAccount");
-            ReInitListeners(statement);
+            IMappedStatement statement = ((IModelStoreAccessor)dataMapper).ModelStore.GetMappedStatement("InsertAccount");
             Assert.That(statement, Is.Not.Null);
-            statement.PostInsertListeners = new PostInsertEventListener[] { new MyPostInsertEventListener() };
+            statement.PostInsert += PostInsertEventHandler;
 
             Account account = new Account();
             account.Id = 6;
@@ -142,16 +154,26 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
 
             Assert.That(id, Is.EqualTo(999));
             Assert.That(account.Id, Is.EqualTo(99));
+
+            statement.PostInsert -= PostInsertEventHandler;
+
         }
+
+        private static void PostInsertEventHandler(object src, PostInsertEventArgs evnt)
+        {
+            Assert.That(((IMappedStatement)src).Id, Is.EqualTo("InsertAccount"));
+            Account account = (Account)evnt.ParameterObject;
+            account.Id = 99;
+            evnt.ResultObject = 999;
+        }
+      
 
         [Test]
         public void PreUpdateOrDeleteEventListener_must_be_fired()
         {
-            IMappedStatement statement = ((IModelStoreAccessor)dataMapper).ModelStore.GetMappedStatement("SelectAccount");
-            ReInitListeners(statement);
-            statement = ((IModelStoreAccessor)dataMapper).ModelStore.GetMappedStatement("UpdateAccount");
-            ReInitListeners(statement);
-            statement.PreUpdateOrDeleteListeners = new PreUpdateOrDeleteEventListener[] { new MyPreUpdateOrDeleteEventListener() };
+            IMappedStatement statement =  ((IModelStoreAccessor)dataMapper).ModelStore.GetMappedStatement("UpdateAccount");
+            statement.PreUpdateOrDelete += PreUpdateOrDeleteEventHandler;
+            
             Account account = dataMapper.QueryForObject<Account>("SelectAccount", 1);
             account.EmailAddress = "To.Be.Replace@noname.org";
 
@@ -162,16 +184,22 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
             Assert.That(account, Is.Not.Null);
             Assert.That(account.Id, Is.EqualTo(1));
             Assert.That(account.EmailAddress, Is.EqualTo("Pre.Update.Or.Delete.Event@noname.org"));
+
+            statement.PreUpdateOrDelete -= PreUpdateOrDeleteEventHandler;
+        }
+
+        private static void PreUpdateOrDeleteEventHandler(object src, PreUpdateOrDeleteEventArgs evnt)
+        {
+            Assert.That(((IMappedStatement)src).Id, Is.EqualTo("UpdateAccount"));
+            Account account = (Account)evnt.ParameterObject;
+            account.EmailAddress = "Pre.Update.Or.Delete.Event@noname.org";
         }
 
         [Test]
         public void PostUpdateOrDeleteEventListener_must_be_fired()
         {
-            IMappedStatement statement = ((IModelStoreAccessor)dataMapper).ModelStore.GetMappedStatement("SelectAccount");
-            ReInitListeners(statement);
-            statement = ((IModelStoreAccessor)dataMapper).ModelStore.GetMappedStatement("UpdateAccount");
-            ReInitListeners(statement);
-            statement.PostUpdateOrDeleteListeners = new PostUpdateOrDeleteEventListener[] { new MyPostUpdateOrDeleteEventListener() };
+            IMappedStatement statement = ((IModelStoreAccessor)dataMapper).ModelStore.GetMappedStatement("UpdateAccount");
+            statement.PostUpdateOrDelete += PostUpdateOrDeleteEventHandler;
 
             Account account = dataMapper.QueryForObject<Account>("SelectAccount", 1);
 
@@ -179,8 +207,20 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
 
             Assert.That(id, Is.EqualTo(999));
             Assert.That(account.Id, Is.EqualTo(99));
+
+            statement.PostUpdateOrDelete -= PostUpdateOrDeleteEventHandler;
+
         }
 
+        private static void PostUpdateOrDeleteEventHandler(object src, PostUpdateOrDeleteEventArgs evnt)
+        {
+            Assert.That(((IMappedStatement)src).Id, Is.EqualTo("UpdateAccount"));
+            Account account = (Account)evnt.ParameterObject;
+            account.Id = 99;
+            evnt.ResultObject = 999;
+        }
+
+        /*
         [Test]
         public void PreCreateEventListener_must_be_fired()
         {
@@ -242,19 +282,6 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
             Assert.That(account.Document.Id, Is.EqualTo(55));
         }
         
-        private class MyPreSelectEventListener : PreSelectEventListener
-        {
-            /// <summary>
-            /// Calls on the specified event.
-            /// </summary>
-            /// <param name="evnt">The event.</param>
-            /// <returns>Returns the parameter object</returns>
-            public override object OnEvent(PreSelectEvent evnt)
-            {
-                Assert.That(evnt.MappedStatement.Id, Is.EqualTo("SelectAccount"));
-                return (int)evnt.ParameterObject +1;
-           }
-        }
 
         private class MyPostSelectEventListener : PostSelectEventListener
         {
@@ -264,7 +291,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
             /// </summary>
             /// <param name="evnt">The event.</param>
             /// <returns>Returns is used as the result object</returns>
-            public override object OnEvent(PostSelectEvent evnt)
+            public override object OnEvent(PostSelectEventArgs evnt)
             {
                 Assert.That(evnt.MappedStatement.Id, Is.EqualTo("SelectAccount"));
                 Account account = (Account)evnt.ResultObject;
@@ -282,7 +309,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
             /// </summary>
             /// <param name="evnt">The event.</param>
             /// <returns>Returns is used as the parameter object</returns>
-            public override object OnEvent(PreInsertEvent evnt)
+            public override object OnEvent(PreInsertEventArgs evnt)
             {
                 Assert.That(evnt.MappedStatement.Id, Is.EqualTo("InsertAccount"));
                 Account account = (Account)evnt.ParameterObject;
@@ -300,7 +327,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
             /// </summary>
             /// <param name="evnt">The event.</param>
             /// <returns>Returns is used as the result object</returns>
-            public override object OnEvent(PostInsertEvent evnt)
+            public override object OnEvent(PostInsertEventArgs evnt)
             {
                 Assert.That(evnt.MappedStatement.Id, Is.EqualTo("InsertAccount"));
                 Account account = (Account)evnt.ParameterObject;
@@ -317,7 +344,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
             /// </summary>
             /// <param name="evnt">The event.</param>
             /// <returns>Returns is used as the parameter object</returns>
-            public override object OnEvent(PreUpdateOrDeleteEvent evnt)
+            public override object OnEvent(PreUpdateOrDeleteEventArgs evnt)
             {
                 Assert.That(evnt.MappedStatement.Id, Is.EqualTo("UpdateAccount"));
                 Account account = (Account)evnt.ParameterObject;
@@ -335,7 +362,7 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
             /// </summary>
             /// <param name="evnt">The event.</param>
             /// <returns>Returns is used as the result object</returns>
-            public override object OnEvent(PostUpdateOrDeleteEvent evnt)
+            public override object OnEvent(PostUpdateOrDeleteEventArgs evnt)
             {
                 Assert.That(evnt.MappedStatement.Id, Is.EqualTo("UpdateAccount"));
                 Account account = (Account)evnt.ParameterObject;
@@ -419,6 +446,8 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
 
                 return null;
             }
+
         }
+         */
     }
 }

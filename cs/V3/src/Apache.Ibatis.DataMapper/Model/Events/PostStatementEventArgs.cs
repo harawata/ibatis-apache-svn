@@ -26,17 +26,20 @@
 namespace Apache.Ibatis.DataMapper.Model.Events
 {
     /// <summary>
-    /// Lauchs before excuting an insert statement
+    /// Base class for post <see cref="BaseStatementEventArgs"/>
     /// </summary>
-    public sealed class PreInsertEvent : PreStatementEvent
+    public abstract class PostStatementEventArgs : BaseStatementEventArgs
     {
+        private object resultObject = null;
+
         /// <summary>
-        /// Gets the event type.
+        /// Gets or sets the result object.
         /// </summary>
-        /// <value>The type.</value>
-        public override StatementEventType Type
+        /// <value>The result object.</value>
+        public object ResultObject
         {
-            get { return StatementEventType.PreInsert; }
+            get { return resultObject; }
+            set { resultObject = value; }
         }
     }
 }

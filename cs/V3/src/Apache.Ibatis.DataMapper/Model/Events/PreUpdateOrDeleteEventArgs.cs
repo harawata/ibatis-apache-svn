@@ -23,49 +23,20 @@
  ********************************************************************************/
 #endregion
 
-using Apache.Ibatis.DataMapper.MappedStatements;
-
 namespace Apache.Ibatis.DataMapper.Model.Events
 {
     /// <summary>
-    /// Base class for <see cref="ISatementEvent"/>
+    /// Event launchs before excuting an update/delete statement
     /// </summary>
-    public abstract class BaseSatementEvent : ISatementEvent
+    public sealed class PreUpdateOrDeleteEventArgs : PreStatementEventArgs
     {
-        private IMappedStatement mappedStatement = null;
-        private object parameterObject = null;
-
-
-        #region ISatementEvent Members
-
-        /// <summary>
-        /// Gets or sets the parameter object.
-        /// </summary>
-        /// <value>The parameter object.</value>
-        public object ParameterObject
-        {
-            get { return parameterObject; }
-            set { parameterObject = value; }
-        }
-
-        /// <summary>
-        /// Gets the mapped statement.
-        /// </summary>
-        /// <value>The mapped statement.</value>
-        public IMappedStatement MappedStatement
-        {
-            get { return mappedStatement; }
-            set { mappedStatement = value; }
-        }
-
-
         /// <summary>
         /// Gets the event type.
         /// </summary>
         /// <value>The type.</value>
-        public abstract StatementEventType Type { get; }
-
-
-        #endregion
+        public override StatementEventType Type
+        {
+            get { return StatementEventType.PreUpdateOrDelete; }
+        }
     }
 }

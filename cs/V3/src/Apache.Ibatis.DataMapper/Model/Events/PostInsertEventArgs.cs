@@ -23,23 +23,20 @@
  ********************************************************************************/
 #endregion
 
-namespace Apache.Ibatis.DataMapper.Model.Events.Listeners
+namespace Apache.Ibatis.DataMapper.Model.Events
 {
     /// <summary>
-    /// Handles event of type <see cref="PostInsertEvent"/>.
+    /// Event launchs after excuting an insert statement
     /// </summary>
-    public abstract class PostInsertEventListener : IStatementEventListener<PostInsertEvent>
+    public sealed class PostInsertEventArgs : PostStatementEventArgs
     {
-        #region IStatementEventListener<PostInsertEvent> Members
-
         /// <summary>
-        /// Calls on the specified event.
+        /// Gets the event type.
         /// </summary>
-        /// <param name="evnt">The event.</param>
-        /// <returns>Returns is used as the result object</returns>
-        public abstract object OnEvent(PostInsertEvent evnt);
-
-
-        #endregion
+        /// <value>The type.</value>
+        public override StatementEventType Type
+        {
+            get { return StatementEventType.PostInsert; }
+        }
     }
 }

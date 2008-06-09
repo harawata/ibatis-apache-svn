@@ -1,12 +1,11 @@
-
 #region Apache Notice
 /*****************************************************************************
- * $Revision: 408099 $
- * $LastChangedDate: 2008-06-07 10:14:33 +0200 (sam., 07 juin 2008) $
+ * $Revision: 476843 $
+ * $LastChangedDate: 2008-06-08 20:20:44 +0200 (dim., 08 juin 2008) $
  * $LastChangedBy: gbayon $
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2006/2005 - The Apache Software Foundation
+ * Copyright (C) 2008/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,32 +23,37 @@
  ********************************************************************************/
 #endregion
 
+using System;
 using Apache.Ibatis.DataMapper.MappedStatements;
 
 namespace Apache.Ibatis.DataMapper.Model.Events
 {
     /// <summary>
-    /// Defines the contract for events generated during statement execution.
+    /// Base class for event statement
     /// </summary>
-    public interface ISatementEvent
+    public abstract class BaseStatementEventArgs : EventArgs
     {
-        /// <summary>
-        /// Gets the mapped statement.
-        /// </summary>
-        /// <value>The mapped statement.</value>
-        IMappedStatement MappedStatement { get; set;}
+        private object parameterObject = null;
 
-        /// <summary>
-        /// Gets the event type.
-        /// </summary>
-        /// <value>The type.</value>
-        StatementEventType Type { get; }
+        #region ISatementEvent Members
 
         /// <summary>
         /// Gets or sets the parameter object.
         /// </summary>
         /// <value>The parameter object.</value>
-        object ParameterObject { get; set;}
+        public object ParameterObject
+        {
+            get { return parameterObject; }
+            set { parameterObject = value; }
+        }
 
+        /// <summary>
+        /// Gets the event type.
+        /// </summary>
+        /// <value>The type.</value>
+        public abstract StatementEventType Type { get; }
+
+
+        #endregion
     }
 }

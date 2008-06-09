@@ -23,22 +23,20 @@
  ********************************************************************************/
 #endregion
 
-namespace Apache.Ibatis.DataMapper.Model.Events.Listeners
+namespace Apache.Ibatis.DataMapper.Model.Events
 {
     /// <summary>
-    /// Handles event of type <see cref="PostUpdateOrDeleteEvent"/>.
+    /// Event lauchs before excuting an insert statement
     /// </summary>
-    public abstract class PostUpdateOrDeleteEventListener : IStatementEventListener<PostUpdateOrDeleteEvent>
+    public sealed class PreInsertEventArgs : PreStatementEventArgs
     {
-        #region IStatementEventListener<PostUpdateOrDeleteEvent> Members
-
         /// <summary>
-        /// Calls on the specified event.
+        /// Gets the event type.
         /// </summary>
-        /// <param name="evnt">The event.</param>
-        /// <returns>Returns is used as the result object</returns>
-        public abstract object OnEvent(PostUpdateOrDeleteEvent evnt);
-
-        #endregion
+        /// <value>The type.</value>
+        public override StatementEventType Type
+        {
+            get { return StatementEventType.PreInsert; }
+        }
     }
 }

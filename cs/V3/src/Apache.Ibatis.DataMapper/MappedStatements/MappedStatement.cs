@@ -58,7 +58,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
     /// Base implementation of <see cref="IMappedStatement"/>.
     /// </summary>
     [DebuggerDisplay("MappedStatement: {Id}")]
-    public class MappedStatement : IMappedStatement
+    public class MappedStatement : MappedStatementEventSupport, IMappedStatement
     {
         /// <summary>
         /// Event launch on execute query
@@ -70,16 +70,6 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         private readonly IModelStore modelStore = null;
         private readonly IPreparedCommand preparedCommand = null;
         private readonly IResultStrategy resultStrategy = null;
-
-        protected IStatementEventListener<PreInsertEvent>[] preInsertListeners = new IStatementEventListener<PreInsertEvent>[] { };
-        protected IStatementEventListener<PostInsertEvent>[] postInsertListeners = new IStatementEventListener<PostInsertEvent>[] { };
-
-        protected IStatementEventListener<PreUpdateOrDeleteEvent>[] preUpdateOrDeleteListeners = new IStatementEventListener<PreUpdateOrDeleteEvent>[] { };
-        protected IStatementEventListener<PostUpdateOrDeleteEvent>[] postUpdateOrDeleteListeners = new IStatementEventListener<PostUpdateOrDeleteEvent>[] { };
-
-        protected IStatementEventListener<PreSelectEvent>[] preSelectListeners = new IStatementEventListener<PreSelectEvent>[] { };
-        protected IStatementEventListener<PostSelectEvent>[] postSelectListeners = new IStatementEventListener<PostSelectEvent>[] { };
-
         #endregion
 
         /// <summary>
@@ -98,66 +88,6 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         #region IDataMapper Members
 
         #region properties
-        /// <summary>
-        /// Gets or sets the pre insert listener.
-        /// </summary>
-        /// <value>The pre insert listener.</value>
-        public IStatementEventListener<PreInsertEvent>[] PreInsertListeners
-        {
-            get { return preInsertListeners; }
-            set { preInsertListeners = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the post insert listener.
-        /// </summary>
-        /// <value>The post insert listener.</value>
-        public IStatementEventListener<PostInsertEvent>[] PostInsertListeners
-        {
-            get { return postInsertListeners; }
-            set { postInsertListeners = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the pre update listener.
-        /// </summary>
-        /// <value>The pre update listener.</value>
-        public IStatementEventListener<PreUpdateOrDeleteEvent>[] PreUpdateOrDeleteListeners
-        {
-            get { return preUpdateOrDeleteListeners; }
-            set { preUpdateOrDeleteListeners = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the post update listener.
-        /// </summary>
-        /// <value>The post update listener.</value>
-        public IStatementEventListener<PostUpdateOrDeleteEvent>[] PostUpdateOrDeleteListeners
-        {
-            get { return postUpdateOrDeleteListeners; }
-            set { postUpdateOrDeleteListeners = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the pre select listener.
-        /// </summary>
-        /// <value>The pre select listener.</value>
-        public IStatementEventListener<PreSelectEvent>[] PreSelectListeners
-        {
-            get { return preSelectListeners; }
-            set { preSelectListeners = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the post select listener.
-        /// </summary>
-        /// <value>The post select listener.</value>
-        public IStatementEventListener<PostSelectEvent>[] PostSelectListeners
-        {
-            get { return postSelectListeners; }
-            set { postSelectListeners = value; }
-        }
-
         /// <summary>
         /// The IPreparedCommand to use
         /// </summary>
@@ -208,14 +138,14 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         {
             object obj = null;
 
-            object param = LaunchPreEvent(preSelectListeners, parameterObject);
+            object param = RaisePreEvent<PreSelectEventArgs>(PreSelectEvent, parameterObject);
 
             RequestScope request = statement.Sql.GetRequestScope(this, param, session);
             preparedCommand.Create(request, session, Statement, param);
 
             obj = RunQueryForObject(request, session, param, resultObject);
 
-            return LaunchPostEvent(postSelectListeners, param, obj);
+            return RaisePostEvent<object, PostSelectEventArgs>(PostSelectEvent, param, obj);
         }
 
         /// <summary>
@@ -282,7 +212,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         {
             T obj = default(T);
 
-            object param = LaunchPreEvent(preSelectListeners, parameterObject);
+            object param = RaisePreEvent<PreSelectEventArgs>(PreSelectEvent, parameterObject);
 
             RequestScope request = statement.Sql.GetRequestScope(this, param, session);
 
@@ -290,7 +220,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 
             obj = RunQueryForObject<T>(request, session, param, resultObject);
 
-            return LaunchPostEvent(postSelectListeners, param, obj);
+            return RaisePostEvent<T, PostSelectEventArgs>(PostSelectEvent, param, obj);
         }
 
 
@@ -356,7 +286,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// <param name="rowDelegate"></param>
         public virtual IList ExecuteQueryForRowDelegate(ISession session, object parameterObject, RowDelegate rowDelegate)
         {
-            object param = LaunchPreEvent(preSelectListeners, parameterObject);
+            object param = RaisePreEvent<PreSelectEventArgs>(PreSelectEvent, parameterObject);
 
             RequestScope request = statement.Sql.GetRequestScope(this, param, session);
 
@@ -369,7 +299,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 
             IList list = RunQueryForList(request, session, param, null, rowDelegate);
 
-            return LaunchPostEvent(postSelectListeners, param, list);
+            return RaisePostEvent<IList, PostSelectEventArgs>(PostSelectEvent, param, list);
         }
 
         /// <summary>
@@ -406,7 +336,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// <returns>A List of result objects.</returns>
         public virtual IList ExecuteQueryForList(ISession session, object parameterObject)
         {
-            object param = LaunchPreEvent(preSelectListeners, parameterObject);
+            object param = RaisePreEvent<PreSelectEventArgs>(PreSelectEvent, parameterObject);
 
             RequestScope request = statement.Sql.GetRequestScope(this, param, session);
 
@@ -414,7 +344,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 
             IList list = RunQueryForList(request, session, param);
 
-            return LaunchPostEvent(postSelectListeners, param, list);
+            return RaisePostEvent<IList, PostSelectEventArgs>(PostSelectEvent, param, list);
         }
 
         /// <summary>
@@ -425,7 +355,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// <param name="resultObject">A strongly typed collection of result objects.</param>
         public virtual void ExecuteQueryForList(ISession session, object parameterObject, IList resultObject)
         {
-            object param = LaunchPreEvent(preSelectListeners, parameterObject);
+            object param = RaisePreEvent<PreSelectEventArgs>(PreSelectEvent, parameterObject);
 
             RequestScope request = statement.Sql.GetRequestScope(this, param, session);
 
@@ -433,7 +363,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 
             RunQueryForList(request, session, param, resultObject, null);
 
-            LaunchPostEvent(postSelectListeners, param, resultObject);
+            RaisePostEvent<IList, PostSelectEventArgs>(PostSelectEvent, param, resultObject);
         }
 
         /// <summary>
@@ -572,7 +502,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// <param name="rowDelegate"></param>
         public virtual IList<T> ExecuteQueryForRowDelegate<T>(ISession session, object parameterObject, RowDelegate<T> rowDelegate)
         {
-            object param = LaunchPreEvent(preSelectListeners, parameterObject);
+            object param = RaisePreEvent<PreSelectEventArgs>(PreSelectEvent, parameterObject);
 
             RequestScope request = statement.Sql.GetRequestScope(this, param, session);
 
@@ -584,7 +514,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
             }
             IList<T> list = RunQueryForList<T>(request, session, param, null, rowDelegate);
 
-            return LaunchPostEvent(postSelectListeners, param, list);
+            return RaisePostEvent<IList<T>, PostSelectEventArgs>(PostSelectEvent, param, list);
         }
 
 
@@ -596,7 +526,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// <returns>A List of result objects.</returns>
         public virtual IList<T> ExecuteQueryForList<T>(ISession session, object parameterObject)
         {
-            object param = LaunchPreEvent(preSelectListeners, parameterObject);
+            object param = RaisePreEvent<PreSelectEventArgs>(PreSelectEvent, parameterObject);
 
             RequestScope request = statement.Sql.GetRequestScope(this, param, session);
 
@@ -604,7 +534,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 
             IList<T> list = RunQueryForList<T>(request, session, param, null, null);
 
-            return LaunchPostEvent(postSelectListeners, param, list);
+            return RaisePostEvent<IList<T>, PostSelectEventArgs>(PostSelectEvent, param, list);
         }
 
         /// <summary>
@@ -615,7 +545,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// <param name="resultObject">A strongly typed collection of result objects.</param>
         public virtual void ExecuteQueryForList<T>(ISession session, object parameterObject, IList<T> resultObject)
         {
-            object param = LaunchPreEvent(preSelectListeners, parameterObject);
+            object param = RaisePreEvent<PreSelectEventArgs>(PreSelectEvent, parameterObject);
 
             RequestScope request = statement.Sql.GetRequestScope(this, param, session);
 
@@ -623,7 +553,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 
             RunQueryForList<T>(request, session, param, resultObject, null);
 
-            LaunchPostEvent(postSelectListeners, param, resultObject);
+            RaisePostEvent<IList<T>, PostSelectEventArgs>(PostSelectEvent, param, resultObject);
         }
 
         /// <summary>
@@ -746,8 +676,6 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
             return list;
         }
 
-
-
         #endregion
 
         #region ExecuteUpdate, ExecuteInsert
@@ -763,7 +691,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         {
             int rows = 0; // the number of rows affected
 
-            object param = LaunchPreEvent(preUpdateOrDeleteListeners, parameterObject);
+            object param = RaisePreEvent<PreUpdateOrDeleteEventArgs>(PreUpdateOrDeleteEvent, parameterObject);
 
             RequestScope request = statement.Sql.GetRequestScope(this, param, session);
 
@@ -778,7 +706,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 
             RaiseExecuteEvent();
 
-            return LaunchPostEvent(postUpdateOrDeleteListeners, param, rows);
+            return RaisePostEvent<int, PostUpdateOrDeleteEventArgs>(PostUpdateOrDeleteEvent, param, rows);
         }
 
 
@@ -794,7 +722,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
             object generatedKey = null;
             SelectKey selectKeyStatement = null;
 
-            object param = LaunchPreEvent(preInsertListeners, parameterObject);
+            object param = RaisePreEvent<PreInsertEventArgs>(PreInsertEvent, parameterObject);
 
             RequestScope request = statement.Sql.GetRequestScope(this, param, session);
 
@@ -861,7 +789,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
 
             RaiseExecuteEvent();
 
-            return LaunchPostEvent(postInsertListeners, param, generatedKey);
+            return RaisePostEvent<object, PostInsertEventArgs>(PostInsertEvent, param, generatedKey);
         }
 
         #endregion
@@ -1185,54 +1113,6 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
             Execute(this, e);
         }
 
-        /// <summary>
-        /// Launches the pre event.
-        /// </summary>
-        /// <param name="listeners">The listeners.</param>
-        /// <param name="parameterObject">The parameter object.</param>
-        internal object LaunchPreEvent<TEvent>(IStatementEventListener<TEvent>[] listeners, 
-            object parameterObject) where TEvent : PreStatementEvent, new()
-        {
-            object param = parameterObject;
-            if (listeners.Length > 0)
-            {
-                TEvent evnt = new TEvent();
-                evnt.MappedStatement = this;
-                evnt.ParameterObject = param;
-                foreach (IStatementEventListener<TEvent> listener in listeners)
-                {
-                    evnt.ParameterObject = listener.OnEvent(evnt);
-                }
-                param = evnt.ParameterObject;
-            }
-            return param;
-        }
 
-        /// <summary>
-        /// Launches the pre event.
-        /// </summary>
-        /// <param name="listeners">The listeners.</param>
-        /// <param name="parameterObject">The parameter object.</param>
-        /// <param name="resultObject">The result object.</param>
-        /// <returns></returns>
-        internal TType LaunchPostEvent<TType, TEvent>(IStatementEventListener<TEvent>[] listeners, 
-            object parameterObject,
-            TType resultObject) where TEvent : PostStatementEvent, new()
-        {
-            TType result = resultObject;
-            if (listeners.Length > 0)
-            {
-                TEvent evnt = new TEvent();
-                evnt.MappedStatement = this;
-                evnt.ResultObject = result;
-                evnt.ParameterObject = parameterObject;
-                foreach (IStatementEventListener<TEvent> listener in listeners)
-                {
-                    evnt.ResultObject = listener.OnEvent(evnt);
-                }
-                result = (TType)evnt.ResultObject;
-            }
-            return result;
-        }
     }
 }
