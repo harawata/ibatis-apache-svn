@@ -109,21 +109,22 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// <param name="key">The key.</param>
         /// <param name="parameterObject">The parameter object.</param>
         /// <returns>Returns is used as the parameter object</returns>
-        protected virtual object RaisePreEvent<TEvent>(object key,  object parameterObject)
+        protected object RaisePreEvent<TEvent>(object key,  object parameterObject)
             where TEvent : PreStatementEventArgs, new()
         {
             EventHandler<TEvent> handlers = (EventHandler<TEvent>)events[key];
 
-            TEvent eventArgs = new TEvent();
-            eventArgs.ParameterObject = parameterObject;
-
-            // should process _all_ the listeners
             if (handlers != null)
             {
+                TEvent eventArgs = new TEvent();
+                eventArgs.ParameterObject = parameterObject;
                 handlers(this, eventArgs);            
+                return eventArgs.ParameterObject;
             }
-
-            return eventArgs.ParameterObject;
+            else
+            {
+                return parameterObject;
+            }
         }
 
         /// <summary>
@@ -133,22 +134,23 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// <param name="parameterObject">The parameter object.</param>
         /// <param name="resultObject">The result object.</param>
         /// <returns>Returns is used as the result object</returns>
-        protected virtual TType RaisePostEvent<TType, TEvent>(object key, object parameterObject, TType resultObject)
+        protected TType RaisePostEvent<TType, TEvent>(object key, object parameterObject, TType resultObject)
             where TEvent : PostStatementEventArgs, new()
         {
             EventHandler<TEvent> handlers = (EventHandler<TEvent>)events[key];
 
-            TEvent eventArgs = new TEvent();
-            eventArgs.ParameterObject = parameterObject;
-            eventArgs.ResultObject = resultObject;
-
-            // should process _all_ the listeners
             if (handlers != null)
             {
+                TEvent eventArgs = new TEvent();
+                eventArgs.ParameterObject = parameterObject;
+                eventArgs.ResultObject = resultObject;
                 handlers(this, eventArgs);
+                return (TType)eventArgs.ResultObject;
             }
-
-            return (TType)eventArgs.ResultObject;
+            else
+            {
+                return resultObject;
+            }
         }
     }
 }

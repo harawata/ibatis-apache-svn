@@ -35,8 +35,6 @@ using Apache.Ibatis.Common.Exceptions;
 using Apache.Ibatis.Common.Utilities;
 using Apache.Ibatis.Common.Utilities.Objects;
 using Apache.Ibatis.DataMapper.DataExchange;
-using Apache.Ibatis.DataMapper.Model.Events;
-using Apache.Ibatis.DataMapper.Model.Events.Listeners;
 using Apache.Ibatis.DataMapper.TypeHandlers;
 
 #endregion
@@ -48,7 +46,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
     /// </summary>
     [Serializable]
     [DebuggerDisplay("ResultMap: {Id}-{ClassName}")]
-    public sealed class ResultMap : IResultMap
+    public sealed class ResultMap : ResultMapEventSupport, IResultMap
     {
         private static IResultMap nullResultMap = null;
 
@@ -83,11 +81,6 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         private readonly List<string> keyPropertyNames = new List<string>();
         [NonSerialized]
         private readonly ResultPropertyCollection keysProperties = new ResultPropertyCollection();
-
-        [NonSerialized]
-        private IResultMapEventListener<PostCreateEvent>[] postCreateEventListeners = new IResultMapEventListener<PostCreateEvent>[] { };
-        [NonSerialized]
-        private IResultMapEventListener<PreCreateEvent>[] preCreateEventListeners = new IResultMapEventListener<PreCreateEvent>[] { };
 
         #endregion
 
@@ -275,31 +268,12 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         {
             if (!isSimpleType)
             {
-                if (preCreateEventListeners.Length > 0)
-                {
-                    PreCreateEvent evnt = new PreCreateEvent();
-                    evnt.ResultMap = this;
-                    evnt.Parameters = parameters;
-                    foreach (IResultMapEventListener<PreCreateEvent> listener in preCreateEventListeners)
-                    {
-                        evnt.Parameters = (object[])listener.OnEvent(evnt);
-                    }
-                    parameters = evnt.Parameters;
-                }
+                parameters = RaisePreCreateEvent(parameters);
 
                 object instance = objectFactory.CreateInstance(parameters);
 
-                if (postCreateEventListeners.Length > 0)
-                {
-                    PostCreateEvent evnt = new PostCreateEvent();
-                    evnt.ResultMap = this;
-                    evnt.Instance = instance;
-                    foreach (IResultMapEventListener<PostCreateEvent> listener in postCreateEventListeners)
-                    {
-                        evnt.Instance = listener.OnEvent(evnt);
-                    }
-                    instance = evnt.Instance;
-                }
+                instance = RaisePostCreateEvent(instance);
+
                 return instance;
             }
             else
@@ -372,26 +346,6 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         {
             get { return keysProperties; }
         }     
-
-        /// <summary>
-        /// Handles event generated after creating an instance of the <see cref="IResultMap"/> object.
-        /// </summary>
-        /// <value>The post create events.</value>
-        public IResultMapEventListener<PostCreateEvent>[] PostCreateEventListeners
-        {
-            get { return postCreateEventListeners; }
-            set { postCreateEventListeners = value; }
-        }
-
-        /// <summary>
-        /// Handles event generated before creating an instance of the <see cref="IResultMap"/> object.
-        /// </summary>
-        /// <value>The pre create events.</value>
-        public IResultMapEventListener<PreCreateEvent>[] PreCreateEventListeners
-        {
-            get { return preCreateEventListeners; }
-            set { preCreateEventListeners = value; }
-        }
 
         #endregion
 

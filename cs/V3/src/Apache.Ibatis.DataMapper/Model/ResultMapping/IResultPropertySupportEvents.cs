@@ -1,12 +1,11 @@
-
 #region Apache Notice
 /*****************************************************************************
- * $Revision: 408099 $
- * $LastChangedDate: 2008-06-07 10:14:33 +0200 (sam., 07 juin 2008) $
+ * $Revision: 476843 $
+ * $LastChangedDate: 2008-06-08 20:20:44 +0200 (dim., 08 juin 2008) $
  * $LastChangedBy: gbayon $
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2006/2005 - The Apache Software Foundation
+ * Copyright (C) 2008/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,18 +23,18 @@
  ********************************************************************************/
 #endregion
 
-namespace Apache.Ibatis.DataMapper.Model.Events
+using System;
+using Apache.Ibatis.DataMapper.Model.Events;
+
+namespace Apache.Ibatis.DataMapper.Model.ResultMapping
 {
     /// <summary>
-    /// Valid event type
+    /// Defines the contract for events generated during <see cref="ResultProperty"/> analyse.
     /// </summary>
-    public enum StatementEventType
+    public interface IResultPropertySupportEvents
     {
-        PreInsert,
-        PostInsert,
-        PreSelect,
-        PostSelect,
-        PreUpdateOrDelete,
-        PostUpdateOrDelete
+        event EventHandler<PrePropertyEventArgs> PreProperty;
+        event EventHandler<PostPropertyEventArgs> PostProperty;
+
     }
 }

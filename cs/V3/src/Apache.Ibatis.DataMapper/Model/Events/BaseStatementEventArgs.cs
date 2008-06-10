@@ -24,7 +24,6 @@
 #endregion
 
 using System;
-using Apache.Ibatis.DataMapper.MappedStatements;
 
 namespace Apache.Ibatis.DataMapper.Model.Events
 {
@@ -46,13 +45,6 @@ namespace Apache.Ibatis.DataMapper.Model.Events
             get { return parameterObject; }
             set { parameterObject = value; }
         }
-
-        /// <summary>
-        /// Gets the event type.
-        /// </summary>
-        /// <value>The type.</value>
-        public abstract StatementEventType Type { get; }
-
 
         #endregion
     }

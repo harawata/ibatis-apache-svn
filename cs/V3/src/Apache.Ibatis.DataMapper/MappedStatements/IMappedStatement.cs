@@ -29,8 +29,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Apache.Ibatis.DataMapper.Data;
 using Apache.Ibatis.DataMapper.Model;
-using Apache.Ibatis.DataMapper.Model.Events;
-using Apache.Ibatis.DataMapper.Model.Events.Listeners;
 using Apache.Ibatis.DataMapper.Model.Statements;
 using Apache.Ibatis.DataMapper.Session;
 #endregion

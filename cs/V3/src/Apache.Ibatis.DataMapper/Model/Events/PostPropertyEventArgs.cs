@@ -24,38 +24,17 @@
  ********************************************************************************/
 #endregion
 
+using System;
 using Apache.Ibatis.DataMapper.Model.ResultMapping;
 
 namespace Apache.Ibatis.DataMapper.Model.Events
 {
     /// <summary>
-    /// Lauchs before setting the property value in an instance of a <see cref="IResultMap"/> object.
+    /// Lauchs after setting the property value in an instance of a <see cref="IResultMap"/> object.
     /// </summary>
-    public sealed class PrePropertyEvent : IResultPropertyEvent
+    public sealed class PostPropertyEventArgs : EventArgs
     {
-        private ResultProperty property = null;
-        private object dataBaseValue = null;
         private object target = null;
-
-        /// <summary>
-        /// Gets or sets the result property.
-        /// </summary>
-        /// <value>The result property.</value>
-        public ResultProperty ResultProperty
-        {
-            get { return property; }
-            set { property = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the data base value.
-        /// </summary>
-        /// <value>The data base value.</value>
-        public object DataBaseValue
-        {
-            get { return dataBaseValue; }
-            set { dataBaseValue = value; }
-        }
 
         /// <summary>
         /// Gets or sets the target.

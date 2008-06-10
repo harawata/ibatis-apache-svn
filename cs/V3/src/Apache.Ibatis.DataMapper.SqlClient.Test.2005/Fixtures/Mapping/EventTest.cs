@@ -4,7 +4,6 @@ using Apache.Ibatis.DataMapper.Configuration;
 using Apache.Ibatis.DataMapper.Configuration.Interpreters.Config.Xml;
 using Apache.Ibatis.DataMapper.MappedStatements;
 using Apache.Ibatis.DataMapper.Model.Events;
-using Apache.Ibatis.DataMapper.Model.Events.Listeners;
 using Apache.Ibatis.DataMapper.Model.ResultMapping;
 using Apache.Ibatis.DataMapper.Session;
 using Apache.Ibatis.DataMapper.SqlClient.Test.Domain;
@@ -44,19 +43,6 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
         {
             InitScript(sessionFactory.DataSource, scriptDirectory + "account-init.sql");
             InitScript(sessionFactory.DataSource, scriptDirectory + "documents-init.sql");
-        }
-
-
-        private static void ReInitListeners(IResultMap resultMap)
-        {
-            resultMap.PreCreateEventListeners = new IResultMapEventListener<PreCreateEvent>[] { };
-            resultMap.PostCreateEventListeners = new IResultMapEventListener<PostCreateEvent>[] { };
-        }
-
-        private static void ReInitListeners(ResultProperty resultProperty)
-        {
-            resultProperty.PrePropertyEventListeners = new IResultPropertyEventListener<PrePropertyEvent>[] { };
-            resultProperty.PostPropertyEventListeners = new IResultPropertyEventListener<PostPropertyEvent>[] { };
         }
 
 
@@ -220,43 +206,58 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
             evnt.ResultObject = 999;
         }
 
-        /*
+    
         [Test]
         public void PreCreateEventListener_must_be_fired()
         {
             IResultMap resultMap = ((IModelStoreAccessor)dataMapper).ModelStore.GetResultMap("Account.account-result-constructor");
-            ReInitListeners(resultMap);
-            resultMap.PreCreateEventListeners = new PreCreateEventListener[] { new MyPreCreateEventListener() };
+            resultMap.PreCreate += PreCreateEventHandler;
 
             Account account = dataMapper.QueryForObject<Account>("SelectAccountViaConstructor", 1);
 
             Assert.That(account.Id, Is.EqualTo(1));
             Assert.That(account.LastName, Is.EqualTo("new lastName"));
+
+            resultMap.PreCreate -= PreCreateEventHandler;
+        }
+
+        private static void PreCreateEventHandler(object src, PreCreateEventArgs evnt)
+        {
+            Assert.That(((IResultMap)src).Id, Is.EqualTo("Account.account-result-constructor"));
+            evnt.Parameters[evnt.Parameters.Length - 1] = "new lastName";
         }
 
         [Test]
         public void PostCreateEventListener_must_be_fired()
         {
             IResultMap resultMap = ((IModelStoreAccessor)dataMapper).ModelStore.GetResultMap("Account.account-result-constructor");
-            ReInitListeners(resultMap);
-            resultMap.PostCreateEventListeners = new PostCreateEventListener[] { new MyPostCreateEventListener() };
+            resultMap.PostCreate += PostCreateEventHandler;
 
             Account account = dataMapper.QueryForObject<Account>("SelectAccountViaConstructor", 1);
 
             Assert.That(account.Id, Is.EqualTo(1234));
             Assert.That(account.LastName, Is.EqualTo("New LastName"));
             Assert.That(account.FirstName, Is.EqualTo("New FirstName"));
+
+            resultMap.PostCreate -= PostCreateEventHandler;
         }
 
+        private static void PostCreateEventHandler(object src, PostCreateEventArgs evnt)
+        {
+            Assert.That(((IResultMap)src).Id, Is.EqualTo("Account.account-result-constructor"));
+            Account account = (Account)evnt.Instance;
+            account.Id = 1234;
+            account.FirstName = "New FirstName";
+            account.LastName = "New LastName";
+        }
+  
         [Test]
         public void PrePropertyEventListener_must_be_fired()
         {
             IResultMap resultMap = ((IModelStoreAccessor)dataMapper).ModelStore.GetResultMap("Account.account-result");
-            ReInitListeners(resultMap);
             ResultProperty resultProperty = resultMap.Properties.FindByPropertyName("FirstName");
-            ReInitListeners(resultProperty);
 
-            resultProperty.PrePropertyEventListeners = new PrePropertyEventListener[] { new MyPrePropertyEventListener() };
+            resultProperty.PreProperty += PreCreateEventHandler;
 
             Account account = dataMapper.QueryForObject<Account>("SelectAccount", 1);
 
@@ -264,190 +265,41 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
             Assert.That(account.FirstName, Is.EqualTo("No Name"));
             Assert.That(account.LastName, Is.EqualTo("Dalton"));
 
+            resultProperty.PreProperty -= PreCreateEventHandler;
         }
 
+        private static void PreCreateEventHandler(object src, PrePropertyEventArgs evnt)
+        {
+            Assert.That(((ResultProperty)src).PropertyName, Is.EqualTo("FirstName"));
+            evnt.DataBaseValue = "No Name";
+        }
+
+  
         [Test]
         public void PostPropertyEventListener_must_be_fired()
         {
             IResultMap resultMap = ((IModelStoreAccessor)dataMapper).ModelStore.GetResultMap("Account.account-result-with-document");
-            ReInitListeners(resultMap);
             ResultProperty resultProperty = resultMap.Properties.FindByPropertyName("Document");
-            ReInitListeners(resultProperty);
 
-            resultProperty.PostPropertyEventListeners = new PostPropertyEventListener[] { new MyPostPropertyEventListener() };
+            resultProperty.PostProperty += PostCreateEventHandler;
 
             Account account = dataMapper.QueryForObject<Account>("SelectAccountWithDocument", 1);
             Assert.That(account.Id, Is.EqualTo(1));
             Assert.That(account.Document, Is.Not.Null);
             Assert.That(account.Document.Id, Is.EqualTo(55));
-        }
-        
 
-        private class MyPostSelectEventListener : PostSelectEventListener
+            resultProperty.PostProperty -= PostCreateEventHandler;
+        }
+
+        private static void PostCreateEventHandler(object src, PostPropertyEventArgs evnt)
         {
+            Assert.That(((ResultProperty)src).PropertyName, Is.EqualTo("Document"));
+            Account account = (Account)evnt.Target;
 
-            /// <summary>
-            /// Calls on the specified event.
-            /// </summary>
-            /// <param name="evnt">The event.</param>
-            /// <returns>Returns is used as the result object</returns>
-            public override object OnEvent(PostSelectEventArgs evnt)
-            {
-                Assert.That(evnt.MappedStatement.Id, Is.EqualTo("SelectAccount"));
-                Account account = (Account)evnt.ResultObject;
-                account.Id = 99;
+            Assert.That(account.Document, Is.Null);
 
-                return account;
-            }
+            account.Document = new Document();
+            account.Document.Id = 55;
         }
-
-        private class MyPreInsertEventListener :PreInsertEventListener
-        {
-
-            /// <summary>
-            /// Calls on the specified event.
-            /// </summary>
-            /// <param name="evnt">The event.</param>
-            /// <returns>Returns is used as the parameter object</returns>
-            public override object OnEvent(PreInsertEventArgs evnt)
-            {
-                Assert.That(evnt.MappedStatement.Id, Is.EqualTo("InsertAccount"));
-                Account account = (Account)evnt.ParameterObject;
-                account.EmailAddress = "pre.insert.email@noname.org";
-
-                return account;
-            }
-        }
-
-        private class MyPostInsertEventListener : PostInsertEventListener
-        {
-
-            /// <summary>
-            /// Calls on the specified event.
-            /// </summary>
-            /// <param name="evnt">The event.</param>
-            /// <returns>Returns is used as the result object</returns>
-            public override object OnEvent(PostInsertEventArgs evnt)
-            {
-                Assert.That(evnt.MappedStatement.Id, Is.EqualTo("InsertAccount"));
-                Account account = (Account)evnt.ParameterObject;
-                account.Id = 99;
-                return 999;
-            }
-        }
-
-        private class MyPreUpdateOrDeleteEventListener : PreUpdateOrDeleteEventListener
-        {
-
-            /// <summary>
-            /// Calls on the specified event.
-            /// </summary>
-            /// <param name="evnt">The event.</param>
-            /// <returns>Returns is used as the parameter object</returns>
-            public override object OnEvent(PreUpdateOrDeleteEventArgs evnt)
-            {
-                Assert.That(evnt.MappedStatement.Id, Is.EqualTo("UpdateAccount"));
-                Account account = (Account)evnt.ParameterObject;
-                account.EmailAddress = "Pre.Update.Or.Delete.Event@noname.org";
-
-                return account;
-            }
-        }
-
-        private class MyPostUpdateOrDeleteEventListener : PostUpdateOrDeleteEventListener
-        {
-
-            /// <summary>
-            /// Calls on the specified event.
-            /// </summary>
-            /// <param name="evnt">The event.</param>
-            /// <returns>Returns is used as the result object</returns>
-            public override object OnEvent(PostUpdateOrDeleteEventArgs evnt)
-            {
-                Assert.That(evnt.MappedStatement.Id, Is.EqualTo("UpdateAccount"));
-                Account account = (Account)evnt.ParameterObject;
-                account.Id = 99;
-                return 999;
-            }
-        }
-
-        private class MyPreCreateEventListener : PreCreateEventListener
-        {
-            /// <summary>
-            /// Calls before creating an instance of the <see cref="IResultMap"/> object.
-            /// </summary>
-            /// <param name="evnt">The event.</param>
-            /// <returns>
-            /// Returns is used as constructor arguments for the instance being created
-            /// </returns>
-            public override object OnEvent(PreCreateEvent evnt)
-            {
-                Assert.That(evnt.ResultMap.Id, Is.EqualTo("Account.account-result-constructor"));
-                evnt.Parameters[evnt.Parameters.Length-1] = "new lastName";
-
-                return evnt.Parameters;
-            }
-        }
-
-        private class MyPostCreateEventListener : PostCreateEventListener
-        {
-
-            /// <summary>
-            /// Calls after creating an instance of the <see cref="IResultMap"/> object.
-            /// </summary>
-            /// <param name="evnt">The event.</param>
-            /// <returns>Returns is used as the instance object</returns>
-            public override object OnEvent(PostCreateEvent evnt)
-            {
-                Assert.That(evnt.ResultMap.Id, Is.EqualTo("Account.account-result-constructor"));
-                Account account = (Account)evnt.Instance;
-                account.Id = 1234;
-                account.FirstName = "New FirstName";
-                account.LastName = "New LastName";
-
-                return account;
-            }
-        }
-
-        private class MyPrePropertyEventListener : PrePropertyEventListener
-        {
-
-            /// <summary>
-            /// Calls before setting the property value in an instance of a <see cref="IResultMap"/> object.
-            /// </summary>
-            /// <param name="evnt">The event.</param>
-            /// <returns>
-            /// Returns is used as databse value, to be set on the property
-            /// </returns>
-            public override object OnEvent(PrePropertyEvent evnt)
-            {
-                Assert.That(evnt.ResultProperty.PropertyName, Is.EqualTo("FirstName"));
-                return "No Name";
-            }
-        }
-
-        private class MyPostPropertyEventListener : PostPropertyEventListener
-        {
-            /// <summary>
-            /// Calls after creating an instance of the <see cref="IResultMap"/> object.
-            /// </summary>
-            /// <param name="evnt">The event.</param>
-            /// <returns>Returns is not used</returns>
-            public override object OnEvent(PostPropertyEvent evnt)
-            {
-                Assert.That(evnt.ResultProperty.PropertyName, Is.EqualTo("Document"));
-
-                Account account = (Account) evnt.Target;
-
-                Assert.That(account.Document, Is.Null);
-
-                account.Document = new Document();
-                account.Document.Id = 55;
-
-                return null;
-            }
-
-        }
-         */
     }
 }

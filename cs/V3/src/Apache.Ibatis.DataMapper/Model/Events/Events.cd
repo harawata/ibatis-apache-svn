@@ -5,7 +5,7 @@
     <Position X="5.5" Y="0.75" Width="2.25" />
     <TypeIdentifier>
       <FileName>Model\Events\BaseStatementEventArgs.cs</FileName>
-      <HashCode>AAABAAAAAAAAAAAAAAgAAAAAAAAAAAAAAQgAAAAAAQA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAQgAAAAAAAA=</HashCode>
     </TypeIdentifier>
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
@@ -69,5 +69,25 @@
       <FileName>Model\Events\PostUpdateOrDeleteEventArgs.cs</FileName>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
     </TypeIdentifier>
+  </Class>
+  <Class Name="Apache.Ibatis.DataMapper.Model.Events.PreCreateEventArgs">
+    <Position X="0.75" Y="8" Width="2" />
+    <TypeIdentifier>
+      <FileName>Model\Events\PreCreateEventArgs.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAACAAAA=</HashCode>
+    </TypeIdentifier>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+  </Class>
+  <Class Name="Apache.Ibatis.DataMapper.Model.Events.PostCreateEventArgs">
+    <Position X="3.25" Y="8" Width="2" />
+    <TypeIdentifier>
+      <FileName>Model\Events\PostCreateEventArgs.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
   </Class>
 </ClassDiagram>

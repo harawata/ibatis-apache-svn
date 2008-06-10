@@ -1,6 +1,7 @@
+
 #region Apache Notice
 /*****************************************************************************
- * $Revision: 576082 $
+ * $Revision: 408099 $
  * $LastChangedDate$
  * $LastChangedBy$
  * 
@@ -23,24 +24,37 @@
  ********************************************************************************/
 #endregion
 
+using System;
 using Apache.Ibatis.DataMapper.Model.ResultMapping;
 
-namespace Apache.Ibatis.DataMapper.Model.Events.Listeners
+namespace Apache.Ibatis.DataMapper.Model.Events
 {
     /// <summary>
-    /// Handles event of type <see cref="PostCreateEvent"/>.
+    /// Lauchs before setting the property value in an instance of a <see cref="IResultMap"/> object.
     /// </summary>
-    public abstract class PostCreateEventListener : IResultMapEventListener<PostCreateEvent>
+    public sealed class PrePropertyEventArgs : EventArgs
     {
-        #region IResultMapEventListener<PostCreateEvent> Members
+        private object dataBaseValue = null;
+        private object target = null;
 
         /// <summary>
-        /// Calls after creating an instance of the <see cref="IResultMap"/> object.
+        /// Gets or sets the data base value.
         /// </summary>
-        /// <param name="evnt">The event.</param>
-        /// <returns>Returns is used as the instance object</returns>
-        public abstract object OnEvent(PostCreateEvent evnt);
+        /// <value>The data base value.</value>
+        public object DataBaseValue
+        {
+            get { return dataBaseValue; }
+            set { dataBaseValue = value; }
+        }
 
-        #endregion
+        /// <summary>
+        /// Gets or sets the target.
+        /// </summary>
+        /// <value>The target.</value>
+        public object Target
+        {
+            get { return target; }
+            set { target = value; }
+        }
     }
 }

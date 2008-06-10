@@ -42,8 +42,6 @@ using Apache.Ibatis.DataMapper.DataExchange;
 using Apache.Ibatis.DataMapper.Exceptions;
 using Apache.Ibatis.DataMapper.MappedStatements.ArgumentStrategy;
 using Apache.Ibatis.DataMapper.MappedStatements.PropertyStrategy;
-using Apache.Ibatis.DataMapper.Model.Events;
-using Apache.Ibatis.DataMapper.Model.Events.Listeners;
 using Apache.Ibatis.DataMapper.Proxy;
 using Apache.Ibatis.DataMapper.Scope;
 using Apache.Ibatis.DataMapper.TypeHandlers;
@@ -57,7 +55,7 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
 	/// </summary>
 	[Serializable]
     [DebuggerDisplay("ResultProperty: {propertyName}-{columnName}")]
-	public class ResultProperty 
+    public class ResultProperty : ResultPropertyEventSupport
 	{
         /// <summary>
         /// Unknow Column Index
@@ -106,34 +104,9 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
 	    [NonSerialized]
         private static readonly IFactory arrayListFactory = new ArrayListFactory();
 
-        [NonSerialized]
-        private IResultPropertyEventListener<PrePropertyEvent>[] prePropertyEventListeners = new IResultPropertyEventListener<PrePropertyEvent>[] { };
-        [NonSerialized]
-        private IResultPropertyEventListener<PostPropertyEvent>[] postPropertyEventListeners = new IResultPropertyEventListener<PostPropertyEvent>[] { };
-
 		#endregion
 
 		#region Properties
-
-        /// <summary>
-        /// Handles event generated before setting the property value of a <see cref="ResultProperty"/>.
-        /// </summary>
-        /// <value>The post create events.</value>
-        public IResultPropertyEventListener<PrePropertyEvent>[] PrePropertyEventListeners
-        {
-            get { return prePropertyEventListeners; }
-            set { prePropertyEventListeners = value; }
-        }
-
-        /// <summary>
-        /// Handles event generated after setting the property value of a <see cref="ResultProperty"/>.
-        /// </summary>
-        /// <value>The pre create events.</value>
-        public IResultPropertyEventListener<PostPropertyEvent>[] PostPropertyEventListeners
-        {
-            get { return postPropertyEventListeners; }
-            set { postPropertyEventListeners = value; }
-        }
 
         /// <summary>
         /// Tell us if the member type implement generic Ilist interface.
@@ -545,33 +518,13 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
         /// <param name="target">Object to set the field/property on.</param>
         /// <param name="value">Value.</param>
         public void Set(object target, object value)
-       {
-           if (prePropertyEventListeners.Length > 0)
-           {
-               PrePropertyEvent evnt = new PrePropertyEvent();
-               evnt.ResultProperty = this;
-               evnt.DataBaseValue = value;
-               evnt.Target = target;
-               foreach (IResultPropertyEventListener<PrePropertyEvent> listener in prePropertyEventListeners)
-               {
-                   evnt.DataBaseValue = listener.OnEvent(evnt);
-               }
-               value = evnt.DataBaseValue;
-           }
+        {
+            value = RaisePrePropertyEvent(target, value);
 
-           setAccessor.Set(target, value);
-           
-           if (postPropertyEventListeners.Length > 0)
-           {
-               PostPropertyEvent evnt = new PostPropertyEvent();
-               evnt.ResultProperty = this;
-               evnt.Target = target;
-               foreach (IResultPropertyEventListener<PostPropertyEvent> listener in postPropertyEventListeners)
-               {
-                   listener.OnEvent(evnt);
-               }
-           }
-       }
+            setAccessor.Set(target, value);
+
+            RaisePostPropertyEvent(target);
+        }
 
        /// <summary>
        /// Gets a result argument value.
@@ -650,7 +603,6 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
 	    /// </summary>
 	    private class ArrayListFactory : IFactory
 	    {
-
             #region IFactory Members
 
             /// <summary>

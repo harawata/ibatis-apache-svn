@@ -24,7 +24,6 @@
 #endregion
 
 using System;
-using System.ComponentModel;
 using Apache.Ibatis.DataMapper.Model.Events;
 
 namespace Apache.Ibatis.DataMapper.MappedStatements

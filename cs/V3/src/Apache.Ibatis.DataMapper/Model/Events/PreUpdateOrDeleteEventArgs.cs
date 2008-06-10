@@ -30,13 +30,5 @@ namespace Apache.Ibatis.DataMapper.Model.Events
     /// </summary>
     public sealed class PreUpdateOrDeleteEventArgs : PreStatementEventArgs
     {
-        /// <summary>
-        /// Gets the event type.
-        /// </summary>
-        /// <value>The type.</value>
-        public override StatementEventType Type
-        {
-            get { return StatementEventType.PreUpdateOrDelete; }
-        }
     }
 }

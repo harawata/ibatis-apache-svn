@@ -30,14 +30,6 @@ namespace Apache.Ibatis.DataMapper.Model.Events
     /// </summary>
     public sealed class PostSelectEventArgs : PostStatementEventArgs
     {
-        /// <summary>
-        /// Gets the event type.
-        /// </summary>
-        /// <value>The type.</value>
-        public override StatementEventType Type
-        {
-            get { return StatementEventType.PostSelect; }
-        }
 
     }
 }

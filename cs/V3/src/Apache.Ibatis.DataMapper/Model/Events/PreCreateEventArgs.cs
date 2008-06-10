@@ -24,25 +24,26 @@
  ********************************************************************************/
 #endregion
 
+using System;
 using Apache.Ibatis.DataMapper.Model.ResultMapping;
 
 namespace Apache.Ibatis.DataMapper.Model.Events
 {
     /// <summary>
-    /// Lauchs after creating an instance of the <see cref="IResultMap"/> object.
+    /// Event lauchs before creating an instance of the <see cref="IResultMap"/> object.
     /// </summary>
-    public sealed class PostCreateEvent : BaseResultMapEvent
+    public sealed class PreCreateEventArgs : EventArgs
     {
-        private object instance = null;
+        private object[] parameters = null;
 
         /// <summary>
-        /// Gets or sets the newly created instance.
+        /// Gets or sets the parameters used for create the instance 
         /// </summary>
-        /// <value>The instance.</value>
-        public object Instance
+        /// <value>The parameters.</value>
+        public object[] Parameters
         {
-            get { return instance; }
-            set { instance = value; }
+            get { return parameters; }
+            set { parameters = value; }
         }
     }
 }

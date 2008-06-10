@@ -1,12 +1,11 @@
-
 #region Apache Notice
 /*****************************************************************************
- * $Revision: 408099 $
+ * $Revision: 476843 $
  * $LastChangedDate$
  * $LastChangedBy$
  * 
  * iBATIS.NET Data Mapper
- * Copyright (C) 2006/2005 - The Apache Software Foundation
+ * Copyright (C) 2008/2005 - The Apache Software Foundation
  *  
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,18 +23,17 @@
  ********************************************************************************/
 #endregion
 
-namespace Apache.Ibatis.DataMapper.Model.Events.Listeners
+using System;
+using Apache.Ibatis.DataMapper.Model.Events;
+
+namespace Apache.Ibatis.DataMapper.Model.ResultMapping
 {
     /// <summary>
-    /// Handles event of type <see cref="IResultPropertyEvent"/>.
+    /// Defines the contract for events generated during <see cref="IResultMap"/> analyse.
     /// </summary>
-    public interface IResultPropertyEventListener<IResultPropertyEvent>
+    public interface IResultMapEvents
     {
-        /// <summary>
-        /// Calls on the specified event.
-        /// </summary>
-        /// <param name="evnt">The event.</param>
-        /// <returns></returns>
-        object OnEvent(IResultPropertyEvent evnt);
+        event EventHandler<PreCreateEventArgs> PreCreate;
+        event EventHandler<PostCreateEventArgs> PostCreate;
     }
 }

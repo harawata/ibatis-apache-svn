@@ -27,7 +27,6 @@ using System;
 using Apache.Ibatis.DataMapper.DataExchange;
 using System.Collections.Generic;
 using Apache.Ibatis.DataMapper.Model.Events;
-using Apache.Ibatis.DataMapper.Model.Events.Listeners;
 
 namespace Apache.Ibatis.DataMapper.Model.ResultMapping
 {
@@ -194,44 +193,25 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
             get { return keysProperties; }
         }
 
+        #region IResultMapEvents Members
+
         /// <summary>
-        /// Handles event generated after creating an instance of the <see cref="IResultMap"/> object.
+        /// Handles event <see cref="PreCreateEventArgs"/> generated before creating an instance of the <see cref="IResultMap"/> object.
         /// </summary>
-        /// <value>The post create events.</value>
-        public IResultMapEventListener<PostCreateEvent>[] PostCreateEventListeners
+        public event EventHandler<PreCreateEventArgs> PreCreate
         {
-            get { throw new Exception("The method or operation is not implemented."); }
-            set { throw new Exception("The method or operation is not implemented."); }
+            add { throw new NotImplementedException("PreCreate EventHandler"); }
+            remove { throw new NotImplementedException("PreCreate EventHandler"); }
         }
 
         /// <summary>
-        /// Handles event generated before creating an instance of the <see cref="IResultMap"/> object.
+        /// Handles event <see cref="PostCreateEventArgs"/> generated after creating an instance of the <see cref="IResultMap"/> object.
         /// </summary>
-        /// <value>The pre create events.</value>
-        public IResultMapEventListener<PreCreateEvent>[] PreCreateEventListeners
+        public event EventHandler<PostCreateEventArgs> PostCreate
         {
-            get { throw new Exception("The method or operation is not implemented."); }
-            set { throw new Exception("The method or operation is not implemented."); }
+            add { throw new NotImplementedException("PostCreate EventHandler"); }
+            remove { throw new NotImplementedException("PostCreate EventHandler"); }
         }
-
-        /// <summary>
-        /// Handles event generated before setting the property value in an instance of a <see cref="IResultMap"/> object.
-        /// </summary>
-        /// <value>The post create events.</value>
-        public IResultMapEventListener<PrePropertyEvent>[] PrePropertyEventListeners
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-            set { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        /// <summary>
-        /// Handles event generated after setting the property value in an instance of a <see cref="IResultMap"/> object.
-        /// </summary>
-        /// <value>The pre create events.</value>
-        public IResultMapEventListener<PostPropertyEvent>[] PostPropertyEventListeners
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-            set { throw new Exception("The method or operation is not implemented."); }
-        }
+        #endregion
     }
 }
