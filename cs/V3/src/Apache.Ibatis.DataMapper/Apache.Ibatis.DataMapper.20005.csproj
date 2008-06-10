@@ -120,7 +120,7 @@
     <Compile Include="Configuration\Module\ResultMapModuleBuilder.cs" />
     <Compile Include="Configuration\Module\TypeAliasModuleBuilder.cs" />
     <Compile Include="Configuration\Module\TypeHandlerModuleBuilder.cs" />
-    <Compile Include="DataMapperLocalSessionScope.cs" />
+    <Compile Include="Session\DataMapperLocalSessionScope.cs" />
     <Compile Include="IMapperFactory.cs" />
     <Compile Include="Configuration\Interpreters\Config\AbstractInterpreter.cs" />
     <Compile Include="Configuration\Interpreters\Config\Code\CodeConfigInterpreter.cs" />

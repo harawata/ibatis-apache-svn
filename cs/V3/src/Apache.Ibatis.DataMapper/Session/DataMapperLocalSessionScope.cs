@@ -27,12 +27,12 @@
 using System;
 using Apache.Ibatis.DataMapper.Session;
 
-namespace Apache.Ibatis.DataMapper
+namespace Apache.Ibatis.DataMapper.Session
 {
     /// <summary>
     /// Local SessionScope management
     /// </summary>
-    public class DataMapperLocalSessionScope : IDisposable
+    internal class DataMapperLocalSessionScope : IDisposable
     {
         private readonly bool isSessionLocal = false;
         private readonly ISession session = null;
