@@ -27,6 +27,7 @@
 #region Imports
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using Apache.Ibatis.DataMapper.Data;
 using Apache.Ibatis.DataMapper.Model;
 using Apache.Ibatis.DataMapper.Model.Statements;
@@ -261,7 +262,15 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// <returns></returns>
         IList<T> ExecuteQueryForRowDelegate<T>(ISession session, object parameterObject, RowDelegate<T> rowDelegate);
         #endregion
-	    
-	    
+
+        #region ExecuteQueryForDataTable
+        /// <summary>
+        /// Executes an SQL statement that returns DataTable.
+        /// </summary>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <returns>The object</returns>
+        DataTable ExecuteQueryForDataTable(ISession session, object parameterObject); 
+        #endregion
     }
 }

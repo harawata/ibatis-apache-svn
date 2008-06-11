@@ -35,20 +35,23 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
 	/// </summary>
     public sealed class ResultClassStrategy : IResultStrategy
 	{
-		private static IResultStrategy _simpleTypeStrategy = null;
-		private static IResultStrategy _dictionaryStrategy = null;
-		private static IResultStrategy _listStrategy = null;
-		private static IResultStrategy _autoMapStrategy = null;
+		private static IResultStrategy simpleTypeStrategy = null;
+		private static IResultStrategy dictionaryStrategy = null;
+		private static IResultStrategy listStrategy = null;
+		private static IResultStrategy autoMapStrategy = null;
+        private static IResultStrategy dataTableStrategy = null;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ResultClassStrategy"/> class.
 		/// </summary>
 		public ResultClassStrategy()
 		{
-			_simpleTypeStrategy = new SimpleTypeStrategy();
-			_dictionaryStrategy = new DictionaryStrategy();
-			_listStrategy = new ListStrategy();
-			_autoMapStrategy = new AutoMapStrategy();
+			simpleTypeStrategy = new SimpleTypeStrategy();
+			dictionaryStrategy = new DictionaryStrategy();
+			listStrategy = new ListStrategy();
+			autoMapStrategy = new AutoMapStrategy();
+            dataTableStrategy = new DataTableStrategy();
+
 		}
 
         #region IResultStrategy Members
@@ -65,19 +68,23 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
   			// Check if the ResultClass is a 'primitive' Type
             if (request.DataExchangeFactory.TypeHandlerFactory.IsSimpleType(request.CurrentResultMap.Class))
 			{
-                return _simpleTypeStrategy.Process(request, ref reader, resultObject);
+                return simpleTypeStrategy.Process(request, ref reader, resultObject);
 			}
             else if (typeof(IDictionary).IsAssignableFrom(request.CurrentResultMap.Class)) 
 			{
-                return _dictionaryStrategy.Process(request, ref reader, resultObject);
+                return dictionaryStrategy.Process(request, ref reader, resultObject);
 			}
             else if (typeof(IList).IsAssignableFrom(request.CurrentResultMap.Class)) 
 			{
-                return _listStrategy.Process(request, ref reader, resultObject);
+                return listStrategy.Process(request, ref reader, resultObject);
 			}
-			else
+            else if (typeof(DataTable).IsAssignableFrom(request.CurrentResultMap.Class))
+            {
+                return dataTableStrategy.Process(request, ref reader, resultObject);
+            }
+            else
 			{
-                return _autoMapStrategy.Process(request, ref reader, resultObject);
+                return autoMapStrategy.Process(request, ref reader, resultObject);
 			}
 		}
 

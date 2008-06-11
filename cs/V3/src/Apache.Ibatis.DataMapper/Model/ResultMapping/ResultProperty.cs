@@ -395,7 +395,8 @@ namespace Apache.Ibatis.DataMapper.Model.ResultMapping
             
             if ( propertyName.Length>0 && 
 				 propertyName != "value" && 
-				!typeof(IDictionary).IsAssignableFrom(resultClass) )
+				!typeof(IDictionary).IsAssignableFrom(resultClass)&&
+                !typeof(DataTable).IsAssignableFrom(resultClass)) 
 			{   
                 #region SetAccessor
                 if (!isComplexMemberName)

@@ -30,6 +30,11 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
   </cacheModels>
 	
 	<resultMaps>
+
+    <resultMap id="Account-result-DataTable" class="dataTable">
+      <result property="Id"           column="Account_ID"/>
+      <result property="FirstName"    column="Account_FirstName"/>
+    </resultMap>
     
     <resultMap id="Category-result" class="Category2">
       <result property="Id" column="Category_ID"/>
@@ -140,6 +145,17 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
     -->
   <statements>
 
+    <!-- Query for DataTable -->
+    <select id="SimpleAccountDataTableViaResultMap" parameterClass="int" resultMap="Account-result-DataTable">
+      select *
+      from Accounts
+    </select>
+
+    <select id="SimpleAccountDataTable" parameterClass="int" resultClass="data">
+      select *
+      from Accounts
+    </select>
+    
     <!-- external sql source -->
     <select id="SimpleSqlSource" sqlSource="SimpleSqlSource" resultMap="account-result"/>
     <select id="SqlSourceWithParameter" parameterClass="Integer" sqlSource="SqlSourceWithParameter" resultMap="account-result"/>

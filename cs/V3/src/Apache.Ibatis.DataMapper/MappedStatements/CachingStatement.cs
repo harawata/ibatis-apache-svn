@@ -99,6 +99,17 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
             get { return mappedStatement.ModelStore; }
 		}
 
+        /// <summary>
+        /// Executes an SQL statement that returns DataTable.
+        /// </summary>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <returns>The object</returns>
+        public DataTable ExecuteQueryForDataTable(ISession session, object parameterObject)
+        {
+            return mappedStatement.ExecuteQueryForDataTable(session, parameterObject);
+        }
+
 		/// <summary>
 		/// Executes the SQL and retuns all rows selected in a map that is keyed on the property named
 		/// in the keyProperty parameter.  The value at each key will be the value of the property specified

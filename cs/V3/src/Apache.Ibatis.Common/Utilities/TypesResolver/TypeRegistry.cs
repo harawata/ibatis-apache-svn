@@ -30,6 +30,7 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Collections.Generic;
+using System.Data;
 
 #endregion
 
@@ -128,6 +129,15 @@ namespace Apache.Ibatis.Common.Utilities.TypesResolver
 		/// Another alias around the 'Hashtable' type.
 		/// </summary>
 		public const string HashtableAlias3 = "hashmap";
+
+        /// <summary>
+        /// The alias around the 'DataTable' type.
+        /// </summary>
+        public const string DataTableAlias1 = "datatable";
+        /// <summary>
+        /// Another alias around the 'DataTable' type.
+        /// </summary>
+        public const string DataTableAlias2 = "data";
 
 		/// <summary>
 		/// The alias around the 'short' type.
@@ -316,7 +326,7 @@ namespace Apache.Ibatis.Common.Utilities.TypesResolver
 		#endregion
 
 		#region Fields
-        private static IDictionary<string, Type> _types = new Dictionary<string, Type>();
+        private static readonly IDictionary<string, Type> types = new Dictionary<string, Type>();
 		#endregion
 
 		#region Constructor (s) / Destructor
@@ -338,89 +348,92 @@ namespace Apache.Ibatis.Common.Utilities.TypesResolver
         static TypeRegistry()
 		{
 			// Initialize a dictionary with some fully qualifiaed name 
-			_types[ArrayListAlias1] = typeof (ArrayList);
-			_types[ArrayListAlias2] = typeof (ArrayList);
+            types[DataTableAlias1] = typeof(DataTable);
+            types[DataTableAlias2] = typeof(DataTable);
 
-			_types[BoolAlias] = typeof (bool);
-			_types[BooleanAlias] = typeof (bool);
+			types[ArrayListAlias1] = typeof (ArrayList);
+			types[ArrayListAlias2] = typeof (ArrayList);
 
-			_types[ByteAlias] = typeof (byte);
+			types[BoolAlias] = typeof (bool);
+			types[BooleanAlias] = typeof (bool);
 
-			_types[CharAlias] = typeof (char);
+			types[ByteAlias] = typeof (byte);
 
-			_types[DateAlias1] = typeof (DateTime);
-			_types[DateAlias2] = typeof (DateTime);
+			types[CharAlias] = typeof (char);
 
-			_types[DecimalAlias] = typeof (decimal);
+			types[DateAlias1] = typeof (DateTime);
+			types[DateAlias2] = typeof (DateTime);
 
-			_types[DoubleAlias] = typeof (double);
+			types[DecimalAlias] = typeof (decimal);
 
-			_types[FloatAlias] = typeof (float);
-			_types[SingleAlias] = typeof (float);
+			types[DoubleAlias] = typeof (double);
 
-			_types[GuidAlias] = typeof (Guid);
+			types[FloatAlias] = typeof (float);
+			types[SingleAlias] = typeof (float);
 
-			_types[HashtableAlias1] = typeof (Hashtable);
-			_types[HashtableAlias2] = typeof (Hashtable);
-			_types[HashtableAlias3] = typeof (Hashtable);
+			types[GuidAlias] = typeof (Guid);
 
-			_types[Int16Alias1] = typeof (short);
-			_types[Int16Alias2] = typeof (short);
+			types[HashtableAlias1] = typeof (Hashtable);
+			types[HashtableAlias2] = typeof (Hashtable);
+			types[HashtableAlias3] = typeof (Hashtable);
 
-			_types[Int32Alias1] = typeof (int);
-			_types[Int32Alias2] = typeof (int);
-			_types[Int32Alias3] = typeof (int);
+			types[Int16Alias1] = typeof (short);
+			types[Int16Alias2] = typeof (short);
 
-			_types[Int64Alias1] = typeof (long);
-			_types[Int64Alias2] = typeof (long);
+			types[Int32Alias1] = typeof (int);
+			types[Int32Alias2] = typeof (int);
+			types[Int32Alias3] = typeof (int);
 
-			_types[UInt16Alias1] = typeof (ushort);
-			_types[UInt16Alias2] = typeof (ushort);
+			types[Int64Alias1] = typeof (long);
+			types[Int64Alias2] = typeof (long);
 
-			_types[UInt32Alias1] = typeof (uint);
-			_types[UInt32Alias2] = typeof (uint);
+			types[UInt16Alias1] = typeof (ushort);
+			types[UInt16Alias2] = typeof (ushort);
 
-			_types[UInt64Alias1] = typeof (ulong);
-			_types[UInt64Alias2] = typeof (ulong);
+			types[UInt32Alias1] = typeof (uint);
+			types[UInt32Alias2] = typeof (uint);
 
-			_types[SByteAlias] = typeof (sbyte);
+			types[UInt64Alias1] = typeof (ulong);
+			types[UInt64Alias2] = typeof (ulong);
 
-			_types[StringAlias] = typeof (string);
+			types[SByteAlias] = typeof (sbyte);
 
-			_types[TimeSpanAlias] = typeof (string);
+			types[StringAlias] = typeof (string);
 
-            _types[NullableInt32Alias] = typeof(int?);
-            _types[NullableInt32ArrayAlias] = typeof(int?[]);
+			types[TimeSpanAlias] = typeof (string);
 
-            _types[NullableDecimalAlias] = typeof(decimal?);
-            _types[NullableDecimalArrayAlias] = typeof(decimal?[]);
+            types[NullableInt32Alias] = typeof(int?);
+            types[NullableInt32ArrayAlias] = typeof(int?[]);
 
-            _types[NullableCharAlias] = typeof(char?);
-            _types[NullableCharArrayAlias] = typeof(char?[]);
+            types[NullableDecimalAlias] = typeof(decimal?);
+            types[NullableDecimalArrayAlias] = typeof(decimal?[]);
 
-            _types[NullableInt64Alias] = typeof(long?);
-            _types[NullableInt64ArrayAlias] = typeof(long?[]);
+            types[NullableCharAlias] = typeof(char?);
+            types[NullableCharArrayAlias] = typeof(char?[]);
 
-            _types[NullableInt16Alias] = typeof(short?);
-            _types[NullableInt16ArrayAlias] = typeof(short?[]);
+            types[NullableInt64Alias] = typeof(long?);
+            types[NullableInt64ArrayAlias] = typeof(long?[]);
 
-            _types[NullableUInt32Alias] = typeof(uint?);
-            _types[NullableUInt32ArrayAlias] = typeof(uint?[]);
+            types[NullableInt16Alias] = typeof(short?);
+            types[NullableInt16ArrayAlias] = typeof(short?[]);
 
-            _types[NullableUInt64Alias] = typeof(ulong?);
-            _types[NullableUInt64ArrayAlias] = typeof(ulong?[]);
+            types[NullableUInt32Alias] = typeof(uint?);
+            types[NullableUInt32ArrayAlias] = typeof(uint?[]);
 
-            _types[NullableUInt16Alias] = typeof(ushort?);
-            _types[NullableUInt16ArrayAlias] = typeof(ushort?[]);
+            types[NullableUInt64Alias] = typeof(ulong?);
+            types[NullableUInt64ArrayAlias] = typeof(ulong?[]);
 
-            _types[NullableDoubleAlias] = typeof(double?);
-            _types[NullableDoubleArrayAlias] = typeof(double?[]);
+            types[NullableUInt16Alias] = typeof(ushort?);
+            types[NullableUInt16ArrayAlias] = typeof(ushort?[]);
 
-            _types[NullableFloatAlias] = typeof(float?);
-            _types[NullableFloatArrayAlias] = typeof(float?[]);
+            types[NullableDoubleAlias] = typeof(double?);
+            types[NullableDoubleArrayAlias] = typeof(double?[]);
 
-            _types[NullableBoolAlias] = typeof(bool?);
-            _types[NullableBoolArrayAlias] = typeof(bool?[]);
+            types[NullableFloatAlias] = typeof(float?);
+            types[NullableFloatArrayAlias] = typeof(float?[]);
+
+            types[NullableBoolAlias] = typeof(bool?);
+            types[NullableBoolArrayAlias] = typeof(bool?[]);
 
         }
 		#endregion
@@ -446,7 +459,7 @@ namespace Apache.Ibatis.Common.Utilities.TypesResolver
         public static Type ResolveType(string alias)
         {
             Type type = null;
-            _types.TryGetValue(alias.ToLower(), out type);
+            types.TryGetValue(alias.ToLower(), out type);
             return type;
         }
 

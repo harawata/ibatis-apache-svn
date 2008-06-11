@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Data;
 using Apache.Ibatis.Common.Exceptions;
 using Apache.Ibatis.Common.Utilities;
 using Apache.Ibatis.DataMapper.Model;
@@ -7,6 +8,7 @@ using Apache.Ibatis.DataMapper.Session;
 using Apache.Ibatis.DataMapper.SqlClient.Test.Domain;
 using Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 
 namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
 {
@@ -42,6 +44,60 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
         #endregion
 
         #region Object Query tests
+
+
+        [Test]
+        public void QueryForDatatable_with_resulclass_should_work()
+        {
+            DataTable dataTable = dataMapper.QueryForDataTable("SimpleAccountDataTable", 1);
+
+            DataRow[] currentRows = dataTable.Select(null, null, DataViewRowState.CurrentRows);
+
+            //if (currentRows.Length < 1)
+            //    Console.WriteLine("No Current Rows Found");
+            //else
+            //{
+            //    foreach (DataColumn column in dataTable.Columns)
+            //        Console.Write("\t{0}", column.ColumnName);
+
+            //    Console.WriteLine("\tRowState");
+
+            //    foreach (DataRow row in currentRows)
+            //    {
+            //        foreach (DataColumn column in dataTable.Columns)
+            //            Console.Write("\t{0}", row[column]);
+
+            //        Console.WriteLine("\t" + row.RowState);
+            //    }
+            //}
+
+
+            Assert.That(dataTable, Is.Not.Null);
+            Assert.That(currentRows.Length, Is.GreaterThan(0));
+            Assert.That(dataTable.Columns[0].ColumnName, Is.EqualTo("Account_ID"));
+            Assert.That(dataTable.Columns[1].ColumnName, Is.EqualTo("Account_FirstName"));
+            Assert.That(currentRows[0][0], Is.EqualTo(1));
+            Assert.That(currentRows[0][1], Is.EqualTo("Joe"));
+        }
+
+        [Test]
+        public void QueryForDatatable_with_resulmap_should_work()
+        {
+            DataTable dataTable = dataMapper.QueryForDataTable("SimpleAccountDataTableViaResultMap", 1);
+
+            DataRow[] currentRows = dataTable.Select(null, null, DataViewRowState.CurrentRows);
+
+            Assert.That(dataTable, Is.Not.Null);
+            Assert.That(currentRows.Length, Is.GreaterThan(0));
+            Assert.That(dataTable.Columns[0].ColumnName, Is.EqualTo("Id"));
+            Assert.That(dataTable.Columns[0].DataType, Is.EqualTo(typeof(int)));
+
+            Assert.That(dataTable.Columns[1].ColumnName, Is.EqualTo("FirstName"));
+            Assert.That(dataTable.Columns[1].DataType, Is.EqualTo(typeof(string)));
+
+            Assert.That(currentRows[0][0], Is.EqualTo(1));
+            Assert.That(currentRows[0][1], Is.EqualTo("Joe"));
+        }
 
         [Test]
         public void Statement_with_SqlSource_should_work()

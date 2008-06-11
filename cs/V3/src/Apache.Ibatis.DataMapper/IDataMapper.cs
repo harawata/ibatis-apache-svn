@@ -25,6 +25,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using Apache.Ibatis.DataMapper.Exceptions;
 
 namespace Apache.Ibatis.DataMapper
@@ -295,6 +296,15 @@ namespace Apache.Ibatis.DataMapper
         /// <param name="rowDelegate"></param>
         /// <returns>A List of result objects.</returns>
         IList<T> QueryWithRowDelegate<T>(string statementName, object parameterObject, RowDelegate<T> rowDelegate);
-  
+
+        /// <summary>
+        /// Executes a SQL SELECT statement that returns  data 
+        /// to populate a DataTable.
+        /// If a resultMap is specified, the column name will be the result property name.
+        /// </summary>
+        /// <param name="statementId">The statement id.</param>
+        /// <param name="parameterObject">The parameter object.</param>
+        /// <returns>A DataTable</returns>
+        DataTable QueryForDataTable(string statementId, object parameterObject);
     }
 }

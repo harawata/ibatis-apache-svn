@@ -38,6 +38,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
         private static readonly IResultStrategy resultMapStrategy = null;
         private static readonly IResultStrategy groupByStrategy = null;
         private static readonly IResultStrategy cirularStrategy = null;
+        private static readonly IResultStrategy dataTableStrategy = null;
 
         /// <summary>
         /// Initializes the <see cref="MapStrategy"/> class.
@@ -47,6 +48,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
             resultMapStrategy = new ResultMapStrategy();
             groupByStrategy = new GroupByStrategy();
             cirularStrategy = new CirularStrategy();
+            dataTableStrategy = new DataTableStrategy();
         }
         
         #region IResultStrategy Members
@@ -68,6 +70,10 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
             else if (resultMap.KeyPropertyNames.Count > 0)
             {
                 return cirularStrategy.Process(request, ref reader, resultObject);
+            }
+            else if (typeof(DataTable).IsAssignableFrom(resultMap.Class))
+            {
+                return dataTableStrategy.Process(request, ref reader, resultObject);
             }
             else
             {

@@ -29,6 +29,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Reflection;
 using Apache.Ibatis.Common.Exceptions;
 using Apache.Ibatis.Common.Logging;
@@ -356,9 +357,9 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
             {
                 handler = GetUnkownTypeHandler();
             }
-            else if (typeof(IDictionary).IsAssignableFrom(classType))
+            else if (typeof(IDictionary).IsAssignableFrom(classType) || typeof(DataTable).IsAssignableFrom(classType))
             {
-                // IDictionary
+                // IDictionary or DataTable
                 if (memberType == null || memberType.Length == 0)
                 {
                     handler = GetUnkownTypeHandler();
@@ -431,9 +432,9 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
             {
                 handler = GetUnkownTypeHandler();
             }
-            else if (typeof(IDictionary).IsAssignableFrom(argumentType))
+            else if (typeof(IDictionary).IsAssignableFrom(argumentType) || typeof(DataTable).IsAssignableFrom(argumentType))
             {
-                // IDictionary
+                // IDictionary or 
                 if (clrType == null || clrType.Length == 0)
                 {
                     handler = GetUnkownTypeHandler();

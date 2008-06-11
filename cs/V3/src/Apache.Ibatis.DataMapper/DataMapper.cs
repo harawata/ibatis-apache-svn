@@ -26,7 +26,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
-
+using System.Data;
 using Apache.Ibatis.Common.Contracts;
 using Apache.Ibatis.DataMapper.Session;
 using Apache.Ibatis.DataMapper.Model;
@@ -486,6 +486,22 @@ namespace Apache.Ibatis.DataMapper
             return Update(statementId, parameterObject);
         }
 
+        /// <summary>
+        /// Executes a SQL SELECT statement that returns  data
+        /// to populate a DataTable.
+        /// If a resultMap is specified, the column name will be the result property name.
+        /// </summary>
+        /// <param name="statementId">The statement id.</param>
+        /// <param name="parameterObject">The parameter object.</param>
+        /// <returns>A DataTable</returns>
+        public DataTable QueryForDataTable(string statementId, object parameterObject)
+        {
+            using (DataMapperLocalSessionScope sessionScope = new DataMapperLocalSessionScope(sessionStore, sessionFactory))
+            {
+                IMappedStatement statement = modelStore.GetMappedStatement(statementId);
+                return statement.ExecuteQueryForDataTable(sessionScope.Session, parameterObject);
+            }
+        }
         #endregion
 
         #region IModelStoreAccessor Members

@@ -1008,6 +1008,67 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         
         #endregion
 
+        #region ExecuteQueryForDataTable
+        /// <summary>
+        /// Executes an SQL statement that returns DataTable.
+        /// </summary>
+        /// <param name="session">The session used to execute the statement.</param>
+        /// <param name="parameterObject">The object used to set the parameters in the SQL.</param>
+        /// <returns>The object</returns>
+        public virtual DataTable ExecuteQueryForDataTable(ISession session, object parameterObject)
+        {
+            DataTable dataTable = null;
+
+            object param = RaisePreEvent<PreSelectEventArgs>(PreSelectEvent, parameterObject);
+
+            RequestScope request = statement.Sql.GetRequestScope(this, param, session);
+            preparedCommand.Create(request, session, Statement, param);
+
+            dataTable = RunQueryForForDataTable(request, session, param);
+
+            return RaisePostEvent<DataTable, PostSelectEventArgs>(PostSelectEvent, param, dataTable);
+        }
+
+        /// <summary>
+        /// Runs the query for for data table.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="session">The session.</param>
+        /// <param name="parameterObject">The parameter object.</param>
+        /// <returns></returns>
+        internal DataTable RunQueryForForDataTable(RequestScope request, ISession session, object parameterObject)
+        {
+            DataTable dataTable = null;
+
+            using (IDbCommand command = request.IDbCommand)
+            {
+                IDataReader reader = command.ExecuteReader();
+
+                try
+                {
+                    // Get Results
+                    while (reader.Read())
+                    {
+                        dataTable = (DataTable)resultStrategy.Process(request, ref reader, dataTable);
+                    }
+                }
+                finally
+                {
+                    reader.Close();
+                    reader.Dispose();
+                }
+
+                // do we need ??
+                //ExecuteDelayedLoad(request);
+
+                // do we need ??
+                //RetrieveOutputParameters(request, session, command, parameterObject);
+            }
+
+            return dataTable;
+        } 
+        #endregion
+
         #endregion
 
        /// <summary>
