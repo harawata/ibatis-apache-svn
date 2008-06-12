@@ -35,6 +35,7 @@ using Apache.Ibatis.DataMapper.Configuration.Interpreters.Config;
 using Apache.Ibatis.DataMapper.DataExchange;
 using Apache.Ibatis.DataMapper.Exceptions;
 using Apache.Ibatis.DataMapper.Model.ResultMapping;
+using System.Data;
 
 #endregion 
 
@@ -118,7 +119,7 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
             }
             else
             {
-                if (!dataExchangeFactory.TypeHandlerFactory.IsSimpleType(type))
+                if (!dataExchangeFactory.TypeHandlerFactory.IsSimpleType(type) && type!=typeof(DataRow))
                 {
                     factory = dataExchangeFactory.ObjectFactory.CreateFactory(type, Type.EmptyTypes);
                 }

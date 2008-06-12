@@ -131,13 +131,17 @@ namespace Apache.Ibatis.Common.Utilities.TypesResolver
 		public const string HashtableAlias3 = "hashmap";
 
         /// <summary>
-        /// The alias around the 'DataTable' type.
+        /// The alias around the 'DataRow' type.
         /// </summary>
-        public const string DataTableAlias1 = "datatable";
+        public const string DataRowAlias1 = "datarow";
         /// <summary>
-        /// Another alias around the 'DataTable' type.
+        /// Another alias around the 'DataRow' type.
         /// </summary>
-        public const string DataTableAlias2 = "data";
+        public const string DataRowAlias2 = "data";
+        /// <summary>
+        /// Another alias around the 'DataRow' type.
+        /// </summary>
+        public const string DataRowAlias3 = "row";
 
 		/// <summary>
 		/// The alias around the 'short' type.
@@ -348,8 +352,9 @@ namespace Apache.Ibatis.Common.Utilities.TypesResolver
         static TypeRegistry()
 		{
 			// Initialize a dictionary with some fully qualifiaed name 
-            types[DataTableAlias1] = typeof(DataTable);
-            types[DataTableAlias2] = typeof(DataTable);
+            types[DataRowAlias1] = typeof(DataRow);
+            types[DataRowAlias2] = typeof(DataRow);
+            types[DataRowAlias2] = typeof(DataRow);
 
 			types[ArrayListAlias1] = typeof (ArrayList);
 			types[ArrayListAlias2] = typeof (ArrayList);

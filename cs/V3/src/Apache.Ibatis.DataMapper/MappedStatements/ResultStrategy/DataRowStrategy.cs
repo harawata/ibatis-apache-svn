@@ -34,9 +34,9 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
     /// <summary>
     /// <see cref="IResultStrategy"/> implementation when 
     /// a 'resultClass' attribute is specified and
-    /// the type of the result object is <see cref="DataTable"/>.
+    /// the type of the result object is <see cref="DataRow"/>.
     /// </summary>
-    public class DataTableStrategy : IResultStrategy
+    public class DataRowStrategy : IResultStrategy
     {
         #region IResultStrategy Members
 
@@ -50,11 +50,13 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
         public object Process(RequestScope request, ref IDataReader reader, object resultObject)
         {
             IResultMap resultMap = request.CurrentResultMap.ResolveSubMap(reader);
-            DataTable dataTable = resultObject as DataTable;
-
-            if (dataTable == null)
+            DataRow dataRow = (DataRow)resultObject;
+            DataTable dataTable = dataRow.Table;
+            
+            if (dataTable.Columns.Count==0)
             {
-                dataTable = new DataTable(resultMap.Id);
+                // Builds and adss the columns
+                dataTable.TableName = resultMap.Id;
                 if (resultMap is AutoResultMap)
                 {
                     for (int index = 0; index < reader.FieldCount; index++)
@@ -76,19 +78,31 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
                         DataColumn column = new DataColumn();
                         if (property.CLRType.Length > 0)
                         {
-                            column.DataType = property.MemberType;
+                            column.DataType = request.DataExchangeFactory.TypeHandlerFactory.GetType(property.CLRType);
                         }
-                        //column.DataType = reader.GetFieldType(reader.GetOrdinal(property.PropertyName));
+                        else
+                        {
+                            object value = property.GetDataBaseValue(reader);
+                            if (value == null)
+                            {
+                                int columnIndex = reader.GetOrdinal(property.ColumnName);
+                                column.DataType = reader.GetFieldType(columnIndex);
+                            }  
+                            else
+                            {
+                                column.DataType = value.GetType();
+                            }
+                        }
                         column.ColumnName = property.PropertyName;
+
                         dataTable.Columns.Add(column);
                     }
                 }
             }
 
-            DataRow row = null;
+           
             if (resultMap is AutoResultMap)
             {
-                row = dataTable.NewRow();
                 for (int index = 0; index < reader.FieldCount; index++)
                 {
                     string propertyName = reader.GetName(index);
@@ -106,7 +120,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
                         string.Empty,
                         null,
                         string.Empty,
-                        typeof(DataTable),
+                        typeof(DataRow),
                         request.DataExchangeFactory,
                         typeHandler);
 
@@ -115,22 +129,11 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
                     {
                         value = DBNull.Value;
                     }
-                    row[property.PropertyName] = value;
+                    dataRow[property.PropertyName] = value;
                 }
             }
             else
             {
-                // We must set the DataType before adding any data to the DataTable
-                for (int index = 0; index < resultMap.Properties.Count; index++)
-                {
-                    ResultProperty property = resultMap.Properties[index];
-                    object value = property.GetDataBaseValue(reader);
-                    if (value != null && property.CLRType.Length == 0)
-                    {
-                        dataTable.Columns[property.PropertyName].DataType = value.GetType();
-                    }
-                }
-                row = dataTable.NewRow();
                 for (int index = 0; index < resultMap.Properties.Count; index++)
                 {
                     ResultProperty property = resultMap.Properties[index];
@@ -139,13 +142,11 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
                     {
                         value = DBNull.Value;
                     }
-                    row[property.PropertyName] = value;
-
+                    dataRow[property.PropertyName] = value;
                 }
             }
-            dataTable.Rows.Add(row);
 
-            return dataTable;
+            return null;
         }
 
         #endregion

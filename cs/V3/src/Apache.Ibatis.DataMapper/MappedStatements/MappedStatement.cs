@@ -38,6 +38,7 @@ using Apache.Ibatis.DataMapper.Data;
 using Apache.Ibatis.DataMapper.Model;
 using Apache.Ibatis.DataMapper.Model.Events;
 using Apache.Ibatis.DataMapper.Model.ParameterMapping;
+using Apache.Ibatis.DataMapper.Model.ResultMapping;
 using Apache.Ibatis.DataMapper.Model.Statements;
 using Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy;
 using Apache.Ibatis.DataMapper.Scope;
@@ -1038,7 +1039,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
         /// <returns></returns>
         internal DataTable RunQueryForForDataTable(RequestScope request, ISession session, object parameterObject)
         {
-            DataTable dataTable = null;
+            DataTable dataTable = new DataTable("DataTable"); ;
 
             using (IDbCommand command = request.IDbCommand)
             {
@@ -1049,7 +1050,9 @@ namespace Apache.Ibatis.DataMapper.MappedStatements
                     // Get Results
                     while (reader.Read())
                     {
-                        dataTable = (DataTable)resultStrategy.Process(request, ref reader, dataTable);
+                        DataRow dataRow = dataTable.NewRow();
+                        dataTable.Rows.Add(dataRow);
+                        resultStrategy.Process(request, ref reader, dataRow);
                     }
                 }
                 finally

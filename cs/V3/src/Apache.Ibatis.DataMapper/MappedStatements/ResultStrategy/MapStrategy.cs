@@ -48,7 +48,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
             resultMapStrategy = new ResultMapStrategy();
             groupByStrategy = new GroupByStrategy();
             cirularStrategy = new CirularStrategy();
-            dataTableStrategy = new DataTableStrategy();
+            dataTableStrategy = new DataRowStrategy();
         }
         
         #region IResultStrategy Members
@@ -71,7 +71,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
             {
                 return cirularStrategy.Process(request, ref reader, resultObject);
             }
-            else if (typeof(DataTable).IsAssignableFrom(resultMap.Class))
+            else if (typeof(DataRow).IsAssignableFrom(resultMap.Class))
             {
                 return dataTableStrategy.Process(request, ref reader, resultObject);
             }

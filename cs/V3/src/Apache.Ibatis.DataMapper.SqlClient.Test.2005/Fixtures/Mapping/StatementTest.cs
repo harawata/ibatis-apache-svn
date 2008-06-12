@@ -50,7 +50,6 @@ namespace Apache.Ibatis.DataMapper.SqlClient.Test.Fixtures.Mapping
         public void QueryForDatatable_with_resulclass_should_work()
         {
             DataTable dataTable = dataMapper.QueryForDataTable("SimpleAccountDataTable", 1);
-
             DataRow[] currentRows = dataTable.Select(null, null, DataViewRowState.CurrentRows);
 
             //if (currentRows.Length < 1)

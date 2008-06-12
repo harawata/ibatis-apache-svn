@@ -26,6 +26,7 @@
 #region Using
 
 using System;
+using System.Data;
 using Apache.Ibatis.Common.Configuration;
 using Apache.Ibatis.Common.Utilities.Objects;
 using Apache.Ibatis.DataMapper.Configuration.Interpreters.Config;
@@ -106,7 +107,7 @@ namespace Apache.Ibatis.DataMapper.Configuration.Serializers
                     resultClass = modelStore.DataExchangeFactory.TypeHandlerFactory.GetType(classNames[i].Trim());
                     IFactory resultClassFactory = null;
                     if (Type.GetTypeCode(resultClass) == TypeCode.Object &&
-                        (resultClass.IsValueType == false))
+                        (resultClass.IsValueType == false) && resultClass != typeof(DataRow))
                     {
                         resultClassFactory = modelStore.DataExchangeFactory.ObjectFactory.CreateFactory(resultClass, Type.EmptyTypes);
                     }

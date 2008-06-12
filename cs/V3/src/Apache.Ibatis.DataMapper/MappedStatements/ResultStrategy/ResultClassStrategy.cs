@@ -50,7 +50,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
 			dictionaryStrategy = new DictionaryStrategy();
 			listStrategy = new ListStrategy();
 			autoMapStrategy = new AutoMapStrategy();
-            dataTableStrategy = new DataTableStrategy();
+            dataTableStrategy = new DataRowStrategy();
 
 		}
 
@@ -78,7 +78,7 @@ namespace Apache.Ibatis.DataMapper.MappedStatements.ResultStrategy
 			{
                 return listStrategy.Process(request, ref reader, resultObject);
 			}
-            else if (typeof(DataTable).IsAssignableFrom(request.CurrentResultMap.Class))
+            else if (typeof(DataRow).IsAssignableFrom(request.CurrentResultMap.Class))
             {
                 return dataTableStrategy.Process(request, ref reader, resultObject);
             }

@@ -31,8 +31,8 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 	
 	<resultMaps>
 
-    <resultMap id="Account-result-DataTable" class="dataTable">
-      <result property="Id"           column="Account_ID"/>
+    <resultMap id="Account-result-DataRow" class="dataRow">
+      <result property="Id" type="int"           column="Account_ID"/>
       <result property="FirstName"    column="Account_FirstName"/>
     </resultMap>
     
@@ -146,7 +146,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
   <statements>
 
     <!-- Query for DataTable -->
-    <select id="SimpleAccountDataTableViaResultMap" parameterClass="int" resultMap="Account-result-DataTable">
+    <select id="SimpleAccountDataTableViaResultMap" parameterClass="int" resultMap="Account-result-DataRow">
       select *
       from Accounts
     </select>

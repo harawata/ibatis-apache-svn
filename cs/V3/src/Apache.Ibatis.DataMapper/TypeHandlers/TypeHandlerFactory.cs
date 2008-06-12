@@ -357,7 +357,7 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
             {
                 handler = GetUnkownTypeHandler();
             }
-            else if (typeof(IDictionary).IsAssignableFrom(classType) || typeof(DataTable).IsAssignableFrom(classType))
+            else if (typeof(IDictionary).IsAssignableFrom(classType) || typeof(DataRow).IsAssignableFrom(classType))
             {
                 // IDictionary or DataTable
                 if (memberType == null || memberType.Length == 0)
@@ -432,7 +432,7 @@ namespace Apache.Ibatis.DataMapper.TypeHandlers
             {
                 handler = GetUnkownTypeHandler();
             }
-            else if (typeof(IDictionary).IsAssignableFrom(argumentType) || typeof(DataTable).IsAssignableFrom(argumentType))
+            else if (typeof(IDictionary).IsAssignableFrom(argumentType) || typeof(DataRow).IsAssignableFrom(argumentType))
             {
                 // IDictionary or 
                 if (clrType == null || clrType.Length == 0)
