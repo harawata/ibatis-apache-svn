@@ -354,7 +354,7 @@ namespace Apache.Ibatis.Common.Utilities.TypesResolver
 			// Initialize a dictionary with some fully qualifiaed name 
             types[DataRowAlias1] = typeof(DataRow);
             types[DataRowAlias2] = typeof(DataRow);
-            types[DataRowAlias2] = typeof(DataRow);
+            types[DataRowAlias3] = typeof(DataRow);
 
 			types[ArrayListAlias1] = typeof (ArrayList);
 			types[ArrayListAlias2] = typeof (ArrayList);
